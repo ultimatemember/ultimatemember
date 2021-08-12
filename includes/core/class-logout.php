@@ -44,7 +44,7 @@ if ( ! class_exists( 'um\core\Logout' ) ) {
 			}
 
 			$trid = 0;
-			if ( UM()->external_integrations()->is_wpml_active() ) {
+			if ( UM()->integrations()->is_wpml_active() ) {
 				global $sitepress;
 				$default_lang = $sitepress->get_default_language();
 

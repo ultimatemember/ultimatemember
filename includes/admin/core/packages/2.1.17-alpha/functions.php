@@ -8,7 +8,7 @@
  */
 function um_upgrade_get_slug2117( $tab ) {
 	$slug = get_post_meta( $tab->ID, 'um_tab_slug', true );
-	if ( UM()->external_integrations()->is_wpml_active() ) {
+	if ( UM()->integrations()->is_wpml_active() ) {
 		global $sitepress;
 
 		$tab_id = $sitepress->get_object_id( $tab->ID, 'um_profile_tabs', true, $sitepress->get_default_language() );
@@ -91,7 +91,7 @@ function um_upgrade_profile_tabs2117() {
 				$tab_slug = "custom_profiletab_{$auto_increment}";
 			}
 
-			if ( UM()->external_integrations()->is_wpml_active() ) {
+			if ( UM()->integrations()->is_wpml_active() ) {
 				global $sitepress;
 
 				$tab_id = $sitepress->get_object_id( $tab->ID, 'um_profile_tabs', true, $sitepress->get_default_language() );

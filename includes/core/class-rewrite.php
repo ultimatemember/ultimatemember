@@ -98,7 +98,7 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 					$newrules[ $user_slug . '/([^/]+)/?$' ] = 'index.php?page_id=' . $user_page_id . '&um_user=$matches[1]';
 				}
 
-				if ( UM()->external_integrations()->is_wpml_active() ) {
+				if ( UM()->integrations()->is_wpml_active() ) {
 					global $sitepress;
 
 					$active_languages = $sitepress->get_active_languages();
@@ -125,7 +125,7 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 					$newrules[ $account_slug . '/([^/]+)?$' ] = 'index.php?page_id=' . $account_page_id . '&um_tab=$matches[1]';
 				}
 
-				if ( UM()->external_integrations()->is_wpml_active() ) {
+				if ( UM()->integrations()->is_wpml_active() ) {
 					global $sitepress;
 
 					$active_languages = $sitepress->get_active_languages();

@@ -264,3 +264,33 @@ function um_locate_template_custom_path( $template_locations, $custom_path ) {
 
 	return $located;
 }
+
+
+/**
+ * @param string $email_key
+ *
+ * @return string
+ */
+function um_get_email_template( $email_key ) {
+	$template_path = "email/{$email_key}.php";
+	return apply_filters( 'um_email_template_path', $template_path, $email_key );
+}
+
+
+/**
+ * @param string $email_key
+ *
+ * @return bool|string
+ */
+function um_get_email_template_module( $email_key ) {
+	$email_notifications = UM()->config()->get( 'email_notifications' );
+	if ( ! array_key_exists( $email_key, $email_notifications ) ) {
+		return false;
+	}
+
+	if ( ! array_key_exists( 'module', $email_notifications[ $email_key ] ) ) {
+		return '';
+	}
+
+	return $email_notifications[ $email_key ]['module'];
+}

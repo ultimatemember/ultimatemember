@@ -20,19 +20,19 @@ class UM_Modules_List_Table extends WP_List_Table {
 	/**
 	 * @var array
 	 */
-	var $actions = [];
+	var $actions = array();
 
 
 	/**
 	 * @var array
 	 */
-	var $bulk_actions = [];
+	var $bulk_actions = array();
 
 
 	/**
 	 * @var array
 	 */
-	var $columns = [];
+	var $columns = array();
 
 
 	/**
@@ -40,12 +40,12 @@ class UM_Modules_List_Table extends WP_List_Table {
 	 *
 	 * @param array $args
 	 */
-	function __construct( $args = [] ){
-		$args = wp_parse_args( $args, [
-			'singular'  => __( 'item', 'ultimate-member' ),
-			'plural'    => __( 'items', 'ultimate-member' ),
-			'ajax'      => false
-		] );
+	function __construct( $args = array() ) {
+		$args = wp_parse_args( $args, array(
+			'singular' => __( 'item', 'ultimate-member' ),
+			'plural'   => __( 'items', 'ultimate-member' ),
+			'ajax'     => false,
+		) );
 
 		$this->no_items_message = $args['plural'] . ' ' . __( 'not found.', 'ultimate-member' );
 
@@ -60,7 +60,7 @@ class UM_Modules_List_Table extends WP_List_Table {
 	 * @return mixed
 	 */
 	function __call( $name, $arguments ) {
-		return call_user_func_array( [ $this, $name ], $arguments );
+		return call_user_func_array( array( $this, $name ), $arguments );
 	}
 
 
@@ -72,7 +72,7 @@ class UM_Modules_List_Table extends WP_List_Table {
 
 		$columns  = $this->get_columns();
 		$sortable = $this->get_sortable_columns();
-		$this->_column_headers = [ $columns, [], $sortable ];
+		$this->_column_headers = array( $columns, array(), $sortable );
 
 		$modules = UM()->modules()->get_list();
 
@@ -88,10 +88,10 @@ class UM_Modules_List_Table extends WP_List_Table {
 
 		$this->items = array_slice( $modules, ( $paged - 1 ) * $per_page, $per_page );
 
-		$this->set_pagination_args( [
+		$this->set_pagination_args( array(
 			'total_items' => count( $modules ),
 			'per_page'    => $per_page,
-		] );
+		) );
 	}
 
 
@@ -140,7 +140,7 @@ class UM_Modules_List_Table extends WP_List_Table {
 				echo '</th>';
 			} elseif ( method_exists( $this, '_column_' . $column_name ) ) {
 				echo call_user_func(
-					[ $this, '_column_' . $column_name ],
+					array( $this, '_column_' . $column_name ),
 					$item,
 					$classes,
 					$data,
@@ -148,7 +148,7 @@ class UM_Modules_List_Table extends WP_List_Table {
 				);
 			} elseif ( method_exists( $this, 'column_' . $column_name ) ) {
 				echo "<td $attributes>";
-				echo call_user_func( [ $this, 'column_' . $column_name ], $item );
+				echo call_user_func( array( $this, 'column_' . $column_name ), $item );
 				echo $this->handle_row_actions( $item, $column_name, $primary );
 				echo '</td>';
 			} else {
@@ -189,9 +189,9 @@ class UM_Modules_List_Table extends WP_List_Table {
 	 *
 	 * @return $this
 	 */
-	function set_columns( $args = [] ) {
+	function set_columns( $args = array() ) {
 		if ( count( $this->bulk_actions ) ) {
-			$args = array_merge( [ 'cb' => '<input type="checkbox" />' ], $args );
+			$args = array_merge( array( 'cb' => '<input type="checkbox" />' ), $args );
 		}
 		$this->columns = $args;
 		return $this;
@@ -211,7 +211,7 @@ class UM_Modules_List_Table extends WP_List_Table {
 	 *
 	 * @return $this
 	 */
-	function set_actions( $args = [] ) {
+	function set_actions( $args = array() ) {
 		$this->actions = $args;
 		return $this;
 	}
@@ -230,7 +230,7 @@ class UM_Modules_List_Table extends WP_List_Table {
 	 *
 	 * @return $this
 	 */
-	function set_bulk_actions( $args = [] ) {
+	function set_bulk_actions( $args = array() ) {
 		$this->bulk_actions = $args;
 		return $this;
 	}
@@ -245,7 +245,7 @@ class UM_Modules_List_Table extends WP_List_Table {
 
 
 	function get_table_classes() {
-		return [ 'widefat', 'striped', $this->_args['plural'] ];
+		return array( 'widefat', 'striped', $this->_args['plural'] );
 	}
 
 
@@ -265,7 +265,7 @@ class UM_Modules_List_Table extends WP_List_Table {
 	 * @return string
 	 */
 	function column_module( $item ) {
-		$actions = [];
+		$actions = array();
 
 		if ( UM()->modules()->can_activate( $item['key'] ) ) {
 			$actions['activate'] = '<a href="admin.php?page=um-modules&action=activate&slug=' . $item['key'] . '&_wpnonce=' . wp_create_nonce( 'um_module_activate' . $item['key'] . get_current_user_id() ) . '">' . __( 'Activate', 'ultimate-member' ). '</a>';
@@ -290,22 +290,22 @@ class UM_Modules_List_Table extends WP_List_Table {
 }
 
 
-$ListTable = new UM_Modules_List_Table( [
-	'singular'  => __( 'Module', 'ultimate-member' ),
-	'plural'    => __( 'Modules', 'ultimate-member' ),
-	'ajax'      => false,
-] );
+$ListTable = new UM_Modules_List_Table( array(
+	'singular' => __( 'Module', 'ultimate-member' ),
+	'plural'   => __( 'Modules', 'ultimate-member' ),
+	'ajax'     => false,
+) );
 
-$ListTable->set_bulk_actions( [
-	'activate'      => __( 'Activate', 'ultimate-member' ),
-	'deactivate'    => __( 'Deactivate', 'ultimate-member' ),
-	'flush-data'    => __( 'Flush module data', 'ultimate-member' ),
-] );
+$ListTable->set_bulk_actions( array(
+	'activate'   => __( 'Activate', 'ultimate-member' ),
+	'deactivate' => __( 'Deactivate', 'ultimate-member' ),
+	'flush-data' => __( 'Flush module data', 'ultimate-member' ),
+) );
 
-$ListTable->set_columns( [
-	'module'        => __( 'Module', 'ultimate-member' ),
-	'description'   => __( 'Description', 'ultimate-member' ),
-] );
+$ListTable->set_columns( array(
+	'module'      => __( 'Module', 'ultimate-member' ),
+	'description' => __( 'Description', 'ultimate-member' ),
+) );
 
 
 $ListTable->prepare_items(); ?>

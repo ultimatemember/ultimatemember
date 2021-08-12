@@ -64,8 +64,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			add_filter( 'um_settings_section_install_info__content', array( $this, 'settings_install_info_tab' ), 10, 2 );
 
-
 			add_filter( 'um_settings_structure', array( $this, 'sorting_licenses_options' ), 9999, 1 );
+
 
 
 			//save handlers
@@ -75,16 +75,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			add_action( 'um_settings_before_save', array( $this, 'check_permalinks_changes' ) );
 			add_action( 'um_settings_save', array( $this, 'on_settings_save' ) );
 
-
-			add_filter( 'um_change_settings_before_save', array( $this, 'save_email_templates' ) );
-
-
 			//save licenses options
 			add_action( 'um_settings_before_save', array( $this, 'before_licenses_save' ) );
 			add_action( 'um_settings_save', array( $this, 'licenses_save' ) );
 
 			add_filter( 'um_change_settings_before_save', array( $this, 'set_default_if_empty' ), 9, 1 );
 			add_filter( 'um_change_settings_before_save', array( $this, 'remove_empty_values' ), 10, 1 );
+			add_filter( 'um_change_settings_before_save', array( $this, 'save_email_templates' ) );
 
 			add_action( 'admin_init', array( &$this, 'um_download_install_info' ) );
 		}
@@ -284,7 +281,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'size'        => 'small',
 					);
 				}
-
 
 				$settings_map[ $page_id ] = array(
 					'sanitize' => 'absint',
@@ -910,6 +906,26 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'sanitize' => 'bool',
 					),
 				)
+			);
+
+			foreach ( array_keys( UM()->config()->get( 'email_notifications' ) ) as $email_key ) {
+				$settings_map[ $email_key . '_on' ] = array(
+					'sanitize' => 'bool',
+				);
+				$settings_map[ $email_key . '_sub' ] = array(
+					'sanitize' => 'text',
+				);
+				$settings_map[ $email_key ] = array(
+					'sanitize' => 'wp_kses',
+				);
+			}
+
+			$settings_map['pages_settings'] = array(
+				'sanitize' => 'bool',
+			);
+
+			$settings_map['um_email_template'] = array(
+				'sanitize' => 'key',
 			);
 
 			$this->settings_map = apply_filters( 'um_settings_map', $settings_map );
@@ -2149,7 +2165,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				 * }
 				 * ?>
 				 */
-				do_action( "um_settings_before_save" );
+				do_action( 'um_settings_before_save' );
+
+				$settings = UM()->admin()->sanitize_options( $_POST['um_options'] );
 
 				/**
 				 * UM hook
@@ -2171,9 +2189,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				 * }
 				 * ?>
 				 */
-				$settings = apply_filters( 'um_change_settings_before_save', $_POST['um_options'] );
-
-				$settings = UM()->admin()->sanitize_options( $settings );
+				$settings = apply_filters( 'um_change_settings_before_save', $settings );
 
 				foreach ( $settings as $key => $value ) {
 					UM()->options()->update( $key, $value );
@@ -2265,10 +2281,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				return $settings;
 			}
 
-
 			$filtered_settings = array();
 			foreach ( $settings as $key => $value ) {
-
 				$filtered_settings[ $key ] = $value;
 
 				foreach ( $fields as $field ) {
@@ -2598,25 +2612,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'value' => $email_key,
 				),
 				array(
-					'id'        => $email_key . '_on',
-					'type'      => 'checkbox',
-					'label'     => $emails[ $email_key ]['title'],
-					'tooltip'   => $emails[ $email_key ]['description'],
+					'id'      => $email_key . '_on',
+					'type'    => 'checkbox',
+					'label'   => $emails[ $email_key ]['title'],
+					'tooltip' => $emails[ $email_key ]['description'],
 				),
 				array(
-					'id'            => $email_key . '_sub',
-					'type'          => 'text',
-					'label'         => __( 'Subject Line', 'ultimate-member' ),
-					'conditional'   => array( $email_key . '_on', '=', 1 ),
-					'tooltip'       => __( 'This is the subject line of the e-mail', 'ultimate-member' ),
+					'id'          => $email_key . '_sub',
+					'type'        => 'text',
+					'label'       => __( 'Subject Line', 'ultimate-member' ),
+					'conditional' => array( $email_key . '_on', '=', 1 ),
+					'tooltip'     => __( 'This is the subject line of the e-mail', 'ultimate-member' ),
 				),
 				array(
-					'id'            => $email_key,
-					'type'          => 'email_template',
-					'label'         => __( 'Message Body', 'ultimate-member' ),
-					'conditional'   => array( $email_key . '_on', '=', 1 ),
-					'tooltip'       => __( 'This is the content of the e-mail', 'ultimate-member' ),
-					'value'         => um_get_template_html( "email/{$email_key}.php" ),
+					'id'          => $email_key,
+					'type'        => 'email_template',
+					'label'       => __( 'Message Body', 'ultimate-member' ),
+					'conditional' => array( $email_key . '_on', '=', 1 ),
+					'tooltip'     => __( 'This is the content of the e-mail', 'ultimate-member' ),
+					'value'       => um_get_template_html( "email/{$email_key}.php" ),
 				),
 			), $email_key );
 
@@ -2948,8 +2962,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		function settings_install_info_tab( $html, $section_fields ) {
 			global $wpdb;
 
-			if ( ! class_exists( '\Browser' ) )
+			if ( ! class_exists( '\Browser' ) ) {
 				require_once um_path . 'includes/lib/browser.php';
+			}
 
 			// Detect browser
 			$browser = new \Browser();
@@ -2967,7 +2982,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				echo $this->content;
 			} else { ?>
 
-				<h3>Install Info</h3>
+				<h3><?php _e( 'Install Info', 'ultimate-member' ) ?></h3>
 
 				<form action="" method="post" dir="ltr">
 					<textarea style="width:70%; height:400px;" readonly="readonly" onclick="this.focus();this.select()" id="install-info-textarea" name="um-install-info" title="<?php _e( 'To copy the Install info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'ultimate-member' ); ?>">
@@ -3407,28 +3422,82 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 		 * @return array
 		 */
 		function save_email_templates( $settings ) {
-
 			if ( empty( $settings['um_email_template'] ) ) {
 				return $settings;
 			}
 
-			$template = $settings['um_email_template'];
-			$content = wp_kses_post( stripslashes( $settings[ $template ] ) );
+			$email_key = $settings['um_email_template'];
+			$content   = stripslashes( $settings[ $email_key ] );
 
-			$theme_template_path = UM()->mail()->get_template_file( 'theme', $template );
+			$template_name = um_get_email_template( $email_key );
+			$module = um_get_email_template_module( $email_key );
 
-			if ( ! file_exists( $theme_template_path ) ) {
-				UM()->mail()->copy_email_template( $template );
+			$template_path = UM()->template_path( $module );
+
+			$template_locations = array(
+				trailingslashit( $template_path ) . $template_name,
+			);
+
+			$template_locations = apply_filters( 'um_pre_template_locations', $template_locations, $template_name, $module, $template_path );
+
+			// build multisite blog_ids priority paths
+			if ( is_multisite() ) {
+				$blog_id = get_current_blog_id();
+
+				$ms_template_locations = array_map( function( $item ) use ( $template_path, $blog_id ) {
+					return str_replace( trailingslashit( $template_path ), trailingslashit( $template_path ) . $blog_id . '/', $item );
+				}, $template_locations );
+
+				$template_locations = array_merge( $ms_template_locations, $template_locations );
 			}
 
-			$fp = fopen( $theme_template_path, "w" );
-			$result = fputs( $fp, $content );
-			fclose( $fp );
+			$template_locations = apply_filters( 'um_template_locations', $template_locations, $template_name, $module, $template_path );
 
-			if ( $result !== false ) {
-				unset( $settings['um_email_template'] );
-				unset( $settings[ $template ] );
+			$template_locations = array_map( 'wp_normalize_path', $template_locations );
+
+			$custom_path = apply_filters( 'um_template_structure_custom_path', false, $template_name, $module );
+			if ( false === $custom_path || ! is_dir( $custom_path ) ) {
+				$template_exists = locate_template( $template_locations );
+			} else {
+				$template_exists = um_locate_template_custom_path( $template_locations, $custom_path );
 			}
+
+			if ( empty( $template_exists ) ) {
+				if ( false === $custom_path || ! is_dir( $custom_path ) ) {
+					$base_dir = trailingslashit( get_stylesheet_directory() );
+				} else {
+					$base_dir = trailingslashit( $custom_path );
+				}
+				$template_exists = $base_dir . $template_locations[0];
+
+				$template_exists       = wp_normalize_path( $template_exists );
+				$default_template_path = wp_normalize_path( trailingslashit( UM()->default_templates_path( $module ) ) . $template_name );
+
+				if ( file_exists( $default_template_path ) ) {
+					$folders = explode( DIRECTORY_SEPARATOR, $template_locations[0] );
+					$folders = array_splice( $folders, 0, count( $folders ) - 1 );
+					$cur_folder = '';
+
+					foreach ( $folders as $folder ) {
+						$prev_dir = $cur_folder;
+						$cur_folder .= $folder . DIRECTORY_SEPARATOR;
+						if ( ! is_dir( $base_dir . $cur_folder ) && wp_is_writable( $base_dir . $prev_dir ) ) {
+							mkdir( $base_dir . $cur_folder, 0777 );
+						}
+					}
+
+					copy( $default_template_path, $template_exists );
+				}
+			}
+
+			if ( wp_is_writable( $template_exists ) ) {
+				$fp = fopen( $template_exists, "w" );
+				fputs( $fp, $content );
+				fclose( $fp );
+			}
+
+			unset( $settings['um_email_template'] );
+			unset( $settings[ $email_key ] );
 
 			return $settings;
 		}

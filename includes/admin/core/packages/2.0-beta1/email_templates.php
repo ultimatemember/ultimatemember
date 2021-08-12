@@ -9,12 +9,14 @@
  * @return string
  */
 function um_upgrade20beta1_template_in_theme( $template_name, $html = false ) {
-	$template_name_file = UM()->mail()->get_template_filename( $template_name );
+	$template_name_file = um_upgrade20beta1_get_template_filename( $template_name );
 	$ext = ! $html ? '.php' : '.html';
 
 	$blog_id = '';
 	if ( ! $html ) {
-		$blog_id = UM()->mail()->get_blog_id();
+		if ( is_multisite() ) {
+			$blog_id = '/' . get_current_blog_id();
+		}
 	}
 
 	// check if there is template at theme folder
@@ -23,6 +25,32 @@ function um_upgrade20beta1_template_in_theme( $template_name, $html = false ) {
 	) );
 	// Return what we found.
 	return ! $template ? false : true;
+}
+
+
+function um_upgrade20beta1_get_template_filename( $template_name ) {
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_change_email_template_file
+	 * @description Change email notification template path
+	 * @input_vars
+	 * [{"var":"$template_name","type":"string","desc":"Template Name"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage
+	 * <?php add_filter( 'um_change_email_template_file', 'function_name', 10, 1 ); ?>
+	 * @example
+	 * <?php
+	 * add_filter( 'um_change_email_template_file', 'my_change_email_template_file', 10, 1 );
+	 * function my_change_email_template_file( $template, $template_name ) {
+	 *     // your code here
+	 *     return $template;
+	 * }
+	 * ?>
+	 */
+	return apply_filters( 'um_change_email_template_file', $template_name );
 }
 
 
@@ -37,14 +65,16 @@ function um_upgrade20beta1_template_in_theme( $template_name, $html = false ) {
  */
 function um_upgrade20beta1_get_template_file( $location, $template_name, $html = false ) {
 	$template_path = '';
-	$template_name_file = UM()->mail()->get_template_filename( $template_name );
+	$template_name_file = um_upgrade20beta1_get_template_filename( $template_name );
 	$ext = ! $html ? '.php' : '.html';
 	switch( $location ) {
 		case 'theme':
 
 			$blog_id = '';
 			if ( ! $html ) {
-				$blog_id = UM()->mail()->get_blog_id();
+				if ( is_multisite() ) {
+					$blog_id = '/' . get_current_blog_id();
+				}
 			}
 
 			$template_path = trailingslashit( get_stylesheet_directory() . '/ultimate-member/email' . $blog_id ). $template_name_file . $ext;
