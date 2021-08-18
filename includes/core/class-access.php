@@ -695,6 +695,10 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 * @return string
 		 */
 		function filter_restricted_post_excerpt( $post_excerpt, $post ) {
+			if ( empty( $post ) ) {
+				return $post_excerpt;
+			}
+
 			if ( current_user_can( 'administrator' ) || is_admin() ) {
 				return $post_excerpt;
 			}
@@ -751,7 +755,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				}
 			} else {
 				$post_id = get_the_ID();
-				if ( $this->is_restricted( $post_id ) ) {
+				if ( false !== $post_id && $this->is_restricted( $post_id ) ) {
 					$has_thumbnail = false;
 				}
 			}
@@ -1629,6 +1633,11 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 * @return bool|array
 		 */
 		function get_post_privacy_settings( $post ) {
+			// break for incorrect post
+			if ( empty( $post ) ) {
+				return false;
+			}
+
 			static $cache = array();
 
 			$cache_key = is_numeric( $post ) ? $post : $post->ID;
@@ -1836,6 +1845,11 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 * @return bool
 		 */
 		function is_restricted( $post_id ) {
+			// break for incorrect post
+			if ( empty( $post_id ) ) {
+				return false;
+			}
+
 			static $cache = array();
 
 			if ( isset( $cache[ $post_id ] ) ) {
