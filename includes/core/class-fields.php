@@ -2416,10 +2416,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							} elseif( isset( $data['label'] ) ) {
 								$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $data['label'] );
 							}
-							
+
 
 							$output .= '<input class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $name ) . '" id="' . esc_attr( $key . UM()->form()->form_suffix ) . '" value="' . $this->field_value( $key, $default, $data ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />';
-							
+
 
 							$output .= '</div>';
 
@@ -2622,7 +2622,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '<div class="um-rating um-raty" id="' . esc_attr( $key ) . '" data-key="' . esc_attr( $key ) . '" data-number="' . esc_attr( $data['number'] ) . '" data-score="' . $this->field_value( $key, $default, $data ) . '"></div>';
 					$output .= '</div>';
-					
+
 					if ( $this->is_error( $key ) ) {
 						$output .= $this->field_error( $this->show_error( $key ) );
 					} elseif ( $this->is_notice( $key ) ) {
@@ -4122,6 +4122,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						if ( ! empty( $res ) ) {
 							$res = stripslashes( $res );
+						}
+						if ( 'description' === $data['metakey'] ) {
+							$res = nl2br( $res );
 						}
 
 						$data['is_view_field'] = true;
