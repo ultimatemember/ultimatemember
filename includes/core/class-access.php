@@ -1072,6 +1072,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 								continue;
 							}
 						}
+					} elseif ( isset( $menu_item->type ) && 'custom' === $menu_item->type ) {
+						$filtered_items[] = $menu_item;
+						continue;
 					}
 				} else {
 					//add all other posts
