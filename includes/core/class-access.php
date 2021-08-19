@@ -204,14 +204,14 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 						}
 					}
 					$restricted_taxonomies = array_values( $restricted_taxonomies );
-				}
 
-				if ( ! empty( $post_types ) ) {
-					$taxonomies = array();
-					foreach ( $post_types as $p_t ) {
-						$taxonomies = array_merge( $taxonomies, get_object_taxonomies( $p_t ) );
+					if ( ! empty( $post_types ) ) {
+						$taxonomies = array();
+						foreach ( $post_types as $p_t ) {
+							$taxonomies = array_merge( $taxonomies, get_object_taxonomies( $p_t ) );
+						}
+						$restricted_taxonomies = array_intersect( $taxonomies, $restricted_taxonomies );
 					}
-					$restricted_taxonomies = array_intersect( $taxonomies, $restricted_taxonomies );
 				}
 
 				if ( ! empty( $restricted_taxonomies ) ) {
@@ -327,9 +327,11 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					}
 				}
 				$restricted_taxonomies = array_values( $restricted_taxonomies );
-			}
 
-			$restricted_taxonomies = array_intersect( $query->query_vars['taxonomy'], $restricted_taxonomies );
+				if ( ! empty( $restricted_taxonomies ) ) {
+					$restricted_taxonomies = array_intersect( $query->query_vars['taxonomy'], $restricted_taxonomies );
+				}
+			}
 
 			if ( empty( $restricted_taxonomies ) ) {
 				return $exclude;

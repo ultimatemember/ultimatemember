@@ -32,6 +32,9 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		var $post_form = null;
 
 
+		var $nonce = null;
+
+
 		/**
 		 * Form constructor.
 		 */
@@ -331,13 +334,17 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 			if ( $http_post && ! is_admin() && isset( $_POST['form_id'] ) && is_numeric( $_POST['form_id'] ) ) {
 
-				$this->form_id     = absint( $_POST['form_id'] );
-				$this->form_status = get_post_status( $this->form_id );
-				$this->form_data = UM()->query()->post_data( $this->form_id );
+				$this->form_id = absint( $_POST['form_id'] );
+				if ( 'um_form' !== get_post_type( $this->form_id ) ) {
+					return;
+				}
 
+				$this->form_status = get_post_status( $this->form_id );
 				if ( 'publish' !== $this->form_status ) {
 					return;
 				}
+
+				$this->form_data   = UM()->query()->post_data( $this->form_id );
 
 				/**
 				 * UM hook
