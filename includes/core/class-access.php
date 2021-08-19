@@ -1202,7 +1202,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				$is_singular = ! empty( $query->is_singular ) ? true : false;
 			}
 
-			if ( $query->is_main_query() || ! empty( $query->query_vars['um_main_query'] ) ) {
+			if ( is_object( $query ) && is_a( $query, '\WP_Query' ) &&
+			     ( $query->is_main_query() || ! empty( $query->query_vars['um_main_query'] ) ) ) {
 				if ( $is_singular ) {
 					if ( $this->is_restricted( $posts[0]->ID ) ) {
 						$content_restriction = $this->get_post_privacy_settings( $posts[0]->ID );

@@ -710,7 +710,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				}
 
 				if ( 'profile' === $this->set_mode ) {
-					if ( ! isset( UM()->form()->post_form['profile_nonce'] ) || UM()->form()->post_form['profile_nonce'] !== UM()->form()->nonce ) {
+					if ( ! isset( UM()->form()->post_form['profile_nonce'] ) || false === wp_verify_nonce( UM()->form()->post_form['profile_nonce'], 'um-profile-nonce' . UM()->user()->target_id ) ) {
 						return '';
 					}
 				}
