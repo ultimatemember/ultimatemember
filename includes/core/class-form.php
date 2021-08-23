@@ -311,6 +311,21 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 
 		/**
+		 * Return the errors as a WordPress Error object
+		 * @return WP_Error
+		 */
+		function get_wp_error() {
+			$wp_error = new \WP_Error();
+			if ( $this->count_errors() > 0 ) {
+				foreach ( $this->errors as $key => $value ) {
+					$wp_error->add( $key, $value );
+				}
+			}
+			return $wp_error;
+		}
+
+
+		/**
 		 * Declare all fields
 		 */
 		public function field_declare() {
