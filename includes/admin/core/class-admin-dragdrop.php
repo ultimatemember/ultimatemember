@@ -59,8 +59,8 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 			}
 
 			foreach ( $_POST as $key => $value ) {
-
-				$key = sanitize_key( $key );
+				// don't use sanitize_key here because of a key can be in Uppercase
+				$key = sanitize_text_field( $key );
 
 				// adding rows
 				if ( 0 === strpos( $key, '_um_row_' ) ) {

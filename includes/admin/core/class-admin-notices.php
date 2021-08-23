@@ -48,7 +48,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$this->need_upgrade();
 			$this->check_wrong_licenses();
 
-			$this->reviews_notice();
+			// removed for now to avoid the bad reviews
+			//$this->reviews_notice();
 
 			//$this->future_changed();
 

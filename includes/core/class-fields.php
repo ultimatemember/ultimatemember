@@ -709,6 +709,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					return '';
 				}
 
+				if ( 'profile' === $this->set_mode ) {
+					if ( ! isset( UM()->form()->post_form['profile_nonce'] ) || false === wp_verify_nonce( UM()->form()->post_form['profile_nonce'], 'um-profile-nonce' . UM()->user()->target_id ) ) {
+						return '';
+					}
+				}
+
 				return stripslashes_deep( UM()->form()->post_form[ $key ] );
 
 			} elseif ( um_user( $key ) && $this->editing == true ) {
@@ -2416,10 +2422,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							} elseif( isset( $data['label'] ) ) {
 								$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $data['label'] );
 							}
-							
+
 
 							$output .= '<input class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $name ) . '" id="' . esc_attr( $key . UM()->form()->form_suffix ) . '" value="' . $this->field_value( $key, $default, $data ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />';
-							
+
 
 							$output .= '</div>';
 
@@ -2591,7 +2597,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= ob_get_clean();
 						$output .= '<br /><span class="description">' . $placeholder . '</span>';
 					} else {
-						$output .= '<textarea  ' . $disabled . '  style="height: ' . esc_attr( $height ) . ';" class="' . $this->get_class( $key, $data ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_id ) . '" placeholder="' . esc_attr( $placeholder ) . '">' . esc_textarea( strip_tags( $field_value ) ) . '</textarea>';
+						$textarea_field_value = ! empty( $data['html'] ) ? $field_value : strip_tags( $field_value );
+						$output .= '<textarea  ' . $disabled . '  style="height: ' . esc_attr( $height ) . ';" class="' . $this->get_class( $key, $data ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_id ) . '" placeholder="' . esc_attr( $placeholder ) . '">' . esc_textarea( $textarea_field_value ) . '</textarea>';
 					}
 
 					$output .= '</div>';
@@ -2621,7 +2628,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '<div class="um-rating um-raty" id="' . esc_attr( $key ) . '" data-key="' . esc_attr( $key ) . '" data-number="' . esc_attr( $data['number'] ) . '" data-score="' . $this->field_value( $key, $default, $data ) . '"></div>';
 					$output .= '</div>';
-					
+
 					if ( $this->is_error( $key ) ) {
 						$output .= $this->field_error( $this->show_error( $key ) );
 					} elseif ( $this->is_notice( $key ) ) {
@@ -3878,6 +3885,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			UM()->form()->form_suffix = '-' . $this->global_args['form_id'];
 
 			$this->set_mode = $mode;
+
+			if ( 'profile' === $mode ) {
+				UM()->form()->nonce = wp_create_nonce( 'um-profile-nonce' . UM()->user()->target_id );
+			}
+
 			$this->set_id = $this->global_args['form_id'];
 
 			$this->field_icons = ( isset( $this->global_args['icons'] ) ) ? $this->global_args['icons'] : 'label';
@@ -4121,6 +4133,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						if ( ! empty( $res ) ) {
 							$res = stripslashes( $res );
+						}
+						if ( 'description' === $data['metakey'] ) {
+							$res = nl2br( $res );
 						}
 
 						$data['is_view_field'] = true;
