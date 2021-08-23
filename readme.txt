@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 5.8
-Stable tag: 2.2.2
+Stable tag: 2.2.3
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -155,7 +155,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
-= 2.2.3: August 11, 2021 =
+= 2.2.3: August 25, 2021 =
 
 * Enhancements:
 
@@ -169,6 +169,13 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed: Displaying 404 error for the restricted Media
   - Fixed: Displaying 'Login as this user' action on the user profile
   - Fixed: Sanitizing of the social links fields (e.g. Twitter, Facebook, etc.)
+  - Fixed: Visibility of a restricted taxonomy page in the nav menu
+  - Fixed: Sanitizing key for the drag&drop action
+  - Fixed: Sanitizing the description field with allowed HTML inside
+  - Fixed: The "Assignment to constant variable" JS error on some sites
+  - Fixed: Keep description formatting in a view mode
+  - Fixed: Profile form nonce handling, security enhancement
+  - Optimized: Restriction content handlers, avoid queries duplicates or unnecessary queries
 
 = 2.2.2: August 3, 2021 =
 
