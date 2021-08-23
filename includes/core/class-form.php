@@ -312,7 +312,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 		/**
 		 * Return the errors as a WordPress Error object
-		 * @return WP_Error
+		 *
+		 * @return \WP_Error
 		 */
 		function get_wp_error() {
 			$wp_error = new \WP_Error();
