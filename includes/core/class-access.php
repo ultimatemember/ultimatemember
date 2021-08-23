@@ -166,9 +166,11 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				}
 			} else {
 				$restricted_posts = UM()->options()->get( 'restricted_access_post_metabox' );
-				$restricted_posts = array_keys( $restricted_posts );
-				if ( ! empty( $post_types ) ) {
-					$restricted_posts = array_intersect( $post_types, $restricted_posts );
+				if ( ! empty( $restricted_posts ) ) {
+					$restricted_posts = array_keys( $restricted_posts );
+					if ( ! empty( $post_types ) ) {
+						$restricted_posts = array_intersect( $post_types, $restricted_posts );
+					}
 				}
 
 				if ( ! empty( $restricted_posts ) ) {
@@ -812,6 +814,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			global $wp_taxonomies;
 
 			$restricted_posts = UM()->options()->get( 'restricted_access_post_metabox' );
+			if ( empty( $restricted_posts ) ) {
+				$restricted_posts = array();
+			}
 			$restricted_posts = array_keys( $restricted_posts );
 
 			$restricted_taxonomies = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
