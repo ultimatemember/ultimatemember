@@ -105,6 +105,30 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			add_action( 'template_redirect', array( &$this, 'template_redirect' ), 1000 );
 			add_action( 'um_access_check_individual_term_settings', array( &$this, 'um_access_check_individual_term_settings' ) );
 			add_action( 'um_access_check_global_settings', array( &$this, 'um_access_check_global_settings' ) );
+
+
+			add_action( 'plugins_loaded', array( &$this, 'disable_restriction_pre_queries' ), 1 );
+		}
+
+
+		/**
+		 * Rollback function for old business logic to avoid security enhancements with 404 errors
+		 */
+		function disable_restriction_pre_queries() {
+			if ( ! UM()->options()->get( 'disable_restriction_pre_queries' ) ) {
+				return;
+			}
+
+			remove_action( 'pre_get_terms', array( &$this, 'exclude_hidden_terms_query' ), 99 );
+			remove_filter( 'widget_posts_args', array( &$this, 'exclude_restricted_posts_widget' ), 99 );
+			remove_filter( 'wp_list_pages_excludes', array( &$this, 'exclude_restricted_pages' ), 10 );
+			remove_filter( 'getarchives_where', array( &$this, 'exclude_restricted_posts_archives_widget' ), 99 );
+			remove_filter( 'get_next_post_where', array( &$this, 'exclude_navigation_posts' ), 99 );
+			remove_filter( 'get_previous_post_where', array( &$this, 'exclude_navigation_posts' ), 99 );
+			remove_action( 'pre_get_posts', array( &$this, 'exclude_posts' ), 99 );
+			remove_filter( 'posts_where', array( &$this, 'exclude_posts_where' ), 10 );
+			remove_filter( 'wp_count_posts', array( &$this, 'custom_count_posts_handler' ), 99 );
+			remove_filter( 'the_title', array( &$this, 'filter_restricted_post_title' ), 10 );
 		}
 
 
@@ -628,6 +652,10 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 * @return string
 		 */
 		function filter_restricted_post_title( $title, $id = null ) {
+			if ( ! UM()->options()->get( 'restricted_post_title_replace' ) ) {
+				return $title;
+			}
+
 			if ( current_user_can( 'administrator' ) ) {
 				return $title;
 			}
