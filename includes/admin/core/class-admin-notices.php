@@ -32,6 +32,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			add_action( 'admin_notices', array( &$this, 'render_notices' ), 1 );
 
 			add_action( 'wp_ajax_um_dismiss_notice', array( &$this, 'dismiss_notice' ) );
+			add_action( 'admin_init', array( &$this, 'force_dismiss_notice' ) );
 		}
 
 
@@ -44,12 +45,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$this->exif_extension_notice();
 			$this->show_update_messages();
 			$this->check_wrong_install_folder();
-			//$this->admin_notice_opt_in();
 			$this->need_upgrade();
 			$this->check_wrong_licenses();
 
 			// removed for now to avoid the bad reviews
-			//$this->reviews_notice();
+			$this->reviews_notice();
 
 			//$this->future_changed();
 
@@ -483,44 +483,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		}
 
 
-		/**
-		 * Show admin notices
-		 */
-		public function admin_notice_opt_in() {
-
-			if ( ! current_user_can( 'manage_options' ) ) {
-				return;
-			}
-
-			//backward compatibility
-			$hide_notice = get_option( 'um_tracking_notice' );
-
-			if ( $hide_notice ) {
-				return;
-			}
-
-			ob_start(); ?>
-
-			<p>
-				<?php printf( __( 'Thanks for installing <strong>%s</strong>! We hope you like the plugin. To fund full-time development and support of the plugin we also sell extensions. If you subscribe to our mailing list we will send you a 20%% discount code for one of our <a href="%s" target="_blank">access passes</a>.', 'ultimate-member' ), ultimatemember_plugin_name, 'https://ultimatemember.com/pricing/' ); ?>
-			</p>
-
-			<p>
-				<a href="http://ultimatemember.com/discount/" target="_blank" id="um_opt_in_start" class="button button-primary"><?php _e( 'Claim 20% discount code', 'ultimate-member' ) ?></a>
-				&nbsp;
-				<a href="javascript:void(0);" class="button-secondary um_opt_in_link"><?php _e( 'No thanks', 'ultimate-member' ) ?></a>
-			</p>
-
-			<?php $message = ob_get_clean();
-
-			$this->add_notice( 'opt_in_notice', array(
-				'class'     => 'updated',
-				'message'   => $message,
-				'dismissible' => true
-			), 2 );
-		}
-
-
 		function check_wrong_licenses() {
 			$invalid_license = 0;
 			$arr_inactive_license_keys = array();
@@ -691,11 +653,33 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			}
 
 			$hidden_notices = get_option( 'um_hidden_admin_notices', array() );
+			if ( ! is_array( $hidden_notices ) ) {
+				$hidden_notices = array();
+			}
+
 			$hidden_notices[] = sanitize_key( $_POST['key'] );
 
 			update_option( 'um_hidden_admin_notices', $hidden_notices );
 
 			wp_send_json_success();
+		}
+
+
+		function force_dismiss_notice() {
+			if ( ! empty( $_REQUEST['um_dismiss_notice'] ) && ! empty( $_REQUEST['um_admin_nonce'] ) ) {
+				if ( wp_verify_nonce( $_REQUEST['um_admin_nonce'], 'um-admin-nonce' ) ) {
+					$hidden_notices = get_option( 'um_hidden_admin_notices', array() );
+					if ( ! is_array( $hidden_notices ) ) {
+						$hidden_notices = array();
+					}
+
+					$hidden_notices[] = sanitize_key( $_REQUEST['um_dismiss_notice'] );
+
+					update_option( 'um_hidden_admin_notices', $hidden_notices );
+				} else {
+					wp_die( __( 'Security Check', 'ultimate-member' ) );
+				}
+			}
 		}
 	}
 }
