@@ -1100,7 +1100,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							continue;
 						} else {
 							$restriction_settings = $this->get_post_privacy_settings( $menu_item->object_id );
-							if ( empty( $restriction_settings['_um_access_hide_from_queries'] ) ) {
+							if ( UM()->options()->get( 'disable_restriction_pre_queries' ) || empty( $restriction_settings['_um_access_hide_from_queries'] ) ) {
 								$filtered_items[] = $menu_item;
 								continue;
 							}
@@ -1241,7 +1241,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			if ( is_object( $query ) && is_a( $query, '\WP_Query' ) &&
 			     ( $query->is_main_query() || ! empty( $query->query_vars['um_main_query'] ) ) ) {
 				if ( $is_singular ) {
-					if ( $this->is_restricted( $posts[0]->ID ) ) {
+					if ( ! UM()->options()->get( 'disable_restriction_pre_queries' ) && $this->is_restricted( $posts[0]->ID ) ) {
 						$content_restriction = $this->get_post_privacy_settings( $posts[0]->ID );
 						if ( ! empty( $content_restriction['_um_access_hide_from_queries'] ) ) {
 							unset( $posts[0] );
@@ -1276,7 +1276,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				} else {
 					if ( $is_singular ) {
 						if ( ! isset( $restriction['_um_noaccess_action'] ) || '0' == $restriction['_um_noaccess_action'] ) {
-							if ( empty( $restriction['_um_access_hide_from_queries'] ) ) {
+							if ( UM()->options()->get( 'disable_restriction_pre_queries' ) || empty( $restriction['_um_access_hide_from_queries'] ) ) {
 								/**
 								 * UM hook
 								 *
@@ -1318,7 +1318,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							}
 						}
 					} else {
-						if ( empty( $restriction['_um_access_hide_from_queries'] ) ) {
+						if ( UM()->options()->get( 'disable_restriction_pre_queries' ) || empty( $restriction['_um_access_hide_from_queries'] ) ) {
 							$filtered_posts[] = $post;
 							continue;
 						}
