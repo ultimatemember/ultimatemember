@@ -358,7 +358,19 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				$restricted_taxonomies = array_values( $restricted_taxonomies );
 
 				if ( ! empty( $restricted_taxonomies ) ) {
-					$restricted_taxonomies = array_intersect( $query->query_vars['taxonomy'], $restricted_taxonomies );
+					if ( isset( $query->query_vars['taxonomy'] ) && is_array( $query->query_vars['taxonomy'] ) ) {
+						$restricted_taxonomies = array_intersect( $query->query_vars['taxonomy'], $restricted_taxonomies );
+					} elseif ( ! empty( $query->query_vars['term_taxonomy_id'] ) ) {
+						$term_taxonomy_ids = is_array( $query->query_vars['term_taxonomy_id'] ) ? $query->query_vars['term_taxonomy_id'] : array( $query->query_vars['term_taxonomy_id'] );
+
+						global $wpdb;
+						$tax_in_query = $wpdb->get_col( "SELECT DISTINCT taxonomy FROM {$wpdb->term_taxonomy} WHERE term_taxonomy_id IN('" . implode( "','", $term_taxonomy_ids ) . "')" );
+						if ( ! empty( $tax_in_query ) ) {
+							$restricted_taxonomies = array_intersect( $tax_in_query, $restricted_taxonomies );
+						} else {
+							$restricted_taxonomies = array();
+						}
+					}
 				}
 			}
 
