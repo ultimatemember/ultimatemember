@@ -1669,13 +1669,15 @@ function um_is_myprofile() {
 /**
  * Returns the edit profile link
  *
+ * @param int $user_id
+ *
  * @return string
  */
-function um_edit_profile_url() {
+function um_edit_profile_url( $user_id = null ) {
 	if ( um_is_core_page( 'user' ) ) {
 		$url = UM()->permalinks()->get_current_url();
 	} else {
-		$url = um_user_profile_url();
+		$url = isset( $user_id ) ? um_user_profile_url( $user_id ) : um_user_profile_url();
 	}
 
 	$url = remove_query_arg( 'profiletab', $url );

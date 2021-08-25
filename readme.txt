@@ -166,6 +166,8 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * Enhancements:
 
   - Added: 'um_ignore_restricted_title' hook for workaround show post title of the restricted post
+  - Added: Disable pre-queries for restriction content logic ('disable_restriction_pre_queries') option for backward compatibility with business logic where 404 error for restricted content isn't a good way
+  - Added: Replace the restricted Post Title ('restricted_post_title_replace') option for ability to disable restricted post's title replace
 
 * Bugfixes:
 
@@ -181,6 +183,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed: The "Assignment to constant variable" JS error on some sites
   - Fixed: Keep description formatting in a view mode
   - Fixed: Profile form nonce handling, security enhancement
+  - Fixed: `um_edit_profile_url()`` function and added $user_id attribute
   - Optimized: Restriction content handlers, avoid queries duplicates or unnecessary queries
 
 = 2.2.2: August 3, 2021 =
