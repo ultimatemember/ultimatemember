@@ -416,8 +416,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				array(
 					'id'          => '_um_access_hide_from_queries',
 					'type'        => 'checkbox',
-					'label'       => __( 'Would you like to display 404 error on the term\'s archive page and terms\' posts single pages when users haven\'t access?', 'ultimate-member' ),
-					'description' => __( 'Recommended to be enabled. Restricted term\'s archive page and all terms\' posts will be hidden by exclusion from WP Query. The safest and most effective method that hides post and its comments from all requests, RSS feeds, etc. on your site', 'ultimate-member' ),
+					'label'       => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Hide from queries', 'ultimate-member' ) : __( 'Would you like to display 404 error on the term\'s archive page and terms\' posts single pages when users haven\'t access?', 'ultimate-member' ),
+					'description' => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Exclude only from WP queries results', 'ultimate-member' ) : __( 'Recommended to be enabled. Restricted term\'s archive page and all terms\' posts will be hidden by exclusion from WP Query. The safest and most effective method that hides post and its comments from all requests, RSS feeds, etc. on your site', 'ultimate-member' ),
 					'value'       => 1,
 					'conditional' => array( '_um_accessible', '!=', '0' ),
 				),
@@ -431,7 +431,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 						'0' => __( 'Show access restricted message', 'ultimate-member' ),
 						'1' => __( 'Redirect user', 'ultimate-member' ),
 					),
-					'conditional' => array( '_um_access_hide_from_queries', '=', '0' ),
+					'conditional' => UM()->options()->get( 'disable_restriction_pre_queries' ) ? '' : array( '_um_access_hide_from_queries', '=', '0' ),
 				),
 				array(
 					'id'          => '_um_restrict_by_custom_message',
@@ -568,8 +568,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				array(
 					'id'          => '_um_access_hide_from_queries',
 					'type'        => 'checkbox',
-					'label'       => __( 'Would you like to display 404 error on the term\'s archive page and terms\' posts single pages when users haven\'t access?', 'ultimate-member' ),
-					'description' => __( 'Recommended to be enabled. Restricted term\'s archive page and all terms\' posts will be hidden by exclusion from WP Query. The safest and most effective method that hides post and its comments from all requests, RSS feeds, etc. on your site', 'ultimate-member' ),
+					'label'       => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Hide from queries', 'ultimate-member' ) : __( 'Would you like to display 404 error on the term\'s archive page and terms\' posts single pages when users haven\'t access?', 'ultimate-member' ),
+					'description' => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Exclude only from WP queries results', 'ultimate-member' ) : __( 'Recommended to be enabled. Restricted term\'s archive page and all terms\' posts will be hidden by exclusion from WP Query. The safest and most effective method that hides post and its comments from all requests, RSS feeds, etc. on your site', 'ultimate-member' ),
 					'value'       => ! empty( $data['_um_access_hide_from_queries'] ) ? $data['_um_access_hide_from_queries'] : '',
 					'conditional' => array( '_um_accessible', '!=', '0' ),
 				),
@@ -583,7 +583,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 						'0' => __( 'Show access restricted message', 'ultimate-member' ),
 						'1' => __( 'Redirect user', 'ultimate-member' ),
 					),
-					'conditional' => array( '_um_access_hide_from_queries', '=', '0' ),
+					'conditional' => UM()->options()->get( 'disable_restriction_pre_queries' ) ? '' : array( '_um_access_hide_from_queries', '=', '0' ),
 				),
 				array(
 					'id'          => '_um_restrict_by_custom_message',

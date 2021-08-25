@@ -629,7 +629,7 @@ function um_editing_user_id_input( $args ) {
 	if ( UM()->fields()->editing == 1 && UM()->fields()->set_mode == 'profile' && UM()->user()->target_id ) { ?>
 
 		<input type="hidden" name="user_id" id="user_id" value="<?php echo esc_attr( UM()->user()->target_id ); ?>" />
-		<input type="hidden" name="profile_nonce" id="profile_nonce" value="<?php echo esc_attr( wp_create_nonce( 'um-profile-nonce' . UM()->user()->target_id ) ); ?>" />
+		<input type="hidden" name="profile_nonce" id="profile_nonce" value="<?php echo esc_attr( UM()->form()->nonce ); ?>" />
 
 	<?php }
 }

@@ -143,6 +143,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 		function init_default_settings() {
 			$this->default_settings = array(
 				'restricted_access_post_metabox'        => array( 'post' => 1, 'page' => 1 ),
+				'disable_restriction_pre_queries'       => 0,
 				'uninstall_on_delete'                   => 0,
 				'permalink_base'                        => 'user_login',
 				'display_name'                          => 'full_name',
@@ -174,6 +175,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'access_exclude_uris'                   => array(),
 				'home_page_accessible'                  => 1,
 				'category_page_accessible'              => 1,
+				'restricted_post_title_replace'         => 1,
 				'restricted_access_post_title'          => __( 'Restricted content', 'ultimate-member' ),
 				'restricted_access_message'             => '',
 				'restricted_blocks'                     => 0,

@@ -3,7 +3,7 @@
 <div class="um-item">
 	<div class="um-item-link">
 		<i class="um-icon-ios-paper"></i>
-		<a href="<?php echo esc_url( get_permalink( $post ) ); ?>"><?php echo esc_html( $post->post_title ); ?></a>
+		<a href="<?php echo esc_url( get_permalink( $post ) ); ?>"><?php echo get_the_title( $post ); ?></a>
 	</div>
 
 	<?php if ( has_post_thumbnail( $post->ID ) ) {

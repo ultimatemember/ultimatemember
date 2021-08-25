@@ -20,6 +20,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		function __construct() {
 			add_action( 'um_access_fix_external_post_content', array( &$this, 'bbpress_no_access_message_fix' ), 10 );
 			add_action( 'um_access_fix_external_post_content', array( &$this, 'forumwp_fix' ), 11 );
+			add_action( 'um_access_fix_external_post_content', array( &$this, 'woocommerce_fix' ), 12 );
 
 			// Integration for the "Transposh Translation Filter" plugin
 			add_action( 'template_redirect', array( &$this, 'transposh_user_profile' ), 9990 );
@@ -136,6 +137,30 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 			if ( function_exists( 'FMWP' ) ) {
 				remove_filter( 'single_template', array( FMWP()->frontend()->shortcodes(), 'cpt_template' ) );
 			}
+		}
+
+
+		/**
+		 * Fixed Woocommerce access to Products message
+		 */
+		function woocommerce_fix() {
+			if ( UM()->dependencies()->woocommerce_active_check() ) {
+				add_filter( 'single_template', array( &$this, 'woocommerce_template' ), 9999999, 1 );
+			}
+		}
+
+
+		/**
+		 * @param string $single_template
+		 *
+		 * @return string
+		 */
+		function woocommerce_template( $single_template ) {
+			if ( is_product() ) {
+				remove_filter( 'template_include', array( 'WC_Template_Loader', 'template_loader' ) );
+			}
+
+			return $single_template;
 		}
 
 

@@ -32,6 +32,9 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		var $post_form = null;
 
 
+		var $nonce = null;
+
+
 		/**
 		 * Form constructor.
 		 */
@@ -308,6 +311,21 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 
 		/**
+		 * Return the errors as a WordPress Error object
+		 * @return WP_Error
+		 */
+		function get_wp_error() {
+			$wp_error = new \WP_Error();
+			if ( $this->count_errors() > 0 ) {
+				foreach ( $this->errors as $key => $value ) {
+					$wp_error->add( $key, $value );
+				}
+			}
+			return $wp_error;
+		}
+
+
+		/**
 		 * Declare all fields
 		 */
 		public function field_declare() {
@@ -331,13 +349,17 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 			if ( $http_post && ! is_admin() && isset( $_POST['form_id'] ) && is_numeric( $_POST['form_id'] ) ) {
 
-				$this->form_id     = absint( $_POST['form_id'] );
-				$this->form_status = get_post_status( $this->form_id );
-				$this->form_data = UM()->query()->post_data( $this->form_id );
+				$this->form_id = absint( $_POST['form_id'] );
+				if ( 'um_form' !== get_post_type( $this->form_id ) ) {
+					return;
+				}
 
+				$this->form_status = get_post_status( $this->form_id );
 				if ( 'publish' !== $this->form_status ) {
 					return;
 				}
+
+				$this->form_data   = UM()->query()->post_data( $this->form_id );
 
 				/**
 				 * UM hook
@@ -579,7 +601,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 											$form[ $k ] = (int) $form[ $k ];
 											break;
 										case 'textarea':
-											if ( ! empty( $field['html'] ) ) {
+											if ( ! empty( $field['html'] ) || ( UM()->profile()->get_show_bio_key( $form ) === $k && UM()->options()->get( 'profile_show_html_bio' ) ) ) {
 												$form[ $k ] = wp_kses_post( $form[ $k ] );
 											} else {
 												$form[ $k ] = sanitize_textarea_field( $form[ $k ] );
