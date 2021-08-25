@@ -49,3 +49,21 @@ function um_force_admin_bar() {
 	um_reset_user();
 }
 add_action( 'wp_footer', 'um_force_admin_bar' );
+
+/**
+ * Add fallback to dismiss feedback/reviews
+ */
+function um_dismiss_review_fallback() {
+
+	if ( ! empty( $_REQUEST['um_dismiss_notice'] ) && ! empty( $_REQUEST['um_admin_nonce'] ) ) {
+		if( wp_verify_nonce( $_REQUEST['um_admin_nonce'], 'um-admin-nonce' ) ) {
+			$hidden_notices   = get_option( 'um_hidden_admin_notices', array() );
+			$hidden_notices[] = sanitize_key( $_REQUEST['um_dismiss_notice'] );
+
+			update_option( 'um_hidden_admin_notices', $hidden_notices );
+		} else {
+			wp_die( 'Security check' );
+		}
+	}
+}
+add_action( 'admin_init', 'um_dismiss_review_fallback' );
