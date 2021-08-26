@@ -159,6 +159,9 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * Bugfixes:
 
+  - Fixed: Hiding comments feed for pages with active comments
+  - Fixed: Changing the post title to the restricted value while displaying in the loop that uses direct `post_title` variable
+  - Fixed: PHP errors related to not passed function attributes from 3rd-party plugins or themes when using WP native hooks
   - Fixed: Handling the login form errors via \WP_Error
 
 = 2.2.3: August 25, 2021 =
