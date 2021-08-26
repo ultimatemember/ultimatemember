@@ -3473,6 +3473,8 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 
 			$template_locations = array_map( 'wp_normalize_path', $template_locations );
 
+			$template_locations = apply_filters( 'um_save_email_templates_locations', $template_locations, $template_name, $module, $template_path );
+
 			$custom_path = apply_filters( 'um_template_structure_custom_path', false, $template_name, $module );
 			if ( false === $custom_path || ! is_dir( $custom_path ) ) {
 				$template_exists = locate_template( $template_locations );

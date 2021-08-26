@@ -231,3 +231,30 @@ function um_change_email_subject_polylang( $subject, $template ) {
 	return $subject;
 }
 add_filter( 'um_email_send_subject', 'um_change_email_subject_polylang', 10, 2 );
+
+
+/**
+ * @param array $template_locations
+ * @param $template_name
+ * @param $module
+ * @param $template_path
+ *
+ * @return array
+ */
+function um_change_email_templates_locations_polylang( $template_locations, $template_name, $module, $template_path ) {
+	$code = pll_current_language();
+	$code_default = pll_default_language();
+
+	if ( $code === $code_default ) {
+		return $template_locations;
+	}
+
+	foreach ( $template_locations as $k => $location ) {
+		if ( false === strstr( $location, $code ) ) {
+			unset( $template_locations[ $k ] );
+		}
+	}
+
+	return $template_locations;
+}
+add_filter( 'um_save_email_templates_locations', 'um_change_email_templates_locations_polylang', 10, 4 );
