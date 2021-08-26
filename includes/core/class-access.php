@@ -726,7 +726,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 *
 		 * @return string
 		 */
-		function filter_restricted_post_excerpt( $post_excerpt, $post ) {
+		function filter_restricted_post_excerpt( $post_excerpt, $post = null ) {
 			if ( empty( $post ) ) {
 				return $post_excerpt;
 			}
