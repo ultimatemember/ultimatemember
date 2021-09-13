@@ -18,8 +18,8 @@ if ( isset( $_GET['action'] ) ) {
 		case 'delete': {
 			$role_keys = array();
 			if ( isset( $_REQUEST['id'] ) ) {
-				check_admin_referer( 'um_role_delete' . sanitize_key( $_REQUEST['id'] ) . get_current_user_id() );
-				$role_keys = (array) sanitize_key( $_REQUEST['id'] );
+				check_admin_referer( 'um_role_delete' . sanitize_title( $_REQUEST['id'] ) . get_current_user_id() );
+				$role_keys = (array) sanitize_title( $_REQUEST['id'] );
 			} elseif ( isset( $_REQUEST['item'] ) ) {
 				check_admin_referer( 'bulk-' . sanitize_key( __( 'Roles', 'ultimate-member' ) ) );
 				$role_keys = array_map( 'sanitize_key', $_REQUEST['item'] );
@@ -343,21 +343,21 @@ class UM_Roles_List_Table extends WP_List_Table {
 	function column_title( $item ) {
 		$actions = array();
 
-		$actions['edit'] = '<a href="admin.php?page=um_roles&tab=edit&id=' . esc_attr( $item['key'] ) . '">' . __( 'Edit', 'ultimate-member' ) . '</a>';
+		$actions['edit'] = '<a href="admin.php?page=um_roles&tab=edit&id=' . urlencode( $item['key'] ) . '">' . __( 'Edit', 'ultimate-member' ) . '</a>';
 
 		if ( ! empty( $item['_um_is_custom'] ) ) {
-			$actions['delete'] = '<a href="admin.php?page=um_roles&action=delete&id=' . esc_attr( $item['key'] ) . '&_wpnonce=' . wp_create_nonce( 'um_role_delete' . $item['key'] . get_current_user_id() ) . '" onclick="return confirm( \'' . __( 'Are you sure you want to delete this role?', 'ultimate-member' ) . '\' );">' . __( 'Delete', 'ultimate-member' ) . '</a>';
+			$actions['delete'] = '<a href="admin.php?page=um_roles&action=delete&id=' . urlencode( $item['key'] ) . '&_wpnonce=' . wp_create_nonce( 'um_role_delete' . $item['key'] . get_current_user_id() ) . '" onclick="return confirm( \'' . __( 'Are you sure you want to delete this role?', 'ultimate-member' ) . '\' );">' . __( 'Delete', 'ultimate-member' ) . '</a>';
 		} else {
 			$role_meta = get_option( "um_role_{$item['key']}_meta" );
 
 			if ( ! empty( $role_meta ) ) {
-				$actions['reset'] = '<a href="admin.php?page=um_roles&action=reset&id=' . esc_attr( $item['key'] ) . '&_wpnonce=' . wp_create_nonce( 'um_role_reset' . $item['key'] . get_current_user_id() ) . '" onclick="return confirm( \'' . __( 'Are you sure you want to reset UM role meta?', 'ultimate-member' ) . '\' );">' . __( 'Reset UM Role meta', 'ultimate-member' ) . '</a>';
+				$actions['reset'] = '<a href="admin.php?page=um_roles&action=reset&id=' . urlencode( $item['key'] ) . '&_wpnonce=' . wp_create_nonce( 'um_role_reset' . $item['key'] . get_current_user_id() ) . '" onclick="return confirm( \'' . __( 'Are you sure you want to reset UM role meta?', 'ultimate-member' ) . '\' );">' . __( 'Reset UM Role meta', 'ultimate-member' ) . '</a>';
 			}
 		}
 
 
 
-		return sprintf('%1$s %2$s', '<strong><a class="row-title" href="admin.php?page=um_roles&tab=edit&id=' . esc_attr( $item['key'] ) . '">' . stripslashes( $item['name'] ) . '</a></strong>', $this->row_actions( $actions ) );
+		return sprintf('%1$s %2$s', '<strong><a class="row-title" href="admin.php?page=um_roles&tab=edit&id=' . urlencode( $item['key'] ) . '">' . stripslashes( $item['name'] ) . '</a></strong>', $this->row_actions( $actions ) );
 	}
 
 
