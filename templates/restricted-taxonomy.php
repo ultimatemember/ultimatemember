@@ -43,8 +43,8 @@ get_header(); ?>
 				$message = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
 			}
 
-			// translators: %s: Restricted taxonomy message.
-			printf( __( '%s', 'ultimate-member' ), $message ); ?>
+			// translators: Restricted taxonomy message.
+			echo translate( $message, 'ultimate-member' ); ?>
 
 		</main><!-- #main -->
 	</div><!-- #primary -->

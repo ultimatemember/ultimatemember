@@ -90,6 +90,17 @@ class UM_Emails_List_Table extends WP_List_Table {
 
 
 	/**
+	 * Gets a list of CSS classes for the WP_List_Table table tag.
+	 * @return array  Array of CSS classes for the table tag.
+	 */
+	protected function get_table_classes() {
+		$mode = get_user_setting( 'posts_list_mode', 'list' );
+		$mode_class = esc_attr( 'table-view-' . $mode );
+		return array( 'widefat', 'striped', $mode_class, $this->_args['plural'] );
+	}
+
+
+	/**
 	 *
 	 */
 	function prepare_items() {
@@ -263,7 +274,7 @@ class UM_Emails_List_Table extends WP_List_Table {
 	 * @return string
 	 */
 	function column_icl_translations( $item ) {
-		return UM()->external_integrations()->wpml_column_content( $item );
+		return UM()->external_integrations()->translations()->emails_column_content( $item );
 	}
 
 

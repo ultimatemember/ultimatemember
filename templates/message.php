@@ -4,8 +4,8 @@
 
 	<div class="um-postmessage">
 		<?php
-		// translators: %s: The message after registration process based on a role data and user status after registration
-		printf( __( '%s', 'ultimate-member' ), $this->custom_message ); ?>
+		// translators: The message after registration process based on a role data and user status after registration
+		echo translate( $this->custom_message, 'ultimate-member' ); ?>
 	</div>
 
 </div>
