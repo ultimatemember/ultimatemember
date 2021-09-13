@@ -90,7 +90,7 @@ if ( ! empty( $_POST['role'] ) ) {
 				$error .= __( 'Title is empty!', 'ultimate-member' ) . '<br />';
 			}
 
-			if ( preg_match( "/[a-z0-9]+$/i", $data['name'] ) ) {
+			if ( preg_match( "/^[\p{Latin}\d\-_ ]+$/i", $data['name'] ) ) {
 				$id = sanitize_title( $data['name'] );
 			} else {
 				$auto_increment = UM()->options()->get( 'custom_roles_increment' );
