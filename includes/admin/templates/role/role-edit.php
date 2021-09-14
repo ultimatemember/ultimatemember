@@ -91,6 +91,8 @@ if ( ! empty( $_POST['role'] ) ) {
 			}
 
 			if ( preg_match( "/^[\p{Latin}\d\-_ ]+$/i", $data['name'] ) ) {
+				// uses sanitize_title instead of sanitize_key for backward compatibility based on #906 pull-request (https://github.com/ultimatemember/ultimatemember/pull/906)
+				// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
 				$id = sanitize_title( $data['name'] );
 			} else {
 				$auto_increment = UM()->options()->get( 'custom_roles_increment' );

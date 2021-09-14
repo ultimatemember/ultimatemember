@@ -1379,7 +1379,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							}
 						}
 					} else {
-						if ( UM()->options()->get( 'disable_restriction_pre_queries' ) || empty( $restriction['_um_access_hide_from_queries'] ) ) {
+						if ( empty( $restriction['_um_access_hide_from_queries'] ) || ! UM()->options()->get( 'disable_restriction_pre_queries' ) ) {
 							$filtered_posts[] = $this->maybe_replace_title( $post );
 							continue;
 						}
