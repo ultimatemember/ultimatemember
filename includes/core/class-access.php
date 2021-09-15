@@ -1131,7 +1131,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							continue;
 						} else {
 							$restriction_settings = $this->get_post_privacy_settings( $menu_item->object_id );
-							if ( UM()->options()->get( 'disable_restriction_pre_queries' ) || empty( $restriction_settings['_um_access_hide_from_queries'] ) ) {
+							if ( empty( $restriction_settings['_um_access_hide_from_queries'] ) || ! UM()->options()->get( 'disable_restriction_pre_queries' ) ) {
 								$filtered_items[] = $menu_item;
 								continue;
 							}
