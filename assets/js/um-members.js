@@ -134,6 +134,7 @@ function um_set_range_label( slider, ui ) {
 	var placeholder = '';
 	var placeholder_s = slider.siblings( '.um-slider-range' ).data( 'placeholder-s' );
 	var placeholder_p = slider.siblings( '.um-slider-range' ).data( 'placeholder-p' );
+	var um_range_min, um_range_max;
 
 	if ( ui ) {
 		if ( ui.values[ 0 ] === ui.values[ 1 ] ) {
@@ -146,6 +147,8 @@ function um_set_range_label( slider, ui ) {
 			.replace( '\{field_label\}', slider.siblings( '.um-slider-range' )
 			.data('label') );
 		}
+		um_range_min = ui.values[0];
+		um_range_max = ui.values[1];
 	} else {
 		if ( slider.slider( "values", 0 ) === slider.slider( "values", 1 ) ) {
 			placeholder = placeholder_s.replace( '\{value\}', slider.slider( "values", 0 ) )
@@ -157,11 +160,13 @@ function um_set_range_label( slider, ui ) {
 			.replace( '\{field_label\}', slider.siblings( '.um-slider-range' )
 			.data('label') );
 		}
+		um_range_min = slider.slider( "values", 0 );
+		um_range_max = slider.slider( "values", 1 );
 	}
 	slider.siblings( '.um-slider-range' ).html( placeholder );
 
-	slider.siblings( ".um_range_min" ).val( slider.slider( "values", 0 ) );
-	slider.siblings( ".um_range_max" ).val( slider.slider( "values", 1 ) );
+	slider.siblings( ".um_range_min" ).val( um_range_min );
+	slider.siblings( ".um_range_max" ).val( um_range_max );
 }
 
 
