@@ -1132,7 +1132,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 						} else {
 							$restriction_settings = $this->get_post_privacy_settings( $menu_item->object_id );
 							if ( empty( $restriction_settings['_um_access_hide_from_queries'] ) || ! UM()->options()->get( 'disable_restriction_pre_queries' ) ) {
-								$filtered_items[] = $menu_item;
+								$filtered_items[] = $this->maybe_replace_nav_menu_title( $menu_item );
 								continue;
 							}
 						}
@@ -1267,6 +1267,36 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			$post->post_title = stripslashes( $restricted_global_title );
 
 			return $post;
+		}
+
+
+		/**
+		 * @param \WP_Post $nav_item
+		 *
+		 * @return \WP_Post
+		 */
+		function maybe_replace_nav_menu_title( $nav_item ) {
+			if ( ! UM()->options()->get( 'restricted_post_title_replace' ) ) {
+				return $nav_item;
+			}
+
+			if ( current_user_can( 'administrator' ) ) {
+				return $nav_item;
+			}
+
+			if ( ! is_a( $nav_item, '\WP_Post' ) ) {
+				return $nav_item;
+			}
+
+			$ignore = apply_filters( 'um_ignore_restricted_title', false, $nav_item->ID );
+			if ( $ignore ) {
+				return $nav_item;
+			}
+
+			$restricted_global_title = UM()->options()->get( 'restricted_access_post_title' );
+			$nav_item->title = stripslashes( $restricted_global_title );
+
+			return $nav_item;
 		}
 
 

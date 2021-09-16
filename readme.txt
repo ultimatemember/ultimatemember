@@ -155,9 +155,13 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
-= 2.2.5: September 22, 2021 =
+= 2.2.5: September 21, 2021 =
 
+* Bugfixes:
 
+  - Fixed: Invalid role keys on the role list-table + role edit screen (case when latin symbols used with not UTF-8 symbols)
+  - Fixed: Restriction logic and archive lists (+ nav menu bar) with active "Disable pre-queries for restriction content logic" option
+  - Fixed: Restriction settings fields conditions on wp-admin screens
 
 = 2.2.4: August 27, 2021 =
 
