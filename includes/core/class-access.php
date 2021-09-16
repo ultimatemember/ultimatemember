@@ -127,7 +127,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			remove_action( 'pre_get_posts', array( &$this, 'exclude_posts' ), 99 );
 			remove_filter( 'posts_where', array( &$this, 'exclude_posts_where' ), 10 );
 			remove_filter( 'wp_count_posts', array( &$this, 'custom_count_posts_handler' ), 99 );
-			remove_filter( 'the_title', array( &$this, 'filter_restricted_post_title' ), 10 );
 		}
 
 
