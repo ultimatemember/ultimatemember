@@ -700,7 +700,7 @@ function um_user_submitted_registration_formatted( $style = false ) {
 			$fields = maybe_unserialize( $fields );
 		}
 
-		if ( isset( $fields ) ) {
+		if ( ! empty( $fields ) ) {
 
 			$fields['form_id'] = array( 'title' => __( 'Form', 'ultimate-member' ) );
 
