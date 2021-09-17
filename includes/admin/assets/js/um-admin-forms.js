@@ -483,7 +483,6 @@ jQuery(document).ready( function() {
 	});
 
 	function um_set_range_label( slider, ui ) {
-		console.log( slider );
 		var placeholder = '';
 		var placeholder_s = slider.siblings( '.um-slider-range' ).data( 'placeholder-s' );
 		var placeholder_p = slider.siblings( '.um-slider-range' ).data( 'placeholder-p' );

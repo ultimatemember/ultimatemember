@@ -217,8 +217,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							if ( ! empty( $filter_type ) ) {
 								if ( 'slider' === $filter_type ) {
 									if ( ! empty( $_POST[ $k ] ) ) {
-										if ( count($_POST[ $k ]) > 1 ) {
-											$temp_value[ $k ] = $_POST[ $k ];
+										if ( count( $_POST[ $k ] ) > 1 ) {
+											$temp_value[ $k ] = array_map( 'intval', $_POST[ $k ] );
 										} else {
 											$temp_value[ $k ] = (int) $_POST[ $k ];
 										}
