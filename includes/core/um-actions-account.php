@@ -298,18 +298,12 @@ function um_submit_account_details( $args ) {
 			continue;
 		}
 
-		if ( 'single_user_password' === $k ) {
+		if ( 'single_user_password' === $k || 'user_login' === $k ) {
 			continue;
-		} elseif ( 'user_login' === $k ) {
-			continue;
-		} elseif ( 'first_name' === $k ) {
-			$v = sanitize_text_field( $v );
-		} elseif ( 'last_name' === $k ) {
+		} elseif ( 'first_name' === $k || 'last_name' === $k || 'user_password' === $k ) {
 			$v = sanitize_text_field( $v );
 		} elseif ( 'user_email' === $k ) {
 			$v = sanitize_email( $v );
-		} elseif ( 'user_password' === $k ) {
-			$v = sanitize_text_field( $v );
 		} elseif ( 'hide_in_members' === $k ) {
 			$v = array_map( 'sanitize_text_field', $v );
 		}
