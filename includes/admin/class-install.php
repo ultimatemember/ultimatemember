@@ -286,16 +286,19 @@ KEY meta_value_indx (um_value(191))
 			}
 
 			//Install Core Pages
-			$predefined_pages = array();
 			foreach ( UM()->config()->get( 'predefined_pages' ) as $slug => $data ) {
 
 				$page_exists = UM()->query()->find_post_id( 'page', '_um_core', $slug );
 				if ( $page_exists ) {
-					$predefined_pages[ $slug ] = $page_exists;
 					continue;
 				}
 
-				$content = apply_filters( 'um_setup_predefined_page_content', $data['content'], $slug );
+				if ( empty( $data['title'] ) ) {
+					continue;
+				}
+
+				$content = ! empty( $data['content'] ) ? $data['content'] : '';
+				$content = apply_filters( 'um_setup_predefined_page_content', $content, $slug );
 
 				$user_page = array(
 					'post_title'     => $data['title'],
