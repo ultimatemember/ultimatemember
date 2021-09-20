@@ -502,13 +502,17 @@ add_action( 'um_before_account_notifications', 'um_before_account_notifications'
 
 
 /**
- * Update Profile URL
+ * Update Profile URL, display name, full name.
  *
- * @param $user_id
- * @param $changed
+ * @version 2.2.5
+ *
+ * @param   int   $user_id  The user ID.
+ * @param   array $changes  An array of fields values.
  */
-function um_after_user_account_updated_permalink( $user_id, $changed ) {
-	UM()->user()->generate_profile_slug( $user_id );
+function um_after_user_account_updated_permalink( $user_id, $changes ) {
+	if ( isset( $changes['first_name'] ) && isset( $changes['last_name'] ) ) {
+		do_action( 'um_update_profile_full_name', $user_id, $changes );
+	}
 }
 add_action( 'um_after_user_account_updated', 'um_after_user_account_updated_permalink', 10, 2 );
 
