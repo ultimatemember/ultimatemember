@@ -10,7 +10,7 @@ if ( empty( UM()->builder()->form_id ) ) {
 
 	<?php $fields = UM()->query()->get_attr( 'custom_fields', UM()->builder()->form_id ); ?>
 
-	<input type="hidden" id="form__um_custom_fields" name="form[_um_custom_fields]" value="<?php echo esc_attr( serialize( $fields ) ); ?>">
+<!--	<input type="hidden" id="form__um_custom_fields" name="form[_um_custom_fields]" value="--><?php //echo esc_attr( serialize( $fields ) ); ?><!--">-->
 
 	<div class="um-admin-drag-ctrls-demo um-admin-drag-ctrls">
 
