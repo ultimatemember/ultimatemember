@@ -424,19 +424,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				} elseif ( UM()->form()->has_error( 'um_account_security' ) ) {
 					$url = '';
 					if ( um_is_predefined_page( 'account' ) ) {
-
 						$url = UM()->account()->tab_link( $this->current_tab );
-
 						$url = add_query_arg( 'err', 'account', $url );
-
-						if ( function_exists( 'icl_get_current_language' ) ) {
-							if ( icl_get_current_language() != icl_get_default_language() ) {
-								$url = UM()->permalinks()->get_current_url( true );
-								$url = add_query_arg( 'err', 'account', $url );
-
-								exit( wp_redirect( $url ) );
-							}
-						}
 					}
 
 					exit( wp_redirect( $url ) );

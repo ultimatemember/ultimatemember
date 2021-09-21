@@ -432,19 +432,8 @@ function um_submit_account_details( $args ) {
 
 	$url = '';
 	if ( um_is_predefined_page( 'account' ) ) {
-
 		$url = UM()->account()->tab_link( $tab );
-
 		$url = add_query_arg( 'updated', 'account', $url );
-
-		if ( function_exists( 'icl_get_current_language' ) ) {
-			if ( icl_get_current_language() != icl_get_default_language() ) {
-				$url = UM()->permalinks()->get_current_url( true );
-				$url = add_query_arg( 'updated', 'account', $url );
-
-				um_js_redirect( $url );
-			}
-		}
 	}
 
 	um_js_redirect( $url );

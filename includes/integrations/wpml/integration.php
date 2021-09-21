@@ -282,3 +282,86 @@ function um_change_email_templates_locations_wpml( $template_locations, $templat
 	return $template_locations;
 }
 add_filter( 'um_save_email_templates_locations', 'um_change_email_templates_locations_wpml', 10, 4 );
+
+
+/**
+ * Extends rewrite rules
+ *
+ * @param array $rules
+ *
+ * @return array
+ */
+function um_add_rewrite_rules_wpml( $rules ) {
+	global $sitepress;
+
+	$newrules = array();
+
+	$active_languages = $sitepress->get_active_languages();
+
+	$user_page_id = um_get_predefined_page_id( 'user' );
+	if ( $user_page_id ) {
+
+		$user = get_post( $user_page_id );
+		foreach ( $active_languages as $language_code => $language ) {
+
+			$lang_post_id = wpml_object_id_filter( $user_page_id, 'post', false, $language_code );
+			$lang_post_obj = get_post( $lang_post_id );
+
+			if ( isset( $lang_post_obj->post_name ) && $lang_post_obj->post_name != $user->post_name ) {
+				$user_slug = $lang_post_obj->post_name;
+				$newrules[ $user_slug . '/([^/]+)/?$' ] = 'index.php?page_id=' . $lang_post_id . '&um_user=$matches[1]&lang=' . $language_code;
+			}
+		}
+	}
+
+	$account_page_id = um_get_predefined_page_id( 'account' );
+	if ( $account_page_id ) {
+		$account = get_post( $account_page_id );
+
+		foreach ( $active_languages as $language_code => $language ) {
+
+			$lang_post_id = wpml_object_id_filter( $account_page_id, 'post', false, $language_code );
+			$lang_post_obj = get_post( $lang_post_id );
+
+			if ( isset( $lang_post_obj->post_name ) && $lang_post_obj->post_name != $account->post_name ) {
+				$account_slug = $lang_post_obj->post_name;
+				$newrules[ $account_slug . '/([^/]+)/?$' ] = 'index.php?page_id=' . $lang_post_id . '&um_user=$matches[1]&lang=' . $language_code;
+			}
+		}
+	}
+
+	return $newrules + $rules;
+}
+add_filter( 'rewrite_rules_array', 'um_add_rewrite_rules_wpml', 10, 1 );
+
+
+/**
+ * UM filter - Restore original arguments on translated page
+ *
+ * @todo Customize this form metadata
+ *
+ * @description Restore original arguments on load shortcode if they are missed in the WPML translation
+ * @hook um_pre_args_setup
+ *
+ * @global \SitePress $sitepress
+ * @param array $args
+ * @return array
+ */
+function um_pre_args_setup_wpml( $args ) {
+	global $sitepress;
+
+	$original_form_id = $sitepress->get_object_id( $args['form_id'], 'post', true, $sitepress->get_default_language() );
+
+	if ( $original_form_id != $args['form_id'] ) {
+		$original_post_data = UM()->query()->post_data( $original_form_id );
+
+		foreach ( $original_post_data as $key => $value ) {
+			if ( ! isset( $args[ $key ] ) ) {
+				$args[ $key ] = $value;
+			}
+		}
+	}
+
+	return $args;
+}
+//add_filter( 'um_pre_args_setup', 'um_pre_args_setup_wpml', 20, 1 );

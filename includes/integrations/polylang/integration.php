@@ -258,3 +258,71 @@ function um_change_email_templates_locations_polylang( $template_locations, $tem
 	return $template_locations;
 }
 add_filter( 'um_save_email_templates_locations', 'um_change_email_templates_locations_polylang', 10, 4 );
+
+
+/**
+ * Extends rewrite rules
+ *
+ * @param array $rules
+ *
+ * @return array
+ */
+function um_add_rewrite_rules_polylang( $rules ) {
+	global $polylang;
+
+	$active_languages = pll_languages_list();
+
+	$newrules = array();
+
+	// Account
+	$account_page_id = um_get_predefined_page_id( 'account' );
+	if ( $account_page_id ) {
+		$account = get_post( $account_page_id );
+
+		foreach ( $active_languages as $language_code ) {
+			if ( $language_code === pll_default_language() && $polylang->options['hide_default'] ) {
+				continue;
+			}
+
+			$lang_post_id = pll_get_post( $account_page_id, $language_code );
+			$lang_post_obj = get_post( $lang_post_id );
+
+			if ( isset( $account->post_name ) && isset( $lang_post_obj->post_name ) ) {
+				$lang_page_slug = $lang_post_obj->post_name;
+
+				if ( $polylang->options['force_lang'] === 1 ) {
+					$newrules[ $language_code . '/' . $lang_page_slug . '/([^/]+)?$' ] = 'index.php?page_id=' . $lang_post_id . '&um_tab=$matches[1]&lang=' . $language_code;
+				}
+
+				$newrules[ $lang_page_slug . '/([^/]+)?$' ] = 'index.php?page_id=' . $lang_post_id . '&um_tab=$matches[1]&lang=' . $language_code;
+			}
+		}
+	}
+
+	// Profile
+	$user_page_id = um_get_predefined_page_id( 'user' );
+	if ( $user_page_id ) {
+		$user = get_post( $user_page_id );
+
+		foreach ( $active_languages as $language_code ) {
+			if ( $language_code === pll_default_language() && $polylang->options['hide_default'] ) {
+				continue;
+			}
+			$lang_post_id = pll_get_post( $user_page_id, $language_code );
+			$lang_post_obj = get_post( $lang_post_id );
+
+			if ( isset( $user->post_name ) && isset( $lang_post_obj->post_name ) ) {
+				$lang_page_slug = $lang_post_obj->post_name;
+
+				if ( $polylang->options['force_lang'] === 1 ) {
+					$newrules[ $language_code . '/' . $lang_page_slug . '/([^/]+)/?$' ] = 'index.php?page_id=' . $lang_post_id . '&um_user=$matches[1]&lang=' . $language_code;
+				}
+
+				$newrules[ $lang_page_slug . '/([^/]+)/?$' ] = 'index.php?page_id=' . $lang_post_id . '&um_user=$matches[1]&lang=' . $language_code;
+			}
+		}
+	}
+
+	return $newrules + $rules;
+}
+add_filter( 'rewrite_rules_array', 'um_add_rewrite_rules_polylang', 10, 1 );

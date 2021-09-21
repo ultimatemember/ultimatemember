@@ -43,21 +43,7 @@ if ( ! class_exists( 'um\core\Logout' ) ) {
 				return;
 			}
 
-			$trid = 0;
-			if ( UM()->integrations()->is_wpml_active() ) {
-				global $sitepress;
-				$default_lang = $sitepress->get_default_language();
-
-				$current_page_ID = get_the_ID();
-				if ( function_exists( 'icl_object_id' ) ) {
-					$trid = icl_object_id( $current_page_ID, 'page', true, $default_lang );
-				} else {
-					$trid = wpml_object_id_filter( $current_page_ID, 'page', true, $default_lang );
-				}
-			}
-
-			$logout_page_id = um_get_predefined_page_id( 'logout' );
-			if ( um_is_predefined_page( 'logout' ) || ( $trid > 0 && $trid == $logout_page_id ) ) {
+			if ( um_is_predefined_page( 'logout' ) ) {
 
 				if ( is_user_logged_in() ) {
 
