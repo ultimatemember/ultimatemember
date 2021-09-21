@@ -14,7 +14,7 @@
  * @return string
  */
 function um_trim_string( $s, $length = 20 ) {
-	$s = strlen( $s ) > $length ? substr( $s, 0, $length ) . "..." : $s;
+	$s = mb_strlen( $s ) > $length ? substr( $s, 0, $length ) . "..." : $s;
 
 	return $s;
 }
