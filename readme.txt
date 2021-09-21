@@ -155,11 +155,12 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
-= 2.2.5: September 21, 2021 =
+= 2.2.5: September 22, 2021 =
 
 * Enhancements:
 
   - Added: Ability to insert SoundCloud track URL instead of Track ID
+  - Added: Settings for the password min/max length (Ultimate Member > Settings > Users)
 
 * Bugfixes:
 
@@ -168,6 +169,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed: Restriction settings fields conditions on wp-admin screens
   - Fixed: Account `user_login` field validation removed as redundant. The field is disabled and not used in code flow
   - Fixed: `display_name` data update after First + Last name fields edition on the Account page
+  - Fixed: Password length validation on the Account page and Password Reset page
 
 = 2.2.4: August 27, 2021 =
 

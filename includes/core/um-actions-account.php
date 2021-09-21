@@ -82,11 +82,16 @@ function um_submit_account_errors_hook( $args ) {
 				}
 
 				if ( UM()->options()->get( 'account_require_strongpass' ) ) {
-					if ( strlen( utf8_decode( $args['user_password'] ) ) < 8 ) {
+					$min_length = UM()->options()->get( 'password_min_chars' );
+					$min_length = ! empty( $min_length ) ? $min_length : 8;
+					$max_length = UM()->options()->get( 'password_max_chars' );
+					$max_length = ! empty( $max_length ) ? $max_length : 30;
+
+					if ( mb_strlen( $args['user_password'] ) < $min_length ) {
 						UM()->form()->add_error( 'user_password', __( 'Your password must contain at least 8 characters', 'ultimate-member' ) );
 					}
 
-					if ( strlen( utf8_decode( $args['user_password'] ) ) > 30 ) {
+					if ( mb_strlen( $args['user_password'] ) > $max_length ) {
 						UM()->form()->add_error( 'user_password', __( 'Your password must contain less than 30 characters', 'ultimate-member' ) );
 					}
 

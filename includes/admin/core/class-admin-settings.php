@@ -676,6 +676,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'reset_require_strongpass'              => array(
 						'sanitize' => 'bool',
 					),
+					'password_min_chars'                    => array(
+						'sanitize' => 'absint',
+					),
+					'password_max_chars'                    => array(
+						'sanitize' => 'absint',
+					),
 					'profile_noindex'                       => array(
 						'sanitize' => 'bool',
 					),
@@ -1047,6 +1053,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'type'    => 'checkbox',
 										'label'   => __( 'Require a strong password? (when user resets password only)', 'ultimate-member' ),
 										'tooltip' => __( 'Enable or disable a strong password rules on password reset and change procedure', 'ultimate-member' ),
+									),
+									array(
+										'id'      => 'password_min_chars',
+										'type'    => 'number',
+										'label'   => __( 'Password minimum length', 'ultimate-member' ),
+										'tooltip' => __( 'If you want to enable a minimum number of characters to be in password. User password field in the UM forms has own settings for that. Leave empty to use default value 8', 'ultimate-member' ),
+										'size'    => 'small',
+									),
+									array(
+										'id'      => 'password_max_chars',
+										'type'    => 'number',
+										'label'   => __( 'Password maximum length', 'ultimate-member' ),
+										'tooltip' => __( 'If you want to enable a maximum number of characters to be in password. User password field in the UM forms has own settings for that. Leave empty to use default value 30', 'ultimate-member' ),
+										'size'    => 'small',
 									),
 									array(
 										'id'      => 'profile_noindex',
