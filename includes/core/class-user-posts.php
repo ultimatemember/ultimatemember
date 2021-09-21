@@ -29,12 +29,13 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 		 */
 		function add_posts() {
 			$args = array(
-				'post_type'      => 'post',
-				'posts_per_page' => 10,
-				'offset'         => 0,
-				'author'         => um_get_requested_user(),
-				'post_status'    => array( 'publish' ),
-				'um_main_query'  => true,
+				'post_type'        => 'post',
+				'posts_per_page'   => 10,
+				'offset'           => 0,
+				'author'           => um_get_requested_user(),
+				'post_status'      => array( 'publish' ),
+				'um_main_query'    => true,
+				'suppress_filters' => false,
 			);
 
 			/**
@@ -108,12 +109,13 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 			$page = ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 0;
 
 			$args = array(
-				'post_type'      => 'post',
-				'posts_per_page' => 10,
-				'offset'         => ( $page - 1 ) * 10,
-				'author'         => $author,
-				'post_status'    => array( 'publish' ),
-				'um_main_query'  => true,
+				'post_type'        => 'post',
+				'posts_per_page'   => 10,
+				'offset'           => ( $page - 1 ) * 10,
+				'author'           => $author,
+				'post_status'      => array( 'publish' ),
+				'um_main_query'    => true,
+				'suppress_filters' => false,
 			);
 
 			/**

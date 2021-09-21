@@ -127,7 +127,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			remove_action( 'pre_get_posts', array( &$this, 'exclude_posts' ), 99 );
 			remove_filter( 'posts_where', array( &$this, 'exclude_posts_where' ), 10 );
 			remove_filter( 'wp_count_posts', array( &$this, 'custom_count_posts_handler' ), 99 );
-			remove_filter( 'the_title', array( &$this, 'filter_restricted_post_title' ), 10 );
 		}
 
 
@@ -1131,8 +1130,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							continue;
 						} else {
 							$restriction_settings = $this->get_post_privacy_settings( $menu_item->object_id );
-							if ( UM()->options()->get( 'disable_restriction_pre_queries' ) || empty( $restriction_settings['_um_access_hide_from_queries'] ) ) {
-								$filtered_items[] = $menu_item;
+							if ( empty( $restriction_settings['_um_access_hide_from_queries'] ) || ! UM()->options()->get( 'disable_restriction_pre_queries' ) ) {
+								$filtered_items[] = $this->maybe_replace_nav_menu_title( $menu_item );
 								continue;
 							}
 						}
@@ -1271,6 +1270,36 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 
 		/**
+		 * @param \WP_Post $nav_item
+		 *
+		 * @return \WP_Post
+		 */
+		function maybe_replace_nav_menu_title( $nav_item ) {
+			if ( ! UM()->options()->get( 'restricted_post_title_replace' ) ) {
+				return $nav_item;
+			}
+
+			if ( current_user_can( 'administrator' ) ) {
+				return $nav_item;
+			}
+
+			if ( ! is_a( $nav_item, '\WP_Post' ) ) {
+				return $nav_item;
+			}
+
+			$ignore = apply_filters( 'um_ignore_restricted_title', false, $nav_item->ID );
+			if ( $ignore ) {
+				return $nav_item;
+			}
+
+			$restricted_global_title = UM()->options()->get( 'restricted_access_post_title' );
+			$nav_item->title = stripslashes( $restricted_global_title );
+
+			return $nav_item;
+		}
+
+
+		/**
 		 * Protect Post Types in query
 		 * Restrict content new logic
 		 *
@@ -1379,7 +1408,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							}
 						}
 					} else {
-						if ( UM()->options()->get( 'disable_restriction_pre_queries' ) || empty( $restriction['_um_access_hide_from_queries'] ) ) {
+						if ( empty( $restriction['_um_access_hide_from_queries'] ) || ! UM()->options()->get( 'disable_restriction_pre_queries' ) ) {
 							$filtered_posts[] = $this->maybe_replace_title( $post );
 							continue;
 						}

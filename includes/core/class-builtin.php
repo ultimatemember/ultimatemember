@@ -1003,10 +1003,10 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				),
 
 				'soundcloud' => array(
-					'title' => __('SoundCloud','ultimate-member'),
+					'title' => __( 'SoundCloud', 'ultimate-member' ),
 					'metakey' => 'soundcloud',
 					'type' => 'url',
-					'label' => __('SoundCloud','ultimate-member'),
+					'label' => __( 'SoundCloud', 'ultimate-member' ),
 					'required' => 0,
 					'public' => 1,
 					'editable' => 1,
@@ -1400,7 +1400,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$array['numeric'] = __('Numeric value only','ultimate-member');
 			$array['phone_number'] = __('Phone Number','ultimate-member');
 			$array['skype'] = __('Skype ID','ultimate-member');
-			$array['soundcloud'] = __('SoundCloud Profile','ultimate-member');
+			$array['soundcloud'] = __( 'SoundCloud Profile', 'ultimate-member' );
 			$array['twitter_url'] = __('Twitter URL','ultimate-member');
 			$array['is_email'] = __('E-mail( Not Unique )','ultimate-member');
 			$array['unique_email'] = __('Unique E-mail','ultimate-member');

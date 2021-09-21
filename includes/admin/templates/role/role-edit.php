@@ -50,7 +50,9 @@ global $wp_roles;
 
 if ( ! empty( $_GET['id'] ) ) {
 
-	$role_id = sanitize_key( $_GET['id'] );
+	// uses sanitize_title instead of sanitize_key for backward compatibility based on #906 pull-request (https://github.com/ultimatemember/ultimatemember/pull/906)
+	// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
+	$role_id = sanitize_title( $_GET['id'] );
 
 	$data = get_option( "um_role_{$role_id}_meta" );
 
@@ -88,7 +90,9 @@ if ( ! empty( $_POST['role'] ) ) {
 				$error .= __( 'Title is empty!', 'ultimate-member' ) . '<br />';
 			}
 
-			if ( preg_match( "/[a-z0-9]+$/i", $data['name'] ) ) {
+			if ( preg_match( "/^[\p{Latin}\d\-_ ]+$/i", $data['name'] ) ) {
+				// uses sanitize_title instead of sanitize_key for backward compatibility based on #906 pull-request (https://github.com/ultimatemember/ultimatemember/pull/906)
+				// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
 				$id = sanitize_title( $data['name'] );
 			} else {
 				$auto_increment = UM()->options()->get( 'custom_roles_increment' );
@@ -96,9 +100,11 @@ if ( ! empty( $_POST['role'] ) ) {
 				$id             = 'custom_role_' . $auto_increment;
 			}
 
-			$redirect = add_query_arg( array( 'page'=>'um_roles', 'tab'=>'edit', 'id'=>$id, 'msg'=>'a' ), admin_url( 'admin.php' ) );
+			$redirect = add_query_arg( array( 'page' => 'um_roles', 'tab' => 'edit', 'id' => $id, 'msg' => 'a' ), admin_url( 'admin.php' ) );
 		} elseif ( 'edit' === sanitize_key( $_GET['tab'] ) && ! empty( $_GET['id'] ) ) {
-			$id = sanitize_key( $_GET['id'] );
+			// uses sanitize_title instead of sanitize_key for backward compatibility based on #906 pull-request (https://github.com/ultimatemember/ultimatemember/pull/906)
+			// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
+			$id = sanitize_title( $_GET['id'] );
 
 			$pre_role_meta = get_option( "um_role_{$id}_meta", array() );
 			if ( isset( $pre_role_meta['name'] ) ) {

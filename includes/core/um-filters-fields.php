@@ -23,21 +23,31 @@ add_filter( 'um_edit_label_all_fields', 'um_edit_label_all_fields', 10, 2 );
 
 
 /**
- * Outputs a soundcloud track
+ * Outputs a SoundCloud track
  *
- * @param $value
- * @param $data
+ * @param string $value
+ * @param array $data
  *
  * @return string
  */
 function um_profile_field_filter_hook__soundcloud_track( $value, $data ) {
 
 	if ( ! is_numeric( $value ) ) {
-		return __( 'Invalid soundcloud track ID', 'ultimate-member' );
+		# if we're passed a track url:
+		if ( preg_match( '/https:\/\/soundcloud.com\/.*/', $value ) ) {
+			$value = '<div class="um-soundcloud">
+					<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=' . esc_attr( urlencode( $value ) ) . '&amp;color=ff6600&amp;auto_play=false&amp;show_artwork=true"></iframe>
+					</div>';
+			return $value;
+		} else {
+			# neither a track id nor url:
+			return __( 'Invalid SoundCloud track ID', 'ultimate-member' );
+		}
 	}
 
+	# if we're passed a track id:
 	$value = '<div class="um-soundcloud">
-					<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' . $value . '&amp;color=ff6600&amp;auto_play=false&amp;show_artwork=true"></iframe>
+					<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' . esc_attr( $value ) . '&amp;color=ff6600&amp;auto_play=false&amp;show_artwork=true"></iframe>
 					</div>';
 
 	return $value;

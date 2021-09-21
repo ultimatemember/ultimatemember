@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 5.8
-Stable tag: 2.2.4
+Stable tag: 2.2.5
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -154,6 +154,20 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
+
+= 2.2.5: September 21, 2021 =
+
+* Enhancements:
+
+  - Added: Ability to insert SoundCloud track URL instead of Track ID
+
+* Bugfixes:
+
+  - Fixed: Invalid role keys on the role list-table + role edit screen (case when latin symbols used with not UTF-8 symbols)
+  - Fixed: Restriction logic and archive lists (+ nav menu bar) with active "Disable pre-queries for restriction content logic" option
+  - Fixed: Restriction settings fields conditions on wp-admin screens
+  - Fixed: Account `user_login` field validation removed as redundant. The field is disabled and not used in code flow
+  - Fixed: `display_name` data update after First + Last name fields edition on the Account page
 
 = 2.2.4: August 27, 2021 =
 
