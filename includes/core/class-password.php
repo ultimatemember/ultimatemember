@@ -549,11 +549,11 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				$max_length = ! empty( $max_length ) ? $max_length : 30;
 
 				if ( mb_strlen( $args['user_password'] ) < $min_length ) {
-					UM()->form()->add_error( 'user_password', __( 'Your password must contain at least 8 characters', 'ultimate-member' ) );
+					UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain at least %d characters', 'ultimate-member' ), $min_length ) );
 				}
 
 				if ( mb_strlen( $args['user_password'] ) > $max_length ) {
-					UM()->form()->add_error( 'user_password', __( 'Your password must contain less than 30 characters', 'ultimate-member' ) );
+					UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain less than %d characters', 'ultimate-member' ), $max_length ) );
 				}
 
 				if ( ! UM()->validation()->strong_pass( $args['user_password'] ) ) {
