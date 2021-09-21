@@ -170,6 +170,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed: Account `user_login` field validation removed as redundant. The field is disabled and not used in code flow
   - Fixed: `display_name` data update after First + Last name fields edition on the Account page
   - Fixed: Password length validation on the Account page and Password Reset page
+  - Fixed: Using custom fields from multi-select dropdowns for user's `Display Name`. Unserialized custom field's values
 
 = 2.2.4: August 27, 2021 =
 
