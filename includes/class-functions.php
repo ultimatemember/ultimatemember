@@ -391,5 +391,20 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			}
 		}
 
+
+		/**
+		 * Replace the first match in the string, alternative for the `str_replace()` function
+		 *
+		 * @param string $search
+		 * @param string $replace
+		 * @param string $subject
+		 *
+		 * @return string
+		 */
+		function str_replace_first( $search, $replace, $subject ) {
+			$search = '/' . preg_quote( $search, '/' ) . '/';
+			return preg_replace( $search, $replace, $subject, 1 );
+		}
+
 	}
 }

@@ -14,7 +14,7 @@
  * @return string
  */
 function um_trim_string( $s, $length = 20 ) {
-	$s = strlen( $s ) > $length ? substr( $s, 0, $length ) . "..." : $s;
+	$s = mb_strlen( $s ) > $length ? substr( $s, 0, $length ) . "..." : $s;
 
 	return $s;
 }
@@ -2448,7 +2448,11 @@ function um_user( $data, $attrs = null ) {
 
 				foreach ( $fields as $field ) {
 					if ( um_profile( $field ) ) {
-						$name .= um_profile( $field ) . ' ';
+
+						$field_value = maybe_unserialize( um_profile( $field ) );
+						$field_value = is_array( $field_value ) ? implode( ',', $field_value ) : $field_value;
+
+						$name .= $field_value . ' ';
 					} elseif ( um_user( $field ) && $field != 'display_name' && $field != 'full_name' ) {
 						$name .= um_user( $field ) . ' ';
 					}

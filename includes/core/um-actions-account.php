@@ -82,12 +82,17 @@ function um_submit_account_errors_hook( $args ) {
 				}
 
 				if ( UM()->options()->get( 'account_require_strongpass' ) ) {
-					if ( strlen( utf8_decode( $args['user_password'] ) ) < 8 ) {
-						UM()->form()->add_error( 'user_password', __( 'Your password must contain at least 8 characters', 'ultimate-member' ) );
+					$min_length = UM()->options()->get( 'password_min_chars' );
+					$min_length = ! empty( $min_length ) ? $min_length : 8;
+					$max_length = UM()->options()->get( 'password_max_chars' );
+					$max_length = ! empty( $max_length ) ? $max_length : 30;
+
+					if ( mb_strlen( $args['user_password'] ) < $min_length ) {
+						UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain at least %d characters', 'ultimate-member' ), $min_length ) );
 					}
 
-					if ( strlen( utf8_decode( $args['user_password'] ) ) > 30 ) {
-						UM()->form()->add_error( 'user_password', __( 'Your password must contain less than 30 characters', 'ultimate-member' ) );
+					if ( mb_strlen( $args['user_password'] ) > $max_length ) {
+						UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain less than %d characters', 'ultimate-member' ), $max_length ) );
 					}
 
 					if ( ! UM()->validation()->strong_pass( $args['user_password'] ) ) {
@@ -370,8 +375,24 @@ function um_submit_account_details( $args ) {
 	 */
 	do_action( 'um_account_pre_update_profile', $changes, $user_id );
 
-	UM()->user()->update_profile( $changes );
+	if ( isset( $changes['first_name'] ) || isset( $changes['last_name'] ) || isset( $changes['nickname'] ) ) {
+		$user = get_userdata( $user_id );
+		if ( ! empty( $user ) && ! is_wp_error( $user ) ) {
+			UM()->user()->previous_data['display_name'] = $user->display_name;
 
+			if ( isset( $changes['first_name'] ) ) {
+				UM()->user()->previous_data['first_name'] = $user->first_name;
+			}
+			if ( isset( $changes['last_name'] ) ) {
+				UM()->user()->previous_data['last_name'] = $user->last_name;
+			}
+			if ( isset( $changes['nickname'] ) ) {
+				UM()->user()->previous_data['nickname'] = $user->nickname;
+			}
+		}
+	}
+
+	UM()->user()->update_profile( $changes );
 
 	if ( UM()->account()->is_secure_enabled() ) {
 		update_user_meta( $user_id, 'um_account_secure_fields', array() );
@@ -497,7 +518,7 @@ add_action( 'um_before_account_notifications', 'um_before_account_notifications'
  * @param   array $changes  An array of fields values.
  */
 function um_after_user_account_updated_permalink( $user_id, $changes ) {
-	if ( isset( $changes['first_name'] ) && isset( $changes['last_name'] ) ) {
+	if ( isset( $changes['first_name'] ) || isset( $changes['last_name'] ) ) {
 		do_action( 'um_update_profile_full_name', $user_id, $changes );
 	}
 }

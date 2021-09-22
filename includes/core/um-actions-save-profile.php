@@ -41,11 +41,47 @@ function um_update_profile_full_name( $user_id, $changes ) {
 		case 'nickname':
 			$update_name = get_user_meta( $user_id, 'nickname', true );
 			break;
+		case 'default':
+			$user = get_userdata( $user_id );
+
+			if ( ! empty( $user ) && ! is_wp_error( $user ) ) {
+				if ( ! empty( UM()->user()->previous_data['display_name'] ) ) {
+					if ( isset( UM()->user()->previous_data['first_name'] ) ) {
+						$fname = get_user_meta( $user_id, 'first_name', true );
+						$update_name = UM()->str_replace_first( UM()->user()->previous_data['first_name'], $fname, UM()->user()->previous_data['display_name'] );
+					}
+
+					if ( isset( UM()->user()->previous_data['last_name'] ) ) {
+						$lname = get_user_meta( $user_id, 'last_name', true );
+						if ( isset( $update_name ) ) {
+							$update_name = UM()->str_replace_first( UM()->user()->previous_data['last_name'], $lname, $update_name );
+						} else {
+							$update_name = UM()->str_replace_first( UM()->user()->previous_data['last_name'], $lname, UM()->user()->previous_data['display_name'] );
+						}
+					}
+
+					if ( isset( UM()->user()->previous_data['nickname'] ) ) {
+						$nickname = get_user_meta( $user_id, 'nickname', true );
+						if ( isset( $update_name ) ) {
+							$update_name = UM()->str_replace_first( UM()->user()->previous_data['nickname'], $nickname, $update_name );
+						} else {
+							$update_name = UM()->str_replace_first( UM()->user()->previous_data['nickname'], $nickname, UM()->user()->previous_data['display_name'] );
+						}
+					}
+
+					// unset if the display name is the same
+					if ( isset( $update_name ) && $update_name === UM()->user()->previous_data['display_name'] ) {
+						unset( $update_name );
+					}
+				}
+			}
+
+			break;
 	}
 
 	if ( isset( $update_name ) ) {
 
-		$arr_user =  array( 'ID' => $user_id, 'display_name' => $update_name );
+		$arr_user = array( 'ID' => $user_id, 'display_name' => $update_name );
 		$return = wp_update_user( $arr_user );
 
 		if ( is_wp_error( $return ) ) {
@@ -54,7 +90,7 @@ function um_update_profile_full_name( $user_id, $changes ) {
 
 	}
 
-	if ( isset( $changes['first_name'] ) && isset( $changes['last_name'] ) ) {
+	if ( isset( $changes['first_name'] ) || isset( $changes['last_name'] ) ) {
 		$user = get_userdata( $user_id );
 		if ( ! empty( $user ) && ! is_wp_error( $user ) ) {
 			$full_name = $user->display_name;

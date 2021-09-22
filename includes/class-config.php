@@ -523,6 +523,8 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'use_um_gravatar_default_builtin_image' => 'default',
 				'use_um_gravatar_default_image'         => 0,
 				'reset_require_strongpass'              => 0,
+				'password_min_chars'                    => 8,
+				'password_max_chars'                    => 30,
 				'account_tab_password'                  => 1,
 				'account_tab_privacy'                   => 1,
 				'account_tab_notifications'             => 1,

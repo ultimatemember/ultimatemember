@@ -595,7 +595,7 @@ function um_submit_form_errors_hook_( $args ) {
 				}
 
 				if ( isset( $array['min_chars'] ) && $array['min_chars'] > 0 ) {
-					if ( $args[ $key ] && strlen( utf8_decode( $args[ $key ] ) ) < $array['min_chars'] ) {
+					if ( $args[ $key ] && mb_strlen( $args[ $key ] ) < $array['min_chars'] ) {
 						if ( empty( $array['label'] ) ) {
 							UM()->form()->add_error( $key, sprintf( __( 'This field must contain at least %s characters', 'ultimate-member' ), $array['min_chars'] ) );
 						} else {
@@ -605,7 +605,7 @@ function um_submit_form_errors_hook_( $args ) {
 				}
 
 				if ( isset( $array['max_chars'] ) && $array['max_chars'] > 0 ) {
-					if ( $args[ $key ] && strlen( utf8_decode( $args[ $key ] ) ) > $array['max_chars'] ) {
+					if ( $args[ $key ] && mb_strlen( $args[ $key ] ) > $array['max_chars'] ) {
 						if ( empty( $array['label'] ) ) {
 							UM()->form()->add_error( $key, sprintf( __( 'This field must contain less than %s characters', 'ultimate-member' ), $array['max_chars'] ) );
 						} else {
@@ -895,7 +895,7 @@ function um_submit_form_errors_hook_( $args ) {
 				$profile_show_bio = UM()->options()->get( 'profile_show_bio' );
 
 				if ( $profile_show_bio ) {
-					if ( strlen( utf8_decode( str_replace( array( "\r\n", "\n", "\r\t", "\t" ), ' ', $args['description'] ) ) ) > $max_chars && $max_chars ) {
+					if ( mb_strlen( str_replace( array( "\r\n", "\n", "\r\t", "\t" ), ' ', $args['description'] ) ) > $max_chars && $max_chars ) {
 						UM()->form()->add_error( 'description', sprintf( __( 'Your user description must contain less than %s characters', 'ultimate-member' ), $max_chars ) );
 					}
 				}
