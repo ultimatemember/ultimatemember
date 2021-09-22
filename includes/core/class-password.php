@@ -543,12 +543,17 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 			if ( UM()->options()->get( 'reset_require_strongpass' ) ) {
 
-				if ( strlen( utf8_decode( $args['user_password'] ) ) < 8 ) {
-					UM()->form()->add_error( 'user_password', __( 'Your password must contain at least 8 characters', 'ultimate-member' ) );
+				$min_length = UM()->options()->get( 'password_min_chars' );
+				$min_length = ! empty( $min_length ) ? $min_length : 8;
+				$max_length = UM()->options()->get( 'password_max_chars' );
+				$max_length = ! empty( $max_length ) ? $max_length : 30;
+
+				if ( mb_strlen( $args['user_password'] ) < $min_length ) {
+					UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain at least %d characters', 'ultimate-member' ), $min_length ) );
 				}
 
-				if ( strlen( utf8_decode( $args['user_password'] ) ) > 30 ) {
-					UM()->form()->add_error( 'user_password', __( 'Your password must contain less than 30 characters', 'ultimate-member' ) );
+				if ( mb_strlen( $args['user_password'] ) > $max_length ) {
+					UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain less than %d characters', 'ultimate-member' ), $max_length ) );
 				}
 
 				if ( ! UM()->validation()->strong_pass( $args['user_password'] ) ) {

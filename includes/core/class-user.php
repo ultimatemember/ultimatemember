@@ -16,6 +16,14 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 
 		/**
+		 * Data that we will set before the update profile to compare it after update
+		 *
+		 * @var null
+		 */
+		public $previous_data = null;
+
+
+		/**
 		 * User constructor.
 		 */
 		function __construct() {

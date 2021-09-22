@@ -350,7 +350,8 @@ function um_submit_form_register( $args ) {
 
 	$unique_userID = uniqid();
 
-	if ( empty( $user_login ) || strlen( $user_login ) > 30 && ! is_email( $user_login ) ) {
+	// see dbDelta and WP native DB structure user_login varchar(60)
+	if ( empty( $user_login ) || mb_strlen( $user_login ) > 60 && ! is_email( $user_login ) ) {
 		$user_login = 'user' . $unique_userID;
 		while ( username_exists( $user_login ) ) {
 			$unique_userID = uniqid();

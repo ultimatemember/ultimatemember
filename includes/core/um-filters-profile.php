@@ -66,7 +66,7 @@ function um_dynamic_user_profile_title( $title, $id = '' ) {
 		return $title;
 	}
 
-	return ( strlen( $title ) !== strlen( utf8_decode( $title ) ) ) ? $title : utf8_encode( $title );
+	return ( strlen( $title ) !== mb_strlen( $title ) ) ? $title : utf8_encode( $title );
 }
 add_filter( 'the_title', 'um_dynamic_user_profile_title', 100000, 2 );
 

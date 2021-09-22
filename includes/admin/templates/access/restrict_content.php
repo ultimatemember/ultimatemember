@@ -96,7 +96,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				'0' => __( 'Show access restricted message', 'ultimate-member' ),
 				'1' => __( 'Redirect user', 'ultimate-member' ),
 			),
-			'conditional' => UM()->options()->get( 'disable_restriction_pre_queries' ) ? '' : array( '_um_access_hide_from_queries', '=', '0' ),
+			'conditional' => UM()->options()->get( 'disable_restriction_pre_queries' ) ? array( '_um_accessible', '!=', '0' ) : array( '_um_access_hide_from_queries', '=', '0' ),
 		),
 		array(
 			'id'          => '_um_restrict_by_custom_message',

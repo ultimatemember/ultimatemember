@@ -1757,7 +1757,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if ( ! isset( $array['max_files_error'] ) ) {
 						$array['max_files_error'] = __( 'You can only upload one image', 'ultimate-member' );
 					}
-					if ( ! isset( $array['max_size'] ) ) {
+					if ( empty( $array['max_size'] ) ) {
 						$array['max_size'] = 999999999;
 					}
 					if ( ! isset( $array['upload_help_text'] ) ) {
@@ -1798,7 +1798,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if ( ! isset( $array['max_files_error'] ) ) {
 						$array['max_files_error'] = __( 'You can only upload one file', 'ultimate-member' );
 					}
-					if ( ! isset( $array['max_size'] ) ) {
+					if ( empty( $array['max_size'] ) ) {
 						$array['max_size'] = 999999999;
 					}
 					if ( ! isset( $array['upload_help_text'] ) ) {

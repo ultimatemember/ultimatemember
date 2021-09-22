@@ -28,15 +28,6 @@ jQuery(document).ready(function() {
 		jQuery(this).parents('.um-admin-notice').find( '.notice-dismiss' ).trigger('click');
 	});
 
-	jQuery(document.body).on('click', '.um_opt_in_link', function (e) {
-		jQuery(this).parents('.um-admin-notice').find( '.notice-dismiss' ).trigger('click');
-	});
-
-
-	jQuery(document.body).on('click', '#um_opt_in_start', function (e) {
-		jQuery(this).parents('.um-admin-notice').find( '.notice-dismiss' ).trigger('click');
-	});
-
 
 	jQuery(document.body).on( 'click', '.um-admin-notice.is-dismissible .notice-dismiss', function(e) {
 		var notice_key = jQuery(this).parents('.um-admin-notice').data('key');
@@ -50,6 +41,7 @@ jQuery(document).ready(function() {
 				return true;
 			},
 			error: function( data ) {
+				um_admin_dismiss_notice_fallback( notice_key );
 				return false;
 			}
 		});
@@ -57,3 +49,16 @@ jQuery(document).ready(function() {
 
 
 });
+
+/**
+ * Dismiss fallback of ajax request
+ */
+function um_admin_dismiss_notice_fallback( notice_key ) {
+	var href_index = "";
+	if ( window.location.href.indexOf("?") > -1 ) {
+		href_index = window.location.href + "&";
+	} else {
+		href_index = window.location.href + "?";
+	}
+	window.location.href = href_index + "um_dismiss_notice=" + notice_key + "&um_admin_nonce=" + um_admin_scripts.nonce;
+}

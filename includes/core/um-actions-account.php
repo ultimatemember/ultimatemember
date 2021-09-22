@@ -9,6 +9,8 @@
  * @param array $args
  */
 function um_submit_account_errors_hook( $args ) {
+	global $current_user;
+
 	if ( ! isset( $args['_um_account'] ) && ! isset( $args['_um_account_tab'] ) ) {
 		return;
 	}
@@ -19,8 +21,6 @@ function um_submit_account_errors_hook( $args ) {
 		UM()->form()->add_error( 'um_account_security', __( 'Are you hacking? Please try again!', 'ultimate-member' ) );
 	}
 
-	$user = get_user_by( 'login', um_user( 'user_login' ) );
-
 	switch ( $tab ) {
 		case 'delete': {
 			// delete account
@@ -28,7 +28,7 @@ function um_submit_account_errors_hook( $args ) {
 				if ( strlen( trim( sanitize_text_field( $args['single_user_password'] ) ) ) === 0 ) {
 					UM()->form()->add_error( 'single_user_password', __( 'You must enter your password', 'ultimate-member' ) );
 				} else {
-					if ( ! wp_check_password( sanitize_text_field( $args['single_user_password'] ), $user->data->user_pass, $user->data->ID ) ) {
+					if ( ! wp_check_password( sanitize_text_field( $args['single_user_password'] ), $current_user->data->user_pass, $current_user->data->ID ) ) {
 						UM()->form()->add_error( 'single_user_password', __( 'This is not your password', 'ultimate-member' ) );
 					}
 				}
@@ -69,7 +69,7 @@ function um_submit_account_errors_hook( $args ) {
 						UM()->form()->add_error( 'current_user_password', __( 'This is not your password', 'ultimate-member' ) );
 						return;
 					} else {
-						if ( ! wp_check_password( $args['current_user_password'], $user->data->user_pass, $user->data->ID ) ) {
+						if ( ! wp_check_password( $args['current_user_password'], $current_user->data->user_pass, $current_user->data->ID ) ) {
 							UM()->form()->add_error( 'current_user_password', __( 'This is not your password', 'ultimate-member' ) );
 							return;
 						}
@@ -82,12 +82,17 @@ function um_submit_account_errors_hook( $args ) {
 				}
 
 				if ( UM()->options()->get( 'account_require_strongpass' ) ) {
-					if ( strlen( utf8_decode( $args['user_password'] ) ) < 8 ) {
-						UM()->form()->add_error( 'user_password', __( 'Your password must contain at least 8 characters', 'ultimate-member' ) );
+					$min_length = UM()->options()->get( 'password_min_chars' );
+					$min_length = ! empty( $min_length ) ? $min_length : 8;
+					$max_length = UM()->options()->get( 'password_max_chars' );
+					$max_length = ! empty( $max_length ) ? $max_length : 30;
+
+					if ( mb_strlen( $args['user_password'] ) < $min_length ) {
+						UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain at least %d characters', 'ultimate-member' ), $min_length ) );
 					}
 
-					if ( strlen( utf8_decode( $args['user_password'] ) ) > 30 ) {
-						UM()->form()->add_error( 'user_password', __( 'Your password must contain less than 30 characters', 'ultimate-member' ) );
+					if ( mb_strlen( $args['user_password'] ) > $max_length ) {
+						UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain less than %d characters', 'ultimate-member' ), $max_length ) );
 					}
 
 					if ( ! UM()->validation()->strong_pass( $args['user_password'] ) ) {
@@ -105,7 +110,7 @@ function um_submit_account_errors_hook( $args ) {
 			$account_name_require = UM()->options()->get( 'account_name_require' );
 
 			if ( isset( $args['user_login'] ) ) {
-				$args['user_login'] = sanitize_text_field( $args['user_login'] );
+				$args['user_login'] = sanitize_user( $args['user_login'] );
 			}
 			if ( isset( $args['first_name'] ) ) {
 				$args['first_name'] = sanitize_text_field( $args['first_name'] );
@@ -118,11 +123,6 @@ function um_submit_account_errors_hook( $args ) {
 			}
 			if ( isset( $args['single_user_password'] ) ) {
 				$args['single_user_password'] = sanitize_text_field( $args['single_user_password'] );
-			}
-
-			if ( ! empty( $args['user_login'] ) && ! validate_username( $args['user_login'] ) ) {
-				UM()->form()->add_error( 'user_login', __( 'Your username is invalid', 'ultimate-member' ) );
-				return;
 			}
 
 			if ( isset( $args['first_name'] ) && ( strlen( trim( $args['first_name'] ) ) === 0 && $account_name_require ) ) {
@@ -153,7 +153,7 @@ function um_submit_account_errors_hook( $args ) {
 				if ( strlen( trim( $args['single_user_password'] ) ) === 0 ) {
 					UM()->form()->add_error( 'single_user_password', __( 'You must enter your password', 'ultimate-member' ) );
 				} else {
-					if ( ! wp_check_password( $args['single_user_password'], $user->data->user_pass, $user->data->ID ) ) {
+					if ( ! wp_check_password( $args['single_user_password'], $current_user->data->user_pass, $current_user->data->ID ) ) {
 						UM()->form()->add_error( 'single_user_password', __( 'This is not your password', 'ultimate-member' ) );
 					}
 				}
@@ -303,20 +303,12 @@ function um_submit_account_details( $args ) {
 			continue;
 		}
 
-		if ( 'single_user_password' === $k ) {
+		if ( 'single_user_password' === $k || 'user_login' === $k ) {
 			continue;
-		}
-
-		if ( 'user_login' === $k ) {
-			$v = sanitize_user( $v );
-		} elseif ( 'first_name' === $k ) {
-			$v = sanitize_text_field( $v );
-		} elseif ( 'last_name' === $k ) {
+		} elseif ( 'first_name' === $k || 'last_name' === $k || 'user_password' === $k ) {
 			$v = sanitize_text_field( $v );
 		} elseif ( 'user_email' === $k ) {
 			$v = sanitize_email( $v );
-		} elseif ( 'user_password' === $k ) {
-			$v = sanitize_text_field( $v );
 		} elseif ( 'hide_in_members' === $k ) {
 			$v = array_map( 'sanitize_text_field', $v );
 		}
@@ -383,8 +375,24 @@ function um_submit_account_details( $args ) {
 	 */
 	do_action( 'um_account_pre_update_profile', $changes, $user_id );
 
-	UM()->user()->update_profile( $changes );
+	if ( isset( $changes['first_name'] ) || isset( $changes['last_name'] ) || isset( $changes['nickname'] ) ) {
+		$user = get_userdata( $user_id );
+		if ( ! empty( $user ) && ! is_wp_error( $user ) ) {
+			UM()->user()->previous_data['display_name'] = $user->display_name;
 
+			if ( isset( $changes['first_name'] ) ) {
+				UM()->user()->previous_data['first_name'] = $user->first_name;
+			}
+			if ( isset( $changes['last_name'] ) ) {
+				UM()->user()->previous_data['last_name'] = $user->last_name;
+			}
+			if ( isset( $changes['nickname'] ) ) {
+				UM()->user()->previous_data['nickname'] = $user->nickname;
+			}
+		}
+	}
+
+	UM()->user()->update_profile( $changes );
 
 	if ( UM()->account()->is_secure_enabled() ) {
 		update_user_meta( $user_id, 'um_account_secure_fields', array() );
@@ -491,13 +499,17 @@ add_action( 'um_before_account_notifications', 'um_before_account_notifications'
 
 
 /**
- * Update Profile URL
+ * Update Profile URL, display name, full name.
  *
- * @param $user_id
- * @param $changed
+ * @version 2.2.5
+ *
+ * @param   int   $user_id  The user ID.
+ * @param   array $changes  An array of fields values.
  */
-function um_after_user_account_updated_permalink( $user_id, $changed ) {
-	UM()->user()->generate_profile_slug( $user_id );
+function um_after_user_account_updated_permalink( $user_id, $changes ) {
+	if ( isset( $changes['first_name'] ) || isset( $changes['last_name'] ) ) {
+		do_action( 'um_update_profile_full_name', $user_id, $changes );
+	}
 }
 add_action( 'um_after_user_account_updated', 'um_after_user_account_updated_permalink', 10, 2 );
 

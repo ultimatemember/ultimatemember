@@ -109,7 +109,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			add_action( 'um_access_check_individual_term_settings', array( &$this, 'um_access_check_individual_term_settings' ) );
 			add_action( 'um_access_check_global_settings', array( &$this, 'um_access_check_global_settings' ) );
 
-
 			add_action( 'plugins_loaded', array( &$this, 'disable_restriction_pre_queries' ), 1 );
 		}
 
@@ -131,7 +130,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			remove_action( 'pre_get_posts', array( &$this, 'exclude_posts' ), 99 );
 			remove_filter( 'posts_where', array( &$this, 'exclude_posts_where' ), 10 );
 			remove_filter( 'wp_count_posts', array( &$this, 'custom_count_posts_handler' ), 99 );
-			remove_filter( 'the_title', array( &$this, 'filter_restricted_post_title' ), 10 );
 		}
 
 
@@ -513,7 +511,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 *
 		 * @return object
 		 */
-		function custom_count_posts_handler( $counts, $type, $perm ) {
+		function custom_count_posts_handler( $counts, $type = 'post', $perm = '' ) {
 			if ( current_user_can( 'administrator' ) ) {
 				return $counts;
 			}
@@ -612,17 +610,19 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		/**
 		 * Exclude restricted posts in widgets
 		 *
-		 * @param string  $sql_where
+		 * @param string $sql_where
 		 * @param array $parsed_args
 		 *
 		 * @return string
 		 */
-		function exclude_restricted_posts_archives_widget( $sql_where, $parsed_args ) {
+		function exclude_restricted_posts_archives_widget( $sql_where, $parsed_args = array() ) {
 			if ( current_user_can( 'administrator' ) ) {
 				return $sql_where;
 			}
 
-			$exclude_posts = $this->exclude_posts_array( false, $parsed_args['post_type'] );
+			$post_type = ! empty( $parsed_args['post_type'] ) ? $parsed_args['post_type'] : false;
+
+			$exclude_posts = $this->exclude_posts_array( false, $post_type );
 			if ( ! empty( $exclude_posts ) ) {
 				$exclude_string = implode( ',', $exclude_posts );
 				$sql_where .= ' AND ID NOT IN ( ' . $exclude_string . ' )';
@@ -635,16 +635,20 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		/**
 		 * Exclude posts from next, previous navigation
 		 *
-		 * @param string  $where
-		 * @param bool    $in_same_term
-		 * @param array   $excluded_terms
-		 * @param string  $taxonomy.
-		 * @param \WP_Post $post
+		 * @param string $where
+		 * @param bool $in_same_term
+		 * @param string|array $excluded_terms
+		 * @param string $taxonomy
+		 * @param null|\WP_Post $post
 		 *
 		 * @return string
 		 */
-		function exclude_navigation_posts( $where, $in_same_term, $excluded_terms, $taxonomy, $post ) {
+		function exclude_navigation_posts( $where, $in_same_term = false, $excluded_terms = '', $taxonomy = 'category', $post = null ) {
 			if ( current_user_can( 'administrator' ) ) {
+				return $where;
+			}
+
+			if ( empty( $post ) ) {
 				return $where;
 			}
 
@@ -741,7 +745,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 *
 		 * @return string
 		 */
-		function filter_restricted_post_excerpt( $post_excerpt, $post ) {
+		function filter_restricted_post_excerpt( $post_excerpt = '', $post = null ) {
 			if ( empty( $post ) ) {
 				return $post_excerpt;
 			}
@@ -789,7 +793,11 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 *
 		 * @return bool
 		 */
-		function filter_post_thumbnail( $has_thumbnail, $post, $thumbnail_id ) {
+		function filter_post_thumbnail( $has_thumbnail, $post = null, $thumbnail_id = false ) {
+			if ( empty( $thumbnail_id ) ) {
+				return $has_thumbnail;
+			}
+
 			if ( current_user_can( 'administrator' ) ) {
 				return $has_thumbnail;
 			}
@@ -854,7 +862,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 * @return array
 		 */
 		function get_available_comments_post_types() {
-			global $wp_taxonomies;
+			global $wp_taxonomies, $wpdb;
 
 			$restricted_posts = UM()->options()->get( 'restricted_access_post_metabox' );
 			if ( empty( $restricted_posts ) ) {
@@ -875,7 +883,17 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			$restricted_posts = array_unique( $restricted_posts );
 			foreach ( $restricted_posts as $k => $post_type ) {
 				if ( 'closed' === get_default_comment_status( $post_type ) ) {
-					unset( $restricted_posts[ $k ] );
+					$open_comments = $wpdb->get_var( $wpdb->prepare(
+						"SELECT ID 
+						FROM {$wpdb->posts} 
+						WHERE post_type = %s AND 
+						      comment_status != 'closed'",
+						$post_type
+					) );
+
+					if ( empty( $open_comments ) ) {
+						unset( $restricted_posts[ $k ] );
+					}
 				}
 			}
 
@@ -909,12 +927,12 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 
 		/**
-		 * @param object $stats
+		 * @param array|object $stats
 		 * @param int $post_id Post ID. Can be 0 for the whole website
 		 *
 		 * @return object
 		 */
-		function custom_comments_count_handler( $stats, $post_id ) {
+		function custom_comments_count_handler( $stats = array(), $post_id = 0 ) {
 			if ( ! empty( $stats ) || current_user_can( 'administrator' ) ) {
 				return $stats;
 			}
@@ -1059,7 +1077,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 * @param int $post_id
 		 * @return boolean
 		 */
-		function disable_comments_open_number( $count, $post_id ) {
+		function disable_comments_open_number( $count, $post_id = 0 ) {
 			if ( current_user_can( 'administrator' ) ) {
 				return $count;
 			}
@@ -1085,11 +1103,11 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		/**
 		 * Protect Post Types in menu query
 		 * Restrict content new logic
-		 * @param $menu_items
-		 * @param $args
+		 * @param array $menu_items
+		 * @param array $args
 		 * @return array
 		 */
-		function filter_menu( $menu_items, $args ) {
+		function filter_menu( $menu_items, $args = array() ) {
 			//if empty
 			if ( empty( $menu_items ) ) {
 				return $menu_items;
@@ -1115,8 +1133,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							continue;
 						} else {
 							$restriction_settings = $this->get_post_privacy_settings( $menu_item->object_id );
-							if ( UM()->options()->get( 'disable_restriction_pre_queries' ) || empty( $restriction_settings['_um_access_hide_from_queries'] ) ) {
-								$filtered_items[] = $menu_item;
+							if ( empty( $restriction_settings['_um_access_hide_from_queries'] ) || ! UM()->options()->get( 'disable_restriction_pre_queries' ) ) {
+								$filtered_items[] = $this->maybe_replace_nav_menu_title( $menu_item );
 								continue;
 							}
 						}
@@ -1225,11 +1243,71 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 
 		/**
+		 * @param \WP_Post $post
+		 *
+		 * @return \WP_Post
+		 */
+		function maybe_replace_title( $post ) {
+			if ( ! UM()->options()->get( 'restricted_post_title_replace' ) ) {
+				return $post;
+			}
+
+			if ( current_user_can( 'administrator' ) ) {
+				return $post;
+			}
+
+			if ( ! is_a( $post, '\WP_Post' ) ) {
+				return $post;
+			}
+
+			$ignore = apply_filters( 'um_ignore_restricted_title', false, $post->ID );
+			if ( $ignore ) {
+				return $post;
+			}
+
+			$restricted_global_title = UM()->options()->get( 'restricted_access_post_title' );
+			$post->post_title = stripslashes( $restricted_global_title );
+
+			return $post;
+		}
+
+
+		/**
+		 * @param \WP_Post $nav_item
+		 *
+		 * @return \WP_Post
+		 */
+		function maybe_replace_nav_menu_title( $nav_item ) {
+			if ( ! UM()->options()->get( 'restricted_post_title_replace' ) ) {
+				return $nav_item;
+			}
+
+			if ( current_user_can( 'administrator' ) ) {
+				return $nav_item;
+			}
+
+			if ( ! is_a( $nav_item, '\WP_Post' ) ) {
+				return $nav_item;
+			}
+
+			$ignore = apply_filters( 'um_ignore_restricted_title', false, $nav_item->ID );
+			if ( $ignore ) {
+				return $nav_item;
+			}
+
+			$restricted_global_title = UM()->options()->get( 'restricted_access_post_title' );
+			$nav_item->title = stripslashes( $restricted_global_title );
+
+			return $nav_item;
+		}
+
+
+		/**
 		 * Protect Post Types in query
 		 * Restrict content new logic
 		 *
-		 * @param $posts
-		 * @param \WP_Query $query
+		 * @param array $posts
+		 * @param array|\WP_Query $query
 		 * @return array
 		 */
 		function filter_protected_posts( $posts, $query ) {
@@ -1311,7 +1389,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 								 */
 								do_action( 'um_access_fix_external_post_content' );
 
-								$filtered_posts[] = $post;
+								$filtered_posts[] = $this->maybe_replace_title( $post );
 								continue;
 							}
 						} elseif ( '1' == $restriction['_um_noaccess_action'] ) {
@@ -1333,8 +1411,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							}
 						}
 					} else {
-						if ( UM()->options()->get( 'disable_restriction_pre_queries' ) || empty( $restriction['_um_access_hide_from_queries'] ) ) {
-							$filtered_posts[] = $post;
+						if ( empty( $restriction['_um_access_hide_from_queries'] ) || ! UM()->options()->get( 'disable_restriction_pre_queries' ) ) {
+							$filtered_posts[] = $this->maybe_replace_title( $post );
 							continue;
 						}
 					}
