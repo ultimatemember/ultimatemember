@@ -767,10 +767,10 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						'sanitize' => 'absint',
 					),
 					'_min'                            => array(
-						'sanitize' => 'absint',
+						'sanitize' => 'empty_int',
 					),
 					'_max'                            => array(
-						'sanitize' => 'absint',
+						'sanitize' => 'empty_int',
 					),
 					'_min_chars'                      => array(
 						'sanitize' => 'absint',
@@ -1360,6 +1360,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					case 'int':
 						$sanitized[ $k ] = (int) $v;
 						break;
+					case 'empty_int':
+						$sanitized[ $k ] = ( '' !== $v ) ? (int) $v : '';
+						break;
 					case 'bool':
 						$sanitized[ $k ] = (bool) $v;
 						break;
@@ -1391,6 +1394,13 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 							$sanitized[ $k ] = array_map( 'absint', $v );
 						} else {
 							$sanitized[ $k ] = absint( $v );
+						}
+						break;
+					case 'empty_absint':
+						if ( is_array( $v ) ) {
+							$sanitized[ $k ] = array_map( 'absint', $v );
+						} else {
+							$sanitized[ $k ] = ( '' !== $v ) ? absint( $v ) : '';
 						}
 						break;
 				}
