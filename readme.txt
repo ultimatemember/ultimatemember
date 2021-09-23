@@ -157,7 +157,9 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = 2.2.6: October xx, 2021 =
 
+* Bugfixes:
 
+  - Fixed: "Clear All" button for the filters with "&" symbol in the label
 
 = 2.2.5: September 22, 2021 =
 
