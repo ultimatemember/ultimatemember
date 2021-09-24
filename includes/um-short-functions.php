@@ -14,7 +14,7 @@
  * @return string
  */
 function um_trim_string( $s, $length = 20 ) {
-	$s = strlen( $s ) > $length ? substr( $s, 0, $length ) . "..." : $s;
+	$s = mb_strlen( $s ) > $length ? substr( $s, 0, $length ) . "..." : $s;
 
 	return $s;
 }
@@ -31,7 +31,7 @@ function um_dynamic_login_page_redirect( $redirect_to = '' ) {
 
 	$uri = um_get_core_page( 'login' );
 
-	if (!$redirect_to) {
+	if ( ! $redirect_to ) {
 		$redirect_to = UM()->permalinks()->get_current_url();
 	}
 
@@ -697,9 +697,10 @@ function um_user_submitted_registration_formatted( $style = false ) {
 
 		if ( isset( $submitted_data['form_id'] ) ) {
 			$fields = UM()->query()->get_attr( 'custom_fields', $submitted_data['form_id'] );
+			$fields = maybe_unserialize( $fields );
 		}
 
-		if ( isset( $fields ) ) {
+		if ( ! empty( $fields ) ) {
 
 			$fields['form_id'] = array( 'title' => __( 'Form', 'ultimate-member' ) );
 
@@ -717,10 +718,10 @@ function um_user_submitted_registration_formatted( $style = false ) {
 			if ( empty( $rows ) ) {
 				$rows = array(
 					'_um_row_1' => array(
-						'type'      => 'row',
-						'id'        => '_um_row_1',
-						'sub_rows'  => 1,
-						'cols'      => 1
+						'type'     => 'row',
+						'id'       => '_um_row_1',
+						'sub_rows' => 1,
+						'cols'     => 1,
 					),
 				);
 			}
@@ -1483,7 +1484,7 @@ function um_edit_my_profile_cancel_uri( $url = '' ) {
  * @return bool
  */
 function um_is_on_edit_profile() {
-	if ( isset( $_REQUEST['um_action'] ) && $_REQUEST['um_action'] == 'edit' ) {
+	if ( isset( $_REQUEST['um_action'] ) && sanitize_key( $_REQUEST['um_action'] ) == 'edit' ) {
 		return true;
 	}
 
@@ -1661,13 +1662,15 @@ function um_is_myprofile() {
 /**
  * Returns the edit profile link
  *
+ * @param int $user_id
+ *
  * @return string
  */
-function um_edit_profile_url() {
+function um_edit_profile_url( $user_id = null ) {
 	if ( um_is_core_page( 'user' ) ) {
 		$url = UM()->permalinks()->get_current_url();
 	} else {
-		$url = um_user_profile_url();
+		$url = isset( $user_id ) ? um_user_profile_url( $user_id ) : um_user_profile_url();
 	}
 
 	$url = remove_query_arg( 'profiletab', $url );
@@ -2438,7 +2441,11 @@ function um_user( $data, $attrs = null ) {
 
 				foreach ( $fields as $field ) {
 					if ( um_profile( $field ) ) {
-						$name .= um_profile( $field ) . ' ';
+
+						$field_value = maybe_unserialize( um_profile( $field ) );
+						$field_value = is_array( $field_value ) ? implode( ',', $field_value ) : $field_value;
+
+						$name .= $field_value . ' ';
 					} elseif ( um_user( $field ) && $field != 'display_name' && $field != 'full_name' ) {
 						$name .= um_user( $field ) . ' ';
 					}
@@ -2616,15 +2623,15 @@ function um_secure_media_uri( $url ) {
  */
 function um_force_utf8_string( $value ) {
 
-	if (is_array( $value )) {
+	if ( is_array( $value ) ) {
 		$arr_value = array();
-		foreach ($value as $key => $value) {
-			$utf8_decoded_value = utf8_decode( $value );
+		foreach ( $value as $key => $v ) {
+			$utf8_decoded_value = utf8_decode( $v );
 
-			if (mb_check_encoding( $utf8_decoded_value, 'UTF-8' )) {
+			if ( mb_check_encoding( $utf8_decoded_value, 'UTF-8' ) ) {
 				array_push( $arr_value, $utf8_decoded_value );
 			} else {
-				array_push( $arr_value, $value );
+				array_push( $arr_value, $v );
 			}
 
 		}

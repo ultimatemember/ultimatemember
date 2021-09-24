@@ -49,6 +49,9 @@ class UM_Polylang implements UM_Multilingual {
 			add_filter( 'um_is_core_page', array( &$this, 'is_core_page' ), 10, 2 );
 			add_filter( 'um_get_core_page_filter', array( &$this, 'localize_core_page_url' ), 10, 3 );
 			add_filter( 'um_localize_permalink_filter', array( &$this, 'localize_profile_permalink' ), 10, 2 );
+
+			add_filter( 'um_login_form_button_two_url', array( &$this, 'localize_page_url' ), 10, 2 );
+			add_filter( 'um_register_form_button_two_url', array( &$this, 'localize_page_url' ), 10, 2 );
 		}
 	}
 
@@ -278,9 +281,7 @@ class UM_Polylang implements UM_Multilingual {
 	 * @return string|false
 	 */
 	public function get_page_url_for_language( $post_id, $language = '' ) {
-
-		$url = get_permalink( $post_id );
-
+		
 		if ( $this->is_active() ) {
 
 			$lang = '';
@@ -297,7 +298,7 @@ class UM_Polylang implements UM_Multilingual {
 			}
 		}
 
-		return $url;
+		return empty( $url ) ? get_permalink( $post_id ) : $url;
 	}
 
 	/**
@@ -404,16 +405,12 @@ class UM_Polylang implements UM_Multilingual {
 	public function localize_core_page_url( $url, $slug, $updated = '' ) {
 
 		if ( $this->is_active() ) {
-
 			$language_codes = $this->get_languages_codes();
-			if ( $language_codes['default'] != $language_codes['current'] ) {
+			$page_id = UM()->config()->permalinks[$slug];
+			$url = $this->get_page_url_for_language( $page_id, $language_codes['current'] );
 
-				$page_id = UM()->config()->permalinks[$slug];
-				$url = $this->get_page_url_for_language( $page_id, $language_codes['current'] );
-
-				if ( $updated ) {
-					$url = add_query_arg( 'updated', esc_attr( $updated ), $url );
-				}
+			if ( $updated ) {
+				$url = add_query_arg( 'updated', esc_attr( $updated ), $url );
 			}
 		}
 
@@ -445,6 +442,24 @@ class UM_Polylang implements UM_Multilingual {
 		}
 
 		return $subject;
+	}
+
+	/**
+	 * Get translated page URL.
+	 *
+	 * @param  string $url   Page URL or slug
+	 * @param  array  $args	Additional data
+	 * @return string
+	 */
+	public function localize_page_url( $url, $args = array() ) {
+
+		$page = get_page_by_path( trim( $url, "/ \n\r\t\v\0" ) );
+		if ( $page && is_a( $page, '\WP_Post' ) ) {
+			$language_codes = $this->get_languages_codes();
+			$url = $this->get_page_url_for_language( $page->ID, $language_codes['current'] );
+		}
+
+		return $url;
 	}
 
 	/**

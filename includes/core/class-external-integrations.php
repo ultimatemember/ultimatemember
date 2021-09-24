@@ -26,9 +26,10 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		 */
 		public function __construct() {
 
+			// Post content
 			add_action( 'um_access_fix_external_post_content', array( &$this, 'bbpress_no_access_message_fix' ), 10 );
-
 			add_action( 'um_access_fix_external_post_content', array( &$this, 'forumwp_fix' ), 11 );
+			add_action( 'um_access_fix_external_post_content', array( &$this, 'woocommerce_fix' ), 12 );
 
 			// Integration for the "Transposh Translation Filter" plugin
 			add_action( 'template_redirect', array( &$this, 'transposh_user_profile' ), 9990 );
@@ -58,6 +59,31 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 
 
 		/**
+		 * Fixed WooCommerce access to Products message
+		 */
+		public function woocommerce_fix() {
+			if ( UM()->dependencies()->woocommerce_active_check() ) {
+				add_filter( 'single_template', array( &$this, 'woocommerce_template' ), 9999999, 1 );
+			}
+		}
+
+
+		/**
+		 * Fixed WooCommerce access to Products message
+		 *
+		 * @param  string $single_template
+		 * @return string
+		 */
+		public function woocommerce_template( $single_template ) {
+			if ( is_product() ) {
+				remove_filter( 'template_include', array( 'WC_Template_Loader', 'template_loader' ) );
+			}
+
+			return $single_template;
+		}
+
+
+		/**
 		 * @param bool|string $current_code
 		 *
 		 * @return array
@@ -65,13 +91,16 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		public function get_languages_codes( $current_code = false ) {
 			global $sitepress;
 
-			if ( !$this->is_wpml_active() ) return $current_code;
+			if ( ! $this->is_wpml_active() ) {
+				return $current_code;
+			}
 
-			$current_code = !empty( $current_code ) ? $current_code : $sitepress->get_current_language();
+			if ( empty( $current_code ) ) {
+				$current_code = $sitepress->get_current_language();
+			}
 
 			$default = $sitepress->get_locale_from_language_code( $sitepress->get_default_language() );
 			$current = $sitepress->get_locale_from_language_code( $current_code );
-
 
 			return array(
 				'default'	 => $default,

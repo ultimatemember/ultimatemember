@@ -26,7 +26,7 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 		/**
 		 * Update order of fields
 		 */
-		function update_order() {
+		public function update_order() {
 			UM()->admin()->check_ajax_nonce();
 
 			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
@@ -38,14 +38,18 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 			 */
 			extract( $_POST );
 
+			if ( isset( $form_id ) ) {
+				$form_id = absint( $form_id );
+			}
+
 			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
 
-			$this->row_data = get_option( 'um_form_rowdata_' . $form_id, array() );
+			$this->row_data   = get_option( 'um_form_rowdata_' . $form_id, array() );
 			$this->exist_rows = array();
 
 			if ( ! empty( $fields ) ) {
 				foreach ( $fields as $key => $array ) {
-					if ( $array['type'] == 'row' ) {
+					if ( 'row' === $array['type'] ) {
 						$this->row_data[ $key ] = $array;
 						unset( $fields[ $key ] );
 					}
@@ -55,6 +59,8 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 			}
 
 			foreach ( $_POST as $key => $value ) {
+				// don't use sanitize_key here because of a key can be in Uppercase
+				$key = sanitize_text_field( $key );
 
 				// adding rows
 				if ( 0 === strpos( $key, '_um_row_' ) ) {
@@ -63,19 +69,25 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 
 					$row_id = str_replace( '_um_row_', '', $key );
 
+					if ( strstr( $_POST[ '_um_rowcols_' . $row_id . '_cols' ], ':' ) ) {
+						$cols = sanitize_text_field( $_POST[ '_um_rowcols_' . $row_id . '_cols' ] );
+					} else {
+						$cols = absint( $_POST[ '_um_rowcols_' . $row_id . '_cols' ] );
+					}
+
 					$row_array = array(
-						'type'      => 'row',
-						'id'        => $value,
-						'sub_rows'  => $_POST[ '_um_rowsub_' . $row_id . '_rows' ],
-						'cols'      => $_POST[ '_um_rowcols_' . $row_id . '_cols' ],
-						'origin'    => $_POST[ '_um_roworigin_' . $row_id . '_val' ],
+						'type'     => 'row',
+						'id'       => sanitize_key( $value ),
+						'sub_rows' => absint( $_POST[ '_um_rowsub_' . $row_id . '_rows' ] ),
+						'cols'     => $cols,
+						'origin'   => sanitize_key( $_POST[ '_um_roworigin_' . $row_id . '_val' ] ),
 					);
 
 					$row_args = $row_array;
 
 					if ( isset( $this->row_data[ $row_array['origin'] ] ) ) {
 						foreach ( $this->row_data[ $row_array['origin'] ] as $k => $v ) {
-							if ( $k != 'position' && $k != 'metakey' ) {
+							if ( 'position' !== $k && 'metakey' !== $k ) {
 								$update_args[ $k ] = $v;
 							}
 						}
@@ -93,7 +105,7 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 				if ( 0 === strpos( $key, 'um_position_' ) ) {
 					$field_key = str_replace( 'um_position_', '', $key );
 					if ( isset( $fields[ $field_key ] ) ) {
-						$fields[ $field_key ]['position'] = $value;
+						$fields[ $field_key ]['position'] = absint( $value );
 					}
 				}
 
@@ -101,7 +113,7 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 				if ( 0 === strpos( $key, 'um_row_' ) ) {
 					$field_key = str_replace( 'um_row_', '', $key );
 					if ( isset( $fields[ $field_key ] ) ) {
-						$fields[ $field_key ]['in_row'] = $value;
+						$fields[ $field_key ]['in_row'] = sanitize_key( $value );
 					}
 				}
 
@@ -109,7 +121,7 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 				if ( 0 === strpos( $key, 'um_subrow_' ) ) {
 					$field_key = str_replace( 'um_subrow_', '', $key );
 					if ( isset( $fields[ $field_key ] ) ) {
-						$fields[ $field_key ]['in_sub_row'] = $value;
+						$fields[ $field_key ]['in_sub_row'] = sanitize_key( $value );
 					}
 				}
 
@@ -117,7 +129,7 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 				if ( 0 === strpos( $key, 'um_col_' ) ) {
 					$field_key = str_replace( 'um_col_', '', $key );
 					if ( isset( $fields[ $field_key ] ) ) {
-						$fields[ $field_key ]['in_column'] = $value;
+						$fields[ $field_key ]['in_column'] = absint( $value );
 					}
 				}
 
@@ -125,21 +137,20 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 				if ( 0 === strpos( $key, 'um_group_' ) ) {
 					$field_key = str_replace( 'um_group_', '', $key );
 					if ( isset( $fields[ $field_key ] ) ) {
-						$fields[ $field_key ]['in_group'] = $value;
+						$fields[ $field_key ]['in_group'] = ! empty( $value ) ? absint( $value ) : '';
 					}
 				}
-
 			}
 
 			foreach ( $this->row_data as $k => $v ) {
-				if ( ! in_array( $k, $this->exist_rows ) ) {
+				if ( ! in_array( $k, $this->exist_rows, true ) ) {
 					unset( $this->row_data[ $k ] );
 				}
 			}
 
 			update_option( 'um_existing_rows_' . $form_id, $this->exist_rows );
 
-			update_option( 'um_form_rowdata_' . $form_id , $this->row_data );
+			update_option( 'um_form_rowdata_' . $form_id, $this->row_data );
 
 			UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
 
@@ -149,11 +160,11 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 		/**
 		 * Load form to maintain form order
 		 */
-		function load_field_order() {
+		public function load_field_order() {
 
 			$screen = get_current_screen();
 
-			if ( ! isset( $screen->id ) || $screen->id != 'um_form' ) {
+			if ( ! isset( $screen->id ) || 'um_form' !== $screen->id ) {
 				return;
 			} ?>
 

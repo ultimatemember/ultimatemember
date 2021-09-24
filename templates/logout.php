@@ -8,7 +8,7 @@
 
 			<div class="um-misc-img">
 				<a href="<?php echo esc_url( um_get_core_page( 'user' ) ); ?>">
-					<?php echo um_user( 'profile_photo', 80 ); ?>
+					<?php echo get_avatar( um_user( 'ID' ), 80 ) ?>
 				</a>
 			</div>
 			

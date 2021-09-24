@@ -161,18 +161,16 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 */
 		function parse_shortcode_args( $args ) {
 			if ( $this->message_mode == true ) {
-
 				if ( ! empty( $_REQUEST['um_role'] ) ) {
 					$args['template'] = 'message';
-					$roleID = esc_attr( $_REQUEST['um_role'] );
+					$roleID = sanitize_key( $_REQUEST['um_role'] );
 					$role = UM()->roles()->role_data( $roleID );
 
-					if ( ! empty( $role ) && ! empty( $role["status"] ) ) {
-						$message_key = $role["status"] . '_message';
+					if ( ! empty( $role ) && ! empty( $role['status'] ) ) {
+						$message_key = $role['status'] . '_message';
 						$this->custom_message = ! empty( $role[ $message_key ] ) ? stripslashes( $role[ $message_key ] ) : '';
 					}
 				}
-
 			}
 
 			foreach ( $args as $k => $v ) {
@@ -679,8 +677,11 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			extract( $args, EXTR_SKIP );
 
 			//not display on admin preview
-			if ( empty( $_POST['act_id'] ) || $_POST['act_id'] != 'um_admin_preview_form' ) {
-				if ( 'register' == $mode && is_user_logged_in() ) {
+			if ( empty( $_POST['act_id'] ) || sanitize_key( $_POST['act_id'] ) !== 'um_admin_preview_form' ) {
+
+				$enable_loggedin_registration = apply_filters( 'um_registration_for_loggedin_users', false, $args );
+
+				if ( 'register' == $mode && is_user_logged_in() && ! $enable_loggedin_registration ) {
 					ob_get_clean();
 					return __( 'You are already registered', 'ultimate-member' );
 				}
@@ -717,7 +718,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 							}
 
 							$this->profile_role = $args['role'];
-						} else {
+						} elseif ( $this->profile_role != $args['role'] ) {
 							ob_get_clean();
 							return '';
 						}
@@ -1266,7 +1267,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 				$hash = UM()->member_directory()->get_directory_hash( $directory_id );
 
-				$query[ 'search_' . $hash ] = ! empty( $_GET[ 'search_' . $hash ] ) ? $_GET[ 'search_' . $hash ] : '';
+				$query[ 'search_' . $hash ] = ! empty( $_GET[ 'search_' . $hash ] ) ? sanitize_text_field( $_GET[ 'search_' . $hash ] ) : '';
 			}
 
 			if ( empty( $query ) ) {

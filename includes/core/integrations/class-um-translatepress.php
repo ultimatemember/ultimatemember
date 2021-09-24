@@ -378,20 +378,6 @@ class UM_TranslatePress implements UM_Multilingual {
 	}
 
 	/**
-	 * Get translated profile page URL.
-	 * NOTE: TranslatePress doesn't need this feature. Added for compability.
-	 *
-	 * @since  2.1.7
-	 *
-	 * @param  string   $profile_url  Default profile URL
-	 * @param  integer  $page_id      The page ID
-	 * @return string
-	 */
-	public function localize_profile_permalink( $profile_url, $page_id ) {
-		return $profile_url;
-	}
-
-	/**
 	 * Change email template path.
 	 *
 	 * @since  2.1.7

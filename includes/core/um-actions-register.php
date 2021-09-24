@@ -350,7 +350,8 @@ function um_submit_form_register( $args ) {
 
 	$unique_userID = uniqid();
 
-	if ( empty( $user_login ) || strlen( $user_login ) > 30 && ! is_email( $user_login ) ) {
+	// see dbDelta and WP native DB structure user_login varchar(60)
+	if ( empty( $user_login ) || mb_strlen( $user_login ) > 60 && ! is_email( $user_login ) ) {
 		$user_login = 'user' . $unique_userID;
 		while ( username_exists( $user_login ) ) {
 			$unique_userID = uniqid();
@@ -591,7 +592,7 @@ function um_add_submit_button_to_register( $args ) {
 
 	<div class="um-col-alt">
 
-		<?php if ( isset( $args['secondary_btn'] ) && $args['secondary_btn'] != 0 ) { ?>
+		<?php if ( ! empty( $args['secondary_btn'] ) ) { ?>
 
 			<div class="um-left um-half">
 				<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ) ?>" class="um-button" id="um-submit-btn" />

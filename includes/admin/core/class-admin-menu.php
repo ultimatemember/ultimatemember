@@ -191,7 +191,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 		function um_roles_pages() {
 			if ( empty( $_GET['tab'] ) ) {
 				include_once um_path . 'includes/admin/core/list-tables/roles-list-table.php';
-			} elseif ( sanitize_key( $_GET['tab'] ) == 'add' || sanitize_key( $_GET['tab'] ) == 'edit' ) {
+			} elseif ( 'add' === sanitize_key( $_GET['tab'] ) || 'edit' === sanitize_key( $_GET['tab'] ) ) {
 				include_once um_path . 'includes/admin/templates/role/role-edit.php';
 			} else {
 				um_js_redirect( add_query_arg( array( 'page' => 'um_roles' ), get_admin_url( 'admin.php' ) ) );
@@ -275,6 +275,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 				$size = 0;
 
 				foreach( new \RecursiveIteratorIterator( new \RecursiveDirectoryIterator( $directory ) ) as $file ) {
+					$filename = $file->getFilename();
+					if ( $filename == '.' || $filename == '..' ) {
+						continue;
+					}
+
 					$size += $file->getSize();
 				}
 				return round ( $size / 1048576, 2);

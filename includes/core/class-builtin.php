@@ -36,9 +36,9 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 * Builtin constructor.
 		 */
 		function __construct() {
-			add_action( 'init',  array(&$this, 'set_core_fields'), 1);
-			add_action( 'init',  array(&$this, 'set_predefined_fields'), 1);
-			add_action( 'init',  array(&$this, 'set_custom_fields'), 1);
+			add_action( 'init', array( &$this, 'set_core_fields' ), 1 );
+			add_action( 'init', array( &$this, 'set_predefined_fields' ), 1 );
+			add_action( 'init', array( &$this, 'set_custom_fields' ), 1 );
 			$this->saved_fields = get_option( 'um_fields' );
 		}
 
@@ -61,13 +61,15 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 */
 		function is_dropdown_field( $field, $attrs ) {
 
-			if ( isset( $attrs['options'] ) )
+			if ( isset( $attrs['options'] ) ) {
 				return true;
+			}
 
 			$fields = $this->all_user_fields;
 
-			if ( isset( $fields[$field]['options'] ) || ! empty( $fields[$field]['custom_dropdown_options_source'] ) )
+			if ( isset( $fields[$field]['options'] ) || ! empty( $fields[$field]['custom_dropdown_options_source'] ) ) {
 				return true;
+			}
 
 			return false;
 		}
@@ -134,14 +136,25 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 *
 		 * @param $key
 		 *
-		 * @return int|string|void
+		 * @return int|string
 		 */
 		function unique_field_err( $key ) {
-			if ( empty( $key ) ) return __('Please provide a meta key','ultimate-member');
-			if ( isset( $this->core_fields[ $key ] ) ) return __('Your meta key is a reserved core field and cannot be used','ultimate-member');
-			if ( isset( $this->predefined_fields[ $key ] ) ) return __('Your meta key is a predefined reserved key and cannot be used','ultimate-member');
-			if ( isset( $this->saved_fields[ $key ] ) ) return __('Your meta key already exists in your fields list','ultimate-member');
-			if ( ! UM()->validation()->safe_string( $key ) ) return __('Your meta key contains illegal characters. Please correct it.','ultimate-member');
+			if ( empty( $key ) ) {
+				return __( 'Please provide a meta key', 'ultimate-member' );
+			}
+			if ( isset( $this->core_fields[ $key ] ) ) {
+				return __( 'Your meta key is a reserved core field and cannot be used', 'ultimate-member' );
+			}
+			if ( isset( $this->predefined_fields[ $key ] ) ) {
+				return __( 'Your meta key is a predefined reserved key and cannot be used', 'ultimate-member' );
+			}
+			if ( isset( $this->saved_fields[ $key ] ) ) {
+				return __( 'Your meta key already exists in your fields list', 'ultimate-member' );
+			}
+			if ( ! UM()->validation()->safe_string( $key ) ) {
+				return __( 'Your meta key contains illegal characters. Please correct it.', 'ultimate-member' );
+			}
+
 			return 0;
 		}
 
@@ -151,11 +164,16 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 *
 		 * @param $date
 		 *
-		 * @return int|string|void
+		 * @return int|string
 		 */
 		function date_range_start_err( $date ) {
-			if ( empty( $date ) ) return __('Please provide a date range beginning','ultimate-member');
-			if ( ! UM()->validation()->validate_date( $date ) ) return __('Please enter a valid start date in the date range','ultimate-member');
+			if ( empty( $date ) ) {
+				return __( 'Please provide a date range beginning', 'ultimate-member' );
+			}
+			if ( ! UM()->validation()->validate_date( $date ) ) {
+				return __( 'Please enter a valid start date in the date range', 'ultimate-member' );
+			}
+
 			return 0;
 		}
 
@@ -166,12 +184,18 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 * @param $date
 		 * @param $start_date
 		 *
-		 * @return int|string|void
+		 * @return int|string
 		 */
 		function date_range_end_err( $date, $start_date ) {
-			if ( empty( $date ) ) return __('Please provide a date range end','ultimate-member');
-			if ( ! UM()->validation()->validate_date( $date ) ) return __('Please enter a valid end date in the date range','ultimate-member');
-			if ( strtotime( $date ) <= strtotime( $start_date ) ) return __('The end of date range must be greater than the start of date range','ultimate-member');
+			if ( empty( $date ) ) {
+				return __( 'Please provide a date range end', 'ultimate-member' );
+			}
+			if ( ! UM()->validation()->validate_date( $date ) ) {
+				return __( 'Please enter a valid end date in the date range', 'ultimate-member' );
+			}
+			if ( strtotime( $date ) <= strtotime( $start_date ) ) {
+				return __( 'The end of date range must be greater than the start of date range', 'ultimate-member' );
+			}
 			return 0;
 		}
 
@@ -352,7 +376,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'password' => array(
 					'name' => 'Password',
 					'col1' => array('_title','_metakey','_help','_min_chars','_max_chars','_visibility'),
-					'col2' => array('_label','_placeholder','_public','_roles','_force_good_pass','_force_confirm_pass'),
+					'col2' => array('_label','_placeholder','_public','_roles','_force_good_pass','_force_confirm_pass','_label_confirm_pass'),
 					'col3' => array('_required','_editable','_icon'),
 					'validate' => array(
 						'_title' => array(
@@ -631,20 +655,22 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 * Predefined Fields
 		 */
 		function set_predefined_fields() {
-
 			global $wp_roles;
-			$role_keys = get_option( 'um_roles', array() );
-			if ( ! empty( $role_keys ) && is_array( $role_keys ) ) {
-				$role_keys = array_map( function( $item ) {
-					return 'um_' . $item;
-				}, $role_keys );
-			} else {
-				$role_keys = array();
+
+			$um_roles = array();
+			if ( ! empty( $wp_roles->roles ) ) {
+				$role_keys = get_option( 'um_roles', array() );
+				if ( ! empty( $role_keys ) && is_array( $role_keys ) ) {
+					$role_keys = array_map( function( $item ) {
+						return 'um_' . $item;
+					}, $role_keys );
+				} else {
+					$role_keys = array();
+				}
+
+				$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+				$um_roles = UM()->roles()->get_roles( false, $exclude_roles );
 			}
-
-			$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
-
-			$um_roles = UM()->roles()->get_roles( false, $exclude_roles );
 
 			/**
 			 * UM hook
@@ -714,6 +740,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'max_chars' => 30,
 					'force_good_pass' => 1,
 					'force_confirm_pass' => 1,
+					'label_confirm_pass' => __('Confirm Password','ultimate-member')
 				),
 
 				'first_name' => array(
@@ -976,10 +1003,10 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				),
 
 				'soundcloud' => array(
-					'title' => __('SoundCloud','ultimate-member'),
+					'title' => __( 'SoundCloud', 'ultimate-member' ),
 					'metakey' => 'soundcloud',
 					'type' => 'url',
-					'label' => __('SoundCloud','ultimate-member'),
+					'label' => __( 'SoundCloud', 'ultimate-member' ),
 					'required' => 0,
 					'public' => 1,
 					'editable' => 1,
@@ -1373,7 +1400,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$array['numeric'] = __('Numeric value only','ultimate-member');
 			$array['phone_number'] = __('Phone Number','ultimate-member');
 			$array['skype'] = __('Skype ID','ultimate-member');
-			$array['soundcloud'] = __('SoundCloud Profile','ultimate-member');
+			$array['soundcloud'] = __( 'SoundCloud Profile', 'ultimate-member' );
 			$array['twitter_url'] = __('Twitter URL','ultimate-member');
 			$array['is_email'] = __('E-mail( Not Unique )','ultimate-member');
 			$array['unique_email'] = __('Unique E-mail','ultimate-member');

@@ -16,6 +16,14 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 
 		/**
+		 * Data that we will set before the update profile to compare it after update
+		 *
+		 * @var null
+		 */
+		public $previous_data = null;
+
+
+		/**
 		 * User constructor.
 		 */
 		function __construct() {
@@ -347,8 +355,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 
 			if ( ! empty( $_POST['um-role'] ) && current_user_can( 'promote_users' ) ) {
-				if ( ! user_can( $user_id, $_POST['um-role'] ) ) {
-					UM()->roles()->set_role( $user_id, $_POST['um-role'] );
+				if ( ! user_can( $user_id, sanitize_key( $_POST['um-role'] ) ) ) {
+					UM()->roles()->set_role( $user_id, sanitize_key( $_POST['um-role'] ) );
 				}
 			}
 
@@ -368,8 +376,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 
 			if ( ! empty( $_POST['um-role'] ) && current_user_can( 'promote_users' ) ) {
-				if ( ! user_can( $user_id, $_POST['um-role'] ) ) {
-					UM()->roles()->set_role( $user_id, $_POST['um-role'] );
+				if ( ! user_can( $user_id, sanitize_key( $_POST['um-role'] ) ) ) {
+					UM()->roles()->set_role( $user_id, sanitize_key( $_POST['um-role'] ) );
 				}
 			}
 
@@ -383,7 +391,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		function get_pending_users_count() {
 
 			$cached_users_queue = get_option( 'um_cached_users_queue' );
-			if ( $cached_users_queue > 0 && ! isset( $_REQUEST['delete_count'] ) ){
+			if ( $cached_users_queue > 0 && ! isset( $_REQUEST['delete_count'] ) ) {
 				return $cached_users_queue;
 			}
 
@@ -592,8 +600,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				//if there custom 2 role not empty
 				if ( ! empty( $_POST['um-role'] ) && current_user_can( 'promote_users' ) ) {
 					$user = get_userdata( $user_id );
-					$user->add_role( $_POST['um-role'] );
-					UM()->user()->profile['role'] = $_POST['um-role'];
+					$user->add_role( sanitize_key( $_POST['um-role'] ) );
+					UM()->user()->profile['role'] = sanitize_key( $_POST['um-role'] );
 					UM()->user()->update_usermeta_info( 'role' );
 				}
 
@@ -641,9 +649,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			if ( is_admin() ) {
 				if ( ! empty( $_POST['um-role'] ) && current_user_can( 'promote_users' ) ) {
-					$new_roles = array_merge( $new_roles, array( $_POST['um-role'] ) );
-					if ( ! user_can( $user_id, $_POST['um-role'] ) ) {
-						UM()->roles()->set_role( $user_id, $_POST['um-role'] );
+					$new_roles = array_merge( $new_roles, array( sanitize_key( $_POST['um-role'] ) ) );
+					if ( ! user_can( $user_id, sanitize_key( $_POST['um-role'] ) ) ) {
+						UM()->roles()->set_role( $user_id, sanitize_key( $_POST['um-role'] ) );
 					}
 				}
 			}
@@ -1743,11 +1751,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				$role = UM()->roles()->get_priority_user_role( $user_id );
 				$permissions = UM()->roles()->role_data( $role );
 
-				if ( isset( $permissions['profile_noindex'] ) && $permissions['profile_noindex'] === '1' ) {
+				if ( isset( $permissions['profile_noindex'] ) && (bool) $permissions['profile_noindex'] ) {
 					// Setting "Avoid indexing profile by search engines" in [wp-admin > Ultimate Member > User Roles > Edit Role]
 					$profile_noindex = true;
 
-				} elseif ( ( ! isset( $permissions['profile_noindex'] ) || $permissions['profile_noindex'] === '' ) && UM()->options()->get( 'profile_noindex' ) === '1' ) {
+				} elseif ( ( ! isset( $permissions['profile_noindex'] ) || $permissions['profile_noindex'] === '' ) && (bool) UM()->options()->get( 'profile_noindex' ) ) {
 					// Setting "Avoid indexing profile by search engines" in [wp-admin > Ultimate Member > Settings > General > Users]
 					$profile_noindex = true;
 

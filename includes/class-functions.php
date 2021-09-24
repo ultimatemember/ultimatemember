@@ -48,7 +48,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 * @param bool $action
 		 */
 		function check_ajax_nonce( $action = false ) {
-			$nonce = isset( $_REQUEST['nonce'] ) ? $_REQUEST['nonce'] : '';
+			$nonce = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( $_REQUEST['nonce'] ) : '';
 			$action = empty( $action ) ? 'um-frontend-nonce' : $action;
 
 			if ( ! wp_verify_nonce( $nonce, $action ) ) {
@@ -389,6 +389,21 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			} else {
 				return is_scalar( $var ) ? sanitize_text_field( $var ) : $var;
 			}
+		}
+
+
+		/**
+		 * Replace the first match in the string, alternative for the `str_replace()` function
+		 *
+		 * @param string $search
+		 * @param string $replace
+		 * @param string $subject
+		 *
+		 * @return string
+		 */
+		function str_replace_first( $search, $replace, $subject ) {
+			$search = '/' . preg_quote( $search, '/' ) . '/';
+			return preg_replace( $search, $replace, $subject, 1 );
 		}
 
 	}

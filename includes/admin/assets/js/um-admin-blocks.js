@@ -65,7 +65,7 @@ var um_block_restriction = wp.compose.createHigherOrderComponent( function( Bloc
 				wp.element.createElement(
 					wp.components.PanelBody,
 					{
-						title: wp.i18n.__( 'UM access Controls', 'ultimate-member' ),
+						title: wp.i18n.__( 'Ultimate Member: Content Restriction', 'ultimate-member' ),
 						className: 'um_block_settings'
 					},
 					wp.element.createElement(
@@ -93,7 +93,7 @@ var um_block_restriction = wp.compose.createHigherOrderComponent( function( Bloc
 						{
 							type: 'number',
 							className: um_condition_fields['um_who_access'],
-							label: wp.i18n.__( 'Who can access this content?', 'ultimate-member' ),
+							label: wp.i18n.__( 'Who can access this block?', 'ultimate-member' ),
 							value: props.attributes.um_who_access,
 							options: [
 								{
@@ -132,7 +132,7 @@ var um_block_restriction = wp.compose.createHigherOrderComponent( function( Bloc
 						{
 							multiple: true,
 							className: um_condition_fields['um_roles_access'],
-							label: wp.i18n.__( 'What roles can access this content?', 'ultimate-member' ),
+							label: wp.i18n.__( 'What roles can access this block?', 'ultimate-member' ),
 							value: props.attributes.um_roles_access,
 							options: um_restrict_roles,
 							onChange: function onChange( value ) {
@@ -145,7 +145,7 @@ var um_block_restriction = wp.compose.createHigherOrderComponent( function( Bloc
 						{
 							type: 'number',
 							className: um_condition_fields['um_message_type'],
-							label: wp.i18n.__( 'Restriction Action', 'ultimate-member' ),
+							label: wp.i18n.__( 'Restriction action', 'ultimate-member' ),
 							value: props.attributes.um_message_type,
 							options: [
 								{
@@ -176,7 +176,7 @@ var um_block_restriction = wp.compose.createHigherOrderComponent( function( Bloc
 						{
 							type: 'number',
 							className: um_condition_fields['um_message_content'],
-							label: wp.i18n.__( 'Restriction Message Content', 'ultimate-member' ),
+							label: wp.i18n.__( 'Custom restricted access message', 'ultimate-member' ),
 							value: props.attributes.um_message_content,
 							onChange: function onChange( value ) {
 								props.setAttributes({ um_message_content: value });

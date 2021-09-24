@@ -483,10 +483,10 @@ jQuery(document).ready( function() {
 	});
 
 	function um_set_range_label( slider, ui ) {
-		console.log( slider );
 		var placeholder = '';
 		var placeholder_s = slider.siblings( '.um-slider-range' ).data( 'placeholder-s' );
 		var placeholder_p = slider.siblings( '.um-slider-range' ).data( 'placeholder-p' );
+		var um_range_min, um_range_max;
 
 		if ( ui ) {
 			if ( ui.values[ 0 ] === ui.values[ 1 ] ) {
@@ -499,6 +499,8 @@ jQuery(document).ready( function() {
 					.replace( '\{field_label\}', slider.siblings( '.um-slider-range' )
 						.data('label') );
 			}
+			um_range_min = ui.values[0];
+			um_range_max = ui.values[1];
 		} else {
 			if ( slider.slider( "values", 0 ) === slider.slider( "values", 1 ) ) {
 				placeholder = placeholder_s.replace( '\{value\}', slider.slider( "values", 0 ) )
@@ -510,11 +512,13 @@ jQuery(document).ready( function() {
 					.replace( '\{field_label\}', slider.siblings( '.um-slider-range' )
 						.data('label') );
 			}
+			um_range_min = slider.slider( "values", 0 );
+			um_range_max = slider.slider( "values", 1 );
 		}
 		slider.siblings( '.um-slider-range' ).html( placeholder );
 
-		slider.siblings( ".um_range_min" ).val( slider.slider( "values", 0 ) );
-		slider.siblings( ".um_range_max" ).val( slider.slider( "values", 1 ) );
+		slider.siblings( ".um_range_min" ).val( um_range_min );
+		slider.siblings( ".um_range_max" ).val( um_range_max );
 	}
 
 
@@ -557,7 +561,6 @@ jQuery(document).ready( function() {
 	jQuery( '.um-multi-text-add-option' ).on('click', function() {
 		var list = jQuery(this).siblings( 'ul.um-multi-text-list' );
 
-		var field_id = list.data( 'field_id' );
 		var k = 0;
 		if ( list.find( 'li:last input.um-forms-field' ).length > 0 ) {
 			k = list.find( 'li:last input.um-forms-field' ).attr('id').split("-");
@@ -566,7 +569,7 @@ jQuery(document).ready( function() {
 
 		var text_html = jQuery( '<div>' ).append( list.siblings('.um-hidden-multi-text').clone() ).html();
 
-		var classes = list.find('li:last').attr('class');
+		var classes = list.data('item_class');
 
 		list.append(
 			'<li class="' + classes + '"><span class="um-field-wrapper">' + text_html +

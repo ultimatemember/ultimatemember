@@ -45,6 +45,9 @@ class UM_WPML implements UM_Multilingual {
 			add_filter( 'um_is_core_page', array( &$this, 'is_core_page' ), 10, 2 );
 			add_filter( 'um_get_core_page_filter', array( &$this, 'localize_core_page_url' ), 10, 3 );
 			add_filter( 'um_localize_permalink_filter', array( &$this, 'localize_profile_permalink' ), 10, 2 );
+
+			add_filter( 'um_login_form_button_two_url', array( &$this, 'localize_page_url' ), 10, 2 );
+			add_filter( 'um_register_form_button_two_url', array( &$this, 'localize_page_url' ), 10, 2 );
 		}
 	}
 
@@ -290,9 +293,7 @@ class UM_WPML implements UM_Multilingual {
 	 */
 	public function get_page_url_for_language( $post_id, $language ) {
 
-		$url = get_permalink( $post_id );
-
-		if ( $this->is_active() ){
+		if ( $this->is_active() ) {
 			$lang_post_id = icl_object_id( $post_id, 'page', true, $language );
 
 			if ( $lang_post_id != 0 ) {
@@ -300,7 +301,7 @@ class UM_WPML implements UM_Multilingual {
 			}
 		}
 
-		return $url;
+		return empty( $url ) ? get_permalink( $post_id ) : $url;
 	}
 
 	/**
@@ -416,13 +417,12 @@ class UM_WPML implements UM_Multilingual {
 	 */
 	public function localize_core_page_url( $url, $slug, $updated ) {
 
-		if ( $this->is_active() ){
-			if ( function_exists( 'icl_get_current_language' ) && icl_get_current_language() != icl_get_default_language() ) {
-				$url = $this->get_page_url_for_language( UM()->config()->permalinks[$slug], icl_get_current_language() );
+		if ( $this->is_active() ) {
+			$page_id = UM()->config()->permalinks[$slug];
+			$url = $this->get_page_url_for_language( $page_id, icl_get_current_language() );
 
-				if ( $updated ) {
-					$url = add_query_arg( 'updated', esc_attr( $updated ), $url );
-				}
+			if ( $updated ) {
+				$url = add_query_arg( 'updated', esc_attr( $updated ), $url );
 			}
 		}
 
@@ -459,6 +459,24 @@ class UM_WPML implements UM_Multilingual {
 	}
 
 	/**
+	 * Get translated page URL.
+	 *
+	 * @param  string $url   Page URL or slug
+	 * @param  array  $args	Additional data
+	 * @return string
+	 */
+	public function localize_page_url( $url, $args = array() ) {
+
+		$page = get_page_by_path( trim( $url, "/ \n\r\t\v\0" ) );
+		if ( $page && is_a( $page, '\WP_Post' ) ) {
+			$language_codes = $this->get_languages_codes();
+			$url = $this->get_page_url_for_language( $page->ID, $language_codes['current'] );
+		}
+
+		return $url;
+	}
+
+	/**
 	 * Get translated profile page URL.
 	 *
 	 * @since  2.1.6
@@ -471,17 +489,26 @@ class UM_WPML implements UM_Multilingual {
 	public function localize_profile_permalink( $profile_url, $page_id ) {
 		global $sitepress;
 
-		if ( $this->is_active() ) {
-			if ( function_exists( 'icl_object_id' ) ) {
-				$language_code = ICL_LANGUAGE_CODE;
-				$lang_post_id = icl_object_id( $page_id, 'page', true, $language_code );
+		if ( $this->is_active() && function_exists( 'icl_object_id' ) ) {
 
-				if ( $lang_post_id != 0 ) {
-					$profile_url = get_permalink( $lang_post_id );
-				} else {
-					// No page found, it's most likely the homepage
-					$profile_url = $sitepress->language_url( $language_code );
+			static $language_code = null;
+			if( empty( $language_code ) && isset( $_SERVER['HTTP_REFERER'] ) ){
+				$referer = esc_url( $_SERVER['HTTP_REFERER'] );
+				if( strstr( $referer, home_url() ) ){
+					$language_code = $sitepress->get_language_from_url( $referer );
+					$sitepress->switch_lang( $language_code );
 				}
+			}
+			if( empty( $language_code ) ) {
+				$language_code = ICL_LANGUAGE_CODE;
+			}
+			$lang_post_id = icl_object_id( $page_id, 'page', true, $language_code );
+
+			if ( $lang_post_id != 0 ) {
+				$profile_url = get_permalink( $lang_post_id );
+			} else {
+				// No page found, it's most likely the homepage
+				$profile_url = $sitepress->language_url( $language_code );
 			}
 		}
 
@@ -536,14 +563,14 @@ class UM_WPML implements UM_Multilingual {
 	public function shortcode_pre_args_setup( $args ) {
 		global $sitepress;
 
-		if ( $this->is_active() ) {
+		if ( $this->is_active() && isset( $args['form_id'] ) ) {
 			$original_form_id = $sitepress->get_object_id( $args['form_id'], 'post', true, $sitepress->get_default_language() );
 
 			if ( $original_form_id != $args['form_id'] ) {
 				$original_post_data = UM()->query()->post_data( $original_form_id );
 
 				foreach ( $original_post_data as $key => $value ) {
-					if ( !isset( $args[$key] ) ) {
+					if ( ! isset( $args[$key] ) ) {
 						$args[$key] = $value;
 					}
 				}
