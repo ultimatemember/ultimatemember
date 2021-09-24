@@ -2,134 +2,6 @@
 	exit;
 }
 
-global $wpdb;
-
-if ( isset( $_REQUEST['_wp_http_referer'] ) ) {
-	$redirect = remove_query_arg( array( '_wp_http_referer' ), wp_unslash( $_REQUEST['_wp_http_referer'] ) );
-} else {
-	$redirect = get_admin_url() . 'admin.php?page=um_roles';
-}
-
-global $wp_roles;
-
-if ( isset( $_GET['action'] ) ) {
-	switch ( sanitize_key( $_GET['action'] ) ) {
-		/* delete action */
-		case 'delete': {
-			// uses sanitize_title instead of sanitize_key for backward compatibility based on #906 pull-request (https://github.com/ultimatemember/ultimatemember/pull/906)
-			// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
-			$role_keys = array();
-			if ( isset( $_REQUEST['id'] ) ) {
-				check_admin_referer( 'um_role_delete' . sanitize_title( $_REQUEST['id'] ) . get_current_user_id() );
-				$role_keys = (array) sanitize_title( $_REQUEST['id'] );
-			} elseif ( isset( $_REQUEST['item'] ) ) {
-				check_admin_referer( 'bulk-' . sanitize_key( __( 'Roles', 'ultimate-member' ) ) );
-				$role_keys = array_map( 'sanitize_title', $_REQUEST['item'] );
-			}
-
-			if ( ! count( $role_keys ) ) {
-				um_js_redirect( $redirect );
-			}
-
-			$um_roles = get_option( 'um_roles', array() );
-
-			$um_custom_roles = array();
-			foreach ( $role_keys as $k => $role_key ) {
-				$role_meta = get_option( "um_role_{$role_key}_meta" );
-
-				if ( empty( $role_meta['_um_is_custom'] ) ) {
-					continue;
-				}
-
-				delete_option( "um_role_{$role_key}_meta" );
-				$um_roles = array_diff( $um_roles, array( $role_key ) );
-
-				$roleID            = 'um_' . $role_key;
-				$um_custom_roles[] = $roleID;
-
-				//check if role exist before removing it
-				if ( get_role( $roleID ) ) {
-					remove_role( $roleID );
-				}
-			}
-
-			//set for users with deleted roles role "Subscriber"
-			$args = array(
-				'blog_id'     => get_current_blog_id(),
-				'role__in'    => $um_custom_roles,
-				'number'      => -1,
-				'count_total' => false,
-				'fields'      => 'ids',
-			);
-			$users_to_subscriber = get_users( $args );
-			if ( ! empty( $users_to_subscriber ) ) {
-				foreach ( $users_to_subscriber as $user_id ) {
-					$object_user = get_userdata( $user_id );
-
-					if ( ! empty( $object_user ) ) {
-						foreach ( $um_custom_roles as $roleID ) {
-							$object_user->remove_role( $roleID );
-						}
-					}
-
-					//update user role if it's empty
-					if ( empty( $object_user->roles ) ) {
-						wp_update_user(
-							array(
-								'ID'   => $user_id,
-								'role' => 'subscriber',
-							)
-						);
-					}
-				}
-			}
-
-			update_option( 'um_roles', $um_roles );
-
-			um_js_redirect( add_query_arg( 'msg', 'd', $redirect ) );
-			break;
-		}
-		case 'reset': {
-			// uses sanitize_title instead of sanitize_key for backward compatibility based on #906 pull-request (https://github.com/ultimatemember/ultimatemember/pull/906)
-			// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
-			$role_keys = array();
-			if ( isset( $_REQUEST['id'] ) ) {
-				check_admin_referer( 'um_role_reset' . sanitize_title( $_REQUEST['id'] ) . get_current_user_id() );
-				$role_keys = (array) sanitize_title( $_REQUEST['id'] );
-			} elseif ( isset( $_REQUEST['item'] ) ) {
-				check_admin_referer( 'bulk-' . sanitize_key( __( 'Roles', 'ultimate-member' ) ) );
-				$role_keys = array_map( 'sanitize_title', $_REQUEST['item'] );
-			}
-
-			if ( ! count( $role_keys ) ) {
-				um_js_redirect( $redirect );
-			}
-
-			foreach ( $role_keys as $k => $role_key ) {
-				$role_meta = get_option( "um_role_{$role_key}_meta" );
-
-				if ( ! empty( $role_meta['_um_is_custom'] ) ) {
-					unset( $role_keys[ array_search( $role_key, $role_keys, true ) ] );
-					continue;
-				}
-
-				delete_option( "um_role_{$role_key}_meta" );
-			}
-
-			um_js_redirect( add_query_arg( 'msg', 'reset', $redirect ) );
-			break;
-		}
-	}
-}
-
-//remove extra query arg
-if ( ! empty( $_GET['_wp_http_referer'] ) ) {
-	um_js_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce' ), wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
-}
-
-$order_by = 'name';
-$order    = ( isset( $_GET['order'] ) && 'asc' === strtolower( sanitize_key( $_GET['order'] ) ) ) ? 'ASC' : 'DESC';
-
 if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
@@ -210,10 +82,74 @@ class UM_Roles_List_Table extends WP_List_Table {
 	 *
 	 */
 	function prepare_items() {
+		$screen = $this->screen;
+
 		$columns               = $this->get_columns();
 		$hidden                = array();
 		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
+
+		$per_page = $this->get_items_per_page( str_replace( '-', '_', $screen->id . '_per_page' ), 20 );
+		$paged = $this->get_pagenum();
+
+		$users_count = count_users();
+
+		$roles = array();
+		$role_keys = get_option( 'um_roles', array() );
+
+		if ( $role_keys ) {
+			foreach ( $role_keys as $role_key ) {
+				$role_meta = get_option( "um_role_{$role_key}_meta" );
+				if ( $role_meta ) {
+					$roles[ 'um_' . $role_key ] = array(
+						'key'   => $role_key,
+						'users' => ! empty( $users_count['avail_roles'][ 'um_' . $role_key ] ) ? $users_count['avail_roles'][ 'um_' . $role_key ] : 0,
+					);
+					$roles[ 'um_' . $role_key ] = array_merge( $roles[ 'um_' . $role_key ], $role_meta );
+				}
+			}
+		}
+
+		global $wp_roles;
+
+		foreach ( $wp_roles->roles as $roleID => $role_data ) {
+			if ( in_array( $roleID, array_keys( $roles ) ) ) {
+				continue;
+			}
+
+			$roles[ $roleID ] = array(
+				'key'   => $roleID,
+				'users' => ! empty( $users_count['avail_roles'][ $roleID ] ) ? $users_count['avail_roles'][ $roleID ] : 0,
+				'name'  => $role_data['name'],
+			);
+
+			$role_meta = get_option( "um_role_{$roleID}_meta" );
+			if ( $role_meta ) {
+				$roles[ $roleID ] = array_merge( $roles[ $roleID ], $role_meta );
+			}
+		}
+
+		$order = ( isset( $_GET['order'] ) && 'asc' === strtolower( sanitize_key( $_GET['order'] ) ) ) ? 'asc' : 'desc';
+
+		switch( $order ) {
+			case 'asc':
+				uasort( $roles, function( $a, $b ) {
+					return strnatcmp( $a['name'], $b['name'] );
+				} );
+				break;
+			case 'desc':
+				uasort( $roles, function( $a, $b ) {
+					return strnatcmp( $a['name'], $b['name'] ) * -1;
+				} );
+				break;
+		}
+
+		$this->items = array_slice( $roles, ( $paged - 1 ) * $per_page, $per_page );
+
+		$this->set_pagination_args( array(
+			'total_items' => count( $roles ),
+			'per_page'    => $per_page,
+		) );
 	}
 
 
@@ -398,97 +334,34 @@ class UM_Roles_List_Table extends WP_List_Table {
 	function column_priority( $item ) {
 		echo ! empty( $item['_um_priority'] ) ? $item['_um_priority'] : '-';
 	}
-
-
-	/**
-	 * @param array $attr
-	 */
-	function um_set_pagination_args( $attr = array() ) {
-		$this->set_pagination_args( $attr );
-	}
 }
 
 
 $ListTable = new UM_Roles_List_Table( array(
-	'singular'  => __( 'Role', 'ultimate-member' ),
-	'plural'    => __( 'Roles', 'ultimate-member' ),
-	'ajax'      => false
+	'singular' => __( 'Role', 'ultimate-member' ),
+	'plural'   => __( 'Roles', 'ultimate-member' ),
+	'ajax'     => false,
 ));
 
-$per_page   = 20;
-$paged      = $ListTable->get_pagenum();
-
 $ListTable->set_bulk_actions( array(
-	'delete' => __( 'Delete', 'ultimate-member' )
+	'delete' => __( 'Delete', 'ultimate-member' ),
 ) );
 
 $ListTable->set_columns( array(
-	'title'         => __( 'Role Title', 'ultimate-member' ),
-	'roleid'        => __( 'Role ID', 'ultimate-member' ),
-	'users'         => __( 'No.of Members', 'ultimate-member' ),
-	'core'          => __( 'UM Custom Role', 'ultimate-member' ),
-	'admin_access'  => __( 'WP-Admin Access', 'ultimate-member' ),
-	'priority'      => __( 'Priority', 'ultimate-member' ),
+	'title'        => __( 'Role Title', 'ultimate-member' ),
+	'roleid'       => __( 'Role ID', 'ultimate-member' ),
+	'users'        => __( 'No.of Members', 'ultimate-member' ),
+	'core'         => __( 'UM Custom Role', 'ultimate-member' ),
+	'admin_access' => __( 'WP-Admin Access', 'ultimate-member' ),
+	'priority'     => __( 'Priority', 'ultimate-member' ),
 ) );
 
 $ListTable->set_sortable_columns( array(
-	'title' => 'title'
+	'title' => 'title',
 ) );
 
-$users_count = count_users();
-
-$roles = array();
-$role_keys = get_option( 'um_roles', array() );
-
-if ( $role_keys ) {
-	foreach ( $role_keys as $role_key ) {
-		$role_meta = get_option( "um_role_{$role_key}_meta" );
-		if ( $role_meta ) {
-
-			$roles[ 'um_' . $role_key ] = array(
-				'key'   => $role_key,
-				'users' => ! empty( $users_count['avail_roles'][ 'um_' . $role_key ] ) ? $users_count['avail_roles'][ 'um_' . $role_key ] : 0
-			);
-			$roles[ 'um_' . $role_key ] = array_merge( $roles[ 'um_' . $role_key ], $role_meta );
-		}
-	}
-}
-
-global $wp_roles;
-
-foreach ( $wp_roles->roles as $roleID => $role_data ) {
-	if ( in_array( $roleID, array_keys( $roles ) ) ) {
-		continue;
-	}
-
-	$roles[ $roleID ] = array(
-		'key'   => $roleID,
-		'users' => ! empty( $users_count['avail_roles'][ $roleID ] ) ? $users_count['avail_roles'][ $roleID ] : 0,
-		'name'  => $role_data['name']
-	);
-
-	$role_meta = get_option( "um_role_{$roleID}_meta" );
-	if ( $role_meta ) {
-		$roles[ $roleID ] = array_merge( $roles[ $roleID ], $role_meta );
-	}
-}
-
-switch( strtolower( $order ) ) {
-	case 'asc':
-		uasort( $roles, function( $a, $b ) {
-			return strnatcmp( $a['name'], $b['name'] );
-		} );
-		break;
-	case 'desc':
-		uasort( $roles, function( $a, $b ) {
-			return strnatcmp( $a['name'], $b['name'] ) * -1;
-		} );
-		break;
-}
-
 $ListTable->prepare_items();
-$ListTable->items = array_slice( $roles, ( $paged - 1 ) * $per_page, $per_page );
-$ListTable->um_set_pagination_args( array( 'total_items' => count( $roles ), 'per_page' => $per_page ) ); ?>
+?>
 
 <div class="wrap">
 	<h2>

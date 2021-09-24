@@ -238,6 +238,49 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 
 		/**
+		 * AJAX callback for getting the pages list
+		 */
+		function get_pages_list() {
+			// we will pass post IDs and titles to this array
+			$return = array();
+
+			$pre_result = apply_filters( 'um_admin_settings_get_pages_list', false );
+
+			if ( false === $pre_result ) {
+				// you can use WP_Query, query_posts() or get_posts() here - it doesn't matter
+				$search_results = new \WP_Query( array(
+					'post_type'           => 'page',
+					's'                   => sanitize_text_field( $_GET['search'] ), // the search query
+					'post_status'         => 'publish', // if you don't want drafts to be returned
+					'ignore_sticky_posts' => 1,
+					'posts_per_page'      => 10, // how much to show at once
+					'paged'               => absint( $_GET['page'] ),
+					'orderby'             => 'title',
+					'order'               => 'asc',
+				) );
+
+				if ( $search_results->have_posts() ) {
+					while ( $search_results->have_posts() ) {
+						$search_results->the_post();
+
+						// shorten the title a little
+						$title = ( mb_strlen( $search_results->post->post_title ) > 50 ) ? mb_substr( $search_results->post->post_title, 0, 49 ) . '...' : $search_results->post->post_title;
+						$title = sprintf( __( '%s (ID: %s)', 'ultimate-member' ), $title, $search_results->post->ID );
+						$return[] = array( $search_results->post->ID, $title ); // array( Post ID, Post Title )
+					}
+				}
+
+				$return['total_count'] = $search_results->found_posts;
+			} else {
+				// got already calculated posts array from 3rd-party integrations (e.g. WPML, Polylang)
+				$return = $pre_result;
+			}
+
+			wp_send_json( $return );
+		}
+
+
+		/**
 		 *
 		 */
 		public function init_variables() {
@@ -254,33 +297,41 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			);
 
 			foreach ( UM()->config()->get( 'predefined_pages' ) as $slug => $page ) {
-				$have_pages = UM()->query()->wp_pages();
 				$page_id    = UM()->options()->get_predefined_page_option_key( $slug );
 
 				$page_title = ! empty( $page['title'] ) ? $page['title'] : '';
 
-				if ( 'reached_maximum_limit' === $have_pages ) {
-					$general_pages_fields[] = array(
-						'id'          => $page_id,
-						'type'        => 'text',
-						// translators: %s: Page title
-						'label'       => sprintf( __( '%s page', 'ultimate-member' ), $page_title ),
-						'placeholder' => __( 'Add page ID', 'ultimate-member' ),
-						'compiler'    => true,
-						'size'        => 'small',
-					);
+				$options = array();
+				$page_value = '';
+
+				$pre_result = apply_filters( 'um_admin_settings_pages_list_value', false, $page_id );
+				if ( false === $pre_result ) {
+					if ( ! empty( $opt_value = UM()->options()->get( $page_id ) ) ) {
+						$title = get_the_title( $opt_value );
+						$title = ( mb_strlen( $title ) > 50 ) ? mb_substr( $title, 0, 49 ) . '...' : $title;
+						$title = sprintf( __( '%s (ID: %s)', 'ultimate-member' ), $title, $opt_value );
+
+						$options    = array( $opt_value => $title );
+						$page_value = $opt_value;
+					}
 				} else {
-					$general_pages_fields[] = array(
-						'id'          => $page_id,
-						'type'        => 'select',
-						// translators: %s: Page title
-						'label'       => sprintf( __( '%s page', 'ultimate-member' ), $page_title ),
-						'options'     => UM()->query()->wp_pages(),
-						'placeholder' => __( 'Choose a page...', 'ultimate-member' ),
-						'compiler'    => true,
-						'size'        => 'small',
-					);
+					// `page_value` variable that we transfer from 3rd-party hook for getting filtered option value also
+					$page_value = $pre_result['page_value'];
+					unset( $pre_result['page_value'] );
+
+					$options = $pre_result;
 				}
+
+				$general_pages_fields[] = array(
+					'id'          => $page_id,
+					'type'        => 'page_select',
+					// translators: %s: Page title
+					'label'       => sprintf( __( '%s page', 'ultimate-member' ), $page_title ),
+					'options'     => $options,
+					'value'       => $page_value,
+					'placeholder' => __( 'Choose a page...', 'ultimate-member' ),
+					'size'        => 'small',
+				);
 
 				$settings_map[ $page_id ] = array(
 					'sanitize' => 'absint',
@@ -1916,29 +1967,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			$current_tab = empty( $_GET['tab'] ) ? '' : sanitize_key( $_GET['tab'] );
 			$current_subtab = empty( $_GET['section'] ) ? '' : sanitize_key( $_GET['section'] );
 
-			$settings_struct = $this->settings_structure[ $current_tab ];
-
-			//remove not option hidden fields
-			if ( ! empty( $settings_struct['fields'] ) ) {
-				foreach ( $settings_struct['fields'] as $field_key => $field_options ) {
-
-					if ( isset( $field_options['is_option'] ) && $field_options['is_option'] === false ) {
-						unset( $settings_struct['fields'][ $field_key ] );
-					}
-
-				}
-			}
-
-			if ( empty( $settings_struct['fields'] ) && empty( $settings_struct['sections'] ) ) {
-				um_js_redirect( add_query_arg( array( 'page' => 'um_options' ), admin_url( 'admin.php' ) ) );
-			}
-
-			if ( ! empty( $settings_struct['sections'] ) ) {
-				if ( empty( $settings_struct['sections'][ $current_subtab ] ) ) {
-					um_js_redirect( add_query_arg( array( 'page' => 'um_options', 'tab' => $current_tab ), admin_url( 'admin.php' ) ) );
-				}
-			}
-
 			echo '<div id="um-settings-wrap" class="wrap"><h2>' .  __( 'Ultimate Member - Settings', 'ultimate-member' ) . '</h2>';
 
 			echo $this->generate_tabs_menu() . $this->generate_subtabs_menu( $current_tab );
@@ -2265,7 +2293,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					$arg['section'] = sanitize_key( $_GET['section'] );
 				}
 
-				um_js_redirect( add_query_arg( $arg, admin_url( 'admin.php' ) ) );
+				wp_redirect( add_query_arg( $arg, admin_url( 'admin.php' ) ) );
+				exit;
 			}
 		}
 

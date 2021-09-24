@@ -79,6 +79,8 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		/**
 		 * Get wp pages
 		 *
+		 * @deprecated since 3.0
+		 *
 		 * @return array|string
 		 */
 		function wp_pages() {

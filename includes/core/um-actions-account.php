@@ -444,7 +444,8 @@ function um_submit_account_details( $args ) {
 		$url = add_query_arg( 'updated', 'account', $url );
 	}
 
-	um_js_redirect( $url );
+	wp_safe_redirect( $url );
+	exit;
 }
 add_action( 'um_submit_account_details', 'um_submit_account_details' );
 

@@ -44,7 +44,8 @@ do_action( 'um_roles_add_meta_boxes', 'um_role_meta' );
  */
 do_action( 'um_roles_add_meta_boxes_um_role_meta' );
 
-$data   = array();
+$data = UM()->admin_menu()->um_roles_data;
+
 $option = array();
 global $wp_roles;
 
@@ -54,96 +55,11 @@ if ( ! empty( $_GET['id'] ) ) {
 	// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
 	$role_id = sanitize_title( $_GET['id'] );
 
-	$data = get_option( "um_role_{$role_id}_meta" );
+	if ( empty( $data ) ) {
+		$data = get_option( "um_role_{$role_id}_meta" );
 
-	if ( empty( $data['_um_is_custom'] ) ) {
-		$data['name'] = $wp_roles->roles[ $role_id ]['name'];
-	}
-}
-
-
-if ( ! empty( $_POST['role'] ) ) {
-
-	$id       = '';
-	$redirect = '';
-	$error    = '';
-
-	if ( 'add' === sanitize_key( $_GET['tab'] ) ) {
-		if ( ! wp_verify_nonce( $_POST['um_nonce'], 'um-add-role' ) ) {
-			$error = __( 'Security Issue', 'ultimate-member' ) . '<br />';
-		}
-	} else {
-		if ( ! wp_verify_nonce( $_POST['um_nonce'], 'um-edit-role' ) ) {
-			$error = __( 'Security Issue', 'ultimate-member' ) . '<br />';
-		}
-	}
-
-	if ( empty( $error ) ) {
-
-		$data = UM()->admin()->sanitize_role_meta( $_POST['role'] );
-
-		if ( 'add' === sanitize_key( $_GET['tab'] ) ) {
-
-			$data['name'] = trim( esc_html( strip_tags( $data['name'] ) ) );
-
-			if ( empty( $data['name'] ) ) {
-				$error .= __( 'Title is empty!', 'ultimate-member' ) . '<br />';
-			}
-
-			if ( preg_match( "/^[\p{Latin}\d\-_ ]+$/i", $data['name'] ) ) {
-				// uses sanitize_title instead of sanitize_key for backward compatibility based on #906 pull-request (https://github.com/ultimatemember/ultimatemember/pull/906)
-				// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
-				$id = sanitize_title( $data['name'] );
-			} else {
-				$auto_increment = UM()->options()->get( 'custom_roles_increment' );
-				$auto_increment = ! empty( $auto_increment ) ? $auto_increment : 1;
-				$id             = 'custom_role_' . $auto_increment;
-			}
-
-			$redirect = add_query_arg( array( 'page' => 'um_roles', 'tab' => 'edit', 'id' => $id, 'msg' => 'a' ), admin_url( 'admin.php' ) );
-		} elseif ( 'edit' === sanitize_key( $_GET['tab'] ) && ! empty( $_GET['id'] ) ) {
-			// uses sanitize_title instead of sanitize_key for backward compatibility based on #906 pull-request (https://github.com/ultimatemember/ultimatemember/pull/906)
-			// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
-			$id = sanitize_title( $_GET['id'] );
-
-			$pre_role_meta = get_option( "um_role_{$id}_meta", array() );
-			if ( isset( $pre_role_meta['name'] ) ) {
-				$data['name'] = $pre_role_meta['name'];
-			}
-
-			$redirect = add_query_arg( array( 'page' => 'um_roles', 'tab' => 'edit', 'id' => $id, 'msg'=> 'u' ), admin_url( 'admin.php' ) );
-		}
-
-
-		$all_roles = array_keys( get_editable_roles() );
-		if ( 'add' === sanitize_key( $_GET['tab'] ) ) {
-			if ( in_array( 'um_' . $id, $all_roles, true ) || in_array( $id, $all_roles, true ) ) {
-				$error .= __( 'Role already exists!', 'ultimate-member' ) . '<br />';
-			}
-		}
-
-		if ( '' === $error ) {
-
-			if ( 'add' === sanitize_key( $_GET['tab'] ) ) {
-				$roles   = get_option( 'um_roles', array() );
-				$roles[] = $id;
-
-				update_option( 'um_roles', $roles );
-
-				if ( isset( $auto_increment ) ) {
-					$auto_increment++;
-					UM()->options()->update( 'custom_roles_increment', $auto_increment );
-				}
-			}
-
-			$role_meta = $data;
-			unset( $role_meta['id'] );
-
-			update_option( "um_role_{$id}_meta", $role_meta );
-
-			UM()->user()->remove_cache_all_users();
-
-			um_js_redirect( $redirect );
+		if ( empty( $data['_um_is_custom'] ) ) {
+			$data['name'] = $wp_roles->roles[ $role_id ]['name'];
 		}
 	}
 }
@@ -192,9 +108,9 @@ $screen_id = $current_screen->id; ?>
 		}
 	}
 
-	if ( ! empty( $error ) ) { ?>
+	if ( ! empty( UM()->admin_menu()->um_roles_error ) ) { ?>
 		<div id="message" class="error fade">
-			<p><?php echo $error; ?></p>
+			<p><?php echo UM()->admin_menu()->um_roles_error; ?></p>
 		</div>
 	<?php } ?>
 
