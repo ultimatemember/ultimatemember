@@ -80,6 +80,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			add_action( 'um_admin_do_action__um_hide_exif_notice', array( &$this, 'um_hide_notice' ) );
 			add_action( 'um_admin_do_action__user_action', array( &$this, 'user_action' ) );
 
+			add_action( 'um_admin_do_action__install_predefined_page', array( &$this, 'install_predefined_page' ) );
 			add_action( 'um_admin_do_action__install_predefined_pages', array( &$this, 'install_predefined_pages' ) );
 
 			add_filter( 'admin_body_class', array( &$this, 'admin_body_class' ), 999 );
@@ -1909,15 +1910,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 
 		/**
-		 * Core pages installation
+		 *
 		 */
-		function install_predefined_pages() {
-			if ( ! is_admin() ) {
-				die();
-			}
-
-			UM()->install()->predefined_pages();
-
+		function dismiss_wrong_pages() {
 			//check empty pages in settings
 			$empty_pages = array();
 
@@ -1939,10 +1934,81 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			//if there aren't empty pages - then hide pages notice
 			if ( empty( $empty_pages ) ) {
 				$hidden_notices = get_option( 'um_hidden_admin_notices', array() );
+				if ( ! is_array( $hidden_notices ) ) {
+					$hidden_notices = array();
+				}
+
 				$hidden_notices[] = 'wrong_pages';
 
 				update_option( 'um_hidden_admin_notices', $hidden_notices );
 			}
+		}
+
+
+		/**
+		 * Install selected predefined page
+		 */
+		function install_predefined_page() {
+			if ( ! is_admin() ) {
+				die();
+			}
+
+			if ( ! current_user_can( 'manage_options' ) ) {
+				$url = add_query_arg( array( 'page' => 'um_options' ), admin_url( 'admin.php' ) );
+				exit( wp_redirect( $url ) );
+			}
+
+			$predefined_pages = array_keys( UM()->config()->get( 'predefined_pages' ) );
+
+			$page_slug = array_key_exists( 'um_page_slug', $_REQUEST ) ? sanitize_key( $_REQUEST['um_page_slug'] ) : '';
+
+			if ( empty( $page_slug ) || ! in_array( $page_slug, $predefined_pages, true ) ) {
+				$url = add_query_arg( array( 'page' => 'um_options' ), admin_url( 'admin.php' ) );
+				exit( wp_redirect( $url ) );
+			}
+
+			$post_ids = new \WP_Query( array(
+				'post_type'      => 'page',
+				'meta_query'     => array(
+					array(
+						'key'   => '_um_core',
+						'value' => $page_slug,
+					)
+				),
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+			) );
+
+			$post_ids = $post_ids->get_posts();
+
+			if ( ! empty( $post_ids ) ) {
+				foreach ( $post_ids as $post_id ) {
+					delete_post_meta( $post_id, '_um_core' );
+				}
+			}
+
+			UM()->install()->predefined_page( $page_slug );
+
+			// Auto dismiss 'wrong_pages' notice if it's visible
+			$this->dismiss_wrong_pages();
+
+			$url = add_query_arg( array( 'page' => 'um_options' ), admin_url( 'admin.php' ) );
+			exit( wp_redirect( $url ) );
+		}
+
+
+		/**
+		 * Core pages installation
+		 */
+		function install_predefined_pages() {
+			if ( ! is_admin() ) {
+				die();
+			}
+
+			UM()->install()->predefined_pages();
+
+			// Auto dismiss 'wrong_pages' notice if it's visible
+			$this->dismiss_wrong_pages();
 
 			$url = add_query_arg( array( 'page' => 'um_options' ), admin_url( 'admin.php' ) );
 			exit( wp_redirect( $url ) );

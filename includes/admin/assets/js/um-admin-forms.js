@@ -11,6 +11,7 @@ jQuery(document).ready( function() {
 					search: params.term, // search query
 					action: 'um_get_pages_list', // AJAX action for admin-ajax.php
 					page: params.page || 1, // infinite scroll pagination
+					nonce: um_admin_scripts.nonce
 				};
 			},
 			processResults: function( data, params ) {

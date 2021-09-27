@@ -370,7 +370,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 * @return string|void
 		 */
 		function get_template( $template_name, $basename = '', $t_args = array(), $echo = false ) {
-			_deprecated_function( 'UM()->get_template()', '3.0', 'um_get_template_html() or um_get_template()' );
+			_deprecated_function( __METHOD__, '3.0', 'um_get_template_html() or um_get_template()' );
 
 			if ( $echo ) {
 				um_get_template_html( $template_name, $t_args, '', '', $basename );
@@ -391,7 +391,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 * @return string
 		 */
 		function locate_template( $template_name, $path = '' ) {
-			_deprecated_function( 'UM()->locate_template()', '3.0', 'um_locate_template' );
+			_deprecated_function( __METHOD__, '3.0', 'um_locate_template' );
 
 			return um_locate_template( $template_name, '', '', $path );
 		}

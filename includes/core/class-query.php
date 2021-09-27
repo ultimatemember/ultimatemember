@@ -77,47 +77,6 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 
 
 		/**
-		 * Get wp pages
-		 *
-		 * @deprecated since 3.0
-		 *
-		 * @return array|string
-		 */
-		function wp_pages() {
-			global $wpdb;
-
-			if( isset( $this->wp_pages ) && ! empty( $this->wp_pages ) ){
-				return $this->wp_pages;
-			}
-
-			$count_pages = wp_count_posts('page');
-
-			if ( $count_pages->publish > 300 ){
-				return 'reached_maximum_limit';
-			}
-
-			$pages = $wpdb->get_results(
-				"SELECT * 
-				FROM {$wpdb->posts} 
-				WHERE post_type = 'page' AND 
-				      post_status = 'publish'",
-				OBJECT
-			);
-
-			$array = array();
-			if( $wpdb->num_rows > 0 ){
-				foreach ($pages as $page_data) {
-					$array[ $page_data->ID ] = $page_data->post_title;
-				}
-			}
-
-			$this->wp_pages = $array;
-
-			return $array;
-		}
-
-
-		/**
 		 * Get all forms
 		 *
 		 * @return mixed
@@ -437,15 +396,61 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 
 
 		/**
+		 * Get wp pages
+		 *
+		 * @deprecated 3.0
+		 *
+		 * @return array|string
+		 */
+		function wp_pages() {
+			_deprecated_function( __METHOD__, '3.0' );
+			global $wpdb;
+
+			if( isset( $this->wp_pages ) && ! empty( $this->wp_pages ) ){
+				return $this->wp_pages;
+			}
+
+			$count_pages = wp_count_posts('page');
+
+			if ( $count_pages->publish > 300 ){
+				return 'reached_maximum_limit';
+			}
+
+			$pages = $wpdb->get_results(
+				"SELECT * 
+				FROM {$wpdb->posts} 
+				WHERE post_type = 'page' AND 
+				      post_status = 'publish'",
+				OBJECT
+			);
+
+			$array = array();
+			if( $wpdb->num_rows > 0 ){
+				foreach ($pages as $page_data) {
+					$array[ $page_data->ID ] = $page_data->post_title;
+				}
+			}
+
+			$this->wp_pages = $array;
+
+			return $array;
+		}
+
+
+		/**
 		 * Checks if its a core page of UM
+		 *
+		 * @deprecated 3.0
 		 *
 		 * @param $post_id
 		 *
 		 * @return bool|mixed
 		 */
-		function is_core( $post_id ){
-			$is_core = get_post_meta($post_id, '_um_core', true);
-			if ( $is_core != '' ) {
+		function is_core( $post_id ) {
+			_deprecated_function( __METHOD__, '3.0' );
+
+			$is_core = get_post_meta( $post_id, '_um_core', true );
+			if ( $is_core !== '' ) {
 				return $is_core;
 			} else {
 				return false;

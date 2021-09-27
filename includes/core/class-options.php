@@ -178,7 +178,7 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		 * @return string
 		 */
 		function get_core_page_id( $key ) {
-			_deprecated_function( 'UM()->options()->get_core_page_id()', '3.0', 'UM()->options()->get_predefined_page_option_key()' );
+			_deprecated_function( __METHOD__, '3.0', 'UM()->options()->get_predefined_page_option_key()' );
 			return apply_filters( 'um_core_page_id_filter', $this->get_predefined_page_option_key( $key ) );
 		}
 	}

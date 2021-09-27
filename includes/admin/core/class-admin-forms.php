@@ -1036,7 +1036,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			if ( ! empty( $multiple ) ) {
 				$hidden = "<input type=\"hidden\" $hidden_name_attr value=\"\" />";
 			}
-			$html = "$hidden<select $multiple $id_attr $name_attr $class_attr $data_attr>$options</select>";
+
+			$button = '';
+			$slug = str_replace( 'core_', '', $field_data['id'] );
+			if ( ! um_get_predefined_page_id( $slug ) ) {
+				$button = '&nbsp;<a href="' . esc_url( add_query_arg( array( 'um_adm_action' => 'install_predefined_page', 'um_page_slug' => $slug ) ) ) . '" class="button button-primary">' . esc_html__( 'Create Default', 'ultimate-member' ) . '</a>';
+			}
+
+			$html = "$hidden<select $multiple $id_attr $name_attr $class_attr $data_attr>$options</select>$button";
 
 			return $html;
 		}

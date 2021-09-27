@@ -204,7 +204,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 * @deprecated 3.0
 		 */
 		function is_um_page() {
-			_deprecated_function( 'UM()->shortcodes()->is_um_page()', '3.0' );
+			_deprecated_function( __METHOD__, '3.0' );
 
 			if ( is_ultimatemember() ) {
 				remove_filter( 'the_content', 'wpautop' );

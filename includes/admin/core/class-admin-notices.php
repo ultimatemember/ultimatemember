@@ -147,6 +147,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$admin_notices = $this->get_admin_notices();
 
 			$hidden = get_option( 'um_hidden_admin_notices', array() );
+			if ( ! is_array( $hidden ) ) {
+				$hidden = array();
+			}
 
 			uasort( $admin_notices, array( &$this, 'notice_priority_sort' ) );
 
@@ -284,7 +287,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			}
 
 			$this->add_notice( 'old_extensions', array(
-				'class' => 'error',
+				'class'   => 'error',
 				'message' => '<p>' . sprintf( __( '<strong>%s %s</strong> requires 2.0 extensions. You have pre 2.0 extensions installed on your site. <br /> Please update %s extensions to latest versions. For more info see this <a href="%s" target="_blank">doc</a>.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version, ultimatemember_plugin_name, 'https://docs.ultimatemember.com/article/201-how-to-update-your-site' ) . '</p>',
 			), 0 );
 		}
@@ -332,8 +335,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				$test = get_post( $user_page_id );
 				if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
 					$this->add_notice( 'wrong_user_page', array(
-						'class'     => 'updated',
-						'message'   => '<p>' . __( 'Ultimate Member Setup Error: User page can not be a child page.', 'ultimate-member' ) . '</p>',
+						'class'   => 'updated',
+						'message' => '<p>' . __( 'Ultimate Member Setup Error: User page can not be a child page.', 'ultimate-member' ) . '</p>',
 					), 25 );
 				}
 			}
@@ -342,10 +345,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				$test = get_post( $account_page_id );
 				if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
 					$this->add_notice( 'wrong_account_page', array(
-						'class'     => 'updated',
-						'message'   => '<p>' . __( 'Ultimate Member Setup Error: Account page can not be a child page.', 'ultimate-member' ) . '</p>',
+						'class'   => 'updated',
+						'message' => '<p>' . __( 'Ultimate Member Setup Error: Account page can not be a child page.', 'ultimate-member' ) . '</p>',
 					), 30 );
 				}
+			}
+
+			if ( um_get_predefined_page_id( 'user' ) === um_get_predefined_page_id( 'account' ) ) {
+				$this->add_notice( 'wrong_account_user_page', array(
+					'class'   => 'error',
+					'message' => '<p>' . __( '<strong>Ultimate Member Setup Error:</strong> Account page and User page should be separate pages.', 'ultimate-member' ) . '</p>',
+				), 30 );
 			}
 		}
 
@@ -358,8 +368,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			if ( ! extension_loaded( 'exif' ) && ! $hide_exif_notice ) {
 				$this->add_notice( 'exif_disabled', array(
-					'class'     => 'updated',
-					'message'   => '<p>' . sprintf( __( 'Exif is not enabled on your server. Mobile photo uploads will not be rotated correctly until you enable the exif extension. <a href="%s">Hide this notice</a>', 'ultimate-member' ), add_query_arg( 'um_adm_action', 'um_hide_exif_notice' ) ) . '</p>',
+					'class'   => 'updated',
+					'message' => '<p>' . sprintf( __( 'Exif is not enabled on your server. Mobile photo uploads will not be rotated correctly until you enable the exif extension. <a href="%s">Hide this notice</a>', 'ultimate-member' ), add_query_arg( 'um_adm_action', 'um_hide_exif_notice' ) ) . '</p>',
 				), 10 );
 			}
 		}
@@ -383,7 +393,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					$confirm_uri = admin_url( 'users.php?' . http_build_query( array(
 						'um_adm_action' => 'delete_users',
 						'user'          => $request_users,
-						'confirm'       => 1
+						'confirm'       => 1,
 					) ) );
 					$users = '';
 
@@ -447,13 +457,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				foreach ( $messages as $message ) {
 					if ( isset( $message['err_content'] ) ) {
 						$this->add_notice( 'actions', array(
-							'class'     => 'error',
-							'message'   => '<p>' . $message['err_content'] . '</p>',
+							'class'   => 'error',
+							'message' => '<p>' . $message['err_content'] . '</p>',
 						), 50 );
 					} else {
 						$this->add_notice( 'actions', array(
-							'class'     => 'updated',
-							'message'   => '<p>' . $message['content'] . '</p>',
+							'class'   => 'updated',
+							'message' => '<p>' . $message['content'] . '</p>',
 						), 50 );
 					}
 				}
@@ -475,8 +485,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			if ( $invalid_folder ) {
 				$this->add_notice( 'invalid_dir', array(
-					'class'     => 'error',
-					'message'   => '<p>' . sprintf( __( 'You have installed <strong>%s</strong> with wrong folder name. Correct folder name is <strong>"ultimate-member"</strong>.', 'ultimate-member' ), ultimatemember_plugin_name ) . '</p>',
+					'class'   => 'error',
+					'message' => '<p>' . sprintf( __( 'You have installed <strong>%s</strong> with wrong folder name. Correct folder name is <strong>"ultimate-member"</strong>.', 'ultimate-member' ), ultimatemember_plugin_name ) . '</p>',
 				), 1 );
 			}
 		}
@@ -505,15 +515,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			if ( ! empty(  $arr_inactive_license_keys ) ) {
 				$this->add_notice( 'license_key', array(
-					'class'     => 'error',
-					'message'   => '<p>' . sprintf( __( 'There are %d inactive %s license keys for this site. This site is not authorized to get plugin updates. You can active this site on <a href="%s">www.ultimatemember.com</a>.', 'ultimate-member' ), count( $arr_inactive_license_keys ) , ultimatemember_plugin_name, UM()->store_url ) . '</p>',
+					'class'   => 'error',
+					'message' => '<p>' . sprintf( __( 'There are %d inactive %s license keys for this site. This site is not authorized to get plugin updates. You can active this site on <a href="%s">www.ultimatemember.com</a>.', 'ultimate-member' ), count( $arr_inactive_license_keys ) , ultimatemember_plugin_name, UM()->store_url ) . '</p>',
 				), 3 );
 			}
 
 			if ( $invalid_license ) {
 				$this->add_notice( 'license_key', array(
-					'class'     => 'error',
-					'message'   => '<p>' . sprintf( __( 'You have %d invalid or expired license keys for %s. Please go to the <a href="%s">Licenses page</a> to correct this issue.', 'ultimate-member' ), $invalid_license, ultimatemember_plugin_name, add_query_arg( array('page'=>'um_options', 'tab' => 'licenses'), admin_url( 'admin.php' ) ) ) . '</p>',
+					'class'   => 'error',
+					'message' => '<p>' . sprintf( __( 'You have %d invalid or expired license keys for %s. Please go to the <a href="%s">Licenses page</a> to correct this issue.', 'ultimate-member' ), $invalid_license, ultimatemember_plugin_name, add_query_arg( array('page'=>'um_options', 'tab' => 'licenses'), admin_url( 'admin.php' ) ) ) . '</p>',
 				), 3 );
 			}
 		}
@@ -538,20 +548,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				<?php $message = ob_get_clean();
 
 				$this->add_notice( 'upgrade', array(
-					'class'     => 'error',
-					'message'   => $message,
+					'class'   => 'error',
+					'message' => $message,
 				), 4 );
 			} else {
 				if ( isset( $_GET['msg'] ) && 'updated' === sanitize_key( $_GET['msg'] ) ) {
 					if ( isset( $_GET['page'] ) && 'um_options' === sanitize_key( $_GET['page'] ) ) {
 						$this->add_notice( 'settings_upgrade', array(
-							'class'     => 'updated',
-							'message'   => '<p>' . __( 'Settings successfully upgraded', 'ultimate-member' ) . '</p>',
+							'class'   => 'updated',
+							'message' => '<p>' . __( 'Settings successfully upgraded', 'ultimate-member' ) . '</p>',
 						), 4 );
 					} else {
 						$this->add_notice( 'upgrade', array(
-							'class'     => 'updated',
-							'message'   => '<p>' . sprintf( __( '<strong>%s %s</strong> Successfully Upgraded', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version ) . '</p>',
+							'class'   => 'updated',
+							'message' => '<p>' . sprintf( __( '<strong>%s %s</strong> Successfully Upgraded', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version ) . '</p>',
 						), 4 );
 					}
 				}
@@ -617,9 +627,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			<?php $message = ob_get_clean();
 
 			$this->add_notice( 'reviews_notice', array(
-				'class'         => 'updated',
-				'message'       => $message,
-				'dismissible'   => true
+				'class'       => 'updated',
+				'message'     => $message,
+				'dismissible' => true,
 			), 1 );
 		}
 
@@ -628,7 +638,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		 * Check Future Changes notice
 		 */
 		function future_changed() {
-
 			ob_start(); ?>
 
 			<p>
@@ -638,12 +647,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			<?php $message = ob_get_clean();
 
 			$this->add_notice( 'future_changes', array(
-				'class'         => 'updated',
-				'message'       => $message,
+				'class'   => 'updated',
+				'message' => $message,
 			), 2 );
 		}
 
 
+		/**
+		 *
+		 */
 		function dismiss_notice() {
 			UM()->admin()->check_ajax_nonce();
 
@@ -664,6 +676,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		}
 
 
+		/**
+		 *
+		 */
 		function force_dismiss_notice() {
 			if ( ! empty( $_REQUEST['um_dismiss_notice'] ) && ! empty( $_REQUEST['um_admin_nonce'] ) ) {
 				if ( wp_verify_nonce( $_REQUEST['um_admin_nonce'], 'um-admin-nonce' ) ) {

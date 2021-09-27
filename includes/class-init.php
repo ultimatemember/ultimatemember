@@ -497,7 +497,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @deprecated 3.0
 		 */
 		function activation() {
-			_deprecated_function( 'UM()->activation()', '3.0', 'UM()->install()->activation()' );
+			_deprecated_function( __METHOD__, '3.0', 'UM()->install()->activation()' );
 
 			UM()->install()->activation();
 		}
@@ -511,7 +511,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @deprecated 3.0
 		 */
 		function maybe_network_activation() {
-			_deprecated_function( 'UM()->maybe_network_activation()', '3.0', 'UM()->install()->maybe_network_activation()' );
+			_deprecated_function( __METHOD__, '3.0', 'UM()->install()->maybe_network_activation()' );
 
 			UM()->install()->maybe_network_activation();
 		}
@@ -523,7 +523,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @deprecated 3.0
 		 */
 		function single_site_activation() {
-			_deprecated_function( 'UM()->single_site_activation()', '3.0', 'UM()->install()->single_site_activation()' );
+			_deprecated_function( __METHOD__, '3.0', 'UM()->install()->single_site_activation()' );
 
 			UM()->install()->single_site_activation();
 		}
@@ -1060,7 +1060,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return um\core\Setup
 		 */
 		function setup() {
-			_deprecated_function( 'UM()->setup()', '3.0' );
+			_deprecated_function( __METHOD__, '3.0' );
 
 			if ( empty( $this->classes['setup'] ) ) {
 				$this->classes['setup'] = new um\core\Setup();
@@ -1562,7 +1562,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return um\Extensions
 		 */
 		function extensions() {
-			_deprecated_function( 'UM()->extensions()', '3.0' );
+			_deprecated_function( __METHOD__, '3.0' );
 
 			if ( empty( $this->classes['extensions'] ) ) {
 				$this->classes['extensions'] = new um\Extensions();

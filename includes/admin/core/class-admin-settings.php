@@ -241,6 +241,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 * AJAX callback for getting the pages list
 		 */
 		function get_pages_list() {
+			UM()->admin()->check_ajax_nonce();
+
 			// we will pass post IDs and titles to this array
 			$return = array();
 
@@ -2392,15 +2394,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				if ( ! empty( $_POST['um_options']['pages_settings'] ) ) {
 					$post_ids = new \WP_Query( array(
-						'post_type' => 'page',
-						'meta_query' => array(
+						'post_type'      => 'page',
+						'meta_query'     => array(
 							array(
-								'key'       => '_um_core',
-								'compare'   => 'EXISTS'
+								'key'     => '_um_core',
+								'compare' => 'EXISTS',
 							)
 						),
 						'posts_per_page' => -1,
-						'fields'        => 'ids'
+						'fields'         => 'ids',
 					) );
 
 					$post_ids = $post_ids->get_posts();
@@ -2412,8 +2414,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					}
 
 					foreach ( $_POST['um_options'] as $option_slug => $post_id ) {
-						$slug = str_replace( 'core_', '', $option_slug );
-						update_post_meta( $post_id, '_um_core', $slug );
+						$slug = str_replace( 'core_', '', sanitize_key( $option_slug ) );
+						update_post_meta( absint( $post_id ), '_um_core', $slug );
 					}
 
 					// reset rewrite rules after re-save pages
@@ -3176,13 +3178,13 @@ Exclude CSS/JS on Home: 		<?php if( UM()->options()->get( 'js_css_exlcude_home' 
  * ?>
  */
 do_action( "um_install_info_before_page_config" ); ?>
-User:						<?php echo get_permalink( UM()->options()->get('core_user') ) . "\n"; ?>
-Account:						<?php echo get_permalink( UM()->options()->get('core_account') ) . "\n"; ?>
-Members:					<?php echo get_permalink( UM()->options()->get('core_members') ) . "\n"; ?>
-Register:						<?php echo get_permalink( UM()->options()->get('core_register') ) . "\n"; ?>
-Login:						<?php echo get_permalink( UM()->options()->get('core_login') ) . "\n"; ?>
-Logout:						<?php echo get_permalink( UM()->options()->get('core_logout') ) . "\n"; ?>
-Password Reset:				<?php echo get_permalink( UM()->options()->get('core_password-reset') ) . "\n"; ?>
+User:						<?php echo um_get_predefined_page_url( 'user' ) . "\n"; ?>
+Account:					<?php echo um_get_predefined_page_url( 'account' ) . "\n"; ?>
+Members:					<?php echo um_get_predefined_page_url( 'members' ) . "\n"; ?>
+Register:					<?php echo um_get_predefined_page_url( 'register' ) . "\n"; ?>
+Login:						<?php echo um_get_predefined_page_url( 'login' ) . "\n"; ?>
+Logout:						<?php echo um_get_predefined_page_url( 'logout' ) . "\n"; ?>
+Password Reset:				<?php echo um_get_predefined_page_url( 'password-reset' ) . "\n"; ?>
 						<?php
 						/**
 						 * UM hook

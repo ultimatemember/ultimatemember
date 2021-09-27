@@ -47,67 +47,6 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 
 
 		/**
-		 * SEO canonical href bugfix
-		 *
-		 * @deprecated 2.1.7
-		 *
-		 * @see function um_profile_remove_wpseo()
-		 */
-		function um_rel_canonical_() {
-			_deprecated_function( 'UM()->permalinks()->um_rel_canonical_()', '2.1.7', 'um_profile_remove_wpseo' );
-
-			global $wp_the_query;
-
-			if ( ! is_singular() ) {
-				return;
-			}
-
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_allow_canonical__filter
-			 * @description Allow canonical
-			 * @input_vars
-			 * [{"var":"$allow_canonical","type":"bool","desc":"Allow?"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_allow_canonical__filter', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_allow_canonical__filter', 'my_allow_canonical', 10, 1 );
-			 * function my_allow_canonical( $allow_canonical ) {
-			 *     // your code here
-			 *     return $allow_canonical;
-			 * }
-			 * ?>
-			 */
-			$enable_canonical = apply_filters( "um_allow_canonical__filter", true );
-
-			if( ! $enable_canonical )
-				return;
-
-			if ( ! $id = $wp_the_query->get_queried_object_id() ) {
-				return;
-			}
-
-			if ( um_is_predefined_page( 'user', $id ) ) {
-				$link = esc_url( $this->get_current_url() );
-				echo "<link rel=\"canonical\" href=\"$link\" />\n";
-				return;
-			}
-
-			$link = get_permalink( $id );
-			if ( $page = get_query_var( 'cpage' ) ) {
-				$link = get_comments_pagenum_link( $page );
-				echo "<link rel=\"canonical\" href=\"$link\" />\n";
-			}
-
-		}
-
-
-		/**
 		 * Get query as array
 		 *
 		 * @return array

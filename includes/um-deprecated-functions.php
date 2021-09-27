@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return bool
  */
 function is_ultimatemember() {
-	_deprecated_function( 'is_ultimatemember', '3.0' );
+	_deprecated_function( __FUNCTION__, '3.0' );
 
 	global $post;
 
@@ -50,7 +50,7 @@ function is_ultimatemember() {
  * @return string
  */
 function um_get_core_page( $slug, $updated = false ) {
-	_deprecated_function( 'um_get_core_page', '3.0', 'um_get_predefined_page_url' );
+	_deprecated_function( __FUNCTION__, '3.0', 'um_get_predefined_page_url' );
 
 	$url = um_get_predefined_page_url( $slug );
 	if ( $updated ) {
@@ -69,7 +69,7 @@ function um_get_core_page( $slug, $updated = false ) {
  * @return  string
  */
 function um_get_domain_protocol() {
-	_deprecated_function( 'um_get_domain_protocol', '3.0' );
+	_deprecated_function( __FUNCTION__, '3.0' );
 	if ( is_ssl() ) {
 		$protocol = 'https://';
 	} else {
@@ -89,7 +89,7 @@ function um_get_domain_protocol() {
  * @return bool
  */
 function um_is_core_post( $post, $slug ) {
-	_deprecated_function( 'um_is_core_post', '3.0', 'um_is_predefined_page' );
+	_deprecated_function( __FUNCTION__, '3.0', 'um_is_predefined_page' );
 	return um_is_predefined_page( $slug, $post );
 }
 
@@ -108,7 +108,7 @@ function um_is_core_post( $post, $slug ) {
  * @return bool
  */
 function um_is_core_page( $slug, $post = null ) {
-	_deprecated_function( 'um_is_core_page', '3.0', 'um_is_predefined_page' );
+	_deprecated_function( __FUNCTION__, '3.0', 'um_is_predefined_page' );
 	return um_is_predefined_page( $slug, $post );
 }
 
@@ -116,9 +116,10 @@ function um_is_core_page( $slug, $post = null ) {
 /**
  * @param $url
  *
- * @deprecated since 3.0
+ * @deprecated 3.0
  */
 function um_js_redirect( $url ) {
+	_deprecated_function( __FUNCTION__, '3.0', 'wp_redirect or wp_safe_redirect' );
 	if ( headers_sent() || empty( $url ) ) {
 		//for blank redirects
 		if ( '' == $url ) {

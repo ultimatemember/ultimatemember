@@ -328,7 +328,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 * @return mixed|void
 		 */
 		function get_template_filename( $template_name ) {
-			_deprecated_function( 'UM()->mail()->get_template_filename()', '3.0' );
+			_deprecated_function( __METHOD__, '3.0' );
 
 			/**
 			 * UM hook
@@ -363,7 +363,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 * @return string
 		 */
 		function get_blog_id() {
-			_deprecated_function( 'UM()->mail()->get_blog_id()', '3.0' );
+			_deprecated_function( __METHOD__, '3.0' );
 
 			$blog_id = '';
 			if ( is_multisite() ) {
@@ -384,7 +384,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 * @return string
 		 */
 		function locate_template( $template_name ) {
-			_deprecated_function( 'UM()->mail()->locate_template()', '3.0' );
+			_deprecated_function( __METHOD__, '3.0' );
 
 			// check if there is template at theme folder
 			$blog_id = $this->get_blog_id();
@@ -442,7 +442,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 * @return bool|string
 		 */
 		function get_email_template( $slug, $args = array() ) {
-			_deprecated_function( 'UM()->mail()->get_email_template()', '3.0', 'um_get_template' );
+			_deprecated_function( __METHOD__, '3.0', 'um_get_template' );
 
 			$located = $this->locate_template( $slug );
 
@@ -541,7 +541,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 * @return string
 		 */
 		function get_template_file( $location, $template_name ) {
-			_deprecated_function( 'UM()->mail()->get_template_file()', '3.0' );
+			_deprecated_function( __METHOD__, '3.0' );
 			$template_path = '';
 			$template_name_file = $this->get_template_filename( $template_name );
 
@@ -572,7 +572,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 * @return string
 		 */
 		function template_in_theme( $template_name ) {
-			_deprecated_function( 'UM()->mail()->template_in_theme()', '3.0' );
+			_deprecated_function( __METHOD__, '3.0' );
 			$template_name_file = $this->get_template_filename( $template_name );
 
 			$blog_id = $this->get_blog_id();
@@ -600,7 +600,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 * @return bool
 		 */
 		function copy_email_template( $template ) {
-			_deprecated_function( 'UM()->mail()->copy_email_template()', '3.0' );
+			_deprecated_function( __METHOD__, '3.0' );
 
 			$in_theme = $this->template_in_theme( $template );
 			if ( $in_theme ) {

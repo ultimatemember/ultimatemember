@@ -275,8 +275,63 @@ KEY meta_value_indx (um_value(191))
 			update_option( 'um_core_directories', array( $form_id ) );
 		}
 
+
 		/**
-		 * Install Core Pages
+		 * Install selected predefined pages by $slug
+		 *
+		 * @param string $slug
+		 * @param bool $with_rewrite
+		 *
+		 * @since 3.0
+		 */
+		function predefined_page( $slug, $with_rewrite = true ) {
+			$page_exists = UM()->query()->find_post_id( 'page', '_um_core', $slug );
+			if ( $page_exists ) {
+				return;
+			}
+
+			$predefined_pages = UM()->config()->get( 'predefined_pages' );
+			if ( empty( $predefined_pages ) || ! array_key_exists( $slug, $predefined_pages ) ) {
+				return;
+			}
+
+			$data = $predefined_pages[ $slug ];
+
+			if ( empty( $data['title'] ) ) {
+				return;
+			}
+
+			$content = ! empty( $data['content'] ) ? $data['content'] : '';
+			$content = apply_filters( 'um_setup_predefined_page_content', $content, $slug );
+
+			$user_page = array(
+				'post_title'     => $data['title'],
+				'post_content'   => $content,
+				'post_name'      => $slug,
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'post_author'    => get_current_user_id(),
+				'comment_status' => 'closed',
+			);
+
+			$post_id = wp_insert_post( $user_page );
+			if ( empty( $post_id ) || is_wp_error( $post_id ) ) {
+				return;
+			}
+
+			update_post_meta( $post_id, '_um_core', $slug );
+
+			UM()->options()->update( UM()->options()->get_predefined_page_option_key( $slug ), $post_id );
+
+			if ( $with_rewrite ) {
+				// reset rewrite rules after page creation and option upgrade
+				UM()->rewrite()->reset_rules();
+			}
+		}
+
+
+		/**
+		 * Install all predefined pages
 		 *
 		 * @since 3.0
 		 */
@@ -287,37 +342,8 @@ KEY meta_value_indx (um_value(191))
 
 			//Install Core Pages
 			foreach ( UM()->config()->get( 'predefined_pages' ) as $slug => $data ) {
-
-				$page_exists = UM()->query()->find_post_id( 'page', '_um_core', $slug );
-				if ( $page_exists ) {
-					continue;
-				}
-
-				if ( empty( $data['title'] ) ) {
-					continue;
-				}
-
-				$content = ! empty( $data['content'] ) ? $data['content'] : '';
-				$content = apply_filters( 'um_setup_predefined_page_content', $content, $slug );
-
-				$user_page = array(
-					'post_title'     => $data['title'],
-					'post_content'   => $content,
-					'post_name'      => $slug,
-					'post_type'      => 'page',
-					'post_status'    => 'publish',
-					'post_author'    => get_current_user_id(),
-					'comment_status' => 'closed',
-				);
-
-				$post_id = wp_insert_post( $user_page );
-				if ( empty( $post_id ) || is_wp_error( $post_id ) ) {
-					continue;
-				}
-
-				update_post_meta( $post_id, '_um_core', $slug );
-
-				UM()->options()->update( UM()->options()->get_predefined_page_option_key( $slug ), $post_id );
+				// fires without rewrites for making that after the loop
+				$this->predefined_page( $slug, false );
 			}
 
 			// reset rewrite rules after first install of core pages

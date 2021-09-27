@@ -935,7 +935,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 * @return array
 		 */
 		function get_core_pages() {
-			_deprecated_function( 'UM()->config()->get_core_pages()', '3.0' );
+			_deprecated_function( __METHOD__, '3.0' );
 
 			$permalink = array();
 			$core_pages = array_keys( $this->core_pages );

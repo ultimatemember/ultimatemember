@@ -50,7 +50,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 				return;
 			}
 
-			$profile_id = UM()->options()->get( 'core_user' );
+			$profile_id = um_get_predefined_page_id( 'user' );
 			$post = get_post( $profile_id );
 
 			if ( empty( $post ) || is_wp_error( $post ) ) {
@@ -137,6 +137,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		 * @return string
 		 */
 		function get_status_html( $template, $code ) {
+			_deprecated_function( __METHOD__, '3.0', 'um_wpml_get_status_html()' );
 			return um_wpml_get_status_html( $template, $code );
 		}
 
@@ -151,6 +152,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		 * @return string
 		 */
 		function render_status_icon( $link, $text, $img ) {
+			_deprecated_function( __METHOD__, '3.0', 'um_wpml_render_status_icon()' );
 			return um_wpml_render_status_icon( $link, $text, $img );
 		}
 
@@ -163,6 +165,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		 * @return bool|mixed
 		 */
 		function is_wpml_active() {
+			_deprecated_function( __METHOD__, '3.0', 'UM()->integrations()->is_wpml_active()' );
 			return UM()->integrations()->is_wpml_active();
 		}
 
@@ -175,6 +178,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		 * @return array
 		 */
 		function get_languages_codes( $current_code = false ) {
+			_deprecated_function( __METHOD__, '3.0', 'um_wpml_get_languages_codes()' );
 			return um_wpml_get_languages_codes();
 		}
 	}
