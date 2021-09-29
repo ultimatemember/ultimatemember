@@ -534,13 +534,16 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			}
 
 			if ( ! empty( $directory_data['roles'] ) ) {
-				if ( ! empty( $this->roles ) ) {
-					$this->roles = array_intersect( $this->roles, maybe_unserialize( $directory_data['roles'] ) );
-				} else {
-					$this->roles = array_merge( $this->roles, maybe_unserialize( $directory_data['roles'] ) );
-				}
+				$directory_data_roles = maybe_unserialize( $directory_data['roles'] );
+				if ( ! empty( $directory_data_roles ) ) {
+					if ( ! empty( $this->roles ) ) {
+						$this->roles = array_intersect( $this->roles, $directory_data_roles );
+					} else {
+						$this->roles = array_merge( $this->roles, $directory_data_roles );
+					}
 
-				$this->roles_in_query = true;
+					$this->roles_in_query = true;
+				}
 			}
 
 			if ( ! empty( $this->roles ) ) {

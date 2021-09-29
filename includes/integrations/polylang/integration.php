@@ -453,3 +453,25 @@ function um_admin_settings_pages_list_value_polylang( $pre_result, $page_id ) {
 	return $pre_result;
 }
 add_filter( 'um_admin_settings_pages_list_value', 'um_admin_settings_pages_list_value_polylang', 10, 2 );
+
+
+/**
+ * @param array $variables
+ *
+ * @return array
+ */
+function um_common_js_variables_polylang( $variables ) {
+	$variables['locale'] = pll_current_language();
+	return $variables;
+}
+add_filter( 'um_common_js_variables', 'um_common_js_variables_polylang', 10, 1 );
+
+
+/**
+ * @param string $locale
+ */
+function um_admin_init_locale_polylang( $locale ) {
+	global $polylang;
+	PLL()->curlang = $polylang->model->get_language( $locale );
+}
+add_action( 'um_admin_init_locale', 'um_admin_init_locale_polylang', 10, 1 );

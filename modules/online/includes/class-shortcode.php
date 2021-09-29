@@ -40,11 +40,6 @@ class Shortcode {
 		$args['online'] = UM()->Online()->get_users();
 		$template = ( $args['online'] && count( $args['online'] ) > 0 ) ? 'online' : 'nobody';
 
-		ob_start();
-
-		UM()->get_template( "{$template}.php", um_online_plugin, $args, true );
-
-		$output = ob_get_clean();
-		return $output;
+		return um_get_template_html( "{$template}.php", $args, 'online' );
 	}
 }

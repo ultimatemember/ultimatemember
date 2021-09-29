@@ -5,7 +5,7 @@ if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 	//Only for AJAX loading posts
 	if ( ! empty( $comments ) ) {
 		foreach ( $comments as $comment ) {
-			UM()->get_template( 'profile/comments-single.php', '', array( 'comment' => $comment ), true );
+			um_get_template( 'profile/comments-single.php', array( 'comment' => $comment ) );
 		}
 	}
 } else {
@@ -13,7 +13,7 @@ if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 		<div class="um-ajax-items">
 
 			<?php foreach ( $comments as $comment ) {
-				UM()->get_template( 'profile/comments-single.php', '', array( 'comment' => $comment ), true );
+				um_get_template( 'profile/comments-single.php', array( 'comment' => $comment ) );
 			}
 
 			if ( $count_comments > 10 ) { ?>

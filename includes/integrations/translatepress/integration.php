@@ -51,3 +51,15 @@ function um_get_predefined_page_id_translatepress( $page_id, $slug ) {
 	return $page_id;
 }
 add_filter( 'um_get_predefined_page_id', 'um_get_predefined_page_id_translatepress', 10, 2 );
+
+
+/**
+ * @param array $variables
+ *
+ * @return array
+ */
+function um_common_js_variables_translatepress( $variables ) {
+	$variables['locale'] = get_locale();
+	return $variables;
+}
+add_filter( 'um_common_js_variables', 'um_common_js_variables_translatepress', 10, 1 );

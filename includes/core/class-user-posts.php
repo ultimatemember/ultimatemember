@@ -70,7 +70,7 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 				$count_posts = count( $count_posts );
 			}
 
-			UM()->get_template( 'profile/posts.php', '', array( 'posts' => $posts, 'count_posts' => $count_posts ), true );
+			um_get_template( 'profile/posts.php', array( 'posts' => $posts, 'count_posts' => $count_posts ) );
 		}
 
 
@@ -94,7 +94,7 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 				'count'         => 1,
 			) );
 
-			UM()->get_template( 'profile/comments.php', '', array( 'comments' => $comments, 'count_comments' => $comments_count ), true );
+			um_get_template( 'profile/comments.php', array( 'comments' => $comments, 'count_comments' => $comments_count ) );
 		}
 
 
@@ -142,7 +142,7 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 			$args = apply_filters( 'um_profile_query_make_posts', $args );
 			$posts = get_posts( $args );
 
-			UM()->get_template( 'profile/posts.php', '', array( 'posts' => $posts ), true );
+			um_get_template( 'profile/posts.php', array( 'posts' => $posts ) );
 			wp_die();
 		}
 
@@ -164,7 +164,7 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 				'type__not_in'  => apply_filters( 'um_excluded_comment_types', array('') ),
 			) );
 
-			UM()->get_template( 'profile/comments.php', '', array( 'comments' => $comments ), true );
+			um_get_template( 'profile/comments.php', array( 'comments' => $comments ) );
 			wp_die();
 		}
 

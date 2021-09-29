@@ -4,7 +4,7 @@ if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 	//Only for AJAX loading posts
 	if ( ! empty( $posts ) ) {
 		foreach ( $posts as $post ) {
-			UM()->get_template( 'profile/posts-single.php', '', array( 'post' => $post ), true );
+			um_get_template( 'profile/posts-single.php', array( 'post' => $post ) );
 		}
 	}
 } else {
@@ -12,7 +12,7 @@ if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 		<div class="um-ajax-items">
 
 			<?php foreach ( $posts as $post ) {
-				UM()->get_template( 'profile/posts-single.php', '', array( 'post' => $post ), true );
+				um_get_template( 'profile/posts-single.php', array( 'post' => $post ) );
 			}
 
 			if ( $count_posts > 10 ) { ?>

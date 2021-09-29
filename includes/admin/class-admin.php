@@ -2244,6 +2244,11 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 				 */
 				do_action( "um_admin_do_action__{$action}", $action );
 			}
+
+			if ( ! empty( $_REQUEST['um_current_locale'] ) ) {
+				$locale = sanitize_key( $_REQUEST['um_current_locale'] );
+				do_action( 'um_admin_init_locale', $locale );
+			}
 		}
 
 

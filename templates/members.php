@@ -152,11 +152,10 @@ if ( $filters_expanded ) {
 //send $args variable to the templates
 $args['args'] = $args;
 foreach ( $args['view_types'] as $type ) {
-	$basename = UM()->member_directory()->get_type_basename( $type );
-	UM()->get_template( 'members-' . $type . '.php', $basename, $args, true );
+	um_get_template( 'members-' . $type . '.php', $args );
 }
-UM()->get_template( 'members-header.php', '', $args, true );
-UM()->get_template( 'members-pagination.php', '', $args, true );
+um_get_template( 'members-header.php', $args );
+um_get_template( 'members-pagination.php', $args );
 
 $must_search = 0;
 $not_searched = false;

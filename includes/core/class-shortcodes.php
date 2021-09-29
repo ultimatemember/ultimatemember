@@ -370,7 +370,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 					echo '';
 				} else {
 					$args['lock_text'] = $this->convert_locker_tags( $args['lock_text'] );
-					UM()->get_template( 'login-to-view.php', '', $args, true );
+					um_get_template( 'login-to-view.php', $args );
 				}
 			} else {
 				if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {

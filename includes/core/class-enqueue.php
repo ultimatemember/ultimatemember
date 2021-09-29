@@ -35,6 +35,18 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 
 
 		/**
+		 * @var string
+		 */
+		var $css_url_v3;
+
+
+		/**
+		 * @var string
+		 */
+		var $js_url_v3;
+
+
+		/**
 		 * Enqueue constructor.
 		 */
 		function __construct() {
@@ -42,6 +54,9 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 
 			$this->js_baseurl = um_url . 'assets/js/';
 			$this->css_baseurl = um_url . 'assets/css/';
+
+			$this->js_url_v3 = um_url . 'assets/v3/js/';
+			$this->css_url_v3 = um_url . 'assets/v3/css/';
 
 			add_action( 'init',  array( &$this, 'scripts_enqueue_priority' ) );
 		}
@@ -87,6 +102,14 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 		 *
 		 */
 		function register_scripts() {
+
+			wp_register_script( 'um_common_v3', $this->js_url_v3 . 'common.js', array( 'jquery' ), ultimatemember_version, true );
+			$um_common_variables = apply_filters( 'um_common_js_variables', array(
+				'locale' => get_locale(),
+			) );
+			wp_localize_script( 'um_common_v3', 'um_common_variables', $um_common_variables );
+			wp_enqueue_script( 'um_common_v3' );
+
 			$dequeue_select2 = apply_filters( 'um_dequeue_select2_scripts', false );
 			if ( class_exists( 'WooCommerce' ) || $dequeue_select2 ) {
 				wp_dequeue_style( 'select2' );

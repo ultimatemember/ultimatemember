@@ -473,6 +473,30 @@ add_filter( 'um_admin_settings_pages_list_value', 'um_admin_settings_pages_list_
 
 
 /**
+ * @param array $variables
+ *
+ * @return array
+ */
+function um_common_js_variables_wpml( $variables ) {
+	global $sitepress;
+
+	$variables['locale'] = $sitepress->get_current_language();
+	return $variables;
+}
+add_filter( 'um_common_js_variables', 'um_common_js_variables_wpml', 10, 1 );
+
+
+/**
+ * @param string $locale
+ */
+function um_admin_init_locale_wpml( $locale ) {
+	global $sitepress;
+	$sitepress->switch_lang( $locale );
+}
+add_action( 'um_admin_init_locale', 'um_admin_init_locale_wpml', 10, 1 );
+
+
+/**
  * UM filter - Restore original arguments on translated page
  *
  * @todo Customize this form metadata

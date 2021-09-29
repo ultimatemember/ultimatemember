@@ -149,9 +149,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * Get view Type template
 		 * @param string $type
 		 *
+		 * @deprecated 3.0
+		 *
 		 * @return string
 		 */
 		function get_type_basename( $type ) {
+			_deprecated_function( __METHOD__, '3.0' );
 			return apply_filters( "um_member_directory_{$type}_type_template_basename", '' );
 		}
 
@@ -2459,7 +2462,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				unset( $this->query_args['meta_query'] );
 			}
 
-			if ( isset( $this->query_args['role__in'] ) && empty( $this->query_args['role__in'] ) ) {
+			if ( is_user_logged_in() && ! UM()->roles()->um_user_can( 'can_view_all' ) && isset( $this->query_args['role__in'] ) && empty( $this->query_args['role__in'] ) ) {
 				$member_directory_response = apply_filters( 'um_ajax_get_members_response', array(
 					'pagination'    => $this->calculate_pagination( $directory_data, 0 ),
 					'users'         => array(),

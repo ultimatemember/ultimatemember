@@ -361,6 +361,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 
 			wp_register_script( 'um_admin_builder_v3', $this->js_url_v3 . 'admin-builder.js', ['jquery', 'wp-util'], ultimatemember_version, true );
 			wp_enqueue_script( 'um_admin_builder_v3' );
+
+			wp_register_script( 'um_common_v3', $this->js_url_v3 . 'common.js', array( 'jquery' ), ultimatemember_version, true );
+
+			$um_common_variables = apply_filters( 'um_common_js_variables', array(
+				'locale' => get_locale(),
+			) );
+			wp_localize_script( 'um_common_v3', 'um_common_variables', $um_common_variables );
+
+			wp_enqueue_script( 'um_common_v3' );
 		}
 
 

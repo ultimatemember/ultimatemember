@@ -136,3 +136,17 @@ function um_get_predefined_page_id_weglot( $page_id, $slug ) {
 	return $page_id;
 }
 add_filter( 'um_get_predefined_page_id', 'um_get_predefined_page_id_weglot', 10, 2 );
+
+
+/**
+ * @param array $variables
+ *
+ * @return array
+ * @throws Exception
+ */
+function um_common_js_variables_weglot( $variables ) {
+	$codes = um_weglot_get_languages_codes();
+	$variables['locale'] = $codes['current'];
+	return $variables;
+}
+add_filter( 'um_common_js_variables', 'um_common_js_variables_weglot', 10, 1 );

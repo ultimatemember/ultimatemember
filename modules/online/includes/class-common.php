@@ -114,11 +114,7 @@ class Common {
 
 		$args['is_online'] = UM()->Online()->is_online( um_profile_id() );
 
-		ob_start();
-
-		UM()->get_template( 'online-marker.php', um_online_plugin, $args, true );
-
-		ob_end_flush();
+		um_get_template( 'online-marker.php', $args, 'online' );
 	}
 
 
@@ -191,12 +187,7 @@ class Common {
 
 		$args['is_online'] = UM()->Online()->is_online( um_user('ID') );
 
-		ob_start();
-
-		UM()->get_template( 'online-text.php', um_online_plugin, $args, true );
-
-		$output = ob_get_clean();
-		return $output;
+		return um_get_template_html( 'online-text.php', $args, 'online' );
 	}
 
 
@@ -212,11 +203,7 @@ class Common {
 
 		$args['is_online'] = UM()->Online()->is_online( um_user('ID') );
 
-		ob_start();
-
-		UM()->get_template( 'online-marker.php', um_online_plugin, $args, true );
-
-		ob_end_flush();
+		um_get_template( 'online-marker.php', $args, 'online' );
 	}
 
 
