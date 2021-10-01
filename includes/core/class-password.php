@@ -458,7 +458,11 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			}
 
 			if ( ( ! is_email( $user ) && ! username_exists( $user ) ) || ( is_email( $user ) && ! email_exists( $user ) ) ) {
-				UM()->form()->add_error( 'username_b', __( 'We can\'t find an account registered with that address or username', 'ultimate-member' ) );
+				if (UM()->options()->get('enable_hide_valid_email_addresses')) {
+					exit( wp_redirect( um_get_core_page('password-reset', 'checkemail' ) ) );
+				} else {
+					UM()->form()->add_error('username_b', __('We can\'t find an account registered with that address or username', 'ultimate-member'));
+				}
 			} else {
 
 				if ( is_email( $user ) ) {

@@ -9,7 +9,13 @@
 				<div class="um-field um-field-block um-field-type_block">
 					<div class="um-field-block">
 						<div style="text-align:center;">
-							<?php esc_html_e( 'We have sent you a password reset link to your e-mail. Please check your inbox.', 'ultimate-member' ); ?>
+							<?php
+							if (UM()->options()->get('enable_hide_valid_email_addresses')) {
+								esc_html_e('If an account matching the provided details exists, we will send a password reset link. Please check your inbox.', 'ultimate-member');
+							} else {
+								esc_html_e('We have sent you a password reset link to your e-mail. Please check your inbox.', 'ultimate-member');
+							}
+							?>
 						</div>
 					</div>
 				</div>

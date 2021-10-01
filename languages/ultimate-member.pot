@@ -2357,6 +2357,14 @@ msgstr ""
 msgid "Other"
 msgstr ""
 
+#: includes/admin/core/class-admin-settings.php:1278
+msgid "Hide the existence of an e-mail address when resetting a password"
+msgstr ""
+
+#: includes/admin/core/class-admin-settings.php:1279
+msgid "When enabled, the password reset form will not confirm the existence of an account matching provided details"
+msgstr ""
+
 #: includes/admin/core/class-admin-settings.php:1248
 msgid "Enable the Reset Password Limit?"
 msgstr ""
@@ -7969,6 +7977,11 @@ msgstr ""
 
 #: templates/password-change.php:47
 msgid "Change my password"
+msgstr ""
+
+
+#: templates/password-reset.php:14
+msgid "If an account matching the provided details exists, we will send a password reset link. Please check your inbox."
 msgstr ""
 
 #: templates/password-reset.php:12

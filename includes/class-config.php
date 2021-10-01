@@ -552,6 +552,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'restricted_blocks'                     => 0,
 				'enable_blocks'                         => 0,
 				'restricted_block_message'              => '',
+				'enable_hide_valid_email_addresses'		=> 0,
 				'enable_reset_password_limit'           => 1,
 				'reset_password_limit_number'           => 3,
 				'blocked_emails'                        => '',

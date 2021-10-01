@@ -1273,6 +1273,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								'title'  => __( 'Other', 'ultimate-member' ),
 								'fields' => array(
 									array(
+										'id' => 'enable_hide_valid_email_addresses',
+										'type' => 'checkbox',
+										'label' => __('Hide the existence of an e-mail address when resetting a password'),
+										'tooltip' => __('When enabled, the password reset form will not confirm the existence of an account matching provided details'),
+									),
+									array(
 										'id'    => 'enable_reset_password_limit',
 										'type'  => 'checkbox',
 										'label' => __( 'Enable the Reset Password Limit?', 'ultimate-member' ),
