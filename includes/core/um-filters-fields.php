@@ -100,6 +100,38 @@ add_filter( 'um_profile_field_filter_hook__vimeo_video', 'um_profile_field_filte
 
 
 /**
+ * Outputs a viber link
+ *
+ * @param $value
+ * @param $data
+ *
+ * @return int|string
+ */
+function um_profile_field_filter_hook__viber( $value, $data ) {
+	$value = str_replace('+', '', $value);
+	$value = '<a href="viber://chat?number=%2B' . esc_attr( $value ) . '" target="_blank"  rel="nofollow" title="' . esc_attr( $data['title'] ) . '">' . esc_html( $value ) . '</a>';
+	return $value;
+}
+add_filter( 'um_profile_field_filter_hook__viber', 'um_profile_field_filter_hook__viber', 99, 2 );
+
+
+/**
+ * Outputs a whatsapp link
+ *
+ * @param $value
+ * @param $data
+ *
+ * @return int|string
+ */
+function um_profile_field_filter_hook__whatsapp( $value, $data ) {
+	$value = str_replace('+', '', $value);
+	$value = '<a href="https://api.whatsapp.com/send?phone=' . esc_attr( $value ) . '" target="_blank"  rel="nofollow" title="' . esc_attr( $data['title'] ) . '">' . esc_html( $value ) . '</a>';
+	return $value;
+}
+add_filter( 'um_profile_field_filter_hook__whatsapp', 'um_profile_field_filter_hook__whatsapp', 99, 2 );
+
+
+/**
  * Outputs a google map
  *
  * @param $value
@@ -362,9 +394,11 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 		    && !strstr( $value, '.com' )
 		    && !strstr( $value, '.net' )
 		    && !strstr( $value, '.org' )
+		    && !strstr( $value, '.me' )
 		) {
 			if ( $data['validate'] == 'soundcloud_url' ) 	$value = 'https://soundcloud.com/' . $value;
 			if ( $data['validate'] == 'youtube_url' ) 		$value = 'https://youtube.com/user/' . $value;
+			if ( $data['validate'] == 'telegram_url' ) 		$value = 'https://t.me/' . $value;
 			if ( $data['validate'] == 'facebook_url' ) 		$value = 'https://facebook.com/' . $value;
 			if ( $data['validate'] == 'twitter_url' ) 		$value = 'https://twitter.com/' . $value;
 			if ( $data['validate'] == 'linkedin_url' ) 		$value = 'https://linkedin.com/' . $value;
@@ -393,8 +427,11 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 		$value = str_replace('http://','',$value );
 
 		$data['url_target'] = ( isset( $data['url_target'] ) ) ? $data['url_target'] : '_blank';
-		$value = '<a href="'. 'skype:'.$value.'?chat'.'" title="'.$value.'" target="'.$data['url_target'].'" ' . $url_rel . '>'.$value.'</a>';
-
+		if ( strpos( $value, '.cid.' ) !== 0 ) {
+			$value = '<a href="' . 'skype:' . $value . '?chat' . '" title="' . $value . '" target="' . $data['url_target'] . '" ' . $url_rel . '>' . $value . '</a>';
+		} else {
+			$value = '<a href="' . 'skype:live:' . $value . '?chat' . '" title="' . $value . '" target="' . $data['url_target'] . '" ' . $url_rel . '>' . esc_html__( 'Skype' ) . '</a>';
+		}
 	}
 
 	if ( ! is_array( $value ) ) {
@@ -858,3 +895,15 @@ function um_edit_url_field_value( $value, $key ) {
 	return $value;
 }
 add_filter( 'um_edit_url_field_value', 'um_edit_url_field_value', 10, 2 );
+
+
+add_filter( 'um_submit_post_form', 'my_submit_post_form', 10, 1 );
+function my_submit_post_form( $data ) {
+	$skype_key = 'skype-'. $data['form_id'];
+	if ( array_key_exists( $skype_key , $data ) ) {
+		$skype = str_replace('live:', '', $data[ $skype_key ] );
+		$data[ $skype_key ] = $skype;
+	}
+
+	return $data;
+}
