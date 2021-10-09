@@ -283,11 +283,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 
 		/**
-		 *
+		 * Initialize settings, section General > Pages
 		 */
-		public function init_variables() {
-
-			$settings_map = array();
+		public function init_section_general_(){
 
 			$general_pages_fields = array(
 				array(
@@ -305,6 +303,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				$options = array();
 				$page_value = '';
+				$description = '';
 
 				$pre_result = apply_filters( 'um_admin_settings_pages_list_value', false, $page_id );
 				if ( false === $pre_result ) {
@@ -324,6 +323,26 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					$options = $pre_result;
 				}
 
+				if ( $page_value > 0 ) {
+					switch ( $page_id ) {
+						case 'core_account':
+							if ( $page_value === um_get_predefined_page_id( 'user' ) ) {
+								$description = '<strong>' . __( 'Warning:', 'ultimate-member' ) . '</strong> ' . __( 'The Account page and User page must be separate pages.', 'ultimate-member' );
+							}
+							break;
+						case 'core_logout':
+							if ( $page_value === (int) get_option( 'page_on_front' ) ) {
+								$description = '<strong>' . __( 'Warning:', 'ultimate-member' ) . '</strong> ' . __( 'The Home page must not be chosen as the Logout page.', 'ultimate-member' );
+							}
+							break;
+						case 'core_user':
+							if ( $page_value === um_get_predefined_page_id( 'account' ) ) {
+								$description = '<strong>' . __( 'Warning:', 'ultimate-member' ) . '</strong> ' . __( 'The Account page and User page must be separate pages.', 'ultimate-member' );
+							}
+							break;
+					}
+				}
+
 				$general_pages_fields[] = array(
 					'id'          => $page_id,
 					'type'        => 'page_select',
@@ -332,13 +351,28 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'options'     => $options,
 					'value'       => $page_value,
 					'placeholder' => __( 'Choose a page...', 'ultimate-member' ),
-					'size'        => 'small',
+					'size'        => 'medium',
+					'description' => $description
 				);
 
-				$settings_map[ $page_id ] = array(
+				$this->map[ $page_id ] = array(
 					'sanitize' => 'absint',
 				);
 			}
+
+			$this->structure['']['sections'][''] = array(
+				'title'	 => __( 'Pages', 'ultimate-member' ),
+				'fields' => $general_pages_fields
+			);
+		}
+
+
+		/**
+		 * Initialize settings
+		 */
+		public function init_variables() {
+
+			$this->map = array();
 
 			$appearances_profile_menu_fields = array(
 				array(
@@ -348,7 +382,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				),
 			);
 
-			$settings_map['profile_menu'] = array(
+			$this->map['profile_menu'] = array(
 				'sanitize' => 'bool',
 			);
 
@@ -379,7 +413,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						),
 					);
 
-					$settings_map[ 'profile_tab_' . $id ] = array(
+					$this->map[ 'profile_tab_' . $id ] = array(
 						'sanitize' => 'bool',
 					);
 				} else {
@@ -416,8 +450,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						),
 					);
 
-					$settings_map = array_merge(
-						$settings_map,
+					$this->map = array_merge(
+						$this->map,
 						array(
 							"profile_tab_{$id}"         => array(
 								'sanitize' => 'bool',
@@ -445,7 +479,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				'size'        => 'small',
 			);
 
-			$settings_map['profile_menu_default_tab'] = array(
+			$this->map['profile_menu_default_tab'] = array(
 				'sanitize' => 'key',
 			);
 
@@ -461,7 +495,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				)
 			);
 
-			$settings_map['profile_menu_icons'] = array(
+			$this->map['profile_menu_icons'] = array(
 				'sanitize' => 'bool',
 			);
 
@@ -572,8 +606,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				),
 			);
 
-			$settings_map = array_merge(
-				$settings_map,
+			$this->map = array_merge(
+				$this->map,
 				array(
 					'accessible'                    => array(
 						'sanitize' => 'int',
@@ -622,10 +656,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					)
 				);
 
-				$settings_map['restricted_blocks']        = array(
+				$this->map['restricted_blocks']        = array(
 					'sanitize' => 'bool',
 				);
-				$settings_map['restricted_block_message'] = array(
+				$this->map['restricted_block_message'] = array(
 					'sanitize' => 'textarea',
 				);
 			}
@@ -666,8 +700,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				)
 			);
 
-			$settings_map = array_merge(
-				$settings_map,
+			$this->map = array_merge(
+				$this->map,
 				array(
 					'restricted_access_post_metabox'     => array(
 						'sanitize' => 'key',
@@ -695,8 +729,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 <p>' . __( 'If the update was successful, you will see a corresponding message. Otherwise, contact technical support if the update failed.', 'ultimate-member' ) . '</p>';
 			}
 
-			$settings_map = array_merge(
-				$settings_map,
+			$this->map = array_merge(
+				$this->map,
 				array(
 					'permalink_base'                        => array(
 						'sanitize' => 'key',
@@ -978,58 +1012,34 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			);
 
 			foreach ( array_keys( UM()->config()->get( 'email_notifications' ) ) as $email_key ) {
-				$settings_map[ $email_key . '_on' ] = array(
+				$this->map[ $email_key . '_on' ] = array(
 					'sanitize' => 'bool',
 				);
-				$settings_map[ $email_key . '_sub' ] = array(
+				$this->map[ $email_key . '_sub' ] = array(
 					'sanitize' => 'text',
 				);
-				$settings_map[ $email_key ] = array(
+				$this->map[ $email_key ] = array(
 					'sanitize' => 'wp_kses',
 				);
 			}
 
-			$settings_map['pages_settings'] = array(
+			$this->map['pages_settings'] = array(
 				'sanitize' => 'bool',
 			);
 
-			$settings_map['um_email_template'] = array(
+			$this->map['um_email_template'] = array(
 				'sanitize' => 'key',
 			);
 
-			$this->settings_map = apply_filters( 'um_settings_map', $settings_map );
-
 			$modules_sections = apply_filters( 'um_modules_settings_sections', array() );
 
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_settings_structure
-			 * @description Extend UM Settings
-			 * @input_vars
-			 * [{"var":"$settings","type":"array","desc":"UM Settings"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_settings_structure', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_settings_structure', 'my_settings_structure', 10, 1 );
-			 * function my_settings_structure( $settings ) {
-			 *     // your code here
-			 *     return $settings;
-			 * }
-			 * ?>
-			 */
-			$this->settings_structure = apply_filters(
-				'um_settings_structure',
-				array(
+			$this->structure = array(
 					''             => array(
 						'title'    => __( 'General', 'ultimate-member' ),
 						'sections' => array(
 							''        => array(
 								'title'  => __( 'Pages', 'ultimate-member' ),
-								'fields' => $general_pages_fields,
+								'fields' => array(),
 							),
 							'users'   => array(
 								'title'  => __( 'Users', 'ultimate-member' ),
@@ -1881,8 +1891,63 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							),
 						),
 					),
-				)
-			);
+				);
+
+
+			// Init settings for the certain section
+			if ( isset( $_REQUEST['page'] ) && 'um_options' === $_REQUEST['page'] ) {
+				$tab = empty( $_REQUEST['tab'] ) ? 'general' : sanitize_key( $_REQUEST['section'] );
+				$section = empty( $_REQUEST['section'] ) ? '' : sanitize_key( $_REQUEST['section'] );
+				$method = "init_section_{$tab}_{$section}";
+				if ( method_exists( $this, $method ) ) {
+					$this->$method();
+				}
+			}
+
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_settings_map
+			 * @description Extend Settings map
+			 * @input_vars
+			 * [{"var":"$settings_map","type":"array","desc":"UM Settings map"}]
+			 * @change_log
+			 * ["Since: 3.0"]
+			 * @usage add_filter( 'um_settings_map', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_settings_map', 'my_settings_map', 10, 1 );
+			 * function my_settings_map( $settings_map ) {
+			 *     // your code here
+			 *     return $settings_map;
+			 * }
+			 * ?>
+			 */
+			$this->settings_map = apply_filters( 'um_settings_map', $this->map );
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_settings_structure
+			 * @description Extend UM Settings
+			 * @input_vars
+			 * [{"var":"$settings","type":"array","desc":"UM Settings"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_settings_structure', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_settings_structure', 'my_settings_structure', 10, 1 );
+			 * function my_settings_structure( $settings ) {
+			 *     // your code here
+			 *     return $settings;
+			 * }
+			 * ?>
+			 */
+			$this->settings_structure = apply_filters( 'um_settings_structure', $this->structure );
 
 		}
 
