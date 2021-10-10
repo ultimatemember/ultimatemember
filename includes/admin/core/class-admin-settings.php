@@ -28,6 +28,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 
 		/**
+		 * @var array
+		 */
+		private $map;
+
+		/**
+		 * @var array
+		 */
+		private $structure;
+
+
+		/**
 		 * @var
 		 */
 		private $previous_licenses;
@@ -38,7 +49,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 */
 		private $need_change_permalinks;
 
-
+		
 		private $gravatar_changed = false;
 
 
@@ -283,9 +294,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 
 		/**
-		 * Initialize settings, section General > Pages
+		 * Initialize settings: General > Pages
 		 */
 		public function init_section_general_(){
+			global $wpdb;
 
 			$general_pages_fields = array(
 				array(
@@ -323,21 +335,53 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					$options = $pre_result;
 				}
 
+				// Display warning if page is set wrong.
 				if ( $page_value > 0 ) {
+					$content = $wpdb->get_var( "SELECT `post_content` FROM `{$wpdb->posts}` WHERE `ID`={$page_value};" );
 					switch ( $page_id ) {
 						case 'core_account':
 							if ( $page_value === um_get_predefined_page_id( 'user' ) ) {
 								$description = '<strong>' . __( 'Warning:', 'ultimate-member' ) . '</strong> ' . __( 'The Account page and User page must be separate pages.', 'ultimate-member' );
+							} elseif ( false === strpos( $content, '[ultimatemember_account' ) ) {
+								$description = '<strong>' . __( 'Warning:', 'ultimate-member' ) . '</strong> ' . __( 'The Account page must contain shortcode <strong>[ultimatemember_account]</strong>', 'ultimate-member' );
+							} elseif ( function_exists( 'wc_get_page_id' ) && wc_get_page_id( 'myaccount' ) === um_get_predefined_page_id( 'account' ) ) {
+								$description = '<strong>' . __( 'Warning:', 'ultimate-member' ) . '</strong> ' . __( 'The Account page and WooCommerce "My account" page should be separate pages.', 'ultimate-member' );
+							}
+							break;
+						case 'core_login':
+							if ( $page_value === um_get_predefined_page_id( 'logout' ) ) {
+								$description = '<strong>' . __( 'Warning:', 'ultimate-member' ) . '</strong> ' . __( 'The Login page and Logout page must be separate pages.', 'ultimate-member' );
+							} elseif ( false === strpos( $content, '[ultimatemember form_id=' ) ) {
+								$description = '<strong>' . __( 'Warning:', 'ultimate-member' ) . '</strong> ' . __( 'The Login page must contain a login form shortcode.', 'ultimate-member' ) . __( ' You can get existing shortcode or create a new one <a href="edit.php?post_type=um_form" target="_blank">here</a>', 'ultimate-member' );
 							}
 							break;
 						case 'core_logout':
 							if ( $page_value === (int) get_option( 'page_on_front' ) ) {
-								$description = '<strong>' . __( 'Warning:', 'ultimate-member' ) . '</strong> ' . __( 'The Home page must not be chosen as the Logout page.', 'ultimate-member' );
+								$description = '<strong>' . __( 'Warning:', 'ultimate-member' ) . '</strong> ' . __( 'The Home page and Logout page must be separate pages.', 'ultimate-member' );
+							} elseif ( $page_value === um_get_predefined_page_id( 'login' ) ) {
+								$description = '<strong>' . __( 'Warning:', 'ultimate-member' ) . '</strong> ' . __( 'The Login page and Logout page must be separate pages.', 'ultimate-member' );
+							}
+							break;
+						case 'core_members':
+							if ( false === strpos( $content, '[ultimatemember form_id=' ) ) {
+								$description = '<strong>' . __( 'Warning:', 'ultimate-member' ) . '</strong> ' . __( 'The Members page must contain a member directory shortcode.', 'ultimate-member' ) . __( ' You can get existing shortcode or create a new one <a href="edit.php?post_type=um_directory" target="_blank">here</a>', 'ultimate-member' );
+							}
+							break;
+						case 'core_password-reset':
+							if ( false === strpos( $content, '[ultimatemember_password]' ) ) {
+								$description = '<strong>' . __( 'Warning:', 'ultimate-member' ) . '</strong> ' . __( 'The Password Reset page must contain shortcode <strong>[ultimatemember_password]</strong>', 'ultimate-member' );
+							}
+							break;
+						case 'core_register':
+							if ( false === strpos( $content, '[ultimatemember form_id=' ) ) {
+								$description = '<strong>' . __( 'Warning:', 'ultimate-member' ) . '</strong> ' . __( 'The Register page must contain a registration form shortcode.', 'ultimate-member' ) . __( ' You can get existing shortcode or create a new one <a href="edit.php?post_type=um_form" target="_blank">here</a>', 'ultimate-member' );
 							}
 							break;
 						case 'core_user':
 							if ( $page_value === um_get_predefined_page_id( 'account' ) ) {
 								$description = '<strong>' . __( 'Warning:', 'ultimate-member' ) . '</strong> ' . __( 'The Account page and User page must be separate pages.', 'ultimate-member' );
+							} elseif ( false === strpos( $content, '[ultimatemember form_id=' ) ) {
+								$description = '<strong>' . __( 'Warning:', 'ultimate-member' ) . '</strong> ' . __( 'The User page must contain a profile form shortcode.', 'ultimate-member' ) . __( ' You can get existing shortcode or create a new one <a href="edit.php?post_type=um_form" target="_blank">here</a>', 'ultimate-member' );
 							}
 							break;
 					}
@@ -1034,864 +1078,864 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			$modules_sections = apply_filters( 'um_modules_settings_sections', array() );
 
 			$this->structure = array(
-					''             => array(
-						'title'    => __( 'General', 'ultimate-member' ),
-						'sections' => array(
-							''        => array(
-								'title'  => __( 'Pages', 'ultimate-member' ),
-								'fields' => array(),
-							),
-							'users'   => array(
-								'title'  => __( 'Users', 'ultimate-member' ),
-								'fields' => array(
-									array(
-										'id'          => 'permalink_base',
-										'type'        => 'select',
-										'size'        => 'small',
-										'label'       => __( 'Profile Permalink Base', 'ultimate-member' ),
-										// translators: %s: Profile page URL
-										'tooltip'     => sprintf( __( 'Here you can control the permalink structure of the user profile URL globally e.g. %s<strong>username</strong>/', 'ultimate-member' ), trailingslashit( um_get_predefined_page_url( 'user' ) ) ),
-										'options'     => array(
-											'user_login' => __( 'Username', 'ultimate-member' ),
-											'name'       => __( 'First and Last Name with \'.\'', 'ultimate-member' ),
-											'name_dash'  => __( 'First and Last Name with \'-\'', 'ultimate-member' ),
-											'name_plus'  => __( 'First and Last Name with \'+\'', 'ultimate-member' ),
-											'user_id'    => __( 'User ID', 'ultimate-member' ),
-										),
-										'placeholder' => __( 'Select...', 'ultimate-member' ),
+				''             => array(
+					'title'    => __( 'General', 'ultimate-member' ),
+					'sections' => array(
+						''        => array(
+							'title'  => __( 'Pages', 'ultimate-member' ),
+							'fields' => array(),
+						),
+						'users'   => array(
+							'title'  => __( 'Users', 'ultimate-member' ),
+							'fields' => array(
+								array(
+									'id'          => 'permalink_base',
+									'type'        => 'select',
+									'size'        => 'small',
+									'label'       => __( 'Profile Permalink Base', 'ultimate-member' ),
+									// translators: %s: Profile page URL
+									'tooltip'     => sprintf( __( 'Here you can control the permalink structure of the user profile URL globally e.g. %s<strong>username</strong>/', 'ultimate-member' ), trailingslashit( um_get_predefined_page_url( 'user' ) ) ),
+									'options'     => array(
+										'user_login' => __( 'Username', 'ultimate-member' ),
+										'name'       => __( 'First and Last Name with \'.\'', 'ultimate-member' ),
+										'name_dash'  => __( 'First and Last Name with \'-\'', 'ultimate-member' ),
+										'name_plus'  => __( 'First and Last Name with \'+\'', 'ultimate-member' ),
+										'user_id'    => __( 'User ID', 'ultimate-member' ),
 									),
-									array(
-										'id'          => 'display_name',
-										'type'        => 'select',
-										'size'        => 'medium',
-										'label'       => __( 'User Display Name', 'ultimate-member' ),
-										'tooltip'     => __( 'This is the name that will be displayed for users on the front end of your site. Default setting uses first/last name as display name if it exists', 'ultimate-member' ),
-										'options'     => array(
-											'default'        => __( 'Default WP Display Name', 'ultimate-member' ),
-											'nickname'       => __( 'Nickname', 'ultimate-member' ),
-											'username'       => __( 'Username', 'ultimate-member' ),
-											'full_name'      => __( 'First name & last name', 'ultimate-member' ),
-											'sur_name'       => __( 'Last name & first name', 'ultimate-member' ),
-											'initial_name'   => __( 'First name & first initial of last name', 'ultimate-member' ),
-											'initial_name_f' => __( 'First initial of first name & last name', 'ultimate-member' ),
-											'first_name'     => __( 'First name only', 'ultimate-member' ),
-											'field'          => __( 'Custom field(s)', 'ultimate-member' ),
-										),
-										'placeholder' => __( 'Select...', 'ultimate-member' ),
+									'placeholder' => __( 'Select...', 'ultimate-member' ),
+								),
+								array(
+									'id'          => 'display_name',
+									'type'        => 'select',
+									'size'        => 'medium',
+									'label'       => __( 'User Display Name', 'ultimate-member' ),
+									'tooltip'     => __( 'This is the name that will be displayed for users on the front end of your site. Default setting uses first/last name as display name if it exists', 'ultimate-member' ),
+									'options'     => array(
+										'default'        => __( 'Default WP Display Name', 'ultimate-member' ),
+										'nickname'       => __( 'Nickname', 'ultimate-member' ),
+										'username'       => __( 'Username', 'ultimate-member' ),
+										'full_name'      => __( 'First name & last name', 'ultimate-member' ),
+										'sur_name'       => __( 'Last name & first name', 'ultimate-member' ),
+										'initial_name'   => __( 'First name & first initial of last name', 'ultimate-member' ),
+										'initial_name_f' => __( 'First initial of first name & last name', 'ultimate-member' ),
+										'first_name'     => __( 'First name only', 'ultimate-member' ),
+										'field'          => __( 'Custom field(s)', 'ultimate-member' ),
 									),
-									array(
-										'id'          => 'display_name_field',
-										'type'        => 'text',
-										'label'       => __( 'Display Name Custom Field(s)', 'ultimate-member' ),
-										'tooltip'     => __( 'Specify the custom field meta key or custom fields seperated by comma that you want to use to display users name on the frontend of your site', 'ultimate-member' ),
-										'conditional' => array( 'display_name', '=', 'field' ),
+									'placeholder' => __( 'Select...', 'ultimate-member' ),
+								),
+								array(
+									'id'          => 'display_name_field',
+									'type'        => 'text',
+									'label'       => __( 'Display Name Custom Field(s)', 'ultimate-member' ),
+									'tooltip'     => __( 'Specify the custom field meta key or custom fields seperated by comma that you want to use to display users name on the frontend of your site', 'ultimate-member' ),
+									'conditional' => array( 'display_name', '=', 'field' ),
+								),
+								array(
+									'id'      => 'author_redirect',
+									'type'    => 'checkbox',
+									'label'   => __( 'Automatically redirect author page to their profile?', 'ultimate-member' ),
+									'tooltip' => __( 'If enabled, author pages will automatically redirect to the user\'s profile page', 'ultimate-member' ),
+								),
+								array(
+									'id'      => 'members_page',
+									'type'    => 'checkbox',
+									'label'   => __( 'Enable Members Directory', 'ultimate-member' ),
+									'tooltip' => __( 'Control whether to enable or disable member directories on this site', 'ultimate-member' ),
+								),
+								array(
+									'id'      => 'use_gravatars',
+									'type'    => 'checkbox',
+									'label'   => __( 'Use Gravatars?', 'ultimate-member' ),
+									'tooltip' => __( 'Do you want to use gravatars instead of the default plugin profile photo (If the user did not upload a custom profile photo / avatar)', 'ultimate-member' ),
+								),
+								array(
+									'id'          => 'use_um_gravatar_default_builtin_image',
+									'type'        => 'select',
+									'label'       => __( 'Use Gravatar builtin image', 'ultimate-member' ),
+									'tooltip'     => __( 'Gravatar has a number of built in options which you can also use as defaults', 'ultimate-member' ),
+									'options'     => array(
+										'default'   => __( 'Default', 'ultimate-member' ),
+										'404'       => __( '404 ( File Not Found response )', 'ultimate-member' ),
+										'mm'        => __( 'Mystery Man', 'ultimate-member' ),
+										'identicon' => __( 'Identicon', 'ultimate-member' ),
+										'monsterid' => __( 'Monsterid', 'ultimate-member' ),
+										'wavatar'   => __( 'Wavatar', 'ultimate-member' ),
+										'retro'     => __( 'Retro', 'ultimate-member' ),
+										'blank'     => __( 'Blank ( a transparent PNG image )', 'ultimate-member' ),
 									),
-									array(
-										'id'      => 'author_redirect',
-										'type'    => 'checkbox',
-										'label'   => __( 'Automatically redirect author page to their profile?', 'ultimate-member' ),
-										'tooltip' => __( 'If enabled, author pages will automatically redirect to the user\'s profile page', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'members_page',
-										'type'    => 'checkbox',
-										'label'   => __( 'Enable Members Directory', 'ultimate-member' ),
-										'tooltip' => __( 'Control whether to enable or disable member directories on this site', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'use_gravatars',
-										'type'    => 'checkbox',
-										'label'   => __( 'Use Gravatars?', 'ultimate-member' ),
-										'tooltip' => __( 'Do you want to use gravatars instead of the default plugin profile photo (If the user did not upload a custom profile photo / avatar)', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'use_um_gravatar_default_builtin_image',
-										'type'        => 'select',
-										'label'       => __( 'Use Gravatar builtin image', 'ultimate-member' ),
-										'tooltip'     => __( 'Gravatar has a number of built in options which you can also use as defaults', 'ultimate-member' ),
-										'options'     => array(
-											'default'   => __( 'Default', 'ultimate-member' ),
-											'404'       => __( '404 ( File Not Found response )', 'ultimate-member' ),
-											'mm'        => __( 'Mystery Man', 'ultimate-member' ),
-											'identicon' => __( 'Identicon', 'ultimate-member' ),
-											'monsterid' => __( 'Monsterid', 'ultimate-member' ),
-											'wavatar'   => __( 'Wavatar', 'ultimate-member' ),
-											'retro'     => __( 'Retro', 'ultimate-member' ),
-											'blank'     => __( 'Blank ( a transparent PNG image )', 'ultimate-member' ),
-										),
-										'conditional' => array( 'use_gravatars', '=', 1 ),
-										'size'        => 'medium',
-									),
-									array(
-										'id'          => 'use_um_gravatar_default_image',
-										'type'        => 'checkbox',
-										'label'       => __( 'Use Default plugin avatar as Gravatar\'s Default avatar', 'ultimate-member' ),
-										'tooltip'     => __( 'Do you want to use the plugin default avatar instead of the gravatar default photo (If the user did not upload a custom profile photo / avatar)', 'ultimate-member' ),
-										'conditional' => array( 'use_um_gravatar_default_builtin_image', '=', 'default' ),
-									),
-									array(
-										'id'      => 'reset_require_strongpass',
-										'type'    => 'checkbox',
-										'label'   => __( 'Require a strong password? (when user resets password only)', 'ultimate-member' ),
-										'tooltip' => __( 'Enable or disable a strong password rules on password reset and change procedure', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'password_min_chars',
-										'type'    => 'number',
-										'label'   => __( 'Password minimum length', 'ultimate-member' ),
-										'tooltip' => __( 'If you want to enable a minimum number of characters to be in password. User password field in the UM forms has own settings for that. Leave empty to use default value 8', 'ultimate-member' ),
-										'size'    => 'small',
-									),
-									array(
-										'id'      => 'password_max_chars',
-										'type'    => 'number',
-										'label'   => __( 'Password maximum length', 'ultimate-member' ),
-										'tooltip' => __( 'If you want to enable a maximum number of characters to be in password. User password field in the UM forms has own settings for that. Leave empty to use default value 30', 'ultimate-member' ),
-										'size'    => 'small',
-									),
-									array(
-										'id'      => 'profile_noindex',
-										'type'    => 'select',
-										'size'    => 'small',
-										'label'   => __( 'Avoid indexing profile by search engines', 'ultimate-member' ),
-										'tooltip' => __( 'Hides the profile page for robots. This setting can be overridden by individual role settings.', 'ultimate-member' ),
-										'options' => array(
-											'0' => __( 'No', 'ultimate-member' ),
-											'1' => __( 'Yes', 'ultimate-member' ),
-										),
-									),
-									array(
-										'id'      => 'activation_link_expiry_time',
-										'type'    => 'number',
-										'label'   => __( 'Activation link lifetime', 'ultimate-member' ),
-										'tooltip' => __( 'How long does an activation link live in seconds? Leave empty for endless links.', 'ultimate-member' ),
-										'size'    => 'small',
+									'conditional' => array( 'use_gravatars', '=', 1 ),
+									'size'        => 'medium',
+								),
+								array(
+									'id'          => 'use_um_gravatar_default_image',
+									'type'        => 'checkbox',
+									'label'       => __( 'Use Default plugin avatar as Gravatar\'s Default avatar', 'ultimate-member' ),
+									'tooltip'     => __( 'Do you want to use the plugin default avatar instead of the gravatar default photo (If the user did not upload a custom profile photo / avatar)', 'ultimate-member' ),
+									'conditional' => array( 'use_um_gravatar_default_builtin_image', '=', 'default' ),
+								),
+								array(
+									'id'      => 'reset_require_strongpass',
+									'type'    => 'checkbox',
+									'label'   => __( 'Require a strong password? (when user resets password only)', 'ultimate-member' ),
+									'tooltip' => __( 'Enable or disable a strong password rules on password reset and change procedure', 'ultimate-member' ),
+								),
+								array(
+									'id'      => 'password_min_chars',
+									'type'    => 'number',
+									'label'   => __( 'Password minimum length', 'ultimate-member' ),
+									'tooltip' => __( 'If you want to enable a minimum number of characters to be in password. User password field in the UM forms has own settings for that. Leave empty to use default value 8', 'ultimate-member' ),
+									'size'    => 'small',
+								),
+								array(
+									'id'      => 'password_max_chars',
+									'type'    => 'number',
+									'label'   => __( 'Password maximum length', 'ultimate-member' ),
+									'tooltip' => __( 'If you want to enable a maximum number of characters to be in password. User password field in the UM forms has own settings for that. Leave empty to use default value 30', 'ultimate-member' ),
+									'size'    => 'small',
+								),
+								array(
+									'id'      => 'profile_noindex',
+									'type'    => 'select',
+									'size'    => 'small',
+									'label'   => __( 'Avoid indexing profile by search engines', 'ultimate-member' ),
+									'tooltip' => __( 'Hides the profile page for robots. This setting can be overridden by individual role settings.', 'ultimate-member' ),
+									'options' => array(
+										'0' => __( 'No', 'ultimate-member' ),
+										'1' => __( 'Yes', 'ultimate-member' ),
 									),
 								),
-							),
-							'account' => array(
-								'title'  => __( 'Account', 'ultimate-member' ),
-								'fields' => array(
-									array(
-										'id'      => 'account_tab_password',
-										'type'    => 'checkbox',
-										'label'   => __( 'Password Account Tab', 'ultimate-member' ),
-										'tooltip' => __( 'Enable/disable the Password account tab in account page', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'account_tab_privacy',
-										'type'    => 'checkbox',
-										'label'   => __( 'Privacy Account Tab', 'ultimate-member' ),
-										'tooltip' => __( 'Enable/disable the Privacy account tab in account page', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'account_tab_notifications',
-										'type'    => 'checkbox',
-										'label'   => __( 'Notifications Account Tab', 'ultimate-member' ),
-										'tooltip' => __( 'Enable/disable the Notifications account tab in account page', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'account_tab_delete',
-										'type'    => 'checkbox',
-										'label'   => __( 'Delete Account Tab', 'ultimate-member' ),
-										'tooltip' => __( 'Enable/disable the Delete account tab in account page', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'delete_account_text',
-										'type'    => 'textarea', // bug with wp 4.4? should be editor
-										'label'   => __( 'Account Deletion Custom Text', 'ultimate-member' ),
-										'tooltip' => __( 'This is custom text that will be displayed to users before they delete their accounts from your site when password is required.', 'ultimate-member' ),
-										'args'    => array(
-											'textarea_rows' => 6,
-										),
-									),
-									array(
-										'id'      => 'delete_account_no_pass_required_text',
-										'type'    => 'textarea',
-										'label'   => __( 'Account Deletion without password Custom Text', 'ultimate-member' ),
-										'tooltip' => __( 'This is custom text that will be displayed to users before they delete their accounts from your site when password isn\'t required.', 'ultimate-member' ),
-										'args'    => array(
-											'textarea_rows' => 6,
-										),
-									),
-									array(
-										'id'      => 'account_name',
-										'type'    => 'checkbox',
-										'label'   => __( 'Add a First & Last Name fields', 'ultimate-member' ),
-										'tooltip' => __( 'Whether to enable these fields on the user account page by default or hide them.', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'account_name_disable',
-										'type'        => 'checkbox',
-										'label'       => __( 'Disable First & Last Name fields', 'ultimate-member' ),
-										'tooltip'     => __( 'Whether to allow users changing their first and last name in account page.', 'ultimate-member' ),
-										'conditional' => array( 'account_name', '=', '1' ),
-									),
-									array(
-										'id'          => 'account_name_require',
-										'type'        => 'checkbox',
-										'label'       => __( 'Require First & Last Name', 'ultimate-member' ),
-										'tooltip'     => __( 'Require first and last name?', 'ultimate-member' ),
-										'conditional' => array( 'account_name', '=', '1' ),
-									),
-									array(
-										'id'      => 'account_email',
-										'type'    => 'checkbox',
-										'label'   => __( 'Allow users to change e-mail', 'ultimate-member' ),
-										'tooltip' => __( 'Whether to allow users changing their email in account page.', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'account_general_password',
-										'type'    => 'checkbox',
-										'label'   => __( 'Password is required?', 'ultimate-member' ),
-										'tooltip' => __( 'Password is required to save account data.', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'account_require_strongpass',
-										'type'    => 'checkbox',
-										'label'   => __( 'Require a strong password?', 'ultimate-member' ),
-										'tooltip' => __( 'Enable or disable a strong password rules on account page / change password tab', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'account_hide_in_directory',
-										'type'        => 'checkbox',
-										'label'       => __( 'Allow users to hide their profiles from directory', 'ultimate-member' ),
-										'tooltip'     => __( 'Whether to allow users changing their profile visibility from member directory in account page.', 'ultimate-member' ),
-										'conditional' => array( 'account_tab_privacy', '=', '1' ),
-									),
-									array(
-										'id'          => 'account_hide_in_directory_default',
-										'type'        => 'select',
-										'label'       => __( 'Hide profiles from directory by default', 'ultimate-member' ),
-										'tooltip'     => __( 'Set default value for the "Hide my profile from directory" option', 'ultimate-member' ),
-										'options'     => array(
-											'No'  => __( 'No', 'ultimate-member' ),
-											'Yes' => __( 'Yes', 'ultimate-member' ),
-										),
-										'size'        => 'small',
-										'conditional' => array( 'account_hide_in_directory', '=', '1' ),
-									),
+								array(
+									'id'      => 'activation_link_expiry_time',
+									'type'    => 'number',
+									'label'   => __( 'Activation link lifetime', 'ultimate-member' ),
+									'tooltip' => __( 'How long does an activation link live in seconds? Leave empty for endless links.', 'ultimate-member' ),
+									'size'    => 'small',
 								),
 							),
-							'uploads' => array(
-								'title'  => __( 'Uploads', 'ultimate-member' ),
-								'fields' => array(
-									array(
-										'id'      => 'profile_photo_max_size',
-										'type'    => 'text',
-										'size'    => 'small',
-										'label'   => __( 'Profile Photo Maximum File Size (bytes)', 'ultimate-member' ),
-										'tooltip' => __( 'Sets a maximum size for the uploaded photo', 'ultimate-member' ),
+						),
+						'account' => array(
+							'title'  => __( 'Account', 'ultimate-member' ),
+							'fields' => array(
+								array(
+									'id'      => 'account_tab_password',
+									'type'    => 'checkbox',
+									'label'   => __( 'Password Account Tab', 'ultimate-member' ),
+									'tooltip' => __( 'Enable/disable the Password account tab in account page', 'ultimate-member' ),
+								),
+								array(
+									'id'      => 'account_tab_privacy',
+									'type'    => 'checkbox',
+									'label'   => __( 'Privacy Account Tab', 'ultimate-member' ),
+									'tooltip' => __( 'Enable/disable the Privacy account tab in account page', 'ultimate-member' ),
+								),
+								array(
+									'id'      => 'account_tab_notifications',
+									'type'    => 'checkbox',
+									'label'   => __( 'Notifications Account Tab', 'ultimate-member' ),
+									'tooltip' => __( 'Enable/disable the Notifications account tab in account page', 'ultimate-member' ),
+								),
+								array(
+									'id'      => 'account_tab_delete',
+									'type'    => 'checkbox',
+									'label'   => __( 'Delete Account Tab', 'ultimate-member' ),
+									'tooltip' => __( 'Enable/disable the Delete account tab in account page', 'ultimate-member' ),
+								),
+								array(
+									'id'      => 'delete_account_text',
+									'type'    => 'textarea', // bug with wp 4.4? should be editor
+									'label'   => __( 'Account Deletion Custom Text', 'ultimate-member' ),
+									'tooltip' => __( 'This is custom text that will be displayed to users before they delete their accounts from your site when password is required.', 'ultimate-member' ),
+									'args'    => array(
+										'textarea_rows' => 6,
 									),
-									array(
-										'id'      => 'cover_photo_max_size',
-										'type'    => 'text',
-										'size'    => 'small',
-										'label'   => __( 'Cover Photo Maximum File Size (bytes)', 'ultimate-member' ),
-										'tooltip' => __( 'Sets a maximum size for the uploaded cover', 'ultimate-member' ),
+								),
+								array(
+									'id'      => 'delete_account_no_pass_required_text',
+									'type'    => 'textarea',
+									'label'   => __( 'Account Deletion without password Custom Text', 'ultimate-member' ),
+									'tooltip' => __( 'This is custom text that will be displayed to users before they delete their accounts from your site when password isn\'t required.', 'ultimate-member' ),
+									'args'    => array(
+										'textarea_rows' => 6,
 									),
-									array(
-										'id'                  => 'photo_thumb_sizes',
-										'type'                => 'multi_text',
-										'size'                => 'small',
-										'label'               => __( 'Profile Photo Thumbnail Sizes (px)', 'ultimate-member' ),
-										'tooltip'             => __( 'Here you can define which thumbnail sizes will be created for each profile photo upload.', 'ultimate-member' ),
-										'validate'            => 'numeric',
-										'add_text'            => __( 'Add New Size', 'ultimate-member' ),
-										'show_default_number' => 1,
+								),
+								array(
+									'id'      => 'account_name',
+									'type'    => 'checkbox',
+									'label'   => __( 'Add a First & Last Name fields', 'ultimate-member' ),
+									'tooltip' => __( 'Whether to enable these fields on the user account page by default or hide them.', 'ultimate-member' ),
+								),
+								array(
+									'id'          => 'account_name_disable',
+									'type'        => 'checkbox',
+									'label'       => __( 'Disable First & Last Name fields', 'ultimate-member' ),
+									'tooltip'     => __( 'Whether to allow users changing their first and last name in account page.', 'ultimate-member' ),
+									'conditional' => array( 'account_name', '=', '1' ),
+								),
+								array(
+									'id'          => 'account_name_require',
+									'type'        => 'checkbox',
+									'label'       => __( 'Require First & Last Name', 'ultimate-member' ),
+									'tooltip'     => __( 'Require first and last name?', 'ultimate-member' ),
+									'conditional' => array( 'account_name', '=', '1' ),
+								),
+								array(
+									'id'      => 'account_email',
+									'type'    => 'checkbox',
+									'label'   => __( 'Allow users to change e-mail', 'ultimate-member' ),
+									'tooltip' => __( 'Whether to allow users changing their email in account page.', 'ultimate-member' ),
+								),
+								array(
+									'id'      => 'account_general_password',
+									'type'    => 'checkbox',
+									'label'   => __( 'Password is required?', 'ultimate-member' ),
+									'tooltip' => __( 'Password is required to save account data.', 'ultimate-member' ),
+								),
+								array(
+									'id'      => 'account_require_strongpass',
+									'type'    => 'checkbox',
+									'label'   => __( 'Require a strong password?', 'ultimate-member' ),
+									'tooltip' => __( 'Enable or disable a strong password rules on account page / change password tab', 'ultimate-member' ),
+								),
+								array(
+									'id'          => 'account_hide_in_directory',
+									'type'        => 'checkbox',
+									'label'       => __( 'Allow users to hide their profiles from directory', 'ultimate-member' ),
+									'tooltip'     => __( 'Whether to allow users changing their profile visibility from member directory in account page.', 'ultimate-member' ),
+									'conditional' => array( 'account_tab_privacy', '=', '1' ),
+								),
+								array(
+									'id'          => 'account_hide_in_directory_default',
+									'type'        => 'select',
+									'label'       => __( 'Hide profiles from directory by default', 'ultimate-member' ),
+									'tooltip'     => __( 'Set default value for the "Hide my profile from directory" option', 'ultimate-member' ),
+									'options'     => array(
+										'No'  => __( 'No', 'ultimate-member' ),
+										'Yes' => __( 'Yes', 'ultimate-member' ),
 									),
-									array(
-										'id'                  => 'cover_thumb_sizes',
-										'type'                => 'multi_text',
-										'size'                => 'small',
-										'label'               => __( 'Cover Photo Thumbnail Sizes (px)', 'ultimate-member' ),
-										'tooltip'             => __( 'Here you can define which thumbnail sizes will be created for each cover photo upload.', 'ultimate-member' ),
-										'validate'            => 'numeric',
-										'add_text'            => __( 'Add New Size', 'ultimate-member' ),
-										'show_default_number' => 1,
-									),
-									array(
-										'id'      => 'image_orientation_by_exif',
-										'type'    => 'checkbox',
-										'label'   => __( 'Change image orientation', 'ultimate-member' ),
-										'tooltip' => __( 'Rotate image to and use orientation by the camera EXIF data.', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'image_compression',
-										'type'    => 'text',
-										'size'    => 'small',
-										'label'   => __( 'Image Quality', 'ultimate-member' ),
-										'tooltip' => __( 'Quality is used to determine quality of image uploads, and ranges from 0 (worst quality, smaller file) to 100 (best quality, biggest file). The default range is 60.', 'ultimate-member' ),
-									),
+									'size'        => 'small',
+									'conditional' => array( 'account_hide_in_directory', '=', '1' ),
+								),
+							),
+						),
+						'uploads' => array(
+							'title'  => __( 'Uploads', 'ultimate-member' ),
+							'fields' => array(
+								array(
+									'id'      => 'profile_photo_max_size',
+									'type'    => 'text',
+									'size'    => 'small',
+									'label'   => __( 'Profile Photo Maximum File Size (bytes)', 'ultimate-member' ),
+									'tooltip' => __( 'Sets a maximum size for the uploaded photo', 'ultimate-member' ),
+								),
+								array(
+									'id'      => 'cover_photo_max_size',
+									'type'    => 'text',
+									'size'    => 'small',
+									'label'   => __( 'Cover Photo Maximum File Size (bytes)', 'ultimate-member' ),
+									'tooltip' => __( 'Sets a maximum size for the uploaded cover', 'ultimate-member' ),
+								),
+								array(
+									'id'                  => 'photo_thumb_sizes',
+									'type'                => 'multi_text',
+									'size'                => 'small',
+									'label'               => __( 'Profile Photo Thumbnail Sizes (px)', 'ultimate-member' ),
+									'tooltip'             => __( 'Here you can define which thumbnail sizes will be created for each profile photo upload.', 'ultimate-member' ),
+									'validate'            => 'numeric',
+									'add_text'            => __( 'Add New Size', 'ultimate-member' ),
+									'show_default_number' => 1,
+								),
+								array(
+									'id'                  => 'cover_thumb_sizes',
+									'type'                => 'multi_text',
+									'size'                => 'small',
+									'label'               => __( 'Cover Photo Thumbnail Sizes (px)', 'ultimate-member' ),
+									'tooltip'             => __( 'Here you can define which thumbnail sizes will be created for each cover photo upload.', 'ultimate-member' ),
+									'validate'            => 'numeric',
+									'add_text'            => __( 'Add New Size', 'ultimate-member' ),
+									'show_default_number' => 1,
+								),
+								array(
+									'id'      => 'image_orientation_by_exif',
+									'type'    => 'checkbox',
+									'label'   => __( 'Change image orientation', 'ultimate-member' ),
+									'tooltip' => __( 'Rotate image to and use orientation by the camera EXIF data.', 'ultimate-member' ),
+								),
+								array(
+									'id'      => 'image_compression',
+									'type'    => 'text',
+									'size'    => 'small',
+									'label'   => __( 'Image Quality', 'ultimate-member' ),
+									'tooltip' => __( 'Quality is used to determine quality of image uploads, and ranges from 0 (worst quality, smaller file) to 100 (best quality, biggest file). The default range is 60.', 'ultimate-member' ),
+								),
 
-									array(
-										'id'      => 'image_max_width',
-										'type'    => 'text',
-										'size'    => 'small',
-										'label'   => __( 'Image Upload Maximum Width (px)', 'ultimate-member' ),
-										'tooltip' => __( 'Any image upload above this width will be resized to this limit automatically.', 'ultimate-member' ),
-									),
+								array(
+									'id'      => 'image_max_width',
+									'type'    => 'text',
+									'size'    => 'small',
+									'label'   => __( 'Image Upload Maximum Width (px)', 'ultimate-member' ),
+									'tooltip' => __( 'Any image upload above this width will be resized to this limit automatically.', 'ultimate-member' ),
+								),
 
-									array(
-										'id'      => 'cover_min_width',
-										'type'    => 'text',
-										'size'    => 'small',
-										'label'   => __( 'Cover Photo Minimum Width (px)', 'ultimate-member' ),
-										'tooltip' => __( 'This will be the minimum width for cover photo uploads', 'ultimate-member' ),
-									),
+								array(
+									'id'      => 'cover_min_width',
+									'type'    => 'text',
+									'size'    => 'small',
+									'label'   => __( 'Cover Photo Minimum Width (px)', 'ultimate-member' ),
+									'tooltip' => __( 'This will be the minimum width for cover photo uploads', 'ultimate-member' ),
 								),
 							),
 						),
 					),
-					'access'       => array(
-						'title'    => __( 'Access', 'ultimate-member' ),
-						'sections' => array(
-							''      => array(
-								'title'  => __( 'Restriction Content', 'ultimate-member' ),
-								'fields' => $access_fields,
-							),
-							'other' => array(
-								'title'  => __( 'Other', 'ultimate-member' ),
-								'fields' => array(
-									array(
-										'id'    => 'enable_reset_password_limit',
-										'type'  => 'checkbox',
-										'label' => __( 'Enable the Reset Password Limit?', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'reset_password_limit_number',
-										'type'        => 'text',
-										'label'       => __( 'Reset Password Limit', 'ultimate-member' ),
-										'tooltip'     => __( 'Set the maximum reset password limit. If reached the maximum limit, user will be locked from using this.', 'ultimate-member' ),
-										'validate'    => 'numeric',
-										'conditional' => array( 'enable_reset_password_limit', '=', 1 ),
-										'size'        => 'small',
-									),
-									array(
-										'id'      => 'blocked_emails',
-										'type'    => 'textarea',
-										'label'   => __( 'Blocked Email Addresses', 'ultimate-member' ),
-										'tooltip' => __( 'This will block the specified e-mail addresses from being able to sign up or sign in to your site. To block an entire domain, use something like *@domain.com', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'blocked_words',
-										'type'    => 'textarea',
-										'label'   => __( 'Blacklist Words', 'ultimate-member' ),
-										'tooltip' => __( 'This option lets you specify blacklist of words to prevent anyone from signing up with such a word as their username', 'ultimate-member' ),
-									),
+				),
+				'access'       => array(
+					'title'    => __( 'Access', 'ultimate-member' ),
+					'sections' => array(
+						''      => array(
+							'title'  => __( 'Restriction Content', 'ultimate-member' ),
+							'fields' => $access_fields,
+						),
+						'other' => array(
+							'title'  => __( 'Other', 'ultimate-member' ),
+							'fields' => array(
+								array(
+									'id'    => 'enable_reset_password_limit',
+									'type'  => 'checkbox',
+									'label' => __( 'Enable the Reset Password Limit?', 'ultimate-member' ),
+								),
+								array(
+									'id'          => 'reset_password_limit_number',
+									'type'        => 'text',
+									'label'       => __( 'Reset Password Limit', 'ultimate-member' ),
+									'tooltip'     => __( 'Set the maximum reset password limit. If reached the maximum limit, user will be locked from using this.', 'ultimate-member' ),
+									'validate'    => 'numeric',
+									'conditional' => array( 'enable_reset_password_limit', '=', 1 ),
+									'size'        => 'small',
+								),
+								array(
+									'id'      => 'blocked_emails',
+									'type'    => 'textarea',
+									'label'   => __( 'Blocked Email Addresses', 'ultimate-member' ),
+									'tooltip' => __( 'This will block the specified e-mail addresses from being able to sign up or sign in to your site. To block an entire domain, use something like *@domain.com', 'ultimate-member' ),
+								),
+								array(
+									'id'      => 'blocked_words',
+									'type'    => 'textarea',
+									'label'   => __( 'Blacklist Words', 'ultimate-member' ),
+									'tooltip' => __( 'This option lets you specify blacklist of words to prevent anyone from signing up with such a word as their username', 'ultimate-member' ),
 								),
 							),
 						),
 					),
-					'email'        => array(
-						'title'  => __( 'Email', 'ultimate-member' ),
-						'fields' => array(
-							array(
-								'id'      => 'admin_email',
-								'type'    => 'text',
-								'label'   => __( 'Admin E-mail Address', 'ultimate-member' ),
-								'tooltip' => __( 'e.g. admin@companyname.com', 'ultimate-member' ),
-							),
-							array(
-								'id'      => 'mail_from',
-								'type'    => 'text',
-								'label'   => __( 'Mail appears from', 'ultimate-member' ),
-								'tooltip' => __( 'e.g. Site Name', 'ultimate-member' ),
-							),
-							array(
-								'id'      => 'mail_from_addr',
-								'type'    => 'text',
-								'label'   => __( 'Mail appears from address', 'ultimate-member' ),
-								'tooltip' => __( 'e.g. admin@companyname.com', 'ultimate-member' ),
-							),
-							array(
-								'id'      => 'email_html',
-								'type'    => 'checkbox',
-								'label'   => __( 'Use HTML for E-mails?', 'ultimate-member' ),
-								'tooltip' => __( 'If you plan use e-mails with HTML, please make sure that this option is enabled. Otherwise, HTML will be displayed as plain text.', 'ultimate-member' ),
-							),
+				),
+				'email'        => array(
+					'title'  => __( 'Email', 'ultimate-member' ),
+					'fields' => array(
+						array(
+							'id'      => 'admin_email',
+							'type'    => 'text',
+							'label'   => __( 'Admin E-mail Address', 'ultimate-member' ),
+							'tooltip' => __( 'e.g. admin@companyname.com', 'ultimate-member' ),
+						),
+						array(
+							'id'      => 'mail_from',
+							'type'    => 'text',
+							'label'   => __( 'Mail appears from', 'ultimate-member' ),
+							'tooltip' => __( 'e.g. Site Name', 'ultimate-member' ),
+						),
+						array(
+							'id'      => 'mail_from_addr',
+							'type'    => 'text',
+							'label'   => __( 'Mail appears from address', 'ultimate-member' ),
+							'tooltip' => __( 'e.g. admin@companyname.com', 'ultimate-member' ),
+						),
+						array(
+							'id'      => 'email_html',
+							'type'    => 'checkbox',
+							'label'   => __( 'Use HTML for E-mails?', 'ultimate-member' ),
+							'tooltip' => __( 'If you plan use e-mails with HTML, please make sure that this option is enabled. Otherwise, HTML will be displayed as plain text.', 'ultimate-member' ),
 						),
 					),
-					'appearance'   => array(
-						'title'    => __( 'Appearance', 'ultimate-member' ),
-						'sections' => array(
-							''                  => array(
-								'title'  => __( 'Profile', 'ultimate-member' ),
-								'fields' => array(
-									array(
-										'id'      => 'profile_template',
-										'type'    => 'select',
-										'label'   => __( 'Profile Default Template', 'ultimate-member' ),
-										'tooltip' => __( 'This will be the default template to output profile', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'profile_template' ),
-										'options' => UM()->shortcodes()->get_templates( 'profile' ),
-										'size'    => 'small',
+				),
+				'appearance'   => array(
+					'title'    => __( 'Appearance', 'ultimate-member' ),
+					'sections' => array(
+						''                  => array(
+							'title'  => __( 'Profile', 'ultimate-member' ),
+							'fields' => array(
+								array(
+									'id'      => 'profile_template',
+									'type'    => 'select',
+									'label'   => __( 'Profile Default Template', 'ultimate-member' ),
+									'tooltip' => __( 'This will be the default template to output profile', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'profile_template' ),
+									'options' => UM()->shortcodes()->get_templates( 'profile' ),
+									'size'    => 'small',
+								),
+								array(
+									'id'      => 'profile_max_width',
+									'type'    => 'text',
+									'label'   => __( 'Profile Maximum Width', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'profile_max_width' ),
+									'tooltip' => __( 'The maximum width this shortcode can take from the page width', 'ultimate-member' ),
+									'size'    => 'small',
+								),
+								array(
+									'id'      => 'profile_area_max_width',
+									'type'    => 'text',
+									'label'   => __( 'Profile Area Maximum Width', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'profile_area_max_width' ),
+									'tooltip' => __( 'The maximum width of the profile area inside profile (below profile header)', 'ultimate-member' ),
+									'size'    => 'small',
+								),
+								array(
+									'id'      => 'profile_icons',
+									'type'    => 'select',
+									'label'   => __( 'Profile Field Icons', 'ultimate-member' ),
+									'tooltip' => __( 'This is applicable for edit mode only', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'profile_icons' ),
+									'options' => array(
+										'field' => __( 'Show inside text field', 'ultimate-member' ),
+										'label' => __( 'Show with label', 'ultimate-member' ),
+										'off'   => __( 'Turn off', 'ultimate-member' ),
 									),
-									array(
-										'id'      => 'profile_max_width',
-										'type'    => 'text',
-										'label'   => __( 'Profile Maximum Width', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'profile_max_width' ),
-										'tooltip' => __( 'The maximum width this shortcode can take from the page width', 'ultimate-member' ),
-										'size'    => 'small',
-									),
-									array(
-										'id'      => 'profile_area_max_width',
-										'type'    => 'text',
-										'label'   => __( 'Profile Area Maximum Width', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'profile_area_max_width' ),
-										'tooltip' => __( 'The maximum width of the profile area inside profile (below profile header)', 'ultimate-member' ),
-										'size'    => 'small',
-									),
-									array(
-										'id'      => 'profile_icons',
-										'type'    => 'select',
-										'label'   => __( 'Profile Field Icons', 'ultimate-member' ),
-										'tooltip' => __( 'This is applicable for edit mode only', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'profile_icons' ),
-										'options' => array(
-											'field' => __( 'Show inside text field', 'ultimate-member' ),
-											'label' => __( 'Show with label', 'ultimate-member' ),
-											'off'   => __( 'Turn off', 'ultimate-member' ),
-										),
-										'size'    => 'small',
-									),
-									array(
-										'id'      => 'profile_primary_btn_word',
-										'type'    => 'text',
-										'label'   => __( 'Profile Primary Button Text', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'profile_primary_btn_word' ),
-										'tooltip' => __( 'The text that is used for updating profile button', 'ultimate-member' ),
-										'size'    => 'medium',
-									),
-									array(
-										'id'      => 'profile_secondary_btn',
-										'type'    => 'checkbox',
-										'label'   => __( 'Profile Secondary Button', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'profile_secondary_btn' ),
-										'tooltip' => __( 'Switch on/off the secondary button display in the form', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'profile_secondary_btn_word',
-										'type'        => 'text',
-										'label'       => __( 'Profile Secondary Button Text', 'ultimate-member' ),
-										'default'     => um_get_metadefault( 'profile_secondary_btn_word' ),
-										'tooltip'     => __( 'The text that is used for cancelling update profile button', 'ultimate-member' ),
-										'conditional' => array( 'profile_secondary_btn', '=', 1 ),
-										'size'        => 'medium',
-									),
-									array(
-										'id'                 => 'default_avatar',
-										'type'               => 'media',
-										'label'              => __( 'Default Profile Photo', 'ultimate-member' ),
-										'tooltip'            => __( 'You can change the default profile picture globally here. Please make sure that the photo is 300x300px.', 'ultimate-member' ),
-										'upload_frame_title' => __( 'Select Default Profile Photo', 'ultimate-member' ),
-										'default'            => array(
-											'url' => um_url . 'assets/img/default_avatar.jpg',
-										),
-									),
-									array(
-										'id'                 => 'default_cover',
-										'type'               => 'media',
-										'url'                => true,
-										'preview'            => false,
-										'label'              => __( 'Default Cover Photo', 'ultimate-member' ),
-										'tooltip'            => __( 'You can change the default cover photo globally here. Please make sure that the default cover is large enough and respects the ratio you are using for cover photos.', 'ultimate-member' ),
-										'upload_frame_title' => __( 'Select Default Cover Photo', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'disable_profile_photo_upload',
-										'type'    => 'checkbox',
-										'label'   => __( 'Disable Profile Photo Upload', 'ultimate-member' ),
-										'tooltip' => __( 'Switch on/off the profile photo uploader', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'disable_profile_photo_upload' ),
-									),
-									array(
-										'id'      => 'profile_photosize',
-										'type'    => 'select',
-										'label'   => __( 'Profile Photo Size', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'profile_photosize' ),
-										'options' => UM()->files()->get_profile_photo_size( 'photo_thumb_sizes' ),
-										'tooltip' => __( 'The global default of profile photo size. This can be overridden by individual form settings', 'ultimate-member' ),
-										'size'    => 'small',
-									),
-									array(
-										'id'      => 'profile_cover_enabled',
-										'type'    => 'checkbox',
-										'label'   => __( 'Profile Cover Photos', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'profile_cover_enabled' ),
-										'tooltip' => __( 'Switch on/off the profile cover photos', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'profile_coversize',
-										'type'        => 'select',
-										'label'       => __( 'Profile Cover Size', 'ultimate-member' ),
-										'default'     => um_get_metadefault( 'profile_coversize' ),
-										'options'     => UM()->files()->get_profile_photo_size( 'cover_thumb_sizes' ),
-										'tooltip'     => __( 'The global default width of cover photo size. This can be overridden by individual form settings', 'ultimate-member' ),
-										'conditional' => array( 'profile_cover_enabled', '=', 1 ),
-										'size'        => 'small',
-									),
-									array(
-										'id'          => 'profile_cover_ratio',
-										'type'        => 'select',
-										'label'       => __( 'Profile Cover Ratio', 'ultimate-member' ),
-										'tooltip'     => __( 'Choose global ratio for cover photos of profiles', 'ultimate-member' ),
-										'default'     => um_get_metadefault( 'profile_cover_ratio' ),
-										'options'     => array(
-											'1.6:1' => '1.6:1',
-											'2.7:1' => '2.7:1',
-											'2.2:1' => '2.2:1',
-											'3.2:1' => '3.2:1',
-										),
-										'conditional' => array( 'profile_cover_enabled', '=', 1 ),
-										'size'        => 'small',
-									),
-									array(
-										'id'      => 'profile_show_metaicon',
-										'type'    => 'checkbox',
-										'label'   => __( 'Profile Header Meta Text Icon', 'ultimate-member' ),
-										'default' => 0,
-										'tooltip' => __( 'Display field icons for related user meta fields in header or not', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'profile_show_name',
-										'type'    => 'checkbox',
-										'label'   => __( 'Show display name in profile header', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'profile_show_name' ),
-										'tooltip' => __( 'Switch on/off the user name on profile header', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'profile_show_social_links',
-										'type'    => 'checkbox',
-										'label'   => __( 'Show social links in profile header', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'profile_show_social_links' ),
-										'tooltip' => __( 'Switch on/off the social links on profile header', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'profile_show_bio',
-										'type'    => 'checkbox',
-										'label'   => __( 'Show user description in header', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'profile_show_bio' ),
-										'tooltip' => __( 'Switch on/off the user description on profile header', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'profile_show_html_bio',
-										'type'    => 'checkbox',
-										'label'   => __( 'Enable HTML support for user description', 'ultimate-member' ),
-										'tooltip' => __( 'Switch on/off to enable/disable support for html tags on user description.', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'profile_bio_maxchars',
-										'type'        => 'text',
-										'label'       => __( 'User description maximum chars', 'ultimate-member' ),
-										'default'     => um_get_metadefault( 'profile_bio_maxchars' ),
-										'tooltip'     => __( 'Maximum number of characters to allow in user description field in header.', 'ultimate-member' ),
-										'conditional' => array( 'profile_show_bio', '=', 1 ),
-										'size'        => 'small',
-									),
-									array(
-										'id'      => 'profile_header_menu',
-										'type'    => 'select',
-										'label'   => __( 'Profile Header Menu Position', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'profile_header_menu' ),
-										'tooltip' => __( 'For incompatible themes, please make the menu open from left instead of bottom by default.', 'ultimate-member' ),
-										'options' => array(
-											'bc' => __( 'Bottom of Icon', 'ultimate-member' ),
-											'lc' => __( 'Left of Icon (right for RTL)', 'ultimate-member' ),
-										),
-										'size'    => 'small',
-									),
-									array(
-										'id'      => 'profile_empty_text',
-										'type'    => 'checkbox',
-										'label'   => __( 'Show a custom message if profile is empty', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'profile_empty_text' ),
-										'tooltip' => __( 'Switch on/off the custom message that appears when the profile is empty', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'profile_empty_text_emo',
-										'type'        => 'checkbox',
-										'label'       => __( 'Show the emoticon', 'ultimate-member' ),
-										'default'     => um_get_metadefault( 'profile_empty_text_emo' ),
-										'tooltip'     => __( 'Switch on/off the emoticon (sad face) that appears above the message', 'ultimate-member' ),
-										'conditional' => array( 'profile_empty_text', '=', 1 ),
+									'size'    => 'small',
+								),
+								array(
+									'id'      => 'profile_primary_btn_word',
+									'type'    => 'text',
+									'label'   => __( 'Profile Primary Button Text', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'profile_primary_btn_word' ),
+									'tooltip' => __( 'The text that is used for updating profile button', 'ultimate-member' ),
+									'size'    => 'medium',
+								),
+								array(
+									'id'      => 'profile_secondary_btn',
+									'type'    => 'checkbox',
+									'label'   => __( 'Profile Secondary Button', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'profile_secondary_btn' ),
+									'tooltip' => __( 'Switch on/off the secondary button display in the form', 'ultimate-member' ),
+								),
+								array(
+									'id'          => 'profile_secondary_btn_word',
+									'type'        => 'text',
+									'label'       => __( 'Profile Secondary Button Text', 'ultimate-member' ),
+									'default'     => um_get_metadefault( 'profile_secondary_btn_word' ),
+									'tooltip'     => __( 'The text that is used for cancelling update profile button', 'ultimate-member' ),
+									'conditional' => array( 'profile_secondary_btn', '=', 1 ),
+									'size'        => 'medium',
+								),
+								array(
+									'id'                 => 'default_avatar',
+									'type'               => 'media',
+									'label'              => __( 'Default Profile Photo', 'ultimate-member' ),
+									'tooltip'            => __( 'You can change the default profile picture globally here. Please make sure that the photo is 300x300px.', 'ultimate-member' ),
+									'upload_frame_title' => __( 'Select Default Profile Photo', 'ultimate-member' ),
+									'default'            => array(
+										'url' => um_url . 'assets/img/default_avatar.jpg',
 									),
 								),
-							),
-							'profile_menu'      => array(
-								'title'  => __( 'Profile Menu', 'ultimate-member' ),
-								'fields' => $appearances_profile_menu_fields,
-							),
-							'registration_form' => array(
-								'title'  => __( 'Registration Form', 'ultimate-member' ),
-								'fields' => array(
-									array(
-										'id'      => 'register_template',
-										'type'    => 'select',
-										'label'   => __( 'Registration Default Template', 'ultimate-member' ),
-										'tooltip' => __( 'This will be the default template to output registration', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'register_template' ),
-										'options' => UM()->shortcodes()->get_templates( 'register' ),
-										'size'    => 'small',
-									),
-									array(
-										'id'      => 'register_max_width',
-										'type'    => 'text',
-										'label'   => __( 'Registration Maximum Width', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'register_max_width' ),
-										'tooltip' => __( 'The maximum width this shortcode can take from the page width', 'ultimate-member' ),
-										'size'    => 'small',
-									),
-									array(
-										'id'      => 'register_align',
-										'type'    => 'select',
-										'label'   => __( 'Registration Shortcode Alignment', 'ultimate-member' ),
-										'tooltip' => __( 'The shortcode is centered by default unless you specify otherwise here', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'register_align' ),
-										'options' => array(
-											'center' => __( 'Centered', 'ultimate-member' ),
-											'left'   => __( 'Left aligned', 'ultimate-member' ),
-											'right'  => __( 'Right aligned', 'ultimate-member' ),
-										),
-										'size'    => 'small',
-									),
-									array(
-										'id'      => 'register_icons',
-										'type'    => 'select',
-										'label'   => __( 'Registration Field Icons', 'ultimate-member' ),
-										'tooltip' => __( 'This controls the display of field icons in the registration form', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'register_icons' ),
-										'options' => array(
-											'field' => __( 'Show inside text field', 'ultimate-member' ),
-											'label' => __( 'Show with label', 'ultimate-member' ),
-											'off'   => __( 'Turn off', 'ultimate-member' ),
-										),
-										'size'    => 'small',
-									),
-									array(
-										'id'      => 'register_primary_btn_word',
-										'type'    => 'text',
-										'label'   => __( 'Registration Primary Button Text', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'register_primary_btn_word' ),
-										'tooltip' => __( 'The text that is used for primary button text', 'ultimate-member' ),
-										'size'    => 'medium',
-									),
-									array(
-										'id'      => 'register_secondary_btn',
-										'type'    => 'checkbox',
-										'label'   => __( 'Registration Secondary Button', 'ultimate-member' ),
-										'default' => 1,
-										'tooltip' => __( 'Switch on/off the secondary button display in the form', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'register_secondary_btn_word',
-										'type'        => 'text',
-										'label'       => __( 'Registration Secondary Button Text', 'ultimate-member' ),
-										'default'     => um_get_metadefault( 'register_secondary_btn_word' ),
-										'tooltip'     => __( 'The text that is used for the secondary button text', 'ultimate-member' ),
-										'conditional' => array( 'register_secondary_btn', '=', 1 ),
-										'size'        => 'medium',
-									),
-									array(
-										'id'          => 'register_secondary_btn_url',
-										'type'        => 'text',
-										'label'       => __( 'Registration Secondary Button URL', 'ultimate-member' ),
-										'default'     => um_get_metadefault( 'register_secondary_btn_url' ),
-										'tooltip'     => __( 'You can replace default link for this button by entering custom URL', 'ultimate-member' ),
-										'conditional' => array( 'register_secondary_btn', '=', 1 ),
-										'size'        => 'medium',
-									),
-									array(
-										'id'      => 'register_role',
-										'type'    => 'select',
-										'label'   => __( 'Registration Default Role', 'ultimate-member' ),
-										'tooltip' => __( 'This will be the default role assigned to users registering thru registration form', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'register_role' ),
-										'options' => UM()->roles()->get_roles( __( 'Default', 'ultimate-member' ) ),
-										'size'    => 'small',
-									),
+								array(
+									'id'                 => 'default_cover',
+									'type'               => 'media',
+									'url'                => true,
+									'preview'            => false,
+									'label'              => __( 'Default Cover Photo', 'ultimate-member' ),
+									'tooltip'            => __( 'You can change the default cover photo globally here. Please make sure that the default cover is large enough and respects the ratio you are using for cover photos.', 'ultimate-member' ),
+									'upload_frame_title' => __( 'Select Default Cover Photo', 'ultimate-member' ),
 								),
-							),
-							'login_form'        => array(
-								'title'  => __( 'Login Form', 'ultimate-member' ),
-								'fields' => array(
-									array(
-										'id'      => 'login_template',
-										'type'    => 'select',
-										'label'   => __( 'Login Default Template', 'ultimate-member' ),
-										'tooltip' => __( 'This will be the default template to output login', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'login_template' ),
-										'options' => UM()->shortcodes()->get_templates( 'login' ),
-										'size'    => 'small',
+								array(
+									'id'      => 'disable_profile_photo_upload',
+									'type'    => 'checkbox',
+									'label'   => __( 'Disable Profile Photo Upload', 'ultimate-member' ),
+									'tooltip' => __( 'Switch on/off the profile photo uploader', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'disable_profile_photo_upload' ),
+								),
+								array(
+									'id'      => 'profile_photosize',
+									'type'    => 'select',
+									'label'   => __( 'Profile Photo Size', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'profile_photosize' ),
+									'options' => UM()->files()->get_profile_photo_size( 'photo_thumb_sizes' ),
+									'tooltip' => __( 'The global default of profile photo size. This can be overridden by individual form settings', 'ultimate-member' ),
+									'size'    => 'small',
+								),
+								array(
+									'id'      => 'profile_cover_enabled',
+									'type'    => 'checkbox',
+									'label'   => __( 'Profile Cover Photos', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'profile_cover_enabled' ),
+									'tooltip' => __( 'Switch on/off the profile cover photos', 'ultimate-member' ),
+								),
+								array(
+									'id'          => 'profile_coversize',
+									'type'        => 'select',
+									'label'       => __( 'Profile Cover Size', 'ultimate-member' ),
+									'default'     => um_get_metadefault( 'profile_coversize' ),
+									'options'     => UM()->files()->get_profile_photo_size( 'cover_thumb_sizes' ),
+									'tooltip'     => __( 'The global default width of cover photo size. This can be overridden by individual form settings', 'ultimate-member' ),
+									'conditional' => array( 'profile_cover_enabled', '=', 1 ),
+									'size'        => 'small',
+								),
+								array(
+									'id'          => 'profile_cover_ratio',
+									'type'        => 'select',
+									'label'       => __( 'Profile Cover Ratio', 'ultimate-member' ),
+									'tooltip'     => __( 'Choose global ratio for cover photos of profiles', 'ultimate-member' ),
+									'default'     => um_get_metadefault( 'profile_cover_ratio' ),
+									'options'     => array(
+										'1.6:1' => '1.6:1',
+										'2.7:1' => '2.7:1',
+										'2.2:1' => '2.2:1',
+										'3.2:1' => '3.2:1',
 									),
-									array(
-										'id'      => 'login_max_width',
-										'type'    => 'text',
-										'label'   => __( 'Login Maximum Width', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'login_max_width' ),
-										'tooltip' => __( 'The maximum width this shortcode can take from the page width', 'ultimate-member' ),
-										'size'    => 'small',
+									'conditional' => array( 'profile_cover_enabled', '=', 1 ),
+									'size'        => 'small',
+								),
+								array(
+									'id'      => 'profile_show_metaicon',
+									'type'    => 'checkbox',
+									'label'   => __( 'Profile Header Meta Text Icon', 'ultimate-member' ),
+									'default' => 0,
+									'tooltip' => __( 'Display field icons for related user meta fields in header or not', 'ultimate-member' ),
+								),
+								array(
+									'id'      => 'profile_show_name',
+									'type'    => 'checkbox',
+									'label'   => __( 'Show display name in profile header', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'profile_show_name' ),
+									'tooltip' => __( 'Switch on/off the user name on profile header', 'ultimate-member' ),
+								),
+								array(
+									'id'      => 'profile_show_social_links',
+									'type'    => 'checkbox',
+									'label'   => __( 'Show social links in profile header', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'profile_show_social_links' ),
+									'tooltip' => __( 'Switch on/off the social links on profile header', 'ultimate-member' ),
+								),
+								array(
+									'id'      => 'profile_show_bio',
+									'type'    => 'checkbox',
+									'label'   => __( 'Show user description in header', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'profile_show_bio' ),
+									'tooltip' => __( 'Switch on/off the user description on profile header', 'ultimate-member' ),
+								),
+								array(
+									'id'      => 'profile_show_html_bio',
+									'type'    => 'checkbox',
+									'label'   => __( 'Enable HTML support for user description', 'ultimate-member' ),
+									'tooltip' => __( 'Switch on/off to enable/disable support for html tags on user description.', 'ultimate-member' ),
+								),
+								array(
+									'id'          => 'profile_bio_maxchars',
+									'type'        => 'text',
+									'label'       => __( 'User description maximum chars', 'ultimate-member' ),
+									'default'     => um_get_metadefault( 'profile_bio_maxchars' ),
+									'tooltip'     => __( 'Maximum number of characters to allow in user description field in header.', 'ultimate-member' ),
+									'conditional' => array( 'profile_show_bio', '=', 1 ),
+									'size'        => 'small',
+								),
+								array(
+									'id'      => 'profile_header_menu',
+									'type'    => 'select',
+									'label'   => __( 'Profile Header Menu Position', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'profile_header_menu' ),
+									'tooltip' => __( 'For incompatible themes, please make the menu open from left instead of bottom by default.', 'ultimate-member' ),
+									'options' => array(
+										'bc' => __( 'Bottom of Icon', 'ultimate-member' ),
+										'lc' => __( 'Left of Icon (right for RTL)', 'ultimate-member' ),
 									),
-									array(
-										'id'      => 'login_align',
-										'type'    => 'select',
-										'label'   => __( 'Login Shortcode Alignment', 'ultimate-member' ),
-										'tooltip' => __( 'The shortcode is centered by default unless you specify otherwise here', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'login_align' ),
-										'options' => array(
-											'center' => __( 'Centered', 'ultimate-member' ),
-											'left'   => __( 'Left aligned', 'ultimate-member' ),
-											'right'  => __( 'Right aligned', 'ultimate-member' ),
-										),
-										'size'    => 'small',
-									),
-									array(
-										'id'      => 'login_icons',
-										'type'    => 'select',
-										'label'   => __( 'Login Field Icons', 'ultimate-member' ),
-										'tooltip' => __( 'This controls the display of field icons in the login form', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'login_icons' ),
-										'options' => array(
-											'field' => __( 'Show inside text field', 'ultimate-member' ),
-											'label' => __( 'Show with label', 'ultimate-member' ),
-											'off'   => __( 'Turn off', 'ultimate-member' ),
-										),
-										'size'    => 'small',
-									),
-									array(
-										'id'      => 'login_primary_btn_word',
-										'type'    => 'text',
-										'label'   => __( 'Login Primary Button Text', 'ultimate-member' ),
-										'default' => um_get_metadefault( 'login_primary_btn_word' ),
-										'tooltip' => __( 'The text that is used for primary button text', 'ultimate-member' ),
-										'size'    => 'medium',
-									),
-									array(
-										'id'      => 'login_secondary_btn',
-										'type'    => 'checkbox',
-										'label'   => __( 'Login Secondary Button', 'ultimate-member' ),
-										'default' => 1,
-										'tooltip' => __( 'Switch on/off the secondary button display in the form', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'login_secondary_btn_word',
-										'type'        => 'text',
-										'label'       => __( 'Login Secondary Button Text', 'ultimate-member' ),
-										'default'     => um_get_metadefault( 'login_secondary_btn_word' ),
-										'tooltip'     => __( 'The text that is used for the secondary button text', 'ultimate-member' ),
-										'conditional' => array( 'login_secondary_btn', '=', 1 ),
-										'size'        => 'medium',
-									),
-									array(
-										'id'          => 'login_secondary_btn_url',
-										'type'        => 'text',
-										'label'       => __( 'Login Secondary Button URL', 'ultimate-member' ),
-										'default'     => um_get_metadefault( 'login_secondary_btn_url' ),
-										'tooltip'     => __( 'You can replace default link for this button by entering custom URL', 'ultimate-member' ),
-										'conditional' => array( 'login_secondary_btn', '=', 1 ),
-										'size'        => 'medium',
-									),
-									array(
-										'id'      => 'login_forgot_pass_link',
-										'type'    => 'checkbox',
-										'label'   => __( 'Login Forgot Password Link', 'ultimate-member' ),
-										'default' => 1,
-										'tooltip' => __( 'Switch on/off the forgot password link in login form', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'login_show_rememberme',
-										'type'    => 'checkbox',
-										'label'   => __( 'Show "Remember Me"', 'ultimate-member' ),
-										'default' => 1,
-										'tooltip' => __( 'Allow users to choose If they want to stay signed in even after closing the browser. If you do not show this option, the default will be to not remember login session.', 'ultimate-member' ),
-									),
+									'size'    => 'small',
+								),
+								array(
+									'id'      => 'profile_empty_text',
+									'type'    => 'checkbox',
+									'label'   => __( 'Show a custom message if profile is empty', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'profile_empty_text' ),
+									'tooltip' => __( 'Switch on/off the custom message that appears when the profile is empty', 'ultimate-member' ),
+								),
+								array(
+									'id'          => 'profile_empty_text_emo',
+									'type'        => 'checkbox',
+									'label'       => __( 'Show the emoticon', 'ultimate-member' ),
+									'default'     => um_get_metadefault( 'profile_empty_text_emo' ),
+									'tooltip'     => __( 'Switch on/off the emoticon (sad face) that appears above the message', 'ultimate-member' ),
+									'conditional' => array( 'profile_empty_text', '=', 1 ),
 								),
 							),
 						),
-					),
-					'extensions'   => array(
-						'title' => __( 'Extensions', 'ultimate-member' ),
-					),
-					'modules'       => array(
-						'title'     => __( 'Modules', 'ultimate-member' ),
-						'sections'  => $modules_sections,
-					),
-					'licenses'     => array(
-						'title' => __( 'Licenses', 'ultimate-member' ),
-					),
-					'misc'         => array(
-						'title'  => __( 'Misc', 'ultimate-member' ),
-						'fields' => array(
-							array(
-								'id'    => 'form_asterisk',
-								'type'  => 'checkbox',
-								'label' => __( 'Show an asterisk for required fields', 'ultimate-member' ),
-							),
-							array(
-								'id'      => 'profile_title',
-								'type'    => 'text',
-								'label'   => __( 'User Profile Title', 'ultimate-member' ),
-								'tooltip' => __( 'This is the title that is displayed on a specific user profile', 'ultimate-member' ),
-								'size'    => 'medium',
-							),
-							array(
-								'id'      => 'profile_desc',
-								'type'    => 'textarea',
-								'label'   => __( 'User Profile Dynamic Meta Description', 'ultimate-member' ),
-								'tooltip' => __( 'This will be used in the meta description that is available for search-engines.', 'ultimate-member' ),
-								'args'    => array(
-									'textarea_rows' => 6,
+						'profile_menu'      => array(
+							'title'  => __( 'Profile Menu', 'ultimate-member' ),
+							'fields' => $appearances_profile_menu_fields,
+						),
+						'registration_form' => array(
+							'title'  => __( 'Registration Form', 'ultimate-member' ),
+							'fields' => array(
+								array(
+									'id'      => 'register_template',
+									'type'    => 'select',
+									'label'   => __( 'Registration Default Template', 'ultimate-member' ),
+									'tooltip' => __( 'This will be the default template to output registration', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'register_template' ),
+									'options' => UM()->shortcodes()->get_templates( 'register' ),
+									'size'    => 'small',
+								),
+								array(
+									'id'      => 'register_max_width',
+									'type'    => 'text',
+									'label'   => __( 'Registration Maximum Width', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'register_max_width' ),
+									'tooltip' => __( 'The maximum width this shortcode can take from the page width', 'ultimate-member' ),
+									'size'    => 'small',
+								),
+								array(
+									'id'      => 'register_align',
+									'type'    => 'select',
+									'label'   => __( 'Registration Shortcode Alignment', 'ultimate-member' ),
+									'tooltip' => __( 'The shortcode is centered by default unless you specify otherwise here', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'register_align' ),
+									'options' => array(
+										'center' => __( 'Centered', 'ultimate-member' ),
+										'left'   => __( 'Left aligned', 'ultimate-member' ),
+										'right'  => __( 'Right aligned', 'ultimate-member' ),
+									),
+									'size'    => 'small',
+								),
+								array(
+									'id'      => 'register_icons',
+									'type'    => 'select',
+									'label'   => __( 'Registration Field Icons', 'ultimate-member' ),
+									'tooltip' => __( 'This controls the display of field icons in the registration form', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'register_icons' ),
+									'options' => array(
+										'field' => __( 'Show inside text field', 'ultimate-member' ),
+										'label' => __( 'Show with label', 'ultimate-member' ),
+										'off'   => __( 'Turn off', 'ultimate-member' ),
+									),
+									'size'    => 'small',
+								),
+								array(
+									'id'      => 'register_primary_btn_word',
+									'type'    => 'text',
+									'label'   => __( 'Registration Primary Button Text', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'register_primary_btn_word' ),
+									'tooltip' => __( 'The text that is used for primary button text', 'ultimate-member' ),
+									'size'    => 'medium',
+								),
+								array(
+									'id'      => 'register_secondary_btn',
+									'type'    => 'checkbox',
+									'label'   => __( 'Registration Secondary Button', 'ultimate-member' ),
+									'default' => 1,
+									'tooltip' => __( 'Switch on/off the secondary button display in the form', 'ultimate-member' ),
+								),
+								array(
+									'id'          => 'register_secondary_btn_word',
+									'type'        => 'text',
+									'label'       => __( 'Registration Secondary Button Text', 'ultimate-member' ),
+									'default'     => um_get_metadefault( 'register_secondary_btn_word' ),
+									'tooltip'     => __( 'The text that is used for the secondary button text', 'ultimate-member' ),
+									'conditional' => array( 'register_secondary_btn', '=', 1 ),
+									'size'        => 'medium',
+								),
+								array(
+									'id'          => 'register_secondary_btn_url',
+									'type'        => 'text',
+									'label'       => __( 'Registration Secondary Button URL', 'ultimate-member' ),
+									'default'     => um_get_metadefault( 'register_secondary_btn_url' ),
+									'tooltip'     => __( 'You can replace default link for this button by entering custom URL', 'ultimate-member' ),
+									'conditional' => array( 'register_secondary_btn', '=', 1 ),
+									'size'        => 'medium',
+								),
+								array(
+									'id'      => 'register_role',
+									'type'    => 'select',
+									'label'   => __( 'Registration Default Role', 'ultimate-member' ),
+									'tooltip' => __( 'This will be the default role assigned to users registering thru registration form', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'register_role' ),
+									'options' => UM()->roles()->get_roles( __( 'Default', 'ultimate-member' ) ),
+									'size'    => 'small',
 								),
 							),
-							array(
-								'id'      => 'um_profile_object_cache_stop',
-								'type'    => 'checkbox',
-								'label'   => __( 'Disable Cache User Profile', 'ultimate-member' ),
-								'tooltip' => __( 'Check this box if you would like to disable Ultimate Member user\'s cache.', 'ultimate-member' ),
-							),
-							array(
-								'id'      => 'enable_blocks',
-								'type'    => 'checkbox',
-								'label'   => __( 'Enable Gutenberg Blocks', 'ultimate-member' ),
-								'tooltip' => __( 'Check this box if you would like to use Ultimate Member blocks in Gutenberg editor. Important some themes have the conflicts with Gutenberg editor.', 'ultimate-member' ),
-							),
-							array(
-								'id'      => 'rest_api_version',
-								'type'    => 'select',
-								'label'   => __( 'REST API version', 'ultimate-member' ),
-								'tooltip' => __( 'This controls the REST API version, we recommend to use the last version', 'ultimate-member' ),
-								'options' => array(
-									'1.0' => __( '1.0 version', 'ultimate-member' ),
-									'2.0' => __( '2.0 version', 'ultimate-member' ),
+						),
+						'login_form'        => array(
+							'title'  => __( 'Login Form', 'ultimate-member' ),
+							'fields' => array(
+								array(
+									'id'      => 'login_template',
+									'type'    => 'select',
+									'label'   => __( 'Login Default Template', 'ultimate-member' ),
+									'tooltip' => __( 'This will be the default template to output login', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'login_template' ),
+									'options' => UM()->shortcodes()->get_templates( 'login' ),
+									'size'    => 'small',
 								),
-							),
-							// backward compatibility option leave it disabled for better security and ability to exclude posts/terms pre-query
-							// otherwise we filtering only results and restricted posts/terms can be visible
-							array(
-								'id'      => 'disable_restriction_pre_queries',
-								'type'    => 'checkbox',
-								'label'   => __( 'Disable pre-queries for restriction content logic (advanced)', 'ultimate-member' ),
-								'tooltip' => __( 'Please enable this option only in the cases when you have big or unnecessary queries on your site with active restriction logic. If you want to exclude posts only from the results queries instead of pre_get_posts and fully-hidden post logic also please enable this option. It activates the restriction content logic until 2.2.x version without latest security enhancements', 'ultimate-member' ),
-							),
-							$same_page_update,
-							array(
-								'id'      => 'uninstall_on_delete',
-								'type'    => 'checkbox',
-								'label'   => __( 'Remove Data on Uninstall?', 'ultimate-member' ),
-								'tooltip' => __( 'Check this box if you would like Ultimate Member to completely remove all of its data when the plugin/extensions are deleted.', 'ultimate-member' ),
+								array(
+									'id'      => 'login_max_width',
+									'type'    => 'text',
+									'label'   => __( 'Login Maximum Width', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'login_max_width' ),
+									'tooltip' => __( 'The maximum width this shortcode can take from the page width', 'ultimate-member' ),
+									'size'    => 'small',
+								),
+								array(
+									'id'      => 'login_align',
+									'type'    => 'select',
+									'label'   => __( 'Login Shortcode Alignment', 'ultimate-member' ),
+									'tooltip' => __( 'The shortcode is centered by default unless you specify otherwise here', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'login_align' ),
+									'options' => array(
+										'center' => __( 'Centered', 'ultimate-member' ),
+										'left'   => __( 'Left aligned', 'ultimate-member' ),
+										'right'  => __( 'Right aligned', 'ultimate-member' ),
+									),
+									'size'    => 'small',
+								),
+								array(
+									'id'      => 'login_icons',
+									'type'    => 'select',
+									'label'   => __( 'Login Field Icons', 'ultimate-member' ),
+									'tooltip' => __( 'This controls the display of field icons in the login form', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'login_icons' ),
+									'options' => array(
+										'field' => __( 'Show inside text field', 'ultimate-member' ),
+										'label' => __( 'Show with label', 'ultimate-member' ),
+										'off'   => __( 'Turn off', 'ultimate-member' ),
+									),
+									'size'    => 'small',
+								),
+								array(
+									'id'      => 'login_primary_btn_word',
+									'type'    => 'text',
+									'label'   => __( 'Login Primary Button Text', 'ultimate-member' ),
+									'default' => um_get_metadefault( 'login_primary_btn_word' ),
+									'tooltip' => __( 'The text that is used for primary button text', 'ultimate-member' ),
+									'size'    => 'medium',
+								),
+								array(
+									'id'      => 'login_secondary_btn',
+									'type'    => 'checkbox',
+									'label'   => __( 'Login Secondary Button', 'ultimate-member' ),
+									'default' => 1,
+									'tooltip' => __( 'Switch on/off the secondary button display in the form', 'ultimate-member' ),
+								),
+								array(
+									'id'          => 'login_secondary_btn_word',
+									'type'        => 'text',
+									'label'       => __( 'Login Secondary Button Text', 'ultimate-member' ),
+									'default'     => um_get_metadefault( 'login_secondary_btn_word' ),
+									'tooltip'     => __( 'The text that is used for the secondary button text', 'ultimate-member' ),
+									'conditional' => array( 'login_secondary_btn', '=', 1 ),
+									'size'        => 'medium',
+								),
+								array(
+									'id'          => 'login_secondary_btn_url',
+									'type'        => 'text',
+									'label'       => __( 'Login Secondary Button URL', 'ultimate-member' ),
+									'default'     => um_get_metadefault( 'login_secondary_btn_url' ),
+									'tooltip'     => __( 'You can replace default link for this button by entering custom URL', 'ultimate-member' ),
+									'conditional' => array( 'login_secondary_btn', '=', 1 ),
+									'size'        => 'medium',
+								),
+								array(
+									'id'      => 'login_forgot_pass_link',
+									'type'    => 'checkbox',
+									'label'   => __( 'Login Forgot Password Link', 'ultimate-member' ),
+									'default' => 1,
+									'tooltip' => __( 'Switch on/off the forgot password link in login form', 'ultimate-member' ),
+								),
+								array(
+									'id'      => 'login_show_rememberme',
+									'type'    => 'checkbox',
+									'label'   => __( 'Show "Remember Me"', 'ultimate-member' ),
+									'default' => 1,
+									'tooltip' => __( 'Allow users to choose If they want to stay signed in even after closing the browser. If you do not show this option, the default will be to not remember login session.', 'ultimate-member' ),
+								),
 							),
 						),
 					),
-					'install_info' => array(
-						'title'  => __( 'Install Info', 'ultimate-member' ),
-						'fields' => array(
-							array(
-								'type' => 'install_info',
+				),
+				'extensions'   => array(
+					'title' => __( 'Extensions', 'ultimate-member' ),
+				),
+				'modules'       => array(
+					'title'     => __( 'Modules', 'ultimate-member' ),
+					'sections'  => $modules_sections,
+				),
+				'licenses'     => array(
+					'title' => __( 'Licenses', 'ultimate-member' ),
+				),
+				'misc'         => array(
+					'title'  => __( 'Misc', 'ultimate-member' ),
+					'fields' => array(
+						array(
+							'id'    => 'form_asterisk',
+							'type'  => 'checkbox',
+							'label' => __( 'Show an asterisk for required fields', 'ultimate-member' ),
+						),
+						array(
+							'id'      => 'profile_title',
+							'type'    => 'text',
+							'label'   => __( 'User Profile Title', 'ultimate-member' ),
+							'tooltip' => __( 'This is the title that is displayed on a specific user profile', 'ultimate-member' ),
+							'size'    => 'medium',
+						),
+						array(
+							'id'      => 'profile_desc',
+							'type'    => 'textarea',
+							'label'   => __( 'User Profile Dynamic Meta Description', 'ultimate-member' ),
+							'tooltip' => __( 'This will be used in the meta description that is available for search-engines.', 'ultimate-member' ),
+							'args'    => array(
+								'textarea_rows' => 6,
 							),
 						),
+						array(
+							'id'      => 'um_profile_object_cache_stop',
+							'type'    => 'checkbox',
+							'label'   => __( 'Disable Cache User Profile', 'ultimate-member' ),
+							'tooltip' => __( 'Check this box if you would like to disable Ultimate Member user\'s cache.', 'ultimate-member' ),
+						),
+						array(
+							'id'      => 'enable_blocks',
+							'type'    => 'checkbox',
+							'label'   => __( 'Enable Gutenberg Blocks', 'ultimate-member' ),
+							'tooltip' => __( 'Check this box if you would like to use Ultimate Member blocks in Gutenberg editor. Important some themes have the conflicts with Gutenberg editor.', 'ultimate-member' ),
+						),
+						array(
+							'id'      => 'rest_api_version',
+							'type'    => 'select',
+							'label'   => __( 'REST API version', 'ultimate-member' ),
+							'tooltip' => __( 'This controls the REST API version, we recommend to use the last version', 'ultimate-member' ),
+							'options' => array(
+								'1.0' => __( '1.0 version', 'ultimate-member' ),
+								'2.0' => __( '2.0 version', 'ultimate-member' ),
+							),
+						),
+						// backward compatibility option leave it disabled for better security and ability to exclude posts/terms pre-query
+						// otherwise we filtering only results and restricted posts/terms can be visible
+						array(
+							'id'      => 'disable_restriction_pre_queries',
+							'type'    => 'checkbox',
+							'label'   => __( 'Disable pre-queries for restriction content logic (advanced)', 'ultimate-member' ),
+							'tooltip' => __( 'Please enable this option only in the cases when you have big or unnecessary queries on your site with active restriction logic. If you want to exclude posts only from the results queries instead of pre_get_posts and fully-hidden post logic also please enable this option. It activates the restriction content logic until 2.2.x version without latest security enhancements', 'ultimate-member' ),
+						),
+						$same_page_update,
+						array(
+							'id'      => 'uninstall_on_delete',
+							'type'    => 'checkbox',
+							'label'   => __( 'Remove Data on Uninstall?', 'ultimate-member' ),
+							'tooltip' => __( 'Check this box if you would like Ultimate Member to completely remove all of its data when the plugin/extensions are deleted.', 'ultimate-member' ),
+						),
 					),
-				);
+				),
+				'install_info' => array(
+					'title'  => __( 'Install Info', 'ultimate-member' ),
+					'fields' => array(
+						array(
+							'type' => 'install_info',
+						),
+					),
+				),
+			);
 
 
 			// Init settings for the certain section
