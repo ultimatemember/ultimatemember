@@ -930,7 +930,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'url_text' => 'LinkedIn',
 					'advanced' => 'social',
 					'color' => '#0976b4',
-					'match' => 'https://linkedin.com/in/',
+					'match' => 'https://linkedin.com/',
 				),
 
 				'googleplus' => array(
