@@ -678,7 +678,7 @@ function um_after_account_privacy( $args ) {
 		ARRAY_A );
 
 		if ( ! empty( $pending ) && $pending['post_status'] == 'request-pending' ) {
-			echo '<p>' . esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your export request.', 'ultimate-member' ) . '</p>';
+			echo '<p>' . esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your deletion request.', 'ultimate-member' ) . '</p>';
 		} elseif ( ! empty( $pending ) && $pending['post_status'] == 'request-confirmed' ) {
 			echo '<p>' . esc_html__( 'The administrator has not yet approved deleting your data. Please expect an email with a link to your data.', 'ultimate-member' ) . '</p>';
 		} else {
@@ -756,7 +756,11 @@ function um_request_user_data() {
 		$answer = esc_html( $request_id->get_error_message() );
 	} else {
 		wp_send_user_request( $request_id );
-		$answer = esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your export request.', 'ultimate-member' );
+		if ( 'um-export-data' === $request_action ) {
+			$answer = esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your export request.', 'ultimate-member' );
+		} elseif ( 'um-erase-data' === $request_action ) {
+			$answer = esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your deletion request.', 'ultimate-member' );
+		}
 	}
 
 	wp_send_json_success( array( 'answer' => $answer ) );
