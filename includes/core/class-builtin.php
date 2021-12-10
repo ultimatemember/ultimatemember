@@ -984,6 +984,51 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'url_text' => 'Skype',
 				),
 
+				'viber' => array(
+					'title' => __('Viber number','ultimate-member'),
+					'metakey' => 'viber',
+					'type' => 'text',
+					'label' => __('Viber number','ultimate-member'),
+					'required' => 0,
+					'public' => 1,
+					'editable' => 1,
+					'url_target' => '_blank',
+					'url_rel' => 'nofollow',
+					'icon' => 'um-icon-ios-telephone',
+					'validate' => 'phone_number',
+				),
+
+				'whatsapp' => array(
+					'title' => __('WhatsApp number','ultimate-member'),
+					'metakey' => 'whatsapp',
+					'type' => 'text',
+					'label' => __('WhatsApp number','ultimate-member'),
+					'required' => 0,
+					'public' => 1,
+					'editable' => 1,
+					'url_target' => '_blank',
+					'url_rel' => 'nofollow',
+					'icon' => 'um-icon-ios-telephone-outline',
+					'validate' => 'phone_number',
+				),
+
+				'telegram' => array(
+					'title' => __('Telegram','ultimate-member'),
+					'metakey' => 'telegram',
+					'type' => 'url',
+					'label' => __('Telegram','ultimate-member'),
+					'required' => 0,
+					'public' => 1,
+					'editable' => 1,
+					'url_target' => '_blank',
+					'url_rel' => 'nofollow',
+					'icon' => 'um-faicon-paper-plane',
+					'validate' => 'telegram_url',
+					'url_text' => 'Telegram',
+					'advanced' => 'social',
+					'match' => 'https://t.me/',
+				),
+
 				'youtube' => array(
 					'title' => __('YouTube','ultimate-member'),
 					'metakey' => 'youtube',
@@ -1409,6 +1454,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$array['unique_username_or_email'] = __('Unique Username/E-mail','ultimate-member');
 			$array['url'] = __('Website URL','ultimate-member');
 			$array['youtube_url'] = __('YouTube Profile','ultimate-member');
+			$array['telegram_url'] = __('Telegram URL','ultimate-member');
 			$array['custom'] = __('Custom Validation','ultimate-member');
 
 			/**
