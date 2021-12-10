@@ -876,7 +876,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		function slider_range_placeholder( $filter, $attrs ) {
 			switch ( $filter ) {
 				default: {
-					$label = ucwords( str_replace( array( 'um_', '_' ), array( '', ' ' ), $filter ) );
+					$label = ucwords( str_replace( array( 'um_', '_' ), array( '', ' ' ), $attrs['label'] ) );
 					$placeholders = apply_filters( 'um_member_directory_filter_slider_range_placeholder', false, $filter );
 
 					if ( ! $placeholders ) {
