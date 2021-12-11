@@ -972,7 +972,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'skype' => array(
 					'title' => __('Skype ID','ultimate-member'),
 					'metakey' => 'skype',
-					'type' => 'url',
+					'type' => 'text',
 					'label' => __('Skype ID','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
@@ -981,7 +981,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'url_rel' => 'nofollow',
 					'icon' => 'um-faicon-skype',
 					'validate' => 'skype',
-					'url_text' => 'Skype',
+					'url_text' => __( 'Join chat', 'ultimate-member' ),
 				),
 
 				'viber' => array(
@@ -1008,7 +1008,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable' => 1,
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
-					'icon' => 'um-icon-ios-telephone-outline',
+					'icon' => 'um-icon-social-whatsapp',
 					'validate' => 'phone_number',
 				),
 

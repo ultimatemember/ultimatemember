@@ -767,7 +767,9 @@ function um_profile_dynamic_meta_desc() {
 		<meta property="og:url" content="<?php echo esc_url( $url ); ?>"/>
 
 		<meta name="twitter:card" content="summary"/>
-		<?php if( $twitter ) { ?><meta name="twitter:site" content="@<?php echo esc_attr( $twitter ); ?>"/><?php } ?>
+		<?php if ( $twitter ) { ?>
+			<meta name="twitter:site" content="@<?php echo esc_attr( $twitter ); ?>"/>
+		<?php } ?>
 		<meta name="twitter:title" content="<?php echo esc_attr( $title ); ?>"/>
 		<meta name="twitter:description" content="<?php echo esc_attr( $description ); ?>"/>
 		<meta name="twitter:image" content="<?php echo esc_url( $image ); ?>"/>

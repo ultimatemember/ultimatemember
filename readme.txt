@@ -155,11 +155,15 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
-= 2.2.6: October xx, 2021 =
+= 2.2.6: December xx, 2021 =
 
 * Bugfixes:
 
-  - Fixed: "Clear All" button for the filters with "&" symbol in the label
+  - Fixed: "Clear All" button for the filters with "&" symbol in the label.
+  - Fixed: Uninstall process when delete UM data. Avoid the issue when 3rd-party pages that had been selected as UM page are removed on UM uninstall.
+  - Fixed: Header meta for the Twitter Card. If the user has twitter field filled then <meta name="twitter:site"> will be filled by this value.
+  - Fixed: Member directory a slider filter's label displaying. It uses the filed label for now.
+  - Fixed: Some typos in the fields' labels.
 
 = 2.2.5: September 22, 2021 =
 

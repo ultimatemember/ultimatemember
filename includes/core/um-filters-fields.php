@@ -385,52 +385,44 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 		return '';
 	}
 
-	if ( ( isset( $data['validate'] ) && $data['validate'] !== '' && strstr( $data['validate'], 'url' ) ) || ( isset( $data['type'] ) && $data['type'] == 'url' ) ) {
-		$alt = ( isset( $data['url_text'] ) && !empty( $data['url_text'] ) ) ? $data['url_text'] : $value;
+	if ( isset( $data['type'] ) && 'text' === $data['type'] && isset( $data['validate'] ) && 'skype' === $data['validate'] ) {
+		$alt = ! empty( $data['url_text'] ) ? $data['url_text'] : $value;
 		$url_rel = ( isset( $data['url_rel'] ) && $data['url_rel'] == 'nofollow' ) ? 'rel="nofollow"' : '';
-		if ( ! strstr( $value, 'http' )
-		    && !strstr( $value, '://' )
-		    && !strstr( $value, 'www.' )
-		    && !strstr( $value, '.com' )
-		    && !strstr( $value, '.net' )
-		    && !strstr( $value, '.org' )
-		    && !strstr( $value, '.me' )
-		) {
-			if ( $data['validate'] == 'soundcloud_url' ) 	$value = 'https://soundcloud.com/' . $value;
-			if ( $data['validate'] == 'youtube_url' ) 		$value = 'https://youtube.com/user/' . $value;
-			if ( $data['validate'] == 'telegram_url' ) 		$value = 'https://t.me/' . $value;
-			if ( $data['validate'] == 'facebook_url' ) 		$value = 'https://facebook.com/' . $value;
-			if ( $data['validate'] == 'twitter_url' ) 		$value = 'https://twitter.com/' . $value;
-			if ( $data['validate'] == 'linkedin_url' ) 		$value = 'https://linkedin.com/' . $value;
-			if ( $data['validate'] == 'skype' ) 			$value = 'skype:'.$value.'?chat';
-			if ( $data['validate'] == 'googleplus_url' ) 	$value = 'https://plus.google.com/' . $value;
-			if ( $data['validate'] == 'instagram_url' ) 	$value = 'https://instagram.com/' . $value;
-			if ( $data['validate'] == 'vk_url' ) 			$value = 'https://vk.com/' . $value;
+		$data['url_target'] = ( isset( $data['url_target'] ) ) ? $data['url_target'] : '_blank';
+
+		if ( false === strstr( $value, 'join.skype.com' ) ) {
+			$value = 'skype:' . $value . '?chat';
 		}
 
-
-		if ( ! ( isset( $data['validate'] ) && $data['validate'] == 'skype' ) ) {
+		$value = '<a href="'. esc_attr( $value ) .'" title="' . esc_attr( $alt ) . '" target="' . esc_attr( $data['url_target'] ) . '" ' . $url_rel . '>' . esc_html( $alt ) . '</a>';
+	} else {
+		if ( ( isset( $data['validate'] ) && $data['validate'] !== '' && strstr( $data['validate'], 'url' ) ) || ( isset( $data['type'] ) && $data['type'] == 'url' ) ) {
+			$alt = ( isset( $data['url_text'] ) && !empty( $data['url_text'] ) ) ? $data['url_text'] : $value;
+			$url_rel = ( isset( $data['url_rel'] ) && $data['url_rel'] == 'nofollow' ) ? 'rel="nofollow"' : '';
+			if ( ! strstr( $value, 'http' )
+			     && !strstr( $value, '://' )
+			     && !strstr( $value, 'www.' )
+			     && !strstr( $value, '.com' )
+			     && !strstr( $value, '.net' )
+			     && !strstr( $value, '.org' )
+			     && !strstr( $value, '.me' )
+			) {
+				if ( $data['validate'] == 'soundcloud_url' ) 	$value = 'https://soundcloud.com/' . $value;
+				if ( $data['validate'] == 'youtube_url' ) 		$value = 'https://youtube.com/user/' . $value;
+				if ( $data['validate'] == 'telegram_url' ) 		$value = 'https://t.me/' . $value;
+				if ( $data['validate'] == 'facebook_url' ) 		$value = 'https://facebook.com/' . $value;
+				if ( $data['validate'] == 'twitter_url' ) 		$value = 'https://twitter.com/' . $value;
+				if ( $data['validate'] == 'linkedin_url' ) 		$value = 'https://linkedin.com/' . $value;
+				if ( $data['validate'] == 'googleplus_url' ) 	$value = 'https://plus.google.com/' . $value;
+				if ( $data['validate'] == 'instagram_url' ) 	$value = 'https://instagram.com/' . $value;
+				if ( $data['validate'] == 'vk_url' ) 			$value = 'https://vk.com/' . $value;
+			}
 
 			if ( strpos( $value, 'http://' ) !== 0 ) {
 				$value = 'http://' . $value;
 			}
 			$data['url_target'] = ( isset( $data['url_target'] ) ) ? $data['url_target'] : '_blank';
 			$value = '<a href="'. $value .'" title="'.$alt.'" target="'.$data['url_target'].'" ' . $url_rel . '>'.$alt.'</a>';
-
-		}
-
-	}
-
-	if ( isset( $data['validate'] ) && $data['validate'] == 'skype' ) {
-
-		$value = str_replace('https://','',$value );
-		$value = str_replace('http://','',$value );
-
-		$data['url_target'] = ( isset( $data['url_target'] ) ) ? $data['url_target'] : '_blank';
-		if ( strpos( $value, '.cid.' ) !== 0 ) {
-			$value = '<a href="' . 'skype:' . $value . '?chat' . '" title="' . $value . '" target="' . $data['url_target'] . '" ' . $url_rel . '>' . $value . '</a>';
-		} else {
-			$value = '<a href="' . 'skype:live:' . $value . '?chat' . '" title="' . $value . '" target="' . $data['url_target'] . '" ' . $url_rel . '>' . esc_html__( 'Skype' ) . '</a>';
 		}
 	}
 
@@ -895,15 +887,3 @@ function um_edit_url_field_value( $value, $key ) {
 	return $value;
 }
 add_filter( 'um_edit_url_field_value', 'um_edit_url_field_value', 10, 2 );
-
-
-add_filter( 'um_submit_post_form', 'my_submit_post_form', 10, 1 );
-function my_submit_post_form( $data ) {
-	$skype_key = 'skype-'. $data['form_id'];
-	if ( array_key_exists( $skype_key , $data ) ) {
-		$skype = str_replace('live:', '', $data[ $skype_key ] );
-		$data[ $skype_key ] = $skype;
-	}
-
-	return $data;
-}
