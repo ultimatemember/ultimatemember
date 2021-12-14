@@ -285,6 +285,24 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 
 
 		/**
+		 * Is Discord ID
+		 *
+		 * @param $string
+		 *
+		 * @return bool
+		 */
+		public function is_discord_id( $string ) {
+			if ( ! $string ) {
+				return true;
+			}
+			if ( ! preg_match( '/(^\S+)#(\d+)$/', trim( $string ) ) ) {
+				return false;
+			}
+			return true;
+		}
+
+
+		/**
 		 * Is url
 		 *
 		 * @param $url

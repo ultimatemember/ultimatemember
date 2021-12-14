@@ -1029,6 +1029,19 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'match' => 'https://t.me/',
 				),
 
+				'discord' => array(
+					'title' => __('Discord','ultimate-member'),
+					'metakey' => 'discord',
+					'type' => 'text',
+					'label' => __('Discord ID','ultimate-member'),
+					'required' => 0,
+					'public' => 1,
+					'editable' => 1,
+					'url_target' => '_blank',
+					'url_rel' => 'nofollow',
+					'validate' => 'discord',
+				),
+
 				'youtube' => array(
 					'title' => __('YouTube','ultimate-member'),
 					'metakey' => 'youtube',
@@ -1455,6 +1468,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$array['url'] = __('Website URL','ultimate-member');
 			$array['youtube_url'] = __('YouTube Profile','ultimate-member');
 			$array['telegram_url'] = __('Telegram URL','ultimate-member');
+			$array['discord'] = __('Discord ID','ultimate-member');
 			$array['custom'] = __('Custom Validation','ultimate-member');
 
 			/**
