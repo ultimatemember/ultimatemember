@@ -457,10 +457,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				UM()->form()->add_error( 'username_b', __( 'Please provide your username or email', 'ultimate-member' ) );
 			}
 
-			if ( ( ! is_email( $user ) && ! username_exists( $user ) ) || ( is_email( $user ) && ! email_exists( $user ) ) ) {
-				UM()->form()->add_error( 'username_b', __( 'We can\'t find an account registered with that address or username', 'ultimate-member' ) );
-			} else {
-
+			if ( ( ! is_email( $user ) && username_exists( $user ) ) || ( is_email( $user ) && email_exists( $user ) ) ) {
 				if ( is_email( $user ) ) {
 					$user_id = email_exists( $user );
 				} else {

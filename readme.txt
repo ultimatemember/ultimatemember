@@ -163,6 +163,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Added: Callback for deleting the custom field data from member direcroty settings when this custom field has been deleted in Form Builder.
   - Added: 'um_account_active_tab_inited' JS hook.
   - Updated: Require a strong password option (`Ultimate Member > Settings > General > Users > Require a strong password?`) to make it common for all Ultimate Member forms. Renamed option key from `reset_require_strongpass` to `require_strongpass`.
+  - Updated: Form errors texts on the login/password reset forms. Made them secure.
   - Deprecated: `Ultimate Member > Settings > General > Account > Require a strong password?` option and merged with `Ultimate Member > Settings > General > Users > Require a strong password?` option.
 
 * Bugfixes:

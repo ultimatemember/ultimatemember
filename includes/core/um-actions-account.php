@@ -144,7 +144,7 @@ function um_submit_account_errors_hook( $args ) {
 				}
 
 				if ( email_exists( $args['user_email'] ) && email_exists( $args['user_email'] ) !== get_current_user_id() ) {
-					UM()->form()->add_error( 'user_email', __( 'Email already linked to another account', 'ultimate-member' ) );
+					UM()->form()->add_error( 'user_email', __( 'Please provide a valid e-mail', 'ultimate-member' ) );
 				}
 			}
 

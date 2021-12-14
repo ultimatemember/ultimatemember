@@ -775,7 +775,7 @@ function um_submit_form_errors_hook_( $args ) {
 							if ( $args[ $key ] == '' ) {
 								UM()->form()->add_error( $key, __( 'You must provide a username', 'ultimate-member' ) );
 							} elseif ( $mode == 'register' && username_exists( sanitize_user( $args[ $key ] ) ) ) {
-								UM()->form()->add_error( $key, __( 'Your username is already taken', 'ultimate-member' ) );
+								UM()->form()->add_error( $key, __( 'The username you entered is incorrect', 'ultimate-member' ) );
 							} elseif ( is_email( $args[ $key ] ) ) {
 								UM()->form()->add_error( $key, __( 'Username cannot be an email', 'ultimate-member' ) );
 							} elseif ( ! UM()->validation()->safe_username( $args[ $key ] ) ) {
@@ -787,11 +787,11 @@ function um_submit_form_errors_hook_( $args ) {
 						case 'unique_username_or_email':
 
 							if ( $args[ $key ] == '' ) {
-								UM()->form()->add_error( $key, __( 'You must provide a username', 'ultimate-member' ) );
+								UM()->form()->add_error( $key, __( 'You must provide a username or email', 'ultimate-member' ) );
 							} elseif ( $mode == 'register' && username_exists( sanitize_user( $args[ $key ] ) ) ) {
-								UM()->form()->add_error( $key, __( 'Your username is already taken', 'ultimate-member' ) );
+								UM()->form()->add_error( $key, __( 'The username you entered is incorrect', 'ultimate-member' ) );
 							} elseif ( $mode == 'register' && email_exists( $args[ $key ] ) ) {
-								UM()->form()->add_error( $key, __( 'This email is already linked to an existing account', 'ultimate-member' ) );
+								UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
 							} elseif ( ! UM()->validation()->safe_username( $args[ $key ] ) ) {
 								UM()->form()->add_error( $key, __( 'Your username contains invalid characters', 'ultimate-member' ) );
 							}
@@ -813,11 +813,11 @@ function um_submit_form_errors_hook_( $args ) {
 								if ( $args[ $key ] == '' && in_array( $key, array( 'user_email' ) ) ) {
 									UM()->form()->add_error( $key, __( 'You must provide your email', 'ultimate-member' ) );
 								} elseif ( in_array( $mode, array( 'register' ) ) && $email_exists  ) {
-									UM()->form()->add_error( $key, __( 'This email is already linked to an existing account', 'ultimate-member' ) );
+									UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
 								} elseif ( in_array( $mode, array( 'profile' ) ) && $email_exists && $email_exists != $args['user_id']  ) {
-									UM()->form()->add_error( $key, __( 'This email is already linked to an existing account', 'ultimate-member' ) );
-								} elseif ( !is_email( $args[ $key ] ) ) {
-									UM()->form()->add_error( $key, __( 'This is not a valid email', 'ultimate-member') );
+									UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
+								} elseif ( ! is_email( $args[ $key ] ) ) {
+									UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member') );
 								} elseif ( ! UM()->validation()->safe_username( $args[ $key ] ) ) {
 									UM()->form()->add_error( $key,  __( 'Your email contains invalid characters', 'ultimate-member' ) );
 								}
@@ -825,16 +825,16 @@ function um_submit_form_errors_hook_( $args ) {
 							} else {
 
 								if ( $args[ $key ] != '' && ! is_email( $args[ $key ] ) ) {
-									UM()->form()->add_error( $key, __( 'This is not a valid email', 'ultimate-member' ) );
+									UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
 								} elseif ( $args[ $key ] != '' && email_exists( $args[ $key ] ) ) {
-									UM()->form()->add_error( $key, __( 'This email is already linked to an existing account', 'ultimate-member' ) );
+									UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
 								} elseif ( $args[ $key ] != '' ) {
 
 									$users = get_users( 'meta_value=' . $args[ $key ] );
 
 									foreach ( $users as $user ) {
 										if ( $user->ID != $args['user_id'] ) {
-											UM()->form()->add_error( $key, __( 'This email is already linked to an existing account', 'ultimate-member' ) );
+											UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
 										}
 									}
 

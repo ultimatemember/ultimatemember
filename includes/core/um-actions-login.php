@@ -65,12 +65,12 @@ function um_submit_form_errors_hook_login( $args ) {
 
 	$user = apply_filters( 'authenticate', null, $authenticate, $args['user_password'] );
 	if ( is_wp_error( $user ) && ! in_array( $user->get_error_code(), $ignore_codes ) ) {
-		UM()->form()->add_error( $user->get_error_code(), __( $user->get_error_message(), 'ultimate-member' ) );
+		UM()->form()->add_error( $user->get_error_code(), __( 'Password is incorrect. Please try again.', 'ultimate-member' ) );
 	}
 
 	$user = apply_filters( 'wp_authenticate_user', $user, $args['user_password'] );
 	if ( is_wp_error( $user ) && ! in_array( $user->get_error_code(), $ignore_codes ) ) {
-		UM()->form()->add_error( $user->get_error_code(), __( $user->get_error_message(), 'ultimate-member' ) );
+		UM()->form()->add_error( $user->get_error_code(), __( 'Password is incorrect. Please try again.', 'ultimate-member' ) );
 	}
 
 	// if there is an error notify wp

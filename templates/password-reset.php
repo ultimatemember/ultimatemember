@@ -9,7 +9,7 @@
 				<div class="um-field um-field-block um-field-type_block">
 					<div class="um-field-block">
 						<div style="text-align:center;">
-							<?php esc_html_e( 'We have sent you a password reset link to your e-mail. Please check your inbox.', 'ultimate-member' ); ?>
+							<?php esc_html_e( 'If an account matching the provided details exists, we will send a password reset link. Please check your inbox.', 'ultimate-member' ); ?>
 						</div>
 					</div>
 				</div>
@@ -44,9 +44,9 @@
 						<div class="um-field-block">
 							<div style="text-align:center;">
 								<?php if ( 'expiredkey' === sanitize_key( $_GET['updated'] ) ) {
-									_e( 'Your password reset link has expired. Please request a new link below.', 'ultimate-member' );
+									esc_html_e( 'Your password reset link has expired. Please request a new link below.', 'ultimate-member' );
 								} elseif ( 'invalidkey' === sanitize_key( $_GET['updated'] ) ) {
-									_e( 'Your password reset link appears to be invalid. Please request a new link below.', 'ultimate-member' );
+									esc_html_e( 'Your password reset link appears to be invalid. Please request a new link below.', 'ultimate-member' );
 								} ?>
 							</div>
 						</div>
@@ -55,7 +55,7 @@
 					<div class="um-field um-field-block um-field-type_block">
 						<div class="um-field-block">
 							<div style="text-align:center;">
-								<?php _e( 'To reset your password, please enter your email address or username below', 'ultimate-member' ); ?>
+								<?php esc_html_e( 'To reset your password, please enter your email address or username below.', 'ultimate-member' ); ?>
 							</div>
 						</div>
 					</div>
