@@ -81,7 +81,7 @@ function um_submit_account_errors_hook( $args ) {
 					return;
 				}
 
-				if ( UM()->options()->get( 'account_require_strongpass' ) ) {
+				if ( UM()->options()->get( 'require_strongpass' ) ) {
 					$min_length = UM()->options()->get( 'password_min_chars' );
 					$min_length = ! empty( $min_length ) ? $min_length : 8;
 					$max_length = UM()->options()->get( 'password_max_chars' );

@@ -541,7 +541,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				$args['confirm_user_password'] = sanitize_text_field( $args['confirm_user_password'] );
 			}
 
-			if ( UM()->options()->get( 'reset_require_strongpass' ) ) {
+			if ( UM()->options()->get( 'require_strongpass' ) ) {
 
 				$min_length = UM()->options()->get( 'password_min_chars' );
 				$min_length = ! empty( $min_length ) ? $min_length : 8;

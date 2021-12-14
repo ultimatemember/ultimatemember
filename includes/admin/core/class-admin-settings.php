@@ -673,7 +673,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'use_um_gravatar_default_image'         => array(
 						'sanitize' => 'bool',
 					),
-					'reset_require_strongpass'              => array(
+					'require_strongpass'                    => array(
 						'sanitize' => 'bool',
 					),
 					'password_min_chars'                    => array(
@@ -719,9 +719,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'sanitize' => 'bool',
 					),
 					'account_general_password'              => array(
-						'sanitize' => 'bool',
-					),
-					'account_require_strongpass'            => array(
 						'sanitize' => 'bool',
 					),
 					'account_hide_in_directory'             => array(
@@ -1049,10 +1046,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'conditional' => array( 'use_um_gravatar_default_builtin_image', '=', 'default' ),
 									),
 									array(
-										'id'      => 'reset_require_strongpass',
+										'id'      => 'require_strongpass',
 										'type'    => 'checkbox',
-										'label'   => __( 'Require a strong password? (when user resets password only)', 'ultimate-member' ),
-										'tooltip' => __( 'Enable or disable a strong password rules on password reset and change procedure', 'ultimate-member' ),
+										'label'   => __( 'Require a strong password?', 'ultimate-member' ),
+										'tooltip' => __( 'Enable or disable a strong password rules common for all Ultimate Member forms. Note: Individual settings for the password-type field still have a higher priority.', 'ultimate-member' ),
 									),
 									array(
 										'id'      => 'password_min_chars',
@@ -1164,12 +1161,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'type'    => 'checkbox',
 										'label'   => __( 'Password is required?', 'ultimate-member' ),
 										'tooltip' => __( 'Password is required to save account data.', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'account_require_strongpass',
-										'type'    => 'checkbox',
-										'label'   => __( 'Require a strong password?', 'ultimate-member' ),
-										'tooltip' => __( 'Enable or disable a strong password rules on account page / change password tab', 'ultimate-member' ),
 									),
 									array(
 										'id'          => 'account_hide_in_directory',
@@ -3172,7 +3163,7 @@ Enable Members Directory:	<?php echo $this->info_value( UM()->options()->get('me
 Use Gravatars: 				<?php echo $this->info_value( UM()->options()->get('use_gravatars'), 'yesno', true ); ?>
 <?php if( UM()->options()->get('use_gravatars') ): ?>Gravatar builtin image:		<?php  echo UM()->options()->get('use_um_gravatar_default_builtin_image') . "\n"; ?>
 	UM Avatar as blank Gravatar: 	<?php echo $this->info_value( UM()->options()->get('use_um_gravatar_default_image'), 'yesno', true ); ?><?php endif; ?>
-Require a strong password: 	<?php echo $this->info_value( UM()->options()->get('reset_require_strongpass'), 'onoff', true ); ?>
+Require a strong password: 	<?php echo $this->info_value( UM()->options()->get('require_strongpass'), 'onoff', true ); ?>
 
 
 --- UM Access Configuration ---
