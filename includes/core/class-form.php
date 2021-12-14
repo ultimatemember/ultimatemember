@@ -122,8 +122,6 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			if ( isset( $arr_options['post']['members_directory'] ) && 'yes' === $arr_options['post']['members_directory'] ) {
 				$ajax_source_func = $_POST['child_callback'];
 				if ( function_exists( $ajax_source_func ) ) {
-					$arr_options['items'] = call_user_func( $ajax_source_func, $arr_options['field']['parent_dropdown_relationship'] );
-
 					global $wpdb;
 
 					$values_array = $wpdb->get_col(
@@ -137,7 +135,15 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					);
 
 					if ( ! empty( $values_array ) ) {
-						$arr_options['items'] = array_intersect( $arr_options['items'], $values_array );
+						$arr_options['items'] = call_user_func( $ajax_source_func, $arr_options['field']['parent_dropdown_relationship'] );
+
+						if ( array_keys( $arr_options['items'] ) !== range( 0, count( $arr_options['items'] ) - 1 ) ) {
+							// array with dropdown items is associative
+							$arr_options['items'] = array_intersect_key( array_map( 'trim', $arr_options['items'] ), array_flip( $values_array ) );
+						} else {
+							// array with dropdown items has sequential numeric keys, starting from 0 and there are intersected values with $values_array
+							$arr_options['items'] = array_intersect( $arr_options['items'], $values_array );
+						}
 					} else {
 						$arr_options['items'] = array();
 					}

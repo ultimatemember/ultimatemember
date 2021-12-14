@@ -18,7 +18,7 @@ $unique_hash = substr( md5( $args['form_id'] ), 10, 5 ); ?>
 					<?php if ( $cover_photos ) { ?>
 						<div class="um-member-cover" data-ratio="<?php echo esc_attr( UM()->options()->get( 'profile_cover_ratio' ) ); ?>">
 							<div class="um-member-cover-e">
-								<a href="{{{user.profile_url}}}" title="{{{user.display_name}}}">
+								<a href="{{{user.profile_url}}}" title="<# if ( user.display_name ) { #>{{{user.display_name}}}<# } #>">
 									{{{user.cover_photo}}}
 								</a>
 							</div>
@@ -27,7 +27,7 @@ $unique_hash = substr( md5( $args['form_id'] ), 10, 5 ); ?>
 
 					if ( $profile_photo ) { ?>
 						<div class="um-member-photo radius-<?php echo esc_attr( UM()->options()->get( 'profile_photocorner' ) ); ?>">
-							<a href="{{{user.profile_url}}}" title="{{{user.display_name}}}">
+							<a href="{{{user.profile_url}}}" title="<# if ( user.display_name ) { #>{{{user.display_name}}}<# } #>">
 								{{{user.avatar}}}
 								<?php do_action( 'um_members_in_profile_photo_tmpl', $args ); ?>
 							</a>
@@ -37,11 +37,13 @@ $unique_hash = substr( md5( $args['form_id'] ), 10, 5 ); ?>
 
 					<div class="um-member-card <?php if ( ! $profile_photo ) { echo 'no-photo'; } ?>">
 						<?php if ( $show_name ) { ?>
-							<div class="um-member-name">
-								<a href="{{{user.profile_url}}}" title="{{{user.display_name}}}">
-									{{{user.display_name_html}}}
-								</a>
-							</div>
+							<# if ( user.display_name_html ) { #>
+								<div class="um-member-name">
+									<a href="{{{user.profile_url}}}" title="{{{user.display_name}}}">
+										{{{user.display_name_html}}}
+									</a>
+								</div>
+							<# } #>
 						<?php }
 
 						// please use for buttons priority > 100
