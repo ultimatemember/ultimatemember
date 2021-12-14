@@ -159,11 +159,19 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * Bugfixes:
 
+  - Added: WhatsApp, Telegram, Discord, Viber messengers predefined fields.
+  - Added: Callback for deleting the custom field data from member direcroty settings when this custom field has been deleted in Form Builder.
+  - Added: 'um_account_active_tab_inited' JS hook.
   - Fixed: "Clear All" button for the filters with "&" symbol in the label.
   - Fixed: Uninstall process when delete UM data. Avoid the issue when 3rd-party pages that had been selected as UM page are removed on UM uninstall.
   - Fixed: Header meta for the Twitter Card. If the user has twitter field filled then <meta name="twitter:site"> will be filled by this value.
   - Fixed: Member directory a slider filter's label displaying. It uses the filed label for now.
+  - Fixed: SkypeID field validation. Also all SkypeID fields on your forms changed type from `url` to `text`. SkypeID supports nicknames or https://join.skype.com/{hash} links.
   - Fixed: Some typos in the fields' labels.
+  - Fixed: "false" display name in the member directory. It displays empty for now if the user hasn't display name.
+  - Fixed: `UM()->clean_array()` function.
+  - Fixed: LinkedIn field URL. Added ability to display the organization URL.
+  - Fixed: Canonical link of the user profile if WPML plugin is active.
 
 = 2.2.5: September 22, 2021 =
 
