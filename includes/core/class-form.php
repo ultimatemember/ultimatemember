@@ -114,7 +114,9 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			$arr_options['status'] = 'success';
 			$arr_options['post']   = $_POST;
 
-			UM()->fields()->set_id    = absint( $_POST['form_id'] );
+			if ( isset( $_POST['form_id'] ) ) {
+				UM()->fields()->set_id = absint( $_POST['form_id'] );
+			}
 			UM()->fields()->set_mode  = 'profile';
 			$form_fields              = UM()->fields()->get_fields();
 			$arr_options['fields']    = $form_fields;
@@ -135,7 +137,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					);
 
 					if ( ! empty( $values_array ) ) {
-						$arr_options['items'] = call_user_func( $ajax_source_func, $arr_options['field']['parent_dropdown_relationship'] );
+						$parent_dropdown = isset( $arr_options['field']['parent_dropdown_relationship'] ) ? $arr_options['field']['parent_dropdown_relationship'] : '';
+						$arr_options['items'] = call_user_func( $ajax_source_func, $parent_dropdown );
 
 						if ( array_keys( $arr_options['items'] ) !== range( 0, count( $arr_options['items'] ) - 1 ) ) {
 							// array with dropdown items is associative

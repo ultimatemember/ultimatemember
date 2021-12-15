@@ -504,9 +504,10 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				$data = get_user_by( 'email', $user );
 			}
 
-			um_fetch_user( $data->ID );
-
-			UM()->user()->password_reset();
+			if ( isset( $data ) && is_a( $data, '\WP_User' ) ) {
+				um_fetch_user( $data->ID );
+				UM()->user()->password_reset();
+			}
 
 			exit( wp_redirect( um_get_core_page('password-reset', 'checkemail' ) ) );
 		}
