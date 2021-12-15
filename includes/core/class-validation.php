@@ -295,7 +295,10 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 			if ( ! $string ) {
 				return true;
 			}
-			if ( ! preg_match( '/(^\S+)#(\d+)$/', trim( $string ) ) ) {
+			if ( substr_count( $string, '#' ) > 1 ) {
+				return false;
+			}
+			if ( ! preg_match( '/(\S+)#(\d+)$/', trim( $string ) ) ) {
 				return false;
 			}
 			return true;
