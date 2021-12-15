@@ -1,30 +1,42 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 
-/**
- * Add dynamic profile headers
- *
- * @param $items
- * @param $args
- *
- * @return mixed
- */
-function um_add_custom_message_to_menu( $items, $args ) {
-	if ( ! is_user_logged_in() ) {
-		$items = UM()->shortcodes()->convert_user_tags( $items );
-		return $items;
-	}
-
-	um_fetch_user( get_current_user_id() );
-	$items = UM()->shortcodes()->convert_user_tags( $items );
-	um_reset_user();
-
-	return $items;
-}
-add_filter( 'wp_nav_menu_items', 'um_add_custom_message_to_menu', 10, 2 );
-
-
 if ( ! is_admin() ) {
+	/**
+	 * Add dynamic profile headers
+	 *
+	 * @param array $sorted_menu_items
+	 * @param \stdClass $args
+	 *
+	 * @return array
+	 */
+	function um_add_custom_message_to_menu( $sorted_menu_items, $args ) {
+
+		if ( is_user_logged_in() ) {
+			um_fetch_user( get_current_user_id() );
+		}
+
+		foreach ( $sorted_menu_items as &$menu_item ) {
+			if ( $menu_item->title ) {
+				$menu_item->title = UM()->shortcodes()->convert_user_tags( $menu_item->title );
+			}
+			if ( $menu_item->attr_title ) {
+				$menu_item->attr_title = UM()->shortcodes()->convert_user_tags( $menu_item->attr_title );
+			}
+			if ( $menu_item->description ) {
+				$menu_item->description = UM()->shortcodes()->convert_user_tags( $menu_item->description );
+			}
+		}
+
+		if ( is_user_logged_in() ) {
+			um_reset_user();
+		}
+
+		return $sorted_menu_items;
+	}
+	add_filter( 'wp_nav_menu_objects', 'um_add_custom_message_to_menu', 9999, 2 );
+
+
 	/**
 	 * Conditional menu items
 	 *

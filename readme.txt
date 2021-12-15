@@ -155,7 +155,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
-= 2.3.0: December xx, 2021 =
+= 2.3.0: December 16, 2021 =
 
 * Enhancements:
 
@@ -171,13 +171,21 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed: "Clear All" button for the filters with "&" symbol in the label.
   - Fixed: Uninstall process when delete UM data. Avoid the issue when 3rd-party pages that had been selected as UM page are removed on UM uninstall.
   - Fixed: Header meta for the Twitter Card. If the user has twitter field filled then <meta name="twitter:site"> will be filled by this value.
-  - Fixed: Member directory a slider filter's label displaying. It uses the filed label for now.
+  - Fixed: Member directory a slider filter's label displaying. It uses the filled label for now.
   - Fixed: SkypeID field validation. Also all SkypeID fields on your forms changed type from `url` to `text`. SkypeID supports nicknames or https://join.skype.com/{hash} links.
   - Fixed: Some typos in the fields' labels.
   - Fixed: "false" display name in the member directory. It displays empty for now if the user hasn't display name.
   - Fixed: `UM()->clean_array()` function.
   - Fixed: LinkedIn field URL. Added ability to display the organization URL.
   - Fixed: Canonical link of the user profile if WPML plugin is active.
+  - Fixed: Replacing placeholders in nav menus. Used an earlier hook for filtering items before generating HTML and avoided issues with raw, not-escaped HTML inside tags' attributes.
+
+* Templates required update:
+  - members-grid.php
+  - members-list.php
+  - password-reset.php
+
+* Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade
 
 = 2.2.5: September 22, 2021 =
 
