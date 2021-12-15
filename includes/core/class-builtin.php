@@ -1025,7 +1025,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'icon' => 'um-faicon-paper-plane',
 					'validate' => 'telegram_url',
 					'url_text' => 'Telegram',
-					'advanced' => 'social',
 					'match' => 'https://t.me/',
 				),
 

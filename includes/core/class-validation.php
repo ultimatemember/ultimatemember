@@ -285,7 +285,7 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 
 
 		/**
-		 * Is Discord ID
+		 * Is Discord ID?
 		 *
 		 * @param $string
 		 *
@@ -298,7 +298,7 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 			if ( substr_count( $string, '#' ) > 1 ) {
 				return false;
 			}
-			if ( ! preg_match( '/(\S+)#(\d+)$/', trim( $string ) ) ) {
+			if ( ! preg_match( '/^(.+)#(\d+)$/', trim( $string ) ) ) {
 				return false;
 			}
 			return true;

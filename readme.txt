@@ -173,6 +173,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed: Header meta for the Twitter Card. If the user has twitter field filled then <meta name="twitter:site"> will be filled by this value.
   - Fixed: Member directory a slider filter's label displaying. It uses the filled label for now.
   - Fixed: SkypeID field validation. Also all SkypeID fields on your forms changed type from `url` to `text`. SkypeID supports nicknames or https://join.skype.com/{hash} links.
+  - Fixed: Typos in Account > Privacy tab texts related to Download/Erase the user data.
   - Fixed: Some typos in the fields' labels.
   - Fixed: "false" display name in the member directory. It displays empty for now if the user hasn't display name.
   - Fixed: `UM()->clean_array()` function.
