@@ -1049,7 +1049,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'id'      => 'require_strongpass',
 										'type'    => 'checkbox',
 										'label'   => __( 'Require a strong password?', 'ultimate-member' ),
-										'tooltip' => __( 'Enable or disable a strong password rules common for all Ultimate Member forms. Note: Individual settings for the password-type field still have a higher priority.', 'ultimate-member' ),
+										'tooltip' => __( 'Enable or disable a strong password rules common for all Ultimate Member forms.', 'ultimate-member' ),
 									),
 									array(
 										'id'      => 'password_min_chars',
