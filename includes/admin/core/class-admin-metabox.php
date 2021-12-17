@@ -1725,7 +1725,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					?>
 
 					<p><label for="_force_good_pass"><?php _e( 'Force strong password?', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Turn on to force users to create a strong password (A combination of one lowercase letter, one uppercase letter, and one number). If turned on this option is only applied to register forms and not to login forms.', 'ultimate-member' ) ); ?></label>
-						<input type="checkbox" name="_force_good_pass" id="_force_good_pass" value="1" <?php checked( isset( $this->edit_mode_value ) ? $this->edit_mode_value : 0 ) ?> />
+						<input type="checkbox" name="_force_good_pass" id="_force_good_pass" value="1" <?php checked( isset( $this->edit_mode_value ) ? $this->edit_mode_value : UM()->options()->get( 'require_strongpass' ) ) ?> />
 					</p>
 
 					<?php

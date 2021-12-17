@@ -457,10 +457,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				UM()->form()->add_error( 'username_b', __( 'Please provide your username or email', 'ultimate-member' ) );
 			}
 
-			if ( ( ! is_email( $user ) && ! username_exists( $user ) ) || ( is_email( $user ) && ! email_exists( $user ) ) ) {
-				UM()->form()->add_error( 'username_b', __( 'We can\'t find an account registered with that address or username', 'ultimate-member' ) );
-			} else {
-
+			if ( ( ! is_email( $user ) && username_exists( $user ) ) || ( is_email( $user ) && email_exists( $user ) ) ) {
 				if ( is_email( $user ) ) {
 					$user_id = email_exists( $user );
 				} else {
@@ -507,9 +504,10 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				$data = get_user_by( 'email', $user );
 			}
 
-			um_fetch_user( $data->ID );
-
-			UM()->user()->password_reset();
+			if ( isset( $data ) && is_a( $data, '\WP_User' ) ) {
+				um_fetch_user( $data->ID );
+				UM()->user()->password_reset();
+			}
 
 			exit( wp_redirect( um_get_core_page('password-reset', 'checkemail' ) ) );
 		}
@@ -541,7 +539,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				$args['confirm_user_password'] = sanitize_text_field( $args['confirm_user_password'] );
 			}
 
-			if ( UM()->options()->get( 'reset_require_strongpass' ) ) {
+			if ( UM()->options()->get( 'require_strongpass' ) ) {
 
 				$min_length = UM()->options()->get( 'password_min_chars' );
 				$min_length = ! empty( $min_length ) ? $min_length : 8;

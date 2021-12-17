@@ -1,0 +1,20 @@
+{
+  "name": "ultimatemember/ultimatemember",
+  "description": "The easiest way to create powerful online communities and beautiful user profiles with WordPress.",
+  "type": "wordpress-plugin",
+  "homepage": "https://wordpress.org/plugins/ultimate-member/",
+  "license": "GPL-3.0-or-later",
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "require": {
+    "woocommerce/action-scheduler": "3.2.1"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-master"
+  },
+  "extra": {
+    "installer-paths": {
+      "vendor/{$vendor}/{$name}/": ["woocommerce/action-scheduler"]
+    }
+  }
+}

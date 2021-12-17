@@ -1253,6 +1253,7 @@ jQuery(document.body).ready( function() {
 				if ( typeof current_value == 'undefined' ) {
 					current_value = [];
 				} else {
+					current_value = um_unsanitize_value( current_value );
 					current_value = current_value.split( '||' );
 				}
 

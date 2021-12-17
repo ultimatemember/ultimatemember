@@ -167,11 +167,21 @@ jQuery(document).ready(function() {
 		jQuery(".um-s2").each( function( e ) {
 			var obj = jQuery(this);
 
-			obj.select2({
-				allowClear: false,
-				minimumResultsForSearch: 10,
-				dropdownParent: obj.parent()
-			}).on( 'change', unselectEmptyOption );
+			// fix https://github.com/ultimatemember/ultimatemember/issues/941
+			// using .um-custom-shortcode-tab class as temporarily solution
+			var atts = {};
+			if ( obj.parents('.um-custom-shortcode-tab').length ) {
+				atts = {
+					allowClear: false
+				};
+			} else {
+				atts = {
+					allowClear: false,
+					minimumResultsForSearch: 10,
+					dropdownParent: obj.parent()
+				};
+			}
+			obj.select2( atts ).on( 'change', unselectEmptyOption );
 		} );
 
 		jQuery(".um-s3").each( function( e ) {

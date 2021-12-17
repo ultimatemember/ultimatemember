@@ -81,7 +81,7 @@ function um_submit_account_errors_hook( $args ) {
 					return;
 				}
 
-				if ( UM()->options()->get( 'account_require_strongpass' ) ) {
+				if ( UM()->options()->get( 'require_strongpass' ) ) {
 					$min_length = UM()->options()->get( 'password_min_chars' );
 					$min_length = ! empty( $min_length ) ? $min_length : 8;
 					$max_length = UM()->options()->get( 'password_max_chars' );
@@ -144,7 +144,7 @@ function um_submit_account_errors_hook( $args ) {
 				}
 
 				if ( email_exists( $args['user_email'] ) && email_exists( $args['user_email'] ) !== get_current_user_id() ) {
-					UM()->form()->add_error( 'user_email', __( 'Email already linked to another account', 'ultimate-member' ) );
+					UM()->form()->add_error( 'user_email', __( 'Please provide a valid e-mail', 'ultimate-member' ) );
 				}
 			}
 
@@ -678,7 +678,7 @@ function um_after_account_privacy( $args ) {
 		ARRAY_A );
 
 		if ( ! empty( $pending ) && $pending['post_status'] == 'request-pending' ) {
-			echo '<p>' . esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your export request.', 'ultimate-member' ) . '</p>';
+			echo '<p>' . esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your deletion request.', 'ultimate-member' ) . '</p>';
 		} elseif ( ! empty( $pending ) && $pending['post_status'] == 'request-confirmed' ) {
 			echo '<p>' . esc_html__( 'The administrator has not yet approved deleting your data. Please expect an email with a link to your data.', 'ultimate-member' ) . '</p>';
 		} else {
@@ -756,7 +756,11 @@ function um_request_user_data() {
 		$answer = esc_html( $request_id->get_error_message() );
 	} else {
 		wp_send_user_request( $request_id );
-		$answer = esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your export request.', 'ultimate-member' );
+		if ( 'um-export-data' === $request_action ) {
+			$answer = esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your export request.', 'ultimate-member' );
+		} elseif ( 'um-erase-data' === $request_action ) {
+			$answer = esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your deletion request.', 'ultimate-member' );
+		}
 	}
 
 	wp_send_json_success( array( 'answer' => $answer ) );

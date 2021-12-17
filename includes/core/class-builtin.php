@@ -930,7 +930,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'url_text' => 'LinkedIn',
 					'advanced' => 'social',
 					'color' => '#0976b4',
-					'match' => 'https://linkedin.com/in/',
+					'match' => 'https://linkedin.com/',
 				),
 
 				'googleplus' => array(
@@ -972,7 +972,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'skype' => array(
 					'title' => __('Skype ID','ultimate-member'),
 					'metakey' => 'skype',
-					'type' => 'url',
+					'type' => 'text',
 					'label' => __('Skype ID','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
@@ -981,7 +981,64 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'url_rel' => 'nofollow',
 					'icon' => 'um-faicon-skype',
 					'validate' => 'skype',
-					'url_text' => 'Skype',
+					'url_text' => __( 'Join chat', 'ultimate-member' ),
+				),
+
+				'viber' => array(
+					'title' => __('Viber number','ultimate-member'),
+					'metakey' => 'viber',
+					'type' => 'text',
+					'label' => __('Viber number','ultimate-member'),
+					'required' => 0,
+					'public' => 1,
+					'editable' => 1,
+					'url_target' => '_blank',
+					'url_rel' => 'nofollow',
+					'icon' => 'um-icon-ios-telephone',
+					'validate' => 'phone_number',
+				),
+
+				'whatsapp' => array(
+					'title' => __('WhatsApp number','ultimate-member'),
+					'metakey' => 'whatsapp',
+					'type' => 'text',
+					'label' => __('WhatsApp number','ultimate-member'),
+					'required' => 0,
+					'public' => 1,
+					'editable' => 1,
+					'url_target' => '_blank',
+					'url_rel' => 'nofollow',
+					'icon' => 'um-icon-social-whatsapp',
+					'validate' => 'phone_number',
+				),
+
+				'telegram' => array(
+					'title' => __('Telegram','ultimate-member'),
+					'metakey' => 'telegram',
+					'type' => 'url',
+					'label' => __('Telegram','ultimate-member'),
+					'required' => 0,
+					'public' => 1,
+					'editable' => 1,
+					'url_target' => '_blank',
+					'url_rel' => 'nofollow',
+					'icon' => 'um-faicon-paper-plane',
+					'validate' => 'telegram_url',
+					'url_text' => 'Telegram',
+					'match' => 'https://t.me/',
+				),
+
+				'discord' => array(
+					'title' => __('Discord','ultimate-member'),
+					'metakey' => 'discord',
+					'type' => 'text',
+					'label' => __('Discord ID','ultimate-member'),
+					'required' => 0,
+					'public' => 1,
+					'editable' => 1,
+					'url_target' => '_blank',
+					'url_rel' => 'nofollow',
+					'validate' => 'discord',
 				),
 
 				'youtube' => array(
@@ -1409,6 +1466,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$array['unique_username_or_email'] = __('Unique Username/E-mail','ultimate-member');
 			$array['url'] = __('Website URL','ultimate-member');
 			$array['youtube_url'] = __('YouTube Profile','ultimate-member');
+			$array['telegram_url'] = __('Telegram URL','ultimate-member');
+			$array['discord'] = __('Discord ID','ultimate-member');
 			$array['custom'] = __('Custom Validation','ultimate-member');
 
 			/**
@@ -1524,7 +1583,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 						"iu" => __("Inuktitut",'ultimate-member'),
 						"ja" => __("Japanese",'ultimate-member'),
 						"jv" => __("Javanese",'ultimate-member'),
-						"ka" => __("Georgian",'ultimate-member'),
+						"ka" => __("Kartuli",'ultimate-member'),
 						"kg" => __("Kongo",'ultimate-member'),
 						"ki" => __("Kikuyu",'ultimate-member'),
 						"kj" => __("Kwanyama",'ultimate-member'),
@@ -1716,7 +1775,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 						'TF' => __('French Southern Territories','ultimate-member'),
 						'GA' => __('Gabon','ultimate-member'),
 						'GM' => __('Gambia','ultimate-member'),
-						'GE' => __('Georgia','ultimate-member'),
+						'GE' => __('Sakartvelo','ultimate-member'),
 						'DE' => __('Germany','ultimate-member'),
 						'GH' => __('Ghana','ultimate-member'),
 						'GI' => __('Gibraltar','ultimate-member'),
