@@ -170,10 +170,12 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			// Validate user id
 			$user = get_userdata( $user_id );
 
+mwi_logger('set_role: entered');
 			// User exists
 			if ( ! empty( $user ) ) {
-				// Get users old UM role
+				// Get users old UM role array
 				$role = UM()->roles()->get_um_user_role( $user_id );
+mwi_logger('set_role: userroles = '.implode($role));
 
 				// User already has this role so no new role is set
 				if ( $new_role === $role || ( ! $this->is_role_custom( $new_role ) && user_can( $user, $new_role ) ) ) {
@@ -539,7 +541,8 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 				return false;
 			}
 
-			return array_shift( $user_um_roles_array );
+mwi_logger('get_um_user_role Returning : '.implode(',',$user_um_roles_array));
+			return  implode(',',$user_um_roles_array);
 		}
 
 

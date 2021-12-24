@@ -349,6 +349,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param $result
 		 */
 		function add_um_role_existing_user( $user_id, $result ) {
+mwi_logger('add_um_role_existing_user: ');
 			// Bail if no user ID was passed
 			if ( empty( $user_id ) ) {
 				return;
@@ -370,6 +371,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param $user_id
 		 */
 		function add_um_role_wpmu_new_user( $user_id ) {
+mwi_logger('add_um_role_new_user: ');
 			// Bail if no user ID was passed
 			if ( empty( $user_id ) ) {
 				return;
@@ -646,7 +648,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			$old_roles = $old_data->roles;
 			$userdata  = get_userdata( $user_id );
 			$new_roles = $userdata->roles;
-
+mwi_logger('profile_update entered with new roles: '.implode(',',$new_roles).'     old roles: '.implode(',',$old_roles));
 			if ( is_admin() ) {
 				if ( ! empty( $_POST['um-role'] ) && current_user_can( 'promote_users' ) ) {
 					$new_roles = array_merge( $new_roles, array( sanitize_key( $_POST['um-role'] ) ) );
@@ -692,7 +694,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @return void
 		 */
 		function profile_form_additional_section( $userdata ) {
-
+mwi_logger('profile_form_additional_section: ');
 			/**
 			 * UM hook
 			 *
@@ -715,6 +717,50 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 * }
 			 * ?>
 			 */
+
+
+			/* Get a list of all the possible roles, and then intersect that with this user's roles.
+			 * this is to weed out roles that may have been deleted */
+			$roles = get_editable_roles();
+			$user_roles = ! empty($userdata->roles) ? array_intersect($userdata->roles,array_keys($roles)) : array();
+mwi_logger('profile_form_additional_section: ',implode(',',$user_roles));
+?>
+<div class="um-roles-container">
+<table class="form-table">
+<tr>  <th> <label><?php _e('Roles', 'um-multiple-roles'); ?></label>  </th>
+<td>
+<?php
+			foreach ( $roles as $role_id => $role_data ) {
+				if ( current_user_can( 'promote_users', get_current_user_id() ) ) {
+
+?>
+<label for="user_role_<?php echo esc_attr( $role_id ); ?>">
+<input type="checkbox" style="width: 1em;" id="user_role_<?php esc_attr_e( $role_id ); ?>"
+       value="<?php esc_attr_e( $role_id ); ?>"
+       name="um_user_roles[]" <?php echo ( ! empty( $user_roles ) && in_array( $role_id, $user_roles ) ) ? ' checked="checked"' : ''; ?> />
+   <?php esc_html_e( translate_user_role( $role_data['name'] ) ); ?>
+</label>
+<br />
+<?php
+				} else {
+					/* If this user does not have the capability to promote users we leave off
+					 * the checkbox and simply give the list of roles the user has
+					 */
+					if ( ! empty( $user_roles ) && in_array( $role_id, $user_roles ) ) {
+						echo translate_user_role( $role_data['name'] ) . ', ';
+					}
+				}
+			}
+?>
+<?php wp_nonce_field( 'um_set_roles', '_um_roles_nonce' ); ?>
+<br>
+</td>
+</tr>
+</table>
+</div>
+<?php
+
+/* Roles are now appearing as checkboxes in place of the original select box
 			$section_content = apply_filters( 'um_user_profile_additional_fields', '', $userdata );
 
 			if ( ! empty( $section_content ) && ! ( is_multisite() && is_network_admin() ) ) {
@@ -725,6 +771,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 				echo $section_content;
 			}
+*/
 		}
 
 
