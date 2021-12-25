@@ -349,16 +349,15 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param $result
 		 */
 		function add_um_role_existing_user( $user_id, $result ) {
-mwi_logger('add_um_role_existing_user: ');
 			// Bail if no user ID was passed
 			if ( empty( $user_id ) ) {
 				return;
 			}
 
 			if ( ! empty( $_POST['um-role'] ) && current_user_can( 'promote_users' ) ) {
-				if ( ! user_can( $user_id, sanitize_key( $_POST['um-role'] ) ) ) {
-					UM()->roles()->set_role( $user_id, sanitize_key( $_POST['um-role'] ) );
-				}
+				// $_POST['um-role'] is now an array, so we sanitize each entry
+				$new_roles = array_map( 'sanitize_text_field', wp_unslash( $_POST['um-role'] ) );
+				UM()->roles()->set_role( $user_id, $new_roles );
 			}
 
 			$this->remove_cache( $user_id );
@@ -371,16 +370,16 @@ mwi_logger('add_um_role_existing_user: ');
 		 * @param $user_id
 		 */
 		function add_um_role_wpmu_new_user( $user_id ) {
-mwi_logger('add_um_role_new_user: ');
 			// Bail if no user ID was passed
 			if ( empty( $user_id ) ) {
 				return;
 			}
 
 			if ( ! empty( $_POST['um-role'] ) && current_user_can( 'promote_users' ) ) {
-				if ( ! user_can( $user_id, sanitize_key( $_POST['um-role'] ) ) ) {
-					UM()->roles()->set_role( $user_id, sanitize_key( $_POST['um-role'] ) );
-				}
+				// $_POST['um-role'] is now an array, so we sanitize each entry
+				$new_roles = array_map( 'sanitize_text_field', wp_unslash( $_POST['um-role'] ) );
+				UM()->roles()->set_role( $user_id, $new_roles );
+
 			}
 
 			$this->remove_cache( $user_id );
@@ -644,17 +643,13 @@ mwi_logger('add_um_role_new_user: ');
 			if ( empty( $user_id ) ) {
 				return;
 			}
-
 			$old_roles = $old_data->roles;
-			$userdata  = get_userdata( $user_id );
-			$new_roles = $userdata->roles;
-mwi_logger('profile_update entered with new roles: '.implode(',',$new_roles).'     old roles: '.implode(',',$old_roles));
+
 			if ( is_admin() ) {
 				if ( ! empty( $_POST['um-role'] ) && current_user_can( 'promote_users' ) ) {
-					$new_roles = array_merge( $new_roles, array( sanitize_key( $_POST['um-role'] ) ) );
-					if ( ! user_can( $user_id, sanitize_key( $_POST['um-role'] ) ) ) {
-						UM()->roles()->set_role( $user_id, sanitize_key( $_POST['um-role'] ) );
-					}
+					// $_POST['um-role'] is now an array, so we sanitize each entry
+					$new_roles = array_map( 'sanitize_text_field', wp_unslash( $_POST['um-role'] ) );
+					UM()->roles()->set_role( $user_id, $new_roles );
 				}
 			}
 
@@ -694,7 +689,6 @@ mwi_logger('profile_update entered with new roles: '.implode(',',$new_roles).'  
 		 * @return void
 		 */
 		function profile_form_additional_section( $userdata ) {
-mwi_logger('profile_form_additional_section: ');
 			/**
 			 * UM hook
 			 *
@@ -723,7 +717,6 @@ mwi_logger('profile_form_additional_section: ');
 			 * this is to weed out roles that may have been deleted */
 			$roles = get_editable_roles();
 			$user_roles = ! empty($userdata->roles) ? array_intersect($userdata->roles,array_keys($roles)) : array();
-mwi_logger('profile_form_additional_section: ',implode(',',$user_roles));
 ?>
 <div class="um-roles-container">
 <table class="form-table">
@@ -737,7 +730,7 @@ mwi_logger('profile_form_additional_section: ',implode(',',$user_roles));
 <label for="user_role_<?php echo esc_attr( $role_id ); ?>">
 <input type="checkbox" style="width: 1em;" id="user_role_<?php esc_attr_e( $role_id ); ?>"
        value="<?php esc_attr_e( $role_id ); ?>"
-       name="um_user_roles[]" <?php echo ( ! empty( $user_roles ) && in_array( $role_id, $user_roles ) ) ? ' checked="checked"' : ''; ?> />
+       name="um-role[]" <?php echo ( ! empty( $user_roles ) && in_array( $role_id, $user_roles ) ) ? ' checked="checked"' : ''; ?> />
    <?php esc_html_e( translate_user_role( $role_data['name'] ) ); ?>
 </label>
 <br />
