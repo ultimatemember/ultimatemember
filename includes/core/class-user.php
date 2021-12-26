@@ -349,12 +349,15 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param $result
 		 */
 		function add_um_role_existing_user( $user_id, $result ) {
-			// Bail if no user ID was passed
-			if ( empty( $user_id ) ) {
-				return;
+			// Bail if no user ID was passed, or the current user cannot prompte users
+			// or the nonce does not check
+			if ( empty( $user_id ) ||
+			    !current_user_can('promote_users') ||
+			    !wp_verify_nonce($_POST['_um_roles_nonce'],'um_set_roles')) {
+				 return;
 			}
 
-			if ( ! empty( $_POST['um-role'] ) && current_user_can( 'promote_users' ) ) {
+			if ( ! empty( $_POST['um-role'] ) ) {
 				// $_POST['um-role'] is now an array, so we sanitize each entry
 				$new_roles = array_map( 'sanitize_text_field', wp_unslash( $_POST['um-role'] ) );
 				UM()->roles()->set_role( $user_id, $new_roles );
@@ -370,12 +373,15 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param $user_id
 		 */
 		function add_um_role_wpmu_new_user( $user_id ) {
-			// Bail if no user ID was passed
-			if ( empty( $user_id ) ) {
-				return;
+			// Bail if no user ID was passed, or the current user cannot prompte users
+			// or the nonce does not check
+			if ( empty( $user_id ) ||
+			    !current_user_can('promote_users') ||
+			    !wp_verify_nonce($_POST['_um_roles_nonce'],'um_set_roles')) {
+				 return;
 			}
 
-			if ( ! empty( $_POST['um-role'] ) && current_user_can( 'promote_users' ) ) {
+			if ( ! empty( $_POST['um-role'] ) ) {
 				// $_POST['um-role'] is now an array, so we sanitize each entry
 				$new_roles = array_map( 'sanitize_text_field', wp_unslash( $_POST['um-role'] ) );
 				UM()->roles()->set_role( $user_id, $new_roles );
@@ -592,14 +598,17 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param $user_id
 		 */
 		function user_register_via_admin( $user_id ) {
-
-			if ( empty( $user_id ) ) {
-				return;
+			// Bail if no user ID was passed, or the current user cannot prompte users
+			// or the nonce does not check
+			if ( empty( $user_id ) ||
+			    !current_user_can('promote_users') ||
+			    !wp_verify_nonce($_POST['_um_roles_nonce'],'um_set_roles')) {
+				 return;
 			}
 
 			if ( is_admin() ) {
 				//if there custom 2 role not empty
-				if ( ! empty( $_POST['um-role'] ) && current_user_can( 'promote_users' ) ) {
+				if ( ! empty( $_POST['um-role'] ) ) {
 					$user = get_userdata( $user_id );
 					$user->add_role( sanitize_key( $_POST['um-role'] ) );
 					UM()->user()->profile['role'] = sanitize_key( $_POST['um-role'] );
@@ -639,14 +648,18 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param \WP_User $old_data
 		 */
 		function profile_update( $user_id, $old_data ) {
-			// Bail if no user ID was passed
-			if ( empty( $user_id ) ) {
-				return;
+			// Bail if no user ID was passed, or the current user cannot prompte users
+			// or the nonce does not check
+			if ( empty( $user_id ) ||
+			    !current_user_can('promote_users') ||
+			    !wp_verify_nonce($_POST['_um_roles_nonce'],'um_set_roles')) {
+				 return;
 			}
+
 			$old_roles = $old_data->roles;
 
 			if ( is_admin() ) {
-				if ( ! empty( $_POST['um-role'] ) && current_user_can( 'promote_users' ) ) {
+				if ( ! empty( $_POST['um-role'] ) ) {
 					// $_POST['um-role'] is now an array, so we sanitize each entry
 					$new_roles = array_map( 'sanitize_text_field', wp_unslash( $_POST['um-role'] ) );
 					UM()->roles()->set_role( $user_id, $new_roles );
