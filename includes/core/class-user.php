@@ -717,6 +717,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 * this is to weed out roles that may have been deleted */
 			$roles = get_editable_roles();
 			$user_roles = ! empty($userdata->roles) ? array_intersect($userdata->roles,array_keys($roles)) : array();
+			$curruserid=get_current_user_id() ;
+			$curruserpriority=UM()->roles()->get_role_priority(UM()->roles()->get_priority_user_role($curruserid));
+
 ?>
 <div class="um-roles-container">
 <table class="form-table">
@@ -724,7 +727,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 <td>
 <?php
 			foreach ( $roles as $role_id => $role_data ) {
-				if ( current_user_can( 'promote_users', get_current_user_id() ) ) {
+				if ( current_user_can( 'promote_users', $curruserid) &&
+					$curruserpriority >= UM()->roles()->get_role_priority($role_data['name'])  ) {
 
 ?>
 <label for="user_role_<?php echo esc_attr( $role_id ); ?>">

@@ -170,6 +170,8 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			// Validate user id
 			$user = get_userdata( $user_id );
 
+			$curruserpriority=$this->get_role_priority($this->get_priority_user_role(get_current_user_id()));
+
 			// User exists
 			if ( ! empty( $user ) ) {
 				/* $new_roles is the list of roles we want the user to have.
@@ -192,12 +194,18 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 					$roles_to_remove = array_merge($roles_to_remove,array_diff( $user_roles, $new_roles ));
 				}
 				foreach ( $roles_to_remove as $role ) {
-					$user->remove_role( $role );
+					$role_priority=$this->get_role_priority($role);
+					if ( $curruserpriority >= $role_priority) {
+						$user->remove_role( $role );
+					}
 				}
 				foreach (array_diff($new_roles, $user->roles) as $role) {
-					do_action( 'um_when_role_is_set', $user_id );
-					$user->add_role( $role );
-					do_action( 'um_after_user_role_is_updated', $user_id, $role );
+					$role_priority=$this->get_role_priority($role);
+					if ( $curruserpriority >= $role_priority) {
+						do_action( 'um_when_role_is_set', $user_id );
+						$user->add_role( $role );
+						do_action( 'um_after_user_role_is_updated', $user_id, $role );
+					}
 				} 
 
 				do_action( 'um_after_user_role_is_changed' );
@@ -419,6 +427,31 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			return array_values( $user->roles );
 		}
 
+		function get_role_priority( $role ) {
+			$um_roles_keys = get_option( 'um_roles', array() );
+
+			if ( ! empty( $um_roles_keys ) ) {
+				$um_roles_keys = array_map(
+					function( $item ) {
+						return 'um_' . $item;
+					},
+					$um_roles_keys
+				);
+			}
+
+			if ( ! empty( $um_roles_keys ) && in_array( $role, $um_roles_keys, true ) ) {
+				$userrole_metakey = substr( $role, 3 );
+			} else {
+				$userrole_metakey = $role;
+			}
+
+			$rolemeta = get_option( "um_role_{$userrole_metakey}_meta", false );
+
+			$priority = ! empty( $rolemeta['_um_priority'] ) ? $rolemeta['_um_priority'] : 0;
+
+			return $priority;
+		}
+
 
 		/**
 		 * @param $user_id
@@ -568,7 +601,7 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 				return false;
 			}
 
-			return  implode(',',$user_um_roles_array);
+			return array_shift( $user_um_roles_array );
 		}
 
 
