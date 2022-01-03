@@ -264,6 +264,51 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					unset( $form_fields[ $id ] );
 					update_post_meta( $form_id, '_um_custom_fields', $form_fields );
 				}
+
+				$directories = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'um_directory'" );
+				foreach ( $directories as $directory_id ) {
+					// Frontend filters
+					$directory_search_fields = get_post_meta( $directory_id, '_um_search_fields', true );
+					$directory_search_fields = array_values( array_diff( $directory_search_fields, array( $id ) ) );
+					update_post_meta( $directory_id, '_um_search_fields', $directory_search_fields );
+
+					// Admin filtering
+					$directory_search_filters = get_post_meta( $directory_id, '_um_search_filters', true );
+					unset( $directory_search_filters[ $id ] );
+					update_post_meta( $directory_id, '_um_search_filters', $directory_search_filters );
+
+					// display in tagline
+					$directory_reveal_fields = get_post_meta( $directory_id, '_um_reveal_fields', true );
+					$directory_reveal_fields = array_values( array_diff( $directory_reveal_fields, array( $id ) ) );
+					update_post_meta( $directory_id, '_um_reveal_fields', $directory_reveal_fields );
+
+					// extra user information section
+					$directory_tagline_fields = get_post_meta( $directory_id, '_um_tagline_fields', true );
+					$directory_tagline_fields = array_values( array_diff( $directory_tagline_fields, array( $id ) ) );
+					update_post_meta( $directory_id, '_um_tagline_fields', $directory_tagline_fields );
+
+					// Custom fields selected in "Choose field(s) to enable in sorting"
+					$directory_sorting_fields = get_post_meta( $directory_id, '_um_sorting_fields', true );
+					foreach ( $directory_sorting_fields as $key => $sorting_data ) {
+						if ( is_array( $sorting_data ) && array_key_exists( $id, $sorting_data ) ) {
+							unset( $directory_sorting_fields[ $key ] );
+						}
+					}
+					$directory_sorting_fields = array_values( $directory_sorting_fields );
+					update_post_meta( $directory_id, '_um_sorting_fields', $directory_sorting_fields );
+
+					// If "Default sort users by" = "Other (Custom Field)" is selected when delete this custom field and set default sorting
+					$directory_sortby_custom = get_post_meta( $directory_id, '_um_sortby_custom', true );
+					if ( $directory_sortby_custom === $id ) {
+						$directory_sortby = get_post_meta( $directory_id, '_um_sortby', true );
+						if ( 'other' === $directory_sortby ) {
+							update_post_meta( $directory_id, '_um_sortby', 'user_registered_desc' );
+						}
+						update_post_meta( $directory_id, '_um_sortby_custom', '' );
+						update_post_meta( $directory_id, '_um_sortby_custom_label', '' );
+					}
+				}
+
 			}
 		}
 

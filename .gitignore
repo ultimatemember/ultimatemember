@@ -218,5 +218,7 @@ pip-log.txt
 
 node_modules/
 assets/vendor/
+/vendor/
 package-lock.json
-.idea
+.idea/
+composer.lock

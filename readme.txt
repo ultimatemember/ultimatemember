@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 5.8
-Stable tag: 2.2.5
+Stable tag: 2.3.0
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -154,6 +154,39 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
+
+= 2.3.0: December 20, 2021 =
+
+* Enhancements:
+
+  - Added: WhatsApp, Telegram, Discord, Viber messengers predefined fields.
+  - Added: Callback for deleting the custom field data from member direcroty settings when this custom field has been deleted in Form Builder.
+  - Added: 'um_account_active_tab_inited' JS hook.
+  - Updated: Require a strong password option (`Ultimate Member > Settings > General > Users > Require a strong password?`) to make it common for all Ultimate Member forms. Renamed option key from `reset_require_strongpass` to `require_strongpass`.
+  - Updated: Form errors texts on the login/password reset forms. Made them secure.
+  - Deprecated: `Ultimate Member > Settings > General > Account > Require a strong password?` option and merged with `Ultimate Member > Settings > General > Users > Require a strong password?` option.
+
+* Bugfixes:
+
+  - Fixed: "Clear All" button for the filters with "&" symbol in the label.
+  - Fixed: Uninstall process when delete UM data. Avoid the issue when 3rd-party pages that had been selected as UM page are removed on UM uninstall.
+  - Fixed: Header meta for the Twitter Card. If the user has twitter field filled then <meta name="twitter:site"> will be filled by this value.
+  - Fixed: Member directory a slider filter's label displaying. It uses the filled label for now.
+  - Fixed: SkypeID field validation. Also all SkypeID fields on your forms changed type from `url` to `text`. SkypeID supports nicknames or https://join.skype.com/{hash} links.
+  - Fixed: Typos in Account > Privacy tab texts related to Download/Erase the user data.
+  - Fixed: Some typos in the fields' labels.
+  - Fixed: "false" display name in the member directory. It displays empty for now if the user hasn't display name.
+  - Fixed: `UM()->clean_array()` function.
+  - Fixed: LinkedIn field URL. Added ability to display the organization URL.
+  - Fixed: Canonical link of the user profile if WPML plugin is active.
+  - Fixed: Replacing placeholders in nav menus. Used an earlier hook for filtering items before generating HTML and avoided issues with raw, not-escaped HTML inside tags' attributes.
+
+* Templates required update:
+  - members-grid.php
+  - members-list.php
+  - password-reset.php
+
+* Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade
 
 = 2.2.5: September 22, 2021 =
 

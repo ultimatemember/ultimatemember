@@ -335,7 +335,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			if ( is_array( $var ) ) {
 				return array_map( array( $this, 'clean_array' ), $var );
 			} else {
-				return is_scalar( $var ) ? sanitize_text_field( $var ) : $var;
+				return ! is_scalar( $var ) ? sanitize_text_field( $var ) : $var;
 			}
 		}
 

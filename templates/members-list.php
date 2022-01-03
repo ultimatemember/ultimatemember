@@ -15,7 +15,7 @@ $unique_hash = substr( md5( $args['form_id'] ), 10, 5 ); ?>
 					<div class="um-member-card-container">
 						<?php if ( $profile_photo ) { ?>
 							<div class="um-member-photo radius-<?php echo esc_attr( UM()->options()->get( 'profile_photocorner' ) ); ?>">
-								<a href="{{{user.profile_url}}}" title="{{{user.display_name}}}">
+								<a href="{{{user.profile_url}}}" title="<# if ( user.display_name ) { #>{{{user.display_name}}}<# } #>">
 									{{{user.avatar}}}
 
 									<?php do_action( 'um_members_list_in_profile_photo_tmpl', $args ); ?>
@@ -27,11 +27,13 @@ $unique_hash = substr( md5( $args['form_id'] ), 10, 5 ); ?>
 							<div class="um-member-card-content">
 								<div class="um-member-card-header">
 									<?php if ( $show_name ) { ?>
-										<div class="um-member-name">
-											<a href="{{{user.profile_url}}}" title="{{{user.display_name}}}">
-												{{{user.display_name_html}}}
-											</a>
-										</div>
+										<# if ( user.display_name_html ) { #>
+											<div class="um-member-name">
+												<a href="{{{user.profile_url}}}" title="<# if ( user.display_name ) { #>{{{user.display_name}}}<# } #>">
+													{{{user.display_name_html}}}
+												</a>
+											</div>
+										<# } #>
 									<?php } ?>
 
 									{{{user.hook_just_after_name}}}

@@ -21,6 +21,23 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 		function __construct() {
 			add_action( 'wp_roles_init', array( &$this, 'um_roles_init' ), 99999 );
 			add_action( 'update_option', array( &$this, 'um_on_roles_update' ), 10, 3 );
+			add_action( 'set_user_role', array( &$this, 'remove_user_cache' ), 10, 1 );
+		}
+
+
+		/**
+		 * Flush the Cache User Profile on set new user role(s)
+		 *
+		 * @param int $user_id
+		 */
+		function remove_user_cache( $user_id ) {
+			$user = get_userdata( $user_id );
+
+			if ( ! is_a( $user, '\WP_User' ) ) {
+				return;
+			}
+
+			UM()->user()->remove_cache( $user_id );
 		}
 
 
