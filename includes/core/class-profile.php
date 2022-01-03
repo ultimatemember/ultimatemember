@@ -56,7 +56,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		 * Delete profile avatar AJAX handler
 		 */
 		public function ajax_delete_profile_photo() {
-			UM()->check_ajax_nonce();
+			UM()->ajax()->check_nonce( 'um-frontend-nonce' );
 
 			if ( ! array_key_exists( 'user_id', $_REQUEST ) ) {
 				wp_send_json_error( __( 'Invalid data', 'ultimate-member' ) );
@@ -76,7 +76,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		 * Delete cover photo AJAX handler
 		 */
 		public function ajax_delete_cover_photo() {
-			UM()->check_ajax_nonce();
+			UM()->ajax()->check_nonce( 'um-frontend-nonce' );
 
 			if ( ! array_key_exists( 'user_id', $_REQUEST ) ) {
 				wp_send_json_error( __( 'Invalid data', 'ultimate-member' ) );

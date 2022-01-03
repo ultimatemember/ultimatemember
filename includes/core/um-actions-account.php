@@ -704,7 +704,7 @@ function um_after_account_privacy( $args ) {
 
 
 function um_request_user_data() {
-	UM()->check_ajax_nonce();
+	UM()->ajax()->check_nonce( 'um-frontend-nonce' );
 
 	if ( ! isset( $_POST['request_action'] ) ) {
 		wp_send_json_error( __( 'Wrong request.', 'ultimate-member' ) );

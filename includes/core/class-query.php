@@ -39,7 +39,7 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		 * Ajax pagination for posts
 		 */
 		public function ajax_paginate() {
-			UM()->check_ajax_nonce();
+			UM()->ajax()->check_nonce( 'um-frontend-nonce' );
 
 			/**
 			 * @var $hook

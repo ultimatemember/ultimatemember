@@ -1,6 +1,6 @@
 <?php
 function um_upgrade_tempfolder2024() {
-	UM()->admin()->check_ajax_nonce();
+	UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 	um_maybe_unset_time_limit();
 

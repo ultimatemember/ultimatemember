@@ -2,11 +2,52 @@
 @import "mixins"
 @import "colors"
 
-.um-modal-tabs
+
+.#{$prefix}admin-boxed-links
+  width: 100%
+  text-align: center
+  a
+    width: 33.3%
+    float: left
+    border-left: 1px solid #fff
+    border-right: 1px solid #fff
+    padding: 30px 25px !important
+    background: #f8f8f8
+    text-align: center
+    display: inline-block !important
+    font-size: 14px
+    transition: all .2s linear
+    text-decoration: none
+    color: #666
+    margin: 0 !important
+    box-sizing: border-box !important
+    border-radius: 2px
+    font-weight: 600
+  &:hover
+    background: #eee
+  &.#{$prefix}admin-activebg
+    background: #{$um-base}
+    color: #fff
+    &:hover
+      background: #{$um-base}
+      color: #fff
+  i
+    font-size: 28px
+    vertical-align: middle
+    margin: 0 10px 0 0
+
+.#{$prefix}admin-half
+  float: left
+  width: 48%
+.#{$prefix}admin-tri
+  float: left
+  width: 33%
+
+.#{$prefix}modal-tabs
   display: inline
   width: 100%
   margin: 0
-  .um-modal-tab
+  .#{$prefix}modal-tab
     display: inline
     &:first-child
       a
@@ -22,11 +63,369 @@
         outline: none
         box-shadow: none
 
-.um-modal-tabs-content-wrapper
+.#{$prefix}modal-tabs-content-wrapper
   width: 100%
   margin: 5px 0 0 0
-  .um-modal-tab-content
+  .#{$prefix}modal-tab-content
     width: 100%
     display: none
     &.active
       display: block
+
+
+.#{$prefix}admin-error-block,
+.#{$prefix}admin-success-block
+  display: none
+  width: 100%
+  background: #{$admin-warning}
+  border-radius: 3px
+  color: #fff
+  box-sizing: border-box
+  position: relative
+  padding: 12px
+  font-size: 13px
+  line-height: 1em !important
+  margin: 0 0 16px 0
+
+.#{$prefix}admin-success-block
+  background: #{$admin-ok}
+
+.#{$prefix}admin-cur-condition-template
+  display: none
+
+
+.um-admin-builder
+  i
+    font-size: 15px !important
+    height: 100% !important
+    line-height: 100% !important
+    margin: 0 5px 0 0 !important
+
+  .um-admin-drag
+    margin-top: 40px
+
+
+.um-admin-drag-add-field
+  display: block
+  width: 100%
+  height: 30px
+  line-height: 30px
+  text-align: center
+  color: #aaa
+  text-decoration: none
+  &:hover
+    color: #0085ba
+  i
+    font-size: 23px !important
+    margin: 0 !important
+
+
+.um-admin-drag-ctrls
+  position: absolute
+  top: -30px
+  left: 0
+  &.um-admin-drag-ctrls-demo
+    position: absolute
+    right: 7px
+    top: -30px
+    left: auto
+
+  a
+    float: left
+    margin: 0 5px 0 0
+    height: 30px
+    line-height: 30px
+    background: #eee
+    color: #888
+    padding: 0 8px
+    text-decoration: none
+    border-radius: 2px 2px 0 0
+
+    &:hover
+      background-color: #e5e5e5
+
+    &.active,
+    &.active:hover
+      background-color: #{$um-base}
+      color: #fff
+
+    &.columns
+      a
+        width: 30px !important
+        background-image: url(../img/1-column.gif)
+        background-repeat: no-repeat
+        background-position: center
+        &:nth-child(2)
+          background-image: url(../img/2-columns.gif)
+        &:last-child
+          background-image: url(../img/3-columns.gif)
+
+        &.active
+          background-image: url(../img/1-column-active.gif)
+          &:nth-child(2)
+            background-image: url(../img/2-columns-active.gif)
+          &:last-child
+            background-image: url(../img/3-columns-active.gif)
+
+.um-admin-drag
+  width: 100%
+  background: #f1f1f1
+  box-sizing: border-box
+  position: relative
+  padding: 60px 20px 20px 20px
+.um-admin-drag-row
+  width: 100%
+  background: #fefefe
+  box-sizing: border-box
+  position: relative
+  padding: 60px 20px 20px 20px
+  margin: 0 0 60px 0
+  &:last-child
+    margin-bottom: 0
+
+.um-admin-drag-row-icons
+  position: absolute
+  right: 0
+  top: -30px
+  height: 30px
+
+.um-admin-drag-rowsub
+  position: relative
+  box-sizing: border-box
+  background: #f1f1f1
+  padding: 20px
+  margin: 0 0 60px 0
+  &:last-child
+    margin-bottom: 0
+
+.um-admin-drag-rowsub-icons
+  position: absolute
+  right: 0
+  top: -30px
+  height: 30px
+
+
+.um-admin-drag-col
+  float: left
+  width: 100%
+  background: #fff
+  border: 1px dashed #bbb
+  box-sizing: border-box
+  padding: 20px
+
+  &.cols-3
+    width: 32%
+    &.cols-last
+      width: 32%
+    &.cols-middle
+      width: 32%
+      margin: 0 2%
+
+  &.cols-1
+    width: 100%
+    &.cols-last
+      width: 100%
+
+  &.cols-2
+    width: 49%
+    margin: 0 1% 0 0
+    &.cols-last
+      width: 49%
+      margin: 0 0 0 1%
+
+.um-admin-drag-addrow
+  text-align: center
+  font-size: 14px
+  color: #888
+  cursor: pointer
+  border: 1px dashed #bbb
+  padding: 10px 0
+  margin: 20px 0 0 0
+
+  i
+    font-size: 23px !important
+    margin: 0 !important
+  &:hover
+    color: #0085ba
+
+
+.um-admin-drag-fld
+  display: block
+  position: relative
+  border: 1px solid #dddddd
+  margin: 0 0 15px 0
+  background: #F5F5F5
+  cursor: move !important
+  &.um-field-type-group
+    background: #555
+    border: 0
+
+.um-admin-drag-fld-title
+  float: left
+  font-weight: bold
+  font-size: 13px
+  color: #666
+  height: 30px
+  line-height: 30px
+  margin: 0 0 0 20px
+  &.um-field-type-group
+    color: #fff
+  i
+    width: 24px
+    display: inline-block
+    text-align: center
+
+.um-admin-drag-group
+  background: #FCFCFC
+  cursor: default
+  padding: 20px
+  border: 1px dashed #bbb
+
+.um-admin-drag-fld-type
+  float: left
+  font-size: 13px
+  height: 30px
+  line-height: 30px
+  margin: 0 0 0 20px
+  font-weight: 400
+  color: #999
+  &.um-field-type-group
+    color: #fff
+
+.um-admin-drag-col.cols-3
+  .um-admin-drag-fld:hover
+    .um-admin-drag-fld-icons
+      display: block
+  .um-admin-drag-fld-title
+    height: auto
+    line-height: 18px
+    margin: 10px
+    margin-bottom: 0
+  .um-admin-drag-fld-type
+    height: auto
+    line-height: 18px
+    margin: 0 0 10px 0
+  .um-admin-drag-fld-icons
+    float: none
+    position: absolute
+    bottom: 0
+    right: 0
+    height: 30px
+    display: none
+    &.um-field-type-group
+      float: left
+      position: relative
+      bottom: auto
+      right: auto
+      height: 30px
+      display: block
+
+.um-admin-drag-fld-icons
+  float: right
+  &.um-field-type-group
+    a.um_admin_duplicate_field
+      display: none !important
+
+
+
+.um-admin-drag-row-icons a,
+.um-admin-drag-row-icons span,
+.um-admin-drag-rowsub-icons a,
+.um-admin-drag-rowsub-icons span,
+.um-admin-drag-fld-icons a
+  text-decoration: none
+  color: #fff
+  width: 40px
+  height: 30px
+  line-height: 30px
+  text-align: center
+  display: block !important
+  float: left
+  background: #{$um-base}
+  padding: 0 4px
+  transition: all .2s linear
+  border-left: 1px solid #379dd5
+
+.um-admin-drag-row-icons span,
+.um-admin-drag-rowsub-icons span
+  cursor: move !important
+
+.um-admin-drag-row-icons a:hover,
+.um-admin-drag-row-icons span:hover,
+.um-admin-drag-rowsub-icons a:hover,
+.um-admin-drag-rowsub-icons span:hover,
+.um-admin-drag-fld-icons a:hover
+  background: #008ec2
+
+.um-admin-drag-row-icons,
+.um-admin-drag-rowsub-icons,
+.um-admin-drag-fld-icons
+  i
+    font-size: 18px !important
+    margin: 0 !important
+    top: 2px
+    position: relative
+
+.um-row-placeholder
+  width: 100%
+  border: 2px dashed #aaa
+  box-sizing: border-box
+
+.um-rowsub-placeholder
+  width: 100%
+  border: 2px dashed #ccc
+  box-sizing: border-box
+  display: block
+
+.um-fld-placeholder
+  display: block
+  border: 1px dashed #dddddd
+  background: #fff
+  box-sizing: border-box
+  width: 100%
+
+.um-admin-preview-overlay
+  position: absolute
+  top: 0
+  bottom: 0
+  left: 0
+  right: 0
+  background-color: rgba(255,255,255,0)
+  z-index: 100
+
+#UM_preview_form
+  .um-admin-modal-body
+    position: relative
+
+
+
+// RTL styles
+.wp-admin.rtl
+  .#{$prefix}admin-drag-ctrls
+    &.#{$prefix}admin-drag-ctrls-demo
+      left: 12px
+      right: auto
+    &.columns
+      right: 0 !important
+      left: auto
+      a
+        float: right
+
+  .#{$prefix}admin-drag-row-icons
+    left: 0
+    right: auto
+    a
+      float: right
+  .#{$prefix}admin-drag-fld-icons
+    float: left
+    a
+      float: right
+
+  .#{$prefix}admin-drag-rowsub-icons
+    right: auto
+    left: 0
+
+  .#{$prefix}admin-drag-fld-title,
+  .#{$prefix}admin-drag-fld-type
+    float: right
+    margin: 0 20px 0 0

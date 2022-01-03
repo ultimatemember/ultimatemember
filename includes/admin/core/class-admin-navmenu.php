@@ -31,9 +31,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 
 			if ( $wp_version < '5.4' ) {
 				add_action( 'admin_footer-nav-menus.php', array( &$this, '_wp_template' ) );
-				add_action( 'load-nav-menus.php', array( &$this, 'enqueue_nav_menus_scripts' ) );
-			} else {
-				add_action( 'load-customize.php', array( &$this, 'enqueue_nav_menus_scripts' ) );
 			}
 
 			add_action( 'wp_update_nav_menu_item', array( &$this, '_save' ), 10, 3 );
@@ -187,37 +184,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 		 */
 		function enqueue_nav_menus_scripts() {
 			add_action( 'admin_enqueue_scripts', array( &$this, 'admin_enqueue_scripts' ) );
-		}
-
-
-		/**
-		 *
-		 */
-		function admin_enqueue_scripts() {
-			UM()->admin_enqueue()->load_nav_manus_scripts();
-
-			$menu_restriction_data = array();
-
-			$menus = get_posts( 'post_type=nav_menu_item&numberposts=-1' );
-			foreach ( $menus as $data ) {
-				$_nav_roles_meta = get_post_meta( $data->ID, 'menu-item-um_nav_roles', true );
-
-				$um_nav_roles = array();
-				if ( $_nav_roles_meta ) {
-					foreach ( $_nav_roles_meta as $key => $value ) {
-						if ( is_int( $key ) ) {
-							$um_nav_roles[] = $value;
-						}
-					}
-				}
-
-				$menu_restriction_data[ $data->ID ] = array(
-					'um_nav_public' => get_post_meta( $data->ID, 'menu-item-um_nav_public', true ),
-					'um_nav_roles'  => $um_nav_roles,
-				);
-			}
-
-			wp_localize_script( 'um_admin_nav_manus', 'um_menu_restriction_data', $menu_restriction_data );
 		}
 
 

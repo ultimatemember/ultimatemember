@@ -235,7 +235,7 @@ class UM_Emails_List_Table extends WP_List_Table {
 		$text = '<span class="dashicons um-notification-status' . esc_attr( $icon ) . '"></span><a href="' . esc_url( $link ) . '"><strong>' . $item['title'] . '</strong></a>';
 
 		if ( ! empty( $item['description'] ) ) {
-			$text .= ' <span class="um_tooltip dashicons dashicons-editor-help" title="' . esc_attr( $item['description'] ) . '"></span>';
+			$text .= ' <span class="um-tooltip dashicons dashicons-editor-help" title="' . esc_attr( $item['description'] ) . '"></span>';
 		}
 
 		return $text;

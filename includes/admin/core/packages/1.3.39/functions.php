@@ -1,6 +1,6 @@
 <?php
 function um_upgrade_usermetaquery1339() {
-	UM()->admin()->check_ajax_nonce();
+	UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 	include 'usermeta_query.php';
 

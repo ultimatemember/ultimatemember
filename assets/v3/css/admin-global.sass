@@ -1,0 +1,70 @@
+@import "selectors"
+@import "mixins"
+@import "colors"
+
+.#{$prefix}admin-notice
+  border-color: #{$um-base}
+  color: #555
+  &.error
+    border-color: #dc3232
+  a
+    text-decoration: none
+    color: #{$um-base}
+    &:hover
+      color: #44b0ec
+    &.button-primary
+      background-color: #{$um-base}
+      border-color: #{$um-base}
+      &:hover
+        background-color: #008ec2
+        border-color: #008ec2
+    &.button-secondary
+      opacity: 0.7
+      &:hover
+        opacity: 0.9
+
+
+/*Tooltip*/
+.ui-tooltip
+  &.#{$prefix}tooltip
+    padding: 8px
+    color: #{$tooltip-color} !important
+    background: #{$tooltip-back} !important
+    position: absolute
+    z-index: 1000000
+    max-width: 300px
+    font-size: 12px
+    border-radius: 5px
+    border: none !important
+    text-shadow: none !important
+    a
+      color: #{$tooltip-color} !important
+
+.#{$prefix}tooltip
+  cursor: pointer
+  vertical-align: middle
+  &:hover
+    opacity: 1
+    &:before
+      opacity: 0.8
+  &.dashicons
+    height: 22px
+    &:before
+      height: 22px
+  &.dashicons-editor-help
+    &:before
+      float: left
+      font-size: 20px
+      line-height: 20px
+      color: #{$tooltip-back} !important
+
+.#{$prefix}hidden-notice
+  display: none
+
+ul#adminmenu
+  a.wp-has-current-submenu:after
+    display: none !important
+  & > li.current > a.current:after
+    display: none !important
+  li.wp-has-submenu.wp-not-current-submenu:hover:after
+    right: -9999999px

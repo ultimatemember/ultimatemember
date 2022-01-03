@@ -251,7 +251,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * Remove file by AJAX
 		 */
 		function ajax_remove_file() {
-			UM()->check_ajax_nonce();
+			UM()->ajax()->check_nonce( 'um-frontend-nonce' );
 
 			if ( empty( $_POST['src'] ) ) {
 				wp_send_json_error( __( 'Wrong path', 'ultimate-member' ) );
@@ -305,7 +305,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * Resize image AJAX handler
 		 */
 		function ajax_resize_image() {
-			UM()->check_ajax_nonce();
+			UM()->ajax()->check_nonce( 'um-frontend-nonce' );
 
 			/**
 			 * @var $key

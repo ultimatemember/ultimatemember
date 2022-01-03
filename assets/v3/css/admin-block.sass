@@ -1,0 +1,12 @@
+@import "selectors"
+@import "mixins"
+@import "colors"
+
+.#{$prefix}block-settings
+  .#{$prefix}block-settings-hidden
+    display: none
+  .components-select-control
+    .components-select-control__input[multiple]
+      height: auto
+      & + .components-input-control__suffix
+        display: none

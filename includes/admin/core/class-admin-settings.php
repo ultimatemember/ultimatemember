@@ -91,7 +91,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 * AJAX handler for the AJAX update fields
 		 */
 		public function same_page_update_ajax() {
-			UM()->admin()->check_ajax_nonce();
+			UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 			if ( empty( $_POST['cb_func'] ) ) {
 				wp_send_json_error( __( 'Wrong callback', 'ultimate-member' ) );
@@ -241,7 +241,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 * AJAX callback for getting the pages list
 		 */
 		function get_pages_list() {
-			UM()->admin()->check_ajax_nonce();
+			UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 			// we will pass post IDs and titles to this array
 			$return = array();

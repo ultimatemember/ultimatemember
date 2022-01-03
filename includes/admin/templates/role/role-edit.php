@@ -44,7 +44,7 @@ do_action( 'um_roles_add_meta_boxes', 'um_role_meta' );
  */
 do_action( 'um_roles_add_meta_boxes_um_role_meta' );
 
-$data = UM()->admin_menu()->um_roles_data;
+$data = UM()->admin()->menu()->um_roles_data;
 
 $option = array();
 global $wp_roles;
@@ -108,9 +108,9 @@ $screen_id = $current_screen->id; ?>
 		}
 	}
 
-	if ( ! empty( UM()->admin_menu()->um_roles_error ) ) { ?>
+	if ( ! empty( UM()->admin()->menu()->um_roles_error ) ) { ?>
 		<div id="message" class="error fade">
-			<p><?php echo UM()->admin_menu()->um_roles_error; ?></p>
+			<p><?php echo UM()->admin()->menu()->um_roles_error; ?></p>
 		</div>
 	<?php } ?>
 

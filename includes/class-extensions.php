@@ -38,6 +38,8 @@ if ( ! class_exists( 'um\Extensions' ) ) {
 
 		/**
 		 * Extensions constructor.
+		 *
+		 * @deprecated 3.0
 		 */
 		function __construct() {
 

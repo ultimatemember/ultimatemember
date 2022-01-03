@@ -1,0 +1,52 @@
+@import "selectors"
+@import "mixins"
+@import "colors"
+
+##{$prefix}roles
+  .row-actions
+    .reset
+      a
+        color: #{$delete-link}
+        &:hover
+          color: red
+
+
+.wp-list-table.roles
+  .manage-column
+    &.column-title
+      width: 200px
+    &.column-count
+      width: 150px
+    &.column-core
+      width: 150px
+  .column-core,
+  .column-users,
+  .column-admin_access,
+  .column-priority
+    width: 15%
+    text-align: center !important
+  td.column-count
+    font-size: 14px
+
+@media screen and (max-width: 782px)
+  .wp-list-table.roles
+    .column-core,
+    .column-users,
+    .column-admin_access,
+    .column-priority
+      text-align: left !important
+
+##{$prefix}admin-form-wp-capabilities
+  .#{$prefix}metadata-line
+    th
+      width: auto
+    td
+      width: 20px
+
+#um_edit_role
+  #titlewrap > span
+    width: 40px
+    font-size: 24px
+    float: left
+    display: block
+    line-height: 37px

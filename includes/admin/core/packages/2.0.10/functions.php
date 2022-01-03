@@ -1,6 +1,6 @@
 <?php
 function um_upgrade_styles2010() {
-	UM()->admin()->check_ajax_nonce();
+	UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 	um_maybe_unset_time_limit();
 
@@ -10,7 +10,7 @@ function um_upgrade_styles2010() {
 
 
 function um_upgrade_cache2010() {
-	UM()->admin()->check_ajax_nonce();
+	UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 	um_maybe_unset_time_limit();
 

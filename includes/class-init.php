@@ -251,13 +251,13 @@ if ( ! class_exists( 'UM' ) ) {
 		 *
 		 * @since 3.0
 		 *
-		 * @return um\admin\Install()
+		 * @return um\common\Install()
 		 */
 		function install() {
-			if ( empty( $this->classes['um\admin\install'] ) ) {
-				$this->classes['um\admin\install'] = new um\admin\Install();
+			if ( empty( $this->classes['um\common\install'] ) ) {
+				$this->classes['um\common\install'] = new um\common\Install();
 			}
-			return $this->classes['um\admin\install'];
+			return $this->classes['um\common\install'];
 		}
 
 
@@ -556,26 +556,36 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->access();
 
 			if ( $this->is_request( 'ajax' ) ) {
+				$this->ajax()->includes();
+			} elseif ( $this->is_request( 'admin' ) ) {
+				$this->admin()->includes();
+			} elseif ( $this->is_request( 'frontend' ) ) {
+				$this->frontend()->includes();
+			}
+
+
+
+			if ( $this->is_request( 'ajax' ) ) {
 				$this->admin();
 				$this->ajax_init();
 				$this->admin_ajax_hooks();
-				$this->metabox();
+				//$this->metabox();
 				$this->admin_upgrade()->init_packages_ajax_handlers();
 				$this->admin_gdpr();
-				$this->columns();
-				$this->admin()->notices();
+				//$this->columns();
+				//$this->admin()->notices();
 				$this->admin_navmenu();
 				$this->plugin_updater();
 				$this->theme_updater();
 			} elseif ( $this->is_request( 'admin' ) ) {
 				$this->admin();
-				$this->admin_menu();
+				//$this->admin_menu();
 				$this->admin_upgrade();
 				$this->admin_settings();
-				$this->columns();
+				//$this->columns();
 				$this->admin_enqueue();
-				$this->metabox();
-				$this->admin()->notices();
+				//$this->metabox();
+				//$this->admin()->notices();
 				$this->users();
 				$this->dragdrop();
 				$this->admin_gdpr();
@@ -615,6 +625,52 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->multisite();
 			}
 
+		}
+
+
+
+		/**
+		 * Getting the AJAX class instance
+		 *
+		 * @since 3.0
+		 *
+		 * @return um\ajax\Common()
+		 */
+		function ajax() {
+			if ( empty( $this->classes['um\ajax\common'] ) ) {
+				$this->classes['um\ajax\common'] = new um\ajax\Common();
+			}
+			return $this->classes['um\ajax\common'];
+		}
+
+
+		/**
+		 * Getting the Frontend class instance
+		 *
+		 * @since 3.0
+		 *
+		 * @return um\frontend\Common()
+		 */
+		function frontend() {
+			if ( empty( $this->classes['um\frontend\common'] ) ) {
+				$this->classes['um\frontend\common'] = new um\frontend\Common();
+			}
+			return $this->classes['um\frontend\common'];
+		}
+
+
+		/**
+		 * Getting the Admin class instance
+		 *
+		 * @since 2.0 but changed structure in 3.0
+		 *
+		 * @return um\admin\Common()
+		 */
+		function admin() {
+			if ( empty( $this->classes['um\admin\common'] ) ) {
+				$this->classes['um\admin\common'] = new um\admin\Common();
+			}
+			return $this->classes['um\admin\common'];
 		}
 
 
@@ -776,26 +832,13 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
-		 * @return um\admin\Admin()
-		 */
-		function admin() {
-			if ( empty( $this->classes['admin'] ) ) {
-				$this->classes['admin'] = new um\admin\Admin();
-			}
-			return $this->classes['admin'];
-		}
-
-
-		/**
-		 * @since 2.0
+		 * @deprecated 3.0
 		 *
-		 * @return um\admin\core\Admin_Menu()
+		 * @return um\admin\Menu()
 		 */
 		function admin_menu() {
-			if ( empty( $this->classes['admin_menu'] ) ) {
-				$this->classes['admin_menu'] = new um\admin\core\Admin_Menu();
-			}
-			return $this->classes['admin_menu'];
+			_deprecated_function( __METHOD__, '3.0', 'UM()->admin()->menu()' );
+			return $this->admin()->menu();
 		}
 
 
@@ -884,13 +927,13 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
-		 * @return um\admin\core\Admin_Columns()
+		 * @deprecated 3.0
+		 *
+		 * @return um\admin\Columns()
 		 */
 		function columns() {
-			if ( empty( $this->classes['admin_columns'] ) ) {
-				$this->classes['admin_columns'] = new um\admin\core\Admin_Columns();
-			}
-			return $this->classes['admin_columns'];
+			_deprecated_function( __METHOD__, '3.0', 'UM()->admin()->columns()' );
+			return $this->admin()->columns();
 		}
 
 
@@ -910,13 +953,13 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
-		 * @return um\admin\core\Admin_Metabox()
+		 * @deprecated 3.0
+		 *
+		 * @return um\admin\Metabox()
 		 */
 		function metabox() {
-			if ( empty( $this->classes['admin_metabox'] ) ) {
-				$this->classes['admin_metabox'] = new um\admin\core\Admin_Metabox();
-			}
-			return $this->classes['admin_metabox'];
+			_deprecated_function( __METHOD__, '3.0', 'UM()->admin()->metabox()' );
+			return UM()->admin()->metabox();
 		}
 
 

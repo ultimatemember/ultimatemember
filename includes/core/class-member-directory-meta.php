@@ -440,7 +440,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 		 * Main Query function for getting members via AJAX
 		 */
 		function ajax_get_members() {
-			UM()->check_ajax_nonce();
+			UM()->ajax()->check_nonce( 'um-frontend-nonce' );
 
 			global $wpdb;
 

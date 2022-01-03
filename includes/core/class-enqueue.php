@@ -180,8 +180,8 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			}
 
 			$localize_data = apply_filters( 'um_enqueue_localize_data', array(
-				'max_upload_size'   => $max_upload_size,
-				'nonce'             => wp_create_nonce( "um-frontend-nonce" ),
+				'max_upload_size' => $max_upload_size,
+				'nonce'           => wp_create_nonce( 'um-frontend-nonce' ),
 			) );
 			wp_localize_script( 'um_scripts', 'um_scripts', $localize_data );
 

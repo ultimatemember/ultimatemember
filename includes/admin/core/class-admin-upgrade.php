@@ -121,8 +121,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 						font: 400 18px/1 dashicons;
 						speak: none;
 						margin: 0 8px 0 -2px;
-						-webkit-font-smoothing: antialiased;
-						-moz-osx-font-smoothing: grayscale;
 						vertical-align: top;
 					}
 				</style>
@@ -355,7 +353,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 
 
 		function ajax_run_package() {
-			UM()->admin()->check_ajax_nonce();
+			UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 			if ( empty( $_POST['pack'] ) ) {
 				exit('');
@@ -369,7 +367,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 
 
 		function ajax_get_packages() {
-			UM()->admin()->check_ajax_nonce();
+			UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 			$update_versions = $this->need_run_upgrades();
 			wp_send_json_success( array( 'packages' => $update_versions ) );

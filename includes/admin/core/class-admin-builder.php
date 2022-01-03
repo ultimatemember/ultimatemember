@@ -33,6 +33,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		}
 
 
+
+		function get_icons() {
+			UM()->ajax()->check_nonce( 'um-admin-nonce' );
+
+			$icons = file_get_contents( um_path . 'assets/v3/fonts/fontawesome/metadata/icons.json' );
+
+			wp_send_json_success( json_decode( $icons ) );
+		}
+
+
 		/**
 		 * Apply a filter to handle errors for field updating in backend
 		 *
@@ -189,7 +199,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 * @param $edit_array
 		 */
 		function add_conditional_support( $form_id, $field_args, $in_edit, $edit_array ) {
-			$metabox = UM()->metabox();
+			$metabox = UM()->admin()->metabox();
 
 			if ( isset( $field_args['conditional_support'] ) && $field_args['conditional_support'] == 0 ) {
 				return;
@@ -274,7 +284,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 * Update the builder area
 		 */
 		function update_builder() {
-			UM()->admin()->check_ajax_nonce();
+			UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
 				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
@@ -589,7 +599,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 *
 		 */
 		function update_field() {
-			UM()->admin()->check_ajax_nonce();
+			UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
 				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
@@ -753,13 +763,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 *
 		 */
 		function dynamic_modal_content() {
-			UM()->admin()->check_ajax_nonce();
+			UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
 			}
 
-			$metabox = UM()->metabox();
+			$metabox = UM()->admin()->metabox();
 
 			/**
 			 * @var $act_id
@@ -1242,7 +1252,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 *  Retrieves dropdown/multi-select options from a callback function
 		 */
 		function populate_dropdown_options() {
-			UM()->admin()->check_ajax_nonce();
+			UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
 				wp_send_json_error( __( 'This is not possible for security reasons.', 'ultimate-member' ) );

@@ -26,8 +26,29 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 			add_filter( 'query_vars', array( &$this, 'query_vars' ), 10, 1 );
 			add_filter( 'rewrite_rules_array', array( &$this, '_add_rewrite_rules' ), 10, 1 );
 
+			add_action( 'wp_insert_post', array( $this, 'flush_post_rewrite_rules' ), 10, 3 );
+
 			add_action( 'template_redirect', array( &$this, 'redirect_author_page' ), 9999 );
 			add_action( 'template_redirect', array( &$this, 'locate_user_profile' ), 9999 );
+		}
+
+
+		/**
+		 * Reset rewrite rules if predefined page has been updated
+		 *
+		 * @since 3.0
+		 *
+		 * @param int $post_ID
+		 * @param \WP_Post $post
+		 * @param bool $update
+		 */
+		function flush_post_rewrite_rules( $post_ID, $post, $update ) {
+			foreach ( UM()->config()->get( 'predefined_pages' ) as $slug => $data ) {
+				if ( um_is_predefined_page( $slug, $post ) ) {
+					$this->reset_rules();
+					return;
+				}
+			}
 		}
 
 

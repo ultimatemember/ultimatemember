@@ -27,7 +27,7 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 		 * Update order of fields
 		 */
 		public function update_order() {
-			UM()->admin()->check_ajax_nonce();
+			UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
 				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );

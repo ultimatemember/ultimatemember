@@ -191,7 +191,7 @@ function um_polylang_get_status_html( $template, $code ) {
  *
  * @return array
  */
-function um_admin_settings_change_subject_field( $section_fields, $email_key ) {
+function um_admin_settings_change_subject_field_polylang( $section_fields, $email_key ) {
 	$language_codes = um_polylang_get_languages_codes();
 
 	if ( $language_codes['default'] === $language_codes['current'] ) {
@@ -207,7 +207,7 @@ function um_admin_settings_change_subject_field( $section_fields, $email_key ) {
 
 	return $section_fields;
 }
-add_filter( 'um_admin_settings_email_section_fields', 'um_admin_settings_change_subject_field', 10, 2 );
+add_filter( 'um_admin_settings_email_section_fields', 'um_admin_settings_change_subject_field_polylang', 10, 2 );
 
 
 /**

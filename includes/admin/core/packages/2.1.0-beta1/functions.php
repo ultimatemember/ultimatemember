@@ -2,7 +2,7 @@
 
 
 function um_upgrade_metadata210beta1() {
-	UM()->admin()->check_ajax_nonce();
+	UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 	um_maybe_unset_time_limit();
 
@@ -13,7 +13,7 @@ function um_upgrade_metadata210beta1() {
 
 
 function um_upgrade_memberdir210beta1() {
-	UM()->admin()->check_ajax_nonce();
+	UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 	um_maybe_unset_time_limit();
 

@@ -2388,7 +2388,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * Main Query function for getting members via AJAX
 		 */
 		function ajax_get_members() {
-			UM()->check_ajax_nonce();
+			UM()->ajax()->check_nonce( 'um-frontend-nonce' );
 
 			global $wpdb;
 
@@ -2633,7 +2633,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * @version 2.1.12
 		 */
 		function default_filter_settings() {
-			UM()->admin()->check_ajax_nonce();
+			UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 			// we can't use function "sanitize_key" because it changes uppercase to lowercase
 			$filter_key = sanitize_text_field( $_REQUEST['key'] );

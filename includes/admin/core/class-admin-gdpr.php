@@ -40,7 +40,7 @@ if ( ! class_exists( 'um\admin\core\Admin_GDPR' ) ) {
 			add_meta_box(
 				"um-admin-form-register_gdpr",
 				__( 'Privacy Policy', 'ultimate-member' ),
-				array( UM()->metabox(), 'load_metabox_form' ),
+				array( UM()->admin()->metabox(), 'load_metabox_form' ),
 				'um_form',
 				'side',
 				'default'

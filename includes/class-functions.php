@@ -181,15 +181,14 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		/**
 		 * Check frontend nonce
 		 *
+		 * @deprecated 3.0
+		 *
 		 * @param bool $action
 		 */
 		function check_ajax_nonce( $action = false ) {
-			$nonce = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( $_REQUEST['nonce'] ) : '';
+			_deprecated_function( __METHOD__, '3.0', 'UM()->ajax()->check_nonce()' );
 			$action = empty( $action ) ? 'um-frontend-nonce' : $action;
-
-			if ( ! wp_verify_nonce( $nonce, $action ) ) {
-				wp_send_json_error( esc_js( __( 'Wrong Nonce', 'ultimate-member' ) ) );
-			}
+			UM()->ajax()->check_nonce( $action );
 		}
 
 
@@ -249,7 +248,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 			ob_start(); ?>
 
-			<span class="um_tooltip dashicons dashicons-editor-help" title="<?php echo $tip ?>"></span>
+			<span class="um-tooltip dashicons dashicons-editor-help" title="<?php echo $tip ?>"></span>
 
 			<?php if ( $echo ) {
 				ob_get_flush();

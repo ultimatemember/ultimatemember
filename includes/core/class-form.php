@@ -57,7 +57,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 *
 		 */
 		public function ajax_muted_action() {
-			UM()->check_ajax_nonce();
+			UM()->ajax()->check_nonce( 'um-frontend-nonce' );
 
 			/**
 			 * @var $user_id
@@ -108,7 +108,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 *
 		 */
 		public function ajax_select_options() {
-			UM()->check_ajax_nonce();
+			UM()->ajax()->check_nonce( 'um-frontend-nonce' );
 
 			$arr_options           = array();
 			$arr_options['status'] = 'success';

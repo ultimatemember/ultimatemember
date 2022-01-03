@@ -103,7 +103,7 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 		 *
 		 */
 		function load_posts() {
-			UM()->check_ajax_nonce();
+			UM()->ajax()->check_nonce( 'um-frontend-nonce' );
 
 			$author = ! empty( $_POST['author'] ) ? absint( $_POST['author'] ) : get_current_user_id();
 			$page = ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 0;
@@ -151,7 +151,7 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 		 * Dynamic load of comments
 		 */
 		function load_comments() {
-			UM()->check_ajax_nonce();
+			UM()->ajax()->check_nonce( 'um-frontend-nonce' );
 
 			$user_id = ! empty( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : get_current_user_id();
 			$page = ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 0;

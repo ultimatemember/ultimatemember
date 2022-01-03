@@ -22,7 +22,7 @@ function um_upgrade_get_slug2117( $tab ) {
 
 
 function um_upgrade_profile_tabs2117() {
-	UM()->admin()->check_ajax_nonce();
+	UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 	um_maybe_unset_time_limit();
 

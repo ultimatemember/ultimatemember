@@ -2,7 +2,7 @@
 
 
 function um_upgrade_users_count213beta3() {
-	UM()->admin()->check_ajax_nonce();
+	UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 	um_maybe_unset_time_limit();
 
@@ -15,7 +15,7 @@ function um_upgrade_users_count213beta3() {
 
 
 function um_upgrade_metadata_per_user213beta3() {
-	UM()->admin()->check_ajax_nonce();
+	UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 	um_maybe_unset_time_limit();
 
@@ -120,7 +120,7 @@ function um_upgrade_metadata_per_user213beta3() {
 
 
 function um_upgrade_metatable213beta3() {
-	UM()->admin()->check_ajax_nonce();
+	UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 	um_maybe_unset_time_limit();
 

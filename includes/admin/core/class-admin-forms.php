@@ -552,7 +552,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$html .= '</span></span>';
 
-			UM()->metabox()->init_icon = true;
+			UM()->admin()->metabox()->init_icon = true;
 
 			return $html;
 		}
