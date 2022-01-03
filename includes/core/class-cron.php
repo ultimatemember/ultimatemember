@@ -116,5 +116,12 @@ if ( ! class_exists( 'um\core\Cron' ) ) {
 			}
 		}
 
+
+		public function unschedule_events() {
+			wp_clear_scheduled_hook( 'um_weekly_scheduled_events' );
+			wp_clear_scheduled_hook( 'um_daily_scheduled_events' );
+			wp_clear_scheduled_hook( 'um_twicedaily_scheduled_events' );
+			wp_clear_scheduled_hook( 'um_hourly_scheduled_events' );
+		}
 	}
 }
