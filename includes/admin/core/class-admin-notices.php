@@ -532,7 +532,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				</p>
 
 				<p>
-					<a href="<?php echo esc_url( $url ) ?>" class="button button-primary"><?php _e( 'Upgrade Now', 'ultimate-member' ) ?></a>
+					<a href="<?php echo esc_url( $url ) ?>" class="button button-primary"><?php _e( 'Visit Upgrade Page', 'ultimate-member' ) ?></a>
 					&nbsp;
 				</p>
 
