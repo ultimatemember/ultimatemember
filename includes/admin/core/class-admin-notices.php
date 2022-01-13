@@ -426,6 +426,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					$messages[0]['content'] = __( 'The form has been duplicated successfully.', 'ultimate-member' );
 					break;
 
+				case 'settings_updated':
+					$messages[0]['content'] = __( 'Settings have been saved successfully.', 'ultimate-member' );
+					break;
+
 				case 'user_updated':
 					$messages[0]['content'] = __( 'User has been updated.', 'ultimate-member' );
 					break;
