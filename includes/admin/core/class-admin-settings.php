@@ -1810,39 +1810,32 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 */
 		public function sorting_licenses_options( $settings ) {
 			//sorting  licenses
-			if ( empty( $settings['licenses']['fields'] ) ) {
-				return $settings;
+			if ( ! empty( $settings['licenses']['fields'] ) ) {
+				$licenses = $settings['licenses']['fields'];
+				@uasort( $licenses, function( $a, $b ) {
+					return strnatcasecmp( $a['label'], $b['label'] );
+				} );
+				$settings['licenses']['fields'] = $licenses;
 			}
 
-			$licenses = $settings['licenses']['fields'];
-			@uasort( $licenses, function( $a, $b ) {
-				return strnatcasecmp( $a['label'], $b['label'] );
-			} );
-			$settings['licenses']['fields'] = $licenses;
+			//sorting extensions by the title
+			if ( ! empty( $settings['extensions']['sections'] ) ) {
+				$extensions = $settings['extensions']['sections'];
 
-			//sorting extensions
-			if ( empty( $settings['extensions']['sections'] ) ) {
-				return $settings;
-			}
-
-			$extensions = $settings['extensions']['sections'];
-			@uasort( $extensions, function( $a, $b ) {
-				return strnatcasecmp( $a['title'], $b['title'] );
-			} );
-
-			$keys = array_keys( $extensions );
-			if ( $keys[0] !== '' ) {
-				$new_key = strtolower( str_replace( ' ', '_', $extensions['']['title'] ) );
-				$temp = $extensions[''];
-				$extensions[ $new_key ] = $temp;
-				$extensions[''] = $extensions[ $keys[0] ];
-				unset( $extensions[ $keys[0] ] );
 				@uasort( $extensions, function( $a, $b ) {
 					return strnatcasecmp( $a['title'], $b['title'] );
 				} );
-			}
 
-			$settings['extensions']['sections'] = $extensions;
+				$keys = array_keys( $extensions );
+				$temp = array(
+					'' => $extensions[ $keys[0] ],
+				);
+
+				unset( $extensions[ $keys[0] ] );
+				$extensions = $temp + $extensions;
+
+				$settings['extensions']['sections'] = $extensions;
+			}
 
 			return $settings;
 		}
