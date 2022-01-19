@@ -2943,6 +2943,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Activate', 'ultimate-member' ) ?>" />
 									<?php } else { ?>
 										<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Re-Activate', 'ultimate-member' ) ?>" />
+										<input type="button" class="button um_license_deactivate" id="<?php echo esc_attr( $field_data['id'] ) ?>_deactivate" value="<?php esc_attr_e( 'Clear License',  'ultimate-member' ) ?>"/>
 									<?php }
 
 									if ( ! empty( $messages ) ) {
