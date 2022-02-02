@@ -11,7 +11,7 @@ function um_submit_form_errors_hook__blockedemails( $args ) {
 	if ( ! $emails ) {
 		return;
 	}
-
+	$emails = strtolower( $emails );
 	$emails = array_map( 'rtrim', explode( "\n", $emails ) );
 
 	if ( isset( $args['user_email'] ) && is_email( $args['user_email'] ) ) {
@@ -19,7 +19,7 @@ function um_submit_form_errors_hook__blockedemails( $args ) {
 		$domain = explode( '@', $args['user_email'] );
 		$check_domain = str_replace( $domain[0], '*', $args['user_email'] );
 
-		if ( in_array( $args['user_email'], $emails ) ) {
+		if ( in_array( strtolower( $args['user_email'] ), $emails ) ) {
 			exit( wp_redirect( esc_url( add_query_arg( 'err', 'blocked_email' ) ) ) );
 		}
 
@@ -86,11 +86,12 @@ function um_submit_form_errors_hook__blockedwords( $args ) {
 	$mode = $args['mode'];
 	$fields = unserialize( $args['custom_fields'] );
 
+	$words = strtolower( $words );
 	$words = array_map( 'rtrim', explode( "\n", $words ) );
 	if ( ! empty( $fields ) && is_array( $fields ) ) {
 		foreach ( $fields as $key => $array ) {
 			if ( isset( $array['validate'] ) && in_array( $array['validate'], array( 'unique_username', 'unique_email', 'unique_username_or_email' ) ) ) {
-				if ( ! UM()->form()->has_error( $key ) && isset( $args[ $key ] ) && in_array( $args[ $key ], $words ) ) {
+				if ( ! UM()->form()->has_error( $key ) && isset( $args[ $key ] ) && in_array( strtolower( $args[ $key ] ), $words ) ) {
 					UM()->form()->add_error( $key, __( 'You are not allowed to use this word as your username.', 'ultimate-member' ) );
 				}
 			}
