@@ -20,10 +20,13 @@
 				if ( !self.$menu.length ) {
 					self.$menu = $('div.um-new-dropdown[data-element="' + self.data.element + '"]').first();
 				}
+
 				self.$dropdown = self.$menu.clone();
 				self.$dropdown.on('click', 'li a', self.itemHandler); /* add the handler for menu items */
 				$(window).on('resize', self.updatePosition); /* update the position on window resize */
-				$(document.body).append(self.$dropdown);
+
+				var parent = '' !== self.data.parent ? self.data.parent : document.body;
+				$(parent).append(self.$dropdown);
 
 				/* trigger event */
 				self.$element.trigger('um_new_dropdown_render', {
@@ -59,11 +62,20 @@
 			},
 
 			calculatePosition: function () {
-				var offset = self.$element.offset(),
-					rect = self.$element.get(0).getBoundingClientRect(),
+				var rect = self.$element.get(0).getBoundingClientRect(),
 					height = self.$dropdown.innerHeight() || 150,
 					width = self.data.width || 150,
 					place = '';
+
+				var offset;
+				if ( '' !== self.data.parent ) {
+					offset = self.$element.offset();
+				} else {
+
+				}
+
+				var base_width = '' !== self.data.parent ? $( self.data.parent )[0].offsetWidth : window.innerWidth;
+				var base_height = '' !== self.data.parent ? $( self.data.parent )[0].offsetHeight : window.innerHeight;
 
 				var css = {
 					position: 'absolute',
@@ -71,7 +83,7 @@
 				};
 
 				/* vertical position */
-				if ( window.innerHeight - rect.bottom > height ) {
+				if ( base_height - rect.bottom > height ) {
 					css.top = offset.top + rect.height + 'px';
 					place += 'bottom';
 				} else {
@@ -80,7 +92,7 @@
 				}
 
 				/* horisontal position */
-				if ( offset.left > width || offset.left > window.innerWidth / 2 ) {
+				if ( offset.left > width || offset.left > base_width / 2 ) {
 					css.left = offset.left + rect.width - width + 'px';
 					place += '-left';
 				} else {
