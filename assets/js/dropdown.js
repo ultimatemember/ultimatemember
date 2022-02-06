@@ -22,7 +22,7 @@
 				}
 
 				self.$dropdown = self.$menu.clone();
-				self.$dropdown.on('click', 'li a', self.itemHandler); /* add the handler for menu items */
+				self.$dropdown.on('click', 'li a', self.itemHandler).attr('data-cloned', '1'); /* add the handler for menu items */
 				$(window).on('resize', self.updatePosition); /* update the position on window resize */
 
 				var parent = '' !== self.data.parent ? self.data.parent : document.body;
@@ -54,8 +54,11 @@
 			},
 
 			hideAll: function () {
-				self.hide();
-				$('body > div.um-new-dropdown').remove();
+				if ( self.$element.data('um-new-dropdown-show') ) {
+					self.hide();
+				}
+
+				$( 'div.um-new-dropdown[data-cloned="1"]' ).remove();
 				$('.um-new-dropdown-shown').removeClass('um-new-dropdown-shown').data('um-new-dropdown-show', false);
 
 				return self;
@@ -69,9 +72,15 @@
 
 				var offset;
 				if ( '' !== self.data.parent ) {
-					offset = self.$element.offset();
-				} else {
+					var parentPos = $( self.data.parent ).offset();
+					var childPos = self.$element.offset();
 
+					offset = {
+						top: childPos.top - parentPos.top,
+						left: childPos.left - parentPos.left
+					};
+				} else {
+					offset = self.$element.offset();
 				}
 
 				var base_width = '' !== self.data.parent ? $( self.data.parent )[0].offsetWidth : window.innerWidth;
@@ -135,10 +144,12 @@
 				self.$menu.find('li a[class="' + attrClass + '"]').trigger('click');
 
 				/* hide dropdown */
-				self.hide();
+				if ( self.$element.data('um-new-dropdown-show') ) {
+					self.hide();
+				}
 			},
 
-			triggerHandler: function (e) {
+			triggerHandler: function(e) {
 				e.stopPropagation();
 
 				self.$element = $(e.currentTarget);
@@ -151,26 +162,41 @@
 			}
 		};
 
+		// hidden dropdown menu block generated via PHP. Is used for cloning when 'action' on the 'link'
 		self.$menu = $(element);
 
+		// 'link' data
 		self.data = self.$menu.data();
 
+		// base 'link' which we use for 'action' and show a clone of the hidden dropdown
 		self.$element = self.$menu.closest(self.data.element);
-		if ( !self.$element.length ) {
-			self.$element = $(self.data.element).first();
+		if ( ! self.$element.length ) {
+			self.$element = $( self.data.element ).first();
 		}
 
 		self.$dropdown = $(document.body).children('div[data-element="' + self.data.element + '"]');
 
 		if ( typeof self.data.initted === 'undefined' ) {
+			// single init based on 'initted' data and add 'action' handler for the 'link'
 			self.$menu.data('initted', true);
-			$(document.body).on(self.data.trigger, self.data.element, self.triggerHandler);
+			self.data = self.$menu.data();
+
+			// screenTriggers is used to not duplicate the triggers for more than 1 element on the page
+			if ( typeof um_dropdownMenu.screenTriggers === 'undefined' ) {
+				um_dropdownMenu.screenTriggers = {};
+			}
+
+			if ( um_dropdownMenu.screenTriggers[ self.data.element ] !== self.data.trigger ) {
+				um_dropdownMenu.screenTriggers[ self.data.element ] = self.data.trigger;
+				$(document.body).on( self.data.trigger, self.data.element, self.triggerHandler );
+			}
 		}
 
 		if ( typeof um_dropdownMenu.globalHandlersInitted === 'undefined' ) {
 			um_dropdownMenu.globalHandlersInitted = true;
-			$(document.body).on('click', function (e) {
-				if ( !$(e.target).closest('.um-new-dropdown').length ) {
+			//var globalParent = '' !== self.data.parent ? self.data.parent : document.body;
+			$( document.body ).on('click', function(e) {
+				if ( ! $( e.target ).closest('.um-new-dropdown').length ) {
 					self.hideAll();
 				}
 			});
