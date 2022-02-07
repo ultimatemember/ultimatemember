@@ -4706,7 +4706,7 @@ msgid "New User Notification"
 msgstr ""
 
 #: includes/class-config.php:485
-msgid "Whether to receive notification when a new user account is approved"
+msgid "Whether to receive notification when a new user account is created"
 msgstr ""
 
 #: includes/class-config.php:491
