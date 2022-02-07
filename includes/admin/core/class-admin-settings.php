@@ -1280,13 +1280,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									array(
 										'id'      => 'blocked_emails',
 										'type'    => 'textarea',
-										'label'   => __( 'Blocked Email Addresses', 'ultimate-member' ),
+										'label'   => __( 'Blocked Email Addresses (Enter one email per line)', 'ultimate-member' ),
 										'tooltip' => __( 'This will block the specified e-mail addresses from being able to sign up or sign in to your site. To block an entire domain, use something like *@domain.com', 'ultimate-member' ),
 									),
 									array(
 										'id'      => 'blocked_words',
 										'type'    => 'textarea',
-										'label'   => __( 'Blacklist Words', 'ultimate-member' ),
+										'label'   => __( 'Blacklist Words (Enter one word per line)', 'ultimate-member' ),
 										'tooltip' => __( 'This option lets you specify blacklist of words to prevent anyone from signing up with such a word as their username', 'ultimate-member' ),
 									),
 								),

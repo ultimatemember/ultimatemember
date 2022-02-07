@@ -6,7 +6,7 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
-Tested up to: 5.8
+Tested up to: 5.9
 Stable tag: 2.3.0
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -155,7 +155,18 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
-= 2.3.1: January xx, 2022 =
+= 2.3.1: February 9, 2022 =
+
+* Enhancements:
+
+  - Added: wp-admin notice on the Settings page when settings have been changed (#963)
+  - Added: WP Blocks restriction settings for the blocks (templates/nav-menu) on the FSE pages
+
+* Bugfixes:
+
+  - Fixed: "Can user edit this field?" fields' option for the file/image upload field-types (#958)
+  - Fixed: Using uppercase symbols in the "Blocked Email Addresses" and "Blacklist Words" blacklists settings (#962)
+  - Fixed: Some typos in the labels (#975)
 
 = 2.3.0: December 20, 2021 =
 
