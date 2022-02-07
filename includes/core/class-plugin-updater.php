@@ -19,15 +19,8 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 		 * Plugin_Updater constructor.
 		 */
 		function __construct() {
-			//create cron event
-			if ( ! wp_next_scheduled( 'um_check_extensions_licenses' ) ) {
-				wp_schedule_event( time() + ( 24*60*60 ), 'daily', 'um_check_extensions_licenses' );
-			}
-
-			register_deactivation_hook( um_plugin, array( &$this, 'um_plugin_updater_deactivation_hook' ) );
-
 			//cron request to UM()->store_url;
-			add_action( 'um_check_extensions_licenses', array( &$this, 'um_checklicenses' ) );
+			add_action( 'um_daily_scheduled_events', array( &$this, 'um_checklicenses' ) );
 			
 			// clean update plugin cache
 			add_action( 'upgrader_process_complete', array( &$this, 'clean_update_plugins_cache' ), 20, 2 );
@@ -245,14 +238,6 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 			}
 
 			return $active_um_plugins;
-		}
-
-
-		/**
-		 * Remove CRON events on deactivation hook
-		 */
-		function um_plugin_updater_deactivation_hook() {
-			wp_clear_scheduled_hook( 'um_check_extensions_licenses' );
 		}
 
 

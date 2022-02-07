@@ -213,6 +213,8 @@ if ( ! class_exists( 'UM' ) ) {
 				//run activation
 				register_activation_hook( um_plugin, array( &$this, 'activation' ) );
 
+				register_deactivation_hook( um_plugin, array( &$this, 'deactivation' ) );
+
 				if ( is_multisite() && ! defined( 'DOING_AJAX' ) ) {
 					add_action( 'wp_loaded', array( $this, 'maybe_network_activation' ) );
 				}
@@ -451,6 +453,16 @@ if ( ! class_exists( 'UM' ) ) {
 			if ( is_multisite() ) {
 				update_network_option( get_current_network_id(), 'um_maybe_network_wide_activation', 1 );
 			}
+		}
+
+
+		/**
+		 * Plugin Deactivation
+		 *
+		 * @since 2.3
+		 */
+		function deactivation() {
+			$this->cron()->unschedule_events();
 		}
 
 

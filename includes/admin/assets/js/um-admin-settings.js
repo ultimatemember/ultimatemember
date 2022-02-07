@@ -1,10 +1,24 @@
 jQuery( document ).ready( function() {
+
+
 	/**
 	 * Licenses
 	 */
 	jQuery( document.body ).on( 'click', '.um_license_deactivate', function() {
 		jQuery(this).siblings('.um-option-field').val('');
-		jQuery(this).parents('form.um-settings-form').trigger('submit');
+		if ( jQuery(this).siblings('#submit').length ) {
+			// clear = true for passing the empty field value to the license form submission
+			jQuery(this).siblings('#submit').trigger('click',[ true ]);
+		} else {
+			jQuery(this).parents('form.um-settings-form').trigger('submit');
+		}
+	});
+
+
+	jQuery( document.body ).on( 'click', '.um-settings-form #submit', function( e, clear ) {
+		if ( ! clear && '' === jQuery(this).siblings('.um-option-field').val() ) {
+			return false;
+		}
 	});
 
 
