@@ -482,7 +482,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 					                   '{user_profile_link}<br /><br />' .
 					                   'Here is the submitted registration form:<br /><br />' .
 					                   '{submitted_registration}',
-					'description'   => __('Whether to receive notification when a new user account is approved','ultimate-member'),
+					'description'   => __('Whether to receive notification when a new user account is created','ultimate-member'),
 					'recipient'   => 'admin',
 					'default_active' => true
 				),
