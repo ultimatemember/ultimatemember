@@ -161,12 +161,20 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
   - Added: wp-admin notice on the Settings page when settings have been changed (#963)
   - Added: WP Blocks restriction settings for the blocks (templates/nav-menu) on the FSE pages
+  - Added: UM-specific query_var for UM additional Users_Query on users.php screen in wp-admin. `um_custom_user_query` = true
+  - Added: Ability for dropdown.js to use it inside parent wrapper (not only document.body)
+  - Changed: Using WP Cron schedules. Un-schedule events after plugin deactivation
+  - Removed: `um_check_extensions_licenses` and replaced it to `um_daily_scheduled_events` event
 
 * Bugfixes:
 
   - Fixed: "Can user edit this field?" fields' option for the file/image upload field-types (#958)
   - Fixed: Using uppercase symbols in the "Blocked Email Addresses" and "Blacklist Words" blacklists settings (#962)
+  - Fixed: PHP warning related to the Ultimate Member custom fields without type
   - Fixed: Some typos in the labels (#975)
+  - Fixed: UX issue with wrong text on the admin notice about upgrade
+  - Fixed: UX issue with Blacklist Words and Blocked Email settings labels. Added a small description about per line separation (#962)
+  - Fixed: Sorting the Extensions settings sections
 
 = 2.3.0: December 20, 2021 =
 
