@@ -217,6 +217,8 @@ if ( ! class_exists( 'UM' ) ) {
 					add_action( 'wp_loaded', array( $this->install(), 'maybe_network_activation' ) );
 				}
 
+				register_deactivation_hook( um_plugin, array( &$this, 'deactivation' ) );
+
 				// textdomain loading
 				$this->localize();
 
@@ -262,6 +264,16 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->classes['um\common\install'] = new um\common\Install();
 			}
 			return $this->classes['um\common\install'];
+		}
+
+
+		/**
+		 * Plugin Deactivation
+		 *
+		 * @since 2.3
+		 */
+		function deactivation() {
+			$this->cron()->unschedule_events();
 		}
 
 

@@ -1378,13 +1378,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									array(
 										'id'          => 'blocked_emails',
 										'type'        => 'textarea',
-										'label'       => __( 'Blocked Email Addresses', 'ultimate-member' ),
+										'label'       => __( 'Blocked Email Addresses (Enter one email per line)', 'ultimate-member' ),
 										'description' => __( 'This will block the specified e-mail addresses from being able to sign up or sign in to your site. To block an entire domain, use something like *@domain.com', 'ultimate-member' ),
 									),
 									array(
 										'id'          => 'blocked_words',
 										'type'        => 'textarea',
-										'label'       => __( 'Blacklist Words', 'ultimate-member' ),
+										'label'       => __( 'Blacklist Words (Enter one word per line)', 'ultimate-member' ),
 										'description' => __( 'This option lets you specify blacklist of words to prevent anyone from signing up with such a word as their username', 'ultimate-member' ),
 									),
 								),
@@ -2307,7 +2307,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				//redirect after save settings
 				$arg = array(
-					'page' => 'um_options',
+					'page'   => 'um_options',
+					'update' => 'settings_updated',
 				);
 
 				if ( ! empty( $_GET['tab'] ) ) {
@@ -3025,6 +3026,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Activate', 'ultimate-member' ) ?>" />
 									<?php } else { ?>
 										<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Re-Activate', 'ultimate-member' ) ?>" />
+										<input type="button" class="button um_license_deactivate" id="<?php echo esc_attr( $field_data['id'] ) ?>_deactivate" value="<?php esc_attr_e( 'Clear License',  'ultimate-member' ) ?>"/>
 									<?php }
 
 									if ( ! empty( $messages ) ) {

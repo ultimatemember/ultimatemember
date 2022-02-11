@@ -495,6 +495,10 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 					$messages[0]['content'] = __( 'The form has been duplicated successfully.', 'ultimate-member' );
 					break;
 
+				case 'settings_updated':
+					$messages[0]['content'] = __( 'Settings have been saved successfully.', 'ultimate-member' );
+					break;
+
 				case 'user_updated':
 					$messages[0]['content'] = __( 'User has been updated.', 'ultimate-member' );
 					break;
@@ -601,7 +605,7 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 				</p>
 
 				<p>
-					<a href="<?php echo esc_url( $url ) ?>" class="button button-primary"><?php _e( 'Upgrade Now', 'ultimate-member' ) ?></a>
+					<a href="<?php echo esc_url( $url ) ?>" class="button button-primary"><?php _e( 'Visit Upgrade Page', 'ultimate-member' ) ?></a>
 					&nbsp;
 				</p>
 

@@ -491,7 +491,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'key'            => 'notification_new_user',
 					'title'          => __( 'New User Notification', 'ultimate-member' ),
 					'subject'        => __( '[{site_name}] New user account', 'ultimate-member' ),
-					'description'    => __( 'Whether to receive notification when a new user account is approved', 'ultimate-member' ),
+					'description'    => __( 'Whether to receive notification when a new user account is created', 'ultimate-member' ),
 					'recipient'      => 'admin',
 					'default_active' => true,
 				),
