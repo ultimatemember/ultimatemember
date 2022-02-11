@@ -226,40 +226,41 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'in_fields'             => false,
 					'form_only'             => true,
 					'conditional_support'   => 0,
-					'icon'                  => 'um-faicon-pencil',
-					'col1'                  => array('_id','_background','_text_color','_padding','_margin','_border','_borderradius','_borderstyle','_bordercolor'),
+					'icon'                  => 'fas fa-pencil-alt',
+					// '_id' in the end for getting beautify columns in the edit form
+					'col1'                  => array('_background','_text_color','_padding','_margin','_border','_borderradius','_borderstyle','_bordercolor','_id'),
 					'col2'                  => array('_heading','_heading_text','_heading_background_color','_heading_text_color','_icon','_icon_color','_css_class'),
 				),
 
 				/*Group is the repeatable block with 1 pre-defined repeat*/
-				'group' => [
-					'name'      => __( 'Fields Group', 'ultimate-member' ),
-					'tabs'      => [
-						'general'       => [
-							'key'   => 'general',
-							'label' => __( 'General', 'ultimate-member' ),
-						],
-						'privacy'       => [
-							'key'   => 'privacy',
-							'label' => __( 'Privacy & Validation', 'ultimate-member' ),
-						],
-						'conditional'   => [
-							'key'   => 'conditional',
-							'label' => __( 'Conditional Logic', 'ultimate-member' ),
-						],
-					],
-					'col1'      => [ '_title', '_max_entries' ],
-					'col2'      => [ '_label', '_public', '_roles' ],
-					'validate'  => [
-						'_title'    => [
-							'mode'  => 'required',
-							'error' => 'You must provide a title',
-						],
-						'_metakey'  => [
-							'mode'  => 'unique',
-						],
-					],
-				],
+//				'group' => [
+//					'name'      => __( 'Fields Group', 'ultimate-member' ),
+//					'tabs'      => [
+//						'general'       => [
+//							'key'   => 'general',
+//							'label' => __( 'General', 'ultimate-member' ),
+//						],
+//						'privacy'       => [
+//							'key'   => 'privacy',
+//							'label' => __( 'Privacy & Validation', 'ultimate-member' ),
+//						],
+//						'conditional'   => [
+//							'key'   => 'conditional',
+//							'label' => __( 'Conditional Logic', 'ultimate-member' ),
+//						],
+//					],
+//					'col1'      => [ '_title', '_max_entries' ],
+//					'col2'      => [ '_label', '_public', '_roles' ],
+//					'validate'  => [
+//						'_title'    => [
+//							'mode'  => 'required',
+//							'error' => 'You must provide a title',
+//						],
+//						'_metakey'  => [
+//							'mode'  => 'unique',
+//						],
+//					],
+//				],
 
 				'text' => array(
 					'name' => 'Text Box',
@@ -868,7 +869,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'pretty_format' => 1,
 					'years' => 115,
 					'years_x' => 'past',
-					'icon' => 'um-faicon-calendar'
+					'icon' => 'far fa-calendar-alt'
 				),
 
 				'gender' => array(
@@ -904,7 +905,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable' => 1,
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
-					'icon' => 'um-faicon-facebook',
+					'icon' => 'fab fa-facebook-f',
 					'validate' => 'facebook_url',
 					'url_text' => 'Facebook',
 					'advanced' => 'social',
@@ -922,7 +923,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable' => 1,
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
-					'icon' => 'um-faicon-twitter',
+					'icon' => 'fab fa-twitter',
 					'validate' => 'twitter_url',
 					'url_text' => 'Twitter',
 					'advanced' => 'social',
@@ -940,7 +941,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable' => 1,
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
-					'icon' => 'um-faicon-linkedin',
+					'icon' => 'fab fa-linkedin-in',
 					'validate' => 'linkedin_url',
 					'url_text' => 'LinkedIn',
 					'advanced' => 'social',
@@ -958,7 +959,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable' => 1,
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
-					'icon' => 'um-faicon-google-plus',
+					'icon' => 'fab fa-google-plus-g',
 					'validate' => 'google_url',
 					'url_text' => 'Google+',
 					'advanced' => 'social',
@@ -976,7 +977,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable' => 1,
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
-					'icon' => 'um-faicon-instagram',
+					'icon' => 'fab fa-instagram',
 					'validate' => 'instagram_url',
 					'url_text' => 'Instagram',
 					'advanced' => 'social',
@@ -994,7 +995,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable' => 1,
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
-					'icon' => 'um-faicon-skype',
+					'icon' => 'fab fa-skype',
 					'validate' => 'skype',
 					'url_text' => __( 'Join chat', 'ultimate-member' ),
 				),
@@ -1009,7 +1010,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable' => 1,
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
-					'icon' => 'um-icon-ios-telephone',
+					'icon' => 'fas fa-phone-alt',
 					'validate' => 'phone_number',
 				),
 
@@ -1023,7 +1024,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable' => 1,
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
-					'icon' => 'um-icon-social-whatsapp',
+					'icon' => 'fab fa-whatsapp',
 					'validate' => 'phone_number',
 				),
 
@@ -1037,7 +1038,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable' => 1,
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
-					'icon' => 'um-faicon-paper-plane',
+					'icon' => 'fab fa-telegram-plane',
 					'validate' => 'telegram_url',
 					'url_text' => 'Telegram',
 					'match' => 'https://t.me/',
@@ -1054,6 +1055,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
 					'validate' => 'discord',
+					'icon'      => 'fab fa-discord',
 				),
 
 				'youtube' => array(
@@ -1066,7 +1068,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable' => 1,
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
-					'icon' => 'um-faicon-youtube',
+					'icon' => 'fab fa-youtube',
 					'validate' => 'youtube_url',
 					'url_text' => 'YouTube',
 					'advanced' => 'social',
@@ -1084,7 +1086,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable' => 1,
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
-					'icon' => 'um-faicon-soundcloud',
+					'icon' => 'fab fa-soundcloud',
 					'validate' => 'soundcloud_url',
 					'url_text' => 'SoundCloud',
 					'advanced' => 'social',
@@ -1102,7 +1104,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable' => 1,
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
-					'icon' => 'um-faicon-vk',
+					'icon' => 'fab fa-vk',
 					'validate' => 'vk_url',
 					'url_text' => 'VKontakte',
 					'advanced' => 'social',
@@ -1154,7 +1156,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'public' => 1,
 					'editable' => 1,
 					'validate' => 'phone_number',
-					'icon' => 'um-faicon-phone',
+					'icon' => 'fas fa-phone-alt',
 				),
 
 				'mobile_number' => array(
@@ -1166,7 +1168,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'public' => 1,
 					'editable' => 1,
 					'validate' => 'phone_number',
-					'icon' => 'um-faicon-mobile',
+					'icon' => 'fas fa-mobile-alt',
 				),
 
 				// private use ( not public list )
@@ -1177,7 +1179,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'type' => 'image',
 					'label' => __('Change your profile photo','ultimate-member'),
 					'upload_text' => __('Upload your photo here','ultimate-member'),
-					'icon' => 'um-faicon-camera',
+					'icon' => 'fas fa-camera',
 					'crop' => 1,
 					'max_size' => ( UM()->options()->get('profile_photo_max_size') ) ? UM()->options()->get('profile_photo_max_size') : 999999999,
 					'min_width' => str_replace('px','',UM()->options()->get('profile_photosize')),
@@ -1191,7 +1193,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'type' => 'image',
 					'label' => __('Change your cover photo','ultimate-member'),
 					'upload_text' => __('Upload profile cover here','ultimate-member'),
-					'icon' => 'um-faicon-picture-o',
+					'icon' => 'far fa-image',
 					'crop' => 2,
 					'max_size' => ( UM()->options()->get('cover_photo_max_size') ) ? UM()->options()->get('cover_photo_max_size') : 999999999,
 					'modal_size' => 'large',

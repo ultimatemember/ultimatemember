@@ -108,7 +108,7 @@ UM.dropdown = {
 					'top': '4px',
 					'left': 'auto',
 					'right': '-17px'
-				}).find('i').removeClass().addClass('um-icon-arrow-right-b');
+				}).find('i').removeClass().addClass('fas fa-caret-right');
 				break;
 
 			case 'rc':
@@ -126,7 +126,7 @@ UM.dropdown = {
 					'top': '4px',
 					'left': '-17px',
 					'right': 'auto'
-				}).find('i').removeClass().addClass('um-icon-arrow-left-b');
+				}).find('i').removeClass().addClass('fas fa-caret-left');
 				break;
 
 			case 'bc':
@@ -149,7 +149,7 @@ UM.dropdown = {
 					'top': '-17px',
 					'left': ($menu.width() / 2) - 12,
 					'right': 'auto'
-				}).find('i').removeClass().addClass('um-icon-arrow-up-b');
+				}).find('i').removeClass().addClass('fas fa-caret-up');
 				break;
 		}
 	},

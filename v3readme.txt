@@ -143,7 +143,15 @@
 
 `UM()->get_template()` use `um_get_template()` instead and for getting template content without echo use `um_get_template_html()` (remove since 1 year after official v3 release)
 `UM()->locate_template()` use `um_locate_template()` instead (remove since 1 year after official v3 release)
+`UM()->fonticons()` and class file. There is FA json file with all icons data.
 
+`um_dynamic_modal_content` AJAX action for getting modal content. Please make the separate handlers for displaying modal content.
+
+### Deprecated variables
+
+`UM()->is_filtering` is deprecated. It's not useful since 2.1.0 where the member directories functionality has been deprecated.
+
+$GLOBALS['ultimatemember'] is deprecated. We don't use global $ultimatemember since 2.0
 
 ### Deleted after deprecate
 

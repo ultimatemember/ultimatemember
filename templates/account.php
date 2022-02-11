@@ -109,7 +109,7 @@
 									</span>
 									<span class="um-account-title uimob800-hide"><?php echo esc_html( $info['title'] ); ?></span>
 									<span class="um-account-arrow uimob800-hide">
-										<i class="<?php if ( is_rtl() ) { ?>um-faicon-angle-left<?php } else { ?>um-faicon-angle-right<?php } ?>"></i>
+										<i class="<?php if ( is_rtl() ) { ?>fas fa-angle-left<?php } else { ?>fas fa-angle-right<?php } ?>"></i>
 									</span>
 								</a>
 							</li>
@@ -153,7 +153,7 @@
 							<a href="javascript:void(0);" data-tab="<?php echo esc_attr( $id ); ?>" class="<?php if ( $id == $current_tab ) echo 'current'; ?>">
 								<?php echo esc_html( $info['title'] ); ?>
 								<span class="ico"><i class="<?php echo esc_attr( $info['icon'] ); ?>"></i></span>
-								<span class="arr"><i class="um-faicon-angle-down"></i></span>
+								<span class="arr"><i class="fas fa-angle-down"></i></span>
 							</a>
 						</div>
 

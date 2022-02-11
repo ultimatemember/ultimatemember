@@ -425,23 +425,23 @@ function um_field_restore_default_value( $dom ) {
 			if ( $dom.find('input[type="checkbox"]:checked').length >= 1 ) {
 
 				$dom.find('input[type="checkbox"]:checked').prop('checked', false);
-				$dom.find('span.um-field-checkbox-state i').removeClass('um-icon-android-checkbox-outline');
-				$dom.find('span.um-field-checkbox-state i').addClass('um-icon-android-checkbox-outline-blank');
+				$dom.find('span.um-field-checkbox-state i').removeClass('far fa-check-square');
+				$dom.find('span.um-field-checkbox-state i').addClass('far fa-square');
 				$dom.find('.um-field-checkbox.active').removeClass('active');
 
 				if ( Array.isArray( field.value ) ) {
 					jQuery.each( field.value, function ( i, value ) {
 						var cbox_elem = $dom.find('input[type="checkbox"][value="' + value + '"]');
 						cbox_elem.attr('checked', true);
-						cbox_elem.closest('.um-field-checkbox').find('i').removeClass('um-icon-android-checkbox-outline-blank');
-						cbox_elem.closest('.um-field-checkbox').find('i').addClass('um-icon-android-checkbox-outline');
+						cbox_elem.closest('.um-field-checkbox').find('i').removeClass('far fa-square');
+						cbox_elem.closest('.um-field-checkbox').find('i').addClass('far fa-check-square');
 						cbox_elem.closest('.um-field-checkbox').addClass('active');
 					});
 				} else {
 					var cbox_elem = $dom.find('input[type="checkbox"][value="' + field.value + '"]');
 					cbox_elem.attr('checked', true);
-					cbox_elem.closest('.um-field-checkbox').find('i').removeClass('um-icon-android-checkbox-outline-blank');
-					cbox_elem.closest('.um-field-checkbox').find('i').addClass('um-icon-android-checkbox-outline');
+					cbox_elem.closest('.um-field-checkbox').find('i').removeClass('far fa-square');
+					cbox_elem.closest('.um-field-checkbox').find('i').addClass('far fa-check-square');
 					cbox_elem.closest('.um-field-checkbox').addClass('active');
 				}
 			}
@@ -455,14 +455,14 @@ function um_field_restore_default_value( $dom ) {
 
 					$dom.find('input[type="radio"]:checked').prop('checked', false);
 
-					$dom.find('span.um-field-radio-state i').removeClass('um-icon-android-radio-button-on');
-					$dom.find('span.um-field-radio-state i').addClass('um-icon-android-radio-button-off');
+					$dom.find('span.um-field-radio-state i').removeClass('far fa-dot-circle');
+					$dom.find('span.um-field-radio-state i').addClass('far fa-circle');
 					$dom.find('.um-field-radio.active').removeClass('active');
 
 					var radio_elem = $dom.find('input[type="radio"][value="' + field.value + '"]');
 					radio_elem.attr('checked', true);
-					radio_elem.closest('.um-field-radio').find('i').removeClass('um-icon-android-radio-button-off');
-					radio_elem.closest('.um-field-radio').find('i').addClass('um-icon-android-radio-button-on');
+					radio_elem.closest('.um-field-radio').find('i').removeClass('far fa-circle');
+					radio_elem.closest('.um-field-radio').find('i').addClass('far fa-dot-circle');
 					radio_elem.closest('.um-field-radio').addClass('active');
 
 				}, 100 );

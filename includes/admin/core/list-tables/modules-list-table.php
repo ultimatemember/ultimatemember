@@ -106,8 +106,12 @@ class UM_Modules_List_Table extends WP_List_Table {
 		$is_active = UM()->modules()->is_active( $item['key'] );
 		$is_disabled = UM()->modules()->is_disabled( $item['key'] );
 
-		$class = $is_disabled ? 'disabled ' : 'enabled ';
-		$class .= $is_active ? 'active' : 'inactive';
+		if ( ! UM()->is_legacy ) {
+			$class = $is_disabled ? 'disabled ' : 'enabled ';
+			$class .= $is_active ? 'active' : 'inactive';
+		} else {
+			$class = 'unavailable ';
+		}
 
 		echo sprintf( '<tr class="%s">', esc_attr( $class ) );
 		$this->single_row_columns( $item );
@@ -264,25 +268,27 @@ class UM_Modules_List_Table extends WP_List_Table {
 	 *
 	 * @return string
 	 */
-	function column_module( $item ) {
+	function column_module_title( $item ) {
 		$actions = array();
 
-		if ( UM()->modules()->can_activate( $item['key'] ) ) {
-			$actions['activate'] = '<a href="admin.php?page=um-modules&action=activate&slug=' . $item['key'] . '&_wpnonce=' . wp_create_nonce( 'um_module_activate' . $item['key'] . get_current_user_id() ) . '">' . __( 'Activate', 'ultimate-member' ). '</a>';
-		}
+		if ( ! UM()->is_legacy ) {
+			if ( UM()->modules()->can_activate( $item['key'] ) ) {
+				$actions['activate'] = '<a href="admin.php?page=um-modules&action=activate&slug=' . esc_attr( $item['key'] ) . '&_wpnonce=' . wp_create_nonce( 'um_module_activate' . $item['key'] . get_current_user_id() ) . '">' . __( 'Activate', 'ultimate-member' ). '</a>';
+			}
 
-		if ( UM()->modules()->can_deactivate( $item['key'] ) ) {
-			$actions['deactivate'] = '<a href="admin.php?page=um-modules&action=deactivate&slug=' . $item['key'] . '&_wpnonce=' . wp_create_nonce( 'um_module_deactivate' . $item['key'] . get_current_user_id() ) . '" class="delete">' . __( 'Deactivate', 'ultimate-member' ). '</a>';
-		}
+			if ( UM()->modules()->can_deactivate( $item['key'] ) ) {
+				$actions['deactivate'] = '<a href="admin.php?page=um-modules&action=deactivate&slug=' . esc_attr( $item['key'] ) . '&_wpnonce=' . wp_create_nonce( 'um_module_deactivate' . $item['key'] . get_current_user_id() ) . '" class="delete">' . __( 'Deactivate', 'ultimate-member' ). '</a>';
+			}
 
-		if ( UM()->modules()->can_flush( $item['key'] ) ) {
-			$actions['flush-data'] = '<a href="admin.php?page=um-modules&action=flush-data&slug=' . $item['key'] . '&_wpnonce=' . wp_create_nonce( 'um_module_flush' . $item['key'] . get_current_user_id() ) . '" class="delete">' . __( 'Flush data', 'ultimate-member' ). '</a>';
+			if ( UM()->modules()->can_flush( $item['key'] ) ) {
+				$actions['flush-data'] = '<a href="admin.php?page=um-modules&action=flush-data&slug=' . esc_attr( $item['key'] ) . '&_wpnonce=' . wp_create_nonce( 'um_module_flush' . $item['key'] . get_current_user_id() ) . '" class="delete">' . __( 'Flush data', 'ultimate-member' ). '</a>';
+			}
 		}
 
 		if ( file_exists( $item['path'] . DIRECTORY_SEPARATOR . 'icon.png' ) ) {
-			$column_content = sprintf('<div class="um-module-data-wrapper"><div class="um-module-icon-wrapper">%1$s</div><div class="um-module-title-wrapper">%2$s %3$s</div></div>', '<img class="um-module-icon" src="' . $item['url'] . '/icon.png" title="' . stripslashes( $item['title'] ) . '" />','<strong>' . stripslashes( $item['title'] ) . '</strong>', $this->row_actions( $actions ) );
+			$column_content = sprintf('<div class="um-module-data-wrapper"><div class="um-module-icon-wrapper">%1$s</div><div class="um-module-title-wrapper">%2$s %3$s</div></div>', '<img class="um-module-icon" src="' . esc_attr( $item['url'] ) . 'icon.png" title="' . esc_attr( $item['title'] ) . '" />','<strong>' . esc_html( $item['title'] ) . '</strong>', $this->row_actions( $actions ) );
 		} else {
-			$column_content = sprintf('<div class="um-module-data-wrapper um-module-no-icon"><div class="um-module-title-wrapper">%1$s %2$s</div></div>', '<strong>' . stripslashes( $item['title'] ) . '</strong>', $this->row_actions( $actions ) );
+			$column_content = sprintf('<div class="um-module-data-wrapper um-module-no-icon"><div class="um-module-title-wrapper">%1$s %2$s</div></div>', '<strong>' . esc_html( $item['title'] ) . '</strong>', $this->row_actions( $actions ) );
 		}
 
 		return $column_content;
@@ -296,24 +302,30 @@ $ListTable = new UM_Modules_List_Table( array(
 	'ajax'     => false,
 ) );
 
-$ListTable->set_bulk_actions( array(
-	'activate'   => __( 'Activate', 'ultimate-member' ),
-	'deactivate' => __( 'Deactivate', 'ultimate-member' ),
-	'flush-data' => __( 'Flush module data', 'ultimate-member' ),
-) );
+$bulk_actions = array();
+if ( ! UM()->is_legacy ) {
+	$bulk_actions = array(
+		'activate'   => __( 'Activate', 'ultimate-member' ),
+		'deactivate' => __( 'Deactivate', 'ultimate-member' ),
+		'flush-data' => __( 'Flush module data', 'ultimate-member' ),
+	);
+}
+
+$ListTable->set_bulk_actions( $bulk_actions );
 
 $ListTable->set_columns( array(
-	'module'      => __( 'Module', 'ultimate-member' ),
-	'description' => __( 'Description', 'ultimate-member' ),
+	'module_title' => __( 'Module', 'ultimate-member' ),
+	'description'  => __( 'Description', 'ultimate-member' ),
 ) );
-
 
 $ListTable->prepare_items(); ?>
 
 <div class="wrap">
-	<h2>
-		<?php _e( 'Ultimate Member - Modules', 'ultimate-member' ) ?>
-	</h2>
+	<h1 class="wp-heading-inline">
+		<?php esc_html_e( 'Ultimate Member - Modules', 'ultimate-member' ) ?>
+	</h1>
+
+	<hr class="wp-header-end">
 
 	<?php if ( ! empty( $_GET['msg'] ) ) {
 		switch( sanitize_key( $_GET['msg'] ) ) {

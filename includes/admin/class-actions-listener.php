@@ -37,7 +37,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 			add_action( 'load-ultimate-member_page_um-modules', array( &$this, 'handle_modules_actions' ) );
 			add_action( 'load-ultimate-member_page_um_options', array( &$this, 'handle_email_notifications_actions' ) );
 			add_action( 'load-ultimate-member_page_um_roles', array( &$this, 'handle_roles_actions' ) );
-			add_action( 'load-users.php', array( UM()->install(), 'set_default_user_status' ) );
+			//add_action( 'load-users.php', array( UM()->install(), 'set_default_user_status' ) ); for avoid the conflicts with \WP_Users_Query on the users.php page
 		}
 
 

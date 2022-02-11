@@ -29,7 +29,7 @@
 
 		<label class="um-field-checkbox">
 			<input type="checkbox" name="use_gdpr_agreement" value="1">
-			<span class="um-field-checkbox-state"><i class="um-icon-android-checkbox-outline-blank"></i></span>
+			<span class="um-field-checkbox-state"><i class="far fa-square"></i></span>
 			<span class="um-field-checkbox-option"><?php echo esc_html( $confirm ); ?></span>
 		</label>
 		<div class="um-clear"></div>
@@ -41,7 +41,7 @@
 			$error_message = ! empty( $args['use_gdpr_error_text'] ) ? $args['use_gdpr_error_text'] :  __( 'Please confirm your acceptance of our privacy policy', 'ultimate-member' ); ?>
 
 			<p class="um-notice err">
-				<i class="um-icon-ios-close-empty" onclick="jQuery(this).parent().fadeOut();"></i><?php echo esc_html( $error_message ) ?>
+				<i class="fas fa-times" onclick="jQuery(this).parent().fadeOut();"></i><?php echo esc_html( $error_message ) ?>
 			</p>
 			<br/>
 		<?php } ?>

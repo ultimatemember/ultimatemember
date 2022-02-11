@@ -15,7 +15,7 @@ $role = $object['data']; ?>
 					'id'      => '_um_priority',
 					'type'    => 'text',
 					'label'   => __( 'Role Priority', 'ultimate-member' ),
-					'tooltip' => __( 'The higher the number, the higher the priority', 'ultimate-member' ),
+					'description' => __( 'The higher the number, the higher the priority', 'ultimate-member' ),
 					'value'   => ! empty( $role['_um_priority'] ) ? $role['_um_priority'] : '',
 				),
 			),

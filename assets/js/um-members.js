@@ -647,7 +647,9 @@ jQuery(document.body).ready( function() {
 
 		var obj = jQuery(this);
 		obj.select2('destroy').select2({
-			dropdownParent: obj.parent()
+			dropdownParent: obj.parent(),
+			containerCssClass : 'um-select2-selection',
+			dropdownCssClass: 'um-select2-dropdown',
 		});
 	});
 
@@ -1008,7 +1010,9 @@ jQuery(document.body).ready( function() {
 
 		var obj = jQuery(this);
 		obj.select2('destroy').select2({
-			dropdownParent: obj.parent()
+			dropdownParent: obj.parent(),
+			containerCssClass : 'um-select2-selection',
+			dropdownCssClass: 'um-select2-dropdown',
 		});
 		obj.val('').trigger( 'change' );
 
@@ -1150,7 +1154,9 @@ jQuery(document.body).ready( function() {
 			}
 
 			select.select2('destroy').select2({
-				dropdownParent: select.parent()
+				dropdownParent: select.parent(),
+				containerCssClass : 'um-select2-selection',
+				dropdownCssClass: 'um-select2-dropdown',
 			});
 
 			if ( directory.find( '.um-search-filter select[data-um-parent="' +  filter_name + '"]' ).length > 0 ) {
@@ -1277,7 +1283,9 @@ jQuery(document.body).ready( function() {
 					select.prop('disabled', false);
 				}
 				select.select2('destroy').select2({
-					dropdownParent: select.parent()
+					dropdownParent: select.parent(),
+					containerCssClass : 'um-select2-selection',
+					dropdownCssClass: 'um-select2-dropdown',
 				});
 
 				if ( directory.find( '.um-search-filter select[data-um-parent="' +  filter_name + '"]' ).length > 0 ) {

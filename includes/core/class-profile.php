@@ -145,15 +145,15 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 			$tabs = apply_filters( 'um_profile_tabs', array(
 				'main' => array(
 					'name' => __( 'About', 'ultimate-member' ),
-					'icon' => 'um-faicon-user'
+					'icon' => 'fas fa-user'
 				),
 				'posts' => array(
 					'name' => __( 'Posts', 'ultimate-member' ),
-					'icon' => 'um-faicon-pencil'
+					'icon' => 'fas fa-pencil-alt'
 				),
 				'comments' => array(
 					'name' => __( 'Comments', 'ultimate-member' ),
-					'icon' => 'um-faicon-comment'
+					'icon' => 'fas fa-comment'
 				)
 			) );
 

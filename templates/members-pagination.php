@@ -13,15 +13,15 @@
 		</div>
 
 		<div class="um-members-pagi uimob340-hide uimob500-hide">
-			<span class="pagi pagi-arrow <# if ( data.pagination.current_page == 1 ) { #>disabled<# } #>" data-page="first" aria-label="<?php esc_attr_e( 'First page', 'ultimate-member' ); ?>"><i class="um-faicon-angle-double-left"></i></span>
-			<span class="pagi pagi-arrow <# if ( data.pagination.current_page == 1 ) { #>disabled<# } #>" data-page="prev" aria-label="<?php esc_attr_e( 'Previous page', 'ultimate-member' ); ?>"><i class="um-faicon-angle-left"></i></span>
+			<span class="pagi pagi-arrow <# if ( data.pagination.current_page == 1 ) { #>disabled<# } #>" data-page="first" aria-label="<?php esc_attr_e( 'First page', 'ultimate-member' ); ?>"><i class="fas fa-angle-double-left"></i></span>
+			<span class="pagi pagi-arrow <# if ( data.pagination.current_page == 1 ) { #>disabled<# } #>" data-page="prev" aria-label="<?php esc_attr_e( 'Previous page', 'ultimate-member' ); ?>"><i class="fas fa-angle-left"></i></span>
 
 			<# _.each( data.pagination.pages_to_show, function( page, key, list ) { #>
 				<span class="pagi <# if ( page == data.pagination.current_page ) { #>current<# } #>" data-page="{{{page}}}">{{{page}}}</span>
 			<# }); #>
 
-			<span class="pagi pagi-arrow <# if ( data.pagination.current_page == data.pagination.total_pages ) { #>disabled<# } #>" data-page="next" aria-label="<?php esc_attr_e( 'Next page', 'ultimate-member' ); ?>"><i class="um-faicon-angle-right"></i></span>
-			<span class="pagi pagi-arrow <# if ( data.pagination.current_page == data.pagination.total_pages ) { #>disabled<# } #>" data-page="last" aria-label="<?php esc_attr_e( 'Last page', 'ultimate-member' ); ?>"><i class="um-faicon-angle-double-right"></i></span>
+			<span class="pagi pagi-arrow <# if ( data.pagination.current_page == data.pagination.total_pages ) { #>disabled<# } #>" data-page="next" aria-label="<?php esc_attr_e( 'Next page', 'ultimate-member' ); ?>"><i class="fas fa-angle-right"></i></span>
+			<span class="pagi pagi-arrow <# if ( data.pagination.current_page == data.pagination.total_pages ) { #>disabled<# } #>" data-page="last" aria-label="<?php esc_attr_e( 'Last page', 'ultimate-member' ); ?>"><i class="fas fa-angle-double-right"></i></span>
 		</div>
 	<# } #>
 </script>

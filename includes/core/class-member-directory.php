@@ -290,8 +290,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			// Types
 			$this->view_types = apply_filters( 'um_member_directory_views', array(
-				'grid'  => array( 'title' => __( 'Grid', 'ultimate-member' ), 'icon' => 'um-faicon-th' ),
-				'list'  => array( 'title' => __( 'List', 'ultimate-member' ), 'icon' => 'um-faicon-list' ),
+				'grid'  => array( 'title' => __( 'Grid', 'ultimate-member' ), 'icon' => 'fas fa-th' ),
+				'list'  => array( 'title' => __( 'List', 'ultimate-member' ), 'icon' => 'fas fa-list' ),
 			) );
 
 			// Sort

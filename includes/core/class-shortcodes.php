@@ -675,7 +675,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			extract( $args, EXTR_SKIP );
 
 			//not display on admin preview
-			if ( empty( $_POST['act_id'] ) || sanitize_key( $_POST['act_id'] ) !== 'um_admin_preview_form' ) {
+			if ( empty( $_POST['action'] ) || sanitize_key( $_POST['action'] ) !== 'um_admin_preview_form' ) {
 
 				$enable_loggedin_registration = apply_filters( 'um_registration_for_loggedin_users', false, $args );
 

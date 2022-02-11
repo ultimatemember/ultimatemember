@@ -1,0 +1,226 @@
+@import "colors"
+@import "mixins"
+@import "selectors"
+
+.#{$prefix}admin-modal
+  input[type="submit"]
+    &.button-primary
+      min-height: 30px
+      padding: 0 12px !important
+      vertical-align: middle !important
+  a
+    &.button-primary
+      min-height: 30px
+      padding: 0 12px !important
+      vertical-align: middle !important
+  a
+    &.button
+      min-height: 30px
+      padding: 0 12px !important
+      vertical-align: middle !important
+      &.#{$prefix}admin-remove-condition
+        i
+          margin: 0 !important
+      i:before
+        display: block
+        top: 0
+  &.#{$prefix}modal
+    &.normal
+      width: 730px
+      margin-left: -355px
+    .#{$prefix}modal-close
+      position: absolute
+      right: 6px
+      opacity: 0.4
+      z-index: 10
+      &:hover
+        opacity: 1
+
+
+    &.loading
+      .#{$prefix}modal-body
+        background: white
+        &.#{$prefix}admin-modal-body
+          background: white url(../img/admin/ajax-loader.gif) no-repeat center
+          min-height: 100px
+        .#{$prefix}admin-modal-body
+          background: white url(../img/admin/ajax-loader.gif) no-repeat center
+          min-height: 100px
+
+
+    .#{$prefix}admin-metabox
+      label
+        margin: 0 !important
+
+  h3
+    font-size: 14px
+    line-height: 14px
+    font-weight: normal
+    color: #fff
+
+  h4
+    margin: 0 0 10px 0 !important
+
+  label
+    font-size: 13px
+    color: #aaa
+  p
+    font-size: 13px
+    color: #aaa
+
+  &.#{$prefix}admin-fields-form
+    .#{$prefix}modal-body
+      padding-left: 0
+      padding-right: 0
+      padding-bottom: 0
+      .#{$prefix}admin-modal-form-inner
+        padding-left: 20px
+        padding-right: 20px
+        padding-bottom: 20px
+      .#{$prefix}admin-modal-foot
+        padding: 20px 0 !important
+        border-top: 1px solid #ddd
+        text-align: center
+        background: #eee
+        border-radius: 0 0 3px 3px
+        a
+          margin: 0 10px !important
+          font-size: 14px !important
+        input
+          margin: 0 10px !important
+          font-size: 14px !important
+
+.#{$prefix}modal
+  &.#{$prefix}admin-form-preview
+    .#{$prefix}modal-body
+      padding-left: 0
+      padding-right: 0
+      padding-bottom: 0
+      .#{$prefix}admin-preview-inner
+        padding-left: 20px
+        padding-right: 20px
+        padding-bottom: 20px
+        position: relative
+        .#{$prefix}admin-preview-overlay
+          position: absolute
+          top: 0
+          bottom: 0
+          left: 0
+          right: 0
+          background-color: rgba(255,255,255,0)
+          z-index: 100
+      .#{$prefix}admin-modal-foot
+        padding: 20px 0 !important
+        border-top: 1px solid #ddd
+        text-align: center
+        background: #eee
+        border-radius: 0 0 3px 3px
+        a
+          margin: 0 10px !important
+          font-size: 14px !important
+        input
+          margin: 0 10px !important
+          font-size: 14px !important
+
+
+
+// Registration data modal
+
+.#{$prefix}admin-infobox
+  p
+    color: #666
+    padding-top: 15px
+  label
+    font-weight: bold
+    display: block
+    color: #333
+    cursor: default
+
+  & > p:not(:first-child)
+    border-top: 1px solid #e5e5e5
+  & > .#{$prefix}row > p
+    border-top: 1px solid #e5e5e5
+  & > p:first-child
+    margin-top: 0
+    padding-top: 0
+
+
+// Field modal on the form builder
+
+.#{$prefix}admin-btn-toggle
+  padding: 10px 0
+  p
+    margin: 0 5px 0 0 !important
+  a
+    text-decoration: none
+    color: #999
+    &.active
+      color: #0085ba
+      &:hover
+        color: #0085ba
+
+  i
+    margin: 0 5px 0 0 !important
+    height: 100%
+    color: #666
+    position: relative
+    top: 1px
+
+.#{$prefix}admin-btn-content
+  display: none
+  padding: 5px 0 0 0
+
+  p
+    float: left
+    margin-right: 10px !important
+    padding: 0 !important
+
+    &.#{$prefix}admin-conditions-notice
+      width: 100%
+      margin: 0 0 9px 0 !important
+
+  .#{$prefix}admin-cur-condition:not(:last-child)
+    margin: 0 0 5px 0
+
+// Fields manager
+.#{$prefix}modal-body
+  h4
+    margin: 0 0 10px 0 !important
+
+.#{$prefix}admin-btns
+  line-height: 1.5em
+  margin: 0 0 5px 0
+  +flex( row, flex-start, baseline, wrap )
+  .#{$prefix}no-custom-fields
+    margin: 0
+  a
+    margin: 0 3px 8px 0 !important
+    font-size: 12px !important
+    +flex( row, flex-start, center, nowrap )
+    display: flex !important
+    &.with-icon
+      span
+        color: #aaa
+        font-size: 15px !important
+        padding-left: 5px
+        height: auto
+        width: auto
+      &:hover
+        span
+          color: #cb3838
+
+// WP Editor
+
+.dynamic-mce-content
+  display: none
+
+.#{$prefix}admin-modal-body
+  &.#{$prefix}admin-metabox
+    .#{$prefix}admin-editor-h
+      margin-top: 12px
+      label
+        margin: 0 0 4px 0 !important
+    .wp-editor-wrap
+      margin: 0 0 4px 0 !important
+      textarea
+        border: 0 !important

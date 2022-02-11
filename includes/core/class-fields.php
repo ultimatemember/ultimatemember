@@ -53,7 +53,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$checked = (bool) $_REQUEST[ $id ];
 			}
 
-			$class = $checked ? 'um-icon-android-checkbox-outline' : 'um-icon-android-checkbox-outline-blank';
+			$class = $checked ? 'far fa-check-square' : 'far fa-square';
 
 			?>
 
@@ -195,234 +195,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 
 		/**
-		 * Deletes a field in form only
-		 *
-		 * @param  integer $id
-		 * @param  integer $form_id
-		 */
-		function delete_field_from_form( $id, $form_id ) {
-			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
-
-			if ( isset( $fields[ $id ] ) ) {
-				$condition_fields = get_option( 'um_fields' );
-
-				if( ! is_array( $condition_fields ) ) $condition_fields = array();
-
-				foreach ( $condition_fields as $key => $value ) {
-					$deleted_field = array_search( $id, $value );
-
-					if ( $key != $id && $deleted_field != false ) {
-						$deleted_field_id = str_replace( 'conditional_field', '', $deleted_field );
-
-						if ( $deleted_field_id == '' ) {
-							$arr_id = 0;
-						} else {
-							$arr_id = $deleted_field_id;
-						}
-
-						unset( $condition_fields[ $key ][ 'conditional_action' . $deleted_field_id ] );
-						unset( $condition_fields[ $key ][ $deleted_field ] );
-						unset( $condition_fields[ $key ][ 'conditional_operator' . $deleted_field_id ] );
-						unset( $condition_fields[ $key ][ 'conditional_value' . $deleted_field_id ] );
-						unset( $condition_fields[ $key ]['conditions'][ $arr_id ] );
-
-						unset( $fields[ $key ][ 'conditional_action' . $deleted_field_id ] );
-						unset( $fields[ $key ][ $deleted_field ] );
-						unset( $fields[ $key ][ 'conditional_operator' . $deleted_field_id ] );
-						unset( $fields[ $key ][ 'conditional_value' . $deleted_field_id ] );
-						unset( $fields[ $key ]['conditions'][ $arr_id ] );
-					}
-				}
-
-				update_option( 'um_fields' , $condition_fields );
-				unset( $fields[ $id ] );
-				UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
-			}
-		}
-
-
-		/**
-		 * Deletes a field from custom fields
-		 *
-		 * @param  integer $id
-		 */
-		function delete_field_from_db( $id ) {
-			$fields = UM()->builtin()->saved_fields;
-			if ( isset( $fields[ $id ] ) ) {
-				$args = $fields[ $id ];
-
-				unset( $fields[ $id ] );
-
-				do_action( 'um_delete_custom_field', $id, $args );
-
-				update_option( 'um_fields', $fields );
-
-				global $wpdb;
-				$forms = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'um_form'" );
-				foreach ( $forms as $form_id ) {
-					$form_fields = get_post_meta( $form_id, '_um_custom_fields', true );
-					unset( $form_fields[ $id ] );
-					update_post_meta( $form_id, '_um_custom_fields', $form_fields );
-				}
-
-				$directories = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'um_directory'" );
-				foreach ( $directories as $directory_id ) {
-					// Frontend filters
-					$directory_search_fields = get_post_meta( $directory_id, '_um_search_fields', true );
-					$directory_search_fields = array_values( array_diff( $directory_search_fields, array( $id ) ) );
-					update_post_meta( $directory_id, '_um_search_fields', $directory_search_fields );
-
-					// Admin filtering
-					$directory_search_filters = get_post_meta( $directory_id, '_um_search_filters', true );
-					unset( $directory_search_filters[ $id ] );
-					update_post_meta( $directory_id, '_um_search_filters', $directory_search_filters );
-
-					// display in tagline
-					$directory_reveal_fields = get_post_meta( $directory_id, '_um_reveal_fields', true );
-					$directory_reveal_fields = array_values( array_diff( $directory_reveal_fields, array( $id ) ) );
-					update_post_meta( $directory_id, '_um_reveal_fields', $directory_reveal_fields );
-
-					// extra user information section
-					$directory_tagline_fields = get_post_meta( $directory_id, '_um_tagline_fields', true );
-					$directory_tagline_fields = array_values( array_diff( $directory_tagline_fields, array( $id ) ) );
-					update_post_meta( $directory_id, '_um_tagline_fields', $directory_tagline_fields );
-
-					// Custom fields selected in "Choose field(s) to enable in sorting"
-					$directory_sorting_fields = get_post_meta( $directory_id, '_um_sorting_fields', true );
-					foreach ( $directory_sorting_fields as $key => $sorting_data ) {
-						if ( is_array( $sorting_data ) && array_key_exists( $id, $sorting_data ) ) {
-							unset( $directory_sorting_fields[ $key ] );
-						}
-					}
-					$directory_sorting_fields = array_values( $directory_sorting_fields );
-					update_post_meta( $directory_id, '_um_sorting_fields', $directory_sorting_fields );
-
-					// If "Default sort users by" = "Other (Custom Field)" is selected when delete this custom field and set default sorting
-					$directory_sortby_custom = get_post_meta( $directory_id, '_um_sortby_custom', true );
-					if ( $directory_sortby_custom === $id ) {
-						$directory_sortby = get_post_meta( $directory_id, '_um_sortby', true );
-						if ( 'other' === $directory_sortby ) {
-							update_post_meta( $directory_id, '_um_sortby', 'user_registered_desc' );
-						}
-						update_post_meta( $directory_id, '_um_sortby_custom', '' );
-						update_post_meta( $directory_id, '_um_sortby_custom_label', '' );
-					}
-				}
-
-			}
-		}
-
-
-		/**
-		 * Quickly adds a field from custom fields
-		 *
-		 * @param integer $global_id
-		 * @param integer $form_id
-		 * @param array   $position
-		 */
-		function add_field_from_list( $global_id, $form_id, $position = array() ) {
-			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
-			$field_scope = UM()->builtin()->saved_fields;
-
-			if ( ! isset( $fields[ $global_id ] ) ) {
-
-				$count = 1;
-				if ( ! empty( $fields ) ) {
-					$count = count( $fields ) + 1;
-				}
-
-				$fields[ $global_id ] = $field_scope[ $global_id ];
-				$fields[ $global_id ]['position'] = $count;
-
-				// set position
-				if ( $position ) {
-					foreach ( $position as $key => $val) {
-						$fields[ $global_id ][ $key ] = $val;
-					}
-				}
-
-				// add field to form
-				UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
-
-			}
-		}
-
-
-		/**
-		 * Quickly adds a field from pre-defined fields
-		 *
-		 * @param integer $global_id
-		 * @param integer $form_id
-		 * @param array   $position
-		 */
-		function add_field_from_predefined( $global_id, $form_id, $position = array() ) {
-			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
-			$field_scope = UM()->builtin()->predefined_fields;
-
-			if ( ! isset( $fields[ $global_id ] ) ) {
-
-				$count = 1;
-				if ( ! empty( $fields ) ) {
-					$count = count( $fields ) + 1;
-				}
-
-				$fields[ $global_id ] = $field_scope[ $global_id ];
-				$fields[ $global_id ]['position'] = $count;
-
-				// set position
-				if ( $position ) {
-					foreach ( $position as $key => $val ) {
-						$fields[ $global_id ][ $key ] = $val;
-					}
-				}
-
-				// add field to form
-				UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
-			}
-		}
-
-
-		/**
-		 * Duplicates a frield by meta key
-		 *
-		 * @param  integer $id
-		 * @param  integer $form_id
-		 */
-		function duplicate_field( $id, $form_id ) {
-			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
-			$all_fields = UM()->builtin()->saved_fields;
-
-			$inc = count( $fields ) + 1;
-
-			$duplicate = $fields[ $id ];
-
-			$new_metakey = $id . "_" . $inc;
-			$new_title = $fields[ $id ]['title'] . " #" . $inc;
-			$new_position = $inc;
-
-			$duplicate['title'] = $new_title;
-			$duplicate['metakey'] = $new_metakey;
-			$duplicate['position'] = $new_position;
-
-			$fields[ $new_metakey ] = $duplicate;
-			$all_fields[ $new_metakey ] = $duplicate;
-
-			// not global attributes
-			unset( $all_fields[ $new_metakey ]['in_row'] );
-			unset( $all_fields[ $new_metakey ]['in_sub_row'] );
-			unset( $all_fields[ $new_metakey ]['in_column'] );
-			unset( $all_fields[ $new_metakey ]['in_group'] );
-			unset( $all_fields[ $new_metakey ]['position'] );
-
-
-			do_action( 'um_add_new_field', $new_metakey, $duplicate );
-
-			UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
-			update_option( 'um_fields', $all_fields );
-		}
-
-
-		/**
 		 * Print field error
 		 *
 		 * @param string $text
@@ -437,19 +209,19 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 
 			if ( $force_show ) {
-				$output = '<div class="um-field-error"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . esc_attr( $text ) . '</div>';
+				$output = '<div class="um-field-error"><span class="um-field-arrow"><i class="fas fa-caret-up"></i></span>' . esc_attr( $text ) . '</div>';
 				return $output;
 			}
 
 
 			if ( isset( $this->set_id ) && UM()->form()->processing == $this->set_id ) {
-				$output = '<div class="um-field-error"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . esc_attr( $text ) . '</div>';
+				$output = '<div class="um-field-error"><span class="um-field-arrow"><i class="fas fa-caret-up"></i></span>' . esc_attr( $text ) . '</div>';
 			} else {
 				$output = '';
 			}
 
 			if ( ! UM()->form()->processing ) {
-				$output = '<div class="um-field-error"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . esc_attr( $text ) . '</div>';
+				$output = '<div class="um-field-error"><span class="um-field-arrow"><i class="fas fa-caret-up"></i></span>' . esc_attr( $text ) . '</div>';
 			}
 
 			return $output;
@@ -471,19 +243,19 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 
 			if ( $force_show ) {
-				$output = '<div class="um-field-notice"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . esc_attr( $text ) . '</div>';
+				$output = '<div class="um-field-notice"><span class="um-field-arrow"><i class="fas fa-caret-up"></i></span>' . esc_attr( $text ) . '</div>';
 				return $output;
 			}
 
 
 			if ( isset( $this->set_id ) && UM()->form()->processing == $this->set_id ) {
-				$output = '<div class="um-field-notice"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . esc_attr( $text ) . '</div>';
+				$output = '<div class="um-field-notice"><span class="um-field-arrow"><i class="fas fa-caret-up"></i></span>' . esc_attr( $text ) . '</div>';
 			} else {
 				$output = '';
 			}
 
 			if ( ! UM()->form()->processing ) {
-				$output = '<div class="um-field-notice"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . esc_attr( $text ) . '</div>';
+				$output = '<div class="um-field-notice"><span class="um-field-arrow"><i class="fas fa-caret-up"></i></span>' . esc_attr( $text ) . '</div>';
 			}
 
 			return $output;
@@ -633,7 +405,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				if ( ! UM()->mobile()->isMobile() ) {
 					if ( ! isset( $this->disable_tooltips ) ) {
-						$output .= '<span class="um-tip um-tip-' . ( is_rtl() ? 'e' : 'w' ) . '" title="' . esc_attr__( $data['help'], 'ultimate-member' ) . '"><i class="um-icon-help-circled"></i></span>';
+						$output .= '<span class="um-tip um-tip-' . ( is_rtl() ? 'e' : 'w' ) . '" title="' . esc_attr__( $data['help'], 'ultimate-member' ) . '"><i class="fas fa-question-circle"></i></span>';
 					}
 				}
 
@@ -2731,11 +2503,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$img = '';
 						}
 						$output .= '<div class="um-single-image-preview show ' . $crop_class . '" data-crop="' . $crop_data . '" data-key="' . $key . '">
-								<a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>' . $img . '
+								<a href="javascript:void(0);" class="cancel"><i class="fas fa-times"></i></a>' . $img . '
 							</div><a href="javascript:void(0);" data-modal="um_upload_single" data-modal-size="' . $modal_size . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . __( 'Change photo', 'ultimate-member' ) . '</a>';
 					} else {
 						$output .= '<div class="um-single-image-preview ' . $crop_class . '" data-crop="' . $crop_data . '" data-key="' . $key . '">
-								<a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>
+								<a href="javascript:void(0);" class="cancel"><i class="fas fa-times"></i></a>
 								<img src="" alt="" />
 							<div class="um-clear"></div></div><a href="javascript:void(0);" data-modal="um_upload_single" data-modal-size="' . $modal_size . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . $button_text . '</a>';
 					}
@@ -2752,7 +2524,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$set_mode = '';
 					}
 					$nonce = wp_create_nonce( 'um_upload_nonce-' . $this->timestamp );
-					$output .= '<div class="um-single-image-preview ' . $crop_class . '"  data-crop="' . $crop_data . '" data-ratio="' . $ratio . '" data-min_width="' . $min_width . '" data-min_height="' . $min_height . '" data-coord=""><a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a><img src="" alt="" /><div class="um-clear"></div></div><div class="um-clear"></div>';
+					$output .= '<div class="um-single-image-preview ' . $crop_class . '"  data-crop="' . $crop_data . '" data-ratio="' . $ratio . '" data-min_width="' . $min_width . '" data-min_height="' . $min_height . '" data-coord=""><a href="javascript:void(0);" class="cancel"><i class="fas fa-times"></i></a><img src="" alt="" /><div class="um-clear"></div></div><div class="um-clear"></div>';
 					$output .= '<div class="um-single-image-upload" data-user_id="' . esc_attr( $_um_profile_id ) . '" data-nonce="' . $nonce . '" data-timestamp="' . esc_attr( $this->timestamp ) . '" data-icon="' . esc_attr( $icon ) . '" data-set_id="' . esc_attr( $set_id ) . '" data-set_mode="' . esc_attr( $set_mode ) . '" data-type="' . esc_attr( $type ) . '" data-key="' . esc_attr( $key ) . '" data-max_size="' . esc_attr( $max_size ) . '" data-max_size_error="' . esc_attr( $max_size_error ) . '" data-min_size_error="' . esc_attr( $min_size_error ) . '" data-extension_error="' . esc_attr( $extension_error ) . '"  data-allowed_types="' . esc_attr( $allowed_types ) . '" data-upload_text="' . esc_attr( $upload_text ) . '" data-max_files_error="' . esc_attr( $max_files_error ) . '" data-upload_help_text="' . esc_attr( $upload_help_text ) . '">' . $button_text . '</div>';
 					$output .= '<div class="um-modal-footer">
 									<div class="um-modal-right">
@@ -2814,7 +2586,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						if ( file_exists( $file_dir ) ) {
 							$output .= "<div class=\"um-single-file-preview show\" data-key=\"{$key}\">
-										<a href=\"#\" class=\"cancel\"><i class=\"um-icon-close\"></i></a>
+										<a href=\"#\" class=\"cancel\"><i class=\"fas fa-times\"></i></a>
 										<div class=\"um-single-fileinfo\">
 											<a href=\"{$file_url}\" target=\"_blank\">
 												<span class=\"icon\" style=\"background:" . UM()->files()->get_fonticon_bg_by_ext( $file_type['ext'] ) . "\"><i class=\"" . UM()->files()->get_fonticon_by_ext( $file_type['ext'] ) . "\"></i></span>
@@ -2843,7 +2615,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$set_mode = '';
 					}
 					$output .= '<div class="um-single-file-preview">
-										<a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>
+										<a href="javascript:void(0);" class="cancel"><i class="fas fa-times"></i></a>
 										<div class="um-single-fileinfo">
 											<a href="" target="_blank">
 												<span class="icon"><i></i></span>
@@ -3481,10 +3253,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 							if ( $this->is_radio_checked( $key, $option_value, $data ) ) {
 								$active = 'active';
-								$class = "um-icon-android-radio-button-on";
+								$class = 'far fa-dot-circle';
 							} else {
 								$active = '';
-								$class = "um-icon-android-radio-button-off";
+								$class = 'far fa-circle';
 							}
 
 
@@ -3608,10 +3380,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						if ( $this->is_selected( $key, $v, $data ) ) {
 							$active = 'active';
-							$class = "um-icon-android-checkbox-outline";
+							$class = 'far fa-check-square';
 						} else {
 							$active = '';
-							$class = "um-icon-android-checkbox-outline-blank";
+							$class = 'far fa-square';
 						}
 
 						if ( isset( $data['editable'] ) && $data['editable'] == 0 ) {
@@ -3710,8 +3482,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if ( ! empty( $fields ) ) {
 
 						$output .= '<div class="um-field-group" data-max_entries="' . $max_entries . '">
-								<div class="um-field-group-head"><i class="um-icon-plus"></i>' . esc_html__( $label, 'ultimate-member' ) . '</div>';
-						$output .= '<div class="um-field-group-body"><a href="javascript:void(0);" class="um-field-group-cancel"><i class="um-icon-close"></i></a>';
+								<div class="um-field-group-head"><i class="fas fa-plus"></i>' . esc_html__( $label, 'ultimate-member' ) . '</div>';
+						$output .= '<div class="um-field-group-body"><a href="javascript:void(0);" class="um-field-group-cancel"><i class="fas fa-times"></i></a>';
 
 						foreach ( $fields as $subkey => $subdata ) {
 							$output .= $this->edit_field( $subkey, $subdata, 'group' );
@@ -4418,7 +4190,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				$emo = UM()->options()->get( 'profile_empty_text_emo' );
 				if ( $emo ) {
-					$emo = '<i class="um-faicon-frown-o"></i>';
+					$emo = '<i class="far fa-frown"></i>';
 				} else {
 					$emo = false;
 				}
@@ -4689,72 +4461,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 
 		/**
-		 *
-		 */
-		function do_ajax_action() {
-			UM()->ajax()->check_nonce( 'um-admin-nonce' );
-
-			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
-				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
-			}
-
-			/**
-			 * @var $in_row
-			 * @var $in_sub_row
-			 * @var $in_column
-			 * @var $in_group
-			 * @var $act_id
-			 * @var $arg1
-			 * @var $arg2
-			 */
-			extract( $_POST );
-
-			$output = null;
-
-			$position = array();
-			if ( ! empty( $in_column ) ) {
-				$position['in_row'] = '_um_row_' . ( (int) $in_row + 1 );
-				$position['in_sub_row'] = $in_sub_row;
-				$position['in_column'] = $in_column;
-				$position['in_group'] = $in_group;
-			}
-
-			switch ( $act_id ) {
-
-				case 'um_admin_duplicate_field':
-					$this->duplicate_field( $arg1, $arg2 );
-					break;
-
-				case 'um_admin_remove_field_global':
-					$this->delete_field_from_db( $arg1 );
-					break;
-
-				case 'um_admin_remove_field':
-					$this->delete_field_from_form( $arg1, $arg2 );
-					break;
-
-				case 'um_admin_add_field_from_predefined':
-					$this->add_field_from_predefined( $arg1, $arg2, $position );
-					break;
-
-				case 'um_admin_add_field_from_list':
-					$this->add_field_from_list( $arg1, $arg2, $position );
-					break;
-
-			}
-
-			if ( is_array( $output ) ) {
-				print_r( $output );
-			} else {
-				echo $output;
-			}
-			die;
-
-		}
-
-
-
-		/**
 		 * Get rendered field attributes
 		 *
 		 * @since  2.1.2
@@ -4834,6 +4540,77 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$html_atts .= $conditional;
 
 			return $html_atts;
+		}
+
+
+		/**
+		 * Deletes a field from custom fields
+		 *
+		 * @deprecated 3.0
+		 *
+		 * @param  integer $id
+		 */
+		function delete_field_from_db( $id ) {
+			_deprecated_function( __METHOD__, '3.0', 'UM()->common()->field()->delete_permanently( $id )' );
+			UM()->common()->field()->delete_permanently( $id );
+		}
+
+
+		/**
+		 * Duplicates a field by meta key
+		 *
+		 * @deprecated 3.0
+		 *
+		 * @param  integer $id
+		 * @param  integer $form_id
+		 */
+		function duplicate_field( $id, $form_id ) {
+			_deprecated_function( __METHOD__, '3.0', 'UM()->common()->field()->duplicate( $id, $form_id )' );
+			UM()->common()->field()->duplicate( $id, $form_id );
+		}
+
+
+		/**
+		 * Deletes a field in form only
+		 *
+		 * @deprecated 3.0
+		 *
+		 * @param  integer $id
+		 * @param  integer $form_id
+		 */
+		function delete_field_from_form( $id, $form_id ) {
+			_deprecated_function( __METHOD__, '3.0', 'UM()->common()->field()->delete_from_form( $id, $form_id )' );
+			UM()->common()->field()->delete_from_form( $id, $form_id );
+		}
+
+
+		/**
+		 * Quickly adds a field from custom fields
+		 *
+		 * @deprecated 3.0
+		 *
+		 * @param integer $global_id
+		 * @param integer $form_id
+		 * @param array   $position
+		 */
+		function add_field_from_list( $global_id, $form_id, $position = array() ) {
+			_deprecated_function( __METHOD__, '3.0', 'UM()->ajax()->builder()->add_from_list( $global_id, $form_id, $position )' );
+			UM()->ajax()->builder()->add_from_list( $global_id, $form_id, $position );
+		}
+
+
+		/**
+		 * Quickly adds a field from pre-defined fields
+		 *
+		 * @deprecated 3.0
+		 *
+		 * @param integer $global_id
+		 * @param integer $form_id
+		 * @param array   $position
+		 */
+		function add_field_from_predefined( $global_id, $form_id, $position = array() ) {
+			_deprecated_function( __METHOD__, '3.0', 'UM()->ajax()->builder()->add_from_predefined( $global_id, $form_id, $position )' );
+			UM()->ajax()->builder()->add_from_predefined( $global_id, $form_id, $position );
 		}
 	}
 }

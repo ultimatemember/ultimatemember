@@ -1,0 +1,360 @@
+@import "selectors"
+@import "mixins"
+@import "colors"
+
+
+.#{$prefix}form-table
+  .#{$prefix}forms-line
+    &[data-conditional]
+      display: none
+    &[data-field_type="checkbox"]
+      td
+        label
+          font-style: italic
+    .#{$prefix}text-delete
+      color: #a00
+      float: left
+      &:hover
+        color: red
+    .#{$prefix}multi-text-add-option
+      margin-bottom: 14px
+    .icon_preview
+      display: none
+      max-width: 200px
+      max-height: 200px
+      padding: 5px
+      cursor: pointer
+      border: 1px solid #e3e3e3
+      background: #f7f7f7
+      border-radius: 3px
+      height: auto
+      width: auto !important
+    td
+      .#{$prefix}same-page-update-wrapper
+        display: none
+        margin: 7px 0 0 0
+        input.#{$prefix}admin-form-same-page-update
+          margin: 7px 0 0 0
+        .upgrade_log
+          margin: 7px 0 0 0
+          width: 100%
+          height: 150px
+          overflow: auto
+          border: 1px solid #a1a1a1
+      .select2
+        margin: 1px 0 0 0
+        .select2-selection__rendered
+          line-height: 26px
+        .select2-selection__clear
+          top: -1px
+
+    &[data-field_type="same_page_update"]
+      vertical-align: baseline
+      th,
+      td
+        vertical-align: baseline
+    &[data-field_type="separator"]
+      td
+        padding: 15px 0 0 0
+        font-size: 12px
+        font-weight: bold
+
+  &.#{$prefix}third-column
+    .#{$prefix}forms-line
+      th
+        width: 33%
+
+  &.#{$prefix}half-column
+    .#{$prefix}forms-line
+      th
+        width: 50%
+
+  &.#{$prefix}two-thirds-column
+    .#{$prefix}forms-line
+      th
+        width: 83%
+
+  &.#{$prefix}top-label
+    .#{$prefix}forms-line
+      td
+        padding: 0 0 15px 0
+        label
+          margin: 0 0 5px 0
+          display: inline-block
+
+      &[data-field_type="icon"]
+        td
+          label
+            width: 100%
+            display: block
+            margin: 0 0 5px 0
+  .description
+    font-style: italic
+    clear: both
+
+.um_admin_fonticon_wrapper
+  +flex( row, flex-start, center, nowrap )
+  .#{$prefix}admin-icon-value
+    line-height: 1
+    i
+      top: 0
+
+input[type="text"],
+select,
+textarea
+  &.#{$prefix}forms-field
+    box-sizing: border-box
+    &.#{$prefix}long-field
+      width: 100% !important
+    &.#{$prefix}medium-field
+      width: 50% !important
+    &.#{$prefix}small-field
+      width: 25% !important
+
+@media screen and (max-width: 782px)
+  input[type="text"],
+  select,
+  textarea
+    &.#{$prefix}forms-field
+      &.#{$prefix}medium-field
+        width: 100% !important
+      &.#{$prefix}small-field
+        width: 50% !important
+
+.#{$prefix}multi-text-list,
+.#{$prefix}multi-selects-list,
+.#{$prefix}md-default-filters-list
+  float: left
+  width: 100%
+  margin: 0 0 10px 0
+
+.#{$prefix}hidden-multi-text,
+.#{$prefix}hidden-multi-selects,
+.#{$prefix}hidden-md-default-filters
+  display: none !important
+
+.#{$prefix}md-default-filters-option-line
+  float: left
+  width: 100%
+  clear: both
+  border-bottom: 1px solid #eee
+  padding: 0 0 5px 0
+  margin: 5px 0 0 0
+  .#{$prefix}field-wrapper
+    float: left
+    width: calc( 100% - 60px )
+    line-height: 30px
+    box-sizing: border-box
+  .#{$prefix}field-wrapper2
+    float: left
+    width: calc( 100% - 60px )
+    line-height: 30px
+    box-sizing: border-box
+    &.um
+      margin: 5px 0 0 0
+    .ui-slider-range.ui-widget-header
+      background: #44b0ec
+      border: 1px solid #44b0ec !important
+      margin-top: -1px
+    select
+      width: 100%
+      float: left
+    input
+      width: 100%
+      float: left
+      &.#{$prefix}timepicker-filter,
+      &.#{$prefix}datepicker-filter
+        width: calc( 50% - 7px ) !important
+        float: left
+        &:first-child
+          margin-right: 11px
+    .#{$prefix}slider
+      margin: 5px 9px 0 9px
+      width: calc( 100% - 18px )
+      box-sizing: border-box
+      display: block
+  .#{$prefix}field-control
+    float: left
+    width: 60px
+    line-height: 30px
+    padding: 0 10px
+    box-sizing: border-box
+
+
+
+.#{$prefix}multi-selects-option-line
+  float: left
+  width: 100%
+  padding: 0
+  clear: both
+  margin: 0 0 5px 0
+  &.#{$prefix}admin-drag-fld
+    +flex( row, flex-start, center, nowrap )
+    background: none
+    border: none
+    .#{$prefix}field-wrapper
+      width: calc( 100% - 90px )
+    .#{$prefix}field-icon
+      float: left
+      width: 20px
+      text-align: left
+      line-height: 30px
+
+  .#{$prefix}field-wrapper
+    float: left
+    width: calc( 100% - 60px )
+    line-height: 30px
+    box-sizing: border-box
+
+    &.#{$prefix}custom-order-fields
+      margin: 5px 0 0 0
+
+      label
+        float: left
+        width: 100%
+        line-height: 30px
+        box-sizing: border-box
+        margin: 0 !important
+        padding: 0 !important
+        font-weight: bold
+        +flex( row, space-beetween, baseline, nowrap )
+
+        input[type="text"]
+          width: auto
+          display: inline
+          font-weight: normal
+          max-width: 70%
+          flex: 0.9
+
+    input,
+    select
+      float: left
+      width: 100%
+      margin: 0
+
+  .#{$prefix}field-control
+    float: left
+    width: 60px
+    line-height: 30px
+    padding: 0 10px
+    box-sizing: border-box
+
+.#{$prefix}multi-text-option-line
+  float: left
+  width: 100%
+  padding: 0
+  clear: both
+  margin: 0 0 5px 0
+  .#{$prefix}field-wrapper
+    float: left
+    width: calc( 100% - 90px )
+    line-height: 30px
+    box-sizing: border-box
+    input,
+    select
+      float: left
+      width: 100%
+      margin: 0
+  .#{$prefix}field-control
+    float: left
+    width: 60px
+    line-height: 30px
+    padding: 0 10px
+    box-sizing: border-box
+
+
+
+
+
+.#{$prefix}form-fields-section
+  float: left
+  clear: none
+  margin: 0
+  padding: 0 10px 0 0
+  box-sizing: border-box
+  -moz-box-sizing: border-box
+  -webkit-box-sizing: border-box
+  label
+    float: left
+    width: 100%
+    margin: 0
+    padding: 0
+    input
+      float: left
+      margin-top: 0
+    span
+      float: left
+      width: calc( 100% - 20px )
+
+
+@media screen and (max-width: 782px)
+  .#{$prefix}form-fields-section
+    width: 100% !important
+  .#{$prefix}admin-metabox
+    .#{$prefix}form-fields-section
+      label
+        line-height: 22px !important
+        margin: 0 0 12px 0 !important
+        span
+          width: calc( 100% - 30px )
+
+  .#{$prefix}multi-text-option-line,
+  .#{$prefix}multi-selects-option-line
+    margin: 0 0 6px 0
+
+  .#{$prefix}forms-line
+    label
+      float: left
+      width: 100%
+
+  .#{$prefix}form-table
+    &.#{$prefix}third-column,
+    &.#{$prefix}half-column,
+    &.#{$prefix}two-thirds-column
+      .#{$prefix}forms-line
+        th
+          float: left
+          width: 100%
+          margin-bottom: 5px
+          label
+            float: left
+            width: 100%
+        td
+          float: left
+          width: 100%
+
+
+
+
+
+
+
+.#{$prefix}sortable-items-field
+  .#{$prefix}sortable-item
+    cursor: move !important
+    padding: 5px
+    box-sizing: border-box
+    -moz-box-sizing: border-box
+    -webkit-box-sizing: border-box
+    border: 1px solid #7e8993
+    border-radius: 4px
+    -moz-border-radius: 4px
+    background: #f1f1f1
+    height: 42px
+    line-height: 28px
+    +flex( row, flex-start, center, nowrap )
+    &.#{$prefix}hidden-item
+      display: none
+    .#{$prefix}field-icon
+      font-size: 18px
+      width: 20px
+      text-align: left
+      margin: 0 10px 0 0
+
+
+.wp-picker-container
+  input.wp-color-picker[type="text"]
+    width: 68px !important
+    float: left !important
+    padding: 2px 4px !important
+    border-width: 1px !important

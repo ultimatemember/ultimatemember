@@ -194,11 +194,11 @@ function um_add_update_notice( $args ) {
 	}
 
 	if ( ! empty( $err ) ) {
-		$output .= '<p class="um-notice err"><i class="um-icon-ios-close-empty" onclick="jQuery(this).parent().fadeOut();"></i>' . $err . '</p>';
+		$output .= '<p class="um-notice err"><i class="fas fa-times" onclick="jQuery(this).parent().fadeOut();"></i>' . $err . '</p>';
 	}
 
 	if ( ! empty( $success ) ) {
-		$output .= '<p class="um-notice success"><i class="um-icon-ios-close-empty" onclick="jQuery(this).parent().fadeOut();"></i>' . $success . '</p>';
+		$output .= '<p class="um-notice success"><i class="fas fa-times" onclick="jQuery(this).parent().fadeOut();"></i>' . $success . '</p>';
 	}
 
 	echo $output;

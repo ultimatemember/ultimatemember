@@ -268,7 +268,7 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 							<span><?php _e( 'Sort by:', 'ultimate-member' ); ?>&nbsp;</span>
 							<div class="um-member-directory-sorting-a">
 								<a href="javascript:void(0);" class="um-member-directory-sorting-a-text"><?php echo $sorting_options[ $sort_from_url ] ?></a>
-								&nbsp;<i class="um-faicon-caret-down"></i><i class="um-faicon-caret-up"></i>
+								&nbsp;<i class="fas fa-caret-down"></i><i class="fas fa-caret-up"></i>
 							</div>
 						</div>
 
@@ -288,7 +288,7 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 								<a href="javascript:void(0);">
 									<?php _e( 'More filters', 'ultimate-member' ); ?>
 								</a>
-								&nbsp;<i class="um-faicon-caret-down"></i><i class="um-faicon-caret-up"></i>
+								&nbsp;<i class="fas fa-caret-down"></i><i class="fas fa-caret-up"></i>
 							</span>
 						</span>
 					<?php } ?>

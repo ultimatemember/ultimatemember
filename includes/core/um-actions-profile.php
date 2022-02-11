@@ -172,7 +172,7 @@ function um_profile_content_main( $args ) {
 		?>
 		<div class="um-profile-note">
 			<span>
-				<i class="um-faicon-lock"></i>
+				<i class="fas fa-lock"></i>
 				<?php echo $can_view; ?>
 			</span>
 		</div>
@@ -798,7 +798,7 @@ function um_profile_header_cover_area( $args ) {
 		$overlay = '<span class="um-cover-overlay">
 				<span class="um-cover-overlay-s">
 					<ins>
-						<i class="um-faicon-picture-o"></i>
+						<i class="far fa-image"></i>
 						<span class="um-cover-overlay-t">' . __( 'Change your cover photo', 'ultimate-member' ) . '</span>
 					</ins>
 				</span>
@@ -920,7 +920,7 @@ function um_profile_header_cover_area( $args ) {
 					if ( ! isset( UM()->user()->cannot_edit ) ) { ?>
 
 						<a href="javascript:void(0);" class="um-cover-add"><span class="um-cover-add-i"><i
-									class="um-icon-plus um-tip-n"
+									class="fas fa-plus um-tip-n"
 									title="<?php esc_attr_e( 'Upload a cover photo', 'ultimate-member' ); ?>"></i></span></a>
 
 					<?php }
@@ -982,7 +982,7 @@ function um_profile_header( $args ) {
 		$overlay = '<span class="um-profile-photo-overlay">
 			<span class="um-profile-photo-overlay-s">
 				<ins>
-					<i class="um-faicon-camera"></i>
+					<i class="fas fa-camera"></i>
 				</ins>
 			</span>
 		</span>';
@@ -1374,7 +1374,7 @@ function um_add_edit_icon( $args ) {
 	if ( UM()->fields()->editing == true ) { ?>
 
 		<div class="um-profile-edit um-profile-headericon">
-			<a href="javascript:void(0);" class="um-profile-edit-a um-profile-save"><i class="um-faicon-check"></i></a>
+			<a href="javascript:void(0);" class="um-profile-edit-a um-profile-save"><i class="fas fa-check"></i></a>
 		</div>
 
 		<?php return;
@@ -1455,7 +1455,7 @@ function um_add_edit_icon( $args ) {
 
 	<div class="um-profile-edit um-profile-headericon">
 
-		<a href="javascript:void(0);" class="um-profile-edit-a"><i class="um-faicon-cog"></i></a>
+		<a href="javascript:void(0);" class="um-profile-edit-a"><i class="fas fa-cog"></i></a>
 
 		<?php UM()->profile()->new_ui( $args['header_menu'], 'div.um-profile-edit', 'click', $items ); ?>
 

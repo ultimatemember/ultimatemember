@@ -557,7 +557,7 @@ function um_after_account_privacy( $args ) {
 				<?php esc_html_e( 'Download your data', 'ultimate-member' ); ?>
 			</label>
 			<span class="um-tip um-tip-<?php echo is_rtl() ? 'e' : 'w' ?>" original-title="<?php esc_attr_e( 'You can request a file with the information that we believe is most relevant and useful to you.', 'ultimate-member' ); ?>">
-				<i class="um-icon-help-circled"></i>
+				<i class="fas fa-question-circle"></i>
 			</span>
 			<div class="um-clear"></div>
 		</div>
@@ -606,7 +606,7 @@ function um_after_account_privacy( $args ) {
 				<div class="um-field-area">
 					<input id="um-export-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'ultimate-member' )?>">
 					<div class="um-field-error um-export-data">
-						<span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span><?php esc_html_e( 'You must enter a password', 'ultimate-member' ); ?>
+						<span class="um-field-arrow"><i class="fas fa-caret-up"></i></span><?php esc_html_e( 'You must enter a password', 'ultimate-member' ); ?>
 					</div>
 					<div class="um-field-area-response um-export-data"></div>
 				</div>
@@ -633,7 +633,7 @@ function um_after_account_privacy( $args ) {
 				<?php esc_html_e( 'Erase of your data', 'ultimate-member' ); ?>
 			</label>
 			<span class="um-tip um-tip-<?php echo is_rtl() ? 'e' : 'w' ?>" original-title="<?php esc_attr_e( 'You can request erasing of the data that we have about you.', 'ultimate-member' ); ?>">
-				<i class="um-icon-help-circled"></i>
+				<i class="fas fa-question-circle"></i>
 			</span>
 			<div class="um-clear"></div>
 		</div>
@@ -678,7 +678,7 @@ function um_after_account_privacy( $args ) {
 					<?php esc_html_e( 'Enter your current password to confirm the erasure of your personal data.', 'ultimate-member' ); ?>
 					<input id="um-erase-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'ultimate-member' )?>">
 					<div class="um-field-error um-erase-data">
-						<span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span><?php esc_html_e( 'You must enter a password', 'ultimate-member' ); ?>
+						<span class="um-field-arrow"><i class="fas fa-caret-up"></i></span><?php esc_html_e( 'You must enter a password', 'ultimate-member' ); ?>
 					</div>
 					<div class="um-field-area-response um-erase-data"></div>
 				</label>

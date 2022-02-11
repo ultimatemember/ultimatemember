@@ -159,6 +159,8 @@ jQuery(document).ready(function() {
 			var obj = jQuery(this);
 
 			obj.select2({
+				containerCssClass : 'um-select2-selection',
+				dropdownCssClass: 'um-select2-dropdown',
 				allowClear: true,
 				dropdownParent: obj.parent()
 			}).on( 'change', unselectEmptyOption );
@@ -172,10 +174,14 @@ jQuery(document).ready(function() {
 			var atts = {};
 			if ( obj.parents('.um-custom-shortcode-tab').length ) {
 				atts = {
+					containerCssClass : 'um-select2-selection',
+					dropdownCssClass: 'um-select2-dropdown',
 					allowClear: false
 				};
 			} else {
 				atts = {
+					containerCssClass : 'um-select2-selection',
+					dropdownCssClass: 'um-select2-dropdown',
 					allowClear: false,
 					minimumResultsForSearch: 10,
 					dropdownParent: obj.parent()
@@ -188,6 +194,8 @@ jQuery(document).ready(function() {
 			var obj = jQuery(this);
 
 			obj.select2({
+				containerCssClass : 'um-select2-selection',
+				dropdownCssClass: 'um-select2-dropdown',
 				allowClear: false,
 				minimumResultsForSearch: -1,
 				dropdownParent: obj.parent()
@@ -239,19 +247,19 @@ jQuery(document).ready(function() {
 		var field = jQuery(this).parents('.um-field-area');
 		var this_field = jQuery(this).parents('label');
 		field.find('.um-field-radio').removeClass('active');
-		field.find('.um-field-radio').find('i').removeAttr('class').addClass('um-icon-android-radio-button-off');
+		field.find('.um-field-radio').find('i').removeAttr('class').addClass('far fa-circle');
 		this_field.addClass('active');
-		this_field.find('i').removeAttr('class').addClass('um-icon-android-radio-button-on');
+		this_field.find('i').removeAttr('class').addClass('far fa-dot-circle');
 	});
 
 	jQuery(document).on('change', '.um-field-area input[type="checkbox"]', function() {
 		var this_field = jQuery(this).parents('label');
 		if ( this_field.hasClass('active') ) {
 			this_field.removeClass('active');
-			this_field.find('i').removeAttr('class').addClass('um-icon-android-checkbox-outline-blank');
+			this_field.find('i').removeAttr('class').addClass('far fa-square');
 		} else {
 			this_field.addClass('active');
-			this_field.find('i').removeAttr('class').addClass('um-icon-android-checkbox-outline');
+			this_field.find('i').removeAttr('class').addClass('far fa-check-square');
 		}
 	});
 
@@ -661,7 +669,9 @@ jQuery(document).ready(function() {
 		me.select2({
 			data: arr_items,
 			allowClear: true,
-			minimumResultsForSearch: 10
+			minimumResultsForSearch: 10,
+			containerCssClass : 'um-select2-selection',
+			dropdownCssClass: 'um-select2-dropdown',
 		});
 
 		if ( data.post.members_directory === 'yes' ) {
@@ -685,7 +695,10 @@ jQuery(document).ready(function() {
 						me.prop('disabled', true);
 					}
 
-					me.select2('destroy').select2();
+					me.select2('destroy').select2({
+						containerCssClass : 'um-select2-selection',
+						dropdownCssClass: 'um-select2-dropdown'
+					});
 					me.val('').trigger( 'change' );
 				});
 

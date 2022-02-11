@@ -655,12 +655,14 @@ function um_user_submitted_registration_formatted( $style = false ) {
 	}
 
 	// Timestamp
-	$output .= um_user_submited_display( 'timestamp', __( 'Date Submitted', 'ultimate-member' ) );
-	$output .= um_user_submited_display( 'form_id', __( 'Form', 'ultimate-member' ), $submitted_data );
+	$output .= um_user_submitted_display( 'timestamp', __( 'Date Submitted', 'ultimate-member' ) );
+	$output .= um_user_submitted_display( 'form_id', __( 'Form', 'ultimate-member' ), $submitted_data );
 
 	if ( isset( $submitted_data['use_gdpr_agreement'] ) ) {
-		$output .= um_user_submited_display( 'use_gdpr_agreement', __( 'GDPR Applied', 'ultimate-member' ), $submitted_data );
+		$output .= um_user_submitted_display( 'use_gdpr_agreement', __( 'GDPR Applied', 'ultimate-member' ), $submitted_data );
 	}
+
+	$output = apply_filters( 'um_user_submitted_registration_formatted_before_fields', $output, $submitted_data, $style );
 
 	if ( isset( $submitted_data ) && is_array( $submitted_data ) ) {
 
@@ -678,7 +680,7 @@ function um_user_submitted_registration_formatted( $style = false ) {
 			UM()->fields()->get_fields = $fields;
 
 			foreach ( $fields as $key => $array ) {
-				if ( isset( $array['type'] ) && $array['type'] == 'row' ) {
+				if ( isset( $array['type'] ) && 'row' === $array['type'] ) {
 					$rows[ $key ] = $array;
 					unset( UM()->fields()->get_fields[ $key ] ); // not needed now
 				}
@@ -732,7 +734,7 @@ function um_user_submitted_registration_formatted( $style = false ) {
 								$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
 								if ( $col1_fields ) {
 									foreach ( $col1_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
+										$output .= um_user_submitted_display( $key, $data['title'] );
 									}
 								}
 
@@ -741,14 +743,14 @@ function um_user_submitted_registration_formatted( $style = false ) {
 								$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
 								if ( $col1_fields ) {
 									foreach ( $col1_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
+										$output .= um_user_submitted_display( $key, $data['title'] );
 									}
 								}
 
 								$col2_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 2 );
 								if ( $col2_fields ) {
 									foreach ( $col2_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
+										$output .= um_user_submitted_display( $key, $data['title'] );
 									}
 								}
 
@@ -757,21 +759,21 @@ function um_user_submitted_registration_formatted( $style = false ) {
 								$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
 								if ( $col1_fields ) {
 									foreach ( $col1_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
+										$output .= um_user_submitted_display( $key, $data['title'] );
 									}
 								}
 
 								$col2_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 2 );
 								if ( $col2_fields ) {
 									foreach ( $col2_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
+										$output .= um_user_submitted_display( $key, $data['title'] );
 									}
 								}
 
 								$col3_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 3 );
 								if ( $col3_fields ) {
 									foreach ( $col3_fields as $key => $data ) {
-										$output .= um_user_submited_display( $key, $data['title'] );
+										$output .= um_user_submitted_display( $key, $data['title'] );
 									}
 								}
 
@@ -799,6 +801,7 @@ function um_user_submitted_registration_formatted( $style = false ) {
 
 }
 
+
 /**
  * Prepare template
  *
@@ -808,9 +811,9 @@ function um_user_submitted_registration_formatted( $style = false ) {
  * @param  boolean $style
  * @return string
  *
- * @since  2.1.4 
+ * @since  3.0
  */
-function um_user_submited_display( $k, $title, $data = array(), $style = true ) {
+function um_user_submitted_display( $k, $title, $data = array(), $style = true ) {
 	$output = '';
 
 	if ( 'form_id' == $k && isset( $data['form_id'] ) && ! empty( $data['form_id'] ) ) {

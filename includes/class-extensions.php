@@ -1,9 +1,9 @@
 <?php
 namespace um;
 
-// Exit if executed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\Extensions' ) ) {
 

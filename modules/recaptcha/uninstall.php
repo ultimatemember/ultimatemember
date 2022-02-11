@@ -5,7 +5,7 @@
  */
 
 // Exit if accessed directly.
-if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) return;
+if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit;
 
 
 if ( ! defined( 'um_recaptcha_path' ) ) {

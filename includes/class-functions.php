@@ -248,7 +248,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 			ob_start(); ?>
 
-			<span class="um-tooltip dashicons dashicons-editor-help" title="<?php echo $tip ?>"></span>
+			<span class="um-helptip dashicons dashicons-editor-help" title="<?php echo $tip ?>"></span>
 
 			<?php if ( $echo ) {
 				ob_get_flush();

@@ -104,7 +104,7 @@ $unique_hash = substr( md5( $args['form_id'] ), 10, 5 ); ?>
 
 									<?php if ( $userinfo_animate ) { ?>
 										<div class="um-member-more">
-											<a href="javascript:void(0);"><i class="um-faicon-angle-down"></i></a>
+											<a href="javascript:void(0);"><i class="fas fa-angle-down"></i></a>
 										</div>
 									<?php } ?>
 
@@ -129,7 +129,7 @@ $unique_hash = substr( md5( $args['form_id'] ), 10, 5 ); ?>
 
 									<?php if ( $userinfo_animate ) { ?>
 										<div class="um-member-less">
-											<a href="javascript:void(0);"><i class="um-faicon-angle-up"></i></a>
+											<a href="javascript:void(0);"><i class="fas fa-angle-up"></i></a>
 										</div>
 									<?php } ?>
 								</div>

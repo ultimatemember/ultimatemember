@@ -1,0 +1,7 @@
+.um-block-settings .um-block-settings-hidden {
+  display: none; }
+
+.um-block-settings .components-select-control .components-select-control__input[multiple] {
+  height: auto; }
+  .um-block-settings .components-select-control .components-select-control__input[multiple] + .components-input-control__suffix {
+    display: none; }

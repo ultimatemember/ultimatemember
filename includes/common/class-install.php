@@ -177,14 +177,15 @@ KEY meta_value_indx (um_value(191))
 		 */
 		function set_default_user_status() {
 			$args = array(
-				'fields'     => 'ids',
-				'number'     => 0,
-				'meta_query' => array(
+				'fields'               => 'ids',
+				'number'               => 0,
+				'meta_query'           => array(
 					array(
 						'key'     => 'account_status',
 						'compare' => 'NOT EXISTS',
 					),
 				),
+				'um_custom_user_query' => true,
 			);
 
 			$users = new \WP_User_Query( $args );

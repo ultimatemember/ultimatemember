@@ -20,7 +20,6 @@ class Member_Directory {
 	 * Online_Member_Directory constructor.
 	 */
 	function __construct() {
-		add_action( 'um_pre_directory_shortcode', array( &$this, 'enqueue_scripts' ), 10, 1 );
 		add_filter( 'um_admin_extend_directory_options_profile', array( &$this, 'member_directory_options_profile' ), 10, 1 );
 
 		add_filter( 'um_members_directory_filter_fields',  array( $this, 'directory_filter_dropdown_options' ), 10, 1 );
@@ -36,14 +35,6 @@ class Member_Directory {
 
 		add_action( 'um_members_in_profile_photo_tmpl', array( &$this, 'extend_js_template' ), 10, 1 );
 		add_action( 'um_members_list_in_profile_photo_tmpl', array( &$this, 'extend_js_template' ), 10, 1 );
-	}
-
-
-	/**
-	 *
-	 */
-	function enqueue_scripts() {
-		UM()->Online()->enqueue_scripts();
 	}
 
 
@@ -127,7 +118,7 @@ class Member_Directory {
 		}
 
 		if ( ! ( in_array( 1, $value ) && in_array( 0, $value ) ) ) {
-			$online_users_array = UM()->Online()->common()->get_online_users();
+			$online_users_array = UM()->module( 'online' )->get_users( 'ids' );
 
 			foreach ( $value as $val ) {
 				if ( $val == '0' ) {
@@ -169,7 +160,7 @@ class Member_Directory {
 
 		if ( ! ( in_array( 1, $value ) && in_array( 0, $value ) ) ) {
 
-			$online_users_array = UM()->Online()->common()->get_online_users();
+			$online_users_array = UM()->module( 'online' )->get_users( 'ids' );
 
 			foreach ( $value as $val ) {
 				if ( $val == '0' ) {
@@ -203,8 +194,9 @@ class Member_Directory {
 	 */
 	function get_members_data( $data_array, $user_id ) {
 		$data_array['is_online'] = false;
-		if ( ! UM()->Online()->common()->is_hidden_status( $user_id ) ) {
-			$data_array['is_online'] = UM()->Online()->is_online( $user_id );
+
+		if ( ! UM()->module( 'online' )->user()->is_hidden_status( $user_id ) ) {
+			$data_array['is_online'] = UM()->module( 'online' )->user()->is_online( $user_id );
 		}
 
 		return $data_array;
@@ -222,11 +214,10 @@ class Member_Directory {
 			<# if ( user.is_online ) { #>
 				<span class="um-online-status online um-tip-n"
 				      title="<?php esc_attr_e( 'Online', 'ultimate-member' ) ?>">
-					<i class="um-faicon-circle"></i>
+					<i class="fas fa-circle"></i>
 				</span>
 			<# } #>
 
 		<?php }
 	}
-
 }

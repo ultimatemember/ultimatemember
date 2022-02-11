@@ -31,6 +31,9 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 			add_action( 'admin_init', array( &$this, 'create_languages_folder' ) );
 			add_action( 'admin_init', array( &$this, 'force_dismiss_notice' ) );
 			add_action( 'admin_init', array( &$this, 'create_list' ), 10 );
+			// add admin notice only on the modules page
+			add_action( 'load-ultimate-member_page_um-modules', array( &$this, 'legacy_enabled_modules' ) );
+			add_action( 'load-ultimate-member_page_um_options', array( &$this, 'legacy_notices_options' ) );
 			add_action( 'admin_notices', array( &$this, 'render_notices' ), 1 );
 			add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1000 );
 		}
@@ -288,8 +291,65 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 
 			$this->add_notice( 'old_extensions', array(
 				'class'   => 'error',
-				'message' => '<p>' . sprintf( __( '<strong>%s %s</strong> requires 2.0 extensions. You have pre 2.0 extensions installed on your site. <br /> Please update %s extensions to latest versions. For more info see this <a href="%s" target="_blank">doc</a>.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version, ultimatemember_plugin_name, 'https://docs.ultimatemember.com/article/201-how-to-update-your-site' ) . '</p>',
+				'message' => '<p>' . sprintf( __( '<strong>%s %s</strong> requires 2.0 extensions. You have pre 2.0 extensions installed on your site. <br /> Please update %s extensions to latest versions. For more info see this <a href="%s" target="_blank">doc</a>.', 'ultimate-member' ), ultimatemember_plugin_name, UM_VERSION, ultimatemember_plugin_name, 'https://docs.ultimatemember.com/article/201-how-to-update-your-site' ) . '</p>',
 			), 0 );
+		}
+
+
+		function legacy_enabled_modules() {
+			if ( ! UM()->is_legacy ) {
+				return;
+			}
+
+			$this->add_notice( 'modules_when_legacy', array(
+				'class'       => 'warning',
+				'message'     => '<p>' . __( 'There is the text about unavailable to use modules with legacy design.', 'ultimate-member' ) . '</p>',
+				'dismissible' => false,
+			), 1 );
+		}
+
+
+		function legacy_notices_options() {
+			if ( isset( $_GET['section'] ) ) {
+				return;
+			}
+
+			if ( ! isset( $_GET['tab'] ) || 'appearance' !== $_GET['tab'] ) {
+				return;
+			}
+
+			$extension_plugins = UM()->config()->get( 'extension_plugins' );
+			$active_plugins = (array) get_option( 'active_plugins', array() );
+			if ( is_multisite() ) {
+				$active_plugins = array_merge( $active_plugins, get_site_option( 'active_sitewide_plugins', array() ) );
+			}
+
+			// disable option for v3 designs while some of the old extensions are active
+			$active_extension_plugins = array_intersect( $active_plugins, $extension_plugins );
+			if ( ! empty( $active_extension_plugins ) ) {
+				$this->add_notice( 'v3_design_disabled', array(
+					'class'       => 'warning',
+					'message'     => '<p>' . __( 'There is the text about unavailable to use v3 design because of old extensions are active.', 'ultimate-member' ) . '</p>',
+					'dismissible' => false,
+				), 1 );
+			}
+
+			// disable option for legacy designs while some of the modules are active
+			if ( ! UM()->is_legacy ) {
+				$modules = UM()->modules()->get_list();
+				if ( ! empty( $modules ) ) {
+					foreach ( $modules as $slug => $data ) {
+						if ( UM()->modules()->is_active( $slug ) ) {
+							$this->add_notice( 'v2_design_disabled', array(
+								'class'       => 'warning',
+								'message'     => '<p>' . __( 'There is the text about unavailable to use the legacy design because of v3 modules are active.', 'ultimate-member' ) . '</p>',
+								'dismissible' => false,
+							), 1 );
+							break;
+						}
+					}
+				}
+			}
 		}
 
 
@@ -537,7 +597,7 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 				ob_start(); ?>
 
 				<p>
-					<?php printf( __( '<strong>%s version %s</strong> needs to be updated to work correctly.<br />It is necessary to update the structure of the database and options that are associated with <strong>%s %s</strong>.<br />Please visit <a href="%s">"Upgrade"</a> page and run the upgrade process.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version, ultimatemember_plugin_name, ultimatemember_version, $url ); ?>
+					<?php printf( __( '<strong>%s version %s</strong> needs to be updated to work correctly.<br />It is necessary to update the structure of the database and options that are associated with <strong>%s %s</strong>.<br />Please visit <a href="%s">"Upgrade"</a> page and run the upgrade process.', 'ultimate-member' ), ultimatemember_plugin_name, UM_VERSION, ultimatemember_plugin_name, ultimatemember_version, $url ); ?>
 				</p>
 
 				<p>
@@ -561,7 +621,7 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 					} else {
 						$this->add_notice( 'upgrade', array(
 							'class'   => 'updated',
-							'message' => '<p>' . sprintf( __( '<strong>%s %s</strong> Successfully Upgraded', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version ) . '</p>',
+							'message' => '<p>' . sprintf( __( '<strong>%s %s</strong> Successfully Upgraded', 'ultimate-member' ), ultimatemember_plugin_name, UM_VERSION ) . '</p>',
 						), 4 );
 					}
 				}

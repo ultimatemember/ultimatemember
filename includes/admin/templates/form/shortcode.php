@@ -10,7 +10,7 @@
 				'id'        => '_um_is_default',
 				'type'      => 'select',
 				'label'     => __( 'Default Form', 'ultimate-member' ),
-				'tooltip'   => sprintf( __( 'If you set this form as default you will have an ability to use %s shortcode for the displaying form at the page. Otherwise you will have to use %s', 'ultimate-member' ), UM()->shortcodes()->get_default_shortcode( get_the_ID() ), UM()->shortcodes()->get_shortcode( get_the_ID() ) ),
+				'description'   => sprintf( __( 'If you set this form as default you will have an ability to use %s shortcode for the displaying form at the page. Otherwise you will have to use %s', 'ultimate-member' ), UM()->shortcodes()->get_default_shortcode( get_the_ID() ), UM()->shortcodes()->get_shortcode( get_the_ID() ) ),
 				'value'     => UM()->query()->get_meta_value( '_um_is_default' ),
 				'options'   => array(
 					0	=> __( 'No', 'ultimate-member' ),

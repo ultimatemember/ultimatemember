@@ -345,7 +345,7 @@ font-weight: normal;
 	line-height: 70px;
 }
 
-.um-profile-note i.um-faicon-lock{
+.um-profile-note i.fa-lock {
 	position: relative;
 	top: 2px;
 	display: inline-block;

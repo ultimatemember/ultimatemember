@@ -23,6 +23,20 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 *
 		 * @var array
 		 */
+		var $modules = array();
+
+
+		/**
+		 * @var array
+		 */
+		var $extension_plugins = array();
+
+
+		/**
+		 * @since 3.0
+		 *
+		 * @var array
+		 */
 		var $default_settings = array();
 
 
@@ -107,6 +121,85 @@ if ( ! class_exists( 'um\Config' ) ) {
 
 
 		/**
+		 *
+		 */
+		public function init_modules() {
+			$this->modules = array(
+				'jobboardwp'       => array(
+					'title'       => __( 'JobBoardWP integration', 'ultimate-member' ),
+					'description' => __( 'Integrates Ultimate Member with JobBoardWP.', 'ultimate-member' ),
+					'plugin_slug' => 'um-jobboardwp/um-jobboardwp.php',
+				),
+				'forumwp'          => array(
+					'title'       => __( 'ForumWP integration', 'ultimate-member' ),
+					'description' => __( 'Integrates Ultimate Member with ForumWP.', 'ultimate-member' ),
+					'plugin_slug' => 'um-forumwp/um-forumwp.php',
+				),
+				'online'           => array(
+					'title'       => __( 'Online', 'ultimate-member' ),
+					'description' => __( 'Display online users and show the user online status on your site.', 'ultimate-member' ),
+					'plugin_slug' => 'um-online/um-online.php',
+				),
+				'recaptcha'        => array(
+					'title'       => __( 'Google reCAPTCHA', 'ultimate-member' ),
+					'description' => __( 'Protect your website from spam and integrate Google reCAPTCHA into your Ultimate Member forms.', 'ultimate-member' ),
+					'plugin_slug' => 'um-recaptcha/um-recaptcha.php',
+				),
+				'terms-conditions' => array(
+					'title'       => __( 'Terms & Conditions', 'ultimate-member' ),
+					'description' => __( 'Add a terms and condition checkbox to your registration forms & require users to agree to your T&Cs before registering on your site.', 'ultimate-member' ),
+					'plugin_slug' => 'um-terms-conditions/um-terms-conditions.php',
+				),
+			);
+
+			foreach ( $this->modules as $slug => &$data ) {
+				$data['key'] = $slug;
+
+				$data['path'] = UM_PATH . 'modules' . DIRECTORY_SEPARATOR . $slug;
+				$data['url'] = UM_URL . "modules/{$slug}/";
+			}
+		}
+
+
+		/**
+		 *
+		 */
+		public function init_extension_plugins() {
+			$this->extension_plugins = array(
+				'um-bbpress/um-bbpress.php',
+				'um-followers/um-followers.php',
+				'um-forumwp/um-forumwp.php',
+				'um-friends/um-friends.php',
+				'um-groups/um-groups.php',
+				'um-instagram/um-instagram.php',
+				'um-jobboardwp/um-jobboardwp.php',
+				'um-mailchimp/um-mailchimp.php',
+				'um-messaging/um-messaging.php',
+				'um-mycred/um-mycred.php',
+				'um-notices/um-notices.php',
+				'um-notifications/um-notifications.php',
+				'um-online/um-online.php',
+				'um-private-content/um-private-content.php',
+				'um-profile-completeness/um-profile-completeness.php',
+				'um-profile-tabs/um-profile-tabs.php',
+				'um-recaptcha/um-recaptcha.php',
+				'um-reviews/um-reviews.php',
+				'um-social-activity/um-social-activity.php',
+				'um-social-login/um-social-login.php',
+				'um-terms-conditions/um-terms-conditions.php',
+				'um-unsplash/um-unsplash.php',
+				'um-user-bookmarks/um-user-bookmarks.php',
+				'um-user-locations/um-user-locations.php',
+				'um-user-notes/um-user-notes.php',
+				'um-user-photos/um-user-photos.php',
+				'um-user-tags/um-user-tags.php',
+				'um-verified-users/um-verified-users.php',
+				'um-woocommerce/um-woocommerce.php',
+			);
+		}
+
+
+		/**
 		 * Init legacy global option that have been deprecated in 2.0
 		 *
 		 * @since 3.0
@@ -142,6 +235,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 */
 		function init_default_settings() {
 			$this->default_settings = array(
+				'enable_version_3_design'               => 1,
 				'restricted_access_post_metabox'        => array( 'post' => 1, 'page' => 1 ),
 				'disable_restriction_pre_queries'       => 0,
 				'uninstall_on_delete'                   => 0,

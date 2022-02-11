@@ -186,15 +186,16 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		 */
 		function count_users_by_status( $status ) {
 			$args = array(
-				'fields'     => 'ids',
-				'number'     => 0,
-				'meta_query' => array(
+				'fields'               => 'ids',
+				'number'               => 0,
+				'meta_query'           => array(
 					array(
 						'key'     => 'account_status',
 						'value'   => $status,
 						'compare' => '=',
 					),
 				),
+				'um_custom_user_query' => true,
 			);
 
 			$users = new \WP_User_Query( $args );

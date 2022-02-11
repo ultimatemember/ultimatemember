@@ -2,7 +2,7 @@
 
 
 function um_upgrade_skypeid_fields230() {
-	UM()->admin()->check_ajax_nonce();
+	UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 	um_maybe_unset_time_limit();
 
@@ -63,7 +63,7 @@ function um_upgrade_skypeid_fields230() {
 
 
 function um_upgrade_usermeta_count230() {
-	UM()->admin()->check_ajax_nonce();
+	UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 	um_maybe_unset_time_limit();
 
@@ -81,7 +81,7 @@ function um_upgrade_usermeta_count230() {
 
 
 function um_upgrade_usermeta_part230() {
-	UM()->admin()->check_ajax_nonce();
+	UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 	um_maybe_unset_time_limit();
 
@@ -134,7 +134,7 @@ function um_upgrade_usermeta_part230() {
 
 
 function um_upgrade_reset_password230() {
-	UM()->admin()->check_ajax_nonce();
+	UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
 	um_maybe_unset_time_limit();
 

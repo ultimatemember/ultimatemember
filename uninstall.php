@@ -77,6 +77,7 @@ if ( ! empty( $delete_options ) ) {
 	delete_option( 'um_core_forms' ); // option is created on the first install
 	delete_option( 'um_core_directories' ); // option is created on the first install
 	delete_option( 'um_flush_rewrite_rules' );
+	delete_option( 'um_cache_fonticons' ); // old fonticons option
 
 	//remove all users cache
 	UM()->user()->remove_cache_all_users();

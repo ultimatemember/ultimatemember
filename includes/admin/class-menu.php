@@ -41,7 +41,7 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 
 			add_action( 'admin_head', array( $this, 'menu_order_count' ) );
 
-			add_action( 'parent_file', array( &$this, 'parent_file' ), 9 );
+			add_filter( 'admin_body_class', array( &$this, 'selected_menu' ), 10, 1 );
 		}
 
 
@@ -290,12 +290,12 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 		 * Extension menu
 		 */
 		function modules_menu() {
-		    $modules = UM()->modules()->get_list();
-		    if ( empty( $modules ) ) {
-		        return;
-            }
+			$modules = UM()->modules()->get_list();
+			if ( empty( $modules ) ) {
+				return;
+			}
 
-			add_submenu_page( $this->slug, __( 'Modules', 'ultimate-member' ), '<span style="color: #00B9EB">' . __( 'Modules', 'ultimate-member' ) . '</span>', 'manage_options', 'um-modules', [ &$this, 'modules_page' ] );
+			add_submenu_page( $this->slug, __( 'Modules', 'ultimate-member' ), '<span style="color: #00B9EB">' . __( 'Modules', 'ultimate-member' ) . '</span>', 'manage_options', 'um-modules', array( &$this, 'modules_page' ) );
 		}
 
 
@@ -391,7 +391,7 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 
 				<div id="um-metaboxes-general" class="wrap">
 
-					<h1>Ultimate Member <sup><?php echo ultimatemember_version; ?></sup></h1>
+					<h1>Ultimate Member <sup><?php echo UM_VERSION; ?></sup></h1>
 
 					<?php wp_nonce_field( 'um-metaboxes-general' ); ?>
 					<?php wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false ); ?>
@@ -429,20 +429,79 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 
 
 		/**
-		 * Fix parent file for correct highlighting
+		 * Made selected UM menu on Add/Edit CPT and Term Taxonomies
 		 *
-		 * @param $parent_file
+		 * @param string $classes
 		 *
 		 * @return string
+		 *
+		 * @since 1.0
 		 */
-		function parent_file( $parent_file ) {
-			global $current_screen;
-			$screen_id = $current_screen->id;
-			if ( strstr( $screen_id, 'um_' ) ) {
-				$parent_file = 'ultimatemember';
+		function selected_menu( $classes ) {
+			global $submenu, $pagenow;
+
+			if ( isset( $submenu['ultimatemember'] ) ) {
+				if ( isset( $_GET['post_type'] ) && ( 'um_directory' === $_GET['post_type'] || 'um_form' === $_GET['post_type'] ) ) {
+					add_filter( 'parent_file', array( &$this, 'change_parent_file' ), 200, 1 );
+				}
+
+				if ( 'post.php' === $pagenow && ( isset( $_GET['post'] ) && ( 'um_directory' === get_post_type( $_GET['post'] ) || 'um_form' == get_post_type( $_GET['post'] ) ) ) ) {
+					add_filter( 'parent_file', array( &$this, 'change_parent_file' ), 200, 1 );
+				}
+
+				add_filter( 'submenu_file', array( &$this, 'change_submenu_file' ), 200, 2 );
 			}
+
+			return $classes;
+		}
+
+
+		/**
+		 * Return admin submenu variable for display pages
+		 *
+		 * @param string $parent_file
+		 *
+		 * @return string
+		 *
+		 * @since 3.0
+		 */
+		function change_parent_file( $parent_file ) {
+			global $pagenow;
+
+			if ( 'post-new.php' !== $pagenow ) {
+				$pagenow = 'admin.php';
+			}
+
+			$parent_file = 'ultimatemember';
+
 			return $parent_file;
 		}
 
+
+		/**
+		 * Return admin submenu variable for display pages
+		 *
+		 * @param string $submenu_file
+		 * @param string $parent_file
+		 *
+		 * @return string
+		 *
+		 * @since 3.0
+		 */
+		function change_submenu_file( $submenu_file, $parent_file ) {
+			global $pagenow;
+
+			if ( 'post-new.php' === $pagenow ) {
+				if ( 'ultimatemember' === $parent_file ) {
+					if ( 'post-new.php' === $pagenow && isset( $_GET['post_type'] ) && ( 'um_directory' === $_GET['post_type'] || 'um_form' === $_GET['post_type'] ) ) {
+						$submenu_file = 'edit.php?post_type=' . sanitize_key( $_GET['post_type'] );
+					}
+
+					$pagenow = 'admin.php';
+				}
+			}
+
+			return $submenu_file;
+		}
 	}
 }

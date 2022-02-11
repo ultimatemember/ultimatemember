@@ -40,21 +40,33 @@ final class Init {
 	 * Init constructor.
 	 */
 	function __construct() {
+		// common classes
+		$this->common();
 
+		if ( UM()->is_request( 'admin' ) ) {
+			$this->admin();
+		}
 	}
 
 
 	/**
-	 * @return includes\Form()
+	 * @return includes\Common()
 	 */
-	function form() {
-		if ( empty( UM()->classes['umm\terms_conditions\includes\form'] ) ) {
-			UM()->classes['umm\terms_conditions\includes\form'] = new includes\Form();
+	function common() {
+		if ( empty( UM()->classes['umm\terms_conditions\includes\common'] ) ) {
+			UM()->classes['umm\terms_conditions\includes\common'] = new includes\Common();
 		}
-		return UM()->classes['umm\terms_conditions\includes\form'];
+		return UM()->classes['umm\terms_conditions\includes\common'];
 	}
 
 
-
-
+	/**
+	 * @return includes\admin\Init()
+	 */
+	function admin() {
+		if ( empty( UM()->classes['umm\terms_conditions\includes\admin\init'] ) ) {
+			UM()->classes['umm\terms_conditions\includes\admin\init'] = new includes\admin\Init();
+		}
+		return UM()->classes['umm\terms_conditions\includes\admin\init'];
+	}
 }

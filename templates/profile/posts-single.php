@@ -2,7 +2,8 @@
 
 <div class="um-item">
 	<div class="um-item-link">
-		<i class="um-icon-ios-paper"></i>
+		<i class="fas fa-newspaper"></i>
+
 		<a href="<?php echo esc_url( get_permalink( $post ) ); ?>"><?php echo get_the_title( $post ); ?></a>
 	</div>
 

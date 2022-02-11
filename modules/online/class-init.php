@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @package umm\online
  */
-final class Init {
+final class Init extends Functions {
 
 
 	/**
@@ -40,14 +40,28 @@ final class Init {
 	 * Init constructor.
 	 */
 	function __construct() {
+		parent::__construct();
+
+		// common classes
 		$this->common();
-		if ( UM()->is_request( 'frontend' ) ) {
+		$this->enqueue();
+		$this->fields();
+		$this->member_directory();
+		// don't use construct here because there are helper functions inside User class
+		$this->user()->hooks();
+
+		$this->friends();
+		$this->private_messages();
+
+		if ( UM()->is_request( 'admin' ) ) {
+			$this->admin();
+		} elseif ( UM()->is_request( 'frontend' ) ) {
+			$this->account();
+			$this->profile();
 			$this->shortcode();
 		}
 
-		$this->member_directory();
-
-		add_action( 'widgets_init', [ &$this, 'widgets_init' ] );
+		add_action( 'widgets_init', array( &$this, 'widgets_init' ) );
 	}
 
 
@@ -71,6 +85,39 @@ final class Init {
 
 
 	/**
+	 * @return includes\Enqueue()
+	 */
+	function enqueue() {
+		if ( empty( UM()->classes['umm\online\includes\enqueue'] ) ) {
+			UM()->classes['umm\online\includes\enqueue'] = new includes\Enqueue();
+		}
+		return UM()->classes['umm\online\includes\enqueue'];
+	}
+
+
+	/**
+	 * @return includes\Admin()
+	 */
+	function admin() {
+		if ( empty( UM()->classes['umm\online\includes\admin'] ) ) {
+			UM()->classes['umm\online\includes\admin'] = new includes\Admin();
+		}
+		return UM()->classes['umm\online\includes\admin'];
+	}
+
+
+	/**
+	 * @return includes\Fields()
+	 */
+	function fields() {
+		if ( empty( UM()->classes['umm\online\includes\fields'] ) ) {
+			UM()->classes['umm\online\includes\fields'] = new includes\Fields();
+		}
+		return UM()->classes['umm\online\includes\fields'];
+	}
+
+
+	/**
 	 * @return includes\Member_Directory()
 	 */
 	function member_directory() {
@@ -78,6 +125,69 @@ final class Init {
 			UM()->classes['umm\online\includes\member_directory'] = new includes\Member_Directory();
 		}
 		return UM()->classes['umm\online\includes\member_directory'];
+	}
+
+
+	/**
+	 * @return null|includes\cross_modules\Friends()
+	 */
+	function friends() {
+		if ( ! UM()->modules()->is_active( 'friends' ) ) {
+			return null;
+		}
+
+		if ( empty( UM()->classes['umm\online\includes\cross_modules\friends'] ) ) {
+			UM()->classes['umm\online\includes\cross_modules\friends'] = new includes\cross_modules\Friends();
+		}
+		return UM()->classes['umm\online\includes\cross_modules\friends'];
+	}
+
+
+	/**
+	 * @return null|includes\cross_modules\Private_Messages()
+	 */
+	function private_messages() {
+		if ( ! UM()->modules()->is_active( 'private_messages' ) ) {
+			return null;
+		}
+
+		if ( empty( UM()->classes['umm\online\includes\cross_modules\private_messages'] ) ) {
+			UM()->classes['umm\online\includes\cross_modules\private_messages'] = new includes\cross_modules\Private_Messages();
+		}
+		return UM()->classes['umm\online\includes\cross_modules\private_messages'];
+	}
+
+
+	/**
+	 * @return includes\User()
+	 */
+	function user() {
+		if ( empty( UM()->classes['umm\online\includes\user'] ) ) {
+			UM()->classes['umm\online\includes\user'] = new includes\User();
+		}
+		return UM()->classes['umm\online\includes\user'];
+	}
+
+
+	/**
+	 * @return includes\Account()
+	 */
+	function account() {
+		if ( empty( UM()->classes['umm\online\includes\account'] ) ) {
+			UM()->classes['umm\online\includes\account'] = new includes\Account();
+		}
+		return UM()->classes['umm\online\includes\account'];
+	}
+
+
+	/**
+	 * @return includes\Profile()
+	 */
+	function profile() {
+		if ( empty( UM()->classes['umm\online\includes\profile'] ) ) {
+			UM()->classes['umm\online\includes\profile'] = new includes\Profile();
+		}
+		return UM()->classes['umm\online\includes\profile'];
 	}
 
 
@@ -90,6 +200,4 @@ final class Init {
 		}
 		return UM()->classes['umm\online\includes\shortcode'];
 	}
-
-
 }

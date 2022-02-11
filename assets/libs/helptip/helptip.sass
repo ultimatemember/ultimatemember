@@ -1,0 +1,33 @@
+@import "../../css/colors"
+@import "../../css/selectors"
+
+/*Helptip*/
+.ui-tooltip
+  &.#{$helptip}
+    padding: 8px
+    color: $grey-text !important
+    background: $overlay !important
+    position: absolute
+    z-index: 1000000
+    max-width: 300px
+    font-size: 12px
+    border-radius: 5px
+    border: none !important
+    text-shadow: none !important
+
+.#{$helptip}
+  cursor: pointer
+  vertical-align: middle
+  &:hover
+    opacity: 1
+    &:before
+      opacity: 0.8
+  &.dashicons
+    height: 22px
+    &:before
+      @extend .#{$helptip}.dashicons
+  &.dashicons-editor-help:before
+    float: left
+    font-size: 20px
+    line-height: 20px
+    color: $overlay !important

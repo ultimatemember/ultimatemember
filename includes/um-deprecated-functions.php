@@ -144,3 +144,22 @@ function um_js_redirect( $url ) {
 	}
 	exit;
 }
+
+
+/**
+ * Prepare template
+ *
+ * @param  string  $k
+ * @param  string  $title
+ * @param  array   $data
+ * @param  boolean $style
+ * @return string
+ *
+ * @deprecated 3.0
+ *
+ * @since  2.1.4
+ */
+function um_user_submited_display( $k, $title, $data = array(), $style = true ) {
+	_deprecated_function( __FUNCTION__, '3.0', 'um_user_submitted_display()' );
+	return um_user_submitted_display( $k, $title, $data, $style );
+}

@@ -20,14 +20,14 @@ class Modules {
 	 *
 	 * @var array
 	 */
-	private $list = [];
+	private $list = array();
 
 
 	/**
 	 * Modules constructor.
 	 */
 	function __construct() {
-		add_action( 'um_core_loaded', [ &$this, 'predefined_modules' ], 0 );
+		add_action( 'um_core_loaded', array( &$this, 'predefined_modules' ), 0 );
 	}
 
 
@@ -39,41 +39,7 @@ class Modules {
 	 * @uses DIRECTORY_SEPARATOR for getting proper path to modules' directories
 	 */
 	function predefined_modules() {
-		$modules = [
-			'jobboardwp'   => [
-				'title'         => __( 'JobBoardWP integration', 'ultimate-member' ),
-				'description'   => __( 'Integrates Ultimate Member with JobBoardWP.', 'ultimate-member' ),
-				'plugin_slug'   => 'um-jobboardwp/um-jobboardwp.php',
-			],
-			'forumwp'   => [
-				'title'         => __( 'ForumWP integration', 'ultimate-member' ),
-				'description'   => __( 'Integrates Ultimate Member with ForumWP.', 'ultimate-member' ),
-				'plugin_slug'   => 'um-forumwp/um-forumwp.php',
-			],
-			'online'    => [
-				'title'         => __( 'Online', 'ultimate-member' ),
-				'description'   => __( 'Display online users and show the user online status on your site.', 'ultimate-member' ),
-				'plugin_slug'   => 'um-online/um-online.php',
-			],
-			'recaptcha' => [
-				'title'         => __( 'Google reCAPTCHA', 'ultimate-member' ),
-				'description'   => __( 'Protect your website from spam and integrate Google reCAPTCHA into your Ultimate Member forms.', 'ultimate-member' ),
-				'plugin_slug'   => 'um-recaptcha/um-recaptcha.php',
-			],
-			'terms-conditions'   => [
-				'title'         => __( 'Terms & Conditions', 'ultimate-member' ),
-				'description'   => __( 'Add a terms and condition checkbox to your registration forms & require users to agree to your T&Cs before registering on your site.', 'ultimate-member' ),
-				'plugin_slug'   => 'um-terms-conditions/um-terms-conditions.php',
-			],
-		];
-
-		foreach ( $modules as $slug => &$data ) {
-			$data['key'] = $slug;
-
-			$data['path'] = um_path . 'modules' . DIRECTORY_SEPARATOR . $slug;
-			$data['url'] = um_url . "modules/{$slug}/";
-		}
-
+		$modules = UM()->config()->get( 'modules' );
 		$modules = apply_filters( 'um_predefined_modules', $modules );
 
 		/** This filter is documented in wp-admin/includes/class-wp-plugins-list-table.php */
@@ -167,6 +133,10 @@ class Modules {
 	 * @return bool
 	 */
 	function is_active( $slug ) {
+		if ( UM()->is_legacy ) {
+			return false;
+		}
+
 		if ( ! $this->exists( $slug ) ) {
 			return false;
 		}
@@ -193,6 +163,10 @@ class Modules {
 	 * @return bool
 	 */
 	function is_disabled( $slug ) {
+		if ( UM()->is_legacy ) {
+			return false;
+		}
+
 		if ( ! $this->exists( $slug ) ) {
 			return false;
 		}
@@ -214,6 +188,10 @@ class Modules {
 	 * @return bool
 	 */
 	function can_activate( $slug ) {
+		if ( UM()->is_legacy ) {
+			return false;
+		}
+
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return false;
 		}
@@ -246,6 +224,10 @@ class Modules {
 	 * @return bool
 	 */
 	function can_deactivate( $slug ) {
+		if ( UM()->is_legacy ) {
+			return false;
+		}
+
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return false;
 		}
@@ -280,6 +262,10 @@ class Modules {
 	 * @return bool
 	 */
 	function can_flush( $slug ) {
+		if ( UM()->is_legacy ) {
+			return false;
+		}
+
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return false;
 		}
@@ -402,6 +388,11 @@ class Modules {
 	 * @uses run
 	 */
 	function load_modules() {
+		// disable modules init when v2 legacy is used
+		if ( UM()->is_legacy ) {
+			return;
+		}
+
 		$modules = $this->get_list();
 		if ( empty( $modules ) ) {
 			return;
@@ -426,6 +417,10 @@ class Modules {
 	 * @uses UM::call_class()
 	 */
 	private function run( $slug ) {
+		if ( UM()->is_legacy ) {
+			return;
+		}
+
 		$slug = UM()->undash( $slug );
 		UM()->call_class( "umm\\{$slug}\\Init" );
 	}
@@ -442,6 +437,10 @@ class Modules {
 	 * @return mixed
 	 */
 	private function install( $slug ) {
+		if ( UM()->is_legacy ) {
+			return null;
+		}
+
 		$slug = UM()->undash( $slug );
 		return UM()->call_class( "umm\\{$slug}\\Install" );
 	}

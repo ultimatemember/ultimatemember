@@ -243,8 +243,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 			$submitted = get_user_meta( $user_id, 'submitted', true );
 			if ( ! empty( $submitted ) ) {
-				$actions['view_info'] = '<a href="javascript:void(0);" data-modal="UM_preview_registration" data-modal-size="smaller" 
-				data-dynamic-content="um_admin_review_registration" data-arg1="' . esc_attr( $user_id ) . '" data-arg2="edit_registration">' . __( 'Info', 'ultimate-member' ) . '</a>';
+				$actions['view_info'] = '<a href="#" class="um-preview-registration" data-user_id="' . esc_attr( $user_id ) . '">' . esc_html__( 'Info', 'ultimate-member' ) . '</a>';
 			}
 
 			if ( ! current_user_can( 'administrator' ) ) {

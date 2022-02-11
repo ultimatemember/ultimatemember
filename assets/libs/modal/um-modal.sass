@@ -1,0 +1,148 @@
+/**
+ * Ultimate Member modal styles
+ */
+
+@import "../../css/colors"
+@import "../../css/mixins"
+@import "../../css/selectors"
+
+/* body */
+.#{$prefix}overflow-hidden
+  overflow-x: hidden
+  overflow-y: hidden
+
+/* hidden content */
+.#{$prefix}modal-hidden-content
+  display: none
+
+/* overlay */
+.#{$prefix}modal-overlay
+  background: rgba( 0, 0, 0, 0.85 )
+  width: 100%
+  height: 100%
+  position: fixed
+  left: 0
+  top: 0
+  z-index: 99999
+
+/* modal */
+.#{$prefix}modal
+  border-radius: 3px
+  bottom: -50px
+  box-sizing: border-box
+  display: block
+  left: 50%
+  margin-left: -170px
+  min-width: 340px
+  opacity: 0
+  overflow: hidden
+  position: fixed
+  transition: bottom 0.5s ease-out 0.1s
+  z-index: 100000
+
+  &.large
+    margin-left: -450px
+    width: 900px
+  &.normal
+    margin-left: -300px
+    width: 600px
+  &.small
+    margin-left: -200px
+    width: 400px
+
+  *
+    -webkit-font-smoothing: antialiased
+    -moz-osx-font-smoothing: grayscale
+
+  .#{$prefix}modal-close
+    color: #fff
+    cursor: pointer
+    display: block
+    font-size: 24px
+    line-height: 20px
+    right: 0
+    padding: 10px
+    position: absolute
+    text-decoration: none
+    top: 0
+    z-index: 10
+    &.#{$prefix}modal-close-fixed
+      position: fixed
+
+
+  .#{$prefix}modal-header
+    & + .#{$prefix}modal-body
+      background: #fff
+      box-sizing: border-box
+      min-height: 3px
+      max-height: inherit
+      padding: 20px
+      width: 100%
+      overflow: auto
+
+    .#{$prefix}modal-body
+      .#{$prefix}single-image-preview.crop
+        img
+          float: left
+
+  &.loading
+    background-color: #fff
+    .#{$prefix}modal-body
+      background: #fff url(images/loading.gif) no-repeat center
+      min-height: 100px
+      & > *
+        opacity: 0.5
+
+
+  .#{$prefix}modal-header
+    background-color: #{$um-base}
+    border-radius: 3px 3px 0 0
+    height: 44px
+    line-height: 40px
+    color: #fff
+    padding: 2px 20px
+    box-sizing: border-box
+    font-size: 17px
+
+  .#{$prefix}modal-footer
+    background-color: #fff
+    -moz-border-radius: 0 0 3px 3px
+    -webkit-border-radius: 0 0 3px 3px
+    border-radius: 0 0 3px 3px
+    padding: 0.5em
+    text-align: right
+
+
+  .#{$prefix}modal-btn
+    cursor: pointer
+    line-height: 34px
+    height: 34px
+    display: inline-block
+    -moz-border-radius: 3px
+    -webkit-border-radius: 3px
+    border-radius: 3px
+    padding: 0 20px
+    text-align: center
+    color: #fff
+    vertical-align: middle
+    font-size: 14px
+    box-sizing: border-box
+    transition: 0.2s
+    text-decoration: none
+
+    &:hover
+      background: #44b0ec
+      color: #fff
+
+    &.alt
+      color: #666
+      background: #eee
+      &:hover
+        background: #e5e5e5
+
+    &.disabled
+      opacity: 0.5
+      cursor: default
+      &:hover
+        opacity: 0.5
+        cursor: default

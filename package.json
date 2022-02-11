@@ -1,0 +1,37 @@
+{
+  "name": "roots",
+  "version": "7.0.3",
+  "author": "Ben Word <ben@benword.com>",
+  "homepage": "http://roots.io",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/roots/roots.git"
+  },
+  "bugs": {
+    "url": "https://github.com/roots/roots/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://opensource.org/licenses/MIT"
+    }
+  ],
+  "scripts": {
+    "postinstall": "node node_modules/bower/bin/bower install && grunt dev"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-cli": "^2.3.0",
+    "gulp-concat": "2.6.1",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^4.1.0",
+    "gulp-uglify": "^3.0.2",
+    "gulp-clean-css": "^4.3.0",
+    "v_to_md5": "*"
+  },
+  "dependencies": {
+  }
+}

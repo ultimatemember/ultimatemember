@@ -1,49 +1,40 @@
 <?php
 /**
-* Uninstall UM ForumWP
-*
-*/
+ * Uninstall UM Terms Conditions
+ *
+ */
 
 // Exit if accessed directly.
-if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) return;
+if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit;
 
 
-if ( ! defined( 'um_forumwp_path' ) ) {
-	define( 'um_forumwp_path', plugin_dir_path( __FILE__ ) );
+if ( ! defined( 'um_terms_conditions_path' ) ) {
+	define( 'um_terms_conditions_path', plugin_dir_path( __FILE__ ) );
 }
 
-if ( ! defined( 'um_forumwp_url' ) ) {
-	define( 'um_forumwp_url', plugin_dir_url( __FILE__ ) );
+if ( ! defined( 'um_terms_conditions_url' ) ) {
+	define( 'um_terms_conditions_url', plugin_dir_url( __FILE__ ) );
 }
 
-if ( ! defined( 'um_forumwp_plugin' ) ) {
-	define( 'um_forumwp_plugin', plugin_basename( __FILE__ ) );
+if ( ! defined( 'um_terms_conditions_plugin' ) ) {
+	define( 'um_terms_conditions_plugin', plugin_basename( __FILE__ ) );
 }
 
 $options = get_option( 'um_options', array() );
 
 if ( ! empty( $options['uninstall_on_delete'] ) ) {
-	if ( ! class_exists( 'um_ext\um_forumwp\core\ForumWP_Setup' ) ) {
-		require_once um_forumwp_path . 'includes/core/class-forumwp-setup.php';
-	}
-
-	$fmwp_setup = new um_ext\um_forumwp\core\ForumWP_Setup();
-
-	//remove settings
-	foreach ( $fmwp_setup->settings_defaults as $k => $v ) {
-		unset( $options[ $k ] );
-	}
-
-	update_option( 'um_options', $options );
-
 	global $wpdb;
 	$wpdb->query(
 		"DELETE 
 		FROM {$wpdb->postmeta} 
-		WHERE meta_key = '_um_forumwp_can_topic' OR 
-		      meta_key = '_um_forumwp_can_reply'"
+		WHERE meta_key LIKE '_um_register_use_gdpr' OR 
+			  meta_key LIKE '_um_register_use_gdpr_content_id' OR
+			  meta_key LIKE '_um_register_use_gdpr_toggle_show' OR
+			  meta_key LIKE '_um_register_use_gdpr_toggle_hide' OR
+			  meta_key LIKE '_um_register_use_gdpr_agreement' OR
+			  meta_key LIKE '_um_register_use_gdpr_error_text'"
 	);
 
-	delete_option( 'um_forumwp_last_version_upgrade' );
-	delete_option( 'um_forumwp_version' );
+	delete_option( 'um_terms_conditions_last_version_upgrade' );
+	delete_option( 'um_terms_conditions_version' );
 }

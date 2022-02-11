@@ -93,34 +93,34 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		function get_tabs() {
 			$tabs = array();
 			$tabs[100]['general'] = array(
-				'icon'          => 'um-faicon-user',
-				'title'         => __( 'Account', 'ultimate-member' ),
-				'submit_title'  => __( 'Update Account', 'ultimate-member' ),
+				'icon'         => 'fas fa-user',
+				'title'        => __( 'Account', 'ultimate-member' ),
+				'submit_title' => __( 'Update Account', 'ultimate-member' ),
 			);
 
 			$tabs[200]['password'] = array(
-				'icon'          => 'um-faicon-asterisk',
-				'title'         => __( 'Change Password', 'ultimate-member' ),
-				'submit_title'  => __( 'Update Password', 'ultimate-member' ),
+				'icon'         => 'fas fa-asterisk',
+				'title'        => __( 'Change Password', 'ultimate-member' ),
+				'submit_title' => __( 'Update Password', 'ultimate-member' ),
 			);
 
 			$tabs[300]['privacy'] = array(
-				'icon'          => 'um-faicon-lock',
-				'title'         => __( 'Privacy', 'ultimate-member' ),
-				'submit_title'  => __( 'Update Privacy', 'ultimate-member' ),
+				'icon'         => 'fas fa-lock',
+				'title'        => __( 'Privacy', 'ultimate-member' ),
+				'submit_title' => __( 'Update Privacy', 'ultimate-member' ),
 			);
 
 			$tabs[400]['notifications'] = array(
-				'icon'          => 'um-faicon-envelope',
-				'title'         => __( 'Notifications', 'ultimate-member' ),
-				'submit_title'  => __( 'Update Notifications', 'ultimate-member' ),
+				'icon'         => 'far fa-envelope',
+				'title'        => __( 'Notifications', 'ultimate-member' ),
+				'submit_title' => __( 'Update Notifications', 'ultimate-member' ),
 			);
 
 			//if user cannot delete profile hide delete tab
 			if ( um_user( 'can_delete_profile' ) || um_user( 'can_delete_everyone' ) ) {
 
 				$tabs[99999]['delete'] = array(
-					'icon'          => 'um-faicon-trash-o',
+					'icon'          => 'far fa-trash-alt',
 					'title'         => __( 'Delete Account', 'ultimate-member' ),
 					'submit_title'  => __( 'Delete Account', 'ultimate-member' ),
 				);

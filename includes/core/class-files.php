@@ -42,29 +42,29 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			add_action( 'template_redirect', array( &$this, 'download_routing' ), 1 );
 
 			$this->fonticon = array(
-				'pdf' 	=> array('icon' 	=> 'um-faicon-file-pdf-o', 'color' => '#D24D4D' ),
-				'txt' 	=> array('icon' 	=> 'um-faicon-file-text-o' ),
-				'csv' 	=> array('icon' 	=> 'um-faicon-file-text-o' ),
-				'doc' 	=> array('icon' 	=> 'um-faicon-file-text-o', 'color' => '#2C95D5' ),
-				'docx' 	=> array('icon' 	=> 'um-faicon-file-text-o', 'color' => '#2C95D5' ),
-				'odt' 	=> array('icon' 	=> 'um-faicon-file-text-o', 'color' => '#2C95D5' ),
-				'ods' 	=> array('icon' 	=> 'um-faicon-file-excel-o', 'color' => '#51BA6A' ),
-				'xls' 	=> array('icon' 	=> 'um-faicon-file-excel-o', 'color' => '#51BA6A' ),
-				'xlsx' 	=> array('icon' 	=> 'um-faicon-file-excel-o', 'color' => '#51BA6A' ),
-				'zip' 	=> array('icon' 	=> 'um-faicon-file-zip-o' ),
-				'rar' 	=> array('icon'		=> 'um-faicon-file-zip-o' ),
-				'mp3'	=> array('icon'		=> 'um-faicon-file-audio-o' ),
-				'jpg' 	=> array('icon' 	=> 'um-faicon-picture-o' ),
-				'jpeg' 	=> array('icon' 	=> 'um-faicon-picture-o' ),
-				'png' 	=> array('icon' 	=> 'um-icon-image' ),
-				'gif' 	=> array('icon' 	=> 'um-icon-images' ),
-				'eps' 	=> array('icon' 	=> 'um-icon-images' ),
-				'psd' 	=> array('icon' 	=> 'um-icon-images' ),
-				'tif' 	=> array('icon' 	=> 'um-icon-image' ),
-				'tiff' 	=> array('icon' 	=> 'um-icon-image' ),
+				'pdf' 	=> array('icon' 	=> 'far fa-file-pdf', 'color' => '#D24D4D' ),
+				'txt' 	=> array('icon' 	=> 'far fa-file-alt' ),
+				'csv' 	=> array('icon' 	=> 'far fa-file-alt' ),
+				'doc' 	=> array('icon' 	=> 'far fa-file-alt', 'color' => '#2C95D5' ),
+				'docx' 	=> array('icon' 	=> 'far fa-file-alt', 'color' => '#2C95D5' ),
+				'odt' 	=> array('icon' 	=> 'far fa-file-alt', 'color' => '#2C95D5' ),
+				'ods' 	=> array('icon' 	=> 'far fa-file-excel', 'color' => '#51BA6A' ),
+				'xls' 	=> array('icon' 	=> 'far fa-file-excel', 'color' => '#51BA6A' ),
+				'xlsx' 	=> array('icon' 	=> 'far fa-file-excel', 'color' => '#51BA6A' ),
+				'zip' 	=> array('icon' 	=> 'far fa-file-archive' ),
+				'rar' 	=> array('icon'		=> 'far fa-file-archive' ),
+				'mp3'	=> array('icon'		=> 'far fa-file-audio' ),
+				'jpg' 	=> array('icon' 	=> 'far fa-image' ),
+				'jpeg' 	=> array('icon' 	=> 'far fa-image' ),
+				'png' 	=> array('icon' 	=> 'far fa-image' ),
+				'gif' 	=> array('icon' 	=> 'far fa-images' ),
+				'eps' 	=> array('icon' 	=> 'far fa-images' ),
+				'psd' 	=> array('icon' 	=> 'far fa-images' ),
+				'tif' 	=> array('icon' 	=> 'far fa-image' ),
+				'tiff' 	=> array('icon' 	=> 'far fa-image' ),
 			);
 
-			$this->default_file_fonticon = 'um-faicon-file-o';
+			$this->default_file_fonticon = 'far fa-file';
 		}
 
 

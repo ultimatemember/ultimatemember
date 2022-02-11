@@ -12,7 +12,7 @@
 				'id'		    => '_um_status',
 				'type'		    => 'select',
 				'label'    		=> __( 'Registration Status', 'ultimate-member' ),
-				'tooltip' 	=> __( 'Select the status you would like this user role to have after they register on your site', 'ultimate-member' ),
+				'description' 	=> __( 'Select the status you would like this user role to have after they register on your site', 'ultimate-member' ),
 				'value' 		=> ! empty( $role['_um_status'] ) ? __( $role['_um_status'] , 'ultimate-member' ) : array(),
 				'options'		=> array(
 					'approved'	=> __( 'Auto Approve', 'ultimate-member' ),
@@ -24,7 +24,7 @@
 				'id'		    => '_um_auto_approve_act',
 				'type'		    => 'select',
 				'label'    		=> __( 'Action to be taken after registration', 'ultimate-member' ),
-				'tooltip' 	=> __( 'Select what action is taken after a person registers on your site. Depending on the status you can redirect them to their profile, a custom url or show a custom message', 'ultimate-member' ),
+				'description' 	=> __( 'Select what action is taken after a person registers on your site. Depending on the status you can redirect them to their profile, a custom url or show a custom message', 'ultimate-member' ),
 				'value' 		=> ! empty( $role['_um_auto_approve_act'] ) ? __( $role['_um_auto_approve_act'], 'ultimate-member' ) : array(),
 				'options'		=> array(
 					'redirect_profile' 	=> __( 'Redirect to profile', 'ultimate-member' ),
@@ -43,7 +43,7 @@
 				'id'		=> '_um_login_email_activate',
 				'type'		=> 'checkbox',
 				'label'    		=> __( 'Login user after validating the activation link?', 'ultimate-member' ),
-				'tooltip' 	=> __( 'Login the user after validating the activation link', 'ultimate-member' ),
+				'description' 	=> __( 'Login the user after validating the activation link', 'ultimate-member' ),
 				'value' 		=> ! empty( $role['_um_login_email_activate'] ) ? __( $role['_um_login_email_activate'], 'ultimate-member' ) : 0,
 				'conditional'	=> array( '_um_status', '=', 'checkmail' )
 			),
@@ -51,7 +51,7 @@
 				'id'		    => '_um_checkmail_action',
 				'type'		    => 'select',
 				'label'    		=> __( 'Action to be taken after registration', 'ultimate-member' ),
-				'tooltip' 	=> __( 'Select what action is taken after a person registers on your site. Depending on the status you can redirect them to their profile, a custom url or show a custom message', 'ultimate-member' ),
+				'description' 	=> __( 'Select what action is taken after a person registers on your site. Depending on the status you can redirect them to their profile, a custom url or show a custom message', 'ultimate-member' ),
 				'value' 		=> ! empty( $role['_um_checkmail_action'] ) ? __( $role['_um_checkmail_action'], 'ultimate-member' ) : array(),
 				'options'		=> array(
 					'show_message' 	=> __( 'Show custom message', 'ultimate-member' ),
@@ -77,7 +77,7 @@
 				'id'		=> '_um_url_email_activate',
 				'type'		=> 'text',
 				'label'    		=> __( 'URL redirect after e-mail activation', 'ultimate-member' ),
-				'tooltip' 	=> __( 'If you want users to go to a specific page other than login page after e-mail activation, enter the URL here.', 'ultimate-member' ),
+				'description' 	=> __( 'If you want users to go to a specific page other than login page after e-mail activation, enter the URL here.', 'ultimate-member' ),
 				'value' 		=> ! empty( $role['_um_url_email_activate'] ) ? __( $role['_um_url_email_activate'], 'ultimate-member' ) : '',
 				'conditional'	=> array( '_um_status', '=', 'checkmail' ),
 			),
@@ -85,7 +85,7 @@
 				'id'		    => '_um_pending_action',
 				'type'		    => 'select',
 				'label'    		=> __( 'Action to be taken after registration', 'ultimate-member' ),
-				'tooltip' 	=> __( 'Select what action is taken after a person registers on your site. Depending on the status you can redirect them to their profile, a custom url or show a custom message', 'ultimate-member' ),
+				'description' 	=> __( 'Select what action is taken after a person registers on your site. Depending on the status you can redirect them to their profile, a custom url or show a custom message', 'ultimate-member' ),
 				'value' 		=> ! empty( $role['_um_pending_action'] ) ? __( $role['_um_pending_action'], 'ultimate-member' ) : array(),
 				'options'		=> array(
 					'show_message' 	=> __( 'Show custom message', 'ultimate-member' ),

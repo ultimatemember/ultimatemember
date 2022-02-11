@@ -4,7 +4,7 @@
 
 	<a href="javascript:void(0);" data-action="um_remove_modal" class="um-modal-close"
 	   aria-label="<?php esc_attr_e( 'Close view photo modal', 'ultimate-member' ) ?>">
-		<i class="um-faicon-times"></i>
+		<i class="fas fa-times"></i>
 	</a>
 
 	<div class="um-modal-body photo">

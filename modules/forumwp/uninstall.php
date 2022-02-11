@@ -1,11 +1,11 @@
 <?php
 /**
-* Uninstall UM ForumWP
-*
-*/
+ * Uninstall UM ForumWP
+ *
+ */
 
 // Exit if accessed directly.
-if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) return;
+if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit;
 
 
 if ( ! defined( 'um_forumwp_path' ) ) {

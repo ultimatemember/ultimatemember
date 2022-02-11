@@ -104,7 +104,7 @@ function um_display_login_errors( $args ) {
 				if ( empty( $error_message ) ) {
 					return;
 				}
-				echo '<p class="um-notice err um-error-code-' . esc_attr( $error ) . '"><i class="um-icon-ios-close-empty" onclick="jQuery(this).parent().fadeOut();"></i>' . $error_message  . '</p>';
+				echo '<p class="um-notice err um-error-code-' . esc_attr( $error ) . '"><i class="fas fa-times" onclick="jQuery(this).parent().fadeOut();"></i>' . $error_message  . '</p>';
 			}
 		}
 	}

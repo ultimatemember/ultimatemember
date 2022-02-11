@@ -91,6 +91,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			add_action( 'user_register', array( &$this, 'user_register_via_admin' ), 10, 1 );
 			add_action( 'user_register', array( &$this, 'set_gravatar' ), 11, 1 );
 
+			add_action( 'user_register', array( &$this, 'set_default_account_status' ), 0, 1 );
 
 			if ( is_multisite() ) {
 				add_action( 'added_existing_user', array( &$this, 'add_um_role_existing_user' ), 10, 2 );
@@ -2120,6 +2121,14 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 
 			return $user_id;
+		}
+
+
+		/**
+		 * @param int $user_id
+		 */
+		function set_default_account_status( $user_id ) {
+			add_user_meta( $user_id, 'account_status', 'approved' );
 		}
 
 

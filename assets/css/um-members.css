@@ -221,13 +221,13 @@ body #content .um-directory a {
           cursor: pointer; }
           .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-sorting .um-member-directory-sorting-a a {
             margin: 0 5px 0 0; }
-          .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-sorting .um-member-directory-sorting-a i.um-faicon-caret-down {
+          .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-sorting .um-member-directory-sorting-a i.fa-caret-down {
             display: inline; }
-          .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-sorting .um-member-directory-sorting-a i.um-faicon-caret-up {
+          .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-sorting .um-member-directory-sorting-a i.fa-caret-up {
             display: none; }
-          .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-sorting .um-member-directory-sorting-a.um-member-directory-sorting-visible i.um-faicon-caret-down {
+          .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-sorting .um-member-directory-sorting-a.um-member-directory-sorting-visible i.fa-caret-down {
             display: none; }
-          .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-sorting .um-member-directory-sorting-a.um-member-directory-sorting-visible i.um-faicon-caret-up {
+          .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-sorting .um-member-directory-sorting-a.um-member-directory-sorting-visible i.fa-caret-up {
             display: inline; }
           .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-sorting .um-member-directory-sorting-a .um-new-dropdown {
             top: 24px;
@@ -252,13 +252,13 @@ body #content .um-directory a {
           cursor: pointer; }
           .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-filters .um-member-directory-filters-a a {
             margin: 0 5px 0 0; }
-          .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-filters .um-member-directory-filters-a i.um-faicon-caret-down {
+          .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-filters .um-member-directory-filters-a i.fa-caret-down {
             display: inline; }
-          .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-filters .um-member-directory-filters-a i.um-faicon-caret-up {
+          .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-filters .um-member-directory-filters-a i.fa-caret-up {
             display: none; }
-          .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-filters .um-member-directory-filters-a.um-member-directory-filters-visible i.um-faicon-caret-down {
+          .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-filters .um-member-directory-filters-a.um-member-directory-filters-visible i.fa-caret-down {
             display: none; }
-          .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-filters .um-member-directory-filters-a.um-member-directory-filters-visible i.um-faicon-caret-up {
+          .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-filters .um-member-directory-filters-a.um-member-directory-filters-visible i.fa-caret-up {
             display: inline; }
     .um-directory .um-member-directory-header .um-member-directory-header-row .um-search {
       margin: 0;
@@ -394,18 +394,20 @@ body #content .um-directory a {
         box-sizing: border-box;
         -moz-box-sizing: border-box;
         -webkit-box-sizing: border-box; }
-        .um-directory .um-members-wrapper .um-members .um-member .um-member-photo.radius-1 a img {
-          -moz-border-radius: 999px !important;
-          -webkit-border-radius: 999px !important;
-          border-radius: 999px !important; }
-        .um-directory .um-members-wrapper .um-members .um-member .um-member-photo.radius-1.radius-2 a img {
-          -moz-border-radius: 4px !important;
-          -webkit-border-radius: 4px !important;
-          border-radius: 4px !important; }
-        .um-directory .um-members-wrapper .um-members .um-member .um-member-photo.radius-1.radius-3 a img {
-          -moz-border-radius: 0 !important;
-          -webkit-border-radius: 0 !important;
-          border-radius: 0 !important; }
+        .um-directory .um-members-wrapper .um-members .um-member .um-member-photo {
+          box-sizing: content-box; }
+          .um-directory .um-members-wrapper .um-members .um-member .um-member-photo.radius-1 a img {
+            -moz-border-radius: 999px !important;
+            -webkit-border-radius: 999px !important;
+            border-radius: 999px !important; }
+          .um-directory .um-members-wrapper .um-members .um-member .um-member-photo.radius-1.radius-2 a img {
+            -moz-border-radius: 4px !important;
+            -webkit-border-radius: 4px !important;
+            border-radius: 4px !important; }
+          .um-directory .um-members-wrapper .um-members .um-member .um-member-photo.radius-1.radius-3 a img {
+            -moz-border-radius: 0 !important;
+            -webkit-border-radius: 0 !important;
+            border-radius: 0 !important; }
         .um-directory .um-members-wrapper .um-members .um-member .um-member-card .um-member-name {
           display: flex;
           flex-direction: row;

@@ -29,15 +29,13 @@ class Shortcode {
 	 * @return string
 	 */
 	function ultimatemember_online( $args = array() ) {
-		UM()->Online()->enqueue_scripts();
-
 		$defaults = array(
 			'max'   => 11,
-			'roles' => 'all'
+			'roles' => 'all',
 		);
 		$args = wp_parse_args( $args, $defaults );
 
-		$args['online'] = UM()->Online()->get_users();
+		$args['online'] = UM()->module( 'online' )->get_users();
 		$template = ( $args['online'] && count( $args['online'] ) > 0 ) ? 'online' : 'nobody';
 
 		return um_get_template_html( "{$template}.php", $args, 'online' );

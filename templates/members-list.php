@@ -109,7 +109,7 @@ $unique_hash = substr( md5( $args['form_id'] ), 10, 5 ); ?>
 								<# if ( Object.keys( user.dropdown_actions ).length > 0 ) { #>
 									<div class="um-member-cog">
 										<a href="javascript:void(0);" class="um-member-actions-a">
-											<i class="um-faicon-cog"></i>
+											<i class="fas fa-cog"></i>
 										</a>
 										<?php UM()->member_directory()->dropdown_menu_js( '.um-member-cog', 'click', 'user' ); ?>
 									</div>
@@ -129,10 +129,10 @@ $unique_hash = substr( md5( $args['form_id'] ), 10, 5 ); ?>
 							<# if ( $show_block ) { #>
 								<div class="um-member-card-reveal-buttons">
 									<div class="um-member-more">
-										<a href="javascript:void(0);"><i class="um-faicon-angle-down"></i></a>
+										<a href="javascript:void(0);"><i class="fas fa-angle-down"></i></a>
 									</div>
 									<div class="um-member-less">
-										<a href="javascript:void(0);"><i class="um-faicon-angle-up"></i></a>
+										<a href="javascript:void(0);"><i class="fas fa-angle-up"></i></a>
 									</div>
 								</div>
 							<# } #>
