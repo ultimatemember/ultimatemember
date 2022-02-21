@@ -37,7 +37,8 @@ function um_admin_init_users_select() {
 			width: "100%",
 			allowHtml: true,
 			dropdownCssClass: 'um-select2-users-dropdown',
-			containerCssClass : 'um-select2-users-container'
+			containerCssClass : 'um-select2-users-container',
+			placeholder: jQuery(this).data('placeholder')
 		};
 
 		jQuery('.um-user-select-field').select2( select2_atts );
