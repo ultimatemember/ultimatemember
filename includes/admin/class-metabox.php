@@ -1099,77 +1099,21 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 		 * Add form metabox
 		 */
 		function add_metabox_form() {
-
 			add_meta_box('submitdiv', __( 'Publish', 'ultimate-member' ), array( $this, 'custom_submitdiv' ), 'um_form', 'side', 'high' );
 
-			add_meta_box( 'um-admin-form-mode', __( 'Select Form Type', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );
+			add_meta_box( 'um-admin-form-mode', __( 'Select Form Type', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'high' );
 			add_meta_box( 'um-admin-form-builder', __( 'Form Builder', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );
 			add_meta_box( 'um-admin-form-shortcode', __( 'Shortcode', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
 
-			add_meta_box( 'um-admin-form-register_customize', __( 'Customize this form', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
+			add_meta_box( 'um-admin-form-register_customize', __( 'Form settings', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
 
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_admin_custom_register_metaboxes
-			 * @description Add custom metaboxes for register form
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_admin_custom_register_metaboxes', 'function_name', 10 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_admin_custom_register_metaboxes', 'my_admin_custom_register_metaboxes', 10 );
-			 * function my_admin_custom_register_metaboxes() {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( 'um_admin_custom_register_metaboxes' );
-
-			add_meta_box( 'um-admin-form-profile_customize', __( 'Customize this form', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
+			add_meta_box( 'um-admin-form-profile_customize', __( 'Form settings', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
+			add_meta_box( 'um-admin-form-profile_menu', __( 'Menu', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'high' );
 			add_meta_box( 'um-admin-form-profile_settings', __( 'User Meta', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
 
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_admin_custom_profile_metaboxes
-			 * @description Add custom metaboxes for profile form
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_admin_custom_profile_metaboxes', 'function_name', 10 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_admin_custom_profile_metaboxes', 'my_admin_custom_profile_metaboxes', 10 );
-			 * function my_admin_custom_profile_metaboxes() {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( 'um_admin_custom_profile_metaboxes' );
+			add_meta_box( 'um-admin-form-login_customize', __( 'Form settings', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
 
-			add_meta_box( 'um-admin-form-login_customize', __( 'Customize this form', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
-			add_meta_box( 'um-admin-form-login_settings', __( 'Options', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
-
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_admin_custom_login_metaboxes
-			 * @description Add custom metaboxes for login form
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_admin_custom_login_metaboxes', 'function_name', 10 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_admin_custom_login_metaboxes', 'my_admin_custom_login_metaboxes', 10 );
-			 * function my_admin_custom_login_metaboxes() {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( 'um_admin_custom_login_metaboxes' );
+			do_action( 'um_admin_add_form_metabox' );
 		}
 
 
@@ -1571,11 +1515,20 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 
 				case '_icon':
 
+					UM()->install()->set_icons_options();
+
+					$um_icons_list = get_option( 'um_icons_list' );
+
 					if ( $this->set_field_type == 'row' ) {
 						?>
 
 						<p class="_heading_text"><label for="_icon"><?php _e( 'Icon', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Select an icon to appear in the field. Leave blank if you do not want an icon to show in the field.', 'ultimate-member' ) ); ?></label>
-							<select name="_icon" id="_icon" class="um-icon-select-field" data-value="<?php echo ( isset( $this->edit_mode_value ) ) ? $this->edit_mode_value : ''; ?>"></select>
+							<select name="_icon" id="_icon" class="um-icon-select-field" data-placeholder="<?php esc_attr_e( 'Select Icon', 'ultimate-member' ); ?>" >
+								<option value=""><?php esc_html_e( 'Select Icon', 'ultimate-member' ); ?></option>
+								<?php if ( ! empty( $this->edit_mode_value ) && array_key_exists( $this->edit_mode_value, $um_icons_list ) ) { ?>
+									<option value="<?php echo esc_attr( $this->edit_mode_value ); ?>" selected><?php echo esc_html( $um_icons_list[ $this->edit_mode_value ]['label'] ); ?></option>
+								<?php } ?>
+							</select>
 						</p>
 
 					<?php } else { ?>
@@ -1583,7 +1536,12 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 						<div class="um-admin-tri">
 
 							<p><label for="_icon"><?php _e( 'Icon', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Select an icon to appear in the field. Leave blank if you do not want an icon to show in the field.', 'ultimate-member' ) ); ?></label>
-								<select name="_icon" id="_icon" class="um-icon-select-field" data-value="<?php echo (isset( $this->edit_mode_value ) ) ? $this->edit_mode_value : ''; ?>"></select>
+								<select name="_icon" id="_icon" class="um-icon-select-field" data-placeholder="<?php esc_attr_e( 'Select Icon', 'ultimate-member' ); ?>">
+									<option value=""><?php esc_html_e( 'Select Icon', 'ultimate-member' ); ?></option>
+									<?php if ( ! empty( $this->edit_mode_value ) && array_key_exists( $this->edit_mode_value, $um_icons_list ) ) { ?>
+										<option value="<?php echo esc_attr( $this->edit_mode_value ); ?>" selected><?php echo esc_html( $um_icons_list[ $this->edit_mode_value ]['label'] ); ?></option>
+									<?php } ?>
+								</select>
 							</p>
 
 						</div>

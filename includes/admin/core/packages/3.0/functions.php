@@ -8,6 +8,8 @@ function um_upgrade_fonticons30() {
 
 	delete_option( 'um_cache_fonticons' );
 
+	UM()->install()->set_icons_options();
+
 	$fonticons_assoc = array(
 		'um-icon-plus'                           => 'fas fa-plus',
 		'um-faicon-plus'                         => 'fas fa-plus',
@@ -1296,6 +1298,7 @@ function um_upgrade_fonticons30() {
 
 	// set v3 design disabled for old customers
 	UM()->options()->update( 'enable_version_3_design', false );
+	update_option( 'um_is_legacy', true );
 	update_option( 'um_last_version_upgrade', '3.0' );
 
 	wp_send_json_success( array( 'message' => __( 'Fonticons have been updated successfully.', 'ultimate-member' ) ) );

@@ -34,7 +34,8 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 			add_action( 'um_admin_do_action__install_predefined_page', array( &$this, 'install_predefined_page' ) );
 			add_action( 'um_admin_do_action__install_predefined_pages', array( &$this, 'install_predefined_pages' ) );
 
-			add_action( 'load-ultimate-member_page_um-modules', array( &$this, 'handle_modules_actions' ) );
+			//add_action( 'load-ultimate-member_page_um-modules', array( &$this, 'handle_modules_actions' ) );
+			add_action( 'load-ultimate-member_page_um_options', array( &$this, 'handle_modules_actions_options' ) );
 			add_action( 'load-ultimate-member_page_um_options', array( &$this, 'handle_email_notifications_actions' ) );
 			add_action( 'load-ultimate-member_page_um_roles', array( &$this, 'handle_roles_actions' ) );
 			//add_action( 'load-users.php', array( UM()->install(), 'set_default_user_status' ) ); for avoid the conflicts with \WP_Users_Query on the users.php page
@@ -378,6 +379,149 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 				$redirect = remove_query_arg( [ '_wp_http_referer' ], wp_unslash( $_REQUEST['_wp_http_referer'] ) );
 			} else {
 				$redirect = get_admin_url( null, 'admin.php?page=um-modules' );
+			}
+
+			if ( isset( $_GET['action'] ) ) {
+				switch ( sanitize_key( $_GET['action'] ) ) {
+					case 'activate': {
+						// Activate module
+						$slugs = [];
+						if ( isset( $_GET['slug'] ) ) {
+							// single activate
+							$slug = sanitize_key( $_GET['slug'] );
+
+							if ( empty( $slug ) ) {
+								exit( wp_redirect( $redirect ) );
+							}
+
+							check_admin_referer( 'um_module_activate' . $slug . get_current_user_id() );
+							$slugs = [ $slug ];
+						} elseif( isset( $_REQUEST['item'] ) ) {
+							// bulk activate
+							check_admin_referer( 'bulk-' . sanitize_key( __( 'Modules', 'ultimate-member' ) ) );
+							$slugs = array_map( 'sanitize_key', $_REQUEST['item'] );
+						}
+
+						if ( ! count( $slugs ) ) {
+							exit( wp_redirect( $redirect ) );
+						}
+
+						$results = 0;
+						foreach ( $slugs as $slug ) {
+							if ( UM()->modules()->activate( $slug ) ) {
+								$results++;
+							}
+						}
+
+						if ( ! $results ) {
+							exit( wp_redirect( $redirect ) );
+						}
+
+						exit( wp_redirect( add_query_arg( 'msg', 'a', $redirect ) ) );
+						break;
+					}
+					case 'deactivate': {
+						// Deactivate module
+						$slugs = [];
+						if ( isset( $_GET['slug'] ) ) {
+							// single deactivate
+							$slug = sanitize_key( $_GET['slug'] );
+
+							if ( empty( $slug ) ) {
+								exit( wp_redirect( $redirect ) );
+							}
+
+							check_admin_referer( 'um_module_deactivate' . $slug . get_current_user_id() );
+							$slugs = [ $slug ];
+						} elseif( isset( $_REQUEST['item'] ) )  {
+							// bulk deactivate
+							check_admin_referer( 'bulk-' . sanitize_key( __( 'Modules', 'ultimate-member' ) ) );
+							$slugs = array_map( 'sanitize_key', $_REQUEST['item'] );
+						}
+
+						if ( ! count( $slugs ) ) {
+							exit( wp_redirect( $redirect ) );
+						}
+
+						$results = 0;
+						foreach ( $slugs as $slug ) {
+							if ( UM()->modules()->deactivate( $slug ) ) {
+								$results++;
+							}
+						}
+
+						if ( ! $results ) {
+							exit( wp_redirect( $redirect ) );
+						}
+
+						exit( wp_redirect( add_query_arg( 'msg', 'd', $redirect ) ) );
+						break;
+					}
+					case 'flush-data': {
+						// Flush module's data
+						$slugs = [];
+						if ( isset( $_GET['slug'] ) ) {
+							// single flush
+							$slug = sanitize_key( $_GET['slug'] );
+
+							if ( empty( $slug ) ) {
+								exit( wp_redirect( $redirect ) );
+							}
+
+							check_admin_referer( 'um_module_flush' . $slug . get_current_user_id() );
+							$slugs = [ $slug ];
+						} elseif( isset( $_REQUEST['item'] ) )  {
+							// bulk flush
+							check_admin_referer( 'bulk-' . sanitize_key( __( 'Modules', 'ultimate-member' ) ) );
+							$slugs = array_map( 'sanitize_key', $_REQUEST['item'] );
+						}
+
+						if ( ! count( $slugs ) ) {
+							exit( wp_redirect( $redirect ) );
+						}
+
+						$results = 0;
+						foreach ( $slugs as $slug ) {
+							if ( UM()->modules()->flush_data( $slug ) ) {
+								$results++;
+							}
+						}
+
+						if ( ! $results ) {
+							exit( wp_redirect( $redirect ) );
+						}
+
+						exit( wp_redirect( add_query_arg( 'msg', 'f', $redirect ) ) );
+						break;
+					}
+				}
+			}
+
+			//remove extra query arg
+			if ( ! empty( $_GET['_wp_http_referer'] ) ) {
+				exit( wp_redirect( remove_query_arg( [ '_wp_http_referer', '_wpnonce' ], wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) );
+			}
+		}
+
+
+
+		/**
+		 * Handles Modules list table
+		 *
+		 * @since 3.0
+		 *
+		 * @uses Modules::activate() UM()->modules()->activate( $slug )
+		 * @uses Modules::deactivate() UM()->modules()->deactivate( $slug )
+		 * @uses Modules::flush_data() UM()->modules()->flush_data( $slug )
+		 */
+		function handle_modules_actions_options() {
+			if ( ! ( isset( $_GET['page'] ) && 'um_options' === $_GET['page'] && isset( $_GET['tab'] ) && 'modules' === $_GET['tab'] && ! isset( $_GET['section'] ) ) ) {
+				return;
+			}
+			if ( isset( $_REQUEST['_wp_http_referer'] ) ) {
+				$redirect = remove_query_arg( [ '_wp_http_referer' ], wp_unslash( $_REQUEST['_wp_http_referer'] ) );
+			} else {
+				$redirect = get_admin_url( null, 'admin.php?page=um_options&tab=modules' );
 			}
 
 			if ( isset( $_GET['action'] ) ) {

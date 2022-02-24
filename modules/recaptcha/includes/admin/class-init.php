@@ -20,9 +20,17 @@ class Init {
 	 */
 	public function __construct() {
 		add_action( 'um_admin_create_notices', array( &$this, 'add_admin_notice' ) );
-		add_action( 'um_admin_custom_register_metaboxes', array( &$this, 'add_metabox_register' ), 10 );
-		add_action( 'um_admin_custom_login_metaboxes', array( &$this, 'add_metabox_login' ), 10 );
+		add_action( 'um_admin_add_form_metabox', array( &$this, 'add_form_metaboxes' ), 10 );
 		add_filter( 'um_settings_structure', array( &$this, 'add_settings' ), 10, 1 );
+		add_filter( 'um_module_list_table_actions', array( &$this, 'extend_module_row_actions' ), 10, 2 );
+	}
+
+
+	public function extend_module_row_actions( $actions, $module_slug ) {
+		if ( 'recaptcha' === $module_slug ) {
+			$actions = UM()->array_insert_after( $actions, 'docs', array( 'settings' => '<a href="admin.php?page=um_options&tab=modules&section=' . esc_attr( $module_slug ) . '">' . __( 'Settings', 'ultimate-member' ) . '</a>' ) );
+		}
+		return $actions;
 	}
 
 
@@ -66,7 +74,7 @@ class Init {
 	/**
 	 *
 	 */
-	public function add_metabox_register() {
+	public function add_form_metaboxes() {
 		$module_data = UM()->modules()->get_data( 'recaptcha' );
 		if ( ! $module_data ) {
 			return;
@@ -80,17 +88,6 @@ class Init {
 			'side',
 			'default'
 		);
-	}
-
-
-	/**
-	 *
-	 */
-	public function add_metabox_login() {
-		$module_data = UM()->modules()->get_data( 'recaptcha' );
-		if ( ! $module_data ) {
-			return;
-		}
 
 		add_meta_box(
 			"um-admin-form-login_recaptcha{" . $module_data['path'] . "}",

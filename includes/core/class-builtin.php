@@ -855,6 +855,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'public' => 1,
 					'editable' => 1,
 					'max_words' => 40,
+					'max_chars' => 180,
 					'placeholder' => __('Enter a bit about yourself...','ultimate-member'),
 				),
 
@@ -1265,7 +1266,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 						'Yes'   => __( 'Yes', 'ultimate-member' ),
 					),
 					'account_only'  => true,
-					'required_opt'  => array( 'members_page', 1 ),
 				),
 
 				'delete_account'        => array(

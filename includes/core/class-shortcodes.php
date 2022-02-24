@@ -635,14 +635,9 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				}
 			}
 
-			if ( 'directory' != $args['mode'] ) {
+			if ( 'directory' !== $args['mode'] ) {
 				$args = array_merge( $post_data, $args );
-
-				if ( empty( $args['use_custom_settings'] ) ) {
-					$args = array_merge( $args, $this->get_css_args( $args ) );
-				} else {
-					$args = array_merge( $this->get_css_args( $args ), $args );
-				}
+				$args = array_merge( $this->get_css_args( $args ), $args );
 			}
 			// filter for arguments
 
@@ -693,33 +688,31 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 					um_set_requested_user( um_profile_id() );
 				}
 
-				if ( ! empty( $args['use_custom_settings'] ) ) { // Option "Apply custom settings to this form"
-					if ( ! empty( $args['role'] ) ) { // Option "Make this profile form role-specific"
+				if ( ! empty( $args['role'] ) ) { // Option "Make this profile form role-specific"
 
-						// show the first Profile Form with role selected, don't show profile forms below the page with other role-specific setting
-						if ( empty( $this->profile_role ) ) {
-							$current_user_roles = UM()->roles()->get_all_user_roles( um_profile_id() );
+					// show the first Profile Form with role selected, don't show profile forms below the page with other role-specific setting
+					if ( empty( $this->profile_role ) ) {
+						$current_user_roles = UM()->roles()->get_all_user_roles( um_profile_id() );
 
-							if ( empty( $current_user_roles ) ) {
-								ob_get_clean();
-								return '';
-							} elseif ( is_array( $args['role'] ) ) {
-								if ( ! count( array_intersect( $args['role'], $current_user_roles ) ) ) {
-									ob_get_clean();
-									return '';
-								}
-							} else {
-								if ( ! in_array( $args['role'], $current_user_roles ) ) {
-									ob_get_clean();
-									return '';
-								}
-							}
-
-							$this->profile_role = $args['role'];
-						} elseif ( $this->profile_role != $args['role'] ) {
+						if ( empty( $current_user_roles ) ) {
 							ob_get_clean();
 							return '';
+						} elseif ( is_array( $args['role'] ) ) {
+							if ( ! count( array_intersect( $args['role'], $current_user_roles ) ) ) {
+								ob_get_clean();
+								return '';
+							}
+						} else {
+							if ( ! in_array( $args['role'], $current_user_roles ) ) {
+								ob_get_clean();
+								return '';
+							}
 						}
+
+						$this->profile_role = $args['role'];
+					} elseif ( $this->profile_role != $args['role'] ) {
+						ob_get_clean();
+						return '';
 					}
 				}
 			}
@@ -1221,7 +1214,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 * @return string
 		 */
 		public function ultimatemember_searchform( $args = array(), $content = '' ) {
-			if ( ! UM()->options()->get( 'members_page' ) ) {
+			if ( ! UM()->modules()->is_active( 'member_directory' ) ) {
 				return '';
 			}
 

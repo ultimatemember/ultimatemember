@@ -2,7 +2,9 @@
 namespace um;
 
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 
 /**
@@ -208,7 +210,7 @@ class Modules {
 			return false;
 		}
 
-		return true;
+		return apply_filters( 'um_module_can_activate', true, $slug );
 	}
 
 

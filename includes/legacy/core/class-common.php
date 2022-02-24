@@ -1,17 +1,17 @@
 <?php
-namespace um\core;
+namespace um\legacy\core;
 
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
-if ( ! class_exists( 'um\core\Common' ) ) {
+if ( ! class_exists( 'um\legacy\core\Common' ) ) {
 
 
 	/**
 	 * Class Common
 	 *
-	 * @package um\core
+	 * @package um\legacy\core
 	 */
 	class Common {
 

@@ -1,16 +1,17 @@
 <?php
-namespace um\core\rest;
+namespace um\legacy\core\rest;
 
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
-if ( ! class_exists( 'um\core\rest\API_v1' ) ) {
+if ( ! class_exists( 'um\legacy\core\rest\API_v1' ) ) {
 
 
 	/**
 	 * Class REST_API
-	 * @package um\core
+	 *
+	 * @package um\legacy\core\rest
 	 */
 	class API_v1 extends API {
 

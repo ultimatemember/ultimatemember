@@ -314,7 +314,7 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 				return;
 			}
 
-			if ( ! isset( $_GET['tab'] ) || 'appearance' !== $_GET['tab'] ) {
+			if ( ! isset( $_GET['tab'] ) || 'misc' !== $_GET['tab'] ) {
 				return;
 			}
 
@@ -391,7 +391,10 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 				break;
 			}
 
-			if ( $user_page_id = um_get_predefined_page_id( 'user' ) ) {
+			$user_page_id    = um_get_predefined_page_id( 'user' );
+			$account_page_id = um_get_predefined_page_id( 'account' );
+
+			if ( ! empty( $user_page_id ) ) {
 				$test = get_post( $user_page_id );
 				if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
 					$this->add_notice( 'wrong_user_page', array(
@@ -401,7 +404,7 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 				}
 			}
 
-			if ( $account_page_id = um_get_predefined_page_id( 'account' ) ) {
+			if ( ! empty( $account_page_id ) ) {
 				$test = get_post( $account_page_id );
 				if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
 					$this->add_notice( 'wrong_account_page', array(
@@ -411,7 +414,7 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 				}
 			}
 
-			if ( um_get_predefined_page_id( 'user' ) === um_get_predefined_page_id( 'account' ) ) {
+			if (  ! empty( $user_page_id ) && ! empty( $account_page_id ) && $user_page_id === $account_page_id ) {
 				$this->add_notice( 'wrong_account_user_page', array(
 					'class'   => 'error',
 					'message' => '<p>' . __( '<strong>Ultimate Member Setup Error:</strong> Account page and User page should be separate pages.', 'ultimate-member' ) . '</p>',
@@ -560,11 +563,11 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 			$invalid_license = 0;
 			$arr_inactive_license_keys = array();
 
-			if ( empty( UM()->admin_settings()->settings_structure['licenses']['fields'] ) ) {
+			if ( empty( UM()->admin()->settings()->settings_structure['licenses']['fields'] ) ) {
 				return;
 			}
 
-			foreach ( UM()->admin_settings()->settings_structure['licenses']['fields'] as $field_data ) {
+			foreach ( UM()->admin()->settings()->settings_structure['licenses']['fields'] as $field_data ) {
 				$license = get_option( "{$field_data['id']}_edd_answer" );
 
 				if ( ( is_object( $license ) && 'valid' == $license->license ) || 'valid' == $license )

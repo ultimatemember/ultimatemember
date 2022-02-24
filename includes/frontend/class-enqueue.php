@@ -74,9 +74,6 @@ if ( ! class_exists( 'um\frontend\Enqueue' ) ) {
 			wp_enqueue_script( 'um_profile' );
 			wp_enqueue_script( 'um_account' );
 
-			//Old FontAwesome and FontIcons styles
-			// 'um-fonticons-ii', 'um-fonticons-fa'
-
 			// old before 2.0 styles
 			wp_register_style( 'um_default_css', $this->urls['css'] . 'um-old-default.css', array(), UM_VERSION );
 
@@ -87,6 +84,14 @@ if ( ! class_exists( 'um\frontend\Enqueue' ) ) {
 
 			$deps = array( 'um-jquery-ui', 'um-fontawesome', 'um-ionicons', 'um_default_css', 'um_crop', 'um_fileupload', 'um-modal', 'um_responsive' );
 			$deps = array_merge( $deps, $this->pickadate_deps['css'] );
+
+			// Old FontAwesome and FontIcons styles only for 3rd-party integrations for old customers.
+			// All UM core and modules have updated icons
+			$um_is_legacy = get_option( 'um_is_legacy' );
+			if ( $um_is_legacy ) {
+				$deps = array_merge( $deps, array( 'um-fonticons-ii', 'um-fonticons-fa' ) );
+			}
+
 			wp_register_style( 'um_styles', $this->urls['css'] . 'um-styles' . $this->suffix . '.css', $deps, UM_VERSION );
 
 			wp_register_style( 'um_members', $this->urls['css'] . 'um-members.css', array( 'um_styles', 'um-tipsy' ), UM_VERSION );

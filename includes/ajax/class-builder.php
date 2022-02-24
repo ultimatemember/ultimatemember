@@ -43,31 +43,34 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 		function get_icons() {
 			UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
-			$icons = file_get_contents( UM_PATH . 'assets/libs/fontawesome/metadata/icons.json' );
+			$search_request = ! empty( $_REQUEST['search'] ) ? sanitize_text_field( $_REQUEST['search'] ) : '';
+			$page           = ! empty( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
+			$per_page       = 50;
 
-			$icons = json_decode( $icons );
+			UM()->install()->set_icons_options();
 
-			$ionicons = file_get_contents( UM_PATH . 'assets/libs/ionicons/data.json' );
-
-			$classes = array();
-			$ionicons = json_decode( $ionicons );
-			foreach ( $ionicons->icons as $item ) {
-				foreach ( $item->icons as $class ) {
-					$classes[] = 'ion-' . $class;
-
-					$search        = new \stdClass();
-					$search->terms = $item->tags;
-
-					$icons->{'ion-' . $class} = array(
-						'styles' => array( 'ion' ),
-						'label'  => 'ion-' . $class,
-						'search' => $search,
-					);
-				}
+			$um_icons_list = get_option( 'um_icons_list' );
+			if ( ! empty( $search_request ) ) {
+				$um_icons_list = array_filter( $um_icons_list, function( $item ) use ( $search_request ) {
+					$result = array_filter( $item['search'], function( $search_item ) use ( $search_request ) {
+						return stripos( $search_item, $search_request ) !== false;
+					});
+					return count( $result ) > 0;
+				});
 			}
 
-			wp_send_json_success( $icons );
+			$total_count = count( $um_icons_list );
+
+			$um_icons_list = array_slice( $um_icons_list, $per_page * ( $page - 1 ), $per_page );
+
+			wp_send_json_success(
+				array(
+					'icons'       => $um_icons_list,
+					'total_count' => $total_count,
+				)
+			);
 		}
+
 
 
 		function edit_field_popup() {

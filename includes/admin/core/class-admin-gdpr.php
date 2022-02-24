@@ -28,23 +28,6 @@ if ( ! class_exists( 'um\admin\core\Admin_GDPR' ) ) {
 			add_action( 'admin_init', array( &$this, 'plugin_add_suggested_privacy_content' ), 20 );
 			add_filter( 'wp_privacy_personal_data_exporters', array( &$this, 'plugin_register_exporters' ) );
 			add_filter( 'wp_privacy_personal_data_erasers', array( &$this, 'plugin_register_erasers' ) );
-
-			add_action( 'um_admin_custom_register_metaboxes', array( &$this, 'add_metabox_register' ) );
-		}
-
-
-		/**
-		 *
-		 */
-		function add_metabox_register() {
-			add_meta_box(
-				"um-admin-form-register_gdpr",
-				__( 'Privacy Policy', 'ultimate-member' ),
-				array( UM()->admin()->metabox(), 'load_metabox_form' ),
-				'um_form',
-				'side',
-				'default'
-			);
 		}
 
 

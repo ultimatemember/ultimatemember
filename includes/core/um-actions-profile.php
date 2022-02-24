@@ -973,7 +973,7 @@ function um_profile_header( $args ) {
 	$default_size = str_replace( 'px', '', $args['photosize'] );
 
 	// Switch on/off the profile photo uploader
-	$disable_photo_uploader = empty( $args['use_custom_settings'] ) ? UM()->options()->get( 'disable_profile_photo_upload' ) : $args['disable_photo_upload'];
+	$disable_photo_uploader = ! array_key_exists( 'disable_photo_upload', $args ) ? UM()->options()->get( 'disable_profile_photo_upload' ) : $args['disable_photo_upload'];
 
 	if ( ! empty( $disable_photo_uploader ) ) {
 		$args['disable_photo_upload'] = 1;

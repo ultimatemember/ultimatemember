@@ -110,43 +110,17 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		function ultimatemember_password( $args = array() ) {
 			ob_start();
 
-			$defaults = array(
-				'template'  => 'password-reset',
-				'mode'      => 'password',
-				'form_id'   => 'um_password_id',
-				'max_width' => '450px',
-				'align'     => 'center',
+			$args = shortcode_atts(
+				array(
+					'template'  => 'password-reset',
+					'mode'      => 'password',
+					'form_id'   => 'um_password_id',
+					'max_width' => '450px',
+					'align'     => 'center',
+				),
+				$args,
+				'ultimatemember_password'
 			);
-			$args = wp_parse_args( $args, $defaults );
-
-			if ( empty( $args['use_custom_settings'] ) ) {
-				$args = array_merge( $args, UM()->shortcodes()->get_css_args( $args ) );
-			} else {
-				$args = array_merge( UM()->shortcodes()->get_css_args( $args ), $args );
-			}
-
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_reset_password_shortcode_args_filter
-			 * @description Extend Reset Password Arguments
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Shortcode arguments"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_reset_password_shortcode_args_filter', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_reset_password_shortcode_args_filter', 'my_reset_password_shortcode_args', 10, 1 );
-			 * function my_reset_password_shortcode_args( $args ) {
-			 *     // your code here
-			 *     return $args;
-			 * }
-			 * ?>
-			 */
-			$args = apply_filters( 'um_reset_password_shortcode_args_filter', $args );
 
 			if ( isset( $this->change_password ) ) {
 				$args['template'] = 'password-change';

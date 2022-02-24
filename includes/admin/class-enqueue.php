@@ -182,6 +182,9 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			wp_register_style( 'um_admin_settings', $this->urls['css'] . 'admin-settings' . $this->suffix . '.css', array(), UM_VERSION );
 			wp_enqueue_script( 'um_admin_settings' );
 			wp_enqueue_style( 'um_admin_settings' );
+
+			wp_register_style( 'um_admin_modules', $this->urls['css'] . 'admin-modules' . $this->suffix . '.css', array(), UM_VERSION );
+			wp_enqueue_style( 'um_admin_modules' );
 		}
 
 
@@ -491,12 +494,11 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			wp_register_style( 'um_crop', $this->urls['libs'] . 'cropper/cropper' . $this->suffix . '.css', array(), UM_VERSION );
 			wp_register_style( 'um_responsive', $this->urls['css'] . 'um-responsive.css', array(), UM_VERSION );
 			wp_register_style( 'um_styles', $this->urls['css'] . 'um-styles' . $this->suffix . '.css', array(), UM_VERSION );
-			wp_register_style( 'um_members', $this->urls['css'] . 'um-members.css', array(), UM_VERSION );
 			wp_register_style( 'um_profile', $this->urls['css'] . 'um-profile.css', array(), UM_VERSION );
 			wp_register_style( 'um_account', $this->urls['css'] . 'um-account.css', array(), UM_VERSION );
 			wp_register_style( 'um_misc', $this->urls['css'] . 'um-misc.css', array(), UM_VERSION );
 
-			$deps = array_merge( $this->pickadate_deps['css'], array( 'um_crop', 'um-tipsy', 'um-raty', 'um_responsive', 'um_styles', 'um_members', 'um_profile', 'um_account', 'um_misc', 'select2' ) );
+			$deps = array_merge( $this->pickadate_deps['css'], array( 'um_crop', 'um-tipsy', 'um-raty', 'um_responsive', 'um_styles', 'um_profile', 'um_account', 'um_misc', 'select2' ) );
 			wp_register_style( 'um_default_css', $this->urls['css'] . 'um-old-default.css', $deps, UM_VERSION );
 		}
 	}

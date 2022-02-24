@@ -189,7 +189,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 *
 		 */
 		function access_members() {
-			if ( UM()->options()->get( 'members_page' ) == 0 && um_is_predefined_page( 'members' ) ) {
+			if ( um_is_predefined_page( 'members' ) ) {
 				um_redirect_home();
 			}
 		}

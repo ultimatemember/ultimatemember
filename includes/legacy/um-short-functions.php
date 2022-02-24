@@ -2081,7 +2081,7 @@ function um_get_default_avatar_uri() {
 	$uri = UM()->options()->get( 'default_avatar' );
 	$uri = !empty( $uri['url'] ) ? $uri['url'] : '';
 	if ( ! $uri ) {
-		$uri = um_url . 'assets/img/default_avatar.jpg';
+		$uri = um_url . 'assets/legacy/img/default_avatar.jpg';
 	}
 
 	return set_url_scheme( $uri );

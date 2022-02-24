@@ -1,17 +1,17 @@
 <?php
-namespace um\admin\core;
+namespace um\legacy\admin\core;
 
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
-if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
+if ( ! class_exists( 'um\legacy\admin\core\Admin_Metabox' ) ) {
 
 
 	/**
 	 * Class Admin_Metabox
 	 *
-	 * @package um\admin\core
+	 * @package um\legacy\admin\core
 	 */
 	class Admin_Metabox {
 
@@ -694,7 +694,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			$path = str_replace('}','', $path );
 
 
-			include_once $path . 'includes/admin/templates/directory/'. $box['id'] . '.php';
+			include_once $path . 'includes/legacy/admin/templates/directory/'. $box['id'] . '.php';
 			if ( ! $this->directory_nonce_added ) {
 				$this->directory_nonce_added = true;
 				wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_directory_nonce' );
@@ -729,7 +729,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			$path = str_replace('{','', $path );
 			$path = str_replace('}','', $path );
 
-			include_once $path . 'includes/admin/templates/role/'. $box['id'] . '.php';
+			include_once $path . 'includes/legacy/admin/templates/role/'. $box['id'] . '.php';
 			//wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_role_nonce' );
 		}
 
@@ -761,7 +761,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			$path = str_replace('{','', $path );
 			$path = str_replace('}','', $path );
 
-			include_once $path . 'includes/admin/templates/form/'. $box['id'] . '.php';
+			include_once $path . 'includes/legacy/admin/templates/form/'. $box['id'] . '.php';
 
 			if ( ! $this->form_nonce_added ) {
 				$this->form_nonce_added = true;
@@ -793,7 +793,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			$path = str_replace('{','', $path );
 			$path = str_replace('}','', $path );
 
-			include_once $path . 'includes/admin/templates/'. $box['id'] . '.php';
+			include_once $path . 'includes/legacy/admin/templates/'. $box['id'] . '.php';
 			if ( ! $this->custom_nonce_added ) {
 				$this->custom_nonce_added = true;
 				wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_custom_nonce' );
@@ -1207,17 +1207,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			$screen = get_current_screen();
 
 			if ( isset( $screen->id ) && strstr( $screen->id, 'um_form' ) ) {
-				foreach ( glob( um_path . 'includes/admin/templates/modal/forms/*.php' ) as $modal_content ) {
+				foreach ( glob( um_path . 'includes/legacy/admin/templates/modal/forms/*.php' ) as $modal_content ) {
 					include_once $modal_content;
 				}
 			}
 
 			if ( $this->init_icon ) {
-				include_once um_path . 'includes/admin/templates/modal/forms/fonticons.php';
+				include_once um_path . 'includes/legacy/admin/templates/modal/forms/fonticons.php';
 			}
 
 			if ( $screen->id == 'users' ) {
-				include_once um_path . 'includes/admin/templates/modal/dynamic_registration_preview.php';
+				include_once um_path . 'includes/legacy/admin/templates/modal/dynamic_registration_preview.php';
 			}
 
 			// needed on forms only

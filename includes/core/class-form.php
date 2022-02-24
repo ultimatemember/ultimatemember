@@ -718,11 +718,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			/**
 			 * @todo WPML integration to get role from original if it's empty
 			 */
-			$use_custom = get_post_meta( $post_id, "_um_{$mode}_use_custom_settings", true );
-			if ( $use_custom ) { // Custom Form settings
-				$role = get_post_meta( $post_id, "_um_{$mode}_role", true );
-			}
-
+			$role = get_post_meta( $post_id, "_um_{$mode}_role", true );
 			if ( empty( $role ) ) { // custom role is default, return default role's slug
 				$role = $global_role;
 			}

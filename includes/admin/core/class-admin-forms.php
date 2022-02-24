@@ -554,6 +554,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				'field_id' => $field_data['id'],
 			);
 
+			if ( ! empty( $field_data['label'] ) ) {
+				$data['label'] = $field_data['label'];
+			}
+
 			$data_attr = '';
 			foreach ( $data as $key => $value ) {
 				$data_attr .= " data-{$key}=\"" . esc_attr( $value ) . '" ';

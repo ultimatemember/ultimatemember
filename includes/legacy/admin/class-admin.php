@@ -1,17 +1,17 @@
 <?php
-namespace um\admin;
+namespace um\legacy\admin;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'um\admin\Admin' ) ) {
+if ( ! class_exists( 'um\legacy\admin\Admin' ) ) {
 
 
 	/**
 	 * Class Admin
-	 * @package um\admin
+	 * @package um\legacy\admin
 	 */
 	class Admin extends Admin_Functions {
 
@@ -64,7 +64,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		public function __construct() {
 			parent::__construct();
 
-			$this->templates_path = um_path . 'includes/admin/templates/';
+			$this->templates_path = um_path . 'includes/legacy/admin/templates/';
 
 			add_action( 'admin_init', array( &$this, 'admin_init' ), 0 );
 

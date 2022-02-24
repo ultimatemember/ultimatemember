@@ -18,7 +18,16 @@ class Init {
 	 */
 	function __construct() {
 		add_filter( 'um_settings_structure', array( &$this, 'extend_settings' ), 10, 1 );
+		add_filter( 'um_module_list_table_actions', array( &$this, 'extend_module_row_actions' ), 10, 2 );
 		add_filter( 'um_admin_role_metaboxes', array( &$this, 'add_role_metabox' ), 10, 1 );
+	}
+
+
+	public function extend_module_row_actions( $actions, $module_slug ) {
+		if ( 'jobboardwp' === $module_slug ) {
+			$actions = UM()->array_insert_after( $actions, 'docs', array( 'settings' => '<a href="admin.php?page=um_options&tab=modules&section=' . esc_attr( $module_slug ) . '">' . __( 'Settings', 'ultimate-member' ) . '</a>' ) );
+		}
+		return $actions;
 	}
 
 

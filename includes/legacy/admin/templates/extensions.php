@@ -207,7 +207,7 @@ $free['terms-conditions'] = array(
 
 					<div class="plugin-card">
 						<a href="<?php echo esc_url( $info['url'] ); ?>" class="plugin-image">
-							<img src="<?php echo esc_url( um_url . 'assets/img/extensions/' . $key . '.png'  ); ?>" alt="<?php echo esc_attr( $info['name'] ) ?>" />
+							<img src="<?php echo esc_url( um_url . 'assets/legacy/img/extensions/' . $key . '.png'  ); ?>" alt="<?php echo esc_attr( $info['name'] ) ?>" />
 						</a>
 						<div class="plugin-card-top">
 							<h3><a href="<?php echo esc_url( $info['url'] ); ?>"><?php echo $info['name']; ?></a></h3>
@@ -241,7 +241,7 @@ $free['terms-conditions'] = array(
 
 					<div class="plugin-card">
 						<a href="<?php echo esc_url( $info['url'] ); ?>" class="plugin-image">
-							<img src="<?php echo esc_url( um_url . 'assets/img/extensions/' . $key . '.png'  ); ?>" alt="<?php echo esc_attr( $info['name'] ) ?>" />
+							<img src="<?php echo esc_url( um_url . 'assets/legacy/img/extensions/' . $key . '.png'  ); ?>" alt="<?php echo esc_attr( $info['name'] ) ?>" />
 						</a>
 						<div class="plugin-card-top">
 							<h3><a href="<?php echo esc_url( $info['url'] ); ?>"><?php echo $info['name']; ?></a></h3>

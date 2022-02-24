@@ -2,6 +2,32 @@
 @import "mixins"
 @import "colors"
 
+##{$prefix}plan
+  width: 100%
+  font-size: 14px
+  line-height: 1.6em
+  margin: 10px 0 0 0
+  padding: 0
+  & > p
+    font-size: inherit
+    line-height: inherit
+    margin: 0 0 10px 0
+
+.modules td,
+.modules th
+  color: #000
+.modules .inactive .module_title strong
+  font-weight: 400
+td.module_title strong
+  display: block
+  margin-bottom: 0.2em
+  font-size: 14px
+
+.modules .active td, .modules .active th, .modules .inactive td, .modules .inactive th
+  padding: 10px 9px
+
+.modules .row-actions, .modules .second
+  padding: 0 0 5px
 
 .wp-list-table.modules
   thead
@@ -13,24 +39,9 @@
   .#{$prefix}module-data-wrapper
     +flex( row, flex-start, flex-start, nowrap )
     width: 100%
-
-    .#{$prefix}module-icon-wrapper
-      +flex( row, flex-start, center, nowrap )
-      width: 50px
-      margin-right: 10px
-      .#{$prefix}module-icon
-        display: inline-block
-        width: 50px
-        height: 50px
-        margin: auto
-        border-radius: 100%
-        padding: 3px
-        background: #fff
-        box-sizing: border-box
-
     .#{$prefix}module-title-wrapper
       +flex( column, flex-start, stretch, nowrap )
-      width: calc( 100% - 60px )
+      width: 100%
       .row-actions
         span
           &.deactivate
@@ -39,9 +50,6 @@
           &.flush-data
             a
               color: #b32d2e
-    &.#{$prefix}module-no-icon
-      .#{$prefix}module-title-wrapper
-        width: 100%
 
 
   .active
@@ -104,7 +112,10 @@
 @media (min-width: 783px)
   .wp-list-table.modules
     .column-module_title
-      width: 40%
+      width: 30%
+    .column-type
+      width: 130px
+      text-align: center
 
 @media screen and (max-width: 782px)
 

@@ -1,15 +1,15 @@
 <?php
-namespace um\admin;
+namespace um\legacy\admin;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'um\admin\Admin_Functions' ) ) {
+if ( ! class_exists( 'um\legacy\admin\Admin_Functions' ) ) {
 
 
 	/**
 	 * Class Admin_Functions
-	 * @package um\admin\core
+	 * @package um\legacy\admin
 	 */
 	class Admin_Functions {
 

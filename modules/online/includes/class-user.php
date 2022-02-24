@@ -55,7 +55,6 @@ class User {
 	function hooks() {
 		add_action( 'um_delete_user',  array( $this, 'clear_online_user' ), 10, 1 );
 		add_action( 'clear_auth_cookie', array( $this, 'clear_auth_cookie_clear_online_user' ), 10 );
-		add_filter( 'um_rest_api_get_stats', array( &$this, 'rest_api_get_stats' ), 10, 1 );
 	}
 
 
@@ -84,18 +83,5 @@ class User {
 		if ( ! empty( $userinfo->ID ) ) {
 			$this->clear_online_user( $userinfo->ID );
 		}
-	}
-
-
-	/**
-	 * Get online users count via REST API
-	 *
-	 * @param $response
-	 *
-	 * @return mixed
-	 */
-	function rest_api_get_stats( $response ) {
-		$response['stats']['total_online'] = UM()->module( 'online' )->get_users( 'count' );
-		return $response;
 	}
 }

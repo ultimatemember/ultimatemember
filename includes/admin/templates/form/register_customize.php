@@ -4,8 +4,6 @@
 
 global $post_id;
 
-$use_custom_settings = ! isset( $post_id ) ? false : get_post_meta( $post_id, '_um_register_use_custom_settings', true );
-
 foreach ( UM()->roles()->get_roles( __( 'Default', 'ultimate-member' ) ) as $key => $value ) {
 	$_um_register_role = UM()->query()->get_meta_value( '_um_register_role', $key );
 	if ( ! empty( $_um_register_role ) ) {
@@ -13,7 +11,90 @@ foreach ( UM()->roles()->get_roles( __( 'Default', 'ultimate-member' ) ) as $key
 	}
 }
 
-$register_secondary_btn = ! isset( $post_id ) ? UM()->options()->get( 'register_secondary_btn' ) : get_post_meta( $post_id, '_um_register_secondary_btn', true );
+$options = array(
+	'' => __( 'Select page', 'ultimate-member' ),
+);
+
+$pages = get_pages();
+foreach ( $pages as $page ) {
+	$options[ $page->ID ] = $page->post_title;
+}
+
+$register_use_gdpr = ! isset( $post_id ) ? false : get_post_meta( $post_id, '_um_register_use_gdpr', true );
+
+$register_customize_fields = array(
+	array(
+		'id'      => '_um_register_role',
+		'type'    => 'select',
+		'label'   => __( 'User registration role', 'ultimate-member' ),
+		'value'   => ! empty( $register_role ) ? $register_role : 0,
+		'options' => UM()->roles()->get_roles( __( 'Default', 'ultimate-member' ) ),
+	),
+	array(
+		'id'      => '_um_register_template',
+		'type'    => 'select',
+		'label'   => __( 'Template', 'ultimate-member' ),
+		'value'   => UM()->query()->get_meta_value( '_um_register_template', null, UM()->options()->get( 'register_template' ) ),
+		'options' => UM()->shortcodes()->get_templates( 'register' ),
+	),
+	array(
+		'id'          => '_um_register_primary_btn_word',
+		'type'        => 'text',
+		'label'       => __( 'Primary Button Text', 'ultimate-member' ),
+		'description' => __( 'Customize the button text', 'ultimate-member' ),
+		'value'       => UM()->query()->get_meta_value( '_um_register_primary_btn_word', null, UM()->options()->get( 'register_primary_btn_word' ) ),
+	),
+	array(
+		'id'      => '_um_register_use_gdpr',
+		'type'    => 'select',
+		'label'   => __( 'Enable privacy policy agreement', 'ultimate-member' ),
+		'value'   => $register_use_gdpr,
+		'options' => array(
+			0 => __( 'No', 'ultimate-member' ),
+			1 => __( 'Yes', 'ultimate-member' ),
+		),
+	),
+	array(
+		'id'          => '_um_register_use_gdpr_content_id',
+		'type'        => 'select',
+		'label'       => __( 'Privacy policy content', 'ultimate-member' ),
+		'value'       => UM()->query()->get_meta_value( '_um_register_use_gdpr_content_id', null, '' ),
+		'options'     => $options,
+		'conditional' => array( '_um_register_use_gdpr', '=', '1' ),
+	),
+	array(
+		'id'          => '_um_register_use_gdpr_toggle_show',
+		'type'        => 'text',
+		'label'       => __( 'Toggle Show text', 'ultimate-member' ),
+		'placeholder' => __( 'Show privacy policy', 'ultimate-member' ),
+		'value'       => UM()->query()->get_meta_value( '_um_register_use_gdpr_toggle_show', null, __( 'Show privacy policy', 'ultimate-member' ) ),
+		'conditional' => array( '_um_register_use_gdpr', '=', '1' ),
+	),
+	array(
+		'id'          => '_um_register_use_gdpr_toggle_hide',
+		'type'        => 'text',
+		'label'       => __( 'Toggle Hide text', 'ultimate-member' ),
+		'placeholder' => __( 'Hide privacy policy', 'ultimate-member' ),
+		'value'       => UM()->query()->get_meta_value( '_um_register_use_gdpr_toggle_hide', null, __( 'Hide privacy policy', 'ultimate-member' ) ),
+		'conditional' => array( '_um_register_use_gdpr', '=', '1' ),
+	),
+	array(
+		'id'          => '_um_register_use_gdpr_agreement',
+		'type'        => 'text',
+		'label'       => __( 'Checkbox agreement description', 'ultimate-member' ),
+		'placeholder' => __( 'Please confirm that you agree to our privacy policy', 'ultimate-member' ),
+		'value'       => UM()->query()->get_meta_value( '_um_register_use_gdpr_agreement', null, __( 'Please confirm that you agree to our privacy policy', 'ultimate-member' ) ),
+		'conditional' => array( '_um_register_use_gdpr', '=', '1' ),
+	),
+	array(
+		'id'          => '_um_register_use_gdpr_error_text',
+		'type'        => 'text',
+		'label'       => __( 'Error Text', 'ultimate-member' ),
+		'placeholder' => __( 'Please confirm your acceptance of our privacy policy', 'ultimate-member' ),
+		'value'       => UM()->query()->get_meta_value( '_um_register_use_gdpr_error_text', null, __( 'Please confirm your acceptance of our privacy policy', 'ultimate-member' ) ),
+		'conditional' => array( '_um_register_use_gdpr', '=', '1' ),
+	),
+);
 ?>
 
 <div class="um-admin-metabox">
@@ -22,83 +103,7 @@ $register_secondary_btn = ! isset( $post_id ) ? UM()->options()->get( 'register_
 		array(
 			'class'     => 'um-form-register-customize um-top-label',
 			'prefix_id' => 'form',
-			'fields'    => array(
-				array(
-					'id'      => '_um_register_use_custom_settings',
-					'type'    => 'select',
-					'label'   => __( 'Apply custom settings to this form', 'ultimate-member' ),
-					'description' => __( 'Switch to yes if you want to customize this form settings, styling &amp; appearance', 'ultimate-member' ),
-					'value'   => $use_custom_settings,
-					'options' => array(
-						0 => __( 'No', 'ultimate-member' ),
-						1 => __( 'Yes', 'ultimate-member' ),
-					),
-				),
-				array(
-					'id'          => '_um_register_role',
-					'type'        => 'select',
-					'label'       => __( 'Assign role to form', 'ultimate-member' ),
-					'value'       => ! empty( $register_role ) ? $register_role : 0,
-					'options'     => UM()->roles()->get_roles( __( 'Default', 'ultimate-member' ) ),
-					'conditional' => array( '_um_register_use_custom_settings', '=', 1 ),
-				),
-				array(
-					'id'          => '_um_register_template',
-					'type'        => 'select',
-					'label'       => __( 'Template', 'ultimate-member' ),
-					'value'       => UM()->query()->get_meta_value( '_um_register_template', null, UM()->options()->get( 'register_template' ) ),
-					'options'     => UM()->shortcodes()->get_templates( 'register' ),
-					'conditional' => array( '_um_register_use_custom_settings', '=', 1 ),
-				),
-				array(
-					'id'          => '_um_register_max_width',
-					'type'        => 'text',
-					'label'       => __( 'Max. Width (px)', 'ultimate-member' ),
-					'description'     => __( 'The maximum width of shortcode in pixels e.g. 600px', 'ultimate-member' ),
-					'value'       => UM()->query()->get_meta_value( '_um_register_max_width', null, UM()->options()->get( 'register_max_width' ) ),
-					'conditional' => array( '_um_register_use_custom_settings', '=', 1 ),
-				),
-				array(
-					'id'          => '_um_register_icons',
-					'type'        => 'select',
-					'label'       => __( 'Field Icons', 'ultimate-member' ),
-					'description'     => __( 'Whether to show field icons and where to show them relative to the field', 'ultimate-member' ),
-					'value'       => UM()->query()->get_meta_value( '_um_register_icons', null, UM()->options()->get( 'register_icons' ) ),
-					'options'     => array(
-						'field' => __( 'Show inside text field', 'ultimate-member' ),
-						'label' => __( 'Show with label', 'ultimate-member' ),
-						'off'   => __( 'Turn off', 'ultimate-member' ),
-					),
-					'conditional' => array( '_um_register_use_custom_settings', '=', 1 ),
-				),
-				array(
-					'id'          => '_um_register_primary_btn_word',
-					'type'        => 'text',
-					'label'       => __( 'Primary Button Text', 'ultimate-member' ),
-					'description'     => __( 'Customize the button text', 'ultimate-member' ),
-					'value'       => UM()->query()->get_meta_value( '_um_register_primary_btn_word', null, UM()->options()->get( 'register_primary_btn_word' ) ),
-					'conditional' => array( '_um_register_use_custom_settings', '=', 1 ),
-				),
-				array(
-					'id'          => '_um_register_secondary_btn',
-					'type'        => 'select',
-					'label'       => __( 'Show Secondary Button', 'ultimate-member' ),
-					'value'       => $register_secondary_btn,
-					'conditional' => array( '_um_register_use_custom_settings', '=', 1 ),
-					'options'     => array(
-						0 => __( 'No', 'ultimate-member' ),
-						1 => __( 'Yes', 'ultimate-member' ),
-					),
-				),
-				array(
-					'id'          => '_um_register_secondary_btn_word',
-					'type'        => 'text',
-					'label'       => __( 'Secondary Button Text', 'ultimate-member' ),
-					'description'     => __( 'Customize the button text', 'ultimate-member' ),
-					'value'       => UM()->query()->get_meta_value( '_um_register_secondary_btn_word', null, UM()->options()->get( 'register_secondary_btn_word' ) ),
-					'conditional' => array( '_um_register_secondary_btn', '=', 1 ),
-				),
-			),
+			'fields'    => $register_customize_fields,
 		)
 	)->render_form();
 	?>

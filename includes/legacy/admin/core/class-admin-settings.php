@@ -1,16 +1,16 @@
 <?php
-namespace um\admin\core;
+namespace um\legacy\admin\core;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
+if ( ! class_exists( 'um\legacy\admin\core\Admin_Settings' ) ) {
 
 
 	/**
 	 * Class Admin_Settings
-	 * @package um\admin\core
+	 * @package um\legacy\admin\core
 	 */
 	class Admin_Settings {
 
@@ -1397,7 +1397,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'tooltip'            => __( 'You can change the default profile picture globally here. Please make sure that the photo is 300x300px.', 'ultimate-member' ),
 										'upload_frame_title' => __( 'Select Default Profile Photo', 'ultimate-member' ),
 										'default'            => array(
-											'url' => um_url . 'assets/img/default_avatar.jpg',
+											'url' => um_url . 'assets/legacy/img/default_avatar.jpg',
 										),
 									),
 									array(
@@ -2573,7 +2573,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			$emails = UM()->config()->email_notifications;
 
 			if ( empty( $email_key ) || empty( $emails[ $email_key ] ) ) {
-				include_once um_path . 'includes/admin/core/list-tables/emails-list-table.php';
+				include_once um_path . 'includes/legacy/admin/core/list-tables/emails-list-table.php';
 			}
 		}
 
@@ -2974,7 +2974,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			global $wpdb;
 
 			if ( ! class_exists( '\Browser' ) )
-				require_once um_path . 'includes/lib/browser.php';
+				require_once um_path . 'includes/legacy/lib/browser.php';
 
 			// Detect browser
 			$browser = new \Browser();

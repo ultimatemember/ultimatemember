@@ -86,12 +86,17 @@ if ( ! class_exists( 'um\common\Install' ) ) {
 			if ( ! $version ) {
 				update_option( 'um_last_version_upgrade', ultimatemember_version );
 				add_option( 'um_first_activation_date', time() );
-			} else {
-				UM()->options()->update( 'rest_api_version', '1.0' ); // legacy for old customers
 			}
 
 			if ( $version !== ultimatemember_version ) {
 				update_option( 'um_version', ultimatemember_version );
+			}
+
+			$first_activation = get_option( 'um_first_activation_date', false );
+
+			// if {first activation date} is lower than first v3 release then set legacy option
+			if ( ! $first_activation || $first_activation <= 1644940610 ) {
+				add_option( 'um_is_legacy', true );
 			}
 
 			//run setup
@@ -101,6 +106,8 @@ if ( ! class_exists( 'um\common\Install' ) ) {
 			$this->set_default_settings();
 			$this->set_default_roles_meta();
 			$this->set_default_user_status();
+
+			$this->set_icons_options();
 
 			if ( ! get_option( 'um_is_installed' ) ) {
 				$this->create_forms();
@@ -200,6 +207,66 @@ KEY meta_value_indx (um_value(191))
 
 			foreach ( $result as $user_id ) {
 				update_user_meta( $user_id, 'account_status', 'approved' );
+			}
+		}
+
+
+		/**
+		 *
+		 */
+		function set_icons_options() {
+			$fa_version    = get_option( 'um_fa_version' );
+			$ion_version   = get_option( 'um_ion_version' );
+			$um_icons_list = get_option( 'um_icons_list' );
+
+			if ( empty( $um_icons_list ) || $fa_version !== UM()->admin()->enqueue()->fa_version || $ion_version !== UM()->admin()->enqueue()->ion_version ) {
+				update_option( 'um_fa_version', UM()->admin()->enqueue()->fa_version, false );
+				update_option( 'um_ion_version', UM()->admin()->enqueue()->ion_version, false );
+
+				$common_icons = array();
+
+				$icons = file_get_contents( UM_PATH . 'assets/libs/fontawesome/metadata/icons.json' );
+				$icons = json_decode( $icons );
+
+				foreach ( $icons as $key => $data ) {
+					if ( ! isset( $data->styles ) ) {
+						continue;
+					}
+
+					foreach ( $data->styles as $style ) {
+						$style_class = '';
+						if ( 'solid' === $style ) {
+							$style_class = 'fas fa-';
+						} elseif ( 'regular' === $style ) {
+							$style_class = 'far fa-';
+						} elseif ( 'brands' === $style ) {
+							$style_class = 'fab fa-';
+						}
+
+						$label  = count( $data->styles ) > 1 ? $data->label . ' (' . $style . ')' : $data->label;
+						$search = array_unique( array_merge( $data->search->terms, array( $key, strtolower( $data->label ) ) ) );
+
+						$common_icons[ $style_class . $key ] = array(
+							'label'  => $label,
+							'search' => $search,
+						);
+					}
+				}
+
+				$ionicons = file_get_contents( UM_PATH . 'assets/libs/ionicons/data.json' );
+				$ionicons = json_decode( $ionicons );
+				foreach ( $ionicons->icons as $item ) {
+					foreach ( $item->icons as $class ) {
+						$search = array_unique( array_merge( $item->tags, array( $class, 'ion-' . $class ) ) );
+
+						$common_icons[ 'ion-' . $class ] = array(
+							'label'  => $class,
+							'search' => $search,
+						);
+					}
+				}
+
+				update_option( 'um_icons_list', $common_icons, false );
 			}
 		}
 

@@ -867,10 +867,10 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			 */
 			extract( $args );
 
-			include_once um_path . 'assets/dynamic_css/dynamic_global.php';
+			include_once um_path . 'assets/legacy/dynamic_css/dynamic_global.php';
 
 			if ( isset( $mode ) && in_array( $mode, array( 'profile', 'directory' ) ) ) {
-				$file = um_path . 'assets/dynamic_css/dynamic_' . $mode . '.php';
+				$file = um_path . 'assets/legacy/dynamic_css/dynamic_' . $mode . '.php';
 
 				if ( file_exists( $file ) )
 					include_once $file;

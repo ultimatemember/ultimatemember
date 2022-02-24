@@ -42,6 +42,12 @@ if ( ! class_exists( 'um\common\Enqueue' ) ) {
 
 
 		/**
+		 * @var string Ionicons version
+		 */
+		var $ion_version = '4.5.10-1';
+
+
+		/**
 		 * @var array
 		 *
 		 *@since 3.0
@@ -119,8 +125,11 @@ if ( ! class_exists( 'um\common\Enqueue' ) ) {
 			wp_register_style( 'um-helptip', $this->urls['libs'] . 'helptip/helptip' . $this->suffix . '.css', array( 'dashicons', 'um-jquery-ui' ), '1.0.0' );
 
 			// old fonticons
-			wp_register_style( 'um-fonticons-ii', $this->urls['libs'] . 'fonticons/um-fonticons-ii' . $this->suffix . '.css', array(), UM_VERSION );
-			wp_register_style( 'um-fonticons-fa', $this->urls['libs'] . 'fonticons/um-fonticons-fa' . $this->suffix . '.css', array(), UM_VERSION );
+			$um_is_legacy = get_option( 'um_is_legacy' );
+			if ( $um_is_legacy ) {
+				wp_register_style( 'um-fonticons-ii', $this->urls['libs'] . 'fonticons/um-fonticons-ii' . $this->suffix . '.css', array(), UM_VERSION );
+				wp_register_style( 'um-fonticons-fa', $this->urls['libs'] . 'fonticons/um-fonticons-fa' . $this->suffix . '.css', array(), UM_VERSION );
+			}
 
 			// new fonticons since 3.0
 			wp_register_style( 'um-far', $this->urls['libs'] . 'fontawesome/css/regular' . $this->suffix . '.css', array(), $this->fa_version );
@@ -129,7 +138,7 @@ if ( ! class_exists( 'um\common\Enqueue' ) ) {
 			wp_register_style( 'um-fa', $this->urls['libs'] . 'fontawesome/css/v4-shims' . $this->suffix . '.css', array(), $this->fa_version );
 			wp_register_style( 'um-fontawesome', $this->urls['libs'] . 'fontawesome/css/fontawesome' . $this->suffix . '.css', array( 'um-fa', 'um-far', 'um-fas', 'um-fab' ), $this->fa_version );
 
-			wp_register_style( 'um-ionicons', $this->urls['libs'] . 'ionicons/ionicons' . $this->suffix . '.css', array(), '6.0.1' );
+			wp_register_style( 'um-ionicons', $this->urls['libs'] . 'ionicons/ionicons' . $this->suffix . '.css', array(), $this->ion_version );
 
 			// Select2
 			$dequeue_select2 = apply_filters( 'um_dequeue_select2_scripts', false );

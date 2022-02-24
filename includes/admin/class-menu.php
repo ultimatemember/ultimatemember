@@ -34,7 +34,6 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 		function __construct() {
 			add_action( 'admin_menu', array( &$this, 'primary_admin_menu' ), 0 );
 			add_action( 'admin_menu', array( &$this, 'secondary_menu_items' ), 1000 );
-			add_action( 'admin_menu', array( &$this, 'modules_menu' ), 99999 );
 
 			add_action( 'load-ultimate-member_page_um_roles', array( &$this, 'maybe_role_redirect' ) );
 			add_action( 'load-ultimate-member_page_um_options', array( &$this, 'maybe_settings_redirect' ) );
@@ -81,8 +80,6 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 			$this->pagehook = add_menu_page( __( 'Ultimate Member', 'ultimate-member' ), __( 'Ultimate Member', 'ultimate-member' ), 'manage_options', $this->slug, array( &$this, 'admin_page' ), 'dashicons-admin-users', '42.78578');
 
 			add_action( 'load-' . $this->pagehook, array( &$this, 'on_load_page' ) );
-
-			add_submenu_page( $this->slug, __( 'Dashboard', 'ultimate-member' ), __( 'Dashboard', 'ultimate-member' ), 'manage_options', $this->slug, array( &$this, 'admin_page' ) );
 		}
 
 
@@ -90,13 +87,15 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 		 * Secondary admin menu (after settings)
 		 */
 		function secondary_menu_items() {
+			add_submenu_page( $this->slug, __( 'Dashboard', 'ultimate-member' ), __( 'Dashboard', 'ultimate-member' ), 'manage_options', $this->slug, array( &$this, 'admin_page' ) );
+
+			add_submenu_page( $this->slug, __( 'Settings', 'ultimate-member' ), __( 'Settings', 'ultimate-member' ), 'manage_options', 'um_options', array( UM()->admin()->settings(), 'settings_page' ) );
+
 			add_submenu_page( $this->slug, __( 'Forms', 'ultimate-member' ), __( 'Forms', 'ultimate-member' ), 'manage_options', 'edit.php?post_type=um_form', '' );
 
 			add_submenu_page( $this->slug, __( 'User Roles', 'ultimate-member' ), __( 'User Roles', 'ultimate-member' ), 'manage_options', 'um_roles', array( &$this, 'um_roles_pages' ) );
 
-			if ( UM()->options()->get( 'members_page' ) ) {
-				add_submenu_page( $this->slug, __( 'Member Directories', 'ultimate-member' ), __( 'Member Directories', 'ultimate-member' ), 'manage_options', 'edit.php?post_type=um_directory', '' );
-			}
+			add_submenu_page( $this->slug, __( 'Member Directories', 'ultimate-member' ), __( 'Member Directories', 'ultimate-member' ), 'manage_options', 'edit.php?post_type=um_directory', '' );
 
 			/**
 			 * UM hook
@@ -116,6 +115,10 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 			 * ?>
 			 */
 			do_action( 'um_extend_admin_menu' );
+
+			if ( ! UM()->is_pro_plugin_active() ) {
+				add_submenu_page( $this->slug, __( 'Upgrade to Pro', 'ultimate-member' ), '<span style="color: #7856ff">' . __( 'Upgrade to Pro', 'ultimate-member' ) . '</span>', 'manage_options', 'https://ultimatemember.com/pricing-beta/', '' );
+			}
 		}
 
 
@@ -247,7 +250,7 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 			$current_tab = empty( $_GET['tab'] ) ? '' : sanitize_key( $_GET['tab'] );
 			$current_subtab = empty( $_GET['section'] ) ? '' : sanitize_key( $_GET['section'] );
 
-			$settings_struct = UM()->admin_settings()->settings_structure[ $current_tab ];
+			$settings_struct = UM()->admin()->settings()->settings_structure[ $current_tab ];
 
 			//remove not option hidden fields
 			if ( ! empty( $settings_struct['fields'] ) ) {
@@ -283,19 +286,6 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 		 */
 		function modules_page() {
 			include_once um_path . 'includes/admin/core/list-tables/modules-list-table.php';
-		}
-
-
-		/**
-		 * Extension menu
-		 */
-		function modules_menu() {
-			$modules = UM()->modules()->get_list();
-			if ( empty( $modules ) ) {
-				return;
-			}
-
-			add_submenu_page( $this->slug, __( 'Modules', 'ultimate-member' ), '<span style="color: #00B9EB">' . __( 'Modules', 'ultimate-member' ) . '</span>', 'manage_options', 'um-modules', array( &$this, 'modules_page' ) );
 		}
 
 

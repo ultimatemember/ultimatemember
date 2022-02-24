@@ -216,6 +216,21 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 
 		/**
+		 * Is Ultimate Member Pro active?
+		 *
+		 * @return bool
+		 */
+		public function is_pro_plugin_active() {
+			$active_plugins = (array) get_option( 'active_plugins', array() );
+			if ( is_multisite() ) {
+				$active_plugins = array_merge( $active_plugins, get_site_option( 'active_sitewide_plugins', array() ) );
+			}
+
+			return in_array( 'ultimate-member-pro/ultimate-member-pro.php', $active_plugins, true );
+		}
+
+
+		/**
 		 * Help Tip displaying
 		 *
 		 * Function for render/displaying UltimateMember help tip

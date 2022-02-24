@@ -402,28 +402,13 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 					'_um_register_use_gdpr_error_text'  => array(
 						'sanitize' => 'text',
 					),
-					'_um_register_use_custom_settings'  => array(
-						'sanitize' => 'bool',
-					),
 					'_um_register_role'                 => array(
 						'sanitize' => 'key',
 					),
 					'_um_register_template'             => array(
 						'sanitize' => 'text',
 					),
-					'_um_register_max_width'            => array(
-						'sanitize' => 'text',
-					),
-					'_um_register_icons'                => array(
-						'sanitize' => 'key',
-					),
 					'_um_register_primary_btn_word'     => array(
-						'sanitize' => 'text',
-					),
-					'_um_register_secondary_btn'        => array(
-						'sanitize' => 'bool',
-					),
-					'_um_register_secondary_btn_word'   => array(
 						'sanitize' => 'text',
 					),
 					'_um_login_after_login'             => array(
@@ -432,25 +417,10 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 					'_um_login_redirect_url'            => array(
 						'sanitize' => 'url',
 					),
-					'_um_login_use_custom_settings'     => array(
-						'sanitize' => 'bool',
-					),
 					'_um_login_template'                => array(
 						'sanitize' => 'text',
 					),
-					'_um_login_max_width'               => array(
-						'sanitize' => 'text',
-					),
-					'_um_login_icons'                   => array(
-						'sanitize' => 'key',
-					),
 					'_um_login_primary_btn_word'        => array(
-						'sanitize' => 'text',
-					),
-					'_um_login_secondary_btn'           => array(
-						'sanitize' => 'bool',
-					),
-					'_um_login_secondary_btn_word'      => array(
 						'sanitize' => 'text',
 					),
 					'_um_login_forgot_pass_link'        => array(
@@ -461,9 +431,6 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 					),
 					'_um_profile_metafields'            => array(
 						'sanitize' => array( $this, 'sanitize_user_field' ),
-					),
-					'_um_profile_use_custom_settings'   => array(
-						'sanitize' => 'bool',
 					),
 					'_um_profile_role'                  => array(
 						'sanitize' => array( $this, 'sanitize_existed_role' ),
@@ -481,12 +448,6 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 						'sanitize' => 'key',
 					),
 					'_um_profile_primary_btn_word'      => array(
-						'sanitize' => 'text',
-					),
-					'_um_profile_secondary_btn'         => array(
-						'sanitize' => 'bool',
-					),
-					'_um_profile_secondary_btn_word'    => array(
 						'sanitize' => 'text',
 					),
 					'_um_profile_cover_enabled'         => array(
@@ -1484,23 +1445,23 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 		public function sanitize_options( $data ) {
 			$sanitized = array();
 			foreach ( $data as $k => $v ) {
-				if ( ! array_key_exists( $k, UM()->admin_settings()->settings_map ) ) {
+				if ( ! array_key_exists( $k, UM()->admin()->settings()->settings_map ) ) {
 					// @todo remove since 2.2.x and leave only continue
 					$sanitized[ $k ] = $v;
 					continue;
 				}
 
-				if ( ! array_key_exists( 'sanitize', UM()->admin_settings()->settings_map[ $k ] ) ) {
+				if ( ! array_key_exists( 'sanitize', UM()->admin()->settings()->settings_map[ $k ] ) ) {
 					// @todo remove since 2.2.x and leave only continue
 					$sanitized[ $k ] = $v;
 					continue;
 				}
 
-				if ( is_callable( UM()->admin_settings()->settings_map[ $k ]['sanitize'], true, $callable_name ) ) {
-					add_filter( 'um_settings_sanitize_' . $k, UM()->admin_settings()->settings_map[ $k ]['sanitize'], 10, 1 );
+				if ( is_callable( UM()->admin()->settings()->settings_map[ $k ]['sanitize'], true, $callable_name ) ) {
+					add_filter( 'um_settings_sanitize_' . $k, UM()->admin()->settings()->settings_map[ $k ]['sanitize'], 10, 1 );
 				}
 
-				switch ( UM()->admin_settings()->settings_map[ $k ]['sanitize'] ) {
+				switch ( UM()->admin()->settings()->settings_map[ $k ]['sanitize'] ) {
 					default:
 						$sanitized[ $k ] = apply_filters( 'um_settings_sanitize_' . $k, $v );
 						break;
@@ -1632,11 +1593,11 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 		function includes() {
 			$this->enqueue();
 			$this->actions_listener();
-			//$this->settings();
+			$this->settings();
 			$this->notices();
 			$this->menu();
-			$this->metabox();
 			$this->columns();
+			$this->metabox();
 		}
 
 

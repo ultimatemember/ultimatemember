@@ -43,7 +43,8 @@
 
 .um-admin-tri {
   float: left;
-  width: 33%; }
+  width: 33%;
+  position: relative; }
 
 .um-modal-tabs {
   display: inline;

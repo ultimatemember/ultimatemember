@@ -1,16 +1,16 @@
 <?php
-namespace um\admin\core;
+namespace um\legacy\admin\core;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
-if ( ! class_exists( 'um\admin\core\Admin_GDPR' ) ) {
+if ( ! class_exists( 'um\legacy\admin\core\Admin_GDPR' ) ) {
 
 
 	/**
 	 * Class Admin_GDPR
-	 * @package um\admin\core
+	 * @package um\legacy\admin\core
 	 */
 	class Admin_GDPR {
 

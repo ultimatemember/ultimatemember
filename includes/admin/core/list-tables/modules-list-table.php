@@ -249,7 +249,7 @@ class UM_Modules_List_Table extends WP_List_Table {
 
 
 	function get_table_classes() {
-		return array( 'widefat', 'striped', $this->_args['plural'] );
+		return array( 'widefat', $this->_args['plural'] );
 	}
 
 
@@ -264,6 +264,29 @@ class UM_Modules_List_Table extends WP_List_Table {
 
 
 	/**
+	 * @param object $item
+	 *
+	 * @return string
+	 */
+	function column_type( $item ) {
+		$type = '';
+		switch ( $item['type'] ) {
+			case 'free':
+				$type = __( 'Free', 'ultimate-member' );
+				break;
+			case 'pro':
+				$type = __( 'Pro', 'ultimate-member' );
+				break;
+			case 'premium':
+				$type = __( 'Premium', 'ultimate-member' );
+				break;
+		}
+
+		return $type;
+	}
+
+
+	/**
 	 * @param $item
 	 *
 	 * @return string
@@ -273,23 +296,27 @@ class UM_Modules_List_Table extends WP_List_Table {
 
 		if ( ! UM()->is_legacy ) {
 			if ( UM()->modules()->can_activate( $item['key'] ) ) {
-				$actions['activate'] = '<a href="admin.php?page=um-modules&action=activate&slug=' . esc_attr( $item['key'] ) . '&_wpnonce=' . wp_create_nonce( 'um_module_activate' . $item['key'] . get_current_user_id() ) . '">' . __( 'Activate', 'ultimate-member' ). '</a>';
+				$actions['activate'] = '<a href="admin.php?page=um_options&tab=modules&action=activate&slug=' . esc_attr( $item['key'] ) . '&_wpnonce=' . wp_create_nonce( 'um_module_activate' . $item['key'] . get_current_user_id() ) . '">' . __( 'Activate', 'ultimate-member' ). '</a>';
+			}
+
+			$module_data = UM()->modules()->get_data( $item['key'] );
+
+			if ( array_key_exists( 'docs_url', $module_data ) ) {
+				$actions['docs'] = '<a href="' . esc_url_raw( $module_data['docs_url'] ) . '" target="_blank">' . __( 'Documentation', 'ultimate-member' ). '</a>';
 			}
 
 			if ( UM()->modules()->can_deactivate( $item['key'] ) ) {
-				$actions['deactivate'] = '<a href="admin.php?page=um-modules&action=deactivate&slug=' . esc_attr( $item['key'] ) . '&_wpnonce=' . wp_create_nonce( 'um_module_deactivate' . $item['key'] . get_current_user_id() ) . '" class="delete">' . __( 'Deactivate', 'ultimate-member' ). '</a>';
+				$actions['deactivate'] = '<a href="admin.php?page=um_options&tab=modules&action=deactivate&slug=' . esc_attr( $item['key'] ) . '&_wpnonce=' . wp_create_nonce( 'um_module_deactivate' . $item['key'] . get_current_user_id() ) . '" class="delete">' . __( 'Deactivate', 'ultimate-member' ). '</a>';
 			}
 
 			if ( UM()->modules()->can_flush( $item['key'] ) ) {
-				$actions['flush-data'] = '<a href="admin.php?page=um-modules&action=flush-data&slug=' . esc_attr( $item['key'] ) . '&_wpnonce=' . wp_create_nonce( 'um_module_flush' . $item['key'] . get_current_user_id() ) . '" class="delete">' . __( 'Flush data', 'ultimate-member' ). '</a>';
+				$actions['flush-data'] = '<a href="admin.php?page=um_options&tab=modules&action=flush-data&slug=' . esc_attr( $item['key'] ) . '&_wpnonce=' . wp_create_nonce( 'um_module_flush' . $item['key'] . get_current_user_id() ) . '" class="delete">' . __( 'Flush data', 'ultimate-member' ). '</a>';
 			}
+
+			$actions = apply_filters( 'um_module_list_table_actions', $actions, $item['key'] );
 		}
 
-		if ( file_exists( $item['path'] . DIRECTORY_SEPARATOR . 'icon.png' ) ) {
-			$column_content = sprintf('<div class="um-module-data-wrapper"><div class="um-module-icon-wrapper">%1$s</div><div class="um-module-title-wrapper">%2$s %3$s</div></div>', '<img class="um-module-icon" src="' . esc_attr( $item['url'] ) . 'icon.png" title="' . esc_attr( $item['title'] ) . '" />','<strong>' . esc_html( $item['title'] ) . '</strong>', $this->row_actions( $actions ) );
-		} else {
-			$column_content = sprintf('<div class="um-module-data-wrapper um-module-no-icon"><div class="um-module-title-wrapper">%1$s %2$s</div></div>', '<strong>' . esc_html( $item['title'] ) . '</strong>', $this->row_actions( $actions ) );
-		}
+		$column_content = sprintf('<div class="um-module-data-wrapper"><div class="um-module-title-wrapper">%1$s %2$s</div></div>', '<strong>' . esc_html( $item['title'] ) . '</strong>', $this->row_actions( $actions, true ) );
 
 		return $column_content;
 	}
@@ -315,34 +342,44 @@ $ListTable->set_bulk_actions( $bulk_actions );
 
 $ListTable->set_columns( array(
 	'module_title' => __( 'Module', 'ultimate-member' ),
+	'type'         => __( 'Type', 'ultimate-member' ),
 	'description'  => __( 'Description', 'ultimate-member' ),
 ) );
 
-$ListTable->prepare_items(); ?>
+$ListTable->prepare_items();
 
-<div class="wrap">
-	<h1 class="wp-heading-inline">
-		<?php esc_html_e( 'Ultimate Member - Modules', 'ultimate-member' ) ?>
-	</h1>
+if ( ! empty( $_GET['msg'] ) ) {
+	switch( sanitize_key( $_GET['msg'] ) ) {
+		case 'a':
+			echo '<div class="clear"></div><div id="message" class="updated fade"><p>' . __( 'Module <strong>activated</strong> successfully.', 'ultimate-member' ) . '</p></div>';
+			break;
+		case 'd':
+			echo '<div class="clear"></div><div id="message" class="updated fade"><p>' . __( 'Module <strong>deactivated</strong> successfully.', 'ultimate-member' ) . '</p></div>';
+			break;
+		case 'f':
+			echo '<div class="clear"></div><div id="message" class="updated fade"><p>' . __( 'Module\'s data is <strong>flushed</strong> successfully.', 'ultimate-member' ) . '</p></div>';
+			break;
+	}
+} ?>
 
-	<hr class="wp-header-end">
+<div class="clear"></div>
 
-	<?php if ( ! empty( $_GET['msg'] ) ) {
-		switch( sanitize_key( $_GET['msg'] ) ) {
-			case 'a':
-				echo '<div id="message" class="updated fade"><p>' . __( 'Module <strong>activated</strong> successfully.', 'ultimate-member' ) . '</p></div>';
-				break;
-			case 'd':
-				echo '<div id="message" class="updated fade"><p>' . __( 'Module <strong>deactivated</strong> successfully.', 'ultimate-member' ) . '</p></div>';
-				break;
-			case 'f':
-				echo '<div id="message" class="updated fade"><p>' . __( 'Module\'s data is <strong>flushed</strong> successfully.', 'ultimate-member' ) . '</p></div>';
-				break;
-		}
-	} ?>
+<?php ob_start(); ?>
 
-	<form action="" method="get" name="um-modules" id="um-modules">
-		<input type="hidden" name="page" value="um-modules" />
-		<?php $ListTable->display(); ?>
-	</form>
+<div id="um-plan">
+	<p><?php esc_html_e( 'You are using the free version of Ultimate Member. With this you have access to the modules below. Upgrade to Ultimate Member Pro to get access to the pro modules.', 'ultimate-member' ); ?></p>
+	<p><?php echo wp_kses( sprintf( __( 'Click <a href="%s" target="_blank">here</a> to view our different plans for Ultimate Member Pro.', 'ultimate-member' ), 'https://ultimatemember.com/pricing-beta/' ), array( 'a' => array( 'href' => array(), 'target' => true ) ) ); ?></p>
 </div>
+
+<?php
+$same_page_license = ob_get_clean();
+$same_page_license = apply_filters( 'um_modules_page_same_page_license', $same_page_license );
+
+echo $same_page_license;
+?>
+
+<form action="" method="get" name="um-modules" id="um-modules">
+	<input type="hidden" name="page" value="um_options" />
+	<input type="hidden" name="tab" value="modules" />
+	<?php $ListTable->display(); ?>
+</form>

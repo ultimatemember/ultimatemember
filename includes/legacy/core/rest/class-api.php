@@ -1,17 +1,17 @@
 <?php
-namespace um\core\rest;
+namespace um\legacy\core\rest;
 
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
-if ( ! class_exists( 'um\core\rest\API' ) ) {
+if ( ! class_exists( 'um\legacy\core\rest\API' ) ) {
 
 
 	/**
 	 * Class API
 	 *
-	 * @package um\core\rest
+	 * @package um\legacy\core\rest
 	 */
 	class API {
 
@@ -538,7 +538,7 @@ if ( ! class_exists( 'um\core\rest\API' ) ) {
 
 				case 'xml' :
 
-					require_once um_path . 'includes/lib/array2xml.php';
+					require_once um_path . 'includes/legacy/lib/array2xml.php';
 					$xml = \Array2XML::createXML( 'um', $this->data );
 					echo $xml->saveXML();
 

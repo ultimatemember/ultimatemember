@@ -1,5 +1,5 @@
 <?php
-namespace um\admin\core;
+namespace um\legacy\admin\core;
 
 
 use \RecursiveDirectoryIterator;
@@ -8,12 +8,12 @@ use \RecursiveDirectoryIterator;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
-if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
+if ( ! class_exists( 'um\legacy\admin\core\Admin_Menu' ) ) {
 
 
 	/**
 	 * Class Admin_Menu
-	 * @package um\admin\core
+	 * @package um\legacy\admin\core
 	 */
 	class Admin_Menu {
 
@@ -160,9 +160,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 
 			add_submenu_page( $this->slug, __( 'User Roles', 'ultimate-member' ), __( 'User Roles', 'ultimate-member' ), 'manage_options', 'um_roles', array( &$this, 'um_roles_pages' ) );
 
-			if ( UM()->options()->get( 'members_page' ) ) {
-				add_submenu_page( $this->slug, __( 'Member Directories', 'ultimate-member' ), __( 'Member Directories', 'ultimate-member' ), 'manage_options', 'edit.php?post_type=um_directory', '' );
-			}
+			add_submenu_page( $this->slug, __( 'Member Directories', 'ultimate-member' ), __( 'Member Directories', 'ultimate-member' ), 'manage_options', 'edit.php?post_type=um_directory', '' );
 
 			/**
 			 * UM hook
@@ -190,9 +188,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 		 */
 		function um_roles_pages() {
 			if ( empty( $_GET['tab'] ) ) {
-				include_once um_path . 'includes/admin/core/list-tables/roles-list-table.php';
+				include_once um_path . 'includes/legacy/admin/core/list-tables/roles-list-table.php';
 			} elseif ( 'add' === sanitize_key( $_GET['tab'] ) || 'edit' === sanitize_key( $_GET['tab'] ) ) {
-				include_once um_path . 'includes/admin/templates/role/role-edit.php';
+				include_once um_path . 'includes/legacy/admin/templates/role/role-edit.php';
 			} else {
 				um_js_redirect( add_query_arg( array( 'page' => 'um_roles' ), get_admin_url( 'admin.php' ) ) );
 			}

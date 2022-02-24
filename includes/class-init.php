@@ -194,19 +194,24 @@ if ( ! class_exists( 'UM' ) ) {
 					$this->is_permalinks = true;
 				}
 
-				$this->is_legacy = ! $this->options()->get( 'enable_version_3_design' );
-				if ( ! $this->is_legacy ) {
-					$extension_plugins = $this->config()->get( 'extension_plugins' );
+				$is_legacy = get_option( 'um_is_legacy' );
+				if ( $is_legacy ) {
+					$this->is_legacy = ! $this->options()->get( 'enable_version_3_design' );
+					if ( ! $this->is_legacy ) {
+						$extension_plugins = $this->config()->get( 'extension_plugins' );
 
-					$active_plugins = (array) get_option( 'active_plugins', array() );
-					if ( is_multisite() ) {
-						$active_plugins = array_merge( $active_plugins, get_site_option( 'active_sitewide_plugins', array() ) );
-					}
+						$active_plugins = (array) get_option( 'active_plugins', array() );
+						if ( is_multisite() ) {
+							$active_plugins = array_merge( $active_plugins, get_site_option( 'active_sitewide_plugins', array() ) );
+						}
 
-					$active_extension_plugins = array_intersect( $active_plugins, $extension_plugins );
-					if ( ! empty( $active_extension_plugins ) ) {
-						$this->is_legacy = true;
+						$active_extension_plugins = array_intersect( $active_plugins, $extension_plugins );
+						if ( ! empty( $active_extension_plugins ) ) {
+							$this->is_legacy = true;
+						}
 					}
+				} else {
+					$this->is_legacy = false;
 				}
 
 				$this->honeypot = 'um_request';
@@ -228,16 +233,23 @@ if ( ! class_exists( 'UM' ) ) {
 				// include hook files
 				add_action( 'plugins_loaded', array( &$this, 'init' ), 0 );
 				//run hook for extensions init
-				add_action( 'plugins_loaded', array( &$this, 'extensions_init' ), -19 );
-
-				add_action( 'init', array( &$this, 'old_update_patch' ), 0 );
+				add_action( 'plugins_loaded', array( &$this, 'core_loaded_trigger' ), -19 );
 
 				// init widgets
 				add_action( 'widgets_init', array( &$this, 'widgets_init' ) );
 
 				//include short non class functions
-				require_once 'um-short-functions.php';
-				require_once 'um-deprecated-functions.php';
+				$is_legacy = get_option( 'um_is_legacy' );
+
+				if ( ! $is_legacy || ! $this->is_legacy ) {
+					require_once 'um-short-functions.php';
+					require_once 'um-deprecated-functions.php';
+				} elseif ( $is_legacy && $this->is_legacy ) {
+					add_action( 'init', array( &$this, 'old_update_patch' ), 0 );
+
+					require_once 'legacy/um-short-functions.php';
+					require_once 'legacy/um-deprecated-functions.php';
+				}
 			}
 		}
 
@@ -508,7 +520,7 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 *
 		 */
-		function extensions_init() {
+		function core_loaded_trigger() {
 			do_action( 'um_core_loaded' );
 		}
 
@@ -521,75 +533,138 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return void
 		 */
 		public function includes() {
-			// direct require file with core functions
-			require 'um-core-functions.php';
+			$is_legacy = get_option( 'um_is_legacy' );
 
-			$this->modules();
-			$this->integrations();
-			$this->access();
+			if ( ! $is_legacy || ! $this->is_legacy ) {
+				// direct require file with core functions
+				require 'um-core-functions.php';
 
-			$this->common()->includes();
-			if ( $this->is_request( 'ajax' ) ) {
-				$this->ajax()->includes();
-			} elseif ( $this->is_request( 'admin' ) ) {
-				$this->admin()->includes();
-			} elseif ( $this->is_request( 'frontend' ) ) {
-				$this->frontend()->includes();
-			}
+				$this->modules();
+				$this->integrations();
+				$this->access();
 
-			if ( $this->is_request( 'ajax' ) ) {
-				$this->admin();
-				$this->ajax_init();
-				$this->admin_ajax_hooks();
-				//$this->metabox();
-				$this->admin_upgrade()->init_packages_ajax_handlers();
-				$this->admin_gdpr();
-				//$this->columns();
-				$this->admin_navmenu();
-				$this->plugin_updater();
-				$this->theme_updater();
-			} elseif ( $this->is_request( 'admin' ) ) {
-				$this->admin();
-				$this->admin_upgrade();
-				$this->admin_settings();
-				//$this->metabox();
-				$this->users();
-				$this->dragdrop();
-				$this->admin_gdpr();
-				$this->admin_navmenu();
-				$this->plugin_updater();
-				$this->theme_updater();
-			} elseif ( $this->is_request( 'frontend' ) ) {
-				//$this->enqueue();
-				$this->account();
-				$this->password();
-				$this->login();
-				$this->register();
-				$this->user_posts();
-				$this->logout();
-			}
+				$this->common()->includes();
+				if ( $this->is_request( 'ajax' ) ) {
+					$this->ajax()->includes();
+				} elseif ( $this->is_request( 'admin' ) ) {
+					$this->admin()->includes();
+				} elseif ( $this->is_request( 'frontend' ) ) {
+					$this->frontend()->includes();
+				}
 
-			//common includes
-			$this->rewrite();
-			$this->mail();
-			$this->rest_api();
-			$this->shortcodes();
-			$this->roles();
-			$this->user();
-			$this->profile();
-			$this->builtin();
-			$this->form();
-			$this->permalinks();
-			$this->modal();
-			$this->cron();
-			$this->mobile();
-			$this->external_integrations();
-			$this->gdpr();
-			$this->member_directory();
+				if ( $this->is_request( 'ajax' ) ) {
+					//$this->admin();
+					$this->ajax_init();
+					$this->admin_ajax_hooks();
+					$this->admin_upgrade()->init_packages_ajax_handlers();
+					$this->admin_gdpr();
+					//$this->columns();
+					$this->admin_navmenu();
+					$this->plugin_updater();
+					$this->theme_updater();
+				} elseif ( $this->is_request( 'admin' ) ) {
+					//$this->admin();
+					$this->admin_upgrade();
+					$this->users();
+					$this->dragdrop();
+					$this->admin_gdpr();
+					$this->admin_navmenu();
+					$this->plugin_updater();
+					$this->theme_updater();
+				} elseif ( $this->is_request( 'frontend' ) ) {
+					$this->account();
+					$this->password();
+					$this->login();
+					$this->register();
+					$this->user_posts();
+					$this->logout();
+				}
 
-			//if multisite networks active
-			if ( is_multisite() ) {
-				$this->multisite();
+				//common includes
+				$this->rewrite();
+				$this->mail();
+				$this->shortcodes();
+				$this->roles();
+				$this->user();
+				$this->profile();
+				$this->builtin();
+				$this->form();
+				$this->permalinks();
+				$this->modal();
+				$this->cron();
+				$this->mobile();
+				$this->external_integrations();
+				$this->gdpr();
+				$this->member_directory();
+
+				//if multisite networks active
+				if ( is_multisite() ) {
+					$this->multisite();
+				}
+			} elseif ( $is_legacy && $this->is_legacy ) {
+				// legacy part
+				$this->common();
+				$this->access();
+
+				if ( $this->is_request( 'ajax' ) ) {
+					$this->admin();
+					$this->ajax_init();
+					$this->admin_ajax_hooks();
+					$this->metabox();
+					$this->admin_upgrade()->init_packages_ajax_handlers();
+					$this->admin_gdpr();
+					$this->columns();
+					$this->admin()->notices();
+					$this->admin_navmenu();
+					$this->plugin_updater();
+					$this->theme_updater();
+				} elseif ( $this->is_request( 'admin' ) ) {
+					$this->admin();
+					$this->admin_menu();
+					$this->admin_upgrade();
+					$this->admin_settings();
+					$this->columns();
+					$this->admin_enqueue();
+					$this->metabox();
+					$this->admin()->notices();
+					$this->users();
+					$this->dragdrop();
+					$this->admin_gdpr();
+					$this->admin_navmenu();
+					$this->plugin_updater();
+					$this->theme_updater();
+				} elseif ( $this->is_request( 'frontend' ) ) {
+					$this->enqueue();
+					$this->account();
+					$this->password();
+					$this->login();
+					$this->register();
+					$this->user_posts();
+					$this->logout();
+				}
+
+				//common includes
+				$this->rewrite();
+				$this->mail();
+				$this->rest_api();
+				$this->shortcodes();
+				$this->roles();
+				$this->user();
+				$this->profile();
+				$this->builtin();
+				$this->form();
+				$this->permalinks();
+				$this->modal();
+				$this->cron();
+				$this->mobile();
+				$this->external_integrations();
+				$this->gdpr();
+				$this->member_directory();
+
+				//if multisite networks active
+				if ( is_multisite() ) {
+					$this->multisite();
+				}
 			}
 		}
 
@@ -603,6 +678,17 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return um\common\Init()
 		 */
 		function common() {
+			// legacy part
+			$is_legacy = get_option( 'um_is_legacy' );
+			if ( $is_legacy ) {
+				if ( UM()->is_legacy ) {
+					if ( empty( $this->classes['um\legacy\common'] ) ) {
+						$this->classes['um\legacy\common'] = new um\legacy\core\Common();
+					}
+					return $this->classes['um\legacy\common'];
+				}
+			}
+
 			if ( empty( $this->classes['um\common\init'] ) ) {
 				$this->classes['um\common\init'] = new um\common\Init();
 			}
@@ -648,6 +734,17 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return um\admin\Init()
 		 */
 		function admin() {
+			// legacy part
+			$is_legacy = get_option( 'um_is_legacy' );
+			if ( $is_legacy ) {
+				if ( UM()->is_legacy ) {
+					if ( empty( $this->classes['um\legacy\admin'] ) ) {
+						$this->classes['um\legacy\admin'] = new um\legacy\admin\Admin();
+					}
+					return $this->classes['um\legacy\admin'];
+				}
+			}
+
 			if ( empty( $this->classes['um\admin\init'] ) ) {
 				$this->classes['um\admin\init'] = new um\admin\Init();
 			}
@@ -723,6 +820,17 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return um\core\Options()
 		 */
 		function options() {
+			// legacy part
+			$is_legacy = get_option( 'um_is_legacy' );
+			if ( $is_legacy ) {
+				if ( UM()->is_legacy ) {
+					if ( empty( $this->classes['um\legacy\options'] ) ) {
+						$this->classes['um\legacy\options'] = new um\legacy\core\Options();
+					}
+					return $this->classes['um\legacy\options'];
+				}
+			}
+
 			if ( empty( $this->classes['options'] ) ) {
 				$this->classes['options'] = new um\core\Options();
 			}
@@ -790,11 +898,13 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
-		 * @return um\admin\core\Admin_Settings()
+		 * Legacy since 3.0
+		 *
+		 * @return um\legacy\admin\core\Admin_Settings()
 		 */
 		function admin_settings() {
 			if ( empty( $this->classes['admin_settings'] ) ) {
-				$this->classes['admin_settings'] = new um\admin\core\Admin_Settings();
+				$this->classes['admin_settings'] = new um\legacy\admin\core\Admin_Settings();
 			}
 			return $this->classes['admin_settings'];
 		}
@@ -822,10 +932,15 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return bool|um\admin\core\Admin_GDPR()
 		 */
 		function admin_gdpr() {
-			global $wp_version;
-
-			if ( version_compare( $wp_version, '4.9.6', '<' ) ) {
-				return false;
+			// legacy part
+			$is_legacy = get_option( 'um_is_legacy' );
+			if ( $is_legacy ) {
+				if ( UM()->is_legacy ) {
+					if ( empty( $this->classes['um\legacy\admin_gdpr'] ) ) {
+						$this->classes['um\legacy\admin_gdpr'] = new um\legacy\admin\core\Admin_GDPR();
+					}
+					return $this->classes['um\legacy\admin_gdpr'];
+				}
 			}
 
 			if ( empty( $this->classes['admin_gdpr'] ) ) {
@@ -843,12 +958,6 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return bool|um\core\GDPR()
 		 */
 		function gdpr() {
-			global $wp_version;
-
-			if ( version_compare( $wp_version, '4.9.6', '<' ) ) {
-				return false;
-			}
-
 			if ( empty( $this->classes['gdpr'] ) ) {
 				$this->classes['gdpr'] = new um\core\GDPR();
 			}
@@ -954,19 +1063,20 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
-		 * @return um\core\rest\API_v1|um\core\rest\API_v2
+		 * Legacy since 3.0
+		 *
+		 * @return um\legacy\core\rest\API_v1|um\legacy\core\rest\API_v2
 		 */
 		function rest_api() {
-
 			$api_version = $this->options()->get( 'rest_api_version' );
 
 			if ( empty( $this->classes['rest_api'] ) ) {
 				if ( '1.0' === $api_version ) {
-					$this->classes['rest_api'] = new um\core\rest\API_v1();
+					$this->classes['rest_api'] = new um\legacy\core\rest\API_v1();
 				} elseif ( '2.0' === $api_version ) {
-					$this->classes['rest_api'] = new um\core\rest\API_v2();
+					$this->classes['rest_api'] = new um\legacy\core\rest\API_v2();
 				} else {
-					$this->classes['rest_api'] = new um\core\rest\API_v1();
+					$this->classes['rest_api'] = new um\legacy\core\rest\API_v1();
 				}
 			}
 
@@ -1358,35 +1468,63 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @since 2.0
 		 */
 		function init() {
+			$is_legacy = get_option( 'um_is_legacy' );
 
 			ob_start();
 
-			require_once 'core/um-actions-form.php';
-			require_once 'core/um-actions-access.php';
-			require_once 'core/um-actions-wpadmin.php';
-			require_once 'core/um-actions-core.php';
-			require_once 'core/um-actions-ajax.php';
-			require_once 'core/um-actions-login.php';
-			require_once 'core/um-actions-register.php';
-			require_once 'core/um-actions-profile.php';
-			require_once 'core/um-actions-account.php';
-			require_once 'core/um-actions-global.php';
-			require_once 'core/um-actions-user.php';
-			require_once 'core/um-actions-save-profile.php';
-			require_once 'core/um-actions-misc.php';
+			if ( ! $is_legacy || ! $this->is_legacy ) {
+				require_once 'core/um-actions-form.php';
+				require_once 'core/um-actions-access.php';
+				require_once 'core/um-actions-wpadmin.php';
+				require_once 'core/um-actions-core.php';
+				require_once 'core/um-actions-ajax.php';
+				require_once 'core/um-actions-login.php';
+				require_once 'core/um-actions-register.php';
+				require_once 'core/um-actions-profile.php';
+				require_once 'core/um-actions-account.php';
+				require_once 'core/um-actions-global.php';
+				require_once 'core/um-actions-user.php';
+				require_once 'core/um-actions-save-profile.php';
+				require_once 'core/um-actions-misc.php';
 
-			require_once 'core/um-filters-login.php';
-			require_once 'core/um-filters-fields.php';
-			require_once 'core/um-filters-files.php';
-			require_once 'core/um-filters-navmenu.php';
-			require_once 'core/um-filters-avatars.php';
-			require_once 'core/um-filters-user.php';
+				require_once 'core/um-filters-login.php';
+				require_once 'core/um-filters-fields.php';
+				require_once 'core/um-filters-files.php';
+				require_once 'core/um-filters-navmenu.php';
+				require_once 'core/um-filters-avatars.php';
+				require_once 'core/um-filters-user.php';
 
-			require_once 'core/um-filters-profile.php';
-			require_once 'core/um-filters-account.php';
-			require_once 'core/um-filters-misc.php';
-			require_once 'core/um-filters-commenting.php';
+				require_once 'core/um-filters-profile.php';
+				require_once 'core/um-filters-account.php';
+				require_once 'core/um-filters-misc.php';
+				require_once 'core/um-filters-commenting.php';
+			} elseif ( $is_legacy && $this->is_legacy ) {
+				require_once 'legacy/core/um-actions-form.php';
+				require_once 'legacy/core/um-actions-access.php';
+				require_once 'legacy/core/um-actions-wpadmin.php';
+				require_once 'legacy/core/um-actions-core.php';
+				require_once 'legacy/core/um-actions-ajax.php';
+				require_once 'legacy/core/um-actions-login.php';
+				require_once 'legacy/core/um-actions-register.php';
+				require_once 'legacy/core/um-actions-profile.php';
+				require_once 'legacy/core/um-actions-account.php';
+				require_once 'legacy/core/um-actions-global.php';
+				require_once 'legacy/core/um-actions-user.php';
+				require_once 'legacy/core/um-actions-save-profile.php';
+				require_once 'legacy/core/um-actions-misc.php';
 
+				require_once 'legacy/core/um-filters-login.php';
+				require_once 'legacy/core/um-filters-fields.php';
+				require_once 'legacy/core/um-filters-files.php';
+				require_once 'legacy/core/um-filters-navmenu.php';
+				require_once 'legacy/core/um-filters-avatars.php';
+				require_once 'legacy/core/um-filters-user.php';
+
+				require_once 'legacy/core/um-filters-profile.php';
+				require_once 'legacy/core/um-filters-account.php';
+				require_once 'legacy/core/um-filters-misc.php';
+				require_once 'legacy/core/um-filters-commenting.php';
+			}
 		}
 
 
@@ -1424,7 +1562,6 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return mixed
 		 */
 		function module( $slug ) {
-
 			$data = $this->modules()->get_data( $slug );
 			if ( ! empty( $data['path'] ) ) {
 				$slug = $this->undash( $slug );
@@ -1443,24 +1580,6 @@ if ( ! class_exists( 'UM' ) ) {
 
 
 		// DEPRECATED
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * @deprecated 3.0
-		 *
-		 * @return um\core\Setup
-		 */
-		function setup() {
-			_deprecated_function( __METHOD__, '3.0' );
-
-			if ( empty( $this->classes['setup'] ) ) {
-				$this->classes['setup'] = new um\core\Setup();
-			}
-
-			return $this->classes['setup'];
-		}
 
 
 		/**
@@ -1504,20 +1623,22 @@ if ( ! class_exists( 'UM' ) ) {
 
 
 		/**
+		 * @since 2.0
+		 *
+		 * @deprecated 3.0
+		 */
+		function setup() {
+			_deprecated_function( __METHOD__, '3.0', 'UM()->install()' );
+		}
+
+
+		/**
 		 * @since 2.0.34
 		 *
 		 * @deprecated 3.0
-		 *
-		 * @return um\Extensions
 		 */
 		function extensions() {
 			_deprecated_function( __METHOD__, '3.0' );
-
-			if ( empty( $this->classes['extensions'] ) ) {
-				$this->classes['extensions'] = new um\Extensions();
-			}
-
-			return $this->classes['extensions'];
 		}
 
 
@@ -1528,73 +1649,9 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @deprecated 3.0
 		 *
 		 * @param $slug
-		 *
-		 * @return um_ext\um_bbpress\Init
 		 */
 		function extension( $slug ) {
 			_deprecated_function( __METHOD__, '3.0' );
-			if ( empty( $this->classes[ $slug ] ) ) {
-				$class = "um_ext\um_{$slug}\Init";
-
-				/**
-				 * @var $class um_ext\um_bbpress\Init
-				 */
-				$this->classes[ $slug ] = $class::instance();
-			}
-
-			return $this->classes[ $slug ];
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * @deprecated 3.0
-		 *
-		 * @return um\admin\Menu()
-		 */
-		function admin_menu() {
-			_deprecated_function( __METHOD__, '3.0', 'UM()->admin()->menu()' );
-			return $this->admin()->menu();
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * @deprecated 3.0
-		 *
-		 * @return um\admin\Enqueue()
-		 */
-		function admin_enqueue() {
-			_deprecated_function( __METHOD__, '3.0', 'UM()->admin()->enqueue()' );
-			return $this->admin()->enqueue();
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * @deprecated 3.0
-		 *
-		 * @return um\admin\Columns()
-		 */
-		function columns() {
-			_deprecated_function( __METHOD__, '3.0', 'UM()->admin()->columns()' );
-			return $this->admin()->columns();
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * @deprecated 3.0
-		 *
-		 * @return um\admin\Metabox()
-		 */
-		function metabox() {
-			_deprecated_function( __METHOD__, '3.0', 'UM()->admin()->metabox()' );
-			return UM()->admin()->metabox();
 		}
 
 
@@ -1611,13 +1668,76 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
-		 * @deprecated 3.0
+		 * Legacy since 3.0
 		 *
-		 * @return um\frontend\Enqueue
+		 * @return um\legacy\admin\core\Admin_Menu()
+		 */
+		function admin_menu() {
+			if ( empty( $this->classes['um\legacy\admin\menu'] ) ) {
+				$this->classes['um\legacy\admin\menu'] = new um\legacy\admin\core\Admin_Menu();
+			}
+			return $this->classes['um\legacy\admin\menu'];
+		}
+
+
+		/**
+		 * @since 2.0
+		 *
+		 * Legacy since 3.0
+		 *
+		 * @return um\legacy\admin\core\Admin_Enqueue()
+		 */
+		function admin_enqueue() {
+			if ( empty( $this->classes['um\legacy\admin\enqueue'] ) ) {
+				$this->classes['um\legacy\admin\enqueue'] = new um\legacy\admin\core\Admin_Enqueue();
+			}
+			return $this->classes['um\legacy\admin\enqueue'];
+		}
+
+
+		/**
+		 * @since 2.0
+		 *
+		 * Legacy since 3.0
+		 *
+		 * @return um\legacy\admin\core\Admin_Columns()
+		 */
+		function columns() {
+			if ( empty( $this->classes['um\legacy\admin\columns'] ) ) {
+				$this->classes['um\legacy\admin\columns'] = new um\legacy\admin\core\Admin_Columns();
+			}
+			return $this->classes['um\legacy\admin\columns'];
+		}
+
+
+		/**
+		 * @since 2.0
+		 *
+		 * Legacy since 3.0
+		 *
+		 * @return um\legacy\admin\core\Admin_Metabox()
+		 */
+		function metabox() {
+			if ( empty( $this->classes['um\legacy\admin\metabox'] ) ) {
+				$this->classes['um\legacy\admin\metabox'] = new um\legacy\admin\core\Admin_Metabox();
+			}
+			return $this->classes['um\legacy\admin\metabox'];
+		}
+
+
+		/**
+		 * @since 2.0
+		 *
+		 * Legacy since 3.0
+		 *
+		 * @return um\legacy\core\Enqueue
 		 */
 		function enqueue() {
-			_deprecated_function( __METHOD__, '3.0', 'UM()->frontend()->enqueue()' );
-			return $this->frontend()->enqueue();
+			if ( empty( $this->classes['um\legacy\enqueue'] ) ) {
+				$this->classes['um\legacy\enqueue'] = new um\legacy\core\Enqueue();
+			}
+
+			return $this->classes['um\legacy\enqueue'];
 		}
 	}
 }

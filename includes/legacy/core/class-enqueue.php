@@ -1,17 +1,17 @@
 <?php
-namespace um\core;
+namespace um\legacy\core;
 
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
-if ( ! class_exists( 'um\core\Enqueue' ) ) {
+if ( ! class_exists( 'um\legacy\core\Enqueue' ) ) {
 
 
 	/**
 	 * Class Enqueue
-	 * @package um\core
+	 * @package um\legacy\core
 	 */
 	class Enqueue {
 
@@ -40,8 +40,8 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 		function __construct() {
 			$this->suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG || defined( 'UM_SCRIPT_DEBUG' ) ) ? '' : '.min';
 
-			$this->js_baseurl = um_url . 'assets/js/';
-			$this->css_baseurl = um_url . 'assets/css/';
+			$this->js_baseurl = um_url . 'assets/legacy/js/';
+			$this->css_baseurl = um_url . 'assets/legacy/css/';
 
 			add_action( 'init',  array( &$this, 'scripts_enqueue_priority' ) );
 		}
@@ -112,8 +112,8 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			if ( $locale ) {
 				if ( file_exists( WP_LANG_DIR . '/plugins/ultimate-member/assets/js/pickadate/' . $locale . '.js' ) ) {
 					wp_register_script('um_datetime_locale', content_url() . '/languages/plugins/ultimate-member/assets/js/pickadate/' . $locale . '.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
-				} elseif ( file_exists( um_path . 'assets/js/pickadate/translations/' . $locale . '.js' ) ) {
-					wp_register_script('um_datetime_locale', um_url . 'assets/js/pickadate/translations/' . $locale . '.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
+				} elseif ( file_exists( um_path . 'assets/legacy/js/pickadate/translations/' . $locale . '.js' ) ) {
+					wp_register_script('um_datetime_locale', um_url . 'assets/legacy/js/pickadate/translations/' . $locale . '.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
 				}
 			}
 
@@ -376,7 +376,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 
 			// load a localized version for date/time
 			$locale = get_locale();
-			if ( $locale && ( file_exists( WP_LANG_DIR . '/plugins/ultimate-member/assets/js/pickadate/' . $locale . '.js' ) || file_exists( um_path . 'assets/js/pickadate/translations/' . $locale . '.js' ) ) ) {
+			if ( $locale && ( file_exists( WP_LANG_DIR . '/plugins/ultimate-member/assets/js/pickadate/' . $locale . '.js' ) || file_exists( um_path . 'assets/legacy/js/pickadate/translations/' . $locale . '.js' ) ) ) {
 				wp_enqueue_script('um_datetime_locale' );
 			}
 

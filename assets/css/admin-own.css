@@ -54,10 +54,17 @@
 .um-admin-metabox label {
   display: block;
   cursor: default;
-  margin: 0 0 8px 0 !important;
   padding: 0 !important;
   font-size: 13px;
   color: #666; }
+
+.um-admin-metabox .um-top-label label {
+  margin: 0 0 8px 0 !important; }
+
+.um-admin-metabox th {
+  font-size: 13px;
+  color: #666;
+  cursor: default; }
 
 .um-admin-metabox input[type="text"] {
   height: auto !important;

@@ -86,6 +86,20 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 
 
 		/**
+		 * Add UM option value
+		 *
+		 * @param $option_id
+		 * @param $value
+		 */
+		function add( $option_id, $value ) {
+			if ( ! array_key_exists( $option_id, $this->options ) ) {
+				$this->options[ $option_id ] = $value;
+				update_option( 'um_options', $this->options );
+			}
+		}
+
+
+		/**
 		 * Update UM option value
 		 *
 		 * @param $option_id

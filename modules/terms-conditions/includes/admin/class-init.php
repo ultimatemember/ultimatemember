@@ -20,7 +20,7 @@ class Init {
 	 * @since    1.0.0
 	 */
 	public function __construct() {
-		add_action( 'um_admin_custom_register_metaboxes', array( &$this, 'add_metabox_register' ) );
+		add_action( 'um_admin_add_form_metabox', array( &$this, 'add_metabox_register' ) );
 	}
 
 

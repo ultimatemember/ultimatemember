@@ -155,6 +155,132 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
+
+= 3.0: xx.xx, 2022 =
+
+### Enhancements:
+
+* Added: `ultimate-member/modules` dir with all migrated UMv2 free extensions to the new UMv3 modules
+* Added: `ultimate-member/includes/ajax` dir with new UMv3 AJAX callbacks and handlers
+* Added: `ultimate-member/includes/common` dir with new UMv3 common callbacks and handlers
+* Added: `ultimate-member/includes/frontend` dir with new UMv3 frontend callbacks and handlers
+* Added: `ultimate-member/includes/integrations` dir with new UMv3 3rd-party integrations
+** Added: multilingual integrations with WPML (Sitepress) plugin
+** Added: multilingual integrations with Polylang plugin
+** Added: multilingual integrations with TranslatePress plugin
+** Added: multilingual integrations with Weglot plugin
+* Added: ultimate-member/includes/class-modules.php for operating with v3 modules
+* Updated: package.json for making build fresh
+* Updated: gulpfile.js for v3 build with modules and new assets structure
+
+### Moved:
+
+* `ultimate-member/assets` folder to the `ultimate-member/assets/legacy`. Making that for the legacy designs
+* `ultimate-member/includes/admin/assets` folder to the `ultimate-member/assets/legacy/admin`. Making that for the legacy designs
+* `ultimate-member/templates` folder to the `ultimate-member/templates/legacy`. Making that for the legacy designs
+* `ultimate-member/includes/um-short-functions.php` file to the `ultimate-member/includes/legacy/um-short-functions.php`. Making that for the legacy designs
+* `ultimate-member/includes/um-deprecated-functions.php` file to the `ultimate-member/includes/legacy/um-deprecated-functions.php`. Making that for the legacy designs
+* `ultimate-member/includes/admin` dir to the `ultimate-member/includes/legacy/admin`. Making that for the legacy designs
+* `ultimate-member/includes/core` dir to the `ultimate-member/includes/legacy/core`. Making that for the legacy designs
+
+### Deprecated:
+
+* 'um_reset_password_shortcode_args_filter' hook, use `shortcode_atts_ultimatemember_password` instead
+* REST_API functionality. Removed REST API version setting. REST API is legacy for now for old customers
+* Settings > Appearances global settings separated to different places and individual form settings:
+** `Registration Maximum Width` is fully deprecated
+** `Registration Shortcode Alignment` is fully deprecated
+** `Registration Field Icons` is fully deprecated
+** `Registration Secondary Button` is fully deprecated
+** `Registration Secondary Button Text` is fully deprecated
+** `Registration Secondary Button URL` is fully deprecated
+** `Registration Default Template` is moved to the individual form settings
+** `Registration Primary Button Text` is moved to the individual form settings
+** `Registration Default Role` is moved to the individual form settings
+
+** `Login Maximum Width` is fully deprecated
+** `Login Shortcode Alignment` is fully deprecated
+** `Login Field Icons` is fully deprecated
+** `Login Secondary Button` is fully deprecated
+** `Login Secondary Button Text` is fully deprecated
+** `Login Secondary Button URL` is fully deprecated
+** `Login Default Template` is moved to the individual form settings
+** `Login Primary Button Text` is moved to the individual form settings
+** `Login Forgot Password Link` is moved to the individual form settings
+** `Show "Remember Me"` is moved to the individual form settings
+
+** Profile Menu subtab is moved to the individual form add/edit page with all settings
+
+** `Profile Maximum Width` is fully deprecated
+** `Profile Area Maximum Width` is fully deprecated
+** `Profile Field Icons` is fully deprecated
+** `Profile Secondary Button` is fully deprecated
+** `Profile Secondary Button Text` is fully deprecated
+** `Profile Header Meta Text Icon` is fully deprecated
+** `Profile Header Menu Position` is fully deprecated
+** `Show a custom message if profile is empty` is fully deprecated
+** `Show the emoticon` is fully deprecated
+** `Profile Default Template` is moved to the individual form settings
+** `Profile Primary Button Text` is moved to the individual form settings
+** `Disable Profile Photo Upload` is moved to the individual form settings
+** `Profile Cover Photos` is renamed to `Enable Cover Photos` and moved to the individual form settings
+** `Show display name in profile header` is moved to the individual form settings
+** `Show social links in profile header?` is moved to the individual form settings
+** `Show user description in profile header?` is moved to the individual form settings
+** `Enable HTML support for user description` is fully deprecated. Getting Biography predefined field settings
+** `User description maximum chars` is fully deprecated. Getting Biography predefined field settings
+** `Default Profile Photo` is moved to the General > Users settings section
+** `Default Cover Photo` is moved to the General > Users settings section
+** `Profile Photo Size` is moved to the General > Uploads settings section
+** `Profile Cover Size` is moved to the General > Uploads settings section
+** `Profile Cover Ratio` is moved to the General > Uploads settings section
+
+* Registration form individual add/edit page
+** Metabox "Customize this form" renamed to "Form settings"
+*** `Apply custom settings to this form` is fully deprecated
+*** `Max. Width (px)` is fully deprecated
+*** `Field Icons` is fully deprecated
+*** `Show Secondary Button` is fully deprecated
+*** `Secondary Button Text` is fully deprecated
+*** `Assign role to form` renamed to `User registration role` and has predefined value when add form, but now all forms have individual setting
+*** `Template` has predefined value when add form, but now all forms have individual setting
+*** `Primary Button Text` has predefined value when add form, but now all forms have individual setting
+** Metabox "Privacy Policy" removed
+*** `Enable on this form` renamed to `Enable privacy policy agreement` + all conditional fields are moved to the `Form settings` metabox
+
+* Login form individual add/edit page
+** Metabox "Customize this form" renamed to "Form settings"
+*** `Apply custom settings to this form` is fully deprecated
+*** `Max. Width (px)` is fully deprecated
+*** `Field Icons` is fully deprecated
+*** `Show Secondary Button` is fully deprecated
+*** `Secondary Button Text` is fully deprecated
+*** `Template` has predefined value when add form, but now all forms have individual setting
+*** `Primary Button Text` has predefined value when add form, but now all forms have individual setting
+*** `Show Forgot Password Link?` has predefined value when add form, but now all forms have individual setting
+*** `Show "Remember Me"?` has predefined value when add form, but now all forms have individual setting
+** Metabox "Options" removed
+*** `Redirection after Login` + conditional `Set Custom Redirect URL` are moved to the `Form settings` metabox
+
+* Profile form individual add/edit page
+** Metabox "Customize this form" renamed to "Form settings"
+*** `Apply custom settings to this form` is fully deprecated
+*** `Template` has predefined value when add form, but now all forms have individual setting
+*** `Max. Width (px)` is fully deprecated
+*** `Profile Area Max. Width (px)` is fully deprecated
+*** `Field Icons` is fully deprecated
+*** `Show Secondary Button` is fully deprecated
+*** `Secondary Button Text` is fully deprecated
+
+### Removed:
+
+* UM()->extensions function and um\Extensions class. Also removed from legacy. They were unused.
+* `um_admin_custom_register_metaboxes` use `um_admin_add_form_metabox`
+* `um_admin_custom_profile_metaboxes` use `um_admin_add_form_metabox`
+* `um_admin_custom_login_metaboxes` use `um_admin_add_form_metabox`
+* Settings > General > Users > `Enable Members Directory` removed. Use "Member Directory" module instead.
+
+
 = 2.3.1: February 9, 2022 =
 
 * Enhancements:
