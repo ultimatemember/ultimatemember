@@ -211,7 +211,10 @@ function um_profile_field_filter_hook__textarea( $value, $data ) {
 	$value = html_entity_decode( $value );
 	$value = preg_replace('$(https?://[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', ' <a href="$1" target="_blank">$1</a> ', $value." ");
 	$value = preg_replace('$(www\.[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', '<a target="_blank" href="http://$1">$1</a> ', $value." ");
-	$value = wpautop($value);
+
+	if ( ! ( isset( $data['metakey'] ) && 'description' === $data['metakey'] ) ) {
+		$value = wpautop( $value );
+	}
 
 	return $value;
 }
