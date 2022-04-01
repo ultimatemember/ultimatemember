@@ -895,6 +895,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'advanced' => 'social',
 					'color' => '#3B5999',
 					'match' => 'https://facebook.com/',
+					'placeholder' => 'https://facebook.com/example',
 				),
 
 				'twitter' => array(
@@ -913,6 +914,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'advanced' => 'social',
 					'color' => '#4099FF',
 					'match' => 'https://twitter.com/',
+					'placeholder' => 'https://twitter.com/example',
 				),
 
 				'linkedin' => array(
@@ -931,6 +933,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'advanced' => 'social',
 					'color' => '#0976b4',
 					'match' => 'https://linkedin.com/',
+					'placeholder' => 'https://linkedin.com/example',
 				),
 
 				'googleplus' => array(
@@ -949,6 +952,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'advanced' => 'social',
 					'color' => '#dd4b39',
 					'match' => 'https://google.com/+',
+					'placeholder' => 'https://google.com/+example',
 				),
 
 				'instagram' => array(
@@ -967,6 +971,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'advanced' => 'social',
 					'color' => 'radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%)',
 					'match' => 'https://instagram.com/',
+					'placeholder' => 'https://instagram.com/example',
 				),
 
 				'skype' => array(
@@ -1026,6 +1031,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'validate' => 'telegram_url',
 					'url_text' => 'Telegram',
 					'match' => 'https://t.me/',
+					'placeholder' => 'https://t.me/example',
 				),
 
 				'discord' => array(
@@ -1057,6 +1063,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'advanced' => 'social',
 					'color' => '#e52d27',
 					'match' => 'https://youtube.com/',
+					'placeholder' => 'https://youtube.com/example',
 				),
 
 				'soundcloud' => array(
@@ -1075,6 +1082,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'advanced' => 'social',
 					'color' => '#f50',
 					'match' => 'https://soundcloud.com/',
+					'placeholder' => 'https://soundcloud.com/example',
 				),
 
 				'vkontakte' => array(
@@ -1093,6 +1101,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'advanced' => 'social',
 					'color' => '#2B587A',
 					'match' => 'https://vk.com/',
+					'placeholder' => 'https://vk.com/example',
 				),
 
 				'role_select' => array(

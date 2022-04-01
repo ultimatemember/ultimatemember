@@ -91,14 +91,14 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 				}
 
 				// Dropdown options source from callback function
-				if ( in_array( $fields[ $key ]['type'], array( 'select','multiselect' ) ) && 
+				if ( in_array( $fields[ $key ]['type'], array( 'select','multiselect' ) ) &&
 					isset( $fields[ $key ]['custom_dropdown_options_source'] ) &&
 					! empty( $fields[ $key ]['custom_dropdown_options_source'] ) &&
 					function_exists( $fields[ $key ]['custom_dropdown_options_source'] ) ){
 					$arr_options = call_user_func( $fields[ $key ]['custom_dropdown_options_source'] );
 					$fields[ $key ]['options'] = array_keys( $arr_options );
 				}
-				
+
 				// Unset changed value that doesn't match the option list
 				if ( in_array( $fields[ $key ]['type'], array( 'select' ) ) &&
 				     ! empty( $stripslashes ) && ! empty( $fields[ $key ]['options'] ) &&
@@ -308,28 +308,41 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 		/**
 		 * Is url
 		 *
-		 * @param $url
-		 * @param bool $social
+		 * @param  string $url     An URL to test.
+		 * @param  string $social  A domain of the social network.
+		 * @param  array  $field   The field data.
 		 *
 		 * @return bool
 		 */
-		function is_url( $url, $social = false ) {
+		public function is_url( $url, $social = '', $field = array() ) {
 			if ( ! $url ) {
 				return true;
 			}
 
-			if ( $social ) {
+			$protocol = preg_match_all( '~https?://~', $url, $m1 );
+			if ( 1 !== $protocol ) {
+				return false;
+			}
 
-				if ( strstr( $url, $social ) && '' != str_replace( $social, '', $url ) ) {
+			$has_amphora = preg_match_all( '~https?://[^/]+@~', $url, $m2 );
+			if ( 0 !== $has_amphora ) {
+				return false;
+			}
+
+			if ( $field && array_key_exists( 'match', $field ) ) {
+
+				return false !== strpos( $url, $field['match'] );
+
+			} elseif ( $social ) {
+
+				if ( strstr( $url, $social ) && '' !== str_replace( $social, '', $url ) ) {
 					return true;
 				}
-
 			} else {
 
 				if ( strstr( $url, 'http://' ) || strstr( $url, 'https://' ) ) {
 					return true;
 				}
-
 			}
 
 			return false;

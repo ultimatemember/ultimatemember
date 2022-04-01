@@ -620,6 +620,10 @@ function um_submit_form_errors_hook_( $args ) {
 					}
 				}
 
+				if ( isset( $array['type'] ) && 'url' === $array['type'] && '' !== $args[$key] && um_get_core_page( 'logout' ) === trim( $args[$key] ) ) {
+					UM()->form()->add_error( $key, __( 'You can not use Logout URL here', 'ultimate-member' ) );
+				}
+
 				if ( isset( $array['force_good_pass'] ) && $array['force_good_pass'] == 1 ) {
 					if ( ! UM()->validation()->strong_pass( $args[ $key ] ) ) {
 						UM()->form()->add_error( $key, __( 'Your password must contain at least one lowercase letter, one capital letter and one number', 'ultimate-member' ) );
@@ -702,57 +706,57 @@ function um_submit_form_errors_hook_( $args ) {
 							break;
 
 						case 'youtube_url':
-							if ( ! UM()->validation()->is_url( $args[ $key ], 'youtube.com' ) ) {
-								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s username or profile URL', 'ultimate-member' ), $array['label'] ) );
+							if ( ! UM()->validation()->is_url( $args[ $key ], 'youtube.com', $array ) ) {
+								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s profile URL', 'ultimate-member' ), $array['label'] ) );
 							}
 							break;
 
 						case 'telegram_url':
-							if ( ! UM()->validation()->is_url( $args[ $key ], 't.me' ) ) {
-								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s username or profile URL', 'ultimate-member' ), $array['label'] ) );
+							if ( ! UM()->validation()->is_url( $args[ $key ], 't.me', $array ) ) {
+								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s profile URL', 'ultimate-member' ), $array['label'] ) );
 							}
 							break;
 
 						case 'soundcloud_url':
-							if ( ! UM()->validation()->is_url( $args[ $key ], 'soundcloud.com' ) ) {
-								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s username or profile URL','ultimate-member'), $array['label'] ) );
+							if ( ! UM()->validation()->is_url( $args[ $key ], 'soundcloud.com', $array ) ) {
+								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s profile URL','ultimate-member'), $array['label'] ) );
 							}
 							break;
 
 						case 'facebook_url':
-							if ( ! UM()->validation()->is_url( $args[ $key ], 'facebook.com' ) ) {
-								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s username or profile URL', 'ultimate-member' ), $array['label'] ) );
+							if ( ! UM()->validation()->is_url( $args[ $key ], 'facebook.com', $array ) ) {
+								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s profile URL', 'ultimate-member' ), $array['label'] ) );
 							}
 							break;
 
 						case 'twitter_url':
-							if ( ! UM()->validation()->is_url( $args[ $key ], 'twitter.com' ) ) {
-								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s username or profile URL', 'ultimate-member' ), $array['label'] ) );
+							if ( ! UM()->validation()->is_url( $args[ $key ], 'twitter.com', $array ) ) {
+								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s profile URL', 'ultimate-member' ), $array['label'] ) );
 							}
 							break;
 
 						case 'instagram_url':
 
-							if ( ! UM()->validation()->is_url( $args[ $key ], 'instagram.com' ) ) {
+							if ( ! UM()->validation()->is_url( $args[ $key ], 'instagram.com', $array ) ) {
 								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s profile URL', 'ultimate-member' ), $array['label'] ) );
 							}
 							break;
 
 						case 'google_url':
-							if ( ! UM()->validation()->is_url( $args[ $key ], 'plus.google.com' ) ) {
-								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s username or profile URL', 'ultimate-member' ), $array['label'] ) );
+							if ( ! UM()->validation()->is_url( $args[ $key ], 'plus.google.com', $array ) ) {
+								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s profile URL', 'ultimate-member' ), $array['label'] ) );
 							}
 							break;
 
 						case 'linkedin_url':
-							if ( ! UM()->validation()->is_url( $args[ $key ], 'linkedin.com' ) ) {
-								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s username or profile URL', 'ultimate-member' ), $array['label'] ) );
+							if ( ! UM()->validation()->is_url( $args[ $key ], 'linkedin.com', $array ) ) {
+								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s profile URL', 'ultimate-member' ), $array['label'] ) );
 							}
 							break;
 
 						case 'vk_url':
-							if ( ! UM()->validation()->is_url( $args[ $key ], 'vk.com' ) ) {
-								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s username or profile URL', 'ultimate-member' ), $array['label'] ) );
+							if ( ! UM()->validation()->is_url( $args[ $key ], 'vk.com', $array ) ) {
+								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s profile URL', 'ultimate-member' ), $array['label'] ) );
 							}
 							break;
 
@@ -870,7 +874,7 @@ function um_submit_form_errors_hook_( $args ) {
 								}
 							}
 							break;
-							
+
 						case 'alphabetic':
 
 							if ( $args[ $key ] != '' ) {
@@ -878,7 +882,7 @@ function um_submit_form_errors_hook_( $args ) {
 								if ( ! preg_match( '/^\p{L}+$/u', str_replace( ' ', '', $args[ $key ] ) ) ) {
 									UM()->form()->add_error( $key, __( 'You must provide alphabetic letters', 'ultimate-member' ) );
 								}
-								
+
 							}
 
 							break;
