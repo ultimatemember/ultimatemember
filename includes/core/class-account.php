@@ -46,7 +46,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			add_shortcode( 'ultimatemember_account', array( &$this, 'ultimatemember_account' ) );
 			add_action( 'template_redirect', array( &$this, 'account_page_restrict' ), 10001 );
 			add_action( 'template_redirect', array( &$this, 'account_submit' ), 10002 );
-			add_filter( 'um_predefined_fields_hook', array( &$this, 'predefined_fields_hook' ), 1 );
 		}
 
 
@@ -433,24 +432,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 			}
 
-		}
-
-
-		/**
-		 * Filter account fields
-		 * @param  array $predefined_fields
-		 * @return array
-		 */
-		function predefined_fields_hook( $predefined_fields ) {
-			$account_hide_in_directory =  UM()->options()->get( 'account_hide_in_directory' );
-
-			$account_hide_in_directory = apply_filters( 'um_account_hide_in_members_visibility', $account_hide_in_directory );
-
-			if ( ! $account_hide_in_directory ) {
-				unset( $predefined_fields['hide_in_members'] );
-			}
-
-			return $predefined_fields;
 		}
 
 

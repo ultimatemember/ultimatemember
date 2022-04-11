@@ -1,16 +1,16 @@
 <?php
-namespace um\core;
+namespace um\legacy\core;
 
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
-if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
+if ( ! class_exists( 'um\legacy\core\Member_Directory_Meta' ) ) {
 
 
 	/**
 	 * Class Member_Directory_Meta
-	 * @package um\core
+	 * @package um\legacy\core
 	 */
 	class Member_Directory_Meta extends Member_Directory {
 

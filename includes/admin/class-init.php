@@ -39,12 +39,6 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 		/**
 		 * @var array
 		 */
-		public $member_directory_meta;
-
-
-		/**
-		 * @var array
-		 */
 		public $form_meta;
 
 
@@ -257,123 +251,6 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 					),
 					'_um_access_hide_from_queries'   => array(
 						'sanitize' => 'bool',
-					),
-				)
-			);
-
-			$this->member_directory_meta = apply_filters(
-				'um_member_directory_meta_map',
-				array(
-					'_um_directory_template'       => array(
-						'sanitize' => 'text',
-					),
-					'_um_mode'                     => array(
-						'sanitize' => 'key',
-					),
-					'_um_view_types'               => array(
-						'sanitize' => array( $this, 'sanitize_md_view_types' ),
-					),
-					'_um_default_view'             => array(
-						'sanitize' => 'key',
-					),
-					'_um_roles'                    => array(
-						'sanitize' => array( $this, 'sanitize_restriction_existed_role' ),
-					),
-					'_um_has_profile_photo'        => array(
-						'sanitize' => 'bool',
-					),
-					'_um_show_these_users'         => array(
-						'sanitize' => 'textarea',
-					),
-					'_um_exclude_these_users'      => array(
-						'sanitize' => 'textarea',
-					),
-					'_um_must_search'              => array(
-						'sanitize' => 'bool',
-					),
-					'_um_max_users'                => array(
-						'sanitize' => 'absint',
-					),
-					'_um_profiles_per_page'        => array(
-						'sanitize' => 'absint',
-					),
-					'_um_profiles_per_page_mobile' => array(
-						'sanitize' => 'absint',
-					),
-					'_um_directory_header'         => array(
-						'sanitize' => 'text',
-					),
-					'_um_directory_header_single'  => array(
-						'sanitize' => 'text',
-					),
-					'_um_directory_no_users'       => array(
-						'sanitize' => 'text',
-					),
-					'_um_profile_photo'            => array(
-						'sanitize' => 'bool',
-					),
-					'_um_cover_photos'             => array(
-						'sanitize' => 'bool',
-					),
-					'_um_show_name'                => array(
-						'sanitize' => 'bool',
-					),
-					'_um_show_tagline'             => array(
-						'sanitize' => 'bool',
-					),
-					'_um_tagline_fields'           => array(
-						'sanitize' => array( $this, 'sanitize_user_field' ),
-					),
-					'_um_show_userinfo'            => array(
-						'sanitize' => 'bool',
-					),
-					'_um_reveal_fields'            => array(
-						'sanitize' => array( $this, 'sanitize_user_field' ),
-					),
-					'_um_show_social'              => array(
-						'sanitize' => 'bool',
-					),
-					'_um_userinfo_animate'         => array(
-						'sanitize' => 'bool',
-					),
-					'_um_search'                   => array(
-						'sanitize' => 'bool',
-					),
-					'_um_roles_can_search'         => array(
-						'sanitize' => array( $this, 'sanitize_restriction_existed_role' ),
-					),
-					'_um_filters'                  => array(
-						'sanitize' => 'bool',
-					),
-					'_um_roles_can_filter'         => array(
-						'sanitize' => array( $this, 'sanitize_restriction_existed_role' ),
-					),
-					'_um_search_fields'            => array(
-						'sanitize' => array( $this, 'sanitize_filter_fields' ),
-					),
-					'_um_filters_expanded'         => array(
-						'sanitize' => 'bool',
-					),
-					'_um_filters_is_collapsible'   => array(
-						'sanitize' => 'bool',
-					),
-					'_um_search_filters'           => array(
-						'sanitize' => array( $this, 'sanitize_filter_fields' ),
-					),
-					'_um_sortby'                   => array(
-						'sanitize' => 'text',
-					),
-					'_um_sortby_custom'            => array(
-						'sanitize' => 'text',
-					),
-					'_um_sortby_custom_label'      => array(
-						'sanitize' => 'text',
-					),
-					'_um_enable_sorting'           => array(
-						'sanitize' => 'bool',
-					),
-					'_um_sorting_fields'           => array(
-						'sanitize' => array( $this, 'sanitize_md_sorting_fields' ),
 					),
 				)
 			);
@@ -782,75 +659,6 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 		 *
 		 * @return array|string
 		 */
-		public function sanitize_md_sorting_fields( $value ) {
-			$filter_fields = array_merge( UM()->member_directory()->sort_fields, array( 'other' => __( 'Other (Custom Field)', 'ultimate-member' ) ) );
-			$filter_fields = array_keys( $filter_fields );
-
-			if ( '' !== $value ) {
-				$value = array_filter(
-					$value,
-					function( $v, $k ) use ( $filter_fields ) {
-						if ( 'other_data' === $k ) {
-							return true;
-						} else {
-							return in_array( sanitize_text_field( $v ), $filter_fields, true );
-						}
-					},
-					ARRAY_FILTER_USE_BOTH
-				);
-
-				$value = array_map(
-					function( $item ) {
-						if ( is_array( $item ) ) {
-							if ( isset( $item['meta_key'] ) ) {
-								$item['meta_key'] = sanitize_text_field( $item['meta_key'] );
-							}
-							if ( isset( $item['label'] ) ) {
-								$item['label'] = sanitize_text_field( $item['label'] );
-							}
-
-							return $item;
-						} else {
-							return sanitize_text_field( $item );
-						}
-					},
-					$value
-				);
-			}
-
-			return $value;
-		}
-
-
-		/**
-		 * @param array|string $value
-		 *
-		 * @return array|string
-		 */
-		public function sanitize_filter_fields( $value ) {
-			$filter_fields = array_keys( UM()->member_directory()->filter_fields );
-
-			if ( '' !== $value ) {
-				$value = array_filter(
-					$value,
-					function( $v, $k ) use ( $filter_fields ) {
-						return in_array( sanitize_text_field( $v ), $filter_fields, true );
-					},
-					ARRAY_FILTER_USE_BOTH
-				);
-
-				$value = array_map( 'sanitize_text_field', $value );
-			}
-
-			return $value;
-		}
-
-
-		/**
-		 * @param array|string $value
-		 *
-		 * @return array|string
-		 */
 		public function sanitize_user_field( $value ) {
 			$user_fields = array_keys( UM()->builtin()->all_user_fields() );
 
@@ -864,36 +672,6 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 				);
 
 				$value = array_map( 'sanitize_text_field', $value );
-			}
-
-			return $value;
-		}
-
-
-		/**
-		 * @param array|string $value
-		 *
-		 * @return array|string
-		 */
-		public function sanitize_md_view_types( $value ) {
-			$view_types = array_map(
-				function ( $item ) {
-					return $item['title'];
-				},
-				UM()->member_directory()->view_types
-			);
-			$view_types = array_keys( $view_types );
-
-			if ( '' !== $value ) {
-				$value = array_filter(
-					$value,
-					function( $v, $k ) use ( $view_types ) {
-						return in_array( sanitize_key( $k ), $view_types, true ) && 1 === (int) $v;
-					},
-					ARRAY_FILTER_USE_BOTH
-				);
-
-				$value = array_map( 'sanitize_key', $value );
 			}
 
 			return $value;
@@ -1187,82 +965,6 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			$data = $sanitized;
 
 			$data = apply_filters( 'um_save_restriction_term_meta_sanitize', $data );
-
-			return $data;
-		}
-
-
-		/**
-		 * Sanitize member directory meta when wp-admin form has been submitted
-		 *
-		 * @todo checking all sanitize types
-		 *
-		 * @param array $data
-		 *
-		 * @return array
-		 */
-		public function sanitize_member_directory_meta( $data ) {
-			$sanitized = array();
-			foreach ( $data as $k => $v ) {
-				if ( ! array_key_exists( $k, $this->member_directory_meta ) ) {
-					// @todo remove since 2.2.x and leave only continue
-					$sanitized[ $k ] = $v;
-					continue;
-				}
-
-				if ( ! array_key_exists( 'sanitize', $this->member_directory_meta[ $k ] ) ) {
-					// @todo remove since 2.2.x and leave only continue
-					$sanitized[ $k ] = $v;
-					continue;
-				}
-
-				if ( is_callable( $this->member_directory_meta[ $k ]['sanitize'], true, $callable_name ) ) {
-					add_filter( 'um_member_directory_meta_sanitize_' . $k, $this->member_directory_meta[ $k ]['sanitize'], 10, 1 );
-				}
-
-				switch ( $this->member_directory_meta[ $k ]['sanitize'] ) {
-					default:
-						$sanitized[ $k ] = apply_filters( 'um_member_directory_meta_sanitize_' . $k, $data[ $k ] );
-						break;
-					case 'int':
-						$sanitized[ $k ] = (int) $v;
-						break;
-					case 'bool':
-						$sanitized[ $k ] = (bool) $v;
-						break;
-					case 'url':
-						if ( is_array( $v ) ) {
-							$sanitized[ $k ] = array_map( 'esc_url_raw', $v );
-						} else {
-							$sanitized[ $k ] = esc_url_raw( $v );
-						}
-						break;
-					case 'text':
-						$sanitized[ $k ] = sanitize_text_field( $v );
-						break;
-					case 'textarea':
-						$sanitized[ $k ] = sanitize_textarea_field( $v );
-						break;
-					case 'key':
-						if ( is_array( $v ) ) {
-							$sanitized[ $k ] = array_map( 'sanitize_key', $v );
-						} else {
-							$sanitized[ $k ] = sanitize_key( $v );
-						}
-						break;
-					case 'absint':
-						if ( is_array( $v ) ) {
-							$sanitized[ $k ] = array_map( 'absint', $v );
-						} else {
-							$sanitized[ $k ] = absint( $v );
-						}
-						break;
-				}
-			}
-
-			$data = $sanitized;
-
-			$data = apply_filters( 'um_save_member_directory_meta_sanitize', $data );
 
 			return $data;
 		}
@@ -1598,6 +1300,20 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			$this->menu();
 			$this->columns();
 			$this->metabox();
+			$this->site_health();
+		}
+
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return Site_Health
+		 */
+		function site_health() {
+			if ( empty( UM()->classes['um\admin\site_health'] ) ) {
+				UM()->classes['um\admin\site_health'] = new Site_Health();
+			}
+			return UM()->classes['um\admin\site_health'];
 		}
 
 

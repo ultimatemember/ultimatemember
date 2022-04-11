@@ -40,9 +40,6 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 		private $need_change_permalinks;
 
 
-		private $gravatar_changed = false;
-
-
 		/**
 		 * Admin_Settings constructor.
 		 */
@@ -59,8 +56,6 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 
 			//custom content for licenses tab
 			add_filter( 'um_settings_section_licenses__content', array( $this, 'settings_licenses_tab' ), 10, 2 );
-
-			add_filter( 'um_settings_section_install_info__content', array( $this, 'settings_install_info_tab' ), 10, 2 );
 
 			add_filter( 'um_settings_structure', array( $this, 'sorting_licenses_options' ), 9999, 1 );
 
@@ -80,9 +75,6 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 			add_filter( 'um_change_settings_before_save', array( $this, 'set_default_if_empty' ), 9, 1 );
 			add_filter( 'um_change_settings_before_save', array( $this, 'remove_empty_values' ), 10, 1 );
 			add_filter( 'um_change_settings_before_save', array( $this, 'save_email_templates' ) );
-
-			add_action( 'admin_init', array( &$this, 'um_download_install_info' ) );
-
 
 			add_filter( 'um_settings_custom_subtabs', array( $this, 'settings_custom_subtabs' ), 20, 2 );
 			add_filter( 'um_settings_section_modules__content', array( $this, 'settings_modules_section' ), 20, 2 );
@@ -114,201 +106,6 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 
 
 		/**
-		 * AJAX handler for the AJAX update fields
-		 */
-		public function same_page_update_ajax() {
-			UM()->ajax()->check_nonce( 'um-admin-nonce' );
-
-			if ( empty( $_POST['cb_func'] ) ) {
-				wp_send_json_error( __( 'Wrong callback', 'ultimate-member' ) );
-			}
-
-			$cb_func = sanitize_key( $_POST['cb_func'] );
-
-			if ( 'um_usermeta_fields' === $cb_func ) {
-				//first install metatable
-				global $wpdb;
-
-				$metakeys = array();
-				foreach ( UM()->builtin()->all_user_fields as $all_user_field ) {
-					$metakeys[] = $all_user_field['metakey'];
-				}
-
-				$metakeys = apply_filters( 'um_metadata_same_page_update_ajax', $metakeys, UM()->builtin()->all_user_fields );
-
-				if ( is_multisite() ) {
-
-					$sites = get_sites( array( 'fields' => 'ids' ) );
-					foreach ( $sites as $blog_id ) {
-						$metakeys[] = $wpdb->get_blog_prefix( $blog_id ) . 'capabilities';
-					}
-				} else {
-					$blog_id    = get_current_blog_id();
-					$metakeys[] = $wpdb->get_blog_prefix( $blog_id ) . 'capabilities';
-				}
-
-				//member directory data
-				$metakeys[] = 'um_member_directory_data';
-				$metakeys[] = '_um_verified';
-				$metakeys[] = '_money_spent';
-				$metakeys[] = '_completed';
-				$metakeys[] = '_reviews_avg';
-
-				//myCred meta
-				if ( function_exists( 'mycred_get_types' ) ) {
-					$mycred_types = mycred_get_types();
-					if ( ! empty( $mycred_types ) ) {
-						foreach ( array_keys( $mycred_types ) as $point_type ) {
-							$metakeys[] = $point_type;
-						}
-					}
-				}
-
-				$sortby_custom_keys = $wpdb->get_col( "SELECT DISTINCT meta_value FROM {$wpdb->postmeta} WHERE meta_key='_um_sortby_custom'" );
-				if ( empty( $sortby_custom_keys ) ) {
-					$sortby_custom_keys = array();
-				}
-
-				$sortby_custom_keys2 = $wpdb->get_col( "SELECT meta_value FROM {$wpdb->postmeta} WHERE meta_key='_um_sorting_fields'" );
-				if ( ! empty( $sortby_custom_keys2 ) ) {
-					foreach ( $sortby_custom_keys2 as $custom_val ) {
-						$custom_val = maybe_unserialize( $custom_val );
-
-						foreach ( $custom_val as $sort_value ) {
-							if ( is_array( $sort_value ) ) {
-								$field_keys           = array_keys( $sort_value );
-								$sortby_custom_keys[] = $field_keys[0];
-							}
-						}
-					}
-				}
-
-				if ( ! empty( $sortby_custom_keys ) ) {
-					$sortby_custom_keys = array_unique( $sortby_custom_keys );
-					$metakeys           = array_merge( $metakeys, $sortby_custom_keys );
-				}
-
-				$skip_fields = UM()->builtin()->get_fields_without_metakey();
-				$skip_fields = array_merge( $skip_fields, UM()->member_directory()->core_search_fields );
-
-				$real_usermeta = $wpdb->get_col( "SELECT DISTINCT meta_key FROM {$wpdb->usermeta}" );
-				$real_usermeta = ! empty( $real_usermeta ) ? $real_usermeta : array();
-				$real_usermeta = array_merge( $real_usermeta, array( 'um_member_directory_data' ) );
-
-				if ( ! empty( $sortby_custom_keys ) ) {
-					$real_usermeta = array_merge( $real_usermeta, $sortby_custom_keys );
-				}
-
-				$wp_usermeta_option = array_intersect( array_diff( $metakeys, $skip_fields ), $real_usermeta );
-
-				update_option( 'um_usermeta_fields', array_values( $wp_usermeta_option ) );
-
-				update_option( 'um_member_directory_update_meta', time() );
-
-				UM()->options()->update( 'member_directory_own_table', true );
-
-				wp_send_json_success();
-			} elseif ( 'um_get_metadata' === $cb_func ) {
-				global $wpdb;
-
-				$wp_usermeta_option = get_option( 'um_usermeta_fields', array() );
-
-				$count = $wpdb->get_var(
-					"SELECT COUNT(*)
-					FROM {$wpdb->usermeta}
-					WHERE meta_key IN ('" . implode( "','", $wp_usermeta_option ) . "')"
-				);
-
-				wp_send_json_success( array( 'count' => $count ) );
-			} elseif ( 'um_update_metadata_per_page' === $cb_func ) {
-
-				if ( empty( $_POST['page'] ) ) {
-					wp_send_json_error( __( 'Wrong data', 'ultimate-member' ) );
-				}
-
-				$per_page           = 500;
-				$wp_usermeta_option = get_option( 'um_usermeta_fields', array() );
-
-				global $wpdb;
-				$metadata = $wpdb->get_results(
-					$wpdb->prepare(
-						"SELECT *
-						FROM {$wpdb->usermeta}
-						WHERE meta_key IN ('" . implode( "','", $wp_usermeta_option ) . "')
-						LIMIT %d, %d",
-						( absint( $_POST['page'] ) - 1 ) * $per_page,
-						$per_page
-					),
-					ARRAY_A
-				);
-
-				$values = array();
-				foreach ( $metadata as $metarow ) {
-					$values[] = $wpdb->prepare( '(%d, %s, %s)', $metarow['user_id'], $metarow['meta_key'], $metarow['meta_value'] );
-				}
-
-				if ( ! empty( $values ) ) {
-					$wpdb->query(
-						"INSERT INTO
-						{$wpdb->prefix}um_metadata(user_id, um_key, um_value)
-						VALUES " . implode( ',', $values )
-					);
-				}
-
-				$from = ( absint( $_POST['page'] ) * $per_page ) - $per_page + 1;
-				$to   = absint( $_POST['page'] ) * $per_page;
-
-				wp_send_json_success( array( 'message' => sprintf( __( 'Metadata from %1$s to %2$s was upgraded successfully...', 'ultimate-member' ), $from, $to ) ) );
-			}
-		}
-
-
-		/**
-		 * AJAX callback for getting the pages list
-		 */
-		function get_pages_list() {
-			UM()->ajax()->check_nonce( 'um-admin-nonce' );
-
-			// we will pass post IDs and titles to this array
-			$return = array();
-
-			$pre_result = apply_filters( 'um_admin_settings_get_pages_list', false );
-
-			if ( false === $pre_result ) {
-				// you can use WP_Query, query_posts() or get_posts() here - it doesn't matter
-				$search_results = new \WP_Query( array(
-					'post_type'           => 'page',
-					's'                   => sanitize_text_field( $_GET['search'] ), // the search query
-					'post_status'         => 'publish', // if you don't want drafts to be returned
-					'ignore_sticky_posts' => 1,
-					'posts_per_page'      => 10, // how much to show at once
-					'paged'               => absint( $_GET['page'] ),
-					'orderby'             => 'title',
-					'order'               => 'asc',
-				) );
-
-				if ( $search_results->have_posts() ) {
-					while ( $search_results->have_posts() ) {
-						$search_results->the_post();
-
-						// shorten the title a little
-						$title = ( mb_strlen( $search_results->post->post_title ) > 50 ) ? mb_substr( $search_results->post->post_title, 0, 49 ) . '...' : $search_results->post->post_title;
-						$title = sprintf( __( '%s (ID: %s)', 'ultimate-member' ), $title, $search_results->post->ID );
-						$return[] = array( $search_results->post->ID, $title ); // array( Post ID, Post Title )
-					}
-				}
-
-				$return['total_count'] = $search_results->found_posts;
-			} else {
-				// got already calculated posts array from 3rd-party integrations (e.g. WPML, Polylang)
-				$return = $pre_result;
-			}
-
-			wp_send_json( $return );
-		}
-
-
-		/**
 		 *
 		 */
 		public function init_variables() {
@@ -326,10 +123,9 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 
 			foreach ( UM()->config()->get( 'predefined_pages' ) as $slug => $page ) {
 				$page_id    = UM()->options()->get_predefined_page_option_key( $slug );
-
 				$page_title = ! empty( $page['title'] ) ? $page['title'] : '';
 
-				$options = array();
+				$options    = array();
 				$page_value = '';
 
 				$pre_result = apply_filters( 'um_admin_settings_pages_list_value', false, $page_id );
@@ -579,23 +375,6 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 				)
 			);
 
-			$latest_update   = get_option( 'um_member_directory_update_meta', false );
-			$latest_truncate = get_option( 'um_member_directory_truncated', false );
-
-			$same_page_update = array(
-				'id'          => 'member_directory_own_table',
-				'type'        => 'same_page_update',
-				'label'       => __( 'Enable custom table for usermeta', 'ultimate-member' ),
-				'description' => __( 'Check this box if you would like to enable the use of a custom table for user metadata. Improved performance for member directory searches.', 'ultimate-member' ),
-			);
-
-			if ( empty( $latest_update ) || ( ! empty( $latest_truncate ) && $latest_truncate > $latest_update ) ) {
-				$same_page_update['upgrade_cb']          = 'sync_metatable';
-				$same_page_update['upgrade_description'] = '<p>' . __( 'We recommend creating a backup of your site before running the update process. Do not exit the page before the update process has complete.', 'ultimate-member' ) . '</p>
-<p>' . __( 'After clicking the <strong>"Run"</strong> button, the update process will start. All information will be displayed in the field below.', 'ultimate-member' ) . '</p>
-<p>' . __( 'If the update was successful, you will see a corresponding message. Otherwise, contact technical support if the update failed.', 'ultimate-member' ) . '</p>';
-			}
-
 			$settings_map = array_merge(
 				$settings_map,
 				array(
@@ -667,12 +446,6 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 					),
 					'account_general_password'              => array(
 						'sanitize' => 'bool',
-					),
-					'account_hide_in_directory'             => array(
-						'sanitize' => 'bool',
-					),
-					'account_hide_in_directory_default'     => array(
-						'sanitize' => 'text',
 					),
 					'profile_photo_max_size'                => array(
 						'sanitize' => 'absint',
@@ -831,7 +604,6 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 					'label'       => __( 'Disable pre-queries for restriction content logic (advanced)', 'ultimate-member' ),
 					'description' => __( 'Please enable this option only in the cases when you have big or unnecessary queries on your site with active restriction logic. If you want to exclude posts only from the results queries instead of pre_get_posts and fully-hidden post logic also please enable this option. It activates the restriction content logic until 2.2.x version without latest security enhancements', 'ultimate-member' ),
 				),
-				$same_page_update,
 				array(
 					'id'          => 'uninstall_on_delete',
 					'type'        => 'checkbox',
@@ -1134,25 +906,6 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 										'label'       => __( 'Password is required?', 'ultimate-member' ),
 										'description' => __( 'Password is required to save account data.', 'ultimate-member' ),
 									),
-									array(
-										'id'          => 'account_hide_in_directory',
-										'type'        => 'checkbox',
-										'label'       => __( 'Allow users to hide their profiles from directory', 'ultimate-member' ),
-										'description' => __( 'Whether to allow users changing their profile visibility from member directory in account page.', 'ultimate-member' ),
-										'conditional' => array( 'account_tab_privacy', '=', '1' ),
-									),
-									array(
-										'id'          => 'account_hide_in_directory_default',
-										'type'        => 'select',
-										'label'       => __( 'Hide profiles from directory by default', 'ultimate-member' ),
-										'description' => __( 'Set default value for the "Hide my profile from directory" option', 'ultimate-member' ),
-										'options'     => array(
-											'No'  => __( 'No', 'ultimate-member' ),
-											'Yes' => __( 'Yes', 'ultimate-member' ),
-										),
-										'size'        => 'small',
-										'conditional' => array( 'account_hide_in_directory', '=', '1' ),
-									),
 								),
 							),
 							'uploads' => array(
@@ -1334,14 +1087,6 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 						'title'  => __( 'Misc', 'ultimate-member' ),
 						'fields' => $misc_fields,
 					),
-					'install_info' => array(
-						'title'  => __( 'Install Info', 'ultimate-member' ),
-						'fields' => array(
-							array(
-								'type' => 'install_info',
-							),
-						),
-					),
 				)
 			);
 
@@ -1371,15 +1116,19 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 					return strnatcasecmp( $a['title'], $b['title'] );
 				} );
 
-				$modules = array( '' => array(
+				$modules = array(
+					'' => array(
 						'title'  => __( 'Modules', 'ultimate-member' ),
-					) ) + $modules;
+					)
+				) + $modules;
 
 				$settings['modules']['sections'] = $modules;
 			} else {
-				$modules = array( '' => array(
-					'title'  => __( 'Modules', 'ultimate-member' ),
-				) );
+				$modules = array(
+					'' => array(
+						'title'  => __( 'Modules', 'ultimate-member' ),
+					)
+				);
 
 				$settings['modules']['sections'] = $modules;
 			}
@@ -1439,7 +1188,7 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 			 */
 			do_action( "um_settings_page_before_" . $current_tab . "_" . $current_subtab . "_content" );
 
-			if ( in_array( $current_tab, apply_filters('um_settings_custom_tabs', array( 'licenses', 'install_info' ) ) ) || in_array( $current_subtab, apply_filters( 'um_settings_custom_subtabs', array(), $current_tab ) ) ) {
+			if ( in_array( $current_subtab, apply_filters( 'um_settings_custom_subtabs', array(), $current_tab ) ) ) {
 
 				/**
 				 * UM hook
@@ -1822,15 +1571,6 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 					$this->need_change_permalinks = true;
 				}
 			}
-
-			// set variable if gravatar settings were changed
-			// update for um_member_directory_data metakey
-			if ( isset( $_POST['um_options']['use_gravatars'] ) ) {
-				$use_gravatar = UM()->options()->get( 'use_gravatars' );
-				if ( ( empty( $use_gravatar ) && ! empty( $_POST['um_options']['use_gravatars'] ) ) || ( ! empty( $use_gravatar ) && empty( $_POST['um_options']['use_gravatars'] ) ) ) {
-					$this->gravatar_changed = true;
-				}
-			}
 		}
 
 
@@ -1839,7 +1579,6 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 		 */
 		function on_settings_save() {
 			if ( ! empty( $_POST['um_options'] ) ) {
-
 				if ( ! empty( $_POST['um_options']['pages_settings'] ) ) {
 					$post_ids = new \WP_Query( array(
 						'post_type'      => 'page',
@@ -1880,95 +1619,6 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 							}
 						}
 					}
-
-
-					// update for um_member_directory_data metakey
-					if ( isset( $_POST['um_options']['use_gravatars'] ) ) {
-						if ( $this->gravatar_changed ) {
-							global $wpdb;
-
-							if ( ! empty( $_POST['um_options']['use_gravatars'] ) ) {
-
-								$results = $wpdb->get_col(
-									"SELECT u.ID FROM {$wpdb->users} AS u
-									LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND um.meta_key = 'synced_gravatar_hashed_id' )
-									LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
-									WHERE um.meta_value != '' AND um.meta_value IS NOT NULL AND
-										um2.meta_value LIKE '%s:13:\"profile_photo\";b:0;%'"
-								);
-
-							} else {
-
-								$results = $wpdb->get_col(
-									"SELECT u.ID FROM {$wpdb->users} AS u
-									LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND ( um.meta_key = 'synced_profile_photo' || um.meta_key = 'profile_photo' ) )
-									LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
-									WHERE ( um.meta_value IS NULL OR um.meta_value = '' ) AND
-										um2.meta_value LIKE '%s:13:\"profile_photo\";b:1;%'"
-								);
-
-							}
-
-							if ( ! empty( $results ) ) {
-								foreach ( $results as $user_id ) {
-									$md_data = get_user_meta( $user_id, 'um_member_directory_data', true );
-									if ( ! empty( $md_data ) ) {
-										$md_data['profile_photo'] = ! empty( $_POST['um_options']['use_gravatars'] );
-										update_user_meta( $user_id, 'um_member_directory_data', $md_data );
-									}
-								}
-							}
-						}
-					}
-
-				} elseif ( isset( $_POST['um_options']['member_directory_own_table'] ) ) {
-					if ( empty( $_POST['um_options']['member_directory_own_table'] ) ) {
-						global $wpdb;
-
-						$results = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}um_metadata LIMIT 1", ARRAY_A );
-
-						if ( ! empty( $results ) ) {
-							$wpdb->query("TRUNCATE TABLE {$wpdb->prefix}um_metadata" );
-						}
-
-						update_option( 'um_member_directory_truncated', time() );
-					}
-				} elseif ( isset( $_POST['um_options']['account_hide_in_directory_default'] ) ) {
-
-					global $wpdb;
-
-					if ( $_POST['um_options']['account_hide_in_directory_default'] === 'No' ) {
-
-						$results = $wpdb->get_col(
-							"SELECT u.ID FROM {$wpdb->users} AS u
-							LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND um.meta_key = 'hide_in_members' )
-							LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
-							WHERE um.meta_value IS NULL AND
-								um2.meta_value LIKE '%s:15:\"hide_in_members\";b:1;%'"
-						);
-
-					} else {
-
-						$results = $wpdb->get_col(
-							"SELECT u.ID FROM {$wpdb->users} AS u
-							LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND um.meta_key = 'hide_in_members' )
-							LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
-							WHERE um.meta_value IS NULL AND
-								um2.meta_value LIKE '%s:15:\"hide_in_members\";b:0;%'"
-						);
-
-					}
-
-					if ( ! empty( $results ) ) {
-						foreach ( $results as $user_id ) {
-							$md_data = get_user_meta( $user_id, 'um_member_directory_data', true );
-							if ( ! empty( $md_data ) ) {
-								$md_data['hide_in_members'] = ( $_POST['um_options']['account_hide_in_directory_default'] === 'No' ) ? false : true;
-								update_user_meta( $user_id, 'um_member_directory_data', $md_data );
-							}
-						}
-					}
-
 				}
 			}
 		}
@@ -2470,442 +2120,6 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 			<?php $section = ob_get_clean();
 
 			return $section;
-		}
-
-
-		/**
-		 * @param $html
-		 * @param $section_fields
-		 */
-		function settings_install_info_tab( $html, $section_fields ) {
-			global $wpdb;
-
-			if ( ! class_exists( '\Browser' ) ) {
-				require_once um_path . 'includes/lib/browser.php';
-			}
-
-			// Detect browser
-			$browser = new \Browser();
-
-			// Get theme info
-			$theme_data = wp_get_theme();
-			$theme      = $theme_data->Name . ' ' . $theme_data->Version;
-
-			// Identify Hosting Provider
-			$host = um_get_host();
-
-			um_fetch_user( get_current_user_id() );
-
-			if ( isset( $this->content ) ) {
-				echo $this->content;
-			} else { ?>
-
-				<h3><?php _e( 'Install Info', 'ultimate-member' ) ?></h3>
-
-				<form action="" method="post" dir="ltr">
-					<textarea style="width:70%; height:400px;" readonly="readonly" onclick="this.focus();this.select()" id="install-info-textarea" name="um-install-info" title="<?php _e( 'To copy the Install info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'ultimate-member' ); ?>">
-### Begin Install Info ###
-
-## Please include this information when posting support requests ##
-
-<?php
-/**
- * UM hook
- *
- * @type action
- * @title um_install_info_before
- * @description Before install info settings
- * @change_log
- * ["Since: 2.0"]
- * @usage add_action( 'um_install_info_before', 'function_name', 10 );
- * @example
- * <?php
- * add_action( 'um_install_info_before', 'my_install_info_before', 10 );
- * function my_install_info_before() {
- *     // your code here
- * }
- * ?>
- */
-do_action( 'um_install_info_before' ); ?>
-
---- Site Info ---
-
-Site URL:					<?php echo site_url() . "\n"; ?>
-Home URL:					<?php echo home_url() . "\n"; ?>
-Multisite:					<?php echo is_multisite() ? 'Yes' . "\n" : 'No' . "\n" ?>
-
---- Hosting Provider ---
-
-<?php if( $host ) : ?>
-	Host:						<?php echo $host . "\n"; ?>
-<?php endif; ?>
-
---- User Browser ---
-
-<?php echo $browser ; ?>
-
----- Current User Details --
-
-<?php $user = wp_get_current_user(); ?>
-Role: <?php echo implode( ', ', um_user( 'roles' ) ). "\n"; ?>
-
-
---- WordPress Configurations ---
-
-Version:						<?php echo get_bloginfo( 'version' ) . "\n"; ?>
-Language:					<?php echo get_locale()."\n"; ?>
-Permalink Structure:			<?php echo UM()->is_permalinks . "\n"; ?>
-Active Theme:				<?php echo $theme . "\n"; ?>
-						<?php $show_on_front = get_option( 'show_on_front' ); ?>
-						<?php if( $show_on_front == "posts" ): ?>
-							Show On Front:				<?php echo get_option( 'show_on_front' ) . "/static\n" ?>
-						<?php elseif( $show_on_front == "page" ): ?>
-							Page On Front:				<?php $id = get_option( 'page_on_front' ); echo get_the_title( $id ) . ' (#' . $id . ')' . "\n" ?>
-							Page For Posts:				<?php $id = get_option( 'page_for_posts' ); echo get_the_title( $id ) . ' (#' . $id . ')' . "\n" ?>
-						<?php endif; ?>
-ABSPATH:					<?php echo ABSPATH."\n"; ?>
-						<?php $wp_count_posts = wp_count_posts(); ?>
-All Posts/Pages:				<?php echo array_sum((array)$wp_count_posts)."\n";?>
-						<?php
-						$request['cmd'] = '_notify-validate';
-
-						$params = array(
-							'sslverify'  => false,
-							'timeout'    => 60,
-							'user-agent' => 'UltimateMember/' . UM_VERSION,
-							'body'       => $request,
-						);
-
-						$response = wp_remote_post( 'https://www.paypal.com/cgi-bin/webscr', $params );
-
-						if ( ! is_wp_error( $response ) && $response['response']['code'] >= 200 && $response['response']['code'] < 300 ) {
-							$WP_REMOTE_POST =  'wp_remote_post() works' . "\n";
-						} else {
-							$WP_REMOTE_POST =  'wp_remote_post() does not work' . "\n";
-						}
-						?>
-WP Remote Post:           		<?php echo $WP_REMOTE_POST; ?>
-WP_DEBUG:                 			<?php echo defined( 'WP_DEBUG' ) ? WP_DEBUG ? 'Enabled' . "\n" : 'Disabled' . "\n" : 'Not set' . "\n" ?>
-WP Table Prefix:          			<?php echo "Length: ". strlen( $wpdb->prefix ); echo ", Status:"; if ( strlen( $wpdb->prefix )>16 ) {echo " ERROR: Too Long";} else {echo " Acceptable";} echo "\n"; ?>
-Memory Limit:   				<?php echo ( um_let_to_num( WP_MEMORY_LIMIT )/( 1024 ) )."MB"; ?><?php echo "\n"; ?>
-
-
---- UM Configurations ---
-
-Version:						<?php echo UM_VERSION . "\n"; ?>
-Upgraded From:            		<?php echo get_option( 'um_last_version_upgrade', 'None' ) . "\n"; ?>
-Current URL Method:			<?php echo UM()->options()->get( 'current_url_method' ). "\n"; ?>
-Cache User Profile:			<?php if( UM()->options()->get( 'um_profile_object_cache_stop' ) == 1 ){ echo "No"; }else{ echo "Yes"; } echo "\n"; ?>
-Generate Slugs on Directories:	<?php if( UM()->options()->get( 'um_generate_slug_in_directory' ) == 1 ){ echo "No"; }else{ echo "Yes"; } echo "\n"; ?>
-Force UTF-8 Encoding: 		<?php if( UM()->options()->get( 'um_force_utf8_strings' ) == 1 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
-JS/CSS Compression: 			<?php if ( defined('SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) { echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
-						<?php if( is_multisite() ): ?>
-							Network Structure:			<?php echo UM()->options()->get( 'network_permalink_structure' ). "\n"; ?>
-						<?php endif; ?>
-Port Forwarding in URL: 		<?php if( UM()->options()->get( 'um_port_forwarding_url' ) == 1 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
-Exclude CSS/JS on Home: 		<?php if( UM()->options()->get( 'js_css_exlcude_home' ) == 1 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
-
-
---- UM Pages Configuration ---
-
-<?php
-/**
- * UM hook
- *
- * @type action
- * @title um_install_info_before_page_config
- * @description Before page config install info
- * @change_log
- * ["Since: 2.0"]
- * @usage add_action( 'um_install_info_before_page_config', 'function_name', 10 );
- * @example
- * <?php
- * add_action( 'um_install_info_before_page_config', 'my_install_info_before_page_config', 10 );
- * function my_install_info_before_page_config() {
- *     // your code here
- * }
- * ?>
- */
-do_action( "um_install_info_before_page_config" ); ?>
-User:						<?php echo um_get_predefined_page_url( 'user' ) . "\n"; ?>
-Account:					<?php echo um_get_predefined_page_url( 'account' ) . "\n"; ?>
-Members:					<?php echo um_get_predefined_page_url( 'members' ) . "\n"; ?>
-Register:					<?php echo um_get_predefined_page_url( 'register' ) . "\n"; ?>
-Login:						<?php echo um_get_predefined_page_url( 'login' ) . "\n"; ?>
-Logout:						<?php echo um_get_predefined_page_url( 'logout' ) . "\n"; ?>
-Password Reset:				<?php echo um_get_predefined_page_url( 'password-reset' ) . "\n"; ?>
-						<?php
-						/**
-						 * UM hook
-						 *
-						 * @type action
-						 * @title um_install_info_after_page_config
-						 * @description After page config install info
-						 * @change_log
-						 * ["Since: 2.0"]
-						 * @usage add_action( 'um_install_info_after_page_config', 'function_name', 10 );
-						 * @example
-						 * <?php
-						 * add_action( 'um_install_info_after_page_config', 'my_install_info_after_page_config', 10 );
-						 * function my_install_info_after_page_config() {
-						 *     // your code here
-						 * }
-						 * ?>
-						 */
-						do_action( "um_install_info_after_page_config" ); ?>
-
-
---- UM Users Configuration ---
-
-Default New User Role: 		<?php  echo UM()->options()->get('register_role') . "\n"; ?>
-Profile Permalink Base:		<?php  echo UM()->options()->get('permalink_base') . "\n"; ?>
-User Display Name:			<?php  echo UM()->options()->get('display_name') . "\n"; ?>
-Force Name to Uppercase:		<?php echo $this->info_value( UM()->options()->get('force_display_name_capitlized'), 'yesno', true ); ?>
-Redirect author to profile: 		<?php echo $this->info_value( UM()->options()->get('author_redirect'), 'yesno', true ); ?>
-Use Gravatars: 				<?php echo $this->info_value( UM()->options()->get('use_gravatars'), 'yesno', true ); ?>
-						<?php if( UM()->options()->get('use_gravatars') ): ?>Gravatar builtin image:		<?php  echo UM()->options()->get('use_um_gravatar_default_builtin_image') . "\n"; ?>
-							UM Avatar as blank Gravatar: 	<?php echo $this->info_value( UM()->options()->get('use_um_gravatar_default_image'), 'yesno', true ); ?><?php endif; ?>
-Require a strong password: 	<?php echo $this->info_value( UM()->options()->get('require_strongpass'), 'onoff', true ); ?>
-
-
---- UM Access Configuration ---
-
-Panic Key: 								<?php  echo UM()->options()->get('panic_key') . "\n"; ?>
-Global Site Access:						<?php  $arr = array('Site accessible to Everyone','','Site accessible to Logged In Users'); echo $arr[ (int) UM()->options()->get('accessible') ] . "\n"; ?>
-						<?php if( UM()->options()->get('accessible') == 2 ) { ?>
-							Custom Redirect URL:						<?php echo UM()->options()->get('access_redirect')."\n";?>
-							Exclude the following URLs:<?php echo "\t\t\t\t".implode("\t\n\t\t\t\t\t\t\t\t\t\t",UM()->options()->get('access_exclude_uris') )."\n";?>
-						<?php } ?>
-Backend Login Screen for Guests:			<?php echo $this->info_value( UM()->options()->get('wpadmin_login'), 'yesno', true ); ?>
-						<?php if( ! UM()->options()->get('wpadmin_login') ) { ?>
-							Redirect to alternative login page:			<?php if( UM()->options()->get('wpadmin_login_redirect') == 'um_login_page' ){ echo um_get_predefined_page_url('login')."\n"; }else{ echo UM()->options()->get('wpadmin_login_redirect_url')."\n"; }?>
-						<?php } ?>
-Backend Register Screen for Guests:		<?php echo $this->info_value( UM()->options()->get('wpadmin_register'), 'yesno', true ); ?>
-						<?php if( ! UM()->options()->get('wpadmin_register') ) { ?>
-							Redirect to alternative register page:		<?php if( UM()->options()->get('wpadmin_register_redirect') == 'um_register_page' ){ echo um_get_predefined_page_url('register')."\n"; }else{ echo UM()->options()->get('wpadmin_register_redirect_url')."\n"; }?>
-						<?php } ?>
-Access Control widget for Admins only: 		<?php echo $this->info_value( UM()->options()->get('access_widget_admin_only'), 'yesno', true ); ?>
-Enable the Reset Password Limit:			<?php echo $this->info_value( UM()->options()->get('enable_reset_password_limit'), 'yesno', true ); ?>
-						<?php if( UM()->options()->get('enable_reset_password_limit') ) { ?>
-							Reset Password Limit: <?php echo UM()->options()->get('reset_password_limit_number') ?>
-							Disable Reset Password Limit for Admins: <?php echo $this->info_value( UM()->options()->get('disable_admin_reset_password_limit'), 'yesno', true ) ?>
-						<?php } ?>
-						<?php $wpadmin_allow_ips = UM()->options()->get( 'wpadmin_allow_ips' ); if( ! empty( $wpadmin_allow_ips ) ) { ?>
-							Whitelisted Backend IPs: 					<?php echo count( explode("\n",trim(UM()->options()->get('wpadmin_allow_ips') ) ) )."\n"; ?>
-						<?php } ?>
-						<?php $blocked_ips = UM()->options()->get('blocked_ips'); if( ! empty( $blocked_ips ) ){ ?>
-							Blocked IP Addresses: 					<?php echo  count( explode("\n",UM()->options()->get('blocked_ips') ) )."\n"; ?>
-						<?php } ?>
-						<?php $blocked_emails = UM()->options()->get('blocked_emails'); if( ! empty( $blocked_emails ) ){ ?>
-							Blocked Email Addresses: 					<?php echo  count( explode("\n",UM()->options()->get('blocked_emails') ) )."\n"; ?>
-						<?php } ?>
-						<?php $blocked_words =  UM()->options()->get('blocked_words'); if( ! empty( $blocked_words ) ){ ?>
-							Blacklist Words: 							<?php echo  count( explode("\n",UM()->options()->get('blocked_words') ) )."\n"; ?>
-						<?php } ?>
-
-
---- UM Email Configurations ---
-
-Mail appears from:  			<?php $mail_from = UM()->options()->get('mail_from'); if( ! empty( $mail_from ) ){echo UM()->options()->get('mail_from');}else{echo "-";}; echo "\n";?>
-Mail appears from address:  	<?php $mail_from_addr = UM()->options()->get('mail_from_addr'); if( ! empty( $mail_from_addr ) ){echo UM()->options()->get('mail_from_addr');}else{echo "-";}; echo "\n";?>
-Use HTML for E-mails:   		<?php echo $this->info_value( UM()->options()->get('email_html'), 'yesno', true ); ?>
-Account Welcome Email:  		<?php echo $this->info_value( UM()->options()->get('welcome_email_on'), 'yesno', true ); ?>
-Account Activation Email:   	<?php echo $this->info_value( UM()->options()->get('checkmail_email_on'), 'yesno', true ); ?>
-Pending Review Email:   		<?php echo $this->info_value( UM()->options()->get('pending_email_on'), 'yesno', true ); ?>
-Account Approved Email: 		<?php echo $this->info_value( UM()->options()->get('approved_email_on'), 'yesno', true ); ?>
-Account Rejected Email: 		<?php echo $this->info_value( UM()->options()->get('rejected_email_on'), 'yesno', true ); ?>
-Account Deactivated Email:  	<?php echo $this->info_value( UM()->options()->get('inactive_email_on'), 'yesno', true ); ?>
-Account Deleted Email:  		<?php echo $this->info_value( UM()->options()->get('deletion_email_on'), 'yesno', true ); ?>
-Password Reset Email:   		<?php echo $this->info_value( UM()->options()->get('resetpw_email_on'), 'yesno', true ); ?>
-Password Changed Email: 		<?php echo $this->info_value( UM()->options()->get('changedpw_email_on'), 'yesno', true ); ?>
-
-
---- UM Total Users ---
-
-				<?php $result = count_users();
-				echo 'All Users('.$result['total_users'].")\n";
-				foreach( $result['avail_roles'] as $role => $count ) {
-					echo $role."(".$count.")\n";
-				} ?>
-
-
---- UM Roles ---
-
-				<?php foreach( UM()->roles()->get_roles() as $role_id => $role ) {
-					echo $role." ({$role_id})\n";
-				} ?>
-
-
---- UM Custom Templates ---
-
-				<?php // Show templates that have been copied to the theme's edd_templates dir
-				$dir = get_stylesheet_directory() . '/ultimate-member/templates/*.php';
-				if ( ! empty( $dir ) ) {
-					$found = glob( $dir );
-					if ( ! empty( $found ) ) {
-						foreach ( glob( $dir ) as $file ) {
-							echo "File: " . $file  . "\n";
-						}
-					} else {
-						echo 'N/A'."\n";
-					}
-				} ?>
-
-
---- UM Email HTML Templates ---
-
-				<?php $dir = get_stylesheet_directory() . '/ultimate-member/templates/emails/*.html';
-
-				if ( ! empty( $dir ) ) {
-					$found =  glob( $dir );
-					if ( ! empty( $found ) ){
-						foreach ( glob( $dir ) as $file ) {
-							echo "File: ". $file  . "\n";
-						}
-					} else {
-						echo 'N/A'."\n";
-					}
-				} ?>
-
-
---- Web Server Configurations ---
-
-PHP Version:              			<?php echo PHP_VERSION . "\n"; ?>
-MySQL Version:            			<?php echo $wpdb->db_version() . "\n"; ?>
-Web Server Info:          			<?php echo $_SERVER['SERVER_SOFTWARE'] . "\n"; ?>
-
-
---- PHP Configurations ---
-
-PHP Memory Limit:         			<?php echo ini_get( 'memory_limit' ) . "\n"; ?>
-PHP Upload Max Size:      			<?php echo ini_get( 'upload_max_filesize' ) . "\n"; ?>
-PHP Post Max Size:        			<?php echo ini_get( 'post_max_size' ) . "\n"; ?>
-PHP Upload Max Filesize:  			<?php echo ini_get( 'upload_max_filesize' ) . "\n"; ?>
-PHP Time Limit:           			<?php echo ini_get( 'max_execution_time' ) . "\n"; ?>
-PHP Max Input Vars:       			<?php echo ini_get( 'max_input_vars' ) . "\n"; ?>
-PHP Arg Separator:        			<?php echo ini_get( 'arg_separator.output' ) . "\n"; ?>
-PHP Allow URL File Open:  			<?php echo ini_get( 'allow_url_fopen' ) ? "Yes\n" : "No\n"; ?>
-
-
---- Web Server Extensions/Modules ---
-
-DISPLAY ERRORS:           			<?php echo ( ini_get( 'display_errors' ) ) ? 'On (' . ini_get( 'display_errors' ) . ')' : 'N/A'; ?><?php echo "\n"; ?>
-FSOCKOPEN:                			<?php echo ( function_exists( 'fsockopen' ) ) ? 'Your server supports fsockopen.' : 'Your server does not support fsockopen.'; ?><?php echo "\n"; ?>
-cURL:                     			<?php echo ( function_exists( 'curl_init' ) ) ? 'Your server supports cURL.' : 'Your server does not support cURL.'; ?><?php echo "\n"; ?>
-SOAP Client:              			<?php echo ( class_exists( 'SoapClient' ) ) ? 'Your server has the SOAP Client enabled.' : 'Your server does not have the SOAP Client enabled.'; ?><?php echo "\n"; ?>
-SUHOSIN:                  			<?php echo ( extension_loaded( 'suhosin' ) ) ? 'Your server has SUHOSIN installed.' : 'Your server does not have SUHOSIN installed.'; ?><?php echo "\n"; ?>
-GD Library:               			<?php echo ( extension_loaded( 'gd' ) && function_exists('gd_info') ) ? 'PHP GD library is installed on your web server.' : 'PHP GD library is NOT installed on your web server.'; ?><?php echo "\n"; ?>
-Mail:                     			<?php echo ( function_exists('mail') ) ? 'PHP mail function exist on your web server.' : 'PHP mail function doesn\'t exist on your web server.'; ?><?php echo "\n"; ?>
-Exif:				          <?php echo ( extension_loaded( 'exif' ) && function_exists('exif_imagetype') ) ? 'PHP Exif library is installed on your web server.' : 'PHP Exif library is NOT installed on your web server.'; ?><?php echo "\n"; ?>
-
-
---- Session Configurations ---
-
-Session:                  			<?php echo isset( $_SESSION ) ? 'Enabled' : 'Disabled'; ?><?php echo "\n"; ?>
-Session Name:             			<?php echo esc_html( ini_get( 'session.name' ) ); ?><?php echo "\n"; ?>
-Cookie Path:              			<?php echo esc_html( ini_get( 'session.cookie_path' ) ); ?><?php echo "\n"; ?>
-Save Path:                			<?php echo esc_html( ini_get( 'session.save_path' ) ); ?><?php echo "\n"; ?>
-Use Cookies:              			<?php echo ini_get( 'session.use_cookies' ) ? 'On' : 'Off'; ?><?php echo "\n"; ?>
-Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 'On' : 'Off'; ?><?php echo "\n"; ?>
-
-
---- WordPress Active Plugins ---
-
-				<?php $plugins = get_plugins();
-				$active_plugins = get_option( 'active_plugins', array() );
-
-				foreach ( $plugins as $plugin_path => $plugin ) {
-					// If the plugin isn't active, don't show it.
-					if ( ! in_array( $plugin_path, $active_plugins ) )
-						continue;
-
-					echo $plugin['Name'] . ': ' . $plugin['Version'] ."\n";
-				}
-
-				if ( is_multisite() ) { ?>
-
-					--- WordPress Network Active Plugins ---
-
-					<?php $plugins = wp_get_active_network_plugins();
-					$active_plugins = get_site_option( 'active_sitewide_plugins', array() );
-
-					foreach ( $plugins as $plugin_path ) {
-						$plugin_base = plugin_basename( $plugin_path );
-
-						// If the plugin isn't active, don't show it.
-						if ( ! array_key_exists( $plugin_base, $active_plugins ) )
-							continue;
-
-						$plugin = get_plugin_data( $plugin_path );
-
-						echo $plugin['Name'] . ' :' . $plugin['Version'] . "\n";
-					}
-
-				}
-
-				/**
-				 * UM hook
-				 *
-				 * @type action
-				 * @title um_install_info_after
-				 * @description After install info
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_install_info_after', 'function_name', 10 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_install_info_after', 'my_install_info_after', 10 );
-				 * function my_install_info_after() {
-				 *     // your code here
-				 * }
-				 * ?>
-				 */
-				do_action( 'um_install_info_after' ); ?>
-
-### End Install Info ###
-					</textarea>
-					<p class="submit">
-						<input type="hidden" name="um-addon-hook" value="download_install_info" />
-						<?php submit_button( 'Download Install Info File', 'primary', 'download_install_info', false ); ?>
-					</p>
-				</form>
-
-			<?php }
-		}
-
-
-		/**
-		 *
-		 */
-		function um_download_install_info() {
-			if ( ! empty( $_POST['download_install_info'] ) ) {
-				nocache_headers();
-
-				header( "Content-type: text/plain" );
-				header( 'Content-Disposition: attachment; filename="ultimatemember-install-info.txt"' );
-
-				echo wp_strip_all_tags( sanitize_textarea_field( $_POST['um-install-info'] ) );
-				exit;
-			}
-		}
-
-
-		/**
-		 * @param string $raw_value
-		 * @param string $type
-		 * @param string $default
-		 *
-		 * @return string
-		 */
-		function info_value( $raw_value = '', $type = 'yesno', $default = '' ) {
-
-			if ( $type == 'yesno' ) {
-				$raw_value = ( $default == $raw_value ) ? "Yes" : "No";
-			} elseif( $type == 'onoff' ) {
-				$raw_value = ( $default == $raw_value ) ? "On" : "Off";
-			}
-
-			return $raw_value."\n";
 		}
 
 

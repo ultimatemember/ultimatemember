@@ -10,13 +10,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @package umm\member_directory
  */
-final class Init {
+final class Init extends Functions {
 
 
 	/**
 	 * @var string
 	 */
-	private $slug = 'member_directory';
+	private $slug = 'member-directory';
 
 
 	/**
@@ -40,23 +40,27 @@ final class Init {
 	 * Init constructor.
 	 */
 	function __construct() {
-		// common classes
-		$this->common();
+		parent::__construct();
 
-		if ( UM()->is_request( 'admin' ) ) {
-			$this->admin();
+		$this->common()->includes();
+		if ( UM()->is_request( 'ajax' ) ) {
+			$this->ajax()->includes();
+		} elseif ( UM()->is_request( 'admin' ) ) {
+			$this->admin()->includes();
+		} elseif ( UM()->is_request( 'frontend' ) ) {
+			$this->frontend()->includes();
 		}
 	}
 
 
 	/**
-	 * @return includes\Common()
+	 * @return includes\common\Init()
 	 */
 	function common() {
-		if ( empty( UM()->classes['umm\member_directory\includes\common'] ) ) {
-			UM()->classes['umm\member_directory\includes\common'] = new includes\Common();
+		if ( empty( UM()->classes['umm\member_directory\includes\common\init'] ) ) {
+			UM()->classes['umm\member_directory\includes\common\init'] = new includes\common\Init();
 		}
-		return UM()->classes['umm\member_directory\includes\common'];
+		return UM()->classes['umm\member_directory\includes\common\init'];
 	}
 
 
@@ -68,5 +72,38 @@ final class Init {
 			UM()->classes['umm\member_directory\includes\admin\init'] = new includes\admin\Init();
 		}
 		return UM()->classes['umm\member_directory\includes\admin\init'];
+	}
+
+
+	/**
+	 * @return includes\ajax\Init()
+	 */
+	function ajax() {
+		if ( empty( UM()->classes['umm\member_directory\includes\ajax\init'] ) ) {
+			UM()->classes['umm\member_directory\includes\ajax\init'] = new includes\ajax\Init();
+		}
+		return UM()->classes['umm\member_directory\includes\ajax\init'];
+	}
+
+
+	/**
+	 * @return includes\frontend\Init()
+	 */
+	function frontend() {
+		if ( empty( UM()->classes['umm\member_directory\includes\frontend\init'] ) ) {
+			UM()->classes['umm\member_directory\includes\frontend\init'] = new includes\frontend\Init();
+		}
+		return UM()->classes['umm\member_directory\includes\frontend\init'];
+	}
+
+
+	/**
+	 * @return Config()
+	 */
+	function config() {
+		if ( empty( UM()->classes['umm\member_directory\config'] ) ) {
+			UM()->classes['umm\member_directory\config'] = new Config();
+		}
+		return UM()->classes['umm\member_directory\config'];
 	}
 }

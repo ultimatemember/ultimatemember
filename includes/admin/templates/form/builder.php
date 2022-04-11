@@ -36,3 +36,74 @@ if ( empty( UM()->builder()->form_id ) ) {
 	</div>
 
 </div>
+
+<div class="um-col-demon-row" style="display:none;">
+
+	<div class="um-admin-drag-row-icons">
+		<a href="javascript:void(0);" class="um-admin-drag-rowsub-add um-admin-tipsy-n" title="<?php esc_attr_e( 'Add Row', 'ultimate-member' ); ?>" data-row_action="add_subrow"><i class="fas fa-plus"></i></a>
+		<a href="javascript:void(0);" class="um-admin-drag-row-edit um_admin_edit_field_popup um-admin-tipsy-n" title="<?php esc_attr_e( 'Edit Row', 'ultimate-member' ); ?>" data-arg1="row" data-arg2="<?php echo esc_attr( get_the_ID() ); ?>" data-field_type="row" data-form_id="<?php echo esc_attr( get_the_ID() ); ?>"><i class="fas fa-pencil-alt"></i></a>
+		<span class="um-admin-drag-row-start"><i class="fas fa-arrows-alt"></i></span>
+		<a href="javascript:void(0);" class="um-admin-tipsy-n" title="<?php esc_attr_e( 'Delete Row', 'ultimate-member' ); ?>" data-remove_element="um-admin-drag-row"><i class="far fa-trash-alt"></i></a>
+	</div>
+	<div class="um-admin-clear"></div>
+
+	<div class="um-admin-drag-rowsubs">
+		<div class="um-admin-drag-rowsub">
+
+			<div class="um-admin-drag-ctrls columns">
+				<a href="javascript:void(0);" class="active" data-cols="1"></a>
+				<a href="javascript:void(0);" data-cols="2"></a>
+				<a href="javascript:void(0);" data-cols="3"></a>
+			</div>
+
+			<div class="um-admin-drag-rowsub-icons">
+				<span class="um-admin-drag-rowsub-start"><i class="fas fa-arrows-alt"></i></span>
+				<a href="javascript:void(0);" class="um-admin-tipsy-n" title="<?php esc_attr_e( 'Delete Row', 'ultimate-member' ); ?>" data-remove_element="um-admin-drag-rowsub"><i class="far fa-trash-alt"></i></a>
+			</div>
+
+			<div class="um-admin-clear"></div>
+
+			<div class="um-admin-drag-col"></div>
+
+			<div class="um-admin-drag-col-dynamic"></div>
+
+			<div class="um-admin-clear"></div>
+
+		</div>
+	</div>
+
+</div>
+
+<div class="um-col-demon-subrow" style="display:none;">
+
+	<div class="um-admin-drag-ctrls columns">
+		<a href="javascript:void(0);" class="active" data-cols="1"></a>
+		<a href="javascript:void(0);" data-cols="2"></a>
+		<a href="javascript:void(0);" data-cols="3"></a>
+	</div>
+
+	<div class="um-admin-drag-rowsub-icons">
+		<span class="um-admin-drag-rowsub-start"><i class="fas fa-arrows-alt"></i></span>
+		<a href="javascript:void(0);" class="um-admin-tipsy-n" title="<?php esc_attr_e( 'Delete Row', 'ultimate-member' ); ?>" data-remove_element="um-admin-drag-rowsub"><i class="far fa-trash-alt"></i></a>
+	</div><div class="um-admin-clear"></div>
+
+	<div class="um-admin-drag-col">
+	</div>
+
+	<div class="um-admin-drag-col-dynamic"></div>
+
+	<div class="um-admin-clear"></div>
+
+</div>
+
+<form action="" method="post" class="um_update_order">
+
+	<input type="hidden" name="form_id" id="form_id" value="<?php echo esc_attr( get_the_ID() ); ?>" />
+	<input type="hidden" name="action" value="um_update_order" />
+	<input type="hidden" name="nonce" value="<?php echo esc_attr( wp_create_nonce( 'um-admin-nonce' ) ) ?>" />
+
+	<div class="um_update_order_fields">
+
+	</div>
+
+</form>

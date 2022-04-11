@@ -555,7 +555,7 @@ if ( ! class_exists( 'UM' ) ) {
 				if ( $this->is_request( 'ajax' ) ) {
 					//$this->admin();
 					$this->ajax_init();
-					$this->admin_ajax_hooks();
+					//$this->admin_ajax_hooks();
 					$this->admin_upgrade()->init_packages_ajax_handlers();
 					$this->admin_gdpr();
 					//$this->columns();
@@ -566,7 +566,7 @@ if ( ! class_exists( 'UM' ) ) {
 					//$this->admin();
 					$this->admin_upgrade();
 					$this->users();
-					$this->dragdrop();
+					//$this->dragdrop();
 					$this->admin_gdpr();
 					$this->admin_navmenu();
 					$this->plugin_updater();
@@ -595,7 +595,6 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->mobile();
 				$this->external_integrations();
 				$this->gdpr();
-				$this->member_directory();
 
 				//if multisite networks active
 				if ( is_multisite() ) {
@@ -755,17 +754,18 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.1.0
 		 *
-		 * @return um\core\Member_Directory()
+		 * @return um\legacy\core\Member_Directory()
 		 */
 		function member_directory() {
+
 			if ( empty( $this->classes['member_directory'] ) ) {
 
 				$search_in_table = $this->options()->get( 'member_directory_own_table' );
 
 				if ( ! empty( $search_in_table ) ) {
-					$this->classes['member_directory'] = new um\core\Member_Directory_Meta();
+					$this->classes['member_directory'] = new um\legacy\core\Member_Directory_Meta();
 				} else {
-					$this->classes['member_directory'] = new um\core\Member_Directory();
+					$this->classes['member_directory'] = new um\legacy\core\Member_Directory();
 				}
 			}
 			return $this->classes['member_directory'];
@@ -876,7 +876,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		function admin_ajax_hooks() {
 			if ( empty( $this->classes['admin_ajax_hooks'] ) ) {
-				$this->classes['admin_ajax_hooks'] = new um\admin\core\Admin_Ajax_Hooks();
+				$this->classes['admin_ajax_hooks'] = new um\legacy\admin\core\Admin_Ajax_Hooks();
 			}
 			return $this->classes['admin_ajax_hooks'];
 		}
@@ -994,11 +994,13 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
-		 * @return um\admin\core\Admin_DragDrop()
+		 * Legacy since 3.0
+		 *
+		 * @return um\legacy\admin\core\Admin_DragDrop()
 		 */
 		function dragdrop() {
 			if ( empty( $this->classes['admin_dragdrop'] ) ) {
-				$this->classes['admin_dragdrop'] = new um\admin\core\Admin_DragDrop();
+				$this->classes['admin_dragdrop'] = new um\legacy\admin\core\Admin_DragDrop();
 			}
 			return $this->classes['admin_dragdrop'];
 		}
@@ -1673,6 +1675,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return um\legacy\admin\core\Admin_Menu()
 		 */
 		function admin_menu() {
+			var_dump('1238172391');
 			if ( empty( $this->classes['um\legacy\admin\menu'] ) ) {
 				$this->classes['um\legacy\admin\menu'] = new um\legacy\admin\core\Admin_Menu();
 			}

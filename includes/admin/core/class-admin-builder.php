@@ -641,32 +641,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		}
 
 
-		/**
-		 *  Retrieves dropdown/multi-select options from a callback function
-		 */
-		function populate_dropdown_options() {
-			UM()->ajax()->check_nonce( 'um-admin-nonce' );
 
-			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
-				wp_send_json_error( __( 'This is not possible for security reasons.', 'ultimate-member' ) );
-			}
-
-			$arr_options = array();
-
-			$um_callback_func = sanitize_key( $_POST['um_option_callback'] );
-			if ( empty( $um_callback_func ) ) {
-				$arr_options['status'] = 'empty';
-				$arr_options['function_name'] = $um_callback_func;
-				$arr_options['function_exists'] = function_exists( $um_callback_func );
-			}
-
-			$arr_options['data'] = array();
-			if ( function_exists( $um_callback_func ) ) {
-				$arr_options['data'] = call_user_func( $um_callback_func );
-			}
-
-			wp_send_json( $arr_options );
-		}
 
 
 		/**

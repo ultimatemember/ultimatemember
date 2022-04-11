@@ -121,90 +121,56 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			$form_fields              = UM()->fields()->get_fields();
 			$arr_options['fields']    = $form_fields;
 
-			if ( isset( $arr_options['post']['members_directory'] ) && 'yes' === $arr_options['post']['members_directory'] ) {
-				$ajax_source_func = $_POST['child_callback'];
-				if ( function_exists( $ajax_source_func ) ) {
-					global $wpdb;
-
-					$values_array = $wpdb->get_col(
-						$wpdb->prepare(
-							"SELECT DISTINCT meta_value 
-							FROM $wpdb->usermeta 
-							WHERE meta_key = %s AND 
-								  meta_value != ''",
-							$arr_options['post']['child_name']
-						)
-					);
-
-					if ( ! empty( $values_array ) ) {
-						$parent_dropdown = isset( $arr_options['field']['parent_dropdown_relationship'] ) ? $arr_options['field']['parent_dropdown_relationship'] : '';
-						$arr_options['items'] = call_user_func( $ajax_source_func, $parent_dropdown );
-
-						if ( array_keys( $arr_options['items'] ) !== range( 0, count( $arr_options['items'] ) - 1 ) ) {
-							// array with dropdown items is associative
-							$arr_options['items'] = array_intersect_key( array_map( 'trim', $arr_options['items'] ), array_flip( $values_array ) );
-						} else {
-							// array with dropdown items has sequential numeric keys, starting from 0 and there are intersected values with $values_array
-							$arr_options['items'] = array_intersect( $arr_options['items'], $values_array );
-						}
-					} else {
-						$arr_options['items'] = array();
-					}
-
-					wp_send_json( $arr_options );
-				}
-			} else {
-				/**
-				 * UM hook
-				 *
-				 * @type filter
-				 * @title um_ajax_select_options__debug_mode
-				 * @description Activate debug mode for AJAX select options
-				 * @input_vars
-				 * [{"var":"$debug_mode","type":"bool","desc":"Enable Debug mode"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage
-				 * <?php add_filter( 'um_ajax_select_options__debug_mode', 'function_name', 10, 1 ); ?>
-				 * @example
-				 * <?php
-				 * add_filter( 'um_ajax_select_options__debug_mode', 'my_ajax_select_options__debug_mode', 10, 1 );
-				 * function my_ajax_select_options__debug_mode( $debug_mode ) {
-				 *     // your code here
-				 *     return $debug_mode;
-				 * }
-				 * ?>
-				 */
-				$debug = apply_filters( 'um_ajax_select_options__debug_mode', false );
-				if ( $debug ) {
-					$arr_options['debug'] = array(
-						$_POST,
-						$form_fields,
-					);
-				}
-
-				if ( ! empty( $_POST['child_callback'] ) && isset( $form_fields[ $_POST['child_name'] ] ) ) {
-
-					$ajax_source_func = $_POST['child_callback'];
-
-					// If the requested callback function is added in the form or added in the field option, execute it with call_user_func.
-					if ( isset( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
-						! empty( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
-						$form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] === $ajax_source_func ) {
-
-						$arr_options['field'] = $form_fields[ $_POST['child_name'] ];
-
-						if ( function_exists( $ajax_source_func ) ) {
-							$arr_options['items'] = call_user_func( $ajax_source_func, $arr_options['field']['parent_dropdown_relationship'] );
-						}
-					} else {
-						$arr_options['status']  = 'error';
-						$arr_options['message'] = __( 'This is not possible for security reasons.', 'ultimate-member' );
-					}
-				}
-
-				wp_send_json( $arr_options );
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_ajax_select_options__debug_mode
+			 * @description Activate debug mode for AJAX select options
+			 * @input_vars
+			 * [{"var":"$debug_mode","type":"bool","desc":"Enable Debug mode"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_ajax_select_options__debug_mode', 'function_name', 10, 1 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_ajax_select_options__debug_mode', 'my_ajax_select_options__debug_mode', 10, 1 );
+			 * function my_ajax_select_options__debug_mode( $debug_mode ) {
+			 *     // your code here
+			 *     return $debug_mode;
+			 * }
+			 * ?>
+			 */
+			$debug = apply_filters( 'um_ajax_select_options__debug_mode', false );
+			if ( $debug ) {
+				$arr_options['debug'] = array(
+					$_POST,
+					$form_fields,
+				);
 			}
+
+			if ( ! empty( $_POST['child_callback'] ) && isset( $form_fields[ $_POST['child_name'] ] ) ) {
+
+				$ajax_source_func = $_POST['child_callback'];
+
+				// If the requested callback function is added in the form or added in the field option, execute it with call_user_func.
+				if ( isset( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
+					! empty( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
+					$form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] === $ajax_source_func ) {
+
+					$arr_options['field'] = $form_fields[ $_POST['child_name'] ];
+
+					if ( function_exists( $ajax_source_func ) ) {
+						$arr_options['items'] = call_user_func( $ajax_source_func, $arr_options['field']['parent_dropdown_relationship'] );
+					}
+				} else {
+					$arr_options['status']  = 'error';
+					$arr_options['message'] = __( 'This is not possible for security reasons.', 'ultimate-member' );
+				}
+			}
+
+			wp_send_json( $arr_options );
 		}
 
 

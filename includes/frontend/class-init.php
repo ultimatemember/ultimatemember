@@ -32,7 +32,7 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		function includes() {
 			$this->actions_listener();
 			$this->enqueue();
-			//$this->user();
+			$this->user()->hooks();
 		}
 
 

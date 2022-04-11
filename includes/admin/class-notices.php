@@ -757,8 +757,8 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 			$um_pages[] = 'ultimate-member_page_um_options';
 			$um_pages[] = 'edit-um_form';
 			$um_pages[] = 'edit-um_role';
-			$um_pages[] = 'edit-um_directory';
-			$um_pages[] = 'ultimate-member_page_ultimatemember-extensions';
+
+			$um_pages = apply_filters( 'um_admin_footer_text_pages', $um_pages );
 
 			if ( isset( $current_screen->id ) && in_array( $current_screen->id, $um_pages ) ) {
 				// Change the footer text

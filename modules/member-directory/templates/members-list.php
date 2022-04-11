@@ -111,7 +111,7 @@ $unique_hash = substr( md5( $args['form_id'] ), 10, 5 ); ?>
 										<a href="javascript:void(0);" class="um-member-actions-a">
 											<i class="fas fa-cog"></i>
 										</a>
-										<?php UM()->member_directory()->dropdown_menu_js( '.um-member-cog', 'click', 'user' ); ?>
+										<?php UM()->module( 'member-directory' )->frontend()->dropdown_menu_js( '.um-member-cog', 'click', 'user' ); ?>
 									</div>
 								<# } #>
 

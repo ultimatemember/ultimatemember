@@ -24,9 +24,7 @@ class Install {
 	 */
 	function __construct() {
 		//settings defaults
-		$this->settings_defaults = [
-
-		];
+		$this->settings_defaults = array();
 	}
 
 

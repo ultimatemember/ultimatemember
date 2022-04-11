@@ -67,14 +67,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 *
 		 * @var array
 		 */
-		var $default_member_directory_meta = array();
-
-
-		/**
-		 * @since 3.0
-		 *
-		 * @var array
-		 */
 		var $form_meta_list = array();
 
 
@@ -275,8 +267,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'account_name_require'                  => 1,
 				'account_email'                         => 1,
 				'account_general_password'              => 0,
-				'account_hide_in_directory'             => 1,
-				'account_hide_in_directory_default'     => 'No',
 				'photo_thumb_sizes'                     => array( 40, 80, 190 ),
 				'cover_thumb_sizes'                     => array( 300, 600 ),
 				'accessible'                            => 0,
@@ -316,7 +306,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'cover_photo_max_size'                  => 999999999,
 				'custom_roles_increment'                => 1,
 				'um_profile_object_cache_stop'          => 0,
-				'member_directory_own_table'            => 0,
 				'profile_show_html_bio'                 => 0,
 				'profile_noindex'                       => 0,
 				'activation_link_expiry_time'           => '',
@@ -373,14 +362,11 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 */
 		function init_predefined_pages() {
 			$core_forms       = get_option( 'um_core_forms', array() );
-			$core_directories = get_option( 'um_core_directories', array() );
-
 			$setup_shortcodes = array_merge( array(
 				'profile'  => '',
 				'login'    => '',
 				'register' => '',
-				'members'  => '',
-			), $core_forms, $core_directories );
+			), $core_forms );
 
 			$this->predefined_pages = array(
 				'user'           => array(
@@ -394,10 +380,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'register'       => array(
 					'title'   => __( 'Register', 'ultimate-member' ),
 					'content' => ! empty( $setup_shortcodes['register'] ) ? '[ultimatemember form_id="' . $setup_shortcodes['register'] . '"]' : '',
-				),
-				'members'        => array(
-					'title'   => __( 'Members', 'ultimate-member' ),
-					'content' => ! empty( $setup_shortcodes['members'] ) ? '[ultimatemember form_id="' . $setup_shortcodes['members'] . '"]' : '',
 				),
 				'logout'         => array(
 					'title'   => __( 'Logout', 'ultimate-member' ),
@@ -662,62 +644,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 
 
 		/**
-		 * Init default member directory meta
-		 *
-		 * @since 3.0
-		 */
-		function init_default_member_directory_meta() {
-			$this->default_member_directory_meta = array(
-				'_um_core'                     => 'members',
-				'_um_template'                 => 'members',
-				'_um_mode'                     => 'directory',
-				'_um_view_types'               => array( 'grid' ),
-				'_um_default_view'             => 'grid',
-				'_um_roles'                    => array(),
-				'_um_has_profile_photo'        => 0,
-				'_um_has_cover_photo'          => 0,
-				'_um_show_these_users'         => '',
-				'_um_exclude_these_users'      => '',
-				'_um_sortby'                   => 'user_registered_desc',
-				'_um_sortby_custom'            => '',
-				'_um_sortby_custom_label'      => '',
-				'_um_enable_sorting'           => 0,
-				'_um_sorting_fields'           => array(),
-				'_um_profile_photo'            => 1,
-				'_um_cover_photos'             => 1,
-				'_um_show_name'                => 1,
-				'_um_show_tagline'             => 0,
-				'_um_tagline_fields'           => array(),
-				'_um_show_userinfo'            => 0,
-				'_um_reveal_fields'            => array(),
-				'_um_show_social'              => 0,
-				'_um_userinfo_animate'         => 1,
-				'_um_search'                   => 0,
-				'_um_roles_can_search'         => array(),
-				'_um_filters'                  => 0,
-				'_um_roles_can_filter'         => array(),
-				'_um_search_fields'            => array(),
-				'_um_filters_expanded'         => 0,
-				'_um_filters_is_collapsible'   => 1,
-				'_um_search_filters'           => array(),
-				'_um_must_search'              => 0,
-				'_um_max_users'                => '',
-				'_um_profiles_per_page'        => 12,
-				'_um_profiles_per_page_mobile' => 6,
-				'_um_directory_header'         => __( '{total_users} Members', 'ultimate-member' ),
-				'_um_directory_header_single'  => __( '{total_users} Member', 'ultimate-member' ),
-				'_um_directory_no_users'       => __( 'We are sorry. We cannot find any users who match your search criteria.', 'ultimate-member' ),
-			);
-
-			$this->default_member_directory_meta = apply_filters( 'um_default_member_directory_meta', $this->default_member_directory_meta );
-
-			// since 3.0 legacy code
-			// @todo remove in 3.1 version
-			$this->core_directory_meta['members'] = $this->default_member_directory_meta;
-		}
-
-
-		/**
 		 * Init default forms' meta
 		 *
 		 * @since 3.0
@@ -752,9 +678,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'_um_login_primary_btn_word'       => __( 'Login', 'ultimate-member' ),
 				'_um_login_forgot_pass_link'       => 1,
 				'_um_login_show_rememberme'        => 1,
-				'_um_directory_template'           => 'members',
-				'_um_directory_header'             => __( '{total_users} Members', 'ultimate-member' ),
-				'_um_directory_header_single'      => __( '{total_users} Member', 'ultimate-member' ),
 			) );
 
 			// since 3.0 legacy code
@@ -974,22 +897,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 * @var array
 		 */
 		var $nonadmin_perms;
-
-
-		/**
-		 * @deprecated 3.0
-		 *
-		 * @var array
-		 */
-		var $core_directories = array();
-
-
-		/**
-		 * @deprecated 3.0
-		 *
-		 * @var array
-		 */
-		var $core_directory_meta = array();
 
 
 		/**

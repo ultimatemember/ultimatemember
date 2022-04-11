@@ -25,12 +25,6 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 		/**
 		 * @var bool
 		 */
-		private $directory_nonce_added = false;
-
-
-		/**
-		 * @var bool
-		 */
 		private $custom_nonce_added = false;
 
 
@@ -65,8 +59,6 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			add_filter( 'um_builtin_validation_types_continue_loop', array( &$this, 'validation_types_continue_loop' ), 1, 4 );
 			add_filter( 'um_restrict_content_hide_metabox', array( &$this, 'hide_metabox_restrict_content_shop' ), 10, 1 );
 
-			add_filter( 'um_member_directory_meta_value_before_save', array( UM()->member_directory(), 'before_save_data' ), 10, 3 );
-
 			add_filter( 'post_updated_messages', array( &$this, 'post_updated_messages' ) );
 
 			add_filter( 'enter_title_here', array( &$this, 'enter_title_here' ), 10, 2 );
@@ -87,9 +79,7 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 				return $title;
 			}
 
-			if ( 'um_directory' === $post->post_type ) {
-				$title = __( 'e.g. Member Directory', 'ultimate-member' );
-			} elseif ( 'um_form' === $post->post_type ) {
+			if ( 'um_form' === $post->post_type ) {
 				$title = __( 'e.g. New Registration Form', 'ultimate-member' );
 			}
 
@@ -119,29 +109,13 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 				10  => __( 'Form draft updated.', 'ultimate-member' ),
 			);
 
-			$messages['um_directory'] = array(
-				0   => '',
-				1   => __( 'Directory updated.', 'ultimate-member' ),
-				2   => __( 'Custom field updated.', 'ultimate-member' ),
-				3   => __( 'Custom field deleted.', 'ultimate-member' ),
-				4   => __( 'Directory updated.', 'ultimate-member' ),
-				5   => isset( $_GET['revision'] ) ? __( 'Directory restored to revision.', 'ultimate-member' ) : false,
-				6   => __( 'Directory created.', 'ultimate-member' ),
-				7   => __( 'Directory saved.', 'ultimate-member' ),
-				8   => __( 'Directory submitted.', 'ultimate-member' ),
-				9   => __( 'Directory scheduled.', 'ultimate-member' ),
-				10  => __( 'Directory draft updated.', 'ultimate-member' ),
-			);
-
 			return $messages;
 		}
 
 
 		function remove_meta_box() {
 			remove_meta_box( 'submitdiv', 'um_form', 'core' );
-			remove_meta_box( 'submitdiv', 'um_directory', 'core' );
 			remove_meta_box( 'slugdiv', 'um_form', 'core' );
-			remove_meta_box( 'slugdiv', 'um_directory', 'core' );
 		}
 
 
@@ -224,11 +198,6 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			if ( $current_screen->id == 'um_form' ) {
 				add_action( 'add_meta_boxes', array( &$this, 'add_metabox_form' ), 1 );
 				add_action( 'save_post', array(&$this, 'save_metabox_form'), 10, 2 );
-			}
-
-			if ( $current_screen->id == 'um_directory' ) {
-				add_action( 'add_meta_boxes', array(&$this, 'add_metabox_directory'), 1 );
-				add_action( 'save_post', array(&$this, 'save_metabox_directory'), 10, 2 );
 			}
 
 			//restrict content metabox
@@ -755,36 +724,6 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 
 
 		/**
-		 * Load a directory metabox
-		 *
-		 * @param $object
-		 * @param $box
-		 */
-		function load_metabox_directory( $object, $box ) {
-			$box['id'] = str_replace( 'um-admin-form-', '', $box['id'] );
-
-			preg_match('#\{.*?\}#s', $box['id'], $matches );
-
-			if ( isset( $matches[0] ) ) {
-				$path = $matches[0];
-				$box['id'] = preg_replace('~(\\{[^}]+\\})~','', $box['id'] );
-			} else {
-				$path = um_path;
-			}
-
-			$path = str_replace('{','', $path );
-			$path = str_replace('}','', $path );
-
-
-			include_once $path . 'includes/admin/templates/directory/'. $box['id'] . '.php';
-			if ( ! $this->directory_nonce_added ) {
-				$this->directory_nonce_added = true;
-				wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_directory_nonce' );
-			}
-		}
-
-
-		/**
 		 * Load a role metabox
 		 *
 		 * @param $object
@@ -880,22 +819,6 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 				$this->custom_nonce_added = true;
 				wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_custom_nonce' );
 			}
-		}
-
-
-		/**
-		 * Add directory metabox
-		 */
-		function add_metabox_directory() {
-			add_meta_box('submitdiv', __( 'Publish', 'ultimate-member' ), array( $this, 'custom_submitdiv' ), 'um_directory', 'side', 'high' );
-
-			add_meta_box( 'um-admin-form-general', __( 'General Options', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
-			add_meta_box( 'um-admin-form-sorting', __( 'Sorting', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
-			add_meta_box( 'um-admin-form-profile', __( 'Profile Card', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
-			add_meta_box( 'um-admin-form-search', __( 'Search Options', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
-			add_meta_box( 'um-admin-form-pagination', __( 'Results &amp; Pagination', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
-			add_meta_box( 'um-admin-form-shortcode', __( 'Shortcode', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'side', 'default' );
-			add_meta_box( 'um-admin-form-appearance', __( 'Styling: General', 'ultimate-member' ), array( &$this, 'load_metabox_directory'), 'um_directory', 'side', 'default' );
 		}
 
 
@@ -1114,103 +1037,6 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			add_meta_box( 'um-admin-form-login_customize', __( 'Form settings', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
 
 			do_action( 'um_admin_add_form_metabox' );
-		}
-
-
-		/**
-		 * Save directory metabox
-		 *
-		 * @param $post_id
-		 * @param $post
-		 */
-		function save_metabox_directory( $post_id, $post ) {
-			global $wpdb;
-
-			// validate nonce
-			if ( ! isset( $_POST['um_admin_save_metabox_directory_nonce'] ) ||
-				 ! wp_verify_nonce( $_POST['um_admin_save_metabox_directory_nonce'], basename( __FILE__ ) ) ) {
-				return;
-			}
-
-			// validate post type
-			if ( $post->post_type != 'um_directory' ) {
-				return;
-			}
-
-			// validate user
-			$post_type = get_post_type_object( $post->post_type );
-			if ( ! current_user_can( $post_type->cap->edit_post, $post_id ) ) {
-				return;
-			}
-
-			$where = array( 'ID' => $post_id );
-
-			if ( empty( $_POST['post_title'] ) ) {
-				$_POST['post_title'] = sprintf( __( 'Directory #%s', 'ultimate-member' ), $post_id );
-			}
-
-			$wpdb->update( $wpdb->posts, array( 'post_title' => sanitize_text_field( $_POST['post_title'] ) ), $where );
-
-			do_action( 'um_before_member_directory_save', $post_id );
-
-			// save
-			delete_post_meta( $post_id, '_um_roles' );
-			delete_post_meta( $post_id, '_um_tagline_fields' );
-			delete_post_meta( $post_id, '_um_reveal_fields' );
-			delete_post_meta( $post_id, '_um_search_fields' );
-			delete_post_meta( $post_id, '_um_roles_can_search' );
-			delete_post_meta( $post_id, '_um_roles_can_filter' );
-			delete_post_meta( $post_id, '_um_show_these_users' );
-			delete_post_meta( $post_id, '_um_exclude_these_users' );
-
-			delete_post_meta( $post_id, '_um_search_filters' );
-			delete_post_meta( $post_id, '_um_search_filters_gmt' );
-
-			delete_post_meta( $post_id, '_um_sorting_fields' );
-
-			//save metadata
-			$metadata = UM()->admin()->sanitize_member_directory_meta( $_POST['um_metadata'] );
-			foreach ( $metadata as $k => $v ) {
-
-				if ( $k == '_um_show_these_users' && trim( $v ) ) {
-					$v = preg_split( '/[\r\n]+/', $v, -1, PREG_SPLIT_NO_EMPTY );
-				}
-
-				if ( $k == '_um_exclude_these_users' && trim( $v ) ) {
-					$v = preg_split( '/[\r\n]+/', $v, -1, PREG_SPLIT_NO_EMPTY );
-				}
-
-				if ( strstr( $k, '_um_' ) ) {
-
-					if ( $k === '_um_is_default' ) {
-
-						$mode = UM()->query()->get_attr( 'mode', $post_id );
-
-						if ( ! empty( $mode ) ) {
-
-							$posts = $wpdb->get_col(
-								"SELECT post_id
-								FROM {$wpdb->postmeta}
-								WHERE meta_key = '_um_mode' AND
-									  meta_value = 'directory'"
-							);
-
-							foreach ( $posts as $p_id ) {
-								delete_post_meta( $p_id, '_um_is_default' );
-							}
-
-						}
-
-					}
-
-					$v = apply_filters( 'um_member_directory_meta_value_before_save', $v, $k, $post_id );
-
-					update_post_meta( $post_id, $k, $v );
-
-				}
-			}
-
-			update_post_meta( $post_id, '_um_search_filters_gmt', (int) $_POST['um-gmt-offset'] );
 		}
 
 

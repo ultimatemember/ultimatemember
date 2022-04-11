@@ -16,7 +16,7 @@ final class Init {
 	/**
 	 * @var string
 	 */
-	private $slug = 'terms_conditions';
+	private $slug = 'terms-conditions';
 
 
 	/**

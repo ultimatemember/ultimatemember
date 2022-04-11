@@ -28,7 +28,7 @@ class Init {
 	 * @param $action
 	 */
 	function add_metabox_register( $action ) {
-		$module_data = UM()->modules()->get_data( 'terms_conditions' );
+		$module_data = UM()->modules()->get_data( 'terms-conditions' );
 		if ( ! $module_data ) {
 			return;
 		}

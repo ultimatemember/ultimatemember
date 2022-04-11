@@ -9,6 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Class Init
+ *
  * @package umm\member_directory\includes\admin
  */
 class Init {
@@ -20,26 +21,81 @@ class Init {
 	 * @since    1.0.0
 	 */
 	public function __construct() {
-		add_action( 'um_admin_add_form_metabox', array( &$this, 'add_metabox_register' ) );
+	}
+
+
+	function includes() {
+		$this->menu();
+		$this->enqueue();
+		$this->metabox();
+		$this->forms();
+		$this->settings();
+		$this->columns();
 	}
 
 
 	/**
-	 * @param $action
+	 * @return Columns()
 	 */
-	function add_metabox_register( $action ) {
-		$module_data = UM()->modules()->get_data( 'terms_conditions' );
-		if ( ! $module_data ) {
-			return;
+	function columns() {
+		if ( empty( UM()->classes['umm\member_directory\includes\admin\columns'] ) ) {
+			UM()->classes['umm\member_directory\includes\admin\columns'] = new Columns();
 		}
+		return UM()->classes['umm\member_directory\includes\admin\columns'];
+	}
 
-		add_meta_box(
-			"um-admin-form-register_terms-conditions{" . $module_data['path'] . "}",
-			__( 'Terms & Conditions', 'ultimate-member' ),
-			array( UM()->admin()->metabox(), 'load_metabox_form' ),
-			'um_form',
-			'side',
-			'default'
-		);
+
+	/**
+	 * @return Menu()
+	 */
+	function menu() {
+		if ( empty( UM()->classes['umm\member_directory\includes\admin\menu'] ) ) {
+			UM()->classes['umm\member_directory\includes\admin\menu'] = new Menu();
+		}
+		return UM()->classes['umm\member_directory\includes\admin\menu'];
+	}
+
+
+	/**
+	 * @return Settings()
+	 */
+	function settings() {
+		if ( empty( UM()->classes['umm\member_directory\includes\admin\settings'] ) ) {
+			UM()->classes['umm\member_directory\includes\admin\settings'] = new Settings();
+		}
+		return UM()->classes['umm\member_directory\includes\admin\settings'];
+	}
+
+
+	/**
+	 * @return Forms()
+	 */
+	function forms() {
+		if ( empty( UM()->classes['umm\member_directory\includes\admin\forms'] ) ) {
+			UM()->classes['umm\member_directory\includes\admin\forms'] = new Forms();
+		}
+		return UM()->classes['umm\member_directory\includes\admin\forms'];
+	}
+
+
+	/**
+	 * @return Metabox()
+	 */
+	function metabox() {
+		if ( empty( UM()->classes['umm\member_directory\includes\admin\metabox'] ) ) {
+			UM()->classes['umm\member_directory\includes\admin\metabox'] = new Metabox();
+		}
+		return UM()->classes['umm\member_directory\includes\admin\metabox'];
+	}
+
+
+	/**
+	 * @return Enqueue()
+	 */
+	function enqueue() {
+		if ( empty( UM()->classes['umm\member_directory\includes\admin\enqueue'] ) ) {
+			UM()->classes['umm\member_directory\includes\admin\enqueue'] = new Enqueue();
+		}
+		return UM()->classes['umm\member_directory\includes\admin\enqueue'];
 	}
 }

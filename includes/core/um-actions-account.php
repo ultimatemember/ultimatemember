@@ -316,20 +316,6 @@ function um_submit_account_details( $args ) {
 		$changes[ $k ] = $v;
 	}
 
-	if ( isset( $changes['hide_in_members'] ) ) {
-		if ( UM()->member_directory()->get_hide_in_members_default() ) {
-			if ( __( 'Yes', 'ultimate-member' ) === $changes['hide_in_members'] || 'Yes' === $changes['hide_in_members'] || array_intersect( array( 'Yes', __( 'Yes', 'ultimate-member' ) ), $changes['hide_in_members'] ) ) {
-				delete_user_meta( $user_id, 'hide_in_members' );
-				unset( $changes['hide_in_members'] );
-			}
-		} else {
-			if ( __( 'No', 'ultimate-member' ) === $changes['hide_in_members'] || 'No' === $changes['hide_in_members'] || array_intersect( array( 'No', __( 'No', 'ultimate-member' ) ), $changes['hide_in_members'] ) ) {
-				delete_user_meta( $user_id, 'hide_in_members' );
-				unset( $changes['hide_in_members'] );
-			}
-		}
-	}
-
 	/**
 	 * UM hook
 	 *
@@ -351,7 +337,7 @@ function um_submit_account_details( $args ) {
 	 * }
 	 * ?>
 	 */
-	$changes = apply_filters( 'um_account_pre_updating_profile_array', $changes );
+	$changes = apply_filters( 'um_account_pre_updating_profile_array', $changes, $user_id );
 
 	/**
 	 * UM hook

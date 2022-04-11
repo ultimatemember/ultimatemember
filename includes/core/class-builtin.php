@@ -1251,23 +1251,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'required_perm' => 'can_make_private_profile',
 				),
 
-				'hide_in_members'       => array(
-					'title'         => __( 'Hide my profile from directory', 'ultimate-member' ),
-					'metakey'       => 'hide_in_members',
-					'type'          => 'radio',
-					'label'         => __( 'Hide my profile from directory', 'ultimate-member' ),
-					'help'          => __( 'Here you can hide yourself from appearing in public directory', 'ultimate-member' ),
-					'required'      => 0,
-					'public'        => 1,
-					'editable'      => 1,
-					'default'       => UM()->member_directory()->get_hide_in_members_default() ? 'Yes' : 'No',
-					'options'       => array(
-						'No'    => __( 'No', 'ultimate-member' ),
-						'Yes'   => __( 'Yes', 'ultimate-member' ),
-					),
-					'account_only'  => true,
-				),
-
 				'delete_account'        => array(
 					'title'         => __( 'Delete Account', 'ultimate-member' ),
 					'metakey'       => 'delete_account',

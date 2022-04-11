@@ -40,7 +40,7 @@ class Common {
 		UM()->module( 'online' )->users[ get_current_user_id() ] = current_time( 'timestamp' );
 
 		// Save the new online users
-		update_option('um_online_users', UM()->module( 'online' )->users );
+		update_option( 'um_online_users', UM()->module( 'online' )->users );
 	}
 
 
@@ -62,7 +62,7 @@ class Common {
 					unset( UM()->module( 'online' )->users[ $user_id ] );
 				}
 			}
-			update_option('um_online_users', UM()->module( 'online' )->users );
+			update_option( 'um_online_users', UM()->module( 'online' )->users );
 		}
 
 		update_option( 'um_online_users_last_updated', time() );

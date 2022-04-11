@@ -35,7 +35,7 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		 * Set variables
 		 */
 		function init_variables() {
-			$this->options = get_option( 'um_options' );
+			$this->options = get_option( 'um_options', array() );
 		}
 
 
@@ -178,6 +178,7 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 
 			if ( $need_update ) {
 				update_option( 'um_options', $options );
+				$this->options = $options;
 			}
 		}
 

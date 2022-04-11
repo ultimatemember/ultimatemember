@@ -17,6 +17,8 @@ if ( ! class_exists( 'um\frontend\User' ) ) {
 
 
 		/**
+		 * Profile page User ID in query
+		 *
 		 * @var null|int
 		 */
 		var $query_id = null;
@@ -26,7 +28,14 @@ if ( ! class_exists( 'um\frontend\User' ) ) {
 		 * User constructor.
 		 */
 		function __construct() {
-			add_action( 'parse_query',  array( &$this, 'set_user_id' ) );
+		}
+
+
+		/**
+		 *
+		 */
+		function hooks() {
+			add_action( 'parse_query', array( &$this, 'set_user_id' ) );
 		}
 
 

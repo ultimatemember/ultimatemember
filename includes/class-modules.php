@@ -284,13 +284,19 @@ class Modules {
 			return false;
 		}
 
-		$slug = UM()->undash( $slug );
-		$first_activation = UM()->options()->get( "module_{$slug}_first_activation" );
-		if ( empty( $first_activation ) ) {
+		if ( ! $this->is_first_installed( $slug ) ) {
 			return false;
 		}
 
 		return true;
+	}
+
+
+	function is_first_installed( $slug ) {
+		$slug             = UM()->undash( $slug );
+		$first_activation = UM()->options()->get( "module_{$slug}_first_activation" );
+
+		return ! empty( $first_activation );
 	}
 
 

@@ -24,7 +24,7 @@ $view_types_options = array_map(
 	function( $item ) {
 		return $item['title'];
 	},
-	UM()->member_directory()->view_types
+	UM()->module( 'member-directory' )->config()->get( 'view_types' )
 );
 
 $conditional = array();

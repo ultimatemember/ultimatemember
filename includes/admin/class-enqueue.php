@@ -61,8 +61,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 		function posts_page() {
 			if ( isset( $_GET['post_type'] ) && 'um_form' === sanitize_key( $_GET['post_type'] ) ) {
 				add_action( 'admin_enqueue_scripts', array( &$this, 'forms_page_scripts' ) );
-			} elseif ( isset( $_GET['post_type'] ) && 'um_directory' === sanitize_key( $_GET['post_type'] ) ) {
-				add_action( 'admin_enqueue_scripts', array( &$this, 'directories_page_scripts' ) );
 			}
 		}
 
@@ -75,9 +73,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			     ( isset( $_GET['post'] ) && 'um_form' === get_post_type( absint( $_GET['post'] ) ) ) ) {
 				add_action( 'admin_enqueue_scripts', array( &$this, 'form_page_scripts' ) );
 				add_action( 'admin_footer', array( $this, 'form_builder_wp_editor' ), 20 );
-			} elseif ( ( isset( $_GET['post_type'] ) && 'um_directory' === sanitize_key( $_GET['post_type'] ) ) ||
-			           ( isset( $_GET['post'] ) && 'um_directory' === get_post_type( absint( $_GET['post'] ) ) ) ) {
-				add_action( 'admin_enqueue_scripts', array( &$this, 'directory_page_scripts' ) );
 			}
 		}
 
@@ -278,14 +273,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 		function directories_page_scripts() {
 			wp_register_style( 'um_admin_directories-screen', $this->urls['css'] . 'admin-directories-screen' . $this->suffix . '.css', array(), UM_VERSION );
 			wp_enqueue_style( 'um_admin_directories-screen' );
-		}
-
-
-		/**
-		 * @since 3.0
-		 */
-		function directory_page_scripts() {
-
 		}
 
 

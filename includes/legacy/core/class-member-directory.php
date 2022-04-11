@@ -1,16 +1,16 @@
 <?php
-namespace um\core;
+namespace um\legacy\core;
 
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
-if ( ! class_exists( 'um\core\Member_Directory' ) ) {
+if ( ! class_exists( 'um\legacy\core\Member_Directory' ) ) {
 
 
 	/**
 	 * Class Member_Directory
-	 * @package um\core
+	 * @package um\legacy\core
 	 */
 	class Member_Directory {
 

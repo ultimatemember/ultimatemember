@@ -111,8 +111,6 @@ if ( ! class_exists( 'um\common\Install' ) ) {
 
 			if ( ! get_option( 'um_is_installed' ) ) {
 				$this->create_forms();
-				$this->create_member_directory();
-
 				update_option( 'um_is_installed', 1 );
 			}
 		}
@@ -311,36 +309,6 @@ KEY meta_value_indx (um_value(191))
 			}
 
 			update_option( 'um_core_forms', $core_forms );
-		}
-
-
-		/**
-		 * Create first install member directory
-		 */
-		function create_member_directory() {
-			/**
-			If page does not exist
-			Create it
-			 **/
-			$page_exists = UM()->query()->find_post_id( 'um_directory', '_um_core', 'members' );
-			if ( $page_exists ) {
-				return;
-			}
-
-			$form = array(
-				'post_type'   => 'um_directory',
-				'post_title'  => __( 'Members', 'ultimate-member' ),
-				'post_status' => 'publish',
-				'post_author' => get_current_user_id(),
-				'meta_input'  => UM()->config()->get( 'default_member_directory_meta' ),
-			);
-
-			$form_id = wp_insert_post( $form );
-			if ( is_wp_error( $form_id ) ) {
-				return;
-			}
-
-			update_option( 'um_core_directories', array( $form_id ) );
 		}
 
 

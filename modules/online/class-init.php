@@ -118,13 +118,17 @@ final class Init extends Functions {
 
 
 	/**
-	 * @return includes\Member_Directory()
+	 * @return null|includes\cross_modules\Member_Directory()
 	 */
 	function member_directory() {
-		if ( empty( UM()->classes['umm\online\includes\member_directory'] ) ) {
-			UM()->classes['umm\online\includes\member_directory'] = new includes\Member_Directory();
+		if ( ! UM()->modules()->is_active( 'member_directory' ) ) {
+			return null;
 		}
-		return UM()->classes['umm\online\includes\member_directory'];
+
+		if ( empty( UM()->classes['umm\online\includes\cross_modules\member_directory'] ) ) {
+			UM()->classes['umm\online\includes\cross_modules\member_directory'] = new includes\cross_modules\Member_Directory();
+		}
+		return UM()->classes['umm\online\includes\cross_modules\member_directory'];
 	}
 
 

@@ -1,8 +1,5 @@
 <?php
-namespace umm\online\includes;
-
-
-use um\core\Member_Directory_Meta;
+namespace umm\online\includes\cross_modules;
 
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -11,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Class Member_Directory
  *
- * @package umm\online\includes
+ * @package umm\online\includes\cross_modules
  */
 class Member_Directory {
 
@@ -26,7 +23,7 @@ class Member_Directory {
 		add_filter( 'um_members_directory_filter_types',  array( $this, 'directory_filter_types' ), 10, 1 );
 		add_filter( 'um_search_fields',  array( $this, 'online_dropdown' ), 10, 1 );
 
-		add_filter( 'um_query_args_online_status__filter',  array( $this, 'online_status_filter' ), 10, 4 );
+		add_filter( 'um_query_args_online_status__filter',  array( $this, 'online_status_filter' ), 10, 5 );
 
 		//UM metadata
 		add_filter( 'um_query_args_online_status__filter_meta',  array( $this, 'online_status_filter_meta' ), 10, 6 );
@@ -105,14 +102,15 @@ class Member_Directory {
 	/**
 	 * Filter users by Online status
 	 *
-	 * @param $query
+	 * @param $field_query
 	 * @param $field
 	 * @param $value
 	 * @param $filter_type
+	 * @param \umm\member_directory\includes\ajax\Directory() $directory_class
 	 *
 	 * @return bool
 	 */
-	function online_status_filter( $query, $field, $value, $filter_type ) {
+	function online_status_filter( $field_query, $field, $value, $filter_type, $directory_class ) {
 		if ( ! is_array( $value ) ) {
 			$value = array( $value );
 		}
@@ -123,17 +121,17 @@ class Member_Directory {
 			foreach ( $value as $val ) {
 				if ( $val == '0' ) {
 					if ( ! empty( $online_users_array ) ) {
-						UM()->member_directory()->query_args['exclude'] = $online_users_array;
+						$directory_class->query_args['exclude'] = $online_users_array;
 					}
 				} elseif ( $val == '1' ) {
 					if ( ! empty( $online_users_array ) ) {
-						UM()->member_directory()->query_args['include'] = $online_users_array;
+						$directory_class->query_args['include'] = $online_users_array;
 					}
 				}
 			}
 		}
 
-		UM()->member_directory()->custom_filters_in_query[ $field ] = $value;
+		$directory_class->custom_filters_in_query[ $field ] = $value;
 
 		return true;
 	}
@@ -143,7 +141,7 @@ class Member_Directory {
 	 * Filter users by Online status
 	 *
 	 * @param $skip
-	 * @param Member_Directory_Meta $query
+	 * @param \umm\member_directory\includes\ajax\Directory_Meta $query
 	 * @param $field
 	 * @param $value
 	 * @param $filter_type

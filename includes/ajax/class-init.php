@@ -33,6 +33,8 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 			$this->user();
 			$this->builder();
 			UM()->admin()->notices();
+			$this->settings();
+			$this->pages();
 		}
 
 
@@ -76,6 +78,32 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 				UM()->classes['um\ajax\user'] = new User();
 			}
 			return UM()->classes['um\ajax\user'];
+		}
+
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return Settings()
+		 */
+		function settings() {
+			if ( empty( UM()->classes['um\ajax\settings'] ) ) {
+				UM()->classes['um\ajax\settings'] = new Settings();
+			}
+			return UM()->classes['um\ajax\settings'];
+		}
+
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return Pages()
+		 */
+		function pages() {
+			if ( empty( UM()->classes['um\ajax\pages'] ) ) {
+				UM()->classes['um\ajax\pages'] = new Pages();
+			}
+			return UM()->classes['um\ajax\pages'];
 		}
 
 

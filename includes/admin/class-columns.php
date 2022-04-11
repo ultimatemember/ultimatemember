@@ -23,9 +23,6 @@ if ( ! class_exists( 'um\admin\Columns' ) ) {
 			add_filter( 'manage_edit-um_form_columns', array( &$this, 'manage_edit_um_form_columns' ) );
 			add_action( 'manage_um_form_posts_custom_column', array( &$this, 'manage_um_form_posts_custom_column' ), 10, 3 );
 
-			add_filter( 'manage_edit-um_directory_columns', array( &$this, 'manage_edit_um_directory_columns' ) );
-			add_action( 'manage_um_directory_posts_custom_column', array( &$this, 'manage_um_directory_posts_custom_column' ), 10, 3 );
-
 			add_filter( 'post_row_actions', array( &$this, 'post_row_actions' ), 99, 2 );
 
 			// Add a post display state for special UM pages.
@@ -143,25 +140,6 @@ if ( ! class_exists( 'um\admin\Columns' ) ) {
 
 
 		/**
-		 * Custom columns for Directory
-		 *
-		 * @param array $columns
-		 *
-		 * @return array
-		 */
-		function manage_edit_um_directory_columns( $columns ) {
-			$new_columns['cb'] = '<input type="checkbox" />';
-			$new_columns['title'] = __( 'Title', 'ultimate-member' );
-			$new_columns['id'] = __( 'ID', 'ultimate-member' );
-			$new_columns['is_default'] = __( 'Default', 'ulitmate-member' );
-			$new_columns['shortcode'] = __( 'Shortcode', 'ultimate-member' );
-			$new_columns['date'] = __( 'Date', 'ultimate-member' );
-
-			return $new_columns;
-		}
-
-
-		/**
 		 * Display custom columns for Form
 		 *
 		 * @param string $column_name
@@ -192,34 +170,6 @@ if ( ! class_exists( 'um\admin\Columns' ) ) {
 				case 'mode':
 					$mode = UM()->query()->get_attr( 'mode', $id );
 					echo UM()->form()->display_form_type( $mode, $id );
-					break;
-			}
-		}
-
-
-		/**
-		 * Display custom columns for Directory
-		 *
-		 * @param string $column_name
-		 * @param int $id
-		 */
-		function manage_um_directory_posts_custom_column( $column_name, $id ) {
-			switch ( $column_name ) {
-				case 'id':
-					echo '<span class="um-admin-number">'.$id.'</span>';
-					break;
-				case 'shortcode':
-					$is_default = UM()->query()->get_attr( 'is_default', $id );
-
-					if ( $is_default ) {
-						echo UM()->shortcodes()->get_default_shortcode( $id );
-					} else {
-						echo UM()->shortcodes()->get_shortcode( $id );
-					}
-					break;
-				case 'is_default':
-					$is_default = UM()->query()->get_attr( 'is_default', $id );
-					echo empty( $is_default ) ? __( 'No', 'ultimate-member' ) : __( 'Yes', 'ultimate-member' );
 					break;
 			}
 		}

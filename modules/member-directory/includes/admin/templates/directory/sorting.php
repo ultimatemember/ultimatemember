@@ -13,7 +13,7 @@ $fields = array(
 		'type'    => 'select',
 		'label'   => __( 'Default sort users by', 'ultimate-member' ),
 		'description' => __( 'Default sorting users by a specific parameter in the directory', 'ultimate-member' ),
-		'options' => UM()->member_directory()->default_sorting,
+		'options' => UM()->module( 'member-directory' )->config()->get( 'default_sorting' ),
 		'value'   => UM()->query()->get_meta_value( '_um_sortby' ),
 	),
 	array(
@@ -44,7 +44,7 @@ $fields = array(
 		'type'                => 'md_sorting_fields',
 		'label'               => __( 'Choose field(s) to enable in sorting', 'ultimate-member' ),
 		'value'               => $_um_sorting_fields,
-		'options'             => array_merge( UM()->member_directory()->sort_fields, array( 'other' => __( 'Other (Custom Field)', 'ultimate-member' ) ) ),
+		'options'             => array_merge( UM()->module( 'member-directory' )->config()->get( 'sort_fields' ), array( 'other' => __( 'Other (Custom Field)', 'ultimate-member' ) ) ),
 		'add_text'            => __( 'Add New Field', 'ultimate-member' ),
 		'show_default_number' => 0,
 		'conditional'         => array( '_um_enable_sorting', '=', 1 ),

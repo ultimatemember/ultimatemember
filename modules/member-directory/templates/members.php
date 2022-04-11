@@ -4,7 +4,7 @@ global $post;
 
 // Get default and real arguments
 $def_args = array();
-foreach ( UM()->config()->get( 'default_member_directory_meta' ) as $k => $v ) {
+foreach ( UM()->module( 'member-directory' )->config()->get( 'default_member_directory_meta' ) as $k => $v ) {
 	$key = str_replace( '_um_', '', $k );
 	$def_args[ $key ] = $v;
 }
@@ -16,7 +16,7 @@ $args = array_merge( $def_args, $args );
 //current user priority role
 $priority_user_role = false;
 if ( is_user_logged_in() ) {
-	$priority_user_role = UM()->roles()->get_priority_user_role( um_user( 'ID' ) );
+	$priority_user_role = UM()->roles()->get_priority_user_role( get_current_user_id() );
 }
 
 $args = apply_filters( 'um_member_directory_agruments_on_load', $args );
@@ -27,7 +27,7 @@ $current_view = 'grid';
 
 if ( ! empty( $args['view_types'] ) && is_array( $args['view_types'] ) ) {
 	$args['view_types'] = array_filter( $args['view_types'], function( $item ) {
-		return in_array( $item, array_keys( UM()->member_directory()->view_types ) );
+		return in_array( $item, array_keys( UM()->module( 'member-directory' )->config()->get( 'view_types' ) ) );
 	});
 }
 
@@ -73,7 +73,7 @@ if ( ! empty( $args['enable_sorting'] ) ) {
 		}
 	}
 
-	$all_sorting_options = UM()->member_directory()->sort_fields;
+	$all_sorting_options = UM()->module( 'member-directory' )->config()->get( 'sort_fields' );
 
 	if ( ! in_array( $default_sorting, $sorting_options_prepared ) ) {
 		$sorting_options_prepared[] = $default_sorting;
@@ -119,7 +119,7 @@ if ( isset( $args['search_fields'] ) ) {
 
 if ( ! empty( $search_filters ) ) {
 	$search_filters = array_filter( $search_filters, function( $item ) {
-		return in_array( $item, array_keys( UM()->member_directory()->filter_fields ) );
+		return in_array( $item, array_keys( UM()->module( 'member-directory' )->config()->get( 'filter_fields' ) ) );
 	});
 
 	$search_filters = array_values( $search_filters );
@@ -165,9 +165,10 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 	if ( $search && $show_search && ! empty( $search_from_url ) ) {
 		$not_searched = false;
 	} elseif ( $filters && $show_filters && count( $search_filters ) ) {
+		$filter_types = UM()->module( 'member-directory' )->config()->get( 'filter_types' );
 		foreach ( $search_filters as $filter ) {
 			// getting value from GET line
-			switch ( UM()->member_directory()->filter_types[ $filter ] ) {
+			switch ( $filter_types[ $filter ] ) {
 				default: {
 
 					$not_searched = apply_filters( 'um_member_directory_filter_value_from_url', $not_searched, $filter );
@@ -240,7 +241,7 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 					<?php if ( ! $single_view ) {
 						$view_types = 0;
 
-						foreach ( UM()->member_directory()->view_types as $key => $value ) {
+						foreach ( UM()->module( 'member-directory' )->config()->get( 'view_types' ) as $key => $value ) {
 							if ( in_array( $key, $args['view_types'] ) ) {
 								if ( empty( $view_types ) ) { ?>
 									<span class="um-member-directory-view-type<?php if ( $not_searched ) {?> um-disabled<?php } ?>">
@@ -275,10 +276,10 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 						<?php $items = array();
 
 						foreach ( $sorting_options as $value => $title ) {
-							$items[] = '<a href="javascript:void(0);" data-directory-hash="' . esc_attr( substr( md5( $form_id ), 10, 5 ) ) . '" class="um-sortyng-by-' . esc_attr( $value ) . '" data-value="' . esc_attr( $value ) . '" data-selected="' . ( ( $sort_from_url == $value ) ? '1' : '0' ) . '" data-default="' . ( ( $default_sorting == $value ) ? '1' : '0' ) . '">' . $title . '</a>'; ?>
+							$items[] = '<a href="javascript:void(0);" data-directory-hash="' . esc_attr( substr( md5( $form_id ), 10, 5 ) ) . '" class="um-sorting-by-' . esc_attr( $value ) . '" data-value="' . esc_attr( $value ) . '" data-selected="' . ( ( $sort_from_url == $value ) ? '1' : '0' ) . '" data-default="' . ( ( $default_sorting == $value ) ? '1' : '0' ) . '">' . $title . '</a>'; ?>
 						<?php }
 
-						UM()->member_directory()->dropdown_menu( '.um-member-directory-sorting-a', 'click', $items ); ?>
+						UM()->module( 'member-directory' )->frontend()->dropdown_menu( '.um-member-directory-sorting-a', 'click', $items ); ?>
 
 					<?php }
 
@@ -320,13 +321,14 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 				<div class="um-member-directory-header-row um-member-directory-filters-bar<?php if ( ! $filters_expanded ) { ?> um-header-row-invisible<?php } ?>">
 					<div class="um-search um-search-<?php echo count( $search_filters ) ?><?php if ( ! $filters_expanded ) { ?> um-search-invisible<?php } ?>">
 						<?php $i = 0;
+						$filter_types = UM()->module( 'member-directory' )->config()->get( 'filter_types' );
 						foreach ( $search_filters as $filter ) {
-							$filter_content = UM()->member_directory()->show_filter( $filter, $args );
+							$filter_content = UM()->module( 'member-directory' )->frontend()->show_filter( $filter, $args );
 							if ( empty( $filter_content ) ) {
 								continue;
 							}
 
-							$type = UM()->member_directory()->filter_types[ $filter ]; ?>
+							$type = $filter_types[ $filter ]; ?>
 
 							<div class="um-search-filter um-<?php echo esc_attr( $type ) ?>-filter-type <?php echo ( $i != 0 && $i%2 !== 0 ) ? 'um-search-filter-2' : '' ?>">
 								<?php echo $filter_content; ?>

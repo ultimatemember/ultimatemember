@@ -335,26 +335,26 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		 */
 		function post_data( $post_id ) {
 			$array['form_id'] = $post_id;
-			$mode = $this->get_attr('mode', $post_id);
+			$mode = $this->get_attr( 'mode', $post_id );
 			$meta = get_post_custom( $post_id );
-			foreach ($meta as $k => $v){
-				if ( strstr($k, '_um_'.$mode.'_' ) ) {
-					$k = str_replace('_um_'.$mode.'_', '', $k);
-					$array[$k] = $v[0];
-				} elseif ($k == '_um_mode'){
-					$k = str_replace('_um_', '', $k);
-					$array[$k] = $v[0];
-				} elseif ( strstr($k, '_um_') ) {
-					$k = str_replace('_um_', '', $k);
-					$array[$k] = $v[0];
+			foreach ( $meta as $k => $v ) {
+				if ( strstr( $k, '_um_' . $mode . '_' ) ) {
+					$k = str_replace( '_um_' . $mode . '_', '', $k );
+					$array[ $k ] = $v[0];
+				} elseif ( '_um_mode' === $k ) {
+					$k = str_replace( '_um_', '', $k );
+					$array[ $k ] = $v[0];
+				} elseif ( strstr( $k, '_um_' ) ) {
+					$k = str_replace( '_um_', '', $k );
+					$array[ $k ] = $v[0];
 				}
-
 			}
 
-			foreach( $array as $k => $v ) {
-				if ( strstr( $k, 'login_') || strstr( $k, 'register_' ) || strstr( $k, 'profile_' ) ){
-					if ( $mode != 'directory' ) {
-						unset($array[$k]);
+			$maybe_skip_unset_meta = apply_filters( 'um_get_post_data_maybe_skip_unset_meta', false, $mode, $post_id );
+			if ( ! $maybe_skip_unset_meta ) {
+				foreach ( $array as $k => $v ) {
+					if ( strstr( $k, 'login_' ) || strstr( $k, 'register_' ) || strstr( $k, 'profile_' ) ) {
+						unset( $array[ $k ] );
 					}
 				}
 			}

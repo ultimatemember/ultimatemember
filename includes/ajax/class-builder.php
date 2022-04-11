@@ -37,6 +37,171 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 			add_action( 'wp_ajax_um_update_field', array( &$this, 'update_field' ) );
 
 			add_action( 'wp_ajax_um_get_icons', array( $this, 'get_icons' ) );
+
+			add_action( 'wp_ajax_um_update_order', array( $this, 'update_order' ) );
+
+			add_action( 'wp_ajax_um_populate_dropdown_options', array( $this, 'populate_dropdown_options' ) );
+		}
+
+
+		/**
+		 *  Retrieves dropdown/multi-select options from a callback function
+		 */
+		function populate_dropdown_options() {
+			UM()->ajax()->check_nonce( 'um-admin-nonce' );
+
+			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( __( 'This is not possible for security reasons.', 'ultimate-member' ) );
+			}
+
+			$arr_options = array();
+
+			$um_callback_func = sanitize_key( $_POST['um_option_callback'] );
+			if ( empty( $um_callback_func ) ) {
+				$arr_options['status'] = 'empty';
+				$arr_options['function_name'] = $um_callback_func;
+				$arr_options['function_exists'] = function_exists( $um_callback_func );
+			}
+
+			$arr_options['data'] = array();
+			if ( function_exists( $um_callback_func ) ) {
+				$arr_options['data'] = call_user_func( $um_callback_func );
+			}
+
+			wp_send_json( $arr_options );
+		}
+
+
+		/**
+		 * Update order of fields
+		 */
+		public function update_order() {
+			UM()->ajax()->check_nonce( 'um-admin-nonce' );
+
+			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
+			}
+
+			/**
+			 * @var $form_id
+			 */
+			extract( $_POST );
+
+			if ( isset( $form_id ) ) {
+				$form_id = absint( $form_id );
+			}
+
+			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
+
+			$this->row_data   = get_option( 'um_form_rowdata_' . $form_id, array() );
+			$this->exist_rows = array();
+
+			if ( ! empty( $fields ) ) {
+				foreach ( $fields as $key => $array ) {
+					if ( 'row' === $array['type'] ) {
+						$this->row_data[ $key ] = $array;
+						unset( $fields[ $key ] );
+					}
+				}
+			} else {
+				$fields = array();
+			}
+
+			foreach ( $_POST as $key => $value ) {
+				// don't use sanitize_key here because of a key can be in Uppercase
+				$key = sanitize_text_field( $key );
+
+				// adding rows
+				if ( 0 === strpos( $key, '_um_row_' ) ) {
+
+					$update_args = null;
+
+					$row_id = str_replace( '_um_row_', '', $key );
+
+					if ( strstr( $_POST[ '_um_rowcols_' . $row_id . '_cols' ], ':' ) ) {
+						$cols = sanitize_text_field( $_POST[ '_um_rowcols_' . $row_id . '_cols' ] );
+					} else {
+						$cols = absint( $_POST[ '_um_rowcols_' . $row_id . '_cols' ] );
+					}
+
+					$row_array = array(
+						'type'     => 'row',
+						'id'       => sanitize_key( $value ),
+						'sub_rows' => absint( $_POST[ '_um_rowsub_' . $row_id . '_rows' ] ),
+						'cols'     => $cols,
+						'origin'   => sanitize_key( $_POST[ '_um_roworigin_' . $row_id . '_val' ] ),
+					);
+
+					$row_args = $row_array;
+
+					if ( isset( $this->row_data[ $row_array['origin'] ] ) ) {
+						foreach ( $this->row_data[ $row_array['origin'] ] as $k => $v ) {
+							if ( 'position' !== $k && 'metakey' !== $k ) {
+								$update_args[ $k ] = $v;
+							}
+						}
+						if ( isset( $update_args ) ) {
+							$row_args = array_merge( $update_args, $row_array );
+						}
+						$this->exist_rows[] = $key;
+					}
+
+					$fields[ $key ] = $row_args;
+
+				}
+
+				// change field position
+				if ( 0 === strpos( $key, 'um_position_' ) ) {
+					$field_key = str_replace( 'um_position_', '', $key );
+					if ( isset( $fields[ $field_key ] ) ) {
+						$fields[ $field_key ]['position'] = absint( $value );
+					}
+				}
+
+				// change field master row
+				if ( 0 === strpos( $key, 'um_row_' ) ) {
+					$field_key = str_replace( 'um_row_', '', $key );
+					if ( isset( $fields[ $field_key ] ) ) {
+						$fields[ $field_key ]['in_row'] = sanitize_key( $value );
+					}
+				}
+
+				// change field sub row
+				if ( 0 === strpos( $key, 'um_subrow_' ) ) {
+					$field_key = str_replace( 'um_subrow_', '', $key );
+					if ( isset( $fields[ $field_key ] ) ) {
+						$fields[ $field_key ]['in_sub_row'] = sanitize_key( $value );
+					}
+				}
+
+				// change field column
+				if ( 0 === strpos( $key, 'um_col_' ) ) {
+					$field_key = str_replace( 'um_col_', '', $key );
+					if ( isset( $fields[ $field_key ] ) ) {
+						$fields[ $field_key ]['in_column'] = absint( $value );
+					}
+				}
+
+				// add field to group
+				if ( 0 === strpos( $key, 'um_group_' ) ) {
+					$field_key = str_replace( 'um_group_', '', $key );
+					if ( isset( $fields[ $field_key ] ) ) {
+						$fields[ $field_key ]['in_group'] = ! empty( $value ) ? absint( $value ) : '';
+					}
+				}
+			}
+
+			foreach ( $this->row_data as $k => $v ) {
+				if ( ! in_array( $k, $this->exist_rows, true ) ) {
+					unset( $this->row_data[ $k ] );
+				}
+			}
+
+			update_option( 'um_existing_rows_' . $form_id, $this->exist_rows );
+
+			update_option( 'um_form_rowdata_' . $form_id, $this->row_data );
+
+			UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
 		}
 
 

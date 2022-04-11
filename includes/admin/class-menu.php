@@ -95,8 +95,6 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 
 			add_submenu_page( $this->slug, __( 'User Roles', 'ultimate-member' ), __( 'User Roles', 'ultimate-member' ), 'manage_options', 'um_roles', array( &$this, 'um_roles_pages' ) );
 
-			add_submenu_page( $this->slug, __( 'Member Directories', 'ultimate-member' ), __( 'Member Directories', 'ultimate-member' ), 'manage_options', 'edit.php?post_type=um_directory', '' );
-
 			/**
 			 * UM hook
 			 *
@@ -431,11 +429,11 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 			global $submenu, $pagenow;
 
 			if ( isset( $submenu['ultimatemember'] ) ) {
-				if ( isset( $_GET['post_type'] ) && ( 'um_directory' === $_GET['post_type'] || 'um_form' === $_GET['post_type'] ) ) {
+				if ( isset( $_GET['post_type'] ) && in_array( $_GET['post_type'], UM()->cpt_list(), true ) ) {
 					add_filter( 'parent_file', array( &$this, 'change_parent_file' ), 200, 1 );
 				}
 
-				if ( 'post.php' === $pagenow && ( isset( $_GET['post'] ) && ( 'um_directory' === get_post_type( $_GET['post'] ) || 'um_form' == get_post_type( $_GET['post'] ) ) ) ) {
+				if ( 'post.php' === $pagenow && ( isset( $_GET['post'] ) && in_array( get_post_type( $_GET['post'] ), UM()->cpt_list(), true ) ) ) {
 					add_filter( 'parent_file', array( &$this, 'change_parent_file' ), 200, 1 );
 				}
 
@@ -483,7 +481,7 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 
 			if ( 'post-new.php' === $pagenow ) {
 				if ( 'ultimatemember' === $parent_file ) {
-					if ( 'post-new.php' === $pagenow && isset( $_GET['post_type'] ) && ( 'um_directory' === $_GET['post_type'] || 'um_form' === $_GET['post_type'] ) ) {
+					if ( 'post-new.php' === $pagenow && isset( $_GET['post_type'] ) && in_array( $_GET['post_type'], UM()->cpt_list(), true ) ) {
 						$submenu_file = 'edit.php?post_type=' . sanitize_key( $_GET['post_type'] );
 					}
 

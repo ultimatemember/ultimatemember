@@ -1,17 +1,17 @@
 <?php
-namespace um\admin\core;
+namespace um\legacy\admin\core;
 
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
-if ( ! class_exists( 'um\admin\core\Admin_Ajax_Hooks' ) ) {
+if ( ! class_exists( 'um\legacy\admin\core\Admin_Ajax_Hooks' ) ) {
 
 
 	/**
 	 * Class Admin_Ajax_Hooks
-	 * @package um\admin\core
+	 * @package um\legacy\admin\core
 	 */
 	class Admin_Ajax_Hooks {
 
