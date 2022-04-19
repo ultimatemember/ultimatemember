@@ -26,7 +26,7 @@ jQuery(document).ready( function() {
 	});
 
 
-	jQuery(document.body).on('click', '.um_secondary_dimiss', function (e) {
+	jQuery(document.body).on('click', '.um_secondary_dismiss', function (e) {
 		jQuery(this).parents('.um-admin-notice').find( '.notice-dismiss' ).trigger('click');
 	});
 

@@ -368,25 +368,31 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 					}
 				}
 
-				ob_start(); ?>
+				ob_start();
+				?>
 
 				<p>
-					<?php printf( __( '%s needs to create several pages (User Profiles, Account, Registration, Login, Password Reset, Logout, Member Directory) to function correctly.', 'ultimate-member' ), ultimatemember_plugin_name ); ?>
+					<?php printf( __( '%s needs to create several pages (User Profiles, Account, Registration, Login, Password Reset, Logout) to function correctly.', 'ultimate-member' ), ultimatemember_plugin_name ); ?>
 				</p>
 
 				<p>
 					<a href="<?php echo esc_url( add_query_arg( 'um_adm_action', 'install_predefined_pages' ) ); ?>" class="button button-primary"><?php _e( 'Create Pages', 'ultimate-member' ) ?></a>
 					&nbsp;
-					<a href="javascript:void(0);" class="button-secondary um_secondary_dimiss"><?php _e( 'No thanks', 'ultimate-member' ) ?></a>
+					<a href="javascript:void(0);" class="button-secondary um_secondary_dismiss"><?php _e( 'No thanks', 'ultimate-member' ) ?></a>
 				</p>
 
-				<?php $message = ob_get_clean();
+				<?php
+				$message = ob_get_clean();
 
-				$this->add_notice( 'wrong_pages', array(
-					'class'       => 'updated',
-					'message'     => $message,
-					'dismissible' => true,
-				), 20 );
+				$this->add_notice(
+					'wrong_pages',
+					array(
+						'class'       => 'updated',
+						'message'     => $message,
+						'dismissible' => true,
+					),
+					20
+				);
 
 				break;
 			}
@@ -399,7 +405,7 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 				if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
 					$this->add_notice( 'wrong_user_page', array(
 						'class'   => 'updated',
-						'message' => '<p>' . __( 'Ultimate Member Setup Error: User page can not be a child page.', 'ultimate-member' ) . '</p>',
+						'message' => '<p>' . wp_kses( __( '<strong>Ultimate Member Setup Error:</strong> User page can not be a child page.', 'ultimate-member' ), UM()->get_allowed_html( 'admin_notice' ) ) . '</p>',
 					), 25 );
 				}
 			}
@@ -409,7 +415,7 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 				if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
 					$this->add_notice( 'wrong_account_page', array(
 						'class'   => 'updated',
-						'message' => '<p>' . __( 'Ultimate Member Setup Error: Account page can not be a child page.', 'ultimate-member' ) . '</p>',
+						'message' => '<p>' . wp_kses( __( '<strong>Ultimate Member Setup Error:</strong> Account page can not be a child page.', 'ultimate-member' ), UM()->get_allowed_html( 'admin_notice' ) ) . '</p>',
 					), 30 );
 				}
 			}
@@ -417,7 +423,22 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 			if (  ! empty( $user_page_id ) && ! empty( $account_page_id ) && $user_page_id === $account_page_id ) {
 				$this->add_notice( 'wrong_account_user_page', array(
 					'class'   => 'error',
-					'message' => '<p>' . __( '<strong>Ultimate Member Setup Error:</strong> Account page and User page should be separate pages.', 'ultimate-member' ) . '</p>',
+					'message' => '<p>' . wp_kses( __( '<strong>Ultimate Member Setup Error:</strong> Account page and User page should be separate pages.', 'ultimate-member' ), UM()->get_allowed_html( 'admin_notice' ) ) . '</p>',
+				), 30 );
+			}
+
+			if ( um_get_predefined_page_id( 'logout' ) === (int) get_option( 'page_on_front' ) ) {
+				$this->add_notice( 'wrong_logout_page_on_home', array(
+					'class'   => 'error',
+					'message' => '<p>' . wp_kses( __( '<strong>Ultimate Member Setup Error:</strong> Home page must not be chosen as the Logout page.', 'ultimate-member' ), UM()->get_allowed_html( 'admin_notice' ) ) . '</p>',
+				), 30 );
+			}
+
+			// avoid conflicts with WooCommerce
+			if ( function_exists( 'wc_get_page_id' ) && wc_get_page_id( 'myaccount' ) === um_get_predefined_page_id( 'account' ) ) {
+				$this->add_notice( 'wrong_account_my_account_page', array(
+					'class'   => 'error',
+					'message' => '<p>' . wp_kses( __( '<strong>Ultimate Member Setup Error:</strong> Account page and WooCommerce "My account" page should be separate pages.', 'ultimate-member' ), UM()->get_allowed_html( 'admin_notice' ) ) . '</p>',
 				), 30 );
 			}
 		}

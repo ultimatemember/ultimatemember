@@ -146,6 +146,56 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 					$options = $pre_result;
 				}
 
+				$page_setting_description = '';
+				if ( ! empty( $page_value ) ) {
+					$content = get_the_content( null, false, $page_value );
+					switch ( $slug ) {
+						case 'account':
+							if ( $page_value === um_get_predefined_page_id( 'user' ) ) {
+								$page_setting_description = __( '<strong>Warning:</strong> Account page and User page must be separate pages.', 'ultimate-member' );
+							} elseif ( ! has_shortcode( $content, 'ultimatemember_account' ) ) {
+								$page_setting_description = __( '<strong>Warning:</strong> Account page must contain shortcode <code>[ultimatemember_account]</code>.', 'ultimate-member' );
+							} elseif ( function_exists( 'wc_get_page_id' ) && wc_get_page_id( 'myaccount' ) === um_get_predefined_page_id( 'account' ) ) {
+								$page_setting_description = __( '<strong>Warning:</strong> Account page and WooCommerce "My account" page should be separate pages.', 'ultimate-member' );
+							}
+							break;
+						case 'login':
+							if ( $page_value === um_get_predefined_page_id( 'logout' ) ) {
+								$page_setting_description = __( '<strong>Warning:</strong> Login page and Logout page must be separate pages.', 'ultimate-member' );
+							} elseif ( ! has_shortcode( $content, 'ultimatemember' ) ) {
+								$page_setting_description = __( '<strong>Warning:</strong> Login page must contain a login form shortcode. You can get existing shortcode or create a new one <a href="edit.php?post_type=um_form" target="_blank">here</a>.', 'ultimate-member' );
+							}
+							break;
+						case 'logout':
+							if ( $page_value === (int) get_option( 'page_on_front' ) ) {
+								$page_setting_description = __( '<strong>Warning:</strong> Home page and Logout page must be separate pages.', 'ultimate-member' );
+							} elseif ( $page_value === um_get_predefined_page_id( 'login' ) ) {
+								$page_setting_description = __( '<strong>Warning:</strong> Login page and Logout page must be separate pages.', 'ultimate-member' );
+							}
+							break;
+						case 'password-reset':
+							if ( ! has_shortcode( $content, 'ultimatemember_password' ) ) {
+								$page_setting_description = __( '<strong>Warning:</strong> Password Reset page must contain shortcode <code>[ultimatemember_password]</code>.', 'ultimate-member' );
+							}
+							break;
+						case 'register':
+							if ( ! has_shortcode( $content, 'ultimatemember' ) ) {
+								$page_setting_description = __( '<strong>Warning:</strong> Register page must contain a registration form shortcode. You can get existing shortcode or create a new one <a href="edit.php?post_type=um_form" target="_blank">here</a>.', 'ultimate-member' );
+							}
+							break;
+						case 'user':
+							if ( $page_value === um_get_predefined_page_id( 'account' ) ) {
+								$description = __( '<strong>Warning:</strong> Account page and User page must be separate pages.', 'ultimate-member' );
+							} elseif ( ! has_shortcode( $content, 'ultimatemember' ) ) {
+								$page_setting_description = __( '<strong>Warning:</strong> User page must contain a profile form shortcode. You can get existing shortcode or create a new one <a href="edit.php?post_type=um_form" target="_blank">here</a>.', 'ultimate-member' );
+							}
+							break;
+						default:
+							$page_setting_description = apply_filters( 'um_pages_settings_description', $page_setting_description, $content, $slug );
+							break;
+					}
+				}
+
 				$general_pages_fields[] = array(
 					'id'          => $page_id,
 					'type'        => 'page_select',
@@ -155,6 +205,7 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 					'value'       => $page_value,
 					'placeholder' => __( 'Choose a page...', 'ultimate-member' ),
 					'size'        => 'small',
+					'description' => $page_setting_description,
 				);
 
 				$settings_map[ $page_id ] = array(

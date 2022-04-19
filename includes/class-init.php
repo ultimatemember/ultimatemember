@@ -571,6 +571,9 @@ if ( ! class_exists( 'UM' ) ) {
 					$this->admin_navmenu();
 					$this->plugin_updater();
 					$this->theme_updater();
+
+					$this->account(); // for adding_shortcode
+					$this->password(); // for adding_shortcode
 				} elseif ( $this->is_request( 'frontend' ) ) {
 					$this->account();
 					$this->password();

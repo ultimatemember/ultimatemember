@@ -26,9 +26,25 @@ class Settings {
 	public function __construct() {
 		add_filter( 'um_settings_map', array( &$this, 'add_settings_sanitize' ), 10, 1 );
 		add_filter( 'um_settings_structure', array( $this, 'admin_settings' ), 10, 1 );
+		add_filter( 'um_pages_settings_description', array( $this, 'admin_pages_settings' ), 10, 3 );
 
 		add_action( 'um_settings_before_save', array( $this, 'check_use_gravatars_setting_change' ) );
 		add_action( 'um_settings_save', array( $this, 'maybe_update_member_directory_data' ) );
+	}
+
+
+	/**
+	 * @param string $page_setting_description
+	 * @param string $content
+	 * @param string $slug
+	 *
+	 * @return string
+	 */
+	public function admin_pages_settings( $page_setting_description, $content, $slug ) {
+		if ( 'members' === $slug && ! has_shortcode( $content, 'ultimatemember' ) ) {
+			$page_setting_description = __( '<strong>Warning:</strong> Members page must contain a member directory shortcode. You can get existing shortcode or create a new one <a href="edit.php?post_type=um_directory" target="_blank">here</a>.', 'ultimate-member' );
+		}
+		return $page_setting_description;
 	}
 
 
