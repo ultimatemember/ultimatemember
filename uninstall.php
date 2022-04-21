@@ -68,11 +68,47 @@ if ( ! empty( $delete_options ) ) {
 		wp_delete_post( $um_post->ID, 1 );
 	}
 
+	global $wp_roles;
+
+	if ( class_exists( '\WP_Roles' ) ) {
+		if ( ! isset( $wp_roles ) ) {
+			$wp_roles = new \WP_Roles();
+		}
+
+		$role_keys = get_option( 'um_roles', array() );
+		if ( $role_keys ) {
+			foreach ( $role_keys as $roleID ) {
+				$role_meta = get_option( "um_role_{$roleID}_meta" );
+				if ( ! empty( $role_meta ) && ! empty( $wp_roles->roles[ $roleID ] ) ) {
+					$wp_roles->roles[ $roleID ] = array_diff( $wp_roles->roles[ $roleID ], $role_meta );
+				}
+			}
+		}
+
+		update_option( $wp_roles->role_key, $wp_roles->roles );
+	}
+	
 	//remove user role meta
 	$role_keys = get_option( 'um_roles', array() );
 	if ( $role_keys ) {
 		foreach ( $role_keys as $role_key ) {
 			delete_option( 'um_role_' . $role_key . '_meta' );
+		}
+		
+		$um_custom_role_users = get_users(
+			array(
+				'role__in' => $role_keys,
+			)
+		);
+
+		if ( ! empty( $um_custom_role_users ) ) {
+			foreach ( $um_custom_role_users as $custom_role_user ) {
+				foreach ( $role_keys as $role_key ) {
+					if ( user_can( $custom_role_user, $role_key ) ) {
+						$custom_role_user->remove_role( $role_key );
+					}
+				}
+			}
 		}
 	}
 

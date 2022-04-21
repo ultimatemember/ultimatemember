@@ -42,6 +42,36 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		}
 
 
+		function get_users() {
+			UM()->admin()->check_ajax_nonce();
+
+			$search_request = ! empty( $_REQUEST['search'] ) ? sanitize_text_field( $_REQUEST['search'] ) : '';
+			$page           = ! empty( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
+			$per_page       = 20;
+
+			$args = array(
+				'fields' => array( 'ID', 'user_login' ),
+				'paged'  => $page,
+				'number' => $per_page
+			);
+
+			if ( ! empty( $search_request ) ) {
+				$args['search'] = $search_request;
+			}
+
+			$users_query = new \WP_User_Query( $args );
+			$users       = $users_query->get_results();
+			$total_count = $users_query->get_total();
+
+			wp_send_json_success(
+				array(
+					'users'       => $users,
+					'total_count' => $total_count,
+				)
+			);
+		}
+
+
 		/**
 		 * Restrict the edit/delete users via wp-admin screen by the UM role capabilities
 		 *

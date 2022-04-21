@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 5.9
-Stable tag: 2.3.0
+Stable tag: 2.3.2
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -133,6 +133,14 @@ Yes. Ultimate Member will work with any properly coded theme. However, some them
 
 The plugin works with popular caching plugins by automatically excluding Ultimate Member pages from being cached. This ensures other visitors to a page will not see the private information of another user. However, if you add features of Ultimate Member to other pages you have to exclude those pages from being cached through your cache plugin settings panel. 
 
+= Does Ultimate Member restrict access to wp-login.php when the plugin is active? =
+
+The plugin does not restrict access to the wp-login.php page when active, so that our plugin does not interfere with the existing functionality of a website or other plugins that may utilise the default login page. If you wish to restrict access to the wp-login.php page you can use a plugin such as [WPS Hide Login](https://wordpress.org/plugins/wps-hide-login/) or another plugin that removes the ability to login via wp-login.php.
+
+= Are Ultimate Member Login/Registration pages required? =
+
+No, you do not need to use our plugin’s login or registration pages and can use another plugin or the default WordPress methods for user registration and login.
+
 == Screenshots ==
 
 1. Screenshot 1
@@ -154,6 +162,26 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
+
+= 2.3.2: April 21, 2022 =
+
+* Enhancements:
+
+  - Added: wp-admin notice with reminder about locking WordPress native registration for guests
+  - Added: Users dropdown field for Ultimate Member settings fields in wp-admin. It supports AJAX lazy loading
+  - Added: JS confirm when redirection from User Profile links to the 3rd-party URL
+
+* Bugfixes:
+
+  - Fixed: PHP warning when there aren't proper user while login
+  - Fixed: Removing UM custom capabilities from global $wp_roles when uninstall
+  - Fixed: Removing UM custom roles from user roles after uninstall
+  - Fixed: Issue with echo XSS on User Profile
+  - Fixed: Sanitizing for the checkbox, radio, multiselect fields for PHP8 installations
+
+* Deprecated:
+
+  - `um_whitelisted_wpadmin_access` hook and `wpadmin_allow_ips` option. They were unused and redundant since the 2.x version
 
 = 2.3.1: February 9, 2022 =
 

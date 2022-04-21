@@ -4,32 +4,6 @@
 
 
 /**
- * Filter to allow whitelisted IP to access the wp-admin login
- *
- * @param $allowed
- *
- * @return int
- */
-function um_whitelisted_wpadmin_access( $allowed ) {
-	$ips = UM()->options()->get( 'wpadmin_allow_ips' );
-
-	if ( ! $ips ) {
-		return $allowed;
-	}
-
-	$ips     = array_map( 'rtrim', explode( "\n", $ips ) );
-	$user_ip = um_user_ip();
-
-	if ( in_array( $user_ip, $ips, true ) ) {
-		$allowed = 1;
-	}
-
-	return $allowed;
-}
-add_filter( 'um_whitelisted_wpadmin_access', 'um_whitelisted_wpadmin_access' );
-
-
-/**
  * Filter to customize errors
  *
  * @param $message

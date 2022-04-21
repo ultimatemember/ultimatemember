@@ -48,6 +48,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$this->need_upgrade();
 			$this->check_wrong_licenses();
 
+			$this->lock_registration();
+
 			// removed for now to avoid the bad reviews
 			//$this->reviews_notice();
 
@@ -211,6 +213,30 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			} else {
 				return $notice;
 			}
+		}
+
+
+		/**
+		 * Checking if the "Membership - Anyone can register" WordPress general setting is active
+		 */
+		public function lock_registration() {
+			$users_can_register = get_option( 'users_can_register' );
+			if ( ! $users_can_register ) {
+				return;
+			}
+
+			$allowed_html = array(
+				'a'      => array(
+					'href' => array(),
+				),
+				'strong' => array(),
+			);
+
+			$this->add_notice( 'lock_registration', array(
+				'class'       => 'info',
+				'message'     => '<p>' . wp_kses( sprintf( __( 'The <strong>"Membership - Anyone can register"</strong> option on the general settings <a href="%s">page</a> is enabled. This means users can register via the standard WordPress wp-login.php page. If you do not want users to be able to register via this page and only register via the Ultimate Member registration form, you should deactivate this option. You can dismiss this notice if you wish to keep the wp-login.php registration page open.', 'ultimate-member' ), admin_url( 'options-general.php' ) . '#users_can_register' ), $allowed_html ) . '</p>',
+				'dismissible' => true,
+			), 10 );
 		}
 
 

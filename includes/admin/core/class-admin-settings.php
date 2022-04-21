@@ -3183,9 +3183,6 @@ Enable the Reset Password Limit:			<?php echo $this->info_value( UM()->options()
 Reset Password Limit: <?php echo UM()->options()->get('reset_password_limit_number') ?>
 Disable Reset Password Limit for Admins: <?php echo $this->info_value( UM()->options()->get('disable_admin_reset_password_limit'), 'yesno', true ) ?>
 <?php } ?>
-<?php $wpadmin_allow_ips = UM()->options()->get( 'wpadmin_allow_ips' ); if( ! empty( $wpadmin_allow_ips ) ) { ?>
-Whitelisted Backend IPs: 					<?php echo count( explode("\n",trim(UM()->options()->get('wpadmin_allow_ips') ) ) )."\n"; ?>
-<?php } ?>
 <?php $blocked_ips = UM()->options()->get('blocked_ips'); if( ! empty( $blocked_ips ) ){ ?>
 Blocked IP Addresses: 					<?php echo  count( explode("\n",UM()->options()->get('blocked_ips') ) )."\n"; ?>
 <?php } ?>
