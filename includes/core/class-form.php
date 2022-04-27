@@ -128,9 +128,9 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 					$values_array = $wpdb->get_col(
 						$wpdb->prepare(
-							"SELECT DISTINCT meta_value 
-							FROM $wpdb->usermeta 
-							WHERE meta_key = %s AND 
+							"SELECT DISTINCT meta_value
+							FROM $wpdb->usermeta
+							WHERE meta_key = %s AND
 								  meta_value != ''",
 							$arr_options['post']['child_name']
 						)
@@ -662,7 +662,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 										case 'multiselect':
 										case 'radio':
 										case 'checkbox':
-											$form[ $k ] = array_map( 'sanitize_text_field', $form[ $k ] );
+											$form[ $k ] = is_array( $form[ $k ] ) ? array_map( 'sanitize_text_field', $form[ $k ] ) : sanitize_text_field( $form[ $k ] );
 											break;
 									}
 								}

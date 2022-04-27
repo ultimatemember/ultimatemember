@@ -1280,13 +1280,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									array(
 										'id'      => 'blocked_emails',
 										'type'    => 'textarea',
-										'label'   => __( 'Blocked Email Addresses', 'ultimate-member' ),
+										'label'   => __( 'Blocked Email Addresses (Enter one email per line)', 'ultimate-member' ),
 										'tooltip' => __( 'This will block the specified e-mail addresses from being able to sign up or sign in to your site. To block an entire domain, use something like *@domain.com', 'ultimate-member' ),
 									),
 									array(
 										'id'      => 'blocked_words',
 										'type'    => 'textarea',
-										'label'   => __( 'Blacklist Words', 'ultimate-member' ),
+										'label'   => __( 'Blacklist Words (Enter one word per line)', 'ultimate-member' ),
 										'tooltip' => __( 'This option lets you specify blacklist of words to prevent anyone from signing up with such a word as their username', 'ultimate-member' ),
 									),
 								),
@@ -1810,39 +1810,32 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 */
 		public function sorting_licenses_options( $settings ) {
 			//sorting  licenses
-			if ( empty( $settings['licenses']['fields'] ) ) {
-				return $settings;
+			if ( ! empty( $settings['licenses']['fields'] ) ) {
+				$licenses = $settings['licenses']['fields'];
+				@uasort( $licenses, function( $a, $b ) {
+					return strnatcasecmp( $a['label'], $b['label'] );
+				} );
+				$settings['licenses']['fields'] = $licenses;
 			}
 
-			$licenses = $settings['licenses']['fields'];
-			@uasort( $licenses, function( $a, $b ) {
-				return strnatcasecmp( $a['label'], $b['label'] );
-			} );
-			$settings['licenses']['fields'] = $licenses;
+			//sorting extensions by the title
+			if ( ! empty( $settings['extensions']['sections'] ) ) {
+				$extensions = $settings['extensions']['sections'];
 
-			//sorting extensions
-			if ( empty( $settings['extensions']['sections'] ) ) {
-				return $settings;
-			}
-
-			$extensions = $settings['extensions']['sections'];
-			@uasort( $extensions, function( $a, $b ) {
-				return strnatcasecmp( $a['title'], $b['title'] );
-			} );
-
-			$keys = array_keys( $extensions );
-			if ( $keys[0] !== '' ) {
-				$new_key = strtolower( str_replace( ' ', '_', $extensions['']['title'] ) );
-				$temp = $extensions[''];
-				$extensions[ $new_key ] = $temp;
-				$extensions[''] = $extensions[ $keys[0] ];
-				unset( $extensions[ $keys[0] ] );
 				@uasort( $extensions, function( $a, $b ) {
 					return strnatcasecmp( $a['title'], $b['title'] );
 				} );
-			}
 
-			$settings['extensions']['sections'] = $extensions;
+				$keys = array_keys( $extensions );
+				$temp = array(
+					'' => $extensions[ $keys[0] ],
+				);
+
+				unset( $extensions[ $keys[0] ] );
+				$extensions = $temp + $extensions;
+
+				$settings['extensions']['sections'] = $extensions;
+			}
 
 			return $settings;
 		}
@@ -2227,7 +2220,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				//redirect after save settings
 				$arg = array(
-					'page' => 'um_options',
+					'page'   => 'um_options',
+					'update' => 'settings_updated',
 				);
 
 				if ( ! empty( $_GET['tab'] ) ) {
@@ -2949,6 +2943,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Activate', 'ultimate-member' ) ?>" />
 									<?php } else { ?>
 										<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Re-Activate', 'ultimate-member' ) ?>" />
+										<input type="button" class="button um_license_deactivate" id="<?php echo esc_attr( $field_data['id'] ) ?>_deactivate" value="<?php esc_attr_e( 'Clear License',  'ultimate-member' ) ?>"/>
 									<?php }
 
 									if ( ! empty( $messages ) ) {
@@ -3187,9 +3182,6 @@ Enable the Reset Password Limit:			<?php echo $this->info_value( UM()->options()
 <?php if( UM()->options()->get('enable_reset_password_limit') ) { ?>
 Reset Password Limit: <?php echo UM()->options()->get('reset_password_limit_number') ?>
 Disable Reset Password Limit for Admins: <?php echo $this->info_value( UM()->options()->get('disable_admin_reset_password_limit'), 'yesno', true ) ?>
-<?php } ?>
-<?php $wpadmin_allow_ips = UM()->options()->get( 'wpadmin_allow_ips' ); if( ! empty( $wpadmin_allow_ips ) ) { ?>
-Whitelisted Backend IPs: 					<?php echo count( explode("\n",trim(UM()->options()->get('wpadmin_allow_ips') ) ) )."\n"; ?>
 <?php } ?>
 <?php $blocked_ips = UM()->options()->get('blocked_ips'); if( ! empty( $blocked_ips ) ){ ?>
 Blocked IP Addresses: 					<?php echo  count( explode("\n",UM()->options()->get('blocked_ips') ) )."\n"; ?>
