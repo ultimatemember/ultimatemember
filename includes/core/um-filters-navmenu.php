@@ -11,6 +11,10 @@ if ( ! is_admin() ) {
 	 * @return array
 	 */
 	function um_add_custom_message_to_menu( $sorted_menu_items, $args ) {
+		//if empty
+		if ( empty( $sorted_menu_items ) ) {
+			return $sorted_menu_items;
+		}
 
 		if ( is_user_logged_in() ) {
 			um_fetch_user( get_current_user_id() );
