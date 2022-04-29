@@ -30,9 +30,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 			add_filter( 'users_list_table_query_args', array( &$this, 'hide_by_caps' ), 1, 1 );
 
-			add_filter( 'pre_user_query', array( &$this, 'sort_by_newest' ) );
+			add_action( 'pre_user_query', array( &$this, 'sort_by_newest' ), 10, 1 );
 
-			add_filter( 'pre_user_query', array( &$this, 'filter_users_by_status' ) );
+			add_action( 'pre_user_query', array( &$this, 'filter_users_by_status' ), 10, 1 );
 
 			add_filter( 'views_users', array( &$this, 'add_status_links' ) );
 
@@ -302,8 +302,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		/**
 		 * Change default sorting at WP Users list table
 		 *
-		 * @param $query
-		 * @return mixed
+		 * @param \WP_User_Query $query
 		 */
 		public function sort_by_newest( $query ) {
 			global $pagenow;
@@ -314,32 +313,22 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 					$query->query_orderby       = ' ORDER BY user_registered ' . ( 'desc' === $query->query_vars['order'] ? 'desc ' : 'asc ' ); //set sort order
 				}
 			}
-
-			return $query;
 		}
 
 
 		/**
 		 * Filter WP users by UM Status
 		 *
-		 * @param $query
-		 * @return mixed
+		 * @param \WP_User_Query $query
 		 */
 		public function filter_users_by_status( $query ) {
 			global $wpdb, $pagenow;
-			if ( is_admin() && 'users.php' === $pagenow && ! empty( $_REQUEST['um_status'] ) ) {
 
+			if ( is_admin() && 'users.php' === $pagenow && ! empty( $_REQUEST['um_status'] ) ) {
 				$status = sanitize_key( $_REQUEST['um_status'] );
 
-				if ( 'needs-verification' === $status ) {
-					$query->query_where = str_replace('WHERE 1=1',
-						"WHERE 1=1 AND {$wpdb->users}.ID IN (
-                                 SELECT {$wpdb->usermeta}.user_id FROM $wpdb->usermeta
-                                    WHERE {$wpdb->usermeta}.meta_key = '_um_verified'
-                                    AND {$wpdb->usermeta}.meta_value = 'pending')",
-						$query->query_where
-					);
-				} else {
+				$skip_status_filter = apply_filters( 'um_skip_filter_users_by_status', false, $status );
+				if ( ! $skip_status_filter ) {
 					$query->query_where = str_replace('WHERE 1=1',
 						"WHERE 1=1 AND {$wpdb->users}.ID IN (
                                  SELECT {$wpdb->usermeta}.user_id FROM $wpdb->usermeta
@@ -349,8 +338,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 					);
 				}
 			}
-
-			return $query;
 		}
 
 
@@ -361,7 +348,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		 * @return array
 		 */
 		public function add_status_links( $views ) {
-			remove_filter( 'pre_user_query', array( &$this, 'filter_users_by_status' ) );
+			remove_action( 'pre_user_query', array( &$this, 'filter_users_by_status' ), 10 );
 
 			$old_views = $views;
 			$views     = array();

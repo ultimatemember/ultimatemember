@@ -1,5 +1,53 @@
-jQuery(document).ready( function() {
+function um_admin_init_users_select() {
+	if ( jQuery('.um-user-select-field').length ) {
+		var select2_atts = {
+			ajax: {
+				url: wp.ajax.settings.url,
+				dataType: 'json',
+				delay: 250, // delay in ms while typing when to perform a AJAX search
+				data: function( params ) {
+					return {
+						search: params.term, // search query
+						action: 'um_get_users', // AJAX action for admin-ajax.php
+						page: params.page || 1, // infinite scroll pagination
+						nonce: um_admin_scripts.nonce
+					};
+				},
+				processResults: function( response, params ) {
+					params.page = params.page || 1;
+					var options = [];
 
+					if ( response.data.users ) {
+						jQuery.each( response.data.users, function( index, text ) {
+							options.push( { id: text.ID, text: text.user_login + ' (#' + text.ID + ')' } );
+						});
+					}
+
+					return {
+						results: options,
+						pagination: {
+							more: ( params.page * 20 ) < response.data.total_count
+						}
+					};
+				},
+				cache: true
+			},
+			minimumInputLength: 0, // the minimum of symbols to input before perform a search
+			allowClear: true,
+			width: "100%",
+			allowHtml: true,
+			dropdownCssClass: 'um-select2-users-dropdown',
+			containerCssClass : 'um-select2-users-container',
+			placeholder: jQuery(this).data('placeholder')
+		};
+
+		jQuery('.um-user-select-field').select2( select2_atts );
+	}
+}
+
+
+jQuery(document).ready( function() {
+	um_admin_init_users_select();
 
 	/**
 	 * Same page upgrade field

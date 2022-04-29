@@ -20,6 +20,7 @@ class Init {
 		add_filter( 'um_is_ultimatememeber_admin_screen', array( &$this, 'is_um_screen' ), 10, 1 );
 
 		add_filter( 'um_admin_role_metaboxes', array( &$this, 'add_role_metabox' ), 10, 1 );
+		add_filter( 'um_role_meta_map', array( &$this, 'add_role_meta_sanitize' ), 10, 1 );
 		add_action( 'add_meta_boxes',  array( &$this, 'add_forum_access_metabox' ), 10 );
 
 		add_action( 'um_admin_custom_restrict_content_metaboxes',  array( &$this, 'save_forum_access_metabox' ), 10, 2 );
@@ -66,6 +67,36 @@ class Init {
 		);
 
 		return $roles_metaboxes;
+	}
+
+
+	/**
+	 * @param array $meta_map
+	 *
+	 * @return array
+	 */
+	public function add_role_meta_sanitize( $meta_map ) {
+		$meta_map = array_merge(
+			$meta_map,
+			array(
+				'_um_disable_forumwp_tab'                => array(
+					'sanitize' => 'bool',
+				),
+				'_um_disable_create_forumwp_topics'      => array(
+					'sanitize' => 'bool',
+				),
+				'_um_lock_create_forumwp_topics_notice'  => array(
+					'sanitize' => 'textarea',
+				),
+				'_um_disable_create_forumwp_replies'     => array(
+					'sanitize' => 'bool',
+				),
+				'_um_lock_create_forumwp_replies_notice' => array(
+					'sanitize' => 'textarea',
+				),
+			)
+		);
+		return $meta_map;
 	}
 
 

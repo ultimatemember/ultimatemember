@@ -18,6 +18,7 @@ class Member_Directory {
 	 */
 	function __construct() {
 		add_filter( 'um_admin_extend_directory_options_profile', array( &$this, 'member_directory_options_profile' ), 10, 1 );
+		add_filter( 'um_member_directory_meta_map', array( &$this, 'add_member_directory_meta_sanitize' ), 10, 1 );
 
 		add_filter( 'um_members_directory_filter_fields',  array( $this, 'directory_filter_dropdown_options' ), 10, 1 );
 		add_filter( 'um_members_directory_filter_types',  array( $this, 'directory_filter_types' ), 10, 1 );
@@ -51,6 +52,24 @@ class Member_Directory {
 		), array_slice( $fields, 3, count( $fields ) - 1 ) );
 
 		return $fields;
+	}
+
+
+	/**
+	 * @param array $meta_map
+	 *
+	 * @return array
+	 */
+	public function add_member_directory_meta_sanitize( $meta_map ) {
+		$meta_map = array_merge(
+			$meta_map,
+			array(
+				'_um_online_hide_stats' => array(
+					'sanitize' => 'bool',
+				),
+			)
+		);
+		return $meta_map;
 	}
 
 

@@ -21,8 +21,36 @@ class Init {
 	public function __construct() {
 		add_action( 'um_admin_create_notices', array( &$this, 'add_admin_notice' ) );
 		add_action( 'um_admin_add_form_metabox', array( &$this, 'add_form_metaboxes' ), 10 );
+		add_filter( 'um_form_meta_map', array( &$this, 'add_form_meta_sanitize' ), 10, 1 );
 		add_filter( 'um_settings_structure', array( &$this, 'add_settings' ), 10, 1 );
 		add_filter( 'um_module_list_table_actions', array( &$this, 'extend_module_row_actions' ), 10, 2 );
+	}
+
+
+	/**
+	 * @param array $meta_map
+	 *
+	 * @return array
+	 */
+	public function add_form_meta_sanitize( $meta_map ) {
+		$meta_map = array_merge(
+			$meta_map,
+			array(
+				'_um_login_g_recaptcha_status'    => array(
+					'sanitize' => 'bool',
+				),
+				'_um_login_g_recaptcha_score'     => array(
+					'sanitize' => 'text',
+				),
+				'_um_register_g_recaptcha_status' => array(
+					'sanitize' => 'bool',
+				),
+				'_um_register_g_recaptcha_score'  => array(
+					'sanitize' => 'text',
+				),
+			)
+		);
+		return $meta_map;
 	}
 
 

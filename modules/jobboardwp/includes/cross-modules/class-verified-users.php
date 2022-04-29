@@ -21,6 +21,7 @@ class Verified_Users {
 	function __construct() {
 		add_action( 'jb_job_submission_after_create_account', array( &$this, 'maybe_verify' ), 11, 1 );
 		add_filter( 'um_verified_users_settings_fields', array( &$this, 'add_verified_users_settings' ), 10, 1 );
+		add_filter( 'um_settings_map', array( &$this, 'add_settings_sanitize' ), 10, 1 );
 		add_filter( 'jb_can_applied_job', array( &$this, 'lock_for_unverified' ), 10, 1 );
 	}
 
@@ -51,6 +52,25 @@ class Verified_Users {
 		);
 
 		return $settings_fields;
+	}
+
+
+	/**
+	 * @param array $settings_map
+	 *
+	 * @return array
+	 */
+	public function add_settings_sanitize( $settings_map ) {
+		$settings_map = array_merge(
+			$settings_map,
+			array(
+				'job_apply_only_verified' => array(
+					'sanitize' => 'bool',
+				),
+			)
+		);
+
+		return $settings_map;
 	}
 
 

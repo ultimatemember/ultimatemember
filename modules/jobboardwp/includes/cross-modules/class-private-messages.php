@@ -20,6 +20,7 @@ class Private_Messages {
 	 */
 	function __construct() {
 		add_filter( 'um_messaging_settings_fields', array( &$this, 'add_messaging_settings' ), 10, 1 );
+		add_filter( 'um_settings_map', array( &$this, 'add_settings_sanitize' ), 10, 1 );
 		add_action( 'jb_after_job_apply_block', array( &$this, 'add_private_message_button' ), 10, 1 );
 	}
 
@@ -38,6 +39,25 @@ class Private_Messages {
 		);
 
 		return $settings_fields;
+	}
+
+
+	/**
+	 * @param array $settings_map
+	 *
+	 * @return array
+	 */
+	public function add_settings_sanitize( $settings_map ) {
+		$settings_map = array_merge(
+			$settings_map,
+			array(
+				'job_show_pm_button' => array(
+					'sanitize' => 'bool',
+				),
+			)
+		);
+
+		return $settings_map;
 	}
 
 

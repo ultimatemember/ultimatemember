@@ -3972,6 +3972,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$res = stripslashes( $res );
 						}
 						if ( 'description' === $data['metakey'] ) {
+							if ( UM()->options()->get( 'profile_show_html_bio' ) ) {
+								$res = make_clickable( wpautop( wp_kses_post( $res ) ) );
+							} else {
+								$res = esc_html( $res );
+							}
 							$res = nl2br( $res );
 						}
 

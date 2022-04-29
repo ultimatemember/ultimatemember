@@ -18,8 +18,10 @@ class Init {
 	 */
 	function __construct() {
 		add_filter( 'um_settings_structure', array( &$this, 'extend_settings' ), 10, 1 );
+		add_filter( 'um_settings_map', array( &$this, 'add_settings_sanitize' ), 10, 1 );
 		add_filter( 'um_module_list_table_actions', array( &$this, 'extend_module_row_actions' ), 10, 2 );
 		add_filter( 'um_admin_role_metaboxes', array( &$this, 'add_role_metabox' ), 10, 1 );
+		add_filter( 'um_role_meta_map', array( &$this, 'add_role_meta_sanitize' ), 10, 1 );
 	}
 
 
@@ -56,6 +58,25 @@ class Init {
 
 
 	/**
+	 * @param array $settings_map
+	 *
+	 * @return array
+	 */
+	public function add_settings_sanitize( $settings_map ) {
+		$settings_map = array_merge(
+			$settings_map,
+			array(
+				'account_tab_jobboardwp' => array(
+					'sanitize' => 'bool',
+				),
+			)
+		);
+
+		return $settings_map;
+	}
+
+
+	/**
 	 * Creates options in Role page
 	 *
 	 * @param array $roles_metaboxes
@@ -80,5 +101,23 @@ class Init {
 		);
 
 		return $roles_metaboxes;
+	}
+
+
+	/**
+	 * @param array $meta_map
+	 *
+	 * @return array
+	 */
+	public function add_role_meta_sanitize( $meta_map ) {
+		$meta_map = array_merge(
+			$meta_map,
+			array(
+				'_um_disable_jobs_tab' => array(
+					'sanitize' => 'bool',
+				),
+			)
+		);
+		return $meta_map;
 	}
 }

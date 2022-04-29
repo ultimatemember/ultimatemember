@@ -27,8 +27,8 @@
 			'label'   => __( 'reCAPTCHA status on this form', 'ultimate-member' ),
 			'value'   => UM()->query()->get_meta_value( '_um_login_g_recaptcha_status', null, $status ),
 			'options' => array(
-				'0' => __( 'No', 'ultimate-member' ),
-				'1' => __( 'Yes', 'ultimate-member' ),
+				0 => __( 'No', 'ultimate-member' ),
+				1 => __( 'Yes', 'ultimate-member' ),
 			),
 		),
 	);

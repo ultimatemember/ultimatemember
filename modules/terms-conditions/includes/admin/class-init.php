@@ -21,13 +21,11 @@ class Init {
 	 */
 	public function __construct() {
 		add_action( 'um_admin_add_form_metabox', array( &$this, 'add_metabox_register' ) );
+		add_filter( 'um_form_meta_map', array( &$this, 'add_form_meta_sanitize' ), 10, 1 );
 	}
 
 
-	/**
-	 * @param $action
-	 */
-	function add_metabox_register( $action ) {
+	public function add_metabox_register() {
 		$module_data = UM()->modules()->get_data( 'terms-conditions' );
 		if ( ! $module_data ) {
 			return;
@@ -41,5 +39,38 @@ class Init {
 			'side',
 			'default'
 		);
+	}
+
+
+	/**
+	 * @param array $meta_map
+	 *
+	 * @return array
+	 */
+	public function add_form_meta_sanitize( $meta_map ) {
+		$meta_map = array_merge(
+			$meta_map,
+			array(
+				'_um_register_use_terms_conditions'             => array(
+					'sanitize' => 'bool',
+				),
+				'_um_register_use_terms_conditions_content_id'  => array(
+					'sanitize' => 'absint',
+				),
+				'_um_register_use_terms_conditions_toggle_show' => array(
+					'sanitize' => 'text',
+				),
+				'_um_register_use_terms_conditions_toggle_hide' => array(
+					'sanitize' => 'text',
+				),
+				'_um_register_use_terms_conditions_agreement'   => array(
+					'sanitize' => 'text',
+				),
+				'_um_register_use_terms_conditions_error_text'  => array(
+					'sanitize' => 'text',
+				),
+			)
+		);
+		return $meta_map;
 	}
 }

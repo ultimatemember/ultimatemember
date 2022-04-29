@@ -482,7 +482,7 @@ class Directory {
 				$this->query_args['order'] = $order;
 			}
 
-			add_filter( 'pre_user_query', array( &$this, 'sortby_randomly' ), 10, 1 );
+			add_action( 'pre_user_query', array( &$this, 'sortby_randomly' ), 10, 1 );
 		}
 
 		$this->query_args = apply_filters( 'um_modify_sortby_parameter', $this->query_args, $sortby );
@@ -492,9 +492,7 @@ class Directory {
 	/**
 	 * Sorting random
 	 *
-	 * @param object $query
-	 *
-	 * @return mixed
+	 * @param \WP_User_Query $query
 	 */
 	function sortby_randomly( $query ) {
 		if ( 'random' === $query->query_vars['orderby'] ) {
@@ -522,10 +520,7 @@ class Directory {
 
 			$query->query_orderby = 'ORDER by RAND(' . $seed . ')';
 		}
-
-		return $query;
 	}
-
 
 
 	/**
@@ -638,7 +633,7 @@ class Directory {
 	/**
 	 * Update limit query
 	 *
-	 * @param $user_query
+	 * @param \WP_User_Query $user_query
 	 */
 	function pagination_changes( $user_query ) {
 		global $wpdb;
@@ -1297,11 +1292,11 @@ class Directory {
 		do_action( 'um_user_before_query', $this->query_args, $this );
 
 		add_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10, 6 );
-		add_filter( 'pre_user_query', array( &$this, 'pagination_changes' ), 10, 1 );
+		add_action( 'pre_user_query', array( &$this, 'pagination_changes' ), 10, 1 );
 
 		$user_query = new \WP_User_Query( $this->query_args );
 
-		remove_filter( 'pre_user_query', array( &$this, 'pagination_changes' ), 10 );
+		remove_action( 'pre_user_query', array( &$this, 'pagination_changes' ), 10 );
 		remove_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10 );
 
 		do_action( 'um_user_after_query', $this->query_args, $user_query );

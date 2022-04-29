@@ -23,6 +23,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 
 		/**
+		 * @deprecated 3.0
 		 * @var array
 		 */
 		var $path_by_slug = array();
@@ -92,6 +93,10 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 * @return mixed|string
 		 */
 		function prepare_template( $slug, $args = array() ) {
+			$emails = UM()->config()->get( 'email_notifications' );
+
+			$module = ! empty( $emails[ $slug ]['module'] ) ? $emails[ $slug ]['module'] : '';
+
 			ob_start();
 
 			if ( UM()->options()->get( 'email_html' ) ) {
@@ -172,7 +177,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 				<body <?php echo $body_attrs ?>>
 
-				<?php um_get_template( "email/{$slug}.php", $args ); ?>
+				<?php um_get_template( "email/{$slug}.php", $args, $module ); ?>
 				<?php /*echo $this->get_email_template( $slug, $args );*/ ?>
 
 				</body>
@@ -183,7 +188,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 				//strip tags in plain text email
 				//important don't use HTML in plain text emails!
 				//$raw_email_template = $this->get_email_template( $slug, $args );
-				$raw_email_template = um_get_template_html( "email/{$slug}.php", $args );
+				$raw_email_template = um_get_template_html( "email/{$slug}.php", $args, $module );
 				$plain_email_template = strip_tags( $raw_email_template );
 				if ( $plain_email_template !== $raw_email_template ) {
 					$plain_email_template = preg_replace( array('/&nbsp;/mi', '/^\s+/mi'), array( ' ', '' ), $plain_email_template );

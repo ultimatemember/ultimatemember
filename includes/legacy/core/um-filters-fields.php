@@ -211,7 +211,10 @@ function um_profile_field_filter_hook__textarea( $value, $data ) {
 	$value = html_entity_decode( $value );
 	$value = preg_replace('$(https?://[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', ' <a href="$1" target="_blank">$1</a> ', $value." ");
 	$value = preg_replace('$(www\.[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', '<a target="_blank" href="http://$1">$1</a> ', $value." ");
-	$value = wpautop($value);
+
+	if ( ! ( isset( $data['metakey'] ) && 'description' === $data['metakey'] ) ) {
+		$value = wpautop( $value );
+	}
 
 	return $value;
 }
@@ -421,8 +424,17 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 			if ( strpos( $value, 'http://' ) !== 0 ) {
 				$value = 'http://' . $value;
 			}
+
+			$value = str_replace('https://https://','https://',$value);
+			$value = str_replace('http://https://','https://',$value);
+
+			$onclick_alert = '';
+			if ( $value !== wp_validate_redirect( $value ) ) {
+				$onclick_alert = ' onclick="return confirm( \'' . sprintf( __( 'This link leads to a 3rd-party website. Make sure the link is safe and you really want to go to this website: `%s`', 'ultimate-member' ), $value ) . '\' );"';
+			}
+
 			$data['url_target'] = ( isset( $data['url_target'] ) ) ? $data['url_target'] : '_blank';
-			$value = '<a href="'. $value .'" title="'.$alt.'" target="'.$data['url_target'].'" ' . $url_rel . '>'.$alt.'</a>';
+			$value = '<a href="'. esc_url( $value ) .'" title="' . esc_attr( $alt ) . '" target="' . esc_attr( $data['url_target'] ) . '" ' . $url_rel . $onclick_alert . '>' . esc_html( $alt ) . '</a>';
 		}
 	}
 
