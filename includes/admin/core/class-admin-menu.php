@@ -37,7 +37,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 		 *
 		 * @var string
 		 */
-		protected $slug = 'ultimatemember';
+		public $slug = 'ultimatemember';
 
 
 		/**
