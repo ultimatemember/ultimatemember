@@ -576,6 +576,68 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 				$user_in_url = trim( $user_in_url, $separate );
 			}
+			
+			// Custom Filed
+			if($permalink_base == "field"){
+
+				$permalink_custom = UM()->options()->get( 'permalink_base_field' );
+
+				um_fetch_user($user_id);
+
+				$permalink_data = UM()->user()->profile[$permalink_custom];
+
+				$has_permalink = !empty($permalink_data);	
+				
+				if($has_permalink){
+				
+					$user_in_url = $permalink_data;
+					$separate = "-";
+					$permalink_data = trim($permalink_data);
+					$permalink_data = preg_replace( '/\s+/', $separate, $permalink_data );
+
+					$profile_slug = $permalink_data;
+
+					$append     = 0;
+					$username   = $permalink_data;
+					$_username   = $permalink_data;
+
+					while ( 1 ) {
+						$username = $_username . ( empty( $append ) ? '' : " $append" );
+						$slug_exists_user_id = UM()->permalinks()->slug_exists_user_id( $profile_slug . ( empty( $append ) ? '' : "{$separate}{$append}" ) );
+						if ( empty( $slug_exists_user_id ) || $user_id == $slug_exists_user_id ) {
+							break;
+						}
+						$append++;
+					}
+
+					$user_in_url = $permalink_data;
+					if ( empty( $user_in_url ) ) {
+						$user_in_url = $userdata->user_login;
+	
+						if ( is_email( $user_in_url ) ) {
+	
+							$user_email  = $user_in_url;
+							$user_in_url = str_replace( '@', '', $user_in_url );
+	
+							if ( ( $pos = strrpos( $user_in_url, '.' ) ) !== false ) {
+								$search_length = strlen( '.' );
+								$user_in_url   = substr_replace( $user_in_url, '-', $pos, $search_length );
+							}
+							update_user_meta( $user_id, "um_email_as_username_{$user_in_url}", $user_email );
+	
+						} else {
+	
+							$user_in_url = sanitize_title( $user_in_url );
+	
+						}
+					}
+
+				}
+
+				$user_in_url = trim( $user_in_url, $separate );
+
+				$user_in_url = !$has_permalink ? $userdata->user_login : $user_in_url;
+			}
 
 			$user_in_url = apply_filters( 'um_change_user_profile_slug', $user_in_url, $user_id );
 
