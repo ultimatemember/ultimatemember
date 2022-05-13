@@ -220,7 +220,7 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 					$user_id = UM()->user()->user_exists_by_id( um_queried_user() );
 				}
 
-				if ( in_array( UM()->options()->get( 'permalink_base' ), array( 'name', 'name_dash', 'name_dot', 'name_plus' ) ) ) {
+				if ( in_array( UM()->options()->get( 'permalink_base' ), array( 'name', 'name_dash', 'name_dot', 'name_plus', 'field' ) ) ) {
 					$user_id = UM()->user()->user_exists_by_name( um_queried_user() );
 				}
 
