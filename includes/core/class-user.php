@@ -643,6 +643,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			if ( $force || empty( $current_profile_slug ) || $current_profile_slug != $user_in_url ) {
 				update_user_meta( $user_id, "um_user_profile_url_slug_{$permalink_base}", $user_in_url );
+				if($permalink_base == "field"){
+					update_user_meta($user_id, $permalink_custom, $user_in_url);
+				}
 			}
 		}
 
