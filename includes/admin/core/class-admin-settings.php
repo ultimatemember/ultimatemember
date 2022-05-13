@@ -973,8 +973,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 											'name_dash'  => __( 'First and Last Name with \'-\'', 'ultimate-member' ),
 											'name_plus'  => __( 'First and Last Name with \'+\'', 'ultimate-member' ),
 											'user_id'    => __( 'User ID', 'ultimate-member' ),
+											'field'      => __( 'Custom field(s)', 'ultimate-member' ),
 										),
 										'placeholder' => __( 'Select...', 'ultimate-member' ),
+									),
+									array(
+										'id'          => 'permalink_base_field',
+										'type'        => 'text',
+										'label'       => __( 'Custom Slug Field Name', 'ultimate-member' ),
+										'tooltip'     => __( 'Specify the custom field meta key to use as slug', 'ultimate-member' ),
+										'conditional' => array( 'permalink_base', '=', 'field' ),
 									),
 									array(
 										'id'          => 'display_name',
