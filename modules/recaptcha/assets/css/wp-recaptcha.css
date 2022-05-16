@@ -1,0 +1,16 @@
+.login.has-normal-um-recaptcha #login {
+	width: 354px;
+}
+
+.login.has-normal-um-recaptcha #um-login-recaptcha {
+	margin-bottom: 16px;
+}
+
+.login.has-compact-um-recaptcha #um-login-recaptcha {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: nowrap;
+	margin-bottom: 16px;
+}

@@ -3180,7 +3180,9 @@
     {
       "icons": [
         "ios-trending-down",
-        "md-trending-down"
+        "md-trending-down",
+        "ios-trending-down-flip",
+        "md-trending-down-flip"
       ],
       "tags": [
         "down",
@@ -3190,7 +3192,9 @@
     {
       "icons": [
         "ios-trending-up",
-        "md-trending-up"
+        "md-trending-up",
+        "ios-trending-up-flip",
+        "md-trending-up-flip"
       ],
       "tags": [
         "trending",

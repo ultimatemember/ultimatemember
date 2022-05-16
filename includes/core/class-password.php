@@ -438,23 +438,29 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 					$user_id = username_exists( $user );
 				}
 
+				// make `password_rst_attempts` usermeta every 12 hours
+				$timeout = (int) get_user_meta( $user_id, 'password_rst_attempts_timeout', true );
+				if ( ! $timeout || $timeout >= time() ) {
+					$timeout_value = apply_filters( 'um_password_rst_attempts_timeout', 12 * HOUR_IN_SECONDS );
+					update_user_meta( $user_id, 'password_rst_attempts', 0 );
+					update_user_meta( $user_id, 'password_rst_attempts_timeout', time() + $timeout_value );
+				}
+
 				$attempts = (int) get_user_meta( $user_id, 'password_rst_attempts', true );
-				$is_admin = user_can( absint( $user_id ), 'manage_options' );
 
 				if ( UM()->options()->get( 'enable_reset_password_limit' ) ) { // if reset password limit is set
-
-					if ( ! ( UM()->options()->get( 'disable_admin_reset_password_limit' ) && $is_admin ) ) {
+					$is_admin = user_can( absint( $user_id ), 'manage_options' );
+					if ( ! ( UM()->options()->get( 'disable_admin_reset_password_limit' ) && $is_admin ) ) { // `disable_admin_reset_password_limit` is 1.3.x legacy setting
 						// Doesn't trigger this when a user has admin capabilities and when reset password limit is disabled for admins
 						$limit = UM()->options()->get( 'reset_password_limit_number' );
 						if ( $attempts >= $limit ) {
-							UM()->form()->add_error( 'username_b', __( 'You have reached the limit for requesting password change for this user already. Contact support if you cannot open the email', 'ultimate-member' ) );
+							UM()->form()->add_error( 'username_b', __( 'You have reached the limit for requesting password change for this user already. You can repeat after 12 hours or contact support if you cannot open the email', 'ultimate-member' ) );
 						} else {
 							update_user_meta( $user_id, 'password_rst_attempts', $attempts + 1 );
 						}
 					}
 				}
 			}
-
 		}
 
 
@@ -603,6 +609,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 					if ( $attempts ) {
 						update_user_meta( $user->ID, 'password_rst_attempts', 0 );
 					}
+					delete_user_meta( $user->ID, 'password_rst_attempts_timeout' );
 					$this->setcookie( $rp_cookie, false );
 
 					// logout

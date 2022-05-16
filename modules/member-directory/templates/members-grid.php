@@ -54,6 +54,7 @@ $unique_hash = substr( md5( $args['form_id'] ), 10, 5 ); ?>
 						<# if ( user.can_edit ) { #>
 							<div class="um-members-edit-btn">
 								<a href="{{{user.edit_profile_url}}}" class="um-edit-profile-btn um-button um-alt">
+									<i class="fas fa-cog"></i>
 									<?php _e( 'Edit profile','ultimate-member' ) ?>
 								</a>
 							</div>

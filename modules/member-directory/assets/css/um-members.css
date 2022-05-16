@@ -516,17 +516,15 @@ body #content .um-directory a {
               width: auto;
               text-align: center;
               font-size: 13px; }
-              .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-card .um-members-edit-btn a.um-edit-profile-btn:before {
-                font-family: "FontAwesome";
-                margin-right: 8px;
+              .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-card .um-members-edit-btn a.um-edit-profile-btn i {
+                margin-right: 5px;
                 width: 14px;
                 text-align: left;
                 display: inline-block;
                 font-size: 16px;
                 position: relative;
                 left: 0;
-                top: 1px;
-                content: "\f013"; }
+                top: -1px; }
           .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-card .um-member-tagline {
             font-size: 13px;
             line-height: 22px;

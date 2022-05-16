@@ -152,10 +152,10 @@ if ( $filters_expanded ) {
 //send $args variable to the templates
 $args['args'] = $args;
 foreach ( $args['view_types'] as $type ) {
-	um_get_template( 'members-' . $type . '.php', $args );
+	um_get_template( 'members-' . $type . '.php', $args, 'member-directory' );
 }
-um_get_template( 'members-header.php', $args );
-um_get_template( 'members-pagination.php', $args );
+um_get_template( 'members-header.php', $args, 'member-directory' );
+um_get_template( 'members-pagination.php', $args, 'member-directory' );
 
 $must_search = 0;
 $not_searched = false;
@@ -210,7 +210,7 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 	}
 } ?>
 
-<div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ); ?>"
+<div class="um <?php echo esc_attr( UM()->shortcodes()->get_class( $mode ) ); ?> um-<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ); ?>"
      data-hash="<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ) ?>" data-base-post="<?php echo esc_attr( $post->ID ) ?>"
 	 data-must-search="<?php echo esc_attr( $must_search ); ?>" data-searched="<?php echo $not_searched ? '0' : '1'; ?>"
 	 data-view_type="<?php echo esc_attr( $current_view ) ?>" data-page="<?php echo esc_attr( $current_page ) ?>"

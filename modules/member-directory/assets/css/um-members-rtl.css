@@ -30,9 +30,9 @@
     margin-left: 0;
     margin-right: 10px; }
 
-.um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-card .um-members-edit-btn a.um-edit-profile-btn:before {
+.um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-card .um-members-edit-btn a.um-edit-profile-btn i {
   margin-right: 0;
-  margin-left: 8px; }
+  margin-left: 5px; }
 
 .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-container .um-member-photo {
   margin: 0 0 0 15px; }

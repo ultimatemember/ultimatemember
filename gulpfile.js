@@ -14,6 +14,7 @@ const md5        = require( 'v_to_md5' );
 const modules = [
 	'forumwp',
 	'jobboardwp',
+	'member-directory',
 	'online',
 	'recaptcha',
 	'terms-conditions',
@@ -220,6 +221,42 @@ gulp.task( 'default', function ( done ) {
 		.pipe( uglify() )
 		.pipe( rename({ suffix: '.min' }) )
 		.pipe( gulp.dest( 'assets/libs/tipsy/' ) );
+
+
+	for ( let pos = 0; pos < modules.length; pos++ ) {
+
+		let css_source = 'modules/' + modules[ pos ] + '/assets/css/*.sass';
+		let css_dest   = 'modules/' + modules[ pos ] + '/assets/css/';
+
+		let js_source =['modules/' + modules[ pos ] + '/assets/js/*.js', '!modules/' + modules[ pos ] + '/assets/js/*.min.js', ];
+		let js_admin_source =['modules/' + modules[ pos ] + '/assets/js/admin/*.js', '!modules/' + modules[ pos ] + '/assets/js/admin/*.min.js', ];
+		let js_dest = 'modules/' + modules[ pos ] + '/assets/js/';
+		let js_admin_dest = 'modules/' + modules[ pos ] + '/assets/js/admin/';
+
+		// full CSS files
+		gulp.src( css_source )
+			.pipe( sass().on( 'error', sass.logError ) )
+			.pipe( gulp.dest( css_dest ) );
+
+		// min CSS files
+		gulp.src( css_source )
+			.pipe( sass().on( 'error', sass.logError ) )
+			.pipe( cleanCSS() )
+			.pipe( rename( { suffix: '.min' } ) )
+			.pipe( gulp.dest( css_dest ) );
+
+		// min JS files
+		gulp.src(js_source)
+			.pipe( uglify() )
+			.pipe( rename({ suffix: '.min' }) )
+			.pipe( gulp.dest( js_dest ) );
+
+		// min wp-admin JS files
+		gulp.src( js_admin_source )
+			.pipe( uglify() )
+			.pipe( rename({ suffix: '.min' }) )
+			.pipe( gulp.dest( js_admin_dest ) );
+	}
 
 	// modules
 	for (const [index, currentValue] of Object.entries( names ) ) {

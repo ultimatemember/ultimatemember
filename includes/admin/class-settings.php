@@ -264,7 +264,7 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 					'id'          => 'accessible',
 					'type'        => 'select',
 					'label'       => __( 'Global Site Access', 'ultimate-member' ),
-					'description' => __( 'Globally control the access of your site, you can have separate restrict options per post/page by editing the desired item.', 'ultimate-member' ),
+					'description' => __( 'This setting is applied site-wide. You can override this setting for individual posts/pages/CPTs by enabling Content Restriction for posts/pages/CPTs below and then editing an individual post/page/CPT and applying content restriction settings to that specific post/page/CPT.', 'ultimate-member' ),
 					'options'     => array(
 						0 => __( 'Site accessible to Everyone', 'ultimate-member' ),
 						2 => __( 'Site accessible to Logged In Users', 'ultimate-member' ),
@@ -302,14 +302,14 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 				array(
 					'id'          => 'restricted_post_title_replace',
 					'type'        => 'checkbox',
-					'label'       => __( 'Replace the restricted Post Title', 'ultimate-member' ),
-					'description' => __( 'Allow to replace the restricted post title to users that do not have permission to view the content', 'ultimate-member' ),
+					'label'       => __( 'Restricted Content Titles', 'ultimate-member' ),
+					'description' => __( 'If enabled, the text entered below will replace the title of the post/page/CPT for users who do not have permission to view the restricted content. Please see this <a href="https://docs.ultimatemember.com/article/1736-content-restriction" target="_blank">doc</a> for more information on this.', 'ultimate-member' ),
 				),
 				array(
 					'id'          => 'restricted_access_post_title',
 					'type'        => 'text',
-					'label'       => __( 'Restricted Access Post Title', 'ultimate-member' ),
-					'description' => __( 'This is the post title shown to users that do not have permission to view the content', 'ultimate-member' ),
+					'label'       => __( 'Restricted Content Title Text', 'ultimate-member' ),
+					'description' => __( 'If enabled, the text entered below will replace the title of the post/page/CPT for users who do not have permission to view the restricted content. Please see this <a href="https://docs.ultimatemember.com/article/1736-content-restriction" target="_blank">doc</a> for more information on this.', 'ultimate-member' ),
 					'conditional' => array( 'restricted_post_title_replace', '=', 1 ),
 				),
 				array(
@@ -475,6 +475,9 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 						'sanitize' => 'bool',
 					),
 					'account_tab_delete'                    => array(
+						'sanitize' => 'bool',
+					),
+					'delete_account_password_requires'      => array(
 						'sanitize' => 'bool',
 					),
 					'delete_account_text'                   => array(
@@ -750,7 +753,7 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 										'size'        => 'small',
 										'label'       => __( 'Profile Permalink Base', 'ultimate-member' ),
 										// translators: %s: Profile page URL
-										'description' => sprintf( __( 'Here you can control the permalink structure of the user profile URL globally e.g. %s<strong>username</strong>/.', 'ultimate-member' ), trailingslashit( um_get_predefined_page_url( 'user' ) ) ),
+										'description' => sprintf( __( 'Select what permalink structure to use for user profile URL globally e.g. %s<strong>username</strong>/.', 'ultimate-member' ), trailingslashit( um_get_predefined_page_url( 'user' ) ) ),
 										'options'     => array(
 											'user_login' => __( 'Username', 'ultimate-member' ),
 											'name'       => __( 'First and Last Name with \'.\'', 'ultimate-member' ),
@@ -812,8 +815,8 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 									array(
 										'id'          => 'use_gravatars',
 										'type'        => 'checkbox',
-										'label'       => __( 'Use Gravatars?', 'ultimate-member' ),
-										'description' => __( 'Do you want to use gravatars instead of the default plugin profile photo (If the user did not upload a custom profile photo / avatar).', 'ultimate-member' ),
+										'label'       => __( 'Use Gravatars', 'ultimate-member' ),
+										'description' => __( 'Enable this option if you want to use gravatars instead of the default plugin profile photo (If the user did not upload a custom profile photo/avatar).', 'ultimate-member' ),
 									),
 									array(
 										'id'          => 'use_um_gravatar_default_builtin_image',
@@ -843,22 +846,24 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 									array(
 										'id'          => 'require_strongpass',
 										'type'        => 'checkbox',
-										'label'       => __( 'Require a strong password?', 'ultimate-member' ),
-										'description' => __( 'Enable or disable a strong password rules common for all Ultimate Member forms.', 'ultimate-member' ),
+										'label'       => __( 'Require Strong Passwords', 'ultimate-member' ),
+										'description' => __( 'Enable this option to apply strong password rules to all password fields (user registration, password reset and password change).', 'ultimate-member' ),
 									),
 									array(
 										'id'          => 'password_min_chars',
 										'type'        => 'number',
 										'label'       => __( 'Password minimum length', 'ultimate-member' ),
-										'description' => __( 'If you want to enable a minimum number of characters to be in password. User password field in the UM forms has own settings for that. Leave empty to use default value 8.', 'ultimate-member' ),
+										'description' => __( 'Enter the minimum number of characters a user must use for their password. The default minimum characters is 8.', 'ultimate-member' ),
 										'size'        => 'small',
+										'conditional' => array( 'require_strongpass', '=', '1' ),
 									),
 									array(
 										'id'          => 'password_max_chars',
 										'type'        => 'number',
 										'label'       => __( 'Password maximum length', 'ultimate-member' ),
-										'description' => __( 'If you want to enable a maximum number of characters to be in password. User password field in the UM forms has own settings for that. Leave empty to use default value 30.', 'ultimate-member' ),
+										'description' => __( 'Enter the maximum number of characters a user can use for their password. The default maximum characters is 30.', 'ultimate-member' ),
 										'size'        => 'small',
+										'conditional' => array( 'require_strongpass', '=', '1' ),
 									),
 									array(
 										'id'          => 'profile_noindex',
@@ -874,8 +879,8 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 									array(
 										'id'          => 'activation_link_expiry_time',
 										'type'        => 'number',
-										'label'       => __( 'Activation link lifetime', 'ultimate-member' ),
-										'description' => __( 'How long does an activation link live in seconds? Leave empty for endless links.', 'ultimate-member' ),
+										'label'       => __( 'Email activation link expiration (days)', 'ultimate-member' ),
+										'description' => __( 'For user registrations that require an email link to be clicked to confirm account. How long would you like the activation link to be active for before it expires? If this field is left blank the activation link will not expire.', 'ultimate-member' ),
 										'size'        => 'small',
 									),
 								),
@@ -887,75 +892,84 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 										'id'          => 'account_tab_password',
 										'type'        => 'checkbox',
 										'label'       => __( 'Password Account Tab', 'ultimate-member' ),
-										'description' => __( 'Enable/disable the Password account tab in account page', 'ultimate-member' ),
+										'description' => __( 'Enable/disable the Password account tab on the account page.', 'ultimate-member' ),
 									),
 									array(
 										'id'          => 'account_tab_privacy',
 										'type'        => 'checkbox',
 										'label'       => __( 'Privacy Account Tab', 'ultimate-member' ),
-										'description' => __( 'Enable/disable the Privacy account tab in account page', 'ultimate-member' ),
+										'description' => __( 'Enable/disable the Privacy account tab on the account page.', 'ultimate-member' ),
 									),
 									array(
 										'id'          => 'account_tab_notifications',
 										'type'        => 'checkbox',
 										'label'       => __( 'Notifications Account Tab', 'ultimate-member' ),
-										'description' => __( 'Enable/disable the Notifications account tab in account page', 'ultimate-member' ),
+										'description' => __( 'Enable/disable the Notifications account tab on the account page.', 'ultimate-member' ),
 									),
 									array(
 										'id'          => 'account_tab_delete',
 										'type'        => 'checkbox',
 										'label'       => __( 'Delete Account Tab', 'ultimate-member' ),
-										'description' => __( 'Enable/disable the Delete account tab in account page', 'ultimate-member' ),
+										'description' => __( 'Enable/disable the Delete account tab on the account page.', 'ultimate-member' ),
+									),
+									array(
+										'id'          => 'delete_account_password_requires',
+										'type'        => 'checkbox',
+										'label'       => __( 'Account deletion password requires', 'ultimate-member' ),
+										'description' => __( 'Enable/disable the requirement to enter a password when deleting an account.', 'ultimate-member' ),
+										'conditional' => array( 'account_tab_delete', '=', '1' ),
 									),
 									array(
 										'id'          => 'delete_account_text',
 										'type'        => 'textarea', // bug with wp 4.4? should be editor
-										'label'       => __( 'Account Deletion Custom Text', 'ultimate-member' ),
-										'description' => __( 'This is custom text that will be displayed to users before they delete their accounts from your site when password is required.', 'ultimate-member' ),
+										'label'       => __( 'Account Deletion Text', 'ultimate-member' ),
+										'description' => __( 'This is the custom text that will be displayed to users before they delete their account from your website when their password is required to confirm account deletion.', 'ultimate-member' ),
 										'args'        => array(
 											'textarea_rows' => 6,
 										),
+										'conditional' => array( 'delete_account_password_requires', '=', '1' ),
 									),
 									array(
 										'id'          => 'delete_account_no_pass_required_text',
 										'type'        => 'textarea',
-										'label'       => __( 'Account Deletion without password Custom Text', 'ultimate-member' ),
-										'description' => __( 'This is custom text that will be displayed to users before they delete their accounts from your site when password isn\'t required.', 'ultimate-member' ),
+										'label'       => __( 'Account Deletion Text', 'ultimate-member' ),
+										'description' => __( 'This is the custom text that will be displayed to users before they delete their account from your website when no password is required to confirm account deletion.', 'ultimate-member' ),
 										'args'        => array(
 											'textarea_rows' => 6,
 										),
+										'conditional' => array( 'delete_account_password_requires', '=', '0' ),
 									),
 									array(
 										'id'          => 'account_name',
 										'type'        => 'checkbox',
-										'label'       => __( 'Add a First & Last Name fields', 'ultimate-member' ),
-										'description' => __( 'Whether to enable these fields on the user account page by default or hide them.', 'ultimate-member' ),
+										'label'       => __( 'Display First & Last name fields', 'ultimate-member' ),
+										'description' => __( 'If enabled, the First & Last name fields will be shown on the account page.', 'ultimate-member' ),
 									),
 									array(
 										'id'          => 'account_name_disable',
 										'type'        => 'checkbox',
-										'label'       => __( 'Disable First & Last Name fields', 'ultimate-member' ),
-										'description' => __( 'Whether to allow users changing their first and last name in account page.', 'ultimate-member' ),
+										'label'       => __( 'Disable First & Last name field editing', 'ultimate-member' ),
+										'description' => __( 'If enabled, this will prevent users from changing their First & Last name fields on the account page.', 'ultimate-member' ),
 										'conditional' => array( 'account_name', '=', '1' ),
 									),
 									array(
 										'id'          => 'account_name_require',
 										'type'        => 'checkbox',
 										'label'       => __( 'Require First & Last Name', 'ultimate-member' ),
-										'description' => __( 'Require first and last name?', 'ultimate-member' ),
+										'description' => __( 'If enabled, users will not be allowed to remove their first or last names when updating their account page.', 'ultimate-member' ),
 										'conditional' => array( 'account_name', '=', '1' ),
 									),
 									array(
 										'id'          => 'account_email',
 										'type'        => 'checkbox',
-										'label'       => __( 'Allow users to change e-mail', 'ultimate-member' ),
-										'description' => __( 'Whether to allow users changing their email in account page.', 'ultimate-member' ),
+										'label'       => __( 'Allow users to change email', 'ultimate-member' ),
+										'description' => __( 'If disabled, users will not be allowed to change their email address on the account page.', 'ultimate-member' ),
 									),
 									array(
 										'id'          => 'account_general_password',
 										'type'        => 'checkbox',
-										'label'       => __( 'Password is required?', 'ultimate-member' ),
-										'description' => __( 'Password is required to save account data.', 'ultimate-member' ),
+										'label'       => __( 'Require password to update account', 'ultimate-member' ),
+										'description' => __( 'If enabled, users will need to enter their password when updating their information via the account page.', 'ultimate-member' ),
 									),
 								),
 							),
@@ -1063,21 +1077,22 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 						'title'    => __( 'Access', 'ultimate-member' ),
 						'sections' => array(
 							''      => array(
-								'title'  => __( 'Restriction Content', 'ultimate-member' ),
+								'title'  => __( 'Content Restriction', 'ultimate-member' ),
 								'fields' => $access_fields,
 							),
 							'other' => array(
 								'title'  => __( 'Other', 'ultimate-member' ),
 								'fields' => array(
 									array(
-										'id'    => 'enable_reset_password_limit',
-										'type'  => 'checkbox',
-										'label' => __( 'Enable the Reset Password Limit?', 'ultimate-member' ),
+										'id'          => 'enable_reset_password_limit',
+										'type'        => 'checkbox',
+										'label'       => __( 'Password reset limit', 'ultimate-member' ),
+										'description' => __( 'If enabled, this sets a limit on the number of password resets a user can do.', 'ultimate-member' ),
 									),
 									array(
 										'id'          => 'reset_password_limit_number',
 										'type'        => 'text',
-										'label'       => __( 'Reset Password Limit', 'ultimate-member' ),
+										'label'       => __( 'Enter password reset limit', 'ultimate-member' ),
 										'description' => __( 'Set the maximum reset password limit. If reached the maximum limit, user will be locked from using this.', 'ultimate-member' ),
 										'validate'    => 'numeric',
 										'conditional' => array( 'enable_reset_password_limit', '=', 1 ),
@@ -1086,14 +1101,20 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 									array(
 										'id'          => 'blocked_emails',
 										'type'        => 'textarea',
-										'label'       => __( 'Blocked Email Addresses (Enter one email per line)', 'ultimate-member' ),
-										'description' => __( 'This will block the specified e-mail addresses from being able to sign up or sign in to your site. To block an entire domain, use something like *@domain.com', 'ultimate-member' ),
+										'label'       => __( 'Blocked Email Addresses', 'ultimate-member' ),
+										'description' => __( 'Please enter one email per line. This will block the specified email addresses from being able to sign up or sign in to your website. To block an entire domain, add an asterix before the <code>@</code> e.g. <code>*@domain.com</code>.', 'ultimate-member' ),
+										'args'        => array(
+											'textarea_rows' => 10,
+										),
 									),
 									array(
 										'id'          => 'blocked_words',
 										'type'        => 'textarea',
-										'label'       => __( 'Blacklist Words (Enter one word per line)', 'ultimate-member' ),
-										'description' => __( 'This option lets you specify blacklist of words to prevent anyone from signing up with such a word as their username', 'ultimate-member' ),
+										'label'       => __( 'Banned Usernames', 'ultimate-member' ),
+										'description' => __( 'This option lets you specify words that will be blocked when a user tries to register using one of these words.', 'ultimate-member' ),
+										'args'        => array(
+											'textarea_rows' => 10,
+										),
 									),
 								),
 							),

@@ -27,6 +27,7 @@ class Init extends Helpers {
 
 	function includes() {
 		$this->shortcode();
+		$this->enqueue();
 	}
 
 
@@ -38,5 +39,16 @@ class Init extends Helpers {
 			UM()->classes['umm\member_directory\includes\frontend\shortcode'] = new Shortcode();
 		}
 		return UM()->classes['umm\member_directory\includes\frontend\shortcode'];
+	}
+
+
+	/**
+	 * @return Enqueue()
+	 */
+	function enqueue() {
+		if ( empty( UM()->classes['umm\member_directory\includes\frontend\enqueue'] ) ) {
+			UM()->classes['umm\member_directory\includes\frontend\enqueue'] = new Enqueue();
+		}
+		return UM()->classes['umm\member_directory\includes\frontend\enqueue'];
 	}
 }

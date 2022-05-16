@@ -35,11 +35,11 @@ class Enqueue {
 
 		switch( $version ) {
 			case 'v3':
-				$deps[] = 'google-recapthca-api-v3';
+				$deps[] = 'google-recaptcha-api-v3';
 				break;
 			case 'v2':
 			default:
-				$deps[] = 'google-recapthca-api-v2';
+				$deps[] = 'google-recaptcha-api-v2';
 				break;
 		}
 
@@ -84,14 +84,14 @@ class Enqueue {
 			case 'v3':
 				$site_key = UM()->options()->get( 'g_reCAPTCHA_site_key' );
 
-				wp_register_script( 'google-recapthca-api-v3', "https://www.google.com/recaptcha/api.js?render=$site_key" );
+				wp_register_script( 'google-recaptcha-api-v3', "https://www.google.com/recaptcha/api.js?render=$site_key", array(), '3.0', false );
 				break;
 			case 'v2':
 			default:
 				$language_code = UM()->options()->get( 'g_recaptcha_language_code' );
 				$language_code = apply_filters( 'um_recaptcha_language_code', $language_code );
 
-				wp_register_script( 'google-recapthca-api-v2', "https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl=$language_code" );
+				wp_register_script( 'google-recaptcha-api-v2', "https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl=$language_code", array(), '2.0', false );
 				break;
 		}
 	}

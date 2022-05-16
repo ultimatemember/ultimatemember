@@ -260,6 +260,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'account_tab_privacy'                   => 1,
 				'account_tab_notifications'             => 1,
 				'account_tab_delete'                    => 1,
+				'delete_account_password_requires'      => 1,
 				'delete_account_text'                   => __( 'Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account enter your password below.', 'ultimate-member' ),
 				'delete_account_no_pass_required_text'  => __( 'Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account, click on the button below.', 'ultimate-member' ),
 				'account_name'                          => 1,

@@ -735,7 +735,17 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			 */
 			do_action( "um_before_{$mode}_form_is_loaded", $args );
 
+			$output = ob_get_clean();
+
+			ob_start();
+
 			$this->template_load( $template, $args );
+
+			$main_content = ob_get_clean();
+
+			$output .= apply_filters( 'um_main_ultimatemember_shortcode_content', $main_content, $mode, $args );
+
+			ob_start();
 
 			$this->dynamic_css( $args );
 
@@ -762,7 +772,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			 */
 			do_action( 'um_after_everything_output' );
 
-			$output = ob_get_clean();
+			$output .= ob_get_clean();
 			return $output;
 		}
 

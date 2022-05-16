@@ -930,6 +930,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					$is_required = UM()->options()->get( 'account_general_password' );
 					break;
 				case 'delete':
+					$is_required = UM()->options()->get( 'delete_account_password_requires' );
 					break;
 				case 'password':
 					break;

@@ -22,6 +22,7 @@ class Init {
 		add_action( 'um_admin_create_notices', array( &$this, 'add_admin_notice' ) );
 		add_action( 'um_admin_add_form_metabox', array( &$this, 'add_form_metaboxes' ), 10 );
 		add_filter( 'um_form_meta_map', array( &$this, 'add_form_meta_sanitize' ), 10, 1 );
+		add_filter( 'um_settings_map', array( &$this, 'settings_map' ), 10, 1 );
 		add_filter( 'um_settings_structure', array( &$this, 'add_settings' ), 10, 1 );
 		add_filter( 'um_module_list_table_actions', array( &$this, 'extend_module_row_actions' ), 10, 2 );
 	}
@@ -54,6 +55,69 @@ class Init {
 	}
 
 
+	/**
+	 * @param array $settings_map
+	 *
+	 * @return array
+	 */
+	public function settings_map( $settings_map ) {
+		$settings_map = array_merge(
+			$settings_map,
+			array(
+				'g_recaptcha_status'               => array(
+					'sanitize' => 'bool',
+				),
+				'g_recaptcha_version'              => array(
+					'sanitize' => 'text',
+				),
+				'g_reCAPTCHA_site_key'             => array(
+					'sanitize' => 'text',
+				),
+				'g_reCAPTCHA_secret_key'           => array(
+					'sanitize' => 'text',
+				),
+				'g_reCAPTCHA_score'                => array(
+					'sanitize' => 'text',
+				),
+				'g_recaptcha_sitekey'              => array(
+					'sanitize' => 'text',
+				),
+				'g_recaptcha_secretkey'            => array(
+					'sanitize' => 'text',
+				),
+				'g_recaptcha_type'                 => array(
+					'sanitize' => 'key',
+				),
+				'g_recaptcha_language_code'        => array(
+					'sanitize' => 'text',
+				),
+				'g_recaptcha_size'                 => array(
+					'sanitize' => 'key',
+				),
+				'g_recaptcha_theme'                => array(
+					'sanitize' => 'key',
+				),
+				'g_recaptcha_password_reset'       => array(
+					'sanitize' => 'bool',
+				),
+				'g_recaptcha_wp_lostpasswordform'  => array(
+					'sanitize' => 'bool',
+				),
+				'g_recaptcha_wp_login_form'        => array(
+					'sanitize' => 'bool',
+				),
+				'g_recaptcha_wp_login_form_widget' => array(
+					'sanitize' => 'bool',
+				),
+				'g_recaptcha_wp_register_form'     => array(
+					'sanitize' => 'bool',
+				),
+			)
+		);
+		return $settings_map;
+	}
+
+
 	public function extend_module_row_actions( $actions, $module_slug ) {
 		if ( 'recaptcha' === $module_slug ) {
 			$actions = UM()->array_insert_after( $actions, 'docs', array( 'settings' => '<a href="admin.php?page=um_options&tab=modules&section=' . esc_attr( $module_slug ) . '">' . __( 'Settings', 'ultimate-member' ) . '</a>' ) );
@@ -74,13 +138,16 @@ class Init {
 			return;
 		}
 
-		ob_start();
-		?>
+		$allowed_html = array(
+			'strong' => array(),
+		);
 
-		<p><?php _e( 'Google reCAPTCHA is active on your site. However you need to fill in both your <strong>site key and secret key</strong> to start protecting your site against spam.', 'ultimate-member' ); ?></p>
+		ob_start(); ?>
+
+		<p><?php echo wp_kses( __( 'Google reCAPTCHA is active on your site. However you need to fill in both your <strong>site key and secret key</strong> to start protecting your site against spam.', 'ultimate-member' ), $allowed_html ); ?></p>
 
 		<p>
-			<a href="<?php echo admin_url( 'admin.php?page=um_options&tab=modules&section=recaptcha' ) ?>" class="button button-primary"><?php esc_html_e( 'I already have the keys', 'ultimate-member' ); ?></a>&nbsp;
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=um_options&tab=extensions&section=recaptcha' ) ); ?>" class="button button-primary"><?php esc_html_e( 'I already have the keys', 'ultimate-member' ); ?></a>&nbsp;
 			<a href="http://google.com/recaptcha" class="button-secondary" target="_blank"><?php esc_html_e( 'Generate your site and secret key', 'ultimate-member' ); ?></a>
 		</p>
 
@@ -94,7 +161,7 @@ class Init {
 				'message'     => $message,
 				'dismissible' => true,
 			),
-		10
+			10
 		);
 	}
 
@@ -108,17 +175,22 @@ class Init {
 			return;
 		}
 
+		if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+
 		add_meta_box(
-			"um-admin-form-register_recaptcha{" . $module_data['path'] . "}",
+			'um-admin-form-register-recaptcha{' . $module_data['path'] . '}',
 			__( 'Google reCAPTCHA', 'ultimate-member' ),
-			array( UM()->admin()->metabox(), 'load_metabox_form' ),
+			array( UM()->metabox(), 'load_metabox_form' ),
 			'um_form',
 			'side',
 			'default'
 		);
 
 		add_meta_box(
-			"um-admin-form-login_recaptcha{" . $module_data['path'] . "}",
+			"um-admin-form-login-recaptcha{" . $module_data['path'] . "}",
 			__( 'Google reCAPTCHA', 'ultimate-member' ),
 			array( UM()->admin()->metabox(), 'load_metabox_form' ),
 			'um_form',
@@ -291,18 +363,6 @@ class Init {
 					'conditional' => array( 'g_recaptcha_version', '=', 'v2' ),
 				),
 				array(
-					'id'          => 'g_recaptcha_theme',
-					'type'        => 'select',
-					'label'       => __( 'Theme', 'ultimate-member' ),
-					'description' => __( 'Select a color theme of the widget.', 'ultimate-member' ),
-					'options'     => array(
-						'dark'  => __( 'Dark', 'ultimate-member' ),
-						'light' => __( 'Light', 'ultimate-member' ),
-					),
-					'size'        => 'small',
-					'conditional' => array( 'g_recaptcha_version', '=', 'v2' ),
-				),
-				array(
 					'id'          => 'g_recaptcha_size',
 					'type'        => 'select',
 					'label'       => __( 'Size', 'ultimate-member' ),
@@ -315,12 +375,52 @@ class Init {
 					'size'        => 'small',
 					'conditional' => array( 'g_recaptcha_version', '=', 'v2' ),
 				),
+				array(
+					'id'          => 'g_recaptcha_theme',
+					'type'        => 'select',
+					'label'       => __( 'Theme', 'ultimate-member' ),
+					'description' => __( 'Select a color theme of the widget.', 'ultimate-member' ),
+					'options'     => array(
+						'dark'  => __( 'Dark', 'ultimate-member' ),
+						'light' => __( 'Light', 'ultimate-member' ),
+					),
+					'size'        => 'small',
+					'conditional' => array( 'g_recaptcha_size', '!=', 'invisible' ),
+				),
 				/* Forms */
 				array(
 					'id'          => 'g_recaptcha_password_reset',
 					'type'        => 'checkbox',
-					'label'       => __( 'Enable Google reCAPTCHA on password reset form', 'ultimate-member' ),
-					'description' => __( 'Display the google Google reCAPTCHA on password reset form.', 'ultimate-member' ),
+					'label'       => __( 'Enable Google reCAPTCHA on the UM password reset form', 'ultimate-member' ),
+					'description' => __( 'Display the google Google reCAPTCHA on the Ultimate Member password reset form.', 'ultimate-member' ),
+					'conditional' => array( 'g_recaptcha_status', '=', 1 ),
+				),
+				array(
+					'id'          => 'g_recaptcha_wp_lostpasswordform',
+					'type'        => 'checkbox',
+					'label'       => __( 'Enable Google reCAPTCHA on wp-login.php lost password form', 'ultimate-member' ),
+					'description' => __( 'Display the google Google reCAPTCHA on wp-login.php lost password form.', 'ultimate-member' ),
+					'conditional' => array( 'g_recaptcha_status', '=', 1 ),
+				),
+				array(
+					'id'          => 'g_recaptcha_wp_login_form',
+					'type'        => 'checkbox',
+					'label'       => __( 'Enable Google reCAPTCHA on wp-login.php form', 'ultimate-member' ),
+					'description' => __( 'Display the google Google reCAPTCHA on wp-login.php form.', 'ultimate-member' ),
+					'conditional' => array( 'g_recaptcha_status', '=', 1 ),
+				),
+				array(
+					'id'          => 'g_recaptcha_wp_login_form_widget',
+					'type'        => 'checkbox',
+					'label'       => __( 'Enable Google reCAPTCHA on login form through `wp_login_form()`', 'ultimate-member' ),
+					'description' => __( 'Display the google Google reCAPTCHA on login form through `wp_login_form()`.', 'ultimate-member' ),
+					'conditional' => array( 'g_recaptcha_status', '=', 1 ),
+				),
+				array(
+					'id'          => 'g_recaptcha_wp_register_form',
+					'type'        => 'checkbox',
+					'label'       => __( 'Enable Google reCAPTCHA on wp-login.php registration form', 'ultimate-member' ),
+					'description' => __( 'Display the google Google reCAPTCHA on wp-login.php registration form`.', 'ultimate-member' ),
 					'conditional' => array( 'g_recaptcha_status', '=', 1 ),
 				),
 			),

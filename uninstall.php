@@ -93,6 +93,7 @@ if ( ! empty( $delete_options ) ) {
               meta_key = 'submitted' OR 
               meta_key = 'account_status' OR 
               meta_key = 'password_rst_attempts' OR 
+              meta_key = 'password_rst_attempts_timeout' OR 
               meta_key = 'profile_photo' OR 
               meta_key = '_enable_new_follow' OR 
               meta_key = '_enable_new_friend' OR 

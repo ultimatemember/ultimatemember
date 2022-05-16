@@ -27,7 +27,18 @@ class Shortcode {
 		add_filter( 'um_load_shortcode_maybe_skip_meta', array( &$this, 'maybe_skip_meta' ), 10, 2 );
 		add_filter( 'um_get_default_shortcode', array( &$this, 'get_default_shortcode' ), 10, 2 );
 
+		add_filter( 'um_main_ultimatemember_shortcode_content', array( &$this, 'change_content' ), 10, 3 );
+
 		add_action( 'um_form_shortcode_dynamic_css_include', array( &$this, 'dynamic_css_include' ), 10, 1 );
+	}
+
+
+	public function change_content( $content, $mode, $args ) {
+		if ( 'directory' === $mode ) {
+			$content = um_get_template_html( 'members.php', array( 'args' => $args, 'form_id' => $args['form_id'], 'mode' => $args['mode'] ), 'member-directory' );
+		}
+
+		return $content;
 	}
 
 
