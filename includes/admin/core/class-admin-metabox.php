@@ -23,24 +23,32 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 
 		/**
+		 * True if the form nonce has been already added
+		 *
 		 * @var bool
 		 */
 		private $form_nonce_added = false;
 
 
 		/**
+		 * True if the directory nonce has been already added
+		 *
 		 * @var bool
 		 */
 		private $directory_nonce_added = false;
 
 
 		/**
+		 * True if a custom nonce has been already added
+		 *
 		 * @var bool
 		 */
 		private $custom_nonce_added = false;
 
 
 		/**
+		 *
+		 * True if icons have been initiated
 		 *
 		 * @var bool
 		 */
@@ -673,7 +681,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			// validate nonce.
 			if (
 				! isset( $_POST['um_admin_save_metabox_restrict_content_nonce'] )
-				|| ! wp_verify_nonce( wp_unslash( $_POST['um_admin_save_metabox_restrict_content_nonce'] ), basename( __FILE__ ) )
+				|| ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['um_admin_save_metabox_restrict_content_nonce'] ) ), basename( __FILE__ ) )
 			) {
 				return;
 			}
@@ -687,7 +695,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			}
 
 			if ( ! empty( $_POST['um_content_restriction'] ) && is_array( $_POST['um_content_restriction'] ) ) {
-				$restriction_meta = UM()->admin()->sanitize_post_restriction_meta( wp_unslash( $_POST['um_content_restriction'] ) );
+				$restriction_meta = UM()->admin()->sanitize_post_restriction_meta( map_deep( wp_unslash( $_POST['um_content_restriction'] ), 'wp_kses_post' ) );
 				update_post_meta( $post_id, 'um_content_restriction', $restriction_meta );
 			} else {
 				delete_post_meta( $post_id, 'um_content_restriction' );
@@ -705,7 +713,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			// validate nonce.
 			if (
 				empty( $_POST['um_admin_save_metabox_custom_nonce'] )
-				|| ! wp_verify_nonce( wp_unslash( $_POST['um_admin_save_metabox_custom_nonce'] ), basename( __FILE__ ) )
+				|| ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['um_admin_save_metabox_custom_nonce'] ) ), basename( __FILE__ ) )
 			) {
 				return;
 			}
@@ -746,7 +754,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			// validate nonce.
 			if (
 				! isset( $_POST['um_admin_save_metabox_directory_nonce'] )
-				|| ! wp_verify_nonce( wp_unslash( $_POST['um_admin_save_metabox_directory_nonce'] ), basename( __FILE__ ) )
+				|| ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['um_admin_save_metabox_directory_nonce'] ) ), basename( __FILE__ ) )
 			) {
 				return;
 			}
@@ -794,7 +802,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 			// save metadata.
 			if ( isset( $_POST['um_metadata'] ) ) {
-				$metadata = UM()->admin()->sanitize_member_directory_meta( wp_unslash( $_POST['um_metadata'] ) );
+				$metadata = UM()->admin()->sanitize_member_directory_meta( map_deep( wp_unslash( $_POST['um_metadata'] ), 'wp_kses_post' ) );
 				foreach ( $metadata as $k => $v ) {
 
 					if ( '_um_show_these_users' === $k && trim( $v ) ) {
@@ -832,7 +840,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				}
 			}
 
-			update_post_meta( $post_id, '_um_search_filters_gmt', absint( wp_unslash( $_POST['um-gmt-offset'] ) ) );
+			$search_filters_gmt = isset( $_POST['um-gmt-offset'] ) ? absint( wp_unslash( $_POST['um-gmt-offset'] ) ) : 0;
+			update_post_meta( $post_id, '_um_search_filters_gmt', $search_filters_gmt );
 		}
 
 
@@ -848,7 +857,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			// validate nonce.
 			if (
 				empty( $_POST['um_admin_save_metabox_form_nonce'] )
-				|| ! wp_verify_nonce( wp_unslash( $_POST['um_admin_save_metabox_form_nonce'] ), basename( __FILE__ ) )
+				|| ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['um_admin_save_metabox_form_nonce'] ) ), basename( __FILE__ ) )
 			) {
 				return;
 			}
@@ -880,7 +889,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			delete_post_meta( $post_id, '_um_profile_metafields' );
 
 			if ( isset( $_POST['form'] ) ) {
-				$form_meta = UM()->admin()->sanitize_form_meta( wp_unslash( $_POST['form'] ) );
+				$form_meta = UM()->admin()->sanitize_form_meta( map_deep( wp_unslash( $_POST['form'] ), 'wp_kses_post' ) );
 				foreach ( $form_meta as $k => $v ) {
 					if ( strstr( $k, '_um_' ) ) {
 						if ( '_um_is_default' === $k ) {
@@ -888,13 +897,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 							$mode = UM()->query()->get_attr( 'mode', $post_id );
 
 							if ( ! empty( $mode ) ) {
-								$posts = $wpdb->get_col( $wpdb->prepare(
-									"SELECT post_id
-									FROM {$wpdb->postmeta}
-									WHERE meta_key = '_um_mode'
-										AND meta_value = %s;",
-									$mode
-								) );
+								$posts = $wpdb->get_col(
+									$wpdb->prepare(
+										"SELECT post_id
+										FROM {$wpdb->postmeta}
+										WHERE meta_key = '_um_mode'
+											AND meta_value = %s;",
+										$mode
+									)
+								);
 								foreach ( $posts as $p_id ) {
 									delete_post_meta( $p_id, '_um_is_default' );
 								}
@@ -916,8 +927,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 */
 		public function save_metabox_restrict_content( $post_id, $post ) {
 			// validate nonce.
-			if ( ! isset( $_POST['um_admin_save_metabox_restrict_content_nonce'] ) ||
-			     ! wp_verify_nonce( wp_unslash( $_POST['um_admin_save_metabox_restrict_content_nonce'] ), basename( __FILE__ ) ) ) {
+			if (
+				! isset( $_POST['um_admin_save_metabox_restrict_content_nonce'] )
+				|| ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['um_admin_save_metabox_restrict_content_nonce'] ) ), basename( __FILE__ ) )
+			) {
 				return;
 			}
 
@@ -928,7 +941,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			}
 
 			if ( ! empty( $_POST['um_content_restriction'] ) && is_array( $_POST['um_content_restriction'] ) ) {
-				$restriction_meta = UM()->admin()->sanitize_post_restriction_meta( wp_unslash( $_POST['um_content_restriction'] ) );
+				$restriction_meta = UM()->admin()->sanitize_post_restriction_meta( map_deep( wp_unslash( $_POST['um_content_restriction'] ), 'wp_kses_post' ) );
 				update_post_meta( $post_id, 'um_content_restriction', $restriction_meta );
 			} else {
 				delete_post_meta( $post_id, 'um_content_restriction' );
@@ -1251,7 +1264,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			// validate nonce.
 			if (
 				! isset( $_REQUEST['um_admin_save_taxonomy_restrict_content_nonce'] )
-				|| ! wp_verify_nonce( wp_unslash( $_REQUEST['um_admin_save_taxonomy_restrict_content_nonce'] ), basename( __FILE__ ) )
+				|| ! wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['um_admin_save_taxonomy_restrict_content_nonce'] ) ), basename( __FILE__ ) )
 			) {
 				return $term_id;
 			}
@@ -1265,7 +1278,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			}
 
 			if ( ! empty( $_REQUEST['um_content_restriction'] ) && is_array( $_REQUEST['um_content_restriction'] ) ) {
-				$restriction_meta = UM()->admin()->sanitize_term_restriction_meta( wp_unslash( $_REQUEST['um_content_restriction'] ) );
+				$restriction_meta = UM()->admin()->sanitize_term_restriction_meta( map_deep( wp_unslash( $_REQUEST['um_content_restriction'] ), 'wp_kses_post' ) );
 				update_term_meta( $term_id, 'um_content_restriction', $restriction_meta );
 			} else {
 				delete_term_meta( $term_id, 'um_content_restriction' );
@@ -1278,7 +1291,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		/**
 		 * Filter validation types on loop
 		 *
-		 * @param bool   $break        Validate?
+		 * @param bool   $break        Validate or not.
 		 * @param string $key          Field Key.
 		 * @param int    $form_id      Form ID.
 		 * @param array  $field_array  Field Settings.
@@ -1309,15 +1322,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 */
 		public function field_input( $attribute, $form_id = null, $field_args = array() ) {
 
-			if ( $this->in_edit == true ) { // we're editing a field.
-				$real_attr = substr( $attribute, 1 );
+			if ( true === $this->in_edit ) { // we're editing a field.
+				$real_attr             = substr( $attribute, 1 );
 				$this->edit_mode_value = isset( $this->edit_array[ $real_attr ] ) ? $this->edit_array[ $real_attr ] : null;
 			}
 
 			switch ( $attribute ) {
 
 				default:
-
 					/**
 					 * UM hook
 					 *
@@ -1338,7 +1350,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					 * ?>
 					 */
 					do_action( "um_admin_field_edit_hook{$attribute}", $this->edit_mode_value, $form_id, $this->edit_array );
-
 					break;
 
 				case '_visibility':
@@ -1365,13 +1376,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					?>
 
 					<p>
-						<select name="<?php echo esc_attr( $attribute ); ?>" id="<?php echo esc_attr( $attribute ); ?>" style="width: 90px">
-
+						<select name="<?php echo esc_attr( $attribute ); ?>" id="<?php echo esc_attr( $attribute ); ?>" style="width: 90px;">
 							<option></option>
 
 							<?php foreach ( $actions as $action ) { ?>
 
-								<option value="<?php echo esc_attr( $action ); ?>" <?php selected( $action, $this->edit_mode_value ); ?>><?php echo esc_html_e( $action ); ?></option>
+								<option value="<?php echo esc_attr( $action ); ?>" <?php selected( $action, $this->edit_mode_value ); ?>><?php echo esc_html( $action ); ?></option>
 
 							<?php } ?>
 
@@ -1400,9 +1410,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 								if ( isset( $array['title'] ) && ( ! isset( $this->edit_array['metakey'] ) || $key !== $this->edit_array['metakey'] ) ) {
 									?>
 
-									<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, $this->edit_mode_value ); ?>><?php echo esc_html_e( $array['title'] ); ?></option>
+									<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, $this->edit_mode_value ); ?>><?php echo esc_html( $array['title'] ); ?></option>
 
-								<?php
+									<?php
 								}
 							}
 							?>
@@ -1418,7 +1428,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				case '_conditional_operator2':
 				case '_conditional_operator3':
 				case '_conditional_operator4':
-
 					$operators = array(
 						'empty',
 						'not empty',
@@ -1437,7 +1446,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 							<?php foreach ( $operators as $operator ) { ?>
 
-								<option value="<?php echo esc_attr( $operator ); ?>" <?php selected( $operator, $this->edit_mode_value ); ?>><?php echo esc_html_e( $operator ); ?></option>
+								<option value="<?php echo esc_attr( $operator ); ?>" <?php selected( $operator, $this->edit_mode_value ); ?>><?php echo esc_html( $operator ); ?></option>
 
 							<?php } ?>
 
@@ -1452,10 +1461,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				case '_conditional_value2':
 				case '_conditional_value3':
 				case '_conditional_value4':
+					$value = isset( $this->edit_mode_value ) ? $this->edit_mode_value : '';
 					?>
 
 					<p>
-						<input type="text" name="<?php echo esc_attr( $attribute ); ?>" id="<?php echo esc_attr( $attribute ); ?>" value="<?php echo isset( $this->edit_mode_value ) ? $this->edit_mode_value : ''; ?>" placeholder="<?php esc_attr_e( 'Value', 'ultimate-member' ); ?>" style="width: 150px !important; position: relative; top: -1px;" />
+						<input type="text" name="<?php echo esc_attr( $attribute ); ?>" id="<?php echo esc_attr( $attribute ); ?>" value="<?php echo esc_attr( $value ); ?>" placeholder="<?php esc_attr_e( 'Value', 'ultimate-member' ); ?>" style="width: 150px !important; position: relative; top: -1px;" />
 					</p>
 
 					<?php
@@ -1471,7 +1481,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 							<option value="" <?php selected( '', $this->edit_mode_value ); ?>></option>
 
 							<?php
-							foreach( UM()->builtin()->validation_types() as $key => $name ) {
+							foreach ( UM()->builtin()->validation_types() as $key => $name ) {
 								/**
 								 * UM hook
 								 *
@@ -1495,11 +1505,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 								 * }
 								 * ?>
 								 */
-								$continue = apply_filters( "um_builtin_validation_types_continue_loop", true, $key, $form_id, $field_args );
+								$continue = apply_filters( 'um_builtin_validation_types_continue_loop', true, $key, $form_id, $field_args );
 								if ( $continue ) {
 									?>
 
-									<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, $this->edit_mode_value ); ?>><?php echo esc_html_e( $name ); ?></option>
+									<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, $this->edit_mode_value ); ?>><?php echo esc_html( $name ); ?></option>
 
 									<?php
 								}
@@ -1513,19 +1523,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_custom_validate':
+					$value = isset( $this->edit_mode_value ) ? $this->edit_mode_value : '';
 					?>
 
 					<p class="_custom_validate">
 						<label for="_custom_validate"><?php esc_html_e( 'Custom Action', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'If you want to apply your custom validation, you can use action hooks to add custom validation. Please refer to documentation for further details.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_custom_validate" id="_custom_validate" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : ''; ?>" />
+						<input type="text" name="_custom_validate" id="_custom_validate" value="<?php echo esc_attr( $value ); ?>" />
 					</p>
 
 					<?php
 					break;
 
 				case '_icon':
-
-					if ( $this->set_field_type == 'row' ) {
+					$value = isset( $this->edit_mode_value ) ? $this->edit_mode_value : '';
+					if ( 'row' === $this->set_field_type ) {
 						$back = 'UM_edit_row';
 						?>
 
@@ -1534,9 +1545,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 							<a href="javascript:void(0);" class="button" data-modal="UM_fonticons" data-modal-size="normal" data-dynamic-content="um_admin_fonticon_selector" data-arg1="" data-arg2="" data-back="<?php echo esc_attr( $back ); ?>"><?php esc_html_e( 'Choose Icon', 'ultimate-member' ); ?></a>
 
-							<span class="um-admin-icon-value"><?php if ( $this->edit_mode_value ) { ?><i class="<?php echo $this->edit_mode_value; ?>"></i><?php } else { ?><?php esc_html_e( 'No Icon', 'ultimate-member' ); ?><?php } ?></span>
+							<span class="um-admin-icon-value">
+							<?php if ( $this->edit_mode_value ) { ?>
+								<i class="<?php echo esc_attr( $this->edit_mode_value ); ?>"></i>
+							<?php } else { ?>
+								<?php esc_html_e( 'No Icon', 'ultimate-member' ); ?>
+							<?php } ?>
+							</span>
 
-							<input type="hidden" name="_icon" id="_icon" value="<?php echo (isset( $this->edit_mode_value ) ) ? $this->edit_mode_value : ''; ?>" />
+							<input type="hidden" name="_icon" id="_icon" value="<?php echo esc_attr( $value ); ?>" />
 
 							<?php if ( $this->edit_mode_value ) { ?>
 								<span class="um-admin-icon-clear show"><i class="um-icon-android-cancel"></i></span>
@@ -1546,7 +1563,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 						</p>
 
-					<?php
+						<?php
 					} else {
 
 						if ( $this->in_edit ) {
@@ -1562,9 +1579,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 								<a href="javascript:void(0);" class="button" data-modal="UM_fonticons" data-modal-size="normal" data-dynamic-content="um_admin_fonticon_selector" data-arg1="" data-arg2="" data-back="<?php echo esc_attr( $back ); ?>"><?php esc_html_e( 'Choose Icon', 'ultimate-member' ); ?></a>
 
-								<span class="um-admin-icon-value"><?php if ( $this->edit_mode_value ) { ?><i class="<?php echo $this->edit_mode_value; ?>"></i><?php } else { ?><?php esc_html_e( 'No Icon', 'ultimate-member' ); ?><?php } ?></span>
+								<span class="um-admin-icon-value">
+								<?php if ( $this->edit_mode_value ) { ?>
+									<i class="<?php echo esc_attr( $this->edit_mode_value ); ?>"></i>
+								<?php } else { ?>
+									<?php esc_html_e( 'No Icon', 'ultimate-member' ); ?>
+								<?php } ?>
+								</span>
 
-								<input type="hidden" name="_icon" id="_icon" value="<?php echo (isset( $this->edit_mode_value ) ) ? $this->edit_mode_value : ''; ?>" />
+								<input type="hidden" name="_icon" id="_icon" value="<?php echo esc_attr( $value ); ?>" />
 
 								<?php if ( $this->edit_mode_value ) { ?>
 									<span class="um-admin-icon-clear show"><i class="um-icon-android-cancel"></i></span>
@@ -1577,70 +1600,75 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 						<?php
 					}
-
 					break;
 
 				case '_css_class':
+					$value = isset( $this->edit_mode_value ) ? $this->edit_mode_value : '';
 					?>
 
 					<p>
 						<label for="_css_class"><?php esc_html_e( 'CSS Class', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Specify a custom CSS class to be applied to this element', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_css_class" id="_css_class" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : ''; ?>" />
+						<input type="text" name="_css_class" id="_css_class" value="<?php echo esc_attr( $value ); ?>" />
 					</p>
 
 					<?php
 					break;
 
 				case '_width':
+					$value = isset( $this->edit_mode_value ) ? absint( $this->edit_mode_value ) : 4;
 					?>
 
 					<p>
 						<label for="_width"><?php esc_html_e( 'Thickness (in pixels)', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This is the width in pixels, e.g. 4 or 2, etc', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_width" id="_width" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : 4; ?>" />
+						<input type="text" name="_width" id="_width" value="<?php echo esc_attr( $value ); ?>" />
 					</p>
 
 					<?php
 					break;
 
 				case '_divider_text':
+					$value = isset( $this->edit_mode_value ) ? $this->edit_mode_value : '';
 					?>
 
 					<p>
 						<label for="_divider_text"><?php esc_html_e( 'Optional Text', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Optional text to include with the divider', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_divider_text" id="_divider_text" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : ''; ?>" />
+						<input type="text" name="_divider_text" id="_divider_text" value="<?php echo esc_attr( $value ); ?>" />
 					</p>
 
 					<?php
 					break;
 
 				case '_padding':
+					$value = isset( $this->edit_mode_value ) ? $this->edit_mode_value : '0px 0px 0px 0px';
 					?>
 
 					<p>
 						<label for="_padding"><?php esc_html_e( 'Padding', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Set padding for this section', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_padding" id="_padding" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : '0px 0px 0px 0px'; ?>" />
+						<input type="text" name="_padding" id="_padding" value="<?php echo esc_attr( $value ); ?>" />
 					</p>
 
 					<?php
 					break;
 
 				case '_margin':
+					$value = isset( $this->edit_mode_value ) ? $this->edit_mode_value : '0px 0px 30px 0px';
 					?>
 
 					<p>
 						<label for="_margin"><?php esc_html_e( 'Margin', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Set margin for this section', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_margin" id="_margin" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : '0px 0px 30px 0px'; ?>" />
+						<input type="text" name="_margin" id="_margin" value="<?php echo esc_attr( $value ); ?>" />
 					</p>
 
 					<?php
 					break;
 
 				case '_border':
+					$value = isset( $this->edit_mode_value ) ? $this->edit_mode_value : '0px 0px 0px 0px';
 					?>
 
 					<p>
 						<label for="_border"><?php esc_html_e( 'Border', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Set border for this section', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_border" id="_border" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : '0px 0px 0px 0px'; ?>" />
+						<input type="text" name="_border" id="_border" value="<?php echo esc_attr( $value ); ?>" />
 					</p>
 
 					<?php
@@ -1663,22 +1691,24 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_borderradius':
+					$value = isset( $this->edit_mode_value ) ? $this->edit_mode_value : '0px';
 					?>
 
 					<p>
 						<label for="_borderradius"><?php esc_html_e( 'Border Radius', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Rounded corners can be applied by setting a pixels value here. e.g. 5px', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_borderradius" id="_borderradius" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : '0px'; ?>" />
+						<input type="text" name="_borderradius" id="_borderradius" value="<?php echo esc_attr( $value ); ?>" />
 					</p>
 
 					<?php
 					break;
 
 				case '_bordercolor':
+					$value = isset( $this->edit_mode_value ) ? $this->edit_mode_value : '';
 					?>
 
 					<p>
 						<label for="_bordercolor"><?php esc_html_e( 'Border Color', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Give a color to this border', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_bordercolor" id="_bordercolor" class="um-admin-colorpicker" data-default-color="" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : ''; ?>" />
+						<input type="text" name="_bordercolor" id="_bordercolor" class="um-admin-colorpicker" data-default-color="" value="<?php echo esc_attr( $value ); ?>" />
 					</p>
 
 					<?php
@@ -1696,88 +1726,96 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_heading_text':
+					$value = isset( $this->edit_mode_value ) ? $this->edit_mode_value : '';
 					?>
 
 					<p class="_heading_text">
 						<label for="_heading_text"><?php esc_html_e( 'Heading Text', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Enter the row heading text here', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_heading_text" id="_heading_text" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : ''; ?>" />
+						<input type="text" name="_heading_text" id="_heading_text" value="<?php echo esc_attr( $value ); ?>" />
 					</p>
 
 					<?php
 					break;
 
 				case '_background':
+					$value = isset( $this->edit_mode_value ) ? $this->edit_mode_value : '';
 					?>
 
 					<p>
 						<label for="_background"><?php esc_html_e( 'Background Color', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This will be the background of entire section', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_background" id="_background" class="um-admin-colorpicker" data-default-color="" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : ''; ?>" />
+						<input type="text" name="_background" id="_background" class="um-admin-colorpicker" data-default-color="" value="<?php echo esc_attr( $value ); ?>" />
 					</p>
 
 					<?php
 					break;
 
 				case '_heading_background_color':
+					$value = isset( $this->edit_mode_value ) ? $this->edit_mode_value : '';
 					?>
 
 					<p class="_heading_text">
 						<label for="_heading_background_color"><?php esc_html_e( 'Heading Background Color', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This will be the background of the heading section', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_heading_background_color" id="_heading_background_color" class="um-admin-colorpicker" data-default-color="" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : ''; ?>" />
+						<input type="text" name="_heading_background_color" id="_heading_background_color" class="um-admin-colorpicker" data-default-color="" value="<?php echo esc_attr( $value ); ?>" />
 					</p>
 
 					<?php
 					break;
 
 				case '_heading_text_color':
+					$value = isset( $this->edit_mode_value ) ? $this->edit_mode_value : '';
 					?>
 
 					<p class="_heading_text">
 						<label for="_heading_text_color"><?php esc_html_e( 'Heading Text Color', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This will be the text color of heading part only', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_heading_text_color" id="_heading_text_color" class="um-admin-colorpicker" data-default-color="" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : ''; ?>" />
+						<input type="text" name="_heading_text_color" id="_heading_text_color" class="um-admin-colorpicker" data-default-color="" value="<?php echo esc_attr( $value ); ?>" />
 					</p>
 
 					<?php
 					break;
 
 				case '_text_color':
+					$value = isset( $this->edit_mode_value ) ? $this->edit_mode_value : '';
 					?>
 
 					<p>
 						<label for="_text_color"><?php esc_html_e( 'Text Color', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This will be the text color of entire section', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_text_color" id="_text_color" class="um-admin-colorpicker" data-default-color="" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : ''; ?>" />
+						<input type="text" name="_text_color" id="_text_color" class="um-admin-colorpicker" data-default-color="" value="<?php echo esc_attr( $value ); ?>" />
 					</p>
 
 					<?php
 					break;
 
 				case '_icon_color':
+					$value = isset( $this->edit_mode_value ) ? $this->edit_mode_value : '';
 					?>
 
 					<p class="_heading_text">
 						<label for="_icon_color"><?php esc_html_e( 'Icon Color', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This will be the color of selected icon. By default It will be the same color as heading text color', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_icon_color" id="_icon_color" class="um-admin-colorpicker" data-default-color="" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : ''; ?>" />
+						<input type="text" name="_icon_color" id="_icon_color" class="um-admin-colorpicker" data-default-color="" value="<?php echo esc_attr( $value ); ?>" />
 					</p>
 
 					<?php
 					break;
 
 				case '_color':
+					$value = isset( $this->edit_mode_value ) ? $this->edit_mode_value : '#eeeeee';
 					?>
 
 					<p>
 						<label for="_color"><?php esc_html_e( 'Color', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select a color for this divider', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_color" id="_color" class="um-admin-colorpicker" data-default-color="#eeeeee" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : '#eeeeee'; ?>" />
+						<input type="text" name="_color" id="_color" class="um-admin-colorpicker" data-default-color="#eeeeee" value="<?php echo esc_attr( $value ); ?>" />
 					</p>
 
 					<?php
 					break;
 
 				case '_url_text':
+					$value = isset( $this->edit_mode_value ) ? $this->edit_mode_value : '';
 					?>
 
 					<p>
 						<label for="_url_text"><?php esc_html_e( 'URL Alt Text', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Entering custom text here will replace the url with a text link', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_url_text" id="_url_text" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : ''; ?>" />
+						<input type="text" name="_url_text" id="_url_text" value="<?php echo esc_attr( $value ); ?>" />
 					</p>
 
 					<?php
@@ -1790,7 +1828,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 						<label for="_url_target"><?php esc_html_e( 'Link Target', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Choose whether to open this link in same window or in a new window', 'ultimate-member' ) ); ?></label>
 						<select name="_url_target" id="_url_target" style="width: 100%">
 							<option value="_blank" <?php selected( '_blank', $this->edit_mode_value ); ?>><?php esc_html_e( 'Open in new window', 'ultimate-member' ); ?></option>
-							<option value="_self"  <?php selected( '_self', $this->edit_mode_value ); ?>><?php esc_html_e( 'Same window', 'ultimate-member' ); ?></option>
+							<option value="_self" <?php selected( '_self', $this->edit_mode_value ); ?>><?php esc_html_e( 'Same window', 'ultimate-member' ); ?></option>
 						</select>
 					</p>
 
@@ -1803,7 +1841,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					<p>
 						<label for="_url_rel"><?php esc_html_e( 'SEO Follow', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Whether to follow or nofollow this link by search engines', 'ultimate-member' ) ); ?></label>
 						<select name="_url_rel" id="_url_rel" style="width: 100%">
-							<option value="follow"  <?php selected( 'follow', $this->edit_mode_value ); ?>><?php esc_html_e( 'Follow', 'ultimate-member' ); ?></option>
+							<option value="follow" <?php selected( 'follow', $this->edit_mode_value ); ?>><?php esc_html_e( 'Follow', 'ultimate-member' ); ?></option>
 							<option value="nofollow" <?php selected( 'nofollow', $this->edit_mode_value ); ?>><?php esc_html_e( 'No-Follow', 'ultimate-member' ); ?></option>
 						</select>
 					</p>
@@ -1812,11 +1850,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_force_good_pass':
+					$checked = isset( $this->edit_mode_value ) ? $this->edit_mode_value : UM()->options()->get( 'require_strongpass' );
 					?>
 
 					<p>
 						<label for="_force_good_pass"><?php esc_html_e( 'Force strong password?', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Turn on to force users to create a strong password (A combination of one lowercase letter, one uppercase letter, and one number). If turned on this option is only applied to register forms and not to login forms.', 'ultimate-member' ) ); ?></label>
-						<input type="checkbox" name="_force_good_pass" id="_force_good_pass" value="1" <?php checked( isset( $this->edit_mode_value ) ? $this->edit_mode_value : UM()->options()->get( 'require_strongpass' ) ); ?> />
+						<input type="checkbox" name="_force_good_pass" id="_force_good_pass" value="1" <?php checked( $checked, 1 ); ?> />
 					</p>
 
 					<?php
@@ -1850,29 +1889,28 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_intervals':
-
+					$value = isset( $this->edit_mode_value ) ? absint( $this->edit_mode_value ) : 60;
 					?>
 
 					<p>
 						<label for="_intervals"><?php esc_html_e( 'Time Intervals (in minutes)', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Choose the minutes interval between each time in the time picker.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_intervals" id="_intervals" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : 60; ?>" placeholder="<?php esc_attr_e( 'e.g. 30, 60, 120', 'ultimate-member' ); ?>" />
+						<input type="text" name="_intervals" id="_intervals" value="<?php echo esc_attr( $value ); ?>" placeholder="<?php esc_attr_e( 'e.g. 30, 60, 120', 'ultimate-member' ); ?>" />
 					</p>
 
 					<?php
 					break;
 
 				case '_format':
-
-					if ( $this->set_field_type == 'date' ) {
+					if ( 'date' === $this->set_field_type ) {
 						?>
 
 						<p>
 							<label for="_format"><?php esc_html_e( 'Date User-Friendly Format', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'The display format of the date which is visible to user.', 'ultimate-member' ) ); ?></label>
 							<select name="_format" id="_format" style="width: 100%">
-								<option value="j M Y" <?php selected( 'j M Y', $this->edit_mode_value ); ?>><?php echo UM()->datetime()->get_time('j M Y'); ?></option>
-								<option value="M j Y" <?php selected( 'M j Y', $this->edit_mode_value ); ?>><?php echo UM()->datetime()->get_time('M j Y'); ?></option>
-								<option value="j F Y" <?php selected( 'j F Y', $this->edit_mode_value ); ?>><?php echo UM()->datetime()->get_time('j F Y'); ?></option>
-								<option value="F j Y" <?php selected( 'F j Y', $this->edit_mode_value ); ?>><?php echo UM()->datetime()->get_time('F j Y'); ?></option>
+								<option value="j M Y" <?php selected( 'j M Y', $this->edit_mode_value ); ?>><?php echo esc_html( UM()->datetime()->get_time( 'j M Y' ) ); ?></option>
+								<option value="M j Y" <?php selected( 'M j Y', $this->edit_mode_value ); ?>><?php echo esc_html( UM()->datetime()->get_time( 'M j Y' ) ); ?></option>
+								<option value="j F Y" <?php selected( 'j F Y', $this->edit_mode_value ); ?>><?php echo esc_html( UM()->datetime()->get_time( 'j F Y' ) ); ?></option>
+								<option value="F j Y" <?php selected( 'F j Y', $this->edit_mode_value ); ?>><?php echo esc_html( UM()->datetime()->get_time( 'F j Y' ) ); ?></option>
 							</select>
 						</p>
 
@@ -1881,9 +1919,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 						<p>
 							<label for="_format"><?php esc_html_e( 'Time Format', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Choose the displayed time-format for this field', 'ultimate-member' ) ); ?></label>
 							<select name="_format" id="_format" style="width: 100%">
-								<option value="g:i a" <?php selected( 'g:i a', $this->edit_mode_value ); ?>><?php echo UM()->datetime()->get_time('g:i a'); ?><?php esc_html_e( '( 12-hr format )', 'ultimate-member' ); ?></option>
-								<option value="g:i A" <?php selected( 'g:i A', $this->edit_mode_value ); ?>><?php echo UM()->datetime()->get_time('g:i A'); ?><?php esc_html_e( '( 12-hr format )', 'ultimate-member' ); ?></option>
-								<option value="H:i"  <?php selected( 'H:i', $this->edit_mode_value ); ?>><?php echo UM()->datetime()->get_time('H:i'); ?><?php esc_html_e( '( 24-hr format )', 'ultimate-member' ); ?></option>
+								<option value="g:i a" <?php selected( 'g:i a', $this->edit_mode_value ); ?>><?php echo esc_html( UM()->datetime()->get_time( 'g:i a' ) ); ?><?php esc_html_e( '( 12-hr format )', 'ultimate-member' ); ?></option>
+								<option value="g:i A" <?php selected( 'g:i A', $this->edit_mode_value ); ?>><?php echo esc_html( UM()->datetime()->get_time( 'g:i A' ) ); ?><?php esc_html_e( '( 12-hr format )', 'ultimate-member' ); ?></option>
+								<option value="H:i" <?php selected( 'H:i', $this->edit_mode_value ); ?>><?php echo esc_html( UM()->datetime()->get_time( 'H:i' ) ); ?><?php esc_html_e( '( 24-hr format )', 'ultimate-member' ); ?></option>
 							</select>
 						</p>
 
@@ -1896,7 +1934,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 					<p>
 						<label for="_format_custom"><?php esc_html_e( 'Use custom Date format', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This option overrides "Date User-Friendly Format" option. See https://www.php.net/manual/en/function.date.php', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_format_custom" id="_format_custom" value="<?php echo htmlspecialchars( $this->edit_mode_value, ENT_QUOTES ); ?>" placeholder="j M Y" />
+						<input type="text" name="_format_custom" id="_format_custom" value="<?php echo esc_attr( htmlspecialchars( $this->edit_mode_value, ENT_QUOTES ) ); ?>" placeholder="j M Y" />
 					</p>
 
 					<?php
@@ -1917,24 +1955,23 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_disabled_weekdays':
-
 					if ( isset( $this->edit_mode_value ) && is_array( $this->edit_mode_value ) ) {
-						$values = $this->edit_mode_value;
+						$values = array_map( 'absint', $this->edit_mode_value );
 					} else {
-						$values = array( '' );
+						$values = array();
 					}
 					?>
 
 					<p>
 						<label for="_disabled_weekdays"><?php esc_html_e( 'Disable specific weekdays', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Disable specific week days from being available for selection in this date picker', 'ultimate-member' ) ); ?></label>
 						<select name="_disabled_weekdays[]" id="_disabled_weekdays" multiple="multiple" style="width: 100%">
-							<option value="1" <?php if ( in_array( 1, $values ) ) { echo 'selected'; } ?>><?php esc_html_e( 'Sunday', 'ultimate-member' ); ?></option>
-							<option value="2" <?php if ( in_array( 2, $values ) ) { echo 'selected'; } ?>><?php esc_html_e( 'Monday', 'ultimate-member' ); ?></option>
-							<option value="3" <?php if ( in_array( 3, $values ) ) { echo 'selected'; } ?>><?php esc_html_e( 'Tuesday', 'ultimate-member' ); ?></option>
-							<option value="4" <?php if ( in_array( 4, $values ) ) { echo 'selected'; } ?>><?php esc_html_e( 'Wednesday', 'ultimate-member' ); ?></option>
-							<option value="5" <?php if ( in_array( 5, $values ) ) { echo 'selected'; } ?>><?php esc_html_e( 'Thursday', 'ultimate-member' ); ?></option>
-							<option value="6" <?php if ( in_array( 6, $values ) ) { echo 'selected'; } ?>><?php esc_html_e( 'Friday', 'ultimate-member' ); ?></option>
-							<option value="7" <?php if ( in_array( 7, $values ) ) { echo 'selected'; } ?>><?php esc_html_e( 'Saturday', 'ultimate-member' ); ?></option>
+							<option value="1" <?php selected( in_array( 1, $values, true ) ); ?>><?php esc_html_e( 'Sunday', 'ultimate-member' ); ?></option>
+							<option value="2" <?php selected( in_array( 2, $values, true ) ); ?>><?php esc_html_e( 'Monday', 'ultimate-member' ); ?></option>
+							<option value="3" <?php selected( in_array( 3, $values, true ) ); ?>><?php esc_html_e( 'Tuesday', 'ultimate-member' ); ?></option>
+							<option value="4" <?php selected( in_array( 4, $values, true ) ); ?>><?php esc_html_e( 'Wednesday', 'ultimate-member' ); ?></option>
+							<option value="5" <?php selected( in_array( 5, $values, true ) ); ?>><?php esc_html_e( 'Thursday', 'ultimate-member' ); ?></option>
+							<option value="6" <?php selected( in_array( 6, $values, true ) ); ?>><?php esc_html_e( 'Friday', 'ultimate-member' ); ?></option>
+							<option value="7" <?php selected( in_array( 7, $values, true ) ); ?>><?php esc_html_e( 'Saturday', 'ultimate-member' ); ?></option>
 						</select>
 					</p>
 
@@ -1942,11 +1979,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_years':
+					$value = isset( $this->edit_mode_value ) ? $this->edit_mode_value : 50;
 					?>
 
 					<p class="_years">
 						<label for="_years"><?php esc_html_e( 'Number of Years to pick from', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Number of years available for the date selection. Default to last 50 years', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_years" id="_years" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : 50; ?>" />
+						<input type="text" name="_years" id="_years" value="<?php echo esc_attr( $value ); ?>" />
 					</p>
 
 					<?php
@@ -1972,7 +2010,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 					<p class="_date_range">
 						<label for="_range_start"><?php esc_html_e( 'Date Range Start', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Set the minimum date/day in range in the format YYYY/MM/DD', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_range_start" id="_range_start" value="<?php echo $this->edit_mode_value; ?>" placeholder="<?php esc_attr_e( 'YYYY/MM/DD', 'ultimate-member' ); ?>" />
+						<input type="text" name="_range_start" id="_range_start" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" placeholder="<?php esc_attr_e( 'YYYY/MM/DD', 'ultimate-member' ); ?>" />
 					</p>
 
 					<?php
@@ -1983,7 +2021,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 					<p class="_date_range">
 						<label for="_range_end"><?php esc_html_e( 'Date Range End', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Set the maximum date/day in range in the format YYYY/MM/DD', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_range_end" id="_range_end" value="<?php echo $this->edit_mode_value; ?>" placeholder="<?php esc_attr_e( 'YYYY/MM/DD', 'ultimate-member' ); ?>" />
+						<input type="text" name="_range_end" id="_range_end" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" placeholder="<?php esc_attr_e( 'YYYY/MM/DD', 'ultimate-member' ); ?>" />
 					</p>
 
 					<?php
@@ -2004,12 +2042,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_content':
-					if ( $this->set_field_type == 'shortcode' ) {
+					if ( 'shortcode' === $this->set_field_type ) {
 						?>
 
 						<p>
 							<label for="_content"><?php esc_html_e( 'Enter Shortcode', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Enter the shortcode in the following textarea and it will be displayed on the fields', 'ultimate-member' ) ); ?></label>
-							<textarea name="_content" id="_content" placeholder="<?php esc_attr_e( 'e.g. [my_custom_shortcode]', 'ultimate-member' ); ?>"><?php echo $this->edit_mode_value; ?></textarea>
+							<textarea name="_content" id="_content" placeholder="<?php esc_attr_e( 'e.g. [my_custom_shortcode]', 'ultimate-member' ); ?>"><?php echo esc_attr( $this->edit_mode_value ); ?></textarea>
 						</p>
 
 						<?php
@@ -2042,20 +2080,22 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_allowed_types':
-					if ( $this->set_field_type == 'image' ) {
-
+					if ( 'image' === $this->set_field_type ) {
 						if ( isset( $this->edit_mode_value ) && is_array( $this->edit_mode_value ) ) {
 							$values = $this->edit_mode_value;
 						} else {
 							$values = array( 'png', 'jpeg', 'jpg', 'gif' );
-						} ?>
+						}
+						?>
 
 						<p>
 							<label for="_allowed_types"><?php esc_html_e( 'Allowed Image Types', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select the image types that you want to allow to be uploaded via this field.', 'ultimate-member' ) ); ?></label>
-							<select name="_allowed_types[]" id="_allowed_types" multiple="multiple" style="width: 100%">
-								<?php foreach( UM()->files()->allowed_image_types() as $e => $n ) { ?>
-									<option value="<?php echo $e; ?>" <?php if ( in_array( $e, $values ) ) { echo 'selected'; } ?>><?php echo $n; ?></option>
+							<select name="_allowed_types[]" id="_allowed_types" multiple="multiple" style="width: 100%;">
+
+								<?php foreach ( UM()->files()->allowed_image_types() as $e => $n ) { ?>
+								<option value="<?php echo esc_attr( $e ); ?>" <?php selected( in_array( $e, $values, true ) ); ?>><?php echo esc_html( $n ); ?></option>
 								<?php } ?>
+
 							</select>
 						</p>
 
@@ -2067,36 +2107,38 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 							$values = $this->edit_mode_value;
 						} else {
 							$values = array( 'pdf', 'txt' );
-						} ?>
+						}
+						?>
 
 						<p>
 							<label for="_allowed_types"><?php esc_html_e( 'Allowed File Types', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select the image types that you want to allow to be uploaded via this field.', 'ultimate-member' ) ); ?></label>
 							<select name="_allowed_types[]" id="_allowed_types" multiple="multiple" style="width: 100%">
-								<?php foreach( UM()->files()->allowed_file_types() as $e => $n ) { ?>
-									<option value="<?php echo $e; ?>" <?php if ( in_array( $e, $values ) ) { echo 'selected'; } ?>><?php echo $n; ?></option>
+
+								<?php foreach ( UM()->files()->allowed_file_types() as $e => $n ) { ?>
+								<option value="<?php echo esc_attr( $e ); ?>" <?php selected( in_array( $e, $values, true ) ); ?>><?php echo esc_html( $n ); ?></option>
 								<?php } ?>
+
 							</select>
 						</p>
 
 						<?php
-
 					}
-
 					break;
 
 				case '_upload_text':
-					if ( $this->set_field_type == 'image' ) {
+					if ( 'image' === $this->set_field_type ) {
 						$value = __( 'Drag &amp; Drop Photo', 'ultimate-member' );
-					}
-					if ( $this->set_field_type == 'file' ) {
+					} elseif ( 'file' === $this->set_field_type ) {
 						$value = __( 'Drag &amp; Drop File', 'ultimate-member' );
+					} else {
+						$value = (string) $this->edit_mode_value;
 					}
 
 					?>
 
 					<p>
 						<label for="_upload_text"><?php esc_html_e( 'Upload Box Text', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This is the headline that appears in the upload box for this field', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_upload_text" id="_upload_text" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : $value; ?>" />
+						<input type="text" name="_upload_text" id="_upload_text" value="<?php echo esc_attr( $value ); ?>" />
 					</p>
 
 					<?php
@@ -2107,18 +2149,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 					<p>
 						<label for="_upload_help_text"><?php esc_html_e( 'Additional Instructions Text', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'If you need to add information or secondary line below the headline of upload box, enter it here', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_upload_help_text" id="_upload_help_text" value="<?php echo $this->edit_mode_value; ?>" />
+						<input type="text" name="_upload_help_text" id="_upload_help_text" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
 					break;
 
 				case '_button_text':
+					$value = empty( $this->edit_mode_value ) ? __( 'Upload', 'ultimate-member' ) : $this->edit_mode_value;
 					?>
 
 					<p>
 						<label for="_button_text"><?php esc_html_e( 'Upload Box Text', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'The text that appears on the button. e.g. Upload', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_button_text" id="_button_text" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : __( 'Upload', 'ultimate-member' ); ?>" />
+						<input type="text" name="_button_text" id="_button_text" value="<?php echo esc_attr( $value ); ?>" />
 					</p>
 
 					<?php
@@ -2129,29 +2172,31 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 					<p>
 						<label for="_max_size"><?php esc_html_e( 'Maximum Size in bytes', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'The maximum size for image that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_max_size" id="_max_size" value="<?php echo $this->edit_mode_value; ?>" />
+						<input type="text" name="_max_size" id="_max_size" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
 					break;
 
 				case '_height':
+					$value = empty( $this->edit_mode_value ) ? '100px' : $this->edit_mode_value;
 					?>
 
 					<p>
 						<label for="_height"><?php esc_html_e( 'Textarea Height', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'The height of textarea in pixels. Default is 100 pixels', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_height" id="_height" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : '100px'; ?>" />
+						<input type="text" name="_height" id="_height" value="<?php echo esc_attr( $value ); ?>" />
 					</p>
 
 					<?php
 					break;
 
 				case '_spacing':
+					$value = empty( $this->edit_mode_value ) ? '20px' : $this->edit_mode_value;
 					?>
 
 					<p>
 						<label for="_spacing"><?php esc_html_e( 'Spacing', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This is the required spacing in pixels. e.g. 20px', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_spacing" id="_spacing" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : '20px'; ?>" />
+						<input type="text" name="_spacing" id="_spacing" value="<?php echo esc_attr( $value ); ?>" />
 					</p>
 
 					<?php
@@ -2173,7 +2218,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 					<p class="_max_selections">
 						<label for="_max_selections"><?php esc_html_e( 'Maximum number of selections', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Enter a number here to force a maximum number of selections by user for this field', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_max_selections" id="_max_selections" value="<?php echo $this->edit_mode_value; ?>" />
+						<input type="text" name="_max_selections" id="_max_selections" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
@@ -2184,18 +2229,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 					<p class="_min_selections">
 						<label for="_min_selections"><?php esc_html_e( 'Minimum number of selections', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Enter a number here to force a minimum number of selections by user for this field', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_min_selections" id="_min_selections" value="<?php echo $this->edit_mode_value; ?>" />
+						<input type="text" name="_min_selections" id="_min_selections" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
 					break;
 
 				case '_max_entries':
+					$value = empty( $this->edit_mode_value ) ? 10 : absint( $this->edit_mode_value );
 					?>
 
 					<p class="_max_entries">
 						<label for="_max_selections"><?php esc_html_e( 'Maximum number of entries', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This is the max number of entries the user can add via field group.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_max_entries" id="_max_entries" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : 10; ?>" />
+						<input type="text" name="_max_entries" id="_max_entries" value="<?php echo esc_attr( $value ); ?>" />
 					</p>
 
 					<?php
@@ -2206,7 +2252,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 					<p>
 						<label for="_max_words"><?php esc_html_e( 'Maximum allowed words', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'If you want to enable a maximum number of words to be input in this textarea. Leave empty to disable this setting', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_max_words" id="_max_words" value="<?php echo $this->edit_mode_value; ?>" />
+						<input type="text" name="_max_words" id="_max_words" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
@@ -2217,7 +2263,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 					<p>
 						<label for="_min"><?php esc_html_e( 'Minimum Number', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Minimum number that can be entered in this field', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_min" id="_min" value="<?php echo $this->edit_mode_value; ?>" />
+						<input type="text" name="_min" id="_min" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
@@ -2228,7 +2274,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 					<p>
 						<label for="_max"><?php esc_html_e( 'Maximum Number', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Maximum number that can be entered in this field', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_max" id="_max" value="<?php echo $this->edit_mode_value; ?>" />
+						<input type="text" name="_max" id="_max" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
@@ -2239,7 +2285,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 					<p>
 						<label for="_min_chars"><?php esc_html_e( 'Minimum length', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'If you want to enable a minimum number of characters to be input in this field. Leave empty to disable this setting', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_min_chars" id="_min_chars" value="<?php echo $this->edit_mode_value; ?>" />
+						<input type="text" name="_min_chars" id="_min_chars" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
@@ -2250,7 +2296,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 					<p>
 						<label for="_max_chars"><?php esc_html_e( 'Maximum length', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_max_chars" id="_max_chars" value="<?php echo $this->edit_mode_value; ?>" />
+						<input type="text" name="_max_chars" id="_max_chars" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
@@ -2268,18 +2314,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_options':
-
 					if ( isset( $this->edit_mode_value ) && is_array( $this->edit_mode_value ) ) {
-						$values = implode("\n", $this->edit_mode_value);
-					} else if ( $this->edit_mode_value ) {
+						$values = implode( "\n", $this->edit_mode_value );
+					} elseif ( $this->edit_mode_value ) {
 						$values = $this->edit_mode_value;
 					} else {
 						$values = '';
-					} ?>
+					}
+					?>
 
 					<p>
 						<label for="_options"><?php esc_html_e( 'Edit Choices', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Enter one choice per line. This will represent the available choices or selections available for user.', 'ultimate-member' ) ); ?></label>
-						<textarea name="_options" id="_options"><?php echo $values; ?></textarea>
+						<textarea name="_options" id="_options"><?php echo esc_textarea( $values ); ?></textarea>
 					</p>
 
 					<?php
@@ -2290,19 +2336,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 					<p>
 						<label for="_title"><?php esc_html_e( 'Title', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This is the title of the field for your reference in the backend. The title will not appear on the front-end of your website.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_title" id="_title" value="<?php echo htmlspecialchars( $this->edit_mode_value, ENT_QUOTES ); ?>" />
+						<input type="text" name="_title" id="_title" value="<?php echo esc_attr( htmlspecialchars( $this->edit_mode_value, ENT_QUOTES ) ); ?>" />
 					</p>
 
 					<?php
 					break;
 
 				case '_id':
-
 					?>
 
 					<p style="display:none">
 						<label for="_id"><?php esc_html_e( 'Unique ID', 'ultimate-member' ); ?></label>
-						<input type="text" name="_id" id="_id" value="<?php echo $this->edit_mode_value; ?>" />
+						<input type="text" name="_id" id="_id" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
@@ -2310,14 +2355,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_metakey':
-
 					if ( $this->in_edit ) {
 
 						?>
 
 						<p>
 							<label for="_metakey"><?php esc_html_e( 'Meta Key', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'The meta key cannot be changed for duplicated fields or when editing an existing field. If you require a different meta key please create a new field.', 'ultimate-member' ) ); ?></label>
-							<input type="text" name="_metakey_locked" id="_metakey_locked" value="<?php echo $this->edit_mode_value; ?>" disabled />
+							<input type="text" name="_metakey_locked" id="_metakey_locked" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" disabled />
 						</p>
 
 					<?php } else { ?>
@@ -2337,8 +2381,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					?>
 
 					<p>
-						<label for="_help"><?php esc_html_e( 'Help Text', 'ultimate-member' ); ?> <?php UM()->tooltip( __('This is the text that appears in a tooltip when a user hovers over the info icon. Help text is useful for providing users with more information about what they should enter in the field. Leave blank if no help text is needed for field.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_help" id="_help" value="<?php echo $this->edit_mode_value; ?>" />
+						<label for="_help"><?php esc_html_e( 'Help Text', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This is the text that appears in a tooltip when a user hovers over the info icon. Help text is useful for providing users with more information about what they should enter in the field. Leave blank if no help text is needed for field.', 'ultimate-member' ) ); ?></label>
+						<input type="text" name="_help" id="_help" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
@@ -2347,25 +2391,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				case '_default':
 					?>
 
-					<?php if ( $this->set_field_type == 'textarea' ) { ?>
+					<?php if ( 'textarea' === $this->set_field_type ) { ?>
 
 					<p>
 						<label for="_default"><?php esc_html_e( 'Default Text', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Text to display by default in this field', 'ultimate-member' ) ); ?></label>
-						<textarea name="_default" id="_default"><?php echo $this->edit_mode_value; ?></textarea>
+						<textarea name="_default" id="_default"><?php echo esc_textarea( $this->edit_mode_value ); ?></textarea>
 					</p>
 
-				<?php } elseif ( $this->set_field_type == 'date' ) { ?>
+				<?php } elseif ( 'date' === $this->set_field_type ) { ?>
 
 					<p class="um">
 						<label for="_default"><?php esc_html_e( 'Default Date', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'You may use all PHP compatible date formats such as: 2020-02-02, 02/02/2020, yesterday, today, tomorrow, next monday, first day of next month, +3 day', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" class="um-datepicker" data-format="yyyy/mm/dd" />
+						<input type="text" name="_default" id="_default" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" class="um-datepicker" data-format="yyyy/mm/dd" />
 					</p>
 
-				<?php } elseif ( $this->set_field_type == 'time' ) { ?>
+				<?php } elseif ( 'time' === $this->set_field_type ) { ?>
 
 					<p class="um">
 						<label for="_default"><?php esc_html_e( 'Default Time', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'You may use all PHP compatible date formats such as: 2020-02-02, 02/02/2020, yesterday, today, tomorrow, next monday, first day of next month, +3 day', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" class="um-timepicker" data-format="HH:i" />
+						<input type="text" name="_default" id="_default" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" class="um-timepicker" data-format="HH:i" />
 					</p>
 
 				<?php } elseif ( 'rating' === $this->set_field_type ) { ?>
@@ -2459,7 +2503,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 							<?php foreach ( UM()->roles()->get_roles() as $key => $value ) { ?>
 
-								<option value="<?php echo esc_attr( $key ); ?>" <?php if ( in_array( $key, $values, true ) ) { echo 'selected'; } ?>><?php echo esc_html( $value ); ?></option>
+								<option value="<?php echo esc_attr( $key ); ?>" <?php selected( in_array( $key, $values, true ) ); ?>><?php echo esc_html( $value ); ?></option>
 
 							<?php } ?>
 

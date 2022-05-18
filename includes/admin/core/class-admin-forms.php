@@ -1014,16 +1014,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$options = '';
 			if ( ! empty( $field_data['options'] ) ) {
+				if ( ! empty( $field_data['multi'] ) ) {
+					$value = is_array( $value ) ? array_map( 'strval', $value ) : array();
+				} elseif ( is_numeric( $value ) ) {
+					$value = (string) $value;
+				}
 				foreach ( $field_data['options'] as $key => $option ) {
+					if ( is_numeric( $key ) ) {
+						$key = (string) $key;
+					}
 					if ( ! empty( $field_data['multi'] ) ) {
-						if ( empty( $value ) || ! is_array( $value ) ) {
-							$value = array();
-						}
 						$options .= '<option value="' . esc_attr( $key ) . '" ' . selected( in_array( $key, $value, true ), true, false ) . '>' . esc_html( $option ) . '</option>';
 					} else {
-						if ( is_string( $key ) ) {
-							$value = (string) $value;
-						}
 						$options .= '<option value="' . esc_attr( $key ) . '" ' . selected( $key === $value, true, false ) . '>' . esc_html( $option ) . '</option>';
 					}
 				}
@@ -1096,7 +1098,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 					$options = '';
 					foreach ( $field_data['options'] as $key => $option ) {
-						if ( is_string( $key ) ) {
+						if ( is_numeric( $key ) ) {
+							$key   = (string) $key;
 							$value = (string) $value;
 						}
 						$options .= '<option value="' . esc_attr( $key ) . '" ' . selected( $key === $value, true, false ) . '>' . esc_html( $option ) . '</option>';
@@ -1173,6 +1176,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$values = $this->get_field_value( $field_data );
 			if ( empty( $values ) ) {
 				$values = array();
+			} elseif ( is_array( $values ) ) {
+				$values = array_map( 'strval', $values );
 			}
 
 			$i    = 0;
@@ -1186,6 +1191,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$html .= '<span class="um-form-fields-section" style="width:' . floor( 100 / $columns ) . '%;">';
 
 				foreach ( $section_fields_per_page as $k => $title ) {
+					if ( is_numeric( $k ) ) {
+						$k = (string) $k;
+					}
 					$id_attr   = ' id="' . esc_attr( $id . '_' . $k ) . '" ';
 					$for_attr  = ' for="' . esc_attr( $id . '_' . $k ) . '" ';
 					$name_attr = ' name="' . esc_attr( $name . '[' . $k . ']' ) . '" ';
@@ -1537,7 +1545,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 					$options = '';
 					foreach ( $field_data['options'] as $key => $option ) {
-						if ( is_string( $key ) ) {
+						if ( is_numeric( $key ) ) {
+							$key   = (string) $key;
 							$value = (string) $value;
 						}
 						$options .= '<option value="' . esc_attr( $key ) . '" ' . selected( $key === $value, true, false ) . '>' . esc_html( $option ) . '</option>';
@@ -1656,7 +1665,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 						if ( is_array( $value ) ) {
 							$selected = selected( 'other' === $key, true, false );
 						} else {
-							if ( is_string( $key ) ) {
+							if ( is_numeric( $key ) ) {
+								$key   = (string) $key;
 								$value = (string) $value;
 							}
 							$selected = selected( $value === $key, true, false );
