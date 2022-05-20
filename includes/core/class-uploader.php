@@ -383,7 +383,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				  ?>
 				 */
 				$movefile = apply_filters( 'um_upload_image_result', $movefile, $user_id, $field_data );
-				
+
 				/**
 				 * Resize and compress images uploaded by the field "Image Upload" without crop.
 				 * Resize and compress images uploaded on Activity wall and Group Discussion wall.
@@ -1361,7 +1361,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				}
 			}
 
-			$files = glob( UM()->uploader()->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR . '*', GLOB_BRACE );
+			$files = glob( UM()->uploader()->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR . '*' );
 			if ( ! empty( $files ) ) {
 				foreach ( $files as $file ) {
 					$str = basename( $file );
