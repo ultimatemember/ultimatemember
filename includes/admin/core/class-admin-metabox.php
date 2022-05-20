@@ -271,6 +271,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 */
 		public function add_metabox_role( $meta = '' ) {
 			$callback = array( &$this, 'load_metabox_role' );
+			$role_id  = isset( $_GET['id'] ) ? sanitize_key( $_GET['id'] ) : '';
+			$role_tab = isset( $_GET['tab'] ) ? sanitize_key( $_GET['tab'] ) : '';
 
 			$roles_metaboxes = array(
 				array(
@@ -299,7 +301,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				),
 			);
 
-			if ( ! isset( $_GET['id'] ) || 'administrator' !== sanitize_key( $_GET['id'] ) ) {
+			if ( 'administrator' !== $role_id ) {
 				$roles_metaboxes[] = array(
 					'id'       => 'um-admin-form-home',
 					'title'    => __( 'Homepage Options', 'ultimate-member' ),
@@ -388,13 +390,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			$roles_metaboxes = apply_filters( 'um_admin_role_metaboxes', $roles_metaboxes );
 
 			$wp_caps_metabox = false;
-			if ( ! empty( $_GET['id'] ) ) {
-				$data = get_option( 'um_role_' . sanitize_key( $_GET['id'] ) . '_meta' );
+			if ( ! empty( $role_id ) ) {
+				$data = get_option( 'um_role_' . $role_id . '_meta' );
 				if ( ! empty( $data['_um_is_custom'] ) ) {
 					$wp_caps_metabox = true;
 				}
 			}
-			if ( isset( $_GET['tab'] ) && 'add' === sanitize_key( $_GET['tab'] ) ) {
+			if ( 'add' === $role_tab ) {
 				$wp_caps_metabox = true;
 			}
 			if ( $wp_caps_metabox ) {
