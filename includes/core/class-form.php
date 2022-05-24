@@ -114,6 +114,39 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			$arr_options['status'] = 'success';
 			$arr_options['post']   = $_POST;
 
+			// Callback validation
+			if ( empty( $_POST['child_callback'] ) ) {
+				$arr_options['status']  = 'error';
+				$arr_options['message'] = __( 'Wrong callback.', 'ultimate-member' );
+
+				wp_send_json( $arr_options );
+			}
+
+			$ajax_source_func = sanitize_text_field( $_POST['child_callback'] );
+
+			if ( ! function_exists( $ajax_source_func ) ) {
+				$arr_options['status']  = 'error';
+				$arr_options['message'] = __( 'Wrong callback.', 'ultimate-member' );
+
+				wp_send_json( $arr_options );
+			}
+
+			$allowed_callbacks = UM()->options()->get( 'allowed_choice_callbacks' );
+			if ( empty( $allowed_callbacks ) ) {
+				$arr_options['status']  = 'error';
+				$arr_options['message'] = __( 'This is not possible for security reasons.', 'ultimate-member' );
+				wp_send_json( $arr_options );
+			}
+
+			$allowed_callbacks = array_map( 'rtrim', explode( "\n", $allowed_callbacks ) );
+
+			if ( ! in_array( $ajax_source_func, $allowed_callbacks, true ) ) {
+				$arr_options['status']  = 'error';
+				$arr_options['message'] = __( 'This is not possible for security reasons.', 'ultimate-member' );
+
+				wp_send_json( $arr_options );
+			}
+
 			if ( isset( $_POST['form_id'] ) ) {
 				UM()->fields()->set_id = absint( $_POST['form_id'] );
 			}
@@ -122,37 +155,34 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			$arr_options['fields']    = $form_fields;
 
 			if ( isset( $arr_options['post']['members_directory'] ) && 'yes' === $arr_options['post']['members_directory'] ) {
-				$ajax_source_func = $_POST['child_callback'];
-				if ( function_exists( $ajax_source_func ) ) {
-					global $wpdb;
+				global $wpdb;
 
-					$values_array = $wpdb->get_col(
-						$wpdb->prepare(
-							"SELECT DISTINCT meta_value
-							FROM $wpdb->usermeta
-							WHERE meta_key = %s AND
-								  meta_value != ''",
-							$arr_options['post']['child_name']
-						)
-					);
+				$values_array = $wpdb->get_col(
+					$wpdb->prepare(
+						"SELECT DISTINCT meta_value
+						FROM $wpdb->usermeta
+						WHERE meta_key = %s AND
+							  meta_value != ''",
+						$arr_options['post']['child_name']
+					)
+				);
 
-					if ( ! empty( $values_array ) ) {
-						$parent_dropdown = isset( $arr_options['field']['parent_dropdown_relationship'] ) ? $arr_options['field']['parent_dropdown_relationship'] : '';
-						$arr_options['items'] = call_user_func( $ajax_source_func, $parent_dropdown );
+				if ( ! empty( $values_array ) ) {
+					$parent_dropdown = isset( $arr_options['field']['parent_dropdown_relationship'] ) ? $arr_options['field']['parent_dropdown_relationship'] : '';
+					$arr_options['items'] = call_user_func( $ajax_source_func, $parent_dropdown );
 
-						if ( array_keys( $arr_options['items'] ) !== range( 0, count( $arr_options['items'] ) - 1 ) ) {
-							// array with dropdown items is associative
-							$arr_options['items'] = array_intersect_key( array_map( 'trim', $arr_options['items'] ), array_flip( $values_array ) );
-						} else {
-							// array with dropdown items has sequential numeric keys, starting from 0 and there are intersected values with $values_array
-							$arr_options['items'] = array_intersect( $arr_options['items'], $values_array );
-						}
+					if ( array_keys( $arr_options['items'] ) !== range( 0, count( $arr_options['items'] ) - 1 ) ) {
+						// array with dropdown items is associative
+						$arr_options['items'] = array_intersect_key( array_map( 'trim', $arr_options['items'] ), array_flip( $values_array ) );
 					} else {
-						$arr_options['items'] = array();
+						// array with dropdown items has sequential numeric keys, starting from 0 and there are intersected values with $values_array
+						$arr_options['items'] = array_intersect( $arr_options['items'], $values_array );
 					}
-
-					wp_send_json( $arr_options );
+				} else {
+					$arr_options['items'] = array();
 				}
+
+				wp_send_json( $arr_options );
 			} else {
 				/**
 				 * UM hook
@@ -184,9 +214,6 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				}
 
 				if ( ! empty( $_POST['child_callback'] ) && isset( $form_fields[ $_POST['child_name'] ] ) ) {
-
-					$ajax_source_func = $_POST['child_callback'];
-
 					// If the requested callback function is added in the form or added in the field option, execute it with call_user_func.
 					if ( isset( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
 						! empty( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
@@ -194,9 +221,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 						$arr_options['field'] = $form_fields[ $_POST['child_name'] ];
 
-						if ( function_exists( $ajax_source_func ) ) {
-							$arr_options['items'] = call_user_func( $ajax_source_func, $arr_options['field']['parent_dropdown_relationship'] );
-						}
+						$arr_options['items'] = call_user_func( $ajax_source_func, $arr_options['field']['parent_dropdown_relationship'] );
 					} else {
 						$arr_options['status']  = 'error';
 						$arr_options['message'] = __( 'This is not possible for security reasons.', 'ultimate-member' );
