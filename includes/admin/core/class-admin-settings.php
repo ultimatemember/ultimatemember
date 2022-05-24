@@ -763,6 +763,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'blocked_words'                         => array(
 						'sanitize' => 'textarea',
 					),
+					'allowed_choice_callbacks'              => array(
+						'sanitize' => 'textarea',
+					),
+					'allow_url_redirect_confirm'            => array(
+						'sanitize' => 'bool',
+					),
 					'admin_email'                           => array(
 						'sanitize' => 'text',
 					),
@@ -1288,6 +1294,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'type'    => 'textarea',
 										'label'   => __( 'Blacklist Words (Enter one word per line)', 'ultimate-member' ),
 										'tooltip' => __( 'This option lets you specify blacklist of words to prevent anyone from signing up with such a word as their username', 'ultimate-member' ),
+									),
+									array(
+										'id'      => 'allowed_choice_callbacks',
+										'type'    => 'textarea',
+										'label'   => __( 'Allowed Choice Callbacks (Enter one PHP function per line)', 'ultimate-member' ),
+										'tooltip' => __( 'This option lets you specify the choice callback functions to prevent anyone from using 3rd-party functions that may put your site at risk.', 'ultimate-member' ),
+									),
+									array(
+										'id'      => 'allow_url_redirect_confirm',
+										'type'    => 'checkbox',
+										'label'   => __( 'Allow external link redirect confirm', 'ultimate-member' ),
+										'tooltip' => __( 'Using JS.confirm alert when you go to an external link.', 'ultimate-member' ),
 									),
 								),
 							),

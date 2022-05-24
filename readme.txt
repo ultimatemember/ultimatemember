@@ -6,8 +6,8 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
-Tested up to: 5.9
-Stable tag: 2.3.2
+Tested up to: 6.0
+Stable tag: 2.4.0
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -162,6 +162,21 @@ No, you do not need to use our plugin’s login or registration pages and can us
 
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
+
+= 2.4.0: May 25, 2022 =
+
+* Enhancements:
+
+  - Added: "Allow external link redirect confirm" setting for the displaying JS.confirm alert before redirect to external link from User Profile links
+  - Added: "Allowed Choice Callbacks" setting for the security enhancements
+
+* Bugfixes:
+
+  - Fixed: PHP warning when nav menu is empty
+  - Fixed: Security issue related to the User Description field
+  - Fixed: Security issue related to the [um_loggedin] shortcode
+  - Fixed: Using $current_screen without checking for existence
+  - Fixed: `remove_unused_uploads()` function for some PHP installations
 
 = 2.3.2: April 21, 2022 =
 
