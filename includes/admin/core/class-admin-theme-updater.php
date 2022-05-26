@@ -1,7 +1,13 @@
 <?php
+/**
+ * Admin theme updater
+ *
+ * @package um\admin\core
+ */
+
 namespace um\admin\core;
 
-
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -12,13 +18,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 
 	/**
 	 * Class Admin_Theme_Updater
-	 * @package um\admin\core
 	 */
 	class Admin_Theme_Updater {
 
 
 		/**
 		 * Restored themes
+		 *
 		 * @var array
 		 */
 		private $restored = array();
@@ -26,13 +32,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 
 		/**
 		 * Saved themes
+		 *
 		 * @var array
 		 */
 		private $saved = array();
 
 
 		/**
-		 * Constructor.
+		 * Class constructor
 		 */
 		public function __construct() {
 			add_filter( 'upgrader_package_options', array( $this, 'upgrader_package_options' ), 40, 1 );
@@ -42,25 +49,27 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 
 		/**
 		 * Copy directory
-		 * @param string $src
-		 * @param string $dest
+		 *
+		 * @param string $src   Source directory.
+		 * @param string $dest  Destination directory.
 		 */
 		public static function recurse_copy( $src, $dest ) {
 
 			if ( ! is_dir( $dest ) ) {
-				@mkdir( $dest, 0777, true );
+				wp_mkdir_p( $dest );
 			}
 
 			$dir = opendir( $src );
-			while ( false !== ( $file = readdir( $dir ) ) ) {
-				if ( ( $file != '.' ) && ( $file != '..' ) ) {
+			do {
+				$file = readdir( $dir );
+				if ( '.' !== $file && '..' !== $file ) {
 					if ( is_dir( $src . DIRECTORY_SEPARATOR . $file ) ) {
 						self::recurse_copy( $src . DIRECTORY_SEPARATOR . $file, $dest . DIRECTORY_SEPARATOR . $file );
-					} else {
+					} elseif ( is_file( $src . DIRECTORY_SEPARATOR . $file ) ) {
 						copy( $src . DIRECTORY_SEPARATOR . $file, $dest . DIRECTORY_SEPARATOR . $file );
 					}
 				}
-			}
+			} while ( false !== $file );
 			closedir( $dir );
 		}
 
@@ -68,7 +77,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 		/**
 		 * Restore UM templates to theme directory
 		 *
-		 * @param string $name
+		 * @param  string $name  Directory name for the theme.
+		 *
 		 * @return void
 		 */
 		public function restore_templates( $name = '' ) {
@@ -85,7 +95,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 			}
 
 			$old_version = get_option( 'theme_version ' . $theme->get( 'Name' ) );
-			$version = $theme->get( 'Version' );
+			$version     = $theme->get( 'Version' );
 			if ( $old_version === $version ) {
 				return;
 			}
@@ -96,16 +106,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 			}
 
 			$um_dir = $theme->get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member';
-			@mkdir( $um_dir, 0777, true );
+			wp_mkdir_p( $um_dir );
 
-			$src = realpath( $temp_dir );
+			$src  = realpath( $temp_dir );
 			$dest = realpath( $um_dir );
 			if ( $src && $dest ) {
 				self::recurse_copy( $src, $dest );
-				error_log( "UM Log. Theme '" . $theme->get( 'template' ) . "' templates restored." );
 				UM()->files()->remove_dir( $src );
-			} else {
-				error_log( "UM Error. Can not restore theme templates." );
 			}
 
 			delete_option( 'theme_version ' . $theme->get( 'Name' ) );
@@ -115,7 +122,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 
 		/**
 		 * Save UM templates to temp directory
-		 * @param string $name
+		 *
+		 * @param  string $name  Directory name for the theme.
 		 *
 		 * @return void
 		 */
@@ -138,15 +146,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 			}
 
 			$temp_dir = UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $theme->get( 'template' );
-			@mkdir( $temp_dir, 0777, true );
+			wp_mkdir_p( $temp_dir );
 
-			$src = realpath( $um_dir );
+			$src  = realpath( $um_dir );
 			$dest = realpath( $temp_dir );
 			if ( $src && $dest ) {
 				self::recurse_copy( $src, $dest );
-				error_log( "UM Log. Theme '" . $theme->get( 'template' ) . "' templates saved." );
-			} else {
-				error_log( "UM Error. Can not save theme templates." );
 			}
 
 			update_option( 'theme_version ' . $theme->get( 'Name' ), $theme->get( 'Version' ) );
@@ -155,12 +160,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 
 
 		/**
-		 * Filter: upgrader_package_options
-		 * 
-		 * @param array $options
+		 * Filters the package options before running an update.
+		 *
+		 * @hook   upgrader_package_options
+		 *
+		 * @param  array $options  Options used by the upgrader.
+		 *
 		 * @return array
 		 */
-		function upgrader_package_options( $options ) {
+		public function upgrader_package_options( $options ) {
 			if ( isset( $options['hook_extra'] ) && isset( $options['hook_extra']['theme'] ) ) {
 				$this->save_templates( $options['hook_extra']['theme'] );
 			}
@@ -169,12 +177,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 
 
 		/**
-		 * Action: upgrader_process_complete
-		 * 
-		 * @param \WP_Upgrader $WP_Upgrader
-		 * @param array $options
+		 * Fires when the upgrader process is complete.
+		 *
+		 * @hook  upgrader_process_complete
+		 *
+		 * @param \WP_Upgrader $upgrader  WP_Upgrader instance.
+		 * @param array        $options   Array of bulk item update data.
 		 */
-		public function upgrader_process_complete( $WP_Upgrader, $options ) {
+		public function upgrader_process_complete( $upgrader, $options ) {
 			if ( isset( $options['themes'] ) && is_array( $options['themes'] ) ) {
 				foreach ( $options['themes'] as $theme ) {
 					$this->restore_templates( $theme );
@@ -183,5 +193,4 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 		}
 
 	}
-
 }
