@@ -689,7 +689,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			global $wp_version, $current_screen;
 
 			if ( version_compare( $wp_version, '5.0', '>=' ) ) {
-				if ( $current_screen->is_block_editor() ) {
+				if ( isset( $current_screen ) && $current_screen->is_block_editor() ) {
 					$this->load_gutenberg_js();
 					$this->load_gutenberg_shortcode_blocks();
 				}

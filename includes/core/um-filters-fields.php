@@ -429,7 +429,7 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 			$value = str_replace('http://https://','https://',$value);
 
 			$onclick_alert = '';
-			if ( $value !== wp_validate_redirect( $value ) ) {
+			if ( UM()->options()->get( 'allow_url_redirect_confirm' ) && $value !== wp_validate_redirect( $value ) ) {
 				$onclick_alert = ' onclick="return confirm( \'' . sprintf( __( 'This link leads to a 3rd-party website. Make sure the link is safe and you really want to go to this website: `%s`', 'ultimate-member' ), $value ) . '\' );"';
 			}
 
