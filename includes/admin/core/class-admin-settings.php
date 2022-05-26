@@ -115,7 +115,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 * @global \wpdb $wpdb
 		 */
 		public function same_page_update_ajax() {
-			UM()->admin()->check_ajax_nonce();
+			check_ajax_referer( 'um-admin-nonce', 'nonce' );
 
 			if ( empty( $_POST['cb_func'] ) ) {
 				wp_send_json_error( __( 'Wrong callback', 'ultimate-member' ) );
@@ -338,103 +338,99 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			$settings_map = array_merge(
 				$settings_map,
 				array(
-					'permalink_base'                        => array( 'sanitize' => 'key' ),
-					'display_name'                          => array( 'sanitize' => 'key' ),
-					'display_name_field'                    => array( 'sanitize' => 'text' ),
-					'author_redirect'                       => array( 'sanitize' => 'bool' ),
-					'members_page'                          => array( 'sanitize' => 'bool' ),
-					'use_gravatars'                         => array( 'sanitize' => 'bool' ),
+					'permalink_base'                       => array( 'sanitize' => 'key' ),
+					'display_name'                         => array( 'sanitize' => 'key' ),
+					'display_name_field'                   => array( 'sanitize' => 'text' ),
+					'author_redirect'                      => array( 'sanitize' => 'bool' ),
+					'members_page'                         => array( 'sanitize' => 'bool' ),
+					'use_gravatars'                        => array( 'sanitize' => 'bool' ),
 					'use_um_gravatar_default_builtin_image' => array( 'sanitize' => 'key' ),
-					'use_um_gravatar_default_image'         => array( 'sanitize' => 'bool' ),
-					'require_strongpass'                    => array( 'sanitize' => 'bool' ),
-					'password_min_chars'                    => array( 'sanitize' => 'absint' ),
-					'password_max_chars'                    => array( 'sanitize' => 'absint' ),
-					'profile_noindex'                       => array( 'sanitize' => 'bool' ),
-					'activation_link_expiry_time'           => array( 'sanitize' => 'absint' ),
-					'account_tab_password'                  => array( 'sanitize' => 'bool' ),
-					'account_tab_privacy'                   => array( 'sanitize' => 'bool' ),
-					'account_tab_notifications'             => array( 'sanitize' => 'bool' ),
-					'account_tab_delete'                    => array( 'sanitize' => 'bool' ),
-					'delete_account_text'                   => array( 'sanitize' => 'textarea' ),
-					'delete_account_no_pass_required_text'  => array( 'sanitize' => 'textarea' ),
-					'account_name'                          => array( 'sanitize' => 'bool' ),
-					'account_name_disable'                  => array( 'sanitize' => 'bool' ),
-					'account_name_require'                  => array( 'sanitize' => 'bool' ),
-					'account_email'                         => array( 'sanitize' => 'bool' ),
-					'account_general_password'              => array( 'sanitize' => 'bool' ),
-					'account_hide_in_directory'             => array( 'sanitize' => 'bool' ),
-					'account_hide_in_directory_default'     => array( 'sanitize' => 'text' ),
-					'profile_photo_max_size'                => array( 'sanitize' => 'absint' ),
-					'cover_photo_max_size'                  => array( 'sanitize' => 'absint' ),
-					'photo_thumb_sizes'                     => array( 'sanitize' => 'absint' ),
-					'cover_thumb_sizes'                     => array( 'sanitize' => 'absint' ),
-					'image_orientation_by_exif'             => array( 'sanitize' => 'bool' ),
-					'image_compression'                     => array( 'sanitize' => 'absint' ),
-					'image_max_width'                       => array( 'sanitize' => 'absint' ),
-					'cover_min_width'                       => array( 'sanitize' => 'absint' ),
-					'enable_reset_password_limit'           => array( 'sanitize' => 'bool' ),
-					'reset_password_limit_number'           => array( 'sanitize' => 'absint' ),
-					'blocked_emails'                        => array( 'sanitize' => 'textarea' ),
-					'blocked_words'                         => array( 'sanitize' => 'textarea' ),
-					'admin_email'                           => array( 'sanitize' => 'text' ),
-					'mail_from'                             => array( 'sanitize' => 'text' ),
-					'mail_from_addr'                        => array( 'sanitize' => 'text' ),
-					'email_html'                            => array( 'sanitize' => 'bool' ),
-					'profile_template'                      => array( 'sanitize' => 'text' ),
-					'profile_max_width'                     => array( 'sanitize' => 'text' ),
-					'profile_area_max_width'                => array( 'sanitize' => 'text' ),
-					'profile_icons'                         => array( 'sanitize' => 'key' ),
-					'profile_primary_btn_word'              => array( 'sanitize' => 'text' ),
-					'profile_secondary_btn'                 => array( 'sanitize' => 'bool' ),
-					'profile_secondary_btn_word'            => array( 'sanitize' => 'text' ),
-					'default_avatar'                        => array( 'sanitize' => 'url' ),
-					'default_cover'                         => array( 'sanitize' => 'url' ),
-					'disable_profile_photo_upload'          => array( 'sanitize' => 'bool' ),
-					'profile_photosize'                     => array( 'sanitize' => array( UM()->admin(), 'sanitize_photosize' ) ),
-					'profile_cover_enabled'                 => array( 'sanitize' => 'bool' ),
-					'profile_coversize'                     => array( 'sanitize' => array( UM()->admin(), 'sanitize_cover_photosize' ) ),
-					'profile_cover_ratio'                   => array( 'sanitize' => 'text' ),
-					'profile_show_metaicon'                 => array( 'sanitize' => 'bool' ),
-					'profile_show_name'                     => array( 'sanitize' => 'bool' ),
-					'profile_show_social_links'             => array( 'sanitize' => 'bool' ),
-					'profile_show_bio'                      => array( 'sanitize' => 'bool' ),
-					'profile_show_html_bio'                 => array( 'sanitize' => 'bool' ),
-					'profile_bio_maxchars'                  => array( 'sanitize' => 'absint' ),
-					'profile_header_menu'                   => array( 'sanitize' => 'key' ),
-					'profile_empty_text'                    => array( 'sanitize' => 'bool' ),
-					'profile_empty_text_emo'                => array( 'sanitize' => 'bool' ),
-					'register_template'                     => array( 'sanitize' => 'text' ),
-					'register_max_width'                    => array( 'sanitize' => 'text' ),
-					'register_align'                        => array( 'sanitize' => 'key' ),
-					'register_icons'                        => array( 'sanitize' => 'key' ),
-					'register_primary_btn_word'             => array( 'sanitize' => 'text' ),
-					'register_secondary_btn'                => array( 'sanitize' => 'bool' ),
-					'register_secondary_btn_word'           => array( 'sanitize' => 'text' ),
-					'register_secondary_btn_url'            => array( 'sanitize' => 'url' ),
-					'register_role'                         => array( 'sanitize' => 'key' ),
-					'login_template'                        => array( 'sanitize' => 'text' ),
-					'login_max_width'                       => array( 'sanitize' => 'text' ),
-					'login_align'                           => array( 'sanitize' => 'key' ),
-					'login_icons'                           => array( 'sanitize' => 'key' ),
-					'login_primary_btn_word'                => array( 'sanitize' => 'text' ),
-					'login_secondary_btn'                   => array( 'sanitize' => 'bool' ),
-					'login_secondary_btn_word'              => array( 'sanitize' => 'text' ),
-					'login_secondary_btn_url'               => array( 'sanitize' => 'url' ),
-					'login_forgot_pass_link'                => array( 'sanitize' => 'bool' ),
-					'login_show_rememberme'                 => array( 'sanitize' => 'bool' ),
-					'form_asterisk'                         => array( 'sanitize' => 'bool' ),
-					'profile_title'                         => array( 'sanitize' => 'text' ),
-					'profile_desc'                          => array( 'sanitize' => 'textarea' ),
-					'um_profile_object_cache_stop'          => array( 'sanitize' => 'bool' ),
-					'enable_blocks'                         => array( 'sanitize' => 'bool' ),
-					'rest_api_version'                      => array( 'sanitize' => 'text' ),
-					'uninstall_on_delete'                   => array( 'sanitize' => 'bool' ),
-					'allowed_choice_callbacks'              => array(
-						'sanitize' => 'textarea',
-					),
-					'allow_url_redirect_confirm'            => array(
-						'sanitize' => 'bool',
-					),
+					'use_um_gravatar_default_image'        => array( 'sanitize' => 'bool' ),
+					'require_strongpass'                   => array( 'sanitize' => 'bool' ),
+					'password_min_chars'                   => array( 'sanitize' => 'absint' ),
+					'password_max_chars'                   => array( 'sanitize' => 'absint' ),
+					'profile_noindex'                      => array( 'sanitize' => 'bool' ),
+					'activation_link_expiry_time'          => array( 'sanitize' => 'absint' ),
+					'account_tab_password'                 => array( 'sanitize' => 'bool' ),
+					'account_tab_privacy'                  => array( 'sanitize' => 'bool' ),
+					'account_tab_notifications'            => array( 'sanitize' => 'bool' ),
+					'account_tab_delete'                   => array( 'sanitize' => 'bool' ),
+					'delete_account_text'                  => array( 'sanitize' => 'textarea' ),
+					'delete_account_no_pass_required_text' => array( 'sanitize' => 'textarea' ),
+					'account_name'                         => array( 'sanitize' => 'bool' ),
+					'account_name_disable'                 => array( 'sanitize' => 'bool' ),
+					'account_name_require'                 => array( 'sanitize' => 'bool' ),
+					'account_email'                        => array( 'sanitize' => 'bool' ),
+					'account_general_password'             => array( 'sanitize' => 'bool' ),
+					'account_hide_in_directory'            => array( 'sanitize' => 'bool' ),
+					'account_hide_in_directory_default'    => array( 'sanitize' => 'text' ),
+					'profile_photo_max_size'               => array( 'sanitize' => 'absint' ),
+					'cover_photo_max_size'                 => array( 'sanitize' => 'absint' ),
+					'photo_thumb_sizes'                    => array( 'sanitize' => 'absint' ),
+					'cover_thumb_sizes'                    => array( 'sanitize' => 'absint' ),
+					'image_orientation_by_exif'            => array( 'sanitize' => 'bool' ),
+					'image_compression'                    => array( 'sanitize' => 'absint' ),
+					'image_max_width'                      => array( 'sanitize' => 'absint' ),
+					'cover_min_width'                      => array( 'sanitize' => 'absint' ),
+					'enable_reset_password_limit'          => array( 'sanitize' => 'bool' ),
+					'reset_password_limit_number'          => array( 'sanitize' => 'absint' ),
+					'blocked_emails'                       => array( 'sanitize' => 'textarea' ),
+					'blocked_words'                        => array( 'sanitize' => 'textarea' ),
+					'admin_email'                          => array( 'sanitize' => 'text' ),
+					'mail_from'                            => array( 'sanitize' => 'text' ),
+					'mail_from_addr'                       => array( 'sanitize' => 'text' ),
+					'email_html'                           => array( 'sanitize' => 'bool' ),
+					'profile_template'                     => array( 'sanitize' => 'text' ),
+					'profile_max_width'                    => array( 'sanitize' => 'text' ),
+					'profile_area_max_width'               => array( 'sanitize' => 'text' ),
+					'profile_icons'                        => array( 'sanitize' => 'key' ),
+					'profile_primary_btn_word'             => array( 'sanitize' => 'text' ),
+					'profile_secondary_btn'                => array( 'sanitize' => 'bool' ),
+					'profile_secondary_btn_word'           => array( 'sanitize' => 'text' ),
+					'default_avatar'                       => array( 'sanitize' => 'url' ),
+					'default_cover'                        => array( 'sanitize' => 'url' ),
+					'disable_profile_photo_upload'         => array( 'sanitize' => 'bool' ),
+					'profile_photosize'                    => array( 'sanitize' => array( UM()->admin(), 'sanitize_photosize' ) ),
+					'profile_cover_enabled'                => array( 'sanitize' => 'bool' ),
+					'profile_coversize'                    => array( 'sanitize' => array( UM()->admin(), 'sanitize_cover_photosize' ) ),
+					'profile_cover_ratio'                  => array( 'sanitize' => 'text' ),
+					'profile_show_metaicon'                => array( 'sanitize' => 'bool' ),
+					'profile_show_name'                    => array( 'sanitize' => 'bool' ),
+					'profile_show_social_links'            => array( 'sanitize' => 'bool' ),
+					'profile_show_bio'                     => array( 'sanitize' => 'bool' ),
+					'profile_show_html_bio'                => array( 'sanitize' => 'bool' ),
+					'profile_bio_maxchars'                 => array( 'sanitize' => 'absint' ),
+					'profile_header_menu'                  => array( 'sanitize' => 'key' ),
+					'profile_empty_text'                   => array( 'sanitize' => 'bool' ),
+					'profile_empty_text_emo'               => array( 'sanitize' => 'bool' ),
+					'register_template'                    => array( 'sanitize' => 'text' ),
+					'register_max_width'                   => array( 'sanitize' => 'text' ),
+					'register_align'                       => array( 'sanitize' => 'key' ),
+					'register_icons'                       => array( 'sanitize' => 'key' ),
+					'register_primary_btn_word'            => array( 'sanitize' => 'text' ),
+					'register_secondary_btn'               => array( 'sanitize' => 'bool' ),
+					'register_secondary_btn_word'          => array( 'sanitize' => 'text' ),
+					'register_secondary_btn_url'           => array( 'sanitize' => 'url' ),
+					'register_role'                        => array( 'sanitize' => 'key' ),
+					'login_template'                       => array( 'sanitize' => 'text' ),
+					'login_max_width'                      => array( 'sanitize' => 'text' ),
+					'login_align'                          => array( 'sanitize' => 'key' ),
+					'login_icons'                          => array( 'sanitize' => 'key' ),
+					'login_primary_btn_word'               => array( 'sanitize' => 'text' ),
+					'login_secondary_btn'                  => array( 'sanitize' => 'bool' ),
+					'login_secondary_btn_word'             => array( 'sanitize' => 'text' ),
+					'login_secondary_btn_url'              => array( 'sanitize' => 'url' ),
+					'login_forgot_pass_link'               => array( 'sanitize' => 'bool' ),
+					'login_show_rememberme'                => array( 'sanitize' => 'bool' ),
+					'form_asterisk'                        => array( 'sanitize' => 'bool' ),
+					'profile_title'                        => array( 'sanitize' => 'text' ),
+					'profile_desc'                         => array( 'sanitize' => 'textarea' ),
+					'um_profile_object_cache_stop'         => array( 'sanitize' => 'bool' ),
+					'enable_blocks'                        => array( 'sanitize' => 'bool' ),
+					'rest_api_version'                     => array( 'sanitize' => 'text' ),
+					'uninstall_on_delete'                  => array( 'sanitize' => 'bool' ),
+					'allowed_choice_callbacks'             => array( 'sanitize' => 'textarea' ),
+					'allow_url_redirect_confirm'           => array( 'sanitize' => 'bool' ),
 				)
 			);
 
@@ -964,18 +960,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'type'    => 'textarea',
 						'label'   => __( 'Blacklist Words (Enter one word per line)', 'ultimate-member' ),
 						'tooltip' => __( 'This option lets you specify blacklist of words to prevent anyone from signing up with such a word as their username', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'allowed_choice_callbacks',
-										'type'    => 'textarea',
-										'label'   => __( 'Allowed Choice Callbacks (Enter one PHP function per line)', 'ultimate-member' ),
-										'tooltip' => __( 'This option lets you specify the choice callback functions to prevent anyone from using 3rd-party functions that may put your site at risk.', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'allow_url_redirect_confirm',
-										'type'    => 'checkbox',
-										'label'   => __( 'Allow external link redirect confirm', 'ultimate-member' ),
-										'tooltip' => __( 'Using JS.confirm alert when you go to an external link.', 'ultimate-member' ),
+					),
+					array(
+						'id'      => 'allowed_choice_callbacks',
+						'type'    => 'textarea',
+						'label'   => __( 'Allowed Choice Callbacks (Enter one PHP function per line)', 'ultimate-member' ),
+						'tooltip' => __( 'This option lets you specify the choice callback functions to prevent anyone from using 3rd-party functions that may put your site at risk.', 'ultimate-member' ),
+					),
+					array(
+						'id'      => 'allow_url_redirect_confirm',
+						'type'    => 'checkbox',
+						'label'   => __( 'Allow external link redirect confirm', 'ultimate-member' ),
+						'tooltip' => __( 'Using JS.confirm alert when you go to an external link.', 'ultimate-member' ),
 					),
 				),
 			);
@@ -1796,6 +1792,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				return '';
 			}
 
+			$current_tab    = empty( $_GET['tab'] ) ? '' : sanitize_key( $_GET['tab'] );
+			$current_subtab = empty( $_GET['section'] ) ? '' : sanitize_key( $_GET['section'] );
+
 			$menu_subtabs = array();
 			foreach ( $this->settings_structure[ $tab ]['sections'] as $slug => $subtab ) {
 				$menu_subtabs[ $slug ] = $subtab['title'];
@@ -1803,20 +1802,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			$subtabs = '<div><ul class="subsubsub">';
 
-			$current_tab    = empty( $_GET['tab'] ) ? '' : sanitize_key( $_GET['tab'] );
-			$current_subtab = empty( $_GET['section'] ) ? '' : sanitize_key( $_GET['section'] );
-
 			foreach ( $menu_subtabs as $name => $label ) {
-				$active   = ( $current_subtab === $name ) ? 'current' : '';
-				$subtabs .= '<a href="' . esc_url( admin_url( 'admin.php?page=um_options' . ( empty( $current_tab ) ? '' : '&tab=' . $current_tab ) . ( empty( $name ) ? '' : '&section=' . $name ) ) ) . '" class="' . $active . '">' . esc_html( $label ) . '</a> | ';
-			}
-			if ( $subtabs ) {
-				$subtabs = trim( $subtabs, ' |' );
+				$subtabs .= '<a href="' . esc_url( admin_url( 'admin.php?page=um_options' . ( empty( $current_tab ) ? '' : '&tab=' . $current_tab ) . ( empty( $name ) ? '' : '&section=' . $name ) ) ) . '" class="' . ( $current_subtab === $name ? 'current' : '' ) . '">' . esc_html( $label ) . '</a> | ';
 			}
 
-			$subtabs .= '</ul></div>';
-
-			return $subtabs;
+			return trim( $subtabs, ' |' ) . '</ul></div>';
 		}
 
 
@@ -2054,7 +2044,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				|| 'save' !== sanitize_key( $_POST['um-settings-action'] )
 			) {
 				// This nonce is not valid.
-				wp_die( __( 'Security Check', 'ultimate-member' ) );
+				wp_die( esc_html__( 'Security Check', 'ultimate-member' ) );
 			}
 
 			/**
@@ -2153,10 +2143,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			$tab     = empty( $_GET['tab'] ) ? '' : sanitize_key( $_GET['tab'] );
 			$section = empty( $_GET['section'] ) ? '' : sanitize_key( $_GET['section'] );
 
-			if ( 'access' === $tab && empty( $section ) ) {
-				if ( ! array_key_exists( 'access_exclude_uris', $settings ) ) {
-					$settings['access_exclude_uris'] = array();
-				}
+			if ( 'access' === $tab && empty( $section ) && ! array_key_exists( 'access_exclude_uris', $settings ) ) {
+				$settings['access_exclude_uris'] = array();
 			}
 
 			return $settings;
@@ -2206,10 +2194,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 * @hook um_settings_before_save
 		 */
 		public function check_permalinks_changes() {
+			check_admin_referer( 'um-settings-nonce', '__umnonce' );
+
 			if ( empty( $_POST['um_options'] ) ) {
 				return;
 			}
-			$um_options = wp_unslash( $_POST['um_options'] );
+			$um_options = map_deep( wp_unslash( $_POST['um_options'] ), 'sanitize_text_field' );
 
 			if (
 				isset( $um_options['permalink_base'] )
@@ -2241,10 +2231,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			if ( empty( $_POST['um_options'] ) ) {
 				return;
 			}
-			$um_options = wp_unslash( $_POST['um_options'] );
+			check_admin_referer( 'um-settings-nonce', '__umnonce' );
 
 			global $wpdb;
 
+			$um_options = map_deep( wp_unslash( $_POST['um_options'] ), 'sanitize_text_field' );
 			if ( ! empty( $um_options['pages_settings'] ) ) {
 				$post_ids = new \WP_Query(
 					array(
@@ -2321,7 +2312,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						}
 					}
 				}
-
 			} elseif ( isset( $um_options['member_directory_own_table'] ) ) {
 
 				if ( empty( $um_options['member_directory_own_table'] ) ) {
@@ -2331,10 +2321,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					}
 					update_option( 'um_member_directory_truncated', time() );
 				}
-
 			} elseif ( isset( $um_options['account_hide_in_directory_default'] ) ) {
 
-				if ( $um_options['account_hide_in_directory_default'] === 'No' ) {
+				if ( 'No' === $um_options['account_hide_in_directory_default'] ) {
 
 					$results = $wpdb->get_col(
 						"SELECT u.ID FROM {$wpdb->users} AS u
@@ -2377,8 +2366,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			if ( empty( $_POST['um_options'] ) || empty( $_POST['licenses_settings'] ) ) {
 				return;
 			}
-			$um_options = wp_unslash( $_POST['um_options'] );
+			check_admin_referer( 'um-settings-nonce', '__umnonce' );
 
+			$um_options = map_deep( wp_unslash( $_POST['um_options'] ), 'sanitize_text_field' );
 			foreach ( $um_options as $key => $value ) {
 				$this->previous_licenses[ sanitize_key( $key ) ] = UM()->options()->get( $key );
 			}
@@ -2394,8 +2384,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			if ( empty( $_POST['um_options'] ) || empty( $_POST['licenses_settings'] ) ) {
 				return;
 			}
-			$um_options = wp_unslash( $_POST['um_options'] );
+			check_admin_referer( 'um-settings-nonce', '__umnonce' );
 
+			$um_options = map_deep( wp_unslash( $_POST['um_options'] ), 'sanitize_text_field' );
 			foreach ( $um_options as $key => $value ) {
 				$key   = sanitize_key( $key );
 				$value = sanitize_text_field( $value );
@@ -2494,7 +2485,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 
 		/**
-		 * Render the tab UM > Settings > Email, emit template screen
+		 * Render the tab UM > Settings > Email, edit template screen
 		 *
 		 * @hook   um_settings_section_email__content
 		 *
@@ -2590,106 +2581,92 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 * @return string
 		 */
 		public function settings_licenses_tab( $html, $section_fields ) {
+			$um_settings_nonce = wp_create_nonce( 'um-settings-nonce' );
 			ob_start();
 			?>
 
 			<div class="wrap-licenses">
 				<input type="hidden" id="licenses_settings" name="licenses_settings" value="1">
-				<?php $um_settings_nonce = wp_create_nonce( 'um-settings-nonce' ); ?>
 				<input type="hidden" name="__umnonce" value="<?php echo esc_attr( $um_settings_nonce ); ?>" />
 				<table class="form-table um-settings-section">
 					<tbody>
 					<?php
 					foreach ( $section_fields as $field_data ) {
 						$option_value = UM()->options()->get( $field_data['id'] );
-						$value = isset( $option_value ) && ! empty( $option_value ) ? $option_value : ( isset( $field_data['default'] ) ? $field_data['default'] : '' );
-
-						$license = get_option( "{$field_data['id']}_edd_answer" );
+						$value        = isset( $option_value ) && ! empty( $option_value ) ? $option_value : ( isset( $field_data['default'] ) ? $field_data['default'] : '' );
+						$license      = get_option( "{$field_data['id']}_edd_answer" );
 
 						if ( is_object( $license ) && ! empty( $value ) ) {
-							// activate_license 'invalid' on anything other than valid, so if there was an error capture it
+							// activate_license 'invalid' on anything other than valid, so if there was an error capture it.
 							if ( empty( $license->success ) ) {
 
 								if ( ! empty( $license->error ) ) {
 									switch ( $license->error ) {
 
 										case 'expired':
-											$class      = 'expired';
-											$messages[] = sprintf(
-												__( 'Your license key expired on %s. Please <a href="%s" target="_blank">renew your license key</a>.', 'ultimate-member' ),
-												date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
-												'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
-											);
-
+											// translators: %1$s: a date when a license expires, %2$s: a link to renew a license.
+											$messages[]     = sprintf( __( 'Your license key expired on %1$s. Please <a href="%2$s" target="_blank">renew your license key</a>.', 'ultimate-member' ), date_i18n( get_option( 'date_format' ), strtotime( $license->expires, time() + (int) ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS ) ) ), 'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired' );
+											$class          = 'expired';
 											$license_status = 'license-' . $class . '-notice';
 											break;
 
 										case 'revoked':
-											$class      = 'error';
-											$messages[] = sprintf(
-												__( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'ultimate-member' ),
-												'https://ultimatemember.com/support?utm_campaign=admin&utm_source=licenses&utm_medium=revoked'
-											);
-
+											// translators: %s: a link to contact support.
+											$messages[]     = sprintf( __( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'ultimate-member' ), 'https://ultimatemember.com/support?utm_campaign=admin&utm_source=licenses&utm_medium=revoked' );
+											$class          = 'error';
 											$license_status = 'license-' . $class . '-notice';
 											break;
 
 										case 'missing':
-											$class      = 'error';
-											$messages[] = sprintf(
-												__( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'ultimate-member' ),
-												'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
-											);
-
+											// translators: %s: a link to account.
+											$messages[]     = sprintf( __( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'ultimate-member' ), 'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=missing' );
+											$class          = 'error';
 											$license_status = 'license-' . $class . '-notice';
 											break;
 
 										case 'invalid':
 										case 'site_inactive':
-											$class      = 'error';
-											$messages[] = sprintf(
-												__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank">visit your account page</a> to manage your license key URLs.', 'ultimate-member' ),
-												$field_data['item_name'],
-												'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
-											);
-
+											// translators: %1$s: an extension name, %2$s: a link to account.
+											$messages[]     = sprintf( __( 'Your %1$s is not active for this URL. Please <a href="%2$s" target="_blank">visit your account page</a> to manage your license key URLs.', 'ultimate-member' ), $field_data['item_name'], 'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid' );
+											$class          = 'error';
 											$license_status = 'license-' . $class . '-notice';
 											break;
 
 										case 'item_name_mismatch':
-											$class      = 'error';
-											$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'ultimate-member' ), $field_data['item_name'] );
-
+											// translators: %s: an extension name.
+											$messages[]     = sprintf( __( 'This appears to be an invalid license key for %s.', 'ultimate-member' ), $field_data['item_name'] );
+											$class          = 'error';
 											$license_status = 'license-' . $class . '-notice';
 											break;
 
 										case 'no_activations_left':
-											$class      = 'error';
-											$messages[] = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'ultimate-member' ), 'https://ultimatemember.com/account' );
-
+											// translators: %s: a link to upgrade.
+											$messages[]     = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'ultimate-member' ), 'https://ultimatemember.com/account' );
+											$class          = 'error';
 											$license_status = 'license-' . $class . '-notice';
 											break;
 
 										case 'license_not_activable':
-											$class      = 'error';
-											$messages[] = __( 'The key you entered belongs to a bundle, please use the product specific license key.', 'ultimate-member' );
-
+											$messages[]     = __( 'The key you entered belongs to a bundle, please use the product specific license key.', 'ultimate-member' );
+											$class          = 'error';
 											$license_status = 'license-' . $class . '-notice';
 											break;
 
 										default:
-											$class      = 'error';
-											$error      = ! empty(  $license->error ) ? $license->error : __( 'unknown_error', 'ultimate-member' );
-											$messages[] = sprintf( __( 'There was an error with this license key: %s. Please <a href="%s">contact our support team</a>.', 'ultimate-member' ), $error, 'https://ultimatemember.com/support' );
+											$error = ! empty( $license->error ) ? $license->error : __( 'unknown_error', 'ultimate-member' );
 
+											// translators: %1$s: error, %2$s: a link to contact support.
+											$messages[]     = sprintf( __( 'There was an error with this license key: %1$s. Please <a href="%2$s">contact our support team</a>.', 'ultimate-member' ), $error, 'https://ultimatemember.com/support' );
+											$class          = 'error';
 											$license_status = 'license-' . $class . '-notice';
 											break;
 									}
 								} else {
-									$class      = 'error';
-									$error      = ! empty( $license->error ) ? $license->error : __( 'unknown_error', 'ultimate-member' );
-									$messages[] = sprintf( __( 'There was an error with this license key: %s. Please <a href="%s">contact our support team</a>.', 'ultimate-member' ), $error, 'https://ultimatemember.com/support' );
+									$error = ! empty( $license->error ) ? $license->error : __( 'unknown_error', 'ultimate-member' );
 
+									// translators: %1$s: error, %2$s: a link to contact support.
+									$messages[]     = sprintf( __( 'There was an error with this license key: %1$s. Please <a href="%2$s">contact our support team</a>.', 'ultimate-member' ), $error, 'https://ultimatemember.com/support' );
+									$class          = 'error';
 									$license_status = 'license-' . $class . '-notice';
 								}
 							} elseif ( ! empty( $license->errors ) ) {
@@ -2700,7 +2677,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								$class       = 'error';
 								$error       = ! empty( $errors[0] ) ? $errors[0] : __( 'unknown_error', 'ultimate-member' );
 								$errors_data = ! empty( $errors_data[0][0] ) ? ', ' . $errors_data[0][0] : '';
-								$messages[]  = sprintf( __( 'There was an error with this license key: %s%s. Please <a href="%s">contact our support team</a>.', 'ultimate-member' ), $error, $errors_data, 'https://ultimatemember.com/support' );
+
+								// translators: %1$s: error, %2$s: error data, %3$s: a link to contact support.
+								$messages[] = sprintf( __( 'There was an error with this license key: %1$s %2$s. Please <a href="%3$s">contact our support team</a>.', 'ultimate-member' ), $error, $errors_data, 'https://ultimatemember.com/support' );
 
 								$license_status = 'license-' . $class . '-notice';
 
@@ -2709,59 +2688,45 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								switch ( $license->license ) {
 
 									case 'expired':
-										$class      = 'expired';
-										$messages[] = sprintf(
-											__( 'Your license key expired on %s. Please <a href="%s" target="_blank">renew your license key</a>.', 'ultimate-member' ),
-											date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
-											'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
-										);
-
+										// translators: %1$s: a date when a license expires, %2$s: a link to renew a license.
+										$messages[]     = sprintf( __( 'Your license key expired on %1$s. Please <a href="%2$s" target="_blank">renew your license key</a>.', 'ultimate-member' ), date_i18n( get_option( 'date_format' ), strtotime( $license->expires, time() + (int) ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS ) ) ), 'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired' );
+										$class          = 'expired';
 										$license_status = 'license-' . $class . '-notice';
 										break;
 
 									case 'revoked':
-										$class      = 'error';
-										$messages[] = sprintf(
-											__( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'ultimate-member' ),
-											'https://ultimatemember.com/support?utm_campaign=admin&utm_source=licenses&utm_medium=revoked'
-										);
-
+										// translators: %s: a link to contact support.
+										$messages[]     = sprintf( __( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'ultimate-member' ), 'https://ultimatemember.com/support?utm_campaign=admin&utm_source=licenses&utm_medium=revoked' );
+										$class          = 'error';
 										$license_status = 'license-' . $class . '-notice';
 										break;
 
 									case 'missing':
-										$class      = 'error';
-										$messages[] = sprintf(
-											__( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'ultimate-member' ),
-											'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
-										);
-
+										// translators: %s: a link to account.
+										$messages[]     = sprintf( __( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'ultimate-member' ), 'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=missing' );
+										$class          = 'error';
 										$license_status = 'license-' . $class . '-notice';
 										break;
 
 									case 'invalid':
 									case 'site_inactive':
-										$class      = 'error';
-										$messages[] = sprintf(
-											__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank">visit your account page</a> to manage your license key URLs.', 'ultimate-member' ),
-											$field_data['item_name'],
-											'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
-										);
-
+										// translators: %1$s: an extension name, %2$s: a link to account.
+										$messages[]     = sprintf( __( 'Your %1$s is not active for this URL. Please <a href="%2$s" target="_blank">visit your account page</a> to manage your license key URLs.', 'ultimate-member' ), $field_data['item_name'], 'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid' );
+										$class          = 'error';
 										$license_status = 'license-' . $class . '-notice';
 										break;
 
 									case 'item_name_mismatch':
-										$class      = 'error';
-										$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'ultimate-member' ), $field_data['item_name'] );
-
+										// translators: %s: an extension name.
+										$messages[]     = sprintf( __( 'This appears to be an invalid license key for %s.', 'ultimate-member' ), $field_data['item_name'] );
+										$class          = 'error';
 										$license_status = 'license-' . $class . '-notice';
 										break;
 
 									case 'no_activations_left':
-										$class      = 'error';
-										$messages[] = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'ultimate-member' ), 'https://ultimatemember.com/account' );
-
+										// translators: %s: a link to upgrade.
+										$messages[]     = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'ultimate-member' ), 'https://ultimatemember.com/account' );
+										$class          = 'error';
 										$license_status = 'license-' . $class . '-notice';
 										break;
 
@@ -2775,44 +2740,43 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									case 'valid':
 									default:
 										$class      = 'valid';
-										$now        = current_time( 'timestamp' );
+										$now        = time() + (int) ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
 										$expiration = strtotime( $license->expires, $now );
 
-										if( 'lifetime' === $license->expires ) {
+										if ( 'lifetime' === $license->expires ) {
 
-											$messages[] = __( 'License key never expires.', 'ultimate-member' );
-
+											$messages[]     = __( 'License key never expires.', 'ultimate-member' );
 											$license_status = 'license-lifetime-notice';
 
 										} elseif ( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
 
 											$messages[] = sprintf(
-												__( 'Your license key expires soon! It expires on %s. <a href="%s" target="_blank">Renew your license key</a>.', 'ultimate-member' ),
-												date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+												// translators: %1$s: a date when a license expires, %2$s: a link to renew a license.
+												__( 'Your license key expires soon! It expires on %1$s. <a href="%2$s" target="_blank">Renew your license key</a>.', 'ultimate-member' ),
+												date_i18n( get_option( 'date_format' ), strtotime( $license->expires, $now ) ),
 												'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
 											);
-
 											$license_status = 'license-expires-soon-notice';
 
 										} else {
 
 											$messages[] = sprintf(
+												// translators: %s: a date when a license expires.
 												__( 'Your license key expires on %s.', 'ultimate-member' ),
-												date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) )
+												date_i18n( get_option( 'date_format' ), strtotime( $license->expires, $now ) )
 											);
-
 											$license_status = 'license-expiration-date-notice';
-
 										}
 										break;
 								}
 							}
-
 						} else {
-							$class          = 'empty';
+							// translators: %s: an extension name.
 							$messages[]     = sprintf( __( 'To receive updates, please enter your valid %s license key.', 'ultimate-member' ), $field_data['item_name'] );
+							$class          = 'empty';
 							$license_status = null;
 						}
+						$um_settings_nonce = wp_create_nonce( 'um-settings-nonce' );
 						?>
 
 						<tr class="um-settings-line">
@@ -2821,30 +2785,33 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								<form method="post" action="" name="um-settings-form" class="um-settings-form">
 									<input type="hidden" value="save" name="um-settings-action" />
 									<input type="hidden" name="licenses_settings" value="1" />
-									<?php $um_settings_nonce = wp_create_nonce( 'um-settings-nonce' ); ?>
 									<input type="hidden" name="__umnonce" value="<?php echo esc_attr( $um_settings_nonce ); ?>" />
-									<input type="text" id="um_options_<?php echo esc_attr( $field_data['id'] ); ?>" name="um_options[<?php echo esc_attr( $field_data['id'] ); ?>]" value="<?php echo $value ?>" class="um-option-field um-long-field" data-field_id="<?php echo esc_attr( $field_data['id'] ); ?>" />
+									<input type="text" id="um_options_<?php echo esc_attr( $field_data['id'] ); ?>" name="um_options[<?php echo esc_attr( $field_data['id'] ); ?>]" value="<?php echo esc_attr( $value ); ?>" class="um-option-field um-long-field" data-field_id="<?php echo esc_attr( $field_data['id'] ); ?>" />
 
 									<?php if ( ! empty( $field_data['description'] ) ) { ?>
-										<div class="description"><?php echo $field_data['description'] ?></div>
+										<div class="description"><?php echo esc_html( $field_data['description'] ); ?></div>
 									<?php } ?>
 
-									<?php if ( ! empty( $value ) && ( ( is_object( $license ) && 'valid' == $license->license ) || 'valid' == $license ) ) { ?>
-										<input type="button" class="button um_license_deactivate" id="<?php echo esc_attr( $field_data['id'] ); ?>_deactivate" value="<?php esc_attr_e( 'Clear License',  'ultimate-member' ); ?>"/>
+									<?php if ( ! empty( $value ) && ( ( is_object( $license ) && 'valid' === $license->license ) || 'valid' === $license ) ) { ?>
+										<input type="button" class="button um_license_deactivate" id="<?php echo esc_attr( $field_data['id'] ); ?>_deactivate" value="<?php esc_attr_e( 'Clear License', 'ultimate-member' ); ?>"/>
 									<?php } elseif ( empty( $value ) ) { ?>
 										<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Activate', 'ultimate-member' ); ?>" />
 									<?php } else { ?>
 										<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Re-Activate', 'ultimate-member' ); ?>" />
-										<input type="button" class="button um_license_deactivate" id="<?php echo esc_attr( $field_data['id'] ); ?>_deactivate" value="<?php esc_attr_e( 'Clear License',  'ultimate-member' ); ?>"/>
+										<input type="button" class="button um_license_deactivate" id="<?php echo esc_attr( $field_data['id'] ); ?>_deactivate" value="<?php esc_attr_e( 'Clear License', 'ultimate-member' ); ?>"/>
 									<?php } ?>
 
-									<?php if ( ! empty( $messages ) ) {
-										foreach ( $messages as $message ) { ?>
+									<?php
+									if ( ! empty( $messages ) ) {
+										foreach ( $messages as $message ) {
+											?>
 											<div class="edd-license-data edd-license-<?php echo esc_attr( $class . ' ' . $license_status ); ?>">
-												<p><?php echo $message ?></p>
+												<p><?php echo wp_kses_post( $message ); ?></p>
 											</div>
-										<?php }
-									} ?>
+											<?php
+										}
+									}
+									?>
 								</form>
 							</td>
 						</tr>
@@ -2889,7 +2856,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			um_fetch_user( get_current_user_id() );
 
 			if ( isset( $this->content ) ) {
-				echo $this->content;
+				echo wp_kses_post( $this->content );
 			} else {
 				$show_on_front = get_option( 'show_on_front' );
 
@@ -2926,7 +2893,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				// Hosting Provider.
 
-				if( $host ){
+				if ( $host ) {
 					$info .= "\n\n" . '--- Hosting Provider ---' . "\n\n";
 					$info .= 'Host:       ' . $host . "\n";
 				}
@@ -2949,12 +2916,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$info .= 'Permalink Structure:  ' . get_option( 'permalink_structure' ) . "\n";
 				$info .= 'Active Theme:         ' . $theme . "\n";
 
-				if( 'posts' === $show_on_front ){
+				if ( 'posts' === $show_on_front ) {
 					$info .= 'Show On Front:        ' . get_option( 'show_on_front' ) . '/static' . "\n";
-				} elseif( 'page' === $show_on_front ) {
-					$id1    = get_option( 'page_on_front' );
+				} elseif ( 'page' === $show_on_front ) {
+					$id1   = get_option( 'page_on_front' );
 					$info .= 'Page On Front:        ' . get_the_title( $id1 ) . ' (#' . $id1 . ')' . "\n";
-					$id2    = get_option( 'page_for_posts' );
+					$id2   = get_option( 'page_for_posts' );
 					$info .= 'Page For Posts:       ' . get_the_title( $id2 ) . ' (#' . $id2 . ')' . "\n";
 				}
 
@@ -2988,17 +2955,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$info .= 'Version:                        ' . ultimatemember_version . "\n";
 				$info .= 'Upgraded From:                  ' . get_option( 'um_last_version_upgrade', 'None' ) . "\n";
 				$info .= 'Current URL Method:             ' . UM()->options()->get( 'current_url_method' ) . "\n";
-				$info .= 'Cache User Profile:             ' . ( UM()->options()->get( 'um_profile_object_cache_stop' ) == 1 ? 'No' : 'Yes' ) . "\n";
-				$info .= 'Generate Slugs on Directories:  ' . ( UM()->options()->get( 'um_generate_slug_in_directory' ) == 1 ? 'No' : 'Yes' ) . "\n";
-				$info .= 'Force UTF-8 Encoding:           ' . ( UM()->options()->get( 'um_force_utf8_strings' ) == 1 ? 'Yes' : 'No' ) . "\n";
+				$info .= 'Cache User Profile:             ' . ( 1 === (int) UM()->options()->get( 'um_profile_object_cache_stop' ) ? 'No' : 'Yes' ) . "\n";
+				$info .= 'Generate Slugs on Directories:  ' . ( 1 === (int) UM()->options()->get( 'um_generate_slug_in_directory' ) ? 'No' : 'Yes' ) . "\n";
+				$info .= 'Force UTF-8 Encoding:           ' . ( 1 === (int) UM()->options()->get( 'um_force_utf8_strings' ) ? 'Yes' : 'No' ) . "\n";
 				$info .= 'JS/CSS Compression:             ' . ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? 'Yes' : 'No' ) . "\n";
 
 				if ( is_multisite() ) {
 					$info .= 'Network Structure:              ' . UM()->options()->get( 'network_permalink_structure' ) . "\n";
 				}
 
-				$info .= 'Port Forwarding in URL:         ' . ( UM()->options()->get( 'um_port_forwarding_url' ) == 1 ? 'Yes' : 'No' ) . "\n";
-				$info .= 'Exclude CSS/JS on Home:         ' . ( UM()->options()->get( 'js_css_exlcude_home' ) == 1 ? 'Yes' : 'No' ) . "\n";
+				$info .= 'Port Forwarding in URL:         ' . ( 1 === (int) UM()->options()->get( 'um_port_forwarding_url' ) ? 'Yes' : 'No' ) . "\n";
+				$info .= 'Exclude CSS/JS on Home:         ' . ( 1 === (int) UM()->options()->get( 'js_css_exlcude_home' ) ? 'Yes' : 'No' ) . "\n";
 
 				// UM Pages Configuration.
 
@@ -3080,7 +3047,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$arr   = array( 'Site accessible to Everyone', '', 'Site accessible to Logged In Users' );
 				$info .= 'Global Site Access:                      ' . $arr[ (int) UM()->options()->get( 'accessible' ) ] . "\n";
 
-				if ( 2 == UM()->options()->get( 'accessible' ) ) {
+				if ( 2 === (int) UM()->options()->get( 'accessible' ) ) {
 					$info .= 'Custom Redirect URL:                     ' . UM()->options()->get( 'access_redirect' ) . "\n";
 					$info .= 'Exclude the following URLs:              ' . implode( "\n\t\t", UM()->options()->get( 'access_exclude_uris' ) ) . "\n";
 				}
@@ -3172,7 +3139,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$info .= "\n\n" . '--- Web Server Configurations ---' . "\n\n";
 				$info .= 'PHP Version:              ' . PHP_VERSION . "\n";
 				$info .= 'MySQL Version:            ' . $wpdb->db_version() . "\n";
-				$info .= 'Web Server Info:          ' . sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) . "\n";
+				if ( ! empty( $_SERVER['SERVER_SOFTWARE'] ) ) {
+					$info .= 'Web Server Info:          ' . sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) . "\n";
+				}
 
 				// PHP Configurations.
 
@@ -3208,16 +3177,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$info .= 'Use Cookies:       ' . ( ini_get( 'session.use_cookies' ) ? 'On' : 'Off' ) . "\n";
 				$info .= 'Use Only Cookies:  ' . ( ini_get( 'session.use_only_cookies' ) ? 'On' : 'Off' ) . "\n";
 
-				// Roles & Total Users.
+				// Roles and Total Users.
 
-				$info .= "\n\n" . '--- Roles & Total Users ---' . "\n\n";
+				$info .= "\n\n" . '--- Roles and Total Users ---' . "\n\n";
 
 				$result = count_users();
 				$info  .= 'All Users: ' . $result['total_users'] . "\n";
 
 				foreach ( UM()->roles()->get_roles() as $role_id => $role ) {
 					$count = isset( $result['avail_roles'][ $role_id ] ) ? absint( $result['avail_roles'][ $role_id ] ) : 0;
-					$info .= $role . ' (' . $role_id . '):  ' . $count . "\n";
+					$info .= $role . ' (' . $role_id . '): ' . $count . "\n";
 				}
 
 				// WordPress Active Plugins.
@@ -3232,7 +3201,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					if ( ! in_array( $plugin_path, $active_plugins, true ) ) {
 						continue;
 					}
-					$info .= $plugin['Name'] . ':  ' . $plugin['Version'] . "\n";
+					$info .= $plugin['Name'] . ': ' . $plugin['Version'] . "\n";
 				}
 
 				// WordPress Network Active Plugins.
@@ -3283,6 +3252,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				<form action="" method="post" dir="ltr">
 					<textarea style="width:70%; height:400px; font-family: monospace;" readonly="readonly" onclick="this.focus();this.select()" id="install-info-textarea" name="um-install-info" title="<?php esc_attr_e( 'To copy the Install info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'ultimate-member' ); ?>"><?php echo esc_html( $info ); ?></textarea>
 					<p class="submit">
+						<input type="hidden" name="nonce" value="<?php echo esc_attr( wp_create_nonce( 'um-settings-nonce' ) ); ?>" />
 						<input type="hidden" name="um-addon-hook" value="download_install_info" />
 						<?php submit_button( 'Download Install Info File', 'primary', 'download_install_info', false ); ?>
 					</p>
@@ -3297,14 +3267,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 * Download install info
 		 */
 		public function um_download_install_info() {
-			if ( ! empty( $_POST['download_install_info'] ) && isset( $_POST['um-install-info'] ) ) {
-				nocache_headers();
-
-				header( 'Content-type: text/plain' );
-				header( 'Content-Disposition: attachment; filename="ultimatemember-install-info.txt"' );
-
-				exit( esc_html( sanitize_textarea_field( wp_unslash( $_POST['um-install-info'] ) ) ) );
+			if ( empty( $_POST['download_install_info'] ) || empty( $_POST['um-install-info'] ) ) {
+				return;
 			}
+			check_admin_referer( 'um-settings-nonce', 'nonce' );
+
+			nocache_headers();
+			header( 'Content-type: text/plain' );
+			header( 'Content-Disposition: attachment; filename="ultimatemember-install-info.txt"' );
+
+			exit( esc_html( sanitize_textarea_field( wp_unslash( $_POST['um-install-info'] ) ) ) );
 		}
 
 
@@ -3375,9 +3347,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				UM()->mail()->copy_email_template( $template );
 			}
 
-			$fp     = fopen( $theme_template_path, 'w' );
-			$result = fputs( $fp, $content );
-			fclose( $fp );
+			file_put_contents( $theme_template_path, $content );
 
 			if ( false !== $result ) {
 				unset( $settings['um_email_template'] );
@@ -3386,5 +3356,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			return $settings;
 		}
+
 	}
 }
