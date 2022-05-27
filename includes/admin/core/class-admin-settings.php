@@ -2479,7 +2479,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			$emails    = UM()->config()->email_notifications;
 
 			if ( empty( $email_key ) || empty( $emails[ $email_key ] ) ) {
-				require_once um_path . 'includes/admin/core/list-tables/emails-list-table.php';
+				require_once um_path . 'includes/admin/core/list-tables/class-um-emails-list-table.php';
 			}
 		}
 

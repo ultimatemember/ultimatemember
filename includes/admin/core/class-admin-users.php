@@ -1,8 +1,16 @@
 <?php
+/**
+ * Admin Users
+ *
+ * @package um\admin\core
+ */
+
 namespace um\admin\core;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 
 if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
@@ -10,15 +18,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 	/**
 	 * Class Admin_Users
-	 * @package um\admin\core
 	 */
 	class Admin_Users {
 
 
 		/**
-		 * Admin_Users constructor.
+		 * Class constructor
 		 */
-		function __construct() {
+		public function __construct() {
 
 			$this->custom_role = 'um_role';
 
@@ -42,17 +49,23 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		}
 
 
-		function get_users() {
-			UM()->admin()->check_ajax_nonce();
+		/**
+		 * AJAX handler that searches and returns users
+		 *
+		 * @hook  wp_ajax_um_get_users
+		 * @see   \um\admin\core\Admin_Ajax_Hooks::construct()
+		 */
+		public function get_users() {
+			check_ajax_referer( 'um-admin-nonce', 'nonce' );
 
-			$search_request = ! empty( $_REQUEST['search'] ) ? sanitize_text_field( $_REQUEST['search'] ) : '';
-			$page           = ! empty( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
+			$search_request = ! empty( $_REQUEST['search'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['search'] ) ) : '';
+			$page           = ! empty( $_REQUEST['page'] ) ? absint( wp_unslash( $_REQUEST['page'] ) ) : 1;
 			$per_page       = 20;
 
 			$args = array(
 				'fields' => array( 'ID', 'user_login' ),
 				'paged'  => $page,
-				'number' => $per_page
+				'number' => $per_page,
 			);
 
 			if ( ! empty( $search_request ) ) {
@@ -75,28 +88,31 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		/**
 		 * Restrict the edit/delete users via wp-admin screen by the UM role capabilities
 		 *
-		 * @param $allcaps
-		 * @param $cap
-		 * @param $args
-		 * @param $user
+		 * @hook   user_has_cap
+		 * @link   https://developer.wordpress.org/reference/hooks/user_has_cap/
+		 *
+		 * @param  array   $allcaps  Array of key/value pairs.
+		 * @param  array   $cap      Required primitive capabilities for the requested capability.
+		 * @param  array   $args     Arguments that accompany the requested capability check.
+		 * @param  WP_User $user     The user object.
 		 *
 		 * @return mixed
 		 */
-		function map_caps_by_role( $allcaps, $cap, $args, $user ) {
-			if ( isset( $cap[0] ) && $cap[0] == 'edit_users' ) {
-				if ( ! user_can( $args[1], 'administrator' ) && $args[0] == 'edit_user' ) {
+		public function map_caps_by_role( $allcaps, $cap, $args, $user ) {
+			if ( isset( $cap[0] ) && 'edit_users' === $cap[0] ) {
+				if ( ! user_can( $args[1], 'administrator' ) && 'edit_user' === $args[0] ) {
 					if ( ! UM()->roles()->um_current_user_can( 'edit', $args[2] ) ) {
 						$allcaps[ $cap[0] ] = false;
 					}
 				}
-			} elseif ( isset( $cap[0] ) && $cap[0] == 'delete_users' ) {
-				if ( ! user_can( $args[1], 'administrator' ) && $args[0] == 'delete_user' ) {
+			} elseif ( isset( $cap[0] ) && 'delete_users' === $cap[0] ) {
+				if ( ! user_can( $args[1], 'administrator' ) && 'delete_user' === $args[0] ) {
 					if ( ! UM()->roles()->um_current_user_can( 'delete', $args[2] ) ) {
 						$allcaps[ $cap[0] ] = false;
 					}
 				}
-			} elseif ( isset( $cap[0] ) && $cap[0] == 'list_users' ) {
-				if ( ! user_can( $args[1], 'administrator' ) && $args[0] == 'list_users' ) {
+			} elseif ( isset( $cap[0] ) && 'list_users' === $cap[0] ) {
+				if ( ! user_can( $args[1], 'administrator' ) && 'list_users' === $args[0] ) {
 					if ( ! um_user( 'can_view_all' ) ) {
 						$allcaps[ $cap[0] ] = false;
 					}
@@ -110,9 +126,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		/**
 		 * Does an action to user asap
 		 *
-		 * @param string $action
+		 * @hook  um_admin_user_action_hook
+		 * @link  https://docs.ultimatemember.com/article/1004-umadminuseractionhook
+		 *
+		 * @param string $action  Bulk action.
 		 */
-		function user_action_hook( $action ) {
+		public function user_action_hook( $action ) {
 			switch ( $action ) {
 				default:
 					/**
@@ -143,10 +162,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 				case 'um_approve_membership':
 				case 'um_reenable':
-
 					add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ), 10, 1 );
 					add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ), 10, 1 );
-
 					UM()->user()->approve();
 					break;
 
@@ -155,10 +172,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 					break;
 
 				case 'um_resend_activation':
-
 					add_filter( 'um_template_tags_patterns_hook', array( UM()->user(), 'add_activation_placeholder' ), 10, 1 );
 					add_filter( 'um_template_tags_replaces_hook', array( UM()->user(), 'add_activation_replace_placeholder' ), 10, 1 );
-
 					UM()->user()->email_pending();
 					break;
 
@@ -168,7 +183,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 				case 'um_delete':
 					if ( is_admin() ) {
-						wp_die( __( 'This action is not allowed in backend.', 'ultimate-member' ) );
+						wp_die( esc_html__( 'This action is not allowed in backend.', 'ultimate-member' ) );
 					}
 					UM()->user()->delete();
 					break;
@@ -179,24 +194,27 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		/**
 		 * Add UM Bulk actions to Users List Table
 		 *
+		 * @hook  restrict_manage_users
 		 */
-		function restrict_manage_users() { ?>
-			<div style="float:right;margin:0 4px">
+		public function restrict_manage_users() {
+			?>
+			<div style="float: right; margin: 0 4px;">
+				<label class="screen-reader-text" for="um_bulk_action"><?php esc_html_e( 'UM Action', 'ultimate-member' ); ?></label>
 
-				<label class="screen-reader-text" for="um_bulk_action"><?php _e( 'UM Action', 'ultimate-member' ); ?></label>
-
-				<select name="um_bulk_action[]" id="um_bulk_action" class="" style="width: 200px">
-					<option value="0"><?php _e( 'UM Action', 'ultimate-member' ); ?></option>
+				<select name="um_bulk_action[]" id="um_bulk_action" class="" style="width: 200px;">
+					<option value="0"><?php esc_html_e( 'UM Action', 'ultimate-member' ); ?></option>
 					<?php echo $this->get_bulk_admin_actions(); ?>
 				</select>
 
 				<input name="um_bulkedit" id="um_bulkedit" class="button" value="<?php esc_attr_e( 'Apply', 'ultimate-member' ); ?>" type="submit" />
-
 			</div>
 
-			<?php if ( ! empty( $_REQUEST['um_status'] ) ) { ?>
-				<input type="hidden" name="um_status" id="um_status" value="<?php echo esc_attr( sanitize_key( $_REQUEST['um_status'] ) );?>"/>
-			<?php }
+			<?php
+			if ( ! empty( $_REQUEST['um_status'] ) ) {
+				?>
+				<input type="hidden" name="um_status" id="um_status" value="<?php echo esc_attr( sanitize_key( $_REQUEST['um_status'] ) ); ?>"/>
+				<?php
+			}
 		}
 
 
@@ -205,7 +223,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		 *
 		 * @return string
 		 */
-		function get_bulk_admin_actions() {
+		public function get_bulk_admin_actions() {
 
 			/**
 			 * UM hook
@@ -230,30 +248,33 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			 * }
 			 * ?>
 			 */
-			$actions = apply_filters( 'um_admin_bulk_user_actions_hook', array(
-				'um_approve_membership' => array(
-					'label' => __( 'Approve Membership', 'ultimate-member' )
-				),
-				'um_reject_membership'  => array(
-					'label' => __( 'Reject Membership', 'ultimate-member' )
-				),
-				'um_put_as_pending'     => array(
-					'label' => __( 'Put as Pending Review', 'ultimate-member' )
-				),
-				'um_resend_activation'  => array(
-					'label' => __( 'Resend Activation E-mail', 'ultimate-member' )
-				),
-				'um_deactivate'         => array(
-					'label' => __( 'Deactivate', 'ultimate-member' )
-				),
-				'um_reenable'           => array(
-					'label' => __( 'Reactivate', 'ultimate-member' )
+			$actions = apply_filters(
+				'um_admin_bulk_user_actions_hook',
+				array(
+					'um_approve_membership' => array(
+						'label' => esc_html__( 'Approve Membership', 'ultimate-member' ),
+					),
+					'um_reject_membership'  => array(
+						'label' => esc_html__( 'Reject Membership', 'ultimate-member' ),
+					),
+					'um_put_as_pending'     => array(
+						'label' => esc_html__( 'Put as Pending Review', 'ultimate-member' ),
+					),
+					'um_resend_activation'  => array(
+						'label' => esc_html__( 'Resend Activation E-mail', 'ultimate-member' ),
+					),
+					'um_deactivate'         => array(
+						'label' => esc_html__( 'Deactivate', 'ultimate-member' ),
+					),
+					'um_reenable'           => array(
+						'label' => esc_html__( 'Reactivate', 'ultimate-member' ),
+					),
 				)
-			) );
+			);
 
 			$output = '';
 			foreach ( $actions as $id => $action_data ) {
-				$output .= '<option value="' . $id . '" '. disabled( isset( $arr['disabled'] ), true, false ) . '>' . $action_data['label'] . '</option>';
+				$output .= '<option value="' . esc_attr( $id ) . '" ' . disabled( isset( $action_data['disabled'] ), true, false ) . '>' . esc_html( $action_data['label'] ) . '</option>';
 			}
 			return $output;
 		}
@@ -262,27 +283,27 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		/**
 		 * Custom row actions for users page
 		 *
-		 * @param array $actions
-		 * @param $user_object \WP_User
+		 * @hook   user_row_actions
+		 *
+		 * @param  array    $actions      An array of action links to be displayed.
+		 * @param  \WP_User $user_object  WP_User object for the currently listed user.
+		 *
 		 * @return array
 		 */
-		function user_row_actions( $actions, $user_object ) {
+		public function user_row_actions( $actions, $user_object ) {
 			$user_id = $user_object->ID;
 
-			$actions['frontend_profile'] = '<a href="' . um_user_profile_url( $user_id ) . '">' . __( 'View profile', 'ultimate-member' ) . '</a>';
+			$actions['frontend_profile'] = '<a href="' . esc_url( um_user_profile_url( $user_id ) ) . '">' . esc_html__( 'View profile', 'ultimate-member' ) . '</a>';
 
 			$submitted = get_user_meta( $user_id, 'submitted', true );
 			if ( ! empty( $submitted ) ) {
-				$actions['view_info'] = '<a href="javascript:void(0);" data-modal="UM_preview_registration" data-modal-size="smaller" 
-				data-dynamic-content="um_admin_review_registration" data-arg1="' . esc_attr( $user_id ) . '" data-arg2="edit_registration">' . __( 'Info', 'ultimate-member' ) . '</a>';
+				$actions['view_info'] = '<a href="javascript:void(0);" data-modal="UM_preview_registration" data-modal-size="smaller" data-dynamic-content="um_admin_review_registration" data-arg1="' . esc_attr( $user_id ) . '" data-arg2="edit_registration">' . esc_html__( 'Info', 'ultimate-member' ) . '</a>';
 			}
 
-			if ( ! current_user_can( 'administrator' ) ) {
-				if ( ! um_can_view_profile( $user_id ) ) {
-					unset( $actions['frontend_profile'] );
-					unset( $actions['view_info'] );
-					unset( $actions['view'] );
-				}
+			if ( ! current_user_can( 'administrator' ) && ! um_can_view_profile( $user_id ) ) {
+				unset( $actions['frontend_profile'] );
+				unset( $actions['view_info'] );
+				unset( $actions['view'] );
 			}
 
 			/**
@@ -315,10 +336,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		/**
 		 * Change default sorting at WP Users list table
 		 *
-		 * @param array $args
+		 * @hook   users_list_table_query_args
+		 *
+		 * @param  array $args  Arguments passed to WP_User_Query to retrieve items for the current users list table.
+		 *
 		 * @return array
 		 */
-		function hide_by_caps( $args ) {
+		public function hide_by_caps( $args ) {
 			if ( ! current_user_can( 'administrator' ) ) {
 				$can_view_roles = um_user( 'can_view_roles' );
 				if ( um_user( 'can_view_all' ) && ! empty( $can_view_roles ) ) {
@@ -333,17 +357,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		/**
 		 * Change default sorting at WP Users list table
 		 *
-		 * @param $query
+		 * @hook   pre_user_query
+		 *
+		 * @param  \WP_User_Query $query  Current instance of WP_User_Query.
+		 *
 		 * @return mixed
 		 */
 		public function sort_by_newest( $query ) {
 			global $pagenow;
 
-			if ( is_admin() && 'users.php' === $pagenow ) {
-				if ( ! isset( $_REQUEST['orderby'] ) ) {
-					$query->query_vars['order'] = 'desc';
-					$query->query_orderby       = ' ORDER BY user_registered ' . ( 'desc' === $query->query_vars['order'] ? 'desc ' : 'asc ' ); //set sort order
-				}
+			if ( is_admin() && 'users.php' === $pagenow && ! isset( $_REQUEST['orderby'] ) ) {
+				$query->query_vars['order'] = 'desc';
+				$query->query_orderby       = ' ORDER BY user_registered DESC'; // set sort order.
 			}
 
 			return $query;
@@ -353,29 +378,35 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		/**
 		 * Filter WP users by UM Status
 		 *
-		 * @param $query
+		 * @hook   pre_user_query
+		 *
+		 * @param  \WP_User_Query $query  Current instance of WP_User_Query.
+		 *
 		 * @return mixed
 		 */
 		public function filter_users_by_status( $query ) {
 			global $wpdb, $pagenow;
+
 			if ( is_admin() && 'users.php' === $pagenow && ! empty( $_REQUEST['um_status'] ) ) {
 
 				$status = sanitize_key( $_REQUEST['um_status'] );
 
 				if ( 'needs-verification' === $status ) {
-					$query->query_where = str_replace('WHERE 1=1',
+					$query->query_where = str_replace(
+						'WHERE 1=1',
 						"WHERE 1=1 AND {$wpdb->users}.ID IN (
-                                 SELECT {$wpdb->usermeta}.user_id FROM $wpdb->usermeta
-                                    WHERE {$wpdb->usermeta}.meta_key = '_um_verified'
-                                    AND {$wpdb->usermeta}.meta_value = 'pending')",
+							SELECT {$wpdb->usermeta}.user_id FROM {$wpdb->usermeta}
+							WHERE {$wpdb->usermeta}.meta_key = '_um_verified'
+								AND {$wpdb->usermeta}.meta_value = 'pending')",
 						$query->query_where
 					);
 				} else {
-					$query->query_where = str_replace('WHERE 1=1',
+					$query->query_where = str_replace(
+						'WHERE 1=1',
 						"WHERE 1=1 AND {$wpdb->users}.ID IN (
-                                 SELECT {$wpdb->usermeta}.user_id FROM $wpdb->usermeta
-                                    WHERE {$wpdb->usermeta}.meta_key = 'account_status'
-                                    AND {$wpdb->usermeta}.meta_value = '{$status}')",
+							SELECT {$wpdb->usermeta}.user_id FROM {$wpdb->usermeta}
+              WHERE {$wpdb->usermeta}.meta_key = 'account_status'
+                AND {$wpdb->usermeta}.meta_value = '{$status}')",
 						$query->query_where
 					);
 				}
@@ -388,7 +419,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		/**
 		 * Add status links to WP Users List Table
 		 *
-		 * @param $views
+		 * @hook   views_users
+		 * @see    https://developer.wordpress.org/reference/hooks/views_this-screen-id/
+		 *
+		 * @param  array $views An array of available list table views.
+		 *
 		 * @return array
 		 */
 		public function add_status_links( $views ) {
@@ -398,17 +433,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			$views     = array();
 
 			if ( ! isset( $_REQUEST['role'] ) && ! isset( $_REQUEST['um_status'] ) ) {
-				$views['all'] = '<a href="' . admin_url( 'users.php' ) . '" class="current">' . __( 'All', 'ultimate-member' ) . ' <span class="count">(' . UM()->query()->count_users() . ')</span></a>';
+				$views['all'] = '<a href="' . admin_url( 'users.php' ) . '" class="current">' . esc_html__( 'All', 'ultimate-member' ) . ' <span class="count">(' . UM()->query()->count_users() . ')</span></a>';
 			} else {
-				$views['all'] = '<a href="' . admin_url( 'users.php' ) . '">' . __( 'All', 'ultimate-member' ) . ' <span class="count">(' . UM()->query()->count_users() . ')</span></a>';
+				$views['all'] = '<a href="' . admin_url( 'users.php' ) . '">' . esc_html__( 'All', 'ultimate-member' ) . ' <span class="count">(' . UM()->query()->count_users() . ')</span></a>';
 			}
 
 			$status = array(
-				'approved'                    => __( 'Approved', 'ultimate-member' ),
-				'awaiting_admin_review'       => __( 'Pending review', 'ultimate-member' ),
-				'awaiting_email_confirmation' => __( 'Waiting e-mail confirmation', 'ultimate-member' ),
-				'inactive'                    => __( 'Inactive', 'ultimate-member' ),
-				'rejected'                    => __( 'Rejected', 'ultimate-member' ),
+				'approved'                    => esc_html__( 'Approved', 'ultimate-member' ),
+				'awaiting_admin_review'       => esc_html__( 'Pending review', 'ultimate-member' ),
+				'awaiting_email_confirmation' => esc_html__( 'Waiting e-mail confirmation', 'ultimate-member' ),
+				'inactive'                    => esc_html__( 'Inactive', 'ultimate-member' ),
+				'rejected'                    => esc_html__( 'Rejected', 'ultimate-member' ),
 			);
 
 			UM()->query()->count_users_by_status( 'unassigned' );
@@ -445,18 +480,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			 */
 			$views = apply_filters( 'um_admin_views_users', $views );
 
-			// remove all filters
+			// remove all filters.
 			unset( $old_views['all'] );
 
-			// add separator
+			// add separator.
 			$views['subsep'] = '<span></span>';
 
-			// merge views
+			// merge views.
 			foreach ( $old_views as $key => $view ) {
 				$views[ $key ] = $view;
 			}
 
-			// hide filters with not accessible roles
+			// hide filters with not accessible roles.
 			if ( ! current_user_can( 'administrator' ) ) {
 				$wp_roles       = wp_roles();
 				$can_view_roles = um_user( 'can_view_roles' );
@@ -477,8 +512,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		 * Bulk user editing actions
 		 */
 		public function um_bulk_users_edit() {
-			// bulk edit users
+			// bulk edit users.
 			if ( ! empty( $_REQUEST['users'] ) && ! empty( $_REQUEST['um_bulkedit'] ) && ! empty( $_REQUEST['um_bulk_action'] ) ) {
+				check_admin_referer( 'bulk-users' );
 
 				$rolename = UM()->roles()->get_priority_user_role( get_current_user_id() );
 				$role     = get_role( $rolename );
@@ -487,10 +523,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 					wp_die( esc_html__( 'You do not have enough permissions to do that.', 'ultimate-member' ) );
 				}
 
-				check_admin_referer( 'bulk-users' );
+				$bulk_actions = map_deep( wp_unslash( (array) $_REQUEST['um_bulk_action'] ), 'sanitize_key' );
+				$bulk_action  = current( array_filter( $bulk_actions ) );
 
-				$users       = array_map( 'absint', (array) $_REQUEST['users'] );
-				$bulk_action = current( array_filter( $_REQUEST['um_bulk_action'] ) );
+				$users = array_map( 'absint', (array) $_REQUEST['users'] );
 
 				foreach ( $users as $user_id ) {
 					UM()->user()->set( $user_id );
@@ -536,24 +572,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 					do_action( "um_admin_user_action_{$bulk_action}_hook" );
 				}
 
-				// Finished. redirect now
-				//if ( $admin_err == 0 ) {
+				// Finished. redirect now.
 
-				$uri = $this->set_redirect_uri( admin_url( 'users.php' ) );
-				$uri = add_query_arg( 'update', 'users_updated', $uri );
+				$uri = add_query_arg( 'update', 'users_updated', $this->set_redirect_uri( admin_url( 'users.php' ) ) );
 
-				wp_redirect( $uri );
+				wp_safe_redirect( $uri );
 				exit;
-
-				/*} else {
-					wp_redirect( admin_url( 'users.php?update=err_users_updated' ) );
-					exit;
-				}*/
 
 			} elseif ( ! empty( $_REQUEST['um_bulkedit'] ) ) {
 
 				$uri = $this->set_redirect_uri( admin_url( 'users.php' ) );
-				wp_redirect( $uri );
+				wp_safe_redirect( $uri );
 				exit;
 
 			}
@@ -563,21 +592,21 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		/**
 		 * Sets redirect URI after bulk action
 		 *
-		 * @param string $uri
+		 * @param  string $uri  Base location.
+		 *
 		 * @return string
 		 */
-		function set_redirect_uri( $uri ) {
+		public function set_redirect_uri( $uri ) {
 
 			if ( ! empty( $_REQUEST['s'] ) ) {
-				$uri = add_query_arg( 's', sanitize_text_field( $_REQUEST['s'] ), $uri );
+				$uri = add_query_arg( 's', sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ), $uri );
 			}
 
 			if ( ! empty( $_REQUEST['um_status'] ) ) {
-				$uri = add_query_arg( 'um_status', sanitize_key( $_REQUEST['um_status'] ), $uri );
+				$uri = add_query_arg( 'um_status', sanitize_key( wp_unslash( $_REQUEST['um_status'] ) ), $uri );
 			}
 
 			return $uri;
-
 		}
 
 	}

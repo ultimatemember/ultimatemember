@@ -1,8 +1,16 @@
 <?php
+/**
+ * Upgrading functionality
+ *
+ * @package um\admin\core
+ */
+
 namespace um\admin\core;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 
 if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
@@ -10,58 +18,66 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 
 	/**
 	 * Class Admin_Upgrade
-	 *
-	 * This class handles all functions that changes data structures and moving files
-	 *
-	 * @package um\admin\core
+	 * This class handles all functions that changes data structures and moving files.
 	 */
 	class Admin_Upgrade {
 
 
 		/**
-		 * @var null
+		 * The class instance
+		 *
+		 * @var \um\admin\core\Admin_Upgrade
 		 */
 		protected static $instance = null;
 
-
 		/**
-		 * @var
+		 * Versions that need upgrade.
+		 *
+		 * @var array
 		 */
-		var $update_versions;
-		var $update_packages;
-		var $necessary_packages;
-
+		public $update_versions;
 
 		/**
+		 * Maybe not used.
+		 *
+		 * @var null
+		 */
+		public $update_packages;
+
+		/**
+		 * Packages to upgrade.
+		 *
+		 * @var array
+		 */
+		public $necessary_packages;
+
+		/**
+		 * A path to the directory that contains packages.
+		 *
 		 * @var string
 		 */
-		var $packages_dir;
+		public $packages_dir;
 
 
 		/**
 		 * Main Admin_Upgrade Instance
-		 *
 		 * Ensures only one instance of UM is loaded or can be loaded.
 		 *
-		 * @since 1.0
-		 * @static
-		 * @see UM()
-		 * @return Admin_Upgrade - Main instance
+		 * @return Admin_Upgrade
 		 */
-		static public function instance() {
+		public static function instance() {
 			if ( is_null( self::$instance ) ) {
 				self::$instance = new self();
 			}
-
 			return self::$instance;
 		}
 
 
 		/**
-		 * Admin_Upgrade constructor.
+		 * Class constructor
 		 */
-		function __construct() {
-			$this->packages_dir = plugin_dir_path( __FILE__ ) . 'packages' . DIRECTORY_SEPARATOR;
+		public function __construct() {
+			$this->packages_dir       = plugin_dir_path( __FILE__ ) . 'packages' . DIRECTORY_SEPARATOR;
 			$this->necessary_packages = $this->need_run_upgrades();
 
 			if ( ! empty( $this->necessary_packages ) ) {
@@ -82,8 +98,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 		/**
 		 * Function for major updates
 		 *
+		 * @param array $args  Data.
 		 */
-		function in_plugin_update_message( $args ) {
+		public function in_plugin_update_message( $args ) {
 			$show_additional_notice = false;
 			if ( isset( $args['new_version'] ) ) {
 				$old_version_array = explode( '.', ultimatemember_version );
@@ -96,11 +113,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 						$show_additional_notice = true;
 					}
 				}
-
 			}
 
 			if ( $show_additional_notice ) {
-				ob_start(); ?>
+				// translators: %s: a new version number.
+				$notice = sprintf( __( '%s is a major update, and we highly recommend creating a full backup of your site before updating.', 'ultimate-member' ), $args['new_version'] );
+				ob_start();
+				?>
 
 				<style type="text/css">
 					.um_plugin_upgrade_notice {
@@ -127,19 +146,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 					}
 				</style>
 
-				<span class="um_plugin_upgrade_notice">
-					<?php printf( __( '%s is a major update, and we highly recommend creating a full backup of your site before updating.', 'ultimate-member' ), $args['new_version'] ); ?>
-				</span>
+				<span class="um_plugin_upgrade_notice"><?php echo esc_html( $notice ); ?></span>
 
-				<?php ob_get_flush();
+				<?php
+				ob_get_flush();
 			}
 		}
 
 
 		/**
-		 * @return array
+		 * Get extensions upgrade packages
+		 *
+		 * @return array $upgrades  Extensions packages.
 		 */
-		function get_extension_upgrades() {
+		public function get_extension_upgrades() {
 			$extensions = UM()->extensions()->get_list();
 			if ( empty( $extensions ) ) {
 				return array();
@@ -155,11 +175,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 
 
 		/**
-		 * Get array of necessary upgrade packages
+		 * Get necessary upgrade packages
 		 *
-		 * @return array
+		 * @return array $diff_packages  Packages.
 		 */
-		function need_run_upgrades() {
+		public function need_run_upgrades() {
 			$um_last_version_upgrade = get_option( 'um_last_version_upgrade', '1.3.88' );
 
 			$diff_packages = array();
@@ -178,21 +198,21 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 		/**
 		 * Get all upgrade packages
 		 *
-		 * @return array
+		 * @return array $update_versions  Packages.
 		 */
-		function get_packages() {
+		public function get_packages() {
 			$update_versions = array();
+
 			$handle = opendir( $this->packages_dir );
 			if ( $handle ) {
-				while ( false !== ( $filename = readdir( $handle ) ) ) {
-					if ( $filename != '.' && $filename != '..' ) {
-						if ( is_dir( $this->packages_dir . $filename ) ) {
-							$update_versions[] = $filename;
-						}
+				do {
+					$file = readdir( $handle );
+					if ( '.' !== $file && '..' !== $file && is_dir( $this->packages_dir . $file ) ) {
+						$update_versions[] = $file;
 					}
-				}
-				closedir( $handle );
+				} while ( false !== $file );
 
+				closedir( $handle );
 				usort( $update_versions, array( &$this, 'version_compare_sort' ) );
 			}
 
@@ -201,16 +221,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 
 
 		/**
-		 *
+		 * Initialize AJAX handlers for hooks
 		 */
-		function init_packages_ajax() {
+		public function init_packages_ajax() {
 			foreach ( $this->necessary_packages as $package ) {
 				$hooks_file = $this->packages_dir . $package . DIRECTORY_SEPARATOR . 'hooks.php';
+
 				if ( file_exists( $hooks_file ) ) {
-					$pack_ajax_hooks = include_once $hooks_file;
+					$pack_ajax_hooks = require_once $hooks_file;
 
 					foreach ( $pack_ajax_hooks as $action => $function ) {
-						add_action( 'wp_ajax_um_' . $action, "um_upgrade_$function" );
+						add_action( 'wp_ajax_um_' . $action, 'um_upgrade_' . $function );
 					}
 				}
 			}
@@ -218,13 +239,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 
 
 		/**
+		 * Initialize AJAX handlers for functions
 		 *
+		 * @see \UM::includes()
 		 */
-		function init_packages_ajax_handlers() {
+		public function init_packages_ajax_handlers() {
 			foreach ( $this->necessary_packages as $package ) {
 				$handlers_file = $this->packages_dir . $package . DIRECTORY_SEPARATOR . 'functions.php';
 				if ( file_exists( $handlers_file ) ) {
-					include_once $handlers_file;
+					require_once $handlers_file;
 				}
 			}
 		}
@@ -233,7 +256,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 		/**
 		 * Add Upgrades admin menu
 		 */
-		function admin_menu() {
+		public function admin_menu() {
 			add_submenu_page( 'ultimatemember', __( 'Upgrade', 'ultimate-member' ), '<span style="color:#ca4a1f;">' . __( 'Upgrade', 'ultimate-member' ) . '</span>', 'manage_options', 'um_upgrade', array( &$this, 'upgrade_page' ) );
 		}
 
@@ -241,18 +264,38 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 		/**
 		 * Upgrade Menu Callback Page
 		 */
-		function upgrade_page() {
-			$um_last_version_upgrade = get_option( 'um_last_version_upgrade', __( 'empty', 'ultimate-member' ) ); ?>
+		public function upgrade_page() {
+			$um_last_version_upgrade = get_option( 'um_last_version_upgrade', __( 'empty', 'ultimate-member' ) );
+
+			$retirect_url = add_query_arg(
+				array(
+					'page' => 'ultimatemember',
+					'msg'  => 'updated',
+				),
+				admin_url( 'admin.php' )
+			);
+			?>
 
 			<div class="wrap">
-				<h2><?php printf( __( '%s - Upgrade Process', 'ultimate-member' ), ultimatemember_plugin_name ) ?></h2>
-				<p><?php printf( __( 'You have installed <strong>%s</strong> version. Your latest DB version is <strong>%s</strong>. We recommend creating a backup of your site before running the update process. Do not exit the page before the update process has complete.', 'ultimate-member' ), ultimatemember_version, $um_last_version_upgrade ) ?></p>
-				<p><?php _e( 'After clicking the <strong>"Run"</strong> button, the update process will start. All information will be displayed in the <strong>"Upgrade Log"</strong> field.', 'ultimate-member' ); ?></p>
-				<p><?php _e( 'If the update was successful, you will see a corresponding message. Otherwise, contact technical support if the update failed.', 'ultimate-member' ); ?></p>
-				<h4><?php _e( 'Upgrade Log', 'ultimate-member' ) ?></h4>
-				<div id="upgrade_log" style="width: 100%;height:300px; overflow: auto;border: 1px solid #a1a1a1;margin: 0 0 10px 0;"></div>
+				<h2>
+					<?php
+					// translators: %s: Plugin name.
+					echo esc_html( sprintf( __( '%s - Upgrade Process', 'ultimate-member' ), ultimatemember_plugin_name ) );
+					?>
+				</h2>
+				<p>
+					<?php
+					// translators: %1$s: Current version, %2$s: The last version upgrade.
+					echo wp_kses_post( sprintf( __( 'You have installed <strong>%1$s</strong> version. Your latest DB version is <strong>%2$s</strong>. We recommend creating a backup of your site before running the update process. Do not exit the page before the update process has complete.', 'ultimate-member' ), ultimatemember_version, $um_last_version_upgrade ) );
+					?>
+				</p>
+				<p><?php echo wp_kses_post( __( 'After clicking the <strong>"Run"</strong> button, the update process will start. All information will be displayed in the <strong>"Upgrade Log"</strong> field.', 'ultimate-member' ) ); ?></p>
+				<p><?php esc_html_e( 'If the update was successful, you will see a corresponding message. Otherwise, contact technical support if the update failed.', 'ultimate-member' ); ?></p>
+
+				<h4><?php esc_html_e( 'Upgrade Log', 'ultimate-member' ); ?></h4>
+				<div id="upgrade_log" style="width: 100%; height: 300px; overflow: auto; border: 1px solid #a1a1a1; margin: 0 0 10px 0;"></div>
 				<div>
-					<input type="button" id="run_upgrade" class="button button-primary" value="<?php esc_attr_e( 'Run', 'ultimate-member' ) ?>"/>
+					<input type="button" id="run_upgrade" class="button button-primary" value="<?php esc_attr_e( 'Run', 'ultimate-member' ); ?>"/>
 				</div>
 			</div>
 
@@ -268,7 +311,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 						um_add_upgrade_log( 'Get Upgrades Packages...' );
 
 						jQuery.ajax({
-							url: '<?php echo esc_js( admin_url( 'admin-ajax.php' ) ) ?>',
+							url: '<?php echo esc_js( admin_url( 'admin-ajax.php' ) ); ?>',
 							type: 'POST',
 							dataType: 'json',
 							data: {
@@ -280,7 +323,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 
 								um_add_upgrade_log( 'Upgrades Packages are ready, start unpacking...' );
 
-								//run first package....the running of the next packages will be at each init.php file
+								// run first package....the running of the next packages will be at each init.php file
 								um_run_upgrade();
 							}
 						});
@@ -300,7 +343,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 							um_add_upgrade_log( '<br />=================================================================' );
 							um_add_upgrade_log( '<h4 style="font-weight: bold;">Prepare package "' + pack + '" version...</h4>' );
 							jQuery.ajax({
-								url: '<?php echo esc_js( admin_url( 'admin-ajax.php' ) ) ?>',
+								url: '<?php echo esc_js( admin_url( 'admin-ajax.php' ) ); ?>',
 								type: 'POST',
 								dataType: 'html',
 								data: {
@@ -315,7 +358,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 							});
 						}, um_request_throttle );
 					} else {
-						window.location = '<?php echo add_query_arg( array( 'page' => 'ultimatemember', 'msg' => 'updated' ), admin_url( 'admin.php' ) ) ?>'
+						window.location = '<?php echo esc_url( $retirect_url ); ?>';
 					}
 
 					return false;
@@ -346,26 +389,31 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 			</script>
 
 			<?php
-
 		}
 
 
-		function ajax_run_package() {
-			UM()->admin()->check_ajax_nonce();
+		/**
+		 * Run package by AJAX.
+		 */
+		public function ajax_run_package() {
+			check_ajax_referer( 'um-admin-nonce', 'nonce' );
 
 			if ( empty( $_POST['pack'] ) ) {
-				exit('');
+				exit( '' );
 			} else {
 				ob_start();
-				include_once $this->packages_dir . sanitize_text_field( $_POST['pack'] ) . DIRECTORY_SEPARATOR . 'init.php';
+				include_once $this->packages_dir . sanitize_text_field( wp_unslash( $_POST['pack'] ) ) . DIRECTORY_SEPARATOR . 'init.php';
 				ob_get_flush();
 				exit;
 			}
 		}
 
 
-		function ajax_get_packages() {
-			UM()->admin()->check_ajax_nonce();
+		/**
+		 * Get packages by AJAX.
+		 */
+		public function ajax_get_packages() {
+			check_ajax_referer( 'um-admin-nonce', 'nonce' );
 
 			$update_versions = $this->need_run_upgrades();
 			wp_send_json_success( array( 'packages' => $update_versions ) );
@@ -375,16 +423,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 		/**
 		 * Parse packages dir for packages files
 		 */
-		function set_update_versions() {
+		public function set_update_versions() {
 			$update_versions = array();
+
 			$handle = opendir( $this->packages_dir );
 			if ( $handle ) {
-				while ( false !== ( $filename = readdir( $handle ) ) ) {
-					if ( $filename != '.' && $filename != '..' )
-						$update_versions[] = preg_replace( '/(.*?)\.php/i', '$1', $filename );
-				}
-				closedir( $handle );
+				do {
+					$file = readdir( $handle );
+					if ( '.' !== $file && '..' !== $file ) {
+						$update_versions[] = preg_replace( '/(.*?)\.php/i', '$1', $file );
+					}
+				} while ( false !== $file );
 
+				closedir( $handle );
 				usort( $update_versions, array( &$this, 'version_compare_sort' ) );
 
 				$this->update_versions = $update_versions;
@@ -392,17 +443,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 		}
 
 
-
-
-
-
 		/**
 		 * Sort versions by version compare function
-		 * @param $a
-		 * @param $b
+		 *
+		 * @see    function version_compare
+		 *
+		 * @param  string $a  First version number.
+		 * @param  string $b  Second version number.
+		 *
 		 * @return mixed
 		 */
-		function version_compare_sort( $a, $b ) {
+		public function version_compare_sort( $a, $b ) {
 			return version_compare( $a, $b );
 		}
 

@@ -209,7 +209,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 		public function um_roles_pages() {
 			$tab = empty( $_GET['tab'] ) ? '' : sanitize_key( $_GET['tab'] );
 			if ( empty( $tab ) ) {
-				include_once um_path . 'includes/admin/core/list-tables/roles-list-table.php';
+				include_once um_path . 'includes/admin/core/list-tables/class-um-roles-list-table.php';
 			} elseif ( 'add' === $tab || 'edit' === $tab ) {
 				include_once um_path . 'includes/admin/templates/role/role-edit.php';
 			} else {
