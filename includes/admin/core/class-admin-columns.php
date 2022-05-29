@@ -120,9 +120,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Columns' ) ) {
 		 * @return string
 		 */
 		public function duplicate_uri( $id ) {
-			$url = add_query_arg( 'um_adm_action', 'duplicate_form', admin_url( 'edit.php?post_type=um_form' ) );
-			$url = add_query_arg( 'post_id', $id, $url );
-			return $url;
+			$url = add_query_arg(
+				array(
+					'um_adm_action' => 'duplicate_form',
+					'post_id'       => $id,
+				),
+				admin_url( 'edit.php?post_type=um_form' )
+			);
+			return wp_nonce_url( $url, 'um-admin-nonce' );
 		}
 
 

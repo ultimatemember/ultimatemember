@@ -1,4 +1,10 @@
 <?php
+/**
+ * Ultimate Member admin side functionality
+ *
+ * @package um\admin
+ */
+
 namespace um\admin;
 
 // Exit if accessed directly.
@@ -6,60 +12,74 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+
 if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 
 	/**
 	 * Class Admin
-	 * @package um\admin
 	 */
 	class Admin extends Admin_Functions {
 
 
 		/**
+		 * Admin templates folder path
+		 *
 		 * @var string
 		 */
 		public $templates_path;
 
 
 		/**
+		 * Role settings map
+		 *
 		 * @var array
 		 */
 		public $role_meta;
 
 
 		/**
+		 * Terms restriction settings map
+		 *
 		 * @var array
 		 */
 		public $restriction_term_meta;
 
 
 		/**
+		 * Member Directory settings map
+		 *
 		 * @var array
 		 */
 		public $member_directory_meta;
 
 
 		/**
+		 * Forms settings map
+		 *
 		 * @var array
 		 */
 		public $form_meta;
 
 
 		/**
+		 * Forms input map
+		 *
 		 * @var array
 		 */
 		public $builder_input;
 
 
 		/**
+		 * Posts restriction settings map
+		 *
 		 * @var array
 		 */
 		public $restriction_post_meta;
 
 
 		/**
-		 * Admin constructor.
+		 * Class constructor
 		 */
 		public function __construct() {
 			parent::__construct();
@@ -90,7 +110,11 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		}
 
 
-		function init_variables() {
+		/**
+		 * Initialize variables
+		 * Fired on admin_init.
+		 */
+		public function init_variables() {
 			$this->role_meta = apply_filters(
 				'um_role_meta_map',
 				array(
@@ -835,7 +859,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 
 		/**
-		 * @param array|string $value
+		 * Sanitize for a directory sorting fields
+		 *
+		 * @param  array|string $value  Input value.
 		 *
 		 * @return array|string
 		 */
@@ -880,7 +906,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 
 		/**
-		 * @param array|string $value
+		 * Sanitize for a directory filter fields
+		 *
+		 * @param  array|string $value  Input value.
 		 *
 		 * @return array|string
 		 */
@@ -904,7 +932,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 
 		/**
-		 * @param array|string $value
+		 * Sanitize for the user field
+		 *
+		 * @param  array|string $value  Input value.
 		 *
 		 * @return array|string
 		 */
@@ -928,7 +958,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 
 		/**
-		 * @param array|string $value
+		 * Sanitize for a directory view types
+		 *
+		 * @param  array|string $value  Input value.
 		 *
 		 * @return array|string
 		 */
@@ -958,7 +990,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 
 		/**
-		 * @param array|string $value
+		 * Sanitize for the profile photo size
+		 *
+		 * @param  array|string $value  Input value.
 		 *
 		 * @return array|string
 		 */
@@ -975,7 +1009,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 
 		/**
-		 * @param array|string $value
+		 * Sanitize for the cover photo size
+		 *
+		 * @param  array|string $value  Input value.
 		 *
 		 * @return array|string
 		 */
@@ -992,7 +1028,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 
 		/**
-		 * @param array|string $value
+		 * Sanitize for restriction roles setting
+		 *
+		 * @param  array|string $value  Input value.
 		 *
 		 * @return array|string
 		 */
@@ -1016,7 +1054,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 
 		/**
-		 * @param array|string $value
+		 * Sanitize for roles fields
+		 *
+		 * @param  array|string $value  Input value.
 		 *
 		 * @return array|string
 		 */
@@ -1040,7 +1080,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 
 		/**
-		 * @param array|string $value
+		 * Sanitize for profile tab privacy
+		 *
+		 * @param  array|string $value  Input value.
 		 *
 		 * @return array|string
 		 */
@@ -1056,7 +1098,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 
 		/**
-		 * @param $value
+		 * Sanitize for noindex field
+		 *
+		 * @param  bool|string $value  Input value.
 		 *
 		 * @return bool|string
 		 */
@@ -1067,7 +1111,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 
 		/**
-		 * @param $value
+		 * Sanitize role capabilities when user role form has been submitted
+		 *
+		 * @param  array $value  Input value.
 		 *
 		 * @return array
 		 */
@@ -1080,7 +1126,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		/**
 		 * Sanitize role meta fields when wp-admin form has been submitted
 		 *
-		 * @param array $data
+		 * @param  array $data  Input value.
 		 *
 		 * @return array
 		 */
@@ -1140,7 +1186,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		/**
 		 * Sanitize post restriction meta fields when wp-admin form has been submitted
 		 *
-		 * @param array $data
+		 * @param  array $data  Input value.
 		 *
 		 * @return array
 		 */
@@ -1196,7 +1242,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		/**
 		 * Sanitize term restriction meta fields when wp-admin form has been submitted
 		 *
-		 * @param array $data
+		 * @param  array $data  Input value.
 		 *
 		 * @return array
 		 */
@@ -1254,7 +1300,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 *
 		 * @todo checking all sanitize types
 		 *
-		 * @param array $data
+		 * @param  array $data  Input value.
 		 *
 		 * @return array
 		 */
@@ -1330,7 +1376,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 *
 		 * @todo checking all sanitize types
 		 *
-		 * @param array $data
+		 * @param  array $data  Input value.
 		 *
 		 * @return array
 		 */
@@ -1419,7 +1465,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 *
 		 * @todo checking all sanitize types
 		 *
-		 * @param array $data
+		 * @param  array $data  Input value.
 		 *
 		 * @return array
 		 */
@@ -1495,7 +1541,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 *
 		 * @todo checking all sanitize types
 		 *
-		 * @param array $data
+		 * @param  array $data  Input value.
 		 *
 		 * @return array
 		 */
@@ -1572,7 +1618,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		/**
 		 * Adds class to our admin pages
 		 *
-		 * @param $classes
+		 * @hook   admin_body_class
+		 *
+		 * @param  string $classes  Space-separated list of CSS classes.
 		 *
 		 * @return string
 		 */
@@ -1585,7 +1633,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 
 		/**
-		 *
+		 * Process manual upgrade request
 		 */
 		public function manual_upgrades_request() {
 			if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
@@ -1598,7 +1646,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 				if ( is_multisite() ) {
 					$blogs_ids = get_sites();
-					foreach( $blogs_ids as $b ) {
+					foreach ( $blogs_ids as $b ) {
 						switch_to_blog( $b->blog_id );
 						wp_clean_update_cache();
 
@@ -1615,25 +1663,38 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					update_option( 'um_last_manual_upgrades_request', time() );
 				}
 
-				$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'got_updates' ), admin_url( 'admin.php' ) );
+				$url = add_query_arg(
+					array(
+						'page'   => 'ultimatemember',
+						'update' => 'got_updates',
+					),
+					admin_url( 'admin.php' )
+				);
 			} else {
-				$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'often_updates' ), admin_url( 'admin.php' ) );
+				$url = add_query_arg(
+					array(
+						'page'   => 'ultimatemember',
+						'update' => 'often_updates',
+					),
+					admin_url( 'admin.php' )
+				);
 			}
-			exit( wp_redirect( $url ) );
+			wp_safe_redirect( $url );
+			exit;
 		}
 
 
 		/**
 		 * Core pages installation
 		 */
-		function install_core_pages() {
+		public function install_core_pages() {
 			if ( ! is_admin() ) {
 				die();
 			}
 
 			UM()->setup()->install_default_pages();
 
-			//check empty pages in settings
+			// check empty pages in settings.
 			$empty_pages = array();
 
 			$pages = UM()->config()->permalinks;
@@ -1641,31 +1702,32 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 				foreach ( $pages as $slug => $page_id ) {
 					$page = get_post( $page_id );
 
-					if ( ! isset( $page->ID ) && in_array( $slug, array_keys( UM()->config()->core_pages ) ) ) {
+					if ( ! isset( $page->ID ) && in_array( $slug, array_keys( UM()->config()->core_pages ), true ) ) {
 						$empty_pages[] = $slug;
 					}
 				}
 			}
 
-			//if there aren't empty pages - then hide pages notice
+			// if there aren't empty pages - then hide pages notice.
 			if ( empty( $empty_pages ) ) {
-				$hidden_notices = get_option( 'um_hidden_admin_notices', array() );
+				$hidden_notices   = get_option( 'um_hidden_admin_notices', array() );
 				$hidden_notices[] = 'wrong_pages';
 
 				update_option( 'um_hidden_admin_notices', $hidden_notices );
 			}
 
 			$url = add_query_arg( array( 'page' => 'um_options' ), admin_url( 'admin.php' ) );
-			exit( wp_redirect( $url ) );
+			wp_safe_redirect( $url );
+			exit;
 		}
 
 
 		/**
 		 * Clear all users cache
 		 *
-		 * @param $action
+		 * @param string $action  Action key.
 		 */
-		function user_cache( $action ) {
+		public function user_cache( $action ) {
 			global $wpdb;
 			if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
 				die();
@@ -1673,47 +1735,62 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'um_cache_userdata_%'" );
 
-			$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'cleared_cache' ), admin_url( 'admin.php' ) );
-			exit( wp_redirect( $url ) );
+			$url = add_query_arg(
+				array(
+					'page'   => 'ultimatemember',
+					'update' => 'cleared_cache',
+				),
+				admin_url( 'admin.php' )
+			);
+			wp_safe_redirect( $url );
+			exit;
 		}
 
 
 		/**
 		 * Purge temp uploads dir
-		 * @param $action
+		 *
+		 * @param string $action  Action key.
 		 */
-		function purge_temp( $action ) {
+		public function purge_temp( $action ) {
 			if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
 				die();
 			}
 
 			UM()->files()->remove_dir( UM()->files()->upload_temp );
 
-			$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'purged_temp' ), admin_url( 'admin.php' ) );
-			exit( wp_redirect( $url ) );
+			$url = add_query_arg(
+				array(
+					'page'   => 'ultimatemember',
+					'update' => 'purged_temp',
+				),
+				admin_url( 'admin.php' )
+			);
+			wp_safe_redirect( $url );
+			exit;
 		}
 
 
 		/**
 		 * Duplicate form
 		 *
-		 * @param $action
+		 * @param string $action  Action key.
 		 */
-		function duplicate_form( $action ) {
-			if ( ! is_admin() || ! current_user_can('manage_options') ) {
-				die();
-			}
-			if ( ! isset( $_REQUEST['post_id'] ) || ! is_numeric( $_REQUEST['post_id'] ) ) {
+		public function duplicate_form( $action ) {
+			check_admin_referer( 'um-admin-nonce' );
+
+			if ( empty( $_REQUEST['post_id'] ) || ! is_admin() || ! current_user_can( 'manage_options' ) ) {
 				die();
 			}
 
 			$post_id = absint( $_REQUEST['post_id'] );
 
 			$n = array(
-				'post_type'     => 'um_form',
-				'post_title'    => sprintf( __( 'Duplicate of %s', 'ultimate-member' ), get_the_title( $post_id ) ),
-				'post_status'   => 'publish',
-				'post_author'   => get_current_user_id(),
+				// translators: %: Form title.
+				'post_title'  => sprintf( __( 'Duplicate of %s', 'ultimate-member' ), get_the_title( $post_id ) ),
+				'post_type'   => 'um_form',
+				'post_status' => 'publish',
+				'post_author' => get_current_user_id(),
 			);
 
 			$n_id = wp_insert_post( $n );
@@ -1721,47 +1798,47 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			$n_fields = get_post_custom( $post_id );
 			foreach ( $n_fields as $key => $value ) {
 
-				if ( $key == '_um_custom_fields' ) {
-					$the_value = unserialize( $value[0] );
+				if ( '_um_custom_fields' === $key ) {
+					$the_value = maybe_unserialize( $value[0] );
 				} else {
 					$the_value = $value[0];
 				}
 
 				update_post_meta( $n_id, $key, $the_value );
-
 			}
 
 			delete_post_meta( $n_id, '_um_core' );
 
-			$url = admin_url( 'edit.php?post_type=um_form' );
-			$url = add_query_arg( 'update', 'form_duplicated', $url );
-
-			exit( wp_redirect( $url ) );
-
+			$url = add_query_arg( 'update', 'form_duplicated', admin_url( 'edit.php?post_type=um_form' ) );
+			wp_safe_redirect( $url );
+			exit;
 		}
 
 
 		/**
 		 * Action to hide notices in admin
 		 *
-		 * @param $action
+		 * @param string $action  Action key.
 		 */
-		function um_hide_notice( $action ) {
+		public function um_hide_notice( $action ) {
 			if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
 				die();
 			}
 
 			update_option( $action, 1 );
-			exit( wp_redirect( remove_query_arg( 'um_adm_action' ) ) );
+
+			$url = remove_query_arg( 'um_adm_action' );
+			wp_safe_redirect( $url );
+			exit;
 		}
 
 
 		/**
 		 * Various user actions
 		 *
-		 * @param $action
+		 * @param string $action  Action key.
 		 */
-		function user_action( $action ) {
+		public function user_action( $action ) {
 			if ( ! is_admin() || ! current_user_can( 'edit_users' ) ) {
 				die();
 			}
@@ -1817,32 +1894,35 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			um_reset_user();
 
-			wp_redirect( add_query_arg( 'update', 'user_updated', admin_url( '?page=ultimatemember' ) ) );
+			$url = add_query_arg( 'update', 'user_updated', admin_url( '?page=ultimatemember' ) );
+			wp_safe_redirect( $url );
 			exit;
-
 		}
 
 
 		/**
 		 * Add any custom links to plugin page
 		 *
-		 * @param array $links
+		 * @hook   plugin_action_links_ultimate-member/ultimate-member.php
+		 *
+		 * @param  array $links  An array of plugin action links.
 		 *
 		 * @return array
 		 */
-		function plugin_links( $links ) {
+		public function plugin_links( $links ) {
+			$more_links   = array();
 			$more_links[] = '<a href="http://docs.ultimatemember.com/">' . __( 'Docs', 'ultimate-member' ) . '</a>';
-			$more_links[] = '<a href="'.admin_url().'admin.php?page=um_options">' . __( 'Settings', 'ultimate-member' ) . '</a>';
-
-			$links = $more_links + $links;
-			return $links;
+			$more_links[] = '<a href="' . admin_url() . 'admin.php?page=um_options">' . __( 'Settings', 'ultimate-member' ) . '</a>';
+			return array_merge( $more_links, $links );
 		}
 
 
 		/**
 		 * Init admin action/filters + request handlers
+		 *
+		 * @hook admin_init
 		 */
-		function admin_init() {
+		public function admin_init() {
 			$this->init_variables();
 
 			if ( is_admin() && current_user_can( 'manage_options' ) && ! empty( $_REQUEST['um_adm_action'] ) ) {
@@ -1895,28 +1975,30 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		/**
 		 * Updated post messages
 		 *
-		 * @param array $messages
+		 * @hook   post_updated_messages
+		 *
+		 * @param  array $messages  Post updated messages.
 		 *
 		 * @return array
 		 */
-		function post_updated_messages( $messages ) {
+		public function post_updated_messages( $messages ) {
 			global $post_ID;
 
 			$post_type = get_post_type( $post_ID );
 
-			if ( $post_type == 'um_form' ) {
+			if ( 'um_form' === $post_type ) {
 				$messages['um_form'] = array(
-					0   => '',
-					1   => __( 'Form updated.', 'ultimate-member' ),
-					2   => __( 'Custom field updated.', 'ultimate-member' ),
-					3   => __( 'Custom field deleted.', 'ultimate-member' ),
-					4   => __( 'Form updated.', 'ultimate-member' ),
-					5   => isset( $_GET['revision'] ) ? __( 'Form restored to revision.', 'ultimate-member' ) : false,
-					6   => __( 'Form created.', 'ultimate-member' ),
-					7   => __( 'Form saved.', 'ultimate-member' ),
-					8   => __( 'Form submitted.', 'ultimate-member' ),
-					9   => __( 'Form scheduled.', 'ultimate-member' ),
-					10  => __( 'Form draft updated.', 'ultimate-member' ),
+					0  => '',
+					1  => __( 'Form updated.', 'ultimate-member' ),
+					2  => __( 'Custom field updated.', 'ultimate-member' ),
+					3  => __( 'Custom field deleted.', 'ultimate-member' ),
+					4  => __( 'Form updated.', 'ultimate-member' ),
+					5  => isset( $_GET['revision'] ) ? __( 'Form restored to revision.', 'ultimate-member' ) : false,
+					6  => __( 'Form created.', 'ultimate-member' ),
+					7  => __( 'Form saved.', 'ultimate-member' ),
+					8  => __( 'Form submitted.', 'ultimate-member' ),
+					9  => __( 'Form scheduled.', 'ultimate-member' ),
+					10 => __( 'Form draft updated.', 'ultimate-member' ),
 				);
 			}
 
@@ -1927,19 +2009,21 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		/**
 		 * Gettext filters
 		 *
-		 * @param $translation
-		 * @param $text
-		 * @param $domain
+		 * @hook   gettext
+		 *
+		 * @param  string $translation  Translated text.
+		 * @param  string $text         Text to translate.
+		 * @param  string $domain       Text domain.
 		 *
 		 * @return string
 		 */
-		function gettext( $translation, $text, $domain ) {
+		public function gettext( $translation, $text, $domain ) {
 			global $post;
 			if ( isset( $post->post_type ) && $this->is_plugin_post_type() ) {
 				$translations = get_translations_for_domain( $domain );
-				if ( $text == 'Publish' ) {
+				if ( 'Publish' === $text ) {
 					return $translations->translate( 'Create' );
-				} elseif ( $text == 'Move to Trash' ) {
+				} elseif ( 'Move to Trash' === $text ) {
 					return $translations->translate( 'Delete' );
 				}
 			}
@@ -1951,11 +2035,11 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		/**
 		 * Fix parent file for correct highlighting
 		 *
-		 * @param $parent_file
+		 * @param  string $parent_file  A parent file.
 		 *
 		 * @return string
 		 */
-		function parent_file( $parent_file ) {
+		public function parent_file( $parent_file ) {
 			global $current_screen;
 			$screen_id = $current_screen->id;
 			if ( strstr( $screen_id, 'um_' ) ) {
@@ -1966,15 +2050,18 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 
 		/**
-		 * @since 2.0
+		 * Get class Admin_Notices instance
+		 *
+		 * @since  2.0
 		 *
 		 * @return core\Admin_Notices()
 		 */
-		function notices() {
+		public function notices() {
 			if ( empty( UM()->classes['admin_notices'] ) ) {
 				UM()->classes['admin_notices'] = new core\Admin_Notices();
 			}
 			return UM()->classes['admin_notices'];
 		}
+
 	}
 }
