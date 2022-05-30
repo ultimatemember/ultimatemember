@@ -380,10 +380,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 					'editor_script' => 'um_admin_blocks-shortcode',
 				) );
 
-				register_block_type( 'um-block/um-member-directories', array(
-					'editor_script' => 'um_admin_blocks-shortcode',
-				) );
-
 				register_block_type( 'um-block/um-password-reset', array(
 					'editor_script' => 'um_admin_blocks-shortcode',
 				) );

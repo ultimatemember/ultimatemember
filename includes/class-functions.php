@@ -641,6 +641,20 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 
 		/**
+		 * @param null|string $post_type
+		 * @return array
+		 */
+		function cpt_taxonomies_list( $post_type = null ) {
+			$taxonomies = apply_filters( 'um_cpt_taxonomies_list', array() );
+
+			if ( isset( $post_type ) ) {
+				$taxonomies = array_key_exists( $post_type, $taxonomies ) ? $taxonomies[ $post_type ] : array();
+			}
+			return $taxonomies;
+		}
+
+
+		/**
 		 * @since 2.1.0
 		 *
 		 * @param $var

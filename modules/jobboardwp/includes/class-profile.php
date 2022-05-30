@@ -38,7 +38,7 @@ class Profile {
 	function add_profile_tab( $tabs ) {
 		$tabs['jobboardwp'] = array(
 			'name' => __( 'Jobs', 'ultimate-member' ),
-			'icon' => 'um-faicon-list-alt',
+			'icon' => 'far fa-list-alt',
 		);
 
 		return $tabs;

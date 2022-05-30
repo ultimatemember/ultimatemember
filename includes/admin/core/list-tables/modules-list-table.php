@@ -305,6 +305,10 @@ class UM_Modules_List_Table extends WP_List_Table {
 				$actions['docs'] = '<a href="' . esc_url_raw( $module_data['docs_url'] ) . '" target="_blank">' . __( 'Documentation', 'ultimate-member' ). '</a>';
 			}
 
+			if ( UM()->modules()->has_settings_section( $item['key'] ) ) {
+				$actions['settings'] = '<a href="admin.php?page=um_options&tab=modules&section=' . esc_attr( $item['key'] ) . '">' . __( 'Settings', 'ultimate-member' ) . '</a>';
+			}
+
 			if ( UM()->modules()->can_deactivate( $item['key'] ) ) {
 				$actions['deactivate'] = '<a href="admin.php?page=um_options&tab=modules&action=deactivate&slug=' . esc_attr( $item['key'] ) . '&_wpnonce=' . wp_create_nonce( 'um_module_deactivate' . $item['key'] . get_current_user_id() ) . '" class="delete">' . __( 'Deactivate', 'ultimate-member' ). '</a>';
 			}

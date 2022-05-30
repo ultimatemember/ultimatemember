@@ -694,7 +694,7 @@ if ( ! class_exists( 'um\legacy\admin\core\Admin_Metabox' ) ) {
 			$path = str_replace('}','', $path );
 
 
-			include_once $path . 'includes/legacy/admin/templates/directory/'. $box['id'] . '.php';
+			include_once trailingslashit( $path ) . 'includes/legacy/admin/templates/directory/'. $box['id'] . '.php';
 			if ( ! $this->directory_nonce_added ) {
 				$this->directory_nonce_added = true;
 				wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_directory_nonce' );

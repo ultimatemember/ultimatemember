@@ -29,11 +29,14 @@ class Shortcode {
 	 * @return string
 	 */
 	function ultimatemember_online( $args = array() ) {
-		$defaults = array(
-			'max'   => 11,
-			'roles' => 'all',
+		$args = shortcode_atts(
+			array(
+				'max'   => 11,
+				'roles' => 'all',
+			),
+			$args,
+			'ultimatemember_online'
 		);
-		$args = wp_parse_args( $args, $defaults );
 
 		$args['online'] = UM()->module( 'online' )->get_users();
 		$template = ( $args['online'] && count( $args['online'] ) > 0 ) ? 'online' : 'nobody';

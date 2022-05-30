@@ -235,9 +235,6 @@ if ( ! class_exists( 'UM' ) ) {
 				//run hook for extensions init
 				add_action( 'plugins_loaded', array( &$this, 'core_loaded_trigger' ), -19 );
 
-				// init widgets
-				add_action( 'widgets_init', array( &$this, 'widgets_init' ) );
-
 				//include short non class functions
 				$is_legacy = get_option( 'um_is_legacy' );
 
@@ -1530,16 +1527,6 @@ if ( ! class_exists( 'UM' ) ) {
 				require_once 'legacy/core/um-filters-misc.php';
 				require_once 'legacy/core/um-filters-commenting.php';
 			}
-		}
-
-
-		/**
-		 * Init UM widgets
-		 *
-		 * @since 2.0
-		 */
-		function widgets_init() {
-			register_widget( 'um\widgets\UM_Search_Widget' );
 		}
 
 

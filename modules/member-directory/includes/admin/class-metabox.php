@@ -446,7 +446,7 @@ class Metabox {
 		$path = str_replace('}','', $path );
 
 
-		include_once $path . 'includes/admin/templates/directory/'. $box['id'] . '.php';
+		include_once trailingslashit( $path ) . 'includes/admin/templates/directory/'. $box['id'] . '.php';
 		if ( ! $this->nonce_added ) {
 			$this->nonce_added = true;
 			wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_directory_nonce' );

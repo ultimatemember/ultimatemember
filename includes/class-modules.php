@@ -47,6 +47,12 @@ class Modules {
 		/** This filter is documented in wp-admin/includes/class-wp-plugins-list-table.php */
 		$all_plugins = apply_filters( 'all_plugins', get_plugins() );
 
+		$active_plugins = (array) get_option( 'active_plugins', array() );
+
+		if ( is_multisite() ) {
+			$active_plugins = array_merge( $active_plugins, get_site_option( 'active_sitewide_plugins', array() ) );
+		}
+
 		foreach ( $modules as $slug => &$data ) {
 			// @todo checking the proper module structure function if not proper make 'invalid' data with displaying red line in list table
 
@@ -63,6 +69,37 @@ class Modules {
 
 					if ( $data['disabled'] ) {
 						$data['description'] = '<strong>' . sprintf( __( 'Module will be disabled until "%s" plugin is installed.', 'ultimate-member' ), $all_plugins[ $data['plugin_slug'] ]['Name'] ) . '</strong><br />' . $data['description'];
+					}
+				}
+
+				if ( array_key_exists( 'plugins_required', $data ) ) {
+					$maybe_installed = array_intersect( array_keys( $data['plugins_required'] ), array_keys( $all_plugins ) );
+					$not_installed = array_diff( array_keys( $data['plugins_required'] ), $maybe_installed );
+
+					$data['disabled'] = count( $not_installed ) > 0;
+
+					if ( $data['disabled'] ) {
+						$plugins_titles = array();
+						foreach ( $not_installed as $plugin_slug ) {
+							$plugins_titles[] = '<a href="' . esc_url( $data['plugins_required'][ $plugin_slug ]['url'] ) . '" target="_blank">' . esc_html( $data['plugins_required'][ $plugin_slug ]['name'] ) . '</a>';
+						}
+						$plugins_titles = '"' .  implode( '", "', $plugins_titles ) . '"';
+
+						$data['description'] = '<strong>' . sprintf( _n( 'Module will be disabled until %s plugin isn\'t installed.', 'Module will be disabled until %s plugins aren\'t installed.', count( $not_installed ), 'ultimate-member' ), $plugins_titles ) . '</strong><br />' . $data['description'];
+					} else {
+						$maybe_activated = array_intersect( array_keys( $data['plugins_required'] ), $active_plugins );
+						$not_active = array_diff( array_keys( $data['plugins_required'] ), $maybe_activated );
+
+						$data['disabled'] = count( $not_active ) > 0;
+						if ( $data['disabled'] ) {
+							$plugins_titles = array();
+							foreach ( $not_active as $plugin_slug ) {
+								$plugins_titles[] = '<a href="' . esc_url( $data['plugins_required'][ $plugin_slug ]['url'] ) . '" target="_blank">' . esc_html( $data['plugins_required'][ $plugin_slug ]['name'] ) . '</a>';
+							}
+							$plugins_titles = '"' .  implode( '", "', $plugins_titles ) . '"';
+
+							$data['description'] = '<strong>' . sprintf( _n( 'Module will be disabled until %s plugin isn\'t active.', 'Module will be disabled until %s plugins aren\'t active.', count( $not_active ), 'ultimate-member' ), $plugins_titles ) . '</strong><br />' . $data['description'];
+						}
 					}
 				}
 
@@ -292,11 +329,31 @@ class Modules {
 	}
 
 
+	/**
+	 * Checking if the module had been already first-time activated
+	 * Must be reset this marker after flushing data of the module
+	 *
+	 * @param string $slug
+	 *
+	 * @return bool
+	 */
 	function is_first_installed( $slug ) {
 		$slug             = UM()->undash( $slug );
 		$first_activation = UM()->options()->get( "module_{$slug}_first_activation" );
 
 		return ! empty( $first_activation );
+	}
+
+
+	/**
+	 * Checking if the module has the settings section in wp-admin dashboard
+	 *
+	 * @param string $slug
+	 *
+	 * @return bool
+	 */
+	function has_settings_section( $slug ) {
+		return ! empty( UM()->admin()->settings()->settings_structure['modules']['sections'][ $slug ] );
 	}
 
 

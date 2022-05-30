@@ -91,7 +91,7 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 
 			add_submenu_page( $this->slug, __( 'Settings', 'ultimate-member' ), __( 'Settings', 'ultimate-member' ), 'manage_options', 'um_options', array( UM()->admin()->settings(), 'settings_page' ) );
 
-			add_submenu_page( $this->slug, __( 'Forms', 'ultimate-member' ), __( 'Forms', 'ultimate-member' ), 'manage_options', 'edit.php?post_type=um_form', '' );
+			add_submenu_page( $this->slug, __( 'Forms', 'ultimate-member' ), __( 'Forms', 'ultimate-member' ), 'manage_options', 'edit.php?post_type=um_form' );
 
 			add_submenu_page( $this->slug, __( 'User Roles', 'ultimate-member' ), __( 'User Roles', 'ultimate-member' ), 'manage_options', 'um_roles', array( &$this, 'um_roles_pages' ) );
 
@@ -429,11 +429,11 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 			global $submenu, $pagenow;
 
 			if ( isset( $submenu['ultimatemember'] ) ) {
-				if ( isset( $_GET['post_type'] ) && in_array( $_GET['post_type'], UM()->cpt_list(), true ) ) {
+				if ( isset( $_GET['post_type'] ) && in_array( sanitize_key( $_GET['post_type'] ), UM()->cpt_list(), true ) ) {
 					add_filter( 'parent_file', array( &$this, 'change_parent_file' ), 200, 1 );
 				}
 
-				if ( 'post.php' === $pagenow && ( isset( $_GET['post'] ) && in_array( get_post_type( $_GET['post'] ), UM()->cpt_list(), true ) ) ) {
+				if ( 'post.php' === $pagenow && ( isset( $_GET['post'] ) && in_array( get_post_type( sanitize_key( $_GET['post'] ) ), UM()->cpt_list(), true ) ) ) {
 					add_filter( 'parent_file', array( &$this, 'change_parent_file' ), 200, 1 );
 				}
 
@@ -456,7 +456,7 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 		function change_parent_file( $parent_file ) {
 			global $pagenow;
 
-			if ( 'post-new.php' !== $pagenow ) {
+			if ( 'edit-tags.php' !== $pagenow && 'term.php' !== $pagenow && 'post-new.php' !== $pagenow ) {
 				$pagenow = 'admin.php';
 			}
 
@@ -479,9 +479,11 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 		function change_submenu_file( $submenu_file, $parent_file ) {
 			global $pagenow;
 
-			if ( 'post-new.php' === $pagenow ) {
+			if ( 'edit-tags.php' === $pagenow || 'term.php' === $pagenow || 'post-new.php' === $pagenow ) {
 				if ( 'ultimatemember' === $parent_file ) {
-					if ( 'post-new.php' === $pagenow && isset( $_GET['post_type'] ) && in_array( $_GET['post_type'], UM()->cpt_list(), true ) ) {
+					if ( isset( $_GET['post_type'] ) && in_array( sanitize_key( $_GET['post_type'] ), UM()->cpt_list(), true ) && isset( $_GET['taxonomy'] ) && in_array( sanitize_key( $_GET['taxonomy'] ), UM()->cpt_taxonomies_list( sanitize_key( $_GET['post_type'] ) ), true ) ) {
+						$submenu_file = 'edit-tags.php?taxonomy=' . sanitize_key( $_GET['taxonomy'] ) . '&post_type=' . sanitize_key( $_GET['post_type'] );
+					} elseif ( 'post-new.php' === $pagenow && isset( $_GET['post_type'] ) && in_array( sanitize_key( $_GET['post_type'] ), UM()->cpt_list(), true ) ) {
 						$submenu_file = 'edit.php?post_type=' . sanitize_key( $_GET['post_type'] );
 					}
 

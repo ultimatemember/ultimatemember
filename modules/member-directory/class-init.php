@@ -50,6 +50,8 @@ final class Init extends Functions {
 		} elseif ( UM()->is_request( 'frontend' ) ) {
 			$this->frontend()->includes();
 		}
+
+		add_action( 'widgets_init', array( &$this, 'widgets' ) );
 	}
 
 
@@ -105,5 +107,13 @@ final class Init extends Functions {
 			UM()->classes['umm\member_directory\config'] = new Config();
 		}
 		return UM()->classes['umm\member_directory\config'];
+	}
+
+
+	/**
+	 *
+	 */
+	function widgets() {
+		register_widget( 'umm\member_directory\includes\widgets\Search' );
 	}
 }

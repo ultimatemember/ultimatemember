@@ -526,6 +526,7 @@ if ( ! class_exists( 'um\legacy\admin\core\Admin_Enqueue' ) ) {
 			register_block_type( 'um-block/um-member-directories', array(
 				'editor_script' => 'um-blocks-shortcode-js',
 			) );
+			var_dump(1872381673286173618321);
 
 			register_block_type( 'um-block/um-password-reset', array(
 				'editor_script' => 'um-blocks-shortcode-js',

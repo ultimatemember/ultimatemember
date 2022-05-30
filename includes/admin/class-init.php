@@ -1426,7 +1426,7 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 				     strstr( $screen_id, 'um_' ) ||
 				     strstr( $screen_id, 'user' ) ||
 				     strstr( $screen_id, 'profile' ) ||
-				     $screen_id == 'nav-menus' ) {
+				     'nav-menus' === $screen_id ) {
 					$is_um_screen = true;
 				}
 			}
@@ -1458,7 +1458,7 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 				if ( in_array( $post_type, $cpt ) ) {
 					return true;
 				}
-			} elseif ( isset( $_REQUEST['action'] ) && sanitize_key( $_REQUEST['action'] ) == 'edit' ) {
+			} elseif ( isset( $_REQUEST['action'] ) && 'edit' === sanitize_key( $_REQUEST['action'] ) ) {
 				$post_type = get_post_type();
 				if ( in_array( $post_type, $cpt ) ) {
 					return true;

@@ -293,15 +293,15 @@ if ( ! class_exists( 'um\legacy\core\Member_Directory' ) ) {
 
 			// Sort
 			$this->sort_fields = apply_filters( 'um_members_directory_sort_fields', array(
-				'user_registered_desc'  => __( 'New users first', 'ultimate-member' ),
-				'user_registered_asc'   => __( 'Old users first', 'ultimate-member' ),
-				'username'              => __( 'Username', 'ultimate-member' ),
-				'nickname'              => __( 'Nickname', 'ultimate-member' ),
-				'first_name'            => __( 'First name', 'ultimate-member' ),
-				'last_name'             => __( 'Last name', 'ultimate-member' ),
-				'display_name'          => __( 'Display name', 'ultimate-member' ),
-				'last_first_name'       => __( 'Last & First name', 'ultimate-member' ),
-				'last_login'            => __( 'Last login', 'ultimate-member' ),
+				'user_registered_desc' => __( 'New users first', 'ultimate-member' ),
+				'user_registered_asc'  => __( 'Old users first', 'ultimate-member' ),
+				'username'             => __( 'Username', 'ultimate-member' ),
+				'nickname'             => __( 'Nickname', 'ultimate-member' ),
+				'first_name'           => __( 'First name', 'ultimate-member' ),
+				'last_name'            => __( 'Last name', 'ultimate-member' ),
+				'display_name'         => __( 'Display name', 'ultimate-member' ),
+				'last_first_name'      => __( 'Last & First name', 'ultimate-member' ),
+				'last_login'           => __( 'Last login', 'ultimate-member' ),
 
 			) );
 

@@ -118,18 +118,30 @@ if ( ! class_exists( 'um\Config' ) ) {
 		public function init_modules() {
 			$this->modules = array(
 				'jobboardwp'       => array(
-					'title'       => __( 'JobBoardWP integration', 'ultimate-member' ),
-					'description' => __( 'Integrates Ultimate Member with JobBoardWP.', 'ultimate-member' ),
-					'plugin_slug' => 'um-jobboardwp/um-jobboardwp.php',
-					'docs_url'    => 'https://docs.ultimatemember.com/article/1574-ultimate-member-jobboardwp',
-					'type'        => 'free',
+					'title'            => __( 'JobBoardWP integration', 'ultimate-member' ),
+					'description'      => __( 'Integrates Ultimate Member with JobBoardWP.', 'ultimate-member' ),
+					'plugin_slug'      => 'um-jobboardwp/um-jobboardwp.php',
+					'docs_url'         => 'https://docs.ultimatemember.com/article/1574-ultimate-member-jobboardwp',
+					'type'             => 'free',
+					'plugins_required' => array(
+						'jobboardwp/jobboardwp.php' => array(
+							'name' => 'JobBoardWP – Job Board Listings and Submissions',
+							'url'  => 'https://wordpress.org/plugins/jobboardwp/',
+						),
+					),
 				),
 				'forumwp'          => array(
-					'title'       => __( 'ForumWP integration', 'ultimate-member' ),
-					'description' => __( 'Integrates Ultimate Member with ForumWP.', 'ultimate-member' ),
-					'plugin_slug' => 'um-forumwp/um-forumwp.php',
-					'docs_url'    => 'https://docs.ultimatemember.com/article/1501-forumwp-setup',
-					'type'        => 'free',
+					'title'            => __( 'ForumWP integration', 'ultimate-member' ),
+					'description'      => __( 'Integrates Ultimate Member with ForumWP.', 'ultimate-member' ),
+					'plugin_slug'      => 'um-forumwp/um-forumwp.php',
+					'docs_url'         => 'https://docs.ultimatemember.com/article/1501-forumwp-setup',
+					'type'             => 'free',
+					'plugins_required' => array(
+						'forumwp/forumwp.php' => array(
+							'name' => 'ForumWP – Forum & Discussion Board Plugin',
+							'url'  => 'https://wordpress.org/plugins/forumwp/',
+						),
+					),
 				),
 				'member-directory' => array(
 					'title'       => __( 'Member Directory', 'ultimate-member' ),
@@ -401,7 +413,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 			// since 3.0 legacy hook
 			// @todo remove in 3.1 version
 			$this->predefined_pages = apply_filters( 'um_core_pages', $this->predefined_pages );
-			$this->core_pages = $this->predefined_pages ;
+			$this->core_pages = $this->predefined_pages;
 		}
 
 

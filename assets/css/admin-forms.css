@@ -42,7 +42,8 @@
   .um-form-table .um-forms-line td .select2 .select2-selection__rendered {
     line-height: 26px; }
   .um-form-table .um-forms-line td .select2 .select2-selection__clear {
-    top: -1px; }
+    top: -1px;
+    margin-right: 0; }
 
 .um-form-table .um-forms-line[data-field_type="same_page_update"] {
   vertical-align: baseline; }

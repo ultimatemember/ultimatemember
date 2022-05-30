@@ -36,7 +36,7 @@ class Init {
 	 */
 	function is_um_screen( $is_um ) {
 		global $current_screen;
-		if ( strstr( $current_screen->id, 'fmwp_forum' ) ) {
+		if ( ! empty( $current_screen ) && strstr( $current_screen->id, 'fmwp_forum' ) ) {
 			$is_um = true;
 		}
 

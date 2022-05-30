@@ -24,7 +24,8 @@ class Enqueue {
 		add_action( 'load-edit.php', array( &$this, 'posts_page' ) );
 		add_action( 'load-post-new.php', array( &$this, 'post_page' ) );
 		add_action( 'load-post.php', array( &$this, 'post_page' ) );
-		add_action( 'enqueue_block_editor_assets', array( &$this, 'block_editor' ) );
+		// after register block category
+		add_action( 'enqueue_block_editor_assets', array( &$this, 'block_editor' ), 11 );
 	}
 
 
@@ -82,7 +83,7 @@ class Enqueue {
 
 		$enable_blocks = UM()->options()->get( 'enable_blocks' );
 		if ( ! empty( $enable_blocks ) ) {
-			wp_register_script( 'um_admin_blocks_member_directory_shortcode', $data['url'] . 'assets/js/blocks-shortcode' . UM()->admin()->enqueue()->suffix . '.js', array( 'wp-i18n', 'wp-blocks', 'wp-components' ), UM_VERSION, true );
+			wp_register_script( 'um_admin_blocks_member_directory_shortcode', $data['url'] . 'assets/js/blocks/blocks-shortcode' . UM()->admin()->enqueue()->suffix . '.js', array( 'wp-i18n', 'wp-blocks', 'wp-components' ), UM_VERSION, true );
 			wp_set_script_translations( 'um_admin_blocks_member_directory_shortcode', 'ultimate-member' );
 
 			wp_enqueue_script( 'um_admin_blocks_member_directory_shortcode' );

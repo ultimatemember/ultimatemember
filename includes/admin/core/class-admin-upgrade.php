@@ -65,7 +65,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 			$this->necessary_packages = $this->need_run_upgrades();
 
 			if ( ! empty( $this->necessary_packages ) ) {
-				add_action( 'admin_menu', array( $this, 'admin_menu' ), 0 );
+				add_action( 'um_extend_admin_menu', array( $this, 'admin_menu' ), 9999999 );
 
 				if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 					$this->init_packages_ajax();
@@ -222,7 +222,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 		 * Add Upgrades admin menu
 		 */
 		function admin_menu() {
-			add_submenu_page( 'ultimatemember', __( 'Upgrade', 'ultimate-member' ), '<span style="color:#ca4a1f;">' . __( 'Upgrade', 'ultimate-member' ) . '</span>', 'manage_options', 'um_upgrade', array( &$this, 'upgrade_page' ) );
+			add_submenu_page( UM()->admin()->menu()->slug, __( 'Upgrade', 'ultimate-member' ), '<span style="color:#ca4a1f;">' . __( 'Upgrade', 'ultimate-member' ) . '</span>', 'manage_options', 'um_upgrade', array( &$this, 'upgrade_page' ), 1 );
 		}
 
 

@@ -116,6 +116,8 @@ $profile_menu_fields = array_merge(
 		),
 	)
 );
+
+$profile_menu_fields = apply_filters( 'um_profile_menu_settings_fields', $profile_menu_fields );
 ?>
 
 

@@ -155,5 +155,23 @@ if ( ! class_exists( 'um\common\User' ) ) {
 
 			return $user_id;
 		}
+
+
+		/**
+		 * Deletes all user roles
+		 *
+		 * @param int $user_id User ID.
+		 */
+		public function flush_roles( $user_id ) {
+			$user = get_userdata( $user_id );
+
+			if ( empty( $user->roles ) ) {
+				return;
+			}
+
+			foreach ( $user->roles as $role ) {
+				$user->remove_role( $role );
+			}
+		}
 	}
 }

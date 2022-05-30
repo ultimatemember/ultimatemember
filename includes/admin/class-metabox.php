@@ -750,7 +750,7 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			$path = str_replace('{','', $path );
 			$path = str_replace('}','', $path );
 
-			include_once $path . 'includes/admin/templates/role/'. $box['id'] . '.php';
+			include_once trailingslashit( $path ) . 'includes/admin/templates/role/'. $box['id'] . '.php';
 			//wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_role_nonce' );
 		}
 
@@ -782,7 +782,7 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			$path = str_replace('{','', $path );
 			$path = str_replace('}','', $path );
 
-			include_once $path . 'includes/admin/templates/form/'. $box['id'] . '.php';
+			include_once trailingslashit( $path ) . 'includes/admin/templates/form/'. $box['id'] . '.php';
 
 			if ( ! $this->form_nonce_added ) {
 				$this->form_nonce_added = true;
@@ -814,7 +814,7 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			$path = str_replace('{','', $path );
 			$path = str_replace('}','', $path );
 
-			include_once $path . 'includes/admin/templates/'. $box['id'] . '.php';
+			include_once trailingslashit( $path ) . 'includes/admin/templates/'. $box['id'] . '.php';
 			if ( ! $this->custom_nonce_added ) {
 				$this->custom_nonce_added = true;
 				wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_custom_nonce' );

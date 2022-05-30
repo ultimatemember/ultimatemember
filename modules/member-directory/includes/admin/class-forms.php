@@ -45,9 +45,9 @@ class Forms {
 		$class_attr = ' class="um-forms-field ' . $class . '" ';
 
 		$data = array(
-			'field_id'          => $field_data['id'],
-			'id_attr'           => $id,
-			'member_directory'  => $post->ID
+			'field_id'         => $field_data['id'],
+			'id_attr'          => $id,
+			'member_directory' => $post->ID,
 		);
 
 		$data_attr = '';

@@ -1,3 +1,14 @@
+#um-settings-wrap .subsubsub {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-left: -3px;
+  margin-right: -3px; }
+  #um-settings-wrap .subsubsub a {
+    margin: 0 3px; }
+
 .um-settings-section .description {
   font-style: italic; }
 

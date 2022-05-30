@@ -5,9 +5,9 @@ Contributors: ultimatemember, champsupertramp, nsinelnikov
 Donate link: 
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
-Requires at least: 5.0
-Tested up to: 5.9
-Stable tag: 2.3.0
+Requires at least: 5.3
+Tested up to: 6.0
+Stable tag: 3.0
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 

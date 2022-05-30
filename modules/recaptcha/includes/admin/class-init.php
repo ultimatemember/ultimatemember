@@ -24,7 +24,6 @@ class Init {
 		add_filter( 'um_form_meta_map', array( &$this, 'add_form_meta_sanitize' ), 10, 1 );
 		add_filter( 'um_settings_map', array( &$this, 'settings_map' ), 10, 1 );
 		add_filter( 'um_settings_structure', array( &$this, 'add_settings' ), 10, 1 );
-		add_filter( 'um_module_list_table_actions', array( &$this, 'extend_module_row_actions' ), 10, 2 );
 	}
 
 
@@ -118,14 +117,6 @@ class Init {
 	}
 
 
-	public function extend_module_row_actions( $actions, $module_slug ) {
-		if ( 'recaptcha' === $module_slug ) {
-			$actions = UM()->array_insert_after( $actions, 'docs', array( 'settings' => '<a href="admin.php?page=um_options&tab=modules&section=' . esc_attr( $module_slug ) . '">' . __( 'Settings', 'ultimate-member' ) . '</a>' ) );
-		}
-		return $actions;
-	}
-
-
 	/**
 	 *
 	 */
@@ -147,7 +138,7 @@ class Init {
 		<p><?php echo wp_kses( __( 'Google reCAPTCHA is active on your site. However you need to fill in both your <strong>site key and secret key</strong> to start protecting your site against spam.', 'ultimate-member' ), $allowed_html ); ?></p>
 
 		<p>
-			<a href="<?php echo esc_url( admin_url( 'admin.php?page=um_options&tab=extensions&section=recaptcha' ) ); ?>" class="button button-primary"><?php esc_html_e( 'I already have the keys', 'ultimate-member' ); ?></a>&nbsp;
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=um_options&tab=modules&section=recaptcha' ) ); ?>" class="button button-primary"><?php esc_html_e( 'I already have the keys', 'ultimate-member' ); ?></a>&nbsp;
 			<a href="http://google.com/recaptcha" class="button-secondary" target="_blank"><?php esc_html_e( 'Generate your site and secret key', 'ultimate-member' ); ?></a>
 		</p>
 
@@ -183,7 +174,7 @@ class Init {
 		add_meta_box(
 			'um-admin-form-register-recaptcha{' . $module_data['path'] . '}',
 			__( 'Google reCAPTCHA', 'ultimate-member' ),
-			array( UM()->metabox(), 'load_metabox_form' ),
+			array( UM()->admin()->metabox(), 'load_metabox_form' ),
 			'um_form',
 			'side',
 			'default'

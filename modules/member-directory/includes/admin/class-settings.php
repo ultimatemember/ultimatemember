@@ -93,7 +93,7 @@ class Settings {
 <p>' . __( 'If the update was successful, you will see a corresponding message. Otherwise, contact technical support if the update failed.', 'ultimate-member' ) . '</p>';
 		}
 
-		$settings['modules']['sections']['member_directory'] = array(
+		$settings['modules']['sections']['member-directory'] = array(
 			'title'  => __( 'Member Directory', 'ultimate-member' ),
 			'fields' => array(
 				array(

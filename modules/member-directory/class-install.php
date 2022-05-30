@@ -38,15 +38,6 @@ class Install {
 	 * Create first install member directory
 	 */
 	function create_member_directory() {
-		/**
-		If page does not exist
-		Create it
-		 **/
-		$page_exists = UM()->query()->find_post_id( 'um_directory', '_um_core', 'members' );
-		if ( $page_exists ) {
-			return;
-		}
-
 		$form = array(
 			'post_type'   => 'um_directory',
 			'post_title'  => __( 'Members', 'ultimate-member' ),
