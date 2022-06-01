@@ -33,6 +33,9 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		 */
 		function init_variables() {
 			$this->options = get_option( 'um_options' );
+			if ( ! is_array( $this->options ) ) {
+				$this->options = array();
+			}
 		}
 
 
