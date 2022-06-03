@@ -430,7 +430,10 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 
 			$onclick_alert = '';
 			if ( UM()->options()->get( 'allow_url_redirect_confirm' ) && $value !== wp_validate_redirect( $value ) ) {
-				$onclick_alert = ' onclick="return confirm( \'' . sprintf( __( 'This link leads to a 3rd-party website. Make sure the link is safe and you really want to go to this website: `%s`', 'ultimate-member' ), $value ) . '\' );"';
+				$onclick_alert = sprintf(
+					' onclick="' . esc_attr( 'return confirm( "%s" );' ) . '"',
+					esc_js( sprintf( __( 'This link leads to a 3rd-party website. Make sure the link is safe and you really want to go to this website: \'%s\'', 'ultimate-member' ), $value ) )
+				);
 			}
 
 			$data['url_target'] = ( isset( $data['url_target'] ) ) ? $data['url_target'] : '_blank';
