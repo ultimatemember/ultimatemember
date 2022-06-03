@@ -20,11 +20,11 @@ $fields = array(
 		'value' => (bool) get_post_meta( $post_id, '_um_profile_photo', true ),
 	),
 	array(
-		'id'      => '_um_cover_photos',
-		'type'    => 'checkbox',
-		'label'   => __( 'Enable Cover Photo', 'ultimate-member' ),
+		'id'          => '_um_cover_photos',
+		'type'        => 'checkbox',
+		'label'       => __( 'Enable Cover Photo', 'ultimate-member' ),
 		'description' => __( 'If turned on, the users cover photo will appear in the directory', 'ultimate-member' ),
-		'value'   => (bool) get_post_meta( $post_id, '_um_cover_photos', true ),
+		'value'       => (bool) get_post_meta( $post_id, '_um_cover_photos', true ),
 	),
 	array(
 		'id'    => '_um_show_name',
@@ -77,7 +77,7 @@ $fields = array(
 		'id'          => '_um_userinfo_animate',
 		'type'        => 'checkbox',
 		'label'       => __( 'Hide extra user information to the reveal section', 'ultimate-member' ),
-		'description'     => __( 'If not checked always shown', 'ultimate-member' ),
+		'description' => __( 'If not checked always shown', 'ultimate-member' ),
 		'value'       => (bool) get_post_meta( $post_id, '_um_userinfo_animate', true ),
 		'conditional' => array( '_um_show_userinfo', '=', 1 ),
 	),
@@ -104,7 +104,8 @@ $fields = array(
  * }
  * ?>
  */
-$fields = apply_filters( 'um_admin_extend_directory_options_profile', $fields ); ?>
+$fields = apply_filters( 'um_admin_extend_directory_options_profile', $fields );
+?>
 
 <div class="um-admin-metabox">
 	<?php

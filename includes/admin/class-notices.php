@@ -30,19 +30,19 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 		function __construct() {
 			add_action( 'admin_init', array( &$this, 'create_languages_folder' ) );
 			add_action( 'admin_init', array( &$this, 'force_dismiss_notice' ) );
-			add_action( 'admin_init', array( &$this, 'create_list' ), 10 );
-			// add admin notice only on the modules page
-			add_action( 'load-ultimate-member_page_um-modules', array( &$this, 'legacy_enabled_modules' ) );
-			add_action( 'load-ultimate-member_page_um_options', array( &$this, 'legacy_notices_options' ) );
+
+			// later then admin_init for checking the $current_screen variable
+			add_action( 'current_screen', array( &$this, 'create_list' ), 10, 1 );
+
 			add_action( 'admin_notices', array( &$this, 'render_notices' ), 1 );
 			add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1000 );
 		}
 
 
 		/**
-		 *
+		 * @param \WP_Screen $current_screen
 		 */
-		function create_list() {
+		function create_list( $current_screen ) {
 			$this->old_extensions_notice();
 			$this->install_predefined_page_notice();
 			$this->exif_extension_notice();
@@ -52,6 +52,12 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 			$this->check_wrong_licenses();
 
 			$this->lock_registration();
+
+			if ( ! empty( $current_screen ) && 'ultimate-member_page_um_options' === $current_screen->id ) {
+				// add admin notice only on the Settings page
+				$this->legacy_enabled_modules();
+				$this->legacy_notices_options();
+			}
 
 			// removed for now to avoid the bad reviews
 			//$this->reviews_notice();
@@ -75,7 +81,7 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 			 * }
 			 * ?>
 			 */
-			do_action( 'um_admin_create_notices' );
+			do_action( 'um_admin_create_notices', $current_screen );
 		}
 
 
@@ -323,6 +329,14 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 
 
 		function legacy_enabled_modules() {
+			if ( ! isset( $_GET['tab'] ) || 'modules' !== sanitize_key( $_GET['tab'] ) ) {
+				return;
+			}
+
+			if ( ! empty( $_GET['section'] ) ) {
+				return;
+			}
+
 			if ( ! UM()->is_legacy ) {
 				return;
 			}
@@ -340,7 +354,7 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 				return;
 			}
 
-			if ( ! isset( $_GET['tab'] ) || 'misc' !== $_GET['tab'] ) {
+			if ( ! isset( $_GET['tab'] ) || 'misc' !== sanitize_key( $_GET['tab'] ) ) {
 				return;
 			}
 
@@ -489,7 +503,6 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 		 * Updating users
 		 */
 		function show_update_messages() {
-
 			if ( ! isset( $_REQUEST['update'] ) ) {
 				return;
 			}
@@ -547,6 +560,12 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 
 				case 'settings_updated':
 					$messages[0]['content'] = __( 'Settings have been saved successfully.', 'ultimate-member' );
+					break;
+
+				case 'version_upgraded':
+					if ( empty( UM()->admin_upgrade()->necessary_packages ) ) {
+						$messages[0]['content'] = sprintf( __( '<strong>%s %s</strong> upgraded successfully.', 'ultimate-member' ), UM_PLUGIN_NAME, UM_VERSION );
+					}
 					break;
 
 				case 'user_updated':
@@ -644,42 +663,33 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 
 
 		function need_upgrade() {
-			if ( ! empty( UM()->admin_upgrade()->necessary_packages ) ) {
+			if ( empty( UM()->admin_upgrade()->necessary_packages ) ) {
+				return;
+			}
 
-				$url = add_query_arg( array( 'page' => 'um_upgrade' ), admin_url( 'admin.php' ) );
+			$url = add_query_arg( array( 'page' => 'um_upgrade' ), admin_url( 'admin.php' ) );
 
-				ob_start(); ?>
+			ob_start(); ?>
 
-				<p>
-					<?php printf( __( '<strong>%s version %s</strong> needs to be updated to work correctly.<br />It is necessary to update the structure of the database and options that are associated with <strong>%s %s</strong>.<br />Please visit <a href="%s">"Upgrade"</a> page and run the upgrade process.', 'ultimate-member' ), ultimatemember_plugin_name, UM_VERSION, ultimatemember_plugin_name, ultimatemember_version, $url ); ?>
-				</p>
+			<p>
+				<?php printf( __( '<strong>%s version %s</strong> needs to be updated to work correctly.<br />It is necessary to update the structure of the database and options that are associated with <strong>%s %s</strong>.<br />Please visit <a href="%s">"Upgrade"</a> page and run the upgrade process.', 'ultimate-member' ), UM_PLUGIN_NAME, UM_VERSION, UM_PLUGIN_NAME, UM_VERSION, $url ); ?>
+			</p>
 
-				<p>
-					<a href="<?php echo esc_url( $url ) ?>" class="button button-primary"><?php _e( 'Visit Upgrade Page', 'ultimate-member' ) ?></a>
-					&nbsp;
-				</p>
+			<p>
+				<a href="<?php echo esc_url( $url ) ?>" class="button button-primary"><?php _e( 'Visit Upgrade Page', 'ultimate-member' ) ?></a>
+				&nbsp;
+			</p>
 
-				<?php $message = ob_get_clean();
+			<?php $message = ob_get_clean();
 
-				$this->add_notice( 'upgrade', array(
+			$this->add_notice(
+				'upgrade',
+				array(
 					'class'   => 'error',
 					'message' => $message,
-				), 4 );
-			} else {
-				if ( isset( $_GET['msg'] ) && 'updated' === sanitize_key( $_GET['msg'] ) ) {
-					if ( isset( $_GET['page'] ) && 'um_options' === sanitize_key( $_GET['page'] ) ) {
-						$this->add_notice( 'settings_upgrade', array(
-							'class'   => 'updated',
-							'message' => '<p>' . __( 'Settings successfully upgraded', 'ultimate-member' ) . '</p>',
-						), 4 );
-					} else {
-						$this->add_notice( 'upgrade', array(
-							'class'   => 'updated',
-							'message' => '<p>' . sprintf( __( '<strong>%s %s</strong> Successfully Upgraded', 'ultimate-member' ), ultimatemember_plugin_name, UM_VERSION ) . '</p>',
-						), 4 );
-					}
-				}
-			}
+				),
+				4
+			);
 		}
 
 
@@ -687,14 +697,13 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 		 *
 		 */
 		function reviews_notice() {
-
 			$first_activation_date = get_option( 'um_first_activation_date', false );
 
 			if ( empty( $first_activation_date ) ) {
 				return;
 			}
 
-			if ( $first_activation_date + 2*WEEK_IN_SECONDS > time() ) {
+			if ( $first_activation_date + 2 * WEEK_IN_SECONDS > time() ) {
 				return;
 			}
 

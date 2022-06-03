@@ -129,13 +129,9 @@ class Init {
 			return;
 		}
 
-		$allowed_html = array(
-			'strong' => array(),
-		);
-
 		ob_start(); ?>
 
-		<p><?php echo wp_kses( __( 'Google reCAPTCHA is active on your site. However you need to fill in both your <strong>site key and secret key</strong> to start protecting your site against spam.', 'ultimate-member' ), $allowed_html ); ?></p>
+		<p><?php echo wp_kses( __( 'Google reCAPTCHA is active on your site. However you need to fill in both your <strong>site key and secret key</strong> to start protecting your site against spam.', 'ultimate-member' ), UM()->get_allowed_html( 'admin_notice' ) ); ?></p>
 
 		<p>
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=um_options&tab=modules&section=recaptcha' ) ); ?>" class="button button-primary"><?php esc_html_e( 'I already have the keys', 'ultimate-member' ); ?></a>&nbsp;

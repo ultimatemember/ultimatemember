@@ -1,10 +1,12 @@
-<?php if ( ! defined( 'ABSPATH' ) ) {
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 if ( empty( UM()->builder()->form_id ) ) {
 	UM()->builder()->form_id = $this->form_id;
-} ?>
+}
+?>
 
 <!-- data-in_row="" data-in_sub_row="" data-in_column="" data-in_group="" data is used for builder handlers when trying to insert field in the selected place -->
 <div class="um-admin-builder" data-form_id="<?php echo esc_attr( UM()->builder()->form_id ); ?>" data-in_row="" data-in_sub_row="" data-in_column="" data-in_group="">

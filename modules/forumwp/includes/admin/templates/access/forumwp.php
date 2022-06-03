@@ -1,13 +1,14 @@
-<?php if ( ! defined( 'ABSPATH' ) ) {
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
-} ?>
+}
+
+$permissions['_um_forumwp_can_topic'] = get_post_meta( $object->ID, '_um_forumwp_can_topic', true );
+$permissions['_um_forumwp_can_reply'] = get_post_meta( $object->ID, '_um_forumwp_can_reply', true );
+?>
 
 <div class="um-admin-metabox">
 	<?php
-
-	$permissions['_um_forumwp_can_topic'] = get_post_meta( $object->ID, '_um_forumwp_can_topic', true );
-	$permissions['_um_forumwp_can_reply'] = get_post_meta( $object->ID, '_um_forumwp_can_reply', true );
-
 	UM()->admin_forms(
 		array(
 			'class'     => 'um-forumwp-access um-top-label',
@@ -34,6 +35,5 @@
 			),
 		)
 	)->render_form();
-
 	?>
 </div>

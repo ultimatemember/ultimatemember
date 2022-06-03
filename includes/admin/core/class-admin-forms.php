@@ -958,7 +958,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 * @return bool|string
 		 */
 		function render_same_page_update( $field_data ) {
-
 			if ( empty( $field_data['id'] ) ) {
 				return false;
 			}
@@ -972,7 +971,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
 
 			$data = array(
-				'field_id' => $field_data['id']
+				'field_id'              => $field_data['id'],
+				'successfully_redirect' => ! empty( $field_data['successfully_redirect'] ) ? $field_data['successfully_redirect'] : '',
 			);
 
 			if ( ! empty( $field_data['data'] ) ) {

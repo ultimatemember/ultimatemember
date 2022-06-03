@@ -136,7 +136,11 @@ class Init {
 		$um_fmwp_can_topic = ! empty( $_POST['_um_forumwp_can_topic'] ) ? $_POST['_um_forumwp_can_topic'] : array();
 		$um_fmwp_can_reply = ! empty( $_POST['_um_forumwp_can_reply'] ) ? $_POST['_um_forumwp_can_reply'] : array();
 
-		update_post_meta( $post_id, '_um_forumwp_can_topic', array_map( 'sanitize_key', $um_fmwp_can_topic ) );
-		update_post_meta( $post_id, '_um_forumwp_can_reply', array_map( 'sanitize_key', $um_fmwp_can_reply ) );
+		// sanitize below
+		$um_fmwp_can_topic = UM()->admin()->sanitize_existed_role( $um_fmwp_can_topic );
+		$um_fmwp_can_reply = UM()->admin()->sanitize_existed_role( $um_fmwp_can_reply );
+
+		update_post_meta( $post_id, '_um_forumwp_can_topic', $um_fmwp_can_topic );
+		update_post_meta( $post_id, '_um_forumwp_can_reply', $um_fmwp_can_reply );
 	}
 }

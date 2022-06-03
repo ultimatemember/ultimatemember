@@ -412,15 +412,13 @@ class Metabox {
 			return;
 		}
 
-		$module_data['path'] = trailingslashit( $module_data['path'] );
-
 		add_meta_box( 'um-admin-form-general{' . $module_data['path'] . '}', __( 'General Options', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
 		add_meta_box( 'um-admin-form-sorting{' . $module_data['path'] . '}', __( 'Sorting', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
 		add_meta_box( 'um-admin-form-profile{' . $module_data['path'] . '}', __( 'Profile Card', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
 		add_meta_box( 'um-admin-form-search{' . $module_data['path'] . '}', __( 'Search Options', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
 		add_meta_box( 'um-admin-form-pagination{' . $module_data['path'] . '}', __( 'Results &amp; Pagination', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
 		add_meta_box( 'um-admin-form-shortcode{' . $module_data['path'] . '}', __( 'Shortcode', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'side', 'default' );
-		add_meta_box( 'um-admin-form-appearance{' . $module_data['path'] . '}', __( 'Styling: General', 'ultimate-member' ), array( &$this, 'load_metabox_directory'), 'um_directory', 'side', 'default' );
+		add_meta_box( 'um-admin-form-appearance{' . $module_data['path'] . '}', __( 'Styling: General', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'side', 'default' );
 	}
 
 

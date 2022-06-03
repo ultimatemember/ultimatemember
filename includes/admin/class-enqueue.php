@@ -439,9 +439,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 				$deps = array( 'jquery', 'wp-util', 'wp-i18n', 'wp-color-picker', 'jquery-ui-sortable', 'jquery-ui-slider', 'jquery-ui-draggable', 'select2', 'um-helptip' );
 				$deps = array_merge( $deps, $this->pickadate_deps['js'] );
 				wp_register_script( 'um_admin_forms', $this->urls['js'] . 'admin/forms' . $this->suffix . '.js', $deps, UM_VERSION, true );
-				wp_localize_script( 'um_admin_forms', 'um_forms_data', array(
-					'successfully_redirect' => add_query_arg( array( 'page' => 'um_options', 'tab' => 'misc', 'msg' => 'updated' ), admin_url( 'admin.php' ) ),
-				) );
 
 				$deps = array( 'wp-color-picker', 'um-jquery-ui', 'select2' );
 				$deps = array_merge( $deps, $this->pickadate_deps['css'] );

@@ -303,7 +303,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 							});
 						}, um_request_throttle );
 					} else {
-						window.location = '<?php echo add_query_arg( array( 'page' => 'ultimatemember', 'msg' => 'updated' ), admin_url( 'admin.php' ) ) ?>'
+						window.location = '<?php echo add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'version_upgraded' ), admin_url( 'admin.php' ) ) ?>'
 					}
 
 					return false;

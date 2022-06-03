@@ -435,96 +435,101 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			 * }
 			 * ?>
 			 */
-			$fields = apply_filters( 'um_admin_category_access_settings_fields', array(
+			$fields = apply_filters(
+				'um_admin_category_access_settings_fields',
 				array(
-					'id'          => '_um_custom_access_settings',
-					'type'        => 'checkbox',
-					'label'       => __( 'Restrict access to this term and its posts?', 'ultimate-member' ),
-					'description' => __( 'Activate content restriction for this term and its posts. Affects only posts that do not have individual Restriction Content settings', 'ultimate-member' ),
-					'value'       => 0,
-				),
-				array(
-					'id'          => '_um_accessible',
-					'type'        => 'select',
-					'label'       => __( 'Who can access this term and its posts?', 'ultimate-member' ),
-					'value'       => '0',
-					'options'     => array(
-						'0' => __( 'Everyone', 'ultimate-member' ),
-						'1' => __( 'Logged out users', 'ultimate-member' ),
-						'2' => __( 'Logged in users', 'ultimate-member' ),
+					array(
+						'id'          => '_um_custom_access_settings',
+						'type'        => 'checkbox',
+						'label'       => __( 'Restrict access to this term and its posts?', 'ultimate-member' ),
+						'description' => __( 'Activate content restriction for this term and its posts. Affects only posts that do not have individual Restriction Content settings', 'ultimate-member' ),
+						'value'       => 0,
 					),
-					'conditional' => array( '_um_custom_access_settings', '=', '1' ),
-				),
-				array(
-					'id'          => '_um_access_roles',
-					'type'        => 'multi_checkbox',
-					'label'       => __( 'Select which roles can access this term and its posts', 'ultimate-member' ),
-					'description' => __( 'Leave empty if you want to display a term for all logged in users', 'ultimate-member' ),
-					'options'     => UM()->roles()->get_roles( false ),
-					'columns'     => 3,
-					'conditional' => array( '_um_accessible', '=', '2' ),
-				),
-				array(
-					'id'          => '_um_access_hide_from_queries',
-					'type'        => 'checkbox',
-					'label'       => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Hide from queries', 'ultimate-member' ) : __( 'Would you like to display 404 error on the term\'s archive page and terms\' posts single pages when users haven\'t access?', 'ultimate-member' ),
-					'description' => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Exclude only from WP queries results', 'ultimate-member' ) : __( 'Recommended to be enabled. Restricted term\'s archive page and all terms\' posts will be hidden by exclusion from WP Query. The safest and most effective method that hides post and its comments from all requests, RSS feeds, etc. on your site', 'ultimate-member' ),
-					'value'       => 1,
-					'conditional' => array( '_um_accessible', '!=', '0' ),
-				),
-				array(
-					'id'          => '_um_noaccess_action',
-					'type'        => 'select',
-					'label'       => __( 'What happens when users without access try to view the term\'s post?', 'ultimate-member' ),
-					'description' => __( 'Action when users without access tries to view the term\'s post', 'ultimate-member' ),
-					'value'       => '0',
-					'options'     => array(
-						'0' => __( 'Show access restricted message', 'ultimate-member' ),
-						'1' => __( 'Redirect user', 'ultimate-member' ),
+					array(
+						'id'          => '_um_accessible',
+						'type'        => 'select',
+						'label'       => __( 'Who can access this term and its posts?', 'ultimate-member' ),
+						'value'       => '0',
+						'options'     => array(
+							'0' => __( 'Everyone', 'ultimate-member' ),
+							'1' => __( 'Logged out users', 'ultimate-member' ),
+							'2' => __( 'Logged in users', 'ultimate-member' ),
+						),
+						'conditional' => array( '_um_custom_access_settings', '=', '1' ),
 					),
-					'conditional' => UM()->options()->get( 'disable_restriction_pre_queries' ) ? array( '_um_accessible', '!=', '0' ) : array( '_um_access_hide_from_queries', '=', '0' ),
-				),
-				array(
-					'id'          => '_um_restrict_by_custom_message',
-					'type'        => 'select',
-					'label'       => __( 'Restricted access message type', 'ultimate-member' ),
-					'description' => __( 'Would you like to use the global default message or apply a custom message to this term\'s post?', 'ultimate-member' ),
-					'value'       => '0',
-					'options'     => array(
-						'0' => __( 'Global default message', 'ultimate-member' ),
-						'1' => __( 'Custom message', 'ultimate-member' ),
+					array(
+						'id'          => '_um_access_roles',
+						'type'        => 'multi_checkbox',
+						'label'       => __( 'Select which roles can access this term and its posts', 'ultimate-member' ),
+						'description' => __( 'Leave empty if you want to display a term for all logged in users', 'ultimate-member' ),
+						'options'     => UM()->roles()->get_roles( false ),
+						'columns'     => 3,
+						'conditional' => array( '_um_accessible', '=', '2' ),
 					),
-					'conditional' => array( '_um_noaccess_action', '=', '0' ),
-				),
-				array(
-					'id'          => '_um_restrict_custom_message',
-					'type'        => 'wp_editor',
-					'label'       => __( 'Custom restricted access message', 'ultimate-member' ),
-					'description' => __( 'You may replace global restricted access message here', 'ultimate-member' ),
-					'value'       => '',
-					'conditional' => array( '_um_restrict_by_custom_message', '=', '1' ),
-				),
-				array(
-					'id'          => '_um_access_redirect',
-					'type'        => 'select',
-					'label'       => __( 'Where should users be redirected to?', 'ultimate-member' ),
-					'description' => __( 'Select redirect to page when user hasn\'t access to the term\'s post', 'ultimate-member' ),
-					'value'       => '0',
-					'conditional' => array( '_um_noaccess_action', '=', '1' ),
-					'options'     => array(
-						'0' => __( 'Login page', 'ultimate-member' ),
-						'1' => __( 'Custom URL', 'ultimate-member' ),
+					array(
+						'id'          => '_um_access_hide_from_queries',
+						'type'        => 'checkbox',
+						'label'       => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Hide from queries', 'ultimate-member' ) : __( 'Would you like to display 404 error on the term\'s archive page and terms\' posts single pages when users haven\'t access?', 'ultimate-member' ),
+						'description' => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Exclude only from WP queries results', 'ultimate-member' ) : __( 'Recommended to be enabled. Restricted term\'s archive page and all terms\' posts will be hidden by exclusion from WP Query. The safest and most effective method that hides post and its comments from all requests, RSS feeds, etc. on your site', 'ultimate-member' ),
+						'value'       => 1,
+						'conditional' => array( '_um_accessible', '!=', '0' ),
+					),
+					array(
+						'id'          => '_um_noaccess_action',
+						'type'        => 'select',
+						'label'       => __( 'What happens when users without access try to view the term\'s post?', 'ultimate-member' ),
+						'description' => __( 'Action when users without access tries to view the term\'s post', 'ultimate-member' ),
+						'value'       => '0',
+						'options'     => array(
+							'0' => __( 'Show access restricted message', 'ultimate-member' ),
+							'1' => __( 'Redirect user', 'ultimate-member' ),
+						),
+						'conditional' => UM()->options()->get( 'disable_restriction_pre_queries' ) ? array( '_um_accessible', '!=', '0' ) : array( '_um_access_hide_from_queries', '=', '0' ),
+					),
+					array(
+						'id'          => '_um_restrict_by_custom_message',
+						'type'        => 'select',
+						'label'       => __( 'Restricted access message type', 'ultimate-member' ),
+						'description' => __( 'Would you like to use the global default message or apply a custom message to this term\'s post?', 'ultimate-member' ),
+						'value'       => '0',
+						'options'     => array(
+							'0' => __( 'Global default message', 'ultimate-member' ),
+							'1' => __( 'Custom message', 'ultimate-member' ),
+						),
+						'conditional' => array( '_um_noaccess_action', '=', '0' ),
+					),
+					array(
+						'id'          => '_um_restrict_custom_message',
+						'type'        => 'wp_editor',
+						'label'       => __( 'Custom restricted access message', 'ultimate-member' ),
+						'description' => __( 'You may replace global restricted access message here', 'ultimate-member' ),
+						'value'       => '',
+						'conditional' => array( '_um_restrict_by_custom_message', '=', '1' ),
+					),
+					array(
+						'id'          => '_um_access_redirect',
+						'type'        => 'select',
+						'label'       => __( 'Where should users be redirected to?', 'ultimate-member' ),
+						'description' => __( 'Select redirect to page when user hasn\'t access to the term\'s post', 'ultimate-member' ),
+						'value'       => '0',
+						'conditional' => array( '_um_noaccess_action', '=', '1' ),
+						'options'     => array(
+							'0' => __( 'Login page', 'ultimate-member' ),
+							'1' => __( 'Custom URL', 'ultimate-member' ),
+						),
+					),
+					array(
+						'id'          => '_um_access_redirect_url',
+						'type'        => 'text',
+						'label'       => __( 'Redirect URL', 'ultimate-member' ),
+						'description' => __( 'Set full URL where do you want to redirect the user', 'ultimate-member' ),
+						'value'       => '',
+						'conditional' => array( '_um_access_redirect', '=', '1' ),
 					),
 				),
-				array(
-					'id'            => '_um_access_redirect_url',
-					'type'          => 'text',
-					'label'         => __( 'Redirect URL', 'ultimate-member' ),
-					'description'   => __( 'Set full URL where do you want to redirect the user', 'ultimate-member' ),
-					'value'         => '',
-					'conditional'   => array( '_um_access_redirect', '=', '1' ),
-				),
-			), array(), 'create' );
+				array(),
+				'create'
+			);
 
 			UM()->admin_forms(
 				array(
@@ -586,97 +591,102 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			 * }
 			 * ?>
 			 */
-			$fields = apply_filters( 'um_admin_category_access_settings_fields', array(
+			$fields = apply_filters(
+				'um_admin_category_access_settings_fields',
 				array(
-					'id'          => '_um_custom_access_settings',
-					'type'        => 'checkbox',
-					'label'       => __( 'Restrict access to this term and its posts?', 'ultimate-member' ),
-					'description' => __( 'Activate content restriction for this term and its posts. Affects only posts that do not have individual Restriction Content settings', 'ultimate-member' ),
-					'value'       => ! empty( $data['_um_custom_access_settings'] ) ? $data['_um_custom_access_settings'] : 0,
-				),
-				array(
-					'id'          => '_um_accessible',
-					'type'        => 'select',
-					'label'       => __( 'Who can access this term and its posts?', 'ultimate-member' ),
-					'value'       => ! empty( $data['_um_accessible'] ) ? $data['_um_accessible'] : '0',
-					'options'     => array(
-						'0' => __( 'Everyone', 'ultimate-member' ),
-						'1' => __( 'Logged out users', 'ultimate-member' ),
-						'2' => __( 'Logged in users', 'ultimate-member' ),
+					array(
+						'id'          => '_um_custom_access_settings',
+						'type'        => 'checkbox',
+						'label'       => __( 'Restrict access to this term and its posts?', 'ultimate-member' ),
+						'description' => __( 'Activate content restriction for this term and its posts. Affects only posts that do not have individual Restriction Content settings', 'ultimate-member' ),
+						'value'       => ! empty( $data['_um_custom_access_settings'] ) ? $data['_um_custom_access_settings'] : 0,
 					),
-					'conditional' => array( '_um_custom_access_settings', '=', '1' ),
-				),
-				array(
-					'id'          => '_um_access_roles',
-					'type'        => 'multi_checkbox',
-					'label'       => __( 'Select which roles can access this term and its posts', 'ultimate-member' ),
-					'description' => __( 'Leave empty if you want to display a term for all logged in users', 'ultimate-member' ),
-					'value'       => $_um_access_roles_value,
-					'options'     => UM()->roles()->get_roles( false ),
-					'columns'     => 3,
-					'conditional' => array( '_um_accessible', '=', '2' ),
-				),
-				array(
-					'id'          => '_um_access_hide_from_queries',
-					'type'        => 'checkbox',
-					'label'       => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Hide from queries', 'ultimate-member' ) : __( 'Would you like to display 404 error on the term\'s archive page and terms\' posts single pages when users haven\'t access?', 'ultimate-member' ),
-					'description' => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Exclude only from WP queries results', 'ultimate-member' ) : __( 'Recommended to be enabled. Restricted term\'s archive page and all terms\' posts will be hidden by exclusion from WP Query. The safest and most effective method that hides post and its comments from all requests, RSS feeds, etc. on your site', 'ultimate-member' ),
-					'value'       => ! empty( $data['_um_access_hide_from_queries'] ) ? $data['_um_access_hide_from_queries'] : '',
-					'conditional' => array( '_um_accessible', '!=', '0' ),
-				),
-				array(
-					'id'          => '_um_noaccess_action',
-					'type'        => 'select',
-					'label'       => __( 'What happens when users without access try to view the term\'s post?', 'ultimate-member' ),
-					'description' => __( 'Action when users without access tries to view the term\'s post', 'ultimate-member' ),
-					'value'       => ! empty( $data['_um_noaccess_action'] ) ? $data['_um_noaccess_action'] : '0',
-					'options'     => array(
-						'0' => __( 'Show access restricted message', 'ultimate-member' ),
-						'1' => __( 'Redirect user', 'ultimate-member' ),
+					array(
+						'id'          => '_um_accessible',
+						'type'        => 'select',
+						'label'       => __( 'Who can access this term and its posts?', 'ultimate-member' ),
+						'value'       => ! empty( $data['_um_accessible'] ) ? $data['_um_accessible'] : '0',
+						'options'     => array(
+							'0' => __( 'Everyone', 'ultimate-member' ),
+							'1' => __( 'Logged out users', 'ultimate-member' ),
+							'2' => __( 'Logged in users', 'ultimate-member' ),
+						),
+						'conditional' => array( '_um_custom_access_settings', '=', '1' ),
 					),
-					'conditional' => UM()->options()->get( 'disable_restriction_pre_queries' ) ? array( '_um_accessible', '!=', '0' ) : array( '_um_access_hide_from_queries', '=', '0' ),
-				),
-				array(
-					'id'          => '_um_restrict_by_custom_message',
-					'type'        => 'select',
-					'label'       => __( 'Restricted access message type', 'ultimate-member' ),
-					'description' => __( 'Would you like to use the global default message or apply a custom message to this term\'s post?', 'ultimate-member' ),
-					'value'       => ! empty( $data['_um_restrict_by_custom_message'] ) ? $data['_um_restrict_by_custom_message'] : '0',
-					'options'     => array(
-						'0' => __( 'Global default message', 'ultimate-member' ),
-						'1' => __( 'Custom message', 'ultimate-member' ),
+					array(
+						'id'          => '_um_access_roles',
+						'type'        => 'multi_checkbox',
+						'label'       => __( 'Select which roles can access this term and its posts', 'ultimate-member' ),
+						'description' => __( 'Leave empty if you want to display a term for all logged in users', 'ultimate-member' ),
+						'value'       => $_um_access_roles_value,
+						'options'     => UM()->roles()->get_roles( false ),
+						'columns'     => 3,
+						'conditional' => array( '_um_accessible', '=', '2' ),
 					),
-					'conditional' => array( '_um_noaccess_action', '=', '0' ),
-				),
-				array(
-					'id'          => '_um_restrict_custom_message',
-					'type'        => 'wp_editor',
-					'label'       => __( 'Custom restricted access message', 'ultimate-member' ),
-					'description' => __( 'You may replace global restricted access message here', 'ultimate-member' ),
-					'value'       => ! empty( $data['_um_restrict_custom_message'] ) ? $data['_um_restrict_custom_message'] : '',
-					'conditional' => array( '_um_restrict_by_custom_message', '=', '1' ),
-				),
-				array(
-					'id'          => '_um_access_redirect',
-					'type'        => 'select',
-					'label'       => __( 'Where should users be redirected to?', 'ultimate-member' ),
-					'description' => __( 'Select redirect to page when user hasn\'t access to the term\'s post', 'ultimate-member' ),
-					'value'       => ! empty( $data['_um_access_redirect'] ) ? $data['_um_access_redirect'] : '0',
-					'options'     => array(
-						'0' => __( 'Login page', 'ultimate-member' ),
-						'1' => __( 'Custom URL', 'ultimate-member' ),
+					array(
+						'id'          => '_um_access_hide_from_queries',
+						'type'        => 'checkbox',
+						'label'       => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Hide from queries', 'ultimate-member' ) : __( 'Would you like to display 404 error on the term\'s archive page and terms\' posts single pages when users haven\'t access?', 'ultimate-member' ),
+						'description' => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Exclude only from WP queries results', 'ultimate-member' ) : __( 'Recommended to be enabled. Restricted term\'s archive page and all terms\' posts will be hidden by exclusion from WP Query. The safest and most effective method that hides post and its comments from all requests, RSS feeds, etc. on your site', 'ultimate-member' ),
+						'value'       => ! empty( $data['_um_access_hide_from_queries'] ) ? $data['_um_access_hide_from_queries'] : '',
+						'conditional' => array( '_um_accessible', '!=', '0' ),
 					),
-					'conditional' => array( '_um_noaccess_action', '=', '1' ),
+					array(
+						'id'          => '_um_noaccess_action',
+						'type'        => 'select',
+						'label'       => __( 'What happens when users without access try to view the term\'s post?', 'ultimate-member' ),
+						'description' => __( 'Action when users without access tries to view the term\'s post', 'ultimate-member' ),
+						'value'       => ! empty( $data['_um_noaccess_action'] ) ? $data['_um_noaccess_action'] : '0',
+						'options'     => array(
+							'0' => __( 'Show access restricted message', 'ultimate-member' ),
+							'1' => __( 'Redirect user', 'ultimate-member' ),
+						),
+						'conditional' => UM()->options()->get( 'disable_restriction_pre_queries' ) ? array( '_um_accessible', '!=', '0' ) : array( '_um_access_hide_from_queries', '=', '0' ),
+					),
+					array(
+						'id'          => '_um_restrict_by_custom_message',
+						'type'        => 'select',
+						'label'       => __( 'Restricted access message type', 'ultimate-member' ),
+						'description' => __( 'Would you like to use the global default message or apply a custom message to this term\'s post?', 'ultimate-member' ),
+						'value'       => ! empty( $data['_um_restrict_by_custom_message'] ) ? $data['_um_restrict_by_custom_message'] : '0',
+						'options'     => array(
+							'0' => __( 'Global default message', 'ultimate-member' ),
+							'1' => __( 'Custom message', 'ultimate-member' ),
+						),
+						'conditional' => array( '_um_noaccess_action', '=', '0' ),
+					),
+					array(
+						'id'          => '_um_restrict_custom_message',
+						'type'        => 'wp_editor',
+						'label'       => __( 'Custom restricted access message', 'ultimate-member' ),
+						'description' => __( 'You may replace global restricted access message here', 'ultimate-member' ),
+						'value'       => ! empty( $data['_um_restrict_custom_message'] ) ? $data['_um_restrict_custom_message'] : '',
+						'conditional' => array( '_um_restrict_by_custom_message', '=', '1' ),
+					),
+					array(
+						'id'          => '_um_access_redirect',
+						'type'        => 'select',
+						'label'       => __( 'Where should users be redirected to?', 'ultimate-member' ),
+						'description' => __( 'Select redirect to page when user hasn\'t access to the term\'s post', 'ultimate-member' ),
+						'value'       => ! empty( $data['_um_access_redirect'] ) ? $data['_um_access_redirect'] : '0',
+						'options'     => array(
+							'0' => __( 'Login page', 'ultimate-member' ),
+							'1' => __( 'Custom URL', 'ultimate-member' ),
+						),
+						'conditional' => array( '_um_noaccess_action', '=', '1' ),
+					),
+					array(
+						'id'          => '_um_access_redirect_url',
+						'type'        => 'text',
+						'label'       => __( 'Redirect URL', 'ultimate-member' ),
+						'description' => __( 'Set full URL where do you want to redirect the user', 'ultimate-member' ),
+						'value'       => ! empty( $data['_um_access_redirect_url'] ) ? $data['_um_access_redirect_url'] : '',
+						'conditional' => array( '_um_access_redirect', '=', '1' ),
+					),
 				),
-				array(
-					'id'          => '_um_access_redirect_url',
-					'type'        => 'text',
-					'label'       => __( 'Redirect URL', 'ultimate-member' ),
-					'description' => __( 'Set full URL where do you want to redirect the user', 'ultimate-member' ),
-					'value'       => ! empty( $data['_um_access_redirect_url'] ) ? $data['_um_access_redirect_url'] : '',
-					'conditional' => array( '_um_access_redirect', '=', '1' ),
-				),
-			), $data, 'edit' );
+				$data,
+				'edit'
+			);
 
 			UM()->admin_forms(
 				array(
@@ -830,84 +840,87 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 
 			$roles_metaboxes = array(
 				array(
-					'id'        => 'um-admin-form-admin-permissions',
-					'title'     => __( 'Administrative Permissions', 'ultimate-member' ),
-					'callback'  => $callback,
-					'screen'    => 'um_role_meta',
-					'context'   => 'normal',
-					'priority'  => 'default'
+					'id'       => 'um-admin-form-admin-permissions',
+					'title'    => __( 'Administrative Permissions', 'ultimate-member' ),
+					'callback' => $callback,
+					'screen'   => 'um_role_meta',
+					'context'  => 'normal',
+					'priority' => 'default',
 				),
 				array(
-					'id'        => 'um-admin-form-general',
-					'title'     => __( 'General Permissions', 'ultimate-member' ),
-					'callback'  => $callback,
-					'screen'    => 'um_role_meta',
-					'context'   => 'normal',
-					'priority'  => 'default'
+					'id'       => 'um-admin-form-general',
+					'title'    => __( 'General Permissions', 'ultimate-member' ),
+					'callback' => $callback,
+					'screen'   => 'um_role_meta',
+					'context'  => 'normal',
+					'priority' => 'default',
 				),
 				array(
-					'id'        => 'um-admin-form-profile',
-					'title'     => __( 'Profile Access', 'ultimate-member' ),
-					'callback'  => $callback,
-					'screen'    => 'um_role_meta',
-					'context'   => 'normal',
-					'priority'  => 'default'
-				)
+					'id'       => 'um-admin-form-profile',
+					'title'    => __( 'Profile Access', 'ultimate-member' ),
+					'callback' => $callback,
+					'screen'   => 'um_role_meta',
+					'context'  => 'normal',
+					'priority' => 'default',
+				),
 			);
 
 			if ( ! isset( $_GET['id'] ) || 'administrator' !== sanitize_key( $_GET['id'] ) ) {
 				$roles_metaboxes[] = array(
-					'id'        => 'um-admin-form-home',
-					'title'     => __( 'Homepage Options', 'ultimate-member' ),
-					'callback'  => $callback,
-					'screen'    => 'um_role_meta',
-					'context'   => 'normal',
-					'priority'  => 'default'
+					'id'       => 'um-admin-form-home',
+					'title'    => __( 'Homepage Options', 'ultimate-member' ),
+					'callback' => $callback,
+					'screen'   => 'um_role_meta',
+					'context'  => 'normal',
+					'priority' => 'default',
 				);
 			}
 
-			$roles_metaboxes = array_merge( $roles_metaboxes, array(
+			$roles_metaboxes = array_merge(
+				$roles_metaboxes,
 				array(
-					'id'        => 'um-admin-form-register',
-					'title'     => __( 'Registration Options', 'ultimate-member' ),
-					'callback'  => $callback,
-					'screen'    => 'um_role_meta',
-					'context'   => 'normal',
-					'priority'  => 'default'
-				),
-				array(
-					'id'        => 'um-admin-form-login',
-					'title'     => __( 'Login Options', 'ultimate-member' ),
-					'callback'  => $callback,
-					'screen'    => 'um_role_meta',
-					'context'   => 'normal',
-					'priority'  => 'default'
-				),
-				array(
-					'id'        => 'um-admin-form-logout',
-					'title'     => __( 'Logout Options', 'ultimate-member' ),
-					'callback'  => $callback,
-					'screen'    => 'um_role_meta',
-					'context'   => 'normal',
-					'priority'  => 'default'
-				),
-				array(
-					'id'        => 'um-admin-form-delete',
-					'title'     => __( 'Delete Options', 'ultimate-member' ),
-					'callback'  => $callback,
-					'screen'    => 'um_role_meta',
-					'context'   => 'normal',
-					'priority'  => 'default'
-				),
-				array(
-					'id'        => 'um-admin-form-publish',
-					'title'     => __( 'Publish', 'ultimate-member' ),
-					'callback'  => $callback,
-					'screen'    => 'um_role_meta',
-					'context'   => 'side',
-					'priority'  => 'default'
+					array(
+						'id'       => 'um-admin-form-register',
+						'title'    => __( 'Registration Options', 'ultimate-member' ),
+						'callback' => $callback,
+						'screen'   => 'um_role_meta',
+						'context'  => 'normal',
+						'priority' => 'default',
+					),
+					array(
+						'id'       => 'um-admin-form-login',
+						'title'    => __( 'Login Options', 'ultimate-member' ),
+						'callback' => $callback,
+						'screen'   => 'um_role_meta',
+						'context'  => 'normal',
+						'priority' => 'default',
+					),
+					array(
+						'id'       => 'um-admin-form-logout',
+						'title'    => __( 'Logout Options', 'ultimate-member' ),
+						'callback' => $callback,
+						'screen'   => 'um_role_meta',
+						'context'  => 'normal',
+						'priority' => 'default',
+					),
+					array(
+						'id'       => 'um-admin-form-delete',
+						'title'    => __( 'Delete Options', 'ultimate-member' ),
+						'callback' => $callback,
+						'screen'   => 'um_role_meta',
+						'context'  => 'normal',
+						'priority' => 'default',
+					),
+					array(
+						'id'       => 'um-admin-form-publish',
+						'title'    => __( 'Publish', 'ultimate-member' ),
+						'callback' => $callback,
+						'screen'   => 'um_role_meta',
+						'context'  => 'side',
+						'priority' => 'default',
+					),
 				)
-			) );
+			);
 
 			/**
 			 * UM hook
@@ -949,12 +962,12 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			}
 			if ( 'add' == sanitize_key( $_GET['tab'] ) || $wp_caps_metabox ) {
 				$roles_metaboxes[] = array(
-					'id'        => 'um-admin-form-wp-capabilities',
-					'title'     => __( 'WP Capabilities', 'ultimate-member' ),
-					'callback'  => $callback,
-					'screen'    => 'um_role_meta',
-					'context'   => 'normal',
-					'priority'  => 'default'
+					'id'       => 'um-admin-form-wp-capabilities',
+					'title'    => __( 'WP Capabilities', 'ultimate-member' ),
+					'callback' => $callback,
+					'screen'   => 'um_role_meta',
+					'context'  => 'normal',
+					'priority' => 'default',
 				);
 			}
 
@@ -1022,7 +1035,7 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 		 * Add form metabox
 		 */
 		function add_metabox_form() {
-			add_meta_box('submitdiv', __( 'Publish', 'ultimate-member' ), array( $this, 'custom_submitdiv' ), 'um_form', 'side', 'high' );
+			add_meta_box( 'submitdiv', __( 'Publish', 'ultimate-member' ), array( $this, 'custom_submitdiv' ), 'um_form', 'side', 'high' );
 
 			add_meta_box( 'um-admin-form-mode', __( 'Select Form Type', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'high' );
 			add_meta_box( 'um-admin-form-builder', __( 'Form Builder', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );

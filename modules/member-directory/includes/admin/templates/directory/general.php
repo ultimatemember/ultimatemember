@@ -42,39 +42,39 @@ $fields = array(
 		'value' => 'directory',
 	),
 	array(
-		'id'      => '_um_view_types',
-		'type'    => 'multi_checkbox',
-		'label'   => __( 'View type(s)', 'ultimate-member' ),
+		'id'          => '_um_view_types',
+		'type'        => 'multi_checkbox',
+		'label'       => __( 'View type(s)', 'ultimate-member' ),
 		'description' => __( 'View type a specific parameter in the directory', 'ultimate-member' ),
-		'options' => $view_types_options,
-		'columns' => 3,
-		'value'   => $_um_view_types_value,
-		'data'    => array( 'fill__um_default_view' => 'checkbox_key' ),
+		'options'     => $view_types_options,
+		'columns'     => 3,
+		'value'       => $_um_view_types_value,
+		'data'        => array( 'fill__um_default_view' => 'checkbox_key' ),
 	),
 	array(
 		'id'          => '_um_default_view',
 		'type'        => 'select',
 		'label'       => __( 'Default view type', 'ultimate-member' ),
-		'description'     => __( 'Default directory view type', 'ultimate-member' ),
+		'description' => __( 'Default directory view type', 'ultimate-member' ),
 		'options'     => $view_types_options,
 		'value'       => $default_view,
 		'conditional' => array( implode( '|', $conditional ), '~', 1 ),
 	),
 	array(
-		'id'      => '_um_roles',
-		'type'    => 'multi_checkbox',
-		'label'   => __( 'User Roles to Display', 'ultimate-member' ),
+		'id'          => '_um_roles',
+		'type'        => 'multi_checkbox',
+		'label'       => __( 'User Roles to Display', 'ultimate-member' ),
 		'description' => __( 'If you do not want to show all members, select only user roles to appear in this directory', 'ultimate-member' ),
-		'options' => UM()->roles()->get_roles(),
-		'columns' => 3,
-		'value'   => $_um_roles_value,
+		'options'     => UM()->roles()->get_roles(),
+		'columns'     => 3,
+		'value'       => $_um_roles_value,
 	),
 	array(
-		'id'      => '_um_has_profile_photo',
-		'type'    => 'checkbox',
-		'label'   => __( 'Only show members who have uploaded a profile photo', 'ultimate-member' ),
+		'id'          => '_um_has_profile_photo',
+		'type'        => 'checkbox',
+		'label'       => __( 'Only show members who have uploaded a profile photo', 'ultimate-member' ),
 		'description' => __( 'If \'Use Gravatars\' as profile photo is enabled, this option is ignored', 'ultimate-member' ),
-		'value'   => (bool) get_post_meta( $post_id, '_um_has_profile_photo', true ),
+		'value'       => (bool) get_post_meta( $post_id, '_um_has_profile_photo', true ),
 	),
 	array(
 		'id'    => '_um_has_cover_photo',
@@ -116,7 +116,8 @@ $fields = array(
  * }
  * ?>
  */
-$fields = apply_filters( 'um_admin_extend_directory_options_general', $fields ); ?>
+$fields = apply_filters( 'um_admin_extend_directory_options_general', $fields );
+?>
 
 <div class="um-admin-metabox">
 	<?php

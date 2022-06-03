@@ -80,10 +80,11 @@ class Settings {
 		$latest_truncate = get_option( 'um_member_directory_truncated', false );
 
 		$same_page_update = array(
-			'id'          => 'member_directory_own_table',
-			'type'        => 'same_page_update',
-			'label'       => __( 'Enable custom table for usermeta', 'ultimate-member' ),
-			'description' => __( 'Check this box if you would like to enable the use of a custom table for user metadata. Improved performance for member directory searches.', 'ultimate-member' ),
+			'id'                    => 'member_directory_own_table',
+			'type'                  => 'same_page_update',
+			'label'                 => __( 'Enable custom table for usermeta', 'ultimate-member' ),
+			'description'           => __( 'Check this box if you would like to enable the use of a custom table for user metadata. Improved performance for member directory searches.', 'ultimate-member' ),
+			'successfully_redirect' => add_query_arg( array( 'page' => 'um_options', 'tab' => 'modules', 'section' => 'member-directory', 'update' => 'settings_updated' ), admin_url( 'admin.php' ) ),
 		);
 
 		if ( empty( $latest_update ) || ( ! empty( $latest_truncate ) && $latest_truncate > $latest_update ) ) {

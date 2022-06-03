@@ -1,8 +1,10 @@
-<?php if ( ! defined( 'ABSPATH' ) ) {
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$is_core = get_post_meta( get_the_ID(), '_um_core', true ); ?>
+$is_core = get_post_meta( get_the_ID(), '_um_core', true );
+?>
 
 <div class="um-admin-boxed-links um-admin-ajaxlink<?php echo $is_core ? ' is-core-form' : ''; ?>">
 

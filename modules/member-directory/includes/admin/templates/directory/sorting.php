@@ -9,18 +9,18 @@ $_um_sorting_fields = empty( $_um_sorting_fields ) ? array() : $_um_sorting_fiel
 
 $fields = array(
 	array(
-		'id'      => '_um_sortby',
-		'type'    => 'select',
-		'label'   => __( 'Default sort users by', 'ultimate-member' ),
+		'id'          => '_um_sortby',
+		'type'        => 'select',
+		'label'       => __( 'Default sort users by', 'ultimate-member' ),
 		'description' => __( 'Default sorting users by a specific parameter in the directory', 'ultimate-member' ),
-		'options' => UM()->module( 'member-directory' )->config()->get( 'default_sorting' ),
-		'value'   => UM()->query()->get_meta_value( '_um_sortby' ),
+		'options'     => UM()->module( 'member-directory' )->config()->get( 'default_sorting' ),
+		'value'       => UM()->query()->get_meta_value( '_um_sortby' ),
 	),
 	array(
 		'id'          => '_um_sortby_custom',
 		'type'        => 'text',
 		'label'       => __( 'Meta key', 'ultimate-member' ),
-		'description'     => __( 'To sort by a custom field, enter the meta key of field here', 'ultimate-member' ),
+		'description' => __( 'To sort by a custom field, enter the meta key of field here', 'ultimate-member' ),
 		'value'       => UM()->query()->get_meta_value( '_um_sortby_custom', null, 'na' ),
 		'conditional' => array( '_um_sortby', '=', 'other' ),
 	),
@@ -28,16 +28,16 @@ $fields = array(
 		'id'          => '_um_sortby_custom_label',
 		'type'        => 'text',
 		'label'       => __( 'Label of custom sort', 'ultimate-member' ),
-		'description'     => __( 'To sort by a custom field, enter the label of sorting here', 'ultimate-member' ),
+		'description' => __( 'To sort by a custom field, enter the label of sorting here', 'ultimate-member' ),
 		'value'       => UM()->query()->get_meta_value( '_um_sortby_custom_label', null, 'na' ),
 		'conditional' => array( '_um_sortby', '=', 'other' ),
 	),
 	array(
-		'id'      => '_um_enable_sorting',
-		'type'    => 'checkbox',
-		'label'   => __( 'Enable custom sorting', 'ultimate-member' ),
+		'id'          => '_um_enable_sorting',
+		'type'        => 'checkbox',
+		'label'       => __( 'Enable custom sorting', 'ultimate-member' ),
 		'description' => __( 'Whether to provide an ability to change the sorting on the directory page', 'ultimate-member' ),
-		'value'   => (bool) get_post_meta( $post_id, '_um_enable_sorting', true ),
+		'value'       => (bool) get_post_meta( $post_id, '_um_enable_sorting', true ),
 	),
 	array(
 		'id'                  => '_um_sorting_fields',
@@ -49,7 +49,8 @@ $fields = array(
 		'show_default_number' => 0,
 		'conditional'         => array( '_um_enable_sorting', '=', 1 ),
 	),
-); ?>
+);
+?>
 
 <div class="um-admin-metabox">
 	<?php
