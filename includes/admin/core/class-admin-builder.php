@@ -618,7 +618,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 				'field_type' => sanitize_key( $_POST['_type'] ),
 				'form_id'    => absint( $_POST['post_id'] ),
 				'args'       => UM()->builtin()->get_core_field_attrs( sanitize_key( $_POST['_type'] ) ),
-				'post'       => UM()->admin()->sanitize_builder_field_meta( $_POST ),
+				'post'       => UM()->admin()->sanitize_builder_field_meta( wp_unslash( $_POST ) ),
 			);
 
 			/**
@@ -1209,7 +1209,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 			$arr_options = array();
 
-			$um_callback_func = sanitize_key( $_POST['um_option_callback'] );
+			// we can not use sanitize_key bacause it removes backslash needed for namespace.
+			$um_callback_func = sanitize_text_field( wp_unslash( $_POST['um_option_callback'] ) );
 			if ( empty( $um_callback_func ) ) {
 				$arr_options['status'] = 'empty';
 				$arr_options['function_name'] = $um_callback_func;
