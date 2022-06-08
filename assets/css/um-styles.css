@@ -1036,13 +1036,23 @@ small.um-max-filesize span{
 }
 .rtl .select2-container--default .select2-selection--multiple .select2-selection__choice{
 	margin: 5px 0 0 5px;
+	max-height: 28px;
 	padding: 3px 5px 3px 3px;
+}
+
+.um .um-form .select2-container .select2-search.select2-search--inline{
+	margin: 5px 5px 0 0;
+	padding: 0px;
+}
+.rtl .um .um-form .select2-container .select2-search.select2-search--inline{
+	margin: 5px 0 0 5px;
 }
 
 .um .um-form .select2-container .select2-search.select2-search--inline > input {
 	border: none !important;
 	padding: 0 !important;
 	border-radius: 0 !important;
+	max-height: 28px;
 }
 
 .um .um-form .select2-container--default .select2-selection--multiple .select2-selection__rendered li {
@@ -1051,7 +1061,6 @@ small.um-max-filesize span{
 	max-width: 100%;
 	box-sizing: border-box;
 	line-height: 20px;
-	max-height: 28px;
 }
 
 /*
