@@ -982,21 +982,21 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 						<div class="um-admin-half">
 
-							<?php if ( isset( $col1 ) ) {  foreach( $col1 as $opt ) $metabox->field_input ( $opt, null, $metabox->edit_array ); } ?>
+							<?php if ( isset( $col1 ) ) {  foreach( $col1 as $opt ) $metabox->field_input ( $opt, $arg2, $metabox->edit_array ); } ?>
 
 						</div>
 
 						<div class="um-admin-half um-admin-right">
 
-							<?php if ( isset( $col2 ) ) {  foreach( $col2 as $opt ) $metabox->field_input ( $opt, null, $metabox->edit_array ); } ?>
+							<?php if ( isset( $col2 ) ) {  foreach( $col2 as $opt ) $metabox->field_input ( $opt, $arg2, $metabox->edit_array ); } ?>
 
 						</div><div class="um-admin-clear"></div>
 
-						<?php if ( isset( $col3 ) ) { foreach( $col3 as $opt ) $metabox->field_input ( $opt, null, $metabox->edit_array ); } ?>
+						<?php if ( isset( $col3 ) ) { foreach( $col3 as $opt ) $metabox->field_input ( $opt, $arg2, $metabox->edit_array ); } ?>
 
 						<div class="um-admin-clear"></div>
 
-						<?php if ( isset( $col_full ) ) {foreach( $col_full as $opt ) $metabox->field_input ( $opt, null, $metabox->edit_array ); } ?>
+						<?php if ( isset( $col_full ) ) {foreach( $col_full as $opt ) $metabox->field_input ( $opt, $arg2, $metabox->edit_array ); } ?>
 
 						<?php $this->modal_footer( $arg2, $args, $metabox ); ?>
 
@@ -1190,7 +1190,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 */
 		public function skip_field_validation( $skip, $post_input, $array ) {
 			if ( $post_input === '_options' && isset( $array['post']['_custom_dropdown_options_source'] ) ) {
-				$skip = function_exists( $array['post']['_custom_dropdown_options_source'] );
+				$skip = function_exists( wp_unslash( $array['post']['_custom_dropdown_options_source'] ) );
 			}
 
 			return $skip;
@@ -1209,7 +1209,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 			$arr_options = array();
 
-			$um_callback_func = sanitize_key( $_POST['um_option_callback'] );
+			// we can not use `sanitize_key()` because it removes backslash needed for namespace and uppercase symbols
+			$um_callback_func = sanitize_text_field( $_POST['um_option_callback'] );
+			// removed added by sanitize slashes for the namespaces
+			$um_callback_func = wp_unslash( $um_callback_func );
+
 			if ( empty( $um_callback_func ) ) {
 				$arr_options['status'] = 'empty';
 				$arr_options['function_name'] = $um_callback_func;

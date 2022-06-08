@@ -94,7 +94,7 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 				if ( in_array( $fields[ $key ]['type'], array( 'select','multiselect' ) ) && 
 					isset( $fields[ $key ]['custom_dropdown_options_source'] ) &&
 					! empty( $fields[ $key ]['custom_dropdown_options_source'] ) &&
-					function_exists( $fields[ $key ]['custom_dropdown_options_source'] ) ){
+					function_exists( $fields[ $key ]['custom_dropdown_options_source'] ) ) {
 					$arr_options = call_user_func( $fields[ $key ]['custom_dropdown_options_source'] );
 					$fields[ $key ]['options'] = array_keys( $arr_options );
 				}
