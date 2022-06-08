@@ -34,6 +34,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			$this->profile = null;
 			$this->cannot_edit = null;
 			$this->password_reset_key = null;
+			$this->deleted_user_id = null;
 
 			global $wpdb;
 
@@ -122,6 +123,10 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param mixed $_meta_value
 		 */
 		function on_delete_usermeta( $meta_ids, $object_id, $meta_key, $_meta_value ) {
+			if ( $this->deleted_user_id ) {
+				return;
+			}
+
 			$metakeys = array( 'account_status', 'hide_in_members', 'synced_gravatar_hashed_id', 'synced_profile_photo', 'profile_photo', 'cover_photo', '_um_verified' );
 			if ( ! in_array( $meta_key, $metakeys ) ) {
 				return;
@@ -263,6 +268,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		function delete_user_handler( $user_id ) {
 			um_fetch_user( $user_id );
 
+			$this->deleted_user_id = $user_id;
 			/**
 			 * UM hook
 			 *
