@@ -283,13 +283,13 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 
 			/**
 			 * Post meta values are passed through the stripslashes() function upon being stored.
-			 * Function wp_slash() is added to compensate for the call to stripslashes().				 *
+			 * Function wp_slash() is added to compensate for the call to stripslashes().
 			 * @see https://developer.wordpress.org/reference/functions/update_post_meta/
 			 */
 			if ( is_array( $new_value ) ) {
-				foreach ( $new_value as $key => $val ) {
-					if ( is_array( $val ) && array_key_exists( 'custom_dropdown_options_source', $val ) ) {
-						$new_value[ $key ]['custom_dropdown_options_source'] = wp_slash( $val['custom_dropdown_options_source'] );
+				foreach ( $new_value as $k => $v ) {
+					if ( is_array( $v ) && array_key_exists( 'custom_dropdown_options_source', $v ) ) {
+						$new_value[ $k ]['custom_dropdown_options_source'] = wp_slash( $v['custom_dropdown_options_source'] );
 					}
 				}
 			}
