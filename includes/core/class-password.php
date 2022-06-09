@@ -533,10 +533,15 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			}
 
 			if ( isset( $args['user_password'] ) ) {
-				$args['user_password'] = sanitize_text_field( $args['user_password'] );
+				$args['user_password'] = trim( $args['user_password'] );
 			}
 			if ( isset( $args['confirm_user_password'] ) ) {
-				$args['confirm_user_password'] = sanitize_text_field( $args['confirm_user_password'] );
+				$args['confirm_user_password'] = trim( $args['confirm_user_password'] );
+			}
+
+			// Check for "\" in password.
+			if ( false !== strpos( wp_unslash( $args['user_password'] ), '\\' ) ) {
+				UM()->form()->add_error( 'user_password', __( 'Passwords may not contain the character "\\".', 'ultimate-member' ) );
 			}
 
 			if ( UM()->options()->get( 'require_strongpass' ) ) {
@@ -546,11 +551,11 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				$max_length = UM()->options()->get( 'password_max_chars' );
 				$max_length = ! empty( $max_length ) ? $max_length : 30;
 
-				if ( mb_strlen( $args['user_password'] ) < $min_length ) {
+				if ( mb_strlen( wp_unslash( $args['user_password'] ) ) < $min_length ) {
 					UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain at least %d characters', 'ultimate-member' ), $min_length ) );
 				}
 
-				if ( mb_strlen( $args['user_password'] ) > $max_length ) {
+				if ( mb_strlen( wp_unslash( $args['user_password'] ) ) > $max_length ) {
 					UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain less than %d characters', 'ultimate-member' ), $max_length ) );
 				}
 
@@ -619,7 +624,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				do_action( 'validate_password_reset', $errors, $user );
 
 				if ( ( ! $errors->get_error_code() ) ) {
-					reset_password( $user, sanitize_text_field( $args['user_password'] ) );
+					reset_password( $user, trim( $args['user_password'] ) );
 
 					// send the Password Changed Email
 					UM()->user()->password_changed();

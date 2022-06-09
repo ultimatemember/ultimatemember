@@ -671,9 +671,14 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 												$form[ $k ] = esc_url_raw( $form[ $k ] );
 											}
 											break;
+										case 'password':
+											$form[ $k ] = trim( $form[ $k ] );
+											if ( array_key_exists( 'confirm_' . $k, $form ) ) {
+												$form[ 'confirm_' . $k ] = trim( $form[ 'confirm_' . $k ] );
+											}
+											break;
 										case 'text':
 										case 'select':
-										case 'password':
 										case 'image':
 										case 'file':
 										case 'date':
