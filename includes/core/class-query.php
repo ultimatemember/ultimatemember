@@ -229,6 +229,7 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 				foreach ( $users->results as $user ) {
 					update_user_meta( $user, 'account_status', 'approved' );
 				}
+				return 0;
 			} else {
 				$args['meta_query'][] = array(array('key' => 'account_status','value' => $status,'compare' => '='));
 			}
