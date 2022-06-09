@@ -94,8 +94,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * Member_Directory constructor.
 		 */
 		function __construct() {
-			add_filter( 'plugins_loaded', array( &$this, 'init_variables' ), 99999 );
-			add_filter( 'init', array( &$this, 'init_filter_types' ), 2 );
+			add_filter( 'init', array( &$this, 'init_variables' ) );
 
 			add_action( 'template_redirect', array( &$this, 'access_members' ), 555 );
 		}
@@ -385,13 +384,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$this->filter_fields = apply_filters( 'um_members_directory_filter_fields', $this->filter_fields );
 
 			ksort( $this->filter_fields );
-		}
 
-
-		/**
-		 *
-		 */
-		function init_filter_types() {
 			$this->filter_types = apply_filters( 'um_members_directory_filter_types', array(
 				'country'               => 'select',
 				'gender'                => 'select',
