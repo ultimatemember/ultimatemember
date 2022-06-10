@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 6.0
-Stable tag: 2.4.0
+Stable tag: 2.4.1
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -162,6 +162,24 @@ No, you do not need to use our plugin’s login or registration pages and can us
 
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
+
+= 2.4.1: June 13, 2022 =
+
+* Enhancements:
+
+  - Added: Number-type Ultimate Member custom fields to the list of the sorting fields on the member directory
+
+* Bugfixes:
+
+  - Fixed: XSS issue related to the JS confirmation and links with JS code inside
+  - Fixed: PHP error when `um_options` option in wp_options table doesn't exist or has wrong format
+  - Fixed: select2 styles for RTL languages
+  - Fixed: Using slashes in the `Choices callback` setting for the dropdown/multi-select fields. It's for the using PHP namespaces
+  - Fixed: Deleting `um_member_directory_data` user meta when user is deleted
+  - Fixed: Using special chars inside the password and avoid using "\" symbol (WordPress native logic)
+  - Fixed: Conflict when `wp_get_current_user()` not exists
+  - Fixed: Changed hook for member directory variables initialization for getting ability to use Ultimate Member hooks for customizing these variables via theme
+  - Fixed: Remove a redundant WP_Users_Query when getting empty `account_status` users
 
 = 2.4.0: June 1, 2022 =
 

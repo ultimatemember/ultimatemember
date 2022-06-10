@@ -1,0 +1,20 @@
+name: Generate POT file
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  WP_Generate_POT_File:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: WordPress .pot File Generator
+        uses: iamdharmesh/action-wordpress-pot-generator@main
+        with:
+          destination_path: './languages'
+          slug: 'ultimate-member'
+          text_domain: 'ultimate-member'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
