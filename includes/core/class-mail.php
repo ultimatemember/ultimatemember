@@ -384,9 +384,21 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			add_filter( 'um_template_tags_replaces_hook', array( &$this, 'add_replace_placeholder' ), 10, 1 );
 
 			// Convert tags in email template
-			return um_convert_tags( $message, $args );
-		}
+			$message = um_convert_tags( $message, $args );
 
+			// Strip tags in plain text email.
+			// Important! Don't use HTML in plain text emails.
+			if ( ! UM()->options()->get( 'email_html' ) ) {
+				$message_nl = str_replace(
+					array( '</p><p', '</p><div', '</div><div', '</div><p' ),
+					array( "</p>\n<p", "</p>\n<div", "</div>\n<div", "</div>\n<p" ),
+					$message
+				);
+				$message    = wp_strip_all_tags( $message_nl );
+			}
+
+			return $message;
+		}
 
 		/**
 		 * Send Email function
@@ -440,7 +452,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 			$subject = wp_unslash( um_convert_tags( $subject , $args ) );
 
-			$this->subject = html_entity_decode( $subject, ENT_QUOTES, 'UTF-8' ); 
+			$this->subject = html_entity_decode( $subject, ENT_QUOTES, 'UTF-8' );
 
 			$this->message = $this->prepare_template( $template, $args );
 
