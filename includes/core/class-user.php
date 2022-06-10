@@ -1653,9 +1653,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param $key
 		 */
 		function update_usermeta_info( $key ) {
-			// delete the key first just in case
+			// delete the key first just in case.
 			delete_user_meta( $this->id, $key );
-			update_user_meta( $this->id, $key, $this->profile[ $key ] );
+			if ( isset( $this->profile[ $key ] ) && '' !== $this->profile[ $key ] ) {
+				update_user_meta( $this->id, $key, $this->profile[ $key ] );
+			}
 		}
 
 
@@ -1928,8 +1930,10 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				}
 
 				if ( ! in_array( $key, $this->update_user_keys ) ) {
-					if ( $value === 0 ) {
+					if ( 0 === $value ) {
 						update_user_meta( $this->id, $key, '0' );
+					} elseif ( '' === $value ) {
+						delete_user_meta( $this->id, $key );
 					} else {
 						update_user_meta( $this->id, $key, $value );
 					}

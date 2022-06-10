@@ -317,9 +317,9 @@ function um_user_edit_profile( $args ) {
 					continue;
 				}
 
-				//update empty user meta
-				if ( ! isset( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == '' ) {
-					update_user_meta( $user_id, $key, '' );
+				// update empty user meta.
+				if ( ! isset( $args['submitted'][ $key ] ) || '' === $args['submitted'][ $key ] ) {
+					delete_user_meta( $user_id, $key );
 				}
 			}
 
@@ -331,9 +331,9 @@ function um_user_edit_profile( $args ) {
 					$args['submitted'][ $key ] = array_intersect( $args['submitted'][ $key ], array_map( 'trim', $array['options'] ) );
 				}
 
-				// update empty user meta
-				if ( ! isset( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == '' ) {
-					update_user_meta( $user_id, $key, array() );
+				// update empty user meta.
+				if ( ! isset( $args['submitted'][ $key ] ) || '' === $args['submitted'][ $key ] ) {
+					delete_user_meta( $user_id, $key );
 				}
 			}
 
