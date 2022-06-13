@@ -396,6 +396,32 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 */
 		function get_pending_users_count() {
 
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title account_status_caching_filter
+			 * @description Retrieve current count for status
+			 * @input_vars
+			 * [{"var":"$status_count","type":"bool","desc":"Current count for this status"},
+			 * {"var":"$status","type":"string","desc":"Required status name"}]
+			 * @change_log
+			 * ["Since: 2.4.2"]
+			 * @usage
+			 * <?php add_filter( 'account_status_caching_filter', 'function_name', 10, 2 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'account_status_caching_filter', 'my_account_status_caching_filter', 10, 2 );
+			 * function my_account_status_caching_filter( $status_count, $status ) {
+			 *     // your code here
+			 *     return $status_count;
+			 * }
+			 * ?>
+			 */
+
+			$status_count = apply_filters( 'account_status_caching_filter', false, 'pending_users_count' );
+			if ( ! empty( $status_count )) return $status_count;
+
 			$cached_users_queue = get_option( 'um_cached_users_queue' );
 			if ( $cached_users_queue > 0 && ! isset( $_REQUEST['delete_count'] ) ) {
 				return $cached_users_queue;
