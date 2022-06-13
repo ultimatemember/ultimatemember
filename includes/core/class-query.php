@@ -222,19 +222,77 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		 * @return int
 		 */
 		function count_users_by_status( $status ) {
-			$args = array( 'fields' => 'ID', 'number' => 0, 'um_custom_user_query' => true );
-			if ( $status == 'unassigned' ) {
-				$args['meta_query'][] = array(array('key' => 'account_status','compare' => 'NOT EXISTS'));
-				$users = new \WP_User_Query( $args );
-				foreach ( $users->results as $user ) {
-					update_user_meta( $user, 'account_status', 'approved' );
+			
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title account_status_caching_filter
+			 * @description Retrieve current count for status
+			 * @input_vars
+			 * [{"var":"$status_count","type":"bool","desc":"Current count for this status"},
+			 * {"var":"$status","type":"string","desc":"Required status name"}]
+			 * @change_log
+			 * ["Since: 2.4.2"]
+			 * @usage
+			 * <?php add_filter( 'account_status_caching_filter', 'function_name', 10, 2 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'account_status_caching_filter', 'my_account_status_caching_filter', 10, 2 );
+			 * function my_account_status_caching_filter( $status_count, $status ) {
+			 *     // your code here
+			 *     return $status_count;
+			 * }
+			 * ?>
+			 */
+
+			$status_count = apply_filters( 'account_status_caching_filter', false, $status );
+			if ( ! $status_count ) {
+				$args = array( 'fields' => 'ID', 'number' => 0, 'um_custom_user_query' => true );
+				if ( $status == 'unassigned' ) {
+					$args['meta_query'][] = array(array('key' => 'account_status','compare' => 'NOT EXISTS'));
+					$users = new \WP_User_Query( $args );
+					foreach ( $users->results as $user ) {
+						update_user_meta( $user, 'account_status', 'approved' );
+					}
+					if ( count( $users->results ) > 0 ) {						
+						$status_count = apply_filters( 'account_status_caching_filter', false, 'approved' );
+						if ( ! empty( $status_count )) {
+
+							/**
+							 * UM hook
+							 *
+							 * @type action
+							 * @title account_status_caching_action
+							 * @description Update current count for status
+							 * @input_vars
+							 * [{"var":"$status_count","type":"int","desc":"Current count for this status"},
+							 * {"var":"$status","type":"string","desc":"Update status name"}]
+							 * @change_log
+							 * ["Since: 2.4.2"]
+							 * @usage
+							 * <?php add_action( 'account_status_caching_action', 'function_name', 10, 2 ); ?>
+							 * @example
+							 * <?php
+							 * add_action( 'account_status_caching_action', 'my_account_status_caching_action', 10, 2 );
+							 * function my_account_status_caching_action( $status_count, $status ) {
+							 *     // your code here
+							 * }
+							 * ?>
+							 */
+
+							do_action( 'account_status_caching_action', $status_count + count( $users->results ), 'approved' );
+						}
+					}
+					return 0;
 				}
-				return 0;
-			} else {
 				$args['meta_query'][] = array(array('key' => 'account_status','value' => $status,'compare' => '='));
+
+				$users = new \WP_User_Query( $args );
+				$status_count = count( $users->results );
+				do_action( 'account_status_caching_action', $status_count, $status );
 			}
-			$users = new \WP_User_Query( $args );
-			return count( $users->results );
+			return $status_count;
 		}
 
 
@@ -268,8 +326,36 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		 * @return mixed
 		 */
 		function count_users() {
-			$result = count_users();
-			return $result['total_users'];
+			$status_count = apply_filters( 'account_status_caching_filter', false, 'all_users' );
+			if ( empty( $status_count )) {
+				$result = count_users();
+				$status_count = $result['total_users'];
+			
+				/**
+				 * UM hook
+				 *
+				 * @type action
+				 * @title account_status_caching_action
+				 * @description Update current count for status
+				 * @input_vars
+				 * [{"var":"$status_count","type":"int","desc":"Current count for this status"},
+				 * {"var":"$status","type":"string","desc":"Update status name"}]
+				 * @change_log
+				 * ["Since: 2.4.2"]
+				 * @usage
+				 * <?php add_action( 'account_status_caching_action', 'function_name', 10, 2 ); ?>
+				 * @example
+				 * <?php
+				 * add_action( 'account_status_caching_action', 'my_account_status_caching_action', 10, 2 );
+				 * function my_account_status_caching_action( $status_count, $status ) {
+				 *     // your code here
+				 * }
+				 * ?>
+				 */
+
+				do_action( 'account_status_caching_action', $status_count, 'all_users' );
+			}
+			return $status_count;
 		}
 
 
