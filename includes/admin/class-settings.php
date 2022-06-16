@@ -54,9 +54,6 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 			//enqueue wp_media for profiles tab
 			add_action( 'um_settings_page_appearance__before_section', array( $this, 'settings_appearance_profile_tab' ) );
 
-			//custom content for licenses tab
-			add_filter( 'um_settings_section_licenses__content', array( $this, 'settings_licenses_tab' ), 10, 2 );
-
 			add_filter( 'um_settings_structure', array( $this, 'sorting_licenses_options' ), 9999, 1 );
 
 
@@ -67,10 +64,6 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 			//save pages options
 			add_action( 'um_settings_before_save', array( $this, 'check_permalinks_changes' ) );
 			add_action( 'um_settings_save', array( $this, 'on_settings_save' ) );
-
-			//save licenses options
-			add_action( 'um_settings_before_save', array( $this, 'before_licenses_save' ) );
-			add_action( 'um_settings_save', array( $this, 'licenses_save' ) );
 
 			add_filter( 'um_change_settings_before_save', array( $this, 'set_default_if_empty' ), 9, 1 );
 			add_filter( 'um_change_settings_before_save', array( $this, 'remove_empty_values' ), 10, 1 );
@@ -109,6 +102,7 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 		 *
 		 */
 		public function init_variables() {
+			global $wpdb;
 
 			$settings_map = array();
 
@@ -714,6 +708,277 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 				);
 			}
 
+			$users_fields = array(
+				array(
+					'id'          => 'permalink_base',
+					'type'        => 'select',
+					'size'        => 'small',
+					'label'       => __( 'Profile Permalink Base', 'ultimate-member' ),
+					// translators: %s: Profile page URL
+					'description' => sprintf( __( 'Select what permalink structure to use for user profile URL globally e.g. %s<strong>username</strong>/.', 'ultimate-member' ), trailingslashit( um_get_predefined_page_url( 'user' ) ) ),
+					'options'     => array(
+						'user_login' => __( 'Username', 'ultimate-member' ),
+						'name'       => __( 'First and Last Name with \'.\'', 'ultimate-member' ),
+						'name_dash'  => __( 'First and Last Name with \'-\'', 'ultimate-member' ),
+						'name_plus'  => __( 'First and Last Name with \'+\'', 'ultimate-member' ),
+						'user_id'    => __( 'User ID', 'ultimate-member' ),
+					),
+				),
+				array(
+					'id'          => 'display_name',
+					'type'        => 'select',
+					'size'        => 'medium',
+					'label'       => __( 'User Display Name', 'ultimate-member' ),
+					'description' => __( 'This is the name that will be displayed for users on the front end of your site. Default setting uses first/last name as display name if it exists.', 'ultimate-member' ),
+					'options'     => array(
+						'default'        => __( 'Default WP Display Name', 'ultimate-member' ),
+						'nickname'       => __( 'Nickname', 'ultimate-member' ),
+						'username'       => __( 'Username', 'ultimate-member' ),
+						'full_name'      => __( 'First name & last name', 'ultimate-member' ),
+						'sur_name'       => __( 'Last name & first name', 'ultimate-member' ),
+						'initial_name'   => __( 'First name & first initial of last name', 'ultimate-member' ),
+						'initial_name_f' => __( 'First initial of first name & last name', 'ultimate-member' ),
+						'first_name'     => __( 'First name only', 'ultimate-member' ),
+						'field'          => __( 'Custom field(s)', 'ultimate-member' ),
+					),
+				),
+				array(
+					'id'          => 'display_name_field',
+					'type'        => 'text',
+					'label'       => __( 'Display Name Custom Field(s)', 'ultimate-member' ),
+					'description' => __( 'Specify the custom field meta key or custom fields seperated by comma that you want to use to display users name on the frontend of your site.', 'ultimate-member' ),
+					'conditional' => array( 'display_name', '=', 'field' ),
+				),
+				array(
+					'id'          => 'author_redirect',
+					'type'        => 'checkbox',
+					'label'       => __( 'Automatically redirect author page to their profile?', 'ultimate-member' ),
+					'description' => __( 'If enabled, author pages will automatically redirect to the user\'s profile page.', 'ultimate-member' ),
+				),
+				array(
+					'id'                 => 'default_avatar',
+					'type'               => 'media',
+					'label'              => __( 'Default Profile Photo', 'ultimate-member' ),
+					'description'        => __( 'You can change the default profile picture globally here. Please make sure that the photo is 300x300px.', 'ultimate-member' ),
+					'upload_frame_title' => __( 'Select Default Profile Photo', 'ultimate-member' ),
+					'default'            => array(
+						'url' => UM_URL . 'assets/img/default_avatar.jpg',
+					),
+				),
+				array(
+					'id'                 => 'default_cover',
+					'type'               => 'media',
+					'url'                => true,
+					'preview'            => false,
+					'label'              => __( 'Default Cover Photo', 'ultimate-member' ),
+					'description'        => __( 'You can change the default cover photo globally here. Please make sure that the default cover is large enough and respects the ratio you are using for cover photos.', 'ultimate-member' ),
+					'upload_frame_title' => __( 'Select Default Cover Photo', 'ultimate-member' ),
+				),
+				array(
+					'id'          => 'use_gravatars',
+					'type'        => 'checkbox',
+					'label'       => __( 'Use Gravatars', 'ultimate-member' ),
+					'description' => __( 'Enable this option if you want to use gravatars instead of the default plugin profile photo (If the user did not upload a custom profile photo/avatar).', 'ultimate-member' ),
+				),
+				array(
+					'id'          => 'use_um_gravatar_default_builtin_image',
+					'type'        => 'select',
+					'label'       => __( 'Use Gravatar builtin image', 'ultimate-member' ),
+					'description' => __( 'Gravatar has a number of built in options which you can also use as defaults.', 'ultimate-member' ),
+					'options'     => array(
+						'default'   => __( 'Default', 'ultimate-member' ),
+						'404'       => __( '404 ( File Not Found response )', 'ultimate-member' ),
+						'mm'        => __( 'Mystery Man', 'ultimate-member' ),
+						'identicon' => __( 'Identicon', 'ultimate-member' ),
+						'monsterid' => __( 'Monsterid', 'ultimate-member' ),
+						'wavatar'   => __( 'Wavatar', 'ultimate-member' ),
+						'retro'     => __( 'Retro', 'ultimate-member' ),
+						'blank'     => __( 'Blank ( a transparent PNG image )', 'ultimate-member' ),
+					),
+					'conditional' => array( 'use_gravatars', '=', 1 ),
+					'size'        => 'medium',
+				),
+				array(
+					'id'          => 'use_um_gravatar_default_image',
+					'type'        => 'checkbox',
+					'label'       => __( 'Use Default plugin avatar as Gravatar\'s Default avatar', 'ultimate-member' ),
+					'description' => __( 'Do you want to use the plugin default avatar instead of the gravatar default photo (If the user did not upload a custom profile photo / avatar).', 'ultimate-member' ),
+					'conditional' => array( 'use_um_gravatar_default_builtin_image', '=', 'default' ),
+				),
+				array(
+					'id'          => 'require_strongpass',
+					'type'        => 'checkbox',
+					'label'       => __( 'Require Strong Passwords', 'ultimate-member' ),
+					'description' => __( 'Enable this option to apply strong password rules to all password fields (user registration, password reset and password change).', 'ultimate-member' ),
+				),
+				array(
+					'id'          => 'password_min_chars',
+					'type'        => 'number',
+					'label'       => __( 'Password minimum length', 'ultimate-member' ),
+					'description' => __( 'Enter the minimum number of characters a user must use for their password. The default minimum characters is 8.', 'ultimate-member' ),
+					'size'        => 'small',
+					'conditional' => array( 'require_strongpass', '=', '1' ),
+				),
+				array(
+					'id'          => 'password_max_chars',
+					'type'        => 'number',
+					'label'       => __( 'Password maximum length', 'ultimate-member' ),
+					'description' => __( 'Enter the maximum number of characters a user can use for their password. The default maximum characters is 30.', 'ultimate-member' ),
+					'size'        => 'small',
+					'conditional' => array( 'require_strongpass', '=', '1' ),
+				),
+				array(
+					'id'          => 'profile_noindex',
+					'type'        => 'select',
+					'size'        => 'small',
+					'label'       => __( 'Avoid indexing profile by search engines', 'ultimate-member' ),
+					'description' => __( 'Hides the profile page for robots. This setting can be overridden by individual role settings.', 'ultimate-member' ),
+					'options'     => array(
+						0 => __( 'No', 'ultimate-member' ),
+						1 => __( 'Yes', 'ultimate-member' ),
+					),
+				),
+				array(
+					'id'          => 'activation_link_expiry_time',
+					'type'        => 'number',
+					'label'       => __( 'Email activation link expiration (days)', 'ultimate-member' ),
+					'description' => __( 'For user registrations that require an email link to be clicked to confirm account. How long would you like the activation link to be active for before it expires? If this field is left blank the activation link will not expire.', 'ultimate-member' ),
+					'size'        => 'small',
+				),
+			);
+
+			$cache_count = $wpdb->get_var(
+				"SELECT COUNT( option_id ) 
+				FROM {$wpdb->options} 
+				WHERE option_name LIKE 'um_cache_userdata_%'"
+			);
+
+			if ( $cache_count ) {
+				$users_fields[] = array(
+					'id'          => 'purge_users_cache',
+					'type'        => 'ajax_button',
+					'label'       => __( 'User Cache', 'ultimate-member' ),
+					'value'       => sprintf( __( 'Clear cache of %s users', 'ultimate-member' ), $cache_count ),
+					'description' => __( 'Run this task from time to time to keep your DB clean.', 'ultimate-member' ) ,
+					'size'        => 'small',
+				);
+			}
+
+			$uploads_fields = array(
+				array(
+					'id'          => 'profile_photo_max_size',
+					'type'        => 'text',
+					'size'        => 'small',
+					'label'       => __( 'Profile Photo Maximum File Size (bytes)', 'ultimate-member' ),
+					'description' => __( 'Sets a maximum size for the uploaded photo', 'ultimate-member' ),
+				),
+				array(
+					'id'          => 'cover_min_width',
+					'type'        => 'text',
+					'size'        => 'small',
+					'label'       => __( 'Cover Photo Minimum Width (px)', 'ultimate-member' ),
+					'description' => __( 'This will be the minimum width for cover photo uploads', 'ultimate-member' ),
+				),
+				array(
+					'id'          => 'cover_photo_max_size',
+					'type'        => 'text',
+					'size'        => 'small',
+					'label'       => __( 'Cover Photo Maximum File Size (bytes)', 'ultimate-member' ),
+					'description' => __( 'Sets a maximum size for the uploaded cover', 'ultimate-member' ),
+				),
+				array(
+					'id'                  => 'photo_thumb_sizes',
+					'type'                => 'multi_text',
+					'size'                => 'small',
+					'label'               => __( 'Profile Photo Thumbnail Sizes (px)', 'ultimate-member' ),
+					'description'         => __( 'Here you can define which thumbnail sizes will be created for each profile photo upload.', 'ultimate-member' ),
+					'validate'            => 'numeric',
+					'add_text'            => __( 'Add New Size', 'ultimate-member' ),
+					'show_default_number' => 1,
+				),
+				array(
+					'id'                  => 'cover_thumb_sizes',
+					'type'                => 'multi_text',
+					'size'                => 'small',
+					'label'               => __( 'Cover Photo Thumbnail Sizes (px)', 'ultimate-member' ),
+					'description'         => __( 'Here you can define which thumbnail sizes will be created for each cover photo upload.', 'ultimate-member' ),
+					'validate'            => 'numeric',
+					'add_text'            => __( 'Add New Size', 'ultimate-member' ),
+					'show_default_number' => 1,
+				),
+				array(
+					'id'          => 'image_orientation_by_exif',
+					'type'        => 'checkbox',
+					'label'       => __( 'Change image orientation', 'ultimate-member' ),
+					'description' => __( 'Rotate image to and use orientation by the camera EXIF data.', 'ultimate-member' ),
+				),
+				array(
+					'id'          => 'image_compression',
+					'type'        => 'text',
+					'size'        => 'small',
+					'label'       => __( 'Image Quality', 'ultimate-member' ),
+					'description' => __( 'Quality is used to determine quality of image uploads, and ranges from 0 (worst quality, smaller file) to 100 (best quality, biggest file). The default range is 60.', 'ultimate-member' ),
+				),
+				array(
+					'id'          => 'image_max_width',
+					'type'        => 'text',
+					'size'        => 'small',
+					'label'       => __( 'Image Upload Maximum Width (px)', 'ultimate-member' ),
+					'description' => __( 'Any image upload above this width will be resized to this limit automatically.', 'ultimate-member' ),
+				),
+				array(
+					'id'          => 'profile_photosize',
+					'type'        => 'select',
+					'label'       => __( 'Profile Photo Size', 'ultimate-member' ),
+					'default'     => um_get_metadefault( 'profile_photosize' ),
+					'options'     => UM()->files()->get_profile_photo_size( 'photo_thumb_sizes' ),
+					'description' => __( 'The global default of profile photo size', 'ultimate-member' ),
+					'size'        => 'small',
+				),
+				array(
+					'id'          => 'profile_coversize',
+					'type'        => 'select',
+					'label'       => __( 'Profile Cover Size', 'ultimate-member' ),
+					'default'     => um_get_metadefault( 'profile_coversize' ),
+					'options'     => UM()->files()->get_profile_photo_size( 'cover_thumb_sizes' ),
+					'description' => __( 'The global default width of cover photo size', 'ultimate-member' ),
+					'size'        => 'small',
+				),
+				array(
+					'id'          => 'profile_cover_ratio',
+					'type'        => 'select',
+					'label'       => __( 'Profile Cover Ratio', 'ultimate-member' ),
+					'description' => __( 'Choose global ratio for cover photos of profiles', 'ultimate-member' ),
+					'default'     => um_get_metadefault( 'profile_cover_ratio' ),
+					'options'     => array(
+						'1.6:1' => '1.6:1',
+						'2.7:1' => '2.7:1',
+						'2.2:1' => '2.2:1',
+						'3.2:1' => '3.2:1',
+					),
+					'size'        => 'small',
+				),
+			);
+
+			$temp_dir_size = UM()->common()->filesystem()->dir_size( 'temp' );
+			if ( $temp_dir_size > 0.1 ) {
+				$uploads_fields[] = array(
+					'id'          => 'purge_temp_files',
+					'type'        => 'ajax_button',
+					'label'       => __( 'Purge Temp Files', 'ultimate-member' ),
+					'value'       => __( 'Purge Temp', 'ultimate-member' ),
+					'description' => sprintf( __( 'You can free up %s MB by purging your temp upload directory.', 'ultimate-member' ), $temp_dir_size ),
+					'size'        => 'small',
+				);
+			} else {
+				$uploads_fields[] = array(
+					'id'    => 'purge_temp_files',
+					'type'  => 'info_text',
+					'label' => __( 'Purge Temp Files', 'ultimate-member' ),
+					'value' => __( 'Your temp uploads directory is clean. There is nothing to purge.', 'ultimate-member' ),
+				);
+			}
+
 			/**
 			 * UM hook
 			 *
@@ -746,144 +1011,7 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 							),
 							'users'   => array(
 								'title'  => __( 'Users', 'ultimate-member' ),
-								'fields' => array(
-									array(
-										'id'          => 'permalink_base',
-										'type'        => 'select',
-										'size'        => 'small',
-										'label'       => __( 'Profile Permalink Base', 'ultimate-member' ),
-										// translators: %s: Profile page URL
-										'description' => sprintf( __( 'Select what permalink structure to use for user profile URL globally e.g. %s<strong>username</strong>/.', 'ultimate-member' ), trailingslashit( um_get_predefined_page_url( 'user' ) ) ),
-										'options'     => array(
-											'user_login' => __( 'Username', 'ultimate-member' ),
-											'name'       => __( 'First and Last Name with \'.\'', 'ultimate-member' ),
-											'name_dash'  => __( 'First and Last Name with \'-\'', 'ultimate-member' ),
-											'name_plus'  => __( 'First and Last Name with \'+\'', 'ultimate-member' ),
-											'user_id'    => __( 'User ID', 'ultimate-member' ),
-										),
-									),
-									array(
-										'id'          => 'display_name',
-										'type'        => 'select',
-										'size'        => 'medium',
-										'label'       => __( 'User Display Name', 'ultimate-member' ),
-										'description' => __( 'This is the name that will be displayed for users on the front end of your site. Default setting uses first/last name as display name if it exists.', 'ultimate-member' ),
-										'options'     => array(
-											'default'        => __( 'Default WP Display Name', 'ultimate-member' ),
-											'nickname'       => __( 'Nickname', 'ultimate-member' ),
-											'username'       => __( 'Username', 'ultimate-member' ),
-											'full_name'      => __( 'First name & last name', 'ultimate-member' ),
-											'sur_name'       => __( 'Last name & first name', 'ultimate-member' ),
-											'initial_name'   => __( 'First name & first initial of last name', 'ultimate-member' ),
-											'initial_name_f' => __( 'First initial of first name & last name', 'ultimate-member' ),
-											'first_name'     => __( 'First name only', 'ultimate-member' ),
-											'field'          => __( 'Custom field(s)', 'ultimate-member' ),
-										),
-									),
-									array(
-										'id'          => 'display_name_field',
-										'type'        => 'text',
-										'label'       => __( 'Display Name Custom Field(s)', 'ultimate-member' ),
-										'description' => __( 'Specify the custom field meta key or custom fields seperated by comma that you want to use to display users name on the frontend of your site.', 'ultimate-member' ),
-										'conditional' => array( 'display_name', '=', 'field' ),
-									),
-									array(
-										'id'          => 'author_redirect',
-										'type'        => 'checkbox',
-										'label'       => __( 'Automatically redirect author page to their profile?', 'ultimate-member' ),
-										'description' => __( 'If enabled, author pages will automatically redirect to the user\'s profile page.', 'ultimate-member' ),
-									),
-									array(
-										'id'                 => 'default_avatar',
-										'type'               => 'media',
-										'label'              => __( 'Default Profile Photo', 'ultimate-member' ),
-										'description'        => __( 'You can change the default profile picture globally here. Please make sure that the photo is 300x300px.', 'ultimate-member' ),
-										'upload_frame_title' => __( 'Select Default Profile Photo', 'ultimate-member' ),
-										'default'            => array(
-											'url' => UM_URL . 'assets/img/default_avatar.jpg',
-										),
-									),
-									array(
-										'id'                 => 'default_cover',
-										'type'               => 'media',
-										'url'                => true,
-										'preview'            => false,
-										'label'              => __( 'Default Cover Photo', 'ultimate-member' ),
-										'description'        => __( 'You can change the default cover photo globally here. Please make sure that the default cover is large enough and respects the ratio you are using for cover photos.', 'ultimate-member' ),
-										'upload_frame_title' => __( 'Select Default Cover Photo', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'use_gravatars',
-										'type'        => 'checkbox',
-										'label'       => __( 'Use Gravatars', 'ultimate-member' ),
-										'description' => __( 'Enable this option if you want to use gravatars instead of the default plugin profile photo (If the user did not upload a custom profile photo/avatar).', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'use_um_gravatar_default_builtin_image',
-										'type'        => 'select',
-										'label'       => __( 'Use Gravatar builtin image', 'ultimate-member' ),
-										'description' => __( 'Gravatar has a number of built in options which you can also use as defaults.', 'ultimate-member' ),
-										'options'     => array(
-											'default'   => __( 'Default', 'ultimate-member' ),
-											'404'       => __( '404 ( File Not Found response )', 'ultimate-member' ),
-											'mm'        => __( 'Mystery Man', 'ultimate-member' ),
-											'identicon' => __( 'Identicon', 'ultimate-member' ),
-											'monsterid' => __( 'Monsterid', 'ultimate-member' ),
-											'wavatar'   => __( 'Wavatar', 'ultimate-member' ),
-											'retro'     => __( 'Retro', 'ultimate-member' ),
-											'blank'     => __( 'Blank ( a transparent PNG image )', 'ultimate-member' ),
-										),
-										'conditional' => array( 'use_gravatars', '=', 1 ),
-										'size'        => 'medium',
-									),
-									array(
-										'id'          => 'use_um_gravatar_default_image',
-										'type'        => 'checkbox',
-										'label'       => __( 'Use Default plugin avatar as Gravatar\'s Default avatar', 'ultimate-member' ),
-										'description' => __( 'Do you want to use the plugin default avatar instead of the gravatar default photo (If the user did not upload a custom profile photo / avatar).', 'ultimate-member' ),
-										'conditional' => array( 'use_um_gravatar_default_builtin_image', '=', 'default' ),
-									),
-									array(
-										'id'          => 'require_strongpass',
-										'type'        => 'checkbox',
-										'label'       => __( 'Require Strong Passwords', 'ultimate-member' ),
-										'description' => __( 'Enable this option to apply strong password rules to all password fields (user registration, password reset and password change).', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'password_min_chars',
-										'type'        => 'number',
-										'label'       => __( 'Password minimum length', 'ultimate-member' ),
-										'description' => __( 'Enter the minimum number of characters a user must use for their password. The default minimum characters is 8.', 'ultimate-member' ),
-										'size'        => 'small',
-										'conditional' => array( 'require_strongpass', '=', '1' ),
-									),
-									array(
-										'id'          => 'password_max_chars',
-										'type'        => 'number',
-										'label'       => __( 'Password maximum length', 'ultimate-member' ),
-										'description' => __( 'Enter the maximum number of characters a user can use for their password. The default maximum characters is 30.', 'ultimate-member' ),
-										'size'        => 'small',
-										'conditional' => array( 'require_strongpass', '=', '1' ),
-									),
-									array(
-										'id'          => 'profile_noindex',
-										'type'        => 'select',
-										'size'        => 'small',
-										'label'       => __( 'Avoid indexing profile by search engines', 'ultimate-member' ),
-										'description' => __( 'Hides the profile page for robots. This setting can be overridden by individual role settings.', 'ultimate-member' ),
-										'options'     => array(
-											0 => __( 'No', 'ultimate-member' ),
-											1 => __( 'Yes', 'ultimate-member' ),
-										),
-									),
-									array(
-										'id'          => 'activation_link_expiry_time',
-										'type'        => 'number',
-										'label'       => __( 'Email activation link expiration (days)', 'ultimate-member' ),
-										'description' => __( 'For user registrations that require an email link to be clicked to confirm account. How long would you like the activation link to be active for before it expires? If this field is left blank the activation link will not expire.', 'ultimate-member' ),
-										'size'        => 'small',
-									),
-								),
+								'fields' => $users_fields,
 							),
 							'account' => array(
 								'title'  => __( 'Account', 'ultimate-member' ),
@@ -975,101 +1103,7 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 							),
 							'uploads' => array(
 								'title'  => __( 'Uploads', 'ultimate-member' ),
-								'fields' => array(
-									array(
-										'id'          => 'profile_photo_max_size',
-										'type'        => 'text',
-										'size'        => 'small',
-										'label'       => __( 'Profile Photo Maximum File Size (bytes)', 'ultimate-member' ),
-										'description' => __( 'Sets a maximum size for the uploaded photo', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'cover_min_width',
-										'type'        => 'text',
-										'size'        => 'small',
-										'label'       => __( 'Cover Photo Minimum Width (px)', 'ultimate-member' ),
-										'description' => __( 'This will be the minimum width for cover photo uploads', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'cover_photo_max_size',
-										'type'        => 'text',
-										'size'        => 'small',
-										'label'       => __( 'Cover Photo Maximum File Size (bytes)', 'ultimate-member' ),
-										'description' => __( 'Sets a maximum size for the uploaded cover', 'ultimate-member' ),
-									),
-									array(
-										'id'                  => 'photo_thumb_sizes',
-										'type'                => 'multi_text',
-										'size'                => 'small',
-										'label'               => __( 'Profile Photo Thumbnail Sizes (px)', 'ultimate-member' ),
-										'description'         => __( 'Here you can define which thumbnail sizes will be created for each profile photo upload.', 'ultimate-member' ),
-										'validate'            => 'numeric',
-										'add_text'            => __( 'Add New Size', 'ultimate-member' ),
-										'show_default_number' => 1,
-									),
-									array(
-										'id'                  => 'cover_thumb_sizes',
-										'type'                => 'multi_text',
-										'size'                => 'small',
-										'label'               => __( 'Cover Photo Thumbnail Sizes (px)', 'ultimate-member' ),
-										'description'         => __( 'Here you can define which thumbnail sizes will be created for each cover photo upload.', 'ultimate-member' ),
-										'validate'            => 'numeric',
-										'add_text'            => __( 'Add New Size', 'ultimate-member' ),
-										'show_default_number' => 1,
-									),
-									array(
-										'id'          => 'image_orientation_by_exif',
-										'type'        => 'checkbox',
-										'label'       => __( 'Change image orientation', 'ultimate-member' ),
-										'description' => __( 'Rotate image to and use orientation by the camera EXIF data.', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'image_compression',
-										'type'        => 'text',
-										'size'        => 'small',
-										'label'       => __( 'Image Quality', 'ultimate-member' ),
-										'description' => __( 'Quality is used to determine quality of image uploads, and ranges from 0 (worst quality, smaller file) to 100 (best quality, biggest file). The default range is 60.', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'image_max_width',
-										'type'        => 'text',
-										'size'        => 'small',
-										'label'       => __( 'Image Upload Maximum Width (px)', 'ultimate-member' ),
-										'description' => __( 'Any image upload above this width will be resized to this limit automatically.', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'profile_photosize',
-										'type'        => 'select',
-										'label'       => __( 'Profile Photo Size', 'ultimate-member' ),
-										'default'     => um_get_metadefault( 'profile_photosize' ),
-										'options'     => UM()->files()->get_profile_photo_size( 'photo_thumb_sizes' ),
-										'description' => __( 'The global default of profile photo size', 'ultimate-member' ),
-										'size'        => 'small',
-									),
-									array(
-										'id'          => 'profile_coversize',
-										'type'        => 'select',
-										'label'       => __( 'Profile Cover Size', 'ultimate-member' ),
-										'default'     => um_get_metadefault( 'profile_coversize' ),
-										'options'     => UM()->files()->get_profile_photo_size( 'cover_thumb_sizes' ),
-										'description' => __( 'The global default width of cover photo size', 'ultimate-member' ),
-										'size'        => 'small',
-									),
-									array(
-										'id'          => 'profile_cover_ratio',
-										'type'        => 'select',
-										'label'       => __( 'Profile Cover Ratio', 'ultimate-member' ),
-										'description' => __( 'Choose global ratio for cover photos of profiles', 'ultimate-member' ),
-										'default'     => um_get_metadefault( 'profile_cover_ratio' ),
-										'options'     => array(
-											'1.6:1' => '1.6:1',
-											'2.7:1' => '2.7:1',
-											'2.2:1' => '2.2:1',
-											'3.2:1' => '3.2:1',
-										),
-										'size'        => 'small',
-									),
-								),
+								'fields' => $uploads_fields,
 							),
 						),
 					),
@@ -1237,7 +1271,7 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 			$current_tab    = empty( $_GET['tab'] ) ? '' : sanitize_key( $_GET['tab'] );
 			$current_subtab = empty( $_GET['section'] ) ? '' : sanitize_key( $_GET['section'] );
 
-			echo '<div id="um-settings-wrap" class="wrap"><h2>' .  __( 'Ultimate Member - Settings', 'ultimate-member' ) . '</h2>';
+			echo '<div id="um-settings-wrap" class="wrap"><h2>' .  esc_html__( 'Ultimate Member - Settings', 'ultimate-member' ) . '</h2>';
 
 			echo $this->generate_tabs_menu() . $this->generate_subtabs_menu( $current_tab );
 
@@ -1407,7 +1441,7 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 					$current_tab = empty( $_GET['tab'] ) ? '' : sanitize_key( $_GET['tab'] );
 					foreach ( $menu_tabs as $name => $label ) {
 						$active = ( $current_tab == $name ) ? 'nav-tab-active' : '';
-						$tabs .= '<a href="' . esc_url( admin_url( 'admin.php?page=um_options' . ( empty( $name ) ? '' : '&tab=' . $name ) ) ) . '" class="nav-tab ' . esc_attr( $active ) . '">' . $label . '</a>';
+						$tabs .= '<a href="' . esc_url( admin_url( 'admin.php?page=ultimatemember' . ( empty( $name ) ? '' : '&tab=' . $name ) ) ) . '" class="nav-tab ' . esc_attr( $active ) . '">' . $label . '</a>';
 					}
 
 					break;
@@ -1461,7 +1495,7 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 			$current_subtab = empty( $_GET['section'] ) ? '' : sanitize_key( $_GET['section'] );
 			foreach ( $menu_subtabs as $name => $label ) {
 				$active = ( $current_subtab == $name ) ? 'current' : '';
-				$subtabs .= '<a href="' . esc_url( admin_url( 'admin.php?page=um_options' . ( empty( $current_tab ) ? '' : '&tab=' . $current_tab ) . ( empty( $name ) ? '' : '&section=' . $name ) ) ) . '" class="' . $active . '">' . $label . '</a> | ';
+				$subtabs .= '<a href="' . esc_url( admin_url( 'admin.php?page=ultimatemember' . ( empty( $current_tab ) ? '' : '&tab=' . $current_tab ) . ( empty( $name ) ? '' : '&section=' . $name ) ) ) . '" class="' . $active . '">' . $label . '</a> | ';
 			}
 
 			return substr( $subtabs, 0, -3 ) . '</ul></div>';
@@ -1552,7 +1586,7 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 
 				//redirect after save settings
 				$arg = array(
-					'page'   => 'um_options',
+					'page'   => 'ultimatemember',
 					'update' => 'settings_updated',
 				);
 
@@ -1699,107 +1733,6 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 		/**
 		 *
 		 */
-		function before_licenses_save() {
-			if ( empty( $_POST['um_options'] ) || empty( $_POST['licenses_settings'] ) ) {
-				return;
-			}
-
-			foreach ( $_POST['um_options'] as $key => $value ) {
-				$this->previous_licenses[ sanitize_key( $key ) ] = UM()->options()->get( $key );
-			}
-		}
-
-
-		/**
-		 *
-		 */
-		function licenses_save() {
-			if ( empty( $_POST['um_options'] ) || empty( $_POST['licenses_settings'] ) ) {
-				return;
-			}
-
-			foreach ( $_POST['um_options'] as $key => $value ) {
-				$key = sanitize_key( $key );
-				$value = sanitize_text_field( $value );
-
-				$edd_action = '';
-				$license_key = '';
-				if ( empty( $this->previous_licenses[ $key ] ) && ! empty( $value ) || ( ! empty( $this->previous_licenses[ $key ] ) && ! empty( $value ) && $this->previous_licenses[ $key ] != $value ) ) {
-					$edd_action = 'activate_license';
-					$license_key = $value;
-				} elseif ( ! empty( $this->previous_licenses[ $key ] ) && empty( $value ) ) {
-					$edd_action = 'deactivate_license';
-					$license_key = $this->previous_licenses[ $key ];
-				} elseif ( ! empty( $this->previous_licenses[ $key ] ) && ! empty( $value ) ) {
-					$edd_action = 'check_license';
-					$license_key = $value;
-				}
-
-				if ( empty( $edd_action ) ) {
-					continue;
-				}
-
-				$item_name = false;
-				$version = false;
-				$author = false;
-				foreach ( $this->settings_structure['licenses']['fields'] as $field_data ) {
-					if ( $field_data['id'] == $key ) {
-						$item_name = ! empty( $field_data['item_name'] ) ? $field_data['item_name'] : false;
-						$version = ! empty( $field_data['version'] ) ? $field_data['version'] : false;
-						$author = ! empty( $field_data['author'] ) ? $field_data['author'] : false;
-					}
-				}
-
-				$api_params = array(
-					'edd_action' => $edd_action,
-					'license'    => $license_key,
-					'item_name'  => $item_name,
-					'version'    => $version,
-					'author'     => $author,
-					'url'        => home_url(),
-				);
-
-				$request = wp_remote_post(
-					UM()->store_url,
-					array(
-						'timeout'   => UM()->request_timeout,
-						'sslverify' => false,
-						'body'      => $api_params
-					)
-				);
-
-				if ( ! is_wp_error( $request ) ) {
-					$request = json_decode( wp_remote_retrieve_body( $request ) );
-				} else {
-					$request = wp_remote_post(
-						UM()->store_url,
-						array(
-							'timeout'   => UM()->request_timeout,
-							'sslverify' => true,
-							'body'      => $api_params
-						)
-					);
-
-					if ( ! is_wp_error( $request ) ) {
-						$request = json_decode( wp_remote_retrieve_body( $request ) );
-					}
-				}
-
-				$request = ( $request ) ? maybe_unserialize( $request ) : false;
-
-				if ( $edd_action == 'activate_license' || $edd_action == 'check_license' ) {
-					update_option( "{$key}_edd_answer", $request );
-				} else {
-					delete_option( "{$key}_edd_answer" );
-				}
-
-			}
-		}
-
-
-		/**
-		 *
-		 */
 		function settings_before_email_tab() {
 			$email_key = empty( $_GET['email'] ) ? '' : sanitize_key( $_GET['email'] );
 			$emails = UM()->config()->get( 'email_notifications' );
@@ -1882,316 +1815,6 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 		 */
 		function settings_appearance_profile_tab() {
 			wp_enqueue_media();
-		}
-
-
-		/**
-		 * @param $html
-		 * @param $section_fields
-		 *
-		 * @return string
-		 */
-		function settings_licenses_tab( $html, $section_fields ) {
-			ob_start(); ?>
-
-			<div class="wrap-licenses">
-				<input type="hidden" id="licenses_settings" name="licenses_settings" value="1">
-				<?php $um_settings_nonce = wp_create_nonce( 'um-settings-nonce' ); ?>
-				<input type="hidden" name="__umnonce" value="<?php echo esc_attr( $um_settings_nonce ); ?>" />
-				<table class="form-table um-settings-section">
-					<tbody>
-					<?php foreach ( $section_fields as $field_data ) {
-						$option_value = UM()->options()->get( $field_data['id'] );
-						$value = isset( $option_value ) && ! empty( $option_value ) ? $option_value : ( isset( $field_data['default'] ) ? $field_data['default'] : '' );
-
-						$license = get_option( "{$field_data['id']}_edd_answer" );
-
-						if ( is_object( $license ) && ! empty( $value ) ) {
-							// activate_license 'invalid' on anything other than valid, so if there was an error capture it
-							if ( empty( $license->success ) ) {
-
-								if ( ! empty( $license->error ) ) {
-									switch ( $license->error ) {
-
-										case 'expired' :
-
-											$class = 'expired';
-											$messages[] = sprintf(
-												__( 'Your license key expired on %s. Please <a href="%s" target="_blank">renew your license key</a>.', 'ultimate-member' ),
-												date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
-												'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
-											);
-
-											$license_status = 'license-' . $class . '-notice';
-
-											break;
-
-										case 'revoked' :
-
-											$class = 'error';
-											$messages[] = sprintf(
-												__( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'ultimate-member' ),
-												'https://ultimatemember.com/support?utm_campaign=admin&utm_source=licenses&utm_medium=revoked'
-											);
-
-											$license_status = 'license-' . $class . '-notice';
-
-											break;
-
-										case 'missing' :
-
-											$class = 'error';
-											$messages[] = sprintf(
-												__( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'ultimate-member' ),
-												'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
-											);
-
-											$license_status = 'license-' . $class . '-notice';
-
-											break;
-
-										case 'invalid' :
-										case 'site_inactive' :
-
-											$class = 'error';
-											$messages[] = sprintf(
-												__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank">visit your account page</a> to manage your license key URLs.', 'ultimate-member' ),
-												$field_data['item_name'],
-												'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
-											);
-
-											$license_status = 'license-' . $class . '-notice';
-
-											break;
-
-										case 'item_name_mismatch' :
-
-											$class = 'error';
-											$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'ultimate-member' ), $field_data['item_name'] );
-
-											$license_status = 'license-' . $class . '-notice';
-
-											break;
-
-										case 'no_activations_left':
-
-											$class = 'error';
-											$messages[] = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'ultimate-member' ), 'https://ultimatemember.com/account' );
-
-											$license_status = 'license-' . $class . '-notice';
-
-											break;
-
-										case 'license_not_activable':
-
-											$class = 'error';
-											$messages[] = __( 'The key you entered belongs to a bundle, please use the product specific license key.', 'ultimate-member' );
-
-											$license_status = 'license-' . $class . '-notice';
-											break;
-
-										default :
-
-											$class = 'error';
-											$error = ! empty(  $license->error ) ? $license->error : __( 'unknown_error', 'ultimate-member' );
-											$messages[] = sprintf( __( 'There was an error with this license key: %s. Please <a href="%s">contact our support team</a>.', 'ultimate-member' ), $error, 'https://ultimatemember.com/support' );
-
-											$license_status = 'license-' . $class . '-notice';
-											break;
-									}
-								} else {
-									$class = 'error';
-									$error = ! empty( $license->error ) ? $license->error : __( 'unknown_error', 'ultimate-member' );
-									$messages[] = sprintf( __( 'There was an error with this license key: %s. Please <a href="%s">contact our support team</a>.', 'ultimate-member' ), $error, 'https://ultimatemember.com/support' );
-
-									$license_status = 'license-' . $class . '-notice';
-								}
-
-							} elseif ( ! empty( $license->errors ) ) {
-
-								$errors = array_keys( $license->errors );
-								$errors_data = array_values( $license->errors );
-
-								$class = 'error';
-								$error = ! empty( $errors[0] ) ? $errors[0] : __( 'unknown_error', 'ultimate-member' );
-								$errors_data = ! empty( $errors_data[0][0] ) ? ', ' . $errors_data[0][0] : '';
-								$messages[] = sprintf( __( 'There was an error with this license key: %s%s. Please <a href="%s">contact our support team</a>.', 'ultimate-member' ), $error, $errors_data, 'https://ultimatemember.com/support' );
-
-								$license_status = 'license-' . $class . '-notice';
-
-							} else {
-
-								switch( $license->license ) {
-
-									case 'expired' :
-
-										$class = 'expired';
-										$messages[] = sprintf(
-											__( 'Your license key expired on %s. Please <a href="%s" target="_blank">renew your license key</a>.', 'ultimate-member' ),
-											date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
-											'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
-										);
-
-										$license_status = 'license-' . $class . '-notice';
-
-										break;
-
-									case 'revoked' :
-
-										$class = 'error';
-										$messages[] = sprintf(
-											__( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'ultimate-member' ),
-											'https://ultimatemember.com/support?utm_campaign=admin&utm_source=licenses&utm_medium=revoked'
-										);
-
-										$license_status = 'license-' . $class . '-notice';
-
-										break;
-
-									case 'missing' :
-
-										$class = 'error';
-										$messages[] = sprintf(
-											__( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'ultimate-member' ),
-											'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
-										);
-
-										$license_status = 'license-' . $class . '-notice';
-
-										break;
-
-									case 'invalid' :
-									case 'site_inactive' :
-
-										$class = 'error';
-										$messages[] = sprintf(
-											__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank">visit your account page</a> to manage your license key URLs.', 'ultimate-member' ),
-											$field_data['item_name'],
-											'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
-										);
-
-										$license_status = 'license-' . $class . '-notice';
-
-										break;
-
-									case 'item_name_mismatch' :
-
-										$class = 'error';
-										$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'ultimate-member' ), $field_data['item_name'] );
-
-										$license_status = 'license-' . $class . '-notice';
-
-										break;
-
-									case 'no_activations_left':
-
-										$class = 'error';
-										$messages[] = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'ultimate-member' ), 'https://ultimatemember.com/account' );
-
-										$license_status = 'license-' . $class . '-notice';
-
-										break;
-
-									case 'license_not_activable':
-
-										$class = 'error';
-										$messages[] = __( 'The key you entered belongs to a bundle, please use the product specific license key.', 'ultimate-member' );
-
-										$license_status = 'license-' . $class . '-notice';
-										break;
-
-									case 'valid' :
-									default:
-
-										$class = 'valid';
-
-										$now        = current_time( 'timestamp' );
-										$expiration = strtotime( $license->expires, $now );
-
-										if( 'lifetime' === $license->expires ) {
-
-											$messages[] = __( 'License key never expires.', 'ultimate-member' );
-
-											$license_status = 'license-lifetime-notice';
-
-										} elseif( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
-
-											$messages[] = sprintf(
-												__( 'Your license key expires soon! It expires on %s. <a href="%s" target="_blank">Renew your license key</a>.', 'ultimate-member' ),
-												date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
-												'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
-											);
-
-											$license_status = 'license-expires-soon-notice';
-
-										} else {
-
-											$messages[] = sprintf(
-												__( 'Your license key expires on %s.', 'ultimate-member' ),
-												date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) )
-											);
-
-											$license_status = 'license-expiration-date-notice';
-
-										}
-
-										break;
-
-								}
-
-							}
-
-						} else {
-							$class = 'empty';
-
-							$messages[] = sprintf(
-								__( 'To receive updates, please enter your valid %s license key.', 'ultimate-member' ),
-								$field_data['item_name']
-							);
-
-							$license_status = null;
-
-						} ?>
-
-						<tr class="um-settings-line">
-							<th><label for="um_options_<?php echo esc_attr( $field_data['id'] ) ?>"><?php echo esc_html( $field_data['label'] ) ?></label></th>
-							<td>
-								<form method="post" action="" name="um-settings-form" class="um-settings-form">
-									<input type="hidden" value="save" name="um-settings-action" />
-									<input type="hidden" name="licenses_settings" value="1" />
-									<?php $um_settings_nonce = wp_create_nonce( 'um-settings-nonce' ); ?>
-									<input type="hidden" name="__umnonce" value="<?php echo esc_attr( $um_settings_nonce ); ?>" />
-									<input type="text" id="um_options_<?php echo esc_attr( $field_data['id'] ) ?>" name="um_options[<?php echo esc_attr( $field_data['id'] ) ?>]" value="<?php echo $value ?>" class="um-option-field um-long-field" data-field_id="<?php echo esc_attr( $field_data['id'] ) ?>" />
-									<?php if ( ! empty( $field_data['description'] ) ) { ?>
-										<div class="description"><?php echo $field_data['description'] ?></div>
-									<?php } ?>
-
-									<?php if ( ! empty( $value ) && ( ( is_object( $license ) && 'valid' == $license->license ) || 'valid' == $license ) ) { ?>
-										<input type="button" class="button um_license_deactivate" id="<?php echo esc_attr( $field_data['id'] ) ?>_deactivate" value="<?php esc_attr_e( 'Clear License',  'ultimate-member' ) ?>"/>
-									<?php } elseif ( empty( $value ) ) { ?>
-										<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Activate', 'ultimate-member' ) ?>" />
-									<?php } else { ?>
-										<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Re-Activate', 'ultimate-member' ) ?>" />
-										<input type="button" class="button um_license_deactivate" id="<?php echo esc_attr( $field_data['id'] ) ?>_deactivate" value="<?php esc_attr_e( 'Clear License',  'ultimate-member' ) ?>"/>
-									<?php }
-
-									if ( ! empty( $messages ) ) {
-										foreach ( $messages as $message ) { ?>
-											<div class="edd-license-data edd-license-<?php echo esc_attr( $class . ' ' . $license_status ) ?>">
-												<p><?php echo $message ?></p>
-											</div>
-										<?php }
-									} ?>
-								</form>
-							</td>
-						</tr>
-					<?php } ?>
-					</tbody>
-				</table>
-			</div>
-			<?php $section = ob_get_clean();
-
-			return $section;
 		}
 
 

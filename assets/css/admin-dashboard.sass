@@ -2,67 +2,28 @@
 @import "mixins"
 @import "colors"
 
-##{$prefix}metaboxes-general
-  h1
-    sup
-      font-size: 14px
-      position: relative
-      font-weight: 400
-      background: #{$um-base}
-      color: #fff !important
-      padding: 2px 4px !important
-      border-radius: 3px
-      top: 5px
-      left: 3px
-      border: none !important
-  span
-    &.ok
-      color: #{$admin-ok}
-    &.red
-      color: #{$admin-warning}
-  a.red
-    color: #{$admin-warning}
-
-  .#{$prefix}metabox-holder
-    p.sub
-      padding: 0 4px 2px 4px
-      margin: 0 0 8px 0
-      color: #8f8f8f
-      font-size: 14px
-      border-bottom: 1px solid #ececec
-    .table
-      float: left
+.#{$prefix}admin-metabox
+  .#{$prefix}users-flex
+    +flex( row, space-between, baseline, nowrap )
+    width: 100%
+    margin: 0
+    padding: 0
+    & > table
       width: 45%
-    a.warning
-      color: #{$admin-warning} !important
-      background: transparent !important
-      border: 0
-    .table_righ
-      float: right
-      width: 45%
-    td.b
-      padding-right: 6px
-      text-align: right
-      font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif
-      font-size: 14px
-      width: 1%
-      a
-        font-size: 18px
-    table td
-      white-space: nowrap
-      font-size: 12px
-    .norm
-      i
-        display: inline-block
-        width: 30px
-        text-align: center
-      p
-        margin: 5px 0
-      .count
-        font-size: 16px
-        font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif
-        color: #999
-        width: 40px
-        display: inline-block
-        text-align: right
-        margin-right: 10px
+      tr
+        vertical-align: baseline
+      td
+        white-space: nowrap
+        font-size: 12px
+        a.#{$prefix}warning
+          color: #{$admin-warning} !important
+          background: transparent !important
+          border: 0
+        &.#{$prefix}users-counter
+          padding-right: 6px
+          text-align: right
+          font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif
+          font-size: 14px
+          width: 1%
+          a
+            font-size: 18px

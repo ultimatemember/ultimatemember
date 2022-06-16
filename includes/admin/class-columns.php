@@ -204,7 +204,7 @@ if ( ! class_exists( 'um\admin\Columns' ) ) {
 		 */
 		function plugin_links( $links ) {
 			$more_links[] = '<a href="http://docs.ultimatemember.com/">' . __( 'Docs', 'ultimate-member' ) . '</a>';
-			$more_links[] = '<a href="'.admin_url().'admin.php?page=um_options">' . __( 'Settings', 'ultimate-member' ) . '</a>';
+			$more_links[] = '<a href="'.admin_url().'admin.php?page=ultimatemember">' . __( 'Settings', 'ultimate-member' ) . '</a>';
 
 			$links = $more_links + $links;
 			return $links;

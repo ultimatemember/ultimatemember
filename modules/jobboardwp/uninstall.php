@@ -20,7 +20,7 @@ if ( ! defined( 'um_jobboardwp_plugin' ) ) {
 	define( 'um_jobboardwp_plugin', plugin_basename( __FILE__ ) );
 }
 
-$options = get_option( 'um_options', [] );
+$options = get_option( 'um_options', array() );
 
 if ( ! empty( $options['uninstall_on_delete'] ) ) {
 	if ( ! class_exists( 'um_ext\um_jobboardwp\core\Setup' ) ) {

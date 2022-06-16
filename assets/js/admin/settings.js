@@ -1,39 +1,16 @@
 jQuery( document ).ready( function() {
-
-
 	/**
-	 * Licenses
+	 * Show notice about not saved settings everywhere but not on the modules page
 	 */
-	jQuery( document.body ).on( 'click', '.um_license_deactivate', function() {
-		jQuery(this).siblings('.um-option-field').val('');
-		if ( jQuery(this).siblings('#submit').length ) {
-			// clear = true for passing the empty field value to the license form submission
-			jQuery(this).siblings('#submit').trigger('click',[ true ]);
-		} else {
-			jQuery(this).parents('form.um-settings-form').trigger('submit');
-		}
-	});
-
-
-	jQuery( document.body ).on( 'click', '.um-settings-form #submit', function( e, clear ) {
-		if ( ! clear && '' === jQuery(this).siblings('.um-option-field').val() ) {
-			return false;
-		}
-	});
-
-
-	/**
-	 * Not licenses page
-	 */
-	if ( jQuery( '#licenses_settings' ).length === 0 ) {
-		var changed = false;
+	if ( jQuery( '#um-modules' ).length === 0 ) {
+		var um_settings_changed = false;
 
 		jQuery( 'input, textarea, select' ).on('change', function() {
-			changed = true;
+			um_settings_changed = true;
 		});
 
 		jQuery( '#um-settings-wrap .um-nav-tab-wrapper a, #um-settings-wrap .subsubsub a' ).on( 'click', function() {
-			if ( changed ) {
+			if ( um_settings_changed ) {
 				window.onbeforeunload = function() {
 					return wp.i18n.__( 'Are sure, maybe some settings not saved', 'ultimate-member' );
 				};
@@ -46,4 +23,60 @@ jQuery( document ).ready( function() {
 			window.onbeforeunload = '';
 		});
 	}
+
+
+	jQuery( document.body ).on( 'click', '#um_options_purge_users_cache', function(e) {
+		e.preventDefault();
+
+		var obj = jQuery(this);
+		obj.prop('disabled', true);
+
+		wp.ajax.send( 'um_purge_users_cache', {
+			data: {
+				nonce: um_admin_scripts.nonce
+			},
+			success: function (data) {
+				obj.siblings( '.um-setting_ajax_button_response' ).addClass('description complete').html( data.message );
+
+				setTimeout( function() {
+					obj.parents('#um-settings-form').find('#submit').trigger('click');
+				}, 500 );
+
+				obj.prop('disabled', false);
+			},
+			error: function (data) {
+				console.log(data);
+			}
+		});
+
+		return false;
+	});
+
+
+	jQuery( document.body ).on( 'click', '#um_options_purge_temp_files', function(e) {
+		e.preventDefault();
+
+		var obj = jQuery(this);
+		obj.prop('disabled', true);
+
+		wp.ajax.send( 'um_purge_temp_files', {
+			data: {
+				nonce: um_admin_scripts.nonce
+			},
+			success: function (data) {
+				obj.siblings( '.um-setting_ajax_button_response' ).addClass('description complete').html( data.message );
+
+				setTimeout( function() {
+					obj.parents('#um-settings-form').find('#submit').trigger('click');
+				}, 500 );
+
+				obj.prop('disabled', false);
+			},
+			error: function (data) {
+				console.log(data);
+			}
+		});
+
+		return false;
+	});
 });

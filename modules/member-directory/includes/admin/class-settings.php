@@ -84,7 +84,7 @@ class Settings {
 			'type'                  => 'same_page_update',
 			'label'                 => __( 'Enable custom table for usermeta', 'ultimate-member' ),
 			'description'           => __( 'Check this box if you would like to enable the use of a custom table for user metadata. Improved performance for member directory searches.', 'ultimate-member' ),
-			'successfully_redirect' => add_query_arg( array( 'page' => 'um_options', 'tab' => 'modules', 'section' => 'member-directory', 'update' => 'settings_updated' ), admin_url( 'admin.php' ) ),
+			'successfully_redirect' => add_query_arg( array( 'page' => 'ultimatemember', 'tab' => 'modules', 'section' => 'member-directory', 'update' => 'settings_updated' ), admin_url( 'admin.php' ) ),
 		);
 
 		if ( empty( $latest_update ) || ( ! empty( $latest_truncate ) && $latest_truncate > $latest_update ) ) {

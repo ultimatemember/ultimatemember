@@ -66,6 +66,19 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 
 
 		/**
+		 * @since 3.0
+		 *
+		 * @return Filesystem()
+		 */
+		function filesystem() {
+			if ( empty( UM()->classes['um\common\filesystem'] ) ) {
+				UM()->classes['um\common\filesystem'] = new Filesystem();
+			}
+			return UM()->classes['um\common\filesystem'];
+		}
+
+
+		/**
 		 * Remove admin bar classes
 		 *
 		 * @param array $classes

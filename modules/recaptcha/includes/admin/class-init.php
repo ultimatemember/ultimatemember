@@ -134,7 +134,7 @@ class Init {
 		<p><?php echo wp_kses( __( 'Google reCAPTCHA is active on your site. However you need to fill in both your <strong>site key and secret key</strong> to start protecting your site against spam.', 'ultimate-member' ), UM()->get_allowed_html( 'admin_notice' ) ); ?></p>
 
 		<p>
-			<a href="<?php echo esc_url( admin_url( 'admin.php?page=um_options&tab=modules&section=recaptcha' ) ); ?>" class="button button-primary"><?php esc_html_e( 'I already have the keys', 'ultimate-member' ); ?></a>&nbsp;
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=ultimatemember&tab=modules&section=recaptcha' ) ); ?>" class="button button-primary"><?php esc_html_e( 'I already have the keys', 'ultimate-member' ); ?></a>&nbsp;
 			<a href="http://google.com/recaptcha" class="button-secondary" target="_blank"><?php esc_html_e( 'Generate your site and secret key', 'ultimate-member' ); ?></a>
 		</p>
 

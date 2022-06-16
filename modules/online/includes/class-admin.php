@@ -36,7 +36,7 @@ class Admin {
 					'type'  => 'checkbox',
 					'label' => __( 'Show online stats in member directory', 'ultimate-member' ),
 				),
-			)
+			),
 		);
 
 		return $settings;

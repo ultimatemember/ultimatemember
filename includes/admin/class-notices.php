@@ -53,7 +53,7 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 
 			$this->lock_registration();
 
-			if ( ! empty( $current_screen ) && 'ultimate-member_page_um_options' === $current_screen->id ) {
+			if ( ! empty( $current_screen ) && 'toplevel_page_ultimatemember' === $current_screen->id ) {
 				// add admin notice only on the Settings page
 				$this->legacy_enabled_modules();
 				$this->legacy_notices_options();
@@ -538,14 +538,6 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 					$messages[0]['content'] = __( 'Your translation files have been updated successfully.', 'ultimate-member' );
 					break;
 
-				case 'purged_temp':
-					$messages[0]['content'] = __( 'Your temp uploads directory is now clean.', 'ultimate-member' );
-					break;
-
-				case 'cleared_cache':
-					$messages[0]['content'] = __( 'Your user cache is now removed.', 'ultimate-member' );
-					break;
-
 				case 'got_updates':
 					$messages[0]['content'] = __( 'You have the latest updates.', 'ultimate-member' );
 					break;
@@ -646,7 +638,7 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 				$invalid_license++;
 			}
 
-			if ( ! empty(  $arr_inactive_license_keys ) ) {
+			if ( ! empty( $arr_inactive_license_keys ) ) {
 				$this->add_notice( 'license_key', array(
 					'class'   => 'error',
 					'message' => '<p>' . sprintf( __( 'There are %d inactive %s license keys for this site. This site is not authorized to get plugin updates. You can active this site on <a href="%s">www.ultimatemember.com</a>.', 'ultimate-member' ), count( $arr_inactive_license_keys ) , ultimatemember_plugin_name, UM()->store_url ) . '</p>',
@@ -656,7 +648,7 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 			if ( $invalid_license ) {
 				$this->add_notice( 'license_key', array(
 					'class'   => 'error',
-					'message' => '<p>' . sprintf( __( 'You have %d invalid or expired license keys for %s. Please go to the <a href="%s">Licenses page</a> to correct this issue.', 'ultimate-member' ), $invalid_license, ultimatemember_plugin_name, add_query_arg( array('page'=>'um_options', 'tab' => 'licenses'), admin_url( 'admin.php' ) ) ) . '</p>',
+					'message' => '<p>' . sprintf( __( 'You have %d invalid or expired license keys for %s. Please go to the <a href="%s">Licenses page</a> to correct this issue.', 'ultimate-member' ), $invalid_license, ultimatemember_plugin_name, add_query_arg( array( 'page' => 'ultimatemember', 'tab' => 'modules' ), admin_url( 'admin.php' ) ) ) . '</p>',
 				), 3 );
 			}
 		}
@@ -810,7 +802,6 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 
 			// Add the dashboard pages
 			$um_pages[] = 'toplevel_page_ultimatemember';
-			$um_pages[] = 'ultimate-member_page_um_options';
 			$um_pages[] = 'edit-um_role';
 
 			$um_pages = apply_filters( 'um_admin_footer_text_pages', $um_pages );

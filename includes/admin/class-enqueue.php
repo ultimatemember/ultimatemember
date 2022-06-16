@@ -36,8 +36,7 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			// @since 3.0
 			add_action( 'load-ultimate-member_page_um-modules', array( &$this, 'modules_page' ) );
 			add_action( 'load-ultimate-member_page_um_roles', array( &$this, 'roles_page' ) );
-			add_action( 'load-toplevel_page_ultimatemember', array( &$this, 'dashboard_page' ) );
-			add_action( 'load-ultimate-member_page_um_options', array( &$this, 'settings_page' ) );
+			add_action( 'load-toplevel_page_ultimatemember', array( &$this, 'settings_page' ) );
 
 			add_action( 'load-nav-menus.php', array( &$this, 'navmenu_page' ) );
 			if ( $wp_version >= '5.4' ) {
@@ -90,14 +89,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 		 */
 		function roles_page() {
 			add_action( 'admin_enqueue_scripts', array( &$this, 'roles_page_scripts' ) );
-		}
-
-
-		/**
-		 * @since 3.0
-		 */
-		function dashboard_page() {
-			add_action( 'admin_enqueue_scripts', array( &$this, 'dashboard_page_scripts' ) );
 		}
 
 
@@ -164,6 +155,8 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 		 * @since 3.0
 		 */
 		function dashboard_page_scripts() {
+			do_action( 'um_admin_dashboard_assets_enqueue' );
+
 			wp_register_style( 'um_admin_dashboard', $this->urls['css'] . 'admin-dashboard' . $this->suffix . '.css', array(), UM_VERSION );
 			wp_enqueue_style( 'um_admin_dashboard' );
 		}

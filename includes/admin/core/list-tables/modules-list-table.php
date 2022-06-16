@@ -296,7 +296,7 @@ class UM_Modules_List_Table extends WP_List_Table {
 
 		if ( ! UM()->is_legacy ) {
 			if ( UM()->modules()->can_activate( $item['key'] ) ) {
-				$actions['activate'] = '<a href="admin.php?page=um_options&tab=modules&action=activate&slug=' . esc_attr( $item['key'] ) . '&_wpnonce=' . wp_create_nonce( 'um_module_activate' . $item['key'] . get_current_user_id() ) . '">' . __( 'Activate', 'ultimate-member' ). '</a>';
+				$actions['activate'] = '<a href="admin.php?page=ultimatemember&tab=modules&action=activate&slug=' . esc_attr( $item['key'] ) . '&_wpnonce=' . wp_create_nonce( 'um_module_activate' . $item['key'] . get_current_user_id() ) . '">' . __( 'Activate', 'ultimate-member' ). '</a>';
 			}
 
 			$module_data = UM()->modules()->get_data( $item['key'] );
@@ -306,15 +306,15 @@ class UM_Modules_List_Table extends WP_List_Table {
 			}
 
 			if ( UM()->modules()->has_settings_section( $item['key'] ) ) {
-				$actions['settings'] = '<a href="admin.php?page=um_options&tab=modules&section=' . esc_attr( $item['key'] ) . '">' . __( 'Settings', 'ultimate-member' ) . '</a>';
+				$actions['settings'] = '<a href="admin.php?page=ultimatemember&tab=modules&section=' . esc_attr( $item['key'] ) . '">' . __( 'Settings', 'ultimate-member' ) . '</a>';
 			}
 
 			if ( UM()->modules()->can_deactivate( $item['key'] ) ) {
-				$actions['deactivate'] = '<a href="admin.php?page=um_options&tab=modules&action=deactivate&slug=' . esc_attr( $item['key'] ) . '&_wpnonce=' . wp_create_nonce( 'um_module_deactivate' . $item['key'] . get_current_user_id() ) . '" class="delete">' . __( 'Deactivate', 'ultimate-member' ). '</a>';
+				$actions['deactivate'] = '<a href="admin.php?page=ultimatemember&tab=modules&action=deactivate&slug=' . esc_attr( $item['key'] ) . '&_wpnonce=' . wp_create_nonce( 'um_module_deactivate' . $item['key'] . get_current_user_id() ) . '" class="delete">' . __( 'Deactivate', 'ultimate-member' ). '</a>';
 			}
 
 			if ( UM()->modules()->can_flush( $item['key'] ) ) {
-				$actions['flush-data'] = '<a href="admin.php?page=um_options&tab=modules&action=flush-data&slug=' . esc_attr( $item['key'] ) . '&_wpnonce=' . wp_create_nonce( 'um_module_flush' . $item['key'] . get_current_user_id() ) . '" class="delete">' . __( 'Flush data', 'ultimate-member' ). '</a>';
+				$actions['flush-data'] = '<a href="admin.php?page=ultimatemember&tab=modules&action=flush-data&slug=' . esc_attr( $item['key'] ) . '&_wpnonce=' . wp_create_nonce( 'um_module_flush' . $item['key'] . get_current_user_id() ) . '" class="delete">' . __( 'Flush data', 'ultimate-member' ). '</a>';
 			}
 
 			$actions = apply_filters( 'um_module_list_table_actions', $actions, $item['key'] );
@@ -383,7 +383,7 @@ echo $same_page_license;
 ?>
 
 <form action="" method="get" name="um-modules" id="um-modules">
-	<input type="hidden" name="page" value="um_options" />
+	<input type="hidden" name="page" value="ultimatemember" />
 	<input type="hidden" name="tab" value="modules" />
 	<?php $ListTable->display(); ?>
 </form>

@@ -159,7 +159,7 @@ function um_wpml_get_status_html( $template, $code ) {
 	$template_locations = array_map( 'wp_normalize_path', $template_locations );
 
 	foreach ( $template_locations as $k => $location ) {
-		if ( false === strstr( $location, $code ) ) {
+		if ( false === strstr( $location, wp_normalize_path( DIRECTORY_SEPARATOR . $code . DIRECTORY_SEPARATOR ) ) ) {
 			unset( $template_locations[ $k ] );
 		}
 	}
@@ -274,7 +274,7 @@ function um_change_email_templates_locations_wpml( $template_locations, $templat
 	}
 
 	foreach ( $template_locations as $k => $location ) {
-		if ( false === strstr( $location, $code ) ) {
+		if ( false === strstr( $location, wp_normalize_path( DIRECTORY_SEPARATOR . $code . DIRECTORY_SEPARATOR ) ) ) {
 			unset( $template_locations[ $k ] );
 		}
 	}

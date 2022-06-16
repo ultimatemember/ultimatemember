@@ -289,7 +289,7 @@ $ListTable->prepare_items(); ?>
 </p>
 
 <form action="" method="get" name="um-settings-emails" id="um-settings-emails">
-	<input type="hidden" name="page" value="um_options" />
+	<input type="hidden" name="page" value="ultimatemember" />
 	<input type="hidden" name="tab" value="email" />
 
 	<?php $ListTable->display(); ?>

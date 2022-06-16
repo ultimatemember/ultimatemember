@@ -1426,7 +1426,7 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 				     strstr( $screen_id, 'um_' ) ||
 				     strstr( $screen_id, 'user' ) ||
 				     strstr( $screen_id, 'profile' ) ||
-				     'nav-menus' === $screen_id ) {
+				     'nav-menus' === $screen_id || 'dashboard' === $screen_id ) {
 					$is_um_screen = true;
 				}
 			}

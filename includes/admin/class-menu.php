@@ -21,7 +21,6 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 		/**
 		 * @var string
 		 */
-		var $pagehook;
 		var $slug = 'ultimatemember';
 
 		public $um_roles_error = '';
@@ -32,11 +31,10 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 		 * Admin_Menu constructor.
 		 */
 		function __construct() {
-			add_action( 'admin_menu', array( &$this, 'primary_admin_menu' ), 0 );
-			add_action( 'admin_menu', array( &$this, 'secondary_menu_items' ), 1000 );
+			add_action( 'admin_menu', array( &$this, 'add_menu_items' ), 1000 );
 
 			add_action( 'load-ultimate-member_page_um_roles', array( &$this, 'maybe_role_redirect' ) );
-			add_action( 'load-ultimate-member_page_um_options', array( &$this, 'maybe_settings_redirect' ) );
+			add_action( 'load-toplevel_page_ultimatemember', array( &$this, 'maybe_settings_redirect' ) );
 
 			add_action( 'admin_head', array( $this, 'menu_order_count' ) );
 
@@ -76,20 +74,10 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 		/**
 		 * Setup admin menu
 		 */
-		function primary_admin_menu() {
-			$this->pagehook = add_menu_page( __( 'Ultimate Member', 'ultimate-member' ), __( 'Ultimate Member', 'ultimate-member' ), 'manage_options', $this->slug, array( &$this, 'admin_page' ), 'dashicons-admin-users', '42.78578');
+		function add_menu_items() {
+			add_menu_page( __( 'Ultimate Member', 'ultimate-member' ), __( 'Ultimate Member', 'ultimate-member' ), 'manage_options', $this->slug, array( UM()->admin()->settings(), 'settings_page' ), 'dashicons-admin-users', '42.78578' );
 
-			add_action( 'load-' . $this->pagehook, array( &$this, 'on_load_page' ) );
-		}
-
-
-		/**
-		 * Secondary admin menu (after settings)
-		 */
-		function secondary_menu_items() {
-			add_submenu_page( $this->slug, __( 'Dashboard', 'ultimate-member' ), __( 'Dashboard', 'ultimate-member' ), 'manage_options', $this->slug, array( &$this, 'admin_page' ) );
-
-			add_submenu_page( $this->slug, __( 'Settings', 'ultimate-member' ), __( 'Settings', 'ultimate-member' ), 'manage_options', 'um_options', array( UM()->admin()->settings(), 'settings_page' ) );
+			add_submenu_page( $this->slug, __( 'Settings', 'ultimate-member' ), __( 'Settings', 'ultimate-member' ), 'manage_options', $this->slug, array( UM()->admin()->settings(), 'settings_page' ) );
 
 			add_submenu_page( $this->slug, __( 'Forms', 'ultimate-member' ), __( 'Forms', 'ultimate-member' ), 'manage_options', 'edit.php?post_type=um_form' );
 
@@ -125,9 +113,9 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 		 */
 		function um_roles_pages() {
 			if ( empty( $_GET['tab'] ) ) {
-				include_once um_path . 'includes/admin/core/list-tables/roles-list-table.php';
+				include_once UM_PATH . 'includes/admin/core/list-tables/roles-list-table.php';
 			} elseif ( in_array( sanitize_key( $_GET['tab'] ), array( 'add', 'edit' ), true ) ) {
-				include_once um_path . 'includes/admin/templates/role/role-edit.php';
+				include_once UM_PATH . 'includes/admin/templates/role/role-edit.php';
 			}
 		}
 
@@ -262,13 +250,13 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 			}
 
 			if ( empty( $settings_struct['fields'] ) && empty( $settings_struct['sections'] ) ) {
-				wp_redirect( add_query_arg( array( 'page' => 'um_options' ), admin_url( 'admin.php' ) ) );
+				wp_redirect( add_query_arg( array( 'page' => 'ultimatemember' ), admin_url( 'admin.php' ) ) );
 				exit;
 			}
 
 			if ( ! empty( $settings_struct['sections'] ) ) {
 				if ( empty( $settings_struct['sections'][ $current_subtab ] ) ) {
-					$args = array( 'page' => 'um_options' );
+					$args = array( 'page' => 'ultimatemember' );
 					if ( ! empty( $current_tab ) ) {
 						$args['tab'] = $current_tab;
 					}
@@ -283,136 +271,7 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 		 * Role page menu callback
 		 */
 		function modules_page() {
-			include_once um_path . 'includes/admin/core/list-tables/modules-list-table.php';
-		}
-
-
-		/**
-		 * Load metabox stuff
-		 */
-		function on_load_page() {
-			wp_enqueue_script( 'common' );
-			wp_enqueue_script( 'wp-lists' );
-			wp_enqueue_script( 'postbox' );
-
-			/** custom metaboxes for dashboard defined here **/
-			add_meta_box( 'um-metaboxes-contentbox-1', __( 'Users Overview', 'ultimate-member' ), array( &$this, 'users_overview' ), $this->pagehook, 'core', 'core' );
-
-			add_meta_box( 'um-metaboxes-sidebox-1', __( 'Purge Temp Files', 'ultimate-member' ), array( &$this, 'purge_temp' ), $this->pagehook, 'side', 'core' );
-
-			add_meta_box( 'um-metaboxes-sidebox-2', __( 'User Cache', 'ultimate-member' ), array( &$this, 'user_cache' ), $this->pagehook, 'side', 'core' );
-
-			//If there are active and licensed extensions - show metabox for upgrade it
-			$exts = UM()->plugin_updater()->get_active_plugins();
-			if ( 0 < count( $exts ) ) {
-				add_meta_box( 'um-metaboxes-sidebox-3', __( 'Upgrade\'s Manual Request', 'ultimate-member' ), array( &$this, 'upgrade_request' ), $this->pagehook, 'side', 'core' );
-			}
-		}
-
-
-		/**
-		 *
-		 */
-		function users_overview() {
-			include_once UM()->admin()->templates_path . 'dashboard/users.php';
-		}
-
-
-		/**
-		 *
-		 */
-		function purge_temp() {
-			include_once UM()->admin()->templates_path . 'dashboard/purge.php';
-		}
-
-
-		/**
-		 *
-		 */
-		function upgrade_request() {
-			include_once UM()->admin()->templates_path . 'dashboard/upgrade-request.php';
-		}
-
-
-		/**
-		 *
-		 */
-		function user_cache() {
-			include_once UM()->admin()->templates_path . 'dashboard/cache.php';
-		}
-
-
-		/**
-		 * Get a directory size
-		 *
-		 * @param $directory
-		 *
-		 * @return float|int
-		 */
-		function dir_size( $directory ) {
-			if ( $directory == 'temp' ) {
-				$directory = UM()->files()->upload_temp;
-				$size = 0;
-
-				foreach( new \RecursiveIteratorIterator( new \RecursiveDirectoryIterator( $directory ) ) as $file ) {
-					$filename = $file->getFilename();
-					if ( $filename == '.' || $filename == '..' ) {
-						continue;
-					}
-
-					$size += $file->getSize();
-				}
-				return round ( $size / 1048576, 2);
-			}
-			return 0;
-		}
-
-
-		/**
-		 * Which admin page to show?
-		 */
-		function admin_page() {
-
-			$page = ! empty( $_REQUEST['page'] ) ? sanitize_key( $_REQUEST['page'] ) : '';
-
-			if ( $page == 'ultimatemember' ) { ?>
-
-				<div id="um-metaboxes-general" class="wrap">
-
-					<h1>Ultimate Member <sup><?php echo UM_VERSION; ?></sup></h1>
-
-					<?php wp_nonce_field( 'um-metaboxes-general' ); ?>
-					<?php wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false ); ?>
-					<?php wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false ); ?>
-
-					<input type="hidden" name="action" value="save_um_metaboxes_general" />
-
-					<div id="dashboard-widgets-wrap">
-
-						<div id="dashboard-widgets" class="metabox-holder um-metabox-holder">
-
-							<div id="postbox-container-1" class="postbox-container"><?php do_meta_boxes( $this->pagehook, 'core', null );  ?></div>
-							<div id="postbox-container-2" class="postbox-container"><?php do_meta_boxes( $this->pagehook, 'normal', null ); ?></div>
-							<div id="postbox-container-3" class="postbox-container"><?php do_meta_boxes( $this->pagehook, 'side', null ); ?></div>
-
-						</div>
-
-					</div>
-
-				</div>
-				<div class="um-admin-clear"></div>
-
-				<script type="text/javascript">
-					//<![CDATA[
-					jQuery(document).ready( function($) {
-						// postboxes setup
-						postboxes.add_postbox_toggles('<?php echo esc_js( $this->pagehook ); ?>');
-					});
-					//]]>
-				</script>
-
-			<?php }
-
+			include_once UM_URL . 'includes/admin/core/list-tables/modules-list-table.php';
 		}
 
 

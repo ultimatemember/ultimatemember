@@ -62,8 +62,27 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			add_filter( 'post_updated_messages', array( &$this, 'post_updated_messages' ) );
 
 			add_filter( 'enter_title_here', array( &$this, 'enter_title_here' ), 10, 2 );
+
+			// WP Dashboard
+			add_action( 'wp_dashboard_setup', array( &$this, 'wp_dashboard_widgets' ) );
 		}
 
+
+		/**
+		 *
+		 */
+		function wp_dashboard_widgets() {
+			UM()->admin()->enqueue()->dashboard_page_scripts();
+			wp_add_dashboard_widget( 'um_users_overview', __( 'Users Overview', 'ultimate-member' ), array( &$this, 'users_overview' ) );
+		}
+
+
+		/**
+		 *
+		 */
+		function users_overview() {
+			include_once trailingslashit( UM()->admin()->templates_path ) . 'dashboard/users.php';
+		}
 
 
 		/**

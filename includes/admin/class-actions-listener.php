@@ -22,8 +22,6 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 		 * Actions_Listener constructor.
 		 */
 		function __construct() {
-			add_action( 'um_admin_do_action__user_cache', array( &$this, 'user_cache' ) );
-			add_action( 'um_admin_do_action__purge_temp', array( &$this, 'purge_temp' ) );
 			add_action( 'um_admin_do_action__manual_upgrades_request', array( &$this, 'manual_upgrades_request' ) );
 			add_action( 'um_admin_do_action__duplicate_form', array( &$this, 'duplicate_form' ) );
 			add_action( 'um_admin_do_action__um_hide_locale_notice', array( &$this, 'hide_notice' ) );
@@ -35,44 +33,10 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 			add_action( 'um_admin_do_action__install_predefined_pages', array( &$this, 'install_predefined_pages' ) );
 
 			//add_action( 'load-ultimate-member_page_um-modules', array( &$this, 'handle_modules_actions' ) );
-			add_action( 'load-ultimate-member_page_um_options', array( &$this, 'handle_modules_actions_options' ) );
-			add_action( 'load-ultimate-member_page_um_options', array( &$this, 'handle_email_notifications_actions' ) );
+			add_action( 'load-toplevel_page_ultimatemember', array( &$this, 'handle_modules_actions_options' ) );
+			add_action( 'load-toplevel_page_ultimatemember', array( &$this, 'handle_email_notifications_actions' ) );
 			add_action( 'load-ultimate-member_page_um_roles', array( &$this, 'handle_roles_actions' ) );
 			//add_action( 'load-users.php', array( UM()->install(), 'set_default_user_status' ) ); for avoid the conflicts with \WP_Users_Query on the users.php page
-		}
-
-
-		/**
-		 * Clear all users cache
-		 *
-		 * @param $action
-		 */
-		public function user_cache( $action ) {
-			global $wpdb;
-			if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
-				die();
-			}
-
-			$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'um_cache_userdata_%'" );
-
-			$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'cleared_cache' ), admin_url( 'admin.php' ) );
-			exit( wp_redirect( $url ) );
-		}
-
-
-		/**
-		 * Purge temp uploads dir
-		 * @param $action
-		 */
-		public function purge_temp( $action ) {
-			if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
-				die();
-			}
-
-			UM()->files()->remove_dir( UM()->files()->upload_temp );
-
-			$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'purged_temp' ), admin_url( 'admin.php' ) );
-			exit( wp_redirect( $url ) );
 		}
 
 
@@ -289,7 +253,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 			}
 
 			if ( ! current_user_can( 'manage_options' ) ) {
-				$url = add_query_arg( array( 'page' => 'um_options' ), admin_url( 'admin.php' ) );
+				$url = add_query_arg( array( 'page' => 'ultimatemember' ), admin_url( 'admin.php' ) );
 				exit( wp_redirect( $url ) );
 			}
 
@@ -298,7 +262,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 			$page_slug = array_key_exists( 'um_page_slug', $_REQUEST ) ? sanitize_key( $_REQUEST['um_page_slug'] ) : '';
 
 			if ( empty( $page_slug ) || ! in_array( $page_slug, $predefined_pages, true ) ) {
-				$url = add_query_arg( array( 'page' => 'um_options' ), admin_url( 'admin.php' ) );
+				$url = add_query_arg( array( 'page' => 'ultimatemember' ), admin_url( 'admin.php' ) );
 				exit( wp_redirect( $url ) );
 			}
 
@@ -327,7 +291,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 			// Auto dismiss 'wrong_pages' notice if it's visible
 			$this->dismiss_wrong_pages();
 
-			$url = add_query_arg( array( 'page' => 'um_options' ), admin_url( 'admin.php' ) );
+			$url = add_query_arg( array( 'page' => 'ultimatemember' ), admin_url( 'admin.php' ) );
 			exit( wp_redirect( $url ) );
 		}
 
@@ -345,7 +309,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 			// Auto dismiss 'wrong_pages' notice if it's visible
 			$this->dismiss_wrong_pages();
 
-			$url = add_query_arg( array( 'page' => 'um_options' ), admin_url( 'admin.php' ) );
+			$url = add_query_arg( array( 'page' => 'ultimatemember' ), admin_url( 'admin.php' ) );
 			exit( wp_redirect( $url ) );
 		}
 
@@ -515,13 +479,13 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 		 * @uses Modules::flush_data() UM()->modules()->flush_data( $slug )
 		 */
 		function handle_modules_actions_options() {
-			if ( ! ( isset( $_GET['page'] ) && 'um_options' === $_GET['page'] && isset( $_GET['tab'] ) && 'modules' === $_GET['tab'] && ! isset( $_GET['section'] ) ) ) {
+			if ( ! ( isset( $_GET['page'] ) && 'ultimatemember' === $_GET['page'] && isset( $_GET['tab'] ) && 'modules' === $_GET['tab'] && ! isset( $_GET['section'] ) ) ) {
 				return;
 			}
 			if ( isset( $_REQUEST['_wp_http_referer'] ) ) {
 				$redirect = remove_query_arg( [ '_wp_http_referer' ], wp_unslash( $_REQUEST['_wp_http_referer'] ) );
 			} else {
-				$redirect = get_admin_url( null, 'admin.php?page=um_options&tab=modules' );
+				$redirect = get_admin_url( null, 'admin.php?page=ultimatemember&tab=modules' );
 			}
 
 			if ( isset( $_GET['action'] ) ) {
