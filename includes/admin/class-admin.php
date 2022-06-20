@@ -1673,6 +1673,20 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'um_cache_userdata_%'" );
 
+			$statuses = array(
+				'approved',
+				'awaiting_admin_review',
+				'awaiting_email_confirmation',
+				'inactive',
+				'rejected',
+				'pending', // not real status key, just for the transient
+				'unassigned', // not real status key, just for the transient
+			);
+
+			foreach ( $statuses as $status ) {
+				delete_transient( "um_count_users_{$status}" );
+			}
+
 			$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'cleared_cache' ), admin_url( 'admin.php' ) );
 			exit( wp_redirect( $url ) );
 		}
