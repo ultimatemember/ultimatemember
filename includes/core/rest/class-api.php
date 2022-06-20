@@ -296,7 +296,7 @@ if ( ! class_exists( 'um\core\rest\API' ) ) {
 			$count = absint( $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}users" ) );
 			$response['stats']['total_users'] = $count;
 
-			$pending = UM()->user()->get_pending_users_count();
+			$pending = UM()->query()->get_pending_users_count();
 			$response['stats']['pending_users'] = absint( $pending );
 
 			/**

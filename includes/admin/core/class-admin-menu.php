@@ -121,7 +121,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 				return;
 			}
 
-			$count = UM()->user()->get_pending_users_count();
+			$count = UM()->query()->get_pending_users_count();
 			if ( is_array( $menu ) ) {
 				foreach ( $menu as $key => $menu_item ) {
 					if ( 0 === strpos( $menu_item[0], _x( 'Users', 'Admin menu name' ) ) ) {
