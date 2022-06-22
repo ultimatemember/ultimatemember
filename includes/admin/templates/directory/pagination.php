@@ -44,6 +44,21 @@ global $post_id; ?>
 					'size'    => 'small',
 				),
 				array(
+					'id'      => '_um_load_more',
+					'type'    => 'checkbox',
+					'label'   => __( 'Enable load more button', 'ultimate-member' ),
+					'tooltip' => __( 'If turned on, button load more will be instead of pagination', 'ultimate-member' ),
+					'value'   => (bool) get_post_meta( $post_id, '_um_load_more', true ),
+				),
+				array(
+					'id'      => '_um_infinite_scroll',
+					'type'    => 'checkbox',
+					'label'   => __( 'Enable infinite scroll', 'ultimate-member' ),
+					'tooltip' => __( 'If turned on, new profiles will appear as you scroll', 'ultimate-member' ),
+					'value'   => (bool) get_post_meta( $post_id, '_um_infinite_scroll', true ),
+					'conditional' => array( '_um_load_more', '=', 1 ),
+				),
+				array(
 					'id'          => '_um_directory_header',
 					'type'        => 'text',
 					'label'       => __( 'Results Text', 'ultimate-member' ),
