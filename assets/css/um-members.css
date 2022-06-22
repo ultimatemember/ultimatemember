@@ -876,6 +876,7 @@ body #content .um-directory a {
       font-size: 15px; }
   .um-directory #um-members-load-more {
     display: block;
+    cursor: pointer;
     margin: 0 auto;
   }
   .um-directory.um-loaded .um-members-wrapper {
