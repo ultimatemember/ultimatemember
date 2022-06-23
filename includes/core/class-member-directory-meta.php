@@ -449,6 +449,10 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			$directory_id = $this->get_directory_by_hash( $_POST['directory_id'] );
 			$directory_data = UM()->query()->post_data( $directory_id );
 
+			if ( $_POST['width'] ) {
+				$directory_data['width'] = absint($_POST['width']);
+			}
+
 			//predefined result for user without capabilities to see other members
 			$this->predefined_no_caps( $directory_data );
 
