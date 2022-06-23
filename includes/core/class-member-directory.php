@@ -2324,7 +2324,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$cover_height = 0;
 			if ( $directory_data['width'] ) {
 				$wrap_width   = $directory_data['width'];
-				if ( $wrap_width > 600 ) {
+				if ( $wrap_width > 500 ) {
 					$width = $wrap_width * 0.48;
 				} else {
 					$width = $wrap_width;
