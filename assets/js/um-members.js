@@ -237,7 +237,7 @@ function um_ajax_get_members( directory, args ) {
 	var local_date = new Date();
 	var gmt_hours = -local_date.getTimezoneOffset() / 60;
 
-	var width = jQuery('.um-members-wrapper').width();
+	var width = jQuery('body').width();
 
 	var request = {
 		directory_id:   hash,
