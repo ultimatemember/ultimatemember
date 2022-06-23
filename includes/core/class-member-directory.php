@@ -2321,6 +2321,19 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			do_action( 'um_members_after_user_name', $user_id, $directory_data );
 			$hook_after_user_name = ob_get_clean();
 
+			$cover_height = 0;
+			if ( $directory_data['width'] ) {
+				$wrap_width   = $directory_data['width'];
+				if ( $wrap_width > 600 ) {
+					$width = $wrap_width * 0.48;
+				} else {
+					$width = $wrap_width;
+				}
+				$ratio        = UM()->options()->get( 'profile_cover_ratio' );
+				$ratios       = explode( ':', $ratio );
+				$cover_height = ceil( $width / $ratios[0] );
+			}
+
 			$data_array = array(
 				'card_anchor'           => substr( md5( $user_id ), 10, 5 ),
 				'id'                    => $user_id,
@@ -2337,6 +2350,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				'dropdown_actions'      => $dropdown_actions,
 				'hook_just_after_name'  => preg_replace( '/^\s+/im', '', $hook_just_after_name ),
 				'hook_after_user_name'  => preg_replace( '/^\s+/im', '', $hook_after_user_name ),
+				'cover_height'          => $cover_height,
 			);
 
 			if ( ! empty( $directory_data['show_tagline'] ) ) {
@@ -2467,6 +2481,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$directory_id = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
 			$directory_data = UM()->query()->post_data( $directory_id );
+
+			if ( $_POST['width'] ) {
+				$directory_data['width'] = absint($_POST['width']);
+			}
 
 			//predefined result for user without capabilities to see other members
 			$this->predefined_no_caps( $directory_data );

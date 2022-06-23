@@ -237,6 +237,8 @@ function um_ajax_get_members( directory, args ) {
 	var local_date = new Date();
 	var gmt_hours = -local_date.getTimezoneOffset() / 60;
 
+	var width = jQuery('.um-members-wrapper').width();
+
 	var request = {
 		directory_id:   hash,
 		page:           page,
@@ -244,6 +246,7 @@ function um_ajax_get_members( directory, args ) {
 		sorting:        sorting,
 		gmt_offset:     gmt_hours,
 		post_refferer:  directory.data('base-post'),
+		width:          width,
 		nonce:          um_scripts.nonce
 	};
 
@@ -387,7 +390,6 @@ function um_build_template( directory, data ) {
 	}
 
 	jQuery( document ).trigger( 'um_build_template', [ directory, data ] );
-	jQuery( window ).trigger( 'resize' );
 
 	init_tipsy();
 }

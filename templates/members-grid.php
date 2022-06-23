@@ -16,7 +16,7 @@ $unique_hash = substr( md5( $args['form_id'] ), 10, 5 ); ?>
 					</span>
 
 					<?php if ( $cover_photos ) { ?>
-						<div class="um-member-cover" data-ratio="<?php echo esc_attr( UM()->options()->get( 'profile_cover_ratio' ) ); ?>">
+						<div class="um-member-cover" style="height: {{{user.cover_height}}}px" data-ratio="<?php echo esc_attr( UM()->options()->get( 'profile_cover_ratio' ) ); ?>">
 							<div class="um-member-cover-e">
 								<a href="{{{user.profile_url}}}" title="<# if ( user.display_name ) { #>{{{user.display_name}}}<# } #>">
 									{{{user.cover_photo}}}
