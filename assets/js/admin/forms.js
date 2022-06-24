@@ -6,12 +6,25 @@ function um_admin_init_users_select() {
 				dataType: 'json',
 				delay: 250, // delay in ms while typing when to perform a AJAX search
 				data: function( params ) {
-					return {
-						search: params.term, // search query
+					var args = {
 						action: 'um_get_users', // AJAX action for admin-ajax.php
+						search: params.term, // search query
 						page: params.page || 1, // infinite scroll pagination
 						nonce: um_admin_scripts.nonce
 					};
+
+					jQuery.each( jQuery(this)[0].attributes, function() {
+						// this.attributes is not a plain object, but an array
+						// of attribute nodes, which contain both the name and value
+						if ( this.specified ) {
+							if ( -1 !== this.name.indexOf( 'data-ajax-args-' ) ) {
+								var arg_name = this.name.replace( 'data-ajax-args-', '' ).trim();
+								args[ arg_name ] = this.value;
+							}
+						}
+					});
+
+					return args;
 				},
 				processResults: function( response, params ) {
 					params.page = params.page || 1;

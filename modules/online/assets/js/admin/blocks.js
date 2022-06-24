@@ -3,8 +3,8 @@
 //-------------------------------------\\
 
 wp.blocks.registerBlockType( 'um-block/um-online', {
-	title: wp.i18n.__( 'UM online members', 'ultimate-member-pro' ),
-	description: wp.i18n.__( 'Displaying online members', 'ultimate-member-pro' ),
+	title: wp.i18n.__( 'UM online members', 'ultimate-member' ),
+	description: wp.i18n.__( 'Displaying online members', 'ultimate-member' ),
 	icon: 'groups',
 	category: 'um-blocks',
 	attributes: {
@@ -75,7 +75,7 @@ wp.blocks.registerBlockType( 'um-block/um-online', {
 						wp.components.Spinner,
 						null
 					),
-					wp.i18n.__( 'Loading roles', 'ultimate-member-pro' )
+					wp.i18n.__( 'Loading roles', 'ultimate-member' )
 				);
 			}
 
@@ -83,7 +83,7 @@ wp.blocks.registerBlockType( 'um-block/um-online', {
 				return wp.element.createElement(
 					'p',
 					null,
-					wp.i18n.__( 'No roles', 'ultimate-member-pro' )
+					wp.i18n.__( 'No roles', 'ultimate-member' )
 				);
 			}
 
@@ -99,7 +99,7 @@ wp.blocks.registerBlockType( 'um-block/um-online', {
 					{
 						className: 'um-online-members-wrapper'
 					},
-					wp.i18n.__( 'Online members', 'ultimate-member-pro' )
+					wp.i18n.__( 'Online members', 'ultimate-member' )
 				),
 				wp.element.createElement(
 					wp.blockEditor.InspectorControls,
@@ -107,14 +107,13 @@ wp.blocks.registerBlockType( 'um-block/um-online', {
 					wp.element.createElement(
 						wp.components.PanelBody,
 						{
-							title: wp.i18n.__( 'Online members', 'ultimate-member-pro' )
+							title: wp.i18n.__( 'Online members', 'ultimate-member' )
 						},
 						wp.element.createElement(
 							wp.components.SelectControl,
 							{
-								label: wp.i18n.__( 'Select role', 'ultimate-member-pro' ),
+								label: wp.i18n.__( 'Select role', 'ultimate-member' ),
 								className: 'um_select_role',
-								type: 'number',
 								value: props.attributes.role,
 								options: get_roles,
 								multiple: true,
@@ -127,7 +126,7 @@ wp.blocks.registerBlockType( 'um-block/um-online', {
 						wp.element.createElement(
 							wp.components.TextControl,
 							{
-								label: wp.i18n.__( 'Maximum amount of members shown on a one screen', 'ultimate-member-pro' ),
+								label: wp.i18n.__( 'Maximum amount of members shown on a one screen', 'ultimate-member' ),
 								className: 'um_select_max',
 								type: 'number',
 								value: props.attributes.max,

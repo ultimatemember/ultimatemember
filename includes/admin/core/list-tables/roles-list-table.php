@@ -341,7 +341,7 @@ $ListTable = new UM_Roles_List_Table( array(
 	'singular' => __( 'Role', 'ultimate-member' ),
 	'plural'   => __( 'Roles', 'ultimate-member' ),
 	'ajax'     => false,
-));
+) );
 
 $ListTable->set_bulk_actions( array(
 	'delete' => __( 'Delete', 'ultimate-member' ),

@@ -208,30 +208,6 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 
 
 		/**
-		 * Get users by status
-		 *
-		 * @param $status
-		 * @param int $number
-		 *
-		 * @return array
-		 */
-		function get_users_by_status($status, $number = 5){
-			$args = array( 'fields' => 'ID', 'number' => $number, 'orderby' => 'user_registered', 'order' => 'desc' );
-
-			$args['meta_query'][] = array(
-				array(
-					'key'     => 'account_status',
-					'value'   => $status,
-					'compare' => '='
-				)
-			);
-
-			$users = new \WP_User_Query( $args );
-			return $users->results;
-		}
-
-
-		/**
 		 * Count all users
 		 *
 		 * @return mixed

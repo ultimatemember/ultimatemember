@@ -610,6 +610,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				'field_id' => $field_data['id'],
 			);
 
+			if ( ! empty( $field_data['data'] ) && is_array( $field_data['data'] ) ) {
+				$data = array_merge( $data, $field_data['data'] );
+			}
+
 			$data_attr = '';
 			foreach ( $data as $key => $value ) {
 				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
@@ -640,11 +644,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				}
 			}
 
+			$placeholder = ! empty( $field_data['placeholder'] ) ? $field_data['placeholder'] : __( 'Select Users', 'ultimate-member' );
+
 			$hidden = '';
 			if ( ! empty( $multiple ) ) {
 				$hidden = "<input type=\"hidden\" $hidden_name_attr value=\"\" />";
 			}
-			$html = "$hidden<select $multiple $id_attr $name_attr $class_attr $data_attr data-placeholder=\"" . esc_attr__( 'Select Users', 'ultimate-member' ) . "\" placeholder=\"" . esc_attr__( 'Select Users', 'ultimate-member' ) . "\"><option>" . esc_html__( 'Select Users', 'ultimate-member' ) . "</option>$options</select>";
+			$html = "$hidden<select $multiple $id_attr $name_attr $class_attr $data_attr data-placeholder=\"" . esc_attr( $placeholder ) . "\" placeholder=\"" . esc_attr( $placeholder ) . "\"><option value=\"\">" . esc_html( $placeholder ) . "</option>$options</select>";
 
 			return $html;
 		}
