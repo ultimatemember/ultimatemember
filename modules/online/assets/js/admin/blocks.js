@@ -117,6 +117,10 @@ wp.blocks.registerBlockType( 'um-block/um-online', {
 								value: props.attributes.role,
 								options: get_roles,
 								multiple: true,
+								style: {
+									height: '80px'
+								},
+								suffix: ' ',
 								onChange: function onChange( value ) {
 									props.setAttributes( { role: value } );
 									umShortcode( max, value );
