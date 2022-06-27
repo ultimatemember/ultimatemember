@@ -243,14 +243,53 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 		 */
 		function upgrade_page() {
 			$um_last_version_upgrade = get_option( 'um_last_version_upgrade', __( 'empty', 'ultimate-member' ) ); ?>
-
+			<style>
+				.um-upgrade-progress-bar {
+					position: relative;
+					/*display: none;*/
+					border: 1px solid #000;
+					width: 100%;
+					height: 20px;
+					border-radius: 3px;
+				}
+				.um-upgrade-percent {
+					width: 100%;
+					position: absolute;
+					color: #000;
+					font-weight: 700;
+					text-align: center;
+					height: 100%;
+				}
+				.um-upgrade-progress {
+					display: inline-block;
+					background: #0085ba;
+					height: 100%;
+					border-radius: 0 5px 5px 0;
+					width: 0;
+				}
+				.um-upgrade-progress.error {
+					background: #f00;
+				}
+				#upgrade_log {
+					width: 100%;
+					height:300px;
+					overflow: auto;
+					border: 1px solid #a1a1a1;
+					margin: 0 0 10px 0;
+				}
+			</style>
 			<div class="wrap">
 				<h2><?php printf( __( '%s - Upgrade Process', 'ultimate-member' ), ultimatemember_plugin_name ) ?></h2>
 				<p><?php printf( __( 'You have installed <strong>%s</strong> version. Your latest DB version is <strong>%s</strong>. We recommend creating a backup of your site before running the update process. Do not exit the page before the update process has complete.', 'ultimate-member' ), ultimatemember_version, $um_last_version_upgrade ) ?></p>
 				<p><?php _e( 'After clicking the <strong>"Run"</strong> button, the update process will start. All information will be displayed in the <strong>"Upgrade Log"</strong> field.', 'ultimate-member' ); ?></p>
 				<p><?php _e( 'If the update was successful, you will see a corresponding message. Otherwise, contact technical support if the update failed.', 'ultimate-member' ); ?></p>
 				<h4><?php _e( 'Upgrade Log', 'ultimate-member' ) ?></h4>
-				<div id="upgrade_log" style="width: 100%;height:300px; overflow: auto;border: 1px solid #a1a1a1;margin: 0 0 10px 0;"></div>
+				<div id="upgrade_log"></div>
+				<div class="um-upgrade-progress-bar">
+					<div class="um-upgrade-percent"><span>0</span>% <?php _e( 'Please wait...', 'ultimate-member' ); ?></div>
+					<span class="um-upgrade-progress"></span>
+				</div>
+				<br>
 				<div>
 					<input type="button" id="run_upgrade" class="button button-primary" value="<?php esc_attr_e( 'Run', 'ultimate-member' ) ?>"/>
 				</div>
@@ -259,10 +298,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 			<script type="text/javascript">
 				var um_request_throttle = 15000;
 				var um_packages;
+				var count, number;
+				var percent_wrap = jQuery( '.um-upgrade-percent span' );
 
 				jQuery( document ).ready( function() {
 					jQuery( '#run_upgrade' ).click( function() {
 						jQuery(this).prop( 'disabled', true );
+						jQuery('.um-upgrade-progress-bar').show();
 
 						um_add_upgrade_log( 'Upgrade Process Started...' );
 						um_add_upgrade_log( 'Get Upgrades Packages...' );
@@ -277,6 +319,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 							},
 							success: function( response ) {
 								um_packages = response.data.packages;
+								count = um_packages.length;
+								number = Math.floor( 100/count );
 
 								um_add_upgrade_log( 'Upgrades Packages are ready, start unpacking...' );
 
@@ -294,11 +338,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 				 */
 				function um_run_upgrade() {
 					if ( um_packages.length ) {
+						var current_progress = percent_wrap.text();
+						var new_progress     = parseInt(current_progress) + number/2;
+						jQuery( '.um-upgrade-progress' ).animate({
+							width: new_progress + '%'
+						}, 500 );
+						percent_wrap.text( new_progress );
 						// 30s between upgrades
 						setTimeout( function () {
 							var pack = um_packages.shift();
 							um_add_upgrade_log( '<br />=================================================================' );
 							um_add_upgrade_log( '<h4 style="font-weight: bold;">Prepare package "' + pack + '" version...</h4>' );
+
 							jQuery.ajax({
 								url: '<?php echo esc_js( admin_url( 'admin-ajax.php' ) ) ?>',
 								type: 'POST',
@@ -309,6 +360,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 									nonce: um_admin_scripts.nonce
 								},
 								success: function( html ) {
+									current_progress = percent_wrap.text();
+									new_progress = parseInt(current_progress) + number/2;
+									jQuery( '.um-upgrade-progress' ).animate({
+										width: new_progress + '%'
+									}, 500 );
+									percent_wrap.text( new_progress );
 									um_add_upgrade_log( 'Package "' + pack + '" is ready. Start the execution...' );
 									jQuery( '#run_upgrade' ).after( html );
 								}
@@ -334,12 +391,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 
 
 				function um_wrong_ajax() {
+					jQuery('.um-upgrade-percent').text('Your upgrade was crashed, please contact with support');
+					jQuery('.um-upgrade-progress').addClass('error');
 					um_add_upgrade_log( 'Wrong AJAX response...' );
 					um_add_upgrade_log( 'Your upgrade was crashed, please contact with support' );
 				}
 
 
 				function um_something_wrong() {
+					jQuery('.um-upgrade-percent').text('Your upgrade was crashed, please contact with support');
+					jQuery('.um-upgrade-progress').addClass('error');
 					um_add_upgrade_log( 'Something went wrong with AJAX request...' );
 					um_add_upgrade_log( 'Your upgrade was crashed, please contact with support' );
 				}
@@ -368,6 +429,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 			UM()->admin()->check_ajax_nonce();
 
 			$update_versions = $this->need_run_upgrades();
+
 			wp_send_json_success( array( 'packages' => $update_versions ) );
 		}
 
