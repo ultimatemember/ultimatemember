@@ -87,27 +87,45 @@ wp.blocks.registerBlockType( 'um-block/um-member-directories', {
 
 			var get_post = get_option( posts );
 
-			return wp.element.createElement(
-				'div',
-				{
-					className: className
-				},
+			return [
 				wp.element.createElement(
-					wp.components.SelectControl,
+					"div",
 					{
-						label: wp.i18n.__( 'Select Directories', 'ultimate-member' ),
-						className: 'um_select_directory',
-						type: 'number',
-						value: member_id,
-						options: get_post,
-						onChange: function onChange( value ) {
-							props.setAttributes({ member_id: value });
-							var shortcode = umShortcode(value);
-							props.setAttributes( { content: shortcode } );
-						}
-					}
+						className: 'um-member-directory-wrapper'
+					},
+					wp.i18n.__( 'UM Member Directory', 'ultimate-member-pro' )
+				),
+				wp.element.createElement(
+					wp.blockEditor.InspectorControls,
+					{},
+					wp.element.createElement(
+						wp.components.PanelBody,
+						{
+							title: wp.i18n.__( 'UM Member Directory', 'ultimate-member-pro' )
+						},
+						wp.element.createElement(
+							wp.components.SelectControl,
+							{
+								label: wp.i18n.__( 'Select Directories', 'ultimate-member' ),
+								className: 'um_select_directory',
+								type: 'number',
+								value: member_id,
+								options: get_post,
+								style: {
+									height: '35px',
+									lineHeight: '20px',
+									padding: '0 7px'
+								},
+								onChange: function onChange( value ) {
+									props.setAttributes({ member_id: value });
+									var shortcode = umShortcode(value);
+									props.setAttributes( { content: shortcode } );
+								}
+							}
+						)
+					)
 				)
-			);
+			]
 		} // end withSelect
 	), // end edit
 
