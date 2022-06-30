@@ -597,7 +597,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$options = '';
 			if ( ! empty( $users ) ) {
 				foreach ( $users as $user ) {
-					$options .= '<option value="' . esc_attr( $user->ID ) . '" selected>' . esc_html( $user->user_login . ' (#' . $user->ID . ')' ) . '</option>';
+					$url = get_avatar_url( $user->ID, 'size=20' );
+					$options .= '<option data-img="'.$url.'" value="' . esc_attr( $user->ID ) . '" selected>' . esc_html( $user->user_login . ' (#' . $user->ID . ')' ) . '</option>';
 				}
 			}
 

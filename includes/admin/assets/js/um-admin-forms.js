@@ -1,5 +1,23 @@
 function um_admin_init_users_select() {
 	if ( jQuery('.um-user-select-field').length ) {
+		function avatarformat (data) {
+			var option;
+			if ( ! data.id ) {
+				return data.text;
+			}
+			if ( 'undefined' !== typeof data.img ) {
+				option = jQuery('<span ><img style="vertical-align: middle; width: 20px; height: 20px;" src="' + data.img + '" /> ' + data.text + '</span>');
+			} else {
+				var img = data.element.attributes['data-img']['value'];
+				if ( img ) {
+					option = jQuery('<img style="vertical-align: middle; width: 20px; height: 20px;" src="' + img + '" /> ' + data.text + '</span>');
+				} else {
+					option = jQuery('<span>' + data.text + '</span>');
+				}
+			}
+			return option;
+		}
+
 		var select2_atts = {
 			ajax: {
 				url: wp.ajax.settings.url,
@@ -18,11 +36,10 @@ function um_admin_init_users_select() {
 					var options = [];
 
 					if ( response.data.users ) {
-						jQuery.each( response.data.users, function( index, text ) {
-							options.push( { id: text.ID, text: text.user_login + ' (#' + text.ID + ')' } );
+						jQuery.each(response.data.users, function (index, text) {
+							options.push({ id: text.ID, text: text.user_login + ' (#' + text.ID + ')', img: text.img });
 						});
 					}
-
 					return {
 						results: options,
 						pagination: {
@@ -38,7 +55,9 @@ function um_admin_init_users_select() {
 			allowHtml: true,
 			dropdownCssClass: 'um-select2-users-dropdown',
 			containerCssClass : 'um-select2-users-container',
-			placeholder: jQuery(this).data('placeholder')
+			placeholder: jQuery(this).data('placeholder'),
+			templateSelection: avatarformat,
+			templateResult: avatarformat
 		};
 
 		jQuery('.um-user-select-field').select2( select2_atts );
