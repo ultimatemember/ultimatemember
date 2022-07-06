@@ -4487,7 +4487,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				}
 
 				if ( um_is_myprofile() ) {
-					$output .= '<p class="um-profile-note">' . $emo . '<span>' . sprintf( __( 'Your profile is looking a little empty. Why not <a href="%s">add</a> some information!', 'ultimate-member' ), esc_url( um_edit_profile_url() ) ) . '</span></p>';
+					if ( isset( $_GET['profiletab'] ) && 'main' !== $_GET['profiletab'] ) {
+						$tab         = sanitize_key( $_GET['profiletab'] );
+						$edit_action = 'edit_' . $tab;
+						$profile_url = um_user_profile_url( um_profile_id() );
+						$edit_url    = add_query_arg( array( 'profiletab' => $tab, 'um_action' => $edit_action ), $profile_url );
+					} else {
+						$edit_url    = um_edit_profile_url();
+					}
+					$output .= '<p class="um-profile-note">' . $emo . '<span>' . sprintf( __( 'Your profile is looking a little empty. Why not <a href="%s">add</a> some information!', 'ultimate-member' ), esc_url( $edit_url ) ) . '</span></p>';
 				} else {
 					$output .= '<p class="um-profile-note">' . $emo . '<span>' . __( 'This user has not added any information to their profile yet.', 'ultimate-member' ) . '</span></p>';
 				}
