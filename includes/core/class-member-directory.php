@@ -2465,7 +2465,16 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			global $wpdb;
 
+			if ( empty( $_POST['directory_id'] ) ) {
+				wp_send_json_error( __( 'Wrong member directory data', 'ultimate-member' ) );
+			}
+
 			$directory_id = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
+
+			if ( empty( $directory_id ) ) {
+				wp_send_json_error( __( 'Wrong member directory data', 'ultimate-member' ) );
+			}
+
 			$directory_data = UM()->query()->post_data( $directory_id );
 
 			//predefined result for user without capabilities to see other members
