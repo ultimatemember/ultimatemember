@@ -330,7 +330,32 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 				);
 			}
 
-			$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $user_settings, $account_settings, $uploads_settings, $restrict_settings );
+			// Access other settings
+			$blocked_emails = str_replace( '<br />', ', ', nl2br( UM()->options()->get('blocked_emails') ) );
+			$blocked_words  = str_replace( '<br />', ', ', nl2br( UM()->options()->get('blocked_words') ) );
+			$access_other_settings = array(
+				'um-blocked_emails'     => array(
+					'label' => __( 'Blocked Email Addresses', 'ultimate-member' ),
+					'value' => $blocked_emails,
+				),
+				'um-blocked_words'  => array(
+					'label' => __( 'Banned Usernames', 'ultimate-member' ),
+					'value' => $blocked_words,
+				),
+				'um-enable_reset_password_limit' => array(
+					'label' => __( 'Password reset limit', 'ultimate-member' ),
+					'value' => UM()->options()->get('enable_reset_password_limit') ? $labels['yes'] : $labels['no'],
+				),
+			);
+
+			if ( 1 == UM()->options()->get('enable_reset_password_limit') ) {
+				$access_other_settings['um-reset_password_limit_number'] = array(
+					'label' => __( 'Enter password reset limit', 'ultimate-member' ),
+					'value' => UM()->options()->get('reset_password_limit_number'),
+				);
+			}
+
+			$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $user_settings, $account_settings, $uploads_settings, $restrict_settings, $access_other_settings );
 
 			return $info;
 		}
