@@ -187,14 +187,14 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 			$profile_sizes_list = '';
 			$profile_sizes      = UM()->options()->get( 'photo_thumb_sizes' );
 			if ( ! empty( $profile_sizes ) ) {
-				foreach ( $profile_sizes as $key => $size ) {
+				foreach ( $profile_sizes as $size ) {
 					$profile_sizes_list = empty ( $profile_sizes_list ) ? $size : $profile_sizes_list . ', ' . $size;
 				}
 			}
 			$cover_sizes_list = '';
 			$cover_sizes      = UM()->options()->get( 'cover_thumb_sizes' );
 			if ( ! empty( $cover_sizes ) ) {
-				foreach ( $cover_sizes as $key => $size ) {
+				foreach ( $cover_sizes as $size ) {
 					$cover_sizes_list = empty ( $cover_sizes_list ) ? $size : $cover_sizes_list . ', ' . $size;
 				}
 			}
@@ -245,8 +245,92 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 				),
 			);
 
+			// Content Restriction settings
+			$restricted_posts      = UM()->options()->get( 'restricted_access_post_metabox' );
+			$restricted_posts_list = '';
+			if ( ! empty( $restricted_posts ) ) {
+				foreach ( $restricted_posts as $key => $posts ) {
+					$restricted_posts_list = empty ( $restricted_posts_list ) ? $key : $restricted_posts_list . ', ' . $key;
+				}
+			}
+			$restricted_taxonomy      = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
+			$restricted_taxonomy_list = '';
+			if ( ! empty( $restricted_taxonomy ) ) {
+				foreach ( $restricted_taxonomy as $key => $posts ) {
+					$restricted_taxonomy_list = empty ( $restricted_taxonomy_list ) ? $key : $restricted_taxonomy_list . ', ' . $key;
+				}
+			}
 
-			$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $user_settings, $account_settings, $uploads_settings );
+			$restrict_settings = array(
+				'um-restricted_access_post_metabox'     => array(
+					'label' => __( 'Enable the "Content Restriction" settings for post types', 'ultimate-member' ),
+					'value' => $restricted_posts_list,
+				),
+				'um-restricted_access_taxonomy_metabox' => array(
+					'label' => __( 'Enable the "Content Restriction" settings for post types', 'ultimate-member' ),
+					'value' => $restricted_taxonomy_list,
+				),
+				'um-accessible'                         => array(
+					'label' => __( 'Global Site Access', 'ultimate-member' ),
+					'value' => UM()->options()->get('accessible') == 0 ? __( 'Site accessible to Everyone', 'ultimate-member' ) : __( 'Site accessible to Logged In Users', 'ultimate-member' ),
+				),
+			);
+
+			if ( 2 == UM()->options()->get('accessible') ) {
+				$exclude_uris = UM()->options()->get( 'access_exclude_uris' );
+				$exclude_uris_list = '';
+				if ( ! empty( $exclude_uris ) ) {
+					foreach ( $exclude_uris as $key => $url ) {
+						$exclude_uris_list = empty ( $exclude_uris_list ) ? $url : $exclude_uris_list . ', ' . $url;
+					}
+				}
+				$restrict_settings['um-access_redirect']          = array(
+					'label' => __( 'Custom Redirect URL', 'ultimate-member' ),
+					'value' => UM()->options()->get('access_redirect'),
+				);
+				$restrict_settings['um-access_exclude_uris']      = array(
+					'label' => __( 'Account Deletion Text', 'ultimate-member' ),
+					'value' => $exclude_uris_list,
+				);
+				$restrict_settings['um-home_page_accessible']     = array(
+					'label' => __( 'Allow Homepage to be accessible', 'ultimate-member' ),
+					'value' => UM()->options()->get('home_page_accessible') ? $labels['yes'] : $labels['no'],
+				);
+				$restrict_settings['um-category_page_accessible'] = array(
+					'label' => __( 'Allow Category pages to be accessible', 'ultimate-member' ),
+					'value' => UM()->options()->get('category_page_accessible') ? $labels['yes'] : $labels['no'],
+				);
+			}
+
+			$restrict_settings['um-restricted_post_title_replace'] = array(
+				'label' => __( 'Restricted Content Titles', 'ultimate-member' ),
+				'value' => UM()->options()->get('restricted_post_title_replace') ? $labels['yes'] : $labels['no'],
+			);
+
+			if ( 1 == UM()->options()->get('restricted_post_title_replace') ) {
+				$restrict_settings['um-restricted_access_post_title'] = array(
+					'label' => __( 'Restricted Content Title Text', 'ultimate-member' ),
+					'value' => UM()->options()->get('restricted_access_post_title'),
+				);
+			}
+
+			$restrict_settings['um-restricted_access_message'] = array(
+				'label' => __( 'Restricted Access Message', 'ultimate-member' ),
+				'value' => UM()->options()->get('restricted_access_message'),
+			);
+			$restrict_settings['um-restricted_blocks'] = array(
+				'label' => __( 'Enable the "Content Restriction" settings for the Gutenberg Blocks', 'ultimate-member' ),
+				'value' => UM()->options()->get('restricted_blocks') ? $labels['yes'] : $labels['no'],
+			);
+
+			if ( 1 == UM()->options()->get('restricted_blocks') ) {
+				$restrict_settings['um-restricted_block_message'] = array(
+					'label' => __( 'Restricted Access Block Message', 'ultimate-member' ),
+					'value' => UM()->options()->get('restricted_block_message'),
+				);
+			}
+
+			$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $user_settings, $account_settings, $uploads_settings, $restrict_settings );
 
 			return $info;
 		}
