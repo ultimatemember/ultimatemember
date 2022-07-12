@@ -41,6 +41,13 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 		 * @return array The updated Site Health information.
 		 */
 		public function debug_information( $info ) {
+			$labels = array(
+				'yes'     => __( 'Yes', 'ultimate-member' ),
+				'no'      => __( 'No', 'ultimate-member' ),
+				'enable'  => __( 'Enable', 'ultimate-member' ),
+				'disable' => __( 'Disable', 'ultimate-member' ),
+			);
+
 			$info['ultimate-member'] = array(
 				'label'       => __( 'Ultimate Member', 'ultimate-member' ),
 				'description' => __( 'This debug information for your Ultimate Member installation can assist you in getting support.', 'ultimate-member' ),
@@ -56,6 +63,7 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 				),
 			);
 
+			// User settings
 			$user_settings = array(
 				'um-permalink_base'              => array(
 					'label' => __( 'Profile Permalink Base', 'ultimate-member' ),
@@ -67,11 +75,11 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 				),
 				'um-author_redirect'             => array(
 					'label' => __( 'Automatically redirect author page to their profile?', 'ultimate-member' ),
-					'value' => UM()->options()->get('author_redirect') ? 'Yes' : 'No',
+					'value' => UM()->options()->get('author_redirect') ? $labels['yes'] : $labels['no'],
 				),
 				'um-profile_noindex'             => array(
 					'label' => __( 'Avoid indexing profile by search engines', 'ultimate-member' ),
-					'value' => UM()->options()->get('profile_noindex') ? 'Yes' : 'No',
+					'value' => UM()->options()->get('profile_noindex') ? $labels['yes'] : $labels['no'],
 				),
 				'um-activation_link_expiry_time' => array(
 					'label' => __( 'Email activation link expiration (days)', 'ultimate-member' ),
@@ -87,7 +95,7 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 				),
 				'um-require_strongpass'          => array(
 					'label' => __( 'Require Strong Passwords', 'ultimate-member' ),
-					'value' => UM()->options()->get('require_strongpass') == 1 ? 'Yes' : 'No',
+					'value' => UM()->options()->get('require_strongpass') == 1 ? $labels['yes'] : $labels['no'],
 				),
 			);
 
@@ -104,7 +112,7 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 
 			$user_settings['um-use_gravatars'] = array(
 				'label' => __( 'Use Gravatars', 'ultimate-member' ),
-				'value' => UM()->options()->get('use_gravatars') ? 'Yes' : 'No',
+				'value' => UM()->options()->get('use_gravatars') ? $labels['yes'] : $labels['no'],
 			);
 
 			if ( 1 == UM()->options()->get('use_gravatars') ) {
@@ -115,12 +123,67 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 				if ( 'default' == UM()->options()->get('use_um_gravatar_default_builtin_image') ) {
 					$user_settings['um-use_um_gravatar_default_image'] = array(
 						'label' => __( 'Use Default plugin avatar as Gravatar\'s Default avatar', 'ultimate-member' ),
-						'value' => UM()->options()->get('use_um_gravatar_default_image') ? 'Yes' : 'No',
+						'value' => UM()->options()->get('use_um_gravatar_default_image') ? $labels['yes'] : $labels['no'],
 					);
 				}
 			}
 
-			$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $user_settings);
+			// Account settings
+			$account_settings = array(
+				'um-account_tab_password'              => array(
+					'label' => __( 'Password Account Tab', 'ultimate-member' ),
+					'value' => UM()->options()->get('account_tab_password') ? $labels['yes'] : $labels['no'],
+				),
+				'um-account_tab_privacy'              => array(
+					'label' => __( 'Privacy Account Tab', 'ultimate-member' ),
+					'value' => UM()->options()->get('account_tab_privacy') ? $labels['yes'] : $labels['no'],
+				),
+				'um-account_tab_notifications'              => array(
+					'label' => __( 'Notifications Account Tab', 'ultimate-member' ),
+					'value' => UM()->options()->get('account_tab_notifications') ? $labels['yes'] : $labels['no'],
+				),
+				'um-account_email'              => array(
+					'label' => __( 'Allow users to change email', 'ultimate-member' ),
+					'value' => UM()->options()->get('account_email') ? $labels['yes'] : $labels['no'],
+				),
+				'um-account_general_password'              => array(
+					'label' => __( 'Require password to update account', 'ultimate-member' ),
+					'value' => UM()->options()->get('account_general_password') ? $labels['yes'] : $labels['no'],
+				),
+				'um-account_name'              => array(
+					'label' => __( 'Display First & Last name fields', 'ultimate-member' ),
+					'value' => UM()->options()->get('account_name') ? $labels['yes'] : $labels['no'],
+				),
+			);
+
+			if ( 1 == UM()->options()->get('account_name') ) {
+				$account_settings['um-account_name_disable'] = array(
+					'label' => __( 'Disable First & Last name field editing', 'ultimate-member' ),
+					'value' => UM()->options()->get('account_name_disable') ? $labels['yes'] : $labels['no'],
+				);
+				$account_settings['um-account_name_require'] = array(
+					'label' => __( 'Require First & Last Name', 'ultimate-member' ),
+					'value' => UM()->options()->get('account_name_require') ? $labels['yes'] : $labels['no'],
+				);
+			}
+
+			$account_settings['um-account_tab_delete'] = array(
+				'label' => __( 'Delete Account Tab', 'ultimate-member' ),
+				'value' => UM()->options()->get('account_tab_delete') ? $labels['yes'] : $labels['no'],
+			);
+
+			if ( 1 == UM()->options()->get('account_tab_delete') ) {
+				$account_settings['um-delete_account_password_requires'] = array(
+					'label' => __( 'Account deletion password requires', 'ultimate-member' ),
+					'value' => UM()->options()->get('delete_account_password_requires') ? $labels['yes'] : $labels['no'],
+				);
+				$account_settings['um-delete_account_text'] = array(
+					'label' => __( 'Account Deletion Text', 'ultimate-member' ),
+					'value' => UM()->options()->get('delete_account_text'),
+				);
+			}
+
+			$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $user_settings, $account_settings );
 
 			return $info;
 		}
