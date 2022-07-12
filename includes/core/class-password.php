@@ -292,9 +292,8 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 						exit;
 					}
 					$rp_login = $userdata->user_login;
-					$rp_key = wp_unslash( sanitize_text_field( $_GET['hash'] ) );
-
-					$user = check_password_reset_key( $rp_key, $rp_login );
+					$rp_key   = wp_unslash( sanitize_text_field( $_GET['hash'] ) );
+					$user     = check_password_reset_key( $rp_key, $rp_login );
 
 					if ( is_wp_error( $user ) ) {
 						$this->setcookie( $rp_cookie, false );
@@ -302,6 +301,12 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 					} else {
 						$value = sprintf( '%s:%s', $rp_login, wp_unslash( sanitize_text_field( $_GET['hash'] ) ) );
 						$this->setcookie( $rp_cookie, $value );
+
+						// logout.
+						if ( is_user_logged_in() && $user->ID !== get_current_user_id() ) {
+							wp_logout();
+						}
+
 						wp_safe_redirect( remove_query_arg( array( 'hash', 'user_id' ) ) );
 					}
 
@@ -624,6 +629,11 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				do_action( 'validate_password_reset', $errors, $user );
 
 				if ( ( ! $errors->get_error_code() ) ) {
+					// clear all sessions with old passwords.
+					$manager = \WP_Session_Tokens::get_instance( $user->ID );
+					$manager->destroy_all();
+
+					// set a new password.
 					reset_password( $user, trim( $args['user_password'] ) );
 
 					// send the Password Changed Email
