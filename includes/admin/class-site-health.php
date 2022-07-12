@@ -302,7 +302,7 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 				);
 			}
 
-			$restrict_settings['um-restricted_post_title_replace'] = array(
+			$restrict_settings['um-restricted_post_title_replace']    = array(
 				'label' => __( 'Restricted Content Titles', 'ultimate-member' ),
 				'value' => UM()->options()->get('restricted_post_title_replace') ? $labels['yes'] : $labels['no'],
 			);
@@ -314,11 +314,11 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 				);
 			}
 
-			$restrict_settings['um-restricted_access_message'] = array(
+			$restrict_settings['um-restricted_access_message']        = array(
 				'label' => __( 'Restricted Access Message', 'ultimate-member' ),
 				'value' => UM()->options()->get('restricted_access_message'),
 			);
-			$restrict_settings['um-restricted_blocks'] = array(
+			$restrict_settings['um-restricted_blocks']                = array(
 				'label' => __( 'Enable the "Content Restriction" settings for the Gutenberg Blocks', 'ultimate-member' ),
 				'value' => UM()->options()->get('restricted_blocks') ? $labels['yes'] : $labels['no'],
 			);
@@ -334,11 +334,11 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 			$blocked_emails = str_replace( '<br />', ', ', nl2br( UM()->options()->get('blocked_emails') ) );
 			$blocked_words  = str_replace( '<br />', ', ', nl2br( UM()->options()->get('blocked_words') ) );
 			$access_other_settings = array(
-				'um-blocked_emails'     => array(
+				'um-blocked_emails'              => array(
 					'label' => __( 'Blocked Email Addresses', 'ultimate-member' ),
 					'value' => $blocked_emails,
 				),
-				'um-blocked_words'  => array(
+				'um-blocked_words'               => array(
 					'label' => __( 'Banned Usernames', 'ultimate-member' ),
 					'value' => $blocked_words,
 				),
@@ -355,7 +355,41 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 				);
 			}
 
-			$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $user_settings, $account_settings, $uploads_settings, $restrict_settings, $access_other_settings );
+			// Email settings
+			$email_settings = array(
+				'um-admin_email'    => array(
+					'label' => __( 'Admin E-mail Address', 'ultimate-member' ),
+					'value' => UM()->options()->get('admin_email'),
+				),
+				'um-mail_from'      => array(
+					'label' => __( 'Mail appears from', 'ultimate-member' ),
+					'value' => UM()->options()->get('mail_from'),
+				),
+				'um-mail_from_addr' => array(
+					'label' => __( 'Mail appears from address', 'ultimate-member' ),
+					'value' => UM()->options()->get('mail_from_addr'),
+				),
+				'um-email_html'     => array(
+					'label' => __( 'Use HTML for E-mails?', 'ultimate-member' ),
+					'value' => UM()->options()->get('email_html') ? $labels['yes'] : $labels['no'],
+				),
+			);
+
+			$emails      = UM()->config()->get( 'email_notifications' );
+			$emails_list = array();
+			foreach ( $emails as $key => $email ) {
+				if ( 1 == UM()->options()->get( $key . '_on' ) ) {
+					$emails_list[ $key ] = $email['title'];
+				}
+			}
+
+			$email_settings['um-emails'] = array(
+				'label' => __( 'Enabled emails', 'ultimate-member' ),
+				'value' => $emails_list,
+			);
+
+
+			$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $user_settings, $account_settings, $uploads_settings, $restrict_settings, $access_other_settings, $email_settings );
 
 			return $info;
 		}
