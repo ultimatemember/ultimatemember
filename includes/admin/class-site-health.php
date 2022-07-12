@@ -184,7 +184,41 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 			}
 
 			// Uploads settings
+			$profile_sizes_list = '';
+			$profile_sizes      = UM()->options()->get( 'photo_thumb_sizes' );
+			if ( ! empty( $profile_sizes ) ) {
+				foreach ( $profile_sizes as $key => $size ) {
+					$profile_sizes_list = empty ( $profile_sizes_list ) ? $size : $profile_sizes_list . ', ' . $size;
+				}
+			}
+			$cover_sizes_list = '';
+			$cover_sizes      = UM()->options()->get( 'cover_thumb_sizes' );
+			if ( ! empty( $cover_sizes ) ) {
+				foreach ( $cover_sizes as $key => $size ) {
+					$cover_sizes_list = empty ( $cover_sizes_list ) ? $size : $cover_sizes_list . ', ' . $size;
+				}
+			}
 			$uploads_settings = array(
+				'um-profile_photo_max_size'    => array(
+					'label' => __( 'Profile Photo Maximum File Size (bytes)', 'ultimate-member' ),
+					'value' => UM()->options()->get('profile_photo_max_size'),
+				),
+				'um-cover_min_width'           => array(
+					'label' => __( 'Cover Photo Minimum Width (px)', 'ultimate-member' ),
+					'value' => UM()->options()->get('cover_min_width'),
+				),
+				'um-cover_photo_max_size'      => array(
+					'label' => __( 'Cover Photo Maximum File Size (bytes)', 'ultimate-member' ),
+					'value' => UM()->options()->get('cover_photo_max_size'),
+				),
+				'um-photo_thumb_sizes'         => array(
+					'label' => __( 'Profile Photo Thumbnail Sizes (px)', 'ultimate-member' ),
+					'value' => $profile_sizes_list,
+				),
+				'um-cover_thumb_sizes'         => array(
+					'label' => __( 'Cover Photo Thumbnail Sizes (px)', 'ultimate-member' ),
+					'value' => $cover_sizes_list,
+				),
 				'um-image_orientation_by_exif' => array(
 					'label' => __( 'Change image orientation', 'ultimate-member' ),
 					'value' => UM()->options()->get('image_orientation_by_exif') ? $labels['yes'] : $labels['no'],
@@ -209,41 +243,8 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 					'label' => __( 'Profile Cover Ratio', 'ultimate-member' ),
 					'value' => UM()->options()->get('profile_cover_ratio'),
 				),
-				'um-profile_photo_max_size'    => array(
-					'label' => __( 'Profile Photo Maximum File Size (bytes)', 'ultimate-member' ),
-					'value' => UM()->options()->get('profile_photo_max_size'),
-				),
-				'um-cover_min_width'           => array(
-					'label' => __( 'Cover Photo Minimum Width (px)', 'ultimate-member' ),
-					'value' => UM()->options()->get('cover_min_width'),
-				),
-				'um-cover_photo_max_size'      => array(
-					'label' => __( 'Cover Photo Maximum File Size (bytes)', 'ultimate-member' ),
-					'value' => UM()->options()->get('cover_photo_max_size'),
-				),
 			);
 
-			$profile_sizes = UM()->options()->get( 'photo_thumb_sizes' );
-			if ( ! empty( $profile_sizes ) ) {
-				foreach ( $profile_sizes as $key => $size ) {
-					$key++;
-					$uploads_settings['um-photo_thumb_sizes' . $key ] = array(
-						'label' => $key . __( ' Profile Photo Thumbnail Sizes', 'ultimate-member' ),
-						'value' => $size . ' px',
-					);
-				}
-			}
-
-			$cover_sizes = UM()->options()->get( 'cover_thumb_sizes' );
-			if ( ! empty( $cover_sizes ) ) {
-				foreach ( $cover_sizes as $key => $size ) {
-					$key++;
-					$uploads_settings['um-cover_thumb_sizes' . $key ] = array(
-						'label' => $key . __( ' Cover Photo Thumbnail Sizes', 'ultimate-member' ),
-						'value' => $size . ' px',
-					);
-				}
-			}
 
 			$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $user_settings, $account_settings, $uploads_settings );
 
