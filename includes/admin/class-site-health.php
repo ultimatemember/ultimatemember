@@ -130,23 +130,23 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 
 			// Account settings
 			$account_settings = array(
-				'um-account_tab_password'              => array(
+				'um-account_tab_password'      => array(
 					'label' => __( 'Password Account Tab', 'ultimate-member' ),
 					'value' => UM()->options()->get('account_tab_password') ? $labels['yes'] : $labels['no'],
 				),
-				'um-account_tab_privacy'              => array(
+				'um-account_tab_privacy'       => array(
 					'label' => __( 'Privacy Account Tab', 'ultimate-member' ),
 					'value' => UM()->options()->get('account_tab_privacy') ? $labels['yes'] : $labels['no'],
 				),
-				'um-account_tab_notifications'              => array(
+				'um-account_tab_notifications' => array(
 					'label' => __( 'Notifications Account Tab', 'ultimate-member' ),
 					'value' => UM()->options()->get('account_tab_notifications') ? $labels['yes'] : $labels['no'],
 				),
-				'um-account_email'              => array(
+				'um-account_email'             => array(
 					'label' => __( 'Allow users to change email', 'ultimate-member' ),
 					'value' => UM()->options()->get('account_email') ? $labels['yes'] : $labels['no'],
 				),
-				'um-account_general_password'              => array(
+				'um-account_general_password'  => array(
 					'label' => __( 'Require password to update account', 'ultimate-member' ),
 					'value' => UM()->options()->get('account_general_password') ? $labels['yes'] : $labels['no'],
 				),
@@ -177,13 +177,75 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 					'label' => __( 'Account deletion password requires', 'ultimate-member' ),
 					'value' => UM()->options()->get('delete_account_password_requires') ? $labels['yes'] : $labels['no'],
 				);
-				$account_settings['um-delete_account_text'] = array(
+				$account_settings['um-delete_account_text']              = array(
 					'label' => __( 'Account Deletion Text', 'ultimate-member' ),
 					'value' => UM()->options()->get('delete_account_text'),
 				);
 			}
 
-			$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $user_settings, $account_settings );
+			// Uploads settings
+			$uploads_settings = array(
+				'um-image_orientation_by_exif' => array(
+					'label' => __( 'Change image orientation', 'ultimate-member' ),
+					'value' => UM()->options()->get('image_orientation_by_exif') ? $labels['yes'] : $labels['no'],
+				),
+				'um-image_compression'         => array(
+					'label' => __( 'Image Quality', 'ultimate-member' ),
+					'value' => UM()->options()->get('image_compression'),
+				),
+				'um-image_max_width'           => array(
+					'label' => __( 'Image Upload Maximum Width (px)', 'ultimate-member' ),
+					'value' => UM()->options()->get('image_max_width'),
+				),
+				'um-profile_photosize'         => array(
+					'label' => __( 'Profile Photo Size', 'ultimate-member' ),
+					'value' => UM()->options()->get('profile_photosize'),
+				),
+				'um-profile_coversize'         => array(
+					'label' => __( 'Profile Cover Size', 'ultimate-member' ),
+					'value' => UM()->options()->get('profile_coversize'),
+				),
+				'um-profile_cover_ratio'       => array(
+					'label' => __( 'Profile Cover Ratio', 'ultimate-member' ),
+					'value' => UM()->options()->get('profile_cover_ratio'),
+				),
+				'um-profile_photo_max_size'    => array(
+					'label' => __( 'Profile Photo Maximum File Size (bytes)', 'ultimate-member' ),
+					'value' => UM()->options()->get('profile_photo_max_size'),
+				),
+				'um-cover_min_width'           => array(
+					'label' => __( 'Cover Photo Minimum Width (px)', 'ultimate-member' ),
+					'value' => UM()->options()->get('cover_min_width'),
+				),
+				'um-cover_photo_max_size'      => array(
+					'label' => __( 'Cover Photo Maximum File Size (bytes)', 'ultimate-member' ),
+					'value' => UM()->options()->get('cover_photo_max_size'),
+				),
+			);
+
+			$profile_sizes = UM()->options()->get( 'photo_thumb_sizes' );
+			if ( ! empty( $profile_sizes ) ) {
+				foreach ( $profile_sizes as $key => $size ) {
+					$key++;
+					$uploads_settings['um-photo_thumb_sizes' . $key ] = array(
+						'label' => $key . __( ' Profile Photo Thumbnail Sizes', 'ultimate-member' ),
+						'value' => $size . ' px',
+					);
+				}
+			}
+
+			$cover_sizes = UM()->options()->get( 'cover_thumb_sizes' );
+			if ( ! empty( $cover_sizes ) ) {
+				foreach ( $cover_sizes as $key => $size ) {
+					$key++;
+					$uploads_settings['um-cover_thumb_sizes' . $key ] = array(
+						'label' => $key . __( ' Cover Photo Thumbnail Sizes', 'ultimate-member' ),
+						'value' => $size . ' px',
+					);
+				}
+			}
+
+			$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $user_settings, $account_settings, $uploads_settings );
 
 			return $info;
 		}
