@@ -46,6 +46,7 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 				'no'  => __( 'No', 'ultimate-member' ),
 			);
 
+			// User roles settings
 			$info['ultimate-member-user-roles'] = array(
 				'label'       => __( 'User roles', 'ultimate-member' ),
 				'description' => __( 'This debug information about user roles.', 'ultimate-member' ),
@@ -406,17 +407,19 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 			);
 
 			$emails      = UM()->config()->get( 'email_notifications' );
-			$emails_list = array();
 			foreach ( $emails as $key => $email ) {
 				if ( 1 == UM()->options()->get( $key . '_on' ) ) {
-					$emails_list[ $key ] = $email['title'];
+					$email_settings['um-' . $key ] = array(
+						'label' => $email['title'] . __( ' Subject', 'ultimate-member' ),
+						'value' => UM()->options()->get( $key . '_sub'),
+					);
+
+					$email_settings['um-theme_' . $key ] = array(
+						'label' => __( 'Template ', 'ultimate-member' ) . $email['title'] . __( ' in theme?', 'ultimate-member' ),
+						'value' => '' != locate_template( array( 'ultimate-member/email/' . $key . '.php' ) ) ? $labels['yes'] : $labels['no'],
+					);
 				}
 			}
-
-			$email_settings['um-emails'] = array(
-				'label' => __( 'Enabled emails', 'ultimate-member' ),
-				'value' => $emails_list,
-			);
 
 			// Misc settings
 			$misc_settings = array(
