@@ -42,24 +42,46 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 		 */
 		public function debug_information( $info ) {
 			$labels = array(
-				'yes'     => __( 'Yes', 'ultimate-member' ),
-				'no'      => __( 'No', 'ultimate-member' ),
-				'enable'  => __( 'Enable', 'ultimate-member' ),
-				'disable' => __( 'Disable', 'ultimate-member' ),
+				'yes' => __( 'Yes', 'ultimate-member' ),
+				'no'  => __( 'No', 'ultimate-member' ),
+			);
+
+			$info['ultimate-member-user-roles'] = array(
+				'label'       => __( 'User roles', 'ultimate-member' ),
+				'description' => __( 'This debug information about user roles.', 'ultimate-member' ),
+				'fields'      => array(
+					'um-roles'         => array(
+						'label' => __( 'User Roles', 'ultimate-member' ),
+						'value' => $this->get_roles(),
+					),
+				),
 			);
 
 			$info['ultimate-member'] = array(
 				'label'       => __( 'Ultimate Member', 'ultimate-member' ),
 				'description' => __( 'This debug information for your Ultimate Member installation can assist you in getting support.', 'ultimate-member' ),
 				'fields'      => array(
-					'um-roles'         => array(
-						'label' => __( 'User Roles', 'ultimate-member' ),
-						'value' => $this->get_roles(),
-					),
 					'um-register_role' => array(
 						'label' => __( 'Default New User Role', 'ultimate-member' ),
 						'value' => get_option( 'default_role' ),
 					),
+				),
+			);
+
+			// Pages settings
+			$pages = apply_filters( 'um_debug_information_pages', array(
+				'User'           => get_the_title( UM()->options()->get('core_user') ) . ' (' . UM()->options()->get('core_user') . '), ' . get_permalink( UM()->options()->get('core_user') ),
+				'Account'        => get_the_title( UM()->options()->get('core_account') ) . ' (' . UM()->options()->get('core_account') . '), ' . get_permalink( UM()->options()->get('core_account') ),
+				'Register'       => get_the_title( UM()->options()->get('core_register') ) . ' (' . UM()->options()->get('core_register') . '), ' . get_permalink( UM()->options()->get('core_register') ),
+				'Login'          => get_the_title( UM()->options()->get('core_login') ) . ' (' . UM()->options()->get('core_login') . '), ' . get_permalink( UM()->options()->get('core_login') ),
+				'Logout'         => get_the_title( UM()->options()->get('core_logout') ) . ' (' . UM()->options()->get('core_logout') . '), ' . get_permalink( UM()->options()->get('core_logout') ),
+				'Password reset' => get_the_title( UM()->options()->get('core_password-reset') ) . ' (' . UM()->options()->get('core_password-reset') . '), ' . get_permalink( UM()->options()->get('core_password-reset') ),
+			) );
+
+			$pages_settings = array(
+				'um-pages' => array(
+					'label' => __( 'Pages', 'ultimate-member' ),
+					'value' => $pages,
 				),
 			);
 
@@ -177,10 +199,18 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 					'label' => __( 'Account deletion password requires', 'ultimate-member' ),
 					'value' => UM()->options()->get('delete_account_password_requires') ? $labels['yes'] : $labels['no'],
 				);
-				$account_settings['um-delete_account_text']              = array(
-					'label' => __( 'Account Deletion Text', 'ultimate-member' ),
-					'value' => UM()->options()->get('delete_account_text'),
-				);
+				if ( 1 == UM()->options()->get('delete_account_password_requires') ) {
+					$account_settings['um-delete_account_text'] = array(
+						'label' => __( 'Account Deletion Text', 'ultimate-member' ),
+						'value' => stripslashes( UM()->options()->get('delete_account_text') ),
+					);
+				} else {
+					$account_settings['um-delete_account_no_pass_required_text'] = array(
+						'label' => __( 'Account Deletion Text', 'ultimate-member' ),
+						'value' => stripslashes( UM()->options()->get('delete_account_no_pass_required_text') ),
+					);
+				}
+
 			}
 
 			// Uploads settings
@@ -310,13 +340,13 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 			if ( 1 == UM()->options()->get('restricted_post_title_replace') ) {
 				$restrict_settings['um-restricted_access_post_title'] = array(
 					'label' => __( 'Restricted Content Title Text', 'ultimate-member' ),
-					'value' => UM()->options()->get('restricted_access_post_title'),
+					'value' => stripslashes( UM()->options()->get('restricted_access_post_title') ),
 				);
 			}
 
 			$restrict_settings['um-restricted_access_message']        = array(
 				'label' => __( 'Restricted Access Message', 'ultimate-member' ),
-				'value' => UM()->options()->get('restricted_access_message'),
+				'value' => stripslashes( UM()->options()->get('restricted_access_message') ),
 			);
 			$restrict_settings['um-restricted_blocks']                = array(
 				'label' => __( 'Enable the "Content Restriction" settings for the Gutenberg Blocks', 'ultimate-member' ),
@@ -326,7 +356,7 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 			if ( 1 == UM()->options()->get('restricted_blocks') ) {
 				$restrict_settings['um-restricted_block_message'] = array(
 					'label' => __( 'Restricted Access Block Message', 'ultimate-member' ),
-					'value' => UM()->options()->get('restricted_block_message'),
+					'value' => stripslashes( UM()->options()->get('restricted_block_message') ),
 				);
 			}
 
@@ -336,11 +366,11 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 			$access_other_settings = array(
 				'um-blocked_emails'              => array(
 					'label' => __( 'Blocked Email Addresses', 'ultimate-member' ),
-					'value' => $blocked_emails,
+					'value' => stripslashes( $blocked_emails ),
 				),
 				'um-blocked_words'               => array(
 					'label' => __( 'Banned Usernames', 'ultimate-member' ),
-					'value' => $blocked_words,
+					'value' => stripslashes( $blocked_words ),
 				),
 				'um-enable_reset_password_limit' => array(
 					'label' => __( 'Password reset limit', 'ultimate-member' ),
@@ -396,11 +426,11 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 				),
 				'um-profile_title'                   => array(
 					'label' => __( 'User Profile Title', 'ultimate-member' ),
-					'value' => UM()->options()->get('profile_title'),
+					'value' => stripslashes( UM()->options()->get('profile_title') ),
 				),
 				'um-profile_desc'                    => array(
 					'label' => __( 'User Profile Dynamic Meta Description', 'ultimate-member' ),
-					'value' => UM()->options()->get('profile_desc'),
+					'value' => stripslashes( UM()->options()->get('profile_desc') ),
 				),
 				'um-um_profile_object_cache_stop'    => array(
 					'label' => __( 'Disable Cache User Profile', 'ultimate-member' ),
