@@ -48,6 +48,12 @@ class Config {
 	/**
 	 * @var array
 	 */
+	var $sorting_supported_fields = array();
+
+
+	/**
+	 * @var array
+	 */
 	var $default_sorting = array();
 
 
@@ -119,6 +125,17 @@ class Config {
 	/**
 	 *
 	 */
+	public function init_sorting_supported_fields() {
+		$this->sorting_supported_fields = apply_filters(
+			'um_members_directory_custom_field_types_supported_sorting',
+			array( 'number' )
+		);
+	}
+
+
+	/**
+	 *
+	 */
 	public function init_sort_fields() {
 		$this->sort_fields = apply_filters(
 			'um_members_directory_sort_fields',
@@ -134,6 +151,28 @@ class Config {
 				'last_login'           => __( 'Last login', 'ultimate-member' ),
 			)
 		);
+
+		if ( ! empty( UM()->builtin()->saved_fields ) ) {
+			foreach ( UM()->builtin()->saved_fields as $key => $data ) {
+				if ( $key == '_um_last_login' ) {
+					continue;
+				}
+
+				if ( isset( $data['type'] ) && in_array( $data['type'], $this->get( 'sorting_supported_fields' ) ) ) {
+					if ( isset( $data['title'] ) && array_search( sprintf( __( '%s DESC', 'ultimate-member' ), $data['title'] ), $this->sort_fields ) !== false ) {
+						$data['title'] = $data['title'] . ' (' . $key . ')';
+					}
+
+					$title = isset( $data['title'] ) ? $data['title'] : ( isset( $data['label'] ) ? $data['label'] : '' );
+					if ( empty( $title ) ) {
+						continue;
+					}
+
+					$this->sort_fields[ $key . '_desc' ] = sprintf( __( '%s DESC', 'ultimate-member' ), $title );
+					$this->sort_fields[ $key . '_asc' ]  = sprintf( __( '%s ASC', 'ultimate-member' ), $title );
+				}
+			}
+		}
 
 		asort( $this->sort_fields );
 	}

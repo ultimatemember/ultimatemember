@@ -37,12 +37,12 @@ class Functions {
 	 *
 	 * @param string $fields
 	 *
-	 * @return array
+	 * @return int|array
 	 */
 	function get_users( $fields = 'all' ) {
 		// force flush if isn't array
 		if ( ! is_array( $this->users ) ) {
-			return array();
+			return ( 'count' === $fields ) ? 0 : array();
 		}
 
 		if ( 'ids' === $fields ) {

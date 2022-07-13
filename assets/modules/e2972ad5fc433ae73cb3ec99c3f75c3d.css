@@ -1,15 +1,3 @@
-.um-admin.post-type-um_directory .manage-column.column-id {
-  width: 60px; }
-
-.um-admin.post-type-um_directory .manage-column.column-title {
-  width: 250px; }
-
-.um-admin.post-type-um_directory .manage-column.column-is_default {
-  width: 60px; }
-
-.um-admin.post-type-um_directory td.column-shortcode, .um-admin.post-type-um_directory td.column-id {
-  font-size: 14px; }
-
 .um-directory .um-member-directory-header .um-member-directory-header-row.um-member-directory-search-row {
   justify-content: flex-start; }
 

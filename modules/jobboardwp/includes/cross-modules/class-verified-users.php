@@ -18,12 +18,13 @@ class Verified_Users {
 	/**
 	 * Verified_Users constructor.
 	 */
-	function __construct() {
+	public function __construct() {
 		add_action( 'jb_job_submission_after_create_account', array( &$this, 'maybe_verify' ), 11, 1 );
 		add_filter( 'um_verified_users_settings_fields', array( &$this, 'add_verified_users_settings' ), 10, 1 );
 		add_filter( 'um_settings_map', array( &$this, 'add_settings_sanitize' ), 10, 1 );
 		add_filter( 'jb_can_applied_job', array( &$this, 'lock_for_unverified' ), 10, 1 );
 	}
+
 
 	/**
 	 * Maybe auto-verify user after registration on posting job
@@ -31,10 +32,8 @@ class Verified_Users {
 	 *
 	 * @param $user_id
 	 */
-	function maybe_verify( $user_id ) {
-		if ( function_exists( 'um_verified_registration_complete' ) ) {
-			um_verified_registration_complete( $user_id );
-		}
+	public function maybe_verify( $user_id ) {
+		UM()->module( 'verified-users' )->common()->user()->maybe_verify_after_registration( $user_id );
 	}
 
 
@@ -43,7 +42,7 @@ class Verified_Users {
 	 *
 	 * @return array
 	 */
-	function add_verified_users_settings( $settings_fields ) {
+	public function add_verified_users_settings( $settings_fields ) {
 		$settings_fields[] = array(
 			'id'          => 'job_apply_only_verified',
 			'type'        => 'checkbox',
@@ -79,12 +78,12 @@ class Verified_Users {
 	 *
 	 * @return bool
 	 */
-	function lock_for_unverified( $can_applied ) {
+	public function lock_for_unverified( $can_applied ) {
 		if ( ! UM()->options()->get( 'job_apply_only_verified' ) ) {
 			return $can_applied;
 		}
 
-		if ( ! is_user_logged_in() || ( is_user_logged_in() && ! UM()->Verified_Users_API()->api()->is_verified( get_current_user_id() ) ) ) {
+		if ( ! is_user_logged_in() || ( is_user_logged_in() && ! UM()->module( 'verified-users' )->common()->user()->is_verified( get_current_user_id() ) ) ) {
 			$can_applied = false;
 		}
 

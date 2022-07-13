@@ -18,7 +18,7 @@ class Activity {
 	/**
 	 * Activity constructor.
 	 */
-	function __construct() {
+	public function __construct() {
 		add_filter( 'um_activity_global_actions', array( &$this, 'social_activity_action' ), 10, 1 );
 		add_action( 'jb_job_submission_after_create_account', array( &$this, 'social_activity_new_user' ), 10, 1 );
 	}
@@ -32,7 +32,7 @@ class Activity {
 	 *
 	 * @since 1.0
 	 */
-	function social_activity_action( $actions ) {
+	public function social_activity_action( $actions ) {
 		$actions['new-jobboardwp-job']    = __( 'New job', 'ultimate-member' );
 		$actions['jobboardwp-job-filled'] = __( 'Job is filled', 'ultimate-member' );
 		return $actions;
@@ -40,11 +40,11 @@ class Activity {
 
 
 	/**
-	 * Add new user activity post
+	 * Add new user activity post after registration via Job Posting form
 	 *
 	 * @param array $user_id
 	 */
-	function social_activity_new_user( $user_id ) {
+	public function social_activity_new_user( $user_id ) {
 		do_action( 'um_after_user_is_approved', $user_id );
 	}
 }

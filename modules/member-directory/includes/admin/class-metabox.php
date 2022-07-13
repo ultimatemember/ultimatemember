@@ -394,9 +394,9 @@ class Metabox {
 	function add_metabox() {
 		global $current_screen;
 
-		if ( $current_screen->id == 'um_directory' ) {
-			add_action( 'add_meta_boxes', array(&$this, 'add_metabox_directory'), 1 );
-			add_action( 'save_post', array(&$this, 'save_metabox_directory'), 10, 2 );
+		if ( 'um_directory' === $current_screen->id ) {
+			add_action( 'add_meta_boxes', array( &$this, 'add_metabox_directory' ), 1 );
+			add_action( 'save_post', array( &$this, 'save_metabox_directory' ), 10, 2 );
 		}
 	}
 
@@ -468,7 +468,7 @@ class Metabox {
 		}
 
 		// validate post type
-		if ( $post->post_type != 'um_directory' ) {
+		if ( 'um_directory' !== $post->post_type ) {
 			return;
 		}
 
@@ -525,9 +525,9 @@ class Metabox {
 
 						$posts = $wpdb->get_col(
 							"SELECT post_id
-								FROM {$wpdb->postmeta}
-								WHERE meta_key = '_um_mode' AND
-									  meta_value = 'directory'"
+							FROM {$wpdb->postmeta}
+							WHERE meta_key = '_um_mode' AND
+								  meta_value = 'directory'"
 						);
 
 						foreach ( $posts as $p_id ) {

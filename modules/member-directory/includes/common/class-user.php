@@ -48,11 +48,11 @@ class User {
 		$md_data = get_user_meta( $object_id, 'um_member_directory_data', true );
 		if ( empty( $md_data ) ) {
 			$md_data = array(
-				'account_status'    => 'approved',
-				'hide_in_members'   => UM()->module( 'member-directory' )->get_hide_in_members_default(),
-				'profile_photo'     => false,
-				'cover_photo'       => false,
-				'verified'          => false,
+				'account_status'  => 'approved',
+				'hide_in_members' => UM()->module( 'member-directory' )->get_hide_in_members_default(),
+				'profile_photo'   => false,
+				'cover_photo'     => false,
+				'verified'        => false,
 			);
 		}
 

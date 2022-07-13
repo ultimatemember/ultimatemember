@@ -174,7 +174,7 @@ jQuery(document).ready(function() {
 
 	um_admin_init_icon_select();
 
-	if ( jQuery('.wp-submenu a[href="https://ultimatemember.com/pricing-beta"]').length ) {
-		jQuery('.wp-submenu a[href="https://ultimatemember.com/pricing-beta"]').attr('target', '_blank');
+	if ( jQuery('.wp-submenu a[href="https://ultimatemember.com/pricing"]').length ) {
+		jQuery('.wp-submenu a[href="https://ultimatemember.com/pricing"]').attr('target', '_blank');
 	}
 });

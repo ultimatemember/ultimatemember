@@ -1,15 +1,3 @@
-.um-admin.post-type-um_directory .manage-column.column-id {
-  width: 60px; }
-
-.um-admin.post-type-um_directory .manage-column.column-title {
-  width: 250px; }
-
-.um-admin.post-type-um_directory .manage-column.column-is_default {
-  width: 60px; }
-
-.um-admin.post-type-um_directory td.column-shortcode, .um-admin.post-type-um_directory td.column-id {
-  font-size: 14px; }
-
 .um-directory .um-member-directory-header .um-member-directory-header-row.um-member-directory-search-row {
   justify-content: flex-start; }
 
@@ -1120,3 +1108,17 @@ div.um .g-recaptcha {
 
 .um-password .um-field .g-recaptcha {
   margin-bottom: 0; }
+
+.login.has-normal-um-recaptcha #login {
+  width: 354px; }
+
+.login.has-normal-um-recaptcha #um-login-recaptcha {
+  margin-bottom: 16px; }
+
+.login.has-compact-um-recaptcha #um-login-recaptcha {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  margin-bottom: 16px; }

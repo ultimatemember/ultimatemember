@@ -40,15 +40,16 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 		 * Metabox constructor.
 		 */
 		function __construct() {
-			$this->in_edit = false;
+			$this->in_edit         = false;
 			$this->edit_mode_value = null;
-			$this->edit_array = [];
+			$this->edit_array      = array();
 
 			add_action( 'admin_head', array( &$this, 'admin_head' ), 9);
 			add_action( 'admin_footer', array( &$this, 'load_modal_content' ), 9 );
 
 			add_action( 'load-post.php', array( &$this, 'add_metabox' ), 9 );
 			add_action( 'load-post-new.php', array( &$this, 'add_metabox' ), 9 );
+			add_action( 'admin_footer', array( &$this, 'load_field_order' ), 9 );
 
 			add_action( 'admin_init', array( &$this, 'remove_meta_box' ), 0 );
 			add_action( 'admin_init', array( &$this, 'add_taxonomy_metabox' ), 9 );
@@ -60,7 +61,6 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			add_filter( 'um_restrict_content_hide_metabox', array( &$this, 'hide_metabox_restrict_content_shop' ), 10, 1 );
 
 			add_filter( 'post_updated_messages', array( &$this, 'post_updated_messages' ) );
-
 			add_filter( 'enter_title_here', array( &$this, 'enter_title_here' ), 10, 2 );
 
 			// WP Dashboard
@@ -214,15 +214,12 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 		function add_metabox() {
 			global $current_screen;
 
-			if ( $current_screen->id == 'um_form' ) {
-				add_action( 'add_meta_boxes', array( &$this, 'add_metabox_form' ), 1 );
-				add_action( 'save_post', array(&$this, 'save_metabox_form'), 10, 2 );
-			}
+			add_action( 'add_meta_boxes', array( &$this, 'add_metabox_form' ), 1 );
+			add_action( 'save_post', array( &$this, 'save_metabox_form' ), 10, 2 );
 
 			//restrict content metabox
 			$post_types = UM()->options()->get( 'restricted_access_post_metabox' );
 			if ( ! empty( $post_types[ $current_screen->id ] ) ) {
-
 				/**
 				 * UM hook
 				 *
@@ -246,16 +243,15 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 				$hide_metabox = apply_filters( 'um_restrict_content_hide_metabox', false );
 
 				if ( ! $hide_metabox ) {
-					add_action( 'add_meta_boxes', array(&$this, 'add_metabox_restrict_content'), 1 );
+					add_action( 'add_meta_boxes', array( &$this, 'add_metabox_restrict_content' ), 1 );
 					add_action( 'save_post', array( &$this, 'save_metabox_restrict_content' ), 10, 2 );
 				}
 
-				if ( $current_screen->id == 'attachment' ) {
+				if ( 'attachment' === $current_screen->id ) {
 					add_action( 'add_attachment', array( &$this, 'save_attachment_metabox_restrict_content' ), 10, 2 );
 					add_action( 'edit_attachment', array( &$this, 'save_attachment_metabox_restrict_content' ), 10, 2 );
 				}
 			}
-
 
 			add_action( 'save_post', array( &$this, 'save_metabox_custom' ), 10, 2 );
 		}
@@ -354,8 +350,9 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			$exclude_taxonomies = UM()->excluded_taxonomies();
 
 			foreach ( $all_taxonomies as $key => $taxonomy ) {
-				if ( in_array( $key, $exclude_taxonomies ) || empty( $tax_types[$key] ) )
+				if ( in_array( $key, $exclude_taxonomies ) || empty( $tax_types[ $key ] ) ) {
 					continue;
+				}
 
 				add_action( $taxonomy . '_add_form_fields', array( &$this, 'um_category_access_fields_create' ) );
 				add_action( $taxonomy . '_edit_form_fields', array( &$this, 'um_category_access_fields_edit' ) );
@@ -854,7 +851,7 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 		/**
 		 * Add role metabox
 		 */
-		function add_metabox_role() {
+		public function add_metabox_role() {
 			$callback = array( &$this, 'load_metabox_role' );
 
 			$roles_metaboxes = array(
@@ -1004,7 +1001,6 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 		}
 
 
-
 		/**
 		 *
 		 */
@@ -1052,8 +1048,14 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 
 		/**
 		 * Add form metabox
+		 *
+		 * @param string $post_type
 		 */
-		function add_metabox_form() {
+		function add_metabox_form( $post_type ) {
+			if ( 'um_form' !== $post_type ) {
+				return;
+			}
+
 			add_meta_box( 'submitdiv', __( 'Publish', 'ultimate-member' ), array( $this, 'custom_submitdiv' ), 'um_form', 'side', 'high' );
 
 			add_meta_box( 'um-admin-form-mode', __( 'Select Form Type', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'high' );
@@ -1073,6 +1075,29 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 
 
 		/**
+		 * Load form to maintain form builder order
+		 * avoid using inside builder metabox to avoid nesting <form>
+		 */
+		public function load_field_order() {
+			global $current_screen;
+
+			if ( ! isset( $current_screen->id ) || 'um_form' !== $current_screen->id ) {
+				return;
+			}
+			?>
+
+			<form action="" method="post" class="um_update_order">
+				<input type="hidden" name="form_id" id="form_id" value="<?php echo esc_attr( get_the_ID() ); ?>" />
+				<input type="hidden" name="action" value="um_update_order" />
+				<input type="hidden" name="nonce" value="<?php echo esc_attr( wp_create_nonce( 'um-admin-nonce' ) ) ?>" />
+				<div class="um_update_order_fields"></div>
+			</form>
+
+			<?php
+		}
+
+
+		/**
 		 * Save form metabox
 		 *
 		 * @param $post_id
@@ -1081,14 +1106,14 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 		function save_metabox_form( $post_id, $post ) {
 			global $wpdb;
 
-			// validate nonce
-			if ( ! isset( $_POST['um_admin_save_metabox_form_nonce'] ) ||
-				 ! wp_verify_nonce( $_POST['um_admin_save_metabox_form_nonce'], basename( __FILE__ ) ) ) {
+			// validate post type
+			if ( 'um_form' !== $post->post_type ) {
 				return;
 			}
 
-			// validate post type
-			if ( $post->post_type != 'um_form' ) {
+			// validate nonce
+			if ( ! isset( $_POST['um_admin_save_metabox_form_nonce'] ) ||
+				 ! wp_verify_nonce( $_POST['um_admin_save_metabox_form_nonce'], basename( __FILE__ ) ) ) {
 				return;
 			}
 
@@ -1108,7 +1133,6 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			delete_post_meta( $post_id, '_um_profile_metafields' );
 
 			$form_meta = UM()->admin()->sanitize_form_meta( $_POST['form'] );
-
 			foreach ( $form_meta as $k => $v ) {
 				if ( strstr( $k, '_um_' ) ) {
 					if ( $k === '_um_is_default' ) {
@@ -1130,7 +1154,6 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 					update_post_meta( $post_id, $k, $v );
 				}
 			}
-
 		}
 
 

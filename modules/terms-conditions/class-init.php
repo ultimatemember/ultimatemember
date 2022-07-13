@@ -2,7 +2,9 @@
 namespace umm\terms_conditions;
 
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 
 /**
@@ -40,23 +42,21 @@ final class Init {
 	 * Init constructor.
 	 */
 	function __construct() {
-		// common classes
-		$this->common();
-
+		$this->common()->includes();
 		if ( UM()->is_request( 'admin' ) ) {
-			$this->admin();
+			$this->admin()->includes();
 		}
 	}
 
 
 	/**
-	 * @return includes\Common()
+	 * @return includes\common\Init()
 	 */
 	function common() {
-		if ( empty( UM()->classes['umm\terms_conditions\includes\common'] ) ) {
-			UM()->classes['umm\terms_conditions\includes\common'] = new includes\Common();
+		if ( empty( UM()->classes['umm\terms_conditions\includes\common\init'] ) ) {
+			UM()->classes['umm\terms_conditions\includes\common\init'] = new includes\common\Init();
 		}
-		return UM()->classes['umm\terms_conditions\includes\common'];
+		return UM()->classes['umm\terms_conditions\includes\common\init'];
 	}
 
 

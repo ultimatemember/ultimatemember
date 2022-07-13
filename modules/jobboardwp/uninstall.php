@@ -1,41 +1,47 @@
 <?php
-/**
- * Uninstall UM JobBoardWP
- *
- */
-
-// Exit if accessed directly.
-if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit;
-
-
-if ( ! defined( 'um_jobboardwp_path' ) ) {
-	define( 'um_jobboardwp_path', plugin_dir_path( __FILE__ ) );
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
-if ( ! defined( 'um_jobboardwp_url' ) ) {
-	define( 'um_jobboardwp_url', plugin_dir_url( __FILE__ ) );
-}
+$install_class = UM()->call_class( 'umm\jobboardwp\Install' );
 
-if ( ! defined( 'um_jobboardwp_plugin' ) ) {
-	define( 'um_jobboardwp_plugin', plugin_basename( __FILE__ ) );
-}
-
+// Remove settings
 $options = get_option( 'um_options', array() );
+foreach ( $install_class->settings_defaults as $k => $v ) {
+	unset( $options[ $k ] );
+}
+update_option( 'um_options', $options );
 
-if ( ! empty( $options['uninstall_on_delete'] ) ) {
-	if ( ! class_exists( 'um_ext\um_jobboardwp\core\Setup' ) ) {
-		require_once um_jobboardwp_path . 'includes/core/class-setup.php';
+// Remove notifications if exists
+$table_exists = $wpdb->query("SHOW TABLES LIKE '{$wpdb->prefix}um_notifications'" );
+if (  ! empty( $table_exists ) ) {
+	$wpdb->query(
+		"DELETE
+		FROM {$wpdb->prefix}um_notifications
+		WHERE type = 'jb_job_approved' OR 
+		      type = 'jb_job_expired'"
+	);
+}
+
+// Remove UM Role metadata
+$all_roles = UM()->roles()->get_roles();
+$role_keys = array_keys( $all_roles );
+foreach ( $role_keys as $role_key ) {
+	$role_meta = get_option( "um_role_{$role_key}_meta", array() );
+
+	$need_upgrade = false;
+	$remove_keys  = array(
+		'_um_disable_jobs_tab',
+	);
+
+	foreach ( $remove_keys as $remove_key ) {
+		if ( array_key_exists( $remove_key, $role_meta ) ) {
+			$need_upgrade = true;
+			unset( $role_meta[ $remove_key ] );
+		}
 	}
 
-	$jb_setup = new um_ext\um_jobboardwp\core\Setup();
-
-	//remove settings
-	foreach ( $jb_setup->settings_defaults as $k => $v ) {
-		unset( $options[ $k ] );
+	if ( $need_upgrade ) {
+		update_option( "um_role_{$role_key}_meta", $role_meta );
 	}
-
-	update_option( 'um_options', $options );
-
-	delete_option( 'um_jobboardwp_last_version_upgrade' );
-	delete_option( 'um_jobboardwp_version' );
 }

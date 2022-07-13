@@ -1551,9 +1551,9 @@ if ( ! class_exists( 'UM' ) ) {
 		 *
 		 * @param $slug
 		 *
-		 * @return mixed
+		 * @return bool|mixed
 		 */
-		function module( $slug ) {
+		public function module( $slug ) {
 			$data = $this->modules()->get_data( $slug );
 			if ( ! empty( $data['path'] ) ) {
 				$slug = $this->undash( $slug );

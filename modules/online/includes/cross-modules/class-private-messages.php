@@ -16,21 +16,22 @@ class Private_Messages {
 	/**
 	 * Private_Messages constructor.
 	 */
-	function __construct() {
+	public function __construct() {
 		add_action( 'um_messaging_conversation_list_name', array( &$this, 'messaging_show_online_dot' ) );
 		add_action( 'um_messaging_conversation_list_name_js', array( &$this, 'messaging_show_online_dot_js' ) );
 		add_filter( 'um_messaging_conversation_json_data', array( &$this, 'messaging_online_status' ), 10, 1 );
 	}
 
+
 	/**
 	 * Show online dot in messaging extension
 	 */
-	function messaging_show_online_dot() {
-		if ( UM()->module( 'online' )->user()->is_hidden_status( um_user('ID') ) ) {
+	public function messaging_show_online_dot() {
+		if ( UM()->module( 'online' )->common()->user()->is_hidden_status( um_user('ID') ) ) {
 			return;
 		}
 
-		$args['is_online'] = UM()->module( 'online' )->user()->is_online( um_user('ID') );
+		$args['is_online'] = UM()->module( 'online' )->common()->user()->is_online( um_user('ID') );
 
 		um_get_template( 'online-marker.php', $args, 'online' );
 	}
@@ -41,12 +42,14 @@ class Private_Messages {
 	 * JS template for conversations list
 	 *
 	 */
-	function messaging_show_online_dot_js() {
-		ob_start(); ?>
+	public function messaging_show_online_dot_js() {
+		ob_start();
+		?>
 
 		<span class="um-online-status <# if ( conversation.online ) { #>online<# } else { #>offline<# } #>"><i class="fas fa-circle"></i></span>
 
-		<?php ob_end_flush();
+		<?php
+		ob_end_flush();
 	}
 
 
@@ -57,8 +60,8 @@ class Private_Messages {
 	 *
 	 * @return array $conversation
 	 */
-	function messaging_online_status( $conversation ) {
-		$conversation['online'] = UM()->module( 'online' )->user()->is_online( um_user('ID') );
+	public function messaging_online_status( $conversation ) {
+		$conversation['online'] = UM()->module( 'online' )->common()->user()->is_online( um_user('ID') );
 		return $conversation;
 	}
 }
