@@ -30,6 +30,21 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 			return UM()->roles()->get_roles();
 		}
 
+		private function get_active_modules() {
+			$modules = UM()->modules()->get_list();
+			$active_modules = array();
+			if ( ! empty( $modules ) ) {
+				foreach ( $modules as $slug => $data ) {
+					if ( UM()->modules()->is_active( $slug ) ) {
+						$active_modules[ $slug ] = $data['title'];
+
+					}
+				}
+			}
+
+			return apply_filters( 'um_debug_information_active_modules', $active_modules );
+		}
+
 
 		/**
 		 * Add our data to Site Health information.
@@ -62,6 +77,10 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 				'label'       => __( 'Ultimate Member', 'ultimate-member' ),
 				'description' => __( 'This debug information for your Ultimate Member installation can assist you in getting support.', 'ultimate-member' ),
 				'fields'      => array(
+					'um-active_modules' => array(
+						'label' => __( 'Active modules', 'ultimate-member' ),
+						'value' => $this->get_active_modules(),
+					),
 					'um-register_role' => array(
 						'label' => __( 'Default New User Role', 'ultimate-member' ),
 						'value' => get_option( 'default_role' ),
@@ -406,7 +425,7 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 				),
 			);
 
-			$emails      = UM()->config()->get( 'email_notifications' );
+			$emails  = UM()->config()->get( 'email_notifications' );
 			foreach ( $emails as $key => $email ) {
 				if ( 1 == UM()->options()->get( $key . '_on' ) ) {
 					$email_settings['um-' . $key ] = array(
