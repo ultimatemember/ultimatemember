@@ -308,7 +308,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					// Admin filtering
 					$directory_search_filters = get_post_meta( $directory_id, '_um_search_filters', true );
-					unset( $directory_search_filters[ $id ] );
+					if ( isset( $directory_search_filters[ $id ] ) ) {
+						unset( $directory_search_filters[ $id ] );
+					}
 					update_post_meta( $directory_id, '_um_search_filters', $directory_search_filters );
 
 					// display in tagline
