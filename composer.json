@@ -10,7 +10,14 @@
     "woocommerce/action-scheduler": "3.2.1"
   },
   "require-dev": {
-    "roave/security-advisories": "dev-master"
+    "roave/security-advisories": "dev-master",
+    "wp-cli/wp-cli": "*",
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
+    "object-calisthenics/phpcs-calisthenics-rules": "*",
+    "phpcompatibility/phpcompatibility-wp": "*",
+    "wp-coding-standards/wpcs": "2.3.0",
+    "squizlabs/php_codesniffer": "3.*",
+    "phpdocumentor/phpdocumentor": "3.1.*"
   },
   "extra": {
     "installer-paths": {
