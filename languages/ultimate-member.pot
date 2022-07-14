@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Ultimate Member plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ultimate Member 2.4.1\n"
+"Project-Id-Version: Ultimate Member 2.4.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ultimate-member\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-06-10T22:44:16+00:00\n"
+"POT-Creation-Date: 2022-07-14T15:29:05+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: ultimate-member\n"
@@ -121,7 +121,7 @@ msgstr ""
 #: includes/admin/core/class-admin-builder.php:776
 #: includes/admin/core/class-admin-dragdrop.php:33
 #: includes/admin/core/class-admin-menu.php:106
-#: includes/core/class-fields.php:4761
+#: includes/core/class-fields.php:4771
 msgid "Please login as administrator"
 msgstr ""
 
@@ -1317,10 +1317,10 @@ msgid "The text that appears on the button. e.g. Upload"
 msgstr ""
 
 #: includes/admin/core/class-admin-metabox.php:2017
-#: includes/core/class-fields.php:1825
-#: includes/core/class-fields.php:1866
-#: includes/core/class-fields.php:2737
-#: includes/core/class-fields.php:2827
+#: includes/core/class-fields.php:1827
+#: includes/core/class-fields.php:1868
+#: includes/core/class-fields.php:2739
+#: includes/core/class-fields.php:2829
 msgid "Upload"
 msgstr ""
 
@@ -3097,7 +3097,7 @@ msgid "UM Action"
 msgstr ""
 
 #: includes/admin/core/class-admin-users.php:193
-#: includes/core/class-fields.php:2807
+#: includes/core/class-fields.php:2809
 msgid "Apply"
 msgstr ""
 
@@ -4272,8 +4272,8 @@ msgstr ""
 #: includes/admin/templates/modal/forms/fonticons.php:14
 #: includes/admin/templates/role/publish.php:30
 #: includes/class-config.php:254
-#: includes/core/class-fields.php:2808
-#: includes/core/class-fields.php:2915
+#: includes/core/class-fields.php:2810
+#: includes/core/class-fields.php:2917
 #: includes/core/um-actions-profile.php:842
 #: includes/core/um-actions-profile.php:854
 #: includes/core/um-actions-profile.php:1042
@@ -4813,7 +4813,7 @@ msgstr ""
 #. translators: %s: The message after registration process based on a role data and user status after registration
 #. translators: %s: Restricted taxonomy message.
 #: includes/core/class-access.php:733
-#: includes/core/class-fields.php:1446
+#: includes/core/class-fields.php:1448
 #: includes/core/um-actions-account.php:497
 #: templates/message.php:8
 #: templates/restricted-taxonomy.php:47
@@ -7093,97 +7093,97 @@ msgstr ""
 msgid "Less than 1 year old"
 msgstr ""
 
-#: includes/core/class-fields.php:1467
+#: includes/core/class-fields.php:1469
 msgid "Custom Field"
 msgstr ""
 
-#: includes/core/class-fields.php:1814
+#: includes/core/class-fields.php:1816
 msgid "Please upload a valid image!"
 msgstr ""
 
-#: includes/core/class-fields.php:1828
+#: includes/core/class-fields.php:1830
 msgid "Sorry this is not a valid image."
 msgstr ""
 
-#: includes/core/class-fields.php:1831
+#: includes/core/class-fields.php:1833
 msgid "This image is too large!"
 msgstr ""
 
-#: includes/core/class-fields.php:1834
+#: includes/core/class-fields.php:1836
 msgid "This image is too small!"
 msgstr ""
 
-#: includes/core/class-fields.php:1837
+#: includes/core/class-fields.php:1839
 msgid "You can only upload one image"
 msgstr ""
 
-#: includes/core/class-fields.php:1869
+#: includes/core/class-fields.php:1871
 msgid "Sorry this is not a valid file."
 msgstr ""
 
-#: includes/core/class-fields.php:1872
+#: includes/core/class-fields.php:1874
 msgid "This file is too large!"
 msgstr ""
 
-#: includes/core/class-fields.php:1875
+#: includes/core/class-fields.php:1877
 msgid "This file is too small!"
 msgstr ""
 
-#: includes/core/class-fields.php:1878
+#: includes/core/class-fields.php:1880
 msgid "You can only upload one file"
 msgstr ""
 
-#: includes/core/class-fields.php:2407
+#: includes/core/class-fields.php:2409
 msgid "Current Password"
 msgstr ""
 
-#: includes/core/class-fields.php:2438
+#: includes/core/class-fields.php:2440
 msgid "New Password"
 msgstr ""
 
-#: includes/core/class-fields.php:2481
-#: includes/core/class-fields.php:2500
+#: includes/core/class-fields.php:2483
 #: includes/core/class-fields.php:2502
+#: includes/core/class-fields.php:2504
 msgid "Confirm %s"
 msgstr ""
 
-#: includes/core/class-fields.php:2747
+#: includes/core/class-fields.php:2749
 msgid "Upload Photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2774
-#: includes/core/class-fields.php:2807
+#: includes/core/class-fields.php:2776
+#: includes/core/class-fields.php:2809
 #: includes/core/um-actions-profile.php:1073
 msgid "Change photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2807
-#: includes/core/class-fields.php:2914
+#: includes/core/class-fields.php:2809
+#: includes/core/class-fields.php:2916
 msgid "Processing..."
 msgstr ""
 
-#: includes/core/class-fields.php:2832
+#: includes/core/class-fields.php:2834
 msgid "Upload File"
 msgstr ""
 
-#: includes/core/class-fields.php:2876
+#: includes/core/class-fields.php:2878
 #: includes/core/um-filters-fields.php:314
 msgid "This file has been removed."
 msgstr ""
 
-#: includes/core/class-fields.php:2880
+#: includes/core/class-fields.php:2882
 msgid "Change file"
 msgstr ""
 
-#: includes/core/class-fields.php:2914
+#: includes/core/class-fields.php:2916
 msgid "Save"
 msgstr ""
 
-#: includes/core/class-fields.php:4490
+#: includes/core/class-fields.php:4500
 msgid "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some information!"
 msgstr ""
 
-#: includes/core/class-fields.php:4492
+#: includes/core/class-fields.php:4502
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
@@ -7251,6 +7251,13 @@ msgstr ""
 #: includes/core/class-password.php:720
 #: includes/core/class-profile.php:517
 msgid "Your set password"
+msgstr ""
+
+#: includes/core/class-member-directory-meta.php:450
+#: includes/core/class-member-directory-meta.php:456
+#: includes/core/class-member-directory.php:2469
+#: includes/core/class-member-directory.php:2475
+msgid "Wrong member directory data"
 msgstr ""
 
 #: includes/core/class-member-directory.php:292
