@@ -1,6 +1,9 @@
 name: JobBoardWP GitHub Actions
 
-on: push
+on:
+  push:
+    branches:
+      - development/3.0
 
 jobs:
   build:
