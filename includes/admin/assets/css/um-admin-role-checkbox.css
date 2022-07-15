@@ -1,0 +1,9 @@
+input[type="checkbox"] {    max-width: 1rem; }
+
+label[for="role"],
+select#role,
+label[for="um-role"],
+select#um-role,
+h3#um_user_screen_block,
+div#um_role_selector_wrapper {    display: none; }
+

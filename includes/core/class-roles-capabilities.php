@@ -166,30 +166,67 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 		 * @uses apply_filters() Calls 'um_set_user_role' with the role and user id
 		 * @return string
 		 */
-		function set_role( $user_id, $new_role = '' ) {
+		function set_role( $user_id, $new_roles = array() ) {
 			// Validate user id
 			$user = get_userdata( $user_id );
 
+			$curruserpriority=$this->get_role_priority($this->get_priority_user_role(get_current_user_id()));
+
 			// User exists
 			if ( ! empty( $user ) ) {
-				// Get users old UM role
-				$role = UM()->roles()->get_um_user_role( $user_id );
+				/* $new_roles is the list of roles we want the user to have.
+				 * $user->roles are the roles the user already has.  We need to remove any roles
+				 * that the user should no longer have, and add roles that the user needs to get
+				 */
+				// Make sure there are no invalid roles provided...
+				$allroles = get_editable_roles();
+				$new_roles = array_intersect( $new_roles, array_keys( $allroles ) );
 
-				// User already has this role so no new role is set
-				if ( $new_role === $role || ( ! $this->is_role_custom( $new_role ) && user_can( $user, $new_role ) ) ) {
-					$new_role = false;
+				// Find roles that might have been deleted and the user should no longer have
+				$roles_to_remove = array_diff( $user->roles,  array_keys( $allroles ) );
+				$user_roles = array_intersect( $user->roles,  array_keys( $allroles ) );
+
+				do_action( 'um_before_user_role_is_changed' );
+
+				if ( ! $new_roles ) {
+					$roles_to_remove=$user->roles;
 				} else {
+					$roles_to_remove = array_merge($roles_to_remove,array_diff( $user_roles, $new_roles ));
+				}
+				foreach ( $roles_to_remove as $role ) {
+					$role_priority=$this->get_role_priority($role);
+					if ( $curruserpriority >= $role_priority) {
+						$user->remove_role( $role );
+					}
+				}
+				foreach (array_diff($new_roles, $user->roles) as $role) {
+					$role_priority=$this->get_role_priority($role);
+					if ( $curruserpriority >= $role_priority) {
+						do_action( 'um_when_role_is_set', $user_id );
+						$user->add_role( $role );
+						do_action( 'um_after_user_role_is_updated', $user_id, $role );
+					}
+				} 
+
+				do_action( 'um_after_user_role_is_changed' );
+
+// This whole section below can be removed. since we are doing similar. I haven't done it yet
+// since I am not sure how the hooks are supposed to be used.
+				// User already has this role so no new role is set
+//				if ( $new_role === $role || ( ! $this->is_role_custom( $new_role ) && user_can( $user, $new_role ) ) ) {
+//					$new_role = false;
+//				} else {
 					// Users role is different than the new role
 
 					// Remove the old UM role
-					if ( ! empty( $role ) && $this->is_role_custom( $role ) ) {
-						$user->remove_role( $role );
-					}
+//					if ( ! empty( $role ) && $this->is_role_custom( $role ) ) {
+//						$user->remove_role( $role );
+//					}
 
 					// Add the new role
-					if ( ! empty( $new_role ) ) {
-						$user->add_role( $new_role );
-					}
+//					if ( ! empty( $new_role ) ) {
+//						$user->add_role( $new_role );
+//					}
 
 					/**
 					 * UM hook
@@ -210,7 +247,7 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 					 * }
 					 * ?>
 					 */
-					do_action( 'um_when_role_is_set', $user_id );
+//					do_action( 'um_when_role_is_set', $user_id );
 					/**
 					 * UM hook
 					 *
@@ -228,9 +265,9 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 					 * }
 					 * ?>
 					 */
-					do_action( 'um_before_user_role_is_changed' );
+//					do_action( 'um_before_user_role_is_changed' );
 
-					UM()->user()->profile['role'] = $new_role;
+//					UM()->user()->profile['role'] = $new_role;
 
 					/**
 					 * UM hook
@@ -252,9 +289,9 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 					 * }
 					 * ?>
 					 */
-					do_action( 'um_member_role_upgrade', $role, UM()->user()->profile['role'] );
+//					do_action( 'um_member_role_upgrade', $role, UM()->user()->profile['role'] );
 
-					UM()->user()->update_usermeta_info( 'role' );
+//					UM()->user()->update_usermeta_info( 'role' );
 					/**
 					 * UM hook
 					 *
@@ -272,7 +309,7 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 					 * }
 					 * ?>
 					 */
-					do_action( 'um_after_user_role_is_changed' );
+//					do_action( 'um_after_user_role_is_changed' );
 					/**
 					 * UM hook
 					 *
@@ -293,11 +330,11 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 					 * }
 					 * ?>
 					 */
-					do_action( 'um_after_user_role_is_updated', $user_id, $role );
-				}
+//					do_action( 'um_after_user_role_is_updated', $user_id, $role );
+//				}
 			} else {
 				// User does don exist so return false
-				$new_role = false;
+ 				$new_role = false;
 			}
 
 			/**
@@ -323,7 +360,7 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			 * }
 			 * ?>
 			 */
-			return apply_filters( 'um_set_user_role', $new_role, $user_id, $user );
+			return apply_filters( 'um_set_user_role', $new_roles, $user_id, $user );
 		}
 
 
@@ -388,6 +425,31 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			}
 
 			return array_values( $user->roles );
+		}
+
+		function get_role_priority( $role ) {
+			$um_roles_keys = get_option( 'um_roles', array() );
+
+			if ( ! empty( $um_roles_keys ) ) {
+				$um_roles_keys = array_map(
+					function( $item ) {
+						return 'um_' . $item;
+					},
+					$um_roles_keys
+				);
+			}
+
+			if ( ! empty( $um_roles_keys ) && in_array( $role, $um_roles_keys, true ) ) {
+				$userrole_metakey = substr( $role, 3 );
+			} else {
+				$userrole_metakey = $role;
+			}
+
+			$rolemeta = get_option( "um_role_{$userrole_metakey}_meta", false );
+
+			$priority = ! empty( $rolemeta['_um_priority'] ) ? $rolemeta['_um_priority'] : 0;
+
+			return $priority;
 		}
 
 

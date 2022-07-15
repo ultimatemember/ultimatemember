@@ -1,5 +1,15 @@
 jQuery( document ).ready( function() {
+	var row = jQuery('select#role').closest('tr');
+	var clone = row.clone();
+	row.html(jQuery('.um-roles-container tr').html());
+	jQuery('.um-roles-container').remove();
 
+	jQuery('input[name="um_user_roles_general"]').change(function() {
+		var checkedValue = jQuery('input:checkbox:checked').map(function() { return this.value; }).get();
+		jQuery('#um_user_roles_general').val(checkedValue);
+	});
+
+/*  The roles are now checkboxes and there is no longer a separate UM section in the user-edit page.
 	jQuery( '#role' ).on('change', function() {
 
 		if ( typeof um_roles == 'object' ) {
@@ -38,5 +48,5 @@ jQuery( document ).ready( function() {
 			jQuery( '#um_user_screen_block' ).show();
 		}
 	}).trigger('change');
-
+*/
 });
