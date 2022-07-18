@@ -62,6 +62,20 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 		}
 
 
+		private function get_field_data( $info, $key, $field_key, $field ) {
+			$row   = isset( $field['metakey'] ) ? false : true;
+			$title = $row ? __( 'Row: ', 'ultimate-member' ) . $field['id'] : __( 'Field: ', 'ultimate-member' ) . $field['metakey'];
+			$field_info = array(
+				'um-field_'.$field_key => array(
+					'label' => $title,
+					'value' => $field,
+				),
+			);
+
+			return $field_info;
+		}
+
+
 		/**
 		 * Add our data to Site Health information.
 		 *
@@ -552,6 +566,18 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 								)
 							);
 						}
+
+						$fields = get_post_meta( $key, '_um_custom_fields', true );
+						if ( ! empty( $fields ) ) {
+							foreach ( $fields as $field_key => $field ) {
+								$field_info = $this->get_field_data( $info, $key, $field_key, $field );
+
+								$info['ultimate-member-' . $key ]['fields'] = array_merge(
+									$info['ultimate-member-' . $key ]['fields'],
+									$field_info
+								);
+							}
+						}
 					} elseif ( 'login' == get_post_meta( $key, '_um_mode', true ) ){
 						$login_redirect_options = array(
 							'0'                => __( 'Default', 'ultimate-member' ),
@@ -596,6 +622,18 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 									),
 								)
 							);
+						}
+
+						$fields = get_post_meta( $key, '_um_custom_fields', true );
+						if ( ! empty( $fields ) ) {
+							foreach ( $fields as $field_key => $field ) {
+								$field_info = $this->get_field_data( $info, $key, $field_key, $field );
+
+								$info['ultimate-member-' . $key ]['fields'] = array_merge(
+									$info['ultimate-member-' . $key ]['fields'],
+									$field_info
+								);
+							}
 						}
 					} elseif ( 'profile' == get_post_meta( $key, '_um_mode', true ) ) {
 						$info['ultimate-member-' . $key ]['fields'] = array_merge(
@@ -754,7 +792,6 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 								);
 							}
 
-
 							$tab_form_settings = apply_filters( 'um_debug_information_tab_form', array() );
 							$info['ultimate-member-' . $key ]['fields'] = array_merge(
 								$info['ultimate-member-' . $key ]['fields'],
@@ -762,7 +799,17 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 							);
 						}
 
+						$fields = get_post_meta( $key, '_um_custom_fields', true );
+						if ( ! empty( $fields ) ) {
+							foreach ( $fields as $field_key => $field ) {
+								$field_info = $this->get_field_data( $info, $key, $field_key, $field );
 
+								$info['ultimate-member-' . $key ]['fields'] = array_merge(
+									$info['ultimate-member-' . $key ]['fields'],
+									$field_info
+								);
+							}
+						}
 					}
 
 
