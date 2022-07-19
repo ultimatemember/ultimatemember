@@ -511,13 +511,30 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 
 
 			// User roles settings
+			$roles_array = array();
+			foreach ( $this->get_roles() as $key => $role ) {
+				if ( strpos( $key, 'um_' ) === 0 ) {
+					$key = substr( $key, 3 );
+				}
+				$rolemeta = $this->get_role_meta( $key );
+				if ( false === $rolemeta ) {
+					$rolemeta = 0;
+				}
+				$priority = ! empty( $rolemeta['_um_priority'] ) ? $rolemeta['_um_priority'] : 0;
+
+				$k = $priority . '-' . $role;
+				$roles_array[ $k ] =  $role . '(' . $priority . ')';
+			}
+
+			krsort($roles_array, SORT_NUMERIC);
+
 			$info['ultimate-member-user-roles'] = array(
-				'label'       => __( 'User roles', 'ultimate-member' ),
+				'label'       => __( 'User roles (priority)', 'ultimate-member' ),
 				'description' => __( 'This debug information about user roles.', 'ultimate-member' ),
 				'fields'      => array(
 					'um-roles'         => array(
 						'label' => __( 'User Roles', 'ultimate-member' ),
-						'value' => $this->get_roles(),
+						'value' => implode(', ', $roles_array ),
 					),
 					'um-register_role' => array(
 						'label' => __( 'Default New User Role', 'ultimate-member' ),
@@ -540,10 +557,6 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 					'label'       => ' - ' . $role . __( ' role settings', 'ultimate-member' ),
 					'description' => __( 'This debug information about user role.', 'ultimate-member' ),
 					'fields'      => array(
-						'um-priority'             => array(
-							'label' => __( 'Role priority', 'ultimate-member' ),
-							'value' => ! empty( $rolemeta['_um_priority'] ) ? $rolemeta['_um_priority'] : 0,
-						),
 						'um-can_access_wpadmin'   => array(
 							'label' => __( 'Can access wp-admin?', 'ultimate-member' ),
 							'value' => $rolemeta['_um_can_access_wpadmin'] ? $labels['yes'] : $labels['no'],
