@@ -529,11 +529,11 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 			krsort($roles_array, SORT_NUMERIC);
 
 			$info['ultimate-member-user-roles'] = array(
-				'label'       => __( 'User roles (priority)', 'ultimate-member' ),
+				'label'       => __( 'User roles', 'ultimate-member' ),
 				'description' => __( 'This debug information about user roles.', 'ultimate-member' ),
 				'fields'      => array(
 					'um-roles'         => array(
-						'label' => __( 'User Roles', 'ultimate-member' ),
+						'label' => __( 'User Roles (priority)', 'ultimate-member' ),
 						'value' => implode(', ', $roles_array ),
 					),
 					'um-register_role' => array(
