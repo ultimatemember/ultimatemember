@@ -113,9 +113,13 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 				if ( strpos( $key, 'um_' ) === 0 ) {
 					$key = substr( $key, 3 );
 				}
-				$rolemeta = $this->get_role_meta($key);
 
-				$info['ultimate-member-' . $key ] = array(
+				$rolemeta = $this->get_role_meta( $key );
+				if ( false === $rolemeta ) {
+					continue;
+				}
+
+				$info[ 'ultimate-member-' . $key ] = array(
 					'label'       => ' - ' . $role . __( ' role settings', 'ultimate-member' ),
 					'description' => __( 'This debug information about user role.', 'ultimate-member' ),
 					'fields'      => array(
@@ -252,6 +256,7 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 					'checkmail' => __( 'Require Email Activation', 'ultimate-member' ),
 					'pending'   => __( 'Require Admin Review', 'ultimate-member' ),
 				);
+
 				$info['ultimate-member-' . $key ]['fields'] = array_merge(
 					$info['ultimate-member-' . $key ]['fields'],
 					array(
