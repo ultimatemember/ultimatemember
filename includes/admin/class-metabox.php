@@ -69,6 +69,23 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 
 
 		/**
+		 * Validate nonce
+		 *
+		 * @param string $metabox
+		 *
+		 * @return bool
+		 */
+		public function verify_custom_metabox_nonce( $metabox ) {
+			$nonce_field = 'um_admin_metabox_' . $metabox . '_nonce';
+			if ( ! isset( $_POST[ $nonce_field ] ) || ! wp_verify_nonce( $_POST[ $nonce_field ], basename( __FILE__ ) ) ) {
+				return false;
+			}
+
+			return true;
+		}
+
+
+		/**
 		 *
 		 */
 		function wp_dashboard_widgets() {
@@ -826,11 +843,11 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 		function load_metabox_custom( $object, $box ) {
 			global $post;
 
-			$box['id'] = str_replace('um-admin-custom-','', $box['id']);
+			$box['id'] = str_replace( 'um-admin-custom-', '', $box['id'] );
 
-			preg_match('#\{.*?\}#s', $box['id'], $matches);
+			preg_match( '#\{.*?\}#s', $box['id'], $matches );
 
-			if ( isset($matches[0]) ){
+			if ( isset( $matches[0] ) ){
 				$path = $matches[0];
 				$box['id'] = preg_replace('~(\\{[^}]+\\})~','', $box['id'] );
 			} else {
@@ -845,6 +862,8 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 				$this->custom_nonce_added = true;
 				wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_custom_nonce' );
 			}
+
+			wp_nonce_field( basename( __FILE__ ), 'um_admin_metabox_' . $box['id'] . '_nonce' );
 		}
 
 

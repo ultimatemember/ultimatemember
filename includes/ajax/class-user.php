@@ -80,6 +80,13 @@ if ( ! class_exists( 'um\ajax\User' ) ) {
 			$users       = $users_query->get_results();
 			$total_count = $users_query->get_total();
 
+			if ( ! empty( $_REQUEST['avatar'] ) ) {
+				foreach ( $users as $key => $user ) {
+					$url                = get_avatar_url( $user->ID );
+					$users[ $key ]->img = $url;
+				}
+			}
+
 			wp_send_json_success(
 				array(
 					'users'       => $users,

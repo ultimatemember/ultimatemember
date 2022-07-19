@@ -608,6 +608,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$data = array(
 				'field_id' => $field_data['id'],
+				'avatar'   => ! empty( $field_data['avatar'] ) ? 1 : 0,
 			);
 
 			if ( ! empty( $field_data['data'] ) && is_array( $field_data['data'] ) ) {
@@ -640,7 +641,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$options = '';
 			if ( ! empty( $users ) ) {
 				foreach ( $users as $user ) {
-					$options .= '<option value="' . esc_attr( $user->ID ) . '" selected>' . esc_html( $user->user_login . ' (#' . $user->ID . ')' ) . '</option>';
+					if ( ! empty( $field_data['avatar'] ) ) {
+						$url = get_avatar_url( $user->ID, 'size=20' );
+						$options .= '<option data-img="' . esc_url( $url ) . '" value="' . esc_attr( $user->ID ) . '" selected>' . esc_html( $user->user_login . ' (#' . $user->ID . ')' ) . '</option>';
+					} else {
+						$options .= '<option value="' . esc_attr( $user->ID ) . '" selected>' . esc_html( $user->user_login . ' (#' . $user->ID . ')' ) . '</option>';
+					}
 				}
 			}
 
