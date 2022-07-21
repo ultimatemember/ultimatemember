@@ -1006,6 +1006,12 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 							);
 						}
 
+						$extend_register_form = apply_filters( 'um_debug_information_register_form', array(), $key );
+						$info['ultimate-member-' . $key ]['fields'] = array_merge(
+							$info['ultimate-member-' . $key ]['fields'],
+							$extend_register_form
+						);
+
 						$fields = get_post_meta( $key, '_um_custom_fields', true );
 						if ( ! empty( $fields ) ) {
 							foreach ( $fields as $field_key => $field ) {
@@ -1062,6 +1068,12 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 								)
 							);
 						}
+
+						$extend_login_form = apply_filters( 'um_debug_information_login_form', array(), $key );
+						$info['ultimate-member-' . $key ]['fields'] = array_merge(
+							$info['ultimate-member-' . $key ]['fields'],
+							$extend_login_form
+						);
 
 						$fields = get_post_meta( $key, '_um_custom_fields', true );
 						if ( ! empty( $fields ) ) {

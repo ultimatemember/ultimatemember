@@ -25,6 +25,8 @@ class Init {
 		add_filter( 'um_settings_map', array( &$this, 'settings_map' ), 10, 1 );
 		add_filter( 'um_settings_structure', array( &$this, 'add_settings' ), 10, 1 );
 		add_action( 'debug_information', array( &$this, 'debug_information' ), 30, 1 );
+		add_action( 'um_debug_information_register_form', array( &$this, 'um_debug_information_register_form' ), 10, 2 );
+		add_action( 'um_debug_information_login_form', array( &$this, 'um_debug_information_login_form' ), 10, 2 );
 	}
 
 
@@ -516,6 +518,49 @@ class Init {
 				)
 			);
 		}
+
+		return $info;
+	}
+
+	/**
+	 * Extend register form info.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $info
+	 * @param int $key
+	 *
+	 * @return array
+	 */
+	public function um_debug_information_register_form( $info, $key ) {
+		$info = array(
+			'um-register_g_recaptcha_status' => array(
+				'label' => __( 'Google reCAPTCHA', 'ultimate-member' ),
+				'value' => get_post_meta( $key, '_um_register_g_recaptcha_status', true ) ? __( 'Yes', 'ultimate-member' ) : __( 'No', 'ultimate-member' ),
+			),
+		);
+
+		return $info;
+	}
+
+
+	/**
+	 * Extend login form info.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $info
+	 * @param int $key
+	 *
+	 * @return array
+	 */
+	public function um_debug_information_login_form( $info, $key ) {
+		$info = array(
+			'um-login_g_recaptcha_status' => array(
+				'label' => __( 'Google reCAPTCHA', 'ultimate-member' ),
+				'value' => get_post_meta( $key, '_um_login_g_recaptcha_status', true ) ? __( 'Yes', 'ultimate-member' ) : __( 'No', 'ultimate-member' ),
+			),
+		);
 
 		return $info;
 	}
