@@ -518,7 +518,7 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 				}
 				$rolemeta = $this->get_role_meta( $key );
 				if ( false === $rolemeta ) {
-					$rolemeta = 0;
+					continue;
 				}
 				$priority = ! empty( $rolemeta['_um_priority'] ) ? $rolemeta['_um_priority'] : 0;
 

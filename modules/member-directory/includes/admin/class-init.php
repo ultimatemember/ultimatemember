@@ -31,6 +31,20 @@ class Init {
 		$this->forms();
 		$this->settings();
 		$this->columns();
+		$this->site_health();
+	}
+
+
+	/**
+	 * @since 3.0
+	 *
+	 * @return Site_Health
+	 */
+	function site_health() {
+		if ( empty( UM()->classes['umm\member_directory\includes\admin\site_health'] ) ) {
+			UM()->classes['umm\member_directory\includes\admin\site_health'] = new Site_Health();
+		}
+		return UM()->classes['umm\member_directory\includes\admin\site_health'];
 	}
 
 
