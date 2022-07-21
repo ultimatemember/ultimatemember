@@ -23,6 +23,7 @@ if ( ! class_exists( 'umm\member_directory\includes\admin\Site_Health' ) ) {
 		 */
 		public function __construct() {
 			add_filter( 'debug_information', array( $this, 'debug_information' ) );
+			add_filter( 'um_debug_information_pages', array( $this, 'um_debug_information_pages' ), 10, 1 );
 		}
 
 
@@ -450,6 +451,22 @@ if ( ! class_exists( 'umm\member_directory\includes\admin\Site_Health' ) ) {
 			}
 
 			return $info;
+		}
+
+
+		/**
+		 * Extend predefined pages.
+		 *
+		 * @since 3.0
+		 *
+		 * @param array $pages
+		 *
+		 * @return array
+		 */
+		public function um_debug_information_pages( $pages ) {
+			$pages['Members page'] = get_the_title( UM()->options()->get('core_members') ) . ' (ID#' . UM()->options()->get('core_members') . ') | ' . get_permalink( UM()->options()->get('core_members') );
+
+			return $pages;
 		}
 	}
 }
