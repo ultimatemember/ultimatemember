@@ -21,6 +21,7 @@ class Admin {
 		add_filter( 'um_settings_map', array( &$this, 'add_settings_sanitize' ), 10, 1 );
 
 		add_action( 'enqueue_block_editor_assets', array( &$this, 'block_editor' ), 11 );
+		add_action( 'debug_information', array( &$this, 'debug_information' ), 25, 1 );
 	}
 
 
@@ -102,5 +103,30 @@ class Admin {
 				'editor_script' => 'um_admin_blocks_online_shortcode',
 			)
 		);
+	}
+
+
+	/**
+	 * Add our data to Site Health information.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $info The Site Health information.
+	 *
+	 * @return array The updated Site Health information.
+	 */
+	public function debug_information( $info ) {
+		$info['ultimate-member-online'] = array(
+			'label'       => __( 'Ultimate Member Online', 'ultimate-member' ),
+			'description' => __( 'This debug information about Ultimate Member Online module.', 'ultimate-member' ),
+			'fields'      => array(
+				'um-online_show_stats' => array(
+					'label' => __( 'Show online stats in member directory', 'ultimate-member' ),
+					'value' => UM()->options()->get('online_show_stats') ? __( 'Yes', 'ultimate-member' ) : __( 'No', 'ultimate-member' ),
+				),
+			),
+		);
+
+		return $info;
 	}
 }
