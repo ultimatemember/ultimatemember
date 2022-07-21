@@ -23,6 +23,7 @@ class Init {
 	public function includes() {
 		$this->enqueue();
 		$this->metabox();
+		$this->site_health();
 	}
 
 
@@ -45,5 +46,16 @@ class Init {
 			UM()->classes['umm\forumwp\includes\admin\metabox'] = new Metabox();
 		}
 		return UM()->classes['umm\forumwp\includes\admin\metabox'];
+	}
+
+
+	/**
+	 * @return Site_Health()
+	 */
+	public function site_health() {
+		if ( empty( UM()->classes['umm\forumwp\includes\admin\site_health'] ) ) {
+			UM()->classes['umm\forumwp\includes\admin\site_health'] = new Site_Health();
+		}
+		return UM()->classes['umm\forumwp\includes\admin\site_health'];
 	}
 }

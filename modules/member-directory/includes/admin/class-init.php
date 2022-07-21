@@ -31,6 +31,7 @@ class Init {
 		$this->forms();
 		$this->settings();
 		$this->columns();
+		$this->site_health();
 	}
 
 
@@ -97,5 +98,16 @@ class Init {
 			UM()->classes['umm\member_directory\includes\admin\enqueue'] = new Enqueue();
 		}
 		return UM()->classes['umm\member_directory\includes\admin\enqueue'];
+	}
+
+
+	/**
+	 * @return Site_Health()
+	 */
+	public function site_health() {
+		if ( empty( UM()->classes['umm\member_directory\includes\admin\site_health'] ) ) {
+			UM()->classes['umm\member_directory\includes\admin\site_health'] = new Site_Health();
+		}
+		return UM()->classes['umm\member_directory\includes\admin\site_health'];
 	}
 }

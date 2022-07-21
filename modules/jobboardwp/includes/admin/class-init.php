@@ -26,6 +26,7 @@ class Init {
 	public function includes() {
 		$this->metabox();
 		$this->settings();
+		$this->site_health();
 	}
 
 
@@ -48,5 +49,16 @@ class Init {
 			UM()->classes['umm\jobboardwp\includes\admin\settings'] = new Settings();
 		}
 		return UM()->classes['umm\jobboardwp\includes\admin\settings'];
+	}
+
+
+	/**
+	 * @return Site_Health()
+	 */
+	public function site_health() {
+		if ( empty( UM()->classes['umm\jobboardwp\includes\admin\site_health'] ) ) {
+			UM()->classes['umm\jobboardwp\includes\admin\site_health'] = new Site_Health();
+		}
+		return UM()->classes['umm\jobboardwp\includes\admin\site_health'];
 	}
 }
