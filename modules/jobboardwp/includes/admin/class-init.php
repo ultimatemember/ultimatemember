@@ -21,6 +21,7 @@ class Init {
 		add_filter( 'um_settings_map', array( &$this, 'add_settings_sanitize' ), 10, 1 );
 		add_filter( 'um_admin_role_metaboxes', array( &$this, 'add_role_metabox' ), 10, 1 );
 		add_filter( 'um_role_meta_map', array( &$this, 'add_role_meta_sanitize' ), 10, 1 );
+		add_filter( 'debug_information', array( $this, 'debug_information' ), 20, 1 );
 	}
 
 
@@ -110,5 +111,30 @@ class Init {
 			)
 		);
 		return $meta_map;
+	}
+
+
+	/**
+	 * Add our data to Site Health information.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $info The Site Health information.
+	 *
+	 * @return array The updated Site Health information.
+	 */
+	public function debug_information( $info ) {
+		$info['ultimate-member-jobboard'] = array(
+			'label'       => __( 'Ultimate Member JobBoard', 'ultimate-member' ),
+			'description' => __( 'This debug information about Ultimate Member JobBoard module.', 'ultimate-member' ),
+			'fields'      => array(
+				'um-account_tab_jobboardwp' => array(
+					'label' => __( 'Account Tab', 'ultimate-member' ),
+					'value' => UM()->options()->get('account_tab_jobboardwp') ? __( 'Yes', 'ultimate-member' ) : __( 'No', 'ultimate-member' ),
+				),
+			),
+		);
+
+		return $info;
 	}
 }
