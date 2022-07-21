@@ -27,7 +27,7 @@ class Private_Messages {
 	 * @param array $args
 	 */
 	function um_recaptcha_directory_enqueue_scripts( $args ) {
-		if ( ! $this->captcha_allowed( $args ) ) {
+		if ( ! UM()->module( 'recaptcha' )->frontend()->forms()->captcha_allowed( $args ) ) {
 			return;
 		}
 
@@ -35,6 +35,7 @@ class Private_Messages {
 			return;
 		}
 
-		UM()->reCAPTCHA()->enqueue()->wp_enqueue_scripts();
+		UM()->module( 'recaptcha' )->frontend()->enqueue()->enqueue_scripts();
+		UM()->module( 'recaptcha' )->frontend()->enqueue()->um_form_enqueue_scripts();
 	}
 }

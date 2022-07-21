@@ -9,12 +9,14 @@ function UM_Drag_and_Drop() {
 		update: function(event, ui){
 
 			jQuery('#publish').attr('disabled','disabled');
+			jQuery('#save').attr('disabled','disabled');
 
 			if ( ui.item.hasClass('um-field-type-group') && ui.item.parents('.um-field-type-group').length > 0  ) {
 
 				jQuery('.um-admin-drag-col,.um-admin-drag-group').sortable('cancel');
 
 				jQuery('#publish').prop('disabled', false);
+				jQuery('#save').prop('disabled', false);
 
 			} else {
 
@@ -37,6 +39,7 @@ function UM_Drag_and_Drop() {
 		update: function(){
 
 			jQuery('#publish').attr('disabled','disabled');
+			jQuery('#save').attr('disabled','disabled');
 
 			UM_update_subrows();
 
@@ -51,6 +54,7 @@ function UM_Drag_and_Drop() {
 		update: function(){
 
 			jQuery('#publish').attr('disabled','disabled');
+			jQuery('#save').attr('disabled','disabled');
 
 			row = jQuery(this);
 			row.find('.um-admin-drag-col').removeClass('cols-1 cols-2 cols-3 cols-last cols-middle');
@@ -79,6 +83,7 @@ function UM_Drag_and_Drop() {
 		update: function(){
 
 			jQuery('#publish').attr('disabled','disabled');
+			jQuery('#save').attr('disabled','disabled');
 
 			UM_update_rows();
 
@@ -249,6 +254,7 @@ function UM_Rows_Refresh() {
 		data: jQuery( '.um_update_order' ).serialize(),
 		success: function(){
 			jQuery('#publish').prop('disabled', false);
+			jQuery('#save').prop('disabled', false);
 		}
 	});
 

@@ -103,7 +103,7 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 			do_action( 'um_extend_admin_menu' );
 
 			if ( ! UM()->is_pro_plugin_active() ) {
-				add_submenu_page( $this->slug, __( 'Upgrade to Pro', 'ultimate-member' ), '<span style="color: #7856ff">' . __( 'Upgrade to Pro', 'ultimate-member' ) . '</span>', 'manage_options', 'https://ultimatemember.com/pricing-beta/', '' );
+				add_submenu_page( $this->slug, __( 'Upgrade to Pro', 'ultimate-member' ), '<span style="color: #7856ff">' . __( 'Upgrade to Pro', 'ultimate-member' ) . '</span>', 'manage_options', 'https://ultimatemember.com/pricing/', '' );
 			}
 		}
 

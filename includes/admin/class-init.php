@@ -1105,7 +1105,11 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 						}
 						break;
 					case 'text':
-						$sanitized[ $k ] = sanitize_text_field( $v );
+						if ( is_array( $v ) ) {
+							$sanitized[ $k ] = array_map( 'sanitize_text_field', $v );
+						} else {
+							$sanitized[ $k ] = sanitize_text_field( $v );
+						}
 						break;
 					case 'textarea':
 						$sanitized[ $k ] = sanitize_textarea_field( $v );

@@ -383,7 +383,7 @@ if ( $form_placeholder ) {
 $form_icon_color = UM()->options()->get( 'form_icon_color' );
 if ( $form_icon_color ) {
 	$css .= "
-.um .um-field-icon i,
+.um .um-form .um-field-icon i,
 .select2-container .select2-choice .select2-arrow:before,
 .select2-search:before,
 .select2-search-choice-close:before

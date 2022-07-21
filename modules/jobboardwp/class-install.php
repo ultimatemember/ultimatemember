@@ -16,13 +16,13 @@ class Install {
 	/**
 	 * @var array Default module settings
 	 */
-	var $settings_defaults;
+	public $settings_defaults;
 
 
 	/**
 	 * Install constructor.
 	 */
-	function __construct() {
+	public function __construct() {
 		//settings defaults
 		$this->settings_defaults = array(
 			'profile_tab_jobboardwp'         => 1,
@@ -47,7 +47,7 @@ class Install {
 	/**
 	 *
 	 */
-	function start() {
+	public function start() {
 		UM()->options()->set_defaults( $this->settings_defaults );
 	}
 }

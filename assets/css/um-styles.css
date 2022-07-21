@@ -365,7 +365,7 @@ p.um-notice {
     display: inline-block;
     padding: 0 15px; }
 
-.um-field-icon {
+.um-form .um-field-icon {
   position: absolute;
   cursor: default;
   text-align: center !important;

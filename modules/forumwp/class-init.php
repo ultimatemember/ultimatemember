@@ -39,94 +39,57 @@ final class Init {
 	/**
 	 * Init constructor.
 	 */
-	function __construct() {
-		$this->permissions();
-		$this->profile();
-
-		if ( UM()->is_request( 'admin' ) ) {
-			$this->admin();
+	public function __construct() {
+		$this->common()->includes();
+		if ( ! UM()->is_request( 'ajax' ) && UM()->is_request( 'admin' ) ) {
+			$this->admin()->includes();
+		} elseif ( UM()->is_request( 'frontend' ) ) {
+			$this->frontend()->includes();
 		}
-
-		$this->activity();
-		$this->notifications();
-		$this->profile_completeness();
+		$this->cross_modules()->includes();
 	}
 
 
 	/**
-	 * @return null|includes\cross_modules\Activity()
+	 * @return includes\common\Init()
 	 */
-	function activity() {
-		if ( ! UM()->modules()->is_active( 'activity' ) ) {
-			return null;
+	public function common() {
+		if ( empty( UM()->classes['umm\forumwp\includes\common\init'] ) ) {
+			UM()->classes['umm\forumwp\includes\common\init'] = new includes\common\Init();
 		}
-
-		if ( empty( UM()->classes['umm\forumwp\includes\cross_modules\activity'] ) ) {
-			UM()->classes['umm\forumwp\includes\cross_modules\activity'] = new includes\cross_modules\Activity();
-		}
-		return UM()->classes['umm\forumwp\includes\cross_modules\activity'];
-	}
-
-
-	/**
-	 * @return null|includes\cross_modules\Notifications()
-	 */
-	function notifications() {
-		if ( ! UM()->modules()->is_active( 'notifications' ) ) {
-			return null;
-		}
-
-		if ( empty( UM()->classes['umm\forumwp\includes\cross_modules\notifications'] ) ) {
-			UM()->classes['umm\forumwp\includes\cross_modules\notifications'] = new includes\cross_modules\Notifications();
-		}
-		return UM()->classes['umm\forumwp\includes\cross_modules\notifications'];
-	}
-
-
-	/**
-	 * @return null|includes\cross_modules\Profile_Completeness()
-	 */
-	function profile_completeness() {
-		if ( ! UM()->modules()->is_active( 'profile_completeness' ) ) {
-			return null;
-		}
-
-		if ( empty( UM()->classes['umm\forumwp\includes\cross_modules\profile_completeness'] ) ) {
-			UM()->classes['umm\forumwp\includes\cross_modules\profile_completeness'] = new includes\cross_modules\Profile_Completeness();
-		}
-		return UM()->classes['umm\forumwp\includes\cross_modules\profile_completeness'];
-	}
-
-
-	/**
-	 * @return includes\Permissions()
-	 */
-	function permissions() {
-		if ( empty( UM()->classes['umm\forumwp\includes\permissions'] ) ) {
-			UM()->classes['umm\forumwp\includes\permissions'] = new includes\Permissions();
-		}
-		return UM()->classes['umm\forumwp\includes\permissions'];
-	}
-
-
-	/**
-	 * @return includes\Profile()
-	 */
-	function profile() {
-		if ( empty( UM()->classes['umm\forumwp\includes\profile'] ) ) {
-			UM()->classes['umm\forumwp\includes\profile'] = new includes\Profile();
-		}
-		return UM()->classes['umm\forumwp\includes\profile'];
+		return UM()->classes['umm\forumwp\includes\common\init'];
 	}
 
 
 	/**
 	 * @return includes\admin\Init()
 	 */
-	function admin() {
+	public function admin() {
 		if ( empty( UM()->classes['umm\forumwp\includes\admin\init'] ) ) {
 			UM()->classes['umm\forumwp\includes\admin\init'] = new includes\admin\Init();
 		}
 		return UM()->classes['umm\forumwp\includes\admin\init'];
+	}
+
+
+	/**
+	 * @return includes\frontend\Init()
+	 */
+	public function frontend() {
+		if ( empty( UM()->classes['umm\forumwp\includes\frontend\init'] ) ) {
+			UM()->classes['umm\forumwp\includes\frontend\init'] = new includes\frontend\Init();
+		}
+		return UM()->classes['umm\forumwp\includes\frontend\init'];
+	}
+
+
+	/**
+	 * @return includes\cross_modules\Init()
+	 */
+	public function cross_modules() {
+		if ( empty( UM()->classes['umm\forumwp\includes\cross_modules\init'] ) ) {
+			UM()->classes['umm\forumwp\includes\cross_modules\init'] = new includes\cross_modules\Init();
+		}
+		return UM()->classes['umm\forumwp\includes\cross_modules\init'];
 	}
 }

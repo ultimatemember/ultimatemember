@@ -34,12 +34,12 @@ class Columns {
 	 * @return array
 	 */
 	function manage_edit_um_directory_columns( $columns ) {
-		$new_columns['cb'] = '<input type="checkbox" />';
-		$new_columns['title'] = __( 'Title', 'ultimate-member' );
-		$new_columns['id'] = __( 'ID', 'ultimate-member' );
+		$new_columns['cb']         = '<input type="checkbox" />';
+		$new_columns['title']      = __( 'Title', 'ultimate-member' );
+		$new_columns['id']         = __( 'ID', 'ultimate-member' );
 		$new_columns['is_default'] = __( 'Default', 'ulitmate-member' );
-		$new_columns['shortcode'] = __( 'Shortcode', 'ultimate-member' );
-		$new_columns['date'] = __( 'Date', 'ultimate-member' );
+		$new_columns['shortcode']  = __( 'Shortcode', 'ultimate-member' );
+		$new_columns['date']       = __( 'Date', 'ultimate-member' );
 
 		return $new_columns;
 	}
@@ -54,7 +54,7 @@ class Columns {
 	function manage_um_directory_posts_custom_column( $column_name, $id ) {
 		switch ( $column_name ) {
 			case 'id':
-				echo '<span class="um-admin-number">'.$id.'</span>';
+				echo '<span class="um-admin-number">' . $id . '</span>';
 				break;
 			case 'shortcode':
 				$is_default = UM()->query()->get_attr( 'is_default', $id );

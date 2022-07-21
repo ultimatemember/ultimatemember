@@ -26,7 +26,7 @@ class Functions {
 	function get_hide_in_members_default() {
 		$default = false;
 		$option = UM()->options()->get( 'account_hide_in_directory_default' );
-		if ( $option == 'Yes' ) {
+		if ( 'Yes' === $option ) {
 			$default = true;
 		}
 

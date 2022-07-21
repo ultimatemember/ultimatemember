@@ -13,8 +13,6 @@ if ( empty( UM()->builder()->form_id ) ) {
 
 	<?php $fields = UM()->query()->get_attr( 'custom_fields', UM()->builder()->form_id ); ?>
 
-<!--	<input type="hidden" id="form__um_custom_fields" name="form[_um_custom_fields]" value="--><?php //echo esc_attr( serialize( $fields ) ); ?><!--">-->
-
 	<div class="um-admin-drag-ctrls-demo um-admin-drag-ctrls">
 		<a href="javascript:void(0);" class="active um_admin_preview_form" data-form_id="<?php echo esc_attr( get_the_ID() ); ?>">
 			<?php esc_html_e( 'Live Preview', 'ultimate-member' ); ?>
@@ -87,25 +85,14 @@ if ( empty( UM()->builder()->form_id ) ) {
 	<div class="um-admin-drag-rowsub-icons">
 		<span class="um-admin-drag-rowsub-start"><i class="fas fa-arrows-alt"></i></span>
 		<a href="javascript:void(0);" class="um-admin-tipsy-n" title="<?php esc_attr_e( 'Delete Row', 'ultimate-member' ); ?>" data-remove_element="um-admin-drag-rowsub"><i class="far fa-trash-alt"></i></a>
-	</div><div class="um-admin-clear"></div>
-
-	<div class="um-admin-drag-col">
 	</div>
+
+	<div class="um-admin-clear"></div>
+
+	<div class="um-admin-drag-col"></div>
 
 	<div class="um-admin-drag-col-dynamic"></div>
 
 	<div class="um-admin-clear"></div>
 
 </div>
-
-<form action="" method="post" class="um_update_order">
-
-	<input type="hidden" name="form_id" id="form_id" value="<?php echo esc_attr( get_the_ID() ); ?>" />
-	<input type="hidden" name="action" value="um_update_order" />
-	<input type="hidden" name="nonce" value="<?php echo esc_attr( wp_create_nonce( 'um-admin-nonce' ) ) ?>" />
-
-	<div class="um_update_order_fields">
-
-	</div>
-
-</form>

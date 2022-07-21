@@ -1380,6 +1380,17 @@ function um_upgrade_options30() {
 		UM()->options()->update( 'activation_link_expiry_time', $time );
 	}
 
+	delete_option( 'um_forumwp_last_version_upgrade' );
+	delete_option( 'um_forumwp_version' );
+	delete_option( 'um_jobboardwp_last_version_upgrade' );
+	delete_option( 'um_jobboardwp_version' );
+	delete_option( 'um_online_last_version_upgrade' );
+	delete_option( 'um_online_version' );
+	delete_option( 'um_recaptcha_last_version_upgrade' );
+	delete_option( 'um_recaptcha_version' );
+	delete_option( 'um_terms_conditions_last_version_upgrade' );
+	delete_option( 'um_terms_conditions_version' );
+
 	// set v3 design disabled for old customers
 	UM()->options()->update( 'enable_version_3_design', false );
 	update_option( 'um_is_legacy', true );

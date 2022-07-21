@@ -14,7 +14,7 @@ class Member_Directory {
 
 
 	/**
-	 * Online_Member_Directory constructor.
+	 * Member_Directory constructor.
 	 */
 	function __construct() {
 		add_filter( 'um_admin_extend_directory_options_profile', array( &$this, 'member_directory_options_profile' ), 10, 1 );
@@ -106,7 +106,7 @@ class Member_Directory {
 	 * @return array
 	 */
 	function online_dropdown( $attrs ) {
-		if ( isset( $attrs['metakey'] ) && 'online_status' == $attrs['metakey'] ) {
+		if ( isset( $attrs['metakey'] ) && 'online_status' === $attrs['metakey'] ) {
 			$attrs['type'] = 'select';
 
 			$attrs['options'] = array(
@@ -176,7 +176,6 @@ class Member_Directory {
 		}
 
 		if ( ! ( in_array( 1, $value ) && in_array( 0, $value ) ) ) {
-
 			$online_users_array = UM()->module( 'online' )->get_users( 'ids' );
 
 			foreach ( $value as $val ) {
@@ -212,8 +211,8 @@ class Member_Directory {
 	function get_members_data( $data_array, $user_id ) {
 		$data_array['is_online'] = false;
 
-		if ( ! UM()->module( 'online' )->user()->is_hidden_status( $user_id ) ) {
-			$data_array['is_online'] = UM()->module( 'online' )->user()->is_online( $user_id );
+		if ( ! UM()->module( 'online' )->common()->user()->is_hidden_status( $user_id ) ) {
+			$data_array['is_online'] = UM()->module( 'online' )->common()->user()->is_online( $user_id );
 		}
 
 		return $data_array;
@@ -230,7 +229,7 @@ class Member_Directory {
 
 			<# if ( user.is_online ) { #>
 				<span class="um-online-status online um-tip-n"
-				      title="<?php esc_attr_e( 'Online', 'ultimate-member' ) ?>">
+				      title="<?php esc_attr_e( 'Online', 'ultimate-member' ); ?>">
 					<i class="fas fa-circle"></i>
 				</span>
 			<# } #>

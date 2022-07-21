@@ -40,14 +40,25 @@ final class Init {
 	 * Init constructor.
 	 */
 	function __construct() {
+		$this->common()->includes();
 		if ( UM()->is_request( 'admin' ) ) {
-			$this->admin();
+			$this->admin()->includes();
 		} elseif ( UM()->is_request( 'frontend' ) ) {
-			$this->enqueue();
-			$this->form();
+			$this->frontend()->includes();
 		}
 
-		$this->private_messages();
+		$this->cross_modules()->includes();
+	}
+
+
+	/**
+	 * @return includes\admin\Init()
+	 */
+	function common() {
+		if ( empty( UM()->classes['umm\recaptcha\includes\common\init'] ) ) {
+			UM()->classes['umm\recaptcha\includes\common\init'] = new includes\common\Init();
+		}
+		return UM()->classes['umm\recaptcha\includes\common\init'];
 	}
 
 
@@ -63,38 +74,34 @@ final class Init {
 
 
 	/**
-	 * @return includes\Enqueue()
+	 * @return includes\frontend\Init()
 	 */
-	function enqueue() {
-		if ( empty( UM()->classes['umm\recaptcha\includes\enqueue'] ) ) {
-			UM()->classes['umm\recaptcha\includes\enqueue'] = new includes\Enqueue();
+	public function frontend() {
+		if ( empty( UM()->classes['umm\recaptcha\includes\frontend\init'] ) ) {
+			UM()->classes['umm\recaptcha\includes\frontend\init'] = new includes\frontend\Init();
 		}
-		return UM()->classes['umm\recaptcha\includes\enqueue'];
+		return UM()->classes['umm\recaptcha\includes\frontend\init'];
 	}
 
 
 	/**
-	 * @return includes\Form()
+	 * @return includes\cross_modules\Init()
 	 */
-	function form() {
-		if ( empty( UM()->classes['umm\recaptcha\includes\form'] ) ) {
-			UM()->classes['umm\recaptcha\includes\form'] = new includes\Form();
+	public function cross_modules() {
+		if ( empty( UM()->classes['umm\recaptcha\includes\cross_modules\init'] ) ) {
+			UM()->classes['umm\recaptcha\includes\cross_modules\init'] = new includes\cross_modules\Init();
 		}
-		return UM()->classes['umm\recaptcha\includes\form'];
+		return UM()->classes['umm\recaptcha\includes\cross_modules\init'];
 	}
 
 
 	/**
-	 * @return null|includes\cross_modules\Private_Messages()
+	 * @return Config()
 	 */
-	function private_messages() {
-		if ( ! UM()->modules()->is_active( 'private_messages' ) ) {
-			return null;
+	function config() {
+		if ( empty( UM()->classes['umm\recaptcha\config'] ) ) {
+			UM()->classes['umm\recaptcha\config'] = new Config();
 		}
-
-		if ( empty( UM()->classes['umm\recaptcha\includes\cross_modules\private_messages'] ) ) {
-			UM()->classes['umm\recaptcha\includes\cross_modules\private_messages'] = new includes\cross_modules\Private_Messages();
-		}
-		return UM()->classes['umm\recaptcha\includes\cross_modules\private_messages'];
+		return UM()->classes['umm\recaptcha\config'];
 	}
 }

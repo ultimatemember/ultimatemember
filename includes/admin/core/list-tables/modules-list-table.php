@@ -372,7 +372,7 @@ if ( ! empty( $_GET['msg'] ) ) {
 
 <div id="um-plan">
 	<p><?php esc_html_e( 'You are using the free version of Ultimate Member. With this you have access to the modules below. Upgrade to Ultimate Member Pro to get access to the pro modules.', 'ultimate-member' ); ?></p>
-	<p><?php echo wp_kses( sprintf( __( 'Click <a href="%s" target="_blank">here</a> to view our different plans for Ultimate Member Pro.', 'ultimate-member' ), 'https://ultimatemember.com/pricing-beta/' ), array( 'a' => array( 'href' => array(), 'target' => true ) ) ); ?></p>
+	<p><?php echo wp_kses( sprintf( __( 'Click <a href="%s" target="_blank">here</a> to view our different plans for Ultimate Member Pro.', 'ultimate-member' ), 'https://ultimatemember.com/pricing/' ), array( 'a' => array( 'href' => array(), 'target' => true ) ) ); ?></p>
 </div>
 
 <?php

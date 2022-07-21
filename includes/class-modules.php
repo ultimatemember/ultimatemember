@@ -30,6 +30,23 @@ class Modules {
 	 */
 	function __construct() {
 		add_action( 'um_core_loaded', array( &$this, 'predefined_modules' ), 0 );
+		add_filter( 'um_module_can_activate', array( &$this, 'maybe_disable_module_activation' ), 9, 2 );
+	}
+
+
+	/**
+	 * @param $can_activate
+	 * @param $slug
+	 *
+	 * @return bool
+	 */
+	function maybe_disable_module_activation( $can_activate, $slug ) {
+		$free_modules = UM()->config()->get( 'modules' );
+		if ( ! array_key_exists( $slug, $free_modules ) ) {
+			$can_activate = false;
+		}
+
+		return $can_activate;
 	}
 
 
@@ -64,11 +81,12 @@ class Modules {
 
 			} else {
 
+				// avoid activation UM module and the UMv2 extension same time
 				if ( array_key_exists( 'plugin_slug', $data ) ) {
 					$data['disabled'] = array_key_exists( $data['plugin_slug'], $all_plugins );
 
 					if ( $data['disabled'] ) {
-						$data['description'] = '<strong>' . sprintf( __( 'Module will be disabled until "%s" plugin is installed.', 'ultimate-member' ), $all_plugins[ $data['plugin_slug'] ]['Name'] ) . '</strong><br />' . $data['description'];
+						$data['description'] = '<strong>' . sprintf( __( 'Module cannot be activated until "%s" plugin isn\'t installed.', 'ultimate-member' ), $all_plugins[ $data['plugin_slug'] ]['Name'] ) . '</strong><br />' . $data['description'];
 					}
 				}
 
@@ -85,7 +103,7 @@ class Modules {
 						}
 						$plugins_titles = '"' .  implode( '", "', $plugins_titles ) . '"';
 
-						$data['description'] = '<strong>' . sprintf( _n( 'Module will be disabled until %s plugin isn\'t installed.', 'Module will be disabled until %s plugins aren\'t installed.', count( $not_installed ), 'ultimate-member' ), $plugins_titles ) . '</strong><br />' . $data['description'];
+						$data['description'] = '<strong>' . sprintf( _n( 'Module cannot be activated until %s plugin is installed and activated.', 'Module cannot be activated until %s plugins are installed and activated.', count( $not_installed ), 'ultimate-member' ), $plugins_titles ) . '</strong><br />' . $data['description'];
 					} else {
 						$maybe_activated = array_intersect( array_keys( $data['plugins_required'] ), $active_plugins );
 						$not_active = array_diff( array_keys( $data['plugins_required'] ), $maybe_activated );
@@ -98,7 +116,7 @@ class Modules {
 							}
 							$plugins_titles = '"' .  implode( '", "', $plugins_titles ) . '"';
 
-							$data['description'] = '<strong>' . sprintf( _n( 'Module will be disabled until %s plugin isn\'t active.', 'Module will be disabled until %s plugins aren\'t active.', count( $not_active ), 'ultimate-member' ), $plugins_titles ) . '</strong><br />' . $data['description'];
+							$data['description'] = '<strong>' . sprintf( _n( 'Module cannot be activated until %s plugin is activated.', 'Module cannot be activated until %s plugins are activated.', count( $not_active ), 'ultimate-member' ), $plugins_titles ) . '</strong><br />' . $data['description'];
 						}
 					}
 				}

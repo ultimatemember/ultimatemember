@@ -312,7 +312,7 @@ textarea.um-forms-field {
   border: 1px solid #7e8993;
   border-radius: 4px;
   -moz-border-radius: 4px;
-  background: #f1f1f1;
+  background: #fff;
   height: 42px;
   line-height: 28px;
   display: flex;
@@ -323,7 +323,6 @@ textarea.um-forms-field {
   .um-sortable-items-field .um-sortable-item.um-hidden-item {
     display: none; }
   .um-sortable-items-field .um-sortable-item .um-field-icon {
-    font-size: 18px;
     width: 20px;
     text-align: left;
     margin: 0 10px 0 0; }

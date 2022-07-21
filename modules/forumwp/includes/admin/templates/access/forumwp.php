@@ -11,7 +11,7 @@ $permissions['_um_forumwp_can_reply'] = get_post_meta( $object->ID, '_um_forumwp
 	<?php
 	UM()->admin_forms(
 		array(
-			'class'     => 'um-forumwp-access um-top-label',
+			'class'     => 'um-forumwp-access um-half-column',
 			'prefix_id' => '',
 			'fields'    => array(
 				array(
@@ -21,7 +21,7 @@ $permissions['_um_forumwp_can_reply'] = get_post_meta( $object->ID, '_um_forumwp
 					'label'   => __( 'Which roles can create new topics in this forum', 'ultimate-member' ),
 					'value'   => ! empty( $permissions['_um_forumwp_can_topic'] ) ? $permissions['_um_forumwp_can_topic'] : array(),
 					'options' => UM()->roles()->get_roles( false, array( 'administrator' ) ),
-					'size'    => 'large',
+					'size'    => 'long',
 				),
 				array(
 					'id'      => '_um_forumwp_can_reply',
@@ -30,7 +30,7 @@ $permissions['_um_forumwp_can_reply'] = get_post_meta( $object->ID, '_um_forumwp
 					'label'   => __( 'Which roles can create new replies in this forum', 'ultimate-member' ),
 					'value'   => ! empty( $permissions['_um_forumwp_can_reply'] ) ? $permissions['_um_forumwp_can_reply'] : array(),
 					'options' => UM()->roles()->get_roles( false, array( 'administrator' ) ),
-					'size'    => 'large',
+					'size'    => 'long',
 				),
 			),
 		)

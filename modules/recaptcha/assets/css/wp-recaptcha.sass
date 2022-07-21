@@ -1,0 +1,14 @@
+@import "../../../../assets/css/selectors"
+@import "../../../../assets/css/mixins"
+@import "../../../../assets/css/colors"
+
+.login
+  &.has-normal-um-recaptcha
+    #login
+      width: 354px
+    #um-login-recaptcha
+      margin-bottom: 16px
+  &.has-compact-um-recaptcha
+    #um-login-recaptcha
+      +flex( row, center, center, nowrap )
+      margin-bottom: 16px

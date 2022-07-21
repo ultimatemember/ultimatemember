@@ -40,48 +40,31 @@ final class Init {
 	 * Init constructor.
 	 */
 	function __construct() {
-		$this->profile();
-
-		if ( UM()->is_request( 'admin' ) ) {
-			$this->admin();
+		$this->common()->includes();
+		if ( ! UM()->is_request( 'ajax' ) && UM()->is_request( 'admin' ) ) {
+			$this->admin()->includes();
 		} elseif ( UM()->is_request( 'frontend' ) ) {
-			$this->enqueue();
+			$this->frontend()->includes();
 		}
-
-		$this->activity();
-		$this->notifications();
-		$this->private_messages();
-		$this->user_bookmarks();
-		$this->verified_users();
+		$this->cross_modules()->includes();
 	}
 
 
 	/**
-	 * @return includes\Profile()
+	 * @return includes\common\Init()
 	 */
-	function profile() {
-		if ( empty( UM()->classes['umm\jobboardwp\includes\profile'] ) ) {
-			UM()->classes['umm\jobboardwp\includes\profile'] = new includes\Profile();
+	public function common() {
+		if ( empty( UM()->classes['umm\jobboardwp\includes\common\init'] ) ) {
+			UM()->classes['umm\jobboardwp\includes\common\init'] = new includes\common\Init();
 		}
-		return UM()->classes['umm\jobboardwp\includes\profile'];
-	}
-
-
-	/**
-	 * @return includes\Enqueue()
-	 */
-	function enqueue() {
-		if ( empty( UM()->classes['umm\jobboardwp\includes\enqueue'] ) ) {
-			UM()->classes['umm\jobboardwp\includes\enqueue'] = new includes\Enqueue();
-		}
-		return UM()->classes['umm\jobboardwp\includes\enqueue'];
+		return UM()->classes['umm\jobboardwp\includes\common\init'];
 	}
 
 
 	/**
 	 * @return includes\admin\Init()
 	 */
-	function admin() {
+	public function admin() {
 		if ( empty( UM()->classes['umm\jobboardwp\includes\admin\init'] ) ) {
 			UM()->classes['umm\jobboardwp\includes\admin\init'] = new includes\admin\Init();
 		}
@@ -90,76 +73,23 @@ final class Init {
 
 
 	/**
-	 * @return null|includes\cross_modules\Activity()
+	 * @return includes\frontend\Init()
 	 */
-	function activity() {
-		if ( ! UM()->modules()->is_active( 'activity' ) ) {
-			return null;
+	public function frontend() {
+		if ( empty( UM()->classes['umm\jobboardwp\includes\frontend\init'] ) ) {
+			UM()->classes['umm\jobboardwp\includes\frontend\init'] = new includes\frontend\Init();
 		}
-
-		if ( empty( UM()->classes['umm\jobboardwp\includes\cross_modules\activity'] ) ) {
-			UM()->classes['umm\jobboardwp\includes\cross_modules\activity'] = new includes\cross_modules\Activity();
-		}
-		return UM()->classes['umm\jobboardwp\includes\cross_modules\activity'];
+		return UM()->classes['umm\jobboardwp\includes\frontend\init'];
 	}
 
 
 	/**
-	 * @return null|includes\cross_modules\Notifications()
+	 * @return includes\cross_modules\Init()
 	 */
-	function notifications() {
-		if ( ! UM()->modules()->is_active( 'notifications' ) ) {
-			return null;
+	public function cross_modules() {
+		if ( empty( UM()->classes['umm\jobboardwp\includes\cross_modules\init'] ) ) {
+			UM()->classes['umm\jobboardwp\includes\cross_modules\init'] = new includes\cross_modules\Init();
 		}
-
-		if ( empty( UM()->classes['umm\jobboardwp\includes\cross_modules\notifications'] ) ) {
-			UM()->classes['umm\jobboardwp\includes\cross_modules\notifications'] = new includes\cross_modules\Notifications();
-		}
-		return UM()->classes['umm\jobboardwp\includes\cross_modules\notifications'];
-	}
-
-
-	/**
-	 * @return null|includes\cross_modules\Private_Messages()
-	 */
-	function private_messages() {
-		if ( ! UM()->modules()->is_active( 'private_messages' ) ) {
-			return null;
-		}
-
-		if ( empty( UM()->classes['umm\jobboardwp\includes\cross_modules\private_messages'] ) ) {
-			UM()->classes['umm\jobboardwp\includes\cross_modules\private_messages'] = new includes\cross_modules\Private_Messages();
-		}
-		return UM()->classes['umm\jobboardwp\includes\cross_modules\private_messages'];
-	}
-
-
-	/**
-	 * @return null|includes\cross_modules\User_Bookmarks()
-	 */
-	function user_bookmarks() {
-		if ( ! UM()->modules()->is_active( 'user_bookmarks' ) ) {
-			return null;
-		}
-
-		if ( empty( UM()->classes['umm\jobboardwp\includes\cross_modules\user_bookmarks'] ) ) {
-			UM()->classes['umm\jobboardwp\includes\cross_modules\user_bookmarks'] = new includes\cross_modules\User_Bookmarks();
-		}
-		return UM()->classes['umm\jobboardwp\includes\cross_modules\user_bookmarks'];
-	}
-
-
-	/**
-	 * @return null|includes\cross_modules\Verified_Users()
-	 */
-	function verified_users() {
-		if ( ! UM()->modules()->is_active( 'verified_users' ) ) {
-			return null;
-		}
-
-		if ( empty( UM()->classes['umm\jobboardwp\includes\cross_modules\verified_users'] ) ) {
-			UM()->classes['umm\jobboardwp\includes\cross_modules\verified_users'] = new includes\cross_modules\Verified_Users();
-		}
-		return UM()->classes['umm\jobboardwp\includes\cross_modules\verified_users'];
+		return UM()->classes['umm\jobboardwp\includes\cross_modules\init'];
 	}
 }

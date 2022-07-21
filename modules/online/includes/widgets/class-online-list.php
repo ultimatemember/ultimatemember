@@ -35,6 +35,14 @@ class Online_List extends \WP_Widget {
 	 * @param array $instance
 	 */
 	public function widget( $args, $instance ) {
+//		// Maybe disable preview
+//		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+//			return;
+//		}
+//
+//		if ( ! empty( $_GET['legacy-widget-preview'] ) && defined( 'IFRAME_REQUEST' ) && IFRAME_REQUEST ) {
+//			return;
+//		}
 		$title = array_key_exists( 'title', $instance ) ? $instance['title'] : __( 'Who is Online', 'ultimate-member' );
 		$title = apply_filters( 'widget_title', $title );
 

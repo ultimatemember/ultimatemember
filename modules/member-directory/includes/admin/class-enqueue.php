@@ -56,7 +56,7 @@ class Enqueue {
 	function directories_page_scripts() {
 		$data = UM()->modules()->get_data( 'member-directory' );
 
-		wp_register_style( 'um_admin_directories-screen', $data['url'] . 'assets/css/admin-directories-screen' . UM()->admin()->enqueue()->suffix . '.css', array(), UM_VERSION );
+		wp_register_style( 'um_admin_directories-screen', $data['url'] . 'assets/css/admin/directories-screen' . UM()->admin()->enqueue()->suffix . '.css', array(), UM_VERSION );
 		wp_enqueue_style( 'um_admin_directories-screen' );
 	}
 
@@ -83,7 +83,7 @@ class Enqueue {
 
 		$enable_blocks = UM()->options()->get( 'enable_blocks' );
 		if ( ! empty( $enable_blocks ) ) {
-			wp_register_script( 'um_admin_blocks_member_directory_shortcode', $data['url'] . 'assets/js/blocks/blocks-shortcode' . UM()->admin()->enqueue()->suffix . '.js', array( 'wp-i18n', 'wp-blocks', 'wp-components' ), UM_VERSION, true );
+			wp_register_script( 'um_admin_blocks_member_directory_shortcode', $data['url'] . 'assets/js/admin/blocks' . UM()->admin()->enqueue()->suffix . '.js', array( 'wp-i18n', 'wp-blocks', 'wp-components' ), UM_VERSION, true );
 			wp_set_script_translations( 'um_admin_blocks_member_directory_shortcode', 'ultimate-member' );
 
 			wp_enqueue_script( 'um_admin_blocks_member_directory_shortcode' );

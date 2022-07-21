@@ -22,6 +22,7 @@ class Activity {
 		add_filter( 'um_activity_global_actions', array( &$this, 'social_activity_action' ) );
 	}
 
+
 	/**
 	 * Add new activity action
 	 *

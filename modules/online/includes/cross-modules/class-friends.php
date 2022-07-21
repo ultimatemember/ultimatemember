@@ -16,7 +16,7 @@ class Friends {
 	/**
 	 * Friends constructor.
 	 */
-	function __construct() {
+	public function __construct() {
 		add_filter( 'um_friends_online_users', array( $this, 'get_online_users' ) );
 	}
 

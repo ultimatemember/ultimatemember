@@ -1,4 +1,8 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
 
 <div class="um-field um-field-type_terms_conditions"  data-key="use_terms_conditions_agreement" style="display: block;padding:0;">
 	<div class="um-field-area">
