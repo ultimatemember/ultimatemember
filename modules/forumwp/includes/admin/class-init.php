@@ -24,6 +24,7 @@ class Init {
 		add_action( 'add_meta_boxes',  array( &$this, 'add_forum_access_metabox' ), 10 );
 
 		add_action( 'um_admin_custom_restrict_content_metaboxes',  array( &$this, 'save_forum_access_metabox' ), 10, 2 );
+		add_filter( 'um_debug_information_user_role', array( $this, 'um_debug_information_user_role' ), 20, 2 );
 	}
 
 
@@ -142,5 +143,77 @@ class Init {
 
 		update_post_meta( $post_id, '_um_forumwp_can_topic', $um_fmwp_can_topic );
 		update_post_meta( $post_id, '_um_forumwp_can_reply', $um_fmwp_can_reply );
+	}
+
+
+	/**
+	 * Extend user role info.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $info The Site Health information.
+	 *
+	 * @return array The updated Site Health information.
+	 */
+	public function um_debug_information_user_role( $info, $key ) {
+		$rolemeta = get_option( "um_role_{$key}_meta", false );
+
+		$info['ultimate-member-' . $key ]['fields'] = array_merge(
+			$info['ultimate-member-' . $key ]['fields'],
+			array(
+				'um-disable_forumwp_tab' => array(
+					'label' => __( 'ForumWP - Disable forums tab?', 'ultimate-member' ),
+					'value' => ! empty( $rolemeta['_um_disable_forumwp_tab'] ) ? __( 'Yes', 'ultimate-member' ) : __( 'No', 'ultimate-member' ),
+				),
+				'um-disable_create_forumwp_topics' => array(
+					'label' => __( 'ForumWP - Disable create new topics?', 'ultimate-member' ),
+					'value' => ! empty( $rolemeta['_um_disable_create_forumwp_topics'] ) ? __( 'Yes', 'ultimate-member' ) : __( 'No', 'ultimate-member' ),
+				),
+			)
+		);
+
+		if ( isset( $rolemeta['_um_disable_create_forumwp_topics'] ) && 1 == $rolemeta['_um_disable_create_forumwp_topics'] ) {
+			$lock_create_forumwp_topics_notice = '';
+			if ( isset( $rolemeta['_um_lock_create_forumwp_topics_notice'] ) ) {
+				$lock_create_forumwp_topics_notice = stripslashes( $rolemeta['_um_lock_create_forumwp_topics_notice'] );
+			}
+			$info['ultimate-member-' . $key ]['fields'] = array_merge(
+				$info['ultimate-member-' . $key ]['fields'],
+				array(
+					'um-lock_create_forumwp_topics_notice' => array(
+						'label' => __( 'ForumWP - Custom message to show if you force locking new topic', 'ultimate-member' ),
+						'value' => $lock_create_forumwp_topics_notice,
+					),
+				)
+			);
+		}
+
+		$info['ultimate-member-' . $key ]['fields'] = array_merge(
+			$info['ultimate-member-' . $key ]['fields'],
+			array(
+				'um-disable_create_forumwp_replies' => array(
+					'label' => __( 'ForumWP - Disable create new replies?', 'ultimate-member' ),
+					'value' => ! empty( $rolemeta['_um_disable_create_forumwp_replies'] ) ? __( 'Yes', 'ultimate-member' ) : __( 'No', 'ultimate-member' ),
+				),
+			)
+		);
+
+		if ( isset( $rolemeta['_um_disable_create_forumwp_replies'] ) && 1 == $rolemeta['_um_disable_create_forumwp_replies'] ) {
+			$lock_create_forumwp_replies_notice = '';
+			if ( isset( $rolemeta['_um_lock_create_forumwp_topics_notice'] ) ) {
+				$lock_create_forumwp_replies_notice = stripslashes( $rolemeta['_um_lock_create_forumwp_replies_notice'] );
+			}
+			$info['ultimate-member-' . $key ]['fields'] = array_merge(
+				$info['ultimate-member-' . $key ]['fields'],
+				array(
+					'um-lock_create_forumwp_replies_notice' => array(
+						'label' => __( 'ForumWP - Custom message to show if you force locking new reply', 'ultimate-member' ),
+						'value' => $lock_create_forumwp_replies_notice,
+					),
+				)
+			);
+		}
+
+		return $info;
 	}
 }
