@@ -911,8 +911,6 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 					);
 				}
 
-
-
 				$info = apply_filters( 'um_debug_information_user_role', $info, $key );
 			}
 
@@ -1261,8 +1259,6 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 							}
 						}
 					}
-
-
 				}
 			}
 
