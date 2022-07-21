@@ -1249,6 +1249,21 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 								);
 							}
 						}
+
+						$profile_metafields = get_post_meta( $key, '_um_profile_metafields', true );
+						if ( ! empty( $profile_metafields ) ) {
+							foreach ( $profile_metafields as $k => $field ) {
+								$info['ultimate-member-' . $key ]['fields'] = array_merge(
+									$info['ultimate-member-' . $key ]['fields'],
+									array(
+										'um-profile_metafields-' . $k => array(
+											'label' => __( 'Field to show in user meta', 'ultimate-member' ),
+											'value' => $field,
+										),
+									)
+								);
+							}
+						}
 					}
 
 
