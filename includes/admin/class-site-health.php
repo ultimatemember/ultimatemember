@@ -913,11 +913,7 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 
 
 
-				$modules_role_settings = apply_filters( 'um_debug_information_user_role', array() );
-				$info['ultimate-member-' . $key ]['fields'] = array_merge(
-					$info['ultimate-member-' . $key ]['fields'],
-					$modules_role_settings
-				);
+				$info = apply_filters( 'um_debug_information_user_role', $info, $key );
 			}
 
 
@@ -1006,11 +1002,7 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 							);
 						}
 
-						$extend_register_form = apply_filters( 'um_debug_information_register_form', array(), $key );
-						$info['ultimate-member-' . $key ]['fields'] = array_merge(
-							$info['ultimate-member-' . $key ]['fields'],
-							$extend_register_form
-						);
+						$info = apply_filters( 'um_debug_information_register_form', $info, $key );
 
 						$fields = get_post_meta( $key, '_um_custom_fields', true );
 						if ( ! empty( $fields ) ) {
@@ -1069,11 +1061,7 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 							);
 						}
 
-						$extend_login_form = apply_filters( 'um_debug_information_login_form', array(), $key );
-						$info['ultimate-member-' . $key ]['fields'] = array_merge(
-							$info['ultimate-member-' . $key ]['fields'],
-							$extend_login_form
-						);
+						$info = apply_filters( 'um_debug_information_login_form', $info, $key );
 
 						$fields = get_post_meta( $key, '_um_custom_fields', true );
 						if ( ! empty( $fields ) ) {
@@ -1243,11 +1231,7 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 								);
 							}
 
-							$tab_form_settings = apply_filters( 'um_debug_information_tab_form', array() );
-							$info['ultimate-member-' . $key ]['fields'] = array_merge(
-								$info['ultimate-member-' . $key ]['fields'],
-								$tab_form_settings
-							);
+							$info = apply_filters( 'um_debug_information_tab_form', $info, $key );
 						}
 
 						$fields = get_post_meta( $key, '_um_custom_fields', true );

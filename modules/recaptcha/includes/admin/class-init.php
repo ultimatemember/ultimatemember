@@ -522,6 +522,7 @@ class Init {
 		return $info;
 	}
 
+
 	/**
 	 * Extend register form info.
 	 *
@@ -533,11 +534,14 @@ class Init {
 	 * @return array
 	 */
 	public function um_debug_information_register_form( $info, $key ) {
-		$info = array(
-			'um-register_g_recaptcha_status' => array(
-				'label' => __( 'Google reCAPTCHA', 'ultimate-member' ),
-				'value' => get_post_meta( $key, '_um_register_g_recaptcha_status', true ) ? __( 'Yes', 'ultimate-member' ) : __( 'No', 'ultimate-member' ),
-			),
+		$info['ultimate-member-' . $key ]['fields'] = array_merge(
+			$info['ultimate-member-' . $key ]['fields'],
+			array(
+				'um-register_g_recaptcha_status' => array(
+					'label' => __( 'Google reCAPTCHA', 'ultimate-member' ),
+					'value' => get_post_meta( $key, '_um_register_g_recaptcha_status', true ) ? __( 'Yes', 'ultimate-member' ) : __( 'No', 'ultimate-member' ),
+				),
+			)
 		);
 
 		return $info;
@@ -555,11 +559,14 @@ class Init {
 	 * @return array
 	 */
 	public function um_debug_information_login_form( $info, $key ) {
-		$info = array(
-			'um-login_g_recaptcha_status' => array(
-				'label' => __( 'Google reCAPTCHA', 'ultimate-member' ),
-				'value' => get_post_meta( $key, '_um_login_g_recaptcha_status', true ) ? __( 'Yes', 'ultimate-member' ) : __( 'No', 'ultimate-member' ),
-			),
+		$info['ultimate-member-' . $key ]['fields'] = array_merge(
+			$info['ultimate-member-' . $key ]['fields'],
+			array(
+				'um-login_g_recaptcha_status' => array(
+					'label' => __( 'Google reCAPTCHA', 'ultimate-member' ),
+					'value' => get_post_meta( $key, '_um_login_g_recaptcha_status', true ) ? __( 'Yes', 'ultimate-member' ) : __( 'No', 'ultimate-member' ),
+				),
+			)
 		);
 
 		return $info;
