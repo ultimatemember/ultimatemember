@@ -90,6 +90,7 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 				'no'      => __( 'No', 'ultimate-member' ),
 				'all'     => __( 'All', 'ultimate-member' ),
 				'default' => __( 'Default', 'ultimate-member' ),
+				'nopages' => __( 'No predefined page', 'ultimate-member' ),
 			);
 
 			// Active modules
@@ -106,12 +107,12 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 
 			// Pages settings
 			$pages = apply_filters( 'um_debug_information_pages', array(
-				'User'           => get_the_title( UM()->options()->get('core_user') ) . ' (ID#' . UM()->options()->get('core_user') . ') | ' . get_permalink( UM()->options()->get('core_user') ),
-				'Account'        => get_the_title( UM()->options()->get('core_account') ) . ' (ID#' . UM()->options()->get('core_account') . ') | ' . get_permalink( UM()->options()->get('core_account') ),
-				'Register'       => get_the_title( UM()->options()->get('core_register') ) . ' (ID#' . UM()->options()->get('core_register') . ') | ' . get_permalink( UM()->options()->get('core_register') ),
-				'Login'          => get_the_title( UM()->options()->get('core_login') ) . ' (ID#' . UM()->options()->get('core_login') . ') | ' . get_permalink( UM()->options()->get('core_login') ),
-				'Logout'         => get_the_title( UM()->options()->get('core_logout') ) . ' (ID#' . UM()->options()->get('core_logout') . ') | ' . get_permalink( UM()->options()->get('core_logout') ),
-				'Password reset' => get_the_title( UM()->options()->get('core_password-reset') ) . ' (ID#' . UM()->options()->get('core_password-reset') . ') | ' . get_permalink( UM()->options()->get('core_password-reset') ),
+				'User'           => null != UM()->options()->get('core_user') ? get_the_title( UM()->options()->get('core_user') ) . ' (ID#' . UM()->options()->get('core_user') . ') | ' . get_permalink( UM()->options()->get('core_user') ) : $labels['nopages'],
+				'Account'        => null != UM()->options()->get('core_account') ? get_the_title( UM()->options()->get('core_account') ) . ' (ID#' . UM()->options()->get('core_account') . ') | ' . get_permalink( UM()->options()->get('core_account') ) : $labels['nopages'],
+				'Register'       => null != UM()->options()->get('core_register') ? get_the_title( UM()->options()->get('core_register') ) . ' (ID#' . UM()->options()->get('core_register') . ') | ' . get_permalink( UM()->options()->get('core_register') ) : $labels['nopages'],
+				'Login'          => null != UM()->options()->get('core_login') ? get_the_title( UM()->options()->get('core_login') ) . ' (ID#' . UM()->options()->get('core_login') . ') | ' . get_permalink( UM()->options()->get('core_login') ) : $labels['nopages'],
+				'Logout'         => null != UM()->options()->get('core_logout') ? get_the_title( UM()->options()->get('core_logout') ) . ' (ID#' . UM()->options()->get('core_logout') . ') | ' . get_permalink( UM()->options()->get('core_logout') ) : $labels['nopages'],
+				'Password reset' => null != UM()->options()->get('core_password') ? get_the_title( UM()->options()->get('core_password-reset') ) . ' (ID#' . UM()->options()->get('core_password-reset') . ') | ' . get_permalink( UM()->options()->get('core_password-reset') ) : $labels['nopages'],
 			) );
 
 			$pages_settings = array(
@@ -145,11 +146,11 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 			$user_settings = array(
 				'um-permalink_base'              => array(
 					'label' => __( 'Profile Permalink Base', 'ultimate-member' ),
-					'value' => $permalink_base[ UM()->options()->get('permalink_base') ],
+					'value' => isset( $permalink_base[ UM()->options()->get('permalink_base') ] ) ? $permalink_base[ UM()->options()->get('permalink_base') ] : $labels['no'],
 				),
 				'um-display_name'                => array(
 					'label' => __( 'User Display Name', 'ultimate-member' ),
-					'value' => $display_name[ UM()->options()->get('display_name') ],
+					'value' => isset( $display_name[ UM()->options()->get('display_name') ] ) ? $display_name[ UM()->options()->get('display_name') ] : $labels['no'],
 				),
 				'um-author_redirect'             => array(
 					'label' => __( 'Automatically redirect author page to their profile?', 'ultimate-member' ),

@@ -464,7 +464,7 @@ if ( ! class_exists( 'umm\member_directory\includes\admin\Site_Health' ) ) {
 		 * @return array
 		 */
 		public function um_debug_information_pages( $pages ) {
-			$pages['Members page'] = get_the_title( UM()->options()->get('core_members') ) . ' (ID#' . UM()->options()->get('core_members') . ') | ' . get_permalink( UM()->options()->get('core_members') );
+			$pages['Members page'] = null != UM()->options()->get('core_members') ? get_the_title( UM()->options()->get('core_members') ) . ' (ID#' . UM()->options()->get('core_members') . ') | ' . get_permalink( UM()->options()->get('core_members') ) : __( 'No predefined page', 'ultimate-member' );
 
 			return $pages;
 		}
