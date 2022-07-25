@@ -684,7 +684,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options_sorted', $attrs['options'], $attrs );
 
-					$label = isset( $attrs['label'] ) ? $attrs['label'] : ''; ?>
+					$label = '';
+					if ( isset( $attrs['label'] ) ) {
+						$label = $attrs['label'];
+					} elseif ( ! isset( $attrs['label'] ) && isset( $attrs['title'] ) ) {
+						$label = $attrs['title'];
+					}
+					?>
 
 					<select class="um-s1" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?><?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>[]<?php } ?>"
 							data-placeholder="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
