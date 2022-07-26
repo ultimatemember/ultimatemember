@@ -38,9 +38,10 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			add_action( 'load-ultimate-member_page_um_roles', array( &$this, 'roles_page' ) );
 			add_action( 'load-toplevel_page_ultimatemember', array( &$this, 'settings_page' ) );
 
-			add_action( 'load-nav-menus.php', array( &$this, 'navmenu_page' ) );
 			if ( $wp_version >= '5.4' ) {
 				add_action( 'load-customize.php', array( &$this, 'navmenu_page' ) );
+			} else {
+				add_action( 'load-nav-menus.php', array( &$this, 'navmenu_page' ) );
 			}
 
 			add_action( 'load-user-new.php', array( &$this, 'wp_user_page' ) );

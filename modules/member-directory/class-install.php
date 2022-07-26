@@ -22,7 +22,7 @@ class Install {
 	/**
 	 * Install constructor.
 	 */
-	function __construct() {
+	public function __construct() {
 		//settings defaults
 		$this->settings_defaults = array(
 			'account_hide_in_directory'         => 1,
@@ -32,12 +32,10 @@ class Install {
 	}
 
 
-
-
 	/**
 	 * Create first install member directory
 	 */
-	function create_member_directory() {
+	public function create_member_directory() {
 		$form = array(
 			'post_type'   => 'um_directory',
 			'post_title'  => __( 'Members', 'ultimate-member' ),

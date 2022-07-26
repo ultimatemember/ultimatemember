@@ -1,40 +1,43 @@
 <?php
-/**
- * Uninstall UM Terms Conditions
- *
- */
-
-// Exit if accessed directly.
-if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit;
-
-
-if ( ! defined( 'um_terms_conditions_path' ) ) {
-	define( 'um_terms_conditions_path', plugin_dir_path( __FILE__ ) );
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
-if ( ! defined( 'um_terms_conditions_url' ) ) {
-	define( 'um_terms_conditions_url', plugin_dir_url( __FILE__ ) );
-}
+$install_class = UM()->call_class( 'umm\member_directory\Install' );
 
-if ( ! defined( 'um_terms_conditions_plugin' ) ) {
-	define( 'um_terms_conditions_plugin', plugin_basename( __FILE__ ) );
-}
-
+// Remove settings
 $options = get_option( 'um_options', array() );
-
-if ( ! empty( $options['uninstall_on_delete'] ) ) {
-	global $wpdb;
-	$wpdb->query(
-		"DELETE 
-		FROM {$wpdb->postmeta} 
-		WHERE meta_key LIKE '_um_register_use_gdpr' OR 
-			  meta_key LIKE '_um_register_use_gdpr_content_id' OR
-			  meta_key LIKE '_um_register_use_gdpr_toggle_show' OR
-			  meta_key LIKE '_um_register_use_gdpr_toggle_hide' OR
-			  meta_key LIKE '_um_register_use_gdpr_agreement' OR
-			  meta_key LIKE '_um_register_use_gdpr_error_text'"
-	);
-
-	delete_option( 'um_terms_conditions_last_version_upgrade' );
-	delete_option( 'um_terms_conditions_version' );
+foreach ( $install_class->settings_defaults as $k => $v ) {
+	unset( $options[ $k ] );
 }
+update_option( 'um_options', $options );
+
+// remove predefined page option value
+UM()->options()->remove( 'core_members' );
+
+// delete registered widgets from options
+delete_option( 'widget_um_search_widget' );
+
+$cpt = UM()->call_class( 'umm\member_directory\includes\common\CPT' );
+$cpt->create_post_types();
+
+$um_directories = get_posts(
+	array(
+		'post_type'   => 'um_directory',
+		'numberposts' => -1,
+		'fields'      => 'ids',
+	)
+);
+
+foreach ( $um_directories as $um_directory_post_id ) {
+	wp_delete_post( $um_directory_post_id, 1 );
+}
+
+global $wpdb;
+
+// Remove usermeta
+$wpdb->query(
+	"DELETE 
+	FROM {$wpdb->usermeta} 
+	WHERE meta_key = 'um_member_directory_data'"
+);

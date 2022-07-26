@@ -195,20 +195,6 @@ if ( ! class_exists( 'um\common\Enqueue' ) ) {
 			);
 			wp_localize_script( 'um-common', 'um_common_variables', $um_common_variables );
 			wp_enqueue_script( 'um-common' );
-
-			if ( ! empty( $this->modules_hash ) ) {
-				$modules_min_deps = apply_filters( 'um_modules_min_scripts_dependencies', array( 'jquery', 'wp-hooks', 'wp-i18n' ) );
-				wp_register_script( 'um-modules-min', $this->urls['modules'] . $this->modules_hash . $this->suffix . '.js', $modules_min_deps, UM_VERSION, true );
-
-				$modules_min_variables = apply_filters( 'um_modules_min_scripts_variables', array() );
-				wp_localize_script( 'um-modules-min', 'um_modules_variables', $modules_min_variables );
-
-				$modules_css_deps = apply_filters( 'um_modules_min_styles_dependencies', array() );
-				wp_register_style( 'um-modules-min', $this->urls['modules'] . $this->modules_hash . $this->suffix . '.css', $modules_css_deps, UM_VERSION );
-
-				wp_enqueue_script( 'um-modules-min' );
-				wp_enqueue_style( 'um-modules-min' );
-			}
 		}
 	}
 }

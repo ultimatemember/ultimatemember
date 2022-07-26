@@ -2,6 +2,8 @@
 	exit;
 }
 
+global $post;
+
 $allowed_html = array(
 	'strong' => array(
 		'style' => true,
@@ -19,12 +21,15 @@ $allowed_html = array(
 	<?php } ?>
 
 	<?php
+	$register_g_recaptcha_status = get_post_meta( $post->ID, '_um_register_g_recaptcha_status', true );
+	$register_g_recaptcha_status = '' === $register_g_recaptcha_status ? $recaptcha_enabled : $register_g_recaptcha_status;
+
 	$fields = array(
 		array(
 			'id'      => '_um_register_g_recaptcha_status',
 			'type'    => 'select',
 			'label'   => __( 'reCAPTCHA status on this form', 'ultimate-member' ),
-			'value'   => UM()->query()->get_meta_value( '_um_register_g_recaptcha_status', null, $recaptcha_enabled ),
+			'value'   => $register_g_recaptcha_status,
 			'options' => array(
 				0 => __( 'No', 'ultimate-member' ),
 				1 => __( 'Yes', 'ultimate-member' ),
@@ -34,11 +39,14 @@ $allowed_html = array(
 
 	$version = UM()->options()->get( 'g_recaptcha_version' );
 	if ( 'v3' === $version ) {
+		$register_g_recaptcha_score = get_post_meta( $post->ID, '_um_register_g_recaptcha_score', true );
+		$register_g_recaptcha_score = '' === $register_g_recaptcha_score ? UM()->options()->get( 'g_reCAPTCHA_score' ) : $register_g_recaptcha_score;
+
 		$fields[] = array(
 			'id'          => '_um_register_g_recaptcha_score',
 			'type'        => 'text',
 			'label'       => __( 'reCAPTCHA score', 'ultimate-member' ),
-			'value'       => UM()->query()->get_meta_value( '_um_register_g_recaptcha_score', null, UM()->options()->get( 'g_reCAPTCHA_score' ) ),
+			'value'       => $register_g_recaptcha_score,
 			'conditional' => array( '_um_register_g_recaptcha_status', '=', '1' ),
 		);
 	}
