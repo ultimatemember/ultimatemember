@@ -1147,7 +1147,67 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 								4 => __( 'Only specific roles', 'ultimate-member' ),
 								5 => __( 'Owner and specific roles', 'ultimate-member' ),
 							);
-							$tabs = array();
+
+							$tabs_for_count = 0;
+							$tabs           = UM()->profile()->tabs();
+
+							foreach ( $tabs as $k => $tab ) {
+								$profile_tab = get_post_meta( $key, '_um_profile_tab_' . $k, true );
+								$info['ultimate-member-' . $key ]['fields'] = array_merge(
+									$info['ultimate-member-' . $key ]['fields'],
+									array(
+										'um-profile_tab_' . $k => array(
+											'label' => $tab['name'] . __( ' Tab', 'ultimate-member' ),
+											'value' => $profile_tab ? $labels['yes'] : $labels['no'],
+										),
+									)
+								);
+
+								if ( isset( $profile_tab ) && 1 == $profile_tab ) {
+									$tabs_for_count++;
+									$privacy = '_um_profile_tab_' . $k . '_privacy';
+									$tab_privacy = get_post_meta( $key, $privacy, true );
+									$info['ultimate-member-' . $key ]['fields'] = array_merge(
+										$info['ultimate-member-' . $key ]['fields'],
+										array(
+											'um-profile_tab_' . $k . '_privacy' => array(
+												'label' => __( 'Who can see ', 'ultimate-member' ) . $tab['name'] . __( ' Tab?', 'ultimate-member' ),
+												'value' => $tab_options[ $tab_privacy ],
+											),
+										)
+									);
+
+									if ( 4 == $tab_privacy || 5 == $tab_privacy ) {
+										$allowed_tab = '_um_profile_tab_' . $k . '_roles';
+										if ( ! empty( get_post_meta( $key, $allowed_tab, true ) ) ) {
+											$allowed_roles = implode(', ', get_post_meta( $key, $allowed_tab, true ) );
+										} else {
+											$allowed_roles = 'All';
+										}
+										$info['ultimate-member-' . $key ]['fields'] = array_merge(
+											$info['ultimate-member-' . $key ]['fields'],
+											array(
+												'um-profile_tab_' . $k . '_privacy_roles' => array(
+													'label' => __( 'Allowed roles for ', 'ultimate-member' ) . $tab['name'] . __( ' Tab', 'ultimate-member' ),
+													'value' => $allowed_roles,
+												),
+											)
+										);
+									}
+								}
+							}
+
+							if ( $tabs_for_count > 0 ) {
+								$info['ultimate-member-' . $key ]['fields'] = array_merge(
+									$info['ultimate-member-' . $key ]['fields'],
+									array(
+										'um-profile_menu_default_tab' => array(
+											'label' => __( 'Profile menu default tab', 'ultimate-member' ),
+											'value' => $tabs[ get_post_meta( $key, '_um_profile_menu_default_tab', true ) ]['name'],
+										),
+									)
+								);
+							}
 
 							$info['ultimate-member-' . $key ]['fields'] = array_merge(
 								$info['ultimate-member-' . $key ]['fields'],
@@ -1156,83 +1216,8 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 										'label' => __( 'Enable menu icons in desktop view', 'ultimate-member' ),
 										'value' => get_post_meta( $key, '_um_profile_menu_icons', true ) ? $labels['yes'] : $labels['no'],
 									),
-									'um-profile_tab_main' => array(
-										'label' => __( 'About Tab', 'ultimate-member' ),
-										'value' => get_post_meta( $key, '_um_profile_tab_main', true ) ? $labels['yes'] : $labels['no'],
-									),
 								)
 							);
-
-							if ( 1 == get_post_meta( $key, '_um_profile_tab_main', true ) ) {
-								$tabs['main'] = __( 'About', 'ultimate-member' );
-								$info['ultimate-member-' . $key ]['fields'] = array_merge(
-									$info['ultimate-member-' . $key ]['fields'],
-									array(
-										'um-profile_tab_main_privacy' => array(
-											'label' => __( 'Who can see About Tab?', 'ultimate-member' ),
-											'value' => $tab_options[ get_post_meta( $key, '_um_profile_tab_main_privacy', true ) ],
-										),
-									)
-								);
-							}
-
-							$info['ultimate-member-' . $key ]['fields'] = array_merge(
-								$info['ultimate-member-' . $key ]['fields'],
-								array(
-									'um-profile_tab_posts' => array(
-										'label' => __( 'Posts Tab', 'ultimate-member' ),
-										'value' => get_post_meta( $key, '_um_profile_tab_posts', true ) ? $labels['yes'] : $labels['no'],
-									),
-								)
-							);
-
-							if ( 1 == get_post_meta( $key, '_um_profile_tab_posts', true ) ) {
-								$tabs['posts'] = __( 'Posts', 'ultimate-member' );
-								$info['ultimate-member-' . $key ]['fields'] = array_merge(
-									$info['ultimate-member-' . $key ]['fields'],
-									array(
-										'um-profile_tab_posts_privacy' => array(
-											'label' => __( 'Who can see About Tab?', 'ultimate-member' ),
-											'value' => $tab_options[ get_post_meta( $key, '_um_profile_tab_posts_privacy', true ) ],
-										),
-									)
-								);
-							}
-
-							$info['ultimate-member-' . $key ]['fields'] = array_merge(
-								$info['ultimate-member-' . $key ]['fields'],
-								array(
-									'um-profile_tab_comments' => array(
-										'label' => __( 'Comments Tab', 'ultimate-member' ),
-										'value' => get_post_meta( $key, '_um_profile_tab_comments', true ) ? $labels['yes'] : $labels['no'],
-									),
-								)
-							);
-
-							if ( 1 == get_post_meta( $key, '_um_profile_tab_comments', true ) ) {
-								$tabs['comments'] = __( 'Comments', 'ultimate-member' );
-								$info['ultimate-member-' . $key ]['fields'] = array_merge(
-									$info['ultimate-member-' . $key ]['fields'],
-									array(
-										'um-profile_tab_comments_privacy' => array(
-											'label' => __( 'Who can see Comments Tab?', 'ultimate-member' ),
-											'value' => $tab_options[ get_post_meta( $key, '_um_profile_tab_comments_privacy', true ) ],
-										),
-									)
-								);
-							}
-
-							if ( count( $tabs ) > 0 ) {
-								$info['ultimate-member-' . $key ]['fields'] = array_merge(
-									$info['ultimate-member-' . $key ]['fields'],
-									array(
-										'um-profile_menu_default_tab' => array(
-											'label' => __( 'Profile menu default tab', 'ultimate-member' ),
-											'value' => $tabs[ get_post_meta( $key, '_um_profile_menu_default_tab', true ) ],
-										),
-									)
-								);
-							}
 
 							$info = apply_filters( 'um_debug_information_tab_form', $info, $key );
 						}
