@@ -1,55 +1,66 @@
-/*!
+/**
  * UM-Modal
  *
+ * @link    https://ultimatemember.com/
  * @author  Ultimate Member
  * @since   UM 3.0
- * @version 1.0.0
- *
- * @link    https://docs.ultimatemember.com/
+ * @version 1.0.1
  */
 
 (function ($) {
 
 	/**
-	 * The UM-Modal library
-	 * @returns {ModalManagerUM}
+	 * Initializes a new instance of ModalManagerUM.
+	 * @constructs ModalManagerUM
+	 * @param {Array}  M
+	 * @param {Object} defaultOptions
+	 * @param {String} defaultTemplate
 	 */
 	function ModalManagerUM() {
 
 		/**
-		 * An array of modals
+		 * All open modals are stored here.
+		 * @type {Array}
 		 */
 		this.M = [];
 
+		/**
+		 * Default modal options.
+		 * @type {Object}
+		 */
 		this.defaultOptions = {
 			attributes: {},
 			classes: '',
+			content: '',
 			duration: 400, // ms
 			footer: '',
 			header: '',
 			size: 'normal', // small, normal, large
-			template: '',
-			content: '',
+			template: ''
 		};
 
+		/**
+		 * Default modal template.
+		 * @type {String}
+		 */
 		this.defaultTemplate = '<div class="um-modal"><span class="um-modal-close">&times;</span><div class="um-modal-header"></div><div class="um-modal-body"></div><div class="um-modal-footer"></div></div>';
 
 	}
 
 
 	/**
-	 *
-	 * @type {{constructor: ModalManagerUM, addModal: (function((string|Object), Object, *): (*|jQuery|HTMLElement)), addOverlay: (function(): (*|jQuery|HTMLElement)), clear: clear, close: (function(): ModalManagerUM), filterOptions: (function(Object): *), getModal: (function(Object): null), hide: (function(Object): (*|Object)), loading: (function(Boolean, Object): ModalManagerUM), responsive: (function(Object): ModalManagerUM), setContent: (function(string, *=): ModalManagerUM), show: (function(Object): (*|Object)), stopEvent: stopEvent}}
+	 * ModalManagerUM prototype.
+	 * @type {{constructor: ModalManagerUM, addModal: (function(Object, jQuery.Event): jQuery), addOverlay: (function(): jQuery), clear: (function(): ModalManagerUM), close: (function(): ModalManagerUM), closeAll: (function(): ModalManagerUM), filterOptions: (function(Object): Object), getModal: (function(Object): (jQuery|null)), hide: (function(Object): (jQuery|null)), loading: (function(Boolean, Object): ModalManagerUM), responsive: (function(Object): ModalManagerUM), setContent: (function(String, Object): ModalManagerUM), show: (function(Object): (jQuery|null)), stopEvent: (function(): ModalManagerUM)}}
 	 */
 	ModalManagerUM.prototype = {
 
 		constructor: ModalManagerUM,
 
 		/**
-		 * Add and display a modal
-		 * @param   {object} options         Modal properties. Optional.
-		 * @param   {object} event         Modal properties. Optional.
-		 * @returns {object}                 A modal jQuery object.
+		 * Add and display a modal.
+		 * @param   {Object}       options Modal properties. Optional. Options object is passed to the function that requests the content as the second argument.
+		 * @param   {jQuery.Event} event   Event object. Optional. The event object is passed to the function that requests the content as the first argument.
+		 * @returns {jQuery}               A modal jQuery object.
 		 */
 		addModal: function (options, event) {
 			options = this.filterOptions( options );
@@ -82,21 +93,32 @@
 			switch ( typeof options.content ) {
 				case 'function':
 					let res = options.content.apply( $modal, [event, options] );
-					if ( typeof res === 'object' && typeof res.readyState === 'number' && typeof res.done === 'function' ) {
+					if ( typeof res === 'object' && typeof res.done === 'function' && typeof res.fail === 'function' ) {
 
-						/**
-						 * Action fired before loading modal content by AJAX
-						 */
+						// Action fired before loading modal content by AJAX.
 						wp.hooks.doAction( 'um-modal-before-ajax', $modal, options, res );
 						this.loading( true, $modal );
 
 						res.done( function (data) {
-
-							/**
-							 * Action fired after loading modal content by AJAX
-							 */
-							wp.hooks.doAction( 'um-modal-after-ajax', $modal, data, res );
 							UM.modal.loading( false, $modal );
+
+							let content = typeof data === 'string' ? data : ( typeof data === 'object' && typeof data.data === 'string' ? data.data : '' );
+							if ( content && $modalBody.is( ':empty' ) ) {
+								UM.modal.setContent( content, $modal ).responsive( $modal );
+							} else {
+								console.warn( 'UM-Modal: received modal content is empty.' );
+							}
+
+							// Action fired after loading modal content by AJAX.
+							wp.hooks.doAction( 'um-modal-after-ajax', $modal, data, res );
+						} );
+
+						res.fail( function (data) {
+							UM.modal.loading( false, $modal );
+							console.error( data );
+
+							// Action fired after loading modal content by AJAX is failed.
+							wp.hooks.doAction( 'um-modal-after-ajax-fail', $modal, data, res );
 						} );
 
 					} else {
@@ -112,7 +134,7 @@
 					if ( options.content === 'loading' ) {
 						this.loading( true, $modal );
 					} else
-					if ( /^https?:/.test( options.content ) ) {
+						if ( /^https?:/.test( options.content ) ) {
 						this.loading( true, $modal );
 						$modalBody.load( options.content.trim(), function () {
 							this.loading( false, $modal );
@@ -172,8 +194,8 @@
 		},
 
 		/**
-		 * Add and display a modal overlay
-		 * @returns {object}                 A modal overlay jQuery object.
+		 * Add and display a modal overlay.
+		 * @returns {jQuery} A modal overlay jQuery object.
 		 */
 		addOverlay: function () {
 			if ( $( 'body > .um-modal-overlay' ).length < 1 ) {
@@ -185,7 +207,8 @@
 		},
 
 		/**
-		 * Remove all modals and overlay
+		 * Remove all modals and overlay.
+		 * @returns {ModalManagerUM}
 		 */
 		clear: function () {
 			this.M = [];
@@ -197,10 +220,11 @@
 			if ( $( document.body ).css( 'overflow-y' ) === 'hidden' ) {
 				$( document.body ).css( 'overflow-y', 'visible' );
 			}
+			return this;
 		},
 
 		/**
-		 * Close current modal
+		 * Close current modal.
 		 * @returns {ModalManagerUM}
 		 */
 		close: function () {
@@ -231,7 +255,7 @@
 		},
 
 		/**
-		 * Close All modals
+		 * Close All modals.
 		 * @returns {ModalManagerUM}
 		 */
 		closeAll: function () {
@@ -257,9 +281,9 @@
 		},
 
 		/**
-		 * Filter modal options
-		 * @param   {Object} options  Modal options.
-		 * @returns {Object}          Modal options.
+		 * Filter modal options.
+		 * @param   {Object} options Modal options.
+		 * @returns {Object}         Modal options.
 		 */
 		filterOptions: function (options) {
 
@@ -279,9 +303,9 @@
 		},
 
 		/**
-		 * Get the current modal
-		 * @param   {Object} modal  A modal element. Optional.
-		 * @returns {Object|null}   A modal jQuery object or NULL.
+		 * Get the current modal.
+		 * @param   {Object}      modal A modal element. Optional.
+		 * @returns {jQuery|null}       A modal jQuery object or NULL.
 		 */
 		getModal: function (modal) {
 			let $modal;
@@ -304,9 +328,9 @@
 		},
 
 		/**
-		 * Hide current modal
-		 * @param   {Object} modal  A modal element. Optional.
-		 * @returns {Object|null}   Hidden modal if exists.
+		 * Hide current modal.
+		 * @param   {Object}      modal A modal element. Optional.
+		 * @returns {jQuery|null}       Hidden modal if exists.
 		 */
 		hide: function (modal) {
 			let $modal = this.getModal( modal );
@@ -328,9 +352,9 @@
 		},
 
 		/**
-		 *
-		 * @param   {Boolean} isLoading  The modal is awaiting a request.
-		 * @param   {Object} modal       A modal element. Optional.
+		 * Add or remove class 'loading' that displays loading icon.
+		 * @param   {Boolean}        isLoading The modal is awaiting a request.
+		 * @param   {Object}         modal     A modal element. Optional.
 		 * @returns {ModalManagerUM}
 		 */
 		loading: function (isLoading, modal) {
@@ -348,8 +372,8 @@
 		},
 
 		/**
-		 * Update modal size and position
-		 * @param   {object} modal   A modal element. Optional.
+		 * Update modal size and position.
+		 * @param   {Object}         modal A modal element. Optional.
 		 * @returns {ModalManagerUM}
 		 */
 		responsive: function( modal ) {
@@ -433,8 +457,9 @@
 		},
 
 		/**
-		 * Update a modal content
-		 * @param   {string} content  A new content
+		 * Update a modal content.
+		 * @param   {String}         content A new content.
+		 * @param   {Object}         modal   A modal element. Optional.
 		 * @returns {ModalManagerUM}
 		 */
 		setContent: function (content, modal) {
@@ -459,9 +484,9 @@
 		},
 
 		/**
-		 * Show current modal
-		 * @param   {object} modal  A modal element. Optional.
-		 * @returns {object|null}   Shown modal if exists.
+		 * Show current modal.
+		 * @param   {Object}      modal A modal element. Optional.
+		 * @returns {jQuery|null}       Shown modal if exists.
 		 */
 		show: function (modal) {
 			let $modal = this.getModal( modal );
@@ -486,12 +511,14 @@
 		},
 
 		/**
-		 * Stop event propagation
-		 * @param {object} e  jQuery.Event
+		 * Stop event propagation.
+		 * @param   {jQuery.Event}   e Event object.
+		 * @returns {ModalManagerUM}
 		 */
 		stopEvent: function (e) {
 			e.preventDefault();
 			e.stopPropagation();
+			return this;
 		}
 	};
 
@@ -515,39 +542,42 @@
 		UM.modal.responsive();
 	});
 
-
+	/**
+	 * Initialise modal's open button with jQuery.
+	 * @param   {Object} options Modal properties. Optional.
+	 * @returns {Object}         Query object.
+	 */
 	$.fn.umModal = function( options ) {
-		const settings = $.extend({
-			// These are the defaults.
-			classes:  '',
-			duration: 400, // ms
-			footer:   '',
-			header:   '',
-			size:     'normal', // small, normal, large
-			content:  '',
-		}, options );
+		this.on( 'click', function (event) {
+			event.preventDefault();
 
-		this.each( function( element ) {
-			let $button = $( this );
+			const settings = $.extend( UM.modal.defaultOptions, options || {}, {
+				relatedButton: $( event.currentTarget )
+			} );
 
-			if ( ! $button.data( 'um-modal-ready' ) ) {
-				$button.on( 'click', function(e) {
-					e.preventDefault();
-					// console.log( this );
-					// console.log( $button );
-					// console.log( e );
+			// Action fired when button is clicked before modal is shown.
+			wp.hooks.doAction( 'um-modal-button-clicked', settings, event );
 
-					settings.relatedButton = $button;
-
-					wp.hooks.doAction( 'um-modal-button-clicked', settings, e );
-
-					UM.modal.addModal( settings, e );
-				});
-
-				$button.data( 'um-modal-ready', true );
-			}
-		});
-
+			UM.modal.addModal( settings, event );
+		} ).data( 'um-modal-ready', true );
 		return this;
 	};
 })( jQuery );
+
+/**
+ * @example How to initialize a button that retrieves a modal content by AJAX and displays response in a new modal.
+ *
+jQuery( '.um_button_example' ).umModal( {
+	content: function ( event, options ) {
+		let $btn = jQuery( event.currentTarget );
+		return wp.ajax.send( 'um_ajax_action_example', {
+			data: {
+				nonce: um_admin_scripts.nonce,
+				user_id: $btn.data( 'user_id' )
+			}
+		} );
+	},
+	header: wp.i18n.__( 'Modal header example', 'ultimate-member' ),
+	size: 'large'
+} );
+*/
