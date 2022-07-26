@@ -21,3 +21,10 @@ $wpdb->query(
 		  meta_key LIKE '_um_register_g_recaptcha_status' OR
 		  meta_key LIKE '_um_register_g_recaptcha_score'"
 );
+
+$hidden_notices = get_option( 'um_hidden_admin_notices', array() );
+if ( ! is_array( $hidden_notices ) ) {
+	$hidden_notices = array();
+}
+unset( $hidden_notices[ array_search( 'um_recaptcha_notice', $hidden_notices, true ) ] );
+update_option( 'um_hidden_admin_notices', $hidden_notices );

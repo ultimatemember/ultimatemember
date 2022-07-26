@@ -39,5 +39,5 @@ global $wpdb;
 $wpdb->query(
 	"DELETE 
 	FROM {$wpdb->usermeta} 
-	WHERE meta_key = 'um_member_directory_data'"
+	WHERE meta_key = 'um_member_directory_data' OR meta_key = 'hide_in_members'"
 );
