@@ -1022,6 +1022,10 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 							'refresh'          => __( 'Refresh active page', 'ultimate-member' ),
 							'redirect_admin'   => __( 'Redirect to WordPress Admin', 'ultimate-member' ),
 						);
+
+						$login_after_login = get_post_meta( $key, '_um_login_after_login', true );
+						$login_after_login = '' === $login_after_login ? '0' : $login_after_login;
+
 						$info['ultimate-member-' . $key ]['fields'] = array_merge(
 							$info['ultimate-member-' . $key ]['fields'],
 							array(
@@ -1043,7 +1047,7 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 								),
 								'um-login_after_login' => array(
 									'label' => __( 'Redirection after Login', 'ultimate-member' ),
-									'value' => $login_redirect_options[ get_post_meta( $key, '_um_login_after_login', true ) ],
+									'value' => $login_redirect_options[ $login_after_login ],
 								),
 							)
 						);
