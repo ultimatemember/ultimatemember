@@ -125,7 +125,7 @@ if ( ! class_exists( 'umm\member_directory\includes\admin\Site_Health' ) ) {
 							),
 							'um-directory_template'   => array(
 								'label' => __( 'Template', 'ultimate-member' ),
-								'value' => get_post_meta( $key, '_um_directory_template', true ),
+								'value' => get_post_meta( $key, '_um_directory_template', true ) ? get_post_meta( $key, '_um_directory_template', true ) : $labels['default'],
 							),
 							'um-directory-view_types' => array(
 								'label' => __( 'View type(s)', 'ultimate-member' ),
@@ -251,6 +251,14 @@ if ( ! class_exists( 'umm\member_directory\includes\admin\Site_Health' ) ) {
 								'label' => __( 'Show display name', 'ultimate-member' ),
 								'value' => get_post_meta( $key,'_um_show_name', true ) ? $labels['yes'] : $labels['no'],
 							),
+						)
+					);
+
+					$info = apply_filters( 'um_debug_member_directory_profile_extend', $info, $key );
+
+					$info['ultimate-member-directory-' . $key ]['fields'] = array_merge(
+						$info['ultimate-member-directory-' . $key ]['fields'],
+						array(
 							'um-directory-show_tagline'     => array(
 								'label' => __( 'Show tagline below profile name', 'ultimate-member' ),
 								'value' => get_post_meta( $key,'_um_show_tagline', true ) ? $labels['yes'] : $labels['no'],
