@@ -23,6 +23,7 @@ if ( ! class_exists( 'umm\online\includes\admin\Site_Health' ) ) {
 		 */
 		public function __construct() {
 			add_action( 'debug_information', array( &$this, 'debug_information' ), 25, 1 );
+			add_filter( 'um_debug_member_directory_profile_extend', array( $this, 'um_debug_member_directory_profile_extend' ), 10, 2 );
 		}
 
 
@@ -45,6 +46,30 @@ if ( ! class_exists( 'umm\online\includes\admin\Site_Health' ) ) {
 						'value' => UM()->options()->get('online_show_stats') ? __( 'Yes', 'ultimate-member' ) : __( 'No', 'ultimate-member' ),
 					),
 				),
+			);
+
+			return $info;
+		}
+
+
+		/**
+		 * Extend profile card for member directory.
+		 *
+		 * @since 3.0
+		 *
+		 * @param array $info The Site Health information.
+		 *
+		 * @return array The updated Site Health information.
+		 */
+		public function um_debug_member_directory_profile_extend( $info, $key ) {
+			$info['ultimate-member-directory-' . $key ]['fields'] = array_merge(
+				$info['ultimate-member-directory-' . $key ]['fields'],
+				array(
+					'um-directory-online_hide_stats'     => array(
+						'label' => __( 'Hide online stats', 'ultimate-member' ),
+						'value' => get_post_meta( $key,'_um_online_hide_stats', true ) ? __( 'Yes', 'ultimate-member-pro' ) : __( 'No', 'ultimate-member-pro' ),
+					),
+				)
 			);
 
 			return $info;
