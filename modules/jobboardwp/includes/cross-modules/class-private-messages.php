@@ -79,10 +79,6 @@ class Private_Messages {
 			return;
 		}
 
-		if ( version_compare( get_bloginfo( 'version' ), '5.4', '<' ) ) {
-			echo do_shortcode( '[ultimatemember_message_button user_id="' . $job->post_author . '"]' );
-		} else {
-			echo apply_shortcodes( '[ultimatemember_message_button user_id="' . $job->post_author . '"]' );
-		}
+		echo apply_shortcodes( '[ultimatemember_message_button user_id="' . $job->post_author . '"]' );
 	}
 }

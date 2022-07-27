@@ -1,18 +1,18 @@
 <?php
-namespace um\admin\core;
+namespace um\common;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
-if ( ! class_exists( 'um\admin\core\Admin_GDPR' ) ) {
+if ( ! class_exists( 'um\common\GDPR' ) ) {
 
 
 	/**
-	 * Class Admin_GDPR
-	 * @package um\admin\core
+	 * Class GDPR
+	 * @package um\common
 	 */
-	class Admin_GDPR {
+	class GDPR {
 
 		/**
 		 * @var array
@@ -21,11 +21,10 @@ if ( ! class_exists( 'um\admin\core\Admin_GDPR' ) ) {
 
 
 		/**
-		 * Admin_GDPR constructor.
+		 * GDPR constructor.
 		 */
 		function __construct() {
 			add_action( 'init', array( &$this, 'init_fields' ), 10 );
-			add_action( 'admin_init', array( &$this, 'plugin_add_suggested_privacy_content' ), 20 );
 			add_filter( 'wp_privacy_personal_data_exporters', array( &$this, 'plugin_register_exporters' ) );
 			add_filter( 'wp_privacy_personal_data_erasers', array( &$this, 'plugin_register_erasers' ) );
 		}
@@ -98,29 +97,6 @@ if ( ! class_exists( 'um\admin\core\Admin_GDPR' ) ) {
 			 * ?>
 			 */
 			$this->meta_associations = apply_filters( 'um_gdpr_meta_associations', $this->meta_associations );
-		}
-
-
-		/**
-		 * Return the default suggested privacy policy content.
-		 *
-		 * @return string The default policy content.
-		 */
-		function plugin_get_default_privacy_content() {
-			ob_start();
-
-			include UM()->admin()->templates_path . 'gdpr.php';
-
-			return ob_get_clean();
-		}
-
-
-		/**
-		 * Add the suggested privacy policy text to the policy postbox.
-		 */
-		function plugin_add_suggested_privacy_content() {
-			$content = $this->plugin_get_default_privacy_content();
-			wp_add_privacy_policy_content( ultimatemember_plugin_name, $content );
 		}
 
 
@@ -293,7 +269,5 @@ if ( ! class_exists( 'um\admin\core\Admin_GDPR' ) ) {
 				'done'           => true,
 			);
 		}
-
 	}
-
 }

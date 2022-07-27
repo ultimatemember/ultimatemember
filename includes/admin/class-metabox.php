@@ -44,7 +44,6 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			$this->edit_mode_value = null;
 			$this->edit_array      = array();
 
-			add_action( 'admin_head', array( &$this, 'admin_head' ), 9);
 			add_action( 'admin_footer', array( &$this, 'load_modal_content' ), 9 );
 
 			add_action( 'load-post.php', array( &$this, 'add_metabox' ), 9 );
@@ -215,17 +214,6 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 
 
 		/**
-		 * Runs on admin head
-		 */
-		function admin_head() {
-			global $post;
-			if ( UM()->admin()->is_own_post_type() && isset( $post->ID ) ) {
-				$this->postmeta = $this->get_custom_post_meta( $post->ID );
-			}
-		}
-
-
-		/**
 		 * Init the metaboxes
 		 */
 		function add_metabox() {
@@ -362,9 +350,9 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 		 */
 		function add_taxonomy_metabox() {
 			//restrict content metabox
-			$all_taxonomies = get_taxonomies( array( 'public' => true ) );
-			$tax_types = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
-			$exclude_taxonomies = UM()->excluded_taxonomies();
+			$all_taxonomies     = get_taxonomies( array( 'public' => true ) );
+			$tax_types          = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
+			$exclude_taxonomies = UM()->common()->access()->excluded_taxonomies();
 
 			foreach ( $all_taxonomies as $key => $taxonomy ) {
 				if ( in_array( $key, $exclude_taxonomies ) || empty( $tax_types[ $key ] ) ) {

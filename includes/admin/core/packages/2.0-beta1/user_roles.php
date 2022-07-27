@@ -150,11 +150,8 @@ if ( ! empty( $um_roles ) ) {
 
 update_option( 'um_roles', $role_keys );
 
-global $wp_roles, $wp_version;
-if ( version_compare( $wp_version, '4.9', '<' ) ) {
-	$wp_roles->_init();
-	$wp_roles->reinit();
-} elseif ( method_exists( $wp_roles, 'for_site' ) ) {
+global $wp_roles;
+if ( method_exists( $wp_roles, 'for_site' ) ) {
 	$wp_roles->for_site( get_current_blog_id() );
 }
 

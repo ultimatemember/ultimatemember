@@ -374,7 +374,22 @@ $ListTable->prepare_items();
 	<?php if ( ! empty( $_GET['msg'] ) ) {
 		switch ( sanitize_key( $_GET['msg'] ) ) {
 			case 'd':
-				echo '<div id="message" class="updated fade"><p>' . __( 'User Role <strong>Deleted</strong> Successfully.', 'ultimate-member' ) . '</p></div>';
+				if ( isset( $_GET['count'] ) ) {
+					$count = absint( $_GET['count'] );
+					if ( $count > 0 ) {
+						$message = sprintf( _n( '%s user role is <strong>deleted</strong> successfully.','%s user roles are <strong>deleted</strong> successfully.', $count, 'ultimate-member' ), $count );
+						echo '<div id="message" class="updated fade"><p>' . $message . '</p></div>';
+					}
+				}
+				break;
+			case 'reset':
+				if ( isset( $_GET['count'] ) ) {
+					$count = absint( $_GET['count'] );
+					if ( $count > 0 ) {
+						$message = sprintf( _n( '%s user role\'s meta is <strong>flushed</strong> successfully.','%s user roles\' meta are <strong>flushed</strong> successfully.', $count, 'ultimate-member' ), $count );
+						echo '<div id="message" class="updated fade"><p>' . $message . '</p></div>';
+					}
+				}
 				break;
 		}
 	} ?>

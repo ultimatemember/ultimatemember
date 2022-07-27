@@ -61,8 +61,6 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			$this->templates_path = um_path . 'includes/admin/templates/';
 
 			add_action( 'admin_init', array( &$this, 'admin_init' ), 0 );
-
-			add_filter( 'admin_body_class', array( &$this, 'admin_body_class' ), 999 );
 		}
 
 
@@ -1219,21 +1217,6 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 
 
 		/**
-		 * Adds class to our admin pages
-		 *
-		 * @param $classes
-		 *
-		 * @return string
-		 */
-		public function admin_body_class( $classes ) {
-			if ( $this->is_own_screen() ) {
-				return "$classes um um-admin";
-			}
-			return $classes;
-		}
-
-
-		/**
 		 * Init admin action/filters + request handlers
 		 */
 		function admin_init() {
@@ -1297,13 +1280,14 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 		 * @used-by \UM::includes()
 		 */
 		function includes() {
-			$this->enqueue();
 			$this->actions_listener();
-			$this->settings();
-			$this->notices();
-			$this->menu();
 			$this->columns();
+			$this->enqueue();
+			$this->gdpr();
+			$this->menu();
 			$this->metabox();
+			$this->notices();
+			$this->settings();
 			$this->site_health();
 		}
 
@@ -1344,6 +1328,19 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 				UM()->classes['um\admin\actions_listener'] = new Actions_Listener();
 			}
 			return UM()->classes['um\admin\actions_listener'];
+		}
+
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return GDPR
+		 */
+		function gdpr() {
+			if ( empty( UM()->classes['um\admin\gdpr'] ) ) {
+				UM()->classes['um\admin\gdpr'] = new GDPR();
+			}
+			return UM()->classes['um\admin\gdpr'];
 		}
 
 
@@ -1402,6 +1399,19 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 		/**
 		 * @since 3.0
 		 *
+		 * @return Screen
+		 */
+		public function screen() {
+			if ( empty( UM()->classes['um\admin\screen'] ) ) {
+				UM()->classes['um\admin\screen'] = new Screen();
+			}
+			return UM()->classes['um\admin\screen'];
+		}
+
+
+		/**
+		 * @since 3.0
+		 *
 		 * @return Settings
 		 */
 		function settings() {
@@ -1410,91 +1420,5 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			}
 			return UM()->classes['um\admin\settings'];
 		}
-
-
-		/**
-		 * Boolean check if we're viewing UM backend
-		 *
-		 * @since 3.0
-		 *
-		 * @return bool
-		 */
-		function is_own_screen() {
-			global $current_screen;
-
-			$is_um_screen = false;
-
-			if ( ! empty( $current_screen ) ) {
-				$screen_id = $current_screen->id;
-				if ( strstr( $screen_id, 'ultimatemember' ) ||
-				     strstr( $screen_id, 'um_' ) ||
-				     strstr( $screen_id, 'user' ) ||
-				     strstr( $screen_id, 'profile' ) ||
-				     'nav-menus' === $screen_id || 'dashboard' === $screen_id ) {
-					$is_um_screen = true;
-				}
-			}
-
-			if ( $this->is_own_post_type() ) {
-				$is_um_screen = true;
-			}
-
-			if ( $this->is_restricted_entity() ) {
-				$is_um_screen = true;
-			}
-
-			return apply_filters( 'um_is_ultimatememeber_admin_screen', $is_um_screen );
-		}
-
-
-		/**
-		 * Check if current page load UM post type
-		 *
-		 * @since 3.0
-		 *
-		 * @return bool
-		 */
-		function is_own_post_type() {
-			$cpt = UM()->cpt_list();
-
-			if ( isset( $_REQUEST['post_type'] ) ) {
-				$post_type = sanitize_key( $_REQUEST['post_type'] );
-				if ( in_array( $post_type, $cpt ) ) {
-					return true;
-				}
-			} elseif ( isset( $_REQUEST['action'] ) && 'edit' === sanitize_key( $_REQUEST['action'] ) ) {
-				$post_type = get_post_type();
-				if ( in_array( $post_type, $cpt ) ) {
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-
-		/**
-		 * If page now show content with restricted post/taxonomy
-		 *
-		 * @since 3.0
-		 *
-		 * @return bool
-		 */
-		function is_restricted_entity() {
-			$restricted_posts = UM()->options()->get( 'restricted_access_post_metabox' );
-			$restricted_taxonomies = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
-
-			global $typenow, $taxnow;
-			if ( ! empty( $typenow ) && ! empty( $restricted_posts[ $typenow ] ) ) {
-				return true;
-			}
-
-			if ( ! empty( $taxnow ) && ! empty( $restricted_taxonomies[ $taxnow ] ) ) {
-				return true;
-			}
-
-			return false;
-		}
-
 	}
 }

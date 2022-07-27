@@ -215,7 +215,7 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 
 			$duplicates         = array();
 			$taxonomies_options = array();
-			$exclude_taxonomies = UM()->excluded_taxonomies();
+			$exclude_taxonomies = UM()->common()->access()->excluded_taxonomies();
 			$all_taxonomies     = get_taxonomies( array( 'public' => true ), 'objects' );
 			foreach ( $all_taxonomies as $key => $taxonomy ) {
 				if ( in_array( $key, $exclude_taxonomies, true ) ) {
@@ -344,33 +344,30 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 				)
 			);
 
-			global $wp_version;
-			if ( version_compare( $wp_version, '5.0', '>=' ) ) {
-				$access_fields = array_merge(
-					$access_fields,
+			$access_fields = array_merge(
+				$access_fields,
+				array(
 					array(
-						array(
-							'id'    => 'restricted_blocks',
-							'type'  => 'checkbox',
-							'label' => __( 'Enable the "Content Restriction" settings for the Gutenberg Blocks', 'ultimate-member' ),
-						),
-						array(
-							'id'          => 'restricted_block_message',
-							'type'        => 'textarea',
-							'label'       => __( 'Restricted Access Block Message', 'ultimate-member' ),
-							'description' => __( 'This is the message shown to users that do not have permission to view the block\'s content', 'ultimate-member' ),
-							'conditional' => array( 'restricted_blocks', '=', 1 ),
-						),
-					)
-				);
+						'id'    => 'restricted_blocks',
+						'type'  => 'checkbox',
+						'label' => __( 'Enable the "Content Restriction" settings for the Gutenberg Blocks', 'ultimate-member' ),
+					),
+					array(
+						'id'          => 'restricted_block_message',
+						'type'        => 'textarea',
+						'label'       => __( 'Restricted Access Block Message', 'ultimate-member' ),
+						'description' => __( 'This is the message shown to users that do not have permission to view the block\'s content', 'ultimate-member' ),
+						'conditional' => array( 'restricted_blocks', '=', 1 ),
+					),
+				)
+			);
 
-				$settings_map['restricted_blocks']        = array(
-					'sanitize' => 'bool',
-				);
-				$settings_map['restricted_block_message'] = array(
-					'sanitize' => 'textarea',
-				);
-			}
+			$settings_map['restricted_blocks']        = array(
+				'sanitize' => 'bool',
+			);
+			$settings_map['restricted_block_message'] = array(
+				'sanitize' => 'textarea',
+			);
 
 			$access_fields = array_merge(
 				$access_fields,

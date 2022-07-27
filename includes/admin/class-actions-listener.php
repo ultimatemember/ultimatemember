@@ -645,6 +645,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 							exit;
 						}
 
+						$deleted_count = 0;
 						$um_roles = get_option( 'um_roles', array() );
 
 						$um_custom_roles = array();
@@ -663,6 +664,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 
 							//check if role exist before removing it
 							if ( get_role( $roleID ) ) {
+								$deleted_count++;
 								remove_role( $roleID );
 							}
 						}
@@ -700,7 +702,12 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 
 						update_option( 'um_roles', $um_roles );
 
-						wp_redirect( add_query_arg( 'msg', 'd', $redirect ) );
+						if ( 0 === $deleted_count ) {
+							wp_redirect( $redirect );
+							exit;
+						}
+
+						wp_redirect( add_query_arg( array( 'msg' => 'd', 'count' => $deleted_count ), $redirect ) );
 						exit;
 						break;
 					}
@@ -721,6 +728,8 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 							exit;
 						}
 
+						$flushed_count = 0;
+
 						foreach ( $role_keys as $k => $role_key ) {
 							$role_meta = get_option( "um_role_{$role_key}_meta" );
 
@@ -729,10 +738,16 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 								continue;
 							}
 
+							$flushed_count++;
 							delete_option( "um_role_{$role_key}_meta" );
 						}
 
-						wp_redirect( add_query_arg( 'msg', 'reset', $redirect ) );
+						if ( 0 === $flushed_count ) {
+							wp_redirect( $redirect );
+							exit;
+						}
+
+						wp_redirect( add_query_arg( array( 'msg' => 'reset', 'count' => $flushed_count ), $redirect ) );
 						exit;
 						break;
 					}

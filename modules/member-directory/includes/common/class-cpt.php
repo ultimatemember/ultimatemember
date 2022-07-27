@@ -16,11 +16,16 @@ class CPT {
 
 
 	/**
-	 * Initialize the class and set its properties.
-	 *
-	 * @since    1.0.0
+	 * CPT constructor.
 	 */
 	public function __construct() {
+	}
+
+
+	/**
+	 *
+	 */
+	public function hooks() {
 		add_action( 'init', array( &$this, 'create_post_types' ), 1 );
 		add_filter( 'um_cpt_list', array( &$this, 'add_um_cpt' ), 10, 1 );
 	}
@@ -29,7 +34,7 @@ class CPT {
 	/**
 	 * Create UM's CPT
 	 */
-	function create_post_types() {
+	public function create_post_types() {
 		register_post_type(
 			'um_directory',
 			array(
@@ -82,7 +87,7 @@ class CPT {
 	 *
 	 * @return array
 	 */
-	function add_um_cpt( $cpt ) {
+	public function add_um_cpt( $cpt ) {
 		$cpt[] = 'um_directory';
 		return $cpt;
 	}

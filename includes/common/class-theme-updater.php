@@ -1,5 +1,5 @@
 <?php
-namespace um\admin\core;
+namespace um\common;
 
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -7,14 +7,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
+if ( ! class_exists( 'um\common\Theme_Updater' ) ) {
 
 
 	/**
-	 * Class Admin_Theme_Updater
-	 * @package um\admin\core
+	 * Class Theme_Updater
+	 * @package um\common
 	 */
-	class Admin_Theme_Updater {
+	class Theme_Updater {
 
 
 		/**
@@ -181,7 +181,5 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 				}
 			}
 		}
-
 	}
-
 }

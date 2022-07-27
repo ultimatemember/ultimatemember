@@ -538,7 +538,6 @@ if ( ! class_exists( 'UM' ) ) {
 
 				$this->modules();
 				$this->integrations();
-				$this->access();
 
 				$this->common()->includes();
 				if ( $this->is_request( 'ajax' ) ) {
@@ -554,20 +553,20 @@ if ( ! class_exists( 'UM' ) ) {
 					$this->ajax_init();
 					//$this->admin_ajax_hooks();
 					$this->admin_upgrade()->init_packages_ajax_handlers();
-					$this->admin_gdpr();
+					//$this->admin_gdpr();
 					//$this->columns();
-					$this->admin_navmenu();
+					//$this->admin_navmenu();
 					$this->plugin_updater();
-					$this->theme_updater();
+					//$this->theme_updater();
 				} elseif ( $this->is_request( 'admin' ) ) {
 					//$this->admin();
 					$this->admin_upgrade();
 					$this->users();
 					//$this->dragdrop();
-					$this->admin_gdpr();
-					$this->admin_navmenu();
+					//$this->admin_gdpr();
+					//$this->admin_navmenu();
 					$this->plugin_updater();
-					$this->theme_updater();
+					//$this->theme_updater();
 
 					$this->account(); // for adding_shortcode
 					$this->password(); // for adding_shortcode
@@ -885,11 +884,13 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0.26
 		 *
-		 * @return um\admin\core\Admin_Navmenu()
+		 * Legacy since 3.0
+		 *
+		 * @return um\legacy\admin\core\Admin_Navmenu()
 		 */
 		function admin_navmenu() {
 			if ( empty( $this->classes['admin_navmenu'] ) ) {
-				$this->classes['admin_navmenu'] = new um\admin\core\Admin_Navmenu();
+				$this->classes['admin_navmenu'] = new um\legacy\admin\core\Admin_Navmenu();
 			}
 			return $this->classes['admin_navmenu'];
 		}

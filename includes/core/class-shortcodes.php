@@ -1145,32 +1145,20 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			$current_user_roles = um_user( 'roles' );
 
 			if ( ! empty( $a['not'] ) && ! empty( $a['roles'] ) ) {
-				if ( version_compare( get_bloginfo( 'version' ),'5.4', '<' ) ) {
-					return do_shortcode( $this->convert_locker_tags( $content ) );
-				} else {
-					return apply_shortcodes( $this->convert_locker_tags( $content ) );
-				}
+				return apply_shortcodes( $this->convert_locker_tags( $content ) );
 			}
 
 			if ( ! empty( $a['not'] ) ) {
 				$not_in_roles = explode( ",", $a['not'] );
 
 				if ( is_array( $not_in_roles ) && ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, $not_in_roles ) ) <= 0 ) ) {
-					if ( version_compare( get_bloginfo( 'version' ),'5.4', '<' ) ) {
-						return do_shortcode( $this->convert_locker_tags( $content ) );
-					} else {
-						return apply_shortcodes( $this->convert_locker_tags( $content ) );
-					}
+					return apply_shortcodes( $this->convert_locker_tags( $content ) );
 				}
 			} else {
 				$roles = explode( ",", $a['roles'] );
 
 				if ( ! empty( $current_user_roles ) && is_array( $roles ) && count( array_intersect( $current_user_roles, $roles ) ) > 0 ) {
-					if ( version_compare( get_bloginfo( 'version' ),'5.4', '<' ) ) {
-						return do_shortcode( $this->convert_locker_tags( $content ) );
-					} else {
-						return apply_shortcodes( $this->convert_locker_tags( $content ) );
-					}
+					return apply_shortcodes( $this->convert_locker_tags( $content ) );
 				}
 			}
 

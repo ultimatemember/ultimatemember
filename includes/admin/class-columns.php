@@ -18,8 +18,7 @@ if ( ! class_exists( 'um\admin\Columns' ) ) {
 		/**
 		 * Columns constructor.
 		 */
-		function __construct() {
-
+		public function __construct() {
 			add_filter( 'manage_edit-um_form_columns', array( &$this, 'manage_edit_um_form_columns' ) );
 			add_action( 'manage_um_form_posts_custom_column', array( &$this, 'manage_um_form_posts_custom_column' ), 10, 3 );
 
@@ -28,14 +27,45 @@ if ( ! class_exists( 'um\admin\Columns' ) ) {
 			// Add a post display state for special UM pages.
 			add_filter( 'display_post_states', array( &$this, 'add_display_post_states' ), 10, 2 );
 
-			add_filter( 'post_row_actions', array( &$this, 'remove_bulk_actions_um_form_inline' ) );
+			add_filter( 'post_row_actions', array( &$this, 'remove_quick_edit_row_action' ) );
+			add_action( 'load-edit.php', array( &$this, 'posts_page' ) );
 
 			add_filter( 'manage_users_columns', array( &$this, 'manage_users_columns' ) );
-
 			add_filter( 'manage_users_custom_column', array( &$this, 'manage_users_custom_column' ), 10, 3 );
 
 			$prefix = is_network_admin() ? 'network_admin_' : '';
-			add_filter( "{$prefix}plugin_action_links_" . um_plugin, array( &$this, 'plugin_links' ) );
+			add_filter( "{$prefix}plugin_action_links_" . UM_PLUGIN, array( &$this, 'plugin_links' ) );
+		}
+
+
+		/**
+		 * Check if there is UM Post Type and remove "Edit" bulk action
+		 */
+		public function posts_page() {
+			global $current_screen;
+
+			if ( empty( $current_screen ) || empty( $current_screen->id ) ) {
+				return;
+			}
+
+			if ( ! UM()->admin()->screen()->is_own_post_type() ) {
+				return;
+			}
+
+			add_filter( "bulk_actions-{$current_screen->id}", array( &$this, 'remove_edit_bulk_action' ) );
+		}
+
+
+		/**
+		 * This will remove the "Edit" bulk action, which is actually quick edit, for all CPT registered via UM
+		 *
+		 * @param array $actions
+		 *
+		 * @return array;
+		 */
+		public function remove_edit_bulk_action( $actions ) {
+			unset( $actions['edit'] );
+			return $actions;
 		}
 
 
@@ -73,14 +103,14 @@ if ( ! class_exists( 'um\admin\Columns' ) ) {
 
 
 		/**
-		 * This will remove the "Edit" bulk action, which is actually quick edit.
+		 * This will remove the "Quick Edit" row action
 		 *
 		 * @param array $actions
 		 *
-		 * @return array;
+		 * @return array
 		 */
-		function remove_bulk_actions_um_form_inline( $actions ) {
-			if ( UM()->admin()->is_own_post_type() ) {
+		public function remove_quick_edit_row_action( $actions ) {
+			if ( UM()->admin()->screen()->is_own_post_type() ) {
 				unset( $actions['inline hide-if-no-js'] );
 				return $actions;
 			}
@@ -96,10 +126,10 @@ if ( ! class_exists( 'um\admin\Columns' ) ) {
 		 *
 		 * @return mixed
 		 */
-		function post_row_actions( $actions, $post ) {
+		public function post_row_actions( $actions, $post ) {
 			//check for your post type
-			if ( $post->post_type == "um_form" ) {
-				$actions['um_duplicate'] = '<a href="' . esc_url( $this->duplicate_uri( $post->ID ) ) . '">' . __( 'Duplicate', 'ultimate-member' ) . '</a>';
+			if ( 'um_form' === $post->post_type ) {
+				$actions['um_duplicate'] = '<a href="' . esc_url( $this->duplicate_uri( $post->ID ) ) . '">' . esc_html__( 'Duplicate', 'ultimate-member' ) . '</a>';
 			}
 			return $actions;
 		}
@@ -112,9 +142,9 @@ if ( ! class_exists( 'um\admin\Columns' ) ) {
 		 *
 		 * @return string
 		 */
-		function duplicate_uri( $id ) {
-			$url = add_query_arg('um_adm_action', 'duplicate_form', admin_url('edit.php?post_type=um_form') );
-			$url = add_query_arg('post_id', $id, $url);
+		public function duplicate_uri( $id ) {
+			$url = add_query_arg( array( 'post_type' => 'um_form', 'um_adm_action' => 'duplicate_form' ), admin_url( 'edit.php' ) );
+			$url = add_query_arg( 'post_id', $id, $url );
 			return $url;
 		}
 
@@ -126,14 +156,14 @@ if ( ! class_exists( 'um\admin\Columns' ) ) {
 		 *
 		 * @return array
 		 */
-		function manage_edit_um_form_columns( $columns ) {
-			$new_columns['cb'] = '<input type="checkbox" />';
-			$new_columns['title'] = __( 'Title', 'ulitmate-member' );
-			$new_columns['id'] = __('ID', 'ulitmate-member' );
-			$new_columns['mode'] = __( 'Type', 'ulitmate-member' );
+		public function manage_edit_um_form_columns( $columns ) {
+			$new_columns['cb']         = '<input type="checkbox" />';
+			$new_columns['title']      = __( 'Title', 'ulitmate-member' );
+			$new_columns['id']         = __( 'ID', 'ulitmate-member' );
+			$new_columns['mode']       = __( 'Type', 'ulitmate-member' );
 			$new_columns['is_default'] = __( 'Default', 'ulitmate-member' );
-			$new_columns['shortcode'] = __( 'Shortcode', 'ulitmate-member' );
-			$new_columns['date'] = __( 'Date', 'ulitmate-member' );
+			$new_columns['shortcode']  = __( 'Shortcode', 'ulitmate-member' );
+			$new_columns['date']       = __( 'Date', 'ulitmate-member' );
 
 			return $new_columns;
 		}
@@ -145,10 +175,10 @@ if ( ! class_exists( 'um\admin\Columns' ) ) {
 		 * @param string $column_name
 		 * @param int $id
 		 */
-		function manage_um_form_posts_custom_column( $column_name, $id ) {
+		public function manage_um_form_posts_custom_column( $column_name, $id ) {
 			switch ( $column_name ) {
 				case 'id':
-					echo '<span class="um-admin-number">'.$id.'</span>';
+					echo '<span class="um-admin-number">' . esc_html( $id ) . '</span>';
 					break;
 
 				case 'shortcode':
@@ -164,7 +194,7 @@ if ( ! class_exists( 'um\admin\Columns' ) ) {
 
 				case 'is_default':
 					$is_default = UM()->query()->get_attr( 'is_default', $id );
-					echo empty( $is_default ) ? __( 'No', 'ultimate-member' ) : __( 'Yes', 'ultimate-member' );
+					echo empty( $is_default ) ? esc_html__( 'No', 'ultimate-member' ) : esc_html__( 'Yes', 'ultimate-member' );
 					break;
 
 				case 'mode':
@@ -187,7 +217,7 @@ if ( ! class_exists( 'um\admin\Columns' ) ) {
 			foreach ( UM()->config()->get( 'predefined_pages' ) as $slug => $data ) {
 				if ( um_is_predefined_page( $slug, $post ) ) {
 					/* translators: %s: UM predefined page title */
-					$post_states[ 'um_predefined_page_' . $slug ] = sprintf( __( 'UM %s', 'ultimate-member' ), $data['title'] );
+					$post_states[ 'um_predefined_page_' . $slug ] = sprintf( esc_html__( 'UM %s', 'ultimate-member' ), $data['title'] );
 				}
 			}
 
@@ -202,13 +232,14 @@ if ( ! class_exists( 'um\admin\Columns' ) ) {
 		 *
 		 * @return array
 		 */
-		function plugin_links( $links ) {
-			$more_links[] = '<a href="http://docs.ultimatemember.com/">' . __( 'Docs', 'ultimate-member' ) . '</a>';
-			$more_links[] = '<a href="'.admin_url().'admin.php?page=ultimatemember">' . __( 'Settings', 'ultimate-member' ) . '</a>';
+		public function plugin_links( $links ) {
+			$more_links[] = '<a href="http://docs.ultimatemember.com/" target="_blank">' . esc_html__( 'Docs', 'ultimate-member' ) . '</a>';
+
+			$url = add_query_arg( array( 'page' => 'ultimatemember' ), admin_url( 'admin.php' ) );
+			$more_links[] = '<a href="' . esc_url( $url ) .'">' . esc_html__( 'Settings', 'ultimate-member' ) . '</a>';
 
 			$links = $more_links + $links;
 			return $links;
 		}
-
 	}
 }

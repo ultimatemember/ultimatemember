@@ -806,7 +806,7 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 
 			$um_pages = apply_filters( 'um_admin_footer_text_pages', $um_pages );
 
-			if ( ( isset( $current_screen->id ) && in_array( $current_screen->id, $um_pages ) ) || UM()->admin()->is_own_post_type() ) {
+			if ( ( isset( $current_screen->id ) && in_array( $current_screen->id, $um_pages ) ) || UM()->admin()->screen()->is_own_post_type() ) {
 				// Change the footer text
 				if ( ! get_option( 'um_admin_footer_text_rated' ) ) {
 

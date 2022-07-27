@@ -22,6 +22,8 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 		function __construct() {
 			parent::__construct();
 
+			add_filter( 'admin_body_class', array( &$this, 'admin_body_class' ), 999 );
+
 			add_action( 'admin_enqueue_scripts', array( &$this, 'register' ), 10 );
 
 			add_action( 'enqueue_block_editor_assets', array( &$this, 'block_editor' ) );
@@ -38,11 +40,7 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			add_action( 'load-ultimate-member_page_um_roles', array( &$this, 'roles_page' ) );
 			add_action( 'load-toplevel_page_ultimatemember', array( &$this, 'settings_page' ) );
 
-			if ( $wp_version >= '5.4' ) {
-				add_action( 'load-customize.php', array( &$this, 'navmenu_page' ) );
-			} else {
-				add_action( 'load-nav-menus.php', array( &$this, 'navmenu_page' ) );
-			}
+			add_action( 'load-customize.php', array( &$this, 'navmenu_page' ) );
 
 			add_action( 'load-user-new.php', array( &$this, 'wp_user_page' ) );
 			add_action( 'load-user-edit.php', array( &$this, 'wp_user_page' ) );
@@ -52,6 +50,21 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 
 			add_action( 'load-post-new.php', array( &$this, 'post_page' ) );
 			add_action( 'load-post.php', array( &$this, 'post_page' ) );
+		}
+
+
+		/**
+		 * Adds class to our admin pages
+		 *
+		 * @param $classes
+		 *
+		 * @return string
+		 */
+		public function admin_body_class( $classes ) {
+			if ( UM()->admin()->screen()->is_own_screen() ) {
+				return "$classes um um-admin";
+			}
+			return $classes;
 		}
 
 
@@ -407,7 +420,7 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			wp_enqueue_script( 'um_admin_global' );
 			wp_enqueue_style( 'um_admin_global' );
 
-			if ( UM()->admin()->is_own_screen() ) {
+			if ( UM()->admin()->screen()->is_own_screen() ) {
 				// jquery is required for jQuery using
 				// wp-util is required for wp.ajax.send function
 				// um-tipsy is required for tipsy.js

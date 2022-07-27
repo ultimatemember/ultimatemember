@@ -288,11 +288,11 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 			global $submenu, $pagenow;
 
 			if ( isset( $submenu['ultimatemember'] ) ) {
-				if ( isset( $_GET['post_type'] ) && in_array( sanitize_key( $_GET['post_type'] ), UM()->cpt_list(), true ) ) {
+				if ( isset( $_GET['post_type'] ) && in_array( sanitize_key( $_GET['post_type'] ), UM()->common()->cpt()->get_list(), true ) ) {
 					add_filter( 'parent_file', array( &$this, 'change_parent_file' ), 200, 1 );
 				}
 
-				if ( 'post.php' === $pagenow && ( isset( $_GET['post'] ) && in_array( get_post_type( sanitize_key( $_GET['post'] ) ), UM()->cpt_list(), true ) ) ) {
+				if ( 'post.php' === $pagenow && ( isset( $_GET['post'] ) && in_array( get_post_type( sanitize_key( $_GET['post'] ) ), UM()->common()->cpt()->get_list(), true ) ) ) {
 					add_filter( 'parent_file', array( &$this, 'change_parent_file' ), 200, 1 );
 				}
 
@@ -340,9 +340,9 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 
 			if ( 'edit-tags.php' === $pagenow || 'term.php' === $pagenow || 'post-new.php' === $pagenow ) {
 				if ( 'ultimatemember' === $parent_file ) {
-					if ( isset( $_GET['post_type'] ) && in_array( sanitize_key( $_GET['post_type'] ), UM()->cpt_list(), true ) && isset( $_GET['taxonomy'] ) && in_array( sanitize_key( $_GET['taxonomy'] ), UM()->cpt_taxonomies_list( sanitize_key( $_GET['post_type'] ) ), true ) ) {
+					if ( isset( $_GET['post_type'] ) && in_array( sanitize_key( $_GET['post_type'] ), UM()->common()->cpt()->get_list(), true ) && isset( $_GET['taxonomy'] ) && in_array( sanitize_key( $_GET['taxonomy'] ), UM()->common()->cpt()->get_taxonomies_list( sanitize_key( $_GET['post_type'] ) ), true ) ) {
 						$submenu_file = 'edit-tags.php?taxonomy=' . sanitize_key( $_GET['taxonomy'] ) . '&post_type=' . sanitize_key( $_GET['post_type'] );
-					} elseif ( 'post-new.php' === $pagenow && isset( $_GET['post_type'] ) && in_array( sanitize_key( $_GET['post_type'] ), UM()->cpt_list(), true ) ) {
+					} elseif ( 'post-new.php' === $pagenow && isset( $_GET['post_type'] ) && in_array( sanitize_key( $_GET['post_type'] ), UM()->common()->cpt()->get_list(), true ) ) {
 						$submenu_file = 'edit.php?post_type=' . sanitize_key( $_GET['post_type'] );
 					}
 

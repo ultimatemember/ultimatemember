@@ -32,7 +32,7 @@ class Enqueue {
 			return;
 		}
 
-		if ( um_is_core_page( 'user' ) ) {
+		if ( um_is_predefined_page( 'user' ) ) {
 			wp_register_style( 'um-forumwp', $data['url'] . 'assets/css/profile' . UM()->frontend()->enqueue()->suffix . '.css', array(), UM_VERSION );
 			wp_enqueue_style( 'um-forumwp' );
 		}

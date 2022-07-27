@@ -50,11 +50,7 @@ class Account {
 	 * @since 1.0
 	 */
 	function account_tab( $output ) {
-		if ( version_compare( get_bloginfo( 'version' ),'5.4', '<' ) ) {
-			$output .= '<div class="um-clear"></div><br />' . do_shortcode( '[jb_jobs_dashboard /]' );
-		} else {
-			$output .= '<div class="um-clear"></div><br />' . apply_shortcodes( '[jb_jobs_dashboard /]' );
-		}
+		$output .= '<div class="um-clear"></div><br />' . apply_shortcodes( '[jb_jobs_dashboard /]' );
 
 		return $output;
 	}

@@ -56,11 +56,7 @@ class Online_List extends \WP_Widget {
 		}
 
 		// This is where you run the code and display the output
-		if ( version_compare( get_bloginfo( 'version' ), '5.4', '<' ) ) {
-			echo do_shortcode('[ultimatemember_online max="' . esc_attr( $max ) . '" roles="' . esc_attr( $role ) . '" /]');
-		} else {
-			echo apply_shortcodes('[ultimatemember_online max="' . esc_attr( $max ) . '" roles="' . esc_attr( $role ) . '" /]');
-		}
+		echo apply_shortcodes('[ultimatemember_online max="' . esc_attr( $max ) . '" roles="' . esc_attr( $role ) . '" /]');
 		echo $args['after_widget'];
 	}
 

@@ -25,7 +25,7 @@ class Init {
 
 
 	public function includes() {
-		$this->cpt();
+		$this->cpt()->hooks();
 		$this->pages();
 		$this->user();
 		$this->fields();

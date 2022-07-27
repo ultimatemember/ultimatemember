@@ -100,7 +100,7 @@ if ( ! class_exists( 'um\common\Install' ) ) {
 			}
 
 			//run setup
-			UM()->common()->create_post_types();
+			UM()->common()->cpt()->create_post_types();
 
 			$this->create_db();
 			$this->set_default_settings();

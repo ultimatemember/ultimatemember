@@ -6,8 +6,8 @@ $roles_associations = get_option( 'um_roles_associations' );
 //for check all post types and taxonomies
 $all_post_types = get_post_types( array( 'public' => true ) );
 
-$all_taxonomies = get_taxonomies( array( 'public' => true ) );
-$exclude_taxonomies = UM()->excluded_taxonomies();
+$all_taxonomies     = get_taxonomies( array( 'public' => true ) );
+$exclude_taxonomies = UM()->common()->access()->excluded_taxonomies();
 
 foreach ( $all_taxonomies as $key => $taxonomy ) {
 	if ( in_array( $key, $exclude_taxonomies ) ) {
@@ -85,8 +85,6 @@ if ( ! empty( $posts ) ) {
 
 
 $all_taxonomies = get_taxonomies( array( 'public' => true ) );
-$exclude_taxonomies = UM()->excluded_taxonomies();
-
 foreach ( $all_taxonomies as $key => $taxonomy ) {
 	if ( in_array( $key , $exclude_taxonomies ) )
 		continue;

@@ -597,64 +597,6 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 
 		/**
-		 * @return mixed|void
-		 */
-		function excluded_taxonomies() {
-			$taxes = array(
-				'nav_menu',
-				'link_category',
-				'post_format',
-			);
-
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_excluded_taxonomies
-			 * @description Exclude taxonomies for UM
-			 * @input_vars
-			 * [{"var":"$taxes","type":"array","desc":"Taxonomies keys"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_excluded_taxonomies', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_excluded_taxonomies', 'my_excluded_taxonomies', 10, 1 );
-			 * function my_excluded_taxonomies( $taxes ) {
-			 *     // your code here
-			 *     return $taxes;
-			 * }
-			 * ?>
-			 */
-			return apply_filters( 'um_excluded_taxonomies', $taxes );
-		}
-
-
-		/**
-		 * @return array
-		 */
-		function cpt_list() {
-			$cpt = apply_filters( 'um_cpt_list', array( 'um_form' ) );
-			return $cpt;
-		}
-
-
-		/**
-		 * @param null|string $post_type
-		 * @return array
-		 */
-		function cpt_taxonomies_list( $post_type = null ) {
-			$taxonomies = apply_filters( 'um_cpt_taxonomies_list', array() );
-
-			if ( isset( $post_type ) ) {
-				$taxonomies = array_key_exists( $post_type, $taxonomies ) ? $taxonomies[ $post_type ] : array();
-			}
-			return $taxonomies;
-		}
-
-
-		/**
 		 * @since 2.1.0
 		 *
 		 * @param $var
@@ -681,6 +623,39 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		function str_replace_first( $search, $replace, $subject ) {
 			$search = '/' . preg_quote( $search, '/' ) . '/';
 			return preg_replace( $search, $replace, $subject, 1 );
+		}
+
+
+		/**
+		 * @deprecated 3.0
+		 *
+		 * @return array
+		 */
+		function cpt_list() {
+			_deprecated_function( __METHOD__, '3.0', 'UM()->common()->cpt()->get_list()' );
+			return UM()->common()->cpt()->get_list();
+		}
+
+
+		/**
+		 * @deprecated 3.0
+		 *
+		 * @param null|string $post_type
+		 * @return array
+		 */
+		function cpt_taxonomies_list( $post_type = null ) {
+			_deprecated_function( __METHOD__, '3.0', 'UM()->common()->cpt()->get_taxonomies_list( $post_type )' );
+			return UM()->common()->cpt()->get_taxonomies_list( $post_type );
+		}
+
+
+		/**
+		 * @deprecated 3.0
+		 * @return array
+		 */
+		function excluded_taxonomies() {
+			_deprecated_function( __METHOD__, '3.0', 'UM()->common()->access()->excluded_taxonomies()' );
+			return UM()->common()->access()->excluded_taxonomies();
 		}
 
 
@@ -723,6 +698,5 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 			return um_locate_template( $template_name, '', '', $path );
 		}
-
 	}
 }

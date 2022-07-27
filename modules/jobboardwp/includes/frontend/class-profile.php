@@ -56,10 +56,6 @@ class Profile {
 	 * @since 1.0
 	 */
 	function profile_tab_content( $args ) {
-		if ( version_compare( get_bloginfo( 'version' ),'5.4', '<' ) ) {
-			echo do_shortcode( '[jb_jobs employer-id="' . um_profile_id() . '" hide-search="1" hide-location-search="1" hide-filters="1" hide-job-types="1" /]' );
-		} else {
-			echo apply_shortcodes( '[jb_jobs employer-id="' . um_profile_id() . '" hide-search="1" hide-location-search="1" hide-filters="1" hide-job-types="1" /]' );
-		}
+		echo apply_shortcodes( '[jb_jobs employer-id="' . um_profile_id() . '" hide-search="1" hide-location-search="1" hide-filters="1" hide-job-types="1" /]' );
 	}
 }
