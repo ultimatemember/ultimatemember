@@ -175,6 +175,14 @@ if ( ! class_exists( 'umm\member_directory\includes\admin\Site_Health' ) ) {
 								'label' => __( 'Exclude specific users (Enter one username per line)', 'ultimate-member' ),
 								'value' => ! empty( get_post_meta( $key, '_um_exclude_these_users', true ) ) ? implode(', ', get_post_meta( $key, '_um_exclude_these_users', true ) ) : '',
 							),
+						)
+					);
+
+					$info = apply_filters( 'um_debug_member_directory_general_extend', $info, $key );
+
+					$info['ultimate-member-directory-' . $key ]['fields'] = array_merge(
+						$info['ultimate-member-directory-' . $key ]['fields'],
+						array(
 							'um-directory-sortby'              => array(
 								'label' => __( 'Default sort users by', 'ultimate-member' ),
 								'value' => $sortby_label,
