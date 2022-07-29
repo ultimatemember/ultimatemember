@@ -3207,7 +3207,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 							$option_value = $this->filter_field_non_utf8_value( $option_value );
 
-							$output .= '<option value="' . $option_value . '" ';
+							$output .= '<option value="' . esc_attr( $option_value ) . '" ';
 
 							if ( $this->is_selected( $form_key, $option_value, $data ) ) {
 								$output .= 'selected';
@@ -3404,7 +3404,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 							$opt_value = $this->filter_field_non_utf8_value( $opt_value );
 
-							$output .= '<option value="' . $opt_value . '" ';
+							$output .= '<option value="' . esc_attr( $opt_value ) . '" ';
 							if ( $this->is_selected( $key, $opt_value, $data ) ) {
 
 								$output .= 'selected';

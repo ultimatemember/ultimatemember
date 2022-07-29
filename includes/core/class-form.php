@@ -438,7 +438,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				 * }
 				 * ?>
 				 */
-				$this->post_form = apply_filters( 'um_submit_post_form', $_POST );
+				$this->post_form = apply_filters( 'um_submit_post_form', wp_unslash( $_POST ) );
 
 				if ( isset( $this->post_form[ UM()->honeypot ] ) && '' !== $this->post_form[ UM()->honeypot ] ) {
 					wp_die( esc_html__( 'Hello, spam bot!', 'ultimate-member' ) );
