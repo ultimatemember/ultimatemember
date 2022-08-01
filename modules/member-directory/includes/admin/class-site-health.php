@@ -463,6 +463,8 @@ if ( ! class_exists( 'umm\member_directory\includes\admin\Site_Health' ) ) {
 							),
 						)
 					);
+
+					$info = apply_filters( 'um_debug_member_directory_extend', $info, $key );
 				}
 			}
 
