@@ -15,6 +15,9 @@ foreach ( UM()->roles()->get_roles() as $key => $value ) {
 
 $profile_menu = ! isset( $post_id ) ? true : get_post_meta( $post_id, '_um_profile_menu', true );
 
+$profile_menu_default_tab = ! isset( $post_id ) ? 'main' : get_post_meta( $post_id, '_um_profile_menu_default_tab', true );
+$profile_menu_icons       = ! isset( $post_id ) ? true : get_post_meta( $post_id, '_um_profile_menu_icons', true );
+
 $profile_menu_fields = array(
 	array(
 		'id'    => '_um_profile_menu',
@@ -108,11 +111,13 @@ $profile_menu_fields = array_merge(
 			'options'     => $tabs_options,
 			'conditional' => array( implode( '|', $tabs_condition ), '~', 1 ),
 			'size'        => 'medium',
+			'value'       => $profile_menu_default_tab,
 		),
 		array(
 			'id'          => '_um_profile_menu_icons',
 			'type'        => 'checkbox',
 			'label'       => __( 'Enable menu icons in desktop view', 'ultimate-member' ),
+			'value'       => $profile_menu_icons,
 			'conditional' => array( '_um_profile_menu', '=', 1 ),
 		),
 	)
