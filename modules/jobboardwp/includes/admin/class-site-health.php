@@ -24,6 +24,7 @@ if ( ! class_exists( 'umm\jobboardwp\includes\admin\Site_Health' ) ) {
 		public function __construct() {
 			add_filter( 'debug_information', array( $this, 'debug_information' ), 20, 1 );
 			add_filter( 'um_debug_information_user_role', array( $this, 'um_debug_information_user_role' ), 20, 2 );
+			add_filter( 'um_debug_extend_private_messages', array( $this, 'um_debug_extend_private_messages' ), 10, 1 );
 		}
 
 
@@ -70,6 +71,30 @@ if ( ! class_exists( 'umm\jobboardwp\includes\admin\Site_Health' ) ) {
 					'um-disable_jobs_tab' => array(
 						'label' => __( 'JobBoard - Disable jobs tab?', 'ultimate-member' ),
 						'value' => ! empty( $rolemeta['_um_disable_jobs_tab'] ) ? __( 'Yes', 'ultimate-member' ) : __( 'No', 'ultimate-member' ),
+					),
+				)
+			);
+
+			return $info;
+		}
+
+
+		/**
+		 * Extend Private messages settings.
+		 *
+		 * @since 3.0
+		 *
+		 * @param array $info
+		 *
+		 * @return array
+		 */
+		public function um_debug_extend_private_messages( $info ) {
+			$info['ultimate-member-private-messages' ]['fields'] = array_merge(
+				$info['ultimate-member-private-messages' ]['fields'],
+				array(
+					'um-job_show_pm_button' => array(
+						'label' => __( 'Show messages button in individual job post', 'ultimate-member-pro' ),
+						'value' => UM()->options()->get('job_show_pm_button') ? __( 'Yes', 'ultimate-member-pro' ) : __( 'No', 'ultimate-member-pro' ),
 					),
 				)
 			);
