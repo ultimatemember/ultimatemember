@@ -24,6 +24,7 @@ if ( ! class_exists( 'umm\member_directory\includes\admin\Site_Health' ) ) {
 		public function __construct() {
 			add_filter( 'debug_information', array( $this, 'debug_information' ) );
 			add_filter( 'um_debug_information_pages', array( $this, 'um_debug_information_pages' ), 10, 1 );
+			add_filter( 'um_extend_mycred_settings', array( $this, 'um_extend_mycred_settings' ), 10, 1 );
 		}
 
 
@@ -485,6 +486,30 @@ if ( ! class_exists( 'umm\member_directory\includes\admin\Site_Health' ) ) {
 			$pages['Members page'] = null != UM()->options()->get('core_members') ? get_the_title( UM()->options()->get('core_members') ) . ' (ID#' . UM()->options()->get('core_members') . ') | ' . get_permalink( UM()->options()->get('core_members') ) : __( 'No predefined page', 'ultimate-member' );
 
 			return $pages;
+		}
+
+
+		/**
+		 * Extend myCred settings.
+		 *
+		 * @since 3.0
+		 *
+		 * @param array $info
+		 *
+		 * @return array
+		 */
+		public function um_extend_mycred_settings( $info ) {
+			$info['ultimate-member-mycred' ]['fields'] = array_merge(
+				$info['ultimate-member-mycred' ]['fields'],
+				array(
+					'um-mycred_show_badges_in_members' => array(
+						'label' => __( 'Show user badges in Member Directories?', 'ultimate-member-pro' ),
+						'value' => UM()->options()->get('mycred_show_badges_in_members') ? __( 'Yes', 'ultimate-member-pro' ) : __( 'No', 'ultimate-member-pro' ),
+					),
+				)
+			);
+
+			return $info;
 		}
 	}
 }
