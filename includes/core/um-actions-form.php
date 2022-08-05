@@ -811,11 +811,11 @@ function um_submit_form_errors_hook_( $args ) {
 								if ( $args[ $key ] == '' && in_array( $key, array( 'user_email' ) ) ) {
 									UM()->form()->add_error( $key, __( 'You must provide your email', 'ultimate-member' ) );
 								} elseif ( in_array( $mode, array( 'register' ) ) && $email_exists  ) {
-									UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
+									UM()->form()->add_error( $key, __( 'The email you entered is used by another user', 'ultimate-member' ) );
 								} elseif ( in_array( $mode, array( 'profile' ) ) && $email_exists && $email_exists != $args['user_id']  ) {
-									UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
+									UM()->form()->add_error( $key, __( 'The email you entered is used by another user', 'ultimate-member' ) );
 								} elseif ( ! is_email( $args[ $key ] ) ) {
-									UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member') );
+									UM()->form()->add_error( $key, __( 'Please enter valid email address', 'ultimate-member') );
 								} elseif ( ! UM()->validation()->safe_username( $args[ $key ] ) ) {
 									UM()->form()->add_error( $key,  __( 'Your email contains invalid characters', 'ultimate-member' ) );
 								}
