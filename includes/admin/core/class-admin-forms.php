@@ -113,8 +113,22 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$data['value'] = wp_unslash( $data['value'] );
 
 				/*for multi_text*/
-				if ( ! is_array( $data['value'] ) && $data['type'] != 'wp_editor' ) {
+				if ( ! is_array( $data['value'] ) && ! in_array( $data['type'], array('info_text','wp_editor' ) ) ) {
 					$data['value'] = esc_attr( $data['value'] );
+				}
+
+				if( in_array( $data['type'], array('info_text') ) ){
+					$arr_kses = array(
+						'a' => array(
+							'href' => array(),
+							'title' => array(),
+							'target' => array(),
+						),
+						'br' => array(),
+						'em' => array(),
+						'strong' => array(),
+					);
+					$data['value'] = wp_kses( $data['value'], $arr_kses );
 				}
 			}
 
