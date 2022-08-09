@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-07-15T10:03:21+00:00\n"
+"POT-Creation-Date: 2022-08-09T12:03:21+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: ultimate-member\n"
@@ -336,18 +336,18 @@ msgstr ""
 msgid "Ultimate Member Blocks"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:318
+#: includes/admin/core/class-admin-forms.php:332
 #: includes/core/um-filters-fields.php:17
 msgid "Required"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:526
+#: includes/admin/core/class-admin-forms.php:540
 #: includes/admin/core/class-admin-metabox.php:1463
 #: includes/admin/core/class-admin-metabox.php:1491
 msgid "Choose Icon"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:532
+#: includes/admin/core/class-admin-forms.php:546
 #: includes/admin/core/class-admin-metabox.php:1465
 #: includes/admin/core/class-admin-metabox.php:1493
 #: includes/admin/assets/js/um-admin-modal.js:415
@@ -355,23 +355,23 @@ msgstr ""
 msgid "No Icon"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:608
+#: includes/admin/core/class-admin-forms.php:622
 msgid "Select Users"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:958
+#: includes/admin/core/class-admin-forms.php:972
 #: includes/admin/core/class-admin-upgrade.php:255
 msgid "Run"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1098
-#: includes/admin/core/class-admin-forms.php:1117
-#: includes/admin/core/class-admin-forms.php:1244
-#: includes/admin/core/class-admin-forms.php:1253
-#: includes/admin/core/class-admin-forms.php:1493
+#: includes/admin/core/class-admin-forms.php:1112
+#: includes/admin/core/class-admin-forms.php:1131
+#: includes/admin/core/class-admin-forms.php:1258
+#: includes/admin/core/class-admin-forms.php:1267
 #: includes/admin/core/class-admin-forms.php:1507
-#: includes/admin/core/class-admin-forms.php:1603
-#: includes/admin/core/class-admin-forms.php:1625
+#: includes/admin/core/class-admin-forms.php:1521
+#: includes/admin/core/class-admin-forms.php:1617
+#: includes/admin/core/class-admin-forms.php:1639
 #: includes/admin/core/class-admin-notices.php:427
 #: includes/core/um-actions-profile.php:841
 #: includes/admin/assets/js/um-admin-forms.js:249
@@ -381,28 +381,28 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1300
+#: includes/admin/core/class-admin-forms.php:1314
 msgid "Select media"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1323
+#: includes/admin/core/class-admin-forms.php:1337
 #: includes/admin/assets/js/um-admin-forms.js:672
 msgid "Select"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1324
+#: includes/admin/core/class-admin-forms.php:1338
 msgid "Clear"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1604
-#: includes/admin/core/class-admin-forms.php:1626
+#: includes/admin/core/class-admin-forms.php:1618
+#: includes/admin/core/class-admin-forms.php:1640
 #: includes/admin/templates/directory/sorting.php:22
 #: includes/admin/assets/js/um-admin-forms.js:251
 msgid "Meta key"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1605
-#: includes/admin/core/class-admin-forms.php:1627
+#: includes/admin/core/class-admin-forms.php:1619
+#: includes/admin/core/class-admin-forms.php:1641
 #: includes/admin/core/class-admin-metabox.php:2265
 #: includes/admin/assets/js/um-admin-forms.js:252
 msgid "Label"
