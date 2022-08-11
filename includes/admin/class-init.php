@@ -1289,6 +1289,20 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			$this->notices();
 			$this->settings();
 			$this->site_health();
+			$this->users_columns();
+		}
+
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return Users_Columns
+		 */
+		function users_columns() {
+			if ( empty( UM()->classes['um\admin\users_columns'] ) ) {
+				UM()->classes['um\admin\users_columns'] = new Users_Columns();
+			}
+			return UM()->classes['um\admin\users_columns'];
 		}
 
 

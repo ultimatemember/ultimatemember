@@ -1,27 +1,26 @@
 <?php
-namespace um\admin\core;
+namespace um\admin;
 
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 
-if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
+if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 
 
 	/**
 	 * Class Admin_Users
-	 * @package um\admin\core
+	 * @package um\admin
 	 */
-	class Admin_Users {
+	class Users_Columns {
 
 
 		/**
-		 * Admin_Users constructor.
+		 * Users_Columns constructor.
 		 */
-		function __construct() {
-
-			$this->custom_role = 'um_role';
-
+		public function __construct() {
 			add_action( 'restrict_manage_users', array( &$this, 'restrict_manage_users' ) );
 
 			add_filter( 'user_row_actions', array( &$this, 'user_row_actions' ), 10, 2 );

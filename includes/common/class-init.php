@@ -40,6 +40,7 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			$this->cpt()->hooks();
 			$this->screen();
 			$this->gdpr();
+			$this->user()->hooks();
 		}
 
 

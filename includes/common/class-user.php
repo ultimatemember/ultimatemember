@@ -26,6 +26,46 @@ if ( ! class_exists( 'um\common\User' ) ) {
 		}
 
 
+		public function hooks() {
+			add_filter( 'user_has_cap', array( &$this, 'map_caps_by_role' ), 10, 3 );
+		}
+
+
+		/**
+		 * Restrict the edit/delete users via wp-admin screen by the UM role capabilities
+		 *
+		 * @param $allcaps
+		 * @param $cap
+		 * @param $args
+		 * @param $user
+		 *
+		 * @return mixed
+		 */
+		function map_caps_by_role( $allcaps, $cap, $args ) {
+			if ( isset( $cap[0] ) && 'edit_users' === $cap[0] ) {
+				if ( ! user_can( $args[1], 'administrator' ) && $args[0] == 'edit_user' ) {
+					if ( ! UM()->roles()->um_current_user_can( 'edit', $args[2] ) ) {
+						$allcaps[ $cap[0] ] = false;
+					}
+				}
+			} elseif ( isset( $cap[0] ) && 'delete_users' === $cap[0] ) {
+				if ( ! user_can( $args[1], 'administrator' ) && 'delete_user' === $args[0] ) {
+					if ( ! UM()->roles()->um_current_user_can( 'delete', $args[2] ) ) {
+						$allcaps[ $cap[0] ] = false;
+					}
+				}
+			} elseif ( isset( $cap[0] ) && 'list_users' === $cap[0] ) {
+				if ( ! user_can( $args[1], 'administrator' ) && 'list_users' === $args[0] ) {
+					if ( ! um_user( 'can_view_all' ) ) {
+						$allcaps[ $cap[0] ] = false;
+					}
+				}
+			}
+
+			return $allcaps;
+		}
+
+
 		/**
 		 * @param int $user_id
 		 *
