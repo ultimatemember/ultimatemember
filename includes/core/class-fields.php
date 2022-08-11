@@ -1579,6 +1579,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					break;
 
+				case 'tel':
+
+					$array['input'] = 'tel';
+
+					break;
+
 				case 'password':
 
 					$array['input'] = 'password';
@@ -2289,6 +2295,43 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				/* Text */
 				case 'text':
+
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
+
+					if ( isset( $data['label'] ) ) {
+						$output .= $this->field_label( $label, $key, $data );
+					}
+
+					$output .= '<div class="um-field-area">';
+
+					if ( ! empty( $icon ) && isset( $this->field_icons ) && $this->field_icons == 'field' ) {
+
+						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $icon ) . '"></i></div>';
+
+					}
+
+					$field_name = $key . UM()->form()->form_suffix;
+					$field_value = htmlspecialchars( $this->field_value( $key, $default, $data ) );
+
+					$output .= '<input ' . $disabled . ' autocomplete="' . esc_attr( $autocomplete ) . '" class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />
+
+						</div>';
+
+					if ( ! empty( $disabled ) ) {
+						$output .= $this->disabled_hidden_field( $field_name, $field_value );
+					}
+
+					if ( $this->is_error( $key ) ) {
+						$output .= $this->field_error( $this->show_error( $key ) );
+					}else if ( $this->is_notice( $key ) ) {
+						$output .= $this->field_notice( $this->show_notice( $key ) );
+					}
+
+					$output .= '</div>';
+					break;
+
+				/* Tel */
+				case 'tel':
 
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
