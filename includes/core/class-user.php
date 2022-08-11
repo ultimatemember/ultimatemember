@@ -1409,9 +1409,19 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 		/**
 		 * Password changed email
+		 *
+		 * @param null|int $user_id
 		 */
-		function password_changed() {
+		function password_changed( $user_id = null ) {
+			if ( ! empty( $user_id ) ) {
+				um_fetch_user( $user_id );
+			}
+
 			UM()->mail()->send( um_user( 'user_email' ), 'changedpw_email' );
+
+			if ( ! empty( $user_id ) ) {
+				um_reset_user();
+			}
 		}
 
 

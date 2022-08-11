@@ -13,6 +13,14 @@
 						</div>
 					</div>
 				</div>
+			<?php } elseif ( isset( $_GET['updated'] ) && 'password_changed' === sanitize_key( $_GET['updated'] ) ) { ?>
+				<div class="um-field um-field-block um-field-type_block">
+					<div class="um-field-block">
+						<div style="text-align:center;">
+							<?php esc_html_e( 'You have successfully changed password.', 'ultimate-member' ); ?>
+						</div>
+					</div>
+				</div>
 			<?php } else { ?>
 
 				<input type="hidden" name="_um_password_reset" id="_um_password_reset" value="1" />
@@ -93,7 +101,7 @@
 				<div class="um-col-alt um-col-alt-b">
 
 					<div class="um-center">
-						<input type="submit" value="<?php esc_attr_e( 'Reset my password', 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
+						<input type="submit" value="<?php esc_attr_e( 'Reset password', 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
 					</div>
 
 					<div class="um-clear"></div>

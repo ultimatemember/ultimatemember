@@ -42,11 +42,19 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 			delete_option( "um_cache_userdata_{$user_id}" );
 
-			//new reset password key via WP native field
+			//new reset password key via WordPress native field. It maybe already exists here but generated twice to make sure that emailed with a proper and fresh hash
 			$user_data = get_userdata( $user_id );
-			$key = UM()->user()->maybe_generate_password_reset_key( $user_data );
+			$key       = UM()->user()->maybe_generate_password_reset_key( $user_data );
 
-			$url =  add_query_arg( array( 'act' => 'reset_password', 'hash' => $key, 'user_id' => $user_id ), um_get_core_page( 'password-reset' ) );
+			// this link looks like WordPress native link e.g. wp-login.php?action=rp&key={hash}&login={user_login}
+			$url = add_query_arg(
+				array(
+					'act'   => 'reset_password',
+					'hash'  => $key,
+					'login' => $user_data->user_login,
+				),
+				um_get_core_page( 'password-reset' )
+			);
 			return $url;
 		}
 
@@ -149,14 +157,14 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			$args = apply_filters( 'um_reset_password_shortcode_args_filter', $args );
 
 			if ( isset( $this->change_password ) ) {
+				// then COOKIE are valid then get data from them and populate hidden fields for the password reset form
 				$args['template'] = 'password-change';
-				$args['rp_key'] = '';
+				$args['rp_key']   = '';
 				$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
 				if ( isset( $_COOKIE[ $rp_cookie ] ) && 0 < strpos( $_COOKIE[ $rp_cookie ], ':' ) ) {
 					list( $rp_login, $rp_key ) = explode( ':', wp_unslash( $_COOKIE[ $rp_cookie ] ), 2 );
 
-					$user = get_user_by( 'login', $rp_login );
-					$args['user_id'] = $user->ID;
+					$args['login']  = $rp_login;
 					$args['rp_key'] = $rp_key;
 				}
 			}
@@ -258,6 +266,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		/**
 		 * Check if a legitimate password change request is in action
 		 *
+		 * works both for the Account > Password form and the Reset Password shortcode form
 		 *
 		 * @return bool
 		 */
@@ -280,56 +289,47 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				UM()->fields()->set_mode = 'password';
 			}
 
+			// validate $rp_cookie and hash via check_password_reset_key
 			if ( um_is_core_page( 'password-reset' ) && isset( $_REQUEST['act'] ) && 'reset_password' === sanitize_key( $_REQUEST['act'] ) ) {
 				wp_fix_server_vars();
 
 				$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
 
-				if ( isset( $_GET['hash'] ) ) {
-					$userdata = get_userdata( wp_unslash( absint( $_GET['user_id'] ) ) );
-					if ( ! $userdata || is_wp_error( $userdata ) ) {
-						wp_redirect( add_query_arg( array( 'act' => 'reset_password', 'error' => 'invalidkey' ), get_permalink() ) );
-						exit;
-					}
-					$rp_login = $userdata->user_login;
-					$rp_key = wp_unslash( sanitize_text_field( $_GET['hash'] ) );
+				if ( isset( $_GET['hash'] ) && isset( $_GET['login'] ) ) {
+					$value = sprintf( '%s:%s', wp_unslash( $_GET['login'] ), wp_unslash( $_GET['hash'] ) );
+					$this->setcookie( $rp_cookie, $value );
 
-					$user = check_password_reset_key( $rp_key, $rp_login );
-
-					if ( is_wp_error( $user ) ) {
-						$this->setcookie( $rp_cookie, false );
-						wp_redirect( add_query_arg( array( 'updated' => 'invalidkey' ), get_permalink() ) );
-					} else {
-						$value = sprintf( '%s:%s', $rp_login, wp_unslash( sanitize_text_field( $_GET['hash'] ) ) );
-						$this->setcookie( $rp_cookie, $value );
-						wp_safe_redirect( remove_query_arg( array( 'hash', 'user_id' ) ) );
-					}
-
+					wp_safe_redirect( remove_query_arg( array( 'hash', 'login' ) ) );
 					exit;
 				}
 
 				if ( isset( $_COOKIE[ $rp_cookie ] ) && 0 < strpos( $_COOKIE[ $rp_cookie ], ':' ) ) {
 					list( $rp_login, $rp_key ) = explode( ':', wp_unslash( $_COOKIE[ $rp_cookie ] ), 2 );
+
 					$user = check_password_reset_key( $rp_key, $rp_login );
+
+					if ( isset( $_POST['user_password'] ) && ! hash_equals( $rp_key, $_POST['rp_key'] ) ) {
+						$user = false;
+					}
 				} else {
 					$user = false;
 				}
 
-				if ( ( ! $user || is_wp_error( $user ) ) && ! isset( $_GET['updated'] ) ) {
+				if ( ! $user || is_wp_error( $user ) ) {
 					$this->setcookie( $rp_cookie, false );
-					if ( $user && $user->get_error_code() === 'expired_key' ) {
-						wp_redirect( add_query_arg( array( 'updated' => 'expiredkey' ), get_permalink() ) );
+					if ( $user && 'expired_key' === $user->get_error_code() ) {
+						wp_redirect( add_query_arg( array( 'updated' => 'expiredkey' ), um_get_core_page( 'password-reset' ) ) );
 					} else {
-						wp_redirect( add_query_arg( array( 'updated' => 'invalidkey' ), get_permalink() ) );
+						wp_redirect( add_query_arg( array( 'updated' => 'invalidkey' ), um_get_core_page( 'password-reset' ) ) );
 					}
 					exit;
 				}
 
+				// this variable is used for populating the reset password form via the hash and login
 				$this->change_password = true;
 			}
 
 			if ( $this->is_reset_request() ) {
-
 				UM()->form()->post_form = $_POST;
 
 				if ( empty( UM()->form()->post_form['mode'] ) ) {
@@ -358,7 +358,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				do_action( 'um_reset_password_errors_hook', UM()->form()->post_form );
 
 				if ( ! isset( UM()->form()->errors ) ) {
-
 					/**
 					 * UM hook
 					 *
@@ -379,7 +378,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 					 * ?>
 					 */
 					do_action( 'um_reset_password_process_hook', UM()->form()->post_form );
-
 				}
 			}
 
@@ -408,7 +406,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				do_action( 'um_change_password_errors_hook', UM()->form()->post_form );
 
 				if ( ! isset( UM()->form()->errors ) ) {
-
 					/**
 					 * UM hook
 					 *
@@ -429,7 +426,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 					 * ?>
 					 */
 					do_action( 'um_change_password_process_hook', UM()->form()->post_form );
-
 				}
 			}
 		}
@@ -446,7 +442,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			}
 
 			$user = '';
-
 			foreach ( $args as $key => $val ) {
 				if ( strstr( $key, 'username_b' ) ) {
 					$user = trim( sanitize_text_field( $val ) );
@@ -468,7 +463,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				$is_admin = user_can( absint( $user_id ), 'manage_options' );
 
 				if ( UM()->options()->get( 'enable_reset_password_limit' ) ) { // if reset password limit is set
-
 					if ( ! ( UM()->options()->get( 'disable_admin_reset_password_limit' ) && $is_admin ) ) {
 						// Doesn't trigger this when a user has admin capabilities and when reset password limit is disabled for admins
 						$limit = UM()->options()->get( 'reset_password_limit_number' );
@@ -480,7 +474,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 					}
 				}
 			}
-
 		}
 
 
@@ -509,12 +502,15 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				UM()->user()->password_reset();
 			}
 
-			exit( wp_redirect( um_get_core_page('password-reset', 'checkemail' ) ) );
+			wp_redirect( um_get_core_page('password-reset', 'checkemail' ) );
+			exit;
 		}
 
 
 		/**
 		 * Error handler: changing password
+		 *
+		 * It works both for the Reset Password Shortcode and Account > Change password form
 		 *
 		 * @param $args
 		 */
@@ -523,9 +519,11 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				wp_die( esc_html__( 'Hello, spam bot!', 'ultimate-member' ) );
 			}
 
-			if ( ! is_user_logged_in() && isset( $args ) && ! um_is_core_page( 'password-reset' ) ||
-			     is_user_logged_in() && isset( $args['user_id'] ) && absint( $args['user_id'] ) !== get_current_user_id() ) {
-				wp_die( esc_html__( 'This is not possible for security reasons.', 'ultimate-member' ) );
+			if ( isset( $args['_um_account'] ) == 1 && isset( $args['_um_account_tab'] ) && 'password' === sanitize_key( $args['_um_account_tab'] ) ) {
+				// validate for security on the account change password page
+				if ( ! is_user_logged_in() ) {
+					wp_die( esc_html__( 'This is not possible for security reasons.', 'ultimate-member' ) );
+				}
 			}
 
 			if ( isset( $args['user_password'] ) && empty( $args['user_password'] ) ) {
@@ -535,6 +533,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			if ( isset( $args['user_password'] ) ) {
 				$args['user_password'] = trim( $args['user_password'] );
 			}
+
 			if ( isset( $args['confirm_user_password'] ) ) {
 				$args['confirm_user_password'] = trim( $args['confirm_user_password'] );
 			}
@@ -545,7 +544,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			}
 
 			if ( UM()->options()->get( 'require_strongpass' ) ) {
-
 				$min_length = UM()->options()->get( 'password_min_chars' );
 				$min_length = ! empty( $min_length ) ? $min_length : 8;
 				$max_length = UM()->options()->get( 'password_max_chars' );
@@ -571,7 +569,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			if ( isset( $args['user_password'] ) && isset( $args['confirm_user_password'] ) && $args['user_password'] !== $args['confirm_user_password'] ) {
 				UM()->form()->add_error( 'confirm_user_password', __( 'Your passwords do not match', 'ultimate-member' ) );
 			}
-
 		}
 
 
@@ -582,20 +579,16 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 */
 		public function um_change_password_process_hook( $args ) {
 			if ( isset( $args['_um_password_change'] ) && $args['_um_password_change'] == 1 ) {
-
+				// it only works on the Password Reset Shortcode form
 				$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
-				$user = get_userdata( absint( $args['user_id'] ) );
 
 				if ( isset( $_COOKIE[ $rp_cookie ] ) && 0 < strpos( $_COOKIE[ $rp_cookie ], ':' ) ) {
 					list( $rp_login, $rp_key ) = explode( ':', wp_unslash( $_COOKIE[ $rp_cookie ] ), 2 );
 
-					if ( $user->user_login != $rp_login ) {
+					$user = check_password_reset_key( $rp_key, $rp_login );
+
+					if ( isset( $args['user_password'] ) && ! hash_equals( $rp_key, $args['rp_key'] ) ) {
 						$user = false;
-					} else {
-						$user = check_password_reset_key( $rp_key, $rp_login );
-						if ( isset( $args['user_password'] ) && ! hash_equals( $rp_key, $args['rp_key'] ) ) {
-							$user = false;
-						}
 					}
 				} else {
 					$user = false;
@@ -603,31 +596,24 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 				if ( ! $user || is_wp_error( $user ) ) {
 					$this->setcookie( $rp_cookie, false );
-					if ( $user && $user->get_error_code() === 'expired_key' ) {
-						wp_redirect( add_query_arg( array( 'updated' => 'expiredkey' ), get_permalink() ) );
+					if ( $user && 'expired_key' === $user->get_error_code() ) {
+						wp_redirect( add_query_arg( array( 'updated' => 'expiredkey' ), um_get_core_page( 'password-reset' ) ) );
 					} else {
-						wp_redirect( add_query_arg( array( 'updated' => 'invalidkey' ), get_permalink() ) );
+						wp_redirect( add_query_arg( array( 'updated' => 'invalidkey' ), um_get_core_page( 'password-reset' ) ) );
 					}
 					exit;
 				}
 
-
 				$errors = new \WP_Error();
-				/**
-				 * Fires before the password reset procedure is validated.
-				 *
-				 * @since 3.5.0
-				 *
-				 * @param object           $errors WP Error object.
-				 * @param \WP_User|\WP_Error $user   WP_User object if the login and reset key match. WP_Error object otherwise.
-				 */
+
+				/** This action is documented in wp-login.php */
 				do_action( 'validate_password_reset', $errors, $user );
 
 				if ( ( ! $errors->get_error_code() ) ) {
 					reset_password( $user, trim( $args['user_password'] ) );
 
 					// send the Password Changed Email
-					UM()->user()->password_changed();
+					UM()->user()->password_changed( $user->ID );
 
 					// clear temporary data
 					$attempts = (int) get_user_meta( $user->ID, 'password_rst_attempts', true );
@@ -635,11 +621,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 						update_user_meta( $user->ID, 'password_rst_attempts', 0 );
 					}
 					$this->setcookie( $rp_cookie, false );
-
-					// logout
-					if ( is_user_logged_in() ) {
-						wp_logout();
-					}
 
 					/**
 					 * UM hook
@@ -660,9 +641,15 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 					 * }
 					 * ?>
 					 */
-					do_action( 'um_after_changing_user_password', absint( $args['user_id'] ) );
+					do_action( 'um_after_changing_user_password', $user->ID );
 
-					exit( wp_redirect( um_get_core_page( 'login', 'password_changed' ) ) );
+					if ( ! is_user_logged_in() ) {
+						$url = um_get_core_page( 'login', 'password_changed' );
+					} else {
+						$url = um_get_core_page( 'password-reset', 'password_changed' );
+					}
+					wp_redirect( $url );
+					exit;
 				}
 			}
 		}
