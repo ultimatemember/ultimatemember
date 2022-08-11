@@ -1,4 +1,4 @@
-name: JobBoardWP GitHub Actions
+name: Ultimate Member - Checking Code quality through PHPCS + WPCS
 
 on: push
 

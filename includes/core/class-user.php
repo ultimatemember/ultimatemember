@@ -127,16 +127,71 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				return;
 			}
 
+			$pending_statuses = array(
+				'awaiting_email_confirmation',
+				'awaiting_admin_review',
+			);
+
 			$old = get_user_meta( $object_id, $meta_key, true );
 
-			$values = array( $old, $_meta_value );
-			foreach ( $values as $value ) {
-				delete_transient( "um_count_users_{$value}" );
+			// deduct old transient count
+			$count = get_transient( "um_count_users_{$old}" );
+			if ( false !== $count ) {
+				if ( ! is_numeric( $count ) ) {
+					delete_transient( "um_count_users_{$old}" );
+				} else {
+					if ( 0 < $count ) {
+						$count--;
+					} else {
+						$count = 0;
+					}
+					set_transient( "um_count_users_{$old}", $count );
+				}
 			}
 
-			$maybe_flush_pending = array_intersect( $values, array( 'awaiting_email_confirmation', 'awaiting_admin_review' ) );
-			if ( ! empty( $maybe_flush_pending ) ) {
-				delete_transient( 'um_count_users_pending' );
+			if ( in_array( $old, $pending_statuses, true ) && ! in_array( $_meta_value, $pending_statuses, true ) ) {
+				// deduct old transient count
+				$count = get_transient( 'um_count_users_pending' );
+				if ( false !== $count ) {
+					if ( ! is_numeric( $count ) ) {
+						delete_transient( 'um_count_users_pending' );
+					} else {
+						if ( 0 < $count ) {
+							$count--;
+						} else {
+							$count = 0;
+						}
+						set_transient( 'um_count_users_pending', $count );
+					}
+				}
+			}
+
+			// add new transient count
+			$count = get_transient( "um_count_users_{$_meta_value}" );
+			if ( false !== $count ) {
+				if ( is_numeric( $count ) ) {
+					$count++;
+				} else {
+					$count = 1;
+				}
+			} else {
+				$count = 1;
+			}
+			set_transient( "um_count_users_{$_meta_value}", $count );
+
+			if ( in_array( $_meta_value, $pending_statuses, true ) && ! in_array( $old, $pending_statuses, true ) ) {
+				// add new transient count
+				$count = get_transient( 'um_count_users_pending' );
+				if ( false !== $count ) {
+					if ( is_numeric( $count ) ) {
+						$count++;
+					} else {
+						$count = 1;
+					}
+				} else {
+					$count = 1;
+				}
+				set_transient( 'um_count_users_pending', $count );
 			}
 		}
 
@@ -152,9 +207,37 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				return;
 			}
 
-			delete_transient( "um_count_users_{$_meta_value}" );
-			if ( in_array( $_meta_value, array( 'awaiting_email_confirmation', 'awaiting_admin_review' ), true ) ) {
-				delete_transient( 'um_count_users_pending' );
+			$pending_statuses = array(
+				'awaiting_email_confirmation',
+				'awaiting_admin_review',
+			);
+
+			// add new transient count
+			$count = get_transient( "um_count_users_{$_meta_value}" );
+			if ( false !== $count ) {
+				if ( is_numeric( $count ) ) {
+					$count++;
+				} else {
+					$count = 1;
+				}
+			} else {
+				$count = 1;
+			}
+			set_transient( "um_count_users_{$_meta_value}", $count );
+
+			if ( in_array( $_meta_value, $pending_statuses, true ) ) {
+				// add new transient count
+				$count = get_transient( 'um_count_users_pending' );
+				if ( false !== $count ) {
+					if ( is_numeric( $count ) ) {
+						$count++;
+					} else {
+						$count = 1;
+					}
+				} else {
+					$count = 1;
+				}
+				set_transient( 'um_count_users_pending', $count );
 			}
 		}
 
@@ -171,10 +254,42 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 
 			$value = ( '' !== $_meta_value ) ? $_meta_value : get_user_meta( $object_id, $meta_key, true );
-			delete_transient( "um_count_users_{$value}" );
 
-			if ( in_array( $value, array( 'awaiting_email_confirmation', 'awaiting_admin_review' ), true ) ) {
-				delete_transient( 'um_count_users_pending' );
+			$pending_statuses = array(
+				'awaiting_email_confirmation',
+				'awaiting_admin_review',
+			);
+
+			// deduct old transient count
+			$count = get_transient( "um_count_users_{$value}" );
+			if ( false !== $count ) {
+				if ( ! is_numeric( $count ) ) {
+					delete_transient( "um_count_users_{$value}" );
+				} else {
+					if ( 0 < $count ) {
+						$count--;
+					} else {
+						$count = 0;
+					}
+					set_transient( "um_count_users_{$value}", $count );
+				}
+			}
+
+			if ( in_array( $value, $pending_statuses, true ) ) {
+				// deduct old transient count
+				$count = get_transient( 'um_count_users_pending' );
+				if ( false !== $count ) {
+					if ( ! is_numeric( $count ) ) {
+						delete_transient( 'um_count_users_pending' );
+					} else {
+						if ( 0 < $count ) {
+							$count--;
+						} else {
+							$count = 0;
+						}
+						set_transient( 'um_count_users_pending', $count );
+					}
+				}
 			}
 		}
 
@@ -391,6 +506,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			UM()->files()->remove_dir( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR );
 
 			delete_transient( 'um_count_users_unassigned' );
+			delete_transient( 'um_count_users_pending' );
 		}
 
 
@@ -648,6 +764,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 
 			delete_transient( 'um_count_users_unassigned' );
+			delete_transient( 'um_count_users_pending' );
 		}
 
 
