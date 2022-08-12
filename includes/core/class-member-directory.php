@@ -684,7 +684,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options_sorted', $attrs['options'], $attrs );
 
-					$label = isset( $attrs['label'] ) ? $attrs['label'] : ''; ?>
+					$label = '';
+					if ( isset( $attrs['label'] ) ) {
+						$label = $attrs['label'];
+					} elseif ( ! isset( $attrs['label'] ) && isset( $attrs['title'] ) ) {
+						$label = $attrs['title'];
+					}
+					?>
 
 					<select class="um-s1" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?><?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>[]<?php } ?>"
 							data-placeholder="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
@@ -2465,7 +2471,16 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			global $wpdb;
 
+			if ( empty( $_POST['directory_id'] ) ) {
+				wp_send_json_error( __( 'Wrong member directory data', 'ultimate-member' ) );
+			}
+
 			$directory_id = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
+
+			if ( empty( $directory_id ) ) {
+				wp_send_json_error( __( 'Wrong member directory data', 'ultimate-member' ) );
+			}
+
 			$directory_data = UM()->query()->post_data( $directory_id );
 
 			//predefined result for user without capabilities to see other members

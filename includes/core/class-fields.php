@@ -308,7 +308,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					// Admin filtering
 					$directory_search_filters = get_post_meta( $directory_id, '_um_search_filters', true );
-					unset( $directory_search_filters[ $id ] );
+					if ( isset( $directory_search_filters[ $id ] ) ) {
+						unset( $directory_search_filters[ $id ] );
+					}
 					update_post_meta( $directory_id, '_um_search_filters', $directory_search_filters );
 
 					// display in tagline
@@ -1577,6 +1579,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					break;
 
+				case 'tel':
+
+					$array['input'] = 'tel';
+
+					break;
+
 				case 'password':
 
 					$array['input'] = 'password';
@@ -2287,6 +2295,43 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				/* Text */
 				case 'text':
+
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
+
+					if ( isset( $data['label'] ) ) {
+						$output .= $this->field_label( $label, $key, $data );
+					}
+
+					$output .= '<div class="um-field-area">';
+
+					if ( ! empty( $icon ) && isset( $this->field_icons ) && $this->field_icons == 'field' ) {
+
+						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $icon ) . '"></i></div>';
+
+					}
+
+					$field_name = $key . UM()->form()->form_suffix;
+					$field_value = htmlspecialchars( $this->field_value( $key, $default, $data ) );
+
+					$output .= '<input ' . $disabled . ' autocomplete="' . esc_attr( $autocomplete ) . '" class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />
+
+						</div>';
+
+					if ( ! empty( $disabled ) ) {
+						$output .= $this->disabled_hidden_field( $field_name, $field_value );
+					}
+
+					if ( $this->is_error( $key ) ) {
+						$output .= $this->field_error( $this->show_error( $key ) );
+					}else if ( $this->is_notice( $key ) ) {
+						$output .= $this->field_notice( $this->show_notice( $key ) );
+					}
+
+					$output .= '</div>';
+					break;
+
+				/* Tel */
+				case 'tel':
 
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
@@ -4487,7 +4532,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				}
 
 				if ( um_is_myprofile() ) {
-					$output .= '<p class="um-profile-note">' . $emo . '<span>' . sprintf( __( 'Your profile is looking a little empty. Why not <a href="%s">add</a> some information!', 'ultimate-member' ), esc_url( um_edit_profile_url() ) ) . '</span></p>';
+					if ( isset( $_GET['profiletab'] ) && 'main' !== $_GET['profiletab'] ) {
+						$tab         = sanitize_key( $_GET['profiletab'] );
+						$edit_action = 'edit_' . $tab;
+						$profile_url = um_user_profile_url( um_profile_id() );
+						$edit_url    = add_query_arg( array( 'profiletab' => $tab, 'um_action' => $edit_action ), $profile_url );
+					} else {
+						$edit_url    = um_edit_profile_url();
+					}
+					$output .= '<p class="um-profile-note">' . $emo . '<span>' . sprintf( __( 'Your profile is looking a little empty. Why not <a href="%s">add</a> some information!', 'ultimate-member' ), esc_url( $edit_url ) ) . '</span></p>';
 				} else {
 					$output .= '<p class="um-profile-note">' . $emo . '<span>' . __( 'This user has not added any information to their profile yet.', 'ultimate-member' ) . '</span></p>';
 				}
