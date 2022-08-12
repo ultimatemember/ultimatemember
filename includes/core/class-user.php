@@ -127,6 +127,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				return;
 			}
 
+			// related to the User role > Registration Options Metabox > Registration status 2nd and 3rd option
+			if ( in_array( $_meta_value, array( 'checkmail', 'pending' ), true ) ) {
+				return;
+			}
+
 			$pending_statuses = array(
 				'awaiting_email_confirmation',
 				'awaiting_admin_review',
@@ -138,34 +143,37 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				return;
 			}
 
-			// deduct old transient count
-			$count = get_transient( "um_count_users_{$old}" );
-			if ( false !== $count ) {
-				if ( ! is_numeric( $count ) ) {
-					delete_transient( "um_count_users_{$old}" );
-				} else {
-					if ( 0 < $count ) {
-						$count--;
-					} else {
-						$count = 0;
-					}
-					set_transient( "um_count_users_{$old}", $count );
-				}
-			}
-
-			if ( in_array( $old, $pending_statuses, true ) && ! in_array( $_meta_value, $pending_statuses, true ) ) {
+			// related to the User role > Registration Options Metabox > Registration status 2nd and 3rd option
+			if ( ! in_array( $old, array( 'checkmail', 'pending' ), true ) ) {
 				// deduct old transient count
-				$count = get_transient( 'um_count_users_pending' );
+				$count = get_transient( "um_count_users_{$old}" );
 				if ( false !== $count ) {
 					if ( ! is_numeric( $count ) ) {
-						delete_transient( 'um_count_users_pending' );
+						delete_transient( "um_count_users_{$old}" );
 					} else {
 						if ( 0 < $count ) {
 							$count--;
 						} else {
 							$count = 0;
 						}
-						set_transient( 'um_count_users_pending', $count );
+						set_transient( "um_count_users_{$old}", $count );
+					}
+				}
+
+				if ( in_array( $old, $pending_statuses, true ) && ! in_array( $_meta_value, $pending_statuses, true ) ) {
+					// deduct old transient count
+					$count = get_transient( 'um_count_users_pending_dot' );
+					if ( false !== $count ) {
+						if ( ! is_numeric( $count ) ) {
+							delete_transient( 'um_count_users_pending_dot' );
+						} else {
+							if ( 0 < $count ) {
+								$count--;
+							} else {
+								$count = 0;
+							}
+							set_transient( 'um_count_users_pending_dot', $count );
+						}
 					}
 				}
 			}
@@ -185,7 +193,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			if ( in_array( $_meta_value, $pending_statuses, true ) && ! in_array( $old, $pending_statuses, true ) ) {
 				// add new transient count
-				$count = get_transient( 'um_count_users_pending' );
+				$count = get_transient( 'um_count_users_pending_dot' );
 				if ( false !== $count ) {
 					if ( is_numeric( $count ) ) {
 						$count++;
@@ -195,7 +203,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				} else {
 					$count = 1;
 				}
-				set_transient( 'um_count_users_pending', $count );
+				set_transient( 'um_count_users_pending_dot', $count );
 			}
 		}
 
@@ -208,6 +216,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 */
 		public function flush_um_count_users_transient_add( $meta_ids, $object_id, $meta_key, $_meta_value ) {
 			if ( 'account_status' !== $meta_key ) {
+				return;
+			}
+
+			// related to the User role > Registration Options Metabox > Registration status 2nd and 3rd option
+			if ( in_array( $_meta_value, array( 'checkmail', 'pending' ), true ) ) {
 				return;
 			}
 
@@ -231,17 +244,17 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			if ( in_array( $_meta_value, $pending_statuses, true ) ) {
 				// add new transient count
-				$count = get_transient( 'um_count_users_pending' );
-				if ( false !== $count ) {
-					if ( is_numeric( $count ) ) {
-						$count++;
+				$pending_count = get_transient( 'um_count_users_pending_dot' );
+				if ( false !== $pending_count ) {
+					if ( is_numeric( $pending_count ) ) {
+						$pending_count++;
 					} else {
-						$count = 1;
+						$pending_count = 1;
 					}
 				} else {
-					$count = 1;
+					$pending_count = 1;
 				}
-				set_transient( 'um_count_users_pending', $count );
+				set_transient( 'um_count_users_pending_dot', $pending_count );
 			}
 		}
 
@@ -258,6 +271,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 
 			$value = ( '' !== $_meta_value ) ? $_meta_value : get_user_meta( $object_id, $meta_key, true );
+
+			// related to the User role > Registration Options Metabox > Registration status 2nd and 3rd option
+			if ( in_array( $value, array( 'checkmail', 'pending' ), true ) ) {
+				return;
+			}
 
 			$pending_statuses = array(
 				'awaiting_email_confirmation',
@@ -281,17 +299,17 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			if ( in_array( $value, $pending_statuses, true ) ) {
 				// deduct old transient count
-				$count = get_transient( 'um_count_users_pending' );
+				$count = get_transient( 'um_count_users_pending_dot' );
 				if ( false !== $count ) {
 					if ( ! is_numeric( $count ) ) {
-						delete_transient( 'um_count_users_pending' );
+						delete_transient( 'um_count_users_pending_dot' );
 					} else {
 						if ( 0 < $count ) {
 							$count--;
 						} else {
 							$count = 0;
 						}
-						set_transient( 'um_count_users_pending', $count );
+						set_transient( 'um_count_users_pending_dot', $count );
 					}
 				}
 			}
@@ -510,7 +528,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			UM()->files()->remove_dir( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR );
 
 			delete_transient( 'um_count_users_unassigned' );
-			delete_transient( 'um_count_users_pending' );
+			delete_transient( 'um_count_users_pending_dot' );
 		}
 
 
@@ -730,7 +748,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param $user_id
 		 */
 		function user_register_via_admin( $user_id ) {
-
 			if ( empty( $user_id ) ) {
 				return;
 			}
@@ -768,7 +785,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 
 			delete_transient( 'um_count_users_unassigned' );
-			delete_transient( 'um_count_users_pending' );
 		}
 
 

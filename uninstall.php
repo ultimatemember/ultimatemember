@@ -126,7 +126,7 @@ if ( ! empty( $delete_options ) ) {
 	foreach ( $statuses as $status ) {
 		delete_transient( "um_count_users_{$status}" );
 	}
-	delete_transient( 'um_count_users_pending' );
+	delete_transient( 'um_count_users_pending_dot' );
 	delete_transient( 'um_count_users_unassigned' );
 
 	//remove all users cache

@@ -270,7 +270,7 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		 * @return int
 		 */
 		function get_pending_users_count() {
-			$users_count = get_transient( 'um_count_users_pending' );
+			$users_count = get_transient( 'um_count_users_pending_dot' );
 			if ( false === $users_count ) {
 				$args = array(
 					'fields'               => 'ids',
@@ -321,7 +321,7 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 					$users_count = $users->get_total();
 				}
 
-				set_transient( 'um_count_users_pending', $users_count );
+				set_transient( 'um_count_users_pending_dot', $users_count );
 			}
 
 			return $users_count;

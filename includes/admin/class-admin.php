@@ -1710,6 +1710,8 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 				delete_transient( "um_count_users_{$status}" );
 			}
 
+			do_action( 'um_flush_user_status_cache' );
+
 			$url = add_query_arg(
 				array(
 					'page'   => 'ultimatemember',
