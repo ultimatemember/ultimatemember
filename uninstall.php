@@ -115,6 +115,20 @@ if ( ! empty( $delete_options ) ) {
 	delete_option( '__ultimatemember_sitekey' );
 	delete_option( 'um_flush_rewrite_rules' );
 
+	$statuses = array(
+		'approved',
+		'awaiting_admin_review',
+		'awaiting_email_confirmation',
+		'inactive',
+		'rejected',
+	);
+
+	foreach ( $statuses as $status ) {
+		delete_transient( "um_count_users_{$status}" );
+	}
+	delete_transient( 'um_count_users_pending_dot' );
+	delete_transient( 'um_count_users_unassigned' );
+
 	//remove all users cache
 	UM()->user()->remove_cache_all_users();
 

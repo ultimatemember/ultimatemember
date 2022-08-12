@@ -72,6 +72,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			add_filter( "{$prefix}plugin_action_links_" . um_plugin, array( &$this, 'plugin_links' ) );
 
 			add_action( 'um_admin_do_action__user_cache', array( &$this, 'user_cache' ) );
+			add_action( 'um_admin_do_action__user_status_cache', array( &$this, 'user_status_cache' ) );
 			add_action( 'um_admin_do_action__purge_temp', array( &$this, 'purge_temp' ) );
 			add_action( 'um_admin_do_action__manual_upgrades_request', array( &$this, 'manual_upgrades_request' ) );
 			add_action( 'um_admin_do_action__duplicate_form', array( &$this, 'duplicate_form' ) );
@@ -1673,8 +1674,53 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'um_cache_userdata_%'" );
 
-			$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'cleared_cache' ), admin_url( 'admin.php' ) );
-			exit( wp_redirect( $url ) );
+			$url = add_query_arg(
+				array(
+					'page'   => 'ultimatemember',
+					'update' => 'cleared_cache',
+				),
+				admin_url( 'admin.php' )
+			);
+			wp_redirect( $url );
+			exit;
+		}
+
+
+		/**
+		 * Clear all users statuses count cache
+		 *
+		 * @param $action
+		 */
+		function user_status_cache( $action ) {
+			if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
+				die();
+			}
+
+			$statuses = array(
+				'approved',
+				'awaiting_admin_review',
+				'awaiting_email_confirmation',
+				'inactive',
+				'rejected',
+				'pending_dot', // not real status key, just for the transient
+				'unassigned', // not real status key, just for the transient
+			);
+
+			foreach ( $statuses as $status ) {
+				delete_transient( "um_count_users_{$status}" );
+			}
+
+			do_action( 'um_flush_user_status_cache' );
+
+			$url = add_query_arg(
+				array(
+					'page'   => 'ultimatemember',
+					'update' => 'cleared_status_cache',
+				),
+				admin_url( 'admin.php' )
+			);
+			wp_redirect( $url );
+			exit;
 		}
 
 

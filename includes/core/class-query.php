@@ -217,48 +217,114 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		/**
 		 * Count users by status
 		 *
+		 * @since 2.4.2 $status = 'unassigned' is unused. Please use `UM()->setup()->set_default_user_status()` instead. Will be deprecated since 3.0
+		 *
 		 * @param $status
 		 *
 		 * @return int
 		 */
 		function count_users_by_status( $status ) {
-			$args = array( 'fields' => 'ID', 'number' => 0, 'um_custom_user_query' => true );
-			if ( $status == 'unassigned' ) {
-				$args['meta_query'][] = array(array('key' => 'account_status','compare' => 'NOT EXISTS'));
-				$users = new \WP_User_Query( $args );
-				foreach ( $users->results as $user ) {
-					update_user_meta( $user, 'account_status', 'approved' );
-				}
+			if ( 'unassigned' === $status ) {
+				_deprecated_argument(
+					__FUNCTION__,
+					'2.4.2',
+					__( 'The "unassigned" $status has been removed. Use `UM()->setup()->set_default_user_status()` for setting up default user account status.', 'ultimate-member' )
+				);
+
+				UM()->setup()->set_default_user_status();
 				return 0;
-			} else {
-				$args['meta_query'][] = array(array('key' => 'account_status','value' => $status,'compare' => '='));
 			}
-			$users = new \WP_User_Query( $args );
-			return count( $users->results );
+
+			$users_count = get_transient( "um_count_users_{$status}" );
+			if ( false === $users_count ) {
+				$args = array(
+					'fields'               => 'ids',
+					'number'               => 1,
+					'meta_query'           => array(
+						array(
+							'key'     => 'account_status',
+							'value'   => $status,
+							'compare' => '=',
+						),
+					),
+					'um_custom_user_query' => true,
+				);
+
+				$users = new \WP_User_Query( $args );
+				if ( empty( $users ) || is_wp_error( $users ) ) {
+					$users_count = 0;
+				} else {
+					$users_count = $users->get_total();
+				}
+
+				set_transient( "um_count_users_{$status}", $users_count );
+			}
+
+			return $users_count;
 		}
 
 
 		/**
-		 * Get users by status
+		 * Get pending users (in queue)
 		 *
-		 * @param $status
-		 * @param int $number
-		 *
-		 * @return array
+		 * @return int
 		 */
-		function get_users_by_status($status, $number = 5){
-			$args = array( 'fields' => 'ID', 'number' => $number, 'orderby' => 'user_registered', 'order' => 'desc' );
+		function get_pending_users_count() {
+			$users_count = get_transient( 'um_count_users_pending_dot' );
+			if ( false === $users_count ) {
+				$args = array(
+					'fields'               => 'ids',
+					'number'               => 1,
+					'meta_query'           => array(
+						'relation' => 'OR',
+						array(
+							'key'     => 'account_status',
+							'value'   => 'awaiting_email_confirmation',
+							'compare' => '=',
+						),
+						array(
+							'key'     => 'account_status',
+							'value'   => 'awaiting_admin_review',
+							'compare' => '=',
+						),
+					),
+					'um_custom_user_query' => true,
+				);
 
-			$args['meta_query'][] = array(
-				array(
-					'key'     => 'account_status',
-					'value'   => $status,
-					'compare' => '='
-				)
-			);
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_admin_pending_queue_filter
+				 * @description Change user query arguments when get pending users
+				 * @input_vars
+				 * [{"var":"$args","type":"array","desc":"WP_Users query arguments"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage
+				 * <?php add_filter( 'um_admin_pending_queue_filter', 'function_name', 10, 1 ); ?>
+				 * @example
+				 * <?php
+				 * add_filter( 'um_admin_pending_queue_filter', 'my_admin_pending_queue', 10, 1 );
+				 * function my_admin_pending_queue( $args ) {
+				 *     // your code here
+				 *     return $args;
+				 * }
+				 * ?>
+				 */
+				$args = apply_filters( 'um_admin_pending_queue_filter', $args );
 
-			$users = new \WP_User_Query( $args );
-			return $users->results;
+				$users = new \WP_User_Query( $args );
+				if ( empty( $users ) || is_wp_error( $users ) ) {
+					$users_count = 0;
+				} else {
+					$users_count = $users->get_total();
+				}
+
+				set_transient( 'um_count_users_pending_dot', $users_count );
+			}
+
+			return $users_count;
 		}
 
 
@@ -456,5 +522,32 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 			}
 		}
 
+
+		/**
+		 * Get users by status
+		 *
+		 * @param $status
+		 * @param int $number
+		 *
+		 * @deprecated 2.4.2
+		 *
+		 * @return array
+		 */
+		function get_users_by_status( $status, $number = 5 ) {
+			_deprecated_function( __METHOD__, '2.4.2' );
+
+			$args = array( 'fields' => 'ID', 'number' => $number, 'orderby' => 'user_registered', 'order' => 'desc' );
+
+			$args['meta_query'][] = array(
+				array(
+					'key'     => 'account_status',
+					'value'   => $status,
+					'compare' => '='
+				)
+			);
+
+			$users = new \WP_User_Query( $args );
+			return $users->results;
+		}
 	}
 }
