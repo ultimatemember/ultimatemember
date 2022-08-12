@@ -248,11 +248,11 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		/**
 		 * Prepare email template to send
 		 *
-		 * @param $slug
-		 * @param $args
+		 * @param  string $slug  Template Key.
+		 * @param  array  $args  Template settings.
 		 * @return mixed|string
 		 */
-		function prepare_template( $slug, $args = array() ) {
+		public function prepare_template( $slug, $args = array() ) {
 			ob_start();
 
 			if ( UM()->options()->get( 'email_html' ) ) {
@@ -331,21 +331,23 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 				?>
 
 
-				<body <?php echo $body_attrs ?>>
+				<body <?php echo $body_attrs; ?>>
 
 				<?php echo $this->get_email_template( $slug, $args ); ?>
 
 				</body>
 				</html>
 
-			<?php } else {
+				<?php
+			} else {
 
-				//strip tags in plain text email
-				//important don't use HTML in plain text emails!
-				$raw_email_template = $this->get_email_template( $slug, $args );
-				$plain_email_template = strip_tags( $raw_email_template );
-				if( $plain_email_template !== $raw_email_template ){
-					$plain_email_template = preg_replace( array('/&nbsp;/mi', '/^\s+/mi'), array(' ', ''), $plain_email_template );
+				// strip tags in plain text email.
+				// important don't use HTML in plain text emails!
+				$raw_email_template   = $this->get_email_template( $slug, $args );
+				$email_template_links = preg_replace( '~<a .*href="([^\"]*)".*>(.*)</a>~i', '$2: $1', $raw_email_template );
+				$plain_email_template = wp_strip_all_tags( $email_template_links );
+				if ( $plain_email_template !== $raw_email_template ) {
+					$plain_email_template = preg_replace( array( '/&nbsp;/mi', '/^\s+/mi' ), array( ' ', '' ), $plain_email_template );
 				}
 
 				echo $plain_email_template;
@@ -353,7 +355,6 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			}
 
 			$message = ob_get_clean();
-
 
 			/**
 			 * UM hook
@@ -383,21 +384,9 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			add_filter( 'um_template_tags_patterns_hook', array( &$this, 'add_placeholder' ), 10, 1 );
 			add_filter( 'um_template_tags_replaces_hook', array( &$this, 'add_replace_placeholder' ), 10, 1 );
 
-			// Convert tags in email template
-			$message = um_convert_tags( $message, $args );
-
-			// Strip tags in plain text email.
-			// Important! Don't use HTML in plain text emails.
-			if ( ! UM()->options()->get( 'email_html' ) ) {
-				$message_nl = str_replace(
-					array( '</p><p', '</p><div', '</div><div', '</div><p' ),
-					array( "</p>\n<p", "</p>\n<div", "</div>\n<div", "</div>\n<p" ),
-					$message
-				);
-				$message    = wp_strip_all_tags( $message_nl );
-			}
-
-			return $message;
+			// Convert tags in email template.
+			$context = UM()->options()->get( 'email_html' ) ? 'html' : 'plain';
+			return um_convert_tags( $message, $args, true, $context );
 		}
 
 		/**

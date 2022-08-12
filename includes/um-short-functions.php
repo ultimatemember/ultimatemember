@@ -183,15 +183,16 @@ function um_replace_placeholders() {
 
 
 /**
- * Convert template tags
+ * Convert template tags.
  *
- * @param $content
- * @param array $args
- * @param bool $with_kses
+ * @param string $content    Template body.
+ * @param array  $args       Template settings.
+ * @param bool   $with_kses  Enable sanitize.
+ * @param string $context    Content-Type: 'html' or 'plain'.
  *
  * @return mixed|string
  */
-function um_convert_tags( $content, $args = array(), $with_kses = true ) {
+function um_convert_tags( $content, $args = array(), $with_kses = true, $context = 'html' ) {
 	$placeholders = um_replace_placeholders();
 
 	$content = str_replace( array_keys( $placeholders ), array_values( $placeholders ), $content );
@@ -206,10 +207,10 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 	$regex = '~\{(usermeta:[^}]*)\}~';
 	preg_match_all( $regex, $content, $matches );
 
-	// Support for all usermeta keys
+	// Support for all usermeta keys.
 	if ( ! empty( $matches[1] ) && is_array( $matches[1] ) ) {
 		foreach ( $matches[1] as $match ) {
-			$key = str_replace( 'usermeta:', '', $match );
+			$key   = str_replace( 'usermeta:', '', $match );
 			$value = um_user( $key );
 			if ( is_array( $value ) ) {
 				$value = implode( ', ', $value );
@@ -217,6 +218,43 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 			$content = str_replace( '{' . $match . '}', apply_filters( 'um_convert_tags', $value, $key ), $content );
 		}
 	}
+
+	// Strip tags in plain text email.
+	if ( 'plain' === $context ) {
+
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_convert_tags_plain
+		 * @description Filters content before strip all HTML tags after convering tags-placeholders.
+		 * @input_vars
+		 * [{"var":"$content","type":"string","desc":"Template body"},
+		 * {"var":"$args","type":"array","desc":"Template settings"}]
+		 * @change_log
+		 * ["Since: 2.4.3"]
+		 * @usage
+		 * <?php add_filter( 'um_convert_tags_plain', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_convert_tags_plain', 'my_convert_tags_return', 10, 2 );
+		 * function my_convert_tags_return( $content, $args ) {
+		 *     // your code here
+		 *     return $content;
+		 * }
+		 * ?>
+		 */
+		$content = apply_filters( 'um_convert_tags_plain', $content, $args );
+
+		$content = wp_strip_all_tags(
+			str_replace(
+				array( '</p><p', '</p><div', '</div><div', '</div><p' ),
+				array( "</p>\n<p", "</p>\n<div", "</div>\n<div", "</div>\n<p" ),
+				$content
+			)
+		);
+	}
+
 	return $content;
 }
 
@@ -671,10 +709,10 @@ function um_get_snippet( $str, $wordCount = 10 ) {
 
 /**
  * Format submitted data for Info preview & Email template
- * @param  boolean $style 
+ * @param  boolean $style
  * @return string
  *
- * @since  2.1.4 
+ * @since  2.1.4
  */
 function um_user_submitted_registration_formatted( $style = false ) {
 	$output = null;
@@ -839,7 +877,7 @@ function um_user_submitted_registration_formatted( $style = false ) {
  * @param  boolean $style
  * @return string
  *
- * @since  2.1.4 
+ * @since  2.1.4
  */
 function um_user_submited_display( $k, $title, $data = array(), $style = true ) {
 	$output = '';
@@ -1140,8 +1178,8 @@ function um_is_file_owner( $url, $user_id = null, $image_path = false ) {
 
 /**
  * Check if file is temporary
- * @param  string $filename 
- * @return bool       
+ * @param  string $filename
+ * @return bool
  */
 function um_is_temp_file( $filename ) {
 	$user_basedir = UM()->uploader()->get_upload_user_base_dir( 'temp' );
