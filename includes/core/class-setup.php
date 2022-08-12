@@ -296,7 +296,7 @@ KEY meta_value_indx (um_value(191))
 					$result = $users->get_results();
 				}
 
-				set_transient( 'um_count_users_unassigned', $result );
+				set_transient( 'um_count_users_unassigned', $result, DAY_IN_SECONDS );
 			}
 
 			if ( empty( $result ) ) {
