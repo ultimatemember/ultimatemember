@@ -134,6 +134,10 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			$old = get_user_meta( $object_id, $meta_key, true );
 
+			if ( $old === $_meta_value ) {
+				return;
+			}
+
 			// deduct old transient count
 			$count = get_transient( "um_count_users_{$old}" );
 			if ( false !== $count ) {
