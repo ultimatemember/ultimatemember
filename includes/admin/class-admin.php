@@ -1702,7 +1702,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 				'awaiting_email_confirmation',
 				'inactive',
 				'rejected',
-				'pending', // not real status key, just for the transient
+				'pending_dot', // not real status key, just for the transient
 				'unassigned', // not real status key, just for the transient
 			);
 
