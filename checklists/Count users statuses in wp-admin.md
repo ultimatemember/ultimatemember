@@ -2,7 +2,7 @@
 
 ## Count users status in wp-admin
 
-This section contains a checklist to do test cases to ensure that the correct user count is displayed after user status changes in wp-admin.
+This document contains a checklist to do test cases to ensure that the correct user count is displayed after user status changes in wp-admin.
 
 ### Contents
 
