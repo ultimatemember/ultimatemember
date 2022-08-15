@@ -1,22 +1,22 @@
-(function( $ ) {
+(function ( $ ) {
 	'use strict';
 
-	$(document).on('click', "a.um-toggle-gdpr" ,function() {
-		 
-		var me = jQuery(this);
+	$( document ).on( 'click', 'a.um-toggle-gdpr', function ( e ) {
+		let $a = jQuery( e.currentTarget );
+		let $area = $a.closest( '.um-field-area' );
+		let $content = $area.find( '.um-gdpr-content' );
 
-		$( ".um-gdpr-content" ).toggle( "fast", function() {
-			if( $( ".um-gdpr-content" ).is(':visible') ){
-				me.text( me.data('toggle-hide') );
-		   	}
+		if ( $content.is( ':visible' ) ) {
+			$area.find( 'a.um-toggle-gdpr' ).text( $a.data( 'toggle-show' ) );
+			$content.hide().find( 'a.um-toggle-gdpr' ).remove();
+			if ( $a.length ) {
+				$a.get( 0 ).scrollIntoView();
+			}
+		} else {
+			$area.find( 'a.um-toggle-gdpr' ).text( $a.data( 'toggle-hide' ) );
+			$content.show().prepend( $a.clone() );
+		}
 
-			if( $( ".um-gdpr-content" ).is(':hidden') ){
-				me.text( me.data('toggle-show') );
-		  	}
-		    
-		});
-
-	});
-
+	} );
 
 })( jQuery );

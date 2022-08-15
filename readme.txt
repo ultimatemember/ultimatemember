@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 6.0
-Stable tag: 2.4.2
+Stable tag: 2.5.0
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -162,6 +162,32 @@ No, you do not need to use our plugin’s login or registration pages and can us
 
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
+
+= 2.5.0: August 17, 2022 =
+
+* Enhancements:
+
+  - Added: Input type "tel" using for the "Mobile Number" and "Phone Number" fields
+
+* Bugfixes:
+
+  - Fixed: Performance issue on wp-admin Users screen. Queries were replaced to the cache transient values
+  - Fixed: Privacy policy displaying when there are 2 registration forms on the same page
+  - Fixed: Password Reset process via Ultimate Member - Password Reset form. Reset password links' arguments changed to the same view as WordPress native has. Password Reset available for the same cases as native WordPress Password Reset has
+  - Fixed: Sanitizing for the Info Text field-type in wp-admin forms. Needed for the proper 3rd-party integrations
+  - Fixed: Displaying the filters' titles on the Member Directory pages
+
+* Deprecated:
+
+  - `UM()->query()->get_users_by_status()` without alternativities. It's unused since 2.5.0. Will be removed since 2.7.0
+  - `UM()->user()->get_pending_users_count()`. Use `UM()->query()->get_pending_users_count()` instead. It's unused since 2.5.0. Will be removed since 2.7.0
+  - `UM()->user()->remove_cached_queue()` without alternativities. It's unused since 2.5.0. Will be removed since 2.7.0
+
+* Templates required update:
+  - password-change.php
+  - password-reset.php
+
+* Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade
 
 = 2.4.2: July 14, 2022 =
 

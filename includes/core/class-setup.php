@@ -32,6 +32,7 @@ if ( ! class_exists( 'um\core\Setup' ) ) {
 			$this->install_default_forms();
 			$this->set_default_settings();
 			$this->set_default_role_meta();
+			$this->set_default_user_status();
 		}
 
 
@@ -262,11 +263,48 @@ KEY meta_value_indx (um_value(191))
 		 * Set UM roles meta to Default WP roles
 		 */
 		function set_default_role_meta() {
-			//for set accounts without account status approved status
-			UM()->query()->count_users_by_status( 'unassigned' );
-
 			foreach ( UM()->config()->default_roles_metadata as $role => $meta ) {
 				add_option( "um_role_{$role}_meta", $meta );
+			}
+		}
+
+
+		/**
+		 * Set accounts without account_status meta to 'approved' status
+		 *
+		 * @since 2.4.2
+		 */
+		function set_default_user_status() {
+			$result = get_transient( 'um_count_users_unassigned' );
+			if ( false === $result ) {
+				$args = array(
+					'fields'               => 'ids',
+					'number'               => 0,
+					'meta_query'           => array(
+						array(
+							'key'     => 'account_status',
+							'compare' => 'NOT EXISTS',
+						),
+					),
+					'um_custom_user_query' => true,
+				);
+
+				$users = new \WP_User_Query( $args );
+				if ( empty( $users ) || is_wp_error( $users ) ) {
+					$result = array();
+				} else {
+					$result = $users->get_results();
+				}
+
+				set_transient( 'um_count_users_unassigned', $result, DAY_IN_SECONDS );
+			}
+
+			if ( empty( $result ) ) {
+				return;
+			}
+
+			foreach ( $result as $user_id ) {
+				update_user_meta( $user_id, 'account_status', 'approved' );
 			}
 		}
 	}

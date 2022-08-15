@@ -440,6 +440,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					$messages[0]['content'] = __( 'Your user cache is now removed.', 'ultimate-member' );
 					break;
 
+				case 'cleared_status_cache':
+					$messages[0]['content'] = __( 'Your user statuses cache is now removed.', 'ultimate-member' );
+					break;
+
 				case 'got_updates':
 					$messages[0]['content'] = __( 'You have the latest updates.', 'ultimate-member' );
 					break;
@@ -528,13 +532,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					continue;
 
 				if ( ( is_object( $license ) && 'inactive' == $license->license ) || 'inactive' == $license ) {
-					$arr_inactive_license_keys[ ] = $license->item_name;
+					$arr_inactive_license_keys[] = $license->item_name;
 				}
 
 				$invalid_license++;
 			}
 
-			if ( ! empty(  $arr_inactive_license_keys ) ) {
+			if ( ! empty( $arr_inactive_license_keys ) ) {
 				$this->add_notice( 'license_key', array(
 					'class'     => 'error',
 					'message'   => '<p>' . sprintf( __( 'There are %d inactive %s license keys for this site. This site is not authorized to get plugin updates. You can active this site on <a href="%s">www.ultimatemember.com</a>.', 'ultimate-member' ), count( $arr_inactive_license_keys ) , ultimatemember_plugin_name, UM()->store_url ) . '</p>',

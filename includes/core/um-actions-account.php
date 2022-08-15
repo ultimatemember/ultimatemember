@@ -209,20 +209,18 @@ function um_submit_account_details( $args ) {
 
 	//change password account's tab
 	if ( 'password' === $current_tab && $args['user_password'] && $args['confirm_user_password'] ) {
-
 		$changes['user_pass'] = trim( $args['user_password'] );
-
-		$args['user_id'] = $user_id;
+		$args['user_id']      = get_current_user_id();
 
 		UM()->user()->password_changed();
 
 		add_filter( 'send_password_change_email', '__return_false' );
 
 		//clear all sessions with old passwords
-		$user = WP_Session_Tokens::get_instance( $user_id );
+		$user = WP_Session_Tokens::get_instance( $args['user_id'] );
 		$user->destroy_all();
 
-		wp_set_password( $changes['user_pass'], $user_id );
+		wp_set_password( $changes['user_pass'], $args['user_id'] );
 
 		do_action( 'um_before_signon_after_account_changes', $args );
 

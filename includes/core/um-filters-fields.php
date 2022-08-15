@@ -100,6 +100,22 @@ add_filter( 'um_profile_field_filter_hook__vimeo_video', 'um_profile_field_filte
 
 
 /**
+ * Outputs a phone link
+ *
+ * @param $value
+ * @param $data
+ *
+ * @return int|string
+ */
+function um_profile_field_filter_hook__phone( $value, $data ) {
+	$value = '<a href="tel:' . esc_attr( $value ) . '" rel="nofollow" title="' . esc_attr( $data['title'] ) . '">' . esc_html( $value ) . '</a>';
+	return $value;
+}
+add_filter( 'um_profile_field_filter_hook__phone_number', 'um_profile_field_filter_hook__phone', 99, 2 );
+add_filter( 'um_profile_field_filter_hook__mobile_number', 'um_profile_field_filter_hook__phone', 99, 2 );
+
+
+/**
  * Outputs a viber link
  *
  * @param $value

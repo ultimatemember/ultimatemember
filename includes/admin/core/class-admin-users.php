@@ -411,7 +411,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 				'rejected'                    => __( 'Rejected', 'ultimate-member' ),
 			);
 
-			UM()->query()->count_users_by_status( 'unassigned' );
+			// set default statuses if not already done
+			UM()->setup()->set_default_user_status();
 
 			foreach ( $status as $k => $v ) {
 				if ( isset( $_REQUEST['um_status'] ) && sanitize_key( $_REQUEST['um_status'] ) === $k ) {

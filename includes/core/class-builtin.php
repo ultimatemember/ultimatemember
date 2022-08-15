@@ -245,6 +245,22 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					)
 				),
 
+				'tel' => array(
+					'name' => __( 'Telephone Box', 'ultimate-member' ),
+					'col1' => array('_title','_metakey','_help','_default','_min_chars','_visibility'),
+					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate','_max_chars'),
+					'col3' => array('_required','_editable','_icon'),
+					'validate' => array(
+						'_title' => array(
+							'mode' => 'required',
+							'error' => __('You must provide a title','ultimate-member'),
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
+						),
+					)
+				),
+
 				'number' => array(
 					'name' => __('Number','ultimate-member'),
 					'col1' => array('_title','_metakey','_help','_default','_min','_visibility'),
@@ -1133,7 +1149,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'phone_number' => array(
 					'title' => __('Phone Number','ultimate-member'),
 					'metakey' => 'phone_number',
-					'type' => 'text',
+					'type' => 'tel',
 					'label' => __('Phone Number','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
@@ -1145,7 +1161,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'mobile_number' => array(
 					'title' => __('Mobile Number','ultimate-member'),
 					'metakey' => 'mobile_number',
-					'type' => 'text',
+					'type' => 'tel',
 					'label' => __('Mobile Number','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
