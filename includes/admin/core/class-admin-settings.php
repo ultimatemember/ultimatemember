@@ -234,6 +234,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$to   = absint( $_POST['page'] ) * $per_page;
 
 				wp_send_json_success( array( 'message' => sprintf( __( 'Metadata from %1$s to %2$s was upgraded successfully...', 'ultimate-member' ), $from, $to ) ) );
+			} else {
+				do_action( 'um_same_page_update_ajax_action', $cb_func );
 			}
 		}
 
