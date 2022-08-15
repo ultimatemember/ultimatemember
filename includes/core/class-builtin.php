@@ -246,14 +246,14 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				),
 
 				'tel' => array(
-					'name' => 'Tel Box',
+					'name' => __( 'Telephone Box', 'ultimate-member' ),
 					'col1' => array('_title','_metakey','_help','_default','_min_chars','_visibility'),
 					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate','_max_chars'),
 					'col3' => array('_required','_editable','_icon'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+							'error' => __('You must provide a title','ultimate-member'),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',

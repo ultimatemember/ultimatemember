@@ -21,10 +21,16 @@ function um_upgrade_phone_fields250() {
 			continue;
 		}
 
+		$need_update = false;
 		foreach ( $forms_fields as $key => &$field ) {
 			if ( in_array( $key, array( 'phone_number', 'mobile_number' ), true ) ) {
 				$field['type'] = 'tel';
+				$need_update = true;
 			}
+		}
+
+		if ( $need_update ) {
+			update_post_meta( $form_id, '_um_custom_fields', $forms_fields );
 		}
 	}
 
