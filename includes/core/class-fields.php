@@ -3606,7 +3606,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		function array_sort_by_column( $arr, $col, $dir = SORT_ASC ) {
 			$sort_col = array();
 			foreach ( $arr as $key => $row ) {
-				if ( $key == 'form_id' ) {
+				if ( 'form_id' === $key ) {
 					unset( $arr['form_id'] );
 					continue;
 				}
@@ -3618,8 +3618,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				}
 			}
 
-			array_multisort( $sort_col, $dir, $arr );
-
+			if ( ! empty( $sort_col ) && count( $sort_col ) === count( $arr ) ) {
+				array_multisort( $sort_col, $dir, $arr );
+			}
 			return $arr;
 		}
 

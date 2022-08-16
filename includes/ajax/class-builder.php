@@ -920,140 +920,169 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
 			}
 
+			if ( empty( $_POST['_type'] ) ) {
+				wp_send_json_error( __( 'Invalid field type', 'ultimate-member' ) );
+			}
+
+			$field_type = sanitize_key( $_POST['_type'] );
+			if ( empty( $field_type ) ) {
+				wp_send_json_error( __( 'Invalid field type', 'ultimate-member' ) );
+			}
+
+			if ( empty( $_POST['post_id'] ) ) {
+				wp_send_json_error( __( 'Invalid Form ID', 'ultimate-member' ) );
+			}
+
+			$form_id = absint( $_POST['post_id'] );
+			if ( empty( $form_id ) ) {
+				wp_send_json_error( __( 'Invalid Form ID', 'ultimate-member' ) );
+			}
+
 			$output['error'] = null;
 
 			$array = array(
-				'field_type' => sanitize_key( $_POST['_type'] ),
-				'form_id'    => absint( $_POST['post_id'] ),
-				'args'       => UM()->builtin()->get_core_field_attrs( sanitize_key( $_POST['_type'] ) ),
+				'field_type' => $field_type,
+				'form_id'    => $form_id,
+				'args'       => UM()->builtin()->get_core_field_attrs( $field_type ),
 				'post'       => UM()->admin()->sanitize_builder_field_meta( $_POST ),
 			);
 
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_admin_pre_save_fields_hook
-			 * @description Filter field data before save
-			 * @input_vars
-			 * [{"var":"$array","type":"array","desc":"Save Field data"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_admin_pre_save_fields_hook', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_admin_pre_save_fields_hook', 'my_admin_pre_save_fields', 10, 1 );
-			 * function my_admin_pre_save_fields( $array ) {
-			 *     // your code here
-			 *     return $array;
-			 * }
-			 * ?>
-			 */
+			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
+
+			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
+			$count = 1;
+			if ( ! empty( $fields ) ) {
+				$count = count( $fields ) + 1;
+			}
+
+			// set unique meta key
+			if ( in_array( $field_type, $fields_without_metakey ) && ! isset( $array['post']['_metakey'] ) ) {
+				$array['post']['_metakey'] = "um_{$field_type}_{$form_id}_{$count}";
+			}
+
+			// set position
+			if ( ! isset( $array['post']['_position'] ) ) {
+				$array['post']['_position'] = $count;
+			}
+
 			$array = apply_filters( 'um_admin_pre_save_fields_hook', $array );
 
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_admin_field_update_error_handling
-			 * @description Change error string on save field
-			 * @input_vars
-			 * [{"var":"$error","type":"string","desc":"Error String"},
-			 * {"var":"$array","type":"array","desc":"Save Field data"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_admin_field_update_error_handling', 'function_name', 10, 2 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_admin_field_update_error_handling', 'my_admin_field_update_error', 10, 2 );
-			 * function my_admin_field_update_error( $error, $array ) {
-			 *     // your code here
-			 *     return $error;
-			 * }
-			 * ?>
-			 */
+			// here we have the finally prepared structure for the field that we try to save into UM Form
+
+			// the next step is validation
+
+			$field_attr = UM()->builtin()->get_core_field_attrs( $field_type );
+
+			if ( isset( $field_attr['validate'] ) ) {
+
+				$validate = $field_attr['validate'];
+				foreach ( $validate as $post_input => $arr ) {
+
+					$skip = apply_filters( 'um_admin_builder_skip_field_validation', false, $post_input, $array );
+					if ( $skip ) {
+						continue;
+					}
+
+					$mode = $arr['mode'];
+
+					switch ( $mode ) {
+						case 'numeric':
+							if ( ! empty( $array['post'][ $post_input ] ) && ! is_numeric( $array['post'][ $post_input ] ) ){
+								$output['error'][ $post_input ] = $validate[ $post_input ]['error'];
+							}
+							break;
+
+						case 'unique':
+							if ( ! isset( $array['post']['edit_mode'] ) ) {
+								if ( UM()->builtin()->unique_field_err( $array['post'][ $post_input ] ) ) {
+									$output['error'][ $post_input ] = UM()->builtin()->unique_field_err( $array['post'][ $post_input ] );
+								}
+							}
+							break;
+
+						case 'required':
+							if ( $array['post'][ $post_input ] == '' ) {
+								$output['error'][ $post_input ] = $validate[ $post_input ]['error'];
+							}
+							break;
+
+						case 'range-start':
+							if ( UM()->builtin()->date_range_start_err( $array['post'][ $post_input ] ) && $array['post']['_range'] == 'date_range' ) {
+								$output['error'][ $post_input ] = UM()->builtin()->date_range_start_err( $array['post'][ $post_input ] );
+							}
+							break;
+
+						case 'range-end':
+							if ( UM()->builtin()->date_range_end_err( $array['post'][ $post_input ], $array['post']['_range_start'] ) && $array['post']['_range'] == 'date_range' ) {
+								$output['error'][ $post_input ] = UM()->builtin()->date_range_end_err( $array['post'][ $post_input ], $array['post']['_range_start'] );
+							}
+							break;
+					}
+
+				}
+
+			}
+
 			$output['error'] = apply_filters( 'um_admin_field_update_error_handling', $output['error'], $array );
 
-			/**
-			 * @var $_metakey
-			 * @var $post_id
-			 */
-			extract( $array['post'] );
+			// validation ended
 
 			if ( empty( $output['error'] ) ) {
+
+				// if field data is valid
+
+				/**
+				 * @var $_metakey
+				 */
+				extract( $array['post'] );
 
 				$save = array();
 				$save[ $_metakey ] = null;
 				foreach ( $array['post'] as $key => $val ) {
-
 					if ( substr( $key, 0, 1 ) === '_' && $val !== '' ) { // field attribute
 						$new_key = ltrim ( $key, '_' );
 
 						if ( $new_key == 'options' ) {
-							//$save[ $_metakey ][$new_key] = explode(PHP_EOL, $val);
 							$save[ $_metakey ][ $new_key ] = preg_split( '/[\r\n]+/', $val, -1, PREG_SPLIT_NO_EMPTY );
 						} else {
 							$save[ $_metakey ][ $new_key ] = $val;
 						}
-
 					} elseif ( strstr( $key, 'um_editor' ) ) {
-
 						if ( 'block' === $array['post']['_type'] ) {
 							$save[ $_metakey ]['content'] = wp_kses_post( $val );
 						} else {
 							$save[ $_metakey ]['content'] = sanitize_textarea_field( $val );
 						}
 					}
-
 				}
 
-				$field_ID = $_metakey;
+				$field_ID   = $_metakey;
 				$field_args = $save[ $_metakey ];
 
-				/**
-				 * UM hook
-				 *
-				 * @type filter
-				 * @title um_admin_pre_save_field_to_form
-				 * @description Change field options before save to form
-				 * @input_vars
-				 * [{"var":"$field_args","type":"array","desc":"Field Options"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_filter( 'um_admin_pre_save_field_to_form', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_filter( 'um_admin_pre_save_field_to_form', 'my_admin_pre_save_field_to_form', 10, 1 );
-				 * function my_admin_pre_save_field_to_form( $field_args ) {
-				 *     // your code here
-				 *     return $field_args;
-				 * }
-				 * ?>
-				 */
+				unset( $field_args['conditions'] );
+				for ( $i = 0; $i < 5; $i++ ) {
+					$suffix =  0 < $i ? $i : '';
+
+					$c_field_key    = 'conditional_field' . $suffix;
+					$c_action_key   = 'conditional_action' . $suffix;
+					$c_operator_key = 'conditional_operator' . $suffix;
+					$c_value_key    = 'conditional_value' . $suffix;
+
+					if ( isset( $field_args[ $c_field_key ] ) && ! empty( $field_args[ $c_action_key ] ) && ! empty( $field_args[ $c_operator_key ] ) ) {
+						$field_args[ $c_value_key ] = isset( $field_args[ $c_value_key ] ) ? $field_args[ $c_value_key ] : '';
+						$field_args['conditions'][] = array(
+							$field_args[ $c_action_key ],
+							$field_args[ $c_field_key ],
+							$field_args[ $c_operator_key ],
+							$field_args[ $c_value_key ]
+						);
+					}
+				}
+
 				$field_args = apply_filters( 'um_admin_pre_save_field_to_form', $field_args );
 
-				UM()->fields()->update_field( $field_ID, $field_args, $post_id );
+				UM()->fields()->update_field( $field_ID, $field_args, $form_id );
 
-				/**
-				 * UM hook
-				 *
-				 * @type filter
-				 * @title um_admin_pre_save_field_to_db
-				 * @description Change field options before save to DB
-				 * @input_vars
-				 * [{"var":"$field_args","type":"array","desc":"Field Options"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_filter( 'um_admin_pre_save_field_to_db', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_filter( 'um_admin_pre_save_field_to_db', 'my_admin_pre_save_field_to_db', 10, 1 );
-				 * function my_admin_pre_save_field_to_form( $field_args ) {
-				 *     // your code here
-				 *     return $field_args;
-				 * }
-				 * ?>
-				 */
 				$field_args = apply_filters( 'um_admin_pre_save_field_to_db', $field_args );
 
 				if ( ! isset( $array['args']['form_only'] ) ) {
@@ -1061,7 +1090,6 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 						UM()->fields()->globally_update_field( $field_ID, $field_args );
 					}
 				}
-
 			}
 
 			$output = json_encode( $output );
