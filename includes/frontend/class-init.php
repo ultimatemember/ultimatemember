@@ -18,7 +18,7 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		/**
 		 * Init constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 		}
 
 
@@ -29,7 +29,7 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		 *
 		 * @used-by \UM::includes()
 		 */
-		function includes() {
+		public function includes() {
 			$this->actions_listener();
 			$this->enqueue();
 			$this->user()->hooks();
@@ -41,7 +41,7 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		 *
 		 * @return Enqueue
 		 */
-		function enqueue() {
+		public function enqueue() {
 			if ( empty( UM()->classes['um\frontend\enqueue'] ) ) {
 				UM()->classes['um\frontend\enqueue'] = new Enqueue();
 			}
@@ -55,7 +55,7 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		 *
 		 * @return User
 		 */
-		function user() {
+		public function user() {
 			if ( empty( UM()->classes['um\frontend\user'] ) ) {
 				UM()->classes['um\frontend\user'] = new User();
 			}
@@ -69,11 +69,27 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		 *
 		 * @return Actions_Listener
 		 */
-		function actions_listener() {
+		public function actions_listener() {
 			if ( empty( UM()->classes['um\frontend\actions_listener'] ) ) {
 				UM()->classes['um\frontend\actions_listener'] = new Actions_Listener();
 			}
 			return UM()->classes['um\frontend\actions_listener'];
+		}
+
+
+		/**
+		 * @since 3.0
+		 *
+		 * @param array|bool $data
+		 *
+		 * @return Forms
+		 */
+		public function forms( $data = false ) {
+			if ( empty( UM()->classes[ 'um\frontend\forms' . $data['id'] ] ) ) {
+				UM()->classes[ 'um\frontend\forms' . $data['id'] ] = new Forms( $data );
+			}
+
+			return UM()->classes[ 'um\frontend\forms' . $data['id'] ];
 		}
 	}
 }

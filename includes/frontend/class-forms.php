@@ -19,7 +19,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		/**
 		 * @var bool
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public $form_data;
 
@@ -27,7 +27,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		/**
 		 * @var string
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public $error_class = 'um-form-error-row';
 
@@ -47,7 +47,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		/**
 		 * @var array
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public $types = array(
 			'text',
@@ -81,7 +81,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 *
 		 * @return self
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function set_data( $data ) {
 			$this->form_data = $data;
@@ -96,7 +96,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 * @param bool $echo
 		 * @return string
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function display( $echo = true ) {
 			if ( empty( $this->form_data['fields'] ) && empty( $this->form_data['sections'] ) && empty( $this->form_data['hiddens'] ) ) {
@@ -167,9 +167,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 			/**
 			 * Filters the state when Ultimate Member form opening tag <form> must be moved to the 3rd-party handler.
 			 *
-			 * Note: It's used internally for displaying "My Details" section on the Job Posting form.
-			 *
-			 * @since 1.0
+			 * @since 3.0
 			 * @hook um_forms_move_form_tag
 			 *
 			 * @param {bool} $move_form_tag Whether we should move the form opening tag <form>. Defaults to false.
@@ -206,7 +204,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 *
 		 * @return bool
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function validate_type( $data ) {
 			return ( ! empty( $data['type'] ) && in_array( $data['type'], $this->types, true ) );
@@ -220,7 +218,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 * @param string $i
 		 * @return string|array
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function get_field_value( $field_data, $i = '' ) {
 			// phpcs:disable WordPress.Security.NonceVerification -- there is already verified
@@ -278,7 +276,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 *
 		 * @return string
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function render_form_row( $data ) {
 			if ( empty( $data['id'] ) ) {
@@ -334,7 +332,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 *
 		 * @return string
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function render_section( $data ) {
 			$html = '';
@@ -346,7 +344,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 			/**
 			 * Filters the section content before its render.
 			 *
-			 * @since 1.0
+			 * @since 3.0
 			 * @hook um_forms_before_render_section
 			 *
 			 * @param {string}         $html         Default HTML before the section render start. It's <h3> title by default.
@@ -388,7 +386,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 *
 		 * @return string
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function render_label( $data ) {
 			return '<p>' . $data['label'] . '</p>';
@@ -403,7 +401,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 *
 		 * @return string
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function render_button( $id, $data ) {
 			$type  = isset( $data['type'] ) ? $data['type'] : 'submit';
@@ -441,7 +439,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 *
 		 * @return string
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function render_hidden( $id, $value ) {
 			if ( empty( $value ) ) {
@@ -477,7 +475,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 *
 		 * @return string
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function render_field_label( $data ) {
 			if ( empty( $data['label'] ) ) {
@@ -496,7 +494,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 			/**
 			 * Filters the condition for disabling the "required" star in the form field label.
 			 *
-			 * @since 1.0
+			 * @since 3.0
 			 * @hook um_frontend_forms_required_star_disabled
 			 *
 			 * @param {bool} $disable_star Whether we should disable the "required" star in the form field label. Defaults to false.
@@ -521,7 +519,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 *
 		 * @return string
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function render_media( $field_data ) {
 			if ( empty( $field_data['id'] ) ) {
@@ -602,7 +600,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 *
 		 * @return string
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function render_text( $field_data ) {
 			if ( empty( $field_data['id'] ) ) {
@@ -646,7 +644,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 *
 		 * @return string
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function render_location_autocomplete( $field_data ) {
 			if ( empty( $field_data['id'] ) ) {
@@ -700,7 +698,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 *
 		 * @return string
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function render_password( $field_data ) {
 			if ( empty( $field_data['id'] ) ) {
@@ -744,7 +742,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 *
 		 * @return string
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function render_select( $field_data ) {
 
@@ -831,7 +829,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 *
 		 * @return string
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function render_conditional_radio( $field_data ) {
 			if ( empty( $field_data['id'] ) ) {
@@ -894,7 +892,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 *
 		 * @return string
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function render_wp_editor( $field_data ) {
 
@@ -934,7 +932,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 			/**
 			 * Filters the WP_Editor options.
 			 *
-			 * @since 1.0
+			 * @since 3.0
 			 * @hook um_content_editor_options
 			 *
 			 * @param {array} $editor_settings WP_Editor field's settings. See the all settings here https://developer.wordpress.org/reference/classes/_wp_editors/parse_settings/#parameters
@@ -983,14 +981,14 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 *
 		 * @return array
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function filter_mce_buttons( $mce_buttons, $editor_id ) {
 			$mce_buttons = array_diff( $mce_buttons, array( 'alignright', 'alignleft', 'aligncenter', 'wp_adv', 'wp_more', 'fullscreen', 'formatselect', 'spellchecker' ) );
 			/**
 			 * Filters the WP_Editor MCE buttons list.
 			 *
-			 * @since 1.0
+			 * @since 3.0
 			 * @hook um_rich_text_editor_buttons
 			 *
 			 * @param {array}  $mce_buttons TinyMCE buttons. See the list of buttons here https://developer.wordpress.org/reference/hooks/mce_buttons/
@@ -1057,7 +1055,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 * @param string $field
 		 * @param string $text
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function add_error( $field, $text ) {
 			if ( 'global' === $field ) {
@@ -1067,7 +1065,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 				/**
 				 * Filters the frontend form global errors.
 				 *
-				 * @since 1.0
+				 * @since 3.0
 				 * @hook um_form_global_error
 				 *
 				 * @param {string} $text Global error text.
@@ -1080,7 +1078,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 					/**
 					 * Filters the frontend form error related to the field.
 					 *
-					 * @since 1.0
+					 * @since 3.0
 					 * @hook um_form_error
 					 *
 					 * @param {string} $text  Error text.
@@ -1100,13 +1098,13 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 * @param string $text
 		 * @param string $key
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function add_notice( $text, $key ) {
 			/**
 			 * Filters the frontend form notices based on the notice key.
 			 *
-			 * @since 1.0
+			 * @since 3.0
 			 * @hook um_form_notice
 			 *
 			 * @param {string} $text Notice text.
@@ -1124,7 +1122,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 * @param  string $field
 		 * @return boolean
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function has_error( $field ) {
 			return ! empty( $this->errors[ $field ] ) || ! empty( $this->errors[ $field ] );
@@ -1136,7 +1134,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 *
 		 * @return boolean
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function has_errors() {
 			return ! empty( $this->errors );
@@ -1148,7 +1146,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 *
 		 * @return boolean
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function has_notices() {
 			return ! empty( $this->notices );
@@ -1158,7 +1156,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		/**
 		 * Flush errors
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function flush_errors() {
 			$this->errors = array();
@@ -1168,7 +1166,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		/**
 		 * Flush notices
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function flush_notices() {
 			$this->notices = array();
@@ -1182,7 +1180,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 *
 		 * @return string|array
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function get_error( $field ) {
 			$default = 'global' === $field ? array() : '';
@@ -1195,7 +1193,7 @@ if ( ! class_exists( 'um\frontend\Forms' ) ) {
 		 *
 		 * @return array
 		 *
-		 * @since 1.0
+		 * @since 3.0
 		 */
 		public function get_notices() {
 			return ! empty( $this->notices ) ? $this->notices : array();
