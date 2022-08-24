@@ -104,6 +104,36 @@ class Settings {
 					'description' => __( 'Turn on or off your Google reCAPTCHA on your site registration and login forms by default.', 'ultimate-member' ),
 				),
 				array(
+					'id'          => 'g_recaptcha_password_reset',
+					'type'        => 'checkbox',
+					'label'       => __( 'Enable Google reCAPTCHA on the UM password reset form', 'ultimate-member' ),
+					'description' => __( 'Display the google Google reCAPTCHA on the Ultimate Member password reset form.', 'ultimate-member' ),
+				),
+				array(
+					'id'          => 'g_recaptcha_wp_lostpasswordform',
+					'type'        => 'checkbox',
+					'label'       => __( 'Enable Google reCAPTCHA on wp-login.php lost password form', 'ultimate-member' ),
+					'description' => __( 'Display the google Google reCAPTCHA on wp-login.php lost password form.', 'ultimate-member' ),
+				),
+				array(
+					'id'          => 'g_recaptcha_wp_login_form',
+					'type'        => 'checkbox',
+					'label'       => __( 'Enable Google reCAPTCHA on wp-login.php form', 'ultimate-member' ),
+					'description' => __( 'Display the google Google reCAPTCHA on wp-login.php form.', 'ultimate-member' ),
+				),
+				array(
+					'id'          => 'g_recaptcha_wp_login_form_widget',
+					'type'        => 'checkbox',
+					'label'       => __( 'Enable Google reCAPTCHA on login form through `wp_login_form()`', 'ultimate-member' ),
+					'description' => __( 'Display the google Google reCAPTCHA on login form through `wp_login_form()`.', 'ultimate-member' ),
+				),
+				array(
+					'id'          => 'g_recaptcha_wp_register_form',
+					'type'        => 'checkbox',
+					'label'       => __( 'Enable Google reCAPTCHA on wp-login.php registration form', 'ultimate-member' ),
+					'description' => __( 'Display the google Google reCAPTCHA on wp-login.php registration form.', 'ultimate-member' ),
+				),
+				array(
 					'id'          => 'g_recaptcha_version',
 					'type'        => 'select',
 					'label'       => __( 'reCAPTCHA type', 'ultimate-member' ),
@@ -113,7 +143,7 @@ class Settings {
 						'v3' => __( 'reCAPTCHA v3', 'ultimate-member' ),
 					),
 					'size'        => 'medium',
-					'conditional' => array( 'g_recaptcha_status', '=', 1 ),
+					'conditional' => array( 'g_recaptcha_status||g_recaptcha_password_reset||g_recaptcha_wp_lostpasswordform||g_recaptcha_wp_login_form||g_recaptcha_wp_login_form_widget||g_recaptcha_wp_register_form', '=', 1 ),
 				),
 				/* reCAPTCHA v3 */
 				array(
@@ -273,42 +303,6 @@ class Settings {
 					),
 					'size'        => 'small',
 					'conditional' => array( 'g_recaptcha_size', '!=', 'invisible' ),
-				),
-				/* Forms */
-				array(
-					'id'          => 'g_recaptcha_password_reset',
-					'type'        => 'checkbox',
-					'label'       => __( 'Enable Google reCAPTCHA on the UM password reset form', 'ultimate-member' ),
-					'description' => __( 'Display the google Google reCAPTCHA on the Ultimate Member password reset form.', 'ultimate-member' ),
-					'conditional' => array( 'g_recaptcha_status', '=', 1 ),
-				),
-				array(
-					'id'          => 'g_recaptcha_wp_lostpasswordform',
-					'type'        => 'checkbox',
-					'label'       => __( 'Enable Google reCAPTCHA on wp-login.php lost password form', 'ultimate-member' ),
-					'description' => __( 'Display the google Google reCAPTCHA on wp-login.php lost password form.', 'ultimate-member' ),
-					'conditional' => array( 'g_recaptcha_status', '=', 1 ),
-				),
-				array(
-					'id'          => 'g_recaptcha_wp_login_form',
-					'type'        => 'checkbox',
-					'label'       => __( 'Enable Google reCAPTCHA on wp-login.php form', 'ultimate-member' ),
-					'description' => __( 'Display the google Google reCAPTCHA on wp-login.php form.', 'ultimate-member' ),
-					'conditional' => array( 'g_recaptcha_status', '=', 1 ),
-				),
-				array(
-					'id'          => 'g_recaptcha_wp_login_form_widget',
-					'type'        => 'checkbox',
-					'label'       => __( 'Enable Google reCAPTCHA on login form through `wp_login_form()`', 'ultimate-member' ),
-					'description' => __( 'Display the google Google reCAPTCHA on login form through `wp_login_form()`.', 'ultimate-member' ),
-					'conditional' => array( 'g_recaptcha_status', '=', 1 ),
-				),
-				array(
-					'id'          => 'g_recaptcha_wp_register_form',
-					'type'        => 'checkbox',
-					'label'       => __( 'Enable Google reCAPTCHA on wp-login.php registration form', 'ultimate-member' ),
-					'description' => __( 'Display the google Google reCAPTCHA on wp-login.php registration form`.', 'ultimate-member' ),
-					'conditional' => array( 'g_recaptcha_status', '=', 1 ),
 				),
 			),
 		);
