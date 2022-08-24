@@ -1505,7 +1505,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					)
 				);
 				?>
-				<span class="description"><?php printf( esc_html__( 'For default text for plain-text emails please see this <a href="%s" target="_blank">doc</a>', 'ultimate-member' ), esc_url( 'https://docs.ultimatemember.com/article/1342-plain-text-email-default-templates#' . $field_data['id'] ) ); ?></span>
 			</div>
 
 			<?php $html = ob_get_clean();

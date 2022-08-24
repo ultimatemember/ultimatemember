@@ -1,7 +1,6 @@
 <?php if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } ?>
-
 Hi {display_name},
 
 You recently changed the password associated with your {site_name} account.

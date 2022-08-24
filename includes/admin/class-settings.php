@@ -1753,6 +1753,8 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 				return $section;
 			}
 
+			$email_content = UM()->options()->get( 'email_html' ) ? um_get_template_html( "emails/{$email_key}.php" ) : nl2br( um_get_template_html( "emails/plain/{$email_key}.php" ) );
+
 			/**
 			 * UM hook
 			 *
@@ -1774,34 +1776,38 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 			 * }
 			 * ?>
 			 */
-			$section_fields = apply_filters( 'um_admin_settings_email_section_fields', array(
+			$section_fields = apply_filters(
+				'um_admin_settings_email_section_fields',
 				array(
-					'id'    => 'um_email_template',
-					'type'  => 'hidden',
-					'value' => $email_key,
+					array(
+						'id'    => 'um_email_template',
+						'type'  => 'hidden',
+						'value' => $email_key,
+					),
+					array(
+						'id'          => $email_key . '_on',
+						'type'        => 'checkbox',
+						'label'       => $emails[ $email_key ]['title'],
+						'description' => $emails[ $email_key ]['description'],
+					),
+					array(
+						'id'          => $email_key . '_sub',
+						'type'        => 'text',
+						'label'       => __( 'Subject Line', 'ultimate-member' ),
+						'conditional' => array( $email_key . '_on', '=', 1 ),
+						'description' => __( 'This is the subject line of the e-mail', 'ultimate-member' ),
+					),
+					array(
+						'id'          => $email_key,
+						'type'        => 'email_template',
+						'label'       => __( 'Message Body', 'ultimate-member' ),
+						'conditional' => array( $email_key . '_on', '=', 1 ),
+						'description' => __( 'This is the content of the e-mail', 'ultimate-member' ),
+						'value'       => $email_content,
+					),
 				),
-				array(
-					'id'          => $email_key . '_on',
-					'type'        => 'checkbox',
-					'label'       => $emails[ $email_key ]['title'],
-					'description' => $emails[ $email_key ]['description'],
-				),
-				array(
-					'id'          => $email_key . '_sub',
-					'type'        => 'text',
-					'label'       => __( 'Subject Line', 'ultimate-member' ),
-					'conditional' => array( $email_key . '_on', '=', 1 ),
-					'description' => __( 'This is the subject line of the e-mail', 'ultimate-member' ),
-				),
-				array(
-					'id'          => $email_key,
-					'type'        => 'email_template',
-					'label'       => __( 'Message Body', 'ultimate-member' ),
-					'conditional' => array( $email_key . '_on', '=', 1 ),
-					'description' => __( 'This is the content of the e-mail', 'ultimate-member' ),
-					'value'       => um_get_template_html( "emails/{$email_key}.php" ),
-				),
-			), $email_key );
+				$email_key
+			);
 
 			return $this->render_settings_section( $section_fields, 'email', $email_key );
 		}
