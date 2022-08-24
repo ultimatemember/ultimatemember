@@ -1,0 +1,10 @@
+@import "colors"
+@import "selectors"
+@import "mixins"
+
+$resolutions: ( xs:320, s:576, m:768, l:992, xl:1024 )
+
+.um
+  @each $size, $number in $resolutions
+    &.#{$prefix}ui-#{$size} .#{$prefix}responsive:not(.#{$prefix}ui-#{$size})
+      display: none !important

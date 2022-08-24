@@ -1491,9 +1491,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			ob_start(); ?>
 
-			<div class="email_template_wrapper <?php echo $field_data['in_theme'] ? 'in_theme' : '' ?>" data-key="<?php echo $field_data['id'] ?>" style="position: relative;">
-
-				<?php wp_editor( $value,
+			<div class="email_template_wrapper" data-key="<?php echo $field_data['id'] ?>" style="position: relative;">
+				<?php
+				wp_editor( $value,
 					$id,
 					array(
 						'textarea_name' => $name,
@@ -1501,10 +1501,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 						'editor_height' => 425,
 						'wpautop'       => false,
 						'media_buttons' => false,
-						'editor_class'  => $class
+						'editor_class'  => $class,
 					)
-				); ?>
-				<span class="description">For default text for plain-text emails please see this <a href="https://docs.ultimatemember.com/article/1342-plain-text-email-default-templates#<?php echo $field_data['id'] ?>" target="_blank">doc</a></span>
+				);
+				?>
+				<span class="description"><?php printf( esc_html__( 'For default text for plain-text emails please see this <a href="%s" target="_blank">doc</a>', 'ultimate-member' ), esc_url( 'https://docs.ultimatemember.com/article/1342-plain-text-email-default-templates#' . $field_data['id'] ) ); ?></span>
 			</div>
 
 			<?php $html = ob_get_clean();

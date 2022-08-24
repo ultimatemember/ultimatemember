@@ -14,14 +14,6 @@
   display: none; }
 
 /* todo remove this in future. It looks strange */
-.um:not(.um-admin) * {
-  box-sizing: content-box;
-  -webkit-font-smoothing: antialiased !important;
-  -moz-osx-font-smoothing: grayscale !important; }
-
-.um:not(.um-admin):before, .um:not(.um-admin):after {
-  box-sizing: content-box; }
-
 .um-header a,
 .um-cover a,
 .um-member-photo a,

@@ -38,8 +38,11 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 
 			$this->access()->hooks();
 			$this->cpt()->hooks();
-			$this->screen();
 			$this->gdpr();
+			$this->mail()->hooks();
+			$this->screen();
+
+			$this->shortcodes();
 			$this->user()->hooks();
 		}
 
@@ -67,6 +70,19 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\cpt'] = new CPT();
 			}
 			return UM()->classes['um\common\cpt'];
+		}
+
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return DB_Upgrade()
+		 */
+		public function db_upgrade() {
+			if ( empty( UM()->classes['um\common\db_upgrade'] ) ) {
+				UM()->classes['um\common\db_upgrade'] = new DB_Upgrade();
+			}
+			return UM()->classes['um\common\db_upgrade'];
 		}
 
 
@@ -106,6 +122,32 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\user'] = new User();
 			}
 			return UM()->classes['um\common\user'];
+		}
+
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return Shortcodes()
+		 */
+		public function shortcodes() {
+			if ( empty( UM()->classes['um\common\shortcodes'] ) ) {
+				UM()->classes['um\common\shortcodes'] = new Shortcodes();
+			}
+			return UM()->classes['um\common\shortcodes'];
+		}
+
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return Options()
+		 */
+		public function options() {
+			if ( empty( UM()->classes['um\common\options'] ) ) {
+				UM()->classes['um\common\options'] = new Options();
+			}
+			return UM()->classes['um\common\options'];
 		}
 
 
@@ -158,6 +200,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\gdpr'] = new GDPR();
 			}
 			return UM()->classes['um\common\gdpr'];
+		}
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return Mail()
+		 */
+		public function mail() {
+			if ( empty( UM()->classes['um\common\mail'] ) ) {
+				UM()->classes['um\common\mail'] = new Mail();
+			}
+			return UM()->classes['um\common\mail'];
 		}
 	}
 }

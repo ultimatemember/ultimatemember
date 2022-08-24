@@ -272,7 +272,7 @@ function um_locate_template_custom_path( $template_locations, $custom_path ) {
  * @return string
  */
 function um_get_email_template( $email_key ) {
-	$template_path = "email/{$email_key}.php";
+	$template_path = "emails/{$email_key}.php";
 	return apply_filters( 'um_email_template_path', $template_path, $email_key );
 }
 

@@ -75,6 +75,19 @@ for ( let i = 0; i < matrix.length; i++ ) {
 gulp.task( 'default', function ( done ) {
 	sass.compiler = require( 'node-sass' );
 
+	// Password Reset
+	gulp.src(['assets/css/password-reset/*.sass'])
+		.pipe( sass().on( 'error', sass.logError ) )
+		.pipe( gulp.dest( 'assets/css/password-reset/' ) );
+	gulp.src(['assets/css/password-reset/*.sass'])
+		.pipe( sass().on( 'error', sass.logError ) )
+		.pipe( cleanCSS() )
+		.pipe( rename( { suffix: '.min' } ) )
+		.pipe( gulp.dest( 'assets/css/password-reset/' ) );
+
+
+
+
 	// full CSS files
 	gulp.src(['assets/css/*.sass'])
 		.pipe( sass().on( 'error', sass.logError ) )

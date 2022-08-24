@@ -38,6 +38,36 @@ if ( ! class_exists( 'um\frontend\Enqueue' ) ) {
 		 * frontend assets registration
 		 */
 		function register() {
+			$password_reset = array(
+				'js'  => array(
+					//'path' => $this->urls['js'] . 'um-scripts' . $this->suffix . '.js',
+					'path' => $this->urls['js'] . 'password-reset/compiler-regular.js',
+					'deps' => array( 'jquery' ),
+					'vars' => array(
+						'honeypot' => UM()->honeypot,
+					),
+				),
+				'css' => array(
+					//'path' => $this->urls['css'] . 'forms' . $this->suffix . '.css',
+					'path' => $this->urls['css'] . 'password-reset/compiler-regular.css',
+					'deps' => array(),
+				),
+			);
+			$password_reset = apply_filters( 'um_password_reset_assets', $password_reset );
+
+			wp_register_script( 'um-password-reset', $password_reset['js']['path'], $password_reset['js']['deps'], UM_VERSION, true );
+			if ( ! empty( $password_reset['js']['vars'] ) ) {
+				// localize data if doesn't empty
+				wp_localize_script( 'um-password-reset', 'umPasswordReset', $password_reset['js']['vars'] );
+			}
+			wp_register_style( 'um-password-reset', $password_reset['css']['path'], $password_reset['css']['deps'], UM_VERSION );
+
+
+			wp_register_style( 'um_forms', $this->urls['css'] . 'forms' . $this->suffix . '.css', array(), UM_VERSION );
+
+
+
+
 			wp_register_script( 'um_fileupload', $this->urls['libs'] . 'jquery-upload-file/jquery.uploadfile' . $this->suffix . '.js', array( 'jquery', 'jquery-form' ), UM_VERSION, true );
 			wp_register_script( 'um_crop', $this->urls['libs'] . 'cropper/cropper' . $this->suffix . '.js', array( 'jquery' ), UM_VERSION, true );
 			wp_register_script('um-dropdown', $this->urls['libs'] . 'dropdown/dropdown' . $this->suffix . '.js', array( 'jquery' ), UM_VERSION, true );

@@ -16,6 +16,10 @@ if ( ! class_exists( 'um\common\User' ) ) {
 	 */
 	class User {
 
+		/**
+		 * @var null|string|\WP_Error
+		 */
+		private $password_reset_key = null;
 
 		/**
 		 * User constructor.
@@ -25,11 +29,48 @@ if ( ! class_exists( 'um\common\User' ) ) {
 		function __construct() {
 		}
 
-
+		/**
+		 *
+		 */
 		public function hooks() {
 			add_filter( 'user_has_cap', array( &$this, 'map_caps_by_role' ), 10, 3 );
 		}
 
+		/**
+		 * @param \WP_User $userdata
+		 *
+		 * @return string|\WP_Error
+		 */
+		function maybe_generate_password_reset_key( $userdata ) {
+			if ( empty( $this->password_reset_key ) ) {
+				$this->password_reset_key = get_password_reset_key( $userdata );
+			}
+
+			return $this->password_reset_key;
+		}
+
+		/**
+		 * Get Reset URL
+		 *
+		 * @param $userdata \WP_User
+		 *
+		 * @return string
+		 */
+		function get_reset_password_url( $userdata ) {
+			delete_option( "um_cache_userdata_{$userdata->ID}" );
+
+			// this link looks like WordPress native link e.g. wp-login.php?action=rp&key={key}&login={user_login}
+			$url = add_query_arg(
+				array(
+					'action' => 'rp',
+					'key'    => $this->maybe_generate_password_reset_key( $userdata ), // new reset password key via WordPress native field. It maybe already exists here but generated twice to make sure that emailed with a proper and fresh hash
+					'login'  => $userdata->user_login,
+				),
+				um_get_predefined_page_url( 'password-reset' )
+			);
+
+			return $url;
+		}
 
 		/**
 		 * Restrict the edit/delete users via wp-admin screen by the UM role capabilities

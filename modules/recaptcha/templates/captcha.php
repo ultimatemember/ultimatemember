@@ -13,13 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // There are "undefined" variables here because they're defined in the code that includes this file as a template.
 ?>
 
-<div class="um-field">
-	<div class="g-recaptcha" id="um-<?php echo esc_attr( $args['form_id'] ); ?>" data-type="<?php /** @noinspection PhpUndefinedVariableInspection */ echo esc_attr( $type ); ?>" data-size="<?php /** @noinspection PhpUndefinedVariableInspection */ echo esc_attr( $size ); ?>" data-theme="<?php /** @noinspection PhpUndefinedVariableInspection */ echo esc_attr( $theme ); ?>" data-sitekey="<?php /** @noinspection PhpUndefinedVariableInspection */ echo esc_attr( $sitekey ); ?>"></div>
-</div>
-
-<?php if ( UM()->form()->has_error( 'recaptcha' ) ) { ?>
-	<div class="um-field-error"><?php echo esc_html( UM()->form()->errors['recaptcha'] ); ?></div>
-<?php } ?>
+<div class="g-recaptcha" id="um-<?php echo esc_attr( $args['form_id'] ); ?>" data-type="<?php /** @noinspection PhpUndefinedVariableInspection */ echo esc_attr( $type ); ?>" data-size="<?php /** @noinspection PhpUndefinedVariableInspection */ echo esc_attr( $size ); ?>" data-theme="<?php /** @noinspection PhpUndefinedVariableInspection */ echo esc_attr( $theme ); ?>" data-sitekey="<?php /** @noinspection PhpUndefinedVariableInspection */ echo esc_attr( $sitekey ); ?>"></div>
 
 <script type="text/javascript">
 	<?php if ( 'invisible' === $size ) { ?>

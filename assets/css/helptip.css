@@ -1,0 +1,14 @@
+*[data-um_helptip] {
+  cursor: pointer; }
+
+.um-helptip {
+  z-index: 200;
+  display: none;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 5px 5px 5px 5px;
+  -moz-border-radius: 5px 5px 5px 5px;
+  -webkit-border-radius: 5px 5px 5px 5px;
+  box-shadow: 0 7px 14px 0 rgba(50, 50, 93, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 0.07);
+  -webkit-box-shadow: 0 7px 14px 0 rgba(50, 50, 93, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 0.07);
+  word-wrap: break-word; }

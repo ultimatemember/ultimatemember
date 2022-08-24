@@ -2370,7 +2370,7 @@ function um_user( $data, $attrs = null ) {
 			break;
 
 		case 'password_reset_link':
-			return UM()->password()->reset_url();
+			return UM()->common()->user()->get_reset_password_url( get_userdata( um_user( 'ID' ) ) );
 			break;
 
 		case 'account_activation_link':

@@ -1799,7 +1799,7 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 					'label'       => __( 'Message Body', 'ultimate-member' ),
 					'conditional' => array( $email_key . '_on', '=', 1 ),
 					'description' => __( 'This is the content of the e-mail', 'ultimate-member' ),
-					'value'       => um_get_template_html( "email/{$email_key}.php" ),
+					'value'       => um_get_template_html( "emails/{$email_key}.php" ),
 				),
 			), $email_key );
 

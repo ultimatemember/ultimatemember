@@ -14,13 +14,11 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 	 */
 	class Init {
 
-
 		/**
 		 * Init constructor.
 		 */
 		public function __construct() {
 		}
-
 
 		/**
 		 * Create classes' instances where __construct isn't empty for hooks init
@@ -32,9 +30,21 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		public function includes() {
 			$this->actions_listener();
 			$this->enqueue();
+			$this->forms();
 			$this->user()->hooks();
 		}
 
+		/**
+		 * @since 3.0
+		 *
+		 * @return Actions_Listener
+		 */
+		public function actions_listener() {
+			if ( empty( UM()->classes['um\frontend\actions_listener'] ) ) {
+				UM()->classes['um\frontend\actions_listener'] = new Actions_Listener();
+			}
+			return UM()->classes['um\frontend\actions_listener'];
+		}
 
 		/**
 		 * @since 3.0
@@ -49,7 +59,6 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 			return UM()->classes['um\frontend\enqueue'];
 		}
 
-
 		/**
 		 * @since 3.0
 		 *
@@ -63,33 +72,32 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 			return UM()->classes['um\frontend\user'];
 		}
 
-
 		/**
 		 * @since 3.0
 		 *
-		 * @return Actions_Listener
+		 * @return Forms
 		 */
-		public function actions_listener() {
-			if ( empty( UM()->classes['um\frontend\actions_listener'] ) ) {
-				UM()->classes['um\frontend\actions_listener'] = new Actions_Listener();
+		public function forms() {
+			if ( empty( UM()->classes['um\frontend\forms'] ) ) {
+				UM()->classes['um\frontend\forms'] = new Forms();
 			}
-			return UM()->classes['um\frontend\actions_listener'];
-		}
 
+			return UM()->classes['um\frontend\forms'];
+		}
 
 		/**
 		 * @since 3.0
 		 *
 		 * @param array|bool $data
 		 *
-		 * @return Forms
+		 * @return Form
 		 */
-		public function forms( $data = false ) {
-			if ( empty( UM()->classes[ 'um\frontend\forms' . $data['id'] ] ) ) {
-				UM()->classes[ 'um\frontend\forms' . $data['id'] ] = new Forms( $data );
+		public function form( $data = false ) {
+			if ( empty( UM()->classes[ 'um\frontend\form' . $data['id'] ] ) ) {
+				UM()->classes[ 'um\frontend\form' . $data['id'] ] = new Form( $data );
 			}
 
-			return UM()->classes[ 'um\frontend\forms' . $data['id'] ];
+			return UM()->classes[ 'um\frontend\form' . $data['id'] ];
 		}
 	}
 }

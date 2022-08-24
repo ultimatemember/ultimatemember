@@ -60,17 +60,17 @@ if ( ! class_exists( 'um\integrations\Common' ) ) {
 		 */
 		function pre_template_locations_common_locale( $template_locations, $template_name, $module, $template_path ) {
 			// make pre templates locations array to avoid the conflicts between different locales when multilingual plugins are integrated
-			// e.g. "ultimate-member/ru_RU(user locale)/uk(WPML)/email/approved_email.php"
+			// e.g. "ultimate-member/ru_RU(user locale)/uk(WPML)/emails/approved_email.php"
 			// must be the next priority:
 			//
-			// ultimate-member/{user locale}/email/approved_email.php
-			// ultimate-member/{site locale}/email/approved_email.php
+			// ultimate-member/{user locale}/emails/approved_email.php
+			// ultimate-member/{site locale}/emails/approved_email.php
 			$template_locations_pre = $template_locations;
 
 			$template_locations = apply_filters( 'um_pre_template_locations_common_locale_integration', $template_locations, $template_name, $module, $template_path );
 
 			// use the user_locale only for email notifications templates
-			if ( 0 === strpos( $template_name, 'email/' ) ) {
+			if ( 0 === strpos( $template_name, 'emails/' ) ) {
 				$current_locale = determine_locale();
 				$current_user_locale = get_user_locale();
 

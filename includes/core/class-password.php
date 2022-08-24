@@ -20,7 +20,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 * Password constructor.
 		 */
 		function __construct() {
-			add_shortcode( 'ultimatemember_password', array( &$this, 'ultimatemember_password' ) );
+			//add_shortcode( 'ultimatemember_password', array( &$this, 'ultimatemember_password' ) );
 
 			add_action( 'template_redirect', array( &$this, 'form_init' ), 10001 );
 
@@ -216,20 +216,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 
 		/**
-		 * Check if a legitimate password reset request is in action
-		 *
-		 * @return bool
-		 */
-		function is_reset_request() {
-			if ( um_is_predefined_page( 'password-reset' ) && isset( $_POST['_um_password_reset'] ) == 1 ) {
-				return true;
-			}
-
-			return false;
-		}
-
-
-		/**
 		 * Check if a legitimate password change request is in action
 		 *
 		 *
@@ -302,61 +288,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				$this->change_password = true;
 			}
 
-			if ( $this->is_reset_request() ) {
-
-				UM()->form()->post_form = $_POST;
-
-				if ( empty( UM()->form()->post_form['mode'] ) ) {
-					UM()->form()->post_form['mode'] = 'password';
-				}
-
-				/**
-				 * UM hook
-				 *
-				 * @type action
-				 * @title um_reset_password_errors_hook
-				 * @description Action on reset password submit form
-				 * @input_vars
-				 * [{"var":"$post","type":"array","desc":"Form submitted"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_reset_password_errors_hook', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_reset_password_errors_hook', 'my_reset_password_errors', 10, 1 );
-				 * function my_reset_password_errors( $post ) {
-				 *     // your code here
-				 * }
-				 * ?>
-				 */
-				do_action( 'um_reset_password_errors_hook', UM()->form()->post_form );
-
-				if ( ! isset( UM()->form()->errors ) ) {
-
-					/**
-					 * UM hook
-					 *
-					 * @type action
-					 * @title um_reset_password_process_hook
-					 * @description Action on reset password success submit form
-					 * @input_vars
-					 * [{"var":"$post","type":"array","desc":"Form submitted"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_action( 'um_reset_password_process_hook', 'function_name', 10, 1 );
-					 * @example
-					 * <?php
-					 * add_action( 'um_reset_password_process_hook', 'my_reset_password_process', 10, 1 );
-					 * function my_reset_password_process( $post ) {
-					 *     // your code here
-					 * }
-					 * ?>
-					 */
-					do_action( 'um_reset_password_process_hook', UM()->form()->post_form );
-
-				}
-			}
-
 			if ( $this->is_change_request() ) {
 				UM()->form()->post_form = $_POST;
 
@@ -406,90 +337,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 				}
 			}
-		}
-
-
-		/**
-		 * Error handler: reset password
-		 *
-		 * @param $args
-		 */
-		public function um_reset_password_errors_hook( $args ) {
-			if ( '' !== $args[ UM()->honeypot ] ) {
-				wp_die( esc_html__( 'Hello, spam bot!', 'ultimate-member' ) );
-			}
-
-			$user = '';
-
-			foreach ( $args as $key => $val ) {
-				if ( strstr( $key, 'username_b' ) ) {
-					$user = trim( sanitize_text_field( $val ) );
-				}
-			}
-
-			if ( empty( $user ) ) {
-				UM()->form()->add_error( 'username_b', __( 'Please provide your username or email', 'ultimate-member' ) );
-			}
-
-			if ( ( ! is_email( $user ) && username_exists( $user ) ) || ( is_email( $user ) && email_exists( $user ) ) ) {
-				if ( is_email( $user ) ) {
-					$user_id = email_exists( $user );
-				} else {
-					$user_id = username_exists( $user );
-				}
-
-				// make `password_rst_attempts` usermeta every 12 hours
-				$timeout = (int) get_user_meta( $user_id, 'password_rst_attempts_timeout', true );
-				if ( ! $timeout || $timeout >= time() ) {
-					$timeout_value = apply_filters( 'um_password_rst_attempts_timeout', 12 * HOUR_IN_SECONDS );
-					update_user_meta( $user_id, 'password_rst_attempts', 0 );
-					update_user_meta( $user_id, 'password_rst_attempts_timeout', time() + $timeout_value );
-				}
-
-				$attempts = (int) get_user_meta( $user_id, 'password_rst_attempts', true );
-
-				if ( UM()->options()->get( 'enable_reset_password_limit' ) ) { // if reset password limit is set
-					$is_admin = user_can( absint( $user_id ), 'manage_options' );
-					if ( ! ( UM()->options()->get( 'disable_admin_reset_password_limit' ) && $is_admin ) ) { // `disable_admin_reset_password_limit` is 1.3.x legacy setting
-						// Doesn't trigger this when a user has admin capabilities and when reset password limit is disabled for admins
-						$limit = UM()->options()->get( 'reset_password_limit_number' );
-						if ( $attempts >= $limit ) {
-							UM()->form()->add_error( 'username_b', __( 'You have reached the limit for requesting password change for this user already. You can repeat after 12 hours or contact support if you cannot open the email', 'ultimate-member' ) );
-						} else {
-							update_user_meta( $user_id, 'password_rst_attempts', $attempts + 1 );
-						}
-					}
-				}
-			}
-		}
-
-
-		/**
-		 * Process a new request
-		 *
-		 * @param $args
-		 */
-		public function um_reset_password_process_hook( $args ) {
-			$user = null;
-
-			foreach ( $args as $key => $val ) {
-				if ( strstr( $key, 'username_b' ) ) {
-					$user = trim( sanitize_text_field( $val ) );
-				}
-			}
-
-			if ( username_exists( $user ) ) {
-				$data = get_user_by( 'login', $user );
-			} elseif ( email_exists( $user ) ) {
-				$data = get_user_by( 'email', $user );
-			}
-
-			if ( isset( $data ) && is_a( $data, '\WP_User' ) ) {
-				um_fetch_user( $data->ID );
-				UM()->user()->password_reset();
-			}
-
-			exit( wp_redirect( add_query_arg( array( 'updated' => 'checkemail' ), um_get_predefined_page_url('password-reset' ) ) ) );
 		}
 
 

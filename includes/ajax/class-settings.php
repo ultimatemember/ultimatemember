@@ -1,8 +1,9 @@
 <?php
 namespace um\ajax;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 
 if ( ! class_exists( 'um\ajax\Settings' ) ) {

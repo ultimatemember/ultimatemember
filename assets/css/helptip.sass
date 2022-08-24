@@ -1,0 +1,15 @@
+@import "colors"
+@import "selectors"
+@import "mixins"
+
+*[data-um_helptip]
+  cursor: pointer
+
+.#{$prefix}helptip
+  z-index: 200
+  display: none
+  background-color: $white
+  padding: 10px
+  +border-radius( 5px, 5px, 5px, 5px )
+  +box-shadow
+  word-wrap: break-word

@@ -31,7 +31,7 @@ function um_add_security_checks( $args ) {
 
 	<?php
 }
-add_action( 'um_after_form_fields', 'um_add_security_checks' );
+//add_action( 'um_after_form_fields', 'um_add_security_checks' );
 add_action( 'um_account_page_hidden_fields', 'um_add_security_checks' );
 
 
@@ -49,16 +49,4 @@ function um_add_form_honeypot_css() {
 }
 add_action( 'wp_head', 'um_add_form_honeypot_css' );
 
-/**
- * Empty the honeypot value
- */
-function um_add_form_honeypot_js() {
-	?>
-		<script type="text/javascript">
-			jQuery( window ).on( 'load', function() {
-				jQuery('input[name="<?php echo esc_js( UM()->honeypot ); ?>"]').val('');
-			});
-		</script>
-	<?php
-}
-add_action( 'wp_footer', 'um_add_form_honeypot_js', 99999999999999999 );
+

@@ -471,7 +471,7 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 
 					$email_settings['um-theme_' . $key ] = array(
 						'label' => __( 'Template ', 'ultimate-member' ) . $email['title'] . __( ' in theme?', 'ultimate-member' ),
-						'value' => '' != locate_template( array( 'ultimate-member/email/' . $key . '.php' ) ) ? $labels['yes'] : $labels['no'],
+						'value' => '' != locate_template( array( 'ultimate-member/emails/' . $key . '.php' ) ) ? $labels['yes'] : $labels['no'],
 					);
 				}
 			}

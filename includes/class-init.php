@@ -71,6 +71,12 @@ if ( ! class_exists( 'UM' ) ) {
 
 
 		/**
+		 * @var string
+		 */
+		public $honeypot;
+
+
+		/**
 		 * Main UM Instance
 		 *
 		 * Ensures only one instance of UM is loaded or can be loaded.
@@ -552,7 +558,7 @@ if ( ! class_exists( 'UM' ) ) {
 					//$this->admin();
 					$this->ajax_init();
 					//$this->admin_ajax_hooks();
-					$this->admin_upgrade()->init_packages_ajax_handlers();
+					//$this->admin_upgrade()->init_packages_ajax_handlers();
 					//$this->admin_gdpr();
 					//$this->columns();
 					//$this->admin_navmenu();
@@ -560,7 +566,7 @@ if ( ! class_exists( 'UM' ) ) {
 					//$this->theme_updater();
 				} elseif ( $this->is_request( 'admin' ) ) {
 					//$this->admin();
-					$this->admin_upgrade();
+					//$this->admin_upgrade();
 					$this->users();
 					//$this->dragdrop();
 					//$this->admin_gdpr();
@@ -569,10 +575,10 @@ if ( ! class_exists( 'UM' ) ) {
 					//$this->theme_updater();
 
 					$this->account(); // for adding_shortcode
-					$this->password(); // for adding_shortcode
+					//$this->password(); // for adding_shortcode
 				} elseif ( $this->is_request( 'frontend' ) ) {
 					$this->account();
-					$this->password();
+					//$this->password();
 					$this->login();
 					$this->register();
 					$this->user_posts();
@@ -581,8 +587,7 @@ if ( ! class_exists( 'UM' ) ) {
 
 				//common includes
 				$this->rewrite();
-				$this->mail();
-				$this->shortcodes();
+				//$this->shortcodes();
 				$this->roles();
 				$this->user();
 				$this->profile();
@@ -699,7 +704,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 *
 		 * @since 3.0
 		 *
-		 * @return um\ajax\Init()
+		 * @return um\ajax\Init
 		 */
 		function ajax() {
 			if ( empty( $this->classes['um\ajax\init'] ) ) {
@@ -816,7 +821,7 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
-		 * @return um\core\Options()
+		 * @return um\common\Options()|um\legacy\core\Options()
 		 */
 		function options() {
 			// legacy part
@@ -830,10 +835,7 @@ if ( ! class_exists( 'UM' ) ) {
 				}
 			}
 
-			if ( empty( $this->classes['options'] ) ) {
-				$this->classes['options'] = new um\core\Options();
-			}
-			return $this->classes['options'];
+			return $this->common()->options();
 		}
 
 
@@ -908,20 +910,6 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->classes['admin_settings'] = new um\legacy\admin\core\Admin_Settings();
 			}
 			return $this->classes['admin_settings'];
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * @return um\admin\core\Admin_Upgrade()
-		 */
-		function admin_upgrade() {
-			if ( empty( $this->classes['admin_upgrade'] ) ) {
-				$this->classes['admin_upgrade'] = um\admin\core\Admin_Upgrade::instance();
-				//$this->classes['admin_upgrade'] = new um\admin\core\Admin_Upgrade();
-			}
-			return $this->classes['admin_upgrade'];
 		}
 
 
@@ -1369,20 +1357,6 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
-		 * @return um\core\Mail
-		 */
-		function mail() {
-			if ( empty( $this->classes['mail'] ) ) {
-				$this->classes['mail'] = new um\core\Mail();
-			}
-
-			return $this->classes['mail'];
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
 		 * @return um\core\Logout
 		 */
 		function logout() {
@@ -1661,12 +1635,24 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
+		 * @deprecated 3.0
+		 *
+		 * @return um\admin\DB_Upgrade()
+		 */
+		function admin_upgrade() {
+			_deprecated_function( __METHOD__, '3.0', 'UM()->admin()->db_upgrade()' );
+			return $this->admin()->db_upgrade();
+		}
+
+
+		/**
+		 * @since 2.0
+		 *
 		 * Legacy since 3.0
 		 *
 		 * @return um\legacy\admin\core\Admin_Menu()
 		 */
 		function admin_menu() {
-			var_dump('1238172391');
 			if ( empty( $this->classes['um\legacy\admin\menu'] ) ) {
 				$this->classes['um\legacy\admin\menu'] = new um\legacy\admin\core\Admin_Menu();
 			}
@@ -1732,6 +1718,22 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 
 			return $this->classes['um\legacy\enqueue'];
+		}
+
+
+		/**
+		 * @since 2.0
+		 *
+		 * Legacy since 3.0
+		 *
+		 * @return um\legacy\core\Mail
+		 */
+		function mail() {
+			if ( empty( $this->classes['um\legacy\mail'] ) ) {
+				$this->classes['um\legacy\mail'] = new um\legacy\core\Mail();
+			}
+
+			return $this->classes['um\legacy\mail'];
 		}
 	}
 }

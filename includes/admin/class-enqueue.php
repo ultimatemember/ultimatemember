@@ -323,7 +323,16 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 
 
 		function block_editor() {
-			// Disable Gutenberg scripts to avoid the conflicts
+			/**
+			 * Disable Gutenberg scripts to avoid the conflicts via filter.
+			 *
+			 * @since 2.x
+			 * @hook  um_disable_blocks_script
+			 *
+			 * @param {bool} $disable_script Do the Gutenberg block scripts are disabled? Default false.
+			 *
+			 * @return {bool} If true then Gutenberg blocks scripts are disabled.
+			 */
 			$disable_script = apply_filters( 'um_disable_blocks_script', false );
 			if ( $disable_script ) {
 				return;

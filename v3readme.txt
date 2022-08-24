@@ -137,7 +137,17 @@
 
 ### Deprecated hooks
 
+'um_before_form_is_loaded', 'um_before_password_form_is_loaded' - action hook for the lostpassword form, use 'um_pre_password_shortcode' for both
+'um_reset_password_shortcode_args_filter' - use 'shortcode_atts_ultimatemember_password' filter's hook
+'um_after_form_fields' - action hook for the lostpassword form, please edit lostpassword.php template file instead
+'um_reset_password_form' - action hook for the lostpassword form, please edit lostpassword.php template file instead
+'um_reset_password_errors_hook' - use action hook 'um_lostpassword_errors_hook' instead
+'um_reset_password_page_hidden_fields' - use filter's hook `um_lostpassword_form_args` instead and add the hiddens to it
+'um_after_password_reset_fields' - use filter's hook `um_lostpassword_form_args` instead and add the fields to it
+'um_change_password_page_hidden_fields' - use filter's hook `um_resetpass_form_args` instead and add the hiddens to it
 
+'um_change_password_form' - action hook for the resetpass form, please edit 'reset-password.php' template and add the content below the form
+'um_after_form_fields' - action hook for the resetpass form, please edit 'reset-password.php' template and add the content below the form
 
 ### Deprecated functions
 
@@ -153,9 +163,29 @@
 
 $GLOBALS['ultimatemember'] is deprecated. We don't use global $ultimatemember since 2.0
 
+
+### Deprecated templates:
+
+password-reset.php -> lostpassword.php
+password-change.php -> reset-password.php
+
 ### Deleted after deprecate
 
 `UM()->members()` has been deprecated since 2.1 and now is deleted please use `UM()->member_directory()` instead
+
+### Deprecated options:
+
+* `disable_admin_reset_password_limit` - UM()->options()->get( 'disable_admin_reset_password_limit' ). Admin reset password limit is disabled by default.
+
+### Added plain email templates:
+
+* emails/plain/reset-password.php
+* emails/plain/password-changed.php
+
+### Changed templates:
+
+* email/resetpw_email.php -> emails/reset-password.php
+* email/changedpw_email.php -> emails/password-changed.php
 
 ### Added constants:
 

@@ -555,7 +555,7 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 					break;
 
 				case 'version_upgraded':
-					if ( empty( UM()->admin_upgrade()->necessary_packages ) ) {
+					if ( empty( UM()->admin()->db_upgrade()->necessary_packages ) ) {
 						$messages[0]['content'] = sprintf( __( '<strong>%s %s</strong> upgraded successfully.', 'ultimate-member' ), UM_PLUGIN_NAME, UM_VERSION );
 					}
 					break;
@@ -655,7 +655,7 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 
 
 		function need_upgrade() {
-			if ( empty( UM()->admin_upgrade()->necessary_packages ) ) {
+			if ( empty( UM()->admin()->db_upgrade()->necessary_packages ) ) {
 				return;
 			}
 

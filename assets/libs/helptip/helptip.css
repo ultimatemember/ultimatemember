@@ -2,7 +2,7 @@
 .ui-tooltip.um-helptip {
   padding: 8px;
   color: #eee !important;
-  background: #333 !important;
+  background: rgba(0, 0, 0, 0.85) !important;
   position: absolute;
   z-index: 1000000;
   max-width: 300px;
@@ -24,4 +24,4 @@
     float: left;
     font-size: 20px;
     line-height: 20px;
-    color: #333 !important; }
+    color: rgba(0, 0, 0, 0.85) !important; }

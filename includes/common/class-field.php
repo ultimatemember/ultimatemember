@@ -29,6 +29,8 @@ if ( ! class_exists( 'um\common\Field' ) ) {
 		/**
 		 * Delete custom field from DB
 		 *
+		 * @todo don't use UM()->builtin()->saved_fields please use $fields = get_option( 'um_fields', array() ); instead for getting globally saved UM custom fields and remove selected field from there
+		 *
 		 * @param string $key
 		 *
 		 * @return bool
@@ -44,6 +46,15 @@ if ( ! class_exists( 'um\common\Field' ) ) {
 
 			unset( $fields[ $key ] );
 
+			/**
+			 * Fires before an Ultimate Member custom field is permanently removed.
+			 *
+			 * @since 1.x
+			 * @hook  um_delete_custom_field
+			 *
+			 * @param {string} $key  Field meta_key.
+			 * @param {array}  $args Field data.
+			 */
 			do_action( 'um_delete_custom_field', $key, $args );
 
 			update_option( 'um_fields', $fields );

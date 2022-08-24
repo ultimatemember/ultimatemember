@@ -893,6 +893,7 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 		function includes() {
 			$this->actions_listener();
 			$this->columns();
+			$this->db_upgrade();
 			$this->enqueue();
 			$this->gdpr();
 			$this->menu();
@@ -1018,6 +1019,19 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 				UM()->classes['um\admin\columns'] = new Columns();
 			}
 			return UM()->classes['um\admin\columns'];
+		}
+
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return DB_Upgrade()
+		 */
+		function db_upgrade() {
+			if ( empty( UM()->classes['um\admin\db_upgrade'] ) ) {
+				UM()->classes['um\admin\db_upgrade'] = new DB_Upgrade();
+			}
+			return UM()->classes['um\admin\db_upgrade'];
 		}
 
 

@@ -476,16 +476,16 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'recipient'      => 'user',
 					'default_active' => true,
 				),
-				'resetpw_email'         => array(
-					'key'            => 'resetpw_email',
+				'reset-password'        => array(
+					'key'            => 'reset-password',
 					'title'          => __( 'Password Reset Email', 'ultimate-member' ),
 					'subject'        => __( 'Reset your password', 'ultimate-member' ),
 					'description'    => __( 'Whether to send an email when users changed their password (Recommended, please keep on)', 'ultimate-member' ),
 					'recipient'      => 'user',
 					'default_active' => true,
 				),
-				'changedpw_email'       => array(
-					'key'            => 'changedpw_email',
+				'password-changed'      => array(
+					'key'            => 'password-changed',
 					'title'          => __( 'Password Changed Email', 'ultimate-member' ),
 					'subject'        => __( 'Your {site_name} password has been changed', 'ultimate-member' ),
 					'description'    => __( 'Whether to send the user an email when he request to reset password (Recommended, please keep on)', 'ultimate-member' ),

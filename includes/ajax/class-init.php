@@ -1,4 +1,5 @@
-<?php namespace um\ajax;
+<?php
+namespace um\ajax;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -29,6 +30,7 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		 * @used-by \UM::includes()
 		 */
 		function includes() {
+			$this->db_upgrade();
 			$this->notices();
 			$this->user();
 			$this->builder();
@@ -52,6 +54,19 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 			if ( ! wp_verify_nonce( $nonce, $action ) ) {
 				wp_send_json_error( __( 'Wrong AJAX Nonce', 'ultimate-member' ) );
 			}
+		}
+
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return DB_Upgrade()
+		 */
+		function db_upgrade() {
+			if ( empty( UM()->classes['um\ajax\db_upgrade'] ) ) {
+				UM()->classes['um\ajax\db_upgrade'] = new DB_Upgrade();
+			}
+			return UM()->classes['um\ajax\db_upgrade'];
 		}
 
 
