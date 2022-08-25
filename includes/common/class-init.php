@@ -24,7 +24,6 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			add_action( 'um_core_loaded', array( UM()->modules(), 'load_modules' ), 1 );
 		}
 
-
 		/**
 		 * Create classes' instances where __construct isn't empty for hooks init
 		 *
@@ -46,7 +45,6 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			$this->user()->hooks();
 		}
 
-
 		/**
 		 * @since 3.0
 		 *
@@ -58,7 +56,6 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			}
 			return UM()->classes['um\common\access'];
 		}
-
 
 		/**
 		 * @since 3.0
@@ -72,20 +69,6 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			return UM()->classes['um\common\cpt'];
 		}
 
-
-		/**
-		 * @since 3.0
-		 *
-		 * @return DB_Upgrade()
-		 */
-		public function db_upgrade() {
-			if ( empty( UM()->classes['um\common\db_upgrade'] ) ) {
-				UM()->classes['um\common\db_upgrade'] = new DB_Upgrade();
-			}
-			return UM()->classes['um\common\db_upgrade'];
-		}
-
-
 		/**
 		 * @since 3.0
 		 *
@@ -97,7 +80,6 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			}
 			return UM()->classes['um\common\field'];
 		}
-
 
 		/**
 		 * @since 3.0
@@ -111,7 +93,6 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			return UM()->classes['um\common\navmenu'];
 		}
 
-
 		/**
 		 * @since 3.0
 		 *
@@ -123,7 +104,6 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			}
 			return UM()->classes['um\common\user'];
 		}
-
 
 		/**
 		 * @since 3.0
@@ -137,7 +117,6 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			return UM()->classes['um\common\shortcodes'];
 		}
 
-
 		/**
 		 * @since 3.0
 		 *
@@ -149,7 +128,6 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			}
 			return UM()->classes['um\common\options'];
 		}
-
 
 		/**
 		 * @since 3.0
@@ -163,7 +141,6 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			return UM()->classes['um\common\screen'];
 		}
 
-
 		/**
 		 * @since 3.0
 		 *
@@ -176,7 +153,6 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			return UM()->classes['um\common\theme_updater'];
 		}
 
-
 		/**
 		 * @since 3.0
 		 *
@@ -188,7 +164,6 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			}
 			return UM()->classes['um\common\filesystem'];
 		}
-
 
 		/**
 		 * @since 3.0

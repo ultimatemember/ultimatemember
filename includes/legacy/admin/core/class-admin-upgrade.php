@@ -1,11 +1,11 @@
 <?php
-namespace um\admin\core;
+namespace um\legacy\admin\core;
 
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
-if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
+if ( ! class_exists( 'um\legacy\admin\core\Admin_Upgrade' ) ) {
 
 
 	/**
@@ -13,7 +13,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 	 *
 	 * This class handles all functions that changes data structures and moving files
 	 *
-	 * @package um\admin\core
+	 * @package um\legacy\admin\core
 	 */
 	class Admin_Upgrade {
 
@@ -48,7 +48,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 		 * @see UM()
 		 * @return Admin_Upgrade - Main instance
 		 */
-		static public function instance() {
+		public static function instance() {
 			if ( is_null( self::$instance ) ) {
 				self::$instance = new self();
 			}

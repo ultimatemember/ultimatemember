@@ -892,7 +892,6 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 		 */
 		function includes() {
 			$this->actions_listener();
-			$this->columns();
 			$this->db_upgrade();
 			$this->enqueue();
 			$this->gdpr();

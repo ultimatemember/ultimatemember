@@ -56,7 +56,7 @@ if ( ! class_exists( 'um\common\User' ) ) {
 		 *
 		 * @return string
 		 */
-		function get_reset_password_url( $userdata ) {
+		public function get_reset_password_url( $userdata ) {
 			delete_option( "um_cache_userdata_{$userdata->ID}" );
 
 			// this link looks like WordPress native link e.g. wp-login.php?action=rp&key={key}&login={user_login}
@@ -70,6 +70,18 @@ if ( ! class_exists( 'um\common\User' ) ) {
 			);
 
 			return $url;
+		}
+
+		/**
+		 * @param int $user_id
+		 */
+		public function flush_reset_password_attempts( $user_id ) {
+			$attempts = get_user_meta( $user_id, 'password_rst_attempts', true );
+			$attempts = ( ! empty( $attempts ) && is_numeric( $attempts ) ) ? $attempts : 0;
+			if ( $attempts > 0 ) {
+				update_user_meta( $user_id, 'password_rst_attempts', 0 );
+			}
+			update_user_meta( $user_id, 'password_rst_attempts_timeout', '' );
 		}
 
 		/**

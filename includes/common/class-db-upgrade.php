@@ -6,152 +6,109 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-if ( ! class_exists( 'um\common\DB_Upgrade' ) ) {
-
+/**
+ * Class DB_Upgrade
+ *
+ * This class handles all functions that changes data structures and moving files
+ *
+ * @package um\common
+ */
+class DB_Upgrade {
 
 	/**
-	 * Class DB_Upgrade
+	 * Path to the folder with updates
 	 *
-	 * This class handles all functions that changes data structures and moving files
-	 *
-	 * @package um\common
+	 * @var string
 	 */
-	class DB_Upgrade {
+	protected $packages_dir;
 
+	/**
+	 * Path to the folder with updates
+	 *
+	 * @var array
+	 */
+	protected $necessary_packages;
 
-		/**
-		 * @var null
-		 */
-		protected static $instance = null;
+	/**
+	 * DB_Upgrade constructor.
+	 */
+	public function __construct() {
+		// early triggered common hook
+		add_action( 'um_core_loaded', array( $this, 'init_variables' ), 10 );
+	}
 
+	/**
+	 *
+	 */
+	public function init_variables() {
+		$this->packages_dir       = UM_PATH . 'updates' . DIRECTORY_SEPARATOR;
+		$this->necessary_packages = $this->need_run_upgrades();
+	}
 
-		/**
-		 * @var
-		 */
-		var $update_versions;
-		var $update_packages;
-		var $necessary_packages;
+	/**
+	 * Get array of necessary upgrade packages
+	 *
+	 * @return array
+	 */
+	private function need_run_upgrades() {
+		$um_last_version_upgrade = get_option( 'um_last_version_upgrade', '1.3.88' );
 
+		$diff_packages = array();
 
-		/**
-		 * @var string
-		 */
-		var $packages_dir;
-
-
-		/**
-		 * Main DB_Upgrade Instance
-		 *
-		 * Ensures only one instance of UM is loaded or can be loaded.
-		 *
-		 * @since 1.0
-		 * @static
-		 * @see UM()
-		 * @return DB_Upgrade - Main instance
-		 */
-		static public function instance() {
-			if ( is_null( self::$instance ) ) {
-				self::$instance = new self();
+		$all_packages = $this->get_packages();
+		foreach ( $all_packages as $package ) {
+			if ( version_compare( $um_last_version_upgrade, $package, '<' ) && version_compare( $package, UM_VERSION, '<=' ) ) {
+				$diff_packages[] = $package;
 			}
-
-			return self::$instance;
 		}
 
+		return $diff_packages;
+	}
 
-		/**
-		 * DB_Upgrade constructor.
-		 */
-		function __construct() {
-		}
+	/**
+	 * Get all upgrade packages
+	 *
+	 * @return array
+	 */
+	private function get_packages() {
+		$update_versions = array();
 
-
-		public function get_packages_dir() {
-			$this->packages_dir = plugin_dir_path( __FILE__ ) . 'packages' . DIRECTORY_SEPARATOR;
-			return $this->packages_dir;
-		}
-
-
-		public function get_necessary_packages() {
-			$this->necessary_packages = $this->need_run_upgrades();
-			return $this->necessary_packages;
-		}
-
-
-		/**
-		 * Get array of necessary upgrade packages
-		 *
-		 * @return array
-		 */
-		function need_run_upgrades() {
-			$um_last_version_upgrade = get_option( 'um_last_version_upgrade', '1.3.88' );
-
-			$diff_packages = array();
-
-			$all_packages = $this->get_packages();
-			foreach ( $all_packages as $package ) {
-				if ( version_compare( $um_last_version_upgrade, $package, '<' ) && version_compare( $package, UM_VERSION, '<=' ) ) {
-					$diff_packages[] = $package;
-				}
-			}
-
-			return $diff_packages;
-		}
-
-
-		/**
-		 * Get all upgrade packages
-		 *
-		 * @return array
-		 */
-		function get_packages() {
-			$update_versions = array();
-			$handle = opendir( $this->packages_dir );
-			if ( $handle ) {
-				while ( false !== ( $filename = readdir( $handle ) ) ) {
-					if ( $filename != '.' && $filename != '..' ) {
-						if ( is_dir( $this->packages_dir . $filename ) ) {
-							$update_versions[] = $filename;
-						}
+		$handle = opendir( $this->packages_dir );
+		if ( $handle ) {
+			while ( false !== ( $filename = readdir( $handle ) ) ) {
+				if ( $filename != '.' && $filename != '..' ) {
+					if ( is_dir( $this->packages_dir . $filename ) ) {
+						$update_versions[] = $filename;
 					}
 				}
-				closedir( $handle );
-
-				usort( $update_versions, array( &$this, 'version_compare_sort' ) );
 			}
+			closedir( $handle );
 
-			return $update_versions;
+			usort( $update_versions, array( &$this, 'version_compare_sort' ) );
 		}
 
+		return $update_versions;
+	}
 
-		/**
-		 * Parse packages dir for packages files
-		 */
-		function set_update_versions() {
-			$update_versions = array();
-			$handle = opendir( $this->packages_dir );
-			if ( $handle ) {
-				while ( false !== ( $filename = readdir( $handle ) ) ) {
-					if ( $filename != '.' && $filename != '..' )
-						$update_versions[] = preg_replace( '/(.*?)\.php/i', '$1', $filename );
-				}
-				closedir( $handle );
+	/**
+	 * Sort versions by version compare function
+	 * Uses as callback function for `usort()` inside class
+	 *
+	 * @param string $a
+	 * @param string $b
+	 * @return int  -1 if the first version is lower than the second,
+	 *               0 if they are equal, and
+	 *               1 if the second is lower.
+	 */
+	private function version_compare_sort( $a, $b ) {
+		return version_compare( $a, $b );
+	}
 
-				usort( $update_versions, array( &$this, 'version_compare_sort' ) );
-
-				$this->update_versions = $update_versions;
-			}
-		}
-
-
-		/**
-		 * Sort versions by version compare function
-		 * @param $a
-		 * @param $b
-		 * @return mixed
-		 */
-		function version_compare_sort( $a, $b ) {
-			return version_compare( $a, $b );
-		}
-
+	/**
+	 * Check if there are available packages for upgrades
+	 * @return bool
+	 */
+	public function need_upgrade() {
+		return ! empty( $this->necessary_packages );
 	}
 }

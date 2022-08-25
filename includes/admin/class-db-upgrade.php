@@ -16,68 +16,23 @@ if ( ! class_exists( 'um\admin\DB_Upgrade' ) ) {
 	 *
 	 * @package um\admin
 	 */
-	class DB_Upgrade {
-
-
-		/**
-		 * @var null
-		 */
-		protected static $instance = null;
-
-
-		/**
-		 * @var
-		 */
-		var $update_versions;
-		var $update_packages;
-		var $necessary_packages;
-
-
-		/**
-		 * @var string
-		 */
-		var $packages_dir;
-
-
-		/**
-		 * Main DB_Upgrade Instance
-		 *
-		 * Ensures only one instance of UM is loaded or can be loaded.
-		 *
-		 * @since 1.0
-		 * @static
-		 * @see UM()
-		 * @return DB_Upgrade - Main instance
-		 */
-		static public function instance() {
-			if ( is_null( self::$instance ) ) {
-				self::$instance = new self();
-			}
-
-			return self::$instance;
-		}
-
+	final class DB_Upgrade extends \um\common\DB_Upgrade {
 
 		/**
 		 * DB_Upgrade constructor.
 		 */
-		function __construct() {
-			$this->packages_dir = plugin_dir_path( __FILE__ ) . 'packages' . DIRECTORY_SEPARATOR;
-			$this->necessary_packages = $this->need_run_upgrades();
+		public function __construct() {
+			parent::__construct();
 
-			if ( ! empty( $this->necessary_packages ) ) {
-				add_action( 'um_extend_admin_menu', array( $this, 'admin_menu' ), 9999999 );
-			}
-
-			add_action( 'in_plugin_update_message-' . um_plugin, array( $this, 'in_plugin_update_message' ) );
+			add_action( 'um_extend_admin_menu', array( $this, 'admin_menu' ), 9999999 );
+			add_action( 'in_plugin_update_message-' . UM_PLUGIN, array( $this, 'in_plugin_update_message' ) );
 		}
-
 
 		/**
 		 * Function for major updates
 		 *
 		 */
-		function in_plugin_update_message( $args ) {
+		public function in_plugin_update_message( $args ) {
 			$show_additional_notice = false;
 			if ( isset( $args['new_version'] ) ) {
 				$old_version_array = explode( '.', UM_VERSION );
@@ -127,73 +82,28 @@ if ( ! class_exists( 'um\admin\DB_Upgrade' ) ) {
 			}
 		}
 
-
-		/**
-		 * Get array of necessary upgrade packages
-		 *
-		 * @return array
-		 */
-		function need_run_upgrades() {
-			$um_last_version_upgrade = get_option( 'um_last_version_upgrade', '1.3.88' );
-
-			$diff_packages = array();
-
-			$all_packages = $this->get_packages();
-			foreach ( $all_packages as $package ) {
-				if ( version_compare( $um_last_version_upgrade, $package, '<' ) && version_compare( $package, UM_VERSION, '<=' ) ) {
-					$diff_packages[] = $package;
-				}
-			}
-
-			return $diff_packages;
-		}
-
-
-		/**
-		 * Get all upgrade packages
-		 *
-		 * @return array
-		 */
-		function get_packages() {
-			$update_versions = array();
-			$handle = opendir( $this->packages_dir );
-			if ( $handle ) {
-				while ( false !== ( $filename = readdir( $handle ) ) ) {
-					if ( $filename != '.' && $filename != '..' ) {
-						if ( is_dir( $this->packages_dir . $filename ) ) {
-							$update_versions[] = $filename;
-						}
-					}
-				}
-				closedir( $handle );
-
-				usort( $update_versions, array( &$this, 'version_compare_sort' ) );
-			}
-
-			return $update_versions;
-		}
-
-
 		/**
 		 * Add Upgrades admin menu
 		 */
-		function admin_menu() {
-			add_submenu_page( UM()->admin()->menu()->slug, __( 'Upgrade', 'ultimate-member' ), '<span style="color:#ca4a1f;">' . __( 'Upgrade', 'ultimate-member' ) . '</span>', 'manage_options', 'um_upgrade', array( &$this, 'upgrade_page' ), 1 );
+		public function admin_menu() {
+			if ( $this->need_upgrade() ) {
+				add_submenu_page( UM()->admin()->menu()->slug, __( 'Upgrade', 'ultimate-member' ), '<span style="color:#ca4a1f;">' . __( 'Upgrade', 'ultimate-member' ) . '</span>', 'manage_options', 'um_upgrade', array( &$this, 'upgrade_page' ), 1 );
+			}
 		}
-
 
 		/**
 		 * Upgrade Menu Callback Page
 		 */
-		function upgrade_page() {
-			$um_last_version_upgrade = get_option( 'um_last_version_upgrade', __( 'empty', 'ultimate-member' ) ); ?>
+		public function upgrade_page() {
+			$um_last_version_upgrade = get_option( 'um_last_version_upgrade', __( 'empty', 'ultimate-member' ) );
+			?>
 
 			<div class="wrap">
-				<h2><?php printf( __( '%s - Upgrade Process', 'ultimate-member' ), ultimatemember_plugin_name ) ?></h2>
-				<p><?php printf( __( 'You have installed <strong>%s</strong> version. Your latest DB version is <strong>%s</strong>. We recommend creating a backup of your site before running the update process. Do not exit the page before the update process has complete.', 'ultimate-member' ), UM_VERSION, $um_last_version_upgrade ) ?></p>
+				<h2><?php printf( __( '%s - Upgrade Process', 'ultimate-member' ), UM_PLUGIN_NAME ); ?></h2>
+				<p><?php printf( __( 'You have installed <strong>%s</strong> version. Your latest DB version is <strong>%s</strong>. We recommend creating a backup of your site before running the update process. Do not exit the page before the update process has complete.', 'ultimate-member' ), UM_VERSION, $um_last_version_upgrade ); ?></p>
 				<p><?php _e( 'After clicking the <strong>"Run"</strong> button, the update process will start. All information will be displayed in the <strong>"Upgrade Log"</strong> field.', 'ultimate-member' ); ?></p>
-				<p><?php _e( 'If the update was successful, you will see a corresponding message. Otherwise, contact technical support if the update failed.', 'ultimate-member' ); ?></p>
-				<h4><?php _e( 'Upgrade Log', 'ultimate-member' ) ?></h4>
+				<p><?php esc_html_e( 'If the update was successful, you will see a corresponding message. Otherwise, contact technical support if the update failed.', 'ultimate-member' ); ?></p>
+				<h4><?php esc_html_e( 'Upgrade Log', 'ultimate-member' ); ?></h4>
 				<div id="upgrade_log" style="width: 100%;height:300px; overflow: auto;border: 1px solid #a1a1a1;margin: 0 0 10px 0;"></div>
 				<div>
 					<input type="button" id="run_upgrade" class="button button-primary" value="<?php esc_attr_e( 'Run', 'ultimate-member' ) ?>"/>
@@ -290,38 +200,6 @@ if ( ! class_exists( 'um\admin\DB_Upgrade' ) ) {
 			</script>
 
 			<?php
-
-		}
-
-
-		/**
-		 * Parse packages dir for packages files
-		 */
-		function set_update_versions() {
-			$update_versions = array();
-			$handle = opendir( $this->packages_dir );
-			if ( $handle ) {
-				while ( false !== ( $filename = readdir( $handle ) ) ) {
-					if ( $filename != '.' && $filename != '..' )
-						$update_versions[] = preg_replace( '/(.*?)\.php/i', '$1', $filename );
-				}
-				closedir( $handle );
-
-				usort( $update_versions, array( &$this, 'version_compare_sort' ) );
-
-				$this->update_versions = $update_versions;
-			}
-		}
-
-
-		/**
-		 * Sort versions by version compare function
-		 * @param $a
-		 * @param $b
-		 * @return mixed
-		 */
-		function version_compare_sort( $a, $b ) {
-			return version_compare( $a, $b );
 		}
 	}
 }

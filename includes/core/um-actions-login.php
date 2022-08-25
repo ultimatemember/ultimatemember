@@ -166,12 +166,7 @@ function um_store_lastlogin_timestamp_( $login ) {
 	$user = get_user_by( 'login', $login );
 	um_store_lastlogin_timestamp( $user->ID );
 
-	$attempts = (int) get_user_meta( $user->ID, 'password_rst_attempts', true );
-	if ( $attempts ) {
-		//don't create meta but update if it's exists only
-		update_user_meta( $user->ID, 'password_rst_attempts', 0 );
-	}
-	delete_user_meta( $user->ID, 'password_rst_attempts_timeout' );
+	UM()->common()->user()->flush_reset_password_attempts( $user->ID );
 }
 add_action( 'wp_login', 'um_store_lastlogin_timestamp_' );
 

@@ -165,7 +165,8 @@ class Shortcode {
 				'query'        => $query,
 				'search_value' => $search_value[0],
 				'members_page' => um_get_predefined_page_url( 'members' ),
-			)
+			),
+			'member-directory'
 		);
 	}
 

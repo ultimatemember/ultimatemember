@@ -30,7 +30,7 @@ final class Init {
 	/**
 	 * @return Init
 	 */
-	static public function instance() {
+	public static function instance() {
 		if ( is_null( self::$instance ) ) {
 			self::$instance = new self();
 		}

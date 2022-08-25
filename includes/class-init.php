@@ -86,7 +86,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @see UM()
 		 * @return UM - Main instance
 		 */
-		static public function instance() {
+		public static function instance() {
 			if ( is_null( self::$instance ) ) {
 				self::$instance = new self();
 				self::$instance->_um_construct();
@@ -558,7 +558,6 @@ if ( ! class_exists( 'UM' ) ) {
 					//$this->admin();
 					$this->ajax_init();
 					//$this->admin_ajax_hooks();
-					//$this->admin_upgrade()->init_packages_ajax_handlers();
 					//$this->admin_gdpr();
 					//$this->columns();
 					//$this->admin_navmenu();
@@ -566,7 +565,6 @@ if ( ! class_exists( 'UM' ) ) {
 					//$this->theme_updater();
 				} elseif ( $this->is_request( 'admin' ) ) {
 					//$this->admin();
-					//$this->admin_upgrade();
 					$this->users();
 					//$this->dragdrop();
 					//$this->admin_gdpr();
@@ -1635,13 +1633,15 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
-		 * @deprecated 3.0
+		 * Legacy since 3.0
 		 *
-		 * @return um\admin\DB_Upgrade()
+		 * @return um\legacy\admin\core\Admin_Upgrade()
 		 */
 		function admin_upgrade() {
-			_deprecated_function( __METHOD__, '3.0', 'UM()->admin()->db_upgrade()' );
-			return $this->admin()->db_upgrade();
+			if ( empty( $this->classes['um\legacy\admin\admin_upgrade'] ) ) {
+				$this->classes['um\legacy\admin\admin_upgrade'] = new um\legacy\admin\core\Admin_Upgrade();
+			}
+			return $this->classes['um\legacy\admin\admin_upgrade'];
 		}
 
 

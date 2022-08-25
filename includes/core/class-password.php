@@ -20,198 +20,9 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 * Password constructor.
 		 */
 		function __construct() {
-			//add_shortcode( 'ultimatemember_password', array( &$this, 'ultimatemember_password' ) );
-
 			add_action( 'template_redirect', array( &$this, 'form_init' ), 10001 );
-
-			add_action( 'um_reset_password_errors_hook', array( &$this, 'um_reset_password_errors_hook' ) );
-			add_action( 'um_reset_password_process_hook', array( &$this,'um_reset_password_process_hook' ) );
-
 			add_action( 'um_change_password_errors_hook', array( &$this, 'um_change_password_errors_hook' ) );
 			add_action( 'um_change_password_process_hook', array( &$this,'um_change_password_process_hook' ) );
-		}
-
-
-		/**
-		 * Get Reset URL
-		 *
-		 * @return bool|string
-		 */
-		function reset_url() {
-			$user_id = um_user( 'ID' );
-
-			delete_option( "um_cache_userdata_{$user_id}" );
-
-			//new reset password key via WP native field
-			$user_data = get_userdata( $user_id );
-			$key = UM()->user()->maybe_generate_password_reset_key( $user_data );
-
-			$url =  add_query_arg( array( 'act' => 'reset_password', 'hash' => $key, 'user_id' => $user_id ), um_get_predefined_page_url( 'password-reset' ) );
-			return $url;
-		}
-
-
-		/**
-		 * Add class based on shortcode
-		 *
-		 * @param string $mode
-		 *
-		 * @return string
-		 */
-		function get_class( $mode ) {
-
-			$classes = 'um-'.$mode;
-
-			if ( is_admin() ) {
-				$classes .= ' um-in-admin';
-			}
-
-			if ( UM()->fields()->editing == true ) {
-				$classes .= ' um-editing';
-			}
-
-			if ( UM()->fields()->viewing == true ) {
-				$classes .= ' um-viewing';
-			}
-
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_form_official_classes__hook
-			 * @description Change form additional classes
-			 * @input_vars
-			 * [{"var":"$classes","type":"string","desc":"Form additional classes"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_form_official_classes__hook', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_form_official_classes__hook', 'my_form_official_classes', 10, 1 );
-			 * function my_form_official_classes( $classes ) {
-			 *     // your code here
-			 *     return $classes;
-			 * }
-			 * ?>
-			 */
-			$classes = apply_filters( 'um_form_official_classes__hook', $classes );
-			return $classes;
-		}
-
-
-		/**
-		 * Shortcode
-		 *
-		 * @param array $args
-		 *
-		 * @return string
-		 */
-		function ultimatemember_password( $args = array() ) {
-			ob_start();
-
-			$args = shortcode_atts(
-				array(
-					'template'  => 'password-reset',
-					'mode'      => 'password',
-					'form_id'   => 'um_password_id',
-					'max_width' => '450px',
-					'align'     => 'center',
-				),
-				$args,
-				'ultimatemember_password'
-			);
-
-			if ( isset( $this->change_password ) ) {
-				$args['template'] = 'password-change';
-				$args['rp_key'] = '';
-				$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
-				if ( isset( $_COOKIE[ $rp_cookie ] ) && 0 < strpos( $_COOKIE[ $rp_cookie ], ':' ) ) {
-					list( $rp_login, $rp_key ) = explode( ':', wp_unslash( $_COOKIE[ $rp_cookie ] ), 2 );
-
-					$user = get_user_by( 'login', $rp_login );
-					$args['user_id'] = $user->ID;
-					$args['rp_key'] = $rp_key;
-				}
-			}
-
-			UM()->fields()->set_id = 'um_password_id';
-
-			/**
-			 * @var $mode
-			 * @var $template
-			 */
-			extract( $args, EXTR_SKIP );
-
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_pre_{$mode}_shortcode
-			 * @description Action pre-load password form shortcode
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Form shortcode pre-loading"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_pre_{$mode}_shortcode', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_pre_{$mode}_shortcode', 'my_pre_password_shortcode', 10, 1 );
-			 * function my_pre_password_shortcode( $args ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( "um_pre_{$mode}_shortcode", $args );
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_before_form_is_loaded
-			 * @description Action pre-load password form shortcode
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Form shortcode pre-loading"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_before_form_is_loaded', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_before_form_is_loaded', 'my_before_form_is_loaded', 10, 1 );
-			 * function my_before_form_is_loaded( $args ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( "um_before_form_is_loaded", $args );
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_before_{$mode}_form_is_loaded
-			 * @description Action pre-load password form shortcode
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Form shortcode pre-loading"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_before_{$mode}_form_is_loaded', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_before_{$mode}_form_is_loaded', 'my_before_form_is_loaded', 10, 1 );
-			 * function my_before_form_is_loaded( $args ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( "um_before_{$mode}_form_is_loaded", $args );
-
-			UM()->shortcodes()->template_load( $template, $args );
-
-			if ( ! is_admin() && ! defined( 'DOING_AJAX' ) ) {
-				UM()->shortcodes()->dynamic_css( $args );
-			}
-
-			$output = ob_get_clean();
-			return $output;
 		}
 
 
@@ -224,10 +35,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		function is_change_request() {
 			if ( isset( $_POST['_um_account'] ) == 1 && isset( $_POST['_um_account_tab'] ) && sanitize_key( $_POST['_um_account_tab'] ) === 'password' ) {
 				return true;
-			} elseif ( isset( $_POST['_um_password_change'] ) && $_POST['_um_password_change'] == 1 ) {
-				return true;
 			}
-
 			return false;
 		}
 
@@ -236,58 +44,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 * Password page form
 		 */
 		public function form_init() {
-			if ( um_is_predefined_page( 'password-reset' ) ) {
-				UM()->fields()->set_mode = 'password';
-			}
-
-			if ( um_is_predefined_page( 'password-reset' ) && isset( $_REQUEST['act'] ) && 'reset_password' === sanitize_key( $_REQUEST['act'] ) ) {
-				wp_fix_server_vars();
-
-				$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
-
-				if ( isset( $_GET['hash'] ) ) {
-					$userdata = get_userdata( wp_unslash( absint( $_GET['user_id'] ) ) );
-					if ( ! $userdata || is_wp_error( $userdata ) ) {
-						wp_redirect( add_query_arg( array( 'act' => 'reset_password', 'error' => 'invalidkey' ), get_permalink() ) );
-						exit;
-					}
-					$rp_login = $userdata->user_login;
-					$rp_key = wp_unslash( sanitize_text_field( $_GET['hash'] ) );
-
-					$user = check_password_reset_key( $rp_key, $rp_login );
-
-					if ( is_wp_error( $user ) ) {
-						$this->setcookie( $rp_cookie, false );
-						wp_redirect( add_query_arg( array( 'updated' => 'invalidkey' ), get_permalink() ) );
-					} else {
-						$value = sprintf( '%s:%s', $rp_login, wp_unslash( sanitize_text_field( $_GET['hash'] ) ) );
-						$this->setcookie( $rp_cookie, $value );
-						wp_safe_redirect( remove_query_arg( array( 'hash', 'user_id' ) ) );
-					}
-
-					exit;
-				}
-
-				if ( isset( $_COOKIE[ $rp_cookie ] ) && 0 < strpos( $_COOKIE[ $rp_cookie ], ':' ) ) {
-					list( $rp_login, $rp_key ) = explode( ':', wp_unslash( $_COOKIE[ $rp_cookie ] ), 2 );
-					$user = check_password_reset_key( $rp_key, $rp_login );
-				} else {
-					$user = false;
-				}
-
-				if ( ( ! $user || is_wp_error( $user ) ) && ! isset( $_GET['updated'] ) ) {
-					$this->setcookie( $rp_cookie, false );
-					if ( $user && $user->get_error_code() === 'expired_key' ) {
-						wp_redirect( add_query_arg( array( 'updated' => 'expiredkey' ), get_permalink() ) );
-					} else {
-						wp_redirect( add_query_arg( array( 'updated' => 'invalidkey' ), get_permalink() ) );
-					}
-					exit;
-				}
-
-				$this->change_password = true;
-			}
-
+			// handle here Account page for now
 			if ( $this->is_change_request() ) {
 				UM()->form()->post_form = $_POST;
 
@@ -451,12 +208,8 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 					// send the Password Changed Email
 					UM()->user()->password_changed();
 
-					// clear temporary data
-					$attempts = (int) get_user_meta( $user->ID, 'password_rst_attempts', true );
-					if ( $attempts ) {
-						update_user_meta( $user->ID, 'password_rst_attempts', 0 );
-					}
-					delete_user_meta( $user->ID, 'password_rst_attempts_timeout' );
+					UM()->common()->user()->flush_reset_password_attempts( $user->ID );
+
 					$this->setcookie( $rp_cookie, false );
 
 					// logout
