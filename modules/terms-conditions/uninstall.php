@@ -31,3 +31,14 @@ if ( ! empty( $usermeta ) ) {
 		}
 	}
 }
+
+// Remove custom templates.
+$templates_directories = array(
+	trailingslashit( get_stylesheet_directory() ) . 'ultimate-member/terms-conditions/',
+	trailingslashit( get_template_directory() ) . 'ultimate-member/terms-conditions/',
+);
+foreach ( $templates_directories as $templates_dir ) {
+	if ( is_dir( $templates_dir ) ) {
+		UM()->files()->remove_dir( $templates_dir );
+	}
+}

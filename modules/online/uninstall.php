@@ -123,3 +123,14 @@ if ( ! empty( $directories ) ) {
 		}
 	}
 }
+
+// Remove custom templates.
+$templates_directories = array(
+	trailingslashit( get_stylesheet_directory() ) . 'ultimate-member/online/',
+	trailingslashit( get_template_directory() ) . 'ultimate-member/online/',
+);
+foreach ( $templates_directories as $templates_dir ) {
+	if ( is_dir( $templates_dir ) ) {
+		UM()->files()->remove_dir( $templates_dir );
+	}
+}

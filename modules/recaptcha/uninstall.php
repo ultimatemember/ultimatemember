@@ -28,3 +28,14 @@ if ( ! is_array( $hidden_notices ) ) {
 }
 unset( $hidden_notices[ array_search( 'um_recaptcha_notice', $hidden_notices, true ) ] );
 update_option( 'um_hidden_admin_notices', $hidden_notices );
+
+// Remove custom templates.
+$templates_directories = array(
+	trailingslashit( get_stylesheet_directory() ) . 'ultimate-member/recaptcha/',
+	trailingslashit( get_template_directory() ) . 'ultimate-member/recaptcha/',
+);
+foreach ( $templates_directories as $templates_dir ) {
+	if ( is_dir( $templates_dir ) ) {
+		UM()->files()->remove_dir( $templates_dir );
+	}
+}

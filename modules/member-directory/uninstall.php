@@ -41,3 +41,14 @@ $wpdb->query(
 	FROM {$wpdb->usermeta} 
 	WHERE meta_key = 'um_member_directory_data' OR meta_key = 'hide_in_members'"
 );
+
+// Remove custom templates.
+$templates_directories = array(
+	trailingslashit( get_stylesheet_directory() ) . 'ultimate-member/member-directory/',
+	trailingslashit( get_template_directory() ) . 'ultimate-member/member-directory/',
+);
+foreach ( $templates_directories as $templates_dir ) {
+	if ( is_dir( $templates_dir ) ) {
+		UM()->files()->remove_dir( $templates_dir );
+	}
+}
