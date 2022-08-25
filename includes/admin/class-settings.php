@@ -1753,7 +1753,14 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 				return $section;
 			}
 
-			$email_content = UM()->options()->get( 'email_html' ) ? um_get_template_html( "emails/{$email_key}.php" ) : nl2br( um_get_template_html( "emails/plain/{$email_key}.php" ) );
+			// Avoid the request to the wrong directory with email templates. Getting module email templates inside module
+			$populate_custom_template = apply_filters( 'um_admin_settings_email_template_content', false, $email_key );
+			if ( false === $populate_custom_template ) {
+				// then get built-in core template not in the module
+				$email_content = UM()->options()->get( 'email_html' ) ? um_get_template_html( "emails/{$email_key}.php" ) : nl2br( um_get_template_html( "emails/plain/{$email_key}.php" ) );
+			} else {
+				$email_content = $populate_custom_template;
+			}
 
 			/**
 			 * UM hook

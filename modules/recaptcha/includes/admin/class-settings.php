@@ -100,7 +100,7 @@ class Settings {
 				array(
 					'id'          => 'g_recaptcha_status',
 					'type'        => 'checkbox',
-					'label'       => __( 'Enable Google reCAPTCHA', 'ultimate-member' ),
+					'label'       => __( 'Enable Google reCAPTCHA on the UM registration and login form', 'ultimate-member' ),
 					'description' => __( 'Turn on or off your Google reCAPTCHA on your site registration and login forms by default.', 'ultimate-member' ),
 				),
 				array(
