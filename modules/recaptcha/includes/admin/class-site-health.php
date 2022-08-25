@@ -51,7 +51,7 @@ if ( ! class_exists( 'umm\recaptcha\includes\admin\Site_Health' ) ) {
 				'description' => __( 'This debug information about Ultimate Member Online module.', 'ultimate-member' ),
 				'fields'      => array(
 					'um-g_recaptcha_status'              => array(
-						'label' => __( 'Enable Google reCAPTCHA', 'ultimate-member' ),
+						'label' => __( 'Enable Google reCAPTCHA on the UM registration and login form', 'ultimate-member' ),
 						'value' => UM()->options()->get( 'g_recaptcha_status' ) ? $labels['yes'] : $labels['no'],
 					),
 					'um-g_recaptcha_password_reset'      => array(
