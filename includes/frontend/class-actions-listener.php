@@ -81,9 +81,10 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 								$attempts = get_user_meta( $user_id, 'password_rst_attempts', true );
 								$attempts = ! empty( $attempts ) && is_numeric( $attempts ) ? (int) $attempts : 0;
 								if ( $attempts >= (int) $limit ) {
-									$lostpassword_form->add_error( 'user_login', __( 'You have reached the limit for requesting password change for this user already. Contact support if you cannot open the email', 'ultimate-member' ) );
+									$lostpassword_form->add_error( 'user_login', __( 'You have reached the limit for requesting password change for this user already. Contact support if you cannot open the email.', 'ultimate-member' ) );
 								} else {
 									update_user_meta( $user_id, 'password_rst_attempts', $attempts + 1 );
+									update_user_meta( $user_id, 'password_rst_attempts_timeout', time() + UM()->config()->get( 'password_reset_attempts_timeout' ) );
 								}
 							}
 						}
@@ -247,10 +248,8 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 							UM()->common()->mail()->send( $user->user_email, 'password-changed' );
 
 							// clear 'password_rst_attempts' meta data
-							$attempts = (int) get_user_meta( $user->ID, 'password_rst_attempts', true );
-							if ( $attempts ) {
-								update_user_meta( $user->ID, 'password_rst_attempts', 0 );
-							}
+							UM()->common()->user()->flush_reset_password_attempts( $user->ID );
+
 							$this->setcookie( $rp_cookie, false );
 
 							/**

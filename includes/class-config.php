@@ -89,6 +89,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 
 
 		/**
+		 * @since 3.0
+		 *
+		 * @var int
+		 */
+		var $password_reset_attempts_timeout;
+
+
+		/**
 		 * Config constructor.
 		 */
 		function __construct() {
@@ -704,7 +712,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 *
 		 * @since 3.0
 		 */
-		function init_form_meta() {
+		public function init_form_meta() {
 			$this->form_meta = apply_filters(
 				'um_form_meta',
 				array(
@@ -864,6 +872,16 @@ if ( ! class_exists( 'um\Config' ) ) {
 			// since 3.0 legacy code
 			// @todo remove in 3.1 version
 			$this->core_form_meta = $this->form_meta;
+		}
+
+		/**
+		 * Init reset password attempts timeout
+		 * This variable set usermeta timeout for the `password_rst_attempts` usermeta
+		 *
+		 * @since 3.0
+		 */
+		public function init_password_reset_attempts_timeout() {
+			$this->password_reset_attempts_timeout = DAY_IN_SECONDS / 2;
 		}
 
 

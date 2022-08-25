@@ -1,24 +1,29 @@
 <?php
-namespace um\core;
+namespace um\common;
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
-if ( ! class_exists( 'um\core\Cron' ) ) {
+if ( ! class_exists( 'um\common\Cron' ) ) {
 
 
 	/**
 	 * Class Cron
-	 * @package um\core
+	 * @package um\common
 	 */
 	class Cron {
-
 
 		/**
 		 * Cron constructor.
 		 */
 		public function __construct() {
+		}
 
+		/**
+		 *
+		 */
+		public function hooks() {
 			/**
 			 * UM hook
 			 *
@@ -43,20 +48,22 @@ if ( ! class_exists( 'um\core\Cron' ) ) {
 			if ( $um_cron ) {
 				return;
 			}
-            
+
 			add_filter( 'cron_schedules', array( $this, 'add_schedules' ) );
-			add_action( 'wp', array( $this, 'schedule_Events' ) );
+			add_action( 'wp', array( $this, 'schedule_events' ) );
+
+			// cron request to flush password_reset attempts with reached timeout
+			add_action( 'um_hourly_scheduled_events', array( &$this, 'flush_password_reset_attempts' ) );
 		}
 
-
 		/**
+		 * Adds once weekly to the existing schedules.\
+		 *
 		 * @param array $schedules
 		 *
 		 * @return array
 		 */
 		public function add_schedules( $schedules = array() ) {
-
-			// Adds once weekly to the existing schedules.
 			$schedules['weekly'] = array(
 				'interval' => 604800,
 				'display'  => __( 'Once Weekly', 'ultimate-member' )
@@ -65,17 +72,15 @@ if ( ! class_exists( 'um\core\Cron' ) ) {
 			return $schedules;
 		}
 
-
 		/**
 		 *
 		 */
-		public function schedule_Events() {
+		public function schedule_events() {
 			$this->weekly_events();
 			$this->daily_events();
 			$this->twicedaily_events();
 			$this->hourly_events();
 		}
-
 
 		/**
 		 *
@@ -86,7 +91,6 @@ if ( ! class_exists( 'um\core\Cron' ) ) {
 			}
 		}
 
-
 		/**
 		 *
 		 */
@@ -95,7 +99,6 @@ if ( ! class_exists( 'um\core\Cron' ) ) {
 				wp_schedule_event( current_time( 'timestamp' ), 'daily', 'um_daily_scheduled_events' );
 			}
 		}
-
 
 		/**
 		 *
@@ -106,7 +109,6 @@ if ( ! class_exists( 'um\core\Cron' ) ) {
 			}
 		}
 
-
 		/**
 		 *
 		 */
@@ -116,12 +118,42 @@ if ( ! class_exists( 'um\core\Cron' ) ) {
 			}
 		}
 
-
+		/**
+		 *
+		 */
 		public function unschedule_events() {
 			wp_clear_scheduled_hook( 'um_weekly_scheduled_events' );
 			wp_clear_scheduled_hook( 'um_daily_scheduled_events' );
 			wp_clear_scheduled_hook( 'um_twicedaily_scheduled_events' );
 			wp_clear_scheduled_hook( 'um_hourly_scheduled_events' );
+		}
+
+		/**
+		 * Hourly action for getting flushed reset password attempts
+		 */
+		public function flush_password_reset_attempts() {
+			global $wpdb;
+
+			if ( ! UM()->options()->get( 'enable_reset_password_limit' ) ) {
+				return;
+			}
+
+			$user_ids = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT user_id 
+					FROM {$wpdb->usermeta}
+					WHERE meta_key = 'password_rst_attempts_timeout' AND 
+					      meta_value != '' AND 
+					      meta_value <= %d",
+					time()
+				)
+			);
+
+			if ( ! empty( $user_ids ) ) {
+				foreach ( $user_ids as $user_id ) {
+					UM()->common()->user()->flush_reset_password_attempts( $user_id );
+				}
+			}
 		}
 	}
 }

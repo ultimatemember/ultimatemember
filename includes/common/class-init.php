@@ -37,6 +37,7 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 
 			$this->access()->hooks();
 			$this->cpt()->hooks();
+			$this->cron()->hooks();
 			$this->gdpr();
 			$this->mail()->hooks();
 			$this->screen();
@@ -67,6 +68,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\cpt'] = new CPT();
 			}
 			return UM()->classes['um\common\cpt'];
+		}
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return Cron()
+		 */
+		public function cron() {
+			if ( empty( UM()->classes['um\common\cron'] ) ) {
+				UM()->classes['um\common\cron'] = new Cron();
+			}
+			return UM()->classes['um\common\cron'];
 		}
 
 		/**

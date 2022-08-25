@@ -1124,7 +1124,8 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 										'id'          => 'reset_password_limit_number',
 										'type'        => 'text',
 										'label'       => __( 'Enter password reset limit', 'ultimate-member' ),
-										'description' => __( 'Set the maximum reset password limit. If reached the maximum limit, user will be locked from using this.', 'ultimate-member' ),
+										// translators: %s: Password Reset Timeout in hours
+										'description' => sprintf( __( 'Set the maximum reset password limit. If reached the maximum limit, user will be locked from using this for the next %s hours.', 'ultimate-member' ), UM()->config()->get( 'password_reset_attempts_timeout' ) / HOUR_IN_SECONDS ),
 										'validate'    => 'numeric',
 										'conditional' => array( 'enable_reset_password_limit', '=', 1 ),
 										'size'        => 'small',
@@ -1133,7 +1134,7 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 										'id'          => 'blocked_emails',
 										'type'        => 'textarea',
 										'label'       => __( 'Blocked Email Addresses', 'ultimate-member' ),
-										'description' => __( 'Please enter one email per line. This will block the specified email addresses from being able to sign up or sign in to your website. To block an entire domain, add an asterix before the <code>@</code> e.g. <code>*@domain.com</code>.', 'ultimate-member' ),
+										'description' => __( 'Please enter one email per line. This will block the specified email addresses from being able to sign up or sign in to your website. To block an entire domain, add an asterisk before the <code>@</code> e.g. <code>*@domain.com</code>.', 'ultimate-member' ),
 										'args'        => array(
 											'textarea_rows' => 10,
 										),

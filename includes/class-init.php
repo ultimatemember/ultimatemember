@@ -288,7 +288,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @since 2.3
 		 */
 		function deactivation() {
-			$this->cron()->unschedule_events();
+			$this->common()->cron()->unschedule_events();
 		}
 
 
@@ -593,7 +593,6 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->form();
 				$this->permalinks();
 				$this->modal();
-				$this->cron();
 				$this->mobile();
 				$this->external_integrations();
 				$this->gdpr();
@@ -1383,20 +1382,6 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
-		 * @return um\core\Cron
-		 */
-		function cron() {
-			if ( empty( $this->classes['cron'] ) ) {
-				$this->classes['cron'] = new um\core\Cron();
-			}
-
-			return $this->classes['cron'];
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
 		 * @return um\core\Templates
 		 */
 		function templates() {
@@ -1734,6 +1719,22 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 
 			return $this->classes['um\legacy\mail'];
+		}
+
+
+		/**
+		 * @since 2.0
+		 *
+		 * Legacy since 3.0
+		 *
+		 * @return um\legacy\core\Cron
+		 */
+		function cron() {
+			if ( empty( $this->classes['cron'] ) ) {
+				$this->classes['cron'] = new um\legacy\core\Cron();
+			}
+
+			return $this->classes['cron'];
 		}
 	}
 }
