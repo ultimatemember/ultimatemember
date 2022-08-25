@@ -1912,23 +1912,16 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 				$default_template_path = wp_normalize_path( trailingslashit( UM()->default_templates_path( $module ) ) . $template_name );
 
 				if ( file_exists( $default_template_path ) ) {
-					$folders = explode( DIRECTORY_SEPARATOR, $template_locations[0] );
-					$folders = array_splice( $folders, 0, count( $folders ) - 1 );
-					$cur_folder = '';
-
-					foreach ( $folders as $folder ) {
-						$prev_dir = $cur_folder;
-						$cur_folder .= $folder . DIRECTORY_SEPARATOR;
-						if ( ! is_dir( $base_dir . $cur_folder ) && wp_is_writable( $base_dir . $prev_dir ) ) {
-							mkdir( $base_dir . $cur_folder, 0777 );
-						}
-					}
-
+					$template_dir_path = dirname( $template_exists );
+					// create the dir for the custom templates if it doesn't exist
+					wp_mkdir_p( $template_dir_path );
+					// copy default template file to the custom template path
 					copy( $default_template_path, $template_exists );
 				}
 			}
 
 			if ( wp_is_writable( $template_exists ) ) {
+				// write custom template content to the custom template file
 				$fp = fopen( $template_exists, "w" );
 				fputs( $fp, $content );
 				fclose( $fp );
