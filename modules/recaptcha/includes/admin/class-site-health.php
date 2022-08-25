@@ -50,81 +50,75 @@ if ( ! class_exists( 'umm\recaptcha\includes\admin\Site_Health' ) ) {
 				'label'       => __( 'Ultimate Member reCAPTCHA', 'ultimate-member' ),
 				'description' => __( 'This debug information about Ultimate Member Online module.', 'ultimate-member' ),
 				'fields'      => array(
-					'um-g_recaptcha_status' => array(
+					'um-g_recaptcha_status'              => array(
 						'label' => __( 'Enable Google reCAPTCHA', 'ultimate-member' ),
-						'value' => UM()->options()->get('g_recaptcha_status') ? $labels['yes'] : $labels['no'],
+						'value' => UM()->options()->get( 'g_recaptcha_status' ) ? $labels['yes'] : $labels['no'],
+					),
+					'um-g_recaptcha_password_reset'      => array(
+						'label' => __( 'Enable Google reCAPTCHA on the UM password reset form', 'ultimate-member' ),
+						'value' => UM()->options()->get( 'g_recaptcha_password_reset' ) ? $labels['yes'] : $labels['no'],
+					),
+					'um-g_recaptcha_wp_lostpasswordform' => array(
+						'label' => __( 'Enable Google reCAPTCHA on wp-login.php lost password form', 'ultimate-member' ),
+						'value' => UM()->options()->get( 'g_recaptcha_wp_lostpasswordform' ) ? $labels['yes'] : $labels['no'],
+					),
+					'um-g_recaptcha_wp_login_form'       => array(
+						'label' => __( 'Enable Google reCAPTCHA on wp-login.php form', 'ultimate-member' ),
+						'value' => UM()->options()->get( 'g_recaptcha_wp_login_form' ) ? $labels['yes'] : $labels['no'],
+					),
+					'um-g_recaptcha_wp_login_form_widget' => array(
+						'label' => __( 'Enable Google reCAPTCHA on login form through `wp_login_form()`', 'ultimate-member' ),
+						'value' => UM()->options()->get( 'g_recaptcha_wp_login_form_widget' ) ? $labels['yes'] : $labels['no'],
+					),
+					'um-g_recaptcha_wp_register_form'     => array(
+						'label' => __( 'Enable Google reCAPTCHA on wp-login.php registration form', 'ultimate-member' ),
+						'value' => UM()->options()->get( 'g_recaptcha_wp_register_form' ) ? $labels['yes'] : $labels['no'],
 					),
 				),
 			);
 
-			if ( 1 == UM()->options()->get('g_recaptcha_status') ) {
+			if ( 1 === (int) UM()->options()->get( 'g_recaptcha_status' ) || 1 === (int) UM()->options()->get( 'g_recaptcha_password_reset' ) || 1 === (int) UM()->options()->get( 'g_recaptcha_wp_lostpasswordform' ) || 1 === (int) UM()->options()->get( 'g_recaptcha_wp_login_form' ) || 1 === (int) UM()->options()->get( 'g_recaptcha_wp_login_form_widget' ) || 1 === (int) UM()->options()->get( 'g_recaptcha_wp_register_form' ) ) {
 				$info['ultimate-member-recaptcha']['fields'] = array_merge(
 					$info['ultimate-member-recaptcha']['fields'],
 					array(
-						'um-g_recaptcha_version' => array(
+						'um-g_recaptcha_version'       => array(
 							'label' => __( 'reCAPTCHA type', 'ultimate-member' ),
-							'value' => __( 'reCAPTCHA ', 'ultimate-member' ) . UM()->options()->get('g_recaptcha_version'),
+							'value' => __( 'reCAPTCHA ', 'ultimate-member' ) . UM()->options()->get( 'g_recaptcha_version' ),
 						),
-						'um-g_recaptcha_sitekey' => array(
+						'um-g_recaptcha_sitekey'       => array(
 							'label' => __( 'Site Key', 'ultimate-member' ),
-							'value' => UM()->options()->get('g_recaptcha_sitekey') ? $labels['yes'] : $labels['no'],
+							'value' => UM()->options()->get( 'g_recaptcha_sitekey' ) ? $labels['yes'] : $labels['no'],
 						),
-						'um-g_recaptcha_secretkey' => array(
+						'um-g_recaptcha_secretkey'     => array(
 							'label' => __( 'Secret Key', 'ultimate-member' ),
-							'value' => UM()->options()->get('g_recaptcha_secretkey') ? $labels['yes'] : $labels['no'],
+							'value' => UM()->options()->get( 'g_recaptcha_secretkey' ) ? $labels['yes'] : $labels['no'],
 						),
-						'um-g_recaptcha_type' => array(
+						'um-g_recaptcha_type'          => array(
 							'label' => __( 'Type', 'ultimate-member' ),
-							'value' => UM()->options()->get('g_recaptcha_type'),
+							'value' => UM()->options()->get( 'g_recaptcha_type' ),
 						),
 						'um-g_recaptcha_language_code' => array(
 							'label' => __( 'Language', 'ultimate-member' ),
-							'value' => UM()->options()->get('g_recaptcha_language_code'),
+							'value' => UM()->options()->get( 'g_recaptcha_language_code' ),
 						),
-						'um-g_recaptcha_size' => array(
+						'um-g_recaptcha_size'          => array(
 							'label' => __( 'Size', 'ultimate-member' ),
-							'value' => UM()->options()->get('g_recaptcha_size'),
+							'value' => UM()->options()->get( 'g_recaptcha_size' ),
 						),
 					)
 				);
 
-				if ( 'invisible' != UM()->options()->get('g_recaptcha_status') ) {
+				if ( 'invisible' !== UM()->options()->get( 'g_recaptcha_size' ) ) {
 					$info['ultimate-member-recaptcha']['fields'] = array_merge(
 						$info['ultimate-member-recaptcha']['fields'],
 						array(
 							'um-g_recaptcha_theme' => array(
 								'label' => __( 'Theme', 'ultimate-member' ),
-								'value' => UM()->options()->get('g_recaptcha_theme'),
+								'value' => UM()->options()->get( 'g_recaptcha_theme' ),
 							),
 						)
 					);
 				}
-
-				$info['ultimate-member-recaptcha']['fields'] = array_merge(
-					$info['ultimate-member-recaptcha']['fields'],
-					array(
-						'um-g_recaptcha_password_reset' => array(
-							'label' => __( 'Enable Google reCAPTCHA on the UM password reset form', 'ultimate-member' ),
-							'value' => UM()->options()->get('g_recaptcha_password_reset') ? $labels['yes'] : $labels['no'],
-						),
-						'um-g_recaptcha_wp_lostpasswordform' => array(
-							'label' => __( 'Enable Google reCAPTCHA on wp-login.php lost password form', 'ultimate-member' ),
-							'value' => UM()->options()->get('g_recaptcha_wp_lostpasswordform') ? $labels['yes'] : $labels['no'],
-						),
-						'um-g_recaptcha_wp_login_form' => array(
-							'label' => __( 'Enable Google reCAPTCHA on wp-login.php form', 'ultimate-member' ),
-							'value' => UM()->options()->get('g_recaptcha_wp_login_form') ? $labels['yes'] : $labels['no'],
-						),
-						'um-g_recaptcha_wp_login_form_widget' => array(
-							'label' => __( 'Enable Google reCAPTCHA on login form through `wp_login_form()`', 'ultimate-member' ),
-							'value' => UM()->options()->get('g_recaptcha_wp_login_form_widget') ? $labels['yes'] : $labels['no'],
-						),
-						'um-g_recaptcha_wp_register_form' => array(
-							'label' => __( 'Enable Google reCAPTCHA on wp-login.php registration form', 'ultimate-member' ),
-							'value' => UM()->options()->get('g_recaptcha_wp_register_form') ? $labels['yes'] : $labels['no'],
-						),
-					)
-				);
 			}
 
 			return $info;
