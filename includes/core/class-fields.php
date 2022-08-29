@@ -2013,8 +2013,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			// get whole field data
 			if ( isset( $data ) && is_array( $data ) ) {
-				$data = $this->get_field( $key );
-				if ( is_array( $data ) ) {
+				$origin_data = $this->get_field( $key );
+				if ( is_array( $origin_data ) ) {
 					/**
 					 * @var string      $in_row
 					 * @var boolean     $in_sub_row
@@ -2070,6 +2070,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					 * @var string      $content
 					 * @var string      $max_entries
 					 */
+					
+					$data = array_merge($origin_data, $data);
+					
 					extract( $data );
 				}
 			}
