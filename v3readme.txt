@@ -5,6 +5,16 @@
 
 ### Changed hooks
 
+`um_admin_bulk_user_actions_hook`
+
+Was structure:
+$actions['um_verify_accounts'] = array( 'label' => __( 'Mark accounts as verified', 'um-verified' ) );
+$actions['um_unverify_accounts'] = array( 'label' => __( 'Mark accounts as unverified', 'um-verified' ) );
+
+Current structure:
+$actions['um_verify_accounts'] => __( 'Mark accounts as verified', 'um-verified' )
+$actions['um_unverify_accounts'] => __( 'Mark accounts as unverified', 'um-verified' )
+
 `um_locate_template`
 
 /**

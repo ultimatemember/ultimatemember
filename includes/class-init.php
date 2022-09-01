@@ -565,7 +565,7 @@ if ( ! class_exists( 'UM' ) ) {
 					//$this->theme_updater();
 				} elseif ( $this->is_request( 'admin' ) ) {
 					//$this->admin();
-					$this->users();
+					//$this->users();
 					//$this->dragdrop();
 					//$this->admin_gdpr();
 					//$this->admin_navmenu();

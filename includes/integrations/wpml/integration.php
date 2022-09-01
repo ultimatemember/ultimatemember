@@ -459,12 +459,14 @@ function um_admin_settings_pages_list_value_wpml( $pre_result, $page_id ) {
 			$opt_value = $page_id;
 		}
 
-		$title = get_the_title( $opt_value );
-		$title = ( mb_strlen( $title ) > 50 ) ? mb_substr( $title, 0, 49 ) . '...' : $title;
-		$title = sprintf( __( '%s (ID: %s)', 'ultimate-member' ), $title, $opt_value );
+		if ( 'publish' === get_post_status( $opt_value ) ) {
+			$title = get_the_title( $opt_value );
+			$title = ( mb_strlen( $title ) > 50 ) ? mb_substr( $title, 0, 49 ) . '...' : $title;
+			$title = sprintf( __( '%s (ID: %s)', 'ultimate-member' ), $title, $opt_value );
 
-		$pre_result = array( $opt_value => $title );
-		$pre_result['page_value'] = $opt_value;
+			$pre_result = array( $opt_value => $title );
+			$pre_result['page_value'] = $opt_value;
+		}
 	}
 
 	return $pre_result;

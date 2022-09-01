@@ -40,6 +40,7 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			$this->cron()->hooks();
 			$this->gdpr();
 			$this->mail()->hooks();
+			$this->pages();
 			$this->screen();
 
 			$this->shortcodes();
@@ -140,6 +141,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\options'] = new Options();
 			}
 			return UM()->classes['um\common\options'];
+		}
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return Pages()
+		 */
+		public function pages() {
+			if ( empty( UM()->classes['um\common\pages'] ) ) {
+				UM()->classes['um\common\pages'] = new Pages();
+			}
+			return UM()->classes['um\common\pages'];
 		}
 
 		/**

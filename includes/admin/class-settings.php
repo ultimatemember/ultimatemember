@@ -125,12 +125,14 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 				$pre_result = apply_filters( 'um_admin_settings_pages_list_value', false, $page_id );
 				if ( false === $pre_result ) {
 					if ( ! empty( $opt_value = UM()->options()->get( $page_id ) ) ) {
-						$title = get_the_title( $opt_value );
-						$title = ( mb_strlen( $title ) > 50 ) ? mb_substr( $title, 0, 49 ) . '...' : $title;
-						$title = sprintf( __( '%s (ID: %s)', 'ultimate-member' ), $title, $opt_value );
+						if ( 'publish' === get_post_status( $opt_value ) ) {
+							$title = get_the_title( $opt_value );
+							$title = ( mb_strlen( $title ) > 50 ) ? mb_substr( $title, 0, 49 ) . '...' : $title;
+							$title = sprintf( __( '%s (ID: %s)', 'ultimate-member' ), $title, $opt_value );
 
-						$options    = array( $opt_value => $title );
-						$page_value = $opt_value;
+							$options    = array( $opt_value => $title );
+							$page_value = $opt_value;
+						}
 					}
 				} else {
 					// `page_value` variable that we transfer from 3rd-party hook for getting filtered option value also

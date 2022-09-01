@@ -1149,7 +1149,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$button = '';
 			$slug = str_replace( 'core_', '', $field_data['id'] );
-			if ( ! um_get_predefined_page_id( $slug ) ) {
+			if ( ! um_get_predefined_page_id( $slug ) || 'publish' !== get_post_status( um_get_predefined_page_id( $slug ) ) ) {
 				$button = '&nbsp;<a href="' . esc_url( add_query_arg( array( 'um_adm_action' => 'install_predefined_page', 'um_page_slug' => $slug ) ) ) . '" class="button button-primary">' . esc_html__( 'Create Default', 'ultimate-member' ) . '</a>';
 			}
 
