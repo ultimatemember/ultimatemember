@@ -51,13 +51,9 @@ add_action('um_post_registration_pending_hook', 'um_post_registration_pending_ho
  * @param $args
  */
 function um_after_insert_user( $user_id, $args ) {
-
 	if ( empty( $user_id ) || ( is_object( $user_id ) && is_a( $user_id, 'WP_Error' ) ) ) {
 		return;
 	}
-
-	//clear Users cached queue
-	UM()->user()->remove_cached_queue();
 
 	um_fetch_user( $user_id );
 	if ( ! empty( $args['submitted'] ) ) {
@@ -271,6 +267,14 @@ function um_check_user_status( $user_id, $args ) {
 }
 add_action( 'um_registration_complete', 'um_check_user_status', 100, 2 );
 
+
+function um_submit_form_errors_hook__registration( $args ) {
+	// Check for "\" in password.
+	if ( false !== strpos( wp_unslash( trim( $args['user_password'] ) ), '\\' ) ) {
+		UM()->form()->add_error( 'user_password', __( 'Passwords may not contain the character "\\".', 'ultimate-member' ) );
+	}
+}
+add_action( 'um_submit_form_errors_hook__registration', 'um_submit_form_errors_hook__registration', 10, 1 );
 
 /**
  * Registration form submit handler

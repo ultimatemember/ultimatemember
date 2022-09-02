@@ -48,7 +48,7 @@ if ( ! class_exists( 'um\legacy\admin\core\Admin_Upgrade' ) ) {
 		 * @see UM()
 		 * @return Admin_Upgrade - Main instance
 		 */
-		public static function instance() {
+		static public function instance() {
 			if ( is_null( self::$instance ) ) {
 				self::$instance = new self();
 			}

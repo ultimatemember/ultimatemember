@@ -32,7 +32,7 @@ if ( ! class_exists( 'um\legacy\core\Options' ) ) {
 		 * Set variables
 		 */
 		function init_variables() {
-			$this->options = get_option( 'um_options' );
+			$this->options = get_option( 'um_options', array() );
 		}
 
 

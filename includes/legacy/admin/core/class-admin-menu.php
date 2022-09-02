@@ -121,7 +121,7 @@ if ( ! class_exists( 'um\legacy\admin\core\Admin_Menu' ) ) {
 				return;
 			}
 
-			$count = UM()->user()->get_pending_users_count();
+			$count = UM()->query()->get_pending_users_count();
 			if ( is_array( $menu ) ) {
 				foreach ( $menu as $key => $menu_item ) {
 					if ( 0 === strpos( $menu_item[0], _x( 'Users', 'Admin menu name' ) ) ) {
@@ -160,7 +160,9 @@ if ( ! class_exists( 'um\legacy\admin\core\Admin_Menu' ) ) {
 
 			add_submenu_page( $this->slug, __( 'User Roles', 'ultimate-member' ), __( 'User Roles', 'ultimate-member' ), 'manage_options', 'um_roles', array( &$this, 'um_roles_pages' ) );
 
-			add_submenu_page( $this->slug, __( 'Member Directories', 'ultimate-member' ), __( 'Member Directories', 'ultimate-member' ), 'manage_options', 'edit.php?post_type=um_directory', '' );
+			if ( UM()->options()->get( 'members_page' ) ) {
+				add_submenu_page( $this->slug, __( 'Member Directories', 'ultimate-member' ), __( 'Member Directories', 'ultimate-member' ), 'manage_options', 'edit.php?post_type=um_directory', '' );
+			}
 
 			/**
 			 * UM hook

@@ -1,4 +1,14 @@
-﻿### Changed handlers:
+﻿### Synced with legacy date:
+
+Core: 03.09.2022
+
+MailChimp: 03.09.2022
+
+
+
+
+
+### Changed handlers:
 
 * Don't remove core pages on uninstall. There can be other content on the page
 

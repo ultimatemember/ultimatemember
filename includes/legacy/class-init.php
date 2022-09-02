@@ -82,7 +82,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @see UM()
 		 * @return UM - Main instance
 		 */
-		public static function instance() {
+		static public function instance() {
 			if ( is_null( self::$instance ) ) {
 				self::$instance = new self();
 				self::$instance->_um_construct();

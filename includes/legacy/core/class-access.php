@@ -49,9 +49,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 			// NEW HOOKS
 
-			// callbacks for changing terms query
-			add_action( 'pre_get_terms', array( &$this, 'exclude_hidden_terms_query' ), 99, 1 );
-
 			// Change recent posts widget query
 			add_filter( 'widget_posts_args', array( &$this, 'exclude_restricted_posts_widget' ), 99, 1 );
 			// Exclude pages displayed by wp_list_pages function
@@ -114,6 +111,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 * Rollback function for old business logic to avoid security enhancements with 404 errors
 		 */
 		function disable_restriction_pre_queries() {
+			// callbacks for changing terms query
+			add_action( 'pre_get_terms', array( &$this, 'exclude_hidden_terms_query' ), 99, 1 );
+
 			if ( ! UM()->options()->get( 'disable_restriction_pre_queries' ) ) {
 				return;
 			}
@@ -257,12 +257,15 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 								continue;
 							}
 
+							$taxonomy_data = get_taxonomy( $term['taxonomy'] );
+
 							$this->ignore_exclude = true;
 							// exclude all posts assigned to current term without individual restriction settings
 							$posts = get_posts(
 								array(
 									'fields'      => 'ids',
 									'post_status' => 'any',
+									'post_type'   => $taxonomy_data->object_type,
 									'numberposts' => -1,
 									'tax_query'   => array(
 										array(
@@ -728,6 +731,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				} elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
 					$content = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
 				}
+
+				// translators: %s: Restricted post message.
+				$content = sprintf( __( '%s', 'ultimate-member' ), $content );
 			}
 
 			return $content;
