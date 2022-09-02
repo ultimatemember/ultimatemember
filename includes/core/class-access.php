@@ -257,12 +257,15 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 								continue;
 							}
 
+							$taxonomy_data = get_taxonomy( $term['taxonomy'] );
+
 							$this->ignore_exclude = true;
 							// exclude all posts assigned to current term without individual restriction settings
 							$posts = get_posts(
 								array(
 									'fields'      => 'ids',
 									'post_status' => 'any',
+									'post_type'   => $taxonomy_data->object_type,
 									'numberposts' => -1,
 									'tax_query'   => array(
 										array(
