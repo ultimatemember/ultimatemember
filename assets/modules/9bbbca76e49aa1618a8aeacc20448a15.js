@@ -19,6 +19,7 @@ jQuery( document ).ready( function() {
 		});
 	}
 });
+jQuery(document).ready(function(){var e=jQuery(".um-online");e.length&&(e.each(function(){var e=jQuery(this).attr("data-max");0<e&&jQuery(this).find(".um-online-user").length>e&&(e=e-1,jQuery(this).find(".um-online-user:gt("+e+")").hide(),e=jQuery(this).find(".um-online-user").length-jQuery(this).find(".um-online-user:visible").length,jQuery('<div class="um-online-user show-all">+'+e+"</div>").insertAfter(jQuery(this).find(".um-online-user:visible:last")))}),jQuery(document.body).on("click",".um-online-user.show-all",function(){return jQuery(this).parents(".um-online").find(".um-online-user").show(),jQuery(this).hide(),!1}))});
 
 
 (function( $ ) {

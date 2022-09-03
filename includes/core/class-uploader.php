@@ -1361,7 +1361,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				}
 			}
 
-			$files = glob( UM()->uploader()->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR . '*', GLOB_BRACE );
+			$files = glob( UM()->uploader()->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR . '*' );
 			if ( ! empty( $files ) ) {
 				foreach ( $files as $file ) {
 					$str = basename( $file );

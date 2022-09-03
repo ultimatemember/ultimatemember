@@ -23,6 +23,7 @@ if ( ! class_exists( 'um\ajax\Settings' ) ) {
 		function __construct() {
 			add_action( 'wp_ajax_um_same_page_update', array( $this, 'same_page_update_ajax' ) );
 			add_action( 'wp_ajax_um_purge_users_cache', array( $this, 'purge_users_cache' ) );
+			add_action( 'wp_ajax_um_purge_user_status_cache', array( $this, 'purge_user_status_cache' ) );
 			add_action( 'wp_ajax_um_purge_temp_files', array( $this, 'purge_temp_files' ) );
 		}
 
@@ -60,6 +61,35 @@ if ( ! class_exists( 'um\ajax\Settings' ) ) {
 			$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'um_cache_userdata_%'" );
 
 			wp_send_json_success( __( 'Your user cache is now removed.', 'ultimate-member' ) );
+		}
+
+		/**
+		 *
+		 */
+		public function purge_user_status_cache() {
+			UM()->ajax()->check_nonce( 'um-admin-nonce' );
+
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( __( 'This is not possible for security reasons.', 'ultimate-member' ) );
+			}
+
+			$statuses = array(
+				'approved',
+				'awaiting_admin_review',
+				'awaiting_email_confirmation',
+				'inactive',
+				'rejected',
+				'pending_dot', // not real status key, just for the transient
+				'unassigned', // not real status key, just for the transient
+			);
+
+			foreach ( $statuses as $status ) {
+				delete_transient( "um_count_users_{$status}" );
+			}
+
+			do_action( 'um_flush_user_status_cache' );
+
+			wp_send_json_success( __( 'Your user statuses cache is now removed.', 'ultimate-member' ) );
 		}
 
 

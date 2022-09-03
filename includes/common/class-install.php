@@ -178,27 +178,33 @@ KEY meta_value_indx (um_value(191))
 		/**
 		 * Set accounts without account_status meta to 'approved' status
 		 *
-		 * @since 3.0
+		 * @since 2.4.2
 		 */
 		function set_default_user_status() {
-			$args = array(
-				'fields'               => 'ids',
-				'number'               => 0,
-				'meta_query'           => array(
-					array(
-						'key'     => 'account_status',
-						'compare' => 'NOT EXISTS',
+			$result = get_transient( 'um_count_users_unassigned' );
+			if ( false === $result ) {
+				$args = array(
+					'fields'               => 'ids',
+					'number'               => 0,
+					'meta_query'           => array(
+						array(
+							'key'     => 'account_status',
+							'compare' => 'NOT EXISTS',
+						),
 					),
-				),
-				'um_custom_user_query' => true,
-			);
+					'um_custom_user_query' => true,
+				);
 
-			$users = new \WP_User_Query( $args );
-			if ( empty( $users ) || is_wp_error( $users ) ) {
-				return;
+				$users = new \WP_User_Query( $args );
+				if ( empty( $users ) || is_wp_error( $users ) ) {
+					$result = array();
+				} else {
+					$result = $users->get_results();
+				}
+
+				set_transient( 'um_count_users_unassigned', $result, DAY_IN_SECONDS );
 			}
 
-			$result = $users->get_results();
 			if ( empty( $result ) ) {
 				return;
 			}

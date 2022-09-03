@@ -52,6 +52,33 @@ jQuery( document ).ready( function() {
 		return false;
 	});
 
+	jQuery( document.body ).on( 'click', '#um_options_purge_user_status_cache', function(e) {
+		e.preventDefault();
+
+		var obj = jQuery(this);
+		obj.prop('disabled', true);
+
+		wp.ajax.send( 'um_purge_user_status_cache', {
+			data: {
+				nonce: um_admin_scripts.nonce
+			},
+			success: function (data) {
+				obj.siblings( '.um-setting_ajax_button_response' ).addClass('description complete').html( data.message );
+
+				setTimeout( function() {
+					obj.parents('#um-settings-form').find('#submit').trigger('click');
+				}, 500 );
+
+				obj.prop('disabled', false);
+			},
+			error: function (data) {
+				console.log(data);
+			}
+		});
+
+		return false;
+	});
+
 
 	jQuery( document.body ).on( 'click', '#um_options_purge_temp_files', function(e) {
 		e.preventDefault();

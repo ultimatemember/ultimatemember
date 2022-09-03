@@ -98,6 +98,20 @@ function um_profile_field_filter_hook__vimeo_video( $value, $data ) {
 }
 add_filter( 'um_profile_field_filter_hook__vimeo_video', 'um_profile_field_filter_hook__vimeo_video', 99, 2 );
 
+/**
+ * Outputs a phone link
+ *
+ * @param $value
+ * @param $data
+ *
+ * @return int|string
+ */
+function um_profile_field_filter_hook__phone( $value, $data ) {
+	$value = '<a href="tel:' . esc_attr( $value ) . '" rel="nofollow" title="' . esc_attr( $data['title'] ) . '">' . esc_html( $value ) . '</a>';
+	return $value;
+}
+add_filter( 'um_profile_field_filter_hook__phone_number', 'um_profile_field_filter_hook__phone', 99, 2 );
+add_filter( 'um_profile_field_filter_hook__mobile_number', 'um_profile_field_filter_hook__phone', 99, 2 );
 
 /**
  * Outputs a viber link
@@ -429,8 +443,11 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 			$value = str_replace('http://https://','https://',$value);
 
 			$onclick_alert = '';
-			if ( $value !== wp_validate_redirect( $value ) ) {
-				$onclick_alert = ' onclick="return confirm( \'' . sprintf( __( 'This link leads to a 3rd-party website. Make sure the link is safe and you really want to go to this website: `%s`', 'ultimate-member' ), $value ) . '\' );"';
+			if ( UM()->options()->get( 'allow_url_redirect_confirm' ) && $value !== wp_validate_redirect( $value ) ) {
+				$onclick_alert = sprintf(
+					' onclick="' . esc_attr( 'return confirm( "%s" );' ) . '"',
+					esc_js( sprintf( __( 'This link leads to a 3rd-party website. Make sure the link is safe and you really want to go to this website: \'%s\'', 'ultimate-member' ), $value ) )
+				);
 			}
 
 			$data['url_target'] = ( isset( $data['url_target'] ) ) ? $data['url_target'] : '_blank';

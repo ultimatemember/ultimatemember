@@ -25,10 +25,10 @@ function um_submit_account_errors_hook( $args ) {
 		case 'delete': {
 			// delete account
 			if ( UM()->account()->current_password_is_required( 'delete' ) ) {
-				if ( strlen( trim( sanitize_text_field( $args['single_user_password'] ) ) ) === 0 ) {
+				if ( strlen( trim( $args['single_user_password'] ) ) === 0 ) {
 					UM()->form()->add_error( 'single_user_password', __( 'You must enter your password', 'ultimate-member' ) );
 				} else {
-					if ( ! wp_check_password( sanitize_text_field( $args['single_user_password'] ), $current_user->data->user_pass, $current_user->data->ID ) ) {
+					if ( ! wp_check_password( trim( $args['single_user_password'] ), $current_user->data->user_pass, $current_user->data->ID ) ) {
 						UM()->form()->add_error( 'single_user_password', __( 'This is not your password', 'ultimate-member' ) );
 					}
 				}
@@ -45,11 +45,11 @@ function um_submit_account_errors_hook( $args ) {
 			UM()->account()->current_tab = 'password';
 
 			if ( isset( $args['user_password'] ) ) {
-				$args['user_password'] = sanitize_text_field( $args['user_password'] );
+				$args['user_password'] = trim( $args['user_password'] );
 			}
 
 			if ( isset( $args['confirm_user_password'] ) ) {
-				$args['confirm_user_password'] = sanitize_text_field( $args['confirm_user_password'] );
+				$args['confirm_user_password'] = trim( $args['confirm_user_password'] );
 			}
 
 			if ( empty( $args['user_password'] ) ) {
@@ -59,6 +59,12 @@ function um_submit_account_errors_hook( $args ) {
 
 			if ( empty( $args['confirm_user_password'] ) ) {
 				UM()->form()->add_error( 'user_password', __( 'Password confirmation is required', 'ultimate-member' ) );
+				return;
+			}
+
+			// Check for "\" in password.
+			if ( false !== strpos( wp_unslash( $args['user_password'] ), '\\' ) ) {
+				UM()->form()->add_error( 'user_password', __( 'Passwords may not contain the character "\\".', 'ultimate-member' ) );
 				return;
 			}
 
@@ -87,11 +93,11 @@ function um_submit_account_errors_hook( $args ) {
 					$max_length = UM()->options()->get( 'password_max_chars' );
 					$max_length = ! empty( $max_length ) ? $max_length : 30;
 
-					if ( mb_strlen( $args['user_password'] ) < $min_length ) {
+					if ( mb_strlen( wp_unslash( $args['user_password'] ) ) < $min_length ) {
 						UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain at least %d characters', 'ultimate-member' ), $min_length ) );
 					}
 
-					if ( mb_strlen( $args['user_password'] ) > $max_length ) {
+					if ( mb_strlen( wp_unslash( $args['user_password'] ) ) > $max_length ) {
 						UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain less than %d characters', 'ultimate-member' ), $max_length ) );
 					}
 
@@ -122,7 +128,7 @@ function um_submit_account_errors_hook( $args ) {
 				$args['user_email'] = sanitize_email( $args['user_email'] );
 			}
 			if ( isset( $args['single_user_password'] ) ) {
-				$args['single_user_password'] = sanitize_text_field( $args['single_user_password'] );
+				$args['single_user_password'] = trim( $args['single_user_password'] );
 			}
 
 			if ( isset( $args['first_name'] ) && ( strlen( trim( $args['first_name'] ) ) === 0 && $account_name_require ) ) {
@@ -150,7 +156,7 @@ function um_submit_account_errors_hook( $args ) {
 
 			// check account password
 			if ( UM()->account()->current_password_is_required( 'general' ) ) {
-				if ( strlen( trim( $args['single_user_password'] ) ) === 0 ) {
+				if ( strlen( $args['single_user_password'] ) === 0 ) {
 					UM()->form()->add_error( 'single_user_password', __( 'You must enter your password', 'ultimate-member' ) );
 				} else {
 					if ( ! wp_check_password( $args['single_user_password'], $current_user->data->user_pass, $current_user->data->ID ) ) {
@@ -203,20 +209,20 @@ function um_submit_account_details( $args ) {
 
 	//change password account's tab
 	if ( 'password' === $current_tab && $args['user_password'] && $args['confirm_user_password'] ) {
-
-		$changes['user_pass'] = sanitize_text_field( $args['user_password'] );
-
-		$args['user_id'] = $user_id;
+		$changes['user_pass'] = trim( $args['user_password'] );
+		$args['user_id']      = get_current_user_id();
 
 		UM()->user()->password_changed();
 
 		add_filter( 'send_password_change_email', '__return_false' );
 
 		//clear all sessions with old passwords
-		$user = WP_Session_Tokens::get_instance( $user_id );
+		$user = WP_Session_Tokens::get_instance( $args['user_id'] );
 		$user->destroy_all();
 
-		wp_set_password( $changes['user_pass'], $user_id );
+		wp_set_password( $changes['user_pass'], $args['user_id'] );
+
+		do_action( 'um_before_signon_after_account_changes', $args );
 
 		wp_signon(
 			array(

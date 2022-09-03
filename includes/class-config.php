@@ -305,6 +305,8 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'reset_password_limit_number'           => 3,
 				'blocked_emails'                        => '',
 				'blocked_words'                         => 'admin' . "\r\n" . 'administrator' . "\r\n" . 'webmaster' . "\r\n" . 'support' . "\r\n" . 'staff',
+				'allowed_choice_callbacks'              => '',
+				'allow_url_redirect_confirm'            => 1,
 				'default_avatar'                        => '',
 				'default_cover'                         => '',
 				'disable_profile_photo_upload'          => 0,

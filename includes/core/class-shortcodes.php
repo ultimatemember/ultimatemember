@@ -357,15 +357,17 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		function um_loggedin( $args = array(), $content = "" ) {
 			ob_start();
 
-			$defaults = array(
-				'lock_text' => __( 'This content has been restricted to logged in users only. Please <a href="{login_referrer}">login</a> to view this content.', 'ultimate-member' ),
-				'show_lock' => 'yes',
+			$args = shortcode_atts(
+				array(
+					'lock_text' => __( 'This content has been restricted to logged in users only. Please <a href="{login_referrer}">login</a> to view this content.', 'ultimate-member' ),
+					'show_lock' => 'yes',
+				),
+				$args,
+				'um_loggedin'
 			);
 
-			$args = wp_parse_args( $args, $defaults );
-
 			if ( ! is_user_logged_in() ) {
-				if ( $args['show_lock'] == 'no' ) {
+				if ( 'no' === $args['show_lock'] ) {
 					echo '';
 				} else {
 					$args['lock_text'] = $this->convert_locker_tags( $args['lock_text'] );
@@ -380,7 +382,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			}
 
 			$output = ob_get_clean();
-			
+
 			return htmlspecialchars_decode( $output, ENT_NOQUOTES );
 		}
 

@@ -632,7 +632,7 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 					continue;
 
 				if ( ( is_object( $license ) && 'inactive' == $license->license ) || 'inactive' == $license ) {
-					$arr_inactive_license_keys[ ] = $license->item_name;
+					$arr_inactive_license_keys[] = $license->item_name;
 				}
 
 				$invalid_license++;

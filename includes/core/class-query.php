@@ -185,25 +185,96 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		 * @return int
 		 */
 		function count_users_by_status( $status ) {
-			$args = array(
-				'fields'               => 'ids',
-				'number'               => 0,
-				'meta_query'           => array(
-					array(
-						'key'     => 'account_status',
-						'value'   => $status,
-						'compare' => '=',
+			$users_count = get_transient( "um_count_users_{$status}" );
+			if ( false === $users_count ) {
+				$args = array(
+					'fields'               => 'ids',
+					'number'               => 1,
+					'meta_query'           => array(
+						array(
+							'key'     => 'account_status',
+							'value'   => $status,
+							'compare' => '=',
+						),
 					),
-				),
-				'um_custom_user_query' => true,
-			);
+					'um_custom_user_query' => true,
+				);
 
-			$users = new \WP_User_Query( $args );
-			if ( empty( $users ) || is_wp_error( $users ) ) {
-				return 0;
+				$users = new \WP_User_Query( $args );
+				if ( empty( $users ) || is_wp_error( $users ) ) {
+					$users_count = 0;
+				} else {
+					$users_count = $users->get_total();
+				}
+
+				set_transient( "um_count_users_{$status}", $users_count );
 			}
 
-			return count( $users->get_results() );
+			return $users_count;
+		}
+
+
+		/**
+		 * Get pending users (in queue)
+		 *
+		 * @return int
+		 */
+		function get_pending_users_count() {
+			$users_count = get_transient( 'um_count_users_pending_dot' );
+			if ( false === $users_count ) {
+				$args = array(
+					'fields'               => 'ids',
+					'number'               => 1,
+					'meta_query'           => array(
+						'relation' => 'OR',
+						array(
+							'key'     => 'account_status',
+							'value'   => 'awaiting_email_confirmation',
+							'compare' => '=',
+						),
+						array(
+							'key'     => 'account_status',
+							'value'   => 'awaiting_admin_review',
+							'compare' => '=',
+						),
+					),
+					'um_custom_user_query' => true,
+				);
+
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_admin_pending_queue_filter
+				 * @description Change user query arguments when get pending users
+				 * @input_vars
+				 * [{"var":"$args","type":"array","desc":"WP_Users query arguments"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage
+				 * <?php add_filter( 'um_admin_pending_queue_filter', 'function_name', 10, 1 ); ?>
+				 * @example
+				 * <?php
+				 * add_filter( 'um_admin_pending_queue_filter', 'my_admin_pending_queue', 10, 1 );
+				 * function my_admin_pending_queue( $args ) {
+				 *     // your code here
+				 *     return $args;
+				 * }
+				 * ?>
+				 */
+				$args = apply_filters( 'um_admin_pending_queue_filter', $args );
+
+				$users = new \WP_User_Query( $args );
+				if ( empty( $users ) || is_wp_error( $users ) ) {
+					$users_count = 0;
+				} else {
+					$users_count = $users->get_total();
+				}
+
+				set_transient( 'um_count_users_pending_dot', $users_count );
+			}
+
+			return $users_count;
 		}
 
 
@@ -226,6 +297,18 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		 * @param $new_value
 		 */
 		function update_attr( $key, $post_id, $new_value ){
+			/**
+			 * Post meta values are passed through the stripslashes() function upon being stored.
+			 * Function wp_slash() is added to compensate for the call to stripslashes().
+			 * @see https://developer.wordpress.org/reference/functions/update_post_meta/
+			 */
+			if ( is_array( $new_value ) ) {
+				foreach ( $new_value as $k => $val ) {
+					if ( is_array( $val ) && array_key_exists( 'custom_dropdown_options_source', $val ) ) {
+						$new_value[ $k ]['custom_dropdown_options_source'] = wp_slash( $val['custom_dropdown_options_source'] );
+					}
+				}
+			}
 			update_post_meta( $post_id, '_um_' . $key, $new_value );
 		}
 

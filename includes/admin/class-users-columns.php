@@ -195,6 +195,9 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 				return;
 			}
 
+			// set default statuses if not already done
+			UM()->install()->set_default_user_status();
+
 			remove_action( 'pre_user_query', array( &$this, 'filter_users_by_status' ), 10 );
 
 			$statuses = $this->get_user_statuses();

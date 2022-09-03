@@ -631,7 +631,7 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 
 						<?php if ( isset( $col1 ) ) {
 							foreach ( $col1 as $opt ) {
-								$metabox->field_input( $opt, null, $metabox->edit_array );
+								$metabox->field_input( $opt, $form_id, $metabox->edit_array );
 							}
 						} ?>
 
@@ -641,7 +641,7 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 
 						<?php if ( isset( $col2 ) ) {
 							foreach ( $col2 as $opt ) {
-								$metabox->field_input( $opt, null, $metabox->edit_array );
+								$metabox->field_input( $opt, $form_id, $metabox->edit_array );
 							}
 						} ?>
 
@@ -651,7 +651,7 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 
 					<?php if ( isset( $col3 ) ) {
 						foreach ( $col3 as $opt ) {
-							$metabox->field_input( $opt, null, $metabox->edit_array );
+							$metabox->field_input( $opt, $form_id, $metabox->edit_array );
 						}
 					} ?>
 
@@ -659,7 +659,7 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 
 					<?php if ( isset( $col_full ) ) {
 						foreach ( $col_full as $opt ) {
-							$metabox->field_input( $opt, null, $metabox->edit_array );
+							$metabox->field_input( $opt, $form_id, $metabox->edit_array );
 						}
 					} ?>
 

@@ -530,6 +530,12 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 					'blocked_words'                         => array(
 						'sanitize' => 'textarea',
 					),
+					'allowed_choice_callbacks'              => array(
+						'sanitize' => 'textarea',
+					),
+					'allow_url_redirect_confirm'            => array(
+						'sanitize' => 'bool',
+					),
 					'admin_email'                           => array(
 						'sanitize' => 'text',
 					),
@@ -863,6 +869,15 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 				);
 			}
 
+			$users_fields[] = array(
+				'id'          => 'purge_user_status_cache',
+				'type'        => 'ajax_button',
+				'label'       => __( 'User Status counter cache', 'ultimate-member' ),
+				'value'       => __( 'Clear cache of user statuses', 'ultimate-member' ),
+				'description' => __( 'Run this task from time to time to keep your DB clean.', 'ultimate-member' ) ,
+				'size'        => 'small',
+			);
+
 			$uploads_fields = array(
 				array(
 					'id'          => 'profile_photo_max_size',
@@ -1149,6 +1164,18 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 										'args'        => array(
 											'textarea_rows' => 10,
 										),
+									),
+									array(
+										'id'          => 'allowed_choice_callbacks',
+										'type'        => 'textarea',
+										'label'       => __( 'Allowed Choice Callbacks (Enter one PHP function per line)', 'ultimate-member' ),
+										'description' => __( 'This option lets you specify the choice callback functions to prevent anyone from using 3rd-party functions that may put your site at risk.', 'ultimate-member' ),
+									),
+									array(
+										'id'          => 'allow_url_redirect_confirm',
+										'type'        => 'checkbox',
+										'label'       => __( 'Allow external link redirect confirm', 'ultimate-member' ),
+										'description' => __( 'Using JS.confirm alert when you go to an external link.', 'ultimate-member' ),
 									),
 								),
 							),

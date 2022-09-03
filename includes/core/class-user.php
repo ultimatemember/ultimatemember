@@ -34,6 +34,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			$this->profile = null;
 			$this->cannot_edit = null;
 			$this->password_reset_key = null;
+			$this->deleted_user_id = null;
 
 			global $wpdb;
 
@@ -64,10 +65,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			$this->target_id = null;
 
 			// When the cache should be cleared
-			add_action( 'um_delete_user_hook', array( &$this, 'remove_cached_queue' ) );
 			add_action( 'um_delete_user', array( &$this, 'remove_cache' ), 10, 1 );
-
-			add_action( 'um_after_user_status_is_changed_hook', array( &$this, 'remove_cached_queue' ) );
 
 			// When user cache should be cleared
 			add_action( 'um_after_user_updated', array( &$this, 'remove_cache' ) );
@@ -105,6 +103,210 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			} else {
 				add_action( 'delete_user', array( &$this, 'delete_user_handler' ), 10, 1 );
 			}
+
+
+			add_action( 'update_user_meta', array( &$this, 'flush_um_count_users_transient_update' ), 10, 4 );
+			add_action( 'added_user_meta', array( &$this, 'flush_um_count_users_transient_add' ), 10, 4 );
+			add_action( 'delete_user_meta', array( &$this, 'flush_um_count_users_transient_delete' ), 10, 4 );
+		}
+
+		/**
+		 * @param $meta_ids
+		 * @param $object_id
+		 * @param $meta_key
+		 * @param $_meta_value
+		 */
+		public function flush_um_count_users_transient_update( $meta_ids, $object_id, $meta_key, $_meta_value ) {
+			if ( 'account_status' !== $meta_key ) {
+				return;
+			}
+
+			// related to the User role > Registration Options Metabox > Registration status 2nd and 3rd option
+			if ( in_array( $_meta_value, array( 'checkmail', 'pending' ), true ) ) {
+				return;
+			}
+
+			$pending_statuses = array(
+				'awaiting_email_confirmation',
+				'awaiting_admin_review',
+			);
+
+			$old = get_user_meta( $object_id, $meta_key, true );
+
+			if ( $old === $_meta_value ) {
+				return;
+			}
+
+			// related to the User role > Registration Options Metabox > Registration status 2nd and 3rd option
+			if ( ! in_array( $old, array( 'checkmail', 'pending' ), true ) ) {
+				// deduct old transient count
+				$count = get_transient( "um_count_users_{$old}" );
+				if ( false !== $count ) {
+					if ( ! is_numeric( $count ) ) {
+						delete_transient( "um_count_users_{$old}" );
+					} else {
+						if ( 0 < $count ) {
+							$count--;
+						} else {
+							$count = 0;
+						}
+						set_transient( "um_count_users_{$old}", $count );
+					}
+				}
+
+				if ( in_array( $old, $pending_statuses, true ) && ! in_array( $_meta_value, $pending_statuses, true ) ) {
+					// deduct old transient count
+					$count = get_transient( 'um_count_users_pending_dot' );
+					if ( false !== $count ) {
+						if ( ! is_numeric( $count ) ) {
+							delete_transient( 'um_count_users_pending_dot' );
+						} else {
+							if ( 0 < $count ) {
+								$count--;
+							} else {
+								$count = 0;
+							}
+							set_transient( 'um_count_users_pending_dot', $count );
+						}
+					}
+				}
+			}
+
+			// add new transient count
+			$count = get_transient( "um_count_users_{$_meta_value}" );
+			if ( false !== $count ) {
+				if ( is_numeric( $count ) ) {
+					$count++;
+				} else {
+					$count = 1;
+				}
+			} else {
+				$count = 1;
+			}
+			set_transient( "um_count_users_{$_meta_value}", $count );
+
+			if ( in_array( $_meta_value, $pending_statuses, true ) && ! in_array( $old, $pending_statuses, true ) ) {
+				// add new transient count
+				$count = get_transient( 'um_count_users_pending_dot' );
+				if ( false !== $count ) {
+					if ( is_numeric( $count ) ) {
+						$count++;
+					} else {
+						$count = 1;
+					}
+				} else {
+					$count = 1;
+				}
+				set_transient( 'um_count_users_pending_dot', $count );
+			}
+		}
+
+
+		/**
+		 * @param $meta_ids
+		 * @param $object_id
+		 * @param $meta_key
+		 * @param $_meta_value
+		 */
+		public function flush_um_count_users_transient_add( $meta_ids, $object_id, $meta_key, $_meta_value ) {
+			if ( 'account_status' !== $meta_key ) {
+				return;
+			}
+
+			// related to the User role > Registration Options Metabox > Registration status 2nd and 3rd option
+			if ( in_array( $_meta_value, array( 'checkmail', 'pending' ), true ) ) {
+				return;
+			}
+
+			$pending_statuses = array(
+				'awaiting_email_confirmation',
+				'awaiting_admin_review',
+			);
+
+			// add new transient count
+			$count = get_transient( "um_count_users_{$_meta_value}" );
+			if ( false !== $count ) {
+				if ( is_numeric( $count ) ) {
+					$count++;
+				} else {
+					$count = 1;
+				}
+			} else {
+				$count = 1;
+			}
+			set_transient( "um_count_users_{$_meta_value}", $count );
+
+			if ( in_array( $_meta_value, $pending_statuses, true ) ) {
+				// add new transient count
+				$pending_count = get_transient( 'um_count_users_pending_dot' );
+				if ( false !== $pending_count ) {
+					if ( is_numeric( $pending_count ) ) {
+						$pending_count++;
+					} else {
+						$pending_count = 1;
+					}
+				} else {
+					$pending_count = 1;
+				}
+				set_transient( 'um_count_users_pending_dot', $pending_count );
+			}
+		}
+
+
+		/**
+		 * @param $meta_ids
+		 * @param $object_id
+		 * @param $meta_key
+		 * @param $_meta_value
+		 */
+		public function flush_um_count_users_transient_delete( $meta_ids, $object_id, $meta_key, $_meta_value ) {
+			if ( 'account_status' !== $meta_key ) {
+				return;
+			}
+
+			$value = ( '' !== $_meta_value ) ? $_meta_value : get_user_meta( $object_id, $meta_key, true );
+
+			// related to the User role > Registration Options Metabox > Registration status 2nd and 3rd option
+			if ( in_array( $value, array( 'checkmail', 'pending' ), true ) ) {
+				return;
+			}
+
+			$pending_statuses = array(
+				'awaiting_email_confirmation',
+				'awaiting_admin_review',
+			);
+
+			// deduct old transient count
+			$count = get_transient( "um_count_users_{$value}" );
+			if ( false !== $count ) {
+				if ( ! is_numeric( $count ) ) {
+					delete_transient( "um_count_users_{$value}" );
+				} else {
+					if ( 0 < $count ) {
+						$count--;
+					} else {
+						$count = 0;
+					}
+					set_transient( "um_count_users_{$value}", $count );
+				}
+			}
+
+			if ( in_array( $value, $pending_statuses, true ) ) {
+				// deduct old transient count
+				$count = get_transient( 'um_count_users_pending_dot' );
+				if ( false !== $count ) {
+					if ( ! is_numeric( $count ) ) {
+						delete_transient( 'um_count_users_pending_dot' );
+					} else {
+						if ( 0 < $count ) {
+							$count--;
+						} else {
+							$count = 0;
+						}
+						set_transient( 'um_count_users_pending_dot', $count );
+					}
+				}
+			}
 		}
 
 
@@ -114,6 +316,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		function delete_user_handler( $user_id ) {
 			um_fetch_user( $user_id );
 
+			$this->deleted_user_id = $user_id;
 			/**
 			 * UM hook
 			 *
@@ -169,6 +372,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			// remove uploads
 			UM()->files()->remove_dir( UM()->files()->upload_temp );
 			UM()->files()->remove_dir( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR );
+
+			delete_transient( 'um_count_users_unassigned' );
+			delete_transient( 'um_count_users_pending_dot' );
 		}
 
 
@@ -233,60 +439,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 
 			$this->remove_cache( $user_id );
-		}
-
-
-		/**
-		 * Get pending users (in queue)
-		 */
-		function get_pending_users_count() {
-
-			$cached_users_queue = get_option( 'um_cached_users_queue' );
-			if ( $cached_users_queue > 0 && ! isset( $_REQUEST['delete_count'] ) ) {
-				return $cached_users_queue;
-			}
-
-			$args = array( 'fields' => 'ID', 'number' => 1 );
-			$args['meta_query']['relation'] = 'OR';
-			$args['meta_query'][] = array(
-				'key'       => 'account_status',
-				'value'     => 'awaiting_email_confirmation',
-				'compare'   => '='
-			);
-			$args['meta_query'][] = array(
-				'key'       => 'account_status',
-				'value'     => 'awaiting_admin_review',
-				'compare'   => '='
-			);
-
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_admin_pending_queue_filter
-			 * @description Change user query arguments when get pending users
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"WP_Users query arguments"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_admin_pending_queue_filter', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_admin_pending_queue_filter', 'my_admin_pending_queue', 10, 1 );
-			 * function my_admin_pending_queue( $args ) {
-			 *     // your code here
-			 *     return $args;
-			 * }
-			 * ?>
-			 */
-			$args = apply_filters( 'um_admin_pending_queue_filter', $args );
-			$users = new \WP_User_Query( $args );
-
-			delete_option( 'um_cached_users_queue' );
-			add_option( 'um_cached_users_queue', $users->get_total(), '', 'no' );
-
-			return $users->get_total();
 		}
 
 
@@ -479,6 +631,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				do_action( 'um_user_register', $user_id, $_POST );
 			}
 
+			delete_transient( 'um_count_users_unassigned' );
 		}
 
 
@@ -649,14 +802,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			<?php $content .= ob_get_clean();
 
 			return $content;
-		}
-
-
-		/**
-		 * Remove cached queue from Users backend
-		 */
-		function remove_cached_queue() {
-			delete_option( 'um_cached_users_queue' );
 		}
 
 
@@ -1254,9 +1399,19 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 		/**
 		 * Password changed email
+		 *
+		 * @param null|int $user_id
 		 */
-		function password_changed() {
+		function password_changed( $user_id = null ) {
+			if ( ! empty( $user_id ) ) {
+				um_fetch_user( $user_id );
+			}
+
 			UM()->mail()->send( um_user( 'user_email' ), 'password-changed' );
+
+			if ( ! empty( $user_id ) ) {
+				um_reset_user();
+			}
 		}
 
 
@@ -2027,6 +2182,29 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		function add_activation_replace_placeholder( $replace_placeholders ) {
 			$replace_placeholders[] = um_user( 'account_activation_link' );
 			return $replace_placeholders;
+		}
+
+
+
+		/**
+		 * Get pending users (in queue)
+		 *
+		 * @deprecated 2.4.2
+		 */
+		function get_pending_users_count() {
+			_deprecated_function( __METHOD__, '2.4.2', 'UM()->query()->get_pending_users_count()' );
+			return UM()->query()->get_pending_users_count();
+		}
+
+
+		/**
+		 * Remove cached queue from Users backend
+		 *
+		 * @deprecated 2.4.2
+		 */
+		function remove_cached_queue() {
+			_deprecated_function( __METHOD__, '2.4.2', '' );
+			delete_option( 'um_cached_users_queue' );
 		}
 	}
 }

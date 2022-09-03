@@ -40,6 +40,10 @@ class User {
 	 * @param mixed $_meta_value
 	 */
 	function update_md_data_when_usermeta_delete( $meta_ids, $object_id, $meta_key, $_meta_value ) {
+		if ( UM()->user()->deleted_user_id ) {
+			return;
+		}
+
 		$metakeys = array( 'account_status', 'hide_in_members', 'synced_gravatar_hashed_id', 'synced_profile_photo', 'profile_photo', 'cover_photo', '_um_verified' );
 		if ( ! in_array( $meta_key, $metakeys ) ) {
 			return;

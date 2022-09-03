@@ -82,6 +82,30 @@ function um_admin_init_users_select() {
 	}
 }
 
+/**
+ *
+ * @param field_key
+ * @param line
+ */
+function um_add_same_page_log( field_key, line ) {
+	var log_field = jQuery( '.um-same-page-update-' + field_key ).find( '.upgrade_log' );
+	var previous_html = log_field.html();
+	log_field.html( previous_html + line + "<br />" );
+}
+
+
+function um_same_page_wrong_ajax( field_key ) {
+	um_add_same_page_log( field_key, wp.i18n.__( 'Wrong AJAX response...', 'ultimate-member' ) );
+	um_add_same_page_log( field_key, wp.i18n.__( 'Your upgrade was crashed, please contact with support', 'ultimate-member' ) );
+}
+
+
+function um_same_page_something_wrong( field_key ) {
+	um_add_same_page_log( field_key, wp.i18n.__( 'Something went wrong with AJAX request...', 'ultimate-member' ) );
+	um_add_same_page_log( field_key, wp.i18n.__( 'Your upgrade was crashed, please contact with support', 'ultimate-member' ) );
+}
+
+
 jQuery(document).ready( function() {
 
 	um_admin_init_users_select();
@@ -242,33 +266,10 @@ jQuery(document).ready( function() {
 					window.location = um_forms_data.successfully_redirect;
 				}
 			}
+		} else {
+			wp.hooks.doAction( 'um_same_page_upgrade', field_key );
 		}
 	});
-
-
-
-	/**
-	 *
-	 * @param field_key
-	 * @param line
-	 */
-	function um_add_same_page_log( field_key, line ) {
-		var log_field = jQuery( '.um-same-page-update-' + field_key ).find( '.upgrade_log' );
-		var previous_html = log_field.html();
-		log_field.html( previous_html + line + "<br />" );
-	}
-
-
-	function um_same_page_wrong_ajax( field_key ) {
-		um_add_same_page_log( field_key, wp.i18n.__( 'Wrong AJAX response...', 'ultimate-member' ) );
-		um_add_same_page_log( field_key, wp.i18n.__( 'Your upgrade was crashed, please contact with support', 'ultimate-member' ) );
-	}
-
-
-	function um_same_page_something_wrong( field_key ) {
-		um_add_same_page_log( field_key, wp.i18n.__( 'Something went wrong with AJAX request...', 'ultimate-member' ) );
-		um_add_same_page_log( field_key, wp.i18n.__( 'Your upgrade was crashed, please contact with support', 'ultimate-member' ) );
-	}
 
 	/**
 	 * Sortable items

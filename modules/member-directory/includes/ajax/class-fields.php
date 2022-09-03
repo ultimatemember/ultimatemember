@@ -35,6 +35,40 @@ class Fields {
 		$arr_options['status'] = 'success';
 		$arr_options['post']   = $_POST;
 
+		// Callback validation
+		if ( empty( $_POST['child_callback'] ) ) {
+			$arr_options['status']  = 'error';
+			$arr_options['message'] = __( 'Wrong callback.', 'ultimate-member' );
+
+			wp_send_json( $arr_options );
+		}
+
+		$ajax_source_func = sanitize_text_field( $_POST['child_callback'] );
+
+		if ( ! function_exists( $ajax_source_func ) ) {
+			$arr_options['status']  = 'error';
+			$arr_options['message'] = __( 'Wrong callback.', 'ultimate-member' );
+
+			wp_send_json( $arr_options );
+		}
+
+		$allowed_callbacks = UM()->options()->get( 'allowed_choice_callbacks' );
+
+		if ( empty( $allowed_callbacks ) ) {
+			$arr_options['status']  = 'error';
+			$arr_options['message'] = __( 'This is not possible for security reasons.', 'ultimate-member' );
+			wp_send_json( $arr_options );
+		}
+
+		$allowed_callbacks = array_map( 'rtrim', explode( "\n", wp_unslash( $allowed_callbacks ) ) );
+
+		if ( ! in_array( $ajax_source_func, $allowed_callbacks, true ) ) {
+			$arr_options['status']  = 'error';
+			$arr_options['message'] = __( 'This is not possible for security reasons.', 'ultimate-member' );
+
+			wp_send_json( $arr_options );
+		}
+
 		if ( isset( $_POST['form_id'] ) ) {
 			UM()->fields()->set_id = absint( $_POST['form_id'] );
 		}

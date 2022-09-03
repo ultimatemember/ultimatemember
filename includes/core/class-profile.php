@@ -422,6 +422,15 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 						$data['in_profile_meta'] = true;
 
 						$value = um_filtered_value( $key, $data );
+						if ( 'description' === $key ) {
+							if ( UM()->options()->get( 'profile_show_html_bio' ) ) {
+								$res = make_clickable( wpautop( wp_kses_post( $value ) ) );
+							} else {
+								$res = esc_html( $value );
+							}
+
+							$value = nl2br( $res );
+						}
 						if ( ! $value && ( ! array_key_exists( 'type', $data ) || ! in_array( $data['type'], $fields_without_metakey ) ) ) {
 							continue;
 						}

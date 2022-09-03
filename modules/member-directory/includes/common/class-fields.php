@@ -81,10 +81,9 @@ class Fields {
 
 			// Admin filtering
 			$directory_search_filters = get_post_meta( $directory_id, '_um_search_filters', true );
-			if ( empty( $directory_search_filters ) ) {
-				$directory_search_filters = array();
+			if ( isset( $directory_search_filters[ $key ] ) ) {
+				unset( $directory_search_filters[ $key ] );
 			}
-			unset( $directory_search_filters[ $key ] );
 			update_post_meta( $directory_id, '_um_search_filters', $directory_search_filters );
 
 			// display in tagline

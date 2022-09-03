@@ -23,6 +23,7 @@ wp.hooks.addFilter( 'um_bookmarks_add_button_args', 'um_jobboardwp', function( d
 }, 10 );
 wp.hooks.addFilter("um_bookmarks_remove_button_args","um_jobboardwp",function(o){return o.job_list=!0,o},10),wp.hooks.addFilter("um_bookmarks_add_button_args","um_jobboardwp",function(o){return o+="&job_list=1"},10);
 
+
 (function( $ ) {
 	'use strict';
 
