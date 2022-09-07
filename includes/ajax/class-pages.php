@@ -37,17 +37,21 @@ if ( ! class_exists( 'um\ajax\Pages' ) ) {
 			$pre_result = apply_filters( 'um_admin_settings_get_pages_list', false );
 
 			if ( false === $pre_result ) {
-				// you can use WP_Query, query_posts() or get_posts() here - it doesn't matter
-				$search_results = new \WP_Query( array(
+				$query_args = array(
 					'post_type'           => 'page',
-					's'                   => sanitize_text_field( $_GET['search'] ), // the search query
 					'post_status'         => 'publish', // if you don't want drafts to be returned
 					'ignore_sticky_posts' => 1,
 					'posts_per_page'      => 10, // how much to show at once
 					'paged'               => absint( $_GET['page'] ),
 					'orderby'             => 'title',
 					'order'               => 'asc',
-				) );
+				);
+
+				if ( ! empty( $_GET['search'] ) ) {
+					$query_args['s'] = sanitize_text_field( $_GET['search'] ); // the search query
+				}
+
+				$search_results = new \WP_Query( $query_args );
 
 				if ( $search_results->have_posts() ) {
 					while ( $search_results->have_posts() ) {
