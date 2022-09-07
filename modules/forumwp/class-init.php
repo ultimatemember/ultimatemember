@@ -12,18 +12,15 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 final class Init {
 
-
 	/**
 	 * @var string
 	 */
 	private $slug = 'forumwp';
 
-
 	/**
 	 * @var
 	 */
 	private static $instance;
-
 
 	/**
 	 * @return Init
@@ -35,7 +32,6 @@ final class Init {
 		return self::$instance;
 	}
 
-
 	/**
 	 * Init constructor.
 	 */
@@ -46,9 +42,7 @@ final class Init {
 		} elseif ( UM()->is_request( 'frontend' ) ) {
 			$this->frontend()->includes();
 		}
-		$this->cross_modules()->includes();
 	}
-
 
 	/**
 	 * @return includes\common\Init()
@@ -60,7 +54,6 @@ final class Init {
 		return UM()->classes['umm\forumwp\includes\common\init'];
 	}
 
-
 	/**
 	 * @return includes\admin\Init()
 	 */
@@ -71,7 +64,6 @@ final class Init {
 		return UM()->classes['umm\forumwp\includes\admin\init'];
 	}
 
-
 	/**
 	 * @return includes\frontend\Init()
 	 */
@@ -80,16 +72,5 @@ final class Init {
 			UM()->classes['umm\forumwp\includes\frontend\init'] = new includes\frontend\Init();
 		}
 		return UM()->classes['umm\forumwp\includes\frontend\init'];
-	}
-
-
-	/**
-	 * @return includes\cross_modules\Init()
-	 */
-	public function cross_modules() {
-		if ( empty( UM()->classes['umm\forumwp\includes\cross_modules\init'] ) ) {
-			UM()->classes['umm\forumwp\includes\cross_modules\init'] = new includes\cross_modules\Init();
-		}
-		return UM()->classes['umm\forumwp\includes\cross_modules\init'];
 	}
 }

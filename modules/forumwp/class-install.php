@@ -1,9 +1,9 @@
 <?php
 namespace umm\forumwp;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Class Install
@@ -12,29 +12,29 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class Install {
 
-
 	/**
-	 * @var array Default module settings
+	 * Default module settings.
+	 *
+	 * @var array
 	 */
-	var $settings_defaults = array();
-
+	public $settings_defaults = array();
 
 	/**
 	 * @var array
 	 */
-	var $roles_meta = array();
-
+	public $roles_meta = array();
 
 	/**
 	 * Install constructor.
 	 */
-	function __construct() {
-		//settings defaults
+	public function __construct() {
 		$this->settings_defaults = array(
-			'profile_tab_forumwp'         => 1,
-			'profile_tab_forumwp_privacy' => 0,
+			// Activity cross-modules install/flush-data
+			'activity-new-forumwp-topic' => 1,
+			'activity-new-forumwp-reply' => 1,
 		);
 
+		// Real-time Notifications cross-modules install/flush-data
 		$notification_types_templates = array(
 			'fmwp_mention'   => __( '<strong>{member}</strong> just mentioned you <a href="{post_url}" target="_blank">here</a>.', 'ultimate-member' ),
 			'fmwp_new_reply' => __( '<strong>{member}</strong> has <strong><a href="{post_url}" target="_blank">replied</a></strong> to a topic or forum on which you are subscribed.', 'ultimate-member' ),
@@ -114,23 +114,21 @@ class Install {
 		);
 	}
 
-
 	/**
 	 * Set default UM role settings for existed ForumWP roles
 	 *
 	 * @since 3.0
 	 */
-	function set_default_roles_meta() {
+	public function set_default_roles_meta() {
 		foreach ( $this->roles_meta as $role => $meta ) {
 			add_option( "um_role_{$role}_meta", $meta );
 		}
 	}
 
-
 	/**
 	 *
 	 */
-	function start() {
+	public function start() {
 		UM()->options()->set_defaults( $this->settings_defaults );
 		$this->set_default_roles_meta();
 	}
