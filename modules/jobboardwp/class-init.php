@@ -46,7 +46,6 @@ final class Init {
 		} elseif ( UM()->is_request( 'frontend' ) ) {
 			$this->frontend()->includes();
 		}
-		$this->cross_modules()->includes();
 	}
 
 
@@ -80,16 +79,5 @@ final class Init {
 			UM()->classes['umm\jobboardwp\includes\frontend\init'] = new includes\frontend\Init();
 		}
 		return UM()->classes['umm\jobboardwp\includes\frontend\init'];
-	}
-
-
-	/**
-	 * @return includes\cross_modules\Init()
-	 */
-	public function cross_modules() {
-		if ( empty( UM()->classes['umm\jobboardwp\includes\cross_modules\init'] ) ) {
-			UM()->classes['umm\jobboardwp\includes\cross_modules\init'] = new includes\cross_modules\Init();
-		}
-		return UM()->classes['umm\jobboardwp\includes\cross_modules\init'];
 	}
 }

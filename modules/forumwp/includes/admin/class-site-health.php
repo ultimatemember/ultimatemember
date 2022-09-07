@@ -1,14 +1,11 @@
 <?php
 namespace umm\forumwp\includes\admin;
 
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 if ( ! class_exists( 'umm\forumwp\includes\admin\Site_Health' ) ) {
-
 
 	/**
 	 * Class Site_Health
@@ -17,15 +14,12 @@ if ( ! class_exists( 'umm\forumwp\includes\admin\Site_Health' ) ) {
 	 */
 	class Site_Health {
 
-
 		/**
 		 * Site_Health constructor.
 		 */
 		public function __construct() {
 			add_filter( 'um_debug_information_user_role', array( $this, 'um_debug_information_user_role' ), 20, 2 );
-			add_filter( 'um_extend_profilec_role_settings', array( $this, 'um_extend_profilec_role_settings' ), 10, 2 );
 		}
-
 
 		/**
 		 * Extend user role info.
@@ -94,32 +88,6 @@ if ( ! class_exists( 'umm\forumwp\includes\admin\Site_Health' ) ) {
 					)
 				);
 			}
-
-			return $info;
-		}
-
-
-		/**
-		 * Extend Profile completeness user role info.
-		 *
-		 * @since 3.0
-		 *
-		 * @param array $info The Site Health information.
-		 *
-		 * @return array The updated Site Health information.
-		 */
-		public function um_extend_profilec_role_settings( $info, $key ) {
-			$rolemeta = get_option( "um_role_{$key}_meta", false );
-
-			$info['ultimate-member-' . $key ]['fields'] = array_merge(
-				$info['ultimate-member-' . $key ]['fields'],
-				array(
-					'um-profilec_prevent_forumwp' => array(
-						'label' => __( 'Profile completeness - Require profile to be complete to create new ForumWP topics/replies?', 'ultimate-member-pro' ),
-						'value' => ! empty( $rolemeta['_um_profilec_prevent_forumwp'] ) ? __( 'Yes', 'ultimate-member-pro' ) : __( 'No', 'ultimate-member-pro' ),
-					),
-				)
-			);
 
 			return $info;
 		}

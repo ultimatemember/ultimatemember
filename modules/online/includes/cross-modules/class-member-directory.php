@@ -33,6 +33,8 @@ class Member_Directory {
 
 		add_action( 'um_members_in_profile_photo_tmpl', array( &$this, 'extend_js_template' ), 10, 1 );
 		add_action( 'um_members_list_in_profile_photo_tmpl', array( &$this, 'extend_js_template' ), 10, 1 );
+
+		add_filter( 'um_debug_member_directory_profile_extend', array( $this, 'extends_site_health' ), 10, 2 );
 	}
 
 
@@ -235,5 +237,28 @@ class Member_Directory {
 			<# } #>
 
 		<?php }
+	}
+
+	/**
+	 * Extend profile card for member directory.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $info The Site Health information.
+	 *
+	 * @return array The updated Site Health information.
+	 */
+	public function extends_site_health( $info, $key ) {
+		$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
+			$info[ 'ultimate-member-directory-' . $key ]['fields'],
+			array(
+				'um-directory-online_hide_stats' => array(
+					'label' => __( 'Hide online stats', 'ultimate-member' ),
+					'value' => get_post_meta( $key,'_um_online_hide_stats', true ) ? __( 'Yes', 'ultimate-member' ) : __( 'No', 'ultimate-member' ),
+				),
+			)
+		);
+
+		return $info;
 	}
 }

@@ -1,9 +1,9 @@
 <?php
 namespace umm\jobboardwp\includes\admin;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Class Init
@@ -12,13 +12,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class Init {
 
-
 	/**
 	 * Init constructor.
 	 */
 	public function __construct() {
 	}
-
 
 	/**
 	 *
@@ -28,7 +26,6 @@ class Init {
 		$this->settings();
 		$this->site_health();
 	}
-
 
 	/**
 	 * @return Metabox()
@@ -40,7 +37,6 @@ class Init {
 		return UM()->classes['umm\jobboardwp\includes\admin\metabox'];
 	}
 
-
 	/**
 	 * @return Settings()
 	 */
@@ -50,7 +46,6 @@ class Init {
 		}
 		return UM()->classes['umm\jobboardwp\includes\admin\settings'];
 	}
-
 
 	/**
 	 * @return Site_Health()

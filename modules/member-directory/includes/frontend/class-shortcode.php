@@ -106,10 +106,6 @@ class Shortcode {
 	 * @return string
 	 */
 	public function ultimatemember_searchform( $args = array(), $content = '' ) {
-		if ( ! UM()->modules()->is_active( 'member-directory' ) ) {
-			return '';
-		}
-
 		$member_directory_ids = array();
 
 		$page_id = um_get_predefined_page_id( 'members' );

@@ -1,9 +1,9 @@
 <?php
 namespace umm\recaptcha;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Class Init
@@ -12,18 +12,15 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 final class Init {
 
-
 	/**
 	 * @var string
 	 */
 	private $slug = 'recaptcha';
 
-
 	/**
 	 * @var
 	 */
 	private static $instance;
-
 
 	/**
 	 * @return Init
@@ -35,43 +32,37 @@ final class Init {
 		return self::$instance;
 	}
 
-
 	/**
 	 * Init constructor.
 	 */
-	function __construct() {
+	public function __construct() {
 		$this->common()->includes();
 		if ( UM()->is_request( 'admin' ) ) {
 			$this->admin()->includes();
 		} elseif ( UM()->is_request( 'frontend' ) ) {
 			$this->frontend()->includes();
 		}
-
-		$this->cross_modules()->includes();
 	}
-
 
 	/**
 	 * @return includes\admin\Init()
 	 */
-	function common() {
+	public function common() {
 		if ( empty( UM()->classes['umm\recaptcha\includes\common\init'] ) ) {
 			UM()->classes['umm\recaptcha\includes\common\init'] = new includes\common\Init();
 		}
 		return UM()->classes['umm\recaptcha\includes\common\init'];
 	}
 
-
 	/**
 	 * @return includes\admin\Init()
 	 */
-	function admin() {
+	public function admin() {
 		if ( empty( UM()->classes['umm\recaptcha\includes\admin\init'] ) ) {
 			UM()->classes['umm\recaptcha\includes\admin\init'] = new includes\admin\Init();
 		}
 		return UM()->classes['umm\recaptcha\includes\admin\init'];
 	}
-
 
 	/**
 	 * @return includes\frontend\Init()
@@ -83,22 +74,10 @@ final class Init {
 		return UM()->classes['umm\recaptcha\includes\frontend\init'];
 	}
 
-
-	/**
-	 * @return includes\cross_modules\Init()
-	 */
-	public function cross_modules() {
-		if ( empty( UM()->classes['umm\recaptcha\includes\cross_modules\init'] ) ) {
-			UM()->classes['umm\recaptcha\includes\cross_modules\init'] = new includes\cross_modules\Init();
-		}
-		return UM()->classes['umm\recaptcha\includes\cross_modules\init'];
-	}
-
-
 	/**
 	 * @return Config()
 	 */
-	function config() {
+	public function config() {
 		if ( empty( UM()->classes['umm\recaptcha\config'] ) ) {
 			UM()->classes['umm\recaptcha\config'] = new Config();
 		}

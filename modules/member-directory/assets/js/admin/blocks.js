@@ -93,7 +93,7 @@ wp.blocks.registerBlockType( 'um-block/um-member-directories', {
 					{
 						className: 'um-member-directory-wrapper'
 					},
-					wp.i18n.__( 'UM Member Directory', 'ultimate-member-pro' )
+					wp.i18n.__( 'UM Member Directory', 'ultimate-member' )
 				),
 				wp.element.createElement(
 					wp.blockEditor.InspectorControls,
@@ -101,7 +101,7 @@ wp.blocks.registerBlockType( 'um-block/um-member-directories', {
 					wp.element.createElement(
 						wp.components.PanelBody,
 						{
-							title: wp.i18n.__( 'UM Member Directory', 'ultimate-member-pro' )
+							title: wp.i18n.__( 'UM Member Directory', 'ultimate-member' )
 						},
 						wp.element.createElement(
 							wp.components.SelectControl,
