@@ -102,6 +102,20 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 						do_action( 'um_lostpassword_errors_hook', $lostpassword_form );
 
 						if ( ! $lostpassword_form->has_errors() ) {
+							$hook_user_id = isset( $user_id ) ? $user_id : null;
+							/**
+							 * Fires just before the Lost Password process when Ultimate Member Lost Password form data is validated.
+							 * Legacy v2.x hooks: 'um_reset_password_process_hook'
+							 *
+							 * Note: Use this hook for adding custom actions before lost user's password form. It's the first hook after the validating form data.
+							 *
+							 * @since 3.0.0
+							 * @hook um_before_send_lostpassword_link
+							 *
+							 * @param {int|null} $user_id User ID whose password was lost or null if user doesn't exist.
+							 */
+							do_action( 'um_before_send_lostpassword_link', $hook_user_id );
+
 							if ( isset( $user_id ) ) {
 								$userdata = get_userdata( $user_id );
 
@@ -120,6 +134,18 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 									);
 								}
 							}
+
+							/**
+							 * Fires just after the Lost Password process when probably lost user's password sending.
+							 *
+							 * Note: Use this hook for adding custom actions after probably lost user's password sending.
+							 *
+							 * @since 3.0.0
+							 * @hook um_after_send_lostpassword_link
+							 *
+							 * @param {int|null} $user_id User ID whose password was lost or null if user doesn't exist.
+							 */
+							do_action( 'um_after_send_lostpassword_link', $hook_user_id );
 
 							// redirect anyway even there isn't a user in `$userdata`. We don't need to show that user exists due to security
 							$url = add_query_arg( array( 'checkemail' => 'confirm' ), um_get_predefined_page_url( 'password-reset' ) );
@@ -232,7 +258,7 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 						/**
 						 * Fires after Ultimate Member native Reset Password form validations are completed.
 						 *
-						 * Note: Use this hook for adding custom validations to your Reset Password form.
+						 * Note: Use this hook for adding custom validations to your Reset Password form. It's the latest hook before the validating form data.
 						 *
 						 * @since 3.0.0
 						 * @hook um_resetpass_errors_hook
@@ -242,6 +268,20 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 						do_action( 'um_resetpass_errors_hook', $resetpass_form );
 
 						if ( ! $resetpass_form->has_errors() ) {
+
+							/**
+							 * Fires just before the Reset Password process when Ultimate Member Reset Password form data is validated.
+							 * Legacy v2.x hooks: 'um_change_password_process_hook'
+							 *
+							 * Note: Use this hook for adding custom actions before reset user's password form. It's the first hook after the validating form data.
+							 *
+							 * @since 3.0.0
+							 * @hook um_before_changing_user_password
+							 *
+							 * @param {int} $user_id User ID whose password was reset.
+							 */
+							do_action( 'um_before_changing_user_password', $user->ID );
+
 							reset_password( $user, $user_password );
 
 							// send the Password Changed Email
@@ -253,23 +293,12 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 							$this->setcookie( $rp_cookie, false );
 
 							/**
-							 * UM hook
+							 * Fires after an user reset their password via Password Reset Form.
 							 *
-							 * @type action
-							 * @title um_after_changing_user_password
-							 * @description Hook that runs after user change their password
-							 * @input_vars
-							 * [{"var":"$user_id","type":"int","desc":"User ID"}]
-							 * @change_log
-							 * ["Since: 2.0"]
-							 * @usage add_action( 'um_after_changing_user_password', 'function_name', 10, 1 );
-							 * @example
-							 * <?php
-							 * add_action( 'um_after_changing_user_password', 'my_after_changing_user_password', 10, 1 );
-							 * function my_user_login_extra( $user_id ) {
-							 *     // your code here
-							 * }
-							 * ?>
+							 * @since 2.0.0
+							 * @hook um_after_changing_user_password
+							 *
+							 * @param {int} $user_id User ID whose password was reset.
 							 */
 							do_action( 'um_after_changing_user_password', $user->ID );
 

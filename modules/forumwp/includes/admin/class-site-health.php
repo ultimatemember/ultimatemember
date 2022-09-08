@@ -33,8 +33,8 @@ if ( ! class_exists( 'umm\forumwp\includes\admin\Site_Health' ) ) {
 		public function um_debug_information_user_role( $info, $key ) {
 			$rolemeta = get_option( "um_role_{$key}_meta", false );
 
-			$info['ultimate-member-' . $key ]['fields'] = array_merge(
-				$info['ultimate-member-' . $key ]['fields'],
+			$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+				$info[ 'ultimate-member-' . $key ]['fields'],
 				array(
 					'um-disable_forumwp_tab' => array(
 						'label' => __( 'ForumWP - Disable forums tab?', 'ultimate-member' ),
@@ -52,8 +52,8 @@ if ( ! class_exists( 'umm\forumwp\includes\admin\Site_Health' ) ) {
 				if ( isset( $rolemeta['_um_lock_create_forumwp_topics_notice'] ) ) {
 					$lock_create_forumwp_topics_notice = stripslashes( $rolemeta['_um_lock_create_forumwp_topics_notice'] );
 				}
-				$info['ultimate-member-' . $key ]['fields'] = array_merge(
-					$info['ultimate-member-' . $key ]['fields'],
+				$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+					$info[ 'ultimate-member-' . $key ]['fields'],
 					array(
 						'um-lock_create_forumwp_topics_notice' => array(
 							'label' => __( 'ForumWP - Custom message to show if you force locking new topic', 'ultimate-member' ),
@@ -63,8 +63,8 @@ if ( ! class_exists( 'umm\forumwp\includes\admin\Site_Health' ) ) {
 				);
 			}
 
-			$info['ultimate-member-' . $key ]['fields'] = array_merge(
-				$info['ultimate-member-' . $key ]['fields'],
+			$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+				$info[ 'ultimate-member-' . $key ]['fields'],
 				array(
 					'um-disable_create_forumwp_replies' => array(
 						'label' => __( 'ForumWP - Disable create new replies?', 'ultimate-member' ),
@@ -78,8 +78,8 @@ if ( ! class_exists( 'umm\forumwp\includes\admin\Site_Health' ) ) {
 				if ( isset( $rolemeta['_um_lock_create_forumwp_topics_notice'] ) ) {
 					$lock_create_forumwp_replies_notice = stripslashes( $rolemeta['_um_lock_create_forumwp_replies_notice'] );
 				}
-				$info['ultimate-member-' . $key ]['fields'] = array_merge(
-					$info['ultimate-member-' . $key ]['fields'],
+				$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+					$info[ 'ultimate-member-' . $key ]['fields'],
 					array(
 						'um-lock_create_forumwp_replies_notice' => array(
 							'label' => __( 'ForumWP - Custom message to show if you force locking new reply', 'ultimate-member' ),

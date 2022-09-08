@@ -189,6 +189,21 @@ if ( ! class_exists( 'um\frontend\Form' ) ) {
 			}
 
 			echo wp_kses( $fields . $hidden . '<div class="um-form-buttons-section">' . $buttons . '</div>', UM()->get_allowed_html( 'templates' ) );
+
+			/**
+			 * Fires in the form footer before closing tag in the form.
+			 * This hook may be used to display custom content in the form footer.
+			 *
+			 * Note: For checking the form on where you need to add content - use $form_data['id']
+			 *
+			 * Legacy v2.x hooks: 'um_after_form_fields', 'um_change_password_form' ( 'um-resetpass' === $form_data['id'] in v3 ), 'um_reset_password_form' ( 'um-lostpassword' == $form_data['id'] in v3 )
+			 *
+			 * @since 3.0.0
+			 * @hook um_form_footer
+			 *
+			 * @param {array} $form_data UM Form data.
+			 */
+			do_action( 'um_form_footer', $this->form_data );
 			?>
 
 			</form>

@@ -1685,7 +1685,11 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 				$filtered_settings[ $key ] = $value;
 
 				foreach ( $fields as $field ) {
-					if ( $field['id'] == $key && isset( $field['type'] ) && $field['type'] == 'multi_text' ) {
+					if ( ! array_key_exists( 'id', $field ) ) {
+						continue;
+					}
+
+					if ( $field['id'] === $key && isset( $field['type'] ) && 'multi_text' === $field['type'] ) {
 						$filtered_settings[ $key ] = array_filter( $settings[ $key ] );
 					}
 				}

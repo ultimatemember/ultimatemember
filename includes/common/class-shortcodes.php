@@ -40,7 +40,7 @@ if ( ! class_exists( 'um\common\Shortcodes' ) ) {
 				return '';
 			}
 
-			// there is possible to use 'shortcode_atts_ultimatemember_password' filter for getting customized $atts
+			/** There is possible to use 'shortcode_atts_ultimatemember_password' filter for getting customized $atts. This filter is documented in wp-includes/shortcodes.php "shortcode_atts_{$shortcode}" */
 			$args = shortcode_atts(
 				array(
 					'max_width' => '450px',
@@ -107,6 +107,16 @@ if ( ! class_exists( 'um\common\Shortcodes' ) ) {
 						),
 					),
 				);
+				/**
+				 * Filters arguments for the Reset Password form in the Password Reset shortcode content.
+				 *
+				 * Note: Use this hook for adding custom fields, hiddens or buttons to your Reset Password form.
+				 *
+				 * @since 3.0.0
+				 * @hook um_resetpass_form_args
+				 *
+				 * @param {array} $resetpass_form_args Reset Password form arguments.
+				 */
 				$resetpass_form_args = apply_filters( 'um_resetpass_form_args', $resetpass_form_args );
 
 				$resetpass_form->set_data( $resetpass_form_args );
@@ -171,6 +181,16 @@ if ( ! class_exists( 'um\common\Shortcodes' ) ) {
 							),
 						),
 					);
+					/**
+					 * Filters arguments for the Lost Password form in the Password Reset shortcode content.
+					 *
+					 * Note: Use this hook for adding custom fields, hiddens or buttons to your Lost Password form.
+					 *
+					 * @since 3.0.0
+					 * @hook um_lostpassword_form_args
+					 *
+					 * @param {array} $lostpassword_form_args Lost Password form arguments.
+					 */
 					$lostpassword_form_args = apply_filters( 'um_lostpassword_form_args', $lostpassword_form_args );
 
 					$lostpassword_form->set_data( $lostpassword_form_args );
@@ -181,13 +201,22 @@ if ( ! class_exists( 'um\common\Shortcodes' ) ) {
 				);
 			}
 
+			/**
+			 * Fires before Password Reset form loading inside shortcode callback.
+			 *
+			 * Note: Use this hook for adding some custom content before the password reset form or enqueue scripts when password reset form shortcode loading.
+			 * Legacy v2.x hooks: 'um_before_password_form_is_loaded', 'um_before_form_is_loaded'
+			 *
+			 * @since 3.0.0
+			 * @hook um_pre_password_shortcode
+			 *
+			 * @param {array} $args Password reset form shortcode arguments.
+			 */
 			do_action( 'um_pre_password_shortcode', $args );
 
 			$template = $args['template'];
 			unset( $args['template'] );
 			$t_args = array_merge( $t_args, $args );
-
-			//wp_enqueue_style( 'um_forms' );
 
 			wp_enqueue_script('um-password-reset' );
 			wp_enqueue_style( 'um-password-reset' );

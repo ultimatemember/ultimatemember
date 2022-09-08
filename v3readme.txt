@@ -159,15 +159,18 @@ $actions['um_unverify_accounts'] => __( 'Mark accounts as unverified', 'um-verif
 
 'um_before_form_is_loaded', 'um_before_password_form_is_loaded' - action hook for the lostpassword form, use 'um_pre_password_shortcode' for both
 'um_reset_password_shortcode_args_filter' - use 'shortcode_atts_ultimatemember_password' filter's hook
-'um_after_form_fields' - action hook for the lostpassword form, please edit lostpassword.php template file instead
-'um_reset_password_form' - action hook for the lostpassword form, please edit lostpassword.php template file instead
 'um_reset_password_errors_hook' - use action hook 'um_lostpassword_errors_hook' instead
+'um_reset_password_process_hook' - use action hook 'um_before_send_lostpassword_link' instead
+'um_change_password_errors_hook' - use action hook 'um_resetpass_errors_hook' instead
+'um_change_password_process_hook' - use action hook 'um_before_changing_user_password' instead
 'um_reset_password_page_hidden_fields' - use filter's hook `um_lostpassword_form_args` instead and add the hiddens to it
 'um_after_password_reset_fields' - use filter's hook `um_lostpassword_form_args` instead and add the fields to it
 'um_change_password_page_hidden_fields' - use filter's hook `um_resetpass_form_args` instead and add the hiddens to it
 
 'um_change_password_form' - action hook for the resetpass form, please edit 'reset-password.php' template and add the content below the form
 'um_after_form_fields' - action hook for the resetpass form, please edit 'reset-password.php' template and add the content below the form
+'um_reset_password_form' - action hook for the lostpassword form, please edit lostpassword.php template file instead
+'um_after_form_fields' - action hook for the lostpassword form, please edit lostpassword.php template file instead
 
 ### Deprecated functions
 

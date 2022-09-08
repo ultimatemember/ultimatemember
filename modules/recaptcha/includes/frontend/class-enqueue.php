@@ -25,7 +25,6 @@ class Enqueue {
 
 		add_action( 'um_pre_register_shortcode', array( &$this, 'um_form_enqueue_scripts' ) );
 		add_action( 'um_pre_login_shortcode', array( &$this, 'um_form_enqueue_scripts' ) );
-		//add_action( 'um_pre_password_shortcode', array( &$this, 'um_form_enqueue_scripts' ) );
 
 		add_filter( 'um_password_reset_assets', array( &$this, 'extends_password_shortcode' ), 10, 1 );
 	}
