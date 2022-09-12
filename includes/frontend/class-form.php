@@ -1148,6 +1148,19 @@ if ( ! class_exists( 'um\frontend\Form' ) ) {
 			$this->notices[ $key ] = apply_filters( 'um_form_notice', $text, $key );
 		}
 
+		/**
+		 * Remove form notice
+		 *
+		 * @param string $key
+		 *
+		 * @since 3.0
+		 */
+		public function remove_notice( $key ) {
+			if ( array_key_exists( $key, $this->notices ) ) {
+				unset( $this->notices[ $key ] );
+			}
+		}
+
 
 		/**
 		 * If a form has error by field key
