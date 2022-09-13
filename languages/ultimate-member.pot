@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-08-17T16:11:52+00:00\n"
+"POT-Creation-Date: 2022-09-02T22:56:36+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: ultimate-member\n"
@@ -4828,7 +4828,7 @@ msgstr ""
 #. translators: %s: Restricted post message.
 #. translators: %s: The message after registration process based on a role data and user status after registration
 #. translators: %s: Restricted taxonomy message.
-#: includes/core/class-access.php:733
+#: includes/core/class-access.php:736
 #: includes/core/class-fields.php:1448
 #: includes/core/um-actions-account.php:495
 #: templates/message.php:8
