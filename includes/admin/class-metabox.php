@@ -1066,16 +1066,17 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			add_meta_box( 'submitdiv', __( 'Publish', 'ultimate-member' ), array( $this, 'custom_submitdiv' ), 'um_form', 'side', 'high' );
 
 			add_meta_box( 'um-admin-form-mode', __( 'Select Form Type', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'high' );
-			add_meta_box( 'um-admin-form-builder', __( 'Form Builder', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );
 			add_meta_box( 'um-admin-form-shortcode', __( 'Shortcode', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
 
+			add_meta_box( 'um-admin-form-register_builder', __( 'Form Builder', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );
 			add_meta_box( 'um-admin-form-register_customize', __( 'Form settings', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
 
+			add_meta_box( 'um-admin-form-profile_builder', __( 'Form Builder', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );
 			add_meta_box( 'um-admin-form-profile_customize', __( 'Form settings', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
 			add_meta_box( 'um-admin-form-profile_menu', __( 'Menu', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'high' );
 			add_meta_box( 'um-admin-form-profile_settings', __( 'User Meta', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
 
-			add_meta_box( 'um-admin-form-login_customize', __( 'Form settings', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
+			add_meta_box( 'um-admin-form-login_customize', __( 'Form settings', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );
 
 			do_action( 'um_admin_add_form_metabox' );
 		}

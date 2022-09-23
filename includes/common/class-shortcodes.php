@@ -26,6 +26,8 @@ if ( ! class_exists( 'um\common\Shortcodes' ) ) {
 		 */
 		public function __construct() {
 			add_shortcode( 'ultimatemember_password', array( &$this, 'reset_password_form' ) );
+			add_shortcode( 'ultimatemember_login', array( &$this, 'login_form' ) );
+			add_shortcode( 'ultimatemember', array( &$this, 'common_forms' ) );
 		}
 
 		/**
@@ -222,6 +224,138 @@ if ( ! class_exists( 'um\common\Shortcodes' ) ) {
 			wp_enqueue_style( 'um-password-reset' );
 
 			return um_get_template_html( $template, $t_args );
+		}
+
+		/**
+		 * Shortcode for the displaying login form
+		 *
+		 * @param array $args
+		 *
+		 * @return string
+		 */
+		public function login_form( $args = array() ) {
+			if ( is_user_logged_in() ) {
+				return '';
+			}
+
+			/** There is possible to use 'shortcode_atts_ultimatemember_login' filter for getting customized $atts. This filter is documented in wp-includes/shortcodes.php "shortcode_atts_{$shortcode}" */
+			$args = shortcode_atts(
+				array(
+					'max_width'     => '450px',
+					'align'         => 'center',
+					'login_button'  => __( 'Log In', 'ultimate-member' ),
+					'show_remember' => true,
+					'show_forgot'   => true,
+				),
+				$args,
+				'ultimatemember_login'
+			);
+
+			wp_enqueue_script('um-login' );
+			wp_enqueue_style( 'um-login' );
+
+			$login_args = array(
+				'form_id'        => 'loginform',
+				'um_login_form'  => true,
+				'echo'           => true,
+				'remember'       => (bool) $args['show_remember'],
+				'label_username' => __( 'Username or Email Address', 'ultimate-member' ),
+				'label_password' => __( 'Password', 'ultimate-member' ),
+				'label_remember' => __( 'Remember Me', 'ultimate-member' ),
+				'label_log_in'   => ! empty( $args['login_button'] ) ? $args['login_button'] : __( 'Log In', 'ultimate-member' ),
+			);
+
+			/** This filter is documented in ultimate-member/includes/frontend/class-form.php */
+			$disable_star = apply_filters( 'um_frontend_forms_required_star_disabled', false );
+			if ( ! $disable_star ) {
+				$login_args['label_username'] = $login_args['label_username'] . ' *';
+				$login_args['label_password'] = $login_args['label_password'] . ' *';
+			}
+
+			$errors = new \WP_Error();
+
+			/**
+			 * Filters the login page errors.
+			 *
+			 * @since 3.6.0
+			 *
+			 * @param \WP_Error $errors      WP Error object.
+			 * @param string   $redirect_to Redirect destination URL.
+			 */
+			$errors = apply_filters( 'um_wp_login_errors', $errors, '' );
+
+			ob_start();
+			?>
+
+			<div class="um um-login">
+				<?php echo do_action( 'um_before_form', array() ); ?>
+
+				<?php if ( isset( $_GET['login'] ) && 'failed' === $_GET['login'] ) { ?>
+					<p class="um-notice err um-error-code-authentication_failed">
+						<?php _e( 'Invalid username, email address or incorrect password.', 'ultimate-member' ); ?>
+					</p>
+				<?php } ?>
+
+				<?php wp_login_form( $login_args ); ?>
+
+				<?php if ( ! empty( $args['show_forgot'] ) ) { ?>
+					<p id="nav">
+						<a href="<?php echo esc_url( um_get_predefined_page_url( 'password-reset' ) ); ?>">
+							<?php esc_html_e( 'Forgot your password?', 'ultimate-member' ); ?>
+						</a>
+					</p>
+				<?php } ?>
+			</div>
+			<?php
+			return ob_get_clean();
+		}
+
+		/**
+		 * Shortcode for the displaying Ultimate Member forms
+		 *
+		 * @param array $args
+		 *
+		 * @return string
+		 */
+		public function common_forms( $args = array() ) {
+			/** There is possible to use 'shortcode_atts_ultimatemember' filter for getting customized $atts. This filter is documented in wp-includes/shortcodes.php "shortcode_atts_{$shortcode}" */
+			$args = shortcode_atts(
+				array(
+					'form_id' => false,
+				),
+				$args,
+				'ultimatemember'
+			);
+
+			if ( empty( $args['form_id'] ) || ! is_numeric( $args['form_id'] ) ) {
+				return '';
+			}
+
+			$form = get_post( $args['form_id'] );
+			if ( empty( $form ) ) {
+				return '';
+			}
+
+			if ( 'publish' !== $form->post_status ) {
+				return '';
+			}
+
+			// backward compatibility for login forms and using new login form shortcode
+			$mode = get_post_meta( $args['form_id'],  '_um_mode', true );
+			if ( 'login' === $mode ) {
+				$login_primary_btn_word = get_post_meta( $args['form_id'], '_um_login_primary_btn_word', true );
+				$show_remember          = get_post_meta( $args['form_id'], '_um_login_show_rememberme', true );
+				$show_forgot            = get_post_meta( $args['form_id'], '_um_login_forgot_pass_link', true );
+
+				$login_args = array(
+					'login_button'  => ! empty( $login_primary_btn_word ) ? $login_primary_btn_word : __( 'Log In', 'ultimate-member' ),
+					'show_remember' => (bool) $show_remember,
+					'show_forgot'   => (bool) $show_forgot,
+				);
+				return $this->login_form( $login_args );
+			}
+
+			return '';
 		}
 	}
 }

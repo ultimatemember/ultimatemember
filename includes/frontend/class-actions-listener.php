@@ -189,22 +189,23 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 							$resetpass_form->add_error( 'user_password', __( 'Passwords may not contain the character "\\".', 'ultimate-member' ) );
 						}
 
-						if ( UM()->options()->get( 'require_strongpass' ) ) {
+						$strongpass_required = UM()->options()->get( 'require_strongpass' );
+						if ( ! empty( $strongpass_required ) ) {
 							$min_length = UM()->options()->get( 'password_min_chars' );
 							$min_length = ! empty( $min_length ) ? $min_length : 8;
 							$max_length = UM()->options()->get( 'password_max_chars' );
 							$max_length = ! empty( $max_length ) ? $max_length : 30;
 
 							if ( mb_strlen( $user_password ) < $min_length ) {
-								UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain at least %d characters', 'ultimate-member' ), $min_length ) );
+								$resetpass_form->add_error( 'user_password', sprintf( __( 'Your password must contain at least %d characters', 'ultimate-member' ), $min_length ) );
 							}
 
 							if ( mb_strlen( $user_password ) > $max_length ) {
-								UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain less than %d characters', 'ultimate-member' ), $max_length ) );
+								$resetpass_form->add_error( 'user_password', sprintf( __( 'Your password must contain less than %d characters', 'ultimate-member' ), $max_length ) );
 							}
 
 							if ( ! UM()->validation()->strong_pass( $user_password ) ) {
-								UM()->form()->add_error( 'user_password', __( 'Your password must contain at least one lowercase letter, one capital letter and one number', 'ultimate-member' ) );
+								$resetpass_form->add_error( 'user_password', __( 'Your password must contain at least one lowercase letter, one capital letter and one number', 'ultimate-member' ) );
 							}
 						}
 

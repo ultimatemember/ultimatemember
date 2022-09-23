@@ -142,7 +142,8 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 		 * @since 3.0
 		 */
 		function users_page_scripts() {
-			wp_enqueue_script( 'um_admin_modal' );
+			wp_register_script( 'um_admin_users', $this->urls['js'] . 'admin/users' . $this->suffix . '.js', array( 'jquery', 'wp-i18n', 'um_admin_modal' ), UM_VERSION, true );
+			wp_enqueue_script( 'um_admin_users' );
 			wp_enqueue_style( 'um_admin_modal' );
 		}
 

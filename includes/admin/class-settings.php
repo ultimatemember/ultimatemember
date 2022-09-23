@@ -775,6 +775,7 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 					'type'               => 'media',
 					'url'                => true,
 					'preview'            => false,
+					'size'               => 'medium',
 					'label'              => __( 'Default Cover Photo', 'ultimate-member' ),
 					'description'        => __( 'You can change the default cover photo globally here. Please make sure that the default cover is large enough and respects the ratio you are using for cover photos.', 'ultimate-member' ),
 					'upload_frame_title' => __( 'Select Default Cover Photo', 'ultimate-member' ),

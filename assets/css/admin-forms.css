@@ -108,6 +108,9 @@ textarea.um-forms-field {
   textarea.um-forms-field.um-small-field {
     width: 25% !important; }
 
+input[type="number"].um-forms-field {
+  padding-right: 0; }
+
 @media screen and (max-width: 782px) {
   input[type="text"].um-forms-field.um-medium-field,
   select.um-forms-field.um-medium-field,

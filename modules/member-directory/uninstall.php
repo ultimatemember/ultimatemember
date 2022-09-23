@@ -23,14 +23,15 @@ $cpt->create_post_types();
 
 $um_directories = get_posts(
 	array(
-		'post_type'   => 'um_directory',
-		'numberposts' => -1,
-		'fields'      => 'ids',
+		'post_type'      => 'um_directory',
+		'posts_per_page' => -1,
+		'fields'         => 'ids',
+		'post_status'    => array( 'any', 'inherit', 'trash', 'auto-draft' ),
 	)
 );
 
 foreach ( $um_directories as $um_directory_post_id ) {
-	wp_delete_post( $um_directory_post_id, 1 );
+	wp_delete_post( $um_directory_post_id, true );
 }
 
 global $wpdb;

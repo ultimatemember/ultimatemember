@@ -62,6 +62,29 @@ if ( ! class_exists( 'um\frontend\Enqueue' ) ) {
 			}
 			wp_register_style( 'um-password-reset', $password_reset['css']['path'], $password_reset['css']['deps'], UM_VERSION );
 
+			$login = array(
+				'js'  => array(
+					//'path' => $this->urls['js'] . 'um-scripts' . $this->suffix . '.js',
+					'path' => $this->urls['js'] . 'login/compiler-regular.js',
+					'deps' => array( 'jquery' ),
+					'vars' => array(
+						'honeypot' => UM()->honeypot,
+					),
+				),
+				'css' => array(
+					//'path' => $this->urls['css'] . 'forms' . $this->suffix . '.css',
+					'path' => $this->urls['css'] . 'login/compiler-regular.css',
+					'deps' => array(),
+				),
+			);
+			$login = apply_filters( 'um_login_assets', $login );
+			wp_register_script( 'um-login', $login['js']['path'], $login['js']['deps'], UM_VERSION, true );
+			if ( ! empty( $login['js']['vars'] ) ) {
+				// localize data if doesn't empty
+				wp_localize_script( 'um-login', 'umLogin', $login['js']['vars'] );
+			}
+			wp_register_style( 'um-login', $login['css']['path'], $login['css']['deps'], UM_VERSION );
+
 
 			wp_register_style( 'um_forms', $this->urls['css'] . 'forms' . $this->suffix . '.css', array(), UM_VERSION );
 
@@ -109,14 +132,14 @@ if ( ! class_exists( 'um\frontend\Enqueue' ) ) {
 
 			wp_register_style( 'um_responsive', $this->urls['css'] . 'um-responsive.css', array(), UM_VERSION );
 
-			$deps = array( 'um-jquery-ui', 'um-fontawesome', 'um-ionicons', 'um_default_css', 'um_crop', 'um_fileupload', 'um-modal', 'um_responsive' );
+			$deps = array( 'um-jquery-ui', 'um-fontawesome', 'um-ionicons', 'um_crop', 'um_fileupload', 'um-modal', 'um_responsive' );
 			$deps = array_merge( $deps, $this->pickadate_deps['css'] );
 
 			// Old FontAwesome and FontIcons styles only for 3rd-party integrations for old customers.
 			// All UM core and modules have updated icons
 			$um_is_legacy = get_option( 'um_is_legacy' );
 			if ( $um_is_legacy ) {
-				$deps = array_merge( $deps, array( 'um-fonticons-ii', 'um-fonticons-fa' ) );
+				$deps = array_merge( $deps, array( 'um-fonticons-ii', 'um-fonticons-fa', 'um_default_css' ) );
 			}
 
 			wp_register_style( 'um_styles', $this->urls['css'] . 'um-styles' . $this->suffix . '.css', $deps, UM_VERSION );
@@ -126,27 +149,27 @@ if ( ! class_exists( 'um\frontend\Enqueue' ) ) {
 				wp_enqueue_style( 'um_rtl' );
 			}
 
-			wp_register_style( 'um_profile', $this->urls['css'] . 'um-profile.css', array( 'um_styles', 'um-tipsy', 'select2' ), UM_VERSION );
-			wp_register_style( 'um_account', $this->urls['css'] . 'um-account.css', array( 'um_styles', 'um-tipsy', 'select2' ), UM_VERSION );
-			wp_register_style( 'um_misc', $this->urls['css'] . 'um-misc.css', array( 'um_styles' ), UM_VERSION );
+//			wp_register_style( 'um_profile', $this->urls['css'] . 'um-profile.css', array( 'um_styles', 'um-tipsy', 'select2' ), UM_VERSION );
+//			wp_register_style( 'um_account', $this->urls['css'] . 'um-account.css', array( 'um_styles', 'um-tipsy', 'select2' ), UM_VERSION );
+//			wp_register_style( 'um_misc', $this->urls['css'] . 'um-misc.css', array( 'um_styles' ), UM_VERSION );
+//
+//			wp_enqueue_style( 'um_profile' );
+//			wp_enqueue_style( 'um_account' );
+//			wp_enqueue_style( 'um_misc' );
 
-			wp_enqueue_style( 'um_profile' );
-			wp_enqueue_style( 'um_account' );
-			wp_enqueue_style( 'um_misc' );
-
-			if ( ! empty( $this->modules_hash ) ) {
-				$modules_min_deps = apply_filters( 'um_modules_min_scripts_dependencies', array( 'jquery', 'wp-hooks', 'wp-i18n' ) );
-				wp_register_script( 'um-modules-min', $this->urls['modules'] . $this->modules_hash . $this->suffix . '.js', $modules_min_deps, UM_VERSION, true );
-
-				$modules_min_variables = apply_filters( 'um_modules_min_scripts_variables', array() );
-				wp_localize_script( 'um-modules-min', 'um_modules_variables', $modules_min_variables );
-
-				$modules_css_deps = apply_filters( 'um_modules_min_styles_dependencies', array() );
-				wp_register_style( 'um-modules-min', $this->urls['modules'] . $this->modules_hash . $this->suffix . '.css', $modules_css_deps, UM_VERSION );
-
-				wp_enqueue_script( 'um-modules-min' );
-				wp_enqueue_style( 'um-modules-min' );
-			}
+//			if ( ! empty( $this->modules_hash ) ) {
+//				$modules_min_deps = apply_filters( 'um_modules_min_scripts_dependencies', array( 'jquery', 'wp-hooks', 'wp-i18n' ) );
+//				wp_register_script( 'um-modules-min', $this->urls['modules'] . $this->modules_hash . $this->suffix . '.js', $modules_min_deps, UM_VERSION, true );
+//
+//				$modules_min_variables = apply_filters( 'um_modules_min_scripts_variables', array() );
+//				wp_localize_script( 'um-modules-min', 'um_modules_variables', $modules_min_variables );
+//
+//				$modules_css_deps = apply_filters( 'um_modules_min_styles_dependencies', array() );
+//				wp_register_style( 'um-modules-min', $this->urls['modules'] . $this->modules_hash . $this->suffix . '.css', $modules_css_deps, UM_VERSION );
+//
+//				wp_enqueue_script( 'um-modules-min' );
+//				wp_enqueue_style( 'um-modules-min' );
+//			}
 
 			$this->old_css_settings();
 		}

@@ -85,6 +85,16 @@ gulp.task( 'default', function ( done ) {
 		.pipe( rename( { suffix: '.min' } ) )
 		.pipe( gulp.dest( 'assets/css/password-reset/' ) );
 
+	// Login
+	gulp.src(['assets/css/login/*.sass'])
+		.pipe( sass().on( 'error', sass.logError ) )
+		.pipe( gulp.dest( 'assets/css/login/' ) );
+	gulp.src(['assets/css/login/*.sass'])
+		.pipe( sass().on( 'error', sass.logError ) )
+		.pipe( cleanCSS() )
+		.pipe( rename( { suffix: '.min' } ) )
+		.pipe( gulp.dest( 'assets/css/login/' ) );
+
 
 
 

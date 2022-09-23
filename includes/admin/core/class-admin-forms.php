@@ -1422,9 +1422,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
 
-			$class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
-			$class .= ! empty( $field_data['size'] ) ? $field_data['size'] : 'um-long-field';
-			$class_attr = ' class="um-forms-field um-media-upload-data-url ' . $class . '"';
+			$class  = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
+			$class .= ! empty( $field_data['size'] ) ? 'um-' . $field_data['size'] . '-field' : 'um-long-field';
+
+			$class_attr_hidden = ' class="um-forms-field um-media-upload-data-url ' . $class . '"';
+			$class_attr        = ' class="um-forms-field um-media-upload-url ' . $class . '"';
 
 			$data = array(
 				'field_id' => $field_data['id'] . '_url',
@@ -1457,14 +1459,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					"<input type=\"hidden\" class=\"um-media-upload-data-width\" name=\"{$name}[width]\" id=\"{$id}_width\" value=\"$image_width\">" .
 					"<input type=\"hidden\" class=\"um-media-upload-data-height\" name=\"{$name}[height]\" id=\"{$id}_height\" value=\"$image_height\">" .
 					"<input type=\"hidden\" class=\"um-media-upload-data-thumbnail\" name=\"{$name}[thumbnail]\" id=\"{$id}_thumbnail\" value=\"$image_thumbnail\">" .
-					"<input type=\"hidden\" $class_attr name=\"{$name}[url]\" id=\"{$id}_url\" value=\"$image_url\" $data_attr>";
+					"<input type=\"hidden\" $class_attr_hidden name=\"{$name}[url]\" id=\"{$id}_url\" value=\"$image_url\" $data_attr>";
 
 			if ( ! isset( $field_data['preview'] ) || $field_data['preview'] !== false ) {
 				$html .= '<img src="' . $image_url . '" alt="" class="icon_preview"><div style="clear:both;"></div>';
 			}
 
 			if ( ! empty( $field_data['url'] ) ) {
-				$html .= '<input type="text" class="um-media-upload-url" readonly value="' . $image_url . '" /><div style="clear:both;"></div>';
+				$html .= '<input type="text" ' . $class_attr . ' readonly value="' . $image_url . '" /><div style="clear:both;"></div>';
 			}
 
 			$html .= '<input type="button" class="um-set-image button button-primary" value="' . esc_attr__( 'Select', 'ultimate-member' ) . '" data-upload_frame="' . $upload_frame_title . '" />

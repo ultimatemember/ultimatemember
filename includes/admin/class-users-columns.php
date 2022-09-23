@@ -20,22 +20,18 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 		 * Users_Columns constructor.
 		 */
 		public function __construct() {
+			add_filter( 'handle_bulk_actions-users', array( &$this, 'handle_bulk_actions' ), 10, 3 );
+			add_action( 'um_admin_user_action_hook', array( &$this, 'user_action_hook' ), 10, 1 );
+
 			add_filter( 'views_users', array( &$this, 'add_status_links' ) );
 			add_filter( 'bulk_actions-users', array( &$this, 'add_bulk_actions' ), 10, 1 );
-			add_filter( 'handle_bulk_actions-users', array( &$this, 'handle_bulk_actions' ), 10, 3 );
 			add_action( 'manage_users_extra_tablenav', array( &$this, 'filter_by_status_action' ), 10, 1 );
 
 			add_filter( 'user_row_actions', array( &$this, 'user_row_actions' ), 10, 2 );
 
 			add_filter( 'users_list_table_query_args', array( &$this, 'hide_by_caps' ), 1, 1 );
-
 			add_action( 'pre_user_query', array( &$this, 'sort_by_newest' ), 10, 1 );
-
 			add_action( 'pre_user_query', array( &$this, 'filter_users_by_status' ), 10, 1 );
-
-			add_action( 'admin_init', array( &$this, 'um_bulk_users_edit' ), 9 );
-
-			add_action( 'um_admin_user_action_hook', array( &$this, 'user_action_hook' ), 10, 1 );
 		}
 
 		/**
@@ -47,60 +43,40 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 		public function add_status_links( $views ) {
 			remove_action( 'pre_user_query', array( &$this, 'filter_users_by_status' ), 10 );
 
-			$old_views = $views;
-			$views     = array();
-
-			if ( ! isset( $_REQUEST['role'] ) && ! isset( $_REQUEST['um_status'] ) ) {
-				$views['all'] = '<a href="' . admin_url( 'users.php' ) . '" class="current">' . __( 'All', 'ultimate-member' ) . ' <span class="count">(' . UM()->query()->count_users() . ')</span></a>';
-			} else {
-				$views['all'] = '<a href="' . admin_url( 'users.php' ) . '">' . __( 'All', 'ultimate-member' ) . ' <span class="count">(' . UM()->query()->count_users() . ')</span></a>';
-			}
-
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_admin_views_users
-			 * @description Admin views array
-			 * @input_vars
-			 * [{"var":"$views","type":"array","desc":"User Views"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_admin_views_users', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_admin_views_users', 'my_admin_views_users', 10, 1 );
-			 * function my_admin_views_users( $views ) {
-			 *     // your code here
-			 *     return $views;
-			 * }
-			 * ?>
-			 */
-			$views = apply_filters( 'um_admin_views_users', $views );
-
-			// remove all filters
-			unset( $old_views['all'] );
-
-			// add separator
-			$views['subsep'] = '<span></span>';
-
-			// merge views
-			foreach ( $old_views as $key => $view ) {
-				$views[ $key ] = $view;
-			}
-
-			// hide filters with not accessible roles
-			if ( ! current_user_can( 'administrator' ) ) {
-				$wp_roles       = wp_roles();
-				$can_view_roles = um_user( 'can_view_roles' );
-				if ( ! empty( $can_view_roles ) ) {
-					foreach ( $wp_roles->get_names() as $this_role => $name ) {
-						if ( ! in_array( $this_role, $can_view_roles, true ) ) {
-							unset( $views[ $this_role ] );
-						}
-					}
-				}
-			}
+//			$old_views = $views;
+//			$views     = array();
+//
+//			if ( ! isset( $_REQUEST['role'] ) ) {
+//				$views['all'] = '<a href="' . admin_url( 'users.php' ) . '" class="current">' . __( 'All', 'ultimate-member' ) . ' <span class="count">(' . UM()->query()->count_users() . ')</span></a>';
+//			} else {
+//				$views['all'] = '<a href="' . admin_url( 'users.php' ) . '">' . __( 'All', 'ultimate-member' ) . ' <span class="count">(' . UM()->query()->count_users() . ')</span></a>';
+//			}
+//
+//			$views = apply_filters( 'um_admin_views_users', $views );
+//
+//			// remove all filters
+//			unset( $old_views['all'] );
+//
+//			// add separator
+//			$views['subsep'] = '<span></span>';
+//
+//			// merge views
+//			foreach ( $old_views as $key => $view ) {
+//				$views[ $key ] = $view;
+//			}
+//
+//			// hide filters with not accessible roles
+//			if ( ! current_user_can( 'administrator' ) ) {
+//				$wp_roles       = wp_roles();
+//				$can_view_roles = um_user( 'can_view_roles' );
+//				if ( ! empty( $can_view_roles ) ) {
+//					foreach ( $wp_roles->get_names() as $this_role => $name ) {
+//						if ( ! in_array( $this_role, $can_view_roles, true ) ) {
+//							unset( $views[ $this_role ] );
+//						}
+//					}
+//				}
+//			}
 
 			return $views;
 		}
@@ -165,18 +141,109 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 				return $sendback;
 			}
 
+			check_admin_referer( 'bulk-users' );
+
+			$rolename = UM()->roles()->get_priority_user_role( get_current_user_id() );
+			$role     = get_role( $rolename );
+
+			if ( ! current_user_can( 'edit_users' ) && ! $role->has_cap( 'edit_users' ) ) {
+				wp_die( esc_html__( 'You do not have enough permissions to do that.', 'ultimate-member' ) );
+			}
+
+			$users = array_map( 'absint', $userids );
+
 			switch ( $current_action ) {
 				case 'um_approve_membership':
+					add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ), 10, 1 );
+					add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ), 10, 1 );
+
+					$approved_count = 0;
+					foreach ( $users as $user ) {
+						$res = UM()->user()->approve();
+						if ( $res ) {
+							$approved_count++;
+						}
+					}
+
+					$sendback = add_query_arg(
+						array(
+							'approved_count' => $approved_count,
+							'update'         => 'um_approved',
+						),
+						$this->set_redirect_uri( $sendback )
+					);
 					break;
 				case 'um_reject_membership':
+					$rejected_count = 0;
+					foreach ( $users as $user ) {
+						$res = UM()->user()->reject();
+						if ( $res ) {
+							$rejected_count++;
+						}
+					}
+					$sendback = add_query_arg(
+						array(
+							'approved_count' => $rejected_count,
+							'update'         => 'um_rejected',
+						),
+						$this->set_redirect_uri( $sendback )
+					);
 					break;
 				case 'um_put_as_pending':
+					$pending_count = 0;
+					foreach ( $users as $user ) {
+						$res = UM()->user()->pending();
+						if ( $res ) {
+							$pending_count++;
+						}
+					}
+					$sendback = add_query_arg(
+						array(
+							'approved_count' => $pending_count,
+							'update'         => 'um_pending',
+						),
+						$this->set_redirect_uri( $sendback )
+					);
 					break;
 				case 'um_resend_activation':
+					add_filter( 'um_template_tags_patterns_hook', array( UM()->user(), 'add_activation_placeholder' ), 10, 1 );
+					add_filter( 'um_template_tags_replaces_hook', array( UM()->user(), 'add_activation_replace_placeholder' ), 10, 1 );
+					$email_pending_count = 0;
+					foreach ( $users as $user ) {
+						$res = UM()->user()->email_pending();
+						if ( $res ) {
+							$email_pending_count++;
+						}
+					}
+					$sendback = add_query_arg(
+						array(
+							'approved_count' => $email_pending_count,
+							'update'         => 'um_resended_activation',
+						),
+						$this->set_redirect_uri( $sendback )
+					);
 					break;
 				case 'um_deactivate':
+					$deactivated_count = 0;
+					foreach ( $users as $user ) {
+						$res = UM()->user()->deactivate();
+						if ( $res ) {
+							$deactivated_count++;
+						}
+					}
+					$sendback = add_query_arg(
+						array(
+							'deactivated_count' => $deactivated_count,
+							'update'            => 'um_deactivate',
+						),
+						$this->set_redirect_uri( $sendback )
+					);
 					break;
 				case 'um_reenable':
+					add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ), 10, 1 );
+					add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ), 10, 1 );
+
+					UM()->user()->approve();
 					break;
 				default:
 					// hook for the handling custom UM actions added via 'um_admin_bulk_user_actions_hook' hook
@@ -191,26 +258,30 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 		 * @param $which
 		 */
 		public function filter_by_status_action( $which ) {
-			if ( 'bottom' === $which ) {
-				return;
-			}
+			$id        = 'bottom' === $which ? 'um_status2' : 'um_status';
+			$button_id = 'bottom' === $which ? 'um_filter_action2' : 'um_filter_action';
 
 			// set default statuses if not already done
 			UM()->install()->set_default_user_status();
 
-			remove_action( 'pre_user_query', array( &$this, 'filter_users_by_status' ), 10 );
+			// remove_action( 'pre_user_query', array( &$this, 'filter_users_by_status' ), 10 );
 
 			$statuses = $this->get_user_statuses();
 			?>
 			<div class="alignleft actions">
-				<label class="screen-reader-text" for="um_status"><?php _e( 'Filter by status', 'ultimate-member' ); ?></label>
-				<select name="um_status" id="um_status">
-					<option value=""><?php _e( 'Filter by status', 'ultimate-member' ); ?></option>
-					<?php foreach ( $statuses as $k => $v ) { ?>
-						<option value="<?php esc_attr( $v ) ?>" <?php selected( isset( $_GET['um_status'] ) && sanitize_key( $_GET['um_status'] ) === $k ) ?>><?php echo esc_html( $v . ' (' . UM()->query()->count_users_by_status( $k ) . ')' ); ?></option>
-					<?php } ?>
+				<label class="screen-reader-text" for="<?php echo esc_attr( $id ); ?>"><?php _e( 'All Statuses', 'ultimate-member' ); ?></label>
+				<select name="<?php echo esc_attr( $id ); ?>" id="<?php echo esc_attr( $id ); ?>">
+					<option value=""><?php esc_html_e( 'All Statuses', 'ultimate-member' ); ?></option>
+					<?php
+					foreach ( $statuses as $k => $v ) {
+						$selected = isset( $_GET['um_status'] ) && $k === sanitize_key( $_GET['um_status'] );
+						?>
+						<option value="<?php echo esc_attr( $k ) ?>" <?php selected( $selected ) ?>><?php echo esc_html( $v ); ?></option>
+						<?php
+					}
+					?>
 				</select>
-				<?php submit_button( __( 'Filter', 'ultimate-member' ), '', 'um-user-query-submit', false ); ?>
+				<?php submit_button( __( 'Filter', 'ultimate-member' ), '', $button_id, false ); ?>
 			</div>
 			<?php
 		}

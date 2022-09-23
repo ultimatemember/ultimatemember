@@ -34,6 +34,7 @@ if ( ! class_exists( 'um\common\User' ) ) {
 		 */
 		public function hooks() {
 			add_filter( 'user_has_cap', array( &$this, 'map_caps_by_role' ), 10, 3 );
+			add_action( 'lostpassword_post', array( &$this, 'reset_password_attempts' ), 10, 2 );
 		}
 
 		/**
@@ -118,6 +119,43 @@ if ( ! class_exists( 'um\common\User' ) ) {
 			return $allcaps;
 		}
 
+		/**
+		 * Maybe flush reset password attempts count after retrieve password
+		 *
+		 * @param \WP_Error      $errors
+		 * @param \WP_User|false $user_data
+		 */
+		public function reset_password_attempts( $errors, $user_data ) {
+			if ( $errors->has_errors() ) {
+				return;
+			}
+
+			if ( false === $user_data ) {
+				return;
+			}
+
+			$this->flush_reset_password_attempts( $user_data->ID );
+		}
+
+		public function can_be_approved( $user_id ) {
+			return true;
+		}
+
+		public function can_be_deactivate( $user_id ) {
+			return true;
+		}
+
+		public function can_be_reactivate( $user_id ) {
+			return true;
+		}
+
+		public function can_be_rejected( $user_id ) {
+			return true;
+		}
+
+		public function can_resend_activation( $user_id ) {
+			return true;
+		}
 
 		/**
 		 * @param int $user_id
