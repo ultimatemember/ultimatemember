@@ -276,6 +276,9 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				extract( $args );
 			}
 
+			// Avoid Directory Traversal vulnerability.
+			$tpl = trim( $tpl, "./\\" );
+
 			$file = um_path . "templates/{$tpl}.php";
 			$theme_file = get_stylesheet_directory() . "/ultimate-member/templates/{$tpl}.php";
 			if ( file_exists( $theme_file ) ) {
