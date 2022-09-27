@@ -276,9 +276,6 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				extract( $args );
 			}
 
-			// Avoid Directory Traversal vulnerability.
-			$tpl = trim( $tpl, "./\\" );
-
 			$file = um_path . "templates/{$tpl}.php";
 			$theme_file = get_stylesheet_directory() . "/ultimate-member/templates/{$tpl}.php";
 			if ( file_exists( $theme_file ) ) {
@@ -286,7 +283,12 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			}
 
 			if ( file_exists( $file ) ) {
-				include $file;
+				// Avoid Directory Traversal vulnerability by the checking the realpath.
+				// Templates can be situated only in the get_stylesheet_directory() or plugindir templates.
+				$real_file = realpath( $file );
+				if ( 0 === strpos( $real_file, um_path . "templates" . DIRECTORY_SEPARATOR ) || 0 === strpos( $real_file, get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR ) ) {
+					include $file;
+				}
 			}
 		}
 
