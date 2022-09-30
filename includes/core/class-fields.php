@@ -146,17 +146,19 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			if ( array_key_exists( 'custom_dropdown_options_source', $args ) ) {
 				if ( function_exists( wp_unslash( $args['custom_dropdown_options_source'] ) ) ) {
-					$allowed_callbacks = UM()->options()->get( 'allowed_choice_callbacks' );
-					if ( ! empty( $allowed_callbacks ) ) {
-						$allowed_callbacks = array_map( 'rtrim', explode( "\n", $allowed_callbacks ) );
-						$allowed_callbacks[] = $args['custom_dropdown_options_source'];
-					} else {
-						$allowed_callbacks = array( $args['custom_dropdown_options_source'] );
-					}
-					$allowed_callbacks = array_unique( $allowed_callbacks );
-					$allowed_callbacks = implode( "\r\n", $allowed_callbacks );
+					if ( ! in_array( $args['custom_dropdown_options_source'], UM()->fields()->dropdown_options_source_blacklist(), true ) ) {
+						$allowed_callbacks = UM()->options()->get( 'allowed_choice_callbacks' );
+						if ( ! empty( $allowed_callbacks ) ) {
+							$allowed_callbacks = array_map( 'rtrim', explode( "\n", $allowed_callbacks ) );
+							$allowed_callbacks[] = $args['custom_dropdown_options_source'];
+						} else {
+							$allowed_callbacks = array( $args['custom_dropdown_options_source'] );
+						}
+						$allowed_callbacks = array_unique( $allowed_callbacks );
+						$allowed_callbacks = implode( "\r\n", $allowed_callbacks );
 
-					UM()->options()->update( 'allowed_choice_callbacks', $allowed_callbacks );
+						UM()->options()->update( 'allowed_choice_callbacks', $allowed_callbacks );
+					}
 				}
 			}
 
@@ -201,19 +203,21 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			if ( array_key_exists( 'custom_dropdown_options_source', $args ) ) {
 				if ( function_exists( wp_unslash( $args['custom_dropdown_options_source'] ) ) ) {
-					$allowed_callbacks = UM()->options()->get( 'allowed_choice_callbacks' );
-					if ( ! empty( $allowed_callbacks ) ) {
-						$allowed_callbacks = array_map( 'rtrim', explode( "\n", $allowed_callbacks ) );
-						$allowed_callbacks[] = $args['custom_dropdown_options_source'];
-					} else {
-						$allowed_callbacks = array( $args['custom_dropdown_options_source'] );
+					if ( ! in_array( $args['custom_dropdown_options_source'], UM()->fields()->dropdown_options_source_blacklist(), true ) ) {
+						$allowed_callbacks = UM()->options()->get( 'allowed_choice_callbacks' );
+						if ( ! empty( $allowed_callbacks ) ) {
+							$allowed_callbacks = array_map( 'rtrim', explode( "\n", $allowed_callbacks ) );
+							$allowed_callbacks[] = $args['custom_dropdown_options_source'];
+						} else {
+							$allowed_callbacks = array( $args['custom_dropdown_options_source'] );
+						}
+						$allowed_callbacks = array_unique( $allowed_callbacks );
+						$allowed_callbacks = implode( "\r\n", $allowed_callbacks );
+
+						UM()->options()->update( 'allowed_choice_callbacks', $allowed_callbacks );
+
+						$args['custom_dropdown_options_source'] = wp_unslash( $args['custom_dropdown_options_source'] );
 					}
-					$allowed_callbacks = array_unique( $allowed_callbacks );
-					$allowed_callbacks = implode( "\r\n", $allowed_callbacks );
-
-					UM()->options()->update( 'allowed_choice_callbacks', $allowed_callbacks );
-
-					$args['custom_dropdown_options_source'] = wp_unslash( $args['custom_dropdown_options_source'] );
 				}
 			}
 
@@ -1291,6 +1295,17 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			return '';
 		}
 
+		public function dropdown_options_source_blacklist() {
+			$blacklist = array(
+				'phpinfo',
+				'exec',
+				'passthru',
+				'shell_exec',
+				'system',
+			);
+			$blacklist = apply_filters( 'um_dropdown_options_source_blacklist', $blacklist );
+			return $blacklist;
+		}
 
 		/**
 		 * Gets selected option value from a callback function
@@ -1304,6 +1319,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		function get_option_value_from_callback( $value, $data, $type ) {
 
 			if ( in_array( $type, array( 'select', 'multiselect' ) ) && ! empty( $data['custom_dropdown_options_source'] ) ) {
+
+				if ( in_array( $data['custom_dropdown_options_source'], $this->dropdown_options_source_blacklist(), true ) ) {
+					return $value;
+				}
 
 				$has_custom_source = apply_filters( "um_has_dropdown_options_source__{$data['metakey']}", false );
 
@@ -1371,6 +1390,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$arr_options = array();
 
 			if ( in_array( $type, array( 'select', 'multiselect' ) ) && ! empty( $data['custom_dropdown_options_source'] ) ) {
+
+				if ( in_array( $data['custom_dropdown_options_source'], $this->dropdown_options_source_blacklist(), true ) ) {
+					return $arr_options;
+				}
 
 				if ( function_exists( $data['custom_dropdown_options_source'] ) ) {
 					if ( isset( $data['parent_dropdown_relationship'] ) ) {
@@ -3037,7 +3060,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						if ( ! empty( $data['custom_dropdown_options_source'] ) && $has_parent_option && function_exists( $data['custom_dropdown_options_source'] ) &&
 							um_user( $data['parent_dropdown_relationship'] )
 						) {
-							$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+							if ( ! in_array( $data['custom_dropdown_options_source'], $this->dropdown_options_source_blacklist(), true ) ) {
+								$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+							}
 
 							$disabled_by_parent_option = '';
 							if ( um_user( $form_key ) ) {
@@ -3053,10 +3078,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					// Child dropdown
 					if ( $has_parent_option ) {
-
 						if ( ! empty( $data['custom_dropdown_options_source'] ) && $has_parent_option &&
 							 function_exists( $data['custom_dropdown_options_source'] ) && isset( UM()->form()->post_form[ $form_key ] ) ) {
-							$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+							if ( ! in_array( $data['custom_dropdown_options_source'], $this->dropdown_options_source_blacklist(), true ) ) {
+								$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+							}
 						}
 					}
 

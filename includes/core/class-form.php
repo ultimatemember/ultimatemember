@@ -148,6 +148,13 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				wp_send_json( $arr_options );
 			}
 
+			if ( in_array( $ajax_source_func, UM()->fields()->dropdown_options_source_blacklist(), true ) ) {
+				$arr_options['status']  = 'error';
+				$arr_options['message'] = __( 'This is not possible for security reasons.', 'ultimate-member' );
+
+				wp_send_json( $arr_options );
+			}
+
 			if ( isset( $_POST['form_id'] ) ) {
 				UM()->fields()->set_id = absint( $_POST['form_id'] );
 			}
