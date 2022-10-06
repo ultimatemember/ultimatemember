@@ -1295,14 +1295,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			return '';
 		}
 
+		/**
+		 * Getting the blacklist of the functions that cannot be used as callback.
+		 * All internal PHP functions are insecure for using inside callback functions.
+		 *
+		 * @return array
+		 */
 		public function dropdown_options_source_blacklist() {
-			$blacklist = array(
-				'phpinfo',
-				'exec',
-				'passthru',
-				'shell_exec',
-				'system',
-			);
+			$list      = get_defined_functions();
+			$blacklist = ! empty( $list['internal'] ) ? $list['internal'] : array();
 			$blacklist = apply_filters( 'um_dropdown_options_source_blacklist', $blacklist );
 			return $blacklist;
 		}
