@@ -1138,7 +1138,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							continue;
 						} else {
 							$restriction_settings = $this->get_post_privacy_settings( $menu_item->object_id );
-							if ( empty( $restriction_settings['_um_access_hide_from_queries'] ) || ! UM()->options()->get( 'disable_restriction_pre_queries' ) ) {
+							if ( empty( $restriction_settings['_um_access_hide_from_queries'] ) || UM()->options()->get( 'disable_restriction_pre_queries' ) ) {
 								$filtered_items[] = $this->maybe_replace_nav_menu_title( $menu_item );
 								continue;
 							}
@@ -1416,7 +1416,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							}
 						}
 					} else {
-						if ( empty( $restriction['_um_access_hide_from_queries'] ) || ! UM()->options()->get( 'disable_restriction_pre_queries' ) ) {
+						if ( empty( $restriction['_um_access_hide_from_queries'] ) || UM()->options()->get( 'disable_restriction_pre_queries' ) ) {
 							$filtered_posts[] = $this->maybe_replace_title( $post );
 							continue;
 						}
