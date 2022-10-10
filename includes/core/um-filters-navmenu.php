@@ -20,13 +20,13 @@ if ( ! is_admin() ) {
 		}
 
 		foreach ( $sorted_menu_items as &$menu_item ) {
-			if ( $menu_item->title ) {
+			if ( ! empty( $menu_item->title ) ) {
 				$menu_item->title = UM()->shortcodes()->convert_user_tags( $menu_item->title );
 			}
-			if ( $menu_item->attr_title ) {
+			if ( ! empty( $menu_item->attr_title ) ) {
 				$menu_item->attr_title = UM()->shortcodes()->convert_user_tags( $menu_item->attr_title );
 			}
-			if ( $menu_item->description ) {
+			if ( ! empty( $menu_item->description ) ) {
 				$menu_item->description = UM()->shortcodes()->convert_user_tags( $menu_item->description );
 			}
 		}
@@ -56,19 +56,22 @@ if ( ! is_admin() ) {
 
 		um_fetch_user( get_current_user_id() );
 
-		$filtered_items = array();
+		$filtered_items   = array();
 		$hide_children_of = array();
 
 		//other filter
 		foreach ( $menu_items as $item ) {
+			if ( empty( $item->ID ) ) {
+				continue;
+			}
 
-			$mode = get_post_meta( $item->ID, 'menu-item-um_nav_public', true );
+			$mode  = get_post_meta( $item->ID, 'menu-item-um_nav_public', true );
 			$roles = get_post_meta( $item->ID, 'menu-item-um_nav_roles', true );
 
 			$visible = true;
 
 			// hide any item that is the child of a hidden item
-			if ( in_array( $item->menu_item_parent, $hide_children_of ) ) {
+			if ( isset( $item->menu_item_parent ) && in_array( $item->menu_item_parent, $hide_children_of ) ) {
 				$visible = false;
 				$hide_children_of[] = $item->ID; // for nested menus
 			}
@@ -79,16 +82,16 @@ if ( ! is_admin() ) {
 
 					case 2:
 						if ( is_user_logged_in() && ! empty( $roles ) ) {
-                            if ( current_user_can( 'administrator' ) ) {
-                                $visible = true;
-                            } else {
-                                $current_user_roles = um_user( 'roles' );
-                                if ( empty( $current_user_roles ) ) {
-                                    $visible = false;
-                                } else {
-                                    $visible = ( count( array_intersect( $current_user_roles, (array)$roles ) ) > 0 ) ? true : false;
-                                }
-                            }
+							if ( current_user_can( 'administrator' ) ) {
+								$visible = true;
+							} else {
+								$current_user_roles = um_user( 'roles' );
+								if ( empty( $current_user_roles ) ) {
+									$visible = false;
+								} else {
+									$visible = ( count( array_intersect( $current_user_roles, (array)$roles ) ) > 0 ) ? true : false;
+								}
+							}
 						} else {
 							$visible = is_user_logged_in() ? true : false;
 						}
