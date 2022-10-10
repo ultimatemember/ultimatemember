@@ -48,22 +48,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			$this->allow_access = false;
 
 			// NEW HOOKS
-
-			// Change recent posts widget query
-			add_filter( 'widget_posts_args', array( &$this, 'exclude_restricted_posts_widget' ), 99, 1 );
-			// Exclude pages displayed by wp_list_pages function
-			add_filter( 'wp_list_pages_excludes', array( &$this, 'exclude_restricted_pages' ), 10, 1 );
-			// Archives list change where based on restricted posts
-			add_filter( 'getarchives_where', array( &$this, 'exclude_restricted_posts_archives_widget' ), 99, 2 );
-
 			// Navigation line below the post content, change query to exclude restricted
 			add_filter( 'get_next_post_where', array( &$this, 'exclude_navigation_posts' ), 99, 5 );
 			add_filter( 'get_previous_post_where', array( &$this, 'exclude_navigation_posts' ), 99, 5 );
-
-			// callbacks for changing posts query
-			add_action( 'pre_get_posts', array( &$this, 'exclude_posts' ), 99, 1 );
-			add_filter( 'posts_where', array( &$this, 'exclude_posts_where' ), 10, 2 );
-			add_filter( 'wp_count_posts', array( &$this, 'custom_count_posts_handler' ), 99, 3 );
 
 			// change the title of the post
 			add_filter( 'the_title', array( &$this, 'filter_restricted_post_title' ), 10, 2 );
@@ -111,7 +98,22 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 * Rollback function for old business logic to avoid security enhancements with 404 errors
 		 */
 		function disable_restriction_pre_queries() {
-			// callbacks for changing terms query
+			// Using inside plugins_loaded hook because of there can be earlier direct queries without hooks.
+			// Avoid using to not getting fatal error for not exists WordPress native functions.
+
+			// Change recent posts widget query.
+			add_filter( 'widget_posts_args', array( &$this, 'exclude_restricted_posts_widget' ), 99, 1 );
+			// Exclude pages displayed by wp_list_pages function.
+			add_filter( 'wp_list_pages_excludes', array( &$this, 'exclude_restricted_pages' ), 10, 1 );
+			// Archives list change where based on restricted posts.
+			add_filter( 'getarchives_where', array( &$this, 'exclude_restricted_posts_archives_widget' ), 99, 2 );
+
+			// Callbacks for changing posts query.
+			add_action( 'pre_get_posts', array( &$this, 'exclude_posts' ), 99, 1 );
+			add_filter( 'posts_where', array( &$this, 'exclude_posts_where' ), 10, 2 );
+			add_filter( 'wp_count_posts', array( &$this, 'custom_count_posts_handler' ), 99, 3 );
+
+			// Callbacks for changing terms query.
 			add_action( 'pre_get_terms', array( &$this, 'exclude_hidden_terms_query' ), 99, 1 );
 
 			if ( ! UM()->options()->get( 'disable_restriction_pre_queries' ) ) {
