@@ -786,14 +786,14 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 			if ( isset( $image_info['invalid_image'] ) && $image_info['invalid_image'] == true ) {
 				$error = sprintf(__('Your image is invalid or too large!','ultimate-member') );
-			} elseif ( isset($data['min_size']) && ( $image_info['size'] < $data['min_size'] ) ) {
+			} elseif ( isset( $data['min_size'] ) && ( $image_info['size'] < $data['min_size'] ) ) {
 				$error = $data['min_size_error'];
-			} elseif ( isset($data['max_file_size']) && ( $image_info['size'] > $data['max_file_size'] ) ) {
+			} elseif ( isset( $data['max_file_size'] ) && ( $image_info['size'] > $data['max_file_size'] ) ) {
 				$error = $data['max_file_size_error'];
-			} elseif ( isset($data['min_width']) && ( $image_info['width'] < $data['min_width'] ) ) {
-				$error = sprintf(__('Your photo is too small. It must be at least %spx wide.','ultimate-member'), $data['min_width']);
-			} elseif ( isset($data['min_height']) && ( $image_info['height'] < $data['min_height'] ) ) {
-				$error = sprintf(__('Your photo is too small. It must be at least %spx wide.','ultimate-member'), $data['min_height']);
+			} elseif ( isset( $data['min_width'] ) && ( $image_info['width'] < $data['min_width'] ) ) {
+				$error = sprintf( __( 'Your photo is too small. It must be at least %spx wide.', 'ultimate-member' ), $data['min_width'] );
+			} elseif ( isset( $data['min_height'] ) && ( $image_info['height'] < $data['min_height'] ) ) {
+				$error = sprintf( __( 'Your photo is too small. It must be at least %spx high.', 'ultimate-member' ), $data['min_height'] );
 			}
 
 			return $error;
