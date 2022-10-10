@@ -78,13 +78,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			// Gutenberg blocks restrictions
 			add_filter( 'render_block', array( $this, 'restrict_blocks' ), 10, 2 );
 
-			// there is posts (Posts/Page/CPT) filtration if site is accessible
-			// there also will be redirects if they need
-			// protect posts types
-			add_filter( 'the_posts', array( &$this, 'filter_protected_posts' ), 99, 2 );
-			// protect pages for wp_list_pages func
-			add_filter( 'get_pages', array( &$this, 'filter_protected_posts' ), 99, 2 );
-
 			// check the site's accessible more priority have Individual Post/Term Restriction settings
 			add_action( 'template_redirect', array( &$this, 'template_redirect' ), 1000 );
 			add_action( 'um_access_check_individual_term_settings', array( &$this, 'um_access_check_individual_term_settings' ) );
@@ -115,6 +108,13 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 			// Callbacks for changing terms query.
 			add_action( 'pre_get_terms', array( &$this, 'exclude_hidden_terms_query' ), 99, 1 );
+
+			// there is posts (Posts/Page/CPT) filtration if site is accessible
+			// there also will be redirects if they need
+			// protect posts types
+			add_filter( 'the_posts', array( &$this, 'filter_protected_posts' ), 99, 2 );
+			// protect pages for wp_list_pages func
+			add_filter( 'get_pages', array( &$this, 'filter_protected_posts' ), 99, 2 );
 
 			if ( ! UM()->options()->get( 'disable_restriction_pre_queries' ) ) {
 				return;
