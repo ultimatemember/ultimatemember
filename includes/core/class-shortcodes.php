@@ -285,8 +285,8 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			if ( file_exists( $file ) ) {
 				// Avoid Directory Traversal vulnerability by the checking the realpath.
 				// Templates can be situated only in the get_stylesheet_directory() or plugindir templates.
-				$real_file = realpath( $file );
-				if ( 0 === strpos( $real_file, um_path . "templates" . DIRECTORY_SEPARATOR ) || 0 === strpos( $real_file, get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR ) ) {
+				$real_file = wp_normalize_path( realpath( $file ) );
+				if ( 0 === strpos( $real_file, wp_normalize_path( um_path . "templates" . DIRECTORY_SEPARATOR ) ) || 0 === strpos( $real_file, wp_normalize_path( get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR ) ) ) {
 					include $file;
 				}
 			}
