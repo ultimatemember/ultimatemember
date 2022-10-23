@@ -3576,7 +3576,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 							$i++;
 							if ($i % 2 == 0) {
-								$col_class = 'right';
+								$col_class = ' right ';
 							} else {
 								$col_class = '';
 							}
@@ -3703,7 +3703,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						$i++;
 						if ( $i % 2 == 0 ) {
-							$col_class = 'right';
+							$col_class = ' right ';
 						} else {
 							$col_class = '';
 						}
