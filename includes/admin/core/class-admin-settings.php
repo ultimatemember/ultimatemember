@@ -3172,7 +3172,6 @@ do_action( "um_install_info_after_page_config" ); ?>
 Default New User Role: 		<?php  echo UM()->options()->get('register_role') . "\n"; ?>
 Profile Permalink Base:		<?php  echo UM()->options()->get('permalink_base') . "\n"; ?>
 User Display Name:			<?php  echo UM()->options()->get('display_name') . "\n"; ?>
-Force Name to Uppercase:		<?php echo $this->info_value( UM()->options()->get('force_display_name_capitlized'), 'yesno', true ); ?>
 Redirect author to profile: 		<?php echo $this->info_value( UM()->options()->get('author_redirect'), 'yesno', true ); ?>
 Enable Members Directory:	<?php echo $this->info_value( UM()->options()->get('members_page'), 'yesno', true ); ?>
 Use Gravatars: 				<?php echo $this->info_value( UM()->options()->get('use_gravatars'), 'yesno', true ); ?>
