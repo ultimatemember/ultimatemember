@@ -2107,7 +2107,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 						update_user_meta( $this->id, $key, $value );
 					}
 				} else {
-					$args[ $key ] = esc_attr( $changes[ $key ] );
+					$args[ $key ] = $changes[ $key ];
 				}
 			}
 
