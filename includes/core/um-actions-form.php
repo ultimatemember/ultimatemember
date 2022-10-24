@@ -702,7 +702,7 @@ function um_submit_form_errors_hook_( $args ) {
 							break;
 
 						case 'youtube_url':
-							if ( ! UM()->validation()->is_url( $args[ $key ], 'youtube.com' ) ) {
+							if ( ! UM()->validation()->is_url( $args[ $key ], 'youtube.com' ) && ! UM()->validation()->is_url( $args[ $key ], 'youtu.be' ) ) {
 								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s username or profile URL', 'ultimate-member' ), $array['label'] ) );
 							}
 							break;

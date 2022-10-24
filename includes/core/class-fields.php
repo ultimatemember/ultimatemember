@@ -86,9 +86,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 
 			foreach ( $social as $k => $arr ) {
-				if ( um_profile( $k ) ) { ?>
+				if ( um_profile( $k ) ) {
+					$match = is_array( $arr['match'] ) ? $arr['match'][0] : $arr['match']; ?>
 
-					<a href="<?php echo esc_url( um_filtered_social_link( $k, $arr['match'] ) ); ?>"
+					<a href="<?php echo esc_url( um_filtered_social_link( $k, $match ) ); ?>"
 					   style="background: <?php echo esc_attr( $arr['color'] ); ?>;" target="_blank" class="um-tip-n"
 					   title="<?php echo esc_attr( $arr['title'] ); ?>"><i class="<?php echo esc_attr( $arr['icon'] ); ?>"></i></a>
 
