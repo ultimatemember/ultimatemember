@@ -178,8 +178,11 @@ function um_check_user_status( $user_id, $args ) {
 		do_action( "track_{$status}_user_registration" );
 
 		if ( $status == 'approved' ) {
-
-			UM()->user()->auto_login( $user_id );
+			// Check if user is logged in because there can be the customized way when through 'um_registration_for_loggedin_users' hook the registration is enabled for the logged in users (e.g. Administrator).
+			if ( ! is_user_logged_in() ) {
+				// Custom way if 'um_registration_for_loggedin_users' hook after custom callbacks returns true. Then don't make auto-login because user is already logged-in.
+				UM()->user()->auto_login( $user_id );
+			}
 			UM()->user()->generate_profile_slug( $user_id );
 
 			/**

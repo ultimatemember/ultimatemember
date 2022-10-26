@@ -1641,6 +1641,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		function email_pending() {
 			$this->assign_secretkey();
 			$this->set_status( 'awaiting_email_confirmation' );
+
+			//clear all sessions for email confirmation pending users
+			$user = \WP_Session_Tokens::get_instance( um_user( 'ID' ) );
+			$user->destroy_all();
+
 			UM()->mail()->send( um_user( 'user_email' ), 'checkmail_email' );
 		}
 
@@ -1662,6 +1667,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 */
 		function pending() {
 			$this->set_status( 'awaiting_admin_review' );
+
+			//clear all sessions for awaiting admin confirmation users
+			$user = \WP_Session_Tokens::get_instance( um_user( 'ID' ) );
+			$user->destroy_all();
+
 			UM()->mail()->send( um_user( 'user_email' ), 'pending_email' );
 		}
 
@@ -1684,6 +1694,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 */
 		function reject() {
 			$this->set_status( 'rejected' );
+
+			//clear all sessions for rejected users
+			$user = \WP_Session_Tokens::get_instance( um_user( 'ID' ) );
+			$user->destroy_all();
+
 			UM()->mail()->send( um_user( 'user_email' ), 'rejected_email' );
 		}
 
@@ -1705,6 +1720,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 */
 		function deactivate() {
 			$this->set_status( 'inactive' );
+
+			//clear all sessions for inactive users
+			$user = \WP_Session_Tokens::get_instance( um_user( 'ID' ) );
+			$user->destroy_all();
+
 			/**
 			 * UM hook
 			 *
@@ -2087,7 +2107,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 						update_user_meta( $this->id, $key, $value );
 					}
 				} else {
-					$args[ $key ] = esc_attr( $changes[ $key ] );
+					$args[ $key ] = $changes[ $key ];
 				}
 			}
 

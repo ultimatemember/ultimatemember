@@ -356,10 +356,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 			if ( empty( $_POST['pack'] ) ) {
 				exit('');
 			} else {
-				ob_start();
-				include_once $this->packages_dir . sanitize_text_field( $_POST['pack'] ) . DIRECTORY_SEPARATOR . 'init.php';
-				ob_get_flush();
-				exit;
+				$pack = sanitize_text_field( $_POST['pack'] );
+				if ( in_array( $pack, $this->necessary_packages, true ) ) {
+					$file = $this->packages_dir . $pack . DIRECTORY_SEPARATOR . 'init.php';
+					if ( file_exists( $file ) ) {
+						ob_start();
+						include_once $file;
+						ob_get_flush();
+						exit;
+					} else {
+						exit('');
+					}
+				} else {
+					exit('');
+				}
 			}
 		}
 

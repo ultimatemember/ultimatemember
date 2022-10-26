@@ -702,7 +702,7 @@ function um_submit_form_errors_hook_( $args ) {
 							break;
 
 						case 'youtube_url':
-							if ( ! UM()->validation()->is_url( $args[ $key ], 'youtube.com' ) ) {
+							if ( ! UM()->validation()->is_url( $args[ $key ], 'youtube.com' ) && ! UM()->validation()->is_url( $args[ $key ], 'youtu.be' ) ) {
 								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s username or profile URL', 'ultimate-member' ), $array['label'] ) );
 							}
 							break;
@@ -806,7 +806,7 @@ function um_submit_form_errors_hook_( $args ) {
 									$args['user_id'] = um_get_requested_user();
 								}
 
-								$email_exists =  email_exists( $args[ $key ] );
+								$email_exists = email_exists( $args[ $key ] );
 
 								if ( $args[ $key ] == '' && in_array( $key, array( 'user_email' ) ) ) {
 									UM()->form()->add_error( $key, __( 'You must provide your email', 'ultimate-member' ) );

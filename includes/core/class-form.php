@@ -148,6 +148,13 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				wp_send_json( $arr_options );
 			}
 
+			if ( in_array( $ajax_source_func, UM()->fields()->dropdown_options_source_blacklist(), true ) ) {
+				$arr_options['status']  = 'error';
+				$arr_options['message'] = __( 'This is not possible for security reasons.', 'ultimate-member' );
+
+				wp_send_json( $arr_options );
+			}
+
 			if ( isset( $_POST['form_id'] ) ) {
 				UM()->fields()->set_id = absint( $_POST['form_id'] );
 			}
@@ -438,7 +445,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				 * }
 				 * ?>
 				 */
-				$this->post_form = apply_filters( 'um_submit_post_form', $_POST );
+				$this->post_form = apply_filters( 'um_submit_post_form', wp_unslash( $_POST ) );
 
 				if ( isset( $this->post_form[ UM()->honeypot ] ) && '' !== $this->post_form[ UM()->honeypot ] ) {
 					wp_die( esc_html__( 'Hello, spam bot!', 'ultimate-member' ) );
@@ -650,19 +657,47 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 												$v = sanitize_text_field( $form[ $k ] );
 
 												// Make a proper social link
-												if ( ! empty( $v ) && ! strstr( $v, $f['match'] ) ) {
-													$domain = trim( strtr( $f['match'], array(
-														'https://' => '',
-														'http://'  => '',
-													) ), ' /' );
+												if ( ! empty( $v ) ) {
+													$replace_match = is_array( $f['match'] ) ? $f['match'][0] : $f['match'];
 
-													if ( ! strstr( $v, $domain ) ) {
-														$v = $f['match'] . $v;
-													} else {
-														$v = 'https://' . trim( strtr( $v, array(
-															'https://' => '',
-															'http://'  => '',
-														) ), ' /' );
+													$need_replace = false;
+													if ( is_array( $f['match'] ) ) {
+														$need_replace = true;
+														foreach ( $f['match'] as $arr_match ) {
+															if ( strstr( $v, $arr_match ) ) {
+																$need_replace = false;
+															}
+														}
+													}
+
+													if ( ! is_array( $f['match'] ) || $need_replace ) {
+														if ( ! strstr( $v, $replace_match ) ) {
+															$domain = trim(
+																strtr(
+																	$replace_match,
+																	array(
+																		'https://' => '',
+																		'http://'  => '',
+																	)
+																),
+																' /'
+															);
+
+															if ( ! strstr( $v, $domain ) ) {
+																$v = $replace_match . $v;
+															} else {
+																$v = 'https://' . trim(
+																	strtr(
+																		$v,
+																		array(
+																			'https://' => '',
+																			'http://'  => '',
+																		)
+																	),
+																	' /'
+																	);
+															}
+														}
 													}
 												}
 
