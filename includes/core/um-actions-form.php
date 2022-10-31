@@ -521,7 +521,7 @@ function um_submit_form_errors_hook_( $args ) {
 					foreach ( $array['conditions'] as $condition ) {
 						$continue = um_check_conditions_on_submit( $condition, $fields, $args, true );
 						if ( $continue === true ) {
-							continue 2;
+							continue 1;
 						}
 					}
 				} catch ( Exception $e ) {
