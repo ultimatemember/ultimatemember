@@ -14,15 +14,13 @@ global $post;
 <div class="um-admin-metabox">
 	<?php $recaptcha_enabled = UM()->options()->get( 'g_recaptcha_status' ); ?>
 
-	<?php if ( $recaptcha_enabled ) { ?>
-		<p><?php echo wp_kses( __( 'Google reCAPTCHA seems to be <strong style="color:#7ACF58;">enabled</strong> by default.', 'ultimate-member' ), $allowed_html ); ?></p>
-	<?php } else { ?>
-		<p><?php echo wp_kses( __( 'Google reCAPTCHA seems to be <strong style="color:#C74A4A;">disabled</strong> by default.', 'ultimate-member' ), $allowed_html ); ?></p>
-	<?php } ?>
+	<?php if ( $recaptcha_enabled ) {
+		$default_info = wp_kses( __( 'Google reCAPTCHA seems to be <strong style="color:#7ACF58;">enabled</strong> by default.', 'ultimate-member' ), $allowed_html );
+	} else {
+		$default_info = wp_kses( __( 'Google reCAPTCHA seems to be <strong style="color:#C74A4A;">disabled</strong> by default.', 'ultimate-member' ), $allowed_html );
+	}
 
-	<?php
 	$login_g_recaptcha_status = get_post_meta( $post->ID, '_um_login_g_recaptcha_status', true );
-	$login_g_recaptcha_status = '' === $login_g_recaptcha_status ? $recaptcha_enabled : $login_g_recaptcha_status;
 
 	$fields = array(
 		array(
@@ -31,9 +29,16 @@ global $post;
 			'label'   => __( 'reCAPTCHA status on this form', 'ultimate-member' ),
 			'value'   => $login_g_recaptcha_status,
 			'options' => array(
-				0 => __( 'No', 'ultimate-member' ),
-				1 => __( 'Yes', 'ultimate-member' ),
+				''  => __( 'Default', 'ultimate-member' ),
+				'0' => __( 'No', 'ultimate-member' ),
+				'1' => __( 'Yes', 'ultimate-member' ),
 			),
+		),
+		array(
+			'id'          => 'login_show_recaptcha',
+			'type'        => 'info_text',
+			'value'       => $default_info,
+			'conditional' => array( '_um_login_g_recaptcha_status', '=', '' ),
 		),
 	);
 

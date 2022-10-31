@@ -213,3 +213,25 @@ password-change.php -> reset-password.php
 ### Added constants:
 
 UM_TEMPLATE_CONFLICT_TEST - for debugging custom templates
+
+
+## Login Form
+
+* Added shortcode [ultimatemember_login] for displaying login form.
+  Shortcode attributes:
+  'login_button'       => (string) text for the login button label, `__( 'Log In', 'ultimate-member' )` by default,
+  'show_remember'      => (bool) 1||0, `true` by default,
+  'show_forgot'        => (bool) 1||0, `true` by default,
+  'login_redirect'     => (string) redirect_profile||redirect_url||refresh||redirect_admin, Empty by default and getting from logged in user's priority role,
+  'login_redirect_url' => (string) If login_redirect="redirect_url" then an attribute using for custom URL redirect,
+
+* Legacy shortcode for login form [ultimatemember form_id="{login_form_id}"] that just populates attributes to ultimatemember_login callback function.
+
+* The possible hooks with v3 login to customize form content:
+  'login_form_top'    - just after the <form> tag is opened
+  'login_form_middle' - after username and password fields before the sumbit button
+  'login_form_bottom' - just before the <form> tag is closed
+
+* wpnonce has been removed from a login form
+
+### Deprecated templates:

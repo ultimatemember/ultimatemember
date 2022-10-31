@@ -76,7 +76,7 @@ if ( ! class_exists( 'um\common\Shortcodes' ) ) {
 
 				$resetpass_form_args = array(
 					'id'        => 'um-resetpass',
-					'class'     => 'um-top-label um-center-always',
+					'class'     => 'um-top-label',
 					'prefix_id' => '',
 					'fields'    => array(
 						array(
@@ -159,7 +159,7 @@ if ( ! class_exists( 'um\common\Shortcodes' ) ) {
 
 					$lostpassword_form_args = array(
 						'id'        => 'um-lostpassword',
-						'class'     => 'um-top-label um-center-always',
+						'class'     => 'um-top-label',
 						'prefix_id' => '',
 						'fields'    => array(
 							array(
@@ -221,7 +221,18 @@ if ( ! class_exists( 'um\common\Shortcodes' ) ) {
 			$t_args = array_merge( $t_args, $args );
 
 			wp_enqueue_script('um-password-reset' );
-			wp_enqueue_style( 'um-password-reset' );
+
+			$form_styling = UM()->options()->get( 'form_styling' );
+			switch ( $form_styling ) {
+				case 'none':
+					break;
+				case 'layout_only':
+					wp_enqueue_style( 'um-password-reset-base' );
+					break;
+				default:
+					wp_enqueue_style( 'um-password-reset-full' );
+					break;
+			}
 
 			return um_get_template_html( $template, $t_args );
 		}
@@ -234,6 +245,8 @@ if ( ! class_exists( 'um\common\Shortcodes' ) ) {
 		 * @return string
 		 */
 		public function login_form( $args = array() ) {
+			global $error;
+
 			if ( is_user_logged_in() ) {
 				return '';
 			}
@@ -241,48 +254,113 @@ if ( ! class_exists( 'um\common\Shortcodes' ) ) {
 			/** There is possible to use 'shortcode_atts_ultimatemember_login' filter for getting customized $atts. This filter is documented in wp-includes/shortcodes.php "shortcode_atts_{$shortcode}" */
 			$args = shortcode_atts(
 				array(
-					'max_width'     => '450px',
-					'align'         => 'center',
-					'login_button'  => __( 'Log In', 'ultimate-member' ),
-					'show_remember' => true,
-					'show_forgot'   => true,
+//					'max_width'      => '450px',
+//					'align'          => 'center',
+					'login_button'       => __( 'Log In', 'ultimate-member' ),
+					'show_remember'      => true,
+					'show_forgot'        => true,
+					'login_redirect'     => '',
+					'login_redirect_url' => '',
+					'form_id'            => '', // backward compatibility argument
 				),
 				$args,
 				'ultimatemember_login'
 			);
 
-			wp_enqueue_script('um-login' );
-			wp_enqueue_style( 'um-login' );
-
-			$login_args = array(
-				'form_id'        => 'loginform',
-				'um_login_form'  => true,
-				'echo'           => true,
-				'remember'       => (bool) $args['show_remember'],
-				'label_username' => __( 'Username or Email Address', 'ultimate-member' ),
-				'label_password' => __( 'Password', 'ultimate-member' ),
-				'label_remember' => __( 'Remember Me', 'ultimate-member' ),
-				'label_log_in'   => ! empty( $args['login_button'] ) ? $args['login_button'] : __( 'Log In', 'ultimate-member' ),
-			);
-
-			/** This filter is documented in ultimate-member/includes/frontend/class-form.php */
-			$disable_star = apply_filters( 'um_frontend_forms_required_star_disabled', false );
-			if ( ! $disable_star ) {
-				$login_args['label_username'] = $login_args['label_username'] . ' *';
-				$login_args['label_password'] = $login_args['label_password'] . ' *';
+			$form_styling = UM()->options()->get( 'form_styling' );
+			switch ( $form_styling ) {
+				case 'none':
+					break;
+				case 'layout_only':
+					wp_enqueue_script('um-login' );
+					wp_enqueue_style( 'um-login-base' );
+					break;
+				default:
+					wp_enqueue_script('um-login' );
+					wp_enqueue_style( 'um-login-full' );
+					break;
 			}
 
-			$errors = new \WP_Error();
+			$login_args = array(
+				'form_id'           => 'um-loginform',
+				'um_login_form'     => true,
+				'um_login_form_id'  => absint( $args['form_id'] ),
+				'um_login_redirect' => in_array( $args['login_redirect'], array_keys( UM()->config()->get( 'login_redirect_options' ) ), true ) ? $args['login_redirect'] : '', // if empty then get default from role
+				'echo'              => true,
+				'remember'          => (bool) $args['show_remember'],
+				'label_username'    => __( 'Username or Email Address', 'ultimate-member' ),
+				'label_password'    => __( 'Password', 'ultimate-member' ),
+				'label_remember'    => __( 'Remember Me', 'ultimate-member' ),
+				'label_log_in'      => ! empty( $args['login_button'] ) ? $args['login_button'] : __( 'Log In', 'ultimate-member' ),
+			);
+
+			if ( ! isset( $_GET['redirect_to'] ) || empty( $_GET['redirect_to'] ) ) {
+				$redirect = '';
+				if ( in_array( $args['login_redirect'], array_keys( UM()->config()->get( 'login_redirect_options' ) ), true ) ) {
+					switch ( $args['login_redirect'] ) {
+						case 'redirect_profile':
+							$redirect = um_get_predefined_page_url( 'user' );
+							break;
+						case 'redirect_url':
+							$redirect = esc_url_raw( $args['login_redirect_url'] );
+							break;
+						case 'redirect_admin':
+							$redirect = get_admin_url();
+							break;
+						case 'refresh':
+							$redirect = '';
+							break;
+						default:
+							$redirect = apply_filters( "um_login_form_custom_redirect_{$args['login_redirect']}", '', $args );
+							break;
+					}
+				}
+
+				$login_args['redirect'] = $redirect;
+			}
 
 			/**
-			 * Filters the login page errors.
+			 * Filters Ultimate Member Login Form arguments for init it through `wp_login_form()`.
 			 *
-			 * @since 3.6.0
+			 * @since 3.0
+			 * @hook um_login_form_args
 			 *
-			 * @param \WP_Error $errors      WP Error object.
-			 * @param string   $redirect_to Redirect destination URL.
+			 * @param {array} $login_args Attributes for `wp_login_form()` function init.
+			 * @param {array} $args       Login form shortcode attributes.
+			 *
+			 * @return {array} Attributes for `wp_login_form()` function.
 			 */
-			$errors = apply_filters( 'um_wp_login_errors', $errors, '' );
+			$login_args = apply_filters( 'um_login_form_args', $login_args, $args );
+
+			$wp_error = new \WP_Error();
+
+			$error_codes = array(
+				'empty'                                  => sprintf( __( '%s and %s are required.', 'ultimate-member' ), $login_args['label_username'], $login_args['label_password'] ),
+				'failed'                                 => __( 'Invalid username, email address or incorrect password.', 'ultimate-member' ),
+				'um_blocked_email'                       => __( 'This email address has been blocked.', 'ultimate-member' ),
+				'um_blocked_domain'                      => __( 'This email address domain has been blocked.', 'ultimate-member' ),
+				'um_account_inactive'                    => __( 'Your account has been disabled.', 'ultimate-member' ),
+				'um_account_awaiting_admin_review'       => __( 'Your account has not been approved yet.', 'ultimate-member' ),
+				'um_account_awaiting_email_confirmation' => __( 'Your account is awaiting e-mail verification.', 'ultimate-member' ),
+				'um_account_rejected'                    => __( 'Your membership request has been rejected.', 'ultimate-member' ),
+			);
+			/**
+			 * Filters Ultimate Member Login Form errors and their codes.
+			 *
+			 * @since 3.0
+			 * @hook um_login_form_error_codes
+			 *
+			 * @param {array} $error_codes Error codes in format $error_code => $error_message.
+			 * @param {array} $args        Login form attributes.
+			 *
+			 * @return {array} Error codes.
+			 */
+			$error_codes = apply_filters( 'um_login_form_error_codes', $error_codes, $args, $login_args );
+
+			if ( ! empty( $args['show_forgot'] ) ) {
+				// Change lostpassword URL only when using Ultimate Member Login Form
+				add_filter( 'lostpassword_url', array( &$this, 'change_lostpassword_url' ), 10, 1 );
+			}
 
 			ob_start();
 			?>
@@ -290,11 +368,47 @@ if ( ! class_exists( 'um\common\Shortcodes' ) ) {
 			<div class="um um-login">
 				<?php echo do_action( 'um_before_form', array() ); ?>
 
-				<?php if ( isset( $_GET['login'] ) && 'failed' === $_GET['login'] ) { ?>
-					<p class="um-notice err um-error-code-authentication_failed">
-						<?php _e( 'Invalid username, email address or incorrect password.', 'ultimate-member' ); ?>
-					</p>
-				<?php } ?>
+				<?php
+				// In case a plugin uses $error rather than the $wp_errors object.
+				if ( ! empty( $error ) ) {
+					$wp_error->add( 'error', $error );
+					unset( $error );
+				}
+
+				if ( ! empty( $_GET['login'] ) ) {
+					$error_code = sanitize_key( $_GET['login'] );
+
+					if ( array_key_exists( $error_code, $error_codes ) ) {
+						$wp_error->add( $error_code, $error_codes[ $error_code ] );
+					}
+				}
+
+				if ( $wp_error->has_errors() ) {
+					$errors   = '';
+					$messages = '';
+
+					foreach ( $wp_error->get_error_codes() as $code ) {
+						$severity = $wp_error->get_error_data( $code );
+						foreach ( $wp_error->get_error_messages( $code ) as $error_message ) {
+							if ( 'message' === $severity ) {
+								$messages .= '	' . $error_message . "<br />\n";
+							} else {
+								$errors .= '	' . $error_message . "<br />\n";
+							}
+						}
+					}
+
+					if ( ! empty( $errors ) ) {
+						/** This filter is documented in wp-login.php */
+						echo '<p class="um-frontend-form-error">' . apply_filters( 'login_errors', $errors ) . "</p>\n";
+					}
+
+					if ( ! empty( $messages ) ) {
+						/** This filter is documented in wp-login.php */
+						echo '<p class="um-frontend-form-notice">' . apply_filters( 'login_messages', $messages ) . "</p>\n";
+					}
+				}
+				?>
 
 				<?php wp_login_form( $login_args ); ?>
 
@@ -306,8 +420,15 @@ if ( ! class_exists( 'um\common\Shortcodes' ) ) {
 					</p>
 				<?php } ?>
 			</div>
+
 			<?php
-			return ob_get_clean();
+			$content = ob_get_clean();
+
+			if ( ! empty( $args['show_forgot'] ) ) {
+				remove_filter( 'lostpassword_url', array( &$this, 'change_lostpassword_url' ), 10 );
+			}
+
+			return $content;
 		}
 
 		/**
@@ -346,16 +467,47 @@ if ( ! class_exists( 'um\common\Shortcodes' ) ) {
 				$login_primary_btn_word = get_post_meta( $args['form_id'], '_um_login_primary_btn_word', true );
 				$show_remember          = get_post_meta( $args['form_id'], '_um_login_show_rememberme', true );
 				$show_forgot            = get_post_meta( $args['form_id'], '_um_login_forgot_pass_link', true );
+				$login_redirect         = get_post_meta( $args['form_id'], '_um_login_after_login', true );
 
 				$login_args = array(
-					'login_button'  => ! empty( $login_primary_btn_word ) ? $login_primary_btn_word : __( 'Log In', 'ultimate-member' ),
-					'show_remember' => (bool) $show_remember,
-					'show_forgot'   => (bool) $show_forgot,
+					'login_button'   => ! empty( $login_primary_btn_word ) ? $login_primary_btn_word : __( 'Log In', 'ultimate-member' ),
+					'show_remember'  => (bool) $show_remember,
+					'show_forgot'    => (bool) $show_forgot,
+					'form_id'        => absint( $args['form_id'] ),
+					'login_redirect' => $login_redirect,
 				);
+				/**
+				 * Filters Ultimate Member Login Form legacy arguments for ultimatemember_login shortcode.
+				 *
+				 * @since 3.0
+				 * @hook um_login_form_legacy_args
+				 *
+				 * @param {array} $login_args Attributes for `ultimatemember_login` shortcode.
+				 * @param {array} $args       Form data.
+				 *
+				 * @return {array} Attributes for `wp_login_form()` function.
+				 */
+				$login_args = apply_filters( 'um_login_form_legacy_args', $login_args, $args );
+
 				return $this->login_form( $login_args );
 			}
 
 			return '';
+		}
+
+		/**
+		 * Change lost password URL in UM Login form
+		 *
+		 * @param  string $lostpassword_url
+		 * @return string
+		 */
+		public function change_lostpassword_url( $lostpassword_url ) {
+			$url = um_get_predefined_page_url( 'password-reset' );
+			if ( false !== $url ) {
+				$lostpassword_url = $url;
+			}
+
+			return $lostpassword_url;
 		}
 	}
 }

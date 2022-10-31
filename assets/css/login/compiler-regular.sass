@@ -5,14 +5,13 @@
     .#{$prefix}notice
       margin: 0 0 12px 0 !important
 
-    #loginform
+    ##{$prefix}loginform
       p.login-username, p.login-password
         margin: 0 0 15px 0
         padding: 0
         +flex( column, flex-start, stretch, nowrap )
         label
-          &:after
-            content: ':'
+          font-weight: bold
         input
           margin: 0
       .g-recaptcha
@@ -21,9 +20,11 @@
       p.login-remember
         +flex( row, left, center, nowrap )
         float: left
+        margin: 0
         label
           +flex( row, flex-start, center, nowrap )
           #rememberme
             margin-right: 5px
       p.login-submit
         +flex( row, right, center, nowrap )
+        margin: 0

@@ -147,30 +147,6 @@ function um_submit_form_errors_hook_logincheck( $args ) {
 }
 add_action( 'um_submit_form_errors_hook_logincheck', 'um_submit_form_errors_hook_logincheck', 9999 );
 
-
-/**
- * Store last login timestamp
- *
- * @param $user_id
- */
-function um_store_lastlogin_timestamp( $user_id ) {
-	update_user_meta( $user_id, '_um_last_login', current_time( 'timestamp' ) );
-}
-add_action( 'um_on_login_before_redirect', 'um_store_lastlogin_timestamp', 10, 1 );
-
-
-/**
- * @param $login
- */
-function um_store_lastlogin_timestamp_( $login ) {
-	$user = get_user_by( 'login', $login );
-	um_store_lastlogin_timestamp( $user->ID );
-
-	UM()->common()->user()->flush_reset_password_attempts( $user->ID );
-}
-add_action( 'wp_login', 'um_store_lastlogin_timestamp_' );
-
-
 /**
  * Login user process
  *

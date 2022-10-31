@@ -31,8 +31,9 @@ $allowed_html = array(
 			'label'   => __( 'reCAPTCHA status on this form', 'ultimate-member' ),
 			'value'   => $register_g_recaptcha_status,
 			'options' => array(
-				0 => __( 'No', 'ultimate-member' ),
-				1 => __( 'Yes', 'ultimate-member' ),
+				''  => __( 'Default', 'ultimate-member' ),
+				'0' => __( 'No', 'ultimate-member' ),
+				'1' => __( 'Yes', 'ultimate-member' ),
 			),
 		),
 	);

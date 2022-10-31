@@ -84,6 +84,9 @@ jQuery( document ).ready( function($) {
 	$( window ).on( 'resize', function() {
 		UM.common.responsive.setClass();
 	});
+
+	$('#user_login').attr( 'required', true );
+	$('#user_pass').attr( 'required', true );
 });
 
 jQuery( window ).on( 'load', function() {

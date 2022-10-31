@@ -247,9 +247,7 @@ function account_activation_link_tags_replaces( $replace_placeholders ) {
 
 
 /**
- * @function um_user_ip()
- *
- * @description This function returns the IP address of user.
+ * This function returns the IP address of user.
  *
  * @usage <?php $user_ip = um_user_ip(); ?>
  *
@@ -268,34 +266,24 @@ function um_user_ip() {
 	$ip = '127.0.0.1';
 
 	if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
-		//check ip from share internet
+		// Check IP from share internet.
 		$ip = $_SERVER['HTTP_CLIENT_IP'];
 	} else if ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-		//to check ip is pass from proxy
+		// Check IP is pass from proxy.
 		$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
 	} else if ( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
 		$ip = $_SERVER['REMOTE_ADDR'];
 	}
 
 	/**
-	 * UM hook
+	 * Filters the user's IP address.
 	 *
-	 * @type filter
-	 * @title um_user_ip
-	 * @description Change User IP
-	 * @input_vars
-	 * [{"var":"$ip","type":"string","desc":"User IP"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_filter( 'um_user_ip', 'function_name', 10, 1 );
-	 * @example
-	 * <?php
-	 * add_filter( 'um_user_ip', 'my_user_ip', 10, 1 );
-	 * function my_user_ip( $ip ) {
-	 *     // your code here
-	 *     return $ip;
-	 * }
-	 * ?>
+	 * @since 1.0.0
+	 * @hook  um_user_ip
+	 *
+	 * @param {string} $ip IP address of user.
+	 *
+	 * @return {string} IP address of user.
 	 */
 	return apply_filters( 'um_user_ip', $ip );
 }

@@ -765,10 +765,6 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 
 			$box['id'] = str_replace( 'um-admin-form-', '', $box['id'] );
 
-			if ( $box['id'] == 'builder' ) {
-				UM()->builder()->form_id = get_the_ID();
-			}
-
 			preg_match('#\{.*?\}#s', $box['id'], $matches);
 
 			if ( isset($matches[0]) ){
@@ -797,7 +793,7 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 
 			$box['id'] = str_replace( 'um-admin-form-','', $box['id'] );
 
-			if ( $box['id'] == 'builder' ) {
+			if ( 'profile_builder' === $box['id'] || 'register_builder' === $box['id'] ) {
 				UM()->builder()->form_id = get_the_ID();
 			}
 

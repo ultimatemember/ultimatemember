@@ -8,6 +8,14 @@ global $post_id;
 $login_forgot_pass_link = ! isset( $post_id ) ? UM()->options()->get( 'login_forgot_pass_link' ) : get_post_meta( $post_id, '_um_login_forgot_pass_link', true );
 $login_show_rememberme  = ! isset( $post_id ) ? UM()->options()->get( 'login_show_rememberme' ) : get_post_meta( $post_id, '_um_login_show_rememberme', true );
 
+$redirect_options = UM()->config()->get( 'login_redirect_options' );
+$redirect_options = array( '' => __( 'Default', 'ultimate-member' ) ) + $redirect_options;
+
+$login_redirect = get_post_meta( $post_id, '_um_login_after_login', true );
+
+$login_btn_word = get_post_meta( $post_id, '_um_login_primary_btn_word', true );
+$login_btn_word = '' !== $login_btn_word ? $login_btn_word : __( 'Login', 'ultimate-member' );
+
 $login_customize_fields = array(
 	array(
 		'id'      => '_um_login_template',
@@ -21,7 +29,7 @@ $login_customize_fields = array(
 		'type'        => 'text',
 		'label'       => __( 'Primary Button Text', 'ultimate-member' ),
 		'description' => __( 'Customize the button text', 'ultimate-member' ),
-		'value'       => UM()->query()->get_meta_value( '_um_login_primary_btn_word', null, UM()->options()->get( 'login_primary_btn_word' ) ),
+		'value'       => $login_btn_word,
 	),
 	array(
 		'id'      => '_um_login_forgot_pass_link',
@@ -48,14 +56,8 @@ $login_customize_fields = array(
 		'type'        => 'select',
 		'label'       => __( 'Redirection after Login', 'ultimate-member' ),
 		'description' => __( 'Change this If you want to override role redirection settings after login only.', 'ultimate-member' ),
-		'value'       => UM()->query()->get_meta_value( '_um_login_after_login', null, 0 ),
-		'options'     => array(
-			'0'                => __( 'Default', 'ultimate-member' ),
-			'redirect_profile' => __( 'Redirect to profile', 'ultimate-member' ),
-			'redirect_url'     => __( 'Redirect to URL', 'ultimate-member' ),
-			'refresh'          => __( 'Refresh active page', 'ultimate-member' ),
-			'redirect_admin'   => __( 'Redirect to WordPress Admin', 'ultimate-member' ),
-		),
+		'value'       => $login_redirect,
+		'options'     => $redirect_options,
 	),
 	array(
 		'id'          => '_um_login_redirect_url',
@@ -71,7 +73,7 @@ $login_customize_fields = array(
 	<?php
 	UM()->admin_forms(
 		array(
-			'class'     => 'um-form-login-customize um-top-label',
+			'class'     => 'um-form-login-customize um-third-column',
 			'prefix_id' => 'form',
 			'fields'    => $login_customize_fields,
 		)

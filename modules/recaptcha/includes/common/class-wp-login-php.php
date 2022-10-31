@@ -552,6 +552,11 @@ class WP_Login_PHP {
 			return;
 		}
 
+		// UM Login form has their own authentication validator
+		if ( ! empty( $_REQUEST['um_login_form'] ) ) {
+			return;
+		}
+
 		if ( $this->is_api_request() ) {
 			return;
 		}
@@ -576,21 +581,6 @@ class WP_Login_PHP {
 
 		$redirect     = isset( $_GET['redirect_to'] ) ? esc_url_raw( $_GET['redirect_to'] ) : '';
 		$force_reauth = isset( $_GET['reauth'] ) ? (bool) $_GET['reauth'] : false;
-
-		// for the wp_login_form() function login widget
-		// $redirect URL in this case will use the widget current URL from where was request to wp-login.php
-		if ( ! empty( $_REQUEST['um_login_form'] ) && ! empty( $redirect ) ) {
-			$query = wp_parse_url( $redirect, PHP_URL_QUERY );
-			parse_str( $query, $query_args );
-
-			if ( array_key_exists( 'redirect_to', $query_args ) ) {
-				$redirect = $query_args['redirect_to'];
-			}
-
-			if ( array_key_exists( 'reauth', $query_args ) ) {
-				$force_reauth = $query_args['reauth'];
-			}
-		}
 
 		switch ( $version ) {
 			case 'v3':

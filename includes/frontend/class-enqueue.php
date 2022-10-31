@@ -49,7 +49,10 @@ if ( ! class_exists( 'um\frontend\Enqueue' ) ) {
 				),
 				'css' => array(
 					//'path' => $this->urls['css'] . 'forms' . $this->suffix . '.css',
-					'path' => $this->urls['css'] . 'password-reset/compiler-regular.css',
+					'path' => array(
+						'base' => $this->urls['css'] . 'password-reset/compiler-regular.css',
+						'full' => $this->urls['css'] . 'password-reset/compiler-regular-full.css',
+					),
 					'deps' => array(),
 				),
 			);
@@ -60,7 +63,8 @@ if ( ! class_exists( 'um\frontend\Enqueue' ) ) {
 				// localize data if doesn't empty
 				wp_localize_script( 'um-password-reset', 'umPasswordReset', $password_reset['js']['vars'] );
 			}
-			wp_register_style( 'um-password-reset', $password_reset['css']['path'], $password_reset['css']['deps'], UM_VERSION );
+			wp_register_style( 'um-password-reset-base', $password_reset['css']['path']['base'], $password_reset['css']['deps'], UM_VERSION );
+			wp_register_style( 'um-password-reset-full', $password_reset['css']['path']['full'], $password_reset['css']['deps'], UM_VERSION );
 
 			$login = array(
 				'js'  => array(
@@ -73,7 +77,10 @@ if ( ! class_exists( 'um\frontend\Enqueue' ) ) {
 				),
 				'css' => array(
 					//'path' => $this->urls['css'] . 'forms' . $this->suffix . '.css',
-					'path' => $this->urls['css'] . 'login/compiler-regular.css',
+					'path' => array(
+						'base' => $this->urls['css'] . 'login/compiler-regular.css',
+						'full' => $this->urls['css'] . 'login/compiler-regular-full.css',
+					),
 					'deps' => array(),
 				),
 			);
@@ -83,10 +90,11 @@ if ( ! class_exists( 'um\frontend\Enqueue' ) ) {
 				// localize data if doesn't empty
 				wp_localize_script( 'um-login', 'umLogin', $login['js']['vars'] );
 			}
-			wp_register_style( 'um-login', $login['css']['path'], $login['css']['deps'], UM_VERSION );
+			wp_register_style( 'um-login-base', $login['css']['path']['base'], $login['css']['deps'], UM_VERSION );
+			wp_register_style( 'um-login-full', $login['css']['path']['full'], $login['css']['deps'], UM_VERSION );
 
 
-			wp_register_style( 'um_forms', $this->urls['css'] . 'forms' . $this->suffix . '.css', array(), UM_VERSION );
+			//wp_register_style( 'um_forms', $this->urls['css'] . 'forms' . $this->suffix . '.css', array(), UM_VERSION );
 
 
 

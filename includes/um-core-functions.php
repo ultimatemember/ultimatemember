@@ -294,3 +294,13 @@ function um_get_email_template_module( $email_key ) {
 
 	return $email_notifications[ $email_key ]['module'];
 }
+
+/**
+ * @return bool
+ */
+function um_is_api_request() {
+	$is_api_request = ( ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST ) || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) );
+	$is_api_request = apply_filters( 'um_is_api_request', $is_api_request );
+
+	return $is_api_request;
+}

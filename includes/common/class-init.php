@@ -39,6 +39,7 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			$this->cpt()->hooks();
 			$this->cron()->hooks();
 			$this->gdpr();
+			$this->login();
 			$this->mail()->hooks();
 			$this->pages();
 			$this->screen();
@@ -206,6 +207,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 		/**
 		 * @since 3.0
 		 *
+		 * @return Login()
+		 */
+		public function login() {
+			if ( empty( UM()->classes['um\common\login'] ) ) {
+				UM()->classes['um\common\login'] = new Login();
+			}
+			return UM()->classes['um\common\login'];
+		}
+
+		/**
+		 * @since 3.0
+		 *
 		 * @return Mail()
 		 */
 		public function mail() {
@@ -213,6 +226,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\mail'] = new Mail();
 			}
 			return UM()->classes['um\common\mail'];
+		}
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return Validation()
+		 */
+		public function validation() {
+			if ( empty( UM()->classes['um\common\validation'] ) ) {
+				UM()->classes['um\common\validation'] = new Validation();
+			}
+			return UM()->classes['um\common\validation'];
 		}
 	}
 }

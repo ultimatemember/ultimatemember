@@ -88,7 +88,10 @@ class Enqueue {
 		}
 
 		$password_reset['js']['path']  = UM()->frontend()->enqueue()->urls['js'] . 'password-reset/compiler-recaptcha.js';
-		$password_reset['css']['path'] = UM()->frontend()->enqueue()->urls['css'] . 'password-reset/compiler-recaptcha.css';
+		$password_reset['css']['path'] = array(
+			'base' => UM()->frontend()->enqueue()->urls['css'] . 'password-reset/compiler-recaptcha.css',
+			'full' => UM()->frontend()->enqueue()->urls['css'] . 'password-reset/compiler-recaptcha-full.css',
+		);
 		//$password_reset['js']['path']  = UM()->frontend()->enqueue()->urls['js'] . 'password-reset/compiler-recaptcha' . UM()->frontend()->enqueue()->suffix . '.js';
 		//$password_reset['css']['path'] = UM()->frontend()->enqueue()->urls['css'] . 'password-reset/compiler-recaptcha' . UM()->frontend()->enqueue()->suffix . '.css';
 
@@ -149,7 +152,10 @@ class Enqueue {
 		}
 
 		$login['js']['path']  = UM()->frontend()->enqueue()->urls['js'] . 'login/compiler-recaptcha.js';
-		$login['css']['path'] = UM()->frontend()->enqueue()->urls['css'] . 'login/compiler-recaptcha.css';
+		$login['css']['path'] = array(
+			'base' => UM()->frontend()->enqueue()->urls['css'] . 'login/compiler-recaptcha.css',
+			'full' => UM()->frontend()->enqueue()->urls['css'] . 'login/compiler-recaptcha-full.css',
+		);
 		//$login['js']['path']  = UM()->frontend()->enqueue()->urls['js'] . 'login/compiler-recaptcha' . UM()->frontend()->enqueue()->suffix . '.js';
 		//$login['css']['path'] = UM()->frontend()->enqueue()->urls['css'] . 'login/compiler-recaptcha' . UM()->frontend()->enqueue()->suffix . '.css';
 		return $login;

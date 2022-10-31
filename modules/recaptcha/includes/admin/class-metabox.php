@@ -68,13 +68,13 @@ class Metabox {
 			$meta_map,
 			array(
 				'_um_login_g_recaptcha_status'    => array(
-					'sanitize' => 'bool',
+					'sanitize' => 'text',
 				),
 				'_um_login_g_recaptcha_score'     => array(
 					'sanitize' => 'text',
 				),
 				'_um_register_g_recaptcha_status' => array(
-					'sanitize' => 'bool',
+					'sanitize' => 'text',
 				),
 				'_um_register_g_recaptcha_score'  => array(
 					'sanitize' => 'text',

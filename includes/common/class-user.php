@@ -86,6 +86,54 @@ if ( ! class_exists( 'um\common\User' ) ) {
 		}
 
 		/**
+		 * @param int $user_id
+		 *
+		 * @return bool|string
+		 */
+		public function get_priority_user_role( $user_id ) {
+			$user = get_userdata( $user_id );
+
+			if ( empty( $user->roles ) ) {
+				return false;
+			}
+
+			// User has roles so look for a UM Role one
+			$um_roles_keys = get_option( 'um_roles', array() );
+
+			if ( ! empty( $um_roles_keys ) ) {
+				$um_roles_keys = array_map(
+					function( $item ) {
+						return 'um_' . $item;
+					},
+					$um_roles_keys
+				);
+			}
+
+			$orders = array();
+			foreach ( array_values( $user->roles ) as $userrole ) {
+				if ( ! empty( $um_roles_keys ) && in_array( $userrole, $um_roles_keys, true ) ) {
+					$userrole_metakey = substr( $userrole, 3 );
+				} else {
+					$userrole_metakey = $userrole;
+				}
+
+				$rolemeta = get_option( "um_role_{$userrole_metakey}_meta", false );
+
+				if ( ! $rolemeta ) {
+					$orders[ $userrole ] = 0;
+					continue;
+				}
+
+				$orders[ $userrole ] = ! empty( $rolemeta['_um_priority'] ) ? $rolemeta['_um_priority'] : 0;
+			}
+
+			arsort( $orders );
+			$roles_in_priority = array_keys( $orders );
+
+			return array_shift( $roles_in_priority );
+		}
+
+		/**
 		 * Restrict the edit/delete users via wp-admin screen by the UM role capabilities
 		 *
 		 * @param $allcaps
@@ -95,7 +143,7 @@ if ( ! class_exists( 'um\common\User' ) ) {
 		 *
 		 * @return mixed
 		 */
-		function map_caps_by_role( $allcaps, $cap, $args ) {
+		public function map_caps_by_role( $allcaps, $cap, $args ) {
 			if ( isset( $cap[0] ) && 'edit_users' === $cap[0] ) {
 				if ( ! user_can( $args[1], 'administrator' ) && $args[0] == 'edit_user' ) {
 					if ( ! UM()->roles()->um_current_user_can( 'edit', $args[2] ) ) {

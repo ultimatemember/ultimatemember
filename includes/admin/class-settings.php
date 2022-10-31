@@ -590,6 +590,9 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 					'uninstall_on_delete'                   => array(
 						'sanitize' => 'bool',
 					),
+					'form_styling'                          => array(
+						'sanitize' => 'key',
+					),
 				)
 			);
 
@@ -638,16 +641,30 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 					),
 				),
 				array(
-					'id'          => 'um_profile_object_cache_stop',
-					'type'        => 'checkbox',
-					'label'       => __( 'Disable Cache User Profile', 'ultimate-member' ),
-					'description' => __( 'Check this box if you would like to disable Ultimate Member user\'s cache.', 'ultimate-member' ),
-				),
-				array(
 					'id'          => 'enable_blocks',
 					'type'        => 'checkbox',
 					'label'       => __( 'Enable Gutenberg Blocks', 'ultimate-member' ),
 					'description' => __( 'Check this box if you would like to use Ultimate Member blocks in Gutenberg editor. Important some themes have the conflicts with Gutenberg editor.', 'ultimate-member' ),
+				),
+			);
+
+			$advanced_fields = array(
+				array(
+					'id'          => 'form_styling',
+					'type'        => 'select',
+					'label'       => __( 'Include Form Styling', 'ultimate-member' ),
+					'description' => __( 'Designed to select the type of styles that are included with the forms.', 'ultimate-member' ),
+					'options'     => array(
+						''            => __( 'Base and form theme styling', 'ultimate-member' ),
+						'layout_only' => __( 'Base styling only', 'ultimate-member' ),
+						'none'        => __( 'No styling', 'ultimate-member' ),
+					),
+				),
+				array(
+					'id'          => 'um_profile_object_cache_stop',
+					'type'        => 'checkbox',
+					'label'       => __( 'Disable Cache User Profile', 'ultimate-member' ),
+					'description' => __( 'Check this box if you would like to disable Ultimate Member user\'s cache.', 'ultimate-member' ),
 				),
 				// backward compatibility option leave it disabled for better security and ability to exclude posts/terms pre-query
 				// otherwise we filtering only results and restricted posts/terms can be visible
@@ -694,7 +711,7 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 					}
 				}
 
-				$misc_fields = array_merge(
+				$advanced_fields = array_merge(
 					array(
 						array(
 							'id'               => 'enable_version_3_design',
@@ -709,7 +726,7 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 							'size'             => 'small',
 						),
 					),
-					$misc_fields
+					$advanced_fields
 				);
 			}
 
@@ -1216,6 +1233,10 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 					),
 					'licenses'     => array(
 						'title' => __( 'Licenses', 'ultimate-member' ),
+					),
+					'advanced'         => array(
+						'title'  => __( 'Advanced', 'ultimate-member' ),
+						'fields' => $advanced_fields,
 					),
 					'misc'         => array(
 						'title'  => __( 'Misc', 'ultimate-member' ),

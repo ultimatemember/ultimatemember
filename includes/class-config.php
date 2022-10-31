@@ -97,6 +97,15 @@ if ( ! class_exists( 'um\Config' ) ) {
 
 
 		/**
+		 * Login redirect options
+		 *
+		 * @since 3.0
+		 *
+		 * @var array
+		 */
+		var $login_redirect_options = array();
+
+		/**
 		 * Config constructor.
 		 */
 		function __construct() {
@@ -332,6 +341,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'profile_show_html_bio'                 => 0,
 				'profile_noindex'                       => 0,
 				'activation_link_expiry_time'           => '',
+				'form_styling'                          => '',
 			);
 
 			$is_legacy = get_option( 'um_is_legacy' );
@@ -884,6 +894,20 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 */
 		public function init_password_reset_attempts_timeout() {
 			$this->password_reset_attempts_timeout = DAY_IN_SECONDS / 2;
+		}
+
+		/**
+		 * Init login redirect types.
+		 *
+		 * @since 3.0
+		 */
+		public function init_login_redirect_options() {
+			$this->login_redirect_options = array(
+				'redirect_profile' => __( 'Redirect to profile', 'ultimate-member' ),
+				'redirect_url'     => __( 'Redirect to URL', 'ultimate-member' ),
+				'refresh'          => __( 'Refresh active page', 'ultimate-member' ),
+				'redirect_admin'   => __( 'Redirect to WordPress Admin', 'ultimate-member' ),
+			);
 		}
 
 

@@ -48,7 +48,24 @@
         width: calc( 70% - 10px )
         margin: 0
         padding: 0
-
+        input[type="text"]
+          background-color: $text-input-bg
+          color: $text-input-color
+          box-sizing: border-box
+          -webkit-box-sizing: border-box
+          -moz-box-sizing: border-box
+          display: block
+          font-size: 16px
+          font-family: inherit
+          border: 1px solid $text-input-border-color
+          border-radius: 2px
+          padding: 6px 10px
+          height: 38px
+          width: 100%
+          line-height: 1.3
+          &:focus
+            border: 1px solid $text-input-border-color-focus
+            box-shadow: none
       &.#{$prefix}form-error-row
         .#{$prefix}form-field-content
           input[type="text"],
@@ -56,7 +73,7 @@
           input[type="number"],
           textarea,
           .wp-editor-wrap
-            border-color: $error-text
+            border: 1px solid $error-text
           .#{$prefix}form-field-error
             color: $error-text
             font-size: 0.9em
@@ -75,6 +92,15 @@
       margin: 0 0 0 calc( 30% + 10px )
       input, button
         margin: 0 10px 0 0
+        background-color: $button-bg
+        border: 1px solid $button-border-color
+        color: $button-color
+        font-size: 1em
+        padding: 10px 15px
+        &:hover
+          background-color: $button-bg-hover
+          border: 1px solid $button-border-color-hover
+          cursor: pointer
 
     &.#{$prefix}top-label
       .#{$prefix}form-row
@@ -163,7 +189,8 @@
   margin: 0 0 10px 0
   .#{$prefix}uploader-dropzone
     +flex( column, flex-start, center, nowrap )
-    border: 3px dashed
+    background-color: $white
+    border: 3px dashed lightgray
     cursor: copy
     padding: 1em
     .moxie-shim.moxie-shim-html5
@@ -172,8 +199,9 @@
       left: 0 !important
       top: 0 !important
     &:hover
-      box-shadow: 0 0 4px 1px inset
+      box-shadow: 0 0 4px 1px lightgray inset
     span
+      color: rgba(51,51,51,0.6)
       margin: 0
       text-align: center
   &.#{$prefix}uploaded
