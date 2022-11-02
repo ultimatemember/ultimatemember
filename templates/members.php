@@ -45,7 +45,7 @@ if ( count( $args['view_types'] ) == 1 ) {
 } else {
 	$args['default_view'] = ! empty( $args['default_view'] ) ? $args['default_view'] : $args['view_types'][0];
 	$default_view = $args['default_view'];
-	$current_view = ( ! empty( $_GET[ 'view_type_' . $unique_hash ] ) && in_array( $_GET[ 'view_type_' . $unique_hash ], $args['view_types'] ) ) ? $_GET[ 'view_type_' . $unique_hash ] : $args['default_view'];
+	$current_view = ( ! empty( $_GET[ 'view_type_' . $unique_hash ] ) && in_array( $_GET[ 'view_type_' . $unique_hash ], $args['view_types'] ) ) ? sanitize_text_field( $_GET[ 'view_type_' . $unique_hash ] ) : $args['default_view'];
 }
 
 // Sorting
