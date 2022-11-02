@@ -67,7 +67,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 			if ( ! empty( $this->necessary_packages ) ) {
 				add_action( 'admin_menu', array( $this, 'admin_menu' ), 0 );
 
-				if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+				if ( defined( 'DOING_AJAX' ) && DOING_AJAX && current_user_can( 'manage_options' ) ) {
 					$this->init_packages_ajax();
 
 					add_action( 'wp_ajax_um_run_package', array( $this, 'ajax_run_package' ) );
