@@ -14,17 +14,7 @@
           font-weight: bold
         input
           margin: 0
-      .g-recaptcha
-        +flex( row, center, center, nowrap )
-        margin-bottom: 15px
-      p.login-remember
-        +flex( row, left, center, nowrap )
-        float: left
-        margin: 0
-        label
-          +flex( row, flex-start, center, nowrap )
-          #rememberme
-            margin-right: 5px
       p.login-submit
-        +flex( row, right, center, nowrap )
-        margin: 0
+        input[type="submit"]
+          &:hover
+            cursor: pointer

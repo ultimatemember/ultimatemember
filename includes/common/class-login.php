@@ -24,6 +24,7 @@ if ( ! class_exists( 'um\common\Login' ) ) {
 		 */
 		function __construct() {
 			add_filter( 'login_form_defaults', array( &$this, 'add_defaults' ), 10, 1 );
+			add_filter( 'login_form_middle', array( &$this, 'add_forgot_password' ), 999, 2 );
 			add_filter( 'login_form_bottom', array( &$this, 'add_hidden_field' ), 10, 2 );
 
 			add_action( 'wp_authenticate', array( &$this, 'validate_before_login' ), 2, 2 );
@@ -49,6 +50,24 @@ if ( ! class_exists( 'um\common\Login' ) ) {
 			$defaults['um_login_redirect'] = '';
 
 			return $defaults;
+		}
+
+		/**
+		 * Add forgot password link.
+		 *
+		 * @param string $content
+		 * @param array $args
+		 *
+		 * @return string
+		 */
+		public function add_forgot_password( $content, $args ) {
+			if ( array_key_exists( 'um_login_form', $args ) && true === $args['um_login_form'] ) {
+				if ( ! empty( $args['um_show_forgot'] ) ) {
+					$content .= '<p class="login-forgot"><a class="um-link" href="' . esc_url( um_get_predefined_page_url( 'password-reset' ) ) . '">' . esc_html__( 'Forgot password', 'ultimate-member' ) . '</a></p>';
+				}
+			}
+
+			return $content;
 		}
 
 		/**

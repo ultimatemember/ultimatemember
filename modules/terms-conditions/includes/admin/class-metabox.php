@@ -25,11 +25,15 @@ class Metabox {
 
 
 	/**
-	 *
+	 * @param $mode
 	 */
-	public function add_metabox_register() {
+	public function add_metabox_register( $mode ) {
 		$module_data = UM()->modules()->get_data( 'terms-conditions' );
 		if ( ! $module_data ) {
+			return;
+		}
+
+		if ( 'register' !== $mode ) {
 			return;
 		}
 

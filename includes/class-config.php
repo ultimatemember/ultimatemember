@@ -342,6 +342,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'profile_noindex'                       => 0,
 				'activation_link_expiry_time'           => '',
 				'form_styling'                          => '',
+				'button_backcolor'                      => '#eee',
+				'button_backcolor_hover'                => '#ddd',
+				'button_forecolor'                      => '#333',
 			);
 
 			$is_legacy = get_option( 'um_is_legacy' );

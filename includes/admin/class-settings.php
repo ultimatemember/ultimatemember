@@ -593,6 +593,15 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 					'form_styling'                          => array(
 						'sanitize' => 'key',
 					),
+					'button_backcolor'                      => array(
+						'sanitize' => 'color',
+					),
+					'button_backcolor_hover'                => array(
+						'sanitize' => 'color',
+					),
+					'button_forecolor'                      => array(
+						'sanitize' => 'color',
+					),
 				)
 			);
 
@@ -655,10 +664,28 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 					'label'       => __( 'Include Form Styling', 'ultimate-member' ),
 					'description' => __( 'Designed to select the type of styles that are included with the forms.', 'ultimate-member' ),
 					'options'     => array(
-						''            => __( 'Base and form theme styling', 'ultimate-member' ),
-						'layout_only' => __( 'Base styling only', 'ultimate-member' ),
+						''            => __( 'Standard', 'ultimate-member' ),
+						'layout_only' => __( 'Minimal', 'ultimate-member' ),
 						'none'        => __( 'No styling', 'ultimate-member' ),
 					),
+				),
+				array(
+					'id'          => 'button_backcolor',
+					'type'        => 'color',
+					'label'       => __( 'Button Background Color', 'ultimate-member' ),
+					'conditional' => array( 'form_styling', '=', '' ),
+				),
+				array(
+					'id'          => 'button_backcolor_hover',
+					'type'        => 'color',
+					'label'       => __( 'Button Background Hover Color', 'ultimate-member' ),
+					'conditional' => array( 'form_styling', '=', '' ),
+				),
+				array(
+					'id'          => 'button_forecolor',
+					'type'        => 'color',
+					'label'       => __( 'Button Text Color', 'ultimate-member' ),
+					'conditional' => array( 'form_styling', '=', '' ),
 				),
 				array(
 					'id'          => 'um_profile_object_cache_stop',

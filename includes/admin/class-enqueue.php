@@ -227,6 +227,27 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 		 * @since 3.0
 		 */
 		function forms_page_scripts() {
+			wp_register_script( 'um_admin_forms-screen', $this->urls['js'] . 'admin/forms-screen' . $this->suffix . '.js', array( 'jquery' ), UM_VERSION, true );
+			wp_localize_script(
+				'um_admin_forms-screen',
+				'um_forms_buttons',
+				array(
+					'login'    => array(
+						'title' => __( 'Add New Login Form', 'ultimate-member' ),
+						'link'  => add_query_arg( array( 'post_type' => 'um_form', 'um_mode' => 'login' ), admin_url( 'post-new.php' ) ),
+					),
+					'register' => array(
+						'title' => __( 'Add New Register Form', 'ultimate-member' ),
+						'link'  => add_query_arg( array( 'post_type' => 'um_form', 'um_mode' => 'register' ), admin_url( 'post-new.php' ) ),
+					),
+					'profile'  => array(
+						'title' => __( 'Add New Profile Form', 'ultimate-member' ),
+						'link'  => add_query_arg( array( 'post_type' => 'um_form', 'um_mode' => 'profile' ), admin_url( 'post-new.php' ) ),
+					),
+				)
+			);
+			wp_enqueue_script( 'um_admin_forms-screen' );
+
 			wp_register_style( 'um_admin_forms-screen', $this->urls['css'] . 'admin-forms-screen' . $this->suffix . '.css', array(), UM_VERSION );
 			wp_enqueue_style( 'um_admin_forms-screen' );
 		}
@@ -236,6 +257,29 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 		 * @since 3.0
 		 */
 		function form_page_scripts() {
+			global $pagenow;
+			if ( ! empty( $pagenow ) && 'post.php' === $pagenow ) {
+				wp_register_script( 'um_admin_forms-screen', $this->urls['js'] . 'admin/forms-screen' . $this->suffix . '.js', array( 'jquery' ), UM_VERSION, true );
+				wp_localize_script(
+					'um_admin_forms-screen',
+					'um_forms_buttons',
+					array(
+						'login'    => array(
+							'title' => __( 'Add New Login Form', 'ultimate-member' ),
+							'link'  => add_query_arg( array( 'post_type' => 'um_form', 'um_mode' => 'login' ), admin_url( 'post-new.php' ) ),
+						),
+						'register' => array(
+							'title' => __( 'Add New Register Form', 'ultimate-member' ),
+							'link'  => add_query_arg( array( 'post_type' => 'um_form', 'um_mode' => 'register' ), admin_url( 'post-new.php' ) ),
+						),
+						'profile'  => array(
+							'title' => __( 'Add New Profile Form', 'ultimate-member' ),
+							'link'  => add_query_arg( array( 'post_type' => 'um_form', 'um_mode' => 'profile' ), admin_url( 'post-new.php' ) ),
+						),
+					)
+				);
+				wp_enqueue_script( 'um_admin_forms-screen' );
+			}
 			$this->enqueue_frontend_preview_assets();
 
 			wp_register_script( 'um_admin_builder', $this->urls['js'] . 'admin/builder' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'wp-i18n', 'jquery-ui-sortable', 'jquery-ui-draggable', 'um_admin_own', 'um-modal', 'um_responsive' ), UM_VERSION, true );

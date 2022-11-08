@@ -76,7 +76,7 @@ if ( ! class_exists( 'um\common\Shortcodes' ) ) {
 
 				$resetpass_form_args = array(
 					'id'        => 'um-resetpass',
-					'class'     => 'um-top-label',
+					'class'     => 'um-top-label um-single-button um-center-always',
 					'prefix_id' => '',
 					'fields'    => array(
 						array(
@@ -159,7 +159,7 @@ if ( ! class_exists( 'um\common\Shortcodes' ) ) {
 
 					$lostpassword_form_args = array(
 						'id'        => 'um-lostpassword',
-						'class'     => 'um-top-label',
+						'class'     => 'um-top-label um-single-button um-center-always',
 						'prefix_id' => '',
 						'fields'    => array(
 							array(
@@ -286,6 +286,7 @@ if ( ! class_exists( 'um\common\Shortcodes' ) ) {
 				'um_login_form'     => true,
 				'um_login_form_id'  => absint( $args['form_id'] ),
 				'um_login_redirect' => in_array( $args['login_redirect'], array_keys( UM()->config()->get( 'login_redirect_options' ) ), true ) ? $args['login_redirect'] : '', // if empty then get default from role
+				'um_show_forgot'    => (bool) $args['show_forgot'],
 				'echo'              => true,
 				'remember'          => (bool) $args['show_remember'],
 				'label_username'    => __( 'Username or Email Address', 'ultimate-member' ),
@@ -412,13 +413,12 @@ if ( ! class_exists( 'um\common\Shortcodes' ) ) {
 
 				<?php wp_login_form( $login_args ); ?>
 
-				<?php if ( ! empty( $args['show_forgot'] ) ) { ?>
-					<p id="nav">
-						<a href="<?php echo esc_url( um_get_predefined_page_url( 'password-reset' ) ); ?>">
-							<?php esc_html_e( 'Forgot your password?', 'ultimate-member' ); ?>
-						</a>
-					</p>
-				<?php } ?>
+				<p class="login-sign-up">
+					<span><?php esc_html_e( 'Don\'t have an account?', 'ultimate-member' ); ?></span>
+					<a class="um-link" href="<?php echo esc_url( um_get_predefined_page_url( 'register' ) ); ?>">
+						<?php esc_html_e( 'Sign up', 'ultimate-member' ); ?>
+					</a>
+				</p>
 			</div>
 
 			<?php

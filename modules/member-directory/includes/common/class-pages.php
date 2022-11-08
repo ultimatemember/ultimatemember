@@ -42,7 +42,7 @@ class Pages {
 
 		$pages['members'] = array(
 			'title'   => __( 'Members', 'ultimate-member' ),
-			'content' => ! empty( $setup_shortcodes['members'] ) ? '[ultimatemember form_id="' . $setup_shortcodes['members'] . '"]' : '',
+			'content' => ! empty( $setup_shortcodes['members'] ) ? '[ultimatemember_directory id="' . $setup_shortcodes['members'] . '"]' : '',
 		);
 
 		return $pages;

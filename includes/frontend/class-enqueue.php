@@ -22,9 +22,71 @@ if ( ! class_exists( 'um\frontend\Enqueue' ) ) {
 		function __construct() {
 			parent::__construct();
 
-			add_action( 'init',  array( &$this, 'scripts_enqueue_priority' ) );
+			add_action( 'init', array( &$this, 'scripts_enqueue_priority' ) );
+			add_action( 'enqueue_block_assets', array( &$this, 'add_to_global_styles' ) );
 		}
 
+		/**
+		 * Adds our custom EDD button colors to the global stylesheet.
+		 *
+		 * @since 2.0
+		 * @return void
+		 */
+		public function add_to_global_styles() {
+			$styling = UM()->options()->get( 'form_styling' );
+			if ( ! empty( $styling ) ) {
+				return;
+			}
+
+			$styles = apply_filters(
+				'um_inline_styles_variables',
+				array(
+					'--um-gray-25:#fcfcfd;',
+					'--um-gray-50:#f9fafb;',
+					'--um-gray-100:#f2f4f7;',
+					'--um-gray-200:#eaecf0;',
+					'--um-gray-300:#d0d5dd;',
+					'--um-gray-400:#98a2b3;',
+					'--um-gray-500:#667085;',
+					'--um-gray-600:#475467;',
+					'--um-gray-700:#344054;',
+					'--um-gray-800:#1d2939;',
+					'--um-gray-900:#101828;',
+				)
+			);
+			$rules  = array();
+
+			$backcolor = UM()->options()->get( 'button_backcolor' );
+			if ( empty( $backcolor ) ) {
+				$backcolor = '#eee';
+			}
+			$styles[] = "--um-blocks-button-bg-color:{$backcolor};";
+
+			$backcolor_hover = UM()->options()->get( 'button_backcolor_hover' );
+			if ( empty( $backcolor_hover ) ) {
+				$backcolor_hover = '#ddd';
+			}
+			$styles[] = "--um-blocks-button-bg-hover-color:{$backcolor_hover};";
+
+			$forecolor = UM()->options()->get( 'button_forecolor' );
+			if ( empty( $forecolor ) ) {
+				$forecolor = '#333';
+			}
+			$styles[] = "--um-blocks-button-fg-color:{$forecolor};";
+
+//			$rules[] = '.um .um-form .um-form-buttons-section input, .um .um-form .um-form-buttons-section button{color: var(--um-blocks-button-fg-color);background-color: var(--um-blocks-button-bg-color);}';
+
+			if ( empty( $styles ) ) {
+				return;
+			}
+			$inline_style = 'body{' . implode( ' ', $styles ) . '}';
+			if ( ! empty( $rules ) ) {
+				$inline_style .= implode( ' ', $rules );
+			}
+			//$stylesheet = wp_style_is( 'um_styles', 'registered' ) ? 'um_styles' : 'wp-block-library';
+			$stylesheet = 'wp-block-library';
+			wp_add_inline_style( $stylesheet, $inline_style );
+		}
 
 		/**
 		 *
@@ -33,11 +95,10 @@ if ( ! class_exists( 'um\frontend\Enqueue' ) ) {
 			add_action( 'wp_enqueue_scripts', array( &$this, 'register' ), $this->get_priority() );
 		}
 
-
 		/**
 		 * frontend assets registration
 		 */
-		function register() {
+		public function register() {
 			$password_reset = array(
 				'js'  => array(
 					//'path' => $this->urls['js'] . 'um-scripts' . $this->suffix . '.js',

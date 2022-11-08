@@ -44,6 +44,9 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			$this->edit_mode_value = null;
 			$this->edit_array      = array();
 
+			add_action( 'load-post.php', array( &$this, 'test_title' ) );
+			add_action( 'load-post-new.php', array( &$this, 'test_title_new' ) );
+
 			add_action( 'admin_footer', array( &$this, 'load_modal_content' ), 9 );
 
 			add_action( 'load-post.php', array( &$this, 'add_metabox' ), 9 );
@@ -64,6 +67,77 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 
 			// WP Dashboard
 			add_action( 'wp_dashboard_setup', array( &$this, 'wp_dashboard_widgets' ) );
+		}
+
+		function test_title() {
+			global $current_screen, $wp_post_types;
+
+			if ( isset( $current_screen->id ) && 'um_form' === $current_screen->id ) {
+				if ( ! empty( $wp_post_types['um_form'] ) ) {
+					if ( isset( $_GET['post'] ) && isset( $_POST['post_ID'] ) && (int) $_GET['post'] !== (int) $_POST['post_ID'] ) {
+						return;
+					} elseif ( isset( $_GET['post'] ) ) {
+						$post_id = (int) $_GET['post'];
+					} elseif ( isset( $_POST['post_ID'] ) ) {
+						$post_id = (int) $_POST['post_ID'];
+					} else {
+						$post_id = 0;
+					}
+
+					if ( $post_id ) {
+						$mode = UM()->query()->get_attr( 'mode', $post_id );
+						$wp_post_types['um_form']->labels->edit_item = sprintf( __( 'Edit %s Form', 'ultimate-member' ), UM()->form()->display_form_type( $mode ) );
+						add_filter( 'admin_title', array( &$this, 'test_title2' ), 10, 1 );
+					}
+				}
+			}
+		}
+
+		function test_title_new() {
+			global $current_screen, $wp_post_types;
+
+			if ( isset( $current_screen->id ) && 'um_form' === $current_screen->id ) {
+				if ( ! empty( $wp_post_types['um_form'] ) ) {
+					if ( ! isset( $_GET['um_mode'] ) ) {
+						$url = add_query_arg( array( 'post_type' => 'um_form' ), admin_url( 'edit.php' ) );
+						wp_redirect( $url );
+						exit;
+					}
+
+					$mode = sanitize_key( $_GET['um_mode'] );
+					if ( ! in_array( $mode, array( 'login', 'profile', 'register' ), true ) ) {
+						$url = add_query_arg( array( 'post_type' => 'um_form' ), admin_url( 'edit.php' ) );
+						wp_redirect( $url );
+						exit;
+					}
+					$wp_post_types['um_form']->labels->add_new_item = sprintf( __( 'Add New %s Form', 'ultimate-member' ), UM()->form()->display_form_type( $mode ) );
+					add_filter( 'admin_title', array( &$this, 'test_title3' ), 10, 1 );
+				}
+			}
+		}
+
+		function test_title2( $admin_title ) {
+			global $wp_post_types;
+
+			if ( ! empty( $wp_post_types['um_form'] ) ) {
+				$wp_post_types['um_form']->labels->edit_item = __( 'Edit Form', 'ultimate-member' );
+			}
+
+			remove_filter( 'admin_title', array( &$this, 'test_title2' ), 10 );
+
+			return $admin_title;
+		}
+
+		function test_title3( $admin_title ) {
+			global $wp_post_types;
+
+			if ( ! empty( $wp_post_types['um_form'] ) ) {
+				$wp_post_types['um_form']->labels->add_new_item = __( 'Add New Form', 'ultimate-member' );
+			}
+
+			remove_filter( 'admin_title', array( &$this, 'test_title3' ), 10 );
+
+			return $admin_title;
 		}
 
 
@@ -261,10 +335,11 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			add_action( 'save_post', array( &$this, 'save_metabox_custom' ), 10, 2 );
 		}
 
-
 		/**
-		 * @param $post_id
-		 * @param $post
+		 * Save Restriction settings data from metabox.
+		 *
+		 * @param int       $post_id
+		 * @param \WP_Post $post
 		 */
 		public function save_metabox_custom( $post_id, $post ) {
 			// validate nonce
@@ -296,11 +371,10 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			do_action( 'um_admin_custom_restrict_content_metaboxes', $post_id, $post );
 		}
 
-
 		/**
 		 *
 		 */
-		function add_metabox_restrict_content() {
+		public function add_metabox_restrict_content() {
 			global $current_screen;
 
 			add_meta_box(
@@ -793,7 +867,7 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 
 			$box['id'] = str_replace( 'um-admin-form-','', $box['id'] );
 
-			if ( 'profile_builder' === $box['id'] || 'register_builder' === $box['id'] ) {
+			if ( 'builder' === $box['id'] ) {
 				UM()->builder()->form_id = get_the_ID();
 			}
 
@@ -1008,8 +1082,7 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 		 *
 		 */
 		public function custom_submitdiv() {
-			global $post;
-
+			global $post, $current_screen;
 			?>
 
 			<div class="submitbox" id="submitpost">
@@ -1042,6 +1115,14 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 							<?php submit_button( __( 'Update', 'ultimate-member' ), 'primary button-large', 'save', false, array( 'accesskey' => 'p' ) ); ?>
 						<?php } ?>
 					</div>
+					<?php
+					if ( isset( $current_screen->base ) && 'post' === $current_screen->base && isset( $current_screen->action ) && 'add' === $current_screen->action ) {
+						if ( isset( $_GET['um_mode'] ) ) {
+							$mode = sanitize_key( $_GET['um_mode'] ); ?>
+							<input type="hidden" name="form[_um_mode]" id="form__um_mode" value="<?php echo esc_attr( $mode ); ?>" />
+						<?php }
+					}?>
+
 					<div class="clear"></div>
 				</div>
 			</div>
@@ -1055,26 +1136,40 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 		 * @param string $post_type
 		 */
 		function add_metabox_form( $post_type ) {
+			global $post, $pagenow;
+
 			if ( 'um_form' !== $post_type ) {
 				return;
 			}
 
 			add_meta_box( 'submitdiv', __( 'Publish', 'ultimate-member' ), array( $this, 'custom_submitdiv' ), 'um_form', 'side', 'high' );
-
-			add_meta_box( 'um-admin-form-mode', __( 'Select Form Type', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'high' );
 			add_meta_box( 'um-admin-form-shortcode', __( 'Shortcode', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
 
-			add_meta_box( 'um-admin-form-register_builder', __( 'Form Builder', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );
-			add_meta_box( 'um-admin-form-register_customize', __( 'Form settings', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
+			//add_meta_box( 'um-admin-form-mode', __( 'Select Form Type', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'high' );
 
-			add_meta_box( 'um-admin-form-profile_builder', __( 'Form Builder', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );
-			add_meta_box( 'um-admin-form-profile_customize', __( 'Form settings', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
-			add_meta_box( 'um-admin-form-profile_menu', __( 'Menu', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'high' );
-			add_meta_box( 'um-admin-form-profile_settings', __( 'User Meta', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
+			if ( ! empty( $pagenow ) && 'post.php' === $pagenow ) {
+				$mode = UM()->query()->get_attr( 'mode', $post->ID );
+			} elseif ( ! empty( $pagenow ) && 'post-new.php' === $pagenow ) {
+				$mode = isset( $_GET['um_mode'] ) ? sanitize_key( $_GET['um_mode'] ) : '';
+			}
 
-			add_meta_box( 'um-admin-form-login_customize', __( 'Form settings', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );
+			switch ( $mode ) {
+				case 'login':
+					add_meta_box( 'um-admin-form-login_customize', __( 'Form settings', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );
+					break;
+				case 'register':
+					add_meta_box( 'um-admin-form-builder', __( 'Form Builder', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );
+					add_meta_box( 'um-admin-form-register_customize', __( 'Form settings', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
+					break;
+				case 'profile':
+					add_meta_box( 'um-admin-form-builder', __( 'Form Builder', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );
+					add_meta_box( 'um-admin-form-profile_customize', __( 'Form settings', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
+					add_meta_box( 'um-admin-form-profile_menu', __( 'Menu', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'high' );
+					add_meta_box( 'um-admin-form-profile_settings', __( 'User Meta', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
+					break;
+			}
 
-			do_action( 'um_admin_add_form_metabox' );
+			do_action( 'um_admin_add_form_metabox', $mode );
 		}
 
 
@@ -1108,7 +1203,7 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 		 * @param $post
 		 */
 		function save_metabox_form( $post_id, $post ) {
-			global $wpdb;
+			global $wpdb, $pagenow;
 
 			// validate post type
 			if ( 'um_form' !== $post->post_type ) {
@@ -1139,22 +1234,6 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			$form_meta = UM()->admin()->sanitize_form_meta( $_POST['form'] );
 			foreach ( $form_meta as $k => $v ) {
 				if ( strstr( $k, '_um_' ) ) {
-					if ( $k === '_um_is_default' ) {
-						$mode = UM()->query()->get_attr( 'mode', $post_id );
-						if ( ! empty( $mode ) ) {
-							$posts = $wpdb->get_col( $wpdb->prepare(
-								"SELECT post_id
-								FROM {$wpdb->postmeta}
-								WHERE meta_key = '_um_mode' AND
-									  meta_value = %s",
-								$mode
-							) );
-							foreach ( $posts as $p_id ) {
-								delete_post_meta( $p_id, '_um_is_default' );
-							}
-						}
-					}
-
 					update_post_meta( $post_id, $k, $v );
 				}
 			}

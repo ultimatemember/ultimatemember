@@ -5,7 +5,9 @@
 
 .um
   width: 100%
+  font-size: $um-font-size
   .#{$prefix}frontend-form-notice
+    font-size: inherit
     display: inline-block
     width: 100%
     margin: 0 0 15px 0
@@ -13,6 +15,7 @@
     box-sizing: border-box
 
   .#{$prefix}frontend-form-error
+    font-size: inherit
     display: inline-block
     width: 100%
     margin: 0 0 15px 0
@@ -24,6 +27,7 @@
     width: 100%
     margin: 0
     padding: 0
+    font-size: inherit
     .#{$prefix}form-section-title
       width: 100%
       margin: 15px 0
@@ -38,7 +42,8 @@
         width: 30%
         margin: 0 10px 0 0
         padding: 0
-        font-weight: bold
+        font-size: $label-size
+        font-weight: $bold-weight
         .#{$prefix}req
           color: $required-asterisk
           margin: 0 0 0 3px
@@ -49,19 +54,19 @@
         margin: 0
         padding: 0
         input[type="text"]
+          +border-box
+          display: block
+          width: 100%
+          height: 44px
+          margin: 0
+          padding: 6px 10px
+          border: 1px solid $text-input-border-color
+          border-radius: $text-input-border-radius
+          outline: none
           background-color: $text-input-bg
           color: $text-input-color
-          box-sizing: border-box
-          -webkit-box-sizing: border-box
-          -moz-box-sizing: border-box
-          display: block
-          font-size: 16px
+          font-size: inherit
           font-family: inherit
-          border: 1px solid $text-input-border-color
-          border-radius: 2px
-          padding: 6px 10px
-          height: 38px
-          width: 100%
           line-height: 1.3
           &:focus
             border: 1px solid $text-input-border-color-focus
@@ -77,42 +82,35 @@
           .#{$prefix}form-field-error
             color: $error-text
             font-size: 0.9em
-      &.#{$prefix}field-conditional_radio-type
-        .#{$prefix}form-field-content
-          label
-            margin: 0 0 5px 0
-          span[data-visible-if]
-            margin: 0 0 5px 0
-
       &.#{$prefix}field-media-type
         align-items: flex-start
 
     .#{$prefix}form-buttons-section
       +flex( row, flex-start, baseline, wrap )
       margin: 0 0 0 calc( 30% + 10px )
-      input, button
-        margin: 0 10px 0 0
+      input[type="submit"],input[type="button"], button
         background-color: $button-bg
-        border: 1px solid $button-border-color
+        border: 1px solid $button-bg
+        border-radius: $button-border-radius
         color: $button-color
-        font-size: 1em
-        padding: 10px 15px
+        text-align: center
+        font-size: inherit
+        font-weight: $bold-weight
+        padding: 15px 16px
+        margin: 0 8px 0 0
+        +box-shadow-xs
         &:hover
           background-color: $button-bg-hover
-          border: 1px solid $button-border-color-hover
+          border: 1px solid $button-bg-hover
           cursor: pointer
-
     &.#{$prefix}top-label
       .#{$prefix}form-row
         +flex( column, flex-start, stretch, nowrap )
         .#{$prefix}form-row-label
           width: 100%
-          margin: 0 0 10px 0
-          padding: 0
+          margin: 0 0 3px 0
         .#{$prefix}form-field-content
           width: 100%
-          margin: 0 0 10px 0
-          padding: 0
       .#{$prefix}form-buttons-section
         margin: 0
         width: 100%
@@ -121,20 +119,19 @@
         margin: 0
         justify-content: center
         input, button
+          width: 100%
           margin: 0
 
   &.#{$prefix}ui-xs
     .#{$prefix}form
-      .#{$prefix}form-row
-        +flex( column, flex-start, stretch, nowrap )
-        .#{$prefix}form-row-label
-          width: 100%
-          margin: 0 0 10px 0
-          padding: 0
-        .#{$prefix}form-field-content
-          width: 100%
-          margin: 0 0 10px 0
-          padding: 0
+      &:not(.#{$prefix}top-label)
+        .#{$prefix}form-row
+          +flex( column, flex-start, stretch, nowrap )
+          .#{$prefix}form-row-label
+            width: 100%
+            margin: 0 0 3px 0
+          .#{$prefix}form-field-content
+            width: 100%
       &:not(.#{$prefix}single-button.#{$prefix}center-always)
         .#{$prefix}form-buttons-section
           margin: 0
@@ -142,16 +139,14 @@
 
   &.#{$prefix}ui-s
     .#{$prefix}form
-      .#{$prefix}form-row
-        +flex( column, flex-start, stretch, nowrap )
-        .#{$prefix}form-row-label
-          width: 100%
-          margin: 0 0 10px 0
-          padding: 0
-        .#{$prefix}form-field-content
-          width: 100%
-          margin: 0 0 10px 0
-          padding: 0
+      &:not(.#{$prefix}top-label)
+        .#{$prefix}form-row
+          +flex( column, flex-start, stretch, nowrap )
+          .#{$prefix}form-row-label
+            width: 100%
+            margin: 0 0 3px 0
+          .#{$prefix}form-field-content
+            width: 100%
       &:not(.#{$prefix}single-button.#{$prefix}center-always)
         .#{$prefix}form-buttons-section
           margin: 0

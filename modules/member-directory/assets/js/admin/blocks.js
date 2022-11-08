@@ -51,7 +51,7 @@ wp.blocks.registerBlockType( 'um-block/um-member-directories', {
 				var shortcode = '';
 
 				if ( value !== undefined ) {
-					shortcode = '[ultimatemember form_id="' + value + '"]';
+					shortcode = '[ultimatemember_directory id="' + value + '"]';
 				}
 
 				return shortcode;

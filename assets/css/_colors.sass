@@ -1,5 +1,3 @@
-$um-base-violet: #7856ff
-
 $um-base: #0085ba
 $um-base-hover: #008ec2
 $delete-link: #a00
@@ -49,13 +47,47 @@ $notice-text: #3f7cc7
 
 // NEW COLORS since v3
 $required-asterisk: #a00
-$button-bg: #eee
-$button-bg-hover: #ddd
-$button-color: #333
-$button-border-color: #ddd
-$button-border-color-hover: #ccc
 
-$text-input-bg: #fff
-$text-input-color: #333
-$text-input-border-color: #ccc
-$text-input-border-color-focus: #999
+$um-font-size: 14px
+
+$um-white: #fff
+$um-black: #000
+
+$um-primary: var(--um-blocks-button-bg-color, #eee)
+$um-primary-hover: var(--um-blocks-button-bg-hover-color, #ddd)
+$um-text: var(--um-blocks-button-fg-color, #333)
+
+$button-bg: var(--um-blocks-button-bg-color, #eee)
+$button-bg-hover: var(--um-blocks-button-bg-hover-color, #ddd)
+$button-color: var(--um-blocks-button-fg-color, #333)
+$button-border-radius: 8px
+
+// Figma shades of gray colors
+$gray-25: var(--um-gray-25, #fcfcfd)
+$gray-50: var(--um-gray-50, #f9fafb)
+$gray-100: var(--um-gray-100, #f2f4f7)
+$gray-200: var(--um-gray-200, #eaecf0)
+$gray-300: var(--um-gray-300, #d0d5dd)
+$gray-400: var(--um-gray-400, #98a2b3)
+$gray-500: var(--um-gray-500, #667085)
+$gray-600: var(--um-gray-600, #475467)
+$gray-700: var(--um-gray-700, #344054)
+$gray-800: var(--um-gray-800, #1d2939)
+$gray-900: var(--um-gray-900, #101828)
+
+// Figma xs shadow
+$shadow-xs-color: rgba( 16, 24, 40, 0.05 )
+
+// Text input variables
+$text-input-border-radius: 6px
+$text-input-bg: $um-white
+$text-input-color: $um-black
+$text-input-border-color: $gray-300
+$text-input-border-color-focus: $gray-400
+
+$bold-weight: 600 // CSS bold = 700, so it will be applied if there aren't 600 weight for the font
+$label-size: 15px
+
+// Links variables
+$link-color: $um-primary
+$link-hover-color: $um-primary-hover

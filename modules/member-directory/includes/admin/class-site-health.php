@@ -121,7 +121,7 @@ if ( ! class_exists( 'umm\member_directory\includes\admin\Site_Health' ) ) {
 						'fields'      => array(
 							'um-directory-shortcode'  => array(
 								'label' => __( 'Shortcode', 'ultimate-member' ),
-								'value' => '[ultimatemember form_id="' . $key . '"]',
+								'value' => '[ultimatemember_directory id="' . $key . '"]',
 							),
 							'um-directory_template'   => array(
 								'label' => __( 'Template', 'ultimate-member' ),

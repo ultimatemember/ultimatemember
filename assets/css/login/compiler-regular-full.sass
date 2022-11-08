@@ -1,44 +1,115 @@
 @import "../forms-full.sass"
 
 .um
+  font-size: $um-font-size
   &.#{$prefix}login
     .#{$prefix}notice
+      font-size: inherit
       margin: 0 0 12px 0 !important
 
     ##{$prefix}loginform
-      p.login-username, p.login-password
-        margin: 0 0 15px 0
-        padding: 0
-        +flex( column, flex-start, stretch, nowrap )
-        label
-          font-weight: bold
-        input
-          margin: 0
-          background-color: $text-input-bg
-          color: $text-input-color
-          box-sizing: border-box
-          -webkit-box-sizing: border-box
-          -moz-box-sizing: border-box
-          display: block
-          font-size: 16px
-          font-family: inherit
-          border: 1px solid $text-input-border-color
-          border-radius: 2px
-          padding: 6px 10px
-          height: 38px
+      font-size: inherit
+      p
+        font-size: inherit
+        &.login-username, &.login-password
+          +flex( column, flex-start, stretch, nowrap )
+          margin: 0 0 15px 0
+          padding: 0
+          font-size: inherit
+          label
+            font-size: $label-size
+            font-weight: $bold-weight
+            margin: 0 0 3px 0
+          input
+            +border-box
+            display: block
+            width: 100%
+            height: 44px
+            margin: 0
+            padding: 6px 10px
+            border: 1px solid $text-input-border-color
+            border-radius: $text-input-border-radius
+            outline: none
+            background-color: $text-input-bg
+            color: $text-input-color
+            font-size: inherit
+            font-family: inherit
+            line-height: 1.3
+            &:focus
+              border: 1px solid $text-input-border-color-focus
+              box-shadow: none
+        &.login-forgot
+          float: right
+        &.login-remember
+          float: left
+          label
+            +flex( row, flex-start, center, nowrap )
+            input
+              margin: 0 4px 0 0
+              padding: 0
+        &.login-submit
+          font-size: inherit
           width: 100%
-          line-height: 1.3
-          &:focus
-            border: 1px solid $text-input-border-color-focus
-            box-shadow: none
-      p.login-submit
-        input[type="submit"]
-          background-color: $button-bg
-          border: 1px solid $button-border-color
-          color: $button-color
-          font-size: 1em
-          padding: 10px 15px
-          &:hover
-            background-color: $button-bg-hover
-            border: 1px solid $button-border-color-hover
-            cursor: pointer
+          float: none
+          display: block
+          clear: both
+          input[type="submit"]
+            background-color: $button-bg
+            border: 1px solid $button-bg
+            border-radius: $button-border-radius
+            color: $button-color
+            text-align: center
+            width: 100%
+            font-size: inherit
+            font-weight: $bold-weight
+            padding: 15px 16px
+            +box-shadow-xs
+            &:hover
+              background-color: $button-bg-hover
+              border: 1px solid $button-bg-hover
+              cursor: pointer
+
+
+    p.login-sign-up
+      font-size: inherit
+      width: 100%
+      text-align: center
+
+  .#{$prefix}link
+    font-size: inherit
+    font-weight: $bold-weight
+    line-height: inherit
+    color: $link-color
+    text-decoration: none
+    border: none
+    outline: none
+    &:hover
+      font-weight: $bold-weight
+      color: $link-hover-color
+      text-decoration: none
+      border: none
+      outline: none
+    &:active
+      font-weight: $bold-weight
+      color: $link-hover-color
+      text-decoration: none
+      border: none
+      outline: none
+    &:visited
+      font-weight: $bold-weight
+      color: $gray-600
+      text-decoration: none
+      border: none
+      outline: none
+    &:focus
+      font-weight: $bold-weight
+      color: $link-hover-color
+      text-decoration: none
+      border: none
+      outline: none
+    &:focus-visible
+      font-weight: $bold-weight
+      color: $link-color
+      text-decoration: none
+      border: none
+      outline: none

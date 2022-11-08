@@ -68,20 +68,19 @@ if ( ! class_exists( 'um\common\Enqueue' ) ) {
 		 *
 		 * @since 3.0
 		 */
-		function __construct() {
+		public function __construct() {
 			add_action( 'um_core_loaded', array( $this, 'init_variables' ) );
 
 			add_action( 'admin_enqueue_scripts', array( &$this, 'common_libs' ), 9 );
 			add_action( 'wp_enqueue_scripts', array( &$this, 'common_libs' ), 9 );
 		}
 
-
 		/**
 		 * Init variables for enqueue scripts
 		 *
 		 * @since 3.0
 		 */
-		function init_variables() {
+		public function init_variables() {
 			$this->suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
 			$this->urls['js']      = UM_URL . 'assets/js/';

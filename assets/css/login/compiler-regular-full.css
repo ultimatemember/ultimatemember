@@ -14,14 +14,17 @@
   word-wrap: break-word; }
 
 .um {
-  width: 100%; }
+  width: 100%;
+  font-size: 14px; }
   .um .um-frontend-form-notice {
+    font-size: inherit;
     display: inline-block;
     width: 100%;
     margin: 0 0 15px 0;
     padding: 0;
     box-sizing: border-box; }
   .um .um-frontend-form-error {
+    font-size: inherit;
     display: inline-block;
     width: 100%;
     margin: 0 0 15px 0;
@@ -35,7 +38,8 @@
     flex-wrap: nowrap;
     width: 100%;
     margin: 0;
-    padding: 0; }
+    padding: 0;
+    font-size: inherit; }
     .um .um-form .um-form-section-title {
       width: 100%;
       margin: 15px 0;
@@ -54,7 +58,8 @@
         width: 30%;
         margin: 0 10px 0 0;
         padding: 0;
-        font-weight: bold; }
+        font-size: 15px;
+        font-weight: 600; }
         .um .um-form .um-form-row .um-form-row-label .um-req {
           color: #a00;
           margin: 0 0 0 3px;
@@ -69,22 +74,24 @@
         margin: 0;
         padding: 0; }
         .um .um-form .um-form-row .um-form-field-content input[type="text"] {
-          background-color: #fff;
-          color: #333;
           box-sizing: border-box;
-          -webkit-box-sizing: border-box;
           -moz-box-sizing: border-box;
+          -webkit-box-sizing: border-box;
           display: block;
-          font-size: 16px;
-          font-family: inherit;
-          border: 1px solid #ccc;
-          border-radius: 2px;
-          padding: 6px 10px;
-          height: 38px;
           width: 100%;
+          height: 44px;
+          margin: 0;
+          padding: 6px 10px;
+          border: 1px solid var(--um-gray-300, #d0d5dd);
+          border-radius: 6px;
+          outline: none;
+          background-color: #fff;
+          color: #000;
+          font-size: inherit;
+          font-family: inherit;
           line-height: 1.3; }
           .um .um-form .um-form-row .um-form-field-content input[type="text"]:focus {
-            border: 1px solid #999;
+            border: 1px solid var(--um-gray-400, #98a2b3);
             box-shadow: none; }
       .um .um-form .um-form-row.um-form-error-row .um-form-field-content input[type="text"],
       .um .um-form .um-form-row.um-form-error-row .um-form-field-content input[type="password"],
@@ -95,10 +102,6 @@
       .um .um-form .um-form-row.um-form-error-row .um-form-field-content .um-form-field-error {
         color: #c72f38;
         font-size: 0.9em; }
-      .um .um-form .um-form-row.um-field-conditional_radio-type .um-form-field-content label {
-        margin: 0 0 5px 0; }
-      .um .um-form .um-form-row.um-field-conditional_radio-type .um-form-field-content span[data-visible-if] {
-        margin: 0 0 5px 0; }
       .um .um-form .um-form-row.um-field-media-type {
         align-items: flex-start; }
     .um .um-form .um-form-buttons-section {
@@ -108,16 +111,20 @@
       align-items: baseline;
       flex-wrap: wrap;
       margin: 0 0 0 calc( 30% + 10px); }
-      .um .um-form .um-form-buttons-section input, .um .um-form .um-form-buttons-section button {
-        margin: 0 10px 0 0;
-        background-color: #eee;
-        border: 1px solid #ddd;
-        color: #333;
-        font-size: 1em;
-        padding: 10px 15px; }
-        .um .um-form .um-form-buttons-section input:hover, .um .um-form .um-form-buttons-section button:hover {
-          background-color: #ddd;
-          border: 1px solid #ccc;
+      .um .um-form .um-form-buttons-section input[type="submit"], .um .um-form .um-form-buttons-section input[type="button"], .um .um-form .um-form-buttons-section button {
+        background-color: var(--um-blocks-button-bg-color, #eee);
+        border: 1px solid var(--um-blocks-button-bg-color, #eee);
+        border-radius: 8px;
+        color: var(--um-blocks-button-fg-color, #333);
+        text-align: center;
+        font-size: inherit;
+        font-weight: 600;
+        padding: 15px 16px;
+        margin: 0 8px 0 0;
+        box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05); }
+        .um .um-form .um-form-buttons-section input[type="submit"]:hover, .um .um-form .um-form-buttons-section input[type="button"]:hover, .um .um-form .um-form-buttons-section button:hover {
+          background-color: var(--um-blocks-button-bg-hover-color, #ddd);
+          border: 1px solid var(--um-blocks-button-bg-hover-color, #ddd);
           cursor: pointer; }
     .um .um-form.um-top-label .um-form-row {
       display: flex;
@@ -127,12 +134,9 @@
       flex-wrap: nowrap; }
       .um .um-form.um-top-label .um-form-row .um-form-row-label {
         width: 100%;
-        margin: 0 0 10px 0;
-        padding: 0; }
+        margin: 0 0 3px 0; }
       .um .um-form.um-top-label .um-form-row .um-form-field-content {
-        width: 100%;
-        margin: 0 0 10px 0;
-        padding: 0; }
+        width: 100%; }
     .um .um-form.um-top-label .um-form-buttons-section {
       margin: 0;
       width: 100%; }
@@ -140,38 +144,33 @@
       margin: 0;
       justify-content: center; }
       .um .um-form.um-single-button.um-center-always .um-form-buttons-section input, .um .um-form.um-single-button.um-center-always .um-form-buttons-section button {
+        width: 100%;
         margin: 0; }
-  .um.um-ui-xs .um-form .um-form-row {
+  .um.um-ui-xs .um-form:not(.um-top-label) .um-form-row {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
     flex-wrap: nowrap; }
-    .um.um-ui-xs .um-form .um-form-row .um-form-row-label {
+    .um.um-ui-xs .um-form:not(.um-top-label) .um-form-row .um-form-row-label {
       width: 100%;
-      margin: 0 0 10px 0;
-      padding: 0; }
-    .um.um-ui-xs .um-form .um-form-row .um-form-field-content {
-      width: 100%;
-      margin: 0 0 10px 0;
-      padding: 0; }
+      margin: 0 0 3px 0; }
+    .um.um-ui-xs .um-form:not(.um-top-label) .um-form-row .um-form-field-content {
+      width: 100%; }
   .um.um-ui-xs .um-form:not(.um-single-button.um-center-always) .um-form-buttons-section {
     margin: 0;
     width: 100%; }
-  .um.um-ui-s .um-form .um-form-row {
+  .um.um-ui-s .um-form:not(.um-top-label) .um-form-row {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
     flex-wrap: nowrap; }
-    .um.um-ui-s .um-form .um-form-row .um-form-row-label {
+    .um.um-ui-s .um-form:not(.um-top-label) .um-form-row .um-form-row-label {
       width: 100%;
-      margin: 0 0 10px 0;
-      padding: 0; }
-    .um.um-ui-s .um-form .um-form-row .um-form-field-content {
-      width: 100%;
-      margin: 0 0 10px 0;
-      padding: 0; }
+      margin: 0 0 3px 0; }
+    .um.um-ui-s .um-form:not(.um-top-label) .um-form-row .um-form-field-content {
+      width: 100%; }
   .um.um-ui-s .um-form:not(.um-single-button.um-center-always) .um-form-buttons-section {
     margin: 0;
     width: 100%; }
@@ -232,46 +231,121 @@
   .um-uploader.um-uploaded {
     display: none; }
 
-.um.um-login .um-notice {
-  margin: 0 0 12px 0 !important; }
-
-.um.um-login #um-loginform p.login-username, .um.um-login #um-loginform p.login-password {
-  margin: 0 0 15px 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: stretch;
-  flex-wrap: nowrap; }
-  .um.um-login #um-loginform p.login-username label, .um.um-login #um-loginform p.login-password label {
-    font-weight: bold; }
-  .um.um-login #um-loginform p.login-username input, .um.um-login #um-loginform p.login-password input {
-    margin: 0;
-    background-color: #fff;
-    color: #333;
-    box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    display: block;
-    font-size: 16px;
-    font-family: inherit;
-    border: 1px solid #ccc;
-    border-radius: 2px;
-    padding: 6px 10px;
-    height: 38px;
+.um {
+  font-size: 14px; }
+  .um.um-login .um-notice {
+    font-size: inherit;
+    margin: 0 0 12px 0 !important; }
+  .um.um-login #um-loginform {
+    font-size: inherit; }
+    .um.um-login #um-loginform p {
+      font-size: inherit; }
+      .um.um-login #um-loginform p.login-username, .um.um-login #um-loginform p.login-password {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch;
+        flex-wrap: nowrap;
+        margin: 0 0 15px 0;
+        padding: 0;
+        font-size: inherit; }
+        .um.um-login #um-loginform p.login-username label, .um.um-login #um-loginform p.login-password label {
+          font-size: 15px;
+          font-weight: 600;
+          margin: 0 0 3px 0; }
+        .um.um-login #um-loginform p.login-username input, .um.um-login #um-loginform p.login-password input {
+          box-sizing: border-box;
+          -moz-box-sizing: border-box;
+          -webkit-box-sizing: border-box;
+          display: block;
+          width: 100%;
+          height: 44px;
+          margin: 0;
+          padding: 6px 10px;
+          border: 1px solid var(--um-gray-300, #d0d5dd);
+          border-radius: 6px;
+          outline: none;
+          background-color: #fff;
+          color: #000;
+          font-size: inherit;
+          font-family: inherit;
+          line-height: 1.3; }
+          .um.um-login #um-loginform p.login-username input:focus, .um.um-login #um-loginform p.login-password input:focus {
+            border: 1px solid var(--um-gray-400, #98a2b3);
+            box-shadow: none; }
+      .um.um-login #um-loginform p.login-forgot {
+        float: right; }
+      .um.um-login #um-loginform p.login-remember {
+        float: left; }
+        .um.um-login #um-loginform p.login-remember label {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
+          align-items: center;
+          flex-wrap: nowrap; }
+          .um.um-login #um-loginform p.login-remember label input {
+            margin: 0 4px 0 0;
+            padding: 0; }
+      .um.um-login #um-loginform p.login-submit {
+        font-size: inherit;
+        width: 100%;
+        float: none;
+        display: block;
+        clear: both; }
+        .um.um-login #um-loginform p.login-submit input[type="submit"] {
+          background-color: var(--um-blocks-button-bg-color, #eee);
+          border: 1px solid var(--um-blocks-button-bg-color, #eee);
+          border-radius: 8px;
+          color: var(--um-blocks-button-fg-color, #333);
+          text-align: center;
+          width: 100%;
+          font-size: inherit;
+          font-weight: 600;
+          padding: 15px 16px;
+          box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05); }
+          .um.um-login #um-loginform p.login-submit input[type="submit"]:hover {
+            background-color: var(--um-blocks-button-bg-hover-color, #ddd);
+            border: 1px solid var(--um-blocks-button-bg-hover-color, #ddd);
+            cursor: pointer; }
+  .um.um-login p.login-sign-up {
+    font-size: inherit;
     width: 100%;
-    line-height: 1.3; }
-    .um.um-login #um-loginform p.login-username input:focus, .um.um-login #um-loginform p.login-password input:focus {
-      border: 1px solid #999;
-      box-shadow: none; }
-
-.um.um-login #um-loginform p.login-submit input[type="submit"] {
-  background-color: #eee;
-  border: 1px solid #ddd;
-  color: #333;
-  font-size: 1em;
-  padding: 10px 15px; }
-  .um.um-login #um-loginform p.login-submit input[type="submit"]:hover {
-    background-color: #ddd;
-    border: 1px solid #ccc;
-    cursor: pointer; }
+    text-align: center; }
+  .um .um-link {
+    font-size: inherit;
+    font-weight: 600;
+    line-height: inherit;
+    color: var(--um-blocks-button-bg-color, #eee);
+    text-decoration: none;
+    border: none;
+    outline: none; }
+    .um .um-link:hover {
+      font-weight: 600;
+      color: var(--um-blocks-button-bg-hover-color, #ddd);
+      text-decoration: none;
+      border: none;
+      outline: none; }
+    .um .um-link:active {
+      font-weight: 600;
+      color: var(--um-blocks-button-bg-hover-color, #ddd);
+      text-decoration: none;
+      border: none;
+      outline: none; }
+    .um .um-link:visited {
+      font-weight: 600;
+      color: var(--um-gray-600, #475467);
+      text-decoration: none;
+      border: none;
+      outline: none; }
+    .um .um-link:focus {
+      font-weight: 600;
+      color: var(--um-blocks-button-bg-hover-color, #ddd);
+      text-decoration: none;
+      border: none;
+      outline: none; }
+    .um .um-link:focus-visible {
+      font-weight: 600;
+      color: var(--um-blocks-button-bg-color, #eee);
+      text-decoration: none;
+      border: none;
+      outline: none; }

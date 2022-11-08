@@ -22,10 +22,7 @@ class Shortcode {
 		add_shortcode( 'ultimatemember_searchform', array( &$this, 'ultimatemember_searchform' ) );
 		add_shortcode( 'ultimatemember_directory', array( &$this, 'ultimatemember_directory' ) );
 
-		add_action( 'um_pre_directory_shortcode', array( &$this, 'directory_shortcode_enqueue' ) );
-
 		add_filter( 'um_load_shortcode_maybe_skip_meta', array( &$this, 'maybe_skip_meta' ), 10, 2 );
-		add_filter( 'um_get_default_shortcode', array( &$this, 'get_default_shortcode' ), 10, 2 );
 
 		add_filter( 'um_main_ultimatemember_shortcode_content', array( &$this, 'change_content' ), 10, 3 );
 
@@ -39,20 +36,6 @@ class Shortcode {
 		}
 
 		return $content;
-	}
-
-
-	/**
-	 * @param $shortcode
-	 * @param $mode
-	 *
-	 * @return string
-	 */
-	public function get_default_shortcode( $shortcode, $mode ) {
-		if ( 'directory' === $mode ) {
-			$shortcode = '[ultimatemember_directory]';
-		}
-		return $shortcode;
 	}
 
 
@@ -83,19 +66,6 @@ class Shortcode {
 			$skip = true;
 		}
 		return $skip;
-	}
-
-
-	/**
-	 * 
-	 */
-	public function directory_shortcode_enqueue() {
-		wp_enqueue_script( 'um_members' );
-		if ( is_rtl() ) {
-			wp_enqueue_style( 'um_members_rtl' );
-		} else {
-			wp_enqueue_style( 'um_members' );
-		}
 	}
 
 
@@ -173,30 +143,48 @@ class Shortcode {
 	 * @return string
 	 */
 	function ultimatemember_directory( $args = array() ) {
-		global $wpdb;
-
-		$args = ! empty( $args ) ? $args : array();
-
-		$default_directory = $wpdb->get_var(
-			"SELECT pm.post_id 
-				FROM {$wpdb->postmeta} pm 
-				LEFT JOIN {$wpdb->postmeta} pm2 ON( pm.post_id = pm2.post_id AND pm2.meta_key = '_um_is_default' )
-				WHERE pm.meta_key = '_um_mode' AND 
-					  pm.meta_value = 'directory' AND 
-					  pm2.meta_value = '1'"
+		/** There is possible to use 'shortcode_atts_ultimatemember' filter for getting customized $atts. This filter is documented in wp-includes/shortcodes.php "shortcode_atts_{$shortcode}" */
+		$args = shortcode_atts(
+			array(
+				'id' => false,
+			),
+			$args,
+			'ultimatemember_directory'
 		);
 
-		$args['form_id'] = $default_directory;
-
-		$shortcode_attrs = '';
-		foreach ( $args as $key => $value ) {
-			$shortcode_attrs .= " {$key}=\"{$value}\"";
+		if ( empty( $args['id'] ) || ! is_numeric( $args['id'] ) ) {
+			return '';
 		}
 
-		if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
-			return do_shortcode( "[ultimatemember {$shortcode_attrs} /]" );
+		$directory = get_post( $args['id'] );
+		if ( empty( $directory ) ) {
+			return '';
+		}
+
+		if ( 'publish' !== $directory->post_status ) {
+			return '';
+		}
+
+		wp_enqueue_script( 'um_members' );
+		if ( is_rtl() ) {
+			wp_enqueue_style( 'um_members_rtl' );
 		} else {
-			return apply_shortcodes( "[ultimatemember {$shortcode_attrs} /]" );
+			wp_enqueue_style( 'um_members' );
 		}
+
+		$directory_args = UM()->query()->post_data( $args['id'] );
+		foreach ( $directory_args as $k => $v ) {
+			$directory_args[ $k ] = maybe_unserialize( $directory_args[ $k ] );
+		}
+
+		return um_get_template_html(
+			'members.php',
+			array(
+				'args'    => $directory_args,
+				'form_id' => $args['id'],
+				'mode'    => 'directory',
+			),
+			'member-directory'
+		);
 	}
 }

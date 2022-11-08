@@ -57,13 +57,7 @@ class Columns {
 				echo '<span class="um-admin-number">' . $id . '</span>';
 				break;
 			case 'shortcode':
-				$is_default = UM()->query()->get_attr( 'is_default', $id );
-
-				if ( $is_default ) {
-					echo UM()->shortcodes()->get_default_shortcode( $id );
-				} else {
-					echo UM()->shortcodes()->get_shortcode( $id );
-				}
+				echo '[ultimatemember_directory id="' . esc_attr( $id ) . '"]';
 				break;
 			case 'is_default':
 				$is_default = UM()->query()->get_attr( 'is_default', $id );

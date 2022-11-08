@@ -199,7 +199,7 @@ if ( ! class_exists( 'um\admin\Columns' ) ) {
 
 				case 'mode':
 					$mode = UM()->query()->get_attr( 'mode', $id );
-					echo UM()->form()->display_form_type( $mode, $id );
+					echo UM()->form()->display_form_type( $mode );
 					break;
 			}
 		}

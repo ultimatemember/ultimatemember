@@ -55,7 +55,6 @@ if ( ! class_exists( 'um\frontend\Form' ) ) {
 			'hidden',
 			'select',
 			'wp_editor',
-			'conditional_radio',
 			'media',
 			'label',
 			'datepicker',
@@ -853,70 +852,6 @@ if ( ! class_exists( 'um\frontend\Form' ) ) {
 
 			return $html;
 		}
-
-
-		/**
-		 * Render conditional radio
-		 *
-		 * @param array $field_data
-		 *
-		 * @return string
-		 *
-		 * @since 3.0
-		 */
-		public function render_conditional_radio( $field_data ) {
-			if ( empty( $field_data['id'] ) ) {
-				return '';
-			}
-
-			if ( empty( $field_data['options'] ) ) {
-				return '';
-			}
-
-			if ( empty( $field_data['condition_sections'] ) ) {
-				return '';
-			}
-
-			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '_' : '' ) . $field_data['id'];
-
-			$class      = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
-			$class     .= ! empty( $field_data['size'] ) ? $field_data['size'] : ' um-long-field';
-			$class_attr = ' class="um-forms-field um-forms-condition-option' . esc_attr( $class ) . '" ';
-
-			$data = array( 'field_id' => $field_data['id'] );
-
-			$data_attr = '';
-			foreach ( $data as $key => $val ) {
-				$data_attr .= " data-{$key}=\"" . esc_attr( $val ) . '" ';
-			}
-
-			$name      = $field_data['id'];
-			$name      = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
-			$name_attr = ' name="' . esc_attr( $name ) . '" ';
-
-			$value = $this->get_field_value( $field_data );
-
-			$html = '';
-			foreach ( $field_data['options'] as $optkey => $option ) {
-				$id_attr = ' id="' . $id . '-' . $optkey . '" ';
-
-				$html .= "<label><input type=\"radio\" $id_attr $class_attr $name_attr $data_attr " . checked( $value, $optkey, false ) . ' value="' . esc_attr( $optkey ) . '" />&nbsp;' . $option . '</label>';
-
-				$cond_html = '';
-				if ( ! empty( $field_data['condition_sections'][ $optkey ] ) ) {
-					foreach ( $field_data['condition_sections'][ $optkey ] as $section_field ) {
-						$cond_html .= call_user_func( array( &$this, 'render_' . $section_field['type'] ), $section_field );
-					}
-				}
-
-				if ( ! empty( $cond_html ) ) {
-					$html .= '<span data-visible-if="' . esc_attr( $optkey ) . '">' . $cond_html . '</span>';
-				}
-			}
-
-			return $html;
-		}
-
 
 		/**
 		 * Render WP Editor field

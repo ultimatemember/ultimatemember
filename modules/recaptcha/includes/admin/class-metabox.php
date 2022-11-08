@@ -19,42 +19,42 @@ class Metabox {
 	 * Metabox constructor.
 	 */
 	public function __construct() {
-		add_action( 'um_admin_add_form_metabox', array( &$this, 'add_form_metaboxes' ), 10 );
+		add_action( 'um_admin_add_form_metabox', array( &$this, 'add_form_metaboxes' ), 10, 1 );
 		add_filter( 'um_form_meta_map', array( &$this, 'add_form_meta_sanitize' ), 10, 1 );
 	}
 
 
 	/**
-	 *
+	 * @param string $mode
 	 */
-	public function add_form_metaboxes() {
+	public function add_form_metaboxes( $mode ) {
 		$module_data = UM()->modules()->get_data( 'recaptcha' );
 		if ( ! $module_data ) {
 			return;
 		}
 
-		if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
-			return;
+		switch ( $mode ) {
+			case 'login':
+				add_meta_box(
+					"um-admin-form-login-recaptcha{" . $module_data['path'] . "}",
+					__( 'Google reCAPTCHA', 'ultimate-member' ),
+					array( UM()->admin()->metabox(), 'load_metabox_form' ),
+					'um_form',
+					'side',
+					'default'
+				);
+				break;
+			case 'register':
+				add_meta_box(
+					'um-admin-form-register-recaptcha{' . $module_data['path'] . '}',
+					__( 'Google reCAPTCHA', 'ultimate-member' ),
+					array( UM()->admin()->metabox(), 'load_metabox_form' ),
+					'um_form',
+					'side',
+					'default'
+				);
+				break;
 		}
-
-
-		add_meta_box(
-			'um-admin-form-register-recaptcha{' . $module_data['path'] . '}',
-			__( 'Google reCAPTCHA', 'ultimate-member' ),
-			array( UM()->admin()->metabox(), 'load_metabox_form' ),
-			'um_form',
-			'side',
-			'default'
-		);
-
-		add_meta_box(
-			"um-admin-form-login-recaptcha{" . $module_data['path'] . "}",
-			__( 'Google reCAPTCHA', 'ultimate-member' ),
-			array( UM()->admin()->metabox(), 'load_metabox_form' ),
-			'um_form',
-			'side',
-			'default'
-		);
 	}
 
 

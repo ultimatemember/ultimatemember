@@ -679,10 +679,9 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		/**
 		 * Display form type as Title
 		 * @param  string $mode
-		 * @param  integer $post_id
 		 * @return string $output
 		 */
-		public function display_form_type( $mode, $post_id ) {
+		public function display_form_type( $mode ) {
 			$output = null;
 			switch ( $mode ) {
 				case 'login':
