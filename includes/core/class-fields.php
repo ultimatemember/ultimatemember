@@ -112,7 +112,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$output = null;
 
 			foreach ( $fields as $key => $data ) {
-				$output .= UM()->fields()->edit_field( $key, $data );
+				$output .= $this->edit_field( $key, $data );
 			}
 
 			echo $output;
@@ -147,7 +147,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			if ( array_key_exists( 'custom_dropdown_options_source', $args ) ) {
 				if ( function_exists( wp_unslash( $args['custom_dropdown_options_source'] ) ) ) {
-					if ( ! in_array( $args['custom_dropdown_options_source'], UM()->fields()->dropdown_options_source_blacklist(), true ) ) {
+					if ( ! $this->is_source_blacklisted( $args['custom_dropdown_options_source'] ) ) {
 						$allowed_callbacks = UM()->options()->get( 'allowed_choice_callbacks' );
 						if ( ! empty( $allowed_callbacks ) ) {
 							$allowed_callbacks = array_map( 'rtrim', explode( "\n", $allowed_callbacks ) );
@@ -204,7 +204,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			if ( array_key_exists( 'custom_dropdown_options_source', $args ) ) {
 				if ( function_exists( wp_unslash( $args['custom_dropdown_options_source'] ) ) ) {
-					if ( ! in_array( $args['custom_dropdown_options_source'], UM()->fields()->dropdown_options_source_blacklist(), true ) ) {
+					if ( ! $this->is_source_blacklisted( $args['custom_dropdown_options_source'] ) ) {
 						$allowed_callbacks = UM()->options()->get( 'allowed_choice_callbacks' );
 						if ( ! empty( $allowed_callbacks ) ) {
 							$allowed_callbacks = array_map( 'rtrim', explode( "\n", $allowed_callbacks ) );
@@ -1310,6 +1310,25 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		}
 
 		/**
+		 * Is the dropdown source callback function blacklisted?
+		 *
+		 * @param string $source Function name
+		 *
+		 * @return bool
+		 */
+		public function is_source_blacklisted( $source ) {
+			// avoid using different letter case for bypass the blacklist e.g. phpInfo
+			// avoid using root namespace for bypass the blacklist e.g. \phpinfo
+			$source = trim( strtolower( $source ), '\\' );
+
+			if ( in_array( $source, $this->dropdown_options_source_blacklist(), true ) ) {
+				return true;
+			}
+
+			return false;
+		}
+
+		/**
 		 * Gets selected option value from a callback function
 		 *
 		 * @param  string $value
@@ -1322,7 +1341,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			if ( in_array( $type, array( 'select', 'multiselect' ) ) && ! empty( $data['custom_dropdown_options_source'] ) ) {
 
-				if ( in_array( $data['custom_dropdown_options_source'], $this->dropdown_options_source_blacklist(), true ) ) {
+				if ( $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
 					return $value;
 				}
 
@@ -1393,7 +1412,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			if ( in_array( $type, array( 'select', 'multiselect' ) ) && ! empty( $data['custom_dropdown_options_source'] ) ) {
 
-				if ( in_array( $data['custom_dropdown_options_source'], $this->dropdown_options_source_blacklist(), true ) ) {
+				if ( $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
 					return $arr_options;
 				}
 
@@ -3062,7 +3081,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						if ( ! empty( $data['custom_dropdown_options_source'] ) && $has_parent_option && function_exists( $data['custom_dropdown_options_source'] ) &&
 							um_user( $data['parent_dropdown_relationship'] )
 						) {
-							if ( ! in_array( $data['custom_dropdown_options_source'], $this->dropdown_options_source_blacklist(), true ) ) {
+							if ( ! $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
 								$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
 							}
 
@@ -3082,7 +3101,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if ( $has_parent_option ) {
 						if ( ! empty( $data['custom_dropdown_options_source'] ) && $has_parent_option &&
 							 function_exists( $data['custom_dropdown_options_source'] ) && isset( UM()->form()->post_form[ $form_key ] ) ) {
-							if ( ! in_array( $data['custom_dropdown_options_source'], $this->dropdown_options_source_blacklist(), true ) ) {
+							if ( ! $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
 								$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
 							}
 						}

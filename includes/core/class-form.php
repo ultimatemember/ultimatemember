@@ -148,7 +148,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				wp_send_json( $arr_options );
 			}
 
-			if ( in_array( $ajax_source_func, UM()->fields()->dropdown_options_source_blacklist(), true ) ) {
+			if ( UM()->fields()->is_source_blacklisted( $ajax_source_func ) ) {
 				$arr_options['status']  = 'error';
 				$arr_options['message'] = __( 'This is not possible for security reasons.', 'ultimate-member' );
 

@@ -1220,7 +1220,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 				$arr_options['function_exists'] = function_exists( $um_callback_func );
 			}
 
-			if ( in_array( $um_callback_func, UM()->fields()->dropdown_options_source_blacklist(), true ) ) {
+			if ( UM()->fields()->is_source_blacklisted( $um_callback_func ) ) {
 				wp_send_json_error( __( 'This is not possible for security reasons. Don\'t use internal PHP functions.', 'ultimate-member' ) );
 			}
 
