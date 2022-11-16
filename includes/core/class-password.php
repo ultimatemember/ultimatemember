@@ -544,10 +544,26 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			}
 
 			if ( UM()->options()->get( 'require_strongpass' ) ) {
+
+				wp_fix_server_vars();
+
+				$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
+				$user = false;
+
+				if ( isset( $_COOKIE[ $rp_cookie ] ) && 0 < strpos( $_COOKIE[ $rp_cookie ], ':' ) ) {
+					list( $rp_login, $rp_key ) = explode( ':', wp_unslash( $_COOKIE[ $rp_cookie ] ), 2 );
+
+					$user = check_password_reset_key( $rp_key, $rp_login );
+
+				}
+
 				$min_length = UM()->options()->get( 'password_min_chars' );
 				$min_length = ! empty( $min_length ) ? $min_length : 8;
 				$max_length = UM()->options()->get( 'password_max_chars' );
 				$max_length = ! empty( $max_length ) ? $max_length : 30;
+				um_fetch_user( $user->ID );
+				$user_login = um_user("user_login");
+				$user_email = um_user("user_email");
 
 				if ( mb_strlen( wp_unslash( $args['user_password'] ) ) < $min_length ) {
 					UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain at least %d characters', 'ultimate-member' ), $min_length ) );
@@ -555,6 +571,14 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 				if ( mb_strlen( wp_unslash( $args['user_password'] ) ) > $max_length ) {
 					UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain less than %d characters', 'ultimate-member' ), $max_length ) );
+				}
+
+				if ( strpos( strtolower( $user_login ), strtolower( $args['user_password'] )  ) > -1 ) {
+					UM()->form()->add_error( 'user_password', __( 'Your password cannot contain the part of your username', 'ultimate-member' ) );
+				}
+
+				if ( strpos( strtolower( $user_email ), strtolower( $args['user_password'] )  ) > -1 ) {
+					UM()->form()->add_error( 'user_password', __( 'Your password cannot contain the part of your email address', 'ultimate-member' ) );
 				}
 
 				if ( ! UM()->validation()->strong_pass( $args['user_password'] ) ) {

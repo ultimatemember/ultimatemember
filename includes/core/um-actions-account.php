@@ -92,6 +92,8 @@ function um_submit_account_errors_hook( $args ) {
 					$min_length = ! empty( $min_length ) ? $min_length : 8;
 					$max_length = UM()->options()->get( 'password_max_chars' );
 					$max_length = ! empty( $max_length ) ? $max_length : 30;
+					$user_login = um_user("user_login");
+					$user_email = um_user("user_email");
 
 					if ( mb_strlen( wp_unslash( $args['user_password'] ) ) < $min_length ) {
 						UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain at least %d characters', 'ultimate-member' ), $min_length ) );
@@ -103,6 +105,14 @@ function um_submit_account_errors_hook( $args ) {
 
 					if ( ! UM()->validation()->strong_pass( $args['user_password'] ) ) {
 						UM()->form()->add_error( 'user_password', __( 'Your password must contain at least one lowercase letter, one capital letter and one number', 'ultimate-member' ) );
+					}
+
+					if ( strpos( strtolower( $user_login ), strtolower( $args['user_password'] )  ) > -1 ) {
+						UM()->form()->add_error( 'user_password', __( 'Your password cannot contain the part of your username', 'ultimate-member' ) );
+					}
+
+					if ( strpos( strtolower( $user_email ), strtolower( $args['user_password'] )  ) > -1 ) {
+						UM()->form()->add_error( 'user_password', __( 'Your password cannot contain the part of your email address', 'ultimate-member' ) );
 					}
 				}
 			}
