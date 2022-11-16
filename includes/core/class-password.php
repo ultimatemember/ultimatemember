@@ -550,10 +550,11 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
 				$user = false;
 
-				if ( isset( $_COOKIE[ $rp_cookie ] ) && 0 < strpos( $_COOKIE[ $rp_cookie ], ':' ) ) {
+				if ( ! is_user_logged_in() && isset( $_COOKIE[ $rp_cookie ] ) && 0 < strpos( $_COOKIE[ $rp_cookie ], ':' ) ) {
 					list( $rp_login, $rp_key ) = explode( ':', wp_unslash( $_COOKIE[ $rp_cookie ] ), 2 );
 
 					$user = check_password_reset_key( $rp_key, $rp_login );
+					um_fetch_user( $user->ID );
 
 				}
 
@@ -561,7 +562,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				$min_length = ! empty( $min_length ) ? $min_length : 8;
 				$max_length = UM()->options()->get( 'password_max_chars' );
 				$max_length = ! empty( $max_length ) ? $max_length : 30;
-				um_fetch_user( $user->ID );
+				
 				$user_login = um_user("user_login");
 				$user_email = um_user("user_email");
 
