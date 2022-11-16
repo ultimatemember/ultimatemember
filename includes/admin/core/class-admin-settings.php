@@ -1309,6 +1309,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'label'   => __( 'Allow external link redirect confirm', 'ultimate-member' ),
 										'tooltip' => __( 'Using JS.confirm alert when you go to an external link.', 'ultimate-member' ),
 									),
+									array(
+										'id'      => 'change_password_request_limit',
+										'type'    => 'checkbox',
+										'label'   => __( 'Change Password request limit', 'ultimate-member' ),
+										'tooltip' => __( 'This option adds rate limit when submitting the change password form in the Account page. Users are only allowed to submit 1 request per 30 minutes to prevent from any brute-force attacks or password guessing with the form.', 'ultimate-member' ),
+									),
 								),
 							),
 						),
