@@ -984,7 +984,7 @@ function um_filtered_value( $key, $data = false ) {
 	 * ?>
 	 */
 	$value = apply_filters( "um_profile_field_filter_hook__{$type}", $value, $data );
-	$value = UM()->shortcodes()->emotize( $value );
+	$value = UM()->common()->shortcodes()->emotize( $value );
 	return $value;
 }
 

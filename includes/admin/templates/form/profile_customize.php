@@ -36,7 +36,7 @@ $profile_customize_fields = array(
 		'type'    => 'select',
 		'label'   => __( 'Template', 'ultimate-member' ),
 		'value'   => UM()->query()->get_meta_value( '_um_profile_template', null, UM()->options()->get( 'profile_template' ) ),
-		'options' => UM()->shortcodes()->get_templates( 'profile' ),
+		'options' => UM()->common()->shortcodes()->get_templates( 'profile' ),
 	),
 	array(
 		'id'          => '_um_profile_primary_btn_word',

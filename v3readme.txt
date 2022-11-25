@@ -172,6 +172,12 @@ $actions['um_unverify_accounts'] => __( 'Mark accounts as unverified', 'um-verif
 'um_reset_password_form' - action hook for the lostpassword form, please edit lostpassword.php template file instead
 'um_after_form_fields' - action hook for the lostpassword form, please edit lostpassword.php template file instead
 
+
+'um_when_status_is_set' - use action hook 'um_before_user_status_is_set' instead
+'um_after_user_status_is_changed_hook' - use action hook 'um_after_user_status_is_changed' instead
+'um_activate_url' to 'um_activate_url_base'
+"um_admin_custom_hook_{$action}" - use filter hook "um_handle_bulk_actions-users-{$current_action}" instead with setting redirect attribute after the action
+
 ### Deprecated functions
 
 `UM()->get_template()` use `um_get_template()` instead and for getting template content without echo use `um_get_template_html()` (remove since 1 year after official v3 release)
@@ -235,3 +241,14 @@ UM_TEMPLATE_CONFLICT_TEST - for debugging custom templates
 * wpnonce has been removed from a login form
 
 ### Deprecated templates:
+
+
+
+## Form Builder:
+
+#### Fields meta:
+* '_help' to '_description'
+* removed '_visibility' and '_public' + '_roles' for fields on the registration form
+* '_intervals' to '_step' for the time-type field
+* 'multiselect' field-type to the 'dropdown' with active '_is_multi' setting
+* '_height' to '_rows' for the textarea-type field

@@ -1117,20 +1117,6 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
-		 * @return um\core\Shortcodes
-		 */
-		function shortcodes() {
-			if ( empty( $this->classes['shortcodes'] ) ) {
-				$this->classes['shortcodes'] = new um\core\Shortcodes();
-			}
-
-			return $this->classes['shortcodes'];
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
 		 * @return um\core\Account
 		 */
 		function account() {
@@ -1320,20 +1306,6 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 
 			return $this->classes['validation'];
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * @return um\core\Access
-		 */
-		function access() {
-			if ( empty( $this->classes['access'] ) ) {
-				$this->classes['access'] = new um\core\Access();
-			}
-
-			return $this->classes['access'];
 		}
 
 
@@ -1604,7 +1576,6 @@ if ( ! class_exists( 'UM' ) ) {
 			_deprecated_function( __METHOD__, '3.0' );
 		}
 
-
 		/**
 		 * @since 2.0
 		 *
@@ -1612,6 +1583,36 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		function fonticons() {
 			_deprecated_function( __METHOD__, '3.0' );
+		}
+
+		/**
+		 * @since 2.0
+		 *
+		 * Legacy since 3.0
+		 *
+		 * @return um\legacy\core\Access
+		 */
+		function access() {
+			if ( empty( $this->classes['um\legacy\core\access'] ) ) {
+				$this->classes['um\legacy\core\access'] = new um\legacy\core\Access();
+			}
+
+			return $this->classes['um\legacy\core\access'];
+		}
+
+		/**
+		 * @since 2.0
+		 *
+		 * Legacy since 3.0
+		 *
+		 * @return um\legacy\core\Shortcodes
+		 */
+		function shortcodes() {
+			if ( empty( $this->classes['um\legacy\core\shortcodes'] ) ) {
+				$this->classes['um\legacy\core\shortcodes'] = new um\legacy\core\Shortcodes();
+			}
+
+			return $this->classes['um\legacy\core\shortcodes'];
 		}
 
 

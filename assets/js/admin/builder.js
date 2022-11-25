@@ -1,5 +1,58 @@
 var $um_tiny_editor;
 
+var um_radioStates = {};
+
+/**
+ * Recalculate options indexes
+ */
+function um_recalculate_indexes() {
+	jQuery('.um-admin-option-rows').find('.um-admin-option-row').each( function (i) {
+		jQuery(this).show().attr('data-option_index', i).data('option_index', i);
+		jQuery(this).find('.um-admin-option-default-multi').attr('name','_options[defaults][' + i + ']');
+		jQuery(this).find('.um-admin-option-default').attr('value',i);
+		jQuery(this).find('.um-admin-option-key').attr('id','um-admin-option-key-' + i).attr('name','_options[keys][' + i + ']');
+		jQuery(this).find('.um-admin-option-val').attr('id','um-admin-option-value-' + i).attr('name','_options[values][' + i + ']');
+	} );
+
+	um_radio_set_states();
+}
+
+function um_multi_or_not() {
+	var rows = jQuery('#_is_multi').parents('.um-admin-modal-form-inner').find( '.um-admin-option-rows .um-admin-option-row' );
+	if ( jQuery('#_is_multi').is(':checked') ) {
+		rows.find('.um-admin-option-default-multi').prop('disabled', false).show();
+		rows.find('.um-admin-option-default').prop('disabled', true).prop('checked', false).hide();
+	} else {
+		rows.find('.um-admin-option-default-multi').prop('disabled', true).prop('checked', false).hide();
+		rows.find('.um-admin-option-default').prop('disabled', false).show();
+	}
+
+	um_radio_set_states();
+}
+
+function um_admin_init_draggable() {
+	/**
+	 * Sort options
+	 */
+	jQuery('.um-admin-option-rows').sortable({
+		items:                  '.um-admin-option-row',
+		forcePlaceholderSize:   true,
+		update: function( event, ui ) {
+			um_recalculate_indexes();
+		}
+	});
+
+	um_radio_set_states();
+}
+
+// for unchecking the radio
+function um_radio_set_states() {
+	um_radioStates = {};
+	jQuery.each(jQuery(".um-admin-option-rows .um-admin-option-default"), function(index, rd) {
+		um_radioStates[rd.value] = jQuery(rd).is(':checked');
+	});
+}
+
 function UM_Drag_and_Drop() {
 	jQuery('.um-admin-drag-col,.um-admin-drag-group').sortable({
 		items: '.um-admin-drag-fld',
@@ -292,6 +345,8 @@ function UM_Rows_Refresh() {
 					UM.modal.responsive( $modal );
 
 					um_admin_init_icon_select();
+
+					um_admin_init_draggable();
 				},
 				error: function( data ) {
 					$modal.removeClass('loading');
@@ -334,6 +389,9 @@ function UM_Rows_Refresh() {
 					um_admin_init_datetimepicker();
 
 					UM.modal.responsive( $modal );
+
+					um_admin_init_draggable();
+
 					um_admin_init_icon_select();
 				},
 				error: function( data ) {
@@ -813,6 +871,76 @@ jQuery( document ).ready( function() {
 		}
 
 	});
+
+
+
+	jQuery( document.body ).on('change', '#_is_multi', function(){
+		um_multi_or_not();
+	});
+
+	// for unchecking the radio
+	jQuery( document.body ).on('click', '.um-admin-option-rows .um-admin-option-default', function() {
+		var val = jQuery(this).val();
+		jQuery(this).prop('checked', (um_radioStates[val] = !um_radioStates[val]));
+
+		jQuery.each( jQuery(".um-admin-option-rows .um-admin-option-default"), function(index, rd) {
+			if(rd.value !== val) {
+				um_radioStates[rd.value] = false;
+			}
+		});
+	});
+
+	// radioButtons.click(function() {
+	//
+	// 	var val = $(this).val();
+	// 	$(this).attr('checked', (radioStates[val] = !radioStates[val]));
+	//
+	// 	$.each(radioButtons, function(index, rd) {
+	// 		if(rd.value !== val) {
+	// 			radioStates[rd.value] = false;
+	// 		}
+	// 	});
+	// });
+	// jQuery( document.body ).on('mouseup', '.um-admin-option-default', function(e) {
+	// 	e.stopPropagation();
+	// 	if ( jQuery(this).is(':checked') ) {
+	// 		jQuery(this).prop('checked', false);
+	// 	} else {
+	// 		jQuery(this).prop('checked', true);
+	// 	}
+	// });
+
+	/* Handlers for options */
+
+	jQuery( document.body ).on('click', '.um-admin-option-row-add', function() {
+		var html = jQuery('.um-admin-option-row-placeholder')[0].outerHTML.replace( 'um-admin-option-row-placeholder', 'um-admin-option-row' );
+
+		var html_wrapper = jQuery('<div>').append( html );
+		html_wrapper.find('.um-admin-option-key').prop('disabled', false);
+		html_wrapper.find('.um-admin-option-val').prop('disabled', false);
+		html_wrapper.find('.um-admin-option-default').prop('disabled', false);
+		html_wrapper.find('.um-admin-option-default-multi').prop('disabled', false);
+
+		jQuery( html_wrapper.html() ).insertAfter( jQuery(this).parents('.um-admin-option-row') );
+		um_recalculate_indexes();
+		um_multi_or_not();
+		um_admin_init_draggable();
+	});
+
+	jQuery( document.body ).on('click', '.um-admin-option-row-remove', function() {
+		if ( jQuery(this).parents('.um-admin-option-rows').find('.um-admin-option-row').length === 1 ) {
+			jQuery(this).parents('.um-admin-option-row').find('.um-admin-option-key').val('');
+			jQuery(this).parents('.um-admin-option-row').find('.um-admin-option-val').val('');
+			jQuery(this).parents('.um-admin-option-row').find('.um-admin-option-default').prop( "checked", false );
+			jQuery(this).parents('.um-admin-option-row').find('.um-admin-option-default-multi').prop( "checked", false );
+			return;
+		}
+
+		jQuery(this).parents('.um-admin-option-row').remove();
+		um_recalculate_indexes();
+		um_admin_init_draggable();
+	});
+
 
 	if ( jQuery('.um-admin-drag').length ) {
 		UM_Drag_and_Drop();

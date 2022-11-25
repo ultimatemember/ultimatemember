@@ -607,7 +607,7 @@ function um_new_modal( id, size, isPhoto, source ) {
 	jQuery( document ).bind( "touchmove", function(e){e.preventDefault();});
 	jQuery( '.um-modal' ).on('touchmove', function(e){e.stopPropagation();});
 
-	var $tpl = jQuery( '<div class="um-modal-overlay"></div><div class="um-modal"></div>' );
+	var $tpl = jQuery( '<div class="um-modal-overlay"></div><div class="um um-modal"></div>' );
 	var $modal = $tpl.filter('.um-modal');
 	$modal.append( jQuery( '#' + id ) );
 

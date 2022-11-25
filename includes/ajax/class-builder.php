@@ -62,6 +62,7 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 			$this->builder_input = apply_filters(
 				'um_builder_input_map',
 				array(
+					// Structure
 					'_in_row'                         => array(
 						'sanitize' => 'key',
 					),
@@ -74,9 +75,13 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 					'_in_group'                       => array(
 						'sanitize' => 'absint',
 					),
-					'_visibility'                     => array(
-						'sanitize' => 'key',
+
+					// Row-type for beautify in admin builder
+					'_id'                             => array(
+						'sanitize' => 'text',
 					),
+
+					// Conditional logic
 					'_conditional_action'             => array(
 						'sanitize' => 'key',
 					),
@@ -137,23 +142,13 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 					'_conditional_value4'             => array(
 						'sanitize' => 'text',
 					),
-					'_validate'                       => array(
-						'sanitize' => 'key',
-					),
-					'_custom_validate'                => array(
-						'sanitize' => 'text',
-					),
-					'_icon'                           => array(
-						'sanitize' => 'text',
-					),
+
+					// Styling
 					'_css_class'                      => array(
 						'sanitize' => 'text',
 					),
 					'_width'                          => array(
 						'sanitize' => 'absint',
-					),
-					'_divider_text'                   => array(
-						'sanitize' => 'text',
 					),
 					'_padding'                        => array(
 						'sanitize' => 'text',
@@ -197,6 +192,23 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 					'_color'                          => array(
 						'sanitize' => 'text',
 					),
+					'_style'                          => array(
+						'sanitize' => 'key',
+					),
+
+					'_validate'                       => array(
+						'sanitize' => 'key',
+					),
+					'_custom_validate'                => array(
+						'sanitize' => 'text',
+					),
+
+					// For divider-type only
+					'_divider_text'                   => array(
+						'sanitize' => 'text',
+					),
+
+					// For URL-type only
 					'_url_text'                       => array(
 						'sanitize' => 'text',
 					),
@@ -206,48 +218,70 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 					'_url_rel'                        => array(
 						'sanitize' => 'key',
 					),
+
+					// For password-type only
 					'_force_good_pass'                => array(
 						'sanitize' => 'bool',
 					),
 					'_force_confirm_pass'             => array(
 						'sanitize' => 'bool',
 					),
-					'_style'                          => array(
-						'sanitize' => 'key',
-					),
-					'_intervals'                      => array(
-						'sanitize' => 'absint',
-					),
-					'_format'                         => array(
+					'_label_confirm_pass'             => array(
 						'sanitize' => 'text',
 					),
-					'_format_custom'                  => array(
+					'_description_confirm_pass'       => array(
+						'sanitize' => 'textarea',
+					),
+					'_placeholder_confirm_pass'       => array(
 						'sanitize' => 'text',
 					),
-					'_pretty_format'                  => array(
-						'sanitize' => 'bool',
-					),
-					'_disabled_weekdays'              => array(
-						'sanitize' => 'absint',
-					),
-					'_years'                          => array(
-						'sanitize' => 'absint',
-					),
-					'_years_x'                        => array(
-						'sanitize' => 'key',
-					),
-					'_range_start'                    => array(
+
+					// For number and time types only
+					'_step'                           => array(
 						'sanitize' => 'text',
 					),
-					'_range_end'                      => array(
+
+					// Input field-types only
+					'_pattern'                        => array(
 						'sanitize' => 'text',
 					),
-					'_range'                          => array(
-						'sanitize' => 'key',
+
+					// For hidden-type only
+					'_value'                          => array(
+						'sanitize' => 'text',
 					),
+
+					// For shortcode and content types only
 					'_content'                        => array(
 						'sanitize' => 'textarea',
 					),
+
+					// For Spacing field-type only
+					'_spacing'                        => array(
+						'sanitize' => 'text',
+					),
+
+					// For dropdown-type only
+					'_is_multi'                       => array(
+						'sanitize' => 'bool',
+					),
+
+					// For multi-dropdown and checkboxes-type only
+					'_max_selections'                 => array(
+						'sanitize' => 'absint',
+					),
+					'_min_selections'                 => array(
+						'sanitize' => 'absint',
+					),
+
+					// For dropdown, radio and checkboxes types only
+					'_custom_dropdown_options_source' => array(
+						'sanitize' => 'text',
+					),
+					'_parent_dropdown_relationship'   => array(
+						'sanitize' => 'text',
+					),
+
 					'_crop'                           => array(
 						'sanitize' => 'int',
 					),
@@ -269,29 +303,16 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 					'_height'                         => array(
 						'sanitize' => 'text',
 					),
-					'_spacing'                        => array(
-						'sanitize' => 'text',
-					),
-					'_is_multi'                       => array(
-						'sanitize' => 'bool',
-					),
-					'_max_selections'                 => array(
-						'sanitize' => 'absint',
-					),
-					'_min_selections'                 => array(
-						'sanitize' => 'absint',
-					),
-					'_max_entries'                    => array(
-						'sanitize' => 'absint',
-					),
+
+
 					'_max_words'                      => array(
 						'sanitize' => 'absint',
 					),
 					'_min'                            => array(
-						'sanitize' => 'empty_int',
+						'sanitize' => 'text',
 					),
 					'_max'                            => array(
-						'sanitize' => 'empty_int',
+						'sanitize' => 'text',
 					),
 					'_min_chars'                      => array(
 						'sanitize' => 'absint',
@@ -303,31 +324,34 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 						'sanitize' => 'bool',
 					),
 					'_options'                        => array(
-						'sanitize' => 'textarea',
+						'sanitize' => array( $this, 'sanitize_options' ),
 					),
+
 					'_title'                          => array(
-						'sanitize' => 'text',
-					),
-					'_id'                             => array(
-						'sanitize' => 'text',
-					),
-					'_metakey'                        => array(
-						'sanitize' => 'text',
-					),
-					'_help'                           => array(
-						'sanitize' => 'text',
-					),
-					'_default'                        => array(
 						'sanitize' => 'text',
 					),
 					'_label'                          => array(
 						'sanitize' => 'text',
 					),
-					'_label_confirm_pass'             => array(
+					'_metakey'                        => array(
+						'sanitize' => 'text',
+					),
+					'_default'                        => array(
 						'sanitize' => 'text',
 					),
 					'_placeholder'                    => array(
 						'sanitize' => 'text',
+					),
+					'_description'                    => array(
+						'sanitize' => 'textarea',
+					),
+					'_required'                       => array(
+						'sanitize' => 'bool',
+					),
+
+					// Visibility and privacy for the fields on the Profile Form only
+					'_visibility'                     => array(
+						'sanitize' => 'key',
 					),
 					'_public'                         => array(
 						'sanitize' => 'text',
@@ -335,25 +359,61 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 					'_roles'                          => array(
 						'sanitize' => array( $this, 'sanitize_existed_role' ),
 					),
-					'_required'                       => array(
-						'sanitize' => 'bool',
-					),
+
+					// Editable fields on the Profile Forms only
 					'_editable'                       => array(
 						'sanitize' => 'bool',
 					),
+
+					// Rating field-type only
 					'_number'                         => array(
 						'sanitize' => 'absint',
 					),
-					'_custom_dropdown_options_source' => array(
-						'sanitize' => 'text',
-					),
-					'_parent_dropdown_relationship'   => array(
-						'sanitize' => 'text',
+
+					// todo Future integration with repeater
+					'_max_entries'                    => array(
+						'sanitize' => 'absint',
 					),
 				)
 			);
 		}
 
+		function sanitize_options( $value ) {
+			if ( ! empty( $value ) ) {
+				$prepared_value = array();
+
+				if ( array_key_exists( 'keys', $value ) ) {
+					foreach ( $value['keys'] as $index => &$key ) {
+						$key = sanitize_key( $key );
+						$prepared_value[ $index ]['key']     = $key;
+						$prepared_value[ $index ]['default'] = false;
+					}
+				}
+
+				if ( array_key_exists( 'values', $value ) ) {
+					foreach ( $value['values'] as $index => &$opt_value ) {
+						$opt_value = sanitize_text_field( $opt_value );
+						$prepared_value[ $index ]['value'] = $opt_value;
+					}
+				}
+
+				if ( array_key_exists( 'defaults', $value ) ) {
+					if ( is_array( $value['defaults'] ) ) {
+						foreach ( $value['defaults'] as $index => &$default ) {
+							$default = (bool) $default;
+							$prepared_value[ $index ]['default'] = $default;
+						}
+					} else {
+						$value['defaults'] = (int) $value['defaults'];
+						$prepared_value[ $value['defaults'] ]['default'] = true;
+					}
+				}
+
+				return $prepared_value;
+			}
+
+			return $value;
+		}
 
 		/**
 		 *  Retrieves dropdown/multi-select options from a callback function
@@ -606,64 +666,68 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 
 				<form action="" method="post" class="um_add_field um_edit_field um-admin-metabox">
 					<div class="um-admin-modal-form-inner">
-					<input type="hidden" name="_in_row" id="_in_row" value="<?php echo $metabox->edit_array['in_row']; ?>" />
-					<input type="hidden" name="_in_sub_row" id="_in_sub_row" value="<?php echo $metabox->edit_array['in_sub_row']; ?>" />
-					<input type="hidden" name="_in_column" id="_in_column" value="<?php echo $metabox->edit_array['in_column']; ?>" />
-					<input type="hidden" name="_in_group" id="_in_group" value="<?php echo $metabox->edit_array['in_group']; ?>" />
+						<input type="hidden" name="_in_row" id="_in_row" value="<?php echo $metabox->edit_array['in_row']; ?>" />
+						<input type="hidden" name="_in_sub_row" id="_in_sub_row" value="<?php echo $metabox->edit_array['in_sub_row']; ?>" />
+						<input type="hidden" name="_in_column" id="_in_column" value="<?php echo $metabox->edit_array['in_column']; ?>" />
+						<input type="hidden" name="_in_group" id="_in_group" value="<?php echo $metabox->edit_array['in_group']; ?>" />
 
-					<input type="hidden" name="_type" id="_type" value="<?php echo esc_attr( $field_type ); ?>" />
+						<input type="hidden" name="_type" id="_type" value="<?php echo esc_attr( $field_type ); ?>" />
 
-					<input type="hidden" name="post_id" id="post_id" value="<?php echo esc_attr( $form_id ); ?>" />
+						<input type="hidden" name="post_id" id="post_id" value="<?php echo esc_attr( $form_id ); ?>" />
 
-					<input type="hidden" name="edit_mode" id="edit_mode" value="true" />
+						<input type="hidden" name="edit_mode" id="edit_mode" value="true" />
 
-					<input type="hidden" name="_metakey" id="_metakey" value="<?php echo $metabox->edit_array['metakey']; ?>" />
+						<input type="hidden" name="_metakey" id="_metakey" value="<?php echo $metabox->edit_array['metakey']; ?>" />
 
-					<input type="hidden" name="_position" id="_position" value="<?php echo $metabox->edit_array['position']; ?>" />
+						<input type="hidden" name="_position" id="_position" value="<?php echo $metabox->edit_array['position']; ?>" />
 
-					<?php if ( isset( $args['mce_content'] ) ) { ?>
-						<div class="dynamic-mce-content"><?php echo ! empty( $metabox->edit_array['content'] ) ? $metabox->edit_array['content'] : ''; ?></div>
-					<?php } ?>
+						<?php if ( isset( $args['mce_content'] ) ) { ?>
+							<div class="dynamic-mce-content"><?php echo ! empty( $metabox->edit_array['content'] ) ? $metabox->edit_array['content'] : ''; ?></div>
+						<?php } ?>
 
-					<?php UM()->builder()->modal_header(); ?>
+						<?php UM()->builder()->modal_header(); ?>
 
-					<div class="um-admin-half">
+						<div class="um-admin-half">
 
-						<?php if ( isset( $col1 ) ) {
-							foreach ( $col1 as $opt ) {
+							<?php if ( isset( $col1 ) ) {
+								foreach ( $col1 as $opt ) {
+									$metabox->field_input( $opt, $form_id, $metabox->edit_array );
+								}
+							} ?>
+
+						</div>
+
+						<div class="um-admin-half um-admin-right">
+
+							<?php if ( isset( $col2 ) ) {
+								foreach ( $col2 as $opt ) {
+									$metabox->field_input( $opt, $form_id, $metabox->edit_array );
+								}
+							} ?>
+
+						</div>
+
+						<div class="um-admin-clear"></div>
+
+						<?php if ( isset( $col3 ) ) {
+							foreach ( $col3 as $opt ) {
+								?>
+								<div class="um-admin-tri">
+									<?php $metabox->field_input( $opt, $form_id, $metabox->edit_array ); ?>
+								</div>
+								<?php
+							}
+						} ?>
+
+						<div class="um-admin-clear"></div>
+
+						<?php if ( isset( $col_full ) ) {
+							foreach ( $col_full as $opt ) {
 								$metabox->field_input( $opt, $form_id, $metabox->edit_array );
 							}
 						} ?>
 
-					</div>
-
-					<div class="um-admin-half um-admin-right">
-
-						<?php if ( isset( $col2 ) ) {
-							foreach ( $col2 as $opt ) {
-								$metabox->field_input( $opt, $form_id, $metabox->edit_array );
-							}
-						} ?>
-
-					</div>
-
-					<div class="um-admin-clear"></div>
-
-					<?php if ( isset( $col3 ) ) {
-						foreach ( $col3 as $opt ) {
-							$metabox->field_input( $opt, $form_id, $metabox->edit_array );
-						}
-					} ?>
-
-					<div class="um-admin-clear"></div>
-
-					<?php if ( isset( $col_full ) ) {
-						foreach ( $col_full as $opt ) {
-							$metabox->field_input( $opt, $form_id, $metabox->edit_array );
-						}
-					} ?>
-
-					<?php UM()->builder()->modal_footer( $form_id, $args, $metabox ); ?>
+						<?php UM()->builder()->modal_footer( $form_id, $args, $metabox ); ?>
 
 					</div>
 
@@ -851,7 +915,11 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 					<?php
 					if ( isset( $col3 ) ) {
 						foreach ( $col3 as $opt ) {
-							$metabox->field_input( $opt );
+							?>
+							<div class="um-admin-tri">
+								<?php $metabox->field_input( $opt ); ?>
+							</div>
+							<?php
 						}
 					}
 					?>
@@ -1311,21 +1379,16 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 							}
 							break;
 
+						case 'unique_options':
+							$maybe_error = UM()->builtin()->unique_option_err( $array['post'][ $post_input ] );
+							if ( $maybe_error ) {
+								$output['error'][ $post_input ] = $maybe_error;
+							}
+							break;
+
 						case 'required':
 							if ( $array['post'][ $post_input ] == '' ) {
 								$output['error'][ $post_input ] = $validate[ $post_input ]['error'];
-							}
-							break;
-
-						case 'range-start':
-							if ( UM()->builtin()->date_range_start_err( $array['post'][ $post_input ] ) && $array['post']['_range'] == 'date_range' ) {
-								$output['error'][ $post_input ] = UM()->builtin()->date_range_start_err( $array['post'][ $post_input ] );
-							}
-							break;
-
-						case 'range-end':
-							if ( UM()->builtin()->date_range_end_err( $array['post'][ $post_input ], $array['post']['_range_start'] ) && $array['post']['_range'] == 'date_range' ) {
-								$output['error'][ $post_input ] = UM()->builtin()->date_range_end_err( $array['post'][ $post_input ], $array['post']['_range_start'] );
 							}
 							break;
 					}
@@ -1353,11 +1416,7 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 					if ( substr( $key, 0, 1 ) === '_' && $val !== '' ) { // field attribute
 						$new_key = ltrim ( $key, '_' );
 
-						if ( $new_key == 'options' ) {
-							$save[ $_metakey ][ $new_key ] = preg_split( '/[\r\n]+/', $val, -1, PREG_SPLIT_NO_EMPTY );
-						} else {
-							$save[ $_metakey ][ $new_key ] = $val;
-						}
+						$save[ $_metakey ][ $new_key ] = $val;
 					} elseif ( strstr( $key, 'um_editor' ) ) {
 						if ( 'block' === $array['post']['_type'] ) {
 							$save[ $_metakey ]['content'] = wp_kses_post( $val );

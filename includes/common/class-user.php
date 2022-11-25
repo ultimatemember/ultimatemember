@@ -22,6 +22,13 @@ if ( ! class_exists( 'um\common\User' ) ) {
 		private $password_reset_key = null;
 
 		/**
+		 * Store User ID while delete
+		 *
+		 * @var null|int
+		 */
+		private $deleted_user_id = null;
+
+		/**
 		 * User constructor.
 		 *
 		 * @since 3.0
@@ -35,6 +42,12 @@ if ( ! class_exists( 'um\common\User' ) ) {
 		public function hooks() {
 			add_filter( 'user_has_cap', array( &$this, 'map_caps_by_role' ), 10, 3 );
 			add_action( 'lostpassword_post', array( &$this, 'reset_password_attempts' ), 10, 2 );
+
+			if ( is_multisite() ) {
+				add_action( 'wpmu_delete_user', array( &$this, 'delete_user_handler' ), 10, 1 );
+			} else {
+				add_action( 'delete_user', array( &$this, 'delete_user_handler' ), 10, 1 );
+			}
 		}
 
 		/**
@@ -42,7 +55,7 @@ if ( ! class_exists( 'um\common\User' ) ) {
 		 *
 		 * @return string|\WP_Error
 		 */
-		function maybe_generate_password_reset_key( $userdata ) {
+		public function maybe_generate_password_reset_key( $userdata ) {
 			if ( empty( $this->password_reset_key ) ) {
 				$this->password_reset_key = get_password_reset_key( $userdata );
 			}
@@ -185,24 +198,671 @@ if ( ! class_exists( 'um\common\User' ) ) {
 			$this->flush_reset_password_attempts( $user_data->ID );
 		}
 
+		/**
+		 * Handler on delete user.
+		 *
+		 * @param int $user_id User ID.
+		 */
+		public function delete_user_handler( $user_id ) {
+			um_fetch_user( $user_id );
+
+			$this->deleted_user_id = $user_id;
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_delete_user_hook
+			 * @description On delete user
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_delete_user_hook', 'function_name', 10 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_delete_user_hook', 'my_delete_user', 10 );
+			 * function my_delete_user() {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( 'um_delete_user_hook' );
+
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_delete_user
+			 * @description On delete user
+			 * @input_vars
+			 * [{"var":"$user_id","type":"int","desc":"User ID"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_delete_user', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_delete_user', 'my_delete_user', 10, 1 );
+			 * function my_delete_user( $user_id ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( 'um_delete_user', $user_id );
+
+			// remove uploads
+			UM()->files()->remove_dir( UM()->files()->upload_temp );
+			UM()->files()->remove_dir( UM()->uploader()->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR );
+
+			delete_transient( 'um_count_users_unassigned' );
+			delete_transient( 'um_count_users_pending_dot' );
+
+			// Send email notifications
+			if ( $this->has_status( $user_id, 'approved' ) ) {
+				$userdata = get_userdata( $user_id );
+				// Don't send email notification to not approved user.
+				UM()->mail()->send( $userdata->user_email, 'deletion_email' );
+			}
+
+			// Send email notifications to administrator about user deletion anyway
+			$emails = um_multi_admin_email();
+			if ( ! empty( $emails ) ) {
+				foreach ( $emails as $email ) {
+					UM()->mail()->send( $email, 'notification_deletion', array( 'admin' => true ) );
+				}
+			}
+		}
+
+		/**
+		 * Check if the user can be approved.
+		 *
+		 * @param int $user_id User ID
+		 *
+		 * @return bool
+		 */
 		public function can_be_approved( $user_id ) {
+			$status = $this->get_status( $user_id );
+			if ( 'approved' === $status ) {
+				// Break if the user already approved
+				return false;
+			}
+
 			return true;
 		}
 
-		public function can_be_deactivate( $user_id ) {
+		/**
+		 * Approve user.
+		 *
+		 * @param int $user_id User ID.
+		 *
+		 * @return bool `true` if the user has been approved
+		 *              `false` on failure or if the user already has approved status.
+		 */
+		public function approve( $user_id ) {
+			if ( ! $this->can_be_approved( $user_id ) ) {
+				return false;
+			}
+
+			/**
+			 * Fires before User has been approved.
+			 *
+			 * @since 3.0.0
+			 * @hook um_before_user_is_approved
+			 *
+			 * @param {int} $user_id User ID.
+			 */
+			do_action( 'um_before_user_is_approved', $user_id );
+
+			$result = $this->set_status( $user_id, 'approved' );
+
+			// It's `false` on failure or if the user already has approved status.
+			if ( false !== $result ) {
+				$userdata = get_userdata( $user_id );
+
+				// Reset cache and activation link hash.
+				$this->remove_cache( $user_id );
+				$this->reset_activation_link( $user_id );
+
+				$email_slug     = 'welcome_email';
+				$current_status = $this->get_status( $user_id );
+				if ( 'awaiting_admin_review' === $current_status ) {
+					$email_slug = 'approved_email';
+					$this->maybe_generate_password_reset_key( $userdata );
+				}
+
+				UM()->common()->mail()->send( $userdata->user_email, $email_slug );
+
+				/**
+				 * Fires after User has been approved.
+				 *
+				 * @since 3.0.0
+				 * @hook um_after_user_is_approved
+				 *
+				 * @param {int} $user_id User ID.
+				 */
+				do_action( 'um_after_user_is_approved', $user_id );
+				return true;
+			}
+
+			return false;
+		}
+
+		/**
+		 * Reset Activation link hash.
+		 *
+		 * @param int $user_id User ID.
+		 */
+		public function reset_activation_link( $user_id ) {
+			delete_user_meta( $user_id, 'account_secret_hash' );
+			delete_user_meta( $user_id, 'account_secret_hash_expiry' );
+		}
+
+		/**
+		 * Set user's activation link hash
+		 *
+		 * @param int $user_id User ID.
+		 */
+		private function assign_secretkey( $user_id ) {
+			if ( ! $this->has_status( $user_id, 'awaiting_email_confirmation' ) ) {
+				return;
+			}
+
+			/**
+			 * Fires before user activation link hash is generated.
+			 *
+			 * @since 3.0.0
+			 * @hook um_before_user_hash_is_changed
+			 *
+			 * @param {int} $user_id User ID.
+			 */
+			do_action( 'um_before_user_hash_is_changed', $user_id );
+
+			$hash = UM()->validation()->generate();
+			update_user_meta( $user_id, 'account_secret_hash', $hash );
+
+			$expiration  = '';
+			$expiry_time = UM()->options()->get( 'activation_link_expiry_time' );
+			if ( ! empty( $expiry_time ) && is_numeric( $expiry_time ) ) {
+				$expiration = time() + $expiry_time;
+				update_user_meta( $user_id, 'account_secret_hash_expiry', $expiration );
+			}
+
+			/**
+			 * Fires after user activation link hash is changed.
+			 *
+			 * @since 3.0.0
+			 * @hook um_before_user_hash_is_changed
+			 *
+			 * @param {int}    $user_id    User ID.
+			 * @param {string} $hash       Activation link hash.
+			 * @param {int}    $expiration Expiration timestamp.
+			 */
+			do_action( 'um_after_user_hash_is_changed', $user_id, $hash, $expiration );
+		}
+
+		/**
+		 * Reset User cache
+		 *
+		 * @param int $user_id User ID.
+		 */
+		public function remove_cache( $user_id ) {
+			delete_option( "um_cache_userdata_{$user_id}" );
+		}
+
+		/**
+		 * Set user's account status.
+		 *
+		 * @param int    $user_id User ID.
+		 * @param string $status  Status key.
+		 *
+		 * @return bool
+		 */
+		public function set_status( $user_id, $status ) {
+			/**
+			 * Fires before User status is set.
+			 *
+			 * @since 3.0.0
+			 * @hook um_before_user_status_is_set
+			 *
+			 * @param {string} $status  Status key.
+			 * @param {int}    $user_id User ID.
+			 */
+			do_action( 'um_before_user_status_is_set', $status, $user_id );
+
+			$result = update_user_meta( $user_id, 'account_status', $status );
+
+			// false on failure or if the value passed to the function is the same as the one that is already in the database.
+			if ( false !== $result ) {
+				/**
+				 * Fires just after User status is changed.
+				 *
+				 * @since 3.0.0
+				 * @hook um_after_user_status_is_changed
+				 *
+				 * @param {string} $status  Status key.
+				 * @param {int}    $user_id User ID.
+				 */
+				do_action( 'um_after_user_status_is_changed', $status, $user_id );
+
+				return true;
+			}
+
+			return false;
+		}
+
+		/**
+		 * Set user account status.
+		 *
+		 * @param int $user_id User ID
+		 *
+		 * @return string
+		 */
+		public function get_status( $user_id ) {
+			$status = get_user_meta( $user_id, 'account_status', true );
+			return $status;
+		}
+
+		/**
+		 * Check if user has selected account status.
+		 *
+		 * @param int    $user_id        User ID.
+		 * @param string $status_control Status key.
+		 *
+		 * @return bool
+		 */
+		public function has_status( $user_id, $status_control ) {
+			$status = $this->get_status( $user_id );
+			return $status === $status_control;
+		}
+
+		/**
+		 * @param $user_id
+		 *
+		 * @return bool
+		 */
+		public function can_be_deactivated( $user_id ) {
+			$status = $this->get_status( $user_id );
+			if ( 'inactive' === $status ) {
+				// Break if the user already approved
+				return false;
+			}
+
+			if ( 'approved' !== $status ) {
+				// Break if the user already doesn't approved yet
+				return false;
+			}
+
 			return true;
 		}
 
-		public function can_be_reactivate( $user_id ) {
+		/**
+		 * @param $user_id
+		 *
+		 * @return bool
+		 */
+		public function deactivate( $user_id ) {
+			if ( ! $this->can_be_deactivated( $user_id ) ) {
+				return false;
+			}
+
+			/**
+			 * Fires before User has been deactivated.
+			 *
+			 * @since 3.0.0
+			 * @hook um_before_user_is_deactivated
+			 *
+			 * @param {int} $user_id User ID.
+			 */
+			do_action( 'um_before_user_is_deactivated', $user_id );
+
+			$result = $this->set_status( $user_id, 'inactive' );
+
+			// It's `false` on failure or if the user already has approved status.
+			if ( false !== $result ) {
+				$userdata = get_userdata( $user_id );
+
+				// Reset cache.
+				$this->remove_cache( $user_id );
+
+				UM()->common()->mail()->send( $userdata->user_email, 'inactive_email' );
+
+				/**
+				 * Fires after User has been deactivated.
+				 *
+				 * @since 3.0.0
+				 * @hook um_after_user_is_inactive
+				 *
+				 * @param {int} $user_id User ID.
+				 */
+				do_action( 'um_after_user_is_inactive', $user_id );
+				return true;
+			}
+
+			return false;
+		}
+
+		/**
+		 * @param $user_id
+		 *
+		 * @return bool
+		 */
+		public function can_be_reactivated( $user_id ) {
+			$status = $this->get_status( $user_id );
+			if ( 'inactive' !== $status ) {
+				// Break if the user doesn't have inactive status
+				return false;
+			}
+
 			return true;
 		}
 
+		/**
+		 * @param $user_id
+		 *
+		 * @return bool
+		 */
+		public function reactivate( $user_id ) {
+			if ( ! $this->can_be_reactivated( $user_id ) ) {
+				return false;
+			}
+
+			/**
+			 * Fires before User has been reactivated.
+			 *
+			 * @since 3.0.0
+			 * @hook um_before_user_is_reactivated
+			 *
+			 * @param {int} $user_id User ID.
+			 */
+			do_action( 'um_before_user_is_reactivated', $user_id );
+
+			$result = $this->set_status( $user_id, 'approved' );
+
+			// It's `false` on failure or if the user already has approved status.
+			if ( false !== $result ) {
+				$userdata = get_userdata( $user_id );
+
+				// Reset cache and activation link hash.
+				$this->remove_cache( $user_id );
+				$this->reset_activation_link( $user_id );
+
+				UM()->common()->mail()->send( $userdata->user_email, 'welcome_email' );
+
+				/**
+				 * Fires after User has been reactivated.
+				 *
+				 * @since 3.0.0
+				 * @hook um_after_user_is_reactivated
+				 *
+				 * @param {int} $user_id User ID.
+				 */
+				do_action( 'um_after_user_is_reactivated', $user_id );
+				return true;
+			}
+
+			return false;
+		}
+
+		/**
+		 * @param $user_id
+		 *
+		 * @return bool
+		 */
 		public function can_be_rejected( $user_id ) {
+			$status = $this->get_status( $user_id );
+			if ( 'rejected' === $status ) {
+				// Break if the user already rejected
+				return false;
+			}
+
+			if ( 'approved' !== $status ) {
+				// Break if the user already doesn't approved yet
+				return false;
+			}
+
 			return true;
 		}
 
-		public function can_resend_activation( $user_id ) {
+		/**
+		 * @param $user_id
+		 *
+		 * @return bool
+		 */
+		public function reject( $user_id ) {
+			if ( ! $this->can_be_rejected( $user_id ) ) {
+				return false;
+			}
+
+			/**
+			 * Fires before User has been rejected.
+			 *
+			 * @since 3.0.0
+			 * @hook um_before_user_is_rejected
+			 *
+			 * @param {int} $user_id User ID.
+			 */
+			do_action( 'um_before_user_is_rejected', $user_id );
+
+			$result = $this->set_status( $user_id, 'rejected' );
+
+			// It's `false` on failure or if the user already has rejected status.
+			if ( false !== $result ) {
+				$userdata = get_userdata( $user_id );
+
+				// Reset cache.
+				$this->remove_cache( $user_id );
+
+				UM()->common()->mail()->send( $userdata->user_email, 'rejected_email' );
+
+				/**
+				 * Fires after User has been rejected.
+				 *
+				 * @since 3.0.0
+				 * @hook um_after_user_is_rejected
+				 *
+				 * @param {int} $user_id User ID.
+				 */
+				do_action( 'um_after_user_is_rejected', $user_id );
+				return true;
+			}
+
+			return false;
+		}
+
+		public function can_be_set_as_pending( $user_id ) {
+			$status = $this->get_status( $user_id );
+			if ( 'awaiting_admin_review' === $status ) {
+				// Break if the user already awaiting_admin_review
+				return false;
+			}
+
 			return true;
+		}
+
+		public function set_as_pending( $user_id ) {
+			if ( ! $this->can_be_set_as_pending( $user_id ) ) {
+				return false;
+			}
+
+			/**
+			 * Fires before User has been set as pending admin review.
+			 *
+			 * @since 3.0.0
+			 * @hook um_before_user_is_set_as_pending
+			 *
+			 * @param {int} $user_id User ID.
+			 */
+			do_action( 'um_before_user_is_set_as_pending', $user_id );
+
+			$result = $this->set_status( $user_id, 'awaiting_admin_review' );
+
+			// It's `false` on failure or if the user already has rejected status.
+			if ( false !== $result ) {
+				$userdata = get_userdata( $user_id );
+
+				// Reset cache.
+				$this->remove_cache( $user_id );
+
+				UM()->common()->mail()->send( $userdata->user_email, 'pending_email' );
+
+				/**
+				 * Fires after User has been set as pending admin review.
+				 *
+				 * @since 3.0.0
+				 * @hook um_after_user_is_set_as_pending
+				 *
+				 * @param {int} $user_id User ID.
+				 */
+				do_action( 'um_after_user_is_set_as_pending', $user_id );
+				return true;
+			}
+
+			return false;
+		}
+
+		public function can_activation_resend( $user_id ) {
+			$status = $this->get_status( $user_id );
+			if ( 'awaiting_admin_review' === $status ) {
+				// Break if the user already awaiting_admin_review
+				return false;
+			}
+
+			return true;
+		}
+
+		public function resend_activation( $user_id ) {
+			if ( ! $this->can_activation_resend( $user_id ) ) {
+				return false;
+			}
+
+			/**
+			 * Fires before User has been set as pending admin review.
+			 *
+			 * @since 3.0.0
+			 * @hook um_before_user_is_set_as_pending
+			 *
+			 * @param {int} $user_id User ID.
+			 */
+			do_action( 'um_before_user_is_set_as_awaiting_email_confirmation', $user_id );
+
+			$result = $this->set_status( $user_id, 'awaiting_email_confirmation' );
+
+			// It's `false` on failure or if the user already has rejected status.
+			if ( false !== $result ) {
+				$userdata = get_userdata( $user_id );
+
+				// Reset cache and set activation link hash.
+				$this->remove_cache( $user_id );
+				$this->assign_secretkey( $user_id );
+
+				UM()->common()->mail()->send( $userdata->user_email, 'checkmail_email' );
+
+				/**
+				 * Fires after User has been set as pending admin review.
+				 *
+				 * @since 3.0.0
+				 * @hook um_after_user_is_set_as_pending
+				 *
+				 * @param {int} $user_id User ID.
+				 */
+				do_action( 'um_after_user_is_set_as_awaiting_email_confirmation', $user_id );
+				return true;
+			}
+
+			return false;
+		}
+
+		/**
+		 * Getting account activation link.
+		 *
+		 * @param int $user_id User ID
+		 *
+		 * @return string|bool Account activation link. Or `false` when something is wrong.
+		 */
+		public function get_account_activation_link( $user_id ) {
+			if ( ! $this->has_status( $user_id, 'awaiting_email_confirmation' ) ) {
+				$this->reset_activation_link( $user_id );
+				return false;
+			}
+
+			// Checking expiry time and if key is expired, re-generate new.
+			$expiry_time = UM()->options()->get( 'activation_link_expiry_time' );
+			if ( ! empty( $expiry_time ) && is_numeric( $expiry_time ) ) {
+				$expiry_timestamp = get_user_meta( $user_id, 'account_secret_hash_expiry', true );
+				if ( empty( $expiry_timestamp ) || time() > $expiry_timestamp ) {
+					$this->assign_secretkey( $user_id );
+				}
+			}
+
+			// Checking if hash is empty then generate it.
+			$hash = get_user_meta( $user_id, 'account_secret_hash', true );
+			if ( empty( $hash ) ) {
+				$this->assign_secretkey( $user_id );
+			}
+
+			// Checking if hash is empty after regeneration then something went wrong and link break with false.
+			$hash = get_user_meta( $user_id, 'account_secret_hash', true );
+			if ( empty( $hash ) ) {
+				return false;
+			}
+
+			/**
+			 * Filters the activation URL base.
+			 *
+			 * @since 3.0.0
+			 * @hook  um_activate_url_base
+			 *
+			 * @param {string} $base_url Base URL for activation link. It's home URL by default.
+			 *
+			 * @return {string} Base URL for activation link.
+			 */
+			$base_url = apply_filters( 'um_activate_url_base', home_url() );
+
+			$url = add_query_arg(
+				array(
+					'act'     => 'activate_via_email',
+					'hash'    => $hash,
+					'user_id' => $user_id,
+				),
+				$base_url
+			);
+			/**
+			 * Filters the activation URL.
+			 *
+			 * @since 1.0.0
+			 * @hook  um_activate_url
+			 *
+			 * @param {string} $url      Account activation link.
+			 * @param {string} $base_url Base URL for activation link. It's home URL by default.
+			 * @param {string} $hash     User hash for the activation.
+			 * @param {int}    $user_id  User ID.
+			 *
+			 * @return {string} Account activation link.
+			 */
+			$url = apply_filters( 'um_activate_url', $url, $base_url, $hash, $user_id );
+			return $url;
+		}
+
+		/**
+		 * Delete user
+		 *
+		 * @param int $user_id User ID.
+		 *
+		 * @return bool It's `true` if user deleted.
+		 */
+		public function delete( $user_id ) {
+			if ( is_multisite() ) {
+				if ( ! function_exists( 'wpmu_delete_user' ) ) {
+					require_once( ABSPATH . 'wp-admin/includes/ms.php' );
+				}
+
+				$result = wpmu_delete_user( $user_id );
+			} else {
+				if ( ! function_exists( 'wp_delete_user' ) ) {
+					require_once( ABSPATH . 'wp-admin/includes/user.php' );
+				}
+
+				$result = wp_delete_user( $user_id );
+			}
+
+			return $result;
 		}
 
 		/**

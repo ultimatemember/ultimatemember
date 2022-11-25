@@ -414,3 +414,93 @@
 
 .select2-container {
   z-index: 9999999; }
+
+.um-admin-option-rows {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  max-height: 115px;
+  overflow-y: auto;
+  width: 100%;
+  padding: 3px;
+  margin: 0;
+  border: 1px solid rgba(220, 220, 222, 0.75);
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box; }
+
+.um-admin-option-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  width: 100%;
+  padding: 0;
+  margin: 0 0 5px 0; }
+  .um-admin-option-row .um-admin-option-row-defaults {
+    width: 20px;
+    height: 30px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    text-align: left; }
+  .um-admin-option-row .um-field-icon {
+    width: 20px;
+    text-align: center;
+    cursor: move; }
+  .um-admin-option-row .um-admin-option-key-wrapper {
+    width: 30%;
+    margin: 0 3px 0 0; }
+  .um-admin-option-row .um-admin-option-val-wrapper {
+    width: calc( 70% - 89px); }
+  .um-admin-option-row .um-admin-option-row-actions {
+    margin: 0 0 0 3px;
+    width: 43px;
+    height: 30px;
+    line-height: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: nowrap;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box; }
+    .um-admin-option-row .um-admin-option-row-actions > button {
+      width: 20px;
+      height: 20px;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: nowrap;
+      line-height: 1; }
+      .um-admin-option-row .um-admin-option-row-actions > button:first-child {
+        margin-right: 3px; }
+      .um-admin-option-row .um-admin-option-row-actions > button span {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: nowrap;
+        width: 100%;
+        font-size: 14px;
+        font-weight: 400;
+        margin: 0;
+        padding: 0; }
+      .um-admin-option-row .um-admin-option-row-actions > button.um-admin-option-row-add span {
+        position: relative;
+        top: 1px;
+        left: 0; }
+  .um-admin-option-row.ui-sortable-placeholder {
+    height: 30px;
+    width: 100%;
+    display: list-item; }

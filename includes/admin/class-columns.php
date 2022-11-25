@@ -182,14 +182,7 @@ if ( ! class_exists( 'um\admin\Columns' ) ) {
 					break;
 
 				case 'shortcode':
-					$is_default = UM()->query()->get_attr( 'is_default', $id );
-
-					if ( $is_default ) {
-						echo UM()->shortcodes()->get_default_shortcode( $id );
-					} else {
-						echo UM()->shortcodes()->get_shortcode( $id );
-					}
-
+					echo UM()->common()->shortcodes()->get_shortcode( $id );
 					break;
 
 				case 'is_default':

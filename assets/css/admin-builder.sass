@@ -451,3 +451,70 @@
 
 .select2-container
   z-index: 9999999
+
+.#{$prefix}admin-option-rows
+  +flex( column, flex-start, stretch, nowrap )
+  max-height: 115px
+  overflow-y: auto
+  width: 100%
+  padding: 3px
+  margin: 0
+  border: 1px solid rgba(220,220,222,.75)
+  +border-box
+
+.#{$prefix}admin-option-row
+  +flex( row, flex-start, center, nowrap )
+  +border-box
+  width: 100%
+  padding: 0
+  margin: 0 0 5px 0
+
+  .um-admin-option-row-defaults
+    width: 20px
+    height: 30px
+    line-height: 1
+    display: flex
+    align-items: center
+    text-align: left
+  .#{$prefix}field-icon
+    width: 20px
+    text-align: center
+    cursor: move
+  .um-admin-option-key-wrapper
+    width: 30%
+    margin: 0 3px 0 0
+  .um-admin-option-val-wrapper
+    width: calc( 70% - 89px )
+  .um-admin-option-row-actions
+    margin: 0 0 0 3px
+    width: 43px
+    height: 30px
+    line-height: 1
+    +flex( row, flex-end, center, nowrap )
+    +border-box
+    & > button
+      width: 20px
+      height: 20px
+      margin: 0
+      padding: 0
+      +flex( row, center, center, nowrap )
+      line-height: 1
+      &:first-child
+        margin-right: 3px
+      span
+        +flex( row, center, center, nowrap )
+        width: 100%
+        font-size: 14px
+        font-weight: 400
+        margin: 0
+        padding: 0
+      &.um-admin-option-row-add
+        span
+          position: relative
+          top: 1px
+          left: 0
+
+  &.ui-sortable-placeholder
+    height: 30px
+    width: 100%
+    display: list-item

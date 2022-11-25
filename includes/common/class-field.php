@@ -1,13 +1,10 @@
 <?php namespace um\common;
 
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 if ( ! class_exists( 'um\common\Field' ) ) {
-
 
 	/**
 	 * Class Field
@@ -16,15 +13,13 @@ if ( ! class_exists( 'um\common\Field' ) ) {
 	 */
 	class Field {
 
-
 		/**
 		 * Field constructor.
 		 *
 		 * @since 3.0
 		 */
-		function __construct() {
+		public function __construct() {
 		}
-
 
 		/**
 		 * Delete custom field from DB
@@ -35,7 +30,7 @@ if ( ! class_exists( 'um\common\Field' ) ) {
 		 *
 		 * @return bool
 		 */
-		function delete_permanently( $key ) {
+		public function delete_permanently( $key ) {
 			$fields = UM()->builtin()->saved_fields;
 
 			if ( ! array_key_exists( $key, $fields ) ) {
@@ -74,14 +69,13 @@ if ( ! class_exists( 'um\common\Field' ) ) {
 			return true;
 		}
 
-
 		/**
 		 * Duplicates a field by meta key
 		 *
 		 * @param string $metakey
 		 * @param int $form_id
 		 */
-		function duplicate( $metakey, $form_id ) {
+		public function duplicate( $metakey, $form_id ) {
 			$fields     = UM()->query()->get_attr( 'custom_fields', $form_id );
 			$all_fields = UM()->builtin()->saved_fields;
 
@@ -113,7 +107,6 @@ if ( ! class_exists( 'um\common\Field' ) ) {
 			update_option( 'um_fields', $all_fields );
 		}
 
-
 		/**
 		 * Delete a field from a form
 		 *
@@ -122,7 +115,7 @@ if ( ! class_exists( 'um\common\Field' ) ) {
 		 *
 		 * @return bool
 		 */
-		function delete_from_form( $metakey, $form_id ) {
+		public function delete_from_form( $metakey, $form_id ) {
 			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
 
 			if ( ! array_key_exists( $metakey, $fields ) ) {
@@ -167,8 +160,5 @@ if ( ! class_exists( 'um\common\Field' ) ) {
 
 			return true;
 		}
-
-
-
 	}
 }

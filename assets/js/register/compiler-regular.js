@@ -1,3 +1,6 @@
+// Standard.js - which is loaded when there isn't recaptcha
+
+// common.js
 if ( typeof ( window.UM ) !== 'object' ) {
 	window.UM = {};
 }
@@ -32,11 +35,6 @@ UM.common = {
 
 			jQuery('.um').each( function() {
 				let obj = jQuery(this);
-
-				if ( obj.hasClass('um-not-responsive') ) {
-					return;
-				}
-
 				let element_width = obj.outerWidth();
 
 				jQuery.each( $resolutions, function( index ) {
@@ -90,4 +88,25 @@ jQuery( document ).ready( function($) {
 
 jQuery( window ).on( 'load', function() {
 	UM.common.responsive.setClass();
+});
+
+
+// forms.js
+if ( typeof ( window.UM ) !== 'object' ) {
+	window.UM = {};
+}
+
+if ( typeof ( UM.forms ) !== 'object' ) {
+	UM.forms = {};
+}
+
+UM.forms = {
+	honeypot: function () {
+		// flush fields using honeypot security
+		jQuery('input[name="' + umRegister.honeypot + '"]').val('');
+	}
+};
+
+jQuery( window ).on( 'load', function() {
+	UM.forms.honeypot();
 });

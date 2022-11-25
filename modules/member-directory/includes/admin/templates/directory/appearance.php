@@ -16,7 +16,7 @@ global $post_id; ?>
 					'type'    => 'select',
 					'label'   => __( 'Template', 'ultimate-member' ),
 					'value'   => get_post_meta( $post_id, '_um_directory_template', true ),
-					'options' => UM()->shortcodes()->get_templates( 'members' ),
+					'options' => UM()->common()->shortcodes()->get_templates( 'members' ),
 				),
 			),
 		)

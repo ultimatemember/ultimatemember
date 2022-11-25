@@ -41,6 +41,7 @@ if ( ! class_exists( 'um\frontend\Enqueue' ) ) {
 			$styles = apply_filters(
 				'um_inline_styles_variables',
 				array(
+					'--um-blocks-error-color:#d92d20;',
 					'--um-gray-25:#fcfcfd;',
 					'--um-gray-50:#f9fafb;',
 					'--um-gray-100:#f2f4f7;',
@@ -153,6 +154,33 @@ if ( ! class_exists( 'um\frontend\Enqueue' ) ) {
 			}
 			wp_register_style( 'um-login-base', $login['css']['path']['base'], $login['css']['deps'], UM_VERSION );
 			wp_register_style( 'um-login-full', $login['css']['path']['full'], $login['css']['deps'], UM_VERSION );
+
+
+			$register = array(
+				'js'  => array(
+					'path' => $this->urls['js'] . 'register/compiler-regular.js',
+					'deps' => array( 'jquery' ),
+					'vars' => array(
+						'honeypot' => UM()->honeypot,
+					),
+				),
+				'css' => array(
+					'path' => array(
+						'base' => $this->urls['css'] . 'register/compiler-regular.css',
+						'full' => $this->urls['css'] . 'register/compiler-regular-full.css',
+					),
+					'deps' => array(),
+				),
+			);
+			$register = apply_filters( 'um_register_assets', $register );
+
+			wp_register_script( 'um-register', $register['js']['path'], $register['js']['deps'], UM_VERSION, true );
+			if ( ! empty( $register['js']['vars'] ) ) {
+				// localize data if doesn't empty
+				wp_localize_script( 'um-register', 'umRegister', $register['js']['vars'] );
+			}
+			wp_register_style( 'um-register-base', $register['css']['path']['base'], $register['css']['deps'], UM_VERSION );
+			wp_register_style( 'um-register-full', $register['css']['path']['full'], $register['css']['deps'], UM_VERSION );
 
 
 			//wp_register_style( 'um_forms', $this->urls['css'] . 'forms' . $this->suffix . '.css', array(), UM_VERSION );

@@ -22,7 +22,7 @@ $login_customize_fields = array(
 		'type'    => 'select',
 		'label'   => __( 'Template', 'ultimate-member' ),
 		'value'   => UM()->query()->get_meta_value( '_um_login_template', null, UM()->options()->get( 'login_template' ) ),
-		'options' => UM()->shortcodes()->get_templates( 'login' ),
+		'options' => UM()->common()->shortcodes()->get_templates( 'login' ),
 	),
 	array(
 		'id'          => '_um_login_primary_btn_word',

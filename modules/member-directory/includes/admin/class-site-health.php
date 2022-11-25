@@ -88,7 +88,6 @@ if ( ! class_exists( 'umm\member_directory\includes\admin\Site_Health' ) ) {
 				'discord'              => __( 'Discord', 'ultimate-member' ),
 				'youtube'              => __( 'Youtube', 'ultimate-member' ),
 				'soundcloud'           => __( 'SoundCloud', 'ultimate-member' ),
-				'vkontakte'            => __( 'Vkontakte', 'ultimate-member' ),
 				'user_registered_desc' => __( 'New users first', 'ultimate-member' ),
 				'user_registered_asc'  => __( 'Old users first', 'ultimate-member' ),
 				'username'             => __( 'Username', 'ultimate-member' ),

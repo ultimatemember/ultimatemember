@@ -1,15 +1,15 @@
 <?php
-namespace um\core;
+namespace um\legacy\core;
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'um\core\Access' ) ) {
+if ( ! class_exists( 'um\legacy\core\Access' ) ) {
 
 
 	/**
 	 * Class Access
-	 * @package um\core
+	 * @package um\legacy\core
 	 */
 	class Access {
 

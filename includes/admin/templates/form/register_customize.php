@@ -36,7 +36,7 @@ $register_customize_fields = array(
 		'type'    => 'select',
 		'label'   => __( 'Template', 'ultimate-member' ),
 		'value'   => UM()->query()->get_meta_value( '_um_register_template', null, UM()->options()->get( 'register_template' ) ),
-		'options' => UM()->shortcodes()->get_templates( 'register' ),
+		'options' => UM()->common()->shortcodes()->get_templates( 'register' ),
 	),
 	array(
 		'id'          => '_um_register_primary_btn_word',

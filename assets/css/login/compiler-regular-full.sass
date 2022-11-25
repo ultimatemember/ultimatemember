@@ -97,10 +97,11 @@
       outline: none
     &:visited
       font-weight: $bold-weight
-      color: $gray-600
       text-decoration: none
       border: none
       outline: none
+      &:not(.#{$prefix}link-always-active)
+        color: $gray-600
     &:focus
       font-weight: $bold-weight
       color: $link-hover-color

@@ -21,6 +21,8 @@
     margin: 0 0 15px 0
     padding: 0
     box-sizing: border-box
+    font-weight: $bold-weight
+    color: $error-text
 
   .#{$prefix}form
     +flex( column, flex-start, stretch, nowrap )
@@ -35,8 +37,15 @@
       &:first-child
         margin-top: 0
     .#{$prefix}form-row
-      margin: 0 0 15px 0
       padding: 0
+      margin: 0 0 15px 0
+      &.#{$prefix}field-block-type,
+      &.#{$prefix}field-divider-type,
+      &.#{$prefix}field-hidden-type,
+      &.#{$prefix}field-label-type,
+      &.#{$prefix}field-shortcode-type,
+      &.#{$prefix}field-spacing-type
+        margin: 0
       +flex( row, flex-start, baseline, wrap )
       .#{$prefix}form-row-label
         width: 30%
@@ -48,12 +57,40 @@
           color: $required-asterisk
           margin: 0 0 0 3px
           font-weight: normal
+      &.#{$prefix}field-checkbox-type,
+      &.#{$prefix}field-radio-type
+        .#{$prefix}col-1
+          display: grid
+          column-gap: 0
+          row-gap: 10px
+          grid-template-columns: 100%
+        .#{$prefix}col-2
+          display: grid
+          column-gap: 20px
+          row-gap: 10px
+          grid-template-columns: calc(50% - 10px) calc(50% - 10px)
+        .#{$prefix}col-3
+          display: grid
+          column-gap: 15px
+          row-gap: 10px
+          grid-template-columns: calc(33.3% - 10px) calc(33.3% - 10px) calc(33.3% - 10px)
       .#{$prefix}form-field-content
         +flex( column, flex-start, stretch, nowrap )
         width: calc( 70% - 10px )
         margin: 0
         padding: 0
-        input[type="text"]
+        input[type="number"],
+        input[type="password"],
+        input[type="text"],
+        input[type="date"],
+        input[type="time"],
+        input[type="tel"],
+        input[type="email"],
+        input[type="url"],
+        input[type="month"],
+        input[type="week"],
+        select,
+        textarea
           +border-box
           display: block
           width: 100%
@@ -71,11 +108,25 @@
           &:focus
             border: 1px solid $text-input-border-color-focus
             box-shadow: none
+        textarea,
+        select[multiple]
+          height: auto
+        .#{$prefix}form-field-description
+          font-size: 0.9em
+          font-style: italic
       &.#{$prefix}form-error-row
         .#{$prefix}form-field-content
-          input[type="text"],
-          input[type="password"],
           input[type="number"],
+          input[type="password"],
+          input[type="text"],
+          input[type="date"],
+          input[type="time"],
+          input[type="tel"],
+          input[type="email"],
+          input[type="url"],
+          input[type="month"],
+          input[type="week"],
+          select,
           textarea,
           .wp-editor-wrap
             border: 1px solid $error-text
@@ -151,6 +202,46 @@
         .#{$prefix}form-buttons-section
           margin: 0
           width: 100%
+
+  .#{$prefix}link
+    font-size: inherit
+    font-weight: $bold-weight
+    line-height: inherit
+    color: $link-color
+    text-decoration: none
+    border: none
+    outline: none
+    &:hover
+      font-weight: $bold-weight
+      color: $link-hover-color
+      text-decoration: none
+      border: none
+      outline: none
+    &:active
+      font-weight: $bold-weight
+      color: $link-hover-color
+      text-decoration: none
+      border: none
+      outline: none
+    &:visited
+      font-weight: $bold-weight
+      text-decoration: none
+      border: none
+      outline: none
+      &:not(.#{$prefix}link-always-active)
+        color: $gray-600
+    &:focus
+      font-weight: $bold-weight
+      color: $link-hover-color
+      text-decoration: none
+      border: none
+      outline: none
+    &:focus-visible
+      font-weight: $bold-weight
+      color: $link-color
+      text-decoration: none
+      border: none
+      outline: none
 
 .#{$prefix}uploaded-wrapper
   display: none

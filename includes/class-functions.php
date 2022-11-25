@@ -355,6 +355,12 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'required'     => true,
 							'autocomplete' => true,
 							'size'         => true,
+							'step'         => true,
+							'min'          => true,
+							'max'          => true,
+							'minlength'    => true,
+							'maxlength'    => true,
+							'pattern'      => true,
 						),
 						'textarea' => array(
 							'cols'         => true,

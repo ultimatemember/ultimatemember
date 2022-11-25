@@ -305,12 +305,12 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				 */
 				do_action( "um_before_{$args['mode']}_form_is_loaded", $args );
 
-				UM()->shortcodes()->template_load( $args['template'], $args );
+				UM()->common()->shortcodes()->template_load( $args['template'], $args );
 
 			}
 
 			if ( ! is_admin() && ! defined( 'DOING_AJAX' ) ) {
-				UM()->shortcodes()->dynamic_css( $args );
+				UM()->common()->shortcodes()->dynamic_css( $args );
 			}
 
 			$output = ob_get_clean();

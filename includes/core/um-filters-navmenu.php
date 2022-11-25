@@ -21,13 +21,13 @@ if ( ! is_admin() ) {
 
 		foreach ( $sorted_menu_items as &$menu_item ) {
 			if ( $menu_item->title ) {
-				$menu_item->title = UM()->shortcodes()->convert_user_tags( $menu_item->title );
+				$menu_item->title = UM()->common()->shortcodes()->convert_user_tags( $menu_item->title );
 			}
 			if ( $menu_item->attr_title ) {
-				$menu_item->attr_title = UM()->shortcodes()->convert_user_tags( $menu_item->attr_title );
+				$menu_item->attr_title = UM()->common()->shortcodes()->convert_user_tags( $menu_item->attr_title );
 			}
 			if ( $menu_item->description ) {
-				$menu_item->description = UM()->shortcodes()->convert_user_tags( $menu_item->description );
+				$menu_item->description = UM()->common()->shortcodes()->convert_user_tags( $menu_item->description );
 			}
 		}
 

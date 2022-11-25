@@ -39,7 +39,7 @@
 						<?php echo esc_html( um_user( 'display_name' ) ); ?>
 					</a>
 					<div class="um-account-profile-link">
-						<a href="<?php echo esc_url( um_user_profile_url() ); ?>" class="um-link">
+						<a href="<?php echo esc_url( um_user_profile_url() ); ?>" class="um-link um-link-always-active">
 							<?php _e( 'View profile', 'ultimate-member' ); ?>
 						</a>
 					</div>
@@ -80,7 +80,7 @@
 							<?php echo um_user( 'display_name', 'html' ); ?>
 						</a>
 						<div class="um-account-profile-link">
-							<a href="<?php echo esc_url( um_user_profile_url() ); ?>" class="um-link">
+							<a href="<?php echo esc_url( um_user_profile_url() ); ?>" class="um-link um-link-always-active">
 								<?php _e( 'View profile', 'ultimate-member' ); ?>
 							</a>
 						</div>

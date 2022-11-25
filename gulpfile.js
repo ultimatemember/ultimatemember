@@ -95,6 +95,16 @@ gulp.task( 'default', function ( done ) {
 		.pipe( rename( { suffix: '.min' } ) )
 		.pipe( gulp.dest( 'assets/css/login/' ) );
 
+	// Register
+	gulp.src(['assets/css/register/*.sass'])
+		.pipe( sass().on( 'error', sass.logError ) )
+		.pipe( gulp.dest( 'assets/css/register/' ) );
+	gulp.src(['assets/css/register/*.sass'])
+		.pipe( sass().on( 'error', sass.logError ) )
+		.pipe( cleanCSS() )
+		.pipe( rename( { suffix: '.min' } ) )
+		.pipe( gulp.dest( 'assets/css/register/' ) );
+
 
 
 

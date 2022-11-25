@@ -750,12 +750,6 @@ function um_submit_form_errors_hook_( $args ) {
 							}
 							break;
 
-						case 'vk_url':
-							if ( ! UM()->validation()->is_url( $args[ $key ], 'vk.com' ) ) {
-								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s username or profile URL', 'ultimate-member' ), $array['label'] ) );
-							}
-							break;
-
 						case 'discord':
 							if ( ! UM()->validation()->is_discord_id( $args[ $key ] ) ) {
 								UM()->form()->add_error( $key, __( 'Please enter a valid Discord ID', 'ultimate-member' ) );

@@ -63,7 +63,7 @@ if ( ! class_exists( 'um\common\Login' ) ) {
 		public function add_forgot_password( $content, $args ) {
 			if ( array_key_exists( 'um_login_form', $args ) && true === $args['um_login_form'] ) {
 				if ( ! empty( $args['um_show_forgot'] ) ) {
-					$content .= '<p class="login-forgot"><a class="um-link" href="' . esc_url( um_get_predefined_page_url( 'password-reset' ) ) . '">' . esc_html__( 'Forgot password', 'ultimate-member' ) . '</a></p>';
+					$content .= '<p class="login-forgot"><a class="um-link um-link-always-active" href="' . esc_url( um_get_predefined_page_url( 'password-reset' ) ) . '">' . esc_html__( 'Forgot password', 'ultimate-member' ) . '</a></p>';
 				}
 			}
 

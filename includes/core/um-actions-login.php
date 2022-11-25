@@ -140,7 +140,7 @@ function um_submit_form_errors_hook_logincheck( $args ) {
 
 	}
 
-	if ( isset( $args['form_id'] ) && $args['form_id'] == UM()->shortcodes()->core_login_form() && UM()->form()->errors && ! isset( $_POST[ UM()->honeypot ] ) ) {
+	if ( isset( $args['form_id'] ) && $args['form_id'] == UM()->common()->shortcodes()->core_login_form() && UM()->form()->errors && ! isset( $_POST[ UM()->honeypot ] ) ) {
 		exit( wp_redirect( um_get_predefined_page_url( 'login' ) ) );
 	}
 

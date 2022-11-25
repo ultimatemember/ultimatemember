@@ -232,7 +232,7 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 		 */
 		function check_for_querystrings() {
 			if ( isset( $_REQUEST['message'] ) ) {
-				UM()->shortcodes()->message_mode = true;
+				UM()->common()->shortcodes()->message_mode = true;
 			}
 		}
 

@@ -158,6 +158,32 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			return 0;
 		}
 
+		/**
+		 * Checks for a unique options keys and labels field error
+		 *
+		 * @param array $options
+		 *
+		 * @return int|string
+		 */
+		function unique_option_err( $options ) {
+			if ( empty( $options ) ) {
+				return __( 'Please provide options list', 'ultimate-member' );
+			}
+
+			$all_keys   = array_column( $options, 'key' );
+			$all_values = array_column( $options, 'value' );
+
+			if ( count( $all_keys ) != count( array_unique( $all_keys ) ) ) {
+				return __( 'Options\' keys must be unique', 'ultimate-member' );
+			}
+
+			if ( count( $all_values ) != count( array_unique( $all_values ) ) ) {
+				return __( 'Options\' values must be unique', 'ultimate-member' );
+			}
+
+			return 0;
+		}
+
 
 		/**
 		 * Check date range errors (start date)
@@ -219,7 +245,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 */
 		function set_core_fields() {
 
-			$this->core_fields = [
+			$this->core_fields = array(
 
 				'row' => array(
 					'name'                  => __( 'Row', 'ultimate-member' ),
@@ -229,7 +255,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'icon'                  => 'fas fa-pencil-alt',
 					// '_id' in the end for getting beautify columns in the edit form
 					'col1'                  => array('_background','_text_color','_padding','_margin','_border','_borderradius','_borderstyle','_bordercolor','_id'),
-					'col2'                  => array('_heading','_heading_text','_heading_background_color','_heading_text_color','_icon','_icon_color','_css_class'),
+					'col2'                  => array('_heading','_heading_text','_heading_background_color','_heading_text_color','_css_class'),
 				),
 
 				/*Group is the repeatable block with 1 pre-defined repeat*/
@@ -262,31 +288,79 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 //					],
 //				],
 
-				'text' => array(
-					'name' => 'Text Box',
-					'col1' => array('_title','_metakey','_help','_default','_min_chars','_visibility'),
-					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate','_max_chars'),
-					'col3' => array('_required','_editable','_icon'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-						'_metakey' => array(
-							'mode' => 'unique',
-						),
-					)
-				),
+//				'color' => array(
+//					'name' => __( 'Color', 'ultimate-member' ),
+//					'col1' => array('_title','_metakey','_description','_default','_min','_visibility'),
+//					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate','_max'),
+//					'col3' => array('_required','_editable'),
+//					'validate' => array(
+//						'_title' => array(
+//							'mode'  => 'required',
+//							'error' => __( 'You must provide a title', 'ultimate-member' ),
+//						),
+//						'_metakey' => array(
+//							'mode' => 'unique',
+//						),
+//					)
+//				),
 
-				'tel' => array(
-					'name'     => __( 'Telephone Box', 'ultimate-member' ),
-					'col1'     => array('_title','_metakey','_help','_default','_min_chars','_visibility'),
-					'col2'     => array('_label','_placeholder','_public','_roles','_validate','_custom_validate','_max_chars'),
-					'col3'     => array('_required','_editable','_icon'),
+//				'month' => array(
+//					'name' => __( 'Month', 'ultimate-member' ),
+//					'col1' => array('_title','_metakey','_description','_default','_min','_visibility'),
+//					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate','_max'),
+//					'col3' => array('_required','_editable'),
+//					'validate' => array(
+//						'_title' => array(
+//							'mode'  => 'required',
+//							'error' => __( 'You must provide a title', 'ultimate-member' ),
+//						),
+//						'_metakey' => array(
+//							'mode' => 'unique',
+//						),
+//					)
+//				),
+
+//				'range' => array(
+//					'name' => __( 'Range', 'ultimate-member' ),
+//					'col1' => array('_title','_metakey','_description','_default','_min','_visibility'),
+//					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate','_max'),
+//					'col3' => array('_required','_editable'),
+//					'validate' => array(
+//						'_title' => array(
+//							'mode'  => 'required',
+//							'error' => __( 'You must provide a title', 'ultimate-member' ),
+//						),
+//						'_metakey' => array(
+//							'mode' => 'unique',
+//						),
+//					)
+//				),
+
+//				'week' => array(
+//					'name' => __( 'Week', 'ultimate-member' ),
+//					'col1' => array('_title','_metakey','_description','_default','_min','_visibility'),
+//					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate','_max'),
+//					'col3' => array('_required','_editable'),
+//					'validate' => array(
+//						'_title' => array(
+//							'mode'  => 'required',
+//							'error' => __( 'You must provide a title', 'ultimate-member' ),
+//						),
+//						'_metakey' => array(
+//							'mode' => 'unique',
+//						),
+//					)
+//				),
+
+				'bool'    => array(
+					'name'     => __( 'Single Checkbox', 'ultimate-member' ),
+					'col1'     => array( '_title', '_metakey', '_description' ),
+					'col2'     => array( '_label', '_visibility', '_public', '_roles' ),
+					'col3'     => array( '_required', '_editable', '_default' ),
 					'validate' => array(
 						'_title'   => array(
 							'mode'  => 'required',
-							'error' => __('You must provide a title','ultimate-member'),
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
@@ -294,127 +368,101 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					),
 				),
 
-				'number' => array(
-					'name' => __('Number','ultimate-member'),
-					'col1' => array('_title','_metakey','_help','_default','_min','_visibility'),
-					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate','_max'),
-					'col3' => array('_required','_editable','_icon'),
+				'radio'    => array(
+					'name'     => __( 'Radio', 'ultimate-member' ),
+					'col1'     => array( '_title', '_metakey', '_description', '_options' ),
+					'col2'     => array( '_label', '_visibility', '_public', '_roles', '_custom_dropdown_options_source', '_parent_dropdown_relationship' ),
+					'col3'     => array( '_required', '_editable', '_choices_layout' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-						'_metakey' => array(
-							'mode' => 'unique',
-						),
-					)
-				),
-
-				'textarea' => array(
-					'name' => 'Textarea',
-					'col1' => array('_title','_metakey','_help','_height','_max_chars','_max_words','_visibility'),
-					'col2' => array('_label','_placeholder','_public','_roles','_default','_html'),
-					'col3' => array('_required','_editable','_icon'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-						'_metakey' => array(
-							'mode' => 'unique',
-						),
-					)
-				),
-
-				'select' => array(
-					'name' => 'Dropdown',
-					'col1' => array('_title','_metakey','_help','_default','_options','_visibility'),
-					'col2' => array('_label','_placeholder','_public','_roles','_custom_dropdown_options_source','_parent_dropdown_relationship'),
-					'col3' => array('_required','_editable','_icon'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
 						'_options' => array(
-							'mode' => 'required',
-							'error' => __('You have not added any choices yet.','ultimate-member')
+							'mode' => 'unique_options',
 						),
-					)
-				),
-
-				'multiselect' => array(
-					'name' => 'Multi-Select',
-					'col1' => array('_title','_metakey','_help','_default','_options','_visibility'),
-					'col2' => array('_label','_placeholder','_public','_roles','_min_selections','_max_selections','_custom_dropdown_options_source'),
-					'col3' => array('_required','_editable','_icon'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-						'_metakey' => array(
-							'mode' => 'unique',
-						),
-						'_options' => array(
-							'mode' => 'required',
-							'error' => __('You have not added any choices yet.','ultimate-member')
-						),
-					)
-				),
-
-				'radio' => array(
-					'name' => 'Radio',
-					'col1' => array('_title','_metakey','_help','_default','_options','_visibility'),
-					'col2' => array('_label','_public','_roles'),
-					'col3' => array('_required','_editable','_icon'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-						'_metakey' => array(
-							'mode' => 'unique',
-						),
-						'_options' => array(
-							'mode' => 'required',
-							'error' => __('You have not added any choices yet.','ultimate-member')
-						),
-					)
+					),
 				),
 
 				'checkbox' => array(
-					'name' => 'Checkbox',
-					'col1' => array('_title','_metakey','_help','_default','_options','_visibility'),
-					'col2' => array('_label','_public','_roles','_max_selections'),
-					'col3' => array('_required','_editable','_icon'),
+					'name'     => __( 'Checkbox', 'ultimate-member' ),
+					'col1'     => array( '_title', '_metakey', '_description', '_options' ),
+					'col2'     => array( '_label', '_visibility', '_public', '_roles', '_custom_dropdown_options_source', '_parent_dropdown_relationship', '_min_selections', '_max_selections' ),
+					'col3'     => array( '_required', '_editable', '_choices_layout' ),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
 						'_options' => array(
-							'mode' => 'required',
-							'error' => __('You have not added any choices yet.','ultimate-member')
+							'mode' => 'unique_options',
+						),
+					),
+				),
+
+				'hidden'   => array(
+					'name' => __( 'Hidden', 'ultimate-member' ),
+					'col1' => array( '_title', '_value' ),
+					'col2' => array( '_metakey' ),
+					'col3' => array(),
+					'validate' => array(
+						'_title' => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
 						),
 					)
 				),
 
-				'url' => array(
-					'name' => 'URL',
-					'col1' => array('_title','_metakey','_help','_default','_url_text','_visibility'),
-					'col2' => array('_label','_placeholder','_url_target','_url_rel','_public','_roles','_validate','_custom_validate'),
-					'col3' => array('_required','_editable','_icon'),
+				'date'     => array(
+					'name'      => __( 'Date', 'ultimate-member' ),
+					'col1'      => array( '_title', '_metakey', '_description' ),
+					'col2'      => array( '_label', '_visibility', '_public', '_roles', '_min', '_max' ),
+					'col3'      => array( '_required', '_editable', '_default' ),
+					'validate'  => array(
+						'_title'        => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' )
+						),
+						'_metakey'      => array(
+							'mode'  => 'unique',
+						),
+					),
+				),
+
+				'time'     => array(
+					'name'     => __( 'Time', 'ultimate-member' ),
+					'col1'     => array( '_title', '_metakey', '_description' ),
+					'col2'     => array( '_label', '_visibility', '_public', '_roles', '_step', '_min', '_max' ),
+					'col3'     => array( '_required', '_editable', '_default' ),
+					'validate' => array(
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title.', 'ultimate-member' ),
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
+						),
+					),
+				),
+
+				'number'   => array(
+					'name' => __( 'Number', 'ultimate-member' ),
+					'col1' => array( '_title', '_metakey', '_placeholder', '_description' ),
+					'col2' => array( '_label','_visibility', '_public', '_roles', '_validate', '_custom_validate', '_step', '_min', '_max' ),
+					'col3' => array( '_required', '_editable', '_default' ),
 					'validate' => array(
 						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
@@ -423,10 +471,42 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				),
 
 				'password' => array(
-					'name' => 'Password',
-					'col1' => array('_title','_metakey','_help','_min_chars','_max_chars','_visibility'),
-					'col2' => array('_label','_placeholder','_public','_roles','_force_good_pass','_force_confirm_pass','_label_confirm_pass'),
-					'col3' => array('_required','_editable','_icon'),
+					'name' => __( 'Password', 'ultimate-member' ),
+					'col1' => array( '_title', '_metakey', '_description', '_min_chars', '_max_chars' ),
+					'col2' => array( '_label', '_placeholder', '_visibility', '_public', '_roles', '_force_confirm_pass', '_label_confirm_pass', '_placeholder_confirm_pass', '_description_confirm_pass', '_pattern' ),
+					'col3' => array( '_required', '_editable', '_force_good_pass' ),
+					'validate' => array(
+						'_title' => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
+						),
+					),
+				),
+
+				'email'    => array(
+					'name' => __( 'Email', 'ultimate-member' ),
+					'col1' => array( '_title', '_metakey', '_description', '_min_chars', '_max_chars' ),
+					'col2' => array( '_label', '_placeholder', '_visibility', '_public', '_roles', '_validate', '_custom_validate', '_pattern' ),
+					'col3' => array( '_required', '_editable', '_default' ),
+					'validate' => array(
+						'_title' => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
+						),
+					),
+				),
+
+				'url'      => array(
+					'name' => __( 'URL', 'ultimate-member' ),
+					'col1' => array('_title','_metakey','_description', '_min_chars', '_max_chars'),
+					'col2' => array('_label','_placeholder','_visibility','_public','_roles','_validate','_custom_validate', '_pattern','_url_text','_url_target','_url_rel'),
+					'col3' => array( '_required', '_editable', '_default' ),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -438,11 +518,78 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					)
 				),
 
+				'tel'      => array(
+					'name'     => __( 'Telephone Box', 'ultimate-member' ),
+					'col1'     => array( '_title', '_metakey', '_description', '_min_chars', '_max_chars' ),
+					'col2'     => array( '_label', '_placeholder', '_visibility', '_public', '_roles', '_validate', '_custom_validate', '_pattern' ),
+					'col3'     => array( '_required', '_editable', '_default' ),
+					'validate' => array(
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
+						),
+					),
+				),
+
+				'text'     => array(
+					'name' => __( 'Text Box', 'ultimate-member' ),
+					'col1' => array( '_title', '_metakey', '_description', '_min_chars', '_max_chars'),
+					'col2' => array( '_label', '_placeholder', '_visibility', '_public', '_roles', '_validate', '_custom_validate', '_pattern' ),
+					'col3' => array( '_required', '_editable', '_default' ),
+					'validate' => array(
+						'_title' => array(
+							'mode' => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
+						),
+					),
+				),
+
+				'select'   => array(
+					'name' => __( 'Dropdown', 'ultimate-member' ),
+					'col1' => array( '_title', '_metakey', '_description', '_is_multi', '_options' ),
+					'col2' => array( '_label', '_placeholder', '_visibility', '_public', '_roles', '_custom_dropdown_options_source', '_parent_dropdown_relationship', '_min_selections', '_max_selections' ),
+					'col3' => array( '_required', '_editable' ),
+					'validate' => array(
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
+						),
+						'_options' => array(
+							'mode' => 'unique_options',
+						),
+					),
+				),
+
+				'textarea' => array(
+					'name'     => __( 'Textarea', 'ultimate-member' ),
+					'col1'     => array( '_title', '_metakey', '_description', '_rows', '_min_chars', '_max_chars', '_max_words' ),
+					'col2'     => array( '_label', '_placeholder', '_visibility', '_public', '_roles', '_default' ),
+					'col3'     => array( '_required', '_editable', '_html' ),
+					'validate' => array(
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
+						),
+					),
+				),
+
 				'image' => array(
 					'name' => 'Image Upload',
-					'col1' => array('_title','_metakey','_help','_allowed_types','_max_size','_crop','_visibility'),
+					'col1' => array('_title','_metakey','_description','_allowed_types','_max_size','_crop','_visibility'),
 					'col2' => array('_label','_public','_roles','_upload_text','_upload_help_text','_button_text'),
-					'col3' => array('_required','_editable','_icon'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -460,9 +607,9 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 
 				'file' => array(
 					'name' => 'File Upload',
-					'col1' => array('_title','_metakey','_help','_allowed_types','_max_size','_visibility'),
+					'col1' => array('_title','_metakey','_description','_allowed_types','_max_size','_visibility'),
 					'col2' => array('_label','_public','_roles','_upload_text','_upload_help_text','_button_text'),
-					'col3' => array('_required','_editable','_icon'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -478,65 +625,9 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					)
 				),
 
-				'date' => array(
-					'name'      => 'Date Picker',
-					'col1'      => array( '_title', '_metakey', '_help', '_default', '_range', '_years', '_years_x', '_range_start', '_range_end', '_visibility' ),
-					'col2'      => array( '_label', '_placeholder', '_public', '_roles', '_format', '_format_custom', '_pretty_format', '_disabled_weekdays' ),
-					'col3'      => array( '_required', '_editable', '_icon' ),
-					'validate'  => array(
-						'_title'        => array(
-							'mode'  => 'required',
-							'error' => __( 'You must provide a title', 'ultimate-member' )
-						),
-						'_metakey'      => array(
-							'mode'  => 'unique',
-						),
-						'_years'        => array(
-							'mode'  => 'numeric',
-							'error' => __( 'Number of years is not valid', 'ultimate-member' )
-						),
-						'_range_start'  => array(
-							'mode'  => 'range-start',
-						),
-						'_range_end'    => array(
-							'mode'  => 'range-end',
-						),
-					)
-				),
 
-				'time' => array(
-					'name' => 'Time Picker',
-					'col1' => array('_title','_metakey','_help','_format','_visibility'),
-					'col2' => array('_label','_placeholder','_default','_public','_roles','_intervals'),
-					'col3' => array('_required','_editable','_icon'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __( 'You must provide a title', 'ultimate-member' )
-						),
-						'_metakey' => array(
-							'mode' => 'unique',
-						),
-					)
-				),
 
-				'rating' => array(
-					'name' => 'Rating',
-					'col1' => array('_title','_metakey','_help','_visibility'),
-					'col2' => array('_label','_public','_roles','_number','_default'),
-					'col3' => array('_required','_editable','_icon'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
-						),
-						'_metakey' => array(
-							'mode' => 'unique',
-						),
-					)
-				),
-
-				'block' => array(
+				'block'     => array(
 					'name' => 'Content Block',
 					'col1' => array('_title','_visibility'),
 					'col2' => array('_public','_roles'),
@@ -567,7 +658,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					)
 				),
 
-				'spacing' => array(
+				'spacing'   => array(
 					'name' => 'Spacing',
 					'col1' => array('_title','_visibility'),
 					'col2' => array('_spacing'),
@@ -580,7 +671,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					)
 				),
 
-				'divider' => array(
+				'divider'   => array(
 					'name' => 'Divider',
 					'col1' => array('_title','_width','_divider_text','_visibility'),
 					'col2' => array('_style','_color','_public','_roles'),
@@ -593,11 +684,27 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					)
 				),
 
-				'googlemap' => array(
+				'rating'           => array(
+					'name' => __( 'Rating', 'ultimate-member' ),
+					'col1' => array('_title','_metakey','_description','_visibility'),
+					'col2' => array('_label','_public','_roles','_number','_default'),
+					'col3' => array('_required','_editable'),
+					'validate' => array(
+						'_title' => array(
+							'mode' => 'required',
+							'error' => __('You must provide a title','ultimate-member')
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
+						),
+					)
+				),
+
+				'googlemap'        => array(
 					'name' => 'Google Map',
-					'col1' => array('_title','_metakey','_help','_visibility'),
+					'col1' => array('_title','_metakey','_description','_visibility'),
 					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
-					'col3' => array('_required','_editable','_icon'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -609,11 +716,11 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					)
 				),
 
-				'youtube_video' => array(
+				'youtube_video'    => array(
 					'name' => 'YouTube Video',
-					'col1' => array('_title','_metakey','_help','_visibility'),
+					'col1' => array('_title','_metakey','_description','_visibility'),
 					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
-					'col3' => array('_required','_editable','_icon'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -625,11 +732,11 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					)
 				),
 
-				'vimeo_video' => array(
+				'vimeo_video'      => array(
 					'name' => 'Vimeo Video',
-					'col1' => array('_title','_metakey','_help','_visibility'),
+					'col1' => array('_title','_metakey','_description','_visibility'),
 					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
-					'col3' => array('_required','_editable','_icon'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -643,9 +750,9 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 
 				'soundcloud_track' => array(
 					'name' => 'SoundCloud Track',
-					'col1' => array('_title','_metakey','_help','_visibility'),
+					'col1' => array('_title','_metakey','_description','_visibility'),
 					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
-					'col3' => array('_required','_editable','_icon'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -656,8 +763,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 						),
 					)
 				),
-
-			];
+			);
 
 			/**
 			 * UM hook
@@ -1111,24 +1217,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'match' => 'https://soundcloud.com/',
 				),
 
-				'vkontakte' => array(
-					'title' => __('VKontakte','ultimate-member'),
-					'metakey' => 'vkontakte',
-					'type' => 'url',
-					'label' => __('VKontakte','ultimate-member'),
-					'required' => 0,
-					'public' => 1,
-					'editable' => 1,
-					'url_target' => '_blank',
-					'url_rel' => 'nofollow',
-					'icon' => 'fab fa-vk',
-					'validate' => 'vk_url',
-					'url_text' => 'VKontakte',
-					'advanced' => 'social',
-					'color' => '#2B587A',
-					'match' => 'https://vk.com/',
-				),
-
 				'role_select' => array(
 					'title' => __('Roles (Dropdown)','ultimate-member'),
 					'metakey' => 'role_select',
@@ -1468,7 +1556,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$array['google_url'] = __('Google+ URL','ultimate-member');
 			$array['instagram_url'] = __('Instagram URL','ultimate-member');
 			$array['linkedin_url'] = __('LinkedIn URL','ultimate-member');
-			$array['vk_url'] = __('VKontakte URL','ultimate-member');
 			$array['lowercase'] = __('Lowercase only','ultimate-member');
 			$array['numeric'] = __('Numeric value only','ultimate-member');
 			$array['phone_number'] = __('Phone Number','ultimate-member');

@@ -1,5 +1,5 @@
 <?php
-namespace um\core;
+namespace um\legacy\core;
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -9,7 +9,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 	/**
 	 * Class Shortcodes
-	 * @package um\core
+	 * @package um\legacy\core
 	 */
 	class Shortcodes {
 

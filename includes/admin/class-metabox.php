@@ -1305,9 +1305,14 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 					break;
 
 				case '_visibility':
+					$mode = get_post_meta( $form_id, '_um_mode', true );
+					if ( 'profile' !== $mode ) {
+						// Show only for the fields only on the profile form.
+						break;
+					}
 					?>
 
-					<p><label for="_visibility"><?php _e( 'Visibility', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Select where this field should appear. This option should only be changed on the profile form and allows you to show a field in one mode only (edit or view) or in both modes.','ultimate-member' ) ); ?></label>
+					<p><label for="_visibility"><?php esc_html_e( 'Visibility', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select where this field should appear. This option should only be changed on the profile form and allows you to show a field in one mode only (edit or view) or in both modes.','ultimate-member' ) ); ?></label>
 						<select name="_visibility" id="_visibility" style="width: 100%">
 							<option value="all" <?php selected( 'all', $this->edit_mode_value ); ?>><?php _e( 'View everywhere', 'ultimate-member' ) ?></option>
 							<option value="edit" <?php selected( 'edit', $this->edit_mode_value ); ?>><?php _e( 'Edit mode only', 'ultimate-member' ) ?></option>
@@ -1475,45 +1480,6 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 					</p>
 
 					<?php
-					break;
-
-				case '_icon':
-
-					UM()->install()->set_icons_options();
-
-					$um_icons_list = get_option( 'um_icons_list' );
-
-					if ( $this->set_field_type == 'row' ) {
-						?>
-
-						<p class="_heading_text"><label for="_icon"><?php _e( 'Icon', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Select an icon to appear in the field. Leave blank if you do not want an icon to show in the field.', 'ultimate-member' ) ); ?></label>
-							<select name="_icon" id="_icon" class="um-icon-select-field" data-placeholder="<?php esc_attr_e( 'Select Icon', 'ultimate-member' ); ?>" >
-								<option value=""><?php esc_html_e( 'Select Icon', 'ultimate-member' ); ?></option>
-								<?php if ( ! empty( $this->edit_mode_value ) && array_key_exists( $this->edit_mode_value, $um_icons_list ) ) { ?>
-									<option value="<?php echo esc_attr( $this->edit_mode_value ); ?>" selected><?php echo esc_html( $um_icons_list[ $this->edit_mode_value ]['label'] ); ?></option>
-								<?php } ?>
-							</select>
-						</p>
-
-					<?php } else { ?>
-
-						<div class="um-admin-tri">
-
-							<p><label for="_icon"><?php _e( 'Icon', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Select an icon to appear in the field. Leave blank if you do not want an icon to show in the field.', 'ultimate-member' ) ); ?></label>
-								<select name="_icon" id="_icon" class="um-icon-select-field" data-placeholder="<?php esc_attr_e( 'Select Icon', 'ultimate-member' ); ?>">
-									<option value=""><?php esc_html_e( 'Select Icon', 'ultimate-member' ); ?></option>
-									<?php if ( ! empty( $this->edit_mode_value ) && array_key_exists( $this->edit_mode_value, $um_icons_list ) ) { ?>
-										<option value="<?php echo esc_attr( $this->edit_mode_value ); ?>" selected><?php echo esc_html( $um_icons_list[ $this->edit_mode_value ]['label'] ); ?></option>
-									<?php } ?>
-								</select>
-							</p>
-
-						</div>
-
-						<?php
-
-					}
-
 					break;
 
 				case '_css_class':
@@ -1692,6 +1658,11 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 					break;
 
 				case '_url_text':
+					$mode = get_post_meta( $form_id, '_um_mode', true );
+					if ( 'profile' !== $mode ) {
+						// Show only for the fields only on the profile form.
+						break;
+					}
 					?>
 
 					<p><label for="_url_text"><?php _e( 'URL Alt Text', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Entering custom text here will replace the url with a text link', 'ultimate-member' ) ); ?></label>
@@ -1702,6 +1673,11 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 					break;
 
 				case '_url_target':
+					$mode = get_post_meta( $form_id, '_um_mode', true );
+					if ( 'profile' !== $mode ) {
+						// Show only for the fields only on the profile form.
+						break;
+					}
 					?>
 
 					<p><label for="_url_target"><?php _e( 'Link Target', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Choose whether to open this link in same window or in a new window', 'ultimate-member' ) ); ?></label>
@@ -1715,6 +1691,11 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 					break;
 
 				case '_url_rel':
+					$mode = get_post_meta( $form_id, '_um_mode', true );
+					if ( 'profile' !== $mode ) {
+						// Show only for the fields only on the profile form.
+						break;
+					}
 					?>
 
 					<p><label for="_url_rel"><?php _e( 'SEO Follow', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Whether to follow or nofollow this link by search engines', 'ultimate-member' ) ); ?></label>
@@ -1738,9 +1719,14 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 					break;
 
 				case '_force_confirm_pass':
+					$mode = get_post_meta( $form_id, '_um_mode', true );
+					if ( 'login' === $mode ) {
+						// Hide for login form.
+						break;
+					}
 					?>
 
-					<p><label for="_force_confirm_pass"><?php _e( 'Automatically add a confirm password field?', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Turn on to add a confirm password field. If turned on the confirm password field will only show on register forms and not on login forms.', 'ultimate-member' ) ); ?></label>
+					<p><label for="_force_confirm_pass"><?php esc_html_e( 'Add a confirm password field?', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Turn on to add a confirm password field. If turned on the confirm password field will only show on register forms and not on login forms.', 'ultimate-member' ) ); ?></label>
 						<input type="checkbox" name="_force_confirm_pass" id="_force_confirm_pass" value="1" <?php checked( isset( $this->edit_mode_value ) ? $this->edit_mode_value : 0 ) ?> class="um-adm-conditional" data-cond1="1" data-cond1-show="_label_confirm_pass" data-cond1-hide="xxx" />
 					</p>
 
@@ -1750,157 +1736,43 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 				case '_style':
 					?>
 
-					<p><label for="_style"><?php _e( 'Style', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'This is the line-style of divider', 'ultimate-member' ) ); ?></label>
+					<p><label for="_style"><?php esc_html_e( 'Style', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This is the line-style of divider', 'ultimate-member' ) ); ?></label>
 						<select name="_style" id="_style" style="width: 100%">
-							<option value="solid"  <?php selected( 'solid', $this->edit_mode_value ); ?>><?php _e( 'Solid', 'ultimate-member' ) ?></option>
-							<option value="dotted" <?php selected( 'dotted', $this->edit_mode_value ); ?>><?php _e( 'Dotted', 'ultimate-member' ) ?></option>
-							<option value="dashed" <?php selected( 'dashed', $this->edit_mode_value ); ?>><?php _e( 'Dashed', 'ultimate-member' ) ?></option>
-							<option value="double" <?php selected( 'double', $this->edit_mode_value ); ?>><?php _e( 'Double', 'ultimate-member' ) ?></option>
+							<option value="solid" <?php selected( 'solid', $this->edit_mode_value ); ?>><?php esc_html_e( 'Solid', 'ultimate-member' ); ?></option>
+							<option value="dotted" <?php selected( 'dotted', $this->edit_mode_value ); ?>><?php esc_html_e( 'Dotted', 'ultimate-member' ); ?></option>
+							<option value="dashed" <?php selected( 'dashed', $this->edit_mode_value ); ?>><?php esc_html_e( 'Dashed', 'ultimate-member' ); ?></option>
+							<option value="double" <?php selected( 'double', $this->edit_mode_value ); ?>><?php esc_html_e( 'Double', 'ultimate-member' ); ?></option>
 						</select>
 					</p>
 
 					<?php
 					break;
 
-				case '_intervals':
-
-					?>
-
-					<p><label for="_intervals"><?php _e( 'Time Intervals (in minutes)', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Choose the minutes interval between each time in the time picker.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_intervals" id="_intervals" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : 60; ?>" placeholder="<?php esc_attr_e( 'e.g. 30, 60, 120', 'ultimate-member' ) ?>" />
-					</p>
-
-					<?php
-					break;
-
-
-				case '_format':
-
-					if ( $this->set_field_type == 'date' ) {
+				case '_step':
+					if ( 'time' === $this->set_field_type ) {
 						?>
 
-						<p><label for="_format"><?php _e( 'Date User-Friendly Format', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'The display format of the date which is visible to user.', 'ultimate-member' ) ); ?></label>
-							<select name="_format" id="_format" style="width: 100%">
-								<option value="j M Y" <?php selected( 'j M Y', $this->edit_mode_value ); ?>><?php echo UM()->datetime()->get_time('j M Y'); ?></option>
-								<option value="M j Y" <?php selected( 'M j Y', $this->edit_mode_value ); ?>><?php echo UM()->datetime()->get_time('M j Y'); ?></option>
-								<option value="j F Y" <?php selected( 'j F Y', $this->edit_mode_value ); ?>><?php echo UM()->datetime()->get_time('j F Y'); ?></option>
-								<option value="F j Y" <?php selected( 'F j Y', $this->edit_mode_value ); ?>><?php echo UM()->datetime()->get_time('F j Y'); ?></option>
-							</select>
+						<p><label for="_step"><?php esc_html_e( 'Time Intervals (in minutes)', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Choose the minutes interval between each time in the time picker.', 'ultimate-member' ) ); ?></label>
+							<input type="text" name="_step" id="_step" value="<?php echo ( $this->edit_mode_value ) ? esc_attr( $this->edit_mode_value ) : 60; ?>" placeholder="<?php esc_attr_e( 'e.g. 30, 60, 120', 'ultimate-member' ); ?>" />
 						</p>
 
-					<?php } else { ?>
+						<?php
+					} else {
+						?>
 
-						<p><label for="_format"><?php _e( 'Time Format', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Choose the displayed time-format for this field', 'ultimate-member' ) ); ?></label>
-							<select name="_format" id="_format" style="width: 100%">
-								<option value="g:i a" <?php selected( 'g:i a', $this->edit_mode_value ); ?>><?php echo UM()->datetime()->get_time('g:i a'); ?><?php _e( '( 12-hr format )', 'ultimate-member' ) ?></option>
-								<option value="g:i A" <?php selected( 'g:i A', $this->edit_mode_value ); ?>><?php echo UM()->datetime()->get_time('g:i A'); ?><?php _e( '( 12-hr format )', 'ultimate-member' ) ?></option>
-								<option value="H:i"  <?php selected( 'H:i', $this->edit_mode_value ); ?>><?php echo UM()->datetime()->get_time('H:i'); ?><?php _e( '( 24-hr format )', 'ultimate-member' ) ?></option>
-							</select>
+						<p><label for="_step"><?php esc_html_e( 'Number step', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Choose a number that specifies the granularity that the value must adhere to.', 'ultimate-member' ) ); ?></label>
+							<input type="text" name="_step" id="_step" value="<?php echo ! empty( $this->edit_mode_value ) ? esc_attr( $this->edit_mode_value ) : 1; ?>" />
 						</p>
 
 						<?php
 					}
-					break;
 
-				case '_format_custom':
+					break;
+				case '_pattern':
 					?>
 
-					<p><label for="_format_custom"><?php _e( 'Use custom Date format', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This option overrides "Date User-Friendly Format" option. See https://www.php.net/manual/en/function.date.php', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_format_custom" id="_format_custom" value="<?php echo htmlspecialchars( $this->edit_mode_value, ENT_QUOTES ); ?>" placeholder="j M Y" />
-					</p>
-
-					<?php
-					break;
-
-				case '_pretty_format':
-					?>
-
-					<p><label for="_pretty_format"><?php _e( 'Displayed Date Format', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Whether you wish to show the date in full or only show the years e.g. 25 Years', 'ultimate-member' ) ); ?></label>
-						<select name="_pretty_format" id="_pretty_format" style="width: 100%">
-							<option value="0" <?php selected( 0, $this->edit_mode_value ); ?>><?php _e( 'Show full date', 'ultimate-member' ) ?></option>
-							<option value="1" <?php selected( 1, $this->edit_mode_value ); ?>><?php _e( 'Show years only', 'ultimate-member' ) ?></option>
-						</select>
-					</p>
-
-					<?php
-					break;
-
-				case '_disabled_weekdays':
-
-					if ( isset( $this->edit_mode_value ) && is_array( $this->edit_mode_value ) ) {
-						$values = $this->edit_mode_value;
-					} else {
-						$values = array('');
-					}
-					?>
-
-					<p><label for="_disabled_weekdays"><?php _e( 'Disable specific weekdays', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Disable specific week days from being available for selection in this date picker', 'ultimate-member' ) ); ?></label>
-						<select name="_disabled_weekdays[]" id="_disabled_weekdays" multiple="multiple" style="width: 100%">
-							<option value="1" <?php if ( in_array( 1, $values ) ) { echo 'selected'; } ?>><?php _e( 'Sunday', 'ultimate-member' ) ?></option>
-							<option value="2" <?php if ( in_array( 2, $values ) ) { echo 'selected'; } ?>><?php _e( 'Monday', 'ultimate-member' ) ?></option>
-							<option value="3" <?php if ( in_array( 3, $values ) ) { echo 'selected'; } ?>><?php _e( 'Tuesday', 'ultimate-member' ) ?></option>
-							<option value="4" <?php if ( in_array( 4, $values ) ) { echo 'selected'; } ?>><?php _e( 'Wednesday', 'ultimate-member' ) ?></option>
-							<option value="5" <?php if ( in_array( 5, $values ) ) { echo 'selected'; } ?>><?php _e( 'Thursday', 'ultimate-member' ) ?></option>
-							<option value="6" <?php if ( in_array( 6, $values ) ) { echo 'selected'; } ?>><?php _e( 'Friday', 'ultimate-member' ) ?></option>
-							<option value="7" <?php if ( in_array( 7, $values ) ) { echo 'selected'; } ?>><?php _e( 'Saturday', 'ultimate-member' ) ?></option>
-						</select>
-					</p>
-
-					<?php
-					break;
-
-				case '_years':
-					?>
-
-					<p class="_years"><label for="_years"><?php _e( 'Number of Years to pick from', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Number of years available for the date selection. Default to last 50 years', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_years" id="_years" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : 50; ?>" />
-					</p>
-
-					<?php
-					break;
-
-				case '_years_x':
-					?>
-
-					<p class="_years"><label for="_years_x"><?php _e( 'Years Selection', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'This decides which years should be shown relative to today date', 'ultimate-member' ) ); ?></label>
-						<select name="_years_x" id="_years_x" style="width: 100%">
-							<option value="equal"  <?php selected( 'equal', $this->edit_mode_value ); ?>><?php _e( 'Equal years before / after today', 'ultimate-member' ) ?></option>
-							<option value="past" <?php selected( 'past', $this->edit_mode_value ); ?>><?php _e( 'Past years only', 'ultimate-member' ) ?></option>
-							<option value="future" <?php selected( 'future', $this->edit_mode_value ); ?>><?php _e( 'Future years only', 'ultimate-member' ) ?></option>
-						</select>
-					</p>
-
-					<?php
-					break;
-
-				case '_range_start':
-					?>
-
-					<p class="_date_range"><label for="_range_start"><?php _e( 'Date Range Start', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Set the minimum date/day in range in the format YYYY/MM/DD', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_range_start" id="_range_start" value="<?php echo $this->edit_mode_value; ?>" placeholder="<?php esc_attr_e( 'YYYY/MM/DD', 'ultimate-member' ) ?>" />
-					</p>
-
-					<?php
-					break;
-
-				case '_range_end':
-					?>
-
-					<p class="_date_range"><label for="_range_end"><?php _e( 'Date Range End', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Set the maximum date/day in range in the format YYYY/MM/DD', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_range_end" id="_range_end" value="<?php echo $this->edit_mode_value; ?>" placeholder="<?php esc_attr_e( 'YYYY/MM/DD', 'ultimate-member' ) ?>" />
-					</p>
-
-					<?php
-					break;
-
-				case '_range':
-					?>
-
-					<p><label for="_range"><?php _e( 'Set Date Range', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Whether to show a specific number of years or specify a date range to be available for the date picker.', 'ultimate-member' ) ); ?></label>
-						<select name="_range" id="_range" class="um-adm-conditional" data-cond1='years' data-cond1-show='_years' data-cond2="date_range" data-cond2-show="_date_range" style="width: 100%">
-							<option value="years" <?php selected( 'years', $this->edit_mode_value ); ?>><?php _e( 'Fixed Number of Years', 'ultimate-member' ) ?></option>
-							<option value="date_range" <?php selected( 'date_range', $this->edit_mode_value ); ?>><?php _e( 'Specific Date Range', 'ultimate-member' ) ?></option>
-						</select>
+					<p><label for="_pattern"><?php esc_html_e( 'Pattern', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Specifies a regular expression the form control\'s value should match.', 'ultimate-member' ) ); ?></label>
+						<input type="text" name="_pattern" id="_pattern" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
@@ -1908,7 +1780,7 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 
 				case '_content':
 
-					if ( $this->set_field_type == 'shortcode' ) {
+					if ( 'shortcode' === $this->set_field_type ) {
 
 						?>
 
@@ -2036,11 +1908,11 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 					<?php
 					break;
 
-				case '_height':
+				case '_rows':
 					?>
 
-					<p><label for="_height"><?php _e( 'Textarea Height', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'The height of textarea in pixels. Default is 100 pixels', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_height" id="_height" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : '100px'; ?>" />
+					<p><label for="_rows"><?php _e( 'Textarea Rows', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'The height of textarea or wp_editor in rows. Default is 5 rows.', 'ultimate-member' ) ); ?></label>
+						<input type="number" name="_rows" id="_rows" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" min="1" />
 					</p>
 
 					<?php
@@ -2060,7 +1932,7 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 					?>
 
 					<p><label for="_is_multi"><?php _e( 'Allow multiple selections', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Enable/disable multiple selections for this field', 'ultimate-member' ) ); ?></label>
-						<input type="checkbox" name="_is_multi" id="_is_multi" value="1" <?php checked( isset( $this->edit_mode_value ) ? $this->edit_mode_value : 0 ) ?> class="um-adm-conditional" data-cond1="1" data-cond1-show="_max_selections" data-cond1-hide="xxx" />
+						<input type="checkbox" name="_is_multi" id="_is_multi" value="1" <?php checked( isset( $this->edit_mode_value ) ? $this->edit_mode_value : 0 ) ?> class="um-adm-conditional" data-cond1="1" data-cond1-show="_max_selections" data-cond1-hide="xxx" data-cond2="1" data-cond2-show="_min_selections" data-cond2-hide="xxx" />
 					</p>
 
 					<?php
@@ -2070,7 +1942,7 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 					?>
 
 					<p class="_max_selections"><label for="_max_selections"><?php _e( 'Maximum number of selections', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Enter a number here to force a maximum number of selections by user for this field', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_max_selections" id="_max_selections" value="<?php echo $this->edit_mode_value; ?>" />
+						<input type="number" name="_max_selections" id="_max_selections" value="<?php echo $this->edit_mode_value; ?>" step="1"/>
 					</p>
 
 					<?php
@@ -2080,7 +1952,7 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 					?>
 
 					<p class="_min_selections"><label for="_min_selections"><?php _e( 'Minimum number of selections', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Enter a number here to force a minimum number of selections by user for this field', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_min_selections" id="_min_selections" value="<?php echo $this->edit_mode_value; ?>" />
+						<input type="number" name="_min_selections" id="_min_selections" value="<?php echo $this->edit_mode_value; ?>" step="1"/>
 					</p>
 
 					<?php
@@ -2107,30 +1979,68 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 					break;
 
 				case '_min':
-					?>
 
-					<p><label for="_min"><?php _e( 'Minimum Number', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Minimum number that can be entered in this field', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_min" id="_min" value="<?php echo $this->edit_mode_value; ?>" />
-					</p>
+					if ( 'time' === $this->set_field_type ) {
+						?>
 
-					<?php
+						<p><label for="_min"><?php esc_html_e( 'Minimum Time', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Minimum time that can be entered in this field', 'ultimate-member' ) ); ?></label>
+							<input type="time" name="_min" id="_min" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
+						</p>
+
+						<?php
+					} elseif ( 'date' === $this->set_field_type ) {
+						?>
+
+						<p><label for="_min"><?php esc_html_e( 'Minimum Date', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Minimum date that can be entered in this field', 'ultimate-member' ) ); ?></label>
+							<input type="date" name="_min" id="_min" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
+						</p>
+
+						<?php
+					} else {
+						?>
+
+						<p><label for="_min"><?php esc_html_e( 'Minimum Number', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Minimum number that can be entered in this field', 'ultimate-member' ) ); ?></label>
+							<input type="number" name="_min" id="_min" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
+						</p>
+
+						<?php
+					}
 					break;
 
 				case '_max':
-					?>
+					if ( 'time' === $this->set_field_type ) {
+						?>
 
-					<p><label for="_max"><?php _e( 'Maximum Number', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Maximum number that can be entered in this field', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_max" id="_max" value="<?php echo $this->edit_mode_value; ?>" />
-					</p>
+						<p><label for="_max"><?php esc_html_e( 'Maximum Time', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Maximum time that can be entered in this field.', 'ultimate-member' ) ); ?></label>
+							<input type="time" name="_max" id="_max" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
+						</p>
 
-					<?php
+						<?php
+					} elseif ( 'date' === $this->set_field_type ) {
+						?>
+
+						<p><label for="_max"><?php esc_html_e( 'Maximum Date', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Maximum date that can be entered in this field.', 'ultimate-member' ) ); ?></label>
+							<input type="date" name="_max" id="_max" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
+						</p>
+
+						<?php
+					} else {
+						?>
+
+						<p><label for="_max"><?php esc_html_e( 'Maximum Number', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Maximum number that can be entered in this field.', 'ultimate-member' ) ); ?></label>
+							<input type="number" name="_max" id="_max" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
+						</p>
+
+						<?php
+					}
+
 					break;
 
 				case '_min_chars':
 					?>
 
-					<p><label for="_min_chars"><?php _e( 'Minimum length', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'If you want to enable a minimum number of characters to be input in this field. Leave empty to disable this setting', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_min_chars" id="_min_chars" value="<?php echo $this->edit_mode_value; ?>" />
+					<p><label for="_min_chars"><?php esc_html_e( 'Minimum length', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'If you want to enable a minimum number of characters to be input in this field. Leave empty to disable this setting', 'ultimate-member' ) ); ?></label>
+						<input type="number" name="_min_chars" id="_min_chars" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" min="0" step="1" />
 					</p>
 
 					<?php
@@ -2139,8 +2049,8 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 				case '_max_chars':
 					?>
 
-					<p><label for="_max_chars"><?php _e( 'Maximum length', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_max_chars" id="_max_chars" value="<?php echo $this->edit_mode_value; ?>" />
+					<p><label for="_max_chars"><?php esc_html_e( 'Maximum length', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting', 'ultimate-member' ) ); ?></label>
+						<input type="number" name="_max_chars" id="_max_chars" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" min="1" step="1" />
 					</p>
 
 					<?php
@@ -2158,16 +2068,83 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 
 				case '_options':
 
-					if ( isset( $this->edit_mode_value ) && is_array( $this->edit_mode_value ) ) {
+					if ( 'radio' === $this->set_field_type || 'select' === $this->set_field_type ) {
+
+					}
+					if ( 'checkbox' === $this->set_field_type || 'select' === $this->set_field_type ) {
+
+					}
+
+
+					/*if ( isset( $this->edit_mode_value ) && is_array( $this->edit_mode_value ) ) {
 						$values = implode("\n", $this->edit_mode_value);
 					} else if ( $this->edit_mode_value ) {
 						$values = $this->edit_mode_value;
 					} else {
 						$values = '';
-					} ?>
+					}*/
 
-					<p><label for="_options"><?php _e( 'Edit Choices', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Enter one choice per line. This will represent the available choices or selections available for user.', 'ultimate-member' ) ); ?></label>
-						<textarea name="_options" id="_options"><?php echo $values; ?></textarea>
+					if ( $this->edit_mode_value ) {
+						$options = $this->edit_mode_value;
+					} else {
+						$options = array(
+							array(
+								'default' => false,
+								'key'     => '',
+								'value'   => '',
+							),
+						);
+					}
+
+					?>
+					<span class="um-admin-option-row-placeholder" data-option_index="{{index}}" style="display: none;">
+						<span class="um-admin-option-row-defaults">
+							<?php if ( 'checkbox' === $this->set_field_type || 'select' === $this->set_field_type ) { ?>
+								<input class="um-admin-option-default-multi" type="checkbox" name="_options[defaults][]" value="1" disabled <?php if ( 'select' === $this->set_field_type ) { ?>style="display: none;"<?php } ?> aria-label="<?php esc_attr_e( 'Does option is default?', 'ultimate-member' ); ?>" />
+							<?php } ?>
+							<?php if ( 'radio' === $this->set_field_type || 'select' === $this->set_field_type ) { ?>
+								<input class="um-admin-option-default" type="radio" name="_options[defaults]" value="" disabled aria-label="<?php esc_attr_e( 'Does option is default?', 'ultimate-member' ); ?>" />
+							<?php } ?>
+						</span>
+						<span class="um-field-icon"><i class="fas fa-sort"></i></span>
+						<span class="um-admin-option-key-wrapper">
+							<input class="um-admin-option-key" id="um-admin-option-key-{{index}}" type="text" name="_options[keys][{{index}}]" value="" disabled placeholder="<?php esc_attr_e( 'Option key', 'ultimate-member' ); ?>" aria-label="<?php esc_attr_e( 'Option key', 'ultimate-member' ); ?>" />
+						</span>
+						<span class="um-admin-option-val-wrapper">
+							<input class="um-admin-option-val" id="um-admin-option-value-{{index}}" type="text" name="_options[values][{{index}}]" value="" disabled placeholder="<?php esc_attr_e( 'Option label', 'ultimate-member' ); ?>" aria-label="<?php esc_attr_e( 'Option label', 'ultimate-member' ); ?>" />
+						</span>
+						<span class="um-admin-option-row-actions">
+							<button type="button" class="button um-admin-option-row-add"><span class="dashicons dashicons-plus"></span></button>
+							<button type="button" class="button um-admin-option-row-remove"><span class="dashicons dashicons-minus"></span></button>
+						</span>
+					</span>
+					<p>
+						<label for="um-admin-option-key-0"><?php _e( 'Edit Choices', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Enter one choice per line. This will represent the available choices or selections available for user.', 'ultimate-member' ) ); ?></label>
+						<span class="um-admin-option-rows">
+							<?php foreach ( $options as $index => $option ) { ?>
+								<span class="um-admin-option-row" data-option_index="<?php echo esc_attr( $index ); ?>">
+									<span class="um-admin-option-row-defaults">
+										<?php if ( 'checkbox' === $this->set_field_type || 'select' === $this->set_field_type ) { ?>
+											<input class="um-admin-option-default-multi" type="checkbox" name="_options[defaults][<?php echo esc_attr( $index ); ?>]" value="1" <?php if ( 'select' === $this->set_field_type ) { ?>style="display: none;"<?php } ?> <?php checked( $option['default'] ); ?> aria-label="<?php esc_attr_e( 'Does option is default?', 'ultimate-member' ); ?>" />
+										<?php } ?>
+										<?php if ( 'radio' === $this->set_field_type || 'select' === $this->set_field_type ) { ?>
+											<input class="um-admin-option-default" type="radio" name="_options[defaults]" value="<?php echo esc_attr( $index ); ?>" <?php checked( $option['default'] ); ?> aria-label="<?php esc_attr_e( 'Does option is default?', 'ultimate-member' ); ?>" />
+										<?php } ?>
+									</span>
+									<span class="um-field-icon"><i class="fas fa-sort"></i></span>
+									<span class="um-admin-option-key-wrapper">
+										<input class="um-admin-option-key" id="um-admin-option-key-<?php echo esc_attr( $index ); ?>" type="text" name="_options[keys][<?php echo esc_attr( $index ); ?>]" value="<?php echo esc_attr( $option['key'] ); ?>" placeholder="<?php esc_attr_e( 'Option key', 'ultimate-member' ); ?>" aria-label="<?php esc_attr_e( 'Option key', 'ultimate-member' ); ?>" />
+									</span>
+									<span class="um-admin-option-val-wrapper">
+										<input class="um-admin-option-val" id="um-admin-option-value-<?php echo esc_attr( $index ); ?>" type="text" name="_options[values][<?php echo esc_attr( $index ); ?>]" value="<?php echo esc_attr( $option['value'] ); ?>" placeholder="<?php esc_attr_e( 'Option label', 'ultimate-member' ); ?>" aria-label="<?php esc_attr_e( 'Option label', 'ultimate-member' ); ?>" />
+									</span>
+									<span class="um-admin-option-row-actions">
+										<button type="button" class="button um-admin-option-row-add"><span class="dashicons dashicons-plus"></span></button>
+										<button type="button" class="button um-admin-option-row-remove"><span class="dashicons dashicons-minus"></span></button>
+									</span>
+								</span>
+							<?php } ?>
+						</span>
 					</p>
 
 					<?php
@@ -2217,50 +2194,97 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 
 					break;
 
-				case '_help':
+				case '_value':
 					?>
 
-					<p><label for="_help"><?php _e( 'Help Text', 'ultimate-member' ) ?> <?php UM()->tooltip( __('This is the text that appears in a tooltip when a user hovers over the info icon. Help text is useful for providing users with more information about what they should enter in the field. Leave blank if no help text is needed for field.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_help" id="_help" value="<?php echo $this->edit_mode_value; ?>" />
+					<p><label for="_value"><?php esc_html_e( 'Value', 'ultimate-member' ); ?></label>
+						<input type="text" name="_value" id="_value" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
 					break;
+				case '_description':
+					?>
 
+					<p><label for="_description"><?php esc_html_e( 'Description', 'ultimate-member' ); ?></label>
+						<textarea name="_description" id="_description"><?php echo esc_textarea( $this->edit_mode_value ); ?></textarea>
+					</p>
+
+					<?php
+					break;
+				case '_description_confirm_pass':
+					?>
+
+					<p><label for="_description_confirm_pass"><?php esc_html_e( 'Confirm password field description', 'ultimate-member' ); ?></label>
+						<textarea name="_description_confirm_pass" id="_description_confirm_pass"><?php echo esc_textarea( $this->edit_mode_value ); ?></textarea>
+					</p>
+
+					<?php
+					break;
 				case '_default':
 					?>
 
-					<?php if ( $this->set_field_type == 'textarea' ) { ?>
+					<?php if ( 'textarea' === $this->set_field_type ) { ?>
 
-					<p><label for="_default"><?php _e( 'Default Text', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Text to display by default in this field', 'ultimate-member' ) ); ?></label>
-						<textarea name="_default" id="_default"><?php echo $this->edit_mode_value; ?></textarea>
-					</p>
+						<p><label for="_default"><?php esc_html_e( 'Default Text', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Text to display by default in this field', 'ultimate-member' ) ); ?></label>
+							<textarea name="_default" id="_default"><?php echo esc_textarea( $this->edit_mode_value ); ?></textarea>
+						</p>
 
-				<?php } elseif ( $this->set_field_type == 'date' ) { ?>
+					<?php } elseif ( 'date' === $this->set_field_type ) { ?>
 
-					<p class="um"><label for="_default"><?php _e( 'Default Date', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'You may use all PHP compatible date formats such as: 2020-02-02, 02/02/2020, yesterday, today, tomorrow, next monday, first day of next month, +3 day', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" class="um-datepicker" data-format="yyyy/mm/dd" />
-					</p>
+						<p><label for="_default"><?php esc_html_e( 'Default Date', 'ultimate-member' ); ?></label>
+							<input type="date" name="_default" id="_default" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
+						</p>
 
-				<?php } elseif ( $this->set_field_type == 'time' ) { ?>
+					<?php } elseif ( 'time' === $this->set_field_type ) { ?>
 
-					<p class="um"><label for="_default"><?php _e( 'Default Time', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'You may use all PHP compatible date formats such as: 2020-02-02, 02/02/2020, yesterday, today, tomorrow, next monday, first day of next month, +3 day', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" class="um-timepicker" data-format="HH:i" />
-					</p>
+						<p><label for="_default"><?php esc_html_e( 'Default Time', 'ultimate-member' ); ?></label>
+							<input type="time" name="_default" id="_default" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
+						</p>
 
-				<?php } elseif ( $this->set_field_type == 'rating' ) { ?>
+					<?php } elseif ( 'number' === $this->set_field_type ) { ?>
 
-					<p><label for="_default"><?php _e( 'Default Rating', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'If you wish the rating field to be prefilled with a number of stars, enter it here.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" />
-					</p>
+						<p><label for="_default"><?php esc_html_e( 'Default Number', 'ultimate-member' ); ?></label>
+							<input type="number" name="_default" id="_default" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
+						</p>
 
-				<?php } else { ?>
+					<?php } elseif ( 'email' === $this->set_field_type ) { ?>
 
-					<p><label for="_default"><?php _e( 'Default Value', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" />
-					</p>
+						<p><label for="_default"><?php esc_html_e( 'Default Email', 'ultimate-member' ); ?></label>
+							<input type="email" name="_default" id="_default" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
+						</p>
 
-				<?php } ?>
+					<?php } elseif ( 'url' === $this->set_field_type ) { ?>
+
+						<p><label for="_default"><?php esc_html_e( 'Default URL', 'ultimate-member' ); ?></label>
+							<input type="url" name="_default" id="_default" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
+						</p>
+
+					<?php } elseif ( 'tel' === $this->set_field_type ) { ?>
+
+						<p><label for="_default"><?php esc_html_e( 'Default Telephone', 'ultimate-member' ); ?></label>
+							<input type="tel" name="_default" id="_default" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
+						</p>
+
+					<?php } elseif ( 'bool' === $this->set_field_type ) { ?>
+
+						<p><label for="_default"><?php esc_html_e( 'Default Checked?', 'ultimate-member' ); ?></label>
+							<input type="checkbox" name="_default" id="_default" value="1" <?php checked( $this->edit_mode_value ); ?> />
+						</p>
+
+					<?php } elseif ( 'rating' === $this->set_field_type ) { ?>
+
+						<p><label for="_default"><?php esc_html_e( 'Default Rating', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'If you wish the rating field to be prefilled with a number of stars, enter it here.', 'ultimate-member' ) ); ?></label>
+							<input type="text" name="_default" id="_default" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
+						</p>
+
+					<?php } else { ?>
+
+						<p><label for="_default"><?php esc_html_e( 'Default Value', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value', 'ultimate-member' ) ); ?></label>
+							<input type="text" name="_default" id="_default" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
+						</p>
+
+					<?php } ?>
 
 					<?php
 					break;
@@ -2268,18 +2292,23 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 				case '_label':
 					?>
 
-					<p><label for="_label"><?php _e( 'Label', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'The field label is the text that appears above the field on your front-end form. Leave blank to not show a label above field.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_label" id="_label" value="<?php echo htmlspecialchars( $this->edit_mode_value, ENT_QUOTES ); ?>" />
+					<p><label for="_label"><?php esc_attr_e( 'Label', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'The field label is the text that appears above the field on your front-end form. Leave blank to not show a label above field.', 'ultimate-member' ) ); ?></label>
+						<input type="text" name="_label" id="_label" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
 					break;
 
 				case '_label_confirm_pass':
+					$mode = get_post_meta( $form_id, '_um_mode', true );
+					if ( 'login' === $mode ) {
+						// Hide for login form.
+						break;
+					}
 					?>
 
-					<p><label for="_label_confirm_pass"><?php _e( 'Confirm password field label', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'This label is the text that appears above the confirm password field. Leave blank to show default label.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_label_confirm_pass" id="_label_confirm_pass" value="<?php echo htmlspecialchars( $this->edit_mode_value, ENT_QUOTES ); ?>" />
+					<p><label for="_label_confirm_pass"><?php esc_attr_e( 'Confirm password field label', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'This label is the text that appears above the confirm password field. Leave blank to show default label.', 'ultimate-member' ) ); ?></label>
+						<input type="text" name="_label_confirm_pass" id="_label_confirm_pass" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
@@ -2288,14 +2317,51 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 				case '_placeholder':
 					?>
 
-					<p><label for="_placeholder"><?php _e( 'Placeholder', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'This is the text that appears within the field e.g please enter your email address. Leave blank to not show any placeholder text.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_placeholder" id="_placeholder" value="<?php echo htmlspecialchars( $this->edit_mode_value, ENT_QUOTES ); ?>" />
+					<p><label for="_placeholder"><?php esc_attr_e( 'Placeholder', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'This is the text that appears within the field e.g please enter your email address. Leave blank to not show any placeholder text.', 'ultimate-member' ) ); ?></label>
+						<input type="text" name="_placeholder" id="_placeholder" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
+					</p>
+
+					<?php
+					break;
+				case '_placeholder_confirm_pass':
+					?>
+
+					<p><label for="_placeholder_confirm_pass"><?php esc_attr_e( 'Confirm password field placeholder', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'This is the text that appears within the field e.g please enter your email address. Leave blank to not show any placeholder text.', 'ultimate-member' ) ); ?></label>
+						<input type="text" name="_placeholder_confirm_pass" id="_placeholder_confirm_pass" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
 					break;
 
+				case '_choices_layout':
+
+					$choices_layouts = array(
+						'col-1' => __( 'One column', 'ultimate-member' ),
+						'col-2' => __( 'Two columns', 'ultimate-member' ),
+						'col-3' => __( 'Three columns', 'ultimate-member' ),
+					);
+
+					$choices_layouts = apply_filters( 'um_choices_layouts_options', $choices_layouts );
+					?>
+
+					<p>
+						<label for="_choices_layout"><?php esc_attr_e( 'Choices Layout', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Select layout for the choices.', 'ultimate-member' ) ); ?></label>
+						<select name="_choices_layout" id="_choices_layout" style="width: 100%;">
+							<?php foreach ( $choices_layouts as $value => $title ) { ?>
+								<option value="<?php echo esc_attr( $value ) ?>" <?php selected( $value, $this->edit_mode_value ); ?>><?php echo esc_html( $title ); ?></option>
+							<?php } ?>
+						</select>
+					</p>
+
+					<?php
+					break;
 				case '_public':
+					$mode = get_post_meta( $form_id, '_um_mode', true );
+					if ( 'profile' !== $mode ) {
+						// Show only for the fields only on the profile form.
+						break;
+					}
+
 					$privacy_options = array(
 						'1'     => __( 'Everyone', 'ultimate-member' ),
 						'2'     => __( 'Members', 'ultimate-member' ),
@@ -2307,11 +2373,11 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 					$privacy_options = apply_filters( 'um_field_privacy_options', $privacy_options ); ?>
 
 					<p>
-						<label for="_public"><?php _e( 'Privacy', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Field privacy allows you to select who can view this field on the front-end. The site admin can view all fields regardless of the option set here.', 'ultimate-member' ) ); ?></label>
+						<label for="_public"><?php esc_attr_e( 'Privacy', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Field privacy allows you to select who can view this field on the front-end. The site admin can view all fields regardless of the option set here.', 'ultimate-member' ) ); ?></label>
 						<select name="_public" id="_public" class="um-adm-conditional" data-cond1="-2" data-cond1-show="_roles" data-cond2="-3" data-cond2-show="_roles"  style="width: 100%">
 							<?php foreach ( $privacy_options as $value => $title ) { ?>
 								<option value="<?php echo esc_attr( $value ) ?>" <?php selected( $value, $this->edit_mode_value ); ?>>
-									<?php echo $title ?>
+									<?php echo esc_html( $title ); ?>
 								</option>
 							<?php } ?>
 						</select>
@@ -2321,6 +2387,11 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 					break;
 
 				case '_roles':
+					$mode = get_post_meta( $form_id, '_um_mode', true );
+					if ( 'profile' !== $mode ) {
+						// Show only for the fields only on the profile form.
+						break;
+					}
 
 					if ( isset( $this->edit_mode_value ) && is_array( $this->edit_mode_value ) ) {
 						$values = $this->edit_mode_value;
@@ -2346,36 +2417,28 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 					break;
 
 				case '_required':
-
-					if ( $this->set_field_type == 'password' )
-						$def_required = 1;
-					else
-						$def_required = 0;
-
+					$def_required = 'password' === $this->set_field_type;
 					?>
 
-					<div class="um-admin-tri">
-
-						<p><label for="_required"><?php _e( 'Is this field required?', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ) ); ?></label>
-							<input type="checkbox" name="_required" id="_required" value="1" <?php checked( isset( $this->edit_mode_value ) ? $this->edit_mode_value : $def_required ) ?> />
-						</p>
-
-					</div>
+					<p><label for="_required"><?php esc_html_e( 'Is this field required?', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ) ); ?></label>
+						<input type="checkbox" name="_required" id="_required" value="1" <?php checked( isset( $this->edit_mode_value ) ? $this->edit_mode_value : $def_required ); ?> />
+					</p>
 
 					<?php
 					break;
 
 				case '_editable':
+					$mode = get_post_meta( $form_id, '_um_mode', true );
+					if ( 'profile' !== $mode ) {
+						// Show only for the fields only on the profile form.
+						break;
+					}
 					?>
 
-					<div class="um-admin-tri">
-
-						<p><label for="_editable"><?php _e( 'Can user edit this field?', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'This option allows you to set whether or not the user can edit the information in this field. The site admin can edit all fields regardless of the option set here.', 'ultimate-member' ) ); ?></label>
-							<input type="hidden" name="_editable" id="_editable_hidden" value="0" />
-							<input type="checkbox" name="_editable" id="_editable" value="1" <?php checked( null === $this->edit_mode_value || $this->edit_mode_value ) ?> />
-						</p>
-
-					</div>
+					<p><label for="_editable"><?php esc_html_e( 'Can user edit this field?', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'This option allows you to set whether or not the user can edit the information in this field. The site admin can edit all fields regardless of the option set here.', 'ultimate-member' ) ); ?></label>
+						<input type="hidden" name="_editable" id="_editable_hidden" value="0" />
+						<input type="checkbox" name="_editable" id="_editable" value="1" <?php checked( null === $this->edit_mode_value || $this->edit_mode_value ); ?> />
+					</p>
 
 					<?php
 					break;

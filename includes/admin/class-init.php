@@ -17,36 +17,30 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 	 */
 	class Init {
 
-
 		/**
 		 * @var string
 		 */
 		public $templates_path;
-
 
 		/**
 		 * @var array
 		 */
 		public $role_meta;
 
-
 		/**
 		 * @var array
 		 */
 		public $restriction_term_meta;
-
 
 		/**
 		 * @var array
 		 */
 		public $form_meta;
 
-
 		/**
 		 * @var array
 		 */
 		public $restriction_post_meta;
-
 
 		/**
 		 * Init constructor.
@@ -57,8 +51,10 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			add_action( 'admin_init', array( &$this, 'admin_init' ), 0 );
 		}
 
-
-		function init_variables() {
+		/**
+		 *
+		 */
+		public function init_variables() {
 			$this->role_meta = apply_filters(
 				'um_role_meta_map',
 				array(
@@ -351,7 +347,6 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			);
 		}
 
-
 		/**
 		 * @param array|string $value
 		 *
@@ -375,7 +370,6 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			return $value;
 		}
 
-
 		/**
 		 * @param array|string $value
 		 *
@@ -392,7 +386,6 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			return $value;
 		}
 
-
 		/**
 		 * @param array|string $value
 		 *
@@ -408,7 +401,6 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 
 			return $value;
 		}
-
 
 		/**
 		 * @param array|string $value
@@ -433,7 +425,6 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			return $value;
 		}
 
-
 		/**
 		 * @param array|string $value
 		 *
@@ -457,7 +448,6 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			return $value;
 		}
 
-
 		/**
 		 * @param array|string $value
 		 *
@@ -473,7 +463,6 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			return $value;
 		}
 
-
 		/**
 		 * @param $value
 		 *
@@ -484,7 +473,6 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			return $value;
 		}
 
-
 		/**
 		 * @param $value
 		 *
@@ -494,7 +482,6 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			$value = array_map( 'boolval', array_filter( $value ) );
 			return $value;
 		}
-
 
 		/**
 		 * Sanitize role meta fields when wp-admin form has been submitted
@@ -555,7 +542,6 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			return $data;
 		}
 
-
 		/**
 		 * Sanitize post restriction meta fields when wp-admin form has been submitted
 		 *
@@ -611,7 +597,6 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			return $data;
 		}
 
-
 		/**
 		 * Sanitize term restriction meta fields when wp-admin form has been submitted
 		 *
@@ -666,7 +651,6 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 
 			return $data;
 		}
-
 
 		/**
 		 * Sanitize form meta when wp-admin form has been submitted
@@ -746,7 +730,6 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 
 			return $data;
 		}
-
 
 		/**
 		 * Sanitize options when wp-admin form has been submitted
@@ -829,11 +812,10 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			return $data;
 		}
 
-
 		/**
 		 * Init admin action/filters + request handlers
 		 */
-		function admin_init() {
+		public function admin_init() {
 			$this->init_variables();
 
 			if ( is_admin() && current_user_can( 'manage_options' ) && ! empty( $_REQUEST['um_adm_action'] ) ) {
@@ -887,13 +869,12 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			}
 		}
 
-
 		/**
 		 * Create classes' instances where __construct isn't empty for hooks init
 		 *
 		 * @used-by \UM::includes()
 		 */
-		function includes() {
+		public function includes() {
 			$this->actions_listener();
 			$this->columns();
 			$this->db_upgrade();
@@ -907,136 +888,125 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			$this->users_columns();
 		}
 
-
 		/**
 		 * @since 3.0
 		 *
 		 * @return Users_Columns
 		 */
-		function users_columns() {
+		public function users_columns() {
 			if ( empty( UM()->classes['um\admin\users_columns'] ) ) {
 				UM()->classes['um\admin\users_columns'] = new Users_Columns();
 			}
 			return UM()->classes['um\admin\users_columns'];
 		}
 
-
 		/**
 		 * @since 3.0
 		 *
 		 * @return Site_Health
 		 */
-		function site_health() {
+		public function site_health() {
 			if ( empty( UM()->classes['um\admin\site_health'] ) ) {
 				UM()->classes['um\admin\site_health'] = new Site_Health();
 			}
 			return UM()->classes['um\admin\site_health'];
 		}
 
-
 		/**
 		 * @since 3.0
 		 *
 		 * @return Enqueue
 		 */
-		function enqueue() {
+		public function enqueue() {
 			if ( empty( UM()->classes['um\admin\enqueue'] ) ) {
 				UM()->classes['um\admin\enqueue'] = new Enqueue();
 			}
 			return UM()->classes['um\admin\enqueue'];
 		}
 
-
 		/**
 		 * @since 3.0
 		 *
 		 * @return Actions_Listener
 		 */
-		function actions_listener() {
+		public function actions_listener() {
 			if ( empty( UM()->classes['um\admin\actions_listener'] ) ) {
 				UM()->classes['um\admin\actions_listener'] = new Actions_Listener();
 			}
 			return UM()->classes['um\admin\actions_listener'];
 		}
 
-
 		/**
 		 * @since 3.0
 		 *
 		 * @return GDPR
 		 */
-		function gdpr() {
+		public function gdpr() {
 			if ( empty( UM()->classes['um\admin\gdpr'] ) ) {
 				UM()->classes['um\admin\gdpr'] = new GDPR();
 			}
 			return UM()->classes['um\admin\gdpr'];
 		}
 
-
 		/**
 		 * @since 3.0
 		 *
 		 * @return Menu
 		 */
-		function menu() {
+		public function menu() {
 			if ( empty( UM()->classes['um\admin\menu'] ) ) {
 				UM()->classes['um\admin\menu'] = new Menu();
 			}
 			return UM()->classes['um\admin\menu'];
 		}
 
-
 		/**
 		 * @since 3.0
 		 *
 		 * @return Metabox()
 		 */
-		function metabox() {
+		public function metabox() {
 			if ( empty( UM()->classes['um\admin\metabox'] ) ) {
 				UM()->classes['um\admin\metabox'] = new Metabox();
 			}
 			return UM()->classes['um\admin\metabox'];
 		}
 
-
 		/**
 		 * @since 3.0
 		 *
 		 * @return Notices()
 		 */
-		function notices() {
+		public function notices() {
 			if ( empty( UM()->classes['um\admin\notices'] ) ) {
 				UM()->classes['um\admin\notices'] = new Notices();
 			}
 			return UM()->classes['um\admin\notices'];
 		}
 
-
 		/**
 		 * @since 3.0
 		 *
 		 * @return Columns()
 		 */
-		function columns() {
+		public function columns() {
 			if ( empty( UM()->classes['um\admin\columns'] ) ) {
 				UM()->classes['um\admin\columns'] = new Columns();
 			}
 			return UM()->classes['um\admin\columns'];
 		}
 
-
 		/**
 		 * @since 3.0
 		 *
 		 * @return DB_Upgrade()
 		 */
-		function db_upgrade() {
+		public function db_upgrade() {
 			if ( empty( UM()->classes['um\admin\db_upgrade'] ) ) {
 				UM()->classes['um\admin\db_upgrade'] = new DB_Upgrade();
 			}
 			return UM()->classes['um\admin\db_upgrade'];
 		}
-
 
 		/**
 		 * @since 3.0
@@ -1050,13 +1020,12 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			return UM()->classes['um\admin\screen'];
 		}
 
-
 		/**
 		 * @since 3.0
 		 *
 		 * @return Settings
 		 */
-		function settings() {
+		public function settings() {
 			if ( empty( UM()->classes['um\admin\settings'] ) ) {
 				UM()->classes['um\admin\settings'] = new Settings();
 			}
