@@ -565,7 +565,6 @@ if ( ! class_exists( 'UM' ) ) {
 					//$this->theme_updater();
 				} elseif ( $this->is_request( 'admin' ) ) {
 					//$this->admin();
-					//$this->users();
 					//$this->dragdrop();
 					//$this->admin_gdpr();
 					//$this->admin_navmenu();
@@ -950,20 +949,6 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['gdpr'];
 		}
 
-
-		/**
-		 * @since 2.0
-		 *
-		 * @return um\admin\core\Admin_Users()
-		 */
-		function users() {
-			if ( empty( $this->classes['admin_users'] ) ) {
-				$this->classes['admin_users'] = new um\admin\core\Admin_Users();
-			}
-			return $this->classes['admin_users'];
-		}
-
-
 		/**
 		 * @since 2.0
 		 *
@@ -976,6 +961,19 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['admin_builder'];
 		}
 
+		/**
+		 * @since 2.0
+		 *
+		 * Legacy since 3.0
+		 *
+		 * @return um\legacy\admin\core\Admin_Users()
+		 */
+		function users() {
+			if ( empty( $this->classes['um\legacy\admin\core\admin_users'] ) ) {
+				$this->classes['um\legacy\admin\core\admin_users'] = new um\legacy\admin\core\Admin_Users();
+			}
+			return $this->classes['um\legacy\admin\core\admin_users'];
+		}
 
 		/**
 		 * @since 2.0
@@ -985,10 +983,10 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return um\legacy\admin\core\Admin_DragDrop()
 		 */
 		function dragdrop() {
-			if ( empty( $this->classes['admin_dragdrop'] ) ) {
-				$this->classes['admin_dragdrop'] = new um\legacy\admin\core\Admin_DragDrop();
+			if ( empty( $this->classes['um\legacy\admin\core\admin_dragdrop'] ) ) {
+				$this->classes['um\legacy\admin\core\admin_dragdrop'] = new um\legacy\admin\core\Admin_DragDrop();
 			}
-			return $this->classes['admin_dragdrop'];
+			return $this->classes['um\legacy\admin\core\admin_dragdrop'];
 		}
 
 

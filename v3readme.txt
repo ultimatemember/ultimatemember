@@ -177,6 +177,8 @@ $actions['um_unverify_accounts'] => __( 'Mark accounts as unverified', 'um-verif
 'um_after_user_status_is_changed_hook' - use action hook 'um_after_user_status_is_changed' instead
 'um_activate_url' to 'um_activate_url_base'
 "um_admin_custom_hook_{$action}" - use filter hook "um_handle_bulk_actions-users-{$current_action}" instead with setting redirect attribute after the action
+'um_admin_user_action_hook' - fully deprecated. Moved to the WordPress native bulk actions and handler for them
+"um_admin_user_action_{$bulk_action}_hook" - fully deprecated. Moved to the WordPress native bulk actions and handler for them
 
 ### Deprecated functions
 
@@ -252,3 +254,11 @@ UM_TEMPLATE_CONFLICT_TEST - for debugging custom templates
 * '_intervals' to '_step' for the time-type field
 * 'multiselect' field-type to the 'dropdown' with active '_is_multi' setting
 * '_height' to '_rows' for the textarea-type field
+
+
+
+## Users List Table:
+
+* Removed links with statuses, but added dropdown filter for that
+* Removed custom bulk actions, but added them to the WordPress native bulk-actions list
+* Reviewed bulk actions handlers and rewritten User class for handle changing statuses

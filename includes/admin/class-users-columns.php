@@ -468,7 +468,7 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 		 * @param string $uri
 		 * @return string
 		 */
-		function set_redirect_uri( $uri ) {
+		private function set_redirect_uri( $uri ) {
 			if ( ! empty( $_REQUEST['s'] ) ) {
 				$uri = add_query_arg( 's', sanitize_text_field( $_REQUEST['s'] ), $uri );
 			}
