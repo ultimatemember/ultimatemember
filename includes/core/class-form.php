@@ -653,7 +653,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 										case 'url':
 											$f = UM()->builtin()->get_a_field( $k );
 
-											if ( array_key_exists( 'match', $f ) && array_key_exists( 'advanced', $f ) && 'social' === $f['advanced'] ) {
+											if ( is_array( $f ) && array_key_exists( 'match', $f ) && array_key_exists( 'advanced', $f ) && 'social' === $f['advanced'] ) {
 												$v = sanitize_text_field( $form[ $k ] );
 
 												// Make a proper social link
