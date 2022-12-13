@@ -1546,7 +1546,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ), 10, 1 );
 			add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ), 10, 1 );
 
-			UM()->mail()->send( um_user( 'user_email' ), 'resetpw_email' );
+			UM()->mail()->send( $userdata->user_email, 'resetpw_email' );
 		}
 
 
