@@ -915,18 +915,20 @@ function um_user_submited_display( $k, $title, $data = array(), $style = true ) 
  * Show filtered social link
  *
  * @param string $key
- * @param string $match
+ * @param null|string $match
  *
  * @return string
  */
-function um_filtered_social_link( $key, $match ) {
+function um_filtered_social_link( $key, $match = null ) {
 	$value = um_profile( $key );
-	$submatch = str_replace( 'https://', '', $match );
-	$submatch = str_replace( 'http://', '', $submatch );
-	if ( strstr( $value, $submatch ) ) {
-		$value = 'https://' . $value;
-	} elseif ( strpos( $value, 'http' ) !== 0 ) {
-		$value = $match . $value;
+	if ( ! empty( $match ) ) {
+		$submatch = str_replace( 'https://', '', $match );
+		$submatch = str_replace( 'http://', '', $submatch );
+		if ( strstr( $value, $submatch ) ) {
+			$value = 'https://' . $value;
+		} elseif ( strpos( $value, 'http' ) !== 0 ) {
+			$value = $match . $value;
+		}
 	}
 	$value = str_replace( 'https://https://', 'https://', $value );
 	$value = str_replace( 'http://https://', 'https://', $value );
