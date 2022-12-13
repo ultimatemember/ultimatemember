@@ -526,6 +526,18 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				}
 			}
 
+			if ( ! empty( $args['user_password'] ) && UM()->options()->get( 'change_password_request_limit' ) && is_user_logged_in() ) {
+				$transient_id       = '_um_change_password_rate_limit__' . um_user( 'ID' );
+				$last_request       = get_transient( $transient_id );
+				$request_limit_time = apply_filters( 'um_change_password_attempt_limit_interval', 30 * MINUTE_IN_SECONDS );
+				if ( ! $last_request ) {
+					set_transient( $transient_id, time(), $request_limit_time );
+				} else {
+					UM()->form()->add_error( 'user_password', __( 'Unable to change password because of password change limit. Please try again later.', 'ultimate-member' ) );
+					return;
+				}
+			}
+
 			if ( isset( $args['user_password'] ) && empty( $args['user_password'] ) ) {
 				UM()->form()->add_error( 'user_password', __( 'You must enter a new password', 'ultimate-member' ) );
 			}

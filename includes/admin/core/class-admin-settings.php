@@ -759,6 +759,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'reset_password_limit_number'           => array(
 						'sanitize' => 'absint',
 					),
+					'change_password_request_limit'         => array(
+						'sanitize' => 'bool',
+					),
 					'blocked_emails'                        => array(
 						'sanitize' => 'textarea',
 					),
@@ -1284,6 +1287,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'validate'    => 'numeric',
 										'conditional' => array( 'enable_reset_password_limit', '=', 1 ),
 										'size'        => 'small',
+									),
+									array(
+										'id'      => 'change_password_request_limit',
+										'type'    => 'checkbox',
+										'label'   => __( 'Change Password request limit', 'ultimate-member' ),
+										'tooltip' => __( 'This option adds rate limit when submitting the change password form in the Account page. Users are only allowed to submit 1 request per 30 minutes to prevent from any brute-force attacks or password guessing with the form.', 'ultimate-member' ),
 									),
 									array(
 										'id'      => 'blocked_emails',
