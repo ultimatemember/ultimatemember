@@ -3457,7 +3457,6 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 		 * @return array
 		 */
 		function save_email_templates( $settings ) {
-
 			if ( empty( $settings['um_email_template'] ) ) {
 				return $settings;
 			}
@@ -3466,16 +3465,17 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 			$content = wp_kses_post( stripslashes( $settings[ $template ] ) );
 
 			$theme_template_path = UM()->mail()->get_template_file( 'theme', $template );
-
 			if ( ! file_exists( $theme_template_path ) ) {
 				UM()->mail()->copy_email_template( $template );
 			}
 
-			$fp = fopen( $theme_template_path, "w" );
-			$result = fputs( $fp, $content );
-			fclose( $fp );
+			if ( file_exists( $theme_template_path ) ) {
+				$fp = fopen( $theme_template_path, "w" );
+				$result = fputs( $fp, $content );
+				fclose( $fp );
+			}
 
-			if ( $result !== false ) {
+			if ( isset( $result ) && $result !== false ) {
 				unset( $settings['um_email_template'] );
 				unset( $settings[ $template ] );
 			}
