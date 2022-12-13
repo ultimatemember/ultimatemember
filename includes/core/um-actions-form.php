@@ -621,6 +621,14 @@ function um_submit_form_errors_hook_( $args ) {
 				}
 
 				if ( isset( $array['force_good_pass'] ) && $array['force_good_pass'] == 1 ) {
+					if ( isset( $args['user_login'] ) && strpos( strtolower( $args['user_login'] ), strtolower( $args['user_password'] )  ) > -1 ) {
+						UM()->form()->add_error( 'user_password', __( 'Your password cannot contain the part of your username', 'ultimate-member' ));
+					}
+
+					if ( isset( $args['user_email'] ) && strpos( strtolower( $args['user_email'] ), strtolower( $args['user_password'] )  ) > -1 ) {
+						UM()->form()->add_error( 'user_password', __( 'Your password cannot contain the part of your email address', 'ultimate-member' ));
+					}
+
 					if ( ! UM()->validation()->strong_pass( $args[ $key ] ) ) {
 						UM()->form()->add_error( $key, __( 'Your password must contain at least one lowercase letter, one capital letter and one number', 'ultimate-member' ) );
 					}
