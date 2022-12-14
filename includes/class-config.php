@@ -553,6 +553,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'restricted_block_message'              => '',
 				'enable_reset_password_limit'           => 1,
 				'reset_password_limit_number'           => 3,
+				'change_password_request_limit'         => false,
 				'blocked_emails'                        => '',
 				'blocked_words'                         => 'admin' . "\r\n" . 'administrator' . "\r\n" . 'webmaster' . "\r\n" . 'support' . "\r\n" . 'staff',
 				'allowed_choice_callbacks'              => '',

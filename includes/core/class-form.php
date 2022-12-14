@@ -148,7 +148,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				wp_send_json( $arr_options );
 			}
 
-			if ( in_array( $ajax_source_func, UM()->fields()->dropdown_options_source_blacklist(), true ) ) {
+			if ( UM()->fields()->is_source_blacklisted( $ajax_source_func ) ) {
 				$arr_options['status']  = 'error';
 				$arr_options['message'] = __( 'This is not possible for security reasons.', 'ultimate-member' );
 
@@ -653,7 +653,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 										case 'url':
 											$f = UM()->builtin()->get_a_field( $k );
 
-											if ( array_key_exists( 'match', $f ) && array_key_exists( 'advanced', $f ) && 'social' === $f['advanced'] ) {
+											if ( is_array( $f ) && array_key_exists( 'match', $f ) && array_key_exists( 'advanced', $f ) && 'social' === $f['advanced'] ) {
 												$v = sanitize_text_field( $form[ $k ] );
 
 												// Make a proper social link

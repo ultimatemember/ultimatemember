@@ -552,28 +552,19 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 * @return bool
 		 */
 		function copy_email_template( $template ) {
-
 			$in_theme = $this->template_in_theme( $template );
 			if ( $in_theme ) {
 				return false;
 			}
 
-			$plugin_template_path = $this->get_template_file( 'plugin', $template );
-			$theme_template_path = $this->get_template_file( 'theme', $template );
+			$plugin_template_path = wp_normalize_path( $this->get_template_file( 'plugin', $template ) );
+			$theme_template_path  = wp_normalize_path( $this->get_template_file( 'theme', $template ) );
+			$template_filename    = $this->get_template_filename( $template ) . '.php';
 
-			$temp_path = str_replace( trailingslashit( get_stylesheet_directory() ), '', $theme_template_path );
-			$temp_path = str_replace( '/', DIRECTORY_SEPARATOR, $temp_path );
-			$folders = explode( DIRECTORY_SEPARATOR, $temp_path );
-			$folders = array_splice( $folders, 0, count( $folders ) - 1 );
-			$cur_folder = '';
-			$theme_dir = trailingslashit( get_stylesheet_directory() );
-
-			foreach ( $folders as $folder ) {
-				$prev_dir = $cur_folder;
-				$cur_folder .= $folder . DIRECTORY_SEPARATOR;
-				if ( ! is_dir( $theme_dir . $cur_folder ) && wp_is_writable( $theme_dir . $prev_dir ) ) {
-					mkdir( $theme_dir . $cur_folder, 0777 );
-				}
+			$template_dir = wp_normalize_path( str_replace( $template_filename, '', $theme_template_path ) );
+			$result       = wp_mkdir_p( $template_dir );
+			if ( ! $result ) {
+				return false;
 			}
 
 			if ( file_exists( $plugin_template_path ) && copy( $plugin_template_path, $theme_template_path ) ) {

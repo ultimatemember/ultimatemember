@@ -295,7 +295,7 @@ function um_user_edit_profile( $args ) {
 
 				$options = array();
 				if ( ! empty( $array['custom_dropdown_options_source'] ) && function_exists( $array['custom_dropdown_options_source'] ) && ! $has_custom_source ) {
-					if ( ! in_array( $array['custom_dropdown_options_source'], UM()->fields()->dropdown_options_source_blacklist(), true ) ) {
+					if ( ! UM()->fields()->is_source_blacklisted( $array['custom_dropdown_options_source'] ) ) {
 						$callback_result = call_user_func( $array['custom_dropdown_options_source'], $array['options'] );
 						if ( is_array( $callback_result ) ) {
 							$options = array_keys( $callback_result );
