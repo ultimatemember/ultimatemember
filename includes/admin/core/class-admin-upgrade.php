@@ -66,18 +66,24 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 
 			if ( ! empty( $this->necessary_packages ) ) {
 				add_action( 'admin_menu', array( $this, 'admin_menu' ), 0 );
-
-				if ( defined( 'DOING_AJAX' ) && DOING_AJAX && current_user_can( 'manage_options' ) ) {
-					$this->init_packages_ajax();
-
-					add_action( 'wp_ajax_um_run_package', array( $this, 'ajax_run_package' ) );
-					add_action( 'wp_ajax_um_get_packages', array( $this, 'ajax_get_packages' ) );
-				}
+				add_action( 'wp_loaded', array( $this, 'initialize_upgrade_packages' ), 0 );
 			}
 
 			add_action( 'in_plugin_update_message-' . um_plugin, array( $this, 'in_plugin_update_message' ) );
 		}
 
+		/**
+		 * Initialize packages for upgrade process.
+		 * Note: Making that only for the 'manage_options' user and when AJAX running.
+		 */
+		public function initialize_upgrade_packages() {
+			if ( defined( 'DOING_AJAX' ) && DOING_AJAX && current_user_can( 'manage_options' ) ) {
+				$this->init_packages_ajax();
+
+				add_action( 'wp_ajax_um_run_package', array( $this, 'ajax_run_package' ) );
+				add_action( 'wp_ajax_um_get_packages', array( $this, 'ajax_get_packages' ) );
+			}
+		}
 
 		/**
 		 * Function for major updates
