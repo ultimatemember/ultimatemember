@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Ultimate Member plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ultimate Member 2.5.2\n"
+"Project-Id-Version: Ultimate Member 2.5.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ultimate-member\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-12-14T14:22:38+00:00\n"
+"POT-Creation-Date: 2022-12-19T13:55:39+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: ultimate-member\n"
@@ -365,7 +365,7 @@ msgid "Select Users"
 msgstr ""
 
 #: includes/admin/core/class-admin-forms.php:972
-#: includes/admin/core/class-admin-upgrade.php:255
+#: includes/admin/core/class-admin-upgrade.php:261
 msgid "Run"
 msgstr ""
 
@@ -1980,7 +1980,7 @@ msgid "After clicking the <strong>\"Run\"</strong> button, the update process wi
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:648
-#: includes/admin/core/class-admin-upgrade.php:251
+#: includes/admin/core/class-admin-upgrade.php:257
 msgid "If the update was successful, you will see a corresponding message. Otherwise, contact technical support if the update failed."
 msgstr ""
 
@@ -3074,31 +3074,31 @@ msgstr ""
 msgid "To copy the Install info, click below then press Ctrl + C (PC) or Cmd + C (Mac)."
 msgstr ""
 
-#: includes/admin/core/class-admin-upgrade.php:131
+#: includes/admin/core/class-admin-upgrade.php:137
 msgid "%s is a major update, and we highly recommend creating a full backup of your site before updating."
 msgstr ""
 
-#: includes/admin/core/class-admin-upgrade.php:237
+#: includes/admin/core/class-admin-upgrade.php:243
 msgid "Upgrade"
 msgstr ""
 
-#: includes/admin/core/class-admin-upgrade.php:245
+#: includes/admin/core/class-admin-upgrade.php:251
 msgid "empty"
 msgstr ""
 
-#: includes/admin/core/class-admin-upgrade.php:248
+#: includes/admin/core/class-admin-upgrade.php:254
 msgid "%s - Upgrade Process"
 msgstr ""
 
-#: includes/admin/core/class-admin-upgrade.php:249
+#: includes/admin/core/class-admin-upgrade.php:255
 msgid "You have installed <strong>%s</strong> version. Your latest DB version is <strong>%s</strong>. We recommend creating a backup of your site before running the update process. Do not exit the page before the update process has complete."
 msgstr ""
 
-#: includes/admin/core/class-admin-upgrade.php:250
+#: includes/admin/core/class-admin-upgrade.php:256
 msgid "After clicking the <strong>\"Run\"</strong> button, the update process will start. All information will be displayed in the <strong>\"Upgrade Log\"</strong> field."
 msgstr ""
 
-#: includes/admin/core/class-admin-upgrade.php:252
+#: includes/admin/core/class-admin-upgrade.php:258
 msgid "Upgrade Log"
 msgstr ""
 
