@@ -59,10 +59,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			// change the excerpt of the restricted post
 			add_filter( 'get_the_excerpt', array( &$this, 'filter_restricted_post_excerpt' ), 999999, 2 );
 
-			// filter attachment
-			add_filter( 'wp_get_attachment_url', array( &$this, 'filter_attachment' ), 99, 2 );
-			add_filter( 'has_post_thumbnail', array( &$this, 'filter_post_thumbnail' ), 99, 3 );
-
 			// comments queries
 			add_action( 'pre_get_comments', array( &$this, 'exclude_posts_comments' ), 99, 1 );
 			add_filter( 'wp_count_comments', array( &$this, 'custom_comments_count_handler' ), 99, 2 );
@@ -84,6 +80,21 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			add_action( 'um_access_check_global_settings', array( &$this, 'um_access_check_global_settings' ) );
 
 			add_action( 'plugins_loaded', array( &$this, 'disable_restriction_pre_queries' ), 1 );
+
+			// Init hooks that use pluggable functions.
+			add_action( 'init', array( &$this, 'initialize_hooks' ), 5 );
+		}
+
+
+		/**
+		 * Init hooks that use pluggable functions.
+		 */
+		public function initialize_hooks() {
+
+			// filter attachment
+			add_filter( 'wp_get_attachment_url', array( &$this, 'filter_attachment' ), 99, 2 );
+			add_filter( 'has_post_thumbnail', array( &$this, 'filter_post_thumbnail' ), 99, 3 );
+
 		}
 
 
@@ -244,11 +255,11 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					global $wpdb;
 
 					$terms = $wpdb->get_results(
-						"SELECT tm.term_id AS term_id, 
-					        tt.taxonomy AS taxonomy 
-					FROM {$wpdb->termmeta} tm 
-					LEFT JOIN {$wpdb->term_taxonomy} tt ON tt.term_id = tm.term_id 
-					WHERE tm.meta_key = 'um_content_restriction' AND 
+						"SELECT tm.term_id AS term_id,
+					        tt.taxonomy AS taxonomy
+					FROM {$wpdb->termmeta} tm
+					LEFT JOIN {$wpdb->term_taxonomy} tt ON tt.term_id = tm.term_id
+					WHERE tm.meta_key = 'um_content_restriction' AND
 					      tt.taxonomy IN('" . implode( "','", $restricted_taxonomies ) . "')",
 						ARRAY_A
 					);
@@ -889,9 +900,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			foreach ( $restricted_posts as $k => $post_type ) {
 				if ( 'closed' === get_default_comment_status( $post_type ) ) {
 					$open_comments = $wpdb->get_var( $wpdb->prepare(
-						"SELECT ID 
-						FROM {$wpdb->posts} 
-						WHERE post_type = %s AND 
+						"SELECT ID
+						FROM {$wpdb->posts}
+						WHERE post_type = %s AND
 						      comment_status != 'closed'",
 						$post_type
 					) );
