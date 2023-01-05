@@ -59,10 +59,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			// change the excerpt of the restricted post
 			add_filter( 'get_the_excerpt', array( &$this, 'filter_restricted_post_excerpt' ), 999999, 2 );
 
-			// filter attachment
-			add_filter( 'wp_get_attachment_url', array( &$this, 'filter_attachment' ), 99, 2 );
-			add_filter( 'has_post_thumbnail', array( &$this, 'filter_post_thumbnail' ), 99, 3 );
-
 			// comments queries
 			add_action( 'pre_get_comments', array( &$this, 'exclude_posts_comments' ), 99, 1 );
 			add_filter( 'wp_count_comments', array( &$this, 'custom_comments_count_handler' ), 99, 2 );
@@ -83,16 +79,19 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			add_action( 'um_access_check_individual_term_settings', array( &$this, 'um_access_check_individual_term_settings' ) );
 			add_action( 'um_access_check_global_settings', array( &$this, 'um_access_check_global_settings' ) );
 
-			add_action( 'plugins_loaded', array( &$this, 'disable_restriction_pre_queries' ), 1 );
+			add_action( 'plugins_loaded', array( &$this, 'initialize_hooks' ), 1 );
 		}
-
 
 		/**
 		 * Rollback function for old business logic to avoid security enhancements with 404 errors
 		 */
-		function disable_restriction_pre_queries() {
+		public function initialize_hooks() {
 			// Using inside plugins_loaded hook because of there can be earlier direct queries without hooks.
 			// Avoid using to not getting fatal error for not exists WordPress native functions.
+
+			// filter attachment
+			add_filter( 'wp_get_attachment_url', array( &$this, 'filter_attachment' ), 99, 2 );
+			add_filter( 'has_post_thumbnail', array( &$this, 'filter_post_thumbnail' ), 99, 3 );
 
 			// Change recent posts widget query.
 			add_filter( 'widget_posts_args', array( &$this, 'exclude_restricted_posts_widget' ), 99, 1 );
@@ -130,7 +129,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			remove_filter( 'posts_where', array( &$this, 'exclude_posts_where' ), 10 );
 			remove_filter( 'wp_count_posts', array( &$this, 'custom_count_posts_handler' ), 99 );
 		}
-
 
 		/**
 		 * Get array with restricted posts
