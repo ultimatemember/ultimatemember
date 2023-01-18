@@ -770,6 +770,13 @@ function um_submit_form_errors_hook_( $args ) {
 							}
 							break;
 
+						case 'tiktok_url':
+
+							if ( ! UM()->validation()->is_url( $args[ $key ], 'tiktok.com' ) ) {
+								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s profile URL', 'ultimate-member' ), $array['label'] ) );
+							}
+							break;
+
 						case 'url':
 							if ( ! UM()->validation()->is_url( $args[ $key ] ) ) {
 								UM()->form()->add_error( $key, __( 'Please enter a valid URL', 'ultimate-member' ) );
@@ -878,7 +885,7 @@ function um_submit_form_errors_hook_( $args ) {
 								}
 							}
 							break;
-							
+
 						case 'alphabetic':
 
 							if ( $args[ $key ] != '' ) {
@@ -886,7 +893,7 @@ function um_submit_form_errors_hook_( $args ) {
 								if ( ! preg_match( '/^\p{L}+$/u', str_replace( ' ', '', $args[ $key ] ) ) ) {
 									UM()->form()->add_error( $key, __( 'You must provide alphabetic letters', 'ultimate-member' ) );
 								}
-								
+
 							}
 
 							break;

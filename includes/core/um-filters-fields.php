@@ -434,6 +434,7 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 				if ( $data['validate'] == 'linkedin_url' ) 		$value = 'https://linkedin.com/' . $value;
 				if ( $data['validate'] == 'googleplus_url' ) 	$value = 'https://plus.google.com/' . $value;
 				if ( $data['validate'] == 'instagram_url' ) 	$value = 'https://instagram.com/' . $value;
+				if ( $data['validate'] == 'tiktok_url' ) 		$value = 'https://tiktok.com/' . $value;
 				if ( $data['validate'] == 'vk_url' ) 			$value = 'https://vk.com/' . $value;
 			}
 

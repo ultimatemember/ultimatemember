@@ -1057,6 +1057,22 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'validate' => 'discord',
 				),
 
+				'tiktok' => array(
+					'title'      => __('TikTok','ultimate-member'),
+					'metakey'    => 'tiktok',
+					'type'       => 'url',
+					'label'      => __('TikTok','ultimate-member'),
+					'required'   => 0,
+					'public'     => 1,
+					'editable'   => 1,
+					'url_target' => '_blank',
+					'url_rel'    => 'nofollow',
+					'validate'   => 'tiktok_url',
+					'url_text'   => 'TikTok',
+					'advanced'   => 'social',
+					'match'      => 'https://tiktok.com/@',
+				),
+
 				'youtube' => array(
 					'title'      => __( 'YouTube', 'ultimate-member' ),
 					'metakey'    => 'youtube',
@@ -1487,6 +1503,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$array['youtube_url'] = __('YouTube Profile','ultimate-member');
 			$array['telegram_url'] = __('Telegram URL','ultimate-member');
 			$array['discord'] = __('Discord ID','ultimate-member');
+			$array['tiktok_url'] = __('TikTok URL','ultimate-member');
 			$array['custom'] = __('Custom Validation','ultimate-member');
 
 			/**
