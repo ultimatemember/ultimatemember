@@ -1073,6 +1073,40 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'match'      => 'https://tiktok.com/@',
 				),
 
+				'twitch' => array(
+					'title'      => __('Twitch','ultimate-member'),
+					'metakey'    => 'twitch',
+					'type'       => 'url',
+					'label'      => __('Twitch','ultimate-member'),
+					'required'   => 0,
+					'public'     => 1,
+					'editable'   => 1,
+					'icon'       => 'um-faicon-twitch',
+					'url_target' => '_blank',
+					'url_rel'    => 'nofollow',
+					'validate'   => 'twitch_url',
+					'url_text'   => 'Twitch',
+					'advanced'   => 'social',
+					'match'      => 'https://twitch.tv/',
+				),
+
+				'reddit' => array(
+					'title'      => __('Reddit','ultimate-member'),
+					'metakey'    => 'reddit',
+					'type'       => 'url',
+					'label'      => __('Reddit','ultimate-member'),
+					'required'   => 0,
+					'public'     => 1,
+					'editable'   => 1,
+					'icon'       => 'um-icon-social-reddit',
+					'url_target' => '_blank',
+					'url_rel'    => 'nofollow',
+					'validate'   => 'reddit_url',
+					'url_text'   => 'Reddit',
+					'advanced'   => 'social',
+					'match'      => 'https://www.reddit.com/user/',
+				),
+
 				'youtube' => array(
 					'title'      => __( 'YouTube', 'ultimate-member' ),
 					'metakey'    => 'youtube',
@@ -1479,32 +1513,34 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 */
 		function validation_types() {
 
-			$array[0] = __('None','ultimate-member');
-			$array['alphabetic'] = __('Alphabetic value only','ultimate-member');
-			$array['alpha_numeric'] = __('Alpha-numeric value','ultimate-member');
-			$array['english'] = __('English letters only','ultimate-member');
-			$array['facebook_url'] = __('Facebook URL','ultimate-member');
-			$array['google_url'] = __('Google+ URL','ultimate-member');
-			$array['instagram_url'] = __('Instagram URL','ultimate-member');
-			$array['linkedin_url'] = __('LinkedIn URL','ultimate-member');
-			$array['vk_url'] = __('VKontakte URL','ultimate-member');
-			$array['lowercase'] = __('Lowercase only','ultimate-member');
-			$array['numeric'] = __('Numeric value only','ultimate-member');
-			$array['phone_number'] = __('Phone Number','ultimate-member');
-			$array['skype'] = __('Skype ID','ultimate-member');
-			$array['soundcloud'] = __( 'SoundCloud Profile', 'ultimate-member' );
-			$array['twitter_url'] = __('Twitter URL','ultimate-member');
-			$array['is_email'] = __('E-mail( Not Unique )','ultimate-member');
-			$array['unique_email'] = __('Unique E-mail','ultimate-member');
-			$array['unique_value'] = __('Unique Metakey value','ultimate-member');
-			$array['unique_username'] = __('Unique Username','ultimate-member');
+			$array[0]                          = __('None','ultimate-member');
+			$array['alphabetic']               = __('Alphabetic value only','ultimate-member');
+			$array['alpha_numeric']            = __('Alpha-numeric value','ultimate-member');
+			$array['english']                  = __('English letters only','ultimate-member');
+			$array['facebook_url']             = __('Facebook URL','ultimate-member');
+			$array['google_url']               = __('Google+ URL','ultimate-member');
+			$array['instagram_url']            = __('Instagram URL','ultimate-member');
+			$array['linkedin_url']             = __('LinkedIn URL','ultimate-member');
+			$array['vk_url']                   = __('VKontakte URL','ultimate-member');
+			$array['lowercase']                = __('Lowercase only','ultimate-member');
+			$array['numeric']                  = __('Numeric value only','ultimate-member');
+			$array['phone_number']             = __('Phone Number','ultimate-member');
+			$array['skype']                    = __('Skype ID','ultimate-member');
+			$array['soundcloud']               = __( 'SoundCloud Profile', 'ultimate-member' );
+			$array['twitter_url']              = __('Twitter URL','ultimate-member');
+			$array['is_email']                 = __('E-mail( Not Unique )','ultimate-member');
+			$array['unique_email']             = __('Unique E-mail','ultimate-member');
+			$array['unique_value']             = __('Unique Metakey value','ultimate-member');
+			$array['unique_username']          = __('Unique Username','ultimate-member');
 			$array['unique_username_or_email'] = __('Unique Username/E-mail','ultimate-member');
-			$array['url'] = __('Website URL','ultimate-member');
-			$array['youtube_url'] = __('YouTube Profile','ultimate-member');
-			$array['telegram_url'] = __('Telegram URL','ultimate-member');
-			$array['discord'] = __('Discord ID','ultimate-member');
-			$array['tiktok_url'] = __('TikTok URL','ultimate-member');
-			$array['custom'] = __('Custom Validation','ultimate-member');
+			$array['url']                      = __('Website URL','ultimate-member');
+			$array['youtube_url']              = __('YouTube Profile','ultimate-member');
+			$array['telegram_url']             = __('Telegram URL','ultimate-member');
+			$array['discord']                  = __('Discord ID','ultimate-member');
+			$array['tiktok_url']               = __('TikTok URL','ultimate-member');
+			$array['twitch_url']               = __('Twitch URL','ultimate-member');
+			$array['reddit_url']               = __('Reddit URL','ultimate-member');
+			$array['custom']                   = __('Custom Validation','ultimate-member');
 
 			/**
 			 * UM hook
