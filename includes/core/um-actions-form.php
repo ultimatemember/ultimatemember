@@ -770,6 +770,27 @@ function um_submit_form_errors_hook_( $args ) {
 							}
 							break;
 
+						case 'tiktok_url':
+
+							if ( ! UM()->validation()->is_url( $args[ $key ], 'tiktok.com' ) ) {
+								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s profile URL', 'ultimate-member' ), $array['label'] ) );
+							}
+							break;
+
+						case 'twitch_url':
+
+							if ( ! UM()->validation()->is_url( $args[ $key ], 'twitch.tv' ) ) {
+								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s profile URL', 'ultimate-member' ), $array['label'] ) );
+							}
+							break;
+
+						case 'reddit_url':
+
+							if ( ! UM()->validation()->is_url( $args[ $key ], 'reddit.com' ) ) {
+								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s profile URL', 'ultimate-member' ), $array['label'] ) );
+							}
+							break;
+
 						case 'url':
 							if ( ! UM()->validation()->is_url( $args[ $key ] ) ) {
 								UM()->form()->add_error( $key, __( 'Please enter a valid URL', 'ultimate-member' ) );
