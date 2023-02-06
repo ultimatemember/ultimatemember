@@ -291,7 +291,7 @@ function um_profile_field_filter_hook__date( $value, $data ) {
 		$value = UM()->datetime()->get_age( $value );
 	} else {
 		$format = empty( $data['format_custom'] ) ? $data['format'] : $data['format_custom'];
-		$value = wp_date( $format, strtotime( $value ) );
+		$value  = wp_date( $format, strtotime( $value ) );
 	}
 
 	return $value;
