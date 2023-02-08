@@ -243,11 +243,11 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					global $wpdb;
 
 					$terms = $wpdb->get_results(
-						"SELECT tm.term_id AS term_id, 
-								tt.taxonomy AS taxonomy 
-						FROM {$wpdb->termmeta} tm 
-						LEFT JOIN {$wpdb->term_taxonomy} tt ON tt.term_id = tm.term_id 
-						WHERE tm.meta_key = 'um_content_restriction' AND 
+						"SELECT tm.term_id AS term_id,
+								tt.taxonomy AS taxonomy
+						FROM {$wpdb->termmeta} tm
+						LEFT JOIN {$wpdb->term_taxonomy} tt ON tt.term_id = tm.term_id
+						WHERE tm.meta_key = 'um_content_restriction' AND
 							  tt.taxonomy IN('" . implode( "','", $restricted_taxonomies ) . "')",
 						ARRAY_A
 					);
@@ -888,9 +888,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			foreach ( $restricted_posts as $k => $post_type ) {
 				if ( 'closed' === get_default_comment_status( $post_type ) ) {
 					$open_comments = $wpdb->get_var( $wpdb->prepare(
-						"SELECT ID 
-						FROM {$wpdb->posts} 
-						WHERE post_type = %s AND 
+						"SELECT ID
+						FROM {$wpdb->posts}
+						WHERE post_type = %s AND
 							  comment_status != 'closed'",
 						$post_type
 					) );
@@ -1401,14 +1401,14 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 							if ( ! isset( $restriction['_um_access_redirect'] ) || '0' == $restriction['_um_access_redirect'] ) {
 
-								exit( wp_redirect( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) ) ) );
+								exit( wp_redirect( esc_url_raw( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) ) ) );
 
 							} elseif ( '1' == $restriction['_um_access_redirect'] ) {
 
 								if ( ! empty( $restriction['_um_access_redirect_url'] ) ) {
 									$redirect = $restriction['_um_access_redirect_url'];
 								} else {
-									$redirect = esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) );
+									$redirect = esc_url_raw( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) );
 								}
 
 								exit( wp_redirect( $redirect ) );
@@ -1549,14 +1549,14 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 							if ( ! isset( $restriction['_um_access_redirect'] ) || '0' == $restriction['_um_access_redirect'] ) {
 
-								$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) ), 'individual_term' );
+								$this->redirect_handler = $this->set_referer( esc_url_raw( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) ), 'individual_term' );
 
 							} elseif ( '1' == $restriction['_um_access_redirect'] ) {
 
 								if ( ! empty( $restriction['_um_access_redirect_url'] ) ) {
 									$redirect = $restriction['_um_access_redirect_url'];
 								} else {
-									$redirect = esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) );
+									$redirect = esc_url_raw( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) );
 								}
 
 								$this->redirect_handler = $this->set_referer( $redirect, 'individual_term' );
@@ -1604,14 +1604,14 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 					if ( ! isset( $restriction['_um_access_redirect'] ) || '0' == $restriction['_um_access_redirect'] ) {
 
-						$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) ), 'individual_term' );
+						$this->redirect_handler = $this->set_referer( esc_url_raw( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) ), 'individual_term' );
 
 					} elseif ( '1' == $restriction['_um_access_redirect'] ) {
 
 						if ( ! empty( $restriction['_um_access_redirect_url'] ) ) {
 							$redirect = $restriction['_um_access_redirect_url'];
 						} else {
-							$redirect = esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) );
+							$redirect = esc_url_raw( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) );
 						}
 
 						$this->redirect_handler = $this->set_referer( $redirect, 'individual_term' );
@@ -1692,7 +1692,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					 */
 					$redirect_homepage = apply_filters( 'um_custom_homepage_redirect_url', $redirect_homepage, um_user( 'ID' ) );
 					$redirect_to = ! empty( $redirect_homepage ) ? $redirect_homepage : um_get_core_page( 'user' );
-					$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect_to ) ), 'custom_homepage' );
+					$this->redirect_handler = $this->set_referer( esc_url_raw( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect_to ) ), 'custom_homepage' );
 
 				} else {
 					$access = UM()->options()->get( 'accessible' );
@@ -1708,7 +1708,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 								$redirect = um_get_core_page( 'login' );
 							}
 
-							$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect ) ), 'global' );
+							$this->redirect_handler = $this->set_referer( esc_url_raw( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect ) ), 'global' );
 						} else {
 							$this->allow_access = true;
 							return;
@@ -1730,7 +1730,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 								$redirect = um_get_core_page( 'login' );
 							}
 
-							$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect ) ), 'global' );
+							$this->redirect_handler = $this->set_referer( esc_url_raw( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect ) ), 'global' );
 						} else {
 							$this->allow_access = true;
 							return;
@@ -1767,7 +1767,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 						$redirect = um_get_core_page( 'login' );
 					}
 
-					$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect ) ), 'global' );
+					$this->redirect_handler = $this->set_referer( esc_url_raw( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect ) ), 'global' );
 				} else {
 					$this->redirect_handler = false;
 					$this->allow_access = true;
