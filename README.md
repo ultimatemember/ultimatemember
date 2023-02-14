@@ -41,7 +41,7 @@ GNU Version 2 or Any Later Version
 
 ## Releases
 
-[Official Release Version: 2.5.3](https://github.com/ultimatemember/ultimatemember/releases/tag/2.5.3).
+[Official Release Version: 2.5.4](https://github.com/ultimatemember/ultimatemember/releases/tag/2.5.4).
 
 ## Changelog
 
