@@ -1236,7 +1236,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				return $fields[ $key ]['label'];
 			}
 
-			return __( 'Custom Field', 'ultimate-member' );
+			return sprintf( __( 'Custom Field (metakey: %s)', 'ultimate-member' ), $key );
 		}
 
 

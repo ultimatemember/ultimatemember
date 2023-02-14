@@ -48,97 +48,103 @@ if ( ! defined( 'ABSPATH' ) ) {
 	 * }
 	 * ?>
 	 */
-	$fields = apply_filters( 'um_admin_access_settings_fields', array(
+	$fields = apply_filters(
+		'um_admin_access_settings_fields',
 		array(
-			'id'      => '_um_custom_access_settings',
-			'type'    => 'checkbox',
-			'label'   => __( 'Restrict access to this post?', 'ultimate-member' ),
-			'description' => __( 'Activate individual content restriction settings for this post. Then ignore all terms restriction content settings if they exists.', 'ultimate-member' ),
-			'value'   => ! empty( $data['_um_custom_access_settings'] ) ? $data['_um_custom_access_settings'] : 0,
-		),
-		array(
-			'id'          => '_um_accessible',
-			'type'        => 'select',
-			'label'       => __( 'Who can access this post?', 'ultimate-member' ),
-			'value'       => ! empty( $data['_um_accessible'] ) ? $data['_um_accessible'] : 0,
-			'options'     => array(
-				'0' => __( 'Everyone', 'ultimate-member' ),
-				'1' => __( 'Logged out users', 'ultimate-member' ),
-				'2' => __( 'Logged in users', 'ultimate-member' ),
+			array(
+				'id'          => '_um_custom_access_settings',
+				'type'        => 'checkbox',
+				'label'       => __( 'Restrict access to this post?', 'ultimate-member' ),
+				'description' => __( 'Activate individual content restriction settings for this post. Then ignore all terms restriction content settings if they exists.', 'ultimate-member' ),
+				'value'       => ! empty( $data['_um_custom_access_settings'] ) ? $data['_um_custom_access_settings'] : 0,
 			),
-			'conditional' => array( '_um_custom_access_settings', '=', '1' ),
-		),
-		array(
-			'id'          => '_um_access_roles',
-			'type'        => 'multi_checkbox',
-			'label'       => __( 'Select which roles can access this post', 'ultimate-member' ),
-			'description'     => __( 'Leave empty if you want to display a post for all logged in users', 'ultimate-member' ),
-			'value'       => $_um_access_roles_value,
-			'options'     => UM()->roles()->get_roles( false ),
-			'columns'     => 3,
-			'conditional' => array( '_um_accessible', '=', '2' ),
-		),
-		array(
-			'id'          => '_um_access_hide_from_queries',
-			'type'        => 'checkbox',
-			'label'       => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Hide from queries', 'ultimate-member' ) : __( 'Would you like to display 404 page when users haven\'t access?', 'ultimate-member' ),
-			'description'     => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Exclude only from WP queries results', 'ultimate-member' ) : __( 'Recommended to be enabled. Restricted post will be hidden by exclusion from WP Query. The safest and most effective method that hides post and its comments from all requests, RSS feeds, etc. on your site', 'ultimate-member' ),
-			'value'       => ! empty( $data['_um_access_hide_from_queries'] ) ? $data['_um_access_hide_from_queries'] : '',
-			'conditional' => array( '_um_accessible', '!=', '0' ),
-		),
-		array(
-			'id'          => '_um_noaccess_action',
-			'type'        => 'select',
-			'label'       => __( 'What happens when users without access try to view the post?', 'ultimate-member' ),
-			'description'     => __( 'Action when users without access tries to view the post', 'ultimate-member' ),
-			'value'       => ! empty( $data['_um_noaccess_action'] ) ? $data['_um_noaccess_action'] : 0,
-			'options'     => array(
-				'0' => __( 'Show access restricted message', 'ultimate-member' ),
-				'1' => __( 'Redirect user', 'ultimate-member' ),
+			array(
+				'id'          => '_um_accessible',
+				'type'        => 'select',
+				'label'       => __( 'Who can access this post?', 'ultimate-member' ),
+				'value'       => ! empty( $data['_um_accessible'] ) ? $data['_um_accessible'] : 0,
+				'options'     => array(
+					'0' => __( 'Everyone', 'ultimate-member' ),
+					'1' => __( 'Logged out users', 'ultimate-member' ),
+					'2' => __( 'Logged in users', 'ultimate-member' ),
+				),
+				'conditional' => array( '_um_custom_access_settings', '=', '1' ),
 			),
-			'conditional' => UM()->options()->get( 'disable_restriction_pre_queries' ) ? array( '_um_accessible', '!=', '0' ) : array( '_um_access_hide_from_queries', '=', '0' ),
-		),
-		array(
-			'id'          => '_um_restrict_by_custom_message',
-			'type'        => 'select',
-			'label'       => __( 'Restricted access message type', 'ultimate-member' ),
-			'description'     => __( 'Would you like to use the global default message or apply a custom message to this post?', 'ultimate-member' ),
-			'value'       => ! empty( $data['_um_restrict_by_custom_message'] ) ? $data['_um_restrict_by_custom_message'] : '0',
-			'options'     => array(
-				'0' => __( 'Global default message', 'ultimate-member' ),
-				'1' => __( 'Custom message', 'ultimate-member' ),
+			array(
+				'id'          => '_um_access_roles',
+				'type'        => 'multi_checkbox',
+				'label'       => __( 'Select which roles can access this post', 'ultimate-member' ),
+				'description' => __( 'Leave empty if you want to display a post for all logged in users', 'ultimate-member' ),
+				'value'       => $_um_access_roles_value,
+				'options'     => UM()->roles()->get_roles( false ),
+				'columns'     => 3,
+				'conditional' => array( '_um_accessible', '=', '2' ),
 			),
-			'conditional' => array( '_um_noaccess_action', '=', '0' ),
-		),
-		array(
-			'id'          => '_um_restrict_custom_message',
-			'type'        => 'wp_editor',
-			'label'       => __( 'Custom restricted access message', 'ultimate-member' ),
-			'description'     => __( 'You may replace global restricted access message here', 'ultimate-member' ),
-			'value'       => ! empty( $data['_um_restrict_custom_message'] ) ? $data['_um_restrict_custom_message'] : '',
-			'conditional' => array( '_um_restrict_by_custom_message', '=', '1' ),
-		),
-		array(
-			'id'          => '_um_access_redirect',
-			'type'        => 'select',
-			'label'       => __( 'Where should users be redirected to?', 'ultimate-member' ),
-			'description'     => __( 'Select redirect to page when user hasn\'t access to post', 'ultimate-member' ),
-			'value'       => ! empty( $data['_um_access_redirect'] ) ? $data['_um_access_redirect'] : '0',
-			'options'     => array(
-				'0' => __( 'Login page', 'ultimate-member' ),
-				'1' => __( 'Custom URL', 'ultimate-member' ),
+			array(
+				'id'          => '_um_access_hide_from_queries',
+				'type'        => 'checkbox',
+				'label'       => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Hide from queries', 'ultimate-member' ) : __( 'Would you like to display 404 page when users haven\'t access?', 'ultimate-member' ),
+				'description' => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Exclude only from WP queries results', 'ultimate-member' ) : __( 'Recommended to be enabled. Restricted post will be hidden by exclusion from WP Query. The safest and most effective method that hides post and its comments from all requests, RSS feeds, etc. on your site', 'ultimate-member' ),
+				'value'       => ! empty( $data['_um_access_hide_from_queries'] ) ? $data['_um_access_hide_from_queries'] : '',
+				'conditional' => array( '_um_accessible', '!=', '0' ),
 			),
-			'conditional' => array( '_um_noaccess_action', '=', '1' ),
+			array(
+				'id'          => '_um_noaccess_action',
+				'type'        => 'select',
+				'label'       => __( 'What happens when users without access try to view the post?', 'ultimate-member' ),
+				'description' => __( 'Action when users without access tries to view the post', 'ultimate-member' ),
+				'value'       => ! empty( $data['_um_noaccess_action'] ) ? $data['_um_noaccess_action'] : 0,
+				'options'     => array(
+					'0' => __( 'Show access restricted message', 'ultimate-member' ),
+					'1' => __( 'Redirect user', 'ultimate-member' ),
+				),
+				'conditional' => UM()->options()->get( 'disable_restriction_pre_queries' ) ? array( '_um_accessible', '!=', '0' ) : array( '_um_access_hide_from_queries', '=', '0' ),
+			),
+			array(
+				'id'          => '_um_restrict_by_custom_message',
+				'type'        => 'select',
+				'label'       => __( 'Restricted access message type', 'ultimate-member' ),
+				'description' => __( 'Would you like to use the global default message or apply a custom message to this post?', 'ultimate-member' ),
+				'value'       => ! empty( $data['_um_restrict_by_custom_message'] ) ? $data['_um_restrict_by_custom_message'] : '0',
+				'options'     => array(
+					'0' => __( 'Global default message', 'ultimate-member' ),
+					'1' => __( 'Custom message', 'ultimate-member' ),
+				),
+				'conditional' => array( '_um_noaccess_action', '=', '0' ),
+			),
+			array(
+				'id'          => '_um_restrict_custom_message',
+				'type'        => 'wp_editor',
+				'label'       => __( 'Custom restricted access message', 'ultimate-member' ),
+				'description' => __( 'You may replace global restricted access message here', 'ultimate-member' ),
+				'value'       => ! empty( $data['_um_restrict_custom_message'] ) ? $data['_um_restrict_custom_message'] : '',
+				'conditional' => array( '_um_restrict_by_custom_message', '=', '1' ),
+			),
+			array(
+				'id'          => '_um_access_redirect',
+				'type'        => 'select',
+				'label'       => __( 'Where should users be redirected to?', 'ultimate-member' ),
+				'description' => __( 'Select redirect to page when user hasn\'t access to post', 'ultimate-member' ),
+				'value'       => ! empty( $data['_um_access_redirect'] ) ? $data['_um_access_redirect'] : '0',
+				'options'     => array(
+					'0' => __( 'Login page', 'ultimate-member' ),
+					'1' => __( 'Custom URL', 'ultimate-member' ),
+				),
+				'conditional' => array( '_um_noaccess_action', '=', '1' ),
+			),
+			array(
+				'id'          => '_um_access_redirect_url',
+				'type'        => 'text',
+				'label'       => __( 'Redirect URL', 'ultimate-member' ),
+				'description' => __( 'Set full URL where do you want to redirect the user', 'ultimate-member' ),
+				'value'       => ! empty( $data['_um_access_redirect_url'] ) ? $data['_um_access_redirect_url'] : '',
+				'conditional' => array( '_um_access_redirect', '=', '1' ),
+			),
 		),
-		array(
-			'id'          => '_um_access_redirect_url',
-			'type'        => 'text',
-			'label'       => __( 'Redirect URL', 'ultimate-member' ),
-			'description'     => __( 'Set full URL where do you want to redirect the user', 'ultimate-member' ),
-			'value'       => ! empty( $data['_um_access_redirect_url'] ) ? $data['_um_access_redirect_url'] : '',
-			'conditional' => array( '_um_access_redirect', '=', '1' ),
-		),
-	), $data, $object, $post_type_object );
+		$data,
+		$object,
+		$post_type_object
+	);
 
 // Hierarchical
 //	if ( $post_type_object->hierarchical ) {
@@ -152,7 +158,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 //		);
 //	}
 
-	UM()->admin_forms(
+	UM()->admin()->forms(
 		array(
 			'class'     => 'um-restrict-content um-third-column',
 			'prefix_id' => 'um_content_restriction',
@@ -160,5 +166,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 		)
 	)->render_form();
 	?>
-
 </div>

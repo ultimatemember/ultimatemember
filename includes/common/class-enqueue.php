@@ -1,13 +1,10 @@
 <?php namespace um\common;
 
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 if ( ! class_exists( 'um\common\Enqueue' ) ) {
-
 
 	/**
 	 * Class Enqueue
@@ -16,14 +13,12 @@ if ( ! class_exists( 'um\common\Enqueue' ) ) {
 	 */
 	class Enqueue {
 
-
 		/**
 		 * @var string scripts' Standard or Minified versions
 		 *
 		 * @since 3.0
 		 */
 		var $suffix;
-
 
 		/**
 		 * @var array URLs for easy using
@@ -32,7 +27,6 @@ if ( ! class_exists( 'um\common\Enqueue' ) ) {
 		 */
 		var $urls;
 
-
 		/**
 		 * @var string FontAwesome version
 		 *
@@ -40,20 +34,10 @@ if ( ! class_exists( 'um\common\Enqueue' ) ) {
 		 */
 		var $fa_version = '5.15.4';
 
-
 		/**
 		 * @var string Ionicons version
 		 */
 		var $ion_version = '4.5.10-1';
-
-
-		/**
-		 * @var array
-		 *
-		 *@since 3.0
-		 */
-		var $pickadate_deps = array();
-
 
 		/**
 		 * @var string
@@ -61,7 +45,6 @@ if ( ! class_exists( 'um\common\Enqueue' ) ) {
 		 *@since 3.0
 		 */
 		var $modules_hash = '';
-
 
 		/**
 		 * Enqueue constructor.
@@ -150,31 +133,6 @@ if ( ! class_exists( 'um\common\Enqueue' ) ) {
 			}
 			wp_register_script( 'select2', $this->urls['libs'] . 'select2/select2.full' . $this->suffix . '.js', array( 'jquery' ), '4.0.13', true );
 			wp_register_style( 'select2', $this->urls['libs'] . 'select2/select2' . $this->suffix . '.css', array(), '4.0.13' );
-
-			//Pickadate
-			wp_register_script( 'um_datetime', $this->urls['libs'] . 'pickadate/picker' . $this->suffix . '.js', array( 'jquery' ), '3.6.2', true );
-			wp_register_script( 'um_datetime_date', $this->urls['libs'] . 'pickadate/picker.date' . $this->suffix . '.js', array( 'jquery', 'um_datetime' ), '3.6.2', true );
-			wp_register_script( 'um_datetime_time', $this->urls['libs'] . 'pickadate/picker.time' . $this->suffix . '.js', array( 'jquery', 'um_datetime' ), '3.6.2', true );
-
-			$this->pickadate_deps['js'] = array( 'um_datetime_date', 'um_datetime_time' );
-
-			// load a localized version for date/time
-			$locale = get_locale();
-			if ( $locale ) {
-				if ( file_exists( WP_LANG_DIR . '/plugins/ultimate-member/assets/libs/pickadate/' . $locale . '.js' ) ) {
-					wp_register_script('um_datetime_locale', content_url() . '/languages/plugins/ultimate-member/assets/libs/pickadate/' . $locale . '.js', array( 'jquery', 'um_datetime' ), '3.6.2', true );
-					$this->pickadate_deps['js'][] = 'um_datetime_locale';
-				} elseif ( file_exists( UM_PATH . 'assets/libs/pickadate/translations/' . $locale . '.js' ) ) {
-					wp_register_script('um_datetime_locale', um_url . 'assets/js/pickadate/translations/' . $locale . '.js', array( 'jquery', 'um_datetime' ), '3.6.2', true );
-					$this->pickadate_deps['js'][] = 'um_datetime_locale';
-				}
-			}
-
-			wp_register_style( 'um_datetime', $this->urls['libs'] . 'pickadate/default' . $this->suffix . '.css', array(), '3.6.2' );
-			wp_register_style( 'um_datetime_date', $this->urls['libs'] . 'pickadate/default.date' . $this->suffix . '.css', array( 'um_datetime' ), '3.6.2' );
-			wp_register_style( 'um_datetime_time', $this->urls['libs'] . 'pickadate/default.time' . $this->suffix . '.css', array( 'um_datetime' ), '3.6.2' );
-
-			$this->pickadate_deps['css'] = array( 'um_datetime_date', 'um_datetime_time' );
 
 			// Raty JS for rating field-type
 			wp_register_script( 'um-raty', $this->urls['libs'] . 'raty/um-raty' . $this->suffix . '.js', array( 'jquery', 'wp-i18n' ), '2.6.0', true );

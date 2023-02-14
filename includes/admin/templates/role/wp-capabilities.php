@@ -1,4 +1,8 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
 
 
 <div class="um-admin-metabox">
@@ -76,18 +80,21 @@
 		$fields[ $cap ] = $cap;
 	}
 
-	UM()->admin_forms( array(
-		'class'     => 'um-role-wp-capabilities',
-		'prefix_id' => 'role',
-		'fields'    => array(
-			array(
-				'id'            => 'wp_capabilities',
-				'type'          => 'multi_checkbox',
-				'options'       => $fields,
-				'value'         => ! empty( $role_capabilities ) ? $role_capabilities : array(),
-				'columns'       => 3,
-				'without_label' => true,
-			)
+	UM()->admin()->forms(
+		array(
+			'class'     => 'um-role-wp-capabilities',
+			'prefix_id' => 'role',
+			'fields'    => array(
+				array(
+					'id'            => 'wp_capabilities',
+					'type'          => 'multi_checkbox',
+					'options'       => $fields,
+					'value'         => ! empty( $role_capabilities ) ? $role_capabilities : array(),
+					'columns'       => 3,
+					'without_label' => true,
+				),
+			),
 		)
-	) )->render_form(); ?>
+	)->render_form();
+	?>
 </div>

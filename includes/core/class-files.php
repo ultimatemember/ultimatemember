@@ -329,7 +329,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			UM()->fields()->set_id = filter_input( INPUT_POST, 'set_id', FILTER_SANITIZE_NUMBER_INT );
 			UM()->fields()->set_mode = filter_input( INPUT_POST, 'set_mode', FILTER_SANITIZE_STRING );
 
-			if ( UM()->fields()->set_mode != 'register' && ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
 				$ret['error'] = esc_js( __( 'You have no permission to edit this user', 'ultimate-member' ) );
 				wp_send_json_error( $ret );
 			}

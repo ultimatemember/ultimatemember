@@ -3,15 +3,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( empty( UM()->builder()->form_id ) ) {
-	UM()->builder()->form_id = $this->form_id;
+if ( empty( UM()->admin()->builder()->form_id ) ) {
+	UM()->admin()->builder()->form_id = $this->form_id;
 }
 ?>
 
 <!-- data-in_row="" data-in_sub_row="" data-in_column="" data-in_group="" data is used for builder handlers when trying to insert field in the selected place -->
-<div class="um-admin-builder" data-form_id="<?php echo esc_attr( UM()->builder()->form_id ); ?>" data-in_row="" data-in_sub_row="" data-in_column="" data-in_group="">
+<div class="um-admin-builder" data-form_id="<?php echo esc_attr( UM()->admin()->builder()->form_id ); ?>" data-in_row="" data-in_sub_row="" data-in_column="" data-in_group="">
 
-	<?php $fields = UM()->query()->get_attr( 'custom_fields', UM()->builder()->form_id ); ?>
+	<?php $fields = UM()->query()->get_attr( 'custom_fields', UM()->admin()->builder()->form_id ); ?>
 
 	<div class="um-admin-drag-ctrls-demo um-admin-drag-ctrls">
 		<a href="javascript:void(0);" class="active um_admin_preview_form" data-form_id="<?php echo esc_attr( get_the_ID() ); ?>">
@@ -23,8 +23,8 @@ if ( empty( UM()->builder()->form_id ) ) {
 
 	<div class="um-admin-drag">
 
-		<div class="um-admin-drag-ajax" data-form_id="<?php echo esc_attr( UM()->builder()->form_id ); ?>">
-			<?php UM()->builder()->show_builder(); ?>
+		<div class="um-admin-drag-ajax" data-form_id="<?php echo esc_attr( UM()->admin()->builder()->form_id ); ?>">
+			<?php UM()->admin()->builder()->show_builder(); ?>
 		</div>
 
 		<div class="um-admin-drag-addrow um-admin-tipsy-n"

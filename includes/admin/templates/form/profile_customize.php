@@ -45,75 +45,97 @@ $profile_customize_fields = array(
 		'description' => __( 'Customize the button text', 'ultimate-member' ),
 		'value'       => UM()->query()->get_meta_value( '_um_profile_primary_btn_word', null, UM()->options()->get( 'profile_primary_btn_word' ) ),
 	),
+);
+
+if ( get_option( 'show_avatars' ) ) {
+	$profile_customize_fields = array_merge(
+		$profile_customize_fields,
+		array(
+			array(
+				'id'          => '_um_profile_disable_photo_upload',
+				'type'        => 'select',
+				'label'       => __( 'Disable Profile Photo Upload', 'ultimate-member' ),
+				'description' => __( 'Switch on/off the profile photo uploader', 'ultimate-member' ),
+				'value'       => $profile_disable_photo_upload,
+				'options'     => array(
+					0 => __( 'No', 'ultimate-member' ),
+					1 => __( 'Yes', 'ultimate-member' ),
+				),
+			),
+			array(
+				'id'          => '_um_profile_photo_required',
+				'type'        => 'select',
+				'label'       => __( 'Make Profile Photo Required', 'ultimate-member' ),
+				'description' => __( 'Require user to update a profile photo when updating their profile', 'ultimate-member' ),
+				'value'       => $profile_photo_required,
+				'options'     => array(
+					0 => __( 'No', 'ultimate-member' ),
+					1 => __( 'Yes', 'ultimate-member' ),
+				),
+				'conditional' => array( '_um_profile_disable_photo_upload', '=', 0 ),
+			),
+		)
+	);
+}
+
+if ( UM()->options()->get( 'use_cover_photos' ) ) {
+	$profile_customize_fields = array_merge(
+		$profile_customize_fields,
+		array(
+			array(
+				'id'      => '_um_profile_cover_enabled',
+				'type'    => 'select',
+				'label'   => __( 'Enable Cover Photos', 'ultimate-member' ),
+				'value'   => $profile_cover_enabled,
+				'options' => array(
+					0 => __( 'No', 'ultimate-member' ),
+					1 => __( 'Yes', 'ultimate-member' ),
+				),
+			),
+		)
+	);
+}
+
+$profile_customize_fields = array_merge(
+	$profile_customize_fields,
 	array(
-		'id'      => '_um_profile_cover_enabled',
-		'type'    => 'select',
-		'label'   => __( 'Enable Cover Photos', 'ultimate-member' ),
-		'value'   => $profile_cover_enabled,
-		'options' => array(
-			0 => __( 'No', 'ultimate-member' ),
-			1 => __( 'Yes', 'ultimate-member' ),
+		array(
+			'id'      => '_um_profile_show_name',
+			'type'    => 'select',
+			'label'   => __( 'Show display name in profile header?', 'ultimate-member' ),
+			'value'   => $profile_show_name,
+			'options' => array(
+				0 => __( 'No', 'ultimate-member' ),
+				1 => __( 'Yes', 'ultimate-member' ),
+			),
 		),
-	),
-	array(
-		'id'          => '_um_profile_disable_photo_upload',
-		'type'        => 'select',
-		'label'       => __( 'Disable Profile Photo Upload', 'ultimate-member' ),
-		'description' => __( 'Switch on/off the profile photo uploader', 'ultimate-member' ),
-		'value'       => $profile_disable_photo_upload,
-		'options'     => array(
-			0 => __( 'No', 'ultimate-member' ),
-			1 => __( 'Yes', 'ultimate-member' ),
+		array(
+			'id'      => '_um_profile_show_social_links',
+			'type'    => 'select',
+			'label'   => __( 'Show social links in profile header?', 'ultimate-member' ),
+			'value'   => $profile_show_social_links,
+			'options' => array(
+				0 => __( 'No', 'ultimate-member' ),
+				1 => __( 'Yes', 'ultimate-member' ),
+			),
 		),
-	),
-	array(
-		'id'          => '_um_profile_photo_required',
-		'type'        => 'select',
-		'label'       => __( 'Make Profile Photo Required', 'ultimate-member' ),
-		'description' => __( 'Require user to update a profile photo when updating their profile', 'ultimate-member' ),
-		'value'       => $profile_photo_required,
-		'options'     => array(
-			0 => __( 'No', 'ultimate-member' ),
-			1 => __( 'Yes', 'ultimate-member' ),
+		array(
+			'id'      => '_um_profile_show_bio',
+			'type'    => 'select',
+			'label'   => __( 'Show user description in profile header?', 'ultimate-member' ),
+			'value'   => $profile_show_bio,
+			'options' => array(
+				0 => __( 'No', 'ultimate-member' ),
+				1 => __( 'Yes', 'ultimate-member' ),
+			),
 		),
-		'conditional' => array( '_um_profile_disable_photo_upload', '=', 0 ),
-	),
-	array(
-		'id'      => '_um_profile_show_name',
-		'type'    => 'select',
-		'label'   => __( 'Show display name in profile header?', 'ultimate-member' ),
-		'value'   => $profile_show_name,
-		'options' => array(
-			0 => __( 'No', 'ultimate-member' ),
-			1 => __( 'Yes', 'ultimate-member' ),
-		),
-	),
-	array(
-		'id'      => '_um_profile_show_social_links',
-		'type'    => 'select',
-		'label'   => __( 'Show social links in profile header?', 'ultimate-member' ),
-		'value'   => $profile_show_social_links,
-		'options' => array(
-			0 => __( 'No', 'ultimate-member' ),
-			1 => __( 'Yes', 'ultimate-member' ),
-		),
-	),
-	array(
-		'id'      => '_um_profile_show_bio',
-		'type'    => 'select',
-		'label'   => __( 'Show user description in profile header?', 'ultimate-member' ),
-		'value'   => $profile_show_bio,
-		'options' => array(
-			0 => __( 'No', 'ultimate-member' ),
-			1 => __( 'Yes', 'ultimate-member' ),
-		),
-	),
+	)
 );
 ?>
 
 <div class="um-admin-metabox">
 	<?php
-	UM()->admin_forms(
+	UM()->admin()->forms(
 		array(
 			'class'     => 'um-form-profile-customize um-top-label',
 			'prefix_id' => 'form',

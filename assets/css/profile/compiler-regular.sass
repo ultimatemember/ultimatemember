@@ -1,0 +1,56 @@
+@import "../forms.sass"
+
+.um-modal.um-profile-photo-modal
+  .um-modal-body
+    +flex( column, flex-start, stretch, nowrap )
+
+.um-profile-wrapper
+  position: relative
+
+.um-profile-photo
+  +flex( row, flex-start, baseline, nowrap )
+  width: 190px
+  margin: 0
+  padding: 0
+
+.um-new-dropdown
+  font-size: 16px
+  margin: 0
+  position: absolute
+  height: auto
+  background: #fff
+  z-index: 10
+  display: none
+  border: 1px solid $border
+  box-shadow: 0 7px 14px 0 $shadow1, 0 3px 6px 0 $shadow2
+  -webkit-box-shadow: 0 7px 14px 0 $shadow1, 0 3px 6px 0 $shadow2
+  +border-box
+  +border-radius(5px, 5px, 5px, 5px)
+  ul
+    margin: 0
+    padding: 0
+    li
+      list-style-type: none
+      padding: 0
+      margin: 0
+      a
+        display: block
+        padding: 8px 12px
+        line-height: 1
+
+.um-new-dropdown-arr
+  position: absolute
+  font-size: 24px
+  width: 24px
+  height: 24px
+  overflow: hidden
+  z-index: 15
+  color: #eee
+  *
+    display: block
+    width: 24px
+    height: 24px
+    vertical-align: bottom
+    overflow: hidden
+    line-height: 24px
+

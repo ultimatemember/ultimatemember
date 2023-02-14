@@ -2,14 +2,13 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-?>
 
+$role = $object['data'];
+?>
 
 <div class="um-admin-metabox">
 	<?php
-	$role = $object['data'];
-
-	UM()->admin_forms(
+	UM()->admin()->forms(
 		array(
 			'class'     => 'um-role-login um-half-column',
 			'prefix_id' => 'role',

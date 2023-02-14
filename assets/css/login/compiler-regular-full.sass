@@ -1,7 +1,6 @@
 @import "../forms-full.sass"
 
 .um
-  font-size: $um-font-size
   &.#{$prefix}login
     .#{$prefix}notice
       font-size: inherit
@@ -74,43 +73,3 @@
       font-size: inherit
       width: 100%
       text-align: center
-
-  .#{$prefix}link
-    font-size: inherit
-    font-weight: $bold-weight
-    line-height: inherit
-    color: $link-color
-    text-decoration: none
-    border: none
-    outline: none
-    &:hover
-      font-weight: $bold-weight
-      color: $link-hover-color
-      text-decoration: none
-      border: none
-      outline: none
-    &:active
-      font-weight: $bold-weight
-      color: $link-hover-color
-      text-decoration: none
-      border: none
-      outline: none
-    &:visited
-      font-weight: $bold-weight
-      text-decoration: none
-      border: none
-      outline: none
-      &:not(.#{$prefix}link-always-active)
-        color: $gray-600
-    &:focus
-      font-weight: $bold-weight
-      color: $link-hover-color
-      text-decoration: none
-      border: none
-      outline: none
-    &:focus-visible
-      font-weight: $bold-weight
-      color: $link-color
-      text-decoration: none
-      border: none
-      outline: none

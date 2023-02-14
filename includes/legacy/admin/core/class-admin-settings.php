@@ -1417,7 +1417,7 @@ if ( ! class_exists( 'um\legacy\admin\core\Admin_Settings' ) ) {
 										'tooltip'            => __( 'You can change the default profile picture globally here. Please make sure that the photo is 300x300px.', 'ultimate-member' ),
 										'upload_frame_title' => __( 'Select Default Profile Photo', 'ultimate-member' ),
 										'default'            => array(
-											'url' => um_url . 'assets/legacy/img/default_avatar.jpg',
+											'url' => um_get_default_avatar_url( array( 'force_default' => true ) ),
 										),
 									),
 									array(

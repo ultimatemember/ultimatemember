@@ -8,7 +8,7 @@ global $post_id;
 
 <div class="um-admin-metabox">
 	<?php
-	UM()->admin_forms(
+	UM()->admin()->forms(
 		array(
 			'class'     => 'um-member-directory-pagination um-half-column',
 			'prefix_id' => 'um_metadata',

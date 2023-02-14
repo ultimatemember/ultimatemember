@@ -46,8 +46,8 @@
   .um-modal * {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale; }
-  .um-modal .um-modal-close {
-    color: #fff;
+  .um-modal > .um-modal-close {
+    color: var(--um-blocks-button-fg-color, #333);
     cursor: pointer;
     display: block;
     font-size: 24px;
@@ -58,8 +58,9 @@
     text-decoration: none;
     top: 0;
     z-index: 10; }
-    .um-modal .um-modal-close.um-modal-close-fixed {
-      position: fixed; }
+    .um-modal > .um-modal-close.um-modal-close-fixed {
+      position: fixed;
+      color: #fff; }
   .um-modal .um-modal-header + .um-modal-body {
     background: #fff;
     box-sizing: border-box;
@@ -78,11 +79,11 @@
       .um-modal.loading .um-modal-body > * {
         opacity: 0.5; }
   .um-modal .um-modal-header {
-    background-color: #0085ba;
+    background-color: var(--um-blocks-button-bg-color, #eee);
     border-radius: 3px 3px 0 0;
     height: 44px;
     line-height: 40px;
-    color: #fff;
+    color: var(--um-blocks-button-fg-color, #333);
     padding: 2px 20px;
     box-sizing: border-box;
     font-size: 17px; }

@@ -1,12 +1,11 @@
 <?php
 namespace um;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\Config' ) ) {
-
 
 	/**
 	 * Class Config
@@ -17,7 +16,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 	 */
 	class Config {
 
-
 		/**
 		 * @since 3.0
 		 *
@@ -25,12 +23,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 */
 		var $modules = array();
 
-
 		/**
 		 * @var array
 		 */
 		var $extension_plugins = array();
-
 
 		/**
 		 * @since 3.0
@@ -39,7 +35,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 */
 		var $default_settings = array();
 
-
 		/**
 		 * @since 3.0
 		 *
@@ -47,12 +42,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 */
 		var $predefined_pages = array();
 
-
 		/**
 		 * @var array
 		 */
 		var $email_notification = array();
-
 
 		/**
 		 * @since 3.0
@@ -61,7 +54,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 */
 		var $roles_meta = array();
 
-
 		/**
 		 * @since 3.0
 		 *
@@ -69,14 +61,12 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 */
 		var $form_meta_list = array();
 
-
 		/**
 		 * @since 3.0
 		 *
 		 * @var array
 		 */
 		var $form_meta = array();
-
 
 		/**
 		 * Legacy variable
@@ -87,14 +77,12 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 */
 		var $global_meta;
 
-
 		/**
 		 * @since 3.0
 		 *
 		 * @var int
 		 */
 		var $password_reset_attempts_timeout;
-
 
 		/**
 		 * Login redirect options
@@ -104,6 +92,33 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 * @var array
 		 */
 		var $login_redirect_options = array();
+
+		/**
+		 * Build-in avatar sizes
+		 *
+		 * @since 3.0
+		 *
+		 * @var array
+		 */
+		var $avatar_sizes = array();
+
+		/**
+		 * Build-in cover ratio
+		 *
+		 * @since 3.0
+		 *
+		 * @var array
+		 */
+		var $cover_ratio = array();
+
+		/**
+		 * Build-in cover sizes
+		 *
+		 * @since 3.0
+		 *
+		 * @var array
+		 */
+		var $cover_sizes = array();
 
 		/**
 		 * Config constructor.
@@ -279,9 +294,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'display_name'                          => 'full_name',
 				'display_name_field'                    => '',
 				'author_redirect'                       => 1,
-				'use_gravatars'                         => 0,
-				'use_um_gravatar_default_builtin_image' => 'default',
-				'use_um_gravatar_default_image'         => 0,
 				'require_strongpass'                    => 0,
 				'password_min_chars'                    => 8,
 				'password_max_chars'                    => 30,
@@ -316,7 +328,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'blocked_words'                         => 'admin' . "\r\n" . 'administrator' . "\r\n" . 'webmaster' . "\r\n" . 'support' . "\r\n" . 'staff',
 				'allowed_choice_callbacks'              => '',
 				'allow_url_redirect_confirm'            => 1,
+				'use_um_gravatar_default_image'         => 0,
 				'default_avatar'                        => '',
+				'use_cover_photos'                      => 0,
 				'default_cover'                         => '',
 				'disable_profile_photo_upload'          => 0,
 				'profile_show_metaicon'                 => 0,
@@ -341,7 +355,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'profile_show_html_bio'                 => 0,
 				'profile_noindex'                       => 0,
 				'activation_link_expiry_time'           => '',
-				'form_styling'                          => '',
+				'styling'                          => '',
 				'button_backcolor'                      => '#eee',
 				'button_backcolor_hover'                => '#ddd',
 				'button_forecolor'                      => '#333',
@@ -913,6 +927,70 @@ if ( ! class_exists( 'um\Config' ) ) {
 			);
 		}
 
+		/**
+		 * Init build-in avatar sizes
+		 *
+		 * @since 3.0
+		 */
+		public function init_avatar_sizes() {
+			// Avatar is a square so size means width = height.
+			$this->avatar_sizes = array(
+				'xl' => array(
+					'title' => __( 'Profile page', 'ultimate-member' ),
+					'size' => 190,
+				),
+				'l'  => array(
+					'title' => __( 'Member Directory', 'ultimate-member' ),
+					'size' => 96, // default WordPress avatar size
+				),
+				'm'  => array(
+					'title' => __( 'Activity|Messages', 'ultimate-member' ),
+					'size' => 40,
+				),
+				's'  => array(
+					'title' => __( 'Widgets', 'ultimate-member' ),
+					'size' => 20,
+				),
+			);
+		}
+
+		/**
+		 * Init build-in cover ratio
+		 *
+		 * @since 3.0
+		 */
+		public function init_cover_ratio() {
+			// size it's height, width will be automatically based on ratio
+			$this->cover_ratio = array(
+				'1.6:1' => __( '1.6:1', 'ultimate-member' ),
+				'2.7:1' => __( '2.7:1', 'ultimate-member' ),
+				'2.2:1' => __( '2.2:1', 'ultimate-member' ),
+				'3.2:1' => __( '3.2:1', 'ultimate-member' ),
+			);
+		}
+
+		/**
+		 * Init build-in cover sizes
+		 *
+		 * @since 3.0
+		 */
+		public function init_cover_sizes() {
+			// size it's height, width will be automatically based on ratio
+			$this->cover_sizes = array(
+				'l'  => array(
+					'title' => __( 'Large version', 'ultimate-member' ),
+					'size' => 600,
+				),
+				'm'  => array(
+					'title' => __( 'User Profile', 'ultimate-member' ),
+					'size' => 300,
+				),
+				's'  => array(
+					'title' => __( 'Member Directory', 'ultimate-member' ),
+					'size' => 100,
+				),
+			);
+		}
 
 
 

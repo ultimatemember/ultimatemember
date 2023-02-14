@@ -42,6 +42,7 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			$this->login();
 			$this->mail()->hooks();
 			$this->pages();
+			$this->permalinks();
 			$this->screen();
 
 			$this->shortcodes();
@@ -154,6 +155,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\pages'] = new Pages();
 			}
 			return UM()->classes['um\common\pages'];
+		}
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return Permalinks()
+		 */
+		public function permalinks() {
+			if ( empty( UM()->classes['um\common\permalinks'] ) ) {
+				UM()->classes['um\common\permalinks'] = new Permalinks();
+			}
+			return UM()->classes['um\common\permalinks'];
 		}
 
 		/**

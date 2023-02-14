@@ -100,7 +100,7 @@ $register_customize_fields = array(
 
 <div class="um-admin-metabox">
 	<?php
-	UM()->admin_forms(
+	UM()->admin()->forms(
 		array(
 			'class'     => 'um-form-register-customize um-top-label',
 			'prefix_id' => 'form',

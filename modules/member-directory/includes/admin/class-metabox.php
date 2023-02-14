@@ -50,11 +50,11 @@ class Metabox {
 				'_um_mode'                     => array(
 					'sanitize' => 'key',
 				),
-				'_um_view_types'               => array(
-					'sanitize' => array( $this, 'sanitize_md_view_types' ),
-				),
-				'_um_default_view'             => array(
+				'_um_view_type'                => array(
 					'sanitize' => 'key',
+				),
+				'_um_grid_columns'             => array(
+					'sanitize' => 'absint',
 				),
 				'_um_roles'                    => array(
 					'sanitize' => array( UM()->admin(), 'sanitize_restriction_existed_role' ),
@@ -72,7 +72,7 @@ class Metabox {
 					'sanitize' => 'bool',
 				),
 				'_um_max_users'                => array(
-					'sanitize' => 'absint',
+					'sanitize' => 'text',
 				),
 				'_um_profiles_per_page'        => array(
 					'sanitize' => 'absint',
@@ -111,9 +111,6 @@ class Metabox {
 					'sanitize' => array( UM()->admin(), 'sanitize_user_field' ),
 				),
 				'_um_show_social'              => array(
-					'sanitize' => 'bool',
-				),
-				'_um_userinfo_animate'         => array(
 					'sanitize' => 'bool',
 				),
 				'_um_search'                   => array(
@@ -227,37 +224,6 @@ class Metabox {
 
 		return $value;
 	}
-
-
-	/**
-	 * @param array|string $value
-	 *
-	 * @return array|string
-	 */
-	public function sanitize_md_view_types( $value ) {
-		$view_types = array_map(
-			function ( $item ) {
-				return $item['title'];
-			},
-			UM()->module( 'member-directory' )->config()->get( 'view_types' )
-		);
-		$view_types = array_keys( $view_types );
-
-		if ( '' !== $value ) {
-			$value = array_filter(
-				$value,
-				function( $v, $k ) use ( $view_types ) {
-					return in_array( sanitize_key( $k ), $view_types, true ) && 1 === (int) $v;
-				},
-				ARRAY_FILTER_USE_BOTH
-			);
-
-			$value = array_map( 'sanitize_key', $value );
-		}
-
-		return $value;
-	}
-
 
 	/**
 	 * Sanitize member directory meta when wp-admin form has been submitted
@@ -561,7 +527,7 @@ class Metabox {
 
 		if ( 'um_directory' === $post->post_type ) {
 
-			if ( ! empty( $value ) && in_array( $key, array( '_um_view_types', '_um_roles', '_um_roles_can_search', '_um_roles_can_filter' ), true ) ) {
+			if ( ! empty( $value ) && in_array( $key, array( '_um_roles', '_um_roles_can_search', '_um_roles_can_filter' ), true ) ) {
 				$value = array_keys( $value );
 			} elseif ( '_um_search_filters' === $key ) {
 

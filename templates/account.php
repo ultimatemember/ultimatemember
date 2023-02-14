@@ -28,7 +28,7 @@
 			 */
 			do_action( 'um_account_page_hidden_fields', $args ); ?>
 
-			<div class="um-account-meta radius-<?php echo esc_attr( UM()->options()->get( 'profile_photocorner' ) ); ?> uimob340-show uimob500-show">
+			<div class="um-account-meta uimob340-show uimob500-show">
 
 				<div class="um-account-meta-img">
 					<a href="<?php echo esc_url( um_user_profile_url() ); ?>"><?php echo get_avatar( um_user( 'ID' ), 120 ); ?></a>
@@ -49,7 +49,7 @@
 			
 			<div class="um-account-side uimob340-hide uimob500-hide">
 
-				<div class="um-account-meta radius-<?php echo esc_attr( UM()->options()->get( 'profile_photocorner' ) ); ?>">
+				<div class="um-account-meta">
 
 					<div class="um-account-meta-img uimob800-hide">
 						<a href="<?php echo esc_url( um_user_profile_url() ); ?>">

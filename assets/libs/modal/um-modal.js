@@ -32,7 +32,7 @@
 			content: '',
 		};
 
-		this.defaultTemplate = '<div class="um-modal"><span class="um-modal-close">&times;</span><div class="um-modal-header"></div><div class="um-modal-body"></div><div class="um-modal-footer"></div></div>';
+		this.defaultTemplate = '<div class="um um-modal"><span class="um-modal-close">&times;</span><div class="um-modal-header"></div><div class="um-modal-body"></div><div class="um-modal-footer"></div></div>';
 
 	}
 
@@ -356,7 +356,8 @@
 			let $modal = this.getModal( modal );
 
 			if ( $modal ) {
-				$modal.removeClass( 'uimob340' ).removeClass( 'uimob500' ).removeClass( 'uimob800' ).removeClass( 'uimob960' );
+				$modal.css( {opacity: 0} );
+				//$modal.removeClass( 'uimob340' ).removeClass( 'uimob500' ).removeClass( 'uimob800' ).removeClass( 'uimob960' );
 
 				const modalHeightDiff = 30;
 				let modalBodyHeightDiff = $modal.find('.um-modal-header').outerHeight() * 1;
@@ -386,22 +387,22 @@
 					modalStyle.bottom = 0;
 					modalStyle.height = h;
 					modalStyle.width = w;
-					$modal.addClass( 'uimob340' );
+					//$modal.addClass( 'uimob340' );
 				} else if ( w <= 500 ) {
 					modalStyle.bottom = 0;
 					modalStyle.height = h;
 					modalStyle.width = w;
-					$modal.addClass( 'uimob500' );
+					//$modal.addClass( 'uimob500' );
 				} else if ( w <= 800 ) {
 					modalStyle.bottom = (h - $modal.innerHeight()) / 2 + 'px';
 					modalStyle.maxHeight = h - modalHeightDiff;
 					modalBodyStyle.maxHeight = modalStyle.maxHeight - modalBodyHeightDiff;
-					$modal.addClass( 'uimob800' );
+					//$modal.addClass( 'uimob800' );
 				} else if ( w <= 960 ) {
 					modalStyle.bottom = (h - $modal.innerHeight()) / 2 + 'px';
 					modalStyle.maxHeight = h - modalHeightDiff;
 					modalBodyStyle.maxHeight = modalStyle.maxHeight - modalBodyHeightDiff;
-					$modal.addClass( 'uimob960' );
+					//$modal.addClass( 'uimob960' );
 				} else if ( w > 960 ) {
 					modalStyle.bottom = (h - $modal.innerHeight()) / 2 + 'px';
 					modalStyle.maxHeight = h - modalHeightDiff;
@@ -426,6 +427,7 @@
 				modalStyle = wp.hooks.applyFilters( 'um-modal-responsive', modalStyle, $modal );
 
 				$modal.css( modalStyle );
+				$modal.css( {opacity: 1} );
 				$modal.find('.um-modal-body').css( modalBodyStyle );
 			}
 
@@ -485,6 +487,12 @@
 			return $modal;
 		},
 
+		buttonClick: function(e) {
+			e.preventDefault();
+			wp.hooks.doAction( 'um-modal-button-clicked', e.data.settings, e );
+			UM.modal.addModal( e.data.settings, e );
+		},
+
 		/**
 		 * Stop event propagation
 		 * @param {object} e  jQuery.Event
@@ -492,6 +500,20 @@
 		stopEvent: function (e) {
 			e.preventDefault();
 			e.stopPropagation();
+		},
+
+		destroy: function (modal) {
+			let $modal = this.getModal( modal );
+			if ( $modal ) {
+				wp.hooks.doAction( 'um-modal-before-destroy', $modal );
+				$modal.each( function( element ) {
+					let $button = $( this )[0].umModalOptions.relatedButton;
+					$button.off( 'click', UM.modal.buttonClick );
+					$button.data( 'um-modal-ready', false );
+				});
+				this.clear();
+			}
+			return $modal;
 		}
 	};
 
@@ -531,19 +553,8 @@
 			let $button = $( this );
 
 			if ( ! $button.data( 'um-modal-ready' ) ) {
-				$button.on( 'click', function(e) {
-					e.preventDefault();
-					// console.log( this );
-					// console.log( $button );
-					// console.log( e );
-
-					settings.relatedButton = $button;
-
-					wp.hooks.doAction( 'um-modal-button-clicked', settings, e );
-
-					UM.modal.addModal( settings, e );
-				});
-
+				settings.relatedButton = $button;
+				$button.on( 'click', { settings: settings }, UM.modal.buttonClick );
 				$button.data( 'um-modal-ready', true );
 			}
 		});

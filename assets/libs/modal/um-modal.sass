@@ -54,8 +54,8 @@
     -webkit-font-smoothing: antialiased
     -moz-osx-font-smoothing: grayscale
 
-  .#{$prefix}modal-close
-    color: #fff
+  & > .#{$prefix}modal-close
+    color: $um-text
     cursor: pointer
     display: block
     font-size: 24px
@@ -68,11 +68,12 @@
     z-index: 10
     &.#{$prefix}modal-close-fixed
       position: fixed
+      color: $white
 
 
   .#{$prefix}modal-header
     & + .#{$prefix}modal-body
-      background: #fff
+      background: $white
       box-sizing: border-box
       min-height: 3px
       max-height: inherit
@@ -86,7 +87,7 @@
           float: left
 
   &.loading
-    background-color: #fff
+    background-color: $white
     .#{$prefix}modal-body
       background: #fff url(images/loading.gif) no-repeat center
       min-height: 100px
@@ -95,17 +96,17 @@
 
 
   .#{$prefix}modal-header
-    background-color: #{$um-base}
+    background-color: $um-primary
     border-radius: 3px 3px 0 0
     height: 44px
     line-height: 40px
-    color: #fff
+    color: $um-text
     padding: 2px 20px
     box-sizing: border-box
     font-size: 17px
 
   .#{$prefix}modal-footer
-    background-color: #fff
+    background-color: $white
     -moz-border-radius: 0 0 3px 3px
     -webkit-border-radius: 0 0 3px 3px
     border-radius: 0 0 3px 3px
@@ -123,7 +124,7 @@
     border-radius: 3px
     padding: 0 20px
     text-align: center
-    color: #fff
+    color: $white
     vertical-align: middle
     font-size: 14px
     box-sizing: border-box

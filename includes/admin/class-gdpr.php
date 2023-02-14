@@ -43,7 +43,7 @@ if ( ! class_exists( 'um\admin\GDPR' ) ) {
 		 */
 		function plugin_add_suggested_privacy_content() {
 			$content = $this->plugin_get_default_privacy_content();
-			wp_add_privacy_policy_content( ultimatemember_plugin_name, $content );
+			wp_add_privacy_policy_content( UM_PLUGIN_NAME, $content );
 		}
 	}
 }

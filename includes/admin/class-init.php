@@ -46,7 +46,7 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 		 * Init constructor.
 		 */
 		public function __construct() {
-			$this->templates_path = um_path . 'includes/admin/templates/';
+			$this->templates_path = UM_PATH . 'includes/admin/templates/';
 
 			add_action( 'admin_init', array( &$this, 'admin_init' ), 0 );
 		}
@@ -365,6 +365,40 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 				);
 
 				$value = array_map( 'sanitize_text_field', $value );
+			}
+
+			return $value;
+		}
+
+		/**
+		 * @param array|string $value
+		 *
+		 * @return array|string
+		 */
+		public function sanitize_avatar( $value ) {
+			if ( ! is_array( $value ) ) {
+				$value = sanitize_text_field( $value );
+				return $value;
+			}
+
+			if ( array_key_exists( 'url', $value ) ) {
+				$value['url'] = esc_url_raw( $value['url'] );
+			}
+
+			if ( array_key_exists( 'id', $value ) ) {
+				$value['id'] = absint( $value['id'] );
+			}
+
+			if ( array_key_exists( 'width', $value ) ) {
+				$value['width'] = absint( $value['width'] );
+			}
+
+			if ( array_key_exists( 'height', $value ) ) {
+				$value['height'] = absint( $value['height'] );
+			}
+
+			if ( array_key_exists( 'thumbnail', $value ) ) {
+				$value['thumbnail'] = sanitize_text_field( $value['thumbnail'] );
 			}
 
 			return $value;
@@ -876,6 +910,7 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 		 */
 		public function includes() {
 			$this->actions_listener();
+			$this->builder();
 			$this->columns();
 			$this->db_upgrade();
 			$this->enqueue();
@@ -886,6 +921,46 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			$this->settings();
 			$this->site_health();
 			$this->users_columns();
+		}
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return Builder
+		 */
+		function builder() {
+			if ( empty( UM()->classes['um\admin\builder'] ) ) {
+				UM()->classes['um\admin\builder'] = new Builder();
+			}
+			return UM()->classes['um\admin\builder'];
+		}
+
+		/**
+		 * @since 3.0
+		 *
+		 * @param bool|array $data
+		 *
+		 * @return Forms
+		 */
+		function forms( $data = false ) {
+			if ( ! isset( UM()->classes[ 'um\admin\forms_' . $data['class'] ] ) || empty( UM()->classes[ 'um\admin\forms_' . $data['class'] ] ) ) {
+				UM()->classes[ 'um\admin\forms_' . $data['class'] ] = new Forms( $data );
+			}
+			return UM()->classes[ 'um\admin\forms_' . $data['class'] ];
+		}
+
+		/**
+		 * @since 3.0
+		 *
+		 * @param bool|array $data
+		 *
+		 * @return Forms_Settings
+		 */
+		function forms_settings( $data = false ) {
+			if ( ! isset( UM()->classes[ 'um\admin\forms_settings_' . $data['class'] ] ) || empty( UM()->classes[ 'um\admin\forms_settings_' . $data['class'] ] ) ) {
+				UM()->classes[ 'um\admin\forms_settings_' . $data['class'] ] = new Forms_Settings( $data );
+			}
+			return UM()->classes[ 'um\admin\forms_settings_' . $data['class'] ];
 		}
 
 		/**
@@ -1030,6 +1105,18 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 				UM()->classes['um\admin\settings'] = new Settings();
 			}
 			return UM()->classes['um\admin\settings'];
+		}
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return Fields_Group
+		 */
+		public function fields_group() {
+			if ( empty( UM()->classes['um\admin\fields_group'] ) ) {
+				UM()->classes['um\admin\fields_group'] = new Fields_Group();
+			}
+			return UM()->classes['um\admin\fields_group'];
 		}
 	}
 }

@@ -52,13 +52,13 @@ $fields = array(
 	array(
 		'id'    => '_um_show_userinfo',
 		'type'  => 'checkbox',
-		'label' => __( 'Show extra user information below tagline?', 'ultimate-member' ),
+		'label' => __( 'Show extra user information in popup?', 'ultimate-member' ),
 		'value' => (bool) get_post_meta( $post_id, '_um_show_userinfo', true ),
 	),
 	array(
 		'id'                  => '_um_reveal_fields',
 		'type'                => 'multi_selects',
-		'label'               => __( 'Choose field(s) to display in extra user information section', 'ultimate-member' ),
+		'label'               => __( 'Choose field(s) to display in extra user information popup', 'ultimate-member' ),
 		'value'               => $_um_reveal_fields,
 		'add_text'            => __( 'Add New Custom Field', 'ultimate-member' ),
 		'conditional'         => array( '_um_show_userinfo', '=', 1 ),
@@ -69,16 +69,8 @@ $fields = array(
 	array(
 		'id'          => '_um_show_social',
 		'type'        => 'checkbox',
-		'label'       => __( 'Show social connect icons in extra user information section', 'ultimate-member' ),
+		'label'       => __( 'Show social connect icons in extra user information popup', 'ultimate-member' ),
 		'value'       => (bool) get_post_meta( $post_id, '_um_show_social', true ),
-		'conditional' => array( '_um_show_userinfo', '=', 1 ),
-	),
-	array(
-		'id'          => '_um_userinfo_animate',
-		'type'        => 'checkbox',
-		'label'       => __( 'Hide extra user information to the reveal section', 'ultimate-member' ),
-		'description' => __( 'If not checked always shown', 'ultimate-member' ),
-		'value'       => (bool) get_post_meta( $post_id, '_um_userinfo_animate', true ),
 		'conditional' => array( '_um_show_userinfo', '=', 1 ),
 	),
 );
@@ -109,7 +101,7 @@ $fields = apply_filters( 'um_admin_extend_directory_options_profile', $fields );
 
 <div class="um-admin-metabox">
 	<?php
-	UM()->admin_forms(
+	UM()->admin()->forms(
 		array(
 			'class'     => 'um-member-directory-profile um-half-column',
 			'prefix_id' => 'um_metadata',

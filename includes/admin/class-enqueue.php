@@ -15,7 +15,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 	 */
 	final class Enqueue extends \um\common\Enqueue {
 
-
 		/**
 		 * Enqueue constructor.
 		 */
@@ -38,6 +37,7 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			// @since 3.0
 			add_action( 'load-ultimate-member_page_um-modules', array( &$this, 'modules_page' ) );
 			add_action( 'load-ultimate-member_page_um_roles', array( &$this, 'roles_page' ) );
+			add_action( 'load-ultimate-member_page_um_fields_groups', array( &$this, 'fields_groups_page' ) );
 			add_action( 'load-toplevel_page_ultimatemember', array( &$this, 'settings_page' ) );
 
 			add_action( 'load-customize.php', array( &$this, 'navmenu_page' ) );
@@ -51,7 +51,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			add_action( 'load-post-new.php', array( &$this, 'post_page' ) );
 			add_action( 'load-post.php', array( &$this, 'post_page' ) );
 		}
-
 
 		/**
 		 * Adds class to our admin pages
@@ -67,7 +66,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			return $classes;
 		}
 
-
 		/**
 		 * @since 3.0
 		 */
@@ -76,7 +74,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 				add_action( 'admin_enqueue_scripts', array( &$this, 'forms_page_scripts' ) );
 			}
 		}
-
 
 		/**
 		 * @since 3.0
@@ -89,14 +86,12 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			}
 		}
 
-
 		/**
 		 * @since 3.0
 		 */
 		function modules_page() {
 			add_action( 'admin_enqueue_scripts', array( &$this, 'modules_page_scripts' ) );
 		}
-
 
 		/**
 		 * @since 3.0
@@ -105,6 +100,12 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			add_action( 'admin_enqueue_scripts', array( &$this, 'roles_page_scripts' ) );
 		}
 
+		/**
+		 * @since 3.0
+		 */
+		function fields_groups_page() {
+			add_action( 'admin_enqueue_scripts', array( &$this, 'fields_groups_page_scripts' ) );
+		}
 
 		/**
 		 * @since 3.0
@@ -113,14 +114,12 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			add_action( 'admin_enqueue_scripts', array( &$this, 'settings_page_scripts' ) );
 		}
 
-
 		/**
 		 * @since 3.0
 		 */
 		function navmenu_page() {
 			add_action( 'admin_enqueue_scripts', array( &$this, 'navmenu_page_scripts' ) );
 		}
-
 
 		/**
 		 * @since 2.0
@@ -129,14 +128,12 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			add_action( 'admin_enqueue_scripts',  array( &$this, 'load_role_wrapper' ) );
 		}
 
-
 		/**
 		 * @since 3.0
 		 */
 		function wp_users_page() {
 			add_action( 'admin_enqueue_scripts',  array( &$this, 'users_page_scripts' ) );
 		}
-
 
 		/**
 		 * @since 3.0
@@ -147,7 +144,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			wp_enqueue_style( 'um_admin_modal' );
 		}
 
-
 		/**
 		 * @since 3.0
 		 */
@@ -155,7 +151,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			wp_register_style( 'um_admin_modules', $this->urls['css'] . 'admin-modules' . $this->suffix . '.css', array(), UM_VERSION );
 			wp_enqueue_style( 'um_admin_modules' );
 		}
-
 
 		/**
 		 * @since 3.0
@@ -165,6 +160,13 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			wp_enqueue_style( 'um_admin_roles' );
 		}
 
+		/**
+		 * @since 3.0
+		 */
+		function fields_groups_page_scripts() {
+			wp_register_style( 'um_admin_fields_groups', $this->urls['css'] . 'admin-fields-groups' . $this->suffix . '.css', array(), UM_VERSION );
+			wp_enqueue_style( 'um_admin_fields_groups' );
+		}
 
 		/**
 		 * @since 3.0
@@ -175,7 +177,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			wp_register_style( 'um_admin_dashboard', $this->urls['css'] . 'admin-dashboard' . $this->suffix . '.css', array(), UM_VERSION );
 			wp_enqueue_style( 'um_admin_dashboard' );
 		}
-
 
 		/**
 		 * @since 3.0
@@ -189,7 +190,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			wp_register_style( 'um_admin_modules', $this->urls['css'] . 'admin-modules' . $this->suffix . '.css', array(), UM_VERSION );
 			wp_enqueue_style( 'um_admin_modules' );
 		}
-
 
 		/**
 		 * @since 3.0
@@ -222,7 +222,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			wp_enqueue_style( 'um_admin_navmenu' );
 		}
 
-
 		/**
 		 * @since 3.0
 		 */
@@ -251,7 +250,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			wp_register_style( 'um_admin_forms-screen', $this->urls['css'] . 'admin-forms-screen' . $this->suffix . '.css', array(), UM_VERSION );
 			wp_enqueue_style( 'um_admin_forms-screen' );
 		}
-
 
 		/**
 		 * @since 3.0
@@ -289,7 +287,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			wp_enqueue_style( 'um_admin_builder' );
 		}
 
-
 		/**
 		 * Print editor scripts if they are not printed by default
 		 */
@@ -318,7 +315,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			$class::editor_js();
 		}
 
-
 		/**
 		 * @since 3.0
 		 */
@@ -326,7 +322,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			wp_register_style( 'um_admin_directories-screen', $this->urls['css'] . 'admin-directories-screen' . $this->suffix . '.css', array(), UM_VERSION );
 			wp_enqueue_style( 'um_admin_directories-screen' );
 		}
-
 
 		/**
 		 * Load JS for Add/Edit User form
@@ -339,7 +334,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			wp_localize_script( 'um_admin_role-wrapper', 'um_roles', (array) $localize_roles_data );
 			wp_enqueue_script( 'um_admin_role-wrapper' );
 		}
-
 
 		/**
 		 * Add Gutenberg category for UM shortcodes
@@ -365,7 +359,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 				)
 			);
 		}
-
 
 		function block_editor() {
 			/**
@@ -405,7 +398,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 				do_action( 'um_load_gutenberg_js' );
 			}
 
-
 			$enable_blocks = UM()->options()->get( 'enable_blocks' );
 			if ( ! empty( $enable_blocks ) ) {
 				wp_register_script( 'um_admin_blocks-shortcode', $this->urls['js'] . 'admin/blocks-shortcode' . $this->suffix . '.js', array( 'wp-i18n', 'wp-blocks', 'wp-components' ), UM_VERSION, true );
@@ -433,7 +425,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 
 				wp_enqueue_script( 'um_admin_blocks-shortcode' );
 
-
 				/**
 				 * Create gutenberg blocks
 				 */
@@ -450,7 +441,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 				) );
 			}
 		}
-
 
 		/**
 		 * wp-admin assets registration + common enqueue
@@ -480,13 +470,10 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 				// um-tipsy is required for tipsy.js
 				// wp-color-picker is required for colorpickers init
 				// um-helptip is required for help tooltips
-				// todo 'um_datetime_date', 'um_datetime_time', 'um_datetime_locale' deprecate
 				$deps = array( 'jquery', 'wp-util', 'um-tipsy', 'wp-color-picker', 'um-helptip' );
-				$deps = array_merge( $deps, $this->pickadate_deps['js'] );
 				wp_register_script( 'um_admin_own', $this->urls['js'] . 'admin/own' . $this->suffix . '.js', $deps, UM_VERSION, true );
 
 				$deps = array( 'wp-color-picker', 'um-tipsy', 'um-helptip', 'um-fontawesome', 'um-ionicons' );
-				$deps = array_merge( $deps, $this->pickadate_deps['css'] );
 				// Only UM pages CSS but general for all UM + Extensions
 				wp_register_style( 'um_admin_own', $this->urls['css'] . 'admin-own' . $this->suffix . '.css', $deps, UM_VERSION );
 
@@ -496,14 +483,10 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 				// um-tipsy is required for tipsy.js
 				// wp-color-picker is required for colorpickers init
 				// um-helptip is required for help tooltips
-				// todo 'um_datetime_date', 'um_datetime_time', 'um_datetime_locale' deprecate
 				$deps = array( 'jquery', 'wp-util', 'wp-i18n', 'wp-color-picker', 'jquery-ui-sortable', 'jquery-ui-slider', 'jquery-ui-draggable', 'select2', 'um-helptip' );
-				$deps = array_merge( $deps, $this->pickadate_deps['js'] );
 				wp_register_script( 'um_admin_forms', $this->urls['js'] . 'admin/forms' . $this->suffix . '.js', $deps, UM_VERSION, true );
 
 				$deps = array( 'wp-color-picker', 'um-jquery-ui', 'select2' );
-				$deps = array_merge( $deps, $this->pickadate_deps['css'] );
-				// todo 'um_datetime_date', 'um_datetime_time', 'um_datetime_locale' deprecate
 				wp_register_style( 'um_admin_forms', $this->urls['css'] . 'admin-forms' . $this->suffix . '.css', $deps, UM_VERSION );
 
 				wp_register_script( 'um_admin_modal', $this->urls['js'] . 'admin/modal' . $this->suffix . '.js', array( 'um-modal' ), UM_VERSION, true );
@@ -522,24 +505,23 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			}
 		}
 
-
 		function enqueue_frontend_preview_assets() {
 			wp_register_script( 'um_fileupload', $this->urls['libs'] . 'jquery-upload-file/jquery.uploadfile' . $this->suffix . '.js', array( 'jquery', 'jquery-form' ), UM_VERSION, true );
-			wp_register_script( 'um_crop', $this->urls['libs'] . 'cropper/cropper' . $this->suffix . '.js', array( 'jquery' ), UM_VERSION, true );
+//			wp_register_script( 'um_crop', $this->urls['libs'] . 'cropper/cropper' . $this->suffix . '.js', array( 'jquery' ), UM_VERSION, true );
 			wp_register_script( 'um_functions', $this->urls['js'] . 'um-functions' . $this->suffix . '.js', array( 'jquery', 'um-tipsy' ), UM_VERSION, true );
 
-			$deps = array_merge( $this->pickadate_deps['js'], array( 'um_functions', 'um_crop', 'um-raty', 'select2', 'um_fileupload' ) );
+			$deps = array( 'um_functions', /*'um_crop',*/ 'um-raty', 'select2', 'um_fileupload' );
 			wp_register_script( 'um_scripts', $this->urls['js'] . 'um-scripts' . $this->suffix . '.js', $deps, UM_VERSION, true );
 			wp_register_script( 'um_responsive', $this->urls['js'] . 'um-responsive' . $this->suffix . '.js', array( 'um_scripts' ), UM_VERSION, true );
 
-			wp_register_style( 'um_crop', $this->urls['libs'] . 'cropper/cropper' . $this->suffix . '.css', array(), UM_VERSION );
+			//wp_register_style( 'um_crop', $this->urls['libs'] . 'cropper/cropper' . $this->suffix . '.css', array(), UM_VERSION );
 			wp_register_style( 'um_responsive', $this->urls['css'] . 'um-responsive.css', array(), UM_VERSION );
-			wp_register_style( 'um_styles', $this->urls['css'] . 'um-styles' . $this->suffix . '.css', array(), UM_VERSION );
+			//wp_register_style( 'um_styles', $this->urls['css'] . 'um-styles' . $this->suffix . '.css', array(), UM_VERSION );
 			wp_register_style( 'um_profile', $this->urls['css'] . 'um-profile.css', array(), UM_VERSION );
 			wp_register_style( 'um_account', $this->urls['css'] . 'um-account.css', array(), UM_VERSION );
 			wp_register_style( 'um_misc', $this->urls['css'] . 'um-misc.css', array(), UM_VERSION );
 
-			$deps = array_merge( $this->pickadate_deps['css'], array( 'um_crop', 'um-tipsy', 'um-raty', 'um_responsive', 'um_styles', 'um_profile', 'um_account', 'um_misc', 'select2' ) );
+			$deps = array( /*'um_crop',*/ 'um-tipsy', 'um-raty', 'um_responsive', /*'um_styles',*/ 'um_profile', 'um_account', 'um_misc', 'select2' );
 			wp_register_style( 'um_default_css', $this->urls['css'] . 'um-old-default.css', $deps, UM_VERSION );
 		}
 	}

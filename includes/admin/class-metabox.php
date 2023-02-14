@@ -1,12 +1,11 @@
 <?php
 namespace um\admin;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\admin\Metabox' ) ) {
-
 
 	/**
 	 * Class Metabox
@@ -15,18 +14,15 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 	 */
 	class Metabox {
 
-
 		/**
 		 * @var bool
 		 */
 		private $form_nonce_added = false;
 
-
 		/**
 		 * @var bool
 		 */
 		private $custom_nonce_added = false;
-
 
 		/**
 		 * @deprecated 3.0
@@ -34,7 +30,6 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 		 * @var bool
 		 */
 		var $init_icon = false;
-
 
 		/**
 		 * Metabox constructor.
@@ -58,6 +53,9 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 
 			//roles metaboxes
 			add_action( 'um_roles_add_meta_boxes', array( &$this, 'add_metabox_role' ) );
+
+			// fields groups metaboxes
+			add_action( 'um_fields_groups_add_meta_boxes', array( &$this, 'add_metabox_fields_group' ) );
 
 			add_filter( 'um_builtin_validation_types_continue_loop', array( &$this, 'validation_types_continue_loop' ), 1, 4 );
 			add_filter( 'um_restrict_content_hide_metabox', array( &$this, 'hide_metabox_restrict_content_shop' ), 10, 1 );
@@ -626,7 +624,7 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 				'create'
 			);
 
-			UM()->admin_forms(
+			UM()->admin()->forms(
 				array(
 					'class'           => 'um-restrict-content um-third-column',
 					'prefix_id'       => 'um_content_restriction',
@@ -783,7 +781,7 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 				'edit'
 			);
 
-			UM()->admin_forms(
+			UM()->admin()->forms(
 				array(
 					'class'           => 'um-restrict-content um-third-column',
 					'prefix_id'       => 'um_content_restriction',
@@ -845,13 +843,40 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 				$path = $matches[0];
 				$box['id'] = preg_replace('~(\\{[^}]+\\})~','', $box['id'] );
 			} else {
-				$path = um_path;
+				$path = UM_PATH;
 			}
 
 			$path = str_replace('{','', $path );
 			$path = str_replace('}','', $path );
 
 			include_once trailingslashit( $path ) . 'includes/admin/templates/role/'. $box['id'] . '.php';
+			//wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_role_nonce' );
+		}
+
+		/**
+		 * Load a role metabox
+		 *
+		 * @param $object
+		 * @param $box
+		 */
+		function load_metabox_fields_group( $object, $box ) {
+			global $post;
+
+			$box['id'] = str_replace( 'um-admin-form-', '', $box['id'] );
+
+			preg_match('#\{.*?\}#s', $box['id'], $matches);
+
+			if ( isset($matches[0]) ){
+				$path = $matches[0];
+				$box['id'] = preg_replace('~(\\{[^}]+\\})~','', $box['id'] );
+			} else {
+				$path = UM_PATH;
+			}
+
+			$path = str_replace('{','', $path );
+			$path = str_replace('}','', $path );
+
+			include_once trailingslashit( $path ) . 'includes/admin/templates/fields-group/'. $box['id'] . '.php';
 			//wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_role_nonce' );
 		}
 
@@ -868,7 +893,7 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			$box['id'] = str_replace( 'um-admin-form-','', $box['id'] );
 
 			if ( 'builder' === $box['id'] ) {
-				UM()->builder()->form_id = get_the_ID();
+				UM()->admin()->builder()->form_id = get_the_ID();
 			}
 
 			preg_match('#\{.*?\}#s', $box['id'], $matches);
@@ -877,7 +902,7 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 				$path = $matches[0];
 				$box['id'] = preg_replace('~(\\{[^}]+\\})~','', $box['id'] );
 			} else {
-				$path = um_path;
+				$path = UM_PATH;
 			}
 
 			$path = str_replace('{','', $path );
@@ -909,7 +934,7 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 				$path = $matches[0];
 				$box['id'] = preg_replace('~(\\{[^}]+\\})~','', $box['id'] );
 			} else {
-				$path = um_path;
+				$path = UM_PATH;
 			}
 
 			$path = str_replace('{','', $path );
@@ -1066,6 +1091,74 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 
 
 			foreach ( $roles_metaboxes as $metabox ) {
+				add_meta_box(
+					$metabox['id'],
+					$metabox['title'],
+					$metabox['callback'],
+					$metabox['screen'],
+					$metabox['context'],
+					$metabox['priority']
+				);
+			}
+		}
+
+		/**
+		 * Add role metabox
+		 */
+		public function add_metabox_fields_group() {
+			$callback = array( &$this, 'load_metabox_fields_group' );
+
+			$fields_groups_metaboxes = array(
+				array(
+					'id'       => 'um-admin-form-publish',
+					'title'    => __( 'Publish', 'ultimate-member' ),
+					'callback' => $callback,
+					'screen'   => 'um_fields_group_meta',
+					'context'  => 'side',
+					'priority' => 'default',
+				),
+				array(
+					'id'       => 'um-admin-form-fields',
+					'title'    => __( 'Fields', 'ultimate-member' ),
+					'callback' => $callback,
+					'screen'   => 'um_fields_group_meta',
+					'context'  => 'normal',
+					'priority' => 'default',
+				),
+			);
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_admin_fields_group_metaboxes
+			 * @description Extend metaboxes at Add/Edit User Role
+			 * @input_vars
+			 * [{"var":"$roles_metaboxes","type":"array","desc":"Metaboxes at Add/Edit UM Role"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_admin_fields_group_metaboxes', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_admin_fields_group_metaboxes', 'my_admin_role_metaboxes', 10, 1 );
+			 * function my_admin_role_metaboxes( $roles_metaboxes ) {
+			 *     // your code here
+			 *     $roles_metaboxes[] = array(
+			 *         'id'        => 'um-admin-form-your-custom',
+			 *         'title'     => __( 'My Roles Metabox', 'ultimate-member' ),
+			 *         'callback'  => 'my-metabox-callback',
+			 *         'screen'    => 'um_role_meta',
+			 *         'context'   => 'side',
+			 *         'priority'  => 'default'
+			 *     );
+			 *
+			 *     return $roles_metaboxes;
+			 * }
+			 * ?>
+			 */
+			$fields_groups_metaboxes = apply_filters( 'um_admin_fields_group_metaboxes', $fields_groups_metaboxes );
+
+			foreach ( $fields_groups_metaboxes as $metabox ) {
 				add_meta_box(
 					$metabox['id'],
 					$metabox['title'],

@@ -56,7 +56,7 @@ global $post;
 		);
 	}
 
-	UM()->admin_forms(
+	UM()->admin()->forms(
 		array(
 			'class'     => 'um-form-login-recaptcha um-top-label',
 			'prefix_id' => 'form',

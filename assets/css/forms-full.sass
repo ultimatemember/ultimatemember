@@ -2,10 +2,10 @@
 @import "selectors"
 @import "mixins"
 @import "helptip.sass"
+@import "common-full.sass"
 
 .um
   width: 100%
-  font-size: $um-font-size
   .#{$prefix}frontend-form-notice
     font-size: inherit
     display: inline-block
@@ -39,13 +39,50 @@
     .#{$prefix}form-row
       padding: 0
       margin: 0 0 15px 0
-      &.#{$prefix}field-block-type,
       &.#{$prefix}field-divider-type,
       &.#{$prefix}field-hidden-type,
       &.#{$prefix}field-label-type,
-      &.#{$prefix}field-shortcode-type,
       &.#{$prefix}field-spacing-type
         margin: 0
+      &.#{$prefix}field-spacing-type
+        .#{$prefix}forms-field
+          display: block
+          width: 100%
+          margin: 0
+          padding: 0
+      &.#{$prefix}field-divider-type
+        hr
+          width: 100%
+          display: block
+          margin: 0 0 15px 0
+          padding: 0
+          border-bottom-width: 0
+          border-left-width: 0
+          border-right-width: 0
+          &.#{$prefix}forms-divider-solid-style
+            border-style: solid
+          &.#{$prefix}forms-divider-dotted-style
+            border-style: dotted
+          &.#{$prefix}forms-divider-dashed-style
+            border-style: dashed
+          &.#{$prefix}forms-divider-double-style
+            border-style: double
+        .#{$prefix}forms-field-text-divider
+          +flex( row, space-between, center, nowrap )
+          width: 100%
+          gap: 8px
+          margin: 0 0 15px 0
+          padding: 0
+          hr
+            width: 30%
+            margin: 0
+            padding: 0
+          & > span
+            display: flex
+            justify-content: center
+            text-align: center
+            width: calc( 40% - 16px )
+            flex-wrap: wrap
       +flex( row, flex-start, baseline, wrap )
       .#{$prefix}form-row-label
         width: 30%
@@ -139,21 +176,21 @@
     .#{$prefix}form-buttons-section
       +flex( row, flex-start, baseline, wrap )
       margin: 0 0 0 calc( 30% + 10px )
-      input[type="submit"],input[type="button"], button
-        background-color: $button-bg
-        border: 1px solid $button-bg
-        border-radius: $button-border-radius
-        color: $button-color
-        text-align: center
-        font-size: inherit
-        font-weight: $bold-weight
-        padding: 15px 16px
-        margin: 0 8px 0 0
-        +box-shadow-xs
-        &:hover
-          background-color: $button-bg-hover
-          border: 1px solid $button-bg-hover
-          cursor: pointer
+      //input[type="submit"],input[type="button"], button
+      //  background-color: $button-bg
+      //  border: 1px solid $button-bg
+      //  border-radius: $button-border-radius
+      //  color: $button-color
+      //  text-align: center
+      //  font-size: inherit
+      //  font-weight: $bold-weight
+      //  padding: 15px 16px
+      //  margin: 0 8px 0 0
+      //  +box-shadow-xs
+      //  &:hover
+      //    background-color: $button-bg-hover
+      //    border: 1px solid $button-bg-hover
+      //    cursor: pointer
     &.#{$prefix}top-label
       .#{$prefix}form-row
         +flex( column, flex-start, stretch, nowrap )
@@ -203,45 +240,6 @@
           margin: 0
           width: 100%
 
-  .#{$prefix}link
-    font-size: inherit
-    font-weight: $bold-weight
-    line-height: inherit
-    color: $link-color
-    text-decoration: none
-    border: none
-    outline: none
-    &:hover
-      font-weight: $bold-weight
-      color: $link-hover-color
-      text-decoration: none
-      border: none
-      outline: none
-    &:active
-      font-weight: $bold-weight
-      color: $link-hover-color
-      text-decoration: none
-      border: none
-      outline: none
-    &:visited
-      font-weight: $bold-weight
-      text-decoration: none
-      border: none
-      outline: none
-      &:not(.#{$prefix}link-always-active)
-        color: $gray-600
-    &:focus
-      font-weight: $bold-weight
-      color: $link-hover-color
-      text-decoration: none
-      border: none
-      outline: none
-    &:focus-visible
-      font-weight: $bold-weight
-      color: $link-color
-      text-decoration: none
-      border: none
-      outline: none
 
 .#{$prefix}uploaded-wrapper
   display: none

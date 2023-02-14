@@ -114,6 +114,8 @@ if ( ! class_exists( 'umm\member_directory\includes\admin\Site_Health' ) ) {
 						$key = substr($key, 3);
 					}
 
+					$view_type = get_post_meta( $key, '_um_view_type', true );
+
 					$info['ultimate-member-directory-' . $key ] = array(
 						'label'       => ' - ' . $directory . __( ' directory settings', 'ultimate-member' ),
 						'description' => __( 'This debug information for your Ultimate Member directory.', 'ultimate-member' ),
@@ -126,23 +128,15 @@ if ( ! class_exists( 'umm\member_directory\includes\admin\Site_Health' ) ) {
 								'label' => __( 'Template', 'ultimate-member' ),
 								'value' => get_post_meta( $key, '_um_directory_template', true ) ? get_post_meta( $key, '_um_directory_template', true ) : $labels['default'],
 							),
-							'um-directory-view_types' => array(
-								'label' => __( 'View type(s)', 'ultimate-member' ),
-								'value' => implode(', ', get_post_meta( $key, '_um_view_types', true ) ),
+							'um-directory-view_type' => array(
+								'label' => __( 'View type', 'ultimate-member' ),
+								'value' => $view_type,
 							),
 						),
 					);
 
-					if ( ! empty( get_post_meta( $key, '_um_view_types', true ) ) ) {
-						$info['ultimate-member-directory-' . $key ]['fields'] = array_merge(
-							$info['ultimate-member-directory-' . $key ]['fields'],
-							array(
-								'um-directory-default_view' => array(
-									'label' => __( 'Default view type', 'ultimate-member' ),
-									'value' => get_post_meta( $key, '_um_default_view', true ),
-								),
-							)
-						);
+					if ( 'grid' === $view_type ) {
+						$info['ultimate-member-directory-' . $key ]['fields']['um-directory-grid_columns'] = get_post_meta( $key, '_um_grid_columns', true );
 					}
 
 					if ( isset( $options[ get_post_meta( $key, '_um_sortby', true ) ] ) ) {
@@ -325,10 +319,6 @@ if ( ! class_exists( 'umm\member_directory\includes\admin\Site_Health' ) ) {
 							'um-directory-show_social' => array(
 								'label' => __( 'Show social connect icons in extra user information section', 'ultimate-member' ),
 								'value' => get_post_meta( $key,'_um_show_social', true ) ? $labels['yes'] : $labels['no'],
-							),
-							'um-directory-userinfo_animate' => array(
-								'label' => __( 'Hide extra user information to the reveal section', 'ultimate-member' ),
-								'value' => get_post_meta( $key,'_um_userinfo_animate', true ) ? $labels['yes'] : $labels['no'],
 							),
 							'um-directory-search' => array(
 								'label' => __( 'Enable Search feature', 'ultimate-member' ),

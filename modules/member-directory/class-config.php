@@ -109,14 +109,8 @@ class Config {
 		$this->view_types = apply_filters(
 			'um_member_directory_views',
 			array(
-				'grid' => array(
-					'title' => __( 'Grid', 'ultimate-member' ),
-					'icon'  => 'fas fa-th',
-				),
-				'list' => array(
-					'title' => __( 'List', 'ultimate-member' ),
-					'icon'  => 'fas fa-list',
-				),
+				'grid' => __( 'Grid', 'ultimate-member' ),
+				'list' => __( 'List', 'ultimate-member' ),
 			)
 		);
 	}
@@ -335,8 +329,8 @@ class Config {
 			'_um_core'                     => 'members',
 			'_um_template'                 => 'members',
 			'_um_mode'                     => 'directory',
-			'_um_view_types'               => array( 'grid' ),
-			'_um_default_view'             => 'grid',
+			'_um_view_type'                => 'grid',
+			'_um_grid_columns'             => 3,
 			'_um_roles'                    => array(),
 			'_um_has_profile_photo'        => 0,
 			'_um_has_cover_photo'          => 0,
@@ -355,7 +349,6 @@ class Config {
 			'_um_show_userinfo'            => 0,
 			'_um_reveal_fields'            => array(),
 			'_um_show_social'              => 0,
-			'_um_userinfo_animate'         => 1,
 			'_um_search'                   => 0,
 			'_um_roles_can_search'         => array(),
 			'_um_filters'                  => 0,

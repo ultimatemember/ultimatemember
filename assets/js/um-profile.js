@@ -34,7 +34,7 @@ jQuery(document).ready(function() {
 		return false;
 	});
 
-	jQuery(document.body).on('click', '.um-reset-profile-photo', function(e) {
+/*	jQuery(document.body).on('click', '.um-reset-profile-photo', function(e) {
 
 		jQuery('.um-profile-photo-img img').attr( 'src', jQuery(this).attr( 'data-default_src' ) );
 
@@ -56,7 +56,7 @@ jQuery(document).ready(function() {
 
 		jQuery(this).parents('li').hide();
 		return false;
-	});
+	});*/
 
 	jQuery(document.body).on('click', '.um-reset-cover-photo', function(e){
 		var obj = jQuery(this);

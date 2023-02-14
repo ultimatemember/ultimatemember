@@ -223,12 +223,12 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->honeypot = 'um_request';
 
 				// run activation
-				register_activation_hook( um_plugin, array( $this->install(), 'activation' ) );
+				register_activation_hook( UM_PLUGIN, array( $this->install(), 'activation' ) );
 				if ( is_multisite() && ! defined( 'DOING_AJAX' ) ) {
 					add_action( 'wp_loaded', array( $this->install(), 'maybe_network_activation' ) );
 				}
 
-				register_deactivation_hook( um_plugin, array( &$this, 'deactivation' ) );
+				register_deactivation_hook( UM_PLUGIN, array( &$this, 'deactivation' ) );
 
 				// textdomain loading
 				$this->localize();
@@ -850,13 +850,16 @@ if ( ! class_exists( 'UM' ) ) {
 
 		/**
 		 * @since 2.0.45
-		 * @return um\admin\core\Admin_Theme_Updater()
+		 *
+		 * Legacy since 3.0
+		 *
+		 * @return um\legacy\admin\core\Admin_Theme_Updater()
 		 */
 		function theme_updater() {
-			if ( empty( $this->classes['theme_updater'] ) ) {
-				$this->classes['theme_updater'] = new um\admin\core\Admin_Theme_Updater();
+			if ( empty( $this->classes['um\legacy\admin\core\theme_updater'] ) ) {
+				$this->classes['um\legacy\admin\core\theme_updater'] = new um\legacy\admin\core\Admin_Theme_Updater();
 			}
-			return $this->classes['theme_updater'];
+			return $this->classes['um\legacy\admin\core\theme_updater'];
 		}
 
 
@@ -914,24 +917,13 @@ if ( ! class_exists( 'UM' ) ) {
 		 *
 		 * @since 2.0.14
 		 *
-		 * @return bool|um\admin\core\Admin_GDPR()
+		 * @return bool|um\legacy\admin\core\Admin_GDPR()
 		 */
 		function admin_gdpr() {
-			// legacy part
-			$is_legacy = get_option( 'um_is_legacy' );
-			if ( $is_legacy ) {
-				if ( UM()->is_legacy ) {
-					if ( empty( $this->classes['um\legacy\admin_gdpr'] ) ) {
-						$this->classes['um\legacy\admin_gdpr'] = new um\legacy\admin\core\Admin_GDPR();
-					}
-					return $this->classes['um\legacy\admin_gdpr'];
-				}
+			if ( empty( $this->classes['um\legacy\admin\core\admin_gdpr'] ) ) {
+				$this->classes['um\legacy\admin\core\admin_gdpr'] = new um\legacy\admin\core\Admin_GDPR();
 			}
-
-			if ( empty( $this->classes['admin_gdpr'] ) ) {
-				$this->classes['admin_gdpr'] = new um\admin\core\Admin_GDPR();
-			}
-			return $this->classes['admin_gdpr'];
+			return $this->classes['um\legacy\admin\core\admin_gdpr'];
 		}
 
 
@@ -952,13 +944,15 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
-		 * @return um\admin\core\Admin_Builder()
+		 * Legacy since 3.0
+		 *
+		 * @return um\legacy\admin\core\Admin_Builder()
 		 */
 		function builder() {
-			if ( empty( $this->classes['admin_builder'] ) ) {
-				$this->classes['admin_builder'] = new um\admin\core\Admin_Builder();
+			if ( empty( $this->classes['um\legacy\admin\core\admin_builder'] ) ) {
+				$this->classes['um\legacy\admin\core\admin_builder'] = new um\legacy\admin\core\Admin_Builder();
 			}
-			return $this->classes['admin_builder'];
+			return $this->classes['um\legacy\admin\core\admin_builder'];
 		}
 
 		/**
@@ -993,28 +987,32 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
+		 * Legacy since 3.0
+		 *
 		 * @param bool|array $data
-		 * @return um\admin\core\Admin_Forms()
+		 * @return um\legacy\admin\core\Admin_Forms()
 		 */
 		function admin_forms( $data = false ) {
-			if ( ! isset( $this->classes[ 'admin_forms_' . $data['class'] ] ) || empty( $this->classes[ 'admin_forms_' . $data['class'] ] ) ) {
-				$this->classes[ 'admin_forms_' . $data['class'] ] = new um\admin\core\Admin_Forms( $data );
+			if ( ! isset( $this->classes[ 'um\legacy\admin\core\forms_' . $data['class'] ] ) || empty( $this->classes[ 'um\legacy\admin\core\forms_' . $data['class'] ] ) ) {
+				$this->classes[ 'um\legacy\admin\core\forms_' . $data['class'] ] = new um\legacy\admin\core\Admin_Forms( $data );
 			}
-			return $this->classes[ 'admin_forms_' . $data['class'] ];
+			return $this->classes[ 'um\legacy\admin\core\forms_' . $data['class'] ];
 		}
 
 
 		/**
 		 * @since 2.0
 		 *
+		 * Legacy since 3.0
+		 *
 		 * @param bool|array $data
-		 * @return um\admin\core\Admin_Forms_Settings()
+		 * @return um\legacy\admin\core\Admin_Forms_Settings()
 		 */
 		function admin_forms_settings( $data = false ) {
-			if ( ! isset( $this->classes[ 'admin_forms_settings_' . $data['class'] ] ) || empty( $this->classes[ 'admin_forms_settings_' . $data['class'] ] ) ) {
-				$this->classes[ 'admin_forms_settings_' . $data['class'] ] = new um\admin\core\Admin_Forms_Settings( $data );
+			if ( ! isset( $this->classes[ 'um\legacy\admin\core\forms_settings_' . $data['class'] ] ) || empty( $this->classes[ 'um\legacy\admin\core\forms_settings_' . $data['class'] ] ) ) {
+				$this->classes[ 'um\legacy\admin\core\forms_settings_' . $data['class'] ] = new um\legacy\admin\core\Admin_Forms_Settings( $data );
 			}
-			return $this->classes[ 'admin_forms_settings_' . $data['class'] ];
+			return $this->classes[ 'um\legacy\admin\core\forms_settings_' . $data['class'] ];
 		}
 
 

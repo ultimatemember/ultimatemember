@@ -15,7 +15,7 @@ foreach ( $pages as $page ) {
 
 <div class="um-admin-metabox">
 	<?php
-	UM()->admin_forms(
+	UM()->admin()->forms(
 		array(
 			'class'     => 'um-form-register-terms-conditions um-top-label',
 			'prefix_id' => 'form',

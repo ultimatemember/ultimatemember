@@ -22,30 +22,13 @@ if ( is_user_logged_in() ) {
 $args = apply_filters( 'um_member_directory_agruments_on_load', $args );
 
 // Views
-$single_view = false;
-$current_view = 'grid';
+$current_view = $args['view_type'];
 
-if ( ! empty( $args['view_types'] ) && is_array( $args['view_types'] ) ) {
-	$args['view_types'] = array_filter( $args['view_types'], function( $item ) {
-		return in_array( $item, array_keys( UM()->module( 'member-directory' )->config()->get( 'view_types' ) ) );
-	});
-}
-
-if ( empty( $args['view_types'] ) || ! is_array( $args['view_types'] ) ) {
-	$args['view_types'] = array(
-		'grid',
-		'list'
-	);
-}
-
-if ( count( $args['view_types'] ) == 1 ) {
-	$single_view = true;
-	$current_view = $args['view_types'][0];
-	$default_view = $current_view;
-} else {
-	$args['default_view'] = ! empty( $args['default_view'] ) ? $args['default_view'] : $args['view_types'][0];
-	$default_view = $args['default_view'];
-	$current_view = ( ! empty( $_GET[ 'view_type_' . $unique_hash ] ) && in_array( $_GET[ 'view_type_' . $unique_hash ], $args['view_types'] ) ) ? $_GET[ 'view_type_' . $unique_hash ] : $args['default_view'];
+if ( 'grid' === $current_view ) {
+	$grid_columns = $args['grid_columns'];
+	if ( $grid_columns > 4 || $grid_columns < 2 ) {
+		$grid_columns = 3;
+	}
 }
 
 // Sorting
@@ -135,10 +118,6 @@ if ( $filters && $show_filters && count( $search_filters ) ) {
 	$classes .= ' um-member-with-filters';
 }
 
-if ( ! $single_view ) {
-	$classes .= ' um-member-with-view';
-}
-
 if ( ! empty( $args['enable_sorting'] ) && ! empty( $sorting_options ) && count( $sorting_options ) > 1 ) {
 	$classes .= ' um-member-with-sorting';
 }
@@ -149,11 +128,17 @@ if ( $filters_expanded ) {
 	$filters_collapsible = ! empty( $args['filters_is_collapsible'] ) ? true : false;
 }
 
+if ( ! get_option( 'show_avatars' ) ) {
+	$args['profile_photo'] = false;
+}
+
+if ( ! UM()->options()->get( 'use_cover_photos' ) ) {
+	$args['cover_photos'] = false;
+}
+
 //send $args variable to the templates
 $args['args'] = $args;
-foreach ( $args['view_types'] as $type ) {
-	um_get_template( 'members-' . $type . '.php', $args, 'member-directory' );
-}
+um_get_template( 'members-' . $args['view_type'] . '.php', $args, 'member-directory' );
 um_get_template( 'members-header.php', $args, 'member-directory' );
 um_get_template( 'members-pagination.php', $args, 'member-directory' );
 
@@ -213,90 +198,35 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 <div class="um <?php echo esc_attr( UM()->common()->shortcodes()->get_class( $mode ) ); ?> um-<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ); ?>"
      data-hash="<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ) ?>" data-base-post="<?php echo esc_attr( $post->ID ) ?>"
 	 data-must-search="<?php echo esc_attr( $must_search ); ?>" data-searched="<?php echo $not_searched ? '0' : '1'; ?>"
-	 data-view_type="<?php echo esc_attr( $current_view ) ?>" data-page="<?php echo esc_attr( $current_page ) ?>"
+	 data-page="<?php echo esc_attr( $current_page ) ?>" data-view_type="<?php echo esc_attr( $current_view ) ?>"
+	 <?php if ( 'grid' === $current_view ) { ?> data-grid-columns="<?php echo esc_attr( $grid_columns ) ?>"<?php } ?>
 	 data-sorting="<?php echo esc_attr( $sort_from_url ) ?>">
+
 	<div class="um-members-overlay"><div class="um-ajax-loading"></div></div>
 
 	<div class="um-member-directory-header um-form">
 
 		<?php do_action( 'um_members_directory_before_head', $args, $form_id, $not_searched ); ?>
 
-		<?php if ( $search && $show_search ) { ?>
-			<div class="um-member-directory-header-row um-member-directory-search-row">
-				<div class="um-member-directory-search-line">
-					<label>
-						<span><?php _e( 'Search:', 'ultimate-member' ); ?></span>
-						<input type="search" class="um-search-line" placeholder="<?php esc_attr_e( 'Search', 'ultimate-member' ) ?>"  value="<?php echo esc_attr( $search_from_url ) ?>" aria-label="<?php esc_attr_e( 'Search', 'ultimate-member' ) ?>" speech />
-					</label>
-					<input type="button" class="um-do-search um-button" value="<?php esc_attr_e( 'Search', 'ultimate-member' ); ?>" />
-				</div>
-			</div>
-		<?php }
+		<?php if ( ( $search && $show_search ) || ( $filters && $show_filters && count( $search_filters ) && $filters_collapsible ) ) { ?>
+			<div class="um-member-directory-header-row um-member-directory-search-filters">
+				<?php if ( $search && $show_search ) { ?>
+					<div class="um-member-directory-search-wrapper">
+						<label class="um-member-directory-search-line">
+							<span><?php _e( 'Search:', 'ultimate-member' ); ?></span>
+							<input type="search" class="um-search-line" placeholder="<?php esc_attr_e( 'Search', 'ultimate-member' ) ?>" value="<?php echo esc_attr( $search_from_url ) ?>" aria-label="<?php esc_attr_e( 'Search', 'ultimate-member' ) ?>" speech />
+						</label>
+						<input type="button" class="um-do-search um-button um-button-primary" value="<?php esc_attr_e( 'Search', 'ultimate-member' ); ?>" />
+					</div>
+				<?php } ?>
 
-		if ( ( ! empty( $args['enable_sorting'] ) && ! empty( $sorting_options ) && count( $sorting_options ) > 1 ) ||
-		     ( $filters && $show_filters && count( $search_filters ) ) ||
-		     ! $single_view ) { ?>
-			<div class="um-member-directory-header-row">
-				<div class="um-member-directory-nav-line">
-					<?php if ( ! $single_view ) {
-						$view_types = 0;
+				<?php do_action( 'um_members_directory_between_search_filters', $args, $form_id, $not_searched ); ?>
 
-						foreach ( UM()->module( 'member-directory' )->config()->get( 'view_types' ) as $key => $value ) {
-							if ( in_array( $key, $args['view_types'] ) ) {
-								if ( empty( $view_types ) ) { ?>
-									<span class="um-member-directory-view-type<?php if ( $not_searched ) {?> um-disabled<?php } ?>">
-								<?php }
-
-								$view_types++; ?>
-
-								<a href="javascript:void(0)"
-								   class="um-member-directory-view-type-a<?php if ( ! $not_searched ) {?> um-tip-n<?php } ?>"
-								   data-type="<?php echo $key; ?>"
-								   data-default="<?php echo ( $default_view == $key ) ? 1 : 0; ?>"
-								   title="<?php printf( esc_attr__( 'Change to %s', 'ultimate-member' ), $value['title'] ) ?>"
-								   default-title="<?php echo esc_attr( $value['title'] ); ?>"
-								   next-item="" ><i class="<?php echo $value['icon']; ?>"></i></a>
-							<?php }
-						}
-
-						if ( ! empty( $view_types ) ) { ?>
-							</span>
-						<?php }
-					}
-
-					if ( ! empty( $args['enable_sorting'] ) && ! empty( $sorting_options ) && count( $sorting_options ) > 1 ) { ?>
-						<div class="um-member-directory-sorting">
-							<span><?php _e( 'Sort by:', 'ultimate-member' ); ?>&nbsp;</span>
-							<div class="um-member-directory-sorting-a">
-								<a href="javascript:void(0);" class="um-member-directory-sorting-a-text"><?php echo $sorting_options[ $sort_from_url ] ?></a>
-								&nbsp;<i class="fas fa-caret-down"></i><i class="fas fa-caret-up"></i>
-							</div>
-						</div>
-
-						<?php $items = array();
-
-						foreach ( $sorting_options as $value => $title ) {
-							$items[] = '<a href="javascript:void(0);" data-directory-hash="' . esc_attr( substr( md5( $form_id ), 10, 5 ) ) . '" class="um-sorting-by-' . esc_attr( $value ) . '" data-value="' . esc_attr( $value ) . '" data-selected="' . ( ( $sort_from_url == $value ) ? '1' : '0' ) . '" data-default="' . ( ( $default_sorting == $value ) ? '1' : '0' ) . '">' . $title . '</a>'; ?>
-						<?php }
-
-						UM()->module( 'member-directory' )->frontend()->dropdown_menu( '.um-member-directory-sorting-a', 'click', $items ); ?>
-
-					<?php }
-
-					if ( $filters && $show_filters && count( $search_filters ) && $filters_collapsible ) { ?>
-						<span class="um-member-directory-filters">
-							<span class="um-member-directory-filters-a<?php if ( $filters_expanded ) { ?> um-member-directory-filters-visible<?php } ?>">
-								<a href="javascript:void(0);">
-									<?php _e( 'More filters', 'ultimate-member' ); ?>
-								</a>
-								&nbsp;<i class="fas fa-caret-down"></i><i class="fas fa-caret-up"></i>
-							</span>
-						</span>
-					<?php } ?>
-				</div>
+				<?php if ( $filters && $show_filters && count( $search_filters ) && $filters_collapsible ) { ?>
+					<input type="button" class="um-filters-toggle um-button" value="<?php esc_attr_e( 'Filters', 'ultimate-member' ); ?>" />
+				<?php } ?>
 			</div>
 		<?php } ?>
-
 
 		<?php if ( $filters && $show_filters && count( $search_filters ) ) {
 
@@ -308,7 +238,7 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 								<# if ( filter.type == 'slider' ) { #>
 									{{{filter.value_label}}}
 								<# } else { #>
-									<strong>{{{filter.label}}}</strong>: {{{filter.value_label}}}
+									{{{filter.label}}}: {{{filter.value_label}}}
 								<# } #>
 								<div class="um-members-filter-remove um-tip-n" data-name="{{{filter.name}}}"
 								     data-value="{{{filter.value}}}" data-range="{{{filter.range}}}"
@@ -320,6 +250,7 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 
 				<div class="um-member-directory-header-row um-member-directory-filters-bar<?php if ( ! $filters_expanded ) { ?> um-header-row-invisible<?php } ?>">
 					<div class="um-search um-search-<?php echo count( $search_filters ) ?><?php if ( ! $filters_expanded ) { ?> um-search-invisible<?php } ?>">
+						<div class="um-filters-header"><?php esc_html_e( 'Filters', 'ultimate-member' ); ?></div>
 						<?php $i = 0;
 						$filter_types = UM()->module( 'member-directory' )->config()->get( 'filter_types' );
 						foreach ( $search_filters as $filter ) {
@@ -338,18 +269,40 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 						} ?>
 					</div>
 				</div>
-				<div class="um-member-directory-header-row">
-					<div class="um-filtered-line">
-						<div class="um-clear-filters"><a href="javascript:void(0);" class="um-clear-filters-a" title="<?php esc_attr_e( 'Remove all filters', 'ultimate-member' ) ?>"><?php _e( 'Clear all', 'ultimate-member' ); ?></a></div>
+				<div class="um-member-directory-header-row um-filtered-line">
+					<div class="um-clear-filters">
+						<a href="javascript:void(0);" class="um-link um-clear-filters-a" title="<?php esc_attr_e( 'Remove all filters', 'ultimate-member' ) ?>"><?php esc_html_e( 'Clear all filters', 'ultimate-member' ); ?></a>
 					</div>
 				</div>
 				<?php
 			}
-		}
-		do_action( 'um_members_directory_head', $args ); ?>
+		} ?>
+
+		<div class="um-member-directory-header-row um-header-row-invisible um-member-directory-users-counter<?php if ( ! empty( $args['enable_sorting'] ) && ! empty( $sorting_options ) && count( $sorting_options ) > 1 ) { ?> um-member-directory-sorting-row<?php } ?>">
+			<div class="um-member-directory-total-users">&nbsp;</div>
+			<?php if ( ! empty( $args['enable_sorting'] ) && ! empty( $sorting_options ) && count( $sorting_options ) > 1 ) { ?>
+				<div class="um-member-directory-sorting disabled">
+					<span><?php _e( 'Sort:', 'ultimate-member' ); ?>&nbsp;</span>
+					<div class="um-member-directory-sorting-a">
+						<a href="javascript:void(0);" class="um-member-directory-sorting-a-text"><?php echo $sorting_options[ $sort_from_url ] ?></a>
+						&nbsp;<i class="fas fa-caret-down"></i><i class="fas fa-caret-up"></i>
+					</div>
+				</div>
+
+				<?php $items = array();
+
+				foreach ( $sorting_options as $value => $title ) {
+					$items[] = '<a href="javascript:void(0);" data-directory-hash="' . esc_attr( substr( md5( $form_id ), 10, 5 ) ) . '" class="um-sorting-by-' . esc_attr( $value ) . '" data-value="' . esc_attr( $value ) . '" data-selected="' . ( ( $sort_from_url == $value ) ? '1' : '0' ) . '" data-default="' . ( ( $default_sorting == $value ) ? '1' : '0' ) . '">' . $title . '</a>'; ?>
+				<?php }
+
+				UM()->module( 'member-directory' )->frontend()->dropdown_menu( '.um-member-directory-sorting-a', 'click', $items ); ?>
+			<?php } ?>
+		</div>
+
+		<?php do_action( 'um_members_directory_head', $args ); ?>
 	</div>
 
-	<div class="um-members-wrapper"></div>
+	<div class="um-members-wrapper um-members-<?php echo esc_attr( $current_view ) ?>"<?php if ( 'grid' === $current_view ) { ?> data-grid-columns="<?php echo esc_attr( $grid_columns ) ?>"<?php } ?>></div>
 
 	<div class="um-members-pagination-box"></div>
 

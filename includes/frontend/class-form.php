@@ -82,29 +82,6 @@ class Form {
 		'block',
 		'shortcode',
 		'spacing',
-
-//		'color',
-//
-//		'text',
-//		'password',
-//		'tel',
-//		'date',
-//		'month',
-//		'week',
-//		'email',
-//		'number',
-//		'time',
-//		'url',
-//
-//		'select',
-//		'checkbox',
-//		'radio',
-//		'range',
-//		'textarea',
-//		'wp_editor',
-////		'media',
-//		'file',
-//		'image',
 	);
 
 	/**
@@ -485,7 +462,7 @@ class Form {
 		$class = isset( $data['class'] ) ? $data['class'] : array();
 		$class = is_array( $class ) ? $class : array( $class );
 
-		$classes   = array_merge( array( 'um-form-button' ), $class );
+		$classes   = array_merge( array( 'um-button', 'um-form-button' ), $class );
 		$classes[] = 'um-form-button-' . $type;
 
 		$data = isset( $data['data'] ) ? $data['data'] : array();
@@ -1664,23 +1641,65 @@ class Form {
 	}
 
 
-	public function render_divider() {
-		$html = '<hr />';
+	public function render_divider( $field_data ) {
+		$id      = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '_' : '' ) . $field_data['id'];
+		$id_attr = ' id="' . esc_attr( $id ) . '" ';
+
+		$class      = ! empty( $field_data['class'] ) ? ' ' . $field_data['class'] : '';
+		$class     .= ! empty( $field_data['style'] ) ? ' um-forms-divider-' . $field_data['style'] . '-style' : '';
+		$class_attr = ' class="um-forms-field' . esc_attr( $class ) . '" ';
+
+		$style  = ! empty( $field_data['width'] ) ? 'border-top-width: ' . esc_attr( $field_data['width'] ) . 'px;' : 'border-top-width: 1px;';
+		$style .= ! empty( $field_data['color'] ) ? 'border-color: ' . esc_attr( $field_data['color'] ) . ';' : 'border-color: #475467;'; // grey-600 if empty
+
+		$style = ! empty( $style ) ? ' style="' . esc_attr( $style ) . '" ' : '';
+
+		$data      = array( 'field_id' => $field_data['id'] );
+		$data_attr = '';
+		foreach ( $data as $key => $value ) {
+			$data_attr .= " data-{$key}=\"" . esc_attr( $value ) . '" ';
+		}
+
+		if ( ! empty( $field_data['divider_text'] ) ) {
+			$html = "<span class=\"um-forms-field-text-divider\"><hr $class_attr $data_attr $style /><span>" . esc_html( $field_data['divider_text'] ) . "</span><hr $class_attr $data_attr $style /></span>";
+		} else {
+			$html = "<hr $id_attr $class_attr $data_attr $style />";
+		}
 		return $html;
 	}
 
-	public function render_block() {
-		$html = '<hr />';
-		return $html;
+	public function render_block( $field_data ) {
+		if ( ! array_key_exists( 'content', $field_data ) ) {
+			return '';
+		}
+
+		return wp_kses( $field_data['content'], UM()->get_allowed_html( 'templates' ) );
 	}
 
-	public function render_shortcode() {
-		$html = '<hr />';
-		return $html;
+	public function render_shortcode( $field_data ) {
+		if ( ! array_key_exists( 'content', $field_data ) ) {
+			return '';
+		}
+
+		return apply_shortcodes( $field_data['content'] );
 	}
 
-	public function render_spacing() {
-		$html = '<hr />';
+	public function render_spacing( $field_data ) {
+		$id      = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '_' : '' ) . $field_data['id'];
+		$id_attr = ' id="' . esc_attr( $id ) . '" ';
+
+		$class      = ! empty( $field_data['class'] ) ? ' ' . $field_data['class'] : '';
+		$class_attr = ' class="um-forms-field' . esc_attr( $class ) . '" ';
+
+		$size = ! empty( $field_data['size'] ) ? 'style="height: ' . esc_attr( $field_data['size'] ) . ';"' : '';
+
+		$data      = array( 'field_id' => $field_data['id'] );
+		$data_attr = '';
+		foreach ( $data as $key => $value ) {
+			$data_attr .= " data-{$key}=\"" . esc_attr( $value ) . '" ';
+		}
+
+		$html = "<span $id_attr $class_attr $data_attr $size></span>";
 		return $html;
 	}
 

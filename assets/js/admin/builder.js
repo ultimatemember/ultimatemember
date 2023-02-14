@@ -340,7 +340,6 @@ function UM_Rows_Refresh() {
 					um_init_helptips();
 					um_admin_init_colorpicker();
 					um_maybe_init_tinymce( $modal, 'edit' );
-					um_admin_init_datetimepicker();
 
 					UM.modal.responsive( $modal );
 
@@ -386,7 +385,6 @@ function UM_Rows_Refresh() {
 					um_admin_init_colorpicker();
 
 					um_maybe_init_tinymce( $modal, 'edit' );
-					um_admin_init_datetimepicker();
 
 					UM.modal.responsive( $modal );
 
@@ -561,7 +559,6 @@ function UM_Add_Icon() {
 										um_admin_init_colorpicker();
 
 										um_maybe_init_tinymce( $modal, 'add' );
-										um_admin_init_datetimepicker();
 
 										UM.modal.responsive( $modal );
 										um_admin_init_icon_select();

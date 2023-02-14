@@ -17,86 +17,6 @@ function um_unsanitize_value( input ) {
 }
 
 
-function um_init_datetimepicker() {
-	jQuery('.um-datepicker:not(.picker__input)').each(function(){
-		var elem = jQuery(this);
-
-		var disable = false;
-		if ( typeof elem.attr('data-disabled_weekdays') != 'undefined' && elem.attr('data-disabled_weekdays') !== '' ) {
-			disable = JSON.parse( elem.attr('data-disabled_weekdays') );
-		}
-
-		var years_n = null;
-		if ( typeof elem.attr('data-years') != 'undefined' ) {
-			years_n = elem.attr('data-years');
-		}
-
-		var minRange = elem.attr('data-date_min');
-		var maxRange = elem.attr('data-date_max');
-
-		var minSplit = [], maxSplit = [];
-		if ( typeof minRange != 'undefined' ) {
-			minSplit = minRange.split(",");
-		}
-		if ( typeof maxRange != 'undefined' ) {
-			maxSplit = maxRange.split(",");
-		}
-
-		var min = minSplit.length ? new Date(minSplit) : null;
-		var max = minSplit.length ? new Date(maxSplit) : null;
-
-		// fix min date for safari
-		if ( min && min.toString() == 'Invalid Date' && minSplit.length == 3 ) {
-			var minDateString = minSplit[1] + '/' + minSplit[2] + '/' + minSplit[0];
-			min = new Date(Date.parse(minDateString));
-		}
-
-		// fix max date for safari
-		if ( max && max.toString() == 'Invalid Date' && maxSplit.length == 3 ) {
-			var maxDateString = maxSplit[1] + '/' + maxSplit[2] + '/' + maxSplit[0];
-			max = new Date(Date.parse(maxDateString));
-		}
-
-		var data = {
-			disable: disable,
-			format: elem.attr( 'data-format' ),
-			formatSubmit: 'yyyy/mm/dd',
-			hiddenName: true,
-			onOpen: function() { elem.blur(); },
-			onClose: function() { elem.blur(); }
-		};
-
-		if ( years_n !== null ) {
-			data.selectYears = years_n;
-		}
-
-		if ( min !== null ) {
-			data.min = min;
-		}
-
-		if ( max !== null ) {
-			data.max = max;
-		}
-
-		elem.pickadate( data );
-	});
-
-	jQuery('.um-timepicker:not(.picker__input)').each(function(){
-		var elem = jQuery(this);
-
-		elem.pickatime({
-			format: elem.attr('data-format'),
-			interval: parseInt( elem.attr('data-intervals') ),
-			formatSubmit: 'HH:i',
-			hiddenName: true,
-			onOpen: function() { elem.blur(); },
-			onClose: function() { elem.blur(); }
-		});
-	});
-}
-
-
-
 function init_tipsy() {
 	if ( typeof( jQuery.fn.tipsy ) === 'function' ) {
 		jQuery('.um-tip-n').tipsy({gravity: 'n', opacity: 1, live: 'a.live', offset: 3 });
@@ -263,8 +183,6 @@ jQuery(document).ready(function() {
 		}
 	});
 
-
-	um_init_datetimepicker();
 
 	jQuery(document).on('click', '.um .um-single-image-preview a.cancel', function( e ) {
 		e.preventDefault();

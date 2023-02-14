@@ -1,22 +1,24 @@
-<?php if ( ! defined( 'ABSPATH' ) ) {
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$role = $object['data']; ?>
+$role = $object['data'];
+?>
 
 <div class="um-admin-metabox">
 	<?php
-	UM()->admin_forms(
+	UM()->admin()->forms(
 		array(
 			'class'     => 'um-role-publish um-top-label',
 			'prefix_id' => 'role',
 			'fields'    => array(
 				array(
-					'id'      => '_um_priority',
-					'type'    => 'text',
-					'label'   => __( 'Role Priority', 'ultimate-member' ),
+					'id'          => '_um_priority',
+					'type'        => 'text',
+					'label'       => __( 'Role Priority', 'ultimate-member' ),
 					'description' => __( 'The higher the number, the higher the priority', 'ultimate-member' ),
-					'value'   => ! empty( $role['_um_priority'] ) ? $role['_um_priority'] : '',
+					'value'       => ! empty( $role['_um_priority'] ) ? $role['_um_priority'] : '',
 				),
 			),
 		)

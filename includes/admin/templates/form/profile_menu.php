@@ -129,7 +129,7 @@ $profile_menu_fields = apply_filters( 'um_profile_menu_settings_fields', $profil
 
 <div class="um-admin-metabox">
 	<?php
-	UM()->admin_forms(
+	UM()->admin()->forms(
 		array(
 			'class'     => 'um-form-profile-menu um-half-column',
 			'prefix_id' => 'form',

@@ -48,6 +48,282 @@ if ( ! class_exists( 'um\common\User' ) ) {
 			} else {
 				add_action( 'delete_user', array( &$this, 'delete_user_handler' ), 10, 1 );
 			}
+
+			add_filter( 'get_avatar', array( &$this, 'get_avatar_cb' ), 99999, 5 );
+			add_filter( 'avatar_defaults', array( $this, 'avatar_defaults' ) );
+		}
+
+		/**
+		 * Get user UM avatars
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param string $avatar
+		 * @param string $id_or_email
+		 * @param int    $size
+		 * @param string $default
+		 * @param string $alt
+		 * @param array  $args {
+		 *     Optional. Extra arguments to retrieve the avatar.
+		 *
+		 *     @type int          $height        Display height of the avatar in pixels. Defaults to $size.
+		 *     @type int          $width         Display width of the avatar in pixels. Defaults to $size.
+		 *     @type bool         $force_default Whether to always show the default image, never the Gravatar. Default false.
+		 *     @type string       $rating        What rating to display avatars up to. Accepts 'G', 'PG', 'R', 'X', and are
+		 *                                       judged in that order. Default is the value of the 'avatar_rating' option.
+		 *     @type string       $scheme        URL scheme to use. See set_url_scheme() for accepted values.
+		 *                                       Default null.
+		 *     @type array|string $class         Array or string of additional classes to add to the img element.
+		 *                                       Default null.
+		 *     @type bool         $force_display Whether to always show the avatar - ignores the show_avatars option.
+		 *                                       Default false.
+		 *     @type string       $loading       Value for the `loading` attribute.
+		 *                                       Default null.
+		 *     @type string       $extra_attr    HTML attributes to insert in the IMG element. Is not sanitized. Default empty.
+		 * }
+		 *
+		 * @return string Avatar in image html elements
+		 */
+		public function get_avatar_cb( $avatar, $id_or_email = '', $size = 96, $default = '', $alt = '', $args = null ) {
+			$defaults = array(
+				// get_avatar_data() args.
+				'size'          => 96,
+				'height'        => null,
+				'width'         => null,
+				'default'       => get_option( 'avatar_default', 'mystery' ),
+				'force_default' => false,
+				'rating'        => get_option( 'avatar_rating' ),
+				'scheme'        => null,
+				'alt'           => '',
+				'class'         => null,
+				'force_display' => false,
+				'loading'       => null,
+				'extra_attr'    => '',
+				'decoding'      => 'async',
+			);
+
+			if ( wp_lazy_loading_enabled( 'img', 'get_avatar' ) ) {
+				$defaults['loading'] = wp_get_loading_attr_default( 'get_avatar' );
+			}
+
+			if ( empty( $args ) ) {
+				$args = array();
+			}
+
+			$args['size']    = (int) $size;
+			$args['default'] = $default;
+			$args['alt']     = $alt;
+
+			$args = wp_parse_args( $args, $defaults );
+
+			if ( empty( $args['height'] ) ) {
+				$args['height'] = $args['size'];
+			}
+			if ( empty( $args['width'] ) ) {
+				$args['width'] = $args['size'];
+			}
+
+			$args = get_avatar_data( $id_or_email, $args );
+
+			$class = array( 'avatar', 'avatar-' . (int) $args['size'], 'photo' );
+
+			if ( ! $args['found_avatar'] || $args['force_default'] ) {
+				$class[] = 'avatar-default';
+			}
+
+			if ( $args['class'] ) {
+				if ( is_array( $args['class'] ) ) {
+					$class = array_merge( $class, $args['class'] );
+				} else {
+					$class[] = $args['class'];
+				}
+			}
+
+			// Add `loading` attribute.
+			$extra_attr = $args['extra_attr'];
+			$loading    = $args['loading'];
+
+			if ( in_array( $loading, array( 'lazy', 'eager' ), true ) && ! preg_match( '/\bloading\s*=/', $extra_attr ) ) {
+				if ( ! empty( $extra_attr ) ) {
+					$extra_attr .= ' ';
+				}
+
+				$extra_attr .= "loading='{$loading}'";
+			}
+
+			if ( in_array( $args['decoding'], array( 'async', 'sync', 'auto' ) ) && ! preg_match( '/\bdecoding\s*=/', $extra_attr ) ) {
+				if ( ! empty( $extra_attr ) ) {
+					$extra_attr .= ' ';
+				}
+				$extra_attr .= "decoding='{$args['decoding']}'";
+			}
+
+			$um_avatar_url = $this->get_avatar_url( $id_or_email );
+
+			if ( UM()->options()->get( 'use_um_gravatar_default_image' ) && empty( $um_avatar_url ) ) {
+				$avatar = sprintf( '<img src="%s" class="%s" alt="%s" height="%d" width="%d" %s />',
+					esc_attr( um_get_default_avatar_url() ),
+					esc_attr( implode( ' ', $class ) ),
+					esc_attr( $args['alt'] ),
+					(int) $args['height'],
+					(int) $args['width'],
+					$extra_attr
+				);
+
+				return $avatar;
+			}
+
+			if ( ! empty( $um_avatar_url ) ) {
+				$avatar = sprintf( '<img src="%s" class="%s" alt="%s" height="%d" width="%d" %s />',
+					esc_attr( $um_avatar_url ),
+					esc_attr( implode( ' ', $class ) ),
+					esc_attr( $args['alt'] ),
+					(int) $args['height'],
+					(int) $args['width'],
+					$extra_attr
+				);
+			}
+
+			return $avatar;
+		}
+
+		/**
+		 * Remove the custom get_avatar hook for the default avatar list output on
+		 * the Discussion Settings page.
+		 *
+		 * @since 3.0.0
+		 * @param array $avatar_defaults
+		 * @return array
+		 */
+		public function avatar_defaults( $avatar_defaults ) {
+			remove_action( 'get_avatar', array( $this, 'get_avatar_cb' ), 99999 );
+			return $avatar_defaults;
+		}
+
+		/**
+		 * @param $user_id
+		 * @param $size
+		 *
+		 * @return mixed
+		 */
+		public function get_avatar( $user_id, $size ) {
+			return get_avatar( $user_id, um_get_avatar_size( $size ) );
+		}
+
+		/**
+		 * @param int $user_id
+		 *
+		 * @return bool
+		 */
+		public function id_exists( $user_id ) {
+			$user = get_userdata( $user_id );
+			return false === $user ? false : true;
+		}
+
+		/**
+		 * Get avatar URL
+		 *
+		 * @param int $user_id
+		 * @param $image
+		 * @param null|array $attrs
+		 *
+		 * @since 3.0.0
+		 *
+		 * @return bool|string
+		 */
+		public function get_avatar_url( $user_id, $image = null, $attrs = null ) {
+			if ( ! file_exists( wp_normalize_path( UM()->uploader()->get_upload_base_dir() . $user_id . '/profile_photo.jpg' ) ) ) {
+				return false;
+			}
+
+			return set_url_scheme( UM()->uploader()->get_upload_base_url() . $user_id . '/profile_photo.jpg' );
+
+			$uri = false;
+			$uri_common = false;
+			$find = false;
+			$ext = '.' . pathinfo( $image, PATHINFO_EXTENSION );
+
+			if ( is_multisite() ) {
+				//multisite fix for old customers
+				$multisite_fix_dir = UM()->uploader()->get_upload_base_dir();
+				$multisite_fix_url = UM()->uploader()->get_upload_base_url();
+				$multisite_fix_dir = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $multisite_fix_dir );
+				$multisite_fix_url = str_replace( '/sites/' . get_current_blog_id() . '/', '/', $multisite_fix_url );
+
+				if ( $attrs == 'original' && file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo{$ext}" ) ) {
+					$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/profile_photo{$ext}";
+				} elseif ( file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo-{$attrs}x{$attrs}{$ext}" ) ) {
+					$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/profile_photo-{$attrs}x{$attrs}{$ext}";
+				} elseif ( file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo-{$attrs}{$ext}" ) ) {
+					$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/profile_photo-{$attrs}{$ext}";
+				} else {
+					$sizes = UM()->options()->get( 'photo_thumb_sizes' );
+					if ( is_array( $sizes ) ) {
+						$find = um_closest_num( $sizes, $attrs );
+					}
+
+					if ( file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo-{$find}x{$find}{$ext}" ) ) {
+						$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/profile_photo-{$find}x{$find}{$ext}";
+					} elseif ( file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo-{$find}{$ext}" ) ) {
+						$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/profile_photo-{$find}{$ext}";
+					} elseif ( file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo{$ext}" ) ) {
+						$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/profile_photo{$ext}";
+					}
+				}
+			}
+
+			if ( $attrs == 'original' && file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo{$ext}" ) ) {
+				$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/profile_photo{$ext}";
+			} elseif ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo-{$attrs}x{$attrs}{$ext}" ) ) {
+				$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/profile_photo-{$attrs}x{$attrs}{$ext}";
+			} elseif ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo-{$attrs}{$ext}" ) ) {
+				$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/profile_photo-{$attrs}{$ext}";
+			} else {
+				$sizes = UM()->options()->get( 'photo_thumb_sizes' );
+				if ( is_array( $sizes ) ) {
+					$find = um_closest_num( $sizes, $attrs );
+				}
+
+				if ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo-{$find}x{$find}{$ext}" ) ) {
+					$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/profile_photo-{$find}x{$find}{$ext}";
+				} elseif ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo-{$find}{$ext}" ) ) {
+					$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/profile_photo-{$find}{$ext}";
+				} elseif ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo{$ext}" ) ) {
+					$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/profile_photo{$ext}";
+				}
+			}
+
+			if ( ! empty( $uri_common ) && empty( $uri ) ) {
+				$uri = $uri_common;
+			}
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_filter_avatar_cache_time
+			 * @description Change Profile field value if it's empty
+			 * @input_vars
+			 * [{"var":"$timestamp","type":"timestamp","desc":"Avatar cache time"},
+			 * {"var":"$user_id","type":"int","desc":"User ID"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_filter_avatar_cache_time', 'function_name', 10, 2 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_filter_avatar_cache_time', 'my_avatar_cache_time', 10, 2 );
+			 * function my_avatar_cache_time( $timestamp, $user_id ) {
+			 *     // your code here
+			 *     return $timestamp;
+			 * }
+			 * ?>
+			 */
+			$cache_time = apply_filters( 'um_filter_avatar_cache_time', current_time( 'timestamp' ), um_user( 'ID' ) );
+			if ( ! empty( $cache_time ) ) {
+				$uri .= "?{$cache_time}";
+			}
+
+			return $uri;
 		}
 
 		/**

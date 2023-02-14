@@ -7,11 +7,9 @@
  * @version 3.0
  */
 
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
 
 /**
  * @param string $slug
@@ -22,7 +20,6 @@ function um_predefined_page_slug_exists( $slug ) {
 	$predefined_pages = UM()->config()->get( 'predefined_pages' );
 	return array_key_exists( $slug, $predefined_pages );
 }
-
 
 /**
  * @param string $slug
@@ -37,7 +34,6 @@ function um_get_predefined_page_id( $slug ) {
 	$option_key = UM()->options()->get_predefined_page_option_key( $slug );
 	return apply_filters( 'um_get_predefined_page_id', UM()->options()->get( $option_key ), $slug );
 }
-
 
 /**
  *
@@ -71,7 +67,6 @@ function um_is_predefined_page( $slug, $post = null ) {
 	return $post->ID === um_get_predefined_page_id( $slug );
 }
 
-
 /**
  * Get predefined page URL
  *
@@ -89,7 +84,91 @@ function um_get_predefined_page_url( $slug ) {
 	return $url;
 }
 
+/**
+ * Default avatar URL
+ *
+ * @since 3.0.0
+ *
+ * @param array $args {
+ *     Optional. Arguments to use instead of the default arguments.
+ *
+ *     @type bool $force_default  Whether to always show the UM build-in default image, never the custom uploaded.
+ *                                Default false.
+ *     @type bool $force_display  Whether to always show the avatar - ignores the `show_avatars` option.
+ *                                Default false.
+ * }
+ *
+ * @return string
+ */
+function um_get_default_avatar_url( $args = array() ) {
+	$build_in_default = UM_URL . 'assets/img/default_avatar.jpg';
 
+	$defaults = array(
+		'force_default' => false,
+		'force_display' => false,
+	);
+
+	$args = wp_parse_args( $args, $defaults );
+
+	if ( $args['force_default'] ) {
+		return set_url_scheme( $build_in_default );
+	}
+
+	if ( ! get_option( 'show_avatars' ) && ! $args['force_display'] ) {
+		return false;
+	}
+
+	$avatar_data = UM()->options()->get( 'default_avatar' );
+
+	$url = ! empty( $avatar_data['url'] ) ? $avatar_data['url'] : $build_in_default;
+	return set_url_scheme( $url );
+}
+
+/**
+ * Default avatar URL
+ *
+ * @todo connect with settings
+ *
+ * @since 3.0.0
+ *
+ * @param string $size Size key(slug)
+ *
+ * @return int
+ */
+function um_get_avatar_size( $size ) {
+	$build_in = UM()->config()->get( 'avatar_sizes' );
+	$option   = UM()->options()->get( 'photo_thumb_sizes' );
+
+	if ( ! array_key_exists( $size, $build_in ) ) {
+		return 96;
+	}
+
+	// temporarily solution
+	return $build_in[ $size ]['size'];
+}
+
+/**
+ * Default avatar URL
+ *
+ * @todo connect with settings
+ *
+ * @since 3.0.0
+ *
+ * @param string $size Size key(slug)
+ *
+ * @return int
+ */
+function um_get_all_avatar_sizes() {
+	$build_in = UM()->config()->get( 'avatar_sizes' );
+/*	$option   = UM()->options()->get( 'photo_thumb_sizes' );
+
+	if ( ! array_key_exists( $size, $build_in ) ) {
+		return 96;
+	}*/
+
+	// temporarily solution
+	return array_column( $build_in, 'size' );
+}
 
 
 

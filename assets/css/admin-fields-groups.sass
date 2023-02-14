@@ -1,0 +1,34 @@
+@import "selectors"
+@import "mixins"
+@import "colors"
+
+#poststuff
+  #um-admin-form-publish
+    .inside
+      margin: 0
+      padding: 0
+
+##{$prefix}fields-groups
+  .row-actions
+    .delete
+      a
+        color: $delete-link
+        &:hover
+          color: $delete-link-hover
+  .wp-list-table
+    .manage-column
+      &.column-title
+        width: 300px
+    .column-status
+      width: 100px
+    .column-key
+      width: 240px
+    .column-fields
+      width: 10%
+      text-align: center !important
+
+@media screen and (max-width: 782px)
+  ##{$prefix}fields-groups
+    .wp-list-table
+      .column-fields
+        text-align: left !important

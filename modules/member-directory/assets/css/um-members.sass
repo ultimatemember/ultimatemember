@@ -1,30 +1,21 @@
 @import "../../../../assets/css/selectors"
 @import "../../../../assets/css/mixins"
 @import "../../../../assets/css/colors"
-
-+keyframes(um-ajax-spinning)
-  0%
-    -webkit-transform: rotate(0deg)
-    transform: rotate(0deg)
-  100%
-    -webkit-transform: rotate(360deg)
-    transform: rotate(360deg)
-
-
+@import "../../../../assets/css/common-full.sass"
 
 .um-new-dropdown
-  font-size: 16px
+  font-size: $um-font-size
   margin: 0
   position: absolute
   height: auto
-  background: #fff
+  background: $white
   z-index: 10
   display: none
-  border: 1px solid $border
-  box-shadow: 0 7px 14px 0 $shadow1, 0 3px 6px 0 $shadow2
-  -webkit-box-shadow: 0 7px 14px 0 $shadow1, 0 3px 6px 0 $shadow2
+  border: 1px solid $gray-200
+  color: $gray-700
+  +box-shadow-lg
   +border-box
-  +border-radius(5px, 5px, 5px, 5px)
+  border-radius: $button-border-radius
   ul
     margin: 0
     padding: 0
@@ -33,26 +24,18 @@
       padding: 0
       margin: 0
       a
+        color: $gray-700
+        font-size: inherit
+        font-weight: $semi-bold-weight
         display: block
-        padding: 8px 12px
+        padding: 13px 16px
+        +border-box
         line-height: 1
-
-.um-new-dropdown-arr
-  position: absolute
-  font-size: 24px
-  width: 24px
-  height: 24px
-  overflow: hidden
-  z-index: 15
-  color: #eee
-  *
-    display: block
-    width: 24px
-    height: 24px
-    vertical-align: bottom
-    overflow: hidden
-    line-height: 24px
-
+        text-decoration: none
+        &:hover,
+        &:active
+          color: $gray-700
+          text-decoration: none
 
 body
   #content
@@ -69,13 +52,14 @@ body
 .#{$prefix}directory
   +flex( column, flex-start, stretch, nowrap )
   position: relative
-
   a
     text-decoration: none
+    &:hover, &:focus
+      text-decoration: none
+  a:not(.um-button)
     border-bottom: none
     box-shadow: none
     &:hover, &:focus
-      text-decoration: none
       border-bottom: none
       box-shadow: none
 
@@ -93,13 +77,13 @@ body
     z-index: 2
     .um-ajax-loading
       +transition(.1s,opacity)
-      color: #c6c6c6 !important
+      color: $um-primary !important
       -webkit-animation: um-ajax-spinning 1.1s infinite linear
       animation: um-ajax-spinning 1.1s infinite linear
       border-top: .2em solid rgba(198, 198, 198, 0.2)
       border-right: .2em solid rgba(198, 198, 198, 0.2)
       border-bottom: .2em solid rgba(198, 198, 198, 0.2)
-      border-left: .2em solid #c6c6c6
+      border-left: .2em solid $um-primary
       font-size: 1.75em
       position: absolute
       left: calc(50% - 1.75em)
@@ -120,642 +104,637 @@ body
     +flex( column, flex-start, stretch, nowrap )
     width: 100%
     .um-member-directory-header-row
-      &.um-member-directory-filters-bar
-        padding: 0 0 10px 0
-      &:not(.um-member-directory-filters-bar)
-        +flex( row, flex-start, baseline, nowrap )
-        margin: 0 0 10px 0
-      &.um-header-row-invisible
-        margin: 0
-      &.um-member-directory-search-row
-        justify-content: flex-end
-      .um-member-directory-search-line
+      +flex( row, flex-start, center, nowrap )
+      margin: 0 0 18px 0
+      width: 100%
+      padding: 0
+      &.um-member-directory-search-filters
         +flex( row, flex-start, center, nowrap )
-        width: 60%
-        label
-          flex: 1
-          margin: 0 10px 0 0
-          min-width: 90px
-          max-width: 85%
-          span
-            display: none
-            margin: 0 5px 0 0
-          .um-search-line
-            -webkit-appearance: textfield
+        .um-filters-toggle
+          margin-left: 10px
+          width: 200px
+        .um-member-directory-search-wrapper
+          +flex( row, flex-start, center, nowrap )
+          width: 100%
+          label.um-member-directory-search-line
+            margin: 0 10px 0 0
             width: 100%
-            +border-box
-        .um-do-search
-          min-width: 15%
-          width: auto
-      .um-member-directory-nav-line
-        +flex( row, space-between, center, nowrap )
-        width: 100%
-        .um-member-directory-view-type
-          font-size: 30px
-          line-height: 30px
-          margin: 0 10px 0 0
-          width: 30px
-          .um-member-directory-view-type-a
-            color: $border
-            display: none
-          &.um-disabled
-            cursor: default
-            a
-              cursor: default
-          &:not( .um-disabled )
-            .um-member-directory-view-type-a
-              &:hover
-                color: $hover
+            & > span
+              display: none
+            .um-search-line
+              -webkit-appearance: textfield
+              +border-box
+              display: block
+              width: 100%
+              height: 44px
+              margin: 0
+              padding: 6px 10px
+              border: 1px solid $text-input-border-color
+              border-radius: $text-input-border-radius
+              outline: none
+              background-color: $text-input-bg
+              color: $text-input-color
+              font-size: inherit
+              font-family: inherit
+              line-height: 1.3
               &:focus
-                color: $border
+                border: 1px solid $text-input-border-color-focus
+                box-shadow: none
+          .um-do-search
+            width: 200px
+      &.um-member-directory-filters-bar
+        +flex( column, flex-start, stretch, nowrap )
+        .um-filters-header
+          color: $gray-700
+          font-size: 15px
+          font-weight: $bold-weight
+          width: 100%
+          margin: 0
+          padding: 0
+          text-align: left
+          grid-column: 1 / 4
+        .um-search
+          margin: 0
+          width: 100%
+          display: grid
+
+          grid-template-rows: auto 1fr
+          grid-template-columns: repeat(3, 1fr)
+          grid-gap: 10px
+          grid-auto-rows: minmax(max-content, auto)
+          -ms-grid-template-rows: auto 1fr
+          -ms-grid-template-columns: repeat(3, 1fr)
+          -ms-grid-gap: 10px
+          -ms-grid-auto-rows: minmax(max-content, auto)
+          align-items: end
+          .um-search-filter
+            +flex( row, flex-start, baseline, nowrap )
+            width: 100%
+            position: relative
+
+            .select2-container
+              float: left
+              width: 100% !important
+
+            .um-s1
+              width: 100%
+            &.um-text-filter-type
+              label
+                width: 100%
+                +border-box
+                display: block
+                margin: 0
+                padding: 0
+                span
+                  font-weight: $bold-weight
+                  font-size: 13px
+              input[type="text"]
+                width: 100%
+                +border-box
+                display: block
+                height: 44px
+                margin: 0
+                padding: 6px 10px
+                border: 1px solid $text-input-border-color
+                border-radius: $text-input-border-radius
+                outline: none
+                background-color: $text-input-bg
+                color: $text-input-color
+                font-size: inherit
+                font-family: inherit
+                line-height: 1.3
+                &:focus
+                  border: 1px solid $text-input-border-color-focus
+                  box-shadow: none
+            &.um-select-filter-type
+              label
+                width: 100%
+                +border-box
+                display: block
+                margin: 0
+                padding: 0
+                span
+                  font-weight: $bold-weight
+                  font-size: 13px
+            &.um-slider-filter-type
+              flex-direction: column
+              align-items: stretch
+              .um-slider
+                width: calc( 100% - 16px )
+                .ui-slider-range.ui-widget-header
+                  background: #44b0ec
+                  border: 1px solid #44b0ec !important
+                  margin-top: -1px
+
+                &.ui-slider.ui-slider-horizontal
+                  border: 1px solid #ddd !important
+                  box-sizing: border-box
+                  margin: 4px 8px 0 8px
+
+              .um-slider-range
+                +flex( row, flex-start, baseline, nowrap )
+                margin: 6px 0 0 8px
+                font-size: 0.8em
+            &.um-datepicker-filter-type,
+            &.um-timepicker-filter-type
+              +flex( row, flex-start, end, nowrap )
+              label
+                width: calc( 50% - 5px )
+                margin: 0 5px 0 0 !important
+                span
+                  font-weight: $bold-weight
+                  font-size: 13px
+                input[type="date"],
+                input[type="time"]
+                  width: 100%
+                  margin: 0
+                  +border-box
+                  display: block
+                  height: 44px
+                  padding: 6px 10px
+                  border: 1px solid $text-input-border-color
+                  border-radius: $text-input-border-radius
+                  outline: none
+                  background-color: $text-input-bg
+                  color: $text-input-color
+                  font-size: inherit
+                  font-family: inherit
+                  line-height: 1.3
+                  &:focus
+                    border: 1px solid $text-input-border-color-focus
+                    box-shadow: none
+                &:nth-child(even)
+                  margin: 0 0 0 5px !important
+          &[style*="overflow: hidden;"]
+            .um-search-filter
+              pointer-events: none
+          &.um-search-invisible
+            display: none
+
+      &.um-member-directory-users-counter
+        +flex( row, flex-start, baseline, nowrap )
+        &.um-member-directory-sorting-row
+          +flex( row, space-between, baseline, nowrap )
+        .um-member-directory-total-users
+          .um-members-total
+            color: $gray-700
+            font-weight: $bold-weight
         .um-member-directory-sorting
           +flex( row, flex-start, baseline, nowrap )
-          flex: 5
+          color: $gray-700
+          font-weight: $bold-weight
           .um-member-directory-sorting-a
-            +flex( row, flex-start, baseline, nowrap )
+            +flex( row, flex-end, baseline, nowrap )
             position: relative
             cursor: pointer
             a
+              color: $gray-700
+              font-weight: $bold-weight
               margin: 0 5px 0 0
+              &:hover,
+              &:active
+                color: $gray-700
+                font-weight: $bold-weight
+                text-decoration: none
             i
               &.fa-caret-down
                 display: inline
               &.fa-caret-up
                 display: none
-            &.um-member-directory-sorting-visible
+            &.um-new-dropdown-shown
               i
                 &.fa-caret-down
                   display: none
                 &.fa-caret-up
                   display: inline
-            .um-new-dropdown
-              top : 24px
-              width: 200px
-              left: -12px
-              li
-                a[data-selected="1"]
-                  display: none
-        .um-member-directory-filters
-          +flex( row, flex-end, baseline, nowrap )
-          flex: 2
-          text-align: right
-          .um-member-directory-filters-a
-            +flex( row, flex-start, baseline, nowrap )
-            cursor: pointer
-            a
-              margin: 0 5px 0 0
-            i
-              &.fa-caret-down
-                display: inline
-              &.fa-caret-up
-                display: none
-            &.um-member-directory-filters-visible
-              i
-                &.fa-caret-down
-                  display: none
-                &.fa-caret-up
-                  display: inline
+          &.disabled
+            display: none !important
+      &.um-header-row-invisible
+        margin: 0 !important
 
-      .um-search
-        margin: 0
-        width: 100%
-        display: grid
-
-        grid-template-rows: auto 1fr
-        grid-template-columns: repeat(3, 1fr)
-        grid-gap: 10px
-        grid-auto-rows: minmax(max-content, auto)
-        -ms-grid-template-rows: auto 1fr
-        -ms-grid-template-columns: repeat(3, 1fr)
-        -ms-grid-gap: 10px
-        -ms-grid-auto-rows: minmax(max-content, auto)
-        align-items: center
-        .um-search-filter
-          +flex( row, flex-start, baseline, nowrap )
-          width: 100%
-          position: relative
-
-          .select2-container
-            float: left
-            width: 100% !important
-
-          .um-s1
-            width: 100%
-          &.um-text-filter-type
-            input
-              width: 100%
-          &.um-slider-filter-type
-            flex-direction: column
-            align-items: stretch
-            .um-slider
-              width: calc( 100% - 16px )
-              .ui-slider-range.ui-widget-header
-                background: #44b0ec
-                border: 1px solid #44b0ec !important
-                margin-top: -1px
-
-              &.ui-slider.ui-slider-horizontal
-                border: 1px solid #ddd !important
-                box-sizing: border-box
-                margin: 4px 8px 0 8px
-
-            .um-slider-range
-              +flex( row, flex-start, baseline, nowrap )
-              margin: 6px 0 0 8px
-              font-size: 0.8em
-          &.um-datepicker-filter-type,
-          &.um-timepicker-filter-type
-            +flex( row, flex-start, baseline, nowrap )
-            input
-              width: calc( 50% - 5px )
-              margin: 0 5px 0 0 !important
-              +border-box
-              //float: left
-              &:nth-child(even)
-                margin: 0 0 0 5px !important
-        &[style*="overflow: hidden;"]
-          .um-search-filter
-            pointer-events: none
-        &.um-search-invisible
-          display: none
-
-      .um-filtered-line
+      &.um-filtered-line
         +flex( row, flex-start, baseline, wrap )
-        //margin: 5px 0 0 0
-        margin: 0
+        margin: 0 0 5px 0
         padding: 0
-        box-sizing: border-box
+        +border-box
         border: none
         .um-members-filter-tag
+          +border-box
           +flex( row, flex-start, center, nowrap )
-          margin: 0 10px 5px 0
-          padding: 0 10px
-          border-radius: 3px
+          margin: 0 20px 5px 0
+          padding: 4px 10px
+          background: $white
+          border: 1px solid $gray-300
+          border-radius: 6px
           cursor: default
-          background: #f1f1f1
-          font-size: 13px
+          font-size: 12px
           &:first-child
             margin-left: 0
           .um-members-filter-remove
-            float: right
-            display: inline-block
             margin-left: 10px
             cursor: pointer
-            font-weight: bold
-            font-size: 20px
+            font-weight: $bold-weight
+            font-size: 18px
+            line-height: 18px
+            color: $gray-400
+            top: -1px
+            position: relative
             &:hover
-              color: #a00
+              color: $gray-600
 
         .um-clear-filters
           display: none
           a
-            padding: 3px 10px
-            margin: 0 10px
+            font-size: 13px
 
 
   .um-members-wrapper
     +flex( column, flex-start, stretch, nowrap )
     width: 100%
-    margin: 0 0 10px 0
+    margin: 0 0 18px 0
     padding: 0
     position: relative
     height: 300px
-
-    .um-members-intro
-      text-align: center
-      margin: 0 0 10px 0
+    -ms-word-break: break-all
+    word-break: break-word
+    word-wrap: break-word
 
     .um-members-total
       font-size: 20px
       font-weight: 300
 
-    .um-members
-      width: 100%
+    .um-member
+      border: 1px solid $gray-200
+      background: $white
+      +border-box
+      border-radius: 8px
+      +box-shadow-md
+      margin: 0
+      .um-member-photo
+        +border-box
+        -moz-border-radius: 999px
+        -webkit-border-radius: 999px
+        border-radius: 999px
+        a, img
+          -moz-border-radius: 999px
+          -webkit-border-radius: 999px
+          border-radius: 999px
+      .um-member-card
+        .um-member-name
+          +flex( row, flex-start, baseline, nowrap )
+          a
+            +flex( row, flex-start, center, nowrap )
+            font-size: 15px
+            font-weight: $bold-weight
+            color: $gray-700
+            &:hover,
+            &:active,
+            &:focus
+              text-decoration: none
+              color: $gray-700
+
+    img
+      display: block
+      overflow: hidden
+      -moz-border-radius: 0
+      -webkit-border-radius: 0
+      border-radius: 0
       margin: 0
       padding: 0
-      -ms-word-break: break-all
-      word-break: break-word
-      word-wrap: break-word
+
+    &.um-members-grid:not(.um-members-empty)
+      display: grid
+      grid-template-rows: auto 1fr
+      grid-template-columns: repeat(3, 1fr)
+      grid-gap: 16px
+      grid-auto-rows: minmax(max-content, auto)
+      -ms-grid-template-rows: auto 1fr
+      -ms-grid-template-columns: repeat(3, 1fr)
+      -ms-grid-gap: 16px
+      -ms-grid-auto-rows: minmax(max-content, auto)
+      align-items: stretch
+      &[data-grid-columns="2"]
+        grid-template-columns: repeat(2, 1fr)
+        -ms-grid-template-columns: repeat(2, 1fr)
+      &[data-grid-columns="3"]
+        grid-template-columns: repeat(3, 1fr)
+        -ms-grid-template-columns: repeat(3, 1fr)
+      &[data-grid-columns="4"]
+        grid-template-columns: repeat(4, 1fr)
+        -ms-grid-template-columns: repeat(4, 1fr)
 
       .um-member
-        border: 1px solid $border
-        +border-box
-        .um-member-photo
-          box-sizing: content-box
-          &.radius-1
-            a img
-              -moz-border-radius: 999px !important
-              -webkit-border-radius: 999px !important
-              border-radius: 999px !important
-            &.radius-2
-              a img
-                -moz-border-radius: 4px !important
-                -webkit-border-radius: 4px !important
-                border-radius: 4px !important
-            &.radius-3
-              a img
-                -moz-border-radius: 0 !important
-                -webkit-border-radius: 0 !important
-                border-radius: 0 !important
-        .um-member-card
-          .um-member-name
-            +flex( row, flex-start, baseline, nowrap )
-            a
-              +flex( row, flex-start, center, nowrap )
-
-
-      img
-        display: block
-        overflow: hidden
-        -moz-border-radius: 0
-        -webkit-border-radius: 0
-        border-radius: 0
-        margin: 0
-        padding: 0
-
-      &.um-members-grid
-        .um-gutter-sizer
-          width: 5%
-        .um-member
-          float: left
-          width: 30%
-          background: #fff
-          text-align: center
-          margin-bottom: 40px
-          position: relative
-          .um-member-status
-            display: none
-            background: #999
-            &.awaiting_admin_review,
-            &.inactive,
-            &.rejected
-              display: block
-              position: absolute
-              top: 0
-              left: 0
-              width: 100%
-              padding: 7px 15px
-              color: #fff
-              z-index: 10
-              font-size: 13px
-              +border-box
-            &.awaiting_admin_review
-              background: #c74a4a
-          .um-member-photo
-            padding: 40px 0 20px 0
-            text-align: center
-            a
-              text-decoration: none
-              box-shadow: none !important
-              display: inline !important
-              img
-                display: inline !important
-                border: 5px solid #fff
-                background: #fff
-                width: 140px
-                height: 140px
-                float: none !important
-
-          &.awaiting_admin_review,
-          &.inactive,
-          &.rejected
-            opacity: 0.7
-          &.with-cover
-            .um-member-photo
-              padding-top: 0
-              a img
-                width: 90px
-                height: 90px
-                position: relative
-                top: -35px
-                margin-bottom: -45px
-                float: none
-                opacity: 1
-
-          .um-member-cover
-            background-color: #eee
-            box-sizing: border-box
-            position: relative
-            &[data-ratio]
-              overflow-y: hidden
-            .um-member-cover-e
-              text-align: center
-              box-sizing: border-box
-              img
-                width: 100% !important
-          .um-member-card
-            padding-bottom: 15px
-            &.no-photo
-              padding-top: 30px
-
-            .um-member-name
-              margin: 0 0 4px 0
-              justify-content: center
-              a
-                font-size: 16px
-                line-height: 26px
-                color: #444
-                font-weight: 700
-
-
-            .um-members-edit-btn
-              margin: 2px 0
-              height: 40px
-              a.um-edit-profile-btn
-                padding: 10px 15px !important
-                transition: none !important
-                display: inline-block !important
-                margin: 0 auto !important
-                min-width: 110px
-                width: auto
-                text-align: center
-                font-size: 13px
-                i
-                  margin-right: 5px
-                  width: 14px
-                  text-align: left
-                  display: inline-block
-                  font-size: 16px
-                  position: relative
-                  left: 0
-                  top: -1px
-
-            .um-member-tagline
-              font-size: 13px
-              line-height: 22px
-              color: #999
-              padding: 0 15px
-
-            .um-member-meta-main
-              .um-member-meta
-                display: none
-                margin: 20px 15px 0 15px
-                padding: 15px 0
-                border-top: 1px solid #e5e5e5
-                &.no-animate
-                  display: block
-                .um-member-metaline
-                  font-size: 13px
-                  padding: 12px 0 0 0
-                  line-height: 16px
-                  vertical-align: middle
-                  strong
-                    display: block
-                    clear: both
-                  span
-                    display: block
-                    text-align: center
-
-                .um-member-connect
-                  padding-top: 20px
-
-                  a
-                    display: inline-block
-                    width: 40px
-                    line-height: 40px
-                    height: 40px
-                    -moz-border-radius: 999px
-                    -webkit-border-radius: 999px
-                    border-radius: 999px
-                    color: #fff !important
-                    opacity: 0.85
-                    margin: 0 1px
-                    font-size: 22px
-                    transition: 0.25s
-
-                    &:hover
-                      opacity: 1
-                      color: #fff
-
-              .um-member-less
-                display: none
-                a
-                  color: #666
-                  display: inline-block
-                  i
-                    display: block
-                    font-size: 32px
-                    height: 32px
-                    line-height: 32px
-              .um-member-more
-                a
-                  color: #666
-                  display: inline-block
-                  i
-                    display: block
-                    font-size: 32px
-                    height: 32px
-                    line-height: 32px
-
-
-      &.um-members-list
         display: grid
 
         grid-template-rows: auto 1fr
         grid-template-columns: repeat(1, 1fr)
-        grid-gap: 10px
+        grid-gap: 16px
         grid-auto-rows: minmax(max-content, auto)
         -ms-grid-template-rows: auto 1fr
         -ms-grid-template-columns: repeat(1, 1fr)
-        -ms-grid-gap: 10px
+        -ms-grid-gap: 24px
         -ms-grid-auto-rows: minmax(max-content, auto)
         align-items: center
-
-        .um-member
-          +flex( column, flex-start, stretch, nowrap )
-          width: 100%
-          padding: 15px
+        //+flex( column, flex-start, stretch, nowrap )
+        width: 100%
+        text-align: center
+        padding: 24px
+        position: relative
+        .um-new-dropdown
+          text-align: left
+        .um-member-card-left-actions
+          position: absolute
+          z-index: 1
+          top: 12px
+          left: 12px
+          .um-member-cog
+            +flex( row, center, center, nowrap )
+            +border-box
+        .um-member-card-right-actions
+          position: absolute
+          z-index: 10
+          top: 12px
+          right: 12px
+        .um-member-photo
+          padding: 0
           margin: 0
-          background: #fff
-          +border-box
+          width: 40%
+          border: 4px solid $white
+          place-self: center
+          overflow: hidden
+          position: relative
+          +box-shadow-lg
+          &:after
+            content: ""
+            display: block
+            padding-bottom: 100%
+          a
+            position: absolute
+            overflow: hidden
+            display: block
+            width: 100%
+            height: 100%
+            text-decoration: none
+            box-shadow: none !important
+            img
+              display: block
+              background: $white
+              width: 100%
+              height: 100%
+              margin: 0
+              padding: 0
+
+        &.with-cover
+          .um-member-photo
+            padding-top: 0
+            a img
+              width: 90px
+              height: 90px
+              position: relative
+              top: -35px
+              margin-bottom: -45px
+              float: none
+              opacity: 1
+
+        .um-member-cover
+          background-color: #eee
+          box-sizing: border-box
+          position: relative
+          &[data-ratio]
+            overflow-y: hidden
+          .um-member-cover-e
+            text-align: center
+            box-sizing: border-box
+            img
+              width: 100% !important
+        .um-member-card
+          +flex( column, flex-start, stretch, nowrap )
+          align-self: flex-start
+          gap: 4px
+          .um-member-name
+            place-self: center
+            margin: 0
           .um-member-status
             display: none
-            background: #999
+            align-self: center
             &.awaiting_admin_review,
             &.inactive,
             &.rejected
               display: block
-              width: 100%
-              padding: 7px 15px
-              margin-bottom: 10px
-              color: #fff
-              font-size: 13px
-              +border-box
             &.awaiting_admin_review
-              background: #c74a4a
-          .um-member-card-container
-            +flex( row, flex-start, flex-start, nowrap )
+              background: $error-100
+              color: $error-700
+          .um-view-profile-btn
+            align-self: center
+            margin: 0
+
+          .um-member-tagline
+            font-size: 13px
+            line-height: 22px
+            color: #999
+            padding: 0 15px
+          .um-member-connect
+            padding-top: 20px
+
+            a
+              display: inline-block
+              width: 40px
+              line-height: 40px
+              height: 40px
+              -moz-border-radius: 999px
+              -webkit-border-radius: 999px
+              border-radius: 999px
+              color: #fff !important
+              opacity: 0.85
+              margin: 0 1px
+              font-size: 22px
+              transition: 0.25s
+
+              &:hover
+                opacity: 1
+                color: #fff
+        .um-member-action-buttons
+          +flex( column, center, center, wrap )
+          align-self: end
+          gap: 10px
+          a.um-button
+            min-width: 120px
+            +border-box
+          .um-member-action-extra-buttons
+            +flex( row, center, center, wrap )
+            gap: 10px
+            a.um-button
+              min-width: 120px
+              +border-box
+              text-align: center
+              padding: 10px
+    &.um-members-list:not(.um-members-empty)
+      display: grid
+
+      grid-template-rows: auto 1fr
+      grid-template-columns: repeat(1, 1fr)
+      grid-gap: 16px
+      grid-auto-rows: minmax(max-content, auto)
+      -ms-grid-template-rows: auto 1fr
+      -ms-grid-template-columns: repeat(1, 1fr)
+      -ms-grid-gap: 16px
+      -ms-grid-auto-rows: minmax(max-content, auto)
+      align-items: center
+
+      .um-member
+        +flex( column, flex-start, stretch, nowrap )
+        width: 100%
+        padding: 15px
+        .um-member-status
+          display: none
+          background: #999
+          &.awaiting_admin_review,
+          &.inactive,
+          &.rejected
+            display: block
             width: 100%
-            margin: 0 0 10px 0
+            padding: 7px 15px
+            margin-bottom: 10px
+            color: #fff
+            font-size: 13px
+            +border-box
+          &.awaiting_admin_review
+            background: #c74a4a
+        .um-member-card-container
+          +flex( row, flex-start, flex-start, nowrap )
+          width: 100%
+          margin: 0 0 10px 0
+          padding: 0
+          .um-member-photo
+            width: 100px
+            margin: 0 15px 0 0
             padding: 0
-            .um-member-photo
+            a
               width: 100px
-              margin: 0 15px 0 0
-              padding: 0
-              a
+              height: 100px
+              display: block
+              img
                 width: 100px
                 height: 100px
-                display: block
-                img
-                  width: 100px
-                  height: 100px
-                  position: relative
-                  top: 0
-                  margin: 0
-                  margin-bottom: 0
-                  border: none
-
-            .um-member-card
-              +flex( row, flex-start, flex-start, nowrap )
-              width: calc( 100% - 115px )
-              padding: 0
-              margin: 0
-              +border-box
-              &.no-photo
-                width: 100%
-
-              .um-member-card-content
-                +flex( column, flex-start, stretch, nowrap )
-                width: calc( 100% - 30px )
-                margin: 0 10px 0 0
-                .um-member-card-header
-                  width: 100%
-                  .um-member-name
-                    margin: 0 0 4px 0
-                    a
-                      font-size: 16px
-                      line-height: 26px
-                      color: #444
-                      font-weight: 700
-
-                .um-member-tagline
-                  +flex( row, flex-start, baseline, wrap )
-                  width: 100%
-                  font-size: 13px
-                  //line-height: 22px
-                  color: #999
-                  padding: 0
-                  box-sizing: border-box
-                .um-member-meta-main
-                  width: 100%
-                  padding: 0
-                  box-sizing: border-box
-                  display: none
-                  &.no-animate
-                    display: block
-                  .um-member-meta
-                    float: left
-                    width: 100%
-                    display: block
-                    margin: 10px 0 0 0
-                    box-sizing: border-box
-                    border: none
-
-                    .um-member-metaline
-                      +flex( row, flex-start, center, wrap )
-                      font-size: 13px
-                      padding: 12px 0 0 0
-                      line-height: 16px
-                      width: 100%
-
-                    .um-member-connect
-                      padding-top: 10px
-                      a
-                        display: inline-block
-                        width: 40px
-                        line-height: 40px
-                        height: 40px
-                        -moz-border-radius: 999px
-                        -webkit-border-radius: 999px
-                        border-radius: 999px
-                        color: #fff !important
-                        opacity: 0.85
-                        margin: 0 1px
-                        font-size: 22px
-                        transition: 0.25s
-                        text-align: center
-
-                        &:hover
-                          opacity: 1
-                          color: #fff
-
-              .um-member-card-actions
-                +flex( column, flex-start, flex-end, nowrap )
-                width: 20px
-                text-align: right
-                padding: 0
-                .um-member-cog
-                  position: relative
-                  .um-member-actions-a
-                    line-height: 1
-                    display: block
-                    color: #666
-                    i
-                      display: block
-                      font-size: 20px
-                      line-height: 1
-                  .um-new-dropdown
-                    width: 180px
-                    right: 0
-                    text-align: left
-
-                a
-                  box-sizing: border-box
-
-          .um-member-card-footer
-            +flex( row, flex-end, center, nowrap )
-            width: 100%
-
-            .um-member-card-footer-buttons
-              +flex( row, flex-start, baseline, nowrap )
-              width: calc( 100% - 145px )
-              margin: 0 10px 0 0
-
-              .um-members-list-footer-button-wrapper
-                +flex( row, flex-start, baseline, nowrap )
+                position: relative
+                top: 0
                 margin: 0
-                //flex: 1 0 calc( ( 100% - 20px ) / 3 )
-              & > :not(:last-child)
-                margin: 0 10px 0 0
-            .um-member-card-reveal-buttons
+                margin-bottom: 0
+                border: none
+
+          .um-member-card
+            +flex( row, flex-start, flex-start, nowrap )
+            width: calc( 100% - 115px )
+            padding: 0
+            margin: 0
+            +border-box
+            .um-member-status
+              display: none
+              align-self: center
+              &.awaiting_admin_review,
+              &.inactive,
+              &.rejected
+                display: block
+              &.awaiting_admin_review
+                background: $error-100
+                color: $error-700
+            &.no-photo
+              width: 100%
+
+            .um-member-card-content
+              +flex( column, flex-start, stretch, nowrap )
+              width: calc( 100% - 30px )
+              margin: 0 10px 0 0
+              .um-member-card-header
+                width: 100%
+                .um-member-name
+                  margin: 0 0 4px 0
+
+              .um-member-tagline
+                +flex( row, flex-start, baseline, wrap )
+                width: 100%
+                font-size: 13px
+                //line-height: 22px
+                color: #999
+                padding: 0
+                box-sizing: border-box
+              .um-member-connect
+                padding-top: 10px
+                a
+                  display: inline-block
+                  width: 40px
+                  line-height: 40px
+                  height: 40px
+                  -moz-border-radius: 999px
+                  -webkit-border-radius: 999px
+                  border-radius: 999px
+                  color: #fff !important
+                  opacity: 0.85
+                  margin: 0 1px
+                  font-size: 22px
+                  transition: 0.25s
+                  text-align: center
+
+                  &:hover
+                    opacity: 1
+                    color: #fff
+
+            .um-member-card-actions
+              +flex( column, flex-start, flex-end, nowrap )
               width: 20px
               text-align: right
-              .um-member-more
-                +flex( column, flex-start, baseline, nowrap )
-                a
+              padding: 0
+              .um-member-cog
+                position: relative
+                .um-member-actions-a
+                  line-height: 1
+                  display: block
                   color: #666
-                  display: inline-block
                   i
                     display: block
-                    font-size: 28px
-                    height: 28px
-                    line-height: 28px
-              .um-member-less
-                +flex( column, flex-start, baseline, nowrap )
-                display: none
-                a
-                  color: #666
-                  display: inline-block
-                  i
-                    display: block
-                    font-size: 28px
-                    height: 28px
-                    line-height: 28px
-            &.no-photo.no-reveal
-              .um-member-card-footer-buttons
-                width: 100%
-            &.no-photo:not(.no-reveal)
-              .um-member-card-footer-buttons
-                width: calc( 100% - 30px )
-            &.no-reveal:not(.no-photo)
-              .um-member-card-footer-buttons
-                width: calc( 100% - 125px )
+                    font-size: 20px
+                    line-height: 1
+                .um-new-dropdown
+                  width: 180px
+                  right: 0
+                  text-align: left
 
+              a
+                box-sizing: border-box
 
+        .um-member-card-footer
+          +flex( row, flex-end, center, nowrap )
+          width: 100%
+          .um-view-profile-btn
+            margin: 0
 
-      .um-members-none
-        text-align: center
-        font-size: 18px
+          .um-member-card-footer-buttons
+            +flex( row, flex-start, baseline, nowrap )
+            width: calc( 100% - 145px )
+            margin: 0 10px 0 0
+
+            .um-members-list-footer-button-wrapper
+              +flex( row, flex-start, baseline, nowrap )
+              margin: 0
+              //flex: 1 0 calc( ( 100% - 20px ) / 3 )
+            & > :not(:last-child)
+              margin: 0 10px 0 0
+          &.no-photo.no-reveal
+            .um-member-card-footer-buttons
+              width: 100%
+          &.no-photo:not(.no-reveal)
+            .um-member-card-footer-buttons
+              width: calc( 100% - 30px )
+          &.no-reveal:not(.no-photo)
+            .um-member-card-footer-buttons
+              width: calc( 100% - 125px )
+
+    &.um-members-empty
+      +flex( row, center, center, nowrap )
+
+    .um-members-none
+      text-align: center
+      font-size: 16px
 
 
   .um-members-pagination-box
@@ -764,40 +743,48 @@ body
     margin: 0 0 10px 0
     padding: 0
     .um-members-pagi
-      +flex( row, center, baseline, nowrap )
+      +flex( row, center, center, nowrap )
       width: 100%
       margin: 0
       padding: 0
-      font-size: 15px
       .pagi
+        +border-box
+        text-align: center
         cursor: pointer
         display: inline-block
-        width: auto
-        height: 34px
-        line-height: 34px
+        padding: 10px
+        width: 40px
+        height: 40px
+        line-height: 18px
         transition: all .2s linear
-        padding: 0 14px
-        color: #666 !important
-        font-weight: normal
-        &.pagi-arrow
-          line-height: 38px
-          i:before
-            font-size: 20px
-            vertical-align: middle !important
-            height: 34px
-            line-height: 34px
-            top: -2px
-            position: relative
+        color: $gray-700
+        background-color: $white
+        border-right: 1px solid $gray-300
+        border-top: 1px solid $gray-300
+        border-bottom: 1px solid $gray-300
+        font-weight: $bold-weight
+        +box-shadow-xs
+        &:first-child
+          border-left: 1px solid $gray-300
+          border-radius: $button-border-radius 0 0 $button-border-radius
+        &:last-child
+          border-radius: 0 $button-border-radius $button-border-radius 0
+        &:hover
+          color: $gray-700
+          background-color: $white
         &.current
           cursor: default
-          color: #fff !important
+          background-color: $gray-50
+          color: $gray-800
           &:hover
-            color: #fff !important
+            color: $gray-800
+            background-color: $gray-50
         &.disabled
           cursor: default
-          opacity: .4
-        &.none
-          color: #aaa !important
+          color: $gray-300
+        &.pagi-arrow
+          width: auto
+          min-width: 80px
 
     .um-members-pagidrop
       width: 100%
@@ -812,88 +799,44 @@ body
     .um-members-wrapper
       height: auto
 
-  &[data-view_type="list"]
-    .um-member-directory-header
-      .um-member-directory-header-row
-        .um-member-directory-view-type
-          .um-member-directory-view-type-a[data-type="list"]
-            display: block
-  &[data-view_type="grid"]
-    .um-member-directory-header
-      .um-member-directory-header-row
-        .um-member-directory-view-type
-          .um-member-directory-view-type-a[data-type="grid"]
-            display: block
-  &[data-view_type="map"]
-    .um-member-directory-header
-      .um-member-directory-header-row
-        .um-member-directory-view-type
-          .um-member-directory-view-type-a[data-type="map"]
-            display: block
-
   &.uimob340
     .um-member-directory-header
       .um-member-directory-header-row
-        .um-member-directory-search-line
-          width: 100%
-        &.um-member-directory-search-row
-          justify-content: flex-start
-
-        .um-member-directory-nav-line
-          flex-wrap: wrap
-          .um-member-directory-view-type
-            width: 20px
-            font-size: 20px
-            line-height: 20px
-            margin: 0 2px 0 0
-          .um-member-directory-sorting
-            width: calc( 100% - 25px )
-            justify-content: flex-end
-            .um-new-dropdown
-              right: 0
-              left: auto
-          .um-member-directory-filters
-            flex: none
-            width: 100%
-      .um-search
-        grid-template-columns: repeat(1, 1fr)
+        .um-search
+          grid-template-columns: repeat(1, 1fr)
+          .um-filters-header
+            grid-column: 1 / 2
 
     .um-members-wrapper
-      .um-members
+      &.um-members-list
         .um-member
-          width: 100%
-        &.um-members-grid
-          .um-gutter-sizer
-            width: 0
-        &.um-members-list
-          .um-member
-            padding: 10px
-            .um-member-photo
+          padding: 10px
+          .um-member-photo
+            width: 50px
+            margin: 0 10px 0 0
+            a
               width: 50px
-              margin: 0 10px 0 0
-              a
+              height: 50px
+              img
                 width: 50px
                 height: 50px
-                img
-                  width: 50px
-                  height: 50px
 
-            .um-member-card
-              width: calc( 100% - 60px )
+          .um-member-card
+            width: calc( 100% - 60px )
 
-            .um-member-card-footer
-              align-items: flex-start
+          .um-member-card-footer
+            align-items: flex-start
+            .um-member-card-footer-buttons
+              +flex( column, flex-start, stretch, nowrap )
+              width: calc( 100% - 90px )
+              margin: 0 10px 0 0
+              .um-members-list-footer-button-wrapper
+                margin: 0 0 5px 0
+                a.um-button
+                  width: 100% !important
+            &.no-reveal:not(.no-photo)
               .um-member-card-footer-buttons
-                +flex( column, flex-start, stretch, nowrap )
-                width: calc( 100% - 90px )
-                margin: 0 10px 0 0
-                .um-members-list-footer-button-wrapper
-                  margin: 0 0 5px 0
-                  a.um-button
-                    width: 100% !important
-              &.no-reveal:not(.no-photo)
-                .um-member-card-footer-buttons
-                  width: calc( 100% - 70px )
+                width: calc( 100% - 70px )
     .um-members-pagination-box
       .um-members-pagi
         display: none
@@ -901,105 +844,81 @@ body
   &.uimob500
     .um-member-directory-header
       .um-member-directory-header-row
-        .um-member-directory-search-line
-          width: 100%
-        &.um-member-directory-search-row
-          justify-content: flex-start
-        .um-member-directory-nav-line
-          .um-member-directory-view-type
-            width: 20px
-            font-size: 20px
-            line-height: 20px
-            margin: 0 5px 0 0
-      .um-search
-        grid-template-columns: repeat(1, 1fr)
+        .um-search
+          grid-template-columns: repeat(1, 1fr)
+          .um-filters-header
+            grid-column: 1 / 2
     .um-members-wrapper
-      .um-members
+      &.um-members-list
         .um-member
-          width: 100%
-        &.um-members-grid
-          .um-gutter-sizer
-            width: 0
-        &.um-members-list
-          .um-member
-            .um-member-photo
+          .um-member-photo
+            width: 70px
+            margin: 0 10px 0 0
+            a
               width: 70px
-              margin: 0 10px 0 0
-              a
+              height: 70px
+              img
                 width: 70px
                 height: 70px
-                img
-                  width: 70px
-                  height: 70px
 
-            .um-member-card
-              width: calc( 100% - 80px )
-            .um-member-card-footer
-              align-items: flex-start
+          .um-member-card
+            width: calc( 100% - 80px )
+          .um-member-card-footer
+            align-items: flex-start
+            .um-member-card-footer-buttons
+              flex-wrap: wrap
+              width: calc( 100% - 110px )
+              margin: 0 10px 0 0
+              .um-members-list-footer-button-wrapper
+                margin: 0 10px 5px 0
+            &.no-reveal:not(.no-photo)
               .um-member-card-footer-buttons
-                flex-wrap: wrap
-                width: calc( 100% - 110px )
-                margin: 0 10px 0 0
-                .um-members-list-footer-button-wrapper
-                  margin: 0 10px 5px 0
-              &.no-reveal:not(.no-photo)
-                .um-member-card-footer-buttons
-                  width: calc( 100% - 90px )
+                width: calc( 100% - 90px )
     .um-members-pagination-box
       .um-members-pagi
         display: none
   &.uimob800
     .um-member-directory-header
       .um-member-directory-header-row
-        .um-member-directory-search-line
-          width: 100%
-      .um-search
-        grid-template-columns: repeat(2, 1fr)
+        .um-search
+          grid-template-columns: repeat(2, 1fr)
+          .um-filters-header
+            grid-column: 1 / 3
 
     .um-members-wrapper
-      .um-members
-        &.um-members-grid
-          .um-gutter-sizer
-            width: 4%
-          .um-member
-            width: 48%
-        &.um-members-list
-          .um-member
-            .um-member-photo
+      &.um-members-list
+        .um-member
+          .um-member-photo
+            width: 80px
+            margin: 0 10px 0 0
+            a
               width: 80px
-              margin: 0 10px 0 0
-              a
+              height: 80px
+              img
                 width: 80px
                 height: 80px
-                img
-                  width: 80px
-                  height: 80px
 
-            .um-member-card
-              width: calc( 100% - 90px )
-            .um-member-card-footer
-              align-items: flex-start
+          .um-member-card
+            width: calc( 100% - 90px )
+          .um-member-card-footer
+            align-items: flex-start
+            .um-member-card-footer-buttons
+              flex-wrap: wrap
+              width: calc( 100% - 120px )
+              margin: 0 10px 0 0
+              .um-members-list-footer-button-wrapper
+                margin: 0 10px 5px 0
+            &.no-reveal:not(.no-photo)
               .um-member-card-footer-buttons
-                flex-wrap: wrap
-                width: calc( 100% - 120px )
-                margin: 0 10px 0 0
-                .um-members-list-footer-button-wrapper
-                  margin: 0 10px 5px 0
-              &.no-reveal:not(.no-photo)
-                .um-member-card-footer-buttons
-                  width: calc( 100% - 100px )
+                width: calc( 100% - 100px )
   &.uimob960
     .um-member-directory-header
-      .um-search
-        grid-template-columns: repeat(2, 1fr)
+      .um-member-directory-header-row
+        .um-search
+          grid-template-columns: repeat(2, 1fr)
+          .um-filters-header
+            grid-column: 1 / 3
 
-    .um-members-wrapper
-      .um-members
-        &.um-members-grid
-          .um-gutter-sizer
-            width: 4%
-          .um-member
-            width: 48%
 
 // todo try to make it only for member directory because can crush other select2
 .select2-container .select2-results li.select2-results__option[aria-disabled=true]

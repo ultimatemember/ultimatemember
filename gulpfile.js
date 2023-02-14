@@ -105,6 +105,16 @@ gulp.task( 'default', function ( done ) {
 		.pipe( rename( { suffix: '.min' } ) )
 		.pipe( gulp.dest( 'assets/css/register/' ) );
 
+	// Profile
+	gulp.src(['assets/css/profile/*.sass'])
+		.pipe( sass().on( 'error', sass.logError ) )
+		.pipe( gulp.dest( 'assets/css/profile/' ) );
+	gulp.src(['assets/css/profile/*.sass'])
+		.pipe( sass().on( 'error', sass.logError ) )
+		.pipe( cleanCSS() )
+		.pipe( rename( { suffix: '.min' } ) )
+		.pipe( gulp.dest( 'assets/css/profile/' ) );
+
 
 
 
@@ -219,18 +229,6 @@ gulp.task( 'default', function ( done ) {
 		.pipe( rename({ suffix: '.min' }) )
 		.pipe( gulp.dest( 'assets/libs/modal/' ) );
 
-	// Pickadate lib
-	gulp.src(['assets/libs/pickadate/*.css', '!assets/libs/pickadate/*.min.css',])
-		.pipe( cleanCSS() )
-		.pipe( rename( { suffix: '.min' } ) )
-		.pipe( gulp.dest( 'assets/libs/pickadate/' ) );
-
-	// min JS files
-	gulp.src(['assets/libs/pickadate/*.js', '!assets/libs/pickadate/*.min.js', ])
-		.pipe( uglify() )
-		.pipe( rename({ suffix: '.min' }) )
-		.pipe( gulp.dest( 'assets/libs/pickadate/' ) );
-
 	// Raty lib
 	gulp.src(['assets/libs/raty/*.css', '!assets/libs/raty/*.min.css',])
 		.pipe( cleanCSS() )
@@ -292,39 +290,39 @@ gulp.task( 'default', function ( done ) {
 	}
 
 	// modules
-	for (const [index, currentValue] of Object.entries( names ) ) {
-		let cv = currentValue.map( function ( val, indx, arr ) {
-			return 'modules/' + val + '/assets/js/*.js'
-		} );
-
-		let css_cv = currentValue.map( function ( val, indx, arr ) {
-			return 'modules/' + val + '/assets/css/*.sass'
-		} );
-
-		Promise.resolve( md5( index ) ).then( function( value ) {
-			gulp.src( cv )
-				.pipe( concat( value + '.js' ) )
-				.pipe( gulp.dest('assets/modules/') );
-
-			gulp.src( cv )
-				.pipe( concat( value + '.min.js' ) )
-				.pipe( uglify() )
-				.pipe( gulp.dest( 'assets/modules/' ) );
-
-			// full CSS files
-			gulp.src( css_cv )
-				.pipe( sass().on( 'error', sass.logError ) )
-				.pipe( concat( value + '.css' ) )
-				.pipe( gulp.dest( 'assets/modules/' ) );
-
-			// min CSS files
-			gulp.src( css_cv )
-				.pipe( sass().on( 'error', sass.logError ) )
-				.pipe( cleanCSS() )
-				.pipe( concat( value + '.min.css' ) )
-				.pipe( gulp.dest( 'assets/modules/' ) );
-		});
-	}
+	// for (const [index, currentValue] of Object.entries( names ) ) {
+	// 	let cv = currentValue.map( function ( val, indx, arr ) {
+	// 		return 'modules/' + val + '/assets/js/*.js'
+	// 	} );
+	//
+	// 	let css_cv = currentValue.map( function ( val, indx, arr ) {
+	// 		return 'modules/' + val + '/assets/css/*.sass'
+	// 	} );
+	//
+	// 	Promise.resolve( md5( index ) ).then( function( value ) {
+	// 		gulp.src( cv )
+	// 			.pipe( concat( value + '.js' ) )
+	// 			.pipe( gulp.dest('assets/modules/') );
+	//
+	// 		gulp.src( cv )
+	// 			.pipe( concat( value + '.min.js' ) )
+	// 			.pipe( uglify() )
+	// 			.pipe( gulp.dest( 'assets/modules/' ) );
+	//
+	// 		// full CSS files
+	// 		gulp.src( css_cv )
+	// 			.pipe( sass().on( 'error', sass.logError ) )
+	// 			.pipe( concat( value + '.css' ) )
+	// 			.pipe( gulp.dest( 'assets/modules/' ) );
+	//
+	// 		// min CSS files
+	// 		gulp.src( css_cv )
+	// 			.pipe( sass().on( 'error', sass.logError ) )
+	// 			.pipe( cleanCSS() )
+	// 			.pipe( concat( value + '.min.css' ) )
+	// 			.pipe( gulp.dest( 'assets/modules/' ) );
+	// 	});
+	// }
 
 	done();
 });

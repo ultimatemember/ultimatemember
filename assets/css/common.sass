@@ -1,0 +1,70 @@
+@import "colors"
+@import "selectors"
+@import "mixins"
+@import "responsive"
+
++keyframes(um-ajax-spinning)
+  0%
+    -webkit-transform: rotate(0deg)
+    transform: rotate(0deg)
+  100%
+    -webkit-transform: rotate(360deg)
+    transform: rotate(360deg)
+
+.um-clickable
+  &:hover
+    cursor: pointer
+
+.um-dropdown
+  position: absolute
+  height: auto
+  background: $white
+  +border-radius( $button-border-radius, $button-border-radius, $button-border-radius, $button-border-radius )
+  z-index: 55
+  display: none
+  border: 1px solid $gray-300
+  +border-box
+  +box-shadow-xs
+
+  ul
+    background: $white
+    position: relative
+    z-index: 16
+    list-style-type: none !important
+    padding: 0 !important
+    margin: 0 !important
+    font-size: inherit
+    +border-radius( $button-border-radius, $button-border-radius, $button-border-radius, $button-border-radius )
+  li
+    list-style-type: none !important
+    padding: 0 !important
+    margin: 0 !important
+    font-size: inherit
+    a
+      font-size: inherit
+      display: block
+      padding: 8px 12px
+      line-height: 18px
+    &:last-child
+      a
+        border-top: 1px solid $gray-200
+        padding: 12px
+
+.um-dropdown-b
+  position: relative
+
+.um-dropdown-arr
+  position: absolute
+  font-size: 24px
+  width: 24px
+  height: 24px
+  overflow: hidden
+  z-index: 15
+  color: $gray-300
+  *
+    display: block !important
+    width: 24px !important
+    height: 24px !important
+    vertical-align: bottom !important
+    overflow: hidden !important
+    line-height: 24px !important

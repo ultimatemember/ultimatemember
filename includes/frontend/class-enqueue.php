@@ -33,7 +33,7 @@ if ( ! class_exists( 'um\frontend\Enqueue' ) ) {
 		 * @return void
 		 */
 		public function add_to_global_styles() {
-			$styling = UM()->options()->get( 'form_styling' );
+			$styling = UM()->options()->get( 'styling' );
 			if ( ! empty( $styling ) ) {
 				return;
 			}
@@ -182,6 +182,32 @@ if ( ! class_exists( 'um\frontend\Enqueue' ) ) {
 			wp_register_style( 'um-register-base', $register['css']['path']['base'], $register['css']['deps'], UM_VERSION );
 			wp_register_style( 'um-register-full', $register['css']['path']['full'], $register['css']['deps'], UM_VERSION );
 
+			$profile = array(
+				'js'  => array(
+					'path' => $this->urls['js'] . 'profile/compiler-regular.js',
+					'deps' => array( 'jquery', 'wp-hooks', 'um_scripts', 'um-modal', 'um-dropdown', 'plupload', 'um_crop' ),
+					'vars' => array(
+						'honeypot' => UM()->honeypot,
+					),
+				),
+				'css' => array(
+					'path' => array(
+						'base' => $this->urls['css'] . 'profile/compiler-regular.css',
+						'full' => $this->urls['css'] . 'profile/compiler-regular-full.css',
+					),
+					'deps' => array( 'um-modal', 'um_crop' ),
+				),
+			);
+			$profile = apply_filters( 'um_profile_assets', $profile );
+
+			wp_register_script( 'um-profile', $profile['js']['path'], $profile['js']['deps'], UM_VERSION, true );
+			if ( ! empty( $profile['js']['vars'] ) ) {
+				// localize data if doesn't empty
+				wp_localize_script( 'um-profile', 'umProfile', $profile['js']['vars'] );
+			}
+			wp_register_style( 'um-profile-base', $profile['css']['path']['base'], $profile['css']['deps'], UM_VERSION );
+			wp_register_style( 'um-profile-full', $profile['css']['path']['full'], $profile['css']['deps'], UM_VERSION );
+
 
 			//wp_register_style( 'um_forms', $this->urls['css'] . 'forms' . $this->suffix . '.css', array(), UM_VERSION );
 
@@ -199,8 +225,6 @@ if ( ! class_exists( 'um\frontend\Enqueue' ) ) {
 			wp_register_script('um-conditional', $this->urls['js'] . 'um-conditional' . $this->suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
 
 			$deps = array( 'jquery', 'wp-util', 'um_fileupload', 'um_crop', 'um-conditional', 'select2', 'um-modal', 'um-dropdown', 'um-raty', 'um-tipsy', 'um-gdpr', 'um_responsive' );
-			$deps = array_merge( $deps, $this->pickadate_deps['js'] );
-
 			wp_register_script('um_scripts', $this->urls['js'] . 'um-scripts' . $this->suffix . '.js', $deps, UM_VERSION, true );
 
 			$max_upload_size = wp_max_upload_size();
@@ -230,8 +254,6 @@ if ( ! class_exists( 'um\frontend\Enqueue' ) ) {
 			wp_register_style( 'um_responsive', $this->urls['css'] . 'um-responsive.css', array(), UM_VERSION );
 
 			$deps = array( 'um-jquery-ui', 'um-fontawesome', 'um-ionicons', 'um_crop', 'um_fileupload', 'um-modal', 'um_responsive' );
-			$deps = array_merge( $deps, $this->pickadate_deps['css'] );
-
 			// Old FontAwesome and FontIcons styles only for 3rd-party integrations for old customers.
 			// All UM core and modules have updated icons
 			$um_is_legacy = get_option( 'um_is_legacy' );
@@ -239,10 +261,10 @@ if ( ! class_exists( 'um\frontend\Enqueue' ) ) {
 				$deps = array_merge( $deps, array( 'um-fonticons-ii', 'um-fonticons-fa', 'um_default_css' ) );
 			}
 
-			wp_register_style( 'um_styles', $this->urls['css'] . 'um-styles' . $this->suffix . '.css', $deps, UM_VERSION );
+			//wp_register_style( 'um_styles', $this->urls['css'] . 'um-styles' . $this->suffix . '.css', $deps, UM_VERSION );
 
 			if ( is_rtl() ) {
-				wp_register_style( 'um_rtl', $this->urls['css'] . 'um.rtl.css', array( 'um_styles' ), UM_VERSION );
+				wp_register_style( 'um_rtl', $this->urls['css'] . 'um.rtl.css', array( /*'um_styles'*/ ), UM_VERSION );
 				wp_enqueue_style( 'um_rtl' );
 			}
 

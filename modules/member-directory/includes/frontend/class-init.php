@@ -24,23 +24,9 @@ class Init extends Helpers {
 		parent::__construct();
 	}
 
-
 	function includes() {
-		$this->shortcode();
 		$this->enqueue();
 	}
-
-
-	/**
-	 * @return Shortcode()
-	 */
-	function shortcode() {
-		if ( empty( UM()->classes['umm\member_directory\includes\frontend\shortcode'] ) ) {
-			UM()->classes['umm\member_directory\includes\frontend\shortcode'] = new Shortcode();
-		}
-		return UM()->classes['umm\member_directory\includes\frontend\shortcode'];
-	}
-
 
 	/**
 	 * @return Enqueue()

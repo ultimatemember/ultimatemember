@@ -163,3 +163,16 @@ function um_user_submited_display( $k, $title, $data = array(), $style = true ) 
 	_deprecated_function( __FUNCTION__, '3.0', 'um_user_submitted_display()' );
 	return um_user_submitted_display( $k, $title, $data, $style );
 }
+
+
+/**
+ * Default avatar URL
+ *
+ * @deprecated 3.0.0
+ *
+ * @return string
+ */
+function um_get_default_avatar_uri() {
+	_deprecated_function( __FUNCTION__, '3.0', 'um_get_default_avatar_url()' );
+	return um_get_default_avatar_url();
+}

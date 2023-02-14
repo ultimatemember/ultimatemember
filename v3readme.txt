@@ -262,3 +262,10 @@ UM_TEMPLATE_CONFLICT_TEST - for debugging custom templates
 * Removed links with statuses, but added dropdown filter for that
 * Removed custom bulk actions, but added them to the WordPress native bulk-actions list
 * Reviewed bulk actions handlers and rewritten User class for handle changing statuses
+
+
+
+
+### Member Directory
+* '_um_view_types' deprecated
+* '_um_default_view' changed to '_um_view_type'

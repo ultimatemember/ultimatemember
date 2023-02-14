@@ -52,7 +52,7 @@ $allowed_html = array(
 		);
 	}
 
-	UM()->admin_forms(
+	UM()->admin()->forms(
 		array(
 			'class'     => 'um-form-register-recaptcha um-top-label',
 			'prefix_id' => 'form',

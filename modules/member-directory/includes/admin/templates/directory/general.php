@@ -17,23 +17,11 @@ if ( $exclude_these_users ) {
 	$exclude_these_users = implode( "\n", str_replace( "\r", '', $exclude_these_users ) );
 }
 
-$_um_view_types_value = get_post_meta( $post_id, '_um_view_types', true );
-$_um_view_types_value = empty( $_um_view_types_value ) ? array( 'grid', 'list' ) : $_um_view_types_value;
+$_um_view_type_value = get_post_meta( $post_id, '_um_view_type', true );
+$_um_view_type_value = empty( $_um_view_type_value ) ? 'grid' : $_um_view_type_value;
 
-$view_types_options = array_map(
-	function( $item ) {
-		return $item['title'];
-	},
-	UM()->module( 'member-directory' )->config()->get( 'view_types' )
-);
-
-$conditional = array();
-foreach ( $view_types_options as $key => $value ) {
-	$conditional[] = '_um_view_types_' . $key;
-}
-
-$default_view = get_post_meta( $post_id, '_um_default_view', true );
-$default_view = empty( $default_view ) ? 'grid' : $default_view;
+$_um_grid_columns = get_post_meta( $post_id, '_um_grid_columns', true );
+$_um_grid_columns = empty( $_um_grid_columns ) ? 3 : absint( $_um_grid_columns );
 
 $fields = array(
 	array(
@@ -42,23 +30,25 @@ $fields = array(
 		'value' => 'directory',
 	),
 	array(
-		'id'          => '_um_view_types',
-		'type'        => 'multi_checkbox',
-		'label'       => __( 'View type(s)', 'ultimate-member' ),
-		'description' => __( 'View type a specific parameter in the directory', 'ultimate-member' ),
-		'options'     => $view_types_options,
-		'columns'     => 3,
-		'value'       => $_um_view_types_value,
-		'data'        => array( 'fill__um_default_view' => 'checkbox_key' ),
+		'id'          => '_um_view_type',
+		'type'        => 'select',
+		'label'       => __( 'View type', 'ultimate-member' ),
+		'description' => __( 'Select directory layout', 'ultimate-member' ),
+		'options'     => UM()->module( 'member-directory' )->config()->get( 'view_types' ),
+		'value'       => $_um_view_type_value,
 	),
 	array(
-		'id'          => '_um_default_view',
+		'id'          => '_um_grid_columns',
 		'type'        => 'select',
-		'label'       => __( 'Default view type', 'ultimate-member' ),
-		'description' => __( 'Default directory view type', 'ultimate-member' ),
-		'options'     => $view_types_options,
-		'value'       => $default_view,
-		'conditional' => array( implode( '|', $conditional ), '~', 1 ),
+		'label'       => __( 'Grid Columns', 'ultimate-member' ),
+		'description' => __( 'Select how many columns appear in this directory', 'ultimate-member' ),
+		'options'     => array(
+			2 => __( '2 Columns', 'ultimate-member' ),
+			3 => __( '3 Columns', 'ultimate-member' ),
+			4 => __( '4 Columns', 'ultimate-member' ),
+		),
+		'value'       => $_um_grid_columns,
+		'conditional' => array( '_um_view_type', '=', 'grid' ),
 	),
 	array(
 		'id'          => '_um_roles',
@@ -68,19 +58,6 @@ $fields = array(
 		'options'     => UM()->roles()->get_roles(),
 		'columns'     => 3,
 		'value'       => $_um_roles_value,
-	),
-	array(
-		'id'          => '_um_has_profile_photo',
-		'type'        => 'checkbox',
-		'label'       => __( 'Only show members who have uploaded a profile photo', 'ultimate-member' ),
-		'description' => __( 'If \'Use Gravatars\' as profile photo is enabled, this option is ignored', 'ultimate-member' ),
-		'value'       => (bool) get_post_meta( $post_id, '_um_has_profile_photo', true ),
-	),
-	array(
-		'id'    => '_um_has_cover_photo',
-		'type'  => 'checkbox',
-		'label' => __( 'Only show members who have uploaded a cover photo', 'ultimate-member' ),
-		'value' => (bool) get_post_meta( $post_id, '_um_has_cover_photo', true ),
 	),
 	array(
 		'id'    => '_um_show_these_users',
@@ -95,6 +72,25 @@ $fields = array(
 		'value' => $exclude_these_users,
 	),
 );
+
+if ( get_option( 'show_avatars' ) ) {
+	$fields[] = array(
+		'id'          => '_um_has_profile_photo',
+		'type'        => 'checkbox',
+		'label'       => __( 'Only show members who have uploaded a profile photo', 'ultimate-member' ),
+		'description' => __( 'If \'Use Gravatars\' as profile photo is enabled, this option is ignored', 'ultimate-member' ),
+		'value'       => (bool) get_post_meta( $post_id, '_um_has_profile_photo', true ),
+	);
+}
+
+if ( UM()->options()->get( 'use_cover_photos' ) ) {
+	$fields[] = array(
+		'id'    => '_um_has_cover_photo',
+		'type'  => 'checkbox',
+		'label' => __( 'Only show members who have uploaded a cover photo', 'ultimate-member' ),
+		'value' => (bool) get_post_meta( $post_id, '_um_has_cover_photo', true ),
+	);
+}
 
 /**
  * UM hook
@@ -121,7 +117,7 @@ $fields = apply_filters( 'um_admin_extend_directory_options_general', $fields );
 
 <div class="um-admin-metabox">
 	<?php
-	UM()->admin_forms(
+	UM()->admin()->forms(
 		array(
 			'class'     => 'um-member-directory-general um-half-column',
 			'prefix_id' => 'um_metadata',

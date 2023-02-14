@@ -166,7 +166,7 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 				),
 				'um-default_avatar'              => array(
 					'label' => __( 'Default Profile Photo', 'ultimate-member' ),
-					'value' => um_get_default_avatar_uri(),
+					'value' => um_get_default_avatar_url(),
 				),
 				'um-default_cover'               => array(
 					'label' => __( 'Default Cover Photo', 'ultimate-member' ),
@@ -174,11 +174,16 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 				),
 				'um-require_strongpass'          => array(
 					'label' => __( 'Require Strong Passwords', 'ultimate-member' ),
-					'value' => UM()->options()->get('require_strongpass') == 1 ? $labels['yes'] : $labels['no'],
+					'value' => UM()->options()->get( 'require_strongpass' ) == 1 ? $labels['yes'] : $labels['no'],
 				),
 			);
 
-			if ( 1 == UM()->options()->get('require_strongpass') ) {
+			$user_settings['um-use_um_gravatar_default_image'] = array(
+				'label' => __( 'Use Default plugin avatar as Gravatar\'s Default avatar', 'ultimate-member' ),
+				'value' => UM()->options()->get('use_um_gravatar_default_image') ? $labels['yes'] : $labels['no'],
+			);
+
+			if ( 1 == UM()->options()->get( 'require_strongpass' ) ) {
 				$user_settings['um-password_min_chars'] =  array(
 					'label' => __( 'Password minimum length', 'ultimate-member' ),
 					'value' => UM()->options()->get('password_min_chars'),
@@ -187,24 +192,6 @@ if ( ! class_exists( 'um\admin\Site_Health' ) ) {
 					'label' => __( 'Password maximum length', 'ultimate-member' ),
 					'value' => UM()->options()->get('password_max_chars'),
 				);
-			}
-
-			$user_settings['um-use_gravatars'] = array(
-				'label' => __( 'Use Gravatars', 'ultimate-member' ),
-				'value' => UM()->options()->get('use_gravatars') ? $labels['yes'] : $labels['no'],
-			);
-
-			if ( 1 == UM()->options()->get('use_gravatars') ) {
-				$user_settings['um-use_um_gravatar_default_builtin_image'] = array(
-					'label' => __( 'Use Gravatar builtin image', 'ultimate-member' ),
-					'value' => UM()->options()->get('use_um_gravatar_default_builtin_image'),
-				);
-				if ( 'default' == UM()->options()->get('use_um_gravatar_default_builtin_image') ) {
-					$user_settings['um-use_um_gravatar_default_image'] = array(
-						'label' => __( 'Use Default plugin avatar as Gravatar\'s Default avatar', 'ultimate-member' ),
-						'value' => UM()->options()->get('use_um_gravatar_default_image') ? $labels['yes'] : $labels['no'],
-					);
-				}
 			}
 
 			// Account settings

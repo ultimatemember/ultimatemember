@@ -181,7 +181,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				}
 
 				if ( ! $user || is_wp_error( $user ) ) {
-					$this->setcookie( $rp_cookie, false );
+					UM()->setcookie( $rp_cookie, false );
 					if ( $user && $user->get_error_code() === 'expired_key' ) {
 						wp_redirect( add_query_arg( array( 'updated' => 'expiredkey' ), get_permalink() ) );
 					} else {
@@ -210,7 +210,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 					UM()->common()->user()->flush_reset_password_attempts( $user->ID );
 
-					$this->setcookie( $rp_cookie, false );
+					UM()->setcookie( $rp_cookie, false );
 
 					// logout
 					if ( is_user_logged_in() ) {

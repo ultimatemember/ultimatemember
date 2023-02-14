@@ -71,7 +71,7 @@ $login_customize_fields = array(
 
 <div class="um-admin-metabox">
 	<?php
-	UM()->admin_forms(
+	UM()->admin()->forms(
 		array(
 			'class'     => 'um-form-login-customize um-third-column',
 			'prefix_id' => 'form',

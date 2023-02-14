@@ -9,7 +9,7 @@ $permissions['_um_forumwp_can_reply'] = get_post_meta( $object->ID, '_um_forumwp
 
 <div class="um-admin-metabox">
 	<?php
-	UM()->admin_forms(
+	UM()->admin()->forms(
 		array(
 			'class'     => 'um-forumwp-access um-half-column',
 			'prefix_id' => '',

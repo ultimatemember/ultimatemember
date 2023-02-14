@@ -685,7 +685,7 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 							<div class="dynamic-mce-content"><?php echo ! empty( $metabox->edit_array['content'] ) ? $metabox->edit_array['content'] : ''; ?></div>
 						<?php } ?>
 
-						<?php UM()->builder()->modal_header(); ?>
+						<?php UM()->admin()->builder()->modal_header(); ?>
 
 						<div class="um-admin-half">
 
@@ -727,7 +727,7 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 							}
 						} ?>
 
-						<?php UM()->builder()->modal_footer( $form_id, $args, $metabox ); ?>
+						<?php UM()->admin()->builder()->modal_footer( $form_id, $args, $metabox ); ?>
 
 					</div>
 
@@ -848,7 +848,7 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 					<input type="hidden" name="_type" id="_type" value="<?php echo esc_attr( $field_type ); ?>" />
 					<input type="hidden" name="post_id" id="post_id" value="<?php echo esc_attr( $form_id ); ?>" />
 
-					<?php UM()->builder()->modal_header(); ?>
+					<?php UM()->admin()->builder()->modal_header(); ?>
 
 					<?php
 					// future feature
@@ -933,7 +933,7 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 						}
 					}
 
-					UM()->builder()->modal_footer( $form_id, $args, $metabox );
+					UM()->admin()->builder()->modal_footer( $form_id, $args, $metabox );
 					?>
 
 					</div>
@@ -1274,9 +1274,9 @@ if ( ! class_exists( 'um\ajax\Builder' ) ) {
 
 			ob_start();
 
-			UM()->builder()->form_id = absint( $_POST['form_id'] );
+			UM()->admin()->builder()->form_id = absint( $_POST['form_id'] );
 
-			UM()->builder()->show_builder();
+			UM()->admin()->builder()->show_builder();
 
 			$output = ob_get_clean();
 

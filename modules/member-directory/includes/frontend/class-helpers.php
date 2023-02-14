@@ -56,11 +56,13 @@ class Helpers {
 	 * @param string $item
 	 * @param string $additional_attributes
 	 * @param string $parent
+	 * @param int    $width
+	 * @param string $place
 	 */
-	public function dropdown_menu_js( $element, $trigger, $item, $additional_attributes = '', $parent = '' ) {
+	public function dropdown_menu_js( $element, $trigger, $item, $additional_attributes = '', $parent = '', $width = 150, $place = '' ) {
 		?>
 
-		<div class="um-new-dropdown" data-element="<?php echo $element; ?>" data-trigger="<?php echo $trigger; ?>" data-parent="<?php echo $parent; ?>">
+		<div class="um-new-dropdown" data-element="<?php echo $element; ?>" data-trigger="<?php echo $trigger; ?>" data-parent="<?php echo $parent; ?>" data-width="<?php echo esc_attr( $width ); ?>" data-place="<?php echo esc_attr( $place ); ?>">
 			<ul>
 				<# _.each( <?php echo $item; ?>.dropdown_actions, function( action, key, list ) { #>
 					<li><a href="<# if ( typeof action.url != 'undefined' ) { #>{{{action.url}}}<# } else { #>javascript:void(0);<# }#>" class="{{{key}}}"<?php echo $additional_attributes ? " $additional_attributes" : '' ?>>{{{action.title}}}</a></li>
@@ -142,10 +144,13 @@ class Helpers {
 				}
 
 				$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) : $default_value; ?>
+				<label for="<?php echo esc_attr( $filter ); ?>">
+					<span><?php esc_html_e( stripslashes( $label ), 'ultimate-member' ); ?></span>
 				<input type="text" autocomplete="off" id="<?php echo $filter; ?>" name="<?php echo $filter; ?>"
 				       placeholder="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
 				       value="<?php echo esc_attr( $filter_from_url ) ?>" class="um-form-field"
 				       aria-label="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>" />
+				</label>
 				<?php
 				break;
 			}
@@ -277,6 +282,7 @@ class Helpers {
 				}
 				?>
 
+				<label for="<?php echo esc_attr( $filter ); ?>"><span><?php esc_html_e( stripslashes( $label ), 'ultimate-member' ); ?></span>
 				<select class="um-s1" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?><?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>[]<?php } ?>"
 				        data-placeholder="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
 				        aria-label="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
@@ -323,6 +329,7 @@ class Helpers {
 					} ?>
 
 				</select>
+				</label>
 
 				<?php break;
 			}
@@ -346,17 +353,20 @@ class Helpers {
 				$label = ! empty( $attrs['label'] ) ? $attrs['label'] : $attrs['title'];
 
 				if ( $range ) { ?>
+					<label for="<?php echo esc_attr( $filter ); ?>_from"><span><?php esc_html_e( sprintf( '%s From', stripslashes( $label ) ), 'ultimate-member' ); ?></span>
+						<input type="date" id="<?php echo $filter; ?>_from" name="<?php echo $filter; ?>_from" class="um-datepicker-filter"
+						       data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
+						       min="<?php echo esc_attr( date( 'Y-m-d', $range[0] ) ); ?>" max="<?php echo esc_attr( date( 'Y-m-d', $range[1] ) ); ?>"
+						       data-filter_name="<?php echo $filter; ?>" data-range="from" data-value="<?php echo ! empty( $default_value ) ? esc_attr( strtotime( min( $default_value ) ) ) : '' ?>" />
+					</label>
 
-					<input type="text" id="<?php echo $filter; ?>_from" name="<?php echo $filter; ?>_from" class="um-datepicker-filter"
-					       placeholder="<?php esc_attr_e( sprintf( '%s From', stripslashes( $label ) ), 'ultimate-member' ); ?>"
-					       data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
-					       data-date_min="<?php echo $range[0] ?>" data-date_max="<?php echo $range[1] ?>"
-					       data-filter_name="<?php echo $filter; ?>" data-range="from" data-value="<?php echo ! empty( $default_value ) ? esc_attr( strtotime( min( $default_value ) ) ) : '' ?>" />
-					<input type="text" id="<?php echo $filter; ?>_to" name="<?php echo $filter; ?>_to" class="um-datepicker-filter"
-					       placeholder="<?php esc_attr_e( sprintf( '%s To', stripslashes( $label ) ), 'ultimate-member' ); ?>"
-					       data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
-					       data-date_min="<?php echo $range[0] ?>" data-date_max="<?php echo $range[1] ?>"
-					       data-filter_name="<?php echo $filter; ?>" data-range="to" data-value="<?php echo ! empty( $default_value ) ? esc_attr( strtotime( max( $default_value ) ) ) : '' ?>" />
+					<label for="<?php echo esc_attr( $filter ); ?>_to"><span><?php esc_html_e( sprintf( '%s To', stripslashes( $label ) ), 'ultimate-member' ); ?></span>
+						<input type="date" id="<?php echo $filter; ?>_to" name="<?php echo $filter; ?>_to" class="um-datepicker-filter"
+						       data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
+						       min="<?php echo esc_attr( date( 'Y-m-d', $range[0] ) ); ?>" max="<?php echo esc_attr( date( 'Y-m-d', $range[1] ) ); ?>"
+						       data-filter_name="<?php echo $filter; ?>" data-range="to" data-value="<?php echo ! empty( $default_value ) ? esc_attr( strtotime( max( $default_value ) ) ) : '' ?>" />
+					</label>
+
 
 				<?php }
 
@@ -381,19 +391,21 @@ class Helpers {
 				}
 
 				if ( $range ) { ?>
+					<label for="<?php echo esc_attr( $filter ); ?>_from"><span><?php esc_html_e( sprintf( '%s From', stripslashes( $label ) ), 'ultimate-member' ); ?></span>
+						<input type="time" id="<?php echo $filter; ?>_from" name="<?php echo $filter; ?>_from" class="um-timepicker-filter"
+						       data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
+						       min="<?php echo esc_attr( date( 'H:i:s', $range[0] ) ); ?>" max="<?php echo esc_attr( date( 'H:i:s', $range[1] ) ); ?>"
+						       step="<?php echo esc_attr( $attrs['intervals'] ) ?>"
+						       data-filter_name="<?php echo $filter; ?>" data-range="from" /></label>
 
-					<input type="text" id="<?php echo $filter; ?>_from" name="<?php echo $filter; ?>_from" class="um-timepicker-filter"
-					       placeholder="<?php esc_attr_e( sprintf( '%s From', stripslashes( $label ) ), 'ultimate-member' ); ?>"
-					       data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
-					       data-min="<?php echo $range[0] ?>" data-max="<?php echo $range[1] ?>"
-					       data-format="<?php echo esc_attr( $js_format ) ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ) ?>"
-					       data-filter_name="<?php echo $filter; ?>" data-range="from" />
-					<input type="text" id="<?php echo $filter; ?>_to" name="<?php echo $filter; ?>_to" class="um-timepicker-filter"
-					       placeholder="<?php esc_attr_e( sprintf( '%s To', stripslashes( $label ) ), 'ultimate-member' ); ?>"
-					       data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
-					       data-min="<?php echo $range[0] ?>" data-max="<?php echo $range[1] ?>"
-					       data-format="<?php echo esc_attr( $js_format ) ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ) ?>"
-					       data-filter_name="<?php echo $filter; ?>" data-range="to" />
+					<label for="<?php echo esc_attr( $filter ); ?>_to"><span><?php esc_html_e( sprintf( '%s To', stripslashes( $label ) ), 'ultimate-member' ); ?></span>
+						<input type="time" id="<?php echo $filter; ?>_to" name="<?php echo $filter; ?>_to" class="um-timepicker-filter"
+						       data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
+						       min="<?php echo esc_attr( date( 'H:i:s', $range[0] ) ); ?>" max="<?php echo esc_attr( date( 'H:i:s', $range[1] ) ); ?>"
+						       step="<?php echo esc_attr( $attrs['intervals'] ) ?>"
+						       data-filter_name="<?php echo $filter; ?>" data-range="to" />
+					</label>
+
 
 				<?php }
 

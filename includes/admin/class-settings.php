@@ -7,38 +7,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'um\admin\Settings' ) ) {
 
-
 	/**
-	 * Class Admin_Settings
+	 * Class Settings
 	 *
 	 * @package um\admin
 	 */
 	class Settings {
-
 
 		/**
 		 * @var array
 		 */
 		public $settings_map;
 
-
 		/**
 		 * @var array
 		 */
 		public $settings_structure;
 
-
-		/**
-		 * @var
-		 */
-		private $previous_licenses;
-
-
 		/**
 		 * @var
 		 */
 		private $need_change_permalinks;
-
 
 		/**
 		 * Admin_Settings constructor.
@@ -73,7 +62,6 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 			add_filter( 'um_settings_section_modules__content', array( $this, 'settings_modules_section' ), 20, 2 );
 		}
 
-
 		/**
 		 * Filter: Set 'uexport' and 'uimport' tabs as pages with custom content
 		 * @hook um_settings_custom_subtabs
@@ -87,16 +75,14 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 			return $subtabs;
 		}
 
-
 		/**
 		 * Filter: Print Export page content
 		 * @param string $settings_section
 		 * @param string $section_fields
 		 */
 		public function settings_modules_section( $settings_section, $section_fields ) {
-			include_once UM_PATH . 'includes/admin/core/list-tables/modules-list-table.php';
+			include_once UM_PATH . 'includes/admin/templates/settings/modules-list.php';
 		}
-
 
 		/**
 		 *
@@ -434,15 +420,6 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 					'author_redirect'                       => array(
 						'sanitize' => 'bool',
 					),
-					'use_gravatars'                         => array(
-						'sanitize' => 'bool',
-					),
-					'use_um_gravatar_default_builtin_image' => array(
-						'sanitize' => 'key',
-					),
-					'use_um_gravatar_default_image'         => array(
-						'sanitize' => 'bool',
-					),
 					'require_strongpass'                    => array(
 						'sanitize' => 'bool',
 					),
@@ -551,8 +528,14 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 					'enable_version_3_design'               => array(
 						'sanitize' => 'bool',
 					),
+					'use_um_gravatar_default_image'         => array(
+						'sanitize' => 'bool',
+					),
 					'default_avatar'                        => array(
-						'sanitize' => 'url',
+						'sanitize' => array( UM()->admin(), 'sanitize_avatar' ),
+					),
+					'use_cover_photos'                      => array(
+						'sanitize' => 'bool',
 					),
 					'default_cover'                         => array(
 						'sanitize' => 'url',
@@ -590,7 +573,7 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 					'uninstall_on_delete'                   => array(
 						'sanitize' => 'bool',
 					),
-					'form_styling'                          => array(
+					'styling'                          => array(
 						'sanitize' => 'key',
 					),
 					'button_backcolor'                      => array(
@@ -659,10 +642,10 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 
 			$advanced_fields = array(
 				array(
-					'id'          => 'form_styling',
+					'id'          => 'styling',
 					'type'        => 'select',
-					'label'       => __( 'Include Form Styling', 'ultimate-member' ),
-					'description' => __( 'Designed to select the type of styles that are included with the forms.', 'ultimate-member' ),
+					'label'       => __( 'Include Styling', 'ultimate-member' ),
+					'description' => __( 'Designed to select the type of styles that are included with the Ultimate Member functionality.', 'ultimate-member' ),
 					'options'     => array(
 						''            => __( 'Standard', 'ultimate-member' ),
 						'layout_only' => __( 'Minimal', 'ultimate-member' ),
@@ -673,19 +656,19 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 					'id'          => 'button_backcolor',
 					'type'        => 'color',
 					'label'       => __( 'Button Background Color', 'ultimate-member' ),
-					'conditional' => array( 'form_styling', '=', '' ),
+					'conditional' => array( 'styling', '=', '' ),
 				),
 				array(
 					'id'          => 'button_backcolor_hover',
 					'type'        => 'color',
 					'label'       => __( 'Button Background Hover Color', 'ultimate-member' ),
-					'conditional' => array( 'form_styling', '=', '' ),
+					'conditional' => array( 'styling', '=', '' ),
 				),
 				array(
 					'id'          => 'button_forecolor',
 					'type'        => 'color',
 					'label'       => __( 'Button Text Color', 'ultimate-member' ),
-					'conditional' => array( 'form_styling', '=', '' ),
+					'conditional' => array( 'styling', '=', '' ),
 				),
 				array(
 					'id'          => 'um_profile_object_cache_stop',
@@ -804,97 +787,94 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 					'label'       => __( 'Automatically redirect author page to their profile?', 'ultimate-member' ),
 					'description' => __( 'If enabled, author pages will automatically redirect to the user\'s profile page.', 'ultimate-member' ),
 				),
+			);
+
+			if ( get_option( 'show_avatars' ) ) {
+				$users_fields = array_merge(
+					$users_fields,
+					array(
+						array(
+							'id'          => 'use_um_gravatar_default_image',
+							'type'        => 'checkbox',
+							'label'       => __( 'Block native avatars', 'ultimate-member' ),
+							'description' => __( 'Do you want to use the plugin default avatar instead of the WordPress native avatars and|or 3rd-party plugins.', 'ultimate-member' ),
+						),
+						array(
+							'id'                 => 'default_avatar',
+							'type'               => 'media',
+							'label'              => __( 'Default Profile Photo', 'ultimate-member' ),
+							'description'        => __( 'You can change the default profile picture globally here. Please make sure that the photo is 300x300px.', 'ultimate-member' ),
+							'upload_frame_title' => __( 'Select Default Profile Photo', 'ultimate-member' ),
+							'default'            => array(
+								'url' => UM_URL . 'assets/img/default_avatar.jpg',
+							),
+							'conditional' => array( 'use_um_gravatar_default_image', '=', 1 ),
+						),
+					)
+				);
+			}
+
+			$users_fields = array_merge(
+				$users_fields,
 				array(
-					'id'                 => 'default_avatar',
-					'type'               => 'media',
-					'label'              => __( 'Default Profile Photo', 'ultimate-member' ),
-					'description'        => __( 'You can change the default profile picture globally here. Please make sure that the photo is 300x300px.', 'ultimate-member' ),
-					'upload_frame_title' => __( 'Select Default Profile Photo', 'ultimate-member' ),
-					'default'            => array(
-						'url' => UM_URL . 'assets/img/default_avatar.jpg',
+					array(
+						'id'          => 'use_cover_photos',
+						'type'        => 'checkbox',
+						'label'       => __( 'Enable Cover Photos', 'ultimate-member' ),
+						'description' => __( 'Do you want to use the cover photos functionality and provide the ability to upload them via User Profiles.', 'ultimate-member' ),
 					),
-				),
-				array(
-					'id'                 => 'default_cover',
-					'type'               => 'media',
-					'url'                => true,
-					'preview'            => false,
-					'size'               => 'medium',
-					'label'              => __( 'Default Cover Photo', 'ultimate-member' ),
-					'description'        => __( 'You can change the default cover photo globally here. Please make sure that the default cover is large enough and respects the ratio you are using for cover photos.', 'ultimate-member' ),
-					'upload_frame_title' => __( 'Select Default Cover Photo', 'ultimate-member' ),
-				),
-				array(
-					'id'          => 'use_gravatars',
-					'type'        => 'checkbox',
-					'label'       => __( 'Use Gravatars', 'ultimate-member' ),
-					'description' => __( 'Enable this option if you want to use gravatars instead of the default plugin profile photo (If the user did not upload a custom profile photo/avatar).', 'ultimate-member' ),
-				),
-				array(
-					'id'          => 'use_um_gravatar_default_builtin_image',
-					'type'        => 'select',
-					'label'       => __( 'Use Gravatar builtin image', 'ultimate-member' ),
-					'description' => __( 'Gravatar has a number of built in options which you can also use as defaults.', 'ultimate-member' ),
-					'options'     => array(
-						'default'   => __( 'Default', 'ultimate-member' ),
-						'404'       => __( '404 ( File Not Found response )', 'ultimate-member' ),
-						'mm'        => __( 'Mystery Man', 'ultimate-member' ),
-						'identicon' => __( 'Identicon', 'ultimate-member' ),
-						'monsterid' => __( 'Monsterid', 'ultimate-member' ),
-						'wavatar'   => __( 'Wavatar', 'ultimate-member' ),
-						'retro'     => __( 'Retro', 'ultimate-member' ),
-						'blank'     => __( 'Blank ( a transparent PNG image )', 'ultimate-member' ),
+					array(
+						'id'                 => 'default_cover',
+						'type'               => 'media',
+						'url'                => true,
+						'preview'            => false,
+						'size'               => 'medium',
+						'label'              => __( 'Default Cover Photo', 'ultimate-member' ),
+						'description'        => __( 'You can change the default cover photo globally here. Please make sure that the default cover is large enough and respects the ratio you are using for cover photos.', 'ultimate-member' ),
+						'upload_frame_title' => __( 'Select Default Cover Photo', 'ultimate-member' ),
+						'conditional' => array( 'use_cover_photos', '=', 1 ),
 					),
-					'conditional' => array( 'use_gravatars', '=', 1 ),
-					'size'        => 'medium',
-				),
-				array(
-					'id'          => 'use_um_gravatar_default_image',
-					'type'        => 'checkbox',
-					'label'       => __( 'Use Default plugin avatar as Gravatar\'s Default avatar', 'ultimate-member' ),
-					'description' => __( 'Do you want to use the plugin default avatar instead of the gravatar default photo (If the user did not upload a custom profile photo / avatar).', 'ultimate-member' ),
-					'conditional' => array( 'use_um_gravatar_default_builtin_image', '=', 'default' ),
-				),
-				array(
-					'id'          => 'require_strongpass',
-					'type'        => 'checkbox',
-					'label'       => __( 'Require Strong Passwords', 'ultimate-member' ),
-					'description' => __( 'Enable this option to apply strong password rules to all password fields (user registration, password reset and password change).', 'ultimate-member' ),
-				),
-				array(
-					'id'          => 'password_min_chars',
-					'type'        => 'number',
-					'label'       => __( 'Password minimum length', 'ultimate-member' ),
-					'description' => __( 'Enter the minimum number of characters a user must use for their password. The default minimum characters is 8.', 'ultimate-member' ),
-					'size'        => 'small',
-					'conditional' => array( 'require_strongpass', '=', '1' ),
-				),
-				array(
-					'id'          => 'password_max_chars',
-					'type'        => 'number',
-					'label'       => __( 'Password maximum length', 'ultimate-member' ),
-					'description' => __( 'Enter the maximum number of characters a user can use for their password. The default maximum characters is 30.', 'ultimate-member' ),
-					'size'        => 'small',
-					'conditional' => array( 'require_strongpass', '=', '1' ),
-				),
-				array(
-					'id'          => 'profile_noindex',
-					'type'        => 'select',
-					'size'        => 'small',
-					'label'       => __( 'Avoid indexing profile by search engines', 'ultimate-member' ),
-					'description' => __( 'Hides the profile page for robots. This setting can be overridden by individual role settings.', 'ultimate-member' ),
-					'options'     => array(
-						0 => __( 'No', 'ultimate-member' ),
-						1 => __( 'Yes', 'ultimate-member' ),
+					array(
+						'id'          => 'require_strongpass',
+						'type'        => 'checkbox',
+						'label'       => __( 'Require Strong Passwords', 'ultimate-member' ),
+						'description' => __( 'Enable this option to apply strong password rules to all password fields (user registration, password reset and password change).', 'ultimate-member' ),
 					),
-				),
-				array(
-					'id'          => 'activation_link_expiry_time',
-					'type'        => 'number',
-					'label'       => __( 'Email activation link expiration (days)', 'ultimate-member' ),
-					'description' => __( 'For user registrations that require an email link to be clicked to confirm account. How long would you like the activation link to be active for before it expires? If this field is left blank the activation link will not expire.', 'ultimate-member' ),
-					'size'        => 'small',
-				),
+					array(
+						'id'          => 'password_min_chars',
+						'type'        => 'number',
+						'label'       => __( 'Password minimum length', 'ultimate-member' ),
+						'description' => __( 'Enter the minimum number of characters a user must use for their password. The default minimum characters is 8.', 'ultimate-member' ),
+						'size'        => 'small',
+						'conditional' => array( 'require_strongpass', '=', '1' ),
+					),
+					array(
+						'id'          => 'password_max_chars',
+						'type'        => 'number',
+						'label'       => __( 'Password maximum length', 'ultimate-member' ),
+						'description' => __( 'Enter the maximum number of characters a user can use for their password. The default maximum characters is 30.', 'ultimate-member' ),
+						'size'        => 'small',
+						'conditional' => array( 'require_strongpass', '=', '1' ),
+					),
+					array(
+						'id'          => 'profile_noindex',
+						'type'        => 'select',
+						'size'        => 'small',
+						'label'       => __( 'Avoid indexing profile by search engines', 'ultimate-member' ),
+						'description' => __( 'Hides the profile page for robots. This setting can be overridden by individual role settings.', 'ultimate-member' ),
+						'options'     => array(
+							0 => __( 'No', 'ultimate-member' ),
+							1 => __( 'Yes', 'ultimate-member' ),
+						),
+					),
+					array(
+						'id'          => 'activation_link_expiry_time',
+						'type'        => 'number',
+						'label'       => __( 'Email activation link expiration (days)', 'ultimate-member' ),
+						'description' => __( 'For user registrations that require an email link to be clicked to confirm account. How long would you like the activation link to be active for before it expires? If this field is left blank the activation link will not expire.', 'ultimate-member' ),
+						'size'        => 'small',
+					),
+				)
 			);
 
 			$cache_count = $wpdb->get_var(
@@ -923,100 +903,112 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 				'size'        => 'small',
 			);
 
-			$uploads_fields = array(
-				array(
-					'id'          => 'profile_photo_max_size',
-					'type'        => 'text',
-					'size'        => 'small',
-					'label'       => __( 'Profile Photo Maximum File Size (bytes)', 'ultimate-member' ),
-					'description' => __( 'Sets a maximum size for the uploaded photo', 'ultimate-member' ),
-				),
-				array(
-					'id'          => 'cover_min_width',
-					'type'        => 'text',
-					'size'        => 'small',
-					'label'       => __( 'Cover Photo Minimum Width (px)', 'ultimate-member' ),
-					'description' => __( 'This will be the minimum width for cover photo uploads', 'ultimate-member' ),
-				),
-				array(
-					'id'          => 'cover_photo_max_size',
-					'type'        => 'text',
-					'size'        => 'small',
-					'label'       => __( 'Cover Photo Maximum File Size (bytes)', 'ultimate-member' ),
-					'description' => __( 'Sets a maximum size for the uploaded cover', 'ultimate-member' ),
-				),
-				array(
-					'id'                  => 'photo_thumb_sizes',
-					'type'                => 'multi_text',
-					'size'                => 'small',
-					'label'               => __( 'Profile Photo Thumbnail Sizes (px)', 'ultimate-member' ),
-					'description'         => __( 'Here you can define which thumbnail sizes will be created for each profile photo upload.', 'ultimate-member' ),
-					'validate'            => 'numeric',
-					'add_text'            => __( 'Add New Size', 'ultimate-member' ),
-					'show_default_number' => 1,
-				),
-				array(
-					'id'                  => 'cover_thumb_sizes',
-					'type'                => 'multi_text',
-					'size'                => 'small',
-					'label'               => __( 'Cover Photo Thumbnail Sizes (px)', 'ultimate-member' ),
-					'description'         => __( 'Here you can define which thumbnail sizes will be created for each cover photo upload.', 'ultimate-member' ),
-					'validate'            => 'numeric',
-					'add_text'            => __( 'Add New Size', 'ultimate-member' ),
-					'show_default_number' => 1,
-				),
-				array(
-					'id'          => 'image_orientation_by_exif',
-					'type'        => 'checkbox',
-					'label'       => __( 'Change image orientation', 'ultimate-member' ),
-					'description' => __( 'Rotate image to and use orientation by the camera EXIF data.', 'ultimate-member' ),
-				),
-				array(
-					'id'          => 'image_compression',
-					'type'        => 'text',
-					'size'        => 'small',
-					'label'       => __( 'Image Quality', 'ultimate-member' ),
-					'description' => __( 'Quality is used to determine quality of image uploads, and ranges from 0 (worst quality, smaller file) to 100 (best quality, biggest file). The default range is 60.', 'ultimate-member' ),
-				),
-				array(
-					'id'          => 'image_max_width',
-					'type'        => 'text',
-					'size'        => 'small',
-					'label'       => __( 'Image Upload Maximum Width (px)', 'ultimate-member' ),
-					'description' => __( 'Any image upload above this width will be resized to this limit automatically.', 'ultimate-member' ),
-				),
-				array(
-					'id'          => 'profile_photosize',
-					'type'        => 'select',
-					'label'       => __( 'Profile Photo Size', 'ultimate-member' ),
-					'default'     => um_get_metadefault( 'profile_photosize' ),
-					'options'     => UM()->files()->get_profile_photo_size( 'photo_thumb_sizes' ),
-					'description' => __( 'The global default of profile photo size', 'ultimate-member' ),
-					'size'        => 'small',
-				),
-				array(
-					'id'          => 'profile_coversize',
-					'type'        => 'select',
-					'label'       => __( 'Profile Cover Size', 'ultimate-member' ),
-					'default'     => um_get_metadefault( 'profile_coversize' ),
-					'options'     => UM()->files()->get_profile_photo_size( 'cover_thumb_sizes' ),
-					'description' => __( 'The global default width of cover photo size', 'ultimate-member' ),
-					'size'        => 'small',
-				),
-				array(
-					'id'          => 'profile_cover_ratio',
-					'type'        => 'select',
-					'label'       => __( 'Profile Cover Ratio', 'ultimate-member' ),
-					'description' => __( 'Choose global ratio for cover photos of profiles', 'ultimate-member' ),
-					'default'     => um_get_metadefault( 'profile_cover_ratio' ),
-					'options'     => array(
-						'1.6:1' => '1.6:1',
-						'2.7:1' => '2.7:1',
-						'2.2:1' => '2.2:1',
-						'3.2:1' => '3.2:1',
+			$uploads_fields = array();
+			if ( get_option( 'show_avatars' ) ) {
+				$uploads_fields = array(
+					array(
+						'id'          => 'profile_photo_max_size',
+						'type'        => 'text',
+						'size'        => 'small',
+						'label'       => __( 'Profile Photo Maximum File Size (bytes)', 'ultimate-member' ),
+						'description' => __( 'Sets a maximum size for the uploaded photo', 'ultimate-member' ),
 					),
-					'size'        => 'small',
-				),
+					array(
+						'id'                  => 'photo_thumb_sizes',
+						'type'                => 'multi_text',
+						'size'                => 'small',
+						'label'               => __( 'Profile Photo Thumbnail Sizes (px)', 'ultimate-member' ),
+						'description'         => __( 'Here you can define which thumbnail sizes will be created for each profile photo upload.', 'ultimate-member' ),
+						'validate'            => 'numeric',
+						'add_text'            => __( 'Add New Size', 'ultimate-member' ),
+						'show_default_number' => 1,
+					),
+					array(
+						'id'          => 'profile_photosize',
+						'type'        => 'select',
+						'label'       => __( 'Profile Photo Size', 'ultimate-member' ),
+						'default'     => um_get_metadefault( 'profile_photosize' ),
+						'options'     => UM()->files()->get_profile_photo_size( 'photo_thumb_sizes' ),
+						'description' => __( 'The global default of profile photo size', 'ultimate-member' ),
+						'size'        => 'small',
+					),
+				);
+			}
+
+			if ( UM()->options()->get( 'use_cover_photos' ) ) {
+				$uploads_fields = array_merge(
+					$uploads_fields,
+					array(
+						array(
+							'id'          => 'cover_min_width',
+							'type'        => 'text',
+							'size'        => 'small',
+							'label'       => __( 'Cover Photo Minimum Width (px)', 'ultimate-member' ),
+							'description' => __( 'This will be the minimum width for cover photo uploads', 'ultimate-member' ),
+						),
+						array(
+							'id'          => 'cover_photo_max_size',
+							'type'        => 'text',
+							'size'        => 'small',
+							'label'       => __( 'Cover Photo Maximum File Size (bytes)', 'ultimate-member' ),
+							'description' => __( 'Sets a maximum size for the uploaded cover', 'ultimate-member' ),
+						),
+						array(
+							'id'                  => 'cover_thumb_sizes',
+							'type'                => 'multi_text',
+							'size'                => 'small',
+							'label'               => __( 'Cover Photo Thumbnail Sizes (px)', 'ultimate-member' ),
+							'description'         => __( 'Here you can define which thumbnail sizes will be created for each cover photo upload.', 'ultimate-member' ),
+							'validate'            => 'numeric',
+							'add_text'            => __( 'Add New Size', 'ultimate-member' ),
+							'show_default_number' => 1,
+						),
+						array(
+							'id'          => 'profile_coversize',
+							'type'        => 'select',
+							'label'       => __( 'Profile Cover Size', 'ultimate-member' ),
+							'default'     => um_get_metadefault( 'profile_coversize' ),
+							'options'     => UM()->files()->get_profile_photo_size( 'cover_thumb_sizes' ),
+							'description' => __( 'The global default width of cover photo size', 'ultimate-member' ),
+							'size'        => 'small',
+						),
+						array(
+							'id'          => 'profile_cover_ratio',
+							'type'        => 'select',
+							'label'       => __( 'Profile Cover Ratio', 'ultimate-member' ),
+							'description' => __( 'Choose global ratio for cover photos of profiles', 'ultimate-member' ),
+							'default'     => um_get_metadefault( 'profile_cover_ratio' ),
+							'options'     => UM()->config()->get( 'cover_ratio' ),
+							'size'        => 'small',
+						),
+					)
+				);
+			}
+
+			$uploads_fields = array_merge(
+				$uploads_fields,
+				array(
+					array(
+						'id'          => 'image_orientation_by_exif',
+						'type'        => 'checkbox',
+						'label'       => __( 'Change image orientation', 'ultimate-member' ),
+						'description' => __( 'Rotate image to and use orientation by the camera EXIF data.', 'ultimate-member' ),
+					),
+					array(
+						'id'          => 'image_compression',
+						'type'        => 'text',
+						'size'        => 'small',
+						'label'       => __( 'Image Quality', 'ultimate-member' ),
+						'description' => __( 'Quality is used to determine quality of image uploads, and ranges from 0 (worst quality, smaller file) to 100 (best quality, biggest file). The default range is 60.', 'ultimate-member' ),
+					),
+					array(
+						'id'          => 'image_max_width',
+						'type'        => 'text',
+						'size'        => 'small',
+						'label'       => __( 'Image Upload Maximum Width (px)', 'ultimate-member' ),
+						'description' => __( 'Any image upload above this width will be resized to this limit automatically.', 'ultimate-member' ),
+					),
+				)
 			);
 
 			$temp_dir_size = UM()->common()->filesystem()->dir_size( 'temp' );
@@ -1274,7 +1266,6 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 
 		}
 
-
 		/**
 		 * @param array $settings
 		 *
@@ -1318,14 +1309,13 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 			return $settings;
 		}
 
-
 		/**
 		 * @param $tab
 		 * @param $section
 		 *
 		 * @return array
 		 */
-		function get_section_fields( $tab, $section ) {
+		public function get_section_fields( $tab, $section ) {
 			if ( empty( $this->settings_structure[ $tab ] ) ) {
 				return array();
 			}
@@ -1339,11 +1329,10 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 			return array();
 		}
 
-
 		/**
 		 * Settings page callback
 		 */
-		function settings_page() {
+		public function settings_page() {
 			$current_tab    = empty( $_GET['tab'] ) ? '' : sanitize_key( $_GET['tab'] );
 			$current_subtab = empty( $_GET['section'] ) ? '' : sanitize_key( $_GET['section'] );
 
@@ -1486,14 +1475,13 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 			<?php }
 		}
 
-
 		/**
 		 * Generate pages tabs
 		 *
 		 * @param string $page
 		 * @return string
 		 */
-		function generate_tabs_menu( $page = 'settings' ) {
+		public function generate_tabs_menu( $page = 'settings' ) {
 
 			$tabs = '<h2 class="nav-tab-wrapper um-nav-tab-wrapper">';
 
@@ -1549,13 +1537,12 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 			return $tabs . '</h2>';
 		}
 
-
 		/**
 		 * @param string $tab
 		 *
 		 * @return string
 		 */
-		function generate_subtabs_menu( $tab = '' ) {
+		public function generate_subtabs_menu( $tab = '' ) {
 			if ( empty( $this->settings_structure[ $tab ]['sections'] ) ) {
 				return '';
 			}
@@ -1577,13 +1564,12 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 			return substr( $subtabs, 0, -3 ) . '</ul></div>';
 		}
 
-
 		/**
 		 * Handler for settings forms
 		 * when "Save Settings" button click
 		 *
 		 */
-		function save_settings_handler() {
+		public function save_settings_handler() {
 
 			if ( isset( $_POST['um-settings-action'] ) && 'save' === sanitize_key( $_POST['um-settings-action'] ) && ! empty( $_POST['um_options'] ) ) {
 
@@ -1679,8 +1665,7 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 			}
 		}
 
-
-		function set_default_if_empty( $settings ) {
+		public function set_default_if_empty( $settings ) {
 			$tab = '';
 			if ( ! empty( $_GET['tab'] ) ) {
 				$tab = sanitize_key( $_GET['tab'] );
@@ -1701,14 +1686,13 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 			return $settings;
 		}
 
-
 		/**
 		 * Remove empty values from multi text fields
 		 *
 		 * @param $settings
 		 * @return array
 		 */
-		function remove_empty_values( $settings ) {
+		public function remove_empty_values( $settings ) {
 			$tab = '';
 			if ( ! empty( $_GET['tab'] ) ) {
 				$tab = sanitize_key( $_GET['tab'] );
@@ -1747,11 +1731,10 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 			return $filtered_settings;
 		}
 
-
 		/**
 		 *
 		 */
-		function check_permalinks_changes() {
+		public function check_permalinks_changes() {
 			if ( ! empty( $_POST['um_options']['permalink_base'] ) ) {
 				if ( UM()->options()->get( 'permalink_base' ) !== $_POST['um_options']['permalink_base'] ) {
 					$this->need_change_permalinks = true;
@@ -1759,11 +1742,10 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 			}
 		}
 
-
 		/**
 		 *
 		 */
-		function on_settings_save() {
+		public function on_settings_save() {
 			if ( ! empty( $_POST['um_options'] ) ) {
 				if ( ! empty( $_POST['um_options']['pages_settings'] ) ) {
 					$post_ids = new \WP_Query( array(
@@ -1809,26 +1791,24 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 			}
 		}
 
-
 		/**
 		 *
 		 */
-		function settings_before_email_tab() {
+		public function settings_before_email_tab() {
 			$email_key = empty( $_GET['email'] ) ? '' : sanitize_key( $_GET['email'] );
 			$emails = UM()->config()->get( 'email_notifications' );
 
 			if ( empty( $email_key ) || empty( $emails[ $email_key ] ) ) {
-				include_once UM_PATH . 'includes/admin/core/list-tables/emails-list-table.php';
+				include_once UM_PATH . 'includes/admin/templates/settings/emails-list.php';
 			}
 		}
-
 
 		/**
 		 * @param $section
 		 *
 		 * @return string
 		 */
-		function settings_email_tab( $section ) {
+		public function settings_email_tab( $section ) {
 			$email_key = empty( $_GET['email'] ) ? '' : sanitize_key( $_GET['email'] );
 			$emails = UM()->config()->get( 'email_notifications' );
 
@@ -1902,14 +1882,12 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 			return $this->render_settings_section( $section_fields, 'email', $email_key );
 		}
 
-
 		/**
 		 *
 		 */
-		function settings_appearance_profile_tab() {
+		public function settings_appearance_profile_tab() {
 			wp_enqueue_media();
 		}
-
 
 		/**
 		 * Render settings section
@@ -1920,27 +1898,27 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 		 *
 		 * @return string
 		 */
-		function render_settings_section( $section_fields, $current_tab, $current_subtab ) {
+		public function render_settings_section( $section_fields, $current_tab, $current_subtab ) {
 			ob_start();
 
-			UM()->admin_forms_settings( array(
-				'class'     => 'um_options-' . $current_tab . '-' . $current_subtab . ' um-third-column',
-				'prefix_id' => 'um_options',
-				'fields'    => $section_fields
-			) )->render_form(); ?>
+			UM()->admin()->forms_settings(
+				array(
+					'class'     => 'um_options-' . $current_tab . '-' . $current_subtab . ' um-third-column',
+					'prefix_id' => 'um_options',
+					'fields'    => $section_fields,
+				)
+			)->render_form();
 
-			<?php $section = ob_get_clean();
-
+			$section = ob_get_clean();
 			return $section;
 		}
-
 
 		/**
 		 * @param array $settings
 		 *
 		 * @return array
 		 */
-		function save_email_templates( $settings ) {
+		public function save_email_templates( $settings ) {
 			if ( empty( $settings['um_email_template'] ) ) {
 				return $settings;
 			}

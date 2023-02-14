@@ -54,7 +54,7 @@ $fields = array(
 
 <div class="um-admin-metabox">
 	<?php
-	UM()->admin_forms(
+	UM()->admin()->forms(
 		array(
 			'class'     => 'um-member-directory-sorting um-half-column',
 			'prefix_id' => 'um_metadata',

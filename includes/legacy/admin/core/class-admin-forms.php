@@ -1,16 +1,16 @@
 <?php
-namespace um\admin\core;
+namespace um\legacy\admin\core;
 
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
-if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
+if ( ! class_exists( 'um\legacy\admin\core\Admin_Forms' ) ) {
 
 
 	/**
 	 * Class Admin_Forms
-	 * @package um\admin\core
+	 * @package um\legacy\admin\core
 	 */
 	class Admin_Forms {
 

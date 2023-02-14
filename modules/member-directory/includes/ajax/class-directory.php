@@ -53,8 +53,74 @@ class Directory {
 	public function __construct() {
 		add_action( 'wp_ajax_nopriv_um_get_members', array( $this, 'get_members' ) );
 		add_action( 'wp_ajax_um_get_members', array( $this, 'get_members' ) );
+
+		add_action( 'wp_ajax_nopriv_um_member_directory_get_more_details', array( $this, 'get_more_details' ) );
+		add_action( 'wp_ajax_um_member_directory_get_more_details', array( $this, 'get_more_details' ) );
 	}
 
+	public function get_more_details() {
+		if ( empty( $_POST['user_id'] ) ) {
+			wp_send_json_error( __( 'Wrong user data', 'ultimate-member' ) );
+		}
+
+		if ( empty( $_POST['directory_id'] ) ) {
+			wp_send_json_error( __( 'Wrong member directory data', 'ultimate-member' ) );
+		}
+
+		$directory_id = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
+
+		if ( empty( $directory_id ) ) {
+			wp_send_json_error( __( 'Wrong member directory data', 'ultimate-member' ) );
+		}
+
+		$directory_data = UM()->query()->post_data( $directory_id );
+
+		$data_array = array();
+
+		if ( ! empty( $directory_data['show_userinfo'] ) ) {
+
+			if ( ! empty( $directory_data['reveal_fields'] ) ) {
+
+				$directory_data['reveal_fields'] = maybe_unserialize( $directory_data['reveal_fields'] );
+
+				if ( is_array( $directory_data['reveal_fields'] ) ) {
+					foreach ( $directory_data['reveal_fields'] as $key ) {
+						if ( ! $key ) {
+							continue;
+						}
+
+						$value = um_filtered_value( $key );
+						if ( ! $value ) {
+							continue;
+						}
+
+						$label = UM()->fields()->get_label( $key );
+						if ( $key == 'role_select' || $key == 'role_radio' ) {
+							$label = strtr( $label, array(
+								' (Dropdown)'   => '',
+								' (Radio)'      => ''
+							) );
+						}
+
+						$data_array[ "label_{$key}" ] = __( $label, 'ultimate-member' );
+						$data_array[ $key ] = $value;
+					}
+				}
+			}
+
+			if ( ! empty( $directory_data['show_social'] ) ) {
+				ob_start();
+				UM()->fields()->show_social_urls();
+				$social_urls = ob_get_clean();
+
+				$data_array['social_urls'] = $social_urls;
+			}
+		}
+
+		$content = um_get_template_html( 'member-details-modal.php', array( 'data' => $data_array ), 'member-directory' );
+
+		wp_send_json_success( $content );
+	}
 
 	/**
 	 * Getting member directory post ID via hash
@@ -1223,7 +1289,6 @@ class Directory {
 	 * @return array
 	 */
 	function calculate_pagination( $directory_data, $total_users ) {
-
 		$current_page = ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
 		$total_users  = ( ! empty( $directory_data['max_users'] ) && $directory_data['max_users'] <= $total_users ) ? $directory_data['max_users'] : $total_users;
 
@@ -1233,32 +1298,51 @@ class Directory {
 			$profiles_per_page = $directory_data['profiles_per_page_mobile'];
 		}
 
-		$total_pages = 1;
-		if ( ! empty( $profiles_per_page ) ) {
-			$total_pages = ceil( $total_users / $profiles_per_page );
-		}
-
-		if ( ! empty( $total_pages ) ) {
-			$index1 = 0 - ( $current_page - 2 ) + 1;
-			$to = $current_page + 2;
-			if ( $index1 > 0 ) {
-				$to += $index1;
+		$pages_to_show = array();
+		$total_pages   = 0;
+		if ( ! empty( $total_users ) ) {
+			$total_pages = 1;
+			if ( ! empty( $profiles_per_page ) ) {
+				$total_pages = absint( ceil( $total_users / $profiles_per_page ) );
 			}
 
-			$index2 = $total_pages - ( $current_page + 2 );
-			$from = $current_page - 2;
-			if ( $index2 < 0 ) {
-				$from += $index2;
+			if ( $total_pages <= 7 ) {
+				$pages_to_show = array(
+					1 => array( 'label' => '1', 'current' => false, ),
+					2 => array( 'label' => '2', 'current' => false, ),
+					3 => array( 'label' => '3', 'current' => false, ),
+					4 => array( 'label' => '4', 'current' => false, ),
+					5 => array( 'label' => '5', 'current' => false, ),
+					6 => array( 'label' => '6', 'current' => false, ),
+					7 => array( 'label' => '7', 'current' => false, ),
+				);
+				$pages_to_show = array_filter( $pages_to_show, function( $key ) use ( $total_pages ) {
+					return $key <= $total_pages;
+				}, ARRAY_FILTER_USE_KEY );
+			} else {
+				$pages_to_show = array();
+				$next_dot = true;
+				for ( $i = 1; $i <= $total_pages; $i++ ) {
+					if ( $i > 3 && $i <= $total_pages - 3 ) {
+						if ( $i === $current_page ) {
+							$pages_to_show[ $i ] = array( 'label' => (string) $i, 'current' => $i === $current_page, );
+							$next_dot = true;
+						} elseif ( $next_dot ) {
+							$next_dot = false;
+							$pages_to_show[ $i ] = array( 'label' => '...', 'current' => $i === $current_page, );
+						}
+					} else {
+						$pages_to_show[ $i ] = array( 'label' => (string) $i, 'current' => $i === $current_page, );
+					}
+				}
 			}
+			$pages_to_show[ $current_page ]['current'] = true;
 
-			$pages_to_show = range(
-				( $from > 0 ) ? $from : 1,
-				( $to <= $total_pages ) ? $to : $total_pages
-			);
+			$pages_to_show = count( $pages_to_show ) > 1 ? $pages_to_show : array();
 		}
 
 		$pagination_data = array(
-			'pages_to_show' => ( ! empty( $pages_to_show ) && count( $pages_to_show ) > 1 ) ? array_values( $pages_to_show ) : array(),
+			'pages_to_show' => $pages_to_show,
 			'current_page'  => $current_page,
 			'total_pages'   => $total_pages,
 			'total_users'   => $total_users,
@@ -1410,17 +1494,15 @@ class Directory {
 
 		$dropdown_actions = $this->build_user_actions_list( $user_id );
 
-		$can_edit = UM()->roles()->um_current_user_can( 'edit', $user_id );
-
-		// Replace hook 'um_members_just_after_name'
-		ob_start();
-		do_action( 'um_members_just_after_name', $user_id, $directory_data );
-		$hook_just_after_name = ob_get_clean();
-
-		// Replace hook 'um_members_after_user_name'
-		ob_start();
-		do_action( 'um_members_after_user_name', $user_id, $directory_data );
-		$hook_after_user_name = ob_get_clean();
+//		// Replace hook 'um_members_just_after_name'
+//		ob_start();
+//		do_action( 'um_members_just_after_name', $user_id, $directory_data );
+//		$hook_just_after_name = ob_get_clean();
+//
+//		// Replace hook 'um_members_after_user_name'
+//		ob_start();
+//		do_action( 'um_members_after_user_name', $user_id, $directory_data );
+//		$hook_after_user_name = ob_get_clean();
 
 		$data_array = array(
 			'card_anchor'          => substr( md5( $user_id ), 10, 5 ),
@@ -1428,20 +1510,23 @@ class Directory {
 			'role'                 => um_user( 'role' ),
 			'account_status'       => um_user( 'account_status' ),
 			'account_status_name'  => um_user( 'account_status_name' ),
-			'cover_photo'          => um_user( 'cover_photo', $this->cover_size ),
 			'display_name'         => um_user( 'display_name' ),
 			'profile_url'          => um_user_profile_url(),
-			'can_edit'             => $can_edit,
-			'edit_profile_url'     => um_edit_profile_url(),
-			'avatar'               => get_avatar( $user_id, $this->avatar_size ),
 			'display_name_html'    => um_user( 'display_name', 'html' ),
 			'dropdown_actions'     => $dropdown_actions,
-			'hook_just_after_name' => preg_replace( '/^\s+/im', '', $hook_just_after_name ),
-			'hook_after_user_name' => preg_replace( '/^\s+/im', '', $hook_after_user_name ),
+//			'hook_just_after_name' => preg_replace( '/^\s+/im', '', $hook_just_after_name ),
+//			'hook_after_user_name' => preg_replace( '/^\s+/im', '', $hook_after_user_name ),
 		);
 
-		if ( ! empty( $directory_data['show_tagline'] ) ) {
+		if ( get_option( 'show_avatars' ) ) {
+			$data_array['avatar'] = get_avatar( $user_id, $this->avatar_size );
+		}
 
+		if ( UM()->options()->get( 'use_cover_photos' ) ) {
+			$data_array['cover_photo'] = um_user( 'cover_photo', $this->cover_size );
+		}
+
+		if ( ! empty( $directory_data['show_tagline'] ) ) {
 			if ( ! empty( $directory_data['tagline_fields'] ) ) {
 				$directory_data['tagline_fields'] = maybe_unserialize( $directory_data['tagline_fields'] );
 
@@ -1463,7 +1548,7 @@ class Directory {
 			}
 		}
 
-		if ( ! empty( $directory_data['show_userinfo'] ) ) {
+/*		if ( ! empty( $directory_data['show_userinfo'] ) ) {
 
 			if ( ! empty( $directory_data['reveal_fields'] ) ) {
 
@@ -1501,7 +1586,7 @@ class Directory {
 
 				$data_array['social_urls'] = $social_urls;
 			}
-		}
+		}*/
 
 		$data_array = apply_filters( 'um_ajax_get_members_data', $data_array, $user_id, $directory_data );
 

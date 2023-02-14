@@ -16,7 +16,7 @@ $_um_search_fields = empty( $_um_search_fields ) ? array() : $_um_search_fields;
 
 <div class="um-admin-metabox">
 	<?php
-	UM()->admin_forms(
+	UM()->admin()->forms(
 		array(
 			'class'     => 'um-form-profile-settings um-top-label',
 			'prefix_id' => 'form',

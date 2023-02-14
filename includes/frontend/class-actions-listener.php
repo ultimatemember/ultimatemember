@@ -238,7 +238,7 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 						}
 
 						if ( ! $user || is_wp_error( $user ) ) {
-							$this->setcookie( $rp_cookie, false );
+							UM()->setcookie( $rp_cookie, false );
 							if ( $user && 'expired_key' === $user->get_error_code() ) {
 								wp_redirect( add_query_arg( array( 'error' => 'expiredkey' ), um_get_predefined_page_url( 'password-reset' ) ) );
 							} else {
@@ -291,7 +291,7 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 							// clear 'password_rst_attempts' meta data
 							UM()->common()->user()->flush_reset_password_attempts( $user->ID );
 
-							$this->setcookie( $rp_cookie, false );
+							UM()->setcookie( $rp_cookie, false );
 
 							/**
 							 * Fires after an user reset their password via Password Reset Form.
@@ -336,7 +336,7 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 
 			if ( isset( $_GET['key'] ) && isset( $_GET['login'] ) ) {
 				$value = sprintf( '%s:%s', wp_unslash( $_GET['login'] ), wp_unslash( $_GET['key'] ) );
-				$this->setcookie( $rp_cookie, $value );
+				UM()->setcookie( $rp_cookie, $value );
 
 				wp_safe_redirect( remove_query_arg( array( 'key', 'login' ) ) );
 				exit;
@@ -355,7 +355,7 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 			}
 
 			if ( ! $user || is_wp_error( $user ) ) {
-				$this->setcookie( $rp_cookie, false );
+				UM()->setcookie( $rp_cookie, false );
 				if ( $user && 'expired_key' === $user->get_error_code() ) {
 					wp_redirect( add_query_arg( array( 'error' => 'expiredkey' ), um_get_predefined_page_url( 'password-reset' ) ) );
 				} else {
@@ -366,31 +366,6 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 
 			// this variable is used for populating the reset password form via the hash and login
 			UM()->common()->shortcodes()->is_resetpass = true;
-		}
-
-		/**
-		 * Disable page caching and set or clear cookie
-		 *
-		 * @param string $name
-		 * @param string $value
-		 * @param int $expire
-		 * @param string $path
-		 */
-		private function setcookie( $name, $value = '', $expire = 0, $path = '' ) {
-			if ( empty( $value ) ) {
-				$expire = time() - YEAR_IN_SECONDS;
-			}
-			if ( empty( $path ) ) {
-				list( $path ) = explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) );
-			}
-
-			$levels = ob_get_level();
-			for ( $i = 0; $i < $levels; $i++ ) {
-				@ob_end_clean();
-			}
-
-			nocache_headers();
-			setcookie( $name, $value, $expire, $path, COOKIE_DOMAIN, is_ssl(), true );
 		}
 	}
 }

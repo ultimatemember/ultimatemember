@@ -320,6 +320,9 @@ class Shortcodes {
 					'save-password' => array(
 						'type'  => 'submit',
 						'label' => __( 'Save Password', 'ultimate-member' ),
+						'class' => array(
+							'um-button-primary',
+						),
 					),
 				),
 			);
@@ -394,6 +397,9 @@ class Shortcodes {
 						'new-password' => array(
 							'type'  => 'submit',
 							'label' => __( 'Get New Password', 'ultimate-member' ),
+							'class' => array(
+								'um-button-primary',
+							),
 						),
 					),
 				);
@@ -436,8 +442,8 @@ class Shortcodes {
 
 		wp_enqueue_script('um-password-reset' );
 
-		$form_styling = UM()->options()->get( 'form_styling' );
-		switch ( $form_styling ) {
+		$styling = UM()->options()->get( 'styling' );
+		switch ( $styling ) {
 			case 'none':
 				break;
 			case 'layout_only':
@@ -479,8 +485,8 @@ class Shortcodes {
 			'ultimatemember_login'
 		);
 
-		$form_styling = UM()->options()->get( 'form_styling' );
-		switch ( $form_styling ) {
+		$styling = UM()->options()->get( 'styling' );
+		switch ( $styling ) {
 			case 'none':
 				break;
 			case 'layout_only':
@@ -726,8 +732,8 @@ class Shortcodes {
 
 			wp_enqueue_script('um-register' );
 
-			$form_styling = UM()->options()->get( 'form_styling' );
-			switch ( $form_styling ) {
+			$styling = UM()->options()->get( 'styling' );
+			switch ( $styling ) {
 				case 'none':
 					break;
 				case 'layout_only':
@@ -759,6 +765,9 @@ class Shortcodes {
 					'register' => array(
 						'type'  => 'submit',
 						'label' => $register_primary_btn_word,
+						'class' => array(
+							'um-button-primary',
+						),
 					),
 				),
 			);
@@ -1021,6 +1030,22 @@ class Shortcodes {
 					}
 				}
 
+				if ( 'block' === $field_args['type'] || 'shortcode' === $field_args['type'] ) {
+					$field_args['content'] = $field_data['content'];
+				}
+
+				if ( 'spacing' === $field_args['type'] ) {
+					$field_args['size'] = $field_data['spacing'];
+				}
+
+				if ( 'divider' === $field_args['type'] ) {
+					$field_args['divider_text'] = ! empty( $field_data['divider_text'] ) ? $field_data['divider_text'] : '';
+
+					$field_args['style'] = ! empty( $field_data['style'] ) ? $field_data['style'] : 'solid';
+					$field_args['color'] = ! empty( $field_data['color'] ) ? $field_data['color'] : '#475467'; // grey-600 if empty
+					$field_args['width'] = ! empty( $field_data['width'] ) ? $field_data['width'] : 1; // 1px if empty
+				}
+
 				$register_form_args['fields'][] = $field_args;
 			}
 
@@ -1044,6 +1069,10 @@ class Shortcodes {
 			$args['register_form'] = $register_form;
 
 			return um_get_template_html( 'register.php', $args );
+		} elseif ( 'profile' === $mode ) {
+			wp_enqueue_script('um-profile' );
+			wp_enqueue_style('um-profile-full' );
+			return um_get_template_html( 'profile.php', $args );
 		}
 
 		return '';

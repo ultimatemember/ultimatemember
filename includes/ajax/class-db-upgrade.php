@@ -31,6 +31,10 @@ if ( ! class_exists( 'um\ajax\DB_Upgrade' ) ) {
 		 *
 		 */
 		public function init_packages_ajax() {
+			if ( ! current_user_can( 'manage_options' ) ) {
+				return;
+			}
+
 			if ( ! $this->need_upgrade() ) {
 				return;
 			}

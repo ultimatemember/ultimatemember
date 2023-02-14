@@ -1,0 +1,25 @@
+#poststuff #um-admin-form-publish .inside {
+  margin: 0;
+  padding: 0; }
+
+#um-fields-groups .row-actions .delete a {
+  color: #a00; }
+  #um-fields-groups .row-actions .delete a:hover {
+    color: #f00; }
+
+#um-fields-groups .wp-list-table .manage-column.column-title {
+  width: 300px; }
+
+#um-fields-groups .wp-list-table .column-status {
+  width: 100px; }
+
+#um-fields-groups .wp-list-table .column-key {
+  width: 240px; }
+
+#um-fields-groups .wp-list-table .column-fields {
+  width: 10%;
+  text-align: center !important; }
+
+@media screen and (max-width: 782px) {
+  #um-fields-groups .wp-list-table .column-fields {
+    text-align: left !important; } }

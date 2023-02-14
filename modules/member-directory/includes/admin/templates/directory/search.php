@@ -14,10 +14,9 @@ $_um_search_fields  = get_post_meta( $post_id, '_um_search_fields', true );
 $_um_search_filters = get_post_meta( $post_id, '_um_search_filters', true );
 ?>
 
-
 <div class="um-admin-metabox">
 	<?php
-	UM()->admin_forms(
+	UM()->admin()->forms(
 		array(
 			'class'     => 'um-member-directory-search um-half-column',
 			'prefix_id' => 'um_metadata',

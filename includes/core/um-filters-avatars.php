@@ -12,7 +12,7 @@ function um_avatar_defaults( $avatar_defaults ) {
 	remove_filter( 'get_avatar', 'um_get_avatar', 99999 );
 	return $avatar_defaults;
 }
-add_filter( 'avatar_defaults', 'um_avatar_defaults', 99999 );
+//add_filter( 'avatar_defaults', 'um_avatar_defaults', 99999 );
 
 
 /**
@@ -42,31 +42,4 @@ function um_get_avatar( $avatar = '', $id_or_email='', $size = '96', $avatar_cla
 
 	return $avatar;
 }
-add_filter( 'get_avatar', 'um_get_avatar', 99999, 5 );
-
-
-if ( ! function_exists( 'um_filter_get_avatar_url' ) ) {
-
-	/**
-	 * Replace Gravatar image URL to Ultimate member profile image URL if setting "Use Gravatars?" disabled
-	 *
-	 * @param string $url
-	 * @param int $id_or_email
-	 * @param array $args
-	 * @return string
-	 */
-	function um_filter_get_avatar_url( $url, $id_or_email, $args ) {
-
-		if ( is_numeric( $id_or_email ) && ! UM()->options()->get( 'use_gravatars' ) && preg_match( '/gravatar/i', $url ) ) {
-			$data = um_get_user_avatar_data( $id_or_email, $args['size'] );
-			if ( ! empty( $data['url'] ) ) {
-				$url = $data['url'];
-			}
-		}
-
-		return $url;
-	}
-
-	// hooked in the get_avatar_data function
-	add_filter( 'get_avatar_url', 'um_filter_get_avatar_url', 20, 3 );
-}
+//add_filter( 'get_avatar', 'um_get_avatar', 99999, 5 );

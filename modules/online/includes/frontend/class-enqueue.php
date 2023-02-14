@@ -27,7 +27,7 @@ class Enqueue {
 	 * @return array
 	 */
 	function extends_styles_dependencies( $deps = array() ) {
-		$deps = array_merge( $deps, array( 'um_styles' ) );
+		$deps = array_merge( $deps, array( /*'um_styles'*/ ) );
 		return $deps;
 	}
 }

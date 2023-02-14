@@ -7,14 +7,14 @@
 // Exit if accessed directly.
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit;
 
-if ( ! defined( 'um_path' ) )
-	define( 'um_path', plugin_dir_path( __FILE__ ) );
+if ( ! defined( 'UM_PATH' ) )
+	define( 'UM_PATH', plugin_dir_path( __FILE__ ) );
 
-if ( ! defined( 'um_url' ) )
-	define( 'um_url', plugin_dir_url( __FILE__ ) );
+if ( ! defined( 'UM_URL' ) )
+	define( 'UM_URL', plugin_dir_url( __FILE__ ) );
 
-if ( ! defined( 'um_plugin' ) )
-	define( 'um_plugin', plugin_basename( __FILE__ ) );
+if ( ! defined( 'UM_PLUGIN' ) )
+	define( 'UM_PLUGIN', plugin_basename( __FILE__ ) );
 
 //for delete Email options only for Core email notifications
 remove_all_filters( 'um_email_notifications' );

@@ -7,7 +7,7 @@ $role = $object['data'];
 
 <div class="um-admin-metabox">
 	<?php
-	UM()->admin_forms(
+	UM()->admin()->forms(
 		array(
 			'class'     => 'um-role-jobboardwp um-half-column',
 			'prefix_id' => 'role',

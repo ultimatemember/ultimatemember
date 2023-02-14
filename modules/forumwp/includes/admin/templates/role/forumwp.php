@@ -1,10 +1,14 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+$role = $object['data'];
+?>
 
 <div class="um-admin-metabox">
 	<?php
-	$role = $object['data'];
-
-	UM()->admin_forms(
+	UM()->admin()->forms(
 		array(
 			'class'     => 'um-role-forumwp um-half-column',
 			'prefix_id' => 'role',
@@ -44,7 +48,7 @@
 					'value'       => ! empty( $role['_um_lock_create_forumwp_replies_notice'] ) ? $role['_um_lock_create_forumwp_replies_notice'] : '',
 					'conditional' => array( '_um_disable_create_forumwp_replies', '=', '1' ),
 				),
-			)
+			),
 		)
 	)->render_form();
 	?>

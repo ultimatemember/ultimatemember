@@ -1,15 +1,15 @@
 <?php
-namespace um\admin\core;
+namespace um\legacy\admin\core;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'um\admin\core\Admin_Forms_Settings' ) ) {
+if ( ! class_exists( 'um\legacy\admin\core\Admin_Forms_Settings' ) ) {
 
 
 	/**
 	 * Class Admin_Forms_Settings
-	 * @package um\admin\core
+	 * @package um\legacy\admin\core
 	 */
 	class Admin_Forms_Settings extends Admin_Forms {
 
