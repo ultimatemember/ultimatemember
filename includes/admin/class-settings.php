@@ -878,8 +878,8 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 			);
 
 			$cache_count = $wpdb->get_var(
-				"SELECT COUNT( option_id ) 
-				FROM {$wpdb->options} 
+				"SELECT COUNT( option_id )
+				FROM {$wpdb->options}
 				WHERE option_name LIKE 'um_cache_userdata_%'"
 			);
 
@@ -1068,10 +1068,57 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 								'title'  => __( 'Account', 'ultimate-member' ),
 								'fields' => array(
 									array(
+										'type'          => 'separator',
+										'value'         => __( 'General tab', 'ultimate-member' ),
+										'without_label' => 1,
+									),
+									array(
+										'id'          => 'account_name',
+										'type'        => 'checkbox',
+										'label'       => __( 'Display First & Last name fields', 'ultimate-member' ),
+										'description' => __( 'If enabled, the First & Last name fields will be shown on the account page.', 'ultimate-member' ),
+									),
+									array(
+										'id'          => 'account_name_disable',
+										'type'        => 'checkbox',
+										'label'       => __( 'Disable First & Last name field editing', 'ultimate-member' ),
+										'description' => __( 'If enabled, this will prevent users from changing their First & Last name fields on the account page.', 'ultimate-member' ),
+										'conditional' => array( 'account_name', '=', '1' ),
+									),
+									array(
+										'id'          => 'account_name_require',
+										'type'        => 'checkbox',
+										'label'       => __( 'Require First & Last Name', 'ultimate-member' ),
+										'description' => __( 'If enabled, users will not be allowed to remove their first or last names when updating their account page.', 'ultimate-member' ),
+										'conditional' => array( 'account_name', '=', '1' ),
+									),
+									array(
+										'id'          => 'account_email',
+										'type'        => 'checkbox',
+										'label'       => __( 'Allow users to change email', 'ultimate-member' ),
+										'description' => __( 'If disabled, users will not be allowed to change their email address on the account page.', 'ultimate-member' ),
+									),
+									array(
+										'id'          => 'account_general_password',
+										'type'        => 'checkbox',
+										'label'       => __( 'Require password to update account', 'ultimate-member' ),
+										'description' => __( 'If enabled, users will need to enter their password when updating their information via the account page.', 'ultimate-member' ),
+									),
+									array(
+										'type'          => 'separator',
+										'value'         => __( 'Password tab', 'ultimate-member' ),
+										'without_label' => 1,
+									),
+									array(
 										'id'          => 'account_tab_password',
 										'type'        => 'checkbox',
 										'label'       => __( 'Password Account Tab', 'ultimate-member' ),
 										'description' => __( 'Enable/disable the Password account tab on the account page.', 'ultimate-member' ),
+									),
+									array(
+										'type'          => 'separator',
+										'value'         => __( 'Privacy tab', 'ultimate-member' ),
+										'without_label' => 1,
 									),
 									array(
 										'id'          => 'account_tab_privacy',
@@ -1080,10 +1127,20 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 										'description' => __( 'Enable/disable the Privacy account tab on the account page.', 'ultimate-member' ),
 									),
 									array(
+										'type'          => 'separator',
+										'value'         => __( 'Notifications tab', 'ultimate-member' ),
+										'without_label' => 1,
+									),
+									array(
 										'id'          => 'account_tab_notifications',
 										'type'        => 'checkbox',
 										'label'       => __( 'Notifications Account Tab', 'ultimate-member' ),
 										'description' => __( 'Enable/disable the Notifications account tab on the account page.', 'ultimate-member' ),
+									),
+									array(
+										'type'          => 'separator',
+										'value'         => __( 'Delete tab', 'ultimate-member' ),
+										'without_label' => 1,
 									),
 									array(
 										'id'          => 'account_tab_delete',
@@ -1117,38 +1174,6 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 											'textarea_rows' => 6,
 										),
 										'conditional' => array( 'delete_account_password_requires', '=', '0' ),
-									),
-									array(
-										'id'          => 'account_name',
-										'type'        => 'checkbox',
-										'label'       => __( 'Display First & Last name fields', 'ultimate-member' ),
-										'description' => __( 'If enabled, the First & Last name fields will be shown on the account page.', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'account_name_disable',
-										'type'        => 'checkbox',
-										'label'       => __( 'Disable First & Last name field editing', 'ultimate-member' ),
-										'description' => __( 'If enabled, this will prevent users from changing their First & Last name fields on the account page.', 'ultimate-member' ),
-										'conditional' => array( 'account_name', '=', '1' ),
-									),
-									array(
-										'id'          => 'account_name_require',
-										'type'        => 'checkbox',
-										'label'       => __( 'Require First & Last Name', 'ultimate-member' ),
-										'description' => __( 'If enabled, users will not be allowed to remove their first or last names when updating their account page.', 'ultimate-member' ),
-										'conditional' => array( 'account_name', '=', '1' ),
-									),
-									array(
-										'id'          => 'account_email',
-										'type'        => 'checkbox',
-										'label'       => __( 'Allow users to change email', 'ultimate-member' ),
-										'description' => __( 'If disabled, users will not be allowed to change their email address on the account page.', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'account_general_password',
-										'type'        => 'checkbox',
-										'label'       => __( 'Require password to update account', 'ultimate-member' ),
-										'description' => __( 'If enabled, users will need to enter their password when updating their information via the account page.', 'ultimate-member' ),
 									),
 								),
 							),
