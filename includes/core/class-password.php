@@ -437,7 +437,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 * @param $args
 		 */
 		public function um_reset_password_errors_hook( $args ) {
-			if ( '' !== $args[ UM()->honeypot ] ) {
+			if ( isset( $args[ UM()->honeypot ] ) && '' !== $args[ UM()->honeypot ] ) {
 				wp_die( esc_html__( 'Hello, spam bot!', 'ultimate-member' ) );
 			}
 
