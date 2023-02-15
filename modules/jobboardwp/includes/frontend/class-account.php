@@ -30,8 +30,8 @@ class Account {
 	 * @since 1.0
 	 */
 	function add_account_tab( $tabs ) {
-		if ( empty( $tabs[500]['jobboardwp'] ) ) {
-			$tabs[500]['jobboardwp'] = array(
+		if ( empty( $tabs[700]['jobboardwp'] ) ) {
+			$tabs[700]['jobboardwp'] = array(
 				'icon'        => 'far fa-list-alt',
 				'title'       => __( 'Jobs Dashboard', 'ultimate-member' ),
 				'show_button' => false,
