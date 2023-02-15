@@ -1,6 +1,8 @@
-<p align="center"><a href="https://ultimatemember.com/"><img src="https://ultimatemember.com/wp-content/uploads/2017/06/umlogonew1.png" alt="Ultimate Member" width="300"></a></p>
+<p align="center"><a href="https://ultimatemember.com/"><img src="https://ultimatemember.com/wp-content/uploads/2022/05/icon-128×128.png" alt="Ultimate Member" ></a><br/>
+<h1 align="center">Ultimate Member</h1>
+</p>
 
-[![License](https://img.shields.io/github/license/ultimatemember/ultimatemember)](https://img.shields.io/github/license/ultimatemember/ultimatemember)
+[![License](https://img.shields.io/github/license/ultimatemember/ultimatemember?style=flat-square)](https://img.shields.io/github/license/ultimatemember/ultimatemember?style=flat-square)
 [![Active Installs](https://img.shields.io/wordpress/plugin/installs/ultimate-member.svg)](https://img.shields.io/wordpress/plugin/installs/ultimate-member.svg)
 [![Ratings](https://img.shields.io/wordpress/plugin/rating/ultimate-member)](https://img.shields.io/wordpress/plugin/rating/ultimate-member)
 [![Latest Version](https://img.shields.io/wordpress/plugin/v/ultimate-member?label=Latest)](https://img.shields.io/wordpress/plugin/v/ultimate-member?label=Latest)
