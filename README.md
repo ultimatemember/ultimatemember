@@ -4,7 +4,7 @@ Ultimate Member
 </div>
 </p>
 
-[![License](https://img.shields.io/github/license/ultimatemember/ultimatemember)](https://img.shields.io/github/license/ultimatemember/ultimatemember)
+[![License](https://img.shields.io/github/license/ultimatemember/ultimatemember?style=flat-square)](https://img.shields.io/github/license/ultimatemember/ultimatemember?style=flat-square)
 [![Active Installs](https://img.shields.io/wordpress/plugin/installs/ultimate-member.svg)](https://img.shields.io/wordpress/plugin/installs/ultimate-member.svg)
 [![Ratings](https://img.shields.io/wordpress/plugin/rating/ultimate-member)](https://img.shields.io/wordpress/plugin/rating/ultimate-member)
 [![Latest Version](https://img.shields.io/wordpress/plugin/v/ultimate-member?label=Latest)](https://img.shields.io/wordpress/plugin/v/ultimate-member?label=Latest)
