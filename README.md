@@ -1,6 +1,6 @@
-<p align="center"><a href="https://ultimatemember.com/"><img src="https://ultimatemember.com/wp-content/uploads/2022/05/icon-128×128.png" alt="Ultimate Member" width="300"></a><br/>
-<div style="color:white;">
-## Ultimate Member
+<p align="center"><a href="https://ultimatemember.com/"><img src="https://ultimatemember.com/wp-content/uploads/2022/05/icon-128×128.png" alt="Ultimate Member" ></a><br/>
+<div style="color:white;font-size:20px;text-align:center;">
+Ultimate Member
 </div>
 </p>
 
