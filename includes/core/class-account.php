@@ -57,6 +57,13 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 * @throws \Exception
 		 */
 		function init_tabs( $args ) {
+			$tabs = array();
+
+			if ( isset( $args['tab'] ) ) {
+				$tabs = explode( ',', $args['tab'] );
+				$tabs = array_map( 'trim', $tabs );
+				$tabs = array_diff( $tabs, array('') );
+			}
 
 			$this->tabs = $this->get_tabs();
 
@@ -67,7 +74,11 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 				foreach ( $arr as $id => $info ) {
 
-					if ( ! empty( $args['tab'] ) && $id != $args['tab'] ) {
+					if ( isset( $args['tab'] ) && 1 < count( $tabs ) && ! array_key_exists( $id, array_flip( $tabs ) ) ) {
+						continue;
+					}
+
+					if ( ! empty( $args['tab'] ) && 1 >= count( $tabs ) && $id != $args['tab'] ) {
 						continue;
 					}
 
@@ -198,11 +209,19 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			 */
 			$args = apply_filters( 'um_account_shortcode_args_filter', $args );
 
-			if ( ! empty( $args['tab'] ) ) {
+			$tabs = array();
+			if ( isset( $args['tab'] ) ) {
+				$tabs = explode( ',',  $args['tab'] );
+				$tabs = array_map( 'trim', $tabs );
+				$tabs = array_diff( $tabs, array('') );
+			}
 
-				if ( $args['tab'] == 'account' ) {
+			if ( ! empty( $args['tab'] ) && 1 === count( $tabs ) ) {
+
+				if ( 'account' === $args['tab'] ) {
 					$args['tab'] = 'general';
 				}
+
 
 				$this->init_tabs( $args );
 
@@ -241,10 +260,14 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				<?php }
 
 			} else {
-
 				$this->init_tabs( $args );
 
-				$this->current_tab = apply_filters( 'um_change_default_tab', $this->current_tab, $args );
+				$current_tab = $this->current_tab;
+				if ( 1 < count( $tabs ) ) {
+					$current_tab = $tabs[0];
+				}
+
+				$this->current_tab = apply_filters( 'um_change_default_tab', $current_tab, $args );
 
 				/**
 				 * UM hook
