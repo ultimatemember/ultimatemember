@@ -2,7 +2,6 @@
 <h1 align="center">Ultimate Member</h1>
 </p>
 
-[![License](https://img.shields.io/github/license/ultimatemember/ultimatemember?style=flat-square)](https://img.shields.io/github/license/ultimatemember/ultimatemember?style=flat-square)
 [![Active Installs](https://img.shields.io/wordpress/plugin/installs/ultimate-member?color=7856ff)](https://img.shields.io/wordpress/plugin/installs/ultimate-member?color=7856ff)
 [![Ratings](https://img.shields.io/wordpress/plugin/rating/ultimate-member?color=7856ff)](https://img.shields.io/wordpress/plugin/rating/ultimate-member?color=7856ff)
 [![Latest Version](https://img.shields.io/wordpress/plugin/v/ultimate-member?label=Latest&color=7856ff)](https://img.shields.io/wordpress/plugin/v/ultimate-member?label=Latest)
