@@ -3,7 +3,7 @@
 </p>
 
 [![License](https://img.shields.io/github/license/ultimatemember/ultimatemember?style=flat-square)](https://img.shields.io/github/license/ultimatemember/ultimatemember?style=flat-square)
-[![Active Installs](https://img.shields.io/wordpress/plugin/installs/ultimate-member.svg&color=7856ff)](https://img.shields.io/wordpress/plugin/installs/ultimate-member.svg)
+[![Active Installs](https://img.shields.io/wordpress/plugin/installs/ultimate-member?color=7856ff)](https://img.shields.io/wordpress/plugin/installs/ultimate-member?color=7856ff)
 [![Ratings](https://img.shields.io/wordpress/plugin/rating/ultimate-member?color=7856ff)](https://img.shields.io/wordpress/plugin/rating/ultimate-member?color=7856ff)
 [![Latest Version](https://img.shields.io/wordpress/plugin/v/ultimate-member?label=Latest&color=7856ff)](https://img.shields.io/wordpress/plugin/v/ultimate-member?label=Latest)
 [![WP Tested](https://img.shields.io/wordpress/plugin/tested/ultimate-member?label=wp&color=7856ff)](https://img.shields.io/wordpress/plugin/tested/ultimate-member?label=wp)
