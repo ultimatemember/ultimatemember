@@ -1,7 +1,5 @@
 <p align="center"><a href="https://ultimatemember.com/"><img src="https://ultimatemember.com/wp-content/uploads/2022/05/icon-128×128.png" alt="Ultimate Member" ></a><br/>
-<div style="color:white;font-size:20px;text-align:center;">
-Ultimate Member
-</div>
+<h1 align="center">Ultimate Member</h1>
 </p>
 
 [![License](https://img.shields.io/github/license/ultimatemember/ultimatemember?style=flat-square)](https://img.shields.io/github/license/ultimatemember/ultimatemember?style=flat-square)
