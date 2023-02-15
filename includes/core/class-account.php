@@ -163,6 +163,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				return '';
 			}
 
+			wp_enqueue_style( 'um-account' );
+
 			um_fetch_user( get_current_user_id() );
 
 			ob_start();
