@@ -312,6 +312,62 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 							exit;
 						}
 						break;
+
+					case 'account-general-tab':
+						$tab_form = UM()->frontend()->form(
+							array(
+								'id' => 'um-general-tab',
+							)
+						);
+						$tab_form->flush_errors();
+
+						if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'um-general-tab' ) ) {
+							$tab_form->add_error( 'global', __( 'Security issue, Please try again', 'ultimate-member' ) );
+						}
+
+						$user_id      = get_current_user_id();
+						$current_user = wp_get_current_user();
+
+						if ( ! UM()->options()->get( 'account_name' ) && UM()->options()->get( 'account_name_require' ) ) {
+							if ( empty( $_POST['first_name'] ) || '' === sanitize_text_field( $_POST['first_name'] ) ) {
+								$tab_form->add_error( 'first_name', __( 'First Name is required', 'ultimate-member' ) );
+							}
+							if ( empty( $_POST['last_name'] ) || '' === sanitize_text_field( $_POST['last_name'] ) ) {
+								$tab_form->add_error( 'last_name', __( 'Last Name is required', 'ultimate-member' ) );
+							}
+						}
+						if ( UM()->options()->get( 'account_email' ) || um_user( 'can_edit_everyone' ) ) {
+							if ( empty( $_POST['user_email'] ) || '' === sanitize_email( $_POST['user_email'] ) ) {
+								$tab_form->add_error( 'user_email', __( 'E-mail is required', 'ultimate-member' ) );
+							}
+							if ( $current_user->user_email !== sanitize_email( $_POST['user_email'] ) && email_exists( sanitize_email( $_POST['user_email'] ) ) ){
+								$tab_form->add_error( 'user_email', __( 'E-mail already exists', 'ultimate-member' ) );
+							}
+						}
+						if ( UM()->account()->current_password_is_required( 'general' ) ) {
+							if ( empty( $_POST['single_user_password'] ) ) {
+								$tab_form->add_error( 'single_user_password', __( 'You must enter your password', 'ultimate-member' ) );
+							}
+							if ( ! wp_check_password( $_POST['single_user_password'], $current_user->user_pass ) ) {
+								$tab_form->add_error( 'single_user_password', __( 'This is not your password', 'ultimate-member' ) );
+							}
+						}
+
+						if ( ! $tab_form->has_errors() ) {
+							if ( UM()->options()->get( 'account_name' ) && ! UM()->options()->get( 'account_name_disable' ) ) {
+								update_user_meta( $user_id, 'first_name', sanitize_text_field( $_POST['first_name'] ) );
+								update_user_meta( $user_id, 'last_name', sanitize_text_field( $_POST['last_name'] ) );
+							}
+							if ( UM()->options()->get( 'account_email' ) || um_user( 'can_edit_everyone' ) ) {
+								$args = array(
+									'ID'         => $user_id,
+									'user_email' => sanitize_email( $_POST['user_email'] )
+								);
+								wp_update_user( $args );
+							}
+						}
+
+						break;
 				}
 			}
 		}

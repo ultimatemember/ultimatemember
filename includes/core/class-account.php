@@ -722,6 +722,11 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 								'value'    => '',
 							),
 						),
+						'hiddens'   => array(
+							'um-action' => 'account-general-tab',
+							'um-tabid'  => $id,
+							'nonce'     => wp_create_nonce( 'um-' . $id . '-tab' ),
+						),
 						'buttons'   => array(
 							'save-password' => array(
 								'type'  => 'submit',
@@ -732,6 +737,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 							),
 						),
 					);
+
 					if ( ! UM()->options()->get( 'account_name' ) ) {
 						unset( $args['fields']['first_name'] );
 						unset( $args['fields']['last_name'] );
@@ -739,6 +745,10 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						if ( UM()->options()->get( 'account_name_disable' ) ) {
 							$args['fields']['first_name']['disabled'] = true;
 							$args['fields']['last_name']['disabled']  = true;
+						}
+						if ( ! UM()->options()->get( 'account_name_require' ) ) {
+							$args['fields']['first_name']['required'] = false;
+							$args['fields']['last_name']['required']  = false;
 						}
 					}
 					if ( ! $this->current_password_is_required( $id ) ) {
