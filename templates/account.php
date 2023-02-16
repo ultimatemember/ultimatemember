@@ -4,7 +4,7 @@
 
 	<div class="um-form">
 
-		<form method="post" action="">
+		<div>
 
 			<?php
 			/**
@@ -166,7 +166,7 @@
 
 			</div>
 			<div class="um-clear"></div>
-		</form>
+		</div>
 
 		<?php
 		/**

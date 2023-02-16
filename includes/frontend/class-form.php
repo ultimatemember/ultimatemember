@@ -677,6 +677,8 @@ class Form {
 		$placeholder_attr = ! empty( $field_data['placeholder'] ) ? ' placeholder="' . $field_data['placeholder'] . '"' : '';
 		$required         = ! empty( $field_data['required'] ) ? ' required' : '';
 
+		$disabled = ! empty( $field_data['disabled'] ) ? 'disabled' : '';
+
 		$name      = isset( $field_data['name'] ) ? $field_data['name'] : $field_data['id'];
 		$name      = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
 		$name_attr = ' name="' . esc_attr( $name ) . '" ';
@@ -684,7 +686,7 @@ class Form {
 		$value      = $this->get_field_value( $field_data );
 		$value_attr = ' value="' . esc_attr( $value ) . '" ';
 
-		$html = "<input type=\"text\" $id_attr $class_attr $name_attr $data_attr $value_attr $placeholder_attr $required />";
+		$html = "<input type=\"text\" $id_attr $class_attr $name_attr $data_attr $value_attr $placeholder_attr $required $disabled />";
 
 		return $html;
 	}
@@ -1592,7 +1594,7 @@ class Form {
 					'init_instance_callback' => "function (editor) {
 													editor.on( 'keyup paste mouseover', function (e) {
 													var content = editor.getContent( { format: 'html' } ).trim();
-													var textarea = jQuery( '#' + editor.id ); 
+													var textarea = jQuery( '#' + editor.id );
 													textarea.val( content ).trigger( 'keyup' ).trigger( 'keypress' ).trigger( 'keydown' ).trigger( 'change' ).trigger( 'paste' ).trigger( 'mouseover' );
 												});}",
 				),

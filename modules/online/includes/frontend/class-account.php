@@ -29,6 +29,26 @@ class Account {
 	 * @return string
 	 */
 	public function add_privacy_field( $args ) {
-		return $args . ',_hide_online_status';
+		$user_id = get_current_user_id();
+
+		$hide_online_status = 'yes';
+		if ( get_user_meta( $user_id, '_hide_online_status', true ) ) {
+			$hide_online_status_meta = get_user_meta( $user_id, '_hide_online_status', true );
+			$hide_online_status      = $hide_online_status_meta[0];
+		}
+
+		$args['fields'][] = array(
+			'type'    => 'radio',
+			'label'   => __( 'Show my online status?', 'ultimate-member-pro' ),
+			'helptip' => __( 'Do you want other people to see that you are online?', 'ultimate-member-pro' ),
+			'id'      => '_hide_online_status',
+			'value'   => $hide_online_status,
+			'options' => array(
+				'no'  => __( 'No', 'ultimate-member' ),
+				'yes' => __( 'Yes', 'ultimate-member' ),
+			),
+		);
+
+		return $args;
 	}
 }

@@ -537,7 +537,7 @@ add_action( 'um_account_pre_update_profile', 'um_disable_native_email_notificati
  *
  * @param $args
  */
-add_action( 'um_after_account_privacy', 'um_after_account_privacy' );
+//add_action( 'um_after_account_privacy', 'um_after_account_privacy' );
 function um_after_account_privacy( $args ) {
 	global $wpdb;
 	$user_id = get_current_user_id();
@@ -554,20 +554,20 @@ function um_after_account_privacy( $args ) {
 			<div class="um-clear"></div>
 		</div>
 		<?php $completed = $wpdb->get_row(
-			"SELECT ID 
-			FROM $wpdb->posts 
-			WHERE post_author = $user_id AND 
-			      post_type = 'user_request' AND 
-			      post_name = 'export_personal_data' AND 
-			      post_status = 'request-completed' 
-			ORDER BY ID DESC 
+			"SELECT ID
+			FROM $wpdb->posts
+			WHERE post_author = $user_id AND
+			      post_type = 'user_request' AND
+			      post_name = 'export_personal_data' AND
+			      post_status = 'request-completed'
+			ORDER BY ID DESC
 			LIMIT 1",
 		ARRAY_A );
 
 		if ( ! empty( $completed ) ) {
-			
+
 			$exports_url = wp_privacy_exports_url();
- 
+
 			echo '<p>' . esc_html__( 'You could download your previous data:', 'ultimate-member' ) . '</p>';
 			echo '<a href="'.esc_attr( $exports_url . get_post_meta( $completed['ID'], '_export_file_name', true ) ) . '">' . esc_html__( 'Download Personal Data', 'ultimate-member' ) . '</a>';
 			echo '<p>' . esc_html__( 'You could send a new request for an export of personal your data.', 'ultimate-member' ) . '</p>';
@@ -575,13 +575,13 @@ function um_after_account_privacy( $args ) {
 		}
 
 		$pending = $wpdb->get_row(
-			"SELECT ID, post_status 
-			FROM $wpdb->posts 
-			WHERE post_author = $user_id AND 
-			      post_type = 'user_request' AND 
-			      post_name = 'export_personal_data' AND 
-			      post_status != 'request-completed' 
-			ORDER BY ID DESC 
+			"SELECT ID, post_status
+			FROM $wpdb->posts
+			WHERE post_author = $user_id AND
+			      post_type = 'user_request' AND
+			      post_name = 'export_personal_data' AND
+			      post_status != 'request-completed'
+			ORDER BY ID DESC
 			LIMIT 1",
 		ARRAY_A );
 
@@ -631,13 +631,13 @@ function um_after_account_privacy( $args ) {
 		</div>
 
 		<?php $completed = $wpdb->get_row(
-			"SELECT ID 
-			FROM $wpdb->posts 
-			WHERE post_author = $user_id AND 
-			      post_type = 'user_request' AND 
-			      post_name = 'remove_personal_data' AND 
-			      post_status = 'request-completed' 
-			ORDER BY ID DESC 
+			"SELECT ID
+			FROM $wpdb->posts
+			WHERE post_author = $user_id AND
+			      post_type = 'user_request' AND
+			      post_name = 'remove_personal_data' AND
+			      post_status = 'request-completed'
+			ORDER BY ID DESC
 			LIMIT 1",
 		ARRAY_A );
 
@@ -649,13 +649,13 @@ function um_after_account_privacy( $args ) {
 		}
 
 		$pending = $wpdb->get_row(
-			"SELECT ID, post_status 
-			FROM $wpdb->posts 
-			WHERE post_author = $user_id AND 
-			      post_type = 'user_request' AND 
-			      post_name = 'remove_personal_data' AND 
-			      post_status != 'request-completed' 
-			ORDER BY ID DESC 
+			"SELECT ID, post_status
+			FROM $wpdb->posts
+			WHERE post_author = $user_id AND
+			      post_type = 'user_request' AND
+			      post_name = 'remove_personal_data' AND
+			      post_status != 'request-completed'
+			ORDER BY ID DESC
 			LIMIT 1",
 		ARRAY_A );
 

@@ -576,185 +576,221 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 * @throws \Exception
 		 */
 		function get_tab_fields( $id, $shortcode_args ) {
-			$output = null;
-
-			UM()->fields()->set_id = $id;
-			UM()->fields()->set_mode = 'account';
-			UM()->fields()->editing = true;
-
-			if ( ! empty( $this->tab_output[ $id ]['content'] ) && ! empty( $this->tab_output[ $id ]['hash'] ) &&
-			     $this->tab_output[ $id ]['hash'] == md5( json_encode( $shortcode_args ) ) ) {
-				return $this->tab_output[ $id ]['content'];
-			}
+			$args    = array();
+			$user_id = get_current_user_id();
 
 			switch ( $id ) {
 
 				case 'privacy':
 
-					$args = 'profile_privacy,profile_noindex,hide_in_members';
-					/**
-					 * UM hook
-					 *
-					 * @type filter
-					 * @title um_account_tab_privacy_fields
-					 * @description Extend Account Tab Privacy
-					 * @input_vars
-					 * [{"var":"$args","type":"array","desc":"Account Arguments"},
-					 * {"var":"$shortcode_args","type":"array","desc":"Account Shortcode Arguments"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_filter( 'um_account_tab_privacy_fields', 'function_name', 10, 2 );
-					 * @example
-					 * <?php
-					 * add_filter( 'um_account_tab_privacy_fields', 'my_account_tab_privacy_fields', 10, 2 );
-					 * function my_account_tab_privacy_fields( $args, $shortcode_args ) {
-					 *     // your code here
-					 *     return $args;
-					 * }
-					 * ?>
-					 */
+					$profile_privacy = apply_filters(
+						'um_profile_privacy_options',
+						array(
+							'Everyone' => __( 'Everyone', 'ultimate-member' ),
+							'Only me'  => __( 'Only me', 'ultimate-member' )
+						)
+					);
+
+					$hide_in_members = '';
+					if ( get_user_meta( $user_id, 'hide_in_members', true ) ) {
+						$hide_in_members_meta = get_user_meta( $user_id, 'hide_in_members', true );
+						$hide_in_members      = $hide_in_members_meta[0];
+					}
+
+					$args = array(
+						'id'        => 'um-' . $id . '-tab',
+						'class'     => 'um-top-label um-single-button',
+						'prefix_id' => '',
+						'fields'    => array(
+							array(
+								'type'    => 'select',
+								'label'   => __( 'Profile Privacy', 'ultimate-member' ),
+								'helptip' => __( 'Who can see your public profile?', 'ultimate-member' ),
+								'id'      => 'profile_privacy',
+								'value'   => get_user_meta( $user_id, 'profile_privacy', true ),
+								'options' => $profile_privacy,
+							),
+							array(
+								'type'    => 'select',
+								'label'   => __( 'Avoid indexing my profile by search engines', 'ultimate-member' ),
+								'helptip' => __( 'Hide my profile for robots?', 'ultimate-member' ),
+								'id'      => 'profile_noindex',
+								'value'   => get_user_meta( $user_id, 'profile_noindex', true ),
+								'options' => array(
+									'0' => __( 'No', 'ultimate-member' ),
+									'1' => __( 'Yes', 'ultimate-member' ),
+								),
+							),
+							array(
+								'type'    => 'radio',
+								'label'   => __( 'Hide my profile from directory', 'ultimate-member' ),
+								'helptip' => __( 'Here you can hide yourself from appearing in public directory', 'ultimate-member' ),
+								'id'      => 'hide_in_members',
+								'value'   => $hide_in_members,
+								'options' => array(
+									'No'  => __( 'No', 'ultimate-member' ),
+									'Yes' => __( 'Yes', 'ultimate-member' ),
+								),
+							),
+						),
+						'buttons'   => array(
+							'save-password' => array(
+								'type'  => 'submit',
+								'label' => __( 'Update Privacy', 'ultimate-member' ),
+								'class' => array(
+									'um-button-primary',
+								),
+							),
+						),
+					);
+
 					$args = apply_filters( 'um_account_tab_privacy_fields', $args, $shortcode_args );
 
-					$fields = UM()->builtin()->get_specific_fields( $args );
-					$fields = $this->filter_fields_by_attrs( $fields, $shortcode_args );
-
-					$this->init_displayed_fields( $fields, $id );
-
-					foreach ( $fields as $key => $data ) {
-						$output .= UM()->fields()->edit_field( $key, $data );
-					}
 					break;
 
 				case 'delete':
 
-					$args = '';
-					if ( $this->current_password_is_required( $id ) ) {
-						$args = 'single_user_password';
-					}
-
-					/**
-					 * UM hook
-					 *
-					 * @type filter
-					 * @title um_account_tab_delete_fields
-					 * @description Extend Account Tab Delete
-					 * @input_vars
-					 * [{"var":"$args","type":"array","desc":"Account Arguments"},
-					 * {"var":"$shortcode_args","type":"array","desc":"Account Shortcode Arguments"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_filter( 'um_account_tab_delete_fields', 'function_name', 10, 2 );
-					 * @example
-					 * <?php
-					 * add_filter( 'um_account_tab_delete_fields', 'my_account_tab_delete_fields', 10, 2 );
-					 * function my_account_tab_delete_fields( $args, $shortcode_args ) {
-					 *     // your code here
-					 *     return $args;
-					 * }
-					 * ?>
-					 */
-					$args = apply_filters( 'um_account_tab_delete_fields', $args, $shortcode_args );
-
-					$fields = UM()->builtin()->get_specific_fields( $args );
-					$fields = $this->filter_fields_by_attrs( $fields, $shortcode_args );
-
-					$this->init_displayed_fields( $fields, $id );
-
-					foreach ( $fields as $key => $data ) {
-						$output .= UM()->fields()->edit_field( $key, $data );
-					}
-
-					if ( ! $output && ! $this->current_password_is_required( $id ) ) {
-						$output = '<div></div>';
-					}
+					$args = array(
+						'id'        => 'um-' . $id . '-tab',
+						'class'     => 'um-top-label um-single-button um-center-always',
+						'prefix_id' => '',
+						'fields'    => array(
+							array(
+								'type'     => 'password',
+								'label'    => __( 'Password', 'ultimate-member' ),
+								'id'       => 'single_user_password',
+								'required' => true,
+								'value'    => '',
+							),
+						),
+						'buttons'   => array(
+							'save-password' => array(
+								'type'  => 'submit',
+								'label' => __( 'Delete Account', 'ultimate-member' ),
+								'class' => array(
+									'um-button-primary',
+								),
+							),
+						),
+					);
 
 					break;
 
 				case 'general':
 
-					$args = 'user_login,first_name,last_name,user_email';
+					$current_user = wp_get_current_user();
 
+					$args = array(
+						'id'        => 'um-' . $id . '-tab',
+						'class'     => 'um-top-label um-single-button um-center-always',
+						'prefix_id' => '',
+						'fields'    => array(
+							'user_login'           => array(
+								'type'     => 'text',
+								'label'    => __( 'Username', 'ultimate-member' ),
+								'id'       => 'user_login',
+								'required' => true,
+								'value'    => $current_user->user_login,
+								'disabled' => true,
+							),
+							'first_name'           => array(
+								'type'     => 'text',
+								'label'    => __( 'First Name', 'ultimate-member' ),
+								'id'       => 'first_name',
+								'required' => true,
+								'value'    => get_user_meta( $user_id, 'first_name', true ),
+							),
+							'last_name'            => array(
+								'type'     => 'text',
+								'label'    => __( 'Last Name', 'ultimate-member' ),
+								'id'       => 'last_name',
+								'required' => true,
+								'value'    => get_user_meta( $user_id, 'last_name', true ),
+							),
+							'user_email'           => array(
+								'type'     => 'text',
+								'label'    => __( 'E-mail Address', 'ultimate-member' ),
+								'id'       => 'user_email',
+								'required' => true,
+								'value'    => $current_user->user_email,
+							),
+							'single_user_password' => array(
+								'type'     => 'password',
+								'label'    => __( 'Password', 'ultimate-member' ),
+								'id'       => 'single_user_password',
+								'required' => true,
+								'value'    => '',
+							),
+						),
+						'buttons'   => array(
+							'save-password' => array(
+								'type'  => 'submit',
+								'label' => __( 'Update account', 'ultimate-member' ),
+								'class' => array(
+									'um-button-primary',
+								),
+							),
+						),
+					);
 					if ( ! UM()->options()->get( 'account_name' ) ) {
-						$args = 'user_login,user_email';
+						unset( $args['fields']['first_name'] );
+						unset( $args['fields']['last_name'] );
+					} else {
+						if ( UM()->options()->get( 'account_name_disable' ) ) {
+							$args['fields']['first_name']['disabled'] = true;
+							$args['fields']['last_name']['disabled']  = true;
+						}
 					}
-
+					if ( ! $this->current_password_is_required( $id ) ) {
+						unset( $args['fields']['single_user_password'] );
+					}
 					if ( ! UM()->options()->get( 'account_email' ) && ! um_user( 'can_edit_everyone' ) ) {
-						$args = str_replace(',user_email','', $args );
+						$args['fields']['user_email']['disabled'] = true;
 					}
 
-					if ( $this->current_password_is_required( $id ) ) {
-						$args .= ',single_user_password';
-					}
-
-					/**
-					 * UM hook
-					 *
-					 * @type filter
-					 * @title um_account_tab_general_fields
-					 * @description Extend Account Tab General
-					 * @input_vars
-					 * [{"var":"$args","type":"array","desc":"Account Arguments"},
-					 * {"var":"$shortcode_args","type":"array","desc":"Account Shortcode Arguments"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_filter( 'um_account_tab_general_fields', 'function_name', 10, 2 );
-					 * @example
-					 * <?php
-					 * add_filter( 'um_account_tab_general_fields', 'my_account_tab_general_fields', 10, 2 );
-					 * function my_account_tab_general_fields( $args, $shortcode_args ) {
-					 *     // your code here
-					 *     return $args;
-					 * }
-					 * ?>
-					 */
-					$args = apply_filters( 'um_account_tab_general_fields', $args, $shortcode_args );
-
-					$fields = UM()->builtin()->get_specific_fields( $args );
-					$fields = $this->filter_fields_by_attrs( $fields, $shortcode_args );
-
-					$this->init_displayed_fields( $fields, $id );
-
-					foreach ( $fields as $key => $data ) {
-						$output .= UM()->fields()->edit_field( $key, $data );
-					}
+					$args = apply_filters( 'um_general_tab_form_args', $args );
 
 					break;
 
 				case 'password':
 
-					$args = 'user_password';
-
-					/**
-					 * UM hook
-					 *
-					 * @type filter
-					 * @title um_account_tab_password_fields
-					 * @description Extend Account Tab Password
-					 * @input_vars
-					 * [{"var":"$args","type":"array","desc":"Account Arguments"},
-					 * {"var":"$shortcode_args","type":"array","desc":"Account Shortcode Arguments"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_filter( 'um_account_tab_password_fields', 'function_name', 10, 2 );
-					 * @example
-					 * <?php
-					 * add_filter( 'um_account_tab_password_fields', 'my_account_tab_password_fields', 10, 2 );
-					 * function my_account_tab_password_fields( $args, $shortcode_args ) {
-					 *     // your code here
-					 *     return $args;
-					 * }
-					 * ?>
-					 */
-					$args = apply_filters( 'um_account_tab_password_fields', $args, $shortcode_args );
-
-					$fields = UM()->builtin()->get_specific_fields( $args );
-					$fields = $this->filter_fields_by_attrs( $fields, $shortcode_args );
-
-					$this->init_displayed_fields( $fields, $id );
-
-					foreach ( $fields as $key => $data ) {
-						$output .= UM()->fields()->edit_field( $key, $data );
-					}
+					$args = array(
+						'id'        => 'um-' . $id . '-tab',
+						'class'     => 'um-top-label um-single-button um-center-always',
+						'prefix_id' => '',
+						'fields'    => array(
+							array(
+								'type'     => 'password',
+								'label'    => __( 'Current Password', 'ultimate-member' ),
+								'id'       => 'current_user_password',
+								'required' => true,
+								'value'    => '',
+							),
+							array(
+								'type'     => 'password',
+								'label'    => __( 'New Password', 'ultimate-member' ),
+								'id'       => 'user_password',
+								'required' => true,
+								'value'    => '',
+							),
+							array(
+								'type'     => 'password',
+								'label'    => __( 'Confirm Password', 'ultimate-member' ),
+								'id'       => 'confirm_user_password',
+								'required' => true,
+								'value'    => '',
+							),
+						),
+						'buttons'   => array(
+							'save-password' => array(
+								'type'  => 'submit',
+								'label' => __( 'Update Password', 'ultimate-member' ),
+								'class' => array(
+									'um-button-primary',
+								),
+							),
+						),
+					);
 
 					break;
 
@@ -781,13 +817,13 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					 * }
 					 * ?>
 					 */
-					$output = apply_filters( "um_account_content_hook_{$id}", $output, $shortcode_args );
+					$args = apply_filters( "um_account_content_hook_{$id}", $args, $shortcode_args );
+
 					break;
 
 			}
 
-			$this->tab_output[ $id ] = array( 'content' => $output, 'hash' => md5( json_encode( $shortcode_args ) ) );
-			return $output;
+			return $args;
 		}
 
 
@@ -802,9 +838,9 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 */
 		function render_account_tab( $tab_id, $tab_data, $args ) {
 
-			$output = $this->get_tab_fields( $tab_id, $args );
+			$args = $this->get_tab_fields( $tab_id, $args );
 
-			if ( $output ) {
+			if ( ! empty( $args ) ) {
 
 				if ( ! empty ( $tab_data['with_header'] ) ) { ?>
 
@@ -833,7 +869,14 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				 */
 				do_action( "um_before_account_{$tab_id}", $args );
 
-				echo $output;
+				$tab_form = UM()->frontend()->form(
+					array(
+						'id' => 'um-' . $tab_id . '-tab',
+					)
+				);
+
+				$tab_form->set_data( $args );
+				$tab_form->display();
 
 				/**
 				 * UM hook
@@ -855,40 +898,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				 * ?>
 				 */
 				do_action( "um_after_account_{$tab_id}", $args );
-
-				if ( ! isset( $tab_data['show_button'] ) || false !== $tab_data['show_button'] ) { ?>
-
-					<div class="um-col-alt um-col-alt-b">
-						<div class="um-left">
-							<?php $submit_title = ! empty( $tab_data['submit_title'] ) ? $tab_data['submit_title'] : $tab_data['title']; ?>
-							<input type="hidden" name="um_account_nonce_<?php echo esc_attr( $tab_id ) ?>" value="<?php echo esc_attr( wp_create_nonce( 'um_update_account_' . $tab_id ) ) ?>" />
-							<input type="submit" name="um_account_submit" id="um_account_submit_<?php echo esc_attr( $tab_id ) ?>"  class="um-button" value="<?php echo esc_attr( $submit_title ) ?>" />
-						</div>
-
-						<?php
-						/**
-						 * UM hook
-						 *
-						 * @type action
-						 * @title um_after_account_{$tab_id}_button
-						 * @description Make some action after show account tab button
-						 * @change_log
-						 * ["Since: 2.0"]
-						 * @usage add_action( 'um_after_account_{$tab_id}_button', 'function_name', 10 );
-						 * @example
-						 * <?php
-						 * add_action( 'um_after_account_{$tab_id}_button', 'my_after_account_tab_button', 10 );
-						 * function my_after_account_tab_button() {
-						 *     // your code here
-						 * }
-						 * ?>
-						 */
-						do_action( "um_after_account_{$tab_id}_button" ); ?>
-
-						<div class="um-clear"></div>
-					</div>
-
-				<?php }
 			}
 		}
 
