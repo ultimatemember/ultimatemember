@@ -1736,6 +1736,28 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					}
 
+					/**
+					 * UM hook
+					 *
+					 * @type filter
+					 * @title um_get_field_date
+					 * @description Extend field date
+					 * @input_vars
+					 * [{"var":"$data","type":"array","desc":"Field Date Data"}]
+					 * @change_log
+					 * ["Since: 2.5.4"]
+					 * @usage add_filter( 'um_get_field_date', 'function_name', 10, 1 );
+					 * @example
+					 * <?php
+					 * add_filter( 'um_get_field_date', 'my_get_field_date', 10, 1 );
+					 * function my_get_field_date( $data ) {
+					 *     // your code here
+					 *     return $data;
+					 * }
+					 * ?>
+					 */
+					$array = apply_filters( 'um_get_field_date', $array );
+
 					break;
 
 				case 'time':

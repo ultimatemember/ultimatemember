@@ -620,7 +620,7 @@ function um_submit_form_errors_hook_( $args ) {
 					}
 				}
 
-				if ( isset( $array['force_good_pass'] ) && $array['force_good_pass'] == 1 ) {
+				if ( isset( $array['force_good_pass'] ) && $array['force_good_pass'] && ! empty( $args['user_password'] ) ) {
 					if ( isset( $args['user_login'] ) && strpos( strtolower( $args['user_login'] ), strtolower( $args['user_password'] )  ) > -1 ) {
 						UM()->form()->add_error( 'user_password', __( 'Your password cannot contain the part of your username', 'ultimate-member' ));
 					}
@@ -770,6 +770,27 @@ function um_submit_form_errors_hook_( $args ) {
 							}
 							break;
 
+						case 'tiktok_url':
+
+							if ( ! UM()->validation()->is_url( $args[ $key ], 'tiktok.com' ) ) {
+								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s profile URL', 'ultimate-member' ), $array['label'] ) );
+							}
+							break;
+
+						case 'twitch_url':
+
+							if ( ! UM()->validation()->is_url( $args[ $key ], 'twitch.tv' ) ) {
+								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s profile URL', 'ultimate-member' ), $array['label'] ) );
+							}
+							break;
+
+						case 'reddit_url':
+
+							if ( ! UM()->validation()->is_url( $args[ $key ], 'reddit.com' ) ) {
+								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s profile URL', 'ultimate-member' ), $array['label'] ) );
+							}
+							break;
+
 						case 'url':
 							if ( ! UM()->validation()->is_url( $args[ $key ] ) ) {
 								UM()->form()->add_error( $key, __( 'Please enter a valid URL', 'ultimate-member' ) );
@@ -878,7 +899,7 @@ function um_submit_form_errors_hook_( $args ) {
 								}
 							}
 							break;
-							
+
 						case 'alphabetic':
 
 							if ( $args[ $key ] != '' ) {
@@ -886,7 +907,7 @@ function um_submit_form_errors_hook_( $args ) {
 								if ( ! preg_match( '/^\p{L}+$/u', str_replace( ' ', '', $args[ $key ] ) ) ) {
 									UM()->form()->add_error( $key, __( 'You must provide alphabetic letters', 'ultimate-member' ) );
 								}
-								
+
 							}
 
 							break;

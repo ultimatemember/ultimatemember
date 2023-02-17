@@ -645,7 +645,24 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 											break;
 										case 'textarea':
 											if ( ! empty( $field['html'] ) || ( UM()->profile()->get_show_bio_key( $form ) === $k && UM()->options()->get( 'profile_show_html_bio' ) ) ) {
-												$form[ $k ] = wp_kses_post( $form[ $k ] );
+												$allowed_html = UM()->get_allowed_html( 'templates' );
+												if ( empty( $allowed_html['iframe'] ) ) {
+													$allowed_html['iframe'] = array(
+														'allow'           => true,
+														'frameborder'     => true,
+														'loading'         => true,
+														'name'            => true,
+														'referrerpolicy'  => true,
+														'sandbox'         => true,
+														'src'             => true,
+														'srcdoc'          => true,
+														'title'           => true,
+														'width'           => true,
+														'height'          => true,
+														'allowfullscreen' => true,
+													);
+												}
+												$form[ $k ] = wp_kses( $form[ $k ], $allowed_html );
 											} else {
 												$form[ $k ] = sanitize_textarea_field( $form[ $k ] );
 											}

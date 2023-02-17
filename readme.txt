@@ -1,4 +1,4 @@
-﻿=== Ultimate Member – User Profile, User Registration, Login & Membership Plugin ===
+﻿=== Ultimate Member – User Profile, Registration, Login, Member Directory, Content Restriction & Membership Plugin ===
 Author URI: https://ultimatemember.com/
 Plugin URI: https://ultimatemember.com/
 Contributors: ultimatemember, champsupertramp, nsinelnikov
@@ -7,11 +7,11 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 6.1
-Stable tag: 2.5.3
+Stable tag: 2.5.4
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
-The #1 plugin for front-end user profiles, user registration & login forms, member directories, content restriction and more.
+The #1 plugin for front-end user profiles, user registration & login forms, member directories, content restriction, user roles and more.
 
 == Description ==
 
@@ -162,6 +162,23 @@ No, you do not need to use our plugin’s login or registration pages and can us
 
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
+
+= 2.5.4: February 17, 2023 =
+
+* Enhancements:
+
+  - Added: TikTok, Twitch and Reddit fields
+  - Added: Handler of restriction settings for blog page
+  - Added: Support of the `<iframes>` inside textarea with enabled the "HTML using" option
+  - Added: 'um_get_field_date' hook for filtering date fields
+  - Added: `UM()->get_allowed_html()` function for using it inside wp_kses allowed HTML tags
+
+* Bugfixes:
+
+  - Fixed: Redirect to some links when content is restricted. Using `esc_url_raw()` instead of `esc_url()` for redirect to URLs inside class-access.php
+  - Fixed: Handle restriction settings for attachments, later hook is used for checking capabilities through `current_user_can()`
+  - Fixed: Honeypot triggering in password reset, when not set
+  - Fixed: Small PHP notices and warnings
 
 = 2.5.3: December 19, 2022 =
 

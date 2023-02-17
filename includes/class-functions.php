@@ -406,5 +406,333 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			return preg_replace( $search, $replace, $subject, 1 );
 		}
 
+		/**
+		 * @param string $context
+		 *
+		 * @return array
+		 */
+		public function get_allowed_html( $context = '' ) {
+			switch ( $context ) {
+				case 'wp-admin':
+					$allowed_html = array(
+						'img'      => array(
+							'alt'      => true,
+							'align'    => true,
+							'border'   => true,
+							'height'   => true,
+							'hspace'   => true,
+							'loading'  => true,
+							'longdesc' => true,
+							'vspace'   => true,
+							'src'      => true,
+							'srcset'   => true,
+							'usemap'   => true,
+							'width'    => true,
+						),
+						'ul'       => array(),
+						'li'       => array(),
+						'h1'       => array(
+							'align' => true,
+						),
+						'h2'       => array(
+							'align' => true,
+						),
+						'h3'       => array(
+							'align' => true,
+						),
+						'p'        => array(
+							'align' => true,
+							'dir'   => true,
+							'lang'  => true,
+						),
+						'form'     => array(
+							'action'         => true,
+							'accept'         => true,
+							'accept-charset' => true,
+							'enctype'        => true,
+							'method'         => true,
+							'name'           => true,
+							'target'         => true,
+						),
+						'label'    => array(
+							'for' => true,
+						),
+						'select'   => array(
+							'name'         => true,
+							'multiple'     => true,
+							'disabled'     => true,
+							'readonly'     => true,
+							'required'     => true,
+							'autocomplete' => true,
+						),
+						'option'   => array(
+							'value'    => true,
+							'selected' => true,
+							'disabled' => true,
+						),
+						'input'    => array(
+							'type'         => true,
+							'name'         => true,
+							'value'        => true,
+							'placeholder'  => true,
+							'readonly'     => true,
+							'disabled'     => true,
+							'checked'      => true,
+							'selected'     => true,
+							'required'     => true,
+							'autocomplete' => true,
+						),
+						'textarea' => array(
+							'cols'         => true,
+							'rows'         => true,
+							'disabled'     => true,
+							'name'         => true,
+							'readonly'     => true,
+							'required'     => true,
+							'autocomplete' => true,
+						),
+						'table'    => array(
+							'align'       => true,
+							'bgcolor'     => true,
+							'border'      => true,
+							'cellpadding' => true,
+							'cellspacing' => true,
+							'dir'         => true,
+							'rules'       => true,
+							'summary'     => true,
+							'width'       => true,
+						),
+						'tbody'    => array(
+							'align'   => true,
+							'char'    => true,
+							'charoff' => true,
+							'valign'  => true,
+						),
+						'td'       => array(
+							'abbr'    => true,
+							'align'   => true,
+							'axis'    => true,
+							'bgcolor' => true,
+							'char'    => true,
+							'charoff' => true,
+							'colspan' => true,
+							'dir'     => true,
+							'headers' => true,
+							'height'  => true,
+							'nowrap'  => true,
+							'rowspan' => true,
+							'scope'   => true,
+							'valign'  => true,
+							'width'   => true,
+						),
+						'tfoot'    => array(
+							'align'   => true,
+							'char'    => true,
+							'charoff' => true,
+							'valign'  => true,
+						),
+						'th'       => array(
+							'abbr'    => true,
+							'align'   => true,
+							'axis'    => true,
+							'bgcolor' => true,
+							'char'    => true,
+							'charoff' => true,
+							'colspan' => true,
+							'headers' => true,
+							'height'  => true,
+							'nowrap'  => true,
+							'rowspan' => true,
+							'scope'   => true,
+							'valign'  => true,
+							'width'   => true,
+						),
+						'thead'    => array(
+							'align'   => true,
+							'char'    => true,
+							'charoff' => true,
+							'valign'  => true,
+						),
+						'tr'       => array(
+							'align'   => true,
+							'bgcolor' => true,
+							'char'    => true,
+							'charoff' => true,
+							'valign'  => true,
+						),
+					);
+					break;
+				case 'templates':
+					$allowed_html = array(
+						'style'    => array(),
+						'link'     => array(
+							'rel'   => true,
+							'href'  => true,
+							'media' => true,
+						),
+						'form'     => array(
+							'action'         => true,
+							'accept'         => true,
+							'accept-charset' => true,
+							'enctype'        => true,
+							'method'         => true,
+							'name'           => true,
+							'target'         => true,
+						),
+						'label'    => array(
+							'for' => true,
+						),
+						'select'   => array(
+							'name'         => true,
+							'multiple'     => true,
+							'disabled'     => true,
+							'readonly'     => true,
+							'required'     => true,
+							'autocomplete' => true,
+						),
+						'option'   => array(
+							'value'    => true,
+							'selected' => true,
+							'disabled' => true,
+						),
+						'input'    => array(
+							'type'         => true,
+							'name'         => true,
+							'value'        => true,
+							'placeholder'  => true,
+							'readonly'     => true,
+							'disabled'     => true,
+							'checked'      => true,
+							'selected'     => true,
+							'required'     => true,
+							'autocomplete' => true,
+							'size'         => true,
+							'step'         => true,
+							'min'          => true,
+							'max'          => true,
+							'minlength'    => true,
+							'maxlength'    => true,
+							'pattern'      => true,
+						),
+						'textarea' => array(
+							'cols'         => true,
+							'rows'         => true,
+							'disabled'     => true,
+							'name'         => true,
+							'readonly'     => true,
+							'required'     => true,
+							'autocomplete' => true,
+						),
+						'img'      => array(
+							'alt'      => true,
+							'align'    => true,
+							'border'   => true,
+							'height'   => true,
+							'hspace'   => true,
+							'loading'  => true,
+							'longdesc' => true,
+							'vspace'   => true,
+							'src'      => true,
+							'srcset'   => true,
+							'usemap'   => true,
+							'width'    => true,
+						),
+						'h1'       => array(
+							'align' => true,
+						),
+						'h2'       => array(
+							'align' => true,
+						),
+						'h3'       => array(
+							'align' => true,
+						),
+						'p'        => array(
+							'align' => true,
+							'dir'   => true,
+							'lang'  => true,
+						),
+						'ul'       => array(),
+						'li'       => array(),
+						'time'     => array(
+							'datetime' => true,
+						),
+					);
+					break;
+				case 'admin_notice':
+					$allowed_html = array(
+						'p'      => array(
+							'align' => true,
+							'dir'   => true,
+							'lang'  => true,
+						),
+						'label'  => array(
+							'for' => true,
+						),
+						'strong' => array(
+							'style' => true,
+						),
+					);
+					break;
+				default:
+					$allowed_html = array();
+					break;
+			}
+
+			$global_allowed = array(
+				'a'      => array(
+					'href'     => array(),
+					'rel'      => true,
+					'rev'      => true,
+					'name'     => true,
+					'target'   => true,
+					'download' => array(
+						'valueless' => 'y',
+					),
+				),
+				'em'     => array(),
+				'i'      => array(),
+				'q'      => array(
+					'cite' => true,
+				),
+				's'      => array(),
+				'strike' => array(),
+				'strong' => array(),
+				'br'     => array(),
+				'div'    => array(
+					'align' => true,
+					'dir'   => true,
+					'lang'  => true,
+				),
+				'span'   => array(
+					'dir'   => true,
+					'align' => true,
+					'lang'  => true,
+				),
+				'code'   => array(),
+				'hr'     => array(
+					'style' => true,
+				),
+			);
+
+			$allowed_html = array_merge( $global_allowed, $allowed_html );
+			$allowed_html = array_map( '_wp_add_global_attributes', $allowed_html );
+
+			/**
+			 * Filters the allowed HTML tags and their attributes in the late escaping before echo.
+			 *
+			 * Note: Please use the `wp_kses()` allowed tags structure.
+			 *
+			 * @since 2.5.4
+			 * @hook um_late_escaping_allowed_tags
+			 *
+			 * @param {array}  $allowed_html Allowed HTML tags with attributes.
+			 * @param {string} $context      Function context 'wp-admin' for Admin Dashboard echo, 'templates' for the frontend.
+			 *
+			 * @return {array} Allowed HTML tags with attributes.
+			 */
+			$allowed_html = apply_filters( 'um_late_escaping_allowed_tags', $allowed_html, $context );
+
+			return $allowed_html;
+		}
 	}
 }
