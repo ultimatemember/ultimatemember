@@ -164,6 +164,9 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 		 * @since 3.0
 		 */
 		function fields_groups_page_scripts() {
+			wp_register_script( 'um_admin_fields_groups', $this->urls['js'] . 'admin/fields-groups' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'wp-i18n', 'jquery-ui-sortable', 'jquery-ui-draggable' ), UM_VERSION, true );
+			wp_enqueue_script( 'um_admin_fields_groups' );
+
 			wp_register_style( 'um_admin_fields_groups', $this->urls['css'] . 'admin-fields-groups' . $this->suffix . '.css', array(), UM_VERSION );
 			wp_enqueue_style( 'um_admin_fields_groups' );
 		}

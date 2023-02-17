@@ -921,6 +921,7 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			$this->settings();
 			$this->site_health();
 			$this->users_columns();
+			$this->fields_group()->hooks();
 		}
 
 		/**

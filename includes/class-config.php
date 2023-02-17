@@ -121,11 +121,37 @@ if ( ! class_exists( 'um\Config' ) ) {
 		var $cover_sizes = array();
 
 		/**
+		 * Build-in field types used in fields groups and forms builders
+		 *
+		 * @since 3.0
+		 *
+		 * @var array
+		 */
+		var $field_type_categories = array();
+
+		/**
+		 * Build-in field types used in fields groups and forms builders
+		 *
+		 * @since 3.0
+		 *
+		 * @var array
+		 */
+		var $field_conditional_rules = array();
+
+		/**
+		 * Build-in field types used in fields groups and forms builders
+		 *
+		 * @since 3.0
+		 *
+		 * @var array
+		 */
+		var $field_types = array();
+
+		/**
 		 * Config constructor.
 		 */
 		function __construct() {
 		}
-
 
 		/**
 		 * Get variable from config
@@ -990,6 +1016,597 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'size' => 100,
 				),
 			);
+		}
+
+		public function init_field_conditional_rules() {
+			$this->field_conditional_rules = array(
+				'=='         => __( 'Value is equal to', 'ultimate-member' ),
+				'!='         => __( 'Value is not equal to', 'ultimate-member' ),
+				'!=empty'    => __( 'Has any value', 'ultimate-member' ),
+				'==empty'    => __( 'Has no value', 'ultimate-member' ),
+				'==contains' => __( 'Value contains', 'ultimate-member' ),
+				'==pattern'  => __( 'Value matches pattern', 'ultimate-member' ),
+				'>'          => __( 'Value is greater than', 'ultimate-member' ),
+				'<'          => __( 'Value is less than', 'ultimate-member' ),
+			);
+		}
+
+		public function init_field_type_categories() {
+			$this->field_type_categories = array(
+				'basic'   => __( 'Basic', 'ultimate-member' ),
+				'choice'  => __( 'Choice', 'ultimate-member' ),
+				'content' => __( 'Content', 'ultimate-member' ),
+				'js'      => __( 'JS', 'ultimate-member' ),
+				'layout'  => __( 'Layout', 'ultimate-member' ),
+			);
+		}
+
+		public function init_field_types() {
+			// size it's height, width will be automatically based on ratio
+			$this->field_types = array(
+				'bool'      => array(
+					'title'             => __( 'Single Checkbox', 'ultimate-member' ),
+					'category'          => 'choice',
+					'conditional_rules' => array(
+						'==',
+						'!=',
+					),
+				),
+				'radio'     => array(
+					'title'    => __( 'Radio', 'ultimate-member' ),
+					'category' => 'choice',
+				),
+				'checkbox'  => array(
+					'title'     => __( 'Checkbox', 'ultimate-member' ),
+					'category' => 'choice',
+				),
+				'hidden'    => array(
+					'title'     => __( 'Hidden', 'ultimate-member' ),
+					'category' => 'basic',
+				),
+				'date'      => array(
+					'title'     => __( 'Date', 'ultimate-member' ),
+					'category' => 'basic',
+				),
+				'time'      => array(
+					'title'     => __( 'Time', 'ultimate-member' ),
+					'category' => 'basic',
+				),
+				'number'    => array(
+					'title'             => __( 'Number', 'ultimate-member' ),
+					'category'          => 'basic',
+					'conditional_rules' => array(
+						'==',
+						'!=',
+						'!=empty',
+						'==empty',
+						'==contains',
+						'>',
+						'<',
+					),
+				),
+				'password'  => array(
+					'title' => __( 'Password', 'ultimate-member' ),
+					'category' => 'basic',
+				),
+				'email'     => array(
+					'title' => __( 'Email', 'ultimate-member' ),
+					'category' => 'basic',
+				),
+				'url'       => array(
+					'title' => __( 'URL', 'ultimate-member' ),
+					'category' => 'basic',
+				),
+				'text'      => array(
+					'title' => __( 'Text Box', 'ultimate-member' ),
+					'category' => 'basic',
+				),
+				'select'    => array(
+					'title' => __( 'Dropdown', 'ultimate-member' ),
+					'category' => 'choice',
+				),
+				'textarea'  => array(
+					'title'     => __( 'Textarea', 'ultimate-member' ),
+					'category' => 'basic',
+				),
+				'file'      => array(
+					'title'             => __( 'File/Image', 'ultimate-member' ),
+					'category'          => 'content',
+					'conditional_rules' => array(
+						'!=empty',
+						'==empty',
+					),
+				),
+				'repeater'  => array(
+					'title'             => __( 'Repeater', 'ultimate-member' ),
+					'category'          => 'layout',
+					'conditional_rules' => array(),
+				),
+				'block'     => array(
+					'title'             => __( 'Content', 'ultimate-member' ),
+					'category'          => 'layout',
+					'conditional_rules' => array(),
+				),
+				'shortcode' => array(
+					'title'             => __( 'Shortcode', 'ultimate-member' ),
+					'category'          => 'layout',
+					'conditional_rules' => array(),
+				),
+				'spacing'   => array(
+					'title'             => __( 'Spacing', 'ultimate-member' ),
+					'category'          => 'layout',
+					'conditional_rules' => array(),
+				),
+				'divider'   => array(
+					'title'             => __( 'Divider', 'ultimate-member' ),
+					'category'          => 'layout',
+					'conditional_rules' => array(),
+				),
+				'rating'    => array(
+					'title'             => __( 'Rating', 'ultimate-member' ),
+					'category'          => 'js',
+					'conditional_rules' => array(
+						'==',
+						'!=',
+						'!=empty',
+						'==empty',
+						'>',
+						'<',
+					),
+				),
+				'googlemap' => array(
+					'title' => __( 'Google Map', 'ultimate-member' ),
+					'category' => 'js',
+				),
+				'oembed'    => array(
+					'title' => __( 'oEmbed', 'ultimate-member' ),
+					'category' => 'content',
+				),
+//				'youtube_video'    => array(
+//					'title' => __( 'YouTube Video', 'ultimate-member' ),
+//					'category' => __( 'Content', 'ultimate-member' ),
+//				),
+//				'vimeo_video'    => array(
+//					'title' => __( 'Vimeo Video', 'ultimate-member' ),
+//					'category' => __( 'Content', 'ultimate-member' ),
+//				),
+//				'soundcloud_track'    => array(
+//					'title' => __( 'SoundCloud Track', 'ultimate-member' ),
+//					'category' => __( 'Content', 'ultimate-member' ),
+//				),
+			);
+
+
+//			$this->core_fields = array(
+//
+//				/*Group is the repeatable block with 1 pre-defined repeat*/
+////				'group' => [
+////					'name'      => __( 'Fields Group', 'ultimate-member' ),
+////					'tabs'      => [
+////						'general'       => [
+////							'key'   => 'general',
+////							'label' => __( 'General', 'ultimate-member' ),
+////						],
+////						'privacy'       => [
+////							'key'   => 'privacy',
+////							'label' => __( 'Privacy & Validation', 'ultimate-member' ),
+////						],
+////						'conditional'   => [
+////							'key'   => 'conditional',
+////							'label' => __( 'Conditional Logic', 'ultimate-member' ),
+////						],
+////					],
+////					'col1'      => [ '_title', '_max_entries' ],
+////					'col2'      => [ '_label', '_public', '_roles' ],
+////					'validate'  => [
+////						'_title'    => [
+////							'mode'  => 'required',
+////							'error' => 'You must provide a title',
+////						],
+////						'_metakey'  => [
+////							'mode'  => 'unique',
+////						],
+////					],
+////				],
+//
+//
+//
+//				'radio'    => array(
+//					'name'     => __( 'Radio', 'ultimate-member' ),
+//					'col1'     => array( '_title', '_metakey', '_description', '_options' ),
+//					'col2'     => array( '_label', '_visibility', '_public', '_roles', '_custom_dropdown_options_source', '_parent_dropdown_relationship' ),
+//					'col3'     => array( '_required', '_editable', '_choices_layout' ),
+//					'validate' => array(
+//						'_title'   => array(
+//							'mode'  => 'required',
+//							'error' => __( 'You must provide a title', 'ultimate-member' ),
+//						),
+//						'_metakey' => array(
+//							'mode' => 'unique',
+//						),
+//						'_options' => array(
+//							'mode' => 'unique_options',
+//						),
+//					),
+//				),
+//
+//				'checkbox' => array(
+//					'name'     => __( 'Checkbox', 'ultimate-member' ),
+//					'col1'     => array( '_title', '_metakey', '_description', '_options' ),
+//					'col2'     => array( '_label', '_visibility', '_public', '_roles', '_custom_dropdown_options_source', '_parent_dropdown_relationship', '_min_selections', '_max_selections' ),
+//					'col3'     => array( '_required', '_editable', '_choices_layout' ),
+//					'validate' => array(
+//						'_title'   => array(
+//							'mode'  => 'required',
+//							'error' => __( 'You must provide a title', 'ultimate-member' ),
+//						),
+//						'_metakey' => array(
+//							'mode' => 'unique',
+//						),
+//						'_options' => array(
+//							'mode' => 'unique_options',
+//						),
+//					),
+//				),
+//
+//				'hidden'   => array(
+//					'name' => __( 'Hidden', 'ultimate-member' ),
+//					'col1' => array( '_title', '_value' ),
+//					'col2' => array( '_metakey' ),
+//					'col3' => array(),
+//					'validate' => array(
+//						'_title' => array(
+//							'mode'  => 'required',
+//							'error' => __( 'You must provide a title', 'ultimate-member' ),
+//						),
+//						'_metakey' => array(
+//							'mode' => 'unique',
+//						),
+//					)
+//				),
+//
+//				'date'     => array(
+//					'name'      => __( 'Date', 'ultimate-member' ),
+//					'col1'      => array( '_title', '_metakey', '_description' ),
+//					'col2'      => array( '_label', '_visibility', '_public', '_roles', '_min', '_max' ),
+//					'col3'      => array( '_required', '_editable', '_default' ),
+//					'validate'  => array(
+//						'_title'        => array(
+//							'mode'  => 'required',
+//							'error' => __( 'You must provide a title', 'ultimate-member' )
+//						),
+//						'_metakey'      => array(
+//							'mode'  => 'unique',
+//						),
+//					),
+//				),
+//
+//				'time'     => array(
+//					'name'     => __( 'Time', 'ultimate-member' ),
+//					'col1'     => array( '_title', '_metakey', '_description' ),
+//					'col2'     => array( '_label', '_visibility', '_public', '_roles', '_step', '_min', '_max' ),
+//					'col3'     => array( '_required', '_editable', '_default' ),
+//					'validate' => array(
+//						'_title'   => array(
+//							'mode'  => 'required',
+//							'error' => __( 'You must provide a title.', 'ultimate-member' ),
+//						),
+//						'_metakey' => array(
+//							'mode' => 'unique',
+//						),
+//					),
+//				),
+//
+//				'number'   => array(
+//					'name' => __( 'Number', 'ultimate-member' ),
+//					'col1' => array( '_title', '_metakey', '_placeholder', '_description' ),
+//					'col2' => array( '_label','_visibility', '_public', '_roles', '_validate', '_custom_validate', '_step', '_min', '_max' ),
+//					'col3' => array( '_required', '_editable', '_default' ),
+//					'validate' => array(
+//						'_title' => array(
+//							'mode'  => 'required',
+//							'error' => __( 'You must provide a title', 'ultimate-member' ),
+//						),
+//						'_metakey' => array(
+//							'mode' => 'unique',
+//						),
+//					)
+//				),
+//
+//				'password' => array(
+//					'name' => __( 'Password', 'ultimate-member' ),
+//					'col1' => array( '_title', '_metakey', '_description', '_min_chars', '_max_chars' ),
+//					'col2' => array( '_label', '_placeholder', '_visibility', '_public', '_roles', '_force_confirm_pass', '_label_confirm_pass', '_placeholder_confirm_pass', '_description_confirm_pass', '_pattern' ),
+//					'col3' => array( '_required', '_editable', '_force_good_pass' ),
+//					'validate' => array(
+//						'_title' => array(
+//							'mode'  => 'required',
+//							'error' => __( 'You must provide a title', 'ultimate-member' ),
+//						),
+//						'_metakey' => array(
+//							'mode' => 'unique',
+//						),
+//					),
+//				),
+//
+//				'email'    => array(
+//					'name' => __( 'Email', 'ultimate-member' ),
+//					'col1' => array( '_title', '_metakey', '_description', '_min_chars', '_max_chars' ),
+//					'col2' => array( '_label', '_placeholder', '_visibility', '_public', '_roles', '_validate', '_custom_validate', '_pattern' ),
+//					'col3' => array( '_required', '_editable', '_default' ),
+//					'validate' => array(
+//						'_title' => array(
+//							'mode'  => 'required',
+//							'error' => __( 'You must provide a title', 'ultimate-member' ),
+//						),
+//						'_metakey' => array(
+//							'mode' => 'unique',
+//						),
+//					),
+//				),
+//
+//				'url'      => array(
+//					'name' => __( 'URL', 'ultimate-member' ),
+//					'col1' => array('_title','_metakey','_description', '_min_chars', '_max_chars'),
+//					'col2' => array('_label','_placeholder','_visibility','_public','_roles','_validate','_custom_validate', '_pattern','_url_text','_url_target','_url_rel'),
+//					'col3' => array( '_required', '_editable', '_default' ),
+//					'validate' => array(
+//						'_title' => array(
+//							'mode' => 'required',
+//							'error' => __('You must provide a title','ultimate-member')
+//						),
+//						'_metakey' => array(
+//							'mode' => 'unique',
+//						),
+//					)
+//				),
+//
+//				'tel'      => array(
+//					'name'     => __( 'Telephone Box', 'ultimate-member' ),
+//					'col1'     => array( '_title', '_metakey', '_description', '_min_chars', '_max_chars' ),
+//					'col2'     => array( '_label', '_placeholder', '_visibility', '_public', '_roles', '_validate', '_custom_validate', '_pattern' ),
+//					'col3'     => array( '_required', '_editable', '_default' ),
+//					'validate' => array(
+//						'_title'   => array(
+//							'mode'  => 'required',
+//							'error' => __( 'You must provide a title', 'ultimate-member' ),
+//						),
+//						'_metakey' => array(
+//							'mode' => 'unique',
+//						),
+//					),
+//				),
+//
+//				'text'     => array(
+//					'name' => __( 'Text Box', 'ultimate-member' ),
+//					'col1' => array( '_title', '_metakey', '_description', '_min_chars', '_max_chars'),
+//					'col2' => array( '_label', '_placeholder', '_visibility', '_public', '_roles', '_validate', '_custom_validate', '_pattern' ),
+//					'col3' => array( '_required', '_editable', '_default' ),
+//					'validate' => array(
+//						'_title' => array(
+//							'mode' => 'required',
+//							'error' => __( 'You must provide a title', 'ultimate-member' ),
+//						),
+//						'_metakey' => array(
+//							'mode' => 'unique',
+//						),
+//					),
+//				),
+//
+//				'select'   => array(
+//					'name' => __( 'Dropdown', 'ultimate-member' ),
+//					'col1' => array( '_title', '_metakey', '_description', '_is_multi', '_options' ),
+//					'col2' => array( '_label', '_placeholder', '_visibility', '_public', '_roles', '_custom_dropdown_options_source', '_parent_dropdown_relationship', '_min_selections', '_max_selections' ),
+//					'col3' => array( '_required', '_editable' ),
+//					'validate' => array(
+//						'_title'   => array(
+//							'mode'  => 'required',
+//							'error' => __( 'You must provide a title', 'ultimate-member' ),
+//						),
+//						'_metakey' => array(
+//							'mode' => 'unique',
+//						),
+//						'_options' => array(
+//							'mode' => 'unique_options',
+//						),
+//					),
+//				),
+//
+//				'textarea' => array(
+//					'name'     => __( 'Textarea', 'ultimate-member' ),
+//					'col1'     => array( '_title', '_metakey', '_description', '_rows', '_min_chars', '_max_chars', '_max_words' ),
+//					'col2'     => array( '_label', '_placeholder', '_visibility', '_public', '_roles', '_default' ),
+//					'col3'     => array( '_required', '_editable', '_html' ),
+//					'validate' => array(
+//						'_title'   => array(
+//							'mode'  => 'required',
+//							'error' => __( 'You must provide a title', 'ultimate-member' ),
+//						),
+//						'_metakey' => array(
+//							'mode' => 'unique',
+//						),
+//					),
+//				),
+//
+//				'image' => array(
+//					'name' => 'Image Upload',
+//					'col1' => array('_title','_metakey','_description','_allowed_types','_max_size','_crop','_visibility'),
+//					'col2' => array('_label','_public','_roles','_upload_text','_upload_help_text','_button_text'),
+//					'col3' => array('_required','_editable'),
+//					'validate' => array(
+//						'_title' => array(
+//							'mode' => 'required',
+//							'error' => __('You must provide a title','ultimate-member')
+//						),
+//						'_metakey' => array(
+//							'mode' => 'unique',
+//						),
+//						'_max_size' => array(
+//							'mode' => 'numeric',
+//							'error' => __('Please enter a valid size','ultimate-member')
+//						),
+//					)
+//				),
+//
+//				'file' => array(
+//					'name' => 'File Upload',
+//					'col1' => array('_title','_metakey','_description','_allowed_types','_max_size','_visibility'),
+//					'col2' => array('_label','_public','_roles','_upload_text','_upload_help_text','_button_text'),
+//					'col3' => array('_required','_editable'),
+//					'validate' => array(
+//						'_title' => array(
+//							'mode' => 'required',
+//							'error' => __('You must provide a title','ultimate-member')
+//						),
+//						'_metakey' => array(
+//							'mode' => 'unique',
+//						),
+//						'_max_size' => array(
+//							'mode' => 'numeric',
+//							'error' => __( 'Please enter a valid size', 'ultimate-member' )
+//						),
+//					)
+//				),
+//
+//
+//
+//				'block'     => array(
+//					'name' => 'Content Block',
+//					'col1' => array('_title','_visibility'),
+//					'col2' => array('_public','_roles'),
+//					'col_full' => array('_content'),
+//					'mce_content' => true,
+//					'validate' => array(
+//						'_title' => array(
+//							'mode' => 'required',
+//							'error' => __('You must provide a title','ultimate-member')
+//						),
+//					)
+//				),
+//
+//				'shortcode' => array(
+//					'name' => 'Shortcode',
+//					'col1' => array('_title','_visibility'),
+//					'col2' => array('_public','_roles'),
+//					'col_full' => array('_content'),
+//					'validate' => array(
+//						'_title' => array(
+//							'mode' => 'required',
+//							'error' => __('You must provide a title','ultimate-member')
+//						),
+//						'_content' => array(
+//							'mode' => 'required',
+//							'error' => __('You must add a shortcode to the content area','ultimate-member')
+//						),
+//					)
+//				),
+//
+//				'spacing'   => array(
+//					'name' => 'Spacing',
+//					'col1' => array('_title','_visibility'),
+//					'col2' => array('_spacing'),
+//					'form_only' => true,
+//					'validate' => array(
+//						'_title' => array(
+//							'mode' => 'required',
+//							'error' => __('You must provide a title','ultimate-member')
+//						),
+//					)
+//				),
+//
+//				'divider'   => array(
+//					'name' => 'Divider',
+//					'col1' => array('_title','_width','_divider_text','_visibility'),
+//					'col2' => array('_style','_color','_public','_roles'),
+//					'form_only' => true,
+//					'validate' => array(
+//						'_title' => array(
+//							'mode' => 'required',
+//							'error' => __('You must provide a title','ultimate-member')
+//						),
+//					)
+//				),
+//
+//				'rating'           => array(
+//					'name' => __( 'Rating', 'ultimate-member' ),
+//					'col1' => array('_title','_metakey','_description','_visibility'),
+//					'col2' => array('_label','_public','_roles','_number','_default'),
+//					'col3' => array('_required','_editable'),
+//					'validate' => array(
+//						'_title' => array(
+//							'mode' => 'required',
+//							'error' => __('You must provide a title','ultimate-member')
+//						),
+//						'_metakey' => array(
+//							'mode' => 'unique',
+//						),
+//					)
+//				),
+//
+//				'googlemap'        => array(
+//					'name' => 'Google Map',
+//					'col1' => array('_title','_metakey','_description','_visibility'),
+//					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
+//					'col3' => array('_required','_editable'),
+//					'validate' => array(
+//						'_title' => array(
+//							'mode' => 'required',
+//							'error' => __('You must provide a title','ultimate-member')
+//						),
+//						'_metakey' => array(
+//							'mode' => 'unique',
+//						),
+//					)
+//				),
+//
+//				'youtube_video'    => array(
+//					'name' => 'YouTube Video',
+//					'col1' => array('_title','_metakey','_description','_visibility'),
+//					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
+//					'col3' => array('_required','_editable'),
+//					'validate' => array(
+//						'_title' => array(
+//							'mode' => 'required',
+//							'error' => __('You must provide a title','ultimate-member')
+//						),
+//						'_metakey' => array(
+//							'mode' => 'unique',
+//						),
+//					)
+//				),
+//
+//				'vimeo_video'      => array(
+//					'name' => 'Vimeo Video',
+//					'col1' => array('_title','_metakey','_description','_visibility'),
+//					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
+//					'col3' => array('_required','_editable'),
+//					'validate' => array(
+//						'_title' => array(
+//							'mode' => 'required',
+//							'error' => __('You must provide a title','ultimate-member')
+//						),
+//						'_metakey' => array(
+//							'mode' => 'unique',
+//						),
+//					)
+//				),
+//
+//				'soundcloud_track' => array(
+//					'name' => 'SoundCloud Track',
+//					'col1' => array('_title','_metakey','_description','_visibility'),
+//					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
+//					'col3' => array('_required','_editable'),
+//					'validate' => array(
+//						'_title' => array(
+//							'mode' => 'required',
+//							'error' => __('You must provide a title','ultimate-member')
+//						),
+//						'_metakey' => array(
+//							'mode' => 'unique',
+//						),
+//					)
+//				),
+//			);
 		}
 
 
