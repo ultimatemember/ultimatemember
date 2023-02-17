@@ -6,7 +6,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div class="submitbox" id="submitpost">
 	<div id="major-publishing-actions">
-
 		<div id="delete-action" style="float: left;">
 			<a class="submitdelete deletion" href="<?php echo add_query_arg( array( 'page' => 'um_fields_groups' ), admin_url( 'admin.php' ) ); ?>"><?php esc_html_e( 'Back to fields groups', 'ultimate-member' ) ?></a>
 		</div>

@@ -935,6 +935,91 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 			}
 			$html = "<input type=\"hidden\" $id_attr_hidden $name_attr value=\"0\" />{$field_html}";
 
+			$html = apply_filters( 'um_admin_render_checkbox_field_html', $html, $field_data );
+			return $html;
+		}
+
+		/**
+		 * @param $field_data
+		 *
+		 * @return bool|string
+		 */
+		public function render_conditional_rules( $field_data ) {
+			if ( empty( $field_data['id'] ) ) {
+				return false;
+			}
+
+//			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
+//			$id_attr        = ' id="' . esc_attr( $id ) . '" ';
+//			$id_attr_hidden = ' id="' . esc_attr( $id ) . '_hidden" ';
+//
+//			$class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
+//			$class .= ! empty( $field_data['size'] ) ? $field_data['size'] : 'um-long-field';
+//			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
+//
+//			$data = array(
+//				'field_id' => $field_data['id']
+//			);
+//
+//			if ( ! empty( $field_data['data'] ) ) {
+//				$data = array_merge( $data, $field_data['data'] );
+//			}
+//
+//			$data_attr = '';
+//			foreach ( $data as $key => $value ) {
+//				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
+//			}
+//
+//			$name = $field_data['id'];
+//			$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
+//			$name_attr = ' name="' . $name . '" ';
+//
+//			$value = $this->get_field_value( $field_data );
+//
+//			$description = ! empty( $field_data['description'] ) ? $field_data['description'] : '';
+//
+//			$field_html = "<input type=\"checkbox\" $id_attr $class_attr $name_attr $data_attr " . checked( $value, true, false ) . " value=\"1\" />";
+//			if ( '' !== $description ) {
+//				$field_html = "<label>$field_html $description</label>";
+//			}
+//			$html = "<input type=\"hidden\" $id_attr_hidden $name_attr value=\"0\" />{$field_html}";
+
+			ob_start();
+			?>
+			<div>
+				<div>
+					<div><strong><?php esc_html_e( 'and', 'ultimate-member' ); ?></strong></div>
+					<div>
+						<select>
+							<option value="f1">F1</option>
+							<option value="f2">F2</option>
+						</select>
+					</div>
+					<div>
+						<select>
+							<option value="C1">C1</option>
+							<option value="C2">C2</option>
+						</select>
+					</div>
+					<div>
+						<select>
+							<option value="V1">V1</option>
+							<option value="V2">V2</option>
+						</select>
+						<input type="text" value="V3" />
+					</div>
+					<div>
+						<input type="button" class="button" value="<?php esc_attr_e( '+', 'ultimate-member' ); ?>" />
+						<input type="button" class="button" value="<?php esc_attr_e( '-', 'ultimate-member' ); ?>" />
+					</div>
+				</div>
+				<div><strong><?php esc_html_e( 'or', 'ultimate-member' ); ?></strong></div>
+				<div>
+					<input type="button" class="button" value="<?php esc_attr_e( 'Add rule group', 'ultimate-member' ); ?>" />
+				</div>
+			</div>
+			<?php
+			$html = ob_get_clean();
 			return $html;
 		}
 
@@ -1032,15 +1117,34 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 
 			if ( ! empty( $field_data['options'] ) ) {
 				foreach ( $field_data['options'] as $key => $option ) {
-					if ( ! empty( $field_data['multi'] ) ) {
-
-						if ( ! is_array( $value ) || empty( $value ) ) {
-							$value = array();
+					if ( is_array( $option ) && ! empty( $option['options'] ) ) {
+						// means that it's option group
+						if ( empty( $option['options'] ) ) {
+							continue;
 						}
+						$options .= '<optgroup label="' . esc_attr( $option['title'] ) . '">';
+						foreach ( $option['options'] as $sub_key => $sub_option ) {
+							if ( ! empty( $field_data['multi'] ) ) {
+								if ( ! is_array( $value ) || empty( $value ) ) {
+									$value = array();
+								}
 
-						$options .= '<option value="' . $key . '" ' . selected( in_array( $key, $value ), true, false ) . ' ' . disabled( in_array( $key, $disabled_options, true ), true, false ) . '>' . esc_html( $option ) . '</option>';
+								$options .= '<option value="' . $sub_key . '" ' . selected( in_array( $sub_key, $value ), true, false ) . ' ' . disabled( in_array( $sub_key, $disabled_options, true ), true, false ) . '>' . esc_html( $sub_option ) . '</option>';
+							} else {
+								$options .= '<option value="' . $sub_key . '" ' . selected( (string)$sub_key == $value, true, false ) . ' ' . disabled( in_array( $sub_key, $disabled_options, true ), true, false ) . '>' . esc_html( $sub_option ) . '</option>';
+							}
+						}
+						$options .= '</optgroup>';
 					} else {
-						$options .= '<option value="' . $key . '" ' . selected( (string)$key == $value, true, false ) . ' ' . disabled( in_array( $key, $disabled_options, true ), true, false ) . '>' . esc_html( $option ) . '</option>';
+						if ( ! empty( $field_data['multi'] ) ) {
+							if ( ! is_array( $value ) || empty( $value ) ) {
+								$value = array();
+							}
+
+							$options .= '<option value="' . $key . '" ' . selected( in_array( $key, $value ), true, false ) . ' ' . disabled( in_array( $key, $disabled_options, true ), true, false ) . '>' . esc_html( $option ) . '</option>';
+						} else {
+							$options .= '<option value="' . $key . '" ' . selected( (string)$key == $value, true, false ) . ' ' . disabled( in_array( $key, $disabled_options, true ), true, false ) . '>' . esc_html( $option ) . '</option>';
+						}
 					}
 				}
 			}

@@ -146,6 +146,15 @@ PRIMARY KEY  (id),
 KEY group_key_indx (group_key),
 KEY status_indx (status)
 ) $charset_collate;
+CREATE TABLE {$wpdb->prefix}um_fields_groups_meta (
+meta_id bigint(20) unsigned NOT NULL auto_increment,
+group_id bigint(20) unsigned NOT NULL,
+meta_key varchar(255) default NULL,
+meta_value longtext,
+PRIMARY KEY  (meta_id),
+KEY group_id_indx (group_id),
+KEY meta_key (meta_key(191))
+) $charset_collate;
 CREATE TABLE {$wpdb->prefix}um_fields (
 id bigint(20) unsigned NOT NULL auto_increment,
 field_key varchar(32) NOT NULL default '',

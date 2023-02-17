@@ -31,6 +31,24 @@ if ( ! class_exists( 'um\admin\Fields_Group' ) ) {
 		}
 
 		/**
+		 *
+		 */
+		public function hooks() {
+			add_filter( 'um_admin_render_checkbox_field_html', array( &$this, 'add_reset_rules_button' ), 10, 2 );
+		}
+
+		public function add_reset_rules_button( $html, $field_data ) {
+			if ( array_key_exists( 'id', $field_data ) && 'conditional_logic' === $field_data['id'] ) {
+				$visibility = '';
+				if ( empty( $field_data['value'] ) ) {
+					$visibility = ' style="visibility:hidden;"';
+				}
+				$html = '<div style="display: flex;flex-direction: row;justify-content: space-between; align-items: center;flex-wrap: nowrap;">' . $html .'<input type="button" class="button um-fields-groups-field-reset-all-conditions" value="' . __( 'Reset all rules', 'ultimate-member' ) . '"' . $visibility . '/></div>';
+			}
+			return $html;
+		}
+
+		/**
 		 * @param int $group_id
 		 *
 		 * @return array
@@ -194,6 +212,72 @@ if ( ! class_exists( 'um\admin\Fields_Group' ) ) {
 			);
 
 			return $fields;
+		}
+
+		/**
+		 * @param array $field Field data array
+		 * @param bool  $raw   Return raw or formatted field type
+		 *
+		 * @return bool|string Field's type or false on failure
+		 */
+		public function get_field_type( $field, $raw = false ) {
+			if ( ! array_key_exists( 'type', $field ) ) {
+				return false;
+			}
+
+			if ( false !== $raw ) {
+				return $field['type'];
+			}
+
+			$types_map = array(
+				'text' => __( 'Text', 'ultimate-member' ),
+			);
+
+			if ( ! array_key_exists( $field['type'], $types_map ) ) {
+				return $field['type'];
+			}
+
+			return $types_map[ $field['type'] ];
+		}
+
+		/**
+		 * @param array|int $field    Field data array
+		 * @param string    $meta_key Meta key for associated meta value
+		 * @param mixed     $default  Default meta value
+		 *
+		 * @return bool|string|array Field's meta or false on failure
+		 */
+		public function get_field_meta( $field, $meta_key, $default = '' ) {
+			global $wpdb;
+
+			if ( ! is_numeric( $field ) ) {
+				if ( ! array_key_exists( 'id', $field ) ) {
+					return false;
+				}
+
+				$field = $field['id'];
+			}
+
+			$meta_value = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT meta_value 
+					FROM {$wpdb->prefix}um_fields_meta 
+					WHERE field_id = %d AND 
+					      meta_key = %s
+					LIMIT 1",
+					$field,
+					sanitize_key( $meta_key )
+				),
+				ARRAY_A
+			);
+
+			if ( empty( $meta_value ) ) {
+				$meta_value = $default;
+			} else {
+				$meta_value = maybe_unserialize( $meta_value );
+			}
+
+			return $meta_value;
 		}
 
 		/**
