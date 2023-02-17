@@ -724,7 +724,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						),
 						'hiddens'   => array(
 							'um-action' => 'account-general-tab',
-							'um-tabid'  => $id,
 							'nonce'     => wp_create_nonce( 'um-' . $id . '-tab' ),
 						),
 						'buttons'   => array(
@@ -790,6 +789,10 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 								'required' => true,
 								'value'    => '',
 							),
+						),
+						'hiddens'   => array(
+							'um-action' => 'account-password-tab',
+							'nonce'     => wp_create_nonce( 'um-' . $id . '-tab' ),
 						),
 						'buttons'   => array(
 							'save-password' => array(
