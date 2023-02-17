@@ -18,34 +18,35 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		/**
 		 * @var
 		 */
-		var $tabs;
+		public $tabs;
 
 
 		/**
 		 * @var string
 		 */
-		var $current_tab = 'general';
+		public $current_tab = 'general';
 
 
 		/**
 		 * @var array
 		 */
-		var $displayed_fields = array();
+		public $displayed_fields = array();
 
 
 		/**
 		 * @var array
 		 */
-		var $tab_output = array();
+		public $tab_output = array();
 
 
 		/**
 		 * Account constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			add_shortcode( 'ultimatemember_account', array( &$this, 'ultimatemember_account' ) );
 			add_action( 'template_redirect', array( &$this, 'account_page_restrict' ), 10001 );
 			add_action( 'template_redirect', array( &$this, 'account_submit' ), 10002 );
+			add_action( 'deleted_user', array( &$this, 'deleted_user_redirecct' ), 10 );
 		}
 
 
@@ -56,7 +57,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 *
 		 * @throws \Exception
 		 */
-		function init_tabs( $args ) {
+		public function init_tabs( $args ) {
 			$tabs = array();
 
 			if ( isset( $args['tab'] ) ) {
@@ -100,7 +101,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 *
 		 * @return array
 		 */
-		function get_tabs() {
+		public function get_tabs() {
 			$tabs = array();
 			$tabs[100]['general'] = array(
 				'icon'         => 'fas fa-user',
@@ -169,7 +170,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 * @return false|string
 		 * @throws \Exception
 		 */
-		function ultimatemember_account( $args = array() ) {
+		public function ultimatemember_account( $args = array() ) {
 			if ( ! is_user_logged_in() ) {
 				return '';
 			}
@@ -349,7 +350,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		/**
 		 *  Update account fields to secure the account submission
 		 */
-		function account_fields_hash() {
+		public function account_fields_hash() {
 			update_user_meta( um_user( 'ID' ), 'um_account_secure_fields', UM()->account()->displayed_fields );
 		}
 
@@ -357,7 +358,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		/**
 		 * Restrict access to Account page
 		 */
-		function account_page_restrict() {
+		public function account_page_restrict() {
 
 			if ( um_is_predefined_page( 'account' ) ) {
 
@@ -388,7 +389,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		/**
 		 * Submit Account handler
 		 */
-		function account_submit() {
+		public function account_submit() {
 
 			if ( um_submitting_account_page() ) {
 
@@ -465,7 +466,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 * @param  integer $id
 		 * @return string
 		 */
-		function tab_link( $id ) {
+		public function tab_link( $id ) {
 
 			if ( UM()->is_permalinks ) {
 
@@ -487,7 +488,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 * @param $shortcode_args
 		 * @return mixed
 		 */
-		function filter_fields_by_attrs( $fields, $shortcode_args ) {
+		public function filter_fields_by_attrs( $fields, $shortcode_args ) {
 			foreach ( $fields as $k => $field ) {
 				if ( isset( $shortcode_args[ $field['metakey'] ] ) && 0 == $shortcode_args[ $field['metakey'] ] ) {
 					unset( $fields[ $k ] );
@@ -504,7 +505,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 * @param $fields
 		 * @param $tab_key
 		 */
-		function init_displayed_fields( $fields, $tab_key ) {
+		public function init_displayed_fields( $fields, $tab_key ) {
 			if ( ! $this->is_secure_enabled() ) {
 				return;
 			}
@@ -522,7 +523,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 * @param $field_key
 		 * @param $tab_key
 		 */
-		function add_displayed_field( $field_key, $tab_key ) {
+		public function add_displayed_field( $field_key, $tab_key ) {
 			if ( ! $this->is_secure_enabled() ) {
 				return;
 			}
@@ -538,7 +539,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		/**
 		 * @return bool
 		 */
-		function is_secure_enabled() {
+		public function is_secure_enabled() {
 			/**
 			 * UM hook
 			 *
@@ -575,7 +576,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 * @return mixed|string|null
 		 * @throws \Exception
 		 */
-		function get_tab_fields( $id, $shortcode_args ) {
+		public function get_tab_fields( $id, $shortcode_args ) {
 			$args    = array();
 			$user_id = get_current_user_id();
 
@@ -662,6 +663,10 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 								'required' => true,
 								'value'    => '',
 							),
+						),
+						'hiddens'   => array(
+							'um-action' => 'account-delete-tab',
+							'nonce'     => wp_create_nonce( 'um-' . $id . '-tab' ),
 						),
 						'buttons'   => array(
 							'save-password' => array(
@@ -849,7 +854,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 *
 		 * @throws \Exception
 		 */
-		function render_account_tab( $tab_id, $tab_data, $args ) {
+		public function render_account_tab( $tab_id, $tab_data, $args ) {
 
 			$args = $this->get_tab_fields( $tab_id, $args );
 
@@ -921,7 +926,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 * @param  string $mode
 		 * @return string
 		 */
-		function get_class( $mode ) {
+		public function get_class( $mode ) {
 
 			$classes = 'um-'.$mode;
 
@@ -969,7 +974,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 *
 		 * @return bool
 		 */
-		function current_password_is_required( $tab_key ) {
+		public function current_password_is_required( $tab_key ) {
 			$is_required = true;
 
 			switch ( $tab_key ) {
@@ -989,6 +994,40 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			$is_required = apply_filters( "um_account_{$tab_key}_require_current", $is_required );
 
 			return $is_required;
+		}
+
+
+		public function deleted_user_redirecct() {
+			if ( um_user( 'after_delete' ) && um_user( 'after_delete' ) === 'redirect_home' ) {
+				um_redirect_home();
+			} elseif ( um_user( 'delete_redirect_url' ) ) {
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_delete_account_redirect_url
+				 * @description Change redirect URL after delete account
+				 * @input_vars
+				 * [{"var":"$url","type":"string","desc":"Redirect URL"},
+				 * {"var":"$id","type":"int","desc":"User ID"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage
+				 * <?php add_filter( 'um_delete_account_redirect_url', 'function_name', 10, 2 ); ?>
+				 * @example
+				 * <?php
+				 * add_filter( 'um_delete_account_redirect_url', 'my_delete_account_redirect_url', 10, 2 );
+				 * function my_delete_account_redirect_url( $url, $id ) {
+				 *     // your code here
+				 *     return $url;
+				 * }
+				 * ?>
+				 */
+				$redirect_url = apply_filters( 'um_delete_account_redirect_url', um_user( 'delete_redirect_url' ), $user_id );
+				exit( wp_redirect( $redirect_url ) );
+			} else {
+				um_redirect_home();
+			}
 		}
 	}
 }

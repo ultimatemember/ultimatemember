@@ -500,6 +500,37 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 					}
 
 					break;
+
+				case 'account-delete-tab':
+					$tab_form = UM()->frontend()->form(
+						array(
+							'id' => 'um-delete-tab',
+						)
+					);
+					$tab_form->flush_errors();
+
+					if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'um-delete-tab' ) ) {
+						$tab_form->add_error( 'global', __( 'Security issue, Please try again', 'ultimate-member' ) );
+					}
+
+					$user_id      = get_current_user_id();
+					$current_user = wp_get_current_user();
+
+					if ( UM()->account()->current_password_is_required( 'delete' ) ) {
+						if ( strlen( trim( $_POST['single_user_password'] ) ) === 0 ) {
+							$tab_form->add_error( 'single_user_password', __( 'You must enter your password', 'ultimate-member' ) );
+						} else {
+							if ( ! wp_check_password( trim( $_POST['single_user_password'] ), $current_user->user_pass, $user_id ) ) {
+								$tab_form->add_error( 'single_user_password', __( 'This is not your password', 'ultimate-member' ) );
+							}
+						}
+					}
+
+					if ( ! $tab_form->has_errors() ) {
+						UM()->user()->delete();
+					}
+
+					break;
 				}
 			}
 		}
