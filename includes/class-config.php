@@ -482,7 +482,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 					                   '{user_profile_link}<br /><br />' .
 					                   'Here is the submitted registration form:<br /><br />' .
 					                   '{submitted_registration}',
-					'description'   => __('Whether to receive notification when a new user account is approved','ultimate-member'),
+					'description'   => __('Whether to receive notification when a new user account is created','ultimate-member'),
 					'recipient'   => 'admin',
 					'default_active' => true
 				),
@@ -522,7 +522,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'use_gravatars'                         => 0,
 				'use_um_gravatar_default_builtin_image' => 'default',
 				'use_um_gravatar_default_image'         => 0,
-				'reset_require_strongpass'              => 0,
+				'require_strongpass'                    => 0,
 				'password_min_chars'                    => 8,
 				'password_max_chars'                    => 30,
 				'account_tab_password'                  => 1,
@@ -538,7 +538,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'account_general_password'              => 0,
 				'account_hide_in_directory'             => 1,
 				'account_hide_in_directory_default'     => 'No',
-				'account_require_strongpass'            => 0,
 				'photo_thumb_sizes'                     => array( 40, 80, 190 ),
 				'cover_thumb_sizes'                     => array( 300, 600 ),
 				'accessible'                            => 0,
@@ -554,8 +553,11 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'restricted_block_message'              => '',
 				'enable_reset_password_limit'           => 1,
 				'reset_password_limit_number'           => 3,
+				'change_password_request_limit'         => false,
 				'blocked_emails'                        => '',
 				'blocked_words'                         => 'admin' . "\r\n" . 'administrator' . "\r\n" . 'webmaster' . "\r\n" . 'support' . "\r\n" . 'staff',
+				'allowed_choice_callbacks'              => '',
+				'allow_url_redirect_confirm'            => 1,
 				'default_avatar'                        => '',
 				'default_cover'                         => '',
 				'disable_profile_photo_upload'          => 0,

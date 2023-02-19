@@ -1,30 +1,45 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 
-/**
- * Add dynamic profile headers
- *
- * @param $items
- * @param $args
- *
- * @return mixed
- */
-function um_add_custom_message_to_menu( $items, $args ) {
-	if ( ! is_user_logged_in() ) {
-		$items = UM()->shortcodes()->convert_user_tags( $items );
-		return $items;
-	}
-
-	um_fetch_user( get_current_user_id() );
-	$items = UM()->shortcodes()->convert_user_tags( $items );
-	um_reset_user();
-
-	return $items;
-}
-add_filter( 'wp_nav_menu_items', 'um_add_custom_message_to_menu', 10, 2 );
-
-
 if ( ! is_admin() ) {
+	/**
+	 * Add dynamic profile headers
+	 *
+	 * @param array $sorted_menu_items
+	 * @param \stdClass $args
+	 *
+	 * @return array
+	 */
+	function um_add_custom_message_to_menu( $sorted_menu_items, $args ) {
+		if ( empty( $sorted_menu_items ) ) {
+			return $sorted_menu_items;
+		}
+
+		if ( is_user_logged_in() ) {
+			um_fetch_user( get_current_user_id() );
+		}
+
+		foreach ( $sorted_menu_items as &$menu_item ) {
+			if ( ! empty( $menu_item->title ) ) {
+				$menu_item->title = UM()->shortcodes()->convert_user_tags( $menu_item->title );
+			}
+			if ( ! empty( $menu_item->attr_title ) ) {
+				$menu_item->attr_title = UM()->shortcodes()->convert_user_tags( $menu_item->attr_title );
+			}
+			if ( ! empty( $menu_item->description ) ) {
+				$menu_item->description = UM()->shortcodes()->convert_user_tags( $menu_item->description );
+			}
+		}
+
+		if ( is_user_logged_in() ) {
+			um_reset_user();
+		}
+
+		return $sorted_menu_items;
+	}
+	add_filter( 'wp_nav_menu_objects', 'um_add_custom_message_to_menu', 9999, 2 );
+
+
 	/**
 	 * Conditional menu items
 	 *
@@ -41,19 +56,22 @@ if ( ! is_admin() ) {
 
 		um_fetch_user( get_current_user_id() );
 
-		$filtered_items = array();
+		$filtered_items   = array();
 		$hide_children_of = array();
 
 		//other filter
 		foreach ( $menu_items as $item ) {
+			if ( empty( $item->ID ) ) {
+				continue;
+			}
 
-			$mode = get_post_meta( $item->ID, 'menu-item-um_nav_public', true );
+			$mode  = get_post_meta( $item->ID, 'menu-item-um_nav_public', true );
 			$roles = get_post_meta( $item->ID, 'menu-item-um_nav_roles', true );
 
 			$visible = true;
 
 			// hide any item that is the child of a hidden item
-			if ( in_array( $item->menu_item_parent, $hide_children_of ) ) {
+			if ( isset( $item->menu_item_parent ) && in_array( $item->menu_item_parent, $hide_children_of ) ) {
 				$visible = false;
 				$hide_children_of[] = $item->ID; // for nested menus
 			}
@@ -64,16 +82,16 @@ if ( ! is_admin() ) {
 
 					case 2:
 						if ( is_user_logged_in() && ! empty( $roles ) ) {
-                            if ( current_user_can( 'administrator' ) ) {
-                                $visible = true;
-                            } else {
-                                $current_user_roles = um_user( 'roles' );
-                                if ( empty( $current_user_roles ) ) {
-                                    $visible = false;
-                                } else {
-                                    $visible = ( count( array_intersect( $current_user_roles, (array)$roles ) ) > 0 ) ? true : false;
-                                }
-                            }
+							if ( current_user_can( 'administrator' ) ) {
+								$visible = true;
+							} else {
+								$current_user_roles = um_user( 'roles' );
+								if ( empty( $current_user_roles ) ) {
+									$visible = false;
+								} else {
+									$visible = ( count( array_intersect( $current_user_roles, (array)$roles ) ) > 0 ) ? true : false;
+								}
+							}
 						} else {
 							$visible = is_user_logged_in() ? true : false;
 						}

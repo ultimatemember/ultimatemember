@@ -1,8 +1,14 @@
 <?php
+/**
+ * Interface for integration between Ultimate Member and multilingual plugin.
+ *
+ * @package um\core\integrations
+ */
+
 namespace um\core\integrations;
 
-// Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) {
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -12,7 +18,7 @@ if ( interface_exists( 'um\core\integrations\UM_Multilingual' ) ) {
 
 /**
  * Interface UM_Multilingual
- * 
+ *
  * @package um\core\integrations
  */
 interface UM_Multilingual {
@@ -27,7 +33,7 @@ interface UM_Multilingual {
 	 *
 	 * @since  2.1.7
 	 *
-	 * @param  array $rules
+	 * @param  array $rules Rewrite rules.
 	 * @return array
 	 */
 	public function add_rewrite_rules( $rules );
@@ -38,8 +44,8 @@ interface UM_Multilingual {
 	 * @since  2.1.6
 	 * @exaple change 'welcome_email_sub' to 'welcome_email_sub_de_DE'
 	 *
-	 * @param  array  $section_fields  The email template fields
-	 * @param  string $email_key       The email template slug
+	 * @param  array  $section_fields The email template fields.
+	 * @param  string $email_key      The email template slug.
 	 * @return array
 	 */
 	public function admin_settings_email_section_fields( $section_fields, $email_key );
@@ -49,10 +55,21 @@ interface UM_Multilingual {
 	 *
 	 * @since  2.1.6
 	 *
-	 * @param  string $template  The email template slug
+	 * @param  string $template The email template slug.
 	 * @return string
 	 */
 	public function change_email_template_file( $template );
+
+
+	/**
+	 * Create email template file in the theme folder.
+	 *
+	 * @since  2.5.4
+	 *
+	 * @param  array $settings Input data.
+	 * @return array
+	 */
+	public function create_email_template_file( $settings );
 
 	/**
 	 *
@@ -60,7 +77,7 @@ interface UM_Multilingual {
 	 *
 	 * @since  2.1.6
 	 *
-	 * @param  array  $item  The email template data
+	 * @param  array $item The email template data.
 	 * @return string
 	 */
 	public function emails_column_content( $item );
@@ -70,7 +87,7 @@ interface UM_Multilingual {
 	 *
 	 * @since  2.1.6
 	 *
-	 * @param  array   $columns   The Email table headers
+	 * @param  array $columns The Email table headers.
 	 * @return array
 	 */
 	public function emails_column_header( $columns );
@@ -79,8 +96,8 @@ interface UM_Multilingual {
 	 * Get default and current locales.
 	 *
 	 * @since  2.1.6
-	 * 
-	 * @param  string|false  $current_code  Slug of the queried language
+	 *
+	 * @param  string|false $current_code Slug of the queried language.
 	 * @return array
 	 */
 	public function get_languages_codes( $current_code = false );
@@ -89,9 +106,9 @@ interface UM_Multilingual {
 	 * Get content for the cell of the column 'translations' in the Email table.
 	 *
 	 * @since  2.1.6
-	 * 
-	 * @param  string  $template  The email template slug
-	 * @param  string  $code      Slug or locale of the queried language
+	 *
+	 * @param  string $template The email template slug.
+	 * @param  string $code     Slug or locale of the queried language.
 	 * @return string
 	 */
 	public function get_status_html( $template, $code );
@@ -102,8 +119,8 @@ interface UM_Multilingual {
 	 * @since  2.1.6
 	 * @exaple change 'welcome_email_sub' to 'welcome_email_sub_de_DE'
 	 *
-	 * @param  string  $subject   Default subject
-	 * @param  string  $template  The email template slug
+	 * @param  string $subject  Default subject.
+	 * @param  string $template The email template slug.
 	 * @return string
 	 */
 	public function localize_email_subject( $subject, $template );
@@ -113,8 +130,8 @@ interface UM_Multilingual {
 	 *
 	 * @since  2.1.6
 	 *
-	 * @param  string  $template		   The email template path
-	 * @param  string  $template_name  The email template slug
+	 * @param  string $template      The email template path.
+	 * @param  string $template_name The email template slug.
 	 * @return string
 	 */
 	public function locate_email_template( $template, $template_name );

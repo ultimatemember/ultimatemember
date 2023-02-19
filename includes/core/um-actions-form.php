@@ -12,36 +12,33 @@ function um_submit_form_errors_hook__blockedemails( $args ) {
 		return;
 	}
 
+	$emails = strtolower( $emails );
 	$emails = array_map( 'rtrim', explode( "\n", $emails ) );
 
 	if ( isset( $args['user_email'] ) && is_email( $args['user_email'] ) ) {
-
-		$domain = explode( '@', $args['user_email'] );
-		$check_domain = str_replace( $domain[0], '*', $args['user_email'] );
-
-		if ( in_array( $args['user_email'], $emails ) ) {
+		if ( in_array( strtolower( $args['user_email'] ), $emails ) ) {
 			exit( wp_redirect( esc_url( add_query_arg( 'err', 'blocked_email' ) ) ) );
 		}
 
-		if ( in_array( $check_domain, $emails ) ) {
+		$domain       = explode( '@', $args['user_email'] );
+		$check_domain = str_replace( $domain[0], '*', $args['user_email'] );
+
+		if ( in_array( strtolower( $check_domain ), $emails ) ) {
 			exit( wp_redirect( esc_url( add_query_arg( 'err', 'blocked_domain' ) ) ) );
 		}
-
 	}
 
 	if ( isset( $args['username'] ) && is_email( $args['username'] ) ) {
-
-		$domain = explode( '@', $args['username'] );
-		$check_domain = str_replace( $domain[0], '*', $args['username'] );
-
-		if ( in_array( $args['username'], $emails ) ) {
+		if ( in_array( strtolower( $args['username'] ), $emails ) ) {
 			exit( wp_redirect( esc_url( add_query_arg( 'err', 'blocked_email' ) ) ) );
 		}
 
-		if ( in_array( $check_domain, $emails ) ) {
+		$domain       = explode( '@', $args['username'] );
+		$check_domain = str_replace( $domain[0], '*', $args['username'] );
+
+		if ( in_array( strtolower( $check_domain ), $emails ) ) {
 			exit( wp_redirect( esc_url( add_query_arg( 'err', 'blocked_domain' ) ) ) );
 		}
-
 	}
 }
 add_action( 'um_submit_form_errors_hook__blockedemails', 'um_submit_form_errors_hook__blockedemails', 10 );
@@ -86,11 +83,12 @@ function um_submit_form_errors_hook__blockedwords( $args ) {
 	$mode = $args['mode'];
 	$fields = unserialize( $args['custom_fields'] );
 
+	$words = strtolower( $words );
 	$words = array_map( 'rtrim', explode( "\n", $words ) );
 	if ( ! empty( $fields ) && is_array( $fields ) ) {
 		foreach ( $fields as $key => $array ) {
 			if ( isset( $array['validate'] ) && in_array( $array['validate'], array( 'unique_username', 'unique_email', 'unique_username_or_email' ) ) ) {
-				if ( ! UM()->form()->has_error( $key ) && isset( $args[ $key ] ) && in_array( $args[ $key ], $words ) ) {
+				if ( ! UM()->form()->has_error( $key ) && isset( $args[ $key ] ) && in_array( strtolower( $args[ $key ] ), $words ) ) {
 					UM()->form()->add_error( $key, __( 'You are not allowed to use this word as your username.', 'ultimate-member' ) );
 				}
 			}
@@ -622,7 +620,15 @@ function um_submit_form_errors_hook_( $args ) {
 					}
 				}
 
-				if ( isset( $array['force_good_pass'] ) && $array['force_good_pass'] == 1 ) {
+				if ( isset( $array['force_good_pass'] ) && $array['force_good_pass'] && ! empty( $args['user_password'] ) ) {
+					if ( isset( $args['user_login'] ) && strpos( strtolower( $args['user_login'] ), strtolower( $args['user_password'] )  ) > -1 ) {
+						UM()->form()->add_error( 'user_password', __( 'Your password cannot contain the part of your username', 'ultimate-member' ));
+					}
+
+					if ( isset( $args['user_email'] ) && strpos( strtolower( $args['user_email'] ), strtolower( $args['user_password'] )  ) > -1 ) {
+						UM()->form()->add_error( 'user_password', __( 'Your password cannot contain the part of your email address', 'ultimate-member' ));
+					}
+
 					if ( ! UM()->validation()->strong_pass( $args[ $key ] ) ) {
 						UM()->form()->add_error( $key, __( 'Your password must contain at least one lowercase letter, one capital letter and one number', 'ultimate-member' ) );
 					}
@@ -704,7 +710,13 @@ function um_submit_form_errors_hook_( $args ) {
 							break;
 
 						case 'youtube_url':
-							if ( ! UM()->validation()->is_url( $args[ $key ], 'youtube.com' ) ) {
+							if ( ! UM()->validation()->is_url( $args[ $key ], 'youtube.com' ) && ! UM()->validation()->is_url( $args[ $key ], 'youtu.be' ) ) {
+								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s username or profile URL', 'ultimate-member' ), $array['label'] ) );
+							}
+							break;
+
+						case 'telegram_url':
+							if ( ! UM()->validation()->is_url( $args[ $key ], 't.me' ) ) {
 								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s username or profile URL', 'ultimate-member' ), $array['label'] ) );
 							}
 							break;
@@ -752,6 +764,33 @@ function um_submit_form_errors_hook_( $args ) {
 							}
 							break;
 
+						case 'discord':
+							if ( ! UM()->validation()->is_discord_id( $args[ $key ] ) ) {
+								UM()->form()->add_error( $key, __( 'Please enter a valid Discord ID', 'ultimate-member' ) );
+							}
+							break;
+
+						case 'tiktok_url':
+
+							if ( ! UM()->validation()->is_url( $args[ $key ], 'tiktok.com' ) ) {
+								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s profile URL', 'ultimate-member' ), $array['label'] ) );
+							}
+							break;
+
+						case 'twitch_url':
+
+							if ( ! UM()->validation()->is_url( $args[ $key ], 'twitch.tv' ) ) {
+								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s profile URL', 'ultimate-member' ), $array['label'] ) );
+							}
+							break;
+
+						case 'reddit_url':
+
+							if ( ! UM()->validation()->is_url( $args[ $key ], 'reddit.com' ) ) {
+								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s profile URL', 'ultimate-member' ), $array['label'] ) );
+							}
+							break;
+
 						case 'url':
 							if ( ! UM()->validation()->is_url( $args[ $key ] ) ) {
 								UM()->form()->add_error( $key, __( 'Please enter a valid URL', 'ultimate-member' ) );
@@ -763,7 +802,7 @@ function um_submit_form_errors_hook_( $args ) {
 							if ( $args[ $key ] == '' ) {
 								UM()->form()->add_error( $key, __( 'You must provide a username', 'ultimate-member' ) );
 							} elseif ( $mode == 'register' && username_exists( sanitize_user( $args[ $key ] ) ) ) {
-								UM()->form()->add_error( $key, __( 'Your username is already taken', 'ultimate-member' ) );
+								UM()->form()->add_error( $key, __( 'The username you entered is incorrect', 'ultimate-member' ) );
 							} elseif ( is_email( $args[ $key ] ) ) {
 								UM()->form()->add_error( $key, __( 'Username cannot be an email', 'ultimate-member' ) );
 							} elseif ( ! UM()->validation()->safe_username( $args[ $key ] ) ) {
@@ -775,11 +814,11 @@ function um_submit_form_errors_hook_( $args ) {
 						case 'unique_username_or_email':
 
 							if ( $args[ $key ] == '' ) {
-								UM()->form()->add_error( $key, __( 'You must provide a username', 'ultimate-member' ) );
+								UM()->form()->add_error( $key, __( 'You must provide a username or email', 'ultimate-member' ) );
 							} elseif ( $mode == 'register' && username_exists( sanitize_user( $args[ $key ] ) ) ) {
-								UM()->form()->add_error( $key, __( 'Your username is already taken', 'ultimate-member' ) );
+								UM()->form()->add_error( $key, __( 'The username you entered is incorrect', 'ultimate-member' ) );
 							} elseif ( $mode == 'register' && email_exists( $args[ $key ] ) ) {
-								UM()->form()->add_error( $key, __( 'This email is already linked to an existing account', 'ultimate-member' ) );
+								UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
 							} elseif ( ! UM()->validation()->safe_username( $args[ $key ] ) ) {
 								UM()->form()->add_error( $key, __( 'Your username contains invalid characters', 'ultimate-member' ) );
 							}
@@ -796,16 +835,16 @@ function um_submit_form_errors_hook_( $args ) {
 									$args['user_id'] = um_get_requested_user();
 								}
 
-								$email_exists =  email_exists( $args[ $key ] );
+								$email_exists = email_exists( $args[ $key ] );
 
 								if ( $args[ $key ] == '' && in_array( $key, array( 'user_email' ) ) ) {
 									UM()->form()->add_error( $key, __( 'You must provide your email', 'ultimate-member' ) );
 								} elseif ( in_array( $mode, array( 'register' ) ) && $email_exists  ) {
-									UM()->form()->add_error( $key, __( 'This email is already linked to an existing account', 'ultimate-member' ) );
+									UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
 								} elseif ( in_array( $mode, array( 'profile' ) ) && $email_exists && $email_exists != $args['user_id']  ) {
-									UM()->form()->add_error( $key, __( 'This email is already linked to an existing account', 'ultimate-member' ) );
-								} elseif ( !is_email( $args[ $key ] ) ) {
-									UM()->form()->add_error( $key, __( 'This is not a valid email', 'ultimate-member') );
+									UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
+								} elseif ( ! is_email( $args[ $key ] ) ) {
+									UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member') );
 								} elseif ( ! UM()->validation()->safe_username( $args[ $key ] ) ) {
 									UM()->form()->add_error( $key,  __( 'Your email contains invalid characters', 'ultimate-member' ) );
 								}
@@ -813,16 +852,16 @@ function um_submit_form_errors_hook_( $args ) {
 							} else {
 
 								if ( $args[ $key ] != '' && ! is_email( $args[ $key ] ) ) {
-									UM()->form()->add_error( $key, __( 'This is not a valid email', 'ultimate-member' ) );
+									UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
 								} elseif ( $args[ $key ] != '' && email_exists( $args[ $key ] ) ) {
-									UM()->form()->add_error( $key, __( 'This email is already linked to an existing account', 'ultimate-member' ) );
+									UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
 								} elseif ( $args[ $key ] != '' ) {
 
 									$users = get_users( 'meta_value=' . $args[ $key ] );
 
 									foreach ( $users as $user ) {
 										if ( $user->ID != $args['user_id'] ) {
-											UM()->form()->add_error( $key, __( 'This email is already linked to an existing account', 'ultimate-member' ) );
+											UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
 										}
 									}
 
@@ -860,7 +899,7 @@ function um_submit_form_errors_hook_( $args ) {
 								}
 							}
 							break;
-							
+
 						case 'alphabetic':
 
 							if ( $args[ $key ] != '' ) {
@@ -868,7 +907,7 @@ function um_submit_form_errors_hook_( $args ) {
 								if ( ! preg_match( '/^\p{L}+$/u', str_replace( ' ', '', $args[ $key ] ) ) ) {
 									UM()->form()->add_error( $key, __( 'You must provide alphabetic letters', 'ultimate-member' ) );
 								}
-								
+
 							}
 
 							break;

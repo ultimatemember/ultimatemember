@@ -1,8 +1,14 @@
 <?php
+/**
+ * Integration between Ultimate Member and WPML.
+ *
+ * @package um\core\integrations
+ */
+
 namespace um\core\integrations;
 
-// Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) {
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -11,7 +17,7 @@ if ( class_exists( 'um\core\integrations\UM_WPML' ) ) {
 }
 
 
-// Interface UM_Multilingual
+// Interface UM_Multilingual.
 require_once __DIR__ . '/interface-um-multilingual.php';
 
 
@@ -32,6 +38,7 @@ class UM_WPML implements UM_Multilingual {
 			/* Email */
 			add_filter( 'um_admin_settings_email_section_fields', array( &$this, 'admin_settings_email_section_fields' ), 10, 2 );
 			add_filter( 'um_change_email_template_file', array( &$this, 'change_email_template_file' ), 10, 1 );
+			add_filter( 'um_change_settings_before_save', array( &$this, 'create_email_template_file' ), 8, 1 );
 			add_filter( 'um_email_send_subject', array( &$this, 'localize_email_subject' ), 10, 2 );
 			add_filter( 'um_email_templates_columns', array( &$this, 'emails_column_header' ), 10, 1 );
 			add_filter( 'um_locate_email_template', array( &$this, 'locate_email_template' ), 10, 2 );
@@ -56,7 +63,9 @@ class UM_WPML implements UM_Multilingual {
 	 *
 	 * @since  2.1.7
 	 *
-	 * @param  array $rules
+	 * @global \SitePress $sitepress
+	 *
+	 * @param  array $rules Rewrite rules.
 	 * @return array
 	 */
 	public function add_rewrite_rules( $rules ) {
@@ -67,34 +76,36 @@ class UM_WPML implements UM_Multilingual {
 
 			$newrules = array();
 
-			// Account
+			// Account.
 			if ( $active_languages && isset( UM()->config()->permalinks['account'] ) ) {
 				$account_page_id = UM()->config()->permalinks['account'];
-				$account = get_post( $account_page_id );
+				$account         = get_post( $account_page_id );
 
 				foreach ( $active_languages as $language_code => $language ) {
-					$lang_post_id = wpml_object_id_filter( $account_page_id, 'post', false, $language_code );
+					$lang_post_id  = wpml_object_id_filter( $account_page_id, 'post', false, $language_code );
 					$lang_post_obj = get_post( $lang_post_id );
 
-					if ( isset( $account->post_name ) && isset( $lang_post_obj->post_name ) && $lang_post_obj->post_name != $account->post_name ) {
+					if ( isset( $account->post_name ) && isset( $lang_post_obj->post_name ) && $lang_post_obj->post_name !== $account->post_name ) {
 						$lang_page_slug = $lang_post_obj->post_name;
-						$newrules[$lang_page_slug . '/([^/]+)/?$'] = 'index.php?page_id=' . $lang_post_id . '&um_tab=$matches[1]&lang=' . $language_code;
+
+						$newrules[ $lang_page_slug . '/([^/]+)/?$' ] = 'index.php?page_id=' . $lang_post_id . '&um_tab=$matches[1]&lang=' . $language_code;
 					}
 				}
 			}
 
-			// Profile
+			// Profile.
 			if ( $active_languages && isset( UM()->config()->permalinks['user'] ) ) {
 				$user_page_id = UM()->config()->permalinks['user'];
-				$user = get_post( $user_page_id );
+				$user         = get_post( $user_page_id );
 
 				foreach ( $active_languages as $language_code => $language ) {
-					$lang_post_id = wpml_object_id_filter( $user_page_id, 'post', false, $language_code );
+					$lang_post_id  = wpml_object_id_filter( $user_page_id, 'post', false, $language_code );
 					$lang_post_obj = get_post( $lang_post_id );
 
-					if ( isset( $user->post_name ) && isset( $lang_post_obj->post_name ) && $lang_post_obj->post_name != $user->post_name ) {
+					if ( isset( $user->post_name ) && isset( $lang_post_obj->post_name ) && $lang_post_obj->post_name !== $user->post_name ) {
 						$lang_page_slug = $lang_post_obj->post_name;
-						$newrules[$lang_page_slug . '/([^/]+)/?$'] = 'index.php?page_id=' . $lang_post_id . '&um_user=$matches[1]&lang=' . $language_code;
+
+						$newrules[ $lang_page_slug . '/([^/]+)/?$' ] = 'index.php?page_id=' . $lang_post_id . '&um_user=$matches[1]&lang=' . $language_code;
 					}
 				}
 			}
@@ -111,25 +122,19 @@ class UM_WPML implements UM_Multilingual {
 	 * @since  2.1.6
 	 * @exaple change 'welcome_email_sub' to 'welcome_email_sub_de_DE'
 	 *
-	 * @param  array  $section_fields  The email template fields
-	 * @param  string $email_key       The email template slug
+	 * @param  array  $section_fields The email template fields.
+	 * @param  string $email_key      The email template slug.
 	 * @return array
 	 */
 	public function admin_settings_email_section_fields( $section_fields, $email_key ) {
-
 		if ( $this->is_active() ) {
-
-			$lang = '';
 			$language_codes = $this->get_languages_codes();
-			if ( $language_codes['default'] != $language_codes['current'] ) {
-				$lang = '_' . $language_codes['current'];
-			}
+			$lang           = $language_codes['default'] === $language_codes['current'] ? '' : '_' . $language_codes['current'];
+			$value_default  = UM()->options()->get( $email_key . '_sub' );
+			$value          = UM()->options()->get( $email_key . '_sub' . $lang );
 
-			$value_default = UM()->options()->get( $email_key . '_sub' );
-			$value = UM()->options()->get( $email_key . '_sub' . $lang );
-
-			$section_fields[2]['id'] = $email_key . '_sub' . $lang;
-			$section_fields[2]['value'] = !empty( $value ) ? $value : $value_default;
+			$section_fields[2]['id']    = $email_key . '_sub' . $lang;
+			$section_fields[2]['value'] = empty( $value ) ? $value_default : $value;
 		}
 
 		return $section_fields;
@@ -140,14 +145,13 @@ class UM_WPML implements UM_Multilingual {
 	 *
 	 * @since  2.1.6
 	 *
-	 * @param  string $template  The email template slug
+	 * @param  string $template The email template slug.
 	 * @return string
 	 */
 	public function change_email_template_file( $template ) {
-
 		if ( $this->is_active() ) {
 			$language_codes = $this->get_languages_codes();
-			if ( $language_codes['default'] != $language_codes['current'] ) {
+			if ( $language_codes['default'] !== $language_codes['current'] ) {
 				$template = $language_codes['current'] . '/' . $template;
 			}
 		}
@@ -155,33 +159,67 @@ class UM_WPML implements UM_Multilingual {
 		return $template;
 	}
 
+
 	/**
-	 * @param $array
+	 * Create email template file in the theme folder.
 	 *
+	 * @since  2.5.4
+	 *
+	 * @param  array $settings Input data.
+	 * @return array
+	 */
+	public function create_email_template_file( $settings ) {
+		if ( isset( $settings['um_email_template'] ) ) {
+			$template      = $settings['um_email_template'];
+			$template_path = UM()->mail()->get_template_file( 'theme', $template );
+
+			if ( ! file_exists( $template_path ) ) {
+				$template_dir = dirname( $template_path );
+
+				if ( wp_mkdir_p( $template_dir ) ) {
+					file_put_contents( $template_path, '' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
+				}
+			}
+		}
+		return $settings;
+	}
+
+	/**
+	 * Filter profile page permalink.
+	 *
+	 * @hook   icl_ls_languages
 	 * @global \SitePress $sitepress
+	 *
+	 * @param  array $array Data.
 	 * @return mixed
 	 */
 	public function core_page_permalink( $array ) {
 		global $sitepress;
 
 		if ( $this->is_active() ) {
-			if ( !um_is_core_page( "user" ) ) return $array;
-			if ( !defined( "ICL_LANGUAGE_CODE" ) ) return $array;
-			if ( !function_exists( 'icl_object_id' ) ) return $array;
+			if ( ! um_is_core_page( 'user' ) ) {
+				return $array;
+			}
+			if ( ! defined( 'ICL_LANGUAGE_CODE' ) ) {
+				return $array;
+			}
+			if ( ! function_exists( 'icl_object_id' ) ) {
+				return $array;
+			}
 
-			// Permalink base
+			// Permalink base.
 			$permalink_base = UM()->options()->get( 'permalink_base' );
 
-			// Get user slug
+			// Get user slug.
 			$profile_slug = strtolower( get_user_meta( um_profile_id(), "um_user_profile_url_slug_{$permalink_base}", true ) );
+
 			$current_language = ICL_LANGUAGE_CODE;
 			foreach ( $array as $lang_code => $arr ) {
 				$sitepress->switch_lang( $lang_code );
-				$user_page = um_get_core_page( "user" );
+				$user_page = um_get_core_page( 'user' );
 
-				$array[$lang_code]['url'] = "{$user_page}{$profile_slug}/";
+				$array[ $lang_code ]['url'] = "{$user_page}{$profile_slug}/";
 			}
-
 			$sitepress->switch_lang( $current_language );
 		}
 
@@ -195,7 +233,8 @@ class UM_WPML implements UM_Multilingual {
 	 * @since  2.1.6
 	 *
 	 * @global \SitePress $sitepress
-	 * @param  array      $item      The email template data
+	 *
+	 * @param  array $item The email template data.
 	 * @return string
 	 */
 	public function emails_column_content( $item ) {
@@ -205,7 +244,7 @@ class UM_WPML implements UM_Multilingual {
 		if ( $this->is_active() ) {
 			$active_languages = $sitepress->get_active_languages();
 			$current_language = $sitepress->get_current_language();
-			unset( $active_languages[$current_language] );
+			unset( $active_languages[ $current_language ] );
 			foreach ( $active_languages as $language_data ) {
 				$html .= $this->get_status_html( $item['key'], $language_data['code'] );
 			}
@@ -220,7 +259,8 @@ class UM_WPML implements UM_Multilingual {
 	 * @since  2.1.6
 	 *
 	 * @global \SitePress $sitepress
-	 * @param  array      $columns   The Email table headers
+	 *
+	 * @param  array $columns The Email table headers.
 	 * @return array
 	 */
 	public function emails_column_header( $columns ) {
@@ -229,7 +269,7 @@ class UM_WPML implements UM_Multilingual {
 		if ( $this->is_active() ) {
 			$active_languages = $sitepress->get_active_languages();
 			$current_language = $sitepress->get_current_language();
-			unset( $active_languages[$current_language] );
+			unset( $active_languages[ $current_language ] );
 
 			if ( count( $active_languages ) > 0 ) {
 				$flags_column = '';
@@ -239,8 +279,8 @@ class UM_WPML implements UM_Multilingual {
 
 				$new_columns = array();
 				foreach ( $columns as $column_key => $column_content ) {
-					$new_columns[$column_key] = $column_content;
-					if ( 'email' === $column_key && !isset( $new_columns['icl_translations'] ) ) {
+					$new_columns[ $column_key ] = $column_content;
+					if ( 'email' === $column_key && ! isset( $new_columns['icl_translations'] ) ) {
 						$new_columns['icl_translations'] = $flags_column;
 					}
 				}
@@ -257,14 +297,15 @@ class UM_WPML implements UM_Multilingual {
 	 *
 	 * @since  2.1.6
 	 *
-	 * @global \SitePress    $sitepress
-	 * @param  string|false  $current_code  Slug of the queried language
-	 * @return array
+	 * @global \SitePress $sitepress
+	 *
+	 * @param  string|false $current_code Slug of the queried language.
+	 * @return arra
 	 */
 	public function get_languages_codes( $current_code = false ) {
 		global $sitepress;
 
-		if ( !$this->is_active() ) {
+		if ( ! $this->is_active() ) {
 			return $current_code;
 		}
 
@@ -286,17 +327,17 @@ class UM_WPML implements UM_Multilingual {
 	 *
 	 * @since  2.1.6
 	 *
-	 * @global \SitePress   $sitepress
-	 * @param  integer      $post_id   The post/page ID
-	 * @param  string       $language  Slug or locale of the queried language
+	 * @global \SitePress $sitepress
+	 *
+	 * @param  integer $post_id  The post/page ID.
+	 * @param  string  $language Slug or locale of the queried language.
 	 * @return string|false
 	 */
 	public function get_page_url_for_language( $post_id, $language ) {
-
 		if ( $this->is_active() ) {
 			$lang_post_id = icl_object_id( $post_id, 'page', true, $language );
 
-			if ( $lang_post_id != 0 ) {
+			if ( ! empty( $lang_post_id ) ) {
 				$url = get_permalink( $lang_post_id );
 			}
 		}
@@ -310,8 +351,9 @@ class UM_WPML implements UM_Multilingual {
 	 * @since  2.1.6
 	 *
 	 * @global \SitePress $sitepress
-	 * @param  string     $template  The email template slug
-	 * @param  string     $code      Slug or locale of the queried language
+	 *
+	 * @param  string $template The email template slug.
+	 * @param  string $code     Slug or locale of the queried language.
 	 * @return string
 	 */
 	public function get_status_html( $template, $code ) {
@@ -319,33 +361,33 @@ class UM_WPML implements UM_Multilingual {
 		$status = 'add';
 
 		$active_languages = $sitepress->get_active_languages();
-		$translation = array(
-				'edit' => array(
-						'icon' => 'edit_translation.png',
-						'text' => sprintf(
-								__( 'Edit the %s translation', 'sitepress' ), $active_languages[$code]['display_name']
-						)
+		$translation      = array(
+			'edit' => array(
+				'icon' => 'edit_translation.png',
+				'text' => sprintf(
+					// translators: %s - language name.
+					__( 'Edit the %s translation', 'sitepress' ),
+					$active_languages[ $code ]['display_name']
 				),
-				'add' => array(
-						'icon' => 'add_translation.png',
-						'text' => sprintf(
-								__( 'Add translation to %s', 'sitepress' ), $active_languages[$code]['display_name']
-						)
-				)
+			),
+			'add'  => array(
+				'icon' => 'add_translation.png',
+				'text' => sprintf(
+					// translators: %s - language name.
+					__( 'Add translation to %s', 'sitepress' ),
+					$active_languages[ $code ]['display_name']
+				),
+			),
 		);
 
 		$language_codes = $this->get_languages_codes( $code );
+		$lang           = $language_codes['default'] === $language_codes['current'] ? '' : $language_codes['current'] . '/';
 
-		$lang = '';
-		if ( $language_codes['default'] != $language_codes['current'] ) {
-			$lang = $language_codes['current'] . '/';
-		}
-
-		//theme location
+		// theme location.
 		$template_path = trailingslashit( get_stylesheet_directory() . '/ultimate-member/email' ) . $lang . $template . '.php';
 
-		//plugin location for default language
-		if ( empty( $lang ) && !file_exists( $template_path ) ) {
+		// plugin location for default language.
+		if ( empty( $lang ) && ! file_exists( $template_path ) ) {
 			$template_path = UM()->mail()->get_template_file( 'plugin', $template );
 		}
 
@@ -353,12 +395,18 @@ class UM_WPML implements UM_Multilingual {
 			$status = 'edit';
 		}
 
-		$link = add_query_arg( array( 'email' => $template, 'lang' => $code ) );
+		$link = add_query_arg(
+			array(
+				'email' => $template,
+				'lang'  => $code,
+			)
+		);
 
-		$icon_html = sprintf( '<a href="%1$s" title="%2$s" class="wpml_icon"><img src="%3$s" style="padding:1px;margin:2px;" border="0" width="16" height="16" /></a>',
-				esc_url( $link ),
-				esc_attr( $translation[$status]['text'] ),
-				esc_url( ICL_PLUGIN_URL . '/res/img/' . $translation[$status]['icon'] )
+		$icon_html = sprintf(
+			'<a href="%1$s" title="%2$s" class="wpml_icon"><img src="%3$s" style="padding:1px;margin:2px;" border="0" width="16" height="16" /></a>',
+			esc_url( $link ),
+			esc_attr( $translation[ $status ]['text'] ),
+			esc_url( ICL_PLUGIN_URL . '/res/img/' . $translation[ $status ]['icon'] )
 		);
 
 		return $icon_html;
@@ -370,6 +418,7 @@ class UM_WPML implements UM_Multilingual {
 	 * @since  2.1.6
 	 *
 	 * @global \SitePress $sitepress
+	 *
 	 * @return boolean
 	 */
 	public function is_active() {
@@ -388,8 +437,9 @@ class UM_WPML implements UM_Multilingual {
 	 *
 	 * @global \WP_Post   $post
 	 * @global \SitePress $sitepress
-	 * @param  boolean    $is_core_page
-	 * @param  string     $page
+	 *
+	 * @param  boolean $is_core_page Is core page.
+	 * @param  string  $page         Page key.
 	 * @return boolean
 	 */
 	public function is_core_page( $is_core_page, $page ) {
@@ -397,7 +447,7 @@ class UM_WPML implements UM_Multilingual {
 		global $sitepress;
 
 		if ( $this->is_active() ) {
-			if ( isset( UM()->config()->permalinks[$page] ) && UM()->config()->permalinks[$page] == wpml_object_id_filter( $post->ID, 'page', true, $sitepress->get_default_language() ) ) {
+			if ( isset( UM()->config()->permalinks[ $page ] ) && wpml_object_id_filter( $post->ID, 'page', true, $sitepress->get_default_language() ) === UM()->config()->permalinks[ $page ] ) {
 				$is_core_page = true;
 			}
 		}
@@ -410,16 +460,15 @@ class UM_WPML implements UM_Multilingual {
 	 *
 	 * @since  2.1.6
 	 *
-	 * @param  string  $url      Default page URL
-	 * @param  string  $slug     Core page slug
-	 * @param  string  $updated  Additional parameter 'updated' value
+	 * @param  string $url     Default page URL.
+	 * @param  string $slug    Core page slug.
+	 * @param  string $updated Additional parameter 'updated' value.
 	 * @return string
 	 */
 	public function localize_core_page_url( $url, $slug, $updated ) {
-
 		if ( $this->is_active() ) {
-			$page_id = UM()->config()->permalinks[$slug];
-			$url = $this->get_page_url_for_language( $page_id, icl_get_current_language() );
+			$page_id = UM()->config()->permalinks[ $slug ];
+			$url     = $this->get_page_url_for_language( $page_id, icl_get_current_language() );
 
 			if ( $updated ) {
 				$url = add_query_arg( 'updated', esc_attr( $updated ), $url );
@@ -435,24 +484,17 @@ class UM_WPML implements UM_Multilingual {
 	 * @since  2.1.6
 	 * @exaple change 'welcome_email_sub' to 'welcome_email_sub_de_DE'
 	 *
-	 * @param  string  $subject   Default subject
-	 * @param  string  $template  The email template slug
+	 * @param  string $subject  Default subject.
+	 * @param  string $template The email template slug.
 	 * @return string
 	 */
 	public function localize_email_subject( $subject, $template ) {
-
 		if ( $this->is_active() ) {
-
-			$lang = '';
 			$language_codes = $this->get_languages_codes();
-			if ( $language_codes['default'] != $language_codes['current'] ) {
-				$lang = '_' . $language_codes['current'];
-			}
-
-			$value_default = UM()->options()->get( $template . '_sub' );
-			$value = UM()->options()->get( $template . '_sub' . $lang );
-
-			$subject = !empty( $value ) ? $value : $value_default;
+			$lang           = $language_codes['default'] === $language_codes['current'] ? '' : '_' . $language_codes['current'];
+			$value_default  = UM()->options()->get( $template . '_sub' );
+			$value          = UM()->options()->get( $template . '_sub' . $lang );
+			$subject        = empty( $value ) ? $value_default : $value;
 		}
 
 		return $subject;
@@ -461,8 +503,8 @@ class UM_WPML implements UM_Multilingual {
 	/**
 	 * Get translated page URL.
 	 *
-	 * @param  string $url   Page URL or slug
-	 * @param  array  $args	Additional data
+	 * @param  string $url  Page URL or slug.
+	 * @param  array  $args Additional data.
 	 * @return string
 	 */
 	public function localize_page_url( $url, $args = array() ) {
@@ -470,7 +512,7 @@ class UM_WPML implements UM_Multilingual {
 		$page = get_page_by_path( trim( $url, "/ \n\r\t\v\0" ) );
 		if ( $page && is_a( $page, '\WP_Post' ) ) {
 			$language_codes = $this->get_languages_codes();
-			$url = $this->get_page_url_for_language( $page->ID, $language_codes['current'] );
+			$url            = $this->get_page_url_for_language( $page->ID, $language_codes['current'] );
 		}
 
 		return $url;
@@ -482,8 +524,9 @@ class UM_WPML implements UM_Multilingual {
 	 * @since  2.1.6
 	 *
 	 * @global \SitePress $sitepress
-	 * @param  string     $profile_url  Default profile URL
-	 * @param  integer    $page_id      The page ID
+	 *
+	 * @param  string  $profile_url Default profile URL.
+	 * @param  integer $page_id     The page ID.
 	 * @return string
 	 */
 	public function localize_profile_permalink( $profile_url, $page_id ) {
@@ -492,22 +535,22 @@ class UM_WPML implements UM_Multilingual {
 		if ( $this->is_active() && function_exists( 'icl_object_id' ) ) {
 
 			static $language_code = null;
-			if( empty( $language_code ) && isset( $_SERVER['HTTP_REFERER'] ) ){
-				$referer = esc_url( $_SERVER['HTTP_REFERER'] );
-				if( strstr( $referer, home_url() ) ){
+			if ( empty( $language_code ) && isset( $_SERVER['HTTP_REFERER'] ) ) {
+				$referer = esc_url( wp_unslash( $_SERVER['HTTP_REFERER'] ) );
+				if ( strstr( $referer, home_url() ) ) {
 					$language_code = $sitepress->get_language_from_url( $referer );
 					$sitepress->switch_lang( $language_code );
 				}
 			}
-			if( empty( $language_code ) ) {
+			if ( empty( $language_code ) ) {
 				$language_code = ICL_LANGUAGE_CODE;
 			}
 			$lang_post_id = icl_object_id( $page_id, 'page', true, $language_code );
 
-			if ( $lang_post_id != 0 ) {
+			if ( ! empty( $lang_post_id ) ) {
 				$profile_url = get_permalink( $lang_post_id );
 			} else {
-				// No page found, it's most likely the homepage
+				// No page found, it's most likely the homepage.
 				$profile_url = $sitepress->language_url( $language_code );
 			}
 		}
@@ -520,29 +563,27 @@ class UM_WPML implements UM_Multilingual {
 	 *
 	 * @since  2.1.6
 	 *
-	 * @param  string  $template		   The email template path
-	 * @param  string  $template_name  The email template slug
+	 * @param  string $template      The email template path.
+	 * @param  string $template_name The email template slug.
 	 * @return string
 	 */
 	public function locate_email_template( $template, $template_name ) {
-
 		if ( $this->is_active() ) {
-			//WPML compatibility and multilingual email templates
-			$lang = '';
+			// WPML compatibility and multilingual email templates.
 			$language_codes = $this->get_languages_codes();
-			if ( $language_codes['default'] != $language_codes['current'] ) {
-				$lang = $language_codes['current'] . '/';
-			}
+			$lang           = $language_codes['default'] === $language_codes['current'] ? '' : $language_codes['current'] . '/';
 
-			// check if there is template at theme folder
-			$template = locate_template( array(
+			// check if there is template at theme folder.
+			$template = locate_template(
+				array(
 					trailingslashit( 'ultimate-member/email' ) . $lang . $template_name . '.php',
-					trailingslashit( 'ultimate-member/email' ) . $template_name . '.php'
-					) );
+					trailingslashit( 'ultimate-member/email' ) . $template_name . '.php',
+				)
+			);
 
-			//if there isn't template at theme folder get template file from plugin dir
-			if ( !$template ) {
-				$path = !empty( UM()->mail()->path_by_slug[$template_name] ) ? UM()->mail()->path_by_slug[$template_name] : um_path . 'templates/email';
+			// if there isn't template at theme folder get template file from plugin dir.
+			if ( ! $template ) {
+				$path     = empty( UM()->mail()->path_by_slug[ $template_name ] ) ? um_path . 'templates/email' : UM()->mail()->path_by_slug[ $template_name ];
 				$template = trailingslashit( $path ) . $template_name . '.php';
 			}
 		}
@@ -557,21 +598,23 @@ class UM_WPML implements UM_Multilingual {
 	 * @hook um_pre_args_setup
 	 *
 	 * @global \SitePress $sitepress
-	 * @param  array      $args
+	 *
+	 * @param  array $args Arguments.
 	 * @return array
 	 */
 	public function shortcode_pre_args_setup( $args ) {
 		global $sitepress;
 
 		if ( $this->is_active() && isset( $args['form_id'] ) ) {
-			$original_form_id = $sitepress->get_object_id( $args['form_id'], 'post', true, $sitepress->get_default_language() );
+			$form_id          = absint( $args['form_id'] );
+			$original_form_id = $sitepress->get_object_id( $form_id, 'post', true, $sitepress->get_default_language() );
 
-			if ( $original_form_id != $args['form_id'] ) {
+			if ( $original_form_id && $original_form_id !== $form_id ) {
 				$original_post_data = UM()->query()->post_data( $original_form_id );
 
 				foreach ( $original_post_data as $key => $value ) {
-					if ( ! isset( $args[$key] ) ) {
-						$args[$key] = $value;
+					if ( ! isset( $args[ $key ] ) ) {
+						$args[ $key ] = $value;
 					}
 				}
 			}

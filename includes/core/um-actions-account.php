@@ -25,10 +25,10 @@ function um_submit_account_errors_hook( $args ) {
 		case 'delete': {
 			// delete account
 			if ( UM()->account()->current_password_is_required( 'delete' ) ) {
-				if ( strlen( trim( sanitize_text_field( $args['single_user_password'] ) ) ) === 0 ) {
+				if ( strlen( trim( $args['single_user_password'] ) ) === 0 ) {
 					UM()->form()->add_error( 'single_user_password', __( 'You must enter your password', 'ultimate-member' ) );
 				} else {
-					if ( ! wp_check_password( sanitize_text_field( $args['single_user_password'] ), $current_user->data->user_pass, $current_user->data->ID ) ) {
+					if ( ! wp_check_password( trim( $args['single_user_password'] ), $current_user->data->user_pass, $current_user->data->ID ) ) {
 						UM()->form()->add_error( 'single_user_password', __( 'This is not your password', 'ultimate-member' ) );
 					}
 				}
@@ -45,11 +45,11 @@ function um_submit_account_errors_hook( $args ) {
 			UM()->account()->current_tab = 'password';
 
 			if ( isset( $args['user_password'] ) ) {
-				$args['user_password'] = sanitize_text_field( $args['user_password'] );
+				$args['user_password'] = trim( $args['user_password'] );
 			}
 
 			if ( isset( $args['confirm_user_password'] ) ) {
-				$args['confirm_user_password'] = sanitize_text_field( $args['confirm_user_password'] );
+				$args['confirm_user_password'] = trim( $args['confirm_user_password'] );
 			}
 
 			if ( empty( $args['user_password'] ) ) {
@@ -59,6 +59,12 @@ function um_submit_account_errors_hook( $args ) {
 
 			if ( empty( $args['confirm_user_password'] ) ) {
 				UM()->form()->add_error( 'user_password', __( 'Password confirmation is required', 'ultimate-member' ) );
+				return;
+			}
+
+			// Check for "\" in password.
+			if ( false !== strpos( wp_unslash( $args['user_password'] ), '\\' ) ) {
+				UM()->form()->add_error( 'user_password', __( 'Passwords may not contain the character "\\".', 'ultimate-member' ) );
 				return;
 			}
 
@@ -81,18 +87,33 @@ function um_submit_account_errors_hook( $args ) {
 					return;
 				}
 
-				if ( UM()->options()->get( 'account_require_strongpass' ) ) {
+				if ( UM()->options()->get( 'require_strongpass' ) ) {
 					$min_length = UM()->options()->get( 'password_min_chars' );
 					$min_length = ! empty( $min_length ) ? $min_length : 8;
 					$max_length = UM()->options()->get( 'password_max_chars' );
 					$max_length = ! empty( $max_length ) ? $max_length : 30;
 
-					if ( mb_strlen( $args['user_password'] ) < $min_length ) {
+					if ( is_user_logged_in() ) {
+						um_fetch_user( get_current_user_id() );
+					}
+
+					$user_login = um_user( 'user_login' );
+					$user_email = um_user( 'user_email' );
+
+					if ( mb_strlen( wp_unslash( $args['user_password'] ) ) < $min_length ) {
 						UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain at least %d characters', 'ultimate-member' ), $min_length ) );
 					}
 
-					if ( mb_strlen( $args['user_password'] ) > $max_length ) {
+					if ( mb_strlen( wp_unslash( $args['user_password'] ) ) > $max_length ) {
 						UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain less than %d characters', 'ultimate-member' ), $max_length ) );
+					}
+
+					if ( strpos( strtolower( $user_login ), strtolower( $args['user_password'] )  ) > -1 ) {
+						UM()->form()->add_error( 'user_password', __( 'Your password cannot contain the part of your username', 'ultimate-member' ) );
+					}
+
+					if ( strpos( strtolower( $user_email ), strtolower( $args['user_password'] )  ) > -1 ) {
+						UM()->form()->add_error( 'user_password', __( 'Your password cannot contain the part of your email address', 'ultimate-member' ) );
 					}
 
 					if ( ! UM()->validation()->strong_pass( $args['user_password'] ) ) {
@@ -122,7 +143,7 @@ function um_submit_account_errors_hook( $args ) {
 				$args['user_email'] = sanitize_email( $args['user_email'] );
 			}
 			if ( isset( $args['single_user_password'] ) ) {
-				$args['single_user_password'] = sanitize_text_field( $args['single_user_password'] );
+				$args['single_user_password'] = trim( $args['single_user_password'] );
 			}
 
 			if ( isset( $args['first_name'] ) && ( strlen( trim( $args['first_name'] ) ) === 0 && $account_name_require ) ) {
@@ -144,13 +165,13 @@ function um_submit_account_errors_hook( $args ) {
 				}
 
 				if ( email_exists( $args['user_email'] ) && email_exists( $args['user_email'] ) !== get_current_user_id() ) {
-					UM()->form()->add_error( 'user_email', __( 'Email already linked to another account', 'ultimate-member' ) );
+					UM()->form()->add_error( 'user_email', __( 'Please provide a valid e-mail', 'ultimate-member' ) );
 				}
 			}
 
 			// check account password
 			if ( UM()->account()->current_password_is_required( 'general' ) ) {
-				if ( strlen( trim( $args['single_user_password'] ) ) === 0 ) {
+				if ( strlen( $args['single_user_password'] ) === 0 ) {
 					UM()->form()->add_error( 'single_user_password', __( 'You must enter your password', 'ultimate-member' ) );
 				} else {
 					if ( ! wp_check_password( $args['single_user_password'], $current_user->data->user_pass, $current_user->data->ID ) ) {
@@ -203,20 +224,20 @@ function um_submit_account_details( $args ) {
 
 	//change password account's tab
 	if ( 'password' === $current_tab && $args['user_password'] && $args['confirm_user_password'] ) {
-
-		$changes['user_pass'] = sanitize_text_field( $args['user_password'] );
-
-		$args['user_id'] = $user_id;
+		$changes['user_pass'] = trim( $args['user_password'] );
+		$args['user_id']      = get_current_user_id();
 
 		UM()->user()->password_changed();
 
 		add_filter( 'send_password_change_email', '__return_false' );
 
 		//clear all sessions with old passwords
-		$user = WP_Session_Tokens::get_instance( $user_id );
+		$user = WP_Session_Tokens::get_instance( $args['user_id'] );
 		$user->destroy_all();
 
-		wp_set_password( $changes['user_pass'], $user_id );
+		wp_set_password( $changes['user_pass'], $args['user_id'] );
+
+		do_action( 'um_before_signon_after_account_changes', $args );
 
 		wp_signon(
 			array(
@@ -678,7 +699,7 @@ function um_after_account_privacy( $args ) {
 		ARRAY_A );
 
 		if ( ! empty( $pending ) && $pending['post_status'] == 'request-pending' ) {
-			echo '<p>' . esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your export request.', 'ultimate-member' ) . '</p>';
+			echo '<p>' . esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your deletion request.', 'ultimate-member' ) . '</p>';
 		} elseif ( ! empty( $pending ) && $pending['post_status'] == 'request-confirmed' ) {
 			echo '<p>' . esc_html__( 'The administrator has not yet approved deleting your data. Please expect an email with a link to your data.', 'ultimate-member' ) . '</p>';
 		} else {
@@ -756,7 +777,11 @@ function um_request_user_data() {
 		$answer = esc_html( $request_id->get_error_message() );
 	} else {
 		wp_send_user_request( $request_id );
-		$answer = esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your export request.', 'ultimate-member' );
+		if ( 'um-export-data' === $request_action ) {
+			$answer = esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your export request.', 'ultimate-member' );
+		} elseif ( 'um-erase-data' === $request_action ) {
+			$answer = esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your deletion request.', 'ultimate-member' );
+		}
 	}
 
 	wp_send_json_success( array( 'answer' => $answer ) );

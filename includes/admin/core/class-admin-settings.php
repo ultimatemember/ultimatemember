@@ -234,6 +234,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$to   = absint( $_POST['page'] ) * $per_page;
 
 				wp_send_json_success( array( 'message' => sprintf( __( 'Metadata from %1$s to %2$s was upgraded successfully...', 'ultimate-member' ), $from, $to ) ) );
+			} else {
+				do_action( 'um_same_page_update_ajax_action', $cb_func );
 			}
 		}
 
@@ -673,7 +675,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'use_um_gravatar_default_image'         => array(
 						'sanitize' => 'bool',
 					),
-					'reset_require_strongpass'              => array(
+					'require_strongpass'                    => array(
 						'sanitize' => 'bool',
 					),
 					'password_min_chars'                    => array(
@@ -721,9 +723,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'account_general_password'              => array(
 						'sanitize' => 'bool',
 					),
-					'account_require_strongpass'            => array(
-						'sanitize' => 'bool',
-					),
 					'account_hide_in_directory'             => array(
 						'sanitize' => 'bool',
 					),
@@ -760,11 +759,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'reset_password_limit_number'           => array(
 						'sanitize' => 'absint',
 					),
+					'change_password_request_limit'         => array(
+						'sanitize' => 'bool',
+					),
 					'blocked_emails'                        => array(
 						'sanitize' => 'textarea',
 					),
 					'blocked_words'                         => array(
 						'sanitize' => 'textarea',
+					),
+					'allowed_choice_callbacks'              => array(
+						'sanitize' => 'textarea',
+					),
+					'allow_url_redirect_confirm'            => array(
+						'sanitize' => 'bool',
 					),
 					'admin_email'                           => array(
 						'sanitize' => 'text',
@@ -1049,10 +1057,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'conditional' => array( 'use_um_gravatar_default_builtin_image', '=', 'default' ),
 									),
 									array(
-										'id'      => 'reset_require_strongpass',
+										'id'      => 'require_strongpass',
 										'type'    => 'checkbox',
-										'label'   => __( 'Require a strong password? (when user resets password only)', 'ultimate-member' ),
-										'tooltip' => __( 'Enable or disable a strong password rules on password reset and change procedure', 'ultimate-member' ),
+										'label'   => __( 'Require a strong password?', 'ultimate-member' ),
+										'tooltip' => __( 'Enable or disable a strong password rules common for all Ultimate Member forms.', 'ultimate-member' ),
 									),
 									array(
 										'id'      => 'password_min_chars',
@@ -1164,12 +1172,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'type'    => 'checkbox',
 										'label'   => __( 'Password is required?', 'ultimate-member' ),
 										'tooltip' => __( 'Password is required to save account data.', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'account_require_strongpass',
-										'type'    => 'checkbox',
-										'label'   => __( 'Require a strong password?', 'ultimate-member' ),
-										'tooltip' => __( 'Enable or disable a strong password rules on account page / change password tab', 'ultimate-member' ),
 									),
 									array(
 										'id'          => 'account_hide_in_directory',
@@ -1287,16 +1289,34 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'size'        => 'small',
 									),
 									array(
+										'id'      => 'change_password_request_limit',
+										'type'    => 'checkbox',
+										'label'   => __( 'Change Password request limit', 'ultimate-member' ),
+										'tooltip' => __( 'This option adds rate limit when submitting the change password form in the Account page. Users are only allowed to submit 1 request per 30 minutes to prevent from any brute-force attacks or password guessing with the form.', 'ultimate-member' ),
+									),
+									array(
 										'id'      => 'blocked_emails',
 										'type'    => 'textarea',
-										'label'   => __( 'Blocked Email Addresses', 'ultimate-member' ),
+										'label'   => __( 'Blocked Email Addresses (Enter one email per line)', 'ultimate-member' ),
 										'tooltip' => __( 'This will block the specified e-mail addresses from being able to sign up or sign in to your site. To block an entire domain, use something like *@domain.com', 'ultimate-member' ),
 									),
 									array(
 										'id'      => 'blocked_words',
 										'type'    => 'textarea',
-										'label'   => __( 'Blacklist Words', 'ultimate-member' ),
+										'label'   => __( 'Blacklist Words (Enter one word per line)', 'ultimate-member' ),
 										'tooltip' => __( 'This option lets you specify blacklist of words to prevent anyone from signing up with such a word as their username', 'ultimate-member' ),
+									),
+									array(
+										'id'      => 'allowed_choice_callbacks',
+										'type'    => 'textarea',
+										'label'   => __( 'Allowed Choice Callbacks (Enter one PHP function per line)', 'ultimate-member' ),
+										'tooltip' => __( 'This option lets you specify the choice callback functions to prevent anyone from using 3rd-party functions that may put your site at risk.', 'ultimate-member' ),
+									),
+									array(
+										'id'      => 'allow_url_redirect_confirm',
+										'type'    => 'checkbox',
+										'label'   => __( 'Allow external link redirect confirm', 'ultimate-member' ),
+										'tooltip' => __( 'Using JS.confirm alert when you go to an external link.', 'ultimate-member' ),
 									),
 								),
 							),
@@ -1819,39 +1839,32 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 */
 		public function sorting_licenses_options( $settings ) {
 			//sorting  licenses
-			if ( empty( $settings['licenses']['fields'] ) ) {
-				return $settings;
+			if ( ! empty( $settings['licenses']['fields'] ) ) {
+				$licenses = $settings['licenses']['fields'];
+				@uasort( $licenses, function( $a, $b ) {
+					return strnatcasecmp( $a['label'], $b['label'] );
+				} );
+				$settings['licenses']['fields'] = $licenses;
 			}
 
-			$licenses = $settings['licenses']['fields'];
-			@uasort( $licenses, function( $a, $b ) {
-				return strnatcasecmp( $a['label'], $b['label'] );
-			} );
-			$settings['licenses']['fields'] = $licenses;
+			//sorting extensions by the title
+			if ( ! empty( $settings['extensions']['sections'] ) ) {
+				$extensions = $settings['extensions']['sections'];
 
-			//sorting extensions
-			if ( empty( $settings['extensions']['sections'] ) ) {
-				return $settings;
-			}
-
-			$extensions = $settings['extensions']['sections'];
-			@uasort( $extensions, function( $a, $b ) {
-				return strnatcasecmp( $a['title'], $b['title'] );
-			} );
-
-			$keys = array_keys( $extensions );
-			if ( $keys[0] !== '' ) {
-				$new_key = strtolower( str_replace( ' ', '_', $extensions['']['title'] ) );
-				$temp = $extensions[''];
-				$extensions[ $new_key ] = $temp;
-				$extensions[''] = $extensions[ $keys[0] ];
-				unset( $extensions[ $keys[0] ] );
 				@uasort( $extensions, function( $a, $b ) {
 					return strnatcasecmp( $a['title'], $b['title'] );
 				} );
-			}
 
-			$settings['extensions']['sections'] = $extensions;
+				$keys = array_keys( $extensions );
+				$temp = array(
+					'' => $extensions[ $keys[0] ],
+				);
+
+				unset( $extensions[ $keys[0] ] );
+				$extensions = $temp + $extensions;
+
+				$settings['extensions']['sections'] = $extensions;
+			}
 
 			return $settings;
 		}
@@ -2236,7 +2249,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				//redirect after save settings
 				$arg = array(
-					'page' => 'um_options',
+					'page'   => 'um_options',
+					'update' => 'settings_updated',
 				);
 
 				if ( ! empty( $_GET['tab'] ) ) {
@@ -2958,6 +2972,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Activate', 'ultimate-member' ) ?>" />
 									<?php } else { ?>
 										<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Re-Activate', 'ultimate-member' ) ?>" />
+										<input type="button" class="button um_license_deactivate" id="<?php echo esc_attr( $field_data['id'] ) ?>_deactivate" value="<?php esc_attr_e( 'Clear License',  'ultimate-member' ) ?>"/>
 									<?php }
 
 									if ( ! empty( $messages ) ) {
@@ -3166,13 +3181,12 @@ do_action( "um_install_info_after_page_config" ); ?>
 Default New User Role: 		<?php  echo UM()->options()->get('register_role') . "\n"; ?>
 Profile Permalink Base:		<?php  echo UM()->options()->get('permalink_base') . "\n"; ?>
 User Display Name:			<?php  echo UM()->options()->get('display_name') . "\n"; ?>
-Force Name to Uppercase:		<?php echo $this->info_value( UM()->options()->get('force_display_name_capitlized'), 'yesno', true ); ?>
 Redirect author to profile: 		<?php echo $this->info_value( UM()->options()->get('author_redirect'), 'yesno', true ); ?>
 Enable Members Directory:	<?php echo $this->info_value( UM()->options()->get('members_page'), 'yesno', true ); ?>
 Use Gravatars: 				<?php echo $this->info_value( UM()->options()->get('use_gravatars'), 'yesno', true ); ?>
 <?php if( UM()->options()->get('use_gravatars') ): ?>Gravatar builtin image:		<?php  echo UM()->options()->get('use_um_gravatar_default_builtin_image') . "\n"; ?>
 	UM Avatar as blank Gravatar: 	<?php echo $this->info_value( UM()->options()->get('use_um_gravatar_default_image'), 'yesno', true ); ?><?php endif; ?>
-Require a strong password: 	<?php echo $this->info_value( UM()->options()->get('reset_require_strongpass'), 'onoff', true ); ?>
+Require a strong password: 	<?php echo $this->info_value( UM()->options()->get('require_strongpass'), 'onoff', true ); ?>
 
 
 --- UM Access Configuration ---
@@ -3196,9 +3210,6 @@ Enable the Reset Password Limit:			<?php echo $this->info_value( UM()->options()
 <?php if( UM()->options()->get('enable_reset_password_limit') ) { ?>
 Reset Password Limit: <?php echo UM()->options()->get('reset_password_limit_number') ?>
 Disable Reset Password Limit for Admins: <?php echo $this->info_value( UM()->options()->get('disable_admin_reset_password_limit'), 'yesno', true ) ?>
-<?php } ?>
-<?php $wpadmin_allow_ips = UM()->options()->get( 'wpadmin_allow_ips' ); if( ! empty( $wpadmin_allow_ips ) ) { ?>
-Whitelisted Backend IPs: 					<?php echo count( explode("\n",trim(UM()->options()->get('wpadmin_allow_ips') ) ) )."\n"; ?>
 <?php } ?>
 <?php $blocked_ips = UM()->options()->get('blocked_ips'); if( ! empty( $blocked_ips ) ){ ?>
 Blocked IP Addresses: 					<?php echo  count( explode("\n",UM()->options()->get('blocked_ips') ) )."\n"; ?>
@@ -3446,7 +3457,6 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 		 * @return array
 		 */
 		function save_email_templates( $settings ) {
-
 			if ( empty( $settings['um_email_template'] ) ) {
 				return $settings;
 			}
@@ -3455,16 +3465,17 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 			$content = wp_kses_post( stripslashes( $settings[ $template ] ) );
 
 			$theme_template_path = UM()->mail()->get_template_file( 'theme', $template );
-
 			if ( ! file_exists( $theme_template_path ) ) {
 				UM()->mail()->copy_email_template( $template );
 			}
 
-			$fp = fopen( $theme_template_path, "w" );
-			$result = fputs( $fp, $content );
-			fclose( $fp );
+			if ( file_exists( $theme_template_path ) ) {
+				$fp = fopen( $theme_template_path, "w" );
+				$result = fputs( $fp, $content );
+				fclose( $fp );
+			}
 
-			if ( $result !== false ) {
+			if ( isset( $result ) && $result !== false ) {
 				unset( $settings['um_email_template'] );
 				unset( $settings[ $template ] );
 			}

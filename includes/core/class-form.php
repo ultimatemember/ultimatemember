@@ -114,36 +114,83 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			$arr_options['status'] = 'success';
 			$arr_options['post']   = $_POST;
 
-			UM()->fields()->set_id    = absint( $_POST['form_id'] );
+			// Callback validation
+			if ( empty( $_POST['child_callback'] ) ) {
+				$arr_options['status']  = 'error';
+				$arr_options['message'] = __( 'Wrong callback.', 'ultimate-member' );
+
+				wp_send_json( $arr_options );
+			}
+
+			$ajax_source_func = sanitize_text_field( $_POST['child_callback'] );
+
+			if ( ! function_exists( $ajax_source_func ) ) {
+				$arr_options['status']  = 'error';
+				$arr_options['message'] = __( 'Wrong callback.', 'ultimate-member' );
+
+				wp_send_json( $arr_options );
+			}
+
+			$allowed_callbacks = UM()->options()->get( 'allowed_choice_callbacks' );
+
+			if ( empty( $allowed_callbacks ) ) {
+				$arr_options['status']  = 'error';
+				$arr_options['message'] = __( 'This is not possible for security reasons.', 'ultimate-member' );
+				wp_send_json( $arr_options );
+			}
+
+			$allowed_callbacks = array_map( 'rtrim', explode( "\n", wp_unslash( $allowed_callbacks ) ) );
+
+			if ( ! in_array( $ajax_source_func, $allowed_callbacks, true ) ) {
+				$arr_options['status']  = 'error';
+				$arr_options['message'] = __( 'This is not possible for security reasons.', 'ultimate-member' );
+
+				wp_send_json( $arr_options );
+			}
+
+			if ( UM()->fields()->is_source_blacklisted( $ajax_source_func ) ) {
+				$arr_options['status']  = 'error';
+				$arr_options['message'] = __( 'This is not possible for security reasons.', 'ultimate-member' );
+
+				wp_send_json( $arr_options );
+			}
+
+			if ( isset( $_POST['form_id'] ) ) {
+				UM()->fields()->set_id = absint( $_POST['form_id'] );
+			}
 			UM()->fields()->set_mode  = 'profile';
 			$form_fields              = UM()->fields()->get_fields();
 			$arr_options['fields']    = $form_fields;
 
 			if ( isset( $arr_options['post']['members_directory'] ) && 'yes' === $arr_options['post']['members_directory'] ) {
-				$ajax_source_func = $_POST['child_callback'];
-				if ( function_exists( $ajax_source_func ) ) {
-					$arr_options['items'] = call_user_func( $ajax_source_func, $arr_options['field']['parent_dropdown_relationship'] );
+				global $wpdb;
 
-					global $wpdb;
+				$values_array = $wpdb->get_col(
+					$wpdb->prepare(
+						"SELECT DISTINCT meta_value
+						FROM $wpdb->usermeta
+						WHERE meta_key = %s AND
+							  meta_value != ''",
+						$arr_options['post']['child_name']
+					)
+				);
 
-					$values_array = $wpdb->get_col(
-						$wpdb->prepare(
-							"SELECT DISTINCT meta_value 
-							FROM $wpdb->usermeta 
-							WHERE meta_key = %s AND 
-								  meta_value != ''",
-							$arr_options['post']['child_name']
-						)
-					);
+				if ( ! empty( $values_array ) ) {
+					$parent_dropdown = isset( $arr_options['field']['parent_dropdown_relationship'] ) ? $arr_options['field']['parent_dropdown_relationship'] : '';
+					$arr_options['items'] = call_user_func( $ajax_source_func, $parent_dropdown );
 
-					if ( ! empty( $values_array ) ) {
-						$arr_options['items'] = array_intersect( $arr_options['items'], $values_array );
+					if ( array_keys( $arr_options['items'] ) !== range( 0, count( $arr_options['items'] ) - 1 ) ) {
+						// array with dropdown items is associative
+						$arr_options['items'] = array_intersect_key( array_map( 'trim', $arr_options['items'] ), array_flip( $values_array ) );
 					} else {
-						$arr_options['items'] = array();
+						// array with dropdown items has sequential numeric keys, starting from 0 and there are intersected values with $values_array
+						$arr_options['items'] = array_intersect( $arr_options['items'], $values_array );
 					}
-
-					wp_send_json( $arr_options );
+				} else {
+					$arr_options['items'] = array();
 				}
+
+				wp_send_json( $arr_options );
 			} else {
 				/**
 				 * UM hook
@@ -175,9 +222,6 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				}
 
 				if ( ! empty( $_POST['child_callback'] ) && isset( $form_fields[ $_POST['child_name'] ] ) ) {
-
-					$ajax_source_func = $_POST['child_callback'];
-
 					// If the requested callback function is added in the form or added in the field option, execute it with call_user_func.
 					if ( isset( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
 						! empty( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
@@ -185,9 +229,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 						$arr_options['field'] = $form_fields[ $_POST['child_name'] ];
 
-						if ( function_exists( $ajax_source_func ) ) {
-							$arr_options['items'] = call_user_func( $ajax_source_func, $arr_options['field']['parent_dropdown_relationship'] );
-						}
+						$arr_options['items'] = call_user_func( $ajax_source_func, $arr_options['field']['parent_dropdown_relationship'] );
 					} else {
 						$arr_options['status']  = 'error';
 						$arr_options['message'] = __( 'This is not possible for security reasons.', 'ultimate-member' );
@@ -403,7 +445,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				 * }
 				 * ?>
 				 */
-				$this->post_form = apply_filters( 'um_submit_post_form', $_POST );
+				$this->post_form = apply_filters( 'um_submit_post_form', wp_unslash( $_POST ) );
 
 				if ( isset( $this->post_form[ UM()->honeypot ] ) && '' !== $this->post_form[ UM()->honeypot ] ) {
 					wp_die( esc_html__( 'Hello, spam bot!', 'ultimate-member' ) );
@@ -603,7 +645,24 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 											break;
 										case 'textarea':
 											if ( ! empty( $field['html'] ) || ( UM()->profile()->get_show_bio_key( $form ) === $k && UM()->options()->get( 'profile_show_html_bio' ) ) ) {
-												$form[ $k ] = wp_kses_post( $form[ $k ] );
+												$allowed_html = UM()->get_allowed_html( 'templates' );
+												if ( empty( $allowed_html['iframe'] ) ) {
+													$allowed_html['iframe'] = array(
+														'allow'           => true,
+														'frameborder'     => true,
+														'loading'         => true,
+														'name'            => true,
+														'referrerpolicy'  => true,
+														'sandbox'         => true,
+														'src'             => true,
+														'srcdoc'          => true,
+														'title'           => true,
+														'width'           => true,
+														'height'          => true,
+														'allowfullscreen' => true,
+													);
+												}
+												$form[ $k ] = wp_kses( $form[ $k ], $allowed_html );
 											} else {
 												$form[ $k ] = sanitize_textarea_field( $form[ $k ] );
 											}
@@ -611,23 +670,51 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 										case 'url':
 											$f = UM()->builtin()->get_a_field( $k );
 
-											if ( array_key_exists( 'match', $f ) && array_key_exists( 'advanced', $f ) && 'social' === $f['advanced'] ) {
+											if ( is_array( $f ) && array_key_exists( 'match', $f ) && array_key_exists( 'advanced', $f ) && 'social' === $f['advanced'] ) {
 												$v = sanitize_text_field( $form[ $k ] );
 
 												// Make a proper social link
-												if ( ! empty( $v ) && ! strstr( $v, $f['match'] ) ) {
-													$domain = trim( strtr( $f['match'], array(
-														'https://' => '',
-														'http://'  => '',
-													) ), ' /' );
+												if ( ! empty( $v ) ) {
+													$replace_match = is_array( $f['match'] ) ? $f['match'][0] : $f['match'];
 
-													if ( ! strstr( $v, $domain ) ) {
-														$v = $f['match'] . $v;
-													} else {
-														$v = 'https://' . trim( strtr( $v, array(
-															'https://' => '',
-															'http://'  => '',
-														) ), ' /' );
+													$need_replace = false;
+													if ( is_array( $f['match'] ) ) {
+														$need_replace = true;
+														foreach ( $f['match'] as $arr_match ) {
+															if ( strstr( $v, $arr_match ) ) {
+																$need_replace = false;
+															}
+														}
+													}
+
+													if ( ! is_array( $f['match'] ) || $need_replace ) {
+														if ( ! strstr( $v, $replace_match ) ) {
+															$domain = trim(
+																strtr(
+																	$replace_match,
+																	array(
+																		'https://' => '',
+																		'http://'  => '',
+																	)
+																),
+																' /'
+															);
+
+															if ( ! strstr( $v, $domain ) ) {
+																$v = $replace_match . $v;
+															} else {
+																$v = 'https://' . trim(
+																	strtr(
+																		$v,
+																		array(
+																			'https://' => '',
+																			'http://'  => '',
+																		)
+																	),
+																	' /'
+																	);
+															}
+														}
 													}
 												}
 
@@ -636,9 +723,14 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 												$form[ $k ] = esc_url_raw( $form[ $k ] );
 											}
 											break;
+										case 'password':
+											$form[ $k ] = trim( $form[ $k ] );
+											if ( array_key_exists( 'confirm_' . $k, $form ) ) {
+												$form[ 'confirm_' . $k ] = trim( $form[ 'confirm_' . $k ] );
+											}
+											break;
 										case 'text':
 										case 'select':
-										case 'password':
 										case 'image':
 										case 'file':
 										case 'date':
@@ -653,7 +745,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 										case 'multiselect':
 										case 'radio':
 										case 'checkbox':
-											$form[ $k ] = array_map( 'sanitize_text_field', $form[ $k ] );
+											$form[ $k ] = is_array( $form[ $k ] ) ? array_map( 'sanitize_text_field', $form[ $k ] ) : sanitize_text_field( $form[ $k ] );
 											break;
 									}
 								}

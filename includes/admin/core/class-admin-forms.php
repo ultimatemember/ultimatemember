@@ -113,8 +113,22 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$data['value'] = wp_unslash( $data['value'] );
 
 				/*for multi_text*/
-				if ( ! is_array( $data['value'] ) && $data['type'] != 'wp_editor' ) {
+				if ( ! is_array( $data['value'] ) && ! in_array( $data['type'], array('info_text','wp_editor' ) ) ) {
 					$data['value'] = esc_attr( $data['value'] );
+				}
+
+				if( in_array( $data['type'], array('info_text') ) ){
+					$arr_kses = array(
+						'a' => array(
+							'href' => array(),
+							'title' => array(),
+							'target' => array(),
+						),
+						'br' => array(),
+						'em' => array(),
+						'strong' => array(),
+					);
+					$data['value'] = wp_kses( $data['value'], $arr_kses );
 				}
 			}
 
@@ -543,6 +557,69 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$html .= '</span></span>';
 
 			UM()->metabox()->init_icon = true;
+
+			return $html;
+		}
+
+
+		/**
+		 * @param $field_data
+		 *
+		 * @return bool|string
+		 */
+		function render_users_dropdown( $field_data ) {
+			if ( empty( $field_data['id'] ) ) {
+				return false;
+			}
+
+			$multiple = ! empty( $field_data['multi'] ) ? 'multiple' : '';
+
+			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
+			$id_attr = ' id="' . esc_attr( $id ) . '" ';
+
+			$class = ! empty( $field_data['class'] ) ? $field_data['class'] . ' ' : ' ';
+			$class .= ! empty( $field_data['size'] ) ? 'um-' . $field_data['size'] . '-field' : 'um-long-field';
+			$class_attr = ' class="um-forms-field um-user-select-field' . esc_attr( $class ) . '" ';
+
+			$data = array(
+				'field_id' => $field_data['id'],
+			);
+
+			$data_attr = '';
+			foreach ( $data as $key => $value ) {
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
+			}
+
+			$name = $field_data['id'];
+			$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
+			$hidden_name_attr = ' name="' . $name . '" ';
+			$name = $name . ( ! empty( $field_data['multi'] ) ? '[]' : '' );
+			$name_attr = ' name="' . $name . '" ';
+
+			$value = $this->get_field_value( $field_data );
+
+			$users = array();
+			if ( ! empty( $value ) ) {
+				$users = get_users(
+					array(
+						'include' => $value,
+						'fields'  => array( 'ID', 'user_login' ),
+					)
+				);
+			}
+
+			$options = '';
+			if ( ! empty( $users ) ) {
+				foreach ( $users as $user ) {
+					$options .= '<option value="' . esc_attr( $user->ID ) . '" selected>' . esc_html( $user->user_login . ' (#' . $user->ID . ')' ) . '</option>';
+				}
+			}
+
+			$hidden = '';
+			if ( ! empty( $multiple ) ) {
+				$hidden = "<input type=\"hidden\" $hidden_name_attr value=\"\" />";
+			}
+			$html = "$hidden<select $multiple $id_attr $name_attr $class_attr $data_attr data-placeholder=\"" . esc_attr__( 'Select Users', 'ultimate-member' ) . "\" placeholder=\"" . esc_attr__( 'Select Users', 'ultimate-member' ) . "\"><option>" . esc_html__( 'Select Users', 'ultimate-member' ) . "</option>$options</select>";
 
 			return $html;
 		}

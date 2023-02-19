@@ -446,7 +446,16 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 			$blog_id = get_current_blog_id();
 
-			$directory_id = $this->get_directory_by_hash( $_POST['directory_id'] );
+			if ( empty( $_POST['directory_id'] ) ) {
+				wp_send_json_error( __( 'Wrong member directory data', 'ultimate-member' ) );
+			}
+
+			$directory_id = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
+
+			if ( empty( $directory_id ) ) {
+				wp_send_json_error( __( 'Wrong member directory data', 'ultimate-member' ) );
+			}
+
 			$directory_data = UM()->query()->post_data( $directory_id );
 
 			//predefined result for user without capabilities to see other members
@@ -663,6 +672,25 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				}
 			}
 
+			$numeric_sorting_keys = array();
+
+			if ( ! empty( UM()->builtin()->saved_fields ) ) {
+				foreach ( UM()->builtin()->saved_fields as $key => $data ) {
+					if ( $key == '_um_last_login' ) {
+						continue;
+					}
+
+					if ( isset( $data['type'] ) && 'number' === $data['type'] ) {
+						if ( array_key_exists( $key . '_desc', $this->sort_fields ) ) {
+							$numeric_sorting_keys[] = $key . '_desc';
+						}
+						if ( array_key_exists( $key . '_asc', $this->sort_fields ) ) {
+							$numeric_sorting_keys[] = $key . '_asc';
+						}
+					}
+				}
+			}
+
 			// handle sorting options
 			// sort members by
 			if ( $sortby == $directory_data['sortby_custom'] || in_array( $sortby, $custom_sort ) ) {
@@ -672,6 +700,21 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				$custom_sort_type = apply_filters( 'um_member_directory_custom_sorting_type', 'CHAR', $sortby, $directory_data );
 
 				$this->sql_order = " ORDER BY CAST( umm_sort.um_value AS {$custom_sort_type} ) {$order} ";
+
+			} elseif ( count( $numeric_sorting_keys ) && in_array( $sortby, $numeric_sorting_keys ) ) {
+
+				if ( strstr( $sortby, '_desc' ) ) {
+					$sortby = str_replace( '_desc', '', $sortby );
+					$order = 'DESC';
+				}
+
+				if ( strstr( $sortby, '_asc' ) ) {
+					$sortby = str_replace( '_asc', '', $sortby );
+					$order = 'ASC';
+				}
+
+				$this->joins[]   = "LEFT JOIN {$wpdb->prefix}um_metadata umm_sort ON ( umm_sort.user_id = u.ID AND umm_sort.um_key = '{$sortby}' )";
+				$this->sql_order = " ORDER BY CAST( umm_sort.um_value AS SIGNED ) {$order}, u.user_registered DESC ";
 
 			} elseif ( 'username' == $sortby ) {
 

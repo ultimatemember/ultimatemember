@@ -94,9 +94,11 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 				if ( in_array( $fields[ $key ]['type'], array( 'select','multiselect' ) ) && 
 					isset( $fields[ $key ]['custom_dropdown_options_source'] ) &&
 					! empty( $fields[ $key ]['custom_dropdown_options_source'] ) &&
-					function_exists( $fields[ $key ]['custom_dropdown_options_source'] ) ){
-					$arr_options = call_user_func( $fields[ $key ]['custom_dropdown_options_source'] );
-					$fields[ $key ]['options'] = array_keys( $arr_options );
+					function_exists( $fields[ $key ]['custom_dropdown_options_source'] ) ) {
+					if ( ! UM()->fields()->is_source_blacklisted( $fields[ $key ]['custom_dropdown_options_source'] ) ) {
+						$arr_options = call_user_func( $fields[ $key ]['custom_dropdown_options_source'] );
+						$fields[ $key ]['options'] = array_keys( $arr_options );
+					}
 				}
 				
 				// Unset changed value that doesn't match the option list
@@ -278,6 +280,27 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 				return true;
 			}
 			if ( ! preg_match( $this->regex_phone_number, $string ) ) {
+				return false;
+			}
+			return true;
+		}
+
+
+		/**
+		 * Is Discord ID?
+		 *
+		 * @param $string
+		 *
+		 * @return bool
+		 */
+		public function is_discord_id( $string ) {
+			if ( ! $string ) {
+				return true;
+			}
+			if ( substr_count( $string, '#' ) > 1 ) {
+				return false;
+			}
+			if ( ! preg_match( '/^(.+)#(\d+)$/', trim( $string ) ) ) {
 				return false;
 			}
 			return true;

@@ -4,8 +4,8 @@ jQuery(document).ready(function() {
 
 	if ( current_tab ) {
 		jQuery('.um-account-tab[data-tab="'+current_tab+'"]').show();
-
 		jQuery('.um-account-tab:not(:visible)').find( 'input, select, textarea' ).not( ':disabled' ).addClass('um_account_inactive').prop( 'disabled', true ).attr( 'disabled', true );
+		wp.hooks.doAction( 'um_account_active_tab_inited', current_tab );
 	}
 
 	jQuery( document.body ).on( 'click', '.um-account-side li a', function(e) {

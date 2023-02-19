@@ -1,8 +1,14 @@
 <?php
+/**
+ * Integration between Ultimate Member and TranslatePress.
+ *
+ * @package um\core\integrations
+ */
+
 namespace um\core\integrations;
 
-// Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) {
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -11,7 +17,7 @@ if ( class_exists( 'um\core\integrations\UM_TranslatePress' ) ) {
 }
 
 
-// Interface UM_Multilingual
+// Interface UM_Multilingual.
 require_once __DIR__ . '/interface-um-multilingual.php';
 
 /**
@@ -25,36 +31,42 @@ class UM_TranslatePress implements UM_Multilingual {
 
 	/**
 	 * Class TRP_Translate_Press
+	 *
 	 * @var \TRP_Translate_Press
 	 */
 	private $translate_press = null;
 
 	/**
 	 * Class TRP_Languages
+	 *
 	 * @var /TRP_Languages
 	 */
 	private $tpr_languages = null;
 
 	/**
 	 * Class TRP_Settings
+	 *
 	 * @var /TRP_Settings
 	 */
 	private $tpr_settings = null;
 
 	/**
 	 * Class TRP_Language_Switcher
+	 *
 	 * @var /TRP_Language_Switcher
 	 */
 	private $tpr_switcher = null;
 
 	/**
 	 * The list of active languages
+	 *
 	 * @var type
 	 */
 	public $languages_list = array();
 
 	/**
 	 * The default language locale
+	 *
 	 * @var string
 	 */
 	public $default_language = '';
@@ -65,17 +77,18 @@ class UM_TranslatePress implements UM_Multilingual {
 	public function __construct() {
 		if ( $this->is_active() ) {
 
-			$this->translate_press = $translate_press = \TRP_Translate_Press::get_trp_instance();
-			$this->tpr_languages = $this->translate_press->get_component( 'languages' );
-			$this->tpr_settings = $this->translate_press->get_component( 'settings' );
-			$this->tpr_switcher = $this->translate_press->get_component( 'language_switcher' );
+			$this->translate_press = \TRP_Translate_Press::get_trp_instance();
+			$this->tpr_languages   = $this->translate_press->get_component( 'languages' );
+			$this->tpr_settings    = $this->translate_press->get_component( 'settings' );
+			$this->tpr_switcher    = $this->translate_press->get_component( 'language_switcher' );
 
-			$this->languages_list = $this->tpr_settings->get_setting( 'publish-languages' );
+			$this->languages_list   = $this->tpr_settings->get_setting( 'publish-languages' );
 			$this->default_language = $this->tpr_settings->get_setting( 'default-language' );
 
 			/* Email */
 			add_filter( 'um_admin_settings_email_section_fields', array( &$this, 'admin_settings_email_section_fields' ), 10, 2 );
 			add_filter( 'um_change_email_template_file', array( &$this, 'change_email_template_file' ), 10, 1 );
+			add_filter( 'um_change_settings_before_save', array( &$this, 'create_email_template_file' ), 8, 1 );
 			add_filter( 'um_email_send_subject', array( &$this, 'localize_email_subject' ), 10, 2 );
 			add_filter( 'um_email_templates_columns', array( &$this, 'emails_column_header' ), 10, 1 );
 			add_filter( 'um_locate_email_template', array( &$this, 'locate_email_template' ), 10, 2 );
@@ -92,7 +105,7 @@ class UM_TranslatePress implements UM_Multilingual {
 	 *
 	 * @since  2.1.7
 	 *
-	 * @param  array $rules
+	 * @param  array $rules Rewrite rules.
 	 * @return array
 	 */
 	public function add_rewrite_rules( $rules ) {
@@ -105,24 +118,19 @@ class UM_TranslatePress implements UM_Multilingual {
 	 * @since  2.1.7
 	 * @exaple change 'welcome_email_sub' to 'welcome_email_sub_de_DE'
 	 *
-	 * @param  array  $section_fields  The email template fields
-	 * @param  string $email_key       The email template slug
+	 * @param  array  $section_fields The email template fields.
+	 * @param  string $email_key      The email template slug.
 	 * @return array
 	 */
 	public function admin_settings_email_section_fields( $section_fields, $email_key ) {
-
 		if ( $this->is_active() ) {
-			$locale = '';
 			$language_codes = $this->get_languages_codes();
-			if ( $language_codes['default'] !== $language_codes['current'] ) {
-				$locale = '_' . $language_codes['current'];
-			}
+			$locale         = $language_codes['default'] === $language_codes['current'] ? '' : '_' . $language_codes['current'];
+			$value_default  = UM()->options()->get( $email_key . '_sub' );
+			$value          = UM()->options()->get( $email_key . '_sub' . $locale );
 
-			$value_default = UM()->options()->get( $email_key . '_sub' );
-			$value = UM()->options()->get( $email_key . '_sub' . $locale );
-
-			$section_fields[2]['id'] = $email_key . '_sub' . $locale;
-			$section_fields[2]['value'] = !empty( $value ) ? $value : $value_default;
+			$section_fields[2]['id']    = $email_key . '_sub' . $locale;
+			$section_fields[2]['value'] = ! empty( $value ) ? $value : $value_default;
 		}
 
 		return $section_fields;
@@ -133,11 +141,10 @@ class UM_TranslatePress implements UM_Multilingual {
 	 *
 	 * @since  2.1.7
 	 *
-	 * @param  string $template  The email template slug
+	 * @param  string $template The email template slug.
 	 * @return string
 	 */
 	public function change_email_template_file( $template ) {
-
 		if ( $this->is_active() ) {
 			$language_codes = $this->get_languages_codes();
 			if ( $language_codes['default'] !== $language_codes['current'] ) {
@@ -148,13 +155,38 @@ class UM_TranslatePress implements UM_Multilingual {
 		return $template;
 	}
 
+
+	/**
+	 * Create email template file in the theme folder.
+	 *
+	 * @since  2.5.4
+	 *
+	 * @param  array $settings Input data.
+	 * @return array
+	 */
+	public function create_email_template_file( $settings ) {
+		if ( isset( $settings['um_email_template'] ) ) {
+			$template      = $settings['um_email_template'];
+			$template_path = UM()->mail()->get_template_file( 'theme', $template );
+
+			if ( ! file_exists( $template_path ) ) {
+				$template_dir = dirname( $template_path );
+
+				if ( wp_mkdir_p( $template_dir ) ) {
+					file_put_contents( $template_path, '' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
+				}
+			}
+		}
+		return $settings;
+	}
+
 	/**
 	 *
 	 * Add cell for the column 'translations' in the Email table.
 	 *
 	 * @since  2.1.7
 	 *
-	 * @param  array  $item  The email template data
+	 * @param  array $item The email template data.
 	 * @return string
 	 */
 	public function emails_column_content( $item ) {
@@ -177,11 +209,10 @@ class UM_TranslatePress implements UM_Multilingual {
 	 *
 	 * @since  2.1.7
 	 *
-	 * @param  array   $columns   The Email table headers
+	 * @param  array $columns The Email table headers.
 	 * @return array
 	 */
 	public function emails_column_header( $columns ) {
-
 		if ( $this->is_active() && count( $this->languages_list ) > 0 ) {
 
 			$flags_column = '';
@@ -191,16 +222,16 @@ class UM_TranslatePress implements UM_Multilingual {
 				}
 
 				$language_names = $this->tpr_languages->get_language_names( array( $language_code ) );
-				$language_name = $language_names[$language_code];
+				$language_name  = $language_names[ $language_code ];
 
-				$flag = $this->tpr_switcher->add_flag( $language_code, $language_name );
+				$flag          = $this->tpr_switcher->add_flag( $language_code, $language_name );
 				$flags_column .= '<span class="um-flag" style="margin:2px">' . $flag . '</span>';
 			}
 
 			$new_columns = array();
 			foreach ( $columns as $column_key => $column_content ) {
-				$new_columns[$column_key] = $column_content;
-				if ( 'email' === $column_key && !isset( $new_columns['icl_translations'] ) ) {
+				$new_columns[ $column_key ] = $column_content;
+				if ( 'email' === $column_key && ! isset( $new_columns['icl_translations'] ) ) {
 					$new_columns['icl_translations'] = $flags_column;
 				}
 			}
@@ -216,12 +247,11 @@ class UM_TranslatePress implements UM_Multilingual {
 	 *
 	 * @since  2.1.7
 	 *
-	 * @param  string|false  $current_code  Slug of the queried language
+	 * @param  string|false $current_code Slug of the queried language.
 	 * @return array
 	 */
 	public function get_languages_codes( $current_code = false ) {
-
-		if ( !$this->is_active() ) {
+		if ( ! $this->is_active() ) {
 			return $current_code;
 		}
 
@@ -241,10 +271,10 @@ class UM_TranslatePress implements UM_Multilingual {
 		$current = $current_code;
 
 		if ( strlen( $default ) === 2 ) {
-			$default = current( array_keys( $slugs, $default ) );
+			$default = current( array_keys( $slugs, $default, true ) );
 		}
 		if ( strlen( $current ) === 2 ) {
-			$current = current( array_keys( $slugs, $current ) );
+			$current = current( array_keys( $slugs, $current, true ) );
 		}
 
 		return compact( 'default', 'current' );
@@ -255,8 +285,8 @@ class UM_TranslatePress implements UM_Multilingual {
 	 *
 	 * @since  2.1.7
 	 *
-	 * @param  integer      $post_id   The post/page ID
-	 * @param  string       $language  Slug or locale of the queried language
+	 * @param  integer $post_id  The post/page ID.
+	 * @param  string  $language Slug or locale of the queried language.
 	 * @return string|false
 	 */
 	public function get_page_url_for_language( $post_id, $language = '' ) {
@@ -269,8 +299,8 @@ class UM_TranslatePress implements UM_Multilingual {
 	 *
 	 * @since  2.1.7
 	 *
-	 * @param  string  $template  The email template slug
-	 * @param  string  $code      The locale of the queried language
+	 * @param  string $template The email template slug.
+	 * @param  string $code     Slug or locale of the queried language.
 	 * @return string
 	 */
 	public function get_status_html( $template, $code ) {
@@ -280,29 +310,44 @@ class UM_TranslatePress implements UM_Multilingual {
 			$lang = $code . '/';
 		}
 
-		//theme location
+		// theme location.
 		$template_path = trailingslashit( get_stylesheet_directory() . '/ultimate-member/email' ) . $lang . $template . '.php';
 
-		//plugin location for default language
-		if ( empty( $lang ) && !file_exists( $template_path ) ) {
+		// plugin location for default language.
+		if ( empty( $lang ) && ! file_exists( $template_path ) ) {
 			$template_path = UM()->mail()->get_template_file( 'plugin', $template );
 		}
 
 		$slugs = $this->tpr_settings->get_setting( 'url-slugs' );
-		$link = add_query_arg( array( 'email' => $template, 'lang' => $slugs[$code] ) );
+		$link  = add_query_arg(
+			array(
+				'email' => $template,
+				'lang'  => $slugs[ $code ],
+			)
+		);
 
 		$language_names = $this->tpr_languages->get_language_names( array( $code ) );
-		$language_name = $language_names[$code];
+		$language_name  = $language_names[ $code ];
 
 		if ( file_exists( $template_path ) ) {
 
-			$hint = sprintf( __( 'Edit the translation in %s', 'polylang' ), $language_name );
-			$icon_html = sprintf( '<a href="%1$s" title="%2$s"><span class="screen-reader-text">%3$s</span><span class="dashicons dashicons-edit"></span></a>', esc_url( $link ), esc_html( $hint ), esc_html( $hint )
+			// translators: %s - language name.
+			$hint      = sprintf( __( 'Edit the translation in %s', 'polylang' ), $language_name );
+			$icon_html = sprintf(
+				'<a href="%1$s" title="%2$s"><span class="screen-reader-text">%3$s</span><span class="dashicons dashicons-edit"></span></a>',
+				esc_url( $link ),
+				esc_html( $hint ),
+				esc_html( $hint )
 			);
 		} else {
 
-			$hint = sprintf( __( 'Add a translation in %s', 'polylang' ), $language_name );
-			$icon_html = sprintf( '<a href="%1$s" title="%2$s"><span class="screen-reader-text">%3$s</span><span class="dashicons dashicons-plus"></span></a>', esc_url( $link ), esc_attr( $hint ), esc_html( $hint )
+			// translators: %s - language name.
+			$hint      = sprintf( __( 'Add a translation in %s', 'polylang' ), $language_name );
+			$icon_html = sprintf(
+				'<a href="%1$s" title="%2$s"><span class="screen-reader-text">%3$s</span><span class="dashicons dashicons-plus"></span></a>',
+				esc_url( $link ),
+				esc_attr( $hint ),
+				esc_html( $hint )
 			);
 		}
 
@@ -325,20 +370,18 @@ class UM_TranslatePress implements UM_Multilingual {
 	 *
 	 * @since  2.1.7
 	 *
-	 * @param  string  $url      Default page URL
-	 * @param  string  $slug     Core page slug
-	 * @param  string  $updated  Additional parameter 'updated' value
+	 * @param  string $url     Default page URL.
+	 * @param  string $slug    Core page slug.
+	 * @param  string $updated Additional parameter 'updated' value.
 	 * @return string
 	 */
 	public function localize_core_page_url( $url, $slug, $updated = '' ) {
-
 		if ( $this->is_active() ) {
-
 			$language_codes = $this->get_languages_codes();
-			if ( $language_codes['default'] !== $language_codes['current'] ) {
 
-				$page_id = UM()->config()->permalinks[$slug];
-				$url = $this->get_page_url_for_language( $page_id, $language_codes['current'] );
+			if ( $language_codes['default'] !== $language_codes['current'] ) {
+				$page_id = UM()->config()->permalinks[ $slug ];
+				$url     = $this->get_page_url_for_language( $page_id, $language_codes['current'] );
 
 				if ( $updated ) {
 					$url = add_query_arg( 'updated', esc_attr( $updated ), $url );
@@ -355,23 +398,17 @@ class UM_TranslatePress implements UM_Multilingual {
 	 * @since  2.1.7
 	 * @exaple change 'welcome_email_sub' to 'welcome_email_sub_de_DE'
 	 *
-	 * @param  string  $subject   Default subject
-	 * @param  string  $template  The email template slug
+	 * @param  string $subject  Default subject.
+	 * @param  string $template The email template slug.
 	 * @return string
 	 */
 	public function localize_email_subject( $subject, $template ) {
-
 		if ( $this->is_active() ) {
-			$locale = '';
 			$language_codes = $this->get_languages_codes();
-			if ( $language_codes['default'] !== $language_codes['current'] ) {
-				$locale = '_' . $language_codes['current'];
-			}
-
-			$value_default = UM()->options()->get( $template . '_sub' );
-			$value = UM()->options()->get( $template . '_sub' . $locale );
-
-			$subject = !empty( $value ) ? $value : $value_default;
+			$locale         = $language_codes['default'] === $language_codes['current'] ? '' : '_' . $language_codes['current'];
+			$value_default  = UM()->options()->get( $template . '_sub' );
+			$value          = UM()->options()->get( $template . '_sub' . $locale );
+			$subject        = empty( $value ) ? $value_default : $value;
 		}
 
 		return $subject;
@@ -382,28 +419,26 @@ class UM_TranslatePress implements UM_Multilingual {
 	 *
 	 * @since  2.1.7
 	 *
-	 * @param  string  $template		   The email template path
-	 * @param  string  $template_name  The email template slug
+	 * @param  string $template      The email template path.
+	 * @param  string $template_name The email template slug.
 	 * @return string
 	 */
 	public function locate_email_template( $template, $template_name ) {
-
 		if ( $this->is_active() ) {
-			$locale = '';
 			$language_codes = $this->get_languages_codes();
-			if ( $language_codes['default'] !== $language_codes['current'] ) {
-				$locale = $language_codes['current'] . '/';
-			}
+			$locale         = $language_codes['default'] === $language_codes['current'] ? '' : '_' . $language_codes['current'];
 
-			// check if there is template at theme folder
-			$template = locate_template( array(
-				trailingslashit( 'ultimate-member/email' ) . $locale . $template_name . '.php',
-				trailingslashit( 'ultimate-member/email' ) . $template_name . '.php'
-				) );
+			// check if there is template at theme folder.
+			$template = locate_template(
+				array(
+					trailingslashit( 'ultimate-member/email' ) . $locale . $template_name . '.php',
+					trailingslashit( 'ultimate-member/email' ) . $template_name . '.php',
+				)
+			);
 
-			//if there isn't template at theme folder get template file from plugin dir
-			if ( !$template ) {
-				$path = !empty( UM()->mail()->path_by_slug[$template_name] ) ? UM()->mail()->path_by_slug[$template_name] : um_path . 'templates/email';
+			// if there isn't template at theme folder get template file from plugin dir.
+			if ( ! $template ) {
+				$path     = empty( UM()->mail()->path_by_slug[ $template_name ] ) ? um_path . 'templates/email' : UM()->mail()->path_by_slug[ $template_name ];
 				$template = trailingslashit( $path ) . $template_name . '.php';
 			}
 		}
@@ -417,7 +452,7 @@ class UM_TranslatePress implements UM_Multilingual {
 	 *
 	 * @since  2.1.7
 	 *
-	 * @param  array $args
+	 * @param  array $args Arguments.
 	 * @return array
 	 */
 	public function shortcode_pre_args_setup( $args ) {

@@ -1,0 +1,20 @@
+name: Ultimate Member - Checking Code quality through PHPCS + WPCS
+
+on:
+  push:
+    branches:
+      - development/3.0
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Run CS
+        run: vendor/bin/phpcs --standard=phpcs.xml .

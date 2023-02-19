@@ -1,8 +1,14 @@
 <?php
+/**
+ * Integration between Ultimate Member and Polylang.
+ *
+ * @package um\core\integrations
+ */
+
 namespace um\core\integrations;
 
-// Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) {
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -11,7 +17,7 @@ if ( class_exists( 'um\core\integrations\UM_Polylang' ) ) {
 }
 
 
-// Interface UM_Multilingual
+// Interface UM_Multilingual.
 require_once __DIR__ . '/interface-um-multilingual.php';
 
 
@@ -33,6 +39,7 @@ class UM_Polylang implements UM_Multilingual {
 			/* Email */
 			add_filter( 'um_admin_settings_email_section_fields', array( &$this, 'admin_settings_email_section_fields' ), 10, 2 );
 			add_filter( 'um_change_email_template_file', array( &$this, 'change_email_template_file' ), 10, 1 );
+			add_filter( 'um_change_settings_before_save', array( &$this, 'create_email_template_file' ), 8, 1 );
 			add_filter( 'um_email_send_subject', array( &$this, 'localize_email_subject' ), 10, 2 );
 			add_filter( 'um_email_templates_columns', array( &$this, 'emails_column_header' ), 10, 1 );
 			add_filter( 'um_locate_email_template', array( &$this, 'locate_email_template' ), 10, 2 );
@@ -60,8 +67,9 @@ class UM_Polylang implements UM_Multilingual {
 	 *
 	 * @since  2.1.7
 	 *
-	 * @global object $polylang  The Polylang instance
-	 * @param  array  $rules
+	 * @global object $polylang The Polylang instance.
+	 *
+	 * @param  array $rules Rewrite rules.
 	 * @return array
 	 */
 	public function add_rewrite_rules( $rules ) {
@@ -72,50 +80,50 @@ class UM_Polylang implements UM_Multilingual {
 
 			$newrules = array();
 
-			// Account
+			// Account.
 			if ( isset( UM()->config()->permalinks['account'] ) ) {
 				$account_page_id = UM()->config()->permalinks['account'];
-				$account = get_post( $account_page_id );
+				$account         = get_post( $account_page_id );
 
 				foreach ( $active_languages as $language_code ) {
-					if( $language_code === pll_default_language() && $polylang->options['hide_default'] ){
+					if ( pll_default_language() === $language_code && $polylang->options['hide_default'] ) {
 						continue;
 					}
-					$lang_post_id = pll_get_post( $account_page_id, $language_code );
+					$lang_post_id  = pll_get_post( $account_page_id, $language_code );
 					$lang_post_obj = get_post( $lang_post_id );
 
 					if ( isset( $account->post_name ) && isset( $lang_post_obj->post_name ) ) {
 						$lang_page_slug = $lang_post_obj->post_name;
 
-						if( $polylang->options['force_lang'] === 1 ){
-							$newrules[$language_code . '/' . $lang_page_slug . '/([^/]+)?$'] = 'index.php?page_id=' . $lang_post_id . '&um_tab=$matches[1]&lang=' . $language_code;
+						if ( 1 === $polylang->options['force_lang'] ) {
+							$newrules[ $language_code . '/' . $lang_page_slug . '/([^/]+)?$' ] = 'index.php?page_id=' . $lang_post_id . '&um_tab=$matches[1]&lang=' . $language_code;
 						}
 
-						$newrules[$lang_page_slug . '/([^/]+)?$'] = 'index.php?page_id=' . $lang_post_id . '&um_tab=$matches[1]&lang=' . $language_code;
+						$newrules[ $lang_page_slug . '/([^/]+)?$' ] = 'index.php?page_id=' . $lang_post_id . '&um_tab=$matches[1]&lang=' . $language_code;
 					}
 				}
 			}
 
-			// Profile
+			// Profile.
 			if ( isset( UM()->config()->permalinks['user'] ) ) {
 				$user_page_id = UM()->config()->permalinks['user'];
-				$user = get_post( $user_page_id );
+				$user         = get_post( $user_page_id );
 
 				foreach ( $active_languages as $language_code ) {
-					if( $language_code === pll_default_language() && $polylang->options['hide_default'] ){
+					if ( pll_default_language() === $language_code && $polylang->options['hide_default'] ) {
 						continue;
 					}
-					$lang_post_id = pll_get_post( $user_page_id, $language_code );
+					$lang_post_id  = pll_get_post( $user_page_id, $language_code );
 					$lang_post_obj = get_post( $lang_post_id );
 
 					if ( isset( $user->post_name ) && isset( $lang_post_obj->post_name ) ) {
 						$lang_page_slug = $lang_post_obj->post_name;
 
-						if( $polylang->options['force_lang'] === 1 ){
-							$newrules[$language_code . '/' . $lang_page_slug . '/([^/]+)/?$'] = 'index.php?page_id=' . $lang_post_id . '&um_user=$matches[1]&lang=' . $language_code;
+						if ( 1 === $polylang->options['force_lang'] ) {
+							$newrules[ $language_code . '/' . $lang_page_slug . '/([^/]+)/?$' ] = 'index.php?page_id=' . $lang_post_id . '&um_user=$matches[1]&lang=' . $language_code;
 						}
 
-						$newrules[$lang_page_slug . '/([^/]+)/?$'] = 'index.php?page_id=' . $lang_post_id . '&um_user=$matches[1]&lang=' . $language_code;
+						$newrules[ $lang_page_slug . '/([^/]+)/?$' ] = 'index.php?page_id=' . $lang_post_id . '&um_user=$matches[1]&lang=' . $language_code;
 					}
 				}
 			}
@@ -132,23 +140,20 @@ class UM_Polylang implements UM_Multilingual {
 	 * @since  2.1.6
 	 * @exaple change 'welcome_email_sub' to 'welcome_email_sub_de_DE'
 	 *
-	 * @param  array  $section_fields  The email template fields
-	 * @param  string $email_key       The email template slug
+	 * @param  array  $section_fields The email template fields.
+	 * @param  string $email_key      The email template slug.
 	 * @return array
 	 */
 	public function admin_settings_email_section_fields( $section_fields, $email_key ) {
 		if ( $this->is_active() ) {
-			$locale = '';
 			$language_codes = $this->get_languages_codes();
-			if ( $language_codes['default'] != $language_codes['current'] ) {
-				$locale = '_' . $language_codes['current'];
-			}
+			$locale         = $language_codes['default'] === $language_codes['current'] ? '' : '_' . $language_codes['current'];
 
 			$value_default = UM()->options()->get( $email_key . '_sub' );
-			$value = UM()->options()->get( $email_key . '_sub' . $locale );
+			$value         = UM()->options()->get( $email_key . '_sub' . $locale );
 
-			$section_fields[2]['id'] = $email_key . '_sub' . $locale;
-			$section_fields[2]['value'] = !empty( $value ) ? $value : $value_default;
+			$section_fields[2]['id']    = $email_key . '_sub' . $locale;
+			$section_fields[2]['value'] = empty( $value ) ? $value_default : $value;
 		}
 
 		return $section_fields;
@@ -159,7 +164,7 @@ class UM_Polylang implements UM_Multilingual {
 	 *
 	 * @since  2.1.6
 	 *
-	 * @param  string $template  The email template slug
+	 * @param  string $template The email template slug.
 	 * @return string
 	 */
 	public function change_email_template_file( $template ) {
@@ -173,13 +178,39 @@ class UM_Polylang implements UM_Multilingual {
 		return $template;
 	}
 
+
+	/**
+	 * Create email template file in the theme folder.
+	 *
+	 * @since  2.5.4
+	 *
+	 * @param  array $settings Input data.
+	 * @return array
+	 */
+	public function create_email_template_file( $settings ) {
+		if ( isset( $settings['um_email_template'] ) ) {
+			$template      = $settings['um_email_template'];
+			$template_path = UM()->mail()->get_template_file( 'theme', $template );
+
+			if ( ! file_exists( $template_path ) ) {
+				$template_dir = dirname( $template_path );
+
+				if ( wp_mkdir_p( $template_dir ) ) {
+					file_put_contents( $template_path, '' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
+				}
+			}
+		}
+		return $settings;
+	}
+
+
 	/**
 	 *
 	 * Add cell for the column 'translations' in the Email table.
 	 *
 	 * @since  2.1.6
 	 *
-	 * @param  array  $item  The email template data
+	 * @param  array $item The email template data.
 	 * @return string
 	 */
 	public function emails_column_content( $item ) {
@@ -187,7 +218,7 @@ class UM_Polylang implements UM_Multilingual {
 
 		if ( $this->is_active() ) {
 			foreach ( pll_languages_list() as $language_code ) {
-				if ( $language_code === pll_current_language() ) {
+				if ( pll_current_language() === $language_code ) {
 					continue;
 				}
 				$html .= $this->get_status_html( $item['key'], $language_code );
@@ -202,8 +233,9 @@ class UM_Polylang implements UM_Multilingual {
 	 *
 	 * @since  2.1.6
 	 *
-	 * @global object  $polylang  The Polylang instance
-	 * @param  array   $columns   The Email table headers
+	 * @global object $polylang The Polylang instance.
+	 *
+	 * @param  array $columns The Email table headers.
 	 * @return array
 	 */
 	public function emails_column_header( $columns ) {
@@ -214,17 +246,17 @@ class UM_Polylang implements UM_Multilingual {
 
 				$flags_column = '';
 				foreach ( pll_languages_list() as $language_code ) {
-					if ( $language_code === pll_current_language() ) {
+					if ( pll_current_language() === $language_code ) {
 						continue;
 					}
-					$language = $polylang->model->get_language( $language_code );
+					$language      = $polylang->model->get_language( $language_code );
 					$flags_column .= '<span class="um-flag" style="margin:2px">' . $language->flag . '</span>';
 				}
 
 				$new_columns = array();
 				foreach ( $columns as $column_key => $column_content ) {
-					$new_columns[$column_key] = $column_content;
-					if ( 'email' === $column_key && !isset( $new_columns['icl_translations'] ) ) {
+					$new_columns[ $column_key ] = $column_content;
+					if ( 'email' === $column_key && ! isset( $new_columns['icl_translations'] ) ) {
 						$new_columns['icl_translations'] = $flags_column;
 					}
 				}
@@ -241,14 +273,15 @@ class UM_Polylang implements UM_Multilingual {
 	 *
 	 * @since  2.1.6
 	 *
-	 * @global object        $polylang      The Polylang instance
-	 * @param  string|false  $current_code  Slug of the queried language
+	 * @global object $polylang The Polylang instance.
+	 *
+	 * @param  string|false $current_code Slug of the queried language.
 	 * @return array
 	 */
 	public function get_languages_codes( $current_code = false ) {
 		global $polylang;
 
-		if ( !$this->is_active() ) {
+		if ( ! $this->is_active() ) {
 			return $current_code;
 		}
 
@@ -262,11 +295,9 @@ class UM_Polylang implements UM_Multilingual {
 			$current_code = substr( get_locale(), 0, 2 );
 		}
 
-		$default = $current = pll_default_language( 'locale' );
 		$language = $polylang->model->get_language( $current_code );
-		if ( $language && isset( $language->locale ) ) {
-			$current = $language->locale;
-		}
+		$default  = pll_default_language( 'locale' );
+		$current  = $language && isset( $language->locale ) ? $language->locale : $default;
 
 		return compact( 'default', 'current' );
 	}
@@ -276,12 +307,11 @@ class UM_Polylang implements UM_Multilingual {
 	 *
 	 * @since  2.1.6
 	 *
-	 * @param  integer      $post_id   The post/page ID
-	 * @param  string       $language  Slug or locale of the queried language
+	 * @param  integer $post_id  The post/page ID.
+	 * @param  string  $language Slug or locale of the queried language.
 	 * @return string|false
 	 */
 	public function get_page_url_for_language( $post_id, $language = '' ) {
-		
 		if ( $this->is_active() ) {
 
 			$lang = '';
@@ -306,47 +336,57 @@ class UM_Polylang implements UM_Multilingual {
 	 *
 	 * @since  2.1.6
 	 *
-	 * @global object  $polylang  The Polylang instance
-	 * @param  string  $template  The email template slug
-	 * @param  string  $code      Slug or locale of the queried language
+	 * @global object $polylang The Polylang instance.
+	 *
+	 * @param  string $template The email template slug.
+	 * @param  string $code     Slug or locale of the queried language.
 	 * @return string
 	 */
 	public function get_status_html( $template, $code ) {
 		global $polylang;
 
 		$language = $polylang->model->get_language( $code );
-		$default = pll_default_language();
+		$default  = pll_default_language();
 
 		$lang = '';
 		if ( $code !== $default ) {
 			$lang = $language->locale . '/';
 		}
 
-		//theme location
+		// theme location.
 		$template_path = trailingslashit( get_stylesheet_directory() . '/ultimate-member/email' ) . $lang . $template . '.php';
 
-		//plugin location for default language
-		if ( empty( $lang ) && !file_exists( $template_path ) ) {
+		// plugin location for default language.
+		if ( empty( $lang ) && ! file_exists( $template_path ) ) {
 			$template_path = UM()->mail()->get_template_file( 'plugin', $template );
 		}
 
-		$link = add_query_arg( array( 'email' => $template, 'lang' => $code ) );
+		$link = add_query_arg(
+			array(
+				'email' => $template,
+				'lang'  => $code,
+			)
+		);
 
 		if ( file_exists( $template_path ) ) {
 
-			$hint = sprintf( __( 'Edit the translation in %s', 'polylang' ), $language->name );
-			$icon_html = sprintf( '<a href="%1$s" title="%2$s" class="pll_icon_edit"><span class="screen-reader-text">%3$s</span></a>',
-					esc_url( $link ),
-					esc_html( $hint ),
-					esc_html( $hint )
+			// translators: %s - language name.
+			$hint      = sprintf( __( 'Edit the translation in %s', 'polylang' ), $language->name );
+			$icon_html = sprintf(
+				'<a href="%1$s" title="%2$s" class="pll_icon_edit"><span class="screen-reader-text">%3$s</span></a>',
+				esc_url( $link ),
+				esc_html( $hint ),
+				esc_html( $hint )
 			);
 		} else {
 
-			$hint = sprintf( __( 'Add a translation in %s', 'polylang' ), $language->name );
-			$icon_html = sprintf( '<a href="%1$s" title="%2$s" class="pll_icon_add"><span class="screen-reader-text">%3$s</span></a>',
-					esc_url( $link ),
-					esc_attr( $hint ),
-					esc_html( $hint )
+			// translators: %s - language name.
+			$hint      = sprintf( __( 'Add a translation in %s', 'polylang' ), $language->name );
+			$icon_html = sprintf(
+				'<a href="%1$s" title="%2$s" class="pll_icon_add"><span class="screen-reader-text">%3$s</span></a>',
+				esc_url( $link ),
+				esc_attr( $hint ),
+				esc_html( $hint )
 			);
 		}
 
@@ -374,17 +414,19 @@ class UM_Polylang implements UM_Multilingual {
 	 * @since  2.1.7
 	 * @hook   um_is_core_page
 	 *
-	 * @global \WP_Post   $post
-	 * @param  boolean    $is_core_page
-	 * @param  string     $page
+	 * @global \WP_Post $post
+	 *
+	 * @param  boolean $is_core_page Is core page.
+	 * @param  string  $page         Page key.
 	 * @return boolean
 	 */
 	public function is_core_page( $is_core_page, $page ) {
 		global $post;
 
 		if ( $this->is_active() ) {
-			$lang_post_id = pll_get_post( $post->ID, pll_default_language() );
-			if ( isset( UM()->config()->permalinks[$page] ) && UM()->config()->permalinks[$page] == $lang_post_id ) {
+			$lang_post_id = absint( pll_get_post( $post->ID, pll_default_language() ) );
+			$um_page_id   = isset( UM()->config()->permalinks[ $page ] ) ? absint( UM()->config()->permalinks[ $page ] ) : 0;
+			if ( $um_page_id && $um_page_id === $lang_post_id ) {
 				$is_core_page = true;
 			}
 		}
@@ -397,17 +439,17 @@ class UM_Polylang implements UM_Multilingual {
 	 *
 	 * @since  2.1.6
 	 *
-	 * @param  string  $url      Default page URL
-	 * @param  string  $slug     Core page slug
-	 * @param  string  $updated  Additional parameter 'updated' value
+	 * @param  string $url     Default page URL.
+	 * @param  string $slug    Core page slug.
+	 * @param  string $updated Additional parameter 'updated' value.
 	 * @return string
 	 */
 	public function localize_core_page_url( $url, $slug, $updated = '' ) {
 
 		if ( $this->is_active() ) {
 			$language_codes = $this->get_languages_codes();
-			$page_id = UM()->config()->permalinks[$slug];
-			$url = $this->get_page_url_for_language( $page_id, $language_codes['current'] );
+			$page_id        = UM()->config()->permalinks[ $slug ];
+			$url            = $this->get_page_url_for_language( $page_id, $language_codes['current'] );
 
 			if ( $updated ) {
 				$url = add_query_arg( 'updated', esc_attr( $updated ), $url );
@@ -423,32 +465,26 @@ class UM_Polylang implements UM_Multilingual {
 	 * @since  2.1.6
 	 * @exaple change 'welcome_email_sub' to 'welcome_email_sub_de_DE'
 	 *
-	 * @param  string  $subject   Default subject
-	 * @param  string  $template  The email template slug
+	 * @param  string $subject  Default subject.
+	 * @param  string $template The email template slug.
 	 * @return string
 	 */
 	public function localize_email_subject( $subject, $template ) {
 		if ( $this->is_active() ) {
-			$locale = '';
 			$language_codes = $this->get_languages_codes();
-			if ( $language_codes['default'] != $language_codes['current'] ) {
-				$locale = '_' . $language_codes['current'];
-			}
-
-			$value_default = UM()->options()->get( $template . '_sub' );
-			$value = UM()->options()->get( $template . '_sub' . $locale );
-
-			$subject = !empty( $value ) ? $value : $value_default;
+			$locale         = $language_codes['default'] === $language_codes['current'] ? '' : '_' . $language_codes['current'];
+			$value_default  = UM()->options()->get( $template . '_sub' );
+			$value          = UM()->options()->get( $template . '_sub' . $locale );
+			$subject        = empty( $value ) ? $value_default : $value;
 		}
-
 		return $subject;
 	}
 
 	/**
 	 * Get translated page URL.
 	 *
-	 * @param  string $url   Page URL or slug
-	 * @param  array  $args	Additional data
+	 * @param  string $url  Page URL or slug.
+	 * @param  array  $args Additional data.
 	 * @return string
 	 */
 	public function localize_page_url( $url, $args = array() ) {
@@ -456,7 +492,7 @@ class UM_Polylang implements UM_Multilingual {
 		$page = get_page_by_path( trim( $url, "/ \n\r\t\v\0" ) );
 		if ( $page && is_a( $page, '\WP_Post' ) ) {
 			$language_codes = $this->get_languages_codes();
-			$url = $this->get_page_url_for_language( $page->ID, $language_codes['current'] );
+			$url            = $this->get_page_url_for_language( $page->ID, $language_codes['current'] );
 		}
 
 		return $url;
@@ -467,8 +503,8 @@ class UM_Polylang implements UM_Multilingual {
 	 *
 	 * @since  2.1.6
 	 *
-	 * @param  string   $profile_url  Default profile URL
-	 * @param  integer  $page_id      The page ID
+	 * @param  string  $profile_url Default profile URL.
+	 * @param  integer $page_id     The page ID.
 	 * @return string
 	 */
 	public function localize_profile_permalink( $profile_url, $page_id ) {
@@ -485,27 +521,26 @@ class UM_Polylang implements UM_Multilingual {
 	 *
 	 * @since  2.1.6
 	 *
-	 * @param  string  $template		   The email template path
-	 * @param  string  $template_name  The email template slug
+	 * @param  string $template      The email template path.
+	 * @param  string $template_name The email template slug.
 	 * @return string
 	 */
 	public function locate_email_template( $template, $template_name ) {
 		if ( $this->is_active() ) {
-			$locale = '';
 			$language_codes = $this->get_languages_codes();
-			if ( $language_codes['default'] !== $language_codes['current'] ) {
-				$locale = $language_codes['current'] . '/';
-			}
+			$locale         = $language_codes['default'] === $language_codes['current'] ? '' : $language_codes['current'] . '/';
 
-			// check if there is template at theme folder
-			$template = locate_template( array(
+			// check if there is template at theme folder.
+			$template = locate_template(
+				array(
 					trailingslashit( 'ultimate-member/email' ) . $locale . $template_name . '.php',
-					trailingslashit( 'ultimate-member/email' ) . $template_name . '.php'
-					) );
+					trailingslashit( 'ultimate-member/email' ) . $template_name . '.php',
+				)
+			);
 
-			//if there isn't template at theme folder get template file from plugin dir
-			if ( !$template ) {
-				$path = !empty( UM()->mail()->path_by_slug[$template_name] ) ? UM()->mail()->path_by_slug[$template_name] : um_path . 'templates/email';
+			// if there isn't template at theme folder get template file from plugin dir.
+			if ( ! $template ) {
+				$path     = empty( UM()->mail()->path_by_slug[ $template_name ] ) ? um_path . 'templates/email' : UM()->mail()->path_by_slug[ $template_name ];
 				$template = trailingslashit( $path ) . $template_name . '.php';
 			}
 		}
@@ -516,23 +551,23 @@ class UM_Polylang implements UM_Multilingual {
 	/**
 	 * Get arguments from original form if translated form doesn't have this data.
 	 *
-	 * @since  2.1.6
+	 * @since 2.1.6
 	 * @hook um_pre_args_setup
 	 *
-	 * @param  array $args
+	 * @param  array $args Arguments.
 	 * @return array
 	 */
 	public function shortcode_pre_args_setup( $args ) {
+		if ( $this->is_active() && isset( $args['form_id'] ) ) {
+			$form_id          = absint( $args['form_id'] );
+			$original_form_id = pll_get_post( $form_id, pll_default_language() );
 
-		if ( $this->is_active() ) {
-			$original_form_id = pll_get_post( $args['form_id'] , pll_default_language() );
-
-			if ( $original_form_id && $original_form_id != $args['form_id'] ) {
+			if ( $original_form_id && $original_form_id !== $form_id ) {
 				$original_post_data = UM()->query()->post_data( $original_form_id );
 
 				foreach ( $original_post_data as $key => $value ) {
-					if ( !isset( $args[$key] ) ) {
-						$args[$key] = $value;
+					if ( ! isset( $args[ $key ] ) ) {
+						$args[ $key ] = $value;
 					}
 				}
 			}
@@ -547,14 +582,14 @@ class UM_Polylang implements UM_Multilingual {
 	 * @since  2.1.7
 	 * @hook   um_profile_bio_key
 	 *
-	 * @param  string $key  Field Key
-	 * @param  array  $args Form Data
+	 * @param  string $key  Field Key.
+	 * @param  array  $args Form Data.
 	 * @return string
 	 */
 	public function profile_bio_key( $key, $args ) {
-		if ( $key === 'description' ) {
+		if ( 'description' === $key ) {
 			$curlang_slug = pll_current_language();
-			$key = 'description_' . $curlang_slug;
+			$key          = 'description_' . $curlang_slug;
 		}
 		return $key;
 	}
@@ -566,19 +601,18 @@ class UM_Polylang implements UM_Multilingual {
 	 * @hook   um_field_value
 	 * @hook   um_profile_field_filter_hook__description
 	 *
-	 * @param  string       $value  Field Value
-	 * @param  array|string $data   Default value or field data
-	 * @param  string|null  $key    Field Key
-	 * @param  array        $data   Field Data
+	 * @param  string       $value Field Value.
+	 * @param  array|string $data  Default value or field data.
+	 * @param  string|null  $key   Field Key.
 	 * @return string
 	 */
 	public function profile_bio_value( $value, $data, $key = null ) {
-		if( is_null( $key ) && is_array( $data ) ){
+		if ( is_null( $key ) && is_array( $data ) ) {
 			$key = $data['metakey'];
 		}
-		if ( $key === 'description' ) {
+		if ( 'description' === $key ) {
 			$curlang_slug = pll_current_language();
-			$description = get_user_meta( um_profile_id(), 'description_' . $curlang_slug, true );
+			$description  = get_user_meta( um_profile_id(), 'description_' . $curlang_slug, true );
 			if ( $description ) {
 				$value = $description;
 			}
@@ -592,16 +626,16 @@ class UM_Polylang implements UM_Multilingual {
 	 * @since  2.1.7
 	 * @hook   um_after_user_updated
 	 *
-	 * @param integer $user_id User ID
-	 * @param array   $args    Form Data
+	 * @param integer $user_id User ID.
+	 * @param array   $args    Form Data.
 	 */
 	public function profile_bio_update( $user_id, $args ) {
 		$curlang_slug = pll_current_language();
-		$bio_key = 'description_' . $curlang_slug;
-		if ( isset( $args[$bio_key] ) ) {
-			update_user_meta( $user_id, $bio_key, $args[$bio_key] );
-			if ( $curlang_slug === pll_default_language() ) {
-				update_user_meta( $user_id, 'description', $args[$bio_key] );
+		$bio_key      = 'description_' . $curlang_slug;
+		if ( isset( $args[ $bio_key ] ) ) {
+			update_user_meta( $user_id, $bio_key, $args[ $bio_key ] );
+			if ( pll_default_language() === $curlang_slug ) {
+				update_user_meta( $user_id, 'description', $args[ $bio_key ] );
 			}
 		} elseif ( isset( $args['description'] ) ) {
 			update_user_meta( $user_id, $bio_key, $args['description'] );

@@ -1,13 +1,14 @@
-<p align="center"><a href="https://ultimatemember.com/"><img src="https://ultimatemember.com/wp-content/uploads/2017/06/umlogonew1.png" alt="Ultimate Member" width="300"></a></p>
+<p align="center"><a href="https://ultimatemember.com/"><img src="https://ultimatemember.com/wp-content/uploads/2022/05/icon-128×128.png" alt="Ultimate Member" ></a><br/>
+<h1 align="center">Ultimate Member</h1>
+</p>
 
-[![License](https://img.shields.io/github/license/ultimatemember/ultimatemember)](https://img.shields.io/github/license/ultimatemember/ultimatemember)
-[![Active Installs](https://img.shields.io/wordpress/plugin/installs/ultimate-member.svg)](https://img.shields.io/wordpress/plugin/installs/ultimate-member.svg)
-[![Ratings](https://img.shields.io/wordpress/plugin/rating/ultimate-member)](https://img.shields.io/wordpress/plugin/rating/ultimate-member)
-[![Latest Version](https://img.shields.io/wordpress/plugin/v/ultimate-member?label=Latest)](https://img.shields.io/wordpress/plugin/v/ultimate-member?label=Latest)
-[![WP Tested](https://img.shields.io/wordpress/plugin/tested/ultimate-member?label=wp)](https://img.shields.io/wordpress/plugin/tested/ultimate-member?label=wp)
-[![WP Version Required](https://img.shields.io/wordpress/plugin/wp-version/ultimate-member?label=wp)](https://img.shields.io/wordpress/plugin/wp-version/ultimate-member?label=wp)
-[![Downloads](https://img.shields.io/wordpress/plugin/dt/ultimate-member.svg)](https://img.shields.io/wordpress/plugin/dt/ultimate-member.svg)
-[![Build Status](https://travis-ci.org/ultimatemember/ultimatemember.svg?branch=master)](https://travis-ci.org/ultimatemember/ultimatemember)
+[![Active Installs](https://img.shields.io/wordpress/plugin/installs/ultimate-member?color=7856ff)](https://img.shields.io/wordpress/plugin/installs/ultimate-member?color=7856ff)
+[![Ratings](https://img.shields.io/wordpress/plugin/rating/ultimate-member?color=7856ff)](https://img.shields.io/wordpress/plugin/rating/ultimate-member?color=7856ff)
+[![Latest Version](https://img.shields.io/wordpress/plugin/v/ultimate-member?label=Latest&color=7856ff)](https://img.shields.io/wordpress/plugin/v/ultimate-member?label=Latest)
+[![WP Tested](https://img.shields.io/wordpress/plugin/tested/ultimate-member?label=wp&color=7856ff)](https://img.shields.io/wordpress/plugin/tested/ultimate-member?label=wp)
+[![WP Version Required](https://img.shields.io/wordpress/plugin/wp-version/ultimate-member?label=wp&color=7856ff)](https://img.shields.io/wordpress/plugin/wp-version/ultimate-member?label=wp)
+[![Downloads](https://img.shields.io/wordpress/plugin/dt/ultimate-member?color=7856ff)](https://img.shields.io/wordpress/plugin/dt/ultimate-member?color=7856ff)
+[![Build Status](https://img.shields.io/travis/ultimatemember/ultimatemember/master?color=7856ff)](https://travis-ci.org/ultimatemember/ultimatemember)
 
 Ultimate Member is the #1 user profile & membership plugin for WordPress. The plugin makes it a breeze for users to sign-up and become members of your website. The plugin allows you to add beautiful user profiles to your site and is perfect for creating advanced online communities and membership sites. Lightweight and highly extendible, Ultimate Member will enable you to create almost any type of site where users can join and become members with absolute ease.
 
@@ -41,7 +42,7 @@ GNU Version 2 or Any Later Version
 
 ## Releases
 
-[Official Release Version: 2.2.5](https://github.com/ultimatemember/ultimatemember/releases/tag/2.2.5).
+[Official Release Version: 2.5.4](https://github.com/ultimatemember/ultimatemember/releases/tag/2.5.4).
 
 ## Changelog
 

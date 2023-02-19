@@ -294,10 +294,12 @@ function um_user_edit_profile( $args ) {
 			if ( isset( $array['options'] ) && in_array( $array['type'], array( 'select', 'multiselect' ) ) ) {
 
 				$options = array();
-				if ( ! empty( $array['custom_dropdown_options_source'] ) && function_exists( $array['custom_dropdown_options_source'] ) && ! $has_custom_source  ) {
-					$callback_result = call_user_func( $array['custom_dropdown_options_source'], $array['options'] );
-					if ( is_array( $callback_result ) ) {
-						$options = array_keys( $callback_result );
+				if ( ! empty( $array['custom_dropdown_options_source'] ) && function_exists( $array['custom_dropdown_options_source'] ) && ! $has_custom_source ) {
+					if ( ! UM()->fields()->is_source_blacklisted( $array['custom_dropdown_options_source'] ) ) {
+						$callback_result = call_user_func( $array['custom_dropdown_options_source'], $array['options'] );
+						if ( is_array( $callback_result ) ) {
+							$options = array_keys( $callback_result );
+						}
 					}
 				}
 
@@ -721,7 +723,11 @@ function um_profile_dynamic_meta_desc() {
 
 		$locale = get_user_locale( $user_id );
 		$site_name = get_bloginfo( 'name' );
-		$twitter_site = '@' . sanitize_title( $site_name );
+
+		$twitter = (string) um_user( 'twitter' );
+		if ( ! empty( $twitter ) ) {
+			$twitter = trim( str_replace( 'https://twitter.com/', '', $twitter ), "/ \n\r\t\v\0" );
+		}
 
 		$title = trim( um_user( 'display_name' ) );
 		$description = um_convert_tags( UM()->options()->get( 'profile_desc' ) );
@@ -763,7 +769,9 @@ function um_profile_dynamic_meta_desc() {
 		<meta property="og:url" content="<?php echo esc_url( $url ); ?>"/>
 
 		<meta name="twitter:card" content="summary"/>
-		<meta name="twitter:site" content="<?php echo esc_attr( $twitter_site ); ?>"/>
+		<?php if ( $twitter ) { ?>
+			<meta name="twitter:site" content="@<?php echo esc_attr( $twitter ); ?>"/>
+		<?php } ?>
 		<meta name="twitter:title" content="<?php echo esc_attr( $title ); ?>"/>
 		<meta name="twitter:description" content="<?php echo esc_attr( $description ); ?>"/>
 		<meta name="twitter:image" content="<?php echo esc_url( $image ); ?>"/>

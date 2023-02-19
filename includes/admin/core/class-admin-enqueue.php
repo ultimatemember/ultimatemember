@@ -106,8 +106,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 				$this->um_cpt_form_screen = true;
 				add_action( 'admin_footer', array( $this, 'admin_footer_scripts' ), 20 );
 			}
-
-			$this->post_page = true;
 		}
 
 
@@ -233,11 +231,22 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		 * Load Forms
 		 */
 		function load_forms() {
+			if ( class_exists( 'WooCommerce' ) ) {
+				wp_dequeue_style( 'select2' );
+				wp_deregister_style( 'select2' );
+
+				wp_dequeue_script( 'select2' );
+				wp_deregister_script( 'select2' );
+			}
+
+			wp_register_script( 'select2', $this->front_js_baseurl . 'select2/select2.full' . $this->suffix . '.js', array( 'jquery', 'jquery-masonry' ), '4.0.13', true );
+			wp_register_style( 'select2', $this->front_css_baseurl . 'select2/select2' . $this->suffix . '.css', array(), '4.0.13' );
+
 			wp_register_style( 'um_ui', $this->front_css_baseurl . 'jquery-ui.css', array(), ultimatemember_version );
-			wp_register_style( 'um_admin_forms', $this->css_url . 'um-admin-forms.css', array( 'wp-color-picker', 'um_ui' ), ultimatemember_version );
+			wp_register_style( 'um_admin_forms', $this->css_url . 'um-admin-forms.css', array( 'wp-color-picker', 'um_ui', 'select2' ), ultimatemember_version );
 			wp_enqueue_style( 'um_admin_forms' );
 
-			wp_register_script( 'um_admin_forms', $this->js_url . 'um-admin-forms.js', array( 'jquery', 'wp-i18n' ), ultimatemember_version, true );
+			wp_register_script( 'um_admin_forms', $this->js_url . 'um-admin-forms.js', array( 'jquery', 'wp-i18n', 'select2' ), ultimatemember_version, true );
 
 			wp_localize_script( 'um_admin_forms', 'um_forms_data', array(
 				'successfully_redirect' => add_query_arg( array( 'page' => 'um_options', 'tab' => 'misc', 'msg' => 'updated' ), admin_url( 'admin.php' ) ),
@@ -646,14 +655,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			}
 
 			global $wp_version, $current_screen;
-			if ( version_compare( $wp_version, '5.0', '>=' ) && ! empty( $this->post_page ) ) {
 
-				if ( $current_screen->is_block_editor() ) {
+			if ( version_compare( $wp_version, '5.0', '>=' ) ) {
+				if ( isset( $current_screen ) && $current_screen->is_block_editor() ) {
 					$this->load_gutenberg_js();
 					$this->load_gutenberg_shortcode_blocks();
 				}
 			}
-
 		}
 
 

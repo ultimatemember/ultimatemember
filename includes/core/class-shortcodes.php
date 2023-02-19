@@ -283,7 +283,12 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			}
 
 			if ( file_exists( $file ) ) {
-				include $file;
+				// Avoid Directory Traversal vulnerability by the checking the realpath.
+				// Templates can be situated only in the get_stylesheet_directory() or plugindir templates.
+				$real_file = wp_normalize_path( realpath( $file ) );
+				if ( 0 === strpos( $real_file, wp_normalize_path( um_path . "templates" . DIRECTORY_SEPARATOR ) ) || 0 === strpos( $real_file, wp_normalize_path( get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR ) ) ) {
+					include $file;
+				}
 			}
 		}
 
@@ -357,15 +362,17 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		function um_loggedin( $args = array(), $content = "" ) {
 			ob_start();
 
-			$defaults = array(
-				'lock_text' => __( 'This content has been restricted to logged in users only. Please <a href="{login_referrer}">login</a> to view this content.', 'ultimate-member' ),
-				'show_lock' => 'yes',
+			$args = shortcode_atts(
+				array(
+					'lock_text' => __( 'This content has been restricted to logged in users only. Please <a href="{login_referrer}">login</a> to view this content.', 'ultimate-member' ),
+					'show_lock' => 'yes',
+				),
+				$args,
+				'um_loggedin'
 			);
 
-			$args = wp_parse_args( $args, $defaults );
-
 			if ( ! is_user_logged_in() ) {
-				if ( $args['show_lock'] == 'no' ) {
+				if ( 'no' === $args['show_lock'] ) {
 					echo '';
 				} else {
 					$args['lock_text'] = $this->convert_locker_tags( $args['lock_text'] );

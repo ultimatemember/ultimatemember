@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<ruleset name="Ultimate Member CS">
+
+	<description>Best practices Ultimate Member Coding Standards</description>
+	<config name="testVersion" value="5.6-"/>
+
+	<arg value="ps"/>
+	<arg name="colors"/>
+	<arg name="parallel" value="100"/>
+	<arg name="extensions" value="php"/>
+	<arg name="cache" value=".phpcs.cache"/>
+
+	<exclude-pattern>\.github/*</exclude-pattern>
+	<exclude-pattern>vendor/*</exclude-pattern>
+	<exclude-pattern>node_modules/*</exclude-pattern>
+	<exclude-pattern>documentor/*</exclude-pattern>
+	<exclude-pattern>\.idea/*</exclude-pattern>
+
+	<rule ref="WordPress-Extra"/>
+
+	<rule ref="PHPCompatibilityWP">
+		<include-pattern>*\.php$</include-pattern>
+	</rule>
+
+</ruleset>

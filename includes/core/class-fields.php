@@ -86,9 +86,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 
 			foreach ( $social as $k => $arr ) {
-				if ( um_profile( $k ) ) { ?>
+				if ( um_profile( $k ) ) {
+					if ( array_key_exists( 'match' , $arr ) ) {
+						$match = is_array( $arr['match'] ) ? $arr['match'][0] : $arr['match'];
+					} else {
+						$match = null;
+					}
+					?>
 
-					<a href="<?php echo esc_url( um_filtered_social_link( $k, $arr['match'] ) ); ?>"
+					<a href="<?php echo esc_url( um_filtered_social_link( $k, $match ) ); ?>"
 					   style="background: <?php echo esc_attr( $arr['color'] ); ?>;" target="_blank" class="um-tip-n"
 					   title="<?php echo esc_attr( $arr['title'] ); ?>"><i class="<?php echo esc_attr( $arr['icon'] ); ?>"></i></a>
 
@@ -111,7 +117,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$output = null;
 
 			foreach ( $fields as $key => $data ) {
-				$output .= UM()->fields()->edit_field( $key, $data );
+				$output .= $this->edit_field( $key, $data );
 			}
 
 			echo $output;
@@ -143,6 +149,24 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$fields = UM()->builtin()->saved_fields;
 
 			$fields[ $id ] = $args;
+
+			if ( array_key_exists( 'custom_dropdown_options_source', $args ) ) {
+				if ( function_exists( wp_unslash( $args['custom_dropdown_options_source'] ) ) ) {
+					if ( ! $this->is_source_blacklisted( $args['custom_dropdown_options_source'] ) ) {
+						$allowed_callbacks = UM()->options()->get( 'allowed_choice_callbacks' );
+						if ( ! empty( $allowed_callbacks ) ) {
+							$allowed_callbacks = array_map( 'rtrim', explode( "\n", $allowed_callbacks ) );
+							$allowed_callbacks[] = $args['custom_dropdown_options_source'];
+						} else {
+							$allowed_callbacks = array( $args['custom_dropdown_options_source'] );
+						}
+						$allowed_callbacks = array_unique( $allowed_callbacks );
+						$allowed_callbacks = implode( "\r\n", $allowed_callbacks );
+
+						UM()->options()->update( 'allowed_choice_callbacks', $allowed_callbacks );
+					}
+				}
+			}
 
 			unset( $fields[ $id ]['in_row'] );
 			unset( $fields[ $id ]['in_sub_row'] );
@@ -181,6 +205,26 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			// custom fields support
 			if ( isset( UM()->builtin()->predefined_fields[ $id ] ) && isset( UM()->builtin()->predefined_fields[ $id ]['custom'] ) ) {
 				$args = array_merge( UM()->builtin()->predefined_fields[ $id ], $args );
+			}
+
+			if ( array_key_exists( 'custom_dropdown_options_source', $args ) ) {
+				if ( function_exists( wp_unslash( $args['custom_dropdown_options_source'] ) ) ) {
+					if ( ! $this->is_source_blacklisted( $args['custom_dropdown_options_source'] ) ) {
+						$allowed_callbacks = UM()->options()->get( 'allowed_choice_callbacks' );
+						if ( ! empty( $allowed_callbacks ) ) {
+							$allowed_callbacks = array_map( 'rtrim', explode( "\n", $allowed_callbacks ) );
+							$allowed_callbacks[] = $args['custom_dropdown_options_source'];
+						} else {
+							$allowed_callbacks = array( $args['custom_dropdown_options_source'] );
+						}
+						$allowed_callbacks = array_unique( $allowed_callbacks );
+						$allowed_callbacks = implode( "\r\n", $allowed_callbacks );
+
+						UM()->options()->update( 'allowed_choice_callbacks', $allowed_callbacks );
+
+						$args['custom_dropdown_options_source'] = wp_unslash( $args['custom_dropdown_options_source'] );
+					}
+				}
 			}
 
 			$fields[ $id ] = $args;
@@ -264,6 +308,53 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					unset( $form_fields[ $id ] );
 					update_post_meta( $form_id, '_um_custom_fields', $form_fields );
 				}
+
+				$directories = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'um_directory'" );
+				foreach ( $directories as $directory_id ) {
+					// Frontend filters
+					$directory_search_fields = get_post_meta( $directory_id, '_um_search_fields', true );
+					$directory_search_fields = array_values( array_diff( $directory_search_fields, array( $id ) ) );
+					update_post_meta( $directory_id, '_um_search_fields', $directory_search_fields );
+
+					// Admin filtering
+					$directory_search_filters = get_post_meta( $directory_id, '_um_search_filters', true );
+					if ( isset( $directory_search_filters[ $id ] ) ) {
+						unset( $directory_search_filters[ $id ] );
+					}
+					update_post_meta( $directory_id, '_um_search_filters', $directory_search_filters );
+
+					// display in tagline
+					$directory_reveal_fields = get_post_meta( $directory_id, '_um_reveal_fields', true );
+					$directory_reveal_fields = array_values( array_diff( $directory_reveal_fields, array( $id ) ) );
+					update_post_meta( $directory_id, '_um_reveal_fields', $directory_reveal_fields );
+
+					// extra user information section
+					$directory_tagline_fields = get_post_meta( $directory_id, '_um_tagline_fields', true );
+					$directory_tagline_fields = array_values( array_diff( $directory_tagline_fields, array( $id ) ) );
+					update_post_meta( $directory_id, '_um_tagline_fields', $directory_tagline_fields );
+
+					// Custom fields selected in "Choose field(s) to enable in sorting"
+					$directory_sorting_fields = get_post_meta( $directory_id, '_um_sorting_fields', true );
+					foreach ( $directory_sorting_fields as $key => $sorting_data ) {
+						if ( is_array( $sorting_data ) && array_key_exists( $id, $sorting_data ) ) {
+							unset( $directory_sorting_fields[ $key ] );
+						}
+					}
+					$directory_sorting_fields = array_values( $directory_sorting_fields );
+					update_post_meta( $directory_id, '_um_sorting_fields', $directory_sorting_fields );
+
+					// If "Default sort users by" = "Other (Custom Field)" is selected when delete this custom field and set default sorting
+					$directory_sortby_custom = get_post_meta( $directory_id, '_um_sortby_custom', true );
+					if ( $directory_sortby_custom === $id ) {
+						$directory_sortby = get_post_meta( $directory_id, '_um_sortby', true );
+						if ( 'other' === $directory_sortby ) {
+							update_post_meta( $directory_id, '_um_sortby', 'user_registered_desc' );
+						}
+						update_post_meta( $directory_id, '_um_sortby_custom', '' );
+						update_post_meta( $directory_id, '_um_sortby_custom_label', '' );
+					}
+				}
+
 			}
 		}
 
@@ -1210,6 +1301,37 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			return '';
 		}
 
+		/**
+		 * Getting the blacklist of the functions that cannot be used as callback.
+		 * All internal PHP functions are insecure for using inside callback functions.
+		 *
+		 * @return array
+		 */
+		public function dropdown_options_source_blacklist() {
+			$list      = get_defined_functions();
+			$blacklist = ! empty( $list['internal'] ) ? $list['internal'] : array();
+			$blacklist = apply_filters( 'um_dropdown_options_source_blacklist', $blacklist );
+			return $blacklist;
+		}
+
+		/**
+		 * Is the dropdown source callback function blacklisted?
+		 *
+		 * @param string $source Function name
+		 *
+		 * @return bool
+		 */
+		public function is_source_blacklisted( $source ) {
+			// avoid using different letter case for bypass the blacklist e.g. phpInfo
+			// avoid using root namespace for bypass the blacklist e.g. \phpinfo
+			$source = trim( strtolower( $source ), '\\' );
+
+			if ( in_array( $source, $this->dropdown_options_source_blacklist(), true ) ) {
+				return true;
+			}
+
+			return false;
+		}
 
 		/**
 		 * Gets selected option value from a callback function
@@ -1223,6 +1345,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		function get_option_value_from_callback( $value, $data, $type ) {
 
 			if ( in_array( $type, array( 'select', 'multiselect' ) ) && ! empty( $data['custom_dropdown_options_source'] ) ) {
+
+				if ( $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
+					return $value;
+				}
 
 				$has_custom_source = apply_filters( "um_has_dropdown_options_source__{$data['metakey']}", false );
 
@@ -1290,6 +1416,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$arr_options = array();
 
 			if ( in_array( $type, array( 'select', 'multiselect' ) ) && ! empty( $data['custom_dropdown_options_source'] ) ) {
+
+				if ( $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
+					return $arr_options;
+				}
 
 				if ( function_exists( $data['custom_dropdown_options_source'] ) ) {
 					if ( isset( $data['parent_dropdown_relationship'] ) ) {
@@ -1498,6 +1628,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					break;
 
+				case 'tel':
+
+					$array['input'] = 'tel';
+
+					break;
+
 				case 'password':
 
 					$array['input'] = 'password';
@@ -1599,6 +1735,28 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 
 					}
+
+					/**
+					 * UM hook
+					 *
+					 * @type filter
+					 * @title um_get_field_date
+					 * @description Extend field date
+					 * @input_vars
+					 * [{"var":"$data","type":"array","desc":"Field Date Data"}]
+					 * @change_log
+					 * ["Since: 2.5.4"]
+					 * @usage add_filter( 'um_get_field_date', 'function_name', 10, 1 );
+					 * @example
+					 * <?php
+					 * add_filter( 'um_get_field_date', 'my_get_field_date', 10, 1 );
+					 * function my_get_field_date( $data ) {
+					 *     // your code here
+					 *     return $data;
+					 * }
+					 * ?>
+					 */
+					$array = apply_filters( 'um_get_field_date', $array );
 
 					break;
 
@@ -2243,6 +2401,43 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$output .= '</div>';
 					break;
 
+				/* Tel */
+				case 'tel':
+
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
+
+					if ( isset( $data['label'] ) ) {
+						$output .= $this->field_label( $label, $key, $data );
+					}
+
+					$output .= '<div class="um-field-area">';
+
+					if ( ! empty( $icon ) && isset( $this->field_icons ) && $this->field_icons == 'field' ) {
+
+						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $icon ) . '"></i></div>';
+
+					}
+
+					$field_name = $key . UM()->form()->form_suffix;
+					$field_value = htmlspecialchars( $this->field_value( $key, $default, $data ) );
+
+					$output .= '<input ' . $disabled . ' autocomplete="' . esc_attr( $autocomplete ) . '" class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />
+
+						</div>';
+
+					if ( ! empty( $disabled ) ) {
+						$output .= $this->disabled_hidden_field( $field_name, $field_value );
+					}
+
+					if ( $this->is_error( $key ) ) {
+						$output .= $this->field_error( $this->show_error( $key ) );
+					}else if ( $this->is_notice( $key ) ) {
+						$output .= $this->field_notice( $this->show_notice( $key ) );
+					}
+
+					$output .= '</div>';
+					break;
+
 				/* Number */
 				case 'number':
 
@@ -2685,39 +2880,54 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						} else {
 							$img = '';
 						}
-						$output .= '<div class="um-single-image-preview show ' . $crop_class . '" data-crop="' . $crop_data . '" data-key="' . $key . '">
-								<a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>' . $img . '
-							</div><a href="javascript:void(0);" data-modal="um_upload_single" data-modal-size="' . $modal_size . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . __( 'Change photo', 'ultimate-member' ) . '</a>';
+						$output .= '<div class="um-single-image-preview show ' . $crop_class . '" data-crop="' . $crop_data . '" data-key="' . $key . '">';
+						if ( empty( $disabled ) ) {
+							$output .= '<a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>';
+						}
+						$output .= $img;
+						$output .= '</div>';
+						if ( empty( $disabled ) ) {
+							$output .= '<a href="javascript:void(0);" data-modal="um_upload_single" data-modal-size="' . $modal_size . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . __( 'Change photo', 'ultimate-member' ) . '</a>';
+						}
+
+
 					} else {
-						$output .= '<div class="um-single-image-preview ' . $crop_class . '" data-crop="' . $crop_data . '" data-key="' . $key . '">
-								<a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>
-								<img src="" alt="" />
-							<div class="um-clear"></div></div><a href="javascript:void(0);" data-modal="um_upload_single" data-modal-size="' . $modal_size . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . $button_text . '</a>';
+						$output .= '<div class="um-single-image-preview ' . $crop_class . '" data-crop="' . $crop_data . '" data-key="' . $key . '">';
+						if ( empty( $disabled ) ) {
+							$output .= '<a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>';
+						}
+						$output .= '<img src="" alt="" /><div class="um-clear"></div></div>';
+						if ( empty( $disabled ) ) {
+							$output .= '<a href="javascript:void(0);" data-modal="um_upload_single" data-modal-size="' . $modal_size . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . $button_text . '</a>';
+						}
+
 					}
 					$output .= '</div>';
 					/* modal hidden */
-					$output .= '<div class="um-modal-hidden-content">';
-					$output .= '<div class="um-modal-header"> ' . $modal_label . '</div>';
-					$output .= '<div class="um-modal-body">';
-					if (isset( $this->set_id )) {
-						$set_id = $this->set_id;
-						$set_mode = $this->set_mode;
-					} else {
-						$set_id = 0;
-						$set_mode = '';
-					}
-					$nonce = wp_create_nonce( 'um_upload_nonce-' . $this->timestamp );
-					$output .= '<div class="um-single-image-preview ' . $crop_class . '"  data-crop="' . $crop_data . '" data-ratio="' . $ratio . '" data-min_width="' . $min_width . '" data-min_height="' . $min_height . '" data-coord=""><a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a><img src="" alt="" /><div class="um-clear"></div></div><div class="um-clear"></div>';
-					$output .= '<div class="um-single-image-upload" data-user_id="' . esc_attr( $_um_profile_id ) . '" data-nonce="' . $nonce . '" data-timestamp="' . esc_attr( $this->timestamp ) . '" data-icon="' . esc_attr( $icon ) . '" data-set_id="' . esc_attr( $set_id ) . '" data-set_mode="' . esc_attr( $set_mode ) . '" data-type="' . esc_attr( $type ) . '" data-key="' . esc_attr( $key ) . '" data-max_size="' . esc_attr( $max_size ) . '" data-max_size_error="' . esc_attr( $max_size_error ) . '" data-min_size_error="' . esc_attr( $min_size_error ) . '" data-extension_error="' . esc_attr( $extension_error ) . '"  data-allowed_types="' . esc_attr( $allowed_types ) . '" data-upload_text="' . esc_attr( $upload_text ) . '" data-max_files_error="' . esc_attr( $max_files_error ) . '" data-upload_help_text="' . esc_attr( $upload_help_text ) . '">' . $button_text . '</div>';
-					$output .= '<div class="um-modal-footer">
+					if ( empty( $disabled ) ) {
+						$output .= '<div class="um-modal-hidden-content">';
+						$output .= '<div class="um-modal-header"> ' . $modal_label . '</div>';
+						$output .= '<div class="um-modal-body">';
+						if ( isset( $this->set_id ) ) {
+							$set_id   = $this->set_id;
+							$set_mode = $this->set_mode;
+						} else {
+							$set_id   = 0;
+							$set_mode = '';
+						}
+						$nonce  = wp_create_nonce( 'um_upload_nonce-' . $this->timestamp );
+						$output .= '<div class="um-single-image-preview ' . $crop_class . '"  data-crop="' . $crop_data . '" data-ratio="' . $ratio . '" data-min_width="' . $min_width . '" data-min_height="' . $min_height . '" data-coord=""><a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a><img src="" alt="" /><div class="um-clear"></div></div><div class="um-clear"></div>';
+						$output .= '<div class="um-single-image-upload" data-user_id="' . esc_attr( $_um_profile_id ) . '" data-nonce="' . $nonce . '" data-timestamp="' . esc_attr( $this->timestamp ) . '" data-icon="' . esc_attr( $icon ) . '" data-set_id="' . esc_attr( $set_id ) . '" data-set_mode="' . esc_attr( $set_mode ) . '" data-type="' . esc_attr( $type ) . '" data-key="' . esc_attr( $key ) . '" data-max_size="' . esc_attr( $max_size ) . '" data-max_size_error="' . esc_attr( $max_size_error ) . '" data-min_size_error="' . esc_attr( $min_size_error ) . '" data-extension_error="' . esc_attr( $extension_error ) . '"  data-allowed_types="' . esc_attr( $allowed_types ) . '" data-upload_text="' . esc_attr( $upload_text ) . '" data-max_files_error="' . esc_attr( $max_files_error ) . '" data-upload_help_text="' . esc_attr( $upload_help_text ) . '">' . $button_text . '</div>';
+						$output .= '<div class="um-modal-footer">
 									<div class="um-modal-right">
 										<a href="javascript:void(0);" class="um-modal-btn um-finish-upload image disabled" data-key="' . $key . '" data-change="' . __( 'Change photo', 'ultimate-member' ) . '" data-processing="' . __( 'Processing...', 'ultimate-member' ) . '"> ' . __( 'Apply', 'ultimate-member' ) . '</a>
 										<a href="javascript:void(0);" class="um-modal-btn alt" data-action="um_remove_modal"> ' . __( 'Cancel', 'ultimate-member' ) . '</a>
 									</div>
 									<div class="um-clear"></div>
 								</div>';
-					$output .= '</div>';
-					$output .= '</div>';
+						$output .= '</div>';
+						$output .= '</div>';
+					}
 					/* end */
 					if ( $this->is_error( $key ) ) {
 						$output .= $this->field_error( $this->show_error( $key ) );
@@ -2768,9 +2978,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 
 						if ( file_exists( $file_dir ) ) {
-							$output .= "<div class=\"um-single-file-preview show\" data-key=\"{$key}\">
-										<a href=\"#\" class=\"cancel\"><i class=\"um-icon-close\"></i></a>
-										<div class=\"um-single-fileinfo\">
+							$output .= "<div class=\"um-single-file-preview show\" data-key=\"{$key}\">";
+							if ( empty( $disabled ) ) {
+								$output .= "<a href=\"#\" class=\"cancel\"><i class=\"um-icon-close\"></i></a>";
+							}
+							$output .= "<div class=\"um-single-fileinfo\">
 											<a href=\"{$file_url}\" target=\"_blank\">
 												<span class=\"icon\" style=\"background:" . UM()->files()->get_fonticon_bg_by_ext( $file_type['ext'] ) . "\"><i class=\"" . UM()->files()->get_fonticon_by_ext( $file_type['ext'] ) . "\"></i></span>
 												<span class=\"filename\">{$file_field_name}</span>
@@ -2780,24 +2992,29 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$output .= "<div class=\"um-single-file-preview show\" data-key=\"{$key}\">" . __('This file has been removed.','ultimate-member') . "</div>";
 						}
 
-						$output .= "<a href=\"#\" data-modal=\"um_upload_single\" data-modal-size=\"{$modal_size}\" data-modal-copy=\"1\" class=\"um-button um-btn-auto-width\">" . __( 'Change file', 'ultimate-member' ) . "</a>";
+						if ( empty( $disabled ) ) {
+							$output .= "<a href=\"#\" data-modal=\"um_upload_single\" data-modal-size=\"{$modal_size}\" data-modal-copy=\"1\" class=\"um-button um-btn-auto-width\">" . __( 'Change file', 'ultimate-member' ) . "</a>";
+						}
 					} else {
-						$output .= "<div class=\"um-single-file-preview\" data-key=\"{$key}\">
-							</div><a href=\"#\" data-modal=\"um_upload_single\" data-modal-size=\"{$modal_size}\" data-modal-copy=\"1\" class=\"um-button um-btn-auto-width\">{$button_text}</a>";
+						$output .= "<div class=\"um-single-file-preview\" data-key=\"{$key}\"></div>";
+						if ( empty( $disabled ) ) {
+							$output .= "<a href=\"#\" data-modal=\"um_upload_single\" data-modal-size=\"{$modal_size}\" data-modal-copy=\"1\" class=\"um-button um-btn-auto-width\">{$button_text}</a>";
+						}
 					}
 					$output .= '</div>';
 					/* modal hidden */
-					$output .= '<div class="um-modal-hidden-content">';
-					$output .= '<div class="um-modal-header"> ' . $modal_label . '</div>';
-					$output .= '<div class="um-modal-body">';
-					if ( isset( $this->set_id ) ) {
-						$set_id = $this->set_id;
-						$set_mode = $this->set_mode;
-					} else {
-						$set_id = 0;
-						$set_mode = '';
-					}
-					$output .= '<div class="um-single-file-preview">
+					if ( empty( $disabled ) ) {
+						$output .= '<div class="um-modal-hidden-content">';
+						$output .= '<div class="um-modal-header"> ' . $modal_label . '</div>';
+						$output .= '<div class="um-modal-body">';
+						if ( isset( $this->set_id ) ) {
+							$set_id   = $this->set_id;
+							$set_mode = $this->set_mode;
+						} else {
+							$set_id   = 0;
+							$set_mode = '';
+						}
+						$output .= '<div class="um-single-file-preview">
 										<a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>
 										<div class="um-single-fileinfo">
 											<a href="" target="_blank">
@@ -2806,17 +3023,18 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 											</a>
 										</div>
 								</div>';
-					$nonce = wp_create_nonce( 'um_upload_nonce-' . $this->timestamp );
-					$output .= '<div class="um-single-file-upload" data-user_id="' . esc_attr( $_um_profile_id ) . '" data-timestamp="' . esc_attr( $this->timestamp ) . '" data-nonce="' . $nonce . '" data-icon="' . esc_attr( $icon ) . '" data-set_id="' . esc_attr( $set_id ) . '" data-set_mode="' . esc_attr( $set_mode ) . '" data-type="' . esc_attr( $type ) . '" data-key="' . esc_attr( $key ) . '" data-max_size="' . esc_attr( $max_size ) . '" data-max_size_error="' . esc_attr( $max_size_error ) . '" data-min_size_error="' . esc_attr( $min_size_error ) . '" data-extension_error="' . esc_attr( $extension_error ) . '"  data-allowed_types="' . esc_attr( $allowed_types ) . '" data-upload_text="' . esc_attr( $upload_text ) . '" data-max_files_error="' . esc_attr( $max_files_error ) . '" data-upload_help_text="' . esc_attr( $upload_help_text ) . '">' . $button_text . '</div>';
-					$output .= '<div class="um-modal-footer">
+						$nonce  = wp_create_nonce( 'um_upload_nonce-' . $this->timestamp );
+						$output .= '<div class="um-single-file-upload" data-user_id="' . esc_attr( $_um_profile_id ) . '" data-timestamp="' . esc_attr( $this->timestamp ) . '" data-nonce="' . $nonce . '" data-icon="' . esc_attr( $icon ) . '" data-set_id="' . esc_attr( $set_id ) . '" data-set_mode="' . esc_attr( $set_mode ) . '" data-type="' . esc_attr( $type ) . '" data-key="' . esc_attr( $key ) . '" data-max_size="' . esc_attr( $max_size ) . '" data-max_size_error="' . esc_attr( $max_size_error ) . '" data-min_size_error="' . esc_attr( $min_size_error ) . '" data-extension_error="' . esc_attr( $extension_error ) . '"  data-allowed_types="' . esc_attr( $allowed_types ) . '" data-upload_text="' . esc_attr( $upload_text ) . '" data-max_files_error="' . esc_attr( $max_files_error ) . '" data-upload_help_text="' . esc_attr( $upload_help_text ) . '">' . $button_text . '</div>';
+						$output .= '<div class="um-modal-footer">
 									<div class="um-modal-right">
 										<a href="javascript:void(0);" class="um-modal-btn um-finish-upload file disabled" data-key="' . esc_attr( $key ) . '" data-change="' . esc_attr__( 'Change file' ) . '" data-processing="' . esc_attr__( 'Processing...', 'ultimate-member' ) . '"> ' . __( 'Save', 'ultimate-member' ) . '</a>
 										<a href="javascript:void(0);" class="um-modal-btn alt" data-action="um_remove_modal"> ' . __( 'Cancel', 'ultimate-member' ) . '</a>
 									</div>
 									<div class="um-clear"></div>
 								</div>';
-					$output .= '</div>';
-					$output .= '</div>';
+						$output .= '</div>';
+						$output .= '</div>';
+					}
 					/* end */
 					if ( $this->is_error( $key ) ) {
 						$output .= $this->field_error( $this->show_error( $key ) );
@@ -2890,7 +3108,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						if ( ! empty( $data['custom_dropdown_options_source'] ) && $has_parent_option && function_exists( $data['custom_dropdown_options_source'] ) &&
 							um_user( $data['parent_dropdown_relationship'] )
 						) {
-							$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+							if ( ! $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
+								$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+							}
 
 							$disabled_by_parent_option = '';
 							if ( um_user( $form_key ) ) {
@@ -2906,10 +3126,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					// Child dropdown
 					if ( $has_parent_option ) {
-
 						if ( ! empty( $data['custom_dropdown_options_source'] ) && $has_parent_option &&
 							 function_exists( $data['custom_dropdown_options_source'] ) && isset( UM()->form()->post_form[ $form_key ] ) ) {
-							$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+							if ( ! $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
+								$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+							}
 						}
 					}
 
@@ -3429,7 +3650,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 							$i++;
 							if ($i % 2 == 0) {
-								$col_class = 'right';
+								$col_class = ' right ';
 							} else {
 								$col_class = '';
 							}
@@ -3556,7 +3777,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						$i++;
 						if ( $i % 2 == 0 ) {
-							$col_class = 'right';
+							$col_class = ' right ';
 						} else {
 							$col_class = '';
 						}
@@ -4135,6 +4356,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$res = stripslashes( $res );
 						}
 						if ( 'description' === $data['metakey'] ) {
+							if ( UM()->options()->get( 'profile_show_html_bio' ) ) {
+								$res = make_clickable( wpautop( wp_kses_post( $res ) ) );
+							} else {
+								$res = esc_html( $res );
+							}
+
 							$res = nl2br( $res );
 						}
 
@@ -4379,7 +4606,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				}
 
 				if ( um_is_myprofile() ) {
-					$output .= '<p class="um-profile-note">' . $emo . '<span>' . sprintf( __( 'Your profile is looking a little empty. Why not <a href="%s">add</a> some information!', 'ultimate-member' ), esc_url( um_edit_profile_url() ) ) . '</span></p>';
+					if ( isset( $_GET['profiletab'] ) && 'main' !== $_GET['profiletab'] ) {
+						$tab         = sanitize_key( $_GET['profiletab'] );
+						$edit_action = 'edit_' . $tab;
+						$profile_url = um_user_profile_url( um_profile_id() );
+						$edit_url    = add_query_arg( array( 'profiletab' => $tab, 'um_action' => $edit_action ), $profile_url );
+					} else {
+						$edit_url    = um_edit_profile_url();
+					}
+					$output .= '<p class="um-profile-note">' . $emo . '<span>' . sprintf( __( 'Your profile is looking a little empty. Why not <a href="%s">add</a> some information!', 'ultimate-member' ), esc_url( $edit_url ) ) . '</span></p>';
 				} else {
 					$output .= '<p class="um-profile-note">' . $emo . '<span>' . __( 'This user has not added any information to their profile yet.', 'ultimate-member' ) . '</span></p>';
 				}

@@ -48,6 +48,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$this->need_upgrade();
 			$this->check_wrong_licenses();
 
+			$this->lock_registration();
+
+			$this->extensions_page();
+
 			// removed for now to avoid the bad reviews
 			//$this->reviews_notice();
 
@@ -210,6 +214,63 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				return;
 			} else {
 				return $notice;
+			}
+		}
+
+
+		/**
+		 * Checking if the "Membership - Anyone can register" WordPress general setting is active
+		 */
+		public function lock_registration() {
+			$users_can_register = get_option( 'users_can_register' );
+			if ( ! $users_can_register ) {
+				return;
+			}
+
+			$allowed_html = array(
+				'a'      => array(
+					'href' => array(),
+				),
+				'strong' => array(),
+			);
+
+			$this->add_notice( 'lock_registration', array(
+				'class'       => 'info',
+				'message'     => '<p>' . wp_kses( sprintf( __( 'The <strong>"Membership - Anyone can register"</strong> option on the general settings <a href="%s">page</a> is enabled. This means users can register via the standard WordPress wp-login.php page. If you do not want users to be able to register via this page and only register via the Ultimate Member registration form, you should deactivate this option. You can dismiss this notice if you wish to keep the wp-login.php registration page open.', 'ultimate-member' ), admin_url( 'options-general.php' ) . '#users_can_register' ), $allowed_html ) . '</p>',
+				'dismissible' => true,
+			), 10 );
+		}
+
+		/**
+		 * Checking if the "Membership - Anyone can register" WordPress general setting is active
+		 */
+		public function extensions_page() {
+			global $pagenow;
+			if ( isset( $pagenow ) && 'admin.php' === $pagenow && isset( $_GET['page'] ) && 'ultimatemember-extensions' === $_GET['page'] ) {
+				ob_start();
+				?>
+
+				<p>
+					<?php _e( '<strong>All Access Pass</strong> – Get access to all Ultimate Member extensions at a significant discount with our All Access Pass.', 'ultimate-member' ) ?>
+				</p>
+				<p>
+					<a href="https://ultimatemember.com/pricing/" class="button button-primary" target="_blank">
+						<?php _e( 'View Pricing', 'ultimate-member' ) ?>
+					</a>
+				</p>
+
+				<?php
+				$message = ob_get_clean();
+
+				$this->add_notice(
+					'extensions_all_access',
+					array(
+						'class'       => 'info',
+						'message'     => $message,
+						'dismissible' => false,
+					),
+					10
+				);
 			}
 		}
 
@@ -414,6 +475,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					$messages[0]['content'] = __( 'Your user cache is now removed.', 'ultimate-member' );
 					break;
 
+				case 'cleared_status_cache':
+					$messages[0]['content'] = __( 'Your user statuses cache is now removed.', 'ultimate-member' );
+					break;
+
 				case 'got_updates':
 					$messages[0]['content'] = __( 'You have the latest updates.', 'ultimate-member' );
 					break;
@@ -424,6 +489,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 				case 'form_duplicated':
 					$messages[0]['content'] = __( 'The form has been duplicated successfully.', 'ultimate-member' );
+					break;
+
+				case 'settings_updated':
+					$messages[0]['content'] = __( 'Settings have been saved successfully.', 'ultimate-member' );
 					break;
 
 				case 'user_updated':
@@ -498,13 +567,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					continue;
 
 				if ( ( is_object( $license ) && 'inactive' == $license->license ) || 'inactive' == $license ) {
-					$arr_inactive_license_keys[ ] = $license->item_name;
+					$arr_inactive_license_keys[] = $license->item_name;
 				}
 
 				$invalid_license++;
 			}
 
-			if ( ! empty(  $arr_inactive_license_keys ) ) {
+			if ( ! empty( $arr_inactive_license_keys ) ) {
 				$this->add_notice( 'license_key', array(
 					'class'     => 'error',
 					'message'   => '<p>' . sprintf( __( 'There are %d inactive %s license keys for this site. This site is not authorized to get plugin updates. You can active this site on <a href="%s">www.ultimatemember.com</a>.', 'ultimate-member' ), count( $arr_inactive_license_keys ) , ultimatemember_plugin_name, UM()->store_url ) . '</p>',
@@ -532,7 +601,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				</p>
 
 				<p>
-					<a href="<?php echo esc_url( $url ) ?>" class="button button-primary"><?php _e( 'Upgrade Now', 'ultimate-member' ) ?></a>
+					<a href="<?php echo esc_url( $url ) ?>" class="button button-primary"><?php _e( 'Visit Upgrade Page', 'ultimate-member' ) ?></a>
 					&nbsp;
 				</p>
 
