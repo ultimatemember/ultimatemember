@@ -1,8 +1,9 @@
 <?php
 namespace umm\online\includes\frontend;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 
 /**

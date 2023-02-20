@@ -634,6 +634,10 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 								),
 							),
 						),
+						'hiddens'   => array(
+							'um-action' => 'account-privacy-tab',
+							'nonce'     => wp_create_nonce( 'um-privacy-tab' ),
+						),
 						'buttons'   => array(
 							'save-password' => array(
 								'type'  => 'submit',
@@ -666,7 +670,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						),
 						'hiddens'   => array(
 							'um-action' => 'account-delete-tab',
-							'nonce'     => wp_create_nonce( 'um-' . $id . '-tab' ),
+							'nonce'     => wp_create_nonce( 'um-delete-tab' ),
 						),
 						'buttons'   => array(
 							'save-password' => array(
@@ -729,7 +733,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						),
 						'hiddens'   => array(
 							'um-action' => 'account-general-tab',
-							'nonce'     => wp_create_nonce( 'um-' . $id . '-tab' ),
+							'nonce'     => wp_create_nonce( 'um-general-tab' ),
 						),
 						'buttons'   => array(
 							'save-password' => array(
@@ -797,7 +801,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						),
 						'hiddens'   => array(
 							'um-action' => 'account-password-tab',
-							'nonce'     => wp_create_nonce( 'um-' . $id . '-tab' ),
+							'nonce'     => wp_create_nonce( 'um-password-tab' ),
 						),
 						'buttons'   => array(
 							'save-password' => array(
