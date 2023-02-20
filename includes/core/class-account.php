@@ -657,7 +657,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 					$args = array(
 						'id'        => 'um-' . $id . '-tab',
-						'class'     => 'um-top-label um-single-button um-center-always',
+						'class'     => 'um-top-label um-single-button',
 						'prefix_id' => '',
 						'fields'    => array(
 							array(
@@ -774,7 +774,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 					$args = array(
 						'id'        => 'um-' . $id . '-tab',
-						'class'     => 'um-top-label um-single-button um-center-always',
+						'class'     => 'um-top-label um-single-button',
 						'prefix_id' => '',
 						'fields'    => array(
 							array(

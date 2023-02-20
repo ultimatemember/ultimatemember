@@ -31,6 +31,7 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 			$this->actions_listener();
 			$this->enqueue();
 			$this->forms();
+			$this->account();
 			$this->user()->hooks();
 		}
 
@@ -83,6 +84,19 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 			}
 
 			return UM()->classes['um\frontend\forms'];
+		}
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return Account
+		 */
+		public function account() {
+			if ( empty( UM()->classes['um\frontend\account'] ) ) {
+				UM()->classes['um\frontend\account'] = new Account();
+			}
+
+			return UM()->classes['um\frontend\account'];
 		}
 
 		/**
