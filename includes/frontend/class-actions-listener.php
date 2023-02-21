@@ -379,6 +379,13 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 					if ( UM()->options()->get( 'account_name' ) && ! UM()->options()->get( 'account_name_disable' ) ) {
 						update_user_meta( $user_id, 'first_name', $first_name );
 						update_user_meta( $user_id, 'last_name', $last_name );
+						if ( isset( $first_name ) || isset( $last_name ) ) {
+							$changes = array(
+								'first_name' => $first_name,
+								'last_name'  => $last_name,
+							);
+							do_action( 'um_update_profile_full_name', $user_id, $changes );
+						}
 					}
 					if ( UM()->options()->get( 'account_email' ) || um_user( 'can_edit_everyone' ) ) {
 						$args = array(
@@ -530,6 +537,41 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 						)
 					);
 				}
+			}
+
+			if ( ! empty( $_POST['um-action-privacy-tab'] ) && 'account-privacy-tab' === sanitize_key( $_POST['um-action-privacy-tab'] ) ) {
+				$tab_form = UM()->frontend()->form(
+					array(
+						'id' => 'um-privacy-tab',
+					)
+				);
+				$tab_form->flush_errors();
+
+				if ( empty( $_POST['privacy-tab-nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['privacy-tab-nonce'] ), 'um-privacy-tab' ) ) {
+					$tab_form->add_error( 'global', __( 'Security issue, Please try again', 'ultimate-member' ) );
+				}
+
+				$changes = array(
+					'profile_privacy' => sanitize_text_field( $_POST['profile_privacy'] ),
+					'profile_noindex' => sanitize_key( $_POST['profile_noindex'] ),
+					'hide_in_members' => array(
+						sanitize_text_field( $_POST['hide_in_members'] ),
+					),
+				);
+
+				/**
+				 * Filters extend privacy data.
+				 *
+				 * @since 1.0
+				 * @hook um_account_privacy_fields_update
+				 *
+				 * @param {string} $changes account privacy fields
+				 *
+				 * @return {array} account privacy fields.
+				 */
+				$changes = apply_filters( 'um_account_privacy_fields_update', $changes );
+
+				UM()->user()->update_profile( $changes );
 			}
 
 			if ( ! empty( $_POST['um-action-export-tab'] ) && 'account-privacy-export-tab' === sanitize_key( $_POST['um-action-export-tab'] ) ) {

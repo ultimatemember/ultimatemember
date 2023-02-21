@@ -19,15 +19,16 @@ class Account {
 	 */
 	public function __construct() {
 		add_filter( 'um_account_tab_privacy_fields', array( &$this, 'add_privacy_field' ), 10, 1 );
+		add_filter( 'um_account_privacy_fields_update', array( &$this, 'privacy_fields_update' ), 10, 1 );
 	}
 
 
 	/**
 	 * Shows the online field in account page
 	 *
-	 * @param string $args
+	 * @param array $args
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function add_privacy_field( $args ) {
 		$user_id = get_current_user_id();
@@ -49,6 +50,21 @@ class Account {
 				'yes' => __( 'Yes', 'ultimate-member' ),
 			),
 		);
+
+		return $args;
+	}
+
+
+	/**
+	 * Extend privacy tab update fields
+	 *
+	 * @param array $args
+	 *
+	 * @return array
+	 */
+	public function privacy_fields_update( $args ) {
+		// phpcs:disable WordPress.Security.NonceVerification -- already verified here
+		$args['_hide_online_status'] = array( sanitize_key( $_POST['_hide_online_status'] ) );
 
 		return $args;
 	}

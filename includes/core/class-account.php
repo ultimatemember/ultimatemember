@@ -584,6 +584,16 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 				case 'privacy':
 
+					/**
+					 * Filters extend privacy options.
+					 *
+					 * @since 1.0
+					 * @hook um_profile_privacy_options
+					 *
+					 * @param {array} $options privacy options
+					 *
+					 * @return {array} privacy options.
+					 */
 					$profile_privacy = apply_filters(
 						'um_profile_privacy_options',
 						array(
@@ -592,10 +602,12 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						)
 					);
 
-					$hide_in_members = 'No';
+
 					if ( get_user_meta( $user_id, 'hide_in_members', true ) ) {
 						$hide_in_members_meta = get_user_meta( $user_id, 'hide_in_members', true );
 						$hide_in_members      = $hide_in_members_meta[0];
+					} else {
+						$hide_in_members = 'No';
 					}
 
 					$args = array(
@@ -649,17 +661,39 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						),
 					);
 
+					/**
+					 * Filters extend privacy tab form.
+					 *
+					 * @since 1.0
+					 * @hook um_account_tab_privacy_fields
+					 *
+					 * @param {array} $args           form arguments
+					 * @param {array} $shortcode_args shortcode arguments
+					 *
+					 * @return {array} form arguments.
+					 */
 					$args = apply_filters( 'um_account_tab_privacy_fields', $args, $shortcode_args );
 
 					break;
 
 				case 'delete':
 
+					if ( UM()->account()->current_password_is_required( 'delete' ) ) {
+						$delete_text = UM()->options()->get( 'delete_account_text' );
+					} else {
+						$delete_text = UM()->options()->get( 'delete_account_no_pass_required_text' );
+					}
+
 					$args = array(
 						'id'        => 'um-' . $id . '-tab',
 						'class'     => 'um-top-label um-single-button',
 						'prefix_id' => '',
 						'fields'    => array(
+							'delete_text' => array(
+								'type' => 'block',
+								'id'      => 'um-delete-text',
+								'content' => $delete_text,
+							),
 							array(
 								'type'     => 'password',
 								'label'    => __( 'Password', 'ultimate-member' ),
@@ -766,6 +800,16 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						$args['fields']['user_email']['disabled'] = true;
 					}
 
+					/**
+					 * Filters extend general tab form.
+					 *
+					 * @since 1.0
+					 * @hook um_general_tab_form_args
+					 *
+					 * @param {array} $args           form arguments
+					 *
+					 * @return {array} form arguments.
+					 */
 					$args = apply_filters( 'um_general_tab_form_args', $args );
 
 					break;
@@ -819,25 +863,15 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				default :
 
 					/**
-					 * UM hook
+					 * Filters extend tab form.
 					 *
-					 * @type filter
-					 * @title um_account_content_hook_{$id}
-					 * @description Change not default Account tabs content
-					 * @input_vars
-					 * [{"var":"$output","type":"string","desc":"Account Tab Output"},
-					 * {"var":"$shortcode_args","type":"array","desc":"Account Shortcode Arguments"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_filter( 'um_account_content_hook_{$id}', 'function_name', 10, 2 );
-					 * @example
-					 * <?php
-					 * add_filter( 'um_account_content_hook_{$id}', 'my_account_content', 10, 2 );
-					 * function my_account_tab_password_fields( $args, $shortcode_args ) {
-					 *     // your code here
-					 *     return $args;
-					 * }
-					 * ?>
+					 * @since 1.0
+					 * @hook um_account_content_hook_{$id}
+					 *
+					 * @param {array} $args           form arguments
+					 * @param {array} $shortcode_args shortcode arguments
+					 *
+					 * @return {array} form arguments.
 					 */
 					$args = apply_filters( "um_account_content_hook_{$id}", $args, $shortcode_args );
 
