@@ -18,7 +18,7 @@ function um_before_account_notifications( $args = array() ) {
 
 	<?php }
 }
-add_action( 'um_before_account_notifications', 'um_before_account_notifications' );
+//add_action( 'um_before_account_notifications', 'um_before_account_notifications' );
 
 
 /**

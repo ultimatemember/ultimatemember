@@ -860,6 +860,58 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 					break;
 
+				case 'notifications':
+
+					/**
+					 * Filters extend notifications tab form.
+					 *
+					 * @since 1.0
+					 * @hook um_notifications_tab_form_args
+					 *
+					 * @param {array} $args           form arguments
+					 *
+					 * @return {array} form arguments.
+					 */
+					$fields = apply_filters( 'um_notifications_tab_form_args', array() );
+
+					if ( ! empty( $fields ) ) {
+						$notifications_text = '<p>'. esc_html__( 'Select what email notifications you want to receive', 'ultimate-member' ) . '</p>';
+
+						$args = array(
+							'id'        => 'um-' . $id . '-tab',
+							'class'     => 'um-top-label um-single-button',
+							'prefix_id' => '',
+							'fields'    => array(
+								array(
+									'type'    => 'block',
+									'id'      => 'um-notifications-text',
+									'content' => $notifications_text,
+								),
+							),
+							'hiddens'   => array(
+								'um-action-notifications-tab' => 'account-notifications-tab',
+								'notifications-tab-nonce'     => wp_create_nonce( 'um-notifications-tab' ),
+							),
+							'buttons'   => array(
+								'update-notifications' => array(
+									'type'  => 'submit',
+									'label' => __( 'Update Notifications', 'ultimate-member' ),
+									'class' => array(
+										'um-button-primary',
+									),
+								),
+							),
+						);
+
+						$args['fields'] = array_merge( $args['fields'], $fields );
+					}
+//					echo '<pre>';
+//					print_r($args);
+//					echo '</pre>';
+//					exit();
+
+					break;
+
 				default :
 
 					/**
