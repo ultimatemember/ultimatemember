@@ -592,7 +592,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						)
 					);
 
-					$hide_in_members = '';
+					$hide_in_members = 'No';
 					if ( get_user_meta( $user_id, 'hide_in_members', true ) ) {
 						$hide_in_members_meta = get_user_meta( $user_id, 'hide_in_members', true );
 						$hide_in_members      = $hide_in_members_meta[0];
@@ -635,8 +635,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 							),
 						),
 						'hiddens'   => array(
-							'um-action' => 'account-privacy-tab',
-							'nonce'     => wp_create_nonce( 'um-privacy-tab' ),
+							'um-action-privacy-tab' => 'account-privacy-tab',
+							'privacy-tab-nonce'     => wp_create_nonce( 'um-privacy-tab' ),
 						),
 						'buttons'   => array(
 							'update-privacy' => array(
@@ -669,8 +669,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 							),
 						),
 						'hiddens'   => array(
-							'um-action' => 'account-delete-tab',
-							'nonce'     => wp_create_nonce( 'um-delete-tab' ),
+							'um-action-delete-tab' => 'account-delete-tab',
+							'delete-tab-nonce'     => wp_create_nonce( 'um-delete-tab' ),
 						),
 						'buttons'   => array(
 							'delete-account' => array(
@@ -691,7 +691,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 					$args = array(
 						'id'        => 'um-' . $id . '-tab',
-						'class'     => 'um-top-label um-single-button um-center-always',
+						'class'     => 'um-top-label um-single-button',
 						'prefix_id' => '',
 						'fields'    => array(
 							'user_login'           => array(
@@ -732,8 +732,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 							),
 						),
 						'hiddens'   => array(
-							'um-action' => 'account-general-tab',
-							'nonce'     => wp_create_nonce( 'um-general-tab' ),
+							'um-action-general-tab' => 'account-general-tab',
+							'general-tab-nonce'     => wp_create_nonce( 'um-general-tab' ),
 						),
 						'buttons'   => array(
 							'update-account' => array(
@@ -800,8 +800,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 							),
 						),
 						'hiddens'   => array(
-							'um-action' => 'account-password-tab',
-							'nonce'     => wp_create_nonce( 'um-password-tab' ),
+							'um-action-password-tab' => 'account-password-tab',
+							'password-tab-nonce'     => wp_create_nonce( 'um-password-tab' ),
 						),
 						'buttons'   => array(
 							'update-password' => array(

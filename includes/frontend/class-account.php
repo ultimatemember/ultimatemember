@@ -50,11 +50,11 @@ class Account {
 				'content' => array(),
 			),
 			'hiddens'   => array(
-				'um-action' => 'account-privacy-export-tab',
-				'nonce'     => wp_create_nonce( 'um-privacy-export-tab' ),
+				'um-action-export-tab' => 'account-privacy-export-tab',
+				'export-tab-nonce'     => wp_create_nonce( 'um-privacy-export-tab' ),
 			),
 			'buttons'   => array(
-				'submit-password' => array(
+				'request-data' => array(
 					'type'  => 'submit',
 					'label' => __( 'Request data', 'ultimate-member' ),
 					'class' => array(
@@ -167,11 +167,11 @@ class Account {
 				'content' => array(),
 			),
 			'hiddens'   => array(
-				'um-action' => 'account-privacy-erase-tab',
-				'nonce'     => wp_create_nonce( 'um-privacy-erase-tab' ),
+				'um-action-erase-tab' => 'account-privacy-erase-tab',
+				'erase-tab-nonce'     => wp_create_nonce( 'um-privacy-erase-tab' ),
 			),
 			'buttons'   => array(
-				'submit-password' => array(
+				'request-erase-data' => array(
 					'type'  => 'submit',
 					'label' => __( 'Request data erase', 'ultimate-member' ),
 					'class' => array(
