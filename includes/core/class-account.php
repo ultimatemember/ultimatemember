@@ -639,7 +639,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 							'nonce'     => wp_create_nonce( 'um-privacy-tab' ),
 						),
 						'buttons'   => array(
-							'save-password' => array(
+							'update-privacy' => array(
 								'type'  => 'submit',
 								'label' => __( 'Update Privacy', 'ultimate-member' ),
 								'class' => array(
@@ -673,7 +673,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 							'nonce'     => wp_create_nonce( 'um-delete-tab' ),
 						),
 						'buttons'   => array(
-							'save-password' => array(
+							'delete-account' => array(
 								'type'  => 'submit',
 								'label' => __( 'Delete Account', 'ultimate-member' ),
 								'class' => array(
@@ -736,7 +736,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 							'nonce'     => wp_create_nonce( 'um-general-tab' ),
 						),
 						'buttons'   => array(
-							'save-password' => array(
+							'update-account' => array(
 								'type'  => 'submit',
 								'label' => __( 'Update account', 'ultimate-member' ),
 								'class' => array(
@@ -804,7 +804,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 							'nonce'     => wp_create_nonce( 'um-password-tab' ),
 						),
 						'buttons'   => array(
-							'save-password' => array(
+							'update-password' => array(
 								'type'  => 'submit',
 								'label' => __( 'Update Password', 'ultimate-member' ),
 								'class' => array(
