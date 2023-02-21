@@ -388,6 +388,8 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 						}
 					}
 					if ( UM()->options()->get( 'account_email' ) || um_user( 'can_edit_everyone' ) ) {
+						add_filter( 'send_email_change_email', '__return_false' );
+
 						$args = array(
 							'ID'         => $user_id,
 							'user_email' => $user_email,
