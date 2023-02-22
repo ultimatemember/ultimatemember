@@ -83,9 +83,10 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						continue;
 					}
 
-					$output = $this->get_tab_fields( $id, $args );
+					$tab_args    = $this->get_tab_fields( $id, $args );
+					$tab_content = $this->get_tab_content( $id, $args );
 
-					if ( ! empty( $output ) ) {
+					if ( ! empty( $tab_args ) || ! empty( $tab_content ) ) {
 						$tabs_structed[ $id ] = $info;
 					}
 
@@ -568,7 +569,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 
 		/**
-		 * Get Tab Output
+		 * Get Tab fields args
 		 *
 		 * @param $id
 		 * @param $shortcode_args
@@ -921,13 +922,29 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					 *
 					 * @return {array} form arguments.
 					 */
-					$args = apply_filters( "um_account_content_hook_{$id}", $args, $shortcode_args );
+					$args = apply_filters( "um_account_args_hook_{$id}", $args, $shortcode_args );
 
 					break;
 
 			}
 
 			return $args;
+		}
+
+
+		/**
+		 * Get Tab fields args
+		 *
+		 * @param $id
+		 * @param $shortcode_args
+		 *
+		 * @return mixed|string|null
+		 * @throws \Exception
+		 */
+		public function get_tab_content( $id, $shortcode_args ) {
+			$output = apply_filters( "um_account_content_hook_{$id}", '', $shortcode_args );
+
+			return $output;
 		}
 
 
@@ -942,37 +959,36 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 */
 		public function render_account_tab( $tab_id, $tab_data, $args ) {
 
-			$args = $this->get_tab_fields( $tab_id, $args );
+			$args   = $this->get_tab_fields( $tab_id, $args );
+			$output = $this->get_tab_content( $tab_id, $args );
 
+			if ( ! empty ( $tab_data['with_header'] ) ) { ?>
+
+				<div class="um-account-heading uimob340-hide uimob500-hide"><i class="<?php echo esc_attr( $tab_data['icon'] ) ?>"></i><?php echo esc_html( $tab_data['title'] ); ?></div>
+
+			<?php }
+
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_before_account_{$tab_id}
+			 * @description Make some action before show account tab
+			 * @input_vars
+			 * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_before_account_{$tab_id}', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_before_account_{$tab_id}', 'my_before_account_tab', 10, 1 );
+			 * function my_before_account_tab( $args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( "um_before_account_{$tab_id}", $args );
 			if ( ! empty( $args ) ) {
-
-				if ( ! empty ( $tab_data['with_header'] ) ) { ?>
-
-					<div class="um-account-heading uimob340-hide uimob500-hide"><i class="<?php echo esc_attr( $tab_data['icon'] ) ?>"></i><?php echo esc_html( $tab_data['title'] ); ?></div>
-
-				<?php }
-
-				/**
-				 * UM hook
-				 *
-				 * @type action
-				 * @title um_before_account_{$tab_id}
-				 * @description Make some action before show account tab
-				 * @input_vars
-				 * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_before_account_{$tab_id}', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_before_account_{$tab_id}', 'my_before_account_tab', 10, 1 );
-				 * function my_before_account_tab( $args ) {
-				 *     // your code here
-				 * }
-				 * ?>
-				 */
-				do_action( "um_before_account_{$tab_id}", $args );
-
 				$tab_form = UM()->frontend()->form(
 					array(
 						'id' => 'um-' . $tab_id . '-tab',
@@ -981,28 +997,33 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 				$tab_form->set_data( $args );
 				$tab_form->display();
-
-				/**
-				 * UM hook
-				 *
-				 * @type action
-				 * @title um_after_account_{$tab_id}
-				 * @description Make some action after show account tab
-				 * @input_vars
-				 * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_after_account_{$tab_id}', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_after_account_{$tab_id}', 'my_after_account_tab', 10, 1 );
-				 * function my_after_account_tab( $args ) {
-				 *     // your code here
-				 * }
-				 * ?>
-				 */
-				do_action( "um_after_account_{$tab_id}", $args );
 			}
+
+			if ( ! empty( $output ) ) {
+				echo $output;
+			}
+
+
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_after_account_{$tab_id}
+			 * @description Make some action after show account tab
+			 * @input_vars
+			 * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_after_account_{$tab_id}', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_after_account_{$tab_id}', 'my_after_account_tab', 10, 1 );
+			 * function my_after_account_tab( $args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( "um_after_account_{$tab_id}", $args );
 		}
 
 
