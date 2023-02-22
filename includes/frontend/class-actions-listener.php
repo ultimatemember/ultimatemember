@@ -395,6 +395,9 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 							'user_email' => $user_email,
 						);
 						wp_update_user( $args );
+
+						// @todo check this function
+						UM()->mail()->send( $user_email, 'changedaccount_email' );
 					}
 				}
 			}
@@ -520,7 +523,7 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 
 				if ( ! $tab_form->has_errors() ) {
 
-					// @todo remove check this function
+					// @todo check this function
 					// UM()->user()->password_changed();
 
 					add_filter( 'send_password_change_email', '__return_false' );
@@ -553,27 +556,29 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 					$tab_form->add_error( 'global', __( 'Security issue, Please try again', 'ultimate-member' ) );
 				}
 
-				$changes = array(
-					'profile_privacy' => sanitize_text_field( $_POST['profile_privacy'] ),
-					'profile_noindex' => sanitize_key( $_POST['profile_noindex'] ),
-					'hide_in_members' => array(
-						sanitize_text_field( $_POST['hide_in_members'] ),
-					),
-				);
+				if ( ! $tab_form->has_errors() ) {
+					$changes = array(
+						'profile_privacy' => sanitize_text_field( $_POST['profile_privacy'] ),
+						'profile_noindex' => sanitize_key( $_POST['profile_noindex'] ),
+						'hide_in_members' => array(
+							sanitize_text_field( $_POST['hide_in_members'] ),
+						),
+					);
 
-				/**
-				 * Filters extend privacy data.
-				 *
-				 * @since 1.0
-				 * @hook um_account_privacy_fields_update
-				 *
-				 * @param {string} $changes account privacy fields
-				 *
-				 * @return {array} account privacy fields.
-				 */
-				$changes = apply_filters( 'um_account_privacy_fields_update', $changes );
+					/**
+					 * Filters extend privacy data.
+					 *
+					 * @since 1.0
+					 * @hook um_account_privacy_fields_update
+					 *
+					 * @param {string} $changes account privacy fields
+					 *
+					 * @return {array} account privacy fields.
+					 */
+					$changes = apply_filters( 'um_account_privacy_fields_update', $changes );
 
-				UM()->user()->update_profile( $changes );
+					UM()->user()->update_profile( $changes );
+				}
 			}
 
 			if ( ! empty( $_POST['um-action-export-tab'] ) && 'account-privacy-export-tab' === sanitize_key( $_POST['um-action-export-tab'] ) ) {
@@ -647,6 +652,37 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 						$tab_form->add_error( 'um-erase-data', esc_html( $request_id->get_error_message() ) );
 					}
 					wp_send_user_request( $request_id );
+				}
+			}
+
+			if ( ! empty( $_POST['um-action-notifications-tab'] ) && 'account-notifications-tab' === sanitize_key( $_POST['um-action-notifications-tab'] ) ) {
+				$tab_form = UM()->frontend()->form(
+					array(
+						'id' => 'um-notifications-tab',
+					)
+				);
+				$tab_form->flush_errors();
+
+				if ( empty( $_POST['notifications-tab-nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['notifications-tab-nonce'] ), 'um-notifications-tab' ) ) {
+					$tab_form->add_error( 'global', __( 'Security issue, Please try again', 'ultimate-member' ) );
+				}
+
+				$user_id = get_current_user_id();
+
+				if ( ! $tab_form->has_errors() ) {
+					/**
+					 * Filters extend notifications data.
+					 *
+					 * @since 1.0
+					 * @hook um_account_notifications_fields_update
+					 *
+					 * @param {string} $changes account notifications fields
+					 *
+					 * @return {array} account notifications fields.
+					 */
+					$changes = apply_filters( 'um_account_notifications_fields_update', array() );
+
+					UM()->user()->update_profile( $changes );
 				}
 			}
 		}

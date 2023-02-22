@@ -1413,15 +1413,21 @@ class Form {
 
 
 		$value = $this->get_field_value( $field_data );
-		if ( ! is_array( $value ) || empty( $value ) ) {
-			$value = array();
-		}
-		$value = array_map( 'strval', $value );
-
 		$options = '';
-		foreach ( $field_data['options'] as $key => $option ) {
-			$id_attr = ' id="' . esc_attr( $id . '_' . $key ) . '" ';
-			$options .= '<label><input type="checkbox" ' . $id_attr . $name_attr . $class_attr . $data_attr . ' value="' . esc_attr( $key ) . '" ' . checked( in_array( (string) $key, $value, true ), true, false ) . ' />' . esc_html( $option ) . '</label>';
+		if ( 1 < count( $field_data['options'] ) ) {
+			if ( ! is_array( $value ) || empty( $value ) ) {
+				$value = array();
+			}
+
+			foreach ( $field_data['options'] as $key => $option ) {
+				$id_attr  = ' id="' . esc_attr( $id . '_' . $key ) . '" ';
+				$options .= '<label><input type="checkbox" ' . $id_attr . $name_attr . $class_attr . $data_attr . ' value="' . esc_attr( $key ) . '" ' . checked( in_array( (string) $key, $value, true ), true, false ) . ' />' . esc_html( $option ) . '</label>';
+			}
+		} else {
+			foreach ( $field_data['options'] as $key => $option ) {
+				$id_attr  = ' id="' . esc_attr( $id . '_' . $key ) . '" ';
+				$options .= '<label><input type="checkbox" ' . $id_attr . $name_attr . $class_attr . $data_attr . ' value="' . esc_attr( $key ) . '" ' . checked( $value, true, false ) . ' />' . esc_html( $option ) . '</label>';
+			}
 		}
 
 		$columns_layout = ! empty( $field_data['columns_layout'] ) ? $field_data['columns_layout'] : 'um-col-1';

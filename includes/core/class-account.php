@@ -905,10 +905,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 						$args['fields'] = array_merge( $args['fields'], $fields );
 					}
-//					echo '<pre>';
-//					print_r($args);
-//					echo '</pre>';
-//					exit();
 
 					break;
 
