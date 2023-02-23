@@ -685,6 +685,8 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 					UM()->user()->update_profile( $changes );
 				}
 			}
+
+			do_action( 'um_update_account_tab' );
 		}
 
 		/**
