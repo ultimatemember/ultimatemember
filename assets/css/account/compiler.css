@@ -344,6 +344,13 @@
   flex-wrap: nowrap;
   justify-content: flex-start;
 }
+.um-account-tab .um-field-checkbox-type label {
+  display: block;
+}
+.um-account-tab .um-field-checkbox-type label input {
+  margin: 0 5px 0 0;
+  vertical-align: middle;
+}
 
 .um-account-meta {
   text-align: center;
