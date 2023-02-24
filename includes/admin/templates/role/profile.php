@@ -53,7 +53,7 @@
 					'0' => __( 'No', 'ultimate-member' ),
 					'1' => __( 'Yes', 'ultimate-member' ),
 				],
-				'value'     => ! empty( $role['_um_profile_noindex'] ) ? $role['_um_profile_noindex'] : '',
+				'value'     => array_key_exists( '_um_profile_noindex', $role ) ? $role['_um_profile_noindex'] : '',
 			)
 		)
 	) )->render_form(); ?>
