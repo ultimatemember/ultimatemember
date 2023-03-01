@@ -1,8 +1,9 @@
 <?php
 namespace um\core;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 
 if ( ! class_exists( 'um\core\Account' ) ) {
@@ -63,7 +64,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			if ( isset( $args['tab'] ) ) {
 				$tabs = explode( ',', $args['tab'] );
 				$tabs = array_map( 'trim', $tabs );
-				$tabs = array_diff( $tabs, array('') );
+				$tabs = array_diff( $tabs, array( '' ) );
 			}
 
 			$this->tabs = $this->get_tabs();
@@ -79,7 +80,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						continue;
 					}
 
-					if ( ! empty( $args['tab'] ) && 1 >= count( $tabs ) && $id != $args['tab'] ) {
+					if ( ! empty( $args['tab'] ) && 1 >= count( $tabs ) && $id !== $args['tab'] ) {
 						continue;
 					}
 
@@ -89,9 +90,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					if ( ! empty( $tab_args ) || ! empty( $tab_content ) ) {
 						$tabs_structed[ $id ] = $info;
 					}
-
 				}
-
 			}
 			$this->tabs = $tabs_structed;
 		}
@@ -104,6 +103,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 */
 		public function get_tabs() {
 			$tabs = array();
+
 			$tabs[100]['general'] = array(
 				'icon'         => 'fas fa-user',
 				'title'        => __( 'Account', 'ultimate-member' ),
@@ -132,9 +132,9 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			if ( um_user( 'can_delete_profile' ) || um_user( 'can_delete_everyone' ) ) {
 
 				$tabs[99999]['delete'] = array(
-					'icon'          => 'far fa-trash-alt',
-					'title'         => __( 'Delete Account', 'ultimate-member' ),
-					'submit_title'  => __( 'Delete Account', 'ultimate-member' ),
+					'icon'         => 'far fa-trash-alt',
+					'title'        => __( 'Delete Account', 'ultimate-member' ),
+					'submit_title' => __( 'Delete Account', 'ultimate-member' ),
 				);
 
 			}
@@ -183,11 +183,11 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			ob_start();
 
 			$defaults = array(
-				'template'  => 'account',
-				'mode'      => 'account',
-				'form_id'   => 'um_account_id',
+				'template' => 'account',
+				'mode'     => 'account',
+				'form_id'  => 'um_account_id',
 			);
-			$args = wp_parse_args( $args, $defaults );
+			$args     = wp_parse_args( $args, $defaults );
 
 			/**
 			 * UM hook
@@ -213,9 +213,9 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 			$tabs = array();
 			if ( isset( $args['tab'] ) ) {
-				$tabs = explode( ',',  $args['tab'] );
+				$tabs = explode( ',', $args['tab'] );
 				$tabs = array_map( 'trim', $tabs );
-				$tabs = array_diff( $tabs, array('') );
+				$tabs = array_diff( $tabs, array( '' ) );
 			}
 
 			if ( ! empty( $args['tab'] ) && 1 === count( $tabs ) ) {
@@ -223,7 +223,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				if ( 'account' === $args['tab'] ) {
 					$args['tab'] = 'general';
 				}
-
 
 				$this->init_tabs( $args );
 
@@ -255,12 +254,13 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 								 */
 								do_action( 'um_account_page_hidden_fields', $args );
 
-								$this->render_account_tab( $args['tab'], $this->tabs[ $args['tab'] ], $args );  ?>
+								$this->render_account_tab( $args['tab'], $this->tabs[ $args['tab'] ], $args );
+								?>
 							</form>
 						</div>
 					</div>
-				<?php }
-
+					<?php
+				}
 			} else {
 				$this->init_tabs( $args );
 
@@ -367,22 +367,21 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				if ( ! is_user_logged_in() ) {
 					$redirect_to = add_query_arg(
 						'redirect_to',
-						urlencode_deep( um_get_predefined_page_url( 'account' ) ) ,
+						urlencode_deep( um_get_predefined_page_url( 'account' ) ),
 						um_get_predefined_page_url( 'login' )
 					);
 
+					// phpcs:ignore WordPress.Security.SafeRedirect
 					exit( wp_redirect( $redirect_to ) );
 				}
 
-
 				//set data for fields
 				UM()->fields()->set_mode = 'account';
-				UM()->fields()->editing = true;
+				UM()->fields()->editing  = true;
 
 				if ( get_query_var( 'um_tab' ) ) {
 					$this->current_tab = get_query_var( 'um_tab' );
 				}
-
 			}
 		}
 
@@ -394,7 +393,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 			if ( um_submitting_account_page() ) {
 
-				UM()->form()->post_form = $_POST;
+				UM()->form()->post_form = $_POST; // phpcs:ignore WordPress.Security.NonceVerification -- already verified here
 
 				/**
 				 * UM hook
@@ -454,9 +453,9 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						$url = add_query_arg( 'err', 'account', $url );
 					}
 
+					// phpcs:ignore WordPress.Security.SafeRedirect
 					exit( wp_redirect( $url ) );
 				}
-
 			}
 
 		}
@@ -491,7 +490,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 */
 		public function filter_fields_by_attrs( $fields, $shortcode_args ) {
 			foreach ( $fields as $k => $field ) {
-				if ( isset( $shortcode_args[ $field['metakey'] ] ) && 0 == $shortcode_args[ $field['metakey'] ] ) {
+				if ( isset( $shortcode_args[ $field['metakey'] ] ) && 0 === (int) $shortcode_args[ $field['metakey'] ] ) {
 					unset( $fields[ $k ] );
 				}
 			}
@@ -584,7 +583,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			switch ( $id ) {
 
 				case 'privacy':
-
 					/**
 					 * Filters extend privacy options.
 					 *
@@ -599,10 +597,9 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						'um_profile_privacy_options',
 						array(
 							'Everyone' => __( 'Everyone', 'ultimate-member' ),
-							'Only me'  => __( 'Only me', 'ultimate-member' )
+							'Only me'  => __( 'Only me', 'ultimate-member' ),
 						)
 					);
-
 
 					if ( get_user_meta( $user_id, 'hide_in_members', true ) ) {
 						$hide_in_members_meta = get_user_meta( $user_id, 'hide_in_members', true );
@@ -678,7 +675,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					break;
 
 				case 'delete':
-
 					if ( UM()->account()->current_password_is_required( 'delete' ) ) {
 						$delete_text = UM()->options()->get( 'delete_account_text' );
 					} else {
@@ -691,7 +687,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						'prefix_id' => '',
 						'fields'    => array(
 							'delete_text' => array(
-								'type' => 'block',
+								'type'    => 'block',
 								'id'      => 'um-delete-text',
 								'content' => $delete_text,
 							),
@@ -721,7 +717,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					break;
 
 				case 'general':
-
 					$current_user = wp_get_current_user();
 
 					$args = array(
@@ -816,7 +811,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					break;
 
 				case 'password':
-
 					$args = array(
 						'id'        => 'um-' . $id . '-tab',
 						'class'     => 'um-top-label um-single-button',
@@ -862,7 +856,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					break;
 
 				case 'notifications':
-
 					/**
 					 * Filters extend notifications tab form.
 					 *
@@ -876,7 +869,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					$fields = apply_filters( 'um_notifications_tab_form_args', array() );
 
 					if ( ! empty( $fields ) ) {
-						$notifications_text = '<p>'. esc_html__( 'Select what email notifications you want to receive', 'ultimate-member' ) . '</p>';
+						$notifications_text = '<p>' . esc_html__( 'Select what email notifications you want to receive', 'ultimate-member' ) . '</p>';
 
 						$args = array(
 							'id'        => 'um-' . $id . '-tab',
@@ -891,7 +884,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 							),
 							'hiddens'   => array(
 								'um-action-notifications-tab' => 'account-notifications-tab',
-								'notifications-tab-nonce'     => wp_create_nonce( 'um-notifications-tab' ),
+								'notifications-tab-nonce' => wp_create_nonce( 'um-notifications-tab' ),
 							),
 							'buttons'   => array(
 								'update-notifications' => array(
@@ -909,8 +902,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 					break;
 
-				default :
-
+				default:
 					/**
 					 * Filters extend tab form.
 					 *
@@ -962,11 +954,13 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			$args   = $this->get_tab_fields( $tab_id, $args );
 			$output = $this->get_tab_content( $tab_id, $args );
 
-			if ( ! empty ( $tab_data['with_header'] ) ) { ?>
+			if ( ! empty( $tab_data['with_header'] ) ) {
+				?>
 
-				<div class="um-account-heading uimob340-hide uimob500-hide"><i class="<?php echo esc_attr( $tab_data['icon'] ) ?>"></i><?php echo esc_html( $tab_data['title'] ); ?></div>
+				<div class="um-account-heading uimob340-hide uimob500-hide"><i class="<?php echo esc_attr( $tab_data['icon'] ); ?>"></i><?php echo esc_html( $tab_data['title'] ); ?></div>
 
-			<?php }
+				<?php
+			}
 
 			/**
 			 * UM hook
@@ -1003,7 +997,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				echo $output;
 			}
 
-
 			/**
 			 * UM hook
 			 *
@@ -1035,17 +1028,17 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 */
 		public function get_class( $mode ) {
 
-			$classes = 'um-'.$mode;
+			$classes = 'um-' . $mode;
 
 			if ( is_admin() ) {
 				$classes .= ' um-in-admin';
 			}
 
-			if ( UM()->fields()->editing == true ) {
+			if ( true === UM()->fields()->editing ) {
 				$classes .= ' um-editing';
 			}
 
-			if ( UM()->fields()->viewing == true ) {
+			if ( true === UM()->fields()->viewing ) {
 				$classes .= ' um-viewing';
 			}
 
@@ -1092,7 +1085,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					$is_required = UM()->options()->get( 'delete_account_password_requires' );
 					break;
 				case 'password':
-					break;
 				case 'privacy_erase_data':
 				case 'privacy_download_data':
 					break;
@@ -1131,6 +1123,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				 * ?>
 				 */
 				$redirect_url = apply_filters( 'um_delete_account_redirect_url', um_user( 'delete_redirect_url' ), $user_id );
+				// phpcs:ignore WordPress.Security.SafeRedirect
 				exit( wp_redirect( $redirect_url ) );
 			} else {
 				um_redirect_home();

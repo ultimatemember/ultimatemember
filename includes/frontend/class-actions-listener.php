@@ -159,6 +159,7 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 						}
 
 						if ( empty( $_POST['rp_key'] ) || empty( $_POST['login'] ) ) {
+							// phpcs:ignore WordPress.Security.SafeRedirect
 							wp_redirect( add_query_arg( array( 'error' => 'invalidkey' ), um_get_predefined_page_url( 'password-reset' ) ) );
 							exit;
 						}
@@ -197,10 +198,12 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 							$max_length = ! empty( $max_length ) ? $max_length : 30;
 
 							if ( mb_strlen( $user_password ) < $min_length ) {
+								// translators: %s is a max length.
 								$resetpass_form->add_error( 'user_password', sprintf( __( 'Your password must contain at least %d characters', 'ultimate-member' ), $min_length ) );
 							}
 
 							if ( mb_strlen( $user_password ) > $max_length ) {
+								// translators: %s is a max length.
 								$resetpass_form->add_error( 'user_password', sprintf( __( 'Your password must contain less than %d characters', 'ultimate-member' ), $max_length ) );
 							}
 
@@ -240,8 +243,10 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 						if ( ! $user || is_wp_error( $user ) ) {
 							UM()->setcookie( $rp_cookie, false );
 							if ( $user && 'expired_key' === $user->get_error_code() ) {
+								// phpcs:ignore WordPress.Security.SafeRedirect
 								wp_redirect( add_query_arg( array( 'error' => 'expiredkey' ), um_get_predefined_page_url( 'password-reset' ) ) );
 							} else {
+								// phpcs:ignore WordPress.Security.SafeRedirect
 								wp_redirect( add_query_arg( array( 'error' => 'invalidkey' ), um_get_predefined_page_url( 'password-reset' ) ) );
 							}
 							exit;
@@ -496,18 +501,20 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 					$user_email = um_user( 'user_email' );
 
 					if ( mb_strlen( wp_unslash( $user_password ) ) < $min_length ) {
+						// translators: %s is a min length.
 						$tab_form->add_error( 'user_password', sprintf( __( 'Your password must contain at least %d characters', 'ultimate-member' ), $min_length ) );
 					}
 
 					if ( mb_strlen( wp_unslash( $user_password ) ) > $max_length ) {
+						// translators: %s is a max length.
 						$tab_form->add_error( 'user_password', sprintf( __( 'Your password must contain less than %d characters', 'ultimate-member' ), $max_length ) );
 					}
 
-					if ( strpos( strtolower( $user_login ), strtolower( $user_password )  ) > -1 ) {
+					if ( strpos( strtolower( $user_login ), strtolower( $user_password ) ) > -1 ) {
 						$tab_form->add_error( 'user_password', __( 'Your password cannot contain the part of your username', 'ultimate-member' ) );
 					}
 
-					if ( strpos( strtolower( $user_email ), strtolower( $user_password )  ) > -1 ) {
+					if ( strpos( strtolower( $user_email ), strtolower( $user_password ) ) > -1 ) {
 						$tab_form->add_error( 'user_password', __( 'Your password cannot contain the part of your email address', 'ultimate-member' ) );
 					}
 
@@ -515,7 +522,6 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 						$tab_form->add_error( 'user_password', __( 'Your password must contain at least one lowercase letter, one capital letter and one number', 'ultimate-member' ) );
 					}
 				}
-
 
 				if ( $user_password !== $confirm_user_password ) {
 					$tab_form->add_error( 'confirm_user_password', __( 'Your passwords do not match', 'ultimate-member' ) );
@@ -699,6 +705,7 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 				return;
 			}
 
+			// phpcs:disable WordPress.Security.NonceVerification -- is verified above
 			if ( ! isset( $_GET['action'] ) || 'rp' !== $_GET['action'] ) {
 				return;
 			}
@@ -730,8 +737,10 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 			if ( ! $user || is_wp_error( $user ) ) {
 				UM()->setcookie( $rp_cookie, false );
 				if ( $user && 'expired_key' === $user->get_error_code() ) {
+					// phpcs:ignore WordPress.Security.SafeRedirect
 					wp_redirect( add_query_arg( array( 'error' => 'expiredkey' ), um_get_predefined_page_url( 'password-reset' ) ) );
 				} else {
+					// phpcs:ignore WordPress.Security.SafeRedirect
 					wp_redirect( add_query_arg( array( 'error' => 'invalidkey' ), um_get_predefined_page_url( 'password-reset' ) ) );
 				}
 				exit;
@@ -739,6 +748,7 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 
 			// this variable is used for populating the reset password form via the hash and login
 			UM()->common()->shortcodes()->is_resetpass = true;
+			// phpcs:enable WordPress.Security.NonceVerification -- is verified above
 		}
 	}
 }

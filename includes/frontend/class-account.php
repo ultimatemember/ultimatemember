@@ -33,7 +33,7 @@ class Account {
 
 		// Export data
 		$export_label  = '<label>' . esc_html__( 'Download your data', 'ultimate-member' );
-		$export_label .= '<br>' .  esc_attr__( 'You can request a file with the information that we believe is most relevant and useful to you.', 'ultimate-member' );
+		$export_label .= '<br>' . esc_attr__( 'You can request a file with the information that we believe is most relevant and useful to you.', 'ultimate-member' );
 		$export_label .= '</label>';
 
 		$export_args = array(
@@ -92,7 +92,7 @@ class Account {
 			$exports_url = wp_privacy_exports_url();
 
 			$exports_content  = '<p>' . esc_html__( 'You could download your previous data:', 'ultimate-member' ) . '</p>';
-			$exports_content .= '<a href="'.esc_attr( $exports_url . get_post_meta( $completed['ID'], '_export_file_name', true ) ) . '">' . esc_html__( 'Download Personal Data', 'ultimate-member' ) . '</a>';
+			$exports_content .= '<a href="' . esc_attr( $exports_url . get_post_meta( $completed['ID'], '_export_file_name', true ) ) . '">' . esc_html__( 'Download Personal Data', 'ultimate-member' ) . '</a>';
 			$exports_content .= '<p>' . esc_html__( 'You could send a new request for an export of personal your data.', 'ultimate-member' ) . '</p>';
 
 			$export_args['fields']['export'] = array(
@@ -102,7 +102,7 @@ class Account {
 			);
 		}
 
-		if ( ! empty( $pending ) && $pending['post_status'] == 'request-pending' ) {
+		if ( ! empty( $pending ) && 'request-pending' === $pending['post_status'] ) {
 			$exports_content = '<p>' . esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your export request.', 'ultimate-member' ) . '</p>';
 
 			$export_args['fields']['content'] = array(
@@ -111,7 +111,7 @@ class Account {
 				'content' => $exports_content,
 			);
 			unset( $export_args['buttons'] );
-		} elseif ( ! empty( $pending ) && $pending['post_status'] == 'request-confirmed' ) {
+		} elseif ( ! empty( $pending ) && 'request-confirmed' === $pending['post_status'] ) {
 			$exports_content = '<p>' . esc_html__( 'The administrator has not yet approved downloading the data. Please expect an email with a link to your data.', 'ultimate-member' ) . '</p>';
 
 			$export_args['fields']['content'] = array(
@@ -150,7 +150,7 @@ class Account {
 
 		// Erase data
 		$erase_label  = '<label>' . esc_html__( 'Erase of your data', 'ultimate-member' );
-		$erase_label .= '<br>' .  esc_attr__( 'You can request erasing of the data that we have about you.', 'ultimate-member' );
+		$erase_label .= '<br>' . esc_attr__( 'You can request erasing of the data that we have about you.', 'ultimate-member' );
 		$erase_label .= '</label>';
 
 		$erase_args = array(
@@ -216,7 +216,7 @@ class Account {
 			ARRAY_A
 		);
 
-		if ( ! empty( $erase_pending ) && $erase_pending['post_status'] == 'request-pending' ) {
+		if ( ! empty( $erase_pending ) && 'request-pending' === $erase_pending['post_status'] ) {
 			$erase_content = '<p>' . esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your deletion request.', 'ultimate-member' ) . '</p>';
 
 			$erase_args['fields']['content'] = array(
@@ -225,7 +225,7 @@ class Account {
 				'content' => $erase_content,
 			);
 			unset( $erase_args['buttons'] );
-		} elseif ( ! empty( $erase_pending ) && $erase_pending['post_status'] == 'request-confirmed' ) {
+		} elseif ( ! empty( $erase_pending ) && 'request-confirmed' === $erase_pending['post_status'] ) {
 			$erase_content = '<p>' . esc_html__( 'The administrator has not yet approved deleting your data. Please expect an email with a link to your data.', 'ultimate-member' ) . '</p>';
 
 			$erase_args['fields']['content'] = array(
