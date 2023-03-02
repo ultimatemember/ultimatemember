@@ -47,7 +47,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			add_shortcode( 'ultimatemember_account', array( &$this, 'ultimatemember_account' ) );
 			add_action( 'template_redirect', array( &$this, 'account_page_restrict' ), 10001 );
 			add_action( 'template_redirect', array( &$this, 'account_submit' ), 10002 );
-			add_action( 'deleted_user', array( &$this, 'deleted_user_redirecct' ), 10 );
+			add_action( 'deleted_user', array( &$this, 'deleted_user_redirect' ), 10 );
 		}
 
 
@@ -372,7 +372,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					);
 
 					// phpcs:ignore WordPress.Security.SafeRedirect
-					exit( wp_redirect( $redirect_to ) );
+					wp_redirect( $redirect_to );
+					exit();
 				}
 
 				//set data for fields
@@ -454,7 +455,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					}
 
 					// phpcs:ignore WordPress.Security.SafeRedirect
-					exit( wp_redirect( $url ) );
+					wp_redirect( $url );
+					exit();
 				}
 			}
 
@@ -1096,7 +1098,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		}
 
 
-		public function deleted_user_redirecct() {
+		public function deleted_user_redirect() {
 			if ( um_user( 'after_delete' ) && um_user( 'after_delete' ) === 'redirect_home' ) {
 				um_redirect_home();
 			} elseif ( um_user( 'delete_redirect_url' ) ) {
@@ -1124,7 +1126,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				 */
 				$redirect_url = apply_filters( 'um_delete_account_redirect_url', um_user( 'delete_redirect_url' ), $user_id );
 				// phpcs:ignore WordPress.Security.SafeRedirect
-				exit( wp_redirect( $redirect_url ) );
+				wp_redirect( $redirect_url );
+				exit();
 			} else {
 				um_redirect_home();
 			}
