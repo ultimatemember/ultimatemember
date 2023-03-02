@@ -530,7 +530,7 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 				if ( ! $tab_form->has_errors() ) {
 
 					// @todo check this function
-					// UM()->user()->password_changed();
+					 UM()->user()->password_changed();
 
 					add_filter( 'send_password_change_email', '__return_false' );
 

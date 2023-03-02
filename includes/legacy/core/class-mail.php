@@ -440,7 +440,7 @@ if ( ! class_exists( 'um\legacy\core\Mail' ) ) {
 
 			$subject = wp_unslash( um_convert_tags( $subject , $args ) );
 
-			$this->subject = html_entity_decode( $subject, ENT_QUOTES, 'UTF-8' ); 
+			$this->subject = html_entity_decode( $subject, ENT_QUOTES, 'UTF-8' );
 
 			$this->message = $this->prepare_template( $template, $args );
 
@@ -591,7 +591,7 @@ if ( ! class_exists( 'um\legacy\core\Mail' ) ) {
 		 *
 		 * @return array
 		 */
-		function add_placeholder( $placeholders ) {
+		public function add_placeholder( $placeholders ) {
 			$placeholders[] = '{user_profile_link}';
 			$placeholders[] = '{site_url}';
 			$placeholders[] = '{admin_email}';
@@ -610,12 +610,12 @@ if ( ! class_exists( 'um\legacy\core\Mail' ) ) {
 		 *
 		 * @return array
 		 */
-		function add_replace_placeholder( $replace_placeholders ) {
+		public function add_replace_placeholder( $replace_placeholders ) {
 			$replace_placeholders[] = um_user_profile_url();
 			$replace_placeholders[] = get_bloginfo( 'url' );
 			$replace_placeholders[] = um_admin_email();
 			$replace_placeholders[] = um_user_submitted_registration_formatted();
-			$replace_placeholders[] = um_get_core_page( 'login' );
+			$replace_placeholders[] = um_get_predefined_page_url( 'login' );
 			$replace_placeholders[] = esc_html__( 'Your set password', 'ultimate-member' );
 			$replace_placeholders[] = um_user( 'account_activation_link' );
 			return $replace_placeholders;
