@@ -222,6 +222,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					$values[] = $wpdb->prepare( '(%d, %s, %s)', $metarow['user_id'], $metarow['meta_key'], $metarow['meta_value'] );
 				}
 
+				// maybe create table.
+				$table_name = $wpdb->prefix . 'um_metadata';
+				$query      = $wpdb->prepare(
+					'SHOW TABLES LIKE %s',
+					$wpdb->esc_like( $table_name )
+				);
+				if ( $wpdb->get_var( $query ) !== $table_name ) {
+					UM()->setup()->create_db();
+				}
+
 				if ( ! empty( $values ) ) {
 					$wpdb->query(
 						"INSERT INTO
