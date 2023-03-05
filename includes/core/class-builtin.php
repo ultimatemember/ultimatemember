@@ -949,24 +949,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'match' => 'https://linkedin.com/',
 				),
 
-				'googleplus' => array(
-					'title' => __('Google+','ultimate-member'),
-					'metakey' => 'googleplus',
-					'type' => 'url',
-					'label' => __('Google+','ultimate-member'),
-					'required' => 0,
-					'public' => 1,
-					'editable' => 1,
-					'url_target' => '_blank',
-					'url_rel' => 'nofollow',
-					'icon' => 'um-faicon-google-plus',
-					'validate' => 'google_url',
-					'url_text' => 'Google+',
-					'advanced' => 'social',
-					'color' => '#dd4b39',
-					'match' => 'https://google.com/+',
-				),
-
 				'instagram' => array(
 					'title' => __('Instagram','ultimate-member'),
 					'metakey' => 'instagram',
@@ -1522,7 +1504,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$array['alpha_numeric']            = __('Alpha-numeric value','ultimate-member');
 			$array['english']                  = __('English letters only','ultimate-member');
 			$array['facebook_url']             = __('Facebook URL','ultimate-member');
-			$array['google_url']               = __('Google+ URL','ultimate-member');
 			$array['instagram_url']            = __('Instagram URL','ultimate-member');
 			$array['linkedin_url']             = __('LinkedIn URL','ultimate-member');
 			$array['vk_url']                   = __('VKontakte URL','ultimate-member');
