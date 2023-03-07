@@ -36,6 +36,9 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 			add_action( 'load-toplevel_page_ultimatemember', array( &$this, 'handle_modules_actions_options' ) );
 			add_action( 'load-toplevel_page_ultimatemember', array( &$this, 'handle_email_notifications_actions' ) );
 			add_action( 'load-ultimate-member_page_um_roles', array( &$this, 'handle_roles_actions' ) );
+
+			add_action( 'load-ultimate-member_page_um_field_groups', array( &$this, 'handle_save_field_group' ) );
+			add_action( 'load-ultimate-member_page_um_field_groups', array( &$this, 'handle_field_groups_actions' ) );
 			//add_action( 'load-users.php', array( UM()->install(), 'set_default_user_status' ) ); for avoid the conflicts with \WP_Users_Query on the users.php page
 		}
 
@@ -749,6 +752,463 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 
 						wp_redirect( add_query_arg( array( 'msg' => 'reset', 'count' => $flushed_count ), $redirect ) );
 						exit;
+						break;
+					}
+				}
+			}
+		}
+
+		private function sanitize( $data ) {
+			$sanitize_map = array(
+				'title'       => 'text',
+				'description' => 'textarea',
+			);
+
+			foreach ( $data as $key => &$value ) {
+				if ( 'fields' === $key ) {
+					foreach ( $value as $field_id => &$field_row ) {
+						if ( empty( $field_row['type'] ) ) {
+							continue;
+						}
+
+						// get sanitizing map based on the field type
+						$field_settings      = UM()->admin()->field_group()->get_field_settings( sanitize_key( $field_row['type'] ) );
+						$field_settings      = call_user_func_array('array_merge', $field_settings );
+						$fields_sanitize_map = array_column( $field_settings, 'sanitize', 'id' );
+
+						$fields_sanitize_map['id']    = 'empty_absint';
+						$fields_sanitize_map['order'] = 'absint';
+
+						foreach ( $field_row as $field_setting_key => &$field_setting_value ) {
+							if ( ! array_key_exists( $field_setting_key, $fields_sanitize_map ) ) {
+								continue;
+							}
+							switch ( $fields_sanitize_map[ $field_setting_key ] ) {
+								default:
+									$field_setting_value = apply_filters( 'um_groups_fields_sanitize_field_' . $field_setting_key, $field_setting_value );
+									break;
+								case 'int':
+									$field_setting_value = (int) $field_setting_value;
+									break;
+								case 'empty_int':
+									$field_setting_value = ( '' !== $field_setting_value ) ? (int) $field_setting_value : '';
+									break;
+								case 'bool':
+									$field_setting_value = (bool) $field_setting_value;
+									break;
+								case 'url':
+									if ( is_array( $field_setting_value ) ) {
+										$field_setting_value = array_map( 'esc_url_raw', $field_setting_value );
+									} else {
+										$field_setting_value = esc_url_raw( $field_setting_value );
+									}
+									break;
+								case 'text':
+									$field_setting_value = sanitize_text_field( $field_setting_value );
+									break;
+								case 'textarea':
+									$field_setting_value = sanitize_textarea_field( $field_setting_value );
+									break;
+								case 'wp_kses':
+									$field_setting_value = wp_kses_post( $field_setting_value );
+									break;
+								case 'key':
+									if ( is_array( $field_setting_value ) ) {
+										$field_setting_value = array_map( 'sanitize_key', $field_setting_value );
+									} else {
+										$field_setting_value = sanitize_key( $field_setting_value );
+									}
+									break;
+								case 'absint':
+									if ( is_array( $field_setting_value ) ) {
+										$field_setting_value = array_map( 'absint', $field_setting_value );
+									} else {
+										$field_setting_value = absint( $field_setting_value );
+									}
+									break;
+								case 'empty_absint':
+									if ( is_array( $field_setting_value ) ) {
+										$field_setting_value = array_map( 'absint', $field_setting_value );
+									} else {
+										$field_setting_value = ( '' !== $field_setting_value ) ? absint( $field_setting_value ) : '';
+									}
+									break;
+								case 'conditional_rules':
+									if ( is_array( $field_setting_value ) ) {
+										if ( array_key_exists( '{group_key}', $field_setting_value ) ) {
+											// just a case if something went wrong with disabled and JS handlers
+											unset( $field_setting_value[ '{group_key}' ] );
+										}
+
+										foreach ( $field_setting_value as $cond_group_k => &$cond_group ) {
+											foreach ( $cond_group as $cond_row_k => &$cond_row ) {
+												$cond_row['field'] = absint( $cond_row['field'] );
+												$cond_row['condition'] = sanitize_text_field( $cond_row['condition'] );
+												// remove if rule isn't filled
+												if ( empty( $cond_row['field'] ) || $cond_row['condition'] ) {
+													unset( $field_setting_value[ $cond_group_k ][ $cond_row_k ] );
+													continue;
+												}
+												$cond_row['value'] = sanitize_text_field( $cond_row['value'] );
+											}
+										}
+									}
+									break;
+							}
+						}
+					}
+				} else {
+					if ( ! array_key_exists( $key, $sanitize_map ) ) {
+						continue;
+					}
+					switch ( $sanitize_map[ $key ] ) {
+						default:
+							$value = apply_filters( 'um_groups_fields_sanitize_' . $key, $value );
+							break;
+						case 'int':
+							$value = (int) $value;
+							break;
+						case 'empty_int':
+							$value = ( '' !== $value ) ? (int) $value : '';
+							break;
+						case 'bool':
+							$value = (bool) $value;
+							break;
+						case 'url':
+							if ( is_array( $value ) ) {
+								$value = array_map( 'esc_url_raw', $value );
+							} else {
+								$value = esc_url_raw( $value );
+							}
+							break;
+						case 'text':
+							$value = sanitize_text_field( $value );
+							break;
+						case 'textarea':
+							$value = sanitize_textarea_field( $value );
+							break;
+						case 'wp_kses':
+							$value = wp_kses_post( $value );
+							break;
+						case 'key':
+							if ( is_array( $value ) ) {
+								$value = array_map( 'sanitize_key', $value );
+							} else {
+								$value = sanitize_key( $value );
+							}
+							break;
+						case 'absint':
+							if ( is_array( $value ) ) {
+								$value = array_map( 'absint', $value );
+							} else {
+								$value = absint( $value );
+							}
+							break;
+						case 'empty_absint':
+							if ( is_array( $value ) ) {
+								$value = array_map( 'absint', $value );
+							} else {
+								$value = ( '' !== $value ) ? absint( $value ) : '';
+							}
+							break;
+					}
+				}
+			}
+
+			return $data;
+		}
+
+		private function validate( $data ) {
+			$result = true;
+			return $result;
+		}
+
+		public function handle_save_field_group() {
+			global $wpdb;
+
+			if ( empty( $_POST['um_admin_action'] ) || 'save_field_group' !== sanitize_key( $_POST['um_admin_action'] ) ) {
+				return;
+			}
+
+			if ( empty( $_POST['field_group'] ) ) {
+				return;
+			}
+
+			if ( empty( $_POST['um_nonce'] ) ) {
+				return;
+			}
+
+			if ( empty( $_GET['tab'] ) || ! in_array( sanitize_key( $_GET['tab'] ), array( 'edit', 'add' ) ) ) {
+				return;
+			}
+
+			$redirect = get_admin_url() . 'admin.php?page=um_field_groups&tab=edit';
+
+			$action = sanitize_key( $_GET['tab'] ); // 'edit' or 'add'
+			if ( 'edit' === $action ) {
+				if ( empty( $_GET['id'] ) ) {
+					return;
+				}
+
+				$group_id = absint( $_GET['id'] );
+				if ( empty( $group_id ) ) {
+					return;
+				}
+
+				if ( ! wp_verify_nonce( $_POST['um_nonce'], 'um-edit-field-group' ) ) {
+					return;
+				}
+
+				if ( empty( $_POST['field_group']['id'] ) || $group_id !== absint( $_POST['field_group']['id'] ) ) {
+					return;
+				}
+
+				// Remove extra slashes by WordPress native function.
+				$_POST['field_group'] = wp_unslash( $_POST['field_group'] );
+
+				// Sanitize data by WordPress native functions.
+				$data = $this->sanitize( $_POST['field_group'] );
+
+				// Validate data sending for fields.
+				$result = $this->validate( $data );
+
+				if ( true !== $result ) {
+					// @todo validation of the fields
+					return;
+				}
+
+				// $data below is sanitized based on fields types etc.
+				$title       = ! empty( $data['title'] ) ? $data['title'] : __( '(no title)', 'ultimate-member' );
+				$description = ! empty( $data['description'] ) ? $data['description'] : '';
+
+				$args = array(
+					'id'          => $group_id,
+					'title'       => $title,
+					'description' => $description,
+				);
+				$field_group_id = UM()->admin()->field_group()->update( $args );
+				if ( ! empty( $field_group_id ) ) {
+					if ( ! empty( $data['fields'] ) ) {
+						foreach ( $data['fields'] as $group_field ) {
+							if ( empty( $group_field['id'] ) ) {
+								// add new field
+								$meta = $group_field;
+								unset( $meta['id'] );
+								unset( $meta['title'] );
+								unset( $meta['type'] );
+
+								$field_args = array(
+									'group_id' => $field_group_id,
+									'title'    => $group_field['title'],
+									'type'     => $group_field['type'],
+									'meta'     => $meta,
+								);
+								UM()->admin()->field_group()->add_field( $field_args );
+							} else {
+								// update field
+								$meta = $group_field;
+								unset( $meta['id'] );
+								unset( $meta['title'] );
+								unset( $meta['type'] );
+
+								$field_args = array(
+									'id'    => $group_field['id'],
+									'title' => $group_field['title'],
+									'type'  => $group_field['type'],
+									'meta'  => $meta,
+								);
+								UM()->admin()->field_group()->update_field( $field_args );
+							}
+						}
+					}
+
+					wp_redirect( add_query_arg( array( 'id' => $field_group_id, 'msg' => 'u' ), $redirect ) );
+					exit;
+				}
+			} elseif ( 'add' === $action ) {
+				if ( ! wp_verify_nonce( $_POST['um_nonce'], 'um-add-field-group' ) ) {
+					return;
+				}
+
+				$_POST['field_group'] = wp_unslash( $_POST['field_group'] );
+
+				$data = $this->sanitize( $_POST['field_group'] );
+
+				$title       = ! empty( $data['title'] ) ? sanitize_text_field( $data['title'] ) : __( '(no title)', 'ultimate-member' );
+				$description = ! empty( $data['description'] ) ? sanitize_textarea_field( $data['description'] ) : '';
+
+				// default status = active
+				$args = array(
+					'title'       => $title,
+					'description' => $description,
+				);
+				$field_group_id = UM()->admin()->field_group()->create( $args );
+				if ( ! empty( $field_group_id ) ) {
+					if ( ! empty( $data['fields'] ) ) {
+						foreach ( $data['fields'] as $group_field ) {
+							// add new field
+							$meta = $group_field;
+							unset( $meta['id'] );
+							unset( $meta['title'] );
+							unset( $meta['type'] );
+
+							$field_args = array(
+								'group_id' => $field_group_id,
+								'title'    => $group_field['title'],
+								'type'     => $group_field['type'],
+								'meta'     => $meta,
+							);
+							UM()->admin()->field_group()->add_field( $field_args );
+						}
+					}
+
+					wp_redirect( add_query_arg( array( 'id' => $field_group_id, 'msg' => 'a' ), $redirect ) );
+					exit;
+				}
+			}
+		}
+
+		public function handle_field_groups_actions() {
+			if ( ! empty( $_GET['tab'] ) ) {
+				return;
+			}
+
+			if ( isset( $_REQUEST['_wp_http_referer'] ) ) {
+				$redirect = remove_query_arg( array( '_wp_http_referer' ), wp_unslash( $_REQUEST['_wp_http_referer'] ) );
+			} else {
+				$redirect = get_admin_url() . 'admin.php?page=um_field_groups';
+			}
+
+			if ( isset( $_GET['action'] ) ) {
+				switch ( sanitize_key( $_GET['action'] ) ) {
+					/* delete action */
+					case 'delete': {
+						// uses sanitize_title instead of sanitize_key for backward compatibility based on #906 pull-request (https://github.com/ultimatemember/ultimatemember/pull/906)
+						// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
+//						$role_keys = array();
+//						if ( isset( $_REQUEST['id'] ) ) {
+//							check_admin_referer( 'um_role_delete' . sanitize_title( $_REQUEST['id'] ) . get_current_user_id() );
+//							$role_keys = (array) sanitize_title( $_REQUEST['id'] );
+//						} elseif ( isset( $_REQUEST['item'] ) ) {
+//							check_admin_referer( 'bulk-' . sanitize_key( __( 'Roles', 'ultimate-member' ) ) );
+//							$role_keys = array_map( 'sanitize_title', $_REQUEST['item'] );
+//						}
+//
+//						if ( ! count( $role_keys ) ) {
+//							wp_redirect( $redirect );
+//							exit;
+//						}
+//
+//						$deleted_count = 0;
+//						$um_roles = get_option( 'um_roles', array() );
+//
+//						$um_custom_roles = array();
+//						foreach ( $role_keys as $k => $role_key ) {
+//							$role_meta = get_option( "um_role_{$role_key}_meta" );
+//
+//							if ( empty( $role_meta['_um_is_custom'] ) ) {
+//								continue;
+//							}
+//
+//							delete_option( "um_role_{$role_key}_meta" );
+//							$um_roles = array_diff( $um_roles, array( $role_key ) );
+//
+//							$roleID            = 'um_' . $role_key;
+//							$um_custom_roles[] = $roleID;
+//
+//							//check if role exist before removing it
+//							if ( get_role( $roleID ) ) {
+//								$deleted_count++;
+//								remove_role( $roleID );
+//							}
+//						}
+//
+//						//set for users with deleted roles role "Subscriber"
+//						$args = array(
+//							'blog_id'     => get_current_blog_id(),
+//							'role__in'    => $um_custom_roles,
+//							'number'      => -1,
+//							'count_total' => false,
+//							'fields'      => 'ids',
+//						);
+//						$users_to_subscriber = get_users( $args );
+//						if ( ! empty( $users_to_subscriber ) ) {
+//							foreach ( $users_to_subscriber as $user_id ) {
+//								$object_user = get_userdata( $user_id );
+//
+//								if ( ! empty( $object_user ) ) {
+//									foreach ( $um_custom_roles as $roleID ) {
+//										$object_user->remove_role( $roleID );
+//									}
+//								}
+//
+//								//update user role if it's empty
+//								if ( empty( $object_user->roles ) ) {
+//									wp_update_user(
+//										array(
+//											'ID'   => $user_id,
+//											'role' => 'subscriber',
+//										)
+//									);
+//								}
+//							}
+//						}
+//
+//						update_option( 'um_roles', $um_roles );
+//
+//						if ( 0 === $deleted_count ) {
+//							wp_redirect( $redirect );
+//							exit;
+//						}
+
+//						wp_redirect( add_query_arg( array( 'msg' => 'd', 'count' => $deleted_count ), $redirect ) );
+//						exit;
+						break;
+					}
+					case 'duplicate': {
+						// uses sanitize_title instead of sanitize_key for backward compatibility based on #906 pull-request (https://github.com/ultimatemember/ultimatemember/pull/906)
+						// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
+//						$role_keys = array();
+//						if ( isset( $_REQUEST['id'] ) ) {
+//							check_admin_referer( 'um_role_reset' . sanitize_title( $_REQUEST['id'] ) . get_current_user_id() );
+//							$role_keys = (array) sanitize_title( $_REQUEST['id'] );
+//						} elseif ( isset( $_REQUEST['item'] ) ) {
+//							check_admin_referer( 'bulk-' . sanitize_key( __( 'Roles', 'ultimate-member' ) ) );
+//							$role_keys = array_map( 'sanitize_title', $_REQUEST['item'] );
+//						}
+//
+//						if ( ! count( $role_keys ) ) {
+//							wp_redirect( $redirect );
+//							exit;
+//						}
+//
+//						$flushed_count = 0;
+//
+//						foreach ( $role_keys as $k => $role_key ) {
+//							$role_meta = get_option( "um_role_{$role_key}_meta" );
+//
+//							if ( ! empty( $role_meta['_um_is_custom'] ) ) {
+//								unset( $role_keys[ array_search( $role_key, $role_keys, true ) ] );
+//								continue;
+//							}
+//
+//							$flushed_count++;
+//							delete_option( "um_role_{$role_key}_meta" );
+//						}
+//
+//						if ( 0 === $flushed_count ) {
+//							wp_redirect( $redirect );
+//							exit;
+//						}
+
+//						wp_redirect( add_query_arg( array( 'msg' => 'reset', 'count' => $flushed_count ), $redirect ) );
+//						exit;
+						break;
+					}
+					case 'activate': {
+						break;
+					}
+					case 'deactivate': {
 						break;
 					}
 				}

@@ -129,6 +129,8 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 */
 		var $field_type_categories = array();
 
+		var $static_field_settings = array();
+
 		/**
 		 * Build-in field types used in fields groups and forms builders
 		 *
@@ -137,6 +139,26 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 * @var array
 		 */
 		var $field_conditional_rules = array();
+
+		/**
+		 * @var array
+		 */
+		var $field_settings_tabs = array();
+
+		/**
+		 * @var array
+		 */
+		var $field_privacy_settings = array();
+
+		/**
+		 * @var array
+		 */
+		var $field_visibility_settings = array();
+
+		/**
+		 * @var array
+		 */
+		var $field_validation_settings = array();
 
 		/**
 		 * Build-in field types used in fields groups and forms builders
@@ -1018,6 +1040,16 @@ if ( ! class_exists( 'um\Config' ) ) {
 			);
 		}
 
+		public function init_field_type_categories() {
+			$this->field_type_categories = array(
+				'basic'   => __( 'Basic', 'ultimate-member' ),
+				'choice'  => __( 'Choice', 'ultimate-member' ),
+				'content' => __( 'Content', 'ultimate-member' ),
+				'js'      => __( 'JS', 'ultimate-member' ),
+				'layout'  => __( 'Layout', 'ultimate-member' ),
+			);
+		}
+
 		public function init_field_conditional_rules() {
 			$this->field_conditional_rules = array(
 				'=='         => __( 'Value is equal to', 'ultimate-member' ),
@@ -1031,13 +1063,181 @@ if ( ! class_exists( 'um\Config' ) ) {
 			);
 		}
 
-		public function init_field_type_categories() {
-			$this->field_type_categories = array(
-				'basic'   => __( 'Basic', 'ultimate-member' ),
-				'choice'  => __( 'Choice', 'ultimate-member' ),
-				'content' => __( 'Content', 'ultimate-member' ),
-				'js'      => __( 'JS', 'ultimate-member' ),
-				'layout'  => __( 'Layout', 'ultimate-member' ),
+		public function init_field_settings_tabs() {
+			$this->field_settings_tabs = array(
+				'general'      => __( 'General', 'ultimate-member' ),
+				'presentation' => __( 'Presentation', 'ultimate-member' ),
+				'validation'   => __( 'Validation', 'ultimate-member' ),
+				'privacy'      => __( 'Privacy & Permissions', 'ultimate-member' ),
+				'conditional'  => __( 'Conditional Logic', 'ultimate-member' ),
+				'advanced'     => __( 'Advanced', 'ultimate-member' ),
+			);
+		}
+
+		public function init_field_privacy_settings() {
+			$this->field_privacy_settings = array(
+				'1'  => __( 'Everyone', 'ultimate-member' ),
+				'2'  => __( 'Members', 'ultimate-member' ),
+				'-1' => __( 'Only visible to profile owner and users who can edit other member accounts', 'ultimate-member' ),
+				'-3' => __( 'Only visible to profile owner and specific roles', 'ultimate-member' ),
+				'-2' => __( 'Only specific member roles', 'ultimate-member' ),
+			);
+
+			$this->field_privacy_settings = apply_filters( 'um_field_privacy_options', $this->field_privacy_settings );
+		}
+
+		public function init_field_visibility_settings() {
+			$this->field_visibility_settings = array(
+				'edit'     => __( 'Profile Edit mode', 'ultimate-member' ),
+				'view'     => __( 'Profile View mode', 'ultimate-member' ),
+				'register' => __( 'Register', 'ultimate-member' ),
+			);
+		}
+
+		public function init_field_validation_settings() {
+			$this->field_validation_settings = array(
+				''                         => __( 'None', 'ultimate-member' ),
+				'alphabetic'               => __( 'Alphabetic value only', 'ultimate-member' ),
+				'alpha_numeric'            => __( 'Alpha-numeric value', 'ultimate-member' ),
+				'english'                  => __( 'English letters only', 'ultimate-member' ),
+				'facebook_url'             => __( 'Facebook URL', 'ultimate-member' ),
+				'google_url'               => __( 'Google URL', 'ultimate-member' ),
+				'instagram_url'            => __( 'Instagram URL', 'ultimate-member' ),
+				'linkedin_url'             => __( 'LinkedIn URL', 'ultimate-member' ),
+				'lowercase'                => __( 'Lowercase only', 'ultimate-member' ),
+				'numeric'                  => __( 'Numeric value only', 'ultimate-member' ),
+				'phone_number'             => __( 'Phone Number', 'ultimate-member' ),
+				'skype'                    => __( 'Skype ID', 'ultimate-member' ),
+				'soundcloud'               => __( 'SoundCloud Profile', 'ultimate-member' ),
+				'twitter_url'              => __( 'Twitter URL', 'ultimate-member' ),
+				'is_email'                 => __( 'E-mail( Not Unique )', 'ultimate-member' ),
+				'unique_email'             => __( 'Unique E-mail', 'ultimate-member' ),
+				'unique_value'             => __( 'Unique Metakey value', 'ultimate-member' ),
+				'unique_username'          => __( 'Unique Username', 'ultimate-member' ),
+				'unique_username_or_email' => __( 'Unique Username/E-mail', 'ultimate-member' ),
+				'url'                      => __( 'Website URL', 'ultimate-member' ),
+				'youtube_url'              => __( 'YouTube Profile', 'ultimate-member' ),
+				'telegram_url'             => __( 'Telegram URL', 'ultimate-member' ),
+				'discord'                  => __( 'Discord ID', 'ultimate-member' ),
+				'custom'                   => __( 'Custom Validation', 'ultimate-member' ),
+			);
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_admin_field_validation_hook
+			 * @description Extend validation types
+			 * @input_vars
+			 * [{"var":"$types","type":"array","desc":"Validation Types"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_admin_field_validation_hook', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_admin_field_validation_hook', 'my_admin_field_validation', 10, 1 );
+			 * function my_admin_field_validation( $types ) {
+			 *     // your code here
+			 *     return $types;
+			 * }
+			 * ?>
+			 */
+			$this->field_validation_settings = apply_filters( 'um_admin_field_validation_hook', $this->field_validation_settings );
+		}
+
+		public function init_static_field_settings() {
+			$field_types_options = array();
+			$field_types         = $this->get( 'field_types' );
+			$categories          = $this->get( 'field_type_categories' );
+			foreach ( $categories as $cat_key => $cat_title ) {
+				$field_types_options[ $cat_key ] = array(
+					'title'   => $cat_title,
+					'options' => array(),
+				);
+				foreach ( $field_types as $field_key => $field_data ) {
+					if ( $cat_key !== $field_data['category'] ) {
+						continue;
+					}
+					$field_types_options[ $cat_key ]['options'][ $field_key ] = $field_data['title'];
+				}
+			}
+
+			$this->static_field_settings = array(
+				'general'      => array(
+					'type'  => array(
+						'id'       => 'type',
+						'type'     => 'select',
+						'class'    => 'um-field-groups-field-type-select',
+						'label'    => __( 'Field type', 'ultimate-member' ),
+						'options'  => $field_types_options,
+						'sanitize' => 'key',
+					),
+					'title' => array(
+						'id'          => 'title',
+						'type'        => 'text',
+						'class'       => 'um-field-groups-field-title-input',
+						'label'       => __( 'Field title', 'ultimate-member' ),
+						'description' => __( 'Shown internally for administrator who set up fields group', 'ultimate-member' ),
+						'required'    => true,
+						'sanitize'    => 'text',
+					),
+				),
+				'presentation' => array(),
+				'validation'   => array(),
+				'privacy'      => array(
+					'privacy'       => array(
+						'id'          => 'privacy',
+						'type'        => 'select',
+						'options'     => $this->get( 'field_privacy_settings' ),
+						'label'       => __( 'Privacy', 'ultimate-member' ),
+						'description' => __( 'Field privacy allows you to select who can view this field on the front-end. The site admin can view all fields regardless of the option set here.', 'ultimate-member' ),
+						'sanitize'    => 'text',
+					),
+					'privacy_roles' => array(
+						'id'          => 'privacy_roles',
+						'type'        => 'select',
+						'options'     => UM()->roles()->get_roles(),
+						'label'       => __( 'Select member roles', 'ultimate-member' ),
+						'description' => __( 'Select the member roles that can view this field on the front-end.', 'ultimate-member' ),
+						'sanitize'    => 'key',
+						'conditional' => array( 'privacy', '=', '-2' ),
+					),
+					'visibility'    => array(
+						'id'          => 'visibility',
+						'type'        => 'select',
+						'multi'       => true,
+						'options'     => $this->get( 'field_visibility_settings' ),
+						'label'       => __( 'Visibility', 'ultimate-member' ),
+						'description' => __( 'Select where this field should appear. This option allows you to show a field in selected profile mode (edit or view) or in register forms. Leave empty to show everywhere.', 'ultimate-member' ),
+						'sanitize'    => 'key',
+					),
+				),
+				'conditional'  => array(
+					'conditional_logic'  => array(
+						'id'       => 'conditional_logic',
+						'type'     => 'checkbox',
+						'label'    => __( 'Conditional Logic', 'ultimate-member' ),
+						'sanitize' => 'bool',
+					),
+					'conditional_action' => array(
+						'id'          => 'conditional_action',
+						'type'        => 'select',
+						'label'       => __( 'Action', 'ultimate-member' ),
+						'options'     => array(
+							'show' => __( 'Show', 'ultimate-member' ),
+							'hide' => __( 'Hide', 'ultimate-member' ),
+						),
+						'sanitize'    => 'key',
+						'conditional' => array( 'conditional_logic', '=', 1 ),
+					),
+					'conditional_rules'  => array(
+						'id'          => 'conditional_rules',
+						'type'        => 'conditional_rules',
+						'label'       => __( 'Rules', 'ultimate-member' ),
+						'sanitize'    => 'conditional_rules',
+						'conditional' => array( 'conditional_logic', '=', 1 ),
+					),
+				),
+				'advanced'     => array(),
 			);
 		}
 
@@ -1098,8 +1298,131 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'category' => 'basic',
 				),
 				'text'      => array(
-					'title' => __( 'Text Box', 'ultimate-member' ),
-					'category' => 'basic',
+					'title'             => __( 'Text Box', 'ultimate-member' ),
+					'category'          => 'basic',
+					'conditional_rules' => array(
+						'==',
+						'!=',
+						'!=empty',
+						'==empty',
+						'==pattern',
+						'==contains',
+					),
+					'settings'          => array(
+						'general'      => array(
+							'label'         => array(
+								'id'          => 'label',
+								'type'        => 'text',
+								'label'       => __( 'Field label', 'ultimate-member' ),
+								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'meta_key'      => array(
+								'id'          => 'meta_key',
+								'type'        => 'text',
+								'label'       => __( 'Meta key', 'ultimate-member' ),
+								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'default_value' => array(
+								'id'          => 'default_value',
+								'type'        => 'text',
+								'label'       => __( 'Default value', 'ultimate-member' ),
+								'description' => __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+						),
+						'presentation' => array(
+							'placeholder' => array(
+								'id'          => 'placeholder',
+								'type'        => 'text',
+								'label'       => __( 'Placeholder', 'ultimate-member' ),
+								'description' => __( 'This is the text that appears within the field e.g please enter your email address. Leave blank to not show any placeholder text.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'description' => array(
+								'id'          => 'description',
+								'type'        => 'textarea',
+								'label'       => __( 'Description', 'ultimate-member' ),
+								'description' => __( 'This is the text that appears below the field on your front-end. Description is useful for providing users with more information about what they should enter in the field. Leave blank if no description is needed for field.', 'ultimate-member' ),
+								'args'        => array(
+									'textarea_rows' => 5,
+								),
+								'sanitize'    => 'textarea',
+							),
+						),
+						'validation'   => array(
+							'required'        => array(
+								'id'          => 'required',
+								'type'        => 'checkbox',
+								'label'       => __( 'Is this field required?', 'ultimate-member' ),
+								'description' => __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+							'min_chars'       => array(
+								'id'          => 'min_chars',
+								'type'        => 'number',
+								'label'       => __( 'Minimum length', 'ultimate-member' ),
+								'description' => __( 'If you want to enable a minimum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
+							),
+							'max_chars'       => array(
+								'id'          => 'max_chars',
+								'type'        => 'number',
+								'label'       => __( 'Maximum length', 'ultimate-member' ),
+								'description' => __( 'If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
+							),
+							'pattern'         => array(
+								'id'          => 'pattern',
+								'type'        => 'text',
+								'label'       => __( 'Input mask (pattern)', 'ultimate-member' ),
+								'description' => __( 'A regular <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/text#specifying_a_pattern">expression</a> to validate input format.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'validate'        => array(
+								'id'          => 'validate',
+								'type'        => 'select',
+								'label'       => __( 'Validation', 'ultimate-member' ),
+								'description' => __( 'Does this field require a special validation?', 'ultimate-member' ),
+								'options'     => $this->get( 'field_validation_settings' ),
+								'sanitize'    => 'key',
+							),
+							'custom_validate' => array(
+								'id'          => 'custom_validate',
+								'type'        => 'text',
+								'label'       => __( 'Custom validation action', 'ultimate-member' ),
+								'description' => __( 'If you want to apply your custom validation, you can use action hooks to add custom validation. Please refer to documentation for further details.', 'ultimate-member' ),
+								'conditional' => array( 'validate', '=', 'custom' ),
+								'sanitize'    => 'text',
+							),
+						),
+						'privacy'      => array(
+							'required' => array(
+								'id'          => 'required',
+								'type'        => 'checkbox',
+								'label'       => __( 'Mark as readonly', 'ultimate-member' ),
+								'description' => __( 'Enable to prevent users from editing this field. Note: if the profile editing option is set to publicly editable, the field will still be visible within the account page but will not be customizable.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+						),
+						'advanced'     => array(
+							'wrapper_class' => array(
+								'id'          => 'wrapper_class',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper class', 'ultimate-member' ),
+								'description' => __( 'CSS class added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+							'wrapper_id'    => array(
+								'id'          => 'wrapper_id',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper id', 'ultimate-member' ),
+								'description' => __( 'ID added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+						),
+					),
 				),
 				'select'    => array(
 					'title' => __( 'Dropdown', 'ultimate-member' ),

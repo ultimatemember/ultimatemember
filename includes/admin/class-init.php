@@ -921,7 +921,7 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			$this->settings();
 			$this->site_health();
 			$this->users_columns();
-			$this->fields_group()->hooks();
+			$this->field_group()->hooks();
 		}
 
 		/**
@@ -1111,13 +1111,13 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 		/**
 		 * @since 3.0
 		 *
-		 * @return Fields_Group
+		 * @return Field_Group
 		 */
-		public function fields_group() {
-			if ( empty( UM()->classes['um\admin\fields_group'] ) ) {
-				UM()->classes['um\admin\fields_group'] = new Fields_Group();
+		public function field_group() {
+			if ( empty( UM()->classes['um\admin\field_group'] ) ) {
+				UM()->classes['um\admin\field_group'] = new Field_Group();
 			}
-			return UM()->classes['um\admin\fields_group'];
+			return UM()->classes['um\admin\field_group'];
 		}
 	}
 }

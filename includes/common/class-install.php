@@ -136,17 +136,17 @@ KEY user_id_indx (user_id),
 KEY meta_key_indx (um_key),
 KEY meta_value_indx (um_value(191))
 ) $charset_collate;
-CREATE TABLE {$wpdb->prefix}um_fields_groups (
+CREATE TABLE {$wpdb->prefix}um_field_groups (
 id bigint(20) unsigned NOT NULL auto_increment,
 group_key varchar(32) NOT NULL default '',
 title varchar(255) default NULL,
 description longtext default NULL,
-status enum('active','inactive','invalid') NOT NULL default 'invalid',
+status enum('active','inactive','draft','invalid') NOT NULL default 'invalid',
 PRIMARY KEY  (id),
 KEY group_key_indx (group_key),
 KEY status_indx (status)
 ) $charset_collate;
-CREATE TABLE {$wpdb->prefix}um_fields_groups_meta (
+CREATE TABLE {$wpdb->prefix}um_field_groups_meta (
 meta_id bigint(20) unsigned NOT NULL auto_increment,
 group_id bigint(20) unsigned NOT NULL,
 meta_key varchar(255) default NULL,
@@ -160,7 +160,6 @@ id bigint(20) unsigned NOT NULL auto_increment,
 field_key varchar(32) NOT NULL default '',
 group_id bigint(20) unsigned NOT NULL,
 title varchar(255) default NULL,
-description longtext default NULL,
 type varchar(255) NOT NULL default '',
 PRIMARY KEY  (id),
 UNIQUE KEY field_key_group_id_indx (field_key,group_id),

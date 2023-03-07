@@ -5,14 +5,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'um\admin\Fields_Group' ) ) {
+if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 
 	/**
-	 * Class Fields_Group
+	 * Class Field_Group
 	 *
 	 * @package um\admin
 	 */
-	class Fields_Group {
+	class Field_Group {
 
 		/**
 		 * @var
@@ -25,7 +25,7 @@ if ( ! class_exists( 'um\admin\Fields_Group' ) ) {
 		private $global_fields = array();
 
 		/**
-		 * Fields_Group constructor.
+		 * Field_Group constructor.
 		 */
 		public function __construct() {
 		}
@@ -43,9 +43,98 @@ if ( ! class_exists( 'um\admin\Fields_Group' ) ) {
 				if ( empty( $field_data['value'] ) ) {
 					$visibility = ' style="visibility:hidden;"';
 				}
-				$html = '<div style="display: flex;flex-direction: row;justify-content: space-between; align-items: center;flex-wrap: nowrap;">' . $html .'<input type="button" class="button um-fields-groups-field-reset-all-conditions" value="' . __( 'Reset all rules', 'ultimate-member' ) . '"' . $visibility . '/></div>';
+				$html = '<div style="display: flex;flex-direction: row;justify-content: space-between; align-items: center;flex-wrap: nowrap;">' . $html .'<input type="button" class="button um-field-groups-field-reset-all-conditions" value="' . __( 'Reset all rules', 'ultimate-member' ) . '"' . $visibility . '/></div>';
 			}
 			return $html;
+		}
+
+		/**
+		 * @param int    $id User ID or Group ID
+		 * @param string $by 'user' or 'group'
+		 *
+		 * @return bool|int
+		 */
+		public function get_draft_by( $id, $by ) {
+			global $wpdb;
+
+			if ( 'user' === $by ) {
+				$draft_id = $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT fg.id 
+						FROM {$wpdb->prefix}um_field_groups AS fg 
+						LEFT JOIN {$wpdb->prefix}um_field_groups_meta fgm ON fgm.group_id = fg.id AND fgm.meta_key = 'user_id'  
+						WHERE fg.status = 'draft' AND 
+							  fgm.meta_value = %d",
+						$id
+					)
+				);
+			} elseif ( 'group' === $by ) {
+				$draft_id = $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT fg.id 
+						FROM {$wpdb->prefix}um_field_groups AS fg 
+						LEFT JOIN {$wpdb->prefix}um_field_groups_meta fgm ON fgm.group_id = fg.id AND fgm.meta_key = 'group_id'  
+						WHERE fg.status = 'draft' AND 
+							  fgm.meta_value = %d",
+						$id
+					)
+				);
+			}
+
+			return ! empty( $draft_id ) ? absint( $draft_id ) : false;
+		}
+
+
+		public function get_field_settings( $field_type, $field_id = null ) {
+			$static_settings = UM()->config()->get( 'static_field_settings' );
+			$field_types     = UM()->config()->get( 'field_types' );
+
+//			$settings_by_type_keys = array_unique( array_merge( array_keys( $static_settings ), array_keys( $field_types ) ) );
+//			$settings_by_type      = array_fill_keys( $settings_by_type_keys, array() );
+//			foreach ( $settings_by_type as $tab_key => &$tab_fields ) {
+//				if ( array_key_exists( $tab_key, $static_settings ) ) {
+//					$tab_fields = array_merge( $tab_fields, $static_settings[ $tab_key ] );
+//					foreach ( $tab_fields as $field_key => &$field_data ) {
+//						if ( array_key_exists( $tab_key, $field_types[ $field_type ]['settings'] ) &&
+//						     array_key_exists( $field_key, $field_types[ $field_type ]['settings'][ $tab_key ] ) ) {
+//							$field_data = array_merge( $field_data, $field_types[ $field_type ]['settings'][ $tab_key ][ $field_key ] );
+//						}
+//					}
+//				}
+//
+//				if ( array_key_exists( $tab_key, $field_types[ $field_type ]['settings'] ) ) {
+//					$tab_fields = array_merge( $tab_fields, $field_types[ $field_type ]['settings'][ $tab_key ] );
+//				}
+//			}
+
+			$settings_by_type = array_merge_recursive( $static_settings, $field_types[ $field_type ]['settings'] );
+
+			if ( ! empty( $field_id ) ) {
+				$field_data = $this->get_field_data( $field_id );
+				foreach ( $settings_by_type as $tab_key => &$settings_data ) {
+					foreach ( $settings_data as $setting_key => &$setting_data ) {
+						if ( ! array_key_exists( $setting_key, $field_data ) ) {
+							continue;
+						}
+
+						if ( 'conditional_rules' === $setting_key ) {
+							$setting_data['value'] = unserialize( $field_data[ $setting_key ] );
+						} else {
+							$setting_data['value'] = $field_data[ $setting_key ];
+						}
+					}
+				}
+			}
+
+			return $settings_by_type;
+		}
+
+		public function get_field_tabs( $field_type ) {
+			$titles = UM()->config()->get( 'field_settings_tabs' );
+
+			$field_tabs = array_keys( $this->get_field_settings( $field_type ) );
+			$tabs       = array_intersect_key( $titles, array_flip( $field_tabs ) );
+			return $tabs;
 		}
 
 		/**
@@ -59,7 +148,7 @@ if ( ! class_exists( 'um\admin\Fields_Group' ) ) {
 			$group_data = $wpdb->get_row(
 				$wpdb->prepare(
 					"SELECT * 
-					FROM {$wpdb->prefix}um_fields_groups 
+					FROM {$wpdb->prefix}um_field_groups 
 					WHERE id = %d
 					LIMIT 1",
 					$group_id
@@ -81,35 +170,37 @@ if ( ! class_exists( 'um\admin\Fields_Group' ) ) {
 
 			$query = $wpdb->prepare(
 				"SELECT * 
-				FROM {$wpdb->prefix}um_fields 
-				WHERE group_id = %d",
+				FROM {$wpdb->prefix}um_fields f 
+				LEFT JOIN {$wpdb->prefix}um_fields_meta fm ON fm.field_id = f.id AND fm.meta_key = 'order' 
+				WHERE group_id = %d
+				ORDER BY fm.meta_value ASC",
 				$group_id
 			);
 
-			if ( 'fields_only' === $type ) {
-				$query = $wpdb->prepare(
-					"SELECT * 
-					FROM {$wpdb->prefix}um_fields 
-					WHERE group_id = %d AND 
-					      type != 'row'",
-					$group_id
-				);
-			} elseif ( 'row' === $type ) {
-				$query = $wpdb->prepare(
-					"SELECT * 
-					FROM {$wpdb->prefix}um_fields 
-					WHERE group_id = %d AND 
-					      type = 'row'",
-					$group_id
-				);
-			}
+//			if ( 'fields_only' === $type ) {
+//				$query = $wpdb->prepare(
+//					"SELECT *
+//					FROM {$wpdb->prefix}um_fields
+//					WHERE group_id = %d AND
+//					      type != 'row'",
+//					$group_id
+//				);
+//			} elseif ( 'row' === $type ) {
+//				$query = $wpdb->prepare(
+//					"SELECT *
+//					FROM {$wpdb->prefix}um_fields
+//					WHERE group_id = %d AND
+//					      type = 'row'",
+//					$group_id
+//				);
+//			}
 
 			$fields = $wpdb->get_results( $query, ARRAY_A );
 			return $fields;
 		}
 
 		/**
-		 * Create fields group. With basic row
+		 * Create fields group
 		 *
 		 * @param array $data {
 		 *     Fields Group data array.
@@ -130,7 +221,7 @@ if ( ! class_exists( 'um\admin\Fields_Group' ) ) {
 			}
 
 			$wpdb->insert(
-				"{$wpdb->prefix}um_fields_group",
+				"{$wpdb->prefix}um_field_groups",
 				array(
 					'group_key'   => md5( 'group' . $data['title'] . time() ),
 					'title'       => $data['title'],
@@ -145,30 +236,289 @@ if ( ! class_exists( 'um\admin\Fields_Group' ) ) {
 				)
 			);
 
-			$fields_group_id = $wpdb->insert_id;
+			$field_group_id = $wpdb->insert_id;
 
-			if ( ! empty( $fields_group_id ) ) {
-				// if fields in data array aren't exist then set basic row only
-				if ( ! array_key_exists( 'fields', $data ) ) {
-					$wpdb->insert(
-						"{$wpdb->prefix}um_fields",
-						array(
-							'field_key'   => md5( 'field' . __( 'Row', 'ultimate-member' ) . time() ),
-							'group_id'    => $fields_group_id,
-							'title'       => __( 'Row', 'ultimate-member' ),
-							'description' => __( 'Basic Row', 'ultimate-member' ),
-						),
-						array(
-							'%s',
-							'%d',
-							'%s',
-							'%s',
-						)
-					);
+			if ( ! empty( $field_group_id ) && array_key_exists( 'meta', $data ) ) {
+				foreach ( $data['meta'] as $meta_key => $meta_value ) {
+					$this->update_meta( $field_group_id, $meta_key, $meta_value );
 				}
 			}
 
-			return $fields_group_id;
+//			if ( ! empty( $field_group_id ) ) {
+//				// if fields in data array aren't exist then set basic row only
+//				if ( ! array_key_exists( 'fields', $data ) ) {
+//					$wpdb->insert(
+//						"{$wpdb->prefix}um_fields",
+//						array(
+//							'field_key'   => md5( 'field' . __( 'Row', 'ultimate-member' ) . time() ),
+//							'group_id'    => $field_group_id,
+//							'title'       => __( 'Row', 'ultimate-member' ),
+//							'description' => __( 'Basic Row', 'ultimate-member' ),
+//						),
+//						array(
+//							'%s',
+//							'%d',
+//							'%s',
+//							'%s',
+//						)
+//					);
+//				}
+//			}
+
+			return $field_group_id;
+		}
+
+		public function add_field( $data ) {
+			global $wpdb;
+
+			if ( empty( $data['group_id'] ) || empty( $data['type'] ) ) {
+				return false;
+			}
+
+			$wpdb->insert(
+				"{$wpdb->prefix}um_fields",
+				array(
+					'field_key' => md5( 'field' . $data['title'] . time() ),
+					'group_id'  => $data['group_id'],
+					'title'     => $data['title'],
+					'type'      => $data['type'],
+				),
+				array(
+					'%s',
+					'%d',
+					'%s',
+					'%s',
+				)
+			);
+
+			$field_id = $wpdb->insert_id;
+
+			if ( ! empty( $field_id ) && array_key_exists( 'meta', $data ) ) {
+				foreach ( $data['meta'] as $meta_key => $meta_value ) {
+					$this->update_field_meta( $field_id, $meta_key, $meta_value );
+				}
+			}
+
+			return $field_id;
+		}
+
+		public function update_field( $data ) {
+			global $wpdb;
+
+			if ( ! array_key_exists( 'id', $data ) ) {
+				return false;
+			}
+
+			$update_data   = array();
+			$update_format = array();
+
+			if ( array_key_exists( 'title', $data ) ) {
+				$update_data['title'] = $data['title'];
+				$update_format[] = '%s';
+			}
+
+			if ( array_key_exists( 'type', $data ) ) {
+				$update_data['type'] = $data['type'];
+				$update_format[] = '%s';
+			}
+
+			$wpdb->update(
+				"{$wpdb->prefix}um_fields",
+				$update_data,
+				array(
+					'id' => $data['id'],
+				),
+				$update_format,
+				array(
+					'%d',
+				)
+			);
+
+			if ( array_key_exists( 'meta', $data ) ) {
+				foreach ( $data['meta'] as $meta_key => $meta_value ) {
+					$this->update_field_meta( $data['id'], $meta_key, $meta_value );
+				}
+			}
+
+			return $data['id'];
+		}
+
+		public function field_meta_exists( $field_id, $meta_key ) {
+			global $wpdb;
+
+			$meta_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT meta_id 
+					FROM {$wpdb->prefix}um_fields_meta 
+					WHERE field_id = %d AND 
+					      meta_key = %s 
+					LIMIT 1",
+					$field_id,
+					$meta_key
+				)
+			);
+
+			return ! empty( $meta_id ) ? $meta_id : false;
+		}
+
+		public function meta_exists( $group_id, $meta_key ) {
+			global $wpdb;
+
+			$meta_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT meta_id 
+					FROM {$wpdb->prefix}um_field_groups_meta 
+					WHERE group_id = %d AND 
+					      meta_key = %s 
+					LIMIT 1",
+					$group_id,
+					$meta_key
+				)
+			);
+
+			return ! empty( $meta_id ) ? $meta_id : false;
+		}
+
+		public function update_field_meta( $field_id, $meta_key, $meta_value ) {
+			global $wpdb;
+
+			// don't use predefined in `um_fields`
+			if ( in_array( $meta_key, array( 'id', 'field_key', 'group_id', 'title', 'type' ) ) ) {
+				return;
+			}
+
+			if ( ! is_string( $meta_value ) ) {
+				$meta_value = maybe_serialize( $meta_value );
+			}
+
+			$meta_id = $this->field_meta_exists( $field_id, $meta_key );
+			if ( false === $meta_id ) {
+				$wpdb->insert(
+					"{$wpdb->prefix}um_fields_meta",
+					array(
+						'field_id'   => $field_id,
+						'meta_key'   => $meta_key,
+						'meta_value' => $meta_value,
+					),
+					array(
+						'%d',
+						'%s',
+						'%s',
+					)
+				);
+			} else {
+				$wpdb->update(
+					"{$wpdb->prefix}um_fields_meta",
+					array(
+						'meta_value' => $meta_value,
+					),
+					array(
+						'meta_id'   => $meta_id,
+					),
+					array(
+						'%s',
+					),
+					array(
+						'%d',
+					)
+				);
+			}
+		}
+
+		public function update_meta( $group_id, $meta_key, $meta_value ) {
+			global $wpdb;
+
+			if ( ! is_string( $meta_value ) ) {
+				$meta_value = maybe_serialize( $meta_value );
+			}
+
+			$meta_id = $this->meta_exists( $group_id, $meta_key );
+			if ( false === $meta_id ) {
+				$wpdb->insert(
+					"{$wpdb->prefix}um_field_groups_meta",
+					array(
+						'group_id'   => $group_id,
+						'meta_key'   => $meta_key,
+						'meta_value' => $meta_value,
+					),
+					array(
+						'%d',
+						'%s',
+						'%s',
+					)
+				);
+			} else {
+				$wpdb->update(
+					"{$wpdb->prefix}um_field_groups_meta",
+					array(
+						'meta_value' => $meta_value,
+					),
+					array(
+						'meta_id'   => $meta_id,
+					),
+					array(
+						'%s',
+					),
+					array(
+						'%d',
+					)
+				);
+			}
+		}
+
+		/**
+		 * Update fields group
+		 *
+		 * @param array $data {
+		 *     Fields Group data array.
+		 *
+		 *     @type string $title       The fields group title.
+		 *     @type string $description Optional. The fields group description.
+		 *     @type string $status      Optional. The fields group status ('active' || 'inactive'). 'active' by default.
+		 *     @type array  $fields      Optional. The link label.
+		 * }
+		 *
+		 * @return bool|int Fields Group ID or false on failure
+		 */
+		public function update( $data ) {
+			global $wpdb;
+
+			if ( ! array_key_exists( 'id', $data ) ) {
+				return false;
+			}
+
+			$update_data   = array();
+			$update_format = array();
+
+			if ( array_key_exists( 'title', $data ) ) {
+				$update_data['title'] = $data['title'];
+				$update_format[] = '%s';
+			}
+
+			if ( array_key_exists( 'description', $data ) ) {
+				$update_data['description'] = $data['description'];
+				$update_format[] = '%s';
+			}
+
+			$wpdb->update(
+				"{$wpdb->prefix}um_field_groups",
+				$update_data,
+				array(
+					'id' => $data['id'],
+				),
+				$update_format,
+				array(
+					'%d',
+				)
+			);
+
+			if ( array_key_exists( 'meta', $data ) ) {
+				foreach ( $data['meta'] as $meta_key => $meta_value ) {
+					$this->update_meta( $data['id'], $meta_key, $meta_value );
+				}
+			}
+
+			return $data['id'];
 		}
 
 		/**
@@ -229,15 +579,32 @@ if ( ! class_exists( 'um\admin\Fields_Group' ) ) {
 				return $field['type'];
 			}
 
-			$types_map = array(
-				'text' => __( 'Text', 'ultimate-member' ),
-			);
+			$field_types = UM()->config()->get( 'field_types' );
+
+			$types_map = array_combine( array_keys( $field_types ), array_column( $field_types, 'title' ) );
 
 			if ( ! array_key_exists( $field['type'], $types_map ) ) {
 				return $field['type'];
 			}
 
 			return $types_map[ $field['type'] ];
+		}
+
+		/**
+		 * @param array|int $field Field data array
+		 *
+		 * @return bool|string Field's metakey or false on failure
+		 */
+		public function get_field_metakey( $field ) {
+			if ( ! is_numeric( $field ) ) {
+				if ( ! array_key_exists( 'id', $field ) ) {
+					return false;
+				}
+
+				$field = $field['id'];
+			}
+
+			return $this->get_field_meta( $field, 'meta_key' );
 		}
 
 		/**
@@ -266,9 +633,8 @@ if ( ! class_exists( 'um\admin\Fields_Group' ) ) {
 					      meta_key = %s
 					LIMIT 1",
 					$field,
-					sanitize_key( $meta_key )
-				),
-				ARRAY_A
+					$meta_key
+				)
 			);
 
 			if ( empty( $meta_value ) ) {
@@ -278,6 +644,47 @@ if ( ! class_exists( 'um\admin\Fields_Group' ) ) {
 			}
 
 			return $meta_value;
+		}
+
+		public function get_field_data( $field ) {
+			global $wpdb;
+
+			if ( ! is_numeric( $field ) ) {
+				if ( ! array_key_exists( 'id', $field ) ) {
+					return false;
+				}
+
+				$field = $field['id'];
+			}
+
+			$field_data = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT * 
+					FROM {$wpdb->prefix}um_fields 
+					WHERE id = %d
+					LIMIT 1",
+					$field
+				),
+				ARRAY_A
+			);
+			unset( $field_data['id'] );
+
+			$meta_values = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT meta_key, meta_value 
+					FROM {$wpdb->prefix}um_fields_meta 
+					WHERE field_id = %d",
+					$field
+				),
+				ARRAY_A
+			);
+
+			if ( ! empty( $meta_values ) ) {
+				$meta_values = array_combine( array_column( $meta_values, 'meta_key' ), array_column( $meta_values, 'meta_value' ) );
+				$field_data = array_merge( $field_data, $meta_values );
+			}
+
+			return $field_data;
 		}
 
 		/**

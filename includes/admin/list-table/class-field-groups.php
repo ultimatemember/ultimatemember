@@ -10,9 +10,9 @@ if ( ! class_exists( '\WP_List_Table' ) ) {
 }
 
 /**
- * Class Fields_Groups
+ * Class Field_Groups
  */
-class Fields_Groups extends \WP_List_Table {
+class Field_Groups extends \WP_List_Table {
 
 	/**
 	 * @var string
@@ -90,7 +90,7 @@ class Fields_Groups extends \WP_List_Table {
 		$order = ( isset( $_GET['order'] ) && 'asc' === strtolower( sanitize_key( $_GET['order'] ) ) ) ? 'ASC' : 'DESC';
 
 		$fields_groups_total = $wpdb->get_var(
-			"SELECT COUNT(*) FROM {$wpdb->prefix}um_fields_groups"
+			"SELECT COUNT(*) FROM {$wpdb->prefix}um_field_groups"
 		);
 
 		$this->items = array();
@@ -99,7 +99,7 @@ class Fields_Groups extends \WP_List_Table {
 				$wpdb->prepare(
 					"SELECT fg.*,
 						  COUNT(f.group_id) AS `fields`
-					FROM {$wpdb->prefix}um_fields_groups AS fg
+					FROM {$wpdb->prefix}um_field_groups AS fg
 					LEFT JOIN {$wpdb->prefix}um_fields AS f ON ( f.group_id = fg.id AND f.type != 'row' )
 					GROUP BY fg.id
 					ORDER BY fg.title {$order} 
@@ -236,16 +236,16 @@ class Fields_Groups extends \WP_List_Table {
 	function column_title( $item ) {
 		$actions = array();
 
-		$actions['edit']      = '<a href="admin.php?page=um_fields_groups&tab=edit&id=' . esc_attr( $item['id'] ) . '">' . __( 'Edit', 'ultimate-member' ) . '</a>';
-		$actions['duplicate'] = '<a href="admin.php?page=um_fields_groups&action=duplicate&id=' . esc_attr( $item['id'] ) . '&_wpnonce=' . wp_create_nonce( 'um_field_group_duplicate' . $item['id'] . get_current_user_id() ) . '">' . esc_html__( 'Duplicate', 'ultimate-member' ) . '</a>';
+		$actions['edit']      = '<a href="admin.php?page=um_field_groups&tab=edit&id=' . esc_attr( $item['id'] ) . '">' . __( 'Edit', 'ultimate-member' ) . '</a>';
+		$actions['duplicate'] = '<a href="admin.php?page=um_field_groups&action=duplicate&id=' . esc_attr( $item['id'] ) . '&_wpnonce=' . wp_create_nonce( 'um_field_group_duplicate' . $item['id'] . get_current_user_id() ) . '">' . esc_html__( 'Duplicate', 'ultimate-member' ) . '</a>';
 		if ( ! empty( $item['status'] ) && 'active' === $item['status'] ) {
-			$actions['deactivate'] = '<a href="admin.php?page=um_fields_groups&action=deactivate&id=' . esc_attr( $item['id'] ) . '&_wpnonce=' . wp_create_nonce( 'um_field_group_deactivate' . $item['id'] . get_current_user_id() ) . '" onclick="return confirm( \'' . esc_html__( 'Are you sure you want to deactivate this fields group?', 'ultimate-member' ) . '\' );">' . esc_html__( 'Deactivate', 'ultimate-member' ) . '</a>';
+			$actions['deactivate'] = '<a href="admin.php?page=um_field_groups&action=deactivate&id=' . esc_attr( $item['id'] ) . '&_wpnonce=' . wp_create_nonce( 'um_field_group_deactivate' . $item['id'] . get_current_user_id() ) . '" onclick="return confirm( \'' . esc_html__( 'Are you sure you want to deactivate this fields group?', 'ultimate-member' ) . '\' );">' . esc_html__( 'Deactivate', 'ultimate-member' ) . '</a>';
 		} elseif ( ! empty( $item['status'] ) && 'inactive' === $item['status'] ) {
-			$actions['activate'] = '<a href="admin.php?page=um_fields_groups&action=activate&id=' . esc_attr( $item['id'] ) . '&_wpnonce=' . wp_create_nonce( 'um_field_group_activate' . $item['id'] . get_current_user_id() ) . '" onclick="return confirm( \'' . esc_html__( 'Are you sure you want to activate this fields group?', 'ultimate-member' ) . '\' );">' . esc_html__( 'Activate', 'ultimate-member' ) . '</a>';
+			$actions['activate'] = '<a href="admin.php?page=um_field_groups&action=activate&id=' . esc_attr( $item['id'] ) . '&_wpnonce=' . wp_create_nonce( 'um_field_group_activate' . $item['id'] . get_current_user_id() ) . '" onclick="return confirm( \'' . esc_html__( 'Are you sure you want to activate this fields group?', 'ultimate-member' ) . '\' );">' . esc_html__( 'Activate', 'ultimate-member' ) . '</a>';
 		}
-		$actions['delete'] = '<a href="admin.php?page=um_fields_groups&action=delete&id=' . esc_attr( $item['id'] ) . '&_wpnonce=' . wp_create_nonce( 'um_field_group_delete' . $item['id'] . get_current_user_id() ) . '" onclick="return confirm( \'' . esc_html__( 'Are you sure you want to delete this fields group?', 'ultimate-member' ) . '\' );">' . esc_html__( 'Delete', 'ultimate-member' ) . '</a>';
+		$actions['delete'] = '<a href="admin.php?page=um_field_groups&action=delete&id=' . esc_attr( $item['id'] ) . '&_wpnonce=' . wp_create_nonce( 'um_field_group_delete' . $item['id'] . get_current_user_id() ) . '" onclick="return confirm( \'' . esc_html__( 'Are you sure you want to delete this fields group?', 'ultimate-member' ) . '\' );">' . esc_html__( 'Delete', 'ultimate-member' ) . '</a>';
 
-		return sprintf('%1$s %2$s', '<strong><a class="row-title" href="admin.php?page=um_fields_groups&tab=edit&id=' . esc_attr( $item['id'] ) . '">' . esc_html( $item['title'] ) . '</a></strong>', $this->row_actions( $actions ) );
+		return sprintf('%1$s %2$s', '<strong><a class="row-title" href="admin.php?page=um_field_groups&tab=edit&id=' . esc_attr( $item['id'] ) . '">' . esc_html( $item['title'] ) . '</a></strong>', $this->row_actions( $actions ) );
 	}
 
 	/**
@@ -254,7 +254,7 @@ class Fields_Groups extends \WP_List_Table {
 	 * @return string
 	 */
 	function column_description( $item ) {
-		return ! empty( $item['description'] ) ? esc_html( $item['description'] ) : '';
+		return ! empty( $item['description'] ) ? nl2br( esc_html( $item['description'] ) ) : '';
 	}
 
 	/**

@@ -699,7 +699,9 @@ jQuery(document).ready( function() {
 	 * On option fields change
 	 */
 	jQuery( document.body ).on('change', '.um-forms-field', function() {
-		if ( jQuery('.um-forms-line[data-conditional*=\'"' + jQuery(this).data('field_id') + '",\']').length > 0 || jQuery('.um-forms-line[data-conditional*=\'' + jQuery(this).data('field_id') + '|\']').length > 0 || jQuery('.um-forms-line[data-conditional*=\'|' + jQuery(this).data('field_id') + '\']').length > 0 ) {
+		if ( jQuery('.um-forms-line[data-conditional*=\'"' + jQuery(this).data('field_id') + '",\']').length > 0 ||
+			 jQuery('.um-forms-line[data-conditional*=\'' + jQuery(this).data('field_id') + '|\']').length > 0 ||
+			 jQuery('.um-forms-line[data-conditional*=\'|' + jQuery(this).data('field_id') + '\']').length > 0 ) {
 			run_check_conditions();
 		}
 	});
@@ -714,12 +716,15 @@ jQuery(document).ready( function() {
 	 */
 	function run_check_conditions() {
 		jQuery( '.um-forms-line' ).removeClass('um-forms-line-conditioned').each( function() {
-			if ( typeof jQuery(this).data('conditional') === 'undefined' || jQuery(this).hasClass('um-forms-line-conditioned') )
+			if ( typeof jQuery(this).data('conditional') === 'undefined' || jQuery(this).hasClass('um-forms-line-conditioned') ) {
 				return;
+			}
 
 			if ( check_condition( jQuery(this) ) ) {
+				jQuery(this).find( 'input:not(.um-force-disabled), textarea:not(.um-force-disabled), select:not(.um-force-disabled)' ).removeAttr('disabled').prop('disabled', false);
 				jQuery(this).show();
 			} else {
+				jQuery(this).find( 'input, textarea, select' ).attr('disabled','disabled').prop('disabled', true);
 				jQuery(this).hide();
 			}
 		});
@@ -753,7 +758,6 @@ jQuery(document).ready( function() {
 		if ( condition === '=' || condition === '!=' ) {
 			if ( conditional[0].indexOf( '||' ) === -1 ) {
 				var condition_field = jQuery( '#' + prefix + '_' + conditional[0] );
-
 				if ( typeof condition_field.parents('.um-forms-line').data('conditional') !== 'undefined' ) {
 					parent_condition = check_condition( condition_field.parents('.um-forms-line') );
 				}

@@ -3,9 +3,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$ListTable = new um\admin\list_table\Fields_Groups( array(
-	'singular' => __( 'Fields Group', 'ultimate-member' ),
-	'plural'   => __( 'Fields Groups', 'ultimate-member' ),
+$ListTable = new um\admin\list_table\Field_Groups( array(
+	'singular' => __( 'Field Group', 'ultimate-member' ),
+	'plural'   => __( 'Field Groups', 'ultimate-member' ),
 	'ajax'     => false,
 ) );
 
@@ -34,7 +34,7 @@ $ListTable->prepare_items();
 <div class="wrap">
 	<h2>
 		<?php esc_html_e( 'Field Groups', 'ultimate-member' ); ?>
-		<a class="add-new-h2" href="<?php echo esc_url( add_query_arg( array( 'page' => 'um_fields_groups', 'tab' => 'add' ), admin_url( 'admin.php' ) ) ) ?>">
+		<a class="add-new-h2" href="<?php echo esc_url( add_query_arg( array( 'page' => 'um_field_groups', 'tab' => 'add' ), admin_url( 'admin.php' ) ) ) ?>">
 			<?php esc_html_e( 'Add New', 'ultimate-member' ); ?>
 		</a>
 	</h2>
@@ -62,8 +62,8 @@ $ListTable->prepare_items();
 		}
 	}*/ ?>
 
-	<form action="" method="get" name="um-fields-groups" id="um-fields-groups">
-		<input type="hidden" name="page" value="um_fields_groups" />
+	<form action="" method="get" name="um-field-groups" id="um-field-groups">
+		<input type="hidden" name="page" value="um_field_groups" />
 		<?php $ListTable->display(); ?>
 	</form>
 </div>

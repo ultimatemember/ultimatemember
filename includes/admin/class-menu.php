@@ -79,7 +79,7 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 
 			add_submenu_page( $this->slug, __( 'Settings', 'ultimate-member' ), __( 'Settings', 'ultimate-member' ), 'manage_options', $this->slug, array( UM()->admin()->settings(), 'settings_page' ) );
 
-			add_submenu_page( $this->slug, __( 'Fields Groups', 'ultimate-member' ), __( 'Fields Groups', 'ultimate-member' ), 'manage_options', 'um_fields_groups', array( &$this, 'fields_groups_page' ) );
+			add_submenu_page( $this->slug, __( 'Field Groups', 'ultimate-member' ), __( 'Field Groups', 'ultimate-member' ), 'manage_options', 'um_field_groups', array( &$this, 'field_groups_page' ) );
 
 			add_submenu_page( $this->slug, __( 'Forms', 'ultimate-member' ), __( 'Forms', 'ultimate-member' ), 'manage_options', 'edit.php?post_type=um_form' );
 
@@ -110,13 +110,13 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 		}
 
 		/**
-		 * Fields groups page menu callback
+		 * Field groups page menu callback
 		 */
-		function fields_groups_page() {
+		function field_groups_page() {
 			if ( empty( $_GET['tab'] ) ) {
-				include_once UM_PATH . 'includes/admin/templates/fields-group/groups-list.php';
+				include_once UM_PATH . 'includes/admin/templates/field-group/groups-list.php';
 			} elseif ( in_array( sanitize_key( $_GET['tab'] ), array( 'add', 'edit' ), true ) ) {
-				include_once UM_PATH . 'includes/admin/templates/fields-group/group-edit.php';
+				include_once UM_PATH . 'includes/admin/templates/field-group/group-edit.php';
 			}
 		}
 

@@ -37,7 +37,7 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			// @since 3.0
 			add_action( 'load-ultimate-member_page_um-modules', array( &$this, 'modules_page' ) );
 			add_action( 'load-ultimate-member_page_um_roles', array( &$this, 'roles_page' ) );
-			add_action( 'load-ultimate-member_page_um_fields_groups', array( &$this, 'fields_groups_page' ) );
+			add_action( 'load-ultimate-member_page_um_field_groups', array( &$this, 'field_groups_page' ) );
 			add_action( 'load-toplevel_page_ultimatemember', array( &$this, 'settings_page' ) );
 
 			add_action( 'load-customize.php', array( &$this, 'navmenu_page' ) );
@@ -103,8 +103,8 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 		/**
 		 * @since 3.0
 		 */
-		function fields_groups_page() {
-			add_action( 'admin_enqueue_scripts', array( &$this, 'fields_groups_page_scripts' ) );
+		function field_groups_page() {
+			add_action( 'admin_enqueue_scripts', array( &$this, 'field_groups_page_scripts' ) );
 		}
 
 		/**
@@ -163,12 +163,17 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 		/**
 		 * @since 3.0
 		 */
-		function fields_groups_page_scripts() {
-			wp_register_script( 'um_admin_fields_groups', $this->urls['js'] . 'admin/fields-groups' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'wp-i18n', 'jquery-ui-sortable', 'jquery-ui-draggable' ), UM_VERSION, true );
-			wp_enqueue_script( 'um_admin_fields_groups' );
+		function field_groups_page_scripts() {
+			wp_register_script( 'um_admin_field_groups', $this->urls['js'] . 'admin/field-groups' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'wp-i18n', 'jquery-ui-sortable', 'jquery-ui-draggable' ), UM_VERSION, true );
+			$field_groups_data = array(
+				'field_types'       => UM()->config()->get( 'field_types' ),
+				'conditional_rules' => UM()->config()->get( 'field_conditional_rules' ),
+			);
+			wp_localize_script( 'um_admin_field_groups', 'um_admin_field_groups_data', $field_groups_data );
+			wp_enqueue_script( 'um_admin_field_groups' );
 
-			wp_register_style( 'um_admin_fields_groups', $this->urls['css'] . 'admin-fields-groups' . $this->suffix . '.css', array(), UM_VERSION );
-			wp_enqueue_style( 'um_admin_fields_groups' );
+			wp_register_style( 'um_admin_field_groups', $this->urls['css'] . 'admin-field-groups' . $this->suffix . '.css', array(), UM_VERSION );
+			wp_enqueue_style( 'um_admin_field_groups' );
 		}
 
 		/**

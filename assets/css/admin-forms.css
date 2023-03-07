@@ -4,6 +4,11 @@
 .um-form-table .um-forms-line[data-field_type="checkbox"] td label {
   font-style: italic; }
 
+.um-form-table .um-forms-line label .um-req {
+  color: #a00;
+  margin: 0 0 0 3px;
+  font-weight: normal; }
+
 .um-form-table .um-forms-line .um-text-delete {
   color: #a00;
   float: left; }
