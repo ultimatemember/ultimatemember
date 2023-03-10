@@ -163,8 +163,8 @@ title varchar(255) default NULL,
 type varchar(255) NOT NULL default '',
 PRIMARY KEY  (id),
 UNIQUE KEY field_key_group_id_indx (field_key,group_id),
-KEY field_key_indx (field_key)
-KEY group_id_indx (group_id)
+KEY field_key_indx (field_key),
+KEY group_id_indx (group_id),
 KEY type_indx (type)
 ) $charset_collate;
 CREATE TABLE {$wpdb->prefix}um_fields_meta (
