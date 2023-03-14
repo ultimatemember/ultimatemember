@@ -450,6 +450,56 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 		 *
 		 * @return bool|string
 		 */
+		public function render_url( $field_data ) {
+			if ( empty( $field_data['id'] ) ) {
+				return false;
+			}
+
+			$id = ( ! empty( $this->form_data['prefix_id'] ) ? sanitize_title( $this->form_data['prefix_id'] ) : '' ) . '_' . $field_data['id'];
+			$id_attr = ' id="' . esc_attr( $id ) . '" ';
+
+			$class = ! empty( $field_data['class'] ) ? $field_data['class'] . ' ' : ' ';
+			$class .= ! empty( $field_data['size'] ) ? 'um-' . $field_data['size'] . '-field' : 'um-long-field';
+			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
+
+			$data = array(
+				'field_id' => $field_data['id']
+			);
+
+			if ( ! empty( $field_data['attr'] ) && is_array( $field_data['attr'] ) ){
+				$data = array_merge( $data, $field_data['attr'] );
+			}
+
+			$data_attr = '';
+			foreach ( $data as $key => $value ) {
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
+			}
+
+			$placeholder_attr = ! empty( $field_data['placeholder'] ) ? ' placeholder="' . esc_attr( $field_data['placeholder'] ) . '"' : '';
+
+			if ( ! empty( $field_data['name'] ) ) {
+				$name_attr = ' name="' . esc_attr( $field_data['name'] ) . '" ';
+			} else {
+				$name = $field_data['id'];
+				$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
+				$name_attr = ' name="' . esc_attr( $name ) . '" ';
+			}
+
+			$value = $this->get_field_value( $field_data );
+			$value_attr = ' value="' . esc_attr( $value ) . '" ';
+
+			$html = "<input type=\"url\" $id_attr $class_attr $name_attr $data_attr $value_attr $placeholder_attr " . disabled( ! empty( $field_data['disabled'] ), true, false ) . " />";
+
+			return $html;
+		}
+
+		/**
+		 * Render text field
+		 *
+		 * @param $field_data
+		 *
+		 * @return bool|string
+		 */
 		public function render_number( $field_data ) {
 			if ( empty( $field_data['id'] ) ) {
 				return false;

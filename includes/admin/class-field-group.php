@@ -84,6 +84,32 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 			return ! empty( $draft_id ) ? absint( $draft_id ) : false;
 		}
 
+		public function get_all_fields_settings() {
+			$static_settings = UM()->config()->get( 'static_field_settings' );
+			$field_types     = UM()->config()->get( 'field_types' );
+
+			foreach ( $field_types as $field_type => &$data ) {
+				if ( ! empty( $data['settings'] ) ) {
+					$data['settings'] = array_merge_recursive( $static_settings, $data['settings'] );
+				} else {
+					$data['settings'] = $static_settings;
+				}
+
+				foreach ( $data['settings'] as $tab_key => &$settings_data ) {
+					foreach ( $settings_data as $setting_key => &$setting_data ) {
+						if ( array_key_exists( $tab_key, $static_settings ) && array_key_exists( $setting_key, $static_settings[ $tab_key ] ) ) {
+							$setting_data['static'] = true;
+						}
+					}
+
+					if ( empty( $settings_data ) ) {
+						unset( $data['settings'][ $tab_key ] );
+					}
+				}
+			}
+
+			return $field_types;
+		}
 
 		public function get_field_settings( $field_type, $field_id = null ) {
 			$static_settings = UM()->config()->get( 'static_field_settings' );
@@ -111,10 +137,18 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 
 			if ( ! empty( $field_id ) ) {
 				$field_data = $this->get_field_data( $field_id );
+				if ( empty( $field_data ) ) {
+					return $settings_by_type;
+				}
+
 				foreach ( $settings_by_type as $tab_key => &$settings_data ) {
 					foreach ( $settings_data as $setting_key => &$setting_data ) {
 						if ( ! array_key_exists( $setting_key, $field_data ) ) {
 							continue;
+						}
+
+						if ( array_key_exists( $tab_key, $static_settings ) && array_key_exists( $setting_key, $static_settings[ $tab_key ] ) ) {
+							$setting_data['static'] = true;
 						}
 
 						if ( 'conditional_rules' === $setting_key ) {
@@ -649,7 +683,7 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 		public function get_field_data( $field ) {
 			global $wpdb;
 
-			if ( ! is_numeric( $field ) ) {
+			if ( is_array( $field ) ) {
 				if ( ! array_key_exists( 'id', $field ) ) {
 					return false;
 				}
@@ -667,6 +701,11 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 				),
 				ARRAY_A
 			);
+
+			if ( empty( $field_data ) ) {
+				return false;
+			}
+
 			unset( $field_data['id'] );
 
 			$meta_values = $wpdb->get_results(
@@ -685,6 +724,34 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 			}
 
 			return $field_data;
+		}
+
+		public function get_tab_fields_html( $tab, $field ) {
+			$template_settings = UM()->admin()->field_group()->get_field_settings( $field['type'], $field['index'] );
+			if ( isset( $template_settings['general']['type'] ) ) {
+				$template_settings['general']['type']['value'] = $field['type'];
+			}
+
+			$settings_fields = $template_settings[ $tab ];
+			foreach ( $settings_fields as &$setting_data ) {
+				$setting_data['name'] = 'field_group[fields][' . $field['index'] . '][' . $setting_data['id'] . ']';
+				if ( ! empty( $field['disabled'] ) ) {
+					$setting_data['disabled'] = true;
+				}
+				if ( ! empty( $setting_data['static'] ) ) {
+					$setting_data['class'] = ! empty( $setting_data['class'] ) ? $setting_data['class'] . ' um-field-groups-static-field' : 'um-field-groups-static-field';
+				}
+			}
+
+			$form_content = UM()->admin()->forms(
+				array(
+					'class'     => 'field_group_fields_' . $tab . '_' . $field['index'],
+					'prefix_id' => 'field_group[fields][' . $field['index'] . '][' . $tab . ']',
+					'fields'    => $settings_fields,
+				)
+			)->render_form( false );
+
+			return $form_content;
 		}
 
 		/**

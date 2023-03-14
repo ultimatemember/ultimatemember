@@ -164,15 +164,28 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 		 * @since 3.0
 		 */
 		function field_groups_page_scripts() {
-			wp_register_script( 'um_admin_field_groups', $this->urls['js'] . 'admin/field-groups' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'wp-i18n', 'jquery-ui-sortable', 'jquery-ui-draggable' ), UM_VERSION, true );
+			// Assets for UM wp-admin forms that are used in settings pages and metaboxes
+			// jquery is required for jQuery using
+			// wp-util is required for wp.ajax.send function
+			// um-tipsy is required for tipsy.js
+			// wp-color-picker is required for colorpickers init
+			// um-helptip is required for help tooltips
+			$deps = array( 'jquery', 'wp-util', 'wp-i18n', 'wp-color-picker', 'jquery-ui-sortable', 'jquery-ui-slider', 'jquery-ui-draggable', 'select2', 'um-helptip' );
+			wp_register_script( 'um_admin_forms', $this->urls['js'] . 'admin/forms' . $this->suffix . '.js', $deps, UM_VERSION, true );
+
+			$deps = array( 'wp-color-picker', 'um-jquery-ui', 'select2' );
+			wp_register_style( 'um_admin_forms', $this->urls['css'] . 'admin-forms' . $this->suffix . '.css', $deps, UM_VERSION );
+
+			wp_register_script( 'um_admin_field_groups', $this->urls['js'] . 'admin/field-groups' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'wp-i18n', 'jquery-ui-sortable', 'jquery-ui-draggable', 'um_admin_forms' ), UM_VERSION, true );
 			$field_groups_data = array(
-				'field_types'       => UM()->config()->get( 'field_types' ),
+				'field_tabs'        => UM()->config()->get( 'field_settings_tabs' ),
+				'field_types'       => UM()->admin()->field_group()->get_all_fields_settings(),
 				'conditional_rules' => UM()->config()->get( 'field_conditional_rules' ),
 			);
 			wp_localize_script( 'um_admin_field_groups', 'um_admin_field_groups_data', $field_groups_data );
 			wp_enqueue_script( 'um_admin_field_groups' );
 
-			wp_register_style( 'um_admin_field_groups', $this->urls['css'] . 'admin-field-groups' . $this->suffix . '.css', array(), UM_VERSION );
+			wp_register_style( 'um_admin_field_groups', $this->urls['css'] . 'admin-field-groups' . $this->suffix . '.css', array( 'um_admin_forms' ), UM_VERSION );
 			wp_enqueue_style( 'um_admin_field_groups' );
 		}
 

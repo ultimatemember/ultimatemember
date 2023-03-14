@@ -18,10 +18,49 @@ if ( ! class_exists( 'um\ajax\Field_Group' ) ) {
 		 * Field_Group constructor.
 		 */
 		public function __construct() {
+			add_action( 'wp_ajax_um_fields_groups_get_settings_form', array( &$this, 'get_field_settings_form' ) );
+			add_filter( 'um_admin_render_checkbox_field_html', array( &$this, 'add_reset_rules_button' ), 10, 2 );
+
 //			add_action( 'wp_ajax_um_fields_groups_save_draft', array( &$this, 'save_draft' ) );
 //			add_action( 'wp_ajax_um_fields_groups_check_draft', array( &$this, 'check_draft' ) );
 //			add_action( 'wp_ajax_um_fields_groups_flush_draft', array( &$this, 'flush_draft' ) );
 //			add_action( 'wp_ajax_um_fields_groups_add_field', array( &$this, 'add_field' ) );
+		}
+
+		public function add_reset_rules_button( $html, $field_data ) {
+			if ( array_key_exists( 'id', $field_data ) && 'conditional_logic' === $field_data['id'] ) {
+				$visibility = '';
+				if ( empty( $field_data['value'] ) ) {
+					$visibility = ' style="visibility:hidden;"';
+				}
+				$html = '<div style="display: flex;flex-direction: row;justify-content: space-between; align-items: center;flex-wrap: nowrap;">' . $html .'<input type="button" class="button um-field-groups-field-reset-all-conditions" value="' . __( 'Reset all rules', 'ultimate-member' ) . '"' . $visibility . '/></div>';
+			}
+			return $html;
+		}
+
+		public function get_field_settings_form() {
+			UM()->ajax()->check_nonce( 'um-admin-nonce' );
+
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( __( 'Please login as Administrator.', 'ultimate-member' ) );
+			}
+
+			if ( empty( $_POST['field_id'] ) || empty( $_POST['type'] ) ) {
+				wp_send_json_error( __( 'Wrong data.', 'ultimate-member' ) );
+			}
+
+			$type = sanitize_key( $_POST['type'] );
+			$field_id = sanitize_text_field( $_POST['field_id'] );
+
+			$field_settings_settings = UM()->admin()->field_group()->get_field_settings( $type, $field_id );
+
+			$fields = array();
+
+			foreach ( $field_settings_settings as $tab_key => $settings_fields ) {
+				$fields[ $tab_key ] = UM()->admin()->field_group()->get_tab_fields_html( $tab_key, array( 'type' => $type, 'index' => $field_id ) );
+			}
+
+			wp_send_json_success( array( 'fields' => $fields ) );
 		}
 
 		private function sanitize( $data ) {

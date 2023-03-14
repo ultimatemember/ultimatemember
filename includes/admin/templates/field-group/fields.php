@@ -93,20 +93,21 @@ $template_settings['general']['type']['value'] = $template_type;
 					$classes[] = 'current';
 				}
 
-				foreach ( $settings_fields as &$setting_data ) {
+				/*foreach ( $settings_fields as &$setting_data ) {
 					$setting_data['name']     = 'field_group[fields][new_{index}][' . $setting_data['id'] . ']';
 					$setting_data['disabled'] = true;
-				}
+				}*/
 				?>
 				<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" data-tab="<?php echo esc_attr( $tab_key ); ?>">
 					<?php
-					UM()->admin()->forms(
+					echo UM()->admin()->field_group()->get_tab_fields_html( $tab_key, array( 'type' => $template_type, 'index' => 'new_{index}', 'disabled' => true ) );
+					/*UM()->admin()->forms(
 						array(
 							'class'     => 'field_group_fields_' . $tab_key . '_new_{index}',
 							'prefix_id' => 'field_group[fields][new_{index}][' . $tab_key . ']',
 							'fields'    => $settings_fields,
 						)
-					)->render_form();
+					)->render_form();*/
 					?>
 				</div>
 				<?php
@@ -187,19 +188,21 @@ $template_settings['general']['type']['value'] = $template_type;
 									$classes[] = 'current';
 								}
 
-								foreach ( $settings_fields as $setting_key => &$setting_data ) {
+								/*foreach ( $settings_fields as $setting_key => &$setting_data ) {
 									$setting_data['name'] = 'field_group[fields][' . $field['id'] . '][' . $setting_key . ']';
-								}
+								}*/
 								?>
 								<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" data-tab="<?php echo esc_attr( $tab_key ); ?>">
 									<?php
+									echo UM()->admin()->field_group()->get_tab_fields_html( $tab_key, array( 'type' => UM()->admin()->field_group()->get_field_type( $field, true ), 'index' => $field['id'] ) );
+									/*
 									UM()->admin()->forms(
 										array(
 											'class'     => 'field_group_fields_' . $tab_key . '_' . $field['id'],
 											'prefix_id' => 'field_group[fields][' . $field['id'] . '][' . $tab_key . ']',
 											'fields'    => $settings_fields,
 										)
-									)->render_form();
+									)->render_form();*/
 									?>
 								</div>
 								<?php

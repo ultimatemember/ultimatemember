@@ -24,6 +24,65 @@ UM.fields_groups = {
 			let contents = tab_obj.parents('.um-edit-field-tabs').siblings('.um-edit-field-tabs-content');
 			contents.find('div[data-tab]').removeClass('current');
 			contents.find('div[data-tab="' + tab + '"]').addClass('current');
+		},
+		compare: function (a, b) {
+			if (a.length !== b.length) return false;
+			else {
+				// Comparing each element of your array
+				for (var i = 0; i < a.length; i++) {
+					if (a[i] !== b[i]) {
+						return false;
+					}
+				}
+				return true;
+			}
+		},
+		compareDeep: function (a, b) {
+			if ( typeof a !== typeof b ) {
+				return false;
+			}
+
+			if ( typeof a === 'object' ) {
+				let rowsCompare = UM.fields_groups.tabs.compare( Object.keys(a), Object.keys(b) );
+				if ( ! rowsCompare ) {
+					return false;
+				}
+
+				let result = true;
+				Object.entries( a ).forEach(([i, sub]) => {
+					result = UM.fields_groups.tabs.compareDeep( sub, b[i] );
+					if ( ! result ) {
+						return false;
+					}
+				});
+
+				return result;
+			} else {
+				return a === b;
+			}
+		},
+		reBuild: function( row, newSettingsTabs, $ ) {
+			let currentTab = row.find('.um-edit-field-tabs > div[data-tab].current').data('tab');
+			row.find('.um-edit-field-tabs > div[data-tab]').remove();
+
+			row.find('.um-edit-field-tabs-content > div[data-tab]').each( function() {
+				if ( ! newSettingsTabs.includes( $(this).data('tab') ) ) {
+					$(this).remove();
+				}
+			});
+
+			let newTabsHTML = '';
+			for (var i = 0; i < newSettingsTabs.length; i++) {
+				newTabsHTML += '<div data-tab="' + newSettingsTabs[i] + '">' + um_admin_field_groups_data.field_tabs[newSettingsTabs[i]] + '</div>';
+
+				if ( ! row.find('.um-edit-field-tabs-content > div[data-tab="' + newSettingsTabs[i] + '"]').length ) {
+					row.find('.um-edit-field-tabs-content').append('<div data-tab="' + newSettingsTabs[i] + '"></div>');
+				}
+			}
+			row.find('.um-edit-field-tabs').html(newTabsHTML);
+			row.find('.um-edit-field-tabs > div[data-tab="' + currentTab + '"]').addClass('current');
+
+			row.find('.um-edit-field-tabs-content > div[data-tab="' + currentTab + '"]').addClass('current');
 		}
 	},
 	sortable: {
@@ -62,6 +121,42 @@ UM.fields_groups = {
 	},
 	field: {
 		newIndex: 0,
+		settingsScreens: {},
+		prepareSettings: function($, fieldID, settingsTab) {
+			$('.um-field-groups-fields-wrapper').find('.um-field-groups-field-row').each( function() {
+				let id = $(this).data('field'); // id
+				let type = $(this).find('.um-field-groups-field-type-select').val(); // type
+
+				if ( typeof fieldID !== 'undefined' ) {
+					if ( fieldID != id ) {
+						return;
+					}
+				}
+
+				if ( typeof ( UM.fields_groups.field.settingsScreens[ id ] ) !== 'object' ) {
+					UM.fields_groups.field.settingsScreens[ id ] = {};
+				}
+
+				if ( typeof ( UM.fields_groups.field.settingsScreens[ id ][ type ] ) !== 'object' ) {
+					UM.fields_groups.field.settingsScreens[ id ][ type ] = {};
+				}
+
+				$(this).find('.um-edit-field-tabs > div[data-tab]').each(function () {
+					let tabKey = $(this).data('tab');
+
+					if ( typeof settingsTab !== 'undefined' ) {
+						if ( settingsTab != tabKey ) {
+							return;
+						}
+					}
+
+					/*if ( tabKey === 'conditional' ) {
+						console.log( $(this).parents('.um-edit-field-tabs').siblings( '.um-edit-field-tabs-content' ).find( 'div[data-tab="' + tabKey + '"] > .form-table' ).html() );
+					}*/
+					UM.fields_groups.field.settingsScreens[ id ][ type ][ tabKey ] = $(this).parents('.um-edit-field-tabs').siblings( '.um-edit-field-tabs-content' ).find( 'div[data-tab="' + tabKey + '"] > .form-table' ).clone();
+				});
+			});
+		},
 		add: function ( $ ) {
 			let $wrapper = $('.um-field-groups-fields-wrapper');
 			let $cloned = $('.um-field-groups-field-row-template').clone().addClass('um-field-groups-field-row').removeClass('um-field-groups-field-row-template');
@@ -188,31 +283,6 @@ UM.fields_groups = {
 			}
 
 			UM.fields_groups.field.conditional.prepareFieldsList($);
-
-			// let group_id = $('#fields_group_draft_id').val();
-			// if ( '' === group_id ) {
-			// 	group_id = $('#fields_group_id').val();
-			// }
-			//
-			// wp.ajax.send( 'um_fields_groups_add_field', {
-			// 	data: {
-			// 		group_id: group_id,
-			// 		nonce: um_admin_scripts.nonce
-			// 	},
-			// 	beforeSend: function() {
-			// 		// $modal.addClass('loading');
-			// 	},
-			// 	success: function( data ) {
-			// 		console.log( data.field_id );
-			// 		console.log( $cloned );
-			//
-			//
-			// 	},
-			// 	error: function( data ) {
-			// 		// $modal.removeClass('loading');
-			// 		console.error( data );
-			// 	}
-			// });
 		},
 		toggleEdit: function ( row, $ ) {
 			if ( row.hasClass('um-field-row-edit-mode') ) {
@@ -232,6 +302,7 @@ UM.fields_groups = {
 			obj.parents('.um-field-groups-field-row').after( $cloned );
 			UM.fields_groups.sortable.reInit($);
 			UM.fields_groups.field.conditional.prepareFieldsList($);
+			UM.fields_groups.field.prepareSettings($);
 		},
 		delete: function ( obj, $ ) {
 			let $wrapper = obj.parents('.um-field-groups-fields-wrapper');
@@ -246,6 +317,7 @@ UM.fields_groups = {
 				UM.fields_groups.sortable.reInit($);
 			}
 			UM.fields_groups.field.conditional.prepareFieldsList($);
+			UM.fields_groups.field.prepareSettings($);
 		},
 		conditional: {
 			fieldsList: {}, /* format id:{title,type}*/
@@ -254,6 +326,10 @@ UM.fields_groups = {
 					let id = $(this).data('field'); // id
 					let type = $(this).find('.um-field-groups-field-type-select').val(); // type
 					let title = $(this).find('.um-field-groups-field-title-input').val(); // title
+
+					// let settings = 'undefined' !== typeof UM.fields_groups.field.conditional.fieldsList[id] ? UM.fields_groups.field.conditional.fieldsList[id].settings : {}; // settings object
+
+					// $(this).find('.um-forms-field:not(.um-field-groups-static-field)')
 
 					if ( um_admin_field_groups_data.field_types[type].conditional_rules.length ) {
 						let rules = {};
@@ -301,6 +377,8 @@ UM.fields_groups = {
 
 				rulesWrapper.find('.um-conditional-rules-wrapper-bottom').before( $cloned );
 				UM.fields_groups.field.conditional.showReset(rulesWrapper,$);
+
+				UM.fields_groups.field.prepareSettings($);
 			},
 			addRule: function(currentRuleRow,$) {
 				let rulesWrapper = currentRuleRow.parents('.um-conditional-rules-wrapper');
@@ -324,6 +402,8 @@ UM.fields_groups = {
 
 				UM.fields_groups.field.conditional.changeInputIndex(rulesWrapper,$);
 				UM.fields_groups.field.conditional.showReset(rulesWrapper,$);
+
+				UM.fields_groups.field.prepareSettings($);
 			},
 			removeRule: function(currentRuleRow,$) {
 				let rulesWrapper = currentRuleRow.parents('.um-conditional-rules-wrapper');
@@ -346,6 +426,8 @@ UM.fields_groups = {
 				}
 
 				UM.fields_groups.field.conditional.changeInputIndex(rulesWrapper,$);
+
+				UM.fields_groups.field.prepareSettings($);
 			},
 			changeInputIndex: function(rulesWrapper,$) {
 				let groupIndex = 0;
@@ -389,9 +471,109 @@ UM.fields_groups = {
 			}
 		},
 		changeType: function (row, $) {
-			let typeHTML = row.find('.um-groups-fields-field-type-select option[value="' + row.find('.um-groups-fields-field-type-select').val() + '"]').html();
-			row.find( '.um-field-groups-field-type' ).html( typeHTML );
-			UM.fields_groups.field.conditional.prepareFieldsList($);
+			let fieldID = row.data('field');
+			let oldType = UM.fields_groups.field.conditional.fieldsList[fieldID].type;
+			let oldTypeData = um_admin_field_groups_data.field_types[oldType];
+			let oldTypeSettings = oldTypeData.settings;
+
+			let type = row.find('.um-field-groups-field-type-select').val();
+			let typeData = um_admin_field_groups_data.field_types[type];
+
+			let typeSettings = typeData.settings;
+
+			let currentSettingsTabs = Object.keys(oldTypeSettings);
+			let newSettingsTabs = Object.keys(typeSettings);
+
+			let typeHTML = row.find('.um-field-groups-field-type-select option[value="' + row.find('.um-field-groups-field-type-select').val() + '"]').html();
+			row.find( '.um-field-groups-field-type' ).html( typeHTML ); // change field type in a row header
+
+			// add/remove necessary/unnecessary tabs and tab-content blocks
+			// if ( ! UM.fields_groups.tabs.compare( currentSettingsTabs, newSettingsTabs ) ) {
+			// 	UM.fields_groups.tabs.reBuild( row, newSettingsTabs, $ );
+			// }
+
+			console.log( '=================' );
+			console.log( UM.fields_groups.field.settingsScreens[ fieldID ] );
+			console.log( UM.fields_groups.field.settingsScreens[ fieldID ][ type ] );
+
+			if ( typeof ( UM.fields_groups.field.settingsScreens[ fieldID ] ) === 'object' &&  typeof ( UM.fields_groups.field.settingsScreens[ fieldID ][ type ] ) === 'object' ) {
+				$.each( UM.fields_groups.field.settingsScreens[ fieldID ][ type ], function ( tab, html ) {
+					let tabSettingsWrapper = row.find( '.um-edit-field-tabs-content > div[data-tab="' + tab + '"]' );
+
+					if ( 'conditional' === tab ) {
+						// make conditional rules static always
+						UM.fields_groups.field.settingsScreens[ fieldID ][ type ][ tab ].find('[data-field_type="conditional_rules"]').html( tabSettingsWrapper.find('[data-field_type="conditional_rules"]').html() );
+					}
+
+					tabSettingsWrapper.find('.um-field-groups-static-field').each(function () {
+						UM.fields_groups.field.settingsScreens[ fieldID ][ type ][ tab ].find( '[name="' + $(this).attr('name') + '"]' ).val( $(this).val() );
+					});
+
+					// change HTML based on type
+					row.find( '.um-edit-field-tabs-content > div[data-tab="' + tab + '"]' ).html( UM.fields_groups.field.settingsScreens[ fieldID ][ type ][ tab ] );
+
+					run_check_conditions();
+
+					UM.fields_groups.field.conditional.prepareFieldsList($);
+				});
+			} else {
+				console.log( UM.fields_groups.tabs.compareDeep( oldTypeSettings.general, typeSettings.general ) );
+				if ( ! UM.fields_groups.tabs.compareDeep( oldTypeSettings.general, typeSettings.general ) ) {
+					console.log( row.find( '.um-edit-field-tabs-content > div[data-tab="general"] .um-forms-field:not(.um-field-groups-static-field)' ).parents('.um-forms-line') );
+					row.find( '.um-edit-field-tabs-content > div[data-tab="general"] .um-forms-field:not(.um-field-groups-static-field)' ).parents('.um-forms-line').remove();
+					let skeletonRows = Object.keys( typeSettings.general ).length - 2;
+					console.log( skeletonRows );
+					if ( skeletonRows > 0 ) {
+						let i = 0;
+						while (i < skeletonRows) {
+							row.find( '.um-edit-field-tabs-content > div[data-tab="general"] > .form-table tbody' ).append('<tr class="um-forms-line um-forms-skeleton"><th><span class="um-skeleton-box" style="width:100%;height:20px;"></span></th><td><span class="um-skeleton-box" style="width:100%;height:40px;margin-bottom:4px;"></span><span class="um-skeleton-box" style="width:100%;height:20px;"></span></td></tr>');
+							i++;
+						}
+					}
+				}
+
+				wp.ajax.send( 'um_fields_groups_get_settings_form', {
+					data: {
+						field_id: fieldID,
+						type: type,
+						nonce: um_admin_scripts.nonce
+					},
+					success: function( data ) {
+						if ( typeof ( UM.fields_groups.field.settingsScreens[ fieldID ] ) !== 'object' ) {
+							UM.fields_groups.field.settingsScreens[ fieldID ] = {};
+						}
+
+						if ( typeof ( UM.fields_groups.field.settingsScreens[ fieldID ][ type ] ) !== 'object' ) {
+							UM.fields_groups.field.settingsScreens[ fieldID ][ type ] = {};
+						}
+
+						$.each( data.fields, function ( tab, html ) {
+							UM.fields_groups.field.settingsScreens[ fieldID ][ type ][ tab ] = $(html);
+
+							let tabSettingsWrapper = row.find( '.um-edit-field-tabs-content > div[data-tab="' + tab + '"]' );
+
+							if ( 'conditional' === tab ) {
+								// make conditional rules static always
+								UM.fields_groups.field.settingsScreens[ fieldID ][ type ][ tab ].find('[data-field_type="conditional_rules"]').html( tabSettingsWrapper.find('[data-field_type="conditional_rules"]').html() );
+							}
+
+							tabSettingsWrapper.find('.um-field-groups-static-field').each(function () {
+								UM.fields_groups.field.settingsScreens[ fieldID ][ type ][ tab ].find( '[name="' + $(this).attr('name') + '"]' ).val( $(this).val() );
+							});
+
+							// change HTML based on type
+							tabSettingsWrapper.html( UM.fields_groups.field.settingsScreens[ fieldID ][ type ][ tab ] );
+						});
+
+						run_check_conditions();
+
+						UM.fields_groups.field.conditional.prepareFieldsList($);
+					},
+					error: function( data ) {
+						console.error( data );
+					}
+				});
+			}
 		}
 	},
 };
@@ -431,6 +613,8 @@ jQuery( function($) {
 		} );
 	});
 
+	UM.fields_groups.field.prepareSettings($);
+	console.log( UM.fields_groups.field.settingsScreens );
 
 
 	// var um_settings_changed = false;
@@ -563,6 +747,8 @@ jQuery( function($) {
 		} else {
 			UM.fields_groups.field.conditional.showReset($(this),$);
 		}
+
+		UM.fields_groups.field.prepareSettings($);
 	});
 
 	$(document.body).on('change','.um-conditional-rule-field-col .um-conditional-rule-setting', function(e){
@@ -609,6 +795,7 @@ jQuery( function($) {
 				fieldsRow.find('.um-conditional-rule-value-col select.um-conditional-rule-setting').prop('disabled', true).show();
 			}
 		}
+		UM.fields_groups.field.prepareSettings($);
 	});
 
 	$(document.body).on('change','.um-conditional-rule-condition-col .um-conditional-rule-setting', function(e){
@@ -628,6 +815,8 @@ jQuery( function($) {
 				fieldsRow.find('.um-conditional-rule-value-col select.um-conditional-rule-setting').prop('disabled', false).show();
 			}
 		}
+
+		UM.fields_groups.field.prepareSettings($);
 	});
 
 	$('.um-conditional-rules-wrapper .um-conditional-rule-condition-col .um-conditional-rule-setting').trigger('change');
@@ -637,8 +826,20 @@ jQuery( function($) {
 		UM.fields_groups.field.conditional.prepareFieldsList($);
 	});
 
+	$(document.body).on('change','.um-forms-field:not(.um-field-groups-field-type-select)', function(e){
+		UM.fields_groups.field.prepareSettings($);
+	});
+
 	$(document.body).on('change','.um-field-groups-field-type-select', function(e){
 		let row = $(this).parents('.um-field-groups-field-row');
 		UM.fields_groups.field.changeType(row,$);
+	});
+
+	$(document.body).on('change','.um-field-groups-field-metakey-input', function(e){
+		let metakey = wp.i18n.__( '(no metakey)', 'ultimate-member' );
+		if ( '' !== $(this).val() ) {
+			metakey = $(this).val();
+		}
+		$(this).parents('.um-field-groups-field-row').find( '.um-field-groups-field-metakey' ).html( metakey );
 	});
 });
