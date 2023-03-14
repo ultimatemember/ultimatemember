@@ -150,10 +150,7 @@ UM.fields_groups = {
 						}
 					}
 
-					/*if ( tabKey === 'conditional' ) {
-						console.log( $(this).parents('.um-edit-field-tabs').siblings( '.um-edit-field-tabs-content' ).find( 'div[data-tab="' + tabKey + '"] > .form-table' ).html() );
-					}*/
-					UM.fields_groups.field.settingsScreens[ id ][ type ][ tabKey ] = $(this).parents('.um-edit-field-tabs').siblings( '.um-edit-field-tabs-content' ).find( 'div[data-tab="' + tabKey + '"] > .form-table' ).clone();
+					UM.fields_groups.field.settingsScreens[ id ][ type ][ tabKey ] = $(this).parents('.um-edit-field-tabs').siblings( '.um-edit-field-tabs-content' ).find( 'div[data-tab="' + tabKey + '"] > .form-table' )[0].outerHTML;
 				});
 			});
 		},
@@ -302,7 +299,7 @@ UM.fields_groups = {
 			obj.parents('.um-field-groups-field-row').after( $cloned );
 			UM.fields_groups.sortable.reInit($);
 			UM.fields_groups.field.conditional.prepareFieldsList($);
-			UM.fields_groups.field.prepareSettings($);
+			//UM.fields_groups.field.prepareSettings($);
 		},
 		delete: function ( obj, $ ) {
 			let $wrapper = obj.parents('.um-field-groups-fields-wrapper');
@@ -317,7 +314,7 @@ UM.fields_groups = {
 				UM.fields_groups.sortable.reInit($);
 			}
 			UM.fields_groups.field.conditional.prepareFieldsList($);
-			UM.fields_groups.field.prepareSettings($);
+			//UM.fields_groups.field.prepareSettings($);
 		},
 		conditional: {
 			fieldsList: {}, /* format id:{title,type}*/
@@ -488,41 +485,37 @@ UM.fields_groups = {
 			row.find( '.um-field-groups-field-type' ).html( typeHTML ); // change field type in a row header
 
 			// add/remove necessary/unnecessary tabs and tab-content blocks
-			// if ( ! UM.fields_groups.tabs.compare( currentSettingsTabs, newSettingsTabs ) ) {
-			// 	UM.fields_groups.tabs.reBuild( row, newSettingsTabs, $ );
-			// }
-
-			console.log( '=================' );
-			console.log( UM.fields_groups.field.settingsScreens[ fieldID ] );
-			console.log( UM.fields_groups.field.settingsScreens[ fieldID ][ type ] );
+			if ( ! UM.fields_groups.tabs.compare( currentSettingsTabs, newSettingsTabs ) ) {
+				UM.fields_groups.tabs.reBuild( row, newSettingsTabs, $ );
+			}
 
 			if ( typeof ( UM.fields_groups.field.settingsScreens[ fieldID ] ) === 'object' &&  typeof ( UM.fields_groups.field.settingsScreens[ fieldID ][ type ] ) === 'object' ) {
 				$.each( UM.fields_groups.field.settingsScreens[ fieldID ][ type ], function ( tab, html ) {
 					let tabSettingsWrapper = row.find( '.um-edit-field-tabs-content > div[data-tab="' + tab + '"]' );
 
+					let temporaryScreenObj = $('<div>').append( html ).find('.form-table');
+
 					if ( 'conditional' === tab ) {
 						// make conditional rules static always
-						UM.fields_groups.field.settingsScreens[ fieldID ][ type ][ tab ].find('[data-field_type="conditional_rules"]').html( tabSettingsWrapper.find('[data-field_type="conditional_rules"]').html() );
+						temporaryScreenObj.find('[data-field_type="conditional_rules"]').html( tabSettingsWrapper.find('[data-field_type="conditional_rules"]').html() );
 					}
 
 					tabSettingsWrapper.find('.um-field-groups-static-field').each(function () {
-						UM.fields_groups.field.settingsScreens[ fieldID ][ type ][ tab ].find( '[name="' + $(this).attr('name') + '"]' ).val( $(this).val() );
+						temporaryScreenObj.find( '[name="' + $(this).attr('name') + '"]' ).val( $(this).val() );
 					});
 
 					// change HTML based on type
-					row.find( '.um-edit-field-tabs-content > div[data-tab="' + tab + '"]' ).html( UM.fields_groups.field.settingsScreens[ fieldID ][ type ][ tab ] );
-
-					run_check_conditions();
-
-					UM.fields_groups.field.conditional.prepareFieldsList($);
+					row.find( '.um-edit-field-tabs-content > div[data-tab="' + tab + '"]' ).html( temporaryScreenObj[0].outerHTML );
 				});
+
+				row.find('.um-field-groups-field-type-select').removeClass('disabled').prop('disabled', false);
+
+				run_check_conditions();
+				UM.fields_groups.field.conditional.prepareFieldsList($);
 			} else {
-				console.log( UM.fields_groups.tabs.compareDeep( oldTypeSettings.general, typeSettings.general ) );
 				if ( ! UM.fields_groups.tabs.compareDeep( oldTypeSettings.general, typeSettings.general ) ) {
-					console.log( row.find( '.um-edit-field-tabs-content > div[data-tab="general"] .um-forms-field:not(.um-field-groups-static-field)' ).parents('.um-forms-line') );
 					row.find( '.um-edit-field-tabs-content > div[data-tab="general"] .um-forms-field:not(.um-field-groups-static-field)' ).parents('.um-forms-line').remove();
 					let skeletonRows = Object.keys( typeSettings.general ).length - 2;
-					console.log( skeletonRows );
 					if ( skeletonRows > 0 ) {
 						let i = 0;
 						while (i < skeletonRows) {
@@ -548,22 +541,26 @@ UM.fields_groups = {
 						}
 
 						$.each( data.fields, function ( tab, html ) {
-							UM.fields_groups.field.settingsScreens[ fieldID ][ type ][ tab ] = $(html);
+							UM.fields_groups.field.settingsScreens[ fieldID ][ type ][ tab ] = html;
+
+							let temporaryScreenObj = $('<div>').append( html ).find('.form-table');
 
 							let tabSettingsWrapper = row.find( '.um-edit-field-tabs-content > div[data-tab="' + tab + '"]' );
 
 							if ( 'conditional' === tab ) {
 								// make conditional rules static always
-								UM.fields_groups.field.settingsScreens[ fieldID ][ type ][ tab ].find('[data-field_type="conditional_rules"]').html( tabSettingsWrapper.find('[data-field_type="conditional_rules"]').html() );
+								temporaryScreenObj.find('[data-field_type="conditional_rules"]').html( tabSettingsWrapper.find('[data-field_type="conditional_rules"]').html() );
 							}
 
 							tabSettingsWrapper.find('.um-field-groups-static-field').each(function () {
-								UM.fields_groups.field.settingsScreens[ fieldID ][ type ][ tab ].find( '[name="' + $(this).attr('name') + '"]' ).val( $(this).val() );
+								temporaryScreenObj.find( '[name="' + $(this).attr('name') + '"]' ).val( $(this).val() );
 							});
 
 							// change HTML based on type
-							tabSettingsWrapper.html( UM.fields_groups.field.settingsScreens[ fieldID ][ type ][ tab ] );
+							tabSettingsWrapper.html( temporaryScreenObj[0].outerHTML );
 						});
+
+						row.find('.um-field-groups-field-type-select').removeClass('disabled').prop('disabled', false);
 
 						run_check_conditions();
 
@@ -748,7 +745,7 @@ jQuery( function($) {
 			UM.fields_groups.field.conditional.showReset($(this),$);
 		}
 
-		UM.fields_groups.field.prepareSettings($);
+		//UM.fields_groups.field.prepareSettings($);
 	});
 
 	$(document.body).on('change','.um-conditional-rule-field-col .um-conditional-rule-setting', function(e){
@@ -795,7 +792,7 @@ jQuery( function($) {
 				fieldsRow.find('.um-conditional-rule-value-col select.um-conditional-rule-setting').prop('disabled', true).show();
 			}
 		}
-		UM.fields_groups.field.prepareSettings($);
+		//UM.fields_groups.field.prepareSettings($);
 	});
 
 	$(document.body).on('change','.um-conditional-rule-condition-col .um-conditional-rule-setting', function(e){
@@ -816,7 +813,7 @@ jQuery( function($) {
 			}
 		}
 
-		UM.fields_groups.field.prepareSettings($);
+		//UM.fields_groups.field.prepareSettings($);
 	});
 
 	$('.um-conditional-rules-wrapper .um-conditional-rule-condition-col .um-conditional-rule-setting').trigger('change');
@@ -827,10 +824,19 @@ jQuery( function($) {
 	});
 
 	$(document.body).on('change','.um-forms-field:not(.um-field-groups-field-type-select)', function(e){
-		UM.fields_groups.field.prepareSettings($);
+		let row = $(this).parents('.um-field-groups-field-row');
+		let fieldID = row.data('field');
+		let settingsTab = $(this).parents('div[data-tab]').data('tab');
+
+		UM.fields_groups.field.prepareSettings($, fieldID, settingsTab);
 	});
 
 	$(document.body).on('change','.um-field-groups-field-type-select', function(e){
+		if ( $(this).hasClass('disabled') ) {
+			return;
+		}
+
+		$(this).addClass('disabled').prop('disabled', true);
 		let row = $(this).parents('.um-field-groups-field-row');
 		UM.fields_groups.field.changeType(row,$);
 	});

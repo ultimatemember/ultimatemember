@@ -773,7 +773,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 
 						// get sanitizing map based on the field type
 						$field_settings      = UM()->admin()->field_group()->get_field_settings( sanitize_key( $field_row['type'] ) );
-						$field_settings      = call_user_func_array('array_merge', $field_settings );
+						$field_settings      = call_user_func_array('array_merge', array_values( $field_settings ) );
 						$fields_sanitize_map = array_column( $field_settings, 'sanitize', 'id' );
 
 						$fields_sanitize_map['id']    = 'empty_absint';

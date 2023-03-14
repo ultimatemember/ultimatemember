@@ -57,7 +57,10 @@ if ( ! class_exists( 'um\ajax\Field_Group' ) ) {
 			$fields = array();
 
 			foreach ( $field_settings_settings as $tab_key => $settings_fields ) {
-				$fields[ $tab_key ] = UM()->admin()->field_group()->get_tab_fields_html( $tab_key, array( 'type' => $type, 'index' => $field_id ) );
+				$html = UM()->admin()->field_group()->get_tab_fields_html( $tab_key, array( 'type' => $type, 'index' => $field_id ) );
+				if ( ! empty( $html ) ) {
+					$fields[ $tab_key ] = $html;
+				}
 			}
 
 			wp_send_json_success( array( 'fields' => $fields ) );
