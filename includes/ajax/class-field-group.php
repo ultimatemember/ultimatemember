@@ -20,6 +20,7 @@ if ( ! class_exists( 'um\ajax\Field_Group' ) ) {
 		public function __construct() {
 			add_action( 'wp_ajax_um_fields_groups_get_settings_form', array( &$this, 'get_field_settings_form' ) );
 			add_filter( 'um_admin_render_checkbox_field_html', array( &$this, 'add_reset_rules_button' ), 10, 2 );
+			add_filter( 'um_fields_settings', array( &$this, 'change_hidden_settings' ), 10, 2 );
 
 //			add_action( 'wp_ajax_um_fields_groups_save_draft', array( &$this, 'save_draft' ) );
 //			add_action( 'wp_ajax_um_fields_groups_check_draft', array( &$this, 'check_draft' ) );
@@ -36,6 +37,16 @@ if ( ! class_exists( 'um\ajax\Field_Group' ) ) {
 				$html = '<div style="display: flex;flex-direction: row;justify-content: space-between; align-items: center;flex-wrap: nowrap;">' . $html .'<input type="button" class="button um-field-groups-field-reset-all-conditions" value="' . __( 'Reset all rules', 'ultimate-member' ) . '"' . $visibility . '/></div>';
 			}
 			return $html;
+		}
+
+		public function change_hidden_settings( $settings, $field_type ) {
+			if ( 'hidden' === $field_type ) {
+				$settings['conditional']['conditional_action']['options'] = array(
+					'show' => __( 'Enable', 'ultimate-member' ),
+					'hide' => __( 'Disable', 'ultimate-member' ),
+				);
+			}
+			return $settings;
 		}
 
 		public function get_field_settings_form() {

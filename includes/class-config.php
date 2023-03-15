@@ -1251,14 +1251,261 @@ if ( ! class_exists( 'um\Config' ) ) {
 						'==',
 						'!=',
 					),
+					'settings'          => array(
+						'general'      => array(
+							'label'         => array(
+								'id'          => 'label',
+								'type'        => 'text',
+								'label'       => __( 'Field label', 'ultimate-member' ),
+								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'meta_key'      => array(
+								'id'          => 'meta_key',
+								'type'        => 'text',
+								'class'       => 'um-field-groups-field-metakey-input',
+								'label'       => __( 'Meta key', 'ultimate-member' ),
+								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'default_value' => array(
+								'id'          => 'default_value',
+								'type'        => 'checkbox',
+								'label'       => __( 'Default value', 'ultimate-member' ),
+								'description' => __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+						),
+						'presentation' => array(
+							'checkbox_label' => array(
+								'id'          => 'checkbox_label',
+								'type'        => 'text',
+								'label'       => __( 'Message', 'ultimate-member' ),
+								'description' => __( 'Displays text alongside the checkbox.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'description' => array(
+								'id'          => 'description',
+								'type'        => 'textarea',
+								'label'       => __( 'Description', 'ultimate-member' ),
+								'description' => __( 'This is the text that appears below the field on your front-end. Description is useful for providing users with more information about what they should enter in the field. Leave blank if no description is needed for field.', 'ultimate-member' ),
+								'args'        => array(
+									'textarea_rows' => 5,
+								),
+								'sanitize'    => 'textarea',
+							),
+						),
+						'validation'   => array(
+							'required'        => array(
+								'id'          => 'required',
+								'type'        => 'checkbox',
+								'label'       => __( 'Is this field required?', 'ultimate-member' ),
+								'description' => __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+						),
+						'privacy'      => array(
+							'readonly' => array(
+								'id'          => 'readonly',
+								'type'        => 'checkbox',
+								'label'       => __( 'Mark as readonly', 'ultimate-member' ),
+								'description' => __( 'Enable to prevent users from editing this field. Note: if the profile editing option is set to publicly editable, the field will still be visible within the account page but will not be customizable.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+						),
+						'advanced'     => array(
+							'wrapper_class' => array(
+								'id'          => 'wrapper_class',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper class', 'ultimate-member' ),
+								'description' => __( 'CSS class added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+							'wrapper_id'    => array(
+								'id'          => 'wrapper_id',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper id', 'ultimate-member' ),
+								'description' => __( 'ID added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+						),
+					),
 				),
 				'radio'     => array(
-					'title'    => __( 'Radio', 'ultimate-member' ),
-					'category' => 'choice',
+					'title'             => __( 'Radio', 'ultimate-member' ),
+					'category'          => 'choice',
+					'conditional_rules' => array(
+						'==',
+						'!=',
+					),
+					'settings'          => array(
+						'general'      => array(
+							'label'         => array(
+								'id'          => 'label',
+								'type'        => 'text',
+								'label'       => __( 'Field label', 'ultimate-member' ),
+								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'meta_key'      => array(
+								'id'          => 'meta_key',
+								'type'        => 'text',
+								'class'       => 'um-field-groups-field-metakey-input',
+								'label'       => __( 'Meta key', 'ultimate-member' ),
+								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'options' => array(
+								'id'          => 'options',
+								'type'        => 'choices',
+								'multiple'    => false,
+								'label'       => __( 'Edit Choices', 'ultimate-member' ),
+								'description' => __( 'Enter one choice per line. This will represent the available choices or selections available for user.', 'ultimate-member' ),
+								'sanitize'    => 'options',
+							),
+//							'default_value' => array(
+//								'id'          => 'default_value',
+//								'type'        => 'select',
+//								'label'       => __( 'Default value', 'ultimate-member' ),
+//								'description' => __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value.', 'ultimate-member' ),
+//								'sanitize'    => 'text',
+//							),
+						),
+						'presentation' => array(
+							'description' => array(
+								'id'          => 'description',
+								'type'        => 'textarea',
+								'label'       => __( 'Description', 'ultimate-member' ),
+								'description' => __( 'This is the text that appears below the field on your front-end. Description is useful for providing users with more information about what they should enter in the field. Leave blank if no description is needed for field.', 'ultimate-member' ),
+								'args'        => array(
+									'textarea_rows' => 5,
+								),
+								'sanitize'    => 'textarea',
+							),
+						),
+						'validation'   => array(
+							'required'        => array(
+								'id'          => 'required',
+								'type'        => 'checkbox',
+								'label'       => __( 'Is this field required?', 'ultimate-member' ),
+								'description' => __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+						),
+						'privacy'      => array(
+							'readonly' => array(
+								'id'          => 'readonly',
+								'type'        => 'checkbox',
+								'label'       => __( 'Mark as readonly', 'ultimate-member' ),
+								'description' => __( 'Enable to prevent users from editing this field. Note: if the profile editing option is set to publicly editable, the field will still be visible within the account page but will not be customizable.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+						),
+						'advanced'     => array(
+							'wrapper_class' => array(
+								'id'          => 'wrapper_class',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper class', 'ultimate-member' ),
+								'description' => __( 'CSS class added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+							'wrapper_id'    => array(
+								'id'          => 'wrapper_id',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper id', 'ultimate-member' ),
+								'description' => __( 'ID added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+						),
+					),
 				),
 				'checkbox'  => array(
-					'title'     => __( 'Checkbox', 'ultimate-member' ),
-					'category' => 'choice',
+					'title'             => __( 'Checkbox', 'ultimate-member' ),
+					'category'          => 'choice',
+					'conditional_rules' => array(
+						'==',
+						'!=',
+					),
+					'settings'          => array(
+						'general'      => array(
+							'label'         => array(
+								'id'          => 'label',
+								'type'        => 'text',
+								'label'       => __( 'Field label', 'ultimate-member' ),
+								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'meta_key'      => array(
+								'id'          => 'meta_key',
+								'type'        => 'text',
+								'class'       => 'um-field-groups-field-metakey-input',
+								'label'       => __( 'Meta key', 'ultimate-member' ),
+								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'options' => array(
+								'id'          => 'options',
+								'type'        => 'choices',
+								'multiple'    => true,
+								'label'       => __( 'Edit Choices', 'ultimate-member' ),
+								'description' => __( 'Enter one choice per line. This will represent the available choices or selections available for user.', 'ultimate-member' ),
+								'sanitize'    => 'options',
+							),
+//							'default_value' => array(
+//								'id'          => 'default_value',
+//								'type'        => 'select',
+//								'label'       => __( 'Default value', 'ultimate-member' ),
+//								'description' => __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value.', 'ultimate-member' ),
+//								'sanitize'    => 'text',
+//							),
+						),
+						'presentation' => array(
+							'description' => array(
+								'id'          => 'description',
+								'type'        => 'textarea',
+								'label'       => __( 'Description', 'ultimate-member' ),
+								'description' => __( 'This is the text that appears below the field on your front-end. Description is useful for providing users with more information about what they should enter in the field. Leave blank if no description is needed for field.', 'ultimate-member' ),
+								'args'        => array(
+									'textarea_rows' => 5,
+								),
+								'sanitize'    => 'textarea',
+							),
+						),
+						'validation'   => array(
+							'required'        => array(
+								'id'          => 'required',
+								'type'        => 'checkbox',
+								'label'       => __( 'Is this field required?', 'ultimate-member' ),
+								'description' => __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+						),
+						'privacy'      => array(
+							'readonly' => array(
+								'id'          => 'readonly',
+								'type'        => 'checkbox',
+								'label'       => __( 'Mark as readonly', 'ultimate-member' ),
+								'description' => __( 'Enable to prevent users from editing this field. Note: if the profile editing option is set to publicly editable, the field will still be visible within the account page but will not be customizable.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+						),
+						'advanced'     => array(
+							'wrapper_class' => array(
+								'id'          => 'wrapper_class',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper class', 'ultimate-member' ),
+								'description' => __( 'CSS class added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+							'wrapper_id'    => array(
+								'id'          => 'wrapper_id',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper id', 'ultimate-member' ),
+								'description' => __( 'ID added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+						),
+					),
 				),
 				'hidden'    => array(
 					'title'     => __( 'Hidden', 'ultimate-member' ),
@@ -1292,8 +1539,8 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 						'privacy'      => array(
-							'required' => array(
-								'id'          => 'required',
+							'readonly' => array(
+								'id'          => 'readonly',
 								'type'        => 'checkbox',
 								'label'       => __( 'Mark as readonly', 'ultimate-member' ),
 								'description' => __( 'Enable to prevent users from editing this field. Note: if the profile editing option is set to publicly editable, the field will still be visible within the account page but will not be customizable.', 'ultimate-member' ),
@@ -1429,8 +1676,8 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 						'privacy'      => array(
-							'required' => array(
-								'id'          => 'required',
+							'readonly' => array(
+								'id'          => 'readonly',
 								'type'        => 'checkbox',
 								'label'       => __( 'Mark as readonly', 'ultimate-member' ),
 								'description' => __( 'Enable to prevent users from editing this field. Note: if the profile editing option is set to publicly editable, the field will still be visible within the account page but will not be customizable.', 'ultimate-member' ),
@@ -1565,8 +1812,8 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 						'privacy'      => array(
-							'required' => array(
-								'id'          => 'required',
+							'readonly' => array(
+								'id'          => 'readonly',
 								'type'        => 'checkbox',
 								'label'       => __( 'Mark as readonly', 'ultimate-member' ),
 								'description' => __( 'Enable to prevent users from editing this field. Note: if the profile editing option is set to publicly editable, the field will still be visible within the account page but will not be customizable.', 'ultimate-member' ),
@@ -1725,8 +1972,8 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 						'privacy'      => array(
-							'required' => array(
-								'id'          => 'required',
+							'readonly' => array(
+								'id'          => 'readonly',
 								'type'        => 'checkbox',
 								'label'       => __( 'Mark as readonly', 'ultimate-member' ),
 								'description' => __( 'Enable to prevent users from editing this field. Note: if the profile editing option is set to publicly editable, the field will still be visible within the account page but will not be customizable.', 'ultimate-member' ),
@@ -1853,8 +2100,8 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 						'privacy'      => array(
-							'required' => array(
-								'id'          => 'required',
+							'readonly' => array(
+								'id'          => 'readonly',
 								'type'        => 'checkbox',
 								'label'       => __( 'Mark as readonly', 'ultimate-member' ),
 								'description' => __( 'Enable to prevent users from editing this field. Note: if the profile editing option is set to publicly editable, the field will still be visible within the account page but will not be customizable.', 'ultimate-member' ),
@@ -1985,8 +2232,8 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 						'privacy'      => array(
-							'required' => array(
-								'id'          => 'required',
+							'readonly' => array(
+								'id'          => 'readonly',
 								'type'        => 'checkbox',
 								'label'       => __( 'Mark as readonly', 'ultimate-member' ),
 								'description' => __( 'Enable to prevent users from editing this field. Note: if the profile editing option is set to publicly editable, the field will still be visible within the account page but will not be customizable.', 'ultimate-member' ),

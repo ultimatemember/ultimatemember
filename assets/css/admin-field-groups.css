@@ -452,3 +452,97 @@
     flex-wrap: nowrap;
     margin: 0;
     padding: 0; }
+
+.um-admin-option-rows {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box; }
+
+.um-admin-option-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  width: 100%;
+  padding: 0;
+  margin: 0 0 5px 0;
+  column-gap: 5px; }
+  .um-admin-option-row .um-admin-option-move-link {
+    position: relative;
+    width: 25px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box; }
+    .um-admin-option-row .um-admin-option-move-link:before {
+      visibility: visible;
+      content: "";
+      position: absolute;
+      top: -9px;
+      left: 0;
+      mask-size: contain;
+      -webkit-mask-size: contain;
+      mask-position: center;
+      -webkit-mask-position: center;
+      mask-repeat: no-repeat;
+      -webkit-mask-repeat: no-repeat;
+      mask-image: url(../img/admin/grip-dots-vertical-regular.svg);
+      -webkit-mask-image: url(../img/admin/grip-dots-vertical-regular.svg);
+      width: 16px;
+      height: 16px;
+      background-color: var(--um-gray-400, #98a2b3);
+      text-indent: 500%;
+      white-space: nowrap;
+      overflow: hidden;
+      cursor: move; }
+  .um-admin-option-row .um-admin-option-row-defaults {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    width: 20px; }
+    .um-admin-option-row .um-admin-option-row-defaults input {
+      margin: 0;
+      padding: 0; }
+  .um-admin-option-row .um-admin-option-key-wrapper {
+    width: 30%;
+    margin: 0;
+    padding: 0; }
+    .um-admin-option-row .um-admin-option-key-wrapper input {
+      width: 100%;
+      margin: 0;
+      height: 36px;
+      font-size: 13px; }
+  .um-admin-option-row .um-admin-option-val-wrapper {
+    width: calc( 70% - 142px); }
+    .um-admin-option-row .um-admin-option-val-wrapper input {
+      width: 100%;
+      margin: 0;
+      height: 36px;
+      font-size: 13px; }
+  .um-admin-option-row .um-admin-option-row-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: nowrap;
+    column-gap: 5px;
+    width: 77px; }
+    .um-admin-option-row .um-admin-option-row-actions input {
+      width: 36px;
+      height: 36px; }
+  .um-admin-option-row.ui-sortable-placeholder {
+    height: 40px;
+    width: 100%;
+    display: list-item; }

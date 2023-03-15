@@ -35,6 +35,17 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 		 */
 		public function hooks() {
 			add_filter( 'um_admin_render_checkbox_field_html', array( &$this, 'add_reset_rules_button' ), 10, 2 );
+			add_filter( 'um_fields_settings', array( &$this, 'change_hidden_settings' ), 10, 2 );
+		}
+
+		public function change_hidden_settings( $settings, $field_type ) {
+			if ( 'hidden' === $field_type ) {
+				$settings['conditional']['conditional_action']['options'] = array(
+					'show' => __( 'Enable', 'ultimate-member' ),
+					'hide' => __( 'Disable', 'ultimate-member' ),
+				);
+			}
+			return $settings;
 		}
 
 		public function add_reset_rules_button( $html, $field_data ) {
@@ -95,6 +106,8 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 					$data['settings'] = $static_settings;
 				}
 
+				$data['settings'] = apply_filters( 'um_fields_settings', $data['settings'], $field_type );
+
 				foreach ( $data['settings'] as $tab_key => &$settings_data ) {
 					foreach ( $settings_data as $setting_key => &$setting_data ) {
 						if ( array_key_exists( $tab_key, $static_settings ) && array_key_exists( $setting_key, $static_settings[ $tab_key ] ) ) {
@@ -134,6 +147,7 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 //			}
 
 			$settings_by_type = array_merge_recursive( $static_settings, $field_types[ $field_type ]['settings'] );
+			$settings_by_type = apply_filters( 'um_fields_settings', $settings_by_type, $field_type );
 
 			if ( ! empty( $field_id ) ) {
 				$field_data = $this->get_field_data( $field_id );

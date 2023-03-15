@@ -489,6 +489,8 @@ UM.fields_groups = {
 				UM.fields_groups.tabs.reBuild( row, newSettingsTabs, $ );
 			}
 
+			row.find('.um-edit-field-tabs > div[data-tab]').addClass('disabled');
+
 			if ( typeof ( UM.fields_groups.field.settingsScreens[ fieldID ] ) === 'object' &&  typeof ( UM.fields_groups.field.settingsScreens[ fieldID ][ type ] ) === 'object' ) {
 				$.each( UM.fields_groups.field.settingsScreens[ fieldID ][ type ], function ( tab, html ) {
 					let tabSettingsWrapper = row.find( '.um-edit-field-tabs-content > div[data-tab="' + tab + '"]' );
@@ -512,6 +514,8 @@ UM.fields_groups = {
 
 				run_check_conditions();
 				UM.fields_groups.field.conditional.prepareFieldsList($);
+
+				row.find('.um-edit-field-tabs > div[data-tab]').removeClass('disabled');
 			} else {
 				if ( ! UM.fields_groups.tabs.compareDeep( oldTypeSettings.general, typeSettings.general ) ) {
 					row.find( '.um-edit-field-tabs-content > div[data-tab="general"] .um-forms-field:not(.um-field-groups-static-field)' ).parents('.um-forms-line').remove();
@@ -565,6 +569,8 @@ UM.fields_groups = {
 						run_check_conditions();
 
 						UM.fields_groups.field.conditional.prepareFieldsList($);
+
+						row.find('.um-edit-field-tabs > div[data-tab]').removeClass('disabled');
 					},
 					error: function( data ) {
 						console.error( data );
@@ -709,6 +715,9 @@ jQuery( function($) {
 
 	$(document.body).on('click','.um-edit-field-tabs > div[data-tab]:not(.current)', function(e){
 		e.preventDefault();
+		if ( $(this).hasClass('disabled') ) {
+			return;
+		}
 		UM.fields_groups.tabs.setActive($(this),$);
 	});
 

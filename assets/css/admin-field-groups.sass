@@ -406,3 +406,75 @@ $actions-gap: 10px
     +flex( row, center, baseline, nowrap )
     margin: 0
     padding: 0
+
+.#{$prefix}admin-option-rows
+  +flex( column, flex-start, stretch, nowrap )
+  width: 100%
+  margin: 0
+  +border-box
+
+.#{$prefix}admin-option-row
+  +flex( row, flex-start, center, nowrap )
+  +border-box
+  width: 100%
+  padding: 0
+  margin: 0 0 5px 0
+  column-gap: 5px
+  .um-admin-option-move-link
+    position: relative
+    width: 25px
+    +border-box
+    &:before
+      visibility: visible
+      content: ""
+      position: absolute
+      top: -9px
+      left: 0
+      mask-size: contain
+      -webkit-mask-size: contain
+      mask-position: center
+      -webkit-mask-position: center
+      mask-repeat: no-repeat
+      -webkit-mask-repeat: no-repeat
+      mask-image: url(../img/admin/grip-dots-vertical-regular.svg)
+      -webkit-mask-image: url(../img/admin/grip-dots-vertical-regular.svg)
+      width: 16px
+      height: 16px
+      background-color: $gray-400
+      text-indent: 500%
+      white-space: nowrap
+      overflow: hidden
+      cursor: move
+  .um-admin-option-row-defaults
+    +flex( row, center, center, nowrap )
+    width: 20px
+    input
+      margin: 0
+      padding: 0
+  .um-admin-option-key-wrapper
+    width: 30%
+    margin: 0
+    padding: 0
+    input
+      width: 100%
+      margin: 0
+      height: 36px
+      font-size: 13px
+  .um-admin-option-val-wrapper
+    width: calc( 70% - 142px )
+    input
+      width: 100%
+      margin: 0
+      height: 36px
+      font-size: 13px
+  .um-admin-option-row-actions
+    +flex( row, flex-end, center, nowrap )
+    column-gap: 5px
+    width: 77px
+    input
+      width: 36px
+      height: 36px
+  &.ui-sortable-placeholder
+    height: 40px
+    width: 100%
+    display: list-item
