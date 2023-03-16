@@ -408,7 +408,7 @@ function um_user_edit_profile( $args ) {
 			 * }
 			 * ?>
 			 */
-			$exclude_roles = apply_filters( 'um_change_exclude_roles_edit_profile', $exclude_roles );
+			$exclude_roles = apply_filters( 'um_change_exclude_roles_edit_profile_is_admin', $exclude_roles );
 
 			if ( ! in_array( $args['submitted']['role'], $exclude_roles ) ) {
 				$to_update['role'] = $args['submitted']['role'];
