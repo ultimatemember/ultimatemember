@@ -990,7 +990,7 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 			$id_attr        = ' id="' . esc_attr( $id ) . '" ';
 			$id_attr_hidden = ' id="' . esc_attr( $id ) . '_hidden" ';
 
-			$class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
+			$class = ! empty( $field_data['class'] ) ? $field_data['class'] . ' ' : ' ';
 			$class .= ! empty( $field_data['size'] ) ? $field_data['size'] : 'um-long-field';
 			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
 
@@ -1241,27 +1241,34 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 
 			$value = $this->get_field_value( $field_data );
 
+			if ( ! empty( $field_data['name'] ) ) {
+				$name = $field_data['name'];
+			} else {
+				$name = $field_data['id'];
+				$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
+			}
+
 			ob_start();
 			?>
 			<span class="um-admin-option-row-placeholder" data-option_index="{{index}}" style="display: none;">
+				<span class="um-admin-option-move-link"></span>
 				<span class="um-admin-option-row-defaults">
-					<?php if ( 'checkbox' === $this->set_field_type || 'select' === $this->set_field_type ) { ?>
-						<input class="um-admin-option-default-multi" type="checkbox" name="_options[defaults][]" value="1" disabled <?php if ( 'select' === $this->set_field_type ) { ?>style="display: none;"<?php } ?> aria-label="<?php esc_attr_e( 'Does option is default?', 'ultimate-member' ); ?>" />
+					<?php if ( false === $multiple || 'both' === $multiple ) { ?>
+						<input class="um-admin-option-default" disabled type="radio" name="<?php echo esc_attr( $name . '[default_value]' ); ?>" value="{{index}}" aria-label="<?php esc_attr_e( 'Does option is default?', 'ultimate-member' ); ?>" />
 					<?php } ?>
-					<?php if ( 'radio' === $this->set_field_type || 'select' === $this->set_field_type ) { ?>
-						<input class="um-admin-option-default" type="radio" name="_options[defaults]" value="" disabled aria-label="<?php esc_attr_e( 'Does option is default?', 'ultimate-member' ); ?>" />
+					<?php if ( true === $multiple || 'both' === $multiple ) { ?>
+						<input class="um-admin-option-default-multi" data-base-name="<?php echo esc_attr( $name . '[default_value]' ); ?>" disabled type="checkbox" name="<?php echo esc_attr( $name . '[default_value][{{index}}]' ); ?>" value="1" aria-label="<?php esc_attr_e( 'Does option is default?', 'ultimate-member' ); ?>" />
 					<?php } ?>
 				</span>
-				<span class="um-field-icon"><i class="fas fa-sort"></i></span>
 				<span class="um-admin-option-key-wrapper">
-					<input class="um-admin-option-key" id="um-admin-option-key-{{index}}" type="text" name="_options[keys][{{index}}]" value="" disabled placeholder="<?php esc_attr_e( 'Option key', 'ultimate-member' ); ?>" aria-label="<?php esc_attr_e( 'Option key', 'ultimate-member' ); ?>" />
+					<input class="um-admin-option-key" type="text" disabled data-base-name="<?php echo esc_attr( $name . '[keys]' ); ?>" name="<?php echo esc_attr( $name . '[keys][{{index}}]' ); ?>" value="" placeholder="<?php esc_attr_e( 'Option key', 'ultimate-member' ); ?>" aria-label="<?php esc_attr_e( 'Option key', 'ultimate-member' ); ?>" />
 				</span>
 				<span class="um-admin-option-val-wrapper">
-					<input class="um-admin-option-val" id="um-admin-option-value-{{index}}" type="text" name="_options[values][{{index}}]" value="" disabled placeholder="<?php esc_attr_e( 'Option label', 'ultimate-member' ); ?>" aria-label="<?php esc_attr_e( 'Option label', 'ultimate-member' ); ?>" />
+					<input class="um-admin-option-val" type="text" disabled data-base-name="<?php echo esc_attr( $name . '[values]' ); ?>" name="<?php echo esc_attr( $name . '[values][{{index}}]' ); ?>" value="" placeholder="<?php esc_attr_e( 'Option label', 'ultimate-member' ); ?>" aria-label="<?php esc_attr_e( 'Option label', 'ultimate-member' ); ?>" />
 				</span>
 				<span class="um-admin-option-row-actions">
-					<button type="button" class="button um-admin-option-row-add"><span class="dashicons dashicons-plus"></span></button>
-					<button type="button" class="button um-admin-option-row-remove"><span class="dashicons dashicons-minus"></span></button>
+					<input type="button" class="um-admin-option-row-add button" value="+">
+					<input type="button" class="um-admin-option-row-remove button" value="-">
 				</span>
 			</span>
 			<span class="um-admin-option-rows">
@@ -1272,18 +1279,17 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 						<span class="um-admin-option-move-link"></span>
 						<span class="um-admin-option-row-defaults">
 							<?php if ( false === $multiple || 'both' === $multiple ) { ?>
-								<input class="um-admin-option-default" type="radio" name="_options[default_value]" value="0" aria-label="<?php esc_attr_e( 'Does option is default?', 'ultimate-member' ); ?>" />
+								<input class="um-admin-option-default" type="radio" name="<?php echo esc_attr( $name . '[default_value]' ); ?>" value="0" aria-label="<?php esc_attr_e( 'Does option is default?', 'ultimate-member' ); ?>" />
 							<?php } ?>
 							<?php if ( true === $multiple || 'both' === $multiple ) { ?>
-								<input class="um-admin-option-default-multi" type="checkbox" name="_options[default_value][0]" value="1" aria-label="<?php esc_attr_e( 'Does option is default?', 'ultimate-member' ); ?>" />
+								<input class="um-admin-option-default-multi" data-base-name="<?php echo esc_attr( $name . '[default_value]' ); ?>" type="checkbox" name="<?php echo esc_attr( $name . '[default_value][0]' ); ?>" value="1" aria-label="<?php esc_attr_e( 'Does option is default?', 'ultimate-member' ); ?>" />
 							<?php } ?>
 						</span>
-<!--						<span class="um-field-icon"><i class="fas fa-sort"></i></span>-->
 						<span class="um-admin-option-key-wrapper">
-							<input class="um-admin-option-key" id="um-admin-option-key-0" type="text" name="_options[keys][0]" value="" placeholder="<?php esc_attr_e( 'Option key', 'ultimate-member' ); ?>" aria-label="<?php esc_attr_e( 'Option key', 'ultimate-member' ); ?>" />
+							<input class="um-admin-option-key" type="text" data-base-name="<?php echo esc_attr( $name . '[keys]' ); ?>" name="<?php echo esc_attr( $name . '[keys][0]' ); ?>" value="" placeholder="<?php esc_attr_e( 'Option key', 'ultimate-member' ); ?>" aria-label="<?php esc_attr_e( 'Option key', 'ultimate-member' ); ?>" />
 						</span>
 						<span class="um-admin-option-val-wrapper">
-							<input class="um-admin-option-val" id="um-admin-option-value-0" type="text" name="_options[values][0]" value="" placeholder="<?php esc_attr_e( 'Option label', 'ultimate-member' ); ?>" aria-label="<?php esc_attr_e( 'Option label', 'ultimate-member' ); ?>" />
+							<input class="um-admin-option-val" type="text" data-base-name="<?php echo esc_attr( $name . '[values]' ); ?>" name="<?php echo esc_attr( $name . '[values][0]' ); ?>" value="" placeholder="<?php esc_attr_e( 'Option label', 'ultimate-member' ); ?>" aria-label="<?php esc_attr_e( 'Option label', 'ultimate-member' ); ?>" />
 						</span>
 						<span class="um-admin-option-row-actions">
 							<input type="button" class="um-admin-option-row-add button" value="+">
@@ -1292,33 +1298,33 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 					</span>
 					<?php
 				} else {
-					$is_default = array_column( $value, 'default_value' );
-					foreach ( $value as $index => $option ) {
+					foreach ( $value['keys'] as $index => $key ) {
 						?>
 						<span class="um-admin-option-row" data-option_index="<?php echo esc_attr( $index ); ?>">
+							<span class="um-admin-option-move-link"></span>
 							<span class="um-admin-option-row-defaults">
-								<?php if ( 'checkbox' === $this->set_field_type || 'select' === $this->set_field_type ) { ?>
-									<input class="um-admin-option-default-multi" type="checkbox" name="_options[defaults][<?php echo esc_attr( $index ); ?>]" value="1" <?php if ( 'select' === $this->set_field_type ) { ?>style="display: none;"<?php } ?> <?php checked( $option['default'] ); ?> aria-label="<?php esc_attr_e( 'Does option is default?', 'ultimate-member' ); ?>" />
+								<?php if ( false === $multiple || 'both' === $multiple ) { ?>
+									<input class="um-admin-option-default" type="radio" name="<?php echo esc_attr( $name . '[default_value]' ); ?>" value="<?php echo esc_attr( $index ); ?>" aria-label="<?php esc_attr_e( 'Does option is default?', 'ultimate-member' ); ?>" />
 								<?php } ?>
-								<?php if ( 'radio' === $this->set_field_type || 'select' === $this->set_field_type ) { ?>
-									<input class="um-admin-option-default" type="radio" name="_options[defaults]" value="<?php echo esc_attr( $index ); ?>" <?php checked( $option['default'] ); ?> aria-label="<?php esc_attr_e( 'Does option is default?', 'ultimate-member' ); ?>" />
+								<?php if ( true === $multiple || 'both' === $multiple ) { ?>
+									<input class="um-admin-option-default-multi" <?php checked( in_array( $index, $value['default_value'], true ) ); ?> data-base-name="<?php echo esc_attr( $name . '[default_value]' ); ?>" type="checkbox" name="<?php echo esc_attr( $name . '[default_value][' . $index . ']' ); ?>" value="1" aria-label="<?php esc_attr_e( 'Does option is default?', 'ultimate-member' ); ?>" />
 								<?php } ?>
 							</span>
-							<span class="um-field-icon"><i class="fas fa-sort"></i></span>
 							<span class="um-admin-option-key-wrapper">
-								<input class="um-admin-option-key" id="um-admin-option-key-<?php echo esc_attr( $index ); ?>" type="text" name="_options[keys][<?php echo esc_attr( $index ); ?>]" value="<?php echo esc_attr( $option['key'] ); ?>" placeholder="<?php esc_attr_e( 'Option key', 'ultimate-member' ); ?>" aria-label="<?php esc_attr_e( 'Option key', 'ultimate-member' ); ?>" />
+								<input class="um-admin-option-key" type="text" data-base-name="<?php echo esc_attr( $name . '[keys]' ); ?>" name="<?php echo esc_attr( $name . '[keys][' . $index . ']' ); ?>" value="<?php echo esc_attr( $key ); ?>" placeholder="<?php esc_attr_e( 'Option key', 'ultimate-member' ); ?>" aria-label="<?php esc_attr_e( 'Option key', 'ultimate-member' ); ?>" />
 							</span>
 							<span class="um-admin-option-val-wrapper">
-								<input class="um-admin-option-val" id="um-admin-option-value-<?php echo esc_attr( $index ); ?>" type="text" name="_options[values][<?php echo esc_attr( $index ); ?>]" value="<?php echo esc_attr( $option['value'] ); ?>" placeholder="<?php esc_attr_e( 'Option label', 'ultimate-member' ); ?>" aria-label="<?php esc_attr_e( 'Option label', 'ultimate-member' ); ?>" />
+								<input class="um-admin-option-val" type="text" data-base-name="<?php echo esc_attr( $name . '[values]' ); ?>" name="<?php echo esc_attr( $name . '[values][' . $index . ']' ); ?>" value="<?php echo esc_attr( $value['values'][ $index ] ); ?>" placeholder="<?php esc_attr_e( 'Option label', 'ultimate-member' ); ?>" aria-label="<?php esc_attr_e( 'Option label', 'ultimate-member' ); ?>" />
 							</span>
 							<span class="um-admin-option-row-actions">
-								<button type="button" class="button um-admin-option-row-add"><span class="dashicons dashicons-plus"></span></button>
-								<button type="button" class="button um-admin-option-row-remove"><span class="dashicons dashicons-minus"></span></button>
+								<input type="button" class="um-admin-option-row-add button" value="+">
+								<input type="button" class="um-admin-option-row-remove button" value="-">
 							</span>
 						</span>
 					<?php }
 				} ?>
 			</span>
+
 			<?php
 			return ob_get_clean();
 		}

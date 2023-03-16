@@ -854,6 +854,35 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 										}
 									}
 									break;
+								case 'options':
+									if ( is_array( $field_setting_value ) ) {
+										if ( array_key_exists( 'keys', $field_setting_value ) ) {
+											if ( is_array( $field_setting_value['keys'] ) ) {
+												if ( array_key_exists( '{{index}}', $field_setting_value['keys'] ) ) {
+													unset( $field_setting_value['keys']['{{index}}'] );
+												}
+
+												$field_setting_value['keys'] = array_map( 'sanitize_text_field', $field_setting_value['keys'] );
+											}
+										}
+
+										if ( array_key_exists( 'values', $field_setting_value ) ) {
+											if ( is_array( $field_setting_value['values'] ) ) {
+												if ( array_key_exists( '{{index}}', $field_setting_value['values'] ) ) {
+													unset( $field_setting_value['values']['{{index}}'] );
+												}
+
+												$field_setting_value['values'] = array_map( 'sanitize_text_field', $field_setting_value['values'] );
+											}
+										}
+
+										if ( array_key_exists( 'default_value', $field_setting_value ) ) {
+											if ( ! empty( $field_setting_value['default_value'] ) && is_array( $field_setting_value['default_value'] ) ) {
+												$field_setting_value['default_value'] = array_map( 'absint', array_keys( $field_setting_value['default_value'] ) );
+											}
+										}
+									}
+									break;
 							}
 						}
 					}

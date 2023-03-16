@@ -165,7 +165,7 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 							$setting_data['static'] = true;
 						}
 
-						if ( 'conditional_rules' === $setting_key ) {
+						if ( 'conditional_rules' === $setting_key || 'options' === $setting_key ) {
 							$setting_data['value'] = unserialize( $field_data[ $setting_key ] );
 						} else {
 							$setting_data['value'] = $field_data[ $setting_key ];

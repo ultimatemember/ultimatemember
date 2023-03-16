@@ -1,5 +1,67 @@
 // wp-admin scripts that must be enqueued on Fields Groups list table and individual Field Group page
 
+var um_radioStates = {};
+
+/**
+ * Recalculate options indexes
+ */
+function um_recalculate_indexes( optionRowsWrapper ) {
+	optionRowsWrapper.find('.um-admin-option-row').each( function (i) {
+		jQuery(this).show().attr('data-option_index', i).data('option_index', i);
+
+		let baseNameDefaultMulti = jQuery(this).find('.um-admin-option-default-multi').data('base-name');
+		jQuery(this).find('.um-admin-option-default-multi').attr( 'name', baseNameDefaultMulti + '[' + i + ']');
+
+		jQuery(this).find('.um-admin-option-default').attr('value',i);
+
+		let baseNameOptionKey = jQuery(this).find('.um-admin-option-key').data('base-name');
+		jQuery(this).find('.um-admin-option-key').attr('name',baseNameOptionKey + '[' + i + ']');
+
+		let baseNameOptionVal = jQuery(this).find('.um-admin-option-val').data('base-name');
+		jQuery(this).find('.um-admin-option-val').attr('name',baseNameOptionVal + '[' + i + ']');
+	} );
+
+	um_radio_set_states( optionRowsWrapper );
+}
+
+function um_multi_or_not( input, row ) {
+	let optionRowsWrapper = row.find( '.um-admin-option-rows' );
+	let rows = optionRowsWrapper.find( '.um-admin-option-row' );
+
+	if ( input.is(':checked') ) {
+		rows.find('.um-admin-option-default-multi').prop('disabled', false).show();
+		rows.find('.um-admin-option-default').prop('disabled', true).prop('checked', false).hide();
+	} else {
+		rows.find('.um-admin-option-default-multi').prop('disabled', true).prop('checked', false).hide();
+		rows.find('.um-admin-option-default').prop('disabled', false).show();
+	}
+
+	um_radio_set_states( optionRowsWrapper );
+}
+
+function um_admin_init_draggable( optionRowsWrapper ) {
+	/**
+	 * Sort options
+	 */
+	optionRowsWrapper.sortable({
+		items:                  '.um-admin-option-row',
+		forcePlaceholderSize:   true,
+		update: function( event, ui ) {
+			um_recalculate_indexes( optionRowsWrapper );
+		}
+	});
+
+	um_radio_set_states( optionRowsWrapper );
+}
+
+// for unchecking the radio
+function um_radio_set_states( optionRowsWrapper ) {
+	um_radioStates = {};
+	jQuery.each( optionRowsWrapper.find( '.um-admin-option-default' ), function(index, rd) {
+		um_radioStates[rd.value] = jQuery(rd).is(':checked');
+	});
+}
+
 if ( 'undefined' === typeof ( um_admin_field_groups_data ) ) {
 	um_admin_field_groups_data = {};
 }
@@ -290,6 +352,9 @@ UM.fields_groups = {
 		},
 		showEdit: function ( row, $ ) {
 			row.addClass('um-field-row-edit-mode');
+			if ( row.find('.um-field-groups-field-multiple-input').length ) {
+				row.find('.um-field-groups-field-multiple-input').trigger('change');
+			}
 		},
 		hideEdit: function ( row, $ ) {
 			row.removeClass('um-field-row-edit-mode');
@@ -516,6 +581,10 @@ UM.fields_groups = {
 				UM.fields_groups.field.conditional.prepareFieldsList($);
 
 				row.find('.um-edit-field-tabs > div[data-tab]').removeClass('disabled');
+
+				if ( row.find('.um-field-groups-field-multiple-input').length ) {
+					row.find('.um-field-groups-field-multiple-input').trigger('change');
+				}
 			} else {
 				if ( ! UM.fields_groups.tabs.compareDeep( oldTypeSettings.general, typeSettings.general ) ) {
 					row.find( '.um-edit-field-tabs-content > div[data-tab="general"] .um-forms-field:not(.um-field-groups-static-field)' ).parents('.um-forms-line').remove();
@@ -571,6 +640,10 @@ UM.fields_groups = {
 						UM.fields_groups.field.conditional.prepareFieldsList($);
 
 						row.find('.um-edit-field-tabs > div[data-tab]').removeClass('disabled');
+
+						if ( row.find('.um-field-groups-field-multiple-input').length ) {
+							row.find('.um-field-groups-field-multiple-input').trigger('change');
+						}
 					},
 					error: function( data ) {
 						console.error( data );
@@ -856,5 +929,63 @@ jQuery( function($) {
 			metakey = $(this).val();
 		}
 		$(this).parents('.um-field-groups-field-row').find( '.um-field-groups-field-metakey' ).html( metakey );
+	});
+
+	/* Handlers for options */
+
+	$( document.body ).on('change', '.um-field-groups-field-multiple-input', function(){
+		let row = $(this).parents('.um-field-groups-field-row');
+		um_multi_or_not($(this),row);
+	});
+
+	// for unchecking the radio
+	$( document.body ).on('click', '.um-admin-option-rows .um-admin-option-default', function() {
+		var val = $(this).val();
+		$(this).prop('checked', (um_radioStates[val] = !um_radioStates[val]));
+
+		$.each( $(".um-admin-option-rows .um-admin-option-default"), function(index, rd) {
+			if(rd.value !== val) {
+				um_radioStates[rd.value] = false;
+			}
+		});
+	});
+
+	$( document.body ).on('click', '.um-admin-option-row-add', function() {
+		let fieldRow = $(this).parents('.um-field-groups-field-row');
+		let multipleInput = fieldRow.find('.um-field-groups-field-multiple-input');
+
+		let optionRow = $(this).parents('.um-admin-option-row');
+		let optionRowsWrapper = $(this).parents('.um-admin-option-rows');
+
+		let html = optionRowsWrapper.siblings('.um-admin-option-row-placeholder')[0].outerHTML.replace( 'um-admin-option-row-placeholder', 'um-admin-option-row' );
+		//var html = $('.um-admin-option-row-placeholder')[0].outerHTML.replace( 'um-admin-option-row-placeholder', 'um-admin-option-row' );
+
+		let html_wrapper = $('<div>').append( html );
+		html_wrapper.find('.um-admin-option-key').prop('disabled', false);
+		html_wrapper.find('.um-admin-option-val').prop('disabled', false);
+		html_wrapper.find('.um-admin-option-default').prop('disabled', false);
+		html_wrapper.find('.um-admin-option-default-multi').prop('disabled', false);
+
+		html_wrapper.find('.um-admin-option-row').insertAfter( optionRow );
+		um_recalculate_indexes( optionRowsWrapper );
+		um_multi_or_not( multipleInput, fieldRow );
+		um_admin_init_draggable( optionRowsWrapper );
+	});
+
+	$( document.body ).on('click', '.um-admin-option-row-remove', function() {
+		let optionRow = $(this).parents('.um-admin-option-row');
+		let optionRowsWrapper = $(this).parents('.um-admin-option-rows');
+
+		if ( $(this).parents('.um-admin-option-rows').find('.um-admin-option-row').length === 1 ) {
+			optionRow.find('.um-admin-option-key').val('');
+			optionRow.find('.um-admin-option-val').val('');
+			optionRow.find('.um-admin-option-default').prop( "checked", false );
+			optionRow.find('.um-admin-option-default-multi').prop( "checked", false );
+			return;
+		}
+
+		optionRow.remove();
+		um_recalculate_indexes( optionRowsWrapper );
+		um_admin_init_draggable( optionRowsWrapper );
 	});
 });
