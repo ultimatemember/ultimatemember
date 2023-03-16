@@ -456,6 +456,28 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 					return 'um_' . $item;
 				}, $um_roles_keys );
 
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_extend_editable_roles
+				 * @description Extend Editable User Roles
+				 * @input_vars
+				 * [{"var":"$um_roles_keys","type":"array","desc":"Roles Keys"}]
+				 * @change_log
+				 * ["Since: 2.5.5"]
+				 * @usage add_filter( 'um_extend_editable_roles', 'function_name', 10, 1 );
+				 * @example
+				 * <?php
+				 * add_filter( 'um_extend_editable_roles', 'my_um_extend_editable_roles', 10, 1 );
+				 * function my_um_extend_editable_roles( $exclude_roles ) {
+				 *     // your code here
+				 *     return $exclude_roles;
+				 * }
+				 * ?>
+				 */
+				$um_roles_keys = apply_filters( 'um_extend_editable_roles', $um_roles_keys );
+
 				return array_merge( $um_roles_keys, $default_roles );
 			}
 

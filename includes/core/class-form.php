@@ -501,7 +501,29 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 							);
 							$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
 
-							if ( ! empty( $role ) &&
+							/**
+							 * UM hook
+							 *
+							 * @type filter
+							 * @title um_role_checking
+							 * @description Skip the role checking
+							 * @input_vars
+							 * [{"var":"$role_checking","type":"bool","desc":"Skip the role checking"}]
+							 * @change_log
+							 * ["Since: 2.5.5"]
+							 * @usage add_filter( 'um_role_checking', 'function_name', 10, 1 );
+							 * @example
+							 * <?php
+							 * add_filter( 'um_role_checking', 'my_um_role_checking', 10, 1 );
+							 * function my_um_role_checking( $role_checking ) {
+							 *     // your code here
+							 *     return $exclude_roles;
+							 * }
+							 * ?>
+							 */
+							$role_checking = apply_filters( 'um_role_checking', false );
+
+							if ( false === $role_checking && ! empty( $role ) &&
 								( ! in_array( $role, $custom_field_roles, true ) || in_array( $role, $exclude_roles, true ) ) ) {
 								wp_die( esc_html__( 'This is not possible for security reasons.', 'ultimate-member' ) );
 							}
@@ -847,6 +869,28 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				get_option( 'um_roles', array() )
 			);
 			$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_change_exclude_custom_fields_roles
+			 * @description Change array of excluded roles
+			 * @input_vars
+			 * [{"var":"$exclude_roles","type":"array","desc":"Excluded Roles"}]
+			 * @change_log
+			 * ["Since: 2.5.5"]
+			 * @usage add_filter( 'um_change_exclude_custom_fields_roles', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_change_exclude_custom_fields_roles', 'my_um_change_exclude_custom_fields_roles', 10, 1 );
+			 * function my_um_change_exclude_custom_fields_roles( $exclude_roles ) {
+			 *     // your code here
+			 *     return $exclude_roles;
+			 * }
+			 * ?>
+			 */
+			$exclude_roles = apply_filters( 'um_change_exclude_custom_fields_roles', $exclude_roles );
 
 			$roles = UM()->roles()->get_roles( false, $exclude_roles );
 			$roles = array_map(

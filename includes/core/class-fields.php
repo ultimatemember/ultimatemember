@@ -3951,6 +3951,28 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}, get_option( 'um_roles', array() ) );
 			$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
 
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_change_exclude_roles
+			 * @description Change array of excluded roles
+			 * @input_vars
+			 * [{"var":"$exclude_roles","type":"array","desc":"Excluded Roles"}]
+			 * @change_log
+			 * ["Since: 2.5.5"]
+			 * @usage add_filter( 'um_change_exclude_roles', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_change_exclude_roles', 'my_um_change_exclude_roles', 10, 1 );
+			 * function my_um_change_exclude_roles( $exclude_roles ) {
+			 *     // your code here
+			 *     return $exclude_roles;
+			 * }
+			 * ?>
+			 */
+			$exclude_roles = apply_filters( 'um_change_exclude_roles', $exclude_roles );
+
 			$roles = UM()->roles()->get_roles( false, $exclude_roles );
 
 			if ( ! empty( $options ) ) {

@@ -671,10 +671,10 @@ function um_get_snippet( $str, $wordCount = 10 ) {
 
 /**
  * Format submitted data for Info preview & Email template
- * @param  boolean $style 
+ * @param  boolean $style
  * @return string
  *
- * @since  2.1.4 
+ * @since  2.1.4
  */
 function um_user_submitted_registration_formatted( $style = false ) {
 	$output = null;
@@ -839,7 +839,7 @@ function um_user_submitted_registration_formatted( $style = false ) {
  * @param  boolean $style
  * @return string
  *
- * @since  2.1.4 
+ * @since  2.1.4
  */
 function um_user_submited_display( $k, $title, $data = array(), $style = true ) {
 	$output = '';
@@ -1142,8 +1142,8 @@ function um_is_file_owner( $url, $user_id = null, $image_path = false ) {
 
 /**
  * Check if file is temporary
- * @param  string $filename 
- * @return bool       
+ * @param  string $filename
+ * @return bool
  */
 function um_is_temp_file( $filename ) {
 	$user_basedir = UM()->uploader()->get_upload_user_base_dir( 'temp' );

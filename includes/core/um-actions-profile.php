@@ -388,6 +388,28 @@ function um_user_edit_profile( $args ) {
 			}, get_option( 'um_roles', array() ) );
 			$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
 
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_change_exclude_roles_edit_profile
+			 * @description Change array of excluded roles
+			 * @input_vars
+			 * [{"var":"$exclude_roles","type":"array","desc":"Excluded Roles"}]
+			 * @change_log
+			 * ["Since: 2.5.5"]
+			 * @usage add_filter( 'um_change_exclude_roles_edit_profile', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_change_exclude_roles_edit_profile', 'my_um_change_exclude_roles_edit_profile', 10, 1 );
+			 * function my_um_change_exclude_roles_edit_profile( $exclude_roles ) {
+			 *     // your code here
+			 *     return $exclude_roles;
+			 * }
+			 * ?>
+			 */
+			$exclude_roles = apply_filters( 'um_change_exclude_roles_edit_profile', $exclude_roles );
+
 			if ( ! in_array( $args['submitted']['role'], $exclude_roles ) ) {
 				$to_update['role'] = $args['submitted']['role'];
 			}
@@ -407,6 +429,28 @@ function um_user_edit_profile( $args ) {
 					return 'um_' . $item;
 				}, get_option( 'um_roles', array() ) );
 				$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_change_exclude_roles_edit_profile
+				 * @description Change array of excluded roles
+				 * @input_vars
+				 * [{"var":"$exclude_roles","type":"array","desc":"Excluded Roles"}]
+				 * @change_log
+				 * ["Since: 2.5.5"]
+				 * @usage add_filter( 'um_change_exclude_roles_edit_profile', 'function_name', 10, 1 );
+				 * @example
+				 * <?php
+				 * add_filter( 'um_change_exclude_roles_edit_profile', 'my_um_change_exclude_roles_edit_profile', 10, 1 );
+				 * function my_um_change_exclude_roles_edit_profile( $exclude_roles ) {
+				 *     // your code here
+				 *     return $exclude_roles;
+				 * }
+				 * ?>
+				 */
+				$exclude_roles = apply_filters( 'um_change_exclude_roles_edit_profile', $exclude_roles );
 
 				if ( ! in_array( $args['submitted']['role'], $exclude_roles ) ) {
 					$to_update['role'] = $args['submitted']['role'];
