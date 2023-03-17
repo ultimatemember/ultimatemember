@@ -592,7 +592,7 @@ UM.fields_groups = {
 					if ( skeletonRows > 0 ) {
 						let i = 0;
 						while (i < skeletonRows) {
-							row.find( '.um-edit-field-tabs-content > div[data-tab="general"] > .form-table tbody' ).append('<tr class="um-forms-line um-forms-skeleton"><th><span class="um-skeleton-box" style="width:100%;height:20px;"></span></th><td><span class="um-skeleton-box" style="width:100%;height:40px;margin-bottom:4px;"></span><span class="um-skeleton-box" style="width:100%;height:20px;"></span></td></tr>');
+							row.find( '.um-edit-field-tabs-content > div[data-tab="general"] > .form-table tbody' ).append('<tr class="um-forms-line um-forms-skeleton"><th><span class="um-skeleton-box" style="width:100%;height:20px;"></span></th><td><span class="um-skeleton-box" style="width:100%;height:40px;margin-bottom:4px;"></span><span class="um-skeleton-box" style="width:100%;height:14px;"></span></td></tr>');
 							i++;
 						}
 					}

@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-wp_enqueue_script( 'postbox' );
+//wp_enqueue_script( 'postbox' );
 
 /**
  * UM hook
@@ -78,7 +78,7 @@ $screen_id = $current_screen->id; ?>
 
 <script type="text/javascript">
 	jQuery( document ).ready( function() {
-		postboxes.add_postbox_toggles( '<?php echo esc_js( $screen_id ); ?>' );
+		//postboxes.add_postbox_toggles( '<?php //echo esc_js( $screen_id ); ?>//' );
 	});
 </script>
 

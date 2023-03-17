@@ -55,6 +55,8 @@
   position: relative
   overflow: hidden
   background-color: $gray-300
+  border: none
+  border-radius: 4px
   &:after
     position: absolute
     top: 0
@@ -66,7 +68,15 @@
     animation: um-ajax-shimmer 2s infinite
     content: ''
 
+
+
 #poststuff
+  .postbox
+    .postbox-header
+      .hndle
+        cursor: default !important
+      .handle-actions
+        display: none !important
   #um-admin-form-publish
     .inside
       margin: 0
