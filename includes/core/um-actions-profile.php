@@ -392,7 +392,7 @@ function um_user_edit_profile( $args ) {
 			 * UM hook
 			 *
 			 * @type filter
-			 * @title um_change_exclude_roles_edit_profile
+			 * @title um_change_exclude_roles_edit_profile_is_admin
 			 * @description Change array of excluded roles
 			 * @input_vars
 			 * [{"var":"$exclude_roles","type":"array","desc":"Excluded Roles"}]
@@ -401,8 +401,8 @@ function um_user_edit_profile( $args ) {
 			 * @usage add_filter( 'um_change_exclude_roles_edit_profile', 'function_name', 10, 1 );
 			 * @example
 			 * <?php
-			 * add_filter( 'um_change_exclude_roles_edit_profile', 'my_um_change_exclude_roles_edit_profile', 10, 1 );
-			 * function my_um_change_exclude_roles_edit_profile( $exclude_roles ) {
+			 * add_filter( 'um_change_exclude_roles_edit_profile_is_admin', 'my_um_change_exclude_roles_edit_profile_is_admin', 10, 1 );
+			 * function my_um_change_exclude_roles_edit_profile_is_admin( $exclude_roles ) {
 			 *     // your code here
 			 *     return $exclude_roles;
 			 * }

@@ -517,7 +517,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 							 * add_filter( 'um_role_checking', 'my_um_role_checking', 10, 1 );
 							 * function my_um_role_checking( $role_checking ) {
 							 *     // your code here
-							 *     return $exclude_roles;
+							 *     return $role_checking;
 							 * }
 							 * ?>
 							 */

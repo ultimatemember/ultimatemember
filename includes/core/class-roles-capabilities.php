@@ -470,9 +470,9 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 				 * @example
 				 * <?php
 				 * add_filter( 'um_extend_editable_roles', 'my_um_extend_editable_roles', 10, 1 );
-				 * function my_um_extend_editable_roles( $exclude_roles ) {
+				 * function my_um_extend_editable_roles( $um_roles_keys ) {
 				 *     // your code here
-				 *     return $exclude_roles;
+				 *     return $um_roles_keys;
 				 * }
 				 * ?>
 				 */
