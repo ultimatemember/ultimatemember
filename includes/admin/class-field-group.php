@@ -271,7 +271,7 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 			$wpdb->insert(
 				"{$wpdb->prefix}um_field_groups",
 				array(
-					'group_key'   => md5( 'group' . $data['title'] . time() ),
+					'group_key'   => md5( 'group' . uniqid( $data['title'] . $data['group_id'] ) . time() ),
 					'title'       => $data['title'],
 					'description' => array_key_exists( 'description', $data ) ? $data['description'] : '',
 					'status'      => array_key_exists( 'status', $data ) ? $data['status'] : 'active',
@@ -326,7 +326,7 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 			$wpdb->insert(
 				"{$wpdb->prefix}um_fields",
 				array(
-					'field_key' => md5( 'field' . $data['title'] . time() ),
+					'field_key' => md5( 'field' . uniqid( $data['type'] . $data['title'] . $data['group_id'] ) . time() ),
 					'group_id'  => $data['group_id'],
 					'title'     => $data['title'],
 					'type'      => $data['type'],

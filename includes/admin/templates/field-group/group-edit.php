@@ -116,6 +116,13 @@ $screen_id = $current_screen->id; ?>
 				break;
 		}
 	}
+
+
+	if ( ! empty( UM()->admin()->actions_listener()->field_groups_error ) ) {
+		if ( ! empty( UM()->admin()->actions_listener()->field_groups_error['message'] ) ) {
+			echo '<div id="message" class="error fade" data-error-field="' . esc_attr( UM()->admin()->actions_listener()->field_groups_error['field'] ) . '"><p>' . esc_html( UM()->admin()->actions_listener()->field_groups_error['message'] ) . '</p></div>';
+		}
+	}
 	?>
 
 	<form id="um_edit_field_group" action="" method="post">

@@ -17,6 +17,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 	 */
 	class Actions_Listener {
 
+		var $field_groups_error = null;
 
 		/**
 		 * Actions_Listener constructor.
@@ -949,29 +950,54 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 
 		private function validate( $data ) {
 			$result = true;
+
+			if ( empty( $data['title'] ) ) {
+				$this->field_groups_error = array(
+					'field'   => 'title',
+					'message' => __( 'Title cannot be empty.', 'ultimate-member' ),
+				);
+			}
+
+			if ( ! empty( $this->field_groups_error ) ) {
+				$result = $this->field_groups_error;
+				return $result;
+			}
+
+			if ( empty( $data['fields'] ) ) {
+				$this->field_groups_error = array(
+					'field'   => 'um-admin-form-fields',
+					'message' => __( 'Fields cannot be empty.', 'ultimate-member' ),
+				);
+			}
+
+			if ( ! empty( $this->field_groups_error ) ) {
+				$result = $this->field_groups_error;
+				return $result;
+			}
+
 			return $result;
 		}
 
 		public function handle_save_field_group() {
-			global $wpdb;
+			if ( empty( $_GET['tab'] ) || ! in_array( sanitize_key( $_GET['tab'] ), array( 'edit', 'add' ) ) ) {
+				return;
+			}
 
 			if ( empty( $_POST['um_admin_action'] ) || 'save_field_group' !== sanitize_key( $_POST['um_admin_action'] ) ) {
 				return;
 			}
 
-			if ( empty( $_POST['field_group'] ) ) {
-				return;
-			}
+			$redirect = get_admin_url() . 'admin.php?page=um_field_groups&tab=' . sanitize_key( $_GET['tab'] );
 
 			if ( empty( $_POST['um_nonce'] ) ) {
-				return;
+				wp_redirect( add_query_arg( array( 'msg' => 'empty_nonce' ), $redirect ) );
+				exit();
 			}
 
-			if ( empty( $_GET['tab'] ) || ! in_array( sanitize_key( $_GET['tab'] ), array( 'edit', 'add' ) ) ) {
-				return;
+			if ( empty( $_POST['field_group'] ) ) {
+				wp_redirect( add_query_arg( array( 'msg' => 'wrong_data' ), $redirect ) );
+				exit();
 			}
-
-			$redirect = get_admin_url() . 'admin.php?page=um_field_groups&tab=edit';
 
 			$action = sanitize_key( $_GET['tab'] ); // 'edit' or 'add'
 			if ( 'edit' === $action ) {
@@ -981,15 +1007,18 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 
 				$group_id = absint( $_GET['id'] );
 				if ( empty( $group_id ) ) {
-					return;
-				}
-
-				if ( ! wp_verify_nonce( $_POST['um_nonce'], 'um-edit-field-group' ) ) {
-					return;
+					wp_redirect( add_query_arg( array( 'msg' => 'wrong_id' ), $redirect ) );
+					exit();
 				}
 
 				if ( empty( $_POST['field_group']['id'] ) || $group_id !== absint( $_POST['field_group']['id'] ) ) {
-					return;
+					wp_redirect( add_query_arg( array( 'msg' => 'wrong_id' ), $redirect ) );
+					exit();
+				}
+
+				if ( ! wp_verify_nonce( $_POST['um_nonce'], 'um-edit-field-group' ) ) {
+					wp_redirect( add_query_arg( array( 'msg' => 'wrong_nonce' ), $redirect ) );
+					exit();
 				}
 
 				// Remove extra slashes by WordPress native function.
@@ -1056,12 +1085,22 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 				}
 			} elseif ( 'add' === $action ) {
 				if ( ! wp_verify_nonce( $_POST['um_nonce'], 'um-add-field-group' ) ) {
+					wp_redirect( add_query_arg( array( 'msg' => 'wrong_nonce' ), $redirect ) );
 					return;
 				}
 
+				// Remove extra slashes by WordPress native function.
 				$_POST['field_group'] = wp_unslash( $_POST['field_group'] );
 
 				$data = $this->sanitize( $_POST['field_group'] );
+
+				// Validate data sending for fields.
+				$result = $this->validate( $data );
+
+				if ( true !== $result ) {
+					// @todo validation of the fields
+					return;
+				}
 
 				$title       = ! empty( $data['title'] ) ? sanitize_text_field( $data['title'] ) : __( '(no title)', 'ultimate-member' );
 				$description = ! empty( $data['description'] ) ? sanitize_textarea_field( $data['description'] ) : '';

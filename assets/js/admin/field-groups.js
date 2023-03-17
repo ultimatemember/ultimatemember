@@ -655,6 +655,11 @@ UM.fields_groups = {
 };
 
 jQuery( function($) {
+	if ( $('#message[data-error-field]').length > 0 ) {
+		let scrollToID = $('#message[data-error-field]').data('error-field');
+		$( '#' + scrollToID ).addClass( 'um-error' );
+		$('#message[data-error-field]')[0].scrollIntoView();
+	}
 
 	UM.fields_groups.field.conditional.prepareFieldsList($);
 
