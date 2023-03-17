@@ -12,7 +12,6 @@ $ListTable = new um\admin\list_table\Field_Groups( array(
 $ListTable->set_bulk_actions( array(
 	'activate'   => __( 'Activate', 'ultimate-member' ),
 	'deactivate' => __( 'Deactivate', 'ultimate-member' ),
-	'duplicate'  => __( 'Duplicate', 'ultimate-member' ),
 	'delete'     => __( 'Delete', 'ultimate-member' ),
 ) );
 
@@ -39,28 +38,39 @@ $ListTable->prepare_items();
 		</a>
 	</h2>
 
-	<?php /*if ( ! empty( $_GET['msg'] ) ) {
+	<?php
+	if ( ! empty( $_GET['msg'] ) ) {
 		switch ( sanitize_key( $_GET['msg'] ) ) {
 			case 'd':
 				if ( isset( $_GET['count'] ) ) {
 					$count = absint( $_GET['count'] );
 					if ( $count > 0 ) {
-						$message = sprintf( _n( '%s user role is <strong>deleted</strong> successfully.','%s user roles are <strong>deleted</strong> successfully.', $count, 'ultimate-member' ), $count );
-						echo '<div id="message" class="updated fade"><p>' . $message . '</p></div>';
+						$message = sprintf( _n( '%s field group is deleted successfully.','%s field groups are deleted successfully.', $count, 'ultimate-member' ), $count );
+						echo '<div id="message" class="updated fade"><p>' . esc_html( $message ) . '</p></div>';
 					}
 				}
 				break;
-			case 'reset':
+			case 'a':
 				if ( isset( $_GET['count'] ) ) {
 					$count = absint( $_GET['count'] );
 					if ( $count > 0 ) {
-						$message = sprintf( _n( '%s user role\'s meta is <strong>flushed</strong> successfully.','%s user roles\' meta are <strong>flushed</strong> successfully.', $count, 'ultimate-member' ), $count );
-						echo '<div id="message" class="updated fade"><p>' . $message . '</p></div>';
+						$message = sprintf( _n( '%s field group is activated successfully.','%s field groups are activated successfully.', $count, 'ultimate-member' ), $count );
+						echo '<div id="message" class="updated fade"><p>' . esc_html( $message ) . '</p></div>';
+					}
+				}
+				break;
+			case 'da':
+				if ( isset( $_GET['count'] ) ) {
+					$count = absint( $_GET['count'] );
+					if ( $count > 0 ) {
+						$message = sprintf( _n( '%s field group is deactivated successfully.','%s field groups are deactivated successfully.', $count, 'ultimate-member' ), $count );
+						echo '<div id="message" class="updated fade"><p>' . esc_html( $message ) . '</p></div>';
 					}
 				}
 				break;
 		}
-	}*/ ?>
+	}
+	?>
 
 	<form action="" method="get" name="um-field-groups" id="um-field-groups">
 		<input type="hidden" name="page" value="um_field_groups" />

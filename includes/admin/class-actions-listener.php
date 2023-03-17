@@ -1110,134 +1110,94 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 
 			if ( isset( $_GET['action'] ) ) {
 				switch ( sanitize_key( $_GET['action'] ) ) {
-					/* delete action */
 					case 'delete': {
-						// uses sanitize_title instead of sanitize_key for backward compatibility based on #906 pull-request (https://github.com/ultimatemember/ultimatemember/pull/906)
-						// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
-//						$role_keys = array();
-//						if ( isset( $_REQUEST['id'] ) ) {
-//							check_admin_referer( 'um_role_delete' . sanitize_title( $_REQUEST['id'] ) . get_current_user_id() );
-//							$role_keys = (array) sanitize_title( $_REQUEST['id'] );
-//						} elseif ( isset( $_REQUEST['item'] ) ) {
-//							check_admin_referer( 'bulk-' . sanitize_key( __( 'Roles', 'ultimate-member' ) ) );
-//							$role_keys = array_map( 'sanitize_title', $_REQUEST['item'] );
-//						}
-//
-//						if ( ! count( $role_keys ) ) {
-//							wp_redirect( $redirect );
-//							exit;
-//						}
-//
-//						$deleted_count = 0;
-//						$um_roles = get_option( 'um_roles', array() );
-//
-//						$um_custom_roles = array();
-//						foreach ( $role_keys as $k => $role_key ) {
-//							$role_meta = get_option( "um_role_{$role_key}_meta" );
-//
-//							if ( empty( $role_meta['_um_is_custom'] ) ) {
-//								continue;
-//							}
-//
-//							delete_option( "um_role_{$role_key}_meta" );
-//							$um_roles = array_diff( $um_roles, array( $role_key ) );
-//
-//							$roleID            = 'um_' . $role_key;
-//							$um_custom_roles[] = $roleID;
-//
-//							//check if role exist before removing it
-//							if ( get_role( $roleID ) ) {
-//								$deleted_count++;
-//								remove_role( $roleID );
-//							}
-//						}
-//
-//						//set for users with deleted roles role "Subscriber"
-//						$args = array(
-//							'blog_id'     => get_current_blog_id(),
-//							'role__in'    => $um_custom_roles,
-//							'number'      => -1,
-//							'count_total' => false,
-//							'fields'      => 'ids',
-//						);
-//						$users_to_subscriber = get_users( $args );
-//						if ( ! empty( $users_to_subscriber ) ) {
-//							foreach ( $users_to_subscriber as $user_id ) {
-//								$object_user = get_userdata( $user_id );
-//
-//								if ( ! empty( $object_user ) ) {
-//									foreach ( $um_custom_roles as $roleID ) {
-//										$object_user->remove_role( $roleID );
-//									}
-//								}
-//
-//								//update user role if it's empty
-//								if ( empty( $object_user->roles ) ) {
-//									wp_update_user(
-//										array(
-//											'ID'   => $user_id,
-//											'role' => 'subscriber',
-//										)
-//									);
-//								}
-//							}
-//						}
-//
-//						update_option( 'um_roles', $um_roles );
-//
-//						if ( 0 === $deleted_count ) {
-//							wp_redirect( $redirect );
-//							exit;
-//						}
+						$field_group_ids = array();
+						if ( isset( $_REQUEST['id'] ) ) {
+							check_admin_referer( 'um_field_group_delete' . absint( $_REQUEST['id'] ) . get_current_user_id() );
+							$field_group_ids = (array) absint( $_REQUEST['id'] );
+						} elseif ( isset( $_REQUEST['item'] ) ) {
+							check_admin_referer( 'bulk-' . sanitize_key( __( 'Field Groups', 'ultimate-member' ) ) );
+							$field_group_ids = array_map( 'absint', $_REQUEST['item'] );
+						}
 
-//						wp_redirect( add_query_arg( array( 'msg' => 'd', 'count' => $deleted_count ), $redirect ) );
-//						exit;
-						break;
-					}
-					case 'duplicate': {
-						// uses sanitize_title instead of sanitize_key for backward compatibility based on #906 pull-request (https://github.com/ultimatemember/ultimatemember/pull/906)
-						// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
-//						$role_keys = array();
-//						if ( isset( $_REQUEST['id'] ) ) {
-//							check_admin_referer( 'um_role_reset' . sanitize_title( $_REQUEST['id'] ) . get_current_user_id() );
-//							$role_keys = (array) sanitize_title( $_REQUEST['id'] );
-//						} elseif ( isset( $_REQUEST['item'] ) ) {
-//							check_admin_referer( 'bulk-' . sanitize_key( __( 'Roles', 'ultimate-member' ) ) );
-//							$role_keys = array_map( 'sanitize_title', $_REQUEST['item'] );
-//						}
-//
-//						if ( ! count( $role_keys ) ) {
-//							wp_redirect( $redirect );
-//							exit;
-//						}
-//
-//						$flushed_count = 0;
-//
-//						foreach ( $role_keys as $k => $role_key ) {
-//							$role_meta = get_option( "um_role_{$role_key}_meta" );
-//
-//							if ( ! empty( $role_meta['_um_is_custom'] ) ) {
-//								unset( $role_keys[ array_search( $role_key, $role_keys, true ) ] );
-//								continue;
-//							}
-//
-//							$flushed_count++;
-//							delete_option( "um_role_{$role_key}_meta" );
-//						}
-//
-//						if ( 0 === $flushed_count ) {
-//							wp_redirect( $redirect );
-//							exit;
-//						}
+						if ( ! count( $field_group_ids ) ) {
+							wp_redirect( $redirect );
+							exit;
+						}
 
-//						wp_redirect( add_query_arg( array( 'msg' => 'reset', 'count' => $flushed_count ), $redirect ) );
-//						exit;
+						$deleted_count = 0;
+						foreach ( $field_group_ids as $field_group_id ) {
+							if ( UM()->admin()->field_group()->delete_group( $field_group_id ) ) {
+								$deleted_count ++;
+							}
+						}
+
+						if ( $deleted_count > 0 ) {
+							wp_redirect( add_query_arg( array( 'msg' => 'd', 'count' => $deleted_count ), $redirect ) );
+						} else {
+							wp_redirect( $redirect );
+						}
+						exit;
 						break;
 					}
 					case 'activate': {
+						$field_group_ids = array();
+						if ( isset( $_REQUEST['id'] ) ) {
+							check_admin_referer( 'um_field_group_activate' . absint( $_REQUEST['id'] ) . get_current_user_id() );
+							$field_group_ids = (array) absint( $_REQUEST['id'] );
+						} elseif ( isset( $_REQUEST['item'] ) ) {
+							check_admin_referer( 'bulk-' . sanitize_key( __( 'Field Groups', 'ultimate-member' ) ) );
+							$field_group_ids = array_map( 'absint', $_REQUEST['item'] );
+						}
+
+						if ( ! count( $field_group_ids ) ) {
+							wp_redirect( $redirect );
+							exit;
+						}
+
+						$activated_count = 0;
+						foreach ( $field_group_ids as $field_group_id ) {
+							if ( UM()->admin()->field_group()->activate_group( $field_group_id ) ) {
+								$activated_count ++;
+							}
+						}
+
+						if ( $activated_count > 0 ) {
+							wp_redirect( add_query_arg( array( 'msg' => 'a', 'count' => $activated_count ), $redirect ) );
+						} else {
+							wp_redirect( $redirect );
+						}
+						exit;
 						break;
 					}
 					case 'deactivate': {
+						$field_group_ids = array();
+						if ( isset( $_REQUEST['id'] ) ) {
+							check_admin_referer( 'um_field_group_deactivate' . absint( $_REQUEST['id'] ) . get_current_user_id() );
+							$field_group_ids = (array) absint( $_REQUEST['id'] );
+						} elseif ( isset( $_REQUEST['item'] ) ) {
+							check_admin_referer( 'bulk-' . sanitize_key( __( 'Field Groups', 'ultimate-member' ) ) );
+							$field_group_ids = array_map( 'absint', $_REQUEST['item'] );
+						}
+
+						if ( ! count( $field_group_ids ) ) {
+							wp_redirect( $redirect );
+							exit;
+						}
+
+						$deactivated_count = 0;
+						foreach ( $field_group_ids as $field_group_id ) {
+							if ( UM()->admin()->field_group()->deactivate_group( $field_group_id ) ) {
+								$deactivated_count ++;
+							}
+						}
+
+						if ( $deactivated_count > 0 ) {
+							wp_redirect( add_query_arg( array( 'msg' => 'da', 'count' => $deactivated_count ), $redirect ) );
+						} else {
+							wp_redirect( $redirect );
+						}
+						exit;
 						break;
 					}
 				}

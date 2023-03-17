@@ -237,7 +237,6 @@ class Field_Groups extends \WP_List_Table {
 		$actions = array();
 
 		$actions['edit']      = '<a href="admin.php?page=um_field_groups&tab=edit&id=' . esc_attr( $item['id'] ) . '">' . __( 'Edit', 'ultimate-member' ) . '</a>';
-		$actions['duplicate'] = '<a href="admin.php?page=um_field_groups&action=duplicate&id=' . esc_attr( $item['id'] ) . '&_wpnonce=' . wp_create_nonce( 'um_field_group_duplicate' . $item['id'] . get_current_user_id() ) . '">' . esc_html__( 'Duplicate', 'ultimate-member' ) . '</a>';
 		if ( ! empty( $item['status'] ) && 'active' === $item['status'] ) {
 			$actions['deactivate'] = '<a href="admin.php?page=um_field_groups&action=deactivate&id=' . esc_attr( $item['id'] ) . '&_wpnonce=' . wp_create_nonce( 'um_field_group_deactivate' . $item['id'] . get_current_user_id() ) . '" onclick="return confirm( \'' . esc_html__( 'Are you sure you want to deactivate this fields group?', 'ultimate-member' ) . '\' );">' . esc_html__( 'Deactivate', 'ultimate-member' ) . '</a>';
 		} elseif ( ! empty( $item['status'] ) && 'inactive' === $item['status'] ) {
