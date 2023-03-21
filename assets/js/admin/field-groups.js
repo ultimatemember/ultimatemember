@@ -79,11 +79,11 @@ UM.fields_groups = {
 		setActive: function( tab_obj, $ ) {
 			let tab = tab_obj.data('tab');
 
-			let tabs = tab_obj.parents('.um-edit-field-tabs');
+			let tabs = tab_obj.parents('.um-field-row-tabs');
 			tabs.find('div[data-tab]').removeClass('current');
 			tab_obj.addClass('current');
 
-			let contents = tab_obj.parents('.um-edit-field-tabs').siblings('.um-edit-field-tabs-content');
+			let contents = tab_obj.parents('.um-field-row-tabs').siblings('.um-field-row-tabs-content');
 			contents.find('div[data-tab]').removeClass('current');
 			contents.find('div[data-tab="' + tab + '"]').addClass('current');
 		},
@@ -124,10 +124,10 @@ UM.fields_groups = {
 			}
 		},
 		reBuild: function( row, newSettingsTabs, $ ) {
-			let currentTab = row.find('.um-edit-field-tabs > div[data-tab].current').data('tab');
-			row.find('.um-edit-field-tabs > div[data-tab]').remove();
+			let currentTab = row.find('.um-field-row-tabs > div[data-tab].current').data('tab');
+			row.find('.um-field-row-tabs > div[data-tab]').remove();
 
-			row.find('.um-edit-field-tabs-content > div[data-tab]').each( function() {
+			row.find('.um-field-row-tabs-content > div[data-tab]').each( function() {
 				if ( ! newSettingsTabs.includes( $(this).data('tab') ) ) {
 					$(this).remove();
 				}
@@ -137,57 +137,61 @@ UM.fields_groups = {
 			for (var i = 0; i < newSettingsTabs.length; i++) {
 				newTabsHTML += '<div data-tab="' + newSettingsTabs[i] + '">' + um_admin_field_groups_data.field_tabs[newSettingsTabs[i]] + '</div>';
 
-				if ( ! row.find('.um-edit-field-tabs-content > div[data-tab="' + newSettingsTabs[i] + '"]').length ) {
-					row.find('.um-edit-field-tabs-content').append('<div data-tab="' + newSettingsTabs[i] + '"></div>');
+				if ( ! row.find('.um-field-row-tabs-content > div[data-tab="' + newSettingsTabs[i] + '"]').length ) {
+					row.find('.um-field-row-tabs-content').append('<div data-tab="' + newSettingsTabs[i] + '"></div>');
 				}
 			}
-			row.find('.um-edit-field-tabs').html(newTabsHTML);
-			row.find('.um-edit-field-tabs > div[data-tab="' + currentTab + '"]').addClass('current');
+			row.find('.um-field-row-tabs').html(newTabsHTML);
+			row.find('.um-field-row-tabs > div[data-tab="' + currentTab + '"]').addClass('current');
 
-			row.find('.um-edit-field-tabs-content > div[data-tab="' + currentTab + '"]').addClass('current');
+			row.find('.um-field-row-tabs-content > div[data-tab="' + currentTab + '"]').addClass('current');
 		}
 	},
 	sortable: {
-		init: function ($) {
-			$('.um-field-groups-fields-wrapper').sortable({
-				items: '.um-field-groups-field-row',
-				connectWith: 'um-field-groups-fields-wrapper',
-				placeholder: 'um-field-groups-field-placeholder',
+		init: function ($wrapper,$) {
+			$wrapper.sortable({
+				items: '.um-field-row',
+				connectWith: 'um-fields-column-content',
+				placeholder: 'um-field-row-placeholder',
 				forcePlaceholderSize:true,
 				axis: 'y',
 				cursor: 'move',
-				handle: '.um-field-groups-field-move-link',
-				update: function(event, ui){
-					$('.um-field-groups-field-row').each( function(i) {
+				handle: '.um-field-row-move-link',
+				update: function(){
+					// $(this) means sorting wrapper block
+					$(this).find('.um-field-row').each( function(i) {
 						let index = i * 1 + 1;
-						$(this).find('.um-field-groups-field-order').val(index);
-						$(this).find('.um-field-groups-field-row-header .um-field-groups-field-move-link').html(index);
+						$(this).find('.um-field-row-order').val(index);
+						$(this).find('.um-field-row-header .um-field-row-move-link').html(index);
 					});
 				}
 			}).on('sortupdate',function(){
-				$('.um-field-groups-field-row').each( function(i) {
+				// $(this) means sorting wrapper block
+				$(this).find('.um-field-row').each( function(i) {
 					let index = i * 1 + 1;
-					$(this).find('.um-field-groups-field-order').val(index);
-					$(this).find('.um-field-groups-field-row-header .um-field-groups-field-move-link').html(index);
+					$(this).find('.um-field-row-order').val(index);
+					$(this).find('.um-field-row-header .um-field-row-move-link').html(index);
 				});
 			});
 		},
-		destroy: function ($) {
-			$('.um-field-groups-fields-wrapper').sortable('destroy');
+		destroy: function ($wrapper) {
+			if ( $wrapper.hasClass('ui-sortable') ) {
+				$wrapper.sortable('destroy');
+			}
 		},
-		reInit: function ($) {
-			UM.fields_groups.sortable.destroy($);
-			UM.fields_groups.sortable.init($);
-			$('.um-field-groups-fields-wrapper').trigger('sortupdate');
+		reInit: function ($wrapper,$) {
+			UM.fields_groups.sortable.destroy($wrapper);
+			UM.fields_groups.sortable.init($wrapper,$);
+			$wrapper.trigger('sortupdate');
 		}
 	},
 	field: {
 		newIndex: 0,
 		settingsScreens: {},
 		prepareSettings: function($, fieldID, settingsTab) {
-			$('.um-field-groups-fields-wrapper').find('.um-field-groups-field-row').each( function() {
+			$('.um-fields-column-content').find('.um-field-row').each( function() {
 				let id = $(this).data('field'); // id
-				let type = $(this).find('.um-field-groups-field-type-select').val(); // type
+				let type = $(this).find('.um-field-row-type-select').val(); // type
 
 				if ( typeof fieldID !== 'undefined' ) {
 					if ( fieldID != id ) {
@@ -203,7 +207,7 @@ UM.fields_groups = {
 					UM.fields_groups.field.settingsScreens[ id ][ type ] = {};
 				}
 
-				$(this).find('.um-edit-field-tabs > div[data-tab]').each(function () {
+				$(this).find('.um-field-row-tabs > div[data-tab]').each(function () {
 					let tabKey = $(this).data('tab');
 
 					if ( typeof settingsTab !== 'undefined' ) {
@@ -212,22 +216,22 @@ UM.fields_groups = {
 						}
 					}
 
-					UM.fields_groups.field.settingsScreens[ id ][ type ][ tabKey ] = $(this).parents('.um-edit-field-tabs').siblings( '.um-edit-field-tabs-content' ).find( 'div[data-tab="' + tabKey + '"] > .form-table' )[0].outerHTML;
+					UM.fields_groups.field.settingsScreens[ id ][ type ][ tabKey ] = $(this).parents('.um-field-row-tabs').siblings( '.um-field-row-tabs-content' ).find( 'div[data-tab="' + tabKey + '"] > .form-table' )[0].outerHTML;
 				});
 			});
 		},
-		add: function ( $ ) {
-			let $wrapper = $('.um-field-groups-fields-wrapper');
-			let $cloned = $('.um-field-groups-field-row-template').clone().addClass('um-field-groups-field-row').removeClass('um-field-groups-field-row-template');
+		add: function ( button,$ ) {
+			let $wrapper = button.closest('.um-fields-column').find('.um-fields-column-content');
+			let $cloned = button.closest('.um-fields-column').siblings('.um-field-row-template').clone().addClass('um-field-row').removeClass('um-field-row-template');
 
 			UM.fields_groups.field.newIndex ++;
 			let newIndex = UM.fields_groups.field.newIndex;
 			$cloned.data( 'field', 'new_' + newIndex ).attr( 'data-field', 'new_' + newIndex );
 
-			let newOrderIndex = $wrapper.find( '.um-field-groups-field-row' ).length + 1;
-			$cloned.find('.um-field-groups-field-move-link').html( newOrderIndex );
+			let newOrderIndex = $wrapper.find( '.um-field-row' ).length + 1;
+			$cloned.find('.um-field-row-move-link').html( newOrderIndex );
 
-			let fieldID = $cloned.find('.um-field-groups-field-id');
+			let fieldID = $cloned.find('.um-field-row-id');
 			fieldID.removeAttr('disabled').prop('disabled', false);
 			let fieldIDName = fieldID.attr('name');
 			if ( 'undefined' !== typeof fieldIDName ) {
@@ -235,7 +239,7 @@ UM.fields_groups = {
 				fieldID.attr('name', newName);
 			}
 
-			let fieldOrder = $cloned.find('.um-field-groups-field-order');
+			let fieldOrder = $cloned.find('.um-field-row-order');
 			fieldOrder.val( newOrderIndex ).removeAttr('disabled').prop('disabled', false);
 			let fieldOrderName = fieldOrder.attr('name');
 			if ( 'undefined' !== typeof fieldOrderName ) {
@@ -332,13 +336,13 @@ UM.fields_groups = {
 
 			$wrapper.append( $cloned );
 
-			if ( $wrapper.find('.um-field-groups-field-row').length > 1 ) {
-				UM.fields_groups.sortable.reInit($);
+			if ( $wrapper.find('.um-field-row').length > 1 ) {
+				UM.fields_groups.sortable.reInit($wrapper,$);
 			} else {
 				$wrapper.removeClass('hidden');
-				$wrapper.siblings('.um-field-groups-builder-header').removeClass('hidden');
-				$wrapper.siblings('.um-field-groups-fields-wrapper-empty').addClass('hidden');
-				UM.fields_groups.sortable.init($);
+				$wrapper.siblings('.um-fields-column-header').removeClass('hidden');
+				$wrapper.siblings('.um-fields-column-empty-content').addClass('hidden');
+				UM.fields_groups.sortable.init($wrapper,$);
 			}
 
 			UM.fields_groups.field.conditional.prepareFieldsList($);
@@ -352,31 +356,32 @@ UM.fields_groups = {
 		},
 		showEdit: function ( row, $ ) {
 			row.addClass('um-field-row-edit-mode');
-			if ( row.find('.um-field-groups-field-multiple-input').length ) {
-				row.find('.um-field-groups-field-multiple-input').trigger('change');
+			if ( row.find('.um-field-row-multiple-input').length ) {
+				row.find('.um-field-row-multiple-input').trigger('change');
 			}
 		},
 		hideEdit: function ( row, $ ) {
 			row.removeClass('um-field-row-edit-mode');
 		},
 		duplicate: function ( obj, $ ) {
-			let $cloned = obj.parents('.um-field-groups-field-row').clone();
-			obj.parents('.um-field-groups-field-row').after( $cloned );
-			UM.fields_groups.sortable.reInit($);
+			let $wrapper = obj.closest('.um-fields-column-content');
+			let $cloned = obj.closest('.um-field-row').clone();
+			obj.closest('.um-field-row').after( $cloned );
+			UM.fields_groups.sortable.reInit($wrapper,$);
 			UM.fields_groups.field.conditional.prepareFieldsList($);
 			//UM.fields_groups.field.prepareSettings($);
 		},
 		delete: function ( obj, $ ) {
-			let $wrapper = obj.parents('.um-field-groups-fields-wrapper');
-			obj.parents('.um-field-groups-field-row').remove();
+			let $wrapper = obj.closest('.um-fields-column-content');
+			obj.closest('.um-field-row').remove();
 
-			if ( ! $wrapper.find('.um-field-groups-field-row').length ) {
+			if ( ! $wrapper.find('.um-field-row').length ) {
 				$wrapper.addClass('hidden');
-				$wrapper.siblings('.um-field-groups-builder-header').addClass('hidden');
-				$wrapper.siblings('.um-field-groups-fields-wrapper-empty').removeClass('hidden');
-				UM.fields_groups.sortable.destroy($);
+				$wrapper.siblings('.um-fields-column-header').addClass('hidden');
+				$wrapper.siblings('.um-fields-column-empty-content').removeClass('hidden');
+				UM.fields_groups.sortable.destroy($wrapper);
 			} else {
-				UM.fields_groups.sortable.reInit($);
+				UM.fields_groups.sortable.reInit($wrapper,$);
 			}
 			UM.fields_groups.field.conditional.prepareFieldsList($);
 			//UM.fields_groups.field.prepareSettings($);
@@ -384,14 +389,10 @@ UM.fields_groups = {
 		conditional: {
 			fieldsList: {}, /* format id:{title,type}*/
 			prepareFieldsList: function($) {
-				$('.um-field-groups-fields-wrapper').find('.um-field-groups-field-row').each( function() {
+				$('.um-fields-column-content').find('.um-field-row').each( function() {
 					let id = $(this).data('field'); // id
-					let type = $(this).find('.um-field-groups-field-type-select').val(); // type
-					let title = $(this).find('.um-field-groups-field-title-input').val(); // title
-
-					// let settings = 'undefined' !== typeof UM.fields_groups.field.conditional.fieldsList[id] ? UM.fields_groups.field.conditional.fieldsList[id].settings : {}; // settings object
-
-					// $(this).find('.um-forms-field:not(.um-field-groups-static-field)')
+					let type = $(this).find('.um-field-row-type-select').val(); // type
+					let title = $(this).find('.um-field-row-title-input').val(); // title
 
 					if ( um_admin_field_groups_data.field_types[type].conditional_rules.length ) {
 						let rules = {};
@@ -403,7 +404,7 @@ UM.fields_groups = {
 						if ( 'choice' === um_admin_field_groups_data.field_types[type].category ) {
 							valueOptions = {};
 							// @todo get options from field settings
-							//$(this).find('.um-field-groups-field-type-select').val()
+							//$(this).find('.um-field-row-type-select').val()
 						}
 
 						UM.fields_groups.field.conditional.fieldsList[id] = {
@@ -416,7 +417,7 @@ UM.fields_groups = {
 				});
 			},
 			reset: function(resetRulesBtn,$) {
-				let conditionsTab = resetRulesBtn.parents('.um-edit-field-tabs-content > div[data-tab="conditional"]');
+				let conditionsTab = resetRulesBtn.parents('.um-field-row-tabs-content > div[data-tab="conditional"]');
 				conditionsTab.find('.um-conditional-rules-wrapper .um-conditional-remove-rule').each(function(i) {
 					$(this).trigger('click');
 				});
@@ -511,12 +512,12 @@ UM.fields_groups = {
 				});
 			},
 			showReset: function(obj,$) {
-				let conditionsTab = obj.parents('.um-edit-field-tabs-content > div[data-tab="conditional"]');
-				conditionsTab.find('.um-field-groups-field-reset-all-conditions').css({'visibility':'visible'});
+				let conditionsTab = obj.parents('.um-field-row-tabs-content > div[data-tab="conditional"]');
+				conditionsTab.find('.um-field-row-reset-all-conditions').css({'visibility':'visible'});
 			},
 			hideReset: function(obj,$) {
-				let conditionsTab = obj.parents('.um-edit-field-tabs-content > div[data-tab="conditional"]');
-				conditionsTab.find('.um-field-groups-field-reset-all-conditions').css({'visibility':'hidden'});
+				let conditionsTab = obj.parents('.um-field-row-tabs-content > div[data-tab="conditional"]');
+				conditionsTab.find('.um-field-row-reset-all-conditions').css({'visibility':'hidden'});
 			},
 			parseRules: function(conditionsTab,$) {
 				let rows = [];
@@ -538,7 +539,7 @@ UM.fields_groups = {
 			let oldTypeData = um_admin_field_groups_data.field_types[oldType];
 			let oldTypeSettings = oldTypeData.settings;
 
-			let type = row.find('.um-field-groups-field-type-select').val();
+			let type = row.find('.um-field-row-type-select').val();
 			let typeData = um_admin_field_groups_data.field_types[type];
 
 			let typeSettings = typeData.settings;
@@ -546,19 +547,19 @@ UM.fields_groups = {
 			let currentSettingsTabs = Object.keys(oldTypeSettings);
 			let newSettingsTabs = Object.keys(typeSettings);
 
-			let typeHTML = row.find('.um-field-groups-field-type-select option[value="' + row.find('.um-field-groups-field-type-select').val() + '"]').html();
-			row.find( '.um-field-groups-field-type' ).html( typeHTML ); // change field type in a row header
+			let typeHTML = row.find('.um-field-row-type-select option[value="' + row.find('.um-field-row-type-select').val() + '"]').html();
+			row.find( '.um-field-row-type' ).html( typeHTML ); // change field type in a row header
 
 			// add/remove necessary/unnecessary tabs and tab-content blocks
 			if ( ! UM.fields_groups.tabs.compare( currentSettingsTabs, newSettingsTabs ) ) {
 				UM.fields_groups.tabs.reBuild( row, newSettingsTabs, $ );
 			}
 
-			row.find('.um-edit-field-tabs > div[data-tab]').addClass('disabled');
+			row.find('.um-field-row-tabs > div[data-tab]').addClass('disabled');
 
 			if ( typeof ( UM.fields_groups.field.settingsScreens[ fieldID ] ) === 'object' &&  typeof ( UM.fields_groups.field.settingsScreens[ fieldID ][ type ] ) === 'object' ) {
 				$.each( UM.fields_groups.field.settingsScreens[ fieldID ][ type ], function ( tab, html ) {
-					let tabSettingsWrapper = row.find( '.um-edit-field-tabs-content > div[data-tab="' + tab + '"]' );
+					let tabSettingsWrapper = row.find( '.um-field-row-tabs-content > div[data-tab="' + tab + '"]' );
 
 					let temporaryScreenObj = $('<div>').append( html ).find('.form-table');
 
@@ -567,32 +568,32 @@ UM.fields_groups = {
 						temporaryScreenObj.find('[data-field_type="conditional_rules"]').html( tabSettingsWrapper.find('[data-field_type="conditional_rules"]').html() );
 					}
 
-					tabSettingsWrapper.find('.um-field-groups-static-field').each(function () {
+					tabSettingsWrapper.find('.um-field-row-static-setting').each(function () {
 						temporaryScreenObj.find( '[name="' + $(this).attr('name') + '"]' ).val( $(this).val() );
 					});
 
 					// change HTML based on type
-					row.find( '.um-edit-field-tabs-content > div[data-tab="' + tab + '"]' ).html( temporaryScreenObj[0].outerHTML );
+					row.find( '.um-field-row-tabs-content > div[data-tab="' + tab + '"]' ).html( temporaryScreenObj[0].outerHTML );
 				});
 
-				row.find('.um-field-groups-field-type-select').removeClass('disabled').prop('disabled', false);
+				row.find('.um-field-row-type-select').removeClass('disabled').prop('disabled', false);
 
 				run_check_conditions();
 				UM.fields_groups.field.conditional.prepareFieldsList($);
 
-				row.find('.um-edit-field-tabs > div[data-tab]').removeClass('disabled');
+				row.find('.um-field-row-tabs > div[data-tab]').removeClass('disabled');
 
-				if ( row.find('.um-field-groups-field-multiple-input').length ) {
-					row.find('.um-field-groups-field-multiple-input').trigger('change');
+				if ( row.find('.um-field-row-multiple-input').length ) {
+					row.find('.um-field-row-multiple-input').trigger('change');
 				}
 			} else {
 				if ( ! UM.fields_groups.tabs.compareDeep( oldTypeSettings.general, typeSettings.general ) ) {
-					row.find( '.um-edit-field-tabs-content > div[data-tab="general"] .um-forms-field:not(.um-field-groups-static-field)' ).parents('.um-forms-line').remove();
+					row.find( '.um-field-row-tabs-content > div[data-tab="general"] .um-forms-field:not(.um-field-row-static-setting)' ).parents('.um-forms-line').remove();
 					let skeletonRows = Object.keys( typeSettings.general ).length - 2;
 					if ( skeletonRows > 0 ) {
 						let i = 0;
 						while (i < skeletonRows) {
-							row.find( '.um-edit-field-tabs-content > div[data-tab="general"] > .form-table tbody' ).append('<tr class="um-forms-line um-forms-skeleton"><th><span class="um-skeleton-box" style="width:100%;height:20px;"></span></th><td><span class="um-skeleton-box" style="width:100%;height:40px;margin-bottom:4px;"></span><span class="um-skeleton-box" style="width:100%;height:14px;"></span></td></tr>');
+							row.find( '.um-field-row-tabs-content > div[data-tab="general"] > .form-table tbody' ).append('<tr class="um-forms-line um-forms-skeleton"><th><span class="um-skeleton-box" style="width:100%;height:20px;"></span></th><td><span class="um-skeleton-box" style="width:100%;height:40px;margin-bottom:4px;"></span><span class="um-skeleton-box" style="width:100%;height:14px;"></span></td></tr>');
 							i++;
 						}
 					}
@@ -618,14 +619,14 @@ UM.fields_groups = {
 
 							let temporaryScreenObj = $('<div>').append( html ).find('.form-table');
 
-							let tabSettingsWrapper = row.find( '.um-edit-field-tabs-content > div[data-tab="' + tab + '"]' );
+							let tabSettingsWrapper = row.find( '.um-field-row-tabs-content > div[data-tab="' + tab + '"]' );
 
 							if ( 'conditional' === tab ) {
 								// make conditional rules static always
 								temporaryScreenObj.find('[data-field_type="conditional_rules"]').html( tabSettingsWrapper.find('[data-field_type="conditional_rules"]').html() );
 							}
 
-							tabSettingsWrapper.find('.um-field-groups-static-field').each(function () {
+							tabSettingsWrapper.find('.um-field-row-static-setting').each(function () {
 								temporaryScreenObj.find( '[name="' + $(this).attr('name') + '"]' ).val( $(this).val() );
 							});
 
@@ -633,16 +634,16 @@ UM.fields_groups = {
 							tabSettingsWrapper.html( temporaryScreenObj[0].outerHTML );
 						});
 
-						row.find('.um-field-groups-field-type-select').removeClass('disabled').prop('disabled', false);
+						row.find('.um-field-row-type-select').removeClass('disabled').prop('disabled', false);
 
 						run_check_conditions();
 
 						UM.fields_groups.field.conditional.prepareFieldsList($);
 
-						row.find('.um-edit-field-tabs > div[data-tab]').removeClass('disabled');
+						row.find('.um-field-row-tabs > div[data-tab]').removeClass('disabled');
 
-						if ( row.find('.um-field-groups-field-multiple-input').length ) {
-							row.find('.um-field-groups-field-multiple-input').trigger('change');
+						if ( row.find('.um-field-row-multiple-input').length ) {
+							row.find('.um-field-row-multiple-input').trigger('change');
 						}
 					},
 					error: function( data ) {
@@ -663,7 +664,7 @@ jQuery( function($) {
 
 	UM.fields_groups.field.conditional.prepareFieldsList($);
 
-	$('.um-field-groups-fields-wrapper').find('.um-field-groups-field-row').each( function() {
+	$('.um-fields-column-content').find('.um-field-row').each( function() {
 		let fieldID = $(this).data('field');
 		$(this).find('.um-conditional-rule-field-col .um-conditional-rule-setting').each( function() {
 			$(this).find('option').each( function(){
@@ -717,8 +718,9 @@ jQuery( function($) {
 	// jQuery( '#publishing-action input' ).on( 'click', function() {
 	// 	window.onbeforeunload = '';
 	// });
-
-	UM.fields_groups.sortable.init($);
+	$('.um-fields-column-content').each( function () {
+		UM.fields_groups.sortable.init($(this),$);
+	});
 
 	// wp.ajax.send( 'um_fields_groups_check_draft', {
 	// 	data: {
@@ -759,39 +761,39 @@ jQuery( function($) {
 	// 	}
 	// });
 
-	$(document.body).on('click','.um-field-groups-field-row', function(e){
-		if ( typeof e.target !== 'undefined' && e.target.classList.contains('um-field-groups-toggle-edit') ) {
+	$(document.body).on('click','.um-field-row', function(e){
+		if ( typeof e.target !== 'undefined' && e.target.classList.contains('um-field-row-toggle-edit') ) {
 			e.preventDefault();
 			UM.fields_groups.field.toggleEdit($(this),$);
 		}
 	});
 
-	$(document.body).on('click','.um-field-groups-field-edit', function(e){
+	$(document.body).on('click','.um-field-row-action-edit', function(e){
 		e.preventDefault();
-		let row = $(this).parents('.um-field-groups-field-row');
+		let row = $(this).closest('.um-field-row');
 		UM.fields_groups.field.toggleEdit(row,$);
 	});
 
-	$(document.body).on('click','.um-field-groups-field-delete', function(e){
+	$(document.body).on('click','.um-field-row-action-delete', function(e){
 		e.preventDefault();
 		if ( confirm( wp.i18n.__( 'Are you sure you want to delete this field?', 'ultimate-member' ) ) ) {
 			UM.fields_groups.field.delete($(this),$);
 		}
 	});
 
-	$(document.body).on('click','.um-field-groups-field-duplicate', function(e){
+	$(document.body).on('click','.um-field-row-action-duplicate', function(e){
 		e.preventDefault();
 		if ( confirm( wp.i18n.__( 'Are you sure you want to duplicate this field?', 'ultimate-member' ) ) ) {
 			UM.fields_groups.field.duplicate($(this),$);
 		}
 	});
 
-	$(document.body).on('click','.um-add-field-groups-field', function(e){
+	$(document.body).on('click','.um-add-field-to-column', function(e){
 		e.preventDefault();
-		UM.fields_groups.field.add($);
+		UM.fields_groups.field.add($(this),$);
 	});
 
-	$(document.body).on('click','.um-edit-field-tabs > div[data-tab]:not(.current)', function(e){
+	$(document.body).on('click','.um-field-row-tabs > div[data-tab]:not(.current)', function(e){
 		e.preventDefault();
 		if ( $(this).hasClass('disabled') ) {
 			return;
@@ -799,7 +801,7 @@ jQuery( function($) {
 		UM.fields_groups.tabs.setActive($(this),$);
 	});
 
-	$(document.body).on('click','.um-field-groups-field-reset-all-conditions', function(e){
+	$(document.body).on('click','.um-field-row-reset-all-conditions', function(e){
 		e.preventDefault();
 		if ( confirm( wp.i18n.__( 'Are you sure?', 'ultimate-member' ) ) ) {
 			UM.fields_groups.field.conditional.reset($(this),$);
@@ -825,7 +827,7 @@ jQuery( function($) {
 	});
 
 	$(document.body).on('change','.um-conditional-rule-field-col select, .um-conditional-rule-condition-col select, .um-conditional-rule-value-col select,.um-conditional-rule-value-col input', function(e){
-		let conditionsTab = $(this).parents('.um-edit-field-tabs-content > div[data-tab="conditional"]');
+		let conditionsTab = $(this).parents('.um-field-row-tabs-content > div[data-tab="conditional"]');
 		if ( UM.fields_groups.field.conditional.isEmpty(conditionsTab,$) ) {
 			UM.fields_groups.field.conditional.hideReset($(this),$);
 		} else {
@@ -905,41 +907,41 @@ jQuery( function($) {
 
 	$('.um-conditional-rules-wrapper .um-conditional-rule-condition-col .um-conditional-rule-setting').trigger('change');
 
-	$(document.body).on('change','.um-field-groups-field-title-input', function(e){
-		$(this).parents('.um-field-groups-field-row').find( '.um-field-groups-field-title' ).html( $(this).val() );
+	$(document.body).on('change','.um-field-row-title-input', function(e){
+		$(this).closest('.um-field-row').find( '.um-field-row-title' ).html( $(this).val() );
 		UM.fields_groups.field.conditional.prepareFieldsList($);
 	});
 
-	$(document.body).on('change','.um-forms-field:not(.um-field-groups-field-type-select)', function(e){
-		let row = $(this).parents('.um-field-groups-field-row');
+	$(document.body).on('change','.um-forms-field:not(.um-field-row-type-select)', function(e){
+		let row = $(this).closest('.um-field-row');
 		let fieldID = row.data('field');
-		let settingsTab = $(this).parents('div[data-tab]').data('tab');
+		let settingsTab = $(this).closest('div[data-tab]').data('tab');
 
 		UM.fields_groups.field.prepareSettings($, fieldID, settingsTab);
 	});
 
-	$(document.body).on('change','.um-field-groups-field-type-select', function(e){
+	$(document.body).on('change','.um-field-row-type-select', function(e){
 		if ( $(this).hasClass('disabled') ) {
 			return;
 		}
 
 		$(this).addClass('disabled').prop('disabled', true);
-		let row = $(this).parents('.um-field-groups-field-row');
+		let row = $(this).closest('.um-field-row');
 		UM.fields_groups.field.changeType(row,$);
 	});
 
-	$(document.body).on('change','.um-field-groups-field-metakey-input', function(e){
+	$(document.body).on('change','.um-field-row-metakey-input', function(e){
 		let metakey = wp.i18n.__( '(no metakey)', 'ultimate-member' );
 		if ( '' !== $(this).val() ) {
 			metakey = $(this).val();
 		}
-		$(this).parents('.um-field-groups-field-row').find( '.um-field-groups-field-metakey' ).html( metakey );
+		$(this).closest('.um-field-row').find( '.um-field-row-metakey' ).html( metakey );
 	});
 
 	/* Handlers for options */
 
-	$( document.body ).on('change', '.um-field-groups-field-multiple-input', function(){
-		let row = $(this).parents('.um-field-groups-field-row');
+	$( document.body ).on('change', '.um-field-row-multiple-input', function(){
+		let row = $(this).closest('.um-field-row');
 		um_multi_or_not($(this),row);
 	});
 
@@ -956,8 +958,8 @@ jQuery( function($) {
 	});
 
 	$( document.body ).on('click', '.um-admin-option-row-add', function() {
-		let fieldRow = $(this).parents('.um-field-groups-field-row');
-		let multipleInput = fieldRow.find('.um-field-groups-field-multiple-input');
+		let fieldRow = $(this).parents('.um-field-row');
+		let multipleInput = fieldRow.find('.um-field-row-multiple-input');
 
 		let optionRow = $(this).parents('.um-admin-option-row');
 		let optionRowsWrapper = $(this).parents('.um-admin-option-rows');

@@ -54,7 +54,7 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 				if ( empty( $field_data['value'] ) ) {
 					$visibility = ' style="visibility:hidden;"';
 				}
-				$html = '<div style="display: flex;flex-direction: row;justify-content: space-between; align-items: center;flex-wrap: nowrap;">' . $html .'<input type="button" class="button um-field-groups-field-reset-all-conditions" value="' . __( 'Reset all rules', 'ultimate-member' ) . '"' . $visibility . '/></div>';
+				$html = '<div style="display: flex;flex-direction: row;justify-content: space-between; align-items: center;flex-wrap: nowrap;">' . $html .'<input type="button" class="button um-field-row-reset-all-conditions" value="' . __( 'Reset all rules', 'ultimate-member' ) . '"' . $visibility . '/></div>';
 			}
 			return $html;
 		}
@@ -753,7 +753,7 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 					$setting_data['disabled'] = true;
 				}
 				if ( ! empty( $setting_data['static'] ) ) {
-					$setting_data['class'] = ! empty( $setting_data['class'] ) ? $setting_data['class'] . ' um-field-groups-static-field' : 'um-field-groups-static-field';
+					$setting_data['class'] = ! empty( $setting_data['class'] ) ? $setting_data['class'] . ' um-field-row-static-setting' : 'um-field-row-static-setting';
 				}
 			}
 
@@ -788,11 +788,23 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 				if ( ! empty( $group_fields ) ) {
 					$field_ids = array_column( $group_fields, 'id' );
 					if ( ! empty( $field_ids ) ) {
-						$wpdb->query( "DELETE FROM {$wpdb->prefix}um_fields WHERE id IN('" . implode( "','", $field_ids ) . "')" );
-						$wpdb->query( "DELETE FROM {$wpdb->prefix}um_fields_meta WHERE field_id IN('" . implode( "','", $field_ids ) . "')" );
+						$this->delete_field( $field_ids );
 					}
 				}
 			}
+
+			return ( false !== $result && $result > 0 );
+		}
+
+		public function delete_field( $field_ids ) {
+			global $wpdb;
+
+			if ( ! is_array( $field_ids ) ) {
+				$field_ids = array( $field_ids );
+			}
+
+			$result = $wpdb->query( "DELETE FROM {$wpdb->prefix}um_fields WHERE id IN('" . implode( "','", $field_ids ) . "')" );
+			$wpdb->query( "DELETE FROM {$wpdb->prefix}um_fields_meta WHERE field_id IN('" . implode( "','", $field_ids ) . "')" );
 
 			return ( false !== $result && $result > 0 );
 		}
@@ -842,6 +854,74 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 			);
 
 			return ! empty( $result );
+		}
+
+		public function field_row_template() {
+			$field_types = UM()->config()->get( 'field_types' );
+
+			// text-type field is default field type for the builder
+			$template_type     = 'text';
+			$template_tabs     = UM()->admin()->field_group()->get_field_tabs( $template_type );
+			$template_settings = UM()->admin()->field_group()->get_field_settings( $template_type );
+
+			// text-type field is default field type for the builder
+			$template_settings['general']['type']['value'] = $template_type;
+			?>
+			<div class="um-field-row-template um-field-row-edit-mode">
+				<input type="hidden" class="um-field-row-id" name="field_group[fields][new_{index}][id]" value="" disabled />
+				<input type="hidden" class="um-field-row-order" name="field_group[fields][new_{index}][order]" value="" disabled />
+				<div class="um-field-row-header um-field-row-toggle-edit">
+					<span class="um-field-row-move-link"></span>
+					<span class="um-field-row-title um-field-row-toggle-edit"><?php esc_html_e( '(no title)', 'ultimate-member' ); ?></span>
+					<span class="um-field-row-metakey um-field-row-toggle-edit"><?php esc_html_e( '(no metakey)', 'ultimate-member' ); ?></span>
+					<span class="um-field-row-type um-field-row-toggle-edit"><?php echo esc_html( $field_types[ $template_type ]['title'] ); ?></span>
+					<span class="um-field-row-actions um-field-row-toggle-edit">
+						<a href="javascript:void(0);" class="um-field-row-action-edit"><?php esc_html_e( 'Edit', 'ultimate-member' ); ?></a>
+						<a href="javascript:void(0);" class="um-field-row-action-duplicate"><?php esc_html_e( 'Duplicate', 'ultimate-member' ); ?></a>
+						<a href="javascript:void(0);" class="um-field-row-action-delete"><?php esc_html_e( 'Delete', 'ultimate-member' ); ?></a>
+					</span>
+				</div>
+				<div class="um-field-row-content">
+					<div class="um-field-row-tabs">
+						<?php
+						foreach ( $template_tabs as $tab_key => $tab_title ) {
+							$classes = array();
+							if ( 'general' === $tab_key ) {
+								// General tab is selected by default for the new field.
+								$classes[] = 'current';
+							}
+							?>
+
+							<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" data-tab="<?php echo esc_attr( $tab_key ); ?>">
+								<?php echo esc_html( $tab_title ); ?>
+							</div>
+
+							<?php
+						}
+						?>
+					</div>
+					<div class="um-field-row-tabs-content">
+						<?php
+						foreach ( $template_settings as $tab_key => $settings_fields ) {
+							$classes = array();
+							if ( 'general' === $tab_key ) {
+								// General tab is selected by default for the new field.
+								$classes[] = 'current';
+							}
+							?>
+							<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" data-tab="<?php echo esc_attr( $tab_key ); ?>">
+								<?php
+								echo UM()->admin()->field_group()->get_tab_fields_html( $tab_key, array( 'type' => $template_type, 'index' => 'new_{index}', 'disabled' => true ) );
+								?>
+							</div>
+							<?php
+						}
+						?>
+					</div>
+				</div>
+			</div>
+
+			<?php
 		}
 	}
 }

@@ -1166,7 +1166,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'type'  => array(
 						'id'       => 'type',
 						'type'     => 'select',
-						'class'    => 'um-field-groups-field-type-select',
+						'class'    => 'um-field-row-type-select',
 						'label'    => __( 'Field type', 'ultimate-member' ),
 						'options'  => $field_types_options,
 						'sanitize' => 'key',
@@ -1174,7 +1174,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'title' => array(
 						'id'          => 'title',
 						'type'        => 'text',
-						'class'       => 'um-field-groups-field-title-input',
+						'class'       => 'um-field-row-title-input',
 						'label'       => __( 'Field title', 'ultimate-member' ),
 						'description' => __( 'Shown internally for administrator who set up fields group', 'ultimate-member' ),
 						'required'    => true,
@@ -1195,6 +1195,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'privacy_roles' => array(
 						'id'          => 'privacy_roles',
 						'type'        => 'select',
+						'multi'       => true,
 						'options'     => UM()->roles()->get_roles(),
 						'label'       => __( 'Select member roles', 'ultimate-member' ),
 						'description' => __( 'Select the member roles that can view this field on the front-end.', 'ultimate-member' ),
@@ -1263,7 +1264,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							'meta_key'      => array(
 								'id'          => 'meta_key',
 								'type'        => 'text',
-								'class'       => 'um-field-groups-field-metakey-input',
+								'class'       => 'um-field-row-metakey-input',
 								'label'       => __( 'Meta key', 'ultimate-member' ),
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
@@ -1350,7 +1351,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							'meta_key'      => array(
 								'id'          => 'meta_key',
 								'type'        => 'text',
-								'class'       => 'um-field-groups-field-metakey-input',
+								'class'       => 'um-field-row-metakey-input',
 								'label'       => __( 'Meta key', 'ultimate-member' ),
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
@@ -1431,7 +1432,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							'meta_key'      => array(
 								'id'          => 'meta_key',
 								'type'        => 'text',
-								'class'       => 'um-field-groups-field-metakey-input',
+								'class'       => 'um-field-row-metakey-input',
 								'label'       => __( 'Meta key', 'ultimate-member' ),
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
@@ -1511,7 +1512,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							'meta_key'      => array(
 								'id'          => 'meta_key',
 								'type'        => 'text',
-								'class'       => 'um-field-groups-field-metakey-input',
+								'class'       => 'um-field-row-metakey-input',
 								'label'       => __( 'Meta key', 'ultimate-member' ),
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
@@ -1583,7 +1584,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							'meta_key'      => array(
 								'id'          => 'meta_key',
 								'type'        => 'text',
-								'class'       => 'um-field-groups-field-metakey-input',
+								'class'       => 'um-field-row-metakey-input',
 								'label'       => __( 'Meta key', 'ultimate-member' ),
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
@@ -1719,7 +1720,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							'meta_key'      => array(
 								'id'          => 'meta_key',
 								'type'        => 'text',
-								'class'       => 'um-field-groups-field-metakey-input',
+								'class'       => 'um-field-row-metakey-input',
 								'label'       => __( 'Meta key', 'ultimate-member' ),
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
@@ -2007,7 +2008,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							'meta_key'      => array(
 								'id'          => 'meta_key',
 								'type'        => 'text',
-								'class'       => 'um-field-groups-field-metakey-input',
+								'class'       => 'um-field-row-metakey-input',
 								'label'       => __( 'Meta key', 'ultimate-member' ),
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
@@ -2131,7 +2132,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							'meta_key'      => array(
 								'id'          => 'meta_key',
 								'type'        => 'text',
-								'class'       => 'um-field-groups-field-metakey-input',
+								'class'       => 'um-field-row-metakey-input',
 								'label'       => __( 'Meta key', 'ultimate-member' ),
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
@@ -2139,7 +2140,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							'multiple'        => array(
 								'id'          => 'multiple',
 								'type'        => 'checkbox',
-								'class'       => 'um-field-groups-field-multiple-input',
+								'class'       => 'um-field-row-multiple-input',
 								'label'       => __( 'Multiple Options Selection', 'ultimate-member' ),
 								'description' => __( 'Allow users to select multiple choices in this field.', 'ultimate-member' ),
 								'sanitize'    => 'bool',
@@ -2224,7 +2225,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							'meta_key'      => array(
 								'id'          => 'meta_key',
 								'type'        => 'text',
-								'class'       => 'um-field-groups-field-metakey-input',
+								'class'       => 'um-field-row-metakey-input',
 								'label'       => __( 'Meta key', 'ultimate-member' ),
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
@@ -2341,6 +2342,99 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'title'             => __( 'Repeater', 'ultimate-member' ),
 					'category'          => 'layout',
 					'conditional_rules' => array(),
+					'settings'          => array(
+						'general'      => array(
+							'label'         => array(
+								'id'          => 'label',
+								'type'        => 'text',
+								'label'       => __( 'Field label', 'ultimate-member' ),
+								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'meta_key'      => array(
+								'id'          => 'meta_key',
+								'type'        => 'text',
+								'class'       => 'um-field-row-metakey-input',
+								'label'       => __( 'Meta key', 'ultimate-member' ),
+								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'fields'        => array(
+								'id'       => 'fields',
+								'type'     => 'sub_fields',
+								'label'    => __( 'Sub Fields', 'ultimate-member' ),
+								'sanitize' => 'fields',
+								'required' => true,
+							),
+						),
+						'presentation' => array(
+							'add_row_button' => array(
+								'id'          => 'add_row_button',
+								'type'        => 'text',
+								'label'       => __( 'Add Row Button', 'ultimate-member' ),
+								'description' => __( 'Text for "Add Row" button. "Add Row" by default.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'description' => array(
+								'id'          => 'description',
+								'type'        => 'textarea',
+								'label'       => __( 'Description', 'ultimate-member' ),
+								'description' => __( 'This is the text that appears below the field on your front-end. Description is useful for providing users with more information about what they should enter in the field. Leave blank if no description is needed for field.', 'ultimate-member' ),
+								'args'        => array(
+									'textarea_rows' => 5,
+								),
+								'sanitize'    => 'textarea',
+							),
+						),
+						'validation'   => array(
+							'required'        => array(
+								'id'          => 'required',
+								'type'        => 'checkbox',
+								'label'       => __( 'Is this field required?', 'ultimate-member' ),
+								'description' => __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+							'min_rows'       => array(
+								'id'          => 'min_rows',
+								'type'        => 'number',
+								'label'       => __( 'Minimum Rows', 'ultimate-member' ),
+								'description' => __( 'If you want to enable a minimum number of repeater rows to be added in this field. Leave empty to disable this setting.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
+							),
+							'max_rows'       => array(
+								'id'          => 'max_rows',
+								'type'        => 'number',
+								'label'       => __( 'Maximum Rows', 'ultimate-member' ),
+								'description' => __( 'If you want to enable a maximum number of repeater rows to be added in this field. Leave empty to disable this setting.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
+							),
+						),
+						'privacy'      => array(
+							'readonly' => array(
+								'id'          => 'readonly',
+								'type'        => 'checkbox',
+								'label'       => __( 'Mark as readonly', 'ultimate-member' ),
+								'description' => __( 'Enable to prevent users from editing this field. Note: if the profile editing option is set to publicly editable, the field will still be visible within the account page but will not be customizable.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+						),
+						'advanced'     => array(
+							'wrapper_class' => array(
+								'id'          => 'wrapper_class',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper class', 'ultimate-member' ),
+								'description' => __( 'CSS class added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+							'wrapper_id'    => array(
+								'id'          => 'wrapper_id',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper id', 'ultimate-member' ),
+								'description' => __( 'ID added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+						),
+					),
 				),
 				'block'     => array(
 					'title'             => __( 'Content', 'ultimate-member' ),

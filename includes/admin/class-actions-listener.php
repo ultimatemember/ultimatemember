@@ -975,6 +975,32 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 				return $result;
 			}
 
+			foreach ( $data['fields'] as $field_data ) {
+				$field_settings      = UM()->admin()->field_group()->get_field_settings( sanitize_key( $field_data['type'] ) );
+				$field_settings      = call_user_func_array('array_merge', array_values( $field_settings ) );
+				$fields_required_map = array_column( $field_settings, 'required', 'id' );
+
+				foreach ( $fields_required_map as $field_id => $required ) {
+					if ( empty( $required ) ) {
+						continue;
+					}
+
+					if ( empty( $field_data[ $field_id ] ) ) {
+						$this->field_groups_error = array(
+							'field'   => 'um-admin-form-' . $field_id,
+							'message' => __( 'Fields cannot be empty.', 'ultimate-member' ),
+						);
+					}
+
+					if ( ! empty( $this->field_groups_error ) ) {
+						$result = $this->field_groups_error;
+						return $result;
+					}
+				}
+
+				$fields_validate_map = array_column( $field_settings, 'validate', 'id' );
+			}
+
 			return $result;
 		}
 
@@ -1047,6 +1073,19 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 				$field_group_id = UM()->admin()->field_group()->update( $args );
 				if ( ! empty( $field_group_id ) ) {
 					if ( ! empty( $data['fields'] ) ) {
+						// delete permanently the fields that were removed from builder
+						$group_fields = UM()->admin()->field_group()->get_fields( $field_group_id );
+						if ( ! empty( $group_fields ) ) {
+							$field_ids = array_column( $group_fields, 'id' );
+							if ( ! empty( $field_ids ) ) {
+								$new_field_ids    = array_column( $data['fields'], 'id' );
+								$fields_to_delete = array_diff( $field_ids, $new_field_ids );
+								if ( ! empty( $fields_to_delete ) ) {
+									UM()->admin()->field_group()->delete_field( $fields_to_delete );
+								}
+							}
+						}
+
 						foreach ( $data['fields'] as $group_field ) {
 							if ( empty( $group_field['id'] ) ) {
 								// add new field

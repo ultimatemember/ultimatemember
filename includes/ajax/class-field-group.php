@@ -34,7 +34,7 @@ if ( ! class_exists( 'um\ajax\Field_Group' ) ) {
 				if ( empty( $field_data['value'] ) ) {
 					$visibility = ' style="visibility:hidden;"';
 				}
-				$html = '<div style="display: flex;flex-direction: row;justify-content: space-between; align-items: center;flex-wrap: nowrap;">' . $html .'<input type="button" class="button um-field-groups-field-reset-all-conditions" value="' . __( 'Reset all rules', 'ultimate-member' ) . '"' . $visibility . '/></div>';
+				$html = '<div style="display: flex;flex-direction: row;justify-content: space-between; align-items: center;flex-wrap: nowrap;">' . $html .'<input type="button" class="button um-field-row-reset-all-conditions" value="' . __( 'Reset all rules', 'ultimate-member' ) . '"' . $visibility . '/></div>';
 			}
 			return $html;
 		}

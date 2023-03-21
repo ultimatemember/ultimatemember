@@ -126,50 +126,51 @@
 
 $actions-gap: 10px
 
-.um-field-groups-field-row-template
+.um-field-row-template
   display: none
 
-.um-field-group-builder
+
+.um-fields-column
   +flex( column, flex-start, stretch, nowrap )
   margin: 0 0 20px 0
   padding: 0
   width: 100%
   +border-box
-  .um-field-groups-builder-header
+  .um-fields-column-header
     +flex( row, flex-start, baseline, nowrap )
     font-weight: 600
     padding: 15px 20px 15px 15px
     margin: 0
     column-gap: 15px
     background: $gray-50
-    #um-field-groups-builder-field-order
+    .um-fields-column-header-order
       width: 29px
       padding-left: 20px
       +border-box
-    #um-field-groups-builder-field-name
+    .um-fields-column-header-name
       padding-left: 30px
       width: calc( 100% - 549px )
       +border-box
-    #um-field-groups-builder-field-metakey
+    .um-fields-column-header-metakey
       width: 200px
-    #um-field-groups-builder-field-type
+    .um-fields-column-header-type
       width: 120px
-    #um-field-groups-builder-field-actions
+    .um-fields-column-header-actions
       width: 140px
     &.hidden
       display: none !important
-  .um-field-groups-fields-wrapper
+  .um-fields-column-content
     +flex( column, flex-start, stretch, nowrap )
     margin: 0
     border-bottom: 1px solid $gray-300
-    .um-field-groups-field-placeholder
+    .um-field-row-placeholder
       display: block
       width: 100%
       +border-box
       height: 80px
       background: $gray-50
       border-top: 1px solid $gray-300
-    .um-field-groups-field-row
+    .um-field-row
       +flex( column, flex-start, stretch, nowrap )
       margin: 0
       padding: 0
@@ -178,11 +179,11 @@ $actions-gap: 10px
       width: 100%
       min-height: 40px
       +border-box
-      .um-field-groups-field-row-header
+      .um-field-row-header
         +flex( row, space-between, flex-start, nowrap )
         margin: 0
         padding: 20px 20px 20px 15px
-        .um-field-groups-field-move-link
+        .um-field-row-move-link
           position: relative
           padding-left: 20px
           width: 29px
@@ -208,11 +209,11 @@ $actions-gap: 10px
             white-space: nowrap
             overflow: hidden
           cursor: move
-        .um-field-groups-field-metakey
+        .um-field-row-metakey
           width: 200px
-        .um-field-groups-field-type
+        .um-field-row-type
           width: 120px
-        .um-field-groups-field-title
+        .um-field-row-title
           font-weight: bold
           position: relative
           width: calc( 100% - 549px )
@@ -240,39 +241,39 @@ $actions-gap: 10px
             text-indent: 500%
             white-space: nowrap
             overflow: hidden
-        .um-field-groups-field-actions
+        .um-field-row-actions
           width: 140px
           +flex( row, flex-end, baseline, nowrap )
           margin: 0
           padding: 0
           column-gap: $actions-gap
           visibility: hidden
-          a.um-field-groups-field-delete
+          a.um-field-row-action-delete
             color: $delete-link
             &:hover
               color: $delete-link-hover
-      .um-field-groups-field-row-edit-wrapper
+      .um-field-row-content
         display: none
       &:hover
-        .um-field-groups-field-row-header
-          .um-field-groups-field-move-link
+        .um-field-row-header
+          .um-field-row-move-link
             &:before
               visibility: visible
-          .um-field-groups-field-actions
+          .um-field-row-actions
             visibility: visible
       &.um-field-row-edit-mode
-        .um-field-groups-field-row-header
-          .um-field-groups-field-title
+        .um-field-row-header
+          .um-field-row-title
             &:before
               mask-image: url(../img/admin/angle-up-regular.svg)
               -webkit-mask-image: url(../img/admin/angle-up-regular.svg)
-          .um-field-groups-field-actions
+          .um-field-row-actions
             visibility: visible
-        .um-field-groups-field-row-edit-wrapper
+        .um-field-row-content
           +flex( column, flex-start, stretch, nowrap )
           margin: 0
           padding: 0
-          .um-edit-field-tabs
+          .um-field-row-tabs
             +flex( row, flex-start, baseline, nowrap )
             border-bottom: 1px solid $gray-300
             width: 100%
@@ -299,7 +300,7 @@ $actions-gap: 10px
                 border: 1px solid $wp-admin-primary
               &:hover:not(.current)
                 background: #ebedee
-          .um-edit-field-tabs-content
+          .um-field-row-tabs-content
             & > div[data-tab]
               display: none
               padding: 0 10px 0 15px
@@ -331,17 +332,18 @@ $actions-gap: 10px
     .ui-sortable-placeholder
       background: $gray-50
       border-top: 1px solid $gray-300
-  .um-field-groups-fields-wrapper-empty
+  .um-fields-column-empty-content
     +flex( row, center, center, nowrap )
     height: 120px
     margin: 0
     padding: 0
     &.hidden
       display: none !important
-  .um-field-groups-row-bottom
+  .um-fields-column-footer
     +flex( row, center, stretch, nowrap )
     margin: 20px 0 0 0
     padding: 0
+
 
 .um-conditional-rules-group-template
   display: none
@@ -488,3 +490,4 @@ $actions-gap: 10px
     height: 40px
     width: 100%
     display: list-item
+
