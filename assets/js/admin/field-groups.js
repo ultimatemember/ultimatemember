@@ -159,18 +159,18 @@ UM.fields_groups = {
 				handle: '.um-field-row-move-link',
 				update: function(){
 					// $(this) means sorting wrapper block
-					$(this).find('.um-field-row').each( function(i) {
+					$(this).children('.um-field-row').each( function(i) {
 						let index = i * 1 + 1;
-						$(this).find('.um-field-row-order').val(index);
-						$(this).find('.um-field-row-header .um-field-row-move-link').html(index);
+						$(this).children('.um-field-row-order').val(index);
+						$(this).children('.um-field-row-header').children('.um-field-row-move-link').text(index);
 					});
 				}
 			}).on('sortupdate',function(){
 				// $(this) means sorting wrapper block
-				$(this).find('.um-field-row').each( function(i) {
+				$(this).children('.um-field-row').each( function(i) {
 					let index = i * 1 + 1;
-					$(this).find('.um-field-row-order').val(index);
-					$(this).find('.um-field-row-header .um-field-row-move-link').html(index);
+					$(this).children('.um-field-row-order').val(index);
+					$(this).children('.um-field-row-header').children('.um-field-row-move-link').text(index);
 				});
 			});
 		},
@@ -189,9 +189,9 @@ UM.fields_groups = {
 		newIndex: 0,
 		settingsScreens: {},
 		prepareSettings: function($, fieldID, settingsTab) {
-			$('.um-fields-column-content').find('.um-field-row').each( function() {
-				let id = $(this).data('field'); // id
-				let type = $(this).find('.um-field-row-type-select').val(); // type
+			$('.um-fields-column-content > .um-field-row').each( function() {
+				let id   = $(this).data('field'); // id
+				let type = $(this).children('.um-field-row-content').children('.um-field-row-tabs-content').children('div[data-tab="general"]').children('.um-form-table').children('tbody').children('.um-forms-line[data-field_id="type"]').find('.um-field-row-type-select').val(); // type
 
 				if ( typeof fieldID !== 'undefined' ) {
 					if ( fieldID != id ) {
@@ -207,7 +207,7 @@ UM.fields_groups = {
 					UM.fields_groups.field.settingsScreens[ id ][ type ] = {};
 				}
 
-				$(this).find('.um-field-row-tabs > div[data-tab]').each(function () {
+				$(this).children('.um-field-row-content').children('.um-field-row-tabs').children('div[data-tab]').each(function () {
 					let tabKey = $(this).data('tab');
 
 					if ( typeof settingsTab !== 'undefined' ) {
@@ -216,20 +216,36 @@ UM.fields_groups = {
 						}
 					}
 
-					UM.fields_groups.field.settingsScreens[ id ][ type ][ tabKey ] = $(this).parents('.um-field-row-tabs').siblings( '.um-field-row-tabs-content' ).find( 'div[data-tab="' + tabKey + '"] > .form-table' )[0].outerHTML;
+					UM.fields_groups.field.settingsScreens[ id ][ type ][ tabKey ] = $(this).closest('.um-field-row-tabs').siblings( '.um-field-row-tabs-content' ).children( 'div[data-tab="' + tabKey + '"]').children('.um-form-table')[0].outerHTML;
 				});
 			});
 		},
+		sanitizeInput: function(value) {
+			return value.replace(/<(|\/|[^>\/bi]|\/[^>bi]|[^\/>][^>]+|\/[^>][^>]+)>/g, '');
+		},
+		checkIfMultiple: function(row) {
+			// If multiple checkbox is in the field row settings then trigger its change for affecting to Options selector.
+			if ( row.find('.um-field-row-multiple-input').length ) {
+				row.find('.um-field-row-multiple-input').trigger('change');
+			}
+		},
 		add: function ( button,$ ) {
-			let $wrapper = button.closest('.um-fields-column').find('.um-fields-column-content');
-			let $cloned = button.closest('.um-fields-column').siblings('.um-field-row-template').clone().addClass('um-field-row').removeClass('um-field-row-template');
+			let $wrapper = button.closest('.um-fields-column').children('.um-fields-column-content');
+
+			let parentRowFieldID = button.closest('.um-field-row').data('field');
+			if ( 'undefined' === typeof parentRowFieldID ) {
+				parentRowFieldID = 0;
+			}
+
+			// Only one row template for all builder. Avoid duplicates
+			let $cloned = $('.um-field-row-template').clone().addClass('um-field-row').removeClass('um-field-row-template');
 
 			UM.fields_groups.field.newIndex ++;
 			let newIndex = UM.fields_groups.field.newIndex;
 			$cloned.data( 'field', 'new_' + newIndex ).attr( 'data-field', 'new_' + newIndex );
 
-			let newOrderIndex = $wrapper.find( '.um-field-row' ).length + 1;
-			$cloned.find('.um-field-row-move-link').html( newOrderIndex );
+			let newOrderIndex = $wrapper.find( '> .um-field-row' ).length + 1;
+			$cloned.find('.um-field-row-move-link').text( newOrderIndex );
 
 			let fieldID = $cloned.find('.um-field-row-id');
 			fieldID.removeAttr('disabled').prop('disabled', false);
@@ -237,6 +253,14 @@ UM.fields_groups = {
 			if ( 'undefined' !== typeof fieldIDName ) {
 				let newName = fieldIDName.replace( '\{index\}', newIndex );
 				fieldID.attr('name', newName);
+			}
+
+			let fieldParentID = $cloned.find('.um-field-row-parent-id');
+			fieldParentID.removeAttr('disabled').prop('disabled', false);
+			let fieldParentIDName = fieldParentID.attr('name');
+			if ( 'undefined' !== typeof fieldParentIDName ) {
+				let newName = fieldParentIDName.replace( '\{index\}', newIndex );
+				fieldParentID.attr('name', newName).val( parentRowFieldID );
 			}
 
 			let fieldOrder = $cloned.find('.um-field-row-order');
@@ -336,7 +360,7 @@ UM.fields_groups = {
 
 			$wrapper.append( $cloned );
 
-			if ( $wrapper.find('.um-field-row').length > 1 ) {
+			if ( $wrapper.children('.um-field-row').length > 1 ) {
 				UM.fields_groups.sortable.reInit($wrapper,$);
 			} else {
 				$wrapper.removeClass('hidden');
@@ -356,9 +380,7 @@ UM.fields_groups = {
 		},
 		showEdit: function ( row, $ ) {
 			row.addClass('um-field-row-edit-mode');
-			if ( row.find('.um-field-row-multiple-input').length ) {
-				row.find('.um-field-row-multiple-input').trigger('change');
-			}
+			UM.fields_groups.field.checkIfMultiple(row);
 		},
 		hideEdit: function ( row, $ ) {
 			row.removeClass('um-field-row-edit-mode');
@@ -366,6 +388,7 @@ UM.fields_groups = {
 		duplicate: function ( obj, $ ) {
 			let $wrapper = obj.closest('.um-fields-column-content');
 			let $cloned = obj.closest('.um-field-row').clone();
+			// todo changing the fields names and field ID
 			obj.closest('.um-field-row').after( $cloned );
 			UM.fields_groups.sortable.reInit($wrapper,$);
 			UM.fields_groups.field.conditional.prepareFieldsList($);
@@ -373,7 +396,12 @@ UM.fields_groups = {
 		},
 		delete: function ( obj, $ ) {
 			let $wrapper = obj.closest('.um-fields-column-content');
-			obj.closest('.um-field-row').remove();
+			let row = obj.closest('.um-field-row');
+
+			// flush object with settings screen for this field
+			delete UM.fields_groups.field.settingsScreens[ row.data('field') ];
+
+			row.remove();
 
 			if ( ! $wrapper.find('.um-field-row').length ) {
 				$wrapper.addClass('hidden');
@@ -384,7 +412,6 @@ UM.fields_groups = {
 				UM.fields_groups.sortable.reInit($wrapper,$);
 			}
 			UM.fields_groups.field.conditional.prepareFieldsList($);
-			//UM.fields_groups.field.prepareSettings($);
 		},
 		conditional: {
 			fieldsList: {}, /* format id:{title,type}*/
@@ -392,7 +419,7 @@ UM.fields_groups = {
 				$('.um-fields-column-content').find('.um-field-row').each( function() {
 					let id = $(this).data('field'); // id
 					let type = $(this).find('.um-field-row-type-select').val(); // type
-					let title = $(this).find('.um-field-row-title-input').val(); // title
+					let title = UM.fields_groups.field.sanitizeInput( $(this).find('.um-field-row-title-input').val() ); // title
 
 					if ( um_admin_field_groups_data.field_types[type].conditional_rules.length ) {
 						let rules = {};
@@ -582,10 +609,7 @@ UM.fields_groups = {
 				UM.fields_groups.field.conditional.prepareFieldsList($);
 
 				row.find('.um-field-row-tabs > div[data-tab]').removeClass('disabled');
-
-				if ( row.find('.um-field-row-multiple-input').length ) {
-					row.find('.um-field-row-multiple-input').trigger('change');
-				}
+				UM.fields_groups.field.checkIfMultiple(row);
 			} else {
 				if ( ! UM.fields_groups.tabs.compareDeep( oldTypeSettings.general, typeSettings.general ) ) {
 					row.find( '.um-field-row-tabs-content > div[data-tab="general"] .um-forms-field:not(.um-field-row-static-setting)' ).parents('.um-forms-line').remove();
@@ -642,9 +666,7 @@ UM.fields_groups = {
 
 						row.find('.um-field-row-tabs > div[data-tab]').removeClass('disabled');
 
-						if ( row.find('.um-field-row-multiple-input').length ) {
-							row.find('.um-field-row-multiple-input').trigger('change');
-						}
+						UM.fields_groups.field.checkIfMultiple(row);
 					},
 					error: function( data ) {
 						console.error( data );
@@ -656,15 +678,23 @@ UM.fields_groups = {
 };
 
 jQuery( function($) {
-	if ( $('#message[data-error-field]').length > 0 ) {
-		let scrollToID = $('#message[data-error-field]').data('error-field');
+	// handle errors on the first loading
+	let $noticeObj = $('#message[data-error-field]');
+	if ( $noticeObj.length > 0 ) {
+		let scrollToID = $noticeObj.data('error-field');
 		$( '#' + scrollToID ).addClass( 'um-error' );
-		$('#message[data-error-field]')[0].scrollIntoView();
+		$noticeObj[0].scrollIntoView();
 	}
+
+	// make fields columns sortable
+	let $fieldsColumnsObj = $('.um-fields-column-content');
+	$fieldsColumnsObj.each( function () {
+		UM.fields_groups.sortable.init($(this),$);
+	});
 
 	UM.fields_groups.field.conditional.prepareFieldsList($);
 
-	$('.um-fields-column-content').find('.um-field-row').each( function() {
+	$fieldsColumnsObj.find('.um-field-row').each( function() {
 		let fieldID = $(this).data('field');
 		$(this).find('.um-conditional-rule-field-col .um-conditional-rule-setting').each( function() {
 			$(this).find('option').each( function(){
@@ -696,75 +726,15 @@ jQuery( function($) {
 	});
 
 	UM.fields_groups.field.prepareSettings($);
+
 	console.log( UM.fields_groups.field.settingsScreens );
-
-
-	// var um_settings_changed = false;
-
-	// jQuery( 'input, textarea, select' ).on('change', function() {
-	// 	um_settings_changed = true;
-	// });
-	//
-	// jQuery( '.submitdelete.deletion' ).on( 'click', function() {
-	// 	if ( um_settings_changed ) {
-	// 		window.onbeforeunload = function() {
-	// 			return wp.i18n.__( 'Are sure, maybe some settings not saved', 'ultimate-member' );
-	// 		};
-	// 	} else {
-	// 		window.onbeforeunload = '';
-	// 	}
-	// });
-	//
-	// jQuery( '#publishing-action input' ).on( 'click', function() {
-	// 	window.onbeforeunload = '';
-	// });
-	$('.um-fields-column-content').each( function () {
-		UM.fields_groups.sortable.init($(this),$);
-	});
-
-	// wp.ajax.send( 'um_fields_groups_check_draft', {
-	// 	data: {
-	// 		group_id: $('#fields_group_id').val(),
-	// 		nonce: um_admin_scripts.nonce
-	// 	},
-	// 	beforeSend: function() {
-	// 		$('.um-overlay-loader').show();
-	// 	},
-	// 	success: function( data ) {
-	// 		if ( null !== data.draft_id ) {
-	// 			if ( confirm( wp.i18n.__( 'There is not-saved fields group. If you want to use this draft - click "Ok". Otherwise create new one - click "Cancel".', 'ultimate-member' ) ) ) {
-	// 				// click "Ok"
-	// 				$('.um-overlay-loader').hide();
-	// 			} else {
-	// 				// click "cancel"
-	// 				wp.ajax.send( 'um_fields_groups_flush_draft', {
-	// 					data: {
-	// 						group_id: $('#fields_group_id').val(),
-	// 						nonce: um_admin_scripts.nonce
-	// 					},
-	// 					success: function() {
-	// 						window.location.reload();
-	// 					},
-	// 					error: function( data ) {
-	// 						$('.um-overlay-loader').hide();
-	// 						console.error( data );
-	// 					}
-	// 				});
-	// 			}
-	// 		} else {
-	// 			$('.um-overlay-loader').hide();
-	// 		}
-	// 	},
-	// 	error: function( data ) {
-	// 		$('.um-overlay-loader').hide();
-	// 		console.error( data );
-	// 	}
-	// });
 
 	$(document.body).on('click','.um-field-row', function(e){
 		if ( typeof e.target !== 'undefined' && e.target.classList.contains('um-field-row-toggle-edit') ) {
 			e.preventDefault();
-			UM.fields_groups.field.toggleEdit($(this),$);
+			let row = $(this);
+			UM.fields_groups.field.toggleEdit(row,$);
+			e.stopPropagation();
 		}
 	});
 
@@ -907,11 +877,6 @@ jQuery( function($) {
 
 	$('.um-conditional-rules-wrapper .um-conditional-rule-condition-col .um-conditional-rule-setting').trigger('change');
 
-	$(document.body).on('change','.um-field-row-title-input', function(e){
-		$(this).closest('.um-field-row').find( '.um-field-row-title' ).html( $(this).val() );
-		UM.fields_groups.field.conditional.prepareFieldsList($);
-	});
-
 	$(document.body).on('change','.um-forms-field:not(.um-field-row-type-select)', function(e){
 		let row = $(this).closest('.um-field-row');
 		let fieldID = row.data('field');
@@ -930,13 +895,24 @@ jQuery( function($) {
 		UM.fields_groups.field.changeType(row,$);
 	});
 
+	$(document.body).on('change','.um-field-row-title-input', function(e){
+		let title = $(this).val();
+		$(this).closest('.um-field-row').find( '> .um-field-row-header > .um-field-row-title' ).text( UM.fields_groups.field.sanitizeInput(title) );
+		UM.fields_groups.field.conditional.prepareFieldsList($);
+	});
+
 	$(document.body).on('change','.um-field-row-metakey-input', function(e){
 		let metakey = wp.i18n.__( '(no metakey)', 'ultimate-member' );
 		if ( '' !== $(this).val() ) {
 			metakey = $(this).val();
 		}
-		$(this).closest('.um-field-row').find( '.um-field-row-metakey' ).html( metakey );
+
+		$(this).closest('.um-field-row').find( '> .um-field-row-header > .um-field-row-metakey' ).text( UM.fields_groups.field.sanitizeInput(metakey) );
 	});
+
+
+
+
 
 	/* Handlers for options */
 

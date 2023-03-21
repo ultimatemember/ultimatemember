@@ -36,6 +36,7 @@ UM()->admin()->field_group()->field_row_template();
 				?>
 				<div class="um-field-row" data-field="<?php echo esc_attr( $field['id'] ); ?>">
 					<input type="hidden" class="um-field-row-id" name="field_group[fields][<?php echo esc_attr( $field['id'] ); ?>][id]" value="<?php echo esc_attr( $field['id'] ); ?>" />
+					<input type="hidden" class="um-field-row-parent-id" name="field_group[fields][<?php echo esc_attr( $field['id'] ); ?>][parent_id]" value="<?php echo esc_attr( $field['parent_id'] ); ?>" />
 					<input type="hidden" class="um-field-row-order" name="field_group[fields][<?php echo esc_attr( $field['id'] ); ?>][order]" value="<?php echo esc_attr( $order ); ?>" />
 					<div class="um-field-row-header um-field-row-toggle-edit">
 						<span class="um-field-row-move-link">

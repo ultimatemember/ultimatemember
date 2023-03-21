@@ -248,16 +248,16 @@
               color: #f00; }
       .um-fields-column .um-fields-column-content .um-field-row .um-field-row-content {
         display: none; }
-      .um-fields-column .um-fields-column-content .um-field-row:hover .um-field-row-header .um-field-row-move-link:before {
+      .um-fields-column .um-fields-column-content .um-field-row:hover > .um-field-row-header > .um-field-row-move-link:before {
         visibility: visible; }
-      .um-fields-column .um-fields-column-content .um-field-row:hover .um-field-row-header .um-field-row-actions {
+      .um-fields-column .um-fields-column-content .um-field-row:hover > .um-field-row-header > .um-field-row-actions {
         visibility: visible; }
-      .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode .um-field-row-header .um-field-row-title:before {
+      .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode > .um-field-row-header > .um-field-row-title:before {
         mask-image: url(../img/admin/angle-up-regular.svg);
         -webkit-mask-image: url(../img/admin/angle-up-regular.svg); }
-      .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode .um-field-row-header .um-field-row-actions {
+      .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode > .um-field-row-header > .um-field-row-actions {
         visibility: visible; }
-      .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode .um-field-row-content {
+      .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode > .um-field-row-content {
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
@@ -265,7 +265,7 @@
         flex-wrap: nowrap;
         margin: 0;
         padding: 0; }
-        .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode .um-field-row-content .um-field-row-tabs {
+        .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode > .um-field-row-content > .um-field-row-tabs {
           display: flex;
           flex-direction: row;
           justify-content: flex-start;
@@ -279,7 +279,7 @@
           box-sizing: border-box;
           -moz-box-sizing: border-box;
           -webkit-box-sizing: border-box; }
-          .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode .um-field-row-content .um-field-row-tabs div[data-tab] {
+          .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode > .um-field-row-content > .um-field-row-tabs > div[data-tab] {
             margin: 0;
             padding: 10px 20px;
             cursor: pointer;
@@ -290,41 +290,41 @@
             -moz-border-radius: 4px 4px 0 0;
             -webkit-border-radius: 4px 4px 0 0;
             color: #3c434a; }
-            .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode .um-field-row-content .um-field-row-tabs div[data-tab].current {
+            .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode > .um-field-row-content > .um-field-row-tabs > div[data-tab].current {
               color: #fff;
               background: #2271b1;
               cursor: default;
               margin-bottom: -1px;
               border: 1px solid #2271b1; }
-            .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode .um-field-row-content .um-field-row-tabs div[data-tab]:hover:not(.current) {
+            .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode > .um-field-row-content > .um-field-row-tabs > div[data-tab]:hover:not(.current) {
               background: #ebedee; }
-        .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode .um-field-row-content .um-field-row-tabs-content > div[data-tab] {
+        .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode > .um-field-row-content > .um-field-row-tabs-content > div[data-tab] {
           display: none;
           padding: 0 10px 0 15px;
           box-sizing: border-box;
           -moz-box-sizing: border-box;
           -webkit-box-sizing: border-box; }
-          .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode .um-field-row-content .um-field-row-tabs-content > div[data-tab].current {
+          .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode > .um-field-row-content > .um-field-row-tabs-content > div[data-tab].current {
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
             align-items: stretch;
             flex-wrap: nowrap;
             border-left: 4px solid #2271b1; }
-          .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode .um-field-row-content .um-field-row-tabs-content > div[data-tab] input[type="text"].um-forms-field,
-          .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode .um-field-row-content .um-field-row-tabs-content > div[data-tab] input[type="number"].um-forms-field,
-          .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode .um-field-row-content .um-field-row-tabs-content > div[data-tab] input[type="url"].um-forms-field,
-          .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode .um-field-row-content .um-field-row-tabs-content > div[data-tab] select:not([multiple]).um-forms-field {
+          .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode > .um-field-row-content > .um-field-row-tabs-content > div[data-tab] input[type="text"].um-forms-field,
+          .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode > .um-field-row-content > .um-field-row-tabs-content > div[data-tab] input[type="number"].um-forms-field,
+          .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode > .um-field-row-content > .um-field-row-tabs-content > div[data-tab] input[type="url"].um-forms-field,
+          .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode > .um-field-row-content > .um-field-row-tabs-content > div[data-tab] select:not([multiple]).um-forms-field {
             height: 36px;
             font-size: 13px; }
-          .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode .um-field-row-content .um-field-row-tabs-content > div[data-tab] select.um-forms-field {
+          .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode > .um-field-row-content > .um-field-row-tabs-content > div[data-tab] select.um-forms-field {
             font-size: 13px; }
-          .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode .um-field-row-content .um-field-row-tabs-content > div[data-tab] textarea.um-forms-field {
+          .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode > .um-field-row-content > .um-field-row-tabs-content > div[data-tab] textarea.um-forms-field {
             font-size: 13px; }
-          .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode .um-field-row-content .um-field-row-tabs-content > div[data-tab] .description {
+          .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode > .um-field-row-content > .um-field-row-tabs-content > div[data-tab] .description {
             font-size: 13px;
             font-style: normal; }
-          .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode .um-field-row-content .um-field-row-tabs-content > div[data-tab] .um-forms-line td > label {
+          .um-fields-column .um-fields-column-content .um-field-row.um-field-row-edit-mode > .um-field-row-content > .um-field-row-tabs-content > div[data-tab] .um-forms-line td > label {
             font-size: 13px;
             font-style: normal; }
       .um-fields-column .um-fields-column-content .um-field-row.ui-sortable-helper {

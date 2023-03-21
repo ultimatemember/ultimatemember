@@ -60,6 +60,9 @@ if ( ! class_exists( 'um\ajax\Field_Group' ) ) {
 				wp_send_json_error( __( 'Wrong data.', 'ultimate-member' ) );
 			}
 
+			// Avoid duplicates for field row template.
+			UM()->admin()->field_group()->is_displayed = true;
+
 			$type = sanitize_key( $_POST['type'] );
 			$field_id = sanitize_text_field( $_POST['field_id'] );
 

@@ -255,25 +255,25 @@ $actions-gap: 10px
       .um-field-row-content
         display: none
       &:hover
-        .um-field-row-header
-          .um-field-row-move-link
+        & > .um-field-row-header
+          & > .um-field-row-move-link
             &:before
               visibility: visible
-          .um-field-row-actions
+          & > .um-field-row-actions
             visibility: visible
       &.um-field-row-edit-mode
-        .um-field-row-header
-          .um-field-row-title
+        & >.um-field-row-header
+          & > .um-field-row-title
             &:before
               mask-image: url(../img/admin/angle-up-regular.svg)
               -webkit-mask-image: url(../img/admin/angle-up-regular.svg)
-          .um-field-row-actions
+          & > .um-field-row-actions
             visibility: visible
-        .um-field-row-content
+        & > .um-field-row-content
           +flex( column, flex-start, stretch, nowrap )
           margin: 0
           padding: 0
-          .um-field-row-tabs
+          & > .um-field-row-tabs
             +flex( row, flex-start, baseline, nowrap )
             border-bottom: 1px solid $gray-300
             width: 100%
@@ -281,7 +281,7 @@ $actions-gap: 10px
             padding: 0 0 0 10px
             column-gap: 10px
             +border-box
-            div[data-tab]
+            & > div[data-tab]
               margin: 0
               padding: 10px 20px
               cursor: pointer
@@ -300,7 +300,7 @@ $actions-gap: 10px
                 border: 1px solid $wp-admin-primary
               &:hover:not(.current)
                 background: #ebedee
-          .um-field-row-tabs-content
+          & > .um-field-row-tabs-content
             & > div[data-tab]
               display: none
               padding: 0 10px 0 15px

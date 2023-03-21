@@ -24,6 +24,8 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 		 */
 		private $global_fields = array();
 
+		public $is_displayed = false;
+
 		/**
 		 * Field_Group constructor.
 		 */
@@ -857,6 +859,11 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 		}
 
 		public function field_row_template() {
+			// Avoid duplicates for field row template.
+			if ( true === $this->is_displayed ) {
+				return;
+			}
+
 			$field_types = UM()->config()->get( 'field_types' );
 
 			// text-type field is default field type for the builder
@@ -869,6 +876,7 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 			?>
 			<div class="um-field-row-template um-field-row-edit-mode">
 				<input type="hidden" class="um-field-row-id" name="field_group[fields][new_{index}][id]" value="" disabled />
+				<input type="hidden" class="um-field-row-parent-id" name="field_group[fields][new_{index}][parent_id]" value="" disabled />
 				<input type="hidden" class="um-field-row-order" name="field_group[fields][new_{index}][order]" value="" disabled />
 				<div class="um-field-row-header um-field-row-toggle-edit">
 					<span class="um-field-row-move-link"></span>
@@ -922,6 +930,7 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 			</div>
 
 			<?php
+			$this->is_displayed = true;
 		}
 	}
 }

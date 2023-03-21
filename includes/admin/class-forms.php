@@ -132,6 +132,8 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 			$conditional = ! empty( $data['conditional'] ) ? 'data-conditional="' . esc_attr( json_encode( $data['conditional'] ) ) . '"' : '';
 			$prefix_attr = ! empty( $this->form_data['prefix_id'] ) ? ' data-prefix="' . esc_attr( sanitize_title( $this->form_data['prefix_id'] ) ) . '" ' : '';
 
+			$field_id_attr = ' data-field_id="' . esc_attr( $data['id'] ) . '" ';
+
 			$type_attr = ' data-field_type="' . esc_attr( $data['type'] ) . '" ';
 
 			$html = '';
@@ -141,7 +143,7 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 
 					if ( strpos( $this->form_data['class'], 'um-top-label' ) !== false ) {
 
-						$html .= '<div class="form-field um-forms-line" ' . $conditional . $prefix_attr . $type_attr . '>' . $this->render_field_label( $data );
+						$html .= '<div class="form-field um-forms-line" ' . $conditional . $prefix_attr . $field_id_attr . $type_attr . '>' . $this->render_field_label( $data );
 
 						if ( method_exists( $this, 'render_' . $data['type'] ) ) {
 
@@ -163,7 +165,7 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 
 						if ( ! empty( $data['without_label'] ) ) {
 
-							$html .= '<div class="form-field um-forms-line" ' . $conditional . $prefix_attr . $type_attr . '>';
+							$html .= '<div class="form-field um-forms-line" ' . $conditional . $prefix_attr . $field_id_attr . $type_attr . '>';
 
 							if ( method_exists( $this, 'render_' . $data['type'] ) ) {
 
@@ -183,7 +185,7 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 
 						} else {
 
-							$html .= '<div class="form-field um-forms-line" ' . $conditional . $prefix_attr . $type_attr . '>' . $this->render_field_label( $data );
+							$html .= '<div class="form-field um-forms-line" ' . $conditional . $prefix_attr . $field_id_attr . $type_attr . '>' . $this->render_field_label( $data );
 
 							if ( method_exists( $this, 'render_' . $data['type'] ) ) {
 
@@ -207,7 +209,7 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 				} else {
 					if ( strpos( $this->form_data['class'], 'um-top-label' ) !== false ) {
 
-						$html .= '<tr class="um-forms-line" ' . $conditional . $prefix_attr . $type_attr . '>
+						$html .= '<tr class="um-forms-line" ' . $conditional . $prefix_attr . $field_id_attr . $type_attr . '>
 						<td>' . $this->render_field_label( $data );
 
 						if ( method_exists( $this, 'render_' . $data['type'] ) ) {
@@ -232,7 +234,7 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 
 						if ( ! empty( $data['without_label'] ) ) {
 
-							$html .= '<tr class="um-forms-line" ' . $conditional . $prefix_attr . $type_attr . '>
+							$html .= '<tr class="um-forms-line" ' . $conditional . $prefix_attr . $field_id_attr . $type_attr . '>
 							<td colspan="2">';
 
 							if ( method_exists( $this, 'render_' . $data['type'] ) ) {
@@ -255,7 +257,7 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 
 						} else {
 
-							$html .= '<tr class="um-forms-line" ' . $conditional . $prefix_attr . $type_attr . '>
+							$html .= '<tr class="um-forms-line" ' . $conditional . $prefix_attr . $field_id_attr . $type_attr . '>
 							<th>' . $this->render_field_label( $data ) . '</th>
 							<td>';
 
@@ -1078,6 +1080,7 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 							?>
 							<div class="um-field-row" data-field="<?php echo esc_attr( $field['id'] ); ?>">
 								<input type="hidden" class="um-field-row-id" name="<?php echo esc_attr( $name ); ?>[<?php echo esc_attr( $field['id'] ); ?>][id]" value="<?php echo esc_attr( $field['id'] ); ?>" />
+								<input type="hidden" class="um-field-row-parent-id" name="<?php echo esc_attr( $name ); ?>[<?php echo esc_attr( $field['id'] ); ?>][parent_id]" value="<?php echo esc_attr( $field['parent_id'] ); ?>" />
 								<input type="hidden" class="um-field-row-order" name="<?php echo esc_attr( $name ); ?>[<?php echo esc_attr( $field['id'] ); ?>][order]" value="<?php echo esc_attr( $order ); ?>" />
 								<div class="um-field-row-header um-field-row-toggle-edit">
 									<span class="um-field-row-move-link">
