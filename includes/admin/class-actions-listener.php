@@ -777,8 +777,9 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 						$field_settings      = call_user_func_array('array_merge', array_values( $field_settings ) );
 						$fields_sanitize_map = array_column( $field_settings, 'sanitize', 'id' );
 
-						$fields_sanitize_map['id']    = 'empty_absint';
-						$fields_sanitize_map['order'] = 'absint';
+						$fields_sanitize_map['id']        = 'empty_absint';
+						$fields_sanitize_map['order']     = 'absint';
+						$fields_sanitize_map['parent_id'] = 'text';
 
 						foreach ( $field_row as $field_setting_key => &$field_setting_value ) {
 							if ( ! array_key_exists( $field_setting_key, $fields_sanitize_map ) ) {
@@ -975,31 +976,31 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 				return $result;
 			}
 
-			foreach ( $data['fields'] as $field_data ) {
-				$field_settings      = UM()->admin()->field_group()->get_field_settings( sanitize_key( $field_data['type'] ) );
-				$field_settings      = call_user_func_array('array_merge', array_values( $field_settings ) );
-				$fields_required_map = array_column( $field_settings, 'required', 'id' );
-
-				foreach ( $fields_required_map as $field_id => $required ) {
-					if ( empty( $required ) ) {
-						continue;
-					}
-
-					if ( empty( $field_data[ $field_id ] ) ) {
-						$this->field_groups_error = array(
-							'field'   => 'um-admin-form-' . $field_id,
-							'message' => __( 'Fields cannot be empty.', 'ultimate-member' ),
-						);
-					}
-
-					if ( ! empty( $this->field_groups_error ) ) {
-						$result = $this->field_groups_error;
-						return $result;
-					}
-				}
-
-				$fields_validate_map = array_column( $field_settings, 'validate', 'id' );
-			}
+//			foreach ( $data['fields'] as $field_data ) {
+//				$field_settings      = UM()->admin()->field_group()->get_field_settings( sanitize_key( $field_data['type'] ) );
+//				$field_settings      = call_user_func_array('array_merge', array_values( $field_settings ) );
+//				$fields_required_map = array_column( $field_settings, 'required', 'id' );
+//
+//				foreach ( $fields_required_map as $field_id => $required ) {
+//					if ( empty( $required ) ) {
+//						continue;
+//					}
+//
+//					if ( empty( $field_data[ $field_id ] ) ) {
+//						$this->field_groups_error = array(
+//							'field'   => 'um-admin-form-' . $field_id,
+//							'message' => __( 'Fields cannot be empty.', 'ultimate-member' ),
+//						);
+//					}
+//
+//					if ( ! empty( $this->field_groups_error ) ) {
+//						$result = $this->field_groups_error;
+//						return $result;
+//					}
+//				}
+//
+//				$fields_validate_map = array_column( $field_settings, 'validate', 'id' );
+//			}
 
 			return $result;
 		}
@@ -1086,33 +1087,39 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 							}
 						}
 
-						foreach ( $data['fields'] as $group_field ) {
+						$id_parent_accoss = array();
+
+						foreach ( $data['fields'] as $submit_key => $group_field ) {
 							if ( empty( $group_field['id'] ) ) {
 								// add new field
 								$meta = $group_field;
 								unset( $meta['id'] );
 								unset( $meta['title'] );
 								unset( $meta['type'] );
+								unset( $meta['parent_id'] );
 
 								$field_args = array(
-									'group_id' => $field_group_id,
-									'title'    => $group_field['title'],
-									'type'     => $group_field['type'],
-									'meta'     => $meta,
+									'group_id'  => $field_group_id,
+									'title'     => $group_field['title'],
+									'type'      => $group_field['type'],
+									'parent_id' => isset( $id_parent_accoss[ $group_field['parent_id'] ] ) ? $id_parent_accoss[ $group_field['parent_id'] ] : 0,
+									'meta'      => $meta,
 								);
-								UM()->admin()->field_group()->add_field( $field_args );
+								$f_id = UM()->admin()->field_group()->add_field( $field_args );
+								$id_parent_accoss[ $submit_key ] = $f_id;
 							} else {
 								// update field
 								$meta = $group_field;
 								unset( $meta['id'] );
 								unset( $meta['title'] );
 								unset( $meta['type'] );
+								unset( $meta['parent_id'] );
 
 								$field_args = array(
-									'id'    => $group_field['id'],
-									'title' => $group_field['title'],
-									'type'  => $group_field['type'],
-									'meta'  => $meta,
+									'id'        => $group_field['id'],
+									'title'     => $group_field['title'],
+									'type'      => $group_field['type'],
+									'meta'      => $meta,
 								);
 								UM()->admin()->field_group()->update_field( $field_args );
 							}
@@ -1152,20 +1159,25 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 				$field_group_id = UM()->admin()->field_group()->create( $args );
 				if ( ! empty( $field_group_id ) ) {
 					if ( ! empty( $data['fields'] ) ) {
-						foreach ( $data['fields'] as $group_field ) {
+						$id_parent_accoss = array();
+
+						foreach ( $data['fields'] as $submit_key => $group_field ) {
 							// add new field
 							$meta = $group_field;
 							unset( $meta['id'] );
 							unset( $meta['title'] );
 							unset( $meta['type'] );
+							unset( $meta['parent_id'] );
 
 							$field_args = array(
-								'group_id' => $field_group_id,
-								'title'    => $group_field['title'],
-								'type'     => $group_field['type'],
-								'meta'     => $meta,
+								'group_id'  => $field_group_id,
+								'title'     => $group_field['title'],
+								'type'      => $group_field['type'],
+								'parent_id' => isset( $id_parent_accoss[ $group_field['parent_id'] ] ) ? $id_parent_accoss[ $group_field['parent_id'] ] : 0,
+								'meta'      => $meta,
 							);
-							UM()->admin()->field_group()->add_field( $field_args );
+							$f_id = UM()->admin()->field_group()->add_field( $field_args );
+							$id_parent_accoss[ $submit_key ] = $f_id;
 						}
 					}
 

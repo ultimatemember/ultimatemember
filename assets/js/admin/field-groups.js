@@ -124,10 +124,12 @@ UM.fields_groups = {
 			}
 		},
 		reBuild: function( row, newSettingsTabs, $ ) {
-			let currentTab = row.find('.um-field-row-tabs > div[data-tab].current').data('tab');
-			row.find('.um-field-row-tabs > div[data-tab]').remove();
+			let $rowTabs = row.children('.um-field-row-content').children('.um-field-row-tabs');
+			let $rowTabsContent = row.children('.um-field-row-content').children('.um-field-row-tabs-content');
+			let currentTab = $rowTabs.children('div[data-tab].current').data('tab');
+			$rowTabs.children('div[data-tab]').remove();
 
-			row.find('.um-field-row-tabs-content > div[data-tab]').each( function() {
+			$rowTabsContent.children('div[data-tab]').each( function() {
 				if ( ! newSettingsTabs.includes( $(this).data('tab') ) ) {
 					$(this).remove();
 				}
@@ -137,14 +139,14 @@ UM.fields_groups = {
 			for (var i = 0; i < newSettingsTabs.length; i++) {
 				newTabsHTML += '<div data-tab="' + newSettingsTabs[i] + '">' + um_admin_field_groups_data.field_tabs[newSettingsTabs[i]] + '</div>';
 
-				if ( ! row.find('.um-field-row-tabs-content > div[data-tab="' + newSettingsTabs[i] + '"]').length ) {
-					row.find('.um-field-row-tabs-content').append('<div data-tab="' + newSettingsTabs[i] + '"></div>');
+				if ( ! $rowTabsContent.children('div[data-tab="' + newSettingsTabs[i] + '"]').length ) {
+					$rowTabsContent.append('<div data-tab="' + newSettingsTabs[i] + '"></div>');
 				}
 			}
-			row.find('.um-field-row-tabs').html(newTabsHTML);
-			row.find('.um-field-row-tabs > div[data-tab="' + currentTab + '"]').addClass('current');
+			$rowTabs.html(newTabsHTML);
+			$rowTabs.children('div[data-tab="' + currentTab + '"]').addClass('current');
 
-			row.find('.um-field-row-tabs-content > div[data-tab="' + currentTab + '"]').addClass('current');
+			$rowTabsContent.children('div[data-tab="' + currentTab + '"]').addClass('current');
 		}
 	},
 	sortable: {
@@ -566,7 +568,11 @@ UM.fields_groups = {
 			let oldTypeData = um_admin_field_groups_data.field_types[oldType];
 			let oldTypeSettings = oldTypeData.settings;
 
-			let type = row.find('.um-field-row-type-select').val();
+			let $rowTabs = row.children('.um-field-row-content').children('.um-field-row-tabs');
+			let $rowTabsContent = row.children('.um-field-row-content').children('.um-field-row-tabs-content');
+			let $typeSelect = $rowTabsContent.children('div[data-tab="general"]').children('.um-form-table').children('tbody').children('.um-forms-line[data-field_id="type"]').find('.um-field-row-type-select');
+
+			let type = $typeSelect.val();
 			let typeData = um_admin_field_groups_data.field_types[type];
 
 			let typeSettings = typeData.settings;
@@ -574,19 +580,23 @@ UM.fields_groups = {
 			let currentSettingsTabs = Object.keys(oldTypeSettings);
 			let newSettingsTabs = Object.keys(typeSettings);
 
-			let typeHTML = row.find('.um-field-row-type-select option[value="' + row.find('.um-field-row-type-select').val() + '"]').html();
-			row.find( '.um-field-row-type' ).html( typeHTML ); // change field type in a row header
+			//let typeHTML = row.find('.um-field-row-type-select option[value="' + row.find('.um-field-row-type-select').val() + '"]').html();
+			let typeHTML = $typeSelect.find('option[value="' + type + '"]').html();
+			row.find( '> .um-field-row-header > .um-field-row-type' ).text( UM.fields_groups.field.sanitizeInput( typeHTML ) ); // change field type in a row header
+
 
 			// add/remove necessary/unnecessary tabs and tab-content blocks
 			if ( ! UM.fields_groups.tabs.compare( currentSettingsTabs, newSettingsTabs ) ) {
 				UM.fields_groups.tabs.reBuild( row, newSettingsTabs, $ );
 			}
 
-			row.find('.um-field-row-tabs > div[data-tab]').addClass('disabled');
+			//row.find('.um-field-row-tabs > div[data-tab]').addClass('disabled');
+			$rowTabs.children('div[data-tab]').addClass('disabled');
 
 			if ( typeof ( UM.fields_groups.field.settingsScreens[ fieldID ] ) === 'object' &&  typeof ( UM.fields_groups.field.settingsScreens[ fieldID ][ type ] ) === 'object' ) {
 				$.each( UM.fields_groups.field.settingsScreens[ fieldID ][ type ], function ( tab, html ) {
-					let tabSettingsWrapper = row.find( '.um-field-row-tabs-content > div[data-tab="' + tab + '"]' );
+					//let tabSettingsWrapper = row.find( '.um-field-row-tabs-content > div[data-tab="' + tab + '"]' );
+					let tabSettingsWrapper = $rowTabsContent.children( 'div[data-tab="' + tab + '"]' );
 
 					let temporaryScreenObj = $('<div>').append( html ).find('.form-table');
 
@@ -600,24 +610,27 @@ UM.fields_groups = {
 					});
 
 					// change HTML based on type
-					row.find( '.um-field-row-tabs-content > div[data-tab="' + tab + '"]' ).html( temporaryScreenObj[0].outerHTML );
+					tabSettingsWrapper.html( temporaryScreenObj[0].outerHTML );
 				});
 
-				row.find('.um-field-row-type-select').removeClass('disabled').prop('disabled', false);
+				//row.find('.um-field-row-type-select').removeClass('disabled').prop('disabled', false);
+
+				$rowTabsContent.children('div[data-tab="general"]').children('.um-form-table').children('tbody').children('.um-forms-line[data-field_id="type"]').find('.um-field-row-type-select').removeClass('disabled').prop('disabled', false);
 
 				run_check_conditions();
 				UM.fields_groups.field.conditional.prepareFieldsList($);
 
-				row.find('.um-field-row-tabs > div[data-tab]').removeClass('disabled');
+				$rowTabs.children('div[data-tab]').removeClass('disabled');
 				UM.fields_groups.field.checkIfMultiple(row);
 			} else {
 				if ( ! UM.fields_groups.tabs.compareDeep( oldTypeSettings.general, typeSettings.general ) ) {
-					row.find( '.um-field-row-tabs-content > div[data-tab="general"] .um-forms-field:not(.um-field-row-static-setting)' ).parents('.um-forms-line').remove();
+					$rowTabsContent.children('div[data-tab="general"]').find( '> .form-table > tbody > .um-forms-line .um-forms-field:not(.um-field-row-static-setting)' ).closest('.um-forms-line').remove();
+
 					let skeletonRows = Object.keys( typeSettings.general ).length - 2;
 					if ( skeletonRows > 0 ) {
 						let i = 0;
 						while (i < skeletonRows) {
-							row.find( '.um-field-row-tabs-content > div[data-tab="general"] > .form-table tbody' ).append('<tr class="um-forms-line um-forms-skeleton"><th><span class="um-skeleton-box" style="width:100%;height:20px;"></span></th><td><span class="um-skeleton-box" style="width:100%;height:40px;margin-bottom:4px;"></span><span class="um-skeleton-box" style="width:100%;height:14px;"></span></td></tr>');
+							$rowTabsContent.children( 'div[data-tab="general"]').children('.form-table').children('tbody' ).append('<tr class="um-forms-line um-forms-skeleton"><th><span class="um-skeleton-box" style="width:100%;height:20px;"></span></th><td><span class="um-skeleton-box" style="width:100%;height:40px;margin-bottom:4px;"></span><span class="um-skeleton-box" style="width:100%;height:14px;"></span></td></tr>');
 							i++;
 						}
 					}
@@ -643,7 +656,7 @@ UM.fields_groups = {
 
 							let temporaryScreenObj = $('<div>').append( html ).find('.form-table');
 
-							let tabSettingsWrapper = row.find( '.um-field-row-tabs-content > div[data-tab="' + tab + '"]' );
+							let tabSettingsWrapper = $rowTabsContent.children( 'div[data-tab="' + tab + '"]' );
 
 							if ( 'conditional' === tab ) {
 								// make conditional rules static always
@@ -658,13 +671,14 @@ UM.fields_groups = {
 							tabSettingsWrapper.html( temporaryScreenObj[0].outerHTML );
 						});
 
-						row.find('.um-field-row-type-select').removeClass('disabled').prop('disabled', false);
+//						row.find('.um-field-row-type-select').removeClass('disabled').prop('disabled', false);
+						$rowTabsContent.children('div[data-tab="general"]').children('.um-form-table').children('tbody').children('.um-forms-line[data-field_id="type"]').find('.um-field-row-type-select').removeClass('disabled').prop('disabled', false);
 
 						run_check_conditions();
 
 						UM.fields_groups.field.conditional.prepareFieldsList($);
 
-						row.find('.um-field-row-tabs > div[data-tab]').removeClass('disabled');
+						$rowTabs.children('div[data-tab]').removeClass('disabled');
 
 						UM.fields_groups.field.checkIfMultiple(row);
 					},

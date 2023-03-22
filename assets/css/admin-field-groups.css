@@ -353,6 +353,8 @@
     flex-wrap: nowrap;
     margin: 20px 0 0 0;
     padding: 0; }
+  .um-fields-column.um-sub-fields-builder > .um-fields-column-content > .um-field-row > .um-field-row-content > .um-field-row-tabs > div[data-tab] {
+    font-size: 12px; }
 
 .um-conditional-rules-group-template {
   display: none; }

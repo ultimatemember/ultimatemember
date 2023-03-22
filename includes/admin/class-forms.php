@@ -1045,13 +1045,13 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 				$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
 			}
 
-			$fields          = array();
+			$fields          = $value;
 			$field_group_id = 0;
 			if ( isset( $_GET['tab'] ) && 'edit' === sanitize_key( $_GET['tab'] ) ) {
 				$field_group_id = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
-				if ( ! empty( $field_group_id ) ) {
-					$fields = UM()->admin()->field_group()->get_fields( $field_group_id );
-				}
+//				if ( ! empty( $field_group_id ) ) {
+//					$fields = UM()->admin()->field_group()->get_fields( $field_group_id );
+//				}
 			}
 
 			ob_start();
@@ -1059,7 +1059,7 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 			UM()->admin()->field_group()->field_row_template();
 			?>
 
-			<div class="um-fields-column um-sub-fields-builder" data-group_id="<?php echo esc_attr( $field_group_id ); ?>">
+			<div class="um-fields-column um-sub-fields-builder">
 				<div class="um-fields-column-header<?php if ( empty( $fields ) ) { ?> hidden<?php } ?>">
 					<div class="um-fields-column-header-order"><?php esc_html_e( '#', 'ultimate-member' ); ?></div>
 					<div class="um-fields-column-header-name"><?php esc_html_e( 'Name', 'ultimate-member' ); ?></div>

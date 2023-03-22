@@ -210,22 +210,35 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 		}
 
 		/**
-		 * @param int    $group_id
-		 * @param string $type
+		 * @param int      $group_id
+		 * @param null|int $parent_id
 		 *
 		 * @return array
 		 */
-		public function get_fields( $group_id, $type = 'all' ) {
+		public function get_fields( $group_id, $parent_id = null ) {
 			global $wpdb;
 
-			$query = $wpdb->prepare(
-				"SELECT * 
-				FROM {$wpdb->prefix}um_fields f 
-				LEFT JOIN {$wpdb->prefix}um_fields_meta fm ON fm.field_id = f.id AND fm.meta_key = 'order' 
-				WHERE group_id = %d
-				ORDER BY fm.meta_value ASC",
-				$group_id
-			);
+			if ( ! is_null( $parent_id ) ) {
+				$query = $wpdb->prepare(
+					"SELECT * 
+					FROM {$wpdb->prefix}um_fields f 
+					LEFT JOIN {$wpdb->prefix}um_fields_meta fm ON fm.field_id = f.id AND fm.meta_key = 'order' 
+					WHERE group_id = %d AND 
+					      parent_id = %d
+					ORDER BY fm.meta_value ASC",
+					$group_id,
+					$parent_id
+				);
+			} else {
+				$query = $wpdb->prepare(
+					"SELECT * 
+					FROM {$wpdb->prefix}um_fields f 
+					LEFT JOIN {$wpdb->prefix}um_fields_meta fm ON fm.field_id = f.id AND fm.meta_key = 'order' 
+					WHERE group_id = %d
+					ORDER BY fm.meta_value ASC",
+					$group_id
+				);
+			}
 
 //			if ( 'fields_only' === $type ) {
 //				$query = $wpdb->prepare(
@@ -273,7 +286,7 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 			$wpdb->insert(
 				"{$wpdb->prefix}um_field_groups",
 				array(
-					'group_key'   => md5( 'group' . uniqid( $data['title'] . $data['group_id'] ) . time() ),
+					'group_key'   => md5( 'group' . uniqid( $data['title'] ) . time() ),
 					'title'       => $data['title'],
 					'description' => array_key_exists( 'description', $data ) ? $data['description'] : '',
 					'status'      => array_key_exists( 'status', $data ) ? $data['status'] : 'active',
@@ -332,12 +345,14 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 					'group_id'  => $data['group_id'],
 					'title'     => $data['title'],
 					'type'      => $data['type'],
+					'parent_id' => isset( $data['parent_id'] ) ? $data['parent_id'] : 0,
 				),
 				array(
 					'%s',
 					'%d',
 					'%s',
 					'%s',
+					'%d',
 				)
 			);
 
@@ -370,6 +385,11 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 			if ( array_key_exists( 'type', $data ) ) {
 				$update_data['type'] = $data['type'];
 				$update_format[] = '%s';
+			}
+
+			if ( array_key_exists( 'parent_id', $data ) ) {
+				$update_data['parent_id'] = $data['parent_id'];
+				$update_format[] = '%d';
 			}
 
 			$wpdb->update(
@@ -432,8 +452,8 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 		public function update_field_meta( $field_id, $meta_key, $meta_value ) {
 			global $wpdb;
 
-			// don't use predefined in `um_fields`
-			if ( in_array( $meta_key, array( 'id', 'field_key', 'group_id', 'title', 'type' ) ) ) {
+			// don't use predefined in `um_fields`. 'fields' = predefined meta for repeater field that uses internally
+			if ( in_array( $meta_key, array( 'id', 'field_key', 'group_id', 'title', 'type', 'parent_id', 'fields' ) ) ) {
 				return;
 			}
 
@@ -737,6 +757,10 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 			if ( ! empty( $meta_values ) ) {
 				$meta_values = array_combine( array_column( $meta_values, 'meta_key' ), array_column( $meta_values, 'meta_value' ) );
 				$field_data = array_merge( $field_data, $meta_values );
+			}
+
+			if ( 'repeater' === $field_data['type'] ) {
+				$field_data['fields'] = $this->get_fields( $field_data['group_id'], $field );
 			}
 
 			return $field_data;
