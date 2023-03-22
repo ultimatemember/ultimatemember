@@ -151,6 +151,14 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 			$settings_by_type = array_merge_recursive( $static_settings, $field_types[ $field_type ]['settings'] );
 			$settings_by_type = apply_filters( 'um_fields_settings', $settings_by_type, $field_type );
 
+			foreach ( $settings_by_type as $tab_key => &$settings_data ) {
+				foreach ( $settings_data as $setting_key => &$setting_data ) {
+					if ( array_key_exists( $tab_key, $static_settings ) && array_key_exists( $setting_key, $static_settings[ $tab_key ] ) ) {
+						$setting_data['static'] = true;
+					}
+				}
+			}
+
 			if ( ! empty( $field_id ) ) {
 				$field_data = $this->get_field_data( $field_id );
 				if ( empty( $field_data ) ) {
@@ -161,10 +169,6 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 					foreach ( $settings_data as $setting_key => &$setting_data ) {
 						if ( ! array_key_exists( $setting_key, $field_data ) ) {
 							continue;
-						}
-
-						if ( array_key_exists( $tab_key, $static_settings ) && array_key_exists( $setting_key, $static_settings[ $tab_key ] ) ) {
-							$setting_data['static'] = true;
 						}
 
 						if ( 'conditional_rules' === $setting_key || 'options' === $setting_key ) {
