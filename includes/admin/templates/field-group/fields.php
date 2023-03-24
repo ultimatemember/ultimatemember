@@ -6,10 +6,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 $fields = array();
 if ( isset( $_GET['tab'] ) && 'edit' === sanitize_key( $_GET['tab'] ) ) {
 	$field_group_id = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
-	if ( ! empty( $field_group_id ) ) {
-		// Get only 1st level fields with parent_id = 0. parent_id > 0 fields are from the Repeater type field.
-		$fields = UM()->admin()->field_group()->get_fields( $field_group_id, 0 );
-	}
 }
 
 if ( ! is_null( UM()->admin()->actions_listener()->field_group_submission ) &&
@@ -25,6 +21,11 @@ if ( ! is_null( UM()->admin()->actions_listener()->field_group_submission ) &&
 		if ( array_key_exists( 'parent_id', $field ) && $field['parent_id'] !== '0' ) {
 			unset( $fields[ $k ] );
 		}
+	}
+} else {
+	if ( ! empty( $field_group_id ) ) {
+		// Get only 1st level fields with parent_id = 0. parent_id > 0 fields are from the Repeater type field.
+		$fields = UM()->admin()->field_group()->get_fields( $field_group_id, 0 );
 	}
 }
 

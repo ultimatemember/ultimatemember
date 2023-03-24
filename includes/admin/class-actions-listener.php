@@ -990,7 +990,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 
 					if ( 'repeater' === $field_data['type'] && 'fields' === $field_id ) {
 						$child_exists = false;
-						foreach ( $data['fields'] as $kk => $f_data ) {
+						foreach ( $data['fields'] as $f_data ) {
 							if ( array_key_exists( 'parent_id', $f_data ) && $f_data['parent_id'] === $k ) {
 								$child_exists = true;
 							}
@@ -1003,9 +1003,10 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 						}
 					} else {
 						if ( empty( $field_data[ $field_id ] ) ) {
+							var_dump( $field_settings[ $field_id ] );
 							$this->field_groups_error = array(
 								'field'   => 'um-admin-form-' . $field_id,
-								'message' => __( 'Fields cannot be empty.', 'ultimate-member' ),
+								'message' => sprintf( __( '"%s" field cannot be empty.', 'ultimate-member' ), $field_settings[ $field_id ]['label'] ),
 							);
 						}
 					}
