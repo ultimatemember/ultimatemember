@@ -101,6 +101,7 @@ class Field_Groups extends \WP_List_Table {
 						  COUNT(f.group_id) AS `fields`
 					FROM {$wpdb->prefix}um_field_groups AS fg
 					LEFT JOIN {$wpdb->prefix}um_fields AS f ON ( f.group_id = fg.id AND f.type != 'row' )
+					WHERE f.parent_id = 0
 					GROUP BY fg.id
 					ORDER BY fg.title {$order} 
 					LIMIT %d, %d",

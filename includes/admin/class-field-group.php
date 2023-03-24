@@ -61,92 +61,9 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 			return $html;
 		}
 
-		/**
-		 * @param int    $id User ID or Group ID
-		 * @param string $by 'user' or 'group'
-		 *
-		 * @return bool|int
-		 */
-		public function get_draft_by( $id, $by ) {
-			global $wpdb;
-
-			if ( 'user' === $by ) {
-				$draft_id = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT fg.id 
-						FROM {$wpdb->prefix}um_field_groups AS fg 
-						LEFT JOIN {$wpdb->prefix}um_field_groups_meta fgm ON fgm.group_id = fg.id AND fgm.meta_key = 'user_id'  
-						WHERE fg.status = 'draft' AND 
-							  fgm.meta_value = %d",
-						$id
-					)
-				);
-			} elseif ( 'group' === $by ) {
-				$draft_id = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT fg.id 
-						FROM {$wpdb->prefix}um_field_groups AS fg 
-						LEFT JOIN {$wpdb->prefix}um_field_groups_meta fgm ON fgm.group_id = fg.id AND fgm.meta_key = 'group_id'  
-						WHERE fg.status = 'draft' AND 
-							  fgm.meta_value = %d",
-						$id
-					)
-				);
-			}
-
-			return ! empty( $draft_id ) ? absint( $draft_id ) : false;
-		}
-
-		public function get_all_fields_settings() {
-			$static_settings = UM()->config()->get( 'static_field_settings' );
-			$field_types     = UM()->config()->get( 'field_types' );
-
-			foreach ( $field_types as $field_type => &$data ) {
-				if ( ! empty( $data['settings'] ) ) {
-					$data['settings'] = array_merge_recursive( $static_settings, $data['settings'] );
-				} else {
-					$data['settings'] = $static_settings;
-				}
-
-				$data['settings'] = apply_filters( 'um_fields_settings', $data['settings'], $field_type );
-
-				foreach ( $data['settings'] as $tab_key => &$settings_data ) {
-					foreach ( $settings_data as $setting_key => &$setting_data ) {
-						if ( array_key_exists( $tab_key, $static_settings ) && array_key_exists( $setting_key, $static_settings[ $tab_key ] ) ) {
-							$setting_data['static'] = true;
-						}
-					}
-
-					if ( empty( $settings_data ) ) {
-						unset( $data['settings'][ $tab_key ] );
-					}
-				}
-			}
-
-			return $field_types;
-		}
-
 		public function get_field_settings( $field_type, $field_id = null ) {
 			$static_settings = UM()->config()->get( 'static_field_settings' );
 			$field_types     = UM()->config()->get( 'field_types' );
-
-//			$settings_by_type_keys = array_unique( array_merge( array_keys( $static_settings ), array_keys( $field_types ) ) );
-//			$settings_by_type      = array_fill_keys( $settings_by_type_keys, array() );
-//			foreach ( $settings_by_type as $tab_key => &$tab_fields ) {
-//				if ( array_key_exists( $tab_key, $static_settings ) ) {
-//					$tab_fields = array_merge( $tab_fields, $static_settings[ $tab_key ] );
-//					foreach ( $tab_fields as $field_key => &$field_data ) {
-//						if ( array_key_exists( $tab_key, $field_types[ $field_type ]['settings'] ) &&
-//						     array_key_exists( $field_key, $field_types[ $field_type ]['settings'][ $tab_key ] ) ) {
-//							$field_data = array_merge( $field_data, $field_types[ $field_type ]['settings'][ $tab_key ][ $field_key ] );
-//						}
-//					}
-//				}
-//
-//				if ( array_key_exists( $tab_key, $field_types[ $field_type ]['settings'] ) ) {
-//					$tab_fields = array_merge( $tab_fields, $field_types[ $field_type ]['settings'][ $tab_key ] );
-//				}
-//			}
 
 			$settings_by_type = array_merge_recursive( $static_settings, $field_types[ $field_type ]['settings'] );
 			$settings_by_type = apply_filters( 'um_fields_settings', $settings_by_type, $field_type );
@@ -171,11 +88,20 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 							continue;
 						}
 
-						if ( 'conditional_rules' === $setting_key || 'options' === $setting_key ) {
-							$setting_data['value'] = unserialize( $field_data[ $setting_key ] );
-						} else {
-							$setting_data['value'] = $field_data[ $setting_key ];
-						}
+						$setting_data['value'] = maybe_unserialize( $field_data[ $setting_key ] );
+
+//						if ( ! is_null( UM()->admin()->actions_listener()->field_group_submission ) &&
+//						     is_array( UM()->admin()->actions_listener()->field_group_submission ) &&
+//						     array_key_exists( 'fields', UM()->admin()->actions_listener()->field_group_submission ) ) {
+//							UM()->admin()->actions_listener()->field_group_submission['fields'];
+//						} else {
+//							$setting_data['value'] = maybe_unserialize( $field_data[ $setting_key ] );
+//						}
+//						if ( 'conditional_rules' === $setting_key || 'options' === $setting_key ) {
+//							$setting_data['value'] = maybe_unserialize( $field_data[ $setting_key ] );
+//						} else {
+//							$setting_data['value'] = $field_data[ $setting_key ];
+//						}
 					}
 				}
 			}
@@ -224,18 +150,18 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 
 			if ( ! is_null( $parent_id ) ) {
 				$query = $wpdb->prepare(
-					"SELECT * 
+					"SELECT f.*
 					FROM {$wpdb->prefix}um_fields f 
 					LEFT JOIN {$wpdb->prefix}um_fields_meta fm ON fm.field_id = f.id AND fm.meta_key = 'order' 
 					WHERE group_id = %d AND 
-					      parent_id = %d
+						  parent_id = %d
 					ORDER BY fm.meta_value ASC",
 					$group_id,
 					$parent_id
 				);
 			} else {
 				$query = $wpdb->prepare(
-					"SELECT * 
+					"SELECT f.*
 					FROM {$wpdb->prefix}um_fields f 
 					LEFT JOIN {$wpdb->prefix}um_fields_meta fm ON fm.field_id = f.id AND fm.meta_key = 'order' 
 					WHERE group_id = %d
@@ -425,7 +351,7 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 					"SELECT meta_id 
 					FROM {$wpdb->prefix}um_fields_meta 
 					WHERE field_id = %d AND 
-					      meta_key = %s 
+						  meta_key = %s 
 					LIMIT 1",
 					$field_id,
 					$meta_key
@@ -443,7 +369,7 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 					"SELECT meta_id 
 					FROM {$wpdb->prefix}um_field_groups_meta 
 					WHERE group_id = %d AND 
-					      meta_key = %s 
+						  meta_key = %s 
 					LIMIT 1",
 					$group_id,
 					$meta_key
@@ -611,7 +537,7 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 					"SELECT id 
 					FROM {$wpdb->prefix}um_fields 
 					WHERE id = %d AND 
-					      group_id = %d 
+						  group_id = %d 
 					LIMIT 1",
 					$row_field_id,
 					$group_id
@@ -628,7 +554,7 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 					FROM {$wpdb->prefix}um_fields AS f
 					LEFT JOIN {$wpdb->prefix}um_fields_meta AS fm ON fm.field_id = f.id AND fm.meta_key = 'row'
 					WHERE fm.meta_value = %d AND 
-					      group_id = %d",
+						  group_id = %d",
 					$row_field_id,
 					$group_id
 				),
@@ -670,6 +596,10 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 		 * @return bool|string Field's metakey or false on failure
 		 */
 		public function get_field_metakey( $field ) {
+			if ( empty( $field ) ) {
+				return false;
+			}
+
 			if ( ! is_numeric( $field ) ) {
 				if ( ! array_key_exists( 'id', $field ) ) {
 					return false;
@@ -691,6 +621,10 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 		public function get_field_meta( $field, $meta_key, $default = '' ) {
 			global $wpdb;
 
+			if ( empty( $field ) ) {
+				return false;
+			}
+
 			if ( ! is_numeric( $field ) ) {
 				if ( ! array_key_exists( 'id', $field ) ) {
 					return false;
@@ -704,7 +638,7 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 					"SELECT meta_value 
 					FROM {$wpdb->prefix}um_fields_meta 
 					WHERE field_id = %d AND 
-					      meta_key = %s
+						  meta_key = %s
 					LIMIT 1",
 					$field,
 					$meta_key
@@ -763,8 +697,9 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 				$field_data = array_merge( $field_data, $meta_values );
 			}
 
+			// Get repeater fields
 			if ( 'repeater' === $field_data['type'] ) {
-				$field_data['fields'] = $this->get_fields( $field_data['group_id'], $field );
+				$field_data['fields']    = $this->get_fields( $field_data['group_id'], $field );
 			}
 
 			return $field_data;
@@ -772,18 +707,47 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 
 		public function get_tab_fields_html( $tab, $field ) {
 			$template_settings = UM()->admin()->field_group()->get_field_settings( $field['type'], $field['index'] );
+			// set field type from the function's input
 			if ( isset( $template_settings['general']['type'] ) ) {
 				$template_settings['general']['type']['value'] = $field['type'];
 			}
 
 			$settings_fields = $template_settings[ $tab ];
 			foreach ( $settings_fields as &$setting_data ) {
+				// predefine name here for making the proper names through all the group fields builder
 				$setting_data['name'] = 'field_group[fields][' . $field['index'] . '][' . $setting_data['id'] . ']';
+
+				// disable fields if predefined
 				if ( ! empty( $field['disabled'] ) ) {
 					$setting_data['disabled'] = true;
 				}
+
+				// static fields that are still the same when change the field type
 				if ( ! empty( $setting_data['static'] ) ) {
 					$setting_data['class'] = ! empty( $setting_data['class'] ) ? $setting_data['class'] . ' um-field-row-static-setting' : 'um-field-row-static-setting';
+				}
+
+				// Maybe fill the data from submission
+				if ( ! is_null( UM()->admin()->actions_listener()->field_group_submission ) &&
+				     is_array( UM()->admin()->actions_listener()->field_group_submission ) &&
+				     array_key_exists( 'fields', UM()->admin()->actions_listener()->field_group_submission ) ) {
+
+					if ( array_key_exists( $field['index'], UM()->admin()->actions_listener()->field_group_submission['fields'] ) ) {
+						if ( array_key_exists( $setting_data['id'], UM()->admin()->actions_listener()->field_group_submission['fields'][ $field['index'] ] ) ) {
+							$setting_data['value'] = UM()->admin()->actions_listener()->field_group_submission['fields'][ $field['index'] ][ $setting_data['id'] ];
+						} elseif ( 'repeater' === $field['type'] && 'fields' === $setting_data['id'] ) {
+							$sub_fields = array();
+							foreach ( UM()->admin()->actions_listener()->field_group_submission['fields'] as $k => $f ) {
+								if ( array_key_exists( 'parent_id', $f ) && $f['parent_id'] === $field['index'] ) {
+									$sub_fields[ $k ] = $f;
+								}
+							}
+
+							if ( ! empty( $sub_fields ) ) {
+								$setting_data['value'] = $sub_fields;
+							}
+						}
+					}
 				}
 			}
 

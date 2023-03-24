@@ -692,6 +692,13 @@ UM.fields_groups = {
 };
 
 jQuery( function($) {
+	// Set newIndex not 0 if form submitted with invalid data and need to resend.
+	$('.um-field-row > .um-field-row-id').each(function(){
+		if ( '' === $(this).val() ) {
+			UM.fields_groups.field.newIndex ++;
+		}
+	});
+
 	// handle errors on the first loading
 	let $noticeObj = $('#message[data-error-field]');
 	if ( $noticeObj.length > 0 ) {

@@ -19,6 +19,8 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 
 		var $field_groups_error = null;
 
+		public $field_group_submission = null;
+
 		/**
 		 * Actions_Listener constructor.
 		 */
@@ -976,31 +978,46 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 				return $result;
 			}
 
-//			foreach ( $data['fields'] as $field_data ) {
-//				$field_settings      = UM()->admin()->field_group()->get_field_settings( sanitize_key( $field_data['type'] ) );
-//				$field_settings      = call_user_func_array('array_merge', array_values( $field_settings ) );
-//				$fields_required_map = array_column( $field_settings, 'required', 'id' );
-//
-//				foreach ( $fields_required_map as $field_id => $required ) {
-//					if ( empty( $required ) ) {
-//						continue;
-//					}
-//
-//					if ( empty( $field_data[ $field_id ] ) ) {
-//						$this->field_groups_error = array(
-//							'field'   => 'um-admin-form-' . $field_id,
-//							'message' => __( 'Fields cannot be empty.', 'ultimate-member' ),
-//						);
-//					}
-//
-//					if ( ! empty( $this->field_groups_error ) ) {
-//						$result = $this->field_groups_error;
-//						return $result;
-//					}
-//				}
-//
+			foreach ( $data['fields'] as $k => $field_data ) {
+				$field_settings      = UM()->admin()->field_group()->get_field_settings( sanitize_key( $field_data['type'] ) );
+				$field_settings      = call_user_func_array('array_merge', array_values( $field_settings ) );
+				$fields_required_map = array_column( $field_settings, 'required', 'id' );
+
+				foreach ( $fields_required_map as $field_id => $required ) {
+					if ( empty( $required ) ) {
+						continue;
+					}
+
+					if ( 'repeater' === $field_data['type'] && 'fields' === $field_id ) {
+						$child_exists = false;
+						foreach ( $data['fields'] as $kk => $f_data ) {
+							if ( array_key_exists( 'parent_id', $f_data ) && $f_data['parent_id'] === $k ) {
+								$child_exists = true;
+							}
+						}
+						if ( ! $child_exists ) {
+							$this->field_groups_error = array(
+								'field'   => 'um-admin-form-' . $field_id,
+								'message' => __( 'Sub fields cannot be empty.', 'ultimate-member' ),
+							);
+						}
+					} else {
+						if ( empty( $field_data[ $field_id ] ) ) {
+							$this->field_groups_error = array(
+								'field'   => 'um-admin-form-' . $field_id,
+								'message' => __( 'Fields cannot be empty.', 'ultimate-member' ),
+							);
+						}
+					}
+
+					if ( ! empty( $this->field_groups_error ) ) {
+						$result = $this->field_groups_error;
+						return $result;
+					}
+				}
+
 //				$fields_validate_map = array_column( $field_settings, 'validate', 'id' );
-//			}
+			}
 
 			return $result;
 		}
@@ -1053,6 +1070,8 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 
 				// Sanitize data by WordPress native functions.
 				$data = $this->sanitize( $_POST['field_group'] );
+
+				$this->field_group_submission = $data;
 
 				// Validate data sending for fields.
 				$result = $this->validate( $data );
@@ -1140,6 +1159,8 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 
 				$data = $this->sanitize( $_POST['field_group'] );
 
+				$this->field_group_submission = $data;
+
 				// Validate data sending for fields.
 				$result = $this->validate( $data );
 
@@ -1181,7 +1202,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 						}
 					}
 
-					wp_redirect( add_query_arg( array( 'id' => $field_group_id, 'msg' => 'a' ), $redirect ) );
+					wp_redirect( add_query_arg( array( 'id' => $field_group_id, 'msg' => 'a' ), get_admin_url() . 'admin.php?page=um_field_groups&tab=edit' ) );
 					exit;
 				}
 			}

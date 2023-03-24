@@ -3,8 +3,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-//wp_enqueue_script( 'postbox' );
-
 /**
  * UM hook
  *
@@ -46,41 +44,25 @@ do_action( 'um_field_groups_add_meta_boxes_um_field_group_meta' );
 
 $option = array();
 
-$id       = false;
-//$draft_id = false;
-$data     = array(
+$id   = false;
+$data = array(
 	'title'       => '',
 	'description' => '',
 	'group_key'   => '',
 );
 
 if ( ! empty( $_GET['id'] ) ) {
-	$id = absint( $_GET['id'] );
+	$id   = absint( $_GET['id'] );
 	$data = UM()->admin()->field_group()->get_data( $id );
-	// replace by draft by default
-//	$draft_id = UM()->admin()->field_group()->get_draft_by( $id, 'group' );
-//
-//	if ( ! empty( $draft_id ) ) {
-//		$data = UM()->admin()->field_group()->get_data( $draft_id );
-//	} elseif ( ! empty( $id ) ) {
-//		$data = UM()->admin()->field_group()->get_data( $id );
-//	}
-} /*else {
-	$draft_id = UM()->admin()->field_group()->get_draft_by( get_current_user_id(), 'user' );
-	// load draft on creation if it exists
-	if ( ! empty( $draft_id ) ) {
-		$data = UM()->admin()->field_group()->get_data( $draft_id );
-	}
-}*/
+}
 
-global $current_screen;
-$screen_id = $current_screen->id; ?>
-
-<script type="text/javascript">
-	jQuery( document ).ready( function() {
-		//postboxes.add_postbox_toggles( '<?php //echo esc_js( $screen_id ); ?>//' );
-	});
-</script>
+if ( ! is_null( UM()->admin()->actions_listener()->field_group_submission ) ) {
+	$data = wp_parse_args(
+		UM()->admin()->actions_listener()->field_group_submission,
+		$data
+	);
+}
+?>
 
 <div class="wrap">
 	<h2>
@@ -117,7 +99,6 @@ $screen_id = $current_screen->id; ?>
 		}
 	}
 
-
 	if ( ! empty( UM()->admin()->actions_listener()->field_groups_error ) ) {
 		if ( ! empty( UM()->admin()->actions_listener()->field_groups_error['message'] ) ) {
 			echo '<div id="message" class="error fade" data-error-field="' . esc_attr( UM()->admin()->actions_listener()->field_groups_error['field'] ) . '"><p>' . esc_html( UM()->admin()->actions_listener()->field_groups_error['message'] ) . '</p></div>';
@@ -127,7 +108,6 @@ $screen_id = $current_screen->id; ?>
 
 	<form id="um_edit_field_group" action="" method="post">
 		<input type="hidden" id="field_group_id" name="field_group[id]" value="<?php echo esc_attr( $id ); ?>" />
-<!--		<input type="hidden" id="field_group_draft_id" name="field_group[draft_id]" value="--><?php //echo esc_attr( $draft_id ); ?><!--" />-->
 		<?php if ( 'add' === sanitize_key( $_GET['tab'] ) ) { ?>
 			<input type="hidden" name="um_nonce" value="<?php echo esc_attr( wp_create_nonce( 'um-add-field-group' ) ); ?>" />
 		<?php } else { ?>

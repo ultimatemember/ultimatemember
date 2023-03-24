@@ -160,6 +160,35 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			wp_enqueue_style( 'um_admin_roles' );
 		}
 
+		private function get_all_field_types() {
+			$static_settings = UM()->config()->get( 'static_field_settings' );
+			$field_types     = UM()->config()->get( 'field_types' );
+
+			foreach ( $field_types as $field_type => &$data ) {
+				if ( ! empty( $data['settings'] ) ) {
+					$data['settings'] = array_merge_recursive( $static_settings, $data['settings'] );
+				} else {
+					$data['settings'] = $static_settings;
+				}
+
+				$data['settings'] = apply_filters( 'um_fields_settings', $data['settings'], $field_type );
+
+				foreach ( $data['settings'] as $tab_key => &$settings_data ) {
+					foreach ( $settings_data as $setting_key => &$setting_data ) {
+						if ( array_key_exists( $tab_key, $static_settings ) && array_key_exists( $setting_key, $static_settings[ $tab_key ] ) ) {
+							$setting_data['static'] = true;
+						}
+					}
+
+					if ( empty( $settings_data ) ) {
+						unset( $data['settings'][ $tab_key ] );
+					}
+				}
+			}
+
+			return $field_types;
+		}
+
 		/**
 		 * @since 3.0
 		 */
@@ -179,7 +208,7 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			wp_register_script( 'um_admin_field_groups', $this->urls['js'] . 'admin/field-groups' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'wp-i18n', 'jquery-ui-sortable', 'jquery-ui-draggable', 'um_admin_forms' ), UM_VERSION, true );
 			$field_groups_data = array(
 				'field_tabs'        => UM()->config()->get( 'field_settings_tabs' ),
-				'field_types'       => UM()->admin()->field_group()->get_all_fields_settings(),
+				'field_types'       => $this->get_all_field_types(),
 				'conditional_rules' => UM()->config()->get( 'field_conditional_rules' ),
 			);
 			wp_localize_script( 'um_admin_field_groups', 'um_admin_field_groups_data', $field_groups_data );
