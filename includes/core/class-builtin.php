@@ -1067,9 +1067,11 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable'   => 1,
 					'url_target' => '_blank',
 					'url_rel'    => 'nofollow',
+					'icon'       => 'um-icon-ios-musical-note',
 					'validate'   => 'tiktok_url',
 					'url_text'   => 'TikTok',
 					'advanced'   => 'social',
+					'color'      => '#000000',
 					'match'      => 'https://tiktok.com/@',
 				),
 
@@ -1087,6 +1089,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'validate'   => 'twitch_url',
 					'url_text'   => 'Twitch',
 					'advanced'   => 'social',
+					'color'      => '#6441a5',
 					'match'      => 'https://twitch.tv/',
 				),
 
@@ -1104,6 +1107,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'validate'   => 'reddit_url',
 					'url_text'   => 'Reddit',
 					'advanced'   => 'social',
+					'color'      => '#ff4500',
 					'match'      => 'https://www.reddit.com/user/',
 				),
 
