@@ -368,7 +368,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 			if ( um_submitting_account_page() ) {
 
-				UM()->form()->post_form = $_POST;
+				UM()->form()->post_form = wp_unslash( $_POST );
 
 				/**
 				 * UM hook
