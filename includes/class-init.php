@@ -198,7 +198,9 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->honeypot = 'um_request';
 
 				// textdomain loading
-				$this->localize();
+				add_action( 'plugins_loaded', function() {
+					$this->localize();
+				} );
 
 				// include UM classes
 				$this->includes();
@@ -235,7 +237,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 * 'ultimate-member' by default
 		 */
 		function localize() {
-			$language_locale = ( get_locale() != '' ) ? get_locale() : 'en_US';
+			$language_locale = function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale();
 
 			/**
 			 * UM hook
@@ -306,6 +308,7 @@ if ( ! class_exists( 'UM' ) ) {
 			 */
 			$language_file = apply_filters( 'um_language_file', $language_file );
 
+			unload_textdomain( $language_domain, true );
 			load_textdomain( $language_domain, $language_file );
 		}
 
@@ -1292,7 +1295,7 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['files'];
 		}
 
-		
+
 		/**
 		 * @since 2.0.21
 		 *
