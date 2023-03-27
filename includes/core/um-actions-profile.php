@@ -263,7 +263,7 @@ function um_user_edit_profile( $args ) {
 			}
 
 			// skip saving role here
-			if ( in_array( $key, [ 'role', 'role_select', 'role_radio' ] ) ) {
+			if ( in_array( $key, array( 'role', 'role_select', 'role_radio' ) ) ) {
 				continue;
 			}
 
@@ -383,10 +383,7 @@ function um_user_edit_profile( $args ) {
 
 		if ( ! empty( $args['submitted']['role'] ) && current_user_can( 'promote_users' ) ) {
 			global $wp_roles;
-			$role_keys = array_map( function( $item ) {
-				return 'um_' . $item;
-			}, get_option( 'um_roles', array() ) );
-			$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+			$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
 
 			if ( ! in_array( $args['submitted']['role'], $exclude_roles ) ) {
 				$to_update['role'] = $args['submitted']['role'];
@@ -403,10 +400,7 @@ function um_user_edit_profile( $args ) {
 
 			if ( ! empty( $args['submitted']['role'] ) ) {
 				global $wp_roles;
-				$role_keys = array_map( function( $item ) {
-					return 'um_' . $item;
-				}, get_option( 'um_roles', array() ) );
-				$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+				$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
 
 				if ( ! in_array( $args['submitted']['role'], $exclude_roles ) ) {
 					$to_update['role'] = $args['submitted']['role'];
@@ -620,11 +614,7 @@ function um_restore_default_roles( $user_id, $args, $to_update ) {
 	if ( ! empty( $args['submitted']['role'] ) && ! empty( $to_update['role'] ) ) {
 		$wp_user = new WP_User( $user_id );
 
-		$role_keys = array_map( function( $item ) {
-			return 'um_' . $item;
-		}, get_option( 'um_roles', array() ) );
-
-		$leave_roles = array_diff( $args['roles_before_upgrade'], array_merge( $role_keys, array( 'subscriber' ) ) );
+		$leave_roles = array_diff( $args['roles_before_upgrade'], UM()->roles()->get_editable_user_roles() );
 
 		if ( UM()->roles()->is_role_custom( $to_update['role'] ) ) {
 			$wp_user->remove_role( $to_update['role'] );

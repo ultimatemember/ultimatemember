@@ -493,13 +493,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 							}
 
 							global $wp_roles;
-							$role_keys     = array_map(
-								function( $item ) {
-									return 'um_' . $item;
-								},
-								get_option( 'um_roles', array() )
-							);
-							$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+							$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
 
 							if ( ! empty( $role ) &&
 								( ! in_array( $role, $custom_field_roles, true ) || in_array( $role, $exclude_roles, true ) ) ) {
@@ -840,13 +834,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 			// role field
 			global $wp_roles;
-			$role_keys     = array_map(
-				function( $item ) {
-					return 'um_' . $item;
-				},
-				get_option( 'um_roles', array() )
-			);
-			$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+			$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
 
 			$roles = UM()->roles()->get_roles( false, $exclude_roles );
 			$roles = array_map(

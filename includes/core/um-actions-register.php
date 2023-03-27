@@ -430,17 +430,7 @@ function um_submit_form_register( $args ) {
 	//get user role from field Role dropdown or radio
 	if ( isset( $args['role'] ) ) {
 		global $wp_roles;
-		$um_roles = get_option( 'um_roles', array() );
-
-		if ( ! empty( $um_roles ) ) {
-			$role_keys = array_map( function( $item ) {
-				return 'um_' . $item;
-			}, $um_roles );
-		} else {
-			$role_keys = array();
-		}
-
-		$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+		$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
 
 		//if role is properly set it
 		if ( ! in_array( $args['role'], $exclude_roles ) ) {
