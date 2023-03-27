@@ -198,9 +198,7 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->honeypot = 'um_request';
 
 				// textdomain loading
-				add_action( 'plugins_loaded', function() {
-					$this->localize();
-				} );
+				add_action( 'init', array( &$this, 'localize' ), 0 );
 
 				// include UM classes
 				$this->includes();
@@ -236,8 +234,9 @@ if ( ! class_exists( 'UM' ) ) {
 		 *
 		 * 'ultimate-member' by default
 		 */
-		function localize() {
-			$language_locale = function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale();
+		public function localize() {
+			// The function `get_user_locale()` will return `get_locale()` result by default if user or its locale is empty.
+			$language_locale = get_user_locale();
 
 			/**
 			 * UM hook
@@ -308,7 +307,10 @@ if ( ! class_exists( 'UM' ) ) {
 			 */
 			$language_file = apply_filters( 'um_language_file', $language_file );
 
-			unload_textdomain( $language_domain, true );
+			// Unload textdomain if it has already loaded.
+			if ( is_textdomain_loaded( $language_domain ) ) {
+				unload_textdomain( $language_domain, true );
+			}
 			load_textdomain( $language_domain, $language_file );
 		}
 
