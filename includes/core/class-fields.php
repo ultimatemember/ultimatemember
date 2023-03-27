@@ -2055,7 +2055,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 */
 		function get_restricted_fields_for_edit( $_um_profile_id = false ) {
 			// fields that need to be disabled in edit mode (profile)
-			$arr_restricted_fields = array( 'user_email', 'username', 'user_login', 'user_password', '_um_last_login' );
+			$arr_restricted_fields = array( 'user_email', 'username', 'user_login', 'user_password', '_um_last_login', 'user_registered' );
 			$arr_restricted_fields = apply_filters( 'um_user_profile_restricted_edit_fields', $arr_restricted_fields, $_um_profile_id );
 
 			return $arr_restricted_fields;
