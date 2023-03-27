@@ -2688,7 +2688,14 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					// Normalise date format.
 					$value = $this->field_value( $key, $default, $data );
 					if ( $value ) {
-						$value = date( 'Y-m-d', strtotime( $value ) );
+						// numeric (either unix or YYYYMMDD). ACF uses Ymd format of date inside the meta tables.
+						if ( is_numeric( $value ) && strlen( $value ) !== 8 ) {
+							$unixtimestamp = $value;
+						} else {
+							$unixtimestamp = strtotime( $value );
+						}
+						// Ultimate Member date field stores the date in metatable in the format Y/m/d. Convert to it before echo.
+						$value = date( 'Y/m/d', $unixtimestamp );
 					}
 
 					$output .= '<input  ' . $disabled . '  class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $key . UM()->form()->form_suffix ) . '" id="' . esc_attr( $key . UM()->form()->form_suffix ) . '" value="' . esc_attr( $value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" data-range="' . esc_attr( $range ) . '" data-years="' . esc_attr( $years ) . '" data-years_x="' . esc_attr( $years_x ) . '" data-disabled_weekdays="' . esc_attr( $disabled_weekdays ) . '" data-date_min="' . esc_attr( $date_min ) . '" data-date_max="' . esc_attr( $date_max ) . '" data-format="' . esc_attr( $js_format ) . '" data-value="' . esc_attr( $value ) . '" />
