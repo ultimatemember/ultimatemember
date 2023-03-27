@@ -1922,16 +1922,16 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 
 			if ( ! $profile_noindex ) {
-				$role = UM()->roles()->get_priority_user_role( $user_id );
+				$role        = UM()->roles()->get_priority_user_role( $user_id );
 				$permissions = UM()->roles()->role_data( $role );
 
-				if ( isset( $permissions['profile_noindex'] ) && (bool) $permissions['profile_noindex'] ) {
+				if ( isset( $permissions['profile_noindex'] ) && '' !== $permissions['profile_noindex'] ) {
 					// Setting "Avoid indexing profile by search engines" in [wp-admin > Ultimate Member > User Roles > Edit Role]
-					$profile_noindex = true;
+					$profile_noindex = (bool) $permissions['profile_noindex'];
 
-				} elseif ( ( ! isset( $permissions['profile_noindex'] ) || $permissions['profile_noindex'] === '' ) && (bool) UM()->options()->get( 'profile_noindex' ) ) {
+				} else {
 					// Setting "Avoid indexing profile by search engines" in [wp-admin > Ultimate Member > Settings > General > Users]
-					$profile_noindex = true;
+					$profile_noindex = (bool) UM()->options()->get( 'profile_noindex' );
 
 				}
 			}
