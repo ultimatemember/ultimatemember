@@ -858,7 +858,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 			foreach ( $fields as $field_key => $field_settings ) {
 
-				if ( strstr( $field_key, 'role_' ) && is_array( $field_settings['options'] ) ) {
+				if ( strstr( $field_key, 'role_' ) && array_key_exists( 'options', $field_settings ) && is_array( $field_settings['options'] ) ) {
 
 					if ( isset( $this->post_form['mode'] ) && 'profile' === $this->post_form['mode'] &&
 						 isset( $field_settings['editable'] ) && $field_settings['editable'] == 0 ) {
