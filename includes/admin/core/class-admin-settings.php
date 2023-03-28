@@ -106,6 +106,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				$metakeys = array();
 				foreach ( UM()->builtin()->all_user_fields as $all_user_field ) {
+					if ( ! array_key_exists( 'metakey', $all_user_field ) ) {
+						continue;
+					}
 					$metakeys[] = $all_user_field['metakey'];
 				}
 
