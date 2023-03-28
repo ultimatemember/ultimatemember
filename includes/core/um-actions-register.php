@@ -273,7 +273,7 @@ add_action( 'um_registration_complete', 'um_check_user_status', 100, 2 );
 
 function um_submit_form_errors_hook__registration( $args ) {
 	// Check for "\" in password.
-	if ( false !== strpos( wp_unslash( trim( $args['user_password'] ) ), '\\' ) ) {
+	if ( array_key_exists( 'user_password', $args ) && false !== strpos( wp_unslash( trim( $args['user_password'] ) ), '\\' ) ) {
 		UM()->form()->add_error( 'user_password', __( 'Passwords may not contain the character "\\".', 'ultimate-member' ) );
 	}
 }
