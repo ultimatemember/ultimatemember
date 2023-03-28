@@ -75,6 +75,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'filesharing'           => '1.0.0',
 			'beaver-builder'        => '2.0',
 			'user-events'           => '1.0.0',
+			'stripe'           		=> '1.0.0',
 		);
 
 
