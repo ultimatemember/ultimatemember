@@ -45,6 +45,17 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 						),
 					),
 				),
+				'um-block/um-forms'              => array(
+					'render_callback' => array( $this, 'um_forms_render' ),
+					'attributes'      => array(
+						'form_id' => array(
+							'type' => 'string',
+						),
+					),
+				),
+				'um-block/um-password-reset'     => array(
+					'render_callback' => array( $this, 'um_password_reset_render' ),
+				),
 			);
 
 			foreach ( $blocks as $k => $block_data ) {
@@ -62,6 +73,26 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 			}
 
 			$shortcode .= ']';
+
+			return apply_shortcodes( $shortcode );
+		}
+
+
+		public function um_forms_render( $atts ) {
+			$shortcode = '[ultimatemember';
+
+			if ( isset( $atts['form_id'] ) && '' !== $atts['form_id'] ) {
+				$shortcode .= ' form_id="' . $atts['form_id'] . '"';
+			}
+
+			$shortcode .= ']';
+
+			return apply_shortcodes( $shortcode );
+		}
+
+
+		public function um_password_reset_render() {
+			$shortcode = '[ultimatemember_password]';
 
 			return apply_shortcodes( $shortcode );
 		}

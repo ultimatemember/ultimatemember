@@ -1,0 +1,15 @@
+{
+  "apiVersion": 2,
+  "name": "um-block/um-forms",
+  "title": "Form",
+  "description": "Choose display form",
+  "icon": "forms",
+  "category": "um-blocks",
+  "attributes": {
+    "form_id": {
+      "type": "integer"
+    }
+  },
+  "editorScript": "file:./build/index.js",
+  "textdomain": "ultimate-member"
+}
