@@ -248,7 +248,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
 
 			if ( isset( $fields[ $id ] ) ) {
-				$condition_fields = get_option( 'um_fields' );
+				$condition_fields = get_option( 'um_fields', array() );
 
 				if( ! is_array( $condition_fields ) ) $condition_fields = array();
 

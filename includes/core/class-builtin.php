@@ -39,7 +39,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			add_action( 'init', array( &$this, 'set_core_fields' ), 1 );
 			add_action( 'init', array( &$this, 'set_predefined_fields' ), 1 );
 			add_action( 'init', array( &$this, 'set_custom_fields' ), 1 );
-			$this->saved_fields = get_option( 'um_fields' );
+			$this->saved_fields = get_option( 'um_fields', array() );
 		}
 
 
@@ -1337,26 +1337,20 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 * Custom Fields
 		 */
 		function set_custom_fields() {
-
 			if ( is_array( $this->saved_fields ) ) {
-
 				$this->custom_fields = $this->saved_fields;
-
 			} else {
-
-				$this->custom_fields = '';
-
+				$this->custom_fields = array();
 			}
 
-			$custom = $this->custom_fields;
+			$custom     = $this->custom_fields;
 			$predefined = $this->predefined_fields;
 
-			if ( is_array( $custom ) ){
+			if ( is_array( $custom ) ) {
 				$this->all_user_fields = array_merge( $predefined, $custom );
 			} else {
 				$this->all_user_fields = $predefined;
 			}
-
 		}
 
 
