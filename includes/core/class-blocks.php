@@ -56,6 +56,14 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 				'um-block/um-password-reset'     => array(
 					'render_callback' => array( $this, 'um_password_reset_render' ),
 				),
+				'um-block/um-account'            => array(
+					'render_callback' => array( $this, 'um_account_render' ),
+					'attributes'      => array(
+						'tab' => array(
+							'type' => 'string',
+						),
+					),
+				),
 			);
 
 			foreach ( $blocks as $k => $block_data ) {
@@ -93,6 +101,19 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 
 		public function um_password_reset_render() {
 			$shortcode = '[ultimatemember_password]';
+
+			return apply_shortcodes( $shortcode );
+		}
+
+
+		public function um_account_render( $atts ) {
+			$shortcode = '[ultimatemember_account';
+
+			if ( isset( $atts['tab'] ) && 'all' !== $atts['tab'] ) {
+				$shortcode .= ' tab="' . $atts['tab'] . '"';
+			}
+
+			$shortcode .= ']';
 
 			return apply_shortcodes( $shortcode );
 		}

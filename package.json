@@ -22,7 +22,8 @@
     "build:all-blocks": "npm-run-all --parallel build-block-*",
     "build-block-um-member-directories": "cd includes/blocks/um-member-directories && wp-scripts build src/index.js",
     "build-block-um-forms": "cd includes/blocks/um-forms && wp-scripts build src/index.js",
-    "build-block-um-password-reset": "cd includes/blocks/um-password-reset && wp-scripts build src/index.js"
+    "build-block-um-password-reset": "cd includes/blocks/um-password-reset && wp-scripts build src/index.js",
+    "build-block-um-account": "cd includes/blocks/um-account && wp-scripts build src/index.js"
   },
   "engines": {
     "node": ">= 0.10.0"
