@@ -602,6 +602,7 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->external_integrations();
 			$this->gdpr();
 			$this->member_directory();
+			$this->blocks();
 
 			//if multisite networks active
 			if ( is_multisite() ) {
@@ -628,6 +629,20 @@ if ( ! class_exists( 'UM' ) ) {
 				}
 			}
 			return $this->classes['member_directory'];
+		}
+
+
+		/**
+		 * @since 2.6.1
+		 *
+		 * @return um\core\Blocks()
+		 */
+		public function blocks() {
+			if ( empty( $this->classes['blocks'] ) ) {
+				$this->classes['blocks'] = new um\core\Blocks();
+			}
+
+			return $this->classes['blocks'];
 		}
 
 
