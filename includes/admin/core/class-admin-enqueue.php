@@ -556,102 +556,37 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		/**
 		 * Load Gutenberg scripts
 		 */
-//		public function load_gutenberg_js() {
-//			//disable Gutenberg scripts to avoid the conflicts
-//			$disable_script = apply_filters( 'um_disable_blocks_script', false );
-//			if ( $disable_script ) {
-//				return;
-//			}
-//
-//			$restricted_blocks = UM()->options()->get( 'restricted_blocks' );
-//			if ( empty( $restricted_blocks ) ) {
-//				return;
-//			}
-//
-//			wp_register_script( 'um_block_js', $this->js_url . 'um-admin-blocks.js', array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-hooks' ), ultimatemember_version, true );
-//			wp_set_script_translations( 'um_block_js', 'ultimate-member' );
-//
-//			$restrict_options = array();
-//			$roles = UM()->roles()->get_roles( false );
-//			if ( ! empty( $roles ) ) {
-//				foreach ( $roles as $role_key => $title ) {
-//					$restrict_options[] = array(
-//						'label' => $title,
-//						'value' => $role_key,
-//					);
-//				}
-//			}
-//			wp_localize_script( 'um_block_js', 'um_restrict_roles', $restrict_options );
-//
-//			wp_enqueue_script( 'um_block_js' );
-//
-//			do_action( 'um_load_gutenberg_js' );
-//		}
+		public function load_gutenberg_js() {
+			//disable Gutenberg scripts to avoid the conflicts
+			$disable_script = apply_filters( 'um_disable_blocks_script', false );
+			if ( $disable_script ) {
+				return;
+			}
 
+			$restricted_blocks = UM()->options()->get( 'restricted_blocks' );
+			if ( empty( $restricted_blocks ) ) {
+				return;
+			}
 
-		/**
-		 * Load Gutenberg blocks js
-		 */
-//		public function load_gutenberg_shortcode_blocks() {
-//			if ( ! function_exists( 'register_block_type' ) ) {
-//				// Gutenberg is not active.
-//				return;
-//			}
-//
-//			//disable Gutenberg scripts to avoid the conflicts
-//			$disable_script = apply_filters( 'um_disable_blocks_script', false );
-//			if ( $disable_script ) {
-//				return;
-//			}
-//
-//			$enable_blocks = UM()->options()->get( 'enable_blocks' );
-//			if ( empty( $enable_blocks ) ) {
-//				return;
-//			}
-//
-//			wp_register_script( 'um-blocks-shortcode-js', $this->js_url . 'um-admin-blocks-shortcode.js', array( 'wp-i18n', 'wp-blocks', 'wp-components', /*'rich-text'*/ ), ultimatemember_version, true );
-//			wp_set_script_translations( 'um-blocks-shortcode-js', 'ultimate-member' );
-//			wp_enqueue_script( 'um-blocks-shortcode-js' );
-//
-//			$account_settings = array(
-//				'password'      => array(
-//					'label'   => __( 'Password', 'ultimate-member' ),
-//					'enabled' => UM()->options()->get( 'account_tab_password' ),
-//				),
-//				'privacy'       => array(
-//					'label'   => __( 'Privacy', 'ultimate-member' ),
-//					'enabled' => UM()->options()->get( 'account_tab_privacy' ),
-//				),
-//				'notifications' => array(
-//					'label'   => __( 'Notifications', 'ultimate-member' ),
-//					'enabled' => UM()->options()->get( 'account_tab_notifications' ),
-//				),
-//				'delete'        => array(
-//					'label'   => __( 'Delete', 'ultimate-member' ),
-//					'enabled' => UM()->options()->get( 'account_tab_delete' ),
-//				),
-//			);
-//			wp_localize_script( 'um-blocks-shortcode-js', 'um_account_settings', $account_settings );
-//
-//			/**
-//			 * create gutenberg blocks
-//			 */
-//			register_block_type( 'um-block/um-forms', array(
-//				'editor_script' => 'um-blocks-shortcode-js',
-//			) );
-//
-//			register_block_type( 'um-block/um-member-directories', array(
-//				'editor_script' => 'um-blocks-shortcode-js',
-//			) );
-//
-//			register_block_type( 'um-block/um-password-reset', array(
-//				'editor_script' => 'um-blocks-shortcode-js',
-//			) );
-//
-//			register_block_type( 'um-block/um-account', array(
-//				'editor_script' => 'um-blocks-shortcode-js',
-//			) );
-//		}
+			wp_register_script( 'um_block_js', $this->js_url . 'um-admin-blocks.js', array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-hooks' ), ultimatemember_version, true );
+			wp_set_script_translations( 'um_block_js', 'ultimate-member' );
+
+			$restrict_options = array();
+			$roles = UM()->roles()->get_roles( false );
+			if ( ! empty( $roles ) ) {
+				foreach ( $roles as $role_key => $title ) {
+					$restrict_options[] = array(
+						'label' => $title,
+						'value' => $role_key,
+					);
+				}
+			}
+			wp_localize_script( 'um_block_js', 'um_restrict_roles', $restrict_options );
+
+			wp_enqueue_script( 'um_block_js' );
+
+			do_action( 'um_load_gutenberg_js' );
+		}
 
 
 		/**
@@ -770,8 +705,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 
 			if ( version_compare( $wp_version, '5.0', '>=' ) ) {
 				if ( isset( $current_screen ) && $current_screen->is_block_editor() ) {
-//					$this->load_gutenberg_js();
-//					$this->load_gutenberg_shortcode_blocks();
+					$this->load_gutenberg_js();
 				}
 			}
 		}
