@@ -89,17 +89,3 @@ registerBlockType('um-block/um-forms', {
 		return null;
 	}
 });
-
-// jQuery(window).on( 'load', function($) {
-// 	var observer = new MutationObserver(function(mutations) {
-// 		mutations.forEach(function(mutation) {
-//
-// 			jQuery(mutation.addedNodes).find('.um.um-directory').each(function() {
-// 				var directory = jQuery(this);
-// 				um_ajax_get_members( directory );
-// 			});
-// 		});
-// 	});
-//
-// 	observer.observe(document, {attributes: false, childList: true, characterData: false, subtree:true});
-// });
