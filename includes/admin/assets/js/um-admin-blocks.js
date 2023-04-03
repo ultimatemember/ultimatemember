@@ -20,6 +20,7 @@ var um_block_restriction = wp.compose.createHigherOrderComponent( function( Bloc
 	um_condition_fields = wp.hooks.applyFilters( 'um_admin_blocks_condition_fields_default', um_condition_fields );
 
 	return function( props ) {
+		let initialIsRestrict = props.attributes.um_is_restrict !== undefined ? props.attributes.um_is_restrict : false;
 
 		if ( props.attributes.um_is_restrict !== true ) {
 			um_condition_fields['um_who_access'] = 'um_block_settings_hide';
@@ -72,7 +73,7 @@ var um_block_restriction = wp.compose.createHigherOrderComponent( function( Bloc
 						wp.components.ToggleControl,
 						{
 							label: wp.i18n.__( 'Restrict access?', 'ultimate-member' ),
-							checked: props.attributes.um_is_restrict,
+							checked: initialIsRestrict,
 							onChange: function onChange( value ) {
 								props.setAttributes({ um_is_restrict: value });
 								if ( value === false ) {
