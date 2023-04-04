@@ -199,25 +199,25 @@ wp.hooks.addFilter( 'editor.BlockEdit', 'um-block/um_block_restriction', um_bloc
  *
  * @type {{um_is_restrict: {type: string}, um_who_access: {type: string}, um_message_type: {type: string}, um_message_content: {type: string}}}
  */
-var um_block_restrict_settings = {
-	um_is_restrict: {
-		type: "boolean"
-	},
-	um_who_access: {
-		type: "select"
-	},
-	um_roles_access: {
-		type: "select"
-	},
-	um_message_type: {
-		type: "select"
-	},
-	um_message_content: {
-		type: "string"
-	}
-};
-
-um_block_restrict_settings = wp.hooks.applyFilters( 'um_admin_blocks_restrict_settings', um_block_restrict_settings );
+// var um_block_restrict_settings = {
+// 	um_is_restrict: {
+// 		type: "boolean"
+// 	},
+// 	um_who_access: {
+// 		type: "select"
+// 	},
+// 	um_roles_access: {
+// 		type: "select"
+// 	},
+// 	um_message_type: {
+// 		type: "select"
+// 	},
+// 	um_message_content: {
+// 		type: "string"
+// 	}
+// };
+//
+// um_block_restrict_settings = wp.hooks.applyFilters( 'um_admin_blocks_restrict_settings', um_block_restrict_settings );
 
 
 /**
@@ -225,12 +225,12 @@ um_block_restrict_settings = wp.hooks.applyFilters( 'um_admin_blocks_restrict_se
  * @param settings
  * @returns {*}
  */
-function um_add_block_attributes( settings ) {
-	var _lodash = lodash,
-		assign = _lodash.assign;
-
-	settings.attributes = assign( settings.attributes, um_block_restrict_settings );
-	return settings;
-}
-
-wp.hooks.addFilter( 'blocks.registerBlockType', 'um-block/um_add_block_attributes', um_add_block_attributes );
+// function um_add_block_attributes( settings ) {
+// 	var _lodash = lodash,
+// 		assign = _lodash.assign;
+//
+// 	settings.attributes = assign( settings.attributes, um_block_restrict_settings );
+// 	return settings;
+// }
+//
+// wp.hooks.addFilter( 'blocks.registerBlockType', 'um-block/um_add_block_attributes', um_add_block_attributes );

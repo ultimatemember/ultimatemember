@@ -20,7 +20,39 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 		 * Access constructor.
 		 */
 		public function __construct() {
-			add_action( 'init', array( &$this, 'block_editor_render' ), 11 );
+			add_action( 'init', array( &$this, 'block_editor_render' ), 10 );
+			add_filter( 'block_type_metadata', array( &$this, 'block_type_metadata' ), 11, 1 );
+		}
+
+
+		public function block_type_metadata( $metadata ) {
+			if ( empty( $metadata['attributes']['um_is_restrict'] ) ) {
+				$metadata['attributes']['um_is_restrict'] = array(
+					'type' => 'boolean',
+				);
+			}
+			if ( empty( $metadata['attributes']['um_who_access'] ) ) {
+				$metadata['attributes']['um_who_access'] = array(
+					'type' => 'string',
+				);
+			}
+			if ( empty( $metadata['attributes']['um_roles_access'] ) ) {
+				$metadata['attributes']['um_roles_access'] = array(
+					'type' => 'array',
+				);
+			}
+			if ( empty( $metadata['attributes']['um_message_type'] ) ) {
+				$metadata['attributes']['um_message_type'] = array(
+					'type' => 'string',
+				);
+			}
+			if ( empty( $metadata['attributes']['um_message_content'] ) ) {
+				$metadata['attributes']['um_message_content'] = array(
+					'type' => 'string',
+				);
+			}
+
+			return $metadata;
 		}
 
 
