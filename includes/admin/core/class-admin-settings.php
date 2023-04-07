@@ -3020,14 +3020,23 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 
 		public function settings_override_templates_tab( $html, $section_fields ) {
+			?>
+				<p>
+					<a href="<?php echo esc_url( add_query_arg( 'um_adm_action', 'check_version' ) ); ?>" class="button">
+						<?php echo esc_html__( 'Re-check', 'ultimate-member' ); ?>
+					</a>
+				</p>
+			<?php
+			include_once um_path . 'includes/admin/core/list-tables/version-template-list-table.php';
+		}
+
+
+		public function get_override_templates() {
 			$outdated_files = array();
 			$scan_files     = $this->scan_template_files( um_path . '/templates/' );
 			foreach ( $scan_files as $key => $file ) {
 				if ( ! str_contains( $file, 'email/' ) ) {
-					$located = apply_filters( 'um_located_template', $file, get_stylesheet_directory() . '/ultimate-member/' );
-					if ( file_exists( $located ) ) {
-						$theme_file = $located;
-					} elseif ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' . $file ) ) {
+					if ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' . $file ) ) {
 						$theme_file = get_stylesheet_directory() . '/ultimate-member/templates/' . $file;
 					} else {
 						$theme_file = false;
@@ -3060,17 +3069,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				}
 			}
 
-			ob_start();
-			?>
-				<p>
-					<a href="<?php echo esc_url( add_query_arg( 'um_adm_action', 'check_version' ) ); ?>" class="button">
-						<?php echo esc_html__( 'Re-check', 'ultimate-member' ); ?>
-					</a>
-				</p>
-			<?php
-			$section = ob_get_clean();
-
-			return $section;
+			return $outdated_files;
 		}
 
 

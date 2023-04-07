@@ -46,6 +46,20 @@
     text-align: center;
 }
 
+.column-core_version {
+	width: 100px;
+	text-align: center;
+}
+
+.column-theme_version {
+	width: 100px;
+	text-align: center;
+}
+
+.column-status {
+	width: 260px;
+}
+
 th.column-email.column-primary {
     padding-left: 48px;
 }
