@@ -64,6 +64,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			add_filter( 'um_settings_section_install_info__content', array( $this, 'settings_install_info_tab' ), 10, 2 );
 
+			//custom content for licenses tab
+			add_filter( 'um_settings_section_override_templates__content', array( $this, 'settings_override_templates_tab' ), 10, 2 );
+
 
 			add_filter( 'um_settings_structure', array( $this, 'sorting_licenses_options' ), 9999, 1 );
 
@@ -1839,6 +1842,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							),
 						),
 					),
+					'override_templates' => array(
+						'title'  => __( 'Override templates', 'ultimate-member' ),
+						'fields' => array(
+							array(
+								'type' => 'override_templates',
+							),
+						),
+					),
 				)
 			);
 
@@ -3003,6 +3014,21 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				</table>
 			</div>
 			<?php $section = ob_get_clean();
+
+			return $section;
+		}
+
+
+		public function settings_override_templates_tab( $html, $section_fields ) {
+			ob_start();
+			?>
+				<p>
+					<a href="<?php echo esc_url( add_query_arg( 'um_adm_action', 'check_version' ) ); ?>" class="button">
+						<?php echo esc_html__( 'Re-check', 'ultimate-member' ); ?>
+					</a>
+				</p>
+			<?php
+			$section = ob_get_clean();
 
 			return $section;
 		}
