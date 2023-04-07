@@ -3020,6 +3020,46 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 
 		public function settings_override_templates_tab( $html, $section_fields ) {
+			$outdated_files = array();
+			$scan_files     = $this->scan_template_files( um_path . '/templates/' );
+			foreach ( $scan_files as $key => $file ) {
+				if ( ! str_contains( $file, 'email/' ) ) {
+					$located = apply_filters( 'um_located_template', $file, get_stylesheet_directory() . '/ultimate-member/' );
+					if ( file_exists( $located ) ) {
+						$theme_file = $located;
+					} elseif ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' . $file ) ) {
+						$theme_file = get_stylesheet_directory() . '/ultimate-member/templates/' . $file;
+					} else {
+						$theme_file = false;
+					}
+					if ( ! empty( $theme_file ) ) {
+						$core_file = $file;
+
+						$core_version  = $this->get_file_version( um_path . '/templates/' . $core_file );
+						$theme_version = $this->get_file_version( $theme_file );
+
+						$status      = esc_html__( 'Theme version up to date', 'ultimate-member' );
+						$status_code = 1;
+						if ( version_compare( $theme_version, $core_version, '<' ) ) {
+							$status      = esc_html__( 'Theme version is out of date', 'ultimate-member' );
+							$status_code = 0;
+						}
+						if ( '' === $theme_version ) {
+							$status      = esc_html__( 'Theme version is empty', 'ultimate-member' );
+							$status_code = 0;
+						}
+						$outdated_files[] = array(
+							'core_version'  => $core_version,
+							'theme_version' => $theme_version,
+							'core_file'     => stristr( um_path . 'templates/' . $core_file, 'wp-content' ),
+							'theme_file'    => stristr( $theme_file, 'wp-content' ),
+							'status'        => $status,
+							'status_code'   => $status_code,
+						);
+					}
+				}
+			}
+
 			ob_start();
 			?>
 				<p>
@@ -3031,6 +3071,65 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			$section = ob_get_clean();
 
 			return $section;
+		}
+
+
+		/**
+		 * Scan the template files.
+		 *
+		 * @param  string $template_path Path to the template directory.
+		 * @return array
+		 */
+		public static function scan_template_files( $template_path ) {
+			$files  = @scandir( $template_path ); // @codingStandardsIgnoreLine.
+			$result = array();
+
+			if ( ! empty( $files ) ) {
+
+				foreach ( $files as $key => $value ) {
+
+					if ( ! in_array( $value, array( '.', '..' ), true ) ) {
+
+						if ( is_dir( $template_path . DIRECTORY_SEPARATOR . $value ) ) {
+							$sub_files = self::scan_template_files( $template_path . DIRECTORY_SEPARATOR . $value );
+							foreach ( $sub_files as $sub_file ) {
+								$result[] = $value . DIRECTORY_SEPARATOR . $sub_file;
+							}
+						} else {
+							$result[] = $value;
+						}
+					}
+				}
+			}
+			return $result;
+		}
+
+
+		public static function get_file_version( $file ) {
+
+			// Avoid notices if file does not exist.
+			if ( ! file_exists( $file ) ) {
+				return '';
+			}
+
+			// We don't need to write to the file, so just open for reading.
+			$fp = fopen( $file, 'r' ); // @codingStandardsIgnoreLine.
+
+			// Pull only the first 8kiB of the file in.
+			$file_data = fread( $fp, 8192 ); // @codingStandardsIgnoreLine.
+
+			// PHP will close file handle, but we are good citizens.
+			fclose( $fp ); // @codingStandardsIgnoreLine.
+
+			// Make sure we catch CR-only line endings.
+			$file_data = str_replace( "\r", "\n", $file_data );
+			$version   = '';
+
+			if ( preg_match( '/^[ \t\/*#@]*' . preg_quote( '@version', '/' ) . '(.*)$/mi', $file_data, $match ) && $match[1] ) {
+				$version = _cleanup_header_comment( $match[1] );
+			}
+
+			return $version;
 		}
 
 

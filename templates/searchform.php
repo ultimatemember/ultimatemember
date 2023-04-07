@@ -1,4 +1,8 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+<?php
+/**
+ * @version 2.6.0
+ */
+if ( ! defined( 'ABSPATH' ) ) exit; ?>
 
 <div class="search-form um-search-form" data-members_page="<?php echo esc_url( $members_page ); ?>">
 	<?php foreach ( array_keys( $query ) as $key ) { ?>
