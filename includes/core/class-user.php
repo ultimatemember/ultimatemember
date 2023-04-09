@@ -1922,16 +1922,16 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 
 			if ( ! $profile_noindex ) {
-				$role = UM()->roles()->get_priority_user_role( $user_id );
+				$role        = UM()->roles()->get_priority_user_role( $user_id );
 				$permissions = UM()->roles()->role_data( $role );
 
-				if ( isset( $permissions['profile_noindex'] ) && (bool) $permissions['profile_noindex'] ) {
+				if ( isset( $permissions['profile_noindex'] ) && '' !== $permissions['profile_noindex'] ) {
 					// Setting "Avoid indexing profile by search engines" in [wp-admin > Ultimate Member > User Roles > Edit Role]
-					$profile_noindex = true;
+					$profile_noindex = (bool) $permissions['profile_noindex'];
 
-				} elseif ( ( ! isset( $permissions['profile_noindex'] ) || $permissions['profile_noindex'] === '' ) && (bool) UM()->options()->get( 'profile_noindex' ) ) {
+				} else {
 					// Setting "Avoid indexing profile by search engines" in [wp-admin > Ultimate Member > Settings > General > Users]
-					$profile_noindex = true;
+					$profile_noindex = (bool) UM()->options()->get( 'profile_noindex' );
 
 				}
 			}
@@ -2112,18 +2112,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				//if isset roles argument validate role to properly for security reasons
 				if ( isset( $args['role'] ) ) {
 					global $wp_roles;
-					$um_roles = get_option( 'um_roles', array() );
 
-					if ( ! empty( $um_roles ) ) {
-						$role_keys = array_map( function( $item ) {
-							return 'um_' . $item;
-						}, $um_roles );
-					} else {
-						$role_keys = array();
-					}
-
-					$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
-
+					$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
 					if ( in_array( $args['role'], $exclude_roles ) ) {
 						unset( $args['role'] );
 					}

@@ -330,7 +330,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			}
 
 			if ( $this->is_reset_request() ) {
-				UM()->form()->post_form = $_POST;
+				UM()->form()->post_form = wp_unslash( $_POST );
 
 				if ( empty( UM()->form()->post_form['mode'] ) ) {
 					UM()->form()->post_form['mode'] = 'password';
@@ -382,7 +382,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			}
 
 			if ( $this->is_change_request() ) {
-				UM()->form()->post_form = $_POST;
+				UM()->form()->post_form = wp_unslash( $_POST );
 
 				/**
 				 * UM hook

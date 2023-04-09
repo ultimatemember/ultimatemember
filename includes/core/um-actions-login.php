@@ -166,6 +166,8 @@ add_action( 'um_submit_form_errors_hook_logincheck', 'um_submit_form_errors_hook
  */
 function um_store_lastlogin_timestamp( $user_id ) {
 	update_user_meta( $user_id, '_um_last_login', current_time( 'timestamp' ) );
+	// Flush user cache after updating last_login timestamp.
+	UM()->user()->remove_cache( $user_id );
 }
 add_action( 'um_on_login_before_redirect', 'um_store_lastlogin_timestamp', 10, 1 );
 

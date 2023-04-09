@@ -446,20 +446,40 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 		 * @return array
 		 */
 		function get_editable_user_roles() {
-			$default_roles = array( 'subscriber' );
+			$editable_roles = array( 'subscriber' );
 
 			// User has roles so look for a UM Role one
 			$um_roles_keys = get_option( 'um_roles', array() );
-
 			if ( ! empty( $um_roles_keys ) && is_array( $um_roles_keys ) ) {
 				$um_roles_keys = array_map( function( $item ) {
 					return 'um_' . $item;
 				}, $um_roles_keys );
 
-				return array_merge( $um_roles_keys, $default_roles );
+				$editable_roles = array_merge( $editable_roles, $um_roles_keys );
 			}
 
-			return $default_roles;
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_extend_editable_roles
+			 * @description Extend Editable User Roles
+			 * @input_vars
+			 * [{"var":"$editable_roles","type":"array","desc":"Editable Roles Keys"}]
+			 * @change_log
+			 * ["Since: 2.6.0"]
+			 * @usage add_filter( 'um_extend_editable_roles', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_extend_editable_roles', 'my_um_extend_editable_roles', 10, 1 );
+			 * function my_um_extend_editable_roles( $editable_roles ) {
+			 *     // your code here
+			 *     return $editable_roles;
+			 * }
+			 * ?>
+			 */
+			$editable_roles = apply_filters( 'um_extend_editable_roles', $editable_roles );
+			return $editable_roles;
 		}
 
 

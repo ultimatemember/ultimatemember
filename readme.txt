@@ -6,8 +6,8 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
-Tested up to: 6.1
-Stable tag: 2.5.4
+Tested up to: 6.2
+Stable tag: 2.6.0
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -162,6 +162,36 @@ No, you do not need to use our plugin’s login or registration pages and can us
 
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
+
+= 2.6.0: March 29, 2023 =
+
+* Enhancements:
+
+  - Added: Hook arguments ($form_id, $not_searched) to 'um_members_directory_head'
+  - Added: Using user locale `get_user_locale()` for localization with the 1st priority
+  - Added: Hooks to change the profile SEO image: 'um_profile_dynamic_meta_image_size', 'um_profile_dynamic_meta_image_type'
+  - Added: Filter for making 3rd-party roles editable through Ultimate Member interfaces. Use 'um_extend_editable_roles' and pass there an array of role keys( e.g. 'editor', 'administrator', etc. )
+
+* Bugfixes:
+
+  - Fixed: Major issues with the Member Directory search line
+  - Fixed: Social links (Twitch, TikTok, Reddit) colors in profile header
+  - Fixed: Exclude registered date field from editable fields
+  - Fixed: Create the custom table for usermeta if does not exists
+  - Fixed: Locale loading time and hook for that
+  - Fixed: Used `wp_unslash()` for input POST data on Change Password
+  - Fixed: Role setting "Avoid indexing profile by search engines"
+  - Fixed: Date Picker field value format for 3rd-party integration meta fields
+  - Fixed: Last login timestamp being lost in the users cache
+  - Fixed: Textdomain typos
+  - Fixed: Small PHP warnings and notices
+
+* Deprecated:
+
+  - Deprecated: VKontakte and Google+ predefined fields. VKontakte and Google+ fields validation changed to just URL validation.
+
+* Templates required update:
+  - members.php
 
 = 2.5.4: February 17, 2023 =
 

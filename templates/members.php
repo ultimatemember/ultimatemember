@@ -345,7 +345,7 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 				<?php
 			}
 		}
-		do_action( 'um_members_directory_head', $args ); ?>
+		do_action( 'um_members_directory_head', $args, $form_id, $not_searched ); ?>
 	</div>
 
 	<div class="um-members-wrapper"></div>

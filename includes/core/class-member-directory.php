@@ -1531,7 +1531,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			if ( ! empty( $_POST['search'] ) ) {
 				// complex using with change_meta_sql function
 
-				$search = trim( stripslashes( sanitize_text_field( $_POST['search'] ) ) );
+				$search = trim( sanitize_text_field( wp_unslash( $_POST['search'] ) ) );
 
 				$meta_query = array(
 					'relation' => 'OR',
@@ -1549,7 +1549,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					),
 				);
 
-				$meta_query = apply_filters( 'um_member_directory_general_search_meta_query', $meta_query, stripslashes( sanitize_text_field( $_POST['search'] ) ) );
+				$meta_query = apply_filters( 'um_member_directory_general_search_meta_query', $meta_query, $search );
 
 				$this->query_args['meta_query'][] = $meta_query;
 
@@ -1574,17 +1574,31 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		function change_meta_sql( $sql, $queries, $type, $primary_table, $primary_id_column, $context ) {
 			if ( ! empty( $_POST['search'] ) ) {
 				global $wpdb;
-				$search = trim( stripslashes( sanitize_text_field( $_POST['search'] ) ) );
+
+				$search = trim( sanitize_text_field( wp_unslash( $_POST['search'] ) ) );
 				if ( ! empty( $search ) ) {
 
 					$meta_value = '%' . $wpdb->esc_like( $search ) . '%';
 					$search_meta      = $wpdb->prepare( '%s', $meta_value );
 
+					preg_match( '~(?<=\{)(.*?)(?=\})~', $search_meta, $matches, PREG_OFFSET_CAPTURE, 0 );
+
+					// workaround for standard mySQL hashes which are used by $wpdb->prepare instead of the %symbol
+					// sometimes it breaks error for strings like that wp_postmeta.meta_value LIKE '{12f209b48a89eeab33424902879d05d503f251ca8812dde03b59484a2991dc74}AMS{12f209b48a89eeab33424902879d05d503f251ca8812dde03b59484a2991dc74}'
+					// {12f209b48a89eeab33424902879d05d503f251ca8812dde03b59484a2991dc74} isn't applied by the `preg_replace()` below
+					if ( $matches[0][0] ) {
+						$search_meta  = str_replace( '{' . $matches[0][0] . '}', '#%&', $search_meta );
+						$sql['where'] = str_replace( '{' . $matches[0][0] . '}', '#%&', $sql['where'] );
+					}
+
+					// str_replace( '/', '\/', wp_slash( $search_meta ) ) means that we add backslashes to special symbols + add backslash to slash(/) symbol for proper regular pattern.
 					preg_match(
-						'/^(.*).meta_value LIKE ' . addslashes( $search_meta ) . '[^\)]/im',
+						'/^(.*).meta_value LIKE ' . str_replace( '/', '\/', wp_slash( $search_meta ) ) . '[^\)]/im',
 						$sql['where'],
 						$join_matches
 					);
+
+					$sql['where'] = str_replace( '#%&', '{' . $matches[0][0] . '}', $sql['where'] );
 
 					if ( isset( $join_matches[1] ) ) {
 						$meta_join_for_search = trim( $join_matches[1] );
@@ -1592,6 +1606,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						// skip private invisible fields
 						$custom_fields = array();
 						foreach ( array_keys( UM()->builtin()->all_user_fields ) as $field_key ) {
+							if ( empty( $field_key ) ) {
+								continue;
+							}
+
 							$data = UM()->fields()->get_field( $field_key );
 							if ( ! um_can_view_field( $data ) ) {
 								continue;
@@ -1616,8 +1634,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					$search_where = preg_replace( '/ AND \((.*?)\)/im', "$1 OR", $search_where );
 
+					// str_replace( '/', '\/', wp_slash( $search ) ) means that we add backslashes to special symbols + add backslash to slash(/) symbol for proper regular pattern.
 					$sql['where'] = preg_replace(
-						'/(' . $meta_join_for_search . '.meta_value = \'' . esc_attr( $search ) . '\')/im',
+						'/(' . $meta_join_for_search . '.meta_value = \'' . str_replace( '/', '\/', wp_slash( $search ) ) . '\')/im',
 						trim( $search_where ) . " $1",
 						$sql['where'],
 						1

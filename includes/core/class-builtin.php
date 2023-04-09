@@ -39,7 +39,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			add_action( 'init', array( &$this, 'set_core_fields' ), 1 );
 			add_action( 'init', array( &$this, 'set_predefined_fields' ), 1 );
 			add_action( 'init', array( &$this, 'set_custom_fields' ), 1 );
-			$this->saved_fields = get_option( 'um_fields' );
+			$this->saved_fields = get_option( 'um_fields', array() );
 		}
 
 
@@ -675,16 +675,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 
 			$um_roles = array();
 			if ( ! empty( $wp_roles->roles ) ) {
-				$role_keys = get_option( 'um_roles', array() );
-				if ( ! empty( $role_keys ) && is_array( $role_keys ) ) {
-					$role_keys = array_map( function( $item ) {
-						return 'um_' . $item;
-					}, $role_keys );
-				} else {
-					$role_keys = array();
-				}
-
-				$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+				$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
 				$um_roles = UM()->roles()->get_roles( false, $exclude_roles );
 			}
 
@@ -949,24 +940,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'match' => 'https://linkedin.com/',
 				),
 
-				'googleplus' => array(
-					'title' => __('Google+','ultimate-member'),
-					'metakey' => 'googleplus',
-					'type' => 'url',
-					'label' => __('Google+','ultimate-member'),
-					'required' => 0,
-					'public' => 1,
-					'editable' => 1,
-					'url_target' => '_blank',
-					'url_rel' => 'nofollow',
-					'icon' => 'um-faicon-google-plus',
-					'validate' => 'google_url',
-					'url_text' => 'Google+',
-					'advanced' => 'social',
-					'color' => '#dd4b39',
-					'match' => 'https://google.com/+',
-				),
-
 				'instagram' => array(
 					'title' => __('Instagram','ultimate-member'),
 					'metakey' => 'instagram',
@@ -1067,9 +1040,11 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable'   => 1,
 					'url_target' => '_blank',
 					'url_rel'    => 'nofollow',
+					'icon'       => 'um-icon-ios-musical-note',
 					'validate'   => 'tiktok_url',
 					'url_text'   => 'TikTok',
 					'advanced'   => 'social',
+					'color'      => '#000000',
 					'match'      => 'https://tiktok.com/@',
 				),
 
@@ -1087,6 +1062,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'validate'   => 'twitch_url',
 					'url_text'   => 'Twitch',
 					'advanced'   => 'social',
+					'color'      => '#6441a5',
 					'match'      => 'https://twitch.tv/',
 				),
 
@@ -1104,6 +1080,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'validate'   => 'reddit_url',
 					'url_text'   => 'Reddit',
 					'advanced'   => 'social',
+					'color'      => '#ff4500',
 					'match'      => 'https://www.reddit.com/user/',
 				),
 
@@ -1144,24 +1121,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'advanced' => 'social',
 					'color' => '#f50',
 					'match' => 'https://soundcloud.com/',
-				),
-
-				'vkontakte' => array(
-					'title' => __('VKontakte','ultimate-member'),
-					'metakey' => 'vkontakte',
-					'type' => 'url',
-					'label' => __('VKontakte','ultimate-member'),
-					'required' => 0,
-					'public' => 1,
-					'editable' => 1,
-					'url_target' => '_blank',
-					'url_rel' => 'nofollow',
-					'icon' => 'um-faicon-vk',
-					'validate' => 'vk_url',
-					'url_text' => 'VKontakte',
-					'advanced' => 'social',
-					'color' => '#2B587A',
-					'match' => 'https://vk.com/',
 				),
 
 				'role_select' => array(
@@ -1378,26 +1337,20 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 * Custom Fields
 		 */
 		function set_custom_fields() {
-
 			if ( is_array( $this->saved_fields ) ) {
-
 				$this->custom_fields = $this->saved_fields;
-
 			} else {
-
-				$this->custom_fields = '';
-
+				$this->custom_fields = array();
 			}
 
-			$custom = $this->custom_fields;
+			$custom     = $this->custom_fields;
 			$predefined = $this->predefined_fields;
 
-			if ( is_array( $custom ) ){
+			if ( is_array( $custom ) ) {
 				$this->all_user_fields = array_merge( $predefined, $custom );
 			} else {
 				$this->all_user_fields = $predefined;
 			}
-
 		}
 
 
@@ -1518,10 +1471,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$array['alpha_numeric']            = __('Alpha-numeric value','ultimate-member');
 			$array['english']                  = __('English letters only','ultimate-member');
 			$array['facebook_url']             = __('Facebook URL','ultimate-member');
-			$array['google_url']               = __('Google+ URL','ultimate-member');
 			$array['instagram_url']            = __('Instagram URL','ultimate-member');
 			$array['linkedin_url']             = __('LinkedIn URL','ultimate-member');
-			$array['vk_url']                   = __('VKontakte URL','ultimate-member');
 			$array['lowercase']                = __('Lowercase only','ultimate-member');
 			$array['numeric']                  = __('Numeric value only','ultimate-member');
 			$array['phone_number']             = __('Phone Number','ultimate-member');
