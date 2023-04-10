@@ -84,6 +84,9 @@ UM()->admin()->field_group()->field_row_template();
 						<div class="um-field-row-tabs">
 							<?php
 							foreach ( $field_settings_tabs as $tab_key => $tab_title ) {
+								if ( empty( $field_settings_settings[ $tab_key ] ) ) {
+									continue;
+								}
 								$classes = array();
 								if ( 'general' === $tab_key ) {
 									// General tab is selected by default for the new field.
@@ -102,6 +105,9 @@ UM()->admin()->field_group()->field_row_template();
 						<div class="um-field-row-tabs-content">
 							<?php
 							foreach ( $field_settings_settings as $tab_key => $settings_fields ) {
+								if ( empty( $settings_fields ) ) {
+									continue;
+								}
 								$classes = array();
 								if ( 'general' === $tab_key ) {
 									// General tab is selected by default for the new field.

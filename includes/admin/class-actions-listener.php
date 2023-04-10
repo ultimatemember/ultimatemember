@@ -816,6 +816,9 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 								case 'wp_kses':
 									$field_setting_value = wp_kses_post( $field_setting_value );
 									break;
+								case 'color':
+									$field_setting_value = sanitize_hex_color( $field_setting_value );
+									break;
 								case 'key':
 									if ( is_array( $field_setting_value ) ) {
 										$field_setting_value = array_map( 'sanitize_key', $field_setting_value );
@@ -923,6 +926,9 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 						case 'wp_kses':
 							$value = wp_kses_post( $value );
 							break;
+						case 'color':
+							$value = sanitize_hex_color( $value );
+							break;
 						case 'key':
 							if ( is_array( $value ) ) {
 								$value = array_map( 'sanitize_key', $value );
@@ -978,11 +984,14 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 				return $result;
 			}
 
-			foreach ( $data['fields'] as $k => $field_data ) {
-				$field_settings      = UM()->admin()->field_group()->get_field_settings( sanitize_key( $field_data['type'] ) );
-				$field_settings      = call_user_func_array('array_merge', array_values( $field_settings ) );
-				$fields_required_map = array_column( $field_settings, 'required', 'id' );
+			$submitted_fields = $data['fields'];
 
+			foreach ( $data['fields'] as $k => $field_data ) {
+				$field_settings_tabs = UM()->admin()->field_group()->get_field_settings( sanitize_key( $field_data['type'] ) );
+				$field_settings      = call_user_func_array('array_merge', array_values( $field_settings_tabs ) );
+
+				// Checking for required validation
+				$fields_required_map = array_column( $field_settings, 'required', 'id' );
 				foreach ( $fields_required_map as $field_id => $required ) {
 					if ( empty( $required ) ) {
 						continue;
@@ -990,11 +999,12 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 
 					if ( 'repeater' === $field_data['type'] && 'fields' === $field_id ) {
 						$child_exists = false;
-						foreach ( $data['fields'] as $f_data ) {
-							if ( array_key_exists( 'parent_id', $f_data ) && $f_data['parent_id'] === $k ) {
+						foreach ( $submitted_fields as $f_data ) {
+							if ( array_key_exists( 'parent_id', $f_data ) && $f_data['parent_id'] === (string) $k ) {
 								$child_exists = true;
 							}
 						}
+
 						if ( ! $child_exists ) {
 							$this->field_groups_error = array(
 								'field'   => 'um-admin-form-' . $field_id,
@@ -1003,9 +1013,15 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 						}
 					} else {
 						if ( empty( $field_data[ $field_id ] ) ) {
-							var_dump( $field_settings[ $field_id ] );
+							$set_tab = '';
+							foreach ( $field_settings_tabs as $tab_key => $tab_settings ) {
+								if ( in_array( $field_id, array_keys( $tab_settings ) ) ) {
+									$set_tab = $tab_key;
+									break;
+								}
+							}
 							$this->field_groups_error = array(
-								'field'   => 'um-admin-form-' . $field_id,
+								'field'   => 'field_groupfields' . $k . $set_tab . '_' . $field_id,
 								'message' => sprintf( __( '"%s" field cannot be empty.', 'ultimate-member' ), $field_settings[ $field_id ]['label'] ),
 							);
 						}

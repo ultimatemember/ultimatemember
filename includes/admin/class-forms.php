@@ -452,6 +452,106 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 		 *
 		 * @return bool|string
 		 */
+		public function render_date( $field_data ) {
+			if ( empty( $field_data['id'] ) ) {
+				return false;
+			}
+
+			$id = ( ! empty( $this->form_data['prefix_id'] ) ? sanitize_title( $this->form_data['prefix_id'] ) : '' ) . '_' . $field_data['id'];
+			$id_attr = ' id="' . esc_attr( $id ) . '" ';
+
+			$class = ! empty( $field_data['class'] ) ? $field_data['class'] . ' ' : ' ';
+			$class .= ! empty( $field_data['size'] ) ? 'um-' . $field_data['size'] . '-field' : 'um-long-field';
+			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
+
+			$data = array(
+				'field_id' => $field_data['id']
+			);
+
+			if ( ! empty( $field_data['attr'] ) && is_array( $field_data['attr'] ) ){
+				$data = array_merge( $data, $field_data['attr'] );
+			}
+
+			$data_attr = '';
+			foreach ( $data as $key => $value ) {
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
+			}
+
+			$placeholder_attr = ! empty( $field_data['placeholder'] ) ? ' placeholder="' . esc_attr( $field_data['placeholder'] ) . '"' : '';
+
+			if ( ! empty( $field_data['name'] ) ) {
+				$name_attr = ' name="' . esc_attr( $field_data['name'] ) . '" ';
+			} else {
+				$name = $field_data['id'];
+				$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
+				$name_attr = ' name="' . esc_attr( $name ) . '" ';
+			}
+
+			$value = $this->get_field_value( $field_data );
+			$value_attr = ' value="' . esc_attr( $value ) . '" ';
+
+			$html = "<input type=\"date\" $id_attr $class_attr $name_attr $data_attr $value_attr $placeholder_attr " . disabled( ! empty( $field_data['disabled'] ), true, false ) . " />";
+
+			return $html;
+		}
+
+		/**
+		 * Render text field
+		 *
+		 * @param $field_data
+		 *
+		 * @return bool|string
+		 */
+		public function render_time( $field_data ) {
+			if ( empty( $field_data['id'] ) ) {
+				return false;
+			}
+
+			$id = ( ! empty( $this->form_data['prefix_id'] ) ? sanitize_title( $this->form_data['prefix_id'] ) : '' ) . '_' . $field_data['id'];
+			$id_attr = ' id="' . esc_attr( $id ) . '" ';
+
+			$class = ! empty( $field_data['class'] ) ? $field_data['class'] . ' ' : ' ';
+			$class .= ! empty( $field_data['size'] ) ? 'um-' . $field_data['size'] . '-field' : 'um-long-field';
+			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
+
+			$data = array(
+				'field_id' => $field_data['id']
+			);
+
+			if ( ! empty( $field_data['attr'] ) && is_array( $field_data['attr'] ) ){
+				$data = array_merge( $data, $field_data['attr'] );
+			}
+
+			$data_attr = '';
+			foreach ( $data as $key => $value ) {
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
+			}
+
+			$placeholder_attr = ! empty( $field_data['placeholder'] ) ? ' placeholder="' . esc_attr( $field_data['placeholder'] ) . '"' : '';
+
+			if ( ! empty( $field_data['name'] ) ) {
+				$name_attr = ' name="' . esc_attr( $field_data['name'] ) . '" ';
+			} else {
+				$name = $field_data['id'];
+				$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
+				$name_attr = ' name="' . esc_attr( $name ) . '" ';
+			}
+
+			$value = $this->get_field_value( $field_data );
+			$value_attr = ' value="' . esc_attr( $value ) . '" ';
+
+			$html = "<input type=\"time\" $id_attr $class_attr $name_attr $data_attr $value_attr $placeholder_attr " . disabled( ! empty( $field_data['disabled'] ), true, false ) . " />";
+
+			return $html;
+		}
+
+		/**
+		 * Render text field
+		 *
+		 * @param $field_data
+		 *
+		 * @return bool|string
+		 */
 		public function render_url( $field_data ) {
 			if ( empty( $field_data['id'] ) ) {
 				return false;
@@ -961,18 +1061,28 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 
 			$value = $this->get_field_value( $field_data );
 
+			$rows = ! empty( $field_data['args']['textarea_rows'] ) ? $field_data['args']['textarea_rows'] : 8;
+
 			ob_start();
-			wp_editor( $value,
-				$id,
-				array(
-					'textarea_name' => $name,
-					'textarea_rows' => 20,
-					'editor_height' => 425,
-					'wpautop'       => false,
-					'media_buttons' => false,
-					'editor_class'  => $class
-				)
-			);
+
+			if ( UM()->is_request( 'ajax' ) ) {
+				?>
+				<div class="um-admin-editor"></div>
+				<div class="um-admin-editor-content" data-editor_id="<?php echo esc_attr( $id ); ?>" data-editor_name="<?php echo esc_attr( $name ); ?>"><?php echo wp_kses( $value, UM()->get_allowed_html( 'templates' ) ); ?></div>
+				<?php
+			} else {
+				wp_editor( $value,
+					$id,
+					array(
+						'textarea_name' => $name,
+						'textarea_rows' => $rows,
+//						'editor_height' => 425,
+						'wpautop'       => false,
+						'media_buttons' => false,
+						'editor_class'  => $class,
+					)
+				);
+			}
 
 			$html = ob_get_clean();
 			return $html;
@@ -1102,6 +1212,9 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 									<div class="um-field-row-tabs">
 										<?php
 										foreach ( $field_settings_tabs as $tab_key => $tab_title ) {
+											if ( empty( $field_settings_settings[ $tab_key ] ) ) {
+												continue;
+											}
 											$classes = array();
 											if ( 'general' === $tab_key ) {
 												// General tab is selected by default for the new field.
@@ -1120,6 +1233,9 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 									<div class="um-field-row-tabs-content">
 										<?php
 										foreach ( $field_settings_settings as $tab_key => $settings_fields ) {
+											if ( empty( $settings_fields ) ) {
+												continue;
+											}
 											$classes = array();
 											if ( 'general' === $tab_key ) {
 												// General tab is selected by default for the new field.
@@ -1355,6 +1471,11 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 			return $html;
 		}
 
+		/**
+		 * @param $field_data
+		 *
+		 * @return bool|string
+		 */
 		public function render_choices( $field_data ) {
 			if ( empty( $field_data['id'] ) ) {
 				return false;
@@ -1374,8 +1495,55 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 				$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
 			}
 
+			$bulk_options = array(
+				'countries' => __( 'Countries', 'ultimate-member' ),
+				'languages' => __( 'Languages', 'ultimate-member' ),
+				'months'    => __( 'Months', 'ultimate-member' ),
+				'days'      => __( 'Days', 'ultimate-member' ),
+			);
+
+			$bulk_options = apply_filters( 'um_admin_forms_choices_bulk_options', $bulk_options, $field_data );
+
 			ob_start();
 			?>
+			<?php if ( ! empty( $field_data['optgroup'] ) ) { ?>
+				<span class="um-admin-option-group-row-placeholder" data-option_group_index="{{group_index}}" style="display: none;">
+					<span class="um-admin-option-group-rows">
+						<span class="um-admin-option-group-move-link"></span>
+						<span class="um-admin-option-group-label-wrapper">
+							<input class="um-admin-option-group-label" type="text" disabled data-base-name="<?php echo esc_attr( $name . '[{{group_index}}]' ); ?>" name="<?php echo esc_attr( $name . '[[{{group_index}}]][label]' ); ?>" value="" placeholder="<?php esc_attr_e( 'Option group label', 'ultimate-member' ); ?>" aria-label="<?php esc_attr_e( 'Option group label', 'ultimate-member' ); ?>" />
+						</span>
+						<span class="um-admin-option-group-row-actions">
+							<input type="button" class="um-admin-option-group-row-add button" value="+">
+							<input type="button" class="um-admin-option-group-row-remove button" value="-">
+						</span>
+					</span>
+					<span class="um-admin-option-group-rows">
+						<span class="um-admin-option-row" data-option_index="{{index}}">
+							<input class="um-admin-option-group-options" type="hidden" disabled data-base-name="<?php echo esc_attr( $name . '[{{group_index}}][options][]' ); ?>" name="<?php echo esc_attr( $name . '[[{{group_index}}]][options][]' ); ?>" value="{{index}}" />
+							<span class="um-admin-option-move-link"></span>
+							<span class="um-admin-option-row-defaults">
+								<?php if ( false === $multiple || 'both' === $multiple ) { ?>
+									<input class="um-admin-option-default" disabled type="radio" name="<?php echo esc_attr( $name . '[default_value]' ); ?>" value="{{index}}" aria-label="<?php esc_attr_e( 'Does option is default?', 'ultimate-member' ); ?>" />
+								<?php } ?>
+								<?php if ( true === $multiple || 'both' === $multiple ) { ?>
+									<input class="um-admin-option-default-multi" data-base-name="<?php echo esc_attr( $name . '[default_value]' ); ?>" disabled type="checkbox" name="<?php echo esc_attr( $name . '[default_value][{{index}}]' ); ?>" value="1" aria-label="<?php esc_attr_e( 'Does option is default?', 'ultimate-member' ); ?>" />
+								<?php } ?>
+							</span>
+							<span class="um-admin-option-key-wrapper">
+								<input class="um-admin-option-key" type="text" disabled data-base-name="<?php echo esc_attr( $name . '[keys]' ); ?>" name="<?php echo esc_attr( $name . '[keys][{{index}}]' ); ?>" value="" placeholder="<?php esc_attr_e( 'Option key', 'ultimate-member' ); ?>" aria-label="<?php esc_attr_e( 'Option key', 'ultimate-member' ); ?>" />
+							</span>
+							<span class="um-admin-option-val-wrapper">
+								<input class="um-admin-option-val" type="text" disabled data-base-name="<?php echo esc_attr( $name . '[values]' ); ?>" name="<?php echo esc_attr( $name . '[values][{{index}}]' ); ?>" value="" placeholder="<?php esc_attr_e( 'Option label', 'ultimate-member' ); ?>" aria-label="<?php esc_attr_e( 'Option label', 'ultimate-member' ); ?>" />
+							</span>
+							<span class="um-admin-option-row-actions">
+								<input type="button" class="um-admin-option-row-add button" value="+">
+								<input type="button" class="um-admin-option-row-remove button" value="-">
+							</span>
+						</span>
+					</span>
+				</span>
+			<?php } ?>
 			<span class="um-admin-option-row-placeholder" data-option_index="{{index}}" style="display: none;">
 				<span class="um-admin-option-move-link"></span>
 				<span class="um-admin-option-row-defaults">
@@ -1397,7 +1565,22 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 					<input type="button" class="um-admin-option-row-remove button" value="-">
 				</span>
 			</span>
-			<span class="um-admin-option-rows">
+			<span class="um-admin-option-bulk-add-wrapper<?php if ( ! empty( $field_data['optgroup'] ) ) { ?> um-admin-option-bulk-enable-optgroup-wrapper<?php } ?>">
+				<?php if ( ! empty( $field_data['optgroup'] ) ) { ?>
+					<label><input type="checkbox" class="um-admin-option-enable-optgroup" name="<?php echo esc_attr( $name . '[has_groups]' ); ?>" <?php checked( $value['has_groups'] ); ?>value="1"><?php esc_html_e( 'Enable option groups', 'ultimate-member' ); ?></label>
+				<?php } ?>
+				<a href="javascript:void(0);" class="um-admin-option-bulk-toggle" data-show-label="<?php esc_attr_e( 'Show presets', 'ultimate-member' ); ?>" data-hide-label="<?php esc_attr_e( 'Hide presets', 'ultimate-member' ); ?>"><?php esc_html_e( 'Show presets', 'ultimate-member' ); ?></a>
+			</span>
+			<ul class="um-admin-option-bulk-add-list">
+				<?php foreach ( $bulk_options as $bulk_action => $bulk_title ) { ?>
+					<li>
+						<a href="javascript:void(0);" class="um-admin-option-bulk-add" data-bulk_value="<?php echo esc_attr( $bulk_action ); ?>">
+							<?php echo esc_html( $bulk_title ); ?>
+						</a>
+					</li>
+				<?php } ?>
+			</ul>
+			<span class="um-admin-option-rows" data-multiple="<?php echo esc_attr( (string) $multiple ); ?>">
 				<?php
 				if ( empty( $value ) ) {
 					?>
@@ -1450,6 +1633,12 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 					<?php }
 				} ?>
 			</span>
+
+			<?php if ( ! empty( $field_data['optgroup'] ) ) { ?>
+				<span class="um-admin-option-group-row-add-wrapper">
+					<input type="button" class="um-admin-option-group-row-add button" value="<?php echo esc_attr_e( 'Add option group', 'ultimate-member' ); ?>" style="<?php if ( empty( $value['has_groups'] ) ) { ?>display:none;<?php } ?>">
+				</span>
+			<?php } ?>
 
 			<?php
 			return ob_get_clean();

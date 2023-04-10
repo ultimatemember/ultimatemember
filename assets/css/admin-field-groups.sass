@@ -308,6 +308,8 @@ $actions-gap: 10px
               &.current
                 +flex( column, flex-start, stretch, nowrap )
                 border-left: 4px solid $wp-admin-primary
+              .um-forms-field.um-error
+                border-color: $error-700
               input[type="text"].um-forms-field,
               input[type="number"].um-forms-field,
               input[type="url"].um-forms-field,
@@ -427,6 +429,46 @@ $actions-gap: 10px
     margin: 0
     padding: 0
 
+.um-admin-option-bulk-add-wrapper
+  +flex( row, flex-end, baseline, nowrap )
+  width: 100%
+  margin: 0 0 5px 0
+  a
+    font-size: 13px
+    text-decoration: none
+    color: #646970
+    &:hover
+      color: #646970
+      text-decoration: underline
+    &:focus
+      box-shadow: none
+      outline: 0
+    &.active
+      font-weight: $bold-weight
+  &.um-admin-option-bulk-enable-optgroup-wrapper
+    justify-content: space-between
+.#{$prefix}admin-option-bulk-add-list
+  display: none
+  border: 1px solid $gray-300
+  padding: 0
+  margin: 0 0 4px 0
+  li
+    border-top: 1px solid $gray-300
+    padding: 0
+    margin: 0
+    &:first-child
+      border-top: none
+    a
+      font-size: 13px
+      width: 100%
+      padding: 4px
+      margin: 0
+      display: block
+      +border-box
+      &:hover
+        background: $wp-background
+
+
 .#{$prefix}admin-option-rows
   +flex( column, flex-start, stretch, nowrap )
   width: 100%
@@ -499,3 +541,17 @@ $actions-gap: 10px
     width: 100%
     display: list-item
 
+
+.um-admin-option-group-row-add-wrapper
+  +flex( row, center, baseline, nowrap )
+  margin: 0
+  padding: 0
+
+
+.um-admin-editor-content
+  display: none
+
+.um-admin-editor
+  .wp-core-ui.wp-editor-wrap.html-active
+    textarea.wp-editor-area
+      display: block !important

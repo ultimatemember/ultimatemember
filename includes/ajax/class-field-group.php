@@ -19,6 +19,7 @@ if ( ! class_exists( 'um\ajax\Field_Group' ) ) {
 		 */
 		public function __construct() {
 			add_action( 'wp_ajax_um_fields_groups_get_settings_form', array( &$this, 'get_field_settings_form' ) );
+			add_action( 'wp_ajax_um_fields_groups_get_options_preset', array( &$this, 'get_options_preset' ) );
 			add_filter( 'um_admin_render_checkbox_field_html', array( &$this, 'add_reset_rules_button' ), 10, 2 );
 			add_filter( 'um_fields_settings', array( &$this, 'change_hidden_settings' ), 10, 2 );
 		}
@@ -73,6 +74,71 @@ if ( ! class_exists( 'um\ajax\Field_Group' ) ) {
 			}
 
 			wp_send_json_success( array( 'fields' => $fields ) );
+		}
+
+		public function get_options_preset() {
+			UM()->ajax()->check_nonce( 'um-admin-nonce' );
+
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( __( 'Please login as Administrator.', 'ultimate-member' ) );
+			}
+
+			if ( empty( $_POST['preset'] ) ) {
+				wp_send_json_error( __( 'Wrong data.', 'ultimate-member' ) );
+			}
+
+			$preset = sanitize_key( $_POST['preset'] );
+
+			$options = array();
+			switch ( $preset ) {
+				case 'countries':
+					$options = apply_filters( 'um_countries', include wp_normalize_path( UM_PATH . 'i18n/countries.php' ) );
+					break;
+				case 'languages':
+					$options = apply_filters( 'um_languages', include wp_normalize_path( UM_PATH . 'i18n/languages.php' ) );
+					break;
+				case 'states':
+					$options = apply_filters( 'um_states', include wp_normalize_path( UM_PATH . 'i18n/states.php' ) );
+					break;
+				case 'months':
+					$options = array(
+						'january'   => __( 'January', 'ultimate-member' ),
+						'february'  => __( 'February', 'ultimate-member' ),
+						'march'     => __( 'March', 'ultimate-member' ),
+						'april'     => __( 'April', 'ultimate-member' ),
+						'may'       => __( 'May', 'ultimate-member' ),
+						'june'      => __( 'June', 'ultimate-member' ),
+						'july'      => __( 'July', 'ultimate-member' ),
+						'august'    => __( 'August', 'ultimate-member' ),
+						'september' => __( 'September', 'ultimate-member' ),
+						'october'   => __( 'October', 'ultimate-member' ),
+						'november'  => __( 'November', 'ultimate-member' ),
+						'december'  => __( 'December', 'ultimate-member' ),
+					);
+					$options = apply_filters( 'um_months', $options );
+					break;
+				case 'days':
+					$options = array(
+						'sunday'    => __( 'Sunday', 'ultimate-member' ),
+						'monday'    => __( 'Monday', 'ultimate-member' ),
+						'tuesday'   => __( 'Tuesday', 'ultimate-member' ),
+						'wednesday' => __( 'Wednesday', 'ultimate-member' ),
+						'thursday'  => __( 'Thursday', 'ultimate-member' ),
+						'friday'    => __( 'Friday', 'ultimate-member' ),
+						'saturday'  => __( 'Saturday', 'ultimate-member' ),
+					);
+					$options = apply_filters( 'um_days', $options );
+					break;
+				default:
+					$options = apply_filters( "um_{$preset}", $options );
+					break;
+			}
+
+			if ( empty( $options ) ) {
+				wp_send_json_error( __( 'Wrong preset. There aren\'t any options.', 'ultimate-member' ) );
+			}
+
+			wp_send_json_success( array( 'options' => $options ) );
 		}
 	}
 }

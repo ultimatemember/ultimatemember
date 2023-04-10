@@ -97,7 +97,7 @@ return array(
 	'TF' => __( 'French Southern Territories', 'ultimate-member' ),
 	'GA' => __( 'Gabon', 'ultimate-member' ),
 	'GM' => __( 'Gambia', 'ultimate-member' ),
-	'GE' => __( 'Georgia', 'ultimate-member' ),
+	'GE' => __( 'Sakartvelo', 'ultimate-member' ),
 	'DE' => __( 'Germany', 'ultimate-member' ),
 	'GH' => __( 'Ghana', 'ultimate-member' ),
 	'GI' => __( 'Gibraltar', 'ultimate-member' ),

@@ -1242,7 +1242,104 @@ if ( ! class_exists( 'um\Config' ) ) {
 			);
 		}
 
+		/**
+		 * Allowed image types
+		 *
+		 * @return array
+		 */
+		public function allowed_image_types() {
+			return apply_filters( 'um_allowed_image_types', array(
+				'png'  => __( '*.png', 'ultimate-member' ),
+				'jpeg' => __( '*.jpeg', 'ultimate-member' ),
+				'jpg'  => __( '*.jpg', 'ultimate-member' ),
+				'gif'  => __( '*.gif', 'ultimate-member' ),
+				'webp' => __( '*.webp', 'ultimate-member' ),
+			) );
+		}
+
+		/**
+		 * Allowed file types
+		 *
+		 * @return mixed
+		 */
+		public function allowed_file_types() {
+			return apply_filters( 'um_allowed_file_types', array(
+				'pdf'  => __( '*.pdf', 'ultimate-member' ),
+				'txt'  => __( '*.txt', 'ultimate-member' ),
+				'csv'  => __( '*.csv', 'ultimate-member' ),
+				'doc'  => __( '*.doc', 'ultimate-member' ),
+				'docx' => __( '*.docx', 'ultimate-member' ),
+				'odt'  => __( '*.odt', 'ultimate-member' ),
+				'ods'  => __( '*.ods', 'ultimate-member' ),
+				'xls'  => __( '*.xls', 'ultimate-member' ),
+				'xlsx' => __( '*.xlsx', 'ultimate-member' ),
+				'zip'  => __( '*.zip', 'ultimate-member' ),
+				'rar'  => __( '*.rar', 'ultimate-member' ),
+				'mp3'  => __( '*.mp3', 'ultimate-member' ),
+				'jpg'  => __( '*.jpg', 'ultimate-member' ),
+				'jpeg' => __( '*.jpeg', 'ultimate-member' ),
+				'jpe'  => __( '*.jpe', 'ultimate-member' ),
+				'png'  => __( '*.png', 'ultimate-member' ),
+				'gif'  => __( '*.gif', 'ultimate-member' ),
+				'eps'  => __( '*.eps', 'ultimate-member' ),
+				'psd'  => __( '*.psd', 'ultimate-member' ),
+				'tif'  => __( '*.tif', 'ultimate-member' ),
+				'tiff' => __( '*.tiff', 'ultimate-member' ),
+				'webp' => __( '*.webp', 'ultimate-member' ),
+			) );
+		}
+
+		/**
+		 * todo maybe add oembed providers setting
+		 *
+		 * @return \WP_oEmbed|null
+		 */
+		private function wp_oembed_get_object() {
+			static $wp_oembed = null;
+
+			if ( is_null( $wp_oembed ) ) {
+				$wp_oembed = new \WP_oEmbed();
+			}
+			return $wp_oembed;
+		}
+
 		public function init_field_types() {
+			// todo maybe add oembed providers setting
+			//var_dump( $this->wp_oembed_get_object()->providers );
+
+			$choices_layouts = array(
+				'col-1'  => __( 'One column', 'ultimate-member' ),
+				'col-2'  => __( 'Two columns', 'ultimate-member' ),
+				'col-3'  => __( 'Three columns', 'ultimate-member' ),
+				'inline' => __( 'Inline', 'ultimate-member' ),
+			);
+
+			$choices_layouts = apply_filters( 'um_choices_layouts_options', $choices_layouts );
+
+			$post_types_list = get_post_types( array( 'public' => true ), 'objects' );
+
+			$post_types = array();
+			foreach ( $post_types_list as $pt_key => $pt_obj ) {
+				$post_types[ $pt_key ] = $pt_obj->label;
+			}
+
+			$taxonomies_list = get_taxonomies( array( 'public' => true ), 'objects' );
+			$taxonomies = array();
+			foreach ( $taxonomies_list as $tax_key => $tax_obj ) {
+				$taxonomies[ $tax_key ] = $tax_obj->label;
+			}
+
+			$inputmodes = array(
+				'none'    => __( 'none', 'ultimate-member' ),
+				'text'    => __( 'text', 'ultimate-member' ),
+				'tel'     => __( 'tel', 'ultimate-member' ),
+				'url'     => __( 'url', 'ultimate-member' ),
+				'email'   => __( 'email', 'ultimate-member' ),
+				'numeric' => __( 'numeric', 'ultimate-member' ),
+				'decimal' => __( 'decimal', 'ultimate-member' ),
+				'search'  => __( 'search', 'ultimate-member' ),
+			);
+
 			// size it's height, width will be automatically based on ratio
 			$this->field_types = array(
 				'bool'      => array(
@@ -1268,6 +1365,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Meta key', 'ultimate-member' ),
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
+								'required'    => true,
 							),
 							'default_value' => array(
 								'id'          => 'default_value',
@@ -1310,7 +1408,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'id'          => 'readonly',
 								'type'        => 'checkbox',
 								'label'       => __( 'Mark as readonly', 'ultimate-member' ),
-								'description' => __( 'Enable to prevent users from editing this field. Note: if the profile editing option is set to publicly editable, the field will still be visible within the account page but will not be customizable.', 'ultimate-member' ),
+								'description' => __( 'Enable to prevent users from editing this field. Note: if the profile editing option is set to publicly editable, the field will still be visible within the profile page but will not be customizable.', 'ultimate-member' ),
 								'sanitize'    => 'bool',
 							),
 						),
@@ -1331,13 +1429,15 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				),
+				), // ready
 				'radio'     => array(
 					'title'             => __( 'Radio', 'ultimate-member' ),
 					'category'          => 'choice',
 					'conditional_rules' => array(
 						'==',
 						'!=',
+						'!=empty',
+						'==empty',
 					),
 					'settings'          => array(
 						'general'      => array(
@@ -1355,6 +1455,58 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Meta key', 'ultimate-member' ),
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
+								'required'    => true,
+							),
+							'dynamic_choices' => array(
+								'id'          => 'dynamic_choices',
+								'type'        => 'select',
+								'label'       => __( 'Dynamic Choices', 'ultimate-member' ),
+								'description' => __( 'Select auto-populate method to use.', 'ultimate-member' ),
+								'options'     => array(
+									''                => __( 'No', 'ultimate-member' ),
+									'post_type'       => __( 'Post Type', 'ultimate-member' ),
+									'taxonomy'        => __( 'Taxonomy', 'ultimate-member' ),
+									'custom_callback' => __( 'Custom Callback', 'ultimate-member' ),
+								),
+								'sanitize'    => 'key',
+							),
+							'custom_dropdown_options_source' => array(
+								'id'          => 'custom_dropdown_options_source',
+								'type'        => 'text',
+								'label'       => __( 'Choices Callback', 'ultimate-member' ),
+								'description' => __( 'Add a callback source to retrieve choices.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+								'conditional' => array( 'dynamic_choices', '=', 'custom_callback' ),
+							),
+							'parent_dropdown_relationship' => array(
+								'id'          => 'parent_dropdown_relationship',
+								'type'        => 'text',
+								'label'       => __( 'Parent Option (Maybe unnecessary. Discuss if we can pass all fields as parent.)', 'ultimate-member' ),
+								'description' => __( 'Dynamically populates the option based from selected parent option.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+								'conditional' => array( 'custom_dropdown_options_source', '!=', '' ),
+							),
+							'options_cpt' => array(
+								'id'          => 'options_cpt',
+								'type'        => 'select',
+								'multi'       => true,
+								'label'       => __( 'Dynamic Post Type Source', 'ultimate-member' ),
+								'description' => __( 'Select Post Type to use for auto-populating field choices.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+								'required'    => true,
+								'options'     => $post_types,
+								'conditional' => array( 'dynamic_choices', '=', 'post_type' ),
+							),
+							'options_taxonomy' => array(
+								'id'          => 'options_taxonomy',
+								'type'        => 'select',
+								'multi'       => true,
+								'label'       => __( 'Dynamic Taxonomy Source', 'ultimate-member' ),
+								'description' => __( 'Select Taxonomy to use for auto-populating field choices.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+								'required'    => true,
+								'options'     => $taxonomies,
+								'conditional' => array( 'dynamic_choices', '=', 'taxonomy' ),
 							),
 							'options' => array(
 								'id'          => 'options',
@@ -1363,6 +1515,8 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Edit Choices', 'ultimate-member' ),
 								'description' => __( 'Enter one choice per line. This will represent the available choices or selections available for user.', 'ultimate-member' ),
 								'sanitize'    => 'options',
+								'required'    => true,
+								'conditional' => array( 'dynamic_choices', '=', '' ),
 							),
 						),
 						'presentation' => array(
@@ -1375,6 +1529,28 @@ if ( ! class_exists( 'um\Config' ) ) {
 									'textarea_rows' => 5,
 								),
 								'sanitize'    => 'textarea',
+							),
+							'choices_layout' => array(
+								'id'          => 'choices_layout',
+								'type'        => 'select',
+								'label'       => __( 'Choices Layout', 'ultimate-member' ),
+								'description' => __( 'Select the layout for displaying field choices.', 'ultimate-member' ),
+								'options'     => $choices_layouts,
+								'sanitize'    => 'key',
+							),
+							'allow_custom_values'        => array(
+								'id'          => 'allow_custom_values',
+								'type'        => 'checkbox',
+								'label'       => __( 'Allow Custom Values', 'ultimate-member' ),
+								'description' => __( 'Allow custom values to be added.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+							'save_custom_values'        => array(
+								'id'          => 'save_custom_values',
+								'type'        => 'checkbox',
+								'label'       => __( 'Save Custom Values', 'ultimate-member' ),
+								'description' => __( 'Save custom values to the field\'s choices', 'ultimate-member' ),
+								'sanitize'    => 'bool',
 							),
 						),
 						'validation'   => array(
@@ -1419,6 +1595,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'conditional_rules' => array(
 						'==',
 						'!=',
+						'!=empty',
+						'==empty',
+						'==contains',
 					),
 					'settings'          => array(
 						'general'      => array(
@@ -1436,6 +1615,58 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Meta key', 'ultimate-member' ),
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
+								'required'    => true,
+							),
+							'dynamic_choices' => array(
+								'id'          => 'dynamic_choices',
+								'type'        => 'select',
+								'label'       => __( 'Dynamic Choices', 'ultimate-member' ),
+								'description' => __( 'Select auto-populate method to use.', 'ultimate-member' ),
+								'options'     => array(
+									''                => __( 'No', 'ultimate-member' ),
+									'post_type'       => __( 'Post Type', 'ultimate-member' ),
+									'taxonomy'        => __( 'Taxonomy', 'ultimate-member' ),
+									'custom_callback' => __( 'Custom Callback', 'ultimate-member' ),
+								),
+								'sanitize'    => 'key',
+							),
+							'custom_dropdown_options_source' => array(
+								'id'          => 'custom_dropdown_options_source',
+								'type'        => 'text',
+								'label'       => __( 'Choices Callback', 'ultimate-member' ),
+								'description' => __( 'Add a callback source to retrieve choices.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+								'conditional' => array( 'dynamic_choices', '=', 'custom_callback' ),
+							),
+							'parent_dropdown_relationship' => array(
+								'id'          => 'parent_dropdown_relationship',
+								'type'        => 'text',
+								'label'       => __( 'Parent Option (Maybe unnecessary. Discuss if we can pass all fields as parent.)', 'ultimate-member' ),
+								'description' => __( 'Dynamically populates the option based from selected parent option.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+								'conditional' => array( 'custom_dropdown_options_source', '!=', '' ),
+							),
+							'options_cpt' => array(
+								'id'          => 'options_cpt',
+								'type'        => 'select',
+								'multi'       => true,
+								'label'       => __( 'Dynamic Post Type Source', 'ultimate-member' ),
+								'description' => __( 'Select Post Type to use for auto-populating field choices.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+								'required'    => true,
+								'options'     => $post_types,
+								'conditional' => array( 'dynamic_choices', '=', 'post_type' ),
+							),
+							'options_taxonomy' => array(
+								'id'          => 'options_taxonomy',
+								'type'        => 'select',
+								'multi'       => true,
+								'label'       => __( 'Dynamic Taxonomy Source', 'ultimate-member' ),
+								'description' => __( 'Select Taxonomy to use for auto-populating field choices.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+								'required'    => true,
+								'options'     => $taxonomies,
+								'conditional' => array( 'dynamic_choices', '=', 'taxonomy' ),
 							),
 							'options' => array(
 								'id'          => 'options',
@@ -1444,6 +1675,8 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Edit Choices', 'ultimate-member' ),
 								'description' => __( 'Enter one choice per line. This will represent the available choices or selections available for user.', 'ultimate-member' ),
 								'sanitize'    => 'options',
+								'required'    => true,
+								'conditional' => array( 'dynamic_choices', '=', '' ),
 							),
 						),
 						'presentation' => array(
@@ -1456,6 +1689,196 @@ if ( ! class_exists( 'um\Config' ) ) {
 									'textarea_rows' => 5,
 								),
 								'sanitize'    => 'textarea',
+							),
+							'choices_layout' => array(
+								'id'          => 'choices_layout',
+								'type'        => 'select',
+								'label'       => __( 'Choices Layout', 'ultimate-member' ),
+								'description' => __( 'Select the layout for displaying field choices.', 'ultimate-member' ),
+								'options'     => $choices_layouts,
+								'sanitize'    => 'key',
+							),
+							'allow_custom_values'        => array(
+								'id'          => 'allow_custom_values',
+								'type'        => 'checkbox',
+								'label'       => __( 'Allow Custom Values', 'ultimate-member' ),
+								'description' => __( 'Allow custom values to be added.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+							'save_custom_values'        => array(
+								'id'          => 'save_custom_values',
+								'type'        => 'checkbox',
+								'label'       => __( 'Save Custom Values', 'ultimate-member' ),
+								'description' => __( 'Save custom values to the field\'s choices', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+						),
+						'validation'   => array(
+							'required'        => array(
+								'id'          => 'required',
+								'type'        => 'checkbox',
+								'label'       => __( 'Is this field required?', 'ultimate-member' ),
+								'description' => __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+						),
+						'privacy'      => array(
+							'readonly' => array(
+								'id'          => 'readonly',
+								'type'        => 'checkbox',
+								'label'       => __( 'Mark as readonly', 'ultimate-member' ),
+								'description' => __( 'Enable to prevent users from editing this field. Note: if the profile editing option is set to publicly editable, the field will still be visible within the account page but will not be customizable.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+						),
+						'advanced'     => array(
+							'wrapper_class' => array(
+								'id'          => 'wrapper_class',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper class', 'ultimate-member' ),
+								'description' => __( 'CSS class added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+							'wrapper_id'    => array(
+								'id'          => 'wrapper_id',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper id', 'ultimate-member' ),
+								'description' => __( 'ID added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+						),
+					),
+				),
+				'select'    => array(
+					'title'             => __( 'Dropdown', 'ultimate-member' ),
+					'category'          => 'choice',
+					'conditional_rules' => array(
+						'==',
+						'!=',
+						'!=empty',
+						'==empty',
+						'==contains',
+					),
+					'settings'          => array(
+						'general'      => array(
+							'label'         => array(
+								'id'          => 'label',
+								'type'        => 'text',
+								'label'       => __( 'Field label', 'ultimate-member' ),
+								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'meta_key'      => array(
+								'id'          => 'meta_key',
+								'type'        => 'text',
+								'class'       => 'um-field-row-metakey-input',
+								'label'       => __( 'Meta key', 'ultimate-member' ),
+								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+								'required'    => true,
+							),
+							'multiple'        => array(
+								'id'          => 'multiple',
+								'type'        => 'checkbox',
+								'class'       => 'um-field-row-multiple-input',
+								'label'       => __( 'Multiple Options Selection', 'ultimate-member' ),
+								'description' => __( 'Allow users to select multiple choices in this field.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+							'allow_null'        => array(
+								'id'          => 'allow_null',
+								'type'        => 'checkbox',
+								'label'       => __( 'Allow null', 'ultimate-member' ),
+								'description' => __( 'Add empty value option at the start of the list.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+							'dynamic_choices' => array(
+								'id'          => 'dynamic_choices',
+								'type'        => 'select',
+								'label'       => __( 'Dynamic Choices', 'ultimate-member' ),
+								'description' => __( 'Select auto-populate method to use.', 'ultimate-member' ),
+								'options'     => array(
+									''                => __( 'No', 'ultimate-member' ),
+									'post_type'       => __( 'Post Type', 'ultimate-member' ),
+									'taxonomy'        => __( 'Taxonomy', 'ultimate-member' ),
+									'custom_callback' => __( 'Custom Callback', 'ultimate-member' ),
+								),
+								'sanitize'    => 'key',
+							),
+							'custom_dropdown_options_source' => array(
+								'id'          => 'custom_dropdown_options_source',
+								'type'        => 'text',
+								'label'       => __( 'Choices Callback', 'ultimate-member' ),
+								'description' => __( 'Add a callback source to retrieve choices.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+								'conditional' => array( 'dynamic_choices', '=', 'custom_callback' ),
+							),
+							'parent_dropdown_relationship' => array(
+								'id'          => 'parent_dropdown_relationship',
+								'type'        => 'text',
+								'label'       => __( 'Parent Option (Maybe unnecessary. Discuss if we can pass all fields as parent.)', 'ultimate-member' ),
+								'description' => __( 'Dynamically populates the option based from selected parent option.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+								'conditional' => array( 'custom_dropdown_options_source', '!=', '' ),
+							),
+							'options_cpt' => array(
+								'id'          => 'options_cpt',
+								'type'        => 'select',
+								'multi'       => true,
+								'label'       => __( 'Dynamic Post Type Source', 'ultimate-member' ),
+								'description' => __( 'Select Post Type to use for auto-populating field choices.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+								'required'    => true,
+								'options'     => $post_types,
+								'conditional' => array( 'dynamic_choices', '=', 'post_type' ),
+							),
+							'options_taxonomy' => array(
+								'id'          => 'options_taxonomy',
+								'type'        => 'select',
+								'multi'       => true,
+								'label'       => __( 'Dynamic Taxonomy Source', 'ultimate-member' ),
+								'description' => __( 'Select Taxonomy to use for auto-populating field choices.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+								'required'    => true,
+								'options'     => $taxonomies,
+								'conditional' => array( 'dynamic_choices', '=', 'taxonomy' ),
+							),
+							'options' => array(
+								'id'          => 'options',
+								'type'        => 'choices',
+								'multiple'    => 'both',
+								'optgroup'    => true,
+								'label'       => __( 'Edit Choices', 'ultimate-member' ),
+								'description' => __( 'Enter one choice per line. This will represent the available choices or selections available for user.', 'ultimate-member' ),
+								'sanitize'    => 'options',
+								'required'    => true,
+								'conditional' => array( 'dynamic_choices', '=', '' ),
+							),
+						),
+						'presentation' => array(
+							'description' => array(
+								'id'          => 'description',
+								'type'        => 'textarea',
+								'label'       => __( 'Description', 'ultimate-member' ),
+								'description' => __( 'This is the text that appears below the field on your front-end. Description is useful for providing users with more information about what they should enter in the field. Leave blank if no description is needed for field.', 'ultimate-member' ),
+								'args'        => array(
+									'textarea_rows' => 5,
+								),
+								'sanitize'    => 'textarea',
+							),
+							'allow_custom_values'        => array(
+								'id'          => 'allow_custom_values',
+								'type'        => 'checkbox',
+								'label'       => __( 'Allow Custom Values', 'ultimate-member' ),
+								'description' => __( 'Allow custom values to be added.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+							'save_custom_values'        => array(
+								'id'          => 'save_custom_values',
+								'type'        => 'checkbox',
+								'label'       => __( 'Save Custom Values', 'ultimate-member' ),
+								'description' => __( 'Save custom values to the field\'s choices', 'ultimate-member' ),
+								'sanitize'    => 'bool',
 							),
 						),
 						'validation'   => array(
@@ -1525,6 +1948,111 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'sanitize'    => 'text',
 							),
 						),
+					),
+				), // ready
+				'date'      => array(
+					'title'             => __( 'Date', 'ultimate-member' ),
+					'category'          => 'basic',
+					'conditional_rules' => array(
+						'==',
+						'!=',
+						'!=empty',
+						'==empty',
+						'>',
+						'<',
+					),
+					'settings'          => array(
+						'general'      => array(
+							'label'         => array(
+								'id'          => 'label',
+								'type'        => 'text',
+								'label'       => __( 'Field label', 'ultimate-member' ),
+								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'meta_key'      => array(
+								'id'          => 'meta_key',
+								'type'        => 'text',
+								'class'       => 'um-field-row-metakey-input',
+								'label'       => __( 'Meta key', 'ultimate-member' ),
+								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+								'required'    => true,
+							),
+							'default_value' => array(
+								'id'          => 'default_value',
+								'type'        => 'date',
+								'label'       => __( 'Default value', 'ultimate-member' ),
+								'description' => __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+						),
+						'presentation' => array(
+							'description' => array(
+								'id'          => 'description',
+								'type'        => 'textarea',
+								'label'       => __( 'Description', 'ultimate-member' ),
+								'description' => __( 'This is the text that appears below the field on your front-end. Description is useful for providing users with more information about what they should enter in the field. Leave blank if no description is needed for field.', 'ultimate-member' ),
+								'args'        => array(
+									'textarea_rows' => 5,
+								),
+								'sanitize'    => 'textarea',
+							),
+							'step' => array(
+								'id'          => 'step',
+								'type'        => 'number',
+								'label'       => __( 'Step', 'ultimate-member' ),
+								'description' => __( 'Specifies the granularity in days that the value must adhere to.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
+							),
+						),
+						'validation'   => array(
+							'required'        => array(
+								'id'          => 'required',
+								'type'        => 'checkbox',
+								'label'       => __( 'Is this field required?', 'ultimate-member' ),
+								'description' => __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+							'disable_past_dates' => array(
+								'id'          => 'disable_past_dates',
+								'type'        => 'checkbox',
+								'label'       => __( 'Disable Past Dates', 'ultimate-member' ),
+								'description' => __( 'Check this option to prevent any previous date from being selected.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+							'min'       => array(
+								'id'          => 'min',
+								'type'        => 'date',
+								'label'       => __( 'Minimum date', 'ultimate-member' ),
+								'description' => __( 'Indicating the earliest date to accept. Leave empty to disable this setting.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+								'conditional' => array( 'disable_past_dates', '=', 0 ),
+							),
+							'max'       => array(
+								'id'          => 'max',
+								'type'        => 'date',
+								'label'       => __( 'Maximum date', 'ultimate-member' ),
+								'description' => __( 'Indicating the latest date to accept. Leave empty to disable this setting.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'validate'        => array(
+								'id'          => 'validate',
+								'type'        => 'select',
+								'label'       => __( 'Validation', 'ultimate-member' ),
+								'description' => __( 'Does this field require a special validation?', 'ultimate-member' ),
+								'options'     => $this->get( 'field_validation_settings' ),
+								'sanitize'    => 'key',
+							),
+							'custom_validate' => array(
+								'id'          => 'custom_validate',
+								'type'        => 'text',
+								'label'       => __( 'Custom validation action', 'ultimate-member' ),
+								'description' => __( 'If you want to apply your custom validation, you can use action hooks to add custom validation. Please refer to documentation for further details.', 'ultimate-member' ),
+								'conditional' => array( 'validate', '=', 'custom' ),
+								'sanitize'    => 'text',
+							),
+						),
 						'privacy'      => array(
 							'readonly' => array(
 								'id'          => 'readonly',
@@ -1534,23 +2062,27 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'sanitize'    => 'bool',
 							),
 						),
+						'advanced'     => array(
+							'wrapper_class' => array(
+								'id'          => 'wrapper_class',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper class', 'ultimate-member' ),
+								'description' => __( 'CSS class added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+							'wrapper_id'    => array(
+								'id'          => 'wrapper_id',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper id', 'ultimate-member' ),
+								'description' => __( 'ID added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+						),
 					),
-				),
-				'date'      => array(
-					'title'     => __( 'Date', 'ultimate-member' ),
-					'category' => 'basic',
-					'conditional_rules' => array(
-						'==',
-						'!=',
-						'!=empty',
-						'==empty',
-						'>',
-						'<',
-					),
-				),
+				), // ready
 				'time'      => array(
-					'title'     => __( 'Time', 'ultimate-member' ),
-					'category' => 'basic',
+					'title'             => __( 'Time', 'ultimate-member' ),
+					'category'          => 'basic',
 					'conditional_rules' => array(
 						'==',
 						'!=',
@@ -1559,7 +2091,117 @@ if ( ! class_exists( 'um\Config' ) ) {
 						'>',
 						'<',
 					),
-				),
+					'settings'          => array(
+						'general'      => array(
+							'label'         => array(
+								'id'          => 'label',
+								'type'        => 'text',
+								'label'       => __( 'Field label', 'ultimate-member' ),
+								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'meta_key'      => array(
+								'id'          => 'meta_key',
+								'type'        => 'text',
+								'class'       => 'um-field-row-metakey-input',
+								'label'       => __( 'Meta key', 'ultimate-member' ),
+								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+								'required'    => true,
+							),
+							'default_value' => array(
+								'id'          => 'default_value',
+								'type'        => 'time',
+								'label'       => __( 'Default value', 'ultimate-member' ),
+								'description' => __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+						),
+						'presentation' => array(
+							'description' => array(
+								'id'          => 'description',
+								'type'        => 'textarea',
+								'label'       => __( 'Description', 'ultimate-member' ),
+								'description' => __( 'This is the text that appears below the field on your front-end. Description is useful for providing users with more information about what they should enter in the field. Leave blank if no description is needed for field.', 'ultimate-member' ),
+								'args'        => array(
+									'textarea_rows' => 5,
+								),
+								'sanitize'    => 'textarea',
+							),
+							'step' => array(
+								'id'          => 'step',
+								'type'        => 'text',
+								'label'       => __( 'Step', 'ultimate-member' ),
+								'description' => __( 'Specifies the granularity in seconds that the value must adhere to.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+						),
+						'validation'   => array(
+							'required'        => array(
+								'id'          => 'required',
+								'type'        => 'checkbox',
+								'label'       => __( 'Is this field required?', 'ultimate-member' ),
+								'description' => __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+							'min'       => array(
+								'id'          => 'min',
+								'type'        => 'time',
+								'label'       => __( 'Minimum time', 'ultimate-member' ),
+								'description' => __( 'Indicating the earliest time to accept. Leave empty to disable this setting.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'max'       => array(
+								'id'          => 'max',
+								'type'        => 'time',
+								'label'       => __( 'Maximum time', 'ultimate-member' ),
+								'description' => __( 'Indicating the latest time to accept. Leave empty to disable this setting.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'validate'        => array(
+								'id'          => 'validate',
+								'type'        => 'select',
+								'label'       => __( 'Validation', 'ultimate-member' ),
+								'description' => __( 'Does this field require a special validation?', 'ultimate-member' ),
+								'options'     => $this->get( 'field_validation_settings' ),
+								'sanitize'    => 'key',
+							),
+							'custom_validate' => array(
+								'id'          => 'custom_validate',
+								'type'        => 'text',
+								'label'       => __( 'Custom validation action', 'ultimate-member' ),
+								'description' => __( 'If you want to apply your custom validation, you can use action hooks to add custom validation. Please refer to documentation for further details.', 'ultimate-member' ),
+								'conditional' => array( 'validate', '=', 'custom' ),
+								'sanitize'    => 'text',
+							),
+						),
+						'privacy'      => array(
+							'readonly' => array(
+								'id'          => 'readonly',
+								'type'        => 'checkbox',
+								'label'       => __( 'Mark as readonly', 'ultimate-member' ),
+								'description' => __( 'Enable to prevent users from editing this field. Note: if the profile editing option is set to publicly editable, the field will still be visible within the account page but will not be customizable.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+						),
+						'advanced'     => array(
+							'wrapper_class' => array(
+								'id'          => 'wrapper_class',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper class', 'ultimate-member' ),
+								'description' => __( 'CSS class added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+							'wrapper_id'    => array(
+								'id'          => 'wrapper_id',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper id', 'ultimate-member' ),
+								'description' => __( 'ID added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+						),
+					),
+				), // ready
 				'number'    => array(
 					'title'             => __( 'Number', 'ultimate-member' ),
 					'category'          => 'basic',
@@ -1588,13 +2230,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Meta key', 'ultimate-member' ),
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
+								'required'    => true,
 							),
 							'default_value' => array(
 								'id'          => 'default_value',
 								'type'        => 'number',
 								'label'       => __( 'Default value', 'ultimate-member' ),
 								'description' => __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value.', 'ultimate-member' ),
-								'sanitize'    => 'email',
+								'sanitize'    => 'empty_int',
 							),
 						),
 						'presentation' => array(
@@ -1614,6 +2257,176 @@ if ( ! class_exists( 'um\Config' ) ) {
 									'textarea_rows' => 5,
 								),
 								'sanitize'    => 'textarea',
+							),
+							'step' => array(
+								'id'          => 'step',
+								'type'        => 'text',
+								'label'       => __( 'Step', 'ultimate-member' ),
+								'description' => __( 'Specifies the granularity that the value must adhere to.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'inputmode' => array(
+								'id'          => 'inputmode',
+								'type'        => 'select',
+								'label'       => __( 'Input mode', 'ultimate-member' ),
+								'description' => __( 'Provides a hint to browsers as to the type of virtual keyboard configuration to use when editing this element or its contents.', 'ultimate-member' ),
+								'options'     => $inputmodes,
+								'sanitize'    => 'key',
+							),
+						),
+						'validation'   => array(
+							'required'        => array(
+								'id'          => 'required',
+								'type'        => 'checkbox',
+								'label'       => __( 'Is this field required?', 'ultimate-member' ),
+								'description' => __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+							'min'       => array(
+								'id'          => 'min',
+								'type'        => 'number',
+								'label'       => __( 'Minimum value', 'ultimate-member' ),
+								'description' => __( 'The minimum value to accept for this input. Leave empty to disable this setting.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'max'       => array(
+								'id'          => 'max',
+								'type'        => 'number',
+								'label'       => __( 'Maximum value', 'ultimate-member' ),
+								'description' => __( 'The maximum value to accept for this input. Leave empty to disable this setting.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'pattern'         => array(
+								'id'          => 'pattern',
+								'type'        => 'text',
+								'label'       => __( 'Input mask (pattern)', 'ultimate-member' ),
+								'description' => __( 'A regular <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/text#specifying_a_pattern">expression</a> to validate input format.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'validate'        => array(
+								'id'          => 'validate',
+								'type'        => 'select',
+								'label'       => __( 'Validation', 'ultimate-member' ),
+								'description' => __( 'Does this field require a special validation?', 'ultimate-member' ),
+								'options'     => $this->get( 'field_validation_settings' ),
+								'sanitize'    => 'key',
+							),
+							'custom_validate' => array(
+								'id'          => 'custom_validate',
+								'type'        => 'text',
+								'label'       => __( 'Custom validation action', 'ultimate-member' ),
+								'description' => __( 'If you want to apply your custom validation, you can use action hooks to add custom validation. Please refer to documentation for further details.', 'ultimate-member' ),
+								'conditional' => array( 'validate', '=', 'custom' ),
+								'sanitize'    => 'text',
+							),
+						),
+						'privacy'      => array(
+							'readonly' => array(
+								'id'          => 'readonly',
+								'type'        => 'checkbox',
+								'label'       => __( 'Mark as readonly', 'ultimate-member' ),
+								'description' => __( 'Enable to prevent users from editing this field. Note: if the profile editing option is set to publicly editable, the field will still be visible within the account page but will not be customizable.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+						),
+						'advanced'     => array(
+							'wrapper_class' => array(
+								'id'          => 'wrapper_class',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper class', 'ultimate-member' ),
+								'description' => __( 'CSS class added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+							'wrapper_id'    => array(
+								'id'          => 'wrapper_id',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper id', 'ultimate-member' ),
+								'description' => __( 'ID added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+						),
+					),
+				), // ready
+				'password'  => array(
+					'title' => __( 'Password', 'ultimate-member' ),
+					'category' => 'basic',
+					'conditional_rules' => array(
+						'!=empty',
+						'==empty',
+					),
+					'settings'          => array(
+						'general'      => array(
+							'label'         => array(
+								'id'          => 'label',
+								'type'        => 'text',
+								'label'       => __( 'Field label', 'ultimate-member' ),
+								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'meta_key'      => array(
+								'id'          => 'meta_key',
+								'type'        => 'text',
+								'class'       => 'um-field-row-metakey-input',
+								'label'       => __( 'Meta key', 'ultimate-member' ),
+								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+								'required'    => true,
+							),
+							'default_value' => array(
+								'id'          => 'default_value',
+								'type'        => 'text',
+								'label'       => __( 'Default value', 'ultimate-member' ),
+								'description' => __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'confirm_pass' => array(
+								'id'          => 'confirm_pass',
+								'type'        => 'checkbox',
+								'label'       => __( 'Add a confirm password field', 'ultimate-member' ),
+								'description' => __( 'Turn on to add a confirm password field. If turned on the confirm password field will only show on register forms and not on login forms.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+							'label_confirm_pass' => array(
+								'id'          => 'label_confirm_pass',
+								'type'        => 'text',
+								'label'       => __( 'Confirm password field label', 'ultimate-member' ),
+								'description' => __( 'This label is the text that appears above the confirm password field. Leave blank to show default label.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+								'conditional' => array( 'confirm_pass', '=', 1 ),
+							),
+						),
+						'presentation' => array(
+							'placeholder' => array(
+								'id'          => 'placeholder',
+								'type'        => 'text',
+								'label'       => __( 'Placeholder', 'ultimate-member' ),
+								'description' => __( 'This is the text that appears within the field e.g please enter your email address. Leave blank to not show any placeholder text.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'description' => array(
+								'id'          => 'description',
+								'type'        => 'textarea',
+								'label'       => __( 'Description', 'ultimate-member' ),
+								'description' => __( 'This is the text that appears below the field on your front-end. Description is useful for providing users with more information about what they should enter in the field. Leave blank if no description is needed for field.', 'ultimate-member' ),
+								'args'        => array(
+									'textarea_rows' => 5,
+								),
+								'sanitize'    => 'textarea',
+							),
+							'size' => array(
+								'id'          => 'size',
+								'type'        => 'number',
+								'label'       => __( 'Field size', 'ultimate-member' ),
+								'description' => __( 'Size of the control. Leave empty to disable this setting.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
+							),
+							'inputmode' => array(
+								'id'          => 'inputmode',
+								'type'        => 'select',
+								'label'       => __( 'Input mode', 'ultimate-member' ),
+								'description' => __( 'Provides a hint to browsers as to the type of virtual keyboard configuration to use when editing this element or its contents.', 'ultimate-member' ),
+								'options'     => $inputmodes,
+								'sanitize'    => 'key',
 							),
 						),
 						'validation'   => array(
@@ -1688,15 +2501,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				),
-				'password'  => array(
-					'title' => __( 'Password', 'ultimate-member' ),
-					'category' => 'basic',
-					'conditional_rules' => array(
-						'!=empty',
-						'==empty',
-					),
-				),
+				), // ready
 				'email'     => array(
 					'title'             => __( 'Email', 'ultimate-member' ),
 					'category'          => 'basic',
@@ -1724,6 +2529,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Meta key', 'ultimate-member' ),
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
+								'required'    => true,
 							),
 							'default_value' => array(
 								'id'          => 'default_value',
@@ -1731,6 +2537,21 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Default value', 'ultimate-member' ),
 								'description' => __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value.', 'ultimate-member' ),
 								'sanitize'    => 'email',
+							),
+							'confirm_email' => array(
+								'id'          => 'confirm_email',
+								'type'        => 'checkbox',
+								'label'       => __( 'Add a confirm email field', 'ultimate-member' ),
+								'description' => __( 'Turn on to add a confirm email field. If turned on the confirm email field will only show on register forms and not on login forms.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+							'label_confirm_email' => array(
+								'id'          => 'label_confirm_email',
+								'type'        => 'text',
+								'label'       => __( 'Confirm email field label', 'ultimate-member' ),
+								'description' => __( 'This label is the text that appears above the confirm email field. Leave blank to show default label.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+								'conditional' => array( 'confirm_email', '=', 1 ),
 							),
 						),
 						'presentation' => array(
@@ -1750,6 +2571,21 @@ if ( ! class_exists( 'um\Config' ) ) {
 									'textarea_rows' => 5,
 								),
 								'sanitize'    => 'textarea',
+							),
+							'size' => array(
+								'id'          => 'size',
+								'type'        => 'number',
+								'label'       => __( 'Field size', 'ultimate-member' ),
+								'description' => __( 'Size of the control. Leave empty to disable this setting.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
+							),
+							'inputmode' => array(
+								'id'          => 'inputmode',
+								'type'        => 'select',
+								'label'       => __( 'Input mode', 'ultimate-member' ),
+								'description' => __( 'Provides a hint to browsers as to the type of virtual keyboard configuration to use when editing this element or its contents.', 'ultimate-member' ),
+								'options'     => $inputmodes,
+								'sanitize'    => 'key',
 							),
 						),
 						'validation'   => array(
@@ -1773,6 +2609,13 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Maximum length', 'ultimate-member' ),
 								'description' => __( 'If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+							),
+							'multiple'         => array(
+								'id'          => 'multiple',
+								'type'        => 'checkbox',
+								'label'       => __( 'Multiple emails', 'ultimate-member' ),
+								'description' => __( 'Indicates that the user can enter a list of multiple email addresses, separated by commas and, optionally, whitespace characters.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
 							),
 							'pattern'         => array(
 								'id'          => 'pattern',
@@ -1824,7 +2667,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				),
+				), // ready
 				'url'       => array(
 					'title'             => __( 'URL', 'ultimate-member' ),
 					'category'          => 'basic',
@@ -1851,6 +2694,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Meta key', 'ultimate-member' ),
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
+								'required'    => true,
 							),
 							'default_value' => array(
 								'id'          => 'default_value',
@@ -1918,6 +2762,21 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'Entering custom text here will replace the url with a text link.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 							),
+							'size' => array(
+								'id'          => 'size',
+								'type'        => 'number',
+								'label'       => __( 'Field size', 'ultimate-member' ),
+								'description' => __( 'Size of the control. Leave empty to disable this setting.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
+							),
+							'inputmode' => array(
+								'id'          => 'inputmode',
+								'type'        => 'select',
+								'label'       => __( 'Input mode', 'ultimate-member' ),
+								'description' => __( 'Provides a hint to browsers as to the type of virtual keyboard configuration to use when editing this element or its contents.', 'ultimate-member' ),
+								'options'     => $inputmodes,
+								'sanitize'    => 'key',
+							),
 						),
 						'validation'   => array(
 							'required'        => array(
@@ -1940,6 +2799,13 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Maximum length', 'ultimate-member' ),
 								'description' => __( 'If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+							),
+							'pattern'         => array(
+								'id'          => 'pattern',
+								'type'        => 'text',
+								'label'       => __( 'Input mask (pattern)', 'ultimate-member' ),
+								'description' => __( 'A regular <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/text#specifying_a_pattern">expression</a> to validate input format.', 'ultimate-member' ),
+								'sanitize'    => 'text',
 							),
 							'validate'        => array(
 								'id'          => 'validate',
@@ -1984,7 +2850,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				),
+				), // ready
 				'text'      => array(
 					'title'             => __( 'Text Box', 'ultimate-member' ),
 					'category'          => 'basic',
@@ -2012,6 +2878,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Meta key', 'ultimate-member' ),
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
+								'required'    => true,
 							),
 							'default_value' => array(
 								'id'          => 'default_value',
@@ -2038,6 +2905,21 @@ if ( ! class_exists( 'um\Config' ) ) {
 									'textarea_rows' => 5,
 								),
 								'sanitize'    => 'textarea',
+							),
+							'size' => array(
+								'id'          => 'size',
+								'type'        => 'number',
+								'label'       => __( 'Field size', 'ultimate-member' ),
+								'description' => __( 'Size of the control. Leave empty to disable this setting.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
+							),
+							'inputmode' => array(
+								'id'          => 'inputmode',
+								'type'        => 'select',
+								'label'       => __( 'Input mode', 'ultimate-member' ),
+								'description' => __( 'Provides a hint to browsers as to the type of virtual keyboard configuration to use when editing this element or its contents.', 'ultimate-member' ),
+								'options'     => $inputmodes,
+								'sanitize'    => 'key',
 							),
 						),
 						'validation'   => array(
@@ -2112,13 +2994,17 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				),
-				'select'    => array(
-					'title'             => __( 'Dropdown', 'ultimate-member' ),
-					'category'          => 'choice',
+				), // ready
+				'tel'       => array(
+					'title'             => __( 'Telephone Box', 'ultimate-member' ),
+					'category'          => 'basic',
 					'conditional_rules' => array(
 						'==',
 						'!=',
+						'!=empty',
+						'==empty',
+						'==pattern',
+						'==contains',
 					),
 					'settings'          => array(
 						'general'      => array(
@@ -2136,25 +3022,24 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Meta key', 'ultimate-member' ),
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
+								'required'    => true,
 							),
-							'multiple'        => array(
-								'id'          => 'multiple',
-								'type'        => 'checkbox',
-								'class'       => 'um-field-row-multiple-input',
-								'label'       => __( 'Multiple Options Selection', 'ultimate-member' ),
-								'description' => __( 'Allow users to select multiple choices in this field.', 'ultimate-member' ),
-								'sanitize'    => 'bool',
-							),
-							'options' => array(
-								'id'          => 'options',
-								'type'        => 'choices',
-								'multiple'    => 'both',
-								'label'       => __( 'Edit Choices', 'ultimate-member' ),
-								'description' => __( 'Enter one choice per line. This will represent the available choices or selections available for user.', 'ultimate-member' ),
-								'sanitize'    => 'options',
+							'default_value' => array(
+								'id'          => 'default_value',
+								'type'        => 'text',
+								'label'       => __( 'Default value', 'ultimate-member' ),
+								'description' => __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value.', 'ultimate-member' ),
+								'sanitize'    => 'text',
 							),
 						),
 						'presentation' => array(
+							'placeholder' => array(
+								'id'          => 'placeholder',
+								'type'        => 'text',
+								'label'       => __( 'Placeholder', 'ultimate-member' ),
+								'description' => __( 'This is the text that appears within the field e.g please enter your email address. Leave blank to not show any placeholder text.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
 							'description' => array(
 								'id'          => 'description',
 								'type'        => 'textarea',
@@ -2165,6 +3050,21 @@ if ( ! class_exists( 'um\Config' ) ) {
 								),
 								'sanitize'    => 'textarea',
 							),
+							'size' => array(
+								'id'          => 'size',
+								'type'        => 'number',
+								'label'       => __( 'Field size', 'ultimate-member' ),
+								'description' => __( 'Size of the control. Leave empty to disable this setting.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
+							),
+							'inputmode' => array(
+								'id'          => 'inputmode',
+								'type'        => 'select',
+								'label'       => __( 'Input mode', 'ultimate-member' ),
+								'description' => __( 'Provides a hint to browsers as to the type of virtual keyboard configuration to use when editing this element or its contents.', 'ultimate-member' ),
+								'options'     => $inputmodes,
+								'sanitize'    => 'key',
+							),
 						),
 						'validation'   => array(
 							'required'        => array(
@@ -2173,6 +3073,43 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Is this field required?', 'ultimate-member' ),
 								'description' => __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ),
 								'sanitize'    => 'bool',
+							),
+							'min_chars'       => array(
+								'id'          => 'min_chars',
+								'type'        => 'number',
+								'label'       => __( 'Minimum length', 'ultimate-member' ),
+								'description' => __( 'If you want to enable a minimum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
+							),
+							'max_chars'       => array(
+								'id'          => 'max_chars',
+								'type'        => 'number',
+								'label'       => __( 'Maximum length', 'ultimate-member' ),
+								'description' => __( 'If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
+							),
+							'pattern'         => array(
+								'id'          => 'pattern',
+								'type'        => 'text',
+								'label'       => __( 'Input mask (pattern)', 'ultimate-member' ),
+								'description' => __( 'A regular <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/text#specifying_a_pattern">expression</a> to validate input format.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'validate'        => array(
+								'id'          => 'validate',
+								'type'        => 'select',
+								'label'       => __( 'Validation', 'ultimate-member' ),
+								'description' => __( 'Does this field require a special validation?', 'ultimate-member' ),
+								'options'     => $this->get( 'field_validation_settings' ),
+								'sanitize'    => 'key',
+							),
+							'custom_validate' => array(
+								'id'          => 'custom_validate',
+								'type'        => 'text',
+								'label'       => __( 'Custom validation action', 'ultimate-member' ),
+								'description' => __( 'If you want to apply your custom validation, you can use action hooks to add custom validation. Please refer to documentation for further details.', 'ultimate-member' ),
+								'conditional' => array( 'validate', '=', 'custom' ),
+								'sanitize'    => 'text',
 							),
 						),
 						'privacy'      => array(
@@ -2201,7 +3138,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				),
+				), // ready
 				'textarea'  => array(
 					'title'     => __( 'Textarea', 'ultimate-member' ),
 					'category' => 'basic',
@@ -2229,6 +3166,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Meta key', 'ultimate-member' ),
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
+								'required'    => true,
 							),
 							'default_value' => array(
 								'id'          => 'default_value',
@@ -2256,6 +3194,27 @@ if ( ! class_exists( 'um\Config' ) ) {
 								),
 								'sanitize'    => 'textarea',
 							),
+							'html' => array(
+								'id'          => 'html',
+								'type'        => 'checkbox',
+								'label'       => __( 'Accepts HTML?', 'ultimate-member' ),
+								'description' => __( 'Turn on/off HTML tags for this textarea.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+							'rows' => array(
+								'id'          => 'rows',
+								'type'        => 'number',
+								'label'       => __( 'Rows', 'ultimate-member' ),
+								'description' => __( 'The number of visible text lines for the control. If it is specified, it must be a positive integer. If it is not specified, the default value is 2.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
+							),
+							'cols' => array(
+								'id'          => 'cols',
+								'type'        => 'number',
+								'label'       => __( 'Cols', 'ultimate-member' ),
+								'description' => __( 'The visible width of the text control, in average character widths. If it is specified, it must be a positive integer. If it is not specified, the default value is 20.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
+							),
 						),
 						'validation'   => array(
 							'required'        => array(
@@ -2279,12 +3238,12 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 							),
-							'pattern'         => array(
-								'id'          => 'pattern',
-								'type'        => 'text',
-								'label'       => __( 'Input mask (pattern)', 'ultimate-member' ),
-								'description' => __( 'A regular <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/text#specifying_a_pattern">expression</a> to validate input format.', 'ultimate-member' ),
-								'sanitize'    => 'text',
+							'max_words'       => array(
+								'id'          => 'max_words',
+								'type'        => 'number',
+								'label'       => __( 'Maximum allowed words', 'ultimate-member' ),
+								'description' => __( 'If you want to enable a maximum number of words to be input in this textarea. Leave empty to disable this setting.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
 							),
 							'validate'        => array(
 								'id'          => 'validate',
@@ -2329,15 +3288,289 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				),
+				), // ready
 				'file'      => array(
-					'title'             => __( 'File/Image', 'ultimate-member' ),
+					'title'             => __( 'File', 'ultimate-member' ),
 					'category'          => 'content',
 					'conditional_rules' => array(
 						'!=empty',
 						'==empty',
 					),
-				),
+					'settings'          => array(
+						'general'      => array(
+							'label'         => array(
+								'id'          => 'label',
+								'type'        => 'text',
+								'label'       => __( 'Field label', 'ultimate-member' ),
+								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'meta_key'      => array(
+								'id'          => 'meta_key',
+								'type'        => 'text',
+								'class'       => 'um-field-row-metakey-input',
+								'label'       => __( 'Meta key', 'ultimate-member' ),
+								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+								'required'    => true,
+							),
+						),
+						'presentation' => array(
+							'description' => array(
+								'id'          => 'description',
+								'type'        => 'textarea',
+								'label'       => __( 'Description', 'ultimate-member' ),
+								'description' => __( 'This is the text that appears below the field on your front-end. Description is useful for providing users with more information about what they should enter in the field. Leave blank if no description is needed for field.', 'ultimate-member' ),
+								'args'        => array(
+									'textarea_rows' => 5,
+								),
+								'sanitize'    => 'textarea',
+							),
+							'upload_text' => array(
+								'id'          => 'upload_text',
+								'type'        => 'text',
+								'label'       => __( 'Upload Box Text', 'ultimate-member' ),
+								'description' => __( 'This is the headline that appears in the upload box for this field.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'upload_help_text' => array(
+								'id'          => 'upload_help_text',
+								'type'        => 'textarea',
+								'label'       => __( 'Additional Instructions Text', 'ultimate-member' ),
+								'description' => __( 'If you need to add information or secondary line below the headline of upload box, enter it here.', 'ultimate-member' ),
+								'args'        => array(
+									'textarea_rows' => 5,
+								),
+								'sanitize'    => 'textarea',
+							),
+							'button_text' => array(
+								'id'          => 'button_text',
+								'type'        => 'text',
+								'label'       => __( 'Upload Button Text', 'ultimate-member' ),
+								'description' => __( 'The text that appears on the button. e.g. Upload.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+						),
+						'validation'   => array(
+							'required'        => array(
+								'id'          => 'required',
+								'type'        => 'checkbox',
+								'label'       => __( 'Is this field required?', 'ultimate-member' ),
+								'description' => __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+							'min_size'       => array(
+								'id'          => 'min_size',
+								'type'        => 'number',
+								'label'       => __( 'Minimum Size in bytes', 'ultimate-member' ),
+								'description' => __( 'The minimum size for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
+							),
+							'max_size'       => array(
+								'id'          => 'max_size',
+								'type'        => 'number',
+								'label'       => __( 'Maximum Size in bytes', 'ultimate-member' ),
+								'description' => __( 'The maximum size for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
+							),
+							'allowed_types'       => array(
+								'id'          => 'allowed_types',
+								'type'        => 'select',
+								'multi'       => true,
+								'label'       => __( 'Allowed File Types', 'ultimate-member' ),
+								'description' => __( 'Select the file types that you want to allow to be uploaded via this field.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+								'options'     => $this->allowed_file_types(),
+							),
+						),
+						'privacy'      => array(
+							'readonly' => array(
+								'id'          => 'readonly',
+								'type'        => 'checkbox',
+								'label'       => __( 'Mark as readonly', 'ultimate-member' ),
+								'description' => __( 'Enable to prevent users from editing this field. Note: if the profile editing option is set to publicly editable, the field will still be visible within the account page but will not be customizable.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+						),
+						'advanced'     => array(
+							'wrapper_class' => array(
+								'id'          => 'wrapper_class',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper class', 'ultimate-member' ),
+								'description' => __( 'CSS class added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+							'wrapper_id'    => array(
+								'id'          => 'wrapper_id',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper id', 'ultimate-member' ),
+								'description' => __( 'ID added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+						),
+					),
+				), // ready
+				'image'     => array(
+					'title'             => __( 'Image', 'ultimate-member' ),
+					'category'          => 'content',
+					'conditional_rules' => array(
+						'!=empty',
+						'==empty',
+					),
+					'settings'          => array(
+						'general'      => array(
+							'label'         => array(
+								'id'          => 'label',
+								'type'        => 'text',
+								'label'       => __( 'Field label', 'ultimate-member' ),
+								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'meta_key'      => array(
+								'id'          => 'meta_key',
+								'type'        => 'text',
+								'class'       => 'um-field-row-metakey-input',
+								'label'       => __( 'Meta key', 'ultimate-member' ),
+								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+								'required'    => true,
+							),
+						),
+						'presentation' => array(
+							'description' => array(
+								'id'          => 'description',
+								'type'        => 'textarea',
+								'label'       => __( 'Description', 'ultimate-member' ),
+								'description' => __( 'This is the text that appears below the field on your front-end. Description is useful for providing users with more information about what they should enter in the field. Leave blank if no description is needed for field.', 'ultimate-member' ),
+								'args'        => array(
+									'textarea_rows' => 5,
+								),
+								'sanitize'    => 'textarea',
+							),
+							'upload_text' => array(
+								'id'          => 'upload_text',
+								'type'        => 'text',
+								'label'       => __( 'Upload Box Text', 'ultimate-member' ),
+								'description' => __( 'This is the headline that appears in the upload box for this field.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'upload_help_text' => array(
+								'id'          => 'upload_help_text',
+								'type'        => 'textarea',
+								'label'       => __( 'Additional Instructions Text', 'ultimate-member' ),
+								'description' => __( 'If you need to add information or secondary line below the headline of upload box, enter it here.', 'ultimate-member' ),
+								'args'        => array(
+									'textarea_rows' => 5,
+								),
+								'sanitize'    => 'textarea',
+							),
+							'button_text' => array(
+								'id'          => 'button_text',
+								'type'        => 'text',
+								'label'       => __( 'Upload Button Text', 'ultimate-member' ),
+								'description' => __( 'The text that appears on the button. e.g. Upload.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'crop'       => array(
+								'id'          => 'crop',
+								'type'        => 'select',
+								'label'       => __( 'Crop Feature', 'ultimate-member' ),
+								'description' => __( 'Enable/disable crop feature for this image upload and define ratio.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+								'options'     => array(
+									0 => __( 'Turn Off (Default)', 'ultimate-member' ),
+									1 => __( 'Crop and force 1:1 ratio', 'ultimate-member' ),
+									3 => __( 'Crop and force user-defined ratio', 'ultimate-member' ),
+								),
+							),
+						),
+						'validation'   => array(
+							'required'        => array(
+								'id'          => 'required',
+								'type'        => 'checkbox',
+								'label'       => __( 'Is this field required?', 'ultimate-member' ),
+								'description' => __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+							'min_size'       => array(
+								'id'          => 'min_size',
+								'type'        => 'number',
+								'label'       => __( 'Minimum Size in bytes', 'ultimate-member' ),
+								'description' => __( 'The minimum size for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
+							),
+							'max_size'       => array(
+								'id'          => 'max_size',
+								'type'        => 'number',
+								'label'       => __( 'Maximum Size in bytes', 'ultimate-member' ),
+								'description' => __( 'The maximum size for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
+							),
+							'min_width'       => array(
+								'id'          => 'min_width',
+								'type'        => 'number',
+								'label'       => __( 'Minimum width in pixels', 'ultimate-member' ),
+								'description' => __( 'The minimum width for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
+							),
+							'max_width'       => array(
+								'id'          => 'max_width',
+								'type'        => 'number',
+								'label'       => __( 'Maximum width in pixels', 'ultimate-member' ),
+								'description' => __( 'The maximum width for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
+							),
+							'min_height'       => array(
+								'id'          => 'min_height',
+								'type'        => 'number',
+								'label'       => __( 'Minimum height in pixels', 'ultimate-member' ),
+								'description' => __( 'The minimum height for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
+							),
+							'max_height'       => array(
+								'id'          => 'max_height',
+								'type'        => 'number',
+								'label'       => __( 'Maximum height in pixels', 'ultimate-member' ),
+								'description' => __( 'The maximum height for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
+							),
+							'allowed_types'       => array(
+								'id'          => 'allowed_types',
+								'type'        => 'select',
+								'multi'       => true,
+								'label'       => __( 'Allowed Image Types', 'ultimate-member' ),
+								'description' => __( 'Select the file types that you want to allow to be uploaded via this field.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+								'options'     => $this->allowed_image_types(),
+							),
+						),
+						'privacy'      => array(
+							'readonly' => array(
+								'id'          => 'readonly',
+								'type'        => 'checkbox',
+								'label'       => __( 'Mark as readonly', 'ultimate-member' ),
+								'description' => __( 'Enable to prevent users from editing this field. Note: if the profile editing option is set to publicly editable, the field will still be visible within the account page but will not be customizable.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+						),
+						'advanced'     => array(
+							'wrapper_class' => array(
+								'id'          => 'wrapper_class',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper class', 'ultimate-member' ),
+								'description' => __( 'CSS class added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+							'wrapper_id'    => array(
+								'id'          => 'wrapper_id',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper id', 'ultimate-member' ),
+								'description' => __( 'ID added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+						),
+					),
+				), // ready
 				'repeater'  => array(
 					'title'             => __( 'Repeater', 'ultimate-member' ),
 					'category'          => 'layout',
@@ -2358,6 +3591,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Meta key', 'ultimate-member' ),
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
+								'required'    => true,
 							),
 							'fields'        => array(
 								'id'       => 'fields',
@@ -2372,7 +3606,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'id'          => 'add_row_button',
 								'type'        => 'text',
 								'label'       => __( 'Add Row Button', 'ultimate-member' ),
-								'description' => __( 'Text for "Add Row" button. "Add Row" by default.', 'ultimate-member' ),
+								'description' => __( 'Text for "Add Row" button. "Add Row" by default and if this field is empty.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 							),
 							'description' => array(
@@ -2435,27 +3669,166 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				),
+				), // ready
 				'block'     => array(
 					'title'             => __( 'Content', 'ultimate-member' ),
 					'category'          => 'layout',
 					'conditional_rules' => array(),
-				),
+					'settings'          => array(
+						'general' => array(
+							'content' => array(
+								'id'          => 'content',
+								'type'        => 'wp_editor',
+								'label'       => __( 'Content Editor', 'ultimate-member' ),
+								'description' => __( 'Edit the content of this field here.', 'ultimate-member' ),
+								'sanitize'    => 'wp_kses',
+								'required'    => true,
+								'args'        => array(
+									'textarea_rows' => 8,
+								),
+							),
+						),
+						'advanced'     => array(
+							'wrapper_class' => array(
+								'id'          => 'wrapper_class',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper class', 'ultimate-member' ),
+								'description' => __( 'CSS class added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+							'wrapper_id'    => array(
+								'id'          => 'wrapper_id',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper id', 'ultimate-member' ),
+								'description' => __( 'ID added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+						),
+					),
+				), // ready
 				'shortcode' => array(
 					'title'             => __( 'Shortcode', 'ultimate-member' ),
 					'category'          => 'layout',
 					'conditional_rules' => array(),
-				),
+					'settings'          => array(
+						'general' => array(
+							'content' => array(
+								'id'          => 'content',
+								'type'        => 'wp_editor',
+								'label'       => __( 'Enter Shortcode', 'ultimate-member' ),
+								'description' => __( 'Enter the shortcode in the following editor and it will be displayed on the fields.', 'ultimate-member' ),
+								'sanitize'    => 'wp_kses',
+								'required'    => true,
+								'args'        => array(
+									'textarea_rows' => 8,
+								),
+							),
+						),
+						'advanced'     => array(
+							'wrapper_class' => array(
+								'id'          => 'wrapper_class',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper class', 'ultimate-member' ),
+								'description' => __( 'CSS class added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+							'wrapper_id'    => array(
+								'id'          => 'wrapper_id',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper id', 'ultimate-member' ),
+								'description' => __( 'ID added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+						),
+					),
+				), // ready
 				'spacing'   => array(
 					'title'             => __( 'Spacing', 'ultimate-member' ),
 					'category'          => 'layout',
 					'conditional_rules' => array(),
-				),
+					'settings'          => array(
+						'general' => array(
+							'spacing' => array(
+								'id'          => 'spacing',
+								'type'        => 'number',
+								'label'       => __( 'Spacing', 'ultimate-member' ),
+								'description' => __( 'This is the required spacing in pixels. e.g. 20px.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+								'required'    => true,
+							),
+						),
+						'advanced'     => array(
+							'wrapper_class' => array(
+								'id'          => 'wrapper_class',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper class', 'ultimate-member' ),
+								'description' => __( 'CSS class added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+							'wrapper_id'    => array(
+								'id'          => 'wrapper_id',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper id', 'ultimate-member' ),
+								'description' => __( 'ID added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+						),
+					),
+				), // ready
 				'divider'   => array(
 					'title'             => __( 'Divider', 'ultimate-member' ),
 					'category'          => 'layout',
 					'conditional_rules' => array(),
-				),
+					'settings'          => array(
+						'general'      => array(
+							'label'         => array(
+								'id'          => 'label',
+								'type'        => 'text',
+								'label'       => __( 'Divider Text', 'ultimate-member' ),
+								'description' => __( 'Text to include with the divider.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+						),
+						'presentation' => array(
+							'style' => array(
+								'id'          => 'style',
+								'type'        => 'select',
+								'label'       => __( 'Style', 'ultimate-member' ),
+								'description' => __( 'This is the line-style of divider.', 'ultimate-member' ),
+								'options'     => array(
+									'solid'  => __( 'Solid', 'ultimate-member' ),
+									'dotted' => __( 'Dotted', 'ultimate-member' ),
+									'dashed' => __( 'Dashed', 'ultimate-member' ),
+									'double' => __( 'Double', 'ultimate-member' ),
+								),
+								'sanitize'    => 'key',
+							),
+							'color' => array(
+								'id'          => 'color',
+								'type'        => 'color',
+								'label'       => __( 'Line Color', 'ultimate-member' ),
+								'description' => __( 'Select a color for this divider.', 'ultimate-member' ),
+								'sanitize'    => 'color',
+							),
+						),
+						'advanced'     => array(
+							'wrapper_class' => array(
+								'id'          => 'wrapper_class',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper class', 'ultimate-member' ),
+								'description' => __( 'CSS class added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+							'wrapper_id'    => array(
+								'id'          => 'wrapper_id',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper id', 'ultimate-member' ),
+								'description' => __( 'ID added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+						),
+					),
+				), // ready
 				'rating'    => array(
 					'title'             => __( 'Rating', 'ultimate-member' ),
 					'category'          => 'js',
@@ -2467,19 +3840,391 @@ if ( ! class_exists( 'um\Config' ) ) {
 						'>',
 						'<',
 					),
-				),
+					'settings'          => array(
+						'general'      => array(
+							'label'         => array(
+								'id'          => 'label',
+								'type'        => 'text',
+								'label'       => __( 'Field label', 'ultimate-member' ),
+								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'meta_key'      => array(
+								'id'          => 'meta_key',
+								'type'        => 'text',
+								'class'       => 'um-field-row-metakey-input',
+								'label'       => __( 'Meta key', 'ultimate-member' ),
+								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+								'required'    => true,
+							),
+							'max_rating' => array(
+								'id'          => 'max_rating',
+								'type'        => 'select',
+								'label'       => __( 'Rating System', 'ultimate-member' ),
+								'description' => __( 'Choose whether you want a 5-stars or 10-stars ratings based here.', 'ultimate-member' ),
+								'sanitize'    => 'int',
+								'required'    => true,
+								'options'     => array(
+									5  => __( '5 stars rating system', 'ultimate-member' ),
+									10 => __( '10 stars rating system', 'ultimate-member' ),
+								),
+							),
+							'default_value' => array(
+								'id'          => 'default_value',
+								'type'        => 'text',
+								'label'       => __( 'Default value', 'ultimate-member' ),
+								'description' => __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+						),
+						'presentation' => array(
+							'description' => array(
+								'id'          => 'description',
+								'type'        => 'textarea',
+								'label'       => __( 'Description', 'ultimate-member' ),
+								'description' => __( 'This is the text that appears below the field on your front-end. Description is useful for providing users with more information about what they should enter in the field. Leave blank if no description is needed for field.', 'ultimate-member' ),
+								'args'        => array(
+									'textarea_rows' => 5,
+								),
+								'sanitize'    => 'textarea',
+							),
+						),
+						'validation'   => array(
+							'required'        => array(
+								'id'          => 'required',
+								'type'        => 'checkbox',
+								'label'       => __( 'Is this field required?', 'ultimate-member' ),
+								'description' => __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+						),
+						'privacy'      => array(
+							'readonly' => array(
+								'id'          => 'readonly',
+								'type'        => 'checkbox',
+								'label'       => __( 'Mark as readonly', 'ultimate-member' ),
+								'description' => __( 'Enable to prevent users from editing this field. Note: if the profile editing option is set to publicly editable, the field will still be visible within the account page but will not be customizable.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+						),
+						'advanced'     => array(
+							'wrapper_class' => array(
+								'id'          => 'wrapper_class',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper class', 'ultimate-member' ),
+								'description' => __( 'CSS class added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+							'wrapper_id'    => array(
+								'id'          => 'wrapper_id',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper id', 'ultimate-member' ),
+								'description' => __( 'ID added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+						),
+					),
+				), // ready
 				'googlemap' => array(
-					'title' => __( 'Google Map', 'ultimate-member' ),
-					'category' => 'js',
+					'title'             => __( 'Google Map', 'ultimate-member' ),
+					'category'          => 'js',
 					'conditional_rules' => array(
 						'!=empty',
 						'==empty',
 					),
-				),
+					'settings'          => array(
+						'general'      => array(
+							'label'         => array(
+								'id'          => 'label',
+								'type'        => 'text',
+								'label'       => __( 'Field label', 'ultimate-member' ),
+								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'meta_key'      => array(
+								'id'          => 'meta_key',
+								'type'        => 'text',
+								'class'       => 'um-field-row-metakey-input',
+								'label'       => __( 'Meta key', 'ultimate-member' ),
+								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+								'required'    => true,
+							),
+							'default_value' => array(
+								'id'          => 'default_value',
+								'type'        => 'text',
+								'label'       => __( 'Default value', 'ultimate-member' ),
+								'description' => __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+						),
+						'presentation' => array(
+							'placeholder' => array(
+								'id'          => 'placeholder',
+								'type'        => 'text',
+								'label'       => __( 'Placeholder', 'ultimate-member' ),
+								'description' => __( 'This is the text that appears within the field e.g please enter your email address. Leave blank to not show any placeholder text.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'description' => array(
+								'id'          => 'description',
+								'type'        => 'textarea',
+								'label'       => __( 'Description', 'ultimate-member' ),
+								'description' => __( 'This is the text that appears below the field on your front-end. Description is useful for providing users with more information about what they should enter in the field. Leave blank if no description is needed for field.', 'ultimate-member' ),
+								'args'        => array(
+									'textarea_rows' => 5,
+								),
+								'sanitize'    => 'textarea',
+							),
+						),
+						'validation'   => array(
+							'required'        => array(
+								'id'          => 'required',
+								'type'        => 'checkbox',
+								'label'       => __( 'Is this field required?', 'ultimate-member' ),
+								'description' => __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+						),
+						'privacy'      => array(
+							'readonly' => array(
+								'id'          => 'readonly',
+								'type'        => 'checkbox',
+								'label'       => __( 'Mark as readonly', 'ultimate-member' ),
+								'description' => __( 'Enable to prevent users from editing this field. Note: if the profile editing option is set to publicly editable, the field will still be visible within the account page but will not be customizable.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+						),
+						'advanced'     => array(
+							'wrapper_class' => array(
+								'id'          => 'wrapper_class',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper class', 'ultimate-member' ),
+								'description' => __( 'CSS class added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+							'wrapper_id'    => array(
+								'id'          => 'wrapper_id',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper id', 'ultimate-member' ),
+								'description' => __( 'ID added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+						),
+					),
+				), // ready
 				'oembed'    => array(
-					'title' => __( 'oEmbed', 'ultimate-member' ),
-					'category' => 'content',
-				),
+					'title'             => __( 'oEmbed', 'ultimate-member' ),
+					'category'          => 'content',
+					'conditional_rules' => array(
+						'!=empty',
+						'==empty',
+					),
+					'settings'          => array(
+						'general'      => array(
+							'label'         => array(
+								'id'          => 'label',
+								'type'        => 'text',
+								'label'       => __( 'Field label', 'ultimate-member' ),
+								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'meta_key'      => array(
+								'id'          => 'meta_key',
+								'type'        => 'text',
+								'class'       => 'um-field-row-metakey-input',
+								'label'       => __( 'Meta key', 'ultimate-member' ),
+								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+								'required'    => true,
+							),
+						),
+						'presentation' => array(
+							'placeholder' => array(
+								'id'          => 'placeholder',
+								'type'        => 'text',
+								'label'       => __( 'Placeholder', 'ultimate-member' ),
+								'description' => __( 'This is the text that appears within the field e.g please enter your email address. Leave blank to not show any placeholder text.', 'ultimate-member' ),
+								'sanitize'    => 'text',
+							),
+							'description' => array(
+								'id'          => 'description',
+								'type'        => 'textarea',
+								'label'       => __( 'Description', 'ultimate-member' ),
+								'description' => __( 'This is the text that appears below the field on your front-end. Description is useful for providing users with more information about what they should enter in the field. Leave blank if no description is needed for field.', 'ultimate-member' ),
+								'args'        => array(
+									'textarea_rows' => 5,
+								),
+								'sanitize'    => 'textarea',
+							),
+							'size' => array(
+								'id'          => 'size',
+								'type'        => 'number',
+								'label'       => __( 'Field size', 'ultimate-member' ),
+								'description' => __( 'Size of the control. Leave empty to disable this setting.', 'ultimate-member' ),
+								'sanitize'    => 'empty_absint',
+							),
+						),
+						'validation'   => array(
+							'required'        => array(
+								'id'          => 'required',
+								'type'        => 'checkbox',
+								'label'       => __( 'Is this field required?', 'ultimate-member' ),
+								'description' => __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+							'validate'        => array(
+								'id'          => 'validate',
+								'type'        => 'select',
+								'label'       => __( 'Validation', 'ultimate-member' ),
+								'description' => __( 'Does this field require a special validation?', 'ultimate-member' ),
+								'options'     => $this->get( 'field_validation_settings' ),
+								'sanitize'    => 'key',
+							),
+							'custom_validate' => array(
+								'id'          => 'custom_validate',
+								'type'        => 'text',
+								'label'       => __( 'Custom validation action', 'ultimate-member' ),
+								'description' => __( 'If you want to apply your custom validation, you can use action hooks to add custom validation. Please refer to documentation for further details.', 'ultimate-member' ),
+								'conditional' => array( 'validate', '=', 'custom' ),
+								'sanitize'    => 'text',
+							),
+						),
+						'privacy'      => array(
+							'readonly' => array(
+								'id'          => 'readonly',
+								'type'        => 'checkbox',
+								'label'       => __( 'Mark as readonly', 'ultimate-member' ),
+								'description' => __( 'Enable to prevent users from editing this field. Note: if the profile editing option is set to publicly editable, the field will still be visible within the account page but will not be customizable.', 'ultimate-member' ),
+								'sanitize'    => 'bool',
+							),
+						),
+						'advanced'     => array(
+							'wrapper_class' => array(
+								'id'          => 'wrapper_class',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper class', 'ultimate-member' ),
+								'description' => __( 'CSS class added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+							'wrapper_id'    => array(
+								'id'          => 'wrapper_id',
+								'type'        => 'text',
+								'label'       => __( 'Wrapper id', 'ultimate-member' ),
+								'description' => __( 'ID added to the field wrapper element.', 'ultimate-member' ),
+								'sanitize'    => 'key',
+							),
+						),
+					),
+				), // ready
+
+//				'phone_number' => array(
+//					'title'             => __( 'Phone number', 'ultimate-member' ),
+//					'category'          => 'js',
+//					'conditional_rules' => array(
+//						'!=',
+//						'==',
+//						'!=empty',
+//						'==empty',
+//						'==pattern',
+//						'==contains',
+//					),
+//					'settings'          => array(
+//						'general'      => array(
+//							'label'         => array(
+//								'id'          => 'label',
+//								'type'        => 'text',
+//								'label'       => __( 'Field label', 'ultimate-member' ),
+//								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
+//								'sanitize'    => 'text',
+//							),
+//							'meta_key'      => array(
+//								'id'          => 'meta_key',
+//								'type'        => 'text',
+//								'class'       => 'um-field-row-metakey-input',
+//								'label'       => __( 'Meta key', 'ultimate-member' ),
+//								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
+//								'sanitize'    => 'text',
+//								'required'    => true,
+//							),
+//							'default_value' => array(
+//								'id'          => 'default_value',
+//								'type'        => 'text',
+//								'label'       => __( 'Default value', 'ultimate-member' ),
+//								'description' => __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value.', 'ultimate-member' ),
+//								'sanitize'    => 'text',
+//							),
+//						),
+//						'presentation' => array(
+//							'placeholder' => array(
+//								'id'          => 'placeholder',
+//								'type'        => 'text',
+//								'label'       => __( 'Placeholder', 'ultimate-member' ),
+//								'description' => __( 'This is the text that appears within the field e.g please enter your email address. Leave blank to not show any placeholder text.', 'ultimate-member' ),
+//								'sanitize'    => 'text',
+//							),
+//							'description' => array(
+//								'id'          => 'description',
+//								'type'        => 'textarea',
+//								'label'       => __( 'Description', 'ultimate-member' ),
+//								'description' => __( 'This is the text that appears below the field on your front-end. Description is useful for providing users with more information about what they should enter in the field. Leave blank if no description is needed for field.', 'ultimate-member' ),
+//								'args'        => array(
+//									'textarea_rows' => 5,
+//								),
+//								'sanitize'    => 'textarea',
+//							),
+//						),
+//						'validation'   => array(
+//							'required'        => array(
+//								'id'          => 'required',
+//								'type'        => 'checkbox',
+//								'label'       => __( 'Is this field required?', 'ultimate-member' ),
+//								'description' => __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ),
+//								'sanitize'    => 'bool',
+//							),
+//							'min_chars'       => array(
+//								'id'          => 'min_chars',
+//								'type'        => 'number',
+//								'label'       => __( 'Minimum length', 'ultimate-member' ),
+//								'description' => __( 'If you want to enable a minimum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
+//								'sanitize'    => 'empty_absint',
+//							),
+//							'max_chars'       => array(
+//								'id'          => 'max_chars',
+//								'type'        => 'number',
+//								'label'       => __( 'Maximum length', 'ultimate-member' ),
+//								'description' => __( 'If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
+//								'sanitize'    => 'empty_absint',
+//							),
+//						),
+//						'privacy'      => array(
+//							'readonly' => array(
+//								'id'          => 'readonly',
+//								'type'        => 'checkbox',
+//								'label'       => __( 'Mark as readonly', 'ultimate-member' ),
+//								'description' => __( 'Enable to prevent users from editing this field. Note: if the profile editing option is set to publicly editable, the field will still be visible within the account page but will not be customizable.', 'ultimate-member' ),
+//								'sanitize'    => 'bool',
+//							),
+//						),
+//						'advanced'     => array(
+//							'wrapper_class' => array(
+//								'id'          => 'wrapper_class',
+//								'type'        => 'text',
+//								'label'       => __( 'Wrapper class', 'ultimate-member' ),
+//								'description' => __( 'CSS class added to the field wrapper element.', 'ultimate-member' ),
+//								'sanitize'    => 'key',
+//							),
+//							'wrapper_id'    => array(
+//								'id'          => 'wrapper_id',
+//								'type'        => 'text',
+//								'label'       => __( 'Wrapper id', 'ultimate-member' ),
+//								'description' => __( 'ID added to the field wrapper element.', 'ultimate-member' ),
+//								'sanitize'    => 'key',
+//							),
+//						),
+//					),
+//				),
 //				'youtube_video'    => array(
 //					'title' => __( 'YouTube Video', 'ultimate-member' ),
 //					'category' => __( 'Content', 'ultimate-member' ),

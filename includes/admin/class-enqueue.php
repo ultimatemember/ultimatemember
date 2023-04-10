@@ -82,7 +82,6 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			if ( ( isset( $_GET['post_type'] ) && 'um_form' === sanitize_key( $_GET['post_type'] ) ) ||
 			     ( isset( $_GET['post'] ) && 'um_form' === get_post_type( absint( $_GET['post'] ) ) ) ) {
 				add_action( 'admin_enqueue_scripts', array( &$this, 'form_page_scripts' ) );
-				add_action( 'admin_footer', array( $this, 'form_builder_wp_editor' ), 20 );
 			}
 		}
 
@@ -105,6 +104,7 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 		 */
 		function field_groups_page() {
 			add_action( 'admin_enqueue_scripts', array( &$this, 'field_groups_page_scripts' ) );
+			add_action( 'admin_footer', array( $this, 'form_builder_wp_editor' ), 20 );
 		}
 
 		/**

@@ -19,6 +19,8 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 		 */
 		public $form_id;
 
+		private $is_loaded = false;
+
 		/**
 		 * @var array
 		 */
@@ -38,6 +40,34 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 		public function hooks() {
 			add_filter( 'um_admin_render_checkbox_field_html', array( &$this, 'add_reset_rules_button' ), 10, 2 );
 			add_filter( 'um_fields_settings', array( &$this, 'change_hidden_settings' ), 10, 2 );
+
+			add_action( 'admin_footer', array( &$this, 'load_modal_content' ), 9 );
+		}
+
+		/**
+		 * Load modal content
+		 */
+		function load_modal_content() {
+			$screen = get_current_screen();
+
+			// needed on forms only
+			if ( false === $this->is_loaded && isset( $screen->id ) && strstr( $screen->id, 'ultimate-member_page_um_field_groups' ) && ! empty( $_GET['tab'] ) ) {
+				echo '<div id="um-hidden-editor-placeholder" style="display:none;">';
+				wp_editor(
+					'',
+					'um_editor_placeholder',
+					array(
+						'textarea_rows' => 8,
+//						'editor_height' => 425,
+						'wpautop'       => false,
+						'media_buttons' => false,
+						'editor_class'  => 'um-long-field',
+					)
+				);
+				echo '</div>';
+
+				$this->is_loaded = true;
+			}
 		}
 
 		public function change_hidden_settings( $settings, $field_type ) {
@@ -715,7 +745,11 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 			$settings_fields = $template_settings[ $tab ];
 			foreach ( $settings_fields as &$setting_data ) {
 				// predefine name here for making the proper names through all the group fields builder
-				$setting_data['name'] = 'field_group[fields][' . $field['index'] . '][' . $setting_data['id'] . ']';
+				if ( 'repeater' === $field['type'] && 'fields' === $setting_data['id'] ) {
+					$setting_data['name'] = 'field_group[fields]';
+				} else {
+					$setting_data['name'] = 'field_group[fields][' . $field['index'] . '][' . $setting_data['id'] . ']';
+				}
 
 				// disable fields if predefined
 				if ( ! empty( $field['disabled'] ) ) {
