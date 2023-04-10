@@ -303,7 +303,7 @@ $columns = apply_filters(
 
 $ListTable->set_columns( $columns );
 
-$templates = UM()->admin_settings()->get_override_templates();
+$templates = get_option( 'um_template_statuses' ) ? get_option( 'um_template_statuses' ) : array();
 
 $ListTable->prepare_items();
 $ListTable->items = array_slice( $templates, ( $paged - 1 ) * $per_page, $per_page );

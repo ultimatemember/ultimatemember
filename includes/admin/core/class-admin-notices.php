@@ -52,6 +52,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			$this->extensions_page();
 
+			$this->template_version();
+
 			// removed for now to avoid the bad reviews
 			//$this->reviews_notice();
 
@@ -711,6 +713,31 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				'class'         => 'updated',
 				'message'       => $message,
 			), 2 );
+		}
+
+
+		public function template_version() {
+			if ( true === (bool) get_option( 'um_template_version' ) ) {
+				$link = get_admin_url( null, 'admin.php?page=um_options&tab=override_templates' );
+				ob_start();
+				?>
+
+				<p>
+					<?php printf( __( 'Your templates are out of date. Please visit <a href="%s">override templates status page</a> and update templates', 'ultimate-member' ), $link ); ?>
+				</p>
+
+				<?php
+				$message = ob_get_clean();
+				UM()->admin()->notices()->add_notice(
+					'um_private_content_notice',
+					array(
+						'class'       => 'error',
+						'message'     => $message,
+						'dismissible' => false,
+					),
+					10
+				);
+			}
 		}
 
 

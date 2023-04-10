@@ -64,7 +64,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			add_filter( 'um_settings_section_install_info__content', array( $this, 'settings_install_info_tab' ), 10, 2 );
 
-			//custom content for licenses tab
+			//custom content for override templates tab
+			add_action( 'plugins_loaded', array( $this, 'um_check_template_version' ), 10 );
 			add_filter( 'um_settings_section_override_templates__content', array( $this, 'settings_override_templates_tab' ), 10, 2 );
 
 
@@ -3019,11 +3020,34 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		}
 
 
+		public function um_check_template_version() {
+			$um_check_version = get_transient( 'um_check_template_versions' );
+			if ( false === $um_check_version ) {
+				$this->get_override_templates();
+			}
+		}
+
+
 		public function settings_override_templates_tab( $html, $section_fields ) {
+			$um_check_version = get_transient( 'um_check_template_versions' );
 			?>
 				<p>
+					<?php
+					if ( false !== $um_check_version ) {
+						echo esc_html__('Last update was at ', 'ultimate-member') . $um_check_version;
+						echo '<br>';
+						echo esc_html__('You could re-checked changes manually', 'ultimate-member');
+					}
+					?>
+				</p>
+				<p>
 					<a href="<?php echo esc_url( add_query_arg( 'um_adm_action', 'check_version' ) ); ?>" class="button">
-						<?php echo esc_html__( 'Re-check', 'ultimate-member' ); ?>
+						<?php echo esc_html__( 'Re-check templates', 'ultimate-member' ); ?>
+					</a>
+				</p>
+				<p>
+					<a href="#" target="_blank">
+						<?php esc_html_e( 'Documentation', 'woocommerce' ); ?>
 					</a>
 				</p>
 			<?php
@@ -3031,9 +3055,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		}
 
 
-		public function get_override_templates() {
+		public function get_override_templates( $get_list = false ) {
 			$outdated_files = array();
 			$scan_files     = $this->scan_template_files( um_path . '/templates/' );
+			$out_date       = false;
+			set_transient( 'um_check_template_versions', current_time('d/m/Y H:i' ), 12 * HOUR_IN_SECONDS );
 			foreach ( $scan_files as $key => $file ) {
 				if ( ! str_contains( $file, 'email/' ) ) {
 					if ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' . $file ) ) {
@@ -3057,6 +3083,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							$status      = esc_html__( 'Theme version is empty', 'ultimate-member' );
 							$status_code = 0;
 						}
+						if ( 0 === $status_code ) {
+							$out_date = true;
+							update_option( 'um_template_version', 1 );
+						}
 						$outdated_files[] = array(
 							'core_version'  => $core_version,
 							'theme_version' => $theme_version,
@@ -3068,8 +3098,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					}
 				}
 			}
-
-			return $outdated_files;
+			if ( false === $out_date ) {
+				delete_option( 'um_template_version' );
+			}
+			update_option( 'um_template_statuses', $outdated_files );
+			if ( true === $get_list ) {
+				return $outdated_files;
+			}
 		}
 
 
