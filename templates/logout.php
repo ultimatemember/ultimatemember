@@ -1,8 +1,20 @@
 <?php
 /**
+ * Template for the logout
+ *
+ * This template can be overridden by copying it to yourtheme/ultimate-member/logout.php
+ *
+ * Page: "Logout"
+ *
  * @version 1.0.0
+ *
+ * @var string $mode
+ * @var int    $form_id
+ * @var array  $args
  */
-if ( ! defined( 'ABSPATH' ) ) exit; ?>
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} ?>
 
 <div class="um <?php echo esc_attr( $this->get_class( $mode, $args ) ); ?> um-<?php echo esc_attr( $form_id ); ?>">
 

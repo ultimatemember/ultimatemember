@@ -1,8 +1,20 @@
 <?php
 /**
+ * Template for the register page
+ *
+ * This template can be overridden by copying it to yourtheme/ultimate-member/register.php
+ *
+ * Page: "Register"
+ *
  * @version 1.0.0
+ *
+ * @var string $mode
+ * @var int    $form_id
+ * @var array  $args
  */
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! is_user_logged_in() ) {
 	um_reset_user();

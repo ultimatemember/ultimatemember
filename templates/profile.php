@@ -1,8 +1,20 @@
 <?php
 /**
+ * Template for the profile page
+ *
+ * This template can be overridden by copying it to yourtheme/ultimate-member/profile.php
+ *
+ * Page: "Profile"
+ *
  * @version 1.0.0
+ *
+ * @var string $mode
+ * @var int    $form_id
+ * @var array  $args
  */
-if ( ! defined( 'ABSPATH' ) ) exit; ?>
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} ?>
 
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?> um-role-<?php echo esc_attr( um_user( 'role' ) ); ?> ">
 

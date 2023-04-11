@@ -1,8 +1,18 @@
 <?php
 /**
+ * Template for the profile single post
+ *
+ * This template can be overridden by copying it to yourtheme/ultimate-member/profile/posts-single.php
+ *
+ * Page: "Profile"
+ *
  * @version 1.0.0
+ *
+ * @var object $post
  */
-if ( ! defined( 'ABSPATH' ) ) exit; ?>
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} ?>
 
 <div class="um-item">
 	<div class="um-item-link">

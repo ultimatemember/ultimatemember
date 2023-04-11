@@ -1,5 +1,11 @@
 <?php
 /**
+ * Template for the blog restricted message
+ *
+ * This template can be overridden by copying it to yourtheme/ultimate-member/restricted-blog.php
+ *
+ * Call: function blog_message()
+ *
  * @version 1.0.0
  */
 if ( ! defined( 'ABSPATH' ) ) {

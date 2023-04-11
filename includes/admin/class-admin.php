@@ -1870,6 +1870,11 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		}
 
 
+		/**
+		 * Manual check templates versions
+		 *
+		 * @param $action
+		 */
 		public function check_version( $action ) {
 			$templates = UM()->admin_settings()->get_override_templates( true );
 			$out_date  = false;

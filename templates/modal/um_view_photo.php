@@ -1,8 +1,14 @@
 <?php
 /**
+ * Template for the modal photo
+ *
+ * This template can be overridden by copying it to yourtheme/ultimate-member/modal/um_view_photo.php
+ *
  * @version 1.0.0
  */
-if ( ! defined( 'ABSPATH' ) ) exit; ?>
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} ?>
 
 <div id="um_view_photo" style="display:none">
 

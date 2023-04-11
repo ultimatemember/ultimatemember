@@ -1,8 +1,16 @@
 <?php
 /**
+ * Template for the members directory header JS-template
+ *
+ * This template can be overridden by copying it to yourtheme/ultimate-member/members-header.php
+ *
+ * Page: "Members"
+ *
  * @version 1.0.0
  */
-if ( ! defined( 'ABSPATH' ) ) exit; ?>
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} ?>
 
 
 <script type="text/template" id="tmpl-um-members-header">

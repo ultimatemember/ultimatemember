@@ -3028,6 +3028,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		}
 
 
+		/**
+		 * @param $html
+		 * @param $section_fields
+		 *
+		 * @return string
+		 */
 		public function settings_override_templates_tab( $html, $section_fields ) {
 			$um_check_version = get_transient( 'um_check_template_versions' );
 			?>
@@ -3055,11 +3061,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		}
 
 
+		/**
+		 * @param $get_list boolean
+		 *
+		 * @return array
+		 */
 		public function get_override_templates( $get_list = false ) {
 			$outdated_files = array();
 			$scan_files     = $this->scan_template_files( um_path . '/templates/' );
 			$out_date       = false;
-			set_transient( 'um_check_template_versions', current_time('d/m/Y H:i' ), 12 * HOUR_IN_SECONDS );
+			set_transient( 'um_check_template_versions', current_time( 'd/m/Y H:i' ), 12 * HOUR_IN_SECONDS );
 			foreach ( $scan_files as $key => $file ) {
 				if ( ! str_contains( $file, 'email/' ) ) {
 					if ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' . $file ) ) {
@@ -3139,6 +3150,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		}
 
 
+		/**
+		 * @param $file string
+		 *
+		 * @return string
+		 */
 		public static function get_file_version( $file ) {
 
 			// Avoid notices if file does not exist.
