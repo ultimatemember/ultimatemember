@@ -1,4 +1,8 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
+<?php
+/**
+ * @version 1.0.0
+ */
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 
 if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {

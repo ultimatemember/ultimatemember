@@ -1,4 +1,8 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+<?php
+/**
+ * @version 1.0.0
+ */
+if ( ! defined( 'ABSPATH' ) ) exit; ?>
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
 <div class="um-field um-field-type_terms_conditions" data-key="use_terms_conditions_agreement" style="display:block;padding:0;">

@@ -1,4 +1,8 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
+<?php
+/**
+ * @version 1.0.0
+ */
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 $unique_hash = substr( md5( $args['form_id'] ), 10, 5 ); ?>
 

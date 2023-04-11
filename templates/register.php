@@ -1,4 +1,8 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
+<?php
+/**
+ * @version 1.0.0
+ */
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! is_user_logged_in() ) {
 	um_reset_user();
@@ -136,7 +140,7 @@ if ( ! is_user_logged_in() ) {
 			 * ?>
 			 */
 			do_action( 'um_after_form', $args ); ?>
-		
+
 		</form>
 
 	</div>

@@ -1,4 +1,8 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+<?php
+/**
+ * @version 1.0.0
+ */
+if ( ! defined( 'ABSPATH' ) ) exit; ?>
 
 <div class="um <?php echo esc_attr( $this->get_class( $mode, $args ) ); ?> um-<?php echo esc_attr( $form_id ); ?>">
 
@@ -11,9 +15,9 @@
 					<?php echo get_avatar( um_user( 'ID' ), 80 ) ?>
 				</a>
 			</div>
-			
+
 			<div><strong><?php echo esc_html( um_user( 'display_name' ) ); ?></strong></div>
-			
+
 			<?php
 			/**
 			 * UM hook
@@ -35,11 +39,11 @@
 			 * ?>
 			 */
 			do_action( 'um_logout_after_user_welcome', $args ); ?>
-			
+
 		</div>
-		
+
 		<ul class="um-misc-ul">
-			
+
 			<?php
 			/**
 			 * UM hook
@@ -61,7 +65,7 @@
 			 * ?>
 			 */
 			do_action( 'um_logout_user_links', $args ); ?>
-		
+
 		</ul>
 	</div>
 </div>

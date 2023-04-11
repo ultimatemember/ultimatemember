@@ -1,4 +1,8 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+<?php
+/**
+ * @version 1.0.0
+ */
+if ( ! defined( 'ABSPATH' ) ) exit; ?>
 
 <div id="um_view_photo" style="display:none">
 
