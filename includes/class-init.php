@@ -43,18 +43,15 @@ if ( ! class_exists( 'UM' ) ) {
 	 */
 	final class UM extends UM_Functions {
 
-
 		/**
 		 * @var UM the single instance of the class
 		 */
 		protected static $instance = null;
 
-
 		/**
 		 * @var array all plugin's classes
 		 */
 		public $classes = array();
-
 
 		/**
 		 * WP Native permalinks turned on?
@@ -63,18 +60,15 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		public $is_permalinks;
 
-
 		/**
 		 * @var
 		 */
 		public $is_legacy;
 
-
 		/**
 		 * @var string
 		 */
 		public $honeypot;
-
 
 		/**
 		 * Main UM Instance
@@ -95,7 +89,6 @@ if ( ! class_exists( 'UM' ) ) {
 			return self::$instance;
 		}
 
-
 		/**
 		 * Create plugin classes - not sure if it needs!!!!!!!!!!!!!!!
 		 *
@@ -107,7 +100,6 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return mixed
 		 */
 		public function __call( $name, array $params ) {
-
 			if ( empty( $this->classes[ $name ] ) ) {
 
 				/**
@@ -134,9 +126,7 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 
 			return $this->classes[ $name ];
-
 		}
-
 
 		/**
 		 * Function for add classes to $this->classes
@@ -154,7 +144,6 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 		}
 
-
 		/**
 		 * Cloning is forbidden.
 		 * @since 1.0
@@ -162,7 +151,6 @@ if ( ! class_exists( 'UM' ) ) {
 		public function __clone() {
 			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'ultimate-member' ), '1.0' );
 		}
-
 
 		/**
 		 * Unserializing instances of this class is forbidden.
@@ -172,23 +160,21 @@ if ( ! class_exists( 'UM' ) ) {
 			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'ultimate-member' ), '1.0' );
 		}
 
-
 		/**
 		 * UM constructor.
 		 *
 		 * @since 1.0
 		 */
-		function __construct() {
+		public function __construct() {
 			parent::__construct();
 		}
-
 
 		/**
 		 * UM pseudo-constructor.
 		 *
 		 * @since 2.0.18
 		 */
-		function _um_construct() {
+		public function _um_construct() {
 			$this->define_constants();
 
 			//register autoloader for include UM classes
@@ -241,7 +227,7 @@ if ( ! class_exists( 'UM' ) ) {
 				//run hook for extensions init
 				add_action( 'plugins_loaded', array( &$this, 'core_loaded_trigger' ), -19 );
 
-				//include short non class functions
+				//include short non-class functions
 				$is_legacy = get_option( 'um_is_legacy' );
 
 				if ( ! $is_legacy || ! $this->is_legacy ) {
@@ -256,7 +242,6 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 		}
 
-
 		/**
 		 * Define Ultimate Member Constants.
 		 *
@@ -265,7 +250,6 @@ if ( ! class_exists( 'UM' ) ) {
 		private function define_constants() {
 			$this->define( 'UM_TEMPLATE_CONFLICT_TEST', false );
 		}
-
 
 		/**
 		 * Getting the Install class instance
@@ -281,7 +265,6 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['um\common\install'];
 		}
 
-
 		/**
 		 * Plugin Deactivation
 		 *
@@ -290,7 +273,6 @@ if ( ! class_exists( 'UM' ) ) {
 		function deactivation() {
 			$this->common()->cron()->unschedule_events();
 		}
-
 
 		/**
 		 * Loading UM textdomain
@@ -371,7 +353,6 @@ if ( ! class_exists( 'UM' ) ) {
 
 			load_textdomain( $language_domain, $language_file );
 		}
-
 
 		/**
 		 * 1.3.x active extensions deactivate for properly running 2.0.x AJAX upgrades
@@ -469,7 +450,6 @@ if ( ! class_exists( 'UM' ) ) {
 				$um_verified->plugin_inactive = true;
 			}
 		}
-
 
 		/**
 		 * Autoload UM classes handler
@@ -582,7 +562,7 @@ if ( ! class_exists( 'UM' ) ) {
 					$this->logout();
 				}
 
-				//common includes
+//				common includes
 				$this->rewrite();
 				//$this->shortcodes();
 				$this->roles();
@@ -596,7 +576,7 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->external_integrations();
 				$this->gdpr();
 
-				//if multisite networks active
+//				if multisite networks active
 				if ( is_multisite() ) {
 					$this->multisite();
 				}
@@ -1228,11 +1208,11 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return um\core\Query
 		 */
 		function query() {
-			if ( empty( $this->classes['query'] ) ) {
-				$this->classes['query'] = new um\core\Query();
+			if ( empty( $this->classes['um\core\query'] ) ) {
+				$this->classes['um\core\query'] = new um\core\Query();
 			}
 
-			return $this->classes['query'];
+			return $this->classes['um\core\query'];
 		}
 
 
@@ -1269,25 +1249,25 @@ if ( ! class_exists( 'UM' ) ) {
 		 *
 		 * @return um\core\Files
 		 */
-		function files() {
-			if ( empty( $this->classes['files'] ) ) {
-				$this->classes['files'] = new um\core\Files();
+		public function files() {
+			if ( empty( $this->classes['um\core\files'] ) ) {
+				$this->classes['um\core\files'] = new um\core\Files();
 			}
 
-			return $this->classes['files'];
+			return $this->classes['um\core\files'];
 		}
 
-		
+
 		/**
 		 * @since 2.0.21
 		 *
 		 * @return um\core\Uploader
 		 */
 		function uploader() {
-			if ( empty( $this->classes['uploader'] ) ) {
-				$this->classes['uploader'] = new um\core\Uploader();
+			if ( empty( $this->classes['um\core\uploader'] ) ) {
+				$this->classes['um\core\uploader'] = new um\core\Uploader();
 			}
-			return $this->classes['uploader'];
+			return $this->classes['um\core\uploader'];
 		}
 
 
@@ -1455,7 +1435,6 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 		}
 
-
 		/**
 		 * @since 3.0
 		 *
@@ -1468,7 +1447,6 @@ if ( ! class_exists( 'UM' ) ) {
 
 			return $this->classes['um\modules'];
 		}
-
 
 		/**
 		 * Get single module API
@@ -1611,7 +1589,6 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['um\legacy\core\shortcodes'];
 		}
 
-
 		/**
 		 * @since 2.0
 		 *
@@ -1625,7 +1602,6 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 			return $this->classes['um\legacy\admin\admin_upgrade'];
 		}
-
 
 		/**
 		 * @since 2.0
@@ -1641,7 +1617,6 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['um\legacy\admin\menu'];
 		}
 
-
 		/**
 		 * @since 2.0
 		 *
@@ -1655,7 +1630,6 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 			return $this->classes['um\legacy\admin\enqueue'];
 		}
-
 
 		/**
 		 * @since 2.0
@@ -1671,7 +1645,6 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['um\legacy\admin\columns'];
 		}
 
-
 		/**
 		 * @since 2.0
 		 *
@@ -1685,7 +1658,6 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 			return $this->classes['um\legacy\admin\metabox'];
 		}
-
 
 		/**
 		 * @since 2.0
@@ -1702,7 +1674,6 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['um\legacy\enqueue'];
 		}
 
-
 		/**
 		 * @since 2.0
 		 *
@@ -1717,7 +1688,6 @@ if ( ! class_exists( 'UM' ) ) {
 
 			return $this->classes['um\legacy\mail'];
 		}
-
 
 		/**
 		 * @since 2.0
@@ -1735,7 +1705,6 @@ if ( ! class_exists( 'UM' ) ) {
 		}
 	}
 }
-
 
 /**
  * Function for calling UM methods and variables

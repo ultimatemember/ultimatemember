@@ -1,17 +1,17 @@
 <?php
-namespace um\core;
+namespace um\legacy\core;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
-
-
-if ( ! class_exists( 'um\core\Uploader' ) ) {
+if ( ! class_exists( 'um\legacy\core\Uploader' ) ) {
 
 
 	/**
 	 * Class Uploader
-	 * @package um\core
+	 * @package um\legacy\core
 	 */
 	class Uploader {
 

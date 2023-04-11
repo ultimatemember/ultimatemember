@@ -1240,11 +1240,11 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
-		 * @return um\core\Query
+		 * @return um\legacy\core\Query
 		 */
 		function query() {
 			if ( empty( $this->classes['query'] ) ) {
-				$this->classes['query'] = new um\core\Query();
+				$this->classes['query'] = new um\legacy\core\Query();
 			}
 
 			return $this->classes['query'];
@@ -1282,17 +1282,17 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
-		 * @return um\core\Files
+		 * @return um\legacy\core\Files
 		 */
 		function files() {
 			if ( empty( $this->classes['files'] ) ) {
-				$this->classes['files'] = new um\core\Files();
+				$this->classes['files'] = new um\legacy\core\Files();
 			}
 
 			return $this->classes['files'];
 		}
 
-		
+
 		/**
 		 * @since 2.0.21
 		 *

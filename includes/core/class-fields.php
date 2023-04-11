@@ -1,12 +1,11 @@
 <?php
 namespace um\core;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Fields' ) ) {
-
 
 	/**
 	 * Class Fields
@@ -14,11 +13,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 	 */
 	class Fields {
 
-
 		/**
 		 * @var string
 		 */
-		var $set_mode = '';
+		public $set_mode = '';
 
 
 		/**
@@ -26,16 +24,27 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 */
 		public $set_id = null;
 
+		/**
+		 * @var bool
+		 */
+		public $editing = false;
+
+		/**
+		 * @var bool
+		 */
+		public $viewing = false;
+
+		/**
+		 * @var int|string|null
+		 */
+		public $timestamp = null;
 
 		/**
 		 * Fields constructor.
 		 */
-		function __construct() {
-			$this->editing = false;
-			$this->viewing = false;
+		public function __construct() {
 			$this->timestamp = current_time( 'timestamp' );
 		}
-
 
 		/**
 		 * Standard checkbox field
@@ -44,8 +53,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @param  string  $title
 		 * @param  bool $checked
 		 */
-		function checkbox( $id, $title, $checked = true ) {
-
+		public function checkbox( $id, $title, $checked = true ) {
 			/**
 			 * Set value on form submission
 			 */
@@ -54,10 +62,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 
 			$class = $checked ? 'far fa-check-square' : 'far fa-square';
-
 			?>
-
-
 			<div class="um-field um-field-c">
 				<div class="um-field-area">
 					<label class="um-field-checkbox<?php echo $checked ? ' active' : '' ?>">
@@ -71,11 +76,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			<?php
 		}
 
-
 		/**
 		 * Shows social links
 		 */
-		function show_social_urls() {
+		public function show_social_urls() {
 			$social = array();
 
 			$fields = UM()->builtin()->get_all_user_fields();
@@ -97,11 +101,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 		}
 
-
 		/**
-		 * Hidden field inside a shortcode
+		 * Hidden field inside a shortcode.
 		 *
-		 * @param string $field
+		 * @param $field
+		 *
+		 * @return void
+		 * @throws \Exception
 		 */
 		function add_hidden_field( $field ) {
 			echo '<div style="display: none !important;">';
@@ -119,7 +125,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			echo '</div>';
 		}
 
-
 		/**
 		 * Get hidden field
 		 *
@@ -128,10 +133,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @return string
 		 */
-		function disabled_hidden_field( $key, $value ) {
+		public function disabled_hidden_field( $key, $value ) {
 			return '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '"/>';
 		}
-
 
 		/**
 		 * Updates a field globally
@@ -139,7 +143,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @param  integer $id
 		 * @param  array   $args
 		 */
-		function globally_update_field( $id, $args ) {
+		public function globally_update_field( $id, $args ) {
 			$fields = UM()->builtin()->saved_fields;
 
 			$fields[ $id ] = $args;
@@ -171,7 +175,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			update_option( 'um_fields', $fields );
 		}
 
-
 		/**
 		 * Updates a field in form only
 		 *
@@ -179,7 +182,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @param  array   $args
 		 * @param  integer $form_id
 		 */
-		function update_field( $id, $args, $form_id ) {
+		public function update_field( $id, $args, $form_id ) {
 			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
 
 			if ( $args['type'] == 'row' ) {
@@ -227,7 +230,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
 		}
 
-
 		/**
 		 * Print field error
 		 *
@@ -236,8 +238,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @return string
 		 */
-		function field_error( $text, $force_show = false ) {
-
+		public function field_error( $text, $force_show = false ) {
 			if ( empty( $text ) ) {
 				return '';
 			}
@@ -260,7 +261,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			return $output;
 		}
-
 
 		/**
 		 * Print field notice
@@ -270,8 +270,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @return string
 		 */
-		function field_notice( $text, $force_show = false ) {
-
+		public function field_notice( $text, $force_show = false ) {
 			if ( empty( $text ) ) {
 				return '';
 			}
@@ -295,7 +294,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			return $output;
 		}
 
-
 		/**
 		 * Checks if field has a server-side error
 		 *
@@ -303,7 +301,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @return boolean
 		 */
-		function is_error( $key ) {
+		public function is_error( $key ) {
 			return UM()->form()->has_error( $key );
 		}
 
@@ -314,10 +312,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @return boolean
 		 */
-		function is_notice( $key ) {
+		public function is_notice( $key ) {
 			return UM()->form()->has_notice( $key );
 		}
-
 
 		/**
 		 * Returns field error
@@ -326,7 +323,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @return string
 		 */
-		function show_error( $key ) {
+		public function show_error( $key ) {
 			return UM()->form()->errors[ $key ];
 		}
 
@@ -337,10 +334,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @return string
 		 */
-		function show_notice( $key ) {
+		public function show_notice( $key ) {
 			return UM()->form()->notices[ $key ];
 		}
-
 
 		/**
 		 *  Display field label
@@ -351,8 +347,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @return  string
 		 */
-		function field_label( $label, $key, $data ) {
-			$output = null;
+		public function field_label( $label, $key, $data ) {
+			$output  = null;
 			$output .= '<div class="um-field-label">';
 
 			if ( isset( $data['icon'] ) && $data['icon'] != '' && isset( $this->field_icons ) && $this->field_icons != 'off' && ( $this->field_icons == 'label' || $this->viewing == true ) ) {
@@ -453,7 +449,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			return $output;
 		}
-
 
 		/**
 		 * Output field classes

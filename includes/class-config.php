@@ -45,7 +45,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 		/**
 		 * @var array
 		 */
-		var $email_notification = array();
+		var $email_notifications = array();
 
 		/**
 		 * @since 3.0

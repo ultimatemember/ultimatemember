@@ -1,11 +1,11 @@
 <?php
 namespace um\core;
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Files' ) ) {
-
 
 	/**
 	 * Class Files
@@ -13,60 +13,116 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 	 */
 	class Files {
 
+		/**
+		 * @var
+		 */
+		public $upload_temp;
 
 		/**
 		 * @var
 		 */
-		var $upload_temp;
-
-
-		/**
-		 * @var
-		 */
-		var $upload_baseurl;
-
+		public $upload_baseurl;
 
 		/**
 		 * @var
 		 */
-		var $upload_basedir;
+		public $upload_basedir;
 
+		/**
+		 * @var array
+		 */
+		public $upload_dir = array();
+
+		/**
+		 * @var string
+		 */
+		public $upload_temp_url = '';
+
+		/**
+		 * @var array|array[]
+		 */
+		public $fonticon = array();
+
+		public $default_file_fonticon = 'far fa-file';
 
 		/**
 		 * Files constructor.
 		 */
-		function __construct() {
-
+		public function __construct() {
 			$this->setup_paths();
 
-			add_action( 'template_redirect', array( &$this, 'download_routing' ), 1 );
-
 			$this->fonticon = array(
-				'pdf' 	=> array('icon' 	=> 'far fa-file-pdf', 'color' => '#D24D4D' ),
-				'txt' 	=> array('icon' 	=> 'far fa-file-alt' ),
-				'csv' 	=> array('icon' 	=> 'far fa-file-alt' ),
-				'doc' 	=> array('icon' 	=> 'far fa-file-alt', 'color' => '#2C95D5' ),
-				'docx' 	=> array('icon' 	=> 'far fa-file-alt', 'color' => '#2C95D5' ),
-				'odt' 	=> array('icon' 	=> 'far fa-file-alt', 'color' => '#2C95D5' ),
-				'ods' 	=> array('icon' 	=> 'far fa-file-excel', 'color' => '#51BA6A' ),
-				'xls' 	=> array('icon' 	=> 'far fa-file-excel', 'color' => '#51BA6A' ),
-				'xlsx' 	=> array('icon' 	=> 'far fa-file-excel', 'color' => '#51BA6A' ),
-				'zip' 	=> array('icon' 	=> 'far fa-file-archive' ),
-				'rar' 	=> array('icon'		=> 'far fa-file-archive' ),
-				'mp3'	=> array('icon'		=> 'far fa-file-audio' ),
-				'jpg' 	=> array('icon' 	=> 'far fa-image' ),
-				'jpeg' 	=> array('icon' 	=> 'far fa-image' ),
-				'png' 	=> array('icon' 	=> 'far fa-image' ),
-				'gif' 	=> array('icon' 	=> 'far fa-images' ),
-				'eps' 	=> array('icon' 	=> 'far fa-images' ),
-				'psd' 	=> array('icon' 	=> 'far fa-images' ),
-				'tif' 	=> array('icon' 	=> 'far fa-image' ),
-				'tiff' 	=> array('icon' 	=> 'far fa-image' ),
+				'pdf'  => array(
+					'icon'  => 'far fa-file-pdf',
+					'color' => '#D24D4D',
+				),
+				'txt'  => array(
+					'icon' => 'far fa-file-alt',
+				),
+				'csv'  => array(
+					'icon' => 'far fa-file-alt',
+				),
+				'doc'  => array(
+					'icon'  => 'far fa-file-alt',
+					'color' => '#2C95D5',
+				),
+				'docx' => array(
+					'icon'  => 'far fa-file-alt',
+					'color' => '#2C95D5',
+				),
+				'odt'  => array(
+					'icon'  => 'far fa-file-alt',
+					'color' => '#2C95D5',
+				),
+				'ods'  => array(
+					'icon'  => 'far fa-file-excel',
+					'color' => '#51BA6A',
+				),
+				'xls'  => array(
+					'icon'  => 'far fa-file-excel',
+					'color' => '#51BA6A',
+				),
+				'xlsx' => array(
+					'icon'  => 'far fa-file-excel',
+					'color' => '#51BA6A',
+				),
+				'zip'  => array(
+					'icon' => 'far fa-file-archive',
+				),
+				'rar'  => array(
+					'icon' => 'far fa-file-archive',
+				),
+				'mp3'  => array(
+					'icon' => 'far fa-file-audio',
+				),
+				'jpg'  => array(
+					'icon' => 'far fa-image',
+				),
+				'jpeg' => array(
+					'icon' => 'far fa-image',
+				),
+				'png'  => array(
+					'icon' => 'far fa-image',
+				),
+				'gif'  => array(
+					'icon' => 'far fa-images',
+				),
+				'eps'  => array(
+					'icon' => 'far fa-images',
+				),
+				'psd'  => array(
+					'icon' => 'far fa-images',
+				),
+				'tif'  => array(
+					'icon' => 'far fa-image',
+				),
+				'tiff' => array(
+					'icon' => 'far fa-image',
+				),
 			);
 
-			$this->default_file_fonticon = 'far fa-file';
+			add_action( 'template_redirect', array( &$this, 'download_routing' ), 1 );
 		}
-
 
 		/**
 		 * File download link generate
@@ -77,7 +133,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 *
 		 * @return string
 		 */
-		function get_download_link( $form_id, $field_key, $user_id ) {
+		public function get_download_link( $form_id, $field_key, $user_id ) {
 			$field_key = urlencode( $field_key );
 
 			if ( UM()->is_permalinks ) {
@@ -94,11 +150,10 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			return add_query_arg( array( 't' => time() ), $url );
 		}
 
-
 		/**
 		 * @return bool
 		 */
-		function download_routing() {
+		public function download_routing() {
 			if ( 'download' !== get_query_var( 'um_action' ) ) {
 				return false;
 			}
@@ -156,13 +211,12 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			return false;
 		}
 
-
 		/**
 		 * @param $user_id
 		 * @param $field_key
 		 * @param $field_value
 		 */
-		function image_download( $user_id, $field_key, $field_value ) {
+		public function image_download( $user_id, $field_key, $field_value ) {
 			$file_path = UM()->uploader()->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR . $field_value;
 			if ( ! file_exists( $file_path ) ) {
 				if ( is_multisite() ) {
@@ -201,13 +255,12 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			exit;
 		}
 
-
 		/**
 		 * @param $user_id
 		 * @param $field_key
 		 * @param $field_value
 		 */
-		function file_download( $user_id, $field_key, $field_value ) {
+		public function file_download( $user_id, $field_key, $field_value ) {
 			$file_path = UM()->uploader()->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR . $field_value;
 			if ( ! file_exists( $file_path ) ) {
 				if ( is_multisite() ) {
@@ -246,11 +299,10 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			exit;
 		}
 
-
 		/**
 		 * Remove file by AJAX
 		 */
-		function ajax_remove_file() {
+		public function ajax_remove_file() {
 			UM()->ajax()->check_nonce( 'um-frontend-nonce' );
 
 			if ( empty( $_POST['src'] ) ) {
@@ -304,7 +356,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		/**
 		 * Resize image AJAX handler
 		 */
-		function ajax_resize_image() {
+		public function ajax_resize_image() {
 			UM()->ajax()->check_nonce( 'um-frontend-nonce' );
 
 			/**
@@ -624,19 +676,17 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * @return string
 		 */
 		function get_fonticon_bg_by_ext( $extension ) {
-			if ( isset( $this->fonticon[$extension]['color'] ) ) {
-				return $this->fonticon[$extension]['color'];
+			if ( isset( $this->fonticon[ $extension ]['color'] ) ) {
+				return $this->fonticon[ $extension ]['color'];
 			} else {
 				return '#666';
 			}
 		}
 
-
 		/**
 		 * Setup upload directory
 		 */
-		function setup_paths() {
-
+		public function setup_paths() {
 			$this->upload_dir = wp_upload_dir();
 
 			$this->upload_basedir = $this->upload_dir['basedir'] . '/ultimatemember/';
@@ -694,7 +744,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				$this->upload_baseurl = str_replace("http://", "https://",  $this->upload_baseurl);
 			}
 
-			$this->upload_temp = $this->upload_basedir . 'temp/';
+			$this->upload_temp     = $this->upload_basedir . 'temp/';
 			$this->upload_temp_url = $this->upload_baseurl . 'temp/';
 
 			if ( ! file_exists( $this->upload_basedir ) ) {
@@ -708,16 +758,14 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				@mkdir( $this->upload_temp , 0755, true );
 				umask( $old );
 			}
-
 		}
-
 
 		/**
 		 * Generate unique temp directory
 		 *
 		 * @return mixed
 		 */
-		function unique_dir(){
+		public function unique_dir() {
 			$unique_number = UM()->validation()->generate();
 			$array['dir'] = $this->upload_temp . $unique_number . '/';
 			$array['url'] = $this->upload_temp_url . $unique_number . '/';
@@ -732,11 +780,9 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 *
 		 * @return string
 		 */
-		function path_only( $file ) {
-
+		public function path_only( $file ) {
 			return trailingslashit( dirname( $file ) );
 		}
-
 
 		/**
 		 * Fix image orientation
@@ -746,7 +792,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 *
 		 * @return resource
 		 */
-		function fix_image_orientation( $rotate, $source ) {
+		public function fix_image_orientation( $rotate, $source ) {
 			if ( extension_loaded('exif') ) {
 				$exif = @exif_read_data( $source );
 
@@ -769,7 +815,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			return $rotate;
 		}
 
-
 		/**
 		 * Process an image
 		 *
@@ -779,79 +824,64 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 *
 		 * @return array
 		 */
-		function create_and_copy_image($source, $destination, $quality = 100) {
-
+		function create_and_copy_image( $source, $destination, $quality = 100 ) {
 			$info = @getimagesize($source);
 
-			if ($info['mime'] == 'image/jpeg'){
-
+			if ($info['mime'] == 'image/jpeg') {
 				$image = imagecreatefromjpeg( $source );
-
-			} else if ($info['mime'] == 'image/gif'){
-
+			} elseif ($info['mime'] == 'image/gif'){
 				$image = imagecreatefromgif( $source );
-
-			} else if ($info['mime'] == 'image/png'){
-
+			} elseif ($info['mime'] == 'image/png'){
 				$image = imagecreatefrompng( $source );
 				imagealphablending( $image, false );
 				imagesavealpha( $image, true );
-
 			}
 
 			list($w, $h) = @getimagesize( $source );
-			if ( $w > UM()->options()->get('image_max_width') ) {
-
+			if ( $w > UM()->options()->get( 'image_max_width' ) ) {
 				$ratio = round( $w / $h, 2 );
 				$new_w = UM()->options()->get('image_max_width');
 				$new_h = round( $new_w / $ratio, 2 );
 
-				if ( $info['mime'] == 'image/jpeg' ||  $info['mime'] == 'image/gif' ){
-
+				if ( $info['mime'] == 'image/jpeg' ||  $info['mime'] == 'image/gif' ) {
 					$image_p = imagecreatetruecolor( $new_w, $new_h );
 					imagecopyresampled( $image_p, $image, 0, 0, 0, 0, $new_w, $new_h, $w, $h );
 					$image_p = $this->fix_image_orientation( $image_p, $source );
-
-				}else if( $info['mime'] == 'image/png' ){
-
-					$srcImage = $image;
+				} elseif ( $info['mime'] == 'image/png' ) {
+					$srcImage    = $image;
 					$targetImage = imagecreatetruecolor( $new_w, $new_h );
 					imagealphablending( $targetImage, false );
 					imagesavealpha( $targetImage, true );
-					imagecopyresampled( $targetImage, $srcImage,   0, 0, 0, 0, $new_w, $new_h, $w, $h );
-
+					imagecopyresampled( $targetImage, $srcImage, 0, 0, 0, 0, $new_w, $new_h, $w, $h );
 				}
 
-				if ( $info['mime'] == 'image/jpeg' ){
+				if ( $info['mime'] == 'image/jpeg' ) {
 					$has_copied = imagejpeg( $image_p, $destination, $quality );
-				}else if ( $info['mime'] == 'image/gif' ){
+				} elseif ( $info['mime'] == 'image/gif' ) {
 					$has_copied = imagegif( $image_p, $destination );
-				}else if ( $info['mime'] == 'image/png' ){
+				} elseif ( $info['mime'] == 'image/png' ) {
 					$has_copied = imagepng( $targetImage, $destination, 0 ,PNG_ALL_FILTERS);
 				}
 
 				$info['um_has_max_width'] = 'custom';
-				$info['um_has_copied'] = $has_copied ? 'yes':'no';
-
+				$info['um_has_copied']    = $has_copied ? 'yes':'no';
 			} else {
-
 				$image = $this->fix_image_orientation( $image, $source );
 
-				if ( $info['mime'] == 'image/jpeg' ){
+				if ( $info['mime'] == 'image/jpeg' ) {
 					$has_copied = imagejpeg( $image, $destination, $quality );
-				}else if ( $info['mime'] == 'image/gif' ){
+				} elseif ( $info['mime'] == 'image/gif' ) {
 					$has_copied = imagegif( $image, $destination );
-				}else if ( $info['mime'] == 'image/png' ){
-					$has_copied = imagepng( $image , $destination , 0 ,PNG_ALL_FILTERS);
+				} elseif ( $info['mime'] == 'image/png' ) {
+					$has_copied = imagepng( $image , $destination , 0 ,PNG_ALL_FILTERS );
 				}
 
 				$info['um_has_max_width'] = 'default';
-				$info['um_has_copied'] = $has_copied ? 'yes':'no';
+				$info['um_has_copied']    = $has_copied ? 'yes':'no';
 			}
 
 			return $info;
 		}
-
 
 		/**
 		 * Process a file
@@ -859,11 +889,9 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * @param $source
 		 * @param $destination
 		 */
-		function upload_temp_file( $source, $destination ) {
-
+		public function upload_temp_file( $source, $destination ) {
 			move_uploaded_file( $source, $destination );
 		}
-
 
 		/**
 		 * Process a temp upload
@@ -874,8 +902,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 *
 		 * @return string
 		 */
-		function new_image_upload_temp( $source, $destination, $quality = 100 ){
-
+		public function new_image_upload_temp( $source, $destination, $quality = 100 ) {
 			$unique_dir = $this->unique_dir();
 
 			$this->make_dir( $unique_dir['dir'] );
@@ -885,9 +912,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			$url = $unique_dir['url'] . $destination ;
 
 			return $url;
-
 		}
-
 
 		/**
 		 * Process a temp upload for files
@@ -897,18 +922,12 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 *
 		 * @return string
 		 */
-		function new_file_upload_temp( $source, $destination ){
-
+		public function new_file_upload_temp( $source, $destination ){
 			$unique_dir = $this->unique_dir();
-
 			$this->make_dir( $unique_dir['dir'] );
-
 			$this->upload_temp_file( $source, $unique_dir['dir'] . $destination );
-
 			$url = $unique_dir['url'] . $destination;
-
 			return $url;
-
 		}
 
 
@@ -918,8 +937,8 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * @param $dir
 		 */
 		function make_dir( $dir ) {
-			$old = umask(0);
-			@mkdir( $dir, 0755, true);
+			$old = umask( 0 );
+			@mkdir( $dir, 0755, true );
 			umask( $old );
 		}
 
@@ -958,37 +977,29 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * @return mixed
 		 */
 		function get_image_data( $file ) {
-
 			$finfo = finfo_open( FILEINFO_MIME_TYPE );
 
 			$mime_type = finfo_file( $finfo, $file );
 
-			if( function_exists('exif_imagetype') ){
+			if ( function_exists('exif_imagetype') ) {
 
 				$array_exif_image_mimes = array( IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG );
 
 				$allowed_types = apply_filters('um_image_upload_allowed_exif_mimes', $array_exif_image_mimes );
 
 				if( ! in_array( @exif_imagetype( $file ), $allowed_types ) ) {
-
 					$array['invalid_image'] = true;
-
 					return $array;
 				}
-
-			}else{
+			} else {
 
 				$array_image_mimes = array('image/jpeg','image/png','image/gif');
-
 				$allowed_types = apply_filters('um_image_upload_allowed_mimes', $array_image_mimes );
 
 				if ( ! in_array( $mime_type, $allowed_types ) ) {
-
 					$array['invalid_image'] = true;
-
 					return $array;
 				}
-
 			}
 
 			$array['size'] = filesize( $file );
@@ -1009,7 +1020,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			$array['extension'] = $this->get_extension_by_mime_type( $mime_type );
 
-
 			return $array;
 		}
 
@@ -1023,14 +1033,12 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * @return bool
 		 */
 		function in_array( $value, $array ) {
-
-			if ( in_array( $value, explode(',', $array ) ) ){
+			if ( in_array( $value, explode(',', $array ) ) ) {
 				return true;
 			}
 
 			return false;
 		}
-
 
 		/**
 		 * This function will delete file upload from server
@@ -1054,7 +1062,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			}
 		}
 
-
 		/**
 		 * Delete a main user photo
 		 *
@@ -1062,7 +1069,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * @param $type
 		 */
 		function delete_core_user_photo( $user_id, $type ) {
-
 			delete_user_meta( $user_id, $type );
 
 			/**
@@ -1104,7 +1110,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			UM()->user()->remove_cache( $user_id );
 		}
 
-
 		/**
 		 * Resize a local image
 		 *
@@ -1114,7 +1119,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * @return string
 		 */
 		function resize_image( $file, $crop ) {
-
 			$targ_x1 = $crop[0];
 			$targ_y1 = $crop[1];
 			$targ_x2 = $crop[2];
@@ -1159,12 +1163,11 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 */
 		function new_user( $user_id ) {
 			if ( !file_exists( $this->upload_basedir . $user_id . '/' ) ) {
-				$old = umask(0);
-				@mkdir( $this->upload_basedir . $user_id . '/' , 0755, true);
-				umask($old);
+				$old = umask( 0 );
+				@mkdir( $this->upload_basedir . $user_id . '/' , 0755, true );
+				umask( $old );
 			}
 		}
-
 
 		/**
 		 * Remove a directory
@@ -1185,14 +1188,12 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			}
 		}
 
-
 		/**
 		 * Remove old files
 		 * @param string $dir							Path to directoty.
 		 * @param int|string $timestamp		Unix timestamp or PHP relative time. All older files will be removed.
 		 */
 		function remove_old_files( $dir, $timestamp = NULL ) {
-
 			$removed_files = array();
 
 			if ( empty( $timestamp ) ) {
@@ -1226,7 +1227,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			return $removed_files;
 		}
 
-
 		/**
 		 * Format Bytes
 		 *
@@ -1247,7 +1247,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			return '';
 		}
-
 
 		/**
 		 * Get the list of profile/cover sizes
@@ -1278,7 +1277,5 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			return $sizes;
 		}
-
-
 	}
 }

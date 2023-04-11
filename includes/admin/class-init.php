@@ -7,7 +7,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'um\admin\Init' ) ) {
 
-
 	/**
 	 * Class Init
 	 *

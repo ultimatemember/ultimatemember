@@ -1,12 +1,11 @@
 <?php
 namespace um\admin;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\admin\Notices' ) ) {
-
 
 	/**
 	 * Class Notices
@@ -15,34 +14,31 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 	 */
 	class Notices {
 
-
 		/**
 		 * Notices list
 		 *
 		 * @var array
 		 */
-		var $list = array();
-
+		public $list = array();
 
 		/**
 		 * Notices constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			add_action( 'admin_init', array( &$this, 'create_languages_folder' ) );
 			add_action( 'admin_init', array( &$this, 'force_dismiss_notice' ) );
 
-			// later then admin_init for checking the $current_screen variable
+//			 later than admin_init for checking the $current_screen variable
 			add_action( 'current_screen', array( &$this, 'create_list' ), 10, 1 );
 
 			add_action( 'admin_notices', array( &$this, 'render_notices' ), 1 );
 			add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1000 );
 		}
 
-
 		/**
 		 * @param \WP_Screen $current_screen
 		 */
-		function create_list( $current_screen ) {
+		public function create_list( $current_screen ) {
 			$this->old_extensions_notice();
 			$this->install_predefined_page_notice();
 			$this->exif_extension_notice();
@@ -84,22 +80,19 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 			do_action( 'um_admin_create_notices', $current_screen );
 		}
 
-
 		/**
 		 * @return array
 		 */
-		function get_admin_notices() {
+		public function get_admin_notices() {
 			return $this->list;
 		}
-
 
 		/**
 		 * @param $admin_notices
 		 */
-		function set_admin_notices( $admin_notices ) {
+		public function set_admin_notices( $admin_notices ) {
 			$this->list = $admin_notices;
 		}
-
 
 		/**
 		 * @param $a
@@ -107,13 +100,12 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 		 *
 		 * @return mixed
 		 */
-		function notice_priority_sort( $a, $b ) {
+		public function notice_priority_sort( $a, $b ) {
 			if ( $a['priority'] == $b['priority'] ) {
 				return 0;
 			}
 			return ( $a['priority'] < $b['priority'] ) ? -1 : 1;
 		}
-
 
 		/**
 		 * Add notice to UM notices array
@@ -122,7 +114,7 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 		 * @param array $data
 		 * @param int $priority
 		 */
-		function add_notice( $key, $data, $priority = 10 ) {
+		public function add_notice( $key, $data, $priority = 10 ) {
 			$admin_notices = $this->get_admin_notices();
 
 			if ( empty( $admin_notices[ $key ] ) ) {
@@ -131,13 +123,12 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 			}
 		}
 
-
 		/**
 		 * Remove notice from UM notices array
 		 *
 		 * @param string $key
 		 */
-		function remove_notice( $key ) {
+		public function remove_notice( $key ) {
 			$admin_notices = $this->get_admin_notices();
 
 			if ( ! empty( $admin_notices[ $key ] ) ) {
@@ -146,11 +137,10 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 			}
 		}
 
-
 		/**
 		 * Render all admin notices
 		 */
-		function render_notices() {
+		public function render_notices() {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
 			}
@@ -190,7 +180,6 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 			do_action( 'um_admin_after_main_notices' );
 		}
 
-
 		/**
 		 * Display single admin notice
 		 *
@@ -199,7 +188,7 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 		 *
 		 * @return void|string
 		 */
-		function display_notice( $key, $echo = true ) {
+		public function display_notice( $key, $echo = true ) {
 			$admin_notices = $this->get_admin_notices();
 
 			if ( empty( $admin_notices[ $key ] ) ) {
@@ -227,7 +216,6 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 			}
 		}
 
-
 		/**
 		 * Checking if the "Membership - Anyone can register" WordPress general setting is active
 		 */
@@ -251,12 +239,15 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 			), 10 );
 		}
 
-
 		/**
 		 * To store plugin languages
 		 */
-		function create_languages_folder() {
+		public function create_languages_folder() {
 			$path = UM()->files()->upload_basedir;
+			if ( empty( $path ) ) {
+				return;
+			}
+
 			$path = str_replace( '/uploads/ultimatemember', '', $path );
 			$path = $path . '/languages/plugins/';
 			$path = str_replace( '//', '/', $path );
@@ -268,11 +259,10 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 			}
 		}
 
-
 		/**
 		 * Show notice for customers with old extension's versions
 		 */
-		function old_extensions_notice() {
+		public function old_extensions_notice() {
 			$show = false;
 
 			$old_extensions = array(
@@ -327,8 +317,7 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 			), 0 );
 		}
 
-
-		function legacy_enabled_modules() {
+		public function legacy_enabled_modules() {
 			if ( ! isset( $_GET['tab'] ) || 'modules' !== sanitize_key( $_GET['tab'] ) ) {
 				return;
 			}
@@ -348,8 +337,7 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 			), 1 );
 		}
 
-
-		function legacy_notices_options() {
+		public function legacy_notices_options() {
 			if ( isset( $_GET['section'] ) ) {
 				return;
 			}
@@ -392,11 +380,10 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 			}
 		}
 
-
 		/**
 		 * Regarding page setup
 		 */
-		function install_predefined_page_notice() {
+		public function install_predefined_page_notice() {
 			$predefined_pages = array_keys( UM()->config()->get( 'predefined_pages' ) );
 
 			foreach ( $predefined_pages as $slug ) {
@@ -483,11 +470,10 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 			}
 		}
 
-
 		/**
 		* EXIF library notice
 		*/
-		function exif_extension_notice() {
+		public function exif_extension_notice() {
 			$hide_exif_notice = get_option( 'um_hide_exif_notice' );
 
 			if ( ! extension_loaded( 'exif' ) && ! $hide_exif_notice ) {
@@ -498,11 +484,10 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 			}
 		}
 
-
 		/**
 		 * Updating users
 		 */
-		function show_update_messages() {
+		public function show_update_messages() {
 			if ( ! isset( $_REQUEST['update'] ) ) {
 				return;
 			}
@@ -619,11 +604,10 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 
 		}
 
-
 		/**
 		 * Check if plugin is installed with correct folder
 		 */
-		function check_wrong_install_folder() {
+		public function check_wrong_install_folder() {
 			$invalid_folder = false;
 
 			$slug_array = explode( '/', UM_PLUGIN );
@@ -639,8 +623,7 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 			}
 		}
 
-
-		function check_wrong_licenses() {
+		public function check_wrong_licenses() {
 			$invalid_license = 0;
 			$arr_inactive_license_keys = array();
 
@@ -677,15 +660,15 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 		}
 
 
-		function need_upgrade() {
+		public function need_upgrade() {
 			if ( ! UM()->admin()->db_upgrade()->need_upgrade() ) {
 				return;
 			}
 
 			$url = add_query_arg( array( 'page' => 'um_upgrade' ), admin_url( 'admin.php' ) );
 
-			ob_start(); ?>
-
+			ob_start();
+			?>
 			<p>
 				<?php printf( __( '<strong>%s version %s</strong> needs to be updated to work correctly.<br />It is necessary to update the structure of the database and options that are associated with <strong>%s %s</strong>.<br />Please visit <a href="%s">"Upgrade"</a> page and run the upgrade process.', 'ultimate-member' ), UM_PLUGIN_NAME, UM_VERSION, UM_PLUGIN_NAME, UM_VERSION, $url ); ?>
 			</p>
@@ -694,8 +677,8 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 				<a href="<?php echo esc_url( $url ) ?>" class="button button-primary"><?php _e( 'Visit Upgrade Page', 'ultimate-member' ) ?></a>
 				&nbsp;
 			</p>
-
-			<?php $message = ob_get_clean();
+			<?php
+			$message = ob_get_clean();
 
 			$this->add_notice(
 				'upgrade',
@@ -707,11 +690,10 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 			);
 		}
 
-
 		/**
 		 *
 		 */
-		function reviews_notice() {
+		public function reviews_notice() {
 			$first_activation_date = get_option( 'um_first_activation_date', false );
 
 			if ( empty( $first_activation_date ) ) {
@@ -771,23 +753,26 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 			), 1 );
 		}
 
-
 		/**
 		 * Check Future Changes notice
 		 */
-		function future_changed() {
-			ob_start(); ?>
-
+		public function future_changed() {
+			ob_start();
+			?>
 			<p>
 				<?php printf( __( '<strong>%s</strong> future plans! Detailed future list is <a href="%s" target="_blank">here</a>', 'ultimate-member' ), UM_PLUGIN_NAME, '#' ); ?>
 			</p>
+			<?php
+			$message = ob_get_clean();
 
-			<?php $message = ob_get_clean();
-
-			$this->add_notice( 'future_changes', array(
-				'class'   => 'updated',
-				'message' => $message,
-			), 2 );
+			$this->add_notice(
+				'future_changes',
+				array(
+					'class'   => 'updated',
+					'message' => $message,
+				),
+				2
+			);
 		}
 
 
@@ -795,7 +780,7 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 		 * Callback for listening wp-admin and force dismiss notice
 		 * (case when AJAX callback has been break)
 		 */
-		function force_dismiss_notice() {
+		public function force_dismiss_notice() {
 			if ( ! empty( $_REQUEST['um_dismiss_notice'] ) && ! empty( $_REQUEST['um_admin_nonce'] ) ) {
 				if ( wp_verify_nonce( $_REQUEST['um_admin_nonce'], 'um-admin-nonce' ) ) {
 					$hidden_notices = get_option( 'um_hidden_admin_notices', array() );
@@ -811,7 +796,6 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 				}
 			}
 		}
-
 
 		/**
 		 * Change the admin footer text on UM admin pages
@@ -832,12 +816,13 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 			if ( ( isset( $current_screen->id ) && in_array( $current_screen->id, $um_pages ) ) || UM()->admin()->screen()->is_own_post_type() ) {
 				// Change the footer text
 				if ( ! get_option( 'um_admin_footer_text_rated' ) ) {
-
-					ob_start(); ?>
+					ob_start();
+					?>
 					<a href="https://wordpress.org/support/plugin/ultimate-member/reviews/?filter=5" target="_blank" class="um-admin-rating-link" data-rated="<?php esc_attr_e( 'Thanks :)', 'ultimate-member' ) ?>">
 						&#9733;&#9733;&#9733;&#9733;&#9733;
 					</a>
-					<?php $link = ob_get_clean();
+					<?php
+					$link = ob_get_clean();
 
 					ob_start();
 
@@ -859,13 +844,12 @@ if ( ! class_exists( 'um\admin\Notices' ) ) {
 							jQuery(this).parent().text( jQuery( this ).data( 'rated' ) );
 						});
 					</script>
-
-					<?php $footer_text = ob_get_clean();
+					<?php
+					$footer_text = ob_get_clean();
 				}
 			}
 
 			return $footer_text;
 		}
-
 	}
 }

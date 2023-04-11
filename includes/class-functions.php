@@ -1,14 +1,14 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
-
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'UM_Functions' ) ) {
-
 
 	/**
 	 * Class UM_Functions
 	 */
 	class UM_Functions {
-
 
 		/**
 		 * Store URL

@@ -46,7 +46,7 @@ if ( ! class_exists( 'um\common\Filesystem' ) ) {
 		 * Filesystem constructor.
 		 */
 		public function __construct() {
-			$this->init_paths();
+			add_action( 'admin_init', array( &$this, 'init_paths' ) );
 		}
 
 		/**
@@ -54,7 +54,7 @@ if ( ! class_exists( 'um\common\Filesystem' ) ) {
 		 *
 		 * @since 1.0
 		 */
-		private function init_paths() {
+		public function init_paths() {
 			$this->temp_upload_dir = $this->get_upload_dir( 'ultimatemember/temp' );
 			$this->temp_upload_url = $this->get_upload_url( 'ultimatemember/temp' );
 		}
@@ -73,14 +73,6 @@ if ( ! class_exists( 'um\common\Filesystem' ) ) {
 			/** @var $wp_filesystem \WP_Filesystem_Base */
 			global $wp_filesystem;
 
-			if ( ! is_a( $wp_filesystem, 'WP_Filesystem_Base' ) ) {
-				/** @noinspection PhpIncludeInspection */
-				require_once ABSPATH . 'wp-admin/includes/file.php';
-
-				$credentials = request_filesystem_credentials( site_url() );
-				\WP_Filesystem( $credentials );
-			}
-
 			if ( ! $blog_id ) {
 				$blog_id = get_current_blog_id();
 			} else {
@@ -96,8 +88,14 @@ if ( ! class_exists( 'um\common\Filesystem' ) ) {
 
 			$upload_dir = wp_normalize_path( trailingslashit( $this->upload_dir[ $blog_id ] ) . untrailingslashit( $dir ) );
 
-			if ( ! $wp_filesystem->is_dir( $upload_dir ) ) {
-				wp_mkdir_p( $upload_dir );
+			if ( is_null( $wp_filesystem ) ) {
+				if ( is_dir( $upload_dir ) ) {
+					wp_mkdir_p( $upload_dir );
+				}
+			} else {
+				if ( ! $wp_filesystem->is_dir( $upload_dir ) ) {
+					wp_mkdir_p( $upload_dir );
+				}
 			}
 
 			if ( is_multisite() ) {
@@ -154,6 +152,14 @@ if ( ! class_exists( 'um\common\Filesystem' ) ) {
 				$directory = UM()->files()->upload_temp;
 				$size = 0;
 
+				if ( empty( $directory ) || ! is_dir( $directory ) ) {
+					return 0;
+				}
+
+				if ( ! class_exists( '\RecursiveIteratorIterator' ) || ! class_exists( '\RecursiveIteratorIterator' ) ) {
+					return 0;
+				}
+
 				foreach( new \RecursiveIteratorIterator( new \RecursiveDirectoryIterator( $directory ) ) as $file ) {
 					$filename = $file->getFilename();
 					if ( $filename == '.' || $filename == '..' ) {
@@ -168,7 +174,7 @@ if ( ! class_exists( 'um\common\Filesystem' ) ) {
 		}
 
 		/**
-		 * Remove all files, which are older then 24 hours
+		 * Remove all files, which are older than 24 hours
 		 *
 		 * @since 3.0.0
 		 */
@@ -176,16 +182,8 @@ if ( ! class_exists( 'um\common\Filesystem' ) ) {
 			/** @var $wp_filesystem \WP_Filesystem_Base */
 			global $wp_filesystem;
 
-			if ( ! is_a( $wp_filesystem, 'WP_Filesystem_Base' ) ) {
-				/** @noinspection PhpIncludeInspection */
-				require_once ABSPATH . 'wp-admin/includes/file.php';
-
-				$credentials = request_filesystem_credentials( site_url() );
-				\WP_Filesystem( $credentials );
-			}
-
 			/**
-			 * Filters the maximum file age in the temp folder. By default it's 24 hours.
+			 * Filters the maximum file age in the temp folder. By default, it's 24 hours.
 			 *
 			 * @since 1.0
 			 * @hook jb_filesystem_max_file_age
@@ -196,8 +194,14 @@ if ( ! class_exists( 'um\common\Filesystem' ) ) {
 			 */
 			$file_age = apply_filters( 'jb_filesystem_max_file_age', 24 * 3600 ); // Temp file age in seconds
 
-			if ( ! $wp_filesystem->is_dir( $this->temp_upload_dir ) ) {
-				return;
+			if ( is_null( $wp_filesystem ) ) {
+				if ( ! is_dir( $this->temp_upload_dir ) ) {
+					return;
+				}
+			} else {
+				if ( ! $wp_filesystem->is_dir( $this->temp_upload_dir ) ) {
+					return;
+				}
 			}
 
 			// phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
@@ -214,9 +218,15 @@ if ( ! class_exists( 'um\common\Filesystem' ) ) {
 
 				$filepath = wp_normalize_path( $this->temp_upload_dir . DIRECTORY_SEPARATOR . $file );
 
-				// Remove temp file if it is older than the max age and is not the current file
-				if ( $wp_filesystem->mtime( $filepath ) < time() - $file_age ) {
-					$wp_filesystem->delete( $filepath );
+				if ( is_null( $wp_filesystem ) ) {
+					if ( @filemtime( $filepath ) < time() - $file_age ) {
+						@unlink( $filepath );
+					}
+				} else {
+					// Remove temp file if it is older than the max age and is not the current file
+					if ( $wp_filesystem->mtime( $filepath ) < time() - $file_age ) {
+						$wp_filesystem->delete( $filepath );
+					}
 				}
 			}
 

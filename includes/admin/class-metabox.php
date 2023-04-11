@@ -31,14 +31,16 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 		 */
 		var $init_icon = false;
 
+		public $in_edit = false;
+
+		public $edit_mode_value = null;
+
+		public $edit_array = array();
+
 		/**
 		 * Metabox constructor.
 		 */
 		function __construct() {
-			$this->in_edit         = false;
-			$this->edit_mode_value = null;
-			$this->edit_array      = array();
-
 			add_action( 'load-post.php', array( &$this, 'test_title' ) );
 			add_action( 'load-post-new.php', array( &$this, 'test_title_new' ) );
 

@@ -1,15 +1,17 @@
 <?php
-namespace um\core;
+namespace um\legacy\core;
 
 // Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
-if ( ! class_exists( 'um\core\Query' ) ) {
+if ( ! class_exists( 'um\legacy\core\Query' ) ) {
 
 
 	/**
 	 * Class Query
-	 * @package um\core
+	 * @package um\legacy\core
 	 */
 	class Query {
 
@@ -95,9 +97,9 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 			}
 
 			$pages = $wpdb->get_results(
-				"SELECT * 
-				FROM {$wpdb->posts} 
-				WHERE post_type = 'page' AND 
+				"SELECT *
+				FROM {$wpdb->posts}
+				WHERE post_type = 'page' AND
 				      post_status = 'publish'",
 				OBJECT
 			);
