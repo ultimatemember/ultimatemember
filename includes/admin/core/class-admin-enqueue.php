@@ -108,6 +108,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			wp_register_style( 'um_crop', um_url . '/assets/css/um-crop.css', array(), ultimatemember_version );
 			wp_register_style( 'um_responsive', um_url . '/assets/css/um-responsive.css', array( 'um_profile', 'um_crop' ), ultimatemember_version );
 			wp_register_style( 'um_account', um_url . '/assets/css/um-account.css', array(), ultimatemember_version );
+			wp_register_style( 'um_default_css', um_url . '/assets/css/um-old-default.css', array(), ultimatemember_version );
+			wp_register_style( 'um_fonticons_fa', um_url . '/assets/css/um-fonticons-fa.css', array(), ultimatemember_version );
 
 			wp_register_script( 'um_admin_blocks_shortcodes', um_url . 'assets/js/um-blocks' . $this->suffix . '.js', array( 'wp-i18n', 'wp-blocks', 'wp-components' ), ultimatemember_version, true );
 			wp_set_script_translations( 'jb_admin_blocks_shortcodes', 'ultimate-member' );
@@ -174,6 +176,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			wp_register_script( 'um_responsive', um_url . 'assets/js/um-responsive' . $this->suffix . '.js', array( 'jquery', 'um_functions', 'um_crop' ), ultimatemember_version, true );
 
 			// render blocks
+			wp_enqueue_style( 'um_default_css' );
+			wp_enqueue_style( 'um_fonticons_fa' );
 			wp_enqueue_script( 'um_datetime' );
 			wp_enqueue_script( 'um_datetime_date' );
 			wp_enqueue_script( 'um_datetime_time' );
