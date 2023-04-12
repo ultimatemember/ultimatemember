@@ -3074,10 +3074,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			set_transient( 'um_check_template_versions', current_time( 'd/m/Y H:i' ), 12 * HOUR_IN_SECONDS );
 			foreach ( $scan_files as $key => $file ) {
 				if ( ! str_contains( $file, 'email/' ) ) {
-					$located = apply_filters( 'um_get_theme_template', '', $file );
+					$located = apply_filters( 'um_get_theme_template', array(), $file );
 
-					if ( '' !== $located ) {
-						$theme_file = $located;
+					if ( ! empty( $located ) ) {
+						$theme_file = $located['theme'];
 					} elseif ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' . $file ) ) {
 						$theme_file = get_stylesheet_directory() . '/ultimate-member/templates/' . $file;
 					} else {
@@ -3086,8 +3086,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					if ( ! empty( $theme_file ) ) {
 						$core_file = $file;
 
-						if ( '' !== $located ) {
-							$core_path = apply_filters( 'um_core_file_path', '' );
+						if ( ! empty( $located ) ) {
+							$core_path = $located['core'];
 						} else {
 							$core_path = um_path . '/templates/' . $core_file;
 						}
