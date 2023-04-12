@@ -3069,11 +3069,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		public function get_override_templates( $get_list = false ) {
 			$outdated_files = array();
 			$scan_files     = $this->scan_template_files( um_path . '/templates/' );
+			$scan_files     = apply_filters( 'um_extend_scan_files', $scan_files );
 			$out_date       = false;
 			set_transient( 'um_check_template_versions', current_time( 'd/m/Y H:i' ), 12 * HOUR_IN_SECONDS );
 			foreach ( $scan_files as $key => $file ) {
 				if ( ! str_contains( $file, 'email/' ) ) {
-					if ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' . $file ) ) {
+					$located = apply_filters( 'um_get_theme_template', '', $file );
+
+					if ( '' !== $located ) {
+						$theme_file = $located;
+					} elseif ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' . $file ) ) {
 						$theme_file = get_stylesheet_directory() . '/ultimate-member/templates/' . $file;
 					} else {
 						$theme_file = false;
@@ -3081,7 +3086,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					if ( ! empty( $theme_file ) ) {
 						$core_file = $file;
 
-						$core_version  = $this->get_file_version( um_path . '/templates/' . $core_file );
+						if ( '' !== $located ) {
+							$core_path = apply_filters( 'um_core_file_path', '' );
+						} else {
+							$core_path = um_path . '/templates/' . $core_file;
+						}
+						$core_version  = $this->get_file_version( $core_path );
 						$theme_version = $this->get_file_version( $theme_file );
 
 						$status      = esc_html__( 'Theme version up to date', 'ultimate-member' );
@@ -3109,6 +3119,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					}
 				}
 			}
+//			exit();
 			if ( false === $out_date ) {
 				delete_option( 'um_template_version' );
 			}
