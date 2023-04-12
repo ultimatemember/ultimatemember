@@ -3074,7 +3074,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			set_transient( 'um_check_template_versions', current_time( 'd/m/Y H:i' ), 12 * HOUR_IN_SECONDS );
 			foreach ( $scan_files as $key => $file ) {
 				if ( ! str_contains( $file, 'email/' ) ) {
-					$located = apply_filters( 'um_get_theme_template', array(), $file );
+					$located = apply_filters( 'um_get_path_template', array(), $file );
 
 					if ( ! empty( $located ) ) {
 						$theme_file = $located['theme'];
