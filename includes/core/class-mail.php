@@ -541,7 +541,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 					break;
 			}
 
-			return $template_path;
+			return apply_filters( 'um_email_template_path', $template_path, $location, $template_name_file );
 		}
 
 
