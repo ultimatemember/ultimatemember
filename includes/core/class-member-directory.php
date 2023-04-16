@@ -658,6 +658,21 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$option_pairs = apply_filters( 'um_select_options_pair', null, $attrs );
 					}
 
+					// Translate filters "Gender", "Country", "Languages".
+					$filters_transleable = array(
+						'gender',
+						'country',
+						'languages',
+					);
+					if ( in_array( $attrs['metakey'], $filters_transleable, true ) ) {
+						$option_pairs      = true;
+						$translated_values = array();
+						foreach ( $values_array as $value ) {
+							$translated_values[ $value ] = translate( $value, 'ultimate-member' );
+						}
+						$attrs['options'] = array_unique( array_merge( $translated_values, $attrs['options'] ) );
+					}
+
 					if ( $attrs['metakey'] != 'online_status' ) {
 						if ( $attrs['metakey'] != 'role_select' && $attrs['metakey'] != 'mycred_rank' && empty( $custom_dropdown ) && empty( $option_pairs ) ) {
 							$attrs['options'] = array_intersect( array_map( 'stripslashes', array_map( 'trim', $attrs['options'] ) ), $values_array );
