@@ -6,7 +6,7 @@
  *
  * Page: "Profile"
  *
- * @version 1.0.0
+ * @version 2.6.1
  *
  * @var object $posts
  * @var int    $count_posts

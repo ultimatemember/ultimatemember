@@ -7,7 +7,7 @@
  * Page: "Profile"
  * Call: function add_comments(), function load_comments()
  *
- * @version 1.0.0
+ * @version 2.6.1
  *
  * @var int    $count_comments
  * @var object $comments

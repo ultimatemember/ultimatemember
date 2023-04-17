@@ -6,7 +6,7 @@
  *
  * Page: "Members"
  *
- * @version 1.0.0
+ * @version 2.6.1
  *
  * @var array $args
  */

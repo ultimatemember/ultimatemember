@@ -6,7 +6,7 @@
  *
  * Call: function ultimatemember_searchform()
  *
- * @version 1.0.0
+ * @version 2.6.1
  *
  * @var string $members_page
  * @var string $search_value

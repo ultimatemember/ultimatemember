@@ -6,7 +6,7 @@
  *
  * Call: function blog_message()
  *
- * @version 1.0.0
+ * @version 2.6.1
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

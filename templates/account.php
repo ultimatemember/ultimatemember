@@ -6,7 +6,7 @@
  *
  * Page: "Account"
  *
- * @version 1.0.0
+ * @version 2.6.1
  *
  * @var string $mode
  * @var int    $form_id

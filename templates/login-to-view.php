@@ -6,7 +6,7 @@
  *
  * Call: function um_loggedin()
  *
- * @version 1.0.0
+ * @version 2.6.1
  *
  * @var string $lock_text
  */

@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/ultimate-member/modal/um_upload_single.php
  *
- * @version 1.0.0
+ * @version 2.6.1
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
