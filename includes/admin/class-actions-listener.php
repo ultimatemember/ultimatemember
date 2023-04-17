@@ -17,14 +17,20 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 	 */
 	class Actions_Listener {
 
-		var $field_groups_error = null;
+		/**
+		 * @var null
+		 */
+		public $field_groups_error = null;
 
+		/**
+		 * @var null
+		 */
 		public $field_group_submission = null;
 
 		/**
 		 * Actions_Listener constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			add_action( 'um_admin_do_action__manual_upgrades_request', array( &$this, 'manual_upgrades_request' ) );
 			add_action( 'um_admin_do_action__duplicate_form', array( &$this, 'duplicate_form' ) );
 			add_action( 'um_admin_do_action__um_hide_locale_notice', array( &$this, 'hide_notice' ) );
@@ -35,16 +41,13 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 			add_action( 'um_admin_do_action__install_predefined_page', array( &$this, 'install_predefined_page' ) );
 			add_action( 'um_admin_do_action__install_predefined_pages', array( &$this, 'install_predefined_pages' ) );
 
-			//add_action( 'load-ultimate-member_page_um-modules', array( &$this, 'handle_modules_actions' ) );
 			add_action( 'load-toplevel_page_ultimatemember', array( &$this, 'handle_modules_actions_options' ) );
 			add_action( 'load-toplevel_page_ultimatemember', array( &$this, 'handle_email_notifications_actions' ) );
 			add_action( 'load-ultimate-member_page_um_roles', array( &$this, 'handle_roles_actions' ) );
 
 			add_action( 'load-ultimate-member_page_um_field_groups', array( &$this, 'handle_save_field_group' ) );
 			add_action( 'load-ultimate-member_page_um_field_groups', array( &$this, 'handle_field_groups_actions' ) );
-			//add_action( 'load-users.php', array( UM()->install(), 'set_default_user_status' ) ); for avoid the conflicts with \WP_Users_Query on the users.php page
 		}
-
 
 		/**
 		 *
@@ -57,10 +60,9 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 			$last_request = get_option( 'um_last_manual_upgrades_request', false );
 
 			if ( empty( $last_request ) || time() > $last_request + DAY_IN_SECONDS ) {
-
 				if ( is_multisite() ) {
 					$blogs_ids = get_sites();
-					foreach( $blogs_ids as $b ) {
+					foreach ( $blogs_ids as $b ) {
 						switch_to_blog( $b->blog_id );
 						wp_clean_update_cache();
 
@@ -77,21 +79,33 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 					update_option( 'um_last_manual_upgrades_request', time() );
 				}
 
-				$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'got_updates' ), admin_url( 'admin.php' ) );
+				$url = add_query_arg(
+					array(
+						'page'   => 'ultimatemember',
+						'update' => 'got_updates',
+					),
+					admin_url( 'admin.php' )
+				);
 			} else {
-				$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'often_updates' ), admin_url( 'admin.php' ) );
+				$url = add_query_arg(
+					array(
+						'page'   => 'ultimatemember',
+						'update' => 'often_updates',
+					),
+					admin_url( 'admin.php' )
+				);
 			}
-			exit( wp_redirect( $url ) );
+			wp_safe_redirect( $url );
+			exit;
 		}
-
 
 		/**
 		 * Duplicate form
 		 *
 		 * @param $action
 		 */
-		function duplicate_form( $action ) {
-			if ( ! is_admin() || ! current_user_can('manage_options') ) {
+		public function duplicate_form( $action ) {
+			if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
 				die();
 			}
 			if ( ! isset( $_REQUEST['post_id'] ) || ! is_numeric( $_REQUEST['post_id'] ) ) {
@@ -101,10 +115,10 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 			$post_id = absint( $_REQUEST['post_id'] );
 
 			$n = array(
-				'post_type'     => 'um_form',
-				'post_title'    => sprintf( __( 'Duplicate of %s', 'ultimate-member' ), get_the_title( $post_id ) ),
-				'post_status'   => 'publish',
-				'post_author'   => get_current_user_id(),
+				'post_type'   => 'um_form',
+				'post_title'  => sprintf( __( 'Duplicate of %s', 'ultimate-member' ), get_the_title( $post_id ) ),
+				'post_status' => 'publish',
+				'post_author' => get_current_user_id(),
 			);
 
 			$n_id = wp_insert_post( $n );
@@ -112,7 +126,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 			$n_fields = get_post_custom( $post_id );
 			foreach ( $n_fields as $key => $value ) {
 
-				if ( $key == '_um_custom_fields' ) {
+				if ( '_um_custom_fields' === $key ) {
 					$the_value = unserialize( $value[0] );
 				} else {
 					$the_value = $value[0];
@@ -127,18 +141,16 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 			$url = admin_url( 'edit.php?post_type=um_form' );
 			$url = add_query_arg( 'update', 'form_duplicated', $url );
 
-			exit( wp_redirect( $url ) );
-
+			wp_safe_redirect( $url );
+			exit;
 		}
-
-
 
 		/**
 		 * Action to hide notices in admin
 		 *
 		 * @param $action
 		 */
-		function hide_notice( $action ) {
+		public function hide_notice( $action ) {
 			if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
 				die();
 			}
@@ -147,13 +159,12 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 			exit( wp_redirect( remove_query_arg( 'um_adm_action' ) ) );
 		}
 
-
 		/**
 		 * Various user actions
 		 *
 		 * @param $action
 		 */
-		function user_action( $action ) {
+		public function user_action( $action ) {
 			if ( ! is_admin() || ! current_user_can( 'edit_users' ) ) {
 				die();
 			}
@@ -844,12 +855,15 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 									if ( is_array( $field_setting_value ) ) {
 										if ( array_key_exists( '{group_key}', $field_setting_value ) ) {
 											// just a case if something went wrong with disabled and JS handlers
-											unset( $field_setting_value[ '{group_key}' ] );
+											unset( $field_setting_value['{group_key}'] );
 										}
 
 										foreach ( $field_setting_value as $cond_group_k => &$cond_group ) {
 											foreach ( $cond_group as $cond_row_k => &$cond_row ) {
-												$cond_row['field'] = absint( $cond_row['field'] );
+												if ( ! array_key_exists( 'field', $cond_row ) || ! array_key_exists( 'condition', $cond_row ) || ! array_key_exists( 'value', $cond_row ) ) {
+													continue;
+												}
+												$cond_row['field']     = absint( $cond_row['field'] );
 												$cond_row['condition'] = sanitize_text_field( $cond_row['condition'] );
 												// remove if rule isn't filled
 												if ( empty( $cond_row['field'] ) || $cond_row['condition'] ) {
@@ -957,6 +971,63 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 			return $data;
 		}
 
+		/**
+		 * @return bool
+		 */
+		private function conditions_are_met( $conditional_settings, $submitted_data ) {
+			if ( 3 !== count( $conditional_settings ) ) {
+				return false;
+			}
+
+			$cond_field_key       = $conditional_settings[0];
+			$cond_field_condition = $conditional_settings[1];
+			$cond_field_value     = $conditional_settings[2];
+
+			if ( ! array_key_exists( $cond_field_key, $submitted_data ) ) {
+				return false;
+			}
+
+			static $field_settings;
+			if ( empty( $field_settings ) ) {
+				$field_settings_tabs = UM()->admin()->field_group()->get_field_settings( sanitize_key( $submitted_data['type'] ) );
+				$field_settings      = call_user_func_array( 'array_merge', array_values( $field_settings_tabs ) );
+			}
+
+			// Check parents for conditionals logic.
+			if ( ! empty( $field_settings[ $cond_field_key ]['conditional'] ) ) {
+				if ( ! $this->conditions_are_met( $field_settings[ $cond_field_key ]['conditional'], $submitted_data ) ) {
+					return false;
+				}
+			}
+
+			switch ( $cond_field_condition ) {
+				case '=':
+					if ( is_array( $cond_field_value ) ) {
+						if ( ! in_array( $submitted_data[ $cond_field_key ], $cond_field_value, true ) ) {
+							return false;
+						}
+					} else {
+						if ( $cond_field_value !== $submitted_data[ $cond_field_key ] ) {
+							return false;
+						}
+					}
+					break;
+				case '!=':
+					if ( is_array( $cond_field_value ) ) {
+						if ( in_array( $submitted_data[ $cond_field_key ], $cond_field_value, true ) ) {
+							return false;
+						}
+					} else {
+						if ( $cond_field_value === $submitted_data[ $cond_field_key ] ) {
+							return false;
+						}
+					}
+					break;
+			}
+
+			return true;
+		}
+
 		private function validate( $data ) {
 			$result = true;
 
@@ -968,8 +1039,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 			}
 
 			if ( ! empty( $this->field_groups_error ) ) {
-				$result = $this->field_groups_error;
-				return $result;
+				return $this->field_groups_error;
 			}
 
 			if ( empty( $data['fields'] ) ) {
@@ -980,21 +1050,27 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 			}
 
 			if ( ! empty( $this->field_groups_error ) ) {
-				$result = $this->field_groups_error;
-				return $result;
+				return $this->field_groups_error;
 			}
 
 			$submitted_fields = $data['fields'];
 
 			foreach ( $data['fields'] as $k => $field_data ) {
 				$field_settings_tabs = UM()->admin()->field_group()->get_field_settings( sanitize_key( $field_data['type'] ) );
-				$field_settings      = call_user_func_array('array_merge', array_values( $field_settings_tabs ) );
+				$field_settings      = call_user_func_array( 'array_merge', array_values( $field_settings_tabs ) );
 
 				// Checking for required validation
 				$fields_required_map = array_column( $field_settings, 'required', 'id' );
 				foreach ( $fields_required_map as $field_id => $required ) {
 					if ( empty( $required ) ) {
 						continue;
+					}
+
+					if ( ! empty( $field_settings[ $field_id ]['conditional'] ) ) {
+						// Skip hidden by conditional logic fields for required marker.
+						if ( ! $this->conditions_are_met( $field_settings[ $field_id ]['conditional'], $field_data ) ) {
+							continue;
+						}
 					}
 
 					if ( 'repeater' === $field_data['type'] && 'fields' === $field_id ) {
@@ -1015,7 +1091,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 						if ( empty( $field_data[ $field_id ] ) ) {
 							$set_tab = '';
 							foreach ( $field_settings_tabs as $tab_key => $tab_settings ) {
-								if ( in_array( $field_id, array_keys( $tab_settings ) ) ) {
+								if ( in_array( $field_id, array_keys( $tab_settings ), true ) ) {
 									$set_tab = $tab_key;
 									break;
 								}

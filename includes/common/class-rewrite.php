@@ -1,23 +1,22 @@
 <?php
-namespace um\core;
+namespace um\common;
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
-if ( ! class_exists( 'um\core\Rewrite' ) ) {
-
+if ( ! class_exists( 'um\common\Rewrite' ) ) {
 
 	/**
 	 * Class Rewrite
-	 * @package um\core
+	 * @package um\common
 	 */
 	class Rewrite {
-
 
 		/**
 		 * Rewrite constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			if ( ! defined( 'DOING_AJAX' ) ) {
 				add_action( 'wp_loaded', array( $this, 'maybe_flush_rewrite_rules' ) );
 			}
@@ -26,31 +25,48 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 			add_filter( 'query_vars', array( &$this, 'query_vars' ), 10, 1 );
 			add_filter( 'rewrite_rules_array', array( &$this, '_add_rewrite_rules' ), 10, 1 );
 
+			add_action( 'wp_insert_post', array( $this, 'flush_post_rewrite_rules' ), 10, 3 );
+
 			add_action( 'template_redirect', array( &$this, 'redirect_author_page' ), 9999 );
 			add_action( 'template_redirect', array( &$this, 'locate_user_profile' ), 9999 );
 		}
 
+		/**
+		 * Reset rewrite rules if predefined page has been updated
+		 *
+		 * @since 3.0
+		 *
+		 * @param int $post_ID
+		 * @param \WP_Post $post
+		 * @param bool $update
+		 */
+		public function flush_post_rewrite_rules( $post_ID, $post, $update ) {
+			foreach ( UM()->config()->get( 'predefined_pages' ) as $slug => $data ) {
+				if ( um_is_predefined_page( $slug, $post ) ) {
+					$this->reset_rules();
+					return;
+				}
+			}
+		}
 
 		/**
 		 * Update "flush" option for reset rules on wp_loaded hook
 		 */
-		function reset_rules() {
+		public function reset_rules() {
 			update_option( 'um_flush_rewrite_rules', 1 );
 		}
-
 
 		/**
 		 * Reset Rewrite rules if need it.
 		 *
 		 * @return void
 		 */
-		function maybe_flush_rewrite_rules() {
+		public function maybe_flush_rewrite_rules() {
 			if ( get_option( 'um_flush_rewrite_rules' ) ) {
 				flush_rewrite_rules( false );
 				delete_option( 'um_flush_rewrite_rules' );
 			}
 		}
-
 
 		/**
 		 * Modify global query vars
@@ -59,7 +75,7 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 		 *
 		 * @return array
 		 */
-		function query_vars( $public_query_vars ) {
+		public function query_vars( $public_query_vars ) {
 			$public_query_vars[] = 'um_user';
 			$public_query_vars[] = 'um_tab';
 			$public_query_vars[] = 'profiletab';
@@ -74,7 +90,6 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 			return $public_query_vars;
 		}
 
-
 		/**
 		 * Add UM rewrite rules
 		 *
@@ -82,14 +97,13 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 		 *
 		 * @return array
 		 */
-		function _add_rewrite_rules( $rules ) {
+		public function _add_rewrite_rules( $rules ) {
 			$newrules = array();
 
 			$newrules['um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$'] = 'index.php?um_action=download&um_form=$matches[1]&um_field=$matches[2]&um_user=$matches[3]&um_verify=$matches[4]';
 
-			if ( isset( UM()->config()->permalinks['user'] ) ) {
-
-				$user_page_id = UM()->config()->permalinks['user'];
+			$user_page_id = um_get_predefined_page_id( 'user' );
+			if ( $user_page_id ) {
 				$user = get_post( $user_page_id );
 
 				if ( isset( $user->post_name ) ) {
@@ -97,62 +111,25 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 					$user_slug = $user->post_name;
 					$newrules[ $user_slug . '/([^/]+)/?$' ] = 'index.php?page_id=' . $user_page_id . '&um_user=$matches[1]';
 				}
-
-				if ( UM()->external_integrations()->is_wpml_active() ) {
-					global $sitepress;
-
-					$active_languages = $sitepress->get_active_languages();
-
-					foreach ( $active_languages as $language_code => $language ) {
-
-						$lang_post_id = wpml_object_id_filter( $user_page_id, 'post', false, $language_code );
-						$lang_post_obj = get_post( $lang_post_id );
-
-						if ( isset( $lang_post_obj->post_name ) && $lang_post_obj->post_name != $user->post_name ) {
-							$user_slug = $lang_post_obj->post_name;
-							$newrules[ $user_slug . '/([^/]+)/?$' ] = 'index.php?page_id=' . $lang_post_id . '&um_user=$matches[1]&lang=' . $language_code;
-						}
-					}
-				}
 			}
 
-			if ( isset( UM()->config()->permalinks['account'] ) ) {
+			$account_page_id = um_get_predefined_page_id( 'account' );
+			if ( $account_page_id ) {
 
-				$account_page_id = UM()->config()->permalinks['account'];
 				$account = get_post( $account_page_id );
-
 				if ( isset( $account->post_name ) ) {
-
 					$account_slug = $account->post_name;
 					$newrules[ $account_slug . '/([^/]+)?$' ] = 'index.php?page_id=' . $account_page_id . '&um_tab=$matches[1]';
-				}
-
-				if ( UM()->external_integrations()->is_wpml_active() ) {
-					global $sitepress;
-
-					$active_languages = $sitepress->get_active_languages();
-
-					foreach ( $active_languages as $language_code => $language ) {
-
-						$lang_post_id = wpml_object_id_filter( $account_page_id, 'post', false, $language_code );
-						$lang_post_obj = get_post( $lang_post_id );
-
-						if ( isset( $lang_post_obj->post_name ) && $lang_post_obj->post_name != $account->post_name ) {
-							$account_slug = $lang_post_obj->post_name;
-							$newrules[ $account_slug . '/([^/]+)/?$' ] = 'index.php?page_id=' . $lang_post_id . '&um_user=$matches[1]&lang=' . $language_code;
-						}
-					}
 				}
 			}
 
 			return $newrules + $rules;
 		}
 
-
 		/**
 		 * Author page to user profile redirect
 		 */
-		function redirect_author_page() {
+		public function redirect_author_page() {
 			if ( UM()->options()->get( 'author_redirect' ) && is_author() ) {
 				$id = get_query_var( 'author' );
 				um_fetch_user( $id );
@@ -160,15 +137,12 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 			}
 		}
 
-
 		/**
 		 * Locate/display a profile
 		 */
-		function locate_user_profile() {
-			if ( um_queried_user() && um_is_core_page( 'user' ) ) {
-
+		public function locate_user_profile() {
+			if ( um_queried_user() && um_is_predefined_page( 'user' ) ) {
 				if ( UM()->options()->get( 'permalink_base' ) == 'user_login' ) {
-
 					$user_id = username_exists( um_queried_user() );
 
 					//Try
@@ -177,17 +151,16 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 
 						// Search by Profile Slug
 						$args = array(
-							"fields" => 'ids',
+							'fields'     => 'ids',
 							'meta_query' => array(
 								array(
-									'key'       =>  'um_user_profile_url_slug_' . $permalink_base,
-									'value'     => strtolower( um_queried_user() ),
-									'compare'   => '='
-								)
+									'key'     =>  'um_user_profile_url_slug_' . $permalink_base,
+									'value'   => strtolower( um_queried_user() ),
+									'compare' => '=',
+								),
 							),
-							'number'    => 1
+							'number'     => 1,
 						);
-
 
 						$ids = new \WP_User_Query( $args );
 						if ( $ids->total_users > 0 ) {
@@ -211,9 +184,7 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 						if ( ! $user_id ) {
 							$user_id = UM()->user()->user_exists_by_email_as_username( $slug );
 						}
-
 					}
-
 				}
 
 				if ( UM()->options()->get( 'permalink_base' ) == 'user_id' ) {
@@ -225,11 +196,8 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 				}
 
 				/** USER EXISTS SET USER AND CONTINUE **/
-
 				if ( $user_id ) {
-
 					um_set_requested_user( $user_id );
-
 					/**
 					 * UM hook
 					 *
@@ -250,20 +218,13 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 					 * ?>
 					 */
 					do_action( 'um_access_profile', $user_id );
-
 				} else {
-
-					exit( wp_redirect( um_get_core_page( 'user' ) ) );
-
+					exit( wp_redirect( um_get_predefined_page_url( 'user' ) ) );
 				}
-
-			} elseif ( um_is_core_page( 'user' ) ) {
-
+			} elseif ( um_is_predefined_page( 'user' ) ) {
 				if ( is_user_logged_in() ) { // just redirect to their profile
-
 					$query = UM()->permalinks()->get_query_array();
-
-					$url = um_user_profile_url( um_user( 'ID' ) );
+					$url   = um_user_profile_url( um_user( 'ID' ) );
 
 					if ( $query ) {
 						foreach ( $query as $key => $val ) {
@@ -273,7 +234,6 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 
 					exit( wp_redirect( $url ) );
 				} else {
-
 					/**
 					 * UM hook
 					 *
@@ -299,12 +259,8 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 					if ( ! empty( $redirect_to ) ) {
 						exit( wp_redirect( $redirect_to ) );
 					}
-
 				}
-
 			}
-
 		}
-
 	}
 }

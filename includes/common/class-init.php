@@ -43,6 +43,9 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			$this->mail()->hooks();
 			$this->pages();
 			$this->permalinks();
+
+			$this->rewrite();
+
 			$this->screen();
 
 			$this->shortcodes();
@@ -167,6 +170,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\permalinks'] = new Permalinks();
 			}
 			return UM()->classes['um\common\permalinks'];
+		}
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return Rewrite
+		 */
+		public function rewrite() {
+			if ( empty( UM()->classes['um\common\rewrite'] ) ) {
+				UM()->classes['um\common\rewrite'] = new Rewrite();
+			}
+			return UM()->classes['um\common\rewrite'];
 		}
 
 		/**

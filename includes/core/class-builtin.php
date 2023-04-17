@@ -828,16 +828,18 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			 * }
 			 * ?>
 			 */
-			$profile_privacy = apply_filters( 'um_profile_privacy_options', array(
-				'Everyone'  => __( 'Everyone', 'ultimate-member' ),
-				'Only me'   => __( 'Only me', 'ultimate-member' )
-			) );
+			$profile_privacy = apply_filters(
+				'um_profile_privacy_options',
+				array(
+					'Everyone'  => __( 'Everyone', 'ultimate-member' ),
+					'Only me'   => __( 'Only me', 'ultimate-member' )
+				)
+			);
 
 			/*
 			 * it's important create key for array equals value of 'metakey'.
 			 *
 			 */
-
 			$this->predefined_fields = array(
 
 				'user_login' => array(

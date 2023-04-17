@@ -472,6 +472,8 @@ $actions-gap: 10px
 .#{$prefix}admin-option-rows
   +flex( column, flex-start, stretch, nowrap )
   width: 100%
+  max-height: 220px
+  overflow-y: auto
   margin: 0
   +border-box
 
@@ -541,6 +543,19 @@ $actions-gap: 10px
     width: 100%
     display: list-item
 
+.#{$prefix}admin-option-row-skeleton-placeholder
+  display: none
+.#{$prefix}admin-option-row-skeleton
+  +flex( row, flex-start, center, nowrap )
+  +border-box
+  width: 100%
+  padding: 0
+  margin: 0 0 5px 0
+  column-gap: 5px
+  .um-skeleton-box
+    height: 20px
+    margin-top: 8px
+    margin-bottom: 8px
 
 .um-admin-option-group-row-add-wrapper
   +flex( row, center, baseline, nowrap )
@@ -551,7 +566,7 @@ $actions-gap: 10px
 .um-admin-editor-content
   display: none
 
-.um-admin-editor
+.um-field-row-tabs-content
   .wp-core-ui.wp-editor-wrap.html-active
     textarea.wp-editor-area
       display: block !important

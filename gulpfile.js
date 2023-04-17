@@ -8,7 +8,7 @@ const uglify     = require( 'gulp-uglify' );
 const cleanCSS   = require( 'gulp-clean-css' );
 const rename     = require( 'gulp-rename' );
 const concat = require( 'gulp-concat' );
-const md5        = require( 'v_to_md5' );
+// const md5        = require( 'v_to_md5' );
 
 
 const modules = [

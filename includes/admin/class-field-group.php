@@ -70,6 +70,12 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 			}
 		}
 
+		/**
+		 * @param array  $settings
+		 * @param string $field_type
+		 *
+		 * @return array
+		 */
 		public function change_hidden_settings( $settings, $field_type ) {
 			if ( 'hidden' === $field_type ) {
 				$settings['conditional']['conditional_action']['options'] = array(
@@ -139,6 +145,11 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 			return $settings_by_type;
 		}
 
+		/**
+		 * @param string $field_type
+		 *
+		 * @return array
+		 */
 		public function get_field_tabs( $field_type ) {
 			$titles = UM()->config()->get( 'field_settings_tabs' );
 
@@ -157,8 +168,8 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 
 			$group_data = $wpdb->get_row(
 				$wpdb->prepare(
-					"SELECT * 
-					FROM {$wpdb->prefix}um_field_groups 
+					"SELECT *
+					FROM {$wpdb->prefix}um_field_groups
 					WHERE id = %d
 					LIMIT 1",
 					$group_id
@@ -181,9 +192,9 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 			if ( ! is_null( $parent_id ) ) {
 				$query = $wpdb->prepare(
 					"SELECT f.*
-					FROM {$wpdb->prefix}um_fields f 
-					LEFT JOIN {$wpdb->prefix}um_fields_meta fm ON fm.field_id = f.id AND fm.meta_key = 'order' 
-					WHERE group_id = %d AND 
+					FROM {$wpdb->prefix}um_fields f
+					LEFT JOIN {$wpdb->prefix}um_fields_meta fm ON fm.field_id = f.id AND fm.meta_key = 'order'
+					WHERE group_id = %d AND
 						  parent_id = %d
 					ORDER BY fm.meta_value ASC",
 					$group_id,
@@ -192,8 +203,8 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 			} else {
 				$query = $wpdb->prepare(
 					"SELECT f.*
-					FROM {$wpdb->prefix}um_fields f 
-					LEFT JOIN {$wpdb->prefix}um_fields_meta fm ON fm.field_id = f.id AND fm.meta_key = 'order' 
+					FROM {$wpdb->prefix}um_fields f
+					LEFT JOIN {$wpdb->prefix}um_fields_meta fm ON fm.field_id = f.id AND fm.meta_key = 'order'
 					WHERE group_id = %d
 					ORDER BY fm.meta_value ASC",
 					$group_id
@@ -339,16 +350,19 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 
 			if ( array_key_exists( 'title', $data ) ) {
 				$update_data['title'] = $data['title'];
+
 				$update_format[] = '%s';
 			}
 
 			if ( array_key_exists( 'type', $data ) ) {
 				$update_data['type'] = $data['type'];
+
 				$update_format[] = '%s';
 			}
 
 			if ( array_key_exists( 'parent_id', $data ) ) {
 				$update_data['parent_id'] = $data['parent_id'];
+
 				$update_format[] = '%d';
 			}
 
@@ -365,6 +379,20 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 			);
 
 			if ( array_key_exists( 'meta', $data ) ) {
+				// Searching meta rows for delete.
+				$all_meta_keys = $wpdb->get_col(
+					$wpdb->prepare(
+						"SELECT meta_key
+						FROM {$wpdb->prefix}um_fields_meta
+						WHERE field_id = %d",
+						$data['id']
+					)
+				);
+
+				$meta_for_delete = array_diff( $all_meta_keys, array_keys( $data['meta'] ) );
+				foreach ( $meta_for_delete as $meta_key ) {
+					$this->delete_field_meta( $data['id'], $meta_key );
+				}
 				foreach ( $data['meta'] as $meta_key => $meta_value ) {
 					$this->update_field_meta( $data['id'], $meta_key, $meta_value );
 				}
@@ -378,10 +406,10 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 
 			$meta_id = $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT meta_id 
-					FROM {$wpdb->prefix}um_fields_meta 
-					WHERE field_id = %d AND 
-						  meta_key = %s 
+					"SELECT meta_id
+					FROM {$wpdb->prefix}um_fields_meta
+					WHERE field_id = %d AND
+						  meta_key = %s
 					LIMIT 1",
 					$field_id,
 					$meta_key
@@ -396,10 +424,10 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 
 			$meta_id = $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT meta_id 
-					FROM {$wpdb->prefix}um_field_groups_meta 
-					WHERE group_id = %d AND 
-						  meta_key = %s 
+					"SELECT meta_id
+					FROM {$wpdb->prefix}um_field_groups_meta
+					WHERE group_id = %d AND
+						  meta_key = %s
 					LIMIT 1",
 					$group_id,
 					$meta_key
@@ -412,8 +440,8 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 		public function update_field_meta( $field_id, $meta_key, $meta_value ) {
 			global $wpdb;
 
-			// don't use predefined in `um_fields`. 'fields' = predefined meta for repeater field that uses internally
-			if ( in_array( $meta_key, array( 'id', 'field_key', 'group_id', 'title', 'type', 'parent_id', 'fields' ) ) ) {
+			// Don't use predefined in `um_fields`. 'fields' = predefined meta for repeater field that uses internally.
+			if ( in_array( $meta_key, array( 'id', 'field_key', 'group_id', 'title', 'type', 'parent_id', 'fields' ), true ) ) {
 				return;
 			}
 
@@ -443,13 +471,38 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 						'meta_value' => $meta_value,
 					),
 					array(
-						'meta_id'   => $meta_id,
+						'meta_id' => $meta_id,
 					),
 					array(
 						'%s',
 					),
 					array(
 						'%d',
+					)
+				);
+			}
+		}
+
+		/**
+		 * @param $field_id
+		 * @param $meta_key
+		 *
+		 * @return void
+		 */
+		public function delete_field_meta( $field_id, $meta_key ) {
+			global $wpdb;
+
+			$meta_id = $this->field_meta_exists( $field_id, $meta_key );
+			if ( false !== $meta_id ) {
+				$wpdb->delete(
+					"{$wpdb->prefix}um_fields_meta",
+					array(
+						'field_id' => $field_id,
+						'meta_key' => $meta_key,
+					),
+					array(
+						'%d',
+						'%s',
 					)
 				);
 			}
@@ -484,7 +537,7 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 						'meta_value' => $meta_value,
 					),
 					array(
-						'meta_id'   => $meta_id,
+						'meta_id' => $meta_id,
 					),
 					array(
 						'%s',
@@ -522,11 +575,13 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 
 			if ( array_key_exists( 'title', $data ) ) {
 				$update_data['title'] = $data['title'];
+
 				$update_format[] = '%s';
 			}
 
 			if ( array_key_exists( 'description', $data ) ) {
 				$update_data['description'] = $data['description'];
+
 				$update_format[] = '%s';
 			}
 
@@ -564,10 +619,10 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 
 			$field_id = $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT id 
-					FROM {$wpdb->prefix}um_fields 
-					WHERE id = %d AND 
-						  group_id = %d 
+					"SELECT id
+					FROM {$wpdb->prefix}um_fields
+					WHERE id = %d AND
+						  group_id = %d
 					LIMIT 1",
 					$row_field_id,
 					$group_id
@@ -580,10 +635,10 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 
 			$fields = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT f.* 
+					"SELECT f.*
 					FROM {$wpdb->prefix}um_fields AS f
 					LEFT JOIN {$wpdb->prefix}um_fields_meta AS fm ON fm.field_id = f.id AND fm.meta_key = 'row'
-					WHERE fm.meta_value = %d AND 
+					WHERE fm.meta_value = %d AND
 						  group_id = %d",
 					$row_field_id,
 					$group_id
@@ -665,9 +720,9 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 
 			$meta_value = $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT meta_value 
-					FROM {$wpdb->prefix}um_fields_meta 
-					WHERE field_id = %d AND 
+					"SELECT meta_value
+					FROM {$wpdb->prefix}um_fields_meta
+					WHERE field_id = %d AND
 						  meta_key = %s
 					LIMIT 1",
 					$field,
@@ -697,8 +752,8 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 
 			$field_data = $wpdb->get_row(
 				$wpdb->prepare(
-					"SELECT * 
-					FROM {$wpdb->prefix}um_fields 
+					"SELECT *
+					FROM {$wpdb->prefix}um_fields
 					WHERE id = %d
 					LIMIT 1",
 					$field
@@ -714,8 +769,8 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 
 			$meta_values = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT meta_key, meta_value 
-					FROM {$wpdb->prefix}um_fields_meta 
+					"SELECT meta_key, meta_value
+					FROM {$wpdb->prefix}um_fields_meta
 					WHERE field_id = %d",
 					$field
 				),
@@ -724,12 +779,12 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 
 			if ( ! empty( $meta_values ) ) {
 				$meta_values = array_combine( array_column( $meta_values, 'meta_key' ), array_column( $meta_values, 'meta_value' ) );
-				$field_data = array_merge( $field_data, $meta_values );
+				$field_data  = array_merge( $field_data, $meta_values );
 			}
 
 			// Get repeater fields
 			if ( 'repeater' === $field_data['type'] ) {
-				$field_data['fields']    = $this->get_fields( $field_data['group_id'], $field );
+				$field_data['fields'] = $this->get_fields( $field_data['group_id'], $field );
 			}
 
 			return $field_data;
@@ -852,8 +907,8 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 
 			$group_exists = $wpdb->get_var(
 				$wpdb->prepare(
-				"SELECT id 
-					FROM {$wpdb->prefix}um_field_groups 
+				"SELECT id
+					FROM {$wpdb->prefix}um_field_groups
 					WHERE id = %d",
 					$group_id
 				)

@@ -424,27 +424,15 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				$ret['error'] = __( 'You have no permission to edit this user', 'ultimate-member' );
 				wp_send_json_error( $ret );
 			}
-
 			/**
-			 * UM hook
+			 * Change Image Upload nonce.
 			 *
-			 * @type filter
-			 * @title um_image_upload_nonce
-			 * @description Change Image Upload nonce
-			 * @input_vars
-			 * [{"var":"$nonce","type":"bool","desc":"Nonce"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_image_upload_nonce', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_image_upload_nonce', 'my_image_upload_nonce', 10, 1 );
-			 * function my_image_upload_nonce( $nonce ) {
-			 *     // your code here
-			 *     return $nonce;
-			 * }
-			 * ?>
+			 * @since 2.x
+			 * @hook um_image_upload_nonce
+			 *
+			 * @param {bool} $nonce_enabled Checking nonce on image upload. Enabled (true) by default.
+			 *
+			 * @return {bool} Ignore nonce or not.
 			 */
 			$um_image_upload_nonce = apply_filters( 'um_image_upload_nonce', true );
 
@@ -600,7 +588,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			) );
 		}
 
-
 		/**
 		 * Allowed file types
 		 *
@@ -650,7 +637,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				'tiff'  => 'TIFF',
 			) );
 		}
-
 
 		/**
 		 * Get extension icon
@@ -1225,27 +1211,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			}
 
 			return $removed_files;
-		}
-
-		/**
-		 * Format Bytes
-		 *
-		 * @param $size
-		 * @param int $precision
-		 *
-		 * @return string
-		 */
-		function format_bytes( $size, $precision = 1 ) {
-			if ( is_numeric( $size ) ) {
-				$base = log( $size, 1024 );
-				$suffixes = array( '', 'kb', 'MB', 'GB', 'TB' );
-				$computed_size = round( pow( 1024, $base - floor( $base ) ), $precision );
-				$unit = $suffixes[ floor( $base ) ];
-
-				return $computed_size.' '.$unit;
-			}
-
-			return '';
 		}
 
 		/**

@@ -1847,7 +1847,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'id'          => 'options',
 								'type'        => 'choices',
 								'multiple'    => 'both',
-								'optgroup'    => true,
+								//'optgroup'    => true, // todo Make the ability to group select field options inside optgroup tags
 								'label'       => __( 'Edit Choices', 'ultimate-member' ),
 								'description' => __( 'Enter one choice per line. This will represent the available choices or selections available for user.', 'ultimate-member' ),
 								'sanitize'    => 'options',

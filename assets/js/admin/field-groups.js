@@ -218,7 +218,10 @@ UM.fields_groups = {
 						}
 					}
 
-					UM.fields_groups.field.settingsScreens[ id ][ type ][ tabKey ] = $(this).closest('.um-field-row-tabs').siblings( '.um-field-row-tabs-content' ).children( 'div[data-tab="' + tabKey + '"]').children('.um-form-table')[0].outerHTML;
+					let screenObj = $(this).closest('.um-field-row-tabs').siblings( '.um-field-row-tabs-content' ).children( 'div[data-tab="' + tabKey + '"]').children('.um-form-table').clone();
+					screenObj.find( '.wp-editor-wrap' ).replaceWith('<div class="um-admin-editor"></div><div class="um-admin-editor-content" data-editor_id="' + screenObj.find( 'textarea.wp-editor-area' ).attr('id') + '" data-editor_name="' + screenObj.find( 'textarea.wp-editor-area' ).attr('name') + '">' + screenObj.find( 'textarea.wp-editor-area' ).val() + '</div>');
+
+					UM.fields_groups.field.settingsScreens[ id ][ type ][ tabKey ] = screenObj[0].outerHTML;
 				});
 			});
 		},
@@ -278,7 +281,7 @@ UM.fields_groups = {
 				if ( 'undefined' !== typeof extraClass ) {
 					extraClass = extraClass.replace( '\{index\}', newIndex );
 					if ( extraClass ) {
-						$(this).removeAttr( 'class' ).addClass( 'form-table um-form-table ' + extraClass );
+						$(this).removeAttr( 'class' ).removeAttr( 'data-extra-class' ).addClass( 'form-table um-form-table ' + extraClass );
 					}
 				}
 			});
@@ -313,22 +316,29 @@ UM.fields_groups = {
 
 				field.removeAttr('disabled').prop('disabled', false);
 
-				let fieldHidden = field.siblings('input[type="hidden"]');
-				if ( fieldHidden.length ) {
-					let fieldID = fieldHidden.attr('id');
-					if ( 'undefined' !== typeof fieldID ) {
-						let newID = fieldID.replace( 'new_index', 'new_' + newIndex );
-						fieldHidden.attr('id', newID);
-					}
+				let fieldHiddens = [
+					field.siblings('input[type="hidden"]'),
+					$(this).find('#' + fieldID + '_hidden' )
+				];
+				$.each( fieldHiddens, function(i) {
+					let fieldHidden = fieldHiddens[i];
 
-					let fieldName = fieldHidden.attr('name');
-					if ( 'undefined' !== typeof fieldName ) {
-						let newName = fieldName.replace( '\{index\}', newIndex );
-						fieldHidden.attr('name', newName);
-					}
+					if ( fieldHidden.length ) {
+						let fieldID = fieldHidden.attr('id');
+						if ( 'undefined' !== typeof fieldID ) {
+							let newID = fieldID.replace( 'new_index', 'new_' + newIndex );
+							fieldHidden.attr('id', newID);
+						}
 
-					fieldHidden.removeAttr('disabled').prop('disabled', false);
-				}
+						let fieldName = fieldHidden.attr('name');
+						if ( 'undefined' !== typeof fieldName ) {
+							let newName = fieldName.replace( '\{index\}', newIndex );
+							fieldHidden.attr('name', newName);
+						}
+
+						fieldHidden.removeAttr('disabled').prop('disabled', false);
+					}
+				});
 			});
 
 			let row_fieldID = $cloned.data('field');
@@ -370,6 +380,8 @@ UM.fields_groups = {
 				$wrapper.siblings('.um-fields-column-empty-content').addClass('hidden');
 				UM.fields_groups.sortable.init($wrapper,$);
 			}
+
+			run_check_conditions();
 
 			UM.fields_groups.field.conditional.prepareFieldsList($);
 		},
@@ -564,7 +576,7 @@ UM.fields_groups = {
 		},
 		changeType: function (row, $) {
 			let fieldID = row.data('field');
-			let oldType = UM.fields_groups.field.conditional.fieldsList[fieldID].type;
+			let oldType = row.data('previousValue');
 			let oldTypeData = um_admin_field_groups_data.field_types[oldType];
 			let oldTypeSettings = oldTypeData.settings;
 
@@ -580,25 +592,24 @@ UM.fields_groups = {
 			let currentSettingsTabs = Object.keys(oldTypeSettings);
 			let newSettingsTabs = Object.keys(typeSettings);
 
-			//let typeHTML = row.find('.um-field-row-type-select option[value="' + row.find('.um-field-row-type-select').val() + '"]').html();
 			let typeHTML = $typeSelect.find('option[value="' + type + '"]').html();
 			row.find( '> .um-field-row-header > .um-field-row-type' ).text( UM.fields_groups.field.sanitizeInput( typeHTML ) ); // change field type in a row header
 
-			// remove old type wp_editor. todo maybe unnecessary
-			// if ( typeof ( UM.fields_groups.field.settingsScreens[ fieldID ] ) === 'object' &&  typeof ( UM.fields_groups.field.settingsScreens[ fieldID ][ oldType ] ) === 'object' ) {
-			// 	$.each( UM.fields_groups.field.settingsScreens[ fieldID ][ oldType ], function ( tab, html ) {
-			// 		let tabSettingsWrapper = $rowTabsContent.children( 'div[data-tab="' + tab + '"]' );
-			//
-			// 		if ( tabSettingsWrapper.children('.um-form-table').children('tbody').children('.um-forms-line[data-field_type="wp_editor"]').find('.um-admin-editor').length ) {
-			// 			tinyMCE.triggerSave();
-			//
-			// 			let id = tabSettingsWrapper.children('.um-form-table').children('tbody').children('.um-forms-line[data-field_type="wp_editor"]').find('.um-admin-editor-content').data('editor_id');
-			// 			jQuery('#wp-' + id + '-wrap').remove();
-			//
-			// 			//jQuery('.um_tiny_placeholder').replaceWith( jQuery( $um_tiny_editor ).html() );
-			// 		}
-			// 	});
-			// }
+			// remove old type wp_editor.
+			if ( typeof ( UM.fields_groups.field.settingsScreens[ fieldID ] ) === 'object' &&  typeof ( UM.fields_groups.field.settingsScreens[ fieldID ][ oldType ] ) === 'object' ) {
+				$.each( UM.fields_groups.field.settingsScreens[ fieldID ][ oldType ], function ( tab, html ) {
+					let tabSettingsWrapper = $rowTabsContent.children( 'div[data-tab="' + tab + '"]' );
+					let editorTextarea = tabSettingsWrapper.children('.um-form-table').children('tbody').children('.um-forms-line[data-field_type="wp_editor"]').find('textarea.wp-editor-area');
+					if ( editorTextarea.length ) {
+						let id = editorTextarea.attr('id');
+						if ( typeof( tinyMCE ) === 'object' && tinyMCE.get( id ) !== null ) {
+							tinyMCE.triggerSave();
+							tinyMCE.EditorManager.execCommand( 'mceRemoveEditor', true, id );
+							"4" === tinyMCE.majorVersion ? window.tinyMCE.execCommand( "mceRemoveEditor", !0, id ) : window.tinyMCE.execCommand( "mceRemoveControl", !0, id );
+						}
+					}
+				});
+			}
 
 			// add/remove necessary/unnecessary tabs and tab-content blocks
 			if ( ! UM.fields_groups.tabs.compare( currentSettingsTabs, newSettingsTabs ) ) {
@@ -610,27 +621,30 @@ UM.fields_groups = {
 
 			if ( typeof ( UM.fields_groups.field.settingsScreens[ fieldID ] ) === 'object' &&  typeof ( UM.fields_groups.field.settingsScreens[ fieldID ][ type ] ) === 'object' ) {
 				$.each( UM.fields_groups.field.settingsScreens[ fieldID ][ type ], function ( tab, html ) {
-					//let tabSettingsWrapper = row.find( '.um-field-row-tabs-content > div[data-tab="' + tab + '"]' );
 					let tabSettingsWrapper = $rowTabsContent.children( 'div[data-tab="' + tab + '"]' );
 
 					let temporaryScreenObj = $('<div>').append( html ).find('.form-table');
 
 					if ( 'conditional' === tab ) {
-						// make conditional rules static always
+						// Make conditional rules static always.
 						temporaryScreenObj.find('[data-field_type="conditional_rules"]').html( tabSettingsWrapper.find('[data-field_type="conditional_rules"]').html() );
 					}
 
+					// Set static settings values from old field type.
 					tabSettingsWrapper.find('.um-field-row-static-setting').each(function () {
-						temporaryScreenObj.find( '[name="' + $(this).attr('name') + '"]' ).val( $(this).val() );
+						let staticValue = $(this).val();
+						temporaryScreenObj.find( '[name="' + $(this).attr('name') + '"]' ).each( function () {
+							if ( 'hidden' !== $(this).attr('type') && 'checkbox' !== $(this).attr('type') ) {
+								$(this).val( staticValue );
+							}
+						});
 					});
 
-					// change HTML based on type
+					// Change HTML based on type.
 					tabSettingsWrapper.html( temporaryScreenObj[0].outerHTML );
 
 					um_maybe_init_tinymce( tabSettingsWrapper );
 				});
-
-				//row.find('.um-field-row-type-select').removeClass('disabled').prop('disabled', false);
 
 				$rowTabsContent.children('div[data-tab="general"]').children('.um-form-table').children('tbody').children('.um-forms-line[data-field_id="type"]').find('.um-field-row-type-select').removeClass('disabled').prop('disabled', false);
 
@@ -680,8 +694,14 @@ UM.fields_groups = {
 								temporaryScreenObj.find('[data-field_type="conditional_rules"]').html( tabSettingsWrapper.find('[data-field_type="conditional_rules"]').html() );
 							}
 
+							// Set static settings values from old field type.
 							tabSettingsWrapper.find('.um-field-row-static-setting').each(function () {
-								temporaryScreenObj.find( '[name="' + $(this).attr('name') + '"]' ).val( $(this).val() );
+								let staticValue = $(this).val();
+								temporaryScreenObj.find( '[name="' + $(this).attr('name') + '"]' ).each( function () {
+									if ( 'hidden' !== $(this).attr('type') && 'checkbox' !== $(this).attr('type') ) {
+										$(this).val( staticValue );
+									}
+								});
 							});
 
 							// change HTML based on type
@@ -690,7 +710,6 @@ UM.fields_groups = {
 							um_maybe_init_tinymce( tabSettingsWrapper );
 						});
 
-//						row.find('.um-field-row-type-select').removeClass('disabled').prop('disabled', false);
 						$rowTabsContent.children('div[data-tab="general"]').children('.um-form-table').children('tbody').children('.um-forms-line[data-field_id="type"]').find('.um-field-row-type-select').removeClass('disabled').prop('disabled', false);
 
 						run_check_conditions();
@@ -731,11 +750,13 @@ function um_tinymce_init( id, content ) {
 	fullEditor.find('#um_editor_placeholder').attr('name', editorBase.data('editor_name') );
 
 	let newHTML = fullEditor[0].innerHTML.replaceAll( new RegExp( 'um_editor_placeholder', 'gm' ), id );
-	editorBase.siblings('.um-admin-editor').html( newHTML );
+	//editorBase.siblings('.um-admin-editor').html( newHTML );
+	editorBase.siblings('.um-admin-editor').replaceWith( newHTML );
 
 	if ( typeof( tinyMCE ) === 'object' && tinyMCE.get( 'um_editor_placeholder' ) !== null ) {
 
-		editorBase.siblings('.um-admin-editor').find('.wp-editor-container > .mce-tinymce.mce-container.mce-panel').remove();
+		//editorBase.siblings('.um-admin-editor').find('.wp-editor-container > .mce-tinymce.mce-container.mce-panel').remove();
+		editorBase.siblings('.wp-editor-wrap').find('.wp-editor-container > .mce-tinymce.mce-container.mce-panel').remove();
 
 		// let iFrameDoc = document.getElementById('um_editor_placeholder_ifr').contentWindow.document;
 		// iFrameDoc.getElementById('tinymce').outerHTML = iFrameDoc.getElementById('tinymce').outerHTML.replaceAll(/um_editor_placeholder/gm,id);
@@ -791,6 +812,8 @@ function um_tinymce_init( id, content ) {
 			window.switchEditors.go( id, mode );
 		}
 	});
+
+	editorBase.remove();
 }
 
 jQuery( function($) {
@@ -1000,7 +1023,10 @@ jQuery( function($) {
 		UM.fields_groups.field.prepareSettings($, fieldID, settingsTab);
 	});
 
-	$(document.body).on('change','.um-field-row-type-select', function(e){
+	$(document.body).on('focusin', '.um-field-row-type-select', function(){
+		let row = $(this).closest('.um-field-row');
+		row.data('previousValue', $(this).val());
+	}).on('change','.um-field-row-type-select', function(){
 		if ( $(this).hasClass('disabled') ) {
 			return;
 		}
@@ -1030,7 +1056,9 @@ jQuery( function($) {
 
 
 	/* Handlers for options */
-	$( document.body ).on('change', '.um-admin-option-enable-optgroup', function(e){
+
+	// todo optgroup using for the select field type
+	/*$( document.body ).on('change', '.um-admin-option-enable-optgroup', function(e){
 		let rows = $(this).parents('.um-admin-option-bulk-enable-optgroup-wrapper').siblings('.um-admin-option-rows').find('.um-admin-option-row');
 
 		let trigger_confirm = false;
@@ -1062,6 +1090,10 @@ jQuery( function($) {
 
 		if ( change_groups ) {
 			if ( $(this).is(':checked') ) {
+				rows.each( function() {
+					$(this).find('.um-admin-option-row-remove').trigger('click');
+				});
+
 				addOptGroupButton.show();
 				let bulk_list = $(this).parents('.um-admin-option-bulk-add-wrapper').siblings('.um-admin-option-bulk-add-list');
 				if ( bulk_list.is(':visible') ) {
@@ -1074,7 +1106,7 @@ jQuery( function($) {
 				presetsToggle.show();
 			}
 		}
-	});
+	});*/
 
 	$( document.body ).on('click', '.um-admin-option-bulk-toggle', function() {
 		let bulk_list = $(this).parents('.um-admin-option-bulk-add-wrapper').siblings('.um-admin-option-bulk-add-list');
@@ -1089,7 +1121,13 @@ jQuery( function($) {
 	});
 
 	$( document.body ).on('click', '.um-admin-option-bulk-add', function(){
+		if ( $(this).hasClass('disabled') ) {
+			return;
+		}
+
 		let bulk_value = $(this).data('bulk_value');
+		let bulkAddList = $(this).parents('.um-admin-option-bulk-add-list');
+		let rowsList = $(this).parents('.um-admin-option-bulk-add-list').siblings('.um-admin-option-rows');
 		let rows = $(this).parents('.um-admin-option-bulk-add-list').siblings('.um-admin-option-rows').find('.um-admin-option-row');
 
 		let trigger_confirm = false;
@@ -1113,13 +1151,43 @@ jQuery( function($) {
 		}
 
 		if ( run_bulk ) {
+			rows.hide();
+
+			let skeletonCount = rows.length > 6 ? 6 : rows.length;
+			while ( skeletonCount > 0 ) {
+				let $cloned = $('.um-admin-option-row-skeleton-placeholder').clone().addClass('um-admin-option-row-skeleton').removeClass('um-admin-option-row-skeleton-placeholder');
+				rowsList.prepend($cloned );
+				skeletonCount --;
+			}
+
+			bulkAddList.siblings('.um-admin-option-bulk-add-wrapper').find('.um-admin-option-bulk-toggle').trigger('click');
+			bulkAddList.find('.um-admin-option-bulk-add').addClass('disabled');
+
 			wp.ajax.send( 'um_fields_groups_get_options_preset', {
 				data: {
 					preset: bulk_value,
 					nonce: um_admin_scripts.nonce
 				},
 				success: function( data ) {
-					console.log( data.options );
+					rows.each( function() {
+						$(this).find('.um-admin-option-row-remove').trigger('click');
+					});
+
+					let need_clicks = Object.keys(data.options).length - 1;
+					while ( need_clicks > 0 ) {
+						rowsList.find('.um-admin-option-row').first().find('.um-admin-option-row-add').trigger('click');
+						need_clicks --;
+					}
+
+					$.each( data.options, function(i) {
+						let rowIndex = Object.keys(data.options).indexOf(i);
+						rowsList.find('.um-admin-option-key:eq(' + rowIndex + ')').val(i);
+						rowsList.find('.um-admin-option-val:eq(' + rowIndex + ')').val(data.options[i]);
+					});
+					rowsList.find('.um-admin-option-row-skeleton').remove();
+					rows.show();
+
+					bulkAddList.find('.um-admin-option-bulk-add').removeClass('disabled');
 				},
 				error: function( data ) {
 					console.error( data );
@@ -1127,7 +1195,6 @@ jQuery( function($) {
 			});
 		}
 	});
-
 
 
 	$( document.body ).on('change', '.um-field-row-multiple-input', function(){
@@ -1155,7 +1222,6 @@ jQuery( function($) {
 		let optionRowsWrapper = $(this).parents('.um-admin-option-rows');
 
 		let html = optionRowsWrapper.siblings('.um-admin-option-row-placeholder')[0].outerHTML.replace( 'um-admin-option-row-placeholder', 'um-admin-option-row' );
-		//var html = $('.um-admin-option-row-placeholder')[0].outerHTML.replace( 'um-admin-option-row-placeholder', 'um-admin-option-row' );
 
 		let html_wrapper = $('<div>').append( html );
 		html_wrapper.find('.um-admin-option-key').prop('disabled', false);

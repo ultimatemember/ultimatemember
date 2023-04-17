@@ -233,5 +233,25 @@ if ( ! class_exists( 'um\common\Filesystem' ) ) {
 			@closedir( $dir );
 			// phpcs:enable WordPress.PHP.NoSilencedErrors.Discouraged
 		}
+
+		/**
+		 * Format Bytes
+		 *
+		 * @param int $size
+		 * @param int $precision
+		 *
+		 * @return string
+		 */
+		public function format_bytes( $size, $precision = 1 ) {
+			if ( is_numeric( $size ) ) {
+				$base          = log( $size, 1024 );
+				$suffixes      = array( '', 'kb', 'MB', 'GB', 'TB' );
+				$computed_size = round( pow( 1024, $base - floor( $base ) ), $precision );
+				$unit          = $suffixes[ floor( $base ) ];
+
+				return $computed_size . ' ' . $unit;
+			}
+			return '';
+		}
 	}
 }
