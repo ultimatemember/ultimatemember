@@ -13,30 +13,45 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 	 */
 	class Files {
 
+		/**
+		 * @var
+		 */
+		public $upload_temp;
 
 		/**
 		 * @var
 		 */
-		var $upload_temp;
-
-
-		/**
-		 * @var
-		 */
-		var $upload_baseurl;
-
+		public $upload_baseurl;
 
 		/**
 		 * @var
 		 */
-		var $upload_basedir;
+		public $upload_basedir;
 
+		/**
+		 * @var array|array[]
+		 */
+		public $fonticon = array();
+
+		/**
+		 * @var null|string
+		 */
+		public $upload_dir = null;
+
+		/**
+		 * @var null
+		 */
+		public $upload_temp_url = null;
+
+		/**
+		 * @var string
+		 */
+		public $default_file_fonticon = 'um-faicon-file-o';
 
 		/**
 		 * Files constructor.
 		 */
-		function __construct() {
-
+		public function __construct() {
 			$this->setup_paths();
 
 			add_action( 'template_redirect', array( &$this, 'download_routing' ), 1 );
@@ -63,8 +78,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				'tif' 	=> array('icon' 	=> 'um-icon-image' ),
 				'tiff' 	=> array('icon' 	=> 'um-icon-image' ),
 			);
-
-			$this->default_file_fonticon = 'um-faicon-file-o';
 		}
 
 

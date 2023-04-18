@@ -13,16 +13,25 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 	 */
 	class Validation {
 
+		/**
+		 * @var string
+		 */
+		public $regex_safe = '/\A[\w\-\.]+\z/';
+
+		/**
+		 * @var string
+		 */
+		public $regex_username_safe = '|[^a-z0-9 _.\-@]|i';
+
+		/**
+		 * @var string
+		 */
+		public $regex_phone_number = '/\A[\d\-\.\+\(\)\ ]+\z/';
 
 		/**
 		 * Validation constructor.
 		 */
-		function __construct() {
-			$this->regex_safe = '/\A[\w\-\.]+\z/';
-			$this->regex_username_safe = '|[^a-z0-9 _.\-@]|i';
-			$this->regex_phone_number = '/\A[\d\-\.\+\(\)\ ]+\z/';
-
-
+		public function __construct() {
 			add_filter( 'um_user_pre_updating_files_array', array( $this, 'validate_files' ), 10, 1 );
 			add_filter( 'um_before_save_filter_submitted', array( $this, 'validate_fields_values' ), 10, 2 );
 		}
@@ -91,7 +100,7 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 				}
 
 				// Dropdown options source from callback function
-				if ( in_array( $fields[ $key ]['type'], array( 'select','multiselect' ) ) && 
+				if ( in_array( $fields[ $key ]['type'], array( 'select','multiselect' ) ) &&
 					isset( $fields[ $key ]['custom_dropdown_options_source'] ) &&
 					! empty( $fields[ $key ]['custom_dropdown_options_source'] ) &&
 					function_exists( $fields[ $key ]['custom_dropdown_options_source'] ) ) {
@@ -100,7 +109,7 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 						$fields[ $key ]['options'] = array_keys( $arr_options );
 					}
 				}
-				
+
 				// Unset changed value that doesn't match the option list
 				if ( in_array( $fields[ $key ]['type'], array( 'select' ) ) &&
 				     ! empty( $stripslashes ) && ! empty( $fields[ $key ]['options'] ) &&

@@ -444,7 +444,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			$duplicates         = array();
 			$taxonomies_options = array();
 			$exclude_taxonomies = UM()->excluded_taxonomies();
-			$all_taxonomies     = get_taxonomies( array( 'public' => true ), 'objects' );
+			$all_taxonomies     = get_taxonomies( array( 'public' => true, 'show_ui' => true ), 'objects' );
 			foreach ( $all_taxonomies as $key => $taxonomy ) {
 				if ( in_array( $key, $exclude_taxonomies, true ) ) {
 					continue;

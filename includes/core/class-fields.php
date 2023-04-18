@@ -18,7 +18,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		/**
 		 * @var string
 		 */
-		var $set_mode = '';
+		public $set_mode = '';
 
 
 		/**
@@ -26,16 +26,27 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 */
 		public $set_id = null;
 
+		/**
+		 * @var bool
+		 */
+		public $editing = false;
+
+		/**
+		 * @var bool
+		 */
+		public $viewing = false;
+
+		/**
+		 * @var int
+		 */
+		public $timestamp = null;
 
 		/**
 		 * Fields constructor.
 		 */
-		function __construct() {
-			$this->editing = false;
-			$this->viewing = false;
+		public function __construct() {
 			$this->timestamp = current_time( 'timestamp' );
 		}
-
 
 		/**
 		 * Standard checkbox field

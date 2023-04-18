@@ -17,83 +17,75 @@ if ( ! class_exists( 'um\Config' ) ) {
 	 */
 	class Config {
 
+		/**
+		 * @var array
+		 */
+		public $core_forms;
 
 		/**
 		 * @var array
 		 */
-		var $core_forms;
-
-
-		/**
-		 * @var array
-		 */
-		var $core_directories;
-
+		public $core_directories;
 
 		/**
 		 * @var mixed|void
 		 */
-		var $core_pages;
-
-
-		/**
-		 * @var array
-		 */
-		var $core_directory_meta = array();
-
+		public $core_pages;
 
 		/**
 		 * @var array
 		 */
-		var $core_global_meta_all;
+		public $core_directory_meta = array();
 
+		/**
+		 * @var array
+		 */
+		public $core_global_meta_all;
 
 		/**
 		 * @var mixed|void
 		 */
-		var $core_form_meta_all;
-
+		public $core_form_meta_all;
 
 		/**
 		 * @var array
 		 */
-		var $core_form_meta = array();
-
+		public $core_form_meta = array();
 
 		/**
 		 * @var
 		 */
-		var $perms;
-
+		public $perms;
 
 		/**
 		 * @var
 		 */
-		var $nonadmin_perms;
-
-
-		/**
-		 * @var mixed|void
-		 */
-		var $email_notifications;
-
+		public $nonadmin_perms;
 
 		/**
 		 * @var mixed|void
 		 */
-		var $settings_defaults;
+		public $email_notifications;
 
+		/**
+		 * @var mixed|void
+		 */
+		public $settings_defaults;
 
 		/**
 		 * @var array
 		 */
-		var $permalinks;
+		public $permalinks;
 
+		/**
+		 * @var array|array[]
+		 */
+		public $default_roles_metadata = array();
 
 		/**
 		 * Config constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			$this->core_forms = array(
 				'register',
 				'login',
