@@ -720,22 +720,22 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		 * Check Templates Versions notice
 		 */
 		public function template_version() {
-			if ( true === (bool) get_option( 'um_template_version' ) ) {
-				$link = get_admin_url( null, 'admin.php?page=um_options&tab=override_templates' );
+			if ( true === get_option( 'um_override_templates_outdated' ) ) {
+				$link = admin_url( 'admin.php?page=um_options&tab=override_templates' );
 				ob_start();
 				?>
 
 				<p>
 					<?php
 					// translators: %s override templates page link.
-					echo wp_kses( sprintf( __( 'Your templates are out of date. Please visit <a href="%s">override templates status page</a> and update templates', 'ultimate-member' ), $link ), UM()->get_allowed_html( 'admin_notice' ) );
+					echo wp_kses( sprintf( __( 'Your templates are out of date. Please visit <a href="%s">override templates status page</a> and update templates.', 'ultimate-member' ), $link ), UM()->get_allowed_html( 'admin_notice' ) );
 					?>
 				</p>
 
 				<?php
 				$message = ob_get_clean();
 				UM()->admin()->notices()->add_notice(
-					'um_private_content_notice',
+					'um_override_templates_notice',
 					array(
 						'class'       => 'error',
 						'message'     => $message,

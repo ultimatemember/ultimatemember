@@ -449,7 +449,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 					                   'If you did not make this change and believe your {site_name} account has been compromised, please contact us at the following email address: {admin_email}<br /><br />' .
 					                   'Thanks,<br />' .
 					                   '{site_name}',
-					'description'   => __('Whether to send the user an email when he request to reset password (Recommended, please keep on)','ultimate-member'),
+					'description'   => __('Whether to send the user an email when he requests to reset password (Recommended, please keep on)','ultimate-member'),
 					'recipient'   => 'user',
 					'default_active' => true
 				),

@@ -1,49 +1,22 @@
-<?php if ( ! defined( 'ABSPATH' ) ) {
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
 
 /**
  * Class UM_Versions_List_Table
  */
 class UM_Versions_List_Table extends WP_List_Table {
 
-
 	/**
 	 * @var string
 	 */
 	public $no_items_message = '';
 
-
-	/**
-	 * @var array
-	 */
-	public $sortable_columns = array();
-
-
-	/**
-	 * @var string
-	 */
-	public $default_sorting_field = '';
-
-
-	/**
-	 * @var array
-	 */
-	public $actions = array();
-
-
-	/**
-	 * @var array
-	 */
-	public $bulk_actions = array();
-
-
 	/**
 	 * @var array
 	 */
 	public $columns = array();
-
 
 	/**
 	 * UM_Versions_List_Table constructor.
@@ -65,7 +38,6 @@ class UM_Versions_List_Table extends WP_List_Table {
 		parent::__construct( $args );
 	}
 
-
 	/**
 	 * @param callable $name
 	 * @param array $arguments
@@ -76,17 +48,41 @@ class UM_Versions_List_Table extends WP_List_Table {
 		return call_user_func_array( array( $this, $name ), $arguments );
 	}
 
-
 	/**
 	 *
 	 */
 	public function prepare_items() {
-		$columns               = $this->get_columns();
-		$hidden                = array();
-		$sortable              = $this->get_sortable_columns();
-		$this->_column_headers = array( $columns, $hidden, $sortable );
-	}
+		$screen = $this->screen;
 
+		$columns               = $this->get_columns();
+		$sortable              = $this->get_sortable_columns();
+		$this->_column_headers = array( $columns, array(), $sortable );
+
+		$templates = get_option( 'um_template_statuses', array() );
+		$templates = is_array( $templates ) ? $templates : array();
+
+		@uasort(
+			$templates,
+			function ( $a, $b ) {
+				if ( strtolower( $a['status_code'] ) === strtolower( $b['status_code'] ) ) {
+					return 0;
+				}
+				return ( strtolower( $a['status_code'] ) < strtolower( $b['status_code'] ) ) ? -1 : 1;
+			}
+		);
+
+		$per_page = $this->get_items_per_page( str_replace( '-', '_', $screen->id . '_per_page' ), 999 );
+		$paged    = $this->get_pagenum();
+
+		$this->items = array_slice( $templates, ( $paged - 1 ) * $per_page, $per_page );
+
+		$this->set_pagination_args(
+			array(
+				'total_items' => count( $templates ),
+				'per_page'    => $per_page,
+			)
+		);
+	}
 
 	/**
 	 * @param object $item
@@ -102,7 +98,6 @@ class UM_Versions_List_Table extends WP_List_Table {
 		}
 	}
 
-
 	/**
 	 *
 	 */
@@ -110,50 +105,15 @@ class UM_Versions_List_Table extends WP_List_Table {
 		echo $this->no_items_message;
 	}
 
-
-	/**
-	 * @param array $args
-	 *
-	 * @return $this
-	 */
-	public function set_sortable_columns( $args = array() ) {
-		$return_args = array();
-		foreach ( $args as $k=>$val ) {
-			if ( is_numeric( $k ) ) {
-				$return_args[ $val ] = array( $val, $val == $this->default_sorting_field );
-			} elseif( is_string( $k ) ) {
-				$return_args[ $k ] = array( $val, $k == $this->default_sorting_field );
-			} else {
-				continue;
-			}
-		}
-		$this->sortable_columns = $return_args;
-		return $this;
-	}
-
-
-	/**
-	 * @return array
-	 */
-	public function get_sortable_columns() {
-		return $this->sortable_columns;
-	}
-
-
 	/**
 	 * @param array $args
 	 *
 	 * @return $this
 	 */
 	public function set_columns( $args = array() ) {
-		if ( count( $this->bulk_actions ) ) {
-			$args = array_merge( array( 'cb' => '<input type="checkbox" />' ), $args );
-		}
 		$this->columns = $args;
-
 		return $this;
 	}
-
 
 	/**
 	 * @return array
@@ -161,45 +121,6 @@ class UM_Versions_List_Table extends WP_List_Table {
 	public function get_columns() {
 		return $this->columns;
 	}
-
-
-	/**
-	 * @param array $args
-	 *
-	 * @return $this
-	 */
-	public function set_actions( $args = array() ) {
-		$this->actions = $args;
-		return $this;
-	}
-
-
-	/**
-	 * @return array
-	 */
-	public function get_actions() {
-		return $this->actions;
-	}
-
-
-	/**
-	 * @param array $args
-	 *
-	 * @return $this
-	 */
-	public function set_bulk_actions( $args = array() ) {
-		$this->bulk_actions = $args;
-		return $this;
-	}
-
-
-	/**
-	 * @return array
-	 */
-	public function get_bulk_actions() {
-		return $this->bulk_actions;
-	}
-
 
 	/**
 	 * @param $item
@@ -215,7 +136,6 @@ class UM_Versions_List_Table extends WP_List_Table {
 		return $output;
 	}
 
-
 	/**
 	 * @param $item
 	 *
@@ -225,18 +145,14 @@ class UM_Versions_List_Table extends WP_List_Table {
 		return $item['core_version'];
 	}
 
-
 	/**
 	 * @param $item
 	 *
 	 * @return string
 	 */
 	public function column_theme_version( $item ) {
-		$theme_version = $item['theme_version'] ? $item['theme_version'] : '-';
-
-		return $theme_version;
+		return $item['theme_version'] ? $item['theme_version'] : '-';
 	}
-
 
 	/**
 	 * @param $item
@@ -245,30 +161,17 @@ class UM_Versions_List_Table extends WP_List_Table {
 	 */
 	public function column_status( $item ) {
 		$icon = 1 === $item['status_code'] ? 'um-notification-is-active dashicons-yes' : 'dashicons-no-alt';
-		$text = $item['status'] . ' <span class="dashicons um-notification-status ' . esc_attr( $icon ) . '"></span>';
-
-		return $text;
-	}
-
-
-	/**
-	 * @param array $attr
-	 */
-	public function wpc_set_pagination_args( $attr = array() ) {
-		$this->set_pagination_args( $attr );
+		return $item['status'] . ' <span class="dashicons um-notification-status ' . esc_attr( $icon ) . '"></span>';
 	}
 }
 
-$ListTable = new UM_Versions_List_Table(
+$list_table = new UM_Versions_List_Table(
 	array(
 		'singular' => __( 'Template', 'ultimate-member' ),
 		'plural'   => __( 'Templates', 'ultimate-member' ),
 		'ajax'     => false,
 	)
 );
-
-$per_page = 999;
-$paged    = $ListTable->get_pagenum();
 
 /**
  * UM hook
@@ -301,22 +204,12 @@ $columns = apply_filters(
 	)
 );
 
-$ListTable->set_columns( $columns );
-
-$templates = get_option( 'um_template_statuses' ) ? get_option( 'um_template_statuses' ) : array();
-
-$ListTable->prepare_items();
-$ListTable->items = array_slice( $templates, ( $paged - 1 ) * $per_page, $per_page );
-$ListTable->wpc_set_pagination_args(
-	array(
-		'total_items' => count( $templates ),
-		'per_page'    => $per_page,
-	)
-); ?>
+$list_table->set_columns( $columns );
+$list_table->prepare_items();
+?>
 
 <form action="" method="get" name="um-settings-template-versions" id="um-settings-template-versions">
 	<input type="hidden" name="page" value="um_options" />
 	<input type="hidden" name="tab" value="override_templates" />
-
-	<?php $ListTable->display(); ?>
+	<?php $list_table->display(); ?>
 </form>

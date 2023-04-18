@@ -46,17 +46,17 @@
     text-align: center;
 }
 
-.column-core_version {
+.wp-list-table.templates .column-core_version {
 	width: 100px;
 	text-align: center;
 }
 
-.column-theme_version {
+.wp-list-table.templates .column-theme_version {
 	width: 100px;
 	text-align: center;
 }
 
-.column-status {
+.wp-list-table.templates .column-status {
 	width: 260px;
 }
 
@@ -227,6 +227,16 @@ th.column-email.column-primary {
     .um-small-field {
         width:50%;
     }
+
+	.wp-list-table.templates .column-core_version {
+		width: auto;
+		text-align: left;
+	}
+
+	.wp-list-table.templates .column-theme_version {
+		width: auto;
+		text-align: left;
+	}
 }
 
 /*

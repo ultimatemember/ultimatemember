@@ -68,9 +68,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			add_action( 'plugins_loaded', array( $this, 'um_check_template_version' ), 10 );
 			add_filter( 'um_settings_section_override_templates__content', array( $this, 'settings_override_templates_tab' ), 10, 2 );
 
-
 			add_filter( 'um_settings_structure', array( $this, 'sorting_licenses_options' ), 9999, 1 );
-
 
 			//save handlers
 			add_action( 'admin_init', array( $this, 'save_settings_handler' ), 10 );
@@ -79,9 +77,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			add_action( 'um_settings_before_save', array( $this, 'check_permalinks_changes' ) );
 			add_action( 'um_settings_save', array( $this, 'on_settings_save' ) );
 
-
 			add_filter( 'um_change_settings_before_save', array( $this, 'save_email_templates' ) );
-
 
 			//save licenses options
 			add_action( 'um_settings_before_save', array( $this, 'before_licenses_save' ) );
@@ -1978,7 +1974,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			 */
 			do_action( "um_settings_page_before_" . $current_tab . "_" . $current_subtab . "_content" );
 
-			if ( in_array( $current_tab, apply_filters('um_settings_custom_tabs', array( 'licenses', 'install_info' ) ) ) || in_array( $current_subtab, apply_filters( 'um_settings_custom_subtabs', array(), $current_tab ) ) ) {
+			if ( in_array( $current_tab, apply_filters('um_settings_custom_tabs', array( 'licenses', 'install_info', 'override_templates' ) ) ) || in_array( $current_subtab, apply_filters( 'um_settings_custom_subtabs', array(), $current_tab ) ) ) {
 
 				/**
 				 * UM hook
@@ -3019,7 +3015,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			return $section;
 		}
 
-
+		/**
+		 * Periodically checking the versions of templates.
+		 *
+		 * @since 2.6.1
+		 *
+		 * @return void
+		 */
 		public function um_check_template_version() {
 			$um_check_version = get_transient( 'um_check_template_versions' );
 			if ( false === $um_check_version ) {
@@ -3027,35 +3029,35 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			}
 		}
 
-
 		/**
-		 * @param $html
-		 * @param $section_fields
-		 *
-		 * @return string
+		 * HTML for Settings > Override Templates tab.
+		 * @return void
 		 */
-		public function settings_override_templates_tab( $html, $section_fields ) {
+		public function settings_override_templates_tab() {
 			$um_check_version = get_transient( 'um_check_template_versions' );
 			?>
-				<p>
-					<?php
-					if ( false !== $um_check_version ) {
-						echo esc_html__('Last update was at ', 'ultimate-member') . $um_check_version;
-						echo '<br>';
-						echo esc_html__('You could re-checked changes manually', 'ultimate-member');
-					}
-					?>
-				</p>
-				<p>
-					<a href="<?php echo esc_url( add_query_arg( 'um_adm_action', 'check_version' ) ); ?>" class="button">
-						<?php echo esc_html__( 'Re-check templates', 'ultimate-member' ); ?>
-					</a>
-				</p>
-				<p>
-					<a href="#" target="_blank">
-						<?php esc_html_e( 'Documentation', 'woocommerce' ); ?>
-					</a>
-				</p>
+
+			<p class="description" style="margin: 20px 0 0 0;">
+				<a href="<?php echo esc_url( add_query_arg( 'um_adm_action', 'check_templates_version' ) ); ?>" class="button" style="margin-right: 10px;">
+					<?php esc_html_e( 'Re-check templates', 'ultimate-member' ); ?>
+				</a>
+				<?php
+				if ( false !== $um_check_version ) {
+					// translators: %s: Last checking templates time.
+					echo esc_html( sprintf( __( 'Last update: %s. You could re-check changes manually.', 'ultimate-member' ), wp_date( get_option( 'date_format', 'Y-m-d' ) . ' ' . get_option( 'time_format', 'H:i:s' ), $um_check_version ) ) );
+				} else {
+					esc_html_e( 'Templates haven\'t check yet. You could check changes manually.', 'ultimate-member' );
+				}
+				?>
+			</p>
+			<p class="description" style="margin: 20px 0 0 0;">
+				<?php
+				/** @noinspection HtmlUnknownTarget */
+				// translators: %s: Link to the docs article.
+				echo wp_kses( sprintf( __( 'You may get more details about overriding templates <a href="%s" target="_blank">here</a>.', 'ultimate-member' ), 'https://docs.ultimatemember.com/article/1516-templates-map' ), UM()->get_allowed_html( 'admin_notice' ) );
+				?>
+			</p>
+
 			<?php
 			include_once um_path . 'includes/admin/core/list-tables/version-template-list-table.php';
 		}
@@ -3064,17 +3066,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		/**
 		 * @param $get_list boolean
 		 *
-		 * @return array
+		 * @return array|void
 		 */
 		public function get_override_templates( $get_list = false ) {
 			$outdated_files = array();
 			$scan_files     = $this->scan_template_files( um_path . '/templates/' );
-			$scan_files     = apply_filters( 'um_extend_scan_files', $scan_files );
+			$scan_files     = apply_filters( 'um_override_templates_scan_files', $scan_files );
 			$out_date       = false;
-			set_transient( 'um_check_template_versions', current_time( 'd/m/Y H:i' ), 12 * HOUR_IN_SECONDS );
+
+			set_transient( 'um_check_template_versions', time(), 12 * HOUR_IN_SECONDS );
+
 			foreach ( $scan_files as $key => $file ) {
 				if ( ! str_contains( $file, 'email/' ) ) {
-					$located = apply_filters( 'um_get_path_template', array(), $file );
+					$located = apply_filters( 'um_override_templates_get_template_path', array(), $file );
 
 					if ( ! empty( $located ) ) {
 						$theme_file = $located['theme'];
@@ -3106,7 +3110,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						}
 						if ( 0 === $status_code ) {
 							$out_date = true;
-							update_option( 'um_template_version', 1 );
+							update_option( 'um_override_templates_outdated', true );
 						}
 						$outdated_files[] = array(
 							'core_version'  => $core_version,
@@ -3119,9 +3123,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					}
 				}
 			}
-//			exit();
+
 			if ( false === $out_date ) {
-				delete_option( 'um_template_version' );
+				delete_option( 'um_override_templates_outdated' );
 			}
 			update_option( 'um_template_statuses', $outdated_files );
 			if ( true === $get_list ) {
@@ -3142,7 +3146,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			if ( ! empty( $files ) ) {
 
-				foreach ( $files as $key => $value ) {
+				foreach ( $files as $value ) {
 
 					if ( ! in_array( $value, array( '.', '..' ), true ) ) {
 
@@ -3160,14 +3164,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			return $result;
 		}
 
-
 		/**
 		 * @param $file string
 		 *
 		 * @return string
 		 */
 		public static function get_file_version( $file ) {
-
 			// Avoid notices if file does not exist.
 			if ( ! file_exists( $file ) ) {
 				return '';
