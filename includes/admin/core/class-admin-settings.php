@@ -3091,9 +3091,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						$core_file = $file;
 
 						if ( ! empty( $located ) ) {
-							$core_path = $located['core'];
+							$core_path      = $located['core'];
+							$core_file_path = stristr( $core_path, 'wp-content' );
 						} else {
-							$core_path = um_path . '/templates/' . $core_file;
+							$core_path      = um_path . '/templates/' . $core_file;
+							$core_file_path = stristr( um_path . 'templates/' . $core_file, 'wp-content' );
 						}
 						$core_version  = $this->get_file_version( $core_path );
 						$theme_version = $this->get_file_version( $theme_file );
@@ -3115,7 +3117,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						$outdated_files[] = array(
 							'core_version'  => $core_version,
 							'theme_version' => $theme_version,
-							'core_file'     => stristr( um_path . 'templates/' . $core_file, 'wp-content' ),
+							'core_file'     => $core_file_path,
 							'theme_file'    => stristr( $theme_file, 'wp-content' ),
 							'status'        => $status,
 							'status_code'   => $status_code,
