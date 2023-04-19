@@ -1,4 +1,18 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
+<?php
+/**
+ * Template for the profile single comments
+ *
+ * This template can be overridden by copying it to yourtheme/ultimate-member/profile/comments-single.php
+ *
+ * Page: "Profile"
+ *
+ * @version 2.6.1
+ *
+ * @var object $comment
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 $comment_title = apply_filters( 'um_user_profile_comment_title', get_the_title( $comment->comment_post_ID ), $comment );
 $link = apply_filters( 'um_user_profile_comment_url', get_permalink( $comment->comment_post_ID ), $comment ); ?>

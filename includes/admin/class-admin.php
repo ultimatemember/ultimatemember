@@ -80,6 +80,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			add_action( 'um_admin_do_action__um_can_register_notice', array( &$this, 'um_hide_notice' ) );
 			add_action( 'um_admin_do_action__um_hide_exif_notice', array( &$this, 'um_hide_notice' ) );
 			add_action( 'um_admin_do_action__user_action', array( &$this, 'user_action' ) );
+			add_action( 'um_admin_do_action__check_templates_version', array( &$this, 'check_templates_version' ) );
 
 			add_action( 'um_admin_do_action__install_core_pages', array( &$this, 'install_core_pages' ) );
 
@@ -1868,6 +1869,36 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 		}
 
+		/**
+		 * Manual check templates versions
+		 *
+		 * @param $action
+		 */
+		public function check_templates_version( $action ) {
+			$templates = UM()->admin_settings()->get_override_templates( true );
+			$out_date  = false;
+
+			foreach ( $templates as $template ) {
+				if ( 0 === $template['status_code'] ) {
+					$out_date = true;
+					break;
+				}
+			}
+
+			if ( false === $out_date ) {
+				delete_option( 'um_override_templates_outdated' );
+			}
+
+			$url = add_query_arg(
+				array(
+					'page' => 'um_options',
+					'tab'  => 'override_templates',
+				),
+				admin_url( 'admin.php' )
+			);
+			wp_safe_redirect( $url );
+			exit;
+		}
 
 		/**
 		 * Add any custom links to plugin page

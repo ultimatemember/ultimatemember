@@ -1,4 +1,19 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
+<?php
+/**
+ * Template for the profile posts
+ *
+ * This template can be overridden by copying it to yourtheme/ultimate-member/profile/posts.php
+ *
+ * Page: "Profile"
+ *
+ * @version 2.6.1
+ *
+ * @var object $posts
+ * @var int    $count_posts
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 	//Only for AJAX loading posts

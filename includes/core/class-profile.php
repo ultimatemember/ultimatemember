@@ -31,6 +31,11 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		 */
 		var $active_tab;
 
+		/**
+		 * @var null
+		 */
+		public $active_subnav = null;
+
 
 		/**
 		 * Profile constructor.

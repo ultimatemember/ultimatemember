@@ -1,11 +1,27 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+<?php
+/**
+ * Template for the account page
+ *
+ * This template can be overridden by copying it to yourtheme/ultimate-member/account.php
+ *
+ * Page: "Account"
+ *
+ * @version 2.6.1
+ *
+ * @var string $mode
+ * @var int    $form_id
+ * @var array  $args
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} ?>
 
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?>">
 
 	<div class="um-form">
-	
+
 		<form method="post" action="">
-			
+
 			<?php
 			/**
 			 * UM hook
@@ -46,7 +62,7 @@
 				</div>
 
 			</div>
-			
+
 			<div class="um-account-side uimob340-hide uimob500-hide">
 
 				<div class="um-account-meta radius-<?php echo esc_attr( UM()->options()->get( 'profile_photocorner' ) ); ?>">
@@ -118,9 +134,9 @@
 					} ?>
 				</ul>
 			</div>
-			
+
 			<div class="um-account-main" data-current_tab="<?php echo esc_attr( UM()->account()->current_tab ); ?>">
-			
+
 				<?php
 				/**
 				 * UM hook
@@ -164,11 +180,11 @@
 
 					<?php }
 				} ?>
-				
+
 			</div>
 			<div class="um-clear"></div>
 		</form>
-		
+
 		<?php
 		/**
 		 * UM hook

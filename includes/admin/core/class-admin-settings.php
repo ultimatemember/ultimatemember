@@ -64,9 +64,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			add_filter( 'um_settings_section_install_info__content', array( $this, 'settings_install_info_tab' ), 10, 2 );
 
+			//custom content for override templates tab
+			add_action( 'plugins_loaded', array( $this, 'um_check_template_version' ), 10 );
+			add_filter( 'um_settings_section_override_templates__content', array( $this, 'settings_override_templates_tab' ), 10, 2 );
 
 			add_filter( 'um_settings_structure', array( $this, 'sorting_licenses_options' ), 9999, 1 );
-
 
 			//save handlers
 			add_action( 'admin_init', array( $this, 'save_settings_handler' ), 10 );
@@ -75,9 +77,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			add_action( 'um_settings_before_save', array( $this, 'check_permalinks_changes' ) );
 			add_action( 'um_settings_save', array( $this, 'on_settings_save' ) );
 
-
 			add_filter( 'um_change_settings_before_save', array( $this, 'save_email_templates' ) );
-
 
 			//save licenses options
 			add_action( 'um_settings_before_save', array( $this, 'before_licenses_save' ) );
@@ -1839,6 +1839,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							),
 						),
 					),
+					'override_templates' => array(
+						'title'  => __( 'Override templates', 'ultimate-member' ),
+						'fields' => array(
+							array(
+								'type' => 'override_templates',
+							),
+						),
+					),
 				)
 			);
 
@@ -1966,7 +1974,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			 */
 			do_action( "um_settings_page_before_" . $current_tab . "_" . $current_subtab . "_content" );
 
-			if ( in_array( $current_tab, apply_filters('um_settings_custom_tabs', array( 'licenses', 'install_info' ) ) ) || in_array( $current_subtab, apply_filters( 'um_settings_custom_subtabs', array(), $current_tab ) ) ) {
+			if ( in_array( $current_tab, apply_filters('um_settings_custom_tabs', array( 'licenses', 'install_info', 'override_templates' ) ) ) || in_array( $current_subtab, apply_filters( 'um_settings_custom_subtabs', array(), $current_tab ) ) ) {
 
 				/**
 				 * UM hook
@@ -3005,6 +3013,186 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			<?php $section = ob_get_clean();
 
 			return $section;
+		}
+
+		/**
+		 * Periodically checking the versions of templates.
+		 *
+		 * @since 2.6.1
+		 *
+		 * @return void
+		 */
+		public function um_check_template_version() {
+			$um_check_version = get_transient( 'um_check_template_versions' );
+			if ( false === $um_check_version ) {
+				$this->get_override_templates();
+			}
+		}
+
+		/**
+		 * HTML for Settings > Override Templates tab.
+		 * @return void
+		 */
+		public function settings_override_templates_tab() {
+			$um_check_version = get_transient( 'um_check_template_versions' );
+			?>
+
+			<p class="description" style="margin: 20px 0 0 0;">
+				<a href="<?php echo esc_url( add_query_arg( 'um_adm_action', 'check_templates_version' ) ); ?>" class="button" style="margin-right: 10px;">
+					<?php esc_html_e( 'Re-check templates', 'ultimate-member' ); ?>
+				</a>
+				<?php
+				if ( false !== $um_check_version ) {
+					// translators: %s: Last checking templates time.
+					echo esc_html( sprintf( __( 'Last update: %s. You could re-check changes manually.', 'ultimate-member' ), wp_date( get_option( 'date_format', 'Y-m-d' ) . ' ' . get_option( 'time_format', 'H:i:s' ), $um_check_version ) ) );
+				} else {
+					esc_html_e( 'Templates haven\'t check yet. You could check changes manually.', 'ultimate-member' );
+				}
+				?>
+			</p>
+			<p class="description" style="margin: 20px 0 0 0;">
+				<?php
+				/** @noinspection HtmlUnknownTarget */
+				// translators: %s: Link to the docs article.
+				echo wp_kses( sprintf( __( 'You may get more details about overriding templates <a href="%s" target="_blank">here</a>.', 'ultimate-member' ), 'https://docs.ultimatemember.com/article/1516-templates-map' ), UM()->get_allowed_html( 'admin_notice' ) );
+				?>
+			</p>
+
+			<?php
+			include_once um_path . 'includes/admin/core/list-tables/version-template-list-table.php';
+		}
+
+
+		/**
+		 * @param $get_list boolean
+		 *
+		 * @return array|void
+		 */
+		public function get_override_templates( $get_list = false ) {
+			$outdated_files = array();
+			$scan_files     = $this->scan_template_files( um_path . '/templates/' );
+			$scan_files     = apply_filters( 'um_override_templates_scan_files', $scan_files );
+			$out_date       = false;
+
+			set_transient( 'um_check_template_versions', time(), 12 * HOUR_IN_SECONDS );
+
+			foreach ( $scan_files as $key => $file ) {
+				if ( ! str_contains( $file, 'email/' ) ) {
+					$located = apply_filters( 'um_override_templates_get_template_path', array(), $file );
+
+					if ( ! empty( $located ) ) {
+						$theme_file = $located['theme'];
+					} elseif ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' . $file ) ) {
+						$theme_file = get_stylesheet_directory() . '/ultimate-member/templates/' . $file;
+					} else {
+						$theme_file = false;
+					}
+					if ( ! empty( $theme_file ) ) {
+						$core_file = $file;
+
+						if ( ! empty( $located ) ) {
+							$core_path = $located['core'];
+						} else {
+							$core_path = um_path . '/templates/' . $core_file;
+						}
+						$core_version  = $this->get_file_version( $core_path );
+						$theme_version = $this->get_file_version( $theme_file );
+
+						$status      = esc_html__( 'Theme version up to date', 'ultimate-member' );
+						$status_code = 1;
+						if ( version_compare( $theme_version, $core_version, '<' ) ) {
+							$status      = esc_html__( 'Theme version is out of date', 'ultimate-member' );
+							$status_code = 0;
+						}
+						if ( '' === $theme_version ) {
+							$status      = esc_html__( 'Theme version is empty', 'ultimate-member' );
+							$status_code = 0;
+						}
+						if ( 0 === $status_code ) {
+							$out_date = true;
+							update_option( 'um_override_templates_outdated', true );
+						}
+						$outdated_files[] = array(
+							'core_version'  => $core_version,
+							'theme_version' => $theme_version,
+							'core_file'     => stristr( um_path . 'templates/' . $core_file, 'wp-content' ),
+							'theme_file'    => stristr( $theme_file, 'wp-content' ),
+							'status'        => $status,
+							'status_code'   => $status_code,
+						);
+					}
+				}
+			}
+
+			if ( false === $out_date ) {
+				delete_option( 'um_override_templates_outdated' );
+			}
+			update_option( 'um_template_statuses', $outdated_files );
+			if ( true === $get_list ) {
+				return $outdated_files;
+			}
+		}
+
+
+		/**
+		 * Scan the template files.
+		 *
+		 * @param  string $template_path Path to the template directory.
+		 * @return array
+		 */
+		public static function scan_template_files( $template_path ) {
+			$files  = @scandir( $template_path ); // @codingStandardsIgnoreLine.
+			$result = array();
+
+			if ( ! empty( $files ) ) {
+
+				foreach ( $files as $value ) {
+
+					if ( ! in_array( $value, array( '.', '..' ), true ) ) {
+
+						if ( is_dir( $template_path . DIRECTORY_SEPARATOR . $value ) ) {
+							$sub_files = self::scan_template_files( $template_path . DIRECTORY_SEPARATOR . $value );
+							foreach ( $sub_files as $sub_file ) {
+								$result[] = $value . DIRECTORY_SEPARATOR . $sub_file;
+							}
+						} else {
+							$result[] = $value;
+						}
+					}
+				}
+			}
+			return $result;
+		}
+
+		/**
+		 * @param $file string
+		 *
+		 * @return string
+		 */
+		public static function get_file_version( $file ) {
+			// Avoid notices if file does not exist.
+			if ( ! file_exists( $file ) ) {
+				return '';
+			}
+
+			// We don't need to write to the file, so just open for reading.
+			$fp = fopen( $file, 'r' ); // @codingStandardsIgnoreLine.
+
+			// Pull only the first 8kiB of the file in.
+			$file_data = fread( $fp, 8192 ); // @codingStandardsIgnoreLine.
+
+			// PHP will close file handle, but we are good citizens.
+			fclose( $fp ); // @codingStandardsIgnoreLine.
+
+			// Make sure we catch CR-only line endings.
+			$file_data = str_replace( "\r", "\n", $file_data );
+			$version   = '';
+
+			if ( preg_match( '/^[ \t\/*#@]*' . preg_quote( '@version', '/' ) . '(.*)$/mi', $file_data, $match ) && $match[1] ) {
+				$version = _cleanup_header_comment( $match[1] );
+			}
+
+			return $version;
 		}
 
 

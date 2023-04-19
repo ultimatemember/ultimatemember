@@ -1,4 +1,21 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+<?php
+/**
+ * Template for the password change
+ *
+ * This template can be overridden by copying it to yourtheme/ultimate-member/password-change.php
+ *
+ * Call: function ultimatemember_password()
+ *
+ * @version 2.6.1
+ *
+ * @var string $mode
+ * @var string $rp_key
+ * @var int    $form_id
+ * @var array  $args
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} ?>
 
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?>">
 
