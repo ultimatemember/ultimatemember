@@ -3069,59 +3069,65 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 * @return array|void
 		 */
 		public function get_override_templates( $get_list = false ) {
-			$outdated_files = array();
-			$scan_files     = $this->scan_template_files( um_path . '/templates/' );
-			$scan_files     = apply_filters( 'um_override_templates_scan_files', $scan_files );
-			$out_date       = false;
+			$outdated_files   = array();
+			$scan_files['um'] = $this->scan_template_files( um_path . '/templates/' );
+			$scan_files       = apply_filters( 'um_override_templates_scan_files', $scan_files );
+			$out_date         = false;
 
 			set_transient( 'um_check_template_versions', time(), 12 * HOUR_IN_SECONDS );
 
-			foreach ( $scan_files as $key => $file ) {
-				if ( ! str_contains( $file, 'email/' ) ) {
-					$located = apply_filters( 'um_override_templates_get_template_path', array(), $file );
+			foreach ( $scan_files as $key => $files ) {
+				foreach ( $files as $file ) {
+					if ( ! str_contains( $file, 'email/' ) ) {
+						$located = array();
+						$located = apply_filters( "um_override_templates_get_template_path__{$key}", $located, $file );
 
-					if ( ! empty( $located ) ) {
-						$theme_file = $located['theme'];
-					} elseif ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' . $file ) ) {
-						$theme_file = get_stylesheet_directory() . '/ultimate-member/templates/' . $file;
-					} else {
-						$theme_file = false;
-					}
-					if ( ! empty( $theme_file ) ) {
-						$core_file = $file;
-
-						if ( ! empty( $located ) ) {
-							$core_path      = $located['core'];
-							$core_file_path = stristr( $core_path, 'wp-content' );
+						if ( isset( $located['empty'] ) ) {
+							continue;
+						} elseif ( ! empty( $located ) && ! isset( $located['exist'] ) ) {
+							$theme_file = $located['theme'];
+						} elseif ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' . $file ) ) {
+							$theme_file = get_stylesheet_directory() . '/ultimate-member/templates/' . $file;
 						} else {
-							$core_path      = um_path . '/templates/' . $core_file;
-							$core_file_path = stristr( um_path . 'templates/' . $core_file, 'wp-content' );
+							$theme_file = false;
 						}
-						$core_version  = $this->get_file_version( $core_path );
-						$theme_version = $this->get_file_version( $theme_file );
 
-						$status      = esc_html__( 'Theme version up to date', 'ultimate-member' );
-						$status_code = 1;
-						if ( version_compare( $theme_version, $core_version, '<' ) ) {
-							$status      = esc_html__( 'Theme version is out of date', 'ultimate-member' );
-							$status_code = 0;
+						if ( ! empty( $theme_file ) ) {
+							$core_file = $file;
+
+							if ( ! empty( $located ) ) {
+								$core_path      = $located['core'];
+								$core_file_path = stristr( $core_path, 'wp-content' );
+							} else {
+								$core_path      = um_path . '/templates/' . $core_file;
+								$core_file_path = stristr( um_path . 'templates/' . $core_file, 'wp-content' );
+							}
+							$core_version  = $this->get_file_version( $core_path );
+							$theme_version = $this->get_file_version( $theme_file );
+
+							$status      = esc_html__( 'Theme version up to date', 'ultimate-member' );
+							$status_code = 1;
+							if ( version_compare( $theme_version, $core_version, '<' ) ) {
+								$status      = esc_html__( 'Theme version is out of date', 'ultimate-member' );
+								$status_code = 0;
+							}
+							if ( '' === $theme_version ) {
+								$status      = esc_html__( 'Theme version is empty', 'ultimate-member' );
+								$status_code = 0;
+							}
+							if ( 0 === $status_code ) {
+								$out_date = true;
+								update_option( 'um_override_templates_outdated', true );
+							}
+							$outdated_files[] = array(
+								'core_version'  => $core_version,
+								'theme_version' => $theme_version,
+								'core_file'     => $core_file_path,
+								'theme_file'    => stristr( $theme_file, 'wp-content' ),
+								'status'        => $status,
+								'status_code'   => $status_code,
+							);
 						}
-						if ( '' === $theme_version ) {
-							$status      = esc_html__( 'Theme version is empty', 'ultimate-member' );
-							$status_code = 0;
-						}
-						if ( 0 === $status_code ) {
-							$out_date = true;
-							update_option( 'um_override_templates_outdated', true );
-						}
-						$outdated_files[] = array(
-							'core_version'  => $core_version,
-							'theme_version' => $theme_version,
-							'core_file'     => $core_file_path,
-							'theme_file'    => stristr( $theme_file, 'wp-content' ),
-							'status'        => $status,
-							'status_code'   => $status_code,
-						);
 					}
 				}
 			}
