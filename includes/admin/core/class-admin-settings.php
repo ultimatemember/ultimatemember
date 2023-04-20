@@ -3084,7 +3084,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 						if ( isset( $located['empty'] ) ) {
 							continue;
-						} elseif ( ! empty( $located ) && ! isset( $located['exist'] ) ) {
+						} elseif ( ! empty( $located ) && ! isset( $located['empty'] ) ) {
 							$theme_file = $located['theme'];
 						} elseif ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' . $file ) ) {
 							$theme_file = get_stylesheet_directory() . '/ultimate-member/templates/' . $file;
