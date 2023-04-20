@@ -3082,9 +3082,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						$located = array();
 						$located = apply_filters( "um_override_templates_get_template_path__{$key}", $located, $file );
 
-						if ( isset( $located['empty'] ) ) {
-							continue;
-						} elseif ( ! empty( $located ) && ! isset( $located['empty'] ) ) {
+						if ( ! empty( $located ) ) {
 							$theme_file = $located['theme'];
 						} elseif ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' . $file ) ) {
 							$theme_file = get_stylesheet_directory() . '/ultimate-member/templates/' . $file;
