@@ -42,6 +42,31 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		public $timestamp = null;
 
 		/**
+		 * @var array
+		 */
+		public $global_args = array();
+
+		/**
+		 * @var array
+		 */
+		public $field_icons = array();
+
+		/**
+		 * @var array
+		 */
+		public $get_fields = array();
+
+		/**
+		 * @var array
+		 */
+		public $rows = array();
+
+		/**
+		 * @var array
+		 */
+		public $fields = array();
+
+		/**
 		 * Fields constructor.
 		 */
 		public function __construct() {
@@ -2393,7 +2418,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					}
 
 					$field_name = $key . UM()->form()->form_suffix;
-					$field_value = htmlspecialchars( $this->field_value( $key, $default, $data ) );
+
+					$field_value = $this->field_value( $key, $default, $data );
+					$field_value = ! is_null( $field_value ) ? htmlspecialchars( $field_value ) : null;
 
 					$output .= '<input ' . $disabled . ' autocomplete="' . esc_attr( $autocomplete ) . '" class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />
 

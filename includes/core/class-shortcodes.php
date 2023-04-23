@@ -1,11 +1,11 @@
 <?php
 namespace um\core;
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Shortcodes' ) ) {
-
 
 	/**
 	 * Class Shortcodes
@@ -37,6 +37,21 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 * @var array
 		 */
 		public $emoji = array();
+
+		/**
+		 * @var null|int
+		 */
+		public $form_id = null;
+
+		/**
+		 * @var null|string
+		 */
+		public $form_status = null;
+
+		/**
+		 * @var array
+		 */
+		public $set_args = array();
 
 		/**
 		 * Shortcodes constructor.
