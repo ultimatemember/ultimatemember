@@ -634,13 +634,16 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 							if ( isset( $_GET[ 'filter_' . $attrs['parent_dropdown_relationship'] . '_' . $unique_hash ] ) ) {
 								$_POST['parent_option_name'] = $attrs['parent_dropdown_relationship'];
-								$_POST['parent_option'] = explode( '||', filter_input( INPUT_GET, 'filter_' . $attrs['parent_dropdown_relationship'] . '_' . $unique_hash ) );
+
+								$parent_option_value    = sanitize_text_field( $_GET[ 'filter_' . $attrs['parent_dropdown_relationship'] . '_' . $unique_hash ] );
+								$_POST['parent_option'] = explode( '||', $parent_option_value );
 							}
 						}
 
 						$attrs['custom_dropdown_options_source'] = wp_unslash( $attrs['custom_dropdown_options_source'] );
 
 						$ajax_source = apply_filters( "um_custom_dropdown_options_source__{$filter}", $attrs['custom_dropdown_options_source'], $attrs );
+
 						$custom_dropdown .= ' data-um-ajax-source="' . esc_attr( $ajax_source ) . '" ';
 
 						$attrs['options'] = UM()->fields()->get_options_from_callback( $attrs, $attrs['type'] );
