@@ -5,7 +5,7 @@ Contributors: ultimatemember, champsupertramp, nsinelnikov
 Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
-Requires at least: 5.3
+Requires at least: 5.5
 Tested up to: 6.2
 Stable tag: 2.6.0
 License: GNU Version 2 or Any Later Version
