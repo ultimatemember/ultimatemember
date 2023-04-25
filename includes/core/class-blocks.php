@@ -119,7 +119,7 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 
 
 		public function um_forms_render( $atts ) {
-			$shortcode = '[ultimatemember';
+			$shortcode = '[ultimatemember widget="1"';
 
 			if ( isset( $atts['form_id'] ) && '' !== $atts['form_id'] ) {
 				$shortcode .= ' form_id="' . $atts['form_id'] . '"';
