@@ -1258,10 +1258,15 @@ jQuery( function($) {
 	let $noticeObj = $('#message[data-error-field]');
 	if ( $noticeObj.length > 0 ) {
 		let scrollToID = $noticeObj.data('error-field');
-		if ( ! $( '#' + scrollToID ).is(':visible') ) {
-			$( '#' + scrollToID ).closest('.um-field-row:not(.um-field-row-edit-mode)').find('> .um-field-row-header > .um-field-row-actions > .um-field-row-action-edit').trigger('click');
+		let fieldObj = $( '#' + scrollToID );
+		if ( ! fieldObj.is(':visible') ) {
+			fieldObj.closest('.um-field-row:not(.um-field-row-edit-mode)').find('> .um-field-row-header > .um-field-row-actions > .um-field-row-action-edit').trigger('click');
 		}
-		$( '#' + scrollToID ).addClass( 'um-error' );
+		if ( ! fieldObj.is(':visible') ) {
+			let tab = fieldObj.closest('.um-form-table').parent().data('tab');
+			fieldObj.closest('.um-field-row.um-field-row-edit-mode').find('> .um-field-row-content > .um-field-row-tabs > div[data-tab="' + tab + '"]').trigger('click');
+		}
+		fieldObj.addClass( 'um-error' );
 		$noticeObj[0].scrollIntoView();
 	}
 });

@@ -1107,10 +1107,78 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 					}
 				}
 
+				// Checking for type requirements (numeric)
+				$fields_validate_by_type_map = array_column( $field_settings, 'type', 'id' );
+				foreach ( $fields_validate_by_type_map as $field_id => $type ) {
+					if ( empty( $field_data[ $field_id ] ) ) {
+						continue;
+					}
+
+					if ( ! empty( $field_settings[ $field_id ]['conditional'] ) ) {
+						// Skip hidden by conditional logic fields for required marker.
+						if ( ! $this->conditions_are_met( $field_settings[ $field_id ]['conditional'], $field_data ) ) {
+							continue;
+						}
+					}
+
+					if ( 'number' === $type ) {
+						if ( ! is_numeric( $field_data[ $field_id ] ) ) {
+							$set_tab = '';
+							foreach ( $field_settings_tabs as $tab_key => $tab_settings ) {
+								if ( in_array( $field_id, array_keys( $tab_settings ), true ) ) {
+									$set_tab = $tab_key;
+									break;
+								}
+							}
+							$this->field_groups_error = array(
+								'field'   => 'field_groupfields' . $k . $set_tab . '_' . $field_id,
+								// translators: %s - Field label
+								'message' => sprintf( __( '"%s" field must be numeric.', 'ultimate-member' ), $field_settings[ $field_id ]['label'] ),
+							);
+						}
+					} elseif ( 'select' === $type ) {
+						$field_options = array_values( $field_settings[ $field_id ]['options'] );
+						if ( is_array( $field_options[0] ) ) {
+							// with optgroups
+							$field_options = call_user_func_array( 'array_merge', array_column( $field_settings[ $field_id ]['options'], 'options' ) );
+							$valid_options = array_map( 'strval', array_keys( $field_options ) );
+						} else {
+							$valid_options = array_map( 'strval', array_keys( $field_settings[ $field_id ]['options'] ) );
+						}
+
+						if ( ! in_array( (string) $field_data[ $field_id ], $valid_options, true ) ) {
+							$set_tab = '';
+							foreach ( $field_settings_tabs as $tab_key => $tab_settings ) {
+								if ( in_array( $field_id, array_keys( $tab_settings ), true ) ) {
+									$set_tab = $tab_key;
+									break;
+								}
+							}
+							$this->field_groups_error = array(
+								'field'   => 'field_groupfields' . $k . $set_tab . '_' . $field_id,
+								// translators: %s - Field label
+								'message' => sprintf( __( '"%s" field must be in options range.', 'ultimate-member' ), $field_settings[ $field_id ]['label'] ),
+							);
+						}
+					}
+
+					if ( ! empty( $this->field_groups_error ) ) {
+						return $this->field_groups_error;
+					}
+				}
+
+				// Checking for custom validation callbacks in validate
 				$fields_validate_map = array_column( $field_settings, 'validate', 'id' );
 				foreach ( $fields_validate_map as $field_id => $validate ) {
 					if ( empty( $validate ) ) {
 						continue;
+					}
+
+					if ( ! empty( $field_settings[ $field_id ]['conditional'] ) ) {
+						// Skip hidden by conditional logic fields for required marker.
+						if ( ! $this->conditions_are_met( $field_settings[ $field_id ]['conditional'], $field_data ) ) {
+							continue;
+						}
 					}
 
 					foreach ( $validate as $validation_callback ) {

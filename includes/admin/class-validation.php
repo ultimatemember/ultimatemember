@@ -40,6 +40,10 @@ if ( ! class_exists( 'um\admin\Validation' ) ) {
 		 * @return false|string
 		 */
 		public function unique_in_field_group_err( $value, $submission, $submission_key ) {
+			if ( empty( $value ) ) {
+				return false;
+			}
+
 			$matches = array();
 			if ( ! empty( $submission ) ) {
 				foreach ( $submission as $submission_row ) {

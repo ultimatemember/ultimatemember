@@ -1248,13 +1248,16 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 * @return array
 		 */
 		public function allowed_image_types() {
-			return apply_filters( 'um_allowed_image_types', array(
-				'png'  => __( '*.png', 'ultimate-member' ),
-				'jpeg' => __( '*.jpeg', 'ultimate-member' ),
-				'jpg'  => __( '*.jpg', 'ultimate-member' ),
-				'gif'  => __( '*.gif', 'ultimate-member' ),
-				'webp' => __( '*.webp', 'ultimate-member' ),
-			) );
+			return apply_filters(
+				'um_allowed_image_types',
+				array(
+					'png'  => __( '*.png', 'ultimate-member' ),
+					'jpeg' => __( '*.jpeg', 'ultimate-member' ),
+					'jpg'  => __( '*.jpg', 'ultimate-member' ),
+					'gif'  => __( '*.gif', 'ultimate-member' ),
+					'webp' => __( '*.webp', 'ultimate-member' ),
+				)
+			);
 		}
 
 		/**
@@ -1263,30 +1266,33 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 * @return mixed
 		 */
 		public function allowed_file_types() {
-			return apply_filters( 'um_allowed_file_types', array(
-				'pdf'  => __( '*.pdf', 'ultimate-member' ),
-				'txt'  => __( '*.txt', 'ultimate-member' ),
-				'csv'  => __( '*.csv', 'ultimate-member' ),
-				'doc'  => __( '*.doc', 'ultimate-member' ),
-				'docx' => __( '*.docx', 'ultimate-member' ),
-				'odt'  => __( '*.odt', 'ultimate-member' ),
-				'ods'  => __( '*.ods', 'ultimate-member' ),
-				'xls'  => __( '*.xls', 'ultimate-member' ),
-				'xlsx' => __( '*.xlsx', 'ultimate-member' ),
-				'zip'  => __( '*.zip', 'ultimate-member' ),
-				'rar'  => __( '*.rar', 'ultimate-member' ),
-				'mp3'  => __( '*.mp3', 'ultimate-member' ),
-				'jpg'  => __( '*.jpg', 'ultimate-member' ),
-				'jpeg' => __( '*.jpeg', 'ultimate-member' ),
-				'jpe'  => __( '*.jpe', 'ultimate-member' ),
-				'png'  => __( '*.png', 'ultimate-member' ),
-				'gif'  => __( '*.gif', 'ultimate-member' ),
-				'eps'  => __( '*.eps', 'ultimate-member' ),
-				'psd'  => __( '*.psd', 'ultimate-member' ),
-				'tif'  => __( '*.tif', 'ultimate-member' ),
-				'tiff' => __( '*.tiff', 'ultimate-member' ),
-				'webp' => __( '*.webp', 'ultimate-member' ),
-			) );
+			return apply_filters(
+				'um_allowed_file_types',
+				array(
+					'pdf'  => __( '*.pdf', 'ultimate-member' ),
+					'txt'  => __( '*.txt', 'ultimate-member' ),
+					'csv'  => __( '*.csv', 'ultimate-member' ),
+					'doc'  => __( '*.doc', 'ultimate-member' ),
+					'docx' => __( '*.docx', 'ultimate-member' ),
+					'odt'  => __( '*.odt', 'ultimate-member' ),
+					'ods'  => __( '*.ods', 'ultimate-member' ),
+					'xls'  => __( '*.xls', 'ultimate-member' ),
+					'xlsx' => __( '*.xlsx', 'ultimate-member' ),
+					'zip'  => __( '*.zip', 'ultimate-member' ),
+					'rar'  => __( '*.rar', 'ultimate-member' ),
+					'mp3'  => __( '*.mp3', 'ultimate-member' ),
+					'jpg'  => __( '*.jpg', 'ultimate-member' ),
+					'jpeg' => __( '*.jpeg', 'ultimate-member' ),
+					'jpe'  => __( '*.jpe', 'ultimate-member' ),
+					'png'  => __( '*.png', 'ultimate-member' ),
+					'gif'  => __( '*.gif', 'ultimate-member' ),
+					'eps'  => __( '*.eps', 'ultimate-member' ),
+					'psd'  => __( '*.psd', 'ultimate-member' ),
+					'tif'  => __( '*.tif', 'ultimate-member' ),
+					'tiff' => __( '*.tiff', 'ultimate-member' ),
+					'webp' => __( '*.webp', 'ultimate-member' ),
+				)
+			);
 		}
 
 		/**
@@ -1340,7 +1346,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'search'  => __( 'search', 'ultimate-member' ),
 			);
 
-			// size it's height, width will be automatically based on ratio
+			// size is height, width will be automatically based on ratio
 			$this->field_types = array(
 				'bool'      => array(
 					'title'             => __( 'Single Checkbox', 'ultimate-member' ),
@@ -4140,7 +4146,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								),
 								'sanitize'    => 'textarea',
 							),
-							'size' => array(
+							'size'        => array(
 								'id'          => 'size',
 								'type'        => 'number',
 								'label'       => __( 'Field size', 'ultimate-member' ),
