@@ -104,7 +104,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Columns' ) ) {
 			return $actions;
 		}
 
-
 		/**
 		 * Duplicate a form
 		 *
@@ -112,12 +111,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Columns' ) ) {
 		 *
 		 * @return string
 		 */
-		function duplicate_uri( $id ) {
-			$url = add_query_arg('um_adm_action', 'duplicate_form', admin_url('edit.php?post_type=um_form') );
-			$url = add_query_arg('post_id', $id, $url);
+		private function duplicate_uri( $id ) {
+			$url = add_query_arg(
+				array(
+					'post_type'     => 'um_form',
+					'um_adm_action' => 'duplicate_form',
+					'post_id'       => $id,
+					'nonce'         => wp_create_nonce( "um-duplicate_form{$id}" ),
+				),
+				admin_url( 'edit.php' )
+			);
+
 			return $url;
 		}
-
 
 		/**
 		 * Custom columns for Form
