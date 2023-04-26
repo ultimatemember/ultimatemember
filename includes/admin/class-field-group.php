@@ -826,8 +826,9 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 							$setting_data['value'] = UM()->admin()->actions_listener()->field_group_submission['fields'][ $field['index'] ][ $setting_data['id'] ];
 						} elseif ( 'repeater' === $field['type'] && 'fields' === $setting_data['id'] ) {
 							$sub_fields = array();
+
 							foreach ( UM()->admin()->actions_listener()->field_group_submission['fields'] as $k => $f ) {
-								if ( array_key_exists( 'parent_id', $f ) && $f['parent_id'] === $field['index'] ) {
+								if ( array_key_exists( 'parent_id', $f ) && (string) $f['parent_id'] === (string) $field['index'] ) {
 									$sub_fields[ $k ] = $f;
 								}
 							}

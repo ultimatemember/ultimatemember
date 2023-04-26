@@ -1366,6 +1366,12 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 								'required'    => true,
+								'validate'    => array(
+									array(
+										'metakey' => array( UM()->admin()->validation(), 'validate_user_metakey' ),
+										'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
+									),
+								),
 							),
 							'default_value' => array(
 								'id'          => 'default_value',
@@ -1456,6 +1462,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 								'required'    => true,
+								'validate'    => array(
+									'metakey' => array( UM()->admin()->validation(), 'validate_user_metakey' ),
+									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
+								),
 							),
 							'dynamic_choices' => array(
 								'id'          => 'dynamic_choices',
@@ -1616,6 +1626,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 								'required'    => true,
+								'validate'    => array(
+									'metakey' => array( UM()->admin()->validation(), 'validate_user_metakey' ),
+									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
+								),
 							),
 							'dynamic_choices' => array(
 								'id'          => 'dynamic_choices',
@@ -1776,6 +1790,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 								'required'    => true,
+								'validate'    => array(
+									'metakey' => array( UM()->admin()->validation(), 'validate_user_metakey' ),
+									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
+								),
 							),
 							'multiple'        => array(
 								'id'          => 'multiple',
@@ -1939,6 +1957,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Meta key', 'ultimate-member' ),
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
+								'validate'    => array(
+									'metakey' => array( UM()->admin()->validation(), 'validate_user_metakey' ),
+									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
+								),
 							),
 							'default_value' => array(
 								'id'          => 'default_value',
@@ -1978,6 +2000,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 								'required'    => true,
+								'validate'    => array(
+									'metakey' => array( UM()->admin()->validation(), 'validate_user_metakey' ),
+									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
+								),
 							),
 							'default_value' => array(
 								'id'          => 'default_value',
@@ -2108,6 +2134,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 								'required'    => true,
+								'validate'    => array(
+									'metakey' => array( UM()->admin()->validation(), 'validate_user_metakey' ),
+									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
+								),
 							),
 							'default_value' => array(
 								'id'          => 'default_value',
@@ -2231,6 +2261,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 								'required'    => true,
+								'validate'    => array(
+									'metakey' => array( UM()->admin()->validation(), 'validate_user_metakey' ),
+									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
+								),
 							),
 							'default_value' => array(
 								'id'          => 'default_value',
@@ -2371,6 +2405,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 								'required'    => true,
+								'validate'    => array(
+									'metakey' => array( UM()->admin()->validation(), 'validate_user_metakey' ),
+									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
+								),
 							),
 							'default_value' => array(
 								'id'          => 'default_value',
@@ -2530,6 +2568,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 								'required'    => true,
+								'validate'    => array(
+									'metakey' => array( UM()->admin()->validation(), 'validate_user_metakey' ),
+									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
+								),
 							),
 							'default_value' => array(
 								'id'          => 'default_value',
@@ -2695,6 +2737,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 								'required'    => true,
+								'validate'    => array(
+									'metakey' => array( UM()->admin()->validation(), 'validate_user_metakey' ),
+									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
+								),
 							),
 							'default_value' => array(
 								'id'          => 'default_value',
@@ -2879,6 +2925,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 								'required'    => true,
+								'validate'    => array(
+									'metakey' => array( UM()->admin()->validation(), 'validate_user_metakey' ),
+									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
+								),
 							),
 							'default_value' => array(
 								'id'          => 'default_value',
@@ -3023,6 +3073,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 								'required'    => true,
+								'validate'    => array(
+									'metakey' => array( UM()->admin()->validation(), 'validate_user_metakey' ),
+									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
+								),
 							),
 							'default_value' => array(
 								'id'          => 'default_value',
@@ -3167,6 +3221,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 								'required'    => true,
+								'validate'    => array(
+									'metakey' => array( UM()->admin()->validation(), 'validate_user_metakey' ),
+									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
+								),
 							),
 							'default_value' => array(
 								'id'          => 'default_value',
@@ -3313,6 +3371,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 								'required'    => true,
+								'validate'    => array(
+									'metakey' => array( UM()->admin()->validation(), 'validate_user_metakey' ),
+									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
+								),
 							),
 						),
 						'presentation' => array(
@@ -3434,6 +3496,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 								'required'    => true,
+								'validate'    => array(
+									'metakey' => array( UM()->admin()->validation(), 'validate_user_metakey' ),
+									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
+								),
 							),
 						),
 						'presentation' => array(
@@ -3485,56 +3551,56 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 						'validation'   => array(
-							'required'        => array(
+							'required'      => array(
 								'id'          => 'required',
 								'type'        => 'checkbox',
 								'label'       => __( 'Is this field required?', 'ultimate-member' ),
 								'description' => __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ),
 								'sanitize'    => 'bool',
 							),
-							'min_size'       => array(
+							'min_size'      => array(
 								'id'          => 'min_size',
 								'type'        => 'number',
 								'label'       => __( 'Minimum Size in bytes', 'ultimate-member' ),
 								'description' => __( 'The minimum size for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 							),
-							'max_size'       => array(
+							'max_size'      => array(
 								'id'          => 'max_size',
 								'type'        => 'number',
 								'label'       => __( 'Maximum Size in bytes', 'ultimate-member' ),
 								'description' => __( 'The maximum size for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 							),
-							'min_width'       => array(
+							'min_width'     => array(
 								'id'          => 'min_width',
 								'type'        => 'number',
 								'label'       => __( 'Minimum width in pixels', 'ultimate-member' ),
 								'description' => __( 'The minimum width for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 							),
-							'max_width'       => array(
+							'max_width'     => array(
 								'id'          => 'max_width',
 								'type'        => 'number',
 								'label'       => __( 'Maximum width in pixels', 'ultimate-member' ),
 								'description' => __( 'The maximum width for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 							),
-							'min_height'       => array(
+							'min_height'    => array(
 								'id'          => 'min_height',
 								'type'        => 'number',
 								'label'       => __( 'Minimum height in pixels', 'ultimate-member' ),
 								'description' => __( 'The minimum height for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 							),
-							'max_height'       => array(
+							'max_height'    => array(
 								'id'          => 'max_height',
 								'type'        => 'number',
 								'label'       => __( 'Maximum height in pixels', 'ultimate-member' ),
 								'description' => __( 'The maximum height for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 							),
-							'allowed_types'       => array(
+							'allowed_types' => array(
 								'id'          => 'allowed_types',
 								'type'        => 'select',
 								'multi'       => true,
@@ -3577,14 +3643,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'conditional_rules' => array(),
 					'settings'          => array(
 						'general'      => array(
-							'label'         => array(
+							'label'    => array(
 								'id'          => 'label',
 								'type'        => 'text',
 								'label'       => __( 'Field label', 'ultimate-member' ),
 								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 							),
-							'meta_key'      => array(
+							'meta_key' => array(
 								'id'          => 'meta_key',
 								'type'        => 'text',
 								'class'       => 'um-field-row-metakey-input',
@@ -3592,8 +3658,12 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 								'required'    => true,
+								'validate'    => array(
+									'metakey' => array( UM()->admin()->validation(), 'validate_user_metakey' ),
+									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
+								),
 							),
-							'fields'        => array(
+							'fields'   => array(
 								'id'       => 'fields',
 								'type'     => 'sub_fields',
 								'label'    => __( 'Sub Fields', 'ultimate-member' ),
@@ -3609,7 +3679,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'Text for "Add Row" button. "Add Row" by default and if this field is empty.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 							),
-							'description' => array(
+							'description'    => array(
 								'id'          => 'description',
 								'type'        => 'textarea',
 								'label'       => __( 'Description', 'ultimate-member' ),
@@ -3621,21 +3691,21 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 						'validation'   => array(
-							'required'        => array(
+							'required' => array(
 								'id'          => 'required',
 								'type'        => 'checkbox',
 								'label'       => __( 'Is this field required?', 'ultimate-member' ),
 								'description' => __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ),
 								'sanitize'    => 'bool',
 							),
-							'min_rows'       => array(
+							'min_rows' => array(
 								'id'          => 'min_rows',
 								'type'        => 'number',
 								'label'       => __( 'Minimum Rows', 'ultimate-member' ),
 								'description' => __( 'If you want to enable a minimum number of repeater rows to be added in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 							),
-							'max_rows'       => array(
+							'max_rows' => array(
 								'id'          => 'max_rows',
 								'type'        => 'number',
 								'label'       => __( 'Maximum Rows', 'ultimate-member' ),
@@ -3675,7 +3745,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'category'          => 'layout',
 					'conditional_rules' => array(),
 					'settings'          => array(
-						'general' => array(
+						'general'  => array(
 							'content' => array(
 								'id'          => 'content',
 								'type'        => 'wp_editor',
@@ -3688,7 +3758,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								),
 							),
 						),
-						'advanced'     => array(
+						'advanced' => array(
 							'wrapper_class' => array(
 								'id'          => 'wrapper_class',
 								'type'        => 'text',
@@ -3711,7 +3781,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'category'          => 'layout',
 					'conditional_rules' => array(),
 					'settings'          => array(
-						'general' => array(
+						'general'  => array(
 							'content' => array(
 								'id'          => 'content',
 								'type'        => 'wp_editor',
@@ -3724,7 +3794,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								),
 							),
 						),
-						'advanced'     => array(
+						'advanced' => array(
 							'wrapper_class' => array(
 								'id'          => 'wrapper_class',
 								'type'        => 'text',
@@ -3747,7 +3817,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'category'          => 'layout',
 					'conditional_rules' => array(),
 					'settings'          => array(
-						'general' => array(
+						'general'  => array(
 							'spacing' => array(
 								'id'          => 'spacing',
 								'type'        => 'number',
@@ -3757,7 +3827,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'required'    => true,
 							),
 						),
-						'advanced'     => array(
+						'advanced' => array(
 							'wrapper_class' => array(
 								'id'          => 'wrapper_class',
 								'type'        => 'text',
@@ -3781,7 +3851,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'conditional_rules' => array(),
 					'settings'          => array(
 						'general'      => array(
-							'label'         => array(
+							'label' => array(
 								'id'          => 'label',
 								'type'        => 'text',
 								'label'       => __( 'Divider Text', 'ultimate-member' ),
@@ -3857,8 +3927,12 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 								'required'    => true,
+								'validate'    => array(
+									'metakey' => array( UM()->admin()->validation(), 'validate_user_metakey' ),
+									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
+								),
 							),
-							'max_rating' => array(
+							'max_rating'    => array(
 								'id'          => 'max_rating',
 								'type'        => 'select',
 								'label'       => __( 'Rating System', 'ultimate-member' ),
@@ -3891,7 +3965,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 						'validation'   => array(
-							'required'        => array(
+							'required' => array(
 								'id'          => 'required',
 								'type'        => 'checkbox',
 								'label'       => __( 'Is this field required?', 'ultimate-member' ),
@@ -3950,6 +4024,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 								'required'    => true,
+								'validate'    => array(
+									'metakey' => array( UM()->admin()->validation(), 'validate_user_metakey' ),
+									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
+								),
 							),
 							'default_value' => array(
 								'id'          => 'default_value',
@@ -3979,7 +4057,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 						'validation'   => array(
-							'required'        => array(
+							'required' => array(
 								'id'          => 'required',
 								'type'        => 'checkbox',
 								'label'       => __( 'Is this field required?', 'ultimate-member' ),
@@ -4023,14 +4101,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 					),
 					'settings'          => array(
 						'general'      => array(
-							'label'         => array(
+							'label'    => array(
 								'id'          => 'label',
 								'type'        => 'text',
 								'label'       => __( 'Field label', 'ultimate-member' ),
 								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 							),
-							'meta_key'      => array(
+							'meta_key' => array(
 								'id'          => 'meta_key',
 								'type'        => 'text',
 								'class'       => 'um-field-row-metakey-input',
@@ -4038,6 +4116,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 								'required'    => true,
+								'validate'    => array(
+									'metakey' => array( UM()->admin()->validation(), 'validate_user_metakey' ),
+									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
+								),
 							),
 						),
 						'presentation' => array(

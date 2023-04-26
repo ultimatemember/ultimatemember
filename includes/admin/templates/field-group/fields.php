@@ -18,7 +18,7 @@ if ( ! is_null( UM()->admin()->actions_listener()->field_group_submission ) &&
 	);
 
 	foreach ( $fields as $k => $field ) {
-		if ( array_key_exists( 'parent_id', $field ) && $field['parent_id'] !== '0' ) {
+		if ( array_key_exists( 'parent_id', $field ) && '0' !== (string) $field['parent_id'] ) {
 			unset( $fields[ $k ] );
 		}
 	}

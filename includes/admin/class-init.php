@@ -1118,5 +1118,17 @@ if ( ! class_exists( 'um\admin\Init' ) ) {
 			}
 			return UM()->classes['um\admin\field_group'];
 		}
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return Validation
+		 */
+		public function validation() {
+			if ( empty( UM()->classes['um\admin\validation'] ) ) {
+				UM()->classes['um\admin\validation'] = new Validation();
+			}
+			return UM()->classes['um\admin\validation'];
+		}
 	}
 }

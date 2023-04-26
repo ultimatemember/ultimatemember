@@ -1029,8 +1029,6 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 		}
 
 		private function validate( $data ) {
-			$result = true;
-
 			if ( empty( $data['title'] ) ) {
 				$this->field_groups_error = array(
 					'field'   => 'title',
@@ -1076,7 +1074,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 					if ( 'repeater' === $field_data['type'] && 'fields' === $field_id ) {
 						$child_exists = false;
 						foreach ( $submitted_fields as $f_data ) {
-							if ( array_key_exists( 'parent_id', $f_data ) && $f_data['parent_id'] === (string) $k ) {
+							if ( array_key_exists( 'parent_id', $f_data ) && (string) $f_data['parent_id'] === (string) $k ) {
 								$child_exists = true;
 							}
 						}
@@ -1098,21 +1096,51 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 							}
 							$this->field_groups_error = array(
 								'field'   => 'field_groupfields' . $k . $set_tab . '_' . $field_id,
+								// translators: %s - Field label
 								'message' => sprintf( __( '"%s" field cannot be empty.', 'ultimate-member' ), $field_settings[ $field_id ]['label'] ),
 							);
 						}
 					}
 
 					if ( ! empty( $this->field_groups_error ) ) {
-						$result = $this->field_groups_error;
-						return $result;
+						return $this->field_groups_error;
 					}
 				}
 
-//				$fields_validate_map = array_column( $field_settings, 'validate', 'id' );
+				$fields_validate_map = array_column( $field_settings, 'validate', 'id' );
+				foreach ( $fields_validate_map as $field_id => $validate ) {
+					if ( empty( $validate ) ) {
+						continue;
+					}
+
+					foreach ( $validate as $validation_callback ) {
+						if ( ! is_callable( $validation_callback ) ) {
+							continue;
+						}
+						$validation_result = call_user_func_array( $validation_callback, array( $field_data[ $field_id ], $data['fields'], $field_id ) );
+						if ( false === $validation_result ) {
+							continue;
+						}
+
+						$set_tab = '';
+						foreach ( $field_settings_tabs as $tab_key => $tab_settings ) {
+							if ( in_array( $field_id, array_keys( $tab_settings ), true ) ) {
+								$set_tab = $tab_key;
+								break;
+							}
+						}
+
+						$this->field_groups_error = array(
+							'field'   => 'field_groupfields' . $k . $set_tab . '_' . $field_id,
+							'message' => $validation_result,
+						);
+
+						return $this->field_groups_error;
+					}
+				}
 			}
 
-			return $result;
+			return true;
 		}
 
 		public function handle_save_field_group() {
@@ -1127,12 +1155,12 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 			$redirect = get_admin_url() . 'admin.php?page=um_field_groups&tab=' . sanitize_key( $_GET['tab'] );
 
 			if ( empty( $_POST['um_nonce'] ) ) {
-				wp_redirect( add_query_arg( array( 'msg' => 'empty_nonce' ), $redirect ) );
+				wp_safe_redirect( add_query_arg( array( 'msg' => 'empty_nonce' ), $redirect ) );
 				exit();
 			}
 
 			if ( empty( $_POST['field_group'] ) ) {
-				wp_redirect( add_query_arg( array( 'msg' => 'wrong_data' ), $redirect ) );
+				wp_safe_redirect( add_query_arg( array( 'msg' => 'wrong_data' ), $redirect ) );
 				exit();
 			}
 
@@ -1144,17 +1172,17 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 
 				$group_id = absint( $_GET['id'] );
 				if ( empty( $group_id ) ) {
-					wp_redirect( add_query_arg( array( 'msg' => 'wrong_id' ), $redirect ) );
+					wp_safe_redirect( add_query_arg( array( 'msg' => 'wrong_id' ), $redirect ) );
 					exit();
 				}
 
 				if ( empty( $_POST['field_group']['id'] ) || $group_id !== absint( $_POST['field_group']['id'] ) ) {
-					wp_redirect( add_query_arg( array( 'msg' => 'wrong_id' ), $redirect ) );
+					wp_safe_redirect( add_query_arg( array( 'msg' => 'wrong_id' ), $redirect ) );
 					exit();
 				}
 
 				if ( ! wp_verify_nonce( $_POST['um_nonce'], 'um-edit-field-group' ) ) {
-					wp_redirect( add_query_arg( array( 'msg' => 'wrong_nonce' ), $redirect ) );
+					wp_safe_redirect( add_query_arg( array( 'msg' => 'wrong_nonce' ), $redirect ) );
 					exit();
 				}
 
@@ -1183,6 +1211,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 					'title'       => $title,
 					'description' => $description,
 				);
+
 				$field_group_id = UM()->admin()->field_group()->update( $args );
 				if ( ! empty( $field_group_id ) ) {
 					if ( ! empty( $data['fields'] ) ) {
@@ -1217,7 +1246,9 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 									'parent_id' => isset( $id_parent_accoss[ $group_field['parent_id'] ] ) ? $id_parent_accoss[ $group_field['parent_id'] ] : 0,
 									'meta'      => $meta,
 								);
+
 								$f_id = UM()->admin()->field_group()->add_field( $field_args );
+
 								$id_parent_accoss[ $submit_key ] = $f_id;
 							} else {
 								// update field
@@ -1228,23 +1259,25 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 								unset( $meta['parent_id'] );
 
 								$field_args = array(
-									'id'        => $group_field['id'],
-									'title'     => $group_field['title'],
-									'type'      => $group_field['type'],
-									'meta'      => $meta,
+									'id'    => $group_field['id'],
+									'title' => $group_field['title'],
+									'type'  => $group_field['type'],
+									'meta'  => $meta,
 								);
 								UM()->admin()->field_group()->update_field( $field_args );
+
+								$id_parent_accoss[ $submit_key ] = $group_field['id'];
 							}
 						}
 					}
 
-					wp_redirect( add_query_arg( array( 'id' => $field_group_id, 'msg' => 'u' ), $redirect ) );
+					wp_safe_redirect( add_query_arg( array( 'id' => $field_group_id, 'msg' => 'u' ), $redirect ) );
 					exit;
 				}
 			} elseif ( 'add' === $action ) {
 				if ( ! wp_verify_nonce( $_POST['um_nonce'], 'um-add-field-group' ) ) {
-					wp_redirect( add_query_arg( array( 'msg' => 'wrong_nonce' ), $redirect ) );
-					return;
+					wp_safe_redirect( add_query_arg( array( 'msg' => 'wrong_nonce' ), $redirect ) );
+					exit;
 				}
 
 				// Remove extra slashes by WordPress native function.
@@ -1270,6 +1303,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 					'title'       => $title,
 					'description' => $description,
 				);
+
 				$field_group_id = UM()->admin()->field_group()->create( $args );
 				if ( ! empty( $field_group_id ) ) {
 					if ( ! empty( $data['fields'] ) ) {

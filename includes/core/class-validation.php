@@ -369,7 +369,6 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 			return wp_generate_password( $length, false );
 		}
 
-
 		/**
 		 * Random numbers only
 		 *

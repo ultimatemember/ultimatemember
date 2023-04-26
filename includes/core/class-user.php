@@ -98,7 +98,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				'wp_user-',
 				'dismissed',
 				'cap_key',
-				$wpdb->get_blog_prefix(). 'capabilities',
+				$wpdb->get_blog_prefix() . 'capabilities',
 				'managenav',
 				'nav_menu',
 				'user_activation_key',
