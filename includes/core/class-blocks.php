@@ -139,7 +139,7 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 
 
 		public function um_account_render( $atts ) {
-			$shortcode = '[ultimatemember_account';
+			$shortcode = '[ultimatemember_account widget="1"';
 
 			if ( isset( $atts['tab'] ) && 'all' !== $atts['tab'] ) {
 				$shortcode .= ' tab="' . $atts['tab'] . '"';

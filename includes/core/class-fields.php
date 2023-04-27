@@ -2076,7 +2076,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		function edit_field( $key, $data, $rule = false, $args = array() ) {
 			global $_um_profile_id;
 
-			$output = '';
+			if ( 1 === (int) $data['widget'] ) {
+				$_um_profile_id = get_current_user_id();
+			}
+
+			$output   = '';
 			$disabled = '';
 			if ( empty( $_um_profile_id ) ) {
 				$_um_profile_id = um_user( 'ID' );
