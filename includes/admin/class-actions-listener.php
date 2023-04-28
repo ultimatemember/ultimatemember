@@ -866,7 +866,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 												$cond_row['field']     = absint( $cond_row['field'] );
 												$cond_row['condition'] = sanitize_text_field( $cond_row['condition'] );
 												// remove if rule isn't filled
-												if ( empty( $cond_row['field'] ) || $cond_row['condition'] ) {
+												if ( empty( $cond_row['field'] ) || empty( $cond_row['condition'] ) ) {
 													unset( $field_setting_value[ $cond_group_k ][ $cond_row_k ] );
 													continue;
 												}

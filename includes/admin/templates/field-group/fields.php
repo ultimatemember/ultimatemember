@@ -40,7 +40,7 @@ UM()->admin()->field_group()->field_row_template();
 		<div class="um-fields-column-header-type"><?php esc_html_e( 'Type', 'ultimate-member' ); ?></div>
 		<div class="um-fields-column-header-actions">&nbsp;</div>
 	</div>
-	<div class="um-fields-column-content<?php if ( empty( $fields ) ) { ?> hidden<?php } ?>">
+	<div class="um-fields-column-content<?php if ( empty( $fields ) ) { ?> hidden<?php } ?>" data-uniqid="<?php echo esc_attr( uniqid() ); ?>">
 		<?php
 		if ( ! empty( $fields ) ) {
 			$i = 1;

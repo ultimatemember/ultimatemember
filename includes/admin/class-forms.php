@@ -1168,7 +1168,7 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 					<div class="um-fields-column-header-type"><?php esc_html_e( 'Type', 'ultimate-member' ); ?></div>
 					<div class="um-fields-column-header-actions">&nbsp;</div>
 				</div>
-				<div class="um-fields-column-content<?php if ( empty( $value ) ) { ?> hidden<?php } ?>">
+				<div class="um-fields-column-content<?php if ( empty( $value ) ) { ?> hidden<?php } ?>" data-uniqid="<?php echo esc_attr( uniqid() ); ?>">
 					<?php
 					if ( ! empty( $value ) ) {
 						$i = 1;
@@ -1422,7 +1422,19 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 					foreach ( $value as $cond_group_k => $cond_group ) { ?>
 						<div class="um-conditional-rules-group" data-group-index="<?php echo esc_attr( $cond_group_k ); ?>">
 							<?php foreach ( $cond_group as $cond_row_k => $cond_row ) {
-								$field_data = UM()->admin()->field_group()->get_field_data( $cond_row['field'] );
+								$field_data = UM()->admin()->field_group()->get_field_data( $cond_row['field'], true );
+
+								$options = array();
+								if ( isset( $field_types[ $field_data['type'] ]['category'] ) && 'choice' === $field_types[ $field_data['type'] ]['category'] ) {
+									if ( 'bool' === $field_data['type'] ) {
+										$options = array(
+											'0' => __( 'False', 'ultimate-member' ),
+											'1' => __( 'True', 'ultimate-member' ),
+										);
+									} else {
+										$options = array_combine( $field_data['options']['keys'], $field_data['options']['values'] );
+									}
+								}
 								?>
 								<div class="um-conditional-rule-row">
 									<div class="um-conditional-rules-connect"><?php esc_html_e( 'and', 'ultimate-member' ); ?></div>
@@ -1436,20 +1448,32 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 										<div class="um-conditional-rule-condition-col">
 											<select class="um-conditional-rule-setting" data-base-name="<?php echo esc_attr( $name . '[{group_key}][{row_key}][condition]' ); ?>" name="<?php echo esc_attr( $name . '[' . $cond_group_k . '][' . $cond_row_k . '][condition]' ); ?>">
 												<option value=""><?php esc_html_e( '(Select Condition)', 'ultimate-member' ); ?></option>
-												<?php foreach ( $field_conditional_rules as $cond_k => $cond_title ) {
-													if ( ! in_array( $cond_k, $field_types[ $field_data['type'] ]['conditional_rules'] ) ) {
+												<?php
+												foreach ( $field_conditional_rules as $cond_k => $cond_title ) {
+													if ( ! in_array( $cond_k, $field_types[ $field_data['type'] ]['conditional_rules'], true ) ) {
 														continue;
-													} ?>
+													}
+													?>
 													<option value="<?php echo esc_attr( $cond_k ); ?>" <?php selected( $cond_row['condition'], $cond_k ); ?>><?php echo esc_html( $cond_title ); ?></option>
-												<?php } ?>
+													<?php
+												}
+												?>
 											</select>
 										</div>
 										<div class="um-conditional-rule-value-col">
-											<select class="um-conditional-rule-setting" data-base-name="<?php echo esc_attr( $name . '[{group_key}][{row_key}][value]' ); ?>" name="<?php echo esc_attr( $name . '[' . $cond_group_k . '][' . $cond_row_k . '][value]' ); ?>">
+											<select class="um-conditional-rule-setting" <?php disabled( in_array( $cond_row['condition'], array( '', '!=empty', '==empty' ), true ) || empty( $options ) ); ?> data-base-name="<?php echo esc_attr( $name . '[{group_key}][{row_key}][value]' ); ?>" name="<?php echo esc_attr( $name . '[' . $cond_group_k . '][' . $cond_row_k . '][value]' ); ?>">
 												<option value=""><?php esc_html_e( '(Select Value)', 'ultimate-member' ); ?></option>
-<!--												<option value="--><?php //echo esc_attr( $cond_row['value'] ); ?><!--" selected>--><?php //echo esc_html( $field_conditional_rules[ $cond_row['condition'] ] ); ?><!--</option>-->
+												<?php
+												if ( ! empty( $options ) ) {
+													foreach ( $options as $option_k => $option_v ) {
+														?>
+														<option value="<?php echo esc_attr( $option_k ); ?>" <?php selected( isset( $cond_row['value'] ) && $option_k === (string) $cond_row['value'] ); ?>><?php echo esc_html( $option_v ); ?></option>
+														<?php
+													}
+												}
+												?>
 											</select>
-											<input class="um-conditional-rule-setting" data-base-name="<?php echo esc_attr( $name . '[{group_key}][{row_key}][value]' ); ?>" type="text" value="<?php echo esc_attr( $cond_row['value'] ); ?>" disabled name="<?php echo esc_attr( $name . '[' . $cond_group_k . '][' . $cond_row_k . '][value]' ); ?>" placeholder="<?php esc_attr_e( 'Field value', 'ultimate-member' ); ?>" />
+											<input class="um-conditional-rule-setting" <?php disabled( in_array( $cond_row['condition'], array( '', '!=empty', '==empty' ), true ) || ! empty( $options ) ); ?> data-base-name="<?php echo esc_attr( $name . '[{group_key}][{row_key}][value]' ); ?>" type="text" value="<?php echo isset( $cond_row['value'] ) ? esc_attr( $cond_row['value'] ) : ''; ?>" name="<?php echo esc_attr( $name . '[' . $cond_group_k . '][' . $cond_row_k . '][value]' ); ?>" placeholder="<?php esc_attr_e( 'Field value', 'ultimate-member' ); ?>" />
 										</div>
 										<div class="um-conditional-rule-actions-col">
 											<input type="button" class="um-conditional-add-rule button" value="<?php esc_attr_e( '+', 'ultimate-member' ); ?>" />

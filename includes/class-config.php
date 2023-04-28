@@ -1329,8 +1329,8 @@ if ( ! class_exists( 'um\Config' ) ) {
 				$post_types[ $pt_key ] = $pt_obj->label;
 			}
 
+			$taxonomies      = array();
 			$taxonomies_list = get_taxonomies( array( 'public' => true ), 'objects' );
-			$taxonomies = array();
 			foreach ( $taxonomies_list as $tax_key => $tax_obj ) {
 				$taxonomies[ $tax_key ] = $tax_obj->label;
 			}
@@ -1395,7 +1395,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'Displays text alongside the checkbox.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 							),
-							'description' => array(
+							'description'    => array(
 								'id'          => 'description',
 								'type'        => 'textarea',
 								'label'       => __( 'Description', 'ultimate-member' ),
@@ -1407,7 +1407,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 						'validation'   => array(
-							'required'        => array(
+							'required' => array(
 								'id'          => 'required',
 								'type'        => 'checkbox',
 								'label'       => __( 'Is this field required?', 'ultimate-member' ),
@@ -1453,14 +1453,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 					),
 					'settings'          => array(
 						'general'      => array(
-							'label'         => array(
+							'label'                        => array(
 								'id'          => 'label',
 								'type'        => 'text',
 								'label'       => __( 'Field label', 'ultimate-member' ),
 								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 							),
-							'meta_key'      => array(
+							'meta_key'                     => array(
 								'id'          => 'meta_key',
 								'type'        => 'text',
 								'class'       => 'um-field-row-metakey-input',
@@ -1473,7 +1473,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
 								),
 							),
-							'dynamic_choices' => array(
+							'dynamic_choices'              => array(
 								'id'          => 'dynamic_choices',
 								'type'        => 'select',
 								'label'       => __( 'Dynamic Choices', 'ultimate-member' ),
@@ -1502,7 +1502,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'sanitize'    => 'text',
 								'conditional' => array( 'custom_dropdown_options_source', '!=', '' ),
 							),
-							'options_cpt' => array(
+							'options_cpt'                  => array(
 								'id'          => 'options_cpt',
 								'type'        => 'select',
 								'multi'       => true,
@@ -1513,7 +1513,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'options'     => $post_types,
 								'conditional' => array( 'dynamic_choices', '=', 'post_type' ),
 							),
-							'options_taxonomy' => array(
+							'options_taxonomy'             => array(
 								'id'          => 'options_taxonomy',
 								'type'        => 'select',
 								'multi'       => true,
@@ -1524,7 +1524,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'options'     => $taxonomies,
 								'conditional' => array( 'dynamic_choices', '=', 'taxonomy' ),
 							),
-							'options' => array(
+							'options'                      => array(
 								'id'          => 'options',
 								'type'        => 'choices',
 								'multiple'    => false,
@@ -1536,7 +1536,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 						'presentation' => array(
-							'description' => array(
+							'description'         => array(
 								'id'          => 'description',
 								'type'        => 'textarea',
 								'label'       => __( 'Description', 'ultimate-member' ),
@@ -1546,7 +1546,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								),
 								'sanitize'    => 'textarea',
 							),
-							'choices_layout' => array(
+							'choices_layout'      => array(
 								'id'          => 'choices_layout',
 								'type'        => 'select',
 								'label'       => __( 'Choices Layout', 'ultimate-member' ),
@@ -1554,14 +1554,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'options'     => $choices_layouts,
 								'sanitize'    => 'key',
 							),
-							'allow_custom_values'        => array(
+							'allow_custom_values' => array(
 								'id'          => 'allow_custom_values',
 								'type'        => 'checkbox',
 								'label'       => __( 'Allow Custom Values', 'ultimate-member' ),
 								'description' => __( 'Allow custom values to be added.', 'ultimate-member' ),
 								'sanitize'    => 'bool',
 							),
-							'save_custom_values'        => array(
+							'save_custom_values'  => array(
 								'id'          => 'save_custom_values',
 								'type'        => 'checkbox',
 								'label'       => __( 'Save Custom Values', 'ultimate-member' ),
@@ -1570,7 +1570,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 						'validation'   => array(
-							'required'        => array(
+							'required' => array(
 								'id'          => 'required',
 								'type'        => 'checkbox',
 								'label'       => __( 'Is this field required?', 'ultimate-member' ),
@@ -1617,14 +1617,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 					),
 					'settings'          => array(
 						'general'      => array(
-							'label'         => array(
+							'label'                        => array(
 								'id'          => 'label',
 								'type'        => 'text',
 								'label'       => __( 'Field label', 'ultimate-member' ),
 								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 							),
-							'meta_key'      => array(
+							'meta_key'                     => array(
 								'id'          => 'meta_key',
 								'type'        => 'text',
 								'class'       => 'um-field-row-metakey-input',
@@ -1637,7 +1637,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
 								),
 							),
-							'dynamic_choices' => array(
+							'dynamic_choices'              => array(
 								'id'          => 'dynamic_choices',
 								'type'        => 'select',
 								'label'       => __( 'Dynamic Choices', 'ultimate-member' ),
@@ -1666,7 +1666,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'sanitize'    => 'text',
 								'conditional' => array( 'custom_dropdown_options_source', '!=', '' ),
 							),
-							'options_cpt' => array(
+							'options_cpt'                  => array(
 								'id'          => 'options_cpt',
 								'type'        => 'select',
 								'multi'       => true,
@@ -1677,7 +1677,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'options'     => $post_types,
 								'conditional' => array( 'dynamic_choices', '=', 'post_type' ),
 							),
-							'options_taxonomy' => array(
+							'options_taxonomy'             => array(
 								'id'          => 'options_taxonomy',
 								'type'        => 'select',
 								'multi'       => true,
@@ -1688,7 +1688,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'options'     => $taxonomies,
 								'conditional' => array( 'dynamic_choices', '=', 'taxonomy' ),
 							),
-							'options' => array(
+							'options'                      => array(
 								'id'          => 'options',
 								'type'        => 'choices',
 								'multiple'    => true,
@@ -1700,7 +1700,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 						'presentation' => array(
-							'description' => array(
+							'description'         => array(
 								'id'          => 'description',
 								'type'        => 'textarea',
 								'label'       => __( 'Description', 'ultimate-member' ),
@@ -1710,7 +1710,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								),
 								'sanitize'    => 'textarea',
 							),
-							'choices_layout' => array(
+							'choices_layout'      => array(
 								'id'          => 'choices_layout',
 								'type'        => 'select',
 								'label'       => __( 'Choices Layout', 'ultimate-member' ),
@@ -1718,14 +1718,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'options'     => $choices_layouts,
 								'sanitize'    => 'key',
 							),
-							'allow_custom_values'        => array(
+							'allow_custom_values' => array(
 								'id'          => 'allow_custom_values',
 								'type'        => 'checkbox',
 								'label'       => __( 'Allow Custom Values', 'ultimate-member' ),
 								'description' => __( 'Allow custom values to be added.', 'ultimate-member' ),
 								'sanitize'    => 'bool',
 							),
-							'save_custom_values'        => array(
+							'save_custom_values'  => array(
 								'id'          => 'save_custom_values',
 								'type'        => 'checkbox',
 								'label'       => __( 'Save Custom Values', 'ultimate-member' ),
@@ -1734,7 +1734,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 						'validation'   => array(
-							'required'        => array(
+							'required' => array(
 								'id'          => 'required',
 								'type'        => 'checkbox',
 								'label'       => __( 'Is this field required?', 'ultimate-member' ),

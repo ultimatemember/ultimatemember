@@ -161,20 +161,23 @@ UM.fields_groups = {
 				handle: '.um-field-row-move-link',
 				update: function(){
 					// $(this) means sorting wrapper block
-					$(this).children('.um-field-row').each( function(i) {
-						let index = i * 1 + 1;
-						$(this).children('.um-field-row-order').val(index);
-						$(this).children('.um-field-row-header').children('.um-field-row-move-link').text(index);
-					});
+					UM.fields_groups.sortable.update($(this),$);
 				}
 			}).on('sortupdate',function(){
 				// $(this) means sorting wrapper block
-				$(this).children('.um-field-row').each( function(i) {
-					let index = i * 1 + 1;
-					$(this).children('.um-field-row-order').val(index);
-					$(this).children('.um-field-row-header').children('.um-field-row-move-link').text(index);
-				});
+				UM.fields_groups.sortable.update($(this),$);
 			});
+		},
+		update: function ($wrapper,$) {
+			$wrapper.children('.um-field-row').each( function(i) {
+				let index = i * 1 + 1;
+				$(this).children('.um-field-row-order').val(index);
+				$(this).children('.um-field-row-header').children('.um-field-row-move-link').text(index);
+			});
+
+			UM.fields_groups.field.conditional.prepareFieldsList($);
+			UM.fields_groups.field.conditional.showHideConditionalTabs($);
+			UM.fields_groups.field.conditional.fillRulesFields($);
 		},
 		destroy: function ($wrapper) {
 			if ( $wrapper.hasClass('ui-sortable') ) {
@@ -426,35 +429,254 @@ UM.fields_groups = {
 				UM.fields_groups.sortable.reInit($wrapper,$);
 			}
 			UM.fields_groups.field.conditional.prepareFieldsList($);
+			UM.fields_groups.field.conditional.showHideConditionalTabs($);
+			UM.fields_groups.field.conditional.fillRulesFields($);
 		},
 		conditional: {
 			fieldsList: {}, /* format id:{title,type}*/
 			prepareFieldsList: function($) {
-				$('.um-fields-column-content').find('.um-field-row').each( function() {
-					let id = $(this).data('field'); // id
-					let type = $(this).find('.um-field-row-type-select').val(); // type
-					let title = UM.fields_groups.field.sanitizeInput( $(this).find('.um-field-row-title-input').val() ); // title
+				$('.um-fields-column-content').each( function () {
+					let uniqid = $(this).data('uniqid');
+					UM.fields_groups.field.conditional.fieldsList[uniqid] = {};
+					$(this).children('.um-field-row').each( function() {
+						let rowContent = $(this).children('.um-field-row-content');
+						let generalTabFormsLine = rowContent.find('> .um-field-row-tabs-content > div[data-tab="general"] > .um-form-table > tbody > .um-forms-line:not([data-field_type="sub_fields"])');
 
-					if ( um_admin_field_groups_data.field_types[type].conditional_rules.length ) {
-						let rules = {};
-						um_admin_field_groups_data.field_types[type].conditional_rules.forEach((element) => {
-							rules[element] = um_admin_field_groups_data.conditional_rules[ element ];
-						});
+						let type = generalTabFormsLine.find('.um-field-row-type-select').val(); // type
+						if ( um_admin_field_groups_data.field_types[type].conditional_rules.length ) {
+							let id = $(this).data('field'); // id
+							let title = UM.fields_groups.field.sanitizeInput( generalTabFormsLine.find('.um-field-row-title-input').val() ); // title
+							let order = $(this).children('.um-field-row-order').val();
 
-						let valueOptions = null;
-						if ( 'choice' === um_admin_field_groups_data.field_types[type].category ) {
-							valueOptions = {};
-							// @todo get options from field settings
-							//$(this).find('.um-field-row-type-select').val()
+							let rules = {};
+							um_admin_field_groups_data.field_types[type].conditional_rules.forEach((element) => {
+								rules[element] = um_admin_field_groups_data.conditional_rules[ element ];
+							});
+
+							let valueOptions = null;
+							if ( 'choice' === um_admin_field_groups_data.field_types[type].category ) {
+								valueOptions = [];
+								if ( 'bool' === type ) {
+									valueOptions = [
+										{'key':0,'value':wp.i18n.__('False','ultimate-member')},
+										{'key':1,'value':wp.i18n.__('True','ultimate-member')},
+									];
+								} else {
+									generalTabFormsLine.each(function (){
+										if ( 'choices' === $(this).data('field_type') ) {
+											$(this).find('.um-admin-option-row').each(function (){
+												let key = $(this).find('.um-admin-option-key').val();
+												let value = $(this).find('.um-admin-option-val').val();
+												valueOptions.push( {'key':key,'value':value} );
+											});
+										}
+									});
+								}
+							}
+
+							UM.fields_groups.field.conditional.fieldsList[uniqid][order] = {
+								'id': id,
+								'type': type,
+								'title': title,
+								'conditions': rules,
+								'valueOptions': valueOptions,
+								'order': order
+							};
+						}
+					});
+				});
+				// $('.um-fields-column-content').find('.um-field-row').each( function() {
+				// 	let id = $(this).data('field'); // id
+				// 	let type = $(this).find('.um-field-row-type-select').val(); // type
+				// 	let title = UM.fields_groups.field.sanitizeInput( $(this).find('.um-field-row-title-input').val() ); // title
+				//
+				// 	if ( um_admin_field_groups_data.field_types[type].conditional_rules.length ) {
+				// 		let rules = {};
+				// 		um_admin_field_groups_data.field_types[type].conditional_rules.forEach((element) => {
+				// 			rules[element] = um_admin_field_groups_data.conditional_rules[ element ];
+				// 		});
+				//
+				// 		let valueOptions = null;
+				// 		if ( 'choice' === um_admin_field_groups_data.field_types[type].category ) {
+				// 			valueOptions = {};
+				// 			// @todo get options from field settings
+				// 			//$(this).find('.um-field-row-type-select').val()
+				// 		}
+				//
+				// 		UM.fields_groups.field.conditional.fieldsList[id] = {
+				// 			'type': type,
+				// 			'title': title,
+				// 			'conditions': rules,
+				// 			'valueOptions': valueOptions
+				// 		};
+				// 	}
+				// });
+			},
+			showHideConditionalTabs: function($) {
+				$('.um-fields-column-content').each(function (){
+					let firstFieldRow = $(this).children('.um-field-row:first');
+
+					firstFieldRow.each( function () {
+						$(this).data('conditional-disabled',true);
+						let rowContent = $(this).children('.um-field-row-content');
+
+						let conditionalTab = rowContent.children('.um-field-row-tabs').children('div[data-tab="conditional"]');
+						if ( conditionalTab.hasClass('current') ) {
+							conditionalTab.siblings('div[data-tab="general"]').trigger('click');
+						}
+						conditionalTab.hide();
+
+						let conditionalForm = rowContent.children('.um-field-row-content').children('div[data-tab="conditional"]');
+
+						conditionalForm.find('.um-forms-field').prop('disabled', true);
+						conditionalForm.find('.um-conditional-rule-condition-col .um-conditional-rule-setting:not(.um-force-disabled)').prop('disabled', true);
+						conditionalForm.find('.um-conditional-rule-value-col input.um-conditional-rule-setting:not(.um-force-disabled)').prop('disabled', true);
+						conditionalForm.find('.um-conditional-rule-value-col select.um-conditional-rule-setting:not(.um-force-disabled)').prop('disabled', true);
+					});
+
+					let anotherFieldRows = $(this).children('.um-field-row:not(:first)');
+
+					anotherFieldRows.each( function () {
+						$(this).data('conditional-disabled', false);
+						let rowContent = $(this).children('.um-field-row-content');
+
+						rowContent.children('.um-field-row-tabs').children('div[data-tab="conditional"]').show();
+
+						let conditionalForm = rowContent.children('.um-field-row-content').children('div[data-tab="conditional"]');
+
+						conditionalForm.find('.um-forms-field').prop('disabled', false);
+						conditionalForm.find('.um-conditional-rule-condition-col .um-conditional-rule-setting:not(.um-force-disabled)').prop('disabled', false);
+						conditionalForm.find('.um-conditional-rule-value-col input.um-conditional-rule-setting:not(.um-force-disabled)').prop('disabled', false);
+						conditionalForm.find('.um-conditional-rule-value-col select.um-conditional-rule-setting:not(.um-force-disabled)').prop('disabled', false);
+					});
+				});
+
+				run_check_conditions();
+			},
+			fillRulesFields: function($) {
+				let $fieldsColumnsObj = $('.um-fields-column-content');
+				$fieldsColumnsObj.each( function () {
+					let uniqid = $(this).data('uniqid');
+
+					$(this).children('.um-field-row').each( function() {
+						if ( true === $(this).data('conditional-disabled') ) {
+							return;
 						}
 
-						UM.fields_groups.field.conditional.fieldsList[id] = {
-							'type': type,
-							'title': title,
-							'conditions': rules,
-							'valueOptions': valueOptions
-						};
-					}
+						if ( 'undefined' === typeof UM.fields_groups.field.conditional.fieldsList[ uniqid ] ) {
+							return;
+						}
+
+						let currentFieldOrder = $(this).children('.um-field-row-order').val();
+
+						let conditionalForm = $(this).children('.um-field-row-content').children('.um-field-row-tabs-content').children('div[data-tab="conditional"]');
+
+						conditionalForm.find('.um-conditional-rule-field-col .um-conditional-rule-setting').each( function() {
+							let selectField = $(this);
+							let selectFieldVal = selectField.val();
+
+							// Remove all options except empty.
+							selectField.find('option').each( function(){
+								if ( '' === $(this).attr('value') ) {
+									return;
+								}
+								$(this).remove();
+							});
+
+							// Fill dropdown by the fields from the builder in necessary order.
+							$.each( UM.fields_groups.field.conditional.fieldsList[ uniqid ], function ( order, field ) {
+								// Show only fields that has previous order and are situated above the current field in the form.
+								if ( order >= currentFieldOrder ) {
+									return;
+								}
+
+								if ( ! selectField.find( 'option[value="' + field.id + '"]' ).length /*&& String( fieldID ) !== String( field.id )*/ ) {
+									selectField.append( '<option value="' + field.id + '">' + field.title + '</option>' );
+								}
+
+								// Set predefined value that was selected before changing options.
+								if ( String( field.id ) === String( selectFieldVal ) ) {
+									selectField.val( selectFieldVal ).trigger('change');
+								}
+							});
+
+							let fieldsRow = $(this).closest('.um-conditional-rule-fields');
+							if ( '' === selectFieldVal ) {
+								fieldsRow.find('.um-conditional-rule-condition-col .um-conditional-rule-setting').prop('disabled', true);
+								fieldsRow.find('.um-conditional-rule-value-col input.um-conditional-rule-setting').prop('disabled', true).show();
+								fieldsRow.find('.um-conditional-rule-value-col select.um-conditional-rule-setting').prop('disabled', true).hide();
+							} else {
+
+								let fieldRowOrder = $('.um-field-row[data-field="' + selectFieldVal + '"]').children('.um-field-row-order').val();
+
+								let conditionalsField = fieldsRow.find('.um-conditional-rule-condition-col .um-conditional-rule-setting');
+								let conditionalsFieldVal = conditionalsField.val();
+								conditionalsField.prop('disabled', false);
+
+								conditionalsField.find('option').each( function(){
+									if ( '' === $(this).attr('value') ) {
+										return;
+									}
+									$(this).remove();
+								});
+
+								// Fill dropdown by the condition rules based on the field-type.
+								$.each( UM.fields_groups.field.conditional.fieldsList[ uniqid ][fieldRowOrder].conditions, function ( key, title ) {
+									if ( ! conditionalsField.find( 'option[value="' + key + '"]' ).length ) {
+										conditionalsField.append( '<option value="' + key + '">' + title + '</option>' );
+									}
+
+									// Set predefined value that was selected before changing options.
+									if ( String( key ) === String( conditionalsFieldVal ) ) {
+										conditionalsField.val( conditionalsFieldVal );
+									}
+								});
+
+								let valueField = null;
+								if ( null === UM.fields_groups.field.conditional.fieldsList[ uniqid ][fieldRowOrder].valueOptions ) {
+									valueField = fieldsRow.find('.um-conditional-rule-value-col input.um-conditional-rule-setting');
+									if ( '' !== conditionalsFieldVal && '!=empty' !== conditionalsFieldVal && '==empty' !== conditionalsFieldVal ) {
+										valueField.prop('disabled', false);
+									} else {
+										valueField.prop('disabled', true);
+									}
+									valueField.show();
+
+									fieldsRow.find('.um-conditional-rule-value-col select.um-conditional-rule-setting').prop('disabled', true).hide();
+								} else {
+									valueField = fieldsRow.find('.um-conditional-rule-value-col select.um-conditional-rule-setting');
+									let valueFieldVal = valueField.val();
+									fieldsRow.find('.um-conditional-rule-value-col input.um-conditional-rule-setting').prop('disabled', true).hide();
+
+									if ( '' !== conditionalsFieldVal && '!=empty' !== conditionalsFieldVal && '==empty' !== conditionalsFieldVal ) {
+										valueField.prop('disabled', false);
+									} else {
+										valueField.prop('disabled', true);
+									}
+									valueField.show();
+
+									valueField.find('option').each( function(){
+										if ( '' === $(this).attr('value') ) {
+											return;
+										}
+										$(this).remove();
+									});
+
+									// Fill dropdown by the fields values from the builder in necessary order.
+									$.each( UM.fields_groups.field.conditional.fieldsList[ uniqid ][fieldRowOrder].valueOptions, function ( order, option ) {
+										if ( ! valueField.find( 'option[value="' + option.key + '"]' ).length ) {
+											valueField.append( '<option value="' + option.key + '">' + option.value + '</option>' );
+										}
+
+										// Set predefined value that was selected before changing options.
+										if ( String( option.key ) === String( valueFieldVal ) ) {
+											valueField.val( valueFieldVal );
+										}
+									});
+								}
+							}
+						});
+					});
 				});
 			},
 			reset: function(resetRulesBtn,$) {
@@ -482,7 +704,7 @@ UM.fields_groups = {
 				rulesWrapper.find('.um-conditional-rules-wrapper-bottom').before( $cloned );
 				UM.fields_groups.field.conditional.showReset(rulesWrapper,$);
 
-				UM.fields_groups.field.prepareSettings($);
+				//UM.fields_groups.field.prepareSettings($);
 			},
 			addRule: function(currentRuleRow,$) {
 				let rulesWrapper = currentRuleRow.parents('.um-conditional-rules-wrapper');
@@ -507,7 +729,7 @@ UM.fields_groups = {
 				UM.fields_groups.field.conditional.changeInputIndex(rulesWrapper,$);
 				UM.fields_groups.field.conditional.showReset(rulesWrapper,$);
 
-				UM.fields_groups.field.prepareSettings($);
+				//UM.fields_groups.field.prepareSettings($);
 			},
 			removeRule: function(currentRuleRow,$) {
 				let rulesWrapper = currentRuleRow.parents('.um-conditional-rules-wrapper');
@@ -531,7 +753,7 @@ UM.fields_groups = {
 
 				UM.fields_groups.field.conditional.changeInputIndex(rulesWrapper,$);
 
-				UM.fields_groups.field.prepareSettings($);
+				// UM.fields_groups.field.prepareSettings($);
 			},
 			changeInputIndex: function(rulesWrapper,$) {
 				let groupIndex = 0;
@@ -616,7 +838,6 @@ UM.fields_groups = {
 				UM.fields_groups.tabs.reBuild( row, newSettingsTabs, $ );
 			}
 
-			//row.find('.um-field-row-tabs > div[data-tab]').addClass('disabled');
 			$rowTabs.children('div[data-tab]').addClass('disabled');
 
 			if ( typeof ( UM.fields_groups.field.settingsScreens[ fieldID ] ) === 'object' &&  typeof ( UM.fields_groups.field.settingsScreens[ fieldID ][ type ] ) === 'object' ) {
@@ -824,45 +1045,22 @@ jQuery( function($) {
 		}
 	});
 
-	// make fields columns sortable
+	// Make fields columns sortable.
 	let $fieldsColumnsObj = $('.um-fields-column-content');
 	$fieldsColumnsObj.each( function () {
 		UM.fields_groups.sortable.init($(this),$);
 	});
 
+	// Prepare conditional logic fields on first page load.
 	UM.fields_groups.field.conditional.prepareFieldsList($);
+	UM.fields_groups.field.conditional.showHideConditionalTabs($);
+	UM.fields_groups.field.conditional.fillRulesFields($);
 
-	$fieldsColumnsObj.find('.um-field-row').each( function() {
-		let fieldID = $(this).data('field');
-		$(this).find('.um-conditional-rule-field-col .um-conditional-rule-setting').each( function() {
-			$(this).find('option').each( function(){
-				if ( $(this).is(':selected') || '' === $(this).attr('value') ) {
-					return;
-				}
-				$(this).remove();
-			});
+	console.log( '-------- Conditional -----------' );
+	console.log( UM.fields_groups.field.conditional.fieldsList );
+	console.log( '-------------' );
 
-			let selectField = $(this);
-			let selectFieldVal = selectField.val();
-			$.each( UM.fields_groups.field.conditional.fieldsList, function ( id, field ) {
-				if ( ! selectField.find( 'option[value="' + id + '"]' ).length && fieldID != id ) {
-					selectField.find( 'option[value=""]' ).after( '<option value="' + id + '">' + field.title + '</option>' );
-				}
-			});
-
-			let $options = selectField.find('option').detach();
-			$options.sort(function(a, b) {
-				if ( '' === $(a).val() ) {
-					return 0;
-				}
-				if ($(a).text() > $(b).text()) return 1;
-				if ($(a).text() < $(b).text()) return -1;
-				return 0;
-			});
-			selectField.append($options).val( selectFieldVal );
-		} );
-	});
-
+	// Prepare field settings screens for operate them on changing field type.
 	UM.fields_groups.field.prepareSettings($);
 
 	console.log( UM.fields_groups.field.settingsScreens );
@@ -889,6 +1087,7 @@ jQuery( function($) {
 		}
 	});
 
+	// todo make fields duplicate
 	$(document.body).on('click','.um-field-row-action-duplicate', function(e){
 		e.preventDefault();
 		if ( confirm( wp.i18n.__( 'Are you sure you want to duplicate this field?', 'ultimate-member' ) ) ) {
@@ -909,6 +1108,7 @@ jQuery( function($) {
 		UM.fields_groups.tabs.setActive($(this),$);
 	});
 
+	/* START - Conditional Fields handlers */
 	$(document.body).on('click','.um-field-row-reset-all-conditions', function(e){
 		e.preventDefault();
 		if ( confirm( wp.i18n.__( 'Are you sure?', 'ultimate-member' ) ) ) {
@@ -934,6 +1134,7 @@ jQuery( function($) {
 		UM.fields_groups.field.conditional.removeRule(currentRuleRow,$);
 	});
 
+	// Show or Hide "Reset All Rules" button handler.
 	$(document.body).on('change','.um-conditional-rule-field-col select, .um-conditional-rule-condition-col select, .um-conditional-rule-value-col select,.um-conditional-rule-value-col input', function(e){
 		let conditionsTab = $(this).parents('.um-field-row-tabs-content > div[data-tab="conditional"]');
 		if ( UM.fields_groups.field.conditional.isEmpty(conditionsTab,$) ) {
@@ -945,76 +1146,105 @@ jQuery( function($) {
 		//UM.fields_groups.field.prepareSettings($);
 	});
 
+	// Change Rule's Field.
 	$(document.body).on('change','.um-conditional-rule-field-col .um-conditional-rule-setting', function(e){
+		let uniqid = $(this).closest('.um-fields-column-content').data('uniqid');
+
+		if ( 'undefined' === typeof UM.fields_groups.field.conditional.fieldsList[ uniqid ] ) {
+			return;
+		}
+
 		let fieldID = $(this).val();
-		let fieldsRow = $(this).parents('.um-conditional-rule-fields');
+		let fieldsRow = $(this).closest('.um-conditional-rule-fields');
 		if ( '' === fieldID ) {
 			fieldsRow.find('.um-conditional-rule-condition-col .um-conditional-rule-setting').prop('disabled', true);
 			fieldsRow.find('.um-conditional-rule-value-col input.um-conditional-rule-setting').prop('disabled', true).show();
 			fieldsRow.find('.um-conditional-rule-value-col select.um-conditional-rule-setting').prop('disabled', true).hide();
 		} else {
-			let selectField = fieldsRow.find('.um-conditional-rule-condition-col .um-conditional-rule-setting');
-			selectField.prop('disabled', false);
 
-			selectField.find('option').each( function(){
+			let fieldRowOrder = $('.um-field-row[data-field="' + fieldID + '"]').children('.um-field-row-order').val();
+
+			let conditionalsField = fieldsRow.find('.um-conditional-rule-condition-col .um-conditional-rule-setting');
+			conditionalsField.prop('disabled', false);
+
+			conditionalsField.find('option').each( function(){
 				if ( '' === $(this).attr('value') ) {
 					return;
 				}
 				$(this).remove();
 			});
 
-			let selectFieldVal = selectField.val();
-			$.each( UM.fields_groups.field.conditional.fieldsList[ fieldID ].conditions, function ( key, title ) {
-				if ( ! selectField.find( 'option[value="' + key + '"]' ).length ) {
-					selectField.find( 'option[value=""]' ).after( '<option value="' + key + '">' + title + '</option>' );
+			// Fill dropdown by the condition rules based on the field-type.
+			$.each( UM.fields_groups.field.conditional.fieldsList[ uniqid ][fieldRowOrder].conditions, function ( key, title ) {
+				if ( ! conditionalsField.find( 'option[value="' + key + '"]' ).length ) {
+					conditionalsField.append( '<option value="' + key + '">' + title + '</option>' );
 				}
 			});
 
-			let $options = selectField.find('option').detach();
-			$options.sort(function(a, b) {
-				if ( '' === $(a).val() ) {
-					return 0;
-				}
-				if ($(a).text() > $(b).text()) return 1;
-				if ($(a).text() < $(b).text()) return -1;
-				return 0;
-			});
-			selectField.append($options).val('');
-
-			if ( null === UM.fields_groups.field.conditional.fieldsList[ fieldID ].valueOptions ) {
-				fieldsRow.find('.um-conditional-rule-value-col input.um-conditional-rule-setting').prop('disabled', true).show();
+			let valueField = null;
+			if ( null === UM.fields_groups.field.conditional.fieldsList[ uniqid ][fieldRowOrder].valueOptions ) {
+				valueField = fieldsRow.find('.um-conditional-rule-value-col input.um-conditional-rule-setting');
+				valueField.prop('disabled', false).show();
 				fieldsRow.find('.um-conditional-rule-value-col select.um-conditional-rule-setting').prop('disabled', true).hide();
 			} else {
+				valueField = fieldsRow.find('.um-conditional-rule-value-col select.um-conditional-rule-setting');
+
 				fieldsRow.find('.um-conditional-rule-value-col input.um-conditional-rule-setting').prop('disabled', true).hide();
-				fieldsRow.find('.um-conditional-rule-value-col select.um-conditional-rule-setting').prop('disabled', true).show();
+				valueField.prop('disabled', false).show();
+
+				valueField.find('option').each( function(){
+					if ( '' === $(this).attr('value') ) {
+						return;
+					}
+					$(this).remove();
+				});
+
+				// Fill dropdown by the fields values from the builder in necessary order.
+				$.each( UM.fields_groups.field.conditional.fieldsList[ uniqid ][fieldRowOrder].valueOptions, function ( order, option ) {
+					if ( ! valueField.find( 'option[value="' + option.key + '"]' ).length ) {
+						valueField.append( '<option value="' + option.key + '">' + option.value + '</option>' );
+					}
+				});
 			}
+			conditionalsField.val('').trigger('change');
+			valueField.val('').trigger('change');
 		}
 		//UM.fields_groups.field.prepareSettings($);
 	});
 
+	// Change Rule's Condition.
 	$(document.body).on('change','.um-conditional-rule-condition-col .um-conditional-rule-setting', function(e){
+		let uniqid = $(this).closest('.um-fields-column-content').data('uniqid');
+
+		if ( 'undefined' === typeof UM.fields_groups.field.conditional.fieldsList[ uniqid ] ) {
+			return;
+		}
+
 		let ruleKey = $(this).val();
-		let fieldsRow = $(this).parents('.um-conditional-rule-fields');
+		let fieldsRow = $(this).closest('.um-conditional-rule-fields');
 		let fieldID = fieldsRow.find('.um-conditional-rule-field-col .um-conditional-rule-setting').val();
 
+		let fieldRowOrder = $('.um-field-row[data-field="' + fieldID + '"]').children('.um-field-row-order').val();
+
 		if ( '' === ruleKey || '!=empty' === ruleKey || '==empty' === ruleKey ) {
-			fieldsRow.find('.um-conditional-rule-value-col input.um-conditional-rule-setting').prop('disabled', true).show();
-			fieldsRow.find('.um-conditional-rule-value-col select.um-conditional-rule-setting').prop('disabled', true).hide();
+			fieldsRow.find('.um-conditional-rule-value-col input.um-conditional-rule-setting').prop('disabled', true).val('').show();
+			fieldsRow.find('.um-conditional-rule-value-col select.um-conditional-rule-setting').prop('disabled', true).val('').hide();
 		} else {
-			if ( null === UM.fields_groups.field.conditional.fieldsList[ fieldID ].valueOptions ) {
-				fieldsRow.find('.um-conditional-rule-value-col input.um-conditional-rule-setting').prop('disabled', false).show();
-				fieldsRow.find('.um-conditional-rule-value-col select.um-conditional-rule-setting').prop('disabled', true).hide();
+			if ( null === UM.fields_groups.field.conditional.fieldsList[ uniqid ][fieldRowOrder].valueOptions ) {
+				fieldsRow.find('.um-conditional-rule-value-col input.um-conditional-rule-setting').prop('disabled', false).val('').show();
+				fieldsRow.find('.um-conditional-rule-value-col select.um-conditional-rule-setting').prop('disabled', true).val('').hide();
 			} else {
-				fieldsRow.find('.um-conditional-rule-value-col input.um-conditional-rule-setting').prop('disabled', true).hide();
-				fieldsRow.find('.um-conditional-rule-value-col select.um-conditional-rule-setting').prop('disabled', false).show();
+				fieldsRow.find('.um-conditional-rule-value-col input.um-conditional-rule-setting').prop('disabled', true).val('').hide();
+				fieldsRow.find('.um-conditional-rule-value-col select.um-conditional-rule-setting').prop('disabled', false).val('').show();
 			}
 		}
 
 		//UM.fields_groups.field.prepareSettings($);
 	});
 
-	$('.um-conditional-rules-wrapper .um-conditional-rule-condition-col .um-conditional-rule-setting').trigger('change');
+	/* END - Conditional Fields handlers */
 
+	// Changing fields' settings form fields except Field Type.
 	$(document.body).on('change','.um-forms-field:not(.um-field-row-type-select)', function(e){
 		let row = $(this).closest('.um-field-row');
 		let fieldID = row.data('field');
@@ -1023,6 +1253,7 @@ jQuery( function($) {
 		UM.fields_groups.field.prepareSettings($, fieldID, settingsTab);
 	});
 
+	// Field Type field handlers.
 	$(document.body).on('focusin', '.um-field-row-type-select', function(){
 		let row = $(this).closest('.um-field-row');
 		row.data('previousValue', $(this).val());

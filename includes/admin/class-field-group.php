@@ -739,7 +739,7 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 			return $meta_value;
 		}
 
-		public function get_field_data( $field ) {
+		public function get_field_data( $field, $formatted = false ) {
 			global $wpdb;
 
 			if ( is_array( $field ) ) {
@@ -769,7 +769,8 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 
 			$meta_values = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT meta_key, meta_value
+					"SELECT meta_key,
+						meta_value
 					FROM {$wpdb->prefix}um_fields_meta
 					WHERE field_id = %d",
 					$field
@@ -785,6 +786,12 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 			// Get repeater fields
 			if ( 'repeater' === $field_data['type'] ) {
 				$field_data['fields'] = $this->get_fields( $field_data['group_id'], $field );
+			}
+
+			if ( true === $formatted ) {
+				foreach ( $field_data as &$data ) {
+					$data = maybe_unserialize( $data );
+				}
 			}
 
 			return $field_data;
