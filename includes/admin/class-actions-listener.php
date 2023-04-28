@@ -863,9 +863,9 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 												if ( ! array_key_exists( 'field', $cond_row ) || ! array_key_exists( 'condition', $cond_row ) || ! array_key_exists( 'value', $cond_row ) ) {
 													continue;
 												}
-												$cond_row['field']     = absint( $cond_row['field'] );
+												$cond_row['field']     = sanitize_text_field( $cond_row['field'] ); // Don't change `sanitize_text_field` to `absint` because new fields can have break data.
 												$cond_row['condition'] = sanitize_text_field( $cond_row['condition'] );
-												// remove if rule isn't filled
+												// Remove if rule isn't filled.
 												if ( empty( $cond_row['field'] ) || empty( $cond_row['condition'] ) ) {
 													unset( $field_setting_value[ $cond_group_k ][ $cond_row_k ] );
 													continue;
@@ -1052,7 +1052,6 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 			}
 
 			$submitted_fields = $data['fields'];
-
 			foreach ( $data['fields'] as $k => $field_data ) {
 				$field_settings_tabs = UM()->admin()->field_group()->get_field_settings( sanitize_key( $field_data['type'] ) );
 				$field_settings      = call_user_func_array( 'array_merge', array_values( $field_settings_tabs ) );
@@ -1296,7 +1295,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 							}
 						}
 
-						$id_parent_accoss = array();
+						//$id_parent_accoss = array();
 
 						foreach ( $data['fields'] as $submit_key => $group_field ) {
 							if ( empty( $group_field['id'] ) ) {
@@ -1307,17 +1306,32 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 								unset( $meta['type'] );
 								unset( $meta['parent_id'] );
 
+								if ( array_key_exists( 'conditional_rules', $meta ) ) {
+									foreach ( $meta['conditional_rules'] as &$cond_group ) {
+										foreach ( $cond_group as &$cond_row ) {
+											$field_data = UM()->admin()->field_group()->get_field_data( $cond_row['field'] );
+											if ( false === $field_data ) {
+												if ( isset( UM()->admin()->field_group()->submission_ids_assoc[ $cond_row['field'] ] ) ) {
+													$cond_row['field'] = UM()->admin()->field_group()->submission_ids_assoc[ $cond_row['field'] ];
+												}
+											}
+										}
+									}
+								}
+
 								$field_args = array(
 									'group_id'  => $field_group_id,
 									'title'     => $group_field['title'],
 									'type'      => $group_field['type'],
-									'parent_id' => isset( $id_parent_accoss[ $group_field['parent_id'] ] ) ? $id_parent_accoss[ $group_field['parent_id'] ] : 0,
+									//'parent_id' => isset( $id_parent_accoss[ $group_field['parent_id'] ] ) ? $id_parent_accoss[ $group_field['parent_id'] ] : 0,
+									'parent_id' => isset( UM()->admin()->field_group()->submission_ids_assoc[ $group_field['parent_id'] ] ) ? UM()->admin()->field_group()->submission_ids_assoc[ $group_field['parent_id'] ] : 0,
 									'meta'      => $meta,
 								);
 
 								$f_id = UM()->admin()->field_group()->add_field( $field_args );
 
-								$id_parent_accoss[ $submit_key ] = $f_id;
+								//$id_parent_accoss[ $submit_key ] = $f_id;
+								UM()->admin()->field_group()->submission_ids_assoc[ $submit_key ] = $f_id;
 							} else {
 								// update field
 								$meta = $group_field;
@@ -1325,6 +1339,19 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 								unset( $meta['title'] );
 								unset( $meta['type'] );
 								unset( $meta['parent_id'] );
+
+								if ( array_key_exists( 'conditional_rules', $meta ) ) {
+									foreach ( $meta['conditional_rules'] as &$cond_group ) {
+										foreach ( $cond_group as &$cond_row ) {
+											$field_data = UM()->admin()->field_group()->get_field_data( $cond_row['field'] );
+											if ( false === $field_data ) {
+												if ( isset( UM()->admin()->field_group()->submission_ids_assoc[ $cond_row['field'] ] ) ) {
+													$cond_row['field'] = UM()->admin()->field_group()->submission_ids_assoc[ $cond_row['field'] ];
+												}
+											}
+										}
+									}
+								}
 
 								$field_args = array(
 									'id'    => $group_field['id'],
@@ -1334,7 +1361,8 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 								);
 								UM()->admin()->field_group()->update_field( $field_args );
 
-								$id_parent_accoss[ $submit_key ] = $group_field['id'];
+								//$id_parent_accoss[ $submit_key ] = $group_field['id'];
+								UM()->admin()->field_group()->submission_ids_assoc[ $submit_key ] = $group_field['id'];
 							}
 						}
 					}
@@ -1375,7 +1403,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 				$field_group_id = UM()->admin()->field_group()->create( $args );
 				if ( ! empty( $field_group_id ) ) {
 					if ( ! empty( $data['fields'] ) ) {
-						$id_parent_accoss = array();
+						// $id_parent_accoss = array();
 
 						foreach ( $data['fields'] as $submit_key => $group_field ) {
 							// add new field
@@ -1385,15 +1413,32 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 							unset( $meta['type'] );
 							unset( $meta['parent_id'] );
 
+							if ( array_key_exists( 'conditional_rules', $meta ) ) {
+								foreach ( $meta['conditional_rules'] as &$cond_group ) {
+									foreach ( $cond_group as &$cond_row ) {
+										$field_data = UM()->admin()->field_group()->get_field_data( $cond_row['field'] );
+										if ( false === $field_data ) {
+											if ( isset( UM()->admin()->field_group()->submission_ids_assoc[ $cond_row['field'] ] ) ) {
+												$cond_row['field'] = UM()->admin()->field_group()->submission_ids_assoc[ $cond_row['field'] ];
+											}
+										}
+									}
+								}
+							}
+
 							$field_args = array(
 								'group_id'  => $field_group_id,
 								'title'     => $group_field['title'],
 								'type'      => $group_field['type'],
-								'parent_id' => isset( $id_parent_accoss[ $group_field['parent_id'] ] ) ? $id_parent_accoss[ $group_field['parent_id'] ] : 0,
+								//'parent_id' => isset( $id_parent_accoss[ $group_field['parent_id'] ] ) ? $id_parent_accoss[ $group_field['parent_id'] ] : 0,
+								'parent_id' => isset( UM()->admin()->field_group()->submission_ids_assoc[ $group_field['parent_id'] ] ) ? UM()->admin()->field_group()->submission_ids_assoc[ $group_field['parent_id'] ] : 0,
 								'meta'      => $meta,
 							);
+
 							$f_id = UM()->admin()->field_group()->add_field( $field_args );
-							$id_parent_accoss[ $submit_key ] = $f_id;
+
+							//$id_parent_accoss[ $submit_key ] = $f_id;
+							UM()->admin()->field_group()->submission_ids_assoc[ $submit_key ] = $f_id;
 						}
 					}
 

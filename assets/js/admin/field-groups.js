@@ -305,6 +305,21 @@ UM.fields_groups = {
 
 				let field = $(this).find('.um-forms-field');
 
+				let conditionalFields = $(this).find('.um-conditional-rule-setting');
+				conditionalFields.each(function(i) {
+					let baseName = $(this).data('base-name');
+					if ( 'undefined' !== typeof baseName ) {
+						let newBaseName = baseName.replace( '\{index\}', newIndex );
+						$(this).data('base-name', newBaseName).attr('data-base-name',newBaseName);
+					}
+
+					let name = $(this).attr('name');
+					if ( 'undefined' !== typeof name ) {
+						let newName = name.replace( '\{index\}', newIndex );
+						$(this).attr('name',newName);
+					}
+				});
+
 				let fieldID = field.attr('id');
 				if ( 'undefined' !== typeof fieldID ) {
 					let newID = fieldID.replace( 'new_index', 'new_' + newIndex );
@@ -344,34 +359,34 @@ UM.fields_groups = {
 				});
 			});
 
-			let row_fieldID = $cloned.data('field');
-			$cloned.find('.um-conditional-rule-field-col .um-conditional-rule-setting').each( function() {
-				$(this).find('option').each( function(){
-					if ( $(this).is(':selected') || '' === $(this).attr('value') ) {
-						return;
-					}
-					$(this).remove();
-				});
-
-				let selectField = $(this);
-				let selectFieldVal = selectField.val();
-				$.each( UM.fields_groups.field.conditional.fieldsList, function ( id, field ) {
-					if ( ! selectField.find( 'option[value="' + id + '"]' ).length && row_fieldID != id ) {
-						selectField.find( 'option[value=""]' ).after( '<option value="' + id + '">' + field.title + '</option>' );
-					}
-				});
-
-				let $options = selectField.find('option').detach();
-				$options.sort(function(a, b) {
-					if ( '' === $(a).val() ) {
-						return 0;
-					}
-					if ($(a).text() > $(b).text()) return 1;
-					if ($(a).text() < $(b).text()) return -1;
-					return 0;
-				});
-				selectField.append($options).val( selectFieldVal );
-			} );
+			// let row_fieldID = $cloned.data('field');
+			// $cloned.find('.um-conditional-rule-field-col .um-conditional-rule-setting').each( function() {
+			// 	$(this).find('option').each( function(){
+			// 		if ( $(this).is(':selected') || '' === $(this).attr('value') ) {
+			// 			return;
+			// 		}
+			// 		$(this).remove();
+			// 	});
+			//
+			// 	let selectField = $(this);
+			// 	let selectFieldVal = selectField.val();
+			// 	$.each( UM.fields_groups.field.conditional.fieldsList, function ( id, field ) {
+			// 		if ( ! selectField.find( 'option[value="' + id + '"]' ).length && row_fieldID != id ) {
+			// 			selectField.find( 'option[value=""]' ).after( '<option value="' + id + '">' + field.title + '</option>' );
+			// 		}
+			// 	});
+			//
+			// 	let $options = selectField.find('option').detach();
+			// 	$options.sort(function(a, b) {
+			// 		if ( '' === $(a).val() ) {
+			// 			return 0;
+			// 		}
+			// 		if ($(a).text() > $(b).text()) return 1;
+			// 		if ($(a).text() < $(b).text()) return -1;
+			// 		return 0;
+			// 	});
+			// 	selectField.append($options).val( selectFieldVal );
+			// } );
 
 			$wrapper.append( $cloned );
 
@@ -387,6 +402,8 @@ UM.fields_groups = {
 			run_check_conditions();
 
 			UM.fields_groups.field.conditional.prepareFieldsList($);
+			UM.fields_groups.field.conditional.showHideConditionalTabs($);
+			UM.fields_groups.field.conditional.fillRulesFields($);
 		},
 		toggleEdit: function ( row, $ ) {
 			if ( row.hasClass('um-field-row-edit-mode') ) {

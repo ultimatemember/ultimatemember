@@ -29,6 +29,15 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 		public $is_displayed = false;
 
 		/**
+		 * This variable is used for new created fields associations
+		 * with keys in submission and real field IDs after adding them to DB.
+		 * Is used by parent_id field attribute and in conditional_rules meta.
+		 *
+		 * @var array
+		 */
+		public $submission_ids_assoc = array();
+
+		/**
 		 * Field_Group constructor.
 		 */
 		public function __construct() {
