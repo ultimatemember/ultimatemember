@@ -1221,12 +1221,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 									$block_content = $default_message;
 								} elseif ( $block['attrs']['um_message_type'] == '2' ) {
 									$block_content = sanitize_textarea_field( $block['attrs']['um_message_content'] );
-
-
-
-
-
-									
 								}
 							}
 						}
