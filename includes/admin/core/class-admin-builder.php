@@ -1,9 +1,9 @@
 <?php
 namespace um\admin\core;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
@@ -14,17 +14,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 	 */
 	class Admin_Builder {
 
+		/**
+		 * @var int
+		 */
+		public $form_id;
 
 		/**
-		 * @var
+		 * @var array
 		 */
-		var $form_id;
-
+		public $global_fields = array();
 
 		/**
 		 * Admin_Builder constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			add_action( 'um_admin_field_modal_header', array( &$this, 'add_message_handlers' ) );
 			add_action( 'um_admin_field_modal_footer', array( &$this, 'add_conditional_support' ), 10, 4 );
 			add_filter( 'um_admin_builder_skip_field_validation', array( &$this, 'skip_field_validation' ), 10, 3 );
@@ -32,7 +35,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			add_filter( 'um_admin_pre_save_fields_hook', array( &$this, 'um_admin_pre_save_fields_hook' ), 1 );
 			add_filter( 'um_admin_field_update_error_handling', array( &$this, 'um_admin_field_update_error_handling' ), 1, 2 );
 		}
-
 
 		/**
 		 * Apply a filter to handle errors for field updating in backend
