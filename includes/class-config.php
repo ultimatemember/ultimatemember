@@ -21,52 +21,52 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 *
 		 * @var array
 		 */
-		var $modules = array();
+		public $modules = array();
 
 		/**
 		 * @var array
 		 */
-		var $extension_plugins = array();
-
-		/**
-		 * @since 3.0
-		 *
-		 * @var array
-		 */
-		var $default_settings = array();
+		public $extension_plugins = array();
 
 		/**
 		 * @since 3.0
 		 *
 		 * @var array
 		 */
-		var $predefined_pages = array();
-
-		/**
-		 * @var array
-		 */
-		var $email_notifications = array();
+		public $default_settings = array();
 
 		/**
 		 * @since 3.0
 		 *
 		 * @var array
 		 */
-		var $roles_meta = array();
+		public $predefined_pages = array();
+
+		/**
+		 * @var array
+		 */
+		public $email_notifications = array();
 
 		/**
 		 * @since 3.0
 		 *
 		 * @var array
 		 */
-		var $form_meta_list = array();
+		public $roles_meta = array();
 
 		/**
 		 * @since 3.0
 		 *
 		 * @var array
 		 */
-		var $form_meta = array();
+		public $form_meta_list = array();
+
+		/**
+		 * @since 3.0
+		 *
+		 * @var array
+		 */
+		public $form_meta = array();
 
 		/**
 		 * Legacy variable
@@ -75,14 +75,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 *
 		 * @var array
 		 */
-		var $global_meta;
+		public $global_meta;
 
 		/**
 		 * @since 3.0
 		 *
 		 * @var int
 		 */
-		var $password_reset_attempts_timeout;
+		public $password_reset_attempts_timeout;
 
 		/**
 		 * Login redirect options
@@ -91,7 +91,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 *
 		 * @var array
 		 */
-		var $login_redirect_options = array();
+		public $login_redirect_options = array();
 
 		/**
 		 * Build-in avatar sizes
@@ -100,25 +100,82 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 *
 		 * @var array
 		 */
-		var $avatar_sizes = array();
+		public $avatar_sizes = array();
 
 		/**
-		 * Build-in cover ratio
+		 * Build-in cover ratio.
 		 *
 		 * @since 3.0
 		 *
 		 * @var array
 		 */
-		var $cover_ratio = array();
+		public $cover_ratio = array();
 
 		/**
-		 * Build-in cover sizes
+		 * Build-in cover sizes.
 		 *
 		 * @since 3.0
 		 *
 		 * @var array
 		 */
-		var $cover_sizes = array();
+		public $cover_sizes = array();
+
+		/**
+		 * Build-in field types used in field groups and forms builders.
+		 *
+		 * @since 3.0
+		 *
+		 * @var array
+		 */
+		public $field_type_categories = array();
+
+		/**
+		 * Settings for the fields in field group builder applied for all fields type.
+		 *
+		 * @since 3.0
+		 *
+		 * @var array
+		 */
+		public $static_field_settings = array();
+
+		/**
+		 * Build-in field types used in field groups and forms builders.
+		 *
+		 * @since 3.0
+		 *
+		 * @var array
+		 */
+		public $field_conditional_rules = array();
+
+		/**
+		 * The list of the settings tabs in field group screen.
+		 *
+		 * @since 3.0
+		 *
+		 * @var array
+		 */
+		public $field_settings_tabs = array();
+
+		/**
+		 * @since 3,0
+		 *
+		 * @var array
+		 */
+		public $field_privacy_settings = array();
+
+		/**
+		 * @since 3,0
+		 *
+		 * @var array
+		 */
+		public $field_visibility_settings = array();
+
+		/**
+		 * @since 3,0
+		 *
+		 * @var array
+		 */
+		public $field_validation_settings = array();
 
 		/**
 		 * Build-in field types used in fields groups and forms builders
@@ -127,53 +184,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 *
 		 * @var array
 		 */
-		var $field_type_categories = array();
-
-		var $static_field_settings = array();
-
-		/**
-		 * Build-in field types used in fields groups and forms builders
-		 *
-		 * @since 3.0
-		 *
-		 * @var array
-		 */
-		var $field_conditional_rules = array();
-
-		/**
-		 * @var array
-		 */
-		var $field_settings_tabs = array();
-
-		/**
-		 * @var array
-		 */
-		var $field_privacy_settings = array();
-
-		/**
-		 * @var array
-		 */
-		var $field_visibility_settings = array();
-
-		/**
-		 * @var array
-		 */
-		var $field_validation_settings = array();
-
-		/**
-		 * Build-in field types used in fields groups and forms builders
-		 *
-		 * @since 3.0
-		 *
-		 * @var array
-		 */
-		var $field_types = array();
-
-		/**
-		 * Config constructor.
-		 */
-		function __construct() {
-		}
+		public $field_types = array();
 
 		/**
 		 * Get variable from config
@@ -184,16 +195,17 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 *
 		 * @since 3.0
 		 */
-		function get( $key ) {
+		public function get( $key ) {
 			if ( empty( $this->$key ) ) {
-				call_user_func( [ &$this, 'init_' . $key ] );
+				call_user_func( array( &$this, 'init_' . $key ) );
 			}
 			return apply_filters( 'um_config_get', $this->$key, $key );
 		}
 
-
 		/**
+		 * Init UM modules list.
 		 *
+		 * @since 3.0
 		 */
 		public function init_modules() {
 			$this->modules = array(
@@ -252,17 +264,18 @@ if ( ! class_exists( 'um\Config' ) ) {
 				),
 			);
 
+			// Bulk init path and URLs to modules directory.
 			foreach ( $this->modules as $slug => &$data ) {
-				$data['key'] = $slug;
-
+				$data['key']  = $slug;
 				$data['path'] = UM_PATH . 'modules' . DIRECTORY_SEPARATOR . $slug;
-				$data['url'] = UM_URL . "modules/{$slug}/";
+				$data['url']  = UM_URL . "modules/{$slug}/";
 			}
 		}
 
-
 		/**
+		 * The list of plugin directories of the UMv2 extension plugins.
 		 *
+		 * @since 3.0
 		 */
 		public function init_extension_plugins() {
 			$this->extension_plugins = array(
@@ -298,13 +311,12 @@ if ( ! class_exists( 'um\Config' ) ) {
 			);
 		}
 
-
 		/**
 		 * Init legacy global option that have been deprecated in 2.0
 		 *
 		 * @since 3.0
 		 */
-		function init_global_meta() {
+		public function init_global_meta() {
 			$this->global_meta = array(
 				'_um_primary_btn_color',
 				'_um_primary_btn_hover',
@@ -327,86 +339,90 @@ if ( ! class_exists( 'um\Config' ) ) {
 			);
 		}
 
-
 		/**
 		 * Init plugin default settings
 		 *
 		 * @since 3.0
 		 */
-		function init_default_settings() {
+		public function init_default_settings() {
+			$email_blogindfo = get_bloginfo( 'admin_email' );
+
 			$this->default_settings = array(
-				'restricted_access_post_metabox'        => array( 'post' => 1, 'page' => 1 ),
-				'disable_restriction_pre_queries'       => 0,
-				'uninstall_on_delete'                   => 0,
-				'permalink_base'                        => 'user_login',
-				'display_name'                          => 'full_name',
-				'display_name_field'                    => '',
-				'author_redirect'                       => 1,
-				'require_strongpass'                    => 0,
-				'password_min_chars'                    => 8,
-				'password_max_chars'                    => 30,
-				'account_tab_password'                  => 1,
-				'account_tab_privacy'                   => 1,
-				'account_tab_notifications'             => 1,
-				'account_tab_delete'                    => 1,
-				'delete_account_password_requires'      => 1,
-				'delete_account_text'                   => __( 'Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account enter your password below.', 'ultimate-member' ),
-				'delete_account_no_pass_required_text'  => __( 'Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account, click on the button below.', 'ultimate-member' ),
-				'account_name'                          => 1,
-				'account_name_disable'                  => 0,
-				'account_name_require'                  => 1,
-				'account_email'                         => 1,
-				'account_general_password'              => 0,
-				'photo_thumb_sizes'                     => array( 40, 80, 190 ),
-				'cover_thumb_sizes'                     => array( 300, 600 ),
-				'accessible'                            => 0,
-				'access_redirect'                       => '',
-				'access_exclude_uris'                   => array(),
-				'home_page_accessible'                  => 1,
-				'category_page_accessible'              => 1,
-				'restricted_post_title_replace'         => 1,
-				'restricted_access_post_title'          => __( 'Restricted content', 'ultimate-member' ),
-				'restricted_access_message'             => '',
-				'restricted_blocks'                     => 0,
-				'enable_blocks'                         => 0,
-				'restricted_block_message'              => '',
-				'enable_reset_password_limit'           => 1,
-				'reset_password_limit_number'           => 3,
-				'blocked_emails'                        => '',
-				'blocked_words'                         => 'admin' . "\r\n" . 'administrator' . "\r\n" . 'webmaster' . "\r\n" . 'support' . "\r\n" . 'staff',
-				'allowed_choice_callbacks'              => '',
-				'allow_url_redirect_confirm'            => 1,
-				'use_um_gravatar_default_image'         => 0,
-				'default_avatar'                        => '',
-				'use_cover_photos'                      => 0,
-				'default_cover'                         => '',
-				'disable_profile_photo_upload'          => 0,
-				'profile_show_metaicon'                 => 0,
-				'profile_menu'                          => 1,
-				'profile_menu_default_tab'              => 'main',
-				'profile_menu_icons'                    => 1,
-				'form_asterisk'                         => 0,
-				'profile_title'                         => '{display_name} | {site_name}',
-				'profile_desc'                          => '{display_name} is on {site_name}. Join {site_name} to view {display_name}\'s profile',
-				'admin_email'                           => get_bloginfo('admin_email'),
-				'mail_from'                             => get_bloginfo('name'),
-				'mail_from_addr'                        => get_bloginfo('admin_email'),
-				'email_html'                            => 1,
-				'image_orientation_by_exif'             => 0,
-				'image_compression'                     => 60,
-				'image_max_width'                       => 1000,
-				'cover_min_width'                       => 1000,
-				'profile_photo_max_size'                => 999999999,
-				'cover_photo_max_size'                  => 999999999,
-				'custom_roles_increment'                => 1,
-				'um_profile_object_cache_stop'          => 0,
-				'profile_show_html_bio'                 => 0,
-				'profile_noindex'                       => 0,
-				'activation_link_expiry_time'           => '',
-				'styling'                          => '',
-				'button_backcolor'                      => '#eee',
-				'button_backcolor_hover'                => '#ddd',
-				'button_forecolor'                      => '#333',
+				'restricted_access_post_metabox'       => array(
+					'post' => 1,
+					'page' => 1,
+				),
+				'disable_restriction_pre_queries'      => 0,
+				'uninstall_on_delete'                  => 0,
+				'permalink_base'                       => 'user_login',
+				'display_name'                         => 'full_name',
+				'display_name_field'                   => '',
+				'author_redirect'                      => 1,
+				'require_strongpass'                   => 0,
+				'password_min_chars'                   => 8,
+				'password_max_chars'                   => 30,
+				'account_tab_password'                 => 1,
+				'account_tab_privacy'                  => 1,
+				'account_tab_notifications'            => 1,
+				'account_tab_delete'                   => 1,
+				'delete_account_password_requires'     => 1,
+				'delete_account_text'                  => __( 'Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account enter your password below.', 'ultimate-member' ),
+				'delete_account_no_pass_required_text' => __( 'Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account, click on the button below.', 'ultimate-member' ),
+				'account_name'                         => 1,
+				'account_name_disable'                 => 0,
+				'account_name_require'                 => 1,
+				'account_email'                        => 1,
+				'account_general_password'             => 0,
+				'photo_thumb_sizes'                    => array( 40, 80, 190 ),
+				'cover_thumb_sizes'                    => array( 300, 600 ),
+				'accessible'                           => 0,
+				'access_redirect'                      => '',
+				'access_exclude_uris'                  => array(),
+				'home_page_accessible'                 => 1,
+				'category_page_accessible'             => 1,
+				'restricted_post_title_replace'        => 1,
+				'restricted_access_post_title'         => __( 'Restricted content', 'ultimate-member' ),
+				'restricted_access_message'            => '',
+				'restricted_blocks'                    => 0,
+				'enable_blocks'                        => 0,
+				'restricted_block_message'             => '',
+				'enable_reset_password_limit'          => 1,
+				'reset_password_limit_number'          => 3,
+				'blocked_emails'                       => '',
+				'blocked_words'                        => 'admin' . "\r\n" . 'administrator' . "\r\n" . 'webmaster' . "\r\n" . 'support' . "\r\n" . 'staff',
+				'allowed_choice_callbacks'             => '',
+				'allow_url_redirect_confirm'           => 1,
+				'use_um_gravatar_default_image'        => 0,
+				'default_avatar'                       => '',
+				'use_cover_photos'                     => 0,
+				'default_cover'                        => '',
+				'disable_profile_photo_upload'         => 0,
+				'profile_show_metaicon'                => 0,
+				'profile_menu'                         => 1,
+				'profile_menu_default_tab'             => 'main',
+				'profile_menu_icons'                   => 1,
+				'form_asterisk'                        => 0,
+				'profile_title'                        => '{display_name} | {site_name}',
+				'profile_desc'                         => '{display_name} is on {site_name}. Join {site_name} to view {display_name}\'s profile',
+				'admin_email'                          => $email_blogindfo,
+				'mail_from'                            => get_bloginfo( 'name' ),
+				'mail_from_addr'                       => $email_blogindfo,
+				'email_html'                           => 1,
+				'image_orientation_by_exif'            => 0,
+				'image_compression'                    => 60,
+				'image_max_width'                      => 1000,
+				'cover_min_width'                      => 1000,
+				'profile_photo_max_size'               => 999999999,
+				'cover_photo_max_size'                 => 999999999,
+				'custom_roles_increment'               => 1,
+				'um_profile_object_cache_stop'         => 0,
+				'profile_show_html_bio'                => 0,
+				'profile_noindex'                      => 0,
+				'activation_link_expiry_time'          => '',
+				'styling'                              => '',
+				'button_backcolor'                     => '#eee',
+				'button_backcolor_hover'               => '#ddd',
+				'button_forecolor'                     => '#333',
 			);
 
 			$is_legacy = get_option( 'um_is_legacy' );
@@ -428,12 +444,12 @@ if ( ! class_exists( 'um\Config' ) ) {
 
 				if ( ! isset( $tab['default_privacy'] ) ) {
 					$this->default_settings[ 'profile_tab_' . $id . '_privacy' ] = 0;
-					$this->default_settings[ 'profile_tab_' . $id . '_roles' ] = '';
+					$this->default_settings[ 'profile_tab_' . $id . '_roles' ]   = '';
 				}
 			}
 
 			foreach ( $this->get( 'email_notifications' ) as $key => $notification ) {
-				$this->default_settings[ $key . '_on' ] = ! empty( $notification['default_active'] );
+				$this->default_settings[ $key . '_on' ]  = ! empty( $notification['default_active'] );
 				$this->default_settings[ $key . '_sub' ] = $notification['subject'];
 			}
 
@@ -441,7 +457,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				$this->default_settings[ UM()->options()->get_predefined_page_option_key( $slug ) ] = '';
 			}
 
-			foreach( $this->get( 'form_meta_list' ) as $key => $value ) {
+			foreach ( $this->get( 'form_meta_list' ) as $key => $value ) {
 				$this->default_settings[ str_replace( '_um_', '', $key ) ] = $value;
 			}
 
@@ -452,19 +468,21 @@ if ( ! class_exists( 'um\Config' ) ) {
 			$this->settings_defaults = apply_filters( 'um_default_settings_values', $this->default_settings );
 		}
 
-
 		/**
-		 * Init plugin core pages
+		 * Init plugin core pages.
 		 *
 		 * @since 3.0
 		 */
-		function init_predefined_pages() {
+		public function init_predefined_pages() {
 			$core_forms       = get_option( 'um_core_forms', array() );
-			$setup_shortcodes = array_merge( array(
-				'profile'  => '',
-				'login'    => '',
-				'register' => '',
-			), $core_forms );
+			$setup_shortcodes = array_merge(
+				array(
+					'profile'  => '',
+					'login'    => '',
+					'register' => '',
+				),
+				$core_forms
+			);
 
 			$this->predefined_pages = array(
 				'user'           => array(
@@ -498,17 +516,16 @@ if ( ! class_exists( 'um\Config' ) ) {
 			// since 3.0 legacy hook
 			// @todo remove in 3.1 version
 			$this->predefined_pages = apply_filters( 'um_core_pages', $this->predefined_pages );
-			$this->core_pages = $this->predefined_pages;
+			$this->core_pages       = $this->predefined_pages;
 		}
 
-
 		/**
-		 * Init plugin email notifications
+		 * Init plugin email notifications.
 		 *
 		 * @since 3.0
 		 */
-		function init_email_notifications() {
-			$this->email_notifications = apply_filters( 'um_email_notifications', array(
+		public function init_email_notifications() {
+			$this->email_notifications = array(
 				'welcome_email'         => array(
 					'key'            => 'welcome_email',
 					'title'          => __( 'Account Welcome Email', 'ultimate-member' ),
@@ -607,51 +624,18 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'description' => __( 'Whether to receive notification when an account is deleted', 'ultimate-member' ),
 					'recipient'   => 'admin',
 				),
-			) );
+			);
+
+			$this->email_notifications = apply_filters( 'um_email_notifications', $this->email_notifications );
 		}
 
-
 		/**
-		 * Init plugin roles meta for WP native roles
+		 * Init plugin roles meta for WP native roles.
 		 *
 		 * @since 3.0
 		 */
-		function init_roles_meta() {
+		public function init_roles_meta() {
 			$this->roles_meta = array(
-
-// All Caps map
-//				'_um_can_access_wpadmin'            => 1,
-//				'_um_can_not_see_adminbar'          => 0,
-//				'_um_can_edit_everyone'             => 1,
-//				'_um_can_edit_roles'                => '',
-//				'_um_can_delete_everyone'           => 1,
-//				'_um_can_delete_roles'              => '',
-//				'_um_after_delete'                  => '',
-//				'_um_delete_redirect_url'           => '',
-//				'_um_can_edit_profile'              => 1,
-//				'_um_can_delete_profile'            => 1,
-//				'_um_default_homepage'              => 1,
-//				'_um_redirect_homepage'             => '',
-//				'_um_after_login'                   => 'redirect_admin',
-//				'_um_login_redirect_url'            => '',
-//				'_um_after_logout'                  => 'redirect_home',
-//				'_um_logout_redirect_url'           => '',
-//				'_um_can_view_all'                  => 1,
-//				'_um_can_view_roles'                => '',
-//				'_um_can_make_private_profile'      => 1,
-//				'_um_can_access_private_profile'    => 1,
-//				'_um_status'                        => 'approved',
-//				'_um_auto_approve_act'              => 'redirect_profile',
-//				'_um_auto_approve_url'              => '',
-//				'_um_login_email_activate'          => '',
-//				'_um_checkmail_action'              => '',
-//				'_um_checkmail_message'             => '',
-//				'_um_checkmail_url'                 => '',
-//				'_um_url_email_activate'            => '',
-//				'_um_pending_action'                => '',
-//				'_um_pending_message'               => '',
-//				'_um_pending_url'                   => '',
-
 				'subscriber'    => array(
 					'_um_can_access_wpadmin'         => 0,
 					'_um_can_not_see_adminbar'       => 1,
@@ -740,14 +724,13 @@ if ( ! class_exists( 'um\Config' ) ) {
 			$this->default_roles_metadata = $this->roles_meta;
 		}
 
-
 		/**
-		 * Init default forms' meta
+		 * Init default forms' meta.
 		 *
 		 * @since 3.0
 		 */
-		function init_form_meta_list() {
-			$this->form_meta_list = apply_filters( 'um_form_meta_list', array(
+		public function init_form_meta_list() {
+			$this->form_meta_list = array(
 				'_um_profile_show_name'            => 1,
 				'_um_profile_show_social_links'    => 0,
 				'_um_profile_show_bio'             => 1,
@@ -776,175 +759,185 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'_um_login_primary_btn_word'       => __( 'Login', 'ultimate-member' ),
 				'_um_login_forgot_pass_link'       => 1,
 				'_um_login_show_rememberme'        => 1,
-			) );
+			);
+
+			$this->form_meta_list = apply_filters( 'um_form_meta_list', $this->form_meta_list );
 
 			// since 3.0 legacy code
 			// @todo remove in 3.1 version
 			$this->core_form_meta_all = apply_filters( 'um_core_form_meta_all', $this->form_meta_list );
 		}
 
-
 		/**
-		 * Init default form meta data for the 1st install
+		 * Init default form metadata for the 1st install.
 		 *
 		 * @since 3.0
 		 */
 		public function init_form_meta() {
-			$this->form_meta = apply_filters(
-				'um_form_meta',
-				array(
-					'register' => array(
-						'_um_custom_fields' => array(
-							'user_login'    => array(
-								'title'      => __( 'Username', 'ultimate-member' ),
-								'metakey'    => 'user_login',
-								'type'       => 'text',
-								'label'      => __( 'Username', 'ultimate-member' ),
-								'required'   => 1,
-								'public'     => 1,
-								'editable'   => 0,
-								'validate'   => 'unique_username',
-								'min_chars'  => 3,
-								'max_chars'  => 24,
-								'position'   => '1',
-								'in_row'     => '_um_row_1',
-								'in_sub_row' => '0',
-								'in_column'  => '1',
-								'in_group'   => '',
-							),
-							'user_email'    => array(
-								'title'      => __( 'E-mail Address', 'ultimate-member' ),
-								'metakey'    => 'user_email',
-								'type'       => 'text',
-								'label'      => __( 'E-mail Address', 'ultimate-member' ),
-								'required'   => 0,
-								'public'     => 1,
-								'editable'   => 1,
-								'validate'   => 'unique_email',
-								'position'   => '4',
-								'in_row'     => '_um_row_1',
-								'in_sub_row' => '0',
-								'in_column'  => '1',
-								'in_group'   => '',
-							),
-							'user_password' => array(
-								'title'              => __( 'Password', 'ultimate-member' ),
-								'metakey'            => 'user_password',
-								'type'               => 'password',
-								'label'              => __( 'Password', 'ultimate-member' ),
-								'required'           => 1,
-								'public'             => 1,
-								'editable'           => 1,
-								'min_chars'          => 8,
-								'max_chars'          => 30,
-								'force_good_pass'    => 1,
-								'force_confirm_pass' => 1,
-								'position'           => '5',
-								'in_row'             => '_um_row_1',
-								'in_sub_row'         => '0',
-								'in_column'          => '1',
-								'in_group'           => '',
-							),
-							'first_name'    => array(
-								'title'      => __( 'First Name', 'ultimate-member' ),
-								'metakey'    => 'first_name',
-								'type'       => 'text',
-								'label'      => __( 'First Name', 'ultimate-member' ),
-								'required'   => 0,
-								'public'     => 1,
-								'editable'   => 1,
-								'position'   => '2',
-								'in_row'     => '_um_row_1',
-								'in_sub_row' => '0',
-								'in_column'  => '1',
-								'in_group'   => '',
-							),
-							'last_name'     => array(
-								'title'      => __( 'Last Name', 'ultimate-member' ),
-								'metakey'    => 'last_name',
-								'type'       => 'text',
-								'label'      => __( 'Last Name', 'ultimate-member' ),
-								'required'   => 0,
-								'public'     => 1,
-								'editable'   => 1,
-								'position'   => '3',
-								'in_row'     => '_um_row_1',
-								'in_sub_row' => '0',
-								'in_column'  => '1',
-								'in_group'   => '',
-							),
-							'_um_row_1'     => array(
-								'type'     => 'row',
-								'id'       => '_um_row_1',
-								'sub_rows' => '1',
-								'cols'     => '1',
-							),
+			$this->form_meta = array(
+				'register' => array(
+					'_um_custom_fields' => array(
+						'user_login'    => array(
+							'title'      => __( 'Username', 'ultimate-member' ),
+							'metakey'    => 'user_login',
+							'type'       => 'text',
+							'label'      => __( 'Username', 'ultimate-member' ),
+							'required'   => 1,
+							'public'     => 1,
+							'editable'   => 0,
+							'validate'   => 'unique_username',
+							'min_chars'  => 3,
+							'max_chars'  => 24,
+							'position'   => '1',
+							'in_row'     => '_um_row_1',
+							'in_sub_row' => '0',
+							'in_column'  => '1',
+							'in_group'   => '',
 						),
-						'_um_mode'          => 'register',
-						'_um_core'          => 'register',
-						'title'             => __( 'Default Registration', 'ultimate-member' ),
-					),
-					'login'    => array(
-						'_um_custom_fields' => array(
-							'username'      => array(
-								'title'      => __( 'Username or E-mail', 'ultimate-member' ),
-								'metakey'    => 'username',
-								'type'       => 'text',
-								'label'      => __( 'Username or E-mail', 'ultimate-member' ),
-								'required'   => 1,
-								'public'     => 1,
-								'editable'   => 0,
-								'validate'   => 'unique_username_or_email',
-								'position'   => '1',
-								'in_row'     => '_um_row_1',
-								'in_sub_row' => '0',
-								'in_column'  => '1',
-								'in_group'   => '',
-							),
-							'user_password' => array(
-								'title'              => __( 'Password', 'ultimate-member' ),
-								'metakey'            => 'user_password',
-								'type'               => 'password',
-								'label'              => __( 'Password', 'ultimate-member' ),
-								'required'           => 1,
-								'public'             => 1,
-								'editable'           => 1,
-								'min_chars'          => 8,
-								'max_chars'          => 30,
-								'force_good_pass'    => 1,
-								'force_confirm_pass' => 1,
-								'position'           => '2',
-								'in_row'             => '_um_row_1',
-								'in_sub_row'         => '0',
-								'in_column'          => '1',
-								'in_group'           => '',
-							),
-							'_um_row_1'     => array(
-								'type'     => 'row',
-								'id'       => '_um_row_1',
-								'sub_rows' => '1',
-								'cols'     => '1',
-							),
+						'user_email'    => array(
+							'title'      => __( 'E-mail Address', 'ultimate-member' ),
+							'metakey'    => 'user_email',
+							'type'       => 'text',
+							'label'      => __( 'E-mail Address', 'ultimate-member' ),
+							'required'   => 0,
+							'public'     => 1,
+							'editable'   => 1,
+							'validate'   => 'unique_email',
+							'position'   => '4',
+							'in_row'     => '_um_row_1',
+							'in_sub_row' => '0',
+							'in_column'  => '1',
+							'in_group'   => '',
 						),
-						'_um_mode'          => 'login',
-						'_um_core'          => 'login',
-						'title'             => __( 'Default Login', 'ultimate-member' ),
-					),
-					'profile'  => array(
-						'_um_custom_fields' => array(
-							'_um_row_1' => array(
-								'type'     => 'row',
-								'id'       => '_um_row_1',
-								'sub_rows' => '1',
-								'cols'     => '1',
-							),
+						'user_password' => array(
+							'title'              => __( 'Password', 'ultimate-member' ),
+							'metakey'            => 'user_password',
+							'type'               => 'password',
+							'label'              => __( 'Password', 'ultimate-member' ),
+							'required'           => 1,
+							'public'             => 1,
+							'editable'           => 1,
+							'min_chars'          => 8,
+							'max_chars'          => 30,
+							'force_good_pass'    => 1,
+							'force_confirm_pass' => 1,
+							'position'           => '5',
+							'in_row'             => '_um_row_1',
+							'in_sub_row'         => '0',
+							'in_column'          => '1',
+							'in_group'           => '',
 						),
-						'_um_mode'          => 'profile',
-						'_um_core'          => 'profile',
-						'title'             => __( 'Default Profile', 'ultimate-member' ),
+						'first_name'    => array(
+							'title'      => __( 'First Name', 'ultimate-member' ),
+							'metakey'    => 'first_name',
+							'type'       => 'text',
+							'label'      => __( 'First Name', 'ultimate-member' ),
+							'required'   => 0,
+							'public'     => 1,
+							'editable'   => 1,
+							'position'   => '2',
+							'in_row'     => '_um_row_1',
+							'in_sub_row' => '0',
+							'in_column'  => '1',
+							'in_group'   => '',
+						),
+						'last_name'     => array(
+							'title'      => __( 'Last Name', 'ultimate-member' ),
+							'metakey'    => 'last_name',
+							'type'       => 'text',
+							'label'      => __( 'Last Name', 'ultimate-member' ),
+							'required'   => 0,
+							'public'     => 1,
+							'editable'   => 1,
+							'position'   => '3',
+							'in_row'     => '_um_row_1',
+							'in_sub_row' => '0',
+							'in_column'  => '1',
+							'in_group'   => '',
+						),
+						'_um_row_1'     => array(
+							'type'     => 'row',
+							'id'       => '_um_row_1',
+							'sub_rows' => '1',
+							'cols'     => '1',
+						),
 					),
-				)
+					'_um_mode'          => 'register',
+					'_um_core'          => 'register',
+					'title'             => __( 'Default Registration', 'ultimate-member' ),
+				),
+				'login'    => array(
+					'_um_custom_fields' => array(
+						'username'      => array(
+							'title'      => __( 'Username or E-mail', 'ultimate-member' ),
+							'metakey'    => 'username',
+							'type'       => 'text',
+							'label'      => __( 'Username or E-mail', 'ultimate-member' ),
+							'required'   => 1,
+							'public'     => 1,
+							'editable'   => 0,
+							'validate'   => 'unique_username_or_email',
+							'position'   => '1',
+							'in_row'     => '_um_row_1',
+							'in_sub_row' => '0',
+							'in_column'  => '1',
+							'in_group'   => '',
+						),
+						'user_password' => array(
+							'title'              => __( 'Password', 'ultimate-member' ),
+							'metakey'            => 'user_password',
+							'type'               => 'password',
+							'label'              => __( 'Password', 'ultimate-member' ),
+							'required'           => 1,
+							'public'             => 1,
+							'editable'           => 1,
+							'min_chars'          => 8,
+							'max_chars'          => 30,
+							'force_good_pass'    => 1,
+							'force_confirm_pass' => 1,
+							'position'           => '2',
+							'in_row'             => '_um_row_1',
+							'in_sub_row'         => '0',
+							'in_column'          => '1',
+							'in_group'           => '',
+						),
+						'_um_row_1'     => array(
+							'type'     => 'row',
+							'id'       => '_um_row_1',
+							'sub_rows' => '1',
+							'cols'     => '1',
+						),
+					),
+					'_um_mode'          => 'login',
+					'_um_core'          => 'login',
+					'title'             => __( 'Default Login', 'ultimate-member' ),
+				),
+				'profile'  => array(
+					'_um_custom_fields' => array(
+						'_um_row_1' => array(
+							'type'     => 'row',
+							'id'       => '_um_row_1',
+							'sub_rows' => '1',
+							'cols'     => '1',
+						),
+					),
+					'_um_mode'          => 'profile',
+					'_um_core'          => 'profile',
+					'title'             => __( 'Default Profile', 'ultimate-member' ),
+				),
 			);
+
+			/**
+			 * Filters the default form's data.
+			 *
+			 * @since 2.0
+			 * @hook um_form_meta
+			 *
+			 * @param {array} $form_meta Built-in default form meta.
+			 *
+			 * @return {array} Filtered default form meta.
+			 */
+			$this->form_meta = apply_filters( 'um_form_meta', $this->form_meta );
 
 			// since 3.0 legacy code
 			// @todo remove in 3.1 version
@@ -952,8 +945,8 @@ if ( ! class_exists( 'um\Config' ) ) {
 		}
 
 		/**
-		 * Init reset password attempts timeout
-		 * This variable set usermeta timeout for the `password_rst_attempts` usermeta
+		 * Init reset password attempts timeout.
+		 * This variable set usermeta timeout for the `password_rst_attempts` usermeta.
 		 *
 		 * @since 3.0
 		 */
@@ -985,19 +978,19 @@ if ( ! class_exists( 'um\Config' ) ) {
 			$this->avatar_sizes = array(
 				'xl' => array(
 					'title' => __( 'Profile page', 'ultimate-member' ),
-					'size' => 190,
+					'size'  => 190,
 				),
 				'l'  => array(
 					'title' => __( 'Member Directory', 'ultimate-member' ),
-					'size' => 96, // default WordPress avatar size
+					'size'  => 96, // default WordPress avatar size
 				),
 				'm'  => array(
 					'title' => __( 'Activity|Messages', 'ultimate-member' ),
-					'size' => 40,
+					'size'  => 40,
 				),
 				's'  => array(
 					'title' => __( 'Widgets', 'ultimate-member' ),
-					'size' => 20,
+					'size'  => 20,
 				),
 			);
 		}
@@ -1008,7 +1001,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 * @since 3.0
 		 */
 		public function init_cover_ratio() {
-			// size it's height, width will be automatically based on ratio
+			// size is height, width will be automatically based on ratio
 			$this->cover_ratio = array(
 				'1.6:1' => __( '1.6:1', 'ultimate-member' ),
 				'2.7:1' => __( '2.7:1', 'ultimate-member' ),
@@ -1018,28 +1011,33 @@ if ( ! class_exists( 'um\Config' ) ) {
 		}
 
 		/**
-		 * Init build-in cover sizes
+		 * Init build-in cover sizes.
 		 *
 		 * @since 3.0
 		 */
 		public function init_cover_sizes() {
-			// size it's height, width will be automatically based on ratio
+			// size is height, width will be automatically based on ratio
 			$this->cover_sizes = array(
-				'l'  => array(
+				'l' => array(
 					'title' => __( 'Large version', 'ultimate-member' ),
-					'size' => 600,
+					'size'  => 600,
 				),
-				'm'  => array(
+				'm' => array(
 					'title' => __( 'User Profile', 'ultimate-member' ),
-					'size' => 300,
+					'size'  => 300,
 				),
-				's'  => array(
+				's' => array(
 					'title' => __( 'Member Directory', 'ultimate-member' ),
-					'size' => 100,
+					'size'  => 100,
 				),
 			);
 		}
 
+		/**
+		 * Init field type categories. Categories are used for optgroups in field type select.
+		 *
+		 * @since 3.0
+		 */
 		public function init_field_type_categories() {
 			$this->field_type_categories = array(
 				'basic'   => __( 'Basic', 'ultimate-member' ),
@@ -1050,6 +1048,11 @@ if ( ! class_exists( 'um\Config' ) ) {
 			);
 		}
 
+		/**
+		 * All possible conditional rules.
+		 *
+		 * @since 3.0
+		 */
 		public function init_field_conditional_rules() {
 			$this->field_conditional_rules = array(
 				'=='         => __( 'Value is equal to', 'ultimate-member' ),
@@ -1063,6 +1066,11 @@ if ( ! class_exists( 'um\Config' ) ) {
 			);
 		}
 
+		/**
+		 * The list of the field settings tabs. They are used for init field settings section in builder.
+		 *
+		 * @since 3.0
+		 */
 		public function init_field_settings_tabs() {
 			$this->field_settings_tabs = array(
 				'general'      => __( 'General', 'ultimate-member' ),
@@ -1074,6 +1082,11 @@ if ( ! class_exists( 'um\Config' ) ) {
 			);
 		}
 
+		/**
+		 * The list of possible privacy settings for the field.
+		 *
+		 * @since 3.0
+		 */
 		public function init_field_privacy_settings() {
 			$this->field_privacy_settings = array(
 				'1'  => __( 'Everyone', 'ultimate-member' ),
@@ -1083,9 +1096,24 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'-2' => __( 'Only specific member roles', 'ultimate-member' ),
 			);
 
+			/**
+			 * Filters the privacy settings for the fields.
+			 *
+			 * @since 2.0
+			 * @hook um_field_privacy_options
+			 *
+			 * @param {array} $privacy_settings Built-in privacy settings.
+			 *
+			 * @return {array} Filtered privacy settings.
+			 */
 			$this->field_privacy_settings = apply_filters( 'um_field_privacy_options', $this->field_privacy_settings );
 		}
 
+		/**
+		 * The list of possible field's visibility settings.
+		 *
+		 * @since 3.0
+		 */
 		public function init_field_visibility_settings() {
 			$this->field_visibility_settings = array(
 				'edit'     => __( 'Profile Edit mode', 'ultimate-member' ),
@@ -1094,6 +1122,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 			);
 		}
 
+		/**
+		 * The list of the possible validation type for the field.
+		 * @since 3.0
+		 */
 		public function init_field_validation_settings() {
 			$this->field_validation_settings = array(
 				''                         => __( 'None', 'ultimate-member' ),
@@ -1122,28 +1154,23 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'custom'                   => __( 'Custom Validation', 'ultimate-member' ),
 			);
 			/**
-			 * UM hook
+			 * Filters the validation types for the fields.
 			 *
-			 * @type filter
-			 * @title um_admin_field_validation_hook
-			 * @description Extend validation types
-			 * @input_vars
-			 * [{"var":"$types","type":"array","desc":"Validation Types"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_admin_field_validation_hook', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_admin_field_validation_hook', 'my_admin_field_validation', 10, 1 );
-			 * function my_admin_field_validation( $types ) {
-			 *     // your code here
-			 *     return $types;
-			 * }
-			 * ?>
+			 * @since 2.0
+			 * @hook um_admin_field_validation_hook
+			 *
+			 * @param {array} $validation_settings Built-in validation types.
+			 *
+			 * @return {array} Filtered validation types.
 			 */
 			$this->field_validation_settings = apply_filters( 'um_admin_field_validation_hook', $this->field_validation_settings );
 		}
 
+		/**
+		 * Init static field settings fields inside the field group and form builder.
+		 *
+		 * @since 3.0
+		 */
 		public function init_static_field_settings() {
 			$field_types_options = array();
 			$field_types         = $this->get( 'field_types' );
@@ -1243,7 +1270,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 		}
 
 		/**
-		 * Allowed image types
+		 * Allowed image types.
 		 *
 		 * @return array
 		 */
@@ -1309,6 +1336,11 @@ if ( ! class_exists( 'um\Config' ) ) {
 			return $wp_oembed;
 		}
 
+		/**
+		 * All field types initialization.
+		 *
+		 * @since 3.0
+		 */
 		public function init_field_types() {
 			// todo maybe add oembed providers setting
 			//var_dump( $this->wp_oembed_get_object()->providers );
@@ -1346,7 +1378,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'search'  => __( 'search', 'ultimate-member' ),
 			);
 
-			// size is height, width will be automatically based on ratio
+			// Size is height, width will be automatically based on ratio.
 			$this->field_types = array(
 				'bool'      => array(
 					'title'             => __( 'Single Checkbox', 'ultimate-member' ),
@@ -1441,7 +1473,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				), // ready
+				),
 				'radio'     => array(
 					'title'             => __( 'Radio', 'ultimate-member' ),
 					'category'          => 'choice',
@@ -1781,14 +1813,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 					),
 					'settings'          => array(
 						'general'      => array(
-							'label'         => array(
+							'label'                        => array(
 								'id'          => 'label',
 								'type'        => 'text',
 								'label'       => __( 'Field label', 'ultimate-member' ),
 								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 							),
-							'meta_key'      => array(
+							'meta_key'                     => array(
 								'id'          => 'meta_key',
 								'type'        => 'text',
 								'class'       => 'um-field-row-metakey-input',
@@ -1801,7 +1833,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
 								),
 							),
-							'multiple'        => array(
+							'multiple'                     => array(
 								'id'          => 'multiple',
 								'type'        => 'checkbox',
 								'class'       => 'um-field-row-multiple-input',
@@ -1809,14 +1841,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'Allow users to select multiple choices in this field.', 'ultimate-member' ),
 								'sanitize'    => 'bool',
 							),
-							'allow_null'        => array(
+							'allow_null'                   => array(
 								'id'          => 'allow_null',
 								'type'        => 'checkbox',
 								'label'       => __( 'Allow null', 'ultimate-member' ),
 								'description' => __( 'Add empty value option at the start of the list.', 'ultimate-member' ),
 								'sanitize'    => 'bool',
 							),
-							'dynamic_choices' => array(
+							'dynamic_choices'              => array(
 								'id'          => 'dynamic_choices',
 								'type'        => 'select',
 								'label'       => __( 'Dynamic Choices', 'ultimate-member' ),
@@ -1845,7 +1877,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'sanitize'    => 'text',
 								'conditional' => array( 'custom_dropdown_options_source', '!=', '' ),
 							),
-							'options_cpt' => array(
+							'options_cpt'                  => array(
 								'id'          => 'options_cpt',
 								'type'        => 'select',
 								'multi'       => true,
@@ -1856,7 +1888,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'options'     => $post_types,
 								'conditional' => array( 'dynamic_choices', '=', 'post_type' ),
 							),
-							'options_taxonomy' => array(
+							'options_taxonomy'             => array(
 								'id'          => 'options_taxonomy',
 								'type'        => 'select',
 								'multi'       => true,
@@ -1867,11 +1899,11 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'options'     => $taxonomies,
 								'conditional' => array( 'dynamic_choices', '=', 'taxonomy' ),
 							),
-							'options' => array(
+							'options'                      => array(
 								'id'          => 'options',
 								'type'        => 'choices',
 								'multiple'    => 'both',
-								//'optgroup'    => true, // todo Make the ability to group select field options inside optgroup tags
+								// todo Make the ability to group select field options inside optgroup tags by "'optgroup'    => true,"
 								'label'       => __( 'Edit Choices', 'ultimate-member' ),
 								'description' => __( 'Enter one choice per line. This will represent the available choices or selections available for user.', 'ultimate-member' ),
 								'sanitize'    => 'options',
@@ -1880,7 +1912,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 						'presentation' => array(
-							'description' => array(
+							'description'         => array(
 								'id'          => 'description',
 								'type'        => 'textarea',
 								'label'       => __( 'Description', 'ultimate-member' ),
@@ -1890,14 +1922,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 								),
 								'sanitize'    => 'textarea',
 							),
-							'allow_custom_values'        => array(
+							'allow_custom_values' => array(
 								'id'          => 'allow_custom_values',
 								'type'        => 'checkbox',
 								'label'       => __( 'Allow Custom Values', 'ultimate-member' ),
 								'description' => __( 'Allow custom values to be added.', 'ultimate-member' ),
 								'sanitize'    => 'bool',
 							),
-							'save_custom_values'        => array(
+							'save_custom_values'  => array(
 								'id'          => 'save_custom_values',
 								'type'        => 'checkbox',
 								'label'       => __( 'Save Custom Values', 'ultimate-member' ),
@@ -1906,7 +1938,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 						'validation'   => array(
-							'required'        => array(
+							'required' => array(
 								'id'          => 'required',
 								'type'        => 'checkbox',
 								'label'       => __( 'Is this field required?', 'ultimate-member' ),
@@ -1942,8 +1974,8 @@ if ( ! class_exists( 'um\Config' ) ) {
 					),
 				),
 				'hidden'    => array(
-					'title'     => __( 'Hidden', 'ultimate-member' ),
-					'category' => 'basic',
+					'title'             => __( 'Hidden', 'ultimate-member' ),
+					'category'          => 'basic',
 					'conditional_rules' => array(
 						'==',
 						'!=',
@@ -1955,7 +1987,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 						'<',
 					),
 					'settings'          => array(
-						'general'      => array(
+						'general' => array(
 							'meta_key'      => array(
 								'id'          => 'meta_key',
 								'type'        => 'text',
@@ -1977,7 +2009,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				), // ready
+				),
 				'date'      => array(
 					'title'             => __( 'Date', 'ultimate-member' ),
 					'category'          => 'basic',
@@ -2030,7 +2062,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								),
 								'sanitize'    => 'textarea',
 							),
-							'step' => array(
+							'step'        => array(
 								'id'          => 'step',
 								'type'        => 'number',
 								'label'       => __( 'Step', 'ultimate-member' ),
@@ -2039,7 +2071,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 						'validation'   => array(
-							'required'        => array(
+							'required'           => array(
 								'id'          => 'required',
 								'type'        => 'checkbox',
 								'label'       => __( 'Is this field required?', 'ultimate-member' ),
@@ -2053,7 +2085,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'Check this option to prevent any previous date from being selected.', 'ultimate-member' ),
 								'sanitize'    => 'bool',
 							),
-							'min'       => array(
+							'min'                => array(
 								'id'          => 'min',
 								'type'        => 'date',
 								'label'       => __( 'Minimum date', 'ultimate-member' ),
@@ -2061,14 +2093,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'sanitize'    => 'text',
 								'conditional' => array( 'disable_past_dates', '=', 0 ),
 							),
-							'max'       => array(
+							'max'                => array(
 								'id'          => 'max',
 								'type'        => 'date',
 								'label'       => __( 'Maximum date', 'ultimate-member' ),
 								'description' => __( 'Indicating the latest date to accept. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 							),
-							'validate'        => array(
+							'validate'           => array(
 								'id'          => 'validate',
 								'type'        => 'select',
 								'label'       => __( 'Validation', 'ultimate-member' ),
@@ -2076,7 +2108,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'options'     => $this->get( 'field_validation_settings' ),
 								'sanitize'    => 'key',
 							),
-							'custom_validate' => array(
+							'custom_validate'    => array(
 								'id'          => 'custom_validate',
 								'type'        => 'text',
 								'label'       => __( 'Custom validation action', 'ultimate-member' ),
@@ -2111,7 +2143,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				), // ready
+				),
 				'time'      => array(
 					'title'             => __( 'Time', 'ultimate-member' ),
 					'category'          => 'basic',
@@ -2164,7 +2196,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								),
 								'sanitize'    => 'textarea',
 							),
-							'step' => array(
+							'step'        => array(
 								'id'          => 'step',
 								'type'        => 'text',
 								'label'       => __( 'Step', 'ultimate-member' ),
@@ -2180,14 +2212,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ),
 								'sanitize'    => 'bool',
 							),
-							'min'       => array(
+							'min'             => array(
 								'id'          => 'min',
 								'type'        => 'time',
 								'label'       => __( 'Minimum time', 'ultimate-member' ),
 								'description' => __( 'Indicating the earliest time to accept. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 							),
-							'max'       => array(
+							'max'             => array(
 								'id'          => 'max',
 								'type'        => 'time',
 								'label'       => __( 'Maximum time', 'ultimate-member' ),
@@ -2237,7 +2269,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				), // ready
+				),
 				'number'    => array(
 					'title'             => __( 'Number', 'ultimate-member' ),
 					'category'          => 'basic',
@@ -2298,14 +2330,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 								),
 								'sanitize'    => 'textarea',
 							),
-							'step' => array(
+							'step'        => array(
 								'id'          => 'step',
 								'type'        => 'text',
 								'label'       => __( 'Step', 'ultimate-member' ),
 								'description' => __( 'Specifies the granularity that the value must adhere to.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 							),
-							'inputmode' => array(
+							'inputmode'   => array(
 								'id'          => 'inputmode',
 								'type'        => 'select',
 								'label'       => __( 'Input mode', 'ultimate-member' ),
@@ -2322,14 +2354,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ),
 								'sanitize'    => 'bool',
 							),
-							'min'       => array(
+							'min'             => array(
 								'id'          => 'min',
 								'type'        => 'number',
 								'label'       => __( 'Minimum value', 'ultimate-member' ),
 								'description' => __( 'The minimum value to accept for this input. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 							),
-							'max'       => array(
+							'max'             => array(
 								'id'          => 'max',
 								'type'        => 'number',
 								'label'       => __( 'Maximum value', 'ultimate-member' ),
@@ -2386,24 +2418,24 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				), // ready
+				),
 				'password'  => array(
-					'title' => __( 'Password', 'ultimate-member' ),
-					'category' => 'basic',
+					'title'             => __( 'Password', 'ultimate-member' ),
+					'category'          => 'basic',
 					'conditional_rules' => array(
 						'!=empty',
 						'==empty',
 					),
 					'settings'          => array(
 						'general'      => array(
-							'label'         => array(
+							'label'              => array(
 								'id'          => 'label',
 								'type'        => 'text',
 								'label'       => __( 'Field label', 'ultimate-member' ),
 								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 							),
-							'meta_key'      => array(
+							'meta_key'           => array(
 								'id'          => 'meta_key',
 								'type'        => 'text',
 								'class'       => 'um-field-row-metakey-input',
@@ -2416,14 +2448,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
 								),
 							),
-							'default_value' => array(
+							'default_value'      => array(
 								'id'          => 'default_value',
 								'type'        => 'text',
 								'label'       => __( 'Default value', 'ultimate-member' ),
 								'description' => __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 							),
-							'confirm_pass' => array(
+							'confirm_pass'       => array(
 								'id'          => 'confirm_pass',
 								'type'        => 'checkbox',
 								'label'       => __( 'Add a confirm password field', 'ultimate-member' ),
@@ -2457,14 +2489,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 								),
 								'sanitize'    => 'textarea',
 							),
-							'size' => array(
+							'size'        => array(
 								'id'          => 'size',
 								'type'        => 'number',
 								'label'       => __( 'Field size', 'ultimate-member' ),
 								'description' => __( 'Size of the control. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 							),
-							'inputmode' => array(
+							'inputmode'   => array(
 								'id'          => 'inputmode',
 								'type'        => 'select',
 								'label'       => __( 'Input mode', 'ultimate-member' ),
@@ -2545,7 +2577,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				), // ready
+				),
 				'email'     => array(
 					'title'             => __( 'Email', 'ultimate-member' ),
 					'category'          => 'basic',
@@ -2559,14 +2591,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 					),
 					'settings'          => array(
 						'general'      => array(
-							'label'         => array(
+							'label'               => array(
 								'id'          => 'label',
 								'type'        => 'text',
 								'label'       => __( 'Field label', 'ultimate-member' ),
 								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 							),
-							'meta_key'      => array(
+							'meta_key'            => array(
 								'id'          => 'meta_key',
 								'type'        => 'text',
 								'class'       => 'um-field-row-metakey-input',
@@ -2579,14 +2611,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
 								),
 							),
-							'default_value' => array(
+							'default_value'       => array(
 								'id'          => 'default_value',
 								'type'        => 'email',
 								'label'       => __( 'Default value', 'ultimate-member' ),
 								'description' => __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value.', 'ultimate-member' ),
 								'sanitize'    => 'email',
 							),
-							'confirm_email' => array(
+							'confirm_email'       => array(
 								'id'          => 'confirm_email',
 								'type'        => 'checkbox',
 								'label'       => __( 'Add a confirm email field', 'ultimate-member' ),
@@ -2620,14 +2652,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 								),
 								'sanitize'    => 'textarea',
 							),
-							'size' => array(
+							'size'        => array(
 								'id'          => 'size',
 								'type'        => 'number',
 								'label'       => __( 'Field size', 'ultimate-member' ),
 								'description' => __( 'Size of the control. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 							),
-							'inputmode' => array(
+							'inputmode'   => array(
 								'id'          => 'inputmode',
 								'type'        => 'select',
 								'label'       => __( 'Input mode', 'ultimate-member' ),
@@ -2658,7 +2690,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 							),
-							'multiple'         => array(
+							'multiple'        => array(
 								'id'          => 'multiple',
 								'type'        => 'checkbox',
 								'label'       => __( 'Multiple emails', 'ultimate-member' ),
@@ -2715,7 +2747,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				), // ready
+				),
 				'url'       => array(
 					'title'             => __( 'URL', 'ultimate-member' ),
 					'category'          => 'basic',
@@ -2785,7 +2817,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'Choose whether to open this link in same window or in a new window.', 'ultimate-member' ),
 								'sanitize'    => 'key',
 							),
-							'rel'      => array(
+							'rel'         => array(
 								'id'          => 'rel',
 								'type'        => 'select',
 								'options'     => array(
@@ -2807,21 +2839,21 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'Choose whether to open this link in same window or in a new window.', 'ultimate-member' ),
 								'sanitize'    => 'key',
 							),
-							'alt_text'      => array(
+							'alt_text'    => array(
 								'id'          => 'alt_text',
 								'type'        => 'text',
 								'label'       => __( 'Link Alt Text', 'ultimate-member' ),
 								'description' => __( 'Entering custom text here will replace the url with a text link.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 							),
-							'size' => array(
+							'size'        => array(
 								'id'          => 'size',
 								'type'        => 'number',
 								'label'       => __( 'Field size', 'ultimate-member' ),
 								'description' => __( 'Size of the control. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 							),
-							'inputmode' => array(
+							'inputmode'   => array(
 								'id'          => 'inputmode',
 								'type'        => 'select',
 								'label'       => __( 'Input mode', 'ultimate-member' ),
@@ -2902,7 +2934,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				), // ready
+				),
 				'text'      => array(
 					'title'             => __( 'Text Box', 'ultimate-member' ),
 					'category'          => 'basic',
@@ -2962,14 +2994,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 								),
 								'sanitize'    => 'textarea',
 							),
-							'size' => array(
+							'size'        => array(
 								'id'          => 'size',
 								'type'        => 'number',
 								'label'       => __( 'Field size', 'ultimate-member' ),
 								'description' => __( 'Size of the control. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 							),
-							'inputmode' => array(
+							'inputmode'   => array(
 								'id'          => 'inputmode',
 								'type'        => 'select',
 								'label'       => __( 'Input mode', 'ultimate-member' ),
@@ -3050,7 +3082,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				), // ready
+				),
 				'tel'       => array(
 					'title'             => __( 'Telephone Box', 'ultimate-member' ),
 					'category'          => 'basic',
@@ -3110,14 +3142,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 								),
 								'sanitize'    => 'textarea',
 							),
-							'size' => array(
+							'size'        => array(
 								'id'          => 'size',
 								'type'        => 'number',
 								'label'       => __( 'Field size', 'ultimate-member' ),
 								'description' => __( 'Size of the control. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 							),
-							'inputmode' => array(
+							'inputmode'   => array(
 								'id'          => 'inputmode',
 								'type'        => 'select',
 								'label'       => __( 'Input mode', 'ultimate-member' ),
@@ -3198,10 +3230,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				), // ready
+				),
 				'textarea'  => array(
-					'title'     => __( 'Textarea', 'ultimate-member' ),
-					'category' => 'basic',
+					'title'             => __( 'Textarea', 'ultimate-member' ),
+					'category'          => 'basic',
 					'conditional_rules' => array(
 						'==',
 						'!=',
@@ -3258,21 +3290,21 @@ if ( ! class_exists( 'um\Config' ) ) {
 								),
 								'sanitize'    => 'textarea',
 							),
-							'html' => array(
+							'html'        => array(
 								'id'          => 'html',
 								'type'        => 'checkbox',
 								'label'       => __( 'Accepts HTML?', 'ultimate-member' ),
 								'description' => __( 'Turn on/off HTML tags for this textarea.', 'ultimate-member' ),
 								'sanitize'    => 'bool',
 							),
-							'rows' => array(
+							'rows'        => array(
 								'id'          => 'rows',
 								'type'        => 'number',
 								'label'       => __( 'Rows', 'ultimate-member' ),
 								'description' => __( 'The number of visible text lines for the control. If it is specified, it must be a positive integer. If it is not specified, the default value is 2.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 							),
-							'cols' => array(
+							'cols'        => array(
 								'id'          => 'cols',
 								'type'        => 'number',
 								'label'       => __( 'Cols', 'ultimate-member' ),
@@ -3352,7 +3384,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				), // ready
+				),
 				'file'      => array(
 					'title'             => __( 'File', 'ultimate-member' ),
 					'category'          => 'content',
@@ -3362,14 +3394,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 					),
 					'settings'          => array(
 						'general'      => array(
-							'label'         => array(
+							'label'    => array(
 								'id'          => 'label',
 								'type'        => 'text',
 								'label'       => __( 'Field label', 'ultimate-member' ),
 								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 							),
-							'meta_key'      => array(
+							'meta_key' => array(
 								'id'          => 'meta_key',
 								'type'        => 'text',
 								'class'       => 'um-field-row-metakey-input',
@@ -3384,7 +3416,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 						'presentation' => array(
-							'description' => array(
+							'description'      => array(
 								'id'          => 'description',
 								'type'        => 'textarea',
 								'label'       => __( 'Description', 'ultimate-member' ),
@@ -3394,7 +3426,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								),
 								'sanitize'    => 'textarea',
 							),
-							'upload_text' => array(
+							'upload_text'      => array(
 								'id'          => 'upload_text',
 								'type'        => 'text',
 								'label'       => __( 'Upload Box Text', 'ultimate-member' ),
@@ -3411,7 +3443,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								),
 								'sanitize'    => 'textarea',
 							),
-							'button_text' => array(
+							'button_text'      => array(
 								'id'          => 'button_text',
 								'type'        => 'text',
 								'label'       => __( 'Upload Button Text', 'ultimate-member' ),
@@ -3420,28 +3452,28 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 						'validation'   => array(
-							'required'        => array(
+							'required'      => array(
 								'id'          => 'required',
 								'type'        => 'checkbox',
 								'label'       => __( 'Is this field required?', 'ultimate-member' ),
 								'description' => __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ),
 								'sanitize'    => 'bool',
 							),
-							'min_size'       => array(
+							'min_size'      => array(
 								'id'          => 'min_size',
 								'type'        => 'number',
 								'label'       => __( 'Minimum Size in bytes', 'ultimate-member' ),
 								'description' => __( 'The minimum size for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 							),
-							'max_size'       => array(
+							'max_size'      => array(
 								'id'          => 'max_size',
 								'type'        => 'number',
 								'label'       => __( 'Maximum Size in bytes', 'ultimate-member' ),
 								'description' => __( 'The maximum size for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 							),
-							'allowed_types'       => array(
+							'allowed_types' => array(
 								'id'          => 'allowed_types',
 								'type'        => 'select',
 								'multi'       => true,
@@ -3477,7 +3509,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				), // ready
+				),
 				'image'     => array(
 					'title'             => __( 'Image', 'ultimate-member' ),
 					'category'          => 'content',
@@ -3487,14 +3519,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 					),
 					'settings'          => array(
 						'general'      => array(
-							'label'         => array(
+							'label'    => array(
 								'id'          => 'label',
 								'type'        => 'text',
 								'label'       => __( 'Field label', 'ultimate-member' ),
 								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 							),
-							'meta_key'      => array(
+							'meta_key' => array(
 								'id'          => 'meta_key',
 								'type'        => 'text',
 								'class'       => 'um-field-row-metakey-input',
@@ -3509,7 +3541,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 						'presentation' => array(
-							'description' => array(
+							'description'      => array(
 								'id'          => 'description',
 								'type'        => 'textarea',
 								'label'       => __( 'Description', 'ultimate-member' ),
@@ -3519,7 +3551,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								),
 								'sanitize'    => 'textarea',
 							),
-							'upload_text' => array(
+							'upload_text'      => array(
 								'id'          => 'upload_text',
 								'type'        => 'text',
 								'label'       => __( 'Upload Box Text', 'ultimate-member' ),
@@ -3536,14 +3568,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 								),
 								'sanitize'    => 'textarea',
 							),
-							'button_text' => array(
+							'button_text'      => array(
 								'id'          => 'button_text',
 								'type'        => 'text',
 								'label'       => __( 'Upload Button Text', 'ultimate-member' ),
 								'description' => __( 'The text that appears on the button. e.g. Upload.', 'ultimate-member' ),
 								'sanitize'    => 'text',
 							),
-							'crop'       => array(
+							'crop'             => array(
 								'id'          => 'crop',
 								'type'        => 'select',
 								'label'       => __( 'Crop Feature', 'ultimate-member' ),
@@ -3642,7 +3674,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				), // ready
+				),
 				'repeater'  => array(
 					'title'             => __( 'Repeater', 'ultimate-member' ),
 					'category'          => 'layout',
@@ -3745,7 +3777,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				), // ready
+				),
 				'block'     => array(
 					'title'             => __( 'Content', 'ultimate-member' ),
 					'category'          => 'layout',
@@ -3781,7 +3813,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				), // ready
+				),
 				'shortcode' => array(
 					'title'             => __( 'Shortcode', 'ultimate-member' ),
 					'category'          => 'layout',
@@ -3817,7 +3849,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				), // ready
+				),
 				'spacing'   => array(
 					'title'             => __( 'Spacing', 'ultimate-member' ),
 					'category'          => 'layout',
@@ -3850,7 +3882,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				), // ready
+				),
 				'divider'   => array(
 					'title'             => __( 'Divider', 'ultimate-member' ),
 					'category'          => 'layout',
@@ -3904,7 +3936,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				), // ready
+				),
 				'rating'    => array(
 					'title'             => __( 'Rating', 'ultimate-member' ),
 					'category'          => 'js',
@@ -4005,7 +4037,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				), // ready
+				),
 				'googlemap' => array(
 					'title'             => __( 'Google Map', 'ultimate-member' ),
 					'category'          => 'js',
@@ -4097,7 +4129,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				), // ready
+				),
 				'oembed'    => array(
 					'title'             => __( 'oEmbed', 'ultimate-member' ),
 					'category'          => 'content',
@@ -4205,637 +4237,72 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
-				), // ready
-
-//				'phone_number' => array(
-//					'title'             => __( 'Phone number', 'ultimate-member' ),
-//					'category'          => 'js',
-//					'conditional_rules' => array(
-//						'!=',
-//						'==',
-//						'!=empty',
-//						'==empty',
-//						'==pattern',
-//						'==contains',
-//					),
-//					'settings'          => array(
-//						'general'      => array(
-//							'label'         => array(
-//								'id'          => 'label',
-//								'type'        => 'text',
-//								'label'       => __( 'Field label', 'ultimate-member' ),
-//								'description' => __( 'The field label that appears on your front-end form. Leave blank to not show a label.', 'ultimate-member' ),
-//								'sanitize'    => 'text',
-//							),
-//							'meta_key'      => array(
-//								'id'          => 'meta_key',
-//								'type'        => 'text',
-//								'class'       => 'um-field-row-metakey-input',
-//								'label'       => __( 'Meta key', 'ultimate-member' ),
-//								'description' => __( 'A meta key is required to store the entered info in this field in the database. The meta key should be unique to this field and be written in lowercase with an underscore ( _ ) separating words e.g country_list or job_title.', 'ultimate-member' ),
-//								'sanitize'    => 'text',
-//								'required'    => true,
-//							),
-//							'default_value' => array(
-//								'id'          => 'default_value',
-//								'type'        => 'text',
-//								'label'       => __( 'Default value', 'ultimate-member' ),
-//								'description' => __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value.', 'ultimate-member' ),
-//								'sanitize'    => 'text',
-//							),
-//						),
-//						'presentation' => array(
-//							'placeholder' => array(
-//								'id'          => 'placeholder',
-//								'type'        => 'text',
-//								'label'       => __( 'Placeholder', 'ultimate-member' ),
-//								'description' => __( 'This is the text that appears within the field e.g please enter your email address. Leave blank to not show any placeholder text.', 'ultimate-member' ),
-//								'sanitize'    => 'text',
-//							),
-//							'description' => array(
-//								'id'          => 'description',
-//								'type'        => 'textarea',
-//								'label'       => __( 'Description', 'ultimate-member' ),
-//								'description' => __( 'This is the text that appears below the field on your front-end. Description is useful for providing users with more information about what they should enter in the field. Leave blank if no description is needed for field.', 'ultimate-member' ),
-//								'args'        => array(
-//									'textarea_rows' => 5,
-//								),
-//								'sanitize'    => 'textarea',
-//							),
-//						),
-//						'validation'   => array(
-//							'required'        => array(
-//								'id'          => 'required',
-//								'type'        => 'checkbox',
-//								'label'       => __( 'Is this field required?', 'ultimate-member' ),
-//								'description' => __( 'This option allows you to set whether the field must be filled in before the form can be processed.', 'ultimate-member' ),
-//								'sanitize'    => 'bool',
-//							),
-//							'min_chars'       => array(
-//								'id'          => 'min_chars',
-//								'type'        => 'number',
-//								'label'       => __( 'Minimum length', 'ultimate-member' ),
-//								'description' => __( 'If you want to enable a minimum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
-//								'sanitize'    => 'empty_absint',
-//							),
-//							'max_chars'       => array(
-//								'id'          => 'max_chars',
-//								'type'        => 'number',
-//								'label'       => __( 'Maximum length', 'ultimate-member' ),
-//								'description' => __( 'If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
-//								'sanitize'    => 'empty_absint',
-//							),
-//						),
-//						'privacy'      => array(
-//							'readonly' => array(
-//								'id'          => 'readonly',
-//								'type'        => 'checkbox',
-//								'label'       => __( 'Mark as readonly', 'ultimate-member' ),
-//								'description' => __( 'Enable to prevent users from editing this field. Note: if the profile editing option is set to publicly editable, the field will still be visible within the account page but will not be customizable.', 'ultimate-member' ),
-//								'sanitize'    => 'bool',
-//							),
-//						),
-//						'advanced'     => array(
-//							'wrapper_class' => array(
-//								'id'          => 'wrapper_class',
-//								'type'        => 'text',
-//								'label'       => __( 'Wrapper class', 'ultimate-member' ),
-//								'description' => __( 'CSS class added to the field wrapper element.', 'ultimate-member' ),
-//								'sanitize'    => 'key',
-//							),
-//							'wrapper_id'    => array(
-//								'id'          => 'wrapper_id',
-//								'type'        => 'text',
-//								'label'       => __( 'Wrapper id', 'ultimate-member' ),
-//								'description' => __( 'ID added to the field wrapper element.', 'ultimate-member' ),
-//								'sanitize'    => 'key',
-//							),
-//						),
-//					),
-//				),
-//				'youtube_video'    => array(
-//					'title' => __( 'YouTube Video', 'ultimate-member' ),
-//					'category' => __( 'Content', 'ultimate-member' ),
-//				),
-//				'vimeo_video'    => array(
-//					'title' => __( 'Vimeo Video', 'ultimate-member' ),
-//					'category' => __( 'Content', 'ultimate-member' ),
-//				),
-//				'soundcloud_track'    => array(
-//					'title' => __( 'SoundCloud Track', 'ultimate-member' ),
-//					'category' => __( 'Content', 'ultimate-member' ),
-//				),
+				),
 			);
-
-
-//			$this->core_fields = array(
-//
-//				/*Group is the repeatable block with 1 pre-defined repeat*/
-////				'group' => [
-////					'name'      => __( 'Fields Group', 'ultimate-member' ),
-////					'tabs'      => [
-////						'general'       => [
-////							'key'   => 'general',
-////							'label' => __( 'General', 'ultimate-member' ),
-////						],
-////						'privacy'       => [
-////							'key'   => 'privacy',
-////							'label' => __( 'Privacy & Validation', 'ultimate-member' ),
-////						],
-////						'conditional'   => [
-////							'key'   => 'conditional',
-////							'label' => __( 'Conditional Logic', 'ultimate-member' ),
-////						],
-////					],
-////					'col1'      => [ '_title', '_max_entries' ],
-////					'col2'      => [ '_label', '_public', '_roles' ],
-////					'validate'  => [
-////						'_title'    => [
-////							'mode'  => 'required',
-////							'error' => 'You must provide a title',
-////						],
-////						'_metakey'  => [
-////							'mode'  => 'unique',
-////						],
-////					],
-////				],
-//
-//
-//
-//				'radio'    => array(
-//					'name'     => __( 'Radio', 'ultimate-member' ),
-//					'col1'     => array( '_title', '_metakey', '_description', '_options' ),
-//					'col2'     => array( '_label', '_visibility', '_public', '_roles', '_custom_dropdown_options_source', '_parent_dropdown_relationship' ),
-//					'col3'     => array( '_required', '_editable', '_choices_layout' ),
-//					'validate' => array(
-//						'_title'   => array(
-//							'mode'  => 'required',
-//							'error' => __( 'You must provide a title', 'ultimate-member' ),
-//						),
-//						'_metakey' => array(
-//							'mode' => 'unique',
-//						),
-//						'_options' => array(
-//							'mode' => 'unique_options',
-//						),
-//					),
-//				),
-//
-//				'checkbox' => array(
-//					'name'     => __( 'Checkbox', 'ultimate-member' ),
-//					'col1'     => array( '_title', '_metakey', '_description', '_options' ),
-//					'col2'     => array( '_label', '_visibility', '_public', '_roles', '_custom_dropdown_options_source', '_parent_dropdown_relationship', '_min_selections', '_max_selections' ),
-//					'col3'     => array( '_required', '_editable', '_choices_layout' ),
-//					'validate' => array(
-//						'_title'   => array(
-//							'mode'  => 'required',
-//							'error' => __( 'You must provide a title', 'ultimate-member' ),
-//						),
-//						'_metakey' => array(
-//							'mode' => 'unique',
-//						),
-//						'_options' => array(
-//							'mode' => 'unique_options',
-//						),
-//					),
-//				),
-//
-//				'hidden'   => array(
-//					'name' => __( 'Hidden', 'ultimate-member' ),
-//					'col1' => array( '_title', '_value' ),
-//					'col2' => array( '_metakey' ),
-//					'col3' => array(),
-//					'validate' => array(
-//						'_title' => array(
-//							'mode'  => 'required',
-//							'error' => __( 'You must provide a title', 'ultimate-member' ),
-//						),
-//						'_metakey' => array(
-//							'mode' => 'unique',
-//						),
-//					)
-//				),
-//
-//				'date'     => array(
-//					'name'      => __( 'Date', 'ultimate-member' ),
-//					'col1'      => array( '_title', '_metakey', '_description' ),
-//					'col2'      => array( '_label', '_visibility', '_public', '_roles', '_min', '_max' ),
-//					'col3'      => array( '_required', '_editable', '_default' ),
-//					'validate'  => array(
-//						'_title'        => array(
-//							'mode'  => 'required',
-//							'error' => __( 'You must provide a title', 'ultimate-member' )
-//						),
-//						'_metakey'      => array(
-//							'mode'  => 'unique',
-//						),
-//					),
-//				),
-//
-//				'time'     => array(
-//					'name'     => __( 'Time', 'ultimate-member' ),
-//					'col1'     => array( '_title', '_metakey', '_description' ),
-//					'col2'     => array( '_label', '_visibility', '_public', '_roles', '_step', '_min', '_max' ),
-//					'col3'     => array( '_required', '_editable', '_default' ),
-//					'validate' => array(
-//						'_title'   => array(
-//							'mode'  => 'required',
-//							'error' => __( 'You must provide a title.', 'ultimate-member' ),
-//						),
-//						'_metakey' => array(
-//							'mode' => 'unique',
-//						),
-//					),
-//				),
-//
-//				'number'   => array(
-//					'name' => __( 'Number', 'ultimate-member' ),
-//					'col1' => array( '_title', '_metakey', '_placeholder', '_description' ),
-//					'col2' => array( '_label','_visibility', '_public', '_roles', '_validate', '_custom_validate', '_step', '_min', '_max' ),
-//					'col3' => array( '_required', '_editable', '_default' ),
-//					'validate' => array(
-//						'_title' => array(
-//							'mode'  => 'required',
-//							'error' => __( 'You must provide a title', 'ultimate-member' ),
-//						),
-//						'_metakey' => array(
-//							'mode' => 'unique',
-//						),
-//					)
-//				),
-//
-//				'password' => array(
-//					'name' => __( 'Password', 'ultimate-member' ),
-//					'col1' => array( '_title', '_metakey', '_description', '_min_chars', '_max_chars' ),
-//					'col2' => array( '_label', '_placeholder', '_visibility', '_public', '_roles', '_force_confirm_pass', '_label_confirm_pass', '_placeholder_confirm_pass', '_description_confirm_pass', '_pattern' ),
-//					'col3' => array( '_required', '_editable', '_force_good_pass' ),
-//					'validate' => array(
-//						'_title' => array(
-//							'mode'  => 'required',
-//							'error' => __( 'You must provide a title', 'ultimate-member' ),
-//						),
-//						'_metakey' => array(
-//							'mode' => 'unique',
-//						),
-//					),
-//				),
-//
-//				'email'    => array(
-//					'name' => __( 'Email', 'ultimate-member' ),
-//					'col1' => array( '_title', '_metakey', '_description', '_min_chars', '_max_chars' ),
-//					'col2' => array( '_label', '_placeholder', '_visibility', '_public', '_roles', '_validate', '_custom_validate', '_pattern' ),
-//					'col3' => array( '_required', '_editable', '_default' ),
-//					'validate' => array(
-//						'_title' => array(
-//							'mode'  => 'required',
-//							'error' => __( 'You must provide a title', 'ultimate-member' ),
-//						),
-//						'_metakey' => array(
-//							'mode' => 'unique',
-//						),
-//					),
-//				),
-//
-//				'url'      => array(
-//					'name' => __( 'URL', 'ultimate-member' ),
-//					'col1' => array('_title','_metakey','_description', '_min_chars', '_max_chars'),
-//					'col2' => array('_label','_placeholder','_visibility','_public','_roles','_validate','_custom_validate', '_pattern','_url_text','_url_target','_url_rel'),
-//					'col3' => array( '_required', '_editable', '_default' ),
-//					'validate' => array(
-//						'_title' => array(
-//							'mode' => 'required',
-//							'error' => __('You must provide a title','ultimate-member')
-//						),
-//						'_metakey' => array(
-//							'mode' => 'unique',
-//						),
-//					)
-//				),
-//
-//				'tel'      => array(
-//					'name'     => __( 'Telephone Box', 'ultimate-member' ),
-//					'col1'     => array( '_title', '_metakey', '_description', '_min_chars', '_max_chars' ),
-//					'col2'     => array( '_label', '_placeholder', '_visibility', '_public', '_roles', '_validate', '_custom_validate', '_pattern' ),
-//					'col3'     => array( '_required', '_editable', '_default' ),
-//					'validate' => array(
-//						'_title'   => array(
-//							'mode'  => 'required',
-//							'error' => __( 'You must provide a title', 'ultimate-member' ),
-//						),
-//						'_metakey' => array(
-//							'mode' => 'unique',
-//						),
-//					),
-//				),
-//
-//				'text'     => array(
-//					'name' => __( 'Text Box', 'ultimate-member' ),
-//					'col1' => array( '_title', '_metakey', '_description', '_min_chars', '_max_chars'),
-//					'col2' => array( '_label', '_placeholder', '_visibility', '_public', '_roles', '_validate', '_custom_validate', '_pattern' ),
-//					'col3' => array( '_required', '_editable', '_default' ),
-//					'validate' => array(
-//						'_title' => array(
-//							'mode' => 'required',
-//							'error' => __( 'You must provide a title', 'ultimate-member' ),
-//						),
-//						'_metakey' => array(
-//							'mode' => 'unique',
-//						),
-//					),
-//				),
-//
-//				'select'   => array(
-//					'name' => __( 'Dropdown', 'ultimate-member' ),
-//					'col1' => array( '_title', '_metakey', '_description', '_is_multi', '_options' ),
-//					'col2' => array( '_label', '_placeholder', '_visibility', '_public', '_roles', '_custom_dropdown_options_source', '_parent_dropdown_relationship', '_min_selections', '_max_selections' ),
-//					'col3' => array( '_required', '_editable' ),
-//					'validate' => array(
-//						'_title'   => array(
-//							'mode'  => 'required',
-//							'error' => __( 'You must provide a title', 'ultimate-member' ),
-//						),
-//						'_metakey' => array(
-//							'mode' => 'unique',
-//						),
-//						'_options' => array(
-//							'mode' => 'unique_options',
-//						),
-//					),
-//				),
-//
-//				'textarea' => array(
-//					'name'     => __( 'Textarea', 'ultimate-member' ),
-//					'col1'     => array( '_title', '_metakey', '_description', '_rows', '_min_chars', '_max_chars', '_max_words' ),
-//					'col2'     => array( '_label', '_placeholder', '_visibility', '_public', '_roles', '_default' ),
-//					'col3'     => array( '_required', '_editable', '_html' ),
-//					'validate' => array(
-//						'_title'   => array(
-//							'mode'  => 'required',
-//							'error' => __( 'You must provide a title', 'ultimate-member' ),
-//						),
-//						'_metakey' => array(
-//							'mode' => 'unique',
-//						),
-//					),
-//				),
-//
-//				'image' => array(
-//					'name' => 'Image Upload',
-//					'col1' => array('_title','_metakey','_description','_allowed_types','_max_size','_crop','_visibility'),
-//					'col2' => array('_label','_public','_roles','_upload_text','_upload_help_text','_button_text'),
-//					'col3' => array('_required','_editable'),
-//					'validate' => array(
-//						'_title' => array(
-//							'mode' => 'required',
-//							'error' => __('You must provide a title','ultimate-member')
-//						),
-//						'_metakey' => array(
-//							'mode' => 'unique',
-//						),
-//						'_max_size' => array(
-//							'mode' => 'numeric',
-//							'error' => __('Please enter a valid size','ultimate-member')
-//						),
-//					)
-//				),
-//
-//				'file' => array(
-//					'name' => 'File Upload',
-//					'col1' => array('_title','_metakey','_description','_allowed_types','_max_size','_visibility'),
-//					'col2' => array('_label','_public','_roles','_upload_text','_upload_help_text','_button_text'),
-//					'col3' => array('_required','_editable'),
-//					'validate' => array(
-//						'_title' => array(
-//							'mode' => 'required',
-//							'error' => __('You must provide a title','ultimate-member')
-//						),
-//						'_metakey' => array(
-//							'mode' => 'unique',
-//						),
-//						'_max_size' => array(
-//							'mode' => 'numeric',
-//							'error' => __( 'Please enter a valid size', 'ultimate-member' )
-//						),
-//					)
-//				),
-//
-//
-//
-//				'block'     => array(
-//					'name' => 'Content Block',
-//					'col1' => array('_title','_visibility'),
-//					'col2' => array('_public','_roles'),
-//					'col_full' => array('_content'),
-//					'mce_content' => true,
-//					'validate' => array(
-//						'_title' => array(
-//							'mode' => 'required',
-//							'error' => __('You must provide a title','ultimate-member')
-//						),
-//					)
-//				),
-//
-//				'shortcode' => array(
-//					'name' => 'Shortcode',
-//					'col1' => array('_title','_visibility'),
-//					'col2' => array('_public','_roles'),
-//					'col_full' => array('_content'),
-//					'validate' => array(
-//						'_title' => array(
-//							'mode' => 'required',
-//							'error' => __('You must provide a title','ultimate-member')
-//						),
-//						'_content' => array(
-//							'mode' => 'required',
-//							'error' => __('You must add a shortcode to the content area','ultimate-member')
-//						),
-//					)
-//				),
-//
-//				'spacing'   => array(
-//					'name' => 'Spacing',
-//					'col1' => array('_title','_visibility'),
-//					'col2' => array('_spacing'),
-//					'form_only' => true,
-//					'validate' => array(
-//						'_title' => array(
-//							'mode' => 'required',
-//							'error' => __('You must provide a title','ultimate-member')
-//						),
-//					)
-//				),
-//
-//				'divider'   => array(
-//					'name' => 'Divider',
-//					'col1' => array('_title','_width','_divider_text','_visibility'),
-//					'col2' => array('_style','_color','_public','_roles'),
-//					'form_only' => true,
-//					'validate' => array(
-//						'_title' => array(
-//							'mode' => 'required',
-//							'error' => __('You must provide a title','ultimate-member')
-//						),
-//					)
-//				),
-//
-//				'rating'           => array(
-//					'name' => __( 'Rating', 'ultimate-member' ),
-//					'col1' => array('_title','_metakey','_description','_visibility'),
-//					'col2' => array('_label','_public','_roles','_number','_default'),
-//					'col3' => array('_required','_editable'),
-//					'validate' => array(
-//						'_title' => array(
-//							'mode' => 'required',
-//							'error' => __('You must provide a title','ultimate-member')
-//						),
-//						'_metakey' => array(
-//							'mode' => 'unique',
-//						),
-//					)
-//				),
-//
-//				'googlemap'        => array(
-//					'name' => 'Google Map',
-//					'col1' => array('_title','_metakey','_description','_visibility'),
-//					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
-//					'col3' => array('_required','_editable'),
-//					'validate' => array(
-//						'_title' => array(
-//							'mode' => 'required',
-//							'error' => __('You must provide a title','ultimate-member')
-//						),
-//						'_metakey' => array(
-//							'mode' => 'unique',
-//						),
-//					)
-//				),
-//
-//				'youtube_video'    => array(
-//					'name' => 'YouTube Video',
-//					'col1' => array('_title','_metakey','_description','_visibility'),
-//					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
-//					'col3' => array('_required','_editable'),
-//					'validate' => array(
-//						'_title' => array(
-//							'mode' => 'required',
-//							'error' => __('You must provide a title','ultimate-member')
-//						),
-//						'_metakey' => array(
-//							'mode' => 'unique',
-//						),
-//					)
-//				),
-//
-//				'vimeo_video'      => array(
-//					'name' => 'Vimeo Video',
-//					'col1' => array('_title','_metakey','_description','_visibility'),
-//					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
-//					'col3' => array('_required','_editable'),
-//					'validate' => array(
-//						'_title' => array(
-//							'mode' => 'required',
-//							'error' => __('You must provide a title','ultimate-member')
-//						),
-//						'_metakey' => array(
-//							'mode' => 'unique',
-//						),
-//					)
-//				),
-//
-//				'soundcloud_track' => array(
-//					'name' => 'SoundCloud Track',
-//					'col1' => array('_title','_metakey','_description','_visibility'),
-//					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
-//					'col3' => array('_required','_editable'),
-//					'validate' => array(
-//						'_title' => array(
-//							'mode' => 'required',
-//							'error' => __('You must provide a title','ultimate-member')
-//						),
-//						'_metakey' => array(
-//							'mode' => 'unique',
-//						),
-//					)
-//				),
-//			);
 		}
 
-
-
-
-
+		/**
+		 * @deprecated 3.0
+		 *
+		 * @var array
+		 */
+		public $permalinks = array();
 
 		/**
 		 * @deprecated 3.0
 		 *
 		 * @var array
 		 */
-		var $permalinks = array();
-
-
-		/**
-		 * @deprecated 3.0
-		 *
-		 * @var array
-		 */
-		var $settings_defaults;
-
+		public $settings_defaults;
 
 		/**
 		 * @deprecated 3.0
 		 *
 		 * @var array
 		 */
-		var $default_roles_metadata;
-
-
-		/**
-		 * @deprecated 3.0
-		 *
-		 * @var array
-		 */
-		var $perms;
-
+		public $default_roles_metadata;
 
 		/**
 		 * @deprecated 3.0
 		 *
 		 * @var array
 		 */
-		var $nonadmin_perms;
+		public $perms;
 
+		/**
+		 * @deprecated 3.0
+		 *
+		 * @var array
+		 */
+		public $nonadmin_perms;
 
 		/**
 		 * @deprecated 3.0
 		 *
 		 * @var mixed|void
 		 */
-		var $core_form_meta_all;
-
-
+		public $core_form_meta_all;
 
 		/**
 		 * @deprecated 3.0
 		 *
 		 * @var array
 		 */
-		var $core_forms = array();
-
-
-		/**
-		 * @deprecated 3.0
-		 *
-		 * @var array
-		 */
-		var $core_form_meta = array();
-
+		public $core_forms = array();
 
 		/**
 		 * @deprecated 3.0
 		 *
 		 * @var array
 		 */
-		var $core_pages = array();
+		public $core_form_meta = array();
+
+		/**
+		 * @deprecated 3.0
+		 *
+		 * @var array
+		 */
+		public $core_pages = array();
 
 		/**
 		 * Get UM Pages
@@ -4844,17 +4311,17 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 *
 		 * @return array
 		 */
-		function get_core_pages() {
+		public function get_core_pages() {
 			_deprecated_function( __METHOD__, '3.0' );
 
-			$permalink = array();
+			$permalink  = array();
 			$core_pages = array_keys( $this->core_pages );
 			if ( empty( $core_pages ) ) {
 				return $permalink;
 			}
 
 			foreach ( $core_pages as $page_key ) {
-				$page_option_key = UM()->options()->get_predefined_page_option_key( $page_key );
+				$page_option_key        = UM()->options()->get_predefined_page_option_key( $page_key );
 				$permalink[ $page_key ] = UM()->options()->get( $page_option_key );
 			}
 

@@ -1418,10 +1418,13 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 						</div>
 						<div class="um-conditional-rules-groups-connect"><?php esc_html_e( 'or', 'ultimate-member' ); ?></div>
 					</div>
-				<?php } else {
-					foreach ( $value as $cond_group_k => $cond_group ) { ?>
+					<?php
+				} else {
+					foreach ( $value as $cond_group_k => $cond_group ) {
+						?>
 						<div class="um-conditional-rules-group" data-group-index="<?php echo esc_attr( $cond_group_k ); ?>">
-							<?php foreach ( $cond_group as $cond_row_k => $cond_row ) {
+							<?php
+							foreach ( $cond_group as $cond_row_k => $cond_row ) {
 								$field_data = UM()->admin()->field_group()->get_field_data( $cond_row['field'], true );
 
 								$options = array();
@@ -1481,11 +1484,15 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 										</div>
 									</div>
 								</div>
-							<?php } ?>
+								<?php
+							}
+							?>
 							<div class="um-conditional-rules-groups-connect"><?php esc_html_e( 'or', 'ultimate-member' ); ?></div>
 						</div>
-					<?php } ?>
-				<?php } ?>
+						<?php
+					}
+				}
+				?>
 				<div class="um-conditional-rules-wrapper-bottom">
 					<input type="button" class="um-conditional-add-rules-group button" value="<?php esc_attr_e( 'Add rule group', 'ultimate-member' ); ?>" />
 				</div>
