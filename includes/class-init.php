@@ -1,5 +1,7 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
-
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'UM' ) ) {
 
@@ -7,54 +9,19 @@ if ( ! class_exists( 'UM' ) ) {
 	 * Main UM Class
 	 *
 	 * @class UM
-	 * @version 2.0
-	 *
-	 * @method UM_bbPress_API bbPress_API()
-	 * @method UM_Followers_API Followers_API()
-	 * @method UM_Friends_API Friends_API()
-	 * @method UM_Instagram_API Instagram_API()
-	 * @method UM_Mailchimp Mailchimp()
-	 * @method UM_Messaging_API Messaging_API()
-	 * @method UM_myCRED myCRED()
-	 * @method UM_Notices Notices()
-	 * @method UM_Notifications_API Notifications_API()
-	 * @method UM_Online Online()
-	 * @method UM_Profile_Completeness_API Profile_Completeness_API()
-	 * @method UM_reCAPTCHA reCAPTCHA()
-	 * @method UM_Reviews Reviews()
-	 * @method UM_Activity_API Activity_API()
-	 * @method UM_Social_Login_API Social_Login_API()
-	 * @method UM_User_Tags User_Tags()
-	 * @method UM_Verified_Users_API Verified_Users_API()
-	 * @method UM_WooCommerce_API WooCommerce_API()
-	 * @method UM_Terms_Conditions Terms_Conditions()
-	 * @method UM_Private_Content Private_Content()
-	 * @method UM_User_Locations User_Locations()
-	 * @method UM_Photos_API Photos_API()
-	 * @method UM_Groups Groups()
-	 * @method UM_Frontend_Posting Frontend_Posting()
-	 * @method UM_Notes Notes()
-	 * @method UM_User_Bookmarks User_Bookmarks()
-	 * @method UM_Unsplash Unsplash()
-	 * @method UM_ForumWP ForumWP()
-	 * @method UM_Profile_Tabs Profile_Tabs()
-	 * @method UM_JobBoardWP JobBoardWP()
-	 * @method UM_Google_Authenticator Google_Authenticator()
+	 * @version 3.0
 	 */
 	final class UM extends UM_Functions {
-
 
 		/**
 		 * @var UM the single instance of the class
 		 */
 		protected static $instance = null;
 
-
 		/**
 		 * @var array all plugin's classes
 		 */
 		public $classes = array();
-
 
 		/**
 		 * WP Native permalinks turned on?
@@ -63,18 +30,15 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		public $is_permalinks;
 
-
 		/**
 		 * @var
 		 */
 		public $is_legacy;
 
-
 		/**
 		 * @var string
 		 */
 		public $honeypot;
-
 
 		/**
 		 * Main UM Instance
@@ -95,7 +59,6 @@ if ( ! class_exists( 'UM' ) ) {
 			return self::$instance;
 		}
 
-
 		/**
 		 * Create plugin classes - not sure if it needs!!!!!!!!!!!!!!!
 		 *
@@ -107,7 +70,6 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return mixed
 		 */
 		public function __call( $name, array $params ) {
-
 			if ( empty( $this->classes[ $name ] ) ) {
 
 				/**
@@ -134,9 +96,7 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 
 			return $this->classes[ $name ];
-
 		}
-
 
 		/**
 		 * Function for add classes to $this->classes
@@ -154,7 +114,6 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 		}
 
-
 		/**
 		 * Cloning is forbidden.
 		 * @since 1.0
@@ -162,7 +121,6 @@ if ( ! class_exists( 'UM' ) ) {
 		public function __clone() {
 			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'ultimate-member' ), '1.0' );
 		}
-
 
 		/**
 		 * Unserializing instances of this class is forbidden.
@@ -172,23 +130,21 @@ if ( ! class_exists( 'UM' ) ) {
 			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'ultimate-member' ), '1.0' );
 		}
 
-
 		/**
 		 * UM constructor.
 		 *
 		 * @since 1.0
 		 */
-		function __construct() {
+		public function __construct() {
 			parent::__construct();
 		}
-
 
 		/**
 		 * UM pseudo-constructor.
 		 *
 		 * @since 2.0.18
 		 */
-		function _um_construct() {
+		public function _um_construct() {
 			$this->define_constants();
 
 			//register autoloader for include UM classes
@@ -241,21 +197,20 @@ if ( ! class_exists( 'UM' ) ) {
 				//run hook for extensions init
 				add_action( 'plugins_loaded', array( &$this, 'core_loaded_trigger' ), -19 );
 
-				//include short non class functions
+				//include short non-class functions
 				$is_legacy = get_option( 'um_is_legacy' );
 
 				if ( ! $is_legacy || ! $this->is_legacy ) {
 					require_once 'um-short-functions.php';
 					require_once 'um-deprecated-functions.php';
-				} elseif ( $is_legacy && $this->is_legacy ) {
+				}/* elseif ( $is_legacy && $this->is_legacy ) {
 					add_action( 'init', array( &$this, 'old_update_patch' ), 0 );
 
 					require_once 'legacy/um-short-functions.php';
 					require_once 'legacy/um-deprecated-functions.php';
-				}
+				}*/
 			}
 		}
-
 
 		/**
 		 * Define Ultimate Member Constants.
@@ -265,7 +220,6 @@ if ( ! class_exists( 'UM' ) ) {
 		private function define_constants() {
 			$this->define( 'UM_TEMPLATE_CONFLICT_TEST', false );
 		}
-
 
 		/**
 		 * Getting the Install class instance
@@ -281,7 +235,6 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['um\common\install'];
 		}
 
-
 		/**
 		 * Plugin Deactivation
 		 *
@@ -290,7 +243,6 @@ if ( ! class_exists( 'UM' ) ) {
 		function deactivation() {
 			$this->common()->cron()->unschedule_events();
 		}
-
 
 		/**
 		 * Loading UM textdomain
@@ -371,7 +323,6 @@ if ( ! class_exists( 'UM' ) ) {
 
 			load_textdomain( $language_domain, $language_file );
 		}
-
 
 		/**
 		 * 1.3.x active extensions deactivate for properly running 2.0.x AJAX upgrades
@@ -470,7 +421,6 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 		}
 
-
 		/**
 		 * Autoload UM classes handler
 		 *
@@ -519,14 +469,12 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 		}
 
-
 		/**
 		 *
 		 */
 		function core_loaded_trigger() {
 			do_action( 'um_core_loaded' );
 		}
-
 
 		/**
 		 * Include required core files used in admin and on the frontend.
@@ -582,9 +530,7 @@ if ( ! class_exists( 'UM' ) ) {
 					$this->logout();
 				}
 
-				//common includes
-				$this->rewrite();
-				//$this->shortcodes();
+//				common includes
 				$this->roles();
 				$this->user();
 				$this->profile();
@@ -596,11 +542,11 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->external_integrations();
 				$this->gdpr();
 
-				//if multisite networks active
+//				if multisite networks active
 				if ( is_multisite() ) {
 					$this->multisite();
 				}
-			} elseif ( $is_legacy && $this->is_legacy ) {
+			}/* elseif ( $is_legacy && $this->is_legacy ) {
 				// legacy part
 				$this->common();
 				$this->access();
@@ -664,10 +610,8 @@ if ( ! class_exists( 'UM' ) ) {
 				if ( is_multisite() ) {
 					$this->multisite();
 				}
-			}
+			}*/
 		}
-
-
 
 		/**
 		 * Getting the Common class instance
@@ -678,15 +622,15 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		function common() {
 			// legacy part
-			$is_legacy = get_option( 'um_is_legacy' );
-			if ( $is_legacy ) {
-				if ( UM()->is_legacy ) {
-					if ( empty( $this->classes['um\legacy\common'] ) ) {
-						$this->classes['um\legacy\common'] = new um\legacy\core\Common();
-					}
-					return $this->classes['um\legacy\common'];
-				}
-			}
+//			$is_legacy = get_option( 'um_is_legacy' );
+//			if ( $is_legacy ) {
+//				if ( UM()->is_legacy ) {
+//					if ( empty( $this->classes['um\legacy\common'] ) ) {
+//						$this->classes['um\legacy\common'] = new um\legacy\core\Common();
+//					}
+//					return $this->classes['um\legacy\common'];
+//				}
+//			}
 
 			if ( empty( $this->classes['um\common\init'] ) ) {
 				$this->classes['um\common\init'] = new um\common\Init();
@@ -734,43 +678,21 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		function admin() {
 			// legacy part
-			$is_legacy = get_option( 'um_is_legacy' );
-			if ( $is_legacy ) {
-				if ( UM()->is_legacy ) {
-					if ( empty( $this->classes['um\legacy\admin'] ) ) {
-						$this->classes['um\legacy\admin'] = new um\legacy\admin\Admin();
-					}
-					return $this->classes['um\legacy\admin'];
-				}
-			}
+//			$is_legacy = get_option( 'um_is_legacy' );
+//			if ( $is_legacy ) {
+//				if ( UM()->is_legacy ) {
+//					if ( empty( $this->classes['um\legacy\admin'] ) ) {
+//						$this->classes['um\legacy\admin'] = new um\legacy\admin\Admin();
+//					}
+//					return $this->classes['um\legacy\admin'];
+//				}
+//			}
 
 			if ( empty( $this->classes['um\admin\init'] ) ) {
 				$this->classes['um\admin\init'] = new um\admin\Init();
 			}
 			return $this->classes['um\admin\init'];
 		}
-
-
-		/**
-		 * @since 2.1.0
-		 *
-		 * @return um\legacy\core\Member_Directory()
-		 */
-		function member_directory() {
-
-			if ( empty( $this->classes['member_directory'] ) ) {
-
-				$search_in_table = $this->options()->get( 'member_directory_own_table' );
-
-				if ( ! empty( $search_in_table ) ) {
-					$this->classes['member_directory'] = new um\legacy\core\Member_Directory_Meta();
-				} else {
-					$this->classes['member_directory'] = new um\legacy\core\Member_Directory();
-				}
-			}
-			return $this->classes['member_directory'];
-		}
-
 
 		/**
 		 * @param $class
@@ -786,7 +708,6 @@ if ( ! class_exists( 'UM' ) ) {
 
 			return $this->classes[ $key ];
 		}
-
 
 		/**
 		 * @since 3.0
@@ -821,15 +742,15 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		function options() {
 			// legacy part
-			$is_legacy = get_option( 'um_is_legacy' );
-			if ( $is_legacy ) {
-				if ( UM()->is_legacy ) {
-					if ( empty( $this->classes['um\legacy\options'] ) ) {
-						$this->classes['um\legacy\options'] = new um\legacy\core\Options();
-					}
-					return $this->classes['um\legacy\options'];
-				}
-			}
+//			$is_legacy = get_option( 'um_is_legacy' );
+//			if ( $is_legacy ) {
+//				if ( UM()->is_legacy ) {
+//					if ( empty( $this->classes['um\legacy\options'] ) ) {
+//						$this->classes['um\legacy\options'] = new um\legacy\core\Options();
+//					}
+//					return $this->classes['um\legacy\options'];
+//				}
+//			}
 
 			return $this->common()->options();
 		}
@@ -849,83 +770,11 @@ if ( ! class_exists( 'UM' ) ) {
 
 
 		/**
-		 * @since 2.0.45
-		 *
-		 * Legacy since 3.0
-		 *
-		 * @return um\legacy\admin\core\Admin_Theme_Updater()
-		 */
-		function theme_updater() {
-			if ( empty( $this->classes['um\legacy\admin\core\theme_updater'] ) ) {
-				$this->classes['um\legacy\admin\core\theme_updater'] = new um\legacy\admin\core\Admin_Theme_Updater();
-			}
-			return $this->classes['um\legacy\admin\core\theme_updater'];
-		}
-
-
-		/**
 		 * @since 2.0
 		 */
 		function ajax_init() {
 			new um\core\AJAX_Common();
 		}
-
-
-		/**
-		 * @since 2.0.30
-		 */
-		function admin_ajax_hooks() {
-			if ( empty( $this->classes['admin_ajax_hooks'] ) ) {
-				$this->classes['admin_ajax_hooks'] = new um\legacy\admin\core\Admin_Ajax_Hooks();
-			}
-			return $this->classes['admin_ajax_hooks'];
-		}
-
-
-		/**
-		 * @since 2.0.26
-		 *
-		 * Legacy since 3.0
-		 *
-		 * @return um\legacy\admin\core\Admin_Navmenu()
-		 */
-		function admin_navmenu() {
-			if ( empty( $this->classes['admin_navmenu'] ) ) {
-				$this->classes['admin_navmenu'] = new um\legacy\admin\core\Admin_Navmenu();
-			}
-			return $this->classes['admin_navmenu'];
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * Legacy since 3.0
-		 *
-		 * @return um\legacy\admin\core\Admin_Settings()
-		 */
-		function admin_settings() {
-			if ( empty( $this->classes['admin_settings'] ) ) {
-				$this->classes['admin_settings'] = new um\legacy\admin\core\Admin_Settings();
-			}
-			return $this->classes['admin_settings'];
-		}
-
-
-		/**
-		 * GDPR privacy policy
-		 *
-		 * @since 2.0.14
-		 *
-		 * @return bool|um\legacy\admin\core\Admin_GDPR()
-		 */
-		function admin_gdpr() {
-			if ( empty( $this->classes['um\legacy\admin\core\admin_gdpr'] ) ) {
-				$this->classes['um\legacy\admin\core\admin_gdpr'] = new um\legacy\admin\core\Admin_GDPR();
-			}
-			return $this->classes['um\legacy\admin\core\admin_gdpr'];
-		}
-
 
 		/**
 		 * GDPR privacy policy
@@ -939,80 +788,6 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->classes['gdpr'] = new um\core\GDPR();
 			}
 			return $this->classes['gdpr'];
-		}
-
-		/**
-		 * @since 2.0
-		 *
-		 * Legacy since 3.0
-		 *
-		 * @return um\legacy\admin\core\Admin_Builder()
-		 */
-		function builder() {
-			if ( empty( $this->classes['um\legacy\admin\core\admin_builder'] ) ) {
-				$this->classes['um\legacy\admin\core\admin_builder'] = new um\legacy\admin\core\Admin_Builder();
-			}
-			return $this->classes['um\legacy\admin\core\admin_builder'];
-		}
-
-		/**
-		 * @since 2.0
-		 *
-		 * Legacy since 3.0
-		 *
-		 * @return um\legacy\admin\core\Admin_Users()
-		 */
-		function users() {
-			if ( empty( $this->classes['um\legacy\admin\core\admin_users'] ) ) {
-				$this->classes['um\legacy\admin\core\admin_users'] = new um\legacy\admin\core\Admin_Users();
-			}
-			return $this->classes['um\legacy\admin\core\admin_users'];
-		}
-
-		/**
-		 * @since 2.0
-		 *
-		 * Legacy since 3.0
-		 *
-		 * @return um\legacy\admin\core\Admin_DragDrop()
-		 */
-		function dragdrop() {
-			if ( empty( $this->classes['um\legacy\admin\core\admin_dragdrop'] ) ) {
-				$this->classes['um\legacy\admin\core\admin_dragdrop'] = new um\legacy\admin\core\Admin_DragDrop();
-			}
-			return $this->classes['um\legacy\admin\core\admin_dragdrop'];
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * Legacy since 3.0
-		 *
-		 * @param bool|array $data
-		 * @return um\legacy\admin\core\Admin_Forms()
-		 */
-		function admin_forms( $data = false ) {
-			if ( ! isset( $this->classes[ 'um\legacy\admin\core\forms_' . $data['class'] ] ) || empty( $this->classes[ 'um\legacy\admin\core\forms_' . $data['class'] ] ) ) {
-				$this->classes[ 'um\legacy\admin\core\forms_' . $data['class'] ] = new um\legacy\admin\core\Admin_Forms( $data );
-			}
-			return $this->classes[ 'um\legacy\admin\core\forms_' . $data['class'] ];
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * Legacy since 3.0
-		 *
-		 * @param bool|array $data
-		 * @return um\legacy\admin\core\Admin_Forms_Settings()
-		 */
-		function admin_forms_settings( $data = false ) {
-			if ( ! isset( $this->classes[ 'um\legacy\admin\core\forms_settings_' . $data['class'] ] ) || empty( $this->classes[ 'um\legacy\admin\core\forms_settings_' . $data['class'] ] ) ) {
-				$this->classes[ 'um\legacy\admin\core\forms_settings_' . $data['class'] ] = new um\legacy\admin\core\Admin_Forms_Settings( $data );
-			}
-			return $this->classes[ 'um\legacy\admin\core\forms_settings_' . $data['class'] ];
 		}
 
 
@@ -1042,45 +817,6 @@ if ( ! class_exists( 'UM' ) ) {
 
 			return $this->classes['config'];
 		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * Legacy since 3.0
-		 *
-		 * @return um\legacy\core\rest\API_v1|um\legacy\core\rest\API_v2
-		 */
-		function rest_api() {
-			$api_version = $this->options()->get( 'rest_api_version' );
-
-			if ( empty( $this->classes['rest_api'] ) ) {
-				if ( '1.0' === $api_version ) {
-					$this->classes['rest_api'] = new um\legacy\core\rest\API_v1();
-				} elseif ( '2.0' === $api_version ) {
-					$this->classes['rest_api'] = new um\legacy\core\rest\API_v2();
-				} else {
-					$this->classes['rest_api'] = new um\legacy\core\rest\API_v1();
-				}
-			}
-
-			return $this->classes['rest_api'];
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * @return um\core\Rewrite
-		 */
-		function rewrite() {
-			if ( empty( $this->classes['rewrite'] ) ) {
-				$this->classes['rewrite'] = new um\core\Rewrite();
-			}
-
-			return $this->classes['rewrite'];
-		}
-
 
 		/**
 		 * @since 2.0
@@ -1228,11 +964,11 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return um\core\Query
 		 */
 		function query() {
-			if ( empty( $this->classes['query'] ) ) {
-				$this->classes['query'] = new um\core\Query();
+			if ( empty( $this->classes['um\core\query'] ) ) {
+				$this->classes['um\core\query'] = new um\core\Query();
 			}
 
-			return $this->classes['query'];
+			return $this->classes['um\core\query'];
 		}
 
 
@@ -1269,25 +1005,25 @@ if ( ! class_exists( 'UM' ) ) {
 		 *
 		 * @return um\core\Files
 		 */
-		function files() {
-			if ( empty( $this->classes['files'] ) ) {
-				$this->classes['files'] = new um\core\Files();
+		public function files() {
+			if ( empty( $this->classes['um\core\files'] ) ) {
+				$this->classes['um\core\files'] = new um\core\Files();
 			}
 
-			return $this->classes['files'];
+			return $this->classes['um\core\files'];
 		}
 
-		
+
 		/**
 		 * @since 2.0.21
 		 *
 		 * @return um\core\Uploader
 		 */
 		function uploader() {
-			if ( empty( $this->classes['uploader'] ) ) {
-				$this->classes['uploader'] = new um\core\Uploader();
+			if ( empty( $this->classes['um\core\uploader'] ) ) {
+				$this->classes['um\core\uploader'] = new um\core\Uploader();
 			}
-			return $this->classes['uploader'];
+			return $this->classes['um\core\uploader'];
 		}
 
 
@@ -1397,9 +1133,6 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		function init() {
 			$is_legacy = get_option( 'um_is_legacy' );
-
-			ob_start();
-
 			if ( ! $is_legacy || ! $this->is_legacy ) {
 				require_once 'core/um-actions-form.php';
 				require_once 'core/um-actions-access.php';
@@ -1426,35 +1159,8 @@ if ( ! class_exists( 'UM' ) ) {
 				require_once 'core/um-filters-account.php';
 				require_once 'core/um-filters-misc.php';
 				require_once 'core/um-filters-commenting.php';
-			} elseif ( $is_legacy && $this->is_legacy ) {
-				require_once 'legacy/core/um-actions-form.php';
-				require_once 'legacy/core/um-actions-access.php';
-				require_once 'legacy/core/um-actions-wpadmin.php';
-				require_once 'legacy/core/um-actions-core.php';
-				require_once 'legacy/core/um-actions-ajax.php';
-				require_once 'legacy/core/um-actions-login.php';
-				require_once 'legacy/core/um-actions-register.php';
-				require_once 'legacy/core/um-actions-profile.php';
-				require_once 'legacy/core/um-actions-account.php';
-				require_once 'legacy/core/um-actions-global.php';
-				require_once 'legacy/core/um-actions-user.php';
-				require_once 'legacy/core/um-actions-save-profile.php';
-				require_once 'legacy/core/um-actions-misc.php';
-
-				require_once 'legacy/core/um-filters-login.php';
-				require_once 'legacy/core/um-filters-fields.php';
-				require_once 'legacy/core/um-filters-files.php';
-				require_once 'legacy/core/um-filters-navmenu.php';
-				require_once 'legacy/core/um-filters-avatars.php';
-				require_once 'legacy/core/um-filters-user.php';
-
-				require_once 'legacy/core/um-filters-profile.php';
-				require_once 'legacy/core/um-filters-account.php';
-				require_once 'legacy/core/um-filters-misc.php';
-				require_once 'legacy/core/um-filters-commenting.php';
 			}
 		}
-
 
 		/**
 		 * @since 3.0
@@ -1468,7 +1174,6 @@ if ( ! class_exists( 'UM' ) ) {
 
 			return $this->classes['um\modules'];
 		}
-
 
 		/**
 		 * Get single module API
@@ -1495,247 +1200,8 @@ if ( ! class_exists( 'UM' ) ) {
 				return false;
 			}
 		}
-
-
-		// DEPRECATED
-
-
-		/**
-		 * Plugin Activation
-		 *
-		 * @since 2.0
-		 *
-		 * @deprecated 3.0
-		 */
-		function activation() {
-			_deprecated_function( __METHOD__, '3.0', 'UM()->install()->activation()' );
-
-			UM()->install()->activation();
-		}
-
-
-		/**
-		 * Maybe need multisite activation process
-		 *
-		 * @since 2.1.7
-		 *
-		 * @deprecated 3.0
-		 */
-		function maybe_network_activation() {
-			_deprecated_function( __METHOD__, '3.0', 'UM()->install()->maybe_network_activation()' );
-
-			UM()->install()->maybe_network_activation();
-		}
-
-
-		/**
-		 * Single site plugin activation handler
-		 *
-		 * @deprecated 3.0
-		 */
-		function single_site_activation() {
-			_deprecated_function( __METHOD__, '3.0', 'UM()->install()->single_site_activation()' );
-
-			UM()->install()->single_site_activation();
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * @deprecated 3.0
-		 */
-		function setup() {
-			_deprecated_function( __METHOD__, '3.0', 'UM()->install()' );
-		}
-
-
-		/**
-		 * @since 2.0.34
-		 *
-		 * @deprecated 3.0
-		 */
-		function extensions() {
-			_deprecated_function( __METHOD__, '3.0' );
-		}
-
-
-		/**
-		 * Get extension API
-		 *
-		 * @since 2.0.34
-		 * @deprecated 3.0
-		 *
-		 * @param $slug
-		 */
-		function extension( $slug ) {
-			_deprecated_function( __METHOD__, '3.0' );
-		}
-
-		/**
-		 * @since 2.0
-		 *
-		 * @deprecated 3.0
-		 */
-		function fonticons() {
-			_deprecated_function( __METHOD__, '3.0' );
-		}
-
-		/**
-		 * @since 2.0
-		 *
-		 * Legacy since 3.0
-		 *
-		 * @return um\legacy\core\Access
-		 */
-		function access() {
-			if ( empty( $this->classes['um\legacy\core\access'] ) ) {
-				$this->classes['um\legacy\core\access'] = new um\legacy\core\Access();
-			}
-
-			return $this->classes['um\legacy\core\access'];
-		}
-
-		/**
-		 * @since 2.0
-		 *
-		 * Legacy since 3.0
-		 *
-		 * @return um\legacy\core\Shortcodes
-		 */
-		function shortcodes() {
-			if ( empty( $this->classes['um\legacy\core\shortcodes'] ) ) {
-				$this->classes['um\legacy\core\shortcodes'] = new um\legacy\core\Shortcodes();
-			}
-
-			return $this->classes['um\legacy\core\shortcodes'];
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * Legacy since 3.0
-		 *
-		 * @return um\legacy\admin\core\Admin_Upgrade()
-		 */
-		function admin_upgrade() {
-			if ( empty( $this->classes['um\legacy\admin\admin_upgrade'] ) ) {
-				$this->classes['um\legacy\admin\admin_upgrade'] = new um\legacy\admin\core\Admin_Upgrade();
-			}
-			return $this->classes['um\legacy\admin\admin_upgrade'];
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * Legacy since 3.0
-		 *
-		 * @return um\legacy\admin\core\Admin_Menu()
-		 */
-		function admin_menu() {
-			if ( empty( $this->classes['um\legacy\admin\menu'] ) ) {
-				$this->classes['um\legacy\admin\menu'] = new um\legacy\admin\core\Admin_Menu();
-			}
-			return $this->classes['um\legacy\admin\menu'];
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * Legacy since 3.0
-		 *
-		 * @return um\legacy\admin\core\Admin_Enqueue()
-		 */
-		function admin_enqueue() {
-			if ( empty( $this->classes['um\legacy\admin\enqueue'] ) ) {
-				$this->classes['um\legacy\admin\enqueue'] = new um\legacy\admin\core\Admin_Enqueue();
-			}
-			return $this->classes['um\legacy\admin\enqueue'];
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * Legacy since 3.0
-		 *
-		 * @return um\legacy\admin\core\Admin_Columns()
-		 */
-		function columns() {
-			if ( empty( $this->classes['um\legacy\admin\columns'] ) ) {
-				$this->classes['um\legacy\admin\columns'] = new um\legacy\admin\core\Admin_Columns();
-			}
-			return $this->classes['um\legacy\admin\columns'];
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * Legacy since 3.0
-		 *
-		 * @return um\legacy\admin\core\Admin_Metabox()
-		 */
-		function metabox() {
-			if ( empty( $this->classes['um\legacy\admin\metabox'] ) ) {
-				$this->classes['um\legacy\admin\metabox'] = new um\legacy\admin\core\Admin_Metabox();
-			}
-			return $this->classes['um\legacy\admin\metabox'];
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * Legacy since 3.0
-		 *
-		 * @return um\legacy\core\Enqueue
-		 */
-		function enqueue() {
-			if ( empty( $this->classes['um\legacy\enqueue'] ) ) {
-				$this->classes['um\legacy\enqueue'] = new um\legacy\core\Enqueue();
-			}
-
-			return $this->classes['um\legacy\enqueue'];
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * Legacy since 3.0
-		 *
-		 * @return um\legacy\core\Mail
-		 */
-		function mail() {
-			if ( empty( $this->classes['um\legacy\mail'] ) ) {
-				$this->classes['um\legacy\mail'] = new um\legacy\core\Mail();
-			}
-
-			return $this->classes['um\legacy\mail'];
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * Legacy since 3.0
-		 *
-		 * @return um\legacy\core\Cron
-		 */
-		function cron() {
-			if ( empty( $this->classes['cron'] ) ) {
-				$this->classes['cron'] = new um\legacy\core\Cron();
-			}
-
-			return $this->classes['cron'];
-		}
 	}
 }
-
 
 /**
  * Function for calling UM methods and variables

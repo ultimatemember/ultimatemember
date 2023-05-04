@@ -2,10 +2,11 @@
 namespace um\core;
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Builtin' ) ) {
-
 
 	/**
 	 * Class Builtin
@@ -13,43 +14,52 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 	 */
 	class Builtin {
 
-
 		/**
 		 * @var array
 		 */
 		public $predefined_fields = array();
 
+		/**
+		 * @var array
+		 */
+		public $all_user_fields = array();
 
 		/**
 		 * @var array
 		 */
-		var $all_user_fields = array();
-
+		public $core_fields = array();
 
 		/**
 		 * @var array
 		 */
-		var $core_fields = array();
+		public $saved_fields = array();
 
+		/**
+		 * @var array
+		 */
+		public $custom_fields = array();
+
+		/**
+		 * @var array
+		 */
+		public $fields_dropdown = array();
 
 		/**
 		 * Builtin constructor.
 		 */
-		function __construct() {
+		public function __construct() {
+			$this->saved_fields = get_option( 'um_fields', array() );
 			add_action( 'init', array( &$this, 'set_core_fields' ), 1 );
 			add_action( 'init', array( &$this, 'set_predefined_fields' ), 1 );
 			add_action( 'init', array( &$this, 'set_custom_fields' ), 1 );
-			$this->saved_fields = get_option( 'um_fields' );
 		}
-
 
 		/**
 		 * @return array
 		 */
-		function get_all_user_fields() {
+		public function get_all_user_fields() {
 			return apply_filters( 'um_builtin_all_user_fields', $this->all_user_fields );
 		}
-
 
 		/**
 		 * Regular or multi-select/options
@@ -59,8 +69,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 *
 		 * @return bool
 		 */
-		function is_dropdown_field( $field, $attrs ) {
-
+		public function is_dropdown_field( $field, $attrs ) {
 			if ( isset( $attrs['options'] ) ) {
 				return true;
 			}
@@ -74,7 +83,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			return false;
 		}
 
-
 		/**
 		 * Get a field
 		 *
@@ -82,14 +90,13 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 *
 		 * @return mixed|string
 		 */
-		function get_a_field( $field ) {
+		public function get_a_field( $field ) {
 			$fields = $this->all_user_fields;
 			if ( isset( $fields[ $field ] ) ) {
 				return $fields[ $field ];
 			}
 			return '';
 		}
-
 
 		/**
 		 * Get specific fields
@@ -98,7 +105,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 *
 		 * @return array
 		 */
-		function get_specific_fields( $fields ) {
+		public function get_specific_fields( $fields ) {
 			$fields = explode( ',', $fields );
 			$array = array();
 			foreach ( $fields as $field ) {
@@ -109,7 +116,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			return $array;
 		}
 
-
 		/**
 		 * Get specific field
 		 *
@@ -117,7 +123,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 *
 		 * @return array|mixed
 		 */
-		function get_specific_field( $fields ) {
+		public function get_specific_field( $fields ) {
 			$fields = explode( ',', $fields );
 			$array = array();
 			foreach ( $fields as $field ) {
@@ -130,7 +136,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			return $array;
 		}
 
-
 		/**
 		 * Checks for a unique field error
 		 *
@@ -138,7 +143,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 *
 		 * @return int|string
 		 */
-		function unique_field_err( $key ) {
+		public function unique_field_err( $key ) {
 			if ( empty( $key ) ) {
 				return __( 'Please provide a meta key', 'ultimate-member' );
 			}
@@ -165,7 +170,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 *
 		 * @return int|string
 		 */
-		function unique_option_err( $options ) {
+		public function unique_option_err( $options ) {
 			if ( empty( $options ) ) {
 				return __( 'Please provide options list', 'ultimate-member' );
 			}
@@ -184,7 +189,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			return 0;
 		}
 
-
 		/**
 		 * Check date range errors (start date)
 		 *
@@ -192,7 +196,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 *
 		 * @return int|string
 		 */
-		function date_range_start_err( $date ) {
+		public function date_range_start_err( $date ) {
 			if ( empty( $date ) ) {
 				return __( 'Please provide a date range beginning', 'ultimate-member' );
 			}
@@ -203,7 +207,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			return 0;
 		}
 
-
 		/**
 		 * Check date range errors (end date)
 		 *
@@ -212,7 +215,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 *
 		 * @return int|string
 		 */
-		function date_range_end_err( $date, $start_date ) {
+		public function date_range_end_err( $date, $start_date ) {
 			if ( empty( $date ) ) {
 				return __( 'Please provide a date range end', 'ultimate-member' );
 			}
@@ -225,7 +228,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			return 0;
 		}
 
-
 		/**
 		 * Get a core field attrs
 		 *
@@ -233,20 +235,17 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 *
 		 * @return array|mixed
 		 */
-		function get_core_field_attrs( $type ) {
+		public function get_core_field_attrs( $type ) {
 			return ( isset( $this->core_fields[ $type ] ) ) ? $this->core_fields[ $type ] : array('');
 		}
-
 
 		/**
 		 * Core Fields
 		 *
 		 * @uses Builtin::core_fields
 		 */
-		function set_core_fields() {
-
+		public function set_core_fields() {
 			$this->core_fields = array(
-
 				'row' => array(
 					'name'                  => __( 'Row', 'ultimate-member' ),
 					'in_fields'             => false,
@@ -788,11 +787,10 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$this->core_fields = apply_filters( 'um_core_fields_hook', $this->core_fields );
 		}
 
-
 		/**
 		 * Predefined Fields
 		 */
-		function set_predefined_fields() {
+		public function set_predefined_fields() {
 			global $wp_roles;
 
 			$um_roles = array();
@@ -830,16 +828,18 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			 * }
 			 * ?>
 			 */
-			$profile_privacy = apply_filters( 'um_profile_privacy_options', array(
-				'Everyone'  => __( 'Everyone', 'ultimate-member' ),
-				'Only me'   => __( 'Only me', 'ultimate-member' )
-			) );
+			$profile_privacy = apply_filters(
+				'um_profile_privacy_options',
+				array(
+					'Everyone'  => __( 'Everyone', 'ultimate-member' ),
+					'Only me'   => __( 'Only me', 'ultimate-member' )
+				)
+			);
 
 			/*
 			 * it's important create key for array equals value of 'metakey'.
 			 *
 			 */
-
 			$this->predefined_fields = array(
 
 				'user_login' => array(
@@ -1408,33 +1408,25 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$this->predefined_fields = apply_filters( 'um_predefined_fields_hook', $this->predefined_fields );
 		}
 
-
 		/**
 		 * Custom Fields
 		 */
-		function set_custom_fields() {
-
+		public function set_custom_fields() {
 			if ( is_array( $this->saved_fields ) ) {
-
 				$this->custom_fields = $this->saved_fields;
-
 			} else {
-
 				$this->custom_fields = '';
-
 			}
 
 			$custom = $this->custom_fields;
 			$predefined = $this->predefined_fields;
 
-			if ( is_array( $custom ) ){
+			if ( is_array( $custom ) ) {
 				$this->all_user_fields = array_merge( $predefined, $custom );
 			} else {
 				$this->all_user_fields = $predefined;
 			}
-
 		}
-
 
 		/**
 		 * Get all fields without metakeys
@@ -1443,7 +1435,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 *
 		 * @return array
 		 */
-		function get_fields_without_metakey() {
+		public function get_fields_without_metakey() {
 			$fields_without_metakey = array(
 				'block',
 				'shortcode',
@@ -1451,7 +1443,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'divider',
 				'group'
 			);
-
 
 			/**
 			 * UM hook
@@ -1476,7 +1467,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			return apply_filters( 'um_fields_without_metakey', $fields_without_metakey );
 		}
 
-
 		/**
 		 * May be used to show a dropdown, or source for user meta
 		 *
@@ -1485,8 +1475,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 *
 		 * @return array
 		 */
-		function all_user_fields( $exclude_types = null, $show_all = false ) {
-
+		public function all_user_fields( $exclude_types = null, $show_all = false ) {
 			$fields_without_metakey = $this->get_fields_without_metakey();
 			$fields_without_metakey = apply_filters( 'um_all_user_fields_without_metakey', $fields_without_metakey );
 
@@ -1540,14 +1529,12 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			return $all;
 		}
 
-
 		/**
 		 * Possible validation types for fields
 		 *
 		 * @return mixed
 		 */
-		function validation_types() {
-
+		public function validation_types() {
 			$array[0] = __('None','ultimate-member');
 			$array['alphabetic'] = __('Alphabetic value only','ultimate-member');
 			$array['alpha_numeric'] = __('Alpha-numeric value','ultimate-member');
@@ -1597,7 +1584,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			return $array;
 		}
 
-
 		/**
 		 * Get predefined options
 		 *
@@ -1605,9 +1591,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 *
 		 * @return array|mixed|void
 		 */
-		function get( $data ) {
+		public function get( $data ) {
 			switch ( $data ) {
-
 				case 'languages':
 					$array = array(
 						"aa" => __("Afar",'ultimate-member'),
@@ -1796,9 +1781,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 						"zu" => __("Zulu",'ultimate-member')
 					);
 					break;
-
 				case 'countries':
-					$array = array (
+					$array = array(
 						'AF' => __('Afghanistan','ultimate-member'),
 						'AX' => __('Åland Islands','ultimate-member'),
 						'AL' => __('Albania','ultimate-member'),
@@ -2048,7 +2032,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 						'ZW' => __('Zimbabwe','ultimate-member'),
 					);
 					break;
-
 			}
 
 			/**
@@ -2074,6 +2057,5 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$array = apply_filters( "um_{$data}_predefined_field_options", $array );
 			return $array;
 		}
-
 	}
 }

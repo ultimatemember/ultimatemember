@@ -13,7 +13,6 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 	 * @package um\admin
 	 */
 	class Settings {
-
 		/**
 		 * @var array
 		 */
@@ -44,8 +43,6 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 			add_action( 'um_settings_page_appearance__before_section', array( $this, 'settings_appearance_profile_tab' ) );
 
 			add_filter( 'um_settings_structure', array( $this, 'sorting_licenses_options' ), 9999, 1 );
-
-
 
 			//save handlers
 			add_action( 'admin_init', array( $this, 'save_settings_handler' ), 10 );

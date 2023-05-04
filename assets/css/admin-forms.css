@@ -4,6 +4,11 @@
 .um-form-table .um-forms-line[data-field_type="checkbox"] td label {
   font-style: italic; }
 
+.um-form-table .um-forms-line label .um-req {
+  color: #a00;
+  margin: 0 0 0 3px;
+  font-weight: normal; }
+
 .um-form-table .um-forms-line .um-text-delete {
   color: #a00;
   float: left; }
@@ -92,18 +97,38 @@
       top: 0; }
 
 input[type="text"].um-forms-field,
+input[type="url"].um-forms-field,
+input[type="number"].um-forms-field,
+input[type="date"].um-forms-field,
+input[type="time"].um-forms-field,
+input[type="password"].um-forms-field,
 select.um-forms-field,
 textarea.um-forms-field {
   box-sizing: border-box; }
   input[type="text"].um-forms-field.um-long-field,
+  input[type="url"].um-forms-field.um-long-field,
+  input[type="number"].um-forms-field.um-long-field,
+  input[type="date"].um-forms-field.um-long-field,
+  input[type="time"].um-forms-field.um-long-field,
+  input[type="password"].um-forms-field.um-long-field,
   select.um-forms-field.um-long-field,
   textarea.um-forms-field.um-long-field {
     width: 100% !important; }
   input[type="text"].um-forms-field.um-medium-field,
+  input[type="url"].um-forms-field.um-medium-field,
+  input[type="number"].um-forms-field.um-medium-field,
+  input[type="date"].um-forms-field.um-medium-field,
+  input[type="time"].um-forms-field.um-medium-field,
+  input[type="password"].um-forms-field.um-medium-field,
   select.um-forms-field.um-medium-field,
   textarea.um-forms-field.um-medium-field {
     width: 50% !important; }
   input[type="text"].um-forms-field.um-small-field,
+  input[type="url"].um-forms-field.um-small-field,
+  input[type="number"].um-forms-field.um-small-field,
+  input[type="date"].um-forms-field.um-small-field,
+  input[type="time"].um-forms-field.um-small-field,
+  input[type="password"].um-forms-field.um-small-field,
   select.um-forms-field.um-small-field,
   textarea.um-forms-field.um-small-field {
     width: 25% !important; }

@@ -105,6 +105,302 @@ function um_same_page_something_wrong( field_key ) {
 	um_add_same_page_log( field_key, wp.i18n.__( 'Your upgrade was crashed, please contact with support', 'ultimate-member' ) );
 }
 
+/**
+ * Run conditional logic
+ */
+function run_check_conditions() {
+	jQuery( '.um-forms-line' ).removeClass('um-forms-line-conditioned').each( function() {
+		if ( typeof jQuery(this).data('conditional') === 'undefined' || jQuery(this).hasClass('um-forms-line-conditioned') ) {
+			return;
+		}
+
+		if ( check_condition( jQuery(this) ) ) {
+			jQuery(this).find( 'input:not(.um-force-disabled), textarea:not(.um-force-disabled), select:not(.um-force-disabled)' ).removeAttr('disabled').prop('disabled', false);
+			jQuery(this).show();
+		} else {
+			jQuery(this).find( 'input, textarea, select' ).attr('disabled','disabled').prop('disabled', true);
+			jQuery(this).hide();
+		}
+	});
+}
+
+/**
+ * Conditional logic
+ *
+ * true - show field
+ * false - hide field
+ *
+ * @returns {boolean}
+ */
+function check_condition( form_line ) {
+
+	form_line.addClass( 'um-forms-line-conditioned' );
+
+	var conditional = form_line.data('conditional');
+	var condition = conditional[1];
+	var value = conditional[2];
+
+	var prefix = form_line.data( 'prefix' );
+	var parent_condition = true;
+
+	if ( condition === '=' || condition === '!=' ) {
+		if ( conditional[0].indexOf( '||' ) === -1 ) {
+			var condition_field = jQuery( '#' + prefix + '_' + conditional[0] );
+			if ( typeof condition_field.parents('.um-forms-line').data('conditional') !== 'undefined' ) {
+				parent_condition = check_condition( condition_field.parents('.um-forms-line') );
+			}
+		}
+	} else if ( condition === '~' ) {
+		var selectors = conditional[0].split('|');
+		var condition_fields = [];
+		jQuery.each( selectors, function(i) {
+			condition_fields.push( jQuery( '#' + prefix + '_' + selectors[i] ) );
+		});
+		if ( typeof condition_fields[0].parents('.um-forms-line').data('conditional') !== 'undefined' ) {
+			parent_condition = check_condition( condition_fields[0].parents('.um-forms-line') );
+		}
+	} else if ( condition === '><' ) {
+		var condition_field = jQuery( '#' + prefix + '_' + conditional[0] + '_' + conditional[2] );
+
+		if ( typeof condition_field.parents('.um-forms-line').data('conditional') !== 'undefined' ) {
+			parent_condition = check_condition( condition_field.parents('.um-forms-line') );
+		}
+	}
+
+	var own_condition = false;
+	if ( condition === '=' ) {
+		if ( conditional[0].indexOf( '||' ) !== -1 ) {
+			var selectors = conditional[0].split('||');
+			var complete_condition = false;
+
+			jQuery.each( selectors, function(i) {
+				var cond_field = jQuery( '#' + prefix + '_' + selectors[i] );
+
+				own_condition = false;
+				parent_condition = true;
+
+				if ( typeof cond_field.parents('.um-forms-line').data('conditional') !== 'undefined' ) {
+					parent_condition = check_condition( cond_field.parents('.um-forms-line') );
+				}
+
+				var tagName = cond_field.prop("tagName").toLowerCase();
+
+				if ( tagName === 'input' ) {
+					var input_type = cond_field.attr('type');
+					if ( input_type === 'checkbox' ) {
+						own_condition = ( value == '1' ) ? cond_field.is(':checked') : ! cond_field.is(':checked');
+					} else {
+						if ( Array.isArray( value ) ) {
+							own_condition = ( value.indexOf( cond_field.val() ) !== -1 );
+						} else {
+							own_condition = ( cond_field.val() == value );
+						}
+					}
+				} else if ( tagName === 'select' ) {
+
+					if ( Array.isArray( value ) ) {
+						own_condition = ( value.indexOf( cond_field.val() ) !== -1 );
+					} else {
+						own_condition = ( cond_field.val() == value );
+					}
+
+				}
+
+				if ( own_condition && parent_condition ) {
+					complete_condition = true;
+				}
+			});
+
+			return complete_condition;
+		} else {
+			var tagName = condition_field.prop("tagName").toLowerCase();
+
+			if ( tagName == 'input' ) {
+				var input_type = condition_field.attr('type');
+				if ( input_type == 'checkbox' ) {
+					own_condition = ( value == '1' ) ? condition_field.is(':checked') : ! condition_field.is(':checked');
+				} else {
+
+					if ( Array.isArray( value ) ) {
+						own_condition = ( value.indexOf( condition_field.val() ) !== -1 );
+					} else {
+						own_condition = ( condition_field.val() == value );
+					}
+
+				}
+			} else if ( tagName == 'select' ) {
+
+				if ( Array.isArray( value ) ) {
+					own_condition = ( value.indexOf( condition_field.val() ) !== -1 );
+				} else {
+					own_condition = ( condition_field.val() == value );
+				}
+
+			}
+
+			return ( own_condition && parent_condition );
+		}
+
+	} else if ( condition === '!=' ) {
+		if ( conditional[0].indexOf( '||' ) !== -1 ) {
+			var selectors = conditional[0].split('||');
+			var complete_condition = false;
+
+			jQuery.each( selectors, function(i) {
+				var cond_field = jQuery( '#' + prefix + '_' + selectors[i] );
+
+				own_condition = false;
+				parent_condition = true;
+				if ( typeof cond_field.parents('.um-forms-line').data('conditional') !== 'undefined' ) {
+					parent_condition = check_condition( cond_field.parents('.um-forms-line') );
+				}
+
+				var tagName = cond_field.prop("tagName").toLowerCase();
+
+				if ( tagName === 'input' ) {
+					var input_type = cond_field.attr('type');
+					if ( input_type === 'checkbox' ) {
+						own_condition = ( value == '1' ) ? ! cond_field.is(':checked') : cond_field.is(':checked');
+					} else {
+						own_condition = ( cond_field.val() != value );
+					}
+				} else if ( tagName === 'select' ) {
+					own_condition = ( cond_field.val() != value );
+				}
+
+				if ( own_condition && parent_condition ) {
+					complete_condition = true;
+				}
+			});
+
+			return complete_condition;
+		} else {
+			var tagName = condition_field.prop("tagName").toLowerCase();
+
+			if ( tagName == 'input' ) {
+				var input_type = condition_field.attr('type');
+				if ( input_type == 'checkbox' ) {
+					own_condition = ( value == '1' ) ? ! condition_field.is(':checked') : condition_field.is(':checked');
+				} else {
+					own_condition = ( condition_field.val() != value );
+				}
+			} else if ( tagName == 'select' ) {
+				own_condition = ( condition_field.val() != value );
+			}
+
+			return ( own_condition && parent_condition );
+		}
+
+	} else if ( condition === '~' ) {
+		var field_id;
+		var visible_options = [];
+		var lines_field;
+
+		if ( form_line.data('field_type') === 'sortable_items' ) {
+			field_id = form_line.find( '.um-sortable-items-value' ).data('field_id');
+
+			jQuery.each( condition_fields, function(i) {
+				var condition_field = condition_fields[ i ];
+
+				var tagName = condition_field.prop("tagName").toLowerCase();
+
+				if ( tagName === 'input' ) {
+					var input_type = condition_field.attr('type');
+					if ( input_type === 'checkbox' ) {
+						if ( value == '1' && condition_field.is(':checked') ) {
+							visible_options.push( condition_field.data( 'fill_' + field_id ) );
+						}
+					}
+				} else if ( tagName == 'select' ) {
+					if ( ! value && condition_field.val() ) {
+						visible_options = visible_options.concat( condition_field.val() );
+						visible_options = visible_options.filter( um_distinct );
+					}
+				}
+			});
+
+			lines_field = jQuery( '[data-field_id="' + field_id + '"]' );
+
+			if ( visible_options.length ) {
+				lines_field.siblings('.um-sortable-items-field').find('li').addClass('um-hidden-item');
+				jQuery.each( visible_options, function(i) {
+					lines_field.siblings('.um-sortable-items-field').find('li[data-tab-id="' + visible_options[ i ] + '"]').removeClass('um-hidden-item');
+				});
+
+				var sortable_value = [];
+				lines_field.siblings('.um-sortable-items-field').find('li').each( function() {
+					if ( ! jQuery(this).hasClass( 'um-hidden-item' ) ) {
+						sortable_value.push( jQuery(this).data('tab-id') );
+					}
+				});
+
+				lines_field.val( sortable_value.join( ',' ) );
+				lines_field.siblings( '.um-sortable-items-field' ).sortable( 'refresh' );
+
+				own_condition = true;
+			} else {
+				lines_field.val( null );
+			}
+		} else {
+			field_id = form_line.find( form_line.data('field_type') ).data('field_id');
+
+			jQuery.each( condition_fields, function(i) {
+				var condition_field = condition_fields[ i ];
+
+				var tagName = condition_field.prop("tagName").toLowerCase();
+
+				if ( tagName === 'input' ) {
+					var input_type = condition_field.attr('type');
+					if ( input_type === 'checkbox' ) {
+						if ( value == '1' && condition_field.is(':checked') ) {
+							visible_options.push( condition_field.data( 'fill_' + field_id ) );
+						}
+					}
+				} else if ( tagName == 'select' ) {
+					if ( ! value && condition_field.val() ) {
+						visible_options = visible_options.concat( condition_field.val() );
+						visible_options = visible_options.filter( um_distinct );
+					}
+				}
+			});
+
+			lines_field = jQuery( '[data-field_id="' + field_id + '"]' );
+
+			if ( visible_options.length ) {
+				lines_field.find( 'option' ).hide();
+				jQuery.each( visible_options, function(i) {
+					lines_field.find( 'option[value="' + visible_options[ i ] + '"]' ).show();
+				});
+				if ( visible_options.indexOf( lines_field.val() ) === -1 ) {
+					lines_field.val( visible_options[0] );
+					lines_field.find( 'option' ).attr( 'selected', false ).prop( 'selected', false );
+					lines_field.find( 'option[value="' + visible_options[0] + '"]' ).attr( 'selected', true ).prop( 'selected', true );
+				}
+				own_condition = true;
+			} else {
+				lines_field.val( null );
+				lines_field.find( 'option' ).attr( 'selected', false ).prop( 'selected', false );
+			}
+		}
+
+		return ( own_condition && parent_condition );
+	} else if ( condition === '><' ) {
+
+		var tagName = condition_field.prop("tagName").toLowerCase();
+
+		if ( tagName == 'input' ) {
+			var input_type = condition_field.attr('type');
+			if ( input_type == 'checkbox' ) {
+				own_condition = condition_field.is(':checked');
+			}
+		}
+
+		return ( own_condition && parent_condition );
+
+	}
+
+	return false;
+}
 
 jQuery(document).ready( function() {
 
@@ -699,7 +995,9 @@ jQuery(document).ready( function() {
 	 * On option fields change
 	 */
 	jQuery( document.body ).on('change', '.um-forms-field', function() {
-		if ( jQuery('.um-forms-line[data-conditional*=\'"' + jQuery(this).data('field_id') + '",\']').length > 0 || jQuery('.um-forms-line[data-conditional*=\'' + jQuery(this).data('field_id') + '|\']').length > 0 || jQuery('.um-forms-line[data-conditional*=\'|' + jQuery(this).data('field_id') + '\']').length > 0 ) {
+		if ( jQuery('.um-forms-line[data-conditional*=\'"' + jQuery(this).data('field_id') + '",\']').length > 0 ||
+			 jQuery('.um-forms-line[data-conditional*=\'' + jQuery(this).data('field_id') + '|\']').length > 0 ||
+			 jQuery('.um-forms-line[data-conditional*=\'|' + jQuery(this).data('field_id') + '\']').length > 0 ) {
 			run_check_conditions();
 		}
 	});
@@ -709,305 +1007,10 @@ jQuery(document).ready( function() {
 	run_check_conditions();
 
 
-	/**
-	 * Run conditional logic
-	 */
-	function run_check_conditions() {
-		jQuery( '.um-forms-line' ).removeClass('um-forms-line-conditioned').each( function() {
-			if ( typeof jQuery(this).data('conditional') === 'undefined' || jQuery(this).hasClass('um-forms-line-conditioned') )
-				return;
 
-			if ( check_condition( jQuery(this) ) ) {
-				jQuery(this).show();
-			} else {
-				jQuery(this).hide();
-			}
-		});
-	}
 
 
 	function um_distinct( value, index, self ) {
 		return self.indexOf( value ) === index;
 	}
-
-
-	/**
-	 * Conditional logic
-	 *
-	 * true - show field
-	 * false - hide field
-	 *
-	 * @returns {boolean}
-	 */
-	function check_condition( form_line ) {
-
-		form_line.addClass( 'um-forms-line-conditioned' );
-
-		var conditional = form_line.data('conditional');
-		var condition = conditional[1];
-		var value = conditional[2];
-
-		var prefix = form_line.data( 'prefix' );
-		var parent_condition = true;
-
-		if ( condition === '=' || condition === '!=' ) {
-			if ( conditional[0].indexOf( '||' ) === -1 ) {
-				var condition_field = jQuery( '#' + prefix + '_' + conditional[0] );
-
-				if ( typeof condition_field.parents('.um-forms-line').data('conditional') !== 'undefined' ) {
-					parent_condition = check_condition( condition_field.parents('.um-forms-line') );
-				}
-			}
-		} else if ( condition === '~' ) {
-			var selectors = conditional[0].split('|');
-			var condition_fields = [];
-			jQuery.each( selectors, function(i) {
-				condition_fields.push( jQuery( '#' + prefix + '_' + selectors[i] ) );
-			});
-			if ( typeof condition_fields[0].parents('.um-forms-line').data('conditional') !== 'undefined' ) {
-				parent_condition = check_condition( condition_fields[0].parents('.um-forms-line') );
-			}
-		} else if ( condition === '><' ) {
-			var condition_field = jQuery( '#' + prefix + '_' + conditional[0] + '_' + conditional[2] );
-
-			if ( typeof condition_field.parents('.um-forms-line').data('conditional') !== 'undefined' ) {
-				parent_condition = check_condition( condition_field.parents('.um-forms-line') );
-			}
-		}
-
-		var own_condition = false;
-		if ( condition === '=' ) {
-			if ( conditional[0].indexOf( '||' ) !== -1 ) {
-				var selectors = conditional[0].split('||');
-				var complete_condition = false;
-
-				jQuery.each( selectors, function(i) {
-					var cond_field = jQuery( '#' + prefix + '_' + selectors[i] );
-
-					own_condition = false;
-					parent_condition = true;
-
-					if ( typeof cond_field.parents('.um-forms-line').data('conditional') !== 'undefined' ) {
-						parent_condition = check_condition( cond_field.parents('.um-forms-line') );
-					}
-
-					var tagName = cond_field.prop("tagName").toLowerCase();
-
-					if ( tagName === 'input' ) {
-						var input_type = cond_field.attr('type');
-						if ( input_type === 'checkbox' ) {
-							own_condition = ( value == '1' ) ? cond_field.is(':checked') : ! cond_field.is(':checked');
-						} else {
-							if ( Array.isArray( value ) ) {
-								own_condition = ( value.indexOf( cond_field.val() ) !== -1 );
-							} else {
-								own_condition = ( cond_field.val() == value );
-							}
-						}
-					} else if ( tagName === 'select' ) {
-
-						if ( Array.isArray( value ) ) {
-							own_condition = ( value.indexOf( cond_field.val() ) !== -1 );
-						} else {
-							own_condition = ( cond_field.val() == value );
-						}
-
-					}
-
-					if ( own_condition && parent_condition ) {
-						complete_condition = true;
-					}
-				});
-
-				return complete_condition;
-			} else {
-				var tagName = condition_field.prop("tagName").toLowerCase();
-
-				if ( tagName == 'input' ) {
-					var input_type = condition_field.attr('type');
-					if ( input_type == 'checkbox' ) {
-						own_condition = ( value == '1' ) ? condition_field.is(':checked') : ! condition_field.is(':checked');
-					} else {
-
-						if ( Array.isArray( value ) ) {
-							own_condition = ( value.indexOf( condition_field.val() ) !== -1 );
-						} else {
-							own_condition = ( condition_field.val() == value );
-						}
-
-					}
-				} else if ( tagName == 'select' ) {
-
-					if ( Array.isArray( value ) ) {
-						own_condition = ( value.indexOf( condition_field.val() ) !== -1 );
-					} else {
-						own_condition = ( condition_field.val() == value );
-					}
-
-				}
-
-				return ( own_condition && parent_condition );
-			}
-
-		} else if ( condition === '!=' ) {
-			if ( conditional[0].indexOf( '||' ) !== -1 ) {
-				var selectors = conditional[0].split('||');
-				var complete_condition = false;
-
-				jQuery.each( selectors, function(i) {
-					var cond_field = jQuery( '#' + prefix + '_' + selectors[i] );
-
-					own_condition = false;
-					parent_condition = true;
-					if ( typeof cond_field.parents('.um-forms-line').data('conditional') !== 'undefined' ) {
-						parent_condition = check_condition( cond_field.parents('.um-forms-line') );
-					}
-
-					var tagName = cond_field.prop("tagName").toLowerCase();
-
-					if ( tagName === 'input' ) {
-						var input_type = cond_field.attr('type');
-						if ( input_type === 'checkbox' ) {
-							own_condition = ( value == '1' ) ? ! cond_field.is(':checked') : cond_field.is(':checked');
-						} else {
-							own_condition = ( cond_field.val() != value );
-						}
-					} else if ( tagName === 'select' ) {
-						own_condition = ( cond_field.val() != value );
-					}
-
-					if ( own_condition && parent_condition ) {
-						complete_condition = true;
-					}
-				});
-
-				return complete_condition;
-			} else {
-				var tagName = condition_field.prop("tagName").toLowerCase();
-
-				if ( tagName == 'input' ) {
-					var input_type = condition_field.attr('type');
-					if ( input_type == 'checkbox' ) {
-						own_condition = ( value == '1' ) ? ! condition_field.is(':checked') : condition_field.is(':checked');
-					} else {
-						own_condition = ( condition_field.val() != value );
-					}
-				} else if ( tagName == 'select' ) {
-					own_condition = ( condition_field.val() != value );
-				}
-
-				return ( own_condition && parent_condition );
-			}
-
-		} else if ( condition === '~' ) {
-			var field_id;
-			var visible_options = [];
-			var lines_field;
-
-			if ( form_line.data('field_type') === 'sortable_items' ) {
-				field_id = form_line.find( '.um-sortable-items-value' ).data('field_id');
-
-				jQuery.each( condition_fields, function(i) {
-					var condition_field = condition_fields[ i ];
-
-					var tagName = condition_field.prop("tagName").toLowerCase();
-
-					if ( tagName === 'input' ) {
-						var input_type = condition_field.attr('type');
-						if ( input_type === 'checkbox' ) {
-							if ( value == '1' && condition_field.is(':checked') ) {
-								visible_options.push( condition_field.data( 'fill_' + field_id ) );
-							}
-						}
-					} else if ( tagName == 'select' ) {
-						if ( ! value && condition_field.val() ) {
-							visible_options = visible_options.concat( condition_field.val() );
-							visible_options = visible_options.filter( um_distinct );
-						}
-					}
-				});
-
-				lines_field = jQuery( '[data-field_id="' + field_id + '"]' );
-
-				if ( visible_options.length ) {
-					lines_field.siblings('.um-sortable-items-field').find('li').addClass('um-hidden-item');
-					jQuery.each( visible_options, function(i) {
-						lines_field.siblings('.um-sortable-items-field').find('li[data-tab-id="' + visible_options[ i ] + '"]').removeClass('um-hidden-item');
-					});
-
-					var sortable_value = [];
-					lines_field.siblings('.um-sortable-items-field').find('li').each( function() {
-						if ( ! jQuery(this).hasClass( 'um-hidden-item' ) ) {
-							sortable_value.push( jQuery(this).data('tab-id') );
-						}
-					});
-
-					lines_field.val( sortable_value.join( ',' ) );
-					lines_field.siblings( '.um-sortable-items-field' ).sortable( 'refresh' );
-
-					own_condition = true;
-				} else {
-					lines_field.val( null );
-				}
-			} else {
-				field_id = form_line.find( form_line.data('field_type') ).data('field_id');
-
-				jQuery.each( condition_fields, function(i) {
-					var condition_field = condition_fields[ i ];
-
-					var tagName = condition_field.prop("tagName").toLowerCase();
-
-					if ( tagName === 'input' ) {
-						var input_type = condition_field.attr('type');
-						if ( input_type === 'checkbox' ) {
-							if ( value == '1' && condition_field.is(':checked') ) {
-								visible_options.push( condition_field.data( 'fill_' + field_id ) );
-							}
-						}
-					} else if ( tagName == 'select' ) {
-						if ( ! value && condition_field.val() ) {
-							visible_options = visible_options.concat( condition_field.val() );
-							visible_options = visible_options.filter( um_distinct );
-						}
-					}
-				});
-
-				lines_field = jQuery( '[data-field_id="' + field_id + '"]' );
-
-				if ( visible_options.length ) {
-					lines_field.find( 'option' ).hide();
-					jQuery.each( visible_options, function(i) {
-						lines_field.find( 'option[value="' + visible_options[ i ] + '"]' ).show();
-					});
-					if ( visible_options.indexOf( lines_field.val() ) === -1 ) {
-						lines_field.val( visible_options[0] );
-						lines_field.find( 'option' ).attr( 'selected', false ).prop( 'selected', false );
-						lines_field.find( 'option[value="' + visible_options[0] + '"]' ).attr( 'selected', true ).prop( 'selected', true );
-					}
-					own_condition = true;
-				} else {
-					lines_field.val( null );
-					lines_field.find( 'option' ).attr( 'selected', false ).prop( 'selected', false );
-				}
-			}
-
-			return ( own_condition && parent_condition );
-		} else if ( condition === '><' ) {
-
-			var tagName = condition_field.prop("tagName").toLowerCase();
-
-			if ( tagName == 'input' ) {
-				var input_type = condition_field.attr('type');
-				if ( input_type == 'checkbox' ) {
-					own_condition = condition_field.is(':checked');
-				}
-			}
-
-			return ( own_condition && parent_condition );
-
-		}
-
-		return false;
-	}
-
 });

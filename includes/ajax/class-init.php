@@ -31,6 +31,7 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		 */
 		function includes() {
 			$this->db_upgrade();
+			$this->field_group();
 			$this->notices();
 			$this->user();
 			$this->builder();
@@ -69,6 +70,17 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 			return UM()->classes['um\ajax\db_upgrade'];
 		}
 
+		/**
+		 * @since 3.0
+		 *
+		 * @return Field_Group()
+		 */
+		function field_group() {
+			if ( empty( UM()->classes['um\ajax\field_group'] ) ) {
+				UM()->classes['um\ajax\field_group'] = new Field_Group();
+			}
+			return UM()->classes['um\ajax\field_group'];
+		}
 
 		/**
 		 * @since 3.0

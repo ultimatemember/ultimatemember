@@ -31,14 +31,16 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 		 */
 		var $init_icon = false;
 
+		public $in_edit = false;
+
+		public $edit_mode_value = null;
+
+		public $edit_array = array();
+
 		/**
 		 * Metabox constructor.
 		 */
 		function __construct() {
-			$this->in_edit         = false;
-			$this->edit_mode_value = null;
-			$this->edit_array      = array();
-
 			add_action( 'load-post.php', array( &$this, 'test_title' ) );
 			add_action( 'load-post-new.php', array( &$this, 'test_title_new' ) );
 
@@ -54,8 +56,8 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			//roles metaboxes
 			add_action( 'um_roles_add_meta_boxes', array( &$this, 'add_metabox_role' ) );
 
-			// fields groups metaboxes
-			add_action( 'um_fields_groups_add_meta_boxes', array( &$this, 'add_metabox_fields_group' ) );
+			// field groups metaboxes
+			add_action( 'um_field_groups_add_meta_boxes', array( &$this, 'add_metabox_field_group' ) );
 
 			add_filter( 'um_builtin_validation_types_continue_loop', array( &$this, 'validation_types_continue_loop' ), 1, 4 );
 			add_filter( 'um_restrict_content_hide_metabox', array( &$this, 'hide_metabox_restrict_content_shop' ), 10, 1 );
@@ -859,7 +861,7 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 		 * @param $object
 		 * @param $box
 		 */
-		function load_metabox_fields_group( $object, $box ) {
+		function load_metabox_field_group( $object, $box ) {
 			global $post;
 
 			$box['id'] = str_replace( 'um-admin-form-', '', $box['id'] );
@@ -876,7 +878,7 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			$path = str_replace('{','', $path );
 			$path = str_replace('}','', $path );
 
-			include_once trailingslashit( $path ) . 'includes/admin/templates/fields-group/'. $box['id'] . '.php';
+			include_once trailingslashit( $path ) . 'includes/admin/templates/field-group/'. $box['id'] . '.php';
 			//wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_role_nonce' );
 		}
 
@@ -1105,15 +1107,15 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 		/**
 		 * Add role metabox
 		 */
-		public function add_metabox_fields_group() {
-			$callback = array( &$this, 'load_metabox_fields_group' );
+		public function add_metabox_field_group() {
+			$callback = array( &$this, 'load_metabox_field_group' );
 
-			$fields_groups_metaboxes = array(
+			$field_groups_metaboxes = array(
 				array(
 					'id'       => 'um-admin-form-publish',
 					'title'    => __( 'Publish', 'ultimate-member' ),
 					'callback' => $callback,
-					'screen'   => 'um_fields_group_meta',
+					'screen'   => 'um_field_group_meta',
 					'context'  => 'side',
 					'priority' => 'default',
 				),
@@ -1121,7 +1123,7 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 					'id'       => 'um-admin-form-fields',
 					'title'    => __( 'Fields', 'ultimate-member' ),
 					'callback' => $callback,
-					'screen'   => 'um_fields_group_meta',
+					'screen'   => 'um_field_group_meta',
 					'context'  => 'normal',
 					'priority' => 'default',
 				),
@@ -1131,16 +1133,16 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			 * UM hook
 			 *
 			 * @type filter
-			 * @title um_admin_fields_group_metaboxes
+			 * @title um_admin_field_group_metaboxes
 			 * @description Extend metaboxes at Add/Edit User Role
 			 * @input_vars
 			 * [{"var":"$roles_metaboxes","type":"array","desc":"Metaboxes at Add/Edit UM Role"}]
 			 * @change_log
 			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_admin_fields_group_metaboxes', 'function_name', 10, 1 );
+			 * @usage add_filter( 'um_admin_field_group_metaboxes', 'function_name', 10, 1 );
 			 * @example
 			 * <?php
-			 * add_filter( 'um_admin_fields_group_metaboxes', 'my_admin_role_metaboxes', 10, 1 );
+			 * add_filter( 'um_admin_field_group_metaboxes', 'my_admin_role_metaboxes', 10, 1 );
 			 * function my_admin_role_metaboxes( $roles_metaboxes ) {
 			 *     // your code here
 			 *     $roles_metaboxes[] = array(
@@ -1156,9 +1158,9 @@ if ( ! class_exists( 'um\admin\Metabox' ) ) {
 			 * }
 			 * ?>
 			 */
-			$fields_groups_metaboxes = apply_filters( 'um_admin_fields_group_metaboxes', $fields_groups_metaboxes );
+			$field_groups_metaboxes = apply_filters( 'um_admin_field_group_metaboxes', $field_groups_metaboxes );
 
-			foreach ( $fields_groups_metaboxes as $metabox ) {
+			foreach ( $field_groups_metaboxes as $metabox ) {
 				add_meta_box(
 					$metabox['id'],
 					$metabox['title'],

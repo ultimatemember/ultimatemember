@@ -2,18 +2,17 @@
 namespace um\core;
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\User' ) ) {
-
 
 	/**
 	 * Class User
 	 * @package um\core
 	 */
 	class User {
-
 
 		/**
 		 * Data that we will set before the update profile to compare it after update
@@ -22,37 +21,91 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 */
 		public $previous_data = null;
 
+		/**
+		 * @var int
+		 */
+		public $id = 0;
+
+		/**
+		 * @var null
+		 */
+		public $usermeta = null;
+
+		/**
+		 * @var null
+		 */
+		public $data = null;
+
+		/**
+		 * @var null
+		 */
+		public $profile = null;
+
+		/**
+		 * @var null
+		 */
+		public $cannot_edit = null;
+
+		/**
+		 * @var null
+		 */
+		public $password_reset_key = null;
+
+		/**
+		 * @var null
+		 */
+		public $deleted_user_id = null;
+
+		/**
+		 * @var array|string[]
+		 */
+		public $banned_keys = array();
+
+		/**
+		 * @var bool
+		 */
+		public $preview = false;
+
+		/**
+		 * @var bool
+		 */
+		public $send_mail_on_delete = true;
+
+		/**
+		 * A list of keys that should never be in wp_usermeta.
+		 * @var array|string[]
+		 */
+		public $update_user_keys = array();
+
+		/**
+		 * @var null
+		 */
+		public $target_id = null;
 
 		/**
 		 * User constructor.
 		 */
 		function __construct() {
-
-			$this->id = 0;
-			$this->usermeta = null;
-			$this->data = null;
-			$this->profile = null;
-			$this->cannot_edit = null;
-			$this->password_reset_key = null;
-			$this->deleted_user_id = null;
-
 			global $wpdb;
 
 			$this->banned_keys = array(
-				'metabox','postbox','meta-box',
-				'dismissed_wp_pointers', 'session_tokens',
-				'screen_layout', 'wp_user-', 'dismissed',
-				'cap_key', $wpdb->get_blog_prefix(). 'capabilities',
-				'managenav', 'nav_menu', 'user_activation_key',
-				'level_', $wpdb->get_blog_prefix() . 'user_level'
+				'metabox',
+				'postbox',
+				'meta-box',
+				'dismissed_wp_pointers',
+				'session_tokens',
+				'screen_layout',
+				'wp_user-',
+				'dismissed',
+				'cap_key',
+				$wpdb->get_blog_prefix() . 'capabilities',
+				'managenav',
+				'nav_menu',
+				'user_activation_key',
+				'level_',
+				$wpdb->get_blog_prefix() . 'user_level',
 			);
 
-			add_action( 'init',  array( &$this, 'set' ), 1 );
-
-			$this->preview = false;
-			$this->send_mail_on_delete = true;
-
-			// a list of keys that should never be in wp_usermeta
 			$this->update_user_keys = array(
 				'user_email',
 				'user_pass',
@@ -62,7 +115,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				'role',
 			);
 
-			$this->target_id = null;
+			add_action( 'init',  array( &$this, 'set' ), 1 );
 
 			// When the cache should be cleared
 			add_action( 'um_delete_user', array( &$this, 'remove_cache' ), 10, 1 );
@@ -91,19 +144,15 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			add_action( 'user_register', array( &$this, 'set_default_account_status' ), 0, 1 );
 
-			if ( is_multisite() ) {
-				add_action( 'added_existing_user', array( &$this, 'add_um_role_existing_user' ), 10, 2 );
-				add_action( 'wpmu_activate_user', array( &$this, 'add_um_role_wpmu_new_user' ), 10, 1 );
-			}
-
 			add_action( 'init', array( &$this, 'check_membership' ), 10 );
 
 			if ( is_multisite() ) {
+				add_action( 'added_existing_user', array( &$this, 'add_um_role_existing_user' ), 10, 2 );
+				add_action( 'wpmu_activate_user', array( &$this, 'add_um_role_wpmu_new_user' ), 10, 1 );
 				add_action( 'wpmu_delete_user', array( &$this, 'delete_user_handler' ), 10, 1 );
 			} else {
 				add_action( 'delete_user', array( &$this, 'delete_user_handler' ), 10, 1 );
 			}
-
 
 			add_action( 'update_user_meta', array( &$this, 'flush_um_count_users_transient_update' ), 10, 4 );
 			add_action( 'added_user_meta', array( &$this, 'flush_um_count_users_transient_add' ), 10, 4 );

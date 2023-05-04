@@ -1,15 +1,11 @@
 <?php
 namespace um\admin;
 
-
-use \RecursiveDirectoryIterator;
-
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\admin\Menu' ) ) {
-
 
 	/**
 	 * Class Menu
@@ -17,20 +13,25 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 	 */
 	class Menu {
 
+		/**
+		 * @var string
+		 */
+		public $slug = 'ultimatemember';
 
 		/**
 		 * @var string
 		 */
-		var $slug = 'ultimatemember';
-
 		public $um_roles_error = '';
-		public $um_roles_data = array();
 
+		/**
+		 * @var array
+		 */
+		public $um_roles_data = array();
 
 		/**
 		 * Admin_Menu constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			add_action( 'admin_menu', array( &$this, 'add_menu_items' ), 1000 );
 
 			add_action( 'load-ultimate-member_page_um_roles', array( &$this, 'maybe_role_redirect' ) );
@@ -40,7 +41,6 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 
 			add_filter( 'admin_body_class', array( &$this, 'selected_menu' ), 10, 1 );
 		}
-
 
 		/**
 		 * Manage order of admin menu items
@@ -70,16 +70,15 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 			}
 		}
 
-
 		/**
 		 * Setup admin menu
 		 */
-		function add_menu_items() {
+		public function add_menu_items() {
 			add_menu_page( __( 'Ultimate Member', 'ultimate-member' ), __( 'Ultimate Member', 'ultimate-member' ), 'manage_options', $this->slug, array( UM()->admin()->settings(), 'settings_page' ), 'dashicons-admin-users', '42.78578' );
 
 			add_submenu_page( $this->slug, __( 'Settings', 'ultimate-member' ), __( 'Settings', 'ultimate-member' ), 'manage_options', $this->slug, array( UM()->admin()->settings(), 'settings_page' ) );
 
-			add_submenu_page( $this->slug, __( 'Fields Groups', 'ultimate-member' ), __( 'Fields Groups', 'ultimate-member' ), 'manage_options', 'um_fields_groups', array( &$this, 'fields_groups_page' ) );
+			add_submenu_page( $this->slug, __( 'Field Groups', 'ultimate-member' ), __( 'Field Groups', 'ultimate-member' ), 'manage_options', 'um_field_groups', array( &$this, 'field_groups_page' ) );
 
 			add_submenu_page( $this->slug, __( 'Forms', 'ultimate-member' ), __( 'Forms', 'ultimate-member' ), 'manage_options', 'edit.php?post_type=um_form' );
 
@@ -110,20 +109,20 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 		}
 
 		/**
-		 * Fields groups page menu callback
+		 * Field groups page menu callback
 		 */
-		function fields_groups_page() {
+		public function field_groups_page() {
 			if ( empty( $_GET['tab'] ) ) {
-				include_once UM_PATH . 'includes/admin/templates/fields-group/groups-list.php';
+				include_once UM_PATH . 'includes/admin/templates/field-group/groups-list.php';
 			} elseif ( in_array( sanitize_key( $_GET['tab'] ), array( 'add', 'edit' ), true ) ) {
-				include_once UM_PATH . 'includes/admin/templates/fields-group/group-edit.php';
+				include_once UM_PATH . 'includes/admin/templates/field-group/group-edit.php';
 			}
 		}
 
 		/**
 		 * Role page menu callback
 		 */
-		function um_roles_pages() {
+		public function um_roles_pages() {
 			if ( empty( $_GET['tab'] ) ) {
 				include_once UM_PATH . 'includes/admin/templates/role/roles-list.php';
 			} elseif ( in_array( sanitize_key( $_GET['tab'] ), array( 'add', 'edit' ), true ) ) {
@@ -131,11 +130,10 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 			}
 		}
 
-
 		/**
 		 * Trigger redirect on the Roles screen if there is a wrong tab
 		 */
-		function maybe_role_redirect() {
+		public function maybe_role_redirect() {
 			if ( empty( $_GET['tab'] ) ) {
 				//remove extra query arg on the roles list table
 				if ( ! empty( $_GET['_wp_http_referer'] ) ) {
@@ -240,11 +238,10 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 			}
 		}
 
-
 		/**
 		 * Trigger redirect on the Settings screen if there is a wrong tab or section
 		 */
-		function maybe_settings_redirect() {
+		public function maybe_settings_redirect() {
 			$current_tab = empty( $_GET['tab'] ) ? '' : sanitize_key( $_GET['tab'] );
 			$current_subtab = empty( $_GET['section'] ) ? '' : sanitize_key( $_GET['section'] );
 
@@ -287,7 +284,7 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 		 *
 		 * @since 1.0
 		 */
-		function selected_menu( $classes ) {
+		public function selected_menu( $classes ) {
 			global $submenu, $pagenow;
 
 			if ( isset( $submenu['ultimatemember'] ) ) {
@@ -305,7 +302,6 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 			return $classes;
 		}
 
-
 		/**
 		 * Return admin submenu variable for display pages
 		 *
@@ -315,7 +311,7 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 		 *
 		 * @since 3.0
 		 */
-		function change_parent_file( $parent_file ) {
+		public function change_parent_file( $parent_file ) {
 			global $pagenow;
 
 			if ( 'edit-tags.php' !== $pagenow && 'term.php' !== $pagenow && 'post-new.php' !== $pagenow ) {
@@ -327,7 +323,6 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 			return $parent_file;
 		}
 
-
 		/**
 		 * Return admin submenu variable for display pages
 		 *
@@ -338,7 +333,7 @@ if ( ! class_exists( 'um\admin\Menu' ) ) {
 		 *
 		 * @since 3.0
 		 */
-		function change_submenu_file( $submenu_file, $parent_file ) {
+		public function change_submenu_file( $submenu_file, $parent_file ) {
 			global $pagenow;
 
 			if ( 'edit-tags.php' === $pagenow || 'term.php' === $pagenow || 'post-new.php' === $pagenow ) {

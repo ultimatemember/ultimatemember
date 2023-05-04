@@ -1,13 +1,11 @@
 <?php
 namespace um\core;
 
-
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Uploader' ) ) {
-
 
 	/**
 	 * Class Uploader
@@ -15,84 +13,70 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 	 */
 	class Uploader {
 
-
 		/**
 		 * @var integer
 		 */
 		var $user_id;
-
 
 		/**
 		 * @var integer
 		 */
 		var $replace_upload_dir = false;
 
-
 		/**
 		 * @var string
 		 */
 		var $field_key;
-
 
 		/**
 		 * @var string
 		 */
 		var $wp_upload_dir;
 
-
 		/**
 		 * @var string
 		 */
 		var $temp_upload_dir;
-
 
 		/**
 		 * @var string
 		 */
 		var $core_upload_dir;
 
-
 		/**
 		 * @var string
 		 */
 		var $core_upload_url;
-
 
 		/**
 		 * @var string
 		 */
 		var $upload_baseurl;
 
-
 		/**
 		 * @var string
 		 */
 		var $upload_basedir;
-
 
 		/**
 		 * @var string
 		 */
 		var $upload_user_baseurl;
 
-
 		/**
 		 * @var string
 		 */
 		var $upload_user_basedir;
-
 
 		/**
 		 * @var string
 		 */
 		var $upload_image_type;
 
-
 		/**
 		 * @var string
 		 */
 		var $upload_type;
-
 
 		/**
 		 * Uploader constructor.
@@ -118,14 +102,12 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			add_action( 'um_after_move_temporary_files', array( $this, 'remove_unused_uploads' ), 10, 3 );
 		}
 
-
 		/**
 		 * Init
 		 */
 		function init() {
 			$this->user_id = get_current_user_id();
 		}
-
 
 		/**
 		 * Get core temporary directory path
@@ -137,7 +119,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			return $this->get_upload_base_dir(). $this->temp_upload_dir;
 		}
 
-
 		/**
 		 * Get core temporary directory URL
 		 *
@@ -147,7 +128,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		public function get_core_temp_url() {
 			return $this->get_upload_base_url(). $this->temp_upload_dir;
 		}
-
 
 		/**
 		 * Get core upload directory
@@ -159,7 +139,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			return $this->core_upload_dir;
 		}
 
-
 		/**
 		 * Get core upload base url
 		 *
@@ -168,12 +147,9 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 */
 		public function get_upload_base_url() {
 			$wp_baseurl = $this->wp_upload_dir['baseurl'];
-
 			$this->upload_baseurl = set_url_scheme( $wp_baseurl . $this->core_upload_url );
-
 			return $this->upload_baseurl;
 		}
-
 
 		/**
 		 * Get core upload  base directory
@@ -183,12 +159,9 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 */
 		public function get_upload_base_dir() {
 			$wp_basedir = $this->wp_upload_dir['basedir'];
-
 			$this->upload_basedir = $wp_basedir . $this->core_upload_dir;
-
 			return $this->upload_basedir;
 		}
-
 
 		/**
 		 * Get user upload base directory
@@ -214,7 +187,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			return $this->upload_user_basedir;
 		}
 
-
 		/**
 		 * Get user upload base url
 		 *
@@ -226,12 +198,9 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			if ( $user_id ) {
 				$this->user_id = $user_id;
 			}
-
 			$this->upload_user_baseurl = $this->get_upload_base_url() . $this->user_id;
-
 			return $this->upload_user_baseurl;
 		}
-
 
 		/**
 		 * Validate file size
@@ -252,7 +221,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 			return $file;
 		}
-
 
 		/**
 		 * Set upload directory
@@ -287,7 +255,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 			return $args;
 		}
-
 
 		/**
 		 *  Upload Image files
@@ -383,7 +350,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				  ?>
 				 */
 				$movefile = apply_filters( 'um_upload_image_result', $movefile, $user_id, $field_data );
-				
+
 				/**
 				 * Resize and compress images uploaded by the field "Image Upload" without crop.
 				 * Resize and compress images uploaded on Activity wall and Group Discussion wall.
@@ -505,7 +472,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 			return $response;
 		}
-
 
 		/**
 		 * Upload Files
@@ -677,7 +643,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			return $response;
 		}
 
-
 		/**
 		 * Check image upload and handle errors
 		 *
@@ -799,7 +764,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			return $error;
 		}
 
-
 		/**
 		 * Check file upload and handle errors
 		 *
@@ -900,8 +864,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			return $error;
 		}
 
-
-
 		/**
 		 * Make unique filename
 		 *
@@ -913,7 +875,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 * @since  2.0.22
 		 */
 		public function unique_filename( $dir, $filename, $ext ) {
-
 			if ( empty( $ext ) ) {
 				$image_type = wp_check_filetype( $filename );
 				$ext = strtolower( trim( $image_type['ext'], ' \/.' ) );
@@ -947,7 +908,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			return $filename;
 		}
 
-
 		/**
 		 * Delete file
 		 * @param  string $filename
@@ -961,7 +921,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				unlink( $this->upload_user_basedir . DIRECTORY_SEPARATOR . $filename );
 			}
 		}
-
 
 		/**
 		 * Profile photo image process
@@ -979,8 +938,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 * @return array
 		 */
 		public function profile_photo( $response, $image_path, $src, $key, $user_id, $coord, $crop ) {
-			$sizes = UM()->options()->get( 'photo_thumb_sizes' );
-
+			$sizes   = UM()->options()->get( 'photo_thumb_sizes' );
 			$quality = UM()->options()->get( 'image_compression' );
 
 			$image = wp_get_image_editor( $image_path ); // Return an implementation that extends WP_Image_Editor
@@ -1048,7 +1006,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 * @return array
 		 */
 		public function cover_photo( $response, $image_path, $src, $key, $user_id, $coord, $crop ) {
-
 			$sizes = UM()->options()->get( 'cover_thumb_sizes' );
 
 			$quality = UM()->options()->get( 'image_compression' );
@@ -1208,7 +1165,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			return $response;
 		}
 
-
 		/**
 		 * Fix image orientation
 		 *
@@ -1230,7 +1186,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			return $movefile;
 		}
 
-
 		/**
 		 * Move temporary files
 		 *
@@ -1241,7 +1196,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 * @param $files
 		 * @param bool $move_only
 		 */
-		function move_temporary_files( $user_id, $files, $move_only = false ) {
+		public function move_temporary_files( $user_id, $files, $move_only = false ) {
 			$new_files = array();
 			$old_files = array();
 
@@ -1340,7 +1295,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 * @param array $old_files
 		 */
 		function remove_unused_uploads( $user_id, $new_files, $old_files = array() ) {
-
 			if ( ! file_exists( $this->get_upload_user_base_dir( $user_id ) ) ) {
 				return;
 			}
@@ -1389,5 +1343,4 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			}
 		}
 	}
-
 }

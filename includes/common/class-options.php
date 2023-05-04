@@ -4,17 +4,13 @@
  *
  * @package um\common
  */
-
 namespace um\common;
 
-// Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 if ( ! class_exists( 'um\common\Options' ) ) {
-
 
 	/**
 	 * Class Options.
@@ -24,13 +20,11 @@ if ( ! class_exists( 'um\common\Options' ) ) {
 	 */
 	class Options {
 
-
 		/**
 		 * Options constructor.
 		 */
 		public function __construct() {
 		}
-
 
 		/**
 		 * @return array
@@ -45,7 +39,6 @@ if ( ! class_exists( 'um\common\Options' ) ) {
 
 			return $options;
 		}
-
 
 		/**
 		 * Get UM option value
@@ -64,14 +57,11 @@ if ( ! class_exists( 'um\common\Options' ) ) {
 			switch ( $option_id ) {
 				case 'site_name':
 					return get_bloginfo( 'name' );
-					break;
 				case 'admin_email':
 					return get_bloginfo( 'admin_email' );
-					break;
 				default:
 					$options = $this->get_options();
-					$value = array_key_exists( $option_id, $options ) ? $options[ $option_id ] : $default;
-
+					$value   = array_key_exists( $option_id, $options ) ? $options[ $option_id ] : $default;
 					/**
 					 * UM hook
 					 *
@@ -94,10 +84,8 @@ if ( ! class_exists( 'um\common\Options' ) ) {
 					 * ?>
 					 */
 					return apply_filters( "um_get_option_filter__{$option_id}", $value, $option_id );
-					break;
 			}
 		}
-
 
 		/**
 		 * Add UM option value
@@ -113,7 +101,6 @@ if ( ! class_exists( 'um\common\Options' ) ) {
 			}
 		}
 
-
 		/**
 		 * Update UM option value
 		 *
@@ -125,7 +112,6 @@ if ( ! class_exists( 'um\common\Options' ) ) {
 			$options[ $option_id ] = $value;
 			update_option( 'um_options', $options );
 		}
-
 
 		/**
 		 * Delete UM option
@@ -139,7 +125,6 @@ if ( ! class_exists( 'um\common\Options' ) ) {
 				update_option( 'um_options', $options );
 			}
 		}
-
 
 		/**
 		 * Get UM option default value
@@ -158,7 +143,6 @@ if ( ! class_exists( 'um\common\Options' ) ) {
 			return $settings_defaults[ $option_id ];
 		}
 
-
 		/**
 		 * Get predefined page option key
 		 *
@@ -169,7 +153,6 @@ if ( ! class_exists( 'um\common\Options' ) ) {
 		public function get_predefined_page_option_key( $slug ) {
 			return apply_filters( 'um_predefined_page_option_key', "core_{$slug}" );
 		}
-
 
 		/**
 		 * Set default UM settings
@@ -196,7 +179,6 @@ if ( ! class_exists( 'um\common\Options' ) ) {
 				update_option( 'um_options', $options );
 			}
 		}
-
 
 		/**
 		 * Get core page ID
