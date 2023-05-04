@@ -306,10 +306,10 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 			if ( ! $string ) {
 				return true;
 			}
-			if ( substr_count( $string, '#' ) > 1 ) {
+			if ( strlen( $string ) < 2 || strlen( $string ) > 31 ) {
 				return false;
 			}
-			if ( ! preg_match( '/^(.+)#(\d+)$/', trim( $string ) ) ) {
+			if ( ! preg_match( '/^[a-z\d_]+(?:\.[a-z\d_]+)*(\.[a-z]*)?$/', trim( $string ) ) ) {
 				return false;
 			}
 			return true;
