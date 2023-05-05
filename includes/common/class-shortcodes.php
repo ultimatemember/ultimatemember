@@ -25,7 +25,7 @@ class Shortcodes {
 	public $emoji = array();
 
 	/**
-	 * Check if there are global form message.
+	 * Check if there is a global form message.
 	 * @var bool
 	 */
 	public $message_mode = false;
@@ -34,6 +34,11 @@ class Shortcodes {
 	 * @var array
 	 */
 	public $loop = array();
+
+	/**
+	 * @var null|array
+	 */
+	public $set_args = null;
 
 	/**
 	 * Shortcodes constructor.

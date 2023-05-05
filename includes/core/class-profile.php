@@ -1,11 +1,11 @@
 <?php
 namespace um\core;
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Profile' ) ) {
-
 
 	/**
 	 * Class Profile
@@ -13,24 +13,22 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 	 */
 	class Profile {
 
-
 		/**
 		 * @var array
 		 */
 		public $arr_user_slugs = array();
-
 
 		/**
 		 * @var array
 		 */
 		public $arr_user_roles = array();
 
-
 		/**
 		 * @var
 		 */
-		var $active_tab;
+		public $active_tab;
 
+		public $active_subnav;
 
 		/**
 		 * Profile constructor.

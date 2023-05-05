@@ -15,9 +15,9 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 	class Forms {
 
 		/**
-		 * @var bool
+		 * @var bool|array
 		 */
-		var $form_data;
+		public $form_data;
 
 		/**
 		 * Admin_Forms constructor.
@@ -53,7 +53,7 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 				return '';
 			}
 
-			$class = 'form-table um-form-table ' . ( ! empty( $this->form_data['class'] ) ? $this->form_data['class'] : '' );
+			$class      = 'form-table um-form-table ' . ( ! empty( $this->form_data['class'] ) ? $this->form_data['class'] : '' );
 			$class_attr = ' class="' . esc_attr( $class ) . '" ';
 
 			if ( ! empty( $this->form_data['class'] ) ) {
@@ -63,30 +63,30 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 			ob_start();
 
 			foreach ( $this->form_data['fields'] as $field_data ) {
-				if ( isset( $field_data['type'] ) && 'hidden' == $field_data['type'] ) {
+				if ( isset( $field_data['type'] ) && 'hidden' === $field_data['type'] ) {
 					echo $this->render_form_row( $field_data );
 				}
 			}
 
-			if ( empty( $this->form_data['without_wrapper'] ) ) { ?>
-
-				<table <?php echo $class_attr ?>>
+			if ( empty( $this->form_data['without_wrapper'] ) ) {
+				?>
+				<table <?php echo $class_attr; ?>>
 				<tbody>
-
-			<?php }
+				<?php
+			}
 
 			foreach ( $this->form_data['fields'] as $field_data ) {
-				if ( isset( $field_data['type'] ) && 'hidden' != $field_data['type'] ) {
+				if ( isset( $field_data['type'] ) && 'hidden' !== $field_data['type'] ) {
 					echo $this->render_form_row( $field_data );
 				}
 			}
 
-			if ( empty( $this->form_data['without_wrapper'] ) ) { ?>
-
+			if ( empty( $this->form_data['without_wrapper'] ) ) {
+				?>
 				</tbody>
 				</table>
-
-			<?php }
+				<?php
+			}
 
 			if ( $echo ) {
 				ob_get_flush();
@@ -110,12 +110,12 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 				$data['value'] = wp_unslash( $data['value'] );
 
 				/*for multi_text*/
-				if ( ! is_array( $data['value'] ) && ! in_array( $data['type'], array( 'info_text', 'wp_editor' ) ) ) {
+				if ( ! is_array( $data['value'] ) && ! in_array( $data['type'], array( 'info_text', 'wp_editor' ), true ) ) {
 					$data['value'] = esc_attr( $data['value'] );
 				}
 
-				if ( in_array( $data['type'], array('info_text') ) ) {
-					$arr_kses = array(
+				if ( in_array( $data['type'], array( 'info_text' ), true ) ) {
+					$arr_kses      = array(
 						'a'      => array(
 							'href'   => array(),
 							'title'  => array(),
@@ -129,15 +129,15 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 				}
 			}
 
-			$conditional = ! empty( $data['conditional'] ) ? 'data-conditional="' . esc_attr( json_encode( $data['conditional'] ) ) . '"' : '';
+			$conditional = ! empty( $data['conditional'] ) ? 'data-conditional="' . esc_attr( wp_json_encode( $data['conditional'] ) ) . '"' : '';
 			$prefix_attr = ! empty( $this->form_data['prefix_id'] ) ? ' data-prefix="' . esc_attr( sanitize_title( $this->form_data['prefix_id'] ) ) . '" ' : '';
 
-			$field_id_attr = ' data-field_id="' . esc_attr( $data['id'] ) . '" ';
+			$field_id_attr = ! empty( $data['id'] ) ? ' data-field_id="' . esc_attr( $data['id'] ) . '" ' : '';
 
 			$type_attr = ' data-field_type="' . esc_attr( $data['type'] ) . '" ';
 
 			$html = '';
-			if ( $data['type'] != 'hidden' ) {
+			if ( 'hidden' !== $data['type'] ) {
 
 				if ( ! empty( $this->form_data['div_line'] ) ) {
 
