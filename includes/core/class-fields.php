@@ -2077,8 +2077,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			global $_um_profile_id;
 
 			if ( isset( $data['is_block'] ) && 1 === (int) $data['is_block'] ) {
-				$_um_profile_id = get_current_user_id();
-				$form_suffix    = '';
+				$form_suffix = '';
 			} else {
 				$form_suffix = UM()->form()->form_suffix;
 			}
