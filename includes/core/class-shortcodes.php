@@ -691,10 +691,6 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				}
 			}
 
-			if ( ! is_user_logged_in() && isset( $args['widget'] ) && 1 === (int) $args['widget'] && 'profile' === $mode ) {
-				return;
-			}
-
 			// for profiles only
 			if ( $mode == 'profile' && um_profile_id() ) {
 

@@ -626,8 +626,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					$this->init_displayed_fields( $fields, $id );
 
 					foreach ( $fields as $key => $data ) {
-						if ( isset( $shortcode_args['widget'] ) && 1 === (int) $shortcode_args['widget'] ) {
-							$data['widget'] = 1;
+						if ( isset( $shortcode_args['is_block'] ) && 1 === (int) $shortcode_args['is_block'] ) {
+							$data['is_block'] = 1;
 						}
 						$output .= UM()->fields()->edit_field( $key, $data );
 					}
@@ -669,8 +669,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					$this->init_displayed_fields( $fields, $id );
 
 					foreach ( $fields as $key => $data ) {
-						if ( isset( $shortcode_args['widget'] ) && 1 === (int) $shortcode_args['widget'] ) {
-							$data['widget'] = 1;
+						if ( isset( $shortcode_args['is_block'] ) && 1 === (int) $shortcode_args['is_block'] ) {
+							$data['is_block'] = 1;
 						}
 						$output .= UM()->fields()->edit_field( $key, $data );
 					}
@@ -726,8 +726,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					$this->init_displayed_fields( $fields, $id );
 
 					foreach ( $fields as $key => $data ) {
-						if ( isset( $shortcode_args['widget'] ) && 1 === (int) $shortcode_args['widget'] ) {
-							$data['widget'] = 1;
+						if ( isset( $shortcode_args['is_block'] ) && 1 === (int) $shortcode_args['is_block'] ) {
+							$data['is_block'] = 1;
 						}
 						$output .= UM()->fields()->edit_field( $key, $data );
 					}
@@ -767,8 +767,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					$this->init_displayed_fields( $fields, $id );
 
 					foreach ( $fields as $key => $data ) {
-						if ( isset( $shortcode_args['widget'] ) && 1 === (int) $shortcode_args['widget'] ) {
-							$data['widget'] = 1;
+						if ( isset( $shortcode_args['is_block'] ) && 1 === (int) $shortcode_args['is_block'] ) {
+							$data['is_block'] = 1;
 						}
 						$output .= UM()->fields()->edit_field( $key, $data );
 					}

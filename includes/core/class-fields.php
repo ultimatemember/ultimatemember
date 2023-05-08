@@ -2076,7 +2076,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		public function edit_field( $key, $data, $rule = false, $args = array() ) {
 			global $_um_profile_id;
 
-			if ( isset( $data['widget'] ) && 1 === (int) $data['widget'] ) {
+			if ( isset( $data['is_block'] ) && 1 === (int) $data['is_block'] ) {
 				$_um_profile_id = get_current_user_id();
 				$form_suffix    = '';
 			} else {

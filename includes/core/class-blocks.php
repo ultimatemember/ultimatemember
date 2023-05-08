@@ -119,7 +119,13 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 
 
 		public function um_forms_render( $atts ) {
-			$shortcode = '[ultimatemember widget="1"';
+			if ( isset( $atts['form_id'] ) && '' !== $atts['form_id'] ) {
+				$mode = get_post_meta( $atts['form_id'], '_um_mode', true );
+				if ( 'profile' === $mode && ( um_is_core_page( 'account' ) || um_is_core_page( 'user' ) ) ) {
+					return '';
+				}
+			}
+			$shortcode = '[ultimatemember';
 
 			if ( isset( $atts['form_id'] ) && '' !== $atts['form_id'] ) {
 				$shortcode .= ' form_id="' . $atts['form_id'] . '"';
@@ -139,7 +145,10 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 
 
 		public function um_account_render( $atts ) {
-			$shortcode = '[ultimatemember_account widget="1"';
+			if ( um_is_core_page( 'account' ) || um_is_core_page( 'user' ) ) {
+				return '';
+			}
+			$shortcode = '[ultimatemember_account is_block="1"';
 
 			if ( isset( $atts['tab'] ) && 'all' !== $atts['tab'] ) {
 				$shortcode .= ' tab="' . $atts['tab'] . '"';
