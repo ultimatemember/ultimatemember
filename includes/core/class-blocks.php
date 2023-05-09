@@ -125,7 +125,7 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 					return '';
 				}
 			}
-			$shortcode = '[ultimatemember';
+			$shortcode = '[ultimatemember is_block="1"';
 
 			if ( isset( $atts['form_id'] ) && '' !== $atts['form_id'] ) {
 				$shortcode .= ' form_id="' . $atts['form_id'] . '"';
