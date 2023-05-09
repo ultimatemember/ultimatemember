@@ -136,7 +136,7 @@ if ( ! is_user_logged_in() ) {
 			 * ?>
 			 */
 			do_action( 'um_after_form', $args ); ?>
-		
+
 		</form>
 
 	</div>

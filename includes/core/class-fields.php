@@ -2087,6 +2087,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			if ( empty( $_um_profile_id ) ) {
 				$_um_profile_id = um_user( 'ID' );
 			}
+			if ( ! is_user_logged_in() ) {
+				$_um_profile_id = 0;
+			}
 
 			// get whole field data
 			if ( isset( $data ) && is_array( $data ) ) {
