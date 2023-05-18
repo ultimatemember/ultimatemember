@@ -1759,7 +1759,7 @@ function um_profile_menu( $args ) {
 								<span class="title"><?php echo esc_html( $tab['name'] ); ?></span>
 							</a>
 						<?php } else { ?>
-							<a href="<?php echo esc_url( $nav_link ); ?>" class="uimob800-show uimob500-show uimob340-show um-tip-n"
+							<a href="<?php echo esc_url( $nav_link ); ?>" class="uimob800-hide uimob500-hide uimob340-hide um-tip-n"
 							   title="<?php echo esc_attr( $tab['name'] ); ?>" original-title="<?php echo esc_attr( $tab['name'] ); ?>">
 
 								<i class="<?php echo esc_attr( $tab['icon'] ); ?>"></i>
@@ -1768,7 +1768,7 @@ function um_profile_menu( $args ) {
 									<span class="um-tab-notifier uimob800-show uimob500-show uimob340-show"><?php echo $tab['notifier']; ?></span>
 								<?php } ?>
 							</a>
-							<a href="<?php echo esc_url( $nav_link ); ?>" class="uimob800-hide uimob500-hide uimob340-hide"
+							<a href="<?php echo esc_url( $nav_link ); ?>" class="uimob800-show uimob500-show uimob340-show"
 							   title="<?php echo esc_attr( $tab['name'] ); ?>">
 
 								<?php if ( isset( $tab['notifier'] ) && $tab['notifier'] > 0 ) { ?>
