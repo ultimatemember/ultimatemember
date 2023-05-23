@@ -114,7 +114,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			wp_register_style( 'um_fonticons_ii', um_url . 'assets/css/um-fonticons-ii.css', array(), ultimatemember_version );
 
 			wp_register_script( 'um_admin_blocks_shortcodes', um_url . 'assets/js/um-blocks' . $this->suffix . '.js', array( 'wp-i18n', 'wp-blocks', 'wp-components' ), ultimatemember_version, true );
-			wp_set_script_translations( 'jb_admin_blocks_shortcodes', 'ultimate-member' );
+			wp_set_script_translations( 'um_admin_blocks_shortcodes', 'ultimate-member' );
 
 			if ( ! empty( UM()->account()->get_tab_fields( 'notifications', array() ) ) ) {
 				$notifications_enabled = 1;
