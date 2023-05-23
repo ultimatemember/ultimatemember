@@ -71,6 +71,10 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		public $is_permalinks;
 
+		/**
+		 * @var null|string
+		 */
+		public $honeypot = null;
 
 		/**
 		 * Main UM Instance
@@ -82,7 +86,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @see UM()
 		 * @return UM - Main instance
 		 */
-		static public function instance() {
+		public static function instance() {
 			if ( is_null( self::$instance ) ) {
 				self::$instance = new self();
 				self::$instance->_um_construct();
@@ -602,6 +606,7 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->external_integrations();
 			$this->gdpr();
 			$this->member_directory();
+			$this->blocks();
 
 			//if multisite networks active
 			if ( is_multisite() ) {
@@ -628,6 +633,20 @@ if ( ! class_exists( 'UM' ) ) {
 				}
 			}
 			return $this->classes['member_directory'];
+		}
+
+
+		/**
+		 * @since 2.6.1
+		 *
+		 * @return um\core\Blocks()
+		 */
+		public function blocks() {
+			if ( empty( $this->classes['blocks'] ) ) {
+				$this->classes['blocks'] = new um\core\Blocks();
+			}
+
+			return $this->classes['blocks'];
 		}
 
 

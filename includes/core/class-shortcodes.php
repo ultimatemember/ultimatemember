@@ -1,11 +1,11 @@
 <?php
 namespace um\core;
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Shortcodes' ) ) {
-
 
 	/**
 	 * Class Shortcodes
@@ -13,18 +13,50 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 	 */
 	class Shortcodes {
 
-		var $profile_role = '';
+		/**
+		 * @var string
+		 */
+		public $profile_role = '';
+
+		/**
+		 * @var bool
+		 */
+		public $message_mode = false;
+
+		/**
+		 * @var string
+		 */
+		public $custom_message = '';
+
+		/**
+		 * @var array
+		 */
+		public $loop = array();
+
+		/**
+		 * @var array
+		 */
+		public $emoji = array();
+
+		/**
+		 * @var null|int
+		 */
+		public $form_id = null;
+
+		/**
+		 * @var null|string
+		 */
+		public $form_status = null;
+
+		/**
+		 * @var array
+		 */
+		public $set_args = array();
 
 		/**
 		 * Shortcodes constructor.
 		 */
-		function __construct() {
-
-			$this->message_mode = false;
-			$this->custom_message = '';
-
-			$this->loop = array();
-
+		public function __construct() {
 			add_shortcode( 'ultimatemember', array( &$this, 'ultimatemember' ) );
 
 			add_shortcode( 'ultimatemember_login', array( &$this, 'ultimatemember_login' ) );
@@ -123,9 +155,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			$this->emoji[':innocent:'] = $base_uri . '72x72/1f607.png';
 			$this->emoji[':smirk:'] = $base_uri . '72x72/1f60f.png';
 			$this->emoji[':expressionless:'] = $base_uri . '72x72/1f611.png';
-
 		}
-
 
 		/**
 		 * Conditional logout form
@@ -430,11 +460,11 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			$args = ! empty( $args ) ? $args : array();
 
 			$default_login = $wpdb->get_var(
-				"SELECT pm.post_id 
-				FROM {$wpdb->postmeta} pm 
+				"SELECT pm.post_id
+				FROM {$wpdb->postmeta} pm
 				LEFT JOIN {$wpdb->postmeta} pm2 ON( pm.post_id = pm2.post_id AND pm2.meta_key = '_um_is_default' )
-				WHERE pm.meta_key = '_um_mode' AND 
-					  pm.meta_value = 'login' AND 
+				WHERE pm.meta_key = '_um_mode' AND
+					  pm.meta_value = 'login' AND
 					  pm2.meta_value = '1'"
 			);
 
@@ -463,11 +493,11 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			$args = ! empty( $args ) ? $args : array();
 
 			$default_register = $wpdb->get_var(
-				"SELECT pm.post_id 
-				FROM {$wpdb->postmeta} pm 
+				"SELECT pm.post_id
+				FROM {$wpdb->postmeta} pm
 				LEFT JOIN {$wpdb->postmeta} pm2 ON( pm.post_id = pm2.post_id AND pm2.meta_key = '_um_is_default' )
-				WHERE pm.meta_key = '_um_mode' AND 
-					  pm.meta_value = 'register' AND 
+				WHERE pm.meta_key = '_um_mode' AND
+					  pm.meta_value = 'register' AND
 					  pm2.meta_value = '1'"
 			);
 
@@ -496,11 +526,11 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			$args = ! empty( $args ) ? $args : array();
 
 			$default_profile = $wpdb->get_var(
-				"SELECT pm.post_id 
-				FROM {$wpdb->postmeta} pm 
+				"SELECT pm.post_id
+				FROM {$wpdb->postmeta} pm
 				LEFT JOIN {$wpdb->postmeta} pm2 ON( pm.post_id = pm2.post_id AND pm2.meta_key = '_um_is_default' )
-				WHERE pm.meta_key = '_um_mode' AND 
-					  pm.meta_value = 'profile' AND 
+				WHERE pm.meta_key = '_um_mode' AND
+					  pm.meta_value = 'profile' AND
 					  pm2.meta_value = '1'"
 			);
 
@@ -530,11 +560,11 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			$args = ! empty( $args ) ? $args : array();
 
 			$default_directory = $wpdb->get_var(
-				"SELECT pm.post_id 
-				FROM {$wpdb->postmeta} pm 
+				"SELECT pm.post_id
+				FROM {$wpdb->postmeta} pm
 				LEFT JOIN {$wpdb->postmeta} pm2 ON( pm.post_id = pm2.post_id AND pm2.meta_key = '_um_is_default' )
-				WHERE pm.meta_key = '_um_mode' AND 
-					  pm.meta_value = 'directory' AND 
+				WHERE pm.meta_key = '_um_mode' AND
+					  pm.meta_value = 'directory' AND
 					  pm2.meta_value = '1'"
 			);
 
@@ -689,6 +719,10 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 					ob_get_clean();
 					return __( 'You are already registered', 'ultimate-member' );
 				}
+			}
+
+			if ( ! is_user_logged_in() && isset( $args['is_block'] ) && 1 === (int) $args['is_block'] && 'profile' === $mode ) {
+				return;
 			}
 
 			// for profiles only

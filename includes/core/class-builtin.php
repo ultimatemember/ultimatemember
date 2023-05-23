@@ -13,29 +13,40 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 	 */
 	class Builtin {
 
-
 		/**
 		 * @var array
 		 */
 		public $predefined_fields = array();
 
+		/**
+		 * @var array
+		 */
+		public $all_user_fields = array();
 
 		/**
 		 * @var array
 		 */
-		var $all_user_fields = array();
-
+		public $core_fields = array();
 
 		/**
 		 * @var array
 		 */
-		var $core_fields = array();
+		public $saved_fields = array();
 
+		/**
+		 * @var array
+		 */
+		public $custom_fields = array();
+
+		/**
+		 * @var array
+		 */
+		public $fields_dropdown = array();
 
 		/**
 		 * Builtin constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			add_action( 'init', array( &$this, 'set_core_fields' ), 1 );
 			add_action( 'init', array( &$this, 'set_predefined_fields' ), 1 );
 			add_action( 'init', array( &$this, 'set_custom_fields' ), 1 );

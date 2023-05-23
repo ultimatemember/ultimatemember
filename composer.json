@@ -7,6 +7,14 @@
   "minimum-stability": "stable",
   "prefer-stable": true,
   "require": {
+    "ext-mbstring": "*",
+    "ext-json": "*",
+    "ext-dom": "*",
+    "ext-exif": "*",
+    "ext-gd": "*",
+    "ext-fileinfo": "*",
+    "ext-curl": "*",
+    "ext-iconv": "*",
     "woocommerce/action-scheduler": "3.2.1"
   },
   "require-dev": {

@@ -13,30 +13,45 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 	 */
 	class Files {
 
+		/**
+		 * @var
+		 */
+		public $upload_temp;
 
 		/**
 		 * @var
 		 */
-		var $upload_temp;
-
-
-		/**
-		 * @var
-		 */
-		var $upload_baseurl;
-
+		public $upload_baseurl;
 
 		/**
 		 * @var
 		 */
-		var $upload_basedir;
+		public $upload_basedir;
 
+		/**
+		 * @var array|array[]
+		 */
+		public $fonticon = array();
+
+		/**
+		 * @var null|string
+		 */
+		public $upload_dir = null;
+
+		/**
+		 * @var null
+		 */
+		public $upload_temp_url = null;
+
+		/**
+		 * @var string
+		 */
+		public $default_file_fonticon = 'um-faicon-file-o';
 
 		/**
 		 * Files constructor.
 		 */
-		function __construct() {
-
+		public function __construct() {
 			$this->setup_paths();
 
 			add_action( 'template_redirect', array( &$this, 'download_routing' ), 1 );
@@ -63,8 +78,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				'tif' 	=> array('icon' 	=> 'um-icon-image' ),
 				'tiff' 	=> array('icon' 	=> 'um-icon-image' ),
 			);
-
-			$this->default_file_fonticon = 'um-faicon-file-o';
 		}
 
 
@@ -326,8 +339,8 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			$user_id = empty( $_REQUEST['user_id'] ) ? get_current_user_id() : absint( $_REQUEST['user_id'] );
 
-			UM()->fields()->set_id = filter_input( INPUT_POST, 'set_id', FILTER_SANITIZE_NUMBER_INT );
-			UM()->fields()->set_mode = filter_input( INPUT_POST, 'set_mode', FILTER_SANITIZE_STRING );
+			UM()->fields()->set_id   = isset( $_POST['set_id'] ) ? absint( $_POST['set_id'] ) : null;
+			UM()->fields()->set_mode = isset( $_POST['set_mode'] ) ? sanitize_text_field( $_POST['set_mode'] ) : null;
 
 			if ( UM()->fields()->set_mode != 'register' && ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
 				$ret['error'] = esc_js( __( 'You have no permission to edit this user', 'ultimate-member' ) );

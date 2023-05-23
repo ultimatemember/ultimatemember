@@ -18,7 +18,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		/**
 		 * @var string
 		 */
-		var $set_mode = '';
+		public $set_mode = '';
 
 
 		/**
@@ -26,16 +26,52 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 */
 		public $set_id = null;
 
+		/**
+		 * @var bool
+		 */
+		public $editing = false;
+
+		/**
+		 * @var bool
+		 */
+		public $viewing = false;
+
+		/**
+		 * @var int
+		 */
+		public $timestamp = null;
+
+		/**
+		 * @var array
+		 */
+		public $global_args = array();
+
+		/**
+		 * @var array
+		 */
+		public $field_icons = array();
+
+		/**
+		 * @var array
+		 */
+		public $get_fields = array();
+
+		/**
+		 * @var array
+		 */
+		public $rows = array();
+
+		/**
+		 * @var array
+		 */
+		public $fields = array();
 
 		/**
 		 * Fields constructor.
 		 */
-		function __construct() {
-			$this->editing = false;
-			$this->viewing = false;
+		public function __construct() {
 			$this->timestamp = current_time( 'timestamp' );
 		}
-
 
 		/**
 		 * Standard checkbox field
@@ -2073,76 +2109,89 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return string|null
 		 * @throws \Exception
 		 */
-		function edit_field( $key, $data, $rule = false, $args = array() ) {
+		public function edit_field( $key, $data, $rule = false, $args = array() ) {
 			global $_um_profile_id;
 
-			$output = '';
+			if ( isset( $data['is_block'] ) && 1 === (int) $data['is_block'] ) {
+				$form_suffix = '';
+			} else {
+				$form_suffix = UM()->form()->form_suffix;
+			}
+
+			$output   = '';
 			$disabled = '';
 			if ( empty( $_um_profile_id ) ) {
 				$_um_profile_id = um_user( 'ID' );
 			}
 
+			if ( ! is_user_logged_in() && isset( $data['is_block'] ) && 1 === (int) $data['is_block'] ) {
+				$_um_profile_id = 0;
+			}
+
 			// get whole field data
 			if ( isset( $data ) && is_array( $data ) ) {
-				$data = $this->get_field( $key );
-				if ( is_array( $data ) ) {
-					/**
-					 * @var string      $in_row
-					 * @var boolean     $in_sub_row
-					 * @var boolean     $in_column
-					 * @var string      $type
-					 * @var string      $metakey
-					 * @var int         $position
-					 * @var string      $title
-					 * @var string      $help
-					 * @var array       $options
-					 * @var string      $visibility
-					 * @var string      $label
-					 * @var string      $placeholder
-					 * @var boolean     $public
-					 * @var boolean     $editable
-					 * @var string      $icon
-					 * @var boolean     $in_group
-					 * @var boolean     $required
-					 * @var string      $validate
-					 * @var string      $default
-					 * @var string      $conditional
-					 * @var string      $input
-					 * @var string      $js_format
-					 * @var string      $date_max
-					 * @var string      $date_min
-					 * @var string      $disabled_weekdays
-					 * @var string      $years_x
-					 * @var string      $years
-					 * @var string      $range
-					 * @var string      $intervals
-					 * @var string      $height
-					 * @var string      $spacing
-					 * @var string      $borderwidth
-					 * @var string      $borderstyle
-					 * @var string      $bordercolor
-					 * @var string      $divider_text
-					 * @var string      $crop_class
-					 * @var string      $crop_data
-					 * @var string      $modal_size
-					 * @var string      $ratio
-					 * @var string      $min_width
-					 * @var string      $min_height
-					 * @var string      $button_text
-					 * @var string      $max_size
-					 * @var string      $max_size_error
-					 * @var string      $extension_error
-					 * @var string      $allowed_types
-					 * @var string      $upload_text
-					 * @var string      $max_files_error
-					 * @var string      $upload_help_text
-					 * @var string      $min_size_error
-					 * @var string      $filter
-					 * @var string      $content
-					 * @var string      $max_entries
-					 */
-					extract( $data );
+				$origin_data = $this->get_field( $key );
+				if ( is_array( $origin_data ) ) {
+					// Merge data passed with original field data.
+					$data = array_merge( $origin_data, $data );
 				}
+
+				/**
+				 * @var string      $in_row
+				 * @var boolean     $in_sub_row
+				 * @var boolean     $in_column
+				 * @var string      $type
+				 * @var string      $metakey
+				 * @var int         $position
+				 * @var string      $title
+				 * @var string      $help
+				 * @var array       $options
+				 * @var string      $visibility
+				 * @var string      $label
+				 * @var string      $placeholder
+				 * @var boolean     $public
+				 * @var boolean     $editable
+				 * @var string      $icon
+				 * @var boolean     $in_group
+				 * @var boolean     $required
+				 * @var string      $validate
+				 * @var string      $default
+				 * @var string      $conditional
+				 * @var string      $input
+				 * @var string      $js_format
+				 * @var string      $date_max
+				 * @var string      $date_min
+				 * @var string      $disabled_weekdays
+				 * @var string      $years_x
+				 * @var string      $years
+				 * @var string      $range
+				 * @var string      $intervals
+				 * @var string      $height
+				 * @var string      $spacing
+				 * @var string      $borderwidth
+				 * @var string      $borderstyle
+				 * @var string      $bordercolor
+				 * @var string      $divider_text
+				 * @var string      $crop_class
+				 * @var string      $crop_data
+				 * @var string      $modal_size
+				 * @var string      $ratio
+				 * @var string      $min_width
+				 * @var string      $min_height
+				 * @var string      $button_text
+				 * @var string      $max_size
+				 * @var string      $max_size_error
+				 * @var string      $extension_error
+				 * @var string      $allowed_types
+				 * @var string      $upload_text
+				 * @var string      $max_files_error
+				 * @var string      $upload_help_text
+				 * @var string      $min_size_error
+				 * @var string      $filter
+				 * @var string      $content
+				 * @var string      $max_entries
+				 */
+				extract( $data );
 			}
 
 			if ( ! isset( $data['type'] ) ) {
@@ -2344,7 +2393,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					}
 
-					$field_name = $key . UM()->form()->form_suffix;
+					$field_name = $key . $form_suffix;
 					$field_value = htmlspecialchars( $this->field_value( $key, $default, $data ) );
 
 					$output .= '<input ' . $disabled . ' class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />
@@ -2381,8 +2430,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					}
 
-					$field_name = $key . UM()->form()->form_suffix;
-					$field_value = htmlspecialchars( $this->field_value( $key, $default, $data ) );
+					$field_name  = $key . $form_suffix;
+					$field_value = $this->field_value( $key, $default, $data );
+					$field_value = ! is_null( $field_value ) ? htmlspecialchars( $field_value ) : null;
 
 					$output .= '<input ' . $disabled . ' autocomplete="' . esc_attr( $autocomplete ) . '" class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />
 
@@ -2418,7 +2468,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					}
 
-					$field_name = $key . UM()->form()->form_suffix;
+					$field_name = $key . $form_suffix;
 					$field_value = htmlspecialchars( $this->field_value( $key, $default, $data ) );
 
 					$output .= '<input ' . $disabled . ' autocomplete="' . esc_attr( $autocomplete ) . '" class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />
@@ -2463,7 +2513,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$number_limit .= ' max="' . esc_attr( $max ) . '" ';
 					}
 
-					$output .= '<input ' . $disabled . ' class="' . $this->get_class( $key, $data ) . '" type="number" name="' . esc_attr( $key . UM()->form()->form_suffix ) . '" id="' . esc_attr( $key . UM()->form()->form_suffix ) . '" value="' . esc_attr( htmlspecialchars( $this->field_value( $key, $default, $data ) ) ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $number_limit . ' />
+					$output .= '<input ' . $disabled . ' class="' . $this->get_class( $key, $data ) . '" type="number" name="' . esc_attr( $key . $form_suffix ) . '" id="' . esc_attr( $key . UM()->form()->form_suffix ) . '" value="' . esc_attr( htmlspecialchars( $this->field_value( $key, $default, $data ) ) ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $number_limit . ' />
 
 						</div>';
 
@@ -2499,7 +2549,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						}
 
-						$output .= '<input class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $key . UM()->form()->form_suffix ) . '" id="' . esc_attr( $key . UM()->form()->form_suffix ) . '" value="' . $this->field_value( $key, $default, $data ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />
+						$output .= '<input class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $key . $form_suffix ) . '" id="' . esc_attr( $key . UM()->form()->form_suffix ) . '" value="' . $this->field_value( $key, $default, $data ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />
 
 							</div>';
 
@@ -2531,7 +2581,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 							}
 
-							$output .= '<input class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $key . UM()->form()->form_suffix ) . '" id="' . esc_attr( $key . UM()->form()->form_suffix ) . '" value="' . $this->field_value( $key, $default, $data ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />
+							$output .= '<input class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $key . $form_suffix ) . '" id="' . esc_attr( $key . UM()->form()->form_suffix ) . '" value="' . $this->field_value( $key, $default, $data ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />
 
 								</div>';
 
@@ -2567,7 +2617,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						}
 
-						$name = $key . UM()->form()->form_suffix;
+						$name = $key . $form_suffix;
 						if ( $this->set_mode == 'password' && um_is_core_page( 'password-reset' ) ) {
 							$name = $key;
 						}
@@ -2605,7 +2655,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 							}
 
-							$name = $key . UM()->form()->form_suffix;
+							$name = $key . $form_suffix;
 							if ( $this->set_mode == 'password' && um_is_core_page( 'password-reset' ) ) {
 								$name = $key;
 							}
@@ -2655,7 +2705,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					}
 
-					$output .= '<input  ' . $disabled . '  class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $key . UM()->form()->form_suffix ) . '" id="' . esc_attr( $key . UM()->form()->form_suffix ) . '" value="' . esc_attr( $this->field_value( $key, $default, $data ) ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />
+					$output .= '<input  ' . $disabled . '  class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $key . $form_suffix ) . '" id="' . esc_attr( $key . UM()->form()->form_suffix ) . '" value="' . esc_attr( $this->field_value( $key, $default, $data ) ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />
 
 						</div>';
 
@@ -2698,7 +2748,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$value = date( 'Y/m/d', $unixtimestamp );
 					}
 
-					$output .= '<input  ' . $disabled . '  class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $key . UM()->form()->form_suffix ) . '" id="' . esc_attr( $key . UM()->form()->form_suffix ) . '" value="' . esc_attr( $value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" data-range="' . esc_attr( $range ) . '" data-years="' . esc_attr( $years ) . '" data-years_x="' . esc_attr( $years_x ) . '" data-disabled_weekdays="' . esc_attr( $disabled_weekdays ) . '" data-date_min="' . esc_attr( $date_min ) . '" data-date_max="' . esc_attr( $date_max ) . '" data-format="' . esc_attr( $js_format ) . '" data-value="' . esc_attr( $value ) . '" />
+					$output .= '<input  ' . $disabled . '  class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $key . $form_suffix ) . '" id="' . esc_attr( $key . UM()->form()->form_suffix ) . '" value="' . esc_attr( $value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" data-range="' . esc_attr( $range ) . '" data-years="' . esc_attr( $years ) . '" data-years_x="' . esc_attr( $years_x ) . '" data-disabled_weekdays="' . esc_attr( $disabled_weekdays ) . '" data-date_min="' . esc_attr( $date_min ) . '" data-date_max="' . esc_attr( $date_max ) . '" data-format="' . esc_attr( $js_format ) . '" data-value="' . esc_attr( $value ) . '" />
 
 						</div>';
 
@@ -2728,7 +2778,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					}
 
-					$output .= '<input  ' . $disabled . '  class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $key . UM()->form()->form_suffix ) . '" id="' . esc_attr( $key . UM()->form()->form_suffix ) . '" value="' . $this->field_value( $key, $default, $data ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '"  data-format="' . esc_attr( $js_format ) . '" data-intervals="' . esc_attr( $intervals ) . '" data-value="' . $this->field_value( $key, $default, $data ) . '" />
+					$output .= '<input  ' . $disabled . '  class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $key . $form_suffix ) . '" id="' . esc_attr( $key . UM()->form()->form_suffix ) . '" value="' . $this->field_value( $key, $default, $data ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '"  data-format="' . esc_attr( $js_format ) . '" data-intervals="' . esc_attr( $intervals ) . '" data-value="' . $this->field_value( $key, $default, $data ) . '" />
 
 						</div>';
 
@@ -2869,7 +2919,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					} else {
 						$field_value = $this->field_value( $key, $default, $data );
 					}
-					$output .= '<input type="hidden" name="' . esc_attr( $key . UM()->form()->form_suffix ) . '" id="' . esc_attr( $key . UM()->form()->form_suffix ) . '" value="' . $field_value . '" />';
+					$output .= '<input type="hidden" name="' . esc_attr( $key . $form_suffix ) . '" id="' . esc_attr( $key . UM()->form()->form_suffix ) . '" value="' . $field_value . '" />';
 					if ( isset( $data['label'] ) ) {
 						$output .= $this->field_label( $label, $key, $data );
 					}
@@ -2954,7 +3004,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				/* Single File Upload */
 				case 'file':
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . ' data-mode="' . esc_attr( $this->set_mode ) . '" data-upload-label="' . ( ! empty( $data['button_text'] ) ? esc_attr( $data['button_text'] ) : esc_attr__( 'Upload', 'ultimate-member' ) ) . '">';
-					$output .= '<input type="hidden" name="' . esc_attr( $key . UM()->form()->form_suffix ) . '" id="' . esc_attr( $key . UM()->form()->form_suffix ) . '" value="' . $this->field_value( $key, $default, $data ) . '" />';
+					$output .= '<input type="hidden" name="' . esc_attr( $key . $form_suffix ) . '" id="' . esc_attr( $key . UM()->form()->form_suffix ) . '" value="' . $this->field_value( $key, $default, $data ) . '" />';
 					if ( isset( $data['label'] ) ) {
 						$output .= $this->field_label( $label, $key, $data );
 					}
@@ -4188,6 +4238,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 									$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
 									if ( $col1_fields ) {
 										foreach ( $col1_fields as $key => $data ) {
+											if ( ! empty( $args['is_block'] ) ) {
+												$data['is_block'] = 1;
+											}
 											$output .= $this->edit_field( $key, $data );
 										}
 									}
@@ -4199,6 +4252,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 									$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
 									if ( $col1_fields ) {
 										foreach ( $col1_fields as $key => $data ) {
+											if ( ! empty( $args['is_block'] ) ) {
+												$data['is_block'] = 1;
+											}
 											$output .= $this->edit_field( $key, $data );
 										}
 									}
@@ -4208,6 +4264,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 									$col2_fields = $this->get_fields_in_column( $subrow_fields, 2 );
 									if ( $col2_fields ) {
 										foreach ( $col2_fields as $key => $data ) {
+											if ( ! empty( $args['is_block'] ) ) {
+												$data['is_block'] = 1;
+											}
 											$output .= $this->edit_field( $key, $data );
 										}
 									}

@@ -1,4 +1,27 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
+<?php
+/**
+ * Template for the members directory grid
+ *
+ * This template can be overridden by copying it to yourtheme/ultimate-member/members-grid.php
+ *
+ * Page: "Members"
+ *
+ * @version 2.6.1
+ *
+ * @var array  $args
+ * @var bool   $cover_photos
+ * @var bool   $profile_photo
+ * @var bool   $show_name
+ * @var bool   $show_tagline
+ * @var bool   $show_userinfo
+ * @var bool   $userinfo_animate
+ * @var bool   $show_social
+ * @var array  $reveal_fields
+ * @var string $no_users
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 $unique_hash = substr( md5( $args['form_id'] ), 10, 5 ); ?>
 
