@@ -414,7 +414,19 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			if ( ! empty( UM()->options()->get( $template . '_on' ) ) ) {
 				return;
 			}
-
+			/**
+			 * Filters for disabling email notifications programmatically.
+			 *
+			 * @since 2.6.1
+			 * @hook um_disable_email_notification_sending
+			 *
+			 * @param {bool}   $disabled Does an email is disabled programmatically. By default it is false.
+			 * @param {string} $email    Email address for sending.
+			 * @param {string} $template Email template key.
+			 * @param {array}  $args     Arguments for sending email.
+			 *
+			 * @return {bool} `true` if email is disabled programmatically.
+			 */
 			$hook_disabled = apply_filters( 'um_disable_email_notification_sending', false, $email, $template, $args );
 			if ( false !== $hook_disabled ) {
 				return;

@@ -3072,8 +3072,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		public function get_override_templates( $get_list = false ) {
 			$outdated_files   = array();
 			$scan_files['um'] = $this->scan_template_files( um_path . '/templates/' );
-			$scan_files       = apply_filters( 'um_override_templates_scan_files', $scan_files );
-			$out_date         = false;
+			/**
+			 * Filters an array of the template files for scanning versions.
+			 *
+			 * @since 2.6.1
+			 * @hook um_override_templates_scan_files
+			 *
+			 * @param {array} $scan_files Template files for scanning versions.
+			 *
+			 * @return {array} Template files for scanning versions.
+			 */
+			$scan_files = apply_filters( 'um_override_templates_scan_files', $scan_files );
+			$out_date   = false;
 
 			set_transient( 'um_check_template_versions', time(), 12 * HOUR_IN_SECONDS );
 
@@ -3081,6 +3091,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				foreach ( $files as $file ) {
 					if ( ! str_contains( $file, 'email/' ) ) {
 						$located = array();
+						/**
+						 * Filters an array of the template files for scanning versions based on $key.
+						 *
+						 * Note: $key - means um or extension key.
+						 *
+						 * @since 2.6.1
+						 * @hook um_override_templates_get_template_path__{$key}
+						 *
+						 * @param {array}  $located Template file paths for scanning versions.
+						 * @param {string} $file    Template file name.
+						 *
+						 * @return {array} Template file paths for scanning versions.
+						 */
 						$located = apply_filters( "um_override_templates_get_template_path__{$key}", $located, $file );
 
 						if ( ! empty( $located ) ) {
@@ -3188,7 +3211,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			// Pull only the first 8kiB of the file in.
 			$file_data = fread( $fp, 8192 ); // @codingStandardsIgnoreLine.
 
-			// PHP will close file handle, but we are good citizens.
+			// PHP will close a file handle, but we are good citizens.
 			fclose( $fp ); // @codingStandardsIgnoreLine.
 
 			// Make sure we catch CR-only line endings.
