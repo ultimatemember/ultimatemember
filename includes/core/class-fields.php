@@ -388,6 +388,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 						update_post_meta( $directory_id, '_um_sortby_custom', '' );
 						update_post_meta( $directory_id, '_um_sortby_custom_label', '' );
+						update_post_meta( $directory_id, '_um_sortby_custom_type', '' );
+						update_post_meta( $directory_id, '_um_sortby_custom_order', '' );
 					}
 				}
 

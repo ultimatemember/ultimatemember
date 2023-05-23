@@ -389,6 +389,12 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					'_um_sortby_custom_label'      => array(
 						'sanitize' => 'text',
 					),
+					'_um_sortby_custom_type'       => array(
+						'sanitize' => 'text',
+					),
+					'_um_sortby_custom_order'      => array(
+						'sanitize' => 'text',
+					),
 					'_um_enable_sorting'           => array(
 						'sanitize' => 'bool',
 					),

@@ -1423,7 +1423,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			} elseif ( ( ! empty( $directory_data['sortby_custom'] ) && $sortby == $directory_data['sortby_custom'] ) || in_array( $sortby, $custom_sort ) ) {
 
-				$custom_sort_type = apply_filters( 'um_member_directory_custom_sorting_type', 'CHAR', $sortby, $directory_data );
+				$custom_sort_type = ! empty( $directory_data['sortby_custom_type'] ) ? $directory_data['sortby_custom_type'] : 'CHAR';
+				$custom_sort_type = apply_filters( 'um_member_directory_custom_sorting_type', $custom_sort_type, $sortby, $directory_data );
 
 				$this->query_args['meta_query'][] = array(
 					'relation' => 'OR',
@@ -1438,7 +1439,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					)
 				);
 
-				$this->query_args['orderby'] = array( $sortby . '_cs' => 'ASC', 'user_login' => 'ASC' );
+				$custom_sort_order = ! empty( $directory_data['sortby_custom_order'] ) ? $directory_data['sortby_custom_order'] : 'CHAR';
+
+				$this->query_args['orderby'] = array( $sortby . '_cs' => $custom_sort_order, 'user_login' => 'ASC' );
 
 			} else {
 
