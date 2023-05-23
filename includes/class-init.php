@@ -71,6 +71,10 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		public $is_permalinks;
 
+		/**
+		 * @var null|string
+		 */
+		public $honeypot = null;
 
 		/**
 		 * Main UM Instance
@@ -82,7 +86,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @see UM()
 		 * @return UM - Main instance
 		 */
-		static public function instance() {
+		public static function instance() {
 			if ( is_null( self::$instance ) ) {
 				self::$instance = new self();
 				self::$instance->_um_construct();

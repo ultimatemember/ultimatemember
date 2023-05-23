@@ -34,18 +34,38 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		private $custom_nonce_added = false;
 
 
-		var $init_icon = false;
+		public $init_icon = false;
 
+		/**
+		 * @var bool
+		 */
+		public $in_edit = false;
+
+		/**
+		 * @var null
+		 */
+		public $edit_mode_value = null;
+
+		/**
+		 * @var array
+		 */
+		public $edit_array = array();
+
+		/**
+		 * @var array
+		 */
+		public $postmeta = array();
+
+		/**
+		 * @var bool
+		 */
+		public $is_loaded = false;
 
 		/**
 		 * Admin_Metabox constructor.
 		 */
-		function __construct() {
-			$this->in_edit = false;
-			$this->edit_mode_value = null;
-			$this->edit_array = [];
-
-			add_action( 'admin_head', array( &$this, 'admin_head' ), 9);
+		public function __construct() {
+			add_action( 'admin_head', array( &$this, 'admin_head' ), 9 );
 			add_action( 'admin_footer', array( &$this, 'load_modal_content' ), 9 );
 
 			add_action( 'load-post.php', array( &$this, 'add_metabox' ), 9 );

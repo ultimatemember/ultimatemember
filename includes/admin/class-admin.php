@@ -80,6 +80,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			add_action( 'um_admin_do_action__um_can_register_notice', array( &$this, 'um_hide_notice' ) );
 			add_action( 'um_admin_do_action__um_hide_exif_notice', array( &$this, 'um_hide_notice' ) );
 			add_action( 'um_admin_do_action__user_action', array( &$this, 'user_action' ) );
+			add_action( 'um_admin_do_action__check_templates_version', array( &$this, 'check_templates_version' ) );
 
 			add_action( 'um_admin_do_action__install_core_pages', array( &$this, 'install_core_pages' ) );
 
@@ -1745,47 +1746,54 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 *
 		 * @param $action
 		 */
-		function duplicate_form( $action ) {
-			if ( ! is_admin() || ! current_user_can('manage_options') ) {
+		public function duplicate_form( $action ) {
+			if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
 				die();
 			}
-			if ( ! isset( $_REQUEST['post_id'] ) || ! is_numeric( $_REQUEST['post_id'] ) ) {
+
+			if ( empty( $_REQUEST['post_id'] ) || empty( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], "um-duplicate_form{$_REQUEST['post_id']}" ) ) {
+				die();
+			}
+
+			if ( ! is_numeric( $_REQUEST['post_id'] ) ) {
 				die();
 			}
 
 			$post_id = absint( $_REQUEST['post_id'] );
 
 			$n = array(
-				'post_type'     => 'um_form',
-				'post_title'    => sprintf( __( 'Duplicate of %s', 'ultimate-member' ), get_the_title( $post_id ) ),
-				'post_status'   => 'publish',
-				'post_author'   => get_current_user_id(),
+				'post_type'   => 'um_form',
+				// translators: %s - Form title
+				'post_title'  => sprintf( __( 'Duplicate of %s', 'ultimate-member' ), get_the_title( $post_id ) ),
+				'post_status' => 'publish',
+				'post_author' => get_current_user_id(),
 			);
 
 			$n_id = wp_insert_post( $n );
 
 			$n_fields = get_post_custom( $post_id );
 			foreach ( $n_fields as $key => $value ) {
-
-				if ( $key == '_um_custom_fields' ) {
-					$the_value = unserialize( $value[0] );
+				if ( '_um_custom_fields' === $key ) {
+					$the_value = maybe_unserialize( $value[0] );
 				} else {
 					$the_value = $value[0];
 				}
 
 				update_post_meta( $n_id, $key, $the_value );
-
 			}
 
 			delete_post_meta( $n_id, '_um_core' );
 
-			$url = admin_url( 'edit.php?post_type=um_form' );
-			$url = add_query_arg( 'update', 'form_duplicated', $url );
-
-			exit( wp_redirect( $url ) );
-
+			$url = add_query_arg(
+				array(
+					'post_type' => 'um_form',
+					'update'    => 'form_duplicated',
+				),
+				admin_url( 'edit.php' )
+			);
+			wp_safe_redirect( $url );
+			exit;
 		}
-
 
 		/**
 		 * Action to hide notices in admin
@@ -1800,7 +1808,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			update_option( $action, 1 );
 			exit( wp_redirect( remove_query_arg( 'um_adm_action' ) ) );
 		}
-
 
 		/**
 		 * Various user actions
@@ -1868,6 +1875,36 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 		}
 
+		/**
+		 * Manual check templates versions
+		 *
+		 * @param $action
+		 */
+		public function check_templates_version( $action ) {
+			$templates = UM()->admin_settings()->get_override_templates( true );
+			$out_date  = false;
+
+			foreach ( $templates as $template ) {
+				if ( 0 === $template['status_code'] ) {
+					$out_date = true;
+					break;
+				}
+			}
+
+			if ( false === $out_date ) {
+				delete_option( 'um_override_templates_outdated' );
+			}
+
+			$url = add_query_arg(
+				array(
+					'page' => 'um_options',
+					'tab'  => 'override_templates',
+				),
+				admin_url( 'admin.php' )
+			);
+			wp_safe_redirect( $url );
+			exit;
+		}
 
 		/**
 		 * Add any custom links to plugin page

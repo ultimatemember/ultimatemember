@@ -18,7 +18,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		/**
 		 * @var string
 		 */
-		var $set_mode = '';
+		public $set_mode = '';
 
 
 		/**
@@ -26,16 +26,52 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 */
 		public $set_id = null;
 
+		/**
+		 * @var bool
+		 */
+		public $editing = false;
+
+		/**
+		 * @var bool
+		 */
+		public $viewing = false;
+
+		/**
+		 * @var int
+		 */
+		public $timestamp = null;
+
+		/**
+		 * @var array
+		 */
+		public $global_args = array();
+
+		/**
+		 * @var array
+		 */
+		public $field_icons = array();
+
+		/**
+		 * @var array
+		 */
+		public $get_fields = array();
+
+		/**
+		 * @var array
+		 */
+		public $rows = array();
+
+		/**
+		 * @var array
+		 */
+		public $fields = array();
 
 		/**
 		 * Fields constructor.
 		 */
-		function __construct() {
-			$this->editing = false;
-			$this->viewing = false;
+		public function __construct() {
 			$this->timestamp = current_time( 'timestamp' );
 		}
-
 
 		/**
 		 * Standard checkbox field
@@ -248,7 +284,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
 
 			if ( isset( $fields[ $id ] ) ) {
-				$condition_fields = get_option( 'um_fields' );
+				$condition_fields = get_option( 'um_fields', array() );
 
 				if( ! is_array( $condition_fields ) ) $condition_fields = array();
 
@@ -2390,8 +2426,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					}
 
-					$field_name = $key . $form_suffix;
-					$field_value = htmlspecialchars( $this->field_value( $key, $default, $data ) );
+					$field_name  = $key . $form_suffix;
+					$field_value = $this->field_value( $key, $default, $data );
+					$field_value = ! is_null( $field_value ) ? htmlspecialchars( $field_value ) : null;
 
 					$output .= '<input ' . $disabled . ' autocomplete="' . esc_attr( $autocomplete ) . '" class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />
 

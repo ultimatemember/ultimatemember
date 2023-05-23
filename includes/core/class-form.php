@@ -13,43 +13,47 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 	 */
 	class Form {
 
-
 		/**
 		 * @var null
 		 */
-		public $form_suffix;
-
+		public $form_suffix = null;
 
 		/**
 		 * @var
 		 */
-		var $form_id;
-
+		public $form_id;
 
 		/**
 		 * @var null
 		 */
-		var $post_form = null;
+		public $post_form = null;
 
+		/**
+		 * @var null
+		 */
+		public $nonce = null;
 
-		var $nonce = null;
+		/**
+		 * @var null
+		 */
+		public $errors = null;
 
+		/**
+		 * @var null
+		 */
+		public $processing = null;
+
+		/**
+		 * @var array
+		 */
+		public $all_fields = array();
 
 		/**
 		 * Form constructor.
 		 */
-		function __construct() {
-
-			$this->form_suffix = null;
-
-			$this->errors = null;
-
-			$this->processing = null;
-
+		public function __construct() {
 			add_action( 'template_redirect', array( &$this, 'form_init' ), 2 );
-
 			add_action( 'init', array( &$this, 'field_declare' ), 10 );
-
 		}
 
 

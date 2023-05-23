@@ -1,4 +1,20 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
+<?php
+/**
+ * Template for the profile comments
+ *
+ * This template can be overridden by copying it to yourtheme/ultimate-member/profile/comments.php
+ *
+ * Page: "Profile"
+ * Call: function add_comments(), function load_comments()
+ *
+ * @version 2.6.1
+ *
+ * @var int    $count_comments
+ * @var object $comments
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 
 if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {

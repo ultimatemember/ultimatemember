@@ -1,13 +1,11 @@
 <?php
 namespace um\core;
 
-
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Mail' ) ) {
-
 
 	/**
 	 * Class Mail
@@ -15,23 +13,41 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 	 */
 	class Mail {
 
+		/**
+		 * @var array
+		 */
+		public $email_templates = array();
 
 		/**
 		 * @var array
 		 */
-		var $email_templates = array();
-
+		public $path_by_slug = array();
 
 		/**
 		 * @var array
 		 */
-		var $path_by_slug = array();
+		public $attachments = array();
+
+		/**
+		 * @var string
+		 */
+		public $headers = '';
+
+		/**
+		 * @var string
+		 */
+		public $subject = '';
+
+		/**
+		 * @var string
+		 */
+		public $message = '';
 
 
 		/**
 		 * Mail constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			//mandrill compatibility
 			add_filter( 'mandrill_nl2br', array( &$this, 'mandrill_nl2br' ) );
 			add_action( 'plugins_loaded', array( &$this, 'init_paths' ), 99 );
@@ -349,11 +365,9 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 				}
 
 				echo $plain_email_template;
-
 			}
 
 			$message = ob_get_clean();
-
 
 			/**
 			 * UM hook
@@ -387,7 +401,6 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			return um_convert_tags( $message, $args );
 		}
 
-
 		/**
 		 * Send Email function
 		 *
@@ -395,20 +408,27 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 * @param null $template
 		 * @param array $args
 		 */
-		function send( $email, $template, $args = array() ) {
-
+		public function send( $email, $template, $args = array() ) {
 			if ( ! is_email( $email ) ) {
 				return;
 			}
 
-			if ( UM()->options()->get( $template . '_on' ) != 1 ) {
+			if ( ! empty( UM()->options()->get( $template . '_on' ) ) ) {
+				return;
+			}
+
+			$hook_disabled = apply_filters( 'um_disable_email_notification_sending', false, $email, $template, $args );
+			if ( false !== $hook_disabled ) {
 				return;
 			}
 
 			do_action( 'um_before_email_notification_sending', $email, $template, $args );
 
 			$this->attachments = array();
-			$this->headers = 'From: '. stripslashes( UM()->options()->get('mail_from') ) .' <'. UM()->options()->get('mail_from_addr') .'>' . "\r\n";
+			$this->headers     = 'From: ' . stripslashes( UM()->options()->get( 'mail_from' ) ) . ' <' . UM()->options()->get( 'mail_from_addr' ) . '>' . "\r\n";
+
+			add_filter( 'um_template_tags_patterns_hook', array( UM()->mail(), 'add_placeholder' ), 10, 1 );
+			add_filter( 'um_template_tags_replaces_hook', array( UM()->mail(), 'add_replace_placeholder' ), 10, 1 );
 
 			/**
 			 * UM hook
@@ -432,15 +452,10 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			 * }
 			 * ?>
 			 */
-
-			add_filter( 'um_template_tags_patterns_hook', array( UM()->mail(), 'add_placeholder' ), 10, 1 );
-			add_filter( 'um_template_tags_replaces_hook', array( UM()->mail(), 'add_replace_placeholder' ), 10, 1 );
-
 			$subject = apply_filters( 'um_email_send_subject', UM()->options()->get( $template . '_sub' ), $template );
+			$subject = wp_unslash( um_convert_tags( $subject, $args ) );
 
-			$subject = wp_unslash( um_convert_tags( $subject , $args ) );
-
-			$this->subject = html_entity_decode( $subject, ENT_QUOTES, 'UTF-8' ); 
+			$this->subject = html_entity_decode( $subject, ENT_QUOTES, 'UTF-8' );
 
 			$this->message = $this->prepare_template( $template, $args );
 
@@ -455,7 +470,6 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 			do_action( 'um_after_email_notification_sending', $email, $template, $args );
 		}
-
 
 		/**
 		 * @param $template_name

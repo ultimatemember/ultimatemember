@@ -1,4 +1,18 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
+<?php
+/**
+ * Template for the members directory
+ *
+ * This template can be overridden by copying it to yourtheme/ultimate-member/members.php
+ *
+ * Page: "Members"
+ *
+ * @version 2.6.1
+ *
+ * @var array $args
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 global $post;
 

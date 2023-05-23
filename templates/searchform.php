@@ -1,4 +1,20 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+<?php
+/**
+ * Template for the search form
+ *
+ * This template can be overridden by copying it to yourtheme/ultimate-member/searchform.php
+ *
+ * Call: function ultimatemember_searchform()
+ *
+ * @version 2.6.1
+ *
+ * @var string $members_page
+ * @var string $search_value
+ * @var array  $query
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} ?>
 
 <div class="search-form um-search-form" data-members_page="<?php echo esc_url( $members_page ); ?>">
 	<?php foreach ( array_keys( $query ) as $key ) { ?>
