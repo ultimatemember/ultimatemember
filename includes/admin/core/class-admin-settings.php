@@ -422,6 +422,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'id'          => 'profile_menu_icons',
 						'type'        => 'checkbox',
 						'label'       => __( 'Enable menu icons in desktop view', 'ultimate-member' ),
+						'description' => __( '"Desktop view" means the profile block\'s width lower than 800px', 'ultimate-member' ),
 						'conditional' => array( 'profile_menu', '=', 1 ),
 					),
 				)
