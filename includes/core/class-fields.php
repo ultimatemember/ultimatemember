@@ -2130,65 +2130,68 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			// get whole field data
 			if ( isset( $data ) && is_array( $data ) ) {
-				$data = $this->get_field( $key );
-				if ( is_array( $data ) ) {
-					/**
-					 * @var string      $in_row
-					 * @var boolean     $in_sub_row
-					 * @var boolean     $in_column
-					 * @var string      $type
-					 * @var string      $metakey
-					 * @var int         $position
-					 * @var string      $title
-					 * @var string      $help
-					 * @var array       $options
-					 * @var string      $visibility
-					 * @var string      $label
-					 * @var string      $placeholder
-					 * @var boolean     $public
-					 * @var boolean     $editable
-					 * @var string      $icon
-					 * @var boolean     $in_group
-					 * @var boolean     $required
-					 * @var string      $validate
-					 * @var string      $default
-					 * @var string      $conditional
-					 * @var string      $input
-					 * @var string      $js_format
-					 * @var string      $date_max
-					 * @var string      $date_min
-					 * @var string      $disabled_weekdays
-					 * @var string      $years_x
-					 * @var string      $years
-					 * @var string      $range
-					 * @var string      $intervals
-					 * @var string      $height
-					 * @var string      $spacing
-					 * @var string      $borderwidth
-					 * @var string      $borderstyle
-					 * @var string      $bordercolor
-					 * @var string      $divider_text
-					 * @var string      $crop_class
-					 * @var string      $crop_data
-					 * @var string      $modal_size
-					 * @var string      $ratio
-					 * @var string      $min_width
-					 * @var string      $min_height
-					 * @var string      $button_text
-					 * @var string      $max_size
-					 * @var string      $max_size_error
-					 * @var string      $extension_error
-					 * @var string      $allowed_types
-					 * @var string      $upload_text
-					 * @var string      $max_files_error
-					 * @var string      $upload_help_text
-					 * @var string      $min_size_error
-					 * @var string      $filter
-					 * @var string      $content
-					 * @var string      $max_entries
-					 */
-					extract( $data );
+				$origin_data = $this->get_field( $key );
+				if ( is_array( $origin_data ) ) {
+					// Merge data passed with original field data.
+					$data = array_merge( $origin_data, $data );
 				}
+
+				/**
+				 * @var string      $in_row
+				 * @var boolean     $in_sub_row
+				 * @var boolean     $in_column
+				 * @var string      $type
+				 * @var string      $metakey
+				 * @var int         $position
+				 * @var string      $title
+				 * @var string      $help
+				 * @var array       $options
+				 * @var string      $visibility
+				 * @var string      $label
+				 * @var string      $placeholder
+				 * @var boolean     $public
+				 * @var boolean     $editable
+				 * @var string      $icon
+				 * @var boolean     $in_group
+				 * @var boolean     $required
+				 * @var string      $validate
+				 * @var string      $default
+				 * @var string      $conditional
+				 * @var string      $input
+				 * @var string      $js_format
+				 * @var string      $date_max
+				 * @var string      $date_min
+				 * @var string      $disabled_weekdays
+				 * @var string      $years_x
+				 * @var string      $years
+				 * @var string      $range
+				 * @var string      $intervals
+				 * @var string      $height
+				 * @var string      $spacing
+				 * @var string      $borderwidth
+				 * @var string      $borderstyle
+				 * @var string      $bordercolor
+				 * @var string      $divider_text
+				 * @var string      $crop_class
+				 * @var string      $crop_data
+				 * @var string      $modal_size
+				 * @var string      $ratio
+				 * @var string      $min_width
+				 * @var string      $min_height
+				 * @var string      $button_text
+				 * @var string      $max_size
+				 * @var string      $max_size_error
+				 * @var string      $extension_error
+				 * @var string      $allowed_types
+				 * @var string      $upload_text
+				 * @var string      $max_files_error
+				 * @var string      $upload_help_text
+				 * @var string      $min_size_error
+				 * @var string      $filter
+				 * @var string      $content
+				 * @var string      $max_entries
+				 */
+				extract( $data );
 			}
 
 			if ( ! isset( $data['type'] ) ) {
