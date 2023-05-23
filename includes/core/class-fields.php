@@ -2124,6 +2124,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$_um_profile_id = um_user( 'ID' );
 			}
 
+			if ( ! is_user_logged_in() && isset( $data['is_block'] ) && 1 === (int) $data['is_block'] ) {
+				$_um_profile_id = 0;
+			}
+
 			// get whole field data
 			if ( isset( $data ) && is_array( $data ) ) {
 				$data = $this->get_field( $key );
@@ -4231,6 +4235,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 									$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
 									if ( $col1_fields ) {
 										foreach ( $col1_fields as $key => $data ) {
+											if ( ! empty( $args['is_block'] ) ) {
+												$data['is_block'] = 1;
+											}
 											$output .= $this->edit_field( $key, $data );
 										}
 									}
@@ -4242,6 +4249,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 									$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
 									if ( $col1_fields ) {
 										foreach ( $col1_fields as $key => $data ) {
+											if ( ! empty( $args['is_block'] ) ) {
+												$data['is_block'] = 1;
+											}
 											$output .= $this->edit_field( $key, $data );
 										}
 									}
@@ -4251,6 +4261,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 									$col2_fields = $this->get_fields_in_column( $subrow_fields, 2 );
 									if ( $col2_fields ) {
 										foreach ( $col2_fields as $key => $data ) {
+											if ( ! empty( $args['is_block'] ) ) {
+												$data['is_block'] = 1;
+											}
 											$output .= $this->edit_field( $key, $data );
 										}
 									}
