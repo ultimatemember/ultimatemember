@@ -89,6 +89,17 @@ class Modules {
 						$data['description'] = '<strong>' . sprintf( __( 'Module cannot be activated until "%s" plugin isn\'t installed.', 'ultimate-member' ), $all_plugins[ $data['plugin_slug'] ]['Name'] ) . '</strong><br />' . $data['description'];
 					}
 				}
+				
+				if ( array_key_exists( 'php_required', $data ) ) {
+
+					if( phpversion() < floatval($data['php_required']) ){
+
+						$data['disabled'] = true;
+						$data['description'] = '<strong>' . sprintf( __( 'Module requires PHP version "%s" or higher |  Current PHP version: "%s".', 'ultimate-member' ), $data['php_required'],phpversion() ) . '</strong><br />' . $data['description'];
+						
+					}
+
+				}
 
 				if ( array_key_exists( 'plugins_required', $data ) ) {
 					$maybe_installed = array_intersect( array_keys( $data['plugins_required'] ), array_keys( $all_plugins ) );
