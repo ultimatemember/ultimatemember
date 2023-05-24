@@ -144,10 +144,10 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			global $wpdb;
 
 			$result = $wpdb->get_var( $wpdb->prepare(
-				"SELECT umeta_id 
-				FROM {$wpdb->prefix}um_metadata 
-				WHERE user_id = %d AND 
-				      um_key = %s 
+				"SELECT umeta_id
+				FROM {$wpdb->prefix}um_metadata
+				WHERE user_id = %d AND
+				      um_key = %s
 				LIMIT 1",
 				$object_id,
 				$meta_key
@@ -517,7 +517,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm_general ON umm_general.user_id = u.ID";
 					$this->general_meta_joined = true;
 				}
-				$this->where_clauses[] = "( umm_general.um_key = 'um_member_directory_data' AND 
+				$this->where_clauses[] = "( umm_general.um_key = 'um_member_directory_data' AND
 				umm_general.um_value LIKE '%s:14:\"account_status\";s:8:\"approved\";%' AND umm_general.um_value LIKE '%s:15:\"hide_in_members\";b:0;%'{$profile_photo_where}{$cover_photo_where} )";
 			} else {
 				if ( ! empty( $cover_photo_where ) || ! empty( $profile_photo_where ) ) {
@@ -697,9 +697,15 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 				$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm_sort ON ( umm_sort.user_id = u.ID AND umm_sort.um_key = '{$sortby}' )";
 
-				$custom_sort_type = apply_filters( 'um_member_directory_custom_sorting_type', 'CHAR', $sortby, $directory_data );
+				$custom_sort_type = ! empty( $directory_data['sortby_custom_type'] ) ? $directory_data['sortby_custom_type'] : 'CHAR';
+				if ( 'NUMERIC' === $custom_sort_type ) {
+					$custom_sort_type = 'DECIMAL';
+				}
+				$custom_sort_type = apply_filters( 'um_member_directory_custom_sorting_type', $custom_sort_type, $sortby, $directory_data );
 
-				$this->sql_order = " ORDER BY CAST( umm_sort.um_value AS {$custom_sort_type} ) {$order} ";
+				$custom_sort_order = ! empty( $directory_data['sortby_custom_order'] ) ? $directory_data['sortby_custom_order'] : 'CHAR';
+
+				$this->sql_order = " ORDER BY CAST( umm_sort.um_value AS {$custom_sort_type} ) {$custom_sort_order} ";
 
 			} elseif ( count( $numeric_sorting_keys ) && in_array( $sortby, $numeric_sorting_keys ) ) {
 
