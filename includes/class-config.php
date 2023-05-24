@@ -17,83 +17,75 @@ if ( ! class_exists( 'um\Config' ) ) {
 	 */
 	class Config {
 
+		/**
+		 * @var array
+		 */
+		public $core_forms;
 
 		/**
 		 * @var array
 		 */
-		var $core_forms;
-
-
-		/**
-		 * @var array
-		 */
-		var $core_directories;
-
+		public $core_directories;
 
 		/**
 		 * @var mixed|void
 		 */
-		var $core_pages;
-
-
-		/**
-		 * @var array
-		 */
-		var $core_directory_meta = array();
-
+		public $core_pages;
 
 		/**
 		 * @var array
 		 */
-		var $core_global_meta_all;
+		public $core_directory_meta = array();
 
+		/**
+		 * @var array
+		 */
+		public $core_global_meta_all;
 
 		/**
 		 * @var mixed|void
 		 */
-		var $core_form_meta_all;
-
+		public $core_form_meta_all;
 
 		/**
 		 * @var array
 		 */
-		var $core_form_meta = array();
-
+		public $core_form_meta = array();
 
 		/**
 		 * @var
 		 */
-		var $perms;
-
+		public $perms;
 
 		/**
 		 * @var
 		 */
-		var $nonadmin_perms;
-
-
-		/**
-		 * @var mixed|void
-		 */
-		var $email_notifications;
-
+		public $nonadmin_perms;
 
 		/**
 		 * @var mixed|void
 		 */
-		var $settings_defaults;
+		public $email_notifications;
 
+		/**
+		 * @var mixed|void
+		 */
+		public $settings_defaults;
 
 		/**
 		 * @var array
 		 */
-		var $permalinks;
+		public $permalinks;
 
+		/**
+		 * @var array|array[]
+		 */
+		public $default_roles_metadata = array();
 
 		/**
 		 * Config constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			$this->core_forms = array(
 				'register',
 				'login',
@@ -457,7 +449,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 					                   'If you did not make this change and believe your {site_name} account has been compromised, please contact us at the following email address: {admin_email}<br /><br />' .
 					                   'Thanks,<br />' .
 					                   '{site_name}',
-					'description'   => __('Whether to send the user an email when he request to reset password (Recommended, please keep on)','ultimate-member'),
+					'description'   => __('Whether to send the user an email when he requests to reset password (Recommended, please keep on)','ultimate-member'),
 					'recipient'   => 'user',
 					'default_active' => true
 				),

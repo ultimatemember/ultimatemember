@@ -123,10 +123,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 							'href' => array(),
 							'title' => array(),
 							'target' => array(),
+							'class' => array(),
+						),
+						'i' => array(
+							'class' => array(),
+						),
+						'span' => array(
+							'class' => array(),
 						),
 						'br' => array(),
 						'em' => array(),
-						'strong' => array(),
+						'strong' => array(
+							'style' => array()
+						),
 					);
 					$data['value'] = wp_kses( $data['value'], $arr_kses );
 				}

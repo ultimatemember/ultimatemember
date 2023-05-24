@@ -1,13 +1,11 @@
 <?php
 namespace um\core;
 
-
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Mail' ) ) {
-
 
 	/**
 	 * Class Mail
@@ -15,28 +13,44 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 	 */
 	class Mail {
 
+		/**
+		 * @var array
+		 */
+		public $email_templates = array();
 
 		/**
 		 * @var array
 		 */
-		var $email_templates = array();
-
+		public $path_by_slug = array();
 
 		/**
 		 * @var array
 		 */
-		var $path_by_slug = array();
+		public $attachments = array();
 
+		/**
+		 * @var string
+		 */
+		public $headers = '';
+
+		/**
+		 * @var string
+		 */
+		public $subject = '';
+
+		/**
+		 * @var string
+		 */
+		public $message = '';
 
 		/**
 		 * Mail constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			//mandrill compatibility
 			add_filter( 'mandrill_nl2br', array( &$this, 'mandrill_nl2br' ) );
 			add_action( 'plugins_loaded', array( &$this, 'init_paths' ), 99 );
 		}
-
 
 		/**
 		 * Mandrill compatibility
@@ -45,7 +59,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 * @param string $message
 		 * @return bool
 		 */
-		function mandrill_nl2br( $nl2br, $message = '' ) {
+		public function mandrill_nl2br( $nl2br, $message = '' ) {
 			// text emails
 			if ( ! UM()->options()->get( 'email_html' ) ) {
 				$nl2br = true;
@@ -54,11 +68,10 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			return $nl2br;
 		}
 
-
 		/**
 		 * Init paths for email notifications
 		 */
-		function init_paths() {
+		public function init_paths() {
 			/**
 			 * UM hook
 			 *
@@ -83,13 +96,12 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			$this->path_by_slug = apply_filters( 'um_email_templates_path_by_slug', $this->path_by_slug );
 		}
 
-
 		/**
 		 * Check blog ID on multisite, return '' if single site
 		 *
 		 * @return string
 		 */
-		function get_blog_id() {
+		public function get_blog_id() {
 			$blog_id = '';
 			if ( is_multisite() ) {
 				$blog_id = '/' . get_current_blog_id();
@@ -98,7 +110,6 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			return $blog_id;
 		}
 
-
 		/**
 		 * Locate a template and return the path for inclusion.
 		 *
@@ -106,25 +117,29 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 * @param string $template_name
 		 * @return string
 		 */
-		function locate_template( $template_name ) {
+		private function locate_template( $template_name ) {
 			// check if there is template at theme folder
 			$blog_id = $this->get_blog_id();
 
 			//get template file from current blog ID folder
-			$template = locate_template( array(
-				trailingslashit( 'ultimate-member/email' . $blog_id ) . $template_name . '.php'
-			) );
+			$template = locate_template(
+				array(
+					trailingslashit( 'ultimate-member/email' . $blog_id ) . $template_name . '.php',
+				)
+			);
 
-			//if there isn't template at theme folder for current blog ID get template file from theme folder
+			// If there isn't template at theme folder for current blog ID get template file from theme folder
 			if ( is_multisite() && ! $template ) {
-				$template = locate_template( array(
-					trailingslashit( 'ultimate-member/email' ) . $template_name . '.php'
-				) );
+				$template = locate_template(
+					array(
+						trailingslashit( 'ultimate-member/email' ) . $template_name . '.php',
+					)
+				);
 			}
 
-			//if there isn't template at theme folder get template file from plugin dir
+			// If there isn't template at theme folder, get template file from plugin dir
 			if ( ! $template ) {
-				$path = ! empty( $this->path_by_slug[ $template_name ] ) ? $this->path_by_slug[ $template_name ] : um_path . 'templates/email';
+				$path     = ! empty( $this->path_by_slug[ $template_name ] ) ? $this->path_by_slug[ $template_name ] : um_path . 'templates/email';
 				$template = trailingslashit( $path ) . $template_name . '.php';
 			}
 
@@ -154,13 +169,12 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			return apply_filters( 'um_locate_email_template', $template, $template_name );
 		}
 
-
 		/**
 		 * @param $slug
 		 * @param $args
 		 * @return bool|string
 		 */
-		function get_email_template( $slug, $args = array() ) {
+		public function get_email_template( $slug, $args = array() ) {
 			$located = $this->locate_template( $slug );
 
 			/**
@@ -349,11 +363,9 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 				}
 
 				echo $plain_email_template;
-
 			}
 
 			$message = ob_get_clean();
-
 
 			/**
 			 * UM hook
@@ -387,7 +399,6 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			return um_convert_tags( $message, $args );
 		}
 
-
 		/**
 		 * Send Email function
 		 *
@@ -395,20 +406,39 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 * @param null $template
 		 * @param array $args
 		 */
-		function send( $email, $template, $args = array() ) {
-
+		public function send( $email, $template, $args = array() ) {
 			if ( ! is_email( $email ) ) {
 				return;
 			}
 
-			if ( UM()->options()->get( $template . '_on' ) != 1 ) {
+			if ( ! empty( UM()->options()->get( $template . '_on' ) ) ) {
+				return;
+			}
+			/**
+			 * Filters for disabling email notifications programmatically.
+			 *
+			 * @since 2.6.1
+			 * @hook um_disable_email_notification_sending
+			 *
+			 * @param {bool}   $disabled Does an email is disabled programmatically. By default it is false.
+			 * @param {string} $email    Email address for sending.
+			 * @param {string} $template Email template key.
+			 * @param {array}  $args     Arguments for sending email.
+			 *
+			 * @return {bool} `true` if email is disabled programmatically.
+			 */
+			$hook_disabled = apply_filters( 'um_disable_email_notification_sending', false, $email, $template, $args );
+			if ( false !== $hook_disabled ) {
 				return;
 			}
 
 			do_action( 'um_before_email_notification_sending', $email, $template, $args );
 
 			$this->attachments = array();
-			$this->headers = 'From: '. stripslashes( UM()->options()->get('mail_from') ) .' <'. UM()->options()->get('mail_from_addr') .'>' . "\r\n";
+			$this->headers     = 'From: ' . stripslashes( UM()->options()->get( 'mail_from' ) ) . ' <' . UM()->options()->get( 'mail_from_addr' ) . '>' . "\r\n";
+
+			add_filter( 'um_template_tags_patterns_hook', array( UM()->mail(), 'add_placeholder' ), 10, 1 );
+			add_filter( 'um_template_tags_replaces_hook', array( UM()->mail(), 'add_replace_placeholder' ), 10, 1 );
 
 			/**
 			 * UM hook
@@ -432,15 +462,10 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			 * }
 			 * ?>
 			 */
-
-			add_filter( 'um_template_tags_patterns_hook', array( UM()->mail(), 'add_placeholder' ), 10, 1 );
-			add_filter( 'um_template_tags_replaces_hook', array( UM()->mail(), 'add_replace_placeholder' ), 10, 1 );
-
 			$subject = apply_filters( 'um_email_send_subject', UM()->options()->get( $template . '_sub' ), $template );
+			$subject = wp_unslash( um_convert_tags( $subject, $args ) );
 
-			$subject = wp_unslash( um_convert_tags( $subject , $args ) );
-
-			$this->subject = html_entity_decode( $subject, ENT_QUOTES, 'UTF-8' ); 
+			$this->subject = html_entity_decode( $subject, ENT_QUOTES, 'UTF-8' );
 
 			$this->message = $this->prepare_template( $template, $args );
 
@@ -456,13 +481,12 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			do_action( 'um_after_email_notification_sending', $email, $template, $args );
 		}
 
-
 		/**
 		 * @param $template_name
 		 *
 		 * @return mixed|void
 		 */
-		function get_template_filename( $template_name ) {
+		public function get_template_filename( $template_name ) {
 			/**
 			 * UM hook
 			 *
@@ -487,7 +511,6 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			return apply_filters( 'um_change_email_template_file', $template_name );
 		}
 
-
 		/**
 		 * Locate a template and return the path for inclusion.
 		 *
@@ -495,15 +518,17 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 * @param string $template_name
 		 * @return string
 		 */
-		function template_in_theme( $template_name ) {
+		public function template_in_theme( $template_name ) {
 			$template_name_file = $this->get_template_filename( $template_name );
 
 			$blog_id = $this->get_blog_id();
 
-			// check if there is template at theme blog ID folder
-			$template = locate_template( array(
-				trailingslashit( 'ultimate-member/email' . $blog_id ) . $template_name_file . '.php'
-			) );
+			// check if there is a template at theme blog ID folder
+			$template = locate_template(
+				array(
+					trailingslashit( 'ultimate-member/email' . $blog_id ) . $template_name_file . '.php',
+				)
+			);
 
 			// Return what we found.
 			if ( get_template_directory() === get_stylesheet_directory() ) {
@@ -513,9 +538,8 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			}
 		}
 
-
 		/**
-		 * Method returns expected path for template
+		 * Method returns an expected path for template
 		 *
 		 * @access public
 		 *
@@ -524,34 +548,45 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 *
 		 * @return string
 		 */
-		function get_template_file( $location, $template_name ) {
-			$template_path = '';
+		public function get_template_file( $location, $template_name ) {
+			$template_path      = '';
 			$template_name_file = $this->get_template_filename( $template_name );
 
-			switch( $location ) {
+			switch ( $location ) {
 				case 'theme':
 					//save email template in blog ID folder if we use multisite
 					$blog_id = $this->get_blog_id();
 
-					$template_path = trailingslashit( get_stylesheet_directory() . '/ultimate-member/email' . $blog_id ). $template_name_file . '.php';
+					$template_path = trailingslashit( get_stylesheet_directory() . '/ultimate-member/email' . $blog_id ) . $template_name_file . '.php';
 					break;
 				case 'plugin':
-					$path = ! empty( $this->path_by_slug[ $template_name ] ) ? $this->path_by_slug[ $template_name ] : um_path . 'templates/email';
+					$path          = ! empty( $this->path_by_slug[ $template_name ] ) ? $this->path_by_slug[ $template_name ] : um_path . 'templates/email';
 					$template_path = trailingslashit( $path ) . $template_name . '.php';
 					break;
 			}
 
-			return $template_path;
+			/**
+			 * Filters an expected path for email template in theme or plugin.
+			 *
+			 * @since 2.6.1
+			 * @hook um_email_get_template_file_path
+			 *
+			 * @param {string} $template_path      Expected template path.
+			 * @param {string} $location           Where to search 'theme||plugin'.
+			 * @param {string} $template_name_file Expected filename.
+			 *
+			 * @return {string} Expected template path.
+			 */
+			return apply_filters( 'um_email_get_template_file_path', $template_path, $location, $template_name_file );
 		}
 
-
 		/**
-		 * Ajax copy template to the theme
+		 * Copy template to the theme
 		 *
 		 * @param string $template
 		 * @return bool
 		 */
-		function copy_email_template( $template ) {
+		public function copy_email_template( $template ) {
 			$in_theme = $this->template_in_theme( $template );
 			if ( $in_theme ) {
 				return false;
@@ -574,7 +609,6 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			}
 		}
 
-
 		/**
 		 * UM Placeholders for site url, admin email, submit registration
 		 *
@@ -582,7 +616,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 *
 		 * @return array
 		 */
-		function add_placeholder( $placeholders ) {
+		public function add_placeholder( $placeholders ) {
 			$placeholders[] = '{user_profile_link}';
 			$placeholders[] = '{site_url}';
 			$placeholders[] = '{admin_email}';
@@ -593,7 +627,6 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			return $placeholders;
 		}
 
-
 		/**
 		 * UM Replace Placeholders for site url, admin email, submit registration
 		 *
@@ -601,7 +634,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 *
 		 * @return array
 		 */
-		function add_replace_placeholder( $replace_placeholders ) {
+		public function add_replace_placeholder( $replace_placeholders ) {
 			$replace_placeholders[] = um_user_profile_url();
 			$replace_placeholders[] = get_bloginfo( 'url' );
 			$replace_placeholders[] = um_admin_email();

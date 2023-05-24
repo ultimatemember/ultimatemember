@@ -34,8 +34,6 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 			// Integration for the "Transposh Translation Filter" plugin
 			add_action( 'template_redirect', array( &$this, 'transposh_user_profile' ), 9990 );
 
-			$this->plugins_loaded();
-
 			add_action( 'plugins_loaded', array( &$this, 'load_integrations' ), 20 );
 		}
 
@@ -120,7 +118,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 			return isset( $this->translations ) && is_object( $this->translations ) && $this->translations->is_active();
 		}
 
-		
+
 		/**
 		 * Check if WPML is active
 		 *
@@ -147,28 +145,13 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 
 			$active_plugins = UM()->dependencies()->get_active_plugins();
 
-			/* Multilingual */
+			// Multilingual.
 			if ( in_array( 'sitepress-multilingual-cms/sitepress.php', $active_plugins ) ) {
 				$this->translations = $this->wpml();
 			} elseif ( in_array( 'polylang/polylang.php', $active_plugins ) ) {
 				$this->translations = $this->polylang();
 			} elseif ( in_array( 'translatepress-multilingual/index.php', $active_plugins ) ) {
 				$this->translations = $this->translatepress();
-			}
-		}
-		
-
-		/**
-		 * Gravity forms role capabilities compatibility
-		 */
-		public function plugins_loaded() {
-			//gravity forms
-			if ( ! function_exists('members_get_capabilities' ) ) {
-
-				function members_get_capabilities() {
-
-				}
-
 			}
 		}
 

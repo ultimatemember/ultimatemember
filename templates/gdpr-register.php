@@ -1,4 +1,18 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+<?php
+/**
+ * Template for the GDPR checkbox in register form
+ *
+ * This template can be overridden by copying it to yourtheme/ultimate-member/gdpr-register.php
+ *
+ * Page: "Register"
+ * Call: function display_option()
+ *
+ * @version 2.6.1
+ *
+ * @var object $um_content_query
+ * @var array  $args
+ */
+if ( ! defined( 'ABSPATH' ) ) exit; ?>
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
 <div class="um-field um-field-type_terms_conditions" data-key="use_terms_conditions_agreement" style="display:block;padding:0;">

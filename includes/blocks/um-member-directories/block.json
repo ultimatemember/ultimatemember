@@ -1,0 +1,15 @@
+{
+  "apiVersion": 2,
+  "name": "um-block/um-member-directories",
+  "title": "Member Directory",
+  "description": "Choose display directory",
+  "icon": "groups",
+  "category": "um-blocks",
+  "attributes": {
+    "member_id": {
+      "type": "integer"
+    }
+  },
+  "editorScript": "file:./build/index.js",
+  "textdomain": "ultimate-member"
+}

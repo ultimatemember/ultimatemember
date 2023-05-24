@@ -1,4 +1,18 @@
-<?php if ( ! defined( 'ABSPATH' ) ) {
+<?php
+/**
+ * Template for the password reset
+ *
+ * This template can be overridden by copying it to yourtheme/ultimate-member/password-reset.php
+ *
+ * Call: function ultimatemember_password()
+ *
+ * @version 2.6.1
+ *
+ * @var string $mode
+ * @var int    $form_id
+ * @var array  $args
+ */
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } ?>
 

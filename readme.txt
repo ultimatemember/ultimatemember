@@ -2,12 +2,12 @@
 Author URI: https://ultimatemember.com/
 Plugin URI: https://ultimatemember.com/
 Contributors: ultimatemember, champsupertramp, nsinelnikov
-Donate link: 
+Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
-Requires at least: 5.0
+Requires at least: 5.5
 Tested up to: 6.2
-Stable tag: 2.6.0
+Stable tag: 2.6.1
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -119,7 +119,7 @@ No, we have built Ultimate Member to be extremely easy to use and does not requi
 
 = Is Ultimate Member mobile responsive? =
 
-Yes. Ultimate Member is designed to adapt nicely to any screen resolution. It includes specific designs for phones, tablets and desktops. 
+Yes. Ultimate Member is designed to adapt nicely to any screen resolution. It includes specific designs for phones, tablets and desktops.
 
 = Is Ultimate Member multi-site compatible? =
 
@@ -131,7 +131,7 @@ Yes. Ultimate Member will work with any properly coded theme. However, some them
 
 = Does the plugin work with caching plugins? =
 
-The plugin works with popular caching plugins by automatically excluding Ultimate Member pages from being cached. This ensures other visitors to a page will not see the private information of another user. However, if you add features of Ultimate Member to other pages you have to exclude those pages from being cached through your cache plugin settings panel. 
+The plugin works with popular caching plugins by automatically excluding Ultimate Member pages from being cached. This ensures other visitors to a page will not see the private information of another user. However, if you add features of Ultimate Member to other pages you have to exclude those pages from being cached through your cache plugin settings panel.
 
 = Does Ultimate Member restrict access to wp-login.php when the plugin is active? =
 
@@ -162,6 +162,32 @@ No, you do not need to use our plugin’s login or registration pages and can us
 
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
+
+= 2.6.1: May 25, 2023 =
+
+* Enhancements:
+
+  - Added: Override templates versioning utility for wp-admin
+  - Added: Style and class attributes to `info_text` field type in settings
+  - Added: Emails to install info
+  - Added: 'um_email_get_template_file_path' hook
+  - Added: Merging data passed with original field data when `edit_field()` function running
+  - Added: loading="lazy" for avatars and cover photos
+  - Tweak: Changed Discord account validation
+  - Tweak: Changes the structure for the Gutenberg blocks' scripts and way of registration
+  - Tweak: Removed `filter_input` function using
+
+* Bugfixes:
+
+  - Fixed: Removed the hidden in UI taxonomies from the Access > Enable the "Content Restriction" settings for taxonomies setting
+  - Fixed: Dynamically declared variables inside the classes for PHP8 installations
+  - Fixed: Added wpnonce attribute for duplicate UM Form link
+  - Fixed: Sanitize restriction messages when Gutenberg block is restricted
+  - Fixed: Login form error class vulnerability
+
+* All templates required update. Please add the version comments to your custom templates in themes
+
+* Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade
 
 = 2.6.0: March 29, 2023 =
 
@@ -1494,7 +1520,7 @@ No, you do not need to use our plugin’s login or registration pages and can us
   - Add class for member tagline in directory grid `um-member-tagline-<field key>`
   - Add recaptcha support and submit button id
   - Update extensions page layout
- 
+
 * Bugfixes:
   - Fix Conditional Logic fields
   - Fix required field with specific roles in privacy
@@ -1510,7 +1536,7 @@ No, you do not need to use our plugin’s login or registration pages and can us
 
 * Enhancements:
   - Update readme.txt
-  
+
 
 = 1.3.85: June 19, 2017 =
 
@@ -1540,12 +1566,12 @@ No, you do not need to use our plugin’s login or registration pages and can us
   * Fix png image upload with transparency
   * Fix extra slashes in form edit view when invalid input fields occur
   * Remove notices
-  
-  
+
+
 = 1.3.84: April 18, 2017 =
 
 * Enhancements:
-  * Adds new action hooks before and after WP_User_Query. 
+  * Adds new action hooks before and after WP_User_Query.
     * `um_user_before_query`
     * `um_user_after_query`
   * Adds a dismiss link in locale / language translation notices
@@ -1561,7 +1587,7 @@ No, you do not need to use our plugin’s login or registration pages and can us
 
 * Bugfixes
   * Fix image url cache filter
-  * Fix PHP 7.1+ compatibility issues 
+  * Fix PHP 7.1+ compatibility issues
   * Fix UTF8 encoding in form fields
   * Fix hide member directory option.
   * Fix conditional logic fields.
@@ -1576,7 +1602,7 @@ No, you do not need to use our plugin’s login or registration pages and can us
 
 * Enhancements:
    * Adds user avatar's alternate text.  The default text is set to `display_name`
-   * Adds new filter hook to modif the user avatar's alternate text. 
+   * Adds new filter hook to modif the user avatar's alternate text.
        * `um_avatar_image_alternate_text`
    * Set gravatar for newly registered users
    * Adds Tag archive page access settings
@@ -1674,11 +1700,11 @@ No, you do not need to use our plugin’s login or registration pages and can us
 
 * Bugfixes:
   * Fix 'Invalid user ID' on profile update
- 
+
 = 1.3.74: November 29, 2016 =
 
 * Enhancements:
-  * Improves clear users cache. 
+  * Improves clear users cache.
   * Removes user id from redirect URL on registration process for pending review and email activation statuses.
 
 * Bugfixes:
@@ -1723,10 +1749,10 @@ No, you do not need to use our plugin’s login or registration pages and can us
 
 * Enhancements:
   *  Improves the bulk filters, actions and redirection in `User Screens`
-  *  Adds new access options to disallow access on homepage and category pages. 
+  *  Adds new access options to disallow access on homepage and category pages.
   *  Adds Textarea to show in profile tagline on Member Directory
   * Adds a filter hook `um_allow_frontend_image_uploads` to allow profile and cover photo uploads on front-end pages.
-  * Adds new filter hooks to modify image field data on upload: 
+  * Adds new filter hooks to modify image field data on upload:
       * `um_image_handle_global__option`
       * `um_image_handle_{$field}__option`
   * Adds a new filter hook to modify the redirection of non logged in users who visit the parent user page.
@@ -1745,7 +1771,7 @@ No, you do not need to use our plugin’s login or registration pages and can us
   * Fixes a typo in Password Reset Email option's description
   * Fixes a bug where conditional fields 'equals to' validation on registration process
   * Fixes a bug to disable the query with hiding account on member directory
-  * Fixes a bug to retrieve specific number of members 
+  * Fixes a bug to retrieve specific number of members
   * Fixes a bug to retrieve all members with `get_members` new parameter `number`
   * Fixes a typo in Welcome Email template.
   * Fixes a bug where login form redirection is set to `wp-admin/admin-ajax.php` instead of the current page when loaded via ajax.
@@ -1754,20 +1780,20 @@ No, you do not need to use our plugin’s login or registration pages and can us
   * Fixes a bug where non-logged in users are not able to access the profile page when `Global Site Access` is set to `Site accessible to Logged In Users`.
   * Fixes a bug to modify the login redirection url especially when DOING_AJAX is defined.
   * Fixes a bug to retrieve correct community roles per site in a Multisite Network setup.
-  
+
 = 1.3.71: September 12, 2016 =
 
-* Enhancements: 
+* Enhancements:
   * Adds a new filter hook to modify the `cover photo` uri.
       * `um_user_cover_photo_uri__filter`
 * Bugfixes:
   *  Fixes a bug to allow users change their password in account form
-  *  Fixes a bug to allow role validation and assigning of roles to users on registration process 
+  *  Fixes a bug to allow role validation and assigning of roles to users on registration process
   *  Fixes a bug to avoid blank admin footer text all around WordPress
 
 = 1.3.70: September 09, 2016 =
 
-* Enhancements: 
+* Enhancements:
     * Adds a new filter hook to modify the profile `cover photo` uri.
         * `um_user_cover_photo_uri__filter`
 * Bugfixes:
@@ -1783,10 +1809,10 @@ No, you do not need to use our plugin’s login or registration pages and can us
          * This improves the performance when loading profiles in directories. It generates profile slug on Profile Update ( front and back-end ), Registration Process and viewing the Users in the back-end.
     * Adds new filter hook `um_activate_url` to modify the account activation url.
     * Adds new filter hooks to modify first and last name cases
-        * `um_user_first_name_case` 
+        * `um_user_first_name_case`
         * `um_user_last_name_case`
     * Adds new filter hooks to modify nonces of image and file uploads
-        * `um_file_upload_nonce` 
+        * `um_file_upload_nonce`
         * `um_image_upload_nonce`
     * Improves search member filters and keyword sensitivity
     * Improves generation of profile slugs
@@ -1913,13 +1939,13 @@ No, you do not need to use our plugin’s login or registration pages and can us
 * Fixed: select fields with accented characters
 * Fixed: select fields with accented text values
 * Fixed: select fields in overlay
-* Fixed: admin front-end access restriction 
+* Fixed: admin front-end access restriction
 * Fixed: pages query
 
 = 1.3.54: June 02, 2016 =
 * Fixed: remove quick edit from Built-in roles row actions
 * Fixed: remove notices
-* Fixed: dropdown/select fields 
+* Fixed: dropdown/select fields
 * Fixed: upload file extension's case sensitive issue
 * Fixed: reset and change password
 
@@ -1954,7 +1980,7 @@ No, you do not need to use our plugin’s login or registration pages and can us
 * Added: option to force display name to be capitlized
 * Fixed: remove notices
 * Fixed: redirect url on login
-* Fixed: optimize query and object caching 
+* Fixed: optimize query and object caching
 * Fixed: profile photo as required field
 * Fixed: admin access in front-end login
 * Fixed: typos in tooltips
@@ -2442,7 +2468,7 @@ No, you do not need to use our plugin’s login or registration pages and can us
 
 * New: user profiles are cached to speed up load time
 * New: emoji support added to bio / user descriptions
-* Fixed: issues with bio field HTML 
+* Fixed: issues with bio field HTML
 * Fixed: WP-admin PHP warning
 * Fixed: bug with localization of en_US.po file
 

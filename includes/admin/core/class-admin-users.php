@@ -14,14 +14,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 	 */
 	class Admin_Users {
 
+		/**
+		 * @var string
+		 */
+		public $custom_role = 'um_role';
 
 		/**
 		 * Admin_Users constructor.
 		 */
-		function __construct() {
-
-			$this->custom_role = 'um_role';
-
+		public function __construct() {
 			add_action( 'restrict_manage_users', array( &$this, 'restrict_manage_users' ) );
 
 			add_filter( 'user_row_actions', array( &$this, 'user_row_actions' ), 10, 2 );
@@ -273,7 +274,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 			$submitted = get_user_meta( $user_id, 'submitted', true );
 			if ( ! empty( $submitted ) ) {
-				$actions['view_info'] = '<a href="javascript:void(0);" data-modal="UM_preview_registration" data-modal-size="smaller" 
+				$actions['view_info'] = '<a href="javascript:void(0);" data-modal="UM_preview_registration" data-modal-size="smaller"
 				data-dynamic-content="um_admin_review_registration" data-arg1="' . esc_attr( $user_id ) . '" data-arg2="edit_registration">' . __( 'Info', 'ultimate-member' ) . '</a>';
 			}
 
