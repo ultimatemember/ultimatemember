@@ -1594,14 +1594,24 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					$other_label = '';
 					$other_type  = '';
 					$other_order = '';
+
 					if ( is_array( $value ) ) {
 						$keys      = array_keys( $value );
 						$other_key = $keys[0];
 
-						$labels      = array_values( $value );
-						$other_label = $labels[0];
-						$other_type  = $value['type'];
-						$other_order = $value['order'];
+						if ( ! empty( $value['label'] ) ) {
+							$other_label = $value['label'];
+						} else {
+							$labels      = array_values( $value );
+							$other_label = $labels[0];
+						}
+
+						if ( ! empty( $value['type'] ) ) {
+							$other_type = $value['type'];
+						}
+						if ( ! empty( $value['order'] ) ) {
+							$other_order = $value['order'];
+						}
 					} else {
 						if ( ! in_array( $value, array_keys( $field_data['options'] ) ) ) {
 							continue;
@@ -1629,21 +1639,21 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 						<select ' . $id_attr . ' ' . $name_attr . ' ' . $class_attr . ' ' . $data_attr . '>' . $options . '</select></span>
 						<span class="um-field-control"><a href="javascript:void(0);" class="um-select-delete">' . __( 'Remove', 'ultimate-member' ) . '</a></span>
 						<span class="um-field-wrapper um-custom-order-fields"><label>' . __( 'Meta key', 'ultimate-member' ) . ':&nbsp;<input type="text" name="um_metadata[_um_sorting_fields][other_data][' . $k . '][meta_key]" value="' . esc_attr( $other_key ) . '" /></label></span>
-						<span class="um-field-wrapper um-custom-order-fields"><label>' . __( 'Data type', 'ultimate-member' ) . ':&nbsp;</label><select name="um_metadata[_um_sorting_fields][other_data][' . $k . '][data_type]" />
-						<option value="CHAR" ' . selected( $other_type, 'CHAR' ) . '>' . __( 'CHAR', 'ultimate-member' ) . '</option>
-						<option value="NUMERIC" ' . selected( $other_type, 'NUMERIC' ) . '>' . __( 'NUMERIC', 'ultimate-member' ) . '</option>
-						<option value="BINARY" ' . selected( $other_type, 'BINARY' ) . '>' . __( 'BINARY', 'ultimate-member' ) . '</option>
-						<option value="DATE" ' . selected( $other_type, 'DATE' ) . '>' . __( 'DATE', 'ultimate-member' ) . '</option>
-						<option value="DATETIME" ' . selected( $other_type, 'DATETIME' ) . '>' . __( 'DATETIME', 'ultimate-member' ) . '</option>
-						<option value="DECIMAL" ' . selected( $other_type, 'DECIMAL' ) . '>' . __( 'DECIMAL', 'ultimate-member' ) . '</option>
-						<option value="SIGNED" ' . selected( $other_type, 'SIGNED' ) . '>' . __( 'SIGNED', 'ultimate-member' ) . '</option>
-						<option value="TIME" ' . selected( $other_type, 'TIME' ) . '>' . __( 'TIME', 'ultimate-member' ) . '</option>
-						<option value="UNSIGNED" ' . selected( $other_type, 'UNSIGNED' ) . '>' . __( 'UNSIGNED', 'ultimate-member' ) . '</option>
-						</select></span>
-						<span class="um-field-wrapper um-custom-order-fields"><label>' . __( 'Order', 'ultimate-member' ) . ':&nbsp;</label><select name="um_metadata[_um_sorting_fields][other_data][' . $k . '][order]" />
-						<option value="ASC" ' . selected( $other_order, 'ASC' ) . '>' . __( 'ASC', 'ultimate-member' ) . '</option>
-						<option value="DESC" ' . selected( $other_order, 'DESC' ) . '>' . __( 'DESC', 'ultimate-member' ) . '</option>
-						</select></span>
+						<span class="um-field-wrapper um-custom-order-fields"><label>' . __( 'Data type', 'ultimate-member' ) . ':&nbsp;<select name="um_metadata[_um_sorting_fields][other_data][' . $k . '][data_type]" />
+						<option value="CHAR" ' . selected( $other_type, 'CHAR', false ) . '>' . __( 'CHAR', 'ultimate-member' ) . '</option>
+						<option value="NUMERIC" ' . selected( $other_type, 'NUMERIC', false ) . '>' . __( 'NUMERIC', 'ultimate-member' ) . '</option>
+						<option value="BINARY" ' . selected( $other_type, 'BINARY', false ) . '>' . __( 'BINARY', 'ultimate-member' ) . '</option>
+						<option value="DATE" ' . selected( $other_type, 'DATE', false ) . '>' . __( 'DATE', 'ultimate-member' ) . '</option>
+						<option value="DATETIME" ' . selected( $other_type, 'DATETIME', false ) . '>' . __( 'DATETIME', 'ultimate-member' ) . '</option>
+						<option value="DECIMAL" ' . selected( $other_type, 'DECIMAL', false ) . '>' . __( 'DECIMAL', 'ultimate-member' ) . '</option>
+						<option value="SIGNED" ' . selected( $other_type, 'SIGNED', false ) . '>' . __( 'SIGNED', 'ultimate-member' ) . '</option>
+						<option value="TIME" ' . selected( $other_type, 'TIME', false ) . '>' . __( 'TIME', 'ultimate-member' ) . '</option>
+						<option value="UNSIGNED" ' . selected( $other_type, 'UNSIGNED', false ) . '>' . __( 'UNSIGNED', 'ultimate-member' ) . '</option>
+						</select></label></span>
+						<span class="um-field-wrapper um-custom-order-fields"><label>' . __( 'Order', 'ultimate-member' ) . ':&nbsp;<select name="um_metadata[_um_sorting_fields][other_data][' . $k . '][order]" />
+						<option value="ASC" ' . selected( $other_order, 'ASC', false ) . '>' . __( 'ASC', 'ultimate-member' ) . '</option>
+						<option value="DESC" ' . selected( $other_order, 'DESC', false ) . '>' . __( 'DESC', 'ultimate-member' ) . '</option>
+						</select></label></span>
 						<span class="um-field-wrapper um-custom-order-fields"><label>' . __( 'Label', 'ultimate-member' ) . ':&nbsp;<input type="text" name="um_metadata[_um_sorting_fields][other_data][' . $k . '][label]" value="' . esc_attr( $other_label ) . '" /></label></span>
 						</li>';
 				}
