@@ -694,16 +694,27 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			// handle sorting options
 			// sort members by
 			if ( $sortby == $directory_data['sortby_custom'] || in_array( $sortby, $custom_sort ) ) {
+				$custom_sort_order = ! empty( $directory_data['sortby_custom_order'] ) ? $directory_data['sortby_custom_order'] : 'CHAR';
 
 				$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm_sort ON ( umm_sort.user_id = u.ID AND umm_sort.um_key = '{$sortby}' )";
 
 				$custom_sort_type = ! empty( $directory_data['sortby_custom_type'] ) ? $directory_data['sortby_custom_type'] : 'CHAR';
+				if ( ! empty( $directory_data['sorting_fields'] ) ) {
+					// phpcs:disable WordPress.Security.NonceVerification -- already verified here
+					$sorting        = sanitize_text_field( $_POST['sorting'] );
+					$sorting_fields = unserialize( $directory_data['sorting_fields'] );
+					// phpcs:enable WordPress.Security.NonceVerification
+					foreach ( $sorting_fields as $field ) {
+						if ( isset( $field[ $sorting ] ) ) {
+							$custom_sort_type  = $field['type'];
+							$custom_sort_order = $field['order'];
+						}
+					}
+				}
 				if ( 'NUMERIC' === $custom_sort_type ) {
 					$custom_sort_type = 'DECIMAL';
 				}
 				$custom_sort_type = apply_filters( 'um_member_directory_custom_sorting_type', $custom_sort_type, $sortby, $directory_data );
-
-				$custom_sort_order = ! empty( $directory_data['sortby_custom_order'] ) ? $directory_data['sortby_custom_order'] : 'CHAR';
 
 				$this->sql_order = " ORDER BY CAST( umm_sort.um_value AS {$custom_sort_type} ) {$custom_sort_order} ";
 
