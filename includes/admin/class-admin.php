@@ -873,6 +873,12 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 							if ( isset( $item['label'] ) ) {
 								$item['label'] = sanitize_text_field( $item['label'] );
 							}
+							if ( isset( $item['order'] ) ) {
+								$item['order'] = sanitize_text_field( $item['order'] );
+							}
+							if ( isset( $item['data_type'] ) ) {
+								$item['data_type'] = sanitize_text_field( $item['data_type'] );
+							}
 
 							return $item;
 						} else {

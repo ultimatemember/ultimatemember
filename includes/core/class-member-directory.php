@@ -210,7 +210,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				if ( ! empty( $value ) && in_array( $key, array( '_um_view_types', '_um_roles', '_um_roles_can_search', '_um_roles_can_filter' ), true ) ) {
 					$value = array_keys( $value );
 				} elseif ( '_um_search_filters' === $key ) {
-
 					$temp_value = array();
 
 					if ( ! empty( $value ) ) {
@@ -264,8 +263,17 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 									if ( ! empty( $other_data[ $k ]['label'] ) ) {
 										$metalabel = wp_strip_all_tags( $other_data[ $k ]['label'] );
 									}
+									if ( ! empty( $other_data[ $k ]['data_type'] ) ) {
+										$data_type = sanitize_text_field( $other_data[ $k ]['data_type'] );
+									}
+									if ( ! empty( $other_data[ $k ]['order'] ) ) {
+										$order = sanitize_text_field( $other_data[ $k ]['order'] );
+									}
 									$row = array(
-										$metakey => ! empty( $metalabel ) ? $metalabel : $metakey,
+										$metakey => $metakey,
+										'label'  => ! empty( $metalabel ) ? $metalabel : $metakey,
+										'type'   => ! empty( $data_type ) ? $data_type : '',
+										'order'  => ! empty( $order ) ? $order : '',
 									);
 								}
 							}
@@ -275,6 +283,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$value = sanitize_text_field( $value );
 				} elseif ( '_um_sortby_custom_label' === $key ) {
 					$value = wp_strip_all_tags( $value );
+				} elseif ( '_um_sortby_custom_type' === $key ) {
+					$value = sanitize_text_field( $value );
+				} elseif ( '_um_sortby_custom_order' === $key ) {
+					$value = sanitize_text_field( $value );
 				}
 			}
 
