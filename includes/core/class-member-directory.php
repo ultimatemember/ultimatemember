@@ -1434,26 +1434,40 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				unset( $this->query_args['order'] );
 
 			} elseif ( ( ! empty( $directory_data['sortby_custom'] ) && $sortby == $directory_data['sortby_custom'] ) || in_array( $sortby, $custom_sort ) ) {
+				$custom_sort_order = ! empty( $directory_data['sortby_custom_order'] ) ? $directory_data['sortby_custom_order'] : 'CHAR';
 
 				$custom_sort_type = ! empty( $directory_data['sortby_custom_type'] ) ? $directory_data['sortby_custom_type'] : 'CHAR';
+				if ( ! empty( $directory_data['sorting_fields'] ) ) {
+					// phpcs:disable WordPress.Security.NonceVerification -- already verified here
+					$sorting        = sanitize_text_field( $_POST['sorting'] );
+					$sorting_fields = unserialize( $directory_data['sorting_fields'] );
+					// phpcs:enable WordPress.Security.NonceVerification
+					foreach ( $sorting_fields as $field ) {
+						if ( isset( $field[ $sorting ] ) ) {
+							$custom_sort_type  = $field['type'];
+							$custom_sort_order = $field['order'];
+						}
+					}
+				}
 				$custom_sort_type = apply_filters( 'um_member_directory_custom_sorting_type', $custom_sort_type, $sortby, $directory_data );
 
 				$this->query_args['meta_query'][] = array(
-					'relation' => 'OR',
+					'relation'      => 'OR',
 					$sortby . '_cs' => array(
-						'key'       => $sortby,
-						'compare'   => 'EXISTS',
-						'type'      => $custom_sort_type,
+						'key'     => $sortby,
+						'compare' => 'EXISTS',
+						'type'    => $custom_sort_type,
 					),
 					array(
-						'key'       => $sortby,
-						'compare'   => 'NOT EXISTS',
-					)
+						'key'     => $sortby,
+						'compare' => 'NOT EXISTS',
+					),
 				);
 
-				$custom_sort_order = ! empty( $directory_data['sortby_custom_order'] ) ? $directory_data['sortby_custom_order'] : 'CHAR';
-
-				$this->query_args['orderby'] = array( $sortby . '_cs' => $custom_sort_order, 'user_login' => 'ASC' );
+				$this->query_args['orderby'] = array(
+					$sortby . '_cs' => $custom_sort_order,
+					'user_login'    => 'ASC',
+				);
 
 			} else {
 
@@ -2629,7 +2643,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			add_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10, 6 );
 
 			add_filter( 'pre_user_query', array( &$this, 'pagination_changes' ), 10, 1 );
-
+//echo '<pre>';
+//print_r($this->query_args);
+//echo '</pre>';
+//exit();
 			$user_query = new \WP_User_Query( $this->query_args );
 
 			remove_filter( 'pre_user_query', array( &$this, 'pagination_changes' ), 10 );
