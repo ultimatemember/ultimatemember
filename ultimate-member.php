@@ -11,7 +11,7 @@ Text Domain: ultimate-member
 
 defined( 'ABSPATH' ) || exit;
 
-require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+require_once ABSPATH . 'wp-admin/includes/plugin.php';
 $plugin_data = get_plugin_data( __FILE__ );
 
 define( 'um_url', plugin_dir_url( __FILE__ ) );
