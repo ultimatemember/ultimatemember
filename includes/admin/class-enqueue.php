@@ -205,7 +205,7 @@ if ( ! class_exists( 'um\admin\Enqueue' ) ) {
 			$deps = array( 'wp-color-picker', 'um-jquery-ui', 'select2' );
 			wp_register_style( 'um_admin_forms', $this->urls['css'] . 'admin-forms' . $this->suffix . '.css', $deps, UM_VERSION );
 
-			wp_register_script( 'um_admin_field_groups', $this->urls['js'] . 'admin/field-groups' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'wp-i18n', 'jquery-ui-sortable', 'jquery-ui-draggable', 'um_admin_forms' ), UM_VERSION, true );
+			wp_register_script( 'um_admin_field_groups', $this->urls['js'] . 'admin/field-groups' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'wp-i18n', 'wp-url', 'jquery-ui-sortable', 'jquery-ui-draggable', 'um_admin_forms' ), UM_VERSION, true );
 			$field_groups_data = array(
 				'field_tabs'        => UM()->config()->get( 'field_settings_tabs' ),
 				'field_types'       => $this->get_all_field_types(),

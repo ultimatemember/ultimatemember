@@ -63,7 +63,7 @@ function um_is_predefined_page( $slug, $post = null ) {
 		return false;
 	}
 
-	return $post->ID === um_get_predefined_page_id( $slug );
+	return um_get_predefined_page_id( $slug ) === $post->ID;
 }
 
 /**

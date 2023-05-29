@@ -1145,19 +1145,33 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 							$valid_options = array_map( 'strval', array_keys( $field_settings[ $field_id ]['options'] ) );
 						}
 
-						if ( ! in_array( (string) $field_data[ $field_id ], $valid_options, true ) ) {
-							$set_tab = '';
-							foreach ( $field_settings_tabs as $tab_key => $tab_settings ) {
-								if ( in_array( $field_id, array_keys( $tab_settings ), true ) ) {
-									$set_tab = $tab_key;
-									break;
-								}
+						$set_tab = '';
+						foreach ( $field_settings_tabs as $tab_key => $tab_settings ) {
+							if ( in_array( $field_id, array_keys( $tab_settings ), true ) ) {
+								$set_tab = $tab_key;
+								break;
 							}
-							$this->field_groups_error = array(
-								'field'   => 'field_groupfields' . $k . $set_tab . '_' . $field_id,
-								// translators: %s - Field label
-								'message' => sprintf( __( '"%s" field must be in options range.', 'ultimate-member' ), $field_settings[ $field_id ]['label'] ),
-							);
+						}
+
+						if ( is_array( $field_data[ $field_id ] ) ) {
+							$mapped_value      = array_map( 'strval', $field_data[ $field_id ] );
+							$options_intersect = array_intersect( $mapped_value, $valid_options );
+
+							if ( empty( $options_intersect ) ) {
+								$this->field_groups_error = array(
+									'field'   => 'field_groupfields' . $k . $set_tab . '_' . $field_id,
+									// translators: %s - Field label
+									'message' => sprintf( __( '"%s" field must be in options range.', 'ultimate-member' ), $field_settings[ $field_id ]['label'] ),
+								);
+							}
+						} else {
+							if ( ! in_array( (string) $field_data[ $field_id ], $valid_options, true ) ) {
+								$this->field_groups_error = array(
+									'field'   => 'field_groupfields' . $k . $set_tab . '_' . $field_id,
+									// translators: %s - Field label
+									'message' => sprintf( __( '"%s" field must be in options range.', 'ultimate-member' ), $field_settings[ $field_id ]['label'] ),
+								);
+							}
 						}
 					}
 

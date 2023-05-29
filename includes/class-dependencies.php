@@ -195,12 +195,12 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 		 */
 		public function compare_versions( $um_required_ver, $ext_ver, $ext_key, $ext_title ) {
 
-			if ( version_compare( ultimatemember_version, $um_required_ver, '<' )
+			if ( version_compare( UM_VERSION, $um_required_ver, '<' )
 			     || empty( $this->ext_required_version[$ext_key] )
 			     || version_compare( $this->ext_required_version[$ext_key], $ext_ver, '>' ) ) {
 
 				$message = '';
-				if ( version_compare( ultimatemember_version, $um_required_ver, '<' ) ) {
+				if ( version_compare( UM_VERSION, $um_required_ver, '<' ) ) {
 					$message = sprintf( __( 'This version of <strong>"%s"</strong> requires the core <strong>%s</strong> plugin to be <strong>%s</strong> or higher.', 'ultimate-member' ), $ext_title, UM_PLUGIN_NAME, $um_required_ver ) .
 					           '<br />' .
 					           sprintf( __( 'Please update <strong>%s</strong> to the latest version.', 'ultimate-member' ), UM_PLUGIN_NAME );

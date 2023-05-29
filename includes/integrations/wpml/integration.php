@@ -1,4 +1,7 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 
 function um_pre_template_locations_wpml( $template_locations, $template_name, $module, $template_path ) {

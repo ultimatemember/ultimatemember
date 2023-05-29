@@ -6,7 +6,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 /**
  * Class Settings
  *
@@ -14,9 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Settings {
 
-
 	private $gravatar_changed = false;
-
 
 	/**
 	 * Initialize the class and set its properties.
@@ -25,13 +22,15 @@ class Settings {
 	 */
 	public function __construct() {
 		add_filter( 'um_settings_map', array( &$this, 'add_settings_sanitize' ), 10, 1 );
+
+		add_filter( 'um_settings_structure', array( $this, 'add_account_settings' ) );
+
 		add_filter( 'um_settings_structure', array( $this, 'admin_settings' ), 10, 1 );
 		add_filter( 'um_pages_settings_description', array( $this, 'admin_pages_settings' ), 10, 3 );
 
 		add_action( 'um_settings_before_save', array( $this, 'check_use_gravatars_setting_change' ) );
 		add_action( 'um_settings_save', array( $this, 'maybe_update_member_directory_data' ) );
 	}
-
 
 	/**
 	 * @param string $page_setting_description
@@ -47,7 +46,6 @@ class Settings {
 		return $page_setting_description;
 	}
 
-
 	/**
 	 * @param array $settings_map
 	 *
@@ -61,7 +59,7 @@ class Settings {
 					'sanitize' => 'bool',
 				),
 				'account_hide_in_directory_default' => array(
-					'sanitize' => 'text',
+					'sanitize' => 'bool',
 				),
 			)
 		);
@@ -69,6 +67,44 @@ class Settings {
 		return $settings_map;
 	}
 
+	/**
+	 * Add settings related to the General > Account subtab.
+	 *
+	 * @param array $settings
+	 *
+	 * @return array
+	 */
+	public function add_account_settings( $settings ) {
+		$key_after = false;
+		foreach ( $settings['']['sections']['account']['fields'] as $k => $field_data ) {
+			if ( array_key_exists( 'id', $field_data ) && 'account_tab_privacy' === $field_data['id'] ) {
+				$key_after = $k;
+			}
+		}
+
+		if ( false !== $key_after ) {
+			$md_account_settings = array(
+				array(
+					'id'          => 'account_hide_in_directory',
+					'type'        => 'checkbox',
+					'label'       => __( 'Allow users to hide their profiles from directory', 'ultimate-member' ),
+					'description' => __( 'Whether to allow users changing their profile visibility from member directory in account page. Only visible if the "Privacy" account tab is visible.', 'ultimate-member' ),
+					'conditional' => array( 'account_tab_privacy', '=', '1' ),
+				),
+				array(
+					'id'          => 'account_hide_in_directory_default',
+					'type'        => 'checkbox',
+					'label'       => __( 'Hide profiles from directory by default', 'ultimate-member' ),
+					'description' => __( 'Set default value for the "Hide my profile from directory" option', 'ultimate-member' ),
+					'conditional' => array( 'account_hide_in_directory', '=', '1' ),
+				),
+			);
+
+			$settings['']['sections']['account']['fields'] = UM()->array_insert_after( $settings['']['sections']['account']['fields'], 9, $md_account_settings );
+		}
+
+		return $settings;
+	}
 
 	/**
 	 * @param array $settings
@@ -79,12 +115,21 @@ class Settings {
 		$latest_update   = get_option( 'um_member_directory_update_meta', false );
 		$latest_truncate = get_option( 'um_member_directory_truncated', false );
 
+		$redirect_link    = add_query_arg(
+			array(
+				'page'    => 'ultimatemember',
+				'tab'     => 'modules',
+				'section' => 'member-directory',
+				'update'  => 'settings_updated',
+			),
+			admin_url( 'admin.php' )
+		);
 		$same_page_update = array(
 			'id'                    => 'member_directory_own_table',
 			'type'                  => 'same_page_update',
 			'label'                 => __( 'Enable custom table for usermeta', 'ultimate-member' ),
 			'description'           => __( 'Check this box if you would like to enable the use of a custom table for user metadata. Improved performance for member directory searches.', 'ultimate-member' ),
-			'successfully_redirect' => add_query_arg( array( 'page' => 'ultimatemember', 'tab' => 'modules', 'section' => 'member-directory', 'update' => 'settings_updated' ), admin_url( 'admin.php' ) ),
+			'successfully_redirect' => $redirect_link,
 		);
 
 		if ( empty( $latest_update ) || ( ! empty( $latest_truncate ) && $latest_truncate > $latest_update ) ) {
@@ -97,31 +142,12 @@ class Settings {
 		$settings['modules']['sections']['member-directory'] = array(
 			'title'  => __( 'Member Directory', 'ultimate-member' ),
 			'fields' => array(
-				array(
-					'id'          => 'account_hide_in_directory',
-					'type'        => 'checkbox',
-					'label'       => __( 'Allow users to hide their profiles from directory', 'ultimate-member' ),
-					'description' => __( 'Whether to allow users changing their profile visibility from member directory in account page. Only visible if the "Privacy" account tab is visible.', 'ultimate-member' ),
-				),
-				array(
-					'id'          => 'account_hide_in_directory_default',
-					'type'        => 'select',
-					'label'       => __( 'Hide profiles from directory by default', 'ultimate-member' ),
-					'description' => __( 'Set default value for the "Hide my profile from directory" option', 'ultimate-member' ),
-					'options'     => array(
-						'No'  => __( 'No', 'ultimate-member' ),
-						'Yes' => __( 'Yes', 'ultimate-member' ),
-					),
-					'size'        => 'small',
-					'conditional' => array( 'account_hide_in_directory', '=', '1' ),
-				),
 				$same_page_update,
 			),
 		);
 
 		return $settings;
 	}
-
 
 	/**
 	 *

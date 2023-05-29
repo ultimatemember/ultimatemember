@@ -239,8 +239,22 @@ if ( ! class_exists( 'um\frontend\Enqueue' ) ) {
 
 			wp_register_script('um_profile', $this->urls['js'] . 'um-profile' . $this->suffix . '.js', array( 'jquery', 'wp-i18n', 'um_scripts' ), UM_VERSION, true );
 
-			$account_deps = apply_filters( 'um_account_scripts_dependencies', array( 'jquery', 'wp-hooks', 'um_scripts' ) );
-			wp_register_script('um_account', $this->urls['js'] . 'um-account' . $this->suffix . '.js', $account_deps, UM_VERSION, true );
+			$account = array(
+				'js'  => array(
+					'path' => $this->urls['js'] . 'um-account.js',
+					'deps' => array( 'jquery', 'wp-hooks', 'um_scripts' ),
+					'vars' => array(
+						'honeypot' => UM()->honeypot,
+					),
+				),
+				'css' => array(
+					'path' => $this->urls['css'] . 'account/compiler.css',
+					'deps' => array( 'um_responsive', 'um-fontawesome' ),
+				),
+			);
+			$account = apply_filters( 'um_account_assets', $account );
+			wp_register_script( 'um_account', $account['js']['path'], $account['js']['deps'], UM_VERSION, true );
+			wp_register_style( 'um-account', $account['css']['path'], $account['css']['deps'], UM_VERSION );
 
 			wp_enqueue_script( 'um_profile' );
 			wp_enqueue_script( 'um_account' );
@@ -309,7 +323,7 @@ if ( ! class_exists( 'um\frontend\Enqueue' ) ) {
 			$uploads        = wp_upload_dir();
 			$upload_dir     = $uploads['basedir'] . DIRECTORY_SEPARATOR . 'ultimatemember' . DIRECTORY_SEPARATOR;
 			if ( file_exists( $upload_dir . 'um_old_settings.css' ) ) {
-				wp_register_style( 'um_old_css', um_url . '../../uploads/ultimatemember/um_old_settings.css' );
+				wp_register_style( 'um_old_css', UM_URL . '../../uploads/ultimatemember/um_old_settings.css' );
 				wp_enqueue_style( 'um_old_css' );
 			}
 		}

@@ -1,0 +1,476 @@
+*[data-um_helptip] {
+  cursor: pointer;
+}
+
+.um-helptip {
+  z-index: 200;
+  display: none;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 5px 5px 5px 5px;
+  -moz-border-radius: 5px 5px 5px 5px;
+  -webkit-border-radius: 5px 5px 5px 5px;
+  box-shadow: 0 7px 14px 0 rgba(50, 50, 93, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 0.07);
+  -webkit-box-shadow: 0 7px 14px 0 rgba(50, 50, 93, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 0.07);
+  word-wrap: break-word;
+}
+
+.um {
+  width: 100%;
+}
+.um .um-frontend-form-notice {
+  display: inline-block;
+  width: 100%;
+  margin: 0 0 15px 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.um .um-frontend-form-error {
+  display: inline-block;
+  width: 100%;
+  margin: 0 0 15px 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.um .um-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.um .um-form .um-form-section-title {
+  width: 100%;
+  margin: 15px 0;
+  padding: 0;
+}
+.um .um-form .um-form-section-title:first-child {
+  margin-top: 0;
+}
+.um .um-form .um-form-row {
+  margin: 0 0 15px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+.um .um-form .um-form-row .um-form-row-label {
+  width: 30%;
+  margin: 0 10px 0 0;
+  padding: 0;
+  font-weight: bold;
+}
+.um .um-form .um-form-row .um-form-row-label .um-req {
+  color: #a00;
+  margin: 0 0 0 3px;
+  font-weight: normal;
+}
+.um .um-form .um-form-row .um-form-field-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  width: calc(70% - 10px);
+  margin: 0;
+  padding: 0;
+}
+.um .um-form .um-form-row.um-form-error-row .um-form-field-content input[type=text],
+.um .um-form .um-form-row.um-form-error-row .um-form-field-content input[type=password],
+.um .um-form .um-form-row.um-form-error-row .um-form-field-content input[type=number],
+.um .um-form .um-form-row.um-form-error-row .um-form-field-content textarea,
+.um .um-form .um-form-row.um-form-error-row .um-form-field-content .wp-editor-wrap {
+  border-color: var(--um-blocks-error-color, #d92d20);
+}
+.um .um-form .um-form-row.um-form-error-row .um-form-field-content .um-form-field-error {
+  color: var(--um-blocks-error-color, #d92d20);
+  font-size: 0.9em;
+}
+.um .um-form .um-form-row.um-field-media-type {
+  align-items: flex-start;
+}
+.um .um-form .um-form-buttons-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: baseline;
+  flex-wrap: wrap;
+  margin: 0 0 0 calc(30% + 10px);
+}
+.um .um-form .um-form-buttons-section input, .um .um-form .um-form-buttons-section button {
+  margin: 0 10px 0 0;
+}
+.um .um-form.um-top-label .um-form-row {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+}
+.um .um-form.um-top-label .um-form-row .um-form-row-label {
+  width: 100%;
+  margin: 0 0 10px 0;
+  padding: 0;
+}
+.um .um-form.um-top-label .um-form-row .um-form-field-content {
+  width: 100%;
+  margin: 0 0 10px 0;
+  padding: 0;
+}
+.um .um-form.um-top-label .um-form-buttons-section {
+  margin: 0;
+  width: 100%;
+}
+.um .um-form.um-single-button.um-center-always .um-form-buttons-section {
+  margin: 0;
+  justify-content: center;
+}
+.um .um-form.um-single-button.um-center-always .um-form-buttons-section input, .um .um-form.um-single-button.um-center-always .um-form-buttons-section button {
+  margin: 0;
+}
+.um.um-ui-xs .um-form .um-form-row {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+}
+.um.um-ui-xs .um-form .um-form-row .um-form-row-label {
+  width: 100%;
+  margin: 0 0 10px 0;
+  padding: 0;
+}
+.um.um-ui-xs .um-form .um-form-row .um-form-field-content {
+  width: 100%;
+  margin: 0 0 10px 0;
+  padding: 0;
+}
+.um.um-ui-xs .um-form:not(.um-single-button.um-center-always) .um-form-buttons-section {
+  margin: 0;
+  width: 100%;
+}
+.um.um-ui-s .um-form .um-form-row {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+}
+.um.um-ui-s .um-form .um-form-row .um-form-row-label {
+  width: 100%;
+  margin: 0 0 10px 0;
+  padding: 0;
+}
+.um.um-ui-s .um-form .um-form-row .um-form-field-content {
+  width: 100%;
+  margin: 0 0 10px 0;
+  padding: 0;
+}
+.um.um-ui-s .um-form:not(.um-single-button.um-center-always) .um-form-buttons-section {
+  margin: 0;
+  width: 100%;
+}
+
+.um-uploaded-wrapper {
+  display: none;
+}
+.um-uploaded-wrapper .um-cancel-change-media {
+  display: none;
+}
+.um-uploaded-wrapper .um-uploaded-content-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  text-align: center;
+  border-radius: 5px;
+  border: 0;
+}
+.um-uploaded-wrapper .um-uploaded-content-wrapper img {
+  object-fit: fill;
+  width: 100%;
+  height: auto;
+}
+.um-uploaded-wrapper.um-uploaded {
+  display: block;
+}
+.um-uploaded-wrapper.um-waiting-change {
+  display: block;
+}
+.um-uploaded-wrapper.um-waiting-change .um-uploaded-content-wrapper {
+  display: none;
+}
+.um-uploaded-wrapper.um-waiting-change .um-cancel-change-media {
+  display: inline;
+}
+.um-uploaded-wrapper.um-waiting-change .um-change-media {
+  display: none;
+}
+
+.um-uploader {
+  width: 100%;
+  margin: 0 0 10px 0;
+}
+.um-uploader .um-uploader-dropzone {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  border: 3px dashed;
+  cursor: copy;
+  padding: 1em;
+}
+.um-uploader .um-uploader-dropzone .moxie-shim.moxie-shim-html5 {
+  width: 100% !important;
+  height: 100% !important;
+  left: 0 !important;
+  top: 0 !important;
+}
+.um-uploader .um-uploader-dropzone:hover {
+  box-shadow: 0 0 4px 1px inset;
+}
+.um-uploader .um-uploader-dropzone span {
+  margin: 0;
+  text-align: center;
+}
+.um-uploader.um-uploaded {
+  display: none;
+}
+
+.um-account i {
+  vertical-align: baseline !important;
+}
+.um-account p.um-notice {
+  margin: 0 0 20px 0 !important;
+  padding: 12px 15px !important;
+}
+.um-account a:focus {
+  outline: 0 !important;
+}
+
+.um-account-side {
+  float: left;
+  width: 30%;
+  padding: 0px;
+  box-sizing: border-box;
+}
+.um-account-side li {
+  margin-bottom: 1px !important;
+  background: #eee;
+}
+.um-account-side li a {
+  display: block;
+  padding: 4px 0px;
+  font-size: 14px;
+  height: 30px;
+  line-height: 20px;
+  color: #999;
+  position: relative;
+}
+.um-account-side li a span.um-account-arrow {
+  position: absolute;
+  right: 10px;
+  top: 6px;
+  font-size: 26px;
+  opacity: 0.6;
+}
+.um-account-side li a span.um-account-icon i {
+  display: block;
+  height: 30px;
+  line-height: 30px;
+}
+.um-account-side li a span.um-account-title {
+  padding-left: 20px;
+  float: left;
+  height: 30px;
+  line-height: 30px;
+  color: #555;
+}
+.um-account-side li a:hover {
+  color: #444;
+  background: #ddd;
+}
+
+.um-account-main {
+  float: left;
+  width: 70%;
+  padding: 0px 0px 0px 1.5em;
+  box-sizing: border-box;
+}
+.um-account-main a {
+  border-bottom: none !important;
+}
+.um-account-main div.um-account-heading {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: baseline;
+  margin: 0 !important;
+  font-size: 18px;
+  line-height: 18px;
+  font-weight: bold;
+  color: #555;
+}
+.um-account-main div.um-account-heading i {
+  margin-right: 10px;
+  font-size: 26px;
+  position: relative;
+  top: 2px;
+}
+.um-account-main p {
+  margin: 20px 0 0 0 !important;
+  padding: 0 !important;
+}
+.um-account-main label {
+  font-size: 15px;
+}
+
+.um-account-tab {
+  display: none;
+}
+.um-account-tab .um-field .um-field-label {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+}
+.um-account-tab .um-field-checkbox-type label {
+  display: block;
+}
+.um-account-tab .um-field-checkbox-type label input {
+  margin: 0 5px 0 0;
+  vertical-align: middle;
+}
+
+.um-account-meta {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.um-account-meta img {
+  margin: 0 !important;
+  position: static !important;
+  float: none !important;
+  display: inline-block;
+}
+.um-account-meta.radius-1 img {
+  -moz-border-radius: 999px;
+  -webkit-border-radius: 999px;
+  border-radius: 999px;
+}
+.um-account-meta.radius-2 img {
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+.um-account-meta.radius-3 img {
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+
+.um-account-name {
+  padding-top: 12px;
+}
+.um-account-name a {
+  font-weight: bold;
+  color: #555;
+  text-decoration: none !important;
+  font-size: 18px;
+  line-height: 1.4em;
+}
+
+.um-account-profile-link a {
+  font-size: 13px;
+  font-weight: normal;
+}
+
+.um-account-nav a {
+  display: block;
+  height: 44px;
+  line-height: 44px;
+  color: #666 !important;
+  text-decoration: none !important;
+  position: relative;
+  padding-left: 40px;
+  border-bottom: 1px solid #eee !important;
+  transition: all 0.2s linear;
+  font-size: 14px;
+}
+.um-account-nav a.current {
+  font-weight: bold;
+}
+.um-account-nav span.arr {
+  position: absolute;
+  right: 0;
+  top: 1px;
+  font-size: 28px;
+}
+.um-account-nav span.ico {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 21px;
+  width: 21px;
+  text-align: center;
+}
+
+.um-account-side ul, .um-account-side li {
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style-type: none !important;
+}
+
+.um-account-side li a span.um-account-icon,
+.um-account-side li a.current span.um-account-icon,
+.um-account-side li a.current:hover span.um-account-icon {
+  text-align: center;
+  font-size: 20px;
+  width: 20px;
+  height: 30px;
+  border-right: 1px solid #ccc;
+  color: #444;
+  float: left;
+  padding: 0px 15px;
+  font-weight: normal !important;
+}
+
+.um-account-side li a.current,
+.um-account-side li a.current:hover {
+  color: #444;
+  font-weight: bold;
+  text-decoration: none !important;
+}
+
+.um-field-export_data .um-field-error {
+  display: none;
+}
+.um-field-export_data .um-field-area-response {
+  display: none;
+  line-height: 1.5;
+  padding: 10px 0;
+}
+
+.um-request-button {
+  display: inline-block;
+  background-color: #3ba1da;
+  border-radius: 5px;
+  color: #fff;
+  margin: 10px 0 0;
+  padding: 5px 10px;
+  text-decoration: none;
+}
+.um-request-button:hover {
+  background-color: #44b0ec;
+  color: #fff;
+  text-decoration: none;
+}

@@ -208,6 +208,21 @@ class Form {
 			echo wp_kses( '<form action="' . esc_attr( $action ) . '" method="' . esc_attr( $method ) . '" name="' . esc_attr( $name ) . '" id="' . esc_attr( $id ) . '" class="' . esc_attr( $class ) . '" ' . $data_attr . '>', UM()->get_allowed_html( 'templates' ) );
 		}
 
+		/**
+		 * Fires in the form header after opening tag in the form.
+		 * This hook may be used to display custom content in the form header.
+		 *
+		 * Note: For checking the form on where you need to add content - use $form_data['id']
+		 *
+		 * Legacy v2.x hooks: 'um_before_form_is_loaded'
+		 *
+		 * @since 3.0.0
+		 * @hook um_form_header
+		 *
+		 * @param {array} $form_data UM Form data.
+		 */
+		do_action( 'um_form_header', $this->form_data );
+
 		echo wp_kses( $fields . $hidden . '<div class="um-form-buttons-section">' . $buttons . '</div>', UM()->get_allowed_html( 'templates' ) );
 
 		/**
@@ -677,6 +692,8 @@ class Form {
 		$placeholder_attr = ! empty( $field_data['placeholder'] ) ? ' placeholder="' . $field_data['placeholder'] . '"' : '';
 		$required         = ! empty( $field_data['required'] ) ? ' required' : '';
 
+		$disabled = ! empty( $field_data['disabled'] ) ? 'disabled' : '';
+
 		$name      = isset( $field_data['name'] ) ? $field_data['name'] : $field_data['id'];
 		$name      = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
 		$name_attr = ' name="' . esc_attr( $name ) . '" ';
@@ -684,7 +701,7 @@ class Form {
 		$value      = $this->get_field_value( $field_data );
 		$value_attr = ' value="' . esc_attr( $value ) . '" ';
 
-		$html = "<input type=\"text\" $id_attr $class_attr $name_attr $data_attr $value_attr $placeholder_attr $required />";
+		$html = "<input type=\"text\" $id_attr $class_attr $name_attr $data_attr $value_attr $placeholder_attr $required $disabled />";
 
 		return $html;
 	}
@@ -1411,15 +1428,21 @@ class Form {
 
 
 		$value = $this->get_field_value( $field_data );
-		if ( ! is_array( $value ) || empty( $value ) ) {
-			$value = array();
-		}
-		$value = array_map( 'strval', $value );
-
 		$options = '';
-		foreach ( $field_data['options'] as $key => $option ) {
-			$id_attr = ' id="' . esc_attr( $id . '_' . $key ) . '" ';
-			$options .= '<label><input type="checkbox" ' . $id_attr . $name_attr . $class_attr . $data_attr . ' value="' . esc_attr( $key ) . '" ' . checked( in_array( (string) $key, $value, true ), true, false ) . ' />' . esc_html( $option ) . '</label>';
+		if ( 1 < count( $field_data['options'] ) ) {
+			if ( ! is_array( $value ) || empty( $value ) ) {
+				$value = array();
+			}
+
+			foreach ( $field_data['options'] as $key => $option ) {
+				$id_attr  = ' id="' . esc_attr( $id . '_' . $key ) . '" ';
+				$options .= '<label><input type="checkbox" ' . $id_attr . $name_attr . $class_attr . $data_attr . ' value="' . esc_attr( $key ) . '" ' . checked( in_array( (string) $key, $value, true ), true, false ) . ' />' . esc_html( $option ) . '</label>';
+			}
+		} else {
+			foreach ( $field_data['options'] as $key => $option ) {
+				$id_attr  = ' id="' . esc_attr( $id . '_' . $key ) . '" ';
+				$options .= '<label><input type="checkbox" ' . $id_attr . $name_attr . $class_attr . $data_attr . ' value="' . esc_attr( $key ) . '" ' . checked( $value, true, false ) . ' />' . esc_html( $option ) . '</label>';
+			}
 		}
 
 		$columns_layout = ! empty( $field_data['columns_layout'] ) ? $field_data['columns_layout'] : 'um-col-1';
@@ -1592,7 +1615,7 @@ class Form {
 					'init_instance_callback' => "function (editor) {
 													editor.on( 'keyup paste mouseover', function (e) {
 													var content = editor.getContent( { format: 'html' } ).trim();
-													var textarea = jQuery( '#' + editor.id ); 
+													var textarea = jQuery( '#' + editor.id );
 													textarea.val( content ).trigger( 'keyup' ).trigger( 'keypress' ).trigger( 'keydown' ).trigger( 'change' ).trigger( 'paste' ).trigger( 'mouseover' );
 												});}",
 				),

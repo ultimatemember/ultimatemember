@@ -187,6 +187,15 @@ if ( ! class_exists( 'um\Config' ) ) {
 		public $field_types = array();
 
 		/**
+		 * Build-in account tabs.
+		 *
+		 * @since 3.0
+		 *
+		 * @var array
+		 */
+		public $account_tabs = array();
+
+		/**
 		 * Get variable from config
 		 *
 		 * @param string $key
@@ -2198,7 +2207,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 							'step'        => array(
 								'id'          => 'step',
-								'type'        => 'text',
+								'type'        => 'number',
 								'label'       => __( 'Step', 'ultimate-member' ),
 								'description' => __( 'Specifies the granularity in seconds that the value must adhere to.', 'ultimate-member' ),
 								'sanitize'    => 'text',
@@ -4237,6 +4246,82 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 						),
 					),
+				),
+			);
+		}
+
+		public function init_account_tabs() {
+			$this->account_tabs = array(
+				'general'       => array(
+					'order'        => 100,
+					'icon'         => 'fas fa-user',
+					'title'        => __( 'Account', 'ultimate-member' ),
+					'form'         => array(
+						'fields'       => array(
+							'user_login'           => array(
+								'type'     => 'text',
+								'label'    => __( 'Username', 'ultimate-member' ),
+								'id'       => 'user_login',
+								'required' => true,
+								'disabled' => true,
+							),
+							'first_name'           => array(
+								'type'     => 'text',
+								'label'    => __( 'First Name', 'ultimate-member' ),
+								'id'       => 'first_name',
+								'required' => true,
+							),
+							'last_name'            => array(
+								'type'     => 'text',
+								'label'    => __( 'Last Name', 'ultimate-member' ),
+								'id'       => 'last_name',
+								'required' => true,
+							),
+							'user_email'           => array(
+								'type'     => 'text',
+								'label'    => __( 'E-mail Address', 'ultimate-member' ),
+								'id'       => 'user_email',
+								'required' => true,
+							),
+							'single_user_password' => array(
+								'type'     => 'password',
+								'label'    => __( 'Password', 'ultimate-member' ),
+								'id'       => 'single_user_password',
+								'required' => true,
+								'value'    => '',
+							),
+						),
+						'hiddens'      => array(
+							'um-action-general-tab' => 'account-general-tab',
+							'general-tab-nonce'     => wp_create_nonce( 'um-account-general' ),
+						),
+						'submit_title' => __( 'Update Account', 'ultimate-member' ),
+					),
+					'submit_title' => __( 'Update Account', 'ultimate-member' ),
+				),
+				'password'      => array(
+					'order'        => 200,
+					'icon'         => 'fas fa-asterisk',
+					'title'        => __( 'Change Password', 'ultimate-member' ),
+					'submit_title' => __( 'Update Password', 'ultimate-member' ),
+				),
+				'privacy'       => array(
+					'order'        => 300,
+					'icon'         => 'fas fa-lock',
+					'title'        => __( 'Privacy', 'ultimate-member' ),
+					'submit_title' => __( 'Update Privacy', 'ultimate-member' ),
+				),
+				'notifications' => array(
+					'order'        => 400,
+					'icon'         => 'far fa-envelope',
+					'title'        => __( 'Notifications', 'ultimate-member' ),
+					'submit_title' => __( 'Update Notifications', 'ultimate-member' ),
+				),
+				'delete'        => array(
+					'order'        => 99999,
+					'icon'         => 'far fa-trash-alt',
+					'title'        => __( 'Delete Account', 'ultimate-member' ),
+					'submit_title' => __( 'Delete Account', 'ultimate-member' ),
 				),
 			);
 		}

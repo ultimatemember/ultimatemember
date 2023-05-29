@@ -180,6 +180,9 @@ $actions['um_unverify_accounts'] => __( 'Mark accounts as unverified', 'um-verif
 'um_admin_user_action_hook' - fully deprecated. Moved to the WordPress native bulk actions and handler for them
 "um_admin_user_action_{$bulk_action}_hook" - fully deprecated. Moved to the WordPress native bulk actions and handler for them
 
+'um_form_official_classes__hook' - fully deprecated for the Account forms.
+'um_account_shortcode_args_filter' - deprecated. Use 'shortcode_atts_ultimatemember_account' instead of 'um_account_shortcode_args_filter' for filter arguments.
+'um_before_account_form_is_loaded' - fully deprecated. Use 'um_pre_account_shortcode' instead of it.
 ### Deprecated functions
 
 `UM()->get_template()` use `um_get_template()` instead and for getting template content without echo use `um_get_template_html()` (remove since 1 year after official v3 release)

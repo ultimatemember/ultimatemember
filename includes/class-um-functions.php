@@ -15,7 +15,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 *
 		 * @var string
 		 */
-		var $store_url = 'https://ultimatemember.com/';
+		public $store_url = 'https://ultimatemember.com/';
 
 
 		/**
@@ -80,7 +80,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 * @return string
 		 */
 		public function default_templates_path( $module = '' ) {
-			$path = untrailingslashit( um_path ) . '/templates/';
+			$path = untrailingslashit( UM_PATH ) . '/templates/';
 			if ( ! empty( $module ) ) {
 				$module_data = UM()->modules()->get_data( $module );
 				$path = untrailingslashit( $module_data['path'] ) . '/templates/';
@@ -102,21 +102,21 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 * @return array
 		 */
 		public function array_insert_before( $array, $key, $insert_array ) {
-			$index = array_search( $key, array_keys( $array ) );
-			if ( $index === false ) {
+			$index = array_search( $key, array_keys( $array ), true );
+			if ( false === $index ) {
 				return $array;
 			}
 
 			$array = array_slice( $array, 0, $index, true ) +
-			         $insert_array +
-			         array_slice( $array, $index, count( $array ) - 1, true );
+					$insert_array +
+					array_slice( $array, $index, count( $array ) - 1, true );
 
 			return $array;
 		}
 
 
 		/**
-		 * Easy merge arrays based on parent array key. Insert after selected key
+		 * Easy merge arrays based on a parent array key. Insert after a selected key.
 		 *
 		 * @since 3.0
 		 *
@@ -127,14 +127,18 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 * @return array
 		 */
 		public function array_insert_after( $array, $key, $insert_array ) {
-			$index = array_search( $key, array_keys( $array ) );
-			if ( $index === false ) {
+			$index = array_search( $key, array_keys( $array ), true );
+			if ( false === $index ) {
 				return $array;
 			}
 
-			$array = array_slice( $array, 0, $index + 1, true ) +
-			         $insert_array +
-			         array_slice( $array, $index + 1, count( $array ) - 1, true );
+			$array_before = array_slice( $array, 0, $index + 1, true );
+			$array_after  = array_slice( $array, $index + 1, count( $array ) - 1, true );
+			if ( is_numeric( $key ) ) {
+				$array = array_merge( $array_before, $insert_array, $array_after );
+			} else {
+				$array = $array_before + $insert_array + $array_after;
+			}
 
 			return $array;
 		}

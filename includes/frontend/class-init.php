@@ -28,10 +28,24 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		 * @used-by \UM::includes()
 		 */
 		public function includes() {
+			$this->account();
 			$this->actions_listener();
 			$this->enqueue();
 			$this->forms();
 			$this->user()->hooks();
+		}
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return Account
+		 */
+		public function account() {
+			if ( empty( UM()->classes['um\frontend\account'] ) ) {
+				UM()->classes['um\frontend\account'] = new Account();
+			}
+
+			return UM()->classes['um\frontend\account'];
 		}
 
 		/**
@@ -57,6 +71,14 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 			}
 
 			return UM()->classes['um\frontend\enqueue'];
+		}
+
+		public function helpers() {
+			if ( empty( UM()->classes['um\frontend\helpers'] ) ) {
+				UM()->classes['um\frontend\helpers'] = new Helpers();
+			}
+
+			return UM()->classes['um\frontend\helpers'];
 		}
 
 		/**
