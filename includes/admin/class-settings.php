@@ -1790,7 +1790,7 @@ if ( ! class_exists( 'um\admin\Settings' ) ) {
 					}
 
 					// reset rewrite rules after re-save pages
-					UM()->rewrite()->reset_rules();
+					UM()->common()->rewrite()->reset_rules();
 
 				} elseif ( ! empty( $_POST['um_options']['permalink_base'] ) ) {
 					if ( ! empty( $this->need_change_permalinks ) ) {

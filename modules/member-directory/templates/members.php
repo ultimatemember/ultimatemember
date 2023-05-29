@@ -295,7 +295,7 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 					$items[] = '<a href="javascript:void(0);" data-directory-hash="' . esc_attr( substr( md5( $form_id ), 10, 5 ) ) . '" class="um-sorting-by-' . esc_attr( $value ) . '" data-value="' . esc_attr( $value ) . '" data-selected="' . ( ( $sort_from_url == $value ) ? '1' : '0' ) . '" data-default="' . ( ( $default_sorting == $value ) ? '1' : '0' ) . '">' . $title . '</a>'; ?>
 				<?php }
 
-				UM()->module( 'member-directory' )->frontend()->dropdown_menu( '.um-member-directory-sorting-a', 'click', $items ); ?>
+				UM()->frontend()->helpers()->dropdown_menu( '.um-member-directory-sorting-a', 'click', $items ); ?>
 			<?php } ?>
 		</div>
 

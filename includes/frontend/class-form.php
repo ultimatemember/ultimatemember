@@ -208,6 +208,21 @@ class Form {
 			echo wp_kses( '<form action="' . esc_attr( $action ) . '" method="' . esc_attr( $method ) . '" name="' . esc_attr( $name ) . '" id="' . esc_attr( $id ) . '" class="' . esc_attr( $class ) . '" ' . $data_attr . '>', UM()->get_allowed_html( 'templates' ) );
 		}
 
+		/**
+		 * Fires in the form header after opening tag in the form.
+		 * This hook may be used to display custom content in the form header.
+		 *
+		 * Note: For checking the form on where you need to add content - use $form_data['id']
+		 *
+		 * Legacy v2.x hooks: 'um_before_form_is_loaded'
+		 *
+		 * @since 3.0.0
+		 * @hook um_form_header
+		 *
+		 * @param {array} $form_data UM Form data.
+		 */
+		do_action( 'um_form_header', $this->form_data );
+
 		echo wp_kses( $fields . $hidden . '<div class="um-form-buttons-section">' . $buttons . '</div>', UM()->get_allowed_html( 'templates' ) );
 
 		/**

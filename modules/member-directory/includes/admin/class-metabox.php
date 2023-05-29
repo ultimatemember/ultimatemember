@@ -403,7 +403,7 @@ class Metabox {
 			$path = $matches[0];
 			$box['id'] = preg_replace('~(\\{[^}]+\\})~','', $box['id'] );
 		} else {
-			$path = um_path;
+			$path = UM_PATH;
 		}
 
 		$path = str_replace('{','', $path );

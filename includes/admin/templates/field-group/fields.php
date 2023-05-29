@@ -45,7 +45,7 @@ UM()->admin()->field_group()->field_row_template();
 		if ( ! empty( $fields ) ) {
 			$i = 1;
 			foreach ( $fields as $k => $field ) {
-				// text-type field is default field type for the builder
+				// text-type field is the default field type for the builder
 				$field_settings_tabs     = UM()->admin()->field_group()->get_field_tabs( $field['type'] );
 				$field_settings_settings = UM()->admin()->field_group()->get_field_settings( $field['type'], $field['id'] );
 

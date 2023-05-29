@@ -5,7 +5,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 /**
  * Class Account
  *
@@ -13,15 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Account {
 
-
 	/**
 	 * Account constructor.
 	 */
 	public function __construct() {
-		add_filter( 'um_account_page_default_tabs_hook', array( &$this, 'add_account_tab' ), 10, 1 );
-		add_filter( 'um_account_content_hook_jobboardwp', array( &$this, 'account_tab' ), 60, 2 );
+		add_filter( 'um_account_page_default_tabs_hook', array( &$this, 'add_account_tab' ) );
+		add_filter( 'um_account_content_hook_jobboardwp', array( &$this, 'account_tab' ), 60, 1 );
 	}
-
 
 	/**
 	 * @param array $tabs
@@ -42,7 +39,6 @@ class Account {
 		return $tabs;
 	}
 
-
 	/**
 	 * @param string $output
 	 *
@@ -50,7 +46,7 @@ class Account {
 	 *
 	 * @since 1.0
 	 */
-	public function account_tab( $output, $args ) {
+	public function account_tab( $output ) {
 		$output .= '<div class="um-clear"></div><br />' . apply_shortcodes( '[jb_jobs_dashboard /]' );
 
 		return $output;

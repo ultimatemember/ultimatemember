@@ -15,7 +15,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 *
 		 * @var string
 		 */
-		var $store_url = 'https://ultimatemember.com/';
+		public $store_url = 'https://ultimatemember.com/';
 
 
 		/**
@@ -80,7 +80,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 * @return string
 		 */
 		public function default_templates_path( $module = '' ) {
-			$path = untrailingslashit( um_path ) . '/templates/';
+			$path = untrailingslashit( UM_PATH ) . '/templates/';
 			if ( ! empty( $module ) ) {
 				$module_data = UM()->modules()->get_data( $module );
 				$path = untrailingslashit( $module_data['path'] ) . '/templates/';

@@ -1287,6 +1287,12 @@ jQuery( function($) {
 	$(document.body).on('change','.um-field-row-title-input', function(e){
 		let title = $(this).val();
 		$(this).closest('.um-field-row').find( '> .um-field-row-header > .um-field-row-title' ).text( UM.fields_groups.field.sanitizeInput(title) );
+
+		let metakeyField = $(this).closest('.um-form-table').find('> tbody > tr.um-forms-line[data-field_id="meta_key"] .um-field-row-metakey-input');
+		if ( '' === metakeyField.val() ) {
+			metakeyField.val( wp.url.cleanForSlug( title ) ).trigger('change');
+		}
+
 		UM.fields_groups.field.conditional.prepareFieldsList($);
 	});
 

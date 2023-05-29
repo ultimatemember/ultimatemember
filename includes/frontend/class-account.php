@@ -5,7 +5,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 /**
  * Class Account
  *
@@ -13,14 +12,93 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Account {
 
+	/**
+	 * Current account tab.
+	 *
+	 * @var string
+	 */
+	public $current_tab = 'general';
 
 	/**
 	 * Account constructor.
 	 */
 	public function __construct() {
+		add_action( 'template_redirect', array( &$this, 'account_page_restrict' ), 10001 );
 		add_action( 'um_after_account_privacy', array( &$this, 'um_after_account_privacy' ), 10, 1 );
 	}
 
+	/**
+	 * Init AllTabs for user account
+	 *
+	 * @param $args
+	 *
+	 * @throws \Exception
+	 */
+	public function init_tabs( $args ) {
+		$tabs = array();
+
+		if ( isset( $args['tab'] ) ) {
+			$tabs = explode( ',', $args['tab'] );
+			$tabs = array_map( 'trim', $tabs );
+			$tabs = array_diff( $tabs, array( '' ) );
+		}
+
+		$this->tabs = $this->get_tabs();
+
+		ksort( $this->tabs );
+
+		$tabs_structed = array();
+		foreach ( $this->tabs as $k => $arr ) {
+
+			foreach ( $arr as $id => $info ) {
+
+				if ( isset( $args['tab'] ) && 1 < count( $tabs ) && ! array_key_exists( $id, array_flip( $tabs ) ) ) {
+					continue;
+				}
+
+				if ( ! empty( $args['tab'] ) && 1 >= count( $tabs ) && $id !== $args['tab'] ) {
+					continue;
+				}
+
+				$tab_args    = $this->get_tab_fields( $id, $args );
+				$tab_content = $this->get_tab_content( $id, $args );
+
+				if ( ! empty( $tab_args ) || ! empty( $tab_content ) ) {
+					$tabs_structed[ $id ] = $info;
+				}
+			}
+		}
+		$this->tabs = $tabs_structed;
+	}
+
+	/**
+	 * Restrict access to Account page.
+	 */
+	public function account_page_restrict() {
+		if ( ! um_is_predefined_page( 'account' ) ) {
+			return;
+		}
+
+		// Redirect to log in for not logged-in users.
+		if ( ! is_user_logged_in() ) {
+			$redirect_to = add_query_arg(
+				'redirect_to',
+				urlencode_deep( um_get_predefined_page_url( 'account' ) ),
+				um_get_predefined_page_url( 'login' )
+			);
+
+			wp_safe_redirect( $redirect_to );
+			exit;
+		}
+
+		//set data for fields
+//		UM()->fields()->set_mode = 'account';
+//		UM()->fields()->editing  = true;
+
+		if ( get_query_var( 'um_tab' ) ) {
+			$this->current_tab = get_query_var( 'um_tab' );
+		}
+	}
 
 	/**
 	 * Add export and erase user's data in privacy tab

@@ -1,11 +1,11 @@
-<?php namespace um\common;
+<?php
+namespace um\common;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\common\Install' ) ) {
-
 
 	/**
 	 * Class Install
@@ -84,12 +84,12 @@ if ( ! class_exists( 'um\common\Install' ) ) {
 			//first install
 			$version = get_option( 'um_version' );
 			if ( ! $version ) {
-				update_option( 'um_last_version_upgrade', ultimatemember_version );
+				update_option( 'um_last_version_upgrade', UM_VERSION );
 				add_option( 'um_first_activation_date', time() );
 			}
 
-			if ( $version !== ultimatemember_version ) {
-				update_option( 'um_version', ultimatemember_version );
+			if ( $version !== UM_VERSION ) {
+				update_option( 'um_version', UM_VERSION );
 			}
 
 			$first_activation = get_option( 'um_first_activation_date', false );
@@ -409,7 +409,7 @@ KEY meta_key (meta_key(191))
 
 			if ( $with_rewrite ) {
 				// reset rewrite rules after page creation and option upgrade
-				UM()->rewrite()->reset_rules();
+				UM()->common()->rewrite()->reset_rules();
 			}
 		}
 
@@ -431,7 +431,7 @@ KEY meta_key (meta_key(191))
 			}
 
 			// reset rewrite rules after first install of core pages
-			UM()->rewrite()->reset_rules();
+			UM()->common()->rewrite()->reset_rules();
 		}
 
 	}

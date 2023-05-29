@@ -1260,7 +1260,7 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 					?>
 				</div>
 				<div class="um-fields-column-empty-content<?php if ( ! empty( $value ) ) { ?> hidden<?php } ?>">
-					<strong><?php esc_html_e( 'There aren\'t any fields yet. Add them below.', 'ultimate-member' ); ?></strong>
+					<strong><?php esc_html_e( 'No sub-fields yet. Click button below to add sub-field.', 'ultimate-member' ); ?></strong>
 				</div>
 				<div class="um-fields-column-footer">
 					<input type="button" class="um-add-field-to-column button button-primary" value="<?php esc_attr_e( 'Add new field', 'ultimate-member' ); ?>" />
@@ -1325,7 +1325,7 @@ if ( ! class_exists( 'um\admin\Forms' ) ) {
 				$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
 			}
 
-			$field_types = UM()->config()->get( 'field_types' );
+			$field_types             = UM()->config()->get( 'field_types' );
 			$field_conditional_rules = UM()->config()->get( 'field_conditional_rules' );
 			asort( $field_conditional_rules );
 			ob_start();

@@ -166,11 +166,11 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			$args = ! empty( $args ) ? $args : array();
 
 			$default_login = $wpdb->get_var(
-				"SELECT pm.post_id 
-				FROM {$wpdb->postmeta} pm 
+				"SELECT pm.post_id
+				FROM {$wpdb->postmeta} pm
 				LEFT JOIN {$wpdb->postmeta} pm2 ON( pm.post_id = pm2.post_id AND pm2.meta_key = '_um_is_default' )
-				WHERE pm.meta_key = '_um_mode' AND 
-					  pm.meta_value = 'login' AND 
+				WHERE pm.meta_key = '_um_mode' AND
+					  pm.meta_value = 'login' AND
 					  pm2.meta_value = '1'"
 			);
 
@@ -199,11 +199,11 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			$args = ! empty( $args ) ? $args : array();
 
 			$default_register = $wpdb->get_var(
-				"SELECT pm.post_id 
-				FROM {$wpdb->postmeta} pm 
+				"SELECT pm.post_id
+				FROM {$wpdb->postmeta} pm
 				LEFT JOIN {$wpdb->postmeta} pm2 ON( pm.post_id = pm2.post_id AND pm2.meta_key = '_um_is_default' )
-				WHERE pm.meta_key = '_um_mode' AND 
-					  pm.meta_value = 'register' AND 
+				WHERE pm.meta_key = '_um_mode' AND
+					  pm.meta_value = 'register' AND
 					  pm2.meta_value = '1'"
 			);
 
@@ -232,11 +232,11 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			$args = ! empty( $args ) ? $args : array();
 
 			$default_profile = $wpdb->get_var(
-				"SELECT pm.post_id 
-				FROM {$wpdb->postmeta} pm 
+				"SELECT pm.post_id
+				FROM {$wpdb->postmeta} pm
 				LEFT JOIN {$wpdb->postmeta} pm2 ON( pm.post_id = pm2.post_id AND pm2.meta_key = '_um_is_default' )
-				WHERE pm.meta_key = '_um_mode' AND 
-					  pm.meta_value = 'profile' AND 
+				WHERE pm.meta_key = '_um_mode' AND
+					  pm.meta_value = 'profile' AND
 					  pm2.meta_value = '1'"
 			);
 
@@ -548,7 +548,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 */
 		function template_exists($template) {
 
-			$file = um_path . 'templates/' . $template . '.php';
+			$file = UM_PATH . 'templates/' . $template . '.php';
 			$theme_file = get_stylesheet_directory() . '/ultimate-member/templates/' . $template . '.php';
 
 			if (file_exists($theme_file) || file_exists($file)) {

@@ -16,7 +16,7 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @var UM the single instance of the class
 		 */
-		protected static $instance = null;
+		protected static $instance;
 
 		/**
 		 * @var array all plugin's classes
@@ -431,8 +431,8 @@ if ( ! class_exists( 'UM' ) ) {
 		function um__autoloader( $class ) {
 			if ( strpos( $class, 'um' ) === 0 ) {
 
-				$array = explode( '\\', strtolower( $class ) );
-				$array[ count( $array ) - 1 ] = 'class-'. end( $array );
+				$array                        = explode( '\\', strtolower( $class ) );
+				$array[ count( $array ) - 1 ] = 'class-' . end( $array );
 
 				if ( strpos( $class, 'umm' ) === 0 ) {
 					// module namespace
@@ -445,10 +445,11 @@ if ( ! class_exists( 'UM' ) ) {
 						unset( $array[0], $array[1] );
 						$path = implode( DIRECTORY_SEPARATOR, $array );
 						$path = str_replace( '_', '-', $path );
+
 						$full_path .= $path . '.php';
 					}
 				} elseif ( strpos( $class, 'um_ext' ) === 0 ) {
-					$full_path = str_replace( 'ultimate-member', '', untrailingslashit( um_path ) ) . str_replace( '_', '-', $array[1] ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR;
+					$full_path = str_replace( 'ultimate-member', '', untrailingslashit( UM_PATH ) ) . str_replace( '_', '-', $array[1] ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR;
 					unset( $array[0], $array[1] );
 					$path = implode( DIRECTORY_SEPARATOR, $array );
 					$path = str_replace( '_', '-', $path );
@@ -460,10 +461,10 @@ if ( ! class_exists( 'UM' ) ) {
 						array( 'um\\', '_', '\\' ),
 						array( $slash, '-', $slash ),
 						$class );
-					$full_path =  um_path . 'includes' . $path . '.php';
+					$full_path =  UM_PATH . 'includes' . $path . '.php';
 				}
 
-				if( isset( $full_path ) && file_exists( $full_path ) ) {
+				if ( isset( $full_path ) && file_exists( $full_path ) ) {
 					include_once $full_path;
 				}
 			}
@@ -738,9 +739,9 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
-		 * @return um\common\Options()|um\legacy\core\Options()
+		 * @return um\common\Options()|um\legacy\core\Options
 		 */
-		function options() {
+		public function options() {
 			// legacy part
 //			$is_legacy = get_option( 'um_is_legacy' );
 //			if ( $is_legacy ) {

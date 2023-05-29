@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<label class="um-field-checkbox">
 			<input type="checkbox" name="use_terms_conditions_agreement" value="1">
 			<span class="um-field-checkbox-state">
-				<i class="um-icon-android-checkbox-outline-blank"></i>
+				<i class="ion-md-square-outline"></i>
 			</span>
 			<span class="um-field-checkbox-option">
 				<?php echo ! empty( $args['use_terms_conditions_agreement'] ) ? $args['use_terms_conditions_agreement'] :  __( 'Please confirm that you agree to our terms & conditions', 'ultimate-member' ); ?>

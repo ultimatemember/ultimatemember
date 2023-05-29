@@ -5,7 +5,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 /**
  * Class Account
  *
@@ -13,15 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Account {
 
-
 	/**
 	 * Account constructor.
 	 */
 	public function __construct() {
-		add_filter( 'um_account_tab_privacy_fields', array( &$this, 'add_privacy_field' ), 10, 1 );
-		add_filter( 'um_account_privacy_fields_update', array( &$this, 'privacy_fields_update' ), 10, 1 );
+		add_filter( 'um_account_tab_privacy_fields', array( &$this, 'add_privacy_field' ) );
+		add_filter( 'um_account_privacy_fields_update', array( &$this, 'privacy_fields_update' ) );
 	}
-
 
 	/**
 	 * Shows the online field in account page
@@ -54,7 +51,6 @@ class Account {
 		return $args;
 	}
 
-
 	/**
 	 * Extend privacy tab update fields
 	 *
@@ -63,7 +59,7 @@ class Account {
 	 * @return array
 	 */
 	public function privacy_fields_update( $args ) {
-		// phpcs:disable WordPress.Security.NonceVerification -- already verified here
+		// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
 		$args['_hide_online_status'] = array( sanitize_key( $_POST['_hide_online_status'] ) );
 
 		return $args;

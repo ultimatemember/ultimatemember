@@ -1,12 +1,11 @@
 <?php
 namespace um\integrations;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\integrations\Common' ) ) {
-
 
 	/**
 	 * Class Common
@@ -15,21 +14,19 @@ if ( ! class_exists( 'um\integrations\Common' ) ) {
 	 */
 	class Common {
 
-
 		/**
 		 * Common constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			add_action( 'plugins_loaded', array( &$this, 'plugins_loaded' ) );
 
 			add_filter( 'um_pre_template_locations', array( &$this, 'pre_template_locations_common_locale' ), 10, 4 );
 		}
 
-
 		/**
 		 *
 		 */
-		function plugins_loaded() {
+		public function plugins_loaded() {
 			if ( $this->is_wpml_active() ) {
 				include_once wp_normalize_path( 'wpml/integration.php' );
 			}
@@ -47,7 +44,6 @@ if ( ! class_exists( 'um\integrations\Common' ) ) {
 			}
 		}
 
-
 		/**
 		 * Email notifications integration with `get_user_locale()`
 		 *
@@ -58,7 +54,7 @@ if ( ! class_exists( 'um\integrations\Common' ) ) {
 		 *
 		 * @return array
 		 */
-		function pre_template_locations_common_locale( $template_locations, $template_name, $module, $template_path ) {
+		public function pre_template_locations_common_locale( $template_locations, $template_name, $module, $template_path ) {
 			// make pre templates locations array to avoid the conflicts between different locales when multilingual plugins are integrated
 			// e.g. "ultimate-member/ru_RU(user locale)/uk(WPML)/emails/approved_email.php"
 			// must be the next priority:
@@ -71,7 +67,7 @@ if ( ! class_exists( 'um\integrations\Common' ) ) {
 
 			// use the user_locale only for email notifications templates
 			if ( 0 === strpos( $template_name, 'emails/' ) ) {
-				$current_locale = determine_locale();
+				$current_locale      = determine_locale();
 				$current_user_locale = get_user_locale();
 
 				if ( $current_locale != $current_user_locale ) {
@@ -87,13 +83,12 @@ if ( ! class_exists( 'um\integrations\Common' ) ) {
 			return $template_locations;
 		}
 
-
 		/**
 		 * Check if WPML is active
 		 *
 		 * @return bool
 		 */
-		function is_wpml_active() {
+		public function is_wpml_active() {
 			if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
 				global $sitepress;
 				return $sitepress->is_setup_complete();
@@ -102,13 +97,12 @@ if ( ! class_exists( 'um\integrations\Common' ) ) {
 			return false;
 		}
 
-
 		/**
 		 * Check if Polylang is active
 		 *
 		 * @return bool
 		 */
-		function is_polylang_active() {
+		public function is_polylang_active() {
 			if ( defined( 'POLYLANG_VERSION' ) ) {
 				global $polylang;
 				return is_object( $polylang );
@@ -117,23 +111,21 @@ if ( ! class_exists( 'um\integrations\Common' ) ) {
 			return false;
 		}
 
-
 		/**
 		 * Check if TranslatePress is active
 		 *
 		 * @return bool
 		 */
-		function is_translatepress_active() {
+		public function is_translatepress_active() {
 			return defined( 'TRP_PLUGIN_VERSION' ) && class_exists( '\TRP_Translate_Press' );
 		}
-
 
 		/**
 		 * Check if Weglot is active
 		 *
 		 * @return bool
 		 */
-		function is_weglot_active() {
+		public function is_weglot_active() {
 			return defined( 'WEGLOT_VERSION' );
 		}
 	}

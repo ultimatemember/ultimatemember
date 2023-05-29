@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } ?>
 
-<div class="um-online" data-max="<?php echo $max; ?>">
+<div class="um-online" data-max="<?php echo esc_attr( $max ); ?>">
 	<?php
 	$online = array_keys( $online );
 	foreach ( $online as $user_id ) {
@@ -26,12 +26,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 		$name = $user_meta->display_name;
 		if ( empty( $name ) ) {
 			continue;
-		} ?>
+		}
+		?>
 
 		<div class="um-online-user">
 			<div class="um-online-pic">
 				<a href="<?php echo esc_url( um_user_profile_url( $user_id ) ); ?>" class="um-tip-n" title="<?php echo esc_attr( $name ); ?>">
-					<?php echo get_avatar( $user_id, 40 ); ?>
+					<?php echo UM()->common()->user()->get_avatar( um_profile_id(), 'm' ); ?>
 				</a>
 			</div>
 		</div>

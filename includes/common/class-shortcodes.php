@@ -51,6 +51,7 @@ class Shortcodes {
 		add_shortcode( 'ultimatemember_password', array( &$this, 'reset_password_form' ) );
 		add_shortcode( 'ultimatemember_login', array( &$this, 'login_form' ) );
 		add_shortcode( 'ultimatemember', array( &$this, 'common_forms' ) );
+		add_shortcode( 'ultimatemember_account', array( &$this, 'account' ) );
 
 		/**
 		 * UM hook
@@ -212,8 +213,8 @@ class Shortcodes {
 
 		$a = shortcode_atts(
 			array(
-				'roles' => '',
-				'not' => '',
+				'roles'      => '',
+				'not'        => '',
 				'is_profile' => false,
 			),
 			$atts,
@@ -313,7 +314,7 @@ class Shortcodes {
 						'required'    => true,
 						'value'       => '',
 						'placeholder' => __( 'Confirm Password', 'ultimate-member' ),
-					)
+					),
 				),
 				'hiddens'   => array(
 					'um-action' => 'password-reset',
@@ -392,7 +393,7 @@ class Shortcodes {
 							'value'       => '',
 							'placeholder' => __( 'Enter Username or Email Address', 'ultimate-member' ),
 							'validation'  => 'user_login',
-						)
+						),
 					),
 					'hiddens'   => array(
 						'um-action' => 'password-reset-request',
@@ -1084,6 +1085,107 @@ class Shortcodes {
 	}
 
 	/**
+	 * Shortcode for the displaying Ultimate Member Account
+	 *
+	 * @param array $args
+	 *
+	 * @return string
+	 */
+	public function account( $args = array() ) {
+		if ( ! is_user_logged_in() ) {
+			return '';
+		}
+
+		/** There is possible to use 'shortcode_atts_ultimatemember_account' filter for getting customized $atts. This filter is documented in wp-includes/shortcodes.php "shortcode_atts_{$shortcode}" */
+		$args = shortcode_atts(
+			array(
+				'tab' => '',
+			),
+			$args,
+			'ultimatemember_account'
+		);
+
+		$tabs = array();
+		if ( isset( $args['tab'] ) ) {
+			$tabs = explode( ',', $args['tab'] );
+			$tabs = array_map( 'trim', $tabs );
+			$tabs = array_diff( $tabs, array( '' ) );
+		}
+
+		if ( ! empty( $args['tab'] ) && 1 === count( $tabs ) ) {
+
+			if ( 'account' === $args['tab'] ) {
+				$args['tab'] = 'general';
+			}
+
+//			$this->init_tabs( $args );
+
+			UM()->frontend()->account()->current_tab = $args['tab'];
+
+			if ( ! empty( $this->tabs[ $args['tab'] ] ) ) { ?>
+				<div class="um um-custom-shortcode-tab">
+					<div class="um-form">
+						<form method="post" action="">
+							<?php
+							/**
+							 * UM hook
+							 *
+							 * @type action
+							 * @title um_account_page_hidden_fields
+							 * @description Make some action before account tab loading
+							 * @input_vars
+							 * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
+							 * @change_log
+							 * ["Since: 2.0"]
+							 * @usage add_action( 'um_before_template_part', 'function_name', 10, 1 );
+							 * @example
+							 * <?php
+							 * add_action( 'um_account_page_hidden_fields', 'my_account_page_hidden_fields', 10, 1 );
+							 * function my_account_page_hidden_fields( $args ) {
+							 *     // your code here
+							 * }
+							 * ?>
+							 */
+							do_action( 'um_account_page_hidden_fields', $args );
+
+//							$this->render_account_tab( $args['tab'], $this->tabs[ $args['tab'] ], $args );
+							?>
+						</form>
+					</div>
+				</div>
+				<?php
+			}
+		} else {
+//			$this->init_tabs( $args );
+
+			$current_tab = UM()->frontend()->account()->current_tab;
+			if ( 1 < count( $tabs ) ) {
+				$current_tab = $tabs[0];
+			}
+
+			UM()->frontend()->account()->current_tab = apply_filters( 'um_change_default_tab', $current_tab, $args );
+		}
+
+		/**
+		 * Make some action before account tabs loading.
+		 *
+		 * @since 1.3
+		 * @hook um_pre_account_shortcode
+		 *
+		 * @param {array} $args Account Page Arguments.
+		 */
+		do_action( 'um_pre_account_shortcode', $args );
+
+		$output = um_get_template_html( 'account.php', $args );
+
+		//$this->account_fields_hash();
+
+		wp_enqueue_style( 'um-account' );
+
+		return $output;
+	}
+
+	/**
 	 * Change lost password URL in UM Login form
 	 *
 	 * @param  string $lostpassword_url
@@ -1139,7 +1241,7 @@ class Shortcodes {
 			$array[ $excluded ] = __( 'Default Template', 'ultimate-member' );
 		}
 
-		$paths[] = glob( um_path . 'templates/' . '*.php' );
+		$paths[] = glob( UM_PATH . 'templates/' . '*.php' );
 
 		if ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' ) ) {
 			$paths[] = glob( get_stylesheet_directory() . '/ultimate-member/templates/' . '*.php' );
@@ -1346,10 +1448,10 @@ class Shortcodes {
 		 */
 		extract( $args );
 
-		include_once um_path . 'assets/dynamic_css/dynamic_global.php';
+		include_once UM_PATH . 'assets/dynamic_css/dynamic_global.php';
 
 		if ( isset( $mode ) && in_array( $mode, array( 'profile' ) ) ) {
-			$file = um_path . 'assets/dynamic_css/dynamic_' . $mode . '.php';
+			$file = UM_PATH . 'assets/dynamic_css/dynamic_' . $mode . '.php';
 
 			if ( file_exists( $file ) ) {
 				include_once $file;
@@ -1394,7 +1496,7 @@ class Shortcodes {
 			extract( $args );
 		}
 
-		$file = um_path . "templates/{$tpl}.php";
+		$file = UM_PATH . "templates/{$tpl}.php";
 		$theme_file = get_stylesheet_directory() . "/ultimate-member/templates/{$tpl}.php";
 		if ( file_exists( $theme_file ) ) {
 			$file = $theme_file;
