@@ -745,7 +745,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						'sanitize' => 'text',
 					),
 					'_max_size'                       => array(
-						'sanitize' => 'absint',
+						'sanitize' => 'empty_absint',
 					),
 					'_height'                         => array(
 						'sanitize' => 'text',
