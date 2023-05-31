@@ -67,6 +67,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		public $fields = array();
 
 		/**
+		 * @var bool
+		 */
+		public $disable_tooltips = false;
+
+		/**
 		 * Fields constructor.
 		 */
 		public function __construct() {
@@ -712,17 +717,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$output .= '<label' . $for_attr . '>' . __( $label, 'ultimate-member' ) . '</label>';
 
 			if ( ! empty( $data['help'] ) && $this->viewing == false && ! strstr( $key, 'confirm_user_pass' ) ) {
-
 				if ( ! UM()->mobile()->isMobile() ) {
-					if ( ! isset( $this->disable_tooltips ) ) {
+					if ( false === $this->disable_tooltips ) {
 						$output .= '<span class="um-tip um-tip-' . ( is_rtl() ? 'e' : 'w' ) . '" title="' . esc_attr__( $data['help'], 'ultimate-member' ) . '"><i class="um-icon-help-circled"></i></span>';
 					}
 				}
 
-				if ( UM()->mobile()->isMobile() || isset( $this->disable_tooltips ) ) {
+				if ( UM()->mobile()->isMobile() || false !== $this->disable_tooltips ) {
 					$output .= '<span class="um-tip-text">' . __( $data['help'], 'ultimate-member' ) . '</span>';
 				}
-
 			}
 
 			$output .= '<div class="um-clear"></div></div>';
