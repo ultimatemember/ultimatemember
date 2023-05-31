@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-05-31T07:21:41+00:00\n"
+"POT-Creation-Date: 2023-05-31T07:40:35+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: ultimate-member\n"
@@ -122,7 +122,7 @@ msgstr ""
 #: includes/admin/core/class-admin-builder.php:778
 #: includes/admin/core/class-admin-dragdrop.php:33
 #: includes/admin/core/class-admin-menu.php:106
-#: includes/core/class-fields.php:4962
+#: includes/core/class-fields.php:4974
 msgid "Please login as administrator"
 msgstr ""
 
@@ -1351,7 +1351,7 @@ msgstr ""
 #: includes/core/class-fields.php:1940
 #: includes/core/class-fields.php:1981
 #: includes/core/class-fields.php:2921
-#: includes/core/class-fields.php:3011
+#: includes/core/class-fields.php:3017
 msgid "Upload"
 msgstr ""
 
@@ -3174,7 +3174,7 @@ msgid "UM Action"
 msgstr ""
 
 #: includes/admin/core/class-admin-users.php:194
-#: includes/core/class-fields.php:2991
+#: includes/core/class-fields.php:2997
 msgid "Apply"
 msgstr ""
 
@@ -4388,8 +4388,8 @@ msgstr ""
 #: includes/admin/templates/modal/forms/fonticons.php:14
 #: includes/admin/templates/role/publish.php:30
 #: includes/class-config.php:246
-#: includes/core/class-fields.php:2992
-#: includes/core/class-fields.php:3099
+#: includes/core/class-fields.php:2998
+#: includes/core/class-fields.php:3111
 #: includes/core/um-actions-profile.php:897
 #: includes/core/um-actions-profile.php:909
 #: includes/core/um-actions-profile.php:1097
@@ -7281,38 +7281,38 @@ msgid "Upload Photo"
 msgstr ""
 
 #: includes/core/class-fields.php:2958
-#: includes/core/class-fields.php:2991
+#: includes/core/class-fields.php:2997
 #: includes/core/um-actions-profile.php:1128
 msgid "Change photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2991
-#: includes/core/class-fields.php:3098
+#: includes/core/class-fields.php:2997
+#: includes/core/class-fields.php:3110
 msgid "Processing..."
 msgstr ""
 
-#: includes/core/class-fields.php:3016
+#: includes/core/class-fields.php:3022
 msgid "Upload File"
 msgstr ""
 
-#: includes/core/class-fields.php:3060
+#: includes/core/class-fields.php:3066
 #: includes/core/um-filters-fields.php:330
 msgid "This file has been removed."
 msgstr ""
 
-#: includes/core/class-fields.php:3064
+#: includes/core/class-fields.php:3070
 msgid "Change file"
 msgstr ""
 
-#: includes/core/class-fields.php:3098
+#: includes/core/class-fields.php:3110
 msgid "Save"
 msgstr ""
 
-#: includes/core/class-fields.php:4691
+#: includes/core/class-fields.php:4703
 msgid "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some information!"
 msgstr ""
 
-#: includes/core/class-fields.php:4693
+#: includes/core/class-fields.php:4705
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
