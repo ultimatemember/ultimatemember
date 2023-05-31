@@ -168,6 +168,8 @@ No, you do not need to use our plugin’s login or registration pages and can us
 * Bugfixes:
 
   - Fixed: Email notifications sending
+  - Fixed: File and Image uploaders and allowed types data for them
+  - Fixed: Content field-type editor in wp-admin Form Builder
 
 = 2.6.1: May 29, 2023 =
 
