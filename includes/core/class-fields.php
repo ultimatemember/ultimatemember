@@ -2814,7 +2814,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '<div class="um-field-area">';
 
-					if ( isset( $data['html'] ) && $data['html'] != 0 && $key != "description" ) {
+					if ( isset( $data['html'] ) && $data['html'] != 0 && 'description' !== $key ) {
 
 						$textarea_settings = array(
 							'media_buttons' => false,
@@ -2863,7 +2863,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= ob_get_clean();
 						$output .= '<br /><span class="description">' . $placeholder . '</span>';
 					} else {
-						$textarea_field_value = ! empty( $data['html'] ) ? $field_value : strip_tags( $field_value );
+						$textarea_field_value = '';
+						if ( ! empty( $field_value ) ) {
+							$textarea_field_value = ! empty( $data['html'] ) ? $field_value : wp_strip_all_tags( $field_value );
+						}
 						$output .= '<textarea  ' . $disabled . '  style="height: ' . esc_attr( $height ) . ';" class="' . $this->get_class( $key, $data ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_id ) . '" placeholder="' . esc_attr( $placeholder ) . '">' . esc_textarea( $textarea_field_value ) . '</textarea>';
 					}
 
