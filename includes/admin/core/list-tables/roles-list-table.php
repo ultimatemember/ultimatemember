@@ -362,6 +362,8 @@ class UM_Roles_List_Table extends WP_List_Table {
 			}
 		}
 
+		$actions = apply_filters( 'um_role_row_actions', $actions, $id );
+
 		return sprintf('%1$s %2$s', '<strong><a class="row-title" href="admin.php?page=um_roles&tab=edit&id=' . esc_attr( $id ) . '">' . stripslashes( $item['name'] ) . '</a></strong>', $this->row_actions( $actions ) );
 	}
 
