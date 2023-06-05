@@ -136,7 +136,7 @@ if ( ! empty( $_POST['role'] ) ) {
 				}
 			}
 
-			$role_meta = $data;
+			$role_meta = apply_filters( 'um_role_edit_data', $data, $id );
 			unset( $role_meta['id'] );
 
 			update_option( "um_role_{$id}_meta", $role_meta );
