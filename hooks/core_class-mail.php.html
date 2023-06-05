@@ -150,7 +150,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 * @param string $template_name
 		 * @return string
 		 */
-		private function locate_template( $template_name ) {
+		public function locate_template( $template_name ) {
 			// check if there is template at theme folder
 			$blog_id = $this->get_blog_id();
 
