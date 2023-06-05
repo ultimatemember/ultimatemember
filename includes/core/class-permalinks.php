@@ -333,9 +333,9 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 			$permalink_base = UM()->options()->get( 'permalink_base' );
 
 			$user_id = $wpdb->get_var(
-				"SELECT user_id 
-				FROM {$wpdb->usermeta} 
-				WHERE meta_key = 'um_user_profile_url_slug_{$permalink_base}' AND 
+				"SELECT user_id
+				FROM {$wpdb->usermeta}
+				WHERE meta_key = 'um_user_profile_url_slug_{$permalink_base}' AND
 					  meta_value = '{$slug}'
 				ORDER BY umeta_id ASC
 				LIMIT 1"
@@ -394,6 +394,31 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 				$profile_url =  add_query_arg( 'um_user', strtolower( $slug ), $profile_url );
 
 			}
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_permalinks_profile_url
+			 * @description Change user profile URL.
+			 * @input_vars
+			 * [{"var":"$profile_url","type":"string","desc":"Profile URL"},
+			 * {"var":"$page_id","type":"int","desc":"Profile Page ID"},
+			 * {"var":"$slug","type":"string","desc":"Profile slug"}]
+			 * @change_log
+			 * ["Since: 2.6.2"]
+			 * @usage
+			 * <?php add_filter( 'um_permalinks_profile_url', 'function_name', 10, 2 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_permalinks_profile_url', 'my_profile_url', 10, 2 );
+			 * function my_profile_url( $profile_url, $page_id ) {
+			 *     // your code here
+			 *     return $profile_url;
+			 * }
+			 * ?>
+			 */
+			$profile_url = apply_filters( 'um_permalinks_profile_url', $profile_url, $page_id, $slug );
 
 			return ! empty( $profile_url ) ? $profile_url : '';
 		}
