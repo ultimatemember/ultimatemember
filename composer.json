@@ -6,6 +6,12 @@
   "license": "GPL-3.0-or-later",
   "minimum-stability": "stable",
   "prefer-stable": true,
+  "config": {
+    "allow-plugins": {
+      "symfony/flex": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  },
   "require": {
     "ext-mbstring": "*",
     "ext-json": "*",
@@ -18,7 +24,7 @@
     "woocommerce/action-scheduler": "3.2.1"
   },
   "require-dev": {
-    "roave/security-advisories": "dev-master",
+    "roave/security-advisories": "dev-latest",
     "wp-cli/wp-cli": "*",
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
     "object-calisthenics/phpcs-calisthenics-rules": "*",
