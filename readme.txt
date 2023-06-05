@@ -96,9 +96,9 @@ If you're a developer and would like to contribute to the source code of the plu
 
 Want to add a new language to Ultimate Member? Great! You can contribute via [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/ultimate-member).
 
-If you are a developer and you need to know the list of UM Hooks, make this via our [Hooks Documentation](https://docs.ultimatemember.com/article/1324-hooks-list).
+If you are a developer and you need to know the list of UM Hooks, make this via our [Hooks Documentation](https://docs.ultimatemember.com/article/1324-hooks-list) or [Hooks Documentation v2](https://ultimatemember.github.io/ultimatemember/hooks/).
 
-If you are a developer and you need to know the structure of our code, make this via our [Documentation API](https://ultimatemember.com/php-docs/).
+If you are a developer and you need to know the structure of our code, make this via our [Documentation API](https://ultimatemember.github.io/ultimatemember/phpdoc/).
 
 = Documentation & Support =
 
