@@ -1,0 +1,2089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>Ultimate Member - PHPDoc</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src').replace( /\\/g, '/');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist, is empty or trying to view from localhost';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">Ultimate Member - PHPDoc</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                                                        <li><a href="../namespaces/um.html"><abbr title="\um">normal</abbr></a></li>
+                                                    </ul>
+                    </li>
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">21</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">2</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">42</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1708837257"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-1708837257" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-580237340"></a>
+                                <a href="../namespaces/um.html" style="margin-left: 30px; padding-left: 0">um</a>
+            </div>
+            <div id="namespace-580237340" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1891800814"></a>
+                                <a href="../namespaces/um-admin.html" style="margin-left: 30px; padding-left: 0">admin</a>
+            </div>
+            <div id="namespace-1891800814" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1875249531"></a>
+                                <a href="../namespaces/um-admin-core.html" style="margin-left: 30px; padding-left: 0">core</a>
+            </div>
+            <div id="namespace-1875249531" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Ajax-Hooks.html"><abbr title="\um\admin\core\Admin_Ajax_Hooks">Admin_Ajax_Hooks</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Builder.html"><abbr title="\um\admin\core\Admin_Builder">Admin_Builder</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Columns.html"><abbr title="\um\admin\core\Admin_Columns">Admin_Columns</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-DragDrop.html"><abbr title="\um\admin\core\Admin_DragDrop">Admin_DragDrop</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Enqueue.html"><abbr title="\um\admin\core\Admin_Enqueue">Admin_Enqueue</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Forms.html"><abbr title="\um\admin\core\Admin_Forms">Admin_Forms</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Forms-Settings.html"><abbr title="\um\admin\core\Admin_Forms_Settings">Admin_Forms_Settings</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-GDPR.html"><abbr title="\um\admin\core\Admin_GDPR">Admin_GDPR</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Menu.html"><abbr title="\um\admin\core\Admin_Menu">Admin_Menu</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Metabox.html"><abbr title="\um\admin\core\Admin_Metabox">Admin_Metabox</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Navmenu.html"><abbr title="\um\admin\core\Admin_Navmenu">Admin_Navmenu</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Notices.html"><abbr title="\um\admin\core\Admin_Notices">Admin_Notices</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Settings.html"><abbr title="\um\admin\core\Admin_Settings">Admin_Settings</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Theme-Updater.html"><abbr title="\um\admin\core\Admin_Theme_Updater">Admin_Theme_Updater</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Upgrade.html"><abbr title="\um\admin\core\Admin_Upgrade">Admin_Upgrade</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Users.html"><abbr title="\um\admin\core\Admin_Users">Admin_Users</abbr></a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/um-admin-Admin-Functions.html"><abbr title="\um\admin\Admin_Functions">Admin_Functions</abbr></a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-22960582"></a>
+                                <a href="../namespaces/um-core.html" style="margin-left: 30px; padding-left: 0">core</a>
+            </div>
+            <div id="namespace-22960582" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1504981622"></a>
+                                <a href="../namespaces/um-core-rest.html" style="margin-left: 30px; padding-left: 0">rest</a>
+            </div>
+            <div id="namespace-1504981622" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/um-core-rest-API.html"><abbr title="\um\core\rest\API">API</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-rest-API-v1.html"><abbr title="\um\core\rest\API_v1">API_v1</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-rest-API-v2.html"><abbr title="\um\core\rest\API_v2">API_v2</abbr></a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/um-core-Access.html"><abbr title="\um\core\Access">Access</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Account.html"><abbr title="\um\core\Account">Account</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-AJAX-Common.html"><abbr title="\um\core\AJAX_Common">AJAX_Common</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Blocks.html"><abbr title="\um\core\Blocks">Blocks</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Builtin.html"><abbr title="\um\core\Builtin">Builtin</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Common.html"><abbr title="\um\core\Common">Common</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Cron.html"><abbr title="\um\core\Cron">Cron</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Date-Time.html"><abbr title="\um\core\Date_Time">Date_Time</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Enqueue.html"><abbr title="\um\core\Enqueue">Enqueue</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-External-Integrations.html"><abbr title="\um\core\External_Integrations">External_Integrations</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Fields.html"><abbr title="\um\core\Fields">Fields</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Files.html"><abbr title="\um\core\Files">Files</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-FontIcons.html"><abbr title="\um\core\FontIcons">FontIcons</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Form.html"><abbr title="\um\core\Form">Form</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-GDPR.html"><abbr title="\um\core\GDPR">GDPR</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Login.html"><abbr title="\um\core\Login">Login</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Logout.html"><abbr title="\um\core\Logout">Logout</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Mail.html"><abbr title="\um\core\Mail">Mail</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Member-Directory.html"><abbr title="\um\core\Member_Directory">Member_Directory</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Member-Directory-Meta.html"><abbr title="\um\core\Member_Directory_Meta">Member_Directory_Meta</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Modal.html"><abbr title="\um\core\Modal">Modal</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Multisite.html"><abbr title="\um\core\Multisite">Multisite</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Options.html"><abbr title="\um\core\Options">Options</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Password.html"><abbr title="\um\core\Password">Password</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Permalinks.html"><abbr title="\um\core\Permalinks">Permalinks</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Plugin-Updater.html"><abbr title="\um\core\Plugin_Updater">Plugin_Updater</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Profile.html"><abbr title="\um\core\Profile">Profile</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Query.html"><abbr title="\um\core\Query">Query</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Register.html"><abbr title="\um\core\Register">Register</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Rewrite.html"><abbr title="\um\core\Rewrite">Rewrite</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Roles-Capabilities.html"><abbr title="\um\core\Roles_Capabilities">Roles_Capabilities</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Setup.html"><abbr title="\um\core\Setup">Setup</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Shortcodes.html"><abbr title="\um\core\Shortcodes">Shortcodes</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Templates.html"><abbr title="\um\core\Templates">Templates</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Uploader.html"><abbr title="\um\core\Uploader">Uploader</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-User.html"><abbr title="\um\core\User">User</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-User-posts.html"><abbr title="\um\core\User_posts">User_posts</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Validation.html"><abbr title="\um\core\Validation">Validation</abbr></a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1171849896"></a>
+                                <a href="../namespaces/um-lib.html" style="margin-left: 30px; padding-left: 0">lib</a>
+            </div>
+            <div id="namespace-1171849896" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-269627710"></a>
+                                <a href="../namespaces/um-lib-mobiledetect.html" style="margin-left: 30px; padding-left: 0">mobiledetect</a>
+            </div>
+            <div id="namespace-269627710" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/um-lib-mobiledetect-Um-Mobile-Detect.html"><abbr title="\um\lib\mobiledetect\Um_Mobile_Detect">Um_Mobile_Detect</abbr></a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1929060585"></a>
+                                <a href="../namespaces/um-widgets.html" style="margin-left: 30px; padding-left: 0">widgets</a>
+            </div>
+            <div id="namespace-1929060585" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/um-widgets-UM-Search-Widget.html"><abbr title="\um\widgets\UM_Search_Widget">UM_Search_Widget</abbr></a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/um-Config.html"><abbr title="\um\Config">Config</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-Dependencies.html"><abbr title="\um\Dependencies">Dependencies</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-Extensions.html"><abbr title="\um\Extensions">Extensions</abbr></a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Array2XML.html"><abbr title="\Array2XML">Array2XML</abbr></a></li>
+                                                    <li class="class"><a href="../classes/Browser.html"><abbr title="\Browser">Browser</abbr></a></li>
+                                                    <li class="class"><a href="../classes/UM-Emails-List-Table.html"><abbr title="\UM_Emails_List_Table">UM_Emails_List_Table</abbr></a></li>
+                                                    <li class="class"><a href="../classes/UM-Functions.html"><abbr title="\UM_Functions">UM_Functions</abbr></a></li>
+                                                    <li class="class"><a href="../classes/UM-Roles-List-Table.html"><abbr title="\UM_Roles_List_Table">UM_Roles_List_Table</abbr></a></li>
+                                                    <li class="class"><a href="../classes/UM-Versions-List-Table.html"><abbr title="\UM_Versions_List_Table">UM_Versions_List_Table</abbr></a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/um-core.html"><abbr title="\um\core">normal</abbr></a> <i class="icon-level-up"></i>
+                                            </nav>
+                    
+                    <h1><small>\um\core</small>Files</h1>
+                    <p><em>Class Files</em></p>
+                    
+                    
+                                        
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/um-core-Files.html#method___construct" class="">__construct()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_get_download_link" class="">get_download_link()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_download_routing" class="">download_routing()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_image_download" class="">image_download()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_file_download" class="">file_download()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_ajax_remove_file" class="">ajax_remove_file()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_ajax_resize_image" class="">ajax_resize_image()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_ajax_image_upload" class="">ajax_image_upload()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_ajax_file_upload" class="">ajax_file_upload()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_allowed_image_types" class="">allowed_image_types()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_allowed_file_types" class="">allowed_file_types()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_get_fonticon_by_ext" class="">get_fonticon_by_ext()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_get_fonticon_bg_by_ext" class="">get_fonticon_bg_by_ext()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_setup_paths" class="">setup_paths()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_unique_dir" class="">unique_dir()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_path_only" class="">path_only()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_fix_image_orientation" class="">fix_image_orientation()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_create_and_copy_image" class="">create_and_copy_image()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_upload_temp_file" class="">upload_temp_file()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_new_image_upload_temp" class="">new_image_upload_temp()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_new_file_upload_temp" class="">new_file_upload_temp()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_make_dir" class="">make_dir()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_get_extension_by_mime_type" class="">get_extension_by_mime_type()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_get_file_data" class="">get_file_data()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_get_image_data" class="">get_image_data()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_in_array" class="">in_array()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_delete_file" class="">delete_file()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_delete_core_user_photo" class="">delete_core_user_photo()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_resize_image" class="">resize_image()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_new_user" class="">new_user()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_new_user_upload" class="deprecated">new_user_upload()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_remove_dir" class="">remove_dir()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_remove_old_files" class="">remove_old_files()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_format_bytes" class="">format_bytes()</a><br />
+                                                                    <a href="../classes/um-core-Files.html#method_get_profile_photo_size" class="">get_profile_photo_size()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/um-core-Files.html#property_upload_temp" class="">$upload_temp</a><br />
+                                                                    <a href="../classes/um-core-Files.html#property_upload_baseurl" class="">$upload_baseurl</a><br />
+                                                                    <a href="../classes/um-core-Files.html#property_upload_basedir" class="">$upload_basedir</a><br />
+                                                                    <a href="../classes/um-core-Files.html#property_fonticon" class="">$fonticon</a><br />
+                                                                    <a href="../classes/um-core-Files.html#property_upload_dir" class="">$upload_dir</a><br />
+                                                                    <a href="../classes/um-core-Files.html#property_upload_temp_url" class="">$upload_temp_url</a><br />
+                                                                    <a href="../classes/um-core-Files.html#property_default_file_fonticon" class="">$default_file_fonticon</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No constants found</em>
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No protected properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <em>No private methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No private properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/includes-core-class-files.html"><div class="path-wrapper">includes/core/class-files.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">um\core</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                    <div class="namespace-wrapper">\um\core\Files</div>
+                            </dd>
+
+                        
+                        
+                        
+                                                
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr><td colspan="2"><em>None found</em></td></tr>
+                                        </table>
+                </aside>
+            </div>
+
+                        
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_upload_temp" name="property_upload_temp" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$upload_temp</h3>
+                <pre class="signature">$upload_temp</pre>
+                <p><em></em></p>
+                
+
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_upload_baseurl" name="property_upload_baseurl" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$upload_baseurl</h3>
+                <pre class="signature">$upload_baseurl</pre>
+                <p><em></em></p>
+                
+
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_upload_basedir" name="property_upload_basedir" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$upload_basedir</h3>
+                <pre class="signature">$upload_basedir</pre>
+                <p><em></em></p>
+                
+
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_fonticon" name="property_fonticon" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$fonticon</h3>
+                <pre class="signature">$fonticon : array|array[]</pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                <a href="../array|array[]"><abbr title="array|array[]">normal</abbr></a>
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_upload_dir" name="property_upload_dir" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$upload_dir</h3>
+                <pre class="signature">$upload_dir : null|string</pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                <a href="../null|string"><abbr title="null|string">normal</abbr></a>
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_upload_temp_url" name="property_upload_temp_url" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$upload_temp_url</h3>
+                <pre class="signature">$upload_temp_url : null</pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                <a href="../null"><abbr title="null">normal</abbr></a>
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_default_file_fonticon" name="property_default_file_fonticon" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$default_file_fonticon</h3>
+                <pre class="signature">$default_file_fonticon : string</pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                <a href="../string"><abbr title="string">normal</abbr></a>
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method___construct" name="method___construct" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">__construct()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">__construct() : mixed</pre>
+                <p><em>Files constructor.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_download_link" name="method_get_download_link" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_download_link()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_download_link(int  <span class="argument">$form_id</span>, string  <span class="argument">$field_key</span>, int  <span class="argument">$user_id</span>) : string</pre>
+                <p><em>File download link generate</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>int</td>
+                                <td>$form_id </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$field_key </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>int</td>
+                                <td>$user_id </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_download_routing" name="method_download_routing" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">download_routing()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">download_routing() : bool</pre>
+                <p><em></em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_image_download" name="method_image_download" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">image_download()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">image_download( <span class="argument">$user_id</span>,  <span class="argument">$field_key</span>,  <span class="argument">$field_value</span>) : mixed</pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$user_id </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$field_key </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$field_value </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_file_download" name="method_file_download" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">file_download()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">file_download( <span class="argument">$user_id</span>,  <span class="argument">$field_key</span>,  <span class="argument">$field_value</span>) : mixed</pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$user_id </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$field_key </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$field_value </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_ajax_remove_file" name="method_ajax_remove_file" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">ajax_remove_file()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">ajax_remove_file() : mixed</pre>
+                <p><em>Remove file by AJAX</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_ajax_resize_image" name="method_ajax_resize_image" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">ajax_resize_image()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">ajax_resize_image() : mixed</pre>
+                <p><em>Resize image AJAX handler</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_ajax_image_upload" name="method_ajax_image_upload" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">ajax_image_upload()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">ajax_image_upload() : mixed</pre>
+                <p><em>Image upload by AJAX</em></p>
+                
+
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\Exception</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_ajax_file_upload" name="method_ajax_file_upload" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">ajax_file_upload()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">ajax_file_upload() : mixed</pre>
+                <p><em>File upload by AJAX</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_allowed_image_types" name="method_allowed_image_types" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">allowed_image_types()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">allowed_image_types() : array</pre>
+                <p><em>Allowed image types</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_allowed_file_types" name="method_allowed_file_types" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">allowed_file_types()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">allowed_file_types() : mixed</pre>
+                <p><em>Allowed file types</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_fonticon_by_ext" name="method_get_fonticon_by_ext" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_fonticon_by_ext()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_fonticon_by_ext( <span class="argument">$extension</span>) : string</pre>
+                <p><em>Get extension icon</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$extension </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_fonticon_bg_by_ext" name="method_get_fonticon_bg_by_ext" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_fonticon_bg_by_ext()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_fonticon_bg_by_ext( <span class="argument">$extension</span>) : string</pre>
+                <p><em>Get extension icon background</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$extension </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setup_paths" name="method_setup_paths" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setup_paths()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setup_paths() : mixed</pre>
+                <p><em>Setup upload directory</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_unique_dir" name="method_unique_dir" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">unique_dir()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">unique_dir() : mixed</pre>
+                <p><em>Generate unique temp directory</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_path_only" name="method_path_only" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">path_only()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">path_only( <span class="argument">$file</span>) : string</pre>
+                <p><em>Get path only without file name</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$file </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_fix_image_orientation" name="method_fix_image_orientation" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">fix_image_orientation()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">fix_image_orientation( <span class="argument">$rotate</span>,  <span class="argument">$source</span>) : resource</pre>
+                <p><em>Fix image orientation</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$rotate </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$source </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    resource
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_create_and_copy_image" name="method_create_and_copy_image" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">create_and_copy_image()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">create_and_copy_image( <span class="argument">$source</span>,  <span class="argument">$destination</span>, int  <span class="argument">$quality = 100</span>) : array</pre>
+                <p><em>Process an image</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$source </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$destination </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>int</td>
+                                <td>$quality </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_upload_temp_file" name="method_upload_temp_file" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">upload_temp_file()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">upload_temp_file( <span class="argument">$source</span>,  <span class="argument">$destination</span>) : mixed</pre>
+                <p><em>Process a file</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$source </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$destination </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_new_image_upload_temp" name="method_new_image_upload_temp" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">new_image_upload_temp()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">new_image_upload_temp( <span class="argument">$source</span>,  <span class="argument">$destination</span>, int  <span class="argument">$quality = 100</span>) : string</pre>
+                <p><em>Process a temp upload</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$source </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$destination </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>int</td>
+                                <td>$quality </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_new_file_upload_temp" name="method_new_file_upload_temp" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">new_file_upload_temp()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">new_file_upload_temp( <span class="argument">$source</span>,  <span class="argument">$destination</span>) : string</pre>
+                <p><em>Process a temp upload for files</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$source </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$destination </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_make_dir" name="method_make_dir" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">make_dir()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">make_dir( <span class="argument">$dir</span>) : mixed</pre>
+                <p><em>Make a Folder</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$dir </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_extension_by_mime_type" name="method_get_extension_by_mime_type" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_extension_by_mime_type()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_extension_by_mime_type( <span class="argument">$mime</span>) : mixed</pre>
+                <p><em>Get extension by mime type</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$mime </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_file_data" name="method_get_file_data" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_file_data()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_file_data( <span class="argument">$file</span>) : mixed</pre>
+                <p><em>Get file data</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$file </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_image_data" name="method_get_image_data" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_image_data()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_image_data( <span class="argument">$file</span>) : mixed</pre>
+                <p><em>Get image data</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$file </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_in_array" name="method_in_array" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">in_array()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">in_array( <span class="argument">$value</span>,  <span class="argument">$array</span>) : bool</pre>
+                <p><em>If a value exists in comma seperated list</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$value </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$array </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_delete_file" name="method_delete_file" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">delete_file()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">delete_file(string  <span class="argument">$src</span>) : bool</pre>
+                <p><em>This function will delete file upload from server</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$src </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_delete_core_user_photo" name="method_delete_core_user_photo" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">delete_core_user_photo()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">delete_core_user_photo( <span class="argument">$user_id</span>,  <span class="argument">$type</span>) : mixed</pre>
+                <p><em>Delete a main user photo</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$user_id </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$type </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_resize_image" name="method_resize_image" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">resize_image()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">resize_image( <span class="argument">$file</span>,  <span class="argument">$crop</span>) : string</pre>
+                <p><em>Resize a local image</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$file </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$crop </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_new_user" name="method_new_user" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">new_user()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">new_user( <span class="argument">$user_id</span>) : mixed</pre>
+                <p><em>Make a user folder for uploads</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$user_id </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_new_user_upload" name="method_new_user_upload" class="anchor"></a>
+            <article class="method">
+                <h3 class="public deprecated">new_user_upload()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">new_user_upload( <span class="argument">$user_id</span>,  <span class="argument">$source</span>,  <span class="argument">$key</span>) : string</pre>
+                <p><em>New user upload</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$user_id </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$source </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$key </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                                <aside class="alert alert-block alert-error">
+                    <h4>Deprecated since 2.1.0</h4>
+                    
+                </aside>
+                        <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_remove_dir" name="method_remove_dir" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">remove_dir()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">remove_dir( <span class="argument">$dir</span>) : mixed</pre>
+                <p><em>Remove a directory</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$dir </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_remove_old_files" name="method_remove_old_files" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">remove_old_files()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">remove_old_files(string  <span class="argument">$dir</span>, int|string  <span class="argument">$timestamp = NULL</span>) : mixed</pre>
+                <p><em>Remove old files</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$dir </td>
+                                <td><p>Path to directoty.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>int|string</td>
+                                <td>$timestamp </td>
+                                <td><p>Unix timestamp or PHP relative time. All older files will be removed.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_format_bytes" name="method_format_bytes" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">format_bytes()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">format_bytes( <span class="argument">$size</span>, int  <span class="argument">$precision = 1</span>) : string</pre>
+                <p><em>Format Bytes</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$size </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>int</td>
+                                <td>$precision </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_profile_photo_size" name="method_get_profile_photo_size" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_profile_photo_size()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_profile_photo_size(string  <span class="argument">$type</span>) : array</pre>
+                <p><em>Get the list of profile/cover sizes</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$type </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-core-Files.html"><div class="path-wrapper">\um\core\Files</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">class-files.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/includes/core/class-files.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                            <li><a href="../namespaces/um.html"><abbr title="\um">normal</abbr></a></li>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on June 5th, 2023 at 10:24.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>
