@@ -42,6 +42,25 @@ if ( isset( $_GET['action'] ) ) {
 				}
 
 				delete_option( "um_role_{$role_key}_meta" );
+				/**
+				 * UM hook
+				 *
+				 * @type action
+				 * @title um_after_delete_role
+				 * @description After delete role
+				 * @change_log
+				 * ["Since: 2.6.3"]
+				 * @usage add_action( 'um_after_delete_role', 'function_name', 10, 1 );
+				 * @example
+				 * <?php
+				 * add_action( 'um_after_delete_role', 'um_after_delete_role', 10, 1 );
+				 * function um_after_delete_role( $role_key ) {
+				 *     // your code here
+				 * }
+				 * ?>
+				 */
+				do_action( 'um_after_delete_role', $role_key, $role_meta );
+
 				$um_roles = array_diff( $um_roles, array( $role_key ) );
 
 				$roleID            = 'um_' . $role_key;
@@ -114,6 +133,25 @@ if ( isset( $_GET['action'] ) ) {
 				}
 
 				delete_option( "um_role_{$role_key}_meta" );
+
+				/**
+				 * UM hook
+				 *
+				 * @type action
+				 * @title um_after_delete_role_meta
+				 * @description After delete role meta
+				 * @change_log
+				 * ["Since: 2.6.3"]
+				 * @usage add_action( 'um_after_delete_role_meta', 'function_name', 10, 1 );
+				 * @example
+				 * <?php
+				 * add_action( 'um_after_delete_role_meta', 'um_after_delete_role_meta', 10, 1 );
+				 * function um_after_delete_role_meta( $role_key ) {
+				 *     // your code here
+				 * }
+				 * ?>
+				 */
+				do_action( 'um_after_delete_role_meta', $role_key, $role_meta );
 			}
 
 			um_js_redirect( add_query_arg( 'msg', 'reset', $redirect ) );
