@@ -1,12 +1,11 @@
 <?php
 namespace um\admin\core;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
-
 
 	/**
 	 * Class Admin_Users
@@ -42,8 +41,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			add_action( 'um_admin_user_action_hook', array( &$this, 'user_action_hook' ), 10, 1 );
 		}
 
-
-		function get_users() {
+		public function get_users() {
 			UM()->admin()->check_ajax_nonce();
 
 			$search_request = ! empty( $_REQUEST['search'] ) ? sanitize_text_field( $_REQUEST['search'] ) : '';
@@ -53,16 +51,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			$args = array(
 				'fields' => array( 'ID', 'user_login' ),
 				'paged'  => $page,
-				'number' => $per_page
+				'number' => $per_page,
 			);
 
 			if ( ! empty( $search_request ) ) {
-				$args['search'] = $search_request;
+				$args['search'] = '*' . $search_request . '*';
 			}
+
+			$args = apply_filters( 'um_get_users_list_ajax_args', $args );
 
 			$users_query = new \WP_User_Query( $args );
 			$users       = $users_query->get_results();
 			$total_count = $users_query->get_total();
+
+			if ( ! empty( $_REQUEST['avatar'] ) ) {
+				foreach ( $users as $key => $user ) {
+					$url                = get_avatar_url( $user->ID );
+					$users[ $key ]->img = $url;
+				}
+			}
 
 			wp_send_json_success(
 				array(
@@ -71,7 +78,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 				)
 			);
 		}
-
 
 		/**
 		 * Restrict the edit/delete users via wp-admin screen by the UM role capabilities
@@ -83,7 +89,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		 *
 		 * @return mixed
 		 */
-		function map_caps_by_role( $allcaps, $cap, $args, $user ) {
+		public function map_caps_by_role( $allcaps, $cap, $args, $user ) {
 			if ( isset( $cap[0] ) && $cap[0] == 'edit_users' ) {
 				if ( isset( $args[0] ) && isset( $args[1] ) && ! user_can( $args[1], 'administrator' ) && $args[0] == 'edit_user' ) {
 					if ( isset( $args[2] ) && ! UM()->roles()->um_current_user_can( 'edit', $args[2] ) ) {
@@ -107,13 +113,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			return $allcaps;
 		}
 
-
 		/**
 		 * Does an action to user asap
 		 *
 		 * @param string $action
 		 */
-		function user_action_hook( $action ) {
+		public function user_action_hook( $action ) {
 			switch ( $action ) {
 				default:
 					/**
@@ -176,12 +181,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			}
 		}
 
-
 		/**
 		 * Add UM Bulk actions to Users List Table
 		 *
 		 */
-		function restrict_manage_users() { ?>
+		public function restrict_manage_users() {
+			?>
 			<div style="float:right;margin:0 4px">
 
 				<label class="screen-reader-text" for="um_bulk_action"><?php _e( 'UM Action', 'ultimate-member' ); ?></label>
@@ -197,16 +202,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 			<?php if ( ! empty( $_REQUEST['um_status'] ) ) { ?>
 				<input type="hidden" name="um_status" id="um_status" value="<?php echo esc_attr( sanitize_key( $_REQUEST['um_status'] ) );?>"/>
-			<?php }
+				<?php
+			}
 		}
-
 
 		/**
 		 * Get UM bulk actions HTML
 		 *
 		 * @return string
 		 */
-		function get_bulk_admin_actions() {
+		public function get_bulk_admin_actions() {
 
 			/**
 			 * UM hook
@@ -259,7 +264,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			return $output;
 		}
 
-
 		/**
 		 * Custom row actions for users page
 		 *
@@ -267,7 +271,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		 * @param $user_object \WP_User
 		 * @return array
 		 */
-		function user_row_actions( $actions, $user_object ) {
+		public function user_row_actions( $actions, $user_object ) {
 			$user_id = $user_object->ID;
 
 			$actions['frontend_profile'] = '<a href="' . um_user_profile_url( $user_id ) . '">' . __( 'View profile', 'ultimate-member' ) . '</a>';
@@ -312,14 +316,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			return $actions;
 		}
 
-
 		/**
 		 * Change default sorting at WP Users list table
 		 *
 		 * @param array $args
 		 * @return array
 		 */
-		function hide_by_caps( $args ) {
+		public function hide_by_caps( $args ) {
 			if ( ! current_user_can( 'administrator' ) ) {
 				$can_view_roles = um_user( 'can_view_roles' );
 				if ( um_user( 'can_view_all' ) && ! empty( $can_view_roles ) ) {
@@ -329,7 +332,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 			return $args;
 		}
-
 
 		/**
 		 * Change default sorting at WP Users list table
@@ -349,7 +351,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 			return $query;
 		}
-
 
 		/**
 		 * Filter WP users by UM Status
@@ -384,7 +385,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 			return $query;
 		}
-
 
 		/**
 		 * Add status links to WP Users List Table
@@ -474,7 +474,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			return $views;
 		}
 
-
 		/**
 		 * Bulk user editing actions
 		 */
@@ -561,14 +560,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			}
 		}
 
-
 		/**
 		 * Sets redirect URI after bulk action
 		 *
 		 * @param string $uri
 		 * @return string
 		 */
-		function set_redirect_uri( $uri ) {
+		public function set_redirect_uri( $uri ) {
 
 			if ( ! empty( $_REQUEST['s'] ) ) {
 				$uri = add_query_arg( 's', sanitize_text_field( $_REQUEST['s'] ), $uri );
@@ -581,6 +579,5 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			return $uri;
 
 		}
-
 	}
 }

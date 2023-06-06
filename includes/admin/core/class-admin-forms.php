@@ -576,33 +576,39 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 *
 		 * @return bool|string
 		 */
-		function render_users_dropdown( $field_data ) {
+		public function render_users_dropdown( $field_data ) {
 			if ( empty( $field_data['id'] ) ) {
 				return false;
 			}
 
 			$multiple = ! empty( $field_data['multi'] ) ? 'multiple' : '';
 
-			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
+			$id      = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
 			$id_attr = ' id="' . esc_attr( $id ) . '" ';
 
-			$class = ! empty( $field_data['class'] ) ? $field_data['class'] . ' ' : ' ';
-			$class .= ! empty( $field_data['size'] ) ? 'um-' . $field_data['size'] . '-field' : 'um-long-field';
+			$class      = ! empty( $field_data['class'] ) ? $field_data['class'] . ' ' : ' ';
+			$class     .= ! empty( $field_data['size'] ) ? 'um-' . $field_data['size'] . '-field' : 'um-long-field';
 			$class_attr = ' class="um-forms-field um-user-select-field' . esc_attr( $class ) . '" ';
 
 			$data = array(
 				'field_id' => $field_data['id'],
+				'avatar'   => ! empty( $field_data['avatar'] ) ? 1 : 0,
 			);
+
+			if ( ! empty( $field_data['data'] ) && is_array( $field_data['data'] ) ) {
+				$data = array_merge( $data, $field_data['data'] );
+			}
 
 			$data_attr = '';
 			foreach ( $data as $key => $value ) {
 				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
 			}
 
-			$name = $field_data['id'];
-			$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
+			$name             = $field_data['id'];
+			$name             = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
 			$hidden_name_attr = ' name="' . $name . '" ';
-			$name = $name . ( ! empty( $field_data['multi'] ) ? '[]' : '' );
+
+			$name      = $name . ( ! empty( $field_data['multi'] ) ? '[]' : '' );
 			$name_attr = ' name="' . $name . '" ';
 
 			$value = $this->get_field_value( $field_data );
@@ -620,15 +626,22 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$options = '';
 			if ( ! empty( $users ) ) {
 				foreach ( $users as $user ) {
-					$options .= '<option value="' . esc_attr( $user->ID ) . '" selected>' . esc_html( $user->user_login . ' (#' . $user->ID . ')' ) . '</option>';
+					if ( ! empty( $field_data['avatar'] ) ) {
+						$url      = get_avatar_url( $user->ID, 'size=20' );
+						$options .= '<option data-img="' . esc_url( $url ) . '" value="' . esc_attr( $user->ID ) . '" selected>' . esc_html( $user->user_login . ' (#' . $user->ID . ')' ) . '</option>';
+					} else {
+						$options .= '<option value="' . esc_attr( $user->ID ) . '" selected>' . esc_html( $user->user_login . ' (#' . $user->ID . ')' ) . '</option>';
+					}
 				}
 			}
+
+			$placeholder = ! empty( $field_data['placeholder'] ) ? $field_data['placeholder'] : __( 'Select Users', 'ultimate-member' );
 
 			$hidden = '';
 			if ( ! empty( $multiple ) ) {
 				$hidden = "<input type=\"hidden\" $hidden_name_attr value=\"\" />";
 			}
-			$html = "$hidden<select $multiple $id_attr $name_attr $class_attr $data_attr data-placeholder=\"" . esc_attr__( 'Select Users', 'ultimate-member' ) . "\" placeholder=\"" . esc_attr__( 'Select Users', 'ultimate-member' ) . "\"><option>" . esc_html__( 'Select Users', 'ultimate-member' ) . "</option>$options</select>";
+			$html = "$hidden<select $multiple $id_attr $name_attr $class_attr $data_attr data-placeholder=\"" . esc_attr( $placeholder ) . "\" placeholder=\"" . esc_attr( $placeholder ) . "\"><option value=\"\">" . esc_html( $placeholder ) . "</option>$options</select>";
 
 			return $html;
 		}
