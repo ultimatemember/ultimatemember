@@ -125,6 +125,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 							'target' => array(),
 							'class' => array(),
 						),
+						'button' => array(
+							'class' => array(),
+						),
 						'i' => array(
 							'class' => array(),
 						),
