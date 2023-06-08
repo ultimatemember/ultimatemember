@@ -1,11 +1,11 @@
 <?php
 namespace um\core;
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\FontIcons' ) ) {
-
 
 	/**
 	 * Class FontIcons
@@ -13,30 +13,35 @@ if ( ! class_exists( 'um\core\FontIcons' ) ) {
 	 */
 	class FontIcons {
 
+		/**
+		 * The list of the FontIcons.
+		 *
+		 * @var array
+		 */
+		public $all = array();
 
 		/**
 		 * FontIcons constructor.
 		 */
-		function __construct() {
+		public function __construct() {
+			$cached_option = get_option( 'um_cache_fonticons', array() );
 
-			if ( ! get_option( 'um_cache_fonticons' ) ) {
-
+			if ( empty( $cached_option ) ) {
 				$files['ii'] = um_path . 'assets/css/um-fonticons-ii.css';
 				$files['fa'] = um_path . 'assets/css/um-fonticons-fa.css';
 
 				$array = array();
 				foreach ( $files as $c => $file ) {
-
 					$css = file_get_contents( $file );
 
-					if ( $c == 'fa' ) {
-						preg_match_all('/\.(um-faicon-.*?):before/', $css, $matches);
+					if ( 'fa' === $c ) {
+						preg_match_all( '/\.(um-faicon-.*?):before/', $css, $matches );
 					} else {
-						preg_match_all('/\.(um-icon-.*?):before/', $css, $matches);
+						preg_match_all( '/\.(um-icon-.*?):before/', $css, $matches );
 					}
 
 					foreach ( $matches[1] as $match ) {
-						$icon = str_replace( ':before', '', $match );
+						$icon    = str_replace( ':before', '', $match );
 						$array[] = $icon;
 					}
 					$array = array_unique( $array );
@@ -45,9 +50,7 @@ if ( ! class_exists( 'um\core\FontIcons' ) ) {
 				update_option( 'um_cache_fonticons', $array );
 			}
 
-			$this->all = get_option( 'um_cache_fonticons' );
-
+			$this->all = $cached_option;
 		}
-
 	}
 }
