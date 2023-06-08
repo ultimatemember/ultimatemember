@@ -24,35 +24,44 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 			add_filter( 'block_type_metadata_settings', array( &$this, 'block_type_metadata_settings' ), 100, 2 );
 		}
 
-
+		/**
+		 * Add attribute types if restricted blocks is active.
+		 *
+		 * @param array $settings Array of determined settings for registering a block type.
+		 * @param array $args     Metadata provided for registering a block type.
+		 *
+		 * @return array
+		 */
 		public function block_type_metadata_settings( $settings, $args ) {
 			$restricted_blocks = UM()->options()->get( 'restricted_blocks' );
-			if ( ! empty( $restricted_blocks ) ) {
-				if ( empty( $settings['attributes']['um_is_restrict'] ) ) {
-					$settings['attributes']['um_is_restrict'] = array(
-						'type' => 'boolean',
-					);
-				}
-				if ( empty( $settings['attributes']['um_who_access'] ) ) {
-					$settings['attributes']['um_who_access'] = array(
-						'type' => 'string',
-					);
-				}
-				if ( empty( $settings['attributes']['um_roles_access'] ) ) {
-					$settings['attributes']['um_roles_access'] = array(
-						'type' => 'array',
-					);
-				}
-				if ( empty( $settings['attributes']['um_message_type'] ) ) {
-					$settings['attributes']['um_message_type'] = array(
-						'type' => 'string',
-					);
-				}
-				if ( empty( $settings['attributes']['um_message_content'] ) ) {
-					$settings['attributes']['um_message_content'] = array(
-						'type' => 'string',
-					);
-				}
+			if ( empty( $restricted_blocks ) ) {
+				return $settings;
+			}
+
+			if ( empty( $settings['attributes']['um_is_restrict'] ) ) {
+				$settings['attributes']['um_is_restrict'] = array(
+					'type' => 'boolean',
+				);
+			}
+			if ( empty( $settings['attributes']['um_who_access'] ) ) {
+				$settings['attributes']['um_who_access'] = array(
+					'type' => 'string',
+				);
+			}
+			if ( empty( $settings['attributes']['um_roles_access'] ) ) {
+				$settings['attributes']['um_roles_access'] = array(
+					'type' => 'array',
+				);
+			}
+			if ( empty( $settings['attributes']['um_message_type'] ) ) {
+				$settings['attributes']['um_message_type'] = array(
+					'type' => 'string',
+				);
+			}
+			if ( empty( $settings['attributes']['um_message_content'] ) ) {
+				$settings['attributes']['um_message_content'] = array(
+					'type' => 'string',
+				);
 			}
 
 			return $settings;
