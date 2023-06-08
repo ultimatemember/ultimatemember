@@ -81,6 +81,13 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 			 * @param {bool} $disable_script Disabling block scripts variable.
 			 *
 			 * @return {bool} It's true for disabling block scripts.
+			 *
+			 * @example <caption>Disable block scripts.</caption>
+			 * function my_custom_um_disable_blocks_script( $disable_script ) {
+			 *     $disable_script = true;
+			 *     return $disable_script;
+			 * }
+			 * add_filter( 'um_disable_blocks_script', 'my_custom_um_disable_blocks_script', 10, 1 );
 			 */
 			$disable_script = apply_filters( 'um_disable_blocks_script', false );
 			if ( $disable_script ) {

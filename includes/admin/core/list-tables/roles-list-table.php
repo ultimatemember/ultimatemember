@@ -43,21 +43,19 @@ if ( isset( $_GET['action'] ) ) {
 
 				delete_option( "um_role_{$role_key}_meta" );
 				/**
-				 * UM hook
+				 * Fires after delete UM role.
 				 *
-				 * @type action
-				 * @title um_after_delete_role
-				 * @description After delete role
-				 * @change_log
-				 * ["Since: 2.6.3"]
-				 * @usage add_action( 'um_after_delete_role', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_after_delete_role', 'um_after_delete_role', 10, 1 );
-				 * function um_after_delete_role( $role_key ) {
+				 * @since 2.6.3
+				 * @hook um_after_delete_role
+				 *
+				 * @param {string} $role_key  Role key.
+				 * @param {array}  $role_meta Role meta.
+				 *
+				 * @example <caption>Make any custom action after deleting UM role.</caption>
+				 * function my_custom_um_after_delete_role( $role_key, $role_meta ) {
 				 *     // your code here
 				 * }
-				 * ?>
+				 * add_action( 'um_after_delete_role', 'my_custom_um_after_delete_role', 10, 2 );
 				 */
 				do_action( 'um_after_delete_role', $role_key, $role_meta );
 
@@ -135,21 +133,19 @@ if ( isset( $_GET['action'] ) ) {
 				delete_option( "um_role_{$role_key}_meta" );
 
 				/**
-				 * UM hook
+				 * Fires after delete UM role meta.
 				 *
-				 * @type action
-				 * @title um_after_delete_role_meta
-				 * @description After delete role meta
-				 * @change_log
-				 * ["Since: 2.6.3"]
-				 * @usage add_action( 'um_after_delete_role_meta', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_after_delete_role_meta', 'um_after_delete_role_meta', 10, 1 );
-				 * function um_after_delete_role_meta( $role_key ) {
+				 * @since 2.6.3
+				 * @hook um_after_delete_role_meta
+				 *
+				 * @param {string} $role_key  Role key.
+				 * @param {array}  $role_meta Role meta.
+				 *
+				 * @example <caption>Make any custom action after deleting UM role meta.</caption>
+				 * function my_custom_um_after_delete_role_meta( $role_key, $role_meta ) {
 				 *     // your code here
 				 * }
-				 * ?>
+				 * add_action( 'um_after_delete_role_meta', 'my_custom_um_after_delete_role_meta', 10, 2 );
 				 */
 				do_action( 'um_after_delete_role_meta', $role_key, $role_meta );
 			}
@@ -400,9 +396,25 @@ class UM_Roles_List_Table extends WP_List_Table {
 			}
 		}
 
+		/**
+		 * Filters the role actions in WP ListTable Ultimate Member > Roles screen.
+		 *
+		 * @since 2.6.3
+		 * @hook um_role_row_actions
+		 *
+		 * @param {array}  $actions Action links.
+		 * @param {string} $id      Role key.
+		 *
+		 * @example <caption>Add custom action to role's row.</caption>
+		 * function my_custom_um_role_row_actions( $actions, $id ) {
+		 *     $actions['{action_key}'] = "<a href="{action_link}">Action Title</a>";
+		 *     return $actions;
+		 * }
+		 * add_action( 'um_role_row_actions', 'my_custom_um_role_row_actions', 10, 2 );
+		 */
 		$actions = apply_filters( 'um_role_row_actions', $actions, $id );
 
-		return sprintf('%1$s %2$s', '<strong><a class="row-title" href="admin.php?page=um_roles&tab=edit&id=' . esc_attr( $id ) . '">' . stripslashes( $item['name'] ) . '</a></strong>', $this->row_actions( $actions ) );
+		return sprintf( '%1$s %2$s', '<strong><a class="row-title" href="admin.php?page=um_roles&tab=edit&id=' . esc_attr( $id ) . '">' . stripslashes( $item['name'] ) . '</a></strong>', $this->row_actions( $actions ) );
 	}
 
 
