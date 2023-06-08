@@ -1,13 +1,11 @@
 <?php
 namespace um\core;
 
-// Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 if ( ! class_exists( 'um\core\Blocks' ) ) {
-
 
 	/**
 	 * Class Blocks
@@ -15,17 +13,28 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 	 */
 	class Blocks {
 
-
 		/**
-		 * Access constructor.
+		 * Blocks constructor.
 		 */
 		public function __construct() {
-			add_action( 'init', array( &$this, 'block_editor_render' ), 10 );
-			add_filter( 'block_type_metadata_settings', array( &$this, 'block_type_metadata_settings' ), 10, 2 );
+			add_action( 'init', array( &$this, 'block_editor_render' ) );
+			add_filter( 'block_type_metadata_settings', array( &$this, 'block_type_metadata_settings' ), 9999, 2 );
 		}
 
-
+		/**
+		 * Add attribute types if restricted blocks is active.
+		 *
+		 * @param array $settings Array of determined settings for registering a block type.
+		 * @param array $args     Metadata provided for registering a block type.
+		 *
+		 * @return array
+		 */
 		public function block_type_metadata_settings( $settings, $args ) {
+			$restricted_blocks = UM()->options()->get( 'restricted_blocks' );
+			if ( empty( $restricted_blocks ) ) {
+				return $settings;
+			}
+
 			if ( empty( $settings['attributes']['um_is_restrict'] ) ) {
 				$settings['attributes']['um_is_restrict'] = array(
 					'type' => 'boolean',
@@ -55,9 +64,24 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 			return $settings;
 		}
 
-
+		/**
+		 * Register UM Blocks.
+		 *
+		 * @uses register_block_type_from_metadata()
+		 */
 		public function block_editor_render() {
-			//disable Gutenberg scripts to avoid the conflicts
+			/**
+			 * Filters the variable to disable adding UM Blocks to Gutenberg editor.
+			 *
+			 * Note: It's "false" by default. To disable Gutenberg scripts to avoid the conflicts set it to "true"
+			 *
+			 * @since 2.6.3
+			 * @hook um_disable_blocks_script
+			 *
+			 * @param {bool} $disable_script Disabling block scripts variable.
+			 *
+			 * @return {bool} It's true for disabling block scripts.
+			 */
 			$disable_script = apply_filters( 'um_disable_blocks_script', false );
 			if ( $disable_script ) {
 				return;
@@ -70,7 +94,7 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 
 			$blocks = array(
 				'um-block/um-member-directories' => array(
-					'render_callback' => array( $this, 'um_member_directories_render' ),
+					'render_callback' => array( $this, 'member_directories_render' ),
 					'attributes'      => array(
 						'member_id' => array(
 							'type' => 'string',
@@ -78,7 +102,7 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 					),
 				),
 				'um-block/um-forms'              => array(
-					'render_callback' => array( $this, 'um_forms_render' ),
+					'render_callback' => array( $this, 'forms_render' ),
 					'attributes'      => array(
 						'form_id' => array(
 							'type' => 'string',
@@ -86,10 +110,10 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 					),
 				),
 				'um-block/um-password-reset'     => array(
-					'render_callback' => array( $this, 'um_password_reset_render' ),
+					'render_callback' => array( $this, 'password_reset_render' ),
 				),
 				'um-block/um-account'            => array(
-					'render_callback' => array( $this, 'um_account_render' ),
+					'render_callback' => array( $this, 'account_render' ),
 					'attributes'      => array(
 						'tab' => array(
 							'type' => 'string',
@@ -104,8 +128,16 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 			}
 		}
 
-
-		public function um_member_directories_render( $atts ) {
+		/**
+		 * Renders member directory block.
+		 *
+		 * @param array $atts Block attributes.
+		 *
+		 * @return string
+		 *
+		 * @uses apply_shortcodes()
+		 */
+		public function member_directories_render( $atts ) {
 			$shortcode = '[ultimatemember';
 
 			if ( isset( $atts['member_id'] ) && '' !== $atts['member_id'] ) {
@@ -117,8 +149,16 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 			return apply_shortcodes( $shortcode );
 		}
 
-
-		public function um_forms_render( $atts ) {
+		/**
+		 * Renders UM Form block.
+		 *
+		 * @param array $atts Block attributes.
+		 *
+		 * @return string
+		 *
+		 * @uses apply_shortcodes()
+		 */
+		public function forms_render( $atts ) {
 			if ( isset( $atts['form_id'] ) && '' !== $atts['form_id'] ) {
 				$mode = get_post_meta( $atts['form_id'], '_um_mode', true );
 				if ( 'profile' === $mode && ( um_is_core_page( 'account' ) || um_is_core_page( 'user' ) ) ) {
@@ -136,15 +176,29 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 			return apply_shortcodes( $shortcode );
 		}
 
-
-		public function um_password_reset_render() {
+		/**
+		 * Renders UM Reset Password form block.
+		 *
+		 * @return string
+		 *
+		 * @uses apply_shortcodes()
+		 */
+		public function password_reset_render() {
 			$shortcode = '[ultimatemember_password]';
 
 			return apply_shortcodes( $shortcode );
 		}
 
-
-		public function um_account_render( $atts ) {
+		/**
+		 * Renders UM Account block.
+		 *
+		 * @param array $atts Block attributes.
+		 *
+		 * @return string
+		 *
+		 * @uses apply_shortcodes()
+		 */
+		public function account_render( $atts ) {
 			if ( um_is_core_page( 'account' ) || um_is_core_page( 'user' ) ) {
 				return '';
 			}
