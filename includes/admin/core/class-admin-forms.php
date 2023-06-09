@@ -882,8 +882,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$value = $this->get_field_value( $field_data );
 
+			add_filter( 'wp_default_editor', array( &$this, 'set_default_editor_fix' ) );
+
 			ob_start();
-			wp_editor( $value,
+			wp_editor(
+				$value,
 				$id,
 				array(
 					'textarea_name' => $name,
@@ -891,14 +894,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					'editor_height' => 425,
 					'wpautop'       => false,
 					'media_buttons' => false,
-					'editor_class'  => $class
+					'editor_class'  => $class,
 				)
 			);
 
 			$html = ob_get_clean();
+
+			remove_filter( 'wp_default_editor', array( &$this, 'set_default_editor_fix' ) );
+
 			return $html;
 		}
 
+		/**
+		 * Fix the displaying wp_editor on macOS
+		 *
+		 * @return string
+		 */
+		public function set_default_editor_fix() {
+			return 'html';
+		}
 
 		/**
 		 * @param $field_data
