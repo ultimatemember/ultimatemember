@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: admin/templates/role/role-edit.php - Ultimate Member Hook Docs</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+
+	<link href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono|IBM+Plex+Sans:300,400|Playfair+Display:900&display=swap" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="styles-um.css">
+</head>
+
+<body>
+
+<div id="main">
+
+	
+    <h1 class="page-title">Source: admin/templates/role/role-edit.php</h1>
+	
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>&lt;?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+wp_enqueue_script( 'postbox' );
+wp_enqueue_media();
+
+/**
+ * UM hook
+ *
+ * @type action
+ * @title um_roles_add_meta_boxes
+ * @description Add meta boxes on add/edit UM Role
+ * @input_vars
+ * [{"var":"$meta","type":"string","desc":"Meta Box Key"}]
+ * @change_log
+ * ["Since: 2.0"]
+ * @usage add_action( 'um_roles_add_meta_boxes', 'function_name', 10, 1 );
+ * @example
+ * &lt;?php
+ * add_action( 'um_roles_add_meta_boxes', 'my_roles_add_meta_boxes', 10, 1 );
+ * function my_roles_add_meta_boxes( $meta ) {
+ *     // your code here
+ * }
+ * ?>
+ */
+do_action( 'um_roles_add_meta_boxes', 'um_role_meta' );
+/**
+ * UM hook
+ *
+ * @type action
+ * @title um_roles_add_meta_boxes_um_role_meta
+ * @description Make add meta boxes on add/edit UM Role
+ * @change_log
+ * ["Since: 2.0"]
+ * @usage add_action( 'um_roles_add_meta_boxes_um_role_meta', 'function_name', 10 );
+ * @example
+ * &lt;?php
+ * add_action( 'um_roles_add_meta_boxes_um_role_meta', 'my_roles_add_meta_boxes', 10 );
+ * function my_roles_add_meta_boxes() {
+ *     // your code here
+ * }
+ * ?>
+ */
+do_action( 'um_roles_add_meta_boxes_um_role_meta' );
+
+$data   = array();
+$option = array();
+global $wp_roles;
+
+if ( ! empty( $_GET['id'] ) ) {
+
+	// uses sanitize_title instead of sanitize_key for backward compatibility based on #906 pull-request (https://github.com/ultimatemember/ultimatemember/pull/906)
+	// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
+	$role_id = sanitize_title( $_GET['id'] );
+
+	$data = get_option( "um_role_{$role_id}_meta" );
+
+	if ( empty( $data['_um_is_custom'] ) ) {
+		$data['name'] = $wp_roles->roles[ $role_id ]['name'];
+	}
+}
+
+
+if ( ! empty( $_POST['role'] ) ) {
+
+	$id       = '';
+	$redirect = '';
+	$error    = '';
+
+	if ( 'add' === sanitize_key( $_GET['tab'] ) ) {
+		if ( ! wp_verify_nonce( $_POST['um_nonce'], 'um-add-role' ) ) {
+			$error = __( 'Security Issue', 'ultimate-member' ) . '&lt;br />';
+		}
+	} else {
+		if ( ! wp_verify_nonce( $_POST['um_nonce'], 'um-edit-role' ) ) {
+			$error = __( 'Security Issue', 'ultimate-member' ) . '&lt;br />';
+		}
+	}
+
+	if ( empty( $error ) ) {
+
+		$data = UM()->admin()->sanitize_role_meta( $_POST['role'] );
+
+		if ( 'add' === sanitize_key( $_GET['tab'] ) ) {
+
+			$data['name'] = trim( esc_html( strip_tags( $data['name'] ) ) );
+
+			if ( empty( $data['name'] ) ) {
+				$error .= __( 'Title is empty!', 'ultimate-member' ) . '&lt;br />';
+			}
+
+			if ( preg_match( "/^[\p{Latin}\d\-_ ]+$/i", $data['name'] ) ) {
+				// uses sanitize_title instead of sanitize_key for backward compatibility based on #906 pull-request (https://github.com/ultimatemember/ultimatemember/pull/906)
+				// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
+				$id = sanitize_title( $data['name'] );
+			} else {
+				$auto_increment = UM()->options()->get( 'custom_roles_increment' );
+				$auto_increment = ! empty( $auto_increment ) ? $auto_increment : 1;
+				$id             = 'custom_role_' . $auto_increment;
+			}
+
+			$redirect = add_query_arg( array( 'page' => 'um_roles', 'tab' => 'edit', 'id' => $id, 'msg' => 'a' ), admin_url( 'admin.php' ) );
+		} elseif ( 'edit' === sanitize_key( $_GET['tab'] ) &amp;&amp; ! empty( $_GET['id'] ) ) {
+			// uses sanitize_title instead of sanitize_key for backward compatibility based on #906 pull-request (https://github.com/ultimatemember/ultimatemember/pull/906)
+			// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
+			$id = sanitize_title( $_GET['id'] );
+
+			$pre_role_meta = get_option( "um_role_{$id}_meta", array() );
+			if ( isset( $pre_role_meta['name'] ) ) {
+				$data['name'] = $pre_role_meta['name'];
+			}
+
+			$redirect = add_query_arg( array( 'page' => 'um_roles', 'tab' => 'edit', 'id' => $id, 'msg'=> 'u' ), admin_url( 'admin.php' ) );
+		}
+
+
+		$all_roles = array_keys( get_editable_roles() );
+		if ( 'add' === sanitize_key( $_GET['tab'] ) ) {
+			if ( in_array( 'um_' . $id, $all_roles, true ) || in_array( $id, $all_roles, true ) ) {
+				$error .= __( 'Role already exists!', 'ultimate-member' ) . '&lt;br />';
+			}
+		}
+
+		if ( '' === $error ) {
+
+			$update = true;
+			if ( 'add' === sanitize_key( $_GET['tab'] ) ) {
+				$roles   = get_option( 'um_roles', array() );
+				$roles[] = $id;
+
+				update_option( 'um_roles', $roles );
+
+				if ( isset( $auto_increment ) ) {
+					$auto_increment++;
+					UM()->options()->update( 'custom_roles_increment', $auto_increment );
+				}
+
+				$update = false;
+			}
+
+			/**
+			 * Filters the role meta before save it to DB.
+			 *
+			 * @param {array}  $data   Role meta.
+			 * @param {string} $id     Role key.
+			 * @param {bool}   $update Create or update role. "True" if update.
+			 *
+			 * @since 2.6.3
+			 * @hook um_role_edit_data
+			 *
+			 * @example &lt;caption>Add custom metadata for role on saving.&lt;/caption>
+			 * function my_custom_um_role_edit_data( $data, $id, $update ) {
+			 *     $data['{meta_key}'] = {meta_value}; // set your meta key and meta value
+			 *     return $data;
+			 * }
+			 * add_action( 'um_role_edit_data', 'my_custom_um_role_edit_data', 10, 3 );
+			 * @example &lt;caption>Force remove role's metadata on saving when update.&lt;/caption>
+			 * function my_custom_um_role_edit_data( $data, $id, $update ) {
+			 *     if ( true === $update ) {
+			 *         unset( $data['{meta_key}'] ); // set your meta key
+			 *     }
+			 *     return $data;
+			 * }
+			 * add_action( 'um_role_edit_data', 'my_custom_um_role_edit_data', 10, 3 );
+			 */
+			$role_meta = apply_filters( 'um_role_edit_data', $data, $id, $update );
+			unset( $role_meta['id'] );
+
+			update_option( "um_role_{$id}_meta", $role_meta );
+
+			UM()->user()->remove_cache_all_users();
+
+			um_js_redirect( $redirect );
+		}
+	}
+}
+
+global $current_screen;
+$screen_id = $current_screen->id; ?>
+
+&lt;script type="text/javascript">
+	jQuery( document ).ready( function() {
+		postboxes.add_postbox_toggles( '&lt;?php echo esc_js( $screen_id ); ?>' );
+	});
+&lt;/script>
+
+&lt;div class="wrap">
+	&lt;h2>
+		&lt;?php
+		if ( 'add' === sanitize_key( $_GET['tab'] ) ) {
+			esc_html_e( 'Add New Role', 'ultimate-member' );
+		} elseif ( 'edit' === sanitize_key( $_GET['tab'] ) ) {
+			esc_html_e( 'Edit Role', 'ultimate-member' );
+			$add_new_link = add_query_arg(
+				array(
+					'page' => 'um_roles',
+					'tab'  => 'add',
+				),
+				admin_url( 'admin.php' )
+			);
+			?>
+			&lt;a class="add-new-h2" href="&lt;?php echo esc_url( $add_new_link ); ?>">
+				&lt;?php esc_html_e( 'Add New', 'ultimate-member' ); ?>
+			&lt;/a>
+			&lt;?php
+		}
+		?>
+	&lt;/h2>
+
+	&lt;?php
+	if ( ! empty( $_GET['msg'] ) ) {
+		switch ( sanitize_key( $_GET['msg'] ) ) {
+			case 'a':
+				echo '&lt;div id="message" class="updated fade">&lt;p>' . __( 'User Role &lt;strong>Added&lt;/strong> Successfully.', 'ultimate-member' ) . '&lt;/p>&lt;/div>';
+				break;
+			case 'u':
+				echo '&lt;div id="message" class="updated fade">&lt;p>' . __( 'User Role &lt;strong>Updated&lt;/strong> Successfully.', 'ultimate-member' ) . '&lt;/p>&lt;/div>';
+				break;
+		}
+	}
+
+	if ( ! empty( $error ) ) { ?>
+		&lt;div id="message" class="error fade">
+			&lt;p>&lt;?php echo $error; ?>&lt;/p>
+		&lt;/div>
+	&lt;?php } ?>
+
+	&lt;form id="um_edit_role" action="" method="post">
+		&lt;input type="hidden" name="role[id]" value="&lt;?php echo isset( $_GET['id'] ) ? esc_attr( sanitize_key( $_GET['id'] ) ) : '' ?>" />
+		&lt;?php if ( 'add' === sanitize_key( $_GET['tab'] ) ) { ?>
+			&lt;input type="hidden" name="role[_um_is_custom]" value="1" />
+			&lt;input type="hidden" name="um_nonce" value="&lt;?php echo esc_attr( wp_create_nonce( 'um-add-role' ) ) ?>" />
+		&lt;?php } else { ?>
+			&lt;input type="hidden" name="role[_um_is_custom]" value="&lt;?php echo ! empty( $data['_um_is_custom'] ) ? 1 : 0 ?>" />
+			&lt;input type="hidden" name="um_nonce" value="&lt;?php echo esc_attr( wp_create_nonce( 'um-edit-role' ) ) ?>" />
+		&lt;?php } ?>
+		&lt;?php wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false ); ?>
+		&lt;div id="poststuff">
+			&lt;div id="post-body" class="metabox-holder columns-2">
+				&lt;div id="post-body-content">
+					&lt;div id="titlediv">
+						&lt;div id="titlewrap">
+							&lt;?php if ( 'add' === sanitize_key( $_GET['tab'] ) ) { ?>
+								&lt;label for="title" class="screen-reader-text">&lt;?php _e( 'Title', 'ultimate-member' ) ?>&lt;/label>
+								&lt;input type="text" name="role[name]" placeholder="&lt;?php esc_attr_e( 'Enter Title Here', 'ultimate-member' ) ?>" id="title" value="&lt;?php echo isset( $data['name'] ) ? $data['name'] : '' ?>" />
+							&lt;?php } else { ?>
+								&lt;span style="float: left;width:100%;">&lt;?php echo isset( $data['name'] ) ? stripslashes( $data['name'] ) : '' ?>&lt;/span>
+							&lt;?php } ?>
+						&lt;/div>
+					&lt;/div>
+				&lt;/div>
+
+				&lt;?php
+				$object = array(
+					'data'   => $data,
+					'option' => $option,
+				);
+				?>
+
+				&lt;div id="postbox-container-1" class="postbox-container">
+					&lt;?php do_meta_boxes( 'um_role_meta', 'side', $object ); ?>
+				&lt;/div>
+				&lt;div id="postbox-container-2" class="postbox-container">
+					&lt;?php do_meta_boxes( 'um_role_meta', 'normal', $object ); ?>
+				&lt;/div>
+			&lt;/div>
+		&lt;/div>
+	&lt;/form>
+&lt;/div>
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    <footer>
+		<a href="https://wordpress.org/plugins/ultimate-member/">Ultimate Member Plugin</a> &bull;
+		<a href="https://docs.ultimatemember.com/">Official Docs</a>
+	</footer>
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="template_redirect.html">template_redirect</a></li><li><a href="um_after_delete_role.html">um_after_delete_role</a></li><li><a href="um_after_delete_role_meta.html">um_after_delete_role_meta</a></li><li><a href="um_role_edit_data.html">um_role_edit_data</a></li><li><a href="um_role_row_actions.html">um_role_row_actions</a></li><li><a href="wp_nav_menu_item_custom_fields.html">wp_nav_menu_item_custom_fields</a></li></ul><h3>Filters</h3><ul><li><a href="icl_ls_languages.html">icl_ls_languages</a></li><li><a href="um_disable_blocks_script.html">um_disable_blocks_script</a></li><li><a href="um_disable_email_notification_sending.html">um_disable_email_notification_sending</a></li><li><a href="um_email_get_template_file_path.html">um_email_get_template_file_path</a></li><li><a href="um_external_profile_url.html">um_external_profile_url</a></li><li><a href="um_get_current_page_url.html">um_get_current_page_url</a></li><li><a href="um_late_escaping_allowed_tags.html">um_late_escaping_allowed_tags</a></li><li><a href="um_localize_permalink_filter.html">um_localize_permalink_filter</a></li><li><a href="um_override_templates_get_template_path__%257B$key%257D.html">um_override_templates_get_template_path__{$key}</a></li><li><a href="um_override_templates_scan_files.html">um_override_templates_scan_files</a></li><li><a href="um_pre_args_setup.html">um_pre_args_setup</a></li><li><a href="um_profile_permalink.html">um_profile_permalink</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

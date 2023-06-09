@@ -92,7 +92,8 @@ footer {
 }
 
 .prettyprint code {
+	font-size: 16px;
 	padding: 2px 10px;
-	line-height: 16px;
-	height: 16px;
+	line-height: 18px;
+	max-height: 150px;
 }
