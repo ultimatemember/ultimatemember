@@ -472,7 +472,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 */
 		function tab_link( $id ) {
 
-			if ( get_option( 'permalink_structure' ) ) {
+			if ( UM()->is_permalinks ) {
 
 				$url = trailingslashit( untrailingslashit( um_get_core_page( 'account' ) ) );
 				$url = $url . $id . '/';
