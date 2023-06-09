@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - development/2.6.3
 
 jobs:
   hookdocs:
