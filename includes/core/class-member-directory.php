@@ -2717,28 +2717,24 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$user_ids = ! empty( $user_query->results ) ? array_unique( $user_query->results ) : array();
 
 			/**
-			 * UM hook
+			 * Filters the member directory query result.
 			 *
-			 * @type filter
-			 * @title um_prepare_user_results_array
-			 * @description Extend member directory query result
-			 * @input_vars
-			 * [{"var":"$result","type":"array","desc":"Members Query Result"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_prepare_user_results_array', 'function_name', 10, 2 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_prepare_user_results_array', 'my_prepare_user_results', 10, 2 );
-			 * function my_prepare_user_results( $user_ids, $query ) {
-			 *     // your code here
+			 * @since 2.0
+			 * @hook um_prepare_user_results_array
+			 *
+			 * @param {array} $user_ids   Members Query Result.
+			 * @param {array} $query_args Query arguments.
+			 *
+			 * @return {array} Query result.
+			 *
+			 * @example <caption>Remove some users where ID equals 10 and 12 from query.</caption>
+			 * function my_custom_um_prepare_user_results_array( $user_ids, $query_args ) {
+			 *     $user_ids = array_diff( $user_ids, array( 10, 12 ) );
 			 *     return $user_ids;
 			 * }
-			 * ?>
+			 * add_filter( 'um_prepare_user_results_array', 'my_custom_um_prepare_user_results_array', 10, 2 );
 			 */
 			$user_ids = apply_filters( 'um_prepare_user_results_array', $user_ids, $this->query_args );
-
 
 			$sizes = UM()->options()->get( 'cover_thumb_sizes' );
 
@@ -2830,6 +2826,28 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$html = $this->show_filter( $filter_key, array( 'form_id' => $directory_id ), false, true );
 
 			wp_send_json_success( array( 'field_html' => $html ) );
+		}
+
+		/**
+		 * Get member directory id by page id.
+		 *
+		 * @param int $page_id Page ID.
+		 *
+		 * @return array Member directories ID.
+		 */
+		public function get_member_directory_id( $page_id ) {
+			$members_page = get_post( $page_id );
+			if ( ! empty( $members_page ) && ! is_wp_error( $members_page ) ) {
+				if ( ! empty( $members_page->post_content ) ) {
+					preg_match_all( '/\[ultimatemember[^\]]*?form_id\=[\'"]*?(\d+)[\'"]*?/i', $members_page->post_content, $matches );
+					if ( ! empty( $matches[1] ) && is_array( $matches[1] ) ) {
+						$member_directory_ids = array_map( 'absint', $matches[1] );
+						return $member_directory_ids;
+					}
+				}
+			}
+
+			return array();
 		}
 	}
 }

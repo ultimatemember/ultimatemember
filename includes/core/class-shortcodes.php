@@ -1260,7 +1260,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 *
 		 * @return string
 		 */
-		public function ultimatemember_searchform( $args = array(), $content = "" ) {
+		public function ultimatemember_searchform( $args = array(), $content = '' ) {
 			if ( ! UM()->options()->get( 'members_page' ) ) {
 				return '';
 			}
@@ -1269,15 +1269,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 			$page_id = UM()->config()->permalinks['members'];
 			if ( ! empty( $page_id ) ) {
-				$members_page = get_post( $page_id );
-				if ( ! empty( $members_page ) && ! is_wp_error( $members_page ) ) {
-					if ( ! empty( $members_page->post_content ) ) {
-						preg_match_all( '/\[ultimatemember[^\]]*?form_id\=[\'"]*?(\d+)[\'"]*?/i', $members_page->post_content, $matches );
-						if ( ! empty( $matches[1] ) && is_array( $matches[1] ) ) {
-							$member_directory_ids = array_map( 'absint', $matches[1] );
-						}
-					}
-				}
+				$member_directory_ids = UM()->member_directory()->get_member_directory_id( $page_id );
 			}
 
 			if ( empty( $member_directory_ids ) ) {

@@ -877,25 +877,22 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			$total_users = (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' );
 
 			/**
-			 * UM hook
+			 * Filters the member directory query result when um_usermeta table is used.
 			 *
-			 * @type filter
-			 * @title um_prepare_user_results_array_meta
-			 * @description Extend member directory query result
-			 * @input_vars
-			 * [{"var":"$result","type":"array","desc":"Members Query Result"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_prepare_user_results_array', 'function_name', 10, 2 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_prepare_user_results_array', 'my_prepare_user_results', 10, 2 );
-			 * function my_prepare_user_results( $user_ids, $query ) {
-			 *     // your code here
+			 * @since 2.1.3
+			 * @hook um_prepare_user_results_array_meta
+			 *
+			 * @param {array} $user_ids   Members Query Result.
+			 * @param {array} $query_args Query arguments.
+			 *
+			 * @return {array} Query result.
+			 *
+			 * @example <caption>Remove some users where ID equals 10 and 12 from query.</caption>
+			 * function my_custom_um_prepare_user_results_array_meta( $user_ids, $query_args ) {
+			 *     $user_ids = array_diff( $user_ids, array( 10, 12 ) );
 			 *     return $user_ids;
 			 * }
-			 * ?>
+			 * add_filter( 'um_prepare_user_results_array_meta', 'my_custom_um_prepare_user_results_array', 10, 2 );
 			 */
 			$user_ids = apply_filters( 'um_prepare_user_results_array_meta', $user_ids, $query );
 
