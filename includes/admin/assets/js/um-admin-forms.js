@@ -282,11 +282,23 @@ jQuery(document).ready( function() {
 			html += '<span class="um-field-icon"><i class="um-faicon-sort"></i></span>';
 		}
 
+		let dataTypesOptions = '';
+		jQuery.each( um_forms_data.md_sorting_data_types, function( key, label ) {
+			dataTypesOptions += '<option value="' + key + '">' + label + '</option>';
+		} );
+
 		html += '<span class="um-field-wrapper">' + selector_html + '</span>' +
 			'<span class="um-field-control">' +
 			'<a href="javascript:void(0);" class="um-select-delete">' + wp.i18n.__( 'Remove', 'ultimate-member' ) + '</a>' +
 			'</span>' +
 			'<span class="um-field-wrapper um-custom-order-fields"><label>' + wp.i18n.__( 'Meta key', 'ultimate-member' ) + ':&nbsp;<input type="text" name="meta_key" /></label></span>' +
+			'<span class="um-field-wrapper um-custom-order-fields"><label>' + wp.i18n.__( 'Data type', 'ultimate-member' ) + ':&nbsp;<select name="data_type" />' +
+			dataTypesOptions +
+			'</select></label></span>' +
+			'<span class="um-field-wrapper um-custom-order-fields"><label>' + wp.i18n.__( 'Order', 'ultimate-member' ) + ':&nbsp;<select name="order" />' +
+			'<option value="ASC">' + wp.i18n.__( 'ASC', 'ultimate-member' ) + '</option>' +
+			'<option value="DESC">' + wp.i18n.__( 'DESC', 'ultimate-member' ) + '</option>' +
+			'</select></label></span>' +
 			'<span class="um-field-wrapper um-custom-order-fields"><label>' + wp.i18n.__( 'Label', 'ultimate-member' ) + ':&nbsp;<input type="text" name="label" /></label></span>' +
 			'</li>';
 		list.append( html );
@@ -296,6 +308,8 @@ jQuery(document).ready( function() {
 
 		jQuery( '#' + list.data('id_attr') + '-' + k ).parents('li').find('.um-field-wrapper.um-custom-order-fields input[name="meta_key"]').attr('name', 'um_metadata[_um_sorting_fields][other_data][' + k + '][meta_key]');
 		jQuery( '#' + list.data('id_attr') + '-' + k ).parents('li').find('.um-field-wrapper.um-custom-order-fields input[name="label"]').attr('name', 'um_metadata[_um_sorting_fields][other_data][' + k + '][label]');
+		jQuery( '#' + list.data('id_attr') + '-' + k ).parents('li').find('.um-field-wrapper.um-custom-order-fields select[name="data_type"]').attr('name', 'um_metadata[_um_sorting_fields][other_data][' + k + '][data_type]');
+		jQuery( '#' + list.data('id_attr') + '-' + k ).parents('li').find('.um-field-wrapper.um-custom-order-fields select[name="order"]').attr('name', 'um_metadata[_um_sorting_fields][other_data][' + k + '][order]');
 	});
 
 

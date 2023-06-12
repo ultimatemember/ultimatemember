@@ -1617,16 +1617,30 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			if ( ! empty( $values ) && is_array( $values ) ) {
 				foreach ( $values as $k => $value ) {
 
-					$other_key = '';
+					$other_key   = '';
 					$other_label = '';
+					$other_type  = '';
+					$other_order = '';
+
 					if ( is_array( $value ) ) {
-						$keys = array_keys( $value );
+						$keys      = array_keys( $value );
 						$other_key = $keys[0];
 
-						$labels = array_values( $value );
-						$other_label = $labels[0];
+						if ( ! empty( $value['label'] ) ) {
+							$other_label = $value['label'];
+						} else {
+							$labels      = array_values( $value );
+							$other_label = $labels[0];
+						}
+
+						if ( ! empty( $value['type'] ) ) {
+							$other_type = $value['type'];
+						}
+						if ( ! empty( $value['order'] ) ) {
+							$other_order = $value['order'];
+						}
 					} else {
-						if ( ! in_array( $value, array_keys( $field_data['options'] ) ) ) {
+						if ( ! array_key_exists( $value, $field_data['options'] ) ) {
 							continue;
 						}
 					}
@@ -1636,7 +1650,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					$options = '';
 					foreach ( $field_data['options'] as $key => $option ) {
 						if ( is_array( $value ) ) {
-							$selected = selected( $key == 'other', true, false );
+							$selected = selected( 'other' === $key, true, false );
 						} else {
 							$selected = selected( $key == $value, true, false );
 						}
@@ -1648,12 +1662,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					if ( $sorting ) {
 						$html .= '<span class="um-field-icon"><i class="um-faicon-sort"></i></span>';
 					}
-					$html .= "<span class=\"um-field-wrapper\">
-						<select $id_attr $name_attr $class_attr $data_attr>$options</select></span>
-						<span class=\"um-field-control\"><a href=\"javascript:void(0);\" class=\"um-select-delete\">" . __( 'Remove', 'ultimate-member' ) . "</a></span>
-						<span class=\"um-field-wrapper um-custom-order-fields\"><label>" . __( 'Meta key', 'ultimate-member' ) . ":&nbsp;<input type=\"text\" name=\"um_metadata[_um_sorting_fields][other_data][" . $k . "][meta_key]\" value=\"" . esc_attr( $other_key ) . "\" /></label></span>
-						<span class=\"um-field-wrapper um-custom-order-fields\"><label>" . __( 'Label', 'ultimate-member' ) . ":&nbsp;<input type=\"text\" name=\"um_metadata[_um_sorting_fields][other_data][" . $k . "][label]\" value=\"" . esc_attr( $other_label ) . "\" /></label></span>
-						</li>";
+
+					$data_types_html = '';
+					foreach ( UM()->member_directory()->sort_data_types as $type_key => $type_label ) {
+						$data_types_html .= '<option value="' . esc_attr( $type_key ) . '" ' . selected( $other_type, $type_key, false ) . '>' . esc_html( $type_label ) . '</option>';
+					}
+
+					$html .= '<span class="um-field-wrapper">
+						<select ' . $id_attr . ' ' . $name_attr . ' ' . $class_attr . ' ' . $data_attr . '>' . $options . '</select></span>
+						<span class="um-field-control"><a href="javascript:void(0);" class="um-select-delete">' . __( 'Remove', 'ultimate-member' ) . '</a></span>
+						<span class="um-field-wrapper um-custom-order-fields"><label>' . __( 'Meta key', 'ultimate-member' ) . ':&nbsp;<input type="text" name="um_metadata[_um_sorting_fields][other_data][' . $k . '][meta_key]" value="' . esc_attr( $other_key ) . '" /></label></span>
+						<span class="um-field-wrapper um-custom-order-fields"><label>' . __( 'Data type', 'ultimate-member' ) . ':&nbsp;<select name="um_metadata[_um_sorting_fields][other_data][' . $k . '][data_type]" />' .
+						$data_types_html .
+						'</select></label></span>
+						<span class="um-field-wrapper um-custom-order-fields"><label>' . __( 'Order', 'ultimate-member' ) . ':&nbsp;<select name="um_metadata[_um_sorting_fields][other_data][' . $k . '][order]" />
+						<option value="ASC" ' . selected( $other_order, 'ASC', false ) . '>' . __( 'ASC', 'ultimate-member' ) . '</option>
+						<option value="DESC" ' . selected( $other_order, 'DESC', false ) . '>' . __( 'DESC', 'ultimate-member' ) . '</option>
+						</select></label></span>
+						<span class="um-field-wrapper um-custom-order-fields"><label>' . __( 'Label', 'ultimate-member' ) . ':&nbsp;<input type="text" name="um_metadata[_um_sorting_fields][other_data][' . $k . '][label]" value="' . esc_attr( $other_label ) . '" /></label></span>
+						</li>';
 				}
 			} elseif ( ! empty( $field_data['show_default_number'] ) && is_numeric( $field_data['show_default_number'] ) && $field_data['show_default_number'] > 0 ) {
 				$i = 0;

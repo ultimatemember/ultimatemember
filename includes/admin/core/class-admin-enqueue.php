@@ -375,6 +375,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 						),
 						admin_url( 'admin.php' )
 					),
+					'md_sorting_data_types' => UM()->member_directory()->sort_data_types,
 				)
 			);
 
