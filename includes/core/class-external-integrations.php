@@ -51,7 +51,6 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		 * UM filter - Restore original arguments on translated page
 		 *
 		 * @description Restore original arguments on load shortcode if they are missed in the WPML translation
-		 * @hook um_pre_args_setup
 		 *
 		 * @global \SitePress $sitepress
 		 * @param array $args
@@ -82,7 +81,6 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		 * Integration for the "Transposh Translation Filter" plugin
 		 *
 		 * @description Fix issue "404 Not Found" on profile page
-		 * @hook template_redirect
 		 * @see http://transposh.org/
 		 *
 		 * @global transposh_plugin $my_transposh_plugin
@@ -179,7 +177,6 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		/**
 		 * Change user profile URL for WPML compatibility.
 		 *
-		 * @hook um_external_profile_url
 		 * @see  \um\core\Permalinks::profile_permalink()
 		 *
 		 * @param bool|string $profile_url Profile URL.
@@ -217,7 +214,6 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		 *
 		 * Note: It's used for User Profile nav links fix
 		 *
-		 * @hook um_get_current_page_url
 		 * @see  \um\core\Permalinks::get_current_url()
 		 *
 		 * @param string $page_url        Current URL.
@@ -244,7 +240,6 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		/**
 		 * Filters the displayed languages of the WPML language switcher.
 		 *
-		 * @hook icl_ls_languages
 		 * @see  https://wpml.org/wpml-hook/icl_ls_languages/
 		 *
 		 * @param array $array Collection of active languages to display in the language switcher.

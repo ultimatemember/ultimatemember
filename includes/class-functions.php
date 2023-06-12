@@ -729,6 +729,18 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			 * @param {string} $context      Function context 'wp-admin' for Admin Dashboard echo, 'templates' for the frontend.
 			 *
 			 * @return {array} Allowed HTML tags with attributes.
+			 *
+			 * @example <caption>It adds iframe HTML tag and 'onclick' attribute for strong tag.</caption>
+			 * function add_extra_kses_allowed_tags( $allowed_html, $context ) {
+			 *     if ( 'templates' === $context ) {
+			 *         $allowed_html['iframe'] = array(
+			 *             'src' => true,
+			 *         );
+			 *         $allowed_html['strong']['onclick'] = true;
+			 *     }
+			 *     return $allowed_html;
+			 * }
+			 * add_filter( 'um_late_escaping_allowed_tags', 'add_extra_kses_allowed_tags', 10, 2 );
 			 */
 			$allowed_html = apply_filters( 'um_late_escaping_allowed_tags', $allowed_html, $context );
 

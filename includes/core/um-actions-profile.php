@@ -1726,14 +1726,15 @@ function um_profile_menu( $args ) {
 					$nav_link = apply_filters( "um_profile_menu_link_{$id}", $nav_link );
 
 					/**
-					 * Filters changing a link's tag attributes.
+					 * Filters a profile menu navigation links' tag attributes.
 					 *
 					 * @since 2.6.3
 					 * @hook um_profile_menu_link_{$id}_attrs
 					 *
-					 * @param {string} $profile_nav_attrs link's tag attributes.
+					 * @param {string} $profile_nav_attrs Link's tag attributes.
+					 * @param {array}  $args              Profile form arguments.
 					 *
-					 * @return {string} link's tag attributes.
+					 * @return {string} Link's tag attributes.
 					 *
 					 * @example <caption>Add a link's tag attributes.</caption>
 					 * function um_profile_menu_link_attrs( $profile_nav_attrs ) {
@@ -1742,7 +1743,7 @@ function um_profile_menu( $args ) {
 					 * }
 					 * add_filter( 'um_profile_menu_link_{$id}_attrs', 'um_profile_menu_link_attrs', 10, 1 );
 					 */
-					$profile_nav_attrs = apply_filters( "um_profile_menu_link_{$id}_attrs", '' );
+					$profile_nav_attrs = apply_filters( "um_profile_menu_link_{$id}_attrs", '', $args );
 
 					$profile_nav_class = '';
 					if ( ! UM()->options()->get( 'profile_menu_icons' ) ) {

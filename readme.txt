@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
 Tested up to: 6.2
-Stable tag: 2.6.2
+Stable tag: 2.6.3
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -162,6 +162,35 @@ No, you do not need to use our plugin’s login or registration pages and can us
 
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
+
+= 2.6.3: June 14, 2023 =
+
+* Enhancements:
+
+  - Added: `um_profile_menu_link_{$id}_attrs` hook for changing link attributes
+  - Added: `get_member_directory_id()` function for getting member directory ID based on page ID
+  - Added: The "Order" and "Data type" settings for custom sorting fields based on metakey in Member Directory
+  - Added: New hooks `um_profile_permalink`,`um_external_profile_url`
+  - Added: Users dropdown field to Admin Forms class
+  - Added: New developer docs [here](http://ultimatemember.github.io/ultimatemember/). It will be upgraded from version to version
+
+* Bugfixes:
+
+  - Fixed: PHP8.2 PHP errors (deprecated, warnings, etc.)
+  - Fixed: Filters visibility on member directory page based on public or private visibility for filter's field
+  - Fixed: Incorrect Member Directory numerical sorting order
+  - Fixed: wp_editor() doesn't work correctly in content restriction settings for Mac users
+  - Fixed: Profile links when WPML plugin is active
+  - Fixed: ACF and UM blocks conflict
+  - Fixed: `UM()->mail()->locate_template()` function's visibility
+
+* Deprecated:
+
+  - Deprecated: `um_localize_permalink_filter`. Use `post_link` instead
+
+* Templates required update:
+
+  - members.php
 
 = 2.6.2: May 31, 2023 =
 
