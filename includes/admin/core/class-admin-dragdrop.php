@@ -1,12 +1,11 @@
 <?php
 namespace um\admin\core;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
-
 
 	/**
 	 * Class Admin_DragDrop
@@ -14,17 +13,25 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 	 */
 	class Admin_DragDrop {
 
+		/**
+		 * @var array
+		 */
+		public $row_data = array();
+
+		/**
+		 * @var array
+		 */
+		public $exist_rows = array();
 
 		/**
 		 * Admin_DragDrop constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			add_action( 'admin_footer', array( &$this, 'load_field_order' ), 9 );
 		}
 
-
 		/**
-		 * Update order of fields
+		 * Update order of fields.
 		 */
 		public function update_order() {
 			UM()->admin()->check_ajax_nonce();
@@ -153,12 +160,10 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 			update_option( 'um_form_rowdata_' . $form_id, $this->row_data );
 
 			UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
-
 		}
 
-
 		/**
-		 * Load form to maintain form order
+		 * Load form to maintain form order.
 		 */
 		public function load_field_order() {
 
@@ -233,7 +238,7 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 
 				<input type="hidden" name="form_id" id="form_id" value="<?php echo esc_attr( get_the_ID() ); ?>" />
 				<input type="hidden" name="action" value="um_update_order" />
-				<input type="hidden" name="nonce" value="<?php echo esc_attr( wp_create_nonce( 'um-admin-nonce' ) ) ?>" />
+				<input type="hidden" name="nonce" value="<?php echo esc_attr( wp_create_nonce( 'um-admin-nonce' ) ); ?>" />
 
 				<div class="um_update_order_fields">
 
@@ -244,6 +249,5 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 			<?php
 
 		}
-
 	}
 }

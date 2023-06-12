@@ -1,12 +1,11 @@
 <?php
 namespace um\core;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Fields' ) ) {
-
 
 	/**
 	 * Class Fields
@@ -3886,9 +3885,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						$um_field_checkbox_item_title = $v;
 
-						$v = $this->filter_field_non_utf8_value( $v );
+						$v          = $this->filter_field_non_utf8_value( $v );
+						$value_attr = ( ! empty( $v ) && is_string( $v ) ) ? wp_strip_all_tags( $v ) : $v;
 
-						$output .= '<input  ' . $disabled . ' type="checkbox" name="' . esc_attr( $key ) . '[]" value="' . strip_tags( $v ) . '" ';
+						$output .= '<input  ' . $disabled . ' type="checkbox" name="' . esc_attr( $key ) . '[]" value="' . esc_attr( $value_attr ) . '" ';
 
 						if ( $this->is_selected( $key, $v, $data ) ) {
 							$output .= 'checked';
@@ -3897,9 +3897,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= ' />';
 
 						if ( ! empty( $disabled ) && $this->is_selected( $key, $v, $data ) ) {
-							$output .= $this->disabled_hidden_field( $key . '[]', strip_tags( $v ) );
+							$output .= $this->disabled_hidden_field( $key . '[]', $value_attr );
 						}
-
 
 						$output .= '<span class="um-field-checkbox-state"><i class="' . esc_attr( $class ) . '"></i></span>';
 						/**
