@@ -1,12 +1,11 @@
 <?php
 namespace um\core;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
-
 
 	/**
 	 * Class Member_Directory_Meta
@@ -14,14 +13,24 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 	 */
 	class Member_Directory_Meta extends Member_Directory {
 
+		/**
+		 * @var array
+		 */
+		public $joins = array();
 
 		/**
-		 * @var string
+		 * @var array
 		 */
-		var $joins = array();
-		var $where_clauses = array();
+		public $where_clauses = array();
 
-		var $roles = array();
+		/**
+		 * @var array
+		 */
+		public $roles = array();
+
+		/**
+		 * @var bool
+		 */
 		var $roles_in_query = false;
 
 		var $general_meta_joined = false;
@@ -35,7 +44,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 		/**
 		 * Member_Directory_Meta constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			parent::__construct();
 
 			add_action( 'updated_user_meta', array( &$this, 'on_update_usermeta' ), 10, 4 );
@@ -501,7 +510,6 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				}
 			}
 
-
 			$profile_photo_where = '';
 			if ( $directory_data['has_profile_photo'] == 1 ) {
 				$profile_photo_where = " AND umm_general.um_value LIKE '%s:13:\"profile_photo\";b:1;%'";
@@ -578,7 +586,6 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				}
 			}
 
-
 			if ( ! empty( $_POST['search'] ) ) {
 				$search_line = trim( stripslashes( sanitize_text_field( $_POST['search'] ) ) );
 
@@ -599,7 +606,6 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 				$this->is_search = true;
 			}
-
 
 			//filters
 			$filter_query = array();
@@ -638,7 +644,6 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				}
 			}
 
-
 			//unable default filter in case if we select other filters in frontend filters
 			//if ( empty( $this->custom_filters_in_query ) ) {
 			$default_filters = array();
@@ -676,7 +681,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 			if ( ! empty( UM()->builtin()->saved_fields ) ) {
 				foreach ( UM()->builtin()->saved_fields as $key => $data ) {
-					if ( $key == '_um_last_login' ) {
+					if ( '_um_last_login' === $key ) {
 						continue;
 					}
 
@@ -694,26 +699,26 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			// handle sorting options
 			// sort members by
 			if ( $sortby == $directory_data['sortby_custom'] || in_array( $sortby, $custom_sort ) ) {
-				$custom_sort_order = ! empty( $directory_data['sortby_custom_order'] ) ? $directory_data['sortby_custom_order'] : 'CHAR';
+				$custom_sort_order = ! empty( $directory_data['sortby_custom_order'] ) ? $directory_data['sortby_custom_order'] : 'ASC';
 
 				$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm_sort ON ( umm_sort.user_id = u.ID AND umm_sort.um_key = '{$sortby}' )";
 
-				$custom_sort_type = ! empty( $directory_data['sortby_custom_type'] ) ? $directory_data['sortby_custom_type'] : 'CHAR';
+				$meta_query       = new \WP_Meta_Query();
+				$custom_sort_type = ! empty( $directory_data['sortby_custom_type'] ) ? $meta_query->get_cast_for_type( $directory_data['sortby_custom_type'] ) : 'CHAR';
 				if ( ! empty( $directory_data['sorting_fields'] ) ) {
-					// phpcs:disable WordPress.Security.NonceVerification -- already verified here
+					// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
 					$sorting        = sanitize_text_field( $_POST['sorting'] );
-					$sorting_fields = unserialize( $directory_data['sorting_fields'] );
-					// phpcs:enable WordPress.Security.NonceVerification
+					$sorting_fields = maybe_unserialize( $directory_data['sorting_fields'] );
+
 					foreach ( $sorting_fields as $field ) {
 						if ( isset( $field[ $sorting ] ) ) {
-							$custom_sort_type  = $field['type'];
+							$custom_sort_type  = ! empty( $field['type'] ) ? $meta_query->get_cast_for_type( $field['type'] ) : 'CHAR';
 							$custom_sort_order = $field['order'];
 						}
 					}
 				}
-				if ( 'NUMERIC' === $custom_sort_type ) {
-					$custom_sort_type = 'DECIMAL';
-				}
+
+				/** This filter is documented in includes/core/class-member-directory.php */
 				$custom_sort_type = apply_filters( 'um_member_directory_custom_sorting_type', $custom_sort_type, $sortby, $directory_data );
 
 				$this->sql_order = " ORDER BY CAST( umm_sort.um_value AS {$custom_sort_type} ) {$custom_sort_order} ";
@@ -818,7 +823,6 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			}
 
 			$this->sql_order = apply_filters( 'um_modify_sortby_parameter_meta', $this->sql_order, $sortby );
-
 
 			$profiles_per_page = $directory_data['profiles_per_page'];
 			if ( UM()->mobile()->isMobile() && isset( $directory_data['profiles_per_page_mobile'] ) ) {

@@ -7,18 +7,6 @@ global $post_id;
 $_um_sorting_fields = get_post_meta( $post_id, '_um_sorting_fields', true );
 $_um_sorting_fields = empty( $_um_sorting_fields ) ? array() : $_um_sorting_fields;
 
-$custom_type_options = array(
-	'CHAR'     => 'CHAR',
-	'NUMERIC'  => 'NUMERIC',
-	'BINARY'   => 'BINARY',
-	'DATE'     => 'DATE',
-	'DATETIME' => 'DATETIME',
-	'DECIMAL'  => 'DECIMAL',
-	'SIGNED'   => 'SIGNED',
-	'TIME'     => 'TIME',
-	'UNSIGNED' => 'UNSIGNED',
-);
-
 $fields = array(
 	array(
 		'id'      => '_um_sortby',
@@ -42,7 +30,7 @@ $fields = array(
 		'label'       => __( 'Data type', 'ultimate-member' ),
 		'tooltip'     => __( 'To correct sort by a custom field, choose a data type', 'ultimate-member' ),
 		'value'       => UM()->query()->get_meta_value( '_um_sortby_custom_type', null, 'CHAR' ),
-		'options'     => $custom_type_options,
+		'options'     => UM()->member_directory()->sort_data_types,
 		'conditional' => array( '_um_sortby', '=', 'other' ),
 	),
 	array(
@@ -52,8 +40,8 @@ $fields = array(
 		'tooltip'     => __( 'To correct sort by a custom field, choose an order', 'ultimate-member' ),
 		'value'       => UM()->query()->get_meta_value( '_um_sortby_custom_order', null, 'ASC' ),
 		'options'     => array(
-			'ASC'  => 'ASC',
-			'DESC' => 'DESC',
+			'ASC'  => __( 'ASC', 'ultimate-member' ),
+			'DESC' => __( 'DESC', 'ultimate-member' ),
 		),
 		'conditional' => array( '_um_sortby', '=', 'other' ),
 	),

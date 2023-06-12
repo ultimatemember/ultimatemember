@@ -1,20 +1,17 @@
 <?php
 namespace um\admin;
 
-// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 if ( ! class_exists( 'um\admin\Admin' ) ) {
 
-
 	/**
 	 * Class Admin
 	 * @package um\admin
 	 */
 	class Admin extends Admin_Functions {
-
 
 		/**
 		 * @var string

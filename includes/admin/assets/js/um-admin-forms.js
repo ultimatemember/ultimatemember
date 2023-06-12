@@ -245,21 +245,18 @@ jQuery(document).ready( function() {
 			html += '<span class="um-field-icon"><i class="um-faicon-sort"></i></span>';
 		}
 
+		let dataTypesOptions = '';
+		jQuery.each( um_forms_data.md_sorting_data_types, function( key, label ) {
+			dataTypesOptions += '<option value="' + key + '">' + label + '</option>';
+		} );
+
 		html += '<span class="um-field-wrapper">' + selector_html + '</span>' +
 			'<span class="um-field-control">' +
 			'<a href="javascript:void(0);" class="um-select-delete">' + wp.i18n.__( 'Remove', 'ultimate-member' ) + '</a>' +
 			'</span>' +
 			'<span class="um-field-wrapper um-custom-order-fields"><label>' + wp.i18n.__( 'Meta key', 'ultimate-member' ) + ':&nbsp;<input type="text" name="meta_key" /></label></span>' +
 			'<span class="um-field-wrapper um-custom-order-fields"><label>' + wp.i18n.__( 'Data type', 'ultimate-member' ) + ':&nbsp;<select name="data_type" />' +
-			'<option value="CHAR">' + wp.i18n.__( 'CHAR', 'ultimate-member' ) + '</option>' +
-			'<option value="NUMERIC">' + wp.i18n.__( 'NUMERIC', 'ultimate-member' ) + '</option>' +
-			'<option value="BINARY">' + wp.i18n.__( 'BINARY', 'ultimate-member' ) + '</option>' +
-			'<option value="DATE">' + wp.i18n.__( 'DATE', 'ultimate-member' ) + '</option>' +
-			'<option value="DATETIME">' + wp.i18n.__( 'DATETIME', 'ultimate-member' ) + '</option>' +
-			'<option value="DECIMAL">' + wp.i18n.__( 'DECIMAL', 'ultimate-member' ) + '</option>' +
-			'<option value="SIGNED">' + wp.i18n.__( 'SIGNED', 'ultimate-member' ) + '</option>' +
-			'<option value="TIME">' + wp.i18n.__( 'TIME', 'ultimate-member' ) + '</option>' +
-			'<option value="UNSIGNED">' + wp.i18n.__( 'UNSIGNED', 'ultimate-member' ) + '</option>' +
+			dataTypesOptions +
 			'</select></label></span>' +
 			'<span class="um-field-wrapper um-custom-order-fields"><label>' + wp.i18n.__( 'Order', 'ultimate-member' ) + ':&nbsp;<select name="order" />' +
 			'<option value="ASC">' + wp.i18n.__( 'ASC', 'ultimate-member' ) + '</option>' +

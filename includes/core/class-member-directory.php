@@ -1,19 +1,17 @@
 <?php
 namespace um\core;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Member_Directory' ) ) {
-
 
 	/**
 	 * Class Member_Directory
 	 * @package um\core
 	 */
 	class Member_Directory {
-
 
 		/**
 		 * Member Directory Views
@@ -28,6 +26,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 */
 		var $sort_fields = array();
 
+		/**
+		 * @var array
+		 */
+		var $sort_data_types = array();
 
 		/**
 		 * @var array
@@ -319,6 +321,20 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			) );
 
 			$this->sorting_supported_fields = apply_filters( 'um_members_directory_custom_field_types_supported_sorting', array( 'number' ) );
+
+			$this->sort_data_types = array(
+				'CHAR'     => __( 'CHAR', 'ultimate-member' ),
+				'NUMERIC'  => __( 'NUMERIC', 'ultimate-member' ),
+				'BINARY'   => __( 'BINARY', 'ultimate-member' ),
+				'DATE'     => __( 'DATE', 'ultimate-member' ),
+				'DATETIME' => __( 'DATETIME', 'ultimate-member' ),
+				'DECIMAL'  => __( 'DECIMAL', 'ultimate-member' ),
+				'SIGNED'   => __( 'SIGNED', 'ultimate-member' ),
+				'TIME'     => __( 'TIME', 'ultimate-member' ),
+				'UNSIGNED' => __( 'UNSIGNED', 'ultimate-member' ),
+			);
+
+			$this->sort_data_types = apply_filters( 'um_members_directory_sort_data_types', $this->sort_data_types );
 
 			if ( ! empty( UM()->builtin()->saved_fields ) ) {
 				foreach ( UM()->builtin()->saved_fields as $key => $data ) {
@@ -1434,21 +1450,45 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				unset( $this->query_args['order'] );
 
 			} elseif ( ( ! empty( $directory_data['sortby_custom'] ) && $sortby == $directory_data['sortby_custom'] ) || in_array( $sortby, $custom_sort ) ) {
-				$custom_sort_order = ! empty( $directory_data['sortby_custom_order'] ) ? $directory_data['sortby_custom_order'] : 'CHAR';
+				$custom_sort_order = ! empty( $directory_data['sortby_custom_order'] ) ? $directory_data['sortby_custom_order'] : 'ASC';
 
-				$custom_sort_type = ! empty( $directory_data['sortby_custom_type'] ) ? $directory_data['sortby_custom_type'] : 'CHAR';
+				$meta_query       = new \WP_Meta_Query();
+				$custom_sort_type = ! empty( $directory_data['sortby_custom_type'] ) ? $meta_query->get_cast_for_type( $directory_data['sortby_custom_type'] ) : 'CHAR';
 				if ( ! empty( $directory_data['sorting_fields'] ) ) {
-					// phpcs:disable WordPress.Security.NonceVerification -- already verified here
+					// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
 					$sorting        = sanitize_text_field( $_POST['sorting'] );
-					$sorting_fields = unserialize( $directory_data['sorting_fields'] );
-					// phpcs:enable WordPress.Security.NonceVerification
+					$sorting_fields = maybe_serialize( $directory_data['sorting_fields'] );
+
 					foreach ( $sorting_fields as $field ) {
 						if ( isset( $field[ $sorting ] ) ) {
-							$custom_sort_type  = $field['type'];
+							$custom_sort_type  = ! empty( $field['type'] ) ? $meta_query->get_cast_for_type( $field['type'] ) : 'CHAR';
 							$custom_sort_order = $field['order'];
 						}
 					}
 				}
+				/**
+				 * Filters the sorting MySQL type in member directory custom sorting query.
+				 *
+				 * Note: Possible MySQL types are BINARY|CHAR|DATE|DATETIME|SIGNED|UNSIGNED|TIME|DECIMAL
+				 *
+				 * @since 2.1.3
+				 * @hook um_member_directory_custom_sorting_type
+				 *
+				 * @param {string} $custom_sort_type MySQL type to cast meta_value. 'CHAR' is default.
+				 * @param {string} $sortby           meta_key used for sorting.
+				 * @param {array}  $directory_data   Member directory data.
+				 *
+				 * @return {string} MySQL type to cast meta_value.
+				 * @example <caption>Change type to DATE by the directory ID and mete_key.</caption>
+				 * function my_um_member_directory_custom_sorting_type( $custom_sort_type, $sortby, $directory_data ) {
+				 *     if ( '{selected member directory ID}' == $directory_data['form_id'] && '{custom_date_key}' === $sortby ) {
+				 *         $custom_sort_type = 'DATE';
+				 *     }
+				 *
+				 *     return $custom_sort_type;
+				 * }
+				 * add_filter( 'um_member_directory_custom_sorting_type', 'my_um_member_directory_custom_sorting_type', 10, 3 );
+				 */
 				$custom_sort_type = apply_filters( 'um_member_directory_custom_sorting_type', $custom_sort_type, $sortby, $directory_data );
 
 				$this->query_args['meta_query'][] = array(
@@ -2643,10 +2683,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			add_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10, 6 );
 
 			add_filter( 'pre_user_query', array( &$this, 'pagination_changes' ), 10, 1 );
-//echo '<pre>';
-//print_r($this->query_args);
-//echo '</pre>';
-//exit();
+
 			$user_query = new \WP_User_Query( $this->query_args );
 
 			remove_filter( 'pre_user_query', array( &$this, 'pagination_changes' ), 10 );
