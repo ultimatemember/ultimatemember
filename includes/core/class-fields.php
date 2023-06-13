@@ -1036,6 +1036,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$value = '';
 			}
 
+			if ( '' === $value && '' !== $default ) {
+				$value = $default;
+			}
 
 			/**
 			 * UM hook
