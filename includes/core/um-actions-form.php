@@ -715,6 +715,12 @@ function um_submit_form_errors_hook_( $args ) {
 							}
 							break;
 
+						case 'spotify_url':
+							if ( ! UM()->validation()->is_url( $args[ $key ], 'open.spotify.com' ) ) {
+								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s URL', 'ultimate-member' ), $array['label'] ) );
+							}
+							break;
+
 						case 'telegram_url':
 							if ( ! UM()->validation()->is_url( $args[ $key ], 't.me' ) ) {
 								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s username or profile URL', 'ultimate-member' ), $array['label'] ) );

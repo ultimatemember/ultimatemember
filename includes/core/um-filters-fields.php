@@ -78,6 +78,30 @@ add_filter( 'um_profile_field_filter_hook__youtube_video', 'um_profile_field_fil
 
 
 /**
+ * Outputs a spotify iframe
+ *
+ * @param $value
+ * @param $data
+ *
+ * @return bool|string
+ */
+function um_profile_field_filter_hook__spotify( $value, $data ) {
+	if ( preg_match( '/https:\/\/open.spotify.com\/.*/', $value ) ) {
+		$url = str_replace( 'open.spotify.com/', 'open.spotify.com/embed/', $value );
+
+		$value = '<div class="um-spotify">
+				<iframe width="100%" height="352" style="border-radius:12px" frameBorder="0" allowfullscreen="" loading="lazy"  src="' . esc_url( $url ) . '"></iframe>
+				</div>';
+	} else {
+		return __( 'Invalid Spotify URL', 'ultimate-member' );
+	}
+
+	return $value;
+}
+add_filter( 'um_profile_field_filter_hook__spotify', 'um_profile_field_filter_hook__spotify', 99, 2 );
+
+
+/**
  * Outputs a vimeo video
  *
  * @param $value
