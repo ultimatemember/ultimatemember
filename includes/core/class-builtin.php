@@ -1,11 +1,11 @@
 <?php
 namespace um\core;
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Builtin' ) ) {
-
 
 	/**
 	 * Class Builtin
@@ -627,28 +627,27 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
-					)
+					),
 				),
-
 				'spotify' => array(
-					'name' => 'Spotify URL',
-					'col1' => array('_title','_metakey','_help','_visibility'),
-					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
-					'col3' => array('_required','_editable','_icon'),
+					'name'     => __( 'Spotify URL', 'ultimate-member' ),
+					'col1'     => array('_title','_metakey','_help','_visibility'),
+					'col2'     => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
+					'col3'     => array('_required','_editable','_icon'),
 					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
-							'error' => __('You must provide a title','ultimate-member')
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
 						'_metakey' => array(
 							'mode' => 'unique',
 						),
-					)
+					),
 				),
 
 				/*'group' => array(

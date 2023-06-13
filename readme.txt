@@ -172,6 +172,7 @@ No, you do not need to use our plugin’s login or registration pages and can us
   - Added: The "Order" and "Data type" settings for custom sorting fields based on metakey in Member Directory
   - Added: New hooks `um_profile_permalink`,`um_external_profile_url`
   - Added: Users dropdown field to Admin Forms class
+  - Added: Spotify URL field type
   - Added: New developer docs [here](http://ultimatemember.github.io/ultimatemember/). It will be upgraded from version to version
 
 * Bugfixes:
