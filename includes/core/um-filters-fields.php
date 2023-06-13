@@ -452,7 +452,6 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 			) {
 				if ( $data['validate'] == 'soundcloud_url' ) 	$value = 'https://soundcloud.com/' . $value;
 				if ( $data['validate'] == 'youtube_url' ) 		$value = 'https://youtube.com/user/' . $value;
-//				if ( $data['validate'] == 'spotify_url' ) 		$value = 'https://open.spotify.com/' . $value;
 				if ( $data['validate'] == 'telegram_url' ) 		$value = 'https://t.me/' . $value;
 				if ( $data['validate'] == 'facebook_url' ) 		$value = 'https://facebook.com/' . $value;
 				if ( $data['validate'] == 'twitter_url' ) 		$value = 'https://twitter.com/' . $value;
