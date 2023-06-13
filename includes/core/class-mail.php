@@ -411,7 +411,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 				return;
 			}
 
-			if ( ! empty( UM()->options()->get( $template . '_on' ) ) ) {
+			if ( empty( UM()->options()->get( $template . '_on' ) ) ) {
 				return;
 			}
 			/**

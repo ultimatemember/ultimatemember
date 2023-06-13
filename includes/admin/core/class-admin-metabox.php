@@ -1223,7 +1223,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		/**
 		 * Load modal content
 		 */
-		function load_modal_content() {
+		public function load_modal_content() {
 			$screen = get_current_screen();
 
 			if ( isset( $screen->id ) && strstr( $screen->id, 'um_form' ) ) {
@@ -1236,12 +1236,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				include_once um_path . 'includes/admin/templates/modal/forms/fonticons.php';
 			}
 
-			if ( $screen->id == 'users' ) {
+			if ( 'users' === $screen->id ) {
 				include_once um_path . 'includes/admin/templates/modal/dynamic_registration_preview.php';
 			}
 
 			// needed on forms only
-			if ( ! isset( $this->is_loaded ) && isset( $screen->id ) && strstr( $screen->id, 'um_form' ) ) {
+			if ( false === $this->is_loaded && isset( $screen->id ) && strstr( $screen->id, 'um_form' ) ) {
 				$settings['textarea_rows'] = 8;
 
 				echo '<div class="um-hidden-editor-edit" style="display:none;">';

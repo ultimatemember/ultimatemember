@@ -67,6 +67,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		public $fields = array();
 
 		/**
+		 * @var bool
+		 */
+		public $disable_tooltips = false;
+
+		/**
 		 * Fields constructor.
 		 */
 		public function __construct() {
@@ -712,17 +717,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$output .= '<label' . $for_attr . '>' . __( $label, 'ultimate-member' ) . '</label>';
 
 			if ( ! empty( $data['help'] ) && $this->viewing == false && ! strstr( $key, 'confirm_user_pass' ) ) {
-
 				if ( ! UM()->mobile()->isMobile() ) {
-					if ( ! isset( $this->disable_tooltips ) ) {
+					if ( false === $this->disable_tooltips ) {
 						$output .= '<span class="um-tip um-tip-' . ( is_rtl() ? 'e' : 'w' ) . '" title="' . esc_attr__( $data['help'], 'ultimate-member' ) . '"><i class="um-icon-help-circled"></i></span>';
 					}
 				}
 
-				if ( UM()->mobile()->isMobile() || isset( $this->disable_tooltips ) ) {
+				if ( UM()->mobile()->isMobile() || false !== $this->disable_tooltips ) {
 					$output .= '<span class="um-tip-text">' . __( $data['help'], 'ultimate-member' ) . '</span>';
 				}
-
 			}
 
 			$output .= '<div class="um-clear"></div></div>';
@@ -2968,11 +2971,16 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						if ( empty( $disabled ) ) {
 							$output .= '<a href="javascript:void(0);" data-modal="um_upload_single" data-modal-size="' . $modal_size . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . $button_text . '</a>';
 						}
-
 					}
 					$output .= '</div>';
 					/* modal hidden */
 					if ( empty( $disabled ) ) {
+						if ( ! isset( $allowed_types ) ) {
+							$allowed_types = 'gif,jpg,jpeg,png';
+						} elseif ( is_array( $allowed_types ) ) {
+							$allowed_types = implode( ',', $allowed_types );
+						}
+
 						$output .= '<div class="um-modal-hidden-content">';
 						$output .= '<div class="um-modal-header"> ' . $modal_label . '</div>';
 						$output .= '<div class="um-modal-body">';
@@ -2983,7 +2991,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$set_id   = 0;
 							$set_mode = '';
 						}
-						$nonce  = wp_create_nonce( 'um_upload_nonce-' . $this->timestamp );
+
+						$nonce   = wp_create_nonce( 'um_upload_nonce-' . $this->timestamp );
 						$output .= '<div class="um-single-image-preview ' . $crop_class . '"  data-crop="' . $crop_data . '" data-ratio="' . $ratio . '" data-min_width="' . $min_width . '" data-min_height="' . $min_height . '" data-coord=""><a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a><img src="" alt="" /><div class="um-clear"></div></div><div class="um-clear"></div>';
 						$output .= '<div class="um-single-image-upload" data-user_id="' . esc_attr( $_um_profile_id ) . '" data-nonce="' . $nonce . '" data-timestamp="' . esc_attr( $this->timestamp ) . '" data-icon="' . esc_attr( $icon ) . '" data-set_id="' . esc_attr( $set_id ) . '" data-set_mode="' . esc_attr( $set_mode ) . '" data-type="' . esc_attr( $type ) . '" data-key="' . esc_attr( $key ) . '" data-max_size="' . esc_attr( $max_size ) . '" data-max_size_error="' . esc_attr( $max_size_error ) . '" data-min_size_error="' . esc_attr( $min_size_error ) . '" data-extension_error="' . esc_attr( $extension_error ) . '"  data-allowed_types="' . esc_attr( $allowed_types ) . '" data-upload_text="' . esc_attr( $upload_text ) . '" data-max_files_error="' . esc_attr( $max_files_error ) . '" data-upload_help_text="' . esc_attr( $upload_help_text ) . '">' . $button_text . '</div>';
 						$output .= '<div class="um-modal-footer">
@@ -2999,7 +3008,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					/* end */
 					if ( $this->is_error( $key ) ) {
 						$output .= $this->field_error( $this->show_error( $key ) );
-					}else if ( $this->is_notice( $key ) ) {
+					} elseif ( $this->is_notice( $key ) ) {
 						$output .= $this->field_notice( $this->show_notice( $key ) );
 					}
 					$output .= '</div>';
@@ -3072,6 +3081,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$output .= '</div>';
 					/* modal hidden */
 					if ( empty( $disabled ) ) {
+						if ( ! isset( $allowed_types ) ) {
+							$allowed_types = 'pdf,txt';
+						} elseif ( is_array( $allowed_types ) ) {
+							$allowed_types = implode( ',', $allowed_types );
+						}
+
 						$output .= '<div class="um-modal-hidden-content">';
 						$output .= '<div class="um-modal-header"> ' . $modal_label . '</div>';
 						$output .= '<div class="um-modal-body">';
