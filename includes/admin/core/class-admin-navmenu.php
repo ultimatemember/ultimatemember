@@ -47,16 +47,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 		 * Fires just before the move buttons of a nav menu item in the menu editor.
 		 * Adds block "Ultimate Member Menu Settings"
 		 *
-		 * @since WP 5.4.0
-		 * @hook  wp_nav_menu_item_custom_fields
-		 *
-		 * @param int      $item_id Menu item ID.
+		 * @param int       $item_id Menu item ID.
 		 * @param \WP_Post  $item    Menu item data object.
-		 * @param int      $depth   Depth of menu item. Used for padding.
+		 * @param int       $depth   Depth of menu item. Used for padding.
 		 * @param \stdClass $args    An object of menu item arguments.
-		 * @param int      $id      Nav menu ID.
+		 * @param int       $id      Nav menu ID.
 		 */
-		function wp_nav_menu_item_custom_fields( $item_id, $item, $depth, $args, $id = null ) {
+		public function wp_nav_menu_item_custom_fields( $item_id, $item, $depth, $args, $id = null ) {
 
 			$um_nav_public = get_post_meta( $item->ID, 'menu-item-um_nav_public', true );
 			$_nav_roles_meta = get_post_meta( $item->ID, 'menu-item-um_nav_roles', true );

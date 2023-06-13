@@ -1,17 +1,48 @@
 function um_admin_init_users_select() {
 	if ( jQuery('.um-user-select-field').length ) {
+		function avatarformat( data ) {
+			var option;
+			if ( ! data.id ) {
+				return data.text;
+			}
+			if ( 'undefined' !== typeof data.img ) {
+				option = jQuery('<span><img style="vertical-align: sub; width: 20px; height: 20px;" src="' + data.img + '" /> ' + data.text + '</span>');
+			} else {
+				var img = data.element.attributes['data-img']['value'];
+				if ( img ) {
+					option = jQuery('<img style="vertical-align: sub; width: 20px; height: 20px;" src="' + img + '" /> ' + data.text + '</span>');
+				} else {
+					option = jQuery('<span>' + data.text + '</span>');
+				}
+			}
+			return option;
+		}
+
 		var select2_atts = {
 			ajax: {
 				url: wp.ajax.settings.url,
 				dataType: 'json',
 				delay: 250, // delay in ms while typing when to perform a AJAX search
 				data: function( params ) {
-					return {
-						search: params.term, // search query
+					var args = {
 						action: 'um_get_users', // AJAX action for admin-ajax.php
+						search: params.term, // search query
 						page: params.page || 1, // infinite scroll pagination
 						nonce: um_admin_scripts.nonce
 					};
+
+					jQuery.each( jQuery(this)[0].attributes, function() {
+						// this.attributes is not a plain object, but an array
+						// of attribute nodes, which contain both the name and value
+						if ( this.specified ) {
+							if ( -1 !== this.name.indexOf( 'data-ajax-args-' ) ) {
+								var arg_name = this.name.replace( 'data-ajax-args-', '' ).trim();
+								args[ arg_name ] = this.value;
+							}
+						}
+					});
+
+					return args;
 				},
 				processResults: function( response, params ) {
 					params.page = params.page || 1;
@@ -19,7 +50,11 @@ function um_admin_init_users_select() {
 
 					if ( response.data.users ) {
 						jQuery.each( response.data.users, function( index, text ) {
-							options.push( { id: text.ID, text: text.user_login + ' (#' + text.ID + ')' } );
+							if ( typeof text.img !== 'undefined' ) {
+								options.push({ id: text.ID, text: text.user_login + ' (#' + text.ID + ')', img: text.img });
+							} else {
+								options.push( { id: text.ID, text: text.user_login + ' (#' + text.ID + ')' } );
+							}
 						});
 					}
 
@@ -38,7 +73,9 @@ function um_admin_init_users_select() {
 			allowHtml: true,
 			dropdownCssClass: 'um-select2-users-dropdown',
 			containerCssClass : 'um-select2-users-container',
-			placeholder: jQuery(this).data('placeholder')
+			placeholder: jQuery(this).data('placeholder'),
+			templateSelection: avatarformat,
+			templateResult: avatarformat
 		};
 
 		jQuery('.um-user-select-field').select2( select2_atts );
@@ -245,11 +282,23 @@ jQuery(document).ready( function() {
 			html += '<span class="um-field-icon"><i class="um-faicon-sort"></i></span>';
 		}
 
+		let dataTypesOptions = '';
+		jQuery.each( um_forms_data.md_sorting_data_types, function( key, label ) {
+			dataTypesOptions += '<option value="' + key + '">' + label + '</option>';
+		} );
+
 		html += '<span class="um-field-wrapper">' + selector_html + '</span>' +
 			'<span class="um-field-control">' +
 			'<a href="javascript:void(0);" class="um-select-delete">' + wp.i18n.__( 'Remove', 'ultimate-member' ) + '</a>' +
 			'</span>' +
 			'<span class="um-field-wrapper um-custom-order-fields"><label>' + wp.i18n.__( 'Meta key', 'ultimate-member' ) + ':&nbsp;<input type="text" name="meta_key" /></label></span>' +
+			'<span class="um-field-wrapper um-custom-order-fields"><label>' + wp.i18n.__( 'Data type', 'ultimate-member' ) + ':&nbsp;<select name="data_type" />' +
+			dataTypesOptions +
+			'</select></label></span>' +
+			'<span class="um-field-wrapper um-custom-order-fields"><label>' + wp.i18n.__( 'Order', 'ultimate-member' ) + ':&nbsp;<select name="order" />' +
+			'<option value="ASC">' + wp.i18n.__( 'ASC', 'ultimate-member' ) + '</option>' +
+			'<option value="DESC">' + wp.i18n.__( 'DESC', 'ultimate-member' ) + '</option>' +
+			'</select></label></span>' +
 			'<span class="um-field-wrapper um-custom-order-fields"><label>' + wp.i18n.__( 'Label', 'ultimate-member' ) + ':&nbsp;<input type="text" name="label" /></label></span>' +
 			'</li>';
 		list.append( html );
@@ -259,6 +308,8 @@ jQuery(document).ready( function() {
 
 		jQuery( '#' + list.data('id_attr') + '-' + k ).parents('li').find('.um-field-wrapper.um-custom-order-fields input[name="meta_key"]').attr('name', 'um_metadata[_um_sorting_fields][other_data][' + k + '][meta_key]');
 		jQuery( '#' + list.data('id_attr') + '-' + k ).parents('li').find('.um-field-wrapper.um-custom-order-fields input[name="label"]').attr('name', 'um_metadata[_um_sorting_fields][other_data][' + k + '][label]');
+		jQuery( '#' + list.data('id_attr') + '-' + k ).parents('li').find('.um-field-wrapper.um-custom-order-fields select[name="data_type"]').attr('name', 'um_metadata[_um_sorting_fields][other_data][' + k + '][data_type]');
+		jQuery( '#' + list.data('id_attr') + '-' + k ).parents('li').find('.um-field-wrapper.um-custom-order-fields select[name="order"]').attr('name', 'um_metadata[_um_sorting_fields][other_data][' + k + '][order]');
 	});
 
 

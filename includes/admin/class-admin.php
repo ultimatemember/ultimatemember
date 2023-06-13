@@ -1,20 +1,17 @@
 <?php
 namespace um\admin;
 
-// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 if ( ! class_exists( 'um\admin\Admin' ) ) {
 
-
 	/**
 	 * Class Admin
 	 * @package um\admin
 	 */
 	class Admin extends Admin_Functions {
-
 
 		/**
 		 * @var string
@@ -387,6 +384,12 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						'sanitize' => 'text',
 					),
 					'_um_sortby_custom_label'      => array(
+						'sanitize' => 'text',
+					),
+					'_um_sortby_custom_type'       => array(
+						'sanitize' => 'text',
+					),
+					'_um_sortby_custom_order'      => array(
 						'sanitize' => 'text',
 					),
 					'_um_enable_sorting'           => array(
@@ -866,6 +869,12 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 							}
 							if ( isset( $item['label'] ) ) {
 								$item['label'] = sanitize_text_field( $item['label'] );
+							}
+							if ( isset( $item['order'] ) ) {
+								$item['order'] = sanitize_text_field( $item['order'] );
+							}
+							if ( isset( $item['data_type'] ) ) {
+								$item['data_type'] = sanitize_text_field( $item['data_type'] );
 							}
 
 							return $item;

@@ -91,40 +91,47 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			}
 		}
 
-
 		/**
 		 * Loop through dynamic roles and add them to the $wp_roles array
 		 *
 		 * @param null|object $wp_roles
 		 * @return null
 		 */
-		function um_roles_init( $wp_roles = null ) {
+		public function um_roles_init( $wp_roles = null ) {
+			$role_keys = get_option( 'um_roles', array() );
+			$um_roles  = array_map( array( &$this, 'key_to_role_id_mapping' ), $role_keys );
 
-			//Add UM role data to WP Roles
-			foreach ( $wp_roles->roles as $roleID => $role_data ) {
-				$role_meta = get_option( "um_role_{$roleID}_meta" );
+			// Add UM role data to WP Roles.
+			foreach ( $wp_roles->roles as $role_id => $role_data ) {
+				// Skip custom UM roles meta here, because it's added below. See: "Add custom UM roles".
+				if ( in_array( $role_id, $um_roles, true ) ) {
+					continue;
+				}
 
+				$role_meta = get_option( "um_role_{$role_id}_meta" );
 				if ( ! empty( $role_meta ) ) {
-					$wp_roles->roles[ $roleID ] = array_merge( $role_data, $role_meta );
+					$wp_roles->roles[ $role_id ] = array_merge( $role_data, $role_meta );
 				}
 			}
 
-
-			//Add custom UM roles
+			// Add custom UM roles.
 			$roles = array();
-
-			$role_keys = get_option( 'um_roles', array() );
 			foreach ( $role_keys as $role_key ) {
 				$role_meta = get_option( "um_role_{$role_key}_meta" );
-				if ( $role_meta ) {
+				if ( ! empty( $role_meta ) ) {
 					$roles[ 'um_' . $role_key ] = $role_meta;
 				}
 			}
 
+			if ( empty( $roles ) ) {
+				return $wp_roles;
+			}
+
 			foreach ( $roles as $role_id => $details ) {
-				$capabilities = ! empty( $details['wp_capabilities'] ) ? array_keys( $details['wp_capabilities'] ) : array();
+				$capabilities            = ! empty( $details['wp_capabilities'] ) ? array_keys( $details['wp_capabilities'] ) : array();
 				$details['capabilities'] = array_fill_keys( array_values( $capabilities ), true );
 				unset( $details['wp_capabilities'] );
+
 				$wp_roles->roles[ $role_id ]        = $details;
 				$wp_roles->role_objects[ $role_id ] = new \WP_Role( $role_id, $details['capabilities'] );
 				$wp_roles->role_names[ $role_id ]   = $details['name'];
@@ -134,6 +141,9 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			return $wp_roles;
 		}
 
+		public function key_to_role_id_mapping( $role_key ) {
+			return 'um_' . $role_key;
+		}
 
 		/**
 		 * Check if role is custom
@@ -141,21 +151,16 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 		 * @param $role
 		 * @return bool
 		 */
-		function is_role_custom( $role ) {
+		public function is_role_custom( $role ) {
 			// User has roles so look for a UM Role one
 			$role_keys = get_option( 'um_roles', array() );
-
 			if ( empty( $role_keys ) ) {
 				return false;
 			}
 
-			$role_keys = array_map( function( $item ) {
-				return 'um_' . $item;
-			}, $role_keys );
-
-			return in_array( $role, $role_keys );
+			$um_roles = array_map( array( &$this, 'key_to_role_id_mapping' ), $role_keys );
+			return in_array( $role, $um_roles, true );
 		}
-
 
 		/**
 		 * Return a user's main role

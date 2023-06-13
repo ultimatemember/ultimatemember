@@ -1725,6 +1725,26 @@ function um_profile_menu( $args ) {
 					 */
 					$nav_link = apply_filters( "um_profile_menu_link_{$id}", $nav_link );
 
+					/**
+					 * Filters a profile menu navigation links' tag attributes.
+					 *
+					 * @since 2.6.3
+					 * @hook um_profile_menu_link_{$id}_attrs
+					 *
+					 * @param {string} $profile_nav_attrs Link's tag attributes.
+					 * @param {array}  $args              Profile form arguments.
+					 *
+					 * @return {string} Link's tag attributes.
+					 *
+					 * @example <caption>Add a link's tag attributes.</caption>
+					 * function um_profile_menu_link_attrs( $profile_nav_attrs ) {
+					 *     // your code here
+					 *     return $profile_nav_attrs;
+					 * }
+					 * add_filter( 'um_profile_menu_link_{$id}_attrs', 'um_profile_menu_link_attrs', 10, 1 );
+					 */
+					$profile_nav_attrs = apply_filters( "um_profile_menu_link_{$id}_attrs", '', $args );
+
 					$profile_nav_class = '';
 					if ( ! UM()->options()->get( 'profile_menu_icons' ) ) {
 						$profile_nav_class .= ' without-icon';
@@ -1737,7 +1757,7 @@ function um_profile_menu( $args ) {
 					<div class="um-profile-nav-item um-profile-nav-<?php echo esc_attr( $id . ' ' . $profile_nav_class ); ?>">
 						<?php if ( UM()->options()->get( 'profile_menu_icons' ) ) { ?>
 							<a href="<?php echo esc_url( $nav_link ); ?>" class="uimob800-show uimob500-show uimob340-show um-tip-n"
-							   title="<?php echo esc_attr( $tab['name'] ); ?>" original-title="<?php echo esc_attr( $tab['name'] ); ?>">
+							   title="<?php echo esc_attr( $tab['name'] ); ?>" original-title="<?php echo esc_attr( $tab['name'] ); ?>" <?php echo esc_attr( $profile_nav_attrs ); ?>>
 
 								<i class="<?php echo esc_attr( $tab['icon'] ); ?>"></i>
 
@@ -1748,7 +1768,7 @@ function um_profile_menu( $args ) {
 								<span class="uimob800-hide uimob500-hide uimob340-hide title"><?php echo esc_html( $tab['name'] ); ?></span>
 							</a>
 							<a href="<?php echo esc_url( $nav_link ); ?>" class="uimob800-hide uimob500-hide uimob340-hide"
-							   title="<?php echo esc_attr( $tab['name'] ); ?>">
+							   title="<?php echo esc_attr( $tab['name'] ); ?>" <?php echo esc_attr( $profile_nav_attrs ); ?>>
 
 								<i class="<?php echo esc_attr( $tab['icon'] ); ?>"></i>
 
@@ -1760,7 +1780,7 @@ function um_profile_menu( $args ) {
 							</a>
 						<?php } else { ?>
 							<a href="<?php echo esc_url( $nav_link ); ?>" class="uimob800-show uimob500-show uimob340-show um-tip-n"
-							   title="<?php echo esc_attr( $tab['name'] ); ?>" original-title="<?php echo esc_attr( $tab['name'] ); ?>">
+							   title="<?php echo esc_attr( $tab['name'] ); ?>" original-title="<?php echo esc_attr( $tab['name'] ); ?>" <?php echo esc_attr( $profile_nav_attrs ); ?>>
 
 								<i class="<?php echo esc_attr( $tab['icon'] ); ?>"></i>
 
@@ -1769,7 +1789,7 @@ function um_profile_menu( $args ) {
 								<?php } ?>
 							</a>
 							<a href="<?php echo esc_url( $nav_link ); ?>" class="uimob800-hide uimob500-hide uimob340-hide"
-							   title="<?php echo esc_attr( $tab['name'] ); ?>">
+							   title="<?php echo esc_attr( $tab['name'] ); ?>" <?php echo esc_attr( $profile_nav_attrs ); ?>>
 
 								<?php if ( isset( $tab['notifier'] ) && $tab['notifier'] > 0 ) { ?>
 									<span class="um-tab-notifier"><?php echo $tab['notifier']; ?></span>

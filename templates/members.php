@@ -6,7 +6,7 @@
  *
  * Page: "Members"
  *
- * @version 2.6.1
+ * @version 2.6.3
  *
  * @var array $args
  */
@@ -137,6 +137,14 @@ if ( ! empty( $search_filters ) ) {
 	});
 
 	$search_filters = array_values( $search_filters );
+}
+
+// Hide filter fields based on the field visibility.
+foreach ( $search_filters as $key => $filter ) {
+	$filter_data = UM()->fields()->get_field( $filter );
+	if ( ! um_can_view_field( $filter_data ) ) {
+		unset( $search_filters[ $key ] );
+	}
 }
 
 // Classes

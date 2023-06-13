@@ -1515,10 +1515,10 @@ function um_can_view_field( $data ) {
 		UM()->fields()->set_mode = '';
 	}
 
-	if ( isset( $data['public'] ) && UM()->fields()->set_mode != 'register' ) {
+	if ( isset( $data['public'] ) && 'register' !== UM()->fields()->set_mode ) {
 
-		$can_edit = false;
-		$current_user_roles = [];
+		$can_edit           = false;
+		$current_user_roles = array();
 		if ( is_user_logged_in() ) {
 
 			$can_edit = UM()->roles()->um_current_user_can( 'edit', um_user( 'ID' ) );
@@ -1563,7 +1563,6 @@ function um_can_view_field( $data ) {
 				$can_view = apply_filters( 'um_can_view_field_custom', $can_view, $data );
 				break;
 		}
-
 	}
 
 	return apply_filters( 'um_can_view_field', $can_view, $data );

@@ -1,4 +1,5 @@
-<?php if ( ! defined( 'ABSPATH' ) ) {
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -124,6 +125,7 @@ if ( ! empty( $_POST['role'] ) ) {
 
 		if ( '' === $error ) {
 
+			$update = true;
 			if ( 'add' === sanitize_key( $_GET['tab'] ) ) {
 				$roles   = get_option( 'um_roles', array() );
 				$roles[] = $id;
@@ -134,9 +136,36 @@ if ( ! empty( $_POST['role'] ) ) {
 					$auto_increment++;
 					UM()->options()->update( 'custom_roles_increment', $auto_increment );
 				}
+
+				$update = false;
 			}
 
-			$role_meta = $data;
+			/**
+			 * Filters the role meta before save it to DB.
+			 *
+			 * @param {array}  $data   Role meta.
+			 * @param {string} $id     Role key.
+			 * @param {bool}   $update Create or update role. "True" if update.
+			 *
+			 * @since 2.6.3
+			 * @hook um_role_edit_data
+			 *
+			 * @example <caption>Add custom metadata for role on saving.</caption>
+			 * function my_custom_um_role_edit_data( $data, $id, $update ) {
+			 *     $data['{meta_key}'] = {meta_value}; // set your meta key and meta value
+			 *     return $data;
+			 * }
+			 * add_action( 'um_role_edit_data', 'my_custom_um_role_edit_data', 10, 3 );
+			 * @example <caption>Force remove role's metadata on saving when update.</caption>
+			 * function my_custom_um_role_edit_data( $data, $id, $update ) {
+			 *     if ( true === $update ) {
+			 *         unset( $data['{meta_key}'] ); // set your meta key
+			 *     }
+			 *     return $data;
+			 * }
+			 * add_action( 'um_role_edit_data', 'my_custom_um_role_edit_data', 10, 3 );
+			 */
+			$role_meta = apply_filters( 'um_role_edit_data', $data, $id, $update );
 			unset( $role_meta['id'] );
 
 			update_option( "um_role_{$id}_meta", $role_meta );

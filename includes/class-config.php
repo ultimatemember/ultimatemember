@@ -1,12 +1,11 @@
 <?php
 namespace um;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\Config' ) ) {
-
 
 	/**
 	 * Class Config

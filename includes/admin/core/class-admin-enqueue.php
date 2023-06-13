@@ -375,6 +375,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 						),
 						admin_url( 'admin.php' )
 					),
+					'md_sorting_data_types' => UM()->member_directory()->sort_data_types,
 				)
 			);
 
@@ -566,7 +567,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		 * Load Gutenberg scripts
 		 */
 		public function load_gutenberg_js() {
-			//disable Gutenberg scripts to avoid the conflicts
+			/** This filter is documented in includes/core/class-blocks.php */
 			$disable_script = apply_filters( 'um_disable_blocks_script', false );
 			if ( $disable_script ) {
 				return;

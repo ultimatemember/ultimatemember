@@ -1,12 +1,11 @@
 <?php
 namespace um\core;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Fields' ) ) {
-
 
 	/**
 	 * Class Fields
@@ -393,6 +392,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 						update_post_meta( $directory_id, '_um_sortby_custom', '' );
 						update_post_meta( $directory_id, '_um_sortby_custom_label', '' );
+						update_post_meta( $directory_id, '_um_sortby_custom_type', '' );
+						update_post_meta( $directory_id, '_um_sortby_custom_order', '' );
 					}
 				}
 
@@ -1651,6 +1652,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				case 'youtube_video':
 				case 'vimeo_video':
 				case 'soundcloud_track':
+				case 'spotify':
 					$array['disabled'] = '';
 					$array['input'] = 'text';
 					break;
@@ -2380,6 +2382,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				case 'googlemap':
 				case 'youtube_video':
 				case 'vimeo_video':
+				case 'spotify':
 				case 'soundcloud_track':
 
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
@@ -2814,7 +2817,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '<div class="um-field-area">';
 
-					if ( isset( $data['html'] ) && $data['html'] != 0 && $key != "description" ) {
+					if ( isset( $data['html'] ) && $data['html'] != 0 && 'description' !== $key ) {
 
 						$textarea_settings = array(
 							'media_buttons' => false,
@@ -2863,7 +2866,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= ob_get_clean();
 						$output .= '<br /><span class="description">' . $placeholder . '</span>';
 					} else {
-						$textarea_field_value = ! empty( $data['html'] ) ? $field_value : strip_tags( $field_value );
+						$textarea_field_value = '';
+						if ( ! empty( $field_value ) ) {
+							$textarea_field_value = ! empty( $data['html'] ) ? $field_value : wp_strip_all_tags( $field_value );
+						}
 						$output .= '<textarea  ' . $disabled . '  style="height: ' . esc_attr( $height ) . ';" class="' . $this->get_class( $key, $data ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_id ) . '" placeholder="' . esc_attr( $placeholder ) . '">' . esc_textarea( $textarea_field_value ) . '</textarea>';
 					}
 
@@ -3881,9 +3887,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						$um_field_checkbox_item_title = $v;
 
-						$v = $this->filter_field_non_utf8_value( $v );
+						$v          = $this->filter_field_non_utf8_value( $v );
+						$value_attr = ( ! empty( $v ) && is_string( $v ) ) ? wp_strip_all_tags( $v ) : $v;
 
-						$output .= '<input  ' . $disabled . ' type="checkbox" name="' . esc_attr( $key ) . '[]" value="' . strip_tags( $v ) . '" ';
+						$output .= '<input  ' . $disabled . ' type="checkbox" name="' . esc_attr( $key ) . '[]" value="' . esc_attr( $value_attr ) . '" ';
 
 						if ( $this->is_selected( $key, $v, $data ) ) {
 							$output .= 'checked';
@@ -3892,9 +3899,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= ' />';
 
 						if ( ! empty( $disabled ) && $this->is_selected( $key, $v, $data ) ) {
-							$output .= $this->disabled_hidden_field( $key . '[]', strip_tags( $v ) );
+							$output .= $this->disabled_hidden_field( $key . '[]', $value_attr );
 						}
-
 
 						$output .= '<span class="um-field-checkbox-state"><i class="' . esc_attr( $class ) . '"></i></span>';
 						/**

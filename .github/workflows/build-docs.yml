@@ -1,0 +1,31 @@
+name: Build Hook Docs
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  hookdocs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: npm install, and build docs
+        run: |
+          npm install
+          npm run build:docs
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+      - name: PhpDocumentor
+        uses: gpupo/actions-phpDocumentor@1.0
+        with:
+          dir: './'
+      - name: Deploy to GH Pages
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: 'docs/' # The folder the action should deploy.
+          token: ${{ secrets.GH_PAT }}

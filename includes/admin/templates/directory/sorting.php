@@ -25,6 +25,27 @@ $fields = array(
 		'conditional' => array( '_um_sortby', '=', 'other' ),
 	),
 	array(
+		'id'          => '_um_sortby_custom_type',
+		'type'        => 'select',
+		'label'       => __( 'Data type', 'ultimate-member' ),
+		'tooltip'     => __( 'To correct sort by a custom field, choose a data type', 'ultimate-member' ),
+		'value'       => UM()->query()->get_meta_value( '_um_sortby_custom_type', null, 'CHAR' ),
+		'options'     => UM()->member_directory()->sort_data_types,
+		'conditional' => array( '_um_sortby', '=', 'other' ),
+	),
+	array(
+		'id'          => '_um_sortby_custom_order',
+		'type'        => 'select',
+		'label'       => __( 'Order', 'ultimate-member' ),
+		'tooltip'     => __( 'To correct sort by a custom field, choose an order', 'ultimate-member' ),
+		'value'       => UM()->query()->get_meta_value( '_um_sortby_custom_order', null, 'ASC' ),
+		'options'     => array(
+			'ASC'  => __( 'ASC', 'ultimate-member' ),
+			'DESC' => __( 'DESC', 'ultimate-member' ),
+		),
+		'conditional' => array( '_um_sortby', '=', 'other' ),
+	),
+	array(
 		'id'          => '_um_sortby_custom_label',
 		'type'        => 'text',
 		'label'       => __( 'Label of custom sort', 'ultimate-member' ),

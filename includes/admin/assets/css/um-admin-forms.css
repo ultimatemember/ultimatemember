@@ -146,6 +146,14 @@ textarea.um-forms-field.um-small-field {
     flex: 0.9;
 }
 
+.um-multi-selects-option-line .um-field-wrapper.um-custom-order-fields label select{
+	width: auto;
+	display: inline;
+	font-weight: normal;
+	max-width: 70%;
+	flex: 0.9;
+}
+
 .um-multi-selects-option-line.um-admin-drag-fld .um-field-wrapper {
     width: calc( 100% - 90px );
 }

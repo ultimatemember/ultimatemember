@@ -1,11 +1,11 @@
 <?php
 namespace um\core;
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Form' ) ) {
-
 
 	/**
 	 * Class Form
@@ -22,6 +22,11 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 * @var
 		 */
 		public $form_id;
+
+		/**
+		 * @var
+		 */
+		public $form_status;
 
 		/**
 		 * @var null
@@ -738,6 +743,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 										case 'youtube_video':
 										case 'vimeo_video':
 										case 'soundcloud_track':
+										case 'spotify':
 											$form[ $k ] = sanitize_text_field( $form[ $k ] );
 											break;
 										case 'multiselect':

@@ -1,19 +1,17 @@
 <?php
 namespace um\core;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Member_Directory' ) ) {
-
 
 	/**
 	 * Class Member_Directory
 	 * @package um\core
 	 */
 	class Member_Directory {
-
 
 		/**
 		 * Member Directory Views
@@ -28,6 +26,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 */
 		var $sort_fields = array();
 
+		/**
+		 * @var array
+		 */
+		var $sort_data_types = array();
 
 		/**
 		 * @var array
@@ -210,7 +212,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				if ( ! empty( $value ) && in_array( $key, array( '_um_view_types', '_um_roles', '_um_roles_can_search', '_um_roles_can_filter' ), true ) ) {
 					$value = array_keys( $value );
 				} elseif ( '_um_search_filters' === $key ) {
-
 					$temp_value = array();
 
 					if ( ! empty( $value ) ) {
@@ -264,8 +265,17 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 									if ( ! empty( $other_data[ $k ]['label'] ) ) {
 										$metalabel = wp_strip_all_tags( $other_data[ $k ]['label'] );
 									}
+									if ( ! empty( $other_data[ $k ]['data_type'] ) ) {
+										$data_type = sanitize_text_field( $other_data[ $k ]['data_type'] );
+									}
+									if ( ! empty( $other_data[ $k ]['order'] ) ) {
+										$order = sanitize_text_field( $other_data[ $k ]['order'] );
+									}
 									$row = array(
-										$metakey => ! empty( $metalabel ) ? $metalabel : $metakey,
+										$metakey => $metakey,
+										'label'  => ! empty( $metalabel ) ? $metalabel : $metakey,
+										'type'   => ! empty( $data_type ) ? $data_type : '',
+										'order'  => ! empty( $order ) ? $order : '',
 									);
 								}
 							}
@@ -275,6 +285,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$value = sanitize_text_field( $value );
 				} elseif ( '_um_sortby_custom_label' === $key ) {
 					$value = wp_strip_all_tags( $value );
+				} elseif ( '_um_sortby_custom_type' === $key ) {
+					$value = sanitize_text_field( $value );
+				} elseif ( '_um_sortby_custom_order' === $key ) {
+					$value = sanitize_text_field( $value );
 				}
 			}
 
@@ -307,6 +321,20 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			) );
 
 			$this->sorting_supported_fields = apply_filters( 'um_members_directory_custom_field_types_supported_sorting', array( 'number' ) );
+
+			$this->sort_data_types = array(
+				'CHAR'     => __( 'CHAR', 'ultimate-member' ),
+				'NUMERIC'  => __( 'NUMERIC', 'ultimate-member' ),
+				'BINARY'   => __( 'BINARY', 'ultimate-member' ),
+				'DATE'     => __( 'DATE', 'ultimate-member' ),
+				'DATETIME' => __( 'DATETIME', 'ultimate-member' ),
+				'DECIMAL'  => __( 'DECIMAL', 'ultimate-member' ),
+				'SIGNED'   => __( 'SIGNED', 'ultimate-member' ),
+				'TIME'     => __( 'TIME', 'ultimate-member' ),
+				'UNSIGNED' => __( 'UNSIGNED', 'ultimate-member' ),
+			);
+
+			$this->sort_data_types = apply_filters( 'um_members_directory_sort_data_types', $this->sort_data_types );
 
 			if ( ! empty( UM()->builtin()->saved_fields ) ) {
 				foreach ( UM()->builtin()->saved_fields as $key => $data ) {
@@ -1422,23 +1450,64 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				unset( $this->query_args['order'] );
 
 			} elseif ( ( ! empty( $directory_data['sortby_custom'] ) && $sortby == $directory_data['sortby_custom'] ) || in_array( $sortby, $custom_sort ) ) {
+				$custom_sort_order = ! empty( $directory_data['sortby_custom_order'] ) ? $directory_data['sortby_custom_order'] : 'ASC';
 
-				$custom_sort_type = apply_filters( 'um_member_directory_custom_sorting_type', 'CHAR', $sortby, $directory_data );
+				$meta_query       = new \WP_Meta_Query();
+				$custom_sort_type = ! empty( $directory_data['sortby_custom_type'] ) ? $meta_query->get_cast_for_type( $directory_data['sortby_custom_type'] ) : 'CHAR';
+				if ( ! empty( $directory_data['sorting_fields'] ) ) {
+					// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+					$sorting        = sanitize_text_field( $_POST['sorting'] );
+					$sorting_fields = maybe_serialize( $directory_data['sorting_fields'] );
+
+					foreach ( $sorting_fields as $field ) {
+						if ( isset( $field[ $sorting ] ) ) {
+							$custom_sort_type  = ! empty( $field['type'] ) ? $meta_query->get_cast_for_type( $field['type'] ) : 'CHAR';
+							$custom_sort_order = $field['order'];
+						}
+					}
+				}
+				/**
+				 * Filters the sorting MySQL type in member directory custom sorting query.
+				 *
+				 * Note: Possible MySQL types are BINARY|CHAR|DATE|DATETIME|SIGNED|UNSIGNED|TIME|DECIMAL
+				 *
+				 * @since 2.1.3
+				 * @hook um_member_directory_custom_sorting_type
+				 *
+				 * @param {string} $custom_sort_type MySQL type to cast meta_value. 'CHAR' is default.
+				 * @param {string} $sortby           meta_key used for sorting.
+				 * @param {array}  $directory_data   Member directory data.
+				 *
+				 * @return {string} MySQL type to cast meta_value.
+				 * @example <caption>Change type to DATE by the directory ID and mete_key.</caption>
+				 * function my_um_member_directory_custom_sorting_type( $custom_sort_type, $sortby, $directory_data ) {
+				 *     if ( '{selected member directory ID}' == $directory_data['form_id'] && '{custom_date_key}' === $sortby ) {
+				 *         $custom_sort_type = 'DATE';
+				 *     }
+				 *
+				 *     return $custom_sort_type;
+				 * }
+				 * add_filter( 'um_member_directory_custom_sorting_type', 'my_um_member_directory_custom_sorting_type', 10, 3 );
+				 */
+				$custom_sort_type = apply_filters( 'um_member_directory_custom_sorting_type', $custom_sort_type, $sortby, $directory_data );
 
 				$this->query_args['meta_query'][] = array(
-					'relation' => 'OR',
+					'relation'      => 'OR',
 					$sortby . '_cs' => array(
-						'key'       => $sortby,
-						'compare'   => 'EXISTS',
-						'type'      => $custom_sort_type,
+						'key'     => $sortby,
+						'compare' => 'EXISTS',
+						'type'    => $custom_sort_type,
 					),
 					array(
-						'key'       => $sortby,
-						'compare'   => 'NOT EXISTS',
-					)
+						'key'     => $sortby,
+						'compare' => 'NOT EXISTS',
+					),
 				);
 
-				$this->query_args['orderby'] = array( $sortby . '_cs' => 'ASC', 'user_login' => 'ASC' );
+				$this->query_args['orderby'] = array(
+					$sortby . '_cs' => $custom_sort_order,
+					'user_login'    => 'ASC',
+				);
 
 			} else {
 
@@ -2648,28 +2717,24 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$user_ids = ! empty( $user_query->results ) ? array_unique( $user_query->results ) : array();
 
 			/**
-			 * UM hook
+			 * Filters the member directory query result.
 			 *
-			 * @type filter
-			 * @title um_prepare_user_results_array
-			 * @description Extend member directory query result
-			 * @input_vars
-			 * [{"var":"$result","type":"array","desc":"Members Query Result"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_prepare_user_results_array', 'function_name', 10, 2 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_prepare_user_results_array', 'my_prepare_user_results', 10, 2 );
-			 * function my_prepare_user_results( $user_ids, $query ) {
-			 *     // your code here
+			 * @since 2.0
+			 * @hook um_prepare_user_results_array
+			 *
+			 * @param {array} $user_ids   Members Query Result.
+			 * @param {array} $query_args Query arguments.
+			 *
+			 * @return {array} Query result.
+			 *
+			 * @example <caption>Remove some users where ID equals 10 and 12 from query.</caption>
+			 * function my_custom_um_prepare_user_results_array( $user_ids, $query_args ) {
+			 *     $user_ids = array_diff( $user_ids, array( 10, 12 ) );
 			 *     return $user_ids;
 			 * }
-			 * ?>
+			 * add_filter( 'um_prepare_user_results_array', 'my_custom_um_prepare_user_results_array', 10, 2 );
 			 */
 			$user_ids = apply_filters( 'um_prepare_user_results_array', $user_ids, $this->query_args );
-
 
 			$sizes = UM()->options()->get( 'cover_thumb_sizes' );
 
@@ -2761,6 +2826,28 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$html = $this->show_filter( $filter_key, array( 'form_id' => $directory_id ), false, true );
 
 			wp_send_json_success( array( 'field_html' => $html ) );
+		}
+
+		/**
+		 * Get member directory id by page id.
+		 *
+		 * @param int $page_id Page ID.
+		 *
+		 * @return array Member directories ID.
+		 */
+		public function get_member_directory_id( $page_id ) {
+			$members_page = get_post( $page_id );
+			if ( ! empty( $members_page ) && ! is_wp_error( $members_page ) ) {
+				if ( ! empty( $members_page->post_content ) ) {
+					preg_match_all( '/\[ultimatemember[^\]]*?form_id\=[\'"]*?(\d+)[\'"]*?/i', $members_page->post_content, $matches );
+					if ( ! empty( $matches[1] ) && is_array( $matches[1] ) ) {
+						$member_directory_ids = array_map( 'absint', $matches[1] );
+						return $member_directory_ids;
+					}
+				}
+			}
+
+			return array();
 		}
 	}
 }
