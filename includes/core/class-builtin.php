@@ -635,6 +635,22 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					)
 				),
 
+				'spotify' => array(
+					'name' => 'Spotify URL',
+					'col1' => array('_title','_metakey','_help','_visibility'),
+					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
+					'col3' => array('_required','_editable','_icon'),
+					'validate' => array(
+						'_title' => array(
+							'mode' => 'required',
+							'error' => __('You must provide a title','ultimate-member')
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
+						),
+					)
+				),
+
 				/*'group' => array(
                     'name' => 'Field Group',
                     'col1' => array('_title','_max_entries'),
@@ -1497,6 +1513,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$array['unique_username_or_email'] = __('Unique Username/E-mail','ultimate-member');
 			$array['url']                      = __('Website URL','ultimate-member');
 			$array['youtube_url']              = __('YouTube Profile','ultimate-member');
+			$array['spotify_url']              = __('Spotify URL','ultimate-member');
 			$array['telegram_url']             = __('Telegram URL','ultimate-member');
 			$array['discord']                  = __('Discord ID','ultimate-member');
 			$array['tiktok_url']               = __('TikTok URL','ultimate-member');

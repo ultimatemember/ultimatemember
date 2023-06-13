@@ -78,6 +78,30 @@ add_filter( 'um_profile_field_filter_hook__youtube_video', 'um_profile_field_fil
 
 
 /**
+ * Outputs a spotify iframe
+ *
+ * @param $value
+ * @param $data
+ *
+ * @return bool|string
+ */
+function um_profile_field_filter_hook__spotify( $value, $data ) {
+	if ( preg_match( '/https:\/\/open.spotify.com\/.*/', $value ) ) {
+		$url = str_replace( 'open.spotify.com/', 'open.spotify.com/embed/', $value );
+
+		$value = '<div class="um-spotify">
+				<iframe width="100%" height="352" style="border-radius:12px" frameBorder="0" allowfullscreen="" loading="lazy"  src="' . esc_url( $url ) . '"></iframe>
+				</div>';
+	} else {
+		return __( 'Invalid Spotify URL', 'ultimate-member' );
+	}
+
+	return $value;
+}
+add_filter( 'um_profile_field_filter_hook__spotify', 'um_profile_field_filter_hook__spotify', 99, 2 );
+
+
+/**
  * Outputs a vimeo video
  *
  * @param $value
@@ -428,6 +452,7 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 			) {
 				if ( $data['validate'] == 'soundcloud_url' ) 	$value = 'https://soundcloud.com/' . $value;
 				if ( $data['validate'] == 'youtube_url' ) 		$value = 'https://youtube.com/user/' . $value;
+//				if ( $data['validate'] == 'spotify_url' ) 		$value = 'https://open.spotify.com/' . $value;
 				if ( $data['validate'] == 'telegram_url' ) 		$value = 'https://t.me/' . $value;
 				if ( $data['validate'] == 'facebook_url' ) 		$value = 'https://facebook.com/' . $value;
 				if ( $data['validate'] == 'twitter_url' ) 		$value = 'https://twitter.com/' . $value;

@@ -1652,6 +1652,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				case 'youtube_video':
 				case 'vimeo_video':
 				case 'soundcloud_track':
+				case 'spotify':
 					$array['disabled'] = '';
 					$array['input'] = 'text';
 					break;
@@ -2381,6 +2382,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				case 'googlemap':
 				case 'youtube_video':
 				case 'vimeo_video':
+				case 'spotify':
 				case 'soundcloud_track':
 
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
