@@ -685,7 +685,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 						if ( $new_key == 'options' ) {
 							//$save[ $_metakey ][$new_key] = explode(PHP_EOL, $val);
-							$save[ $_metakey ][ $new_key ] = preg_split( '/[\r\n]+/', $val, -1, PREG_SPLIT_NO_EMPTY );
+							$save[ $_metakey ][ $new_key ] = preg_split( '/[\r\n]+/', wp_unslash( $val ), -1, PREG_SPLIT_NO_EMPTY );
 						} else {
 							$save[ $_metakey ][ $new_key ] = $val;
 						}
