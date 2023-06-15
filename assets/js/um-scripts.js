@@ -713,4 +713,17 @@ jQuery(document).ready(function() {
 		}
 	}
 
+	jQuery('.um-toggle-password').on('click', function (){
+		var parent = jQuery(this).closest('.um-field-area-password');
+		var password_field = parent.find('input');
+		var type = password_field.attr('type');
+		if ( 'text' === type ) {
+			password_field.attr('type', 'password');
+			parent.find('i').toggleClass('um-icon-eye um-icon-eye-disabled');
+		} else {
+			password_field.attr('type', 'text');
+			parent.find('i').toggleClass('um-icon-eye um-icon-eye-disabled');
+		}
+	});
+
 });

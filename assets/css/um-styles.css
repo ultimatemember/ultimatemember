@@ -383,6 +383,32 @@ p.um-notice.warning a {
 	word-wrap: break-word;
 }
 
+.um-field-area-password {
+	position: relative;
+}
+
+.um-toggle-password {
+	cursor: pointer;
+	display: block;
+	position: absolute;
+	right: 0;
+	top: 0;
+	height: 100%;
+	width: 40px;
+	text-align: center;
+	box-sizing: border-box;
+	font-size: 20px;
+	line-height: 2;
+}
+
+.um-toggle-password i {
+	transition: all .2s linear;
+}
+
+.um-toggle-password:hover i {
+	color: #44b0ec;
+}
+
 .um-field-value p {
 	margin: 0 0 6px 0 !important;
 	padding: 0;
@@ -452,6 +478,10 @@ p.um-notice.warning a {
 	margin: 0 !important;
 	position: static;
 	outline: none !important;
+}
+
+.um-form input[type=password] {
+	padding-right: 40px !important;
 }
 
 .um-form input[type=number] {
