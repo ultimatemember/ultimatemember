@@ -2560,9 +2560,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						}
 
-						$output .= '<input class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $key . $form_suffix ) . '" id="' . esc_attr( $key . $form_suffix ) . '" value="' . $this->field_value( $key, $default, $data ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />
-
-							</div>';
+						$output .= '<div class="um-field-area-password">
+							<input class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $key . $form_suffix ) . '" id="' . esc_attr( $key . $form_suffix ) . '" value="' . $this->field_value( $key, $default, $data ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />
+							<span class="um-toggle-password"><i class="um-icon-eye"></i></span>
+							</div>
+						</div>';
 
 						if ( $this->is_error( $key ) ) {
 							$output .= $this->field_error( $this->show_error( $key ) );
@@ -2592,9 +2594,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 							}
 
-							$output .= '<input class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $key . $form_suffix ) . '" id="' . esc_attr( $key . $form_suffix ) . '" value="' . $this->field_value( $key, $default, $data ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />
-
-								</div>';
+							$output .= '<div class="um-field-area-password">
+									<input class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $key . $form_suffix ) . '" id="' . esc_attr( $key . $form_suffix ) . '" value="' . $this->field_value( $key, $default, $data ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />
+									<span class="um-toggle-password"><i class="um-icon-eye"></i></span>
+								</div>
+							</div>';
 
 							if ( $this->is_error( $key ) ) {
 								$output .= $this->field_error( $this->show_error( $key ) );

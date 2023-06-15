@@ -635,7 +635,10 @@ function um_after_account_privacy( $args ) {
 					<?php esc_html_e( 'Enter your current password to confirm a new export of your personal data.', 'ultimate-member' ); ?>
 				</label>
 				<div class="um-field-area">
-					<input id="um-export-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'ultimate-member' )?>">
+					<div class="um-field-area-password">
+						<input id="um-export-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'ultimate-member' )?>">
+						<span class="um-toggle-password"><i class="um-icon-eye"></i></span>
+					</div>
 					<div class="um-field-error um-export-data">
 						<span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span><?php esc_html_e( 'You must enter a password', 'ultimate-member' ); ?>
 					</div>
@@ -707,7 +710,10 @@ function um_after_account_privacy( $args ) {
 
 				<label name="um-erase-data">
 					<?php esc_html_e( 'Enter your current password to confirm the erasure of your personal data.', 'ultimate-member' ); ?>
-					<input id="um-erase-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'ultimate-member' )?>">
+					<div class="um-field-area-password">
+						<input id="um-erase-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'ultimate-member' )?>">
+						<span class="um-toggle-password"><i class="um-icon-eye"></i></span>
+					</div>
 					<div class="um-field-error um-erase-data">
 						<span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span><?php esc_html_e( 'You must enter a password', 'ultimate-member' ); ?>
 					</div>
