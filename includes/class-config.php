@@ -1967,6 +1967,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Step', 'ultimate-member' ),
 								'description' => __( 'Specifies the granularity in days that the value must adhere to.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 						),
 						'validation'   => array(
@@ -2082,6 +2083,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Default value', 'ultimate-member' ),
 								'description' => __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value.', 'ultimate-member' ),
 								'sanitize'    => 'text',
+								'step'        => 1,
 							),
 						),
 						'presentation' => array(
@@ -2097,7 +2099,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 							'step'        => array(
 								'id'          => 'step',
-								'type'        => 'text',
+								'type'        => 'number',
 								'label'       => __( 'Step', 'ultimate-member' ),
 								'description' => __( 'Specifies the granularity in seconds that the value must adhere to.', 'ultimate-member' ),
 								'sanitize'    => 'text',
@@ -2117,6 +2119,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Minimum time', 'ultimate-member' ),
 								'description' => __( 'Indicating the earliest time to accept. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'text',
+								'step'        => 1,
 							),
 							'max'             => array(
 								'id'          => 'max',
@@ -2124,6 +2127,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Maximum time', 'ultimate-member' ),
 								'description' => __( 'Indicating the latest time to accept. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'text',
+								'step'        => 1,
 							),
 							'validate'        => array(
 								'id'          => 'validate',
@@ -2231,7 +2235,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 							),
 							'step'        => array(
 								'id'          => 'step',
-								'type'        => 'text',
+								'type'        => 'number',
 								'label'       => __( 'Step', 'ultimate-member' ),
 								'description' => __( 'Specifies the granularity that the value must adhere to.', 'ultimate-member' ),
 								'sanitize'    => 'text',
@@ -2347,13 +2351,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 									'unique'  => array( UM()->admin()->validation(), 'unique_in_field_group_err' ),
 								),
 							),
-							'default_value'      => array(
-								'id'          => 'default_value',
-								'type'        => 'text',
-								'label'       => __( 'Default value', 'ultimate-member' ),
-								'description' => __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value.', 'ultimate-member' ),
-								'sanitize'    => 'text',
-							),
 							'confirm_pass'       => array(
 								'id'          => 'confirm_pass',
 								'type'        => 'checkbox',
@@ -2394,6 +2391,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Field size', 'ultimate-member' ),
 								'description' => __( 'Size of the control. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'inputmode'   => array(
 								'id'          => 'inputmode',
@@ -2418,6 +2416,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Minimum length', 'ultimate-member' ),
 								'description' => __( 'If you want to enable a minimum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'max_chars'       => array(
 								'id'          => 'max_chars',
@@ -2425,6 +2424,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Maximum length', 'ultimate-member' ),
 								'description' => __( 'If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'pattern'         => array(
 								'id'          => 'pattern',
@@ -2557,6 +2557,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Field size', 'ultimate-member' ),
 								'description' => __( 'Size of the control. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'inputmode'   => array(
 								'id'          => 'inputmode',
@@ -2581,6 +2582,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Minimum length', 'ultimate-member' ),
 								'description' => __( 'If you want to enable a minimum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'max_chars'       => array(
 								'id'          => 'max_chars',
@@ -2588,6 +2590,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Maximum length', 'ultimate-member' ),
 								'description' => __( 'If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'multiple'        => array(
 								'id'          => 'multiple',
@@ -2751,6 +2754,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Field size', 'ultimate-member' ),
 								'description' => __( 'Size of the control. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'inputmode'   => array(
 								'id'          => 'inputmode',
@@ -2775,6 +2779,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Minimum length', 'ultimate-member' ),
 								'description' => __( 'If you want to enable a minimum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'max_chars'       => array(
 								'id'          => 'max_chars',
@@ -2782,6 +2787,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Maximum length', 'ultimate-member' ),
 								'description' => __( 'If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'pattern'         => array(
 								'id'          => 'pattern',
@@ -2899,6 +2905,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Field size', 'ultimate-member' ),
 								'description' => __( 'Size of the control. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'inputmode'   => array(
 								'id'          => 'inputmode',
@@ -2923,6 +2930,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Minimum length', 'ultimate-member' ),
 								'description' => __( 'If you want to enable a minimum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'max_chars'       => array(
 								'id'          => 'max_chars',
@@ -2930,6 +2938,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Maximum length', 'ultimate-member' ),
 								'description' => __( 'If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'pattern'         => array(
 								'id'          => 'pattern',
@@ -3047,6 +3056,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Field size', 'ultimate-member' ),
 								'description' => __( 'Size of the control. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'inputmode'   => array(
 								'id'          => 'inputmode',
@@ -3071,6 +3081,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Minimum length', 'ultimate-member' ),
 								'description' => __( 'If you want to enable a minimum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'max_chars'       => array(
 								'id'          => 'max_chars',
@@ -3078,6 +3089,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Maximum length', 'ultimate-member' ),
 								'description' => __( 'If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'pattern'         => array(
 								'id'          => 'pattern',
@@ -3202,6 +3214,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Rows', 'ultimate-member' ),
 								'description' => __( 'The number of visible text lines for the control. If it is specified, it must be a positive integer. If it is not specified, the default value is 2.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'cols'        => array(
 								'id'          => 'cols',
@@ -3209,6 +3222,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Cols', 'ultimate-member' ),
 								'description' => __( 'The visible width of the text control, in average character widths. If it is specified, it must be a positive integer. If it is not specified, the default value is 20.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 						),
 						'validation'   => array(
@@ -3225,6 +3239,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Minimum length', 'ultimate-member' ),
 								'description' => __( 'If you want to enable a minimum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'max_chars'       => array(
 								'id'          => 'max_chars',
@@ -3232,6 +3247,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Maximum length', 'ultimate-member' ),
 								'description' => __( 'If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'max_words'       => array(
 								'id'          => 'max_words',
@@ -3239,6 +3255,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Maximum allowed words', 'ultimate-member' ),
 								'description' => __( 'If you want to enable a maximum number of words to be input in this textarea. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'validate'        => array(
 								'id'          => 'validate',
@@ -3364,6 +3381,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Minimum Size in bytes', 'ultimate-member' ),
 								'description' => __( 'The minimum size for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'max_size'      => array(
 								'id'          => 'max_size',
@@ -3371,6 +3389,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Maximum Size in bytes', 'ultimate-member' ),
 								'description' => __( 'The maximum size for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'allowed_types' => array(
 								'id'          => 'allowed_types',
@@ -3501,6 +3520,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Minimum Size in bytes', 'ultimate-member' ),
 								'description' => __( 'The minimum size for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'max_size'      => array(
 								'id'          => 'max_size',
@@ -3508,6 +3528,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Maximum Size in bytes', 'ultimate-member' ),
 								'description' => __( 'The maximum size for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'min_width'     => array(
 								'id'          => 'min_width',
@@ -3515,6 +3536,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Minimum width in pixels', 'ultimate-member' ),
 								'description' => __( 'The minimum width for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'max_width'     => array(
 								'id'          => 'max_width',
@@ -3522,6 +3544,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Maximum width in pixels', 'ultimate-member' ),
 								'description' => __( 'The maximum width for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'min_height'    => array(
 								'id'          => 'min_height',
@@ -3529,6 +3552,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Minimum height in pixels', 'ultimate-member' ),
 								'description' => __( 'The minimum height for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'max_height'    => array(
 								'id'          => 'max_height',
@@ -3536,6 +3560,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Maximum height in pixels', 'ultimate-member' ),
 								'description' => __( 'The maximum height for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'allowed_types' => array(
 								'id'          => 'allowed_types',
@@ -3641,6 +3666,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Minimum Rows', 'ultimate-member' ),
 								'description' => __( 'If you want to enable a minimum number of repeater rows to be added in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 							'max_rows' => array(
 								'id'          => 'max_rows',
@@ -3648,6 +3674,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Maximum Rows', 'ultimate-member' ),
 								'description' => __( 'If you want to enable a maximum number of repeater rows to be added in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 						),
 						'privacy'      => array(
@@ -4083,6 +4110,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Field size', 'ultimate-member' ),
 								'description' => __( 'Size of the control. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
+								'min'         => 0,
 							),
 						),
 						'validation'   => array(

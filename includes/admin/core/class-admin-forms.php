@@ -553,7 +553,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$value      = $this->get_field_value( $field_data );
 			$value_attr = ' value="' . esc_attr( $value ) . '" ';
 
-			$html = "<input type=\"time\" $id_attr $class_attr $name_attr $data_attr $value_attr $placeholder_attr " . disabled( ! empty( $field_data['disabled'] ), true, false ) . ' />';
+			$step_attr = array_key_exists( 'step', $field_data ) ? ' step="' . esc_attr( $field_data['step'] ) . '" ' : '';
+
+			$html = "<input type=\"time\" $id_attr $class_attr $name_attr $data_attr $value_attr $step_attr $placeholder_attr " . disabled( ! empty( $field_data['disabled'] ), true, false ) . ' />';
 			return $html;
 		}
 
@@ -648,11 +650,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$name_attr = ' name="' . esc_attr( $name ) . '" ';
 			}
 
+			$min_attr = array_key_exists( 'min', $field_data ) ? ' min="' . esc_attr( $field_data['min'] ) . '" ' : '';
+			$max_attr = array_key_exists( 'max', $field_data ) ? ' max="' . esc_attr( $field_data['max'] ) . '" ' : '';
+
 			$value      = $this->get_field_value( $field_data );
 			$value_attr = ' value="' . esc_attr( $value ) . '" ';
 
-			$html = "<input type=\"number\" $id_attr $class_attr $name_attr $data_attr $value_attr $placeholder_attr " . disabled( ! empty( $field_data['disabled'] ), true, false ) . ' />';
-
+			$html = "<input type=\"number\" $id_attr $class_attr $name_attr $data_attr $value_attr $min_attr $max_attr $placeholder_attr " . disabled( ! empty( $field_data['disabled'] ), true, false ) . ' />';
 			return $html;
 		}
 

@@ -20,6 +20,10 @@ if ( ! class_exists( 'um\admin\Validation' ) ) {
 		 * @return false|string|null
 		 */
 		public function validate_user_metakey( $key ) {
+			if ( empty( $key ) ) {
+				return false;
+			}
+
 			$banned_keys = $this->get_banned_keys();
 			if ( isset( $banned_keys[ $key ] ) ) {
 				return __( 'Your meta key is a WordPress native reserved key and cannot be used.', 'ultimate-member' );
