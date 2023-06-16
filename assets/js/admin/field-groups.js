@@ -1581,7 +1581,7 @@ jQuery( function($) {
 		}
 	});
 
-	$( document.body ).on('change', '.um-forms-field[type="time"][data-field_id="min"]', function() {
+	/*$( document.body ).on('change', '.um-forms-field[type="time"][data-field_id="min"]', function() {
 		let maxField = $(this).closest( '.um-form-table' ).find('.um-forms-field[type="time"][data-field_id="max"]');
 		let minValue = $(this).val();
 		let maxValue = maxField.val();
@@ -1621,7 +1621,7 @@ jQuery( function($) {
 				}
 			}
 		}
-	});
+	});*/
 
 	$( document.body ).on('change', '.um-forms-field[type="number"][data-field_id="min_chars"]', function() {
 		let maxField = $(this).closest( '.um-form-table' ).find('.um-forms-field[type="number"][data-field_id="max_chars"]');
