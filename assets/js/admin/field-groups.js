@@ -1623,6 +1623,191 @@ jQuery( function($) {
 		}
 	});
 
+	$( document.body ).on('change', '.um-forms-field[type="number"][data-field_id="min_chars"]', function() {
+		let maxField = $(this).closest( '.um-form-table' ).find('.um-forms-field[type="number"][data-field_id="max_chars"]');
+		let minValue = parseInt( $(this).val() );
+		let maxValue = parseInt( maxField.val() );
+
+		if ( '' === $(this).val() ) {
+			maxField.removeAttr( 'min' );
+		} else {
+			maxField.attr( 'min', minValue );
+
+			if ( '' !== maxField.val() ) {
+				if ( minValue > maxValue ) {
+					maxField.val( minValue );
+					$(this).attr('max', minValue);
+				}
+			}
+		}
+	});
+
+	$( document.body ).on('change', '.um-forms-field[type="number"][data-field_id="max_chars"]', function() {
+		let minField = $(this).closest( '.um-form-table' ).find('.um-forms-field[type="number"][data-field_id="min_chars"]');
+		let maxValue = parseInt( $(this).val() );
+		let minValue = parseInt( minField.val() );
+
+		if ( '' === $(this).val() ) {
+			minField.removeAttr( 'max' );
+		} else {
+			minField.attr( 'max', maxValue );
+			if ( '' !== minField.val() ) {
+				if ( maxValue < minValue ) {
+					minField.val( maxValue );
+					$(this).attr('min', maxValue);
+				}
+			}
+		}
+	});
+
+	$( document.body ).on('change', '.um-forms-field[type="number"][data-field_id="min_size"]', function() {
+		let maxField = $(this).closest( '.um-form-table' ).find('.um-forms-field[type="number"][data-field_id="max_size"]');
+		let minValue = parseInt( $(this).val() );
+		let maxValue = parseInt( maxField.val() );
+
+		if ( '' === $(this).val() ) {
+			maxField.removeAttr( 'min' );
+		} else {
+			maxField.attr( 'min', minValue );
+
+			if ( '' !== maxField.val() ) {
+				if ( minValue > maxValue ) {
+					maxField.val( minValue );
+					$(this).attr('max', minValue);
+				}
+			}
+		}
+	});
+
+	$( document.body ).on('change', '.um-forms-field[type="number"][data-field_id="max_size"]', function() {
+		let minField = $(this).closest( '.um-form-table' ).find('.um-forms-field[type="number"][data-field_id="min_size"]');
+		let maxValue = parseInt( $(this).val() );
+		let minValue = parseInt( minField.val() );
+
+		if ( '' === $(this).val() ) {
+			minField.removeAttr( 'max' );
+		} else {
+			minField.attr( 'max', maxValue );
+			if ( '' !== minField.val() ) {
+				if ( maxValue < minValue ) {
+					minField.val( maxValue );
+					$(this).attr('min', maxValue);
+				}
+			}
+		}
+	});
+
+	$( document.body ).on('change', '.um-forms-field[type="number"][data-field_id="min_width"]', function() {
+		let maxField = $(this).closest( '.um-form-table' ).find('.um-forms-field[type="number"][data-field_id="max_width"]');
+		let minValue = parseInt( $(this).val() );
+		let maxValue = parseInt( maxField.val() );
+
+		if ( '' === $(this).val() ) {
+			maxField.removeAttr( 'min' );
+		} else {
+			maxField.attr( 'min', minValue );
+
+			if ( '' !== maxField.val() ) {
+				if ( minValue > maxValue ) {
+					maxField.val( minValue );
+					$(this).attr('max', minValue);
+				}
+			}
+		}
+	});
+
+	$( document.body ).on('change', '.um-forms-field[type="number"][data-field_id="max_width"]', function() {
+		let minField = $(this).closest( '.um-form-table' ).find('.um-forms-field[type="number"][data-field_id="min_width"]');
+		let maxValue = parseInt( $(this).val() );
+		let minValue = parseInt( minField.val() );
+
+		if ( '' === $(this).val() ) {
+			minField.removeAttr( 'max' );
+		} else {
+			minField.attr( 'max', maxValue );
+			if ( '' !== minField.val() ) {
+				if ( maxValue < minValue ) {
+					minField.val( maxValue );
+					$(this).attr('min', maxValue);
+				}
+			}
+		}
+	});
+
+	$( document.body ).on('change', '.um-forms-field[type="number"][data-field_id="min_height"]', function() {
+		let maxField = $(this).closest( '.um-form-table' ).find('.um-forms-field[type="number"][data-field_id="max_height"]');
+		let minValue = parseInt( $(this).val() );
+		let maxValue = parseInt( maxField.val() );
+
+		if ( '' === $(this).val() ) {
+			maxField.removeAttr( 'min' );
+		} else {
+			maxField.attr( 'min', minValue );
+
+			if ( '' !== maxField.val() ) {
+				if ( minValue > maxValue ) {
+					maxField.val( minValue );
+					$(this).attr('max', minValue);
+				}
+			}
+		}
+	});
+
+	$( document.body ).on('change', '.um-forms-field[type="number"][data-field_id="max_height"]', function() {
+		let minField = $(this).closest( '.um-form-table' ).find('.um-forms-field[type="number"][data-field_id="min_height"]');
+		let maxValue = parseInt( $(this).val() );
+		let minValue = parseInt( minField.val() );
+
+		if ( '' === $(this).val() ) {
+			minField.removeAttr( 'max' );
+		} else {
+			minField.attr( 'max', maxValue );
+			if ( '' !== minField.val() ) {
+				if ( maxValue < minValue ) {
+					minField.val( maxValue );
+					$(this).attr('min', maxValue);
+				}
+			}
+		}
+	});
+
+	$( document.body ).on('change', '.um-forms-field[type="number"][data-field_id="min_rows"]', function() {
+		let maxField = $(this).closest( '.um-form-table' ).find('.um-forms-field[type="number"][data-field_id="max_rows"]');
+		let minValue = parseInt( $(this).val() );
+		let maxValue = parseInt( maxField.val() );
+
+		if ( '' === $(this).val() ) {
+			maxField.removeAttr( 'min' );
+		} else {
+			maxField.attr( 'min', minValue );
+
+			if ( '' !== maxField.val() ) {
+				if ( minValue > maxValue ) {
+					maxField.val( minValue );
+					$(this).attr('max', minValue);
+				}
+			}
+		}
+	});
+
+	$( document.body ).on('change', '.um-forms-field[type="number"][data-field_id="max_rows"]', function() {
+		let minField = $(this).closest( '.um-form-table' ).find('.um-forms-field[type="number"][data-field_id="min_rows"]');
+		let maxValue = parseInt( $(this).val() );
+		let minValue = parseInt( minField.val() );
+
+		if ( '' === $(this).val() ) {
+			minField.removeAttr( 'max' );
+		} else {
+			minField.attr( 'max', maxValue );
+			if ( '' !== minField.val() ) {
+				if ( maxValue < minValue ) {
+					minField.val( maxValue );
+					$(this).attr('min', maxValue);
+				}
+			}
+		}
+	});
+
 	// handle errors on the first loading
 	let $noticeObj = $('#message[data-error-field]');
 	if ( $noticeObj.length > 0 ) {

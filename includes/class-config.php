@@ -1126,6 +1126,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 						'label'       => __( 'Select member roles', 'ultimate-member' ),
 						'description' => __( 'Select the member roles that can view this field on the front-end.', 'ultimate-member' ),
 						'sanitize'    => 'key',
+						'required'    => true,
 						'conditional' => array( 'privacy', '=', array( '-2', '-3' ) ),
 					),
 					'visibility'    => array(
