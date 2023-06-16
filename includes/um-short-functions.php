@@ -1,5 +1,7 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly.
-
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 //Make public functions without class creation
 
@@ -2782,7 +2784,7 @@ function um_is_amp( $check_theme_support = true ) {
 	$is_amp = false;
 
 	if ( ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) ||
-	     ( function_exists( 'is_better_amp' ) && is_better_amp() ) ) {
+		( function_exists( 'is_better_amp' ) && is_better_amp() ) ) {
 		$is_amp = true;
 	}
 
@@ -2791,4 +2793,85 @@ function um_is_amp( $check_theme_support = true ) {
 	}
 
 	return apply_filters( 'um_is_amp', $is_amp );
+}
+
+/**
+ * @since 2.7.0
+ * @param string $slug
+ *
+ * @return bool
+ */
+function um_predefined_page_slug_exists( $slug ) {
+	$predefined_pages = UM()->config()->get( 'predefined_pages' );
+	return array_key_exists( $slug, $predefined_pages );
+}
+
+/**
+ * @since 2.7.0
+ * @param string $slug
+ *
+ * @return false|int
+ */
+function um_get_predefined_page_id( $slug ) {
+	if ( ! um_predefined_page_slug_exists( $slug ) ) {
+		return false;
+	}
+
+	$option_key = UM()->options()->get_predefined_page_option_key( $slug );
+	return apply_filters( 'um_get_predefined_page_id', UM()->options()->get( $option_key ), $slug );
+}
+
+/**
+ * @since 2.7.0
+ *
+ * @param string           $slug
+ * @param null|int|WP_Post $post_obj
+ *
+ * @return bool
+ */
+function um_is_predefined_page( $slug, $post_obj = null ) {
+	// handle $post inside, just we need make $post as WP_Post. Otherwise, something is wrong and return false
+	if ( empty( $post_obj ) ) {
+		global $post;
+		$post_obj = $post;
+	} else {
+		if ( is_numeric( $post_obj ) ) {
+			$post_obj = get_post( $post_obj );
+
+			if ( empty( $post_obj ) ) {
+				return false;
+			}
+		}
+	}
+
+	if ( empty( $post_obj ) ) {
+		return false;
+	}
+
+	if ( empty( $post_obj->ID ) ) {
+		return false;
+	}
+
+	return um_get_predefined_page_id( $slug ) === $post_obj->ID;
+}
+
+/**
+ * Get predefined page URL
+ *
+ * @since 2.7.0
+ *
+ * @param string $slug
+ *
+ * @return false|string
+ */
+function um_get_predefined_page_url( $slug ) {
+	$url = false;
+
+	$page_id = um_get_predefined_page_id( $slug );
+
+	if ( ! empty( $page_id ) ) {
+		$url = get_permalink( $page_id );
+	}
+
+	return $url;
 }

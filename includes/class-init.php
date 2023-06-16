@@ -47,7 +47,7 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @var UM the single instance of the class
 		 */
-		protected static $instance = null;
+		protected static $instance;
 
 
 		/**
@@ -424,7 +424,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 *
 		 * @param $class
 		 */
-		function um__autoloader( $class ) {
+		public function um__autoloader( $class ) {
 			if ( strpos( $class, 'um' ) === 0 ) {
 
 				$array = explode( '\\', strtolower( $class ) );
@@ -564,6 +564,9 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->admin_navmenu();
 				$this->plugin_updater();
 				$this->theme_updater();
+
+				// Fresh structure.
+				$this->ajax()->includes();
 			} elseif ( $this->is_request( 'admin' ) ) {
 				$this->admin();
 				$this->admin_menu();
@@ -573,6 +576,8 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->admin_enqueue();
 				$this->metabox();
 				$this->admin()->notices();
+				$this->admin()->actions_listener();
+				$this->admin()->field_group()->hooks();
 				$this->users();
 				$this->dragdrop();
 				$this->admin_gdpr();
@@ -760,6 +765,19 @@ if ( ! class_exists( 'UM' ) ) {
 			new um\core\AJAX_Common();
 		}
 
+		/**
+		 * Getting the AJAX class instance
+		 *
+		 * @since 2.7.0
+		 *
+		 * @return um\ajax\Init
+		 */
+		public function ajax() {
+			if ( empty( $this->classes['um\ajax\init'] ) ) {
+				$this->classes['um\ajax\init'] = new um\ajax\Init();
+			}
+			return $this->classes['um\ajax\init'];
+		}
 
 		/**
 		 * @since 2.0.30
@@ -1019,7 +1037,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 *
 		 * @return um\Config
 		 */
-		function config() {
+		public function config() {
 			if ( empty( $this->classes['config'] ) ) {
 				$this->classes['config'] = new um\Config();
 			}

@@ -2062,11 +2062,61 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 *
 		 * @return core\Admin_Notices()
 		 */
-		function notices() {
+		public function notices() {
 			if ( empty( UM()->classes['admin_notices'] ) ) {
 				UM()->classes['admin_notices'] = new core\Admin_Notices();
 			}
 			return UM()->classes['admin_notices'];
+		}
+
+		/**
+		 * @since 2.7.0
+		 *
+		 * @param bool|array $data
+		 *
+		 * @return core\Admin_Forms
+		 */
+		public function forms( $data = false ) {
+			if ( ! isset( UM()->classes[ 'um\admin\forms_' . $data['class'] ] ) || empty( UM()->classes[ 'um\admin\forms_' . $data['class'] ] ) ) {
+				UM()->classes[ 'um\admin\forms_' . $data['class'] ] = new core\Admin_Forms( $data );
+			}
+			return UM()->classes[ 'um\admin\forms_' . $data['class'] ];
+		}
+
+		/**
+		 * @since 2.7.0
+		 *
+		 * @return Actions_Listener
+		 */
+		public function actions_listener() {
+			if ( empty( UM()->classes['um\admin\actions_listener'] ) ) {
+				UM()->classes['um\admin\actions_listener'] = new Actions_Listener();
+			}
+			return UM()->classes['um\admin\actions_listener'];
+		}
+
+		/**
+		 * @since 2.7.0
+		 *
+		 * @return Field_Group
+		 */
+		public function field_group() {
+			if ( empty( UM()->classes['um\admin\field_group'] ) ) {
+				UM()->classes['um\admin\field_group'] = new Field_Group();
+			}
+			return UM()->classes['um\admin\field_group'];
+		}
+
+		/**
+		 * @since 2.7.0
+		 *
+		 * @return Validation
+		 */
+		public function validation() {
+			if ( empty( UM()->classes['um\admin\validation'] ) ) {
+				UM()->classes['um\admin\validation'] = new Validation();
+			}
+			return UM()->classes['um\admin\validation'];
 		}
 	}
 }
