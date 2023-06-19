@@ -1155,14 +1155,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 							'hide' => __( 'Hide', 'ultimate-member' ),
 						),
 						'sanitize'    => 'key',
-						'conditional' => array( 'conditional_logic', '=', 1 ),
+						'conditional' => array( 'conditional_logic', '=', true ),
 					),
 					'conditional_rules'  => array(
 						'id'          => 'conditional_rules',
 						'type'        => 'conditional_rules',
 						'label'       => __( 'Rules', 'ultimate-member' ),
 						'sanitize'    => 'conditional_rules',
-						'conditional' => array( 'conditional_logic', '=', 1 ),
+						'conditional' => array( 'conditional_logic', '=', true ),
 					),
 				),
 				'advanced'     => array(),
@@ -1992,7 +1992,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Minimum date', 'ultimate-member' ),
 								'description' => __( 'Indicating the earliest date to accept. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'text',
-								'conditional' => array( 'disable_past_dates', '=', 0 ),
+								'conditional' => array( 'disable_past_dates', '=', false ),
+								'validate'    => array(
+									'max' => array( UM()->admin()->validation(), 'validate_min_max_date' ),
+								),
 							),
 							'max'                => array(
 								'id'          => 'max',
@@ -2000,6 +2003,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Maximum date', 'ultimate-member' ),
 								'description' => __( 'Indicating the latest date to accept. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'text',
+								'validate'    => array(
+									'min' => array( UM()->admin()->validation(), 'validate_max_min_date' ),
+								),
 							),
 							'validate'           => array(
 								'id'          => 'validate',
@@ -2264,6 +2270,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Minimum value', 'ultimate-member' ),
 								'description' => __( 'The minimum value to accept for this input. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'text',
+								'validate'    => array(
+									'max' => array( UM()->admin()->validation(), 'validate_min_max' ),
+								),
 							),
 							'max'             => array(
 								'id'          => 'max',
@@ -2271,6 +2280,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Maximum value', 'ultimate-member' ),
 								'description' => __( 'The maximum value to accept for this input. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'text',
+								'validate'    => array(
+									'min' => array( UM()->admin()->validation(), 'validate_max_min' ),
+								),
 							),
 							'pattern'         => array(
 								'id'          => 'pattern',
@@ -2365,7 +2377,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Confirm password field label', 'ultimate-member' ),
 								'description' => __( 'This label is the text that appears above the confirm password field. Leave blank to show default label.', 'ultimate-member' ),
 								'sanitize'    => 'text',
-								'conditional' => array( 'confirm_pass', '=', 1 ),
+								'conditional' => array( 'confirm_pass', '=', true ),
 							),
 						),
 						'presentation' => array(
@@ -2418,6 +2430,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'If you want to enable a minimum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 								'min'         => 0,
+								'validate'    => array(
+									'max_chars' => array( UM()->admin()->validation(), 'validate_min_max' ),
+								),
 							),
 							'max_chars'       => array(
 								'id'          => 'max_chars',
@@ -2426,6 +2441,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 								'min'         => 0,
+								'validate'    => array(
+									'min_chars' => array( UM()->admin()->validation(), 'validate_max_min' ),
+								),
 							),
 							'pattern'         => array(
 								'id'          => 'pattern',
@@ -2531,7 +2549,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'label'       => __( 'Confirm email field label', 'ultimate-member' ),
 								'description' => __( 'This label is the text that appears above the confirm email field. Leave blank to show default label.', 'ultimate-member' ),
 								'sanitize'    => 'text',
-								'conditional' => array( 'confirm_email', '=', 1 ),
+								'conditional' => array( 'confirm_email', '=', true ),
 							),
 						),
 						'presentation' => array(
@@ -2584,6 +2602,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'If you want to enable a minimum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 								'min'         => 0,
+								'validate'    => array(
+									'max_chars' => array( UM()->admin()->validation(), 'validate_min_max' ),
+								),
 							),
 							'max_chars'       => array(
 								'id'          => 'max_chars',
@@ -2592,6 +2613,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 								'min'         => 0,
+								'validate'    => array(
+									'min_chars' => array( UM()->admin()->validation(), 'validate_max_min' ),
+								),
 							),
 							'multiple'        => array(
 								'id'          => 'multiple',
@@ -2781,6 +2805,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'If you want to enable a minimum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 								'min'         => 0,
+								'validate'    => array(
+									'max_chars' => array( UM()->admin()->validation(), 'validate_min_max' ),
+								),
 							),
 							'max_chars'       => array(
 								'id'          => 'max_chars',
@@ -2789,6 +2816,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 								'min'         => 0,
+								'validate'    => array(
+									'min_chars' => array( UM()->admin()->validation(), 'validate_max_min' ),
+								),
 							),
 							'pattern'         => array(
 								'id'          => 'pattern',
@@ -2932,6 +2962,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'If you want to enable a minimum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 								'min'         => 0,
+								'validate'    => array(
+									'max_chars' => array( UM()->admin()->validation(), 'validate_min_max' ),
+								),
 							),
 							'max_chars'       => array(
 								'id'          => 'max_chars',
@@ -2940,6 +2973,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 								'min'         => 0,
+								'validate'    => array(
+									'min_chars' => array( UM()->admin()->validation(), 'validate_max_min' ),
+								),
 							),
 							'pattern'         => array(
 								'id'          => 'pattern',
@@ -3083,6 +3119,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'If you want to enable a minimum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 								'min'         => 0,
+								'validate'    => array(
+									'max_chars' => array( UM()->admin()->validation(), 'validate_min_max' ),
+								),
 							),
 							'max_chars'       => array(
 								'id'          => 'max_chars',
@@ -3091,6 +3130,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 								'min'         => 0,
+								'validate'    => array(
+									'min_chars' => array( UM()->admin()->validation(), 'validate_max_min' ),
+								),
 							),
 							'pattern'         => array(
 								'id'          => 'pattern',
@@ -3241,6 +3283,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'If you want to enable a minimum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 								'min'         => 0,
+								'validate'    => array(
+									'max_chars' => array( UM()->admin()->validation(), 'validate_min_max' ),
+								),
 							),
 							'max_chars'       => array(
 								'id'          => 'max_chars',
@@ -3249,6 +3294,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 								'min'         => 0,
+								'validate'    => array(
+									'min_chars' => array( UM()->admin()->validation(), 'validate_max_min' ),
+								),
 							),
 							'max_words'       => array(
 								'id'          => 'max_words',
@@ -3383,6 +3431,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'The minimum size for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 								'min'         => 0,
+								'validate'    => array(
+									'max_size' => array( UM()->admin()->validation(), 'validate_min_max' ),
+								),
 							),
 							'max_size'      => array(
 								'id'          => 'max_size',
@@ -3391,6 +3442,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'The maximum size for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 								'min'         => 0,
+								'validate'    => array(
+									'min_size' => array( UM()->admin()->validation(), 'validate_max_min' ),
+								),
 							),
 							'allowed_types' => array(
 								'id'          => 'allowed_types',
@@ -3522,6 +3576,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'The minimum size for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 								'min'         => 0,
+								'validate'    => array(
+									'max_size' => array( UM()->admin()->validation(), 'validate_min_max' ),
+								),
 							),
 							'max_size'      => array(
 								'id'          => 'max_size',
@@ -3530,6 +3587,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'The maximum size for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 								'min'         => 0,
+								'validate'    => array(
+									'min_size' => array( UM()->admin()->validation(), 'validate_max_min' ),
+								),
 							),
 							'min_width'     => array(
 								'id'          => 'min_width',
@@ -3538,6 +3598,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'The minimum width for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 								'min'         => 0,
+								'validate'    => array(
+									'max_width' => array( UM()->admin()->validation(), 'validate_min_max' ),
+								),
 							),
 							'max_width'     => array(
 								'id'          => 'max_width',
@@ -3546,6 +3609,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'The maximum width for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 								'min'         => 0,
+								'validate'    => array(
+									'min_width' => array( UM()->admin()->validation(), 'validate_max_min' ),
+								),
 							),
 							'min_height'    => array(
 								'id'          => 'min_height',
@@ -3554,6 +3620,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'The minimum height for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 								'min'         => 0,
+								'validate'    => array(
+									'max_height' => array( UM()->admin()->validation(), 'validate_min_max' ),
+								),
 							),
 							'max_height'    => array(
 								'id'          => 'max_height',
@@ -3562,6 +3631,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'The maximum height for file that can be uploaded through this field. Leave empty for unlimited size.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 								'min'         => 0,
+								'validate'    => array(
+									'min_height' => array( UM()->admin()->validation(), 'validate_max_min' ),
+								),
 							),
 							'allowed_types' => array(
 								'id'          => 'allowed_types',
@@ -3668,6 +3740,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'If you want to enable a minimum number of repeater rows to be added in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 								'min'         => 0,
+								'validate'    => array(
+									'max_rows' => array( UM()->admin()->validation(), 'validate_min_max' ),
+								),
 							),
 							'max_rows' => array(
 								'id'          => 'max_rows',
@@ -3676,6 +3751,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 								'description' => __( 'If you want to enable a maximum number of repeater rows to be added in this field. Leave empty to disable this setting.', 'ultimate-member' ),
 								'sanitize'    => 'empty_absint',
 								'min'         => 0,
+								'validate'    => array(
+									'min_rows' => array( UM()->admin()->validation(), 'validate_max_min' ),
+								),
 							),
 						),
 						'privacy'      => array(
@@ -4167,6 +4245,40 @@ if ( ! class_exists( 'um\Config' ) ) {
 					),
 				),
 			);
+		}
+
+		/**
+		 * @since 2.7.0
+		 *
+		 * @return mixed
+		 */
+		public function get_all_field_types() {
+			$static_settings = $this->get( 'static_field_settings' );
+			$field_types     = $this->get( 'field_types' );
+
+			foreach ( $field_types as $field_type => &$data ) {
+				if ( ! empty( $data['settings'] ) ) {
+					$data['settings'] = array_merge_recursive( $static_settings, $data['settings'] );
+				} else {
+					$data['settings'] = $static_settings;
+				}
+
+				$data['settings'] = apply_filters( 'um_fields_settings', $data['settings'], $field_type );
+
+				foreach ( $data['settings'] as $tab_key => &$settings_data ) {
+					foreach ( $settings_data as $setting_key => &$setting_data ) {
+						if ( array_key_exists( $tab_key, $static_settings ) && array_key_exists( $setting_key, $static_settings[ $tab_key ] ) ) {
+							$setting_data['static'] = true;
+						}
+					}
+
+					if ( empty( $settings_data ) ) {
+						unset( $data['settings'][ $tab_key ] );
+					}
+				}
+			}
+
+			return $field_types;
 		}
 	}
 }

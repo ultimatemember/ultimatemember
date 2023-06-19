@@ -220,24 +220,6 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 				);
 			}
 
-//			if ( 'fields_only' === $type ) {
-//				$query = $wpdb->prepare(
-//					"SELECT *
-//					FROM {$wpdb->prefix}um_fields
-//					WHERE group_id = %d AND
-//					      type != 'row'",
-//					$group_id
-//				);
-//			} elseif ( 'row' === $type ) {
-//				$query = $wpdb->prepare(
-//					"SELECT *
-//					FROM {$wpdb->prefix}um_fields
-//					WHERE group_id = %d AND
-//					      type = 'row'",
-//					$group_id
-//				);
-//			}
-
 			$fields = $wpdb->get_results( $query, ARRAY_A );
 			return $fields;
 		}
@@ -286,27 +268,6 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 					$this->update_meta( $field_group_id, $meta_key, $meta_value );
 				}
 			}
-
-//			if ( ! empty( $field_group_id ) ) {
-//				// if fields in data array aren't exist then set basic row only
-//				if ( ! array_key_exists( 'fields', $data ) ) {
-//					$wpdb->insert(
-//						"{$wpdb->prefix}um_fields",
-//						array(
-//							'field_key'   => md5( 'field' . __( 'Row', 'ultimate-member' ) . time() ),
-//							'group_id'    => $field_group_id,
-//							'title'       => __( 'Row', 'ultimate-member' ),
-//							'description' => __( 'Basic Row', 'ultimate-member' ),
-//						),
-//						array(
-//							'%s',
-//							'%d',
-//							'%s',
-//							'%s',
-//						)
-//					);
-//				}
-//			}
 
 			return $field_group_id;
 		}

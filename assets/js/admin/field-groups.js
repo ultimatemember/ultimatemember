@@ -1508,42 +1508,56 @@ jQuery( function($) {
 		um_admin_init_draggable( optionRowsWrapper );
 	});
 
-	$( document.body ).on('change', '.um-forms-field[type="number"][data-field_id="min"]', function() {
-		let maxField = $(this).closest( '.um-form-table' ).find('.um-forms-field[type="number"][data-field_id="max"]');
-		let minValue = parseFloat( $(this).val() );
-		let maxValue = parseFloat( maxField.val() );
+	let minMaxFields = [
+		['min', 'max'],
+		['min_chars', 'max_chars'],
+		['min_size', 'max_size'],
+		['min_width', 'max_width'],
+		['min_height', 'max_height'],
+		['min_rows', 'max_rows'],
+	];
 
-		if ( '' === $(this).val() ) {
-			maxField.removeAttr( 'min' );
-		} else {
-			maxField.attr( 'min', minValue );
+	for ( let i = 0; i < minMaxFields.length; i++ ) {
+		let minData = minMaxFields[ i ][0];
+		let maxData = minMaxFields[ i ][1];
 
-			if ( '' !== maxField.val() ) {
-				if ( minValue > maxValue ) {
-					maxField.val( minValue );
-					$(this).attr('max', minValue);
+		$( document.body ).on('change', '.um-forms-field[type="number"][data-field_id="' + minData + '"]', function() {
+			let maxField = $(this).closest( '.um-form-table' ).find('.um-forms-field[type="number"][data-field_id="' + maxData + '"]');
+			let minValue = parseFloat( $(this).val() );
+			let maxValue = parseFloat( maxField.val() );
+
+			if ( '' === $(this).val() ) {
+				maxField.removeAttr( 'min' );
+			} else {
+				maxField.attr( 'min', minValue );
+
+				if ( '' !== maxField.val() ) {
+					if ( minValue > maxValue ) {
+						maxField.val( minValue );
+						$(this).attr('max', minValue);
+					}
 				}
 			}
-		}
-	});
+		});
 
-	$( document.body ).on('change', '.um-forms-field[type="number"][data-field_id="max"]', function() {
-		let minField = $(this).closest( '.um-form-table' ).find('.um-forms-field[type="number"][data-field_id="min"]');
-		let maxValue = parseFloat( $(this).val() );
-		let minValue = parseFloat( minField.val() );
+		$( document.body ).on('change', '.um-forms-field[type="number"][data-field_id="' + maxData + '"]', function() {
+			let minField = $(this).closest( '.um-form-table' ).find('.um-forms-field[type="number"][data-field_id="' + minData + '"]');
+			let maxValue = parseFloat( $(this).val() );
+			let minValue = parseFloat( minField.val() );
 
-		if ( '' === $(this).val() ) {
-			minField.removeAttr( 'max' );
-		} else {
-			minField.attr( 'max', maxValue );
-			if ( '' !== minField.val() ) {
-				if ( maxValue < minValue ) {
-					minField.val( maxValue );
-					$(this).attr('min', maxValue);
+			if ( '' === $(this).val() ) {
+				minField.removeAttr( 'max' );
+			} else {
+				minField.attr( 'max', maxValue );
+				if ( '' !== minField.val() ) {
+					if ( maxValue < minValue ) {
+						minField.val( maxValue );
+						$(this).attr('min', maxValue);
+					}
 				}
 			}
-		}
-	});
+		});
+	}
 
 	$( document.body ).on('change', '.um-forms-field[type="date"][data-field_id="min"]', function() {
 		let maxField = $(this).closest( '.um-form-table' ).find('.um-forms-field[type="date"][data-field_id="max"]');
@@ -1580,21 +1594,19 @@ jQuery( function($) {
 			}
 		}
 	});
+/*
+	$( document.body ).on('change', '.um-forms-field[type="number"][data-field_id="min"]', function() {
+		let maxField = $(this).closest( '.um-form-table' ).find('.um-forms-field[type="number"][data-field_id="max"]');
+		let minValue = parseFloat( $(this).val() );
+		let maxValue = parseFloat( maxField.val() );
 
-	/*$( document.body ).on('change', '.um-forms-field[type="time"][data-field_id="min"]', function() {
-		let maxField = $(this).closest( '.um-form-table' ).find('.um-forms-field[type="time"][data-field_id="max"]');
-		let minValue = $(this).val();
-		let maxValue = maxField.val();
-
-		if ( '' === minValue ) {
+		if ( '' === $(this).val() ) {
 			maxField.removeAttr( 'min' );
 		} else {
 			maxField.attr( 'min', minValue );
-			if ( '' !== maxValue ) {
-				let minParse = new Date('1970-01-01T' + minValue + 'Z');
-				let maxParse = new Date('1970-01-01T' + maxValue + 'Z');
 
-				if ( minParse > maxParse ) {
+			if ( '' !== maxField.val() ) {
+				if ( minValue > maxValue ) {
 					maxField.val( minValue );
 					$(this).attr('max', minValue);
 				}
@@ -1602,26 +1614,23 @@ jQuery( function($) {
 		}
 	});
 
-	$( document.body ).on('change', '.um-forms-field[type="time"][data-field_id="max"]', function() {
-		let minField = $(this).closest( '.um-form-table' ).find('.um-forms-field[type="time"][data-field_id="min"]');
-		let maxValue = $(this).val();
-		let minValue = minField.val();
+	$( document.body ).on('change', '.um-forms-field[type="number"][data-field_id="max"]', function() {
+		let minField = $(this).closest( '.um-form-table' ).find('.um-forms-field[type="number"][data-field_id="min"]');
+		let maxValue = parseFloat( $(this).val() );
+		let minValue = parseFloat( minField.val() );
 
-		if ( '' === maxValue ) {
+		if ( '' === $(this).val() ) {
 			minField.removeAttr( 'max' );
 		} else {
 			minField.attr( 'max', maxValue );
-			if ( '' !== minValue ) {
-				let minParse = new Date('1970-01-01T' + minValue + 'Z');
-				let maxParse = new Date('1970-01-01T' + maxValue + 'Z');
-
-				if ( maxParse < minParse ) {
+			if ( '' !== minField.val() ) {
+				if ( maxValue < minValue ) {
 					minField.val( maxValue );
 					$(this).attr('min', maxValue);
 				}
 			}
 		}
-	});*/
+	});
 
 	$( document.body ).on('change', '.um-forms-field[type="number"][data-field_id="min_chars"]', function() {
 		let maxField = $(this).closest( '.um-form-table' ).find('.um-forms-field[type="number"][data-field_id="max_chars"]');
@@ -1806,7 +1815,7 @@ jQuery( function($) {
 				}
 			}
 		}
-	});
+	});*/
 
 	// handle errors on the first loading
 	let $noticeObj = $('#message[data-error-field]');

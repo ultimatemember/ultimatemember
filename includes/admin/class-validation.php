@@ -14,6 +14,110 @@ if ( ! class_exists( 'um\admin\Validation' ) ) {
 	 */
 	final class Validation extends \um\common\Validation {
 
+		public function validate_min_max( $value, $submission, $submission_key, $field_submission, $compare_with ) {
+			if ( '' === $value ) {
+				return false;
+			}
+
+			if ( ! array_key_exists( $compare_with, $field_submission ) || '' === $field_submission[ $compare_with ] ) {
+				return false;
+			}
+
+			if ( $value > $field_submission[ $compare_with ] ) {
+				if ( array_key_exists( 'type', $field_submission ) ) {
+					$field_settings_tabs = UM()->admin()->field_group()->get_field_settings( $field_submission['type'] );
+					$field_settings      = call_user_func_array( 'array_merge', array_values( $field_settings_tabs ) );
+
+					$min_field_label = $field_settings[ $submission_key ]['label'];
+					$max_field_label = $field_settings[ $compare_with ]['label'];
+
+					// translators: %1$s is a Min field label, %2$s is a Max field label
+					return sprintf( __( '%1$s should be lower %2$s.', 'ultimate-member' ), $min_field_label, $max_field_label );
+				}
+				return __( 'Invalid value.', 'ultimate-member' );
+			}
+
+			return false;
+		}
+
+		public function validate_max_min( $value, $submission, $submission_key, $field_submission, $compare_with ) {
+			if ( '' === $value ) {
+				return false;
+			}
+
+			if ( ! array_key_exists( $compare_with, $field_submission ) || '' === $field_submission[ $compare_with ] ) {
+				return false;
+			}
+
+			if ( $value < $field_submission[ $compare_with ] ) {
+				if ( array_key_exists( 'type', $field_submission ) ) {
+					$field_settings_tabs = UM()->admin()->field_group()->get_field_settings( $field_submission['type'] );
+					$field_settings      = call_user_func_array( 'array_merge', array_values( $field_settings_tabs ) );
+
+					$max_field_label = $field_settings[ $submission_key ]['label'];
+					$min_field_label = $field_settings[ $compare_with ]['label'];
+
+					// translators: %1$s is a Max field label, %2$s is a Min field label
+					return sprintf( __( '%1$s should be higher %2$s.', 'ultimate-member' ), $max_field_label, $min_field_label );
+				}
+				return __( 'Invalid value.', 'ultimate-member' );
+			}
+
+			return false;
+		}
+
+		public function validate_min_max_date( $value, $submission, $submission_key, $field_submission, $compare_with ) {
+			if ( '' === $value ) {
+				return false;
+			}
+
+			if ( ! array_key_exists( $compare_with, $field_submission ) || '' === $field_submission[ $compare_with ] ) {
+				return false;
+			}
+
+			if ( strtotime( $value ) > strtotime( $field_submission[ $compare_with ] ) ) {
+				if ( array_key_exists( 'type', $field_submission ) ) {
+					$field_settings_tabs = UM()->admin()->field_group()->get_field_settings( $field_submission['type'] );
+					$field_settings      = call_user_func_array( 'array_merge', array_values( $field_settings_tabs ) );
+
+					$min_field_label = $field_settings[ $submission_key ]['label'];
+					$max_field_label = $field_settings[ $compare_with ]['label'];
+
+					// translators: %1$s is a Min field label, %2$s is a Max field label
+					return sprintf( __( '%1$s should be lower %2$s.', 'ultimate-member' ), $min_field_label, $max_field_label );
+				}
+				return __( 'Invalid value.', 'ultimate-member' );
+			}
+
+			return false;
+		}
+
+		public function validate_max_min_date( $value, $submission, $submission_key, $field_submission, $compare_with ) {
+			if ( '' === $value ) {
+				return false;
+			}
+
+			if ( ! array_key_exists( $compare_with, $field_submission ) || '' === $field_submission[ $compare_with ] ) {
+				return false;
+			}
+
+			if ( strtotime( $value ) < strtotime( $field_submission[ $compare_with ] ) ) {
+				if ( array_key_exists( 'type', $field_submission ) ) {
+					$field_settings_tabs = UM()->admin()->field_group()->get_field_settings( $field_submission['type'] );
+					$field_settings      = call_user_func_array( 'array_merge', array_values( $field_settings_tabs ) );
+
+					$max_field_label = $field_settings[ $submission_key ]['label'];
+					$min_field_label = $field_settings[ $compare_with ]['label'];
+
+					// translators: %1$s is a Max field label, %2$s is a Min field label
+					return sprintf( __( '%1$s should be higher %2$s.', 'ultimate-member' ), $max_field_label, $min_field_label );
+				}
+				return __( 'Invalid value.', 'ultimate-member' );
+			}
+
+			return false;
+		}
+
 		/**
 		 * @param string $key
 		 *

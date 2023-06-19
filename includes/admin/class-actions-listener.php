@@ -348,7 +348,7 @@ class Actions_Listener {
 					if ( empty( $field_data[ $field_id ] ) ) {
 						$set_tab = '';
 						foreach ( $field_settings_tabs as $tab_key => $tab_settings ) {
-							if ( in_array( $field_id, array_keys( $tab_settings ), true ) ) {
+							if ( array_key_exists( $field_id, $tab_settings ) ) {
 								$set_tab = $tab_key;
 								break;
 							}
@@ -384,7 +384,7 @@ class Actions_Listener {
 					if ( ! is_numeric( $field_data[ $field_id ] ) ) {
 						$set_tab = '';
 						foreach ( $field_settings_tabs as $tab_key => $tab_settings ) {
-							if ( in_array( $field_id, array_keys( $tab_settings ), true ) ) {
+							if ( array_key_exists( $field_id, $tab_settings ) ) {
 								$set_tab = $tab_key;
 								break;
 							}
@@ -407,7 +407,7 @@ class Actions_Listener {
 
 					$set_tab = '';
 					foreach ( $field_settings_tabs as $tab_key => $tab_settings ) {
-						if ( in_array( $field_id, array_keys( $tab_settings ), true ) ) {
+						if ( array_key_exists( $field_id, $tab_settings ) ) {
 							$set_tab = $tab_key;
 							break;
 						}
@@ -440,6 +440,40 @@ class Actions_Listener {
 				}
 			}
 
+			// Checking for minimum value requirements
+			$fields_validate_by_min_map = array_column( $field_settings, 'min', 'id' );
+			foreach ( $fields_validate_by_min_map as $field_id => $min ) {
+				if ( empty( $field_data[ $field_id ] ) ) {
+					continue;
+				}
+
+				if ( ! empty( $field_settings[ $field_id ]['conditional'] ) ) {
+					// Skip hidden by conditional logic fields for required marker.
+					if ( ! $this->conditions_are_met( $field_settings[ $field_id ]['conditional'], $field_data ) ) {
+						continue;
+					}
+				}
+
+				if ( $field_data[ $field_id ] < $min ) {
+					$set_tab = '';
+					foreach ( $field_settings_tabs as $tab_key => $tab_settings ) {
+						if ( array_key_exists( $field_id, $tab_settings ) ) {
+							$set_tab = $tab_key;
+							break;
+						}
+					}
+					$this->field_groups_error = array(
+						'field'   => 'field_groupfields' . $k . $set_tab . '_' . $field_id,
+						// translators: %1$s - Field label, %2$s is a minimum field value
+						'message' => sprintf( __( '"%1$s" field must be lower than %2$s.', 'ultimate-member' ), $field_settings[ $field_id ]['label'], $min ),
+					);
+				}
+
+				if ( ! empty( $this->field_groups_error ) ) {
+					return $this->field_groups_error;
+				}
+			}
+
 			// Checking for custom validation callbacks in validate
 			$fields_validate_map = array_column( $field_settings, 'validate', 'id' );
 			foreach ( $fields_validate_map as $field_id => $validate ) {
@@ -454,18 +488,18 @@ class Actions_Listener {
 					}
 				}
 
-				foreach ( $validate as $validation_callback ) {
+				foreach ( $validate as $validation_key => $validation_callback ) {
 					if ( ! is_callable( $validation_callback ) ) {
 						continue;
 					}
-					$validation_result = call_user_func_array( $validation_callback, array( $field_data[ $field_id ], $data['fields'], $field_id ) );
+					$validation_result = call_user_func_array( $validation_callback, array( $field_data[ $field_id ], $data['fields'], $field_id, $field_data, $validation_key ) );
 					if ( false === $validation_result ) {
 						continue;
 					}
 
 					$set_tab = '';
 					foreach ( $field_settings_tabs as $tab_key => $tab_settings ) {
-						if ( in_array( $field_id, array_keys( $tab_settings ), true ) ) {
+						if ( array_key_exists( $field_id, $tab_settings ) ) {
 							$set_tab = $tab_key;
 							break;
 						}
