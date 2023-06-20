@@ -3106,8 +3106,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						 */
 						$located = apply_filters( "um_override_templates_get_template_path__{$key}", $located, $file );
 
+						$exceptions = array(
+							'members-grid.php',
+							'members-header.php',
+							'members-list.php',
+							'members-pagination.php',
+							'searchform.php',
+							'login-to-view.php',
+							'profile/comments.php',
+							'profile/comments-single.php',
+							'profile/posts.php',
+							'profile/posts-single.php',
+							'modal/um_upload_single.php',
+							'modal/um_view_photo.php',
+						);
+
 						if ( ! empty( $located ) ) {
 							$theme_file = $located['theme'];
+						} elseif ( in_array( $file, $exceptions, true ) && file_exists( get_stylesheet_directory() . '/ultimate-member/' . $file ) ) {
+							$theme_file = get_stylesheet_directory() . '/ultimate-member/' . $file;
 						} elseif ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' . $file ) ) {
 							$theme_file = get_stylesheet_directory() . '/ultimate-member/templates/' . $file;
 						} else {

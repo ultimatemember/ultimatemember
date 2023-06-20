@@ -2,7 +2,7 @@
 /**
  * Template for the login form
  *
- * This template can be overridden by copying it to yourtheme/ultimate-member/login.php
+ * This template can be overridden by copying it to yourtheme/ultimate-member/templates/login.php
  *
  * Page: "Login"
  *

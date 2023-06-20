@@ -2,7 +2,7 @@
 /**
  * Template for the GDPR checkbox in register form
  *
- * This template can be overridden by copying it to yourtheme/ultimate-member/gdpr-register.php
+ * This template can be overridden by copying it to yourtheme/ultimate-member/templates/gdpr-register.php
  *
  * Page: "Register"
  * Call: function display_option()
