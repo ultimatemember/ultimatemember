@@ -14,8 +14,10 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 	class Form {
 
 		/**
-		 * @var null
+		 * @var
 		 */
+		public $form_data;
+
 		public $form_suffix = null;
 
 		/**
