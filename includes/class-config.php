@@ -98,6 +98,15 @@ if ( ! class_exists( 'um\Config' ) ) {
 		public $field_type_categories = array();
 
 		/**
+		 * Settings for the row field type in form builder.
+		 *
+		 * @since 2.7.0
+		 *
+		 * @var array
+		 */
+		public $builder_row_settings = array();
+
+		/**
 		 * Settings for the fields in field group builder applied for all fields type.
 		 *
 		 * @since 2.7.0
@@ -1063,6 +1072,177 @@ if ( ! class_exists( 'um\Config' ) ) {
 			 * @return {array} Filtered validation types.
 			 */
 			$this->field_validation_settings = apply_filters( 'um_admin_field_validation_hook', $this->field_validation_settings );
+		}
+
+		/**
+		 * The list of the form row settings.
+		 *
+		 * @since 2.7.0
+		 */
+		public function init_builder_row_settings() {
+			$this->builder_row_settings = array(
+				'general'      => array(
+					'title'          => array(
+						'id'          => 'title',
+						'type'        => 'text',
+						'class'       => 'um-form-row-title-input',
+						'label'       => __( 'Row title', 'ultimate-member' ),
+						'description' => __( 'Shown internally for administrator who set up form', 'ultimate-member' ),
+						'required'    => true,
+						'sanitize'    => 'text',
+					),
+					'columns_layout' => array(
+						'id'          => 'columns_layout',
+						'type'        => 'select',
+						'class'       => 'um-form-row-columns-select',
+						'options'     => array(
+							1 => __( '1 column', 'ultimate-member' ),
+							2 => __( '2 columns', 'ultimate-member' ),
+							3 => __( '3 columns', 'ultimate-member' ),
+						),
+						'label'       => __( 'Columns', 'ultimate-member' ),
+						'description' => __( 'Select the columns count visible in row on the front-end.', 'ultimate-member' ),
+						'sanitize'    => 'int',
+						'required'    => true,
+					),
+				),
+				'presentation' => array(
+					'background'          => array(
+						'id'          => 'background',
+						'type'        => 'color',
+						'label'       => __( 'Background Color', 'ultimate-member' ),
+						'description' => __( 'This will be the background of entire row.', 'ultimate-member' ),
+						'sanitize'    => 'color',
+					),
+					'text_color'          => array(
+						'id'          => 'text_color',
+						'type'        => 'color',
+						'label'       => __( 'Text Color', 'ultimate-member' ),
+						'description' => __( 'This will be the text color of entire row.', 'ultimate-member' ),
+						'sanitize'    => 'color',
+					),
+					'padding'          => array(
+						'id'          => 'padding',
+						'type'        => 'text',
+						'label'       => __( 'Padding', 'ultimate-member' ),
+						'description' => __( 'Set padding for this row.', 'ultimate-member' ),
+						'sanitize'    => 'text',
+					),
+					'margin'          => array(
+						'id'          => 'margin',
+						'type'        => 'text',
+						'label'       => __( 'Margin', 'ultimate-member' ),
+						'description' => __( 'Set margin for this row.', 'ultimate-member' ),
+						'sanitize'    => 'text',
+					),
+					'border'          => array(
+						'id'          => 'border',
+						'type'        => 'text',
+						'label'       => __( 'Border', 'ultimate-member' ),
+						'description' => __( 'Set border for this row.', 'ultimate-member' ),
+						'sanitize'    => 'text',
+					),
+					'borderradius'          => array(
+						'id'          => 'borderradius',
+						'type'        => 'text',
+						'label'       => __( 'Border Radius', 'ultimate-member' ),
+						'description' => __( 'Rounded corners can be applied by setting a pixels value here. e.g. 5px.', 'ultimate-member' ),
+						'sanitize'    => 'text',
+					),
+					'borderstyle' => array(
+						'id'          => 'borderstyle',
+						'type'        => 'select',
+						'options'     => array(
+							'solid'  => __( 'Solid', 'ultimate-member' ),
+							'dotted' => __( 'Dotted', 'ultimate-member' ),
+							'dashed' => __( 'Dashed', 'ultimate-member' ),
+							'double' => __( 'Double', 'ultimate-member' ),
+						),
+						'label'       => __( 'Border Style', 'ultimate-member' ),
+						'description' => __( 'Choose the border style.', 'ultimate-member' ),
+						'sanitize'    => 'key',
+					),
+					'bordercolor'          => array(
+						'id'          => 'bordercolor',
+						'type'        => 'color',
+						'label'       => __( 'Border Color', 'ultimate-member' ),
+						'description' => __( 'Give a color to this border.', 'ultimate-member' ),
+						'sanitize'    => 'color',
+					),
+				),
+				'privacy'      => array(
+					'privacy'       => array(
+						'id'          => 'privacy',
+						'type'        => 'select',
+						'options'     => $this->get( 'field_privacy_settings' ),
+						'label'       => __( 'Privacy', 'ultimate-member' ),
+						'description' => __( 'Field privacy allows you to select who can view this row on the front-end. The site admin can view all rows regardless of the option set here.', 'ultimate-member' ),
+						'sanitize'    => 'text',
+					),
+					'privacy_roles' => array(
+						'id'          => 'privacy_roles',
+						'type'        => 'select',
+						'multi'       => true,
+						'options'     => UM()->roles()->get_roles(),
+						'label'       => __( 'Select member roles', 'ultimate-member' ),
+						'description' => __( 'Select the member roles that can view this row on the front-end.', 'ultimate-member' ),
+						'sanitize'    => 'key',
+						'required'    => true,
+						'conditional' => array( 'privacy', '=', array( '-2', '-3' ) ),
+					),
+					'visibility'    => array(
+						'id'          => 'visibility',
+						'type'        => 'select',
+						'multi'       => true,
+						'options'     => $this->get( 'field_visibility_settings' ),
+						'label'       => __( 'Visibility', 'ultimate-member' ),
+						'description' => __( 'Select where this row should appear. This option allows you to show a row in selected profile mode (edit or view) or in register forms. Leave empty to show everywhere.', 'ultimate-member' ),
+						'sanitize'    => 'key',
+					),
+				),
+				'conditional'  => array(
+					'conditional_logic'  => array(
+						'id'       => 'conditional_logic',
+						'type'     => 'checkbox',
+						'label'    => __( 'Conditional Logic', 'ultimate-member' ),
+						'sanitize' => 'bool',
+					),
+					'conditional_action' => array(
+						'id'          => 'conditional_action',
+						'type'        => 'select',
+						'label'       => __( 'Action', 'ultimate-member' ),
+						'options'     => array(
+							'show' => __( 'Show', 'ultimate-member' ),
+							'hide' => __( 'Hide', 'ultimate-member' ),
+						),
+						'sanitize'    => 'key',
+						'conditional' => array( 'conditional_logic', '=', true ),
+					),
+					'conditional_rules'  => array(
+						'id'          => 'conditional_rules',
+						'type'        => 'conditional_rules',
+						'label'       => __( 'Rules', 'ultimate-member' ),
+						'sanitize'    => 'conditional_rules',
+						'conditional' => array( 'conditional_logic', '=', true ),
+					),
+				),
+				'advanced'     => array(
+					'wrapper_class' => array(
+						'id'          => 'wrapper_class',
+						'type'        => 'text',
+						'label'       => __( 'Wrapper class', 'ultimate-member' ),
+						'description' => __( 'CSS class added to the row wrapper element.', 'ultimate-member' ),
+						'sanitize'    => 'key',
+					),
+					'wrapper_id'    => array(
+						'id'          => 'wrapper_id',
+						'type'        => 'text',
+						'label'       => __( 'Wrapper id', 'ultimate-member' ),
+						'description' => __( 'ID added to the row wrapper element.', 'ultimate-member' ),
+						'sanitize'    => 'key',
+					),
+				),
+			);
 		}
 
 		/**

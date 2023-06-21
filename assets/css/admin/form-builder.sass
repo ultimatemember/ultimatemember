@@ -1,0 +1,609 @@
+@import "../selectors"
+@import "../mixins"
+@import "../colors"
+
++keyframes(um-ajax-shimmer)
+  100%
+    transform: translateX(100%)
+
+.um-skeleton-box
+  display: inline-block
+  height: 1em
+  position: relative
+  overflow: hidden
+  background-color: $gray-300
+  border: none
+  border-radius: 4px
+  &:after
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    transform: translateX(-100%)
+    background-image: linear-gradient(90deg,rgba(#fff, 0) 0,rgba(#fff, 0.2) 20%,rgba(#fff, 0.5) 60%,rgba(#fff, 0))
+    animation: um-ajax-shimmer 2s infinite
+    content: ''
+
+
+
+
+#um-admin-form-builder-new.postbox
+  .inside
+    padding: 0
+    margin: 0
+
+$actions-gap: 10px
+
+.um-field-row-template
+  display: none
+
+.um-form-builder-new
+  +flex( column, flex-start, stretch, nowrap )
+  margin: 0 0 20px 0
+  padding: 0
+  width: 100%
+  +border-box
+  .um-form-rows
+    +flex( column, flex-start, stretch, nowrap )
+    margin: 0
+    padding: 20px 20px 0 20px
+    width: 100%
+    +border-box
+    .um-form-row
+      +flex( column, flex-start, stretch, nowrap )
+      margin: 0
+      padding: 0
+      width: 100%
+      +border-box
+      row-gap: 5px
+      .um-form-row-header
+        +flex( row, space-between, baseline, nowrap )
+        margin: 0
+        padding: 0
+        width: 100%
+        .um-form-row-header-title-wrapper
+          +flex( row, flex-start, baseline, nowrap )
+          margin: 0
+          padding: 0
+          column-gap: 10px
+          .um-form-row-move-link
+            position: relative
+            padding-left: 20px
+            width: 29px
+            +border-box
+            cursor: move
+            &:before
+              visibility: hidden
+              content: ""
+              position: absolute
+              top: 3px
+              left: 0
+              mask-size: contain
+              -webkit-mask-size: contain
+              mask-position: center
+              -webkit-mask-position: center
+              mask-repeat: no-repeat
+              -webkit-mask-repeat: no-repeat
+              mask-image: url(../../img/admin/grip-dots-vertical-regular.svg)
+              -webkit-mask-image: url(../../img/admin/grip-dots-vertical-regular.svg)
+              width: 14px
+              height: 14px
+              background-color: $gray-400
+              text-indent: 500%
+              white-space: nowrap
+              overflow: hidden
+          .um-form-row-header-title
+            margin: 0
+            padding: 0 0 0 30px
+            font-weight: $bold-weight
+            position: relative
+            +flex( row, flex-start, baseline, nowrap )
+            +border-box
+            &:before
+              content: ""
+              position: absolute
+              top: 3px
+              left: 0
+              mask-size: contain
+              -webkit-mask-size: contain
+              mask-position: center
+              -webkit-mask-position: center
+              mask-repeat: no-repeat
+              -webkit-mask-repeat: no-repeat
+              mask-image: url(../../img/admin/angle-down-regular.svg)
+              -webkit-mask-image: url(../../img/admin/angle-down-regular.svg)
+              width: 14px
+              height: 14px
+              background-color: $gray-400
+              text-indent: 500%
+              white-space: nowrap
+              overflow: hidden
+        .um-form-row-header-actions
+          +flex( row, flex-end, baseline, nowrap )
+          width: 50%
+          margin: 0
+          padding: 0
+          column-gap: 10px
+          visibility: hidden
+          a.um-form-row-action-delete
+            color: $delete-link
+            &:hover
+              color: $delete-link-hover
+      .um-form-row-content
+        +flex( column, flex-start, stretch, nowrap )
+        margin: 0
+        padding: 10px
+        width: 100%
+        +border-box
+        border: 1px solid $gray-300
+        border-radius: 4px
+        -moz-border-radius: 4px
+        -webkit-border-radius: 4px
+      &:hover
+        & > .um-form-row-header
+          & > .um-form-row-header-title-wrapper
+            & > .um-form-row-move-link
+              &:before
+                visibility: visible
+          & > .um-form-row-header-actions
+            visibility: visible
+      &.um-form-row-edit-mode
+        & > .um-form-row-header
+          & > .um-form-row-header-title-wrapper
+            & > .um-form-row-header-title
+              &:before
+                mask-image: url(../../img/admin/angle-up-regular.svg)
+                -webkit-mask-image: url(../../img/admin/angle-up-regular.svg)
+          & > .um-form-row-header-actions
+            visibility: visible
+  .um-fields-footer
+    +flex( row, center, center, nowrap )
+    margin: 20px 0 0 0
+    padding: 0
+    width: 100%
+    +border-box
+    .um-add-field-row
+      font-weight: $bold-weight
+
+.um-form-row-column
+  +flex( column, flex-start, stretch, nowrap )
+  margin: 0 0 20px 0
+  padding: 0
+  width: 100%
+  +border-box
+  .um-fields-column-header
+    +flex( row, flex-start, baseline, nowrap )
+    font-weight: 600
+    padding: 15px 20px 15px 15px
+    margin: 0
+    column-gap: 15px
+    background: $gray-50
+    .um-fields-column-header-order
+      width: 29px
+      padding-left: 20px
+      +border-box
+    .um-fields-column-header-name
+      padding-left: 30px
+      width: calc( 100% - 549px )
+      +border-box
+    .um-fields-column-header-metakey
+      width: 200px
+    .um-fields-column-header-type
+      width: 120px
+    .um-fields-column-header-actions
+      width: 140px
+    &.hidden
+      display: none !important
+  .um-fields-column-content
+    +flex( column, flex-start, stretch, nowrap )
+    margin: 0
+    border-bottom: 1px solid $gray-300
+    .um-field-row-placeholder
+      display: block
+      width: 100%
+      +border-box
+      height: 80px
+      background: $gray-50
+      border-top: 1px solid $gray-300
+    .um-field-row
+      +flex( column, flex-start, stretch, nowrap )
+      margin: 0
+      padding: 0
+      border-top: 1px solid $gray-300
+      background: $white
+      width: 100%
+      min-height: 40px
+      +border-box
+      .um-field-row-header
+        +flex( row, space-between, flex-start, nowrap )
+        margin: 0
+        padding: 20px 20px 20px 15px
+        .um-field-row-move-link
+          position: relative
+          padding-left: 20px
+          width: 29px
+          +border-box
+          &:before
+            visibility: hidden
+            content: ""
+            position: absolute
+            top: 3px
+            left: 0
+            mask-size: contain
+            -webkit-mask-size: contain
+            mask-position: center
+            -webkit-mask-position: center
+            mask-repeat: no-repeat
+            -webkit-mask-repeat: no-repeat
+            mask-image: url(../../img/admin/grip-dots-vertical-regular.svg)
+            -webkit-mask-image: url(../../img/admin/grip-dots-vertical-regular.svg)
+            width: 14px
+            height: 14px
+            background-color: $gray-400
+            text-indent: 500%
+            white-space: nowrap
+            overflow: hidden
+          cursor: move
+        .um-field-row-metakey
+          width: 200px
+        .um-field-row-type
+          width: 120px
+        .um-field-row-title
+          font-weight: bold
+          position: relative
+          width: calc( 100% - 549px )
+          +flex( column, flex-start, stretch, nowrap )
+          row-gap: 3px
+          margin: 0
+          padding: 0 0 0 30px
+          +border-box
+          &:before
+            content: ""
+            position: absolute
+            top: 3px
+            left: 0
+            mask-size: contain
+            -webkit-mask-size: contain
+            mask-position: center
+            -webkit-mask-position: center
+            mask-repeat: no-repeat
+            -webkit-mask-repeat: no-repeat
+            mask-image: url(../../img/admin/angle-down-regular.svg)
+            -webkit-mask-image: url(../../img/admin/angle-down-regular.svg)
+            width: 14px
+            height: 14px
+            background-color: $gray-400
+            text-indent: 500%
+            white-space: nowrap
+            overflow: hidden
+        .um-field-row-actions
+          width: 140px
+          +flex( row, flex-end, baseline, nowrap )
+          margin: 0
+          padding: 0
+          column-gap: $actions-gap
+          visibility: hidden
+          a.um-field-row-action-delete
+            color: $delete-link
+            &:hover
+              color: $delete-link-hover
+      .um-field-row-content
+        display: none
+      &:hover
+        & > .um-field-row-header
+          & > .um-field-row-move-link
+            &:before
+              visibility: visible
+          & > .um-field-row-actions
+            visibility: visible
+      &.um-field-row-edit-mode
+        & >.um-field-row-header
+          & > .um-field-row-title
+            &:before
+              mask-image: url(../../img/admin/angle-up-regular.svg)
+              -webkit-mask-image: url(../../img/admin/angle-up-regular.svg)
+          & > .um-field-row-actions
+            visibility: visible
+        & > .um-field-row-content
+          +flex( column, flex-start, stretch, nowrap )
+          margin: 0
+          padding: 0
+          & > .um-field-row-tabs
+            +flex( row, flex-start, baseline, nowrap )
+            border-bottom: 1px solid $gray-300
+            width: 100%
+            margin: 0
+            padding: 0 0 0 10px
+            column-gap: 10px
+            +border-box
+            & > div[data-tab]
+              margin: 0
+              padding: 10px 20px
+              cursor: pointer
+              font-weight: 600
+              border: 1px solid $gray-300
+              border-bottom: none
+              border-radius: 4px 4px 0 0
+              -moz-border-radius: 4px 4px 0 0
+              -webkit-border-radius: 4px 4px 0 0
+              color: $wp-admin-text
+              &.current
+                color: $white
+                background: $wp-admin-primary
+                cursor: default
+                margin-bottom: -1px
+                border: 1px solid $wp-admin-primary
+              &:hover:not(.current)
+                background: #ebedee
+          & > .um-field-row-tabs-content
+            & > div[data-tab]
+              display: none
+              padding: 0 10px 0 15px
+              +border-box
+              &.current
+                +flex( column, flex-start, stretch, nowrap )
+                border-left: 4px solid $wp-admin-primary
+              .um-forms-field.um-error
+                border-color: $error-700
+              input[type="text"].um-forms-field,
+              input[type="number"].um-forms-field,
+              input[type="url"].um-forms-field,
+              select:not([multiple]).um-forms-field
+                height: 36px
+                font-size: 13px
+              select.um-forms-field
+                font-size: 13px
+              textarea.um-forms-field
+                font-size: 13px
+              .description
+                font-size: 13px
+                font-style: normal
+              .um-forms-line
+                td > label
+                  font-size: 13px
+                  font-style: normal
+      &.ui-sortable-helper
+        border-bottom: 1px solid $gray-300
+    &.hidden
+      display: none !important
+    .ui-sortable-placeholder
+      background: $gray-50
+      border-top: 1px solid $gray-300
+  .um-fields-column-empty-content
+    +flex( row, center, center, nowrap )
+    height: 120px
+    margin: 0
+    padding: 0
+    &.hidden
+      display: none !important
+  .um-fields-column-footer
+    +flex( row, center, stretch, nowrap )
+    margin: 20px 0 0 0
+    padding: 0
+    column-gap: 10px
+
+  &.um-sub-fields-builder
+    & > .um-fields-column-content
+      & > .um-field-row
+        & > .um-field-row-content
+          & > .um-field-row-tabs
+            & > div[data-tab]
+              font-size: 12px
+
+
+.um-conditional-rules-group-template
+  display: none
+.um-conditional-rule-row-template
+  display: none
+.um-conditional-rules-wrapper
+  +flex( column, flex-start, stretch, nowrap )
+  margin: 0
+  padding: 0
+  row-gap: 10px
+  .um-conditional-rules-group
+    +flex( column, flex-start, stretch, nowrap )
+    margin: 0
+    padding: 0
+    row-gap: 10px
+    .um-conditional-rule-row
+      +flex( column, flex-start, stretch, nowrap )
+      row-gap: 10px
+      .um-conditional-rules-connect
+        +flex( row, center, baseline, nowrap )
+        font-size: 11px
+        color: $gray-400
+        font-weight: bold
+      .um-conditional-rule-fields
+        +flex( row, flex-start, center, nowrap )
+        column-gap: 10px
+        .um-conditional-rule-field-col
+          width: 33.3%
+          margin: 0
+          padding: 0
+          select
+            height: 36px
+            font-size: 13px
+            width: 100%
+        .um-conditional-rule-condition-col
+          width: calc( 33% - 82px )
+          margin: 0
+          padding: 0
+          select
+            height: 36px
+            font-size: 13px
+            width: 100%
+        .um-conditional-rule-value-col
+          width: 33.3%
+          margin: 0
+          padding: 0
+          select
+            height: 36px
+            font-size: 13px
+            width: 100%
+          input
+            height: 36px
+            font-size: 13px
+            display: none
+            width: 100%
+        .um-conditional-rule-actions-col
+          +flex( row, flex-end, center, nowrap )
+          column-gap: 10px
+          width: 82px
+          input
+            width: 36px
+            height: 36px
+      &:first-child
+        .um-conditional-rules-connect
+          display: none
+    .um-conditional-rules-groups-connect
+      +flex( row, center, baseline, nowrap )
+      font-size: 11px
+      color: $gray-400
+      font-weight: bold
+  .um-conditional-rules-wrapper-bottom
+    +flex( row, center, baseline, nowrap )
+    margin: 0
+    padding: 0
+
+.um-admin-option-bulk-add-wrapper
+  +flex( row, flex-end, baseline, nowrap )
+  width: 100%
+  margin: 0 0 5px 0
+  a
+    font-size: 13px
+    text-decoration: none
+    color: #646970
+    &:hover
+      color: #646970
+      text-decoration: underline
+    &:focus
+      box-shadow: none
+      outline: 0
+    &.active
+      font-weight: $bold-weight
+  &.um-admin-option-bulk-enable-optgroup-wrapper
+    justify-content: space-between
+.#{$prefix}admin-option-bulk-add-list
+  display: none
+  border: 1px solid $gray-300
+  padding: 0
+  margin: 0 0 4px 0
+  li
+    border-top: 1px solid $gray-300
+    padding: 0
+    margin: 0
+    &:first-child
+      border-top: none
+    a
+      font-size: 13px
+      width: 100%
+      padding: 4px
+      margin: 0
+      display: block
+      +border-box
+      &:hover
+        background: $wp-background
+
+
+.#{$prefix}admin-option-rows
+  +flex( column, flex-start, stretch, nowrap )
+  width: 100%
+  max-height: 220px
+  overflow-y: auto
+  margin: 0
+  +border-box
+
+.#{$prefix}admin-option-row
+  +flex( row, flex-start, center, nowrap )
+  +border-box
+  width: 100%
+  padding: 0
+  margin: 0 0 5px 0
+  column-gap: 5px
+  .um-admin-option-move-link
+    position: relative
+    width: 25px
+    +border-box
+    &:before
+      visibility: visible
+      content: ""
+      position: absolute
+      top: -9px
+      left: 0
+      mask-size: contain
+      -webkit-mask-size: contain
+      mask-position: center
+      -webkit-mask-position: center
+      mask-repeat: no-repeat
+      -webkit-mask-repeat: no-repeat
+      mask-image: url(../../img/admin/grip-dots-vertical-regular.svg)
+      -webkit-mask-image: url(../../img/admin/grip-dots-vertical-regular.svg)
+      width: 16px
+      height: 16px
+      background-color: $gray-400
+      text-indent: 500%
+      white-space: nowrap
+      overflow: hidden
+      cursor: move
+  .um-admin-option-row-defaults
+    +flex( row, center, center, nowrap )
+    width: 20px
+    input
+      margin: 0
+      padding: 0
+  .um-admin-option-key-wrapper
+    width: 30%
+    margin: 0
+    padding: 0
+    input
+      width: 100%
+      margin: 0
+      height: 36px
+      font-size: 13px
+  .um-admin-option-val-wrapper
+    width: calc( 70% - 142px )
+    input
+      width: 100%
+      margin: 0
+      height: 36px
+      font-size: 13px
+  .um-admin-option-row-actions
+    +flex( row, flex-end, center, nowrap )
+    column-gap: 5px
+    width: 77px
+    input
+      width: 36px
+      height: 36px
+  &.ui-sortable-placeholder
+    height: 40px
+    width: 100%
+    display: list-item
+
+.#{$prefix}admin-option-row-skeleton-placeholder
+  display: none
+.#{$prefix}admin-option-row-skeleton
+  +flex( row, flex-start, center, nowrap )
+  +border-box
+  width: 100%
+  padding: 0
+  margin: 0 0 5px 0
+  column-gap: 5px
+  .um-skeleton-box
+    height: 20px
+    margin-top: 8px
+    margin-bottom: 8px
+
+.um-admin-option-group-row-add-wrapper
+  +flex( row, center, baseline, nowrap )
+  margin: 0
+  padding: 0
+
+
+.um-admin-editor-content
+  display: none
+
+.um-field-row-tabs-content
+  .wp-core-ui.wp-editor-wrap.html-active
+    textarea.wp-editor-area
+      display: block !important

@@ -578,6 +578,7 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->admin()->notices();
 				$this->admin()->actions_listener();
 				$this->admin()->field_group()->hooks();
+				$this->admin()->form_builder()->hooks();
 				$this->users();
 				$this->dragdrop();
 				$this->admin_gdpr();

@@ -2110,6 +2110,18 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		/**
 		 * @since 2.7.0
 		 *
+		 * @return Form_Builder
+		 */
+		public function form_builder() {
+			if ( empty( UM()->classes['um\admin\form_builder'] ) ) {
+				UM()->classes['um\admin\form_builder'] = new Form_Builder();
+			}
+			return UM()->classes['um\admin\form_builder'];
+		}
+
+		/**
+		 * @since 2.7.0
+		 *
 		 * @return Validation
 		 */
 		public function validation() {

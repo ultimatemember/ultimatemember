@@ -76,7 +76,7 @@ KEY meta_key (meta_key(191))
 CREATE TABLE {$wpdb->prefix}um_fields (
 id bigint(20) unsigned NOT NULL auto_increment,
 field_key varchar(32) NOT NULL default '',
-group_id bigint(20) unsigned NOT NULL,
+group_id bigint(20) unsigned default NULL,
 title varchar(255) default NULL,
 type varchar(255) NOT NULL default '',
 parent_id bigint(20) unsigned NOT NULL default 0,

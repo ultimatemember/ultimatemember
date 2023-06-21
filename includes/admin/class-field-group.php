@@ -14,17 +14,7 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 	 */
 	class Field_Group {
 
-		/**
-		 * @var
-		 */
-		public $form_id;
-
 		private $is_loaded = false;
-
-		/**
-		 * @var array
-		 */
-		private $global_fields = array();
 
 		public $is_displayed = false;
 
@@ -56,11 +46,14 @@ if ( ! class_exists( 'um\admin\Field_Group' ) ) {
 		/**
 		 * Load modal content
 		 */
-		function load_modal_content() {
-			$screen = get_current_screen();
+		public function load_modal_content() {
+			if ( false !== $this->is_loaded ) {
+				return;
+			}
 
-			// needed on forms only
-			if ( false === $this->is_loaded && isset( $screen->id ) && strstr( $screen->id, 'ultimate-member_page_um_field_groups' ) && ! empty( $_GET['tab'] ) ) {
+			$screen = get_current_screen();
+			// Needed on field groups only
+			if ( isset( $screen ) && isset( $screen->id ) && strstr( $screen->id, 'ultimate-member_page_um_field_groups' ) && ! empty( $_GET['tab'] ) ) {
 				echo '<div id="um-hidden-editor-placeholder" style="display:none;">';
 				wp_editor(
 					'',

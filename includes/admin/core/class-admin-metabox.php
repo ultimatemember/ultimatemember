@@ -736,10 +736,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 			$box['id'] = str_replace( 'um-admin-form-', '', $box['id'] );
 
-			if ( $box['id'] == 'builder' ) {
-				UM()->builder()->form_id = get_the_ID();
-			}
-
 			preg_match('#\{.*?\}#s', $box['id'], $matches);
 
 			if ( isset($matches[0]) ){
@@ -763,13 +759,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 * @param $object
 		 * @param $box
 		 */
-		function load_metabox_form( $object, $box ) {
+		public function load_metabox_form( $object, $box ) {
 			global $post;
 
-			$box['id'] = str_replace( 'um-admin-form-','', $box['id'] );
+			$box['id'] = str_replace( 'um-admin-form-', '', $box['id'] );
 
-			if ( $box['id'] == 'builder' ) {
-				UM()->builder()->form_id = get_the_ID();
+			if ( 'builder' === $box['id'] || 'builder-new' === $box['id'] ) {
+				UM()->builder()->form_id = $post->ID;
 			}
 
 			preg_match('#\{.*?\}#s', $box['id'], $matches);
@@ -784,7 +780,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			$path = str_replace('{','', $path );
 			$path = str_replace('}','', $path );
 
-			include_once $path . 'includes/admin/templates/form/'. $box['id'] . '.php';
+			include_once $path . 'includes/admin/templates/form/' . $box['id'] . '.php';
 
 			if ( ! $this->form_nonce_added ) {
 				$this->form_nonce_added = true;
@@ -834,7 +830,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			add_meta_box( 'um-admin-form-search', __( 'Search Options', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
 			add_meta_box( 'um-admin-form-pagination', __( 'Results &amp; Pagination', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
 			add_meta_box( 'um-admin-form-shortcode', __( 'Shortcode', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'side', 'default' );
-			add_meta_box( 'um-admin-form-appearance', __( 'Styling: General', 'ultimate-member' ), array( &$this, 'load_metabox_directory'), 'um_directory', 'side', 'default' );
+			add_meta_box( 'um-admin-form-appearance', __( 'Styling: General', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'side', 'default' );
 		}
 
 
@@ -991,9 +987,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		/**
 		 * Add form metabox
 		 */
-		function add_metabox_form() {
-
+		public function add_metabox_form() {
 			add_meta_box( 'um-admin-form-mode', __( 'Select Form Type', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );
+
+			add_meta_box( 'um-admin-form-builder-new', __( 'Form Builder New', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal' );
+
 			add_meta_box( 'um-admin-form-builder', __( 'Form Builder', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );
 			add_meta_box( 'um-admin-form-shortcode', __( 'Shortcode', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
 

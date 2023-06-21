@@ -452,6 +452,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 
 			wp_register_style( 'um_admin_builder', $this->css_url . 'um-admin-builder.css', array(), ultimatemember_version );
 			wp_enqueue_style( 'um_admin_builder' );
+
+			// NEW
+			wp_register_script( 'um_admin_builder_new', UM_URL . 'assets/js/admin/form-builder' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'wp-i18n', 'wp-url', 'jquery-ui-sortable', 'jquery-ui-draggable', 'um_admin_forms' ), UM_VERSION, true );
+			$field_groups_data = array(
+				'field_tabs'        => UM()->config()->get( 'field_settings_tabs' ),
+				'field_types'       => $this->get_all_field_types(),
+				'conditional_rules' => UM()->config()->get( 'field_conditional_rules' ),
+			);
+			wp_localize_script( 'um_admin_builder_new', 'um_admin_field_groups_data', $field_groups_data );
+			wp_enqueue_script( 'um_admin_builder_new' );
+
+			wp_register_style( 'um_admin_builder_new', UM_URL . 'assets/css/admin/form-builder' . $this->suffix . '.css', array( 'um_admin_forms' ), UM_VERSION );
+			wp_enqueue_style( 'um_admin_builder_new' );
 		}
 
 
