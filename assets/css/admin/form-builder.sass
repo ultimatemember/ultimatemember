@@ -35,6 +35,12 @@
 
 $actions-gap: 10px
 
+.um-form-section-template
+  display: none
+
+.um-form-row-template
+  display: none
+
 .um-field-row-template
   display: none
 
@@ -44,6 +50,190 @@ $actions-gap: 10px
   padding: 0
   width: 100%
   +border-box
+  .um-form-sections
+    +flex( column, flex-start, stretch, nowrap )
+    margin: 0
+    padding: 20px 20px 0 20px
+    width: 100%
+    +border-box
+    .um-form-section
+      +flex( column, flex-start, stretch, nowrap )
+      margin: 0
+      padding: 0
+      width: 100%
+      +border-box
+      .um-form-section-header
+        +flex( row, space-between, baseline, nowrap )
+        margin: 0 0 5px 0
+        padding: 0
+        width: 100%
+        .um-form-section-header-title-wrapper
+          +flex( row, flex-start, baseline, nowrap )
+          margin: 0
+          padding: 0
+          column-gap: 10px
+          .um-form-section-move-link
+            position: relative
+            padding-left: 20px
+            width: 29px
+            +border-box
+            cursor: move
+            &:before
+              visibility: hidden
+              content: ""
+              position: absolute
+              top: 3px
+              left: 0
+              mask-size: contain
+              -webkit-mask-size: contain
+              mask-position: center
+              -webkit-mask-position: center
+              mask-repeat: no-repeat
+              -webkit-mask-repeat: no-repeat
+              mask-image: url(../../img/admin/grip-dots-vertical-regular.svg)
+              -webkit-mask-image: url(../../img/admin/grip-dots-vertical-regular.svg)
+              width: 14px
+              height: 14px
+              background-color: $gray-400
+              text-indent: 500%
+              white-space: nowrap
+              overflow: hidden
+          .um-form-section-header-title
+            margin: 0
+            padding: 0 0 0 30px
+            font-weight: $bold-weight
+            position: relative
+            +flex( row, flex-start, baseline, nowrap )
+            +border-box
+            &:before
+              content: ""
+              position: absolute
+              top: 3px
+              left: 0
+              mask-size: contain
+              -webkit-mask-size: contain
+              mask-position: center
+              -webkit-mask-position: center
+              mask-repeat: no-repeat
+              -webkit-mask-repeat: no-repeat
+              mask-image: url(../../img/admin/angle-down-regular.svg)
+              -webkit-mask-image: url(../../img/admin/angle-down-regular.svg)
+              width: 14px
+              height: 14px
+              background-color: $gray-400
+              text-indent: 500%
+              white-space: nowrap
+              overflow: hidden
+        .um-form-section-header-actions
+          +flex( row, flex-end, baseline, nowrap )
+          width: 50%
+          margin: 0
+          padding: 0
+          column-gap: 10px
+          visibility: hidden
+          a.um-form-section-action-delete
+            color: $delete-link
+            &:hover
+              color: $delete-link-hover
+      .um-form-section-settings
+        display: none
+      .um-form-section-content
+        +flex( column, flex-start, stretch, nowrap )
+        margin: 0
+        padding: 10px
+        width: 100%
+        +border-box
+        border: 1px solid $gray-300
+        border-radius: 4px
+        -moz-border-radius: 4px
+        -webkit-border-radius: 4px
+      &:hover
+        & > .um-form-section-header
+          & > .um-form-section-header-title-wrapper
+            & > .um-form-section-move-link
+              &:before
+                visibility: visible
+          & > .um-form-section-header-actions
+            visibility: visible
+      &.um-form-section-edit-mode
+        & > .um-form-section-header
+          & > .um-form-section-header-title-wrapper
+            & > .um-form-section-header-title
+              &:before
+                mask-image: url(../../img/admin/angle-up-regular.svg)
+                -webkit-mask-image: url(../../img/admin/angle-up-regular.svg)
+          & > .um-form-section-header-actions
+            visibility: visible
+        & > .um-form-section-settings
+          +flex( column, flex-start, stretch, nowrap )
+          margin: 0
+          padding: 10px 0 0 0
+          width: 100%
+          +border-box
+          border: 1px solid $gray-300
+          border-bottom: none
+          border-radius: 4px 4px 0 0
+          -moz-border-radius: 4px 4px 0 0
+          -webkit-border-radius: 4px 4px 0 0
+          & > .um-form-section-settings-tabs
+            +flex( row, flex-start, baseline, nowrap )
+            border-bottom: 1px solid $gray-300
+            width: 100%
+            margin: 0
+            padding: 0 0 0 10px
+            column-gap: 10px
+            +border-box
+            & > div[data-tab]
+              margin: 0
+              padding: 10px 20px
+              cursor: pointer
+              font-weight: 600
+              border: 1px solid $gray-300
+              border-bottom: none
+              border-radius: 4px 4px 0 0
+              -moz-border-radius: 4px 4px 0 0
+              -webkit-border-radius: 4px 4px 0 0
+              color: $wp-admin-text
+              &.current
+                color: $white
+                background: $wp-admin-primary
+                cursor: default
+                margin-bottom: -1px
+                border: 1px solid $wp-admin-primary
+              &:hover:not(.current)
+                background: #ebedee
+          & > .um-form-section-settings-tabs-content
+            & > div[data-tab]
+              display: none
+              padding: 0 10px 0 15px
+              +border-box
+              &.current
+                +flex( column, flex-start, stretch, nowrap )
+                border-left: 4px solid $wp-admin-primary
+              .um-forms-field.um-error
+                border-color: $error-700
+              input[type="text"].um-forms-field,
+              input[type="number"].um-forms-field,
+              input[type="url"].um-forms-field,
+              select:not([multiple]).um-forms-field
+                height: 36px
+                font-size: 13px
+              select.um-forms-field
+                font-size: 13px
+              textarea.um-forms-field
+                font-size: 13px
+              .description
+                font-size: 13px
+                font-style: normal
+              .um-forms-line
+                td > label
+                  font-size: 13px
+                  font-style: normal
+        & > .um-form-section-content
+          border-radius: 0 0 4px 4px
+          -moz-border-radius: 0 0 4px 4px
+          -webkit-border-radius: 0 0 4px 4px
+
   .um-form-rows
     +flex( column, flex-start, stretch, nowrap )
     margin: 0
@@ -56,10 +246,9 @@ $actions-gap: 10px
       padding: 0
       width: 100%
       +border-box
-      row-gap: 5px
       .um-form-row-header
         +flex( row, space-between, baseline, nowrap )
-        margin: 0
+        margin: 0 0 5px 0
         padding: 0
         width: 100%
         .um-form-row-header-title-wrapper
@@ -130,6 +319,8 @@ $actions-gap: 10px
             color: $delete-link
             &:hover
               color: $delete-link-hover
+      .um-form-row-settings
+        display: none
       .um-form-row-content
         +flex( column, flex-start, stretch, nowrap )
         margin: 0
@@ -140,6 +331,14 @@ $actions-gap: 10px
         border-radius: 4px
         -moz-border-radius: 4px
         -webkit-border-radius: 4px
+        .um-form-row-columns
+          +flex( column, flex-start, stretch, nowrap )
+          margin: 0
+          padding: 0
+          width: 100%
+          +border-box
+          border: 1px dotted $gray-300
+          row-gap: 10px
       &:hover
         & > .um-form-row-header
           & > .um-form-row-header-title-wrapper
@@ -157,7 +356,84 @@ $actions-gap: 10px
                 -webkit-mask-image: url(../../img/admin/angle-up-regular.svg)
           & > .um-form-row-header-actions
             visibility: visible
+        & > .um-form-row-settings
+          +flex( column, flex-start, stretch, nowrap )
+          margin: 0
+          padding: 10px 0 0 0
+          width: 100%
+          +border-box
+          border: 1px solid $gray-300
+          border-bottom: none
+          border-radius: 4px 4px 0 0
+          -moz-border-radius: 4px 4px 0 0
+          -webkit-border-radius: 4px 4px 0 0
+          & > .um-form-row-settings-tabs
+            +flex( row, flex-start, baseline, nowrap )
+            border-bottom: 1px solid $gray-300
+            width: 100%
+            margin: 0
+            padding: 0 0 0 10px
+            column-gap: 10px
+            +border-box
+            & > div[data-tab]
+              margin: 0
+              padding: 10px 20px
+              cursor: pointer
+              font-weight: 600
+              border: 1px solid $gray-300
+              border-bottom: none
+              border-radius: 4px 4px 0 0
+              -moz-border-radius: 4px 4px 0 0
+              -webkit-border-radius: 4px 4px 0 0
+              color: $wp-admin-text
+              &.current
+                color: $white
+                background: $wp-admin-primary
+                cursor: default
+                margin-bottom: -1px
+                border: 1px solid $wp-admin-primary
+              &:hover:not(.current)
+                background: #ebedee
+          & > .um-form-row-settings-tabs-content
+            & > div[data-tab]
+              display: none
+              padding: 0 10px 0 15px
+              +border-box
+              &.current
+                +flex( column, flex-start, stretch, nowrap )
+                border-left: 4px solid $wp-admin-primary
+              .um-forms-field.um-error
+                border-color: $error-700
+              input[type="text"].um-forms-field,
+              input[type="number"].um-forms-field,
+              input[type="url"].um-forms-field,
+              select:not([multiple]).um-forms-field
+                height: 36px
+                font-size: 13px
+              select.um-forms-field
+                font-size: 13px
+              textarea.um-forms-field
+                font-size: 13px
+              .description
+                font-size: 13px
+                font-style: normal
+              .um-forms-line
+                td > label
+                  font-size: 13px
+                  font-style: normal
+        & > .um-form-row-content
+          border-radius: 0 0 4px 4px
+          -moz-border-radius: 0 0 4px 4px
+          -webkit-border-radius: 0 0 4px 4px
   .um-fields-footer
+    +flex( row, center, center, nowrap )
+    margin: 20px 0 0 0
+    padding: 0
+    width: 100%
+    +border-box
+    .um-add-field-row
+      font-weight: $bold-weight
+  .um-builder-footer
     +flex( row, center, center, nowrap )
     margin: 20px 0 0 0
     padding: 0
