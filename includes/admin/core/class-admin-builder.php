@@ -37,77 +37,95 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		}
 
 		/**
-		 * Apply a filter to handle errors for field updating in backend
+		 * Apply a filter to handle errors for field updating in backend.
 		 *
-		 * @param $errors
-		 * @param $array
+		 * @param null|array $errors
+		 * @param array      $submission_data
 		 *
 		 * @return mixed
 		 */
-		function um_admin_field_update_error_handling( $errors, $array ) {
-			/**
-			 * @var $field_type
-			 */
-			extract( $array );
+		public function um_admin_field_update_error_handling( $errors, $submission_data ) {
+			if ( ! array_key_exists( 'field_type', $submission_data ) ) {
+				return $errors;
+			}
 
-			$field_attr = UM()->builtin()->get_core_field_attrs( $field_type );
+			$field_attr = UM()->builtin()->get_core_field_attrs( $submission_data['field_type'] );
+			if ( ! array_key_exists( 'validate', $field_attr ) ) {
+				return $errors;
+			}
 
-			if ( isset( $field_attr['validate'] ) ) {
-
-				$validate = $field_attr['validate'];
-				foreach ( $validate as $post_input => $arr ) {
-
-					$skip = apply_filters( 'um_admin_builder_skip_field_validation', false, $post_input, $array );
-					if ( $skip ) {
-						continue;
-					}
-
-					$mode = $arr['mode'];
-
-					switch ( $mode ) {
-
-						case 'numeric':
-							if ( ! empty( $array['post'][ $post_input ] ) && ! is_numeric( $array['post'][ $post_input ] ) ){
-								$errors[ $post_input ] = $validate[ $post_input ]['error'];
-							}
-							break;
-
-						case 'unique':
-							if ( ! isset( $array['post']['edit_mode'] ) ) {
-								if ( UM()->builtin()->unique_field_err( $array['post'][ $post_input ] ) ) {
-									$errors[ $post_input ] = UM()->builtin()->unique_field_err( $array['post'][ $post_input ] );
-								}
-							}
-							break;
-
-						case 'required':
-							if ( $array['post'][ $post_input ] == '' ) {
-								$errors[ $post_input ] = $validate[ $post_input ]['error'];
-							}
-							break;
-
-						case 'range-start':
-							if ( UM()->builtin()->date_range_start_err( $array['post'][ $post_input ] ) && $array['post']['_range'] == 'date_range' ) {
-								$errors[ $post_input ] = UM()->builtin()->date_range_start_err( $array['post'][ $post_input ] );
-							}
-							break;
-
-						case 'range-end':
-							if ( UM()->builtin()->date_range_end_err( $array['post'][ $post_input ], $array['post']['_range_start'] ) && $array['post']['_range'] == 'date_range' ) {
-								$errors[ $post_input ] = UM()->builtin()->date_range_end_err( $array['post'][ $post_input ], $array['post']['_range_start'] );
-							}
-							break;
-
-					}
-
+			$validate = $field_attr['validate'];
+			foreach ( $validate as $post_input => $arr ) {
+				/**
+				 * Filters the marker for skipping field validation.
+				 *
+				 * @param {bool}   $skip            Errors list. It's null by default.
+				 * @param {string} $post_input      Field key for validation.
+				 * @param {array}  $submission_data Update field handler data.
+				 *
+				 * @return {bool} True for skipping validation.
+				 *
+				 * @since 2.1.0
+				 * @hook um_admin_builder_skip_field_validation
+				 *
+				 * @example <caption>Skipping validation for the `_options` setting field for `billing_country` and `shipping_country` form fields.</caption>
+				 * function my_custom_um_admin_builder_skip_field_validation( $skip, $post_input, $submission_data ) {
+				 *     if ( $post_input === '_options' && isset( $submission_data['post']['_metakey'] ) && in_array( $submission_data['post']['_metakey'], array( 'billing_country', 'shipping_country' ), true ) ) {
+				 *         $skip = true;
+				 *     }
+				 *     return $skip;
+				 * }
+				 * add_filter( 'um_admin_builder_skip_field_validation', 'my_custom_um_admin_builder_skip_field_validation', 10, 3 );
+				 */
+				$skip = apply_filters( 'um_admin_builder_skip_field_validation', false, $post_input, $submission_data );
+				if ( $skip ) {
+					continue;
 				}
 
+				if ( ! array_key_exists( 'mode', $arr ) ) {
+					continue;
+				}
+
+				switch ( $arr['mode'] ) {
+					case 'numeric':
+						if ( ! empty( $submission_data['post'][ $post_input ] ) && ! is_numeric( $submission_data['post'][ $post_input ] ) ) {
+							$errors[ $post_input ] = $validate[ $post_input ]['error'];
+						}
+						break;
+					case 'unique':
+						if ( ! isset( $submission_data['post']['edit_mode'] ) ) {
+							$mode_error = UM()->builtin()->unique_field_err( $submission_data['post'][ $post_input ] );
+							if ( ! empty( $mode_error ) ) {
+								$errors[ $post_input ] = $mode_error;
+							}
+						}
+						break;
+					case 'required':
+						if ( '' === $submission_data['post'][ $post_input ] ) {
+							$errors[ $post_input ] = $validate[ $post_input ]['error'];
+						}
+						break;
+					case 'range-start':
+						if ( 'date_range' === $submission_data['post']['_range'] ) {
+							$mode_error = UM()->builtin()->date_range_start_err( $submission_data['post'][ $post_input ] );
+							if ( ! empty( $mode_error ) ) {
+								$errors[ $post_input ] = $mode_error;
+							}
+						}
+						break;
+					case 'range-end':
+						if ( 'date_range' === $submission_data['post']['_range'] ) {
+							$mode_error = UM()->builtin()->date_range_end_err( $submission_data['post'][ $post_input ], $submission_data['post']['_range_start'] );
+							if ( ! empty( $mode_error ) ) {
+								$errors[ $post_input ] = $mode_error;
+							}
+						}
+						break;
+				}
 			}
 
 			return $errors;
-
 		}
-
 
 		/**
 		 * Some fields may require extra fields before saving
@@ -646,25 +664,22 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			$array = apply_filters( 'um_admin_pre_save_fields_hook', $array );
 
 			/**
-			 * UM hook
+			 * Filters the validation errors on the update field in Form Builder.
 			 *
-			 * @type filter
-			 * @title um_admin_field_update_error_handling
-			 * @description Change error string on save field
-			 * @input_vars
-			 * [{"var":"$error","type":"string","desc":"Error String"},
-			 * {"var":"$array","type":"array","desc":"Save Field data"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_admin_field_update_error_handling', 'function_name', 10, 2 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_admin_field_update_error_handling', 'my_admin_field_update_error', 10, 2 );
-			 * function my_admin_field_update_error( $error, $array ) {
-			 *     // your code here
-			 *     return $error;
+			 * @param {null|array} $errors          Errors list. It's null by default.
+			 * @param {array}      $submission_data Update field handler data.
+			 *
+			 * @return {array} Errors list.
+			 *
+			 * @since 1.3.x
+			 * @hook um_admin_field_update_error_handling
+			 *
+			 * @example <caption>Added error with Error text to the field by the field key.</caption>
+			 * function my_custom_um_admin_field_update_error_handling( $errors, $submission_data ) {
+			 *     $errors['{field_key}'] = {Error text};
+			 *     return $errors;
 			 * }
-			 * ?>
+			 * add_filter( 'um_admin_field_update_error_handling', 'my_custom_um_admin_field_update_error_handling', 10, 2 );
 			 */
 			$output['error'] = apply_filters( 'um_admin_field_update_error_handling', $output['error'], $array );
 
