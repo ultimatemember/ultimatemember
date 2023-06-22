@@ -583,12 +583,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 			$output['error'] = null;
 
+			// phpcs:disable WordPress.Security.NonceVerification -- Already verified by `UM()->admin()->check_ajax_nonce()`
 			$array = array(
 				'field_type' => sanitize_key( $_POST['_type'] ),
 				'form_id'    => absint( $_POST['post_id'] ),
 				'args'       => UM()->builtin()->get_core_field_attrs( sanitize_key( $_POST['_type'] ) ),
 				'post'       => UM()->admin()->sanitize_builder_field_meta( $_POST ),
 			);
+			// phpcs:enable WordPress.Security.NonceVerification -- Already verified by `UM()->admin()->check_ajax_nonce()`
 
 			/**
 			 * Filters the field data before save in Form Builder.
@@ -628,110 +630,82 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			 * add_filter( 'um_admin_field_update_error_handling', 'my_custom_um_admin_field_update_error_handling', 10, 2 );
 			 */
 			$output['error'] = apply_filters( 'um_admin_field_update_error_handling', $output['error'], $array );
-
-			/**
-			 * @var $_metakey
-			 * @var $post_id
-			 */
-			extract( $array['post'] );
-
 			if ( empty( $output['error'] ) ) {
-
-				$save = array();
-				$save[ $_metakey ] = null;
+				$save              = array();
+				$field_id          = $array['post']['_metakey']; // Set field ID as it's metakey.
+				$save[ $field_id ] = null;
 				foreach ( $array['post'] as $key => $val ) {
+					if ( '' !== $val && '_' === substr( $key, 0, 1 ) ) { // field attribute
+						$new_key = ltrim( $key, '_' );
 
-					if ( substr( $key, 0, 1 ) === '_' && $val !== '' ) { // field attribute
-						$new_key = ltrim ( $key, '_' );
-
-						if ( $new_key == 'options' ) {
-							//$save[ $_metakey ][$new_key] = explode(PHP_EOL, $val);
-							$save[ $_metakey ][ $new_key ] = preg_split( '/[\r\n]+/', $val, -1, PREG_SPLIT_NO_EMPTY );
+						if ( 'options' === $new_key ) {
+							$save[ $field_id ][ $new_key ] = preg_split( '/[\r\n]+/', $val, -1, PREG_SPLIT_NO_EMPTY );
 						} else {
-							$save[ $_metakey ][ $new_key ] = $val;
+							$save[ $field_id ][ $new_key ] = $val;
 						}
-
-					} elseif ( strstr( $key, 'um_editor' ) ) {
-
+					} elseif ( false !== strpos( $key, 'um_editor' ) ) {
 						if ( 'block' === $array['post']['_type'] ) {
-							$save[ $_metakey ]['content'] = wp_kses_post( $val );
+							$save[ $field_id ]['content'] = wp_kses_post( $val );
 						} else {
-							$save[ $_metakey ]['content'] = sanitize_textarea_field( $val );
+							$save[ $field_id ]['content'] = sanitize_textarea_field( $val );
 						}
 					}
-
 				}
 
-				$field_ID = $_metakey;
-				$field_args = $save[ $_metakey ];
-
 				/**
-				 * UM hook
+				 * Filters the field options before save to form on the update field in Form Builder.
 				 *
-				 * @type filter
-				 * @title um_admin_pre_save_field_to_form
-				 * @description Change field options before save to form
-				 * @input_vars
-				 * [{"var":"$field_args","type":"array","desc":"Field Options"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_filter( 'um_admin_pre_save_field_to_form', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_filter( 'um_admin_pre_save_field_to_form', 'my_admin_pre_save_field_to_form', 10, 1 );
-				 * function my_admin_pre_save_field_to_form( $field_args ) {
-				 *     // your code here
+				 * @param {array} $field_args Field Options.
+				 *
+				 * @return {array} Field Options.
+				 *
+				 * @since 1.3.x
+				 * @hook um_admin_pre_save_field_to_form
+				 *
+				 * @example <caption>Force change the field's metakey when store it to DB for the form.</caption>
+				 * function my_custom_um_admin_pre_save_field_to_form( $field_args ) {
+				 *     $field_args['metakey'] = {new_metakey};
 				 *     return $field_args;
 				 * }
-				 * ?>
+				 * add_filter( 'um_admin_pre_save_field_to_form', 'my_custom_um_admin_pre_save_field_to_form' );
 				 */
-				$field_args = apply_filters( 'um_admin_pre_save_field_to_form', $field_args );
+				$field_args = apply_filters( 'um_admin_pre_save_field_to_form', $save[ $field_id ] );
 
-				UM()->fields()->update_field( $field_ID, $field_args, $post_id );
+				UM()->fields()->update_field( $field_id, $field_args, $array['post']['post_id'] );
 
 				/**
-				 * UM hook
+				 * Filters the field options before save to DB (globally) on the update field in Form Builder.
 				 *
-				 * @type filter
-				 * @title um_admin_pre_save_field_to_db
-				 * @description Change field options before save to DB
-				 * @input_vars
-				 * [{"var":"$field_args","type":"array","desc":"Field Options"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_filter( 'um_admin_pre_save_field_to_db', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_filter( 'um_admin_pre_save_field_to_db', 'my_admin_pre_save_field_to_db', 10, 1 );
-				 * function my_admin_pre_save_field_to_form( $field_args ) {
-				 *     // your code here
+				 * @param {array} $field_args Field Options.
+				 *
+				 * @return {array} Field Options.
+				 *
+				 * @since 1.3.x
+				 * @hook um_admin_pre_save_field_to_db
+				 *
+				 * @example <caption>Force change the field's metakey when store it to DB globally.</caption>
+				 * function my_custom_um_admin_pre_save_field_to_db( $field_args ) {
+				 *     $field_args['metakey'] = {new_metakey};
 				 *     return $field_args;
 				 * }
-				 * ?>
+				 * add_filter( 'um_admin_pre_save_field_to_db', 'my_custom_um_admin_pre_save_field_to_db' );
 				 */
 				$field_args = apply_filters( 'um_admin_pre_save_field_to_db', $field_args );
 
 				if ( ! isset( $array['args']['form_only'] ) ) {
-					if ( ! isset( UM()->builtin()->predefined_fields[ $field_ID ] ) ) {
-						UM()->fields()->globally_update_field( $field_ID, $field_args );
+					if ( ! isset( UM()->builtin()->predefined_fields[ $field_id ] ) ) {
+						UM()->fields()->globally_update_field( $field_id, $field_args );
 					}
 				}
 			}
 
-			$output = json_encode( $output );
-			if ( is_array( $output ) ) {
-				print_r( $output );
-			} else {
-				echo $output;
-			}
-			die;
+			wp_send_json_success( $output );
 		}
-
 
 		/**
 		 *
 		 */
-		function dynamic_modal_content() {
+		public function dynamic_modal_content() {
 			UM()->admin()->check_ajax_nonce();
 
 			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
