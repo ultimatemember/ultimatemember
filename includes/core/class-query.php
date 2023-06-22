@@ -146,51 +146,46 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		 *
 		 * @return array|bool|int|\WP_Query
 		 */
-		function make( $args ) {
+		public function make( $args ) {
 
 			$defaults = array(
-				'post_type' => 'post',
-				'post_status' => array('publish')
+				'post_type'   => 'post',
+				'post_status' => array( 'publish' ),
 			);
-			$args = wp_parse_args( $args, $defaults );
+			$args     = wp_parse_args( $args, $defaults );
 
-			if ( isset( $args['post__in'] ) && empty( $args['post__in'] ) )
+			if ( isset( $args['post__in'] ) && empty( $args['post__in'] ) ) {
 				return false;
+			}
 
-			extract( $args );
-
-			if ( $post_type == 'comment' ) { // comments
+			if ( 'comment' === $args['post_type'] ) { // comments
 
 				unset( $args['post_type'] );
 
 				/**
-				 * UM hook
+				 * Filters extend excluded comment types
 				 *
-				 * @type filter
-				 * @title um_excluded_comment_types
-				 * @description Extend excluded comment types
-				 * @input_vars
-				 * [{"var":"$types","type":"array","desc":"Comment Types"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage
-				 * <?php add_filter( 'um_excluded_comment_types', 'function_name', 10, 1 ); ?>
-				 * @example
-				 * <?php
-				 * add_filter( 'um_excluded_comment_types', 'my_excluded_comment_types', 10, 1 );
-				 * function my_profile_active_tab( $types ) {
+				 * @since 2.0
+				 * @hook  um_excluded_comment_types
+				 *
+				 * @param {array}  $types  Comment Types.
+				 *
+				 * @return {array} $types Comment Types.
+				 *
+				 * @example <caption>Extend excluded comment types.</caption>
+				 * function my_excluded_comment_types( $types ) {
 				 *     // your code here
 				 *     return $types;
 				 * }
-				 * ?>
+				 * add_filter( 'um_excluded_comment_types', 'my_excluded_comment_types', 10, 1 );
 				 */
-				$args['type__not_in'] = apply_filters( 'um_excluded_comment_types', array('') );
+				$args['type__not_in'] = apply_filters( 'um_excluded_comment_types', array( '' ) );
 
-				$comments = get_comments($args);
+				$comments = get_comments( $args );
 				return $comments;
 
 			} else {
-				$custom_posts = new \WP_Query();
+				$custom_posts        = new \WP_Query();
 				$args['post_status'] = is_array( $args['post_status'] ) ? $args['post_status'] : explode( ',', $args['post_status'] );
 
 				$custom_posts->query( $args );
