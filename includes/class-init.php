@@ -47,7 +47,7 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @var UM the single instance of the class
 		 */
-		protected static $instance = null;
+		protected static $instance;
 
 
 		/**
