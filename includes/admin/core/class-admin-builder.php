@@ -42,7 +42,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 * @param null|array $errors
 		 * @param array      $submission_data
 		 *
-		 * @return mixed
+		 * @return array
 		 */
 		public function um_admin_field_update_error_handling( $errors, $submission_data ) {
 			if ( ! array_key_exists( 'field_type', $submission_data ) ) {
@@ -89,7 +89,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 				switch ( $arr['mode'] ) {
 					case 'numeric':
 						if ( ! empty( $submission_data['post'][ $post_input ] ) && ! is_numeric( $submission_data['post'][ $post_input ] ) ) {
-							$errors[ $post_input ] = $validate[ $post_input ]['error'];
+							$errors[ $post_input ] = $arr['error'];
 						}
 						break;
 					case 'unique':
@@ -102,7 +102,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 						break;
 					case 'required':
 						if ( '' === $submission_data['post'][ $post_input ] ) {
-							$errors[ $post_input ] = $validate[ $post_input ]['error'];
+							$errors[ $post_input ] = $arr['error'];
 						}
 						break;
 					case 'range-start':
