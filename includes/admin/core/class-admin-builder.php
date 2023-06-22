@@ -128,40 +128,39 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		}
 
 		/**
-		 * Some fields may require extra fields before saving
+		 * Some fields may require extra fields before saving.
 		 *
-		 * @param $array
+		 * @param array $submission_data
 		 *
-		 * @return mixed
+		 * @return array
 		 */
-		function um_admin_pre_save_fields_hook( $array ) {
-			/**
-			 * @var $form_id
-			 * @var $field_type
-			 */
-			extract( $array );
+		public function um_admin_pre_save_fields_hook( $submission_data ) {
+			if ( ! array_key_exists( 'form_id', $submission_data ) || ! array_key_exists( 'field_type', $submission_data ) || ! array_key_exists( 'post', $submission_data ) ) {
+				return $submission_data;
+			}
 
-			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
+			$form_id    = $submission_data['form_id'];
+			$field_type = $submission_data['field_type'];
 
 			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
-			$count = 1;
+			$count  = 1;
 			if ( ! empty( $fields ) ) {
 				$count = count( $fields ) + 1;
 			}
 
-			// set unique meta key
-			if ( in_array( $field_type, $fields_without_metakey ) && ! isset( $array['post']['_metakey'] ) ) {
-				$array['post']['_metakey'] = "um_{$field_type}_{$form_id}_{$count}";
+			// Set unique meta key.
+			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
+			if ( ! array_key_exists( '_metakey', $submission_data['post'] ) && in_array( $field_type, $fields_without_metakey, true ) ) {
+				$submission_data['post']['_metakey'] = "um_{$field_type}_{$form_id}_{$count}";
 			}
 
-			// set position
-			if ( ! isset( $array['post']['_position'] ) ) {
-				$array['post']['_position'] = $count;
+			// Set position.
+			if ( ! array_key_exists( '_position', $submission_data['post'] ) ) {
+				$submission_data['post']['_position'] = $count;
 			}
 
-			return $array;
+			return $submission_data;
 		}
-
 
 		/**
 		 * Modify field args just before it is saved into form
@@ -621,11 +620,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 		}
 
-
 		/**
-		 *
+		 * AJAX handler for save the custom field in Form Builder.
 		 */
-		function update_field() {
+		public function update_field() {
 			UM()->admin()->check_ajax_nonce();
 
 			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
@@ -642,24 +640,21 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			);
 
 			/**
-			 * UM hook
+			 * Filters the field data before save in Form Builder.
 			 *
-			 * @type filter
-			 * @title um_admin_pre_save_fields_hook
-			 * @description Filter field data before save
-			 * @input_vars
-			 * [{"var":"$array","type":"array","desc":"Save Field data"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_admin_pre_save_fields_hook', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_admin_pre_save_fields_hook', 'my_admin_pre_save_fields', 10, 1 );
-			 * function my_admin_pre_save_fields( $array ) {
-			 *     // your code here
-			 *     return $array;
+			 * @param {array} $submission_data Update field handler data. Already sanitized here.
+			 *
+			 * @return {array} Update field handler data.
+			 *
+			 * @since 1.3.x
+			 * @hook um_admin_pre_save_fields_hook
+			 *
+			 * @example <caption>Change submitted value to new one by the field key.</caption>
+			 * function my_custom_um_admin_pre_save_fields_hook( $submission_data ) {
+			 *     $submission_data['post']['{field_key}'] = {new value};
+			 *     return $submission_data;
 			 * }
-			 * ?>
+			 * add_filter( 'um_admin_pre_save_fields_hook', 'my_custom_um_admin_pre_save_fields_hook' );
 			 */
 			$array = apply_filters( 'um_admin_pre_save_fields_hook', $array );
 
@@ -770,7 +765,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 						UM()->fields()->globally_update_field( $field_ID, $field_args );
 					}
 				}
-
 			}
 
 			$output = json_encode( $output );
