@@ -41,32 +41,32 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		public function ajax_paginate() {
 			UM()->check_ajax_nonce();
 
-			/**
-			 * @var $hook
-			 * @var $args
-			 */
-			extract( $_REQUEST );
+			// phpcs:disable WordPress.Security.NonceVerification
+			if ( isset( $_REQUEST['hook'] ) ) {
+				$hook = $_REQUEST['hook'];
+			}
+			if ( ! empty( $_REQUEST['args'] ) ) {
+				$args = $_REQUEST['args'];
+			} else {
+				$args = array();
+			}
+			// phpcs:enable WordPress.Security.NonceVerification
 
 			ob_start();
 
 			/**
-			 * UM hook
+			 * Fires on posts loading by AJAX.
 			 *
-			 * @type action
-			 * @title um_ajax_load_posts__{$hook}
-			 * @description Action on posts loading by AJAX
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Query arguments"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_ajax_load_posts__{$hook}', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_ajax_load_posts__{$hook}', 'my_ajax_load_posts', 10, 1 );
+			 * @since 2.0
+			 * @hook  um_ajax_load_posts__{$hook}
+			 *
+			 * @param {array} $args Request.
+			 *
+			 * @example <caption>Make any custom action on posts loading by AJAX.</caption>
 			 * function my_ajax_load_posts( $args ) {
 			 *     // your code here
 			 * }
-			 * ?>
+			 * add_action( 'um_ajax_load_posts__{$hook}', 'my_ajax_load_posts', 10, 1 );
 			 */
 			do_action( "um_ajax_load_posts__{$hook}", $args );
 
@@ -95,9 +95,9 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 			}
 
 			$pages = $wpdb->get_results(
-				"SELECT * 
-				FROM {$wpdb->posts} 
-				WHERE post_type = 'page' AND 
+				"SELECT *
+				FROM {$wpdb->posts}
+				WHERE post_type = 'page' AND
 				      post_status = 'publish'",
 				OBJECT
 			);
