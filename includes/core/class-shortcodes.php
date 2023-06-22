@@ -853,44 +853,37 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 *
 		 * @return string
 		 */
-		function dynamic_css( $args = array() ) {
+		public function dynamic_css( $args = array() ) {
 			/**
-			 * UM hook
+			 * Filters turn on for disable global dynamic CSS for fix the issue #306
 			 *
-			 * @type filter
-			 * @title um_disable_dynamic_global_css
-			 * @description Turn on for disable global dynamic CSS for fix the issue #306
-			 * @input_vars
-			 * [{"var":"$disable","type":"bool","desc":"Disable global CSS"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_disable_dynamic_global_css', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_disable_dynamic_global_css', 'my_disable_dynamic_global_css', 10, 1 );
+			 * @since 2.0
+			 * @hook  um_disable_dynamic_global_css
+			 *
+			 * @param {bool}  $disable  Disable global CSS.
+			 *
+			 * @return {bool} $disable Disable global CSS.
+			 *
+			 * @example <caption>Turn on for disable global dynamic CSS.</caption>
 			 * function my_disable_dynamic_global_css( $disable ) {
 			 *     // your code here
 			 *     return $disable;
 			 * }
-			 * ?>
+			 * add_filter( 'um_disable_dynamic_global_css', 'my_disable_dynamic_global_css', 10, 1 );
 			 */
 			$disable_css = apply_filters( 'um_disable_dynamic_global_css', false );
-			if ( $disable_css )
+			if ( $disable_css ) {
 				return '';
-
-			/**
-			 * @var $mode
-			 */
-			extract( $args );
+			}
 
 			include_once um_path . 'assets/dynamic_css/dynamic_global.php';
 
-			if ( isset( $mode ) && in_array( $mode, array( 'profile', 'directory' ) ) ) {
-				$file = um_path . 'assets/dynamic_css/dynamic_' . $mode . '.php';
+			if ( isset( $args['mode'] ) && in_array( $args['mode'], array( 'profile', 'directory' ), true ) ) {
+				$file = um_path . 'assets/dynamic_css/dynamic_' . $args['mode'] . '.php';
 
-				if ( file_exists( $file ) )
+				if ( file_exists( $file ) ) {
 					include_once $file;
+				}
 			}
 
 			return '';
