@@ -70,18 +70,13 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		public function ajax_muted_action() {
 			UM()->check_ajax_nonce();
 
-			/**
-			 * @var $user_id
-			 * @var $hook
-			 */
-			extract( $_REQUEST );
-
-			if ( isset( $user_id ) ) {
-				$user_id = absint( $user_id );
+			// phpcs:disable WordPress.Security.NonceVerification
+			if ( isset( $_REQUEST['user_id'] ) ) {
+				$user_id = absint( $_REQUEST['user_id'] );
 			}
 
-			if ( isset( $hook ) ) {
-				$hook = sanitize_key( $hook );
+			if ( isset( $_REQUEST['hook'] ) ) {
+				$hook = sanitize_key( $_REQUEST['hook'] );
 			}
 
 			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
@@ -91,27 +86,23 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			switch ( $hook ) {
 				default:
 					/**
-					 * UM hook
+					 * Fires on AJAX muted action.
 					 *
-					 * @type action
-					 * @title um_run_ajax_function__{$hook}
-					 * @description Action on AJAX muted action
-					 * @input_vars
-					 * [{"var":"$request","type":"int","desc":"Request"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_action( 'um_run_ajax_function__{$hook}', 'function_name', 10, 1 );
-					 * @example
-					 * <?php
-					 * add_action( 'um_run_ajax_function__{$hook}', 'my_run_ajax_function', 10, 1 );
+					 * @since 2.0
+					 * @hook  um_run_ajax_function__{$hook}
+					 *
+					 * @param {array} $request Request.
+					 *
+					 * @example <caption>Make any custom action on AJAX muted action.</caption>
 					 * function my_run_ajax_function( $request ) {
 					 *     // your code here
 					 * }
-					 * ?>
+					 * add_action( 'um_run_ajax_function__{$hook}', 'my_run_ajax_function', 10, 1 );
 					 */
 					do_action( "um_run_ajax_function__{$hook}", $_REQUEST );
 					break;
 			}
+			// phpcs:enable WordPress.Security.NonceVerification
 		}
 
 
