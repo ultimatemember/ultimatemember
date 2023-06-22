@@ -4355,52 +4355,35 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return string|null
 		 * @throws \Exception
 		 */
-		function view_field( $key, $data, $rule = false ) {
+		public function view_field( $key, $data, $rule = false ) {
 			$output = '';
 
 			// get whole field data
 			if ( is_array( $data ) ) {
 				$data = $this->get_field( $key );
-
-				if ( is_array( $data ) ) {
-					/**
-					 * @var $visibility
-					 * @var $type
-					 * @var $default
-					 * @var $classes
-					 * @var $conditional
-					 * @var $content
-					 * @var $divider_text
-					 * @var $spacing
-					 * @var $borderwidth
-					 * @var $borderstyle
-					 * @var $bordercolor
-					 * @var $label
-					 */
-					extract( $data );
-				}
 			}
 
 			//hide if empty type
 			if ( ! isset( $data['type'] ) ) {
 				return '';
 			}
+			$type = $data['type'];
 
-			if ( isset( $data['in_group'] ) && $data['in_group'] != '' && $rule != 'group' ) {
+			if ( isset( $data['in_group'] ) && '' !== $data['in_group'] && 'group' !== $rule ) {
 				return '';
 			}
 
 			//invisible on profile page
-			if ( $visibility == 'edit' || $type == 'password' ) {
+			if ( 'edit' === $data['visibility'] || 'password' === $type ) {
 				return '';
 			}
 
 			//hide if empty
 			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
-			if ( ! in_array( $type, $fields_without_metakey ) ) {
-				$_field_value = $this->field_value( $key, $default, $data );
+			if ( ! in_array( $type, $fields_without_metakey, true ) ) {
+				$_field_value = $this->field_value( $key, $data['classes'], $data );
 
-				if ( ! isset( $_field_value ) || $_field_value == '' ) {
+				if ( ! isset( $_field_value ) || '' === $_field_value ) {
 					return '';
 				}
 			}
@@ -4410,7 +4393,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 
 			// disable these fields in profile view only
-			if ( in_array( $key, array( 'user_password' ) ) && $this->set_mode == 'profile' ) {
+			if ( in_array( $key, array( 'user_password' ), true ) && 'profile' === $this->set_mode ) {
 				return '';
 			}
 
@@ -4418,23 +4401,21 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				return '';
 			}
 
-
 			if ( isset( $data['classes'] ) ) {
-				$classes = explode( " ", $data['classes'] );
+				$classes = explode( ' ', $data['classes'] );
 			}
 
 			switch ( $type ) {
 
 				/* Default */
 				default:
+					$_field_value = $this->field_value( $key, $data['default'], $data );
 
-					$_field_value = $this->field_value( $key, $default, $data );
-
-					if ( ! in_array( $type, $fields_without_metakey ) && ( ! isset( $_field_value ) || $_field_value == '' ) ) {
+					if ( ! in_array( $type, $fields_without_metakey, true ) && ( ! isset( $_field_value ) || '' === $_field_value ) ) {
 						$output = '';
 					} else {
 
-						$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
+						$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data ) . '>';
 
 						if ( isset( $data['label'] ) || ! empty( $data['icon'] ) ) {
 
@@ -4445,7 +4426,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$output .= $this->field_label( $data['label'], $key, $data );
 						}
 
-						$res = $this->field_value( $key, $default, $data );
+						$res = $this->field_value( $key, $data['default'], $data );
 
 						if ( ! empty( $res ) ) {
 							$res = stripslashes( $res );
@@ -4462,53 +4443,48 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						$data['is_view_field'] = true;
 						/**
-						 * UM hook
+						 * Filters change field HTML on view mode
 						 *
-						 * @type filter
-						 * @title um_view_field
-						 * @description Change field HTML on view mode
-						 * @input_vars
-						 * [{"var":"$output","type":"string","desc":"Field HTML"},
-						 * {"var":"$data","type":"string","desc":"Field Data"},
-						 * {"var":"$type","type":"string","desc":"Field Type"}]
-						 * @change_log
-						 * ["Since: 2.0"]
-						 * @usage add_filter( 'um_view_field', 'function_name', 10, 3 );
-						 * @example
-						 * <?php
-						 * add_filter( 'um_view_field', 'my_view_field', 10, 3 );
-						 * function my_form_edit_field( $output, $data, $type ) {
+						 * @since 2.0
+						 * @hook  um_view_field
+						 *
+						 * @param {string}  $output  Field HTML.
+						 * @param {string}  $data    Field Data.
+						 * @param {string}  $type    Field Type.
+						 *
+						 * @return {array} $output Field HTML.
+						 *
+						 * @example <caption>Change field HTML on view mode.</caption>
+						 * function my_view_field( $output, $data, $type ) {
 						 *     // your code here
 						 *     return $output;
 						 * }
-						 * ?>
+						 * add_filter( 'um_view_field', 'my_view_field', 10, 3 );
 						 */
 						$res = apply_filters( 'um_view_field', $res, $data, $type );
+
 						/**
-						 * UM hook
+						 * Filters field HTML on view mode by field type
 						 *
-						 * @type filter
-						 * @title um_view_field_value_{$type}
-						 * @description Change field HTML on view mode by field type
-						 * @input_vars
-						 * [{"var":"$output","type":"string","desc":"Field HTML"},
-						 * {"var":"$data","type":"string","desc":"Field Data"}]
-						 * @change_log
-						 * ["Since: 2.0"]
-						 * @usage add_filter( 'um_view_field_value_{$type}', 'function_name', 10, 2 );
-						 * @example
-						 * <?php
-						 * add_filter( 'um_view_field_value_{$type}', 'my_view_field', 10, 2 );
-						 * function my_form_edit_field( $output, $data ) {
+						 * @since 2.0
+						 * @hook  um_view_field_value_{$type}
+						 *
+						 * @param {string}  $output  Field HTML.
+						 * @param {string}  $data    Field Data.
+						 *
+						 * @return {array} $output Field HTML.
+						 *
+						 * @example <caption>Change field HTML on view mode by field type.</caption>
+						 * function my_view_field( $output, $data ) {
 						 *     // your code here
 						 *     return $output;
 						 * }
-						 * ?>
+						 * add_filter( 'um_view_field_value_{$type}', 'my_view_field', 10, 2 );
 						 */
 						$res = apply_filters( "um_view_field_value_{$type}", $res, $data );
 
 						$id_attr = '';
-						if ( ! in_array( $type, $fields_without_metakey ) ) {
+						if ( ! in_array( $type, $fields_without_metakey, true ) ) {
 							$id_attr = ' id="' . esc_attr( $key . UM()->form()->form_suffix ) . '"';
 						}
 
@@ -4525,58 +4501,58 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					break;
 
-				/* HTML */
+					/* HTML */
 				case 'block':
-					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>' . $content . '</div>';
+					$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data ) . '>' . $data['content'] . '</div>';
 					break;
 
-				/* Shortcode */
+					/* Shortcode */
 				case 'shortcode':
-
-					$content = str_replace( '{profile_id}', um_profile_id(), $content );
-					if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
+					$content = str_replace( '{profile_id}', um_profile_id(), $data['content'] );
+					if ( version_compare( get_bloginfo( 'version' ), '5.4', '<' ) ) {
 						$content = do_shortcode( $content );
 					} else {
 						$content = apply_shortcodes( $content );
 					}
 
-					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>' . $content . '</div>';
+					$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data ) . '>' . $content . '</div>';
 					break;
 
-				/* Gap/Space */
+					/* Gap/Space */
 				case 'spacing':
-					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data, array( 'height' => $spacing ) ) . '></div>';
+					$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data, array( 'height' => $data['spacing'] ) ) . '></div>';
 					break;
 
-				/* A line divider */
+					/* A line divider */
 				case 'divider':
-					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data, array( 'border-bottom' => $borderwidth . 'px ' . $borderstyle . ' ' . $bordercolor ) ) . '>';
-					if ( $divider_text ) {
-						$output .= '<div class="um-field-divider-text"><span>' . $divider_text . '</span></div>';
+					$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data, array( 'border-bottom' => $data['borderwidth'] . 'px ' . $data['borderstyle'] . ' ' . $data['bordercolor'] ) ) . '>';
+					if ( $data['divider_text'] ) {
+						$output .= '<div class="um-field-divider-text"><span>' . $data['divider_text'] . '</span></div>';
 					}
 					$output .= '</div>';
 					break;
 
-				/* Rating */
+					/* Rating */
 				case 'rating':
-
-					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
+					$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data ) . '>';
 
 					if ( isset( $data['label'] ) || ! empty( $data['icon'] ) ) {
-						$output .= $this->field_label( $label, $key, $data );
+						$output .= $this->field_label( $data['label'], $key, $data );
 					}
 
-					ob_start(); ?>
+					ob_start();
+					?>
 
 					<div class="um-field-area">
 						<div class="um-field-value">
-							<div class="um-rating-readonly um-raty" id="<?php echo esc_attr( $key ) ?>"
-							     data-key="<?php echo esc_attr( $key ) ?>" data-number="<?php echo esc_attr( $data['number'] ) ?>"
-							     data-score="<?php echo $this->field_value( $key, $default, $data ) ?>"></div>
+							<div class="um-rating-readonly um-raty" id="<?php echo esc_attr( $key ); ?>"
+								data-key="<?php echo esc_attr( $key ); ?>" data-number="<?php echo esc_attr( $data['number'] ); ?>"
+								data-score="<?php echo $this->field_value( $key, $data['default'], $data ); ?>"></div>
 						</div>
 					</div>
 
-					<?php $output .= ob_get_clean();
+					<?php
+					$output .= ob_get_clean();
 					$output .= '</div>';
 
 					break;
@@ -4586,47 +4562,42 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			// Custom filter for field output
 			if ( isset( $this->set_mode ) ) {
 				/**
-				 * UM hook
+				 * Filters field HTML by field $key
 				 *
-				 * @type filter
-				 * @title um_{$key}_form_show_field
-				 * @description Change field HTML by field $key
-				 * @input_vars
-				 * [{"var":"$output","type":"string","desc":"Field HTML"},
-				 * {"var":"$mode","type":"string","desc":"Form Mode"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_filter( 'um_{$key}_form_show_field', 'function_name', 10, 2 );
-				 * @example
-				 * <?php
-				 * add_filter( 'um_{$key}_form_show_field', 'my_form_show_field', 10, 2 );
+				 * @since 2.0
+				 * @hook  um_{$key}_form_show_field
+				 *
+				 * @param {string}  $output  Field HTML.
+				 * @param {string}  $mode    Field Mode.
+				 *
+				 * @return {array} $output Field HTML.
+				 *
+				 * @example <caption>Change field HTML by field $key.</caption>
 				 * function my_form_show_field( $output, $mode ) {
 				 *     // your code here
 				 *     return $output;
 				 * }
-				 * ?>
+				 * add_filter( 'um_{$key}_form_show_field', 'my_form_show_field', 10, 2 );
 				 */
 				$output = apply_filters( "um_{$key}_form_show_field", $output, $this->set_mode );
+
 				/**
-				 * UM hook
+				 * Filters field HTML by field $type
 				 *
-				 * @type filter
-				 * @title um_{$type}_form_show_field
-				 * @description Change field HTML by field $type
-				 * @input_vars
-				 * [{"var":"$output","type":"string","desc":"Field HTML"},
-				 * {"var":"$mode","type":"string","desc":"Form Mode"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_filter( 'um_{$type}_form_show_field', 'function_name', 10, 2 );
-				 * @example
-				 * <?php
-				 * add_filter( 'um_{$type}_form_show_field', 'my_form_show_field', 10, 2 );
+				 * @since 2.0
+				 * @hook  um_{$type}_form_show_field
+				 *
+				 * @param {string}  $output  Field HTML.
+				 * @param {string}  $mode    Field Mode.
+				 *
+				 * @return {array} $output Field HTML.
+				 *
+				 * @example <caption>Change field HTML by field $type.</caption>
 				 * function my_form_show_field( $output, $mode ) {
 				 *     // your code here
 				 *     return $output;
 				 * }
-				 * ?>
+				 * add_filter( 'um_{$type}_form_show_field', 'my_form_show_field', 10, 2 );
 				 */
 				$output = apply_filters( "um_{$type}_form_show_field", $output, $this->set_mode );
 			}
