@@ -602,9 +602,9 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 *
 		 * @return string
 		 */
-		function load( $args ) {
+		public function load( $args ) {
 			$defaults = array();
-			$args = wp_parse_args( $args, $defaults );
+			$args     = wp_parse_args( $args, $defaults );
 
 			// when to not continue
 			$this->form_id = isset( $args['form_id'] ) ? $args['form_id'] : null;
@@ -613,36 +613,32 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			}
 
 			$this->form_status = get_post_status( $this->form_id );
-			if ( $this->form_status != 'publish' ) {
+			if ( 'publish' !== $this->form_status ) {
 				return;
 			}
 
 			// get data into one global array
 			$post_data = UM()->query()->post_data( $this->form_id );
-			$args = array_merge( $args, $post_data );
+			$args      = array_merge( $args, $post_data );
 
 			ob_start();
 
 			/**
-			 * UM hook
+			 * Filters change arguments on load shortcode
 			 *
-			 * @type filter
-			 * @title um_pre_args_setup
-			 * @description Change arguments on load shortcode
-			 * @input_vars
-			 * [{"var":"$post_data","type":"string","desc":"$_POST data"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_pre_args_setup', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_pre_args_setup', 'my_pre_args_setup', 10, 1 );
+			 * @since 2.0
+			 * @hook  um_pre_args_setup
+			 *
+			 * @param {array}  $post_data  $_POST data.
+			 *
+			 * @return {array} $post_data data.
+			 *
+			 * @example <caption>Change arguments on load shortcode.</caption>
 			 * function my_pre_args_setup( $post_data ) {
 			 *     // your code here
 			 *     return $post_data;
 			 * }
-			 * ?>
+			 * add_filter( 'um_pre_args_setup', 'my_pre_args_setup', 10, 1 );
 			 */
 			$args = apply_filters( 'um_pre_args_setup', $args );
 
@@ -650,7 +646,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				$args['template'] = '';
 			}
 
-			if ( isset( $post_data['template'] ) && $post_data['template'] != $args['template'] ) {
+			if ( isset( $post_data['template'] ) && $post_data['template'] !== $args['template'] ) {
 				$args['template'] = $post_data['template'];
 			}
 
@@ -662,7 +658,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				$post_data['template'] = $post_data['mode'];
 			}
 
-			if ( 'directory' == $args['mode'] ) {
+			if ( 'directory' === $args['mode'] ) {
 				wp_enqueue_script( 'um_members' );
 				if ( is_rtl() ) {
 					wp_enqueue_style( 'um_members_rtl' );
@@ -671,7 +667,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				}
 			}
 
-			if ( 'directory' != $args['mode'] ) {
+			if ( 'directory' !== $args['mode'] ) {
 				$args = array_merge( $post_data, $args );
 
 				if ( empty( $args['use_custom_settings'] ) ) {
@@ -683,39 +679,35 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			// filter for arguments
 
 			/**
-			 * UM hook
+			 * Filters change arguments on load shortcode
 			 *
-			 * @type filter
-			 * @title um_shortcode_args_filter
-			 * @description Change arguments on load shortcode
-			 * @input_vars
-			 * [{"var":"$args","type":"string","desc":"Shortcode arguments"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_shortcode_args_filter', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_shortcode_args_filter', 'my_shortcode_args', 10, 1 );
+			 * @since 2.0
+			 * @hook  um_shortcode_args_filter
+			 *
+			 * @param {array}  $post_data  Shortcode arguments.
+			 *
+			 * @return {array} $post_data Shortcode arguments.
+			 *
+			 * @example <caption>Change arguments on load shortcode.</caption>
 			 * function my_shortcode_args( $args ) {
 			 *     // your code here
 			 *     return $args;
 			 * }
-			 * ?>
+			 * add_filter( 'um_shortcode_args_filter', 'my_shortcode_args', 10, 1 );
 			 */
 			$args = apply_filters( 'um_shortcode_args_filter', $args );
 
-			/**
-			 * @var string $mode
-			 */
-			extract( $args, EXTR_SKIP );
+			if ( ! array_key_exists( 'mode', $args ) || ! array_key_exists( 'template', $args ) ) {
+				return;
+			}
+			$mode = $args['mode'];
 
 			//not display on admin preview
-			if ( empty( $_POST['act_id'] ) || sanitize_key( $_POST['act_id'] ) !== 'um_admin_preview_form' ) {
+			if ( empty( $_POST['act_id'] ) || 'um_admin_preview_form' !== sanitize_key( $_POST['act_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 
 				$enable_loggedin_registration = apply_filters( 'um_registration_for_loggedin_users', false, $args );
 
-				if ( 'register' == $mode && is_user_logged_in() && ! $enable_loggedin_registration ) {
+				if ( 'register' === $mode && is_user_logged_in() && ! $enable_loggedin_registration ) {
 					ob_get_clean();
 					return __( 'You are already registered', 'ultimate-member' );
 				}
@@ -726,7 +718,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			}
 
 			// for profiles only
-			if ( $mode == 'profile' && um_profile_id() ) {
+			if ( 'profile' === $mode && um_profile_id() ) {
 
 				//set requested user if it's not setup from permalinks (for not profile page in edit mode)
 				if ( ! um_get_requested_user() ) {
@@ -756,7 +748,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 							}
 
 							$this->profile_role = $args['role'];
-						} elseif ( $this->profile_role != $args['role'] ) {
+						} elseif ( $this->profile_role !== $args['role'] ) {
 							ob_get_clean();
 							return '';
 						}
@@ -765,90 +757,74 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			}
 
 			/**
-			 * UM hook
+			 * Fires pre-load form shortcode.
 			 *
-			 * @type action
-			 * @title um_pre_{$mode}_shortcode
-			 * @description Action pre-load form shortcode
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Form shortcode pre-loading"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_pre_{$mode}_shortcode', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_pre_{$mode}_shortcode', 'my_pre_shortcode', 10, 1 );
+			 * @since 2.0
+			 * @hook  um_pre_{$mode}_shortcode
+			 *
+			 * @param {array} $args Form shortcode pre-loading.
+			 *
+			 * @example <caption>Make any custom action on pre-load form shortcode.</caption>
 			 * function my_pre_shortcode( $args ) {
 			 *     // your code here
 			 * }
-			 * ?>
+			 * add_action( 'um_pre_{$mode}_shortcode', 'my_pre_shortcode', 10, 1 );
 			 */
 			do_action( "um_pre_{$mode}_shortcode", $args );
+
 			/**
-			 * UM hook
+			 * Fires pre-load form shortcode.
 			 *
-			 * @type action
-			 * @title um_before_form_is_loaded
-			 * @description Action pre-load form shortcode
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Form shortcode pre-loading"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_before_form_is_loaded', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
+			 * @since 2.0
+			 * @hook  um_before_form_is_loaded
+			 *
+			 * @param {array} $args Form shortcode pre-loading.
+			 *
+			 * @example <caption>Make any custom action on pre-load form shortcode.</caption>
+			 * function my_pre_shortcode( $args ) {
+			 *     // your code here
+			 * }
 			 * add_action( 'um_before_form_is_loaded', 'my_pre_shortcode', 10, 1 );
-			 * function my_pre_shortcode( $args ) {
-			 *     // your code here
-			 * }
-			 * ?>
 			 */
-			do_action( "um_before_form_is_loaded", $args );
+			do_action( 'um_before_form_is_loaded', $args );
+
 			/**
-			 * UM hook
+			 * Fires pre-load form shortcode.
 			 *
-			 * @type action
-			 * @title um_before_{$mode}_form_is_loaded
-			 * @description Action pre-load form shortcode
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Form shortcode pre-loading"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_before_{$mode}_form_is_loaded', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_before_{$mode}_form_is_loaded', 'my_pre_shortcode', 10, 1 );
+			 * @since 2.0
+			 * @hook  um_before_{$mode}_form_is_loaded
+			 *
+			 * @param {array} $args Form shortcode pre-loading.
+			 *
+			 * @example <caption>Make any custom action on pre-load form shortcode.</caption>
 			 * function my_pre_shortcode( $args ) {
 			 *     // your code here
 			 * }
-			 * ?>
+			 * add_action( 'um_before_{$mode}_form_is_loaded', 'my_pre_shortcode', 10, 1 );
 			 */
 			do_action( "um_before_{$mode}_form_is_loaded", $args );
 
-			$this->template_load( $template, $args );
+			$this->template_load( $args['template'], $args );
 
 			$this->dynamic_css( $args );
 
-			if ( um_get_requested_user() || $mode == 'logout' ) {
+			if ( um_get_requested_user() || 'logout' === $mode ) {
 				um_reset_user();
 			}
 
 			/**
-			 * UM hook
+			 * Fires after load shortcode content.
 			 *
-			 * @type action
-			 * @title um_after_everything_output
-			 * @description Action after load shortcode content
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_after_everything_output', 'function_name', 10 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_after_everything_output', 'my_after_everything_output', 10 );
-			 * function my_after_everything_output() {
+			 * @since 2.0
+			 * @hook  um_after_everything_output
+			 *
+			 * @param {array} $args Form shortcode pre-loading.
+			 *
+			 * @example <caption>Make any custom action after load shortcode content.</caption>
+			 * function my_pre_shortcode() {
 			 *     // your code here
 			 * }
-			 * ?>
+			 * add_action( 'um_after_everything_output', 'my_pre_shortcode', 10 );
 			 */
 			do_action( 'um_after_everything_output' );
 

@@ -42,6 +42,7 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 			UM()->check_ajax_nonce();
 
 			// phpcs:disable WordPress.Security.NonceVerification
+			$hook = '';
 			if ( isset( $_REQUEST['hook'] ) ) {
 				$hook = $_REQUEST['hook'];
 			}
