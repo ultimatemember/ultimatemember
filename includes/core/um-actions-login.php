@@ -1,5 +1,7 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
-
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Error procesing hook for login
@@ -12,7 +14,6 @@ function um_submit_form_errors_hook_login( $args ) {
 	$form_id = $args['form_id'];
 	$mode = $args['mode'];
 	$user_password = $args['user_password'];
-
 
 	if ( isset( $args['username'] ) && $args['username'] == '' ) {
 		UM()->form()->add_error( 'username', __( 'Please enter your username or email', 'ultimate-member' ) );
@@ -190,16 +191,17 @@ function um_store_lastlogin_timestamp_( $login ) {
 }
 add_action( 'wp_login', 'um_store_lastlogin_timestamp_' );
 
-
 /**
  * Login user process
  *
  * @param array $args
  */
 function um_user_login( $args ) {
-	$rememberme = ( isset( $args['rememberme'] ) && 1 === (int) $args['rememberme'] && isset( $_REQUEST['rememberme'] ) ) ? 1 : 0; // phpcs:ignore WordPress.Security.NonceVerification
+	// phpcs:disable WordPress.Security.NonceVerification -- already verified here
+	$rememberme = ( isset( $_REQUEST['rememberme'], $args['rememberme'] ) && 1 === (int) $args['rememberme'] ) ? 1 : 0;
 
-	if ( ( UM()->options()->get( 'deny_admin_frontend_login' ) && ! isset( $_GET['provider'] ) ) && strrpos( um_user( 'wp_roles' ), 'administrator' ) !== false ) { // phpcs:ignore WordPress.Security.NonceVerification
+	// @todo check using the 'deny_admin_frontend_login' option
+	if ( false !== strrpos( um_user( 'wp_roles' ), 'administrator' ) && ( ! isset( $_GET['provider'] ) && UM()->options()->get( 'deny_admin_frontend_login' ) ) ) {
 		wp_die( esc_html__( 'This action has been prevented for security measures.', 'ultimate-member' ) );
 	}
 
@@ -208,7 +210,7 @@ function um_user_login( $args ) {
 	/**
 	 * Fires after successful login and before user is redirected.
 	 *
-	 * @since 2.0
+	 * @since 1.3.x
 	 * @hook  um_on_login_before_redirect
 	 *
 	 * @param {int} $user_id User ID.
@@ -221,29 +223,29 @@ function um_user_login( $args ) {
 	 */
 	do_action( 'um_on_login_before_redirect', um_user( 'ID' ) );
 
-	// Priority redirect
+	// Priority redirect from $_GET attribute.
 	if ( ! empty( $args['redirect_to'] ) ) {
-		exit( wp_safe_redirect( $args['redirect_to'] ) );
+		wp_safe_redirect( $args['redirect_to'] );
+		exit;
 	}
 
 	// Role redirect
 	$after_login = um_user( 'after_login' );
 	if ( empty( $after_login ) ) {
-		exit( wp_redirect( um_user_profile_url() ) );
+		wp_safe_redirect( um_user_profile_url() );
+		exit;
 	}
 
 	switch ( $after_login ) {
-
 		case 'redirect_admin':
-			exit( wp_redirect( admin_url() ) );
-			break;
-
+			wp_safe_redirect( admin_url() );
+			exit;
 		case 'redirect_url':
 			/**
-			 * Filters change redirect URL after successful login
+			 * Filters change redirect URL after successful login.
 			 *
 			 * @since 2.0
-			 * @hook  um_profile_can_view_main
+			 * @hook  um_login_redirect_url
 			 *
 			 * @param {string} $can_view Redirect URL.
 			 * @param {int}    $user_id  User ID.
@@ -258,22 +260,19 @@ function um_user_login( $args ) {
 			 * add_filter( 'um_login_redirect_url', 'my_login_redirect_url', 10, 2 );
 			 */
 			$redirect_url = apply_filters( 'um_login_redirect_url', um_user( 'login_redirect_url' ), um_user( 'ID' ) );
-			exit( wp_redirect( $redirect_url ) );
-			break;
-
+			wp_safe_redirect( $redirect_url );
+			exit;
 		case 'refresh':
-			exit( wp_redirect( UM()->permalinks()->get_current_url() ) );
-			break;
-
+			wp_safe_redirect( UM()->permalinks()->get_current_url() );
+			exit;
 		case 'redirect_profile':
 		default:
-			exit( wp_redirect( um_user_profile_url() ) );
-			break;
-
+			wp_safe_redirect( um_user_profile_url() );
+			exit;
 	}
+	// phpcs:enable WordPress.Security.NonceVerification -- already verified here
 }
-add_action( 'um_user_login', 'um_user_login', 10 );
-
+add_action( 'um_user_login', 'um_user_login' );
 
 /**
  * Form processing
