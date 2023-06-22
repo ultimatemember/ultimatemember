@@ -1,4 +1,6 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+<?php if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} // Exit if accessed directly
 
 
 /**
@@ -8,163 +10,129 @@
  */
 function um_profile_content_main( $args ) {
 
-	/**
-	 * @var $mode
-	 */
-	extract( $args );
+	if ( ! array_key_exists( 'mode', $args ) ) {
+		return;
+	}
+	$mode = $args['mode'];
 
-	if ( ! UM()->options()->get( 'profile_tab_main' ) && ! isset( $_REQUEST['um_action'] ) ) {
+	if ( ! UM()->options()->get( 'profile_tab_main' ) && ! isset( $_REQUEST['um_action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		return;
 	}
 
 	/**
-	 * UM hook
+	 * Filters check user can view profile
 	 *
-	 * @type filter
-	 * @title um_profile_can_view_main
-	 * @description Check user can view profile
-	 * @input_vars
-	 * [{"var":"$view","type":"bool","desc":"Can view?"},
-	 * {"var":"$user_id","type":"int","desc":"User profile ID"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage
-	 * <?php add_filter( 'um_profile_can_view_main', 'function_name', 10, 2 ); ?>
-	 * @example
-	 * <?php
-	 * add_filter( 'um_profile_can_view_main', 'my_profile_can_view_main', 10, 2 );
-	 * function my_profile_can_view_main( $view, $user_id ) {
+	 * @since 2.0
+	 * @hook  um_profile_can_view_main
+	 *
+	 * @param {int}  $can_view Can view profile.
+	 * @param {int}  $user_id  User ID.
+	 *
+	 * @return {int} Can view profile.
+	 *
+	 * @example <caption>Can view profile.</caption>
+	 * function my_profile_can_view_main( $can_view, $user_id ) {
 	 *     // your code here
-	 *     return $view;
+	 *     return $can_view;
 	 * }
-	 * ?>
+	 * add_filter( 'um_profile_can_view_main', 'my_profile_can_view_main', 10, 2 );
 	 */
 	$can_view = apply_filters( 'um_profile_can_view_main', -1, um_profile_id() );
 
-	if ( $can_view == -1 ) {
+	if ( -1 === (int) $can_view ) {
 		/**
-		 * UM hook
+		 * Fires before form.
 		 *
-		 * @type action
-		 * @title um_before_form
-		 * @description Some actions before profile form
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_before_form', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_before_form', 'my_before_form', 10, 1 );
+		 * @since 2.0
+		 * @hook  um_before_form
+		 *
+		 * @param {array} $args Profile form shortcode arguments.
+		 *
+		 * @example <caption>Make any custom action before form.</caption>
 		 * function my_before_form( $args ) {
 		 *     // your code here
 		 * }
-		 * ?>
+		 * add_action( 'um_before_form', 'my_before_form', 10, 1 );
 		 */
 		do_action( 'um_before_form', $args );
 
 		/**
-		 * UM hook
+		 * Fires before profile form fields.
 		 *
-		 * @type action
-		 * @title um_before_{$mode}_fields
-		 * @description Some actions before profile form fields
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"{Profile} form shortcode arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_before_{$mode}_fields', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_before_{$mode}_fields', 'my_before_fields', 10, 1 );
-		 * function my_before_form( $args ) {
+		 * @since 2.0
+		 * @hook  um_before_{$mode}_fields
+		 *
+		 * @param {array} $args Profile form shortcode arguments.
+		 *
+		 * @example <caption>Make any custom action before fields.</caption>
+		 * function my_before_fields( $args ) {
 		 *     // your code here
 		 * }
-		 * ?>
+		 * add_action( 'um_before_{$mode}_fields', 'my_before_fields', 10, 1 );
 		 */
 		do_action( "um_before_{$mode}_fields", $args );
 
 		/**
-		 * UM hook
+		 * Fires before login form fields.
 		 *
-		 * @type action
-		 * @title um_main_{$mode}_fields
-		 * @description Some actions before login form fields
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Login form shortcode arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_before_{$mode}_fields', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_before_{$mode}_fields', 'my_before_fields', 10, 1 );
+		 * @since 2.0
+		 * @hook  um_main_{$mode}_fields
+		 *
+		 * @param {array} $args Login form shortcode arguments.
+		 *
+		 * @example <caption>Make any custom action before login form fields.</caption>
 		 * function my_before_form( $args ) {
 		 *     // your code here
 		 * }
-		 * ?>
+		 * add_action( 'um_main_{$mode}_fields', 'my_before_form', 10, 1 );
 		 */
 		do_action( "um_main_{$mode}_fields", $args );
 
 		/**
-		 * UM hook
+		 * Fires after login form fields.
 		 *
-		 * @type action
-		 * @title um_after_form_fields
-		 * @description Some actions after login form fields
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Login form shortcode arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_after_form_fields', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_after_form_fields', 'my_after_form_fields', 10, 1 );
+		 * @since 2.0
+		 * @hook  um_after_form_fields
+		 *
+		 * @param {array} $args Login form shortcode arguments.
+		 *
+		 * @example <caption>Make any custom action after login form fields.</caption>
 		 * function my_after_form_fields( $args ) {
 		 *     // your code here
 		 * }
-		 * ?>
+		 * add_action( 'um_after_form_fields', 'my_after_form_fields', 10, 1 );
 		 */
 		do_action( 'um_after_form_fields', $args );
 
 		/**
-		 * UM hook
+		 * Fires after profile form fields.
 		 *
-		 * @type action
-		 * @title um_after_{$mode}_fields
-		 * @description Some actions after profile form fields
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_after_{$mode}_fields', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_after_{$mode}_fields', 'my_after_form_fields', 10, 1 );
+		 * @since 2.0
+		 * @hook  um_after_{$mode}_fields
+		 *
+		 * @param {array} $args Profile form shortcode arguments.
+		 *
+		 * @example <caption>Make any custom action after profile form fields.</caption>
 		 * function my_after_form_fields( $args ) {
 		 *     // your code here
 		 * }
-		 * ?>
+		 * add_action( 'um_after_{$mode}_fields', 'my_after_form_fields', 10, 1 );
 		 */
 		do_action( "um_after_{$mode}_fields", $args );
 
 		/**
-		 * UM hook
+		 * Fires after profile form fields.
 		 *
-		 * @type action
-		 * @title um_after_form
-		 * @description Some actions after profile form fields
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_after_form', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_after_form', 'my_after_form', 10, 1 );
+		 * @since 2.0
+		 * @hook  my_after_form
+		 *
+		 * @param {array} $args Profile form shortcode arguments.
+		 *
+		 * @example <caption>Make any custom action after profile form fields.</caption>
 		 * function my_after_form( $args ) {
 		 *     // your code here
 		 * }
-		 * ?>
+		 * add_action( 'my_after_form', 'my_after_form', 10, 1 );
 		 */
 		do_action( 'um_after_form', $args );
 
@@ -173,7 +141,7 @@ function um_profile_content_main( $args ) {
 		<div class="um-profile-note">
 			<span>
 				<i class="um-faicon-lock"></i>
-				<?php echo $can_view; ?>
+				<?php echo esc_html( $can_view ); ?>
 			</span>
 		</div>
 		<?php
