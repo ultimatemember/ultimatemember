@@ -1340,12 +1340,12 @@ add_action( 'um_profile_header', 'um_profile_header', 9 );
  * @param $args
  */
 function um_pre_profile_shortcode( $args ) {
-	/**
-	 * @var $mode
-	 */
-	extract( $args );
+	if ( ! array_key_exists( 'mode', $args ) ) {
+		return;
+	}
+	$mode = $args['mode'];
 
-	if ( $mode == 'profile' ) {
+	if ( 'profile' === $mode ) {
 		if ( UM()->fields()->editing ) {
 			if ( um_get_requested_user() ) {
 				if ( ! UM()->roles()->um_current_user_can( 'edit', um_get_requested_user() ) ) {
