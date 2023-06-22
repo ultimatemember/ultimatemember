@@ -210,26 +210,22 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			return 0;
 		}
 
-
 		/**
-		 * Get a core field attrs
+		 * Get a core field attrs.
 		 *
-		 * @param $type
+		 * @param string $type Field type.
 		 *
-		 * @return array|mixed
+		 * @return array Field data.
 		 */
-		function get_core_field_attrs( $type ) {
-			return ( isset( $this->core_fields[ $type ] ) ) ? $this->core_fields[ $type ] : array('');
+		public function get_core_field_attrs( $type ) {
+			return array_key_exists( $type, $this->core_fields ) ? $this->core_fields[ $type ] : array( '' );
 		}
-
 
 		/**
 		 * Core Fields
 		 */
-		function set_core_fields() {
-
+		public function set_core_fields() {
 			$this->core_fields = array(
-
 				'row' => array(
 					'name' => 'Row',
 					'in_fields' => false,

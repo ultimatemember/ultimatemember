@@ -703,7 +703,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		}
 
 		/**
-		 *
+		 * AJAX handler for dynamic content inside the modal window.
 		 */
 		public function dynamic_modal_content() {
 			UM()->admin()->check_ajax_nonce();
@@ -712,349 +712,356 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
 			}
 
+			// phpcs:disable WordPress.Security.NonceVerification -- already verified here
+			if ( empty( $_POST['act_id'] ) ) {
+				wp_send_json_error( __( 'Wrong dynamic-content attribute.', 'ultimate-member' ) );
+			}
+
 			$metabox = UM()->metabox();
+			$act_id  = sanitize_key( $_POST['act_id'] );
 
-			/**
-			 * @var $act_id
-			 * @var $arg1
-			 * @var $arg2
-			 * @var $arg3
-			 */
-			extract( $_POST );
-
-			if ( isset( $arg1 ) ) {
-				$arg1 = sanitize_text_field( $arg1 );
+			$arg1 = null;
+			if ( isset( $_POST['arg1'] ) ) {
+				$arg1 = sanitize_text_field( $_POST['arg1'] );
 			}
 
-			if ( isset( $arg2 ) ) {
-				$arg2 = sanitize_text_field( $arg2 );
+			$arg2 = null;
+			if ( isset( $_POST['arg2'] ) ) {
+				$arg2 = sanitize_text_field( $_POST['arg2'] );
 			}
 
-			if ( isset( $arg3 ) ) {
-				$arg3 = sanitize_text_field( $arg3 );
+			$arg3 = null;
+			if ( isset( $_POST['arg3'] ) ) {
+				$arg3 = sanitize_text_field( $_POST['arg3'] );
 			}
 
-			switch ( sanitize_key( $act_id ) ) {
+			$form_mode = null;
+			if ( isset( $_POST['form_mode'] ) ) {
+				$form_mode = sanitize_key( $_POST['form_mode'] );
+			}
 
+			$in_row = null;
+			if ( isset( $_POST['in_row'] ) ) {
+				$in_row = absint( $_POST['in_row'] );
+			}
+
+			$in_sub_row = null;
+			if ( isset( $_POST['in_sub_row'] ) ) {
+				$in_sub_row = absint( $_POST['in_sub_row'] );
+			}
+
+			$in_column = null;
+			if ( isset( $_POST['in_column'] ) ) {
+				$in_column = absint( $_POST['in_column'] );
+			}
+
+			$in_group = null;
+			if ( isset( $_POST['in_group'] ) ) {
+				$in_group = absint( $_POST['in_group'] );
+			}
+			// phpcs:enable WordPress.Security.NonceVerification -- already verified here
+
+			switch ( $act_id ) {
 				default:
-
 					ob_start();
-
 					/**
-					 * UM hook
+					 * Fires for integration on AJAX popup admin builder modal content.
 					 *
-					 * @type action
-					 * @title um_admin_ajax_modal_content__hook
-					 * @description Integration hook on ajax popup admin builder modal content
-					 * @input_vars
-					 * [{"var":"$act_id","type":"string","desc":"Ajax Action"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_action( 'um_admin_ajax_modal_content__hook', 'function_name', 10, 1 );
-					 * @example
-					 * <?php
-					 * add_action( 'um_admin_ajax_modal_content__hook', 'my_admin_custom_hook', 10, 1 );
-					 * function um_admin_ajax_modal_content__hook( $act_id ) {
-					 *     // your code here
+					 * @since 1.3.x
+					 * @hook um_admin_ajax_modal_content__hook
+					 *
+					 * @param {string} $act_id `data-dynamic-content` attribute value. Modal action.
+					 *
+					 * @example <caption>Pass HTML to the custom UM modal with data-dynamic-content="user_info".</caption>
+					 * function my_custom_um_admin_ajax_modal_content__hook( $act_id ) {
+					 *     if ( 'user_info' === $act_id ) {
+					 *         // Your HTML is here
+					 *     }
 					 * }
-					 * ?>
+					 * add_action( 'um_admin_ajax_modal_content__hook', 'my_custom_um_admin_ajax_modal_content__hook' );
 					 */
-					do_action( 'um_admin_ajax_modal_content__hook', sanitize_key( $act_id ) );
+					do_action( 'um_admin_ajax_modal_content__hook', $act_id );
 					/**
-					 * UM hook
+					 * Fires for integration on AJAX popup admin builder modal content.
 					 *
-					 * @type action
-					 * @title um_admin_ajax_modal_content__hook_{$act_id}
-					 * @description Integration hook on ajax popup admin builder modal content
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_action( 'um_admin_ajax_modal_content__hook_{$act_id}', 'function_name', 10 );
-					 * @example
-					 * <?php
-					 * add_action( 'um_admin_ajax_modal_content__hook_{$act_id}', 'my_admin_ajax_modal_content', 10 );
-					 * function my_admin_ajax_modal_content() {
-					 *     // your code here
+					 * Note: $act_id `data-dynamic-content` attribute value. Modal action.
+					 *
+					 * @since 1.3.x
+					 * @hook um_admin_ajax_modal_content__hook_{$act_id}
+					 * @deprecated Partially deprecated since 2.6.4. Use common 'um_admin_ajax_modal_content__hook' and pass `$act_id` as callback attribute.
+					 * @todo Fully deprecate since 2.7.0
+					 *
+					 * @example <caption>Pass HTML to the custom UM modal with data-dynamic-content="user_info".</caption>
+					 * function my_custom_um_admin_ajax_modal_content__hook_user_info() {
+					 *     // Your HTML is here for `user_info` modal
 					 * }
-					 * ?>
+					 * add_action( 'um_admin_ajax_modal_content__hook_user_info', 'my_custom_um_admin_ajax_modal_content__hook_user_info' );
 					 */
-					do_action( "um_admin_ajax_modal_content__hook_" . sanitize_key( $act_id ) );
-
+					do_action( 'um_admin_ajax_modal_content__hook_' . $act_id );
 					$output = ob_get_clean();
 					break;
-
 				case 'um_admin_fonticon_selector':
-
-					ob_start(); ?>
-
+					ob_start();
+					?>
 					<div class="um-admin-metabox">
-						<p class="_icon_search"><input type="text" name="_icon_search" id="_icon_search" value="" placeholder="<?php esc_attr_e('Search Icons...', 'ultimate-member' ); ?>" /></p>
+						<p class="_icon_search">
+							<label class="screen-reader-text" for="_icon_search"><?php esc_html_e( 'Search Icons...', 'ultimate-member' ); ?></label>
+							<input type="text" name="_icon_search" id="_icon_search" value="" placeholder="<?php esc_attr_e( 'Search Icons...', 'ultimate-member' ); ?>" />
+						</p>
 					</div>
-
 					<div class="um-admin-icons">
-						<?php foreach( UM()->fonticons()->all as $icon ) { ?>
-							<span data-code="<?php echo esc_attr( $icon ); ?>" title="<?php echo esc_attr( $icon ); ?>" class="um-admin-tipsy-n"><i class="<?php echo $icon; ?>"></i></span>
+						<?php foreach ( UM()->fonticons()->all as $icon ) { ?>
+							<span data-code="<?php echo esc_attr( $icon ); ?>" title="<?php echo esc_attr( $icon ); ?>" class="um-admin-tipsy-n"><i class="<?php echo esc_attr( $icon ); ?>"></i></span>
 						<?php } ?>
-					</div><div class="um-admin-clear"></div>
-
-					<?php $output = ob_get_clean();
+					</div>
+					<div class="um-admin-clear"></div>
+					<?php
+					$output = ob_get_clean();
 					break;
-
 				case 'um_admin_show_fields':
-
+					// $arg2 means `form_id` variable in this case.
 					ob_start();
 					$form_fields = UM()->query()->get_attr( 'custom_fields', $arg2 );
 					$form_fields = array_values( array_filter( array_keys( $form_fields ) ) );
-					//$form_fields = array_keys( $form_fields );
 					?>
-
-					<h4><?php _e('Setup New Field','ultimate-member'); ?></h4>
+					<h4><?php esc_html_e( 'Setup New Field', 'ultimate-member' ); ?></h4>
 					<div class="um-admin-btns">
-
-						<?php if ( UM()->builtin()->core_fields ) {
-							foreach ( UM()->builtin()->core_fields as $field_type => $array ) {
-
-								if ( isset( $array['in_fields'] ) && $array['in_fields'] == false ) {
+						<?php
+						if ( UM()->builtin()->core_fields ) {
+							foreach ( UM()->builtin()->core_fields as $field_type => $field_data ) {
+								if ( isset( $field_data['in_fields'] ) && false === $field_data['in_fields'] ) {
 									continue;
-								} ?>
-
-								<a href="javascript:void(0);" class="button" data-modal="UM_add_field" data-modal-size="normal" data-dynamic-content="um_admin_new_field_popup" data-arg1="<?php echo esc_attr( $field_type ); ?>" data-arg2="<?php echo esc_attr( $arg2 ) ?>"><?php echo esc_html( $array['name'] ); ?></a>
-
-							<?php }
-						} ?>
-
+								}
+								?>
+								<a href="javascript:void(0);" class="button" data-modal="UM_add_field" data-modal-size="normal" data-dynamic-content="um_admin_new_field_popup" data-arg1="<?php echo esc_attr( $field_type ); ?>" data-arg2="<?php echo esc_attr( $arg2 ); ?>"><?php echo esc_html( $field_data['name'] ); ?></a>
+								<?php
+							}
+						}
+						?>
 					</div>
-
-					<h4><?php _e('Predefined Fields','ultimate-member'); ?></h4>
+					<h4><?php esc_html_e( 'Predefined Fields', 'ultimate-member' ); ?></h4>
 					<div class="um-admin-btns">
-
-						<?php if ( UM()->builtin()->predefined_fields ) {
-							foreach ( UM()->builtin()->predefined_fields as $field_key => $array ) {
-								if ( ! isset( $array['account_only'] ) && ! isset( $array['private_use'] ) ) { ?>
-
-									<a href="javascript:void(0);" class="button" <?php disabled( in_array( $field_key, $form_fields, true ) ) ?> data-silent_action="um_admin_add_field_from_predefined" data-arg1="<?php echo esc_attr( $field_key ); ?>" data-arg2="<?php echo esc_attr( $arg2 ); ?>"><?php echo um_trim_string( stripslashes( $array['title'] ), 20 ); ?></a>
-
-								<?php }
+						<?php
+						if ( UM()->builtin()->predefined_fields ) {
+							foreach ( UM()->builtin()->predefined_fields as $field_key => $field_data ) {
+								if ( array_key_exists( 'account_only', $field_data ) && true === $field_data['account_only'] ) {
+									continue;
+								}
+								if ( array_key_exists( 'private_use', $field_data ) && true === $field_data['private_use'] ) {
+									continue;
+								}
+								?>
+								<a href="javascript:void(0);" class="button" <?php disabled( in_array( $field_key, $form_fields, true ) ); ?> data-silent_action="um_admin_add_field_from_predefined" data-arg1="<?php echo esc_attr( $field_key ); ?>" data-arg2="<?php echo esc_attr( $arg2 ); ?>" title="<?php echo esc_attr( $field_data['title'] ); ?>"><?php echo esc_html( um_trim_string( $field_data['title'] ) ); ?></a>
+								<?php
 							}
 						} else {
-							echo '<p>' . __( 'None', 'ultimate-member' ) . '</p>';
-						} ?>
-
+							?>
+							<p><?php esc_html_e( 'None', 'ultimate-member' ); ?></p>
+							<?php
+						}
+						?>
 					</div>
-
-					<h4><?php _e( 'Custom Fields', 'ultimate-member' ); ?></h4>
+					<h4><?php esc_html_e( 'Custom Fields', 'ultimate-member' ); ?></h4>
 					<div class="um-admin-btns">
-
 						<?php
 						if ( UM()->builtin()->custom_fields ) {
-							foreach ( UM()->builtin()->custom_fields as $field_key => $array ) {
-								if ( empty( $array['title'] ) || empty( $array['type'] ) ) {
+							foreach ( UM()->builtin()->custom_fields as $field_key => $field_data ) {
+								if ( empty( $field_data['title'] ) || empty( $field_data['type'] ) ) {
 									continue;
-								} ?>
-
-								<a href="javascript:void(0);" class="button with-icon" <?php disabled( in_array( $field_key, $form_fields, true ) ) ?> data-silent_action="um_admin_add_field_from_list" data-arg1="<?php echo esc_attr( $field_key ); ?>" data-arg2="<?php echo esc_attr( $arg2 ); ?>" title="<?php echo __( 'Meta Key', 'ultimate-member' ) . ' - ' . esc_attr( $field_key ); ?>"><?php echo um_trim_string( stripslashes( $array['title'] ), 20 ); ?> <small>(<?php echo ucfirst( $array['type'] ); ?>)</small><span class="remove"></span></a>
-
-							<?php }
+								}
+								?>
+								<?php // translators: %s is a field metakey. ?>
+								<a href="javascript:void(0);" class="button with-icon" <?php disabled( in_array( $field_key, $form_fields, true ) ); ?> data-silent_action="um_admin_add_field_from_list" data-arg1="<?php echo esc_attr( $field_key ); ?>" data-arg2="<?php echo esc_attr( $arg2 ); ?>" title="<?php echo esc_attr( sprintf( __( 'Meta Key - %s', 'ultimate-member' ), $field_key ) ); ?>"><?php echo esc_html( um_trim_string( $field_data['title'] ) ); ?> <small>(<?php echo esc_html( ucfirst( $field_data['type'] ) ); ?>)</small><span class="remove"></span></a>
+								<?php
+							}
 						} else {
-							echo '<p>' . __( 'You did not create any custom fields', 'ultimate-member' ) . '</p>';
-						} ?>
-
+							?>
+							<p><?php esc_html_e( 'You did not create any custom fields.', 'ultimate-member' ); ?></p>
+							<?php
+						}
+						?>
 					</div>
-
-					<?php $output = ob_get_clean();
+					<?php
+					$output = ob_get_clean();
 					break;
-
 				case 'um_admin_edit_field_popup':
+					// $arg1 means `field_type` variable in this case.
+					// $arg2 means `form_id` variable in this case.
+					// $arg3 means `field_metakey` variable in this case.
+					$field_type_data = UM()->builtin()->get_core_field_attrs( $arg1 );
+					$form_fields     = UM()->query()->get_attr( 'custom_fields', $arg2 );
 
-					ob_start();
-
-					$args = UM()->builtin()->get_core_field_attrs( $arg1 );
-
-					$form_fields = UM()->query()->get_attr( 'custom_fields', $arg2 );
+					if ( ! array_key_exists( $arg3, $form_fields ) ) {
+						$output = '<p>' . esc_html__( 'This field is not setup correctly for this form.', 'ultimate-member' ) . '</p>';
+						break;
+					}
 
 					$metabox->set_field_type = $arg1;
-					$metabox->in_edit = true;
-					$metabox->edit_array = $form_fields[ $arg3 ];
+					$metabox->in_edit        = true;
+					$metabox->edit_array     = $form_fields[ $arg3 ];
 
-					if ( !isset( $metabox->edit_array['metakey'] ) ){
+					if ( ! array_key_exists( 'metakey', $metabox->edit_array ) ) {
 						$metabox->edit_array['metakey'] = $metabox->edit_array['id'];
 					}
 
-					if ( !isset( $metabox->edit_array['position'] ) ){
+					if ( ! array_key_exists( 'position', $metabox->edit_array ) ) {
 						$metabox->edit_array['position'] = $metabox->edit_array['id'];
 					}
 
-					extract( $args );
+					ob_start();
 
-					if ( ! isset( $col1 ) ) {
-
-						echo '<p>'. __( 'This field type is not setup correcty.', 'ultimate-member' ) . '</p>';
-
-					} else {
-
+					if ( ! array_key_exists( 'col1', $field_type_data ) ) {
 						?>
-
-						<?php if ( isset( $metabox->edit_array['in_group'] ) ) { ?>
-							<input type="hidden" name="_in_row" id="_in_row" value="<?php echo $metabox->edit_array['in_row']; ?>" />
-							<input type="hidden" name="_in_sub_row" id="_in_sub_row" value="<?php echo $metabox->edit_array['in_sub_row']; ?>" />
-							<input type="hidden" name="_in_column" id="_in_column" value="<?php echo $metabox->edit_array['in_column']; ?>" />
-							<input type="hidden" name="_in_group" id="_in_group" value="<?php echo $metabox->edit_array['in_group']; ?>" />
-						<?php } ?>
-
-						<input type="hidden" name="_type" id="_type" value="<?php echo $arg1; ?>" />
-
-						<input type="hidden" name="post_id" id="post_id" value="<?php echo $arg2; ?>" />
-
+						<p><?php esc_html_e( 'This field type is not setup correctly.', 'ultimate-member' ); ?></p>
+						<?php
+					} else {
+						?>
+						<input type="hidden" name="_in_row" id="_in_row" value="<?php echo esc_attr( $metabox->edit_array['in_row'] ); ?>" />
+						<input type="hidden" name="_in_sub_row" id="_in_sub_row" value="<?php echo esc_attr( $metabox->edit_array['in_sub_row'] ); ?>" />
+						<input type="hidden" name="_in_column" id="_in_column" value="<?php echo esc_attr( $metabox->edit_array['in_column'] ); ?>" />
+						<input type="hidden" name="_in_group" id="_in_group" value="<?php echo esc_attr( $metabox->edit_array['in_group'] ); ?>" />
+						<input type="hidden" name="_type" id="_type" value="<?php echo esc_attr( $arg1 ); ?>" />
+						<input type="hidden" name="post_id" id="post_id" value="<?php echo esc_attr( $arg2 ); ?>" />
 						<input type="hidden" name="edit_mode" id="edit_mode" value="true" />
+						<input type="hidden" name="_metakey" id="_metakey" value="<?php echo esc_attr( $metabox->edit_array['metakey'] ); ?>" />
+						<input type="hidden" name="_position" id="_position" value="<?php echo esc_attr( $metabox->edit_array['position'] ); ?>" />
 
-						<input type="hidden" name="_metakey" id="_metakey" value="<?php echo $metabox->edit_array['metakey']; ?>" />
-
-						<input type="hidden" name="_position" id="_position" value="<?php echo $metabox->edit_array['position']; ?>" />
-
-						<?php if ( isset( $args['mce_content'] ) ) { ?>
-							<div class="dynamic-mce-content"><?php echo ! empty( $metabox->edit_array['content'] ) ? $metabox->edit_array['content'] : ''; ?></div>
+						<?php if ( array_key_exists( 'mce_content', $field_type_data ) && true === $field_type_data['mce_content'] ) { ?>
+							<div class="dynamic-mce-content"><?php echo ! empty( $metabox->edit_array['content'] ) ? wp_kses( $metabox->edit_array['content'], UM()->get_allowed_html( 'templates' ) ) : ''; ?></div>
 						<?php } ?>
 
 						<?php $this->modal_header(); ?>
 
 						<div class="um-admin-half">
-
-							<?php if ( isset( $col1 ) ) {  foreach( $col1 as $opt ) $metabox->field_input ( $opt, $arg2, $metabox->edit_array ); } ?>
-
+							<?php
+							if ( is_array( $field_type_data['col1'] ) ) {
+								foreach ( $field_type_data['col1'] as $opt ) {
+									$metabox->field_input( $opt, $arg2, $metabox->edit_array );
+								}
+							}
+							?>
 						</div>
-
 						<div class="um-admin-half um-admin-right">
-
-							<?php if ( isset( $col2 ) ) {  foreach( $col2 as $opt ) $metabox->field_input ( $opt, $arg2, $metabox->edit_array ); } ?>
-
-						</div><div class="um-admin-clear"></div>
-
-						<?php if ( isset( $col3 ) ) { foreach( $col3 as $opt ) $metabox->field_input ( $opt, $arg2, $metabox->edit_array ); } ?>
-
+							<?php
+							if ( array_key_exists( 'col2', $field_type_data ) && is_array( $field_type_data['col2'] ) ) {
+								foreach ( $field_type_data['col2'] as $opt ) {
+									$metabox->field_input( $opt, $arg2, $metabox->edit_array );
+								}
+							}
+							?>
+						</div>
 						<div class="um-admin-clear"></div>
-
-						<?php if ( isset( $col_full ) ) {foreach( $col_full as $opt ) $metabox->field_input ( $opt, $arg2, $metabox->edit_array ); } ?>
-
-						<?php $this->modal_footer( $arg2, $args, $metabox ); ?>
-
 						<?php
-
+						if ( array_key_exists( 'col3', $field_type_data ) && is_array( $field_type_data['col3'] ) ) {
+							foreach ( $field_type_data['col3'] as $opt ) {
+								$metabox->field_input( $opt, $arg2, $metabox->edit_array );
+							}
+						}
+						?>
+						<div class="um-admin-clear"></div>
+						<?php
+						if ( array_key_exists( 'col_full', $field_type_data ) && is_array( $field_type_data['col_full'] ) ) {
+							foreach ( $field_type_data['col_full'] as $opt ) {
+								$metabox->field_input( $opt, $arg2, $metabox->edit_array );
+							}
+						}
+						$this->modal_footer( $arg2, $field_type_data, $metabox );
 					}
-
 					$output = ob_get_clean();
 					break;
-
 				case 'um_admin_new_field_popup':
+					// $arg1 means `field_type` variable in this case.
+					// $arg2 means `form_id` variable in this case.
+					$field_type_data         = UM()->builtin()->get_core_field_attrs( $arg1 );
+					$metabox->set_field_type = $arg1;
 
 					ob_start();
 
-					$args = UM()->builtin()->get_core_field_attrs( $arg1 );
-
-					$metabox->set_field_type = $arg1;
-
-					/**
-					 * @var $in_row
-					 * @var $in_sub_row
-					 * @var $in_column
-					 * @var $in_group
-					 */
-					extract( $args );
-
-					if ( ! isset( $col1 ) ) {
-
-						echo '<p>'. __( 'This field type is not setup correcty.', 'ultimate-member' ) . '</p>';
-
+					if ( ! array_key_exists( 'col1', $field_type_data ) ) {
+						?>
+						<p><?php esc_html_e( 'This field type is not setup correctly.', 'ultimate-member' ); ?></p>
+						<?php
 					} else {
-
-						if ( $in_column ) { ?>
-							<input type="hidden" name="_in_row" id="_in_row" value="_um_row_<?php echo $in_row + 1; ?>" />
-							<input type="hidden" name="_in_sub_row" id="_in_sub_row" value="<?php echo $in_sub_row; ?>" />
-							<input type="hidden" name="_in_column" id="_in_column" value="<?php echo $in_column; ?>" />
-							<input type="hidden" name="_in_group" id="_in_group" value="<?php echo $in_group; ?>" />
-						<?php } ?>
-
-						<input type="hidden" name="_type" id="_type" value="<?php echo $arg1; ?>" />
-
-						<input type="hidden" name="post_id" id="post_id" value="<?php echo $arg2; ?>" />
+						?>
+						<input type="hidden" name="_in_row" id="_in_row" value="_um_row_<?php echo esc_attr( $in_row + 1 ); ?>" />
+						<input type="hidden" name="_in_sub_row" id="_in_sub_row" value="<?php echo esc_attr( $in_sub_row ); ?>" />
+						<input type="hidden" name="_in_column" id="_in_column" value="<?php echo esc_attr( $in_column ); ?>" />
+						<input type="hidden" name="_in_group" id="_in_group" value="<?php echo esc_attr( $in_group ); ?>" />
+						<input type="hidden" name="_type" id="_type" value="<?php echo esc_attr( $arg1 ); ?>" />
+						<input type="hidden" name="post_id" id="post_id" value="<?php echo esc_attr( $arg2 ); ?>" />
 
 						<?php $this->modal_header(); ?>
 
 						<div class="um-admin-half">
-
-							<?php if ( isset( $col1 ) ) { foreach( $col1 as $opt ) $metabox->field_input ( $opt ); } ?>
-
+							<?php
+							if ( is_array( $field_type_data['col1'] ) ) {
+								foreach ( $field_type_data['col1'] as $opt ) {
+									$metabox->field_input( $opt );
+								}
+							}
+							?>
 						</div>
-
 						<div class="um-admin-half um-admin-right">
-
-							<?php if ( isset( $col2 ) ) { foreach( $col2 as $opt ) $metabox->field_input ( $opt ); } ?>
-
-						</div><div class="um-admin-clear"></div>
-
-						<?php if ( isset( $col3 ) ) { foreach( $col3 as $opt ) $metabox->field_input ( $opt ); } ?>
-
+							<?php
+							if ( array_key_exists( 'col2', $field_type_data ) && is_array( $field_type_data['col2'] ) ) {
+								foreach ( $field_type_data['col2'] as $opt ) {
+									$metabox->field_input( $opt );
+								}
+							}
+							?>
+						</div>
 						<div class="um-admin-clear"></div>
-
-						<?php if ( isset( $col_full ) ) { foreach( $col_full as $opt ) $metabox->field_input ( $opt ); } ?>
-
-						<?php $this->modal_footer( $arg2, $args, $metabox ); ?>
-
 						<?php
+						if ( array_key_exists( 'col3', $field_type_data ) && is_array( $field_type_data['col3'] ) ) {
+							foreach ( $field_type_data['col3'] as $opt ) {
+								$metabox->field_input( $opt );
+							}
+						}
+						?>
+						<div class="um-admin-clear"></div>
+						<?php
+						if ( array_key_exists( 'col_full', $field_type_data ) && is_array( $field_type_data['col_full'] ) ) {
+							foreach ( $field_type_data['col_full'] as $opt ) {
+								$metabox->field_input( $opt );
+							}
+						}
 
+						$this->modal_footer( $arg2, $field_type_data, $metabox );
 					}
-
 					$output = ob_get_clean();
 					break;
-
 				case 'um_admin_preview_form':
-
+					// $arg1 means `form_id` variable in this case.
 					UM()->user()->preview = true;
 
-					$mode = UM()->query()->get_attr('mode', $arg1 );
-
-					if ( $mode == 'profile' ) {
+					$mode = UM()->query()->get_attr( 'mode', $arg1 );
+					if ( empty( $mode ) ) {
+						$mode = $form_mode;
+					}
+					if ( 'profile' === $mode ) {
 						UM()->fields()->editing = true;
 					}
 
-					$output = '<div class="um-admin-preview-overlay"></div>';
-
-					if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
-						$output .= do_shortcode('[ultimatemember form_id="' . $arg1 . '" /]');
-					} else {
-						$output .= apply_shortcodes('[ultimatemember form_id="' . $arg1 . '" /]');
-					}
-
+					$output  = '<div class="um-admin-preview-overlay"></div>';
+					$output .= apply_shortcodes( '[ultimatemember form_id="' . $arg1 . '" /]' );
 					break;
-
 				case 'um_admin_review_registration':
-					//$user_id = $arg1;
-
-					if ( ! current_user_can( 'administrator' ) ) {
-						if ( ! um_can_view_profile( $arg1 ) ) {
-							$output = '';
-							break;
-						}
+					// $arg1 means `user_id` variable in this case.
+					if ( ! current_user_can( 'administrator' ) && ! um_can_view_profile( $arg1 ) ) {
+						$output = '';
+						break;
 					}
-
 					um_fetch_user( $arg1 );
-
 					UM()->user()->preview = true;
-
-					$output = um_user_submitted_registration_formatted( true );
-
+					$output               = um_user_submitted_registration_formatted( true );
 					um_reset_user();
-
 					break;
-
 			}
 
-			if ( is_array( $output ) ) {
-				print_r( $output );
-			} else {
-				echo $output;
-			}
+			// @todo WPCS through wp_kses.
+			echo $output;
 			die;
 		}
-
 
 		/**
 		 *
