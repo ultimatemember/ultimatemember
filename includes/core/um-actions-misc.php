@@ -73,38 +73,32 @@ add_action( 'um_after_form_fields', 'um_browser_url_redirect_to' );
  * @param $args
  */
 function um_add_update_notice( $args ) {
-	extract( $args );
-
 	$output  = '';
 	$err     = '';
 	$success = '';
 
-	if ( ! empty( $_REQUEST['updated'] ) && ! UM()->form()->errors ) {
-		switch ( sanitize_key( $_REQUEST['updated'] ) ) {
+	if ( ! empty( $_REQUEST['updated'] ) && ! UM()->form()->errors ) { // phpcs:ignore WordPress.Security.NonceVerification
+		switch ( sanitize_key( $_REQUEST['updated'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			default:
 				/**
-				 * UM hook
+				 * Filters add custom success message
 				 *
-				 * @type filter
-				 * @title um_custom_success_message_handler
-				 * @description Add custom success message
-				 * @input_vars
-				 * [{"var":"$success","type":"string","desc":"Message"},
-				 * {"var":"$updated","type":"array","desc":"Updated data"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage
-				 * <?php add_filter( 'um_custom_success_message_handler', 'function_name', 10, 2 ); ?>
-				 * @example
-				 * <?php
-				 * add_filter( 'um_custom_success_message_handler', 'my_custom_success_message', 10, 2 );
+				 * @since 2.0
+				 * @hook  um_custom_success_message_handler
+				 *
+				 * @param {string}  $success  Message.
+				 * @param {array}   $updated  Updated data.
+				 *
+				 * @return {string} Message.
+				 *
+				 * @example <caption>Can view profile.</caption>
 				 * function my_custom_success_message( $success, $updated ) {
 				 *     // your code here
 				 *     return $success;
 				 * }
-				 * ?>
+				 * add_filter( 'um_custom_success_message_handler', 'my_custom_success_message', 10, 2 );
 				 */
-				$success = apply_filters( 'um_custom_success_message_handler', $success, sanitize_key( $_REQUEST['updated'] ) );
+				$success = apply_filters( 'um_custom_success_message_handler', $success, sanitize_key( $_REQUEST['updated'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 				break;
 
 			case 'account':
@@ -122,33 +116,29 @@ function um_add_update_notice( $args ) {
 		}
 	}
 
-	if ( ! empty( $_REQUEST['err'] ) && ! UM()->form()->errors ) {
-		switch( sanitize_key( $_REQUEST['err'] ) ) {
+	if ( ! empty( $_REQUEST['err'] ) && ! UM()->form()->errors ) { // phpcs:ignore WordPress.Security.NonceVerification
+		switch ( sanitize_key( $_REQUEST['err'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 
 			default:
 				/**
-				 * UM hook
+				 * Filters add custom error message
 				 *
-				 * @type filter
-				 * @title um_custom_error_message_handler
-				 * @description Add custom error message
-				 * @input_vars
-				 * [{"var":"$error","type":"string","desc":"Error message"},
-				 * {"var":"$request_error","type":"array","desc":"Error data"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage
-				 * <?php add_filter( 'um_custom_error_message_handler', 'function_name', 10, 2 ); ?>
-				 * @example
-				 * <?php
-				 * add_filter( 'um_custom_error_message_handler', 'my_custom_error_message', 10, 2 );
+				 * @since 2.0
+				 * @hook  um_custom_error_message_handler
+				 *
+				 * @param {string}  $success  Error message.
+				 * @param {array}   $updated  Error data.
+				 *
+				 * @return {string} Error message.
+				 *
+				 * @example <caption>Can view profile.</caption>
 				 * function my_custom_error_message( $error, $request_error ) {
 				 *     // your code here
 				 *     return $error;
 				 * }
-				 * ?>
+				 * add_filter( 'um_custom_error_message_handler', 'my_custom_error_message', 10, 2 );
 				 */
-				$err = apply_filters( 'um_custom_error_message_handler', $err, sanitize_key( $_REQUEST['err'] ) );
+				$err = apply_filters( 'um_custom_error_message_handler', $err, sanitize_key( $_REQUEST['err'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 				if ( ! $err ) {
 					$err = __( 'An error has been encountered', 'ultimate-member' );
 				}
