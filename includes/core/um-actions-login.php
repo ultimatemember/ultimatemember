@@ -197,39 +197,32 @@ add_action( 'wp_login', 'um_store_lastlogin_timestamp_' );
  * @param array $args
  */
 function um_user_login( $args ) {
-	extract( $args );
+	$rememberme = ( isset( $args['rememberme'] ) && 1 === (int) $args['rememberme'] && isset( $_REQUEST['rememberme'] ) ) ? 1 : 0; // phpcs:ignore WordPress.Security.NonceVerification
 
-	$rememberme = ( isset( $args['rememberme'] ) && 1 == $args['rememberme'] && isset( $_REQUEST['rememberme'] ) ) ? 1 : 0;
-
-	if ( ( UM()->options()->get( 'deny_admin_frontend_login' ) && ! isset( $_GET['provider'] ) ) && strrpos( um_user('wp_roles' ), 'administrator' ) !== false ) {
+	if ( ( UM()->options()->get( 'deny_admin_frontend_login' ) && ! isset( $_GET['provider'] ) ) && strrpos( um_user( 'wp_roles' ), 'administrator' ) !== false ) { // phpcs:ignore WordPress.Security.NonceVerification
 		wp_die( esc_html__( 'This action has been prevented for security measures.', 'ultimate-member' ) );
 	}
 
 	UM()->user()->auto_login( um_user( 'ID' ), $rememberme );
 
 	/**
-	 * UM hook
+	 * Fires after successful login and before user is redirected.
 	 *
-	 * @type action
-	 * @title um_on_login_before_redirect
-	 * @description Hook that runs after successful login and before user is redirected
-	 * @input_vars
-	 * [{"var":"$user_id","type":"int","desc":"User ID"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_action( 'um_on_login_before_redirect', 'function_name', 10, 1 );
-	 * @example
-	 * <?php
-	 * add_action( 'um_on_login_before_redirect', 'my_on_login_before_redirect', 10, 1 );
+	 * @since 2.0
+	 * @hook  um_on_login_before_redirect
+	 *
+	 * @param {int} $user_id User ID.
+	 *
+	 * @example <caption>Make any custom action after successful login and before user is redirected.</caption>
 	 * function my_on_login_before_redirect( $user_id ) {
 	 *     // your code here
 	 * }
-	 * ?>
+	 * add_action( 'um_on_login_before_redirect', 'my_on_login_before_redirect', 10, 1 );
 	 */
 	do_action( 'um_on_login_before_redirect', um_user( 'ID' ) );
 
 	// Priority redirect
-	if ( ! empty( $args['redirect_to']  ) ) {
+	if ( ! empty( $args['redirect_to'] ) ) {
 		exit( wp_safe_redirect( $args['redirect_to'] ) );
 	}
 
@@ -247,26 +240,22 @@ function um_user_login( $args ) {
 
 		case 'redirect_url':
 			/**
-			 * UM hook
+			 * Filters change redirect URL after successful login
 			 *
-			 * @type filter
-			 * @title um_login_redirect_url
-			 * @description Change redirect URL after successful login
-			 * @input_vars
-			 * [{"var":"$url","type":"string","desc":"Redirect URL"},
-			 * {"var":"$id","type":"int","desc":"User ID"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_login_redirect_url', 'function_name', 10, 2 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_login_redirect_url', 'my_login_redirect_url', 10, 2 );
+			 * @since 2.0
+			 * @hook  um_profile_can_view_main
+			 *
+			 * @param {string} $can_view Redirect URL.
+			 * @param {int}    $user_id  User ID.
+			 *
+			 * @return {string} Redirect URL.
+			 *
+			 * @example <caption>Change redirect URL.</caption>
 			 * function my_login_redirect_url( $url, $id ) {
 			 *     // your code here
 			 *     return $url;
 			 * }
-			 * ?>
+			 * add_filter( 'um_login_redirect_url', 'my_login_redirect_url', 10, 2 );
 			 */
 			$redirect_url = apply_filters( 'um_login_redirect_url', um_user( 'login_redirect_url' ), um_user( 'ID' ) );
 			exit( wp_redirect( $redirect_url ) );
