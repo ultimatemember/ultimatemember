@@ -1,11 +1,13 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
- * Account automatically approved
+ * Account automatically approved.
  *
- * @param $user_id
- * @param $args
+ * @param int   $user_id
+ * @param array $args
  */
 function um_post_registration_approved_hook( $user_id, $args ) {
 	um_fetch_user( $user_id );
@@ -14,12 +16,11 @@ function um_post_registration_approved_hook( $user_id, $args ) {
 }
 add_action( 'um_post_registration_approved_hook', 'um_post_registration_approved_hook', 10, 2 );
 
-
 /**
- * Account needs email validation
+ * Account needs email validation.
  *
- * @param $user_id
- * @param $args
+ * @param int   $user_id
+ * @param array $args
  */
 function um_post_registration_checkmail_hook( $user_id, $args ) {
 	um_fetch_user( $user_id );
@@ -28,20 +29,18 @@ function um_post_registration_checkmail_hook( $user_id, $args ) {
 }
 add_action( 'um_post_registration_checkmail_hook', 'um_post_registration_checkmail_hook', 10, 2 );
 
-
 /**
- * Account needs admin review
+ * Account needs admin review.
  *
- * @param $user_id
- * @param $args
+ * @param int   $user_id
+ * @param array $args
  */
 function um_post_registration_pending_hook( $user_id, $args ) {
 	um_fetch_user( $user_id );
 
 	UM()->user()->pending();
 }
-add_action('um_post_registration_pending_hook', 'um_post_registration_pending_hook', 10, 2);
-
+add_action( 'um_post_registration_pending_hook', 'um_post_registration_pending_hook', 10, 2 );
 
 /**
  * After insert a new user
@@ -118,7 +117,6 @@ function um_after_insert_user( $user_id, $args ) {
 }
 add_action( 'um_user_register', 'um_after_insert_user', 1, 2 );
 
-
 /**
  * Send notification about registration
  *
@@ -131,7 +129,7 @@ function um_send_registration_notification( $user_id, $args ) {
 	$emails = um_multi_admin_email();
 	if ( ! empty( $emails ) ) {
 		foreach ( $emails as $email ) {
-			if ( um_user( 'account_status' ) != 'pending' ) {
+			if ( 'pending' !== um_user( 'account_status' ) ) {
 				UM()->mail()->send( $email, 'notification_new_user', array( 'admin' => true ) );
 			} else {
 				UM()->mail()->send( $email, 'notification_review', array( 'admin' => true ) );
@@ -140,7 +138,6 @@ function um_send_registration_notification( $user_id, $args ) {
 	}
 }
 add_action( 'um_registration_complete', 'um_send_registration_notification', 10, 2 );
-
 
 /**
  * Check user status and redirect it after registration
@@ -270,7 +267,6 @@ function um_check_user_status( $user_id, $args ) {
 }
 add_action( 'um_registration_complete', 'um_check_user_status', 100, 2 );
 
-
 function um_submit_form_errors_hook__registration( $args ) {
 	// Check for "\" in password.
 	if ( array_key_exists( 'user_password', $args ) && false !== strpos( wp_unslash( trim( $args['user_password'] ) ), '\\' ) ) {
@@ -280,9 +276,9 @@ function um_submit_form_errors_hook__registration( $args ) {
 add_action( 'um_submit_form_errors_hook__registration', 'um_submit_form_errors_hook__registration', 10, 1 );
 
 /**
- * Registration form submit handler
+ * Registration form submit handler.
  *
- * @param $args
+ * @param array $args
  * @return bool|int|WP_Error
  */
 function um_submit_form_register( $args ) {
@@ -431,7 +427,7 @@ function um_submit_form_register( $args ) {
 		$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
 
 		//if role is properly set it
-		if ( ! in_array( $args['role'], $exclude_roles ) ) {
+		if ( ! in_array( $args['role'], $exclude_roles, true ) ) {
 			$user_role = $args['role'];
 		}
 	}

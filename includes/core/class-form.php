@@ -583,10 +583,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				 * ?>
 				 */
 				do_action( "um_submit_form_{$this->post_form['mode']}", $this->post_form );
-
 			}
 		}
-
 
 		/**
 		 * Beautify form data
