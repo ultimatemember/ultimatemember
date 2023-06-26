@@ -757,50 +757,65 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			}
 
 			/**
-			 * Fires pre-load form shortcode.
+			 * Fires before loading form shortcode.
 			 *
-			 * @since 2.0
+			 * Note: $mode can be 'profile', 'login', 'register', 'account'.
+			 *
+			 * @since 1.3.x
 			 * @hook  um_pre_{$mode}_shortcode
 			 *
-			 * @param {array} $args Form shortcode pre-loading.
+			 * @param {array} $args Form shortcode arguments.
 			 *
-			 * @example <caption>Make any custom action on pre-load form shortcode.</caption>
-			 * function my_pre_shortcode( $args ) {
+			 * @example <caption>Make any custom action before loading a registration form shortcode.</caption>
+			 * function my_pre_register_shortcode( $args ) {
 			 *     // your code here
 			 * }
-			 * add_action( 'um_pre_{$mode}_shortcode', 'my_pre_shortcode', 10, 1 );
+			 * add_action( 'um_pre_register_shortcode', 'my_pre_register_shortcode' );
+			 * @example <caption>Make any custom action before loading a login form shortcode.</caption>
+			 * function my_pre_login_shortcode( $args ) {
+			 *     // your code here
+			 * }
+			 * add_action( 'um_pre_login_shortcode', 'my_pre_login_shortcode' );
+			 * @example <caption>Make any custom action before loading a password reset form shortcode.</caption>
+			 * function my_pre_password_shortcode( $args ) {
+			 *     // your code here
+			 * }
+			 * add_action( 'um_pre_password_shortcode', 'my_pre_password_shortcode' );
+			 * @example <caption>Make any custom action before loading a profile form shortcode.</caption>
+			 * function my_pre_profile_shortcode( $args ) {
+			 *     // your code here
+			 * }
+			 * add_action( 'um_pre_profile_shortcode', 'my_pre_profile_shortcode' );
+			 * @example <caption>Make any custom action before loading an account form shortcode.</caption>
+			 * function my_pre_account_shortcode( $args ) {
+			 *     // your code here
+			 * }
+			 * add_action( 'um_pre_account_shortcode', 'my_pre_account_shortcode' );
 			 */
 			do_action( "um_pre_{$mode}_shortcode", $args );
-
 			/**
-			 * Fires pre-load form shortcode.
+			 * Fires before loading form shortcode.
 			 *
-			 * @since 2.0
+			 * @since 1.3.x
 			 * @hook  um_before_form_is_loaded
 			 *
-			 * @param {array} $args Form shortcode pre-loading.
+			 * @param {array} $args Form shortcode arguments.
 			 *
-			 * @example <caption>Make any custom action on pre-load form shortcode.</caption>
+			 * @example <caption>Make any custom action before loading UM form shortcode.</caption>
 			 * function my_pre_shortcode( $args ) {
 			 *     // your code here
 			 * }
 			 * add_action( 'um_before_form_is_loaded', 'my_pre_shortcode', 10, 1 );
 			 */
 			do_action( 'um_before_form_is_loaded', $args );
-
 			/**
-			 * Fires pre-load form shortcode.
+			 * Fires before loading a form shortcode.
 			 *
-			 * @since 2.0
+			 * @since 1.3.x
+			 * @todo Deprecate since 2.7.0. Use `um_pre_{$mode}_shortcode` or `um_before_form_is_loaded` instead.
 			 * @hook  um_before_{$mode}_form_is_loaded
 			 *
-			 * @param {array} $args Form shortcode pre-loading.
-			 *
-			 * @example <caption>Make any custom action on pre-load form shortcode.</caption>
-			 * function my_pre_shortcode( $args ) {
-			 *     // your code here
-			 * }
-			 * add_action( 'um_before_{$mode}_form_is_loaded', 'my_pre_shortcode', 10, 1 );
+			 * @param {array} $args Form shortcode arguments.
 			 */
 			do_action( "um_before_{$mode}_form_is_loaded", $args );
 
@@ -808,7 +823,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 			$this->dynamic_css( $args );
 
-			if ( um_get_requested_user() || 'logout' === $mode ) {
+			if ( 'logout' === $mode || um_get_requested_user() ) {
 				um_reset_user();
 			}
 
@@ -828,10 +843,8 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			 */
 			do_action( 'um_after_everything_output' );
 
-			$output = ob_get_clean();
-			return $output;
+			return ob_get_clean();
 		}
-
 
 		/**
 		 * Get dynamic CSS args
