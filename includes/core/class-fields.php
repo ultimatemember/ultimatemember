@@ -4720,109 +4720,108 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			return $output;
 		}
 
-
 		/**
-		 * Get new row in form
+		 * Get new row in form.
 		 *
-		 * @param  string $row_id
-		 * @param  array  $row_array
+		 * @param string $row_id
+		 * @param array  $row_array
 		 *
 		 * @return string
 		 */
 		public function new_row_output( $row_id, $row_array ) {
-			$output = null;
+			$output = '';
 
-			$padding      = ( isset( $row_array['padding'] ) ) ? $row_array['padding'] : '';
-			$margin       = ( isset( $row_array['margin'] ) ) ? $row_array['margin'] : '';
-			$background   = ( isset( $row_array['background'] ) ) ? $row_array['background'] : '';
-			$text_color   = ( isset( $row_array['text_color'] ) ) ? $row_array['text_color'] : '';
-			$borderradius = ( isset( $row_array['borderradius'] ) ) ? $row_array['borderradius'] : '';
-			$border       = ( isset( $row_array['border'] ) ) ? $row_array['border'] : '';
-			$bordercolor  = ( isset( $row_array['bordercolor'] ) ) ? $row_array['bordercolor'] : '';
-			$borderstyle  = ( isset( $row_array['borderstyle'] ) ) ? $row_array['borderstyle'] : '';
-			$heading      = ( isset( $row_array['heading'] ) ) ? $row_array['heading'] : '';
-			$css_class    = ( isset( $row_array['css_class'] ) ) ? $row_array['css_class'] : '';
+			$background   = array_key_exists( 'background', $row_array ) ? $row_array['background'] : '';
+			$text_color   = array_key_exists( 'text_color', $row_array ) ? $row_array['text_color'] : '';
+			$padding      = array_key_exists( 'padding', $row_array ) ? $row_array['padding'] : '';
+			$margin       = array_key_exists( 'margin', $row_array ) ? $row_array['margin'] : '';
+			$border       = array_key_exists( 'border', $row_array ) ? $row_array['border'] : '';
+			$borderradius = array_key_exists( 'borderradius', $row_array ) ? $row_array['borderradius'] : '';
+			$borderstyle  = array_key_exists( 'borderstyle', $row_array ) ? $row_array['borderstyle'] : '';
+			$bordercolor  = array_key_exists( 'bordercolor', $row_array ) ? $row_array['bordercolor'] : '';
+			$heading      = ! empty( $row_array['heading'] );
+			$css_class    = array_key_exists( 'css_class', $row_array ) ? $row_array['css_class'] : '';
 
-			$css_padding                  = '';
-			$css_margin                   = '';
-			$css_background               = '';
-			$css_borderradius             = '';
-			$css_border                   = '';
-			$css_bordercolor              = '';
-			$css_borderstyle              = '';
-			$css_heading_background_color = '';
-			$css_heading_padding          = '';
-			$css_heading_text_color       = '';
-			$css_heading_borderradius     = '';
-			$css_text_color               = '';
+			$css_borderradius = '';
 
-			// row css rules
-			if ( $padding ) {
-				$css_padding = 'padding: ' . $padding . ';';
-			}
-			if ( $margin ) {
-				$css_margin = 'margin: ' . $margin . ';';
-			} else {
-				$css_margin = 'margin: 0 0 30px 0;';
+			// Row CSS rules.
+			$css_background = '';
+			if ( ! empty( $background ) ) {
+				$css_background = 'background-color: ' . esc_attr( $background ) . ';';
 			}
 
-			if ( $background ) {
-				$css_background = 'background-color: ' . $background . ';';
-			}
-			if ( $borderradius ) {
-				$css_borderradius = 'border-radius: 0px 0px ' . $borderradius . ' ' . $borderradius . ';';
-			}
-			if ( $border ) {
-				$css_border = 'border-width: ' . $border . ';';
-			}
-			if ( $bordercolor ) {
-				$css_bordercolor = 'border-color: ' . $bordercolor . ';';
-			}
-			if ( $borderstyle ) {
-				$css_borderstyle = 'border-style: ' . $borderstyle . ';';
-			}
-			if ( $text_color ) {
-				$css_text_color = 'color: ' . $text_color . ' !important;';
+			$css_text_color = '';
+			if ( ! empty( $text_color ) ) {
+				$css_text_color = 'color: ' . esc_attr( $text_color ) . ' !important;';
 				$css_class     .= ' um-customized-row';
 			}
 
-			// show the heading
-			if ( $heading ) {
+			$css_padding = '';
+			if ( ! empty( $padding ) ) {
+				$css_padding = 'padding: ' . esc_attr( $padding ) . ';';
+			}
 
+			$css_margin = 'margin: 0 0 30px 0;';
+			if ( ! empty( $margin ) ) {
+				$css_margin = 'margin: ' . esc_attr( $margin ) . ';';
+			}
+
+			$css_border = '';
+			if ( ! empty( $border ) ) {
+				$css_border = 'border-width: ' . esc_attr( $border ) . ';';
+			}
+
+			$css_borderstyle = '';
+			if ( ! empty( $borderstyle ) ) {
+				$css_borderstyle = 'border-style: ' . esc_attr( $borderstyle ) . ';';
+			}
+
+			$css_bordercolor = '';
+			if ( ! empty( $bordercolor ) ) {
+				$css_bordercolor = 'border-color: ' . esc_attr( $bordercolor ) . ';';
+			}
+
+			// Show the heading.
+			if ( $heading ) {
+				if ( ! empty( $borderradius ) ) {
+					$css_borderradius = 'border-radius: 0px 0px ' . esc_attr( $borderradius ) . ' ' . esc_attr( $borderradius ) . ';';
+				}
+
+				$css_heading_background_color = '';
+				$css_heading_padding          = '';
 				if ( ! empty( $row_array['heading_background_color'] ) ) {
 					$css_heading_background_color = 'background-color: ' . $row_array['heading_background_color'] . ';';
 					$css_heading_padding          = 'padding: 10px 15px;';
 				}
 
-				$css_heading_borderradius = empty( $borderradius ) ? '' : "border-radius: $borderradius $borderradius 0px 0px;";
+				$css_heading_borderradius = ! empty( $borderradius ) ? 'border-radius: ' . esc_attr( $borderradius ) . ' ' . esc_attr( $borderradius ) . ' 0px 0px;' : '';
 				$css_heading_border       = $css_border . $css_borderstyle . $css_bordercolor . $css_heading_borderradius . 'border-bottom-width: 0px;';
 				$css_heading_margin       = $css_margin . 'margin-bottom: 0px;';
-				$css_heading_text_color   = empty( $row_array['heading_text_color'] ) ? '' : 'color: ' . $row_array['heading_text_color'] . ';';
-				$css_icon_color           = empty( $row_array['icon_color'] ) ? '' : 'color: ' . $row_array['icon_color'] . ';';
+				$css_heading_text_color   = ! empty( $row_array['heading_text_color'] ) ? 'color: ' . esc_attr( $row_array['heading_text_color'] ) . ';' : '';
 
-				$output .= '<div class="um-row-heading" style="' . $css_heading_margin . $css_heading_padding . $css_heading_border . $css_heading_background_color . $css_heading_text_color . '">';
+				$output .= '<div class="um-row-heading" style="' . esc_attr( $css_heading_margin . $css_heading_padding . $css_heading_border . $css_heading_background_color . $css_heading_text_color ) . '">';
 
 				if ( ! empty( $row_array['icon'] ) ) {
-					$output .= '<span class="um-row-heading-icon" style="' . $css_icon_color . '"><i class="' . $row_array['icon'] . '"></i></span>';
+					$css_icon_color = ! empty( $row_array['icon_color'] ) ? 'color: ' . esc_attr( $row_array['icon_color'] ) . ';' : '';
+					$output        .= '<span class="um-row-heading-icon" style="' . esc_attr( $css_icon_color ) . '"><i class="' . esc_attr( $row_array['icon'] ) . '"></i></span>';
 				}
+
 				if ( ! empty( $row_array['heading_text'] ) ) {
-					$output .= htmlspecialchars( $row_array['heading_text'] );
+					$output .= esc_html( $row_array['heading_text'] );
 				}
 
 				$output .= '</div>';
 
 				$css_border .= 'border-top-width: 0px;';
 				$css_margin .= 'margin-top: 0px;';
-
 			} else {
-
-				// no heading
-				$css_borderradius = empty( $borderradius ) ? '' : "border-radius: $borderradius;";
-
+				// No heading.
+				if ( ! empty( $borderradius ) ) {
+					$css_borderradius = 'border-radius: ' . esc_attr( $borderradius ) . ';';
+				}
 			}
 
-			$output .= '<div class="um-row ' . $row_id . ' ' . $css_class . '" style="' . $css_padding . $css_background . $css_margin . $css_border . $css_borderstyle . $css_bordercolor . $css_borderradius . $css_text_color . '">';
-
+			$output .= '<div class="um-row ' . esc_attr( $row_id . ' ' . $css_class ) . '" style="' . esc_attr( $css_padding . $css_background . $css_margin . $css_border . $css_borderstyle . $css_bordercolor . $css_borderradius . $css_text_color ) . '">';
 			return $output;
 		}
 
