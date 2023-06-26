@@ -25,15 +25,11 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		 */
 		public $roles = array();
 
-
 		/**
 		 * Query constructor.
 		 */
 		public function __construct() {
-
-
 		}
-
 
 		/**
 		 * Ajax pagination for posts
@@ -42,28 +38,25 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 			UM()->check_ajax_nonce();
 
 			// phpcs:disable WordPress.Security.NonceVerification
-			$hook = '';
-			if ( isset( $_REQUEST['hook'] ) ) {
-				$hook = $_REQUEST['hook'];
+			if ( ! isset( $_REQUEST['hook'] ) ) {
+				wp_send_json_error( __( 'Invalid hook.', 'ultimate-member' ) );
 			}
-			if ( ! empty( $_REQUEST['args'] ) ) {
-				$args = $_REQUEST['args'];
-			} else {
-				$args = array();
-			}
+			$hook = sanitize_key( $_REQUEST['hook'] );
+
+			$args = ! empty( $_REQUEST['args'] ) ? $_REQUEST['args'] : array();
 			// phpcs:enable WordPress.Security.NonceVerification
 
 			ob_start();
 
 			/**
-			 * Fires on posts loading by AJAX.
+			 * Fires on posts loading by AJAX in User Profile tabs.
 			 *
-			 * @since 2.0
+			 * @since 1.3.x
 			 * @hook  um_ajax_load_posts__{$hook}
 			 *
 			 * @param {array} $args Request.
 			 *
-			 * @example <caption>Make any custom action on posts loading by AJAX.</caption>
+			 * @example <caption>Make any custom action on when posts loading by AJAX in User Profile.</caption>
 			 * function my_ajax_load_posts( $args ) {
 			 *     // your code here
 			 * }
@@ -72,10 +65,9 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 			do_action( "um_ajax_load_posts__{$hook}", $args );
 
 			$output = ob_get_clean();
-
+			// @todo: investigate using WP_KSES
 			die( $output );
 		}
-
 
 		/**
 		 * Get wp pages
