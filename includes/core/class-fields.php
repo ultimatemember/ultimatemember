@@ -351,6 +351,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				foreach ( $directories as $directory_id ) {
 					// Frontend filters
 					$directory_search_fields = get_post_meta( $directory_id, '_um_search_fields', true );
+					$directory_search_fields = ! is_array( $directory_search_fields ) ? array() : $directory_search_fields;
 					$directory_search_fields = array_values( array_diff( $directory_search_fields, array( $id ) ) );
 					update_post_meta( $directory_id, '_um_search_fields', $directory_search_fields );
 
@@ -363,16 +364,19 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					// display in tagline
 					$directory_reveal_fields = get_post_meta( $directory_id, '_um_reveal_fields', true );
+					$directory_reveal_fields = ! is_array( $directory_reveal_fields ) ? array() : $directory_reveal_fields;
 					$directory_reveal_fields = array_values( array_diff( $directory_reveal_fields, array( $id ) ) );
 					update_post_meta( $directory_id, '_um_reveal_fields', $directory_reveal_fields );
 
 					// extra user information section
 					$directory_tagline_fields = get_post_meta( $directory_id, '_um_tagline_fields', true );
+					$directory_tagline_fields = ! is_array( $directory_tagline_fields ) ? array() : $directory_tagline_fields;
 					$directory_tagline_fields = array_values( array_diff( $directory_tagline_fields, array( $id ) ) );
 					update_post_meta( $directory_id, '_um_tagline_fields', $directory_tagline_fields );
 
 					// Custom fields selected in "Choose field(s) to enable in sorting"
 					$directory_sorting_fields = get_post_meta( $directory_id, '_um_sorting_fields', true );
+					$directory_sorting_fields = ! is_array( $directory_sorting_fields ) ? array() : $directory_sorting_fields;
 					foreach ( $directory_sorting_fields as $key => $sorting_data ) {
 						if ( is_array( $sorting_data ) && array_key_exists( $id, $sorting_data ) ) {
 							unset( $directory_sorting_fields[ $key ] );
@@ -4837,8 +4841,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				wp_send_json_error( __( 'Invalid action.', 'ultimate-member' ) );
 			}
 
+			$in_row   = isset( $_POST['in_row'] ) ? absint( $_POST['in_row'] ) : 0;
 			$position = array(
-				'in_row'     => '_um_row_' . ( absint( $_POST['in_row'] ) + 1 ),
+				'in_row'     => '_um_row_' . ( $in_row + 1 ),
 				'in_sub_row' => isset( $_POST['in_sub_row'] ) ? absint( $_POST['in_sub_row'] ) : '',
 				'in_column'  => isset( $_POST['in_column'] ) ? absint( $_POST['in_column'] ) : '',
 				'in_group'   => isset( $_POST['in_group'] ) ? absint( $_POST['in_group'] ) : '',
