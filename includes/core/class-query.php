@@ -1,11 +1,11 @@
 <?php
 namespace um\core;
 
-// Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Query' ) ) {
-
 
 	/**
 	 * Class Query
@@ -13,12 +13,10 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 	 */
 	class Query {
 
-
 		/**
 		 * @var array
 		 */
 		public $wp_pages = array();
-
 
 		/**
 		 * @var array
@@ -74,7 +72,7 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		 *
 		 * @return array|string
 		 */
-		function wp_pages() {
+		public function wp_pages() {
 			global $wpdb;
 
 			if( isset( $this->wp_pages ) && ! empty( $this->wp_pages ) ){
@@ -107,13 +105,12 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 			return $array;
 		}
 
-
 		/**
 		 * Get all forms
 		 *
 		 * @return mixed
 		 */
-		function forms() {
+		public function forms() {
 			$results = array();
 
 			$args = array(
@@ -130,16 +127,14 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 			return $results;
 		}
 
-
 		/**
 		 * Do custom queries
 		 *
-		 * @param $args
+		 * @param array $args
 		 *
 		 * @return array|bool|int|\WP_Query
 		 */
 		public function make( $args ) {
-
 			$defaults = array(
 				'post_type'   => 'post',
 				'post_status' => array( 'publish' ),
@@ -150,40 +145,37 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 				return false;
 			}
 
-			if ( 'comment' === $args['post_type'] ) { // comments
-
+			if ( 'comment' === $args['post_type'] ) {
+				// Comments query.
 				unset( $args['post_type'] );
-
 				/**
-				 * Filters extend excluded comment types
+				 * Filters excluded comment types.
 				 *
-				 * @since 2.0
+				 * @since 1.3.x
 				 * @hook  um_excluded_comment_types
 				 *
-				 * @param {array}  $types  Comment Types.
+				 * @param {array} $types Comment Types.
 				 *
-				 * @return {array} $types Comment Types.
+				 * @return {array} Comment Types.
 				 *
 				 * @example <caption>Extend excluded comment types.</caption>
 				 * function my_excluded_comment_types( $types ) {
 				 *     // your code here
 				 *     return $types;
 				 * }
-				 * add_filter( 'um_excluded_comment_types', 'my_excluded_comment_types', 10, 1 );
+				 * add_filter( 'um_excluded_comment_types', 'my_excluded_comment_types' );
 				 */
 				$args['type__not_in'] = apply_filters( 'um_excluded_comment_types', array( '' ) );
 
-				$comments = get_comments( $args );
-				return $comments;
-
-			} else {
-				$custom_posts        = new \WP_Query();
-				$args['post_status'] = is_array( $args['post_status'] ) ? $args['post_status'] : explode( ',', $args['post_status'] );
-
-				$custom_posts->query( $args );
-
-				return $custom_posts;
+				return get_comments( $args );
 			}
+
+			$custom_posts        = new \WP_Query();
+			$args['post_status'] = is_array( $args['post_status'] ) ? $args['post_status'] : explode( ',', $args['post_status'] );
+
+			$custom_posts->query( $args );
+
+			return $custom_posts;
 		}
 
 
@@ -194,7 +186,7 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		 *
 		 * @return array
 		 */
-		function get_recent_users($number = 5){
+		function get_recent_users( $number = 5 ) {
 			$args = array( 'fields' => 'ID', 'number' => $number, 'orderby' => 'user_registered', 'order' => 'desc' );
 
 			$users = new \WP_User_Query( $args );
