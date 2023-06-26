@@ -277,14 +277,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
 		}
 
-
 		/**
 		 * Deletes a field in form only
 		 *
-		 * @param  integer $id
-		 * @param  integer $form_id
+		 * @param string $id
+		 * @param int    $form_id
 		 */
-		function delete_field_from_form( $id, $form_id ) {
+		public function delete_field_from_form( $id, $form_id ) {
 			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
 
 			if ( isset( $fields[ $id ] ) ) {
@@ -324,13 +323,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 		}
 
-
 		/**
-		 * Deletes a field from custom fields
+		 * Deletes a field from custom fields.
 		 *
-		 * @param  integer $id
+		 * @param string $id
 		 */
-		function delete_field_from_db( $id ) {
+		public function delete_field_from_db( $id ) {
 			$fields = UM()->builtin()->saved_fields;
 			if ( isset( $fields[ $id ] ) ) {
 				$args = $fields[ $id ];
@@ -396,68 +394,30 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						update_post_meta( $directory_id, '_um_sortby_custom_order', '' );
 					}
 				}
-
 			}
 		}
 
-
 		/**
-		 * Quickly adds a field from custom fields
+		 * Quickly adds a field from custom fields.
 		 *
-		 * @param integer $global_id
-		 * @param integer $form_id
-		 * @param array   $position
+		 * @param string $global_id
+		 * @param int    $form_id
+		 * @param array  $position
 		 */
-		function add_field_from_list( $global_id, $form_id, $position = array() ) {
-			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
+		private function add_field_from_list( $global_id, $form_id, $position = array() ) {
+			$fields      = UM()->query()->get_attr( 'custom_fields', $form_id );
 			$field_scope = UM()->builtin()->saved_fields;
 
 			if ( ! isset( $fields[ $global_id ] ) ) {
-
 				$count = 1;
 				if ( ! empty( $fields ) ) {
 					$count = count( $fields ) + 1;
 				}
 
-				$fields[ $global_id ] = $field_scope[ $global_id ];
+				$fields[ $global_id ]             = $field_scope[ $global_id ];
 				$fields[ $global_id ]['position'] = $count;
 
-				// set position
-				if ( $position ) {
-					foreach ( $position as $key => $val) {
-						$fields[ $global_id ][ $key ] = $val;
-					}
-				}
-
-				// add field to form
-				UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
-
-			}
-		}
-
-
-		/**
-		 * Quickly adds a field from pre-defined fields
-		 *
-		 * @param integer $global_id
-		 * @param integer $form_id
-		 * @param array   $position
-		 */
-		function add_field_from_predefined( $global_id, $form_id, $position = array() ) {
-			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
-			$field_scope = UM()->builtin()->predefined_fields;
-
-			if ( ! isset( $fields[ $global_id ] ) ) {
-
-				$count = 1;
-				if ( ! empty( $fields ) ) {
-					$count = count( $fields ) + 1;
-				}
-
-				$fields[ $global_id ] = $field_scope[ $global_id ];
-				$fields[ $global_id ]['position'] = $count;
-
-				// set position
+				// Set position.
 				if ( $position ) {
 					foreach ( $position as $key => $val ) {
 						$fields[ $global_id ][ $key ] = $val;
@@ -469,39 +429,65 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 		}
 
+		/**
+		 * Quickly adds a field from pre-defined fields.
+		 *
+		 * @param string $global_id
+		 * @param int    $form_id
+		 * @param array  $position
+		 */
+		private function add_field_from_predefined( $global_id, $form_id, $position = array() ) {
+			$fields      = UM()->query()->get_attr( 'custom_fields', $form_id );
+			$field_scope = UM()->builtin()->predefined_fields;
+
+			if ( ! isset( $fields[ $global_id ] ) ) {
+				$count = 1;
+				if ( ! empty( $fields ) ) {
+					$count = count( $fields ) + 1;
+				}
+
+				$fields[ $global_id ]             = $field_scope[ $global_id ];
+				$fields[ $global_id ]['position'] = $count;
+
+				// Set position.
+				if ( $position ) {
+					foreach ( $position as $key => $val ) {
+						$fields[ $global_id ][ $key ] = $val;
+					}
+				}
+
+				// add field to form
+				UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
+			}
+		}
 
 		/**
-		 * Duplicates a frield by meta key
+		 * Duplicates a field by meta key.
 		 *
-		 * @param  integer $id
-		 * @param  integer $form_id
+		 * @param string $id
+		 * @param int    $form_id
 		 */
-		function duplicate_field( $id, $form_id ) {
-			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
+		private function duplicate_field( $id, $form_id ) {
+			$fields     = UM()->query()->get_attr( 'custom_fields', $form_id );
 			$all_fields = UM()->builtin()->saved_fields;
 
 			$inc = count( $fields ) + 1;
 
 			$duplicate = $fields[ $id ];
 
-			$new_metakey = $id . "_" . $inc;
-			$new_title = $fields[ $id ]['title'] . " #" . $inc;
+			$new_metakey  = $id . '_' . $inc;
+			$new_title    = $fields[ $id ]['title'] . ' #' . $inc;
 			$new_position = $inc;
 
-			$duplicate['title'] = $new_title;
-			$duplicate['metakey'] = $new_metakey;
+			$duplicate['title']    = $new_title;
+			$duplicate['metakey']  = $new_metakey;
 			$duplicate['position'] = $new_position;
 
-			$fields[ $new_metakey ] = $duplicate;
+			$fields[ $new_metakey ]     = $duplicate;
 			$all_fields[ $new_metakey ] = $duplicate;
 
-			// not global attributes
-			unset( $all_fields[ $new_metakey ]['in_row'] );
-			unset( $all_fields[ $new_metakey ]['in_sub_row'] );
-			unset( $all_fields[ $new_metakey ]['in_column'] );
-			unset( $all_fields[ $new_metakey ]['in_group'] );
-			unset( $all_fields[ $new_metakey ]['position'] );
-
+			// Not global attributes.
+			unset( $all_fields[ $new_metakey ]['in_row'], $all_fields[ $new_metakey ]['in_sub_row'], $all_fields[ $new_metakey ]['in_column'], $all_fields[ $new_metakey ]['in_group'], $all_fields[ $new_metakey ]['position'] );
 
 			do_action( 'um_add_new_field', $new_metakey, $duplicate );
 
@@ -4836,63 +4822,57 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			return $output;
 		}
 
-
 		/**
-		 *
+		 * Admin Builder silent AJAX handler for actions with fields.
 		 */
 		public function do_ajax_action() {
 			UM()->admin()->check_ajax_nonce();
 
-			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
-				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
-			}
-
-			$output = null;
-
-			$position = array();
 			// phpcs:disable WordPress.Security.NonceVerification
-			if ( ! empty( $_POST['in_column'] ) ) {
-				$position['in_row']     = '_um_row_' . ( (int) $_POST['in_row'] + 1 );
-				$position['in_sub_row'] = isset( $_POST['in_sub_row'] ) ? $_POST['in_sub_row'] : '';
-				$position['in_column']  = isset( $_POST['in_column'] ) ? $_POST['in_column'] : '';
-				$position['in_group']   = isset( $_POST['in_group'] ) ? $_POST['in_group'] : '';
+			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( __( 'Please login as administrator.', 'ultimate-member' ) );
 			}
 
-			if ( isset( $_POST['act_id'] ) ) {
-				switch ( $_POST['act_id'] ) {
-					case 'um_admin_duplicate_field':
-						$this->duplicate_field( $_POST['arg1'], $_POST['arg2'] );
-						break;
+			if ( ! isset( $_POST['act_id'] ) ) {
+				wp_send_json_error( __( 'Invalid action.', 'ultimate-member' ) );
+			}
 
-					case 'um_admin_remove_field_global':
-						$this->delete_field_from_db( $_POST['arg1'] );
-						break;
+			$position = array(
+				'in_row'     => '_um_row_' . ( absint( $_POST['in_row'] ) + 1 ),
+				'in_sub_row' => isset( $_POST['in_sub_row'] ) ? absint( $_POST['in_sub_row'] ) : '',
+				'in_column'  => isset( $_POST['in_column'] ) ? absint( $_POST['in_column'] ) : '',
+				'in_group'   => isset( $_POST['in_group'] ) ? absint( $_POST['in_group'] ) : '',
+			);
 
-					case 'um_admin_remove_field':
-						$this->delete_field_from_form( $_POST['arg1'], $_POST['arg2'] );
-						break;
-
-					case 'um_admin_add_field_from_predefined':
-						$this->add_field_from_predefined( $_POST['arg1'], $_POST['arg2'], $position );
-						break;
-
-					case 'um_admin_add_field_from_list':
-						$this->add_field_from_list( $_POST['arg1'], $_POST['arg2'], $position );
-						break;
-				}
+			switch ( sanitize_key( $_POST['act_id'] ) ) {
+				case 'um_admin_duplicate_field':
+					// arg1 is a field metakey(id)
+					// arg2 is a form ID.
+					$this->duplicate_field( sanitize_text_field( $_POST['arg1'] ), absint( $_POST['arg2'] ) );
+					break;
+				case 'um_admin_remove_field_global':
+					// arg1 is a field metakey(id)
+					$this->delete_field_from_db( sanitize_text_field( $_POST['arg1'] ) );
+					break;
+				case 'um_admin_remove_field':
+					// arg1 is a field metakey(id)
+					// arg2 is a form ID.
+					$this->delete_field_from_form( sanitize_text_field( $_POST['arg1'] ), absint( $_POST['arg2'] ) );
+					break;
+				case 'um_admin_add_field_from_predefined':
+					// arg1 is a field metakey(id)
+					// arg2 is a form ID.
+					$this->add_field_from_predefined( sanitize_text_field( $_POST['arg1'] ), absint( $_POST['arg2'] ), $position );
+					break;
+				case 'um_admin_add_field_from_list':
+					// arg1 is a field metakey(id)
+					// arg2 is a form ID.
+					$this->add_field_from_list( sanitize_text_field( $_POST['arg1'] ), absint( $_POST['arg2'] ), $position );
+					break;
 			}
 			// phpcs:enable WordPress.Security.NonceVerification
-
-			if ( is_array( $output ) ) {
-				print_r( $output );
-			} else {
-				echo $output;
-			}
-			die;
-
+			wp_send_json_success();
 		}
-
-
 
 		/**
 		 * Get rendered field attributes
