@@ -861,15 +861,20 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 * @param $args
 		 * @return array
 		 */
-		function get_css_args( $args ) {
+		public function get_css_args( $args ) {
 			$arr = um_styling_defaults( $args['mode'] );
-			$arr = array_merge( $arr, array( 'form_id' => $args['form_id'], 'mode' => $args['mode'] ) );
+			$arr = array_merge(
+				$arr,
+				array(
+					'form_id' => $args['form_id'],
+					'mode'    => $args['mode'],
+				)
+			);
 			return $arr;
 		}
 
-
 		/**
-		 * Load dynamic css
+		 * Load dynamic CSS.
 		 *
 		 * @param array $args
 		 *
@@ -877,31 +882,31 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 */
 		public function dynamic_css( $args = array() ) {
 			/**
-			 * Filters turn on for disable global dynamic CSS for fix the issue #306
+			 * Filters for disable global dynamic CSS. It's false by default, set it to true to disable.
 			 *
 			 * @since 2.0
 			 * @hook  um_disable_dynamic_global_css
 			 *
-			 * @param {bool}  $disable  Disable global CSS.
+			 * @param {bool} $disable Disable global CSS.
 			 *
-			 * @return {bool} $disable Disable global CSS.
+			 * @return {bool} Disable global CSS.
 			 *
-			 * @example <caption>Turn on for disable global dynamic CSS.</caption>
-			 * function my_disable_dynamic_global_css( $disable ) {
-			 *     // your code here
-			 *     return $disable;
-			 * }
-			 * add_filter( 'um_disable_dynamic_global_css', 'my_disable_dynamic_global_css', 10, 1 );
+			 * @example <caption>Turn off enqueue of global dynamic CSS.</caption>
+			 * add_filter( 'um_disable_dynamic_global_css', '__return_true' );
 			 */
 			$disable_css = apply_filters( 'um_disable_dynamic_global_css', false );
 			if ( $disable_css ) {
 				return '';
 			}
 
-			include_once um_path . 'assets/dynamic_css/dynamic_global.php';
+			if ( empty( $args['form_id'] ) ) {
+				return '';
+			}
 
-			if ( isset( $args['mode'] ) && in_array( $args['mode'], array( 'profile', 'directory' ), true ) ) {
-				$file = um_path . 'assets/dynamic_css/dynamic_' . $args['mode'] . '.php';
+			include_once UM_PATH . 'assets/dynamic_css/dynamic-global.php';
+
+			if ( array_key_exists( 'mode', $args ) && in_array( $args['mode'], array( 'profile', 'directory' ), true ) ) {
+				$file = UM_PATH . 'assets/dynamic_css/dynamic-' . $args['mode'] . '.php';
 
 				if ( file_exists( $file ) ) {
 					include_once $file;
@@ -911,14 +916,13 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			return '';
 		}
 
-
 		/**
 		 * Loads a template file
 		 *
 		 * @param $template
 		 * @param array $args
 		 */
-		function template_load( $template, $args = array() ) {
+		public function template_load( $template, $args = array() ) {
 			if ( is_array( $args ) ) {
 				$this->set_args = $args;
 			}
