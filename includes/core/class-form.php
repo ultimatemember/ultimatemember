@@ -63,7 +63,6 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			add_action( 'init', array( &$this, 'field_declare' ), 10 );
 		}
 
-
 		/**
 		 *
 		 */
@@ -71,40 +70,35 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			UM()->check_ajax_nonce();
 
 			// phpcs:disable WordPress.Security.NonceVerification
+			if ( ! isset( $_REQUEST['hook'] ) ) {
+				die( esc_html__( 'Invalid hook', 'ultimate-member' ) );
+			}
+
 			if ( isset( $_REQUEST['user_id'] ) ) {
 				$user_id = absint( $_REQUEST['user_id'] );
 			}
-
-			if ( isset( $_REQUEST['hook'] ) ) {
-				$hook = sanitize_key( $_REQUEST['hook'] );
+			if ( ! isset( $user_id ) || ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+				die( esc_html__( 'You can not edit this user.', 'ultimate-member' ) );
 			}
 
-			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-				die( esc_html__( 'You can not edit this user', 'ultimate-member' ) );
-			}
-
-			switch ( $hook ) {
-				default:
-					/**
-					 * Fires on AJAX muted action.
-					 *
-					 * @since 2.0
-					 * @hook  um_run_ajax_function__{$hook}
-					 *
-					 * @param {array} $request Request.
-					 *
-					 * @example <caption>Make any custom action on AJAX muted action.</caption>
-					 * function my_run_ajax_function( $request ) {
-					 *     // your code here
-					 * }
-					 * add_action( 'um_run_ajax_function__{$hook}', 'my_run_ajax_function', 10, 1 );
-					 */
-					do_action( "um_run_ajax_function__{$hook}", $_REQUEST );
-					break;
-			}
+			$hook = sanitize_key( $_REQUEST['hook'] );
+			/**
+			 * Fires on AJAX muted action.
+			 *
+			 * @since 1.3.x
+			 * @hook  um_run_ajax_function__{$hook}
+			 *
+			 * @param {array} $request Request.
+			 *
+			 * @example <caption>Make any custom action on AJAX muted action.</caption>
+			 * function my_run_ajax_function( $request ) {
+			 *     // your code here
+			 * }
+			 * add_action( 'um_run_ajax_function__{$hook}', 'my_run_ajax_function', 10, 1 );
+			 */
+			do_action( "um_run_ajax_function__{$hook}", $_REQUEST );
 			// phpcs:enable WordPress.Security.NonceVerification
 		}
-
 
 		/**
 		 *
