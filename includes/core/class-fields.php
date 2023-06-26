@@ -3552,46 +3552,49 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				/* Radio */
 				case 'radio':
-					if ( isset( $options ) ) {
-						/**
-						 * Filters extend radio field options.
-						 *
-						 * @since 2.0
-						 * @hook  um_radio_field_options
-						 *
-						 * @param {array}   $options  Radio Field Options.
-						 * @param {array}   $data     Field Data.
-						 *
-						 * @return {array}  $options  Radio Field Options.
-						 *
-						 * @example <caption>Extend radio field options.</caption>
-						 * function my_radio_field_options( $options, $data ) {
-						 *     // your code here
-						 *     return $options;
-						 * }
-						 * add_filter( 'um_radio_field_options', 'my_radio_field_options', 10, 2 );
-						 */
-						$options = apply_filters( 'um_radio_field_options', $options, $data );
-
-						/**
-						 * Filters extend radio field options by field $key.
-						 *
-						 * @since 2.0
-						 * @hook  um_radio_field_options_{$key}
-						 *
-						 * @param {array}   $options  Radio Field Options.
-						 *
-						 * @return {array}  $options  Radio Field Options.
-						 *
-						 * @example <caption>Extend radio field options.</caption>
-						 * function my_radio_field_options( $options ) {
-						 *     // your code here
-						 *     return $options;
-						 * }
-						 * add_filter( 'um_radio_field_options_{$key}', 'my_radio_field_options', 10, 1 );
-						 */
-						$options = apply_filters( "um_radio_field_options_{$key}", $options );
+					$options = array();
+					if ( isset( $data['options'] ) && is_array( $data['options'] ) ) {
+						$options = $data['options'];
 					}
+
+					/**
+					 * Filters extend radio field options.
+					 *
+					 * @since 2.0
+					 * @hook  um_radio_field_options
+					 *
+					 * @param {array}   $options  Radio Field Options.
+					 * @param {array}   $data     Field Data.
+					 *
+					 * @return {array}  $options  Radio Field Options.
+					 *
+					 * @example <caption>Extend radio field options.</caption>
+					 * function my_radio_field_options( $options, $data ) {
+					 *     // your code here
+					 *     return $options;
+					 * }
+					 * add_filter( 'um_radio_field_options', 'my_radio_field_options', 10, 2 );
+					 */
+					$options = apply_filters( 'um_radio_field_options', $options, $data );
+
+					/**
+					 * Filters extend radio field options by field $key.
+					 *
+					 * @since 2.0
+					 * @hook  um_radio_field_options_{$key}
+					 *
+					 * @param {array}   $options  Radio Field Options.
+					 *
+					 * @return {array}  $options  Radio Field Options.
+					 *
+					 * @example <caption>Extend radio field options.</caption>
+					 * function my_radio_field_options( $options ) {
+					 *     // your code here
+					 *     return $options;
+					 * }
+					 * add_filter( 'um_radio_field_options_{$key}', 'my_radio_field_options', 10, 1 );
+					 */
+					$options = apply_filters( "um_radio_field_options_{$key}", $options );
 
 					$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data ) . '>';
 
@@ -3920,7 +3923,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return array
 		 */
 		function get_available_roles( $form_key, $options = array() ) {
-			if ( $form_key != 'role' ) {
+			if ( 'role' !== $form_key ) {
 				return $options;
 			}
 

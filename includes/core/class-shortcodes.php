@@ -582,7 +582,6 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			}
 		}
 
-
 		/**
 		 * Shortcode
 		 *
@@ -590,10 +589,9 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 *
 		 * @return string
 		 */
-		function ultimatemember( $args = array() ) {
+		public function ultimatemember( $args = array() ) {
 			return $this->load( $args );
 		}
-
 
 		/**
 		 * Load a module with global function
@@ -606,15 +604,15 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			$defaults = array();
 			$args     = wp_parse_args( $args, $defaults );
 
-			// when to not continue
-			$this->form_id = isset( $args['form_id'] ) ? $args['form_id'] : null;
-			if ( ! $this->form_id ) {
-				return;
+			// When to not continue.
+			if ( ! array_key_exists( 'form_id', $args ) ) {
+				return '';
 			}
+			$this->form_id = $args['form_id'];
 
 			$this->form_status = get_post_status( $this->form_id );
 			if ( 'publish' !== $this->form_status ) {
-				return;
+				return '';
 			}
 
 			// get data into one global array
@@ -624,21 +622,21 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			ob_start();
 
 			/**
-			 * Filters change arguments on load shortcode
+			 * Filters arguments for loading Ultimate Member shortcodes.
 			 *
-			 * @since 2.0
+			 * @since 1.3.x
 			 * @hook  um_pre_args_setup
 			 *
-			 * @param {array}  $post_data  $_POST data.
+			 * @param {array} $args Data for loading shortcode.
 			 *
-			 * @return {array} $post_data data.
+			 * @return {array} Data for loading shortcode.
 			 *
 			 * @example <caption>Change arguments on load shortcode.</caption>
-			 * function my_pre_args_setup( $post_data ) {
+			 * function my_pre_args_setup( $args ) {
 			 *     // your code here
-			 *     return $post_data;
+			 *     return $args;
 			 * }
-			 * add_filter( 'um_pre_args_setup', 'my_pre_args_setup', 10, 1 );
+			 * add_filter( 'um_pre_args_setup', 'my_pre_args_setup' );
 			 */
 			$args = apply_filters( 'um_pre_args_setup', $args );
 
@@ -676,82 +674,93 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 					$args = array_merge( $this->get_css_args( $args ), $args );
 				}
 			}
-			// filter for arguments
 
 			/**
-			 * Filters change arguments on load shortcode
+			 * Filters change arguments on load shortcode.
 			 *
-			 * @since 2.0
+			 * @since 1.3.x
 			 * @hook  um_shortcode_args_filter
 			 *
-			 * @param {array}  $post_data  Shortcode arguments.
+			 * @param {array} $args Shortcode arguments.
 			 *
-			 * @return {array} $post_data Shortcode arguments.
+			 * @return {array} Shortcode arguments.
 			 *
 			 * @example <caption>Change arguments on load shortcode.</caption>
 			 * function my_shortcode_args( $args ) {
 			 *     // your code here
 			 *     return $args;
 			 * }
-			 * add_filter( 'um_shortcode_args_filter', 'my_shortcode_args', 10, 1 );
+			 * add_filter( 'um_shortcode_args_filter', 'my_shortcode_args' );
 			 */
 			$args = apply_filters( 'um_shortcode_args_filter', $args );
 
 			if ( ! array_key_exists( 'mode', $args ) || ! array_key_exists( 'template', $args ) ) {
-				return;
+				ob_get_clean();
+				return '';
 			}
 			$mode = $args['mode'];
 
-			//not display on admin preview
+			// Not display on admin preview.
 			if ( empty( $_POST['act_id'] ) || 'um_admin_preview_form' !== sanitize_key( $_POST['act_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-
+				/**
+				 * Filters the ability to show registration form for the logged-in users.
+				 * Set it to true for displaying registration form for the logged-in users.
+				 *
+				 * @since 2.1.20
+				 * @hook um_registration_for_loggedin_users
+				 *
+				 * @param {bool}  $show Show registration form for the logged-in users. By default, it's false
+				 * @param {array} $args Shortcode arguments.
+				 *
+				 * @return {bool} Show registration form for the logged-in users.
+				 *
+				 * @example <caption>Show registration form for the logged-in users for all UM registration forms on your website.</caption>
+				 * add_filter( 'um_registration_for_loggedin_users', '__return_true' );
+				 */
 				$enable_loggedin_registration = apply_filters( 'um_registration_for_loggedin_users', false, $args );
 
-				if ( 'register' === $mode && is_user_logged_in() && ! $enable_loggedin_registration ) {
+				if ( ! $enable_loggedin_registration && 'register' === $mode && is_user_logged_in() ) {
 					ob_get_clean();
-					return __( 'You are already registered', 'ultimate-member' );
+					return __( 'You are already registered.', 'ultimate-member' );
 				}
 			}
 
-			if ( ! is_user_logged_in() && isset( $args['is_block'] ) && 1 === (int) $args['is_block'] && 'profile' === $mode ) {
-				return;
+			if ( isset( $args['is_block'] ) && 1 === (int) $args['is_block'] && 'profile' === $mode && ! is_user_logged_in() ) {
+				ob_get_clean();
+				return '';
 			}
 
-			// for profiles only
+			// For profiles only.
 			if ( 'profile' === $mode && um_profile_id() ) {
-
-				//set requested user if it's not setup from permalinks (for not profile page in edit mode)
+				// Set requested user if it's not setup from permalinks (for not profile page in edit mode).
 				if ( ! um_get_requested_user() ) {
 					um_set_requested_user( um_profile_id() );
 				}
 
-				if ( ! empty( $args['use_custom_settings'] ) ) { // Option "Apply custom settings to this form"
-					if ( ! empty( $args['role'] ) ) { // Option "Make this profile form role-specific"
+				if ( ! empty( $args['use_custom_settings'] ) && ! empty( $args['role'] ) ) {
+					// Option "Apply custom settings to this form". Option "Make this profile form role-specific".
+					// Show the first Profile Form with role selected, don't show profile forms below the page with other role-specific setting.
+					if ( empty( $this->profile_role ) ) {
+						$current_user_roles = UM()->roles()->get_all_user_roles( um_profile_id() );
 
-						// show the first Profile Form with role selected, don't show profile forms below the page with other role-specific setting
-						if ( empty( $this->profile_role ) ) {
-							$current_user_roles = UM()->roles()->get_all_user_roles( um_profile_id() );
-
-							if ( empty( $current_user_roles ) ) {
-								ob_get_clean();
-								return '';
-							} elseif ( is_array( $args['role'] ) ) {
-								if ( ! count( array_intersect( $args['role'], $current_user_roles ) ) ) {
-									ob_get_clean();
-									return '';
-								}
-							} else {
-								if ( ! in_array( $args['role'], $current_user_roles ) ) {
-									ob_get_clean();
-									return '';
-								}
-							}
-
-							$this->profile_role = $args['role'];
-						} elseif ( $this->profile_role !== $args['role'] ) {
+						if ( empty( $current_user_roles ) ) {
 							ob_get_clean();
 							return '';
 						}
+						if ( is_array( $args['role'] ) ) {
+							if ( ! count( array_intersect( $args['role'], $current_user_roles ) ) ) {
+								ob_get_clean();
+								return '';
+							}
+						} elseif ( ! in_array( $args['role'], $current_user_roles, true ) ) {
+							ob_get_clean();
+							return '';
+						}
+
+						$this->profile_role = $args['role'];
+					} elseif ( $this->profile_role !== $args['role'] ) {
+						ob_get_clean();
+						return '';
 					}
 				}
 			}
@@ -833,7 +842,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			 * @since 2.0
 			 * @hook  um_after_everything_output
 			 *
-			 * @param {array} $args Form shortcode pre-loading.
+			 * @param {array} $args Form shortcode arguments.
 			 *
 			 * @example <caption>Make any custom action after load shortcode content.</caption>
 			 * function my_pre_shortcode() {
