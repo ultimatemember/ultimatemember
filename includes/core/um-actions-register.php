@@ -279,29 +279,30 @@ add_action( 'um_submit_form_errors_hook__registration', 'um_submit_form_errors_h
  * Registration form submit handler.
  *
  * @param array $args
- * @return bool|int|WP_Error
  */
 function um_submit_form_register( $args ) {
 	if ( isset( UM()->form()->errors ) ) {
-		return false;
+		return;
 	}
 
 	/**
-	 * Filters extend user data on registration form submit
+	 * Filters user data submitted by a registration form.
 	 *
-	 * @since 2.0
+	 * Note: Data is already sanitized here.
+	 *
+	 * @since 1.3.x
 	 * @hook  um_add_user_frontend_submitted
 	 *
-	 * @param {array}  $success  Registration data.
+	 * @param {array} $submitted Submitted registration data.
 	 *
-	 * @return {array} Registration data.
+	 * @return {array} Extended registration data.
 	 *
-	 * @example <caption>Registration data.</caption>
-	 * function my_add_user_frontend_submitted( $success, $updated ) {
+	 * @example <caption>Extends registration data.</caption>
+	 * function my_add_user_frontend_submitted( $submitted ) {
 	 *     // your code here
 	 *     return $submitted;
 	 * }
-	 * add_filter( 'um_add_user_frontend_submitted', 'my_add_user_frontend_submitted', 10, 2 );
+	 * add_filter( 'um_add_user_frontend_submitted', 'my_add_user_frontend_submitted' );
 	 */
 	$args = apply_filters( 'um_add_user_frontend_submitted', $args );
 
@@ -351,7 +352,7 @@ function um_submit_form_register( $args ) {
 	$unique_user_id = uniqid();
 
 	// see dbDelta and WP native DB structure user_login varchar(60)
-	if ( empty( $user_login ) || mb_strlen( $user_login ) > 60 && ! is_email( $user_login ) ) {
+	if ( empty( $user_login ) || ( mb_strlen( $user_login ) > 60 && ! is_email( $user_login ) ) ) {
 		$user_login = 'user' . $unique_user_id;
 		while ( username_exists( $user_login ) ) {
 			$unique_user_id = uniqid();
@@ -372,7 +373,7 @@ function um_submit_form_register( $args ) {
 	}
 
 	if ( empty( $user_email ) ) {
-		$site_url   = @$_SERVER['SERVER_NAME'];
+		$site_url   = wp_parse_url( get_site_url(), PHP_URL_HOST );
 		$user_email = 'nobody' . $unique_user_id . '@' . $site_url;
 		while ( email_exists( $user_email ) ) {
 			$unique_user_id = uniqid();
@@ -380,21 +381,21 @@ function um_submit_form_register( $args ) {
 		}
 
 		/**
-		 * Filters change user default email if it's empty on registration
+		 * Filters change user default email if it's empty on registration.
 		 *
-		 * @since 2.0
+		 * @since 1.3.x
 		 * @hook  um_user_register_submitted__email
 		 *
-		 * @param {string}  $user_email  Default email.
+		 * @param {string} $user_email Default email.
 		 *
-		 * @return {string} $user_email Email.
+		 * @return {string} Default customized email.
 		 *
 		 * @example <caption>Change user default email if it's empty on registration.</caption>
 		 * function my_user_register_submitted__email( $user_email ) {
 		 *     // your code here
 		 *     return $user_email;
 		 * }
-		 * add_filter( 'um_user_register_submitted__email', 'my_user_register_submitted__email', 10, 1 );
+		 * add_filter( 'um_user_register_submitted__email', 'my_user_register_submitted__email' );
 		 */
 		$user_email = apply_filters( 'um_user_register_submitted__email', $user_email );
 	}
@@ -411,8 +412,8 @@ function um_submit_form_register( $args ) {
 
 	$args['submitted'] = array_merge( $args['submitted'], $credentials );
 
-	// set timestamp
-	$timestamp                      = current_time( 'timestamp' );
+	// Set registration timestamp.
+	$timestamp                      = current_time( 'timestamp' ); // @todo Working on timestamps.
 	$args['submitted']['timestamp'] = $timestamp;
 	$args['timestamp']              = $timestamp;
 
@@ -438,10 +439,10 @@ function um_submit_form_register( $args ) {
 	 * @since 2.0
 	 * @hook  um_registration_user_role
 	 *
-	 * @param {string}  $user_role  User role.
-	 * @param {array}   $args       Registration data.
+	 * @param {string} $user_role User role.
+	 * @param {array}  $args      Registration data.
 	 *
-	 * @return {string} $user_role User role.
+	 * @return {string} User role.
 	 *
 	 * @example <caption>Change user role on registration process.</caption>
 	 * function my_registration_user_role( $user_role, $args ) {
@@ -468,20 +469,17 @@ function um_submit_form_register( $args ) {
 	 * @hook  um_user_register
 	 *
 	 * @param {int}   $user_id User ID.
-	 * @param {array} $user_id Form data.
+	 * @param {array} $args    Form data.
 	 *
 	 * @example <caption>Make any custom action after complete UM user registration.</caption>
-	 * function um_user_register( $user_id, $args ) {
+	 * function my_um_user_register( $user_id, $args ) {
 	 *     // your code here
 	 * }
-	 * add_action( 'um_user_register', 'um_user_register', 10, 2 );
+	 * add_action( 'um_user_register', 'my_um_user_register', 10, 2 );
 	 */
 	do_action( 'um_user_register', $user_id, $args );
-
-	return $user_id;
 }
-add_action( 'um_submit_form_register', 'um_submit_form_register', 10 );
-
+add_action( 'um_submit_form_register', 'um_submit_form_register' );
 
 /**
  * Show the submit button
