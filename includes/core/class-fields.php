@@ -1026,7 +1026,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$value = '';
 			}
 
-
 			/**
 			 * UM hook
 			 *
@@ -1044,19 +1043,18 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			return apply_filters( 'um_field_value', $value, $default, $key, $type, $data );
 		}
 
-
 		/**
-		 * Checks if an option is selected
+		 * Checks if an option is selected.
 		 *
 		 * is used by Select, Multiselect and Checkbox fields
 		 *
-		 * @param  string $key
-		 * @param  string $value
-		 * @param  array  $data
+		 * @param string $key
+		 * @param string $value
+		 * @param array  $data
 		 *
 		 * @return boolean
 		 */
-		function is_selected( $key, $value, $data ) {
+		public function is_selected( $key, $value, $data ) {
 			global $wpdb;
 
 			/**
@@ -1116,18 +1114,18 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$value = (int) $value;
 				}
 
-				if ( strstr( $key, 'role_' ) || $key == 'role' ) {
-					$field_value = strtolower( UM()->roles()->get_editable_priority_user_role( um_user( 'ID' ) ) );
-
+				if ( strstr( $key, 'role_' ) || 'role' === $key ) {
 					$role_keys = get_option( 'um_roles', array() );
-
 					if ( ! empty( $role_keys ) ) {
-						if ( in_array( $field_value, $role_keys ) ) {
-							$field_value = 'um_' . $field_value;
+						$field_value = UM()->roles()->get_editable_priority_user_role( um_user( 'ID' ) );
+						if ( ! empty( $field_value ) ) {
+							$field_value = strtolower( $field_value );
+							if ( in_array( $field_value, $role_keys, true ) ) {
+								$field_value = 'um_' . $field_value;
+							}
 						}
 					}
 				}
-
 
 				/**
 				 * UM hook
@@ -1241,7 +1239,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			return false;
 		}
-
 
 		/**
 		 * Checks if a radio button is selected
@@ -3701,46 +3698,49 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				/* Checkbox */
 				case 'checkbox':
-					if ( isset( $options ) ) {
-						/**
-						 * Filters extend checkbox options.
-						 *
-						 * @since 2.0
-						 * @hook  um_checkbox_field_options
-						 *
-						 * @param {array}   $options  Checkbox Options.
-						 * @param {array}   $data     Field Data.
-						 *
-						 * @return {array}  $options  Checkbox Options.
-						 *
-						 * @example <caption>Extend checkbox options.</caption>
-						 * function um_checkbox_field_options( $options, $data ) {
-						 *     // your code here
-						 *     return $options;
-						 * }
-						 * add_filter( 'um_checkbox_field_options', 'um_checkbox_field_options', 10, 2 );
-						 */
-						$options = apply_filters( 'um_checkbox_field_options', $options, $data );
-
-						/**
-						 * Filters extend checkbox options by field $key.
-						 *
-						 * @since 2.0
-						 * @hook  um_checkbox_field_options_{$key}
-						 *
-						 * @param {array}   $options  Checkbox Options.
-						 *
-						 * @return {array}  $options  Checkbox Options.
-						 *
-						 * @example <caption>Extend checkbox options.</caption>
-						 * function my_checkbox_options( $options ) {
-						 *     // your code here
-						 *     return $options;
-						 * }
-						 * add_filter( 'um_checkbox_field_options_{$key}', 'my_checkbox_options', 10, 1 );
-						 */
-						$options = apply_filters( "um_checkbox_field_options_{$key}", $options );
+					$options = array();
+					if ( isset( $data['options'] ) && is_array( $data['options'] ) ) {
+						$options = $data['options'];
 					}
+
+					/**
+					 * Filters extend checkbox options.
+					 *
+					 * @since 2.0
+					 * @hook  um_checkbox_field_options
+					 *
+					 * @param {array}   $options  Checkbox Options.
+					 * @param {array}   $data     Field Data.
+					 *
+					 * @return {array}  $options  Checkbox Options.
+					 *
+					 * @example <caption>Extend checkbox options.</caption>
+					 * function um_checkbox_field_options( $options, $data ) {
+					 *     // your code here
+					 *     return $options;
+					 * }
+					 * add_filter( 'um_checkbox_field_options', 'um_checkbox_field_options', 10, 2 );
+					 */
+					$options = apply_filters( 'um_checkbox_field_options', $options, $data );
+
+					/**
+					 * Filters extend checkbox options by field $key.
+					 *
+					 * @since 2.0
+					 * @hook  um_checkbox_field_options_{$key}
+					 *
+					 * @param {array}   $options  Checkbox Options.
+					 *
+					 * @return {array}  $options  Checkbox Options.
+					 *
+					 * @example <caption>Extend checkbox options.</caption>
+					 * function my_checkbox_options( $options ) {
+					 *     // your code here
+					 *     return $options;
+					 * }
+					 * add_filter( 'um_checkbox_field_options_{$key}', 'my_checkbox_options', 10, 1 );
+					 */
+					$options = apply_filters( "um_checkbox_field_options_{$key}", $options );
 
 					$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data ) . '>';
 
@@ -4242,13 +4242,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		public function view_field( $key, $data, $rule = false ) {
 			$output = '';
 
-			// get whole field data
+			// Get whole field data.
 			if ( is_array( $data ) ) {
 				$data = $this->get_field( $key );
 			}
 
 			//hide if empty type
-			if ( ! isset( $data['type'] ) ) {
+			if ( ! array_key_exists( 'type', $data ) || empty( $data['type'] ) ) {
 				return '';
 			}
 			$type = $data['type'];
@@ -4257,15 +4257,22 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				return '';
 			}
 
-			//invisible on profile page
-			if ( 'edit' === $data['visibility'] || 'password' === $type ) {
+			// Invisible on profile page.
+			if ( 'password' === $type || ( array_key_exists( 'visibility', $data ) && 'edit' === $data['visibility'] ) ) {
 				return '';
 			}
 
-			//hide if empty
+			// Disable these fields in profile view only.
+			if ( 'user_password' === $key && 'profile' === $this->set_mode ) {
+				return '';
+			}
+
+			$default = array_key_exists( 'default', $data ) ? $data['default'] : false;
+
+			// Hide if empty.
 			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
 			if ( ! in_array( $type, $fields_without_metakey, true ) ) {
-				$_field_value = $this->field_value( $key, $data['classes'], $data );
+				$_field_value = $this->field_value( $key, $default, $data );
 
 				if ( ! isset( $_field_value ) || '' === $_field_value ) {
 					return '';
@@ -4276,30 +4283,27 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				return '';
 			}
 
-			// disable these fields in profile view only
-			if ( in_array( $key, array( 'user_password' ), true ) && 'profile' === $this->set_mode ) {
-				return '';
-			}
-
 			if ( ! um_field_conditions_are_met( $data ) ) {
 				return '';
 			}
 
-			if ( isset( $data['classes'] ) ) {
+			$classes = '';
+			if ( ! empty( $data['classes'] ) ) {
 				$classes = explode( ' ', $data['classes'] );
 			}
 
-			switch ( $type ) {
+			$conditional = '';
+			if ( ! empty( $data['conditional'] ) ) {
+				$conditional = $data['conditional'];
+			}
 
+			switch ( $type ) {
 				/* Default */
 				default:
-					$_field_value = $this->field_value( $key, $data['default'], $data );
+					$_field_value = $this->field_value( $key, $default, $data );
 
-					if ( ! in_array( $type, $fields_without_metakey, true ) && ( ! isset( $_field_value ) || '' === $_field_value ) ) {
-						$output = '';
-					} else {
-
-						$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data ) . '>';
+					if ( ( isset( $_field_value ) && '' !== $_field_value ) || in_array( $type, $fields_without_metakey, true ) ) {
+						$output .= '<div ' . esc_html( $this->get_atts( $key, $classes, $conditional, $data ) ) . '>';
 
 						if ( isset( $data['label'] ) || ! empty( $data['icon'] ) ) {
 
@@ -4310,8 +4314,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$output .= $this->field_label( $data['label'], $key, $data );
 						}
 
-						$res = $this->field_value( $key, $data['default'], $data );
-
+						$res = $_field_value;
 						if ( ! empty( $res ) ) {
 							$res = stripslashes( $res );
 						}
@@ -4326,19 +4329,20 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 
 						$data['is_view_field'] = true;
+
 						/**
-						 * Filters change field HTML on view mode
+						 * Filters the inner field HTML on view mode.
 						 *
-						 * @since 2.0
+						 * @since 1.3.x
 						 * @hook  um_view_field
 						 *
-						 * @param {string}  $output  Field HTML.
-						 * @param {string}  $data    Field Data.
-						 * @param {string}  $type    Field Type.
+						 * @param {string} $output  Field inner HTML.
+						 * @param {array}  $data    Field Data.
+						 * @param {string} $type    Field Type.
 						 *
-						 * @return {array} $output Field HTML.
+						 * @return {string} Field inner HTML.
 						 *
-						 * @example <caption>Change field HTML on view mode.</caption>
+						 * @example <caption>Change field's inner HTML on view mode.</caption>
 						 * function my_view_field( $output, $data, $type ) {
 						 *     // your code here
 						 *     return $output;
@@ -4346,17 +4350,16 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						 * add_filter( 'um_view_field', 'my_view_field', 10, 3 );
 						 */
 						$res = apply_filters( 'um_view_field', $res, $data, $type );
-
 						/**
-						 * Filters field HTML on view mode by field type
+						 * Filters the inner field HTML on view mode by field type {$type}.
 						 *
-						 * @since 2.0
+						 * @since 1.3.x
 						 * @hook  um_view_field_value_{$type}
 						 *
-						 * @param {string}  $output  Field HTML.
-						 * @param {string}  $data    Field Data.
+						 * @param {string} $output Field inner HTML.
+						 * @param {array}  $data   Field Data.
 						 *
-						 * @return {array} $output Field HTML.
+						 * @return {string} Field inner HTML.
 						 *
 						 * @example <caption>Change field HTML on view mode by field type.</caption>
 						 * function my_view_field( $output, $data ) {
@@ -4384,79 +4387,92 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					}
 
 					break;
-
 					/* HTML */
 				case 'block':
-					$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data ) . '>' . $data['content'] . '</div>';
+					$content = array_key_exists( 'content', $data ) ? $data['content'] : '';
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>' . $content . '</div>';
 					break;
-
 					/* Shortcode */
 				case 'shortcode':
-					$content = str_replace( '{profile_id}', um_profile_id(), $data['content'] );
-					if ( version_compare( get_bloginfo( 'version' ), '5.4', '<' ) ) {
-						$content = do_shortcode( $content );
-					} else {
-						$content = apply_shortcodes( $content );
-					}
+					$content = array_key_exists( 'content', $data ) ? $data['content'] : '';
+					$content = str_replace( '{profile_id}', um_profile_id(), $content );
+					$content = apply_shortcodes( $content );
 
-					$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data ) . '>' . $content . '</div>';
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>' . $content . '</div>';
 					break;
-
 					/* Gap/Space */
 				case 'spacing':
-					$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data, array( 'height' => $data['spacing'] ) ) . '></div>';
+					$field_style = array();
+					if ( array_key_exists( 'spacing', $data ) ) {
+						$field_style = array( 'height' => $data['spacing'] );
+					}
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data, $field_style ) . '></div>';
 					break;
-
 					/* A line divider */
 				case 'divider':
-					$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data, array( 'border-bottom' => $data['borderwidth'] . 'px ' . $data['borderstyle'] . ' ' . $data['bordercolor'] ) ) . '>';
-					if ( $data['divider_text'] ) {
+					$border_style = '';
+					if ( array_key_exists( 'borderwidth', $data ) ) {
+						$border_style .= $data['borderwidth'] . 'px';
+					}
+					if ( array_key_exists( 'borderstyle', $data ) ) {
+						$border_style .= ' ' . $data['borderstyle'];
+					}
+					if ( array_key_exists( 'bordercolor', $data ) ) {
+						$border_style .= ' ' . $data['bordercolor'];
+					}
+					$field_style = array();
+					if ( ! empty( $border_style ) ) {
+						$field_style = array( 'border-bottom' => $border_style );
+					}
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data, $field_style ) . '>';
+					if ( ! empty( $data['divider_text'] ) ) {
 						$output .= '<div class="um-field-divider-text"><span>' . $data['divider_text'] . '</span></div>';
 					}
 					$output .= '</div>';
 					break;
-
 					/* Rating */
 				case 'rating':
-					$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data ) . '>';
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
 					if ( isset( $data['label'] ) || ! empty( $data['icon'] ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
 
+					$number = 5;
+					if ( array_key_exists( 'number', $data ) && in_array( absint( $data['number'] ), array( 5, 10 ), true ) ) {
+						$number = $data['number'];
+					}
 					ob_start();
 					?>
 
 					<div class="um-field-area">
 						<div class="um-field-value">
 							<div class="um-rating-readonly um-raty" id="<?php echo esc_attr( $key ); ?>"
-								data-key="<?php echo esc_attr( $key ); ?>" data-number="<?php echo esc_attr( $data['number'] ); ?>"
-								data-score="<?php echo $this->field_value( $key, $data['default'], $data ); ?>"></div>
+								data-key="<?php echo esc_attr( $key ); ?>" data-number="<?php echo esc_attr( $number ); ?>"
+								data-score="<?php echo esc_attr( $this->field_value( $key, $default, $data ) ); ?>"></div>
 						</div>
 					</div>
 
 					<?php
 					$output .= ob_get_clean();
 					$output .= '</div>';
-
 					break;
-
 			}
 
-			// Custom filter for field output
+			// Custom filter for field output.
 			if ( isset( $this->set_mode ) ) {
 				/**
-				 * Filters field HTML by field $key
+				 * Filters outer field HTML by field $key.
 				 *
-				 * @since 2.0
+				 * @since 1.3.x
 				 * @hook  um_{$key}_form_show_field
 				 *
-				 * @param {string}  $output  Field HTML.
-				 * @param {string}  $mode    Field Mode.
+				 * @param {string} $output Field outer HTML.
+				 * @param {string} $mode   Field Mode.
 				 *
-				 * @return {array} $output Field HTML.
+				 * @return {string} Field outer HTML.
 				 *
-				 * @example <caption>Change field HTML by field $key.</caption>
+				 * @example <caption>Change field outer HTML by field $key.</caption>
 				 * function my_form_show_field( $output, $mode ) {
 				 *     // your code here
 				 *     return $output;
@@ -4464,19 +4480,18 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				 * add_filter( 'um_{$key}_form_show_field', 'my_form_show_field', 10, 2 );
 				 */
 				$output = apply_filters( "um_{$key}_form_show_field", $output, $this->set_mode );
-
 				/**
-				 * Filters field HTML by field $type
+				 * Filters outer field HTML by field $type.
 				 *
-				 * @since 2.0
+				 * @since 1.3.x
 				 * @hook  um_{$type}_form_show_field
 				 *
-				 * @param {string}  $output  Field HTML.
-				 * @param {string}  $mode    Field Mode.
+				 * @param {string} $output Field outer HTML.
+				 * @param {string} $mode   Field Mode.
 				 *
-				 * @return {array} $output Field HTML.
+				 * @return {string} Field outer HTML.
 				 *
-				 * @example <caption>Change field HTML by field $type.</caption>
+				 * @example <caption>Change field outer HTML by field $type.</caption>
 				 * function my_form_show_field( $output, $mode ) {
 				 *     // your code here
 				 *     return $output;
