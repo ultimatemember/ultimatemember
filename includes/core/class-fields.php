@@ -2909,6 +2909,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$allowed_types = 'gif,jpg,jpeg,png';
 						} elseif ( is_array( $data['allowed_types'] ) ) {
 							$allowed_types = implode( ',', $data['allowed_types'] );
+						} else {
+							$allowed_types = $data['allowed_types'];
 						}
 
 						$output .= '<div class="um-modal-hidden-content">';
@@ -3015,6 +3017,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$allowed_types = 'pdf,txt';
 						} elseif ( is_array( $allowed_types ) ) {
 							$allowed_types = implode( ',', $data['allowed_types'] );
+						} else {
+							$allowed_types = $data['allowed_types'];
 						}
 
 						$output .= '<div class="um-modal-hidden-content">';
