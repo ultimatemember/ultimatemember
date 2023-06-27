@@ -61,6 +61,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 */
 		public $is_loaded = false;
 
+		public $set_field_type;
+
 		/**
 		 * Admin_Metabox constructor.
 		 */
@@ -1820,7 +1822,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					?>
 
 					<p><label for="_format_custom"><?php _e( 'Use custom Date format', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This option overrides "Date User-Friendly Format" option. See https://www.php.net/manual/en/function.date.php', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_format_custom" id="_format_custom" value="<?php echo htmlspecialchars( $this->edit_mode_value, ENT_QUOTES ); ?>" placeholder="j M Y" />
+						<input type="text" name="_format_custom" id="_format_custom" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" placeholder="j M Y" />
 					</p>
 
 					<?php
@@ -2191,7 +2193,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					?>
 
 					<p><label for="_title"><?php _e( 'Title', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'This is the title of the field for your reference in the backend. The title will not appear on the front-end of your website.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_title" id="_title" value="<?php echo htmlspecialchars( $this->edit_mode_value, ENT_QUOTES ); ?>" />
+						<input type="text" name="_title" id="_title" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
@@ -2202,7 +2204,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					?>
 
 					<p style="display:none"><label for="_id"><?php _e( 'Unique ID', 'ultimate-member' ) ?></label>
-						<input type="text" name="_id" id="_id" value="<?php echo $this->edit_mode_value; ?>" />
+						<input type="text" name="_id" id="_id" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
@@ -2271,7 +2273,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				<?php } else { ?>
 
 					<p><label for="_default"><?php _e( 'Default Value', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" />
+						<input type="text" name="_default" id="_default" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 				<?php } ?>
@@ -2283,7 +2285,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					?>
 
 					<p><label for="_label"><?php _e( 'Label', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'The field label is the text that appears above the field on your front-end form. Leave blank to not show a label above field.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_label" id="_label" value="<?php echo htmlspecialchars( $this->edit_mode_value, ENT_QUOTES ); ?>" />
+						<input type="text" name="_label" id="_label" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
@@ -2293,7 +2295,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					?>
 
 					<p><label for="_label_confirm_pass"><?php _e( 'Confirm password field label', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'This label is the text that appears above the confirm password field. Leave blank to show default label.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_label_confirm_pass" id="_label_confirm_pass" value="<?php echo htmlspecialchars( $this->edit_mode_value, ENT_QUOTES ); ?>" />
+						<input type="text" name="_label_confirm_pass" id="_label_confirm_pass" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
@@ -2303,7 +2305,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					?>
 
 					<p><label for="_placeholder"><?php _e( 'Placeholder', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'This is the text that appears within the field e.g please enter your email address. Leave blank to not show any placeholder text.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_placeholder" id="_placeholder" value="<?php echo htmlspecialchars( $this->edit_mode_value, ENT_QUOTES ); ?>" />
+						<input type="text" name="_placeholder" id="_placeholder" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php

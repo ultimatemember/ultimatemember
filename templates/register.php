@@ -2,7 +2,7 @@
 /**
  * Template for the register page
  *
- * This template can be overridden by copying it to yourtheme/ultimate-member/register.php
+ * This template can be overridden by copying it to yourtheme/ultimate-member/templates/register.php
  *
  * Page: "Register"
  *

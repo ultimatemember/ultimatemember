@@ -1,13 +1,11 @@
 <?php
 namespace um\core;
 
-
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Password' ) ) {
-
 
 	/**
 	 * Class Password
@@ -15,20 +13,24 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 	 */
 	class Password {
 
+		/**
+		 * @var bool
+		 */
+		private $change_password = false;
 
 		/**
 		 * Password constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			add_shortcode( 'ultimatemember_password', array( &$this, 'ultimatemember_password' ) );
 
 			add_action( 'template_redirect', array( &$this, 'form_init' ), 10001 );
 
 			add_action( 'um_reset_password_errors_hook', array( &$this, 'um_reset_password_errors_hook' ) );
-			add_action( 'um_reset_password_process_hook', array( &$this,'um_reset_password_process_hook' ) );
+			add_action( 'um_reset_password_process_hook', array( &$this, 'um_reset_password_process_hook' ) );
 
 			add_action( 'um_change_password_errors_hook', array( &$this, 'um_change_password_errors_hook' ) );
-			add_action( 'um_change_password_process_hook', array( &$this,'um_change_password_process_hook' ) );
+			add_action( 'um_change_password_process_hook', array( &$this, 'um_change_password_process_hook' ) );
 		}
 
 
@@ -156,7 +158,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			 */
 			$args = apply_filters( 'um_reset_password_shortcode_args_filter', $args );
 
-			if ( isset( $this->change_password ) ) {
+			if ( false !== $this->change_password ) {
 				// then COOKIE are valid then get data from them and populate hidden fields for the password reset form
 				$args['template'] = 'password-change';
 				$args['rp_key']   = '';

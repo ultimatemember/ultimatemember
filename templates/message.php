@@ -2,7 +2,7 @@
 /**
  * Template for the message after registration process
  *
- * This template can be overridden by copying it to yourtheme/ultimate-member/message.php
+ * This template can be overridden by copying it to yourtheme/ultimate-member/templates/message.php
  *
  * Call: function parse_shortcode_args()
  *
