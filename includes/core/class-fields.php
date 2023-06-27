@@ -48,7 +48,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		/**
 		 * @var array
 		 */
-		public $field_icons = array();
+		public $field_icons = '';
 
 		/**
 		 * @var array
@@ -2089,14 +2089,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			return $arr_restricted_fields;
 		}
 
-
 		/**
 		 * Gets a field in 'input mode'
 		 *
 		 * @param string $key
-		 * @param array $data
-		 * @param bool $rule
-		 * @param array $args
+		 * @param array  $data
+		 * @param bool   $rule
+		 * @param array  $args
 		 *
 		 * @return string|null
 		 * @throws \Exception
@@ -2116,11 +2115,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$_um_profile_id = um_user( 'ID' );
 			}
 
-			if ( ! is_user_logged_in() && isset( $data['is_block'] ) && 1 === (int) $data['is_block'] ) {
+			if ( isset( $data['is_block'] ) && 1 === (int) $data['is_block'] && ! is_user_logged_in() ) {
 				$_um_profile_id = 0;
 			}
 
-			// get whole field data
+			// Get whole field data.
 			if ( isset( $data ) && is_array( $data ) ) {
 				$origin_data = $this->get_field( $key );
 				if ( is_array( $origin_data ) ) {
@@ -2132,6 +2131,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			if ( ! isset( $data['type'] ) ) {
 				return '';
 			}
+			$type = $data['type'];
 
 			if ( isset( $data['in_group'] ) && '' !== $data['in_group'] && 'group' !== $rule ) {
 				return '';
@@ -2151,19 +2151,17 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 
 			// required user permission 'required_perm' - it's field attribute predefined in the field data in code
-			if ( isset( $data['required_perm'] ) ) {
-				if ( ! UM()->roles()->um_user_can( $data['required_perm'] ) ) {
-					return '';
-				}
+			if ( isset( $data['required_perm'] ) && ! UM()->roles()->um_user_can( $data['required_perm'] ) ) {
+				return '';
 			}
 
 			// fields that need to be disabled in edit mode (profile) (email, username, etc.)
 			$arr_restricted_fields = $this->get_restricted_fields_for_edit( $_um_profile_id );
-			if ( in_array( $key, $arr_restricted_fields, true ) && true === $this->editing && 'profile' === $this->set_mode ) {
+			if ( true === $this->editing && 'profile' === $this->set_mode && in_array( $key, $arr_restricted_fields, true ) ) {
 				return '';
 			}
 
-			if ( 'view' === $data['visibility'] && 'register' !== $this->set_mode ) {
+			if ( 'register' !== $this->set_mode && array_key_exists( 'visibility', $data ) && 'view' === $data['visibility'] ) {
 				return '';
 			}
 
@@ -2175,8 +2173,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			// Stop return empty values build field attributes:
 
-			if ( 'view' === $data['visibility'] && 'register' === $this->set_mode ) {
-
+			if ( 'register' === $this->set_mode && array_key_exists( 'visibility', $data ) && 'view' === $data['visibility'] ) {
 				um_fetch_user( get_current_user_id() );
 				if ( ! um_user( 'can_edit_everyone' ) ) {
 					$disabled = ' disabled="disabled" ';
@@ -2199,38 +2196,56 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				}
 			}
 
+			/**
+			 * Filters a field disabled attribute.
+			 *
+			 * @since 2.0
+			 * @hook  um_is_field_disabled
+			 *
+			 * @param {string} $disabled Disable global CSS.
+			 * @param {array}  $data     Field data.
+			 *
+			 * @return {string} Set string to ' disabled="disabled" ' to make a field disabled.
+			 *
+			 * @example <caption>Make a field disabled on the edit mode.</caption>
+			 * function my_is_field_disabled( $disabled, $data ) {
+			 *     $disabled = ' disabled="disabled" ';
+			 *     return $disabled;
+			 * }
+			 * add_filter( 'um_is_field_disabled', 'my_is_field_disabled', 10, 2 );
+			 */
 			$disabled = apply_filters( 'um_is_field_disabled', $disabled, $data );
 
-			if ( ! isset( $data['autocomplete'] ) ) {
-				$autocomplete = 'off';
-			} else {
-				$autocomplete = $data['autocomplete'];
-			}
+			$autocomplete = array_key_exists( 'autocomplete', $data ) ? $data['autocomplete'] : 'off';
 
-			if ( isset( $data['classes'] ) ) {
+			$classes = '';
+			if ( array_key_exists( 'classes', $data ) ) {
 				$classes = explode( ' ', $data['classes'] );
-			} else {
-				$classes = '';
 			}
 
 			um_fetch_user( $_um_profile_id );
 
-			if ( ! isset( $data['type'] ) ) {
-				return '';
+			$input       = array_key_exists( 'input', $data ) ? $data['input'] : 'text';
+			$default     = array_key_exists( 'default', $data ) ? $data['default'] : false;
+			$validate    = array_key_exists( 'validate', $data ) ? $data['validate'] : '';
+			$placeholder = array_key_exists( 'placeholder', $data ) ? $data['placeholder'] : '';
+
+			$conditional = '';
+			if ( ! empty( $data['conditional'] ) ) {
+				$conditional = $data['conditional'];
 			}
-			$type = $data['type'];
 
 			/**
-			 * Filters change field type.
+			 * Filters a field type on the edit mode.
 			 *
-			 * @since 2.0
+			 * @since 1.3.x
 			 * @hook  um_hook_for_field_{$type}
 			 *
 			 * @param {string} $type Field Type.
 			 *
-			 * @return {string} $type Field Type.
+			 * @return {string} Field Type.
 			 *
-			 * @example <caption>Change field type.</caption>
+			 * @example <caption>Change a field type.</caption>
 			 * function my_field_type( $type ) {
 			 *     // your code here
 			 *     return $type;
@@ -2239,13 +2254,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			 */
 			$type = apply_filters( "um_hook_for_field_{$type}", $type );
 			switch ( $type ) {
-
 				case 'textarea':
 				case 'multiselect':
-					$field_id    = $field_name = $key;
-					$field_value = $this->field_value( $key, $data['default'], $data );
+					$field_id    = $key;
+					$field_name  = $key;
+					$field_value = $this->field_value( $key, $default, $data );
 					break;
-
 				case 'select':
 				case 'radio':
 					$form_key = str_replace( array( 'role_select', 'role_radio' ), 'role', $key );
@@ -2262,13 +2276,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			 * @since 2.0.13
 			 * @hook  um_completeness_field_id
 			 *
-			 * @param {int}    $field_id  Field id.
-			 * @param {array}  $data      Field Data.
-			 * @param {array}  $args      Optional field arguments.
+			 * @param {string} $field_id Field id.
+			 * @param {array}  $data     Field Data.
+			 * @param {array}  $args     Optional field arguments.
 			 *
-			 * @return {int} $field_id Field id.
+			 * @return {string} Field id.
 			 *
-			 * @example <caption>Change core id.</caption>
+			 * @example <caption>Change field core id.</caption>
 			 * function function_name( $field_id, $data, $args ) {
 			 *     // your code here
 			 *     return $field_id;
@@ -2282,18 +2296,18 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				/* Default: Integration */
 				default:
-					$mode = ( isset( $this->set_mode ) ) ? $this->set_mode : 'no_mode';
+					$mode = isset( $this->set_mode ) ? $this->set_mode : 'no_mode';
 
 					/**
 					 * Filters change field html by $mode and field $type
 					 *
-					 * @since 2.0
+					 * @since 1.3.x
 					 * @hook  um_edit_field_{$mode}_{$type}
 					 *
-					 * @param {string} $output  Field HTML.
-					 * @param {array}  $data      Field Data.
+					 * @param {string} $output Field HTML.
+					 * @param {array}  $data   Field Data.
 					 *
-					 * @return {int} $output Field HTML.
+					 * @return {string} Field HTML.
 					 *
 					 * @example <caption>Change field html by $mode and field $type.</caption>
 					 * function my_edit_field_html( $output, $data ) {
@@ -2311,7 +2325,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				case 'vimeo_video':
 				case 'spotify':
 				case 'soundcloud_track':
-					$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data ) . '>';
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
 					if ( isset( $data['label'] ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
@@ -2320,14 +2334,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$output .= '<div class="um-field-area">';
 
 					if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-						$output .= '<div class="um-field-icon"><i class="' . $data['icon'] . '"></i></div>';
+						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
 					}
 
 					$field_name  = $key . $form_suffix;
-					$field_value = $this->field_value( $key, $data['default'], $data );
-					$field_value = ! is_null( $field_value ) ? htmlspecialchars( $field_value ) : null;
+					$field_value = $this->field_value( $key, $default, $data );
 
-					$output .= '<input ' . $disabled . ' class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $data['input'] ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $data['placeholder'] ) . '" data-validate="' . esc_attr( $data['validate'] ) . '" data-key="' . esc_attr( $key ) . '" />
+					$output .= '<input ' . esc_html( $disabled ) . ' class="' . esc_html( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />
 
 						</div>';
 
@@ -2343,47 +2356,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '</div>';
 					break;
-
-				/* Text */
+				/* Text and Tel */
 				case 'text':
-					$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data ) . '>';
-
-					if ( isset( $data['label'] ) ) {
-						$output .= $this->field_label( $data['label'], $key, $data );
-					}
-
-					$output .= '<div class="um-field-area">';
-
-					if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-
-						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
-
-					}
-
-					$field_name  = $key . $form_suffix;
-					$field_value = $this->field_value( $key, $data['default'], $data );
-					$field_value = ! is_null( $field_value ) ? htmlspecialchars( $field_value ) : null;
-
-					$output .= '<input ' . $disabled . ' autocomplete="' . esc_attr( $autocomplete ) . '" class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $data['input'] ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $data['placeholder'] ) . '" data-validate="' . esc_attr( $data['validate'] ) . '" data-key="' . esc_attr( $key ) . '" />
-
-						</div>';
-
-					if ( ! empty( $disabled ) ) {
-						$output .= $this->disabled_hidden_field( $field_name, $field_value );
-					}
-
-					if ( $this->is_error( $key ) ) {
-						$output .= $this->field_error( $this->show_error( $key ) );
-					} elseif ( $this->is_notice( $key ) ) {
-						$output .= $this->field_notice( $this->show_notice( $key ) );
-					}
-
-					$output .= '</div>';
-					break;
-
-				/* Tel */
 				case 'tel':
-					$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data ) . '>';
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
 					if ( isset( $data['label'] ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
@@ -2392,16 +2368,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$output .= '<div class="um-field-area">';
 
 					if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-
 						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
-
 					}
 
 					$field_name  = $key . $form_suffix;
-					$field_value = $this->field_value( $key, $data['default'], $data );
-					$field_value = ! is_null( $field_value ) ? htmlspecialchars( $field_value ) : null;
+					$field_value = $this->field_value( $key, $default, $data );
 
-					$output .= '<input ' . $disabled . ' autocomplete="' . esc_attr( $autocomplete ) . '" class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $data['input'] ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $data['placeholder'] ) . '" data-validate="' . esc_attr( $data['validate'] ) . '" data-key="' . esc_attr( $key ) . '" />
+					$output .= '<input ' . esc_html( $disabled ) . ' autocomplete="' . esc_attr( $autocomplete ) . '" class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />
 
 						</div>';
 
@@ -2417,10 +2390,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '</div>';
 					break;
-
 				/* Number */
 				case 'number':
-					$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data ) . '>';
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
 					if ( isset( $data['label'] ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
@@ -2429,9 +2401,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$output .= '<div class="um-field-area">';
 
 					if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-
 						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
-
 					}
 
 					$number_limit = '';
@@ -2442,10 +2412,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$number_limit .= ' max="' . esc_attr( $data['max'] ) . '" ';
 					}
 
-					$field_value = $this->field_value( $key, $data['default'], $data );
-					$field_value = ! is_null( $field_value ) ? htmlspecialchars( $field_value ) : null;
+					$field_name  = $key . $form_suffix;
+					$field_value = $this->field_value( $key, $default, $data );
 
-					$output .= '<input ' . $disabled . ' class="' . $this->get_class( $key, $data ) . '" type="number" name="' . esc_attr( $key . $form_suffix ) . '" id="' . esc_attr( $key . $form_suffix ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $data['placeholder'] ) . '" data-validate="' . esc_attr( $data['validate'] ) . '" data-key="' . esc_attr( $key ) . '" ' . $number_limit . ' />
+					$output .= '<input ' . esc_html( $disabled ) . ' class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="number" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . esc_html( $number_limit ) . ' />
 
 						</div>';
 
@@ -2457,7 +2427,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '</div>';
 					break;
-
 				/* Password */
 				case 'password':
 					$original_key = $key;
@@ -2466,21 +2435,21 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						$key = $original_key;
 
-						$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data ) . '>';
+						$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
 						if ( isset( $data['label'] ) ) {
 							$output .= $this->field_label( $data['label'], $key, $data );
 						}
 
+						$field_name = $key . $form_suffix;
+
 						$output .= '<div class="um-field-area">';
 
 						if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-
 							$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
-
 						}
 
-						$output .= '<input class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $data['input'] ) . '" name="' . esc_attr( $key . $form_suffix ) . '" id="' . esc_attr( $key . $form_suffix ) . '" value="' . $this->field_value( $key, $data['default'], $data ) . '" placeholder="' . esc_attr( $data['placeholder'] ) . '" data-validate="' . esc_attr( $data['validate'] ) . '" data-key="' . esc_attr( $key ) . '" />
+						$output .= '<input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . $this->field_value( $key, $default, $data ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />
 
 							</div>';
 
@@ -2491,13 +2460,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 
 						$output .= '</div>';
-
 					} else {
-
 						if ( UM()->account()->current_password_is_required( 'password' ) && ( 'account' === $this->set_mode || um_is_core_page( 'account' ) ) ) {
 
 							$key     = 'current_' . $original_key;
-							$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data ) . '>';
+							$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
 							if ( isset( $data['label'] ) ) {
 								$output .= $this->field_label( __( 'Current Password', 'ultimate-member' ), $key, $data );
@@ -2506,9 +2473,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$output .= '<div class="um-field-area">';
 
 							if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-
 								$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
-
 							}
 
 							$output .= '<input class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $data['input'] ) . '" name="' . esc_attr( $key . $form_suffix ) . '" id="' . esc_attr( $key . $form_suffix ) . '" value="' . $this->field_value( $key, $data['default'], $data ) . '" placeholder="' . esc_attr( $data['placeholder'] ) . '" data-validate="' . esc_attr( $data['validate'] ) . '" data-key="' . esc_attr( $key ) . '" />
@@ -2527,7 +2492,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						$key = $original_key;
 
-						$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data ) . '>';
+						$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
 						if ( 'account' === $this->set_mode && um_is_core_page( 'account' ) || 'password' === $this->set_mode && um_is_core_page( 'password-reset' ) ) {
 
@@ -2826,18 +2791,34 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				/* Gap/Space */
 				case 'spacing':
-					$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data, array( 'height' => $data['spacing'] ) ) . '></div>';
+					$field_style = array();
+					if ( array_key_exists( 'spacing', $data ) ) {
+						$field_style = array( 'height' => $data['spacing'] );
+					}
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data, $field_style ) . '></div>';
 					break;
-
 				/* A line divider */
 				case 'divider':
-					$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data, array( 'border-bottom' => $data['borderwidth'] . 'px ' . $data['borderstyle'] . ' ' . $data['bordercolor'] ) ) . '>';
-					if ( $data['divider_text'] ) {
+					$border_style = '';
+					if ( array_key_exists( 'borderwidth', $data ) ) {
+						$border_style .= $data['borderwidth'] . 'px';
+					}
+					if ( array_key_exists( 'borderstyle', $data ) ) {
+						$border_style .= ' ' . $data['borderstyle'];
+					}
+					if ( array_key_exists( 'bordercolor', $data ) ) {
+						$border_style .= ' ' . $data['bordercolor'];
+					}
+					$field_style = array();
+					if ( ! empty( $border_style ) ) {
+						$field_style = array( 'border-bottom' => $border_style );
+					}
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data, $field_style ) . '>';
+					if ( ! empty( $data['divider_text'] ) ) {
 						$output .= '<div class="um-field-divider-text"><span>' . esc_html( $data['divider_text'] ) . '</span></div>';
 					}
 					$output .= '</div>';
 					break;
-
 				/* Single Image Upload */
 				case 'image':
 					$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data ) . ' data-mode="' . esc_attr( $this->set_mode ) . '" data-upload-label="' . ( ! empty( $data['button_text'] ) ? esc_attr( $data['button_text'] ) : esc_attr__( 'Upload', 'ultimate-member' ) ) . '">';
@@ -3841,21 +3822,17 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				/* HTML */
 				case 'block':
-					$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data ) . '>' . $data['content'] . '</div>';
+					$content = array_key_exists( 'content', $data ) ? $data['content'] : '';
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>' . $content . '</div>';
 					break;
-
 				/* Shortcode */
 				case 'shortcode':
-					$content = str_replace( '{profile_id}', um_profile_id(), $data['content'] );
-					if ( version_compare( get_bloginfo( 'version' ), '5.4', '<' ) ) {
-						$content = do_shortcode( $content );
-					} else {
-						$content = apply_shortcodes( $content );
-					}
+					$content = array_key_exists( 'content', $data ) ? $data['content'] : '';
+					$content = str_replace( '{profile_id}', um_profile_id(), $content );
+					$content = apply_shortcodes( $content );
 
-					$output .= '<div ' . $this->get_atts( $key, $classes, $data['conditional'], $data ) . '>' . $content . '</div>';
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>' . $content . '</div>';
 					break;
-
 				/* Unlimited Group */
 				case 'group':
 					$fields = $this->get_fields_in_group( $key );
@@ -3873,23 +3850,21 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= '</div>';
 
 					}
-
 					break;
-
 			}
 
-			// Custom filter for field output
+			// Custom filter for field output.
 			if ( isset( $this->set_mode ) ) {
 				/**
 				 * Filters change field HTML on edit mode by field $key.
 				 *
-				 * @since 2.0
-				 * @hook  my_form_edit_field
+				 * @since 1.3.x
+				 * @hook  um_{$key}_form_edit_field
 				 *
-				 * @param {array}   $output   Field HTML.
-				 * @param {array}   $mode     Field Mode.
+				 * @param {string} $output Field HTML.
+				 * @param {string} $mode   Field Mode.
 				 *
-				 * @return {array}  $output  Field HTML.
+				 * @return {string} Field HTML.
 				 *
 				 * @example <caption>Change field HTML.</caption>
 				 * function um_checkbox_field_options( $output, $mode ) {
@@ -4426,7 +4401,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					}
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data, $field_style ) . '>';
 					if ( ! empty( $data['divider_text'] ) ) {
-						$output .= '<div class="um-field-divider-text"><span>' . $data['divider_text'] . '</span></div>';
+						$output .= '<div class="um-field-divider-text"><span>' . esc_html( $data['divider_text'] ) . '</span></div>';
 					}
 					$output .= '</div>';
 					break;
