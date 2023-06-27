@@ -2,7 +2,7 @@
 /**
  * Template for the account page
  *
- * This template can be overridden by copying it to yourtheme/ultimate-member/account.php
+ * This template can be overridden by copying it to yourtheme/ultimate-member/templates/account.php
  *
  * Page: "Account"
  *
