@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
 Tested up to: 6.2
-Stable tag: 2.6.3
+Stable tag: 2.6.4
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -163,9 +163,18 @@ No, you do not need to use our plugin’s login or registration pages and can us
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
-= 2.6.4: July xx, 2023 =
+= 2.6.4: June 27, 2023 =
 
+* Enhancements:
 
+  - Added: Avoid using `extract()` function and increase supporting WordPress Code Standards
+
+* Bugfixes:
+
+  - Fixed: PHP8.2 PHP errors (deprecated, warnings, etc.)
+  - Fixed: Using `str_contains()` in template override
+  - Fixed: Override templates and custom path for 'members-grid.php', 'members-header.php', 'members-list.php', 'members-pagination.php', 'searchform.php', 'login-to-view.php', 'profile/comments.php', 'profile/comments-single.php', 'profile/posts.php', 'profile/posts-single.php', 'modal/um_upload_single.php', 'modal/um_view_photo.php' template files
+  - Fixed: Custom emails data "--- UM Email HTML Templates ---" in Install info
 
 = 2.6.3: June 14, 2023 =
 
@@ -3224,3 +3233,8 @@ Credits to "James Golovich http://www.pritect.net" for the security checks
 = 1.0.0: January, 2015 =
 
 * First official release!
+
+== Upgrade Notice ==
+
+= 2.6.4 =
+This version fixes a security related bug. Upgrade immediately.

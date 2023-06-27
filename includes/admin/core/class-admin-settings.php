@@ -3522,7 +3522,7 @@ if ( ! empty( $dir ) ) {
 } ?>
 
 
---- UM Email HTML Templates ---
+--- UM Custom Email Templates ---
 
 <?php $dir = get_stylesheet_directory() . '/ultimate-member/email/*.php';
 
