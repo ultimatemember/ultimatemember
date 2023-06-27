@@ -3089,7 +3089,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			foreach ( $scan_files as $key => $files ) {
 				foreach ( $files as $file ) {
-					if ( ! str_contains( $file, 'email/' ) ) {
+					if ( false === strpos( $file, 'email/' ) ) {
 						$located = array();
 						/**
 						 * Filters an array of the template files for scanning versions based on $key.
