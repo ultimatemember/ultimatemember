@@ -3508,34 +3508,34 @@ Account Deletion Notification:		<?php echo $this->info_value( UM()->options()->g
 
 --- UM Custom Templates ---
 
-				<?php // Show templates that have been copied to the theme's edd_templates dir
-				$dir = get_stylesheet_directory() . '/ultimate-member/templates/*.php';
-				if ( ! empty( $dir ) ) {
-					$found = glob( $dir );
-					if ( ! empty( $found ) ) {
-						foreach ( glob( $dir ) as $file ) {
-							echo "File: " . $file  . "\n";
-						}
-					} else {
-						echo 'N/A'."\n";
-					}
-				} ?>
+<?php // Show templates that have been copied to the theme's edd_templates dir
+$dir = get_stylesheet_directory() . '/ultimate-member/templates/*.php';
+if ( ! empty( $dir ) ) {
+	$found = glob( $dir );
+	if ( ! empty( $found ) ) {
+		foreach ( glob( $dir ) as $file ) {
+			echo "File: " . $file  . "\n";
+		}
+	} else {
+		echo 'N/A'."\n";
+	}
+} ?>
 
 
 --- UM Email HTML Templates ---
 
-				<?php $dir = get_stylesheet_directory() . '/ultimate-member/templates/emails/*.html';
+<?php $dir = get_stylesheet_directory() . '/ultimate-member/email/*.php';
 
-				if ( ! empty( $dir ) ) {
-					$found =  glob( $dir );
-					if ( ! empty( $found ) ){
-						foreach ( glob( $dir ) as $file ) {
-							echo "File: ". $file  . "\n";
-						}
-					} else {
-						echo 'N/A'."\n";
-					}
-				} ?>
+if ( ! empty( $dir ) ) {
+	$found =  glob( $dir );
+	if ( ! empty( $found ) ){
+		foreach ( glob( $dir ) as $file ) {
+			echo "File: ". $file  . "\n";
+		}
+	} else {
+		echo 'N/A'."\n";
+	}
+} ?>
 
 
 --- Web Server Configurations ---
