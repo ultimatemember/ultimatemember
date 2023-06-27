@@ -2,7 +2,7 @@
 /**
  * Template for the members directory
  *
- * This template can be overridden by copying it to yourtheme/ultimate-member/members.php
+ * This template can be overridden by copying it to yourtheme/ultimate-member/templates/members.php
  *
  * Page: "Members"
  *

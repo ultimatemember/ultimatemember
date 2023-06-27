@@ -13,6 +13,9 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 	 */
 	class Password {
 
+		/**
+		 * @var bool
+		 */
 		private $change_password = false;
 
 		/**

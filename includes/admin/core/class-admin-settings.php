@@ -3089,7 +3089,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			foreach ( $scan_files as $key => $files ) {
 				foreach ( $files as $file ) {
-					if ( ! str_contains( $file, 'email/' ) ) {
+					if ( false === strpos( $file, 'email/' ) ) {
 						$located = array();
 						/**
 						 * Filters an array of the template files for scanning versions based on $key.
@@ -3106,8 +3106,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						 */
 						$located = apply_filters( "um_override_templates_get_template_path__{$key}", $located, $file );
 
+						$exceptions = array(
+							'members-grid.php',
+							'members-header.php',
+							'members-list.php',
+							'members-pagination.php',
+							'searchform.php',
+							'login-to-view.php',
+							'profile/comments.php',
+							'profile/comments-single.php',
+							'profile/posts.php',
+							'profile/posts-single.php',
+							'modal/um_upload_single.php',
+							'modal/um_view_photo.php',
+						);
+
 						if ( ! empty( $located ) ) {
 							$theme_file = $located['theme'];
+						} elseif ( in_array( $file, $exceptions, true ) && file_exists( get_stylesheet_directory() . '/ultimate-member/' . $file ) ) {
+							$theme_file = get_stylesheet_directory() . '/ultimate-member/' . $file;
 						} elseif ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' . $file ) ) {
 							$theme_file = get_stylesheet_directory() . '/ultimate-member/templates/' . $file;
 						} else {
@@ -3491,34 +3508,34 @@ Account Deletion Notification:		<?php echo $this->info_value( UM()->options()->g
 
 --- UM Custom Templates ---
 
-				<?php // Show templates that have been copied to the theme's edd_templates dir
-				$dir = get_stylesheet_directory() . '/ultimate-member/templates/*.php';
-				if ( ! empty( $dir ) ) {
-					$found = glob( $dir );
-					if ( ! empty( $found ) ) {
-						foreach ( glob( $dir ) as $file ) {
-							echo "File: " . $file  . "\n";
-						}
-					} else {
-						echo 'N/A'."\n";
-					}
-				} ?>
+<?php // Show templates that have been copied to the theme's edd_templates dir
+$dir = get_stylesheet_directory() . '/ultimate-member/templates/*.php';
+if ( ! empty( $dir ) ) {
+	$found = glob( $dir );
+	if ( ! empty( $found ) ) {
+		foreach ( glob( $dir ) as $file ) {
+			echo "File: " . $file  . "\n";
+		}
+	} else {
+		echo 'N/A'."\n";
+	}
+} ?>
 
 
---- UM Email HTML Templates ---
+--- UM Custom Email Templates ---
 
-				<?php $dir = get_stylesheet_directory() . '/ultimate-member/templates/emails/*.html';
+<?php $dir = get_stylesheet_directory() . '/ultimate-member/email/*.php';
 
-				if ( ! empty( $dir ) ) {
-					$found =  glob( $dir );
-					if ( ! empty( $found ) ){
-						foreach ( glob( $dir ) as $file ) {
-							echo "File: ". $file  . "\n";
-						}
-					} else {
-						echo 'N/A'."\n";
-					}
-				} ?>
+if ( ! empty( $dir ) ) {
+	$found =  glob( $dir );
+	if ( ! empty( $found ) ){
+		foreach ( glob( $dir ) as $file ) {
+			echo "File: ". $file  . "\n";
+		}
+	} else {
+		echo 'N/A'."\n";
+	}
+} ?>
 
 
 --- Web Server Configurations ---

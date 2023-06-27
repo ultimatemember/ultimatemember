@@ -210,26 +210,22 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			return 0;
 		}
 
-
 		/**
-		 * Get a core field attrs
+		 * Get a core field attrs.
 		 *
-		 * @param $type
+		 * @param string $type Field type.
 		 *
-		 * @return array|mixed
+		 * @return array Field data.
 		 */
-		function get_core_field_attrs( $type ) {
-			return ( isset( $this->core_fields[ $type ] ) ) ? $this->core_fields[ $type ] : array('');
+		public function get_core_field_attrs( $type ) {
+			return array_key_exists( $type, $this->core_fields ) ? $this->core_fields[ $type ] : array( '' );
 		}
-
 
 		/**
 		 * Core Fields
 		 */
-		function set_core_fields() {
-
+		public function set_core_fields() {
 			$this->core_fields = array(
-
 				'row' => array(
 					'name' => 'Row',
 					'in_fields' => false,
@@ -651,21 +647,21 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				),
 
 				/*'group' => array(
-                    'name' => 'Field Group',
-                    'col1' => array('_title','_max_entries'),
-                    'col2' => array('_label','_public','_roles'),
-                    'form_only' => true,
-                    'validate' => array(
-                        '_title' => array(
-                            'mode' => 'required',
-                            'error' => 'You must provide a title'
-                        ),
-                        '_label' => array(
-                            'mode' => 'required',
-                            'error' => 'You must provide a label'
-                        ),
-                    )
-                ),*/
+					'name' => 'Field Group',
+					'col1' => array('_title','_max_entries'),
+					'col2' => array('_label','_public','_roles'),
+					'form_only' => true,
+					'validate' => array(
+						'_title' => array(
+							'mode' => 'required',
+							'error' => 'You must provide a title'
+						),
+						'_label' => array(
+							'mode' => 'required',
+							'error' => 'You must provide a label'
+						),
+					)
+				),*/
 
 			);
 
@@ -1379,47 +1375,42 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			}
 		}
 
-
 		/**
-		 * Get all fields without metakeys
+		 * Get all fields without metakeys.
 		 *
 		 * @since 2.0.56
 		 *
 		 * @return array
 		 */
-		function get_fields_without_metakey() {
+		public function get_fields_without_metakey() {
 			$fields_without_metakey = array(
 				'block',
 				'shortcode',
 				'spacing',
 				'divider',
-				'group'
+				'group',
 			);
 
-
 			/**
-			 * UM hook
+			 * Filters the field types without meta key.
 			 *
-			 * @type filter
-			 * @title um_fields_without_metakey
-			 * @description Field Types without meta key
-			 * @input_vars
-			 * [{"var":"$types","type":"array","desc":"Field Types"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_fields_without_metakey', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_fields_without_metakey', 'my_fields_without_metakey', 10, 1 );
-			 * function my_fields_without_metakey( $types ) {
-			 *     // your code here
-			 *     return $types;
+			 * @param {array} $field_types Field types.
+			 *
+			 * @return {array} Field types.
+			 *
+			 * @since 1.3.x
+			 * @hook um_fields_without_metakey
+			 *
+			 * @example <caption>It adds 'location' and 'distance' field-types to fields without metakeys array.</caption>
+			 * function my_custom_um_fields_without_metakey( $field_types ) {
+			 *     $field_types[] = 'location';
+			 *     $field_types[] = 'distance';
+			 *     return $field_types;
 			 * }
-			 * ?>
+			 * add_filter( 'um_fields_without_metakey', 'my_custom_um_fields_without_metakey' );
 			 */
 			return apply_filters( 'um_fields_without_metakey', $fields_without_metakey );
 		}
-
 
 		/**
 		 * May be used to show a dropdown, or source for user meta

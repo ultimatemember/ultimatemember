@@ -2,7 +2,7 @@
 /**
  * Template for the password change
  *
- * This template can be overridden by copying it to yourtheme/ultimate-member/password-change.php
+ * This template can be overridden by copying it to yourtheme/ultimate-member/templates/password-change.php
  *
  * Call: function ultimatemember_password()
  *

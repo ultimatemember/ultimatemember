@@ -343,20 +343,17 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 			update_post_meta( $post_id, '_um_' . $key, $new_value );
 		}
 
-
 		/**
-		 * Get data
+		 * Get postmeta related to Ultimate Member.
 		 *
-		 * @param $key
-		 * @param $post_id
+		 * @param string $key
+		 * @param int    $post_id
 		 *
 		 * @return mixed
 		 */
-		function get_attr( $key, $post_id ) {
-			$meta = get_post_meta( $post_id, '_um_' . $key, true );
-			return $meta;
+		public function get_attr( $key, $post_id ) {
+			return get_post_meta( $post_id, '_um_' . $key, true );
 		}
-
 
 		/**
 		 * Delete data
