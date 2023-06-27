@@ -2149,7 +2149,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 * @return {array} User Profile Changes.
 			 *
 			 * @example <caption>Remove some_metakey from changes where user ID equals 12.</caption>
-			 * function my_custom_um_prepare_user_results_array_meta( $changes, $user_id ) {
+			 * function my_custom_before_update_profile( $changes, $user_id ) {
 			 *     if ( 12 === $user_id ) {
 			 *         unset( $changes['{some_metakey}'];
 			 *     }
