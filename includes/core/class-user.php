@@ -93,7 +93,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				'dismissed_wp_pointers',
 				'session_tokens',
 				'screen_layout',
-				'wp_user-',
+				$wpdb->get_blog_prefix() . 'user-',
 				'dismissed',
 				'cap_key',
 				$wpdb->get_blog_prefix() . 'capabilities',
@@ -167,7 +167,30 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		}
 
 		/**
+		 * It validates the meta_key for wp_usermeta table.
+		 * Avoid to handle `meta_key` by the UM Forms if it contains $this->banned_keys inside.
+		 *
+		 * @since 2.6.5
+		 *
+		 * @param string $meta_key Usermeta key.
+		 * @return bool
+		 */
+		public function is_metakey_banned( $meta_key ) {
+			$is_banned = false;
+			foreach ( $this->banned_keys as $ban ) {
+				if ( is_numeric( $meta_key ) || false !== stripos( $meta_key, $ban ) ) {
+					$is_banned = true;
+					break;
+				}
+			}
+
+			return $is_banned;
+		}
+
+		/**
 		 * Low-level checking to avoid updating banned user metakeys while UM Forms submission.
+		 *
+		 * @since 2.6.4
 		 *
 		 * @param null|bool $check      Whether to allow updating metadata for the given type.
 		 * @param int       $object_id  ID of the object metadata is for.
@@ -180,7 +203,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				return $check;
 			}
 
-			if ( in_array( $meta_key, $this->banned_keys, true ) ) {
+			if ( $this->is_metakey_banned( $meta_key ) ) {
 				$check = false;
 			}
 
@@ -1299,20 +1322,16 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			$this->set(0, $clean);
 		}
 
-
 		/**
-		 * Clean user profile
+		 * Clean user profile before set.
 		 */
-		function clean() {
+		private function clean() {
 			foreach ( $this->profile as $key => $value ) {
-				foreach ( $this->banned_keys as $ban ) {
-					if ( strstr( $key, $ban ) || is_numeric( $key ) ) {
-						unset( $this->profile[ $key ] );
-					}
+				if ( $this->is_metakey_banned( $key ) ) {
+					unset( $this->profile[ $key ] );
 				}
 			}
 		}
-
 
 		/**
 		 * This method lets you auto sign-in a user to your site.
@@ -2160,7 +2179,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			$changes = apply_filters( 'um_before_update_profile', $changes, $args['ID'] );
 
 			foreach ( $changes as $key => $value ) {
-				if ( in_array( $key, $this->banned_keys, true ) ) {
+				if ( $this->is_metakey_banned( $key ) ) {
 					continue;
 				}
 

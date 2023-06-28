@@ -390,6 +390,22 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			}
 		}
 
+		/**
+		 * Remove banned wp_usermeta keys from submitted data.
+		 *
+		 * @since 2.6.5
+		 * @param array $submitted
+		 * @return array
+		 */
+		public function clean_submitted_data( $submitted ) {
+			foreach ( $submitted as $metakey => $value ) {
+				if ( UM()->user()->is_metakey_banned( $metakey ) ) {
+					unset( $submitted[ $metakey ] );
+				}
+			}
+
+			return $submitted;
+		}
 
 		/**
 		 * Validate form on submit
@@ -478,10 +494,10 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 				// Secure sanitize of the submitted data
 				if ( ! empty( $this->post_form ) ) {
-					$this->post_form = array_diff_key( $this->post_form, array_flip( UM()->user()->banned_keys ) );
+					$this->post_form = $this->clean_submitted_data( $this->post_form );
 				}
 				if ( ! empty( $this->post_form['submitted'] ) ) {
-					$this->post_form['submitted'] = array_diff_key( $this->post_form['submitted'], array_flip( UM()->user()->banned_keys ) );
+					$this->post_form['submitted'] = $this->clean_submitted_data( $this->post_form['submitted'] );
 				}
 
 				// set default role from settings on registration form
