@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: core/um-actions-register.php - Ultimate Member Hook Docs</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+
+	<link href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono|IBM+Plex+Sans:300,400|Playfair+Display:900&display=swap" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="styles-um.css">
+</head>
+
+<body>
+
+<div id="main">
+
+	
+    <h1 class="page-title">Source: core/um-actions-register.php</h1>
+	
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>&lt;?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Account automatically approved.
+ *
+ * @param int   $user_id
+ * @param array $args
+ */
+function um_post_registration_approved_hook( $user_id, $args ) {
+	um_fetch_user( $user_id );
+
+	UM()->user()->approve();
+}
+add_action( 'um_post_registration_approved_hook', 'um_post_registration_approved_hook', 10, 2 );
+
+/**
+ * Account needs email validation.
+ *
+ * @param int   $user_id
+ * @param array $args
+ */
+function um_post_registration_checkmail_hook( $user_id, $args ) {
+	um_fetch_user( $user_id );
+
+	UM()->user()->email_pending();
+}
+add_action( 'um_post_registration_checkmail_hook', 'um_post_registration_checkmail_hook', 10, 2 );
+
+/**
+ * Account needs admin review.
+ *
+ * @param int   $user_id
+ * @param array $args
+ */
+function um_post_registration_pending_hook( $user_id, $args ) {
+	um_fetch_user( $user_id );
+
+	UM()->user()->pending();
+}
+add_action( 'um_post_registration_pending_hook', 'um_post_registration_pending_hook', 10, 2 );
+
+/**
+ * After insert a new user
+ * run at frontend and backend
+ *
+ * @param $user_id
+ * @param $args
+ */
+function um_after_insert_user( $user_id, $args ) {
+	if ( empty( $user_id ) || ( is_object( $user_id ) &amp;&amp; is_a( $user_id, 'WP_Error' ) ) ) {
+		return;
+	}
+
+	um_fetch_user( $user_id );
+	if ( ! empty( $args['submitted'] ) ) {
+		UM()->user()->set_registration_details( $args['submitted'], $args );
+	}
+
+	$status = um_user( 'status' );
+	if ( empty( $status ) ) {
+		um_fetch_user( $user_id );
+		$status = um_user( 'status' );
+	}
+
+	/* save user status */
+	UM()->user()->set_status( $status );
+
+	/* create user uploads directory */
+	UM()->uploader()->get_upload_user_base_dir( $user_id, true );
+
+	/**
+	 * UM hook
+	 *
+	 * @type action
+	 * @title um_registration_set_extra_data
+	 * @description Hook that runs after insert user to DB and there you can set any extra details
+	 * @input_vars
+	 * [{"var":"$user_id","type":"int","desc":"User ID"},
+	 * {"var":"$args","type":"array","desc":"Form data"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_action( 'um_registration_set_extra_data', 'function_name', 10, 2 );
+	 * @example
+	 * &lt;?php
+	 * add_action( 'um_registration_set_extra_data', 'my_registration_set_extra_data', 10, 2 );
+	 * function my_registration_set_extra_data( $user_id, $args ) {
+	 *     // your code here
+	 * }
+	 * ?>
+	 */
+	do_action( 'um_registration_set_extra_data', $user_id, $args );
+
+	/**
+	 * UM hook
+	 *
+	 * @type action
+	 * @title um_registration_complete
+	 * @description After complete UM user registration. Redirects handlers at 100 priority, you can add some info before redirects
+	 * @input_vars
+	 * [{"var":"$user_id","type":"int","desc":"User ID"},
+	 * {"var":"$args","type":"array","desc":"Form data"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_action( 'um_registration_complete', 'function_name', 10, 2 );
+	 * @example
+	 * &lt;?php
+	 * add_action( 'um_registration_complete', 'my_registration_complete', 10, 2 );
+	 * function my_registration_complete( $user_id, $args ) {
+	 *     // your code here
+	 * }
+	 * ?>
+	 */
+	do_action( 'um_registration_complete', $user_id, $args );
+}
+add_action( 'um_user_register', 'um_after_insert_user', 1, 2 );
+
+/**
+ * Send notification about registration
+ *
+ * @param $user_id
+ * @param $args
+ */
+function um_send_registration_notification( $user_id, $args ) {
+	um_fetch_user( $user_id );
+
+	$emails = um_multi_admin_email();
+	if ( ! empty( $emails ) ) {
+		foreach ( $emails as $email ) {
+			if ( 'pending' !== um_user( 'account_status' ) ) {
+				UM()->mail()->send( $email, 'notification_new_user', array( 'admin' => true ) );
+			} else {
+				UM()->mail()->send( $email, 'notification_review', array( 'admin' => true ) );
+			}
+		}
+	}
+}
+add_action( 'um_registration_complete', 'um_send_registration_notification', 10, 2 );
+
+/**
+ * Check user status and redirect it after registration
+ *
+ * @param $user_id
+ * @param $args
+ */
+function um_check_user_status( $user_id, $args ) {
+	$status = um_user( 'account_status' );
+
+	/**
+	 * UM hook
+	 *
+	 * @type action
+	 * @title um_post_registration_{$status}_hook
+	 * @description After complete UM user registration.
+	 * @input_vars
+	 * [{"var":"$user_id","type":"int","desc":"User ID"},
+	 * {"var":"$args","type":"array","desc":"Form data"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_action( 'um_post_registration_{$status}_hook', 'function_name', 10, 2 );
+	 * @example
+	 * &lt;?php
+	 * add_action( 'um_post_registration_{$status}_hook', 'my_post_registration', 10, 2 );
+	 * function my_post_registration( $user_id, $args ) {
+	 *     // your code here
+	 * }
+	 * ?>
+	 */
+	do_action( "um_post_registration_{$status}_hook", $user_id, $args );
+
+	if ( ! is_admin() ) {
+
+		do_action( "track_{$status}_user_registration" );
+
+		if ( $status == 'approved' ) {
+			// Check if user is logged in because there can be the customized way when through 'um_registration_for_loggedin_users' hook the registration is enabled for the logged in users (e.g. Administrator).
+			if ( ! is_user_logged_in() ) {
+				// Custom way if 'um_registration_for_loggedin_users' hook after custom callbacks returns true. Then don't make auto-login because user is already logged-in.
+				UM()->user()->auto_login( $user_id );
+			}
+			UM()->user()->generate_profile_slug( $user_id );
+
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_registration_after_auto_login
+			 * @description After complete UM user registration and autologin.
+			 * @input_vars
+			 * [{"var":"$user_id","type":"int","desc":"User ID"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_registration_after_auto_login', 'function_name', 10, 1 );
+			 * @example
+			 * &lt;?php
+			 * add_action( 'um_registration_after_auto_login', 'my_registration_after_auto_login', 10, 1 );
+			 * function my_registration_after_auto_login( $user_id ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( 'um_registration_after_auto_login', $user_id );
+
+			// Priority redirect
+			if ( isset( $args['redirect_to'] ) ) {
+				exit( wp_safe_redirect( urldecode( $args['redirect_to'] ) ) );
+			}
+
+			um_fetch_user( $user_id );
+
+			if ( um_user( 'auto_approve_act' ) == 'redirect_url' &amp;&amp; um_user( 'auto_approve_url' ) !== '' ) {
+				exit( wp_redirect( um_user( 'auto_approve_url' ) ) );
+			}
+
+			if ( um_user( 'auto_approve_act' ) == 'redirect_profile' ) {
+				exit( wp_redirect( um_user_profile_url() ) );
+			}
+
+		} else {
+
+			if ( um_user( $status . '_action' ) == 'redirect_url' &amp;&amp; um_user( $status . '_url' ) != '' ) {
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_registration_pending_user_redirect
+				 * @description Change redirect URL for pending user after registration
+				 * @input_vars
+				 * [{"var":"$url","type":"string","desc":"Redirect URL"},
+				 * {"var":"$status","type":"string","desc":"User status"},
+				 * {"var":"$user_id","type":"int","desc":"User ID"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage
+				 * &lt;?php add_filter( 'um_registration_pending_user_redirect', 'function_name', 10, 3 ); ?>
+				 * @example
+				 * &lt;?php
+				 * add_filter( 'um_registration_pending_user_redirect', 'my_registration_pending_user_redirect', 10, 3 );
+				 * function my_registration_pending_user_redirect( $url, $status, $user_id ) {
+				 *     // your code here
+				 *     return $url;
+				 * }
+				 * ?>
+				 */
+				$redirect_url = apply_filters( 'um_registration_pending_user_redirect', um_user( $status . '_url' ), $status, um_user( 'ID' ) );
+
+				exit( wp_redirect( $redirect_url ) );
+			}
+
+			if ( um_user( $status . '_action' ) == 'show_message' &amp;&amp; um_user( $status . '_message' ) != '' ) {
+
+				$url  = UM()->permalinks()->get_current_url();
+				$url  = add_query_arg( 'message', esc_attr( $status ), $url );
+				//add only priority role to URL
+				$url  = add_query_arg( 'um_role', esc_attr( um_user( 'role' ) ), $url );
+				$url  = add_query_arg( 'um_form_id', esc_attr( $args['form_id'] ), $url );
+
+				exit( wp_redirect( $url ) );
+			}
+
+		}
+
+	}
+
+}
+add_action( 'um_registration_complete', 'um_check_user_status', 100, 2 );
+
+function um_submit_form_errors_hook__registration( $args ) {
+	// Check for "\" in password.
+	if ( array_key_exists( 'user_password', $args ) &amp;&amp; false !== strpos( wp_unslash( trim( $args['user_password'] ) ), '\\' ) ) {
+		UM()->form()->add_error( 'user_password', __( 'Passwords may not contain the character "\\".', 'ultimate-member' ) );
+	}
+}
+add_action( 'um_submit_form_errors_hook__registration', 'um_submit_form_errors_hook__registration', 10, 1 );
+
+/**
+ * Registration form submit handler.
+ *
+ * @param array $args
+ */
+function um_submit_form_register( $args ) {
+	if ( isset( UM()->form()->errors ) ) {
+		return;
+	}
+
+	/**
+	 * Filters user data submitted by a registration form.
+	 *
+	 * Note: Data is already sanitized here.
+	 *
+	 * @since 1.3.x
+	 * @hook  um_add_user_frontend_submitted
+	 *
+	 * @param {array} $submitted Submitted registration data.
+	 *
+	 * @return {array} Extended registration data.
+	 *
+	 * @example &lt;caption>Extends registration data.&lt;/caption>
+	 * function my_add_user_frontend_submitted( $submitted ) {
+	 *     // your code here
+	 *     return $submitted;
+	 * }
+	 * add_filter( 'um_add_user_frontend_submitted', 'my_add_user_frontend_submitted' );
+	 */
+	$args = apply_filters( 'um_add_user_frontend_submitted', $args );
+
+	if ( ! empty( $args['user_login'] ) ) {
+		$user_login = $args['user_login'];
+	}
+	if ( ! empty( $args['username'] ) &amp;&amp; empty( $args['user_login'] ) ) {
+		$user_login = $args['username'];
+	}
+
+	if ( ! empty( $args['first_name'] ) &amp;&amp; ! empty( $args['last_name'] ) &amp;&amp; empty( $user_login ) ) {
+
+		switch ( UM()->options()->get( 'permalink_base' ) ) {
+			case 'name':
+				$user_login = str_replace( ' ', '.', $args['first_name'] . ' ' . $args['last_name'] );
+				break;
+
+			case 'name_dash':
+				$user_login = str_replace( ' ', '-', $args['first_name'] . ' ' . $args['last_name'] );
+				break;
+
+			case 'name_plus':
+				$user_login = str_replace( ' ', '+', $args['first_name'] . ' ' . $args['last_name'] );
+				break;
+
+			default:
+				$user_login = str_replace( ' ', '', $args['first_name'] . ' ' . $args['last_name'] );
+				break;
+		}
+		$user_login = sanitize_user( strtolower( remove_accents( $user_login ) ), true );
+
+		if ( ! empty( $user_login ) ) {
+			$count           = 1;
+			$temp_user_login = $user_login;
+			while ( username_exists( $temp_user_login ) ) {
+				$temp_user_login = $user_login . $count;
+				$count++;
+			}
+			$user_login = $temp_user_login;
+		}
+	}
+
+	if ( empty( $user_login ) &amp;&amp; ! empty( $args['user_email'] ) ) {
+		$user_login = $args['user_email'];
+	}
+
+	$unique_user_id = uniqid();
+
+	// see dbDelta and WP native DB structure user_login varchar(60)
+	if ( empty( $user_login ) || ( mb_strlen( $user_login ) > 60 &amp;&amp; ! is_email( $user_login ) ) ) {
+		$user_login = 'user' . $unique_user_id;
+		while ( username_exists( $user_login ) ) {
+			$unique_user_id = uniqid();
+			$user_login     = 'user' . $unique_user_id;
+		}
+	}
+
+	if ( isset( $args['username'] ) &amp;&amp; is_email( $args['username'] ) ) {
+		$user_email = $args['username'];
+	} elseif ( ! empty( $args['user_email'] ) ) {
+		$user_email = $args['user_email'];
+	}
+
+	if ( ! isset( $args['user_password'] ) ) {
+		$user_password = UM()->validation()->generate( 8 );
+	} else {
+		$user_password = $args['user_password'];
+	}
+
+	if ( empty( $user_email ) ) {
+		$site_url   = wp_parse_url( get_site_url(), PHP_URL_HOST );
+		$user_email = 'nobody' . $unique_user_id . '@' . $site_url;
+		while ( email_exists( $user_email ) ) {
+			$unique_user_id = uniqid();
+			$user_email     = 'nobody' . $unique_user_id . '@' . $site_url;
+		}
+
+		/**
+		 * Filters change user default email if it's empty on registration.
+		 *
+		 * @since 1.3.x
+		 * @hook  um_user_register_submitted__email
+		 *
+		 * @param {string} $user_email Default email.
+		 *
+		 * @return {string} Default customized email.
+		 *
+		 * @example &lt;caption>Change user default email if it's empty on registration.&lt;/caption>
+		 * function my_user_register_submitted__email( $user_email ) {
+		 *     // your code here
+		 *     return $user_email;
+		 * }
+		 * add_filter( 'um_user_register_submitted__email', 'my_user_register_submitted__email' );
+		 */
+		$user_email = apply_filters( 'um_user_register_submitted__email', $user_email );
+	}
+
+	$credentials = array(
+		'user_login'    => $user_login,
+		'user_password' => $user_password,
+		'user_email'    => trim( $user_email ),
+	);
+
+	if ( ! empty( $args['submitted'] ) ) {
+		$args['submitted'] = UM()->form()->clean_submitted_data( $args['submitted'] );
+	}
+
+	$args['submitted'] = array_merge( $args['submitted'], $credentials );
+
+	// Set registration timestamp.
+	$timestamp                      = current_time( 'timestamp' ); // @todo Working on timestamps.
+	$args['submitted']['timestamp'] = $timestamp;
+	$args['timestamp']              = $timestamp;
+
+	$args = array_merge( $args, $credentials );
+
+	//get user role from global or form's settings
+	$user_role = UM()->form()->assigned_role( UM()->form()->form_id );
+
+	//get user role from field Role dropdown or radio
+	if ( isset( $args['role'] ) ) {
+		global $wp_roles;
+		$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
+
+		//if role is properly set it
+		if ( ! in_array( $args['role'], $exclude_roles, true ) ) {
+			$user_role = $args['role'];
+		}
+	}
+
+	/**
+	 * Filters change user role on registration process
+	 *
+	 * @since 2.0
+	 * @hook  um_registration_user_role
+	 *
+	 * @param {string} $user_role User role.
+	 * @param {array}  $args      Registration data.
+	 *
+	 * @return {string} User role.
+	 *
+	 * @example &lt;caption>Change user role on registration process.&lt;/caption>
+	 * function my_registration_user_role( $user_role, $args ) {
+	 *     // your code here
+	 *     return $user_role;
+	 * }
+	 * add_filter( 'um_registration_user_role', 'my_registration_user_role', 10, 2 );
+	 */
+	$user_role = apply_filters( 'um_registration_user_role', $user_role, $args );
+
+	$userdata = array(
+		'user_login' => $user_login,
+		'user_pass'  => $user_password,
+		'user_email' => $user_email,
+		'role'       => $user_role,
+	);
+
+	$user_id = wp_insert_user( $userdata );
+
+	/**
+	 * Fires after complete UM user registration.
+	 *
+	 * @since 2.0
+	 * @hook  um_user_register
+	 *
+	 * @param {int}   $user_id User ID.
+	 * @param {array} $args    Form data.
+	 *
+	 * @example &lt;caption>Make any custom action after complete UM user registration.&lt;/caption>
+	 * function my_um_user_register( $user_id, $args ) {
+	 *     // your code here
+	 * }
+	 * add_action( 'um_user_register', 'my_um_user_register', 10, 2 );
+	 */
+	do_action( 'um_user_register', $user_id, $args );
+}
+add_action( 'um_submit_form_register', 'um_submit_form_register' );
+
+/**
+ * Show the submit button
+ *
+ * @param $args
+ */
+function um_add_submit_button_to_register( $args ) {
+	$primary_btn_word = $args['primary_btn_word'];
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_register_form_button_one
+	 * @description Change Register Form Primary button
+	 * @input_vars
+	 * [{"var":"$primary_btn_word","type":"string","desc":"Button text"},
+	 * {"var":"$args","type":"array","desc":"Registration Form arguments"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage
+	 * &lt;?php add_filter( 'um_register_form_button_one', 'function_name', 10, 2 ); ?>
+	 * @example
+	 * &lt;?php
+	 * add_filter( 'um_register_form_button_one', 'my_register_form_button_one', 10, 2 );
+	 * function my_register_form_button_one( $primary_btn_word, $args ) {
+	 *     // your code here
+	 *     return $primary_btn_word;
+	 * }
+	 * ?>
+	 */
+	$primary_btn_word = apply_filters('um_register_form_button_one', $primary_btn_word, $args );
+
+	if ( ! isset( $primary_btn_word ) || $primary_btn_word == '' ){
+		$primary_btn_word = UM()->options()->get( 'register_primary_btn_word' );
+	}
+
+	$secondary_btn_word = $args['secondary_btn_word'];
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_register_form_button_two
+	 * @description Change Registration Form Secondary button
+	 * @input_vars
+	 * [{"var":"$secondary_btn_word","type":"string","desc":"Button text"},
+	 * {"var":"$args","type":"array","desc":"Registration Form arguments"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage
+	 * &lt;?php add_filter( 'um_register_form_button_two', 'function_name', 10, 2 ); ?>
+	 * @example
+	 * &lt;?php
+	 * add_filter( 'um_register_form_button_two', 'my_register_form_button_two', 10, 2 );
+	 * function my_register_form_button_two( $secondary_btn_word, $args ) {
+	 *     // your code here
+	 *     return $secondary_btn_word;
+	 * }
+	 * ?>
+	 */
+	$secondary_btn_word = apply_filters( 'um_register_form_button_two', $secondary_btn_word, $args );
+
+	if ( ! isset( $secondary_btn_word ) || $secondary_btn_word == '' ){
+		$secondary_btn_word = UM()->options()->get( 'register_secondary_btn_word' );
+	}
+
+	$secondary_btn_url = ( isset( $args['secondary_btn_url'] ) &amp;&amp; $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_core_page('login');
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_register_form_button_two_url
+	 * @description Change Registration Form Secondary button URL
+	 * @input_vars
+	 * [{"var":"$secondary_btn_url","type":"string","desc":"Button URL"},
+	 * {"var":"$args","type":"array","desc":"Registration Form arguments"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage
+	 * &lt;?php add_filter( 'um_register_form_button_two_url', 'function_name', 10, 2 ); ?>
+	 * @example
+	 * &lt;?php
+	 * add_filter( 'um_register_form_button_two_url', 'my_register_form_button_two_url', 10, 2 );
+	 * function my_register_form_button_two_url( $secondary_btn_url, $args ) {
+	 *     // your code here
+	 *     return $secondary_btn_url;
+	 * }
+	 * ?>
+	 */
+	$secondary_btn_url = apply_filters('um_register_form_button_two_url', $secondary_btn_url, $args ); ?>
+
+	&lt;div class="um-col-alt">
+
+		&lt;?php if ( ! empty( $args['secondary_btn'] ) ) { ?>
+
+			&lt;div class="um-left um-half">
+				&lt;input type="submit" value="&lt;?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ) ?>" class="um-button" id="um-submit-btn" />
+			&lt;/div>
+			&lt;div class="um-right um-half">
+				&lt;a href="&lt;?php echo esc_url( $secondary_btn_url ); ?>" class="um-button um-alt">
+					&lt;?php _e( wp_unslash( $secondary_btn_word ),'ultimate-member' ); ?>
+				&lt;/a>
+			&lt;/div>
+
+		&lt;?php } else { ?>
+
+			&lt;div class="um-center">
+				&lt;input type="submit" value="&lt;?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ) ?>" class="um-button" id="um-submit-btn" />
+			&lt;/div>
+
+		&lt;?php } ?>
+
+		&lt;div class="um-clear">&lt;/div>
+
+	&lt;/div>
+
+	&lt;?php
+}
+add_action( 'um_after_register_fields', 'um_add_submit_button_to_register', 1000 );
+
+
+/**
+ * Show Fields
+ *
+ * @param $args
+ */
+function um_add_register_fields( $args ){
+	echo UM()->fields()->display( 'register', $args );
+}
+add_action( 'um_main_register_fields', 'um_add_register_fields', 100 );
+
+
+/**
+ * Saving files to register a new user, if there are fields with files
+ *
+ * @param $user_id
+ * @param $args
+ */
+function um_registration_save_files( $user_id, $args ) {
+
+	if ( empty( $args['custom_fields'] ) ) {
+		return;
+	}
+
+	$files = array();
+
+	$fields = unserialize( $args['custom_fields'] );
+
+	// loop through fields
+	if ( isset( $fields ) &amp;&amp; is_array( $fields ) ) {
+
+		foreach ( $fields as $key => $array ) {
+
+			if ( isset( $args['submitted'][ $key ] ) ) {
+
+				if ( isset( $fields[ $key ]['type'] ) &amp;&amp; in_array( $fields[ $key ]['type'], array( 'image', 'file' ) ) &amp;&amp;
+				     ( um_is_temp_file( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == 'empty_file' )
+				) {
+
+					$files[ $key ] = $args['submitted'][ $key ];
+
+				}
+			}
+		}
+	}
+
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_user_pre_updating_files_array
+	 * @description Change submitted files before register new user
+	 * @input_vars
+	 * [{"var":"$files","type":"array","desc":"Profile data files"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage
+	 * &lt;?php add_filter( 'um_user_pre_updating_files_array', 'function_name', 10, 1 ); ?>
+	 * @example
+	 * &lt;?php
+	 * add_filter( 'um_user_pre_updating_files_array', 'my_user_pre_updating_files', 10, 1 );
+	 * function my_user_pre_updating_files( $files ) {
+	 *     // your code here
+	 *     return $files;
+	 * }
+	 * ?>
+	 */
+	$files = apply_filters( 'um_user_pre_updating_files_array', $files );
+
+	if ( ! empty( $files ) ) {
+		UM()->uploader()->replace_upload_dir = true;
+		UM()->uploader()->move_temporary_files( $user_id, $files );
+		UM()->uploader()->replace_upload_dir = false;
+	}
+}
+add_action( 'um_registration_set_extra_data', 'um_registration_save_files', 10, 2 );
+
+
+/**
+ * Update user Full Name
+ *
+ * @profile name update
+ *
+ * @param $user_id
+ * @param $args
+ */
+function um_registration_set_profile_full_name( $user_id, $args ) {
+	/**
+	 * UM hook
+	 *
+	 * @type action
+	 * @title um_update_profile_full_name
+	 * @description On update user profile change full name
+	 * @input_vars
+	 * [{"var":"$user_id","type":"int","desc":"User ID"},
+	 * {"var":"$args","type":"array","desc":"Form data"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_action( 'um_update_profile_full_name', 'function_name', 10, 2 );
+	 * @example
+	 * &lt;?php
+	 * add_action( 'um_update_profile_full_name', 'my_update_profile_full_name', 10, 2 );
+	 * function my_update_profile_full_name( $user_id, $args ) {
+	 *     // your code here
+	 * }
+	 * ?>
+	 */
+	do_action( 'um_update_profile_full_name', $user_id, $args );
+}
+add_action( 'um_registration_set_extra_data', 'um_registration_set_profile_full_name', 10, 2 );
+
+
+/**
+ *  Redirect from default registration to UM registration page
+ */
+function um_form_register_redirect() {
+	$page_id = UM()->options()->get( UM()->options()->get_core_page_id( 'register' ) );
+	$register_post = get_post( $page_id );
+	if ( ! empty( $register_post ) ) {
+		wp_safe_redirect( get_permalink( $page_id ) );
+		exit();
+	}
+}
+add_action( 'login_form_register', 'um_form_register_redirect', 10 );
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    <footer>
+		<a href="https://wordpress.org/plugins/ultimate-member/">Ultimate Member Plugin</a> &bull;
+		<a href="https://docs.ultimatemember.com/">Official Docs</a>
+	</footer>
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="um_admin_ajax_modal_content__hook.html">um_admin_ajax_modal_content__hook</a></li><li><a href="um_admin_ajax_modal_content__hook_%257B$act_id%257D.html">um_admin_ajax_modal_content__hook_{$act_id}</a></li><li><a href="um_after_delete_role.html">um_after_delete_role</a></li><li><a href="um_after_delete_role_meta.html">um_after_delete_role_meta</a></li><li><a href="um_after_everything_output.html">um_after_everything_output</a></li><li><a href="um_after_form.html">um_after_form</a></li><li><a href="um_after_form_fields.html">um_after_form_fields</a></li><li><a href="um_after_%257B$mode%257D_fields.html">um_after_{$mode}_fields</a></li><li><a href="um_ajax_load_posts__%257B$hook%257D.html">um_ajax_load_posts__{$hook}</a></li><li><a href="um_before_form.html">um_before_form</a></li><li><a href="um_before_form_is_loaded.html">um_before_form_is_loaded</a></li><li><a href="um_before_%257B$mode%257D_fields.html">um_before_{$mode}_fields</a></li><li><a href="um_before_%257B$mode%257D_form_is_loaded.html">um_before_{$mode}_form_is_loaded</a></li><li><a href="um_main_%257B$mode%257D_fields.html">um_main_{$mode}_fields</a></li><li><a href="um_on_login_before_redirect.html">um_on_login_before_redirect</a></li><li><a href="um_pre_%257B$mode%257D_shortcode.html">um_pre_{$mode}_shortcode</a></li><li><a href="um_role_edit_data.html">um_role_edit_data</a></li><li><a href="um_role_row_actions.html">um_role_row_actions</a></li><li><a href="um_run_ajax_function__%257B$hook%257D.html">um_run_ajax_function__{$hook}</a></li><li><a href="um_user_register.html">um_user_register</a></li></ul><h3>Filters</h3><ul><li><a href="um_add_user_frontend_submitted.html">um_add_user_frontend_submitted</a></li><li><a href="um_admin_builder_skip_field_validation.html">um_admin_builder_skip_field_validation</a></li><li><a href="um_admin_field_update_error_handling.html">um_admin_field_update_error_handling</a></li><li><a href="um_admin_pre_save_field_to_db.html">um_admin_pre_save_field_to_db</a></li><li><a href="um_admin_pre_save_field_to_form.html">um_admin_pre_save_field_to_form</a></li><li><a href="um_admin_pre_save_fields_hook.html">um_admin_pre_save_fields_hook</a></li><li><a href="um_api_output_format.html">um_api_output_format</a></li><li><a href="um_before_update_profile.html">um_before_update_profile</a></li><li><a href="um_change_role_data.html">um_change_role_data</a></li><li><a href="um_checkbox_field_options.html">um_checkbox_field_options</a></li><li><a href="um_checkbox_field_options_%257B$key%257D.html">um_checkbox_field_options_{$key}</a></li><li><a href="um_completeness_field_id.html">um_completeness_field_id</a></li><li><a href="um_custom_dropdown_options_parent__%257B$form_key%257D.html">um_custom_dropdown_options_parent__{$form_key}</a></li><li><a href="um_custom_dropdown_options_source__%257B$form_key%257D.html">um_custom_dropdown_options_source__{$form_key}</a></li><li><a href="um_custom_error_message_handler.html">um_custom_error_message_handler</a></li><li><a href="um_custom_success_message_handler.html">um_custom_success_message_handler</a></li><li><a href="um_disable_blocks_script.html">um_disable_blocks_script</a></li><li><a href="um_disable_dynamic_global_css.html">um_disable_dynamic_global_css</a></li><li><a href="um_disable_email_notification_sending.html">um_disable_email_notification_sending</a></li><li><a href="um_edit_field_%257B$mode%257D_%257B$type%257D.html">um_edit_field_{$mode}_{$type}</a></li><li><a href="um_email_get_template_file_path.html">um_email_get_template_file_path</a></li><li><a href="um_excluded_comment_types.html">um_excluded_comment_types</a></li><li><a href="um_external_profile_url.html">um_external_profile_url</a></li><li><a href="um_field_checkbox_item_title.html">um_field_checkbox_item_title</a></li><li><a href="um_fields_without_metakey.html">um_fields_without_metakey</a></li><li><a href="um_form_fields_textarea_settings.html">um_form_fields_textarea_settings</a></li><li><a href="um_get_current_page_url.html">um_get_current_page_url</a></li><li><a href="um_hook_for_field_%257B$type%257D.html">um_hook_for_field_{$type}</a></li><li><a href="um_is_field_disabled.html">um_is_field_disabled</a></li><li><a href="um_late_escaping_allowed_tags.html">um_late_escaping_allowed_tags</a></li><li><a href="um_localize_permalink_filter.html">um_localize_permalink_filter</a></li><li><a href="um_login_redirect_url.html">um_login_redirect_url</a></li><li><a href="um_member_directory_custom_sorting_type.html">um_member_directory_custom_sorting_type</a></li><li><a href="um_multiselect_option_value.html">um_multiselect_option_value</a></li><li><a href="um_multiselect_options.html">um_multiselect_options</a></li><li><a href="um_multiselect_options_%257B$key%257D.html">um_multiselect_options_{$key}</a></li><li><a href="um_multiselect_options_%257B$type%257D.html">um_multiselect_options_{$type}</a></li><li><a href="um_override_templates_get_template_path__%257B$key%257D.html">um_override_templates_get_template_path__{$key}</a></li><li><a href="um_override_templates_scan_files.html">um_override_templates_scan_files</a></li><li><a href="um_pre_args_setup.html">um_pre_args_setup</a></li><li><a href="um_prepare_user_results_array.html">um_prepare_user_results_array</a></li><li><a href="um_prepare_user_results_array_meta.html">um_prepare_user_results_array_meta</a></li><li><a href="um_profile_can_view_main.html">um_profile_can_view_main</a></li><li><a href="um_profile_menu_link_%257B$id%257D_attrs.html">um_profile_menu_link_{$id}_attrs</a></li><li><a href="um_profile_permalink.html">um_profile_permalink</a></li><li><a href="um_radio_field_options.html">um_radio_field_options</a></li><li><a href="um_radio_field_options_%257B$key%257D.html">um_radio_field_options_{$key}</a></li><li><a href="um_radio_options_pair__%257B$key%257D.html">um_radio_options_pair__{$key}</a></li><li><a href="um_registration_for_loggedin_users.html">um_registration_for_loggedin_users</a></li><li><a href="um_registration_user_role.html">um_registration_user_role</a></li><li><a href="um_reset_password_shortcode_args_filter.html">um_reset_password_shortcode_args_filter</a></li><li><a href="um_rest_get_auser.html">um_rest_get_auser</a></li><li><a href="um_rest_userdata.html">um_rest_userdata</a></li><li><a href="um_select_dropdown_dynamic_options.html">um_select_dropdown_dynamic_options</a></li><li><a href="um_select_dropdown_dynamic_options_%257B$key%257D.html">um_select_dropdown_dynamic_options_{$key}</a></li><li><a href="um_select_options_pair.html">um_select_options_pair</a></li><li><a href="um_selectbox_options.html">um_selectbox_options</a></li><li><a href="um_shortcode_args_filter.html">um_shortcode_args_filter</a></li><li><a href="um_user_register_submitted__email.html">um_user_register_submitted__email</a></li><li><a href="um_view_field.html">um_view_field</a></li><li><a href="um_view_field_value_%257B$type%257D.html">um_view_field_value_{$type}</a></li><li><a href="um_%257B$key%257D_form_edit_field.html">um_{$key}_form_edit_field</a></li><li><a href="um_%257B$key%257D_form_show_field.html">um_{$key}_form_show_field</a></li><li><a href="um_%257B$type%257D_form_show_field.html">um_{$type}_form_show_field</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

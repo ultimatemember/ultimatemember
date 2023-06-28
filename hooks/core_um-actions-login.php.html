@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: core/um-actions-login.php - Ultimate Member Hook Docs</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+
+	<link href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono|IBM+Plex+Sans:300,400|Playfair+Display:900&display=swap" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="styles-um.css">
+</head>
+
+<body>
+
+<div id="main">
+
+	
+    <h1 class="page-title">Source: core/um-actions-login.php</h1>
+	
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>&lt;?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Error procesing hook for login
+ *
+ * @param $args
+ */
+function um_submit_form_errors_hook_login( $args ) {
+	$is_email = false;
+
+	$form_id = $args['form_id'];
+	$mode = $args['mode'];
+	$user_password = $args['user_password'];
+
+	if ( isset( $args['username'] ) &amp;&amp; $args['username'] == '' ) {
+		UM()->form()->add_error( 'username', __( 'Please enter your username or email', 'ultimate-member' ) );
+	}
+
+	if ( isset( $args['user_login'] ) &amp;&amp; $args['user_login'] == '' ) {
+		UM()->form()->add_error( 'user_login', __( 'Please enter your username', 'ultimate-member' ) );
+	}
+
+	if ( isset( $args['user_email'] ) &amp;&amp; $args['user_email'] == '' ) {
+		UM()->form()->add_error( 'user_email', __( 'Please enter your email', 'ultimate-member' ) );
+	}
+
+	if ( isset( $args['username'] ) ) {
+		$authenticate = $args['username'];
+		$field = 'username';
+		if ( is_email( $args['username'] ) ) {
+			$is_email = true;
+			$data = get_user_by('email', $args['username'] );
+			$user_name = isset( $data->user_login ) ? $data->user_login : null;
+		} else {
+			$user_name  = $args['username'];
+		}
+	} elseif ( isset( $args['user_email'] ) ) {
+		$authenticate = $args['user_email'];
+		$field = 'user_email';
+		$is_email = true;
+		$data = get_user_by('email', $args['user_email'] );
+		$user_name = isset( $data->user_login ) ? $data->user_login : null;
+	} else {
+		$field = 'user_login';
+		$user_name = $args['user_login'];
+		$authenticate = $args['user_login'];
+	}
+
+	if ( $args['user_password'] == '' ) {
+		UM()->form()->add_error( 'user_password', __( 'Please enter your password', 'ultimate-member' ) );
+	}
+
+	$user = get_user_by( 'login', $user_name );
+	if ( $user &amp;&amp; wp_check_password( $args['user_password'], $user->data->user_pass, $user->ID ) ) {
+		UM()->login()->auth_id = username_exists( $user_name );
+	} else {
+		UM()->form()->add_error( 'user_password', __( 'Password is incorrect. Please try again.', 'ultimate-member' ) );
+	}
+
+	// Integration with 3rd-party login handlers e.g. 3rd-party reCAPTCHA etc.
+	$third_party_codes = apply_filters( 'um_custom_authenticate_error_codes', array() );
+
+	// @since 4.18 replacement for 'wp_login_failed' action hook
+	// see WP function wp_authenticate()
+	$ignore_codes = array( 'empty_username', 'empty_password' );
+
+	$user = apply_filters( 'authenticate', null, $authenticate, $args['user_password'] );
+	if ( is_wp_error( $user ) &amp;&amp; ! in_array( $user->get_error_code(), $ignore_codes ) ) {
+		if ( ! empty( $third_party_codes ) &amp;&amp; in_array( $user->get_error_code(), $third_party_codes ) ) {
+			UM()->form()->add_error( $user->get_error_code(), $user->get_error_message() );
+		} else {
+			UM()->form()->add_error( 'user_password', __( 'Password is incorrect. Please try again.', 'ultimate-member' ) );
+		}
+	}
+
+	$user = apply_filters( 'wp_authenticate_user', $user, $args['user_password'] );
+	if ( is_wp_error( $user ) &amp;&amp; ! in_array( $user->get_error_code(), $ignore_codes ) ) {
+		if ( ! empty( $third_party_codes ) &amp;&amp; in_array( $user->get_error_code(), $third_party_codes ) ) {
+			UM()->form()->add_error( $user->get_error_code(), $user->get_error_message() );
+		} else {
+			UM()->form()->add_error( 'user_password', __( 'Password is incorrect. Please try again.', 'ultimate-member' ) );
+		}
+	}
+
+	// if there is an error notify wp
+	if ( UM()->form()->has_error( $field ) || UM()->form()->has_error( $user_password ) || UM()->form()->count_errors() > 0 ) {
+		do_action( 'wp_login_failed', $user_name, UM()->form()->get_wp_error() );
+	}
+}
+add_action( 'um_submit_form_errors_hook_login', 'um_submit_form_errors_hook_login', 10 );
+
+
+/**
+ * Display the login errors from other plugins
+ *
+ * @param $args
+ */
+function um_display_login_errors( $args ) {
+	if ( UM()->form()->count_errors() > 0 ) {
+		$errors = UM()->form()->errors;
+		// hook for other plugins to display error
+		$error_keys = array_keys( $errors );
+	}
+
+	if ( isset( $args['custom_fields'] ) ) {
+		$custom_fields = $args['custom_fields'];
+	}
+
+	if ( ! empty( $error_keys ) &amp;&amp; ! empty( $custom_fields ) ) {
+		foreach ( $error_keys as $error ) {
+			if ( trim( $error ) &amp;&amp; ! isset( $custom_fields[ $error ] ) &amp;&amp; ! empty( $errors[ $error ] ) ) {
+				$error_message = apply_filters( 'login_errors', $errors[ $error ], $error );
+				if ( empty( $error_message ) ) {
+					return;
+				}
+				echo '&lt;p class="um-notice err um-error-code-' . esc_attr( $error ) . '">&lt;i class="um-icon-ios-close-empty" onclick="jQuery(this).parent().fadeOut();">&lt;/i>' . $error_message  . '&lt;/p>';
+			}
+		}
+	}
+}
+add_action( 'um_before_login_fields', 'um_display_login_errors' );
+
+
+/**
+ * Login checks thru the frontend login
+ *
+ * @param $args
+ */
+function um_submit_form_errors_hook_logincheck( $args ) {
+	// Logout if logged in
+	if ( is_user_logged_in() ) {
+		wp_logout();
+	}
+
+	$user_id = ( isset( UM()->login()->auth_id ) ) ? UM()->login()->auth_id : '';
+	um_fetch_user( $user_id );
+
+	$status = um_user( 'account_status' ); // account status
+	switch ( $status ) {
+
+		// If user can't login to site...
+		case 'inactive':
+		case 'awaiting_admin_review':
+		case 'awaiting_email_confirmation':
+		case 'rejected':
+		um_reset_user();
+		exit( wp_redirect( add_query_arg( 'err', esc_attr( $status ), UM()->permalinks()->get_current_url() ) ) );
+		break;
+
+	}
+
+	if ( isset( $args['form_id'] ) &amp;&amp; $args['form_id'] == UM()->shortcodes()->core_login_form() &amp;&amp; UM()->form()->errors &amp;&amp; ! isset( $_POST[ UM()->honeypot ] ) ) {
+		exit( wp_redirect( um_get_core_page( 'login' ) ) );
+	}
+
+}
+add_action( 'um_submit_form_errors_hook_logincheck', 'um_submit_form_errors_hook_logincheck', 9999 );
+
+
+/**
+ * Store last login timestamp
+ *
+ * @param $user_id
+ */
+function um_store_lastlogin_timestamp( $user_id ) {
+	update_user_meta( $user_id, '_um_last_login', current_time( 'timestamp' ) );
+	// Flush user cache after updating last_login timestamp.
+	UM()->user()->remove_cache( $user_id );
+}
+add_action( 'um_on_login_before_redirect', 'um_store_lastlogin_timestamp', 10, 1 );
+
+
+/**
+ * @param $login
+ */
+function um_store_lastlogin_timestamp_( $login ) {
+	$user = get_user_by( 'login', $login );
+
+	if ( false !== $user ) {
+		um_store_lastlogin_timestamp( $user->ID );
+
+		$attempts = (int) get_user_meta( $user->ID, 'password_rst_attempts', true );
+		if ( $attempts ) {
+			//don't create meta but update if it's exists only
+			update_user_meta( $user->ID, 'password_rst_attempts', 0 );
+		}
+	}
+}
+add_action( 'wp_login', 'um_store_lastlogin_timestamp_' );
+
+/**
+ * Login user process
+ *
+ * @param array $args
+ */
+function um_user_login( $args ) {
+	// phpcs:disable WordPress.Security.NonceVerification -- already verified here
+	$rememberme = ( isset( $_REQUEST['rememberme'], $args['rememberme'] ) &amp;&amp; 1 === (int) $args['rememberme'] ) ? 1 : 0;
+
+	// @todo check using the 'deny_admin_frontend_login' option
+	if ( false !== strrpos( um_user( 'wp_roles' ), 'administrator' ) &amp;&amp; ( ! isset( $_GET['provider'] ) &amp;&amp; UM()->options()->get( 'deny_admin_frontend_login' ) ) ) {
+		wp_die( esc_html__( 'This action has been prevented for security measures.', 'ultimate-member' ) );
+	}
+
+	UM()->user()->auto_login( um_user( 'ID' ), $rememberme );
+
+	/**
+	 * Fires after successful login and before user is redirected.
+	 *
+	 * @since 1.3.x
+	 * @hook  um_on_login_before_redirect
+	 *
+	 * @param {int} $user_id User ID.
+	 *
+	 * @example &lt;caption>Make any custom action after successful login and before user is redirected.&lt;/caption>
+	 * function my_on_login_before_redirect( $user_id ) {
+	 *     // your code here
+	 * }
+	 * add_action( 'um_on_login_before_redirect', 'my_on_login_before_redirect', 10, 1 );
+	 */
+	do_action( 'um_on_login_before_redirect', um_user( 'ID' ) );
+
+	// Priority redirect from $_GET attribute.
+	if ( ! empty( $args['redirect_to'] ) ) {
+		wp_safe_redirect( $args['redirect_to'] );
+		exit;
+	}
+
+	// Role redirect
+	$after_login = um_user( 'after_login' );
+	if ( empty( $after_login ) ) {
+		wp_safe_redirect( um_user_profile_url() );
+		exit;
+	}
+
+	switch ( $after_login ) {
+		case 'redirect_admin':
+			wp_safe_redirect( admin_url() );
+			exit;
+		case 'redirect_url':
+			/**
+			 * Filters change redirect URL after successful login.
+			 *
+			 * @since 2.0
+			 * @hook  um_login_redirect_url
+			 *
+			 * @param {string} $can_view Redirect URL.
+			 * @param {int}    $user_id  User ID.
+			 *
+			 * @return {string} Redirect URL.
+			 *
+			 * @example &lt;caption>Change redirect URL.&lt;/caption>
+			 * function my_login_redirect_url( $url, $id ) {
+			 *     // your code here
+			 *     return $url;
+			 * }
+			 * add_filter( 'um_login_redirect_url', 'my_login_redirect_url', 10, 2 );
+			 */
+			$redirect_url = apply_filters( 'um_login_redirect_url', um_user( 'login_redirect_url' ), um_user( 'ID' ) );
+			wp_safe_redirect( $redirect_url );
+			exit;
+		case 'refresh':
+			wp_safe_redirect( UM()->permalinks()->get_current_url() );
+			exit;
+		case 'redirect_profile':
+		default:
+			wp_safe_redirect( um_user_profile_url() );
+			exit;
+	}
+	// phpcs:enable WordPress.Security.NonceVerification -- already verified here
+}
+add_action( 'um_user_login', 'um_user_login' );
+
+/**
+ * Form processing
+ *
+ * @param $args
+ */
+function um_submit_form_login( $args ) {
+
+	if ( ! isset( UM()->form()->errors ) ) {
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_user_login
+		 * @description Hook that runs after successful submit login form
+		 * @input_vars
+		 * [{"var":"$args","type":"array","desc":"Form data"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_user_login', 'function_name', 10, 1 );
+		 * @example
+		 * &lt;?php
+		 * add_action( 'um_user_login', 'my_user_login', 10, 1 );
+		 * function my_user_login( $args ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
+		do_action( 'um_user_login', $args );
+	}
+
+	/**
+	 * UM hook
+	 *
+	 * @type action
+	 * @title um_user_login_extra_hook
+	 * @description Hook that runs after successful submit login form
+	 * @input_vars
+	 * [{"var":"$args","type":"array","desc":"Form data"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_action( 'um_user_login_extra_hook', 'function_name', 10, 1 );
+	 * @example
+	 * &lt;?php
+	 * add_action( 'um_user_login_extra_hook', 'my_user_login_extra', 10, 1 );
+	 * function my_user_login_extra( $args ) {
+	 *     // your code here
+	 * }
+	 * ?>
+	 */
+	do_action( 'um_user_login_extra_hook', $args );
+}
+add_action( 'um_submit_form_login', 'um_submit_form_login', 10 );
+
+
+/**
+ * Show the submit button
+ *
+ * @param $args
+ */
+function um_add_submit_button_to_login( $args ) {
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_login_form_button_one
+	 * @description Change Login Form Primary button
+	 * @input_vars
+	 * [{"var":"$primary_btn_word","type":"string","desc":"Button text"},
+	 * {"var":"$args","type":"array","desc":"Login Form arguments"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage
+	 * &lt;?php add_filter( 'um_login_form_button_one', 'function_name', 10, 2 ); ?>
+	 * @example
+	 * &lt;?php
+	 * add_filter( 'um_login_form_button_one', 'my_login_form_button_one', 10, 2 );
+	 * function my_login_form_button_one( $primary_btn_word, $args ) {
+	 *     // your code here
+	 *     return $primary_btn_word;
+	 * }
+	 * ?>
+	 */
+	$primary_btn_word = apply_filters('um_login_form_button_one', $args['primary_btn_word'], $args );
+
+	if ( ! isset( $primary_btn_word ) || $primary_btn_word == '' ){
+		$primary_btn_word = UM()->options()->get( 'login_primary_btn_word' );
+	}
+
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_login_form_button_two
+	 * @description Change Login Form Secondary button
+	 * @input_vars
+	 * [{"var":"$secondary_btn_word","type":"string","desc":"Button text"},
+	 * {"var":"$args","type":"array","desc":"Login Form arguments"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage
+	 * &lt;?php add_filter( 'um_login_form_button_two', 'function_name', 10, 2 ); ?>
+	 * @example
+	 * &lt;?php
+	 * add_filter( 'um_login_form_button_two', 'my_login_form_button_two', 10, 2 );
+	 * function my_login_form_button_two( $secondary_btn_word, $args ) {
+	 *     // your code here
+	 *     return $secondary_btn_word;
+	 * }
+	 * ?>
+	 */
+	$secondary_btn_word = apply_filters( 'um_login_form_button_two', $args['secondary_btn_word'], $args );
+
+	if ( ! isset( $secondary_btn_word ) || $secondary_btn_word == '' ){
+		$secondary_btn_word = UM()->options()->get( 'login_secondary_btn_word' );
+	}
+
+	$secondary_btn_url = ! empty( $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_core_page( 'register' );
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_login_form_button_two_url
+	 * @description Change Login Form Secondary button URL
+	 * @input_vars
+	 * [{"var":"$secondary_btn_url","type":"string","desc":"Button URL"},
+	 * {"var":"$args","type":"array","desc":"Login Form arguments"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage
+	 * &lt;?php add_filter( 'um_login_form_button_two_url', 'function_name', 10, 2 ); ?>
+	 * @example
+	 * &lt;?php
+	 * add_filter( 'um_login_form_button_two_url', 'my_login_form_button_two_url', 10, 2 );
+	 * function my_login_form_button_two_url( $secondary_btn_url, $args ) {
+	 *     // your code here
+	 *     return $secondary_btn_url;
+	 * }
+	 * ?>
+	 */
+	$secondary_btn_url = apply_filters( 'um_login_form_button_two_url', $secondary_btn_url, $args ); ?>
+
+	&lt;div class="um-col-alt">
+
+		&lt;?php if ( ! empty( $args['show_rememberme'] ) ) {
+			UM()->fields()->checkbox( 'rememberme', __( 'Keep me signed in', 'ultimate-member' ), false ); ?>
+			&lt;div class="um-clear">&lt;/div>
+		&lt;?php }
+
+		if ( ! empty( $args['secondary_btn'] ) ) { ?>
+
+			&lt;div class="um-left um-half">
+				&lt;input type="submit" value="&lt;?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
+			&lt;/div>
+			&lt;div class="um-right um-half">
+				&lt;a href="&lt;?php echo esc_url( $secondary_btn_url ); ?>" class="um-button um-alt">
+					&lt;?php _e( wp_unslash( $secondary_btn_word ), 'ultimate-member' ); ?>
+				&lt;/a>
+			&lt;/div>
+
+		&lt;?php } else { ?>
+
+			&lt;div class="um-center">
+				&lt;input type="submit" value="&lt;?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
+			&lt;/div>
+
+		&lt;?php } ?>
+
+		&lt;div class="um-clear">&lt;/div>
+
+	&lt;/div>
+
+	&lt;?php
+}
+add_action( 'um_after_login_fields', 'um_add_submit_button_to_login', 1000 );
+
+
+/**
+ * Display a forgot password link
+ *
+ * @param $args
+ */
+function um_after_login_submit( $args ) {
+	if ( empty( $args['forgot_pass_link'] ) ) {
+		return;
+	} ?>
+
+	&lt;div class="um-col-alt-b">
+		&lt;a href="&lt;?php echo esc_url( um_get_core_page( 'password-reset' ) ); ?>" class="um-link-alt">
+			&lt;?php _e( 'Forgot your password?', 'ultimate-member' ); ?>
+		&lt;/a>
+	&lt;/div>
+
+	&lt;?php
+}
+add_action( 'um_after_login_fields', 'um_after_login_submit', 1001 );
+
+
+/**
+ * Show Fields
+ *
+ * @param $args
+ */
+function um_add_login_fields( $args ) {
+	echo UM()->fields()->display( 'login', $args );
+}
+add_action( 'um_main_login_fields', 'um_add_login_fields', 100 );
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    <footer>
+		<a href="https://wordpress.org/plugins/ultimate-member/">Ultimate Member Plugin</a> &bull;
+		<a href="https://docs.ultimatemember.com/">Official Docs</a>
+	</footer>
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="um_admin_ajax_modal_content__hook.html">um_admin_ajax_modal_content__hook</a></li><li><a href="um_admin_ajax_modal_content__hook_%257B$act_id%257D.html">um_admin_ajax_modal_content__hook_{$act_id}</a></li><li><a href="um_after_delete_role.html">um_after_delete_role</a></li><li><a href="um_after_delete_role_meta.html">um_after_delete_role_meta</a></li><li><a href="um_after_everything_output.html">um_after_everything_output</a></li><li><a href="um_after_form.html">um_after_form</a></li><li><a href="um_after_form_fields.html">um_after_form_fields</a></li><li><a href="um_after_%257B$mode%257D_fields.html">um_after_{$mode}_fields</a></li><li><a href="um_ajax_load_posts__%257B$hook%257D.html">um_ajax_load_posts__{$hook}</a></li><li><a href="um_before_form.html">um_before_form</a></li><li><a href="um_before_form_is_loaded.html">um_before_form_is_loaded</a></li><li><a href="um_before_%257B$mode%257D_fields.html">um_before_{$mode}_fields</a></li><li><a href="um_before_%257B$mode%257D_form_is_loaded.html">um_before_{$mode}_form_is_loaded</a></li><li><a href="um_main_%257B$mode%257D_fields.html">um_main_{$mode}_fields</a></li><li><a href="um_on_login_before_redirect.html">um_on_login_before_redirect</a></li><li><a href="um_pre_%257B$mode%257D_shortcode.html">um_pre_{$mode}_shortcode</a></li><li><a href="um_role_edit_data.html">um_role_edit_data</a></li><li><a href="um_role_row_actions.html">um_role_row_actions</a></li><li><a href="um_run_ajax_function__%257B$hook%257D.html">um_run_ajax_function__{$hook}</a></li><li><a href="um_user_register.html">um_user_register</a></li></ul><h3>Filters</h3><ul><li><a href="um_add_user_frontend_submitted.html">um_add_user_frontend_submitted</a></li><li><a href="um_admin_builder_skip_field_validation.html">um_admin_builder_skip_field_validation</a></li><li><a href="um_admin_field_update_error_handling.html">um_admin_field_update_error_handling</a></li><li><a href="um_admin_pre_save_field_to_db.html">um_admin_pre_save_field_to_db</a></li><li><a href="um_admin_pre_save_field_to_form.html">um_admin_pre_save_field_to_form</a></li><li><a href="um_admin_pre_save_fields_hook.html">um_admin_pre_save_fields_hook</a></li><li><a href="um_api_output_format.html">um_api_output_format</a></li><li><a href="um_before_update_profile.html">um_before_update_profile</a></li><li><a href="um_change_role_data.html">um_change_role_data</a></li><li><a href="um_checkbox_field_options.html">um_checkbox_field_options</a></li><li><a href="um_checkbox_field_options_%257B$key%257D.html">um_checkbox_field_options_{$key}</a></li><li><a href="um_completeness_field_id.html">um_completeness_field_id</a></li><li><a href="um_custom_dropdown_options_parent__%257B$form_key%257D.html">um_custom_dropdown_options_parent__{$form_key}</a></li><li><a href="um_custom_dropdown_options_source__%257B$form_key%257D.html">um_custom_dropdown_options_source__{$form_key}</a></li><li><a href="um_custom_error_message_handler.html">um_custom_error_message_handler</a></li><li><a href="um_custom_success_message_handler.html">um_custom_success_message_handler</a></li><li><a href="um_disable_blocks_script.html">um_disable_blocks_script</a></li><li><a href="um_disable_dynamic_global_css.html">um_disable_dynamic_global_css</a></li><li><a href="um_disable_email_notification_sending.html">um_disable_email_notification_sending</a></li><li><a href="um_edit_field_%257B$mode%257D_%257B$type%257D.html">um_edit_field_{$mode}_{$type}</a></li><li><a href="um_email_get_template_file_path.html">um_email_get_template_file_path</a></li><li><a href="um_excluded_comment_types.html">um_excluded_comment_types</a></li><li><a href="um_external_profile_url.html">um_external_profile_url</a></li><li><a href="um_field_checkbox_item_title.html">um_field_checkbox_item_title</a></li><li><a href="um_fields_without_metakey.html">um_fields_without_metakey</a></li><li><a href="um_form_fields_textarea_settings.html">um_form_fields_textarea_settings</a></li><li><a href="um_get_current_page_url.html">um_get_current_page_url</a></li><li><a href="um_hook_for_field_%257B$type%257D.html">um_hook_for_field_{$type}</a></li><li><a href="um_is_field_disabled.html">um_is_field_disabled</a></li><li><a href="um_late_escaping_allowed_tags.html">um_late_escaping_allowed_tags</a></li><li><a href="um_localize_permalink_filter.html">um_localize_permalink_filter</a></li><li><a href="um_login_redirect_url.html">um_login_redirect_url</a></li><li><a href="um_member_directory_custom_sorting_type.html">um_member_directory_custom_sorting_type</a></li><li><a href="um_multiselect_option_value.html">um_multiselect_option_value</a></li><li><a href="um_multiselect_options.html">um_multiselect_options</a></li><li><a href="um_multiselect_options_%257B$key%257D.html">um_multiselect_options_{$key}</a></li><li><a href="um_multiselect_options_%257B$type%257D.html">um_multiselect_options_{$type}</a></li><li><a href="um_override_templates_get_template_path__%257B$key%257D.html">um_override_templates_get_template_path__{$key}</a></li><li><a href="um_override_templates_scan_files.html">um_override_templates_scan_files</a></li><li><a href="um_pre_args_setup.html">um_pre_args_setup</a></li><li><a href="um_prepare_user_results_array.html">um_prepare_user_results_array</a></li><li><a href="um_prepare_user_results_array_meta.html">um_prepare_user_results_array_meta</a></li><li><a href="um_profile_can_view_main.html">um_profile_can_view_main</a></li><li><a href="um_profile_menu_link_%257B$id%257D_attrs.html">um_profile_menu_link_{$id}_attrs</a></li><li><a href="um_profile_permalink.html">um_profile_permalink</a></li><li><a href="um_radio_field_options.html">um_radio_field_options</a></li><li><a href="um_radio_field_options_%257B$key%257D.html">um_radio_field_options_{$key}</a></li><li><a href="um_radio_options_pair__%257B$key%257D.html">um_radio_options_pair__{$key}</a></li><li><a href="um_registration_for_loggedin_users.html">um_registration_for_loggedin_users</a></li><li><a href="um_registration_user_role.html">um_registration_user_role</a></li><li><a href="um_reset_password_shortcode_args_filter.html">um_reset_password_shortcode_args_filter</a></li><li><a href="um_rest_get_auser.html">um_rest_get_auser</a></li><li><a href="um_rest_userdata.html">um_rest_userdata</a></li><li><a href="um_select_dropdown_dynamic_options.html">um_select_dropdown_dynamic_options</a></li><li><a href="um_select_dropdown_dynamic_options_%257B$key%257D.html">um_select_dropdown_dynamic_options_{$key}</a></li><li><a href="um_select_options_pair.html">um_select_options_pair</a></li><li><a href="um_selectbox_options.html">um_selectbox_options</a></li><li><a href="um_shortcode_args_filter.html">um_shortcode_args_filter</a></li><li><a href="um_user_register_submitted__email.html">um_user_register_submitted__email</a></li><li><a href="um_view_field.html">um_view_field</a></li><li><a href="um_view_field_value_%257B$type%257D.html">um_view_field_value_{$type}</a></li><li><a href="um_%257B$key%257D_form_edit_field.html">um_{$key}_form_edit_field</a></li><li><a href="um_%257B$key%257D_form_show_field.html">um_{$key}_form_show_field</a></li><li><a href="um_%257B$type%257D_form_show_field.html">um_{$type}_form_show_field</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -31,173 +31,172 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>&lt;?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-
+            <pre class="prettyprint source linenums"><code>&lt;?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
- * Um_profile_content_{main_tab}
+ * It renders the content of main profile tab.
  *
- * @param $args
+ * @param array $args
  */
 function um_profile_content_main( $args ) {
+	if ( ! array_key_exists( 'mode', $args ) ) {
+		return;
+	}
+	$mode = $args['mode'];
 
-	/**
-	 * @var $mode
-	 */
-	extract( $args );
-
-	if ( ! UM()->options()->get( 'profile_tab_main' ) &amp;&amp; ! isset( $_REQUEST['um_action'] ) ) {
+	// phpcs:ignore WordPress.Security.NonceVerification -- $_REQUEST is used for echo only
+	if ( ! isset( $_REQUEST['um_action'] ) &amp;&amp; ! UM()->options()->get( 'profile_tab_main' ) ) {
 		return;
 	}
 
 	/**
-	 * UM hook
+	 * Filters user's ability to view a profile
 	 *
-	 * @type filter
-	 * @title um_profile_can_view_main
-	 * @description Check user can view profile
-	 * @input_vars
-	 * [{"var":"$view","type":"bool","desc":"Can view?"},
-	 * {"var":"$user_id","type":"int","desc":"User profile ID"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage
-	 * &lt;?php add_filter( 'um_profile_can_view_main', 'function_name', 10, 2 ); ?>
-	 * @example
-	 * &lt;?php
-	 * add_filter( 'um_profile_can_view_main', 'my_profile_can_view_main', 10, 2 );
-	 * function my_profile_can_view_main( $view, $user_id ) {
-	 *     // your code here
-	 *     return $view;
+	 * @since 1.3.x
+	 * @hook  um_profile_can_view_main
+	 *
+	 * @param {int} $can_view   Can view profile. It's -1 by default.
+	 * @param {int} $profile_id User Profile ID.
+	 *
+	 * @return {int} Can view profile. Set it to -1 for displaying and vice versa to hide.
+	 *
+	 * @example &lt;caption>Make profile hidden.&lt;/caption>
+	 * function my_profile_can_view_main( $can_view, $profile_id ) {
+	 *     $can_view = 1; // make profile hidden.
+	 *     return $can_view;
 	 * }
-	 * ?>
+	 * add_filter( 'um_profile_can_view_main', 'my_profile_can_view_main', 10, 2 );
 	 */
 	$can_view = apply_filters( 'um_profile_can_view_main', -1, um_profile_id() );
 
-	if ( $can_view == -1 ) {
+	if ( -1 === (int) $can_view ) {
 		/**
-		 * UM hook
+		 * Fires before UM Form content.
 		 *
-		 * @type action
-		 * @title um_before_form
-		 * @description Some actions before profile form
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_before_form', 'function_name', 10, 1 );
-		 * @example
-		 * &lt;?php
-		 * add_action( 'um_before_form', 'my_before_form', 10, 1 );
+		 * @since 1.3.x
+		 * @hook  um_before_form
+		 *
+		 * @param {array} $args UM Form shortcode arguments.
+		 *
+		 * @example &lt;caption>Make any custom action before UM form.&lt;/caption>
 		 * function my_before_form( $args ) {
 		 *     // your code here
 		 * }
-		 * ?>
+		 * add_action( 'um_before_form', 'my_before_form' );
 		 */
 		do_action( 'um_before_form', $args );
-
 		/**
-		 * UM hook
+		 * Fires before UM Form fields.
 		 *
-		 * @type action
-		 * @title um_before_{$mode}_fields
-		 * @description Some actions before profile form fields
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"{Profile} form shortcode arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_before_{$mode}_fields', 'function_name', 10, 1 );
-		 * @example
-		 * &lt;?php
-		 * add_action( 'um_before_{$mode}_fields', 'my_before_fields', 10, 1 );
-		 * function my_before_form( $args ) {
+		 * Note: $mode can be equals to 'login', 'profile', 'register'.
+		 *
+		 * @since 1.3.x
+		 * @hook  um_before_{$mode}_fields
+		 *
+		 * @param {array} $args UM Form shortcode arguments.
+		 *
+		 * @example &lt;caption>Make any custom action before UM Profile form fields.&lt;/caption>
+		 * function my_before_profile_fields( $args ) {
 		 *     // your code here
 		 * }
-		 * ?>
+		 * add_action( 'um_before_profile_fields', 'my_before_profile_fields' );
+		 * @example &lt;caption>Make any custom action before UM Login form fields.&lt;/caption>
+		 * function my_before_login_fields( $args ) {
+		 *     // your code here
+		 * }
+		 * add_action( 'um_before_login_fields', 'my_before_login_fields' );
+		 * @example &lt;caption>Make any custom action before UM Register form fields.&lt;/caption>
+		 * function my_before_register_fields( $args ) {
+		 *     // your code here
+		 * }
+		 * add_action( 'um_before_register_fields', 'my_before_register_fields' );
 		 */
 		do_action( "um_before_{$mode}_fields", $args );
-
 		/**
-		 * UM hook
+		 * Fires for rendering UM Form fields.
 		 *
-		 * @type action
-		 * @title um_main_{$mode}_fields
-		 * @description Some actions before login form fields
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Login form shortcode arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_before_{$mode}_fields', 'function_name', 10, 1 );
-		 * @example
-		 * &lt;?php
-		 * add_action( 'um_before_{$mode}_fields', 'my_before_fields', 10, 1 );
-		 * function my_before_form( $args ) {
+		 * Note: $mode can be equals to 'login', 'profile', 'register'.
+		 *
+		 * @since 1.3.x
+		 * @hook  um_main_{$mode}_fields
+		 *
+		 * @param {array} $args UM Form shortcode arguments.
+		 *
+		 * @example &lt;caption>Make any custom action when profile form fields are rendered.&lt;/caption>
+		 * function my_main_profile_fields( $args ) {
 		 *     // your code here
 		 * }
-		 * ?>
+		 * add_action( 'um_main_profile_fields', 'my_main_profile_fields' );
+		 * @example &lt;caption>Make any custom action when login form fields are rendered.&lt;/caption>
+		 * function my_main_login_fields( $args ) {
+		 *     // your code here
+		 * }
+		 * add_action( 'um_main_login_fields', 'my_main_login_fields' );
+		 * @example &lt;caption>Make any custom action when register form fields are rendered.&lt;/caption>
+		 * function my_main_register_fields( $args ) {
+		 *     // your code here
+		 * }
+		 * add_action( 'um_main_register_fields', 'my_main_register_fields' );
 		 */
 		do_action( "um_main_{$mode}_fields", $args );
-
 		/**
-		 * UM hook
+		 * Fires after UM Form fields.
 		 *
-		 * @type action
-		 * @title um_after_form_fields
-		 * @description Some actions after login form fields
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Login form shortcode arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_after_form_fields', 'function_name', 10, 1 );
-		 * @example
-		 * &lt;?php
-		 * add_action( 'um_after_form_fields', 'my_after_form_fields', 10, 1 );
+		 * @since 1.3.x
+		 * @hook  um_after_form_fields
+		 *
+		 * @param {array} $args UM Form shortcode arguments.
+		 *
+		 * @example &lt;caption>Make any custom action after UM Form fields.&lt;/caption>
 		 * function my_after_form_fields( $args ) {
 		 *     // your code here
 		 * }
-		 * ?>
+		 * add_action( 'um_after_form_fields', 'my_after_form_fields' );
 		 */
 		do_action( 'um_after_form_fields', $args );
-
 		/**
-		 * UM hook
+		 * Fires after UM Form fields.
 		 *
-		 * @type action
-		 * @title um_after_{$mode}_fields
-		 * @description Some actions after profile form fields
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_after_{$mode}_fields', 'function_name', 10, 1 );
-		 * @example
-		 * &lt;?php
-		 * add_action( 'um_after_{$mode}_fields', 'my_after_form_fields', 10, 1 );
-		 * function my_after_form_fields( $args ) {
+		 * Note: $mode can be equals to 'login', 'profile', 'register'.
+		 *
+		 * @since 1.3.x
+		 * @hook  um_after_{$mode}_fields
+		 *
+		 * @param {array} $args UM Form shortcode arguments.
+		 *
+		 * @example &lt;caption>Make any custom action after profile form fields.&lt;/caption>
+		 * function my_after_profile_fields( $args ) {
 		 *     // your code here
 		 * }
-		 * ?>
+		 * add_action( 'um_after_profile_fields', 'my_after_profile_fields' );
+		 * @example &lt;caption>Make any custom action after login form fields.&lt;/caption>
+		 * function my_after_login_fields( $args ) {
+		 *     // your code here
+		 * }
+		 * add_action( 'um_after_login_fields', 'my_after_login_fields' );
+		 * @example &lt;caption>Make any custom action after register form fields.&lt;/caption>
+		 * function my_after_register_fields( $args ) {
+		 *     // your code here
+		 * }
+		 * add_action( 'um_after_register_fields', 'my_after_register_fields' );
 		 */
 		do_action( "um_after_{$mode}_fields", $args );
-
 		/**
-		 * UM hook
+		 * Fires after UM Form content.
 		 *
-		 * @type action
-		 * @title um_after_form
-		 * @description Some actions after profile form fields
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_after_form', 'function_name', 10, 1 );
-		 * @example
-		 * &lt;?php
-		 * add_action( 'um_after_form', 'my_after_form', 10, 1 );
+		 * @since 1.3.x
+		 * @hook  um_after_form
+		 *
+		 * @param {array} $args UM Form shortcode arguments.
+		 *
+		 * @example &lt;caption>Make any custom action after UM Form content.&lt;/caption>
 		 * function my_after_form( $args ) {
 		 *     // your code here
 		 * }
-		 * ?>
+		 * add_action( 'um_after_form', 'my_after_form' );
 		 */
 		do_action( 'um_after_form', $args );
 
@@ -206,14 +205,13 @@ function um_profile_content_main( $args ) {
 		&lt;div class="um-profile-note">
 			&lt;span>
 				&lt;i class="um-faicon-lock">&lt;/i>
-				&lt;?php echo $can_view; ?>
+				&lt;?php echo esc_html( $can_view ); ?>
 			&lt;/span>
 		&lt;/div>
 		&lt;?php
 	}
 }
 add_action( 'um_profile_content_main', 'um_profile_content_main' );
-
 
 /**
  * Update user's profile
@@ -1398,53 +1396,49 @@ function um_profile_header( $args ) {
 }
 add_action( 'um_profile_header', 'um_profile_header', 9 );
 
-
 /**
- * Adds profile permissions to view/edit
+ * Adds profile permissions to view/edit.
  *
- * @param $args
+ * @param array $args
  */
 function um_pre_profile_shortcode( $args ) {
-	/**
-	 * @var $mode
-	 */
-	extract( $args );
+	// It handles only UM Profile forms.
+	if ( ! array_key_exists( 'mode', $args ) || 'profile' !== $args['mode'] ) {
+		return;
+	}
 
-	if ( $mode == 'profile' ) {
-		if ( UM()->fields()->editing ) {
-			if ( um_get_requested_user() ) {
-				if ( ! UM()->roles()->um_current_user_can( 'edit', um_get_requested_user() ) ) {
-					um_redirect_home( um_get_requested_user(), um_is_myprofile() );
-				}
-				um_fetch_user( um_get_requested_user() );
+	if ( UM()->fields()->editing ) {
+		if ( um_get_requested_user() ) {
+			if ( ! UM()->roles()->um_current_user_can( 'edit', um_get_requested_user() ) ) {
+				um_redirect_home( um_get_requested_user(), um_is_myprofile() );
 			}
+			um_fetch_user( um_get_requested_user() );
+		}
+	} else {
+		UM()->fields()->viewing = 1;
+
+		if ( um_get_requested_user() ) {
+			if ( ! um_is_myprofile() &amp;&amp; ! um_can_view_profile( um_get_requested_user() ) ) {
+				um_redirect_home( um_get_requested_user(), um_is_myprofile() );
+			}
+
+			if ( ! UM()->roles()->um_current_user_can( 'edit', um_get_requested_user() ) ) {
+				UM()->user()->cannot_edit = 1;
+			}
+
+			um_fetch_user( um_get_requested_user() );
 		} else {
-			UM()->fields()->viewing = 1;
+			if ( ! is_user_logged_in() ) {
+				um_redirect_home( um_get_requested_user(), um_is_myprofile() );
+			}
 
-			if ( um_get_requested_user() ) {
-				if ( ! um_can_view_profile( um_get_requested_user() ) &amp;&amp; ! um_is_myprofile() ) {
-					um_redirect_home( um_get_requested_user(), um_is_myprofile() );
-				}
-
-				if ( ! UM()->roles()->um_current_user_can( 'edit', um_get_requested_user() ) ) {
-					UM()->user()->cannot_edit = 1;
-				}
-
-				um_fetch_user( um_get_requested_user() );
-			} else {
-				if ( ! is_user_logged_in() ) {
-					um_redirect_home( um_get_requested_user(), um_is_myprofile() );
-				}
-
-				if ( ! um_user( 'can_edit_profile' ) ) {
-					UM()->user()->cannot_edit = 1;
-				}
+			if ( ! um_user( 'can_edit_profile' ) ) {
+				UM()->user()->cannot_edit = 1;
 			}
 		}
 	}
 }
 add_action( 'um_pre_profile_shortcode', 'um_pre_profile_shortcode' );
-
 
 /**
  * Display the edit profile icon
@@ -1590,7 +1584,7 @@ function um_submit_form_profile( $args ) {
 	UM()->fields()->editing = true;
 
 	if ( ! empty( $args['submitted'] ) ) {
-		$args['submitted'] = array_diff_key( $args['submitted'], array_flip( UM()->user()->banned_keys ) );
+		$args['submitted'] = UM()->form()->clean_submitted_data( $args['submitted'] );
 	}
 
 	/**
@@ -1883,7 +1877,7 @@ add_action( 'um_profile_menu', 'um_profile_menu', 9 );
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="um_admin_ajax_modal_content__hook.html">um_admin_ajax_modal_content__hook</a></li><li><a href="um_admin_ajax_modal_content__hook_%257B$act_id%257D.html">um_admin_ajax_modal_content__hook_{$act_id}</a></li><li><a href="um_after_delete_role.html">um_after_delete_role</a></li><li><a href="um_after_delete_role_meta.html">um_after_delete_role_meta</a></li><li><a href="um_role_edit_data.html">um_role_edit_data</a></li><li><a href="um_role_row_actions.html">um_role_row_actions</a></li></ul><h3>Filters</h3><ul><li><a href="um_admin_builder_skip_field_validation.html">um_admin_builder_skip_field_validation</a></li><li><a href="um_admin_field_update_error_handling.html">um_admin_field_update_error_handling</a></li><li><a href="um_admin_pre_save_field_to_db.html">um_admin_pre_save_field_to_db</a></li><li><a href="um_admin_pre_save_field_to_form.html">um_admin_pre_save_field_to_form</a></li><li><a href="um_admin_pre_save_fields_hook.html">um_admin_pre_save_fields_hook</a></li><li><a href="um_before_update_profile.html">um_before_update_profile</a></li><li><a href="um_disable_blocks_script.html">um_disable_blocks_script</a></li><li><a href="um_disable_email_notification_sending.html">um_disable_email_notification_sending</a></li><li><a href="um_email_get_template_file_path.html">um_email_get_template_file_path</a></li><li><a href="um_external_profile_url.html">um_external_profile_url</a></li><li><a href="um_fields_without_metakey.html">um_fields_without_metakey</a></li><li><a href="um_get_current_page_url.html">um_get_current_page_url</a></li><li><a href="um_late_escaping_allowed_tags.html">um_late_escaping_allowed_tags</a></li><li><a href="um_localize_permalink_filter.html">um_localize_permalink_filter</a></li><li><a href="um_member_directory_custom_sorting_type.html">um_member_directory_custom_sorting_type</a></li><li><a href="um_override_templates_get_template_path__%257B$key%257D.html">um_override_templates_get_template_path__{$key}</a></li><li><a href="um_override_templates_scan_files.html">um_override_templates_scan_files</a></li><li><a href="um_prepare_user_results_array.html">um_prepare_user_results_array</a></li><li><a href="um_prepare_user_results_array_meta.html">um_prepare_user_results_array_meta</a></li><li><a href="um_profile_menu_link_%257B$id%257D_attrs.html">um_profile_menu_link_{$id}_attrs</a></li><li><a href="um_profile_permalink.html">um_profile_permalink</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="um_admin_ajax_modal_content__hook.html">um_admin_ajax_modal_content__hook</a></li><li><a href="um_admin_ajax_modal_content__hook_%257B$act_id%257D.html">um_admin_ajax_modal_content__hook_{$act_id}</a></li><li><a href="um_after_delete_role.html">um_after_delete_role</a></li><li><a href="um_after_delete_role_meta.html">um_after_delete_role_meta</a></li><li><a href="um_after_everything_output.html">um_after_everything_output</a></li><li><a href="um_after_form.html">um_after_form</a></li><li><a href="um_after_form_fields.html">um_after_form_fields</a></li><li><a href="um_after_%257B$mode%257D_fields.html">um_after_{$mode}_fields</a></li><li><a href="um_ajax_load_posts__%257B$hook%257D.html">um_ajax_load_posts__{$hook}</a></li><li><a href="um_before_form.html">um_before_form</a></li><li><a href="um_before_form_is_loaded.html">um_before_form_is_loaded</a></li><li><a href="um_before_%257B$mode%257D_fields.html">um_before_{$mode}_fields</a></li><li><a href="um_before_%257B$mode%257D_form_is_loaded.html">um_before_{$mode}_form_is_loaded</a></li><li><a href="um_main_%257B$mode%257D_fields.html">um_main_{$mode}_fields</a></li><li><a href="um_on_login_before_redirect.html">um_on_login_before_redirect</a></li><li><a href="um_pre_%257B$mode%257D_shortcode.html">um_pre_{$mode}_shortcode</a></li><li><a href="um_role_edit_data.html">um_role_edit_data</a></li><li><a href="um_role_row_actions.html">um_role_row_actions</a></li><li><a href="um_run_ajax_function__%257B$hook%257D.html">um_run_ajax_function__{$hook}</a></li><li><a href="um_user_register.html">um_user_register</a></li></ul><h3>Filters</h3><ul><li><a href="um_add_user_frontend_submitted.html">um_add_user_frontend_submitted</a></li><li><a href="um_admin_builder_skip_field_validation.html">um_admin_builder_skip_field_validation</a></li><li><a href="um_admin_field_update_error_handling.html">um_admin_field_update_error_handling</a></li><li><a href="um_admin_pre_save_field_to_db.html">um_admin_pre_save_field_to_db</a></li><li><a href="um_admin_pre_save_field_to_form.html">um_admin_pre_save_field_to_form</a></li><li><a href="um_admin_pre_save_fields_hook.html">um_admin_pre_save_fields_hook</a></li><li><a href="um_api_output_format.html">um_api_output_format</a></li><li><a href="um_before_update_profile.html">um_before_update_profile</a></li><li><a href="um_change_role_data.html">um_change_role_data</a></li><li><a href="um_checkbox_field_options.html">um_checkbox_field_options</a></li><li><a href="um_checkbox_field_options_%257B$key%257D.html">um_checkbox_field_options_{$key}</a></li><li><a href="um_completeness_field_id.html">um_completeness_field_id</a></li><li><a href="um_custom_dropdown_options_parent__%257B$form_key%257D.html">um_custom_dropdown_options_parent__{$form_key}</a></li><li><a href="um_custom_dropdown_options_source__%257B$form_key%257D.html">um_custom_dropdown_options_source__{$form_key}</a></li><li><a href="um_custom_error_message_handler.html">um_custom_error_message_handler</a></li><li><a href="um_custom_success_message_handler.html">um_custom_success_message_handler</a></li><li><a href="um_disable_blocks_script.html">um_disable_blocks_script</a></li><li><a href="um_disable_dynamic_global_css.html">um_disable_dynamic_global_css</a></li><li><a href="um_disable_email_notification_sending.html">um_disable_email_notification_sending</a></li><li><a href="um_edit_field_%257B$mode%257D_%257B$type%257D.html">um_edit_field_{$mode}_{$type}</a></li><li><a href="um_email_get_template_file_path.html">um_email_get_template_file_path</a></li><li><a href="um_excluded_comment_types.html">um_excluded_comment_types</a></li><li><a href="um_external_profile_url.html">um_external_profile_url</a></li><li><a href="um_field_checkbox_item_title.html">um_field_checkbox_item_title</a></li><li><a href="um_fields_without_metakey.html">um_fields_without_metakey</a></li><li><a href="um_form_fields_textarea_settings.html">um_form_fields_textarea_settings</a></li><li><a href="um_get_current_page_url.html">um_get_current_page_url</a></li><li><a href="um_hook_for_field_%257B$type%257D.html">um_hook_for_field_{$type}</a></li><li><a href="um_is_field_disabled.html">um_is_field_disabled</a></li><li><a href="um_late_escaping_allowed_tags.html">um_late_escaping_allowed_tags</a></li><li><a href="um_localize_permalink_filter.html">um_localize_permalink_filter</a></li><li><a href="um_login_redirect_url.html">um_login_redirect_url</a></li><li><a href="um_member_directory_custom_sorting_type.html">um_member_directory_custom_sorting_type</a></li><li><a href="um_multiselect_option_value.html">um_multiselect_option_value</a></li><li><a href="um_multiselect_options.html">um_multiselect_options</a></li><li><a href="um_multiselect_options_%257B$key%257D.html">um_multiselect_options_{$key}</a></li><li><a href="um_multiselect_options_%257B$type%257D.html">um_multiselect_options_{$type}</a></li><li><a href="um_override_templates_get_template_path__%257B$key%257D.html">um_override_templates_get_template_path__{$key}</a></li><li><a href="um_override_templates_scan_files.html">um_override_templates_scan_files</a></li><li><a href="um_pre_args_setup.html">um_pre_args_setup</a></li><li><a href="um_prepare_user_results_array.html">um_prepare_user_results_array</a></li><li><a href="um_prepare_user_results_array_meta.html">um_prepare_user_results_array_meta</a></li><li><a href="um_profile_can_view_main.html">um_profile_can_view_main</a></li><li><a href="um_profile_menu_link_%257B$id%257D_attrs.html">um_profile_menu_link_{$id}_attrs</a></li><li><a href="um_profile_permalink.html">um_profile_permalink</a></li><li><a href="um_radio_field_options.html">um_radio_field_options</a></li><li><a href="um_radio_field_options_%257B$key%257D.html">um_radio_field_options_{$key}</a></li><li><a href="um_radio_options_pair__%257B$key%257D.html">um_radio_options_pair__{$key}</a></li><li><a href="um_registration_for_loggedin_users.html">um_registration_for_loggedin_users</a></li><li><a href="um_registration_user_role.html">um_registration_user_role</a></li><li><a href="um_reset_password_shortcode_args_filter.html">um_reset_password_shortcode_args_filter</a></li><li><a href="um_rest_get_auser.html">um_rest_get_auser</a></li><li><a href="um_rest_userdata.html">um_rest_userdata</a></li><li><a href="um_select_dropdown_dynamic_options.html">um_select_dropdown_dynamic_options</a></li><li><a href="um_select_dropdown_dynamic_options_%257B$key%257D.html">um_select_dropdown_dynamic_options_{$key}</a></li><li><a href="um_select_options_pair.html">um_select_options_pair</a></li><li><a href="um_selectbox_options.html">um_selectbox_options</a></li><li><a href="um_shortcode_args_filter.html">um_shortcode_args_filter</a></li><li><a href="um_user_register_submitted__email.html">um_user_register_submitted__email</a></li><li><a href="um_view_field.html">um_view_field</a></li><li><a href="um_view_field_value_%257B$type%257D.html">um_view_field_value_{$type}</a></li><li><a href="um_%257B$key%257D_form_edit_field.html">um_{$key}_form_edit_field</a></li><li><a href="um_%257B$key%257D_form_show_field.html">um_{$key}_form_show_field</a></li><li><a href="um_%257B$type%257D_form_show_field.html">um_{$type}_form_show_field</a></li></ul>
 </nav>
 
 <br class="clear">
