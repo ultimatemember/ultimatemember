@@ -1,11 +1,13 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
- * Account automatically approved
+ * Account automatically approved.
  *
- * @param $user_id
- * @param $args
+ * @param int   $user_id
+ * @param array $args
  */
 function um_post_registration_approved_hook( $user_id, $args ) {
 	um_fetch_user( $user_id );
@@ -14,12 +16,11 @@ function um_post_registration_approved_hook( $user_id, $args ) {
 }
 add_action( 'um_post_registration_approved_hook', 'um_post_registration_approved_hook', 10, 2 );
 
-
 /**
- * Account needs email validation
+ * Account needs email validation.
  *
- * @param $user_id
- * @param $args
+ * @param int   $user_id
+ * @param array $args
  */
 function um_post_registration_checkmail_hook( $user_id, $args ) {
 	um_fetch_user( $user_id );
@@ -28,20 +29,18 @@ function um_post_registration_checkmail_hook( $user_id, $args ) {
 }
 add_action( 'um_post_registration_checkmail_hook', 'um_post_registration_checkmail_hook', 10, 2 );
 
-
 /**
- * Account needs admin review
+ * Account needs admin review.
  *
- * @param $user_id
- * @param $args
+ * @param int   $user_id
+ * @param array $args
  */
 function um_post_registration_pending_hook( $user_id, $args ) {
 	um_fetch_user( $user_id );
 
 	UM()->user()->pending();
 }
-add_action('um_post_registration_pending_hook', 'um_post_registration_pending_hook', 10, 2);
-
+add_action( 'um_post_registration_pending_hook', 'um_post_registration_pending_hook', 10, 2 );
 
 /**
  * After insert a new user
@@ -118,7 +117,6 @@ function um_after_insert_user( $user_id, $args ) {
 }
 add_action( 'um_user_register', 'um_after_insert_user', 1, 2 );
 
-
 /**
  * Send notification about registration
  *
@@ -131,7 +129,7 @@ function um_send_registration_notification( $user_id, $args ) {
 	$emails = um_multi_admin_email();
 	if ( ! empty( $emails ) ) {
 		foreach ( $emails as $email ) {
-			if ( um_user( 'account_status' ) != 'pending' ) {
+			if ( 'pending' !== um_user( 'account_status' ) ) {
 				UM()->mail()->send( $email, 'notification_new_user', array( 'admin' => true ) );
 			} else {
 				UM()->mail()->send( $email, 'notification_review', array( 'admin' => true ) );
@@ -140,7 +138,6 @@ function um_send_registration_notification( $user_id, $args ) {
 	}
 }
 add_action( 'um_registration_complete', 'um_send_registration_notification', 10, 2 );
-
 
 /**
  * Check user status and redirect it after registration
@@ -270,7 +267,6 @@ function um_check_user_status( $user_id, $args ) {
 }
 add_action( 'um_registration_complete', 'um_check_user_status', 100, 2 );
 
-
 function um_submit_form_errors_hook__registration( $args ) {
 	// Check for "\" in password.
 	if ( array_key_exists( 'user_password', $args ) && false !== strpos( wp_unslash( trim( $args['user_password'] ) ), '\\' ) ) {
@@ -280,68 +276,66 @@ function um_submit_form_errors_hook__registration( $args ) {
 add_action( 'um_submit_form_errors_hook__registration', 'um_submit_form_errors_hook__registration', 10, 1 );
 
 /**
- * Registration form submit handler
+ * Registration form submit handler.
  *
- * @param $args
- * @return bool|int|WP_Error
+ * @param array $args
  */
 function um_submit_form_register( $args ) {
 	if ( isset( UM()->form()->errors ) ) {
-		return false;
+		return;
 	}
 
 	/**
-	 * UM hook
+	 * Filters user data submitted by a registration form.
 	 *
-	 * @type filter
-	 * @title um_add_user_frontend_submitted
-	 * @description Extend user data on registration form submit
-	 * @input_vars
-	 * [{"var":"$submitted","type":"array","desc":"Registration data"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage
-	 * <?php add_filter( 'um_add_user_frontend_submitted', 'function_name', 10, 1 ); ?>
-	 * @example
-	 * <?php
-	 * add_filter( 'um_add_user_frontend_submitted', 'my_add_user_frontend_submitted', 10, 1 );
+	 * Note: Data is already sanitized here.
+	 *
+	 * @since 1.3.x
+	 * @hook  um_add_user_frontend_submitted
+	 *
+	 * @param {array} $submitted Submitted registration data.
+	 *
+	 * @return {array} Extended registration data.
+	 *
+	 * @example <caption>Extends registration data.</caption>
 	 * function my_add_user_frontend_submitted( $submitted ) {
 	 *     // your code here
 	 *     return $submitted;
 	 * }
-	 * ?>
+	 * add_filter( 'um_add_user_frontend_submitted', 'my_add_user_frontend_submitted' );
 	 */
 	$args = apply_filters( 'um_add_user_frontend_submitted', $args );
 
-	extract( $args );
-
-	if ( ! empty( $username ) && empty( $user_login ) ) {
-		$user_login = $username;
+	if ( ! empty( $args['user_login'] ) ) {
+		$user_login = $args['user_login'];
+	}
+	if ( ! empty( $args['username'] ) && empty( $args['user_login'] ) ) {
+		$user_login = $args['username'];
 	}
 
-	if ( ! empty( $first_name ) && ! empty( $last_name ) && empty( $user_login ) ) {
+	if ( ! empty( $args['first_name'] ) && ! empty( $args['last_name'] ) && empty( $user_login ) ) {
 
 		switch ( UM()->options()->get( 'permalink_base' ) ) {
 			case 'name':
-				$user_login = str_replace( " ", ".", $first_name . " " . $last_name );
+				$user_login = str_replace( ' ', '.', $args['first_name'] . ' ' . $args['last_name'] );
 				break;
 
 			case 'name_dash':
-				$user_login = str_replace( " ", "-", $first_name . " " . $last_name );
+				$user_login = str_replace( ' ', '-', $args['first_name'] . ' ' . $args['last_name'] );
 				break;
 
 			case 'name_plus':
-				$user_login = str_replace( " ", "+", $first_name . " " . $last_name );
+				$user_login = str_replace( ' ', '+', $args['first_name'] . ' ' . $args['last_name'] );
 				break;
 
 			default:
-				$user_login = str_replace( " ", "", $first_name . " " . $last_name );
+				$user_login = str_replace( ' ', '', $args['first_name'] . ' ' . $args['last_name'] );
 				break;
 		}
 		$user_login = sanitize_user( strtolower( remove_accents( $user_login ) ), true );
 
 		if ( ! empty( $user_login ) ) {
-			$count = 1;
+			$count           = 1;
 			$temp_user_login = $user_login;
 			while ( username_exists( $temp_user_login ) ) {
 				$temp_user_login = $user_login . $count;
@@ -351,56 +345,57 @@ function um_submit_form_register( $args ) {
 		}
 	}
 
-	if ( empty( $user_login ) && ! empty( $user_email ) ) {
-		$user_login = $user_email;
+	if ( empty( $user_login ) && ! empty( $args['user_email'] ) ) {
+		$user_login = $args['user_email'];
 	}
 
-	$unique_userID = uniqid();
+	$unique_user_id = uniqid();
 
 	// see dbDelta and WP native DB structure user_login varchar(60)
-	if ( empty( $user_login ) || mb_strlen( $user_login ) > 60 && ! is_email( $user_login ) ) {
-		$user_login = 'user' . $unique_userID;
+	if ( empty( $user_login ) || ( mb_strlen( $user_login ) > 60 && ! is_email( $user_login ) ) ) {
+		$user_login = 'user' . $unique_user_id;
 		while ( username_exists( $user_login ) ) {
-			$unique_userID = uniqid();
-			$user_login = 'user' . $unique_userID;
+			$unique_user_id = uniqid();
+			$user_login     = 'user' . $unique_user_id;
 		}
 	}
 
-	if ( isset( $username ) && is_email( $username ) ) {
-		$user_email = $username;
+	if ( isset( $args['username'] ) && is_email( $args['username'] ) ) {
+		$user_email = $args['username'];
+	} elseif ( ! empty( $args['user_email'] ) ) {
+		$user_email = $args['user_email'];
 	}
 
-	if ( ! isset( $user_password ) ) {
+	if ( ! isset( $args['user_password'] ) ) {
 		$user_password = UM()->validation()->generate( 8 );
+	} else {
+		$user_password = $args['user_password'];
 	}
 
 	if ( empty( $user_email ) ) {
-		$site_url = @$_SERVER['SERVER_NAME'];
-		$user_email = 'nobody' . $unique_userID . '@' . $site_url;
+		$site_url   = wp_parse_url( get_site_url(), PHP_URL_HOST );
+		$user_email = 'nobody' . $unique_user_id . '@' . $site_url;
 		while ( email_exists( $user_email ) ) {
-			$unique_userID = uniqid();
-			$user_email = 'nobody' . $unique_userID . '@' . $site_url;
+			$unique_user_id = uniqid();
+			$user_email     = 'nobody' . $unique_user_id . '@' . $site_url;
 		}
+
 		/**
-		 * UM hook
+		 * Filters change user default email if it's empty on registration.
 		 *
-		 * @type filter
-		 * @title um_user_register_submitted__email
-		 * @description Change user default email if it's empty on registration
-		 * @input_vars
-		 * [{"var":"$user_email","type":"string","desc":"Default email"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage
-		 * <?php add_filter( 'um_user_register_submitted__email', 'function_name', 10, 1 ); ?>
-		 * @example
-		 * <?php
-		 * add_filter( 'um_user_register_submitted__email', 'my_user_register_submitted__email', 10, 1 );
+		 * @since 1.3.x
+		 * @hook  um_user_register_submitted__email
+		 *
+		 * @param {string} $user_email Default email.
+		 *
+		 * @return {string} Default customized email.
+		 *
+		 * @example <caption>Change user default email if it's empty on registration.</caption>
 		 * function my_user_register_submitted__email( $user_email ) {
 		 *     // your code here
 		 *     return $user_email;
 		 * }
-		 * ?>
+		 * add_filter( 'um_user_register_submitted__email', 'my_user_register_submitted__email' );
 		 */
 		$user_email = apply_filters( 'um_user_register_submitted__email', $user_email );
 	}
@@ -412,15 +407,15 @@ function um_submit_form_register( $args ) {
 	);
 
 	if ( ! empty( $args['submitted'] ) ) {
-		$args['submitted'] = array_diff_key( $args['submitted'], array_flip( UM()->user()->banned_keys ) );
+		$args['submitted'] = UM()->form()->clean_submitted_data( $args['submitted'] );
 	}
 
 	$args['submitted'] = array_merge( $args['submitted'], $credentials );
 
-	// set timestamp
-	$timestamp = current_time( 'timestamp' );
+	// Set registration timestamp.
+	$timestamp                      = current_time( 'timestamp' ); // @todo Working on timestamps.
 	$args['submitted']['timestamp'] = $timestamp;
-	$args['timestamp'] = $timestamp;
+	$args['timestamp']              = $timestamp;
 
 	$args = array_merge( $args, $credentials );
 
@@ -433,70 +428,58 @@ function um_submit_form_register( $args ) {
 		$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
 
 		//if role is properly set it
-		if ( ! in_array( $args['role'], $exclude_roles ) ) {
+		if ( ! in_array( $args['role'], $exclude_roles, true ) ) {
 			$user_role = $args['role'];
 		}
 	}
 
 	/**
-	 * UM hook
+	 * Filters change user role on registration process
 	 *
-	 * @type filter
-	 * @title um_registration_user_role
-	 * @description Change user role on registration process
-	 * @input_vars
-	 * [{"var":"$role","type":"string","desc":"User role"},
-	 * {"var":"$submitted","type":"array","desc":"Registration data"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage
-	 * <?php add_filter( 'um_registration_user_role', 'function_name', 10, 2 ); ?>
-	 * @example
-	 * <?php
-	 * add_filter( 'um_registration_user_role', 'my_registration_user_role', 10, 2 );
-	 * function my_user_register_submitted__email( $role, $submitted ) {
+	 * @since 2.0
+	 * @hook  um_registration_user_role
+	 *
+	 * @param {string} $user_role User role.
+	 * @param {array}  $args      Registration data.
+	 *
+	 * @return {string} User role.
+	 *
+	 * @example <caption>Change user role on registration process.</caption>
+	 * function my_registration_user_role( $user_role, $args ) {
 	 *     // your code here
-	 *     return $role;
+	 *     return $user_role;
 	 * }
-	 * ?>
+	 * add_filter( 'um_registration_user_role', 'my_registration_user_role', 10, 2 );
 	 */
 	$user_role = apply_filters( 'um_registration_user_role', $user_role, $args );
 
 	$userdata = array(
-		'user_login'    => $user_login,
-		'user_pass'     => $user_password,
-		'user_email'    => $user_email,
-		'role'          => $user_role,
+		'user_login' => $user_login,
+		'user_pass'  => $user_password,
+		'user_email' => $user_email,
+		'role'       => $user_role,
 	);
 
 	$user_id = wp_insert_user( $userdata );
 
 	/**
-	 * UM hook
+	 * Fires after complete UM user registration.
 	 *
-	 * @type action
-	 * @title um_user_register
-	 * @description After complete UM user registration.
-	 * @input_vars
-	 * [{"var":"$user_id","type":"int","desc":"User ID"},
-	 * {"var":"$args","type":"array","desc":"Form data"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_action( 'um_user_register', 'function_name', 10, 2 );
-	 * @example
-	 * <?php
-	 * add_action( 'um_user_register', 'my_user_register', 10, 2 );
-	 * function my_user_register( $user_id, $args ) {
+	 * @since 2.0
+	 * @hook  um_user_register
+	 *
+	 * @param {int}   $user_id User ID.
+	 * @param {array} $args    Form data.
+	 *
+	 * @example <caption>Make any custom action after complete UM user registration.</caption>
+	 * function my_um_user_register( $user_id, $args ) {
 	 *     // your code here
 	 * }
-	 * ?>
+	 * add_action( 'um_user_register', 'my_um_user_register', 10, 2 );
 	 */
 	do_action( 'um_user_register', $user_id, $args );
-
-	return $user_id;
 }
-add_action( 'um_submit_form_register', 'um_submit_form_register', 10 );
-
+add_action( 'um_submit_form_register', 'um_submit_form_register' );
 
 /**
  * Show the submit button

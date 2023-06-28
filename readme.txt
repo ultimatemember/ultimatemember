@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
 Tested up to: 6.2
-Stable tag: 2.6.4
+Stable tag: 2.6.5
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -162,6 +162,17 @@ No, you do not need to use our plugin’s login or registration pages and can us
 
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
+
+= 2.6.5: June 28, 2023 =
+
+* Enhancements:
+
+  - Removed: `extract()` function and increase supporting WordPress Code Standards
+  - Updated: [Hooks Documentation v2](https://ultimatemember.github.io/ultimatemember/hooks/)
+
+* Bugfixes:
+
+  - Fixed: A privilege escalation vulnerability used through UM Forms. Known in the wild that vulnerability allowed strangers to create administrator-level WordPress users. Please update immediately and check all administrator-level users on your website.
 
 = 2.6.4: June 27, 2023 =
 
@@ -3235,6 +3246,9 @@ Credits to "James Golovich http://www.pritect.net" for the security checks
 * First official release!
 
 == Upgrade Notice ==
+
+= 2.6.5 =
+This version fixes a security related bug. Upgrade immediately. Version <= 2.6.4 has a privilege escalation vulnerability with administrator-level users.
 
 = 2.6.4 =
 This version fixes a security related bug. Upgrade immediately.

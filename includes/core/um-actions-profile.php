@@ -1,170 +1,169 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
- * Um_profile_content_{main_tab}
+ * It renders the content of main profile tab.
  *
- * @param $args
+ * @param array $args
  */
 function um_profile_content_main( $args ) {
+	if ( ! array_key_exists( 'mode', $args ) ) {
+		return;
+	}
+	$mode = $args['mode'];
 
-	/**
-	 * @var $mode
-	 */
-	extract( $args );
-
-	if ( ! UM()->options()->get( 'profile_tab_main' ) && ! isset( $_REQUEST['um_action'] ) ) {
+	// phpcs:ignore WordPress.Security.NonceVerification -- $_REQUEST is used for echo only
+	if ( ! isset( $_REQUEST['um_action'] ) && ! UM()->options()->get( 'profile_tab_main' ) ) {
 		return;
 	}
 
 	/**
-	 * UM hook
+	 * Filters user's ability to view a profile
 	 *
-	 * @type filter
-	 * @title um_profile_can_view_main
-	 * @description Check user can view profile
-	 * @input_vars
-	 * [{"var":"$view","type":"bool","desc":"Can view?"},
-	 * {"var":"$user_id","type":"int","desc":"User profile ID"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage
-	 * <?php add_filter( 'um_profile_can_view_main', 'function_name', 10, 2 ); ?>
-	 * @example
-	 * <?php
-	 * add_filter( 'um_profile_can_view_main', 'my_profile_can_view_main', 10, 2 );
-	 * function my_profile_can_view_main( $view, $user_id ) {
-	 *     // your code here
-	 *     return $view;
+	 * @since 1.3.x
+	 * @hook  um_profile_can_view_main
+	 *
+	 * @param {int} $can_view   Can view profile. It's -1 by default.
+	 * @param {int} $profile_id User Profile ID.
+	 *
+	 * @return {int} Can view profile. Set it to -1 for displaying and vice versa to hide.
+	 *
+	 * @example <caption>Make profile hidden.</caption>
+	 * function my_profile_can_view_main( $can_view, $profile_id ) {
+	 *     $can_view = 1; // make profile hidden.
+	 *     return $can_view;
 	 * }
-	 * ?>
+	 * add_filter( 'um_profile_can_view_main', 'my_profile_can_view_main', 10, 2 );
 	 */
 	$can_view = apply_filters( 'um_profile_can_view_main', -1, um_profile_id() );
 
-	if ( $can_view == -1 ) {
+	if ( -1 === (int) $can_view ) {
 		/**
-		 * UM hook
+		 * Fires before UM Form content.
 		 *
-		 * @type action
-		 * @title um_before_form
-		 * @description Some actions before profile form
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_before_form', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_before_form', 'my_before_form', 10, 1 );
+		 * @since 1.3.x
+		 * @hook  um_before_form
+		 *
+		 * @param {array} $args UM Form shortcode arguments.
+		 *
+		 * @example <caption>Make any custom action before UM form.</caption>
 		 * function my_before_form( $args ) {
 		 *     // your code here
 		 * }
-		 * ?>
+		 * add_action( 'um_before_form', 'my_before_form' );
 		 */
 		do_action( 'um_before_form', $args );
-
 		/**
-		 * UM hook
+		 * Fires before UM Form fields.
 		 *
-		 * @type action
-		 * @title um_before_{$mode}_fields
-		 * @description Some actions before profile form fields
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"{Profile} form shortcode arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_before_{$mode}_fields', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_before_{$mode}_fields', 'my_before_fields', 10, 1 );
-		 * function my_before_form( $args ) {
+		 * Note: $mode can be equals to 'login', 'profile', 'register'.
+		 *
+		 * @since 1.3.x
+		 * @hook  um_before_{$mode}_fields
+		 *
+		 * @param {array} $args UM Form shortcode arguments.
+		 *
+		 * @example <caption>Make any custom action before UM Profile form fields.</caption>
+		 * function my_before_profile_fields( $args ) {
 		 *     // your code here
 		 * }
-		 * ?>
+		 * add_action( 'um_before_profile_fields', 'my_before_profile_fields' );
+		 * @example <caption>Make any custom action before UM Login form fields.</caption>
+		 * function my_before_login_fields( $args ) {
+		 *     // your code here
+		 * }
+		 * add_action( 'um_before_login_fields', 'my_before_login_fields' );
+		 * @example <caption>Make any custom action before UM Register form fields.</caption>
+		 * function my_before_register_fields( $args ) {
+		 *     // your code here
+		 * }
+		 * add_action( 'um_before_register_fields', 'my_before_register_fields' );
 		 */
 		do_action( "um_before_{$mode}_fields", $args );
-
 		/**
-		 * UM hook
+		 * Fires for rendering UM Form fields.
 		 *
-		 * @type action
-		 * @title um_main_{$mode}_fields
-		 * @description Some actions before login form fields
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Login form shortcode arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_before_{$mode}_fields', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_before_{$mode}_fields', 'my_before_fields', 10, 1 );
-		 * function my_before_form( $args ) {
+		 * Note: $mode can be equals to 'login', 'profile', 'register'.
+		 *
+		 * @since 1.3.x
+		 * @hook  um_main_{$mode}_fields
+		 *
+		 * @param {array} $args UM Form shortcode arguments.
+		 *
+		 * @example <caption>Make any custom action when profile form fields are rendered.</caption>
+		 * function my_main_profile_fields( $args ) {
 		 *     // your code here
 		 * }
-		 * ?>
+		 * add_action( 'um_main_profile_fields', 'my_main_profile_fields' );
+		 * @example <caption>Make any custom action when login form fields are rendered.</caption>
+		 * function my_main_login_fields( $args ) {
+		 *     // your code here
+		 * }
+		 * add_action( 'um_main_login_fields', 'my_main_login_fields' );
+		 * @example <caption>Make any custom action when register form fields are rendered.</caption>
+		 * function my_main_register_fields( $args ) {
+		 *     // your code here
+		 * }
+		 * add_action( 'um_main_register_fields', 'my_main_register_fields' );
 		 */
 		do_action( "um_main_{$mode}_fields", $args );
-
 		/**
-		 * UM hook
+		 * Fires after UM Form fields.
 		 *
-		 * @type action
-		 * @title um_after_form_fields
-		 * @description Some actions after login form fields
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Login form shortcode arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_after_form_fields', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_after_form_fields', 'my_after_form_fields', 10, 1 );
+		 * @since 1.3.x
+		 * @hook  um_after_form_fields
+		 *
+		 * @param {array} $args UM Form shortcode arguments.
+		 *
+		 * @example <caption>Make any custom action after UM Form fields.</caption>
 		 * function my_after_form_fields( $args ) {
 		 *     // your code here
 		 * }
-		 * ?>
+		 * add_action( 'um_after_form_fields', 'my_after_form_fields' );
 		 */
 		do_action( 'um_after_form_fields', $args );
-
 		/**
-		 * UM hook
+		 * Fires after UM Form fields.
 		 *
-		 * @type action
-		 * @title um_after_{$mode}_fields
-		 * @description Some actions after profile form fields
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_after_{$mode}_fields', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_after_{$mode}_fields', 'my_after_form_fields', 10, 1 );
-		 * function my_after_form_fields( $args ) {
+		 * Note: $mode can be equals to 'login', 'profile', 'register'.
+		 *
+		 * @since 1.3.x
+		 * @hook  um_after_{$mode}_fields
+		 *
+		 * @param {array} $args UM Form shortcode arguments.
+		 *
+		 * @example <caption>Make any custom action after profile form fields.</caption>
+		 * function my_after_profile_fields( $args ) {
 		 *     // your code here
 		 * }
-		 * ?>
+		 * add_action( 'um_after_profile_fields', 'my_after_profile_fields' );
+		 * @example <caption>Make any custom action after login form fields.</caption>
+		 * function my_after_login_fields( $args ) {
+		 *     // your code here
+		 * }
+		 * add_action( 'um_after_login_fields', 'my_after_login_fields' );
+		 * @example <caption>Make any custom action after register form fields.</caption>
+		 * function my_after_register_fields( $args ) {
+		 *     // your code here
+		 * }
+		 * add_action( 'um_after_register_fields', 'my_after_register_fields' );
 		 */
 		do_action( "um_after_{$mode}_fields", $args );
-
 		/**
-		 * UM hook
+		 * Fires after UM Form content.
 		 *
-		 * @type action
-		 * @title um_after_form
-		 * @description Some actions after profile form fields
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_after_form', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_after_form', 'my_after_form', 10, 1 );
+		 * @since 1.3.x
+		 * @hook  um_after_form
+		 *
+		 * @param {array} $args UM Form shortcode arguments.
+		 *
+		 * @example <caption>Make any custom action after UM Form content.</caption>
 		 * function my_after_form( $args ) {
 		 *     // your code here
 		 * }
-		 * ?>
+		 * add_action( 'um_after_form', 'my_after_form' );
 		 */
 		do_action( 'um_after_form', $args );
 
@@ -173,14 +172,13 @@ function um_profile_content_main( $args ) {
 		<div class="um-profile-note">
 			<span>
 				<i class="um-faicon-lock"></i>
-				<?php echo $can_view; ?>
+				<?php echo esc_html( $can_view ); ?>
 			</span>
 		</div>
 		<?php
 	}
 }
 add_action( 'um_profile_content_main', 'um_profile_content_main' );
-
 
 /**
  * Update user's profile
@@ -1365,53 +1363,49 @@ function um_profile_header( $args ) {
 }
 add_action( 'um_profile_header', 'um_profile_header', 9 );
 
-
 /**
- * Adds profile permissions to view/edit
+ * Adds profile permissions to view/edit.
  *
- * @param $args
+ * @param array $args
  */
 function um_pre_profile_shortcode( $args ) {
-	/**
-	 * @var $mode
-	 */
-	extract( $args );
+	// It handles only UM Profile forms.
+	if ( ! array_key_exists( 'mode', $args ) || 'profile' !== $args['mode'] ) {
+		return;
+	}
 
-	if ( $mode == 'profile' ) {
-		if ( UM()->fields()->editing ) {
-			if ( um_get_requested_user() ) {
-				if ( ! UM()->roles()->um_current_user_can( 'edit', um_get_requested_user() ) ) {
-					um_redirect_home( um_get_requested_user(), um_is_myprofile() );
-				}
-				um_fetch_user( um_get_requested_user() );
+	if ( UM()->fields()->editing ) {
+		if ( um_get_requested_user() ) {
+			if ( ! UM()->roles()->um_current_user_can( 'edit', um_get_requested_user() ) ) {
+				um_redirect_home( um_get_requested_user(), um_is_myprofile() );
 			}
+			um_fetch_user( um_get_requested_user() );
+		}
+	} else {
+		UM()->fields()->viewing = 1;
+
+		if ( um_get_requested_user() ) {
+			if ( ! um_is_myprofile() && ! um_can_view_profile( um_get_requested_user() ) ) {
+				um_redirect_home( um_get_requested_user(), um_is_myprofile() );
+			}
+
+			if ( ! UM()->roles()->um_current_user_can( 'edit', um_get_requested_user() ) ) {
+				UM()->user()->cannot_edit = 1;
+			}
+
+			um_fetch_user( um_get_requested_user() );
 		} else {
-			UM()->fields()->viewing = 1;
+			if ( ! is_user_logged_in() ) {
+				um_redirect_home( um_get_requested_user(), um_is_myprofile() );
+			}
 
-			if ( um_get_requested_user() ) {
-				if ( ! um_can_view_profile( um_get_requested_user() ) && ! um_is_myprofile() ) {
-					um_redirect_home( um_get_requested_user(), um_is_myprofile() );
-				}
-
-				if ( ! UM()->roles()->um_current_user_can( 'edit', um_get_requested_user() ) ) {
-					UM()->user()->cannot_edit = 1;
-				}
-
-				um_fetch_user( um_get_requested_user() );
-			} else {
-				if ( ! is_user_logged_in() ) {
-					um_redirect_home( um_get_requested_user(), um_is_myprofile() );
-				}
-
-				if ( ! um_user( 'can_edit_profile' ) ) {
-					UM()->user()->cannot_edit = 1;
-				}
+			if ( ! um_user( 'can_edit_profile' ) ) {
+				UM()->user()->cannot_edit = 1;
 			}
 		}
 	}
 }
 add_action( 'um_pre_profile_shortcode', 'um_pre_profile_shortcode' );
-
 
 /**
  * Display the edit profile icon
@@ -1557,7 +1551,7 @@ function um_submit_form_profile( $args ) {
 	UM()->fields()->editing = true;
 
 	if ( ! empty( $args['submitted'] ) ) {
-		$args['submitted'] = array_diff_key( $args['submitted'], array_flip( UM()->user()->banned_keys ) );
+		$args['submitted'] = UM()->form()->clean_submitted_data( $args['submitted'] );
 	}
 
 	/**

@@ -592,19 +592,24 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 
 
 		/**
-		 * Get role data
+		 * Get role data.
 		 *
-		 * @param int $roleID Role ID
+		 * @param int $role_id Role ID.
+		 *
 		 * @return array
 		 */
-		function role_data( $roleID ) {
-			if ( strpos( $roleID, 'um_' ) === 0 ) {
-				$roleID = substr( $roleID, 3 );
-				$role_data = get_option( "um_role_{$roleID}_meta", array() );
+		public function role_data( $role_id ) {
+			if ( empty( $role_id ) ) {
+				return array();
+			}
+
+			if ( strpos( $role_id, 'um_' ) === 0 ) {
+				$role_id   = substr( $role_id, 3 );
+				$role_data = get_option( "um_role_{$role_id}_meta", array() );
 			}
 
 			if ( empty( $role_data ) ) {
-				$role_data = get_option( "um_role_{$roleID}_meta", array() );
+				$role_data = get_option( "um_role_{$role_id}_meta", array() );
 			}
 
 			if ( ! $role_data ) {
@@ -612,20 +617,35 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			}
 
 			$temp = array();
-			foreach ( $role_data as $key=>$value ) {
+			foreach ( $role_data as $key => $value ) {
 				if ( strpos( $key, '_um_' ) === 0 ) {
-					$key = preg_replace('/_um_/', '', $key, 1);
+					$key = preg_replace( '/_um_/', '', $key, 1 );
 				}
-
-				//$key = str_replace( '_um_', '', $key, $count );
 				$temp[ $key ] = $value;
 			}
-
-			$temp = apply_filters( 'um_change_role_data', $temp, $roleID );
-
-			return $temp;
+			/**
+			 * Filters the Ultimate Member related user role data.
+			 *
+			 * @since 2.0
+			 * @hook  um_change_role_data
+			 *
+			 * @param {array}  $role_data Role data.
+			 * @param {string} $role_id   Role ID.
+			 *
+			 * @return {array} Role data.
+			 *
+			 * @example <caption>Set {some_capability_key} capability for subscriber user role.</caption>
+			 * function my_change_role_data( $role_data, $role_id ) {
+			 *     // your code here
+			 *     if ( 'subscriber' === $role_id ) {
+			 *          $role_data['{some_capability_key}'] = true;
+			 *     }
+			 *     return $role_data;
+			 * }
+			 * add_filter( 'um_change_role_data', 'my_change_role_data', 10, 2 );
+			 */
+			return apply_filters( 'um_change_role_data', $temp, $role_id );
 		}
-
 
 		/**
 		 * Query for UM roles

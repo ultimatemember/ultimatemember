@@ -245,69 +245,14 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 				$this->current_tab = apply_filters( 'um_change_default_tab', $this->current_tab, $args );
 
-				/**
-				 * UM hook
-				 *
-				 * @type action
-				 * @title um_pre_{$mode}_shortcode
-				 * @description Make some action before account tabs loading
-				 * @input_vars
-				 * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_pre_{$mode}_shortcode', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_pre_{$mode}_shortcode', 'my_pre_account_shortcode', 10, 1 );
-				 * function my_pre_account_shortcode( $args ) {
-				 *     // your code here
-				 * }
-				 * ?>
-				 */
+				/** This filter is documented in includes/core/class-shortcodes.php */
 				do_action( "um_pre_{$args['mode']}_shortcode", $args );
-				/**
-				 * UM hook
-				 *
-				 * @type action
-				 * @title um_before_form_is_loaded
-				 * @description Make some action before account tabs loading
-				 * @input_vars
-				 * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_before_form_is_loaded', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_before_form_is_loaded', 'my_before_form_is_loaded', 10, 1 );
-				 * function my_before_form_is_loaded( $args ) {
-				 *     // your code here
-				 * }
-				 * ?>
-				 */
+				/** This filter is documented in includes/core/class-shortcodes.php */
 				do_action( 'um_before_form_is_loaded', $args );
-				/**
-				 * UM hook
-				 *
-				 * @type action
-				 * @title um_before_{$mode}_form_is_loaded
-				 * @description Make some action before account tabs loading
-				 * @input_vars
-				 * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_before_{$mode}_form_is_loaded', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_before_{$mode}_form_is_loaded', 'my_before_account_form_is_loaded', 10, 1 );
-				 * function my_before_account_form_is_loaded( $args ) {
-				 *     // your code here
-				 * }
-				 * ?>
-				 */
+				/** This filter is documented in includes/core/class-shortcodes.php */
 				do_action( "um_before_{$args['mode']}_form_is_loaded", $args );
 
 				UM()->shortcodes()->template_load( $args['template'], $args );
-
 			}
 
 			if ( ! is_admin() && ! defined( 'DOING_AJAX' ) ) {

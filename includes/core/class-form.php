@@ -63,57 +63,42 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			add_action( 'init', array( &$this, 'field_declare' ), 10 );
 		}
 
-
 		/**
 		 *
 		 */
 		public function ajax_muted_action() {
 			UM()->check_ajax_nonce();
 
+			// phpcs:disable WordPress.Security.NonceVerification
+			if ( ! isset( $_REQUEST['hook'] ) ) {
+				die( esc_html__( 'Invalid hook', 'ultimate-member' ) );
+			}
+
+			if ( isset( $_REQUEST['user_id'] ) ) {
+				$user_id = absint( $_REQUEST['user_id'] );
+			}
+			if ( ! isset( $user_id ) || ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+				die( esc_html__( 'You can not edit this user.', 'ultimate-member' ) );
+			}
+
+			$hook = sanitize_key( $_REQUEST['hook'] );
 			/**
-			 * @var $user_id
-			 * @var $hook
+			 * Fires on AJAX muted action.
+			 *
+			 * @since 1.3.x
+			 * @hook  um_run_ajax_function__{$hook}
+			 *
+			 * @param {array} $request Request.
+			 *
+			 * @example <caption>Make any custom action on AJAX muted action.</caption>
+			 * function my_run_ajax_function( $request ) {
+			 *     // your code here
+			 * }
+			 * add_action( 'um_run_ajax_function__{$hook}', 'my_run_ajax_function', 10, 1 );
 			 */
-			extract( $_REQUEST );
-
-			if ( isset( $user_id ) ) {
-				$user_id = absint( $user_id );
-			}
-
-			if ( isset( $hook ) ) {
-				$hook = sanitize_key( $hook );
-			}
-
-			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-				die( esc_html__( 'You can not edit this user', 'ultimate-member' ) );
-			}
-
-			switch ( $hook ) {
-				default:
-					/**
-					 * UM hook
-					 *
-					 * @type action
-					 * @title um_run_ajax_function__{$hook}
-					 * @description Action on AJAX muted action
-					 * @input_vars
-					 * [{"var":"$request","type":"int","desc":"Request"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_action( 'um_run_ajax_function__{$hook}', 'function_name', 10, 1 );
-					 * @example
-					 * <?php
-					 * add_action( 'um_run_ajax_function__{$hook}', 'my_run_ajax_function', 10, 1 );
-					 * function my_run_ajax_function( $request ) {
-					 *     // your code here
-					 * }
-					 * ?>
-					 */
-					do_action( "um_run_ajax_function__{$hook}", $_REQUEST );
-					break;
-			}
+			do_action( "um_run_ajax_function__{$hook}", $_REQUEST );
+			// phpcs:enable WordPress.Security.NonceVerification
 		}
-
 
 		/**
 		 *
@@ -390,6 +375,22 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			}
 		}
 
+		/**
+		 * Remove banned wp_usermeta keys from submitted data.
+		 *
+		 * @since 2.6.5
+		 * @param array $submitted
+		 * @return array
+		 */
+		public function clean_submitted_data( $submitted ) {
+			foreach ( $submitted as $metakey => $value ) {
+				if ( UM()->user()->is_metakey_banned( $metakey ) ) {
+					unset( $submitted[ $metakey ] );
+				}
+			}
+
+			return $submitted;
+		}
 
 		/**
 		 * Validate form on submit
@@ -478,10 +479,10 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 				// Secure sanitize of the submitted data
 				if ( ! empty( $this->post_form ) ) {
-					$this->post_form = array_diff_key( $this->post_form, array_flip( UM()->user()->banned_keys ) );
+					$this->post_form = $this->clean_submitted_data( $this->post_form );
 				}
 				if ( ! empty( $this->post_form['submitted'] ) ) {
-					$this->post_form['submitted'] = array_diff_key( $this->post_form['submitted'], array_flip( UM()->user()->banned_keys ) );
+					$this->post_form['submitted'] = $this->clean_submitted_data( $this->post_form['submitted'] );
 				}
 
 				// set default role from settings on registration form
@@ -592,10 +593,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				 * ?>
 				 */
 				do_action( "um_submit_form_{$this->post_form['mode']}", $this->post_form );
-
 			}
 		}
-
 
 		/**
 		 * Beautify form data

@@ -171,14 +171,23 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 *
 		 * @return string|void
 		 */
-		function get_template( $template_name, $basename = '', $t_args = array(), $echo = false ) {
+		public function get_template( $template_name, $basename = '', $t_args = array(), $echo = false ) {
 			if ( ! empty( $t_args ) && is_array( $t_args ) ) {
-				extract( $t_args );
+				/*
+				 * This use of extract() cannot be removed. There are many possible ways that
+				 * templates could depend on variables that it creates existing, and no way to
+				 * detect and deprecate it.
+				 *
+				 * Passing the EXTR_SKIP flag is the safest option, ensuring globals and
+				 * function variables cannot be overwritten.
+				 */
+				// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
+				extract( $t_args, EXTR_SKIP );
 			}
 
 			$path = '';
 			if ( $basename ) {
-				// use '/' instead of "DIRECTORY_SEPARATOR", because wp_normalize_path makes the correct replace
+				// use '/' instead of "DIRECTORY_SEPARATOR", because wp_normalize_path makes the correct replacement
 				$array = explode( '/', wp_normalize_path( trim( $basename ) ) );
 				$path  = $array[0];
 			}
@@ -188,7 +197,6 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 				_doing_it_wrong( __FUNCTION__, sprintf( '<code>%s</code> does not exist.', $located ), '2.1' );
 				return;
 			}
-
 
 			/**
 			 * UM hook
@@ -240,7 +248,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			 * ?>
 			 */
 			do_action( 'um_before_template_part', $template_name, $path, $located, $t_args );
-			include( $located );
+			include $located;
 
 			/**
 			 * UM hook

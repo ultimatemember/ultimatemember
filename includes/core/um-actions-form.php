@@ -416,8 +416,8 @@ function um_check_conditions_on_submit( $condition, $fields, $args, $reset = fal
  */
 function um_submit_form_errors_hook_( $args ) {
 	$form_id = $args['form_id'];
-	$mode = $args['mode'];
-	$fields = unserialize( $args['custom_fields'] );
+	$mode    = $args['mode'];
+	$fields  = unserialize( $args['custom_fields'] );
 
 	$um_profile_photo = um_profile('profile_photo');
 	if ( get_post_meta( $form_id, '_um_profile_photo_required', true ) && ( empty( $args['profile_photo'] ) && empty( $um_profile_photo ) ) ) {
@@ -425,12 +425,12 @@ function um_submit_form_errors_hook_( $args ) {
 	}
 
 	if ( ! empty( $fields ) ) {
-
-		$can_edit = false;
-		$current_user_roles = [];
+		$can_edit           = false;
+		$current_user_roles = array();
 		if ( is_user_logged_in() ) {
-
-			$can_edit = UM()->roles()->um_current_user_can( 'edit', $args['user_id'] );
+			if ( array_key_exists( 'user_id', $args ) ) {
+				$can_edit = UM()->roles()->um_current_user_can( 'edit', $args['user_id'] );
+			}
 
 			um_fetch_user( get_current_user_id() );
 			$current_user_roles = um_user( 'roles' );
@@ -439,7 +439,7 @@ function um_submit_form_errors_hook_( $args ) {
 
 		foreach ( $fields as $key => $array ) {
 
-			if ( $mode == 'profile' ) {
+			if ( 'profile' === $mode ) {
 				$restricted_fields = UM()->fields()->get_restricted_fields_for_edit();
 				if ( is_array( $restricted_fields ) && in_array( $key, $restricted_fields ) ) {
 					continue;
@@ -447,7 +447,7 @@ function um_submit_form_errors_hook_( $args ) {
 			}
 
 			$can_view = true;
-			if ( isset( $array['public'] ) && $mode != 'register' ) {
+			if ( isset( $array['public'] ) && 'register' !== $mode ) {
 
 				switch ( $array['public'] ) {
 					case '1': // Everyone
@@ -490,7 +490,6 @@ function um_submit_form_errors_hook_( $args ) {
 			if ( ! $can_view ) {
 				continue;
 			}
-
 
 			/**
 			 * UM hook

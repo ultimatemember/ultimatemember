@@ -33,7 +33,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			add_action( 'um_change_password_process_hook', array( &$this, 'um_change_password_process_hook' ) );
 		}
 
-
 		/**
 		 * Get Reset URL
 		 *
@@ -109,7 +108,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			return $classes;
 		}
 
-
 		/**
 		 * Shortcode
 		 *
@@ -117,44 +115,41 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 *
 		 * @return string
 		 */
-		function ultimatemember_password( $args = array() ) {
-			ob_start();
-
-			$defaults = array(
-				'template'  => 'password-reset',
-				'mode'      => 'password',
-				'form_id'   => 'um_password_id',
-				'max_width' => '450px',
-				'align'     => 'center',
+		public function ultimatemember_password( $args = array() ) {
+			/** There is possible to use 'shortcode_atts_ultimatemember_password' filter for getting customized $atts. This filter is documented in wp-includes/shortcodes.php "shortcode_atts_{$shortcode}" */
+			$args = shortcode_atts(
+				array(
+					'template'  => 'password-reset',
+					'mode'      => 'password',
+					'form_id'   => 'um_password_id',
+					'max_width' => '450px',
+					'align'     => 'center',
+				),
+				$args,
+				'ultimatemember_password'
 			);
-			$args = wp_parse_args( $args, $defaults );
 
 			if ( empty( $args['use_custom_settings'] ) ) {
 				$args = array_merge( $args, UM()->shortcodes()->get_css_args( $args ) );
 			} else {
 				$args = array_merge( UM()->shortcodes()->get_css_args( $args ), $args );
 			}
-
 			/**
-			 * UM hook
+			 * Filters extend Reset Password Arguments
 			 *
-			 * @type filter
-			 * @title um_reset_password_shortcode_args_filter
-			 * @description Extend Reset Password Arguments
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Shortcode arguments"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_reset_password_shortcode_args_filter', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_reset_password_shortcode_args_filter', 'my_reset_password_shortcode_args', 10, 1 );
+			 * @since 1.3.x
+			 * @hook  um_reset_password_shortcode_args_filter
+			 *
+			 * @param {array} $args Shortcode arguments.
+			 *
+			 * @return {array} Shortcode arguments.
+			 *
+			 * @example <caption>Extend Reset Password Arguments.</caption>
 			 * function my_reset_password_shortcode_args( $args ) {
 			 *     // your code here
 			 *     return $args;
 			 * }
-			 * ?>
+			 * add_filter( 'um_reset_password_shortcode_args_filter', 'my_reset_password_shortcode_args', 10, 1 );
 			 */
 			$args = apply_filters( 'um_reset_password_shortcode_args_filter', $args );
 
@@ -162,7 +157,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				// then COOKIE are valid then get data from them and populate hidden fields for the password reset form
 				$args['template'] = 'password-change';
 				$args['rp_key']   = '';
-				$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
+				$rp_cookie        = 'wp-resetpass-' . COOKIEHASH;
 				if ( isset( $_COOKIE[ $rp_cookie ] ) && 0 < strpos( $_COOKIE[ $rp_cookie ], ':' ) ) {
 					list( $rp_login, $rp_key ) = explode( ':', wp_unslash( $_COOKIE[ $rp_cookie ] ), 2 );
 
@@ -171,85 +166,29 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				}
 			}
 
-			UM()->fields()->set_id = 'um_password_id';
+			if ( empty( $args['mode'] ) || empty( $args['template'] ) ) {
+				return '';
+			}
 
-			/**
-			 * @var $mode
-			 * @var $template
-			 */
-			extract( $args, EXTR_SKIP );
+			UM()->fields()->set_id = $args['form_id'];
 
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_pre_{$mode}_shortcode
-			 * @description Action pre-load password form shortcode
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Form shortcode pre-loading"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_pre_{$mode}_shortcode', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_pre_{$mode}_shortcode', 'my_pre_password_shortcode', 10, 1 );
-			 * function my_pre_password_shortcode( $args ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( "um_pre_{$mode}_shortcode", $args );
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_before_form_is_loaded
-			 * @description Action pre-load password form shortcode
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Form shortcode pre-loading"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_before_form_is_loaded', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_before_form_is_loaded', 'my_before_form_is_loaded', 10, 1 );
-			 * function my_before_form_is_loaded( $args ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( "um_before_form_is_loaded", $args );
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_before_{$mode}_form_is_loaded
-			 * @description Action pre-load password form shortcode
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Form shortcode pre-loading"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_before_{$mode}_form_is_loaded', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_before_{$mode}_form_is_loaded', 'my_before_form_is_loaded', 10, 1 );
-			 * function my_before_form_is_loaded( $args ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( "um_before_{$mode}_form_is_loaded", $args );
+			ob_start();
 
-			UM()->shortcodes()->template_load( $template, $args );
+			/** This filter is documented in includes/core/class-shortcodes.php */
+			do_action( "um_pre_{$args['mode']}_shortcode", $args );
+			/** This filter is documented in includes/core/class-shortcodes.php */
+			do_action( 'um_before_form_is_loaded', $args );
+			/** This filter is documented in includes/core/class-shortcodes.php */
+			do_action( "um_before_{$args['mode']}_form_is_loaded", $args );
+
+			UM()->shortcodes()->template_load( $args['template'], $args );
 
 			if ( ! is_admin() && ! defined( 'DOING_AJAX' ) ) {
 				UM()->shortcodes()->dynamic_css( $args );
 			}
 
-			$output = ob_get_clean();
-			return $output;
+			return ob_get_clean();
 		}
-
 
 		/**
 		 * Check if a legitimate password reset request is in action
