@@ -172,7 +172,7 @@ No, you do not need to use our plugin’s login or registration pages and can us
 
 * Bugfixes:
 
-  - Fixed: A privilege escalation vulnerability used through UM Forms
+  - Fixed: A privilege escalation vulnerability used through UM Forms. Known in the wild that vulnerability allowed strangers to create administrator-level WordPress users. Please update immediately and check all administrator-level users on your website.
 
 = 2.6.4: June 27, 2023 =
 
@@ -3248,7 +3248,7 @@ Credits to "James Golovich http://www.pritect.net" for the security checks
 == Upgrade Notice ==
 
 = 2.6.5 =
-This version fixes a security related bug. Upgrade immediately.
+This version fixes a security related bug. Upgrade immediately. Version <= 2.6.4 has a privilege escalation vulnerability with administrator-level users.
 
 = 2.6.4 =
 This version fixes a security related bug. Upgrade immediately.
