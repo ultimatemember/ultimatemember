@@ -3247,5 +3247,8 @@ Credits to "James Golovich http://www.pritect.net" for the security checks
 
 == Upgrade Notice ==
 
+= 2.6.5 =
+This version fixes a security related bug. Upgrade immediately.
+
 = 2.6.4 =
 This version fixes a security related bug. Upgrade immediately.
