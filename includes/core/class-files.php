@@ -1,11 +1,11 @@
 <?php
 namespace um\core;
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Files' ) ) {
-
 
 	/**
 	 * Class Files
@@ -313,56 +313,49 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			}
 		}
 
-
 		/**
 		 * Resize image AJAX handler
 		 */
-		function ajax_resize_image() {
+		public function ajax_resize_image() {
 			UM()->check_ajax_nonce();
-
-			/**
-			 * @var $key
-			 * @var $src
-			 * @var $coord
-			 * @var $user_id
-			 */
-			extract( $_REQUEST );
-
-			if ( ! isset( $src ) || ! isset( $coord ) ) {
+			// phpcs:disable WordPress.Security.NonceVerification -- verified by the `check_ajax_nonce()`
+			if ( ! isset( $_REQUEST['src'], $_REQUEST['coord'], $_REQUEST['key'] ) ) {
 				wp_send_json_error( esc_js( __( 'Invalid parameters', 'ultimate-member' ) ) );
 			}
 
-			$coord_n = substr_count( $coord, "," );
-			if ( $coord_n != 3 ) {
+			$coord_n = substr_count( $_REQUEST['coord'], ',' );
+			if ( 3 !== $coord_n ) {
 				wp_send_json_error( esc_js( __( 'Invalid coordinates', 'ultimate-member' ) ) );
 			}
 
+			$key     = sanitize_text_field( $_REQUEST['key'] );
+			$coord   = sanitize_text_field( $_REQUEST['coord'] );
 			$user_id = empty( $_REQUEST['user_id'] ) ? get_current_user_id() : absint( $_REQUEST['user_id'] );
 
 			UM()->fields()->set_id   = isset( $_POST['set_id'] ) ? absint( $_POST['set_id'] ) : null;
 			UM()->fields()->set_mode = isset( $_POST['set_mode'] ) ? sanitize_text_field( $_POST['set_mode'] ) : null;
 
-			if ( UM()->fields()->set_mode != 'register' && ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+			if ( 'register' !== UM()->fields()->set_mode && ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
 				$ret['error'] = esc_js( __( 'You have no permission to edit this user', 'ultimate-member' ) );
 				wp_send_json_error( $ret );
 			}
 
-			$src = esc_url_raw( $src );
-
+			$src        = esc_url_raw( $_REQUEST['src'] );
 			$image_path = um_is_file_owner( $src, $user_id, true );
 			if ( ! $image_path ) {
 				wp_send_json_error( esc_js( __( 'Invalid file ownership', 'ultimate-member' ) ) );
 			}
 
 			UM()->uploader()->replace_upload_dir = true;
-			$output = UM()->uploader()->resize_image( $image_path, $src, sanitize_text_field( $key ), $user_id, sanitize_text_field( $coord ) );
+
+			$output = UM()->uploader()->resize_image( $image_path, $src, $key, $user_id, $coord );
+
 			UM()->uploader()->replace_upload_dir = false;
 
 			delete_option( "um_cache_userdata_{$user_id}" );
-
+			// phpcs:enable WordPress.Security.NonceVerification -- verified by the `check_ajax_nonce()`
 			wp_send_json_success( $output );
 		}
-
 
 		/**
 		 * Image upload by AJAX
