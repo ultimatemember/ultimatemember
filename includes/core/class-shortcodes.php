@@ -297,16 +297,23 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			if ( isset( $this->set_args ) && is_array( $this->set_args ) ) {
 				$args = $this->set_args;
 
-				unset( $args['file'] );
-				unset( $args['theme_file'] );
-				unset( $args['tpl'] );
+				unset( $args['file'], $args['theme_file'], $args['tpl'] );
 
 				$args = apply_filters( 'um_template_load_args', $args, $tpl );
 
-				extract( $args );
+				/*
+				 * This use of extract() cannot be removed. There are many possible ways that
+				 * templates could depend on variables that it creates existing, and no way to
+				 * detect and deprecate it.
+				 *
+				 * Passing the EXTR_SKIP flag is the safest option, ensuring globals and
+				 * function variables cannot be overwritten.
+				 */
+				// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
+				extract( $args, EXTR_SKIP );
 			}
 
-			$file = um_path . "templates/{$tpl}.php";
+			$file       = UM_PATH . "templates/{$tpl}.php";
 			$theme_file = get_stylesheet_directory() . "/ultimate-member/templates/{$tpl}.php";
 			if ( file_exists( $theme_file ) ) {
 				$file = $theme_file;
