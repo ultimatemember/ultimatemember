@@ -2530,7 +2530,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						$output .= '</div>';
 
-						if ( 'login' !== $this->set_mode && isset( $data['force_confirm_pass'] ) && 1 === $data['force_confirm_pass'] ) {
+						if ( 'login' !== $this->set_mode && ! empty( $data['force_confirm_pass'] ) ) {
 
 							$key     = 'confirm_' . $original_key;
 							$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';

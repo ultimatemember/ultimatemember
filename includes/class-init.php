@@ -69,7 +69,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 *
 		 * @var
 		 */
-		public $is_permalinks;
+		public $is_permalinks = false;
 
 		/**
 		 * @var null|string

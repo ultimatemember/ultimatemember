@@ -633,18 +633,22 @@ function um_submit_form_errors_hook_( $args ) {
 					}
 				}
 
-				if ( isset( $array['force_confirm_pass'] ) && $array['force_confirm_pass'] == 1 ) {
-					if ( $args[ 'confirm_' . $key ] == '' && ! UM()->form()->has_error( $key ) ) {
-						UM()->form()->add_error( 'confirm_' . $key , __( 'Please confirm your password', 'ultimate-member' ) );
-					}
-					if ( $args[ 'confirm_' . $key ] != $args[$key] && !UM()->form()->has_error( $key ) ) {
-						UM()->form()->add_error( 'confirm_' . $key , __( 'Your passwords do not match', 'ultimate-member' ) );
+				if ( ! empty( $array['force_confirm_pass'] ) ) {
+					if ( ! array_key_exists( 'confirm_' . $key, $args ) && ! UM()->form()->has_error( $key ) ) {
+						UM()->form()->add_error( 'confirm_' . $key, __( 'Please confirm your password', 'ultimate-member' ) );
+					} else {
+						if ( '' === $args[ 'confirm_' . $key ] && ! UM()->form()->has_error( $key ) ) {
+							UM()->form()->add_error( 'confirm_' . $key, __( 'Please confirm your password', 'ultimate-member' ) );
+						}
+						if ( $args[ 'confirm_' . $key ] !== $args[ $key ] && ! UM()->form()->has_error( $key ) ) {
+							UM()->form()->add_error( 'confirm_' . $key, __( 'Your passwords do not match', 'ultimate-member' ) );
+						}
 					}
 				}
 
 				if ( isset( $array['min_selections'] ) && $array['min_selections'] > 0 ) {
 					if ( ( ! isset( $args[ $key ] ) ) || ( isset( $args[ $key ] ) && is_array( $args[ $key ] ) && count( $args[ $key ] ) < $array['min_selections'] ) ) {
-						UM()->form()->add_error($key, sprintf( __( 'Please select at least %s choices', 'ultimate-member' ), $array['min_selections'] ) );
+						UM()->form()->add_error( $key, sprintf( __( 'Please select at least %s choices', 'ultimate-member' ), $array['min_selections'] ) );
 					}
 				}
 

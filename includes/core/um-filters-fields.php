@@ -87,11 +87,15 @@ add_filter( 'um_profile_field_filter_hook__youtube_video', 'um_profile_field_fil
  */
 function um_profile_field_filter_hook__spotify( $value, $data ) {
 	if ( preg_match( '/https:\/\/open.spotify.com\/.*/', $value ) ) {
-		$url = str_replace( 'open.spotify.com/', 'open.spotify.com/embed/', $value );
+		if ( false !== strpos( $value, '/user/' ) ) {
+			$value = '<a href="' . esc_attr( $value ) . '" target="_blank">' . esc_html( $value ) . '</a>';
+		} else {
+			$url = str_replace( 'open.spotify.com/', 'open.spotify.com/embed/', $value );
 
-		$value = '<div class="um-spotify">
+			$value = '<div class="um-spotify">
 				<iframe width="100%" height="352" style="border-radius:12px" frameBorder="0" allowfullscreen="" loading="lazy"  src="' . esc_url( $url ) . '"></iframe>
 				</div>';
+		}
 	} else {
 		return __( 'Invalid Spotify URL', 'ultimate-member' );
 	}
@@ -439,7 +443,7 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 
 		$value = '<a href="'. esc_attr( $value ) .'" title="' . esc_attr( $alt ) . '" target="' . esc_attr( $data['url_target'] ) . '" ' . $url_rel . '>' . esc_html( $alt ) . '</a>';
 	} else {
-		if ( ( isset( $data['validate'] ) && $data['validate'] !== '' && strstr( $data['validate'], 'url' ) ) || ( isset( $data['type'] ) && $data['type'] == 'url' ) ) {
+		if ( ( isset( $data['validate'] ) && $data['validate'] !== '' && $data['type'] !== 'spotify' && strstr( $data['validate'], 'url' ) ) || ( isset( $data['type'] ) && $data['type'] == 'url' ) ) {
 			$alt = ( isset( $data['url_text'] ) && !empty( $data['url_text'] ) ) ? $data['url_text'] : $value;
 			$url_rel = ( isset( $data['url_rel'] ) && $data['url_rel'] == 'nofollow' ) ? 'rel="nofollow"' : '';
 			if ( ! strstr( $value, 'http' )
@@ -460,6 +464,7 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 				if ( $data['validate'] == 'tiktok_url' ) 		$value = 'https://tiktok.com/' . $value;
 				if ( $data['validate'] == 'twitch_url' ) 		$value = 'https://twitch.tv/' . $value;
 				if ( $data['validate'] == 'reddit_url' ) 		$value = 'https://www.reddit.com/user/' . $value;
+				if ( $data['validate'] == 'spotify_url' ) 		$value = 'https://open.spotify.com/' . $value;
 			}
 
 			if ( strpos( $value, 'http://' ) !== 0 ) {

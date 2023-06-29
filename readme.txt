@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
 Tested up to: 6.2
-Stable tag: 2.6.5
+Stable tag: 2.6.6
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -162,6 +162,15 @@ No, you do not need to use our plugin’s login or registration pages and can us
 
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
+
+= 2.6.6: June 29, 2023 =
+
+* Bugfixes:
+
+  - Fixed: Password Confirm field and validation
+  - Fixed: Form Builder row editing
+  - Fixed: Spotify URL user URL display on user profile
+  - Fixed: Spotify URL validation
 
 = 2.6.5: June 28, 2023 =
 

@@ -915,11 +915,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 						<p><?php esc_html_e( 'This field type is not setup correctly.', 'ultimate-member' ); ?></p>
 						<?php
 					} else {
-						?>
-						<input type="hidden" name="_in_row" id="_in_row" value="<?php echo esc_attr( $metabox->edit_array['in_row'] ); ?>" />
-						<input type="hidden" name="_in_sub_row" id="_in_sub_row" value="<?php echo esc_attr( $metabox->edit_array['in_sub_row'] ); ?>" />
-						<input type="hidden" name="_in_column" id="_in_column" value="<?php echo esc_attr( $metabox->edit_array['in_column'] ); ?>" />
-						<input type="hidden" name="_in_group" id="_in_group" value="<?php echo esc_attr( $metabox->edit_array['in_group'] ); ?>" />
+						if ( 'row' !== $arg1 ) {
+							?>
+							<input type="hidden" name="_in_row" id="_in_row" value="<?php echo esc_attr( $metabox->edit_array['in_row'] ); ?>" />
+							<input type="hidden" name="_in_sub_row" id="_in_sub_row" value="<?php echo esc_attr( $metabox->edit_array['in_sub_row'] ); ?>" />
+							<input type="hidden" name="_in_column" id="_in_column" value="<?php echo esc_attr( $metabox->edit_array['in_column'] ); ?>" />
+							<input type="hidden" name="_in_group" id="_in_group" value="<?php echo esc_attr( $metabox->edit_array['in_group'] ); ?>" />
+						<?php } ?>
 						<input type="hidden" name="_type" id="_type" value="<?php echo esc_attr( $arg1 ); ?>" />
 						<input type="hidden" name="post_id" id="post_id" value="<?php echo esc_attr( $arg2 ); ?>" />
 						<input type="hidden" name="edit_mode" id="edit_mode" value="true" />
