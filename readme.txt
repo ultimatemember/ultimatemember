@@ -163,9 +163,14 @@ No, you do not need to use our plugin’s login or registration pages and can us
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
-= 2.6.6: July xx, 2023 =
+= 2.6.6: June 29, 2023 =
 
+* Bugfixes:
 
+  - Fixed: Password Confirm field and validation
+  - Fixed: Form Builder row editing
+  - Fixed: Spotify URL user URL display on user profile
+  - Fixed: Spotify URL validation
 
 = 2.6.5: June 28, 2023 =
 
