@@ -87,11 +87,15 @@ add_filter( 'um_profile_field_filter_hook__youtube_video', 'um_profile_field_fil
  */
 function um_profile_field_filter_hook__spotify( $value, $data ) {
 	if ( preg_match( '/https:\/\/open.spotify.com\/.*/', $value ) ) {
-		$url = str_replace( 'open.spotify.com/', 'open.spotify.com/embed/', $value );
+		if ( false !== strpos( $value, '/user/' ) ) {
+			$value = '<a href="' . esc_attr( $value ) . '" target="_blank">' . esc_html( $value ) . '</a>';
+		} else {
+			$url = str_replace( 'open.spotify.com/', 'open.spotify.com/embed/', $value );
 
-		$value = '<div class="um-spotify">
+			$value = '<div class="um-spotify">
 				<iframe width="100%" height="352" style="border-radius:12px" frameBorder="0" allowfullscreen="" loading="lazy"  src="' . esc_url( $url ) . '"></iframe>
 				</div>';
+		}
 	} else {
 		return __( 'Invalid Spotify URL', 'ultimate-member' );
 	}
