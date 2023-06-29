@@ -44,9 +44,21 @@ jQuery(document).ready(function() {
 				nonce: um_admin_scripts.nonce
 			},
 			success: function( data ) {
+				if ( 'um_admin_remove_field' === act_id && true === data.success ) {
+					console.log(data)
+					var new_data = window.global_form_data.filter(function(value) {
+						return value !== arg1;
+					});
+					window.global_form_data = new_data;
+				}
+
 				demon_settings.data('in_row', '').data('in_sub_row', '').data('in_column', '').data('in_group', '');
 				um_admin_modal_responsive();
 				um_admin_update_builder();
+
+
+				// console.log(data)
+				// console.log(window.global_form_data);
 			},
 			error: function( data ) {
 
