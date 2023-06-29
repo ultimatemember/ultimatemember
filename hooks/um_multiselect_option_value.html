@@ -43,7 +43,7 @@
 
     
 
-    <h4 class="name" id="um_multiselect_option_value">apply_filters( 'um_multiselect_option_value', <span class="signature">$keyword, $type )</span><span class="type-signature"> &rarr; {int}</span></h4>
+    <h4 class="name" id="um_multiselect_option_value">apply_filters( 'um_multiselect_option_value', <span class="signature">$keyword, $type, $data )</span><span class="type-signature"> &rarr; {int}</span></h4>
 
     
 
@@ -123,7 +123,30 @@
 
             
 
-            <td class="description last"><p>Field Type.</p></td>
+            <td class="description last"><p>Field type. Deprecated since 2.6.7</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>$data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Field data. Added since 2.6.7</p></td>
         </tr>
 
     
@@ -167,7 +190,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_class-fields.php.html">core/class-fields.php</a>, <a href="core_class-fields.php.html#line3331">line 3331</a>
+        <a href="core_class-fields.php.html">core/class-fields.php</a>, <a href="core_class-fields.php.html#line3332">line 3332</a>
     </li></ul></dd>
     
 
@@ -218,7 +241,7 @@
     
         <p class="code-caption">Change multiselect keyword data. Enable it.</p>
     
-    <pre class="prettyprint"><code>function my_multiselect_option_value( $keyword, $type ) {
+    <pre class="prettyprint"><code>function my_multiselect_option_value( $keyword, $data ) {
     // your code here
     $keyword = 1;
     return $keyword;
