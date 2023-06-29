@@ -163,6 +163,13 @@ No, you do not need to use our plugin’s login or registration pages and can us
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
+= 2.6.7: July xx, 2023 =
+
+* Bugfixes:
+
+  - Fixed: A privilege escalation vulnerability used through UM Forms. Known in the wild that vulnerability allowed strangers to create administrator-level WordPress users. Please update immediately and check all administrator-level users on your website.
+  - Fixed: Displaying fields on Account page > Privacy > Member directory settings
+
 = 2.6.6: June 29, 2023 =
 
 * Bugfixes:
