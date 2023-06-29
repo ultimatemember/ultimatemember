@@ -211,7 +211,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		public function is_metakey_banned( $meta_key ) {
 			$is_banned = false;
 			foreach ( $this->banned_keys as $ban ) {
-				if ( is_numeric( $meta_key ) || false !== stripos( $meta_key, $ban ) ) {
+				if ( is_numeric( $meta_key ) || false !== stripos( $meta_key, $ban ) || false !== stripos( remove_accents( $meta_key ), $ban ) ) {
 					$is_banned = true;
 					break;
 				}
