@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-06-29T17:22:31+00:00\n"
+"POT-Creation-Date: 2023-06-29T18:54:11+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: ultimate-member\n"
@@ -7372,19 +7372,19 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: includes/core/class-fields.php:4515
+#: includes/core/class-fields.php:4517
 msgid "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some information!"
 msgstr ""
 
-#: includes/core/class-fields.php:4517
+#: includes/core/class-fields.php:4519
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
-#: includes/core/class-fields.php:4784
+#: includes/core/class-fields.php:4786
 msgid "Please login as administrator."
 msgstr ""
 
-#: includes/core/class-fields.php:4788
+#: includes/core/class-fields.php:4790
 msgid "Invalid action."
 msgstr ""
 
