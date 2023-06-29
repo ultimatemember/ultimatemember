@@ -3312,6 +3312,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if ( isset( $data['options'] ) && is_array( $data['options'] ) ) {
 						$options = $data['options'];
 					}
+
 					$max_selections = isset( $data['max_selections'] ) ? absint( $data['max_selections'] ) : 0;
 
 					$field_id   = $key;
@@ -3335,19 +3336,20 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					 * @hook  um_multiselect_option_value
 					 *
 					 * @param {int}    $keyword If 1 - keyword is enabled. It's 0 by default.
-					 * @param {string} $type    Field Type.
+					 * @param {string} $type    Field type. Deprecated since 2.6.7
+					 * @param {array}  $data    Field data. Added since 2.6.7
 					 *
 					 * @return {int} Enabled keyword.
 					 *
 					 * @example <caption>Change multiselect keyword data. Enable it.</caption>
-					 * function my_multiselect_option_value( $keyword, $type ) {
+					 * function my_multiselect_option_value( $keyword, $data ) {
 					 *     // your code here
 					 *     $keyword = 1;
 					 *     return $keyword;
 					 * }
 					 * add_filter( 'um_multiselect_option_value', 'my_multiselect_option_value', 10, 2 );
 					 */
-					$use_keyword = apply_filters( 'um_multiselect_option_value', 0, $type );
+					$use_keyword = apply_filters( 'um_multiselect_option_value', 0, $data );
 
 					$has_icon = ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons;
 
