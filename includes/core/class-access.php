@@ -1755,7 +1755,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 				$redirects = array_unique( $redirects );
 
-				$current_url = UM()->permalinks()->get_current_url( get_option( 'permalink_structure' ) );
+				$current_url = UM()->permalinks()->get_current_url( UM()->is_permalinks );
 				$current_url = untrailingslashit( $current_url );
 				$current_url_slash = trailingslashit( $current_url );
 
