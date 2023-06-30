@@ -335,10 +335,9 @@ jQuery(document).ready(function() {
 	});
 
 	window.global_form_data = [];
+	window.deleting_field = false;
 	/* remove element */
 	jQuery(document.body).on('click', 'a[data-remove_element^="um-"]',function(){
-		// var form_data = [];
-		var row_parent = jQuery(this).closest('.um-admin-drag-row');
 		var rowsub_parent = jQuery(this).closest('.um-admin-drag-rowsub');
 
 		if ( rowsub_parent.length ) {
@@ -347,27 +346,55 @@ jQuery(document).ready(function() {
 				window.global_form_data.push(field);
 			});
 		} else {
-			
+			var row_parent = jQuery(this).closest('.um-admin-drag-row');
+			var row_parent_original = jQuery(this).closest('.um-admin-drag-row').attr('data-original');
+			jQuery(row_parent).find('.um-admin-drag-rowsub').each(function(index, element) {
+				jQuery(this).find('.um-admin-drag-fld').each(function(index, element) {
+					var field = jQuery(this).attr('data-key');
+					window.global_form_data.push(field);
+				});
+			});
 		}
 
-		jQuery.each(window.global_form_data, function(index, element) {
-			jQuery('.um-admin-drag-fld.'+element).find('a[data-silent_action="um_admin_remove_field"]').trigger('click');
-		});
-
 		if (window.global_form_data.length > 0) {
-			var intervalId = setInterval(function() {
+			jQuery.each(window.global_form_data, function(index, element) {
+				var interval_deleting = setInterval(function() {
+					if( false === window.deleting_field && window.global_form_data.length > 0 ){
+						jQuery('.um-admin-drag-fld.'+element).find('a[data-silent_action="um_admin_remove_field"]').trigger('click');
+					}
+					if (window.global_form_data.length === 0) {
+						UM_Rows_Refresh();
+						clearInterval(interval_deleting);
+						return false;
+					}
+				}, 500);
+			});
+
+			var interval_finish = setInterval(function() {
 				if (window.global_form_data.length === 0) {
 					if ( rowsub_parent.length ) {
+						console.log(rowsub_parent)
 						rowsub_parent.remove();
+					} else {
+						console.log(row_parent_original)
+						console.log(jQuery('[data-original="'+ row_parent_original +'"].um-admin-drag-row'))
+
+						jQuery('[data-original="'+ row_parent_original +'"].um-admin-drag-row').find('.um-admin-drag-rowsub').each(function(index, element) {
+							jQuery(this).remove();
+						});
 					}
-					UM_Rows_Refresh();
-					console.log(1)
-					clearInterval(intervalId); // Останавливаем периодическую проверку
+
+
+					clearInterval(interval_finish);
 				}
 			}, 500);
 		} else {
 			if ( rowsub_parent.length ) {
 				rowsub_parent.remove();
+			} else {
+				jQuery(row_parent).find('.um-admin-drag-rowsub').each(function(index, element) {
+					jQuery(this).remove();
+				});
 			}
 
 			UM_Rows_Refresh();

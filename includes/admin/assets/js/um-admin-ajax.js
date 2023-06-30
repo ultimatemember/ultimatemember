@@ -8,6 +8,11 @@ jQuery(document).ready(function() {
 		if ( typeof jQuery(this).attr('disabled') !== 'undefined' ) {
 			return false;
 		}
+		if ( true === window.deleting_field) {
+			return false;
+		}
+
+		window.deleting_field = true;
 
 		var in_row = '';
 		var in_sub_row = '';
@@ -45,7 +50,6 @@ jQuery(document).ready(function() {
 			},
 			success: function( data ) {
 				if ( 'um_admin_remove_field' === act_id && true === data.success ) {
-					console.log(data)
 					var new_data = window.global_form_data.filter(function(value) {
 						return value !== arg1;
 					});
@@ -55,13 +59,10 @@ jQuery(document).ready(function() {
 				demon_settings.data('in_row', '').data('in_sub_row', '').data('in_column', '').data('in_group', '');
 				um_admin_modal_responsive();
 				um_admin_update_builder();
-
-
-				// console.log(data)
-				// console.log(window.global_form_data);
+				window.deleting_field = false;
 			},
 			error: function( data ) {
-
+				window.deleting_field = false;
 			}
 		});
 
