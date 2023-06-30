@@ -455,8 +455,25 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 						$ignore_keys[] = 'confirm_' . $cf_k;
 					}
 
+					if ( 'profile' === $this->form_data['mode'] ) {
+						if ( ! empty( $cf_data['edit_forbidden'] ) ) {
+							$ignore_keys[] = $cf_k;
+						}
+
+						if ( ! um_can_edit_field( $cf_data ) || ! um_can_view_field( $cf_data ) ) {
+							$ignore_keys[] = $cf_k;
+						}
+					}
+
 					if ( ! array_key_exists( 'metakey', $cf_data ) || empty( $cf_data['metakey'] ) ) {
 						unset( $custom_fields[ $cf_k ] );
+					}
+
+					if ( isset( $cf_data['required_opt'] ) ) {
+						$opt = $cf_data['required_opt'];
+						if ( UM()->options()->get( $opt[0] ) !== $opt[1] ) {
+							$ignore_keys[] = $cf_k;
+						}
 					}
 				}
 				$cf_metakeys     = array_column( $custom_fields, 'metakey' );
@@ -473,6 +490,9 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					$cf_metakeys = array_values( array_diff( $cf_metakeys, array( 'user_login' ) ) );
 					// Hidden for edit fields
 					$cf_metakeys = array_values( array_diff( $cf_metakeys, UM()->fields()->get_restricted_fields_for_edit() ) );
+
+					$cf_metakeys[] = 'profile_photo';
+					$cf_metakeys[] = 'cover_photo';
 				}
 				// Add required usermeta for register.
 				if ( 'register' === $this->form_data['mode'] ) {
@@ -696,15 +716,6 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				 * add_action( 'um_submit_form_errors_hook', 'my_custom_submit_form_errors_hook', 10, 2 );
 				 */
 				do_action( 'um_submit_form_errors_hook', $this->post_form, $this->form_data );
-				if ( 'profile' ===  $this->form_data['mode'] ) {
-				var_dump( $this->post_form );
-				var_dump( $this->form_data );
-				var_dump( '------------------------------------------------------------' );
-				var_dump( $all_cf_metakeys );
-				var_dump( $cf_metakeys );
-				var_dump( UM()->form()->errors );
-				exit;
-				}
 				/* Continue based on form mode - store data. */
 				/**
 				 * Fires for make main actions on UM login, registration or profile form submission.

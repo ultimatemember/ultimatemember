@@ -413,7 +413,7 @@ function um_submit_account_details( $args ) {
 		}
 	}
 
-	UM()->user()->update_profile( $changes );
+	UM()->user()->update_profile( $changes, 'account' );
 
 	if ( UM()->account()->is_secure_enabled() ) {
 		update_user_meta( $user_id, 'um_account_secure_fields', array() );

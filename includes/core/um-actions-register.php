@@ -652,29 +652,25 @@ function um_registration_save_files( $user_id, $args, $form_data ) {
 	}
 
 	/**
-	 * UM hook
+	 * Filters files submitted by the UM registration or profile form.
 	 *
-	 * @type filter
-	 * @title um_user_pre_updating_files_array
-	 * @description Change submitted files before register new user
-	 * @input_vars
-	 * [{"var":"$files","type":"array","desc":"Profile data files"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage
-	 * <?php add_filter( 'um_user_pre_updating_files_array', 'function_name', 10, 1 ); ?>
-	 * @example
-	 * <?php
-	 * add_filter( 'um_user_pre_updating_files_array', 'my_user_pre_updating_files', 10, 1 );
-	 * function my_user_pre_updating_files( $files ) {
-	 *     // your code here
+	 * @param {array} $files   Submitted files.
+	 * @param {int}   $user_id User ID.
+	 *
+	 * @return {array} Submitted files.
+	 *
+	 * @since 1.3.x
+	 * @hook um_user_pre_updating_files_array
+	 *
+	 * @example <caption>Extends submitted files.</caption>
+	 * function my_user_pre_updating_files( $files, $user_id ) {
+	 *     $files[] = 'some file';
 	 *     return $files;
 	 * }
-	 * ?>
+	 * add_filter( 'um_user_pre_updating_files_array', 'my_user_pre_updating_files', 10, 2 );
 	 */
-	$files = apply_filters( 'um_user_pre_updating_files_array', $files );
-
-	if ( ! empty( $files ) ) {
+	$files = apply_filters( 'um_user_pre_updating_files_array', $files, $user_id );
+	if ( ! empty( $files ) && is_array( $files ) ) {
 		UM()->uploader()->replace_upload_dir = true;
 		UM()->uploader()->move_temporary_files( $user_id, $files );
 		UM()->uploader()->replace_upload_dir = false;

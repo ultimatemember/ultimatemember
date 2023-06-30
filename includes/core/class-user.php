@@ -2119,11 +2119,15 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		/**
 		 * Update profile
 		 *
-		 * @param $changes
+		 * @param array  $changes
+		 * @param string $context
 		 */
-		public function update_profile( $changes ) {
-			$this->updating_process = true;
-			$args['ID']             = $this->id;
+		public function update_profile( $changes, $context = '' ) {
+			if ( 'account' !== $context ) {
+				$this->updating_process = true;
+			}
+
+			$args['ID'] = $this->id;
 
 			/**
 			 * Filters the update profile changes data.
