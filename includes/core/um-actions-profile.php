@@ -586,16 +586,18 @@ add_action( 'um_user_edit_profile', 'um_user_edit_profile', 10 );
 
 
 /**
- * @param array $post_form
+ * Validate nonce when profile form submit.
+ *
+ * @param array $submitted_data
  */
-function um_profile_validate_nonce( $post_form ) {
-	$user_id = isset( $post_form['user_id'] ) ? $post_form['user_id'] : '';
-	$nonce = isset( $post_form['profile_nonce'] ) ? $post_form['profile_nonce'] : '';
+function um_profile_validate_nonce( $submitted_data ) {
+	$user_id = isset( $submitted_data['user_id'] ) ? $submitted_data['user_id'] : '';
+	$nonce   = isset( $submitted_data['profile_nonce'] ) ? $submitted_data['profile_nonce'] : '';
 	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'um-profile-nonce' . $user_id ) ) {
-		wp_die( __( 'This is not possible for security reasons.', 'ultimate-member' ) );
+		wp_die( esc_html__( 'This is not possible for security reasons.', 'ultimate-member' ) );
 	}
 }
-add_action( 'um_submit_form_errors_hook__profile', 'um_profile_validate_nonce', 10, 1 );
+add_action( 'um_submit_form_errors_hook__profile', 'um_profile_validate_nonce', 1 );
 
 
 add_filter( 'um_user_pre_updating_files_array', array( UM()->validation(), 'validate_files' ), 10, 1 );

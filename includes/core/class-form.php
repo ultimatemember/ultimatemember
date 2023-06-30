@@ -456,6 +456,13 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 				// The '_um_last_login' cannot be updated through UM form.
 				$cf_metakeys = array_values( array_diff( $cf_metakeys, array( 'role_select', 'role_radio', 'role', '_um_last_login' ) ) );
+				// Column names from wp_users table.
+				$cf_metakeys = array_values( array_diff( $cf_metakeys, UM()->user()->update_user_keys ) );
+				// Remove restricted fields when edit profile.
+				if ( 'profile' === $this->form_data['mode'] ) {
+					$cf_metakeys = array_values( array_diff( $cf_metakeys, UM()->fields()->get_restricted_fields_for_edit() ) );
+				}
+				// Add required usermeta for register.
 				if ( 'register' === $this->form_data['mode'] ) {
 					$cf_metakeys[] = 'submitted';
 				}
@@ -659,6 +666,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				var_dump( '------------------------------------------------------------' );
 				var_dump( $all_cf_metakeys );
 				var_dump( $cf_metakeys );
+				var_dump( UM()->form()->errors );
 				exit;
 				}
 				/* Continue based on form mode - store data. */

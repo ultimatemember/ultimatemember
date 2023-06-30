@@ -267,13 +267,18 @@ function um_check_user_status( $user_id, $args ) {
 }
 add_action( 'um_registration_complete', 'um_check_user_status', 100, 2 );
 
-function um_submit_form_errors_hook__registration( $args ) {
+/**
+ * Validate user password field on registration.
+ *
+ * @param array $submitted_data
+ */
+function um_submit_form_errors_hook__registration( $submitted_data ) {
 	// Check for "\" in password.
-	if ( array_key_exists( 'user_password', $args ) && false !== strpos( wp_unslash( trim( $args['user_password'] ) ), '\\' ) ) {
+	if ( array_key_exists( 'user_password', $submitted_data ) && false !== strpos( wp_unslash( trim( $submitted_data['user_password'] ) ), '\\' ) ) {
 		UM()->form()->add_error( 'user_password', __( 'Passwords may not contain the character "\\".', 'ultimate-member' ) );
 	}
 }
-add_action( 'um_submit_form_errors_hook__registration', 'um_submit_form_errors_hook__registration', 10, 1 );
+add_action( 'um_submit_form_errors_hook__registration', 'um_submit_form_errors_hook__registration' );
 
 /**
  * Registration form submit handler.
