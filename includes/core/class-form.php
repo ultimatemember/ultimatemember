@@ -450,7 +450,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 						unset( $custom_fields[ $cf_k ] );
 					}
 
-					if ( ! array_key_exists( 'type', $cf_data ) || 'password' === $cf_data['type'] ) {
+					if ( array_key_exists( 'type', $cf_data ) && 'password' === $cf_data['type'] ) {
 						$ignore_keys[] = $cf_k;
 						$ignore_keys[] = 'confirm_' . $cf_k;
 					}
