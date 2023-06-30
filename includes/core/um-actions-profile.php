@@ -184,10 +184,11 @@ add_action( 'um_profile_content_main', 'um_profile_content_main' );
  * Update user's profile
  *
  * @param array $args
+ * @param array $form_data
  */
-function um_user_edit_profile( $args ) {
+function um_user_edit_profile( $args, $form_data ) {
 	$to_update = null;
-	$files = array();
+	$files     = array();
 
 	$user_id = null;
 	if ( isset( $args['user_id'] ) ) {
@@ -225,9 +226,8 @@ function um_user_edit_profile( $args ) {
 	 */
 	do_action( 'um_user_before_updating_profile', $userinfo );
 
-	if ( ! empty( $args['custom_fields'] ) ) {
-		$fields = apply_filters( 'um_user_edit_profile_fields', unserialize( $args['custom_fields'] ), $args );
-	}
+	$fields = maybe_unserialize( $form_data['custom_fields'] );
+	$fields = apply_filters( 'um_user_edit_profile_fields', $fields, $args, $form_data );
 
 	// loop through fields
 	if ( ! empty( $fields ) ) {
@@ -374,7 +374,6 @@ function um_user_edit_profile( $args ) {
 	if ( isset( $args['submitted'][ $description_key ] ) ) {
 		$to_update[ $description_key ] = $args['submitted'][ $description_key ];
 	}
-
 
 	// Secure selected role
 	if ( is_admin() ) {
@@ -554,26 +553,7 @@ function um_user_edit_profile( $args ) {
 	 */
 	do_action( 'um_user_after_updating_profile', $to_update, $user_id, $args );
 
-	/**
-	 * UM hook
-	 *
-	 * @type action
-	 * @title um_update_profile_full_name
-	 * @description On update user profile change full name
-	 * @input_vars
-	 * [{"var":"$user_id","type":"int","desc":"User ID"},
-	 * {"var":"$args","type":"array","desc":"Form data"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_action( 'um_update_profile_full_name', 'function_name', 10, 2 );
-	 * @example
-	 * <?php
-	 * add_action( 'um_update_profile_full_name', 'my_update_profile_full_name', 10, 2 );
-	 * function my_update_profile_full_name( $user_id, $args ) {
-	 *     // your code here
-	 * }
-	 * ?>
-	 */
+	/** This action is documented in ultimate-member/includes/core/um-actions-register.php */
 	do_action( 'um_update_profile_full_name', $user_id, $to_update );
 
 	if ( ! isset( $args['is_signup'] ) ) {
@@ -582,7 +562,7 @@ function um_user_edit_profile( $args ) {
 		exit( wp_redirect( um_edit_my_profile_cancel_uri( $url ) ) );
 	}
 }
-add_action( 'um_user_edit_profile', 'um_user_edit_profile', 10 );
+add_action( 'um_user_edit_profile', 'um_user_edit_profile', 10, 2 );
 
 
 /**
@@ -601,7 +581,7 @@ add_action( 'um_submit_form_errors_hook__profile', 'um_profile_validate_nonce', 
 
 
 add_filter( 'um_user_pre_updating_files_array', array( UM()->validation(), 'validate_files' ), 10, 1 );
-add_filter( 'um_before_save_filter_submitted', array( UM()->validation(), 'validate_fields_values' ), 10, 2 );
+add_filter( 'um_before_save_filter_submitted', array( UM()->validation(), 'validate_fields_values' ), 10, 3 );
 
 /**
  * Leave roles for User, which are not in the list of update profile (are default WP or 3rd plugins roles)
@@ -1542,15 +1522,16 @@ add_action( 'um_main_profile_fields', 'um_add_profile_fields', 100 );
 /**
  * Form processing
  *
- * @param $args
+ * @param array $args
+ * @param array $form_data
  */
-function um_submit_form_profile( $args ) {
+function um_submit_form_profile( $args, $form_data ) {
 	if ( isset( UM()->form()->errors ) ) {
 		return;
 	}
 
-	UM()->fields()->set_mode  = 'profile';
-	UM()->fields()->editing = true;
+	UM()->fields()->set_mode = 'profile';
+	UM()->fields()->editing  = true;
 
 	if ( ! empty( $args['submitted'] ) ) {
 		$args['submitted'] = UM()->form()->clean_submitted_data( $args['submitted'] );
@@ -1575,9 +1556,9 @@ function um_submit_form_profile( $args ) {
 	 * }
 	 * ?>
 	 */
-	do_action( 'um_user_edit_profile', $args );
+	do_action( 'um_user_edit_profile', $args, $form_data );
 }
-add_action( 'um_submit_form_profile', 'um_submit_form_profile', 10 );
+add_action( 'um_submit_form_profile', 'um_submit_form_profile', 10, 2 );
 
 
 /**

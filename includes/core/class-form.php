@@ -62,7 +62,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 *
 		 * @var array
 		 */
-		private $usermeta_whitelist = array();
+		public $usermeta_whitelist = array();
 
 		/**
 		 * Form constructor.
@@ -393,7 +393,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 */
 		public function clean_submitted_data( $submitted ) {
 			foreach ( $submitted as $metakey => $value ) {
-				if ( UM()->user()->is_metakey_banned( $metakey ) ) {
+				if ( UM()->user()->is_metakey_banned( $metakey/*, 'submission'*/ ) ) {
 					unset( $submitted[ $metakey ] );
 				}
 			}
@@ -442,11 +442,19 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					return;
 				}
 
+				$ignore_keys = array();
+
 				$field_types_without_metakey = UM()->builtin()->get_fields_without_metakey();
 				foreach ( $custom_fields as $cf_k => $cf_data ) {
 					if ( ! array_key_exists( 'type', $cf_data ) || in_array( $cf_data['type'], $field_types_without_metakey, true ) ) {
 						unset( $custom_fields[ $cf_k ] );
 					}
+
+					if ( ! array_key_exists( 'type', $cf_data ) || 'password' === $cf_data['type'] ) {
+						$ignore_keys[] = $cf_k;
+						$ignore_keys[] = 'confirm_' . $cf_k;
+					}
+
 					if ( ! array_key_exists( 'metakey', $cf_data ) || empty( $cf_data['metakey'] ) ) {
 						unset( $custom_fields[ $cf_k ] );
 					}
@@ -455,17 +463,45 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				$all_cf_metakeys = $cf_metakeys;
 
 				// The '_um_last_login' cannot be updated through UM form.
-				$cf_metakeys = array_values( array_diff( $cf_metakeys, array( 'role_select', 'role_radio', 'role', '_um_last_login' ) ) );
-				// Column names from wp_users table.
-				$cf_metakeys = array_values( array_diff( $cf_metakeys, UM()->user()->update_user_keys ) );
+				$cf_metakeys = array_values( array_diff( $cf_metakeys, array( 'role_select', 'role_radio', 'role', '_um_last_login', 'user_pass', 'user_password', 'confirm_user_password' ) ) );
+				if ( ! empty( $ignore_keys ) ) {
+					$cf_metakeys = array_values( array_diff( $cf_metakeys, $ignore_keys ) );
+				}
 				// Remove restricted fields when edit profile.
 				if ( 'profile' === $this->form_data['mode'] ) {
+					// Column names from wp_users table.
+					$cf_metakeys = array_values( array_diff( $cf_metakeys, array( 'user_login' ) ) );
+					// Hidden for edit fields
 					$cf_metakeys = array_values( array_diff( $cf_metakeys, UM()->fields()->get_restricted_fields_for_edit() ) );
 				}
 				// Add required usermeta for register.
 				if ( 'register' === $this->form_data['mode'] ) {
-					$cf_metakeys[] = 'submitted';
+					$cf_metakeys[] = 'form_id';
+					$cf_metakeys[] = 'timestamp';
 				}
+
+				/**
+				 * Filters whitelisted usermeta keys that can be stored inside DB after UM Form submission.
+				 *
+				 * @param {array} $whitelisted_metakeys Whitelisted usermeta keys.
+				 * @param {array} $form_data            UM form data.
+				 *
+				 * @return {array} Whitelisted usermeta keys.
+				 *
+				 * @since 2.6.7
+				 * @hook um_whitelisted_metakeys
+				 *
+				 * @example <caption>Extends whitelisted usermeta keys.</caption>
+				 * function my_um_whitelisted_metakeys( $metakeys, $form_data ) {
+				 *     $metakeys[] = 'some_key';
+				 *     return $metakeys;
+				 * }
+				 * add_filter( 'um_whitelisted_metakeys', 'my_um_whitelisted_metakeys', 10, 2 );
+				 */
+				$cf_metakeys = apply_filters( 'um_whitelisted_metakeys', $cf_metakeys, $this->form_data );
+
+				// Important variable to prevent save unnecessary data to wp_usermeta.
+				$this->usermeta_whitelist = $cf_metakeys;
 
 				/**
 				 * Fires before UM login, registration or profile form submission.
@@ -558,7 +594,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				}
 
 				// @todo REMOVE THAT !!! AND SEPARATE FORM DATA AND SUBMISSION DATA. MAY AFFECT TO EXTENSIONS
-				$this->post_form = array_merge( $this->form_data, $this->post_form );
+				//$this->post_form = array_merge( $this->form_data, $this->post_form );
 
 				// Remove role from post_form at first if role ! empty and there aren't custom fields with role name
 //				if ( ! empty( $this->post_form['role'] ) ) {
@@ -660,7 +696,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				 * add_action( 'um_submit_form_errors_hook', 'my_custom_submit_form_errors_hook', 10, 2 );
 				 */
 				do_action( 'um_submit_form_errors_hook', $this->post_form, $this->form_data );
-				if ( 'login' !==  $this->form_data['mode'] ) {
+				if ( 'profile' ===  $this->form_data['mode'] ) {
 				var_dump( $this->post_form );
 				var_dump( $this->form_data );
 				var_dump( '------------------------------------------------------------' );
@@ -678,7 +714,12 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				 * * 1 - `UM()->login()->verify_nonce()` Verify nonce.
 				 * * 10 - `um_submit_form_login()`       Login form main handler.
 				 * ### um_submit_form_register:
+				 * * 1  - `UM()->register()->verify_nonce()`                 Verify nonce.
+				 * * 9  - `UM()->agreement_validation()`                     GDPR Agreement.
+				 * * 9  - `UM()->terms_conditions()->agreement_validation()` Terms & Conditions Agreement.
+				 * * 10 - `um_submit_form_register()`                        Register form main handler.
 				 * ### um_submit_form_profile:
+				 * * 10 - `um_submit_form_profile()` Profile form main handler.
 				 *
 				 * @since 1.3.x
 				 * @hook um_submit_form_errors_hook
@@ -692,7 +733,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				 * }
 				 * add_action( 'um_submit_form_errors_hook', 'my_custom_submit_form_errors_hook', 10, 2 );
 				 */
-				do_action( "um_submit_form_{$this->post_form['mode']}", $this->post_form, $this->form_data );
+				do_action( "um_submit_form_{$this->form_data['mode']}", $this->post_form, $this->form_data );
 			}
 		}
 
