@@ -43,8 +43,10 @@ add_filter( 'login_message', 'um_custom_wp_err_messages' );
  */
 function um_wp_form_errors_hook_ip_test( $user, $username, $password ) {
 	if ( ! empty( $username ) ) {
-		do_action( 'um_submit_form_errors_hook__blockedips', array() );
-		do_action( 'um_submit_form_errors_hook__blockedemails', array( 'username' => $username ) );
+		/** This action is documented in includes/core/um-actions-form.php */
+		do_action( 'um_submit_form_errors_hook__blockedips', array(), null );
+		/** This action is documented in includes/core/um-actions-form.php */
+		do_action( 'um_submit_form_errors_hook__blockedemails', array( 'username' => $username ), null );
 	}
 
 	return $user;
@@ -53,7 +55,7 @@ add_filter( 'authenticate', 'um_wp_form_errors_hook_ip_test', 10, 3 );
 
 
 /**
- * Login checks thru the wordpress admin login
+ * Login checks through the WordPress admin login.
  *
  * @param $user
  * @param $username
@@ -93,8 +95,8 @@ add_filter( 'authenticate', 'um_wp_form_errors_hook_logincheck', 50, 3 );
 
 /**
  * Change lost password url in UM Login form
- * @param  string $lostpassword_url 
- * @return string                  
+ * @param  string $lostpassword_url
+ * @return string
  */
 function um_lostpassword_url( $lostpassword_url ) {
 

@@ -56,6 +56,15 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		public $all_fields = array();
 
 		/**
+		 * Whitelisted usermeta that can be stored when UM Form is submitted.
+		 *
+		 * @since 2.6.7
+		 *
+		 * @var array
+		 */
+		private $usermeta_whitelist = array();
+
+		/**
 		 * Form constructor.
 		 */
 		public function __construct() {
@@ -401,7 +410,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			} else {
 				$http_post = 'POST';
 			}
-
+			// Handles Register, Profile and Login forms.
 			if ( $http_post && ! is_admin() && isset( $_POST['form_id'] ) && is_numeric( $_POST['form_id'] ) ) {
 
 				$this->form_id = absint( $_POST['form_id'] );
@@ -414,185 +423,268 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					return;
 				}
 
-				$this->form_data   = UM()->query()->post_data( $this->form_id );
+				// Verified that form_id is right and UM form is published. Then get form data.
+
+				$this->form_data = UM()->query()->post_data( $this->form_id );
+
+				// Checking the form custom fields. Form without custom fields is invalid.
+				if ( ! array_key_exists( 'mode', $this->form_data ) ) {
+					return;
+				}
+
+				// Checking the form custom fields. Form without custom fields is invalid.
+				if ( ! array_key_exists( 'custom_fields', $this->form_data ) ) {
+					return;
+				}
+
+				$custom_fields = maybe_unserialize( $this->form_data['custom_fields'] );
+				if ( ! is_array( $custom_fields ) || empty( $custom_fields ) ) {
+					return;
+				}
+
+				$field_types_without_metakey = UM()->builtin()->get_fields_without_metakey();
+				foreach ( $custom_fields as $cf_k => $cf_data ) {
+					if ( ! array_key_exists( 'type', $cf_data ) || in_array( $cf_data['type'], $field_types_without_metakey, true ) ) {
+						unset( $custom_fields[ $cf_k ] );
+					}
+					if ( ! array_key_exists( 'metakey', $cf_data ) || empty( $cf_data['metakey'] ) ) {
+						unset( $custom_fields[ $cf_k ] );
+					}
+				}
+				$cf_metakeys     = array_column( $custom_fields, 'metakey' );
+				$all_cf_metakeys = $cf_metakeys;
+
+				// The '_um_last_login' cannot be updated through UM form.
+				$cf_metakeys = array_values( array_diff( $cf_metakeys, array( 'role_select', 'role_radio', 'role', '_um_last_login' ) ) );
+				if ( 'register' === $this->form_data['mode'] ) {
+					$cf_metakeys[] = 'submitted';
+				}
 
 				/**
-				 * UM hook
+				 * Fires before UM login, registration or profile form submission.
 				 *
-				 * @type action
-				 * @title um_before_submit_form_post
-				 * @description Before submit form
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_before_submit_form_post', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_before_submit_form_post', 'my_before_submit_form_post', 10, 1 );
-				 * function my_run_ajax_function( $post ) {
+				 * @since 1.3.x
+				 * @hook um_before_submit_form_post
+				 *
+				 * @param {array}  $post $_POST submission array. Deprecated since 2.0.
+				 * @param {object} $this UM()->form() class instance. Since 2.6.7
+				 *
+				 * @example <caption>Make any custom action before UM login, registration or profile form submission.</caption>
+				 * function my_custom_before_submit_form_post( $um_form_obj ) {
 				 *     // your code here
 				 * }
-				 * ?>
+				 * add_action( 'um_before_submit_form_post', 'my_custom_before_submit_form_post' );
 				 */
-				do_action( 'um_before_submit_form_post' );
+				do_action( 'um_before_submit_form_post', $this );
 
 				/* save entire form as global */
 				/**
-				 * UM hook
+				 * Filters $_POST submitted data by the UM login, registration or profile form.
 				 *
-				 * @type filter
-				 * @title um_submit_post_form
-				 * @description Change submitted data on form submit
-				 * @input_vars
-				 * [{"var":"$data","type":"array","desc":"Submitted data"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage
-				 * <?php add_filter( 'um_submit_post_form', 'function_name', 10, 1 ); ?>
-				 * @example
-				 * <?php
-				 * add_filter( 'um_submit_post_form', 'my_submit_post_form', 10, 1 );
-				 * function my_submit_post_form( $data ) {
-				 *     // your code here
-				 *     return $data;
+				 * @param {array} $_post Submitted data. Already un-slashed by `wp_unslash()`.
+				 *
+				 * @return {array} Submitted data.
+				 *
+				 * @since 1.3.x
+				 * @hook um_submit_post_form
+				 *
+				 * @example <caption>Extends $_POST data.</caption>
+				 * function my_submit_post_form( $_post ) {
+				 *     $_post['some_key'] = 'some value';
+				 *     return $_post;
 				 * }
-				 * ?>
+				 * add_filter( 'um_submit_post_form', 'my_submit_post_form' );
 				 */
 				$this->post_form = apply_filters( 'um_submit_post_form', wp_unslash( $_POST ) );
 
+				// Validate form submission by honeypot.
 				if ( isset( $this->post_form[ UM()->honeypot ] ) && '' !== $this->post_form[ UM()->honeypot ] ) {
+					// High level escape if hacking.
 					wp_die( esc_html__( 'Hello, spam bot!', 'ultimate-member' ) );
 				}
 
-				$this->post_form              = $this->beautify( $this->post_form );
-				$this->post_form              = $this->sanitize( $this->post_form );
-				$this->post_form['submitted'] = $this->post_form;
+				$this->post_form = $this->beautify( $this->post_form );
 
-				$this->post_form = array_merge( $this->form_data, $this->post_form );
-
+				// Validate and filter 'role' submitted data to avoid handling roles with admin privileges.
 				// Remove role from post_form at first if role ! empty and there aren't custom fields with role name
-				if ( ! empty( $_POST['role'] ) ) {
-					if ( ! isset( $this->form_data['custom_fields'] ) || ! strstr( $this->form_data['custom_fields'], 'role_' ) ) {
+				$maybe_set_default_role = true;
+				if ( array_key_exists( 'role', $this->post_form ) ) {
+					if ( 'login' === $this->form_data['mode'] ) {
 						unset( $this->post_form['role'] );
-						unset( $this->post_form['submitted']['role'] );
-					}
-				}
-
-				// Secure sanitize of the submitted data
-				if ( ! empty( $this->post_form ) ) {
-					$this->post_form = $this->clean_submitted_data( $this->post_form );
-				}
-				if ( ! empty( $this->post_form['submitted'] ) ) {
-					$this->post_form['submitted'] = $this->clean_submitted_data( $this->post_form['submitted'] );
-				}
-
-				// set default role from settings on registration form
-				if ( isset( $this->post_form['mode'] ) && 'register' === $this->post_form['mode'] ) {
-					$role                    = $this->assigned_role( $this->form_id );
-					$this->post_form['role'] = $role;
-				}
-
-				if ( isset( $this->form_data['custom_fields'] ) && strstr( $this->form_data['custom_fields'], 'role_' ) ) {  // Secure selected role
-
-					if ( ! empty( $_POST['role'] ) ) {
-						$custom_field_roles = $this->custom_field_roles( $this->form_data['custom_fields'] );
-
-						if ( ! empty( $custom_field_roles ) ) {
-							if ( is_array( $_POST['role'] ) ) {
-								$role = current( $_POST['role'] );
-								$role = sanitize_key( $role );
-							} else {
-								$role = sanitize_key( $_POST['role'] );
-							}
-
-							global $wp_roles;
-							$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
-
-							if ( ! empty( $role ) &&
-								( ! in_array( $role, $custom_field_roles, true ) || in_array( $role, $exclude_roles, true ) ) ) {
-								wp_die( esc_html__( 'This is not possible for security reasons.', 'ultimate-member' ) );
-							}
-
-							$this->post_form['role']              = $role;
-							$this->post_form['submitted']['role'] = $role;
-						} else {
+					} else {
+						$form_has_role_field = count( array_intersect( $all_cf_metakeys, array( 'role_select', 'role_radio' ) ) ) > 0;
+						if ( ! $form_has_role_field ) {
 							unset( $this->post_form['role'] );
-							unset( $this->post_form['submitted']['role'] );
+						} else {
+							$custom_field_roles = $this->custom_field_roles( $this->form_data['custom_fields'] );
+							if ( ! empty( $custom_field_roles ) ) {
+								if ( is_array( $this->post_form['role'] ) ) {
+									$role = current( $this->post_form['role'] );
+									$role = sanitize_key( $role );
+								} else {
+									$role = sanitize_key( $this->post_form['role'] );
+								}
 
-							// set default role for registration form if custom field hasn't proper value
-							if ( isset( $this->post_form['mode'] ) && 'register' === $this->post_form['mode'] ) {
-								$role                    = $this->assigned_role( $this->form_id );
+								global $wp_roles;
+								$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
+
+								if ( ! empty( $role ) &&
+									( ! in_array( $role, $custom_field_roles, true ) || in_array( $role, $exclude_roles, true ) ) ) {
+									// High level escape if hacking.
+									wp_die( esc_html__( 'This is not possible for security reasons.', 'ultimate-member' ) );
+								}
+
 								$this->post_form['role'] = $role;
+								$maybe_set_default_role  = false;
 							}
 						}
 					}
 				}
 
-				/**
-				 * UM hook
-				 *
-				 * @type filter
-				 * @title um_submit_form_data
-				 * @description Change submitted data on form submit
-				 * @input_vars
-				 * [{"var":"$data","type":"array","desc":"Submitted data"},
-				 * {"var":"$mode","type":"string","desc":"Form mode"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage
-				 * <?php add_filter( 'um_submit_form_data', 'function_name', 10, 2 ); ?>
-				 * @example
-				 * <?php
-				 * add_filter( 'um_submit_form_data', 'my_submit_form_data', 10, 2 );
-				 * function my_submit_form_data( $data ) {
-				 *     // your code here
-				 *     return $data;
-				 * }
-				 * ?>
-				 */
-				$this->post_form = apply_filters( 'um_submit_form_data', $this->post_form, $this->post_form['mode'] );
+				$this->post_form              = $this->sanitize( $this->post_form );
+				$this->post_form['submitted'] = $this->post_form;
 
+				// Set default role from settings on registration form. It has been made after defined 'submitted' because predefined role isn't a submitted field.
+				if ( $maybe_set_default_role && 'register' === $this->form_data['mode'] ) {
+					$role                    = $this->assigned_role( $this->form_id );
+					$this->post_form['role'] = $role;
+				}
+
+				// @todo REMOVE THAT !!! AND SEPARATE FORM DATA AND SUBMISSION DATA. MAY AFFECT TO EXTENSIONS
+				$this->post_form = array_merge( $this->form_data, $this->post_form );
+
+				// Remove role from post_form at first if role ! empty and there aren't custom fields with role name
+//				if ( ! empty( $this->post_form['role'] ) ) {
+//					if ( ! strstr( $this->form_data['custom_fields'], 'role_' ) ) {
+//						unset( $this->post_form['role'] );
+//						//unset( $this->post_form['submitted']['role'] );
+//					}
+//				}
+
+				// Secure sanitize of the submitted data
+//				if ( ! empty( $this->post_form ) ) {
+//					$this->post_form = $this->clean_submitted_data( $this->post_form );
+//				}
+//				if ( ! empty( $this->post_form['submitted'] ) ) {
+//					$this->post_form['submitted'] = $this->clean_submitted_data( $this->post_form['submitted'] );
+//				}
+
+
+
+//				if ( isset( $this->form_data['custom_fields'] ) && strstr( $this->form_data['custom_fields'], 'role_' ) ) {  // Secure selected role
+//					if ( ! empty( $_POST['role'] ) ) {
+//						$custom_field_roles = $this->custom_field_roles( $this->form_data['custom_fields'] );
+//
+//						if ( ! empty( $custom_field_roles ) ) {
+//							if ( is_array( $_POST['role'] ) ) {
+//								$role = current( $_POST['role'] );
+//								$role = sanitize_key( $role );
+//							} else {
+//								$role = sanitize_key( $_POST['role'] );
+//							}
+//
+//							global $wp_roles;
+//							$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
+//
+//							if ( ! empty( $role ) &&
+//								( ! in_array( $role, $custom_field_roles, true ) || in_array( $role, $exclude_roles, true ) ) ) {
+//								wp_die( esc_html__( 'This is not possible for security reasons.', 'ultimate-member' ) );
+//							}
+//
+//							$this->post_form['role']              = $role;
+//							$this->post_form['submitted']['role'] = $role;
+//						} else {
+//							unset( $this->post_form['role'] );
+//							unset( $this->post_form['submitted']['role'] );
+//
+//							// set default role for registration form if custom field hasn't proper value
+//							if ( 'register' === $this->form_data['mode'] ) {
+//								$role                    = $this->assigned_role( $this->form_id );
+//								$this->post_form['role'] = $role;
+//							}
+//						}
+//					}
+//				}
+
+				/**
+				 * Filters $_POST submitted data by the UM login, registration or profile form.
+				 * It's un-slashed by `wp_unslash()`, beautified and sanitized. `role` attribute is filtered by possible role.
+				 * `submitted` key is added by code and contains summary of submission.
+				 *
+				 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+				 * 9  - `um_submit_form_data_trim_fields()` maybe over-functionality and can be removed.
+				 * 10 - `um_submit_form_data_role_fields()` important for conditional logic based on role fields in form.
+				 *
+				 * @param {array}  $_post           Submitted data.
+				 * @param {string} $mode            Form mode. login||register||profile
+				 * @param {array}  $all_cf_metakeys Form's metakeys. Since 2.6.7.
+				 *
+				 * @return {array} Submitted data.
+				 *
+				 * @since 1.3.x
+				 * @hook um_submit_form_data
+				 *
+				 * @example <caption>Extends UM form submitted data.</caption>
+				 * function my_submit_form_data( $_post, $mode, $all_cf_metakeys ) {
+				 *     $_post['some_key'] = 'some value';
+				 *     return $_post;
+				 * }
+				 * add_filter( 'um_submit_form_data', 'my_submit_form_data', 10, 3 );
+				 */
+				$this->post_form = apply_filters( 'um_submit_form_data', $this->post_form, $this->form_data['mode'], $all_cf_metakeys );
 				/* Continue based on form mode - pre-validation */
-
 				/**
-				 * UM hook
+				 * Fires for validation UM login, registration or profile form submission.
 				 *
-				 * @type action
-				 * @title um_submit_form_errors_hook
-				 * @description Action on submit form
-				 * @input_vars
-				 * [{"var":"$post","type":"int","desc":"Post data"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_submit_form_errors_hook', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_submit_form_errors_hook', 'my_submit_form_errors', 10, 1 );
-				 * function my_submit_form_errors( $post ) {
+				 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+				 * 10 - `um_submit_form_errors_hook()` All form validation handlers.
+				 * 20 - `um_recaptcha_validate()`      reCAPTCHA form validation handlers. um-recaptcha extension.
+				 *
+				 * @since 1.3.x
+				 * @hook um_submit_form_errors_hook
+				 *
+				 * @param {array} $post      $_POST Submission array.
+				 * @param {array} $form_data UM form data. Since 2.6.7
+				 *
+				 * @example <caption>Make any common validation action here.</caption>
+				 * function my_custom_before_submit_form_post( $post, $form_data ) {
 				 *     // your code here
 				 * }
-				 * ?>
+				 * add_action( 'um_submit_form_errors_hook', 'my_custom_submit_form_errors_hook', 10, 2 );
 				 */
-				do_action( 'um_submit_form_errors_hook', $this->post_form );
+				do_action( 'um_submit_form_errors_hook', $this->post_form, $this->form_data );
+				if ( 'login' !==  $this->form_data['mode'] ) {
+				var_dump( $this->post_form );
+				var_dump( $this->form_data );
+				var_dump( '------------------------------------------------------------' );
+				var_dump( $all_cf_metakeys );
+				var_dump( $cf_metakeys );
+				exit;
+				}
+				/* Continue based on form mode - store data. */
 				/**
-				 * UM hook
+				 * Fires for make main actions on UM login, registration or profile form submission.
 				 *
-				 * @type action
-				 * @title um_submit_form_{$mode}
-				 * @description Action on submit form
-				 * @input_vars
-				 * [{"var":"$post","type":"int","desc":"Post data"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_submit_form_{$mode}', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_submit_form_{$mode}', 'my_submit_form', 10, 1 );
-				 * function my_submit_form( $post ) {
+				 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+				 * ### um_submit_form_login:
+				 * * 1 - `UM()->login()->verify_nonce()` Verify nonce.
+				 * * 10 - `um_submit_form_login()`       Login form main handler.
+				 * ### um_submit_form_register:
+				 * ### um_submit_form_profile:
+				 *
+				 * @since 1.3.x
+				 * @hook um_submit_form_errors_hook
+				 *
+				 * @param {array} $post      $_POST Submission array.
+				 * @param {array} $form_data UM form data. Since 2.6.7
+				 *
+				 * @example <caption>Make any custom action.</caption>
+				 * function my_custom_before_submit_form_post( $post, $form_data ) {
 				 *     // your code here
 				 * }
-				 * ?>
+				 * add_action( 'um_submit_form_errors_hook', 'my_custom_submit_form_errors_hook', 10, 2 );
 				 */
-				do_action( "um_submit_form_{$this->post_form['mode']}", $this->post_form );
+				do_action( "um_submit_form_{$this->post_form['mode']}", $this->post_form, $this->form_data );
 			}
 		}
 
@@ -716,7 +808,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 																		)
 																	),
 																	' /'
-																	);
+																);
 															}
 														}
 													}
