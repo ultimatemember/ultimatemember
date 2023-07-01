@@ -113,7 +113,7 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 			echo wp_kses(
 				sprintf(
 					// translators: One-time change requires you to reset your password
-					__( '<strong>Important:</strong> This site is currently under maintance. Come back soon.', 'ultimate-member' ),
+					__( '<strong>Important:</strong> This site is currently under maintenance. Please check back soon.', 'ultimate-member' ),
 					um_get_core_page( 'password-reset' )
 				),
 				array(
