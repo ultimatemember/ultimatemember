@@ -607,6 +607,7 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->gdpr();
 			$this->member_directory();
 			$this->blocks();
+			$this->secure();
 
 			//if multisite networks active
 			if ( is_multisite() ) {
@@ -647,6 +648,20 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 
 			return $this->classes['blocks'];
+		}
+
+
+		/**
+		 * @since 2.6.7
+		 *
+		 * @return um\core\Secure()
+		 */
+		public function secure() {
+			if ( empty( $this->classes['secure'] ) ) {
+				$this->classes['secure'] = new um\core\Secure();
+			}
+
+			return $this->classes['secure'];
 		}
 
 
