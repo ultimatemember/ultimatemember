@@ -2638,7 +2638,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$field_name = $key . $form_suffix;
 
 					$disabled_weekdays = '';
-					if ( isset( $data['disabled_weekdays'] ) ) {
+					if ( isset( $data['disabled_weekdays'] ) && is_array( $data['disabled_weekdays'] ) ) {
 						$disabled_weekdays = '[' . implode( ',', $data['disabled_weekdays'] ) . ']';
 					}
 
