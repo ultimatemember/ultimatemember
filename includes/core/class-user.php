@@ -2151,7 +2151,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 */
 			$changes = apply_filters( 'um_before_update_profile', $changes, $args['ID'] );
 			foreach ( $changes as $key => $value ) {
-				if ( $this->is_metakey_banned( $key, 'submission' ) ) {
+				if ( $this->is_metakey_banned( $key, ( 'account' !== $context ) ? 'submission' : '' ) ) {
 					continue;
 				}
 

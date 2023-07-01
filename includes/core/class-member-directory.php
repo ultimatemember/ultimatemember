@@ -1458,11 +1458,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
 					$sorting        = sanitize_text_field( $_POST['sorting'] );
 					$sorting_fields = maybe_serialize( $directory_data['sorting_fields'] );
-
-					foreach ( $sorting_fields as $field ) {
-						if ( isset( $field[ $sorting ] ) ) {
-							$custom_sort_type  = ! empty( $field['type'] ) ? $meta_query->get_cast_for_type( $field['type'] ) : 'CHAR';
-							$custom_sort_order = $field['order'];
+					if ( ! empty( $sorting_fields ) && is_array( $sorting_fields ) ) {
+						foreach ( $sorting_fields as $field ) {
+							if ( isset( $field[ $sorting ] ) ) {
+								$custom_sort_type  = ! empty( $field['type'] ) ? $meta_query->get_cast_for_type( $field['type'] ) : 'CHAR';
+								$custom_sort_order = $field['order'];
+							}
 						}
 					}
 				}
