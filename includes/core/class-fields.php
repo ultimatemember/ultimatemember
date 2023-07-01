@@ -2990,9 +2990,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$output .= '</div>';
 					/* modal hidden */
 					if ( empty( $disabled ) ) {
-						if ( ! isset( $allowed_types ) ) {
+						if ( ! isset( $data['allowed_types'] ) ) {
 							$allowed_types = 'pdf,txt';
-						} elseif ( is_array( $allowed_types ) ) {
+						} elseif ( is_array( $data['allowed_types'] ) ) {
 							$allowed_types = implode( ',', $data['allowed_types'] );
 						} else {
 							$allowed_types = $data['allowed_types'];
