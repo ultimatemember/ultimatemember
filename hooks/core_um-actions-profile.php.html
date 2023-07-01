@@ -214,13 +214,14 @@ function um_profile_content_main( $args ) {
 add_action( 'um_profile_content_main', 'um_profile_content_main' );
 
 /**
- * Update user's profile
+ * Update user's profile (frontend).
  *
  * @param array $args
+ * @param array $form_data
  */
-function um_user_edit_profile( $args ) {
+function um_user_edit_profile( $args, $form_data ) {
 	$to_update = null;
-	$files = array();
+	$files     = array();
 
 	$user_id = null;
 	if ( isset( $args['user_id'] ) ) {
@@ -232,41 +233,33 @@ function um_user_edit_profile( $args ) {
 	if ( UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
 		UM()->user()->set( $user_id );
 	} else {
-		wp_die( __( 'You are not allowed to edit this user.', 'ultimate-member' ) );
+		wp_die( esc_html__( 'You are not allowed to edit this user.', 'ultimate-member' ) );
 	}
 
 	$userinfo = UM()->user()->profile;
 
 	/**
-	 * UM hook
+	 * Fires before collecting data to update on profile form submit.
 	 *
-	 * @type action
-	 * @title um_user_before_updating_profile
-	 * @description Some actions before profile submit
-	 * @input_vars
-	 * [{"var":"$userinfo","type":"array","desc":"User Data"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_action( 'um_user_before_updating_profile', 'function_name', 10, 1 );
-	 * @example
-	 * &lt;?php
-	 * add_action( 'um_user_before_updating_profile', 'my_user_before_updating_profile', 10, 1 );
-	 * function my_user_before_updating_profile( $userinfo ) {
+	 * @since 1.3.x
+	 * @hook um_user_before_updating_profile
+	 *
+	 * @param {array} $userinfo Userdata.
+	 *
+	 * @example &lt;caption>Make any custom action before collecting data to update on profile form submit.&lt;/caption>
+	 * function my_user_before_updating_profile( $role_key, $role_meta ) {
 	 *     // your code here
 	 * }
-	 * ?>
+	 * add_action( 'um_user_before_updating_profile', 'my_user_before_updating_profile', 10, 2 );
 	 */
 	do_action( 'um_user_before_updating_profile', $userinfo );
 
-	if ( ! empty( $args['custom_fields'] ) ) {
-		$fields = apply_filters( 'um_user_edit_profile_fields', unserialize( $args['custom_fields'] ), $args );
-	}
+	$fields = maybe_unserialize( $form_data['custom_fields'] );
+	$fields = apply_filters( 'um_user_edit_profile_fields', $fields, $args, $form_data );
 
 	// loop through fields
 	if ( ! empty( $fields ) ) {
-
 		foreach ( $fields as $key => $array ) {
-
 			if ( ! isset( $array['type'] ) ) {
 				continue;
 			}
@@ -276,16 +269,17 @@ function um_user_edit_profile( $args ) {
 			}
 
 			// required option? 'required_opt' - it's field attribute predefined in the field data in code
+			// @todo can be unnecessary. it's used in 1 place (user account).
 			if ( isset( $array['required_opt'] ) ) {
 				$opt = $array['required_opt'];
-				if ( UM()->options()->get( $opt[0] ) != $opt[1] ) {
+				if ( UM()->options()->get( $opt[0] ) !== $opt[1] ) {
 					continue;
 				}
 			}
 
 			// fields that need to be disabled in edit mode (profile) (email, username, etc.)
 			$arr_restricted_fields = UM()->fields()->get_restricted_fields_for_edit( $user_id );
-			if ( in_array( $key, $arr_restricted_fields ) ) {
+			if ( in_array( $key, $arr_restricted_fields, true ) ) {
 				continue;
 			}
 
@@ -294,13 +288,13 @@ function um_user_edit_profile( $args ) {
 			}
 
 			// skip saving role here
-			if ( in_array( $key, array( 'role', 'role_select', 'role_radio' ) ) ) {
+			if ( in_array( $key, array( 'role', 'role_select', 'role_radio' ), true ) ) {
 				continue;
 			}
 
 			//the same code in class-validation.php validate_fields_values for registration form
 			//rating field validation
-			if ( $array['type'] == 'rating' &amp;&amp; isset( $args['submitted'][ $key ] ) ) {
+			if ( 'rating' === $array['type'] &amp;&amp; isset( $args['submitted'][ $key ] ) ) {
 				if ( ! is_numeric( $args['submitted'][ $key ] ) ) {
 					continue;
 				} else {
@@ -316,13 +310,12 @@ function um_user_edit_profile( $args ) {
 				}
 			}
 
-
 			/**
 			 * Returns dropdown/multi-select options keys from a callback function
 			 * @since 2019-05-30
 			 */
 			$has_custom_source = apply_filters( "um_has_dropdown_options_source__{$key}", false );
-			if ( isset( $array['options'] ) &amp;&amp; in_array( $array['type'], array( 'select', 'multiselect' ) ) ) {
+			if ( isset( $array['options'] ) &amp;&amp; in_array( $array['type'], array( 'select', 'multiselect' ), true ) ) {
 
 				$options = array();
 				if ( ! empty( $array['custom_dropdown_options_source'] ) &amp;&amp; function_exists( $array['custom_dropdown_options_source'] ) &amp;&amp; ! $has_custom_source ) {
@@ -335,9 +328,7 @@ function um_user_edit_profile( $args ) {
 				}
 
 				$array['options'] = apply_filters( "um_custom_dropdown_options__{$key}", $options );
-
 			}
-
 
 			//validation of correct values from options in wp-admin
 			$stripslashes = '';
@@ -345,102 +336,81 @@ function um_user_edit_profile( $args ) {
 				$stripslashes = stripslashes( $args['submitted'][ $key ] );
 			}
 
-			if ( in_array( $array['type'], array( 'select' ) ) ) {
+			if ( 'select' === $array['type'] ) {
 				if ( ! empty( $array['options'] ) &amp;&amp; ! empty( $stripslashes ) &amp;&amp; ! in_array( $stripslashes, array_map( 'trim', $array['options'] ) ) &amp;&amp; ! $has_custom_source  ) {
 					continue;
 				}
 
 				//update empty user meta
-				if ( ! isset( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == '' ) {
+				if ( ! isset( $args['submitted'][ $key ] ) || '' === $args['submitted'][ $key ] ) {
 					update_user_meta( $user_id, $key, '' );
 				}
 			}
 
 			//validation of correct values from options in wp-admin
 			//the user cannot set invalid value in the hidden input at the page
-			if ( in_array( $array['type'], array( 'multiselect', 'checkbox', 'radio' ) ) ) {
+			if ( in_array( $array['type'], array( 'multiselect', 'checkbox', 'radio' ), true ) ) {
 				if ( ! empty( $args['submitted'][ $key ] ) &amp;&amp; ! empty( $array['options'] ) ) {
 					$args['submitted'][ $key ] = array_map( 'stripslashes', array_map( 'trim', $args['submitted'][ $key ] ) );
 					$args['submitted'][ $key ] = array_intersect( $args['submitted'][ $key ], array_map( 'trim', $array['options'] ) );
 				}
 
 				// update empty user meta
-				if ( ! isset( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == '' ) {
+				if ( ! isset( $args['submitted'][ $key ] ) || '' === $args['submitted'][ $key ] ) {
 					update_user_meta( $user_id, $key, array() );
 				}
 			}
 
 			if ( isset( $args['submitted'][ $key ] ) ) {
-
-				if ( isset( $array['type'] ) &amp;&amp; in_array( $array['type'], array( 'image', 'file' ) ) ) {
-
-					if ( um_is_temp_file( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == 'empty_file' ) {
+				if ( in_array( $array['type'], array( 'image', 'file' ), true ) ) {
+					if ( um_is_temp_file( $args['submitted'][ $key ] ) || 'empty_file' === $args['submitted'][ $key ] ) {
 						$files[ $key ] = $args['submitted'][ $key ];
 					} elseif( um_is_file_owner( UM()->uploader()->get_upload_base_url() . $user_id . '/' . $args['submitted'][ $key ], $user_id ) ) {
 
 					} else {
 						$files[ $key ] = 'empty_file';
 					}
-
 				} else {
-					if ( $array['type'] == 'password' ) {
-						$to_update[ $key ] = wp_hash_password( $args['submitted'][ $key ] );
+					if ( 'password' === $array['type'] ) {
+						$to_update[ $key ]         = wp_hash_password( $args['submitted'][ $key ] );
 						$args['submitted'][ $key ] = sprintf( __( 'Your choosed %s', 'ultimate-member' ), $array['title'] );
 					} else {
 						if ( isset( $userinfo[ $key ] ) &amp;&amp; $args['submitted'][ $key ] != $userinfo[ $key ] ) {
 							$to_update[ $key ] = $args['submitted'][ $key ];
-						} elseif ( $args['submitted'][ $key ] != '' ) {
+						} elseif ( '' !== $args['submitted'][ $key ] ) {
 							$to_update[ $key ] = $args['submitted'][ $key ];
 						}
 					}
-
 				}
 
-				// use this filter after all validations has been completed and we can extends data based on key
+				// use this filter after all validations has been completed, and we can extend data based on key
 				$to_update = apply_filters( 'um_change_usermeta_for_update', $to_update, $args, $fields, $key );
-
 			}
 		}
 	}
 
 	$description_key = UM()->profile()->get_show_bio_key( $args );
-	if ( isset( $args['submitted'][ $description_key ] ) ) {
-		$to_update[ $description_key ] = $args['submitted'][ $description_key ];
+	if ( ! isset( $to_update[ $description_key ] ) &amp;&amp; ! empty( $form_data['show_bio'] ) ) {
+		if ( isset( $args['submitted'][ $description_key ] ) ) {
+			$to_update[ $description_key ] = $args['submitted'][ $description_key ];
+		}
 	}
 
-
 	// Secure selected role
-	if ( is_admin() ) {
+	if ( ( isset( $fields['role'] ) &amp;&amp; ! empty( $fields['role']['editable'] ) &amp;&amp; um_can_view_field( $fields['role'] ) ) ||
+		( isset( $fields['role_select'] ) &amp;&amp; ! empty( $fields['role_select']['editable'] ) &amp;&amp; um_can_view_field( $fields['role_select'] ) ) ||
+		( isset( $fields['role_radio'] ) &amp;&amp; ! empty( $fields['role_radio']['editable'] ) &amp;&amp; um_can_view_field( $fields['role_radio'] ) ) ) {
 
-		if ( ! empty( $args['submitted']['role'] ) &amp;&amp; current_user_can( 'promote_users' ) ) {
+		if ( ! empty( $args['submitted']['role'] ) ) {
 			global $wp_roles;
 			$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
 
-			if ( ! in_array( $args['submitted']['role'], $exclude_roles ) ) {
+			if ( ! in_array( $args['submitted']['role'], $exclude_roles, true ) ) {
 				$to_update['role'] = $args['submitted']['role'];
 			}
 
 			$args['roles_before_upgrade'] = UM()->roles()->get_all_user_roles( $user_id );
 		}
-
-	} else {
-
-		if ( ( isset( $fields['role'] ) &amp;&amp; $fields['role']['editable'] != 0 &amp;&amp; um_can_view_field( $fields['role'] ) ) ||
-		     ( isset( $fields['role_select'] ) &amp;&amp; $fields['role_select']['editable'] != 0 &amp;&amp; um_can_view_field( $fields['role_select'] ) ) ||
-		     ( isset( $fields['role_radio'] ) ) &amp;&amp; $fields['role_radio']['editable'] != 0 &amp;&amp; um_can_view_field( $fields['role_radio'] ) ) {
-
-			if ( ! empty( $args['submitted']['role'] ) ) {
-				global $wp_roles;
-				$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
-
-				if ( ! in_array( $args['submitted']['role'], $exclude_roles ) ) {
-					$to_update['role'] = $args['submitted']['role'];
-				}
-
-				$args['roles_before_upgrade'] = UM()->roles()->get_all_user_roles( $user_id );
-			}
-		}
-
 	}
 
 	/**
@@ -463,7 +433,7 @@ function um_user_edit_profile( $args ) {
 	 * }
 	 * ?>
 	 */
-	do_action( 'um_user_pre_updating_profile', $to_update, $user_id );
+	do_action( 'um_user_pre_updating_profile', $to_update, $user_id, $form_data );
 
 	/**
 	 * UM hook
@@ -487,10 +457,9 @@ function um_user_edit_profile( $args ) {
 	 * }
 	 * ?>
 	 */
-	$to_update = apply_filters( 'um_user_pre_updating_profile_array', $to_update, $user_id );
+	$to_update = apply_filters( 'um_user_pre_updating_profile_array', $to_update, $user_id, $form_data );
 
 	if ( is_array( $to_update ) ) {
-
 		if ( isset( $to_update['first_name'] ) || isset( $to_update['last_name'] ) || isset( $to_update['nickname'] ) ) {
 			$user = get_userdata( $user_id );
 			if ( ! empty( $user ) &amp;&amp; ! is_wp_error( $user ) ) {
@@ -535,35 +504,16 @@ function um_user_edit_profile( $args ) {
 		do_action( 'um_after_user_updated', $user_id, $args, $to_update );
 	}
 
-	/**
-	 * UM hook
-	 *
-	 * @type filter
-	 * @title um_user_pre_updating_files_array
-	 * @description Change submitted files before update profile
-	 * @input_vars
-	 * [{"var":"$files","type":"array","desc":"Profile data files"},
-	 * {"var":"$user_id","type":"int","desc":"User ID"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage
-	 * &lt;?php add_filter( 'um_user_pre_updating_files_array', 'function_name', 10, 2 ); ?>
-	 * @example
-	 * &lt;?php
-	 * add_filter( 'um_user_pre_updating_files_array', 'my_user_pre_updating_files', 10, 2 );
-	 * function my_user_pre_updating_files( $files, $user_id ) {
-	 *     // your code here
-	 *     return $files;
-	 * }
-	 * ?>
-	 */
+	/** This action is documented in ultimate-member/includes/core/um-actions-register.php */
 	$files = apply_filters( 'um_user_pre_updating_files_array', $files, $user_id );
-
 	if ( ! empty( $files ) &amp;&amp; is_array( $files ) ) {
 		UM()->uploader()->replace_upload_dir = true;
 		UM()->uploader()->move_temporary_files( $user_id, $files );
 		UM()->uploader()->replace_upload_dir = false;
 	}
+
+	/** This action is documented in ultimate-member/includes/core/um-actions-register.php */
+	do_action( 'um_update_profile_full_name', $user_id, $to_update );
 
 	/**
 	 * UM hook
@@ -587,52 +537,33 @@ function um_user_edit_profile( $args ) {
 	 */
 	do_action( 'um_user_after_updating_profile', $to_update, $user_id, $args );
 
-	/**
-	 * UM hook
-	 *
-	 * @type action
-	 * @title um_update_profile_full_name
-	 * @description On update user profile change full name
-	 * @input_vars
-	 * [{"var":"$user_id","type":"int","desc":"User ID"},
-	 * {"var":"$args","type":"array","desc":"Form data"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_action( 'um_update_profile_full_name', 'function_name', 10, 2 );
-	 * @example
-	 * &lt;?php
-	 * add_action( 'um_update_profile_full_name', 'my_update_profile_full_name', 10, 2 );
-	 * function my_update_profile_full_name( $user_id, $args ) {
-	 *     // your code here
-	 * }
-	 * ?>
-	 */
-	do_action( 'um_update_profile_full_name', $user_id, $to_update );
-
-	if ( ! isset( $args['is_signup'] ) ) {
-		$url = um_user_profile_url( $user_id );
-		$url = apply_filters( 'um_update_profile_redirect_after', $url, $user_id, $args );
-		exit( wp_redirect( um_edit_my_profile_cancel_uri( $url ) ) );
-	}
+	// Finally redirect to profile.
+	$url = um_user_profile_url( $user_id );
+	$url = apply_filters( 'um_update_profile_redirect_after', $url, $user_id, $args );
+	wp_safe_redirect( um_edit_my_profile_cancel_uri( $url ) );
+	exit;
 }
-add_action( 'um_user_edit_profile', 'um_user_edit_profile', 10 );
+add_action( 'um_user_edit_profile', 'um_user_edit_profile', 10, 2 );
 
 
 /**
- * @param array $post_form
+ * Validate nonce when profile form submit.
+ *
+ * @param array $submitted_data
  */
-function um_profile_validate_nonce( $post_form ) {
-	$user_id = isset( $post_form['user_id'] ) ? $post_form['user_id'] : '';
-	$nonce = isset( $post_form['profile_nonce'] ) ? $post_form['profile_nonce'] : '';
+function um_profile_validate_nonce( $submitted_data ) {
+	$user_id = isset( $submitted_data['user_id'] ) ? $submitted_data['user_id'] : '';
+	$nonce   = isset( $submitted_data['profile_nonce'] ) ? $submitted_data['profile_nonce'] : '';
 	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'um-profile-nonce' . $user_id ) ) {
-		wp_die( __( 'This is not possible for security reasons.', 'ultimate-member' ) );
+		wp_die( esc_html__( 'This is not possible for security reasons.', 'ultimate-member' ) );
 	}
 }
-add_action( 'um_submit_form_errors_hook__profile', 'um_profile_validate_nonce', 10, 1 );
+add_action( 'um_submit_form_errors_hook__profile', 'um_profile_validate_nonce', 1 );
 
-
-add_filter( 'um_user_pre_updating_files_array', array( UM()->validation(), 'validate_files' ), 10, 1 );
-add_filter( 'um_before_save_filter_submitted', array( UM()->validation(), 'validate_fields_values' ), 10, 2 );
+// @todo maybe remove that because double validate
+add_filter( 'um_user_pre_updating_files_array', array( UM()->validation(), 'validate_files' ) );
+// @todo maybe remove that because double validate
+add_filter( 'um_before_save_filter_submitted', array( UM()->validation(), 'validate_fields_values' ), 10, 3 );
 
 /**
  * Leave roles for User, which are not in the list of update profile (are default WP or 3rd plugins roles)
@@ -1573,43 +1504,42 @@ add_action( 'um_main_profile_fields', 'um_add_profile_fields', 100 );
 /**
  * Form processing
  *
- * @param $args
+ * @param array $args
+ * @param array $form_data
  */
-function um_submit_form_profile( $args ) {
+function um_submit_form_profile( $args, $form_data ) {
 	if ( isset( UM()->form()->errors ) ) {
 		return;
 	}
 
-	UM()->fields()->set_mode  = 'profile';
-	UM()->fields()->editing = true;
+	UM()->fields()->set_mode = 'profile';
+	UM()->fields()->editing  = true;
 
 	if ( ! empty( $args['submitted'] ) ) {
 		$args['submitted'] = UM()->form()->clean_submitted_data( $args['submitted'] );
 	}
 
 	/**
-	 * UM hook
+	 * Fires on successful submit profile form.
 	 *
-	 * @type action
-	 * @title um_user_edit_profile
-	 * @description Run on successful submit profile form
-	 * @input_vars
-	 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_action( 'um_user_edit_profile', 'function_name', 10, 1 );
-	 * @example
-	 * &lt;?php
-	 * add_action( 'um_user_edit_profile', 'my_user_edit_profile', 10, 1 );
-	 * function my_user_edit_profile( $args ) {
+	 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+	 * * 10 - `um_user_edit_profile()` Profile form main handler.
+	 *
+	 * @since 1.3.x
+	 * @hook um_user_edit_profile
+	 *
+	 * @param {array} $post      $_POST Submission array.
+	 * @param {array} $form_data UM form data. Since 2.6.7
+	 *
+	 * @example &lt;caption>Make any custom action on successful submit profile form.&lt;/caption>
+	 * function my_user_edit_profile( $post, $form_data ) {
 	 *     // your code here
 	 * }
-	 * ?>
+	 * add_action( 'um_user_edit_profile', 'my_user_edit_profile', 10, 2 );
 	 */
-	do_action( 'um_user_edit_profile', $args );
+	do_action( 'um_user_edit_profile', $args, $form_data );
 }
-add_action( 'um_submit_form_profile', 'um_submit_form_profile', 10 );
-
+add_action( 'um_submit_form_profile', 'um_submit_form_profile', 10, 2 );
 
 /**
  * Show the submit button (highest priority)
@@ -1877,7 +1807,7 @@ add_action( 'um_profile_menu', 'um_profile_menu', 9 );
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="um_admin_ajax_modal_content__hook.html">um_admin_ajax_modal_content__hook</a></li><li><a href="um_admin_ajax_modal_content__hook_%257B$act_id%257D.html">um_admin_ajax_modal_content__hook_{$act_id}</a></li><li><a href="um_after_delete_role.html">um_after_delete_role</a></li><li><a href="um_after_delete_role_meta.html">um_after_delete_role_meta</a></li><li><a href="um_after_everything_output.html">um_after_everything_output</a></li><li><a href="um_after_form.html">um_after_form</a></li><li><a href="um_after_form_fields.html">um_after_form_fields</a></li><li><a href="um_after_%257B$mode%257D_fields.html">um_after_{$mode}_fields</a></li><li><a href="um_ajax_load_posts__%257B$hook%257D.html">um_ajax_load_posts__{$hook}</a></li><li><a href="um_before_form.html">um_before_form</a></li><li><a href="um_before_form_is_loaded.html">um_before_form_is_loaded</a></li><li><a href="um_before_%257B$mode%257D_fields.html">um_before_{$mode}_fields</a></li><li><a href="um_before_%257B$mode%257D_form_is_loaded.html">um_before_{$mode}_form_is_loaded</a></li><li><a href="um_main_%257B$mode%257D_fields.html">um_main_{$mode}_fields</a></li><li><a href="um_on_login_before_redirect.html">um_on_login_before_redirect</a></li><li><a href="um_pre_%257B$mode%257D_shortcode.html">um_pre_{$mode}_shortcode</a></li><li><a href="um_role_edit_data.html">um_role_edit_data</a></li><li><a href="um_role_row_actions.html">um_role_row_actions</a></li><li><a href="um_run_ajax_function__%257B$hook%257D.html">um_run_ajax_function__{$hook}</a></li><li><a href="um_user_register.html">um_user_register</a></li></ul><h3>Filters</h3><ul><li><a href="um_add_user_frontend_submitted.html">um_add_user_frontend_submitted</a></li><li><a href="um_admin_builder_skip_field_validation.html">um_admin_builder_skip_field_validation</a></li><li><a href="um_admin_field_update_error_handling.html">um_admin_field_update_error_handling</a></li><li><a href="um_admin_pre_save_field_to_db.html">um_admin_pre_save_field_to_db</a></li><li><a href="um_admin_pre_save_field_to_form.html">um_admin_pre_save_field_to_form</a></li><li><a href="um_admin_pre_save_fields_hook.html">um_admin_pre_save_fields_hook</a></li><li><a href="um_api_output_format.html">um_api_output_format</a></li><li><a href="um_before_update_profile.html">um_before_update_profile</a></li><li><a href="um_change_role_data.html">um_change_role_data</a></li><li><a href="um_checkbox_field_options.html">um_checkbox_field_options</a></li><li><a href="um_checkbox_field_options_%257B$key%257D.html">um_checkbox_field_options_{$key}</a></li><li><a href="um_completeness_field_id.html">um_completeness_field_id</a></li><li><a href="um_custom_dropdown_options_parent__%257B$form_key%257D.html">um_custom_dropdown_options_parent__{$form_key}</a></li><li><a href="um_custom_dropdown_options_source__%257B$form_key%257D.html">um_custom_dropdown_options_source__{$form_key}</a></li><li><a href="um_custom_error_message_handler.html">um_custom_error_message_handler</a></li><li><a href="um_custom_success_message_handler.html">um_custom_success_message_handler</a></li><li><a href="um_disable_blocks_script.html">um_disable_blocks_script</a></li><li><a href="um_disable_dynamic_global_css.html">um_disable_dynamic_global_css</a></li><li><a href="um_disable_email_notification_sending.html">um_disable_email_notification_sending</a></li><li><a href="um_edit_field_%257B$mode%257D_%257B$type%257D.html">um_edit_field_{$mode}_{$type}</a></li><li><a href="um_email_get_template_file_path.html">um_email_get_template_file_path</a></li><li><a href="um_excluded_comment_types.html">um_excluded_comment_types</a></li><li><a href="um_external_profile_url.html">um_external_profile_url</a></li><li><a href="um_field_checkbox_item_title.html">um_field_checkbox_item_title</a></li><li><a href="um_fields_without_metakey.html">um_fields_without_metakey</a></li><li><a href="um_form_fields_textarea_settings.html">um_form_fields_textarea_settings</a></li><li><a href="um_get_current_page_url.html">um_get_current_page_url</a></li><li><a href="um_hook_for_field_%257B$type%257D.html">um_hook_for_field_{$type}</a></li><li><a href="um_is_field_disabled.html">um_is_field_disabled</a></li><li><a href="um_late_escaping_allowed_tags.html">um_late_escaping_allowed_tags</a></li><li><a href="um_localize_permalink_filter.html">um_localize_permalink_filter</a></li><li><a href="um_login_redirect_url.html">um_login_redirect_url</a></li><li><a href="um_member_directory_custom_sorting_type.html">um_member_directory_custom_sorting_type</a></li><li><a href="um_multiselect_option_value.html">um_multiselect_option_value</a></li><li><a href="um_multiselect_options.html">um_multiselect_options</a></li><li><a href="um_multiselect_options_%257B$key%257D.html">um_multiselect_options_{$key}</a></li><li><a href="um_multiselect_options_%257B$type%257D.html">um_multiselect_options_{$type}</a></li><li><a href="um_override_templates_get_template_path__%257B$key%257D.html">um_override_templates_get_template_path__{$key}</a></li><li><a href="um_override_templates_scan_files.html">um_override_templates_scan_files</a></li><li><a href="um_pre_args_setup.html">um_pre_args_setup</a></li><li><a href="um_prepare_user_results_array.html">um_prepare_user_results_array</a></li><li><a href="um_prepare_user_results_array_meta.html">um_prepare_user_results_array_meta</a></li><li><a href="um_profile_can_view_main.html">um_profile_can_view_main</a></li><li><a href="um_profile_menu_link_%257B$id%257D_attrs.html">um_profile_menu_link_{$id}_attrs</a></li><li><a href="um_profile_permalink.html">um_profile_permalink</a></li><li><a href="um_radio_field_options.html">um_radio_field_options</a></li><li><a href="um_radio_field_options_%257B$key%257D.html">um_radio_field_options_{$key}</a></li><li><a href="um_radio_options_pair__%257B$key%257D.html">um_radio_options_pair__{$key}</a></li><li><a href="um_registration_for_loggedin_users.html">um_registration_for_loggedin_users</a></li><li><a href="um_registration_user_role.html">um_registration_user_role</a></li><li><a href="um_reset_password_shortcode_args_filter.html">um_reset_password_shortcode_args_filter</a></li><li><a href="um_rest_get_auser.html">um_rest_get_auser</a></li><li><a href="um_rest_userdata.html">um_rest_userdata</a></li><li><a href="um_select_dropdown_dynamic_options.html">um_select_dropdown_dynamic_options</a></li><li><a href="um_select_dropdown_dynamic_options_%257B$key%257D.html">um_select_dropdown_dynamic_options_{$key}</a></li><li><a href="um_select_options_pair.html">um_select_options_pair</a></li><li><a href="um_selectbox_options.html">um_selectbox_options</a></li><li><a href="um_shortcode_args_filter.html">um_shortcode_args_filter</a></li><li><a href="um_user_register_submitted__email.html">um_user_register_submitted__email</a></li><li><a href="um_view_field.html">um_view_field</a></li><li><a href="um_view_field_value_%257B$type%257D.html">um_view_field_value_{$type}</a></li><li><a href="um_%257B$key%257D_form_edit_field.html">um_{$key}_form_edit_field</a></li><li><a href="um_%257B$key%257D_form_show_field.html">um_{$key}_form_show_field</a></li><li><a href="um_%257B$type%257D_form_show_field.html">um_{$type}_form_show_field</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="um_admin_ajax_modal_content__hook.html">um_admin_ajax_modal_content__hook</a></li><li><a href="um_admin_ajax_modal_content__hook_%257B$act_id%257D.html">um_admin_ajax_modal_content__hook_{$act_id}</a></li><li><a href="um_after_delete_role.html">um_after_delete_role</a></li><li><a href="um_after_delete_role_meta.html">um_after_delete_role_meta</a></li><li><a href="um_after_everything_output.html">um_after_everything_output</a></li><li><a href="um_after_form.html">um_after_form</a></li><li><a href="um_after_form_fields.html">um_after_form_fields</a></li><li><a href="um_after_save_registration_details.html">um_after_save_registration_details</a></li><li><a href="um_after_%257B$mode%257D_fields.html">um_after_{$mode}_fields</a></li><li><a href="um_ajax_load_posts__%257B$hook%257D.html">um_ajax_load_posts__{$hook}</a></li><li><a href="um_before_form.html">um_before_form</a></li><li><a href="um_before_form_is_loaded.html">um_before_form_is_loaded</a></li><li><a href="um_before_save_registration_details.html">um_before_save_registration_details</a></li><li><a href="um_before_submit_form_post.html">um_before_submit_form_post</a></li><li><a href="um_before_%257B$mode%257D_fields.html">um_before_{$mode}_fields</a></li><li><a href="um_before_%257B$mode%257D_form_is_loaded.html">um_before_{$mode}_form_is_loaded</a></li><li><a href="um_main_%257B$mode%257D_fields.html">um_main_{$mode}_fields</a></li><li><a href="um_on_login_before_redirect.html">um_on_login_before_redirect</a></li><li><a href="um_pre_%257B$mode%257D_shortcode.html">um_pre_{$mode}_shortcode</a></li><li><a href="um_registration_complete.html">um_registration_complete</a></li><li><a href="um_registration_set_extra_data.html">um_registration_set_extra_data</a></li><li><a href="um_role_edit_data.html">um_role_edit_data</a></li><li><a href="um_role_row_actions.html">um_role_row_actions</a></li><li><a href="um_run_ajax_function__%257B$hook%257D.html">um_run_ajax_function__{$hook}</a></li><li><a href="um_submit_form_errors_hook.html">um_submit_form_errors_hook</a></li><li><a href="um_submit_form_errors_hook_.html">um_submit_form_errors_hook_</a></li><li><a href="um_submit_form_errors_hook__blockedemails.html">um_submit_form_errors_hook__blockedemails</a></li><li><a href="um_submit_form_errors_hook__blockedips.html">um_submit_form_errors_hook__blockedips</a></li><li><a href="um_submit_form_errors_hook__blockedwords.html">um_submit_form_errors_hook__blockedwords</a></li><li><a href="um_submit_form_errors_hook__profile.html">um_submit_form_errors_hook__profile</a></li><li><a href="um_submit_form_errors_hook__registration.html">um_submit_form_errors_hook__registration</a></li><li><a href="um_submit_form_errors_hook_login.html">um_submit_form_errors_hook_login</a></li><li><a href="um_submit_form_errors_hook_logincheck.html">um_submit_form_errors_hook_logincheck</a></li><li><a href="um_user_before_updating_profile.html">um_user_before_updating_profile</a></li><li><a href="um_user_edit_profile.html">um_user_edit_profile</a></li><li><a href="um_user_login.html">um_user_login</a></li><li><a href="um_user_login_extra_hook.html">um_user_login_extra_hook</a></li><li><a href="um_user_register.html">um_user_register</a></li></ul><h3>Filters</h3><ul><li><a href="um_add_user_frontend_submitted.html">um_add_user_frontend_submitted</a></li><li><a href="um_admin_builder_skip_field_validation.html">um_admin_builder_skip_field_validation</a></li><li><a href="um_admin_field_update_error_handling.html">um_admin_field_update_error_handling</a></li><li><a href="um_admin_pre_save_field_to_db.html">um_admin_pre_save_field_to_db</a></li><li><a href="um_admin_pre_save_field_to_form.html">um_admin_pre_save_field_to_form</a></li><li><a href="um_admin_pre_save_fields_hook.html">um_admin_pre_save_fields_hook</a></li><li><a href="um_api_output_format.html">um_api_output_format</a></li><li><a href="um_before_save_filter_submitted.html">um_before_save_filter_submitted</a></li><li><a href="um_before_update_profile.html">um_before_update_profile</a></li><li><a href="um_change_role_data.html">um_change_role_data</a></li><li><a href="um_checkbox_field_options.html">um_checkbox_field_options</a></li><li><a href="um_checkbox_field_options_%257B$key%257D.html">um_checkbox_field_options_{$key}</a></li><li><a href="um_completeness_field_id.html">um_completeness_field_id</a></li><li><a href="um_custom_dropdown_options_parent__%257B$form_key%257D.html">um_custom_dropdown_options_parent__{$form_key}</a></li><li><a href="um_custom_dropdown_options_source__%257B$form_key%257D.html">um_custom_dropdown_options_source__{$form_key}</a></li><li><a href="um_custom_error_message_handler.html">um_custom_error_message_handler</a></li><li><a href="um_custom_success_message_handler.html">um_custom_success_message_handler</a></li><li><a href="um_disable_blocks_script.html">um_disable_blocks_script</a></li><li><a href="um_disable_dynamic_global_css.html">um_disable_dynamic_global_css</a></li><li><a href="um_disable_email_notification_sending.html">um_disable_email_notification_sending</a></li><li><a href="um_edit_field_%257B$mode%257D_%257B$type%257D.html">um_edit_field_{$mode}_{$type}</a></li><li><a href="um_email_get_template_file_path.html">um_email_get_template_file_path</a></li><li><a href="um_excluded_comment_types.html">um_excluded_comment_types</a></li><li><a href="um_external_profile_url.html">um_external_profile_url</a></li><li><a href="um_field_checkbox_item_title.html">um_field_checkbox_item_title</a></li><li><a href="um_fields_without_metakey.html">um_fields_without_metakey</a></li><li><a href="um_form_fields_textarea_settings.html">um_form_fields_textarea_settings</a></li><li><a href="um_get_current_page_url.html">um_get_current_page_url</a></li><li><a href="um_hook_for_field_%257B$type%257D.html">um_hook_for_field_{$type}</a></li><li><a href="um_is_field_disabled.html">um_is_field_disabled</a></li><li><a href="um_late_escaping_allowed_tags.html">um_late_escaping_allowed_tags</a></li><li><a href="um_localize_permalink_filter.html">um_localize_permalink_filter</a></li><li><a href="um_login_allow_nonce_verification.html">um_login_allow_nonce_verification</a></li><li><a href="um_login_redirect_url.html">um_login_redirect_url</a></li><li><a href="um_member_directory_custom_sorting_type.html">um_member_directory_custom_sorting_type</a></li><li><a href="um_multiselect_option_value.html">um_multiselect_option_value</a></li><li><a href="um_multiselect_options.html">um_multiselect_options</a></li><li><a href="um_multiselect_options_%257B$key%257D.html">um_multiselect_options_{$key}</a></li><li><a href="um_multiselect_options_%257B$type%257D.html">um_multiselect_options_{$type}</a></li><li><a href="um_override_templates_get_template_path__%257B$key%257D.html">um_override_templates_get_template_path__{$key}</a></li><li><a href="um_override_templates_scan_files.html">um_override_templates_scan_files</a></li><li><a href="um_pre_args_setup.html">um_pre_args_setup</a></li><li><a href="um_prepare_user_results_array.html">um_prepare_user_results_array</a></li><li><a href="um_prepare_user_results_array_meta.html">um_prepare_user_results_array_meta</a></li><li><a href="um_profile_can_view_main.html">um_profile_can_view_main</a></li><li><a href="um_profile_menu_link_%257B$id%257D_attrs.html">um_profile_menu_link_{$id}_attrs</a></li><li><a href="um_profile_permalink.html">um_profile_permalink</a></li><li><a href="um_radio_field_options.html">um_radio_field_options</a></li><li><a href="um_radio_field_options_%257B$key%257D.html">um_radio_field_options_{$key}</a></li><li><a href="um_radio_options_pair__%257B$key%257D.html">um_radio_options_pair__{$key}</a></li><li><a href="um_register_allow_nonce_verification.html">um_register_allow_nonce_verification</a></li><li><a href="um_registration_for_loggedin_users.html">um_registration_for_loggedin_users</a></li><li><a href="um_registration_user_role.html">um_registration_user_role</a></li><li><a href="um_reset_password_shortcode_args_filter.html">um_reset_password_shortcode_args_filter</a></li><li><a href="um_rest_get_auser.html">um_rest_get_auser</a></li><li><a href="um_rest_userdata.html">um_rest_userdata</a></li><li><a href="um_select_dropdown_dynamic_options.html">um_select_dropdown_dynamic_options</a></li><li><a href="um_select_dropdown_dynamic_options_%257B$key%257D.html">um_select_dropdown_dynamic_options_{$key}</a></li><li><a href="um_select_options_pair.html">um_select_options_pair</a></li><li><a href="um_selectbox_options.html">um_selectbox_options</a></li><li><a href="um_shortcode_args_filter.html">um_shortcode_args_filter</a></li><li><a href="um_submit_form_data.html">um_submit_form_data</a></li><li><a href="um_submit_post_form.html">um_submit_post_form</a></li><li><a href="um_user_pre_updating_files_array.html">um_user_pre_updating_files_array</a></li><li><a href="um_user_register_submitted__email.html">um_user_register_submitted__email</a></li><li><a href="um_view_field.html">um_view_field</a></li><li><a href="um_view_field_value_%257B$type%257D.html">um_view_field_value_{$type}</a></li><li><a href="um_whitelisted_metakeys.html">um_whitelisted_metakeys</a></li><li><a href="um_%257B$key%257D_form_edit_field.html">um_{$key}_form_edit_field</a></li><li><a href="um_%257B$key%257D_form_show_field.html">um_{$key}_form_show_field</a></li><li><a href="um_%257B$type%257D_form_show_field.html">um_{$type}_form_show_field</a></li></ul>
 </nav>
 
 <br class="clear">
