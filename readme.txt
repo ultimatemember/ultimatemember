@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
 Tested up to: 6.2
-Stable tag: 2.6.6
+Stable tag: 2.6.7
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -169,6 +169,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
   - Fixed: A privilege escalation vulnerability used through UM Forms. Known in the wild that vulnerability allowed strangers to create administrator-level WordPress users. Please update immediately and check all administrator-level users on your website.
   - Fixed: Displaying fields on Account page > Privacy > Member directory settings
   - Fixed: Allowed types for the file field
+  - Fixed: Disabled weekdays for the datepicker field
 
 = 2.6.6: June 29, 2023 =
 
