@@ -2556,7 +2556,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							}
 
 							if ( ! empty( $data['label_confirm_pass'] ) ) {
-								$placeholder = __( $data['label_confirm_pass'], 'ultimate-member' );;
+								$placeholder = __( $data['label_confirm_pass'], 'ultimate-member' );
 							} elseif ( ! empty( $placeholder ) && ! isset( $data['label'] ) ) {
 								/* translators: 1: placeholder. */
 								$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $placeholder );
