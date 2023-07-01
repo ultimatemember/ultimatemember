@@ -234,8 +234,8 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 			$has_admin_cap    = false;
 			$disallowed_roles = array( 'administrator', 'editor' );
 			foreach ( $disallowed_roles as $role ) {
-				$admin_caps = get_role( $role )->capabilities;
-				foreach ( $admin_caps as $cap ) {
+				$admin_caps = array_keys( get_role( $role )->capabilities );
+				foreach ( $admin_caps as $i => $cap ) {
 					if ( user_can( $user_id, $cap ) ) {
 						$has_admin_cap = true;
 						$this->revoke_caps( $cap, $user );
