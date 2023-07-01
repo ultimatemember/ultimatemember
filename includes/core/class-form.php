@@ -613,62 +613,6 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					$this->post_form['role'] = $role;
 				}
 
-				// @todo REMOVE THAT !!! AND SEPARATE FORM DATA AND SUBMISSION DATA. MAY AFFECT TO EXTENSIONS
-				//$this->post_form = array_merge( $this->form_data, $this->post_form );
-
-				// Remove role from post_form at first if role ! empty and there aren't custom fields with role name
-//				if ( ! empty( $this->post_form['role'] ) ) {
-//					if ( ! strstr( $this->form_data['custom_fields'], 'role_' ) ) {
-//						unset( $this->post_form['role'] );
-//						//unset( $this->post_form['submitted']['role'] );
-//					}
-//				}
-
-				// Secure sanitize of the submitted data
-//				if ( ! empty( $this->post_form ) ) {
-//					$this->post_form = $this->clean_submitted_data( $this->post_form );
-//				}
-//				if ( ! empty( $this->post_form['submitted'] ) ) {
-//					$this->post_form['submitted'] = $this->clean_submitted_data( $this->post_form['submitted'] );
-//				}
-
-
-
-//				if ( isset( $this->form_data['custom_fields'] ) && strstr( $this->form_data['custom_fields'], 'role_' ) ) {  // Secure selected role
-//					if ( ! empty( $_POST['role'] ) ) {
-//						$custom_field_roles = $this->custom_field_roles( $this->form_data['custom_fields'] );
-//
-//						if ( ! empty( $custom_field_roles ) ) {
-//							if ( is_array( $_POST['role'] ) ) {
-//								$role = current( $_POST['role'] );
-//								$role = sanitize_key( $role );
-//							} else {
-//								$role = sanitize_key( $_POST['role'] );
-//							}
-//
-//							global $wp_roles;
-//							$exclude_roles = array_diff( array_keys( $wp_roles->roles ), UM()->roles()->get_editable_user_roles() );
-//
-//							if ( ! empty( $role ) &&
-//								( ! in_array( $role, $custom_field_roles, true ) || in_array( $role, $exclude_roles, true ) ) ) {
-//								wp_die( esc_html__( 'This is not possible for security reasons.', 'ultimate-member' ) );
-//							}
-//
-//							$this->post_form['role']              = $role;
-//							$this->post_form['submitted']['role'] = $role;
-//						} else {
-//							unset( $this->post_form['role'] );
-//							unset( $this->post_form['submitted']['role'] );
-//
-//							// set default role for registration form if custom field hasn't proper value
-//							if ( 'register' === $this->form_data['mode'] ) {
-//								$role                    = $this->assigned_role( $this->form_id );
-//								$this->post_form['role'] = $role;
-//							}
-//						}
-//					}
-//				}
-
 				/**
 				 * Filters $_POST submitted data by the UM login, registration or profile form.
 				 * It's un-slashed by `wp_unslash()`, beautified and sanitized. `role` attribute is filtered by possible role.
