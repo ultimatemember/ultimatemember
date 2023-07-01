@@ -244,7 +244,7 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 			}
 
 			if ( user_can( $user_id, 'manage_options' ) ) {
-				$this->revoke_caps( $cap, $user );
+				$this->revoke_caps( 'manage_options', $user );
 				$has_admin_cap = true;
 			}
 
