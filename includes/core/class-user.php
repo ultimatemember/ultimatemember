@@ -175,13 +175,17 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param string $meta_key Usermeta key.
 		 * @return bool
 		 */
-		public function is_metakey_banned( $meta_key ) {
+		public function is_metakey_banned( $meta_key, $context = '' ) {
 			$is_banned = false;
 			foreach ( $this->banned_keys as $ban ) {
 				if ( is_numeric( $meta_key ) || false !== stripos( $meta_key, $ban ) || false !== stripos( remove_accents( $meta_key ), $ban ) ) {
 					$is_banned = true;
 					break;
 				}
+			}
+
+			if ( ! $is_banned && 'submission' === $context && ! in_array( $meta_key, UM()->form()->usermeta_whitelist, true ) ) {
+				$is_banned = true;
 			}
 
 			return $is_banned;
@@ -192,9 +196,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 *
 		 * @since 2.6.4
 		 *
-		 * @param null|bool $check      Whether to allow updating metadata for the given type.
-		 * @param int       $object_id  ID of the object metadata is for.
-		 * @param string    $meta_key   Metadata key.
+		 * @param null|bool $check     Whether to allow updating metadata for the given type.
+		 * @param int       $object_id ID of the object metadata is for.
+		 * @param string    $meta_key  Metadata key.
 		 *
 		 * @return null|bool
 		 */
@@ -203,7 +207,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				return $check;
 			}
 
-			if ( $this->is_metakey_banned( $meta_key ) ) {
+			if ( $this->is_metakey_banned( $meta_key, 'submission' ) ) {
 				$check = false;
 			}
 
@@ -854,28 +858,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					UM()->user()->profile['role'] = sanitize_key( $_POST['um-role'] );
 					UM()->user()->update_usermeta_info( 'role' );
 				}
-
-				/**
-				 * UM hook
-				 *
-				 * @type action
-				 * @title um_user_register
-				 * @description Action on user registration
-				 * @input_vars
-				 * [{"var":"$user_id","type":"int","desc":"User ID"},
-				 * {"var":"$submitted","type":"array","desc":"Registration form submitted"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_user_register', 'function_name', 10, 2 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_user_register', 'my_user_register', 10, 2 );
-				 * function my_user_register( $user_id, $submitted ) {
-				 *     // your code here
-				 * }
-				 * ?>
-				 */
-				do_action( 'um_user_register', $user_id, $_POST );
+				/** This action is documented in ultimate-member/includes/common/um-actions-register.php */
+				do_action( 'um_user_register', $user_id, $_POST, null );
 			}
 
 			delete_transient( 'um_count_users_unassigned' );
@@ -1363,15 +1347,14 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 		}
 
-
 		/**
 		 * Set user's registration details
 		 *
 		 * @param array $submitted
 		 * @param array $args
+		 * @param array $form_data
 		 */
-		function set_registration_details( $submitted, $args ) {
-
+		public function set_registration_details( $submitted, $args, $form_data ) {
 			if ( isset( $submitted['user_pass'] ) ) {
 				unset( $submitted['user_pass'] );
 			}
@@ -1387,7 +1370,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			//remove all password field values from submitted details
 			$password_fields = array();
 			foreach ( $submitted as $k => $v ) {
-				if ( UM()->fields()->get_field_type( $k ) == 'password' ) {
+				if ( 'password' === UM()->fields()->get_field_type( $k ) ) {
 					$password_fields[] = $k;
 					$password_fields[] = 'confirm_' . $k;
 				}
@@ -1397,80 +1380,66 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				unset( $submitted[ $pw_field ] );
 			}
 
-
 			/**
-			 * UM hook
+			 * Filters submitted data before save usermeta "submitted" on registration process.
 			 *
-			 * @type filter
-			 * @title um_before_save_filter_submitted
-			 * @description Change submitted data before save usermeta "submitted" on registration process
-			 * @input_vars
-			 * [{"var":"$submitted","type":"array","desc":"Submitted data"},
-			 * {"var":"$args","type":"array","desc":"Form Args"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_before_save_filter_submitted', 'function_name', 10, 2 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_before_save_filter_submitted', 'my_before_save_filter_submitted', 10, 2 );
-			 * function my_before_save_filter_submitted( $submitted, $args ) {
+			 * @param {array} $submitted           Form submitted data prepared for submitted usermeta.
+			 * @param {array} $form_submitted_data All submitted data from $_POST. Since 2.6.7.
+			 * @param {array} $form_data           Form data. Since 2.6.7.
+			 *
+			 * @return {array} Form submitted data prepared for submitted usermeta.
+			 *
+			 * @since 2.0
+			 * @hook um_before_save_filter_submitted
+			 *
+			 * @example <caption>Change submitted data before save usermeta "submitted" on registration process.</caption>
+			 * function my_before_save_filter_submitted( $submitted, $form_submitted_data, $form_data ) {
 			 *     // your code here
 			 *     return $submitted;
 			 * }
-			 * ?>
+			 * add_filter( 'um_before_save_filter_submitted', 'my_before_save_filter_submitted', 10, 3 );
 			 */
-			$submitted = apply_filters( 'um_before_save_filter_submitted', $submitted, $args );
+			$submitted = apply_filters( 'um_before_save_filter_submitted', $submitted, $args, $form_data );
 
 			/**
-			 * UM hook
+			 * Fires before save registration details to the user.
 			 *
-			 * @type action
-			 * @title um_before_save_registration_details
-			 * @description Action on user registration before save details
-			 * @input_vars
-			 * [{"var":"$user_id","type":"int","desc":"User ID"},
-			 * {"var":"$submitted","type":"array","desc":"Registration form submitted"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_before_save_registration_details', 'function_name', 10, 2 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_before_save_registration_details', 'my_before_save_registration_details', 10, 2 );
-			 * function my_before_save_registration_details( $user_id, $submitted ) {
+			 * @since 1.3.x
+			 * @hook um_before_save_registration_details
+			 *
+			 * @param {int}   $user_id        User ID.
+			 * @param {array} $submitted_data $_POST Submission array.
+			 *
+			 * @example <caption>Make any custom action before save registration details to the user.</caption>
+			 * function my_before_save_registration_details( $user_id, $submitted_data ) {
 			 *     // your code here
 			 * }
-			 * ?>
+			 * add_action( 'um_before_save_registration_details', 'my_before_save_registration_details', 10, 2 );
 			 */
 			do_action( 'um_before_save_registration_details', $this->id, $submitted );
 
 			update_user_meta( $this->id, 'submitted', $submitted );
 
 			$this->update_profile( $submitted );
+
 			/**
-			 * UM hook
+			 * Fires after save registration details to the user.
 			 *
-			 * @type action
-			 * @title um_after_save_registration_details
-			 * @description Action on user registration after save details
-			 * @input_vars
-			 * [{"var":"$user_id","type":"int","desc":"User ID"},
-			 * {"var":"$submitted","type":"array","desc":"Registration form submitted"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_after_save_registration_details', 'function_name', 10, 2 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_after_save_registration_details', 'my_after_save_registration_details', 10, 2 );
-			 * function my_after_save_registration_details( $user_id, $submitted ) {
+			 * @since 1.3.x
+			 * @hook um_after_save_registration_details
+			 *
+			 * @param {int}   $user_id        User ID.
+			 * @param {array} $submitted_data $_POST Submission array.
+			 * @param {array} $form_data      UM form data. Since 2.6.7
+			 *
+			 * @example <caption>Make any custom action after save registration details to the user.</caption>
+			 * function my_after_save_registration_details( $user_id, $submitted_data, $form_data ) {
 			 *     // your code here
 			 * }
-			 * ?>
+			 * add_action( 'um_after_save_registration_details', 'my_after_save_registration_details', 10, 3 );
 			 */
-			do_action( 'um_after_save_registration_details', $this->id, $submitted );
-
+			do_action( 'um_after_save_registration_details', $this->id, $submitted, $form_data );
 		}
-
 
 		/**
 		 * Set last login for new registered users
@@ -2150,11 +2119,15 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		/**
 		 * Update profile
 		 *
-		 * @param $changes
+		 * @param array  $changes
+		 * @param string $context
 		 */
-		public function update_profile( $changes ) {
-			$this->updating_process = true;
-			$args['ID']             = $this->id;
+		public function update_profile( $changes, $context = '' ) {
+			if ( 'account' !== $context ) {
+				$this->updating_process = true;
+			}
+
+			$args['ID'] = $this->id;
 
 			/**
 			 * Filters the update profile changes data.
@@ -2177,9 +2150,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 * add_filter( 'um_before_update_profile', 'my_custom_before_update_profile', 10, 2 );
 			 */
 			$changes = apply_filters( 'um_before_update_profile', $changes, $args['ID'] );
-
 			foreach ( $changes as $key => $value ) {
-				if ( $this->is_metakey_banned( $key ) ) {
+				if ( $this->is_metakey_banned( $key, ( 'account' !== $context ) ? 'submission' : '' ) ) {
 					continue;
 				}
 
@@ -2194,9 +2166,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				}
 			}
 
+			$this->updating_process = false;
+
 			// update user
 			if ( count( $args ) > 1 ) {
-				//if isset roles argument validate role to properly for security reasons
+				// If isset roles argument validate role to properly for security reasons
 				if ( isset( $args['role'] ) ) {
 					global $wp_roles;
 
@@ -2208,9 +2182,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 				wp_update_user( $args );
 			}
-			$this->updating_process = false;
 		}
-
 
 		/**
 		 * User exists by meta key and value

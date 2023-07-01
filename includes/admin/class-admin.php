@@ -760,10 +760,10 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						'sanitize' => 'bool',
 					),
 					'_max_selections'                 => array(
-						'sanitize' => 'absint',
+						'sanitize' => 'empty_int',
 					),
 					'_min_selections'                 => array(
-						'sanitize' => 'absint',
+						'sanitize' => 'empty_int',
 					),
 					'_max_entries'                    => array(
 						'sanitize' => 'absint',

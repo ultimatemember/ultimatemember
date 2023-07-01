@@ -2556,7 +2556,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							}
 
 							if ( ! empty( $data['label_confirm_pass'] ) ) {
-								$placeholder = __( $data['label_confirm_pass'], 'ultimate-member' );;
+								$placeholder = __( $data['label_confirm_pass'], 'ultimate-member' );
 							} elseif ( ! empty( $placeholder ) && ! isset( $data['label'] ) ) {
 								/* translators: 1: placeholder. */
 								$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $placeholder );
@@ -2637,7 +2637,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$field_name = $key . $form_suffix;
 
-					$output .= '<input ' . $disabled . '  class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" data-range="' . esc_attr( $data['range'] ) . '" data-years="' . esc_attr( $data['years'] ) . '" data-years_x="' . esc_attr( $data['years_x'] ) . '" data-disabled_weekdays="' . esc_attr( $data['disabled_weekdays'] ) . '" data-date_min="' . esc_attr( $data['date_min'] ) . '" data-date_max="' . esc_attr( $data['date_max'] ) . '" data-format="' . esc_attr( $data['js_format'] ) . '" data-value="' . esc_attr( $value ) . '" />
+					$disabled_weekdays = '';
+					if ( isset( $data['disabled_weekdays'] ) ) {
+						$disabled_weekdays = '[' . implode( ',', $data['disabled_weekdays'] ) . ']';
+					}
+
+					$output .= '<input ' . $disabled . '  class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" data-range="' . esc_attr( $data['range'] ) . '" data-years="' . esc_attr( $data['years'] ) . '" data-years_x="' . esc_attr( $data['years_x'] ) . '" data-disabled_weekdays="' . esc_attr( $disabled_weekdays ) . '" data-date_min="' . esc_attr( $data['date_min'] ) . '" data-date_max="' . esc_attr( $data['date_max'] ) . '" data-format="' . esc_attr( $data['js_format'] ) . '" data-value="' . esc_attr( $value ) . '" />
 
 						</div>';
 
@@ -2990,9 +2995,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$output .= '</div>';
 					/* modal hidden */
 					if ( empty( $disabled ) ) {
-						if ( ! isset( $allowed_types ) ) {
+						if ( ! isset( $data['allowed_types'] ) ) {
 							$allowed_types = 'pdf,txt';
-						} elseif ( is_array( $allowed_types ) ) {
+						} elseif ( is_array( $data['allowed_types'] ) ) {
 							$allowed_types = implode( ',', $data['allowed_types'] );
 						} else {
 							$allowed_types = $data['allowed_types'];
