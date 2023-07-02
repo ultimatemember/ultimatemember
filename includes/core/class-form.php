@@ -590,7 +590,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 							unset( $this->post_form['role'] );
 						} else {
 							$custom_field_roles = $this->custom_field_roles( $this->form_data['custom_fields'] );
-							if ( ! empty( $custom_field_roles ) ) {
+							if ( ! empty( $custom_field_roles ) && ! empty( $this->post_form['role'] ) ) {
 								if ( is_array( $this->post_form['role'] ) ) {
 									$role = current( $this->post_form['role'] );
 									$role = sanitize_key( $role );
@@ -965,9 +965,10 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 				if ( strstr( $field_key, 'role_' ) && array_key_exists( 'options', $field_settings ) && is_array( $field_settings['options'] ) ) {
 
-					if ( isset( $this->post_form['mode'] ) && 'profile' === $this->post_form['mode'] &&
-						 isset( $field_settings['editable'] ) && $field_settings['editable'] == 0 ) {
-						continue;
+					if ( isset( $this->post_form['mode'] ) && 'profile' === $this->post_form['mode'] ) {
+						if ( empty( $field_settings['editable'] ) || ! um_can_edit_field( $field_settings ) ) {
+							continue;
+						}
 					}
 
 					if ( ! um_can_view_field( $field_settings ) ) {
