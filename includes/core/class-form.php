@@ -493,6 +493,16 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 					$cf_metakeys[] = 'profile_photo';
 					$cf_metakeys[] = 'cover_photo';
+
+					if ( array_key_exists( 'show_bio', $this->form_data ) ) {
+						if ( ! emtpy( $this->form_data['show_bio'] ) ) {
+							$cf_metakeys[] = UM()->profile()->get_show_bio_key( $this->form_data );
+						}
+					} else {
+						if ( UM()->options()->get( 'profile_show_bio' ) ) {
+							$cf_metakeys[] = UM()->profile()->get_show_bio_key( $this->form_data );
+						}
+					}
 				}
 				// Add required usermeta for register.
 				if ( 'register' === $this->form_data['mode'] ) {
