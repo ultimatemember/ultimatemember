@@ -824,16 +824,7 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 			}
 		} elseif ( 'select' == $type || 'radio' == $type ) {
 
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_select_option_value
-			 * @description Enable options pair by field $data
-			 * @input_vars
-			 * [{"var":"$options_pair","type":"null","desc":"Enable pairs"},
-			 * {"var":"$data","type":"array","desc":"Field Data"}]
-			 */
+			/** This filter is documented in includes/core/class-fields.php */
 			$option_pairs = apply_filters( 'um_select_options_pair', null, $data );
 
 			$array = empty( $data['options'] ) ? array() : $data['options'];
@@ -859,16 +850,7 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 	} elseif ( ! empty( $value ) && is_array( $value ) ) {
 		if ( 'multiselect' == $type || 'checkbox' == $type ) {
 
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_select_option_value
-			 * @description Enable options pair by field $data
-			 * @input_vars
-			 * [{"var":"$options_pair","type":"null","desc":"Enable pairs"},
-			 * {"var":"$data","type":"array","desc":"Field Data"}]
-			 */
+			/** This filter is documented in includes/core/class-fields.php */
 			$option_pairs = apply_filters( 'um_select_options_pair', null, $data );
 
 			$arr = $data['options'];

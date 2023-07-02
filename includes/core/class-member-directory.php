@@ -676,16 +676,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 						$attrs['options'] = UM()->fields()->get_options_from_callback( $attrs, $attrs['type'] );
 					} else {
-						/**
-						 * UM hook
-						 *
-						 * @type filter
-						 * @title um_select_option_value
-						 * @description Enable options pair by field $data
-						 * @input_vars
-						 * [{"var":"$options_pair","type":"null","desc":"Enable pairs"},
-						 * {"var":"$data","type":"array","desc":"Field Data"}]
-						 */
+						/** This filter is documented in includes/core/class-fields.php */
 						$option_pairs = apply_filters( 'um_select_options_pair', null, $attrs );
 					}
 

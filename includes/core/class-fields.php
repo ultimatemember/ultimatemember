@@ -3235,13 +3235,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					/**
 					 * Filters enable options pair by field $data.
 					 *
-					 * @since 2.0
+					 * @since 1.3.x `um_multiselect_option_value`
+					 * @since 2.0 renamed to `um_select_options_pair`
+					 *
 					 * @hook  um_select_options_pair
 					 *
 					 * @param {bool|null} $options_pair Enable pairs.
 					 * @param {array}     $data         Field Data.
 					 *
-					 * @return {bool} Enable pairs.
+					 * @return {bool} Enable pairs. Set to `true` if a field requires text keys.
 					 *
 					 * @example <caption>Enable options pair.</caption>
 					 * function my_um_select_options_pair( $options_pair, $data ) {
@@ -3334,28 +3336,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
 
-					/**
-					 * Filters multiselect keyword data.
-					 *
-					 * @since 1.3.x
-					 * @hook  um_multiselect_option_value
-					 *
-					 * @param {int}    $keyword If 1 - keyword is enabled. It's 0 by default.
-					 * @param {string} $type    Field type. Deprecated since 2.6.7
-					 * @param {array}  $data    Field data. Added since 2.6.7
-					 *
-					 * @return {int} Enabled keyword.
-					 *
-					 * @example <caption>Change multiselect keyword data. Enable it.</caption>
-					 * function my_multiselect_option_value( $keyword, $data ) {
-					 *     // your code here
-					 *     $keyword = 1;
-					 *     return $keyword;
-					 * }
-					 * add_filter( 'um_multiselect_option_value', 'my_multiselect_option_value', 10, 2 );
-					 */
-					$use_keyword = apply_filters( 'um_multiselect_option_value', 0, $data );
-
 					$has_icon = ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons;
 
 					$output .= '<div class="um-field-area ' . ( $has_icon ? 'um-field-area-has-icon' : '' ) . ' ">';
@@ -3363,7 +3343,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
 					}
 
-					$output .= '<select  ' . $disabled . ' multiple="multiple" name="' . esc_attr( $field_name ) . '[]" id="' . esc_attr( $field_id ) . '" data-maxsize="' . esc_attr( $max_selections ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" class="' . $this->get_class( $key, $data, $class ) . ' um-user-keyword_' . $use_keyword . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '">';
+					$output .= '<select  ' . $disabled . ' multiple="multiple" name="' . esc_attr( $field_name ) . '[]" id="' . esc_attr( $field_id ) . '" data-maxsize="' . esc_attr( $max_selections ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" class="' . $this->get_class( $key, $data, $class ) . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '">';
 
 					if ( isset( $options ) && 'builtin' === $options ) {
 						$options = UM()->builtin()->get( $data['filter'] );
