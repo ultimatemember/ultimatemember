@@ -109,6 +109,8 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 			);
 
 			add_action( 'um_after_save_registration_details', array( $this, 'secure_user_capabilities' ), 10, 3 );
+
+			add_filter( 'manage_users_custom_column', array( $this, 'manage_users_custom_column' ), 10, 3 );
 		}
 
 		/**
@@ -302,6 +304,7 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 
 		/**
 		 * Secure user capabilities and revoke administrative ones
+		 * @since 2.6.8
 		 */
 		public function secure_user_capabilities( $user_id, $submitted_data, $form_data ) {
 			global $wpdb;
@@ -345,11 +348,39 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		 *
 		 * @param string $cap Capability slug
 		 * @param object $user \WP_User
+		 *
+		 * @since 2.6.8
 		 */
 		public function revoke_caps( $user ) {
 			$user->remove_all_caps();
 			UM()->user()->set_status( 'rejected' );
 			update_user_meta( $user->get( 'ID' ), 'um_user_blocked', 'suspicious_activity' );
+			update_user_meta( $user->get( 'ID' ), 'um_user_blocked__datetime', current_time( 'mysql' ) );
+		}
+
+		/**
+		 * Append blocked status to the `account_status` column rows
+		 *
+		 * @param string $val Default column row value
+		 * @param string $column_name Current column name
+		 * @param integer $user_id   User ID in loop
+		 *
+		 * @since 2.6.8
+		 *
+		 * @return string $val
+		 */
+		public function manage_users_custom_column( $val, $column_name, $user_id ) {
+			if ( 'account_status' === $column_name ) {
+				$is_blocked = get_user_meta( $user_id, 'um_user_blocked', true );
+				if ( ! empty( $is_blocked ) ) {
+					$datetime = get_user_meta( $user_id, 'um_user_blocked__datetime', true );
+					$val      = $val . '<div><small>' . __( 'Blocked Due to Suspicious Activity', 'ultimate-member' ) . '</small></div>';
+					if ( ! empty( $datetime ) ) {
+						$val = $val . '<div><small>' . human_time_diff( strtotime( $datetime ), strtotime( current_time( 'mysql' ) ) ) . ' ' . __( 'ago', 'ultimate-member' ) . '</small></div>';
+					}
+				}
+			}
+			return $val;
 		}
 
 	}
