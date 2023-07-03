@@ -306,8 +306,8 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		public function secure_user_capabilities( $user_id, $submitted_data, $form_data ) {
 			global $wpdb;
 			// Fetch the WP_User object of our user.
-			um_fetch_user( 29 );
-			$user          = new \WP_User( 29 );
+			um_fetch_user( $user_id );
+			$user          = new \WP_User( $user_id );
 			$has_admin_cap = false;
 			if ( ! empty( $this->banned_admin_capabilities ) ) {
 				foreach ( $this->banned_admin_capabilities as $i => $cap ) {
