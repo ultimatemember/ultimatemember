@@ -59,7 +59,6 @@ jQuery(document).ready(function() {
 				demon_settings.data('in_row', '').data('in_sub_row', '').data('in_column', '').data('in_group', '');
 				um_admin_modal_responsive();
 				um_admin_update_builder();
-				window.deleting_field = false;
 			},
 			error: function( data ) {
 				window.deleting_field = false;

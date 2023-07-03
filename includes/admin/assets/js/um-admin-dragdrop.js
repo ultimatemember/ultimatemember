@@ -335,7 +335,7 @@ jQuery(document).ready(function() {
 	});
 
 	window.global_form_data = [];
-	window.deleting_field = false;
+	window.deleting_field   = false;
 	/* remove element */
 	jQuery(document.body).on('click', 'a[data-remove_element^="um-"]',function(){
 		var rowsub_parent = jQuery(this).closest('.um-admin-drag-rowsub');
@@ -383,7 +383,6 @@ jQuery(document).ready(function() {
 							jQuery(this).remove();
 						});
 					}
-
 
 					clearInterval(interval_finish);
 				}

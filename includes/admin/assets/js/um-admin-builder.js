@@ -29,6 +29,8 @@ function um_admin_update_builder() {
 			});
 
 			UM_Rows_Refresh();
+
+			window.deleting_field = false;
 		},
 		error: function( data ) {
 
