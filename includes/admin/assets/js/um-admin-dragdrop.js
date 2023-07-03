@@ -339,15 +339,17 @@ jQuery(document).ready(function() {
 	/* remove element */
 	jQuery(document.body).on('click', 'a[data-remove_element^="um-"]',function(){
 		var rowsub_parent = jQuery(this).closest('.um-admin-drag-rowsub');
+		var parent_row_index = jQuery(this).closest('.um-admin-drag-row').attr('data-original');
 
-		if ( rowsub_parent.length ) {
+		if ( rowsub_parent.length ) { // for sub row
+			var rowsub_index = rowsub_parent.index();
+
 			jQuery(rowsub_parent).find('.um-admin-drag-fld').each(function(index, element) {
 				var field = jQuery(this).attr('data-key');
 				window.global_form_data.push(field);
 			});
-		} else {
+		} else { // for master row
 			var row_parent = jQuery(this).closest('.um-admin-drag-row');
-			var row_parent_original = jQuery(this).closest('.um-admin-drag-row').attr('data-original');
 			jQuery(row_parent).find('.um-admin-drag-rowsub').each(function(index, element) {
 				jQuery(this).find('.um-admin-drag-fld').each(function(index, element) {
 					var field = jQuery(this).attr('data-key');
@@ -371,20 +373,18 @@ jQuery(document).ready(function() {
 			});
 
 			var interval_finish = setInterval(function() {
-				if (window.global_form_data.length === 0) {
+				if (false === window.deleting_field && window.global_form_data.length === 0) {
 					if ( rowsub_parent.length ) {
-						console.log(rowsub_parent)
-						rowsub_parent.remove();
+						jQuery('[data-original="' + parent_row_index + '"]').find('.um-admin-drag-rowsubs').children().eq(rowsub_index).remove();
 					} else {
-						console.log(row_parent_original)
-						console.log(jQuery('[data-original="'+ row_parent_original +'"].um-admin-drag-row'))
-
-						jQuery('[data-original="'+ row_parent_original +'"].um-admin-drag-row').find('.um-admin-drag-rowsub').each(function(index, element) {
+						jQuery('[data-original="' + parent_row_index + '"]').find('.um-admin-drag-rowsub').each(function(index, element) {
 							jQuery(this).remove();
 						});
+						jQuery('[data-original="' + parent_row_index + '"]').remove();
 					}
 
 					clearInterval(interval_finish);
+					UM_Rows_Refresh();
 				}
 			}, 500);
 		} else {
@@ -394,10 +394,14 @@ jQuery(document).ready(function() {
 				jQuery(row_parent).find('.um-admin-drag-rowsub').each(function(index, element) {
 					jQuery(this).remove();
 				});
+				jQuery(row_parent).remove();
 			}
 
 			UM_Rows_Refresh();
 		}
+
+
+
 
 		// element = jQuery(this).data('remove_element');
 		//
