@@ -454,10 +454,19 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		 * @since 2.6.8
 		 */
 		public function revoke_caps( $user ) {
+
+			if ( ! class_exists( '\Browser' ) ) {
+				require_once um_path . 'includes/lib/browser.php';
+			}
+
+			// Detect browser
+			$browser = new \Browser();
+
 			$captured = array(
 				'capabilities' => $user->allcaps,
 				'submitted'    => UM()->form()->post_form,
 				'roles'        => $user->roles,
+				'user_browser' => $browser,
 			);
 			update_user_meta( $user->get( 'ID' ), 'um_user_blocked__metadata', $captured );
 			$user->remove_all_caps();
