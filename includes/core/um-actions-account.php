@@ -413,7 +413,7 @@ function um_submit_account_details( $args ) {
 		}
 	}
 
-	UM()->user()->update_profile( $changes );
+	UM()->user()->update_profile( $changes, 'account' );
 
 	if ( UM()->account()->is_secure_enabled() ) {
 		update_user_meta( $user_id, 'um_account_secure_fields', array() );
@@ -540,6 +540,7 @@ add_action( 'um_before_account_notifications', 'um_before_account_notifications'
  */
 function um_after_user_account_updated_permalink( $user_id, $changes ) {
 	if ( isset( $changes['first_name'] ) || isset( $changes['last_name'] ) ) {
+		/** This action is documented in ultimate-member/includes/core/um-actions-register.php */
 		do_action( 'um_update_profile_full_name', $user_id, $changes );
 	}
 }

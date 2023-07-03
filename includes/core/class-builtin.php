@@ -1298,7 +1298,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 						'Yes'   => __( 'Yes', 'ultimate-member' ),
 					),
 					'account_only'  => true,
-					'required_opt'  => array( 'members_page', 1 ),
+					'required_opt'  => array( 'members_page', true ),
 				),
 
 				'delete_account'        => array(

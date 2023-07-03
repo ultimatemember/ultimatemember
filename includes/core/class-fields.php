@@ -2556,7 +2556,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							}
 
 							if ( ! empty( $data['label_confirm_pass'] ) ) {
-								$placeholder = __( $data['label_confirm_pass'], 'ultimate-member' );;
+								$placeholder = __( $data['label_confirm_pass'], 'ultimate-member' );
 							} elseif ( ! empty( $placeholder ) && ! isset( $data['label'] ) ) {
 								/* translators: 1: placeholder. */
 								$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $placeholder );
@@ -2637,7 +2637,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$field_name = $key . $form_suffix;
 
-					$output .= '<input ' . $disabled . '  class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" data-range="' . esc_attr( $data['range'] ) . '" data-years="' . esc_attr( $data['years'] ) . '" data-years_x="' . esc_attr( $data['years_x'] ) . '" data-disabled_weekdays="' . esc_attr( $data['disabled_weekdays'] ) . '" data-date_min="' . esc_attr( $data['date_min'] ) . '" data-date_max="' . esc_attr( $data['date_max'] ) . '" data-format="' . esc_attr( $data['js_format'] ) . '" data-value="' . esc_attr( $value ) . '" />
+					$disabled_weekdays = '';
+					if ( isset( $data['disabled_weekdays'] ) && is_array( $data['disabled_weekdays'] ) ) {
+						$disabled_weekdays = '[' . implode( ',', $data['disabled_weekdays'] ) . ']';
+					}
+
+					$output .= '<input ' . $disabled . '  class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" data-range="' . esc_attr( $data['range'] ) . '" data-years="' . esc_attr( $data['years'] ) . '" data-years_x="' . esc_attr( $data['years_x'] ) . '" data-disabled_weekdays="' . esc_attr( $disabled_weekdays ) . '" data-date_min="' . esc_attr( $data['date_min'] ) . '" data-date_max="' . esc_attr( $data['date_max'] ) . '" data-format="' . esc_attr( $data['js_format'] ) . '" data-value="' . esc_attr( $value ) . '" />
 
 						</div>';
 
@@ -2990,9 +2995,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$output .= '</div>';
 					/* modal hidden */
 					if ( empty( $disabled ) ) {
-						if ( ! isset( $allowed_types ) ) {
+						if ( ! isset( $data['allowed_types'] ) ) {
 							$allowed_types = 'pdf,txt';
-						} elseif ( is_array( $allowed_types ) ) {
+						} elseif ( is_array( $data['allowed_types'] ) ) {
 							$allowed_types = implode( ',', $data['allowed_types'] );
 						} else {
 							$allowed_types = $data['allowed_types'];
@@ -3230,13 +3235,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					/**
 					 * Filters enable options pair by field $data.
 					 *
-					 * @since 2.0
+					 * @since 1.3.x `um_multiselect_option_value`
+					 * @since 2.0 renamed to `um_select_options_pair`
+					 *
 					 * @hook  um_select_options_pair
 					 *
 					 * @param {bool|null} $options_pair Enable pairs.
 					 * @param {array}     $data         Field Data.
 					 *
-					 * @return {bool} Enable pairs.
+					 * @return {bool} Enable pairs. Set to `true` if a field requires text keys.
 					 *
 					 * @example <caption>Enable options pair.</caption>
 					 * function my_um_select_options_pair( $options_pair, $data ) {
@@ -3312,6 +3319,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if ( isset( $data['options'] ) && is_array( $data['options'] ) ) {
 						$options = $data['options'];
 					}
+
 					$max_selections = isset( $data['max_selections'] ) ? absint( $data['max_selections'] ) : 0;
 
 					$field_id   = $key;
@@ -3328,27 +3336,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
 
-					/**
-					 * Filters multiselect keyword data.
-					 *
-					 * @since 1.3.x
-					 * @hook  um_multiselect_option_value
-					 *
-					 * @param {int}    $keyword If 1 - keyword is enabled. It's 0 by default.
-					 * @param {string} $type    Field Type.
-					 *
-					 * @return {int} Enabled keyword.
-					 *
-					 * @example <caption>Change multiselect keyword data. Enable it.</caption>
-					 * function my_multiselect_option_value( $keyword, $type ) {
-					 *     // your code here
-					 *     $keyword = 1;
-					 *     return $keyword;
-					 * }
-					 * add_filter( 'um_multiselect_option_value', 'my_multiselect_option_value', 10, 2 );
-					 */
-					$use_keyword = apply_filters( 'um_multiselect_option_value', 0, $type );
-
 					$has_icon = ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons;
 
 					$output .= '<div class="um-field-area ' . ( $has_icon ? 'um-field-area-has-icon' : '' ) . ' ">';
@@ -3356,7 +3343,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
 					}
 
-					$output .= '<select  ' . $disabled . ' multiple="multiple" name="' . esc_attr( $field_name ) . '[]" id="' . esc_attr( $field_id ) . '" data-maxsize="' . esc_attr( $max_selections ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" class="' . $this->get_class( $key, $data, $class ) . ' um-user-keyword_' . $use_keyword . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '">';
+					$output .= '<select  ' . $disabled . ' multiple="multiple" name="' . esc_attr( $field_name ) . '[]" id="' . esc_attr( $field_id ) . '" data-maxsize="' . esc_attr( $max_selections ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" class="' . $this->get_class( $key, $data, $class ) . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '">';
 
 					if ( isset( $options ) && 'builtin' === $options ) {
 						$options = UM()->builtin()->get( $data['filter'] );

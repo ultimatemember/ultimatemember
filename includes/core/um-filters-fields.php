@@ -824,16 +824,7 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 			}
 		} elseif ( 'select' == $type || 'radio' == $type ) {
 
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_select_option_value
-			 * @description Enable options pair by field $data
-			 * @input_vars
-			 * [{"var":"$options_pair","type":"null","desc":"Enable pairs"},
-			 * {"var":"$data","type":"array","desc":"Field Data"}]
-			 */
+			/** This filter is documented in includes/core/class-fields.php */
 			$option_pairs = apply_filters( 'um_select_options_pair', null, $data );
 
 			$array = empty( $data['options'] ) ? array() : $data['options'];
@@ -859,16 +850,7 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 	} elseif ( ! empty( $value ) && is_array( $value ) ) {
 		if ( 'multiselect' == $type || 'checkbox' == $type ) {
 
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_select_option_value
-			 * @description Enable options pair by field $data
-			 * @input_vars
-			 * [{"var":"$options_pair","type":"null","desc":"Enable pairs"},
-			 * {"var":"$data","type":"array","desc":"Field Data"}]
-			 */
+			/** This filter is documented in includes/core/class-fields.php */
 			$option_pairs = apply_filters( 'um_select_options_pair', null, $data );
 
 			$arr = $data['options'];
@@ -898,12 +880,13 @@ add_filter( 'um_profile_field_filter_hook__', 'um_profile_field_filter_xss_valid
 /**
  * Trim All form POST submitted data
  *
+ * @todo Maybe deprecate because data is sanitized in earlier code and trim included to `sanitize_text_field()`. Need testing and confirmation.
+ *
  * @param $post_form
- * @param $mode
  *
  * @return mixed
  */
-function um_submit_form_data_trim_fields( $post_form, $mode ) {
+function um_submit_form_data_trim_fields( $post_form ) {
 	foreach ( $post_form as $key => $field ) {
 		if ( is_string( $field ) ) {
 			$post_form[ $key ] = trim( $field );
@@ -912,30 +895,44 @@ function um_submit_form_data_trim_fields( $post_form, $mode ) {
 
 	return $post_form;
 }
-add_filter( 'um_submit_form_data', 'um_submit_form_data_trim_fields', 9, 2 );
+add_filter( 'um_submit_form_data', 'um_submit_form_data_trim_fields', 9, 1 );
 
 
 /**
- * add role_select and role_radio to the $post_form
- * It is necessary for that if on these fields the conditional logic
- * @param $post_form array
- * @param $mode
+ * Add `role_select` and `role_radio` to the $post_form
+ * It is necessary for that if on these fields the conditional logic.
  *
- * @return $post_form
- * @uses   hook filters: um_submit_form_data
+ * @param array $post_form
+ * @param string $mode
+ * @param array $all_cf_metakeys
+ *
+ * @return array
  */
-function um_submit_form_data_role_fields( $post_form, $mode ) {
-	$custom_fields = unserialize( $post_form['custom_fields'] );
-	if ( ! empty( $post_form['role'] ) && array_key_exists( 'role_select', $custom_fields ) ) {
-		$post_form['role_select'] = $post_form['role'];
+function um_submit_form_data_role_fields( $post_form, $mode, $all_cf_metakeys ) {
+	if ( 'login' === $mode ) {
+		return $post_form;
 	}
-	if (! empty( $post_form['role'] ) && array_key_exists( 'role_radio', $custom_fields ) ) {
-		$post_form['role_radio'] = $post_form['role'];
+
+	if ( ! array_key_exists( 'role', $post_form ) ) {
+		return $post_form;
+	}
+
+	$role_fields = array( 'role_select', 'role_radio' );
+
+	$form_has_role_field = count( array_intersect( $all_cf_metakeys, $role_fields ) ) > 0;
+	if ( ! $form_has_role_field ) {
+		return $post_form;
+	}
+
+	foreach ( $role_fields as $role_field ) {
+		if ( in_array( $role_field, $all_cf_metakeys, true ) ) {
+			$post_form[ $role_field ] = $post_form['role'];
+		}
 	}
 
 	return $post_form;
 }
-add_filter( 'um_submit_form_data', 'um_submit_form_data_role_fields', 10, 2 );
+add_filter( 'um_submit_form_data', 'um_submit_form_data_role_fields', 10, 3 );
 
 
 /**

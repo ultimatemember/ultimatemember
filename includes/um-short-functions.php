@@ -844,7 +844,7 @@ function um_user_submitted_registration_formatted( $style = false ) {
 function um_user_submited_display( $k, $title, $data = array(), $style = true ) {
 	$output = '';
 
-	if ( 'form_id' == $k && isset( $data['form_id'] ) && ! empty( $data['form_id'] ) ) {
+	if ( 'form_id' === $k && ! empty( $data['form_id'] ) ) {
 		$v = sprintf( __( '%s - Form ID#: %s', 'ultimate-member' ), get_the_title( $data['form_id'] ), $data['form_id'] );
 	} else {
 		$v = um_user( $k );
@@ -855,23 +855,22 @@ function um_user_submited_display( $k, $title, $data = array(), $style = true ) 
 	}
 
 	$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
-	$type = UM()->fields()->get_field_type( $k );
-	if ( in_array( $type, $fields_without_metakey ) ) {
+	$type                   = UM()->fields()->get_field_type( $k );
+	if ( in_array( $type, $fields_without_metakey, true ) ) {
 		return '';
 	}
 
 	if ( ! $v ) {
 		if ( $style ) {
-			return "<p><label>$title: </label><span>" . __( '(empty)', 'ultimate-member' ) ."</span></p>";
-		} else {
-			return '';
+			return "<p><label>$title: </label><span>" . esc_html__( '(empty)', 'ultimate-member' ) . '</span></p>';
 		}
+		return '';
 	}
 
-	if ( $type == 'image' || $type == 'file' ) {
+	if ( in_array( $type, array( 'image', 'file' ), true ) ) {
 		$file = basename( $v );
 
-		$filedata = get_user_meta( um_user( 'ID' ), $k . "_metadata", true );
+		$filedata = get_user_meta( um_user( 'ID' ), $k . '_metadata', true );
 
 		$baseurl = UM()->uploader()->get_upload_base_url();
 		if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $file ) ) {
@@ -888,14 +887,38 @@ function um_user_submited_display( $k, $title, $data = array(), $style = true ) 
 		}
 	}
 
+	/**
+	 * Filters submitted data info before displaying in modal window or submit to admin email.
+	 *
+	 * @param {string|array} $value Submitted value.
+	 * @param {string}       $k     Submitted data metakey.
+	 * @param {array}        $data  Submitted data
+	 * @param {bool}         $style If styled echo
+	 *
+	 * @return {string|array} Is allowed verify.
+	 *
+	 * @since 2.6.8
+	 * @hook um_submitted_data_value
+	 *
+	 * @example <caption>Change submitted data info before echo.</caption>
+	 * function my_um_submitted_data_value ( $value, $metakey, $data, $style ) {
+	 *     if ( 'some_metakey' === $metakey ) {
+	 *         $value = 'new_value';
+	 *     }
+	 *     return $value;
+	 * }
+	 * add_filter( 'um_submitted_data_value', 'my_um_submitted_data_value', 10, 4 );
+	 */
+	$v = apply_filters( 'um_submitted_data_value', $v, $k, $data, $style );
+
 	if ( is_array( $v ) ) {
 		$v = implode( ',', $v );
 	}
 
-	if ( $k == 'timestamp' ) {
-		$v = date( "d M Y H:i", $v );
-	} elseif ( $k == 'use_gdpr_agreement' ) {
-		$v = date( "d M Y H:i", $v );
+	if ( 'timestamp' === $k ) {
+		$v = wp_date( get_option( 'date_format', 'Y-m-d' ) . ' ' . get_option( 'time_format', 'H:i:s' ), $v );
+	} elseif ( 'use_gdpr_agreement' === $k ) {
+		$v = wp_date( get_option( 'date_format', 'Y-m-d' ) . ' ' . get_option( 'time_format', 'H:i:s' ), $v );
 	}
 
 	if ( $style ) {

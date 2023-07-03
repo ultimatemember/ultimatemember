@@ -1,8 +1,9 @@
 <?php
 namespace um\core;
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Validation' ) ) {
 
@@ -32,8 +33,8 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 		 * Validation constructor.
 		 */
 		public function __construct() {
-			add_filter( 'um_user_pre_updating_files_array', array( $this, 'validate_files' ), 10, 1 );
-			add_filter( 'um_before_save_filter_submitted', array( $this, 'validate_fields_values' ), 10, 2 );
+			add_filter( 'um_user_pre_updating_files_array', array( $this, 'validate_files' ) );
+			add_filter( 'um_before_save_filter_submitted', array( $this, 'validate_fields_values' ), 10, 3 );
 		}
 
 
@@ -56,13 +57,8 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 			return $files;
 		}
 
-
-
-		function validate_fields_values( $changes, $args ) {
-			$fields = array();
-			if ( ! empty( $args['custom_fields'] ) ) {
-				$fields = unserialize( $args['custom_fields'] );
-			}
+		public function validate_fields_values( $changes, $args, $form_data ) {
+			$fields = maybe_unserialize( $form_data['custom_fields'] );
 
 			foreach ( $changes as $key => $value ) {
 				if ( ! isset( $fields[ $key ] ) ) {
@@ -70,7 +66,7 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 				}
 
 				//rating field validation
-				if ( isset( $fields[ $key ]['type'] ) && $fields[ $key ]['type'] == 'rating' ) {
+				if ( isset( $fields[ $key ]['type'] ) && 'rating' === $fields[ $key ]['type'] ) {
 					if ( ! is_numeric( $value ) ) {
 						unset( $changes[ $key ] );
 					} else {
@@ -124,12 +120,10 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 					$value = array_map( 'stripslashes', array_map( 'trim', $value ) );
 					$changes[ $key ] = array_intersect( $value, array_map( 'trim', $fields[ $key ]['options'] ) );
 				}
-
 			}
 
 			return $changes;
 		}
-
 
 		/**
 		 * Removes html from any string

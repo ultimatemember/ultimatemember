@@ -509,7 +509,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'display_name'                          => 'full_name',
 				'display_name_field'                    => '',
 				'author_redirect'                       => 1,
-				'members_page'                          => 1,
+				'members_page'                          => true,
 				'use_gravatars'                         => 0,
 				'use_um_gravatar_default_builtin_image' => 'default',
 				'use_um_gravatar_default_image'         => 0,
