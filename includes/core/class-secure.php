@@ -505,10 +505,15 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 			if ( UM()->options()->get( 'secure_notify_admins_banned_accounts' ) ) {
 				add_action( 'um_secure_notify_administrator_hourly', array( $this, 'notify_administrators_hourly' ) );
 				add_action( 'um_secure_notify_administrator_daily', array( $this, 'notify_administrators_daily' ) );
-				if ( ! wp_next_scheduled( 'um_secure_notify_administrator' ) ) {
+
+				if ( ! wp_next_scheduled( 'um_secure_notify_administrator_hourly' ) ) {
 					wp_schedule_event( current_time( 'mysql' ), 'hourly', 'um_secure_notify_administrator_hourly' );
+				}
+
+				if ( ! wp_next_scheduled( 'um_secure_notify_administrator_daily' ) ) {
 					wp_schedule_event( current_time( 'mysql' ), 'daily', 'um_secure_notify_administrator_daily' );
 				}
+				
 			}
 		}
 
