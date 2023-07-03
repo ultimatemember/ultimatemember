@@ -17,6 +17,15 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 	class Secure {
 
 		/**
+		 * Banned Administrative Capabilities
+		 *
+		 * @since 2.6.8
+		 *
+		 * @var array
+		 */
+		private $banned_admin_capabilities = array();
+
+		/**
 		 * Login constructor.
 		 * @since 2.6.8
 		 */
@@ -34,6 +43,70 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 			add_action( 'um_user_login', array( $this, 'login_validate_expired_pass' ), 1 );
 
 			add_action( 'validate_password_reset', array( $this, 'avoid_old_password' ), 1, 2 );
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_secure_register_form_banned_capabilities
+			 * @description Modify banned capabilities for Register forms
+			 * @input_vars
+			 * [{"var":"$capabilities","type":"array","desc":"WordPress Administratrive Capabilities"}]
+			 * @change_log
+			 * ["Since: 2.6.8"]
+			 * @usage
+			 * <?php add_filter( 'um_secure_register_form_banned_capabilities', 'function_name', 10, 1 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_secure_register_form_banned_capabilities', 'my_banned_capabilities', 10, 1 );
+			 * function my_banned_capabilities( $capabiities ) {
+			 *     // your code here
+			 *     $capabiities[ ] = 'read'; // rejects all users with `read` capabilitiy.
+			 *     return $capabiities;
+			 * }
+			 * ?>
+			 */
+			$this->banned_admin_capabilities = apply_filters(
+				'um_secure_register_form_banned_capabilities',
+				array(
+					'create_sites',
+					'delete_sites',
+					'manage_network',
+					'manage_sites',
+					'manage_network_users',
+					'manage_network_plugins',
+					'manage_network_themes',
+					'manage_network_options',
+					'upgrade_network',
+					'setup_network',
+					'activate_plugins',
+					'edit_dashboard',
+					'edit_theme_options',
+					'export',
+					'import',
+					'list_users',
+					'manage_options',
+					'promote_users',
+					'remove_users',
+					'switch_themes',
+					'customize',
+					'delete_site',
+					'update_core',
+					'update_plugins',
+					'update_themes',
+					'install_plugins',
+					'install_themes',
+					'delete_themes',
+					'delete_plugins',
+					'edit_plugins',
+					'edit_themes',
+					'edit_files',
+					'edit_users',
+					'add_users',
+					'create_users',
+					'delete_users',
+				)
+			);
 
 			add_action( 'um_after_save_registration_details', array( $this, 'secure_user_capabilities' ), 10, 3 );
 		}
@@ -150,12 +223,12 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 							'id'          => 'lock_register_forms',
 							'type'        => 'checkbox',
 							'label'       => __( 'Lock All Register Forms', 'ultimate-member' ),
-							'description' => __( 'This prevents all users from registering with Ultimate Member on your site temporarily.', 'ultimate-member' ),
+							'description' => __( 'This prevents all users from registering with Ultimate Member on your site.', 'ultimate-member' ),
 						),
 						array(
 							'id'          => 'display_login_form_notice',
 							'type'        => 'checkbox',
-							'label'       => __( 'Display Login form notice to reset their passwords', 'ultimate-member' ),
+							'label'       => __( 'Display Login form notice to reset passwords', 'ultimate-member' ),
 							'description' => __( 'Enforces users to reset their passwords( one-time ) and prevent from entering old password.', 'ultimate-member' ),
 						),
 						array(
@@ -163,7 +236,7 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 							'type'        => 'info_text',
 							'label'       => __( 'Expire All Users Sessions', 'ultimate-member' ),
 							'value'       => '<a href="' . admin_url( '?um_secure_expire_all_sessions=1&_wpnonce=' . esc_attr( $nonce ) ) . '" class="button">Logout Users(' . esc_attr( $count_users['total_users'] ) . ') </a>',
-							'description' => __( 'This will logout all users on your site and forces them to reset passwords when <strong>"Display Login form notice to reset their passwords" is enabled.</strong>', 'ultimate-member' ),
+							'description' => __( 'This will logout all users on your site and forces them to reset passwords <br/>when <strong>"Display Login form notice to reset passwords" is enabled/checked.</strong>', 'ultimate-member' ),
 						),
 					),
 				),
@@ -233,13 +306,11 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		public function secure_user_capabilities( $user_id, $submitted_data, $form_data ) {
 			global $wpdb;
 			// Fetch the WP_User object of our user.
-			um_fetch_user( $user_id );
-			$user             = new \WP_User( $user_id );
-			$has_admin_cap    = false;
-			$disallowed_roles = array( 'administrator' );
-			foreach ( $disallowed_roles as $role ) {
-				$admin_caps = array_keys( get_role( $role )->capabilities );
-				foreach ( $admin_caps as $i => $cap ) {
+			um_fetch_user( 29 );
+			$user          = new \WP_User( 29 );
+			$has_admin_cap = false;
+			if ( ! empty( $this->banned_admin_capabilities ) ) {
+				foreach ( $this->banned_admin_capabilities as $i => $cap ) {
 					/**
 					 * When there's at least one administrator cap added to the user,
 					 * immediately revoke caps and mark as rejected.
@@ -254,17 +325,13 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 
 			/**
 			 * Double-check if *_user_level has been modified with the highest level
-			 * when user has no administrator capabilities.
+			 * when user has no administrative capabilities.
 			 */
 			$user_level = um_user( $wpdb->get_blog_prefix() . 'user_level' );
 			if ( ! empty( $user_level ) ) {
-				$arr_levels = array( 'level_10' );
-				foreach ( $arr_levels as $level ) {
-					if ( $level === $user_level ) {
-						$this->revoke_caps( $user );
-						$has_admin_cap = true;
-						break;
-					}
+				if ( 10 === $user_level ) {
+					$this->revoke_caps( $user );
+					$has_admin_cap = true;
 				}
 			}
 
@@ -274,16 +341,15 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		}
 
 		/**
-		 * Revoke Caps
+		 * Revoke Caps & Mark rejected as suspicious
 		 *
 		 * @param string $cap Capability slug
 		 * @param object $user \WP_User
 		 */
 		public function revoke_caps( $user ) {
-
 			$user->remove_all_caps();
-			$user->set_role( 'rejected' ); // Set role to rejected
-			UM()->user()->set_status( 'rejected' ); // Set UM role to rejected
+			UM()->user()->set_status( 'rejected' );
+			update_user_meta( $user->get( 'ID' ), 'um_user_blocked', 'suspicious_activity' );
 		}
 
 	}
