@@ -457,7 +457,8 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		public function revoke_caps( $user ) {
 			$captured = array(
 				'capabilities' => $user->allcaps,
-				'submitted'    => $_REQUEST, //phpcs:ignore WordPress.Security.NonceVerification
+				'submitted'    => UM()->form()->post_form,
+				'roles'        => $user->roles,
 			);
 			update_user_meta( $user->get( 'ID' ), 'um_user_blocked__metadata', $captured );
 			$user->remove_all_caps();
