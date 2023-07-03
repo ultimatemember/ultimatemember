@@ -1,6 +1,8 @@
 <?php
 namespace um\core;
 
+use WP_User_Query;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -105,12 +107,42 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 					'add_users',
 					'create_users',
 					'delete_users',
+					'level_10',
 				)
 			);
 
-			add_action( 'um_after_save_registration_details', array( $this, 'secure_user_capabilities' ), 10, 3 );
-
+			/**
+			 * Add blocked status in the User column list.
+			 */
 			add_filter( 'manage_users_custom_column', array( $this, 'manage_users_custom_column' ), 10, 3 );
+
+			/**
+			 *  WP Schedule Events for Notification
+			 */
+			add_action( 'wp', array( $this, 'schedule_events' ) );
+
+			/**
+			 * Init
+			 */
+			add_action( 'init', array( $this, 'init' ) );
+
+		}
+
+		/**
+		 * Init
+		 *
+		 * @since 2.6.8
+		 */
+		public function init() {
+
+			/**
+			 * Checks the integrity of Current User's Capabilities
+			 */
+			add_action( 'um_after_save_registration_details', array( $this, 'secure_user_capabilities' ), 10 );
+			if ( is_user_logged_in() && ! current_user_can( 'manage_options' ) ) { // Exclude current Logged-in Administrator from validation checks.
+				add_action( 'um_after_user_updated', array( $this, 'secure_user_capabilities' ), 1 );
+			}
+
 		}
 
 		/**
@@ -119,6 +151,7 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		 * @since 2.6.8
 		 */
 		public function admin_init() {
+
 			if ( isset( $_REQUEST['um_secure_expire_all_sessions'] ) ) {
 				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'um-secure-expire-session-nonce' ) ) {
 					// This nonce is not valid.
@@ -212,9 +245,18 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		 * @since 2.6.8
 		 */
 		public function add_settings( $settings ) {
-			$nonce                          = wp_create_nonce( 'um-secure-expire-session-nonce' );
-			$count_users                    = count_users();
-			$settings['secure']['title']    = __( 'Secure', 'ultimate-member' );
+			$nonce                       = wp_create_nonce( 'um-secure-expire-session-nonce' );
+			$count_users                 = count_users();
+			$settings['secure']['title'] = __( 'Secure', 'ultimate-member' );
+
+			$banned_admin_capabilities_options = array();
+			foreach ( $this->banned_admin_capabilities as $i => $cap ) {
+				if ( in_array( $cap, array( 'manage_options', 'promote_users', 'level_10' ), true ) ) {
+					continue;
+				}
+				$banned_admin_capabilities_options[ $cap ] = $cap;
+			}
+
 			$settings['secure']['sections'] =
 			array(
 				'' =>
@@ -239,6 +281,33 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 							'label'       => __( 'Expire All Users Sessions', 'ultimate-member' ),
 							'value'       => '<a href="' . admin_url( '?um_secure_expire_all_sessions=1&_wpnonce=' . esc_attr( $nonce ) ) . '" class="button">Logout Users(' . esc_attr( $count_users['total_users'] ) . ') </a>',
 							'description' => __( 'This will logout all users on your site and forces them to reset passwords <br/>when <strong>"Display Login form notice to reset passwords" is enabled/checked.</strong>', 'ultimate-member' ),
+						),
+						array(
+							'id'          => 'banned_capabilities',
+							'type'        => 'multi_checkbox',
+							'multi'       => true,
+							'columns'     => 2,
+							'options'     => $banned_admin_capabilities_options,
+							'value'       => UM()->options()->get( 'banned_capabilities' ) ? array_keys( UM()->options()->get( 'banned_capabilities' ) ) : array_keys( $banned_admin_capabilities_options ),
+							'label'       => __( 'Banned Administrative Capabilities', 'ultimate-member' ),
+							'description' => __( 'All the above are default Administrator & Super Admin capabilities. When someone tries to inject capabilities to the Profile & Register form submission, it will be flagged with this option. The <strong>manage_options</strong>, <strong>promote_users</strong> &amp; <strong>level_10</strong> capabilities are locked to ensure no users will be created with these capabilities.', 'ultimate-member' ),
+						),
+						array(
+							'id'          => 'secure_notify_admins_banned_accounts',
+							'type'        => 'checkbox',
+							'label'       => __( 'Notify Administrators', 'ultimate-member' ),
+							'description' => __( 'When enabled, All administrators will be notified when someone has suspicious activities in Profile & Register forms.', 'ultimate-member' ),
+						),
+						array(
+							'id'          => 'secure_notify_admins_banned_accounts__interval',
+							'type'        => 'select',
+							'options'     => array(
+								'instant' => __( 'Send Immediately', 'ultimate-member' ),
+								'hourly'  => __( 'Hourly', 'ultimate-member' ),
+								'daily'   => __( 'Daily', 'ultimate-member' ),
+							),
+							'label'       => __( 'Notification Schedule', 'ultimate-member' ),
+							'conditional' => array( 'secure_notify_admins_banned_accounts', '=', 1 ),
 						),
 					),
 				),
@@ -306,23 +375,33 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		 * Secure user capabilities and revoke administrative ones
 		 * @since 2.6.8
 		 */
-		public function secure_user_capabilities( $user_id, $submitted_data, $form_data ) {
+		public function secure_user_capabilities( $user_id ) {
 			global $wpdb;
 			// Fetch the WP_User object of our user.
 			um_fetch_user( $user_id );
-			$user          = new \WP_User( $user_id );
-			$has_admin_cap = false;
-			if ( ! empty( $this->banned_admin_capabilities ) ) {
-				foreach ( $this->banned_admin_capabilities as $i => $cap ) {
-					/**
-					 * When there's at least one administrator cap added to the user,
-					 * immediately revoke caps and mark as rejected.
-					 */
-					if ( $user->has_cap( $cap ) ) {
-						$has_admin_cap = true;
-						$this->revoke_caps( $user );
-						break;
-					}
+			$user            = new \WP_User( $user_id );
+			$has_admin_cap   = false;
+			$arr_banned_caps = array();
+
+			if ( UM()->options()->get( 'banned_capabilities' ) ) {
+				$arr_banned_caps = array_keys( UM()->options()->get( 'banned_capabilities' ) );
+			} else {
+				$arr_banned_caps = $this->banned_admin_capabilities;
+			}
+
+			// Add locked administratrive capabilities
+			$arr_banned_caps[] = 'manage_options';
+			$arr_banned_caps[] = 'promote_users';
+
+			foreach ( $arr_banned_caps as $i => $cap ) {
+				/**
+				 * When there's at least one administrator cap added to the user,
+				 * immediately revoke caps and mark as rejected.
+				 */
+				if ( $user->has_cap( $cap ) ) {
+					$has_admin_cap = true;
+					$this->revoke_caps( $user );
+					break;
 				}
 			}
 
@@ -339,7 +418,24 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 			}
 
 			if ( $has_admin_cap ) {
-				wp_die( esc_html__( 'Security Check!', 'ultimate-member' ) );
+				/**
+				 * Notify Administrators Immediately
+				 */
+				if ( UM()->options()->get( 'secure_notify_admins_banned_accounts' ) ) {
+					$interval = UM()->options()->get( 'secure_notify_admins_banned_accounts__interval' );
+					if ( 'instant' === $interval ) {
+						$this->send_email( array( $user->get( 'ID' ) ) );
+					}
+				}
+
+				// Destroy Sessions & Redirect.
+				wp_destroy_current_session();
+				wp_logout();
+				session_unset();
+				$login_url = add_query_arg( 'err', 'inactive', um_get_core_page( 'login' ) );
+				wp_safe_redirect( $login_url );
+				exit;
+
 			}
 		}
 
@@ -352,8 +448,17 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		 * @since 2.6.8
 		 */
 		public function revoke_caps( $user ) {
+			$captured = array(
+				'capabilities' => $user->allcaps,
+				'submitted'    => $_REQUEST, //phpcs:ignore WordPress.Security.NonceVerification
+			);
+			update_user_meta( $user->get( 'ID' ), 'um_user_blocked__metadata', $captured );
 			$user->remove_all_caps();
-			UM()->user()->set_status( 'rejected' );
+			if ( is_user_logged_in() ) {
+				UM()->user()->set_status( 'inactive' );
+			} else {
+				UM()->user()->set_status( 'rejected' );
+			}
 			update_user_meta( $user->get( 'ID' ), 'um_user_blocked', 'suspicious_activity' );
 			update_user_meta( $user->get( 'ID' ), 'um_user_blocked__datetime', current_time( 'mysql' ) );
 		}
@@ -381,6 +486,164 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 				}
 			}
 			return $val;
+		}
+
+		/**
+		 * Register Events
+		 *
+		 * @since 2.6.8
+		 */
+		public function schedule_events() {
+
+			if ( UM()->options()->get( 'secure_notify_admins_banned_accounts' ) ) {
+				add_action( 'um_secure_notify_administrator_hourly', array( $this, 'notify_administrators_hourly' ) );
+				add_action( 'um_secure_notify_administrator_daily', array( $this, 'notify_administrators_daily' ) );
+				if ( ! wp_next_scheduled( 'um_secure_notify_administrator' ) ) {
+					wp_schedule_event( current_time( 'mysql' ), 'hourly', 'um_secure_notify_administrator_hourly' );
+					wp_schedule_event( current_time( 'mysql' ), 'daily', 'um_secure_notify_administrator_daily' );
+				}
+			}
+		}
+
+		/**
+		 * Notify Administrators hourly - Suspicious activities in an hour
+		 *
+		 * @since 2.6.8
+		 */
+		public function notify_administrators_hourly() {
+
+			$interval = UM()->options()->get( 'secure_notify_admins_banned_accounts__interval' );
+			if ( 'hourly' === $interval ) {
+				$args = array(
+					'fields'     => 'ID',
+					'meta_query' => array(
+						'relation' => 'AND',
+						array(
+							'key'     => 'um_user_blocked__datetime',
+							'value'   => gmdate( 'Y-m-d H:i:s', strtotime( '-1 hour' ) ),
+							'compare' => '>=',
+							'type'    => 'DATETIME',
+						),
+					),
+				);
+
+				$users = new \WP_User_Query( $args );
+
+				$this->send_email( array_values( $users->get_results() ) );
+			}
+
+		}
+
+		/**
+		 * Notify Administrators daily - Today's suspicious activity
+		 *
+		 * @since 2.6.8
+		 */
+		public function notify_administrators_daily() {
+
+			$interval = UM()->options()->get( 'secure_notify_admins_banned_accounts__interval' );
+			if ( 'daily' === $interval ) {
+				$args = array(
+					'fields'     => 'ID',
+					'relation'   => 'AND',
+					'meta_query' => array(
+						'relation' => 'AND',
+						array(
+							'key'     => 'um_user_blocked__datetime',
+							'value'   => gmdate( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
+							'compare' => '>=',
+							'type'    => 'DATE',
+						),
+						array(
+							'key'     => 'um_user_blocked__datetime',
+							'value'   => gmdate( 'Y-m-d H:i:s', strtotime( 'now' ) ),
+							'compare' => '<=',
+							'type'    => 'DATE',
+						),
+					),
+				);
+
+				$users = new \WP_User_Query( $args );
+
+				$this->send_email( array_values( $users->get_results() ) );
+
+			}
+
+		}
+
+		/**
+		 * Get Email template
+		 *
+		 * @param bool $single Whether the template is for single or multiple user activities
+		 * @param array $profile_urls Profile URLs to include in the email body
+		 *
+		 * @since 2.6.8
+		 */
+		public function get_email_template( $single = true, $profile_urls = array() ) {
+			$action = '';
+			if ( ! is_user_logged_in() ) {
+				$action = 'Rejected';
+			} else {
+				$action = 'Deactivated';
+			}
+
+			$body = '';
+			if ( $single ) {
+				$body  = 'This is to inform you that there\'s a suspicious activity with the following account: ';
+				$body .= '<br/>';
+				$body .= '{user_profile_link}';
+				$body .= '<br/><br/>';
+				$body .= 'Due to that we have set the account status to ' . $action . ', Revoked Roles & Destroyed the Login Session.';
+				$body .= '</br>';
+			} else {
+				$body  = 'This is to inform you that there are suspicious activities with the following accounts: ';
+				$body .= '</br>';
+				$body .= '{user_profile_link}';
+				$body .= '</br></br>';
+				$body .= 'Due to that we have set each account\'s status to ' . $action . ', revoked roles & destroyed the login session.';
+				$body .= '</br>';
+			}
+
+			$urls  = implode( '</br>', $profile_urls );
+			$body  = str_replace( '{user_profile_link}', $urls, $body );
+			$body .= '<br/><br/>- Sent via Ultimate Member plugin. ';
+
+			return $body;
+		}
+
+		/**
+		 * Send Email
+		 *
+		 * @param array $user_ids User IDs.
+		 *
+		 * @since 2.6.8
+		 */
+		public function send_email( $user_ids = array() ) {
+
+			if ( empty( $user_ids ) ) {
+				return '';
+			}
+			$multiple_recipients = array();
+			$admins              = get_users( 'role=Administrator' );
+			foreach ( $admins as $user ) {
+				$multiple_recipients[] = $user->user_email;
+			}
+
+			if ( count( $user_ids ) <= 1 ) {
+				$subject = __( 'Suspicious Account Activity on ', 'ultimate-member' ) . wp_parse_url( get_site_url() )['host'];
+				$url     = UM()->user()->get_profile_link( $user_ids[0] );
+				$body    = $this->get_email_template( true, array( $url ) );
+			} else {
+				$subject  = __( 'Suspicious Accounts & Activities on ', 'ultimate-member' ) . wp_parse_url( get_site_url() )['host'];
+				$arr_urls = array();
+				foreach ( $user_ids as $i => $uid ) {
+					$arr_urls[] = UM()->user()->get_profile_link( $uid );
+				}
+				$body = $this->get_email_template( false, $arr_urls );
+			}
+
+			wp_mail( $multiple_recipients, $subject, $body );
+
 		}
 
 	}
