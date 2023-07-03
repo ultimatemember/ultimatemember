@@ -512,7 +512,6 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 				if ( ! wp_next_scheduled( 'um_secure_notify_administrator_daily' ) ) {
 					wp_schedule_event( current_time( 'mysql' ), 'daily', 'um_secure_notify_administrator_daily' );
 				}
-				
 			}
 		}
 
@@ -640,12 +639,12 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 				$multiple_recipients[] = $user->user_email;
 			}
 
+			$subject = _n( 'Suspicious Account Activity on ', 'Suspicious Accounts & Activities on ', count( $user_ids ), 'ultimate-member' ) . wp_parse_url( get_site_url() )['host'];
+
 			if ( count( $user_ids ) <= 1 ) {
-				$subject = __( 'Suspicious Account Activity on ', 'ultimate-member' ) . wp_parse_url( get_site_url() )['host'];
-				$url     = UM()->user()->get_profile_link( $user_ids[0] );
-				$body    = $this->get_email_template( true, array( $url ) );
+				$url  = UM()->user()->get_profile_link( $user_ids[0] );
+				$body = $this->get_email_template( true, array( $url ) );
 			} else {
-				$subject  = __( 'Suspicious Accounts & Activities on ', 'ultimate-member' ) . wp_parse_url( get_site_url() )['host'];
 				$arr_urls = array();
 				foreach ( $user_ids as $i => $uid ) {
 					$arr_urls[] = UM()->user()->get_profile_link( $uid );
