@@ -139,6 +139,7 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 			add_action( 'um_after_save_registration_details', array( $this, 'secure_user_capabilities' ), 10 );
 			if ( is_user_logged_in() && ! current_user_can( 'manage_options' ) ) { // Exclude current Logged-in Administrator from validation checks.
 				add_action( 'um_after_user_updated', array( $this, 'secure_user_capabilities' ), 1 );
+				add_action( 'um_after_user_account_updated', array( $this, 'secure_user_capabilities' ), 1 );
 			}
 
 		}
