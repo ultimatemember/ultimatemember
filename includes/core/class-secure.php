@@ -432,11 +432,18 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 				wp_destroy_current_session();
 				wp_logout();
 				session_unset();
-				$login_url = add_query_arg( 'err', 'inactive', um_get_core_page( 'login' ) );
-				wp_safe_redirect( $login_url );
-				exit;
+				$redirect = apply_filters( 'um_secure_blocked_user_redirect_immediately', true );
+				if ( $redirect ) {
+					$login_url = add_query_arg( 'err', 'inactive', um_get_core_page( 'login' ) );
+					wp_safe_redirect( $login_url );
+					exit;
+				}
+
+				return true;
 
 			}
+
+			return false;
 		}
 
 		/**
