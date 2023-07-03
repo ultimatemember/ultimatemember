@@ -1,8 +1,6 @@
 <?php
 namespace um\core;
 
-use WP_User_Query;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -25,7 +23,7 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		 *
 		 * @var array
 		 */
-		private $banned_admin_capabilities = array();
+		public $banned_admin_capabilities = array();
 
 		/**
 		 * Login constructor.
