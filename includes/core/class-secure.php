@@ -5,7 +5,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 if ( ! class_exists( 'um\core\Secure' ) ) {
 
 	/**
@@ -13,13 +12,13 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 	 *
 	 * @package um\core
 	 *
-	 * @since 2.6.7
+	 * @since 2.6.8
 	 */
 	class Secure {
 
 		/**
 		 * Login constructor.
-		 * @since 2.6.7
+		 * @since 2.6.8
 		 */
 		public function __construct() {
 			add_action( 'admin_init', array( $this, 'admin_init' ) );
@@ -36,9 +35,14 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 
 			add_action( 'validate_password_reset', array( $this, 'avoid_old_password' ), 1, 2 );
 
-			add_action( 'um_after_save_registration_details', array( $this, 'check_user_capabilities' ), 10, 3 );
+			add_action( 'um_after_save_registration_details', array( $this, 'secure_user_capabilities' ), 10, 3 );
 		}
 
+		/**
+		 * Admin Init
+		 *
+		 * @since 2.6.8
+		 */
 		public function admin_init() {
 			if ( isset( $_REQUEST['um_secure_expire_all_sessions'] ) ) {
 				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'um-secure-expire-session-nonce' ) ) {
@@ -60,7 +64,7 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		 * Add Login notice for Reset Password
 		 *
 		 * @param array $args
-		 * @since 2.6.7
+		 * @since 2.6.8
 		 */
 		public function reset_password_notice( $args ) {
 
@@ -95,7 +99,7 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		 * Add Login notice for Under Maintance
 		 *
 		 * @param array $args
-		 * @since 2.6.7
+		 * @since 2.6.8
 		 */
 		public function under_maintanance_notice( $args ) {
 
@@ -130,7 +134,7 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		 * Register Secure Settings
 		 *
 		 * @param array $settings
-		 * @since 2.6.7
+		 * @since 2.6.8
 		 */
 		public function add_settings( $settings ) {
 			$nonce                          = wp_create_nonce( 'um-secure-expire-session-nonce' );
@@ -172,7 +176,7 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		 * Block all UM Register form submissions.
 		 *
 		 * @param array $args Form settings.
-		 * @since 2.6.7
+		 * @since 2.6.8
 		 */
 		public function block_register_forms( $args ) {
 			if ( UM()->options()->get( 'lock_register_forms' ) ) {
@@ -187,7 +191,7 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		 * Validate when user has expired password
 		 *
 		 * @param array $submitted_data
-		 * @since 2.6.7
+		 * @since 2.6.8
 		 */
 		public function login_validate_expired_pass( $submitted_data ) {
 
@@ -206,7 +210,7 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		 *
 		 * @param object $errors
 		 * @param object $user
-		 * @since 2.6.7
+		 * @since 2.6.8
 		 */
 		public function avoid_old_password( $errors, $user ) {
 			$wp_hasher = new \PasswordHash( 8, true );
@@ -215,7 +219,7 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 				$new_user_pass = $_REQUEST['user_password']; // phpcs:ignore WordPress.Security.NonceVerification
 				if ( $wp_hasher->CheckPassword( $new_user_pass, $user->data->user_pass ) ) {
 					UM()->form()->add_error( 'user_password', __( 'Your new password cannot be same as old password.', 'ultimate-member' ) );
-					$errors->add( 'invalid_old_password', __( 'Your new password cannot be same as old password.', 'ultimate-member' ) );
+					$errors->add( 'block_old_password', __( 'Your new password cannot be same as old password.', 'ultimate-member' ) );
 				} else {
 					update_user_meta( $user->data->ID, 'um_secure_has_reset_password', true );
 					update_user_meta( $user->data->ID, 'um_secure_has_reset_password__timestamp', current_time( 'mysql' ) );
@@ -224,35 +228,43 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		}
 
 		/**
-		 * Checks user capabilities and remove administrative ones
+		 * Secure user capabilities and revoke administrative ones
 		 */
-		public function check_user_capabilities( $user_id, $submitted_data, $form_data ) {
-
+		public function secure_user_capabilities( $user_id, $submitted_data, $form_data ) {
+			global $wpdb;
 			// Fetch the WP_User object of our user.
 			um_fetch_user( $user_id );
 			$user             = new \WP_User( $user_id );
 			$has_admin_cap    = false;
-			$disallowed_roles = array( 'administrator', 'editor' );
+			$disallowed_roles = array( 'administrator' );
 			foreach ( $disallowed_roles as $role ) {
 				$admin_caps = array_keys( get_role( $role )->capabilities );
 				foreach ( $admin_caps as $i => $cap ) {
-					if ( user_can( $user_id, $cap ) ) {
+					/**
+					 * When there's at least one administrator cap added to the user,
+					 * immediately revoke caps and mark as rejected.
+					 */
+					if ( $user->has_cap( $cap ) ) {
 						$has_admin_cap = true;
-						$this->revoke_caps( $cap, $user );
+						$this->revoke_caps( $user );
+						break;
 					}
 				}
 			}
 
-			if ( user_can( $user_id, 'manage_options' ) ) {
-				$this->revoke_caps( 'manage_options', $user );
-				$has_admin_cap = true;
-			}
-
-			$arr_levels = array( 'level_10', 'level_9', 'level_8' );
-			foreach ( $arr_levels as $level ) {
-				if ( user_can( $user_id, $level ) ) {
-					$this->revoke_caps( $level, $user );
-					$has_admin_cap = true;
+			/**
+			 * Double-check if *_user_level has been modified with the highest level
+			 * when user has no administrator capabilities.
+			 */
+			$user_level = um_user( $wpdb->get_blog_prefix() . 'user_level' );
+			if ( ! empty( $user_level ) ) {
+				$arr_levels = array( 'level_10' );
+				foreach ( $arr_levels as $level ) {
+					if ( $level === $user_level ) {
+						$this->revoke_caps( $user );
+						$has_admin_cap = true;
+						break;
+					}
 				}
 			}
 
@@ -262,13 +274,14 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		}
 
 		/**
-		 * Revoka Caps
+		 * Revoke Caps
 		 *
 		 * @param string $cap Capability slug
 		 * @param object $user \WP_User
 		 */
-		public function revoke_caps( $cap, $user ) {
-			$user->remove_cap( $cap ); //revoke editable capabilities
+		public function revoke_caps( $user ) {
+
+			$user->remove_all_caps();
 			$user->set_role( 'rejected' ); // Set role to rejected
 			UM()->user()->set_status( 'rejected' ); // Set UM role to rejected
 		}
