@@ -4843,7 +4843,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
 
-			if ( in_array( $data['type'], $fields_without_metakey ) ) {
+			if ( in_array( $data['type'], $fields_without_metakey, true ) ) {
 				unset( $field_atts['id'] );
 
 				if ( empty( $field_atts['data-key'] ) ) {
