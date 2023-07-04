@@ -271,6 +271,10 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			}
 
 			if ( $this->is_reset_request() ) {
+				$form_data = array(
+					'mode' => 'password',
+				);
+
 				UM()->form()->post_form = wp_unslash( $_POST );
 
 				if ( empty( UM()->form()->post_form['mode'] ) ) {
@@ -278,47 +282,43 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				}
 
 				/**
-				 * UM hook
+				 * Fires for handle validate errors on the reset password form submit.
 				 *
-				 * @type action
-				 * @title um_reset_password_errors_hook
-				 * @description Action on reset password submit form
-				 * @input_vars
-				 * [{"var":"$post","type":"array","desc":"Form submitted"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_reset_password_errors_hook', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_reset_password_errors_hook', 'my_reset_password_errors', 10, 1 );
-				 * function my_reset_password_errors( $post ) {
+				 * @since 1.3.x
+				 * @since 2.6.8 Added $form_data attribute.
+				 *
+				 * @hook um_reset_password_errors_hook
+				 *
+				 * @param {array} $submission_data Form submitted data.
+				 * @param {array} $form_data       Form data. Since 2.6.8
+				 *
+				 * @example <caption>Make any custom validation on password reset form.</caption>
+				 * function my_reset_password_errors( $submission_data, $form_data ) {
 				 *     // your code here
 				 * }
-				 * ?>
+				 * add_action( 'um_reset_password_errors_hook', 'my_reset_password_errors', 10, 2 );
 				 */
-				do_action( 'um_reset_password_errors_hook', UM()->form()->post_form );
+				do_action( 'um_reset_password_errors_hook', UM()->form()->post_form, $form_data );
 
 				if ( ! isset( UM()->form()->errors ) ) {
 					/**
-					 * UM hook
+					 * Fires for handle the reset password form when submitted data is valid.
 					 *
-					 * @type action
-					 * @title um_reset_password_process_hook
-					 * @description Action on reset password success submit form
-					 * @input_vars
-					 * [{"var":"$post","type":"array","desc":"Form submitted"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_action( 'um_reset_password_process_hook', 'function_name', 10, 1 );
-					 * @example
-					 * <?php
-					 * add_action( 'um_reset_password_process_hook', 'my_reset_password_process', 10, 1 );
-					 * function my_reset_password_process( $post ) {
+					 * @since 1.3.x
+					 * @since 2.6.8 Added $form_data attribute.
+					 *
+					 * @hook um_reset_password_process_hook
+					 *
+					 * @param {array} $submission_data Form submitted data.
+					 * @param {array} $form_data       Form data. Since 2.6.8
+					 *
+					 * @example <caption>Make any custom action when password reset form is submitted.</caption>
+					 * function my_reset_password_process( $submission_data, $form_data ) {
 					 *     // your code here
 					 * }
-					 * ?>
+					 * add_action( 'um_reset_password_process_hook', 'my_reset_password_process', 10, 2 );
 					 */
-					do_action( 'um_reset_password_process_hook', UM()->form()->post_form );
+					do_action( 'um_reset_password_process_hook', UM()->form()->post_form, $form_data );
 				}
 			}
 
