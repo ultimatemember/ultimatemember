@@ -6,7 +6,7 @@
  *
  * Page: "Members"
  *
- * @version 2.6.3
+ * @version 2.6.8
  *
  * @var array $args
  */
@@ -64,11 +64,11 @@ if ( count( $args['view_types'] ) == 1 ) {
 
 // Sorting
 $default_sorting = ! empty( $args['sortby'] ) ? $args['sortby'] : 'user_registered_desc';
-if ( $default_sorting == 'other' && ! empty( $args['sortby_custom'] ) ) {
+if ( 'other' === $default_sorting && ! empty( $args['sortby_custom'] ) ) {
 	$default_sorting = $args['sortby_custom'];
 }
 
-$sort_from_url = '';
+$sort_from_url         = '';
 $custom_sorting_titles = array();
 if ( ! empty( $args['enable_sorting'] ) ) {
 	$sorting_options = empty( $args['sorting_fields'] ) ? array() : $args['sorting_fields'];
@@ -77,10 +77,10 @@ if ( ! empty( $args['enable_sorting'] ) ) {
 	if ( ! empty( $sorting_options ) ) {
 		foreach ( $sorting_options as $option ) {
 			if ( is_array( $option ) ) {
-				$option_keys = array_keys( $option );
+				$option_keys                = array_keys( $option );
 				$sorting_options_prepared[] = $option_keys[0];
 
-				$custom_sorting_titles[ $option_keys[0] ] = $option[ $option_keys[0] ];
+				$custom_sorting_titles[ $option_keys[0] ] = ! empty( $option['label'] ) ? $option['label'] : $option[ $option_keys[0] ];
 			} else {
 				$sorting_options_prepared[] = $option;
 			}
@@ -89,17 +89,17 @@ if ( ! empty( $args['enable_sorting'] ) ) {
 
 	$all_sorting_options = UM()->member_directory()->sort_fields;
 
-	if ( ! in_array( $default_sorting, $sorting_options_prepared ) ) {
+	if ( ! in_array( $default_sorting, $sorting_options_prepared, true ) ) {
 		$sorting_options_prepared[] = $default_sorting;
 
 		$label = $default_sorting;
-		if ( ! empty( $args['sortby_custom_label'] ) && 'other' == $args['sortby'] ) {
+		if ( ! empty( $args['sortby_custom_label'] ) && 'other' === $args['sortby'] ) {
 			$label = $args['sortby_custom_label'];
 		} elseif ( ! empty( $all_sorting_options[ $default_sorting ] ) ) {
 			$label = $all_sorting_options[ $default_sorting ];
 		}
 
-		$label = ( $label == 'random' ) ? __( 'Random', 'ultimate-member' ) : $label;
+		$label = ( 'random' === $label ) ? __( 'Random', 'ultimate-member' ) : $label;
 
 		$custom_sorting_titles[ $default_sorting ] = $label;
 	}
@@ -109,32 +109,34 @@ if ( ! empty( $args['enable_sorting'] ) ) {
 	}
 
 	$sorting_options = apply_filters( 'um_member_directory_pre_display_sorting', $sorting_options, $args );
-	$sort_from_url = ( ! empty( $_GET[ 'sort_' . $unique_hash ] ) && in_array( sanitize_text_field( $_GET[ 'sort_' . $unique_hash ] ), array_keys( $sorting_options ) ) ) ? sanitize_text_field( $_GET[ 'sort_' . $unique_hash ] ) : $default_sorting;
+	$sort_from_url   = ( ! empty( $_GET[ 'sort_' . $unique_hash ] ) && in_array( sanitize_text_field( $_GET[ 'sort_' . $unique_hash ] ), array_keys( $sorting_options ) ) ) ? sanitize_text_field( $_GET[ 'sort_' . $unique_hash ] ) : $default_sorting;
 }
 
 $current_page = ( ! empty( $_GET[ 'page_' . $unique_hash ] ) && is_numeric( $_GET[ 'page_' . $unique_hash ] ) ) ? absint( $_GET[ 'page_' . $unique_hash ] ) : 1;
 
 //Search
-$search = isset( $args['search'] ) ? $args['search'] : false;
+$search      = isset( $args['search'] ) ? $args['search'] : false;
 $show_search = empty( $args['roles_can_search'] ) || ( ! empty( $priority_user_role ) && in_array( $priority_user_role, $args['roles_can_search'] ) );
 $search_from_url = '';
 if ( $search && $show_search ) {
 	$search_from_url = ! empty( $_GET[ 'search_' . $unique_hash ] ) ? stripslashes( sanitize_text_field( $_GET[ 'search_' . $unique_hash ] ) ) : '';
 }
 
-
 //Filters
-$filters = isset( $args['filters'] ) ? $args['filters'] : false;
-$show_filters = empty( $args['roles_can_filter'] ) || ( ! empty( $priority_user_role ) && in_array( $priority_user_role, $args['roles_can_filter'] ) );
+$filters        = isset( $args['filters'] ) ? $args['filters'] : false;
+$show_filters   = empty( $args['roles_can_filter'] ) || ( ! empty( $priority_user_role ) && in_array( $priority_user_role, $args['roles_can_filter'] ) );
 $search_filters = array();
 if ( isset( $args['search_fields'] ) ) {
 	$search_filters = apply_filters( 'um_frontend_member_search_filters', array_unique( array_filter( $args['search_fields'] ) ) );
 }
 
 if ( ! empty( $search_filters ) ) {
-	$search_filters = array_filter( $search_filters, function( $item ) {
-		return in_array( $item, array_keys( UM()->member_directory()->filter_fields ) );
-	});
+	$search_filters = array_filter(
+		$search_filters,
+		function( $item ) {
+			return array_key_exists( $item, UM()->member_directory()->filter_fields );
+		}
+	);
 
 	$search_filters = array_values( $search_filters );
 }
