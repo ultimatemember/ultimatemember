@@ -2196,6 +2196,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				}
 			}
 
+			if ( ! empty( $this->editing ) && 'account' === $this->set_mode ) {
+				if ( 'user_login' === $key && ! empty( $data['disabled'] ) ) {
+					$disabled = ' disabled="disabled" ';
+				}
+			}
+
 			/**
 			 * Filters a field disabled attribute.
 			 *
