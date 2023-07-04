@@ -2182,7 +2182,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			if ( ! empty( $this->editing ) && 'profile' === $this->set_mode ) {
 				if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
-					if ( isset( $data['editable'] ) && 0 === $data['editable'] ) {
+					if ( empty( $data['editable'] ) ) {
 						$disabled = ' disabled="disabled" ';
 					}
 				}
