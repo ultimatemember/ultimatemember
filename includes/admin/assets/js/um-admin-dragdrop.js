@@ -341,9 +341,9 @@ jQuery(document).ready(function() {
 		var rowsub_parent = jQuery(this).closest('.um-admin-drag-rowsub');
 		var parent_row_index = jQuery(this).closest('.um-admin-drag-row').attr('data-original');
 
+		// save all fields metakey to global_form_data
 		if ( rowsub_parent.length ) { // for sub row
 			var rowsub_index = rowsub_parent.index();
-
 			jQuery(rowsub_parent).find('.um-admin-drag-fld').each(function(index, element) {
 				var field = jQuery(this).attr('data-key');
 				window.global_form_data.push(field);
@@ -359,19 +359,23 @@ jQuery(document).ready(function() {
 		}
 
 		if (window.global_form_data.length > 0) {
+			jQuery('.um-admin-drag').append('<span class="um-admin-row-loading"><span></span></span>');
+
+			// remove all fields from row or subrow
 			jQuery.each(window.global_form_data, function(index, element) {
 				var interval_deleting = setInterval(function() {
 					if( false === window.deleting_field && window.global_form_data.length > 0 ){
+						// jQuery('[data-original="' + parent_row_index + '"]').find('.um-admin-drag-rowsubs').children().eq(rowsub_index).append('<span class="um-admin-row-loading"><span></span></span>');
 						jQuery('.um-admin-drag-fld.'+element).find('a[data-silent_action="um_admin_remove_field"]').trigger('click');
 					}
 					if (window.global_form_data.length === 0) {
-						UM_Rows_Refresh();
 						clearInterval(interval_deleting);
 						return false;
 					}
 				}, 500);
 			});
 
+			// remove row or subrow
 			var interval_finish = setInterval(function() {
 				if (false === window.deleting_field && window.global_form_data.length === 0) {
 					if ( rowsub_parent.length ) {
@@ -382,12 +386,14 @@ jQuery(document).ready(function() {
 						});
 						jQuery('[data-original="' + parent_row_index + '"]').remove();
 					}
-
+					jQuery('.um-admin-row-loading').remove();
 					clearInterval(interval_finish);
 					UM_Rows_Refresh();
 				}
 			}, 500);
+
 		} else {
+			// remove row or subrow
 			if ( rowsub_parent.length ) {
 				rowsub_parent.remove();
 			} else {
@@ -399,19 +405,6 @@ jQuery(document).ready(function() {
 
 			UM_Rows_Refresh();
 		}
-
-
-
-
-		// element = jQuery(this).data('remove_element');
-		//
-		// jQuery(this).parents('.' +element).find('.um-admin-drag-fld').each(function(){
-		// 	jQuery(this).find('a[data-silent_action="um_admin_remove_field"]').trigger('click');
-		// });
-		//
-		// jQuery(this).parents('.' +element).remove();
-		// jQuery('.tipsy').remove();
-		// UM_Rows_Refresh();
 	});
 
 	/* dynamically change columns */
