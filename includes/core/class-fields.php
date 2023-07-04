@@ -1381,8 +1381,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				if ( $has_custom_source ) {
 
-					$opts = apply_filters( "um_get_field__{$data['metakey']}", array() );
-					$arr_options = $opts['options'];
+					/** This filter is documented in includes/core/class-fields.php */
+					$opts        = apply_filters( "um_get_field__{$data['metakey']}", array() );
+					$arr_options = array_key_exists( 'options', $opts ) ? $opts['options'] : array();
 
 				} elseif ( function_exists( $data['custom_dropdown_options_source'] ) ) {
 					if ( isset( $data['parent_dropdown_relationship'] ) ) {
@@ -1627,7 +1628,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
 
-			if ( ! in_array( $array['type'], $fields_without_metakey ) ) {
+			if ( ! in_array( $array['type'], $fields_without_metakey, true ) ) {
 				$array['classes'] .= ' um-field-' . esc_attr( $key );
 			}
 			$array['classes'] .= ' um-field-' . esc_attr( $array['type'] );
@@ -1647,9 +1648,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				case 'text':
 
 					$array['disabled'] = '';
-
-					if ( $key == 'user_login' && isset( $this->set_mode ) && $this->set_mode == 'account' ) {
-						$array['disabled'] = 'disabled="disabled"';
+					if ( 'user_login' === $key && 'account' === $this->set_mode ) {
+						$array['disabled'] = ' disabled="disabled" ';
 					}
 
 					$array['input'] = 'text';
@@ -1759,37 +1759,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 							$array['date_min'] = $past;
 							$array['date_max'] = $future;
-
 						}
-
 					}
-
-					/**
-					 * UM hook
-					 *
-					 * @type filter
-					 * @title um_get_field_date
-					 * @description Extend field date
-					 * @input_vars
-					 * [{"var":"$data","type":"array","desc":"Field Date Data"}]
-					 * @change_log
-					 * ["Since: 2.5.4"]
-					 * @usage add_filter( 'um_get_field_date', 'function_name', 10, 1 );
-					 * @example
-					 * <?php
-					 * add_filter( 'um_get_field_date', 'my_get_field_date', 10, 1 );
-					 * function my_get_field_date( $data ) {
-					 *     // your code here
-					 *     return $data;
-					 * }
-					 * ?>
-					 */
-					$array = apply_filters( 'um_get_field_date', $array );
-
 					break;
-
 				case 'time':
-
 					$array['input'] = 'text';
 
 					if ( ! isset( $array['format'] ) ) {
@@ -2019,30 +1992,44 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 
 			/**
-			 * UM hook
+			 * Filters the field data by the field type. Where $type is the field's type.
 			 *
-			 * @type filter
-			 * @title um_get_field__{$key}
-			 * @description Extend field data by field $key
-			 * @input_vars
-			 * [{"var":"$data","type":"array","desc":"Field Data"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_get_field__{$key}', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_get_field__{$key}', 'my_get_field', 10, 1 );
-			 * function my_get_field( $data ) {
-			 *     // your code here
-			 *     return $data;
+			 * @param {array} $field_data Field data.
+			 *
+			 * @return {array} Field data.
+			 *
+			 * @since 2.0   First hook version applied only for the date type.
+			 * @since 2.6.8 Added support for all field type.
+			 *
+			 * @hook um_get_field_{$type}
+			 *
+			 * @example <caption>Disable all date-type fields.</caption>
+			 * function my_custom_get_field_date( $field_data ) {
+			 *     $field_data['disabled'] = ' disabled="disabled" ';
+			 *     return $field_data;
 			 * }
-			 * ?>
+			 * add_filter( 'um_get_field_date', 'my_custom_get_field_date' );
 			 */
-			$array = apply_filters( "um_get_field__{$key}", $array );
-
-			return $array;
+			$array = apply_filters( "um_get_field_{$array['type']}", $array );
+			/**
+			 * Filters the field data by the metakey. Where $key is the field's metakey.
+			 *
+			 * @param {array} $field_data Field data.
+			 *
+			 * @return {array} Field data.
+			 *
+			 * @since 1.3.x
+			 * @hook um_get_field__{$key}
+			 *
+			 * @example <caption>Disable 'first_name' field.</caption>
+			 * function my_custom_disable_first_name( $field_data ) {
+			 *     $field_data['disabled'] = ' disabled="disabled" ';
+			 *     return $field_data;
+			 * }
+			 * add_filter( 'um_get_field__first_name', 'my_custom_disable_first_name' );
+			 */
+			return apply_filters( "um_get_field__{$key}", $array );
 		}
-
 
 		/**
 		 * @param $option_value
@@ -2109,8 +2096,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$form_suffix = UM()->form()->form_suffix;
 			}
 
-			$output   = '';
-			$disabled = '';
+			$output = '';
+
 			if ( empty( $_um_profile_id ) ) {
 				$_um_profile_id = um_user( 'ID' );
 			}
@@ -2132,6 +2119,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				return '';
 			}
 			$type = $data['type'];
+
+			$disabled = '';
+			if ( isset( $data['disabled'] ) ) {
+				$disabled = $data['disabled'];
+			}
 
 			if ( isset( $data['in_group'] ) && '' !== $data['in_group'] && 'group' !== $rule ) {
 				return '';
@@ -4843,7 +4835,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
 
-			if ( in_array( $data['type'], $fields_without_metakey ) ) {
+			if ( in_array( $data['type'], $fields_without_metakey, true ) ) {
 				unset( $field_atts['id'] );
 
 				if ( empty( $field_atts['data-key'] ) ) {
