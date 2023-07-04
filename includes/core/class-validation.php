@@ -90,13 +90,16 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 
 				// Dynamic dropdown options population
 				$has_custom_source = apply_filters("um_has_dropdown_options_source__{$key}", false );
-				if ( in_array( $fields[ $key ]['type'], array( 'select','multiselect' ) ) && $has_custom_source ){
-					$arr_options = apply_filters("um_get_field__{$key}", $fields[ $key ]['options'] );
-					$fields[ $key ]['options'] = array_keys( $arr_options['options'] );
+				if ( in_array( $fields[ $key ]['type'], array( 'select','multiselect' ), true ) && $has_custom_source ) {
+					/** This filter is documented in includes/core/class-fields.php */
+					$fields[ $key ] = apply_filters( "um_get_field__{$key}", $fields[ $key ] );
+					if ( is_array( $fields[ $key ] ) && array_key_exists( 'options', $fields[ $key ] ) ) {
+						$fields[ $key ]['options'] = array_keys( $fields[ $key ]['options'] );
+					}
 				}
 
 				// Dropdown options source from callback function
-				if ( in_array( $fields[ $key ]['type'], array( 'select','multiselect' ) ) &&
+				if ( in_array( $fields[ $key ]['type'], array( 'select','multiselect' ), true ) &&
 					isset( $fields[ $key ]['custom_dropdown_options_source'] ) &&
 					! empty( $fields[ $key ]['custom_dropdown_options_source'] ) &&
 					function_exists( $fields[ $key ]['custom_dropdown_options_source'] ) ) {
