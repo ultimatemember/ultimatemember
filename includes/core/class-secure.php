@@ -204,7 +204,7 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 			}
 
 			if ( isset( $_REQUEST['um_dismiss_security_first_time_notice'] ) ) {
-				set_transient( 'um_secure_first_time_admin_notice', 1, 5 );
+				set_transient( 'um_secure_first_time_admin_notice', 1, 0 );
 			}
 
 		}
