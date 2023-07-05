@@ -740,7 +740,7 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 					</p>
 					<p>
 					<a class="button button-primary" href="<?php echo esc_attr( admin_url( 'admin.php?page=um_options&tab=secure&um_dismiss_security_first_time_notice=1' ) ); ?>"><?php esc_html_e( 'Manage Security Settings', 'ultimate-member' ); ?></a>
-					<a class="button" href="<?php echo esc_attr( admin_url( 'admin.php?page=um_options&tab=secure' ) ); ?>"><?php esc_html_e( 'Read the documentation', 'ultimate-member' ); ?></a>
+					<a class="button" href="https://docs.ultimatemember.com/article/1869-security-feature"><?php esc_html_e( 'Read the documentation', 'ultimate-member' ); ?></a>
 					</p>
 				</div>
 				<?php
