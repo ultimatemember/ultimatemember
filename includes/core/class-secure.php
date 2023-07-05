@@ -1,6 +1,9 @@
 <?php
 namespace um\core;
 
+use WP_User;
+use WP_User_Query;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -124,6 +127,11 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 			 */
 			add_action( 'init', array( $this, 'init' ) );
 
+			/**
+			 * Admin Notice
+			 */
+			add_action( 'admin_notices', array( $this, 'admin_notice' ) );
+
 		}
 
 		/**
@@ -151,9 +159,9 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		 */
 		public function admin_init() {
 
-			if ( isset( $_REQUEST['um_secure_expire_all_sessions'] ) ) {
-				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'um-secure-expire-session-nonce' ) ) {
-					// This nonce is not valid.
+			if ( isset( $_REQUEST['um_secure_expire_all_sessions'] ) && ( ! wp_doing_ajax() ) ) {
+				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'um-secure-expire-session-nonce' ) || ! current_user_can( 'manage_options' ) ) {
+					// This nonce is not valid or current logged-in user has no administrativerights.
 					wp_die( esc_html_e( 'Security check', 'ultimate-member' ) );
 				}
 
@@ -163,6 +171,36 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 				$sessions_manager->drop_sessions();
 				wp_safe_redirect( admin_url() );
 				exit;
+			}
+
+			if ( isset( $_REQUEST['um_secure_restore_account'] ) && isset( $_REQUEST['user_id'] ) && ( ! wp_doing_ajax() ) ) {
+				$user_id = $_REQUEST['user_id'];
+				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'um-security-restore-account-nonce-' . $user_id ) || ! current_user_can( 'manage_options' ) ) {
+					// This nonce is not valid or current logged-in user has no administrativerights.
+					wp_die( esc_html_e( 'Security check', 'ultimate-member' ) );
+				}
+
+				$user     = new WP_User( $user_id );
+				$metadata = $user->get( 'um_user_blocked__metadata' );
+
+				// Restore Roles.
+				if ( isset( $metadata['roles'] ) ) {
+					foreach ( $metadata['roles'] as $role ) {
+						$user->add_role( $role );
+					}
+				}
+				// Restore Account Status.
+				if ( isset( $metadata['account_status'] ) ) {
+					update_user_meta( $user_id, 'account_status', $metadata['account_status'] );
+				}
+				// Clear Cache
+				UM()->user()->remove_cache( $user_id );
+
+				set_transient( 'um_secure_restore_account_notice_success', 1, 5 );
+
+				wp_safe_redirect( wp_get_referer() );
+				exit;
+
 			}
 
 		}
@@ -378,19 +416,18 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 			global $wpdb;
 			// Fetch the WP_User object of our user.
 			um_fetch_user( $user_id );
-			$user            = new \WP_User( $user_id );
+			$user            = new WP_User( $user_id );
 			$has_admin_cap   = false;
 			$arr_banned_caps = array();
 
 			if ( UM()->options()->get( 'banned_capabilities' ) ) {
 				$arr_banned_caps = array_keys( UM()->options()->get( 'banned_capabilities' ) );
-			} else {
-				$arr_banned_caps = $this->banned_admin_capabilities;
 			}
 
 			// Add locked administratrive capabilities
 			$arr_banned_caps[] = 'manage_options';
 			$arr_banned_caps[] = 'promote_users';
+			$arr_banned_caps[] = 'level_10';
 
 			foreach ( $arr_banned_caps as $i => $cap ) {
 				/**
@@ -459,16 +496,18 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 				require_once um_path . 'includes/lib/browser.php';
 			}
 
-			// Detect browser
+			// Detect browser.
 			$browser = new \Browser();
-
+			// Capture details.
 			$captured = array(
-				'capabilities' => $user->allcaps,
-				'submitted'    => UM()->form()->post_form,
-				'roles'        => $user->roles,
-				'user_browser' => $browser,
+				'capabilities'   => $user->allcaps,
+				'submitted'      => UM()->form()->post_form,
+				'roles'          => $user->roles,
+				'user_browser'   => $browser,
+				'account_status' => get_user_meta( $user->get( 'ID' ), 'account_status', true ),
 			);
 			update_user_meta( $user->get( 'ID' ), 'um_user_blocked__metadata', $captured );
+
 			$user->remove_all_caps();
 			if ( is_user_logged_in() ) {
 				UM()->user()->set_status( 'inactive' );
@@ -492,14 +531,20 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		 */
 		public function manage_users_custom_column( $val, $column_name, $user_id ) {
 			if ( 'account_status' === $column_name ) {
-				$is_blocked = get_user_meta( $user_id, 'um_user_blocked', true );
-				if ( ! empty( $is_blocked ) ) {
-					$datetime = get_user_meta( $user_id, 'um_user_blocked__datetime', true );
-					$val      = $val . '<div><small>' . __( 'Blocked Due to Suspicious Activity', 'ultimate-member' ) . '</small></div>';
+				um_fetch_user( $user_id );
+				$is_blocked     = um_user( 'um_user_blocked' );
+				$account_status = um_user( 'account_status' );
+				if ( ! empty( $is_blocked ) && in_array( $account_status, array( 'rejected', 'inactive' ), true ) ) {
+					$datetime            = um_user( 'um_user_blocked__datetime' );
+					$val                 = $val . '<div><small>' . __( 'Blocked Due to Suspicious Activity', 'ultimate-member' ) . '</small></div>';
+					$nonce               = wp_create_nonce( 'um-security-restore-account-nonce-' . $user_id );
+					$restore_account_url = admin_url( 'users.php?user_id=' . $user_id . '&um_secure_restore_account=1&_wpnonce=' . $nonce );
+					$action              = ' &#183; <a href=" ' . esc_attr( $restore_account_url ) . ' " onclick=\'return confirm("' . __( 'Are you sure that you want to restore this account after getting flagged for suspicious activity?', 'utimate-member' ) . '");\'><small>' . __( 'Restore Account', 'ultimate-member' ) . '</small></a>';
 					if ( ! empty( $datetime ) ) {
-						$val = $val . '<div><small>' . human_time_diff( strtotime( $datetime ), strtotime( current_time( 'mysql' ) ) ) . ' ' . __( 'ago', 'ultimate-member' ) . '</small></div>';
+						$val = $val . '<div><small>' . human_time_diff( strtotime( $datetime ), strtotime( current_time( 'mysql' ) ) ) . ' ' . __( 'ago', 'ultimate-member' ) . '</small>' . $action . '</div>';
 					}
 				}
+				um_reset_user();
 			}
 			return $val;
 		}
@@ -547,7 +592,7 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 					),
 				);
 
-				$users = new \WP_User_Query( $args );
+				$users = new WP_User_Query( $args );
 
 				$this->send_email( array_values( $users->get_results() ) );
 			}
@@ -583,7 +628,7 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 					),
 				);
 
-				$users = new \WP_User_Query( $args );
+				$users = new WP_User_Query( $args );
 
 				$this->send_email( array_values( $users->get_results() ) );
 
@@ -666,7 +711,21 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 
 		}
 
-	}
+		public function admin_notice() {
+			if ( get_transient( 'um_secure_restore_account_notice_success' ) ) { ?>
+				<div class="updated notice is-dismissible">
+					<p>
+					<?php
+						esc_html_e( 'Account has been succesfully restored.', 'um-stripe' );
+					?>
+					</p>
+				</div>
+				<?php
+				// Delete transient, only display this notice once.
+				delete_transient( 'um_secure_restore_account_notice_success' );
+			}
+		}
 
+	}
 
 }
