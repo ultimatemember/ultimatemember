@@ -88,8 +88,6 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 					'export',
 					'import',
 					'list_users',
-					'manage_options',
-					'promote_users',
 					'remove_users',
 					'switch_themes',
 					'customize',
@@ -109,6 +107,8 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 					'create_users',
 					'delete_users',
 					'level_10',
+					'manage_options',
+					'promote_users',
 				)
 			);
 
@@ -293,9 +293,6 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 			$banned_admin_capabilities_options = array();
 			$default_locked_cap_options        = array( 'manage_options', 'promote_users', 'level_10' );
 			foreach ( $this->banned_admin_capabilities as $i => $cap ) {
-				if ( in_array( $cap, $default_locked_cap_options, true ) ) {
-					continue;
-				}
 				$banned_admin_capabilities_options[ $cap ] = $cap;
 			}
 
@@ -325,14 +322,15 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 							'description' => __( 'This will logout all users on your site and forces them to reset passwords <br/>when <strong>"Display Login form notice to reset passwords" is enabled/checked.</strong>', 'ultimate-member' ),
 						),
 						array(
-							'id'          => 'banned_capabilities',
-							'type'        => 'multi_checkbox',
-							'multi'       => true,
-							'columns'     => 2,
-							'options'     => $banned_admin_capabilities_options,
-							'value'       => UM()->options()->get( 'banned_capabilities' ) ? array_keys( UM()->options()->get( 'banned_capabilities' ) ) : array_keys( $default_locked_cap_options ),
-							'label'       => __( 'Banned Administrative Capabilities', 'ultimate-member' ),
-							'description' => __( 'All the above are default Administrator & Super Admin capabilities. When someone tries to inject capabilities to the Account, Profile & Register forms submission, it will be flagged with this option. The <strong>manage_options</strong>, <strong>promote_users</strong> &amp; <strong>level_10</strong> capabilities are locked to ensure no users will be created with these capabilities.', 'ultimate-member' ),
+							'id'               => 'banned_capabilities',
+							'type'             => 'multi_checkbox',
+							'multi'            => true,
+							'columns'          => 2,
+							'options_disabled' => $default_locked_cap_options,
+							'options'          => $banned_admin_capabilities_options,
+							'value'            => UM()->options()->get( 'banned_capabilities' ) ? array_keys( UM()->options()->get( 'banned_capabilities' ) ) : array_keys( $default_locked_cap_options ),
+							'label'            => __( 'Banned Administrative Capabilities', 'ultimate-member' ),
+							'description'      => __( 'All the above are default Administrator & Super Admin capabilities. When someone tries to inject capabilities to the Account, Profile & Register forms submission, it will be flagged with this option. The <strong>manage_options</strong>, <strong>promote_users</strong> &amp; <strong>level_10</strong> capabilities are locked to ensure no users will be created with these capabilities.', 'ultimate-member' ),
 						),
 						array(
 							'id'          => 'secure_notify_admins_banned_accounts',
