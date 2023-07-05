@@ -203,6 +203,10 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 
 			}
 
+			if ( isset( $_REQUEST['um_dismiss_security_first_time_notice'] ) ) {
+				set_transient( 'um_secure_first_time_admin_notice', 1, 5 );
+			}
+
 		}
 
 		/**
@@ -327,7 +331,7 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 							'options'     => $banned_admin_capabilities_options,
 							'value'       => UM()->options()->get( 'banned_capabilities' ) ? array_keys( UM()->options()->get( 'banned_capabilities' ) ) : array_keys( $banned_admin_capabilities_options ),
 							'label'       => __( 'Banned Administrative Capabilities', 'ultimate-member' ),
-							'description' => __( 'All the above are default Administrator & Super Admin capabilities. When someone tries to inject capabilities to the Profile & Register form submission, it will be flagged with this option. The <strong>manage_options</strong>, <strong>promote_users</strong> &amp; <strong>level_10</strong> capabilities are locked to ensure no users will be created with these capabilities.', 'ultimate-member' ),
+							'description' => __( 'All the above are default Administrator & Super Admin capabilities. When someone tries to inject capabilities to the Account, Profile & Register forms submission, it will be flagged with this option. The <strong>manage_options</strong>, <strong>promote_users</strong> &amp; <strong>level_10</strong> capabilities are locked to ensure no users will be created with these capabilities.', 'ultimate-member' ),
 						),
 						array(
 							'id'          => 'secure_notify_admins_banned_accounts',
@@ -723,6 +727,24 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 				<?php
 				// Delete transient, only display this notice once.
 				delete_transient( 'um_secure_restore_account_notice_success' );
+			}
+			// phpcs:disable WordPress.Security.NonceVerification
+			if ( ! get_transient( 'um_secure_first_time_admin_notice' ) && ( ! isset( $_REQUEST['page'] ) || 'um_options' !== $_REQUEST['page'] ) ) {
+				?>
+				<div class="warning notice">
+					<p>
+						<strong> <?php esc_html_e( 'Important Update', 'ultimate-member' ); ?> </strong><br/>
+					<?php
+						esc_html_e( 'Ultimate Member has a new additional feature to secure your Ultimate Member forms to prevent attacks from injecting accounts with administrative roles &amp; capabilities.', 'um-stripe' );
+					?>
+					</p>
+					<p>
+					<a class="button button-primary" href="<?php echo esc_attr( admin_url( 'admin.php?page=um_options&tab=secure&um_dismiss_security_first_time_notice=1' ) ); ?>"><?php esc_html_e( 'Manage Security Settings', 'ultimate-member' ); ?></a>
+					<a class="button" href="<?php echo esc_attr( admin_url( 'admin.php?page=um_options&tab=secure' ) ); ?>"><?php esc_html_e( 'Read the documentation', 'ultimate-member' ); ?></a>
+					</p>
+				</div>
+				<?php
+			// phpcs:enable WordPress.Security.NonceVerification
 			}
 		}
 
