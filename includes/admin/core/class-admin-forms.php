@@ -117,13 +117,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					$data['value'] = esc_attr( $data['value'] );
 				}
 
-				if( in_array( $data['type'], array('info_text') ) ){
+				if ( 'info_text' === $data['type'] ) {
 					$arr_kses = array(
 						'a' => array(
-							'href' => array(),
-							'title' => array(),
-							'target' => array(),
-							'class' => array(),
+							'href'    => array(),
+							'title'   => array(),
+							'target'  => array(),
+							'class'   => array(),
+							'onclick' => array(),
 						),
 						'button' => array(
 							'class' => array(),
@@ -1185,15 +1186,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 * @return bool|string
 		 */
 		function render_multi_checkbox( $field_data ) {
-
 			if ( empty( $field_data['id'] ) ) {
 				return false;
 			}
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
 
-			$class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
-			$class .= ! empty( $field_data['size'] ) ? $field_data['size'] : 'um-long-field';
+			$class      = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
+			$class     .= ! empty( $field_data['size'] ) ? $field_data['size'] : 'um-long-field';
 			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
 
 			$name = $field_data['id'];
@@ -1229,7 +1229,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 					$data_attr = '';
 					foreach ( $data as $key => $value ) {
-						if ( $value == 'checkbox_key' ) {
+						if ( 'checkbox_key' === $value ) {
 							$value = $k;
 						}
 						$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
@@ -1237,7 +1237,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 					if ( isset( $field_data['options_disabled'] ) && in_array( $k, $field_data['options_disabled'], true ) ) {
 						$disabed_attr = 'disabled="disabled"';
-						$values       = array_merge( $values, $field_data['options_disabled'] );
 					}
 
 					$html .= "<label $for_attr>

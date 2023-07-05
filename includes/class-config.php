@@ -195,7 +195,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'_um_secondary_color',
 			);
 
-
 			/**
 			 * UM hook
 			 *
@@ -559,9 +558,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'form_asterisk'                         => 0,
 				'profile_title'                         => '{display_name} | {site_name}',
 				'profile_desc'                          => '{display_name} is on {site_name}. Join {site_name} to view {display_name}\'s profile',
-				'admin_email'                           => get_bloginfo('admin_email'),
-				'mail_from'                             => get_bloginfo('name'),
-				'mail_from_addr'                        => get_bloginfo('admin_email'),
+				'admin_email'                           => get_bloginfo( 'admin_email' ),
+				'mail_from'                             => get_bloginfo( 'name' ),
+				'mail_from_addr'                        => get_bloginfo( 'admin_email' ),
 				'email_html'                            => 1,
 				'image_orientation_by_exif'             => 0,
 				'image_compression'                     => 60,
@@ -576,6 +575,11 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'profile_show_html_bio'                 => 0,
 				'profile_noindex'                       => 0,
 				'activation_link_expiry_time'           => '',
+				'lock_register_forms'                   => false,
+				'display_login_form_notice'             => false,
+				'banned_capabilities'                   => array( 'manage_options', 'promote_users', 'level_10' ),
+				'secure_notify_admins_banned_accounts'  => false,
+				'secure_notify_admins_banned_accounts__interval' => 'instant',
 			);
 
 			add_filter( 'um_get_tabs_from_config', '__return_true' );

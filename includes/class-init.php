@@ -573,6 +573,7 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->admin_enqueue();
 				$this->metabox();
 				$this->admin()->notices();
+				$this->admin()->secure();
 				$this->users();
 				$this->dragdrop();
 				$this->admin_gdpr();

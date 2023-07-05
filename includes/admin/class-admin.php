@@ -2068,5 +2068,17 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			}
 			return UM()->classes['admin_notices'];
 		}
+
+		/**
+		 * @since 2.6.8
+		 *
+		 * @return core\Secure
+		 */
+		public function secure() {
+			if ( empty( UM()->classes['admin_secure'] ) ) {
+				UM()->classes['admin_secure'] = new core\Secure();
+			}
+			return UM()->classes['admin_secure'];
+		}
 	}
 }
