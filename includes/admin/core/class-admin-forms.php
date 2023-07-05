@@ -1204,19 +1204,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$values = array();
 			}
 
-			$i = 0;
+			$i    = 0;
 			$html = '';
 
 			$columns = ( ! empty( $field_data['columns'] ) && is_numeric( $field_data['columns'] ) ) ? $field_data['columns'] : 1;
 			while ( $i < $columns ) {
-				$per_page = ceil( count( $field_data['options'] ) / $columns );
-				$section_fields_per_page = array_slice( $field_data['options'], $i*$per_page, $per_page, true );
-				$html .= '<span class="um-form-fields-section" style="width:' . floor( 100 / $columns ) . '% !important;">';
+				$per_page                = ceil( count( $field_data['options'] ) / $columns );
+				$section_fields_per_page = array_slice( $field_data['options'], $i * $per_page, $per_page, true );
+				$html                   .= '<span class="um-form-fields-section" style="width:' . floor( 100 / $columns ) . '% !important;">';
 
 				foreach ( $section_fields_per_page as $k => $title ) {
-					$id_attr = ' id="' . esc_attr( $id . '_' . $k ) . '" ';
-					$for_attr = ' for="' . esc_attr( $id . '_' . $k ) . '" ';
-					$name_attr = ' name="' . $name . '[' . $k . ']" ';
+					$id_attr      = ' id="' . esc_attr( $id . '_' . $k ) . '" ';
+					$for_attr     = ' for="' . esc_attr( $id . '_' . $k ) . '" ';
+					$name_attr    = ' name="' . $name . '[' . $k . ']" ';
+					$disabed_attr = '';
 
 					$data = array(
 						'field_id' => $field_data['id'] . '_' . $k,
@@ -1234,8 +1235,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 						$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
 					}
 
+					if ( isset( $field_data['options_disabled'] ) && in_array( $k, $field_data['options_disabled'], true ) ) {
+						$disabed_attr = 'disabled="disabled"';
+						$values       = array_merge( $values, $field_data['options_disabled'] );
+					}
+
 					$html .= "<label $for_attr>
-						<input type=\"checkbox\" " . checked( in_array( $k, $values ), true, false ) . "$id_attr $name_attr $data_attr value=\"1\" $class_attr>
+						<input type=\"checkbox\" " . checked( in_array( $k, $values, true ), true, false ) . "$disabed_attr $id_attr $name_attr $data_attr value=\"1\" $class_attr>
 						<span>$title</span>
 					</label>";
 				}
