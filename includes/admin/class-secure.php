@@ -129,6 +129,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 				}
 
 				$metadata = get_user_meta( $user_id, 'um_user_blocked__metadata', true );
+				$user->update_user_level_from_caps();
 
 				// Restore Roles.
 				if ( isset( $metadata['roles'] ) ) {
@@ -147,8 +148,10 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 				delete_user_meta( $user_id, 'um_user_blocked__timestamp' );
 
 				// Don't need to reset a password.
-				update_user_meta( $user_id, 'um_secure_has_reset_password', true );
-				update_user_meta( $user_id, 'um_secure_has_reset_password__timestamp', current_time( 'mysql' ) );
+				if ( UM()->options()->get( 'display_login_form_notice' ) ) {
+					update_user_meta( $user_id, 'um_secure_has_reset_password', true );
+					update_user_meta( $user_id, 'um_secure_has_reset_password__timestamp', current_time( 'mysql' ) );
+				}
 
 				// Clear Cache.
 				UM()->user()->remove_cache( $user_id );
@@ -251,7 +254,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 						'id'          => 'secure_notify_admins_banned_accounts',
 						'type'        => 'checkbox',
 						'label'       => __( 'Notify Administrators', 'ultimate-member' ),
-						'description' => __( 'When enabled, All administrators will be notified when someone has suspicious activities in Profile & Register forms.', 'ultimate-member' ),
+						'description' => __( 'When enabled, All administrators will be notified when someone has suspicious activities in the Account, Profile & Register forms.', 'ultimate-member' ),
 						'conditional' => array( 'secure_ban_admins_accounts', '=', 1 ),
 					),
 					array(
