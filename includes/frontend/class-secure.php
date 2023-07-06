@@ -199,7 +199,7 @@ if ( ! class_exists( 'um\frontend\Secure' ) ) {
 			$arr_banned_caps = array();
 
 			if ( UM()->options()->get( 'banned_capabilities' ) ) {
-				$arr_banned_caps = array_keys( UM()->options()->get( 'banned_capabilities' ) );
+				$arr_banned_caps = UM()->options()->get( 'banned_capabilities' );
 			}
 
 			// Add locked administrative capabilities.

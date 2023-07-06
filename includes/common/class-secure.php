@@ -118,7 +118,7 @@ if ( ! class_exists( 'um\common\Secure' ) ) {
 						array(
 							'admin'        => true,
 							'tags'         => array(
-								'banned_profile_links',
+								'{banned_profile_links}',
 							),
 							'tags_replace' => array(
 								$banned_profile_links,
