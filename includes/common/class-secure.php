@@ -211,19 +211,22 @@ if ( ! class_exists( 'um\common\Secure' ) ) {
 			} elseif ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
 				$user_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) );
 			}
+
+			um_fetch_user( $user->ID );
+
 			// Capture details.
 			$captured = array(
 				'capabilities'   => $user->allcaps,
 				'submitted'      => ! empty( UM()->form()->post_form ) ? UM()->form()->post_form : '',
 				'roles'          => $user->roles,
 				'user_agent'     => $user_agent,
-				'account_status' => get_user_meta( $user->ID, 'account_status', true ),
+				'account_status' => um_user( 'status' ),
 			);
 			update_user_meta( $user->ID, 'um_user_blocked__metadata', $captured );
 
 			$user->remove_all_caps();
 			$user->update_user_level_from_caps();
-			um_fetch_user( $user->ID );
+
 			if ( is_user_logged_in() ) {
 				UM()->user()->set_status( 'inactive' );
 			} else {

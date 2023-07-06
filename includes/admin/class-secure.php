@@ -43,7 +43,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 		public function __construct() {
 			add_action( 'admin_init', array( $this, 'admin_init' ) );
 			add_filter( 'um_settings_structure', array( $this, 'add_settings' ) );
-			add_filter( 'manage_users_custom_column', array( $this, 'add_restore_account' ), 10, 3 );
+			add_filter( 'manage_users_custom_column', array( $this, 'add_restore_account' ), 9999, 3 );
 
 			add_action( 'um_settings_before_save', array( $this, 'check_secure_changes' ) );
 			add_action( 'um_settings_save', array( $this, 'on_settings_save' ) );
@@ -128,6 +128,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 					wp_die( esc_html__( 'Invalid user.', 'ultimate-member' ) );
 				}
 
+				um_fetch_user( $user_id );
 				$metadata = get_user_meta( $user_id, 'um_user_blocked__metadata', true );
 				$user->update_user_level_from_caps();
 
@@ -155,6 +156,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 
 				// Clear Cache.
 				UM()->user()->remove_cache( $user_id );
+				um_reset_user();
 				wp_safe_redirect( add_query_arg( 'update', 'um_secure_restore', wp_get_referer() ) );
 				exit;
 			}
