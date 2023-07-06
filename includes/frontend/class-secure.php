@@ -249,11 +249,6 @@ if ( ! class_exists( 'um\frontend\Secure' ) ) {
 					wp_safe_redirect( $login_url );
 					exit;
 				}
-			} else {
-				if ( UM()->options()->get( 'display_login_form_notice' ) ) {
-					update_user_meta( $user_id, 'um_secure_has_reset_password', true );
-					update_user_meta( $user_id, 'um_secure_has_reset_password__timestamp', current_time( 'mysql' ) );
-				}
 			}
 		}
 
