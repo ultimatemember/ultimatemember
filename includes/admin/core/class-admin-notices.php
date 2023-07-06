@@ -61,6 +61,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			//$this->future_changed();
 
+			$this->common_secure();
+
 			/**
 			 * UM hook
 			 *
@@ -522,7 +524,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					$messages[1]['content']     = __( 'Other users have been updated.', 'ultimate-member' );
 					break;
 				case 'um_secure_expire_sessions':
-					$messages[0]['content'] = __( 'All users sessions have been expired.', 'ultimate-member' );
+					$messages[0]['content'] = __( 'All users sessions have been successfully destroyed.', 'ultimate-member' );
 					break;
 				case 'um_secure_restore':
 					$messages[0]['content'] = __( 'Account has been successfully restored.', 'ultimate-member' );
@@ -784,6 +786,65 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				),
 				1
 			);
+		}
+
+		public function common_secure() {
+			if ( UM()->options()->get( 'lock_register_forms' ) ) {
+				ob_start();
+				?>
+				<p>
+					<?php esc_html_e( 'Your Register forms are now locked. You can unlock them in Ultimate Member > Settings > Secure > Lock All Register Forms.', 'ultimate-member' ); ?>
+				</p>
+				<?php
+				$message = ob_get_clean();
+				$this->add_notice(
+					'common_secure_register',
+					array(
+						'class'       => 'warning',
+						'message'     => $message,
+						'dismissible' => true,
+					),
+					1
+				);
+			}
+
+			if ( UM()->options()->get( 'display_login_form_notice' ) ) {
+				ob_start();
+				?>
+				<p>
+					<?php esc_html_e( 'Mandatory password changes has been enabled. You can disable them in Ultimate Member > Settings > Secure > Display Login form notice to reset passwords.', 'ultimate-member' ); ?>
+				</p>
+				<?php
+				$message = ob_get_clean();
+				$this->add_notice(
+					'common_secure_password_reset',
+					array(
+						'class'       => 'warning',
+						'message'     => $message,
+						'dismissible' => true,
+					),
+					1
+				);
+			}
+
+			if ( UM()->options()->get( 'secure_ban_admins_accounts' ) ) {
+				ob_start();
+				?>
+				<p>
+					<?php esc_html_e( 'Ban for administrative capabilities is enabled. You can disable them in Ultimate Member > Settings > Secure > Enable ban for administrative capabilities.', 'ultimate-member' ); ?>
+				</p>
+				<?php
+				$message = ob_get_clean();
+				$this->add_notice(
+					'common_secure_suspicious_activity',
+					array(
+						'class'       => 'warning',
+						'message'     => $message,
+						'dismissible' => true,
+					),
+					1
+				);
+			}
 		}
 
 		public function dismiss_notice() {

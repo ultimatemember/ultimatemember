@@ -1,27 +1,26 @@
 <?php
-namespace um\core;
+namespace um\frontend;
 
 use WP_Error;
 use WP_User;
-use WP_User_Query;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'um\core\Secure' ) ) {
+if ( ! class_exists( 'um\frontend\Secure' ) ) {
 
 	/**
 	 * Class Secure
 	 *
-	 * @package um\core
+	 * @package um\frontend
 	 *
 	 * @since 2.6.8
 	 */
 	class Secure {
 
 		/**
-		 * Login constructor.
+		 * Secure constructor.
 		 * @since 2.6.8
 		 */
 		public function __construct() {
@@ -36,11 +35,6 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 			add_action( 'um_user_login', array( $this, 'login_validate_expired_pass' ), 1 );
 
 			add_action( 'validate_password_reset', array( $this, 'avoid_old_password' ), 1, 2 );
-
-			/**
-			 *  WP Schedule Events for Notification
-			 */
-			add_action( 'wp', array( $this, 'schedule_events' ) );
 		}
 
 		/**
@@ -49,6 +43,10 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		 * @since 2.6.8
 		 */
 		public function init() {
+			if ( ! UM()->options()->get( 'secure_ban_admins_accounts' ) ) {
+				return;
+			}
+
 			/**
 			 * Checks the integrity of Current User's Capabilities
 			 */
@@ -79,7 +77,7 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 			echo "<p class='um-notice warning'>";
 			echo wp_kses(
 				sprintf(
-					// translators: One-time change requires you to reset your password
+				// translators: One-time change requires you to reset your password
 					__( '<strong>Important:</strong> Your password has expired. This (one-time) change requires you to reset your password. Please <a href="%s">click here</a> to reset your password via Email.', 'ultimate-member' ),
 					um_get_core_page( 'password-reset' )
 				),
@@ -125,10 +123,9 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		/**
 		 * Block all UM Register form submissions.
 		 *
-		 * @param array $args Form settings.
 		 * @since 2.6.8
 		 */
-		public function block_register_forms( $args ) {
+		public function block_register_forms() {
 			if ( UM()->options()->get( 'lock_register_forms' ) ) {
 				$login_url = add_query_arg( 'notice', 'maintenance', um_get_core_page( 'login' ) );
 				nocache_headers();
@@ -186,6 +183,8 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		 * Secure user capabilities and revoke administrative ones.
 		 *
 		 * @since 2.6.8
+		 *
+		 * @param int $user_id
 		 */
 		public function secure_user_capabilities( $user_id ) {
 			global $wpdb;
@@ -229,14 +228,14 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 			}
 
 			if ( $has_admin_cap ) {
-				$this->revoke_caps( $user );
+				UM()->common()->secure()->revoke_caps( $user );
 				/**
 				 * Notify Administrators Immediately
 				 */
 				if ( UM()->options()->get( 'secure_notify_admins_banned_accounts' ) ) {
 					$interval = UM()->options()->get( 'secure_notify_admins_banned_accounts__interval' );
 					if ( 'instant' === $interval ) {
-						$this->send_email( array( $user_id ) );
+						UM()->common()->secure()->send_notification( array( $user_id ) );
 					}
 				}
 
@@ -259,12 +258,13 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 		}
 
 		/**
-		 * Secure user capabilities and revoke administrative ones.
+		 * Set meta (no need to reset his password) if the user is a new registered.
 		 *
 		 * @since 2.6.8
+		 *
+		 * @param int $user_id
 		 */
 		public function maybe_set_whitelisted_password( $user_id ) {
-			global $wpdb;
 			$user = get_userdata( $user_id );
 			if ( empty( $user ) ) {
 				return;
@@ -274,188 +274,6 @@ if ( ! class_exists( 'um\core\Secure' ) ) {
 				update_user_meta( $user_id, 'um_secure_has_reset_password', true );
 				update_user_meta( $user_id, 'um_secure_has_reset_password__timestamp', current_time( 'mysql' ) );
 			}
-		}
-
-		/**
-		 * Revoke Caps & Mark rejected as suspicious
-		 *
-		 * @param object $user \WP_User
-		 *
-		 * @since 2.6.8
-		 */
-		public function revoke_caps( $user ) {
-			$user_agent = '';
-			if ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
-				$user_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) );
-			}
-			// Capture details.
-			$captured = array(
-				'capabilities'   => $user->allcaps,
-				'submitted'      => UM()->form()->post_form,
-				'roles'          => $user->roles,
-				'user_agent'     => $user_agent,
-				'account_status' => get_user_meta( $user->ID, 'account_status', true ),
-			);
-			update_user_meta( $user->ID, 'um_user_blocked__metadata', $captured );
-
-			$user->remove_all_caps();
-			if ( is_user_logged_in() ) {
-				UM()->user()->set_status( 'inactive' );
-			} else {
-				UM()->user()->set_status( 'rejected' );
-			}
-			update_user_meta( $user->ID, 'um_user_blocked', 'suspicious_activity' );
-			update_user_meta( $user->ID, 'um_user_blocked__datetime', current_time( 'mysql' ) );
-		}
-
-		/**
-		 * Add callbacks to Schedule Events.
-		 *
-		 * @since 2.6.8
-		 */
-		public function schedule_events() {
-			if ( UM()->options()->get( 'secure_notify_admins_banned_accounts' ) ) {
-				$notification_interval = UM()->options()->get( 'secure_notify_admins_banned_accounts__interval' );
-				if ( 'instant' === $notification_interval ) {
-					return;
-				}
-
-				if ( 'hourly' === $notification_interval ) {
-					add_action( 'um_hourly_scheduled_events', array( $this, 'notify_administrators_hourly' ) );
-				} elseif ( 'daily' === $notification_interval ) {
-					add_action( 'um_daily_scheduled_events', array( $this, 'notify_administrators_daily' ) );
-				}
-			}
-		}
-
-		/**
-		 * Notify Administrators hourly - Suspicious activities in an hour
-		 *
-		 * @since 2.6.8
-		 */
-		public function notify_administrators_hourly() {
-			$args = array(
-				'fields'     => 'ID',
-				'meta_query' => array(
-					'relation' => 'AND',
-					array(
-						'key'     => 'um_user_blocked__datetime',
-						'value'   => gmdate( 'Y-m-d H:i:s', strtotime( '-1 hour' ) ),
-						'compare' => '>=',
-						'type'    => 'DATETIME',
-					),
-				),
-			);
-
-			$users = new WP_User_Query( $args );
-
-			$this->send_email( array_values( $users->get_results() ) );
-		}
-
-		/**
-		 * Notify Administrators daily - Today's suspicious activity
-		 *
-		 * @since 2.6.8
-		 */
-		public function notify_administrators_daily() {
-			$args = array(
-				'fields'     => 'ID',
-				'relation'   => 'AND',
-				'meta_query' => array(
-					'relation' => 'AND',
-					array(
-						'key'     => 'um_user_blocked__datetime',
-						'value'   => gmdate( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
-						'compare' => '>=',
-						'type'    => 'DATE',
-					),
-					array(
-						'key'     => 'um_user_blocked__datetime',
-						'value'   => gmdate( 'Y-m-d H:i:s', strtotime( 'now' ) ),
-						'compare' => '<=',
-						'type'    => 'DATE',
-					),
-				),
-			);
-
-			$users = new WP_User_Query( $args );
-
-			$this->send_email( array_values( $users->get_results() ) );
-		}
-
-		/**
-		 * Get Email template
-		 *
-		 * @param bool $single Whether the template is for single or multiple user activities
-		 * @param array $profile_urls Profile URLs to include in the email body
-		 *
-		 * @since 2.6.8
-		 */
-		public function get_email_template( $single = true, $profile_urls = array() ) {
-			$action = '';
-			if ( ! is_user_logged_in() ) {
-				$action = 'Rejected';
-			} else {
-				$action = 'Deactivated';
-			}
-
-			$body = '';
-			if ( $single ) {
-				$body  = 'This is to inform you that there\'s a suspicious activity with the following account: ';
-				$body .= '<br/>';
-				$body .= '{user_profile_link}';
-				$body .= '<br/><br/>';
-				$body .= 'Due to that we have set the account status to ' . $action . ', Revoked Roles & Destroyed the Login Session.';
-				$body .= '</br>';
-			} else {
-				$body  = 'This is to inform you that there are suspicious activities with the following accounts: ';
-				$body .= '</br>';
-				$body .= '{user_profile_link}';
-				$body .= '</br></br>';
-				$body .= 'Due to that we have set each account\'s status to ' . $action . ', revoked roles & destroyed the login session.';
-				$body .= '</br>';
-			}
-
-			$urls  = implode( '</br>', $profile_urls );
-			$body  = str_replace( '{user_profile_link}', $urls, $body );
-			$body .= '<br/><br/>- Sent via Ultimate Member plugin. ';
-
-			return $body;
-		}
-
-		/**
-		 * Send Email
-		 *
-		 * @param array $user_ids User IDs.
-		 *
-		 * @since 2.6.8
-		 */
-		public function send_email( $user_ids = array() ) {
-
-			if ( empty( $user_ids ) ) {
-				return '';
-			}
-			$multiple_recipients = array();
-			$admins              = get_users( 'role=Administrator' );
-			foreach ( $admins as $user ) {
-				$multiple_recipients[] = $user->user_email;
-			}
-
-			$subject = _n( 'Suspicious Account Activity on ', 'Suspicious Accounts & Activities on ', count( $user_ids ), 'ultimate-member' ) . wp_parse_url( get_site_url() )['host'];
-
-			if ( count( $user_ids ) <= 1 ) {
-				$url  = UM()->user()->get_profile_link( $user_ids[0] );
-				$body = $this->get_email_template( true, array( $url ) );
-			} else {
-				$arr_urls = array();
-				foreach ( $user_ids as $i => $uid ) {
-					$arr_urls[] = UM()->user()->get_profile_link( $uid );
-				}
-				$body = $this->get_email_template( false, $arr_urls );
-			}
-
-			wp_mail( $multiple_recipients, $subject, $body );
-
 		}
 	}
 }

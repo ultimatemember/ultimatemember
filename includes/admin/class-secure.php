@@ -1,18 +1,28 @@
 <?php
-namespace um\admin\core;
+/**
+ * Usermeta which we use:
+ *
+ * um_user_blocked__metadata
+ * um_user_blocked
+ * um_user_blocked__timestamp
+ *
+ * um_secure_has_reset_password
+ * um_secure_has_reset_password__timestamp
+ */
+namespace um\admin;
 
-use WP_User;
+use WP_Session_Tokens;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'um\admin\core\Secure' ) ) {
+if ( ! class_exists( 'um\admin\Secure' ) ) {
 
 	/**
 	 * Class Secure
 	 *
-	 * @package um\admin\core
+	 * @package um\admin
 	 *
 	 * @since 2.6.8
 	 */
@@ -37,6 +47,21 @@ if ( ! class_exists( 'um\admin\core\Secure' ) ) {
 
 			add_action( 'um_settings_before_save', array( $this, 'check_secure_changes' ) );
 			add_action( 'um_settings_save', array( $this, 'on_settings_save' ) );
+
+			add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
+
+			add_action( 'wp_ajax_um_secure_scan_affected_users', array( $this, 'ajax_scanner' ) );
+		}
+
+		public function admin_scripts( $hook ) {
+			// phpcs:disable WordPress.Security.NonceVerification
+			if ( 'ultimate-member_page_um_options' !== $hook || ( isset( $_GET['tab'] ) && 'secure' !== $_GET['tab'] ) ) {
+				return;
+			}
+			// phpcs:enable WordPress.Security.NonceVerification
+
+			wp_register_script( 'um_admin_secure', UM()->admin_enqueue()->js_url . 'um-admin-secure.js', array( 'jquery' ), UM_VERSION, true );
+			wp_enqueue_script( 'um_admin_secure' );
 		}
 
 		/**
@@ -68,7 +93,7 @@ if ( ! class_exists( 'um\admin\core\Secure' ) ) {
 				if ( ! empty( $users ) ) {
 					foreach ( $users as $user_id ) {
 						// Get an instance of WP_User_Meta_Session_Tokens
-						$sessions_manager = \WP_Session_Tokens::get_instance( $user_id );
+						$sessions_manager = WP_Session_Tokens::get_instance( $user_id );
 						// Remove all the session for instance user.
 						$sessions_manager->destroy_all();
 
@@ -119,7 +144,7 @@ if ( ! class_exists( 'um\admin\core\Secure' ) ) {
 				// Delete blocked meta.
 				delete_user_meta( $user_id, 'um_user_blocked__metadata' );
 				delete_user_meta( $user_id, 'um_user_blocked' );
-				delete_user_meta( $user_id, 'um_user_blocked__datetime' );
+				delete_user_meta( $user_id, 'um_user_blocked__timestamp' );
 
 				// Don't need to reset a password.
 				update_user_meta( $user_id, 'um_secure_has_reset_password', true );
@@ -144,77 +169,49 @@ if ( ! class_exists( 'um\admin\core\Secure' ) ) {
 			$nonce       = wp_create_nonce( 'um-secure-expire-session-nonce' );
 			$count_users = count_users();
 
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_secure_register_form_banned_capabilities
-			 * @description Modify banned capabilities for Register forms
-			 * @input_vars
-			 * [{"var":"$capabilities","type":"array","desc":"WordPress Administratrive Capabilities"}]
-			 * @change_log
-			 * ["Since: 2.6.8"]
-			 * @usage
-			 * <?php add_filter( 'um_secure_register_form_banned_capabilities', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_secure_register_form_banned_capabilities', 'my_banned_capabilities', 10, 1 );
-			 * function my_banned_capabilities( $capabiities ) {
-			 *     // your code here
-			 *     $capabiities[ ] = 'read'; // rejects all users with `read` capabilitiy.
-			 *     return $capabiities;
-			 * }
-			 * ?>
-			 */
-			$banned_admin_capabilities = apply_filters(
-				'um_secure_register_form_banned_capabilities',
-				array(
-					'create_sites',
-					'delete_sites',
-					'manage_network',
-					'manage_sites',
-					'manage_network_users',
-					'manage_network_plugins',
-					'manage_network_themes',
-					'manage_network_options',
-					'upgrade_network',
-					'setup_network',
-					'activate_plugins',
-					'edit_dashboard',
-					'edit_theme_options',
-					'export',
-					'import',
-					'list_users',
-					'remove_users',
-					'switch_themes',
-					'customize',
-					'delete_site',
-					'update_core',
-					'update_plugins',
-					'update_themes',
-					'install_plugins',
-					'install_themes',
-					'delete_themes',
-					'delete_plugins',
-					'edit_plugins',
-					'edit_themes',
-					'edit_files',
-					'edit_users',
-					'add_users',
-					'create_users',
-					'delete_users',
-					'level_10',
-					'manage_options',
-					'promote_users',
-				)
-			);
-
-			$banned_capabilities = array();
+			$banned_capabilities       = array();
+			$banned_admin_capabilities = UM()->common()->secure()->get_banned_capabilities_list();
 			foreach ( $banned_admin_capabilities as $cap ) {
 				$banned_capabilities[ $cap ] = $cap;
 			}
 
+			$disabled_capabilities      = UM()->options()->get_default( 'banned_capabilities' );
+			$disabled_capabilities_text = '<strong>' . implode( '</strong>, <strong>', $disabled_capabilities ) . '</strong>';
+
+			$scanner_content   = '<button class="button um-secure-scan-content">' . esc_html__( 'Scan Now', 'ultimate-member' ) . '</button>';
+			$scanner_content  .= '<span class="um-secure-scan-results">';
+			$scanner_content  .= esc_html__( 'Last scan:', 'ultimate-member' ) . ' ';
+			$scan_status       = get_option( 'um_secure_scan_status' );
+			$last_scanned_time = get_option( 'um_secure_last_time_scanned' );
+			if ( ! empty( $last_scanned_time ) ) {
+				$scanner_content .= human_time_diff( strtotime( $last_scanned_time ), strtotime( current_time( 'mysql' ) ) ) . ' ' . esc_html__( 'ago', 'ultimate-member' );
+				if ( 'started' === $scan_status ) {
+					$scanner_content .= ' - ' . esc_html__( 'Not Completed.', 'ultimate-member' );
+				}
+			} else {
+				$scanner_content .= esc_html__( 'Not Scanned yet.', 'ultimate-member' );
+			}
+			$scanner_content .= '</span>';
+
 			$secure_fields = array(
+				array(
+					'id'               => 'banned_capabilities',
+					'type'             => 'multi_checkbox',
+					'multi'            => true,
+					'columns'          => 2,
+					'options_disabled' => $disabled_capabilities,
+					'options'          => $banned_capabilities,
+					'label'            => __( 'Banned Administrative Capabilities', 'ultimate-member' ),
+					// translators: %s are disabled default capabilities that are enabled by default.
+					'description'      => sprintf( __( 'All the above are default Administrator & Super Admin capabilities. When someone tries to inject capabilities to the Account, Profile & Register forms submission, it will be flagged with this option. The %s capabilities are locked to ensure no users will be created with these capabilities.', 'ultimate-member' ), $disabled_capabilities_text ),
+				),
+				array(
+					'id'          => 'secure_scan_affected_users',
+					'type'        => 'info_text',
+					'label'       => __( 'Scanner', 'ultimate-member' ),
+					'value'       => $scanner_content,
+					'description' => __( 'Scan your site to check for vulnerabilities prior to Ultimate Member version 2.6.7 and get recommendations to secure your site.', 'ultimate-member' ),
+				),
 				array(
 					'id'          => 'lock_register_forms',
 					'type'        => 'checkbox',
@@ -241,28 +238,21 @@ if ( ! class_exists( 'um\admin\core\Secure' ) ) {
 				);
 			}
 
-			$disabled_capabilities      = UM()->options()->get_default( 'banned_capabilities' );
-			$disabled_capabilities_text = '<strong>' . implode( '</strong>, <strong>', $disabled_capabilities ) . '</strong>';
-
 			$secure_fields = array_merge(
 				$secure_fields,
 				array(
 					array(
-						'id'               => 'banned_capabilities',
-						'type'             => 'multi_checkbox',
-						'multi'            => true,
-						'columns'          => 2,
-						'options_disabled' => UM()->options()->get_default( 'banned_capabilities' ),
-						'options'          => $banned_capabilities,
-						'label'            => __( 'Banned Administrative Capabilities', 'ultimate-member' ),
-						// translators: %s are disabled default capabilities that are enabled by default.
-						'description'      => sprintf( __( 'All the above are default Administrator & Super Admin capabilities. When someone tries to inject capabilities to the Account, Profile & Register forms submission, it will be flagged with this option. The %s capabilities are locked to ensure no users will be created with these capabilities.', 'ultimate-member' ), $disabled_capabilities_text ),
+						'id'          => 'secure_ban_admins_accounts',
+						'type'        => 'checkbox',
+						'label'       => __( 'Enable ban for administrative capabilities', 'ultimate-member' ),
+						'description' => __( ' When someone tries to inject capabilities to the Account, Profile & Register forms submission, it will be banned.', 'ultimate-member' ),
 					),
 					array(
 						'id'          => 'secure_notify_admins_banned_accounts',
 						'type'        => 'checkbox',
 						'label'       => __( 'Notify Administrators', 'ultimate-member' ),
 						'description' => __( 'When enabled, All administrators will be notified when someone has suspicious activities in Profile & Register forms.', 'ultimate-member' ),
+						'conditional' => array( 'secure_ban_admins_accounts', '=', 1 ),
 					),
 					array(
 						'id'          => 'secure_notify_admins_banned_accounts__interval',
@@ -303,7 +293,7 @@ if ( ! class_exists( 'um\admin\core\Secure' ) ) {
 				$is_blocked     = um_user( 'um_user_blocked' );
 				$account_status = um_user( 'account_status' );
 				if ( ! empty( $is_blocked ) && in_array( $account_status, array( 'rejected', 'inactive' ), true ) ) {
-					$datetime            = um_user( 'um_user_blocked__datetime' );
+					$datetime            = um_user( 'um_user_blocked__timestamp' );
 					$val                .= '<div><small>' . esc_html__( 'Blocked Due to Suspicious Activity', 'ultimate-member' ) . '</small></div>';
 					$nonce               = wp_create_nonce( 'um-security-restore-account-nonce-' . $user_id );
 					$restore_account_url = admin_url( 'users.php?user_id=' . $user_id . '&um_secure_restore_account=1&_wpnonce=' . $nonce );

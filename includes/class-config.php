@@ -495,9 +495,17 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'body'          => '{display_name} has just deleted their {site_name} account.',
 					'description'   => __('Whether to receive notification when an account is deleted','ultimate-member'),
 					'recipient'   => 'admin'
-				)
+				),
+				'suspicious-activity'   => array(
+					'key'            => 'suspicious-activity',
+					'title'          => __( 'Secure: Suspicious Account Activity', 'ultimate-member' ),
+					'subject'        => __( '[{site_name}] Suspicious Account Activity', 'ultimate-member' ),
+					'body'           => 'This is to inform you that there are suspicious activities with the following accounts: {user_profile_link}',
+					'description'    => __( 'Whether to receive notification when suspicious account activity is detected.', 'ultimate-member' ),
+					'recipient'      => 'admin',
+					'default_active' => true,
+				),
 			) );
-
 
 			//settings defaults
 			$this->settings_defaults = array(
@@ -577,6 +585,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'activation_link_expiry_time'           => '',
 				'lock_register_forms'                   => false,
 				'display_login_form_notice'             => false,
+				'secure_ban_admins_accounts'            => false,
 				'banned_capabilities'                   => array( 'manage_options', 'promote_users', 'level_10' ),
 				'secure_notify_admins_banned_accounts'  => false,
 				'secure_notify_admins_banned_accounts__interval' => 'instant',
