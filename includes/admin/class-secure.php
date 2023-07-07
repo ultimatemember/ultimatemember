@@ -322,11 +322,20 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 		 *
 		 */
 		public function on_settings_save() {
+
 			if ( isset( $_POST['um_options']['display_login_form_notice'] ) && ! empty( $this->need_flush_meta ) ) {  //phpcs:ignore WordPress.Security.NonceVerification
 				global $wpdb;
 				$wpdb->query(
 					"DELETE FROM {$wpdb->usermeta} WHERE meta_key = 'um_secure_has_reset_password' OR meta_key = 'um_secure_has_reset_password__timestamp'"
 				);
+			}
+
+			if ( isset( $_POST['um_options']['secure_notify_admins_banned_accounts'] ) ) {   //phpcs:ignore WordPress.Security.NonceVerification
+				if ( ! empty( $_POST['um_options']['secure_notify_admins_banned_accounts'] ) ) {  //phpcs:ignore WordPress.Security.NonceVerification
+					UM()->options()->update( 'suspicious-activity_on', 1 );
+				} else {
+					UM()->options()->update( 'suspicious-activity_on', 0 );
+				}
 			}
 		}
 	}
