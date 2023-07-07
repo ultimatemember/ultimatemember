@@ -341,9 +341,7 @@ class Secure {
 
 		$content .= $br . $br . '<strong>Install Challenge-Response plugin to Login & Register Forms</strong>';
 		if ( ! array_key_exists( 'um-recaptcha/um-recaptcha.php', $all_plugins ) ) {
-			if ( ! isset( $_SERVER['HTTPS'] ) || 'on' !== $_SERVER['HTTPS'] ) {
-				$content .= $br . $flag . 'We recommend that you install and enable ReCaptcha to Login & Register forms.';
-			}
+			$content .= $br . $flag . 'We recommend that you install and enable <a href="https://wordpress.org/plugins/um-recaptcha/" target="_blank">ReCaptcha</a> to your Reset Password, Login & Register forms.';
 		} else {
 			if ( in_array( 'um-recaptcha/um-recaptcha.php', $active_plugins, true ) ) {
 				$content .= $br . $check . 'Ultimate Member ReCaptcha is actived.';
