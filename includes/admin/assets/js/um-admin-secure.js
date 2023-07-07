@@ -29,11 +29,7 @@ jQuery(document).on("ready", function(){
 				UM_Secure.ajax('');
 
 			});
-			scan_capabilities.on("change", function(){
-				scan_button_elem.attr('disabled', true );
-				scan_button_elem.after( ' <small style="color: red;">' + wp.i18n.__( 'You must save the settings before you can run the scan.', 'ultimate-member' ) + '</small>' );
-				scan_capabilities.off("change");
-			})
+			
 		},
 		ajax: function( last_capability ) {
 			let checkedCaps = [];
