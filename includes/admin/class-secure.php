@@ -72,7 +72,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 		public function admin_init() {
 			// Dismiss admin notice after the first visit to Secure settings page.
 			if ( isset( $_REQUEST['page'] ) && isset( $_REQUEST['tab'] ) &&
-				'um_options' === sanitize_key( $_REQUEST['page'] ) && 'secure' === sanitize_key( $_REQUEST['tab'] ) ) {
+				'um_options' === sanitize_key( $_REQUEST['page'] ) && 'secure' === sanitize_key( $_REQUEST['tab'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				UM()->admin()->notices()->dismiss( 'secure_settings' );
 			}
 
@@ -183,6 +183,8 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 			$disabled_capabilities      = UM()->options()->get_default( 'banned_capabilities' );
 			$disabled_capabilities_text = '<strong>' . implode( '</strong>, <strong>', $disabled_capabilities ) . '</strong>';
 
+			$saved_options = UM()->options()->get( 'banned_capabilities' );
+
 			$scanner_content   = '<button class="button um-secure-scan-content">' . esc_html__( 'Scan Now', 'ultimate-member' ) . '</button>';
 			$scanner_content  .= '<span class="um-secure-scan-results">';
 			$scanner_content  .= esc_html__( 'Last scan:', 'ultimate-member' ) . ' ';
@@ -203,9 +205,11 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 					'id'               => 'banned_capabilities',
 					'type'             => 'multi_checkbox',
 					'multi'            => true,
+					'checkbox_key'     => true,
 					'columns'          => 2,
 					'options_disabled' => $disabled_capabilities,
 					'options'          => $banned_capabilities,
+					'value'            => ! empty( $saved_options ) ? array_keys( $saved_options ) : $disabled_capabilities,
 					'label'            => __( 'Banned Administrative Capabilities', 'ultimate-member' ),
 					// translators: %s are disabled default capabilities that are enabled by default.
 					'description'      => sprintf( __( 'All the above are default Administrator & Super Admin capabilities. When someone tries to inject capabilities to the Account, Profile & Register forms submission, it will be flagged with this option. The %s capabilities are locked to ensure no users will be created with these capabilities.', 'ultimate-member' ), $disabled_capabilities_text ),
@@ -316,13 +320,13 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 		 *
 		 */
 		public function check_secure_changes() {
-			if ( isset( $_POST['um_options']['display_login_form_notice'] ) ) {
+			if ( isset( $_POST['um_options']['display_login_form_notice'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
 				$current_option_value = UM()->options()->get( 'display_login_form_notice' );
 				if ( empty( $current_option_value ) ) {
 					return;
 				}
 
-				if ( empty( $_POST['um_options']['display_login_form_notice'] ) ) {
+				if ( empty( $_POST['um_options']['display_login_form_notice'] ) ) {  //phpcs:ignore WordPress.Security.NonceVerification
 					$this->need_flush_meta = true;
 				}
 			}
@@ -332,7 +336,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 		 *
 		 */
 		public function on_settings_save() {
-			if ( isset( $_POST['um_options']['display_login_form_notice'] ) && ! empty( $this->need_flush_meta ) ) {
+			if ( isset( $_POST['um_options']['display_login_form_notice'] ) && ! empty( $this->need_flush_meta ) ) {  //phpcs:ignore WordPress.Security.NonceVerification
 				global $wpdb;
 				$wpdb->query(
 					"DELETE FROM {$wpdb->usermeta} WHERE meta_key = 'um_secure_has_reset_password' OR meta_key = 'um_secure_has_reset_password__timestamp'"
