@@ -220,7 +220,28 @@ class Secure {
 			);
 		}
 
-		$content .= '<span style="font-size:19px;padding-bottom:10px;display:block;border-bottom:1px solid #ccc;" id="um-secure-scanner-complete">' . ( $suspicious_accounts_count > 0 ? $warning : $check ) . __( 'Scan Complete.', 'ultimate-member' ) . '</span>';
+		/**
+		 * Get Site Health's Total issues to resolve
+		 */
+		$get_issues = get_transient( 'health-check-site-status-result' );
+
+		$issue_counts = array();
+
+		if ( false !== $get_issues ) {
+			$issue_counts = json_decode( $get_issues, true );
+		}
+
+		if ( ! is_array( $issue_counts ) || ! $issue_counts ) {
+			$issue_counts = array(
+				'good'        => 0,
+				'recommended' => 0,
+				'critical'    => 0,
+			);
+		}
+
+		$site_health_issues_total = $issue_counts['recommended'] + $issue_counts['critical'];
+
+		$content .= '<div style="font-size:19px;padding-bottom:10px;width:100%; display:block;border-bottom:1px solid #ccc;" id="um-secure-scanner-complete">' . ( $suspicious_accounts_count > 0 ? $warning : $check ) . __( 'Scan Complete.', 'ultimate-member' ) . '</div>';
 
 		$option       = get_option( 'um_secure_scanned_details', $susp_accounts );
 		$scan_details = $option['scanned_caps'];
@@ -276,14 +297,24 @@ class Secure {
 			$content .= '6. Once your site is secured, please create or enable Daily Backups of your server/site. You can contact your hosting provider to assist you on this matter.';
 			$content .= $br . $br;
 
-			$content .= '👇 Read more Recommendations below.';
-			$content .= $br;
+			$content .= '👇 MORE RECOMMENDATIONS BELOW.';
 		}
 
+		$content .= $br . $br . '<strong>Review & Resolve Issues with Site Health Check tool</strong>';
+		$content .= $br . __( 'Site Health is a tool in WordPress that helps you monitor how your site is doing. It shows critical information about your WordPress configuration and items that require your attention.', 'ultimate-member' );
+		if ( $site_health_issues_total > 0 ) {
+			$content .= $br . $flag . sprintf( /* translators: %d issue in the Site Health status  */ _n( 'There\s %d issue in the Site Health status', 'There are %d issues in the Site Health status', $site_health_issues_total ), $site_health_issues_total );
+			$content .= ': <a target="_blank" href="' . admin_url( 'site-health.php' ) . '">Review Site Health Status</a>';
+		} else {
+			$content .= $br . $check . __( 'There are no issues found in the Site Health status', 'ultimate-member' );
+		}
+
+		$content .= $br . $br . '<strong>Default WP Register Form</strong>';
 		if ( get_option( 'users_can_register' ) ) {
-			$content .= $br . $flag . '<strong>Default WP Register Form is Enabled</strong>';
-			$content .= $br . 'The default WordPress Register form is enabled. If you\'re getting Spam User Registrations, we recommend that you enable a Challenge-Response plugin such as our <a href="https://wordpress.org/plugins/um-recaptcha/" target="_blank">Ultimate Member - ReCaptcha</a> extension.';
+			$content .= $br . $flag . 'The default WordPress Register form is enabled. If you\'re getting Spam User Registrations, we recommend that you enable a Challenge-Response plugin such as our <a href="https://wordpress.org/plugins/um-recaptcha/" target="_blank">Ultimate Member - ReCaptcha</a> extension.';
 			$content .= $br;
+		} else {
+			$content .= $br . $check . 'The default WordPress Register form is disabled.' . $br;
 		}
 
 		$content .= $br . '<strong>Block Disposable Email Addresses/Domains</strong>';
@@ -295,7 +326,7 @@ class Secure {
 			$content .= $br;
 		}
 
-		$content .= $br . '<strong>Manage User Roles & Capabilities</strong> <br/>';
+		$content .= $br . '<strong>Manage User Roles & Capabilities</strong>';
 		if ( absint( $scan_details['total_all_affected_users'] ) > 0 ) {
 			$count_flagged_caps = $scan_details['total_all_cap_flagged'];
 			$count_users        = $scan_details['total_all_affected_users'];
@@ -321,7 +352,7 @@ class Secure {
 			$content .= $br . $br . 'The affected user accounts will be flagged as suspicious when they update their Profile/Account. If you are not using these capabilities, you may remove them from the roles in the <a target="_blank" href="' . admin_url( 'admin.php?page=um_roles' ) . '">User Role settings</a>. If the roles are not created via Ultimate Member > User Roles, you can use a <a href="' . admin_url( 'plugin-install.php?s=User%2520Role%2520Editor%2520WordPress%2520&tab=search&type=term' ) . '" target="_blank">third-party plugin</a> to modify the role capability.';
 			$content .= $br . $br . 'We strongly recommend that you never assign roles with the same capabilities as your administrators for your members/users and that may allow them to access the admin-side features and functionalities of your WordPress site.';
 		} else {
-			$content .= $check . 'Roles & Capabilities are all secured. No users are using the same capabilities as your administrators.';
+			$content .= $br . $check . 'Roles & Capabilities are all secured. No users are using the same capabilities as your administrators.';
 		}
 
 		$content .= $br . $br . '<strong>Require Strong Passwords</strong>';
