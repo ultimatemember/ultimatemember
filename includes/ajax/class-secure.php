@@ -218,12 +218,12 @@ class Secure {
 					'number'     => -1,
 					'exclude'    => $arr_suspected_accounts,
 					'date_query' => array(
-						'after'     => gmdate( 'F d, Y', $oldest_date ),
-						'before'    => gmdate( 'F d, Y', $newest_date ),
-						'inclusive' => true,
+						'after'  => gmdate( 'F d, Y', strtotime( '-1 day', $oldest_date ) ),
+						'before' => gmdate( 'F d, Y', strtotime( '+1 day', $newest_date ) ),
 					),
 				)
 			);
+
 		}
 
 		/**

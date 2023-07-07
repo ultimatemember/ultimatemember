@@ -82,15 +82,17 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 					$query->set(
 						'date_query',
 						array(
-							'after' => human_time_diff( $date_from, strtotime( current_time( 'mysql' ) ) ) . ' ago',
+							'after'     => human_time_diff( $date_from, strtotime( current_time( 'mysql' ) ) ) . ' ago',
+							'inclusive' => true,
 						)
 					);
 				} elseif ( $date_from && $date_to ) {
 					$query->set(
 						'date_query',
 						array(
-							'after'  => human_time_diff( $date_from, strtotime( current_time( 'mysql' ) ) ) . ' ago',
-							'before' => human_time_diff( $date_to, strtotime( current_time( 'mysql' ) ) ) . ' ago',
+							'after'     => human_time_diff( $date_from, strtotime( current_time( 'mysql' ) ) ) . ' ago',
+							'before'    => human_time_diff( $date_to, strtotime( current_time( 'mysql' ) ) ) . ' ago',
+							'inclusive' => true,
 						)
 					);
 				}
