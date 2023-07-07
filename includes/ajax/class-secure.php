@@ -173,7 +173,7 @@ class Secure {
 					array(
 						'key'     => 'submitted',
 						'value'   => sprintf( '.*%s";', '_user_level' ),
-						'compare' => 'LIKE',
+						'compare' => 'REGEXP',
 					),
 				),
 			)
@@ -186,9 +186,8 @@ class Secure {
 		 * Disable and Kickout Suspicious accounts.
 		 */
 		if ( $suspicious_accounts_count > 0 ) {
-			$arr_might_lookout_accounts = array();
-			$arr_dates_registered       = array();
-			$arr_suspected_accounts     = array();
+			$arr_dates_registered   = array();
+			$arr_suspected_accounts = array();
 			if ( ! empty( $susp_accounts ) ) {
 				foreach ( $susp_accounts as $user ) {
 
@@ -207,7 +206,6 @@ class Secure {
 				}
 			}
 
-			$date_query  = array();
 			$oldest_date = min( $arr_dates_registered );
 			$newest_date = max( $arr_dates_registered );
 
@@ -337,6 +335,8 @@ class Secure {
 		$content .= $br . $br . '<strong>Secure Site\'s Connection</strong>';
 		if ( ! isset( $_SERVER['HTTPS'] ) || 'on' !== $_SERVER['HTTPS'] ) {
 			$content .= $br . $flag . 'Your site cannot provide a secure connection. Please contact your hosting provider to enable SSL certifications on your server.';
+		} else {
+			$content .= $br . $check . 'Your site provides a secure connection with SSL.';
 		}
 
 		$content .= $br . $br . '<strong>Install Challenge-Response plugin to Login & Register Forms</strong>';
