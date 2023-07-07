@@ -211,8 +211,6 @@ class Secure {
 			$oldest_date = min( $arr_dates_in_timestamp );
 			$newest_date = max( $arr_dates_in_timestamp );
 
-			$content .= gmdate( 'F d, Y', $newest_date );
-
 			$might_affected_users = new WP_User_Query(
 				array(
 					'number'     => -1,
