@@ -44,6 +44,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 			add_action( 'admin_init', array( $this, 'admin_init' ) );
 			add_filter( 'um_settings_structure', array( $this, 'add_settings' ) );
 			add_filter( 'manage_users_custom_column', array( $this, 'add_restore_account' ), 9999, 3 );
+			add_filter( 'pre_get_users', array( $this, 'filter_users_by_date_registered' ) );
 
 			add_action( 'um_settings_before_save', array( $this, 'check_secure_changes' ) );
 			add_action( 'um_settings_save', array( $this, 'on_settings_save' ) );
@@ -62,6 +63,40 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 
 			wp_register_script( 'um_admin_secure', UM()->admin_enqueue()->js_url . 'um-admin-secure.js', array( 'jquery' ), UM_VERSION, true );
 			wp_enqueue_script( 'um_admin_secure' );
+		}
+
+		/**
+		 * Filter users by Register Date
+		 *
+		 * @since 2.6.8
+		 * @param object $query WP query `pre_get_users`
+		 */
+		public function filter_users_by_date_registered( $query ) {
+			global $pagenow;
+			if ( is_admin() && 'users.php' === $pagenow ) {
+				// phpcs:disable WordPress.Security.NonceVerification
+				$date_from = isset( $_GET['um_secure_date_from'] ) ? $_GET['um_secure_date_from'] : null;
+				$date_to   = isset( $_GET['um_secure_date_to'] ) ? $_GET['um_secure_date_to'] : null;
+				// phpcs:enable WordPress.Security.NonceVerification
+				if ( ! $date_to ) {
+					$query->set(
+						'date_query',
+						array(
+							'after' => human_time_diff( $date_from, strtotime( current_time( 'mysql' ) ) ) . ' ago',
+						)
+					);
+				} elseif ( $date_from && $date_to ) {
+					$query->set(
+						'date_query',
+						array(
+							'after'  => human_time_diff( $date_from, strtotime( current_time( 'mysql' ) ) ) . ' ago',
+							'before' => human_time_diff( $date_to, strtotime( current_time( 'mysql' ) ) ) . ' ago',
+						)
+					);
+				}
+			}
+
+			return $query;
 		}
 
 		/**

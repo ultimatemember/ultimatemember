@@ -181,18 +181,18 @@ class Secure {
 
 		$suspicious_accounts_count = $suspicious_accounts->get_total();
 		$susp_accounts             = $suspicious_accounts->get_results();
+		$arr_dates_registered      = array();
+		$arr_suspected_accounts    = array();
 
 		/**
 		 * Disable and Kickout Suspicious accounts.
 		 */
 		if ( $suspicious_accounts_count > 0 ) {
-			$arr_dates_registered   = array();
-			$arr_suspected_accounts = array();
 			if ( ! empty( $susp_accounts ) ) {
 				foreach ( $susp_accounts as $user ) {
 
 					$arr_suspected_accounts[] = $user->ID;
-					$arr_dates_registered[]   = strtotime( $user->user_registered );
+					$arr_dates_registered[]   = $user->user_registered;
 
 					if ( $user->__get( 'um_user_blocked' ) ) {
 						continue;
@@ -206,15 +206,21 @@ class Secure {
 				}
 			}
 
-			$oldest_date = min( $arr_dates_registered );
-			$newest_date = max( $arr_dates_registered );
+			$arr_dates_in_timestamp = array_map( 'strtotime', $arr_dates_registered );
+
+			$oldest_date = min( $arr_dates_in_timestamp );
+			$newest_date = max( $arr_dates_in_timestamp );
+
+			$content .= gmdate( 'F d, Y', $newest_date );
 
 			$might_affected_users = new WP_User_Query(
 				array(
 					'number'     => -1,
-					'relation'   => 'AND',
+					'exclude'    => $arr_suspected_accounts,
 					'date_query' => array(
-						'after' => human_time_diff( $oldest_date, strtotime( current_time( 'mysql' ) ) ) . ' ago',
+						'after'     => gmdate( 'F d, Y', $oldest_date ),
+						'before'    => gmdate( 'F d, Y', $newest_date ),
+						'inclusive' => true,
 					),
 				)
 			);
@@ -233,7 +239,6 @@ class Secure {
 
 		if ( ! is_array( $issue_counts ) || ! $issue_counts ) {
 			$issue_counts = array(
-				'good'        => 0,
 				'recommended' => 0,
 				'critical'    => 0,
 			);
@@ -253,15 +258,14 @@ class Secure {
 			$content .= $br . __( 'We\'ve temporarily disabled the suspcious account(s) for you to <strong>take actions</strong>.', 'ultimate-member' );
 
 			if ( $might_affected_users->get_total() > 0 ) {
-				$od = gmdate( 'F m, Y', $oldest_date );
-				$nd = gmdate( 'F m, Y', $newest_date );
+				$od = gmdate( 'F d, Y h:iA', $oldest_date );
+				$nd = gmdate( 'F d, Y h:iA', $newest_date );
 				if ( $od !== $nd ) {
 					$date_registered = $od . ' to ' . $nd;
 				} else {
 					$date_registered = $od;
 				}
 				$content .= $br . $br . __( 'Also, We\'ve found ', 'ultimate-member' ) . '<strong style="color:red;">' . /* translators: %s suspcious account */ sprintf( _n( '%s account', '%s accounts', $might_affected_users->get_total(), 'ultimate-member' ), $might_affected_users->get_total() ) . '</strong> ' . sprintf( _n( 'created on %s when the suspicious account was created.', 'created on %s when the suspicious accounts were created.', $suspicious_accounts_count, 'ultimate-member' ), $date_registered );
-
 			}
 		} else {
 			$content .= $br . '<strong>Suspcious Accounts</strong> <br/>';
@@ -277,12 +281,22 @@ class Secure {
 			$content                .= $br . $br;
 			$suspicious_accounts_url = admin_url( 'users.php?um_status=inactive' );
 
+			if ( $might_affected_users->get_total() > 0 ) {
+				$od = gmdate( 'F d, Y', $oldest_date );
+				$nd = gmdate( 'F d, Y', $newest_date );
+				if ( $od !== $nd ) {
+					$suspicious_accounts_url = admin_url( 'users.php?um_secure_date_from=' . $oldest_date . '&um_secure_date_to=' . $newest_date );
+				} else {
+					$suspicious_accounts_url = admin_url( 'users.php?um_secure_date_from=' . $oldest_date );
+				}
+			}
+
 			$content .= '2. Review all suspicious accounts and delete them completely. <a href="' . esc_attr( $suspicious_accounts_url ) . '" target="_blank">Click here to review accounts.</a>';
 			$content .= $br . $br;
 
 			$nonce                    = wp_create_nonce( 'um-secure-expire-session-nonce' );
 			$destroy_all_sessions_url = admin_url( '?um_secure_expire_all_sessions=1&_wpnonce=' . esc_attr( $nonce ) . '&except_me=1' );
-			$content                 .= '3. If accounts are suspicious to you, please destroy all user sessions to logout active users on your site. <a href="' . esc_attr( $destroy_all_sessions_url ) . '" target="_blanl">Click here to Destroy Sessions now</a>';
+			$content                 .= '4. If accounts are suspicious to you, please destroy all user sessions to logout active users on your site. <a href="' . esc_attr( $destroy_all_sessions_url ) . '" target="_blanl">Click here to Destroy Sessions now</a>';
 
 			$content .= $br . $br;
 			$content .= '4. Run a complete scan on your site using third-party Security plugins such as <a target="_blank" href="' . esc_attr( admin_url( 'plugin-install.php?s=Jetpack%2520Protect%2520WP%2520Scan&tab=search&type=term' ) ) . '">WPScan/Jetpack Protect or WordFence Security</a>.';
