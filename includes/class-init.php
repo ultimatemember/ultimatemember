@@ -529,6 +529,8 @@ if ( ! class_exists( 'UM' ) ) {
 			//run setup
 			$this->common()->cpt()->create_post_types();
 			$this->setup()->run_setup();
+
+			$this->cron()->schedule_events();
 		}
 
 
