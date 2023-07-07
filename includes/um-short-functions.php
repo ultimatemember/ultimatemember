@@ -1708,6 +1708,26 @@ function um_edit_profile_url( $user_id = null ) {
 	$url = remove_query_arg( 'subnav', $url );
 	$url = add_query_arg( 'um_action', 'edit', $url );
 
+	/**
+	 * Filters change edit profile URL.
+	 *
+	 * @param {string} $url      Edit profile URL.
+	 * @param {int}    $user_id  User ID.
+	 *
+	 * @return {string} Edit profile URL.
+	 *
+	 * @since 2.6.8
+	 * @hook um_edit_profile_url
+	 *
+	 * @example <caption>Add/remove your custom $_GET attribute to all links.</caption>
+	 * function my_um_edit_profile_url( $url, $user_id ) {
+	 *     $url = add_query_arg( '{attr_value}', '{attr_key}', $url ); // replace to your custom value and key.
+	 *     return $url;
+	 * }
+	 * add_filter( 'um_edit_profile_url', 'my_um_edit_profile_url', 10, 2 );
+	 */
+	$url = apply_filters( 'um_edit_profile_url', $url, $user_id );
+
 	return $url;
 }
 
