@@ -256,8 +256,8 @@ class Secure {
 			$content .= $br . __( 'We\'ve temporarily disabled the suspcious account(s) for you to <strong>take actions</strong>.', 'ultimate-member' );
 
 			if ( $might_affected_users->get_total() > 0 ) {
-				$od = gmdate( 'F d, Y h:iA', $oldest_date );
-				$nd = gmdate( 'F d, Y h:iA', $newest_date );
+				$od = gmdate( 'F d, Y', $oldest_date );
+				$nd = gmdate( 'F d, Y', $newest_date );
 				if ( $od !== $nd ) {
 					$date_registered = $od . ' to ' . $nd;
 				} else {
