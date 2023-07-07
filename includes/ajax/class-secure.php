@@ -334,7 +334,7 @@ class Secure {
 			$content .= $br . $flag . 'You are not blocking email addresses or disposable email domains that are mostly used for Spam Account Registrations. You can get the list of disposable email domains from <a href="https://github.com/champsupertramp/disposable-email-domains/blob/master/um_disposable_email_blocklist.txt" target="_blank">this repository</a> and then add them to <a target="_blank" href="' . esc_attr( 'admin.php?page=um_options&tab=access&section=other' ) . '">Blocked Email Addresses</a> options.';
 			$content .= $br;
 		} else {
-			$content .= $br . 'The default WordPress Register form is enabled. If you\'re getting Spam User Registrations, we recommend that you enable a Challenge-Response plugin such as our <a href="https://wordpress.org/plugins/um-recaptcha/" target="_blank">Ultimate Member - ReCaptcha</a> extension.';
+			$content .= $br . $check . 'Blocked Emails option is already set.';
 			$content .= $br;
 		}
 
