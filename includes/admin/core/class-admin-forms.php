@@ -1214,9 +1214,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$html                   .= '<span class="um-form-fields-section" style="width:' . floor( 100 / $columns ) . '% !important;">';
 
 				foreach ( $section_fields_per_page as $k => $title ) {
-					$id_attr      = ' id="' . esc_attr( $id . '_' . $k ) . '" ';
-					$for_attr     = ' for="' . esc_attr( $id . '_' . $k ) . '" ';
-					$name_attr    = ' name="' . $name . '[' . $k . ']" ';
+					$id_attr  = ' id="' . esc_attr( $id . '_' . $k ) . '" ';
+					$for_attr = ' for="' . esc_attr( $id . '_' . $k ) . '" ';
+
+					if ( ! empty( $field_data['assoc'] ) ) {
+						$name_attr  = ' name="' . esc_attr( $name ) . '[]" ';
+						$value_attr = ' value="' . esc_attr( $k ) . '" ';
+					} else {
+						$name_attr  = ' name="' . esc_attr( $name ) . '[' . esc_attr( $k ) . ']" ';
+						$value_attr = ' value="1" ';
+					}
 					$disabed_attr = '';
 
 					$data = array(
@@ -1240,7 +1247,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					}
 
 					$html .= "<label $for_attr>
-						<input type=\"checkbox\" " . checked( in_array( $k, $values, true ), true, false ) . "$disabed_attr $id_attr $name_attr $data_attr value=\"1\" $class_attr>
+						<input type=\"checkbox\" " . checked( in_array( $k, $values, true ), true, false ) . "$disabed_attr $id_attr $name_attr $data_attr $value_attr $class_attr>
 						<span>$title</span>
 					</label>";
 				}

@@ -196,23 +196,18 @@ if ( ! class_exists( 'um\frontend\Secure' ) ) {
 			// Fetch the WP_User object of our user.
 			um_fetch_user( $user_id );
 			$has_admin_cap   = false;
-			$arr_banned_caps = array();
+			$arr_banned_caps = UM()->options()->get( 'banned_capabilities' );
 
-			if ( UM()->options()->get( 'banned_capabilities' ) ) {
-				$arr_banned_caps = UM()->options()->get( 'banned_capabilities' );
-			}
-
-			// Add locked administrative capabilities.
-			$arr_banned_caps = array_merge( $arr_banned_caps, UM()->options()->get_default( 'banned_capabilities' ) );
-
-			foreach ( $arr_banned_caps as $cap ) {
-				/**
-				 * When there's at least one administrator cap added to the user,
-				 * immediately revoke caps and mark as rejected.
-				 */
-				if ( $user->has_cap( $cap ) ) {
-					$has_admin_cap = true;
-					break;
+			if ( is_array( $arr_banned_caps ) ) {
+				foreach ( $arr_banned_caps as $cap ) {
+					/**
+					 * When there's at least one administrator cap added to the user,
+					 * immediately revoke caps and mark as rejected.
+					 */
+					if ( $user->has_cap( $cap ) ) {
+						$has_admin_cap = true;
+						break;
+					}
 				}
 			}
 

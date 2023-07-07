@@ -1081,7 +1081,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $value;
 		}
 
-
 		/**
 		 * @param $value
 		 *
@@ -1092,6 +1091,15 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $value;
 		}
 
+		/**
+		 * @param $value
+		 *
+		 * @return array
+		 */
+		public function sanitize_wp_capabilities_assoc( $value ) {
+			$value = array_map( 'sanitize_key', array_filter( $value ) );
+			return $value;
+		}
 
 		/**
 		 * Sanitize role meta fields when wp-admin form has been submitted

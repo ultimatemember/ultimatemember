@@ -954,7 +954,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'sanitize' => 'bool',
 					),
 					'banned_capabilities'                   => array(
-						'sanitize' => array( UM()->admin(), 'sanitize_wp_capabilities' ),
+						'sanitize' => array( UM()->admin(), 'sanitize_wp_capabilities_assoc' ),
 					),
 					'secure_notify_admins_banned_accounts'  => array(
 						'sanitize' => 'bool',

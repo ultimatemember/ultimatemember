@@ -20,6 +20,7 @@ if ( ! class_exists( 'um\common\Secure' ) ) {
 
 		public function hooks() {
 			add_action( 'wp', array( $this, 'schedule_events' ) );
+			add_filter( 'um_get_option_filter__banned_capabilities', array( $this, 'add_default_capabilities' ) );
 		}
 
 		/**
@@ -235,6 +236,22 @@ if ( ! class_exists( 'um\common\Secure' ) ) {
 			um_reset_user();
 			update_user_meta( $user->ID, 'um_user_blocked', 'suspicious_activity' );
 			update_user_meta( $user->ID, 'um_user_blocked__timestamp', current_time( 'mysql' ) );
+		}
+
+		/**
+		 * Always add default banned capabilities.
+		 *
+		 * @param mixed $option_value
+		 *
+		 * @return mixed
+		 *
+		 * @since 2.6.8
+		 */
+		public function add_default_capabilities( $option_value ) {
+			if ( is_array( $option_value ) ) {
+				$option_value = array_merge( $option_value, UM()->options()->get_default( 'banned_capabilities' ) );
+			}
+			return $option_value;
 		}
 	}
 }
