@@ -70,6 +70,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 		 * @since 2.6.8
 		 */
 		public function admin_init() {
+			global $wpdb;
 			// Dismiss admin notice after the first visit to Secure settings page.
 			if ( isset( $_REQUEST['page'] ) && isset( $_REQUEST['tab'] ) &&
 				'um_options' === sanitize_key( $_REQUEST['page'] ) && 'secure' === sanitize_key( $_REQUEST['tab'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
@@ -82,34 +83,19 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 					wp_die( esc_html__( 'Security check', 'ultimate-member' ) );
 				}
 
-				$users = get_users(
-					array(
-						'fields' => 'ids',
-					)
-				);
+				/**
+				 * Destroy all user sessions except the current logged-in user.
+				 */
+				$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $wpdb->usermeta . '  WHERE meta_key="session_tokens" AND user_id != %d', get_current_user_id() ) );
 
-				$users = array_values( array_diff( $users, array( get_current_user_id() ) ) );
-
-				if ( ! empty( $users ) ) {
-					foreach ( $users as $user_id ) {
-						// Get an instance of WP_User_Meta_Session_Tokens
-						$sessions_manager = WP_Session_Tokens::get_instance( $user_id );
-						// Remove all the session for instance user.
-						$sessions_manager->destroy_all();
-
-						// Remove all the session data for all users.
-						//$sessions_manager::drop_sessions();
-					}
-
-					if ( UM()->options()->get( 'display_login_form_notice' ) ) {
-						global $wpdb;
-						$wpdb->query(
-							$wpdb->prepare(
-								"DELETE FROM {$wpdb->usermeta} WHERE user_id != %d AND ( meta_key = 'um_secure_has_reset_password' OR meta_key = 'um_secure_has_reset_password__timestamp' )",
-								get_current_user_id()
-							)
-						);
-					}
+				if ( UM()->options()->get( 'display_login_form_notice' ) ) {
+					global $wpdb;
+					$wpdb->query(
+						$wpdb->prepare(
+							"DELETE FROM {$wpdb->usermeta} WHERE user_id != %d AND ( meta_key = 'um_secure_has_reset_password' OR meta_key = 'um_secure_has_reset_password__timestamp' )",
+							get_current_user_id()
+						)
+					);
 				}
 
 				wp_safe_redirect( add_query_arg( 'update', 'um_secure_expire_sessions', wp_get_referer() ) );
