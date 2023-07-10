@@ -947,6 +947,21 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'uninstall_on_delete'                   => array(
 						'sanitize' => 'bool',
 					),
+					'lock_register_forms'                   => array(
+						'sanitize' => 'bool',
+					),
+					'display_login_form_notice'             => array(
+						'sanitize' => 'bool',
+					),
+					'banned_capabilities'                   => array(
+						'sanitize' => array( UM()->admin(), 'sanitize_wp_capabilities_assoc' ),
+					),
+					'secure_notify_admins_banned_accounts'  => array(
+						'sanitize' => 'bool',
+					),
+					'secure_notify_admins_banned_accounts__interval' => array(
+						'sanitize' => 'key',
+					),
 				)
 			);
 

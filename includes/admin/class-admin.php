@@ -88,6 +88,11 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			add_filter( 'post_updated_messages', array( &$this, 'post_updated_messages' ) );
 		}
 
+		public function includes() {
+			$this->notices();
+			$this->secure();
+		}
+
 
 		function init_variables() {
 			$this->role_meta = apply_filters(
@@ -1076,7 +1081,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $value;
 		}
 
-
 		/**
 		 * @param $value
 		 *
@@ -1087,6 +1091,15 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $value;
 		}
 
+		/**
+		 * @param $value
+		 *
+		 * @return array
+		 */
+		public function sanitize_wp_capabilities_assoc( $value ) {
+			$value = array_map( 'sanitize_key', array_filter( $value ) );
+			return $value;
+		}
 
 		/**
 		 * Sanitize role meta fields when wp-admin form has been submitted
@@ -2056,17 +2069,28 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $parent_file;
 		}
 
-
 		/**
 		 * @since 2.0
 		 *
 		 * @return core\Admin_Notices()
 		 */
-		function notices() {
+		public function notices() {
 			if ( empty( UM()->classes['admin_notices'] ) ) {
 				UM()->classes['admin_notices'] = new core\Admin_Notices();
 			}
 			return UM()->classes['admin_notices'];
+		}
+
+		/**
+		 * @since 2.6.8
+		 *
+		 * @return Secure
+		 */
+		public function secure() {
+			if ( empty( UM()->classes['um\admin\secure'] ) ) {
+				UM()->classes['um\admin\secure'] = new Secure();
+			}
+			return UM()->classes['um\admin\secure'];
 		}
 	}
 }

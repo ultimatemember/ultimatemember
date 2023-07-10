@@ -1,9 +1,9 @@
 <?php
 namespace um\admin\core;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
@@ -33,6 +33,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			add_action( 'wp_ajax_um_dismiss_notice', array( &$this, 'dismiss_notice' ) );
 			add_action( 'admin_init', array( &$this, 'force_dismiss_notice' ) );
+
+			add_action( 'current_screen', array( &$this, 'create_list_for_screen' ) );
 		}
 
 
@@ -59,6 +61,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			//$this->future_changed();
 
+			$this->common_secure();
+
 			/**
 			 * UM hook
 			 *
@@ -77,6 +81,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			 * ?>
 			 */
 			do_action( 'um_admin_create_notices' );
+		}
+
+		public function create_list_for_screen() {
+			if ( UM()->admin()->is_um_screen() ) {
+				$this->secure_settings();
+			}
 		}
 
 
@@ -511,8 +521,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 				case 'err_users_updated':
 					$messages[0]['err_content'] = __( 'Super administrators cannot be modified.', 'ultimate-member' );
-					$messages[1]['content'] = __( 'Other users have been updated.', 'ultimate-member' );
-
+					$messages[1]['content']     = __( 'Other users have been updated.', 'ultimate-member' );
+					break;
+				case 'um_secure_expire_sessions':
+					$messages[0]['content'] = __( 'All users sessions have been successfully destroyed.', 'ultimate-member' );
+					break;
+				case 'um_secure_restore':
+					$messages[0]['content'] = __( 'Account has been successfully restored.', 'ultimate-member' );
+					break;
 			}
 
 			if ( ! empty( $messages ) ) {
@@ -715,7 +731,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			), 2 );
 		}
 
-
 		/**
 		 * Check Templates Versions notice
 		 */
@@ -746,26 +761,119 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			}
 		}
 
+		/**
+		 * First time installed Secure settings.
+		 */
+		public function secure_settings() {
+			ob_start();
+			?>
+			<p>
+				<strong><?php esc_html_e( 'Important Update', 'ultimate-member' ); ?></strong><br/>
+				<?php esc_html_e( 'Ultimate Member has a new additional feature to secure your Ultimate Member forms to prevent attacks from injecting accounts with administrative roles &amp; capabilities.', 'ultimate-member' ); ?>
+			</p>
+			<p>
+				<a class="button button-primary" href="<?php echo esc_attr( admin_url( 'admin.php?page=um_options&tab=secure&um_dismiss_notice=secure_settings&um_admin_nonce=' . wp_create_nonce( 'um-admin-nonce' ) ) ); ?>"><?php esc_html_e( 'Manage Security Settings', 'ultimate-member' ); ?></a>
+				<a class="button" target="_blank" href="https://docs.ultimatemember.com/article/1869-security-feature"><?php esc_html_e( 'Read the documentation', 'ultimate-member' ); ?></a>
+			</p>
+			<?php
+			$message = ob_get_clean();
+			$this->add_notice(
+				'secure_settings',
+				array(
+					'class'       => 'warning',
+					'message'     => $message,
+					'dismissible' => true,
+				),
+				1
+			);
+		}
 
-		function dismiss_notice() {
+		public function common_secure() {
+			if ( UM()->options()->get( 'lock_register_forms' ) ) {
+				ob_start();
+				?>
+				<p>
+					<?php esc_html_e( 'Your Register forms are now locked. You can unlock them in Ultimate Member > Settings > Secure > Lock All Register Forms.', 'ultimate-member' ); ?>
+				</p>
+				<?php
+				$message = ob_get_clean();
+				$this->add_notice(
+					'common_secure_register',
+					array(
+						'class'       => 'warning',
+						'message'     => $message,
+						'dismissible' => true,
+					),
+					1
+				);
+			}
+
+			if ( UM()->options()->get( 'display_login_form_notice' ) ) {
+				ob_start();
+				?>
+				<p>
+					<?php esc_html_e( 'Mandatory password changes has been enabled. You can disable them in Ultimate Member > Settings > Secure > Display Login form notice to reset passwords.', 'ultimate-member' ); ?>
+				</p>
+				<?php
+				$message = ob_get_clean();
+				$this->add_notice(
+					'common_secure_password_reset',
+					array(
+						'class'       => 'warning',
+						'message'     => $message,
+						'dismissible' => true,
+					),
+					1
+				);
+			}
+
+			if ( UM()->options()->get( 'secure_ban_admins_accounts' ) ) {
+				ob_start();
+				?>
+				<p>
+					<?php esc_html_e( 'Ban for administrative capabilities is enabled. You can disable them in Ultimate Member > Settings > Secure > Enable ban for administrative capabilities.', 'ultimate-member' ); ?>
+				</p>
+				<?php
+				$message = ob_get_clean();
+				$this->add_notice(
+					'common_secure_suspicious_activity',
+					array(
+						'class'       => 'warning',
+						'message'     => $message,
+						'dismissible' => true,
+					),
+					1
+				);
+			}
+		}
+
+		public function dismiss_notice() {
 			UM()->admin()->check_ajax_nonce();
 
 			if ( empty( $_POST['key'] ) ) {
 				wp_send_json_error( __( 'Wrong Data', 'ultimate-member' ) );
 			}
 
-			$hidden_notices = get_option( 'um_hidden_admin_notices', array() );
-			if ( ! is_array( $hidden_notices ) ) {
-				$hidden_notices = array();
-			}
-
-			$hidden_notices[] = sanitize_key( $_POST['key'] );
-
-			update_option( 'um_hidden_admin_notices', $hidden_notices );
+			$this->dismiss( sanitize_key( $_POST['key'] ) );
 
 			wp_send_json_success();
 		}
 
+		/**
+		 * Dismiss notice by key.
+		 *
+		 * @param string $key
+		 *
+		 * @return void
+		 */
+		public function dismiss( $key ) {
+			$hidden_notices = get_option( 'um_hidden_admin_notices', array() );
+			if ( ! is_array( $hidden_notices ) ) {
+				$hidden_notices = array();
+			}
+			$hidden_notices[] = $key;
+			update_option( 'um_hidden_admin_notices', $hidden_notices );
+		}
 
 		function force_dismiss_notice() {
 			if ( ! empty( $_REQUEST['um_dismiss_notice'] ) && ! empty( $_REQUEST['um_admin_nonce'] ) ) {
