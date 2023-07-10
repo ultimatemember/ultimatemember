@@ -331,7 +331,7 @@ class Secure {
 
 		$content .= $br . '<strong>Block Disposable Email Addresses/Domains</strong>';
 		if ( empty( UM()->options()->get( 'blocked_emails' ) ) ) {
-			$content .= $br . $flag . 'You are not blocking email addresses or disposable email domains that are mostly used for Spam Account Registrations. You can get the list of disposable email domains from <a href="https://github.com/champsupertramp/disposable-email-domains/blob/master/um_disposable_email_blocklist.txt" target="_blank">this repository</a> and then add them to <a target="_blank" href="' . esc_attr( 'admin.php?page=um_options&tab=access&section=other' ) . '">Blocked Email Addresses</a> options.';
+			$content .= $br . $flag . 'You are not blocking email addresses or disposable email domains that are mostly used for Spam Account Registrations. You can get the list of disposable email domains with our basic extension <a href="https://docs.ultimatemember.com/article/1870-block-disposable-email-domains" target="_blank">Block Disposable Email Domains</a>.';
 			$content .= $br;
 		} else {
 			$content .= $br . $check . 'Blocked Emails option is already set.';
