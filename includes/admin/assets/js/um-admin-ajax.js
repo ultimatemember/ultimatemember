@@ -9,6 +9,10 @@ jQuery(document).ready(function() {
 			return false;
 		}
 
+		var act_id = jQuery(this).data('silent_action');
+		var arg1   = jQuery(this).data('arg1');
+		var arg2   = jQuery(this).data('arg2');
+
 		var in_row = '';
 		var in_sub_row = '';
 		var in_column = '';
@@ -21,10 +25,6 @@ jQuery(document).ready(function() {
 			in_column = demon_settings.data('in_column');
 			in_group = demon_settings.data('in_group');
 		}
-
-		var act_id = jQuery(this).data('silent_action');
-		var arg1 = jQuery(this).data('arg1');
-		var arg2 = jQuery(this).data('arg2');
 
 		jQuery('.tipsy').hide();
 
