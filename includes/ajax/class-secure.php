@@ -146,6 +146,7 @@ class Secure {
 
 		$all_plugins    = get_plugins();
 		$active_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
+		$um_forms       = get_posts( 'post_type=um_form&numberposts=-1&fields=ids' );
 
 		$content = '-----' . $br . $br;
 
@@ -329,6 +330,32 @@ class Secure {
 			$content .= $br . $check . 'The default WordPress Register form is disabled.' . $br;
 		}
 
+		$content .= $br . '<strong>Secure Register Forms</strong>';
+		$content .= $br . 'We\'ve removed the assignment of administrative roles for Register forms due to vulnerabilities in previous versions of the plugin. If your Register forms still have Administrative roles, we recommend that you assign a non-admin roles to secure the forms.' . $br;
+		foreach ( $um_forms as $fid ) {
+			switch ( get_post_meta( $fid, '_um_mode', true ) ) {
+				case 'register':
+					$is_customized   = absint( get_post_meta( $fid, '_um_register_use_custom_settings', true ) );
+					$arr_banned_caps = UM()->options()->get( 'banned_capabilities' );
+					$role            = get_post_meta( $fid, '_um_register_role', true );
+					$caps            = get_role( $role )->capabilities;
+					$has_banned_cap  = false;
+					foreach ( array_keys( $caps ) as $cap ) {
+						if ( in_array( $cap, $arr_banned_caps, true ) ) {
+							$content       .= $br . '<a target="_blank" href="' . get_edit_post_link( $fid ) . '">' . get_the_title( $fid ) . '</a> contains <strong>administrative role</strong> ' . $flag;
+							$has_banned_cap = true;
+							break;
+						}
+					}
+
+					if ( ! $has_banned_cap || ! $is_customized ) {
+						$content .= $br . '<a target="_blank" href="' . get_edit_post_link( $fid ) . '">' . get_the_title( $fid ) . '</a>  is <strong>secured</strong> ' . $check;
+					}
+					break;
+			}
+		}
+		$content .= $br;
+
 		$content .= $br . '<strong>Block Disposable Email Addresses/Domains</strong>';
 		if ( empty( UM()->options()->get( 'blocked_emails' ) ) ) {
 			$content .= $br . $flag . 'You are not blocking email addresses or disposable email domains that are mostly used for Spam Account Registrations. You can get the list of disposable email domains with our basic extension <a href="https://docs.ultimatemember.com/article/1870-block-disposable-email-domains" target="_blank">Block Disposable Email Domains</a>.';
@@ -388,7 +415,6 @@ class Secure {
 		} else {
 			if ( in_array( 'um-recaptcha/um-recaptcha.php', $active_plugins, true ) ) {
 				$content .= $br . $check . 'Ultimate Member ReCaptcha is actived.';
-				$um_forms = get_posts( 'post_type=um_form&numberposts=-1&fields=ids' );
 				foreach ( $um_forms as $fid ) {
 					switch ( get_post_meta( $fid, '_um_mode', true ) ) {
 						case 'register':
