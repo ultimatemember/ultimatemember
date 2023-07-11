@@ -803,6 +803,68 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					1
 				);
 			}
+
+			$this->check_registration_forms();
+		}
+
+		private function check_registration_forms() {
+			$um_forms = get_posts(
+				array(
+					'post_type'   => 'um_form',
+					'meta_query'  => array(
+						array(
+							'key'   => '_um_mode',
+							'value' => 'register',
+						),
+						array(
+							'key'   => '_um_register_use_custom_settings',
+							'value' => true,
+						),
+					),
+					'numberposts' => -1,
+					'fields'      => 'ids',
+				)
+			);
+
+			$content         = '';
+			$arr_banned_caps = UM()->options()->get( 'banned_capabilities' );
+
+			foreach ( $um_forms as $form_id ) {
+				$role = get_post_meta( $form_id, '_um_register_role', true );
+				if ( empty( $role ) ) {
+					continue;
+				}
+
+				$caps = get_role( $role )->capabilities;
+				foreach ( array_keys( $caps ) as $cap ) {
+					if ( in_array( $cap, $arr_banned_caps, true ) ) {
+						$content .= '<br /><a target="_blank" href="' . get_edit_post_link( $form_id ) . '">' . get_the_title( $form_id ) . '</a> contains <strong>administrative role</strong>.';
+						break;
+					}
+				}
+			}
+
+			if ( empty( $content ) ) {
+				return;
+			}
+
+			ob_start();
+			?>
+			<p>
+				<?php // translators: %s are link(s) to the forms. ?>
+				<?php echo wp_kses( sprintf( __( 'Register forms have Administrative roles, we recommend that you assign a non-admin roles to secure the forms. %s', 'ultimate-member' ), $content ), UM()->get_allowed_html( 'admin_notice' ) ); ?>
+			</p>
+			<?php
+			$message = ob_get_clean();
+			$this->add_notice(
+				'forms_secure_suspicious_activity',
+				array(
+					'class'       => 'notice-warning',
+					'message'     => $message,
+					'dismissible' => true,
+				),
+				1
+			);
 		}
 
 		public function dismiss_notice() {
