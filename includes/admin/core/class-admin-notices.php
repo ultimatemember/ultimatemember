@@ -804,7 +804,63 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				);
 			}
 
+			$this->check_new_user_role();
 			$this->check_registration_forms();
+		}
+
+		private function check_new_user_role() {
+			$content         = '';
+			$arr_banned_caps = UM()->options()->get( 'banned_capabilities' );
+
+			$global_role = get_option( 'default_role' ); // WP Global settings
+			$caps        = get_role( $global_role )->capabilities;
+			foreach ( array_keys( $caps ) as $cap ) {
+				if ( in_array( $cap, $arr_banned_caps, true ) ) {
+					ob_start();
+					?>
+					<p>
+						<?php esc_html_e( 'The role selected in WordPress native "Settings > New User Default Role" setting has Administrative capabilities.', 'ultimate-member' ); ?>
+					</p>
+					<?php
+					$message = ob_get_clean();
+					$this->add_notice(
+						'default_role_suspicious_activity',
+						array(
+							'class'       => 'notice-warning',
+							'message'     => $message,
+							'dismissible' => true,
+						),
+						1
+					);
+					break;
+				}
+			}
+
+			$um_global_role = UM()->options()->get( 'register_role' ); // UM Settings Global settings
+			if ( ! empty( $um_global_role ) ) {
+				$caps = get_role( $um_global_role )->capabilities;
+				foreach ( array_keys( $caps ) as $cap ) {
+					if ( in_array( $cap, $arr_banned_caps, true ) ) {
+						ob_start();
+						?>
+						<p>
+							<?php esc_html_e( 'The role selected in "Ultimate Member > Settings > Appearance > Registration Form > Registration Default Role" setting has Administrative capabilities.', 'ultimate-member' ); ?>
+						</p>
+						<?php
+						$message = ob_get_clean();
+						$this->add_notice(
+							'register_role_suspicious_activity',
+							array(
+								'class'       => 'notice-warning',
+								'message'     => $message,
+								'dismissible' => true,
+							),
+							1
+						);
+						break;
+					}
+				}
+			}
 		}
 
 		private function check_registration_forms() {
