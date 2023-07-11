@@ -1638,9 +1638,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					update_option( 'um_last_manual_upgrades_request', time() );
 				}
 
-				$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'got_updates' ), admin_url( 'admin.php' ) );
+				$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'um_got_updates' ), admin_url( 'admin.php' ) );
 			} else {
-				$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'often_updates' ), admin_url( 'admin.php' ) );
+				$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'um_often_updates' ), admin_url( 'admin.php' ) );
 			}
 			exit( wp_redirect( $url ) );
 		}
@@ -1699,7 +1699,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			$url = add_query_arg(
 				array(
 					'page'   => 'ultimatemember',
-					'update' => 'cleared_cache',
+					'update' => 'um_cleared_cache',
 				),
 				admin_url( 'admin.php' )
 			);
@@ -1737,7 +1737,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			$url = add_query_arg(
 				array(
 					'page'   => 'ultimatemember',
-					'update' => 'cleared_status_cache',
+					'update' => 'um_cleared_status_cache',
 				),
 				admin_url( 'admin.php' )
 			);
@@ -1757,7 +1757,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			UM()->files()->remove_dir( UM()->files()->upload_temp );
 
-			$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'purged_temp' ), admin_url( 'admin.php' ) );
+			$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'um_purged_temp' ), admin_url( 'admin.php' ) );
 			exit( wp_redirect( $url ) );
 		}
 
@@ -1808,7 +1808,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			$url = add_query_arg(
 				array(
 					'post_type' => 'um_form',
-					'update'    => 'form_duplicated',
+					'update'    => 'um_form_duplicated',
 				),
 				admin_url( 'edit.php' )
 			);
@@ -1891,7 +1891,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			um_reset_user();
 
-			wp_redirect( add_query_arg( 'update', 'user_updated', admin_url( '?page=ultimatemember' ) ) );
+			wp_redirect( add_query_arg( 'update', 'um_user_updated', admin_url( '?page=ultimatemember' ) ) );
 			exit;
 
 		}

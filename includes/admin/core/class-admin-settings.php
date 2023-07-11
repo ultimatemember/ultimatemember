@@ -2287,7 +2287,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				//redirect after save settings
 				$arg = array(
 					'page'   => 'um_options',
-					'update' => 'settings_updated',
+					'update' => 'um_settings_updated',
 				);
 
 				if ( ! empty( $_GET['tab'] ) ) {

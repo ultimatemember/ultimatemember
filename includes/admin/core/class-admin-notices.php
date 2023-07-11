@@ -438,90 +438,42 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			}
 		}
 
-
 		/**
 		 * Updating users
 		 */
-		function show_update_messages() {
-
+		public function show_update_messages() {
 			if ( ! isset( $_REQUEST['update'] ) ) {
 				return;
 			}
 
 			$update = sanitize_key( $_REQUEST['update'] );
-			switch( $update ) {
-
-				case 'confirm_delete':
-					$request_users = array_map( 'absint', (array) $_REQUEST['user'] );
-
-					$confirm_uri = admin_url( 'users.php?' . http_build_query( array(
-						'um_adm_action' => 'delete_users',
-						'user'          => $request_users,
-						'confirm'       => 1
-					) ) );
-					$users = '';
-
-					if ( isset( $request_users ) ) {
-						foreach ( $request_users as $user_id ) {
-							$user = get_userdata( $user_id );
-							$users .= '#' . $user_id . ': ' . $user->user_login . '<br />';
-						}
-					}
-
-					$ignore = admin_url( 'users.php' );
-
-					$messages[0]['err_content'] = sprintf( __( 'Are you sure you want to delete the selected user(s)? The following users will be deleted: <p>%s</p> <strong>This cannot be undone!</strong>', 'ultimate-member' ), $users );
-					$messages[0]['err_content'] .= '<p><a href="'. esc_url( $confirm_uri ) .'" class="button-primary">' . __( 'Remove', 'ultimate-member' ) . '</a>&nbsp;&nbsp;<a href="' . esc_url( $ignore ) . '" class="button">' . __( 'Undo', 'ultimate-member' ) . '</a></p>';
-
-					break;
-
-				case 'language_updated':
-					$messages[0]['content'] = __( 'Your translation files have been updated successfully.', 'ultimate-member' );
-					break;
-
-				case 'purged_temp':
+			switch ( $update ) {
+				case 'um_purged_temp':
 					$messages[0]['content'] = __( 'Your temp uploads directory is now clean.', 'ultimate-member' );
 					break;
-
-				case 'cleared_cache':
+				case 'um_cleared_cache':
 					$messages[0]['content'] = __( 'Your user cache is now removed.', 'ultimate-member' );
 					break;
-
-				case 'cleared_status_cache':
+				case 'um_cleared_status_cache':
 					$messages[0]['content'] = __( 'Your user statuses cache is now removed.', 'ultimate-member' );
 					break;
-
-				case 'got_updates':
+				case 'um_got_updates':
 					$messages[0]['content'] = __( 'You have the latest updates.', 'ultimate-member' );
 					break;
-
-				case 'often_updates':
+				case 'um_often_updates':
 					$messages[0]['err_content'] = __( 'Try again later. You can run this action once daily.', 'ultimate-member' );
 					break;
-
-				case 'form_duplicated':
+				case 'um_form_duplicated':
 					$messages[0]['content'] = __( 'The form has been duplicated successfully.', 'ultimate-member' );
 					break;
-
-				case 'settings_updated':
+				case 'um_settings_updated':
 					$messages[0]['content'] = __( 'Settings have been saved successfully.', 'ultimate-member' );
 					break;
-
-				case 'user_updated':
+				case 'um_user_updated':
 					$messages[0]['content'] = __( 'User has been updated.', 'ultimate-member' );
 					break;
-
-				case 'users_updated':
+				case 'um_users_updated':
 					$messages[0]['content'] = __( 'Users have been updated.', 'ultimate-member' );
-					break;
-
-				case 'users_role_updated':
-					$messages[0]['content'] = __( 'Changed roles.', 'ultimate-member' );
-					break;
-
-				case 'err_users_updated':
-					$messages[0]['err_content'] = __( 'Super administrators cannot be modified.', 'ultimate-member' );
-					$messages[1]['content']     = __( 'Other users have been updated.', 'ultimate-member' );
 					break;
 				case 'um_secure_expire_sessions':
 					$messages[0]['content'] = __( 'All users sessions have been successfully destroyed.', 'ultimate-member' );
@@ -534,21 +486,27 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			if ( ! empty( $messages ) ) {
 				foreach ( $messages as $message ) {
 					if ( isset( $message['err_content'] ) ) {
-						$this->add_notice( 'actions', array(
-							'class'     => 'error',
-							'message'   => '<p>' . $message['err_content'] . '</p>',
-						), 50 );
+						$this->add_notice(
+							'actions',
+							array(
+								'class'   => 'error',
+								'message' => '<p>' . $message['err_content'] . '</p>',
+							),
+							50
+						);
 					} else {
-						$this->add_notice( 'actions', array(
-							'class'     => 'updated',
-							'message'   => '<p>' . $message['content'] . '</p>',
-						), 50 );
+						$this->add_notice(
+							'actions',
+							array(
+								'class'   => 'updated',
+								'message' => '<p>' . $message['content'] . '</p>',
+							),
+							50
+						);
 					}
 				}
 			}
-
 		}
-
 
 		/**
 		 * Check if plugin is installed with correct folder
