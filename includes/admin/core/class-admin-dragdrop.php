@@ -175,6 +175,7 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 			<div class="um-col-demon-settings" data-in_row="" data-in_sub_row="" data-in_column="" data-in_group=""></div>
 
 			<div class="um-col-demon-row" style="display:none;">
+				<span class="um-admin-row-loading"><span></span></span>
 
 				<div class="um-admin-drag-row-icons">
 					<a href="javascript:void(0);" class="um-admin-drag-rowsub-add um-admin-tipsy-n" title="<?php esc_attr_e( 'Add Row', 'ultimate-member' ); ?>" data-row_action="add_subrow"><i class="um-icon-plus"></i></a>
@@ -186,6 +187,7 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 
 				<div class="um-admin-drag-rowsubs">
 					<div class="um-admin-drag-rowsub">
+						<span class="um-admin-row-loading"><span></span></span>
 
 						<div class="um-admin-drag-ctrls columns">
 							<a href="javascript:void(0);" class="active" data-cols="1"></a>

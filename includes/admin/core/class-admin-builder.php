@@ -410,6 +410,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			if ( empty( $fields ) ) {
 				?>
 				<div class="um-admin-drag-row">
+					<span class="um-admin-row-loading"><span></span></span>
 					<!-- Master Row Actions -->
 					<div class="um-admin-drag-row-icons">
 						<a href="javascript:void(0);" class="um-admin-drag-rowsub-add um-admin-tipsy-n" title="<?php esc_attr_e( 'Add Row', 'ultimate-member' ); ?>" data-row_action="add_subrow"><i class="um-icon-plus"></i></a>
@@ -419,6 +420,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					<div class="um-admin-clear"></div>
 					<div class="um-admin-drag-rowsubs">
 						<div class="um-admin-drag-rowsub">
+							<span class="um-admin-row-loading"><span></span></span>
 							<!-- Column Layout -->
 							<div class="um-admin-drag-ctrls columns">
 								<a href="javascript:void(0);" class="active" data-cols="1"></a>
@@ -462,6 +464,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 				foreach ( $rows as $row_id => $array ) {
 					?>
 					<div class="um-admin-drag-row" data-original="<?php echo esc_attr( $row_id ); ?>">
+						<span class="um-admin-row-loading"><span></span></span>
 						<!-- Master Row Actions -->
 						<div class="um-admin-drag-row-icons">
 							<a href="javascript:void(0);" class="um-admin-drag-rowsub-add um-admin-tipsy-n" title="<?php esc_attr_e( 'Add Row', 'ultimate-member' ); ?>" data-row_action="add_subrow"><i class="um-icon-plus"></i></a>
@@ -481,6 +484,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 								$subrow_fields = $this->get_fields_in_subrow( $row_fields, $c );
 								?>
 								<div class="um-admin-drag-rowsub">
+									<span class="um-admin-row-loading"><span></span></span>
 									<!-- Column Layout -->
 									<div class="um-admin-drag-ctrls columns">
 										<?php

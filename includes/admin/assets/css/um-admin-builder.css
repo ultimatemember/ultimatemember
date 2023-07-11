@@ -133,6 +133,7 @@
 	position: relative;
 	padding: 60px 20px 20px 20px;
 	margin: 0 0 60px 0;
+	position: relative;
 }
 .um-admin-drag-row:last-child {margin-bottom: 0}
 
@@ -316,10 +317,11 @@
 	height: calc( 100% + 30px );
 	top: -30px;
 	left: 0;
-	background: #ccc;
-	opacity: 0.23;
+	background: rgba(241, 241, 241, 0.6);
+	z-index: 999;
+	display: none;
 }
-.um-admin-row-loading span{
+.um-admin-row-loading > span {
 	display: block;
 	-webkit-transition: 0.1s opacity;
 	-moz-transition: 0.1s opacity;
