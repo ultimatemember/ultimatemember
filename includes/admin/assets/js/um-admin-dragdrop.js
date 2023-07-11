@@ -353,8 +353,6 @@ jQuery(document).ready(function() {
 		let element        = jQuery(this).data('remove_element');
 		let loadingWrapper = jQuery(this).parents('.' + element ).children('.um-admin-row-loading');
 
-		loadingWrapper.show();
-
 		let row    = jQuery(this).parents('.um-admin-drag-row').index();
 		let subrow = jQuery(this).parents('.um-admin-drag-rowsub').index();
 
@@ -371,6 +369,8 @@ jQuery(document).ready(function() {
 			return;
 		}
 
+		loadingWrapper.show();
+
 		UM.admin.builder.deleteProcess.push({row,subrow});
 
 		UM.admin.builder.fieldsToDelete = jQuery(this).parents('.' +element).find('.um-admin-drag-fld').toArray();
@@ -383,7 +383,7 @@ jQuery(document).ready(function() {
 
 				jQuery.each( UM.admin.builder.deleteProcess, function(i) {
 					if ( fieldPosition.row === UM.admin.builder.deleteProcess[i].row && fieldPosition.subrow === UM.admin.builder.deleteProcess[i].subrow ) {
-						UM.admin.builder.fieldsToDelete.splice(i, 1);
+						UM.admin.builder.deleteProcess.splice(i, 1);
 						return false;
 					}
 				});
@@ -397,7 +397,7 @@ jQuery(document).ready(function() {
 
 			jQuery.each( UM.admin.builder.deleteProcess, function(i) {
 				if ( fieldPosition.row === UM.admin.builder.deleteProcess[i].row && fieldPosition.subrow === UM.admin.builder.deleteProcess[i].subrow ) {
-					UM.admin.builder.fieldsToDelete.splice(i, 1);
+					UM.admin.builder.deleteProcess.splice(i, 1);
 					return false;
 				}
 			});
