@@ -2662,9 +2662,13 @@ function um_force_utf8_string( $value ) {
 	if ( is_array( $value ) ) {
 		$arr_value = array();
 		foreach ( $value as $key => $v ) {
+			if ( ! function_exists( 'utf8_decode' ) ) {
+				continue;
+			}
+
 			$utf8_decoded_value = utf8_decode( $v );
 
-			if ( mb_check_encoding( $utf8_decoded_value, 'UTF-8' ) ) {
+			if ( function_exists( 'mb_check_encoding' ) && mb_check_encoding( $utf8_decoded_value, 'UTF-8' ) ) {
 				array_push( $arr_value, $utf8_decoded_value );
 			} else {
 				array_push( $arr_value, $v );
@@ -2674,11 +2678,12 @@ function um_force_utf8_string( $value ) {
 
 		return $arr_value;
 	} else {
+		if ( function_exists( 'utf8_decode' ) ) {
+			$utf8_decoded_value = utf8_decode( $value );
 
-		$utf8_decoded_value = utf8_decode( $value );
-
-		if (mb_check_encoding( $utf8_decoded_value, 'UTF-8' )) {
-			return $utf8_decoded_value;
+			if ( function_exists( 'mb_check_encoding' ) && mb_check_encoding( $utf8_decoded_value, 'UTF-8' ) ) {
+				return $utf8_decoded_value;
+			}
 		}
 	}
 

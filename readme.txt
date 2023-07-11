@@ -141,6 +141,10 @@ The plugin does not restrict access to the wp-login.php page when active, so tha
 
 No, you do not need to use our plugin’s login or registration pages and can use another plugin or the default WordPress methods for user registration and login.
 
+= Are additional PHP modules necessary for the plugin to work correctly? =
+
+No specific extensions are needed. But we highly recommended keep active these PHP modules: `mbstring`, `json`, `dom`, `exif`, `gd`, `fileinfo`, `curl`, `iconv`. wp-admin > Tools > Site Health page has a summary about your installation and required modules. All major extensions are listed [here](https://make.wordpress.org/hosting/handbook/server-environment/#php-extensions).
+
 == Screenshots ==
 
 1. Screenshot 1
@@ -161,6 +165,16 @@ No, you do not need to use our plugin’s login or registration pages and can us
 = Important: =
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
+
+= 2.6.8: July 12, 2023 =
+
+* Enhancements:
+
+  - Added: Secure settings. [Read more](https://docs.ultimatemember.com/article/1869-security-feature)
+
+* Bugfixes:
+
+  - Fixed: Using some specific functions which cannot exist if PHP modules are disabled
 
 = 2.6.7: July 1, 2023 =
 

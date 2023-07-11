@@ -93,7 +93,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			$this->secure();
 		}
 
-
 		function init_variables() {
 			$this->role_meta = apply_filters(
 				'um_role_meta_map',

@@ -285,6 +285,7 @@ add_filter( 'um_clean_user_basename_filter', 'um_clean_user_basename_filter', 2,
  * @return array
  */
 function um_before_update_profile( $changes, $user_id ) {
+	// todo check if this option required and maybe there are some WordPress native ways how to make that without custom unused functions. Maybe fully deprecate 'um_force_utf8_strings' option which doesn't exist in UI.
 	if ( ! UM()->options()->get( 'um_force_utf8_strings' ) ) {
 		return $changes;
 	}

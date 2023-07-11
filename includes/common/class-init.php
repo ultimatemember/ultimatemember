@@ -23,6 +23,7 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			$this->cpt()->hooks();
 			$this->screen();
 			$this->secure()->hooks();
+			$this->site_health();
 		}
 
 		/**
@@ -59,6 +60,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\secure'] = new Secure();
 			}
 			return UM()->classes['um\common\secure'];
+		}
+
+		/**
+		 * @since 2.6.8
+		 *
+		 * @return Site_Health
+		 */
+		public function site_health() {
+			if ( empty( UM()->classes['um\common\site_health'] ) ) {
+				UM()->classes['um\common\site_health'] = new Site_Health();
+			}
+			return UM()->classes['um\common\site_health'];
 		}
 	}
 }

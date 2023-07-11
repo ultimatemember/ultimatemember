@@ -706,7 +706,9 @@ function um_field_non_utf8_value( $value ) {
 	if ( function_exists( 'mb_detect_encoding' ) ) {
 		$encoding = mb_detect_encoding( $value, 'utf-8, iso-8859-1, ascii', true );
 		if ( strcasecmp( $encoding, 'UTF-8' ) !== 0 ) {
-			$value = iconv( $encoding, 'utf-8', $value );
+			if ( function_exists( 'iconv' ) ) {
+				$value = iconv( $encoding, 'utf-8', $value );
+			}
 		}
 	}
 
