@@ -1,3 +1,11 @@
+if ( typeof (window.UM) !== 'object' ) {
+	window.UM = {};
+}
+
+if ( typeof (window.UM.admin) !== 'object' ) {
+	window.UM.admin = {};
+}
+
 function um_admin_init_datetimepicker() {
 	jQuery('.um-datepicker:not(.picker__input)').each(function(){
 		elem = jQuery(this);
@@ -79,7 +87,7 @@ function um_admin_init_datetimepicker() {
 
 function um_init_tooltips() {
 	if ( jQuery( '.um_tooltip' ).length > 0 ) {
-		jQuery( '.um_tooltip' ).tooltip({
+		window.UM.admin.allTooltips = jQuery( '.um_tooltip' ).tooltip({
 			tooltipClass: "um_tooltip",
 			content: function () {
 				return jQuery( this ).attr( 'title' );
@@ -109,7 +117,7 @@ jQuery(document).ready(function() {
 		});
 		return false;
 	});
-	
+
 	/**
 		remove a field dropdown
 	**/
@@ -124,7 +132,7 @@ jQuery(document).ready(function() {
 		});
 		return false;
 	});
-	
+
 	/**
 		Ajax link
 	**/
@@ -132,7 +140,7 @@ jQuery(document).ready(function() {
 		e.preventDefault();
 		return false;
 	});
-	
+
 	/**
 		On/Off Buttons
 	**/
@@ -149,7 +157,7 @@ jQuery(document).ready(function() {
 		}
 		}
 	});
-	
+
 	/**
 		WP Color Picker
 	**/
@@ -157,12 +165,12 @@ jQuery(document).ready(function() {
 		jQuery('.um-admin-colorpicker').wpColorPicker();
 	}
 
-	
+
 	/**
 		Tooltips
 	**/
 	um_init_tooltips();
-	
+
 	if( typeof tipsy !== 'undefined' ){
 		jQuery('.um-admin-tipsy-n').tipsy({gravity: 'n', opacity: 1, live: 'a.live' });
 		jQuery('.um-admin-tipsy-w').tipsy({gravity: 'w', opacity: 1, live: 'a.live' });
@@ -170,7 +178,7 @@ jQuery(document).ready(function() {
 		jQuery('.um-admin-tipsy-s').tipsy({gravity: 's', opacity: 1, live: 'a.live' });
 	}
 
-	
+
 	/**
 		Conditional fields
 	**/
@@ -197,7 +205,7 @@ jQuery(document).ready(function() {
 				jQuery('.' + jQuery(this).data('cond1-hide') ).show();
 			}
 		}
-		
+
 		if ( jQuery(this).data('cond2') ) {
 			if ( value == jQuery(this).data('cond2') ) {
 				jQuery('.' + jQuery(this).data('cond2-show') ).show();
@@ -212,7 +220,7 @@ jQuery(document).ready(function() {
 				jQuery('.' + jQuery(this).data('cond2-hide') ).show();
 			}
 		}
-		
+
 		if ( jQuery(this).data('cond3') ) {
 			if ( value == jQuery(this).data('cond3') ) {
 				jQuery('.' + jQuery(this).data('cond3-show') ).show();
@@ -222,16 +230,16 @@ jQuery(document).ready(function() {
 				jQuery('.' + jQuery(this).data('cond3-hide') ).show();
 			}
 		}
-		
+
 	});jQuery('.um-adm-conditional').each(function(){jQuery(this).trigger('change');});
-	
+
 	/**
 		Conditional fields for
 		Radio Group
 	**/
 	jQuery('.um-conditional-radio-group input[type=radio]').on('click', function(){
 		var holder = jQuery('.um-conditional-radio-group');
-		
+
 		var val = jQuery(this).val();
 		var cond1 = holder.data('cond1');
 		var show1 = holder.data('cond1-show');
@@ -240,7 +248,7 @@ jQuery(document).ready(function() {
 		} else {
 			jQuery('.' + show1).hide();
 		}
-		
+
 		var val2 = jQuery(this).val();
 		var cond2 = holder.data('cond2');
 		var show2 = holder.data('cond2-show');
@@ -249,7 +257,7 @@ jQuery(document).ready(function() {
 		} else {
 			jQuery('.' + show2).hide();
 		}
-		
+
 	});jQuery('.um-conditional-radio-group input[type=radio]:checked').each(function(){jQuery(this).trigger('click');});
 
 
@@ -258,7 +266,7 @@ jQuery(document).ready(function() {
 		Conditional fields for
 		nav-menu editor options
 	**/
-	
+
 	jQuery('.um-nav-mode').each( function() {
 		if ( jQuery(this).find('select').val() == 2 ) {
 			jQuery(this).parents('.um-nav-edit').find('.um-nav-roles').show();

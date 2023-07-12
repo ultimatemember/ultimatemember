@@ -199,8 +199,8 @@ function um_admin_remove_modal() {
 		jQuery('.um_tiny_placeholder').replaceWith( jQuery( $um_tiny_editor ).html() );
 	}
 
-	if ( jQuery('.um_tooltip').length > 0 ) {
-		jQuery('.um_tooltip').tooltip('close');
+	if ( window.UM.admin.allTooltips.length > 0 ) {
+		window.UM.admin.allTooltips.tooltip('close');
 	}
 	jQuery('.tipsy').hide();
 	jQuery('body').removeClass('um-admin-modal-open');
