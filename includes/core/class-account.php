@@ -15,6 +15,9 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 	 */
 	class Account {
 
+		/**
+		 * @var boolean
+		 */
 		public $account_exist = false;
 
 		/**

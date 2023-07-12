@@ -167,11 +167,15 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 		 */
 		public function forms_render( $atts ) {
 			if ( isset( $atts['form_id'] ) && '' !== $atts['form_id'] ) {
-				$mode = get_post_meta( $atts['form_id'], '_um_mode', true );
-				if ( 'profile' === $mode && ( um_is_core_page( 'account' ) || um_is_core_page( 'user' ) ) ) {
-					return '';
+				if ( um_is_core_page( 'account' ) ) {
+					if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+						return '<div class="um-block-notice">' . esc_html__( 'This block cannot be used on this page', 'ultimate-member' ) . '</div>';
+					} else {
+						return '';
+					}
 				}
 			}
+
 			$shortcode = '[ultimatemember is_block="1"';
 
 			if ( isset( $atts['form_id'] ) && '' !== $atts['form_id'] ) {

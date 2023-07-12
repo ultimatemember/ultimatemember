@@ -14,6 +14,11 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 	class Shortcodes {
 
 		/**
+		 * @var array
+		 */
+		public $forms_exist = array();
+
+		/**
 		 * @var string
 		 */
 		public $profile_role = '';
@@ -597,6 +602,14 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 * @return string
 		 */
 		public function ultimatemember( $args = array() ) {
+			if ( isset( $args['form_id'] ) ) {
+				$id = $args['form_id'];
+				if ( isset( $this->forms_exist[ $id ] ) && true === $this->forms_exist[ $id ] ) {
+					return '';
+				}
+				$this->forms_exist[ $id ] = true;
+			}
+
 			return $this->load( $args );
 		}
 
