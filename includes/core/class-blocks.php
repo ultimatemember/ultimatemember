@@ -206,9 +206,14 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 		 * @uses apply_shortcodes()
 		 */
 		public function account_render( $atts ) {
-			if ( um_is_core_page( 'account' ) || um_is_core_page( 'user' ) ) {
-				return '';
+			if ( um_is_core_page( 'user' ) ) {
+				if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+					return '<div class="um-block-notice">' . esc_html__( 'This block cannot be used on this page', 'ultimate-member' ) . '</div>';
+				} else {
+					return '';
+				}
 			}
+
 			$shortcode = '[ultimatemember_account is_block="1"';
 
 			if ( isset( $atts['tab'] ) && 'all' !== $atts['tab'] ) {
