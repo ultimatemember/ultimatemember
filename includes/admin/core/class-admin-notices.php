@@ -809,8 +809,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		}
 
 		private function check_new_user_role() {
-			$content         = '';
 			$arr_banned_caps = UM()->options()->get( 'banned_capabilities' );
+			if ( empty( $arr_banned_caps ) ) {
+				return;
+			}
 
 			$global_role = get_option( 'default_role' ); // WP Global settings
 			$caps        = get_role( $global_role )->capabilities;
