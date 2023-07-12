@@ -866,6 +866,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		}
 
 		private function check_registration_forms() {
+			$arr_banned_caps = UM()->options()->get( 'banned_capabilities' );
+			if ( empty( $arr_banned_caps ) ) {
+				return;
+			}
+
 			$um_forms = get_posts(
 				array(
 					'post_type'   => 'um_form',
@@ -884,9 +889,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				)
 			);
 
-			$content         = '';
-			$arr_banned_caps = UM()->options()->get( 'banned_capabilities' );
-
+			$content = '';
 			foreach ( $um_forms as $form_id ) {
 				$role = get_post_meta( $form_id, '_um_register_role', true );
 				if ( empty( $role ) ) {

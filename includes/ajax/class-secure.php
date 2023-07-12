@@ -340,11 +340,14 @@ class Secure {
 					$role            = get_post_meta( $fid, '_um_register_role', true );
 					$caps            = get_role( $role )->capabilities;
 					$has_banned_cap  = false;
-					foreach ( array_keys( $caps ) as $cap ) {
-						if ( in_array( $cap, $arr_banned_caps, true ) ) {
-							$content       .= $br . '<a target="_blank" href="' . get_edit_post_link( $fid ) . '">' . get_the_title( $fid ) . '</a> contains <strong>administrative role</strong> ' . $flag;
-							$has_banned_cap = true;
-							break;
+
+					if ( is_array( $arr_banned_caps ) ) {
+						foreach ( array_keys( $caps ) as $cap ) {
+							if ( in_array( $cap, $arr_banned_caps, true ) ) {
+								$content       .= $br . '<a target="_blank" href="' . get_edit_post_link( $fid ) . '">' . get_the_title( $fid ) . '</a> contains <strong>administrative role</strong> ' . $flag;
+								$has_banned_cap = true;
+								break;
+							}
 						}
 					}
 
