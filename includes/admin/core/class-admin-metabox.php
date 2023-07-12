@@ -1092,6 +1092,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			$where = array( 'ID' => $post_id );
 
 			if ( empty( $_POST['post_title'] ) ) {
+				// translators: %s: Directory id.
 				$_POST['post_title'] = sprintf( __( 'Directory #%s', 'ultimate-member' ), $post_id );
 			}
 
@@ -1188,6 +1189,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 			$where = array( 'ID' => $post_id );
 			if ( empty( $_POST['post_title'] ) ) {
+				// translators: %s: Form id.
 				$_POST['post_title'] = sprintf( __( 'Form #%s', 'ultimate-member' ), $post_id );
 			}
 			$wpdb->update( $wpdb->posts, array( 'post_title' => sanitize_text_field( $_POST['post_title'] ) ), $where );
