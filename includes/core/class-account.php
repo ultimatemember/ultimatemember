@@ -1,8 +1,9 @@
 <?php
 namespace um\core;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 
 if ( ! class_exists( 'um\core\Account' ) ) {
@@ -14,35 +15,39 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 	 */
 	class Account {
 
+		/**
+		 * @var boolean
+		 */
+		public $account_exist = false;
 
 		/**
 		 * @var
 		 */
-		var $tabs;
+		public $tabs;
 
 
 		/**
 		 * @var string
 		 */
-		var $current_tab = 'general';
+		public $current_tab = 'general';
 
 
 		/**
 		 * @var array
 		 */
-		var $displayed_fields = array();
+		public $displayed_fields = array();
 
 
 		/**
 		 * @var array
 		 */
-		var $tab_output = array();
+		public $tab_output = array();
 
 
 		/**
 		 * Account constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			add_shortcode( 'ultimatemember_account', array( &$this, 'ultimatemember_account' ) );
 			add_action( 'template_redirect', array( &$this, 'account_page_restrict' ), 10001 );
 			add_action( 'template_redirect', array( &$this, 'account_submit' ), 10002 );
@@ -159,8 +164,11 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 * @return false|string
 		 * @throws \Exception
 		 */
-		function ultimatemember_account( $args = array() ) {
+		public function ultimatemember_account( $args = array() ) {
 			if ( ! is_user_logged_in() ) {
+				return '';
+			}
+			if ( true === $this->account_exist ) {
 				return '';
 			}
 
@@ -169,11 +177,11 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			ob_start();
 
 			$defaults = array(
-				'template'  => 'account',
-				'mode'      => 'account',
-				'form_id'   => 'um_account_id',
+				'template' => 'account',
+				'mode'     => 'account',
+				'form_id'  => 'um_account_id',
 			);
-			$args = wp_parse_args( $args, $defaults );
+			$args     = wp_parse_args( $args, $defaults );
 
 			/**
 			 * UM hook
@@ -199,7 +207,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 			if ( ! empty( $args['tab'] ) ) {
 
-				if ( $args['tab'] == 'account' ) {
+				if ( 'account' === $args['tab'] ) {
 					$args['tab'] = 'general';
 				}
 
@@ -233,12 +241,13 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 								 */
 								do_action( 'um_account_page_hidden_fields', $args );
 
-								$this->render_account_tab( $args['tab'], $this->tabs[ $args['tab'] ], $args );  ?>
+								$this->render_account_tab( $args['tab'], $this->tabs[ $args['tab'] ], $args );
+								?>
 							</form>
 						</div>
 					</div>
-				<?php }
-
+					<?php
+				}
 			} else {
 
 				$this->init_tabs( $args );
@@ -262,6 +271,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			$output = ob_get_clean();
 
 			$this->account_fields_hash();
+
+			$this->account_exist = true;
 
 			return $output;
 		}
