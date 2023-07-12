@@ -508,26 +508,25 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @return string
 		 */
-		function field_error( $text, $force_show = false ) {
+		public function field_error( $text, $force_show = false ) {
 
 			if ( empty( $text ) ) {
 				return '';
 			}
 
 			if ( $force_show ) {
-				$output = '<div class="um-field-error"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . esc_attr( $text ) . '</div>';
+				$output = '<div class="um-field-error"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</div>';
 				return $output;
 			}
 
-
-			if ( isset( $this->set_id ) && UM()->form()->processing == $this->set_id ) {
-				$output = '<div class="um-field-error"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . esc_attr( $text ) . '</div>';
+			if ( isset( $this->set_id ) && UM()->form()->processing === $this->set_id ) {
+				$output = '<div class="um-field-error"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</div>';
 			} else {
 				$output = '';
 			}
 
 			if ( ! UM()->form()->processing ) {
-				$output = '<div class="um-field-error"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . esc_attr( $text ) . '</div>';
+				$output = '<div class="um-field-error"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</div>';
 			}
 
 			return $output;
@@ -542,26 +541,25 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @return string
 		 */
-		function field_notice( $text, $force_show = false ) {
+		public function field_notice( $text, $force_show = false ) {
 
 			if ( empty( $text ) ) {
 				return '';
 			}
 
 			if ( $force_show ) {
-				$output = '<div class="um-field-notice"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . esc_attr( $text ) . '</div>';
+				$output = '<div class="um-field-notice"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</div>';
 				return $output;
 			}
 
-
-			if ( isset( $this->set_id ) && UM()->form()->processing == $this->set_id ) {
-				$output = '<div class="um-field-notice"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . esc_attr( $text ) . '</div>';
+			if ( isset( $this->set_id ) && UM()->form()->processing === $this->set_id ) {
+				$output = '<div class="um-field-notice"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</div>';
 			} else {
 				$output = '';
 			}
 
 			if ( ! UM()->form()->processing ) {
-				$output = '<div class="um-field-notice"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . esc_attr( $text ) . '</div>';
+				$output = '<div class="um-field-notice"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</div>';
 			}
 
 			return $output;
