@@ -257,13 +257,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 				<h2>
 					<?php
 					// translators: %s: plugin name.
-					echo wp_kses( sprintf( __( '%s - Upgrade Process', 'ultimate-member' ), ultimatemember_plugin_name ), JB()->get_allowed_html( 'admin_notice' ) );
+					echo wp_kses( sprintf( __( '%s - Upgrade Process', 'ultimate-member' ), ultimatemember_plugin_name ), UM()->get_allowed_html( 'admin_notice' ) );
 					?>
 				</h2>
 				<p>
 					<?php
 					// translators: %1$s is a plugin version; %2$s is a last version upgrade.
-					echo wp_kses( sprintf( __( 'You have installed <strong>%1$s</strong> version. Your latest DB version is <strong>%2$s</strong>. We recommend creating a backup of your site before running the update process. Do not exit the page before the update process has complete.', 'ultimate-member' ), ultimatemember_version, $um_last_version_upgrade ), JB()->get_allowed_html( 'admin_notice' ) );
+					echo wp_kses( sprintf( __( 'You have installed <strong>%1$s</strong> version. Your latest DB version is <strong>%2$s</strong>. We recommend creating a backup of your site before running the update process. Do not exit the page before the update process has complete.', 'ultimate-member' ), ultimatemember_version, $um_last_version_upgrade ), UM()->get_allowed_html( 'admin_notice' ) );
 					?>
 				</p>
 				<p><?php _e( 'After clicking the <strong>"Run"</strong> button, the update process will start. All information will be displayed in the <strong>"Upgrade Log"</strong> field.', 'ultimate-member' ); ?></p>

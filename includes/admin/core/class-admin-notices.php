@@ -391,7 +391,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 						<p>
 							<?php
 							// translators: %s: Plugin name.
-							echo wp_kses( sprintf( __( '%s needs to create several pages (User Profiles, Account, Registration, Login, Password Reset, Logout, Member Directory) to function correctly.', 'ultimate-member' ), ultimatemember_plugin_name ), JB()->get_allowed_html( 'admin_notice' ) );
+							echo wp_kses( sprintf( __( '%s needs to create several pages (User Profiles, Account, Registration, Login, Password Reset, Logout, Member Directory) to function correctly.', 'ultimate-member' ), ultimatemember_plugin_name ), UM()->get_allowed_html( 'admin_notice' ) );
 							?>
 						</p>
 
@@ -608,7 +608,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				<p>
 					<?php
 					// translators: %1$s is a plugin name; %2$s is a plugin version; %3$s is a plugin name; %4$s is a plugin version; %5$s is a upgrade link.
-					echo wp_kses( sprintf( __( '<strong>%1$s version %2$s</strong> needs to be updated to work correctly.<br />It is necessary to update the structure of the database and options that are associated with <strong>%3$s %4$s</strong>.<br />Please visit <a href="%5$s">"Upgrade"</a> page and run the upgrade process.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version, ultimatemember_plugin_name, ultimatemember_version, $url ), JB()->get_allowed_html( 'admin_notice' ) );
+					echo wp_kses( sprintf( __( '<strong>%1$s version %2$s</strong> needs to be updated to work correctly.<br />It is necessary to update the structure of the database and options that are associated with <strong>%3$s %4$s</strong>.<br />Please visit <a href="%5$s">"Upgrade"</a> page and run the upgrade process.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version, ultimatemember_plugin_name, ultimatemember_version, $url ), UM()->get_allowed_html( 'admin_notice' ) );
 					?>
 				</p>
 
@@ -667,7 +667,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				<p>
 					<?php
 					// translators: %s: plugin name.
-					echo wp_kses( sprintf( __( 'Hey there! It\'s been one month since you installed %s. How have you found the plugin so far?', 'ultimate-member' ), ultimatemember_plugin_name ), JB()->get_allowed_html( 'admin_notice' ) );
+					echo wp_kses( sprintf( __( 'Hey there! It\'s been one month since you installed %s. How have you found the plugin so far?', 'ultimate-member' ), ultimatemember_plugin_name ), UM()->get_allowed_html( 'admin_notice' ) );
 					?>
 				</p>
 				<p>

@@ -8,7 +8,7 @@
 		<h3>
 			<?php
 			// translators: %s: icons nubber.
-			echo wp_kses( sprintf( __( 'Choose from %s available icons', 'ultimate-member' ), count( UM()->fonticons()->all ) ), JB()->get_allowed_html( 'admin_notice' ) );
+			echo wp_kses( sprintf( __( 'Choose from %s available icons', 'ultimate-member' ), count( UM()->fonticons()->all ) ), UM()->get_allowed_html( 'admin_notice' ) );
 			?>
 		</h3>
 	</div>

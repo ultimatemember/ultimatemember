@@ -7,7 +7,7 @@ if ( $this->dir_size( 'temp' ) > 0.1 ) { ?>
 	<p>
 		<?php
 		// translators: %s: temp folder size.
-		echo wp_kses( sprintf( __( 'You can free up <span class="red">%s MB</span> by purging your temp upload directory.', 'ultimate-member' ), $this->dir_size( 'temp' ) ), JB()->get_allowed_html( 'admin_notice' ) );
+		echo wp_kses( sprintf( __( 'You can free up <span class="red">%s MB</span> by purging your temp upload directory.', 'ultimate-member' ), $this->dir_size( 'temp' ) ), UM()->get_allowed_html( 'admin_notice' ) );
 		?>
 	</p>
 

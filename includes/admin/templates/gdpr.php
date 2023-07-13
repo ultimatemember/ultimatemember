@@ -9,7 +9,7 @@
 <p>
 	<?php
 	// translators: %s: plugin name.
-	echo wp_kses( sprintf( __( '%s provides you with forms for user registration, login and profiles.', 'ultimate-member' ), ultimatemember_plugin_name ), JB()->get_allowed_html( 'admin_notice' ) );
+	echo wp_kses( sprintf( __( '%s provides you with forms for user registration, login and profiles.', 'ultimate-member' ), ultimatemember_plugin_name ), UM()->get_allowed_html( 'admin_notice' ) );
 	?>
 </p>
 <p>
@@ -38,7 +38,7 @@
 <p>
 	<?php
 	// translators: %s: plugin name.
-	echo wp_kses( sprintf( __( '%s does not send any user data outside of your site by default.', 'ultimate-member' ), ultimatemember_plugin_name ), JB()->get_allowed_html( 'admin_notice' ) );
+	echo wp_kses( sprintf( __( '%s does not send any user data outside of your site by default.', 'ultimate-member' ), ultimatemember_plugin_name ), UM()->get_allowed_html( 'admin_notice' ) );
 	?>
 </p>
 <p>
