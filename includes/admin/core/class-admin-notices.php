@@ -246,11 +246,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				'strong' => array(),
 			);
 
-			$this->add_notice( 'lock_registration', array(
-				'class'       => 'info',
-				'message'     => '<p>' . wp_kses( sprintf( __( 'The <strong>"Membership - Anyone can register"</strong> option on the general settings <a href="%s">page</a> is enabled. This means users can register via the standard WordPress wp-login.php page. If you do not want users to be able to register via this page and only register via the Ultimate Member registration form, you should deactivate this option. You can dismiss this notice if you wish to keep the wp-login.php registration page open.', 'ultimate-member' ), admin_url( 'options-general.php' ) . '#users_can_register' ), $allowed_html ) . '</p>',
-				'dismissible' => true,
-			), 10 );
+			$this->add_notice(
+				'lock_registration',
+				array(
+					'class'       => 'info',
+					// translators: %s: Setting link.
+					'message'     => '<p>' . wp_kses( sprintf( __( 'The <strong>"Membership - Anyone can register"</strong> option on the general settings <a href="%s">page</a> is enabled. This means users can register via the standard WordPress wp-login.php page. If you do not want users to be able to register via this page and only register via the Ultimate Member registration form, you should deactivate this option. You can dismiss this notice if you wish to keep the wp-login.php registration page open.', 'ultimate-member' ), admin_url( 'options-general.php' ) . '#users_can_register' ), $allowed_html ) . '</p>',
+					'dismissible' => true,
+				),
+				10
+			);
 		}
 
 		/**
@@ -356,10 +361,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				return;
 			}
 
-			$this->add_notice( 'old_extensions', array(
-				'class' => 'error',
-				'message' => '<p>' . sprintf( __( '<strong>%s %s</strong> requires 2.0 extensions. You have pre 2.0 extensions installed on your site. <br /> Please update %s extensions to latest versions. For more info see this <a href="%s" target="_blank">doc</a>.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version, ultimatemember_plugin_name, 'https://docs.ultimatemember.com/article/201-how-to-update-your-site' ) . '</p>',
-			), 0 );
+			$this->add_notice(
+				'old_extensions',
+				array(
+					'class'   => 'error',
+					// translators: %1$s is a plugin name; %2$s is a plugin version; %3$s is a plugin name; %4$s is a doc link.
+					'message' => '<p>' . sprintf( __( '<strong>%1$s %2$s</strong> requires 2.0 extensions. You have pre 2.0 extensions installed on your site. <br /> Please update %3$s extensions to latest versions. For more info see this <a href="%4$s" target="_blank">doc</a>.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version, ultimatemember_plugin_name, 'https://docs.ultimatemember.com/article/201-how-to-update-your-site' ) . '</p>',
+				),
+				0
+			);
 		}
 
 
@@ -379,7 +389,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 						ob_start(); ?>
 
 						<p>
-							<?php printf( __( '%s needs to create several pages (User Profiles, Account, Registration, Login, Password Reset, Logout, Member Directory) to function correctly.', 'ultimate-member' ), ultimatemember_plugin_name ); ?>
+							<?php
+							// translators: %s: Plugin name.
+							echo wp_kses( sprintf( __( '%s needs to create several pages (User Profiles, Account, Registration, Login, Password Reset, Logout, Member Directory) to function correctly.', 'ultimate-member' ), ultimatemember_plugin_name ), JB()->get_allowed_html( 'admin_notice' ) );
+							?>
 						</p>
 
 						<p>
@@ -427,14 +440,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		/**
 		* EXIF library notice
 		*/
-		function exif_extension_notice() {
+		public function exif_extension_notice() {
 			$hide_exif_notice = get_option( 'um_hide_exif_notice' );
 
 			if ( ! extension_loaded( 'exif' ) && ! $hide_exif_notice ) {
-				$this->add_notice( 'exif_disabled', array(
-					'class'     => 'updated',
-					'message'   => '<p>' . sprintf(__( 'Exif is not enabled on your server. Mobile photo uploads will not be rotated correctly until you enable the exif extension. <a href="%s">Hide this notice</a>', 'ultimate-member' ), add_query_arg('um_adm_action', 'um_hide_exif_notice') ) . '</p>',
-				), 10 );
+				$this->add_notice(
+					'exif_disabled',
+					array(
+						'class'   => 'updated',
+						// translators: %s: query args.
+						'message' => '<p>' . sprintf( __( 'Exif is not enabled on your server. Mobile photo uploads will not be rotated correctly until you enable the exif extension. <a href="%s">Hide this notice</a>', 'ultimate-member' ), add_query_arg( 'um_adm_action', 'um_hide_exif_notice' ) ) . '</p>',
+					),
+					10
+				);
 			}
 		}
 
@@ -520,10 +538,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			}
 
 			if ( $invalid_folder ) {
-				$this->add_notice( 'invalid_dir', array(
-					'class'     => 'error',
-					'message'   => '<p>' . sprintf( __( 'You have installed <strong>%s</strong> with wrong folder name. Correct folder name is <strong>"ultimate-member"</strong>.', 'ultimate-member' ), ultimatemember_plugin_name ) . '</p>',
-				), 1 );
+				$this->add_notice(
+					'invalid_dir',
+					array(
+						'class'   => 'error',
+						// translators: %s: Plugin name.
+						'message' => '<p>' . sprintf( __( 'You have installed <strong>%s</strong> with wrong folder name. Correct folder name is <strong>"ultimate-member"</strong>.', 'ultimate-member' ), ultimatemember_plugin_name ) . '</p>',
+					),
+					1
+				);
 			}
 		}
 
@@ -550,17 +573,27 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			}
 
 			if ( ! empty( $arr_inactive_license_keys ) ) {
-				$this->add_notice( 'license_key', array(
-					'class'     => 'error',
-					'message'   => '<p>' . sprintf( __( 'There are %d inactive %s license keys for this site. This site is not authorized to get plugin updates. You can active this site on <a href="%s">www.ultimatemember.com</a>.', 'ultimate-member' ), count( $arr_inactive_license_keys ) , ultimatemember_plugin_name, UM()->store_url ) . '</p>',
-				), 3 );
+				$this->add_notice(
+					'license_key',
+					array(
+						'class'   => 'error',
+						// translators: %1$s is a inactive license number; %2$s is a plugin name; %3$s is a store link.
+						'message' => '<p>' . sprintf( __( 'There are %1$s inactive %2$s license keys for this site. This site is not authorized to get plugin updates. You can active this site on <a href="%3$s">www.ultimatemember.com</a>.', 'ultimate-member' ), count( $arr_inactive_license_keys ), ultimatemember_plugin_name, UM()->store_url ) . '</p>',
+					),
+					3
+				);
 			}
 
 			if ( $invalid_license ) {
-				$this->add_notice( 'license_key', array(
-					'class'     => 'error',
-					'message'   => '<p>' . sprintf( __( 'You have %d invalid or expired license keys for %s. Please go to the <a href="%s">Licenses page</a> to correct this issue.', 'ultimate-member' ), $invalid_license, ultimatemember_plugin_name, add_query_arg( array('page'=>'um_options', 'tab' => 'licenses'), admin_url( 'admin.php' ) ) ) . '</p>',
-				), 3 );
+				$this->add_notice(
+					'license_key',
+					array(
+						'class'   => 'error',
+						// translators: %1$s is a invalid license; %2$s is a plugin name; %3$s is a license link.
+						'message' => '<p>' . sprintf( __( 'You have %1$s invalid or expired license keys for %2$s. Please go to the <a href="%3$s">Licenses page</a> to correct this issue.', 'ultimate-member' ), $invalid_license, ultimatemember_plugin_name, add_query_arg( array( 'page' => 'um_options', 'tab' => 'licenses' ), admin_url( 'admin.php' ) ) ) . '</p>',
+					),
+					3
+				);
 			}
 		}
 
@@ -573,7 +606,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				ob_start(); ?>
 
 				<p>
-					<?php printf( __( '<strong>%s version %s</strong> needs to be updated to work correctly.<br />It is necessary to update the structure of the database and options that are associated with <strong>%s %s</strong>.<br />Please visit <a href="%s">"Upgrade"</a> page and run the upgrade process.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version, ultimatemember_plugin_name, ultimatemember_version, $url ); ?>
+					<?php
+					// translators: %1$s is a plugin name; %2$s is a plugin version; %3$s is a plugin name; %4$s is a plugin version; %5$s is a upgrade link.
+					echo wp_kses( sprintf( __( '<strong>%1$s version %2$s</strong> needs to be updated to work correctly.<br />It is necessary to update the structure of the database and options that are associated with <strong>%3$s %4$s</strong>.<br />Please visit <a href="%5$s">"Upgrade"</a> page and run the upgrade process.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version, ultimatemember_plugin_name, ultimatemember_version, $url ), JB()->get_allowed_html( 'admin_notice' ) );
+					?>
 				</p>
 
 				<p>
@@ -595,10 +631,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 							'message'   => '<p>' . __( 'Settings successfully upgraded', 'ultimate-member' ) . '</p>',
 						), 4 );
 					} else {
-						$this->add_notice( 'upgrade', array(
-							'class'     => 'updated',
-							'message'   => '<p>' . sprintf( __( '<strong>%s %s</strong> Successfully Upgraded', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version ) . '</p>',
-						), 4 );
+						$this->add_notice(
+							'upgrade',
+							array(
+								'class'   => 'updated',
+								// translators: %1$s is a plugin name title; %2$s is a plugin version.
+								'message' => '<p>' . sprintf( __( '<strong>%1$s %2$s</strong> Successfully Upgraded', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version ) . '</p>',
+							),
+							4
+						);
 					}
 				}
 			}
@@ -624,7 +665,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			<div id="um_start_review_notice">
 				<p>
-					<?php printf( __( 'Hey there! It\'s been one month since you installed %s. How have you found the plugin so far?', 'ultimate-member' ), ultimatemember_plugin_name ) ?>
+					<?php
+					// translators: %s: plugin name.
+					echo wp_kses( sprintf( __( 'Hey there! It\'s been one month since you installed %s. How have you found the plugin so far?', 'ultimate-member' ), ultimatemember_plugin_name ), JB()->get_allowed_html( 'admin_notice' ) );
+					?>
 				</p>
 				<p>
 					<a href="javascript:void(0);" id="um_add_review_love"><?php _e( 'I love it!', 'ultimate-member' ) ?></a>&nbsp;|&nbsp;
@@ -678,7 +722,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			ob_start(); ?>
 
 			<p>
-				<?php printf( __( '<strong>%s</strong> future plans! Detailed future list is <a href="%s" target="_blank">here</a>', 'ultimate-member' ), ultimatemember_plugin_name, '#' ); ?>
+				<?php
+				// translators: %1$s is a plugin name; %2$s is a #.
+				echo wp_kses( sprintf( __( '<strong>%1$s</strong> future plans! Detailed future list is <a href="%2$s" target="_blank">here</a>', 'ultimate-member' ), ultimatemember_plugin_name, '#' ), UM()->get_allowed_html( 'admin_notice' ) );
+				?>
 			</p>
 
 			<?php $message = ob_get_clean();

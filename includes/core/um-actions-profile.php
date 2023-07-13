@@ -340,6 +340,7 @@ function um_user_edit_profile( $args, $form_data ) {
 				} else {
 					if ( 'password' === $array['type'] ) {
 						$to_update[ $key ]         = wp_hash_password( $args['submitted'][ $key ] );
+						// translators: %s: title.
 						$args['submitted'][ $key ] = sprintf( __( 'Your choosed %s', 'ultimate-member' ), $array['title'] );
 					} else {
 						if ( isset( $userinfo[ $key ] ) && $args['submitted'][ $key ] != $userinfo[ $key ] ) {
@@ -1233,7 +1234,12 @@ function um_profile_header( $args ) {
 			<?php } ?>
 
 			<div class="um-profile-status <?php echo esc_attr( um_user( 'account_status' ) ); ?>">
-				<span><?php printf( __( 'This user account status is %s', 'ultimate-member' ), um_user( 'account_status_name' ) ); ?></span>
+				<span>
+					<?php
+					// translators: %s: profile status.
+					printf( __( 'This user account status is %s', 'ultimate-member' ), um_user( 'account_status_name' ) );
+					?>
+				</span>
 			</div>
 
 			<?php

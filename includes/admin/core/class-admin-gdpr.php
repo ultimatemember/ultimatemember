@@ -171,8 +171,8 @@ if ( ! class_exists( 'um\admin\core\Admin_GDPR' ) ) {
 			global $wpdb;
 
 			$metadata = $wpdb->get_results( $wpdb->prepare(
-				"SELECT meta_key, meta_value 
-				FROM {$wpdb->usermeta} 
+				"SELECT meta_key, meta_value
+				FROM {$wpdb->usermeta}
 				WHERE user_id = %d",
 				$user_id
 			), ARRAY_A );
@@ -295,7 +295,8 @@ if ( ! class_exists( 'um\admin\core\Admin_GDPR' ) ) {
 					if ( $deleted ) {
 						$items_removed = true;
 					} else {
-						$messages[] = sprintf( __( 'Your %s was unable to be removed at this time.', 'ultimate-member' ), $metadata['name'] );
+						// translators: %s: metadata name.
+						$messages[]     = sprintf( __( 'Your %s was unable to be removed at this time.', 'ultimate-member' ), $metadata['name'] );
 						$items_retained = true;
 					}
 				}
