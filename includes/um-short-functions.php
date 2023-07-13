@@ -845,7 +845,8 @@ function um_user_submited_display( $k, $title, $data = array(), $style = true ) 
 	$output = '';
 
 	if ( 'form_id' === $k && ! empty( $data['form_id'] ) ) {
-		$v = sprintf( __( '%s - Form ID#: %s', 'ultimate-member' ), get_the_title( $data['form_id'] ), $data['form_id'] );
+		// translators: %1$s is a form title; %2$s is a form ID.
+		$v = sprintf( __( '%1$s - Form ID#: %2$s', 'ultimate-member' ), get_the_title( $data['form_id'] ), $data['form_id'] );
 	} else {
 		$v = um_user( $k );
 	}

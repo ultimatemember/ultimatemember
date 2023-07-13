@@ -209,6 +209,7 @@ function um_profile_field_filter_hook__user_registered( $value, $data ) {
 		return '';
 	}
 	$value = strtotime( $value );
+	// translators: %s: date.
 	$value = sprintf( __( 'Joined %s', 'ultimate-member' ), date_i18n( get_option( 'date_format' ), $value ) );
 	return $value;
 }
@@ -478,6 +479,7 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 			if ( UM()->options()->get( 'allow_url_redirect_confirm' ) && $value !== wp_validate_redirect( $value ) ) {
 				$onclick_alert = sprintf(
 					' onclick="' . esc_attr( 'return confirm( "%s" );' ) . '"',
+					// translators: %s: link.
 					esc_js( sprintf( __( 'This link leads to a 3rd-party website. Make sure the link is safe and you really want to go to this website: \'%s\'', 'ultimate-member' ), $value ) )
 				);
 			}

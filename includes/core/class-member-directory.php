@@ -343,6 +343,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					}
 
 					if ( isset( $data['type'] ) && in_array( $data['type'], $this->sorting_supported_fields ) ) {
+						// translators: %s: title.
 						if ( isset( $data['title'] ) && array_search( sprintf( __( '%s DESC', 'ultimate-member' ), $data['title'] ), $this->sort_fields ) !== false ) {
 							$data['title'] = $data['title'] . ' (' . $key . ')';
 						}
@@ -352,7 +353,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							continue;
 						}
 
+						// translators: %s: title.
 						$this->sort_fields[ $key . '_desc' ] = sprintf( __( '%s DESC', 'ultimate-member' ), $title );
+						// translators: %s: title.
 						$this->sort_fields[ $key . '_asc' ] = sprintf( __( '%s ASC', 'ultimate-member' ), $title );
 					}
 				}

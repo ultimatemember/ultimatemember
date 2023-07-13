@@ -2530,7 +2530,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								$output            .= $this->field_label( $label_confirm_pass, $key, $data );
 							} elseif ( isset( $data['label'] ) ) {
 								$data['label'] = __( $data['label'], 'ultimate-member' );
-								/* translators: 1: label, 2: key, 3: data. */
+								// translators: %s: label.
 								$output .= $this->field_label( sprintf( __( 'Confirm %s', 'ultimate-member' ), $data['label'] ), $key, $data );
 							}
 
@@ -2548,10 +2548,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							if ( ! empty( $data['label_confirm_pass'] ) ) {
 								$placeholder = __( $data['label_confirm_pass'], 'ultimate-member' );
 							} elseif ( ! empty( $placeholder ) && ! isset( $data['label'] ) ) {
-								/* translators: 1: placeholder. */
+								// translators: %s: placeholder.
 								$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $placeholder );
 							} elseif ( isset( $data['label'] ) ) {
-								/* translators: 1: label. */
+								// translators: %s: label.
 								$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $data['label'] );
 							}
 
@@ -4489,6 +4489,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					} else {
 						$edit_url    = um_edit_profile_url();
 					}
+					// translators: %s: edit user link.
 					$output .= '<p class="um-profile-note">' . $emo . '<span>' . sprintf( __( 'Your profile is looking a little empty. Why not <a href="%s">add</a> some information!', 'ultimate-member' ), esc_url( $edit_url ) ) . '</span></p>';
 				} else {
 					$output .= '<p class="um-profile-note">' . $emo . '<span>' . __( 'This user has not added any information to their profile yet.', 'ultimate-member' ) . '</span></p>';

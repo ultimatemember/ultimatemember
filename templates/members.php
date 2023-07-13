@@ -273,14 +273,15 @@ $postid = ! empty( $post->ID ) ? $post->ID : '';
 								if ( empty( $view_types ) ) { ?>
 									<span class="um-member-directory-view-type<?php if ( $not_searched ) {?> um-disabled<?php } ?>">
 								<?php }
-
+								// translators: %s: title.
+								$data_title = sprintf( __( 'Change to %s', 'ultimate-member' ), $value['title'] );
 								$view_types++; ?>
 
 								<a href="javascript:void(0)"
 								   class="um-member-directory-view-type-a<?php if ( ! $not_searched ) {?> um-tip-n<?php } ?>"
 								   data-type="<?php echo $key; ?>"
 								   data-default="<?php echo ( $default_view == $key ) ? 1 : 0; ?>"
-								   title="<?php printf( esc_attr__( 'Change to %s', 'ultimate-member' ), $value['title'] ) ?>"
+								   title="<?php esc_attr_e( $data_title ); ?>"
 								   default-title="<?php echo esc_attr( $value['title'] ); ?>"
 								   next-item="" ><i class="<?php echo $value['icon']; ?>"></i></a>
 							<?php }

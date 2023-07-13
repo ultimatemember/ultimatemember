@@ -517,10 +517,12 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				$user_email = um_user( 'user_email' );
 
 				if ( mb_strlen( wp_unslash( $args['user_password'] ) ) < $min_length ) {
+					// translators: %s: min length.
 					UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain at least %d characters', 'ultimate-member' ), $min_length ) );
 				}
 
 				if ( mb_strlen( wp_unslash( $args['user_password'] ) ) > $max_length ) {
+					// translators: %s: max length.
 					UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain less than %d characters', 'ultimate-member' ), $max_length ) );
 				}
 
