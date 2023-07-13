@@ -238,7 +238,7 @@ $postid = ! empty( $post->ID ) ? $post->ID : '';
 ?>
 
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ); ?>"
-     data-hash="<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ) ?>" data-base-post="<?php echo esc_attr( $postid ) ?>"
+	 data-hash="<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ) ?>" data-base-post="<?php echo esc_attr( $postid ) ?>"
 	 data-must-search="<?php echo esc_attr( $must_search ); ?>" data-searched="<?php echo $not_searched ? '0' : '1'; ?>"
 	 data-view_type="<?php echo esc_attr( $current_view ) ?>" data-page="<?php echo esc_attr( $current_page ) ?>"
 	 data-sorting="<?php echo esc_attr( $sort_from_url ) ?>">
@@ -258,38 +258,47 @@ $postid = ! empty( $post->ID ) ? $post->ID : '';
 					<input type="button" class="um-do-search um-button" value="<?php esc_attr_e( 'Search', 'ultimate-member' ); ?>" />
 				</div>
 			</div>
-		<?php }
+			<?php
+		}
 
 		if ( ( ! empty( $args['enable_sorting'] ) && ! empty( $sorting_options ) && count( $sorting_options ) > 1 ) ||
-		     ( $filters && $show_filters && count( $search_filters ) ) ||
-		     ! $single_view ) { ?>
+			( $filters && $show_filters && count( $search_filters ) ) ||
+			! $single_view ) {
+			?>
 			<div class="um-member-directory-header-row">
 				<div class="um-member-directory-nav-line">
-					<?php if ( ! $single_view ) {
+					<?php
+					if ( ! $single_view ) {
 						$view_types = 0;
 
 						foreach ( UM()->member_directory()->view_types as $key => $value ) {
-							if ( in_array( $key, $args['view_types'] ) ) {
-								if ( empty( $view_types ) ) { ?>
-									<span class="um-member-directory-view-type<?php if ( $not_searched ) {?> um-disabled<?php } ?>">
-								<?php }
+							if ( in_array( $key, $args['view_types'], true ) ) {
+								if ( empty( $view_types ) ) {
+									?>
+									<span class="um-member-directory-view-type<?php if ( $not_searched ) { ?> um-disabled<?php } ?>">
+									<?php
+								}
 								// translators: %s: title.
 								$data_title = sprintf( __( 'Change to %s', 'ultimate-member' ), $value['title'] );
-								$view_types++; ?>
+								$view_types++;
+								?>
 
 								<a href="javascript:void(0)"
-								   class="um-member-directory-view-type-a<?php if ( ! $not_searched ) {?> um-tip-n<?php } ?>"
-								   data-type="<?php echo $key; ?>"
-								   data-default="<?php echo ( $default_view == $key ) ? 1 : 0; ?>"
-								   title="<?php esc_attr_e( $data_title ); ?>"
-								   default-title="<?php echo esc_attr( $value['title'] ); ?>"
-								   next-item="" ><i class="<?php echo $value['icon']; ?>"></i></a>
-							<?php }
+									class="um-member-directory-view-type-a<?php if ( ! $not_searched ) { ?> um-tip-n<?php } ?>"
+									data-type="<?php echo esc_attr( $key ); ?>"
+									data-default="<?php echo ( $default_view === $key ) ? 1 : 0; ?>"
+									title="<?php echo esc_attr( $data_title ); ?>"
+									default-title="<?php echo esc_attr( $value['title'] ); ?>"
+									next-item="" ><i class="<?php echo esc_attr( $value['icon'] ); ?>"></i></a>
+								<?php
+							}
 						}
 
-						if ( ! empty( $view_types ) ) { ?>
+						if ( ! empty( $view_types ) ) {
+							?>
 							</span>
-						<?php }
+							<?php
+						}
 					}
 
 					if ( ! empty( $args['enable_sorting'] ) && ! empty( $sorting_options ) && count( $sorting_options ) > 1 ) { ?>
@@ -339,8 +348,8 @@ $postid = ! empty( $post->ID ) ? $post->ID : '';
 									<strong>{{{filter.label}}}</strong>: {{{filter.value_label}}}
 								<# } #>
 								<div class="um-members-filter-remove um-tip-n" data-name="{{{filter.name}}}"
-								     data-value="{{{filter.value}}}" data-range="{{{filter.range}}}"
-								     data-type="{{{filter.type}}}" title="<?php esc_attr_e( 'Remove filter', 'ultimate-member' ) ?>">&times;</div>
+									 data-value="{{{filter.value}}}" data-range="{{{filter.range}}}"
+									 data-type="{{{filter.type}}}" title="<?php esc_attr_e( 'Remove filter', 'ultimate-member' ) ?>">&times;</div>
 							</div>
 						<# }); #>
 					<# } #>
