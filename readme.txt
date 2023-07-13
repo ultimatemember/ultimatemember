@@ -188,7 +188,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
   - Fixed: Registration with empty role. Set default if role fields on the form are empty when form is submitted
   - Fixed: Admin notices after UM actions has unique key with 'um_' prefix for now
   - Fixed: Escaping form errors. It used `esc_html()` but now there is `wp_kses()`
-  - Fixed: Stop render 2 similar shortcodes on the same page (e.g. 2 login forms with the same `form_id`)
+  - Fixed: Stop render 2 similar shortcodes on the same page (e.g. 2 login forms with the same `form_id`). To return back use [`um_ultimatemember_shortcode_disable_singleton`](https://ultimatemember.github.io/ultimatemember/hooks/um_ultimatemember_shortcode_disable_singleton.html) hook
   - Fixed: Stop render Ultimate Member forms (Login, Profile, Registration, Member Directory) on the predefined Account page
   - Fixed: Using blocks with Ultimate Member shortcodes on the predefined Ultimate Member pages
   - Fixed: Using some specific functions which cannot exist if PHP modules are disabled
