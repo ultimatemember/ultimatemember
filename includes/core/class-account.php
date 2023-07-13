@@ -5,9 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 if ( ! class_exists( 'um\core\Account' ) ) {
-
 
 	/**
 	 * Class Account
@@ -16,33 +14,29 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 	class Account {
 
 		/**
-		 * @var boolean
+		 * @var array
 		 */
-		public $account_exist = false;
+		private $account_exist = array();
 
 		/**
 		 * @var
 		 */
 		public $tabs;
 
-
 		/**
 		 * @var string
 		 */
 		public $current_tab = 'general';
-
 
 		/**
 		 * @var array
 		 */
 		public $displayed_fields = array();
 
-
 		/**
 		 * @var array
 		 */
 		public $tab_output = array();
-
 
 		/**
 		 * Account constructor.
@@ -53,7 +47,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			add_action( 'template_redirect', array( &$this, 'account_submit' ), 10002 );
 			add_filter( 'um_predefined_fields_hook', array( &$this, 'predefined_fields_hook' ), 1 );
 		}
-
 
 		/**
 		 * Init AllTabs for user account
@@ -155,7 +148,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			return apply_filters( 'um_account_page_default_tabs_hook', $tabs );
 		}
 
-
 		/**
 		 * Account Shortcode
 		 *
@@ -168,42 +160,46 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			if ( ! is_user_logged_in() ) {
 				return '';
 			}
-			if ( true === $this->account_exist ) {
-				return '';
-			}
 
 			um_fetch_user( get_current_user_id() );
 
-			ob_start();
-
-			$defaults = array(
-				'template' => 'account',
-				'mode'     => 'account',
-				'form_id'  => 'um_account_id',
+			/** There is possible to use 'shortcode_atts_ultimatemember_account' filter for getting customized $args. This filter is documented in wp-includes/shortcodes.php "shortcode_atts_{$shortcode}" */
+			$args = shortcode_atts(
+				array(
+					'template' => 'account',
+					'mode'     => 'account',
+					'form_id'  => 'um_account_id',
+					'tab'      => '',
+				),
+				$args,
+				'ultimatemember_account'
 			);
-			$args     = wp_parse_args( $args, $defaults );
 
 			/**
-			 * UM hook
+			 * Filters Account shortcode arguments.
 			 *
-			 * @type filter
-			 * @title um_account_shortcode_args_filter
-			 * @description Account Shortcode Arguments
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Shortcode Arguments"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_account_shortcode_args_filter', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_account_shortcode_args_filter', 'my_account_shortcode_args', 10, 1 );
+			 * @since 1.3.x
+			 * @hook  um_account_shortcode_args_filter
+			 * @deprecated 2.6.8
+			 * @todo Fully deprecate since 2.6.9. Use `shortcode_atts_ultimatemember_account` instead.
+			 *
+			 * @param {array} $args Shortcode arguments.
+			 *
+			 * @return {array} Shortcode arguments.
+			 *
+			 * @example <caption>Change Account arguments.</caption>
 			 * function my_account_shortcode_args( $args ) {
-			 *     // your code here
+			 *     $args['tab'] = 'password';
 			 *     return $args;
 			 * }
-			 * ?>
+			 * add_filter( 'um_account_shortcode_args_filter', 'my_account_shortcode_args' );
 			 */
 			$args = apply_filters( 'um_account_shortcode_args_filter', $args );
+
+			$account_hash = md5( wp_json_encode( $args ) );
+			if ( in_array( $account_hash, $this->account_exist, true ) ) {
+				return '';
+			}
 
 			if ( ! empty( $args['tab'] ) ) {
 
@@ -221,23 +217,18 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 							<form method="post" action="">
 								<?php
 								/**
-								 * UM hook
+								 * Fires for render account form hidden fields.
 								 *
-								 * @type action
-								 * @title um_account_page_hidden_fields
-								 * @description Make some action before account tab loading
-								 * @input_vars
-								 * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
-								 * @change_log
-								 * ["Since: 2.0"]
-								 * @usage add_action( 'um_before_template_part', 'function_name', 10, 1 );
-								 * @example
-								 * <?php
-								 * add_action( 'um_account_page_hidden_fields', 'my_account_page_hidden_fields', 10, 1 );
+								 * @since 1.3.x
+								 * @hook um_account_page_hidden_fields
+								 *
+								 * @param {array} $args Account shortcode arguments.
+								 *
+								 * @example <caption>Make some action before account tab loading.</caption>
 								 * function my_account_page_hidden_fields( $args ) {
 								 *     // your code here
 								 * }
-								 * ?>
+								 * add_action( 'um_account_page_hidden_fields', 'my_account_page_hidden_fields' );
 								 */
 								do_action( 'um_account_page_hidden_fields', $args );
 
@@ -252,6 +243,24 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 				$this->init_tabs( $args );
 
+				/**
+				 * Filters Account shortcode default tab.
+				 *
+				 * @since 2.0
+				 * @hook  um_change_default_tab
+				 *
+				 * @param {string} $tab  Current account tab.
+				 * @param {array}  $args Shortcode arguments.
+				 *
+				 * @return {string} Current account tab.
+				 *
+				 * @example <caption>Change Account default tab to Password.</caption>
+				 * function my_um_change_default_tab( $tab, $args ) {
+				 *     $tab = 'password';
+				 *     return $tab;
+				 * }
+				 * add_filter( 'um_change_default_tab', 'my_um_change_default_tab, 10, 2 );
+				 */
 				$this->current_tab = apply_filters( 'um_change_default_tab', $this->current_tab, $args );
 
 				/** This filter is documented in includes/core/class-shortcodes.php */
@@ -272,7 +281,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 			$this->account_fields_hash();
 
-			$this->account_exist = true;
+			$this->account_exist[] = $account_hash;
 
 			return $output;
 		}
