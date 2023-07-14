@@ -295,6 +295,12 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 						'label'       => __( 'Notification Schedule', 'ultimate-member' ),
 						'conditional' => array( 'secure_notify_admins_banned_accounts', '=', 1 ),
 					),
+					array(
+						'id'          => 'secure_allowed_redirect_hosts',
+						'type'        => 'textarea',
+						'label'       => __( 'Allowed hosts for redirect (one host per line)', 'ultimate-member' ),
+						'description' => __( 'Extend allowed hosts for redirects', 'ultimate-member' ),
+					),
 				)
 			);
 
