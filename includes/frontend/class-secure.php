@@ -109,7 +109,7 @@ if ( ! class_exists( 'um\frontend\Secure' ) ) {
 
 			echo "<p class='um-notice warning'>";
 			echo wp_kses(
-				__( '<strong>Important:</strong> This site is currently under maintenance. Please log in or check back soon.', 'ultimate-member' ),
+				__( '<strong>Important:</strong> Our website is currently under maintenance. Please check back soon.', 'ultimate-member' ),
 				array(
 					'strong' => array(),
 					'a'      => array(
