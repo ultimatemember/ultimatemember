@@ -57,7 +57,7 @@ if ( ! class_exists( 'um\core\Register' ) ) {
 			if ( empty( $args['_wpnonce'] ) || ! wp_verify_nonce( $args['_wpnonce'], 'um_register_form' ) ) {
 				// @todo add hookdocs
 				$url = apply_filters( 'um_register_invalid_nonce_redirect_url', add_query_arg( array( 'err' => 'invalid_nonce' ) ) );
-				wp_safe_redirect( $url );
+				um_safe_redirect( $url );
 				exit;
 			}
 		}

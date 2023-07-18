@@ -204,14 +204,14 @@ function um_check_user_status( $user_id, $args, $form_data = null ) {
 
 		// Priority redirect
 		if ( isset( $args['redirect_to'] ) ) {
-			wp_safe_redirect( urldecode( $args['redirect_to'] ) );
+			um_safe_redirect( urldecode( $args['redirect_to'] ) );
 			exit;
 		}
 
 		um_fetch_user( $user_id );
 
 		if ( 'redirect_url' === um_user( 'auto_approve_act' ) && '' !== um_user( 'auto_approve_url' ) ) {
-			wp_safe_redirect( um_user( 'auto_approve_url' ) );
+			um_safe_redirect( um_user( 'auto_approve_url' ));
 			exit;
 		}
 
@@ -246,7 +246,7 @@ function um_check_user_status( $user_id, $args, $form_data = null ) {
 			 */
 			$redirect_url = apply_filters( 'um_registration_pending_user_redirect', um_user( $status . '_url' ), $status, um_user( 'ID' ) );
 
-			wp_safe_redirect( $redirect_url );
+			um_safe_redirect( $redirect_url );
 			exit;
 		}
 

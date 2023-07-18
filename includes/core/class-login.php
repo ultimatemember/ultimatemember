@@ -63,7 +63,7 @@ if ( ! class_exists( 'um\core\Login' ) ) {
 			if ( empty( $args['_wpnonce'] ) || ! wp_verify_nonce( $args['_wpnonce'], 'um_login_form' ) ) {
 				// @todo add hookdocs
 				$url = apply_filters( 'um_login_invalid_nonce_redirect_url', add_query_arg( array( 'err' => 'invalid_nonce' ) ) );
-				wp_safe_redirect( $url );
+				um_safe_redirect( $url );
 				exit;
 			}
 		}
