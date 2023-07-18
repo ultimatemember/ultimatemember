@@ -146,32 +146,70 @@ add_action( 'um_registration_complete', 'um_send_registration_notification' );
 function um_check_user_status( $user_id, $args, $form_data = null ) {
 	$status = um_user( 'account_status' );
 	/**
-	 * UM hook
+	 * Fires after complete UM user registration.
+	 * Where $status can be equal to 'approved', 'checkmail' or 'pending'.
 	 *
-	 * @type action
-	 * @title um_post_registration_{$status}_hook
-	 * @description After complete UM user registration.
-	 * @input_vars
-	 * [{"var":"$user_id","type":"int","desc":"User ID"},
-	 * {"var":"$args","type":"array","desc":"Form data"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_action( 'um_post_registration_{$status}_hook', 'function_name', 10, 2 );
-	 * @example
-	 * <?php
-	 * add_action( 'um_post_registration_{$status}_hook', 'my_post_registration', 10, 2 );
-	 * function my_post_registration( $user_id, $args ) {
+	 * @since 1.3.x
+	 * @since 2.6.8 Added $form_data argument.
+	 *
+	 * @hook  um_post_registration_{$status}_hook
+	 *
+	 * @param {int}   $user_id        User ID.
+	 * @param {array} $submitted_data Registration form submitted data.
+	 * @param {array} $form_data      Form data. Since 2.6.8
+	 *
+	 * @example <caption>Make a custom action after complete UM user registration when user get an approved status.</caption>
+	 * function my_um_post_registration( $user_id, $submitted_data, $form_data ) {
 	 *     // your code here
 	 * }
-	 * ?>
+	 * add_action( 'um_post_registration_approved_hook', 'my_um_post_registration', 10, 3 );
+	 * @example <caption>Make a custom action after complete UM user registration when user requires email activation.</caption>
+	 * function my_um_post_registration( $user_id, $submitted_data, $form_data ) {
+	 *     // your code here
+	 * }
+	 * add_action( 'um_post_registration_checkmail_hook', 'my_um_post_registration', 10, 3 );
+	 * @example <caption>Make a custom action after complete UM user registration when user requires admin review.</caption>
+	 * function my_um_post_registration( $user_id, $submitted_data, $form_data ) {
+	 *     // your code here
+	 * }
+	 * add_action( 'um_post_registration_pending_hook', 'my_um_post_registration', 10, 3 );
 	 */
-	do_action( "um_post_registration_{$status}_hook", $user_id, $args );
+	do_action( "um_post_registration_{$status}_hook", $user_id, $args, $form_data );
 
 	if ( is_null( $form_data ) || is_admin() ) {
 		return;
 	}
 
-	do_action( "track_{$status}_user_registration" );
+	/**
+	 * Fires after complete UM user registration. Only for the frontend action which is run before autologin and redirects.
+	 * Where $status can be equal to 'approved', 'checkmail' or 'pending'.
+	 *
+	 * @since 1.3.x
+	 * @since 2.6.8 Added $user_id, $submitted_data, $form_data arguments.
+	 *
+	 * @hook  track_{$status}_user_registration
+	 *
+	 * @param {int}   $user_id        User ID. Since 2.6.8
+	 * @param {array} $submitted_data Registration form submitted data. Since 2.6.8
+	 * @param {array} $form_data      Form data. Since 2.6.8
+	 *
+	 * @example <caption>Make a custom action after complete UM user registration when user get an approved status.</caption>
+	 * function my_um_post_registration( $user_id, $submitted_data, $form_data ) {
+	 *     // your code here
+	 * }
+	 * add_action( 'track_approved_user_registration', 'my_um_post_registration', 10, 3 );
+	 * @example <caption>Make a custom action after complete UM user registration when user requires email activation.</caption>
+	 * function my_um_post_registration( $user_id, $submitted_data, $form_data ) {
+	 *     // your code here
+	 * }
+	 * add_action( 'track_checkmail_user_registration', 'my_um_post_registration', 10, 3 );
+	 * @example <caption>Make a custom action after complete UM user registration when user requires admin review.</caption>
+	 * function my_um_post_registration( $user_id, $submitted_data, $form_data ) {
+	 *     // your code here
+	 * }
+	 * add_action( 'track_pending_user_registration', 'my_um_post_registration', 10, 3 );
+	 */
+	do_action( "track_{$status}_user_registration", $user_id, $args, $form_data );
 
 	if ( 'approved' === $status ) {
 		// Check if user is logged in because there can be the customized way when through 'um_registration_for_loggedin_users' hook the registration is enabled for the logged-in users (e.g. Administrator).
@@ -182,72 +220,60 @@ function um_check_user_status( $user_id, $args, $form_data = null ) {
 		UM()->user()->generate_profile_slug( $user_id );
 
 		/**
-		 * UM hook
+		 * Fires after complete UM user registration and autologin.
 		 *
-		 * @type action
-		 * @title um_registration_after_auto_login
-		 * @description After complete UM user registration and autologin.
-		 * @input_vars
-		 * [{"var":"$user_id","type":"int","desc":"User ID"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_registration_after_auto_login', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_registration_after_auto_login', 'my_registration_after_auto_login', 10, 1 );
-		 * function my_registration_after_auto_login( $user_id ) {
+		 * @since 1.3.65
+		 * @hook  um_registration_after_auto_login
+		 *
+		 * @param {int} $user_id User ID.
+		 *
+		 * @example <caption>Make a custom action after complete UM user registration and autologin.</caption>
+		 * function my_um_registration_after_auto_login( $user_id ) {
 		 *     // your code here
 		 * }
-		 * ?>
+		 * add_action( 'um_registration_after_auto_login', 'my_um_registration_after_auto_login' );
 		 */
 		do_action( 'um_registration_after_auto_login', $user_id );
 
 		// Priority redirect
 		if ( isset( $args['redirect_to'] ) ) {
 			um_safe_redirect( urldecode( $args['redirect_to'] ) );
-			exit;
 		}
 
 		um_fetch_user( $user_id );
 
 		if ( 'redirect_url' === um_user( 'auto_approve_act' ) && '' !== um_user( 'auto_approve_url' ) ) {
-			um_safe_redirect( um_user( 'auto_approve_url' ));
-			exit;
+			um_safe_redirect( um_user( 'auto_approve_url' ) );
 		}
 
 		if ( 'redirect_profile' === um_user( 'auto_approve_act' ) ) {
+			// Not `um_safe_redirect()` because predefined user profile page is situated on the same host.
 			wp_safe_redirect( um_user_profile_url() );
 			exit;
 		}
 	} else {
 		if ( 'redirect_url' === um_user( $status . '_action' ) && '' !== um_user( $status . '_url' ) ) {
 			/**
-			 * UM hook
+			 * Filters the redirect URL for pending user after registration.
 			 *
-			 * @type filter
-			 * @title um_registration_pending_user_redirect
-			 * @description Change redirect URL for pending user after registration
-			 * @input_vars
-			 * [{"var":"$url","type":"string","desc":"Redirect URL"},
-			 * {"var":"$status","type":"string","desc":"User status"},
-			 * {"var":"$user_id","type":"int","desc":"User ID"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_registration_pending_user_redirect', 'function_name', 10, 3 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_registration_pending_user_redirect', 'my_registration_pending_user_redirect', 10, 3 );
+			 * @since 2.0
+			 * @hook  um_registration_pending_user_redirect
+			 *
+			 * @param {string} $url      Redirect URL.
+			 * @param {string} $status   User status.
+			 * @param {int}    $user_id  User ID.
+			 *
+			 * @return {string} Redirect URL.
+			 *
+			 * @example <caption>Change redirect URL for pending user after registration.</caption>
 			 * function my_registration_pending_user_redirect( $url, $status, $user_id ) {
 			 *     // your code here
 			 *     return $url;
 			 * }
-			 * ?>
+			 * add_filter( 'um_registration_pending_user_redirect', 'my_registration_pending_user_redirect', 10, 3 );
 			 */
 			$redirect_url = apply_filters( 'um_registration_pending_user_redirect', um_user( $status . '_url' ), $status, um_user( 'ID' ) );
-
 			um_safe_redirect( $redirect_url );
-			exit;
 		}
 
 		if ( 'show_message' === um_user( $status . '_action' ) && '' !== um_user( $status . '_message' ) ) {
@@ -256,7 +282,7 @@ function um_check_user_status( $user_id, $args, $form_data = null ) {
 			// Add only priority role to URL.
 			$url = add_query_arg( 'um_role', esc_attr( um_user( 'role' ) ), $url );
 			$url = add_query_arg( 'um_form_id', esc_attr( $form_data['form_id'] ), $url );
-
+			// Not `um_safe_redirect()` because UM()->permalinks()->get_current_url() is situated on the same host.
 			wp_safe_redirect( $url );
 			exit;
 		}
@@ -714,6 +740,7 @@ function um_form_register_redirect() {
 	$page_id       = UM()->options()->get( UM()->options()->get_core_page_id( 'register' ) );
 	$register_post = get_post( $page_id );
 	if ( ! empty( $register_post ) ) {
+		// Not `um_safe_redirect()` because predefined register page is situated on the same host.
 		wp_safe_redirect( get_permalink( $page_id ) );
 		exit();
 	}

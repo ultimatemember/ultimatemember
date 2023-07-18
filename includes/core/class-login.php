@@ -61,7 +61,22 @@ if ( ! class_exists( 'um\core\Login' ) ) {
 			}
 
 			if ( empty( $args['_wpnonce'] ) || ! wp_verify_nonce( $args['_wpnonce'], 'um_login_form' ) ) {
-				// @todo add hookdocs
+				/**
+				 * Filters URL for redirect if login form nonce isn't verified.
+				 *
+				 * @param {string} $error_url URL for redirect if login form nonce isn't verified.
+				 *
+				 * @return {string} URL for redirect.
+				 *
+				 * @since 2.0
+				 * @hook um_login_invalid_nonce_redirect_url
+				 *
+				 * @example <caption>Change URL for redirect if login form nonce isn't verified.</caption>
+				 * function my_um_login_invalid_nonce_redirect_url( $error_url ) {
+				 *     return '{your_custom_url}';
+				 * }
+				 * add_filter( 'um_login_invalid_nonce_redirect_url', 'my_um_login_invalid_nonce_redirect_url' );
+				 */
 				$url = apply_filters( 'um_login_invalid_nonce_redirect_url', add_query_arg( array( 'err' => 'invalid_nonce' ) ) );
 				um_safe_redirect( $url );
 				exit;

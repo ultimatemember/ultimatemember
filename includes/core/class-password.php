@@ -239,7 +239,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				if ( isset( $_GET['hash'] ) && isset( $_GET['login'] ) ) {
 					$value = sprintf( '%s:%s', wp_unslash( $_GET['login'] ), wp_unslash( $_GET['hash'] ) );
 					$this->setcookie( $rp_cookie, $value );
-
+					// Not `um_safe_redirect()` because password-reset page is predefined page and is situated on the same host.
 					wp_safe_redirect( remove_query_arg( array( 'hash', 'login' ) ) );
 					exit;
 				}

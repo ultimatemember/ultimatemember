@@ -140,11 +140,13 @@ function um_submit_form_errors_hook_logincheck( $submitted_data, $form_data ) {
 		case 'awaiting_email_confirmation':
 		case 'rejected':
 			um_reset_user();
+			// Not `um_safe_redirect()` because UM()->permalinks()->get_current_url() is situated on the same host.
 			wp_safe_redirect( add_query_arg( 'err', esc_attr( $status ), UM()->permalinks()->get_current_url() ) );
 			exit;
 	}
 
 	if ( isset( $form_data['form_id'] ) && absint( $form_data['form_id'] ) === absint( UM()->shortcodes()->core_login_form() ) && UM()->form()->errors && ! isset( $_POST[ UM()->honeypot ] ) ) {
+		// Not `um_safe_redirect()` because predefined login page is situated on the same host.
 		wp_safe_redirect( um_get_core_page( 'login' ) );
 		exit;
 	}
@@ -224,12 +226,14 @@ function um_user_login( $submitted_data ) {
 	// Role redirect
 	$after_login = um_user( 'after_login' );
 	if ( empty( $after_login ) ) {
+		// Not `um_safe_redirect()` because predefined user profile page is situated on the same host.
 		wp_safe_redirect( um_user_profile_url() );
 		exit;
 	}
 
 	switch ( $after_login ) {
 		case 'redirect_admin':
+			// Not `um_safe_redirect()` because is redirected to wp-admin.
 			wp_safe_redirect( admin_url() );
 			exit;
 		case 'redirect_url':
@@ -255,10 +259,12 @@ function um_user_login( $submitted_data ) {
 			um_safe_redirect( $redirect_url );
 			exit;
 		case 'refresh':
+			// Not `um_safe_redirect()` because UM()->permalinks()->get_current_url() is situated on the same host.
 			wp_safe_redirect( UM()->permalinks()->get_current_url() );
 			exit;
 		case 'redirect_profile':
 		default:
+			// Not `um_safe_redirect()` because predefined user profile page is situated on the same host.
 			wp_safe_redirect( um_user_profile_url() );
 			exit;
 	}

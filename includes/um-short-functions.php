@@ -2843,16 +2843,15 @@ function um_is_amp( $check_theme_support = true ) {
 }
 
 /**
- * UM safe redirect
+ * UM safe redirect. By default, you can be redirected only to WordPress installation Home URL. Fallback URL is wp-admin URL.
+ * But it can be changed through filters and extended by UM Setting "Allowed hosts for safe redirect (one host per line)" and filter `um_wp_safe_redirect_fallback`.
  *
- * @since 2.6.9
+ * @since 2.6.8
  *
  * @param string $url redirect URL.
- *
- * @return string
  */
 function um_safe_redirect( $url ) {
-	add_filter( 'allowed_redirect_hosts', 'um_allowed_redirect_hosts', 10, 1 );
+	add_filter( 'allowed_redirect_hosts', 'um_allowed_redirect_hosts' );
 	add_filter( 'wp_safe_redirect_fallback', 'um_wp_safe_redirect_fallback', 10, 2 );
 
 	wp_safe_redirect( $url );
@@ -2862,21 +2861,19 @@ function um_safe_redirect( $url ) {
 /**
  * UM allowed hosts
  *
- * @since 2.6.9
+ * @since 2.6.8
  *
- * @param array $hosts allowed hosts.
+ * @param array $hosts Allowed hosts.
  *
  * @return array
  */
 function um_allowed_redirect_hosts( $hosts ) {
-	$hosts = UM()->options()->get( 'secure_allowed_redirect_hosts' );
-
-	$hosts = explode( "\n", $hosts );
-	$hosts = array_unique( $hosts );
+	$secure_hosts = UM()->options()->get( 'secure_allowed_redirect_hosts' );
+	$secure_hosts = explode( "\n", $secure_hosts );
+	$secure_hosts = array_unique( $secure_hosts );
 
 	$additional_hosts = array();
-
-	foreach ( $hosts as $key => $host ) {
+	foreach ( $secure_hosts as $host ) {
 		if ( '' !== trim( $host ) ) {
 			$host = trim( $host );
 			$host = str_replace( array( 'http://', 'https://' ), '', $host );
@@ -2887,26 +2884,28 @@ function um_allowed_redirect_hosts( $hosts ) {
 			}
 
 			if ( strpos( $host, 'www.' ) !== false ) {
-				if ( ! in_array( str_replace( array( 'www.' ), '', $host ), $additional_hosts, true ) ) {
-					$additional_hosts[] = str_replace( array( 'www.' ), '', $host );
+				$strip_www = str_replace( 'www.', '', $host );
+				if ( ! in_array( $strip_www, $additional_hosts, true ) ) {
+					$additional_hosts[] = $strip_www;
 				}
 			} else {
-				if ( ! in_array( 'www.' . $host, $additional_hosts, true ) ) {
-					$additional_hosts[] = 'www.' . $host;
+				$added_www = 'www.' . $host;
+				if ( ! in_array( $added_www, $additional_hosts, true ) ) {
+					$additional_hosts[] = $added_www;
 				}
 			}
 		}
 	}
 	/**
-	 * Filters change allowed hosts.
+	 * Filters change allowed hosts. When `wp_safe_redirect()` function is used for the Ultimate Member frontend redirects.
 	 *
-	 * @since 2.6.9
+	 * @since 2.6.8
 	 * @hook  um_allowed_redirect_hosts
 	 *
-	 * @param {array} $additional_hosts allowed hosts.
-	 * @param {array} $hosts  default hosts.
+	 * @param {array} $additional_hosts Allowed hosts.
+	 * @param {array} $hosts            Default hosts.
 	 *
-	 * @return {array} allowed hosts.
+	 * @return {array} Allowed hosts.
 	 *
 	 * @example <caption>Change allowed hosts.</caption>
 	 * function my_um_allowed_redirect_hosts( $additional_hosts, $hosts ) {
@@ -2916,33 +2915,32 @@ function um_allowed_redirect_hosts( $hosts ) {
 	 * add_filter( 'um_allowed_redirect_hosts', 'my_um_allowed_redirect_hosts', 10, 2 );
 	 */
 	$additional_hosts = apply_filters( 'um_allowed_redirect_hosts', $additional_hosts, $hosts );
-
-	$allowed_hosts = array_merge( $hosts, $additional_hosts );
-
-	return $allowed_hosts;
+	return array_merge( $hosts, $additional_hosts );
 }
 
 /**
  * UM fallback redirect URL
  *
- * @since 2.6.9
+ * @since 2.6.8
  *
- * @param string $url    fallback URL.
- * @param string $status redirect status.
+ * @param string $url    Fallback URL.
+ * @param string $status Redirect status.
  *
  * @return string
  */
 function um_wp_safe_redirect_fallback( $url, $status ) {
 	/**
-	 * Filters change fallback URL.
+	 * Filters change fallback URL. When `wp_safe_redirect()` function is used for the Ultimate Member frontend redirects.
+	 * It's `home_url()` by default.
 	 *
-	 * @since 2.6.9
+	 * @since 2.6.8
 	 * @hook  um_wp_safe_redirect_fallback
 	 *
-	 * @param {string} $url     fallback URL.
-	 * @param {string} $status  status.
+	 * @param {string} $url              UM Fallback URL.
+	 * @param {string} $default_fallback Default fallback URL.
+	 * @param {string} $status           Redirect status.
 	 *
-	 * @return {string} fallback URL.
+	 * @return {string} Fallback URL.
 	 *
 	 * @example <caption>Change fallback URL.</caption>
 	 * function my_um_wp_safe_redirect_fallback( $url, $status ) {
@@ -2951,7 +2949,5 @@ function um_wp_safe_redirect_fallback( $url, $status ) {
 	 * }
 	 * add_filter( 'um_wp_safe_redirect_fallback', 'my_um_wp_safe_redirect_fallback', 10, 2 );
 	 */
-	$url = apply_filters( 'um_wp_safe_redirect_fallback', home_url( '/' ), $status );
-
-	return $url;
+	return apply_filters( 'um_wp_safe_redirect_fallback', home_url( '/' ), $url, $status );
 }

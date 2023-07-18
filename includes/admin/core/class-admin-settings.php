@@ -962,6 +962,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'secure_notify_admins_banned_accounts__interval' => array(
 						'sanitize' => 'key',
 					),
+					'secure_allowed_redirect_hosts'        => array(
+						'sanitize' => 'textarea',
+					),
 				)
 			);
 

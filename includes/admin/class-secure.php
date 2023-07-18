@@ -298,8 +298,8 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 					array(
 						'id'          => 'secure_allowed_redirect_hosts',
 						'type'        => 'textarea',
-						'label'       => __( 'Allowed hosts for redirect (one host per line)', 'ultimate-member' ),
-						'description' => __( 'Extend allowed hosts for redirects', 'ultimate-member' ),
+						'label'       => __( 'Allowed hosts for safe redirect (one host per line)', 'ultimate-member' ),
+						'description' => __( 'Extend allowed hosts for frontend pages redirects', 'ultimate-member' ),
 					),
 				)
 			);

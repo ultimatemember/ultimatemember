@@ -589,6 +589,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'banned_capabilities'                   => array( 'manage_options', 'promote_users', 'level_10' ),
 				'secure_notify_admins_banned_accounts'  => false,
 				'secure_notify_admins_banned_accounts__interval' => 'instant',
+				'secure_allowed_redirect_hosts'         => '',
 			);
 
 			add_filter( 'um_get_tabs_from_config', '__return_true' );

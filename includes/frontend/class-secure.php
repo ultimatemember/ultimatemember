@@ -129,6 +129,7 @@ if ( ! class_exists( 'um\frontend\Secure' ) ) {
 			if ( UM()->options()->get( 'lock_register_forms' ) ) {
 				$login_url = add_query_arg( 'notice', 'maintenance', um_get_core_page( 'login' ) );
 				nocache_headers();
+				// Not `um_safe_redirect()` because predefined login page is situated on the same host.
 				wp_safe_redirect( $login_url );
 				exit;
 			}
@@ -144,6 +145,7 @@ if ( ! class_exists( 'um\frontend\Secure' ) ) {
 				$expired_password_reset = get_user_meta( um_user( 'ID' ), 'um_secure_has_reset_password', true );
 				if ( ! $expired_password_reset ) {
 					$login_url = add_query_arg( 'notice', 'expired_password', um_get_core_page( 'login' ) );
+					// Not `um_safe_redirect()` because predefined login page is situated on the same host.
 					wp_safe_redirect( $login_url );
 					exit;
 				}
@@ -241,6 +243,7 @@ if ( ! class_exists( 'um\frontend\Secure' ) ) {
 				$redirect = apply_filters( 'um_secure_blocked_user_redirect_immediately', true );
 				if ( $redirect ) {
 					$login_url = add_query_arg( 'err', 'inactive', um_get_core_page( 'login' ) );
+					// Not `um_safe_redirect()` because predefined login page is situated on the same host.
 					wp_safe_redirect( $login_url );
 					exit;
 				}

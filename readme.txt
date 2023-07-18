@@ -166,7 +166,7 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.6.8: July 14, 2023 =
+= 2.6.8: July 19, 2023 =
 
 * Enhancements:
 
@@ -175,6 +175,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
   - Added: `um_edit_profile_url` hook for force changing user profile edit URL
   - Added: Additional hook attributes to 'um_reset_password_errors_hook' and 'um_reset_password_process_hook'
   - Added: $form_data attribute to 'um_before_save_registration_details' hook
+  - Added: `um_safe_redirect()` function for handle `wp_safe_redirect()` function with new the "Allowed hosts for safe redirect" setting
   - Updated: [Hooks Documentation v2](https://ultimatemember.github.io/ultimatemember/hooks/)
 
 * Bugfixes:

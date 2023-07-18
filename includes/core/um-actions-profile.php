@@ -508,6 +508,7 @@ function um_user_edit_profile( $args, $form_data ) {
 	// Finally redirect to profile.
 	$url = um_user_profile_url( $user_id );
 	$url = apply_filters( 'um_update_profile_redirect_after', $url, $user_id, $args );
+	// Not `um_safe_redirect()` because predefined user profile page is situated on the same host.
 	wp_safe_redirect( um_edit_my_profile_cancel_uri( $url ) );
 	exit;
 }
