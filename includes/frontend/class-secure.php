@@ -224,6 +224,20 @@ if ( ! class_exists( 'um\frontend\Secure' ) ) {
 				}
 			}
 
+			if ( ! $has_admin_cap ) {
+				/**
+				 * Validate submitted raw data for banned metakeys.
+				 */
+				if ( ! empty( UM()->form()->post_form['submitted'] ) && is_array( UM()->form()->post_form['submitted'] ) ) {
+					foreach ( array_keys( UM()->form()->post_form['submitted'] ) as $submitted_metakey ) {
+						if ( UM()->user()->is_metakey_banned( $submitted_metakey ) ) {
+							$has_admin_cap = true;
+							break;
+						}
+					}
+				}
+			}
+
 			if ( $has_admin_cap ) {
 				UM()->common()->secure()->revoke_caps( $user );
 				/**
