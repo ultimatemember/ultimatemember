@@ -2841,3 +2841,117 @@ function um_is_amp( $check_theme_support = true ) {
 
 	return apply_filters( 'um_is_amp', $is_amp );
 }
+
+/**
+ * UM safe redirect
+ *
+ * @since 2.6.9
+ *
+ * @param string $url redirect URL.
+ *
+ * @return string
+ */
+function um_safe_redirect( $url ) {
+	add_filter( 'allowed_redirect_hosts', 'um_allowed_redirect_hosts', 10, 1 );
+	add_filter( 'wp_safe_redirect_fallback', 'um_wp_safe_redirect_fallback', 10, 2 );
+
+	wp_safe_redirect( $url );
+	exit;
+}
+
+/**
+ * UM allowed hosts
+ *
+ * @since 2.6.9
+ *
+ * @param array $hosts allowed hosts.
+ *
+ * @return array
+ */
+function um_allowed_redirect_hosts( $hosts ) {
+	$hosts = UM()->options()->get( 'secure_allowed_redirect_hosts' );
+
+	$hosts = explode( "\n", $hosts );
+	$hosts = array_unique( $hosts );
+
+	$additional_hosts = array();
+
+	foreach ( $hosts as $key => $host ) {
+		if ( '' !== trim( $host ) ) {
+			$host = trim( $host );
+			$host = str_replace( array( 'http://', 'https://' ), '', $host );
+			$host = trim( $host, '/' );
+
+			if ( ! in_array( $host, $additional_hosts, true ) ) {
+				$additional_hosts[] = $host;
+			}
+
+			if ( strpos( $host, 'www.' ) !== false ) {
+				if ( ! in_array( str_replace( array( 'www.' ), '', $host ), $additional_hosts, true ) ) {
+					$additional_hosts[] = str_replace( array( 'www.' ), '', $host );
+				}
+			} else {
+				if ( ! in_array( 'www.' . $host, $additional_hosts, true ) ) {
+					$additional_hosts[] = 'www.' . $host;
+				}
+			}
+		}
+	}
+	/**
+	 * Filters change allowed hosts.
+	 *
+	 * @since 2.6.9
+	 * @hook  um_allowed_redirect_hosts
+	 *
+	 * @param {array} $additional_hosts allowed hosts.
+	 * @param {array} $hosts  default hosts.
+	 *
+	 * @return {array} allowed hosts.
+	 *
+	 * @example <caption>Change allowed hosts.</caption>
+	 * function my_um_allowed_redirect_hosts( $additional_hosts, $hosts ) {
+	 *     // your code here
+	 *     return $allowed_hosts;
+	 * }
+	 * add_filter( 'um_allowed_redirect_hosts', 'my_um_allowed_redirect_hosts', 10, 2 );
+	 */
+	$additional_hosts = apply_filters( 'um_allowed_redirect_hosts', $additional_hosts, $hosts );
+
+	$allowed_hosts = array_merge( $hosts, $additional_hosts );
+
+	return $allowed_hosts;
+}
+
+/**
+ * UM fallback redirect URL
+ *
+ * @since 2.6.9
+ *
+ * @param string $url    fallback URL.
+ * @param string $status redirect status.
+ *
+ * @return string
+ */
+function um_wp_safe_redirect_fallback( $url, $status ) {
+	/**
+	 * Filters change fallback URL.
+	 *
+	 * @since 2.6.9
+	 * @hook  um_wp_safe_redirect_fallback
+	 *
+	 * @param {string} $url     fallback URL.
+	 * @param {string} $status  status.
+	 *
+	 * @return {string} fallback URL.
+	 *
+	 * @example <caption>Change fallback URL.</caption>
+	 * function my_um_wp_safe_redirect_fallback( $url, $status ) {
+	 *     // your code here
+	 *     return $url;
+	 * }
+	 * add_filter( 'um_wp_safe_redirect_fallback', 'my_um_wp_safe_redirect_fallback', 10, 2 );
+	 */
+	$url = apply_filters( 'um_wp_safe_redirect_fallback', home_url( '/' ), $status );
+
+	return $url;
+}

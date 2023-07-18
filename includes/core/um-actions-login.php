@@ -217,7 +217,7 @@ function um_user_login( $submitted_data ) {
 
 	// Priority redirect from $_GET attribute.
 	if ( ! empty( $submitted_data['redirect_to'] ) ) {
-		wp_safe_redirect( $submitted_data['redirect_to'] );
+		um_safe_redirect( $submitted_data['redirect_to'] );
 		exit;
 	}
 
@@ -252,7 +252,7 @@ function um_user_login( $submitted_data ) {
 			 * add_filter( 'um_login_redirect_url', 'my_login_redirect_url', 10, 2 );
 			 */
 			$redirect_url = apply_filters( 'um_login_redirect_url', um_user( 'login_redirect_url' ), um_user( 'ID' ) );
-			wp_safe_redirect( $redirect_url );
+			um_safe_redirect( $redirect_url );
 			exit;
 		case 'refresh':
 			wp_safe_redirect( UM()->permalinks()->get_current_url() );

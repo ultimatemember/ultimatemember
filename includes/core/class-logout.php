@@ -74,8 +74,8 @@ if ( ! class_exists( 'um\core\Logout' ) ) {
 						wp_destroy_current_session();
 						wp_logout();
 						session_unset();
-						exit( wp_safe_redirect( esc_url_raw( $_REQUEST['redirect_to'] ) ) );
-					} else if ( 'redirect_home' === um_user( 'after_logout' ) ) {
+						um_safe_redirect( esc_url_raw( $_REQUEST['redirect_to'] ) );
+					} elseif ( 'redirect_home' === um_user( 'after_logout' ) ) {
 						wp_destroy_current_session();
 						wp_logout();
 						session_unset();
@@ -107,14 +107,12 @@ if ( ! class_exists( 'um\core\Logout' ) ) {
 						wp_destroy_current_session();
 						wp_logout();
 						session_unset();
-						exit( wp_safe_redirect( $redirect_url ) );
+						um_safe_redirect( $redirect_url );
 					}
-
 				} else {
 					add_filter( 'wp_safe_redirect_fallback', array( &$this, 'safe_redirect_default' ), 10, 2 );
 					exit( wp_safe_redirect( home_url() ) );
 				}
-
 			}
 
 		}
