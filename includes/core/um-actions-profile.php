@@ -358,9 +358,13 @@ function um_user_edit_profile( $args, $form_data ) {
 	}
 
 	$description_key = UM()->profile()->get_show_bio_key( $args );
-	if ( ! isset( $to_update[ $description_key ] ) && ! empty( $form_data['show_bio'] ) ) {
-		if ( isset( $args['submitted'][ $description_key ] ) ) {
+	if ( ! isset( $to_update[ $description_key ] ) && isset( $args['submitted'][ $description_key ] ) ) {
+		if ( ! empty( $form_data['use_custom_settings'] ) && ! empty( $form_data['show_bio'] ) ) {
 			$to_update[ $description_key ] = $args['submitted'][ $description_key ];
+		} else {
+			if ( UM()->options()->get( 'profile_show_bio' ) ) {
+				$to_update[ $description_key ] = $args['submitted'][ $description_key ];
+			}
 		}
 	}
 
