@@ -443,21 +443,21 @@ class Secure {
 						case 'register':
 							$has_captcha = get_post_meta( $fid, '_um_register_g_recaptcha_status', true );
 							if ( ! empty( $has_captcha ) ) {
-								// translators: %$1s is UM form edit link, %$2s is the UM form title
-								$content .= $br . '&nbsp;&nbsp;' . wp_kses( sprintf( __( '- Register: <a target="_blank" href="%$1s">%$2s</a> reCAPTCHA is <strong>enabled</strong>', 'ultimate-member' ), get_edit_post_link( $fid ), get_the_title( $fid ) ), UM()->get_allowed_html( 'admin_notice' ) ) . ' ' . $check;
+								// translators: %1$s is UM form edit link, %2$s is the UM form title
+								$content .= $br . '&nbsp;&nbsp;' . wp_kses( sprintf( __( '- Register: <a target="_blank" href="%1$s">%2$s</a> reCAPTCHA is <strong>enabled</strong>', 'ultimate-member' ), get_edit_post_link( $fid ), get_the_title( $fid ) ), UM()->get_allowed_html( 'admin_notice' ) ) . ' ' . $check;
 							} else {
-								// translators: %$1s is UM form edit link, %$2s is the UM form title
-								$content .= $br . '&nbsp;&nbsp;' . wp_kses( sprintf( __( '- Register: <a target="_blank" href="%$1s">%$2s</a> reCAPTCHA is <strong>disabled</strong>', 'ultimate-member' ), get_edit_post_link( $fid ), get_the_title( $fid ) ), UM()->get_allowed_html( 'admin_notice' ) ) . ' ' . $flag;
+								// translators: %1$s is UM form edit link, %2$s is the UM form title
+								$content .= $br . '&nbsp;&nbsp;' . wp_kses( sprintf( __( '- Register: <a target="_blank" href="%1$s">%2$s</a> reCAPTCHA is <strong>disabled</strong>', 'ultimate-member' ), get_edit_post_link( $fid ), get_the_title( $fid ) ), UM()->get_allowed_html( 'admin_notice' ) ) . ' ' . $flag;
 							}
 							break;
 						case 'login':
 							$has_captcha = get_post_meta( $fid, '_um_login_g_recaptcha_status', true );
 							if ( ! empty( $has_captcha ) ) {
-								// translators: %$1s is UM form edit link, %$2s is the UM form title
-								$content .= $br . '&nbsp;&nbsp;' . wp_kses( sprintf( __( '- Login: <a target="_blank" href="%$1s">%$2s</a> reCAPTCHA is <strong>enabled</strong>', 'ultimate-member' ), get_edit_post_link( $fid ), get_the_title( $fid ) ), UM()->get_allowed_html( 'admin_notice' ) ) . ' ' . $check;
+								// translators: %1$s is UM form edit link, %2$s is the UM form title
+								$content .= $br . '&nbsp;&nbsp;' . wp_kses( sprintf( __( '- Login: <a target="_blank" href="%1$s">%2$s</a> reCAPTCHA is <strong>enabled</strong>', 'ultimate-member' ), get_edit_post_link( $fid ), get_the_title( $fid ) ), UM()->get_allowed_html( 'admin_notice' ) ) . ' ' . $check;
 							} else {
-								// translators: %$1s is UM form edit link, %$2s is the UM form title
-								$content .= $br . '&nbsp;&nbsp;' . wp_kses( sprintf( __( '- Login: <a target="_blank" href="%$1s">%$2s</a> reCAPTCHA is <strong>disabled</strong>', 'ultimate-member' ), get_edit_post_link( $fid ), get_the_title( $fid ) ), UM()->get_allowed_html( 'admin_notice' ) ) . ' ' . $flag;
+								// translators: %1$s is UM form edit link, %2$s is the UM form title
+								$content .= $br . '&nbsp;&nbsp;' . wp_kses( sprintf( __( '- Login: <a target="_blank" href="%1$s">%2$s</a> reCAPTCHA is <strong>disabled</strong>', 'ultimate-member' ), get_edit_post_link( $fid ), get_the_title( $fid ) ), UM()->get_allowed_html( 'admin_notice' ) ) . ' ' . $flag;
 							}
 							break;
 					}
