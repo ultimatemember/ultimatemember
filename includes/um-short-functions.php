@@ -2878,6 +2878,7 @@ function um_allowed_redirect_hosts( $hosts ) {
 			$host = trim( $host );
 			$host = str_replace( array( 'http://', 'https://' ), '', $host );
 			$host = trim( $host, '/' );
+			$host = strtolower( $host );
 
 			if ( ! in_array( $host, $additional_hosts, true ) ) {
 				$additional_hosts[] = $host;
