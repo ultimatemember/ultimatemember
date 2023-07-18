@@ -499,6 +499,29 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				case 'um_secure_restore':
 					$messages[0]['content'] = __( 'Account has been successfully restored.', 'ultimate-member' );
 					break;
+				default:
+					/**
+					 * Filters the custom admin notice after um_adm_action.
+					 *
+					 * @param {array}  $messages Admin notice messages.
+					 * @param {string} $update   Update action key.
+					 *
+					 * @return {array} Admin notice messages.
+					 *
+					 * @since 2.6.8
+					 * @hook um_adm_action_custom_update_notice
+					 *
+					 * @example <caption>Add custom admin notice after {custom_update_key} action.</caption>
+					 * function my_um_adm_action_custom_update_notice( $messages, $update ) {
+					 *     if ( 'custom_update_key' === $update ) {
+					 *         $messages[0]['content'] = 'custom notice text';
+					 *     }
+					 *     return $messages;
+					 * }
+					 * add_filter( 'um_adm_action_custom_update_notice', 'my_um_adm_action_custom_update_notice', 10, 2 );
+					 */
+					$messages = apply_filters( 'um_adm_action_custom_update_notice', array(), $update );
+					break;
 			}
 
 			if ( ! empty( $messages ) ) {
