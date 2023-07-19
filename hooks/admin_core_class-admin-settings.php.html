@@ -278,7 +278,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				$from = ( absint( $_POST['page'] ) * $per_page ) - $per_page + 1;
 				$to   = absint( $_POST['page'] ) * $per_page;
-
+				// translators: %1$s is a metadata from name; %2$s is a metadata to.
 				wp_send_json_success( array( 'message' => sprintf( __( 'Metadata from %1$s to %2$s was upgraded successfully...', 'ultimate-member' ), $from, $to ) ) );
 			} else {
 				do_action( 'um_same_page_update_ajax_action', $cb_func );
@@ -979,6 +979,24 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					),
 					'uninstall_on_delete'                   => array(
 						'sanitize' => 'bool',
+					),
+					'lock_register_forms'                   => array(
+						'sanitize' => 'bool',
+					),
+					'display_login_form_notice'             => array(
+						'sanitize' => 'bool',
+					),
+					'banned_capabilities'                   => array(
+						'sanitize' => array( UM()->admin(), 'sanitize_wp_capabilities_assoc' ),
+					),
+					'secure_notify_admins_banned_accounts'  => array(
+						'sanitize' => 'bool',
+					),
+					'secure_notify_admins_banned_accounts__interval' => array(
+						'sanitize' => 'key',
+					),
+					'secure_allowed_redirect_hosts'        => array(
+						'sanitize' => 'textarea',
 					),
 				)
 			);
@@ -2305,7 +2323,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				//redirect after save settings
 				$arg = array(
 					'page'   => 'um_options',
-					'update' => 'settings_updated',
+					'update' => 'um_settings_updated',
 				);
 
 				if ( ! empty( $_GET['tab'] ) ) {
@@ -2770,9 +2788,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 										case 'expired' :
 
-											$class = 'expired';
+											$class      = 'expired';
 											$messages[] = sprintf(
-												__( 'Your license key expired on %s. Please &lt;a href="%s" target="_blank">renew your license key&lt;/a>.', 'ultimate-member' ),
+												// translators: %1$s is a expiry date; %2$s is a renew link.
+												__( 'Your license key expired on %1$s. Please &lt;a href="%2$s" target="_blank">renew your license key&lt;/a>.', 'ultimate-member' ),
 												date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
 												'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&amp;utm_campaign=admin&amp;utm_source=licenses&amp;utm_medium=expired'
 											);
@@ -2785,6 +2804,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 											$class = 'error';
 											$messages[] = sprintf(
+												// translators: %s: support link name.
 												__( 'Your license key has been disabled. Please &lt;a href="%s" target="_blank">contact support&lt;/a> for more information.', 'ultimate-member' ),
 												'https://ultimatemember.com/support?utm_campaign=admin&amp;utm_source=licenses&amp;utm_medium=revoked'
 											);
@@ -2797,6 +2817,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 											$class = 'error';
 											$messages[] = sprintf(
+												// translators: %s: account page.
 												__( 'Invalid license. Please &lt;a href="%s" target="_blank">visit your account page&lt;/a> and verify it.', 'ultimate-member' ),
 												'https://ultimatemember.com/account?utm_campaign=admin&amp;utm_source=licenses&amp;utm_medium=missing'
 											);
@@ -2810,7 +2831,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 											$class = 'error';
 											$messages[] = sprintf(
-												__( 'Your %s is not active for this URL. Please &lt;a href="%s" target="_blank">visit your account page&lt;/a> to manage your license key URLs.', 'ultimate-member' ),
+												// translators: %1$s is a item name title; %2$s is a account page.
+												__( 'Your %1$s is not active for this URL. Please &lt;a href="%2$s" target="_blank">visit your account page&lt;/a> to manage your license key URLs.', 'ultimate-member' ),
 												$field_data['item_name'],
 												'https://ultimatemember.com/account?utm_campaign=admin&amp;utm_source=licenses&amp;utm_medium=invalid'
 											);
@@ -2822,6 +2844,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										case 'item_name_mismatch' :
 
 											$class = 'error';
+											// translators: %s: item name.
 											$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'ultimate-member' ), $field_data['item_name'] );
 
 											$license_status = 'license-' . $class . '-notice';
@@ -2831,6 +2854,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										case 'no_activations_left':
 
 											$class = 'error';
+											// translators: %s: account link.
 											$messages[] = sprintf( __( 'Your license key has reached its activation limit. &lt;a href="%s">View possible upgrades&lt;/a> now.', 'ultimate-member' ), 'https://ultimatemember.com/account' );
 
 											$license_status = 'license-' . $class . '-notice';
@@ -2849,7 +2873,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 											$class = 'error';
 											$error = ! empty(  $license->error ) ? $license->error : __( 'unknown_error', 'ultimate-member' );
-											$messages[] = sprintf( __( 'There was an error with this license key: %s. Please &lt;a href="%s">contact our support team&lt;/a>.', 'ultimate-member' ), $error, 'https://ultimatemember.com/support' );
+											// translators: %1$s is an error; %2$s is a support link.
+											$messages[] = sprintf( __( 'There was an error with this license key: %1$s. Please &lt;a href="%2$s">contact our support team&lt;/a>.', 'ultimate-member' ), $error, 'https://ultimatemember.com/support' );
 
 											$license_status = 'license-' . $class . '-notice';
 											break;
@@ -2857,7 +2882,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								} else {
 									$class = 'error';
 									$error = ! empty( $license->error ) ? $license->error : __( 'unknown_error', 'ultimate-member' );
-									$messages[] = sprintf( __( 'There was an error with this license key: %s. Please &lt;a href="%s">contact our support team&lt;/a>.', 'ultimate-member' ), $error, 'https://ultimatemember.com/support' );
+									// translators: %1$s is an error; %2$s is a support link.
+									$messages[] = sprintf( __( 'There was an error with this license key: %1$s. Please &lt;a href="%2$s">contact our support team&lt;/a>.', 'ultimate-member' ), $error, 'https://ultimatemember.com/support' );
 
 									$license_status = 'license-' . $class . '-notice';
 								}
@@ -2870,7 +2896,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								$class = 'error';
 								$error = ! empty( $errors[0] ) ? $errors[0] : __( 'unknown_error', 'ultimate-member' );
 								$errors_data = ! empty( $errors_data[0][0] ) ? ', ' . $errors_data[0][0] : '';
-								$messages[] = sprintf( __( 'There was an error with this license key: %s%s. Please &lt;a href="%s">contact our support team&lt;/a>.', 'ultimate-member' ), $error, $errors_data, 'https://ultimatemember.com/support' );
+								// translators: %1$s is an error; %2$s is a error data; %3$s is a support link.
+								$messages[] = sprintf( __( 'There was an error with this license key: %1$s%2$s. Please &lt;a href="%3$s">contact our support team&lt;/a>.', 'ultimate-member' ), $error, $errors_data, 'https://ultimatemember.com/support' );
 
 								$license_status = 'license-' . $class . '-notice';
 
@@ -2882,7 +2909,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 										$class = 'expired';
 										$messages[] = sprintf(
-											__( 'Your license key expired on %s. Please &lt;a href="%s" target="_blank">renew your license key&lt;/a>.', 'ultimate-member' ),
+											// translators: %1$s is a expiry date; %2$s is a renew link.
+											__( 'Your license key expired on %1$s. Please &lt;a href="%2$s" target="_blank">renew your license key&lt;/a>.', 'ultimate-member' ),
 											date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
 											'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&amp;utm_campaign=admin&amp;utm_source=licenses&amp;utm_medium=expired'
 										);
@@ -2895,6 +2923,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 										$class = 'error';
 										$messages[] = sprintf(
+											// translators: %s: support link name.
 											__( 'Your license key has been disabled. Please &lt;a href="%s" target="_blank">contact support&lt;/a> for more information.', 'ultimate-member' ),
 											'https://ultimatemember.com/support?utm_campaign=admin&amp;utm_source=licenses&amp;utm_medium=revoked'
 										);
@@ -2907,6 +2936,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 										$class = 'error';
 										$messages[] = sprintf(
+											// translators: %s: account page.
 											__( 'Invalid license. Please &lt;a href="%s" target="_blank">visit your account page&lt;/a> and verify it.', 'ultimate-member' ),
 											'https://ultimatemember.com/account?utm_campaign=admin&amp;utm_source=licenses&amp;utm_medium=missing'
 										);
@@ -2920,7 +2950,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 										$class = 'error';
 										$messages[] = sprintf(
-											__( 'Your %s is not active for this URL. Please &lt;a href="%s" target="_blank">visit your account page&lt;/a> to manage your license key URLs.', 'ultimate-member' ),
+											// translators: %1$s is a item name title; %2$s is a account page.
+											__( 'Your %1$s is not active for this URL. Please &lt;a href="%2$s" target="_blank">visit your account page&lt;/a> to manage your license key URLs.', 'ultimate-member' ),
 											$field_data['item_name'],
 											'https://ultimatemember.com/account?utm_campaign=admin&amp;utm_source=licenses&amp;utm_medium=invalid'
 										);
@@ -2932,6 +2963,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									case 'item_name_mismatch' :
 
 										$class = 'error';
+										// translators: %s: item name.
 										$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'ultimate-member' ), $field_data['item_name'] );
 
 										$license_status = 'license-' . $class . '-notice';
@@ -2941,6 +2973,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									case 'no_activations_left':
 
 										$class = 'error';
+										// translators: %s: account link.
 										$messages[] = sprintf( __( 'Your license key has reached its activation limit. &lt;a href="%s">View possible upgrades&lt;/a> now.', 'ultimate-member' ), 'https://ultimatemember.com/account' );
 
 										$license_status = 'license-' . $class . '-notice';
@@ -2972,7 +3005,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										} elseif( $expiration > $now &amp;&amp; $expiration - $now &lt; ( DAY_IN_SECONDS * 30 ) ) {
 
 											$messages[] = sprintf(
-												__( 'Your license key expires soon! It expires on %s. &lt;a href="%s" target="_blank">Renew your license key&lt;/a>.', 'ultimate-member' ),
+												// translators: %1$s is a expiry date; %2$s is a renew link.
+												__( 'Your license key expires soon! It expires on %1$s. &lt;a href="%2$s" target="_blank">Renew your license key&lt;/a>.', 'ultimate-member' ),
 												date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
 												'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&amp;utm_campaign=admin&amp;utm_source=licenses&amp;utm_medium=renew'
 											);
@@ -2982,6 +3016,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										} else {
 
 											$messages[] = sprintf(
+												// translators: %s: expiry date.
 												__( 'Your license key expires on %s.', 'ultimate-member' ),
 												date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) )
 											);
@@ -3000,6 +3035,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							$class = 'empty';
 
 							$messages[] = sprintf(
+								// translators: %s: item name.
 								__( 'To receive updates, please enter your valid %s license key.', 'ultimate-member' ),
 								$field_data['item_name']
 							);
@@ -3786,7 +3822,7 @@ Use Only Cookies:         			&lt;?php echo ini_get( 'session.use_only_cookies' )
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="um_admin_ajax_modal_content__hook.html">um_admin_ajax_modal_content__hook</a></li><li><a href="um_admin_ajax_modal_content__hook_%257B$act_id%257D.html">um_admin_ajax_modal_content__hook_{$act_id}</a></li><li><a href="um_after_delete_role.html">um_after_delete_role</a></li><li><a href="um_after_delete_role_meta.html">um_after_delete_role_meta</a></li><li><a href="um_after_everything_output.html">um_after_everything_output</a></li><li><a href="um_after_form.html">um_after_form</a></li><li><a href="um_after_form_fields.html">um_after_form_fields</a></li><li><a href="um_after_save_registration_details.html">um_after_save_registration_details</a></li><li><a href="um_after_%257B$mode%257D_fields.html">um_after_{$mode}_fields</a></li><li><a href="um_ajax_load_posts__%257B$hook%257D.html">um_ajax_load_posts__{$hook}</a></li><li><a href="um_before_form.html">um_before_form</a></li><li><a href="um_before_form_is_loaded.html">um_before_form_is_loaded</a></li><li><a href="um_before_save_registration_details.html">um_before_save_registration_details</a></li><li><a href="um_before_submit_form_post.html">um_before_submit_form_post</a></li><li><a href="um_before_%257B$mode%257D_fields.html">um_before_{$mode}_fields</a></li><li><a href="um_before_%257B$mode%257D_form_is_loaded.html">um_before_{$mode}_form_is_loaded</a></li><li><a href="um_main_%257B$mode%257D_fields.html">um_main_{$mode}_fields</a></li><li><a href="um_on_login_before_redirect.html">um_on_login_before_redirect</a></li><li><a href="um_pre_%257B$mode%257D_shortcode.html">um_pre_{$mode}_shortcode</a></li><li><a href="um_registration_complete.html">um_registration_complete</a></li><li><a href="um_registration_set_extra_data.html">um_registration_set_extra_data</a></li><li><a href="um_role_edit_data.html">um_role_edit_data</a></li><li><a href="um_role_row_actions.html">um_role_row_actions</a></li><li><a href="um_run_ajax_function__%257B$hook%257D.html">um_run_ajax_function__{$hook}</a></li><li><a href="um_submit_form_errors_hook.html">um_submit_form_errors_hook</a></li><li><a href="um_submit_form_errors_hook_.html">um_submit_form_errors_hook_</a></li><li><a href="um_submit_form_errors_hook__blockedemails.html">um_submit_form_errors_hook__blockedemails</a></li><li><a href="um_submit_form_errors_hook__blockedips.html">um_submit_form_errors_hook__blockedips</a></li><li><a href="um_submit_form_errors_hook__blockedwords.html">um_submit_form_errors_hook__blockedwords</a></li><li><a href="um_submit_form_errors_hook__profile.html">um_submit_form_errors_hook__profile</a></li><li><a href="um_submit_form_errors_hook__registration.html">um_submit_form_errors_hook__registration</a></li><li><a href="um_submit_form_errors_hook_login.html">um_submit_form_errors_hook_login</a></li><li><a href="um_submit_form_errors_hook_logincheck.html">um_submit_form_errors_hook_logincheck</a></li><li><a href="um_user_before_updating_profile.html">um_user_before_updating_profile</a></li><li><a href="um_user_edit_profile.html">um_user_edit_profile</a></li><li><a href="um_user_login.html">um_user_login</a></li><li><a href="um_user_login_extra_hook.html">um_user_login_extra_hook</a></li><li><a href="um_user_register.html">um_user_register</a></li></ul><h3>Filters</h3><ul><li><a href="um_add_user_frontend_submitted.html">um_add_user_frontend_submitted</a></li><li><a href="um_admin_builder_skip_field_validation.html">um_admin_builder_skip_field_validation</a></li><li><a href="um_admin_field_update_error_handling.html">um_admin_field_update_error_handling</a></li><li><a href="um_admin_pre_save_field_to_db.html">um_admin_pre_save_field_to_db</a></li><li><a href="um_admin_pre_save_field_to_form.html">um_admin_pre_save_field_to_form</a></li><li><a href="um_admin_pre_save_fields_hook.html">um_admin_pre_save_fields_hook</a></li><li><a href="um_api_output_format.html">um_api_output_format</a></li><li><a href="um_before_save_filter_submitted.html">um_before_save_filter_submitted</a></li><li><a href="um_before_update_profile.html">um_before_update_profile</a></li><li><a href="um_change_role_data.html">um_change_role_data</a></li><li><a href="um_checkbox_field_options.html">um_checkbox_field_options</a></li><li><a href="um_checkbox_field_options_%257B$key%257D.html">um_checkbox_field_options_{$key}</a></li><li><a href="um_completeness_field_id.html">um_completeness_field_id</a></li><li><a href="um_custom_dropdown_options_parent__%257B$form_key%257D.html">um_custom_dropdown_options_parent__{$form_key}</a></li><li><a href="um_custom_dropdown_options_source__%257B$form_key%257D.html">um_custom_dropdown_options_source__{$form_key}</a></li><li><a href="um_custom_error_message_handler.html">um_custom_error_message_handler</a></li><li><a href="um_custom_success_message_handler.html">um_custom_success_message_handler</a></li><li><a href="um_disable_blocks_script.html">um_disable_blocks_script</a></li><li><a href="um_disable_dynamic_global_css.html">um_disable_dynamic_global_css</a></li><li><a href="um_disable_email_notification_sending.html">um_disable_email_notification_sending</a></li><li><a href="um_edit_field_%257B$mode%257D_%257B$type%257D.html">um_edit_field_{$mode}_{$type}</a></li><li><a href="um_email_get_template_file_path.html">um_email_get_template_file_path</a></li><li><a href="um_excluded_comment_types.html">um_excluded_comment_types</a></li><li><a href="um_external_profile_url.html">um_external_profile_url</a></li><li><a href="um_field_checkbox_item_title.html">um_field_checkbox_item_title</a></li><li><a href="um_fields_without_metakey.html">um_fields_without_metakey</a></li><li><a href="um_form_fields_textarea_settings.html">um_form_fields_textarea_settings</a></li><li><a href="um_get_current_page_url.html">um_get_current_page_url</a></li><li><a href="um_hook_for_field_%257B$type%257D.html">um_hook_for_field_{$type}</a></li><li><a href="um_is_field_disabled.html">um_is_field_disabled</a></li><li><a href="um_late_escaping_allowed_tags.html">um_late_escaping_allowed_tags</a></li><li><a href="um_localize_permalink_filter.html">um_localize_permalink_filter</a></li><li><a href="um_login_allow_nonce_verification.html">um_login_allow_nonce_verification</a></li><li><a href="um_login_redirect_url.html">um_login_redirect_url</a></li><li><a href="um_member_directory_custom_sorting_type.html">um_member_directory_custom_sorting_type</a></li><li><a href="um_multiselect_option_value.html">um_multiselect_option_value</a></li><li><a href="um_multiselect_options.html">um_multiselect_options</a></li><li><a href="um_multiselect_options_%257B$key%257D.html">um_multiselect_options_{$key}</a></li><li><a href="um_multiselect_options_%257B$type%257D.html">um_multiselect_options_{$type}</a></li><li><a href="um_override_templates_get_template_path__%257B$key%257D.html">um_override_templates_get_template_path__{$key}</a></li><li><a href="um_override_templates_scan_files.html">um_override_templates_scan_files</a></li><li><a href="um_pre_args_setup.html">um_pre_args_setup</a></li><li><a href="um_prepare_user_results_array.html">um_prepare_user_results_array</a></li><li><a href="um_prepare_user_results_array_meta.html">um_prepare_user_results_array_meta</a></li><li><a href="um_profile_can_view_main.html">um_profile_can_view_main</a></li><li><a href="um_profile_menu_link_%257B$id%257D_attrs.html">um_profile_menu_link_{$id}_attrs</a></li><li><a href="um_profile_permalink.html">um_profile_permalink</a></li><li><a href="um_radio_field_options.html">um_radio_field_options</a></li><li><a href="um_radio_field_options_%257B$key%257D.html">um_radio_field_options_{$key}</a></li><li><a href="um_radio_options_pair__%257B$key%257D.html">um_radio_options_pair__{$key}</a></li><li><a href="um_register_allow_nonce_verification.html">um_register_allow_nonce_verification</a></li><li><a href="um_registration_for_loggedin_users.html">um_registration_for_loggedin_users</a></li><li><a href="um_registration_user_role.html">um_registration_user_role</a></li><li><a href="um_reset_password_shortcode_args_filter.html">um_reset_password_shortcode_args_filter</a></li><li><a href="um_rest_get_auser.html">um_rest_get_auser</a></li><li><a href="um_rest_userdata.html">um_rest_userdata</a></li><li><a href="um_select_dropdown_dynamic_options.html">um_select_dropdown_dynamic_options</a></li><li><a href="um_select_dropdown_dynamic_options_%257B$key%257D.html">um_select_dropdown_dynamic_options_{$key}</a></li><li><a href="um_select_options_pair.html">um_select_options_pair</a></li><li><a href="um_selectbox_options.html">um_selectbox_options</a></li><li><a href="um_shortcode_args_filter.html">um_shortcode_args_filter</a></li><li><a href="um_submit_form_data.html">um_submit_form_data</a></li><li><a href="um_submit_post_form.html">um_submit_post_form</a></li><li><a href="um_user_pre_updating_files_array.html">um_user_pre_updating_files_array</a></li><li><a href="um_user_register_submitted__email.html">um_user_register_submitted__email</a></li><li><a href="um_view_field.html">um_view_field</a></li><li><a href="um_view_field_value_%257B$type%257D.html">um_view_field_value_{$type}</a></li><li><a href="um_whitelisted_metakeys.html">um_whitelisted_metakeys</a></li><li><a href="um_%257B$key%257D_form_edit_field.html">um_{$key}_form_edit_field</a></li><li><a href="um_%257B$key%257D_form_show_field.html">um_{$key}_form_show_field</a></li><li><a href="um_%257B$type%257D_form_show_field.html">um_{$type}_form_show_field</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="track_%257B$status%257D_user_registration.html">track_{$status}_user_registration</a></li><li><a href="um_account_page_hidden_fields.html">um_account_page_hidden_fields</a></li><li><a href="um_admin_ajax_modal_content__hook.html">um_admin_ajax_modal_content__hook</a></li><li><a href="um_admin_ajax_modal_content__hook_%257B$act_id%257D.html">um_admin_ajax_modal_content__hook_{$act_id}</a></li><li><a href="um_after_delete_role.html">um_after_delete_role</a></li><li><a href="um_after_delete_role_meta.html">um_after_delete_role_meta</a></li><li><a href="um_after_everything_output.html">um_after_everything_output</a></li><li><a href="um_after_form.html">um_after_form</a></li><li><a href="um_after_form_fields.html">um_after_form_fields</a></li><li><a href="um_after_save_registration_details.html">um_after_save_registration_details</a></li><li><a href="um_after_%257B$mode%257D_fields.html">um_after_{$mode}_fields</a></li><li><a href="um_ajax_load_posts__%257B$hook%257D.html">um_ajax_load_posts__{$hook}</a></li><li><a href="um_before_form.html">um_before_form</a></li><li><a href="um_before_form_is_loaded.html">um_before_form_is_loaded</a></li><li><a href="um_before_save_registration_details.html">um_before_save_registration_details</a></li><li><a href="um_before_submit_form_post.html">um_before_submit_form_post</a></li><li><a href="um_before_%257B$mode%257D_fields.html">um_before_{$mode}_fields</a></li><li><a href="um_before_%257B$mode%257D_form_is_loaded.html">um_before_{$mode}_form_is_loaded</a></li><li><a href="um_main_%257B$mode%257D_fields.html">um_main_{$mode}_fields</a></li><li><a href="um_on_login_before_redirect.html">um_on_login_before_redirect</a></li><li><a href="um_post_registration_%257B$status%257D_hook.html">um_post_registration_{$status}_hook</a></li><li><a href="um_pre_%257B$mode%257D_shortcode.html">um_pre_{$mode}_shortcode</a></li><li><a href="um_registration_after_auto_login.html">um_registration_after_auto_login</a></li><li><a href="um_registration_complete.html">um_registration_complete</a></li><li><a href="um_registration_set_extra_data.html">um_registration_set_extra_data</a></li><li><a href="um_reset_password_errors_hook.html">um_reset_password_errors_hook</a></li><li><a href="um_reset_password_process_hook.html">um_reset_password_process_hook</a></li><li><a href="um_role_edit_data.html">um_role_edit_data</a></li><li><a href="um_role_row_actions.html">um_role_row_actions</a></li><li><a href="um_run_ajax_function__%257B$hook%257D.html">um_run_ajax_function__{$hook}</a></li><li><a href="um_submit_form_errors_hook.html">um_submit_form_errors_hook</a></li><li><a href="um_submit_form_errors_hook_.html">um_submit_form_errors_hook_</a></li><li><a href="um_submit_form_errors_hook__blockedemails.html">um_submit_form_errors_hook__blockedemails</a></li><li><a href="um_submit_form_errors_hook__blockedips.html">um_submit_form_errors_hook__blockedips</a></li><li><a href="um_submit_form_errors_hook__blockedwords.html">um_submit_form_errors_hook__blockedwords</a></li><li><a href="um_submit_form_errors_hook__profile.html">um_submit_form_errors_hook__profile</a></li><li><a href="um_submit_form_errors_hook__registration.html">um_submit_form_errors_hook__registration</a></li><li><a href="um_submit_form_errors_hook_login.html">um_submit_form_errors_hook_login</a></li><li><a href="um_submit_form_errors_hook_logincheck.html">um_submit_form_errors_hook_logincheck</a></li><li><a href="um_user_after_query.html">um_user_after_query</a></li><li><a href="um_user_before_query.html">um_user_before_query</a></li><li><a href="um_user_before_updating_profile.html">um_user_before_updating_profile</a></li><li><a href="um_user_edit_profile.html">um_user_edit_profile</a></li><li><a href="um_user_login.html">um_user_login</a></li><li><a href="um_user_login_extra_hook.html">um_user_login_extra_hook</a></li><li><a href="um_user_register.html">um_user_register</a></li></ul><h3>Filters</h3><ul><li><a href="um_account_shortcode_args_filter.html">um_account_shortcode_args_filter</a></li><li><a href="um_add_user_frontend_submitted.html">um_add_user_frontend_submitted</a></li><li><a href="um_adm_action_custom_update_notice.html">um_adm_action_custom_update_notice</a></li><li><a href="um_admin_builder_skip_field_validation.html">um_admin_builder_skip_field_validation</a></li><li><a href="um_admin_field_update_error_handling.html">um_admin_field_update_error_handling</a></li><li><a href="um_admin_pre_save_field_to_db.html">um_admin_pre_save_field_to_db</a></li><li><a href="um_admin_pre_save_field_to_form.html">um_admin_pre_save_field_to_form</a></li><li><a href="um_admin_pre_save_fields_hook.html">um_admin_pre_save_fields_hook</a></li><li><a href="um_allowed_redirect_hosts.html">um_allowed_redirect_hosts</a></li><li><a href="um_api_output_format.html">um_api_output_format</a></li><li><a href="um_before_save_filter_submitted.html">um_before_save_filter_submitted</a></li><li><a href="um_before_update_profile.html">um_before_update_profile</a></li><li><a href="um_browser_url_redirect_to__filter.html">um_browser_url_redirect_to__filter</a></li><li><a href="um_change_default_tab.html">um_change_default_tab</a></li><li><a href="um_change_role_data.html">um_change_role_data</a></li><li><a href="um_checkbox_field_options.html">um_checkbox_field_options</a></li><li><a href="um_checkbox_field_options_%257B$key%257D.html">um_checkbox_field_options_{$key}</a></li><li><a href="um_completeness_field_id.html">um_completeness_field_id</a></li><li><a href="um_cron_disable.html">um_cron_disable</a></li><li><a href="um_custom_dropdown_options_parent__%257B$form_key%257D.html">um_custom_dropdown_options_parent__{$form_key}</a></li><li><a href="um_custom_dropdown_options_source__%257B$form_key%257D.html">um_custom_dropdown_options_source__{$form_key}</a></li><li><a href="um_custom_error_message_handler.html">um_custom_error_message_handler</a></li><li><a href="um_custom_success_message_handler.html">um_custom_success_message_handler</a></li><li><a href="um_disable_blocks_script.html">um_disable_blocks_script</a></li><li><a href="um_disable_dynamic_global_css.html">um_disable_dynamic_global_css</a></li><li><a href="um_disable_email_notification_sending.html">um_disable_email_notification_sending</a></li><li><a href="um_edit_field_%257B$mode%257D_%257B$type%257D.html">um_edit_field_{$mode}_{$type}</a></li><li><a href="um_edit_profile_url.html">um_edit_profile_url</a></li><li><a href="um_email_get_template_file_path.html">um_email_get_template_file_path</a></li><li><a href="um_excluded_comment_types.html">um_excluded_comment_types</a></li><li><a href="um_external_profile_url.html">um_external_profile_url</a></li><li><a href="um_field_checkbox_item_title.html">um_field_checkbox_item_title</a></li><li><a href="um_fields_without_metakey.html">um_fields_without_metakey</a></li><li><a href="um_form_fields_textarea_settings.html">um_form_fields_textarea_settings</a></li><li><a href="um_get_current_page_url.html">um_get_current_page_url</a></li><li><a href="um_get_field__%257B$key%257D.html">um_get_field__{$key}</a></li><li><a href="um_get_field_%257B$type%257D.html">um_get_field_{$type}</a></li><li><a href="um_hook_for_field_%257B$type%257D.html">um_hook_for_field_{$type}</a></li><li><a href="um_is_field_disabled.html">um_is_field_disabled</a></li><li><a href="um_late_escaping_allowed_tags.html">um_late_escaping_allowed_tags</a></li><li><a href="um_localize_permalink_filter.html">um_localize_permalink_filter</a></li><li><a href="um_login_allow_nonce_verification.html">um_login_allow_nonce_verification</a></li><li><a href="um_login_invalid_nonce_redirect_url.html">um_login_invalid_nonce_redirect_url</a></li><li><a href="um_login_redirect_url.html">um_login_redirect_url</a></li><li><a href="um_logout_redirect_url.html">um_logout_redirect_url</a></li><li><a href="um_member_directory_custom_sorting_type.html">um_member_directory_custom_sorting_type</a></li><li><a href="um_multiselect_options.html">um_multiselect_options</a></li><li><a href="um_multiselect_options_%257B$key%257D.html">um_multiselect_options_{$key}</a></li><li><a href="um_multiselect_options_%257B$type%257D.html">um_multiselect_options_{$type}</a></li><li><a href="um_override_templates_get_template_path__%257B$key%257D.html">um_override_templates_get_template_path__{$key}</a></li><li><a href="um_override_templates_scan_files.html">um_override_templates_scan_files</a></li><li><a href="um_pre_args_setup.html">um_pre_args_setup</a></li><li><a href="um_prepare_user_results_array.html">um_prepare_user_results_array</a></li><li><a href="um_prepare_user_results_array_meta.html">um_prepare_user_results_array_meta</a></li><li><a href="um_profile_can_view_main.html">um_profile_can_view_main</a></li><li><a href="um_profile_menu_link_%257B$id%257D_attrs.html">um_profile_menu_link_{$id}_attrs</a></li><li><a href="um_profile_permalink.html">um_profile_permalink</a></li><li><a href="um_radio_field_options.html">um_radio_field_options</a></li><li><a href="um_radio_field_options_%257B$key%257D.html">um_radio_field_options_{$key}</a></li><li><a href="um_radio_options_pair__%257B$key%257D.html">um_radio_options_pair__{$key}</a></li><li><a href="um_register_allow_nonce_verification.html">um_register_allow_nonce_verification</a></li><li><a href="um_register_invalid_nonce_redirect_url.html">um_register_invalid_nonce_redirect_url</a></li><li><a href="um_registration_for_loggedin_users.html">um_registration_for_loggedin_users</a></li><li><a href="um_registration_pending_user_redirect.html">um_registration_pending_user_redirect</a></li><li><a href="um_registration_user_role.html">um_registration_user_role</a></li><li><a href="um_reset_password_shortcode_args_filter.html">um_reset_password_shortcode_args_filter</a></li><li><a href="um_rest_get_auser.html">um_rest_get_auser</a></li><li><a href="um_rest_userdata.html">um_rest_userdata</a></li><li><a href="um_secure_register_form_banned_capabilities.html">um_secure_register_form_banned_capabilities</a></li><li><a href="um_select_dropdown_dynamic_options.html">um_select_dropdown_dynamic_options</a></li><li><a href="um_select_dropdown_dynamic_options_%257B$key%257D.html">um_select_dropdown_dynamic_options_{$key}</a></li><li><a href="um_select_options_pair.html">um_select_options_pair</a></li><li><a href="um_selectbox_options.html">um_selectbox_options</a></li><li><a href="um_shortcode_args_filter.html">um_shortcode_args_filter</a></li><li><a href="um_submit_form_data.html">um_submit_form_data</a></li><li><a href="um_submit_post_form.html">um_submit_post_form</a></li><li><a href="um_submitted_data_value.html">um_submitted_data_value</a></li><li><a href="um_ultimatemember_shortcode_disable_singleton.html">um_ultimatemember_shortcode_disable_singleton</a></li><li><a href="um_user_pre_updating_files_array.html">um_user_pre_updating_files_array</a></li><li><a href="um_user_register_submitted__email.html">um_user_register_submitted__email</a></li><li><a href="um_view_field.html">um_view_field</a></li><li><a href="um_view_field_value_%257B$type%257D.html">um_view_field_value_{$type}</a></li><li><a href="um_whitelisted_metakeys.html">um_whitelisted_metakeys</a></li><li><a href="um_wp_safe_redirect_fallback.html">um_wp_safe_redirect_fallback</a></li><li><a href="um_%257B$key%257D_form_edit_field.html">um_{$key}_form_edit_field</a></li><li><a href="um_%257B$key%257D_form_show_field.html">um_{$key}_form_show_field</a></li><li><a href="um_%257B$type%257D_form_show_field.html">um_{$type}_form_show_field</a></li></ul>
 </nav>
 
 <br class="clear">
