@@ -1173,6 +1173,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				 */
 				$data = apply_filters( 'um_is_selected_filter_data', $data, $key, $field_value );
 
+				if (isset($_GET['profiletab']) && $_GET['profiletab'] == 'mycustomtab') {
+					$this->editing = true; 
+					$this->set_mode = 'profile';
+				}
+
 				if ( ! $this->editing || 'custom' == $this->set_mode ) {
 					// show default on register screen if there is default
 					if ( isset( $data['default'] ) ) {
