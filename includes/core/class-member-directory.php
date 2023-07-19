@@ -1292,7 +1292,19 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				$profiles_per_page = $directory_data['profiles_per_page_mobile'];
 			}
 
-			$this->query_args['number'] = ( ! empty( $directory_data['max_users'] ) && $directory_data['max_users'] <= $profiles_per_page ) ? $directory_data['max_users'] : $profiles_per_page;
+			if ( $_POST['load_more'] ) {
+				$directory_data['load_more'] = absint( $_POST['load_more'] );
+			}
+
+			if ( ! empty( $directory_data['load_more'] ) ) {
+				if ( ! empty( $directory_data['max_users'] ) && $directory_data['max_users'] <= $profiles_per_page ) {
+					$this->query_args['number'] = $directory_data['max_users'];
+				} else {
+					$this->query_args['number'] = $profiles_per_page * $directory_data['load_more'];
+				}
+			} else {
+				$this->query_args['number'] = (!empty($directory_data['max_users']) && $directory_data['max_users'] <= $profiles_per_page) ? $directory_data['max_users'] : $profiles_per_page;
+			}
 			$this->query_args['paged'] = ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
 		}
 
@@ -2592,7 +2604,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					'relation' => 'AND'
 				),
 			);
-
 
 			// handle different restrictions
 			$this->restriction_options();

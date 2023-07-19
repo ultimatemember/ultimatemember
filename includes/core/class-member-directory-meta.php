@@ -829,12 +829,27 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				$profiles_per_page = $directory_data['profiles_per_page_mobile'];
 			}
 
-			$query_number = ( ! empty( $directory_data['max_users'] ) && $directory_data['max_users'] <= $profiles_per_page ) ? $directory_data['max_users'] : $profiles_per_page;
+			if ( $_POST['load_more'] ) {
+				$directory_data['load_more'] = absint( $_POST['load_more'] );
+			}
+
+			if ( ! empty( $directory_data['load_more'] ) ) {
+				if ( ! empty( $directory_data['max_users'] ) && $directory_data['max_users'] <= $profiles_per_page ) {
+					$query_number = $directory_data['max_users'];
+				} else {
+					$query_number = $profiles_per_page * $directory_data['load_more'];
+				}
+			} else {
+				$query_number = ( ! empty( $directory_data['max_users'] ) && $directory_data['max_users'] <= $profiles_per_page ) ? $directory_data['max_users'] : $profiles_per_page;
+			}
+
 			$query_paged = ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
 
 			$number = $query_number;
-			if ( ! empty( $directory_data['max_users'] ) && $query_paged*$query_number > $directory_data['max_users'] ) {
-				$number = ( $query_paged*$query_number - ( $query_paged*$query_number - $directory_data['max_users'] ) ) % $query_number;
+			if ( empty( $directory_data['load_more'] ) ) {
+				if ( !empty($directory_data['max_users']) && $query_paged * $query_number > $directory_data['max_users'] ) {
+					$number = ($query_paged * $query_number - ($query_paged * $query_number - $directory_data['max_users'])) % $query_number;
+				}
 			}
 
 			// limit

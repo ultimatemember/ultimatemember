@@ -387,7 +387,13 @@ $postid = ! empty( $post->ID ) ? $post->ID : '';
 
 	<div class="um-members-wrapper"></div>
 
-	<div class="um-members-pagination-box"></div>
+	<?php $load_more = get_post_meta( $form_id, '_um_load_more', true );
+		if ( ! $load_more ) { ?>
+		<div class="um-members-pagination-box"></div>
+	<?php } else {
+			$infinite_scroll = get_post_meta( $form_id, '_um_infinite_scroll', true ); ?>
+		<div id="um-members-load-more" data-page="1" <?php echo ( ! empty( $infinite_scroll ) ) ? ' class="um-members-load-more-hide"' : ''; ?>><?php esc_html_e( 'Load more', 'ultimate-member' ); ?></div>
+	<?php } ?>
 
 	<?php
 	/**

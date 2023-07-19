@@ -874,6 +874,11 @@ body #content .um-directory a {
       text-align: center;
       padding: 5px 0;
       font-size: 15px; }
+  .um-directory #um-members-load-more {
+    display: block;
+    cursor: pointer;
+    margin: 0 auto;
+  }
   .um-directory.um-loaded .um-members-wrapper {
     height: auto; }
   .um-directory[data-view_type="list"] .um-member-directory-header .um-member-directory-header-row .um-member-directory-view-type .um-member-directory-view-type-a[data-type="list"] {
