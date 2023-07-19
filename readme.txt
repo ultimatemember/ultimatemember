@@ -168,6 +168,13 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 = 2.6.9: August xx, 2023 =
 
+* Enhancements:
+
+  - Added: Compatibility with UM:Stripe extension
+
+* Bugfixes:
+
+  - Fixed: Using allowed hosts for safe redirect after profile deletion
 
 = 2.6.8: July 19, 2023 =
 
