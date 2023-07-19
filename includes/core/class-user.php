@@ -1409,14 +1409,15 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 *
 			 * @param {int}   $user_id        User ID.
 			 * @param {array} $submitted_data $_POST Submission array.
+			 * @param {array} $form_data      Form data. Since 2.6.8.
 			 *
 			 * @example <caption>Make any custom action before save registration details to the user.</caption>
-			 * function my_before_save_registration_details( $user_id, $submitted_data ) {
+			 * function my_before_save_registration_details( $user_id, $submitted_data, $form_data ) {
 			 *     // your code here
 			 * }
-			 * add_action( 'um_before_save_registration_details', 'my_before_save_registration_details', 10, 2 );
+			 * add_action( 'um_before_save_registration_details', 'my_before_save_registration_details', 10, 3 );
 			 */
-			do_action( 'um_before_save_registration_details', $this->id, $submitted );
+			do_action( 'um_before_save_registration_details', $this->id, $submitted, $form_data );
 
 			update_user_meta( $this->id, 'submitted', $submitted );
 

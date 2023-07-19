@@ -39,25 +39,21 @@ function um_browser_url_redirect_to( $args ) {
 	}
 
 	/**
-	 * UM hook
+	 * Filters 'redirect_to' URL for UM login forms.
 	 *
-	 * @type filter
-	 * @title um_browser_url_redirect_to__filter
-	 * @description Add redirect to field to form and change URL for it
-	 * @input_vars
-	 * [{"var":"$url","type":"string","desc":"Redirect to URL"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage
-	 * <?php add_filter( 'um_browser_url_redirect_to__filter', 'function_name', 10, 1 ); ?>
-	 * @example
-	 * <?php
-	 * add_filter( 'um_browser_url_redirect_to__filter', 'my_browser_url_redirect_to', 10, 1 );
-	 * function my_browser_url_redirect_to( $url ) {
-	 *     // your code here
+	 * @param {string} $url Redirect URL.
+	 *
+	 * @return {string} Custom redirect URL.
+	 *
+	 * @since 1.3.x
+	 * @hook um_browser_url_redirect_to__filter
+	 *
+	 * @example <caption>Force redirect user after login to account page.</caption>
+	 * function my_browser_url_redirect_to__filter( $url ) {
+	 *     $url = '{site_url}/account';
 	 *     return $url;
 	 * }
-	 * ?>
+	 * add_filter( 'um_browser_url_redirect_to__filter', 'my_browser_url_redirect_to__filter' );
 	 */
 	$url = apply_filters( 'um_browser_url_redirect_to__filter', $url );
 	if ( ! empty( $url ) ) {

@@ -320,9 +320,10 @@ $ListTable->items = array_slice( $emails, ( $paged - 1 ) * $per_page, $per_page 
 $ListTable->wpc_set_pagination_args( array( 'total_items' => count( $emails ), 'per_page' => $per_page ) ); ?>
 
 <p class="description" style="margin: 20px 0 0 0;">
-	<?php printf( __( 'You may get more details about email notifications customization <a href="%s">here</a>', 'ultimate-member' ),
-		'https://docs.ultimatemember.com/article/1335-email-templates'
-	); ?>
+	<?php
+	// translators: %s: doc link.
+	echo wp_kses( sprintf( __( 'You may get more details about email notifications customization <a href="%s">here</a>', 'ultimate-member' ), 'https://docs.ultimatemember.com/article/1335-email-templates' ), UM()->get_allowed_html( 'admin_notice' ) );
+	?>
 </p>
 
 <form action="" method="get" name="um-settings-emails" id="um-settings-emails">

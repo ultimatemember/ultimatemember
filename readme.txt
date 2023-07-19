@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
 Tested up to: 6.2
-Stable tag: 2.6.7
+Stable tag: 2.6.8
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -141,6 +141,10 @@ The plugin does not restrict access to the wp-login.php page when active, so tha
 
 No, you do not need to use our plugin’s login or registration pages and can use another plugin or the default WordPress methods for user registration and login.
 
+= Are additional PHP modules necessary for the plugin to work correctly? =
+
+No specific extensions are needed. But we highly recommended keep active these PHP modules: `mbstring`, `json`, `dom`, `exif`, `gd`, `fileinfo`, `curl`, `iconv`. wp-admin > Tools > Site Health page has a summary about your installation and required modules. All major extensions are listed [here](https://make.wordpress.org/hosting/handbook/server-environment/#php-extensions).
+
 == Screenshots ==
 
 1. Screenshot 1
@@ -161,6 +165,42 @@ No, you do not need to use our plugin’s login or registration pages and can us
 = Important: =
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
+
+= 2.6.8: July 19, 2023 =
+
+* Enhancements:
+
+  - Added: Secure settings. [Read more](https://docs.ultimatemember.com/article/1869-security-feature)
+  - Added: Admin notices about possible security issues. For example, regarding the roles with which the user can register on the site
+  - Added: `um_edit_profile_url` hook for force changing user profile edit URL
+  - Added: Additional hook attributes to 'um_reset_password_errors_hook' and 'um_reset_password_process_hook'
+  - Added: $form_data attribute to 'um_before_save_registration_details' hook
+  - Added: `um_safe_redirect()` function for handle `wp_safe_redirect()` function with new the "Allowed hosts for safe redirect" setting
+  - Updated: [Hooks Documentation v2](https://ultimatemember.github.io/ultimatemember/hooks/)
+
+* Bugfixes:
+
+  - Fixed: Updating user description if there isn't custom field on profile form, but field is displayed on profile top
+  - Fixed: Delete Row and Sub-Row actions in UM Form Builder. Avoid cases when fields from rows and sub-rows are still in form after delete their parents rows
+  - Fixed: Ultimate Member WP Cron schedule events starting time. Daily event starts since 12:00AM for now. The similar for weekly and twice-daily events
+  - Fixed: Custom sorting label issue on the Member Directory header
+  - Fixed: Disabled not-editable fields on UM Forms
+  - Fixed: Disabled fields attribute on UM Forms
+  - Fixed: Registration with empty role. Set default if role fields on the form are empty when form is submitted
+  - Fixed: Admin notices after UM actions has unique key with 'um_' prefix for now
+  - Fixed: Escaping form errors. It used `esc_html()` but now there is `wp_kses()`
+  - Fixed: Stop render 2 similar shortcodes on the same page (e.g. 2 login forms with the same `form_id`). To return back use [`um_ultimatemember_shortcode_disable_singleton`](https://ultimatemember.github.io/ultimatemember/hooks/um_ultimatemember_shortcode_disable_singleton.html) hook
+  - Fixed: Stop render Ultimate Member forms (Login, Profile, Registration, Member Directory) on the predefined Account page
+  - Fixed: Using blocks with Ultimate Member shortcodes on the predefined Ultimate Member pages
+  - Fixed: Using some specific functions which cannot exist if PHP modules are disabled
+
+* Deprecated:
+
+  - Deprecated: Unnecessary `um_multiselect_option_value` hook
+
+* Templates required update:
+
+  - members.php
 
 = 2.6.7: July 1, 2023 =
 

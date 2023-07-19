@@ -88,6 +88,10 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			add_filter( 'post_updated_messages', array( &$this, 'post_updated_messages' ) );
 		}
 
+		public function includes() {
+			$this->notices();
+			$this->secure();
+		}
 
 		function init_variables() {
 			$this->role_meta = apply_filters(
@@ -1076,7 +1080,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $value;
 		}
 
-
 		/**
 		 * @param $value
 		 *
@@ -1087,6 +1090,15 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $value;
 		}
 
+		/**
+		 * @param $value
+		 *
+		 * @return array
+		 */
+		public function sanitize_wp_capabilities_assoc( $value ) {
+			$value = array_map( 'sanitize_key', array_filter( $value ) );
+			return $value;
+		}
 
 		/**
 		 * Sanitize role meta fields when wp-admin form has been submitted
@@ -1626,9 +1638,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					update_option( 'um_last_manual_upgrades_request', time() );
 				}
 
-				$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'got_updates' ), admin_url( 'admin.php' ) );
+				$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'um_got_updates' ), admin_url( 'admin.php' ) );
 			} else {
-				$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'often_updates' ), admin_url( 'admin.php' ) );
+				$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'um_often_updates' ), admin_url( 'admin.php' ) );
 			}
 			exit( wp_redirect( $url ) );
 		}
@@ -1687,7 +1699,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			$url = add_query_arg(
 				array(
 					'page'   => 'ultimatemember',
-					'update' => 'cleared_cache',
+					'update' => 'um_cleared_cache',
 				),
 				admin_url( 'admin.php' )
 			);
@@ -1725,7 +1737,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			$url = add_query_arg(
 				array(
 					'page'   => 'ultimatemember',
-					'update' => 'cleared_status_cache',
+					'update' => 'um_cleared_status_cache',
 				),
 				admin_url( 'admin.php' )
 			);
@@ -1745,7 +1757,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			UM()->files()->remove_dir( UM()->files()->upload_temp );
 
-			$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'purged_temp' ), admin_url( 'admin.php' ) );
+			$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'um_purged_temp' ), admin_url( 'admin.php' ) );
 			exit( wp_redirect( $url ) );
 		}
 
@@ -1796,7 +1808,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			$url = add_query_arg(
 				array(
 					'post_type' => 'um_form',
-					'update'    => 'form_duplicated',
+					'update'    => 'um_form_duplicated',
 				),
 				admin_url( 'edit.php' )
 			);
@@ -1879,7 +1891,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			um_reset_user();
 
-			wp_redirect( add_query_arg( 'update', 'user_updated', admin_url( '?page=ultimatemember' ) ) );
+			wp_redirect( add_query_arg( 'update', 'um_user_updated', admin_url( '?page=ultimatemember' ) ) );
 			exit;
 
 		}
@@ -2056,17 +2068,28 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $parent_file;
 		}
 
-
 		/**
 		 * @since 2.0
 		 *
 		 * @return core\Admin_Notices()
 		 */
-		function notices() {
+		public function notices() {
 			if ( empty( UM()->classes['admin_notices'] ) ) {
 				UM()->classes['admin_notices'] = new core\Admin_Notices();
 			}
 			return UM()->classes['admin_notices'];
+		}
+
+		/**
+		 * @since 2.6.8
+		 *
+		 * @return Secure
+		 */
+		public function secure() {
+			if ( empty( UM()->classes['um\admin\secure'] ) ) {
+				UM()->classes['um\admin\secure'] = new Secure();
+			}
+			return UM()->classes['um\admin\secure'];
 		}
 	}
 }

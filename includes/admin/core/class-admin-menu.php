@@ -69,7 +69,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 
 					ob_start();
 
-					printf( __( 'If you like Ultimate Member please consider leaving a %s review. It will help us to grow the plugin and make it more popular. Thank you.', 'ultimate-member' ), $link ) ?>
+					// translators: %s: Review link.
+					echo wp_kses( sprintf( __( 'If you like Ultimate Member please consider leaving a %s review. It will help us to grow the plugin and make it more popular. Thank you.', 'ultimate-member' ), $link ), UM()->get_allowed_html( 'admin_notice' ) );
+					?>
 
 					<script type="text/javascript">
 						jQuery( 'a.um-admin-rating-link' ).click(function() {

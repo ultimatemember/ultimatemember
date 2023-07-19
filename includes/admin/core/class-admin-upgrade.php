@@ -134,7 +134,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 				</style>
 
 				<span class="um_plugin_upgrade_notice">
-					<?php printf( __( '%s is a major update, and we highly recommend creating a full backup of your site before updating.', 'ultimate-member' ), $args['new_version'] ); ?>
+					<?php
+					// translators: %s: new version.
+					echo wp_kses( sprintf( __( '%s is a major update, and we highly recommend creating a full backup of your site before updating.', 'ultimate-member' ), $args['new_version'] ), UM()->get_allowed_html( 'admin_notice' ) );
+					?>
 				</span>
 
 				<?php ob_get_flush();
@@ -251,8 +254,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 			$um_last_version_upgrade = get_option( 'um_last_version_upgrade', __( 'empty', 'ultimate-member' ) ); ?>
 
 			<div class="wrap">
-				<h2><?php printf( __( '%s - Upgrade Process', 'ultimate-member' ), ultimatemember_plugin_name ) ?></h2>
-				<p><?php printf( __( 'You have installed <strong>%s</strong> version. Your latest DB version is <strong>%s</strong>. We recommend creating a backup of your site before running the update process. Do not exit the page before the update process has complete.', 'ultimate-member' ), ultimatemember_version, $um_last_version_upgrade ) ?></p>
+				<h2>
+					<?php
+					// translators: %s: plugin name.
+					echo wp_kses( sprintf( __( '%s - Upgrade Process', 'ultimate-member' ), ultimatemember_plugin_name ), UM()->get_allowed_html( 'admin_notice' ) );
+					?>
+				</h2>
+				<p>
+					<?php
+					// translators: %1$s is a plugin version; %2$s is a last version upgrade.
+					echo wp_kses( sprintf( __( 'You have installed <strong>%1$s</strong> version. Your latest DB version is <strong>%2$s</strong>. We recommend creating a backup of your site before running the update process. Do not exit the page before the update process has complete.', 'ultimate-member' ), ultimatemember_version, $um_last_version_upgrade ), UM()->get_allowed_html( 'admin_notice' ) );
+					?>
+				</p>
 				<p><?php _e( 'After clicking the <strong>"Run"</strong> button, the update process will start. All information will be displayed in the <strong>"Upgrade Log"</strong> field.', 'ultimate-member' ); ?></p>
 				<p><?php _e( 'If the update was successful, you will see a corresponding message. Otherwise, contact technical support if the update failed.', 'ultimate-member' ); ?></p>
 				<h4><?php _e( 'Upgrade Log', 'ultimate-member' ) ?></h4>

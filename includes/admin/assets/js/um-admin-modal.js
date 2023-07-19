@@ -22,7 +22,7 @@ function um_admin_new_modal( id, ajax, size ) {
 	jQuery('#' + id).prependTo('.um-admin-modal');
 	jQuery('#' + id).show();
 	jQuery('.um-admin-modal').show();
-	
+
 	jQuery('.um-admin-modal-head').append('<a href="javascript:void(0);" data-action="UM_remove_modal" class="um-admin-modal-close"><i class="um-faicon-times"></i></a>');
 
 	if ( ajax == true ) {
@@ -92,7 +92,7 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 	in_sub_row = '';
 	in_column = '';
 	in_group = '';
-	
+
 	if ( jQuery('.um-col-demon-settings').data('in_column') ) {
 		in_row = jQuery('.um-col-demon-settings').data('in_row');
 		in_sub_row = jQuery('.um-col-demon-settings').data('in_sub_row');
@@ -101,7 +101,7 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 	}
 
 	var form_mode = jQuery('input[type=hidden][id=form__um_mode]').val();
-	
+
 	jQuery.ajax({
 		url: wp.ajax.settings.url,
 		type: 'POST',
@@ -186,19 +186,23 @@ function um_admin_remove_modal() {
 			/*tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_edit');
 			jQuery('.um-hidden-editor-edit').html( jQuery('.um-admin-editor:visible').contents() );
 			tinyMCE.execCommand('mceAddEditor', true, 'um_editor_edit');*/
-		
+
 		} else {
 			jQuery('#wp-um_editor_new-wrap').remove();
 
 			/*tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_new');
 			jQuery('.um-hidden-editor-new').html( jQuery('.um-admin-editor:visible').contents() );
 			tinyMCE.execCommand('mceAddEditor', true, 'um_editor_new');*/
-		
+
 		}
 
 		jQuery('.um_tiny_placeholder').replaceWith( jQuery( $um_tiny_editor ).html() );
 	}
 
+	if ( 'undefined' !== typeof window.UM.admin.allTooltips && window.UM.admin.allTooltips.length > 0 ) {
+		window.UM.admin.allTooltips.tooltip('close');
+	}
+	jQuery('.tipsy').hide();
 	jQuery('body').removeClass('um-admin-modal-open');
 	jQuery('.um-admin-modal div[id^="UM_"]').hide().appendTo('body');
 	jQuery('.um-admin-modal,.um-admin-overlay').remove();
@@ -226,7 +230,7 @@ function um_admin_modal_add_attr( id, value ) {
 **/
 
 jQuery(document).ready(function() {
-	
+
 	/**
 		disable link
 	**/
@@ -234,7 +238,7 @@ jQuery(document).ready(function() {
 		e.preventDefault();
 		return false;
 	});
-	
+
 	/**
 		toggle area
 	**/
@@ -298,7 +302,7 @@ jQuery(document).ready(function() {
         } );
 
 	});
-	
+
 	/**
 		reset conditions
 	**/
@@ -311,7 +315,7 @@ jQuery(document).ready(function() {
 		um_admin_live_update_scripts();
 		um_admin_modal_responsive();
 	});
-	
+
 	/**
 		remove a condition
 	**/
@@ -336,14 +340,15 @@ jQuery(document).ready(function() {
 		um_admin_live_update_scripts();
 		um_admin_modal_responsive();
 	});
-	
+
 	/**
 		remove modal via action
 	**/
 	jQuery(document.body).on('click', '.um-admin-overlay, a[data-action="UM_remove_modal"]', function(){
+		jQuery('.tipsy').hide();
 		um_admin_remove_modal();
 	});
-	
+
 	/**
 		fire new modal
 	**/
@@ -353,26 +358,26 @@ jQuery(document).ready(function() {
 		var modal_id = jQuery(this).attr('data-modal');
 
 		if ( jQuery(this).attr('data-back') ) {
-		
+
 			jQuery('#UM_fonticons').find('a.um-admin-modal-back').attr("data-modal", jQuery(this).attr('data-back') );
 			var current_icon = jQuery( '#' + jQuery(this).attr('data-back') ).find('input#_icon').val();
 			if ( current_icon == '' ) {
 				jQuery('#UM_fonticons').find('.um-admin-icons span').removeClass('highlighted');
 			}
-		
+
 		}
-		
+
 		if ( jQuery(this).data('dynamic-content') ) {
 			um_admin_new_modal( modal_id, true, jQuery(this).data('modal-size') );
 			um_admin_modal_ajaxcall( jQuery(this).data('dynamic-content'), jQuery(this).data('arg1'), jQuery(this).data('arg2'), jQuery(this).data('arg3') );
 		} else {
 			um_admin_new_modal( modal_id );
 		}
-		
+
 		return false;
 
 	});
-	
+
 	/**
 		choose font icon
 	**/
@@ -382,7 +387,7 @@ jQuery(document).ready(function() {
 		jQuery(this).addClass('highlighted');
 		jQuery('#UM_fonticons').find('a.um-admin-modal-back').attr("data-code", icon);
 	});
-	
+
 	/**
 		submit font icon
 	**/
@@ -401,10 +406,11 @@ jQuery(document).ready(function() {
 		}
 		jQuery(this).attr('data-code', '');
 		if ( v_id == '.postbox' ) {
+			jQuery('.tipsy').hide();
 			um_admin_remove_modal();
 		}
 	});
-	
+
 	/**
 		restore font icon
 	**/
@@ -419,7 +425,7 @@ jQuery(document).ready(function() {
 		element.find('.um-admin-icon-value').html( wp.i18n.__( 'No Icon', 'ultimate-member' ) );
 		jQuery(this).hide();
 	});
-	
+
 	/**
 		search font icons
 	**/
@@ -433,14 +439,14 @@ jQuery(document).ready(function() {
 		um_admin_modal_responsive();
 	});
 
-	
+
 	/**
 	 * Retrieve options from a callback function
 	 */
 	jQuery(document.body).on('blur',"#_custom_dropdown_options_source", function(){
         var me = jQuery(this);
         var _options = jQuery('textarea[id=_options]');
-        
+
         if( me.val() != '' ){
         	var um_option_callback = me.val();
           	jQuery.ajax({
@@ -452,17 +458,17 @@ jQuery(document).ready(function() {
 					nonce: um_admin_scripts.nonce
 				},
 				complete: function(){
-					
+
 				},
 				success: function( response ){
 					var arr_opts = [];
-					
+
 					for (var key in response.data ){
                          arr_opts.push( response.data[ key ] );
 					}
 
 					_options.val( arr_opts.join('\n') );
-					
+
 		        }
 			});
 		}

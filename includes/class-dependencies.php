@@ -193,13 +193,17 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 
 				$message = '';
 				if ( version_compare( ultimatemember_version, $um_required_ver, '<' ) ) {
-					$message = sprintf( __( 'This version of <strong>"%s"</strong> requires the core <strong>%s</strong> plugin to be <strong>%s</strong> or higher.', 'ultimate-member' ), $ext_title, ultimatemember_plugin_name, $um_required_ver ) .
-					           '<br />' .
-					           sprintf( __( 'Please update <strong>%s</strong> to the latest version.', 'ultimate-member' ), ultimatemember_plugin_name );
-				} elseif ( empty( $this->ext_required_version[$ext_key] ) || version_compare( $this->ext_required_version[$ext_key], $ext_ver, '>' ) ) {
-					$message = sprintf( __( 'Sorry, but this version of <strong>%s</strong> does not work with extension <strong>"%s" %s</strong> version.', 'ultimate-member' ), ultimatemember_plugin_name, $ext_title, $ext_ver ) .
-					           '<br />' .
-					           sprintf( __( 'Please update extension <strong>"%s"</strong> to the latest version.', 'ultimate-member' ), $ext_title );
+					// translators: %1$s is a extension name; %2$s is a plugin name; %3$s is a required version.
+					$message = sprintf( __( 'This version of <strong>"%1$s"</strong> requires the core <strong>%2$s</strong> plugin to be <strong>%3$s</strong> or higher.', 'ultimate-member' ), $ext_title, ultimatemember_plugin_name, $um_required_ver ) .
+						'<br />' .
+						// translators: %s: plugin name.
+						sprintf( __( 'Please update <strong>%s</strong> to the latest version.', 'ultimate-member' ), ultimatemember_plugin_name );
+				} elseif ( empty( $this->ext_required_version[ $ext_key ] ) || version_compare( $this->ext_required_version[ $ext_key ], $ext_ver, '>' ) ) {
+					// translators: %1$s is a plugin name; %2$s is a extension name; %3$s is a extension version.
+					$message = sprintf( __( 'Sorry, but this version of <strong>%1$s</strong> does not work with extension <strong>"%2$s" %3$s</strong> version.', 'ultimate-member' ), ultimatemember_plugin_name, $ext_title, $ext_ver ) .
+						'<br />' .
+						// translators: %s: extension name.
+						sprintf( __( 'Please update extension <strong>"%s"</strong> to the latest version.', 'ultimate-member' ), $ext_title );
 				}
 
 				return $message;
@@ -208,9 +212,11 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 				if ( ! self::$active_plugins ) self::init();
 
 				if ( ! in_array( "um-{$ext_key}/um-{$ext_key}.php", self::$active_plugins ) && ! array_key_exists( "um-{$ext_key}/um-{$ext_key}.php", self::$active_plugins ) ) {
-					$message = sprintf( __( 'Please check <strong>"%s" %s</strong> extension\'s folder name.', 'ultimate-member' ), $ext_title, $ext_ver ) .
-					           '<br />' .
-					           sprintf( __( 'Correct folder name is <strong>"%s"</strong>', 'ultimate-member' ), "um-{$ext_key}" );
+					// translators: %1$s is a extension name; %2$s is a extension version.
+					$message = sprintf( __( 'Please check <strong>"%1$s" %2$s</strong> extension\'s folder name.', 'ultimate-member' ), $ext_title, $ext_ver ) .
+						'<br />' .
+						// translators: %s: extension name.
+						sprintf( __( 'Correct folder name is <strong>"%s"</strong>', 'ultimate-member' ), "um-{$ext_key}" );
 
 					return $message;
 				}

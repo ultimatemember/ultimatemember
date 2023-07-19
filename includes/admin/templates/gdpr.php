@@ -7,7 +7,10 @@
 	<?php _e( 'Forms', 'ultimate-member' ); ?>
 </h3>
 <p>
-	<?php printf( __( '%s provides you with forms for user registration, login and profiles.', 'ultimate-member' ), ultimatemember_plugin_name ); ?>
+	<?php
+	// translators: %s: plugin name.
+	echo wp_kses( sprintf( __( '%s provides you with forms for user registration, login and profiles.', 'ultimate-member' ), ultimatemember_plugin_name ), UM()->get_allowed_html( 'admin_notice' ) );
+	?>
 </p>
 <p>
 	<?php _e( 'Via these forms you are collecting personal data from your users.', 'ultimate-member' ); ?>
@@ -33,7 +36,10 @@
 	<?php _e( 'Where we send your data', 'ultimate-member' ); ?>
 </h2>
 <p>
-	<?php printf( __( '%s does not send any user data outside of your site by default.', 'ultimate-member' ), ultimatemember_plugin_name ); ?>
+	<?php
+	// translators: %s: plugin name.
+	echo wp_kses( sprintf( __( '%s does not send any user data outside of your site by default.', 'ultimate-member' ), ultimatemember_plugin_name ), UM()->get_allowed_html( 'admin_notice' ) );
+	?>
 </p>
 <p>
 	<?php _e( 'If you have extended the functionality of the plugin (e.g sending registered user data to MailChimp via our MailChimp extension, this user info may be passed to these external services. These services may be located abroad and outwith the EU.', 'ultimate-member' ); ?>

@@ -91,6 +91,7 @@ jQuery(document).ready(function() {
 						um_admin_modal_responsive();
 					} else {
 						jQuery('.um-col-demon-settings').data('in_row', '').data('in_sub_row', '').data('in_column', '').data('in_group', '');
+						jQuery('.tipsy').hide();
 						um_admin_remove_modal();
 						um_admin_update_builder();
 					}

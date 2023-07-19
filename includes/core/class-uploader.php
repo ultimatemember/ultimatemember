@@ -791,8 +791,10 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			} elseif ( isset( $data['max_file_size'] ) && ( $image_info['size'] > $data['max_file_size'] ) ) {
 				$error = $data['max_file_size_error'];
 			} elseif ( isset( $data['min_width'] ) && ( $image_info['width'] < $data['min_width'] ) ) {
+				// translators: %s: min widdth.
 				$error = sprintf( __( 'Your photo is too small. It must be at least %spx wide.', 'ultimate-member' ), $data['min_width'] );
 			} elseif ( isset( $data['min_height'] ) && ( $image_info['height'] < $data['min_height'] ) ) {
+				// translators: %s: min height.
 				$error = sprintf( __( 'Your photo is too small. It must be at least %spx high.', 'ultimate-member' ), $data['min_height'] );
 			}
 

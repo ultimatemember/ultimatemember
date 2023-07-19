@@ -60,6 +60,7 @@ if ( ! class_exists( 'um\core\Date_Time' ) ) {
 					$mins = 1;
 				}
 
+				// translators: %s: min time.
 				$since = sprintf( _n( '%s min', '%s mins', $mins, 'ultimate-member' ), $mins );
 
 			} elseif ( $diff < DAY_IN_SECONDS && $diff >= HOUR_IN_SECONDS ) {
@@ -69,6 +70,7 @@ if ( ! class_exists( 'um\core\Date_Time' ) ) {
 					$hours = 1;
 				}
 
+				// translators: %s: hours.
 				$since = sprintf( _n( '%s hr', '%s hrs', $hours, 'ultimate-member' ), $hours );
 
 			} elseif ( $diff < WEEK_IN_SECONDS && $diff >= DAY_IN_SECONDS ) {
@@ -79,22 +81,27 @@ if ( ! class_exists( 'um\core\Date_Time' ) ) {
 				}
 
 				if ( $days == 1 ) {
+					// translators: %s: time.
 					$since = sprintf( __( 'Yesterday at %s', 'ultimate-member' ), date_i18n( get_option( 'time_format' ), $from ) );
 				} else {
-					$since = sprintf( __( '%s at %s', 'ultimate-member' ), date_i18n( 'F d', $from ), date_i18n( get_option( 'time_format' ), $from ) );
+					// translators: %1$s is a date; %2$s is a time.
+					$since = sprintf( __( '%1$s at %2$s', 'ultimate-member' ), date_i18n( 'F d', $from ), date_i18n( get_option( 'time_format' ), $from ) );
 				}
 
 			} elseif ( $diff < 30 * DAY_IN_SECONDS && $diff >= WEEK_IN_SECONDS ) {
 
-				$since = sprintf( __( '%s at %s', 'ultimate-member' ), date_i18n( 'F d', $from ), date_i18n( get_option( 'time_format' ), $from ) );
+				// translators: %1$s is a date; %2$s is a time.
+				$since = sprintf( __( '%1$s at %2$s', 'ultimate-member' ), date_i18n( 'F d', $from ), date_i18n( get_option( 'time_format' ), $from ) );
 
 			} elseif ( $diff < YEAR_IN_SECONDS && $diff >= 30 * DAY_IN_SECONDS ) {
 
-				$since = sprintf( __( '%s at %s','ultimate-member'), date_i18n( 'F d', $from ), date_i18n( get_option( 'time_format' ), $from ) );
+				// translators: %1$s is a date; %2$s is a time.
+				$since = sprintf( __( '%1$s at %2$s', 'ultimate-member' ), date_i18n( 'F d', $from ), date_i18n( get_option( 'time_format' ), $from ) );
 
 			} elseif ( $diff >= YEAR_IN_SECONDS ) {
 
-				$since = sprintf( __( '%s at %s', 'ultimate-member' ), date_i18n( get_option( 'date_format' ), $from ), date_i18n( get_option( 'time_format' ), $from ) );
+				// translators: %1$s is a date; %2$s is a time.
+				$since = sprintf( __( '%1$s at %2$s', 'ultimate-member' ), date_i18n( get_option( 'date_format' ), $from ), date_i18n( get_option( 'time_format' ), $from ) );
 
 			}
 
@@ -143,9 +150,11 @@ if ( ! class_exists( 'um\core\Date_Time' ) ) {
 				$age--;
 			}
 			if ( $age == 1 ) {
+				// translators: %s: age.
 				return sprintf( __( '%s year old', 'ultimate-member' ), $age );
 			}
 			if ( $age > 1 ) {
+				// translators: %s: age.
 				return sprintf( __( '%s years old', 'ultimate-member' ), $age );
 			}
 			if ( $age == 0 ) {

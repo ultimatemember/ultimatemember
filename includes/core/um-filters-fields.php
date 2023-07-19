@@ -209,6 +209,7 @@ function um_profile_field_filter_hook__user_registered( $value, $data ) {
 		return '';
 	}
 	$value = strtotime( $value );
+	// translators: %s: date.
 	$value = sprintf( __( 'Joined %s', 'ultimate-member' ), date_i18n( get_option( 'date_format' ), $value ) );
 	return $value;
 }
@@ -478,6 +479,7 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 			if ( UM()->options()->get( 'allow_url_redirect_confirm' ) && $value !== wp_validate_redirect( $value ) ) {
 				$onclick_alert = sprintf(
 					' onclick="' . esc_attr( 'return confirm( "%s" );' ) . '"',
+					// translators: %s: link.
 					esc_js( sprintf( __( 'This link leads to a 3rd-party website. Make sure the link is safe and you really want to go to this website: \'%s\'', 'ultimate-member' ), $value ) )
 				);
 			}
@@ -706,7 +708,9 @@ function um_field_non_utf8_value( $value ) {
 	if ( function_exists( 'mb_detect_encoding' ) ) {
 		$encoding = mb_detect_encoding( $value, 'utf-8, iso-8859-1, ascii', true );
 		if ( strcasecmp( $encoding, 'UTF-8' ) !== 0 ) {
-			$value = iconv( $encoding, 'utf-8', $value );
+			if ( function_exists( 'iconv' ) ) {
+				$value = iconv( $encoding, 'utf-8', $value );
+			}
 		}
 	}
 
@@ -824,16 +828,7 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 			}
 		} elseif ( 'select' == $type || 'radio' == $type ) {
 
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_select_option_value
-			 * @description Enable options pair by field $data
-			 * @input_vars
-			 * [{"var":"$options_pair","type":"null","desc":"Enable pairs"},
-			 * {"var":"$data","type":"array","desc":"Field Data"}]
-			 */
+			/** This filter is documented in includes/core/class-fields.php */
 			$option_pairs = apply_filters( 'um_select_options_pair', null, $data );
 
 			$array = empty( $data['options'] ) ? array() : $data['options'];
@@ -859,16 +854,7 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 	} elseif ( ! empty( $value ) && is_array( $value ) ) {
 		if ( 'multiselect' == $type || 'checkbox' == $type ) {
 
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_select_option_value
-			 * @description Enable options pair by field $data
-			 * @input_vars
-			 * [{"var":"$options_pair","type":"null","desc":"Enable pairs"},
-			 * {"var":"$data","type":"array","desc":"Field Data"}]
-			 */
+			/** This filter is documented in includes/core/class-fields.php */
 			$option_pairs = apply_filters( 'um_select_options_pair', null, $data );
 
 			$arr = $data['options'];

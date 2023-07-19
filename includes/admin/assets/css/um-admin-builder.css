@@ -1,3 +1,35 @@
+@-webkit-keyframes um-ajax-spinning {
+	0% {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg); }
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg); } }
+
+@-moz-keyframes um-ajax-spinning {
+	0% {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg); }
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg); } }
+
+@-ms-keyframes um-ajax-spinning {
+	0% {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg); }
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg); } }
+
+@keyframes um-ajax-spinning {
+	0% {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg); }
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg); } }
+
 /*
 	- General
 */
@@ -101,6 +133,7 @@
 	position: relative;
 	padding: 60px 20px 20px 20px;
 	margin: 0 0 60px 0;
+	position: relative;
 }
 .um-admin-drag-row:last-child {margin-bottom: 0}
 
@@ -278,10 +311,49 @@
 	position: relative;
 }
 
+.um-admin-row-loading {
+	position: absolute;
+	width: 100%;
+	height: calc( 100% + 30px );
+	top: -30px;
+	left: 0;
+	background: rgba(241, 241, 241, 0.6);
+	z-index: 999;
+	display: none;
+}
+.um-admin-row-loading > span {
+	display: block;
+	-webkit-transition: 0.1s opacity;
+	-moz-transition: 0.1s opacity;
+	-ms-transition: 0.1s opacity;
+	-o-transition: 0.1s opacity;
+	transition: 0.1s opacity;
+	color: #c6c6c6 !important;
+	-webkit-animation: um-ajax-spinning 1.1s infinite linear;
+	animation: um-ajax-spinning 1.1s infinite linear;
+	border-top: 0.2em solid rgba(0, 0, 0, 1);
+	border-right: 0.2em solid rgba(0, 0, 0, 1);
+	border-bottom: 0.2em solid rgba(0, 0, 0, 1);
+	border-left: 0.2em solid #c6c6c6;
+	font-size: 1.75em;
+	filter: alpha(opacity=0);
+	-ms-transform: translateZ(0);
+	transform: translateZ(0);
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	margin: -20px 0 0 -20px;
+	outline: 0;
+	padding: 0;
+	vertical-align: baseline;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+}
+
 /*
 	- UI Placeholders
 */
-
 .um-row-placeholder {
 	width: 100%;
 	border: 2px dashed #aaa;

@@ -117,13 +117,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					$data['value'] = esc_attr( $data['value'] );
 				}
 
-				if( in_array( $data['type'], array('info_text') ) ){
+				if ( 'info_text' === $data['type'] ) {
 					$arr_kses = array(
 						'a' => array(
-							'href' => array(),
-							'title' => array(),
-							'target' => array(),
-							'class' => array(),
+							'href'    => array(),
+							'title'   => array(),
+							'target'  => array(),
+							'class'   => array(),
+							'onclick' => array(),
 						),
 						'button' => array(
 							'class' => array(),
@@ -1185,15 +1186,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 * @return bool|string
 		 */
 		function render_multi_checkbox( $field_data ) {
-
 			if ( empty( $field_data['id'] ) ) {
 				return false;
 			}
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
 
-			$class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
-			$class .= ! empty( $field_data['size'] ) ? $field_data['size'] : 'um-long-field';
+			$class      = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
+			$class     .= ! empty( $field_data['size'] ) ? $field_data['size'] : 'um-long-field';
 			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
 
 			$name = $field_data['id'];
@@ -1204,19 +1204,27 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$values = array();
 			}
 
-			$i = 0;
+			$i    = 0;
 			$html = '';
 
 			$columns = ( ! empty( $field_data['columns'] ) && is_numeric( $field_data['columns'] ) ) ? $field_data['columns'] : 1;
 			while ( $i < $columns ) {
-				$per_page = ceil( count( $field_data['options'] ) / $columns );
-				$section_fields_per_page = array_slice( $field_data['options'], $i*$per_page, $per_page, true );
-				$html .= '<span class="um-form-fields-section" style="width:' . floor( 100 / $columns ) . '% !important;">';
+				$per_page                = ceil( count( $field_data['options'] ) / $columns );
+				$section_fields_per_page = array_slice( $field_data['options'], $i * $per_page, $per_page, true );
+				$html                   .= '<span class="um-form-fields-section" style="width:' . floor( 100 / $columns ) . '% !important;">';
 
 				foreach ( $section_fields_per_page as $k => $title ) {
-					$id_attr = ' id="' . esc_attr( $id . '_' . $k ) . '" ';
+					$id_attr  = ' id="' . esc_attr( $id . '_' . $k ) . '" ';
 					$for_attr = ' for="' . esc_attr( $id . '_' . $k ) . '" ';
-					$name_attr = ' name="' . $name . '[' . $k . ']" ';
+
+					if ( ! empty( $field_data['assoc'] ) ) {
+						$name_attr  = ' name="' . esc_attr( $name ) . '[]" ';
+						$value_attr = ' value="' . esc_attr( $k ) . '" ';
+					} else {
+						$name_attr  = ' name="' . esc_attr( $name ) . '[' . esc_attr( $k ) . ']" ';
+						$value_attr = ' value="1" ';
+					}
+					$disabed_attr = '';
 
 					$data = array(
 						'field_id' => $field_data['id'] . '_' . $k,
@@ -1228,14 +1236,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 					$data_attr = '';
 					foreach ( $data as $key => $value ) {
-						if ( $value == 'checkbox_key' ) {
+						if ( 'checkbox_key' === $value ) {
 							$value = $k;
 						}
 						$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
 					}
 
+					if ( isset( $field_data['options_disabled'] ) && in_array( $k, $field_data['options_disabled'], true ) ) {
+						$disabed_attr = 'disabled="disabled"';
+					}
+
 					$html .= "<label $for_attr>
-						<input type=\"checkbox\" " . checked( in_array( $k, $values ), true, false ) . "$id_attr $name_attr $data_attr value=\"1\" $class_attr>
+						<input type=\"checkbox\" " . checked( in_array( $k, $values, true ), true, false ) . "$disabed_attr $id_attr $name_attr $data_attr $value_attr $class_attr>
 						<span>$title</span>
 					</label>";
 				}

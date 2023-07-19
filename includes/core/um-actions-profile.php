@@ -340,6 +340,7 @@ function um_user_edit_profile( $args, $form_data ) {
 				} else {
 					if ( 'password' === $array['type'] ) {
 						$to_update[ $key ]         = wp_hash_password( $args['submitted'][ $key ] );
+						// translators: %s: title.
 						$args['submitted'][ $key ] = sprintf( __( 'Your choosed %s', 'ultimate-member' ), $array['title'] );
 					} else {
 						if ( isset( $userinfo[ $key ] ) && $args['submitted'][ $key ] != $userinfo[ $key ] ) {
@@ -357,9 +358,13 @@ function um_user_edit_profile( $args, $form_data ) {
 	}
 
 	$description_key = UM()->profile()->get_show_bio_key( $args );
-	if ( ! isset( $to_update[ $description_key ] ) && ! empty( $form_data['show_bio'] ) ) {
-		if ( isset( $args['submitted'][ $description_key ] ) ) {
+	if ( ! isset( $to_update[ $description_key ] ) && isset( $args['submitted'][ $description_key ] ) ) {
+		if ( ! empty( $form_data['use_custom_settings'] ) && ! empty( $form_data['show_bio'] ) ) {
 			$to_update[ $description_key ] = $args['submitted'][ $description_key ];
+		} else {
+			if ( UM()->options()->get( 'profile_show_bio' ) ) {
+				$to_update[ $description_key ] = $args['submitted'][ $description_key ];
+			}
 		}
 	}
 
@@ -507,6 +512,7 @@ function um_user_edit_profile( $args, $form_data ) {
 	// Finally redirect to profile.
 	$url = um_user_profile_url( $user_id );
 	$url = apply_filters( 'um_update_profile_redirect_after', $url, $user_id, $args );
+	// Not `um_safe_redirect()` because predefined user profile page is situated on the same host.
 	wp_safe_redirect( um_edit_my_profile_cancel_uri( $url ) );
 	exit;
 }
@@ -1233,7 +1239,12 @@ function um_profile_header( $args ) {
 			<?php } ?>
 
 			<div class="um-profile-status <?php echo esc_attr( um_user( 'account_status' ) ); ?>">
-				<span><?php printf( __( 'This user account status is %s', 'ultimate-member' ), um_user( 'account_status_name' ) ); ?></span>
+				<span>
+					<?php
+					// translators: %s: profile status.
+					printf( __( 'This user account status is %s', 'ultimate-member' ), um_user( 'account_status_name' ) );
+					?>
+				</span>
 			</div>
 
 			<?php

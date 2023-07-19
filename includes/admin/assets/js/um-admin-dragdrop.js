@@ -1,3 +1,16 @@
+if ( typeof (window.UM) !== 'object' ) {
+	window.UM = {};
+}
+
+if ( typeof (window.UM.admin) !== 'object' ) {
+	window.UM.admin = {};
+}
+
+UM.admin.builder = {
+	deleteProcess: [],
+	fieldsToDelete: [],
+}
+
 function UM_Drag_and_Drop() {
 	jQuery('.um-admin-drag-col,.um-admin-drag-group').sortable({
 		items: '.um-admin-drag-fld',
@@ -5,66 +18,66 @@ function UM_Drag_and_Drop() {
 		placeholder: "um-fld-placeholder",
 		forcePlaceholderSize:true,
 		update: function(event, ui){
-			
+
 			jQuery('#publish').attr('disabled','disabled');
-			
+
 			if ( ui.item.hasClass('um-field-type-group') && ui.item.parents('.um-field-type-group').length > 0  ) {
-				
+
 				jQuery('.um-admin-drag-col,.um-admin-drag-group').sortable('cancel');
-				
+
 				jQuery('#publish').prop('disabled', false);
-				
+
 			} else {
-				
+
 				UM_Change_Field_Col();
-				
+
 				UM_Change_Field_Grp();
-				
+
 				UM_Rows_Refresh();
-				
+
 			}
-			
+
 		}
 	});
-	
+
 	jQuery('.um-admin-drag-rowsubs').sortable({
 		items: '.um-admin-drag-rowsub',
 		placeholder: "um-rowsub-placeholder",
 		forcePlaceholderSize:true,
 		zIndex: 9999999999,
 		update: function(){
-			
+
 			jQuery('#publish').attr('disabled','disabled');
-		
+
 			UM_update_subrows();
-		
+
 			UM_Rows_Refresh();
-			
+
 		}
 	}).disableSelection();
-	
+
 	jQuery('.um-admin-drag-rowsub').sortable({
 		items: '.um-admin-drag-col',
 		zIndex: 9999999999,
 		update: function(){
-		
+
 			jQuery('#publish').attr('disabled','disabled');
-			
+
 			row = jQuery(this);
 			row.find('.um-admin-drag-col').removeClass('cols-1 cols-2 cols-3 cols-last cols-middle');
 			row.find('.um-admin-drag-col').addClass('cols-' + row.find('.um-admin-drag-col').length );
 			row.find('.um-admin-drag-col:last').addClass('cols-last');
 			if ( row.find('.um-admin-drag-col').length == 3 ) {row.find('.um-admin-drag-col:eq(1)').addClass('cols-middle');}
-			
+
 			UM_Change_Field_Col();
-			
+
 			UM_Change_Field_Grp();
-			
+
 			UM_Rows_Refresh();
-			
+
 		}
 	}).disableSelection();
-	
+
 	jQuery('.um-admin-drag-ajax').sortable({
 		items: '.um-admin-drag-row',
 		handle: ".um-admin-drag-row-start",
@@ -75,15 +88,15 @@ function UM_Drag_and_Drop() {
 			jQuery('.tipsy').remove();
 		},
 		update: function(){
-		
+
 			jQuery('#publish').attr('disabled','disabled');
-			
+
 			UM_update_rows();
-		
+
 			UM_Change_Field_Col();
-			
+
 			UM_Change_Field_Grp();
-			
+
 			UM_Rows_Refresh();
 
 		}
@@ -152,7 +165,7 @@ function UM_Change_Field_Grp(){
 function UM_Rows_Refresh(){
 
 	jQuery('.um_update_order_fields').empty();
-	
+
 	/* ROWS */
 	var c = 0;
 	jQuery('.um-admin-drag-row').each(function(){
@@ -162,41 +175,41 @@ function UM_Rows_Refresh(){
 
 		col_num = '';
 		row.find('.um-admin-drag-rowsub').each(function(){
-		
+
 			subrow = jQuery(this);
-			
+
 			subrow.find('.um-admin-drag-col').removeClass('cols-1 cols-2 cols-3 cols-last cols-middle');
 			subrow.find('.um-admin-drag-col').addClass('cols-' + subrow.find('.um-admin-drag-col').length );
 			subrow.find('.um-admin-drag-col:last').addClass('cols-last');
 			if ( subrow.find('.um-admin-drag-col').length == 3 ) {subrow.find('.um-admin-drag-col:eq(1)').addClass('cols-middle');}
-			
+
 			if ( !col_num ) {
 			col_num = subrow.find('.um-admin-drag-col').length;
 			} else {
 			col_num = col_num + ':' + subrow.find('.um-admin-drag-col').length;
 			}
-		
+
 		});
-		
+
 		jQuery('.um_update_order_fields').append('<input type="hidden" name="_um_rowcols_'+c+'_cols" id="_um_rowcols_'+c+'_cols" value="'+col_num+'" />');
-		
+
 		sub_rows_count = row.find('.um-admin-drag-rowsub').length;
-		
+
 		var origin_id = jQuery(this).attr('data-original');
 
 		jQuery('.um_update_order_fields').append('<input type="hidden" name="_um_row_'+c+'" id="_um_row_'+c+'" value="_um_row_'+c+'" />');
 		jQuery('.um_update_order_fields').append('<input type="hidden" name="_um_roworigin_'+c+'_val" id="_um_roworigin_'+c+'_val" value="'+origin_id+'" />');
 		jQuery('.um_update_order_fields').append('<input type="hidden" name="_um_rowsub_'+c+'_rows" id="_um_rowsub_'+c+'_rows" value="'+sub_rows_count+'" />');
-		
+
 		jQuery(this).attr('data-original', '_um_row_'+c );
-	
+
 	});
 
 	/* FIELDS */
 	var order;
 	order = 0;
 	jQuery('.um-admin-drag-col .um-admin-drag-fld').each(function(){
-			
+
 		if ( !jQuery(this).hasClass('group') ) {
 			var group = jQuery(this).data('group');
 			if ( group != '' ) {
@@ -210,14 +223,14 @@ function UM_Rows_Refresh(){
 			jQuery('.um_update_order_fields').append('<input type="hidden" name="um_group_'+jQuery(this).data('key')+'" id="um_group_'+jQuery(this).data('key')+'" value="" />');
 			}
 		}
-		
+
 		order++;
 
 		row = jQuery(this).parents('.um-admin-drag-row').index()+1;
 		row = '_um_row_'+row;
-		
+
 		saved_col = jQuery(this).data('column');
-		
+
 		if ( saved_col == 3 ){
 			jQuery(this).appendTo( jQuery(this).parents('.um-admin-drag-rowsub').find('.um-admin-drag-col:eq(2)') );
 		}
@@ -226,21 +239,21 @@ function UM_Rows_Refresh(){
 		}
 
 		sub_row = jQuery(this).parents('.um-admin-drag-rowsub').index();
-				
+
 		jQuery('.um_update_order_fields').append('<input type="hidden" name="um_position_'+jQuery(this).data('key')+'" id="um_position_'+jQuery(this).data('key')+'" value="'+order+'" />');
-		
+
 		jQuery('.um_update_order_fields').append('<input type="hidden" name="um_row_'+jQuery(this).data('key')+'" id="um_row_'+jQuery(this).data('key')+'" value="'+row+'" />');
-		
+
 		jQuery('.um_update_order_fields').append('<input type="hidden" name="um_subrow_'+jQuery(this).data('key')+'" id="um_subrow_'+jQuery(this).data('key')+'" value="'+sub_row+'" />');
-		
+
 		jQuery('.um_update_order_fields').append('<input type="hidden" name="um_col_'+jQuery(this).data('key')+'" id="um_col_'+jQuery(this).data('key')+'" value="'+saved_col+'" />');
-		
+
 	});
-	
+
 	UM_Drag_and_Drop();
-	
+
 	UM_Add_Icon();
-	
+
 	jQuery.ajax({
 		url: wp.ajax.settings.url,
 		type: 'POST',
@@ -249,38 +262,38 @@ function UM_Rows_Refresh(){
 			jQuery('#publish').prop('disabled', false);
 		}
 	});
-	
+
 }
 
 function UM_Add_Icon(){
 
 	var add_icon_html = '<a href="#" class="um-admin-drag-add-field um-admin-tipsy-n" title="Add Field" data-modal="UM_fields" data-modal-size="normal" data-dynamic-content="um_admin_show_fields" data-arg2="'+jQuery('.um-admin-drag-ajax').data('form_id')+'" data-arg1=""><i class="um-icon-plus"></i></a>';
-		
+
 	jQuery('.um-admin-drag-col').each(function(){
 		if ( jQuery(this).find('.um-admin-drag-add-field').length == 0 ) {
 			jQuery(this).append(add_icon_html);
 		} else {
 			jQuery(this).find('.um-admin-drag-add-field').remove();
-			jQuery(this).append(add_icon_html); 
+			jQuery(this).append(add_icon_html);
 		}
 	});
-	
+
 	jQuery('.um-admin-drag-group').each(function(){
 		if ( jQuery(this).find('.um-admin-drag-add-field').length == 0 ) {
 			jQuery(this).append(add_icon_html);
 		} else {
 			jQuery(this).find('.um-admin-drag-add-field').remove();
-			jQuery(this).append(add_icon_html); 
+			jQuery(this).append(add_icon_html);
 		}
 	});
-	
+
 }
 
 jQuery(document).ready(function() {
 	if ( !jQuery('.um-admin-drag').length ) {
 		return false;
 	}
-	
+
 	UM_Drag_and_Drop();
 
 	/* add field to respected area */
@@ -302,19 +315,19 @@ jQuery(document).ready(function() {
 				in_column = 1;
 			}
 		}
-		
+
 		if ( jQuery(this).parents('.um-admin-drag-group').length ) {
 			in_group = jQuery(this).parents('.um-admin-drag-fld.um-field-type-group').data('key');
 		} else {
 			in_group = '';
 		}
-		
+
 		jQuery('.um-col-demon-settings').data('in_row', in_row);
 		jQuery('.um-col-demon-settings').data('in_sub_row', in_sub_row);
 		jQuery('.um-col-demon-settings').data('in_column', in_column);
 		jQuery('.um-col-demon-settings').data('in_group', in_group);
 	});
-	
+
 	/* add row */
 	jQuery(document.body).on('click', '*[data-row_action="add_row"]', function(){
 		var dragg = jQuery('.um-admin-drag-ajax');
@@ -325,7 +338,7 @@ jQuery(document).ready(function() {
 		UM_update_subrows();
 		UM_Rows_Refresh();
 	});
-	
+
 	/* add sub row */
 	jQuery(document.body).on('click', '*[data-row_action="add_subrow"]', function(){
 		var dragg = jQuery(this).parents('.um-admin-drag-row').find('.um-admin-drag-rowsubs');
@@ -333,23 +346,69 @@ jQuery(document).ready(function() {
 		UM_update_subrows();
 		UM_Rows_Refresh();
 	});
-	
-	/* remove element */
-	jQuery(document.body).on('click', 'a[data-remove_element^="um-"]',function(){
-		element = jQuery(this).data('remove_element');
 
-		jQuery(this).parents('.' +element).find('.um-admin-drag-fld').each(function(){
-			jQuery(this).find('a[data-silent_action="um_admin_remove_field"]').trigger('click');
+	/* remove element: Row, Subrow */
+	jQuery(document.body).on('click', 'a[data-remove_element^="um-"]',function(){
+		let deleteButton   = jQuery(this);
+		let element        = jQuery(this).data('remove_element');
+		let loadingWrapper = jQuery(this).parents('.' + element ).children('.um-admin-row-loading');
+
+		let row    = jQuery(this).parents('.um-admin-drag-row').index();
+		let subrow = jQuery(this).parents('.um-admin-drag-rowsub').index();
+
+		let fieldPosition= {row,subrow};
+		let deleteExists= false;
+		jQuery.each( UM.admin.builder.deleteProcess, function(i) {
+			if ( fieldPosition.row === UM.admin.builder.deleteProcess[i].row && fieldPosition.subrow === UM.admin.builder.deleteProcess[i].subrow ) {
+				deleteExists = true;
+				return false;
+			}
 		});
-		
-		jQuery(this).parents('.' +element).remove();
-		jQuery('.tipsy').remove();
-		UM_Rows_Refresh();
+
+		if ( deleteExists ) {
+			return;
+		}
+
+		loadingWrapper.show();
+
+		UM.admin.builder.deleteProcess.push({row,subrow});
+
+		UM.admin.builder.fieldsToDelete = jQuery(this).parents('.' +element).find('.um-admin-drag-fld').toArray();
+
+		if ( UM.admin.builder.fieldsToDelete.length > 0 ) {
+			um_builder_delete_field_ajax( function () {
+				deleteButton.parents('.' +element).remove();
+				jQuery('.tipsy').remove();
+				UM_Rows_Refresh();
+
+				jQuery.each( UM.admin.builder.deleteProcess, function(i) {
+					if ( fieldPosition.row === UM.admin.builder.deleteProcess[i].row && fieldPosition.subrow === UM.admin.builder.deleteProcess[i].subrow ) {
+						UM.admin.builder.deleteProcess.splice(i, 1);
+						return false;
+					}
+				});
+
+				loadingWrapper.hide();
+			} );
+		} else {
+			jQuery(this).parents('.' +element).remove();
+			jQuery('.tipsy').remove();
+			UM_Rows_Refresh();
+
+			jQuery.each( UM.admin.builder.deleteProcess, function(i) {
+				if ( fieldPosition.row === UM.admin.builder.deleteProcess[i].row && fieldPosition.subrow === UM.admin.builder.deleteProcess[i].subrow ) {
+					UM.admin.builder.deleteProcess.splice(i, 1);
+					return false;
+				}
+			});
+
+			loadingWrapper.hide();
+		}
 	});
-	
+
 	/* dynamically change columns */
 	jQuery(document.body).on('click', '.um-admin-drag-ctrls.columns a', function(){
-		
+
 		var row = jQuery(this).parents('.um-admin-drag-rowsub');
 		var tab = jQuery(this);
 		var tabs = jQuery(this).parent();
@@ -358,21 +417,21 @@ jQuery(document).ready(function() {
 		var existing_cols = row.find('.um-admin-drag-col').length;
 		var required_cols = tab.data('cols');
 		var needed_cols = required_cols - existing_cols;
-					
+
 		if ( needed_cols > 0 ) {
-		
+
 			for (i = 0; i < needed_cols; i++){
 				row.find('.um-admin-drag-col-dynamic').append('<div class="um-admin-drag-col"></div>');
 			}
-			
+
 			row.find('.um-admin-drag-col').removeClass('cols-1 cols-2 cols-3 cols-last cols-middle');
 			row.find('.um-admin-drag-col').addClass('cols-' + row.find('.um-admin-drag-col').length );
 			row.find('.um-admin-drag-col:last').addClass('cols-last');
-			
+
 			if ( row.find('.um-admin-drag-col').length == 3 ) {row.find('.um-admin-drag-col:eq(1)').addClass('cols-middle');}
-		
+
 		} else if ( needed_cols < 0 ) {
-		
+
 			needed_cols = needed_cols + 3;
 			if ( needed_cols == 2 ) {
 				row.find('.um-admin-drag-col:first').append( row.find('.um-admin-drag-col.cols-last').html() );
@@ -384,25 +443,25 @@ jQuery(document).ready(function() {
 				row.find('.um-admin-drag-col.cols-last').remove();
 				row.find('.um-admin-drag-col.cols-middle').remove();
 			}
-		
+
 			row.find('.um-admin-drag-col').removeClass('cols-1 cols-2 cols-3 cols-last cols-middle');
 			row.find('.um-admin-drag-col').addClass('cols-' + row.find('.um-admin-drag-col:visible').length );
 			row.find('.um-admin-drag-col:last').addClass('cols-last');
-			
+
 		}
-		
+
 		if ( allow_update_via_col_click == true ) {
 			UM_Change_Field_Col();
 			UM_Rows_Refresh();
 		}
 
 	});
-	
+
 	/* trigger columns at start */
 	allow_update_via_col_click = false;
 	jQuery('.um-admin-drag-ctrls.columns a.active').each(function(){
 		jQuery(this).trigger('click');
 	}).promise().done( function(){ allow_update_via_col_click = true; } );
-	
+
 	UM_Rows_Refresh();
 });

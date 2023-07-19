@@ -245,7 +245,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				$from = ( absint( $_POST['page'] ) * $per_page ) - $per_page + 1;
 				$to   = absint( $_POST['page'] ) * $per_page;
-
+				// translators: %1$s is a metadata from name; %2$s is a metadata to.
 				wp_send_json_success( array( 'message' => sprintf( __( 'Metadata from %1$s to %2$s was upgraded successfully...', 'ultimate-member' ), $from, $to ) ) );
 			} else {
 				do_action( 'um_same_page_update_ajax_action', $cb_func );
@@ -946,6 +946,24 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					),
 					'uninstall_on_delete'                   => array(
 						'sanitize' => 'bool',
+					),
+					'lock_register_forms'                   => array(
+						'sanitize' => 'bool',
+					),
+					'display_login_form_notice'             => array(
+						'sanitize' => 'bool',
+					),
+					'banned_capabilities'                   => array(
+						'sanitize' => array( UM()->admin(), 'sanitize_wp_capabilities_assoc' ),
+					),
+					'secure_notify_admins_banned_accounts'  => array(
+						'sanitize' => 'bool',
+					),
+					'secure_notify_admins_banned_accounts__interval' => array(
+						'sanitize' => 'key',
+					),
+					'secure_allowed_redirect_hosts'        => array(
+						'sanitize' => 'textarea',
 					),
 				)
 			);
@@ -2272,7 +2290,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				//redirect after save settings
 				$arg = array(
 					'page'   => 'um_options',
-					'update' => 'settings_updated',
+					'update' => 'um_settings_updated',
 				);
 
 				if ( ! empty( $_GET['tab'] ) ) {
@@ -2737,9 +2755,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 										case 'expired' :
 
-											$class = 'expired';
+											$class      = 'expired';
 											$messages[] = sprintf(
-												__( 'Your license key expired on %s. Please <a href="%s" target="_blank">renew your license key</a>.', 'ultimate-member' ),
+												// translators: %1$s is a expiry date; %2$s is a renew link.
+												__( 'Your license key expired on %1$s. Please <a href="%2$s" target="_blank">renew your license key</a>.', 'ultimate-member' ),
 												date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
 												'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
 											);
@@ -2752,6 +2771,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 											$class = 'error';
 											$messages[] = sprintf(
+												// translators: %s: support link name.
 												__( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'ultimate-member' ),
 												'https://ultimatemember.com/support?utm_campaign=admin&utm_source=licenses&utm_medium=revoked'
 											);
@@ -2764,6 +2784,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 											$class = 'error';
 											$messages[] = sprintf(
+												// translators: %s: account page.
 												__( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'ultimate-member' ),
 												'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
 											);
@@ -2777,7 +2798,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 											$class = 'error';
 											$messages[] = sprintf(
-												__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank">visit your account page</a> to manage your license key URLs.', 'ultimate-member' ),
+												// translators: %1$s is a item name title; %2$s is a account page.
+												__( 'Your %1$s is not active for this URL. Please <a href="%2$s" target="_blank">visit your account page</a> to manage your license key URLs.', 'ultimate-member' ),
 												$field_data['item_name'],
 												'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
 											);
@@ -2789,6 +2811,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										case 'item_name_mismatch' :
 
 											$class = 'error';
+											// translators: %s: item name.
 											$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'ultimate-member' ), $field_data['item_name'] );
 
 											$license_status = 'license-' . $class . '-notice';
@@ -2798,6 +2821,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										case 'no_activations_left':
 
 											$class = 'error';
+											// translators: %s: account link.
 											$messages[] = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'ultimate-member' ), 'https://ultimatemember.com/account' );
 
 											$license_status = 'license-' . $class . '-notice';
@@ -2816,7 +2840,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 											$class = 'error';
 											$error = ! empty(  $license->error ) ? $license->error : __( 'unknown_error', 'ultimate-member' );
-											$messages[] = sprintf( __( 'There was an error with this license key: %s. Please <a href="%s">contact our support team</a>.', 'ultimate-member' ), $error, 'https://ultimatemember.com/support' );
+											// translators: %1$s is an error; %2$s is a support link.
+											$messages[] = sprintf( __( 'There was an error with this license key: %1$s. Please <a href="%2$s">contact our support team</a>.', 'ultimate-member' ), $error, 'https://ultimatemember.com/support' );
 
 											$license_status = 'license-' . $class . '-notice';
 											break;
@@ -2824,7 +2849,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								} else {
 									$class = 'error';
 									$error = ! empty( $license->error ) ? $license->error : __( 'unknown_error', 'ultimate-member' );
-									$messages[] = sprintf( __( 'There was an error with this license key: %s. Please <a href="%s">contact our support team</a>.', 'ultimate-member' ), $error, 'https://ultimatemember.com/support' );
+									// translators: %1$s is an error; %2$s is a support link.
+									$messages[] = sprintf( __( 'There was an error with this license key: %1$s. Please <a href="%2$s">contact our support team</a>.', 'ultimate-member' ), $error, 'https://ultimatemember.com/support' );
 
 									$license_status = 'license-' . $class . '-notice';
 								}
@@ -2837,7 +2863,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								$class = 'error';
 								$error = ! empty( $errors[0] ) ? $errors[0] : __( 'unknown_error', 'ultimate-member' );
 								$errors_data = ! empty( $errors_data[0][0] ) ? ', ' . $errors_data[0][0] : '';
-								$messages[] = sprintf( __( 'There was an error with this license key: %s%s. Please <a href="%s">contact our support team</a>.', 'ultimate-member' ), $error, $errors_data, 'https://ultimatemember.com/support' );
+								// translators: %1$s is an error; %2$s is a error data; %3$s is a support link.
+								$messages[] = sprintf( __( 'There was an error with this license key: %1$s%2$s. Please <a href="%3$s">contact our support team</a>.', 'ultimate-member' ), $error, $errors_data, 'https://ultimatemember.com/support' );
 
 								$license_status = 'license-' . $class . '-notice';
 
@@ -2849,7 +2876,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 										$class = 'expired';
 										$messages[] = sprintf(
-											__( 'Your license key expired on %s. Please <a href="%s" target="_blank">renew your license key</a>.', 'ultimate-member' ),
+											// translators: %1$s is a expiry date; %2$s is a renew link.
+											__( 'Your license key expired on %1$s. Please <a href="%2$s" target="_blank">renew your license key</a>.', 'ultimate-member' ),
 											date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
 											'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
 										);
@@ -2862,6 +2890,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 										$class = 'error';
 										$messages[] = sprintf(
+											// translators: %s: support link name.
 											__( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'ultimate-member' ),
 											'https://ultimatemember.com/support?utm_campaign=admin&utm_source=licenses&utm_medium=revoked'
 										);
@@ -2874,6 +2903,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 										$class = 'error';
 										$messages[] = sprintf(
+											// translators: %s: account page.
 											__( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'ultimate-member' ),
 											'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
 										);
@@ -2887,7 +2917,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 										$class = 'error';
 										$messages[] = sprintf(
-											__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank">visit your account page</a> to manage your license key URLs.', 'ultimate-member' ),
+											// translators: %1$s is a item name title; %2$s is a account page.
+											__( 'Your %1$s is not active for this URL. Please <a href="%2$s" target="_blank">visit your account page</a> to manage your license key URLs.', 'ultimate-member' ),
 											$field_data['item_name'],
 											'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
 										);
@@ -2899,6 +2930,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									case 'item_name_mismatch' :
 
 										$class = 'error';
+										// translators: %s: item name.
 										$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'ultimate-member' ), $field_data['item_name'] );
 
 										$license_status = 'license-' . $class . '-notice';
@@ -2908,6 +2940,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									case 'no_activations_left':
 
 										$class = 'error';
+										// translators: %s: account link.
 										$messages[] = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'ultimate-member' ), 'https://ultimatemember.com/account' );
 
 										$license_status = 'license-' . $class . '-notice';
@@ -2939,7 +2972,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										} elseif( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
 
 											$messages[] = sprintf(
-												__( 'Your license key expires soon! It expires on %s. <a href="%s" target="_blank">Renew your license key</a>.', 'ultimate-member' ),
+												// translators: %1$s is a expiry date; %2$s is a renew link.
+												__( 'Your license key expires soon! It expires on %1$s. <a href="%2$s" target="_blank">Renew your license key</a>.', 'ultimate-member' ),
 												date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
 												'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
 											);
@@ -2949,6 +2983,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										} else {
 
 											$messages[] = sprintf(
+												// translators: %s: expiry date.
 												__( 'Your license key expires on %s.', 'ultimate-member' ),
 												date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) )
 											);
@@ -2967,6 +3002,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							$class = 'empty';
 
 							$messages[] = sprintf(
+								// translators: %s: item name.
 								__( 'To receive updates, please enter your valid %s license key.', 'ultimate-member' ),
 								$field_data['item_name']
 							);

@@ -568,6 +568,9 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'charoff' => true,
 							'valign'  => true,
 						),
+						'a'        => array(
+							'onclick' => array(),
+						),
 					);
 					break;
 				case 'templates':

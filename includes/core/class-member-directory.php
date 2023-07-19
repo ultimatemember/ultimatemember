@@ -343,6 +343,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					}
 
 					if ( isset( $data['type'] ) && in_array( $data['type'], $this->sorting_supported_fields ) ) {
+						// translators: %s: title.
 						if ( isset( $data['title'] ) && array_search( sprintf( __( '%s DESC', 'ultimate-member' ), $data['title'] ), $this->sort_fields ) !== false ) {
 							$data['title'] = $data['title'] . ' (' . $key . ')';
 						}
@@ -352,7 +353,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							continue;
 						}
 
+						// translators: %s: title.
 						$this->sort_fields[ $key . '_desc' ] = sprintf( __( '%s DESC', 'ultimate-member' ), $title );
+						// translators: %s: title.
 						$this->sort_fields[ $key . '_asc' ] = sprintf( __( '%s ASC', 'ultimate-member' ), $title );
 					}
 				}
@@ -676,16 +679,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 						$attrs['options'] = UM()->fields()->get_options_from_callback( $attrs, $attrs['type'] );
 					} else {
-						/**
-						 * UM hook
-						 *
-						 * @type filter
-						 * @title um_select_option_value
-						 * @description Enable options pair by field $data
-						 * @input_vars
-						 * [{"var":"$options_pair","type":"null","desc":"Enable pairs"},
-						 * {"var":"$data","type":"array","desc":"Field Data"}]
-						 */
+						/** This filter is documented in includes/core/class-fields.php */
 						$option_pairs = apply_filters( 'um_select_options_pair', null, $attrs );
 					}
 
@@ -2658,26 +2652,21 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 				wp_send_json_success( $member_directory_response );
 			}
-
 			/**
-			 * UM hook
+			 * Fires just before the users query for getting users in member directory.
 			 *
-			 * @type action
-			 * @title um_user_before_query
-			 * @description Action before users query on member directory
-			 * @input_vars
-			 * [{"var":"$query_args","type":"array","desc":"Query arguments"},
-			 * {"var":"$md_class","type":"um\core\Member_Directory","desc":"Member Directory class"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_user_before_query', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_user_before_query', 'my_user_before_query', 10, 1 );
-			 * function my_user_before_query( $query_args ) {
-			 *     // your code here
+			 * @since 1.3.x
+			 * @since 2.1.0 Added `$member_directory_class` variable.
+			 * @hook um_user_before_query
+			 *
+			 * @param {array}  $args                   Query arguments.
+			 * @param {object} $member_directory_class Member Directory class. Since 2.1.0 version.
+			 *
+			 * @example <caption>Add custom arguments for query.</caption>
+			 * function my_user_before_query( $query_args, $md_class ) {
+			 *     $query_args['{custom_key}'] = 'custom_value';
 			 * }
-			 * ?>
+			 * add_action( 'um_user_before_query', 'my_user_before_query', 10, 2 );
 			 */
 			do_action( 'um_user_before_query', $this->query_args, $this );
 
@@ -2692,24 +2681,19 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			remove_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10 );
 
 			/**
-			 * UM hook
+			 * Fires just after the users query for getting users in member directory.
 			 *
-			 * @type action
-			 * @title um_user_after_query
-			 * @description Action before users query on member directory
-			 * @input_vars
-			 * [{"var":"$query_args","type":"array","desc":"Query arguments"},
-			 * {"var":"$user_query","type":"array","desc":"User Query"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_user_after_query', 'function_name', 10, 2 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_user_after_query', 'my_user_after_query', 10, 2 );
+			 * @since 1.3.x
+			 * @hook um_user_after_query
+			 *
+			 * @param {array}  $query_args Query arguments.
+			 * @param {object} $user_query Query results.
+			 *
+			 * @example <caption>Make some custom action after getting the users in member directory.</caption>
 			 * function my_user_after_query( $query_args, $user_query ) {
 			 *     // your code here
 			 * }
-			 * ?>
+			 * add_action( 'um_user_after_query', 'my_user_after_query', 10, 2 );
 			 */
 			do_action( 'um_user_after_query', $this->query_args, $user_query );
 
