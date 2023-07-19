@@ -278,7 +278,7 @@ function um_submit_account_details( $args ) {
 				 * ?>
 				 */
 				$redirect_url = apply_filters( 'um_delete_account_redirect_url', um_user( 'delete_redirect_url' ), $user_id );
-				exit( wp_redirect( $redirect_url ) );
+				um_safe_redirect($redirect_url);
 			} else {
 				um_redirect_home();
 			}
