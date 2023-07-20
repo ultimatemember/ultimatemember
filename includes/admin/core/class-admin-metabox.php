@@ -1188,7 +1188,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				// translators: %s: Form id.
 				$_POST['post_title'] = sprintf( __( 'Form #%s', 'ultimate-member' ), $post_id );
 			}
-			$wpdb->update( $wpdb->posts, array( 'post_title' => sanitize_text_field( $_POST['post_title'] ) ), $where );
 
 			// save
 			delete_post_meta( $post_id, '_um_profile_metafields' );
