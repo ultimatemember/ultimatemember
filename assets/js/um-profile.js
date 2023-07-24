@@ -121,12 +121,17 @@ jQuery(document).ready(function() {
 	});
 	jQuery( 'textarea[id="um-meta-bio"]' ).trigger('change');
 
-
 	// Biography (description) fields syncing.
-	jQuery( '.um-profile form' ).on( 'change, input', 'textarea[name="description"]', function ( e ) {
-		var $all_description_fields = jQuery( '#um-meta-bio, #description, textarea[name="description"]', e.delegateTarget );
-		$all_description_fields.val( e.currentTarget.value );
-	} );
+	jQuery( '.um-profile form' ).each( function () {
+		let descKey = jQuery(this).data('description_key');
+		jQuery( document.body ).on( 'change, input', 'textarea[name="' + descKey + '"]', function ( e ) {
+			jQuery(this).parents( 'form' ).find( 'textarea[name="' + descKey + '"]' ).each( function() {
+				if ( jQuery(this)[0] !== e.currentTarget ) {
+					jQuery(this).parents( 'form' ).find( 'textarea[name="' + descKey + '"]' ).val( e.currentTarget.value ).trigger('change');
+				}
+			});
+		});
+	});
 
 
 	jQuery( '.um-profile-edit a.um_delete-item' ).on( 'click', function(e) {
