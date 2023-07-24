@@ -1069,17 +1069,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 * @param $post_id
 		 * @param $post
 		 */
-		function save_metabox_directory( $post_id, $post ) {
+		public function save_metabox_directory( $post_id, $post ) {
 			global $wpdb;
 
 			// validate nonce
 			if ( ! isset( $_POST['um_admin_save_metabox_directory_nonce'] ) ||
-			     ! wp_verify_nonce( $_POST['um_admin_save_metabox_directory_nonce'], basename( __FILE__ ) ) ) {
+				! wp_verify_nonce( $_POST['um_admin_save_metabox_directory_nonce'], basename( __FILE__ ) ) ) {
 				return;
 			}
 
 			// validate post type
-			if ( $post->post_type != 'um_directory' ) {
+			if ( 'um_directory' !== $post->post_type ) {
 				return;
 			}
 
@@ -1095,8 +1095,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				// translators: %s: Directory id.
 				$_POST['post_title'] = sprintf( __( 'Directory #%s', 'ultimate-member' ), $post_id );
 			}
-
-			$wpdb->update( $wpdb->posts, array( 'post_title' => sanitize_text_field( $_POST['post_title'] ) ), $where );
 
 			do_action( 'um_before_member_directory_save', $post_id );
 
@@ -1119,17 +1117,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			$metadata = UM()->admin()->sanitize_member_directory_meta( $_POST['um_metadata'] );
 			foreach ( $metadata as $k => $v ) {
 
-				if ( $k == '_um_show_these_users' && trim( $v ) ) {
+				if ( '_um_show_these_users' === $k && trim( $v ) ) {
 					$v = preg_split( '/[\r\n]+/', $v, -1, PREG_SPLIT_NO_EMPTY );
 				}
 
-				if ( $k == '_um_exclude_these_users' && trim( $v ) ) {
+				if ( '_um_exclude_these_users' === $k && trim( $v ) ) {
 					$v = preg_split( '/[\r\n]+/', $v, -1, PREG_SPLIT_NO_EMPTY );
 				}
 
 				if ( strstr( $k, '_um_' ) ) {
 
-					if ( $k === '_um_is_default' ) {
+					if ( '_um_is_default' === $k ) {
 
 						$mode = UM()->query()->get_attr( 'mode', $post_id );
 
@@ -1145,9 +1143,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 							foreach ( $posts as $p_id ) {
 								delete_post_meta( $p_id, '_um_is_default' );
 							}
-
 						}
-
 					}
 
 					$v = apply_filters( 'um_member_directory_meta_value_before_save', $v, $k, $post_id );
@@ -1192,7 +1188,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				// translators: %s: Form id.
 				$_POST['post_title'] = sprintf( __( 'Form #%s', 'ultimate-member' ), $post_id );
 			}
-			$wpdb->update( $wpdb->posts, array( 'post_title' => sanitize_text_field( $_POST['post_title'] ) ), $where );
 
 			// save
 			delete_post_meta( $post_id, '_um_profile_metafields' );
