@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
 Tested up to: 6.2
-Stable tag: 2.6.8
+Stable tag: 2.6.9
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -166,7 +166,7 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.6.9: August xx, 2023 =
+= 2.6.9: July 26, 2023 =
 
 * Enhancements:
 
@@ -175,6 +175,19 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Bugfixes:
 
   - Fixed: Using allowed hosts for safe redirect after profile deletion
+  - Fixed: Nonce validation for the admin actions handler
+  - Fixed: Using singleton for UM Forms and UM Account shortcodes. Empty pages issue
+  - Fixed: PHP errors in admin notices
+  - Fixed: PHP errors on UM Profile update when there is multiselect field
+  - Fixed: UM Form and UM Member Directories titles un-slashed. Please re-update the entities where you have extra-slashes
+  - Fixed: Maximum allowed words option for textarea where you may insert HTML tags. Ignore HTML tags symbols when count
+  - Fixed: Sanitize for fields (Min characters, Max characters, etc.) where can be empty string or absint value
+
+* Templates required update:
+
+  - profile.php
+
+* Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade
 
 = 2.6.8: July 19, 2023 =
 
