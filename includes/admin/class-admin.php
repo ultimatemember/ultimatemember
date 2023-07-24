@@ -764,16 +764,16 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						'sanitize' => 'bool',
 					),
 					'_max_selections'                 => array(
-						'sanitize' => 'empty_int',
+						'sanitize' => 'empty_absint',
 					),
 					'_min_selections'                 => array(
-						'sanitize' => 'empty_int',
+						'sanitize' => 'empty_absint',
 					),
 					'_max_entries'                    => array(
-						'sanitize' => 'absint',
+						'sanitize' => 'empty_absint',
 					),
 					'_max_words'                      => array(
-						'sanitize' => 'absint',
+						'sanitize' => 'empty_absint',
 					),
 					'_min'                            => array(
 						'sanitize' => 'empty_int',
@@ -782,10 +782,10 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						'sanitize' => 'empty_int',
 					),
 					'_min_chars'                      => array(
-						'sanitize' => 'absint',
+						'sanitize' => 'empty_absint',
 					),
 					'_max_chars'                      => array(
-						'sanitize' => 'absint',
+						'sanitize' => 'empty_absint',
 					),
 					'_html'                           => array(
 						'sanitize' => 'bool',
@@ -1935,22 +1935,25 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 * @return array
 		 */
 		function plugin_links( $links ) {
-			$more_links[] = '<a href="http://docs.ultimatemember.com/">' . __( 'Docs', 'ultimate-member' ) . '</a>';
-			$more_links[] = '<a href="'.admin_url().'admin.php?page=um_options">' . __( 'Settings', 'ultimate-member' ) . '</a>';
+			$more_links[] = '<a href="http://docs.ultimatemember.com/">' . esc_html__( 'Docs', 'ultimate-member' ) . '</a>';
+			$more_links[] = '<a href="' . admin_url() . 'admin.php?page=um_options">' . esc_html__( 'Settings', 'ultimate-member' ) . '</a>';
 
 			$links = $more_links + $links;
 			return $links;
 		}
 
-
 		/**
 		 * Init admin action/filters + request handlers
 		 */
-		function admin_init() {
+		public function admin_init() {
 			$this->init_variables();
 
-			if ( is_admin() && current_user_can( 'manage_options' ) && ! empty( $_REQUEST['um_adm_action'] ) ) {
+			if ( ! empty( $_REQUEST['um_adm_action'] ) && is_admin() && current_user_can( 'manage_options' ) ) {
 				$action = sanitize_key( $_REQUEST['um_adm_action'] );
+
+				if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], $action ) ) {
+					wp_die( esc_attr__( 'Security Check', 'ultimate-member' ) );
+				}
 
 				/**
 				 * UM hook
