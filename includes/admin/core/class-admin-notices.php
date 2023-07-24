@@ -7,7 +7,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
-
 	/**
 	 * Class Admin_Notices
 	 * @package um\admin\core
@@ -19,16 +18,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		 *
 		 * @var array
 		 */
-		var $list = array();
-
+		private $list = array();
 
 		/**
 		 * Admin_Notices constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			add_action( 'admin_init', array( &$this, 'create_languages_folder' ) );
 
-			add_action( 'admin_init', array( &$this, 'create_list' ), 10 );
+			add_action( 'admin_init', array( &$this, 'create_list' ) );
 			add_action( 'admin_notices', array( &$this, 'render_notices' ), 1 );
 
 			add_action( 'wp_ajax_um_dismiss_notice', array( &$this, 'dismiss_notice' ) );
@@ -37,11 +35,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			add_action( 'current_screen', array( &$this, 'create_list_for_screen' ) );
 		}
 
-
 		/**
 		 *
 		 */
-		function create_list() {
+		public function create_list() {
 			$this->old_extensions_notice();
 			$this->install_core_page_notice();
 			$this->exif_extension_notice();
@@ -93,7 +90,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		/**
 		 * @return array
 		 */
-		function get_admin_notices() {
+		public function get_admin_notices() {
 			return $this->list;
 		}
 
@@ -885,7 +882,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			}
 
 			$global_role = get_option( 'default_role' ); // WP Global settings
-			$caps        = get_role( $global_role )->capabilities;
+			$global_role = get_role( $global_role );
+			$caps        = ( null !== $global_role && ! empty( $global_role->capabilities ) ) ? $global_role->capabilities : array();
 			foreach ( array_keys( $caps ) as $cap ) {
 				if ( in_array( $cap, $arr_banned_caps, true ) ) {
 					ob_start();
@@ -910,7 +908,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			$um_global_role = UM()->options()->get( 'register_role' ); // UM Settings Global settings
 			if ( ! empty( $um_global_role ) ) {
-				$caps = get_role( $um_global_role )->capabilities;
+				$um_global_role = get_role( $um_global_role );
+				$caps           = ( null !== $um_global_role && ! empty( $um_global_role->capabilities ) ) ? $um_global_role->capabilities : array();
 				foreach ( array_keys( $caps ) as $cap ) {
 					if ( in_array( $cap, $arr_banned_caps, true ) ) {
 						ob_start();
@@ -966,7 +965,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					continue;
 				}
 
-				$caps = get_role( $role )->capabilities;
+				$role = get_role( $role );
+				$caps = ( null !== $role && ! empty( $role->capabilities ) ) ? $role->capabilities : array();
 				foreach ( array_keys( $caps ) as $cap ) {
 					if ( in_array( $cap, $arr_banned_caps, true ) ) {
 						$content .= '<br /><a target="_blank" href="' . get_edit_post_link( $form_id ) . '">' . get_the_title( $form_id ) . '</a> contains <strong>administrative role</strong>.';
