@@ -124,13 +124,15 @@ jQuery(document).ready(function() {
 	// Biography (description) fields syncing.
 	jQuery( '.um-profile form' ).each( function () {
 		let descKey = jQuery(this).data('description_key');
-		jQuery( document.body ).on( 'change, input', 'textarea[name="' + descKey + '"]', function ( e ) {
-			jQuery(this).parents( 'form' ).find( 'textarea[name="' + descKey + '"]' ).each( function() {
-				if ( jQuery(this)[0] !== e.currentTarget ) {
-					jQuery(this).parents( 'form' ).find( 'textarea[name="' + descKey + '"]' ).val( e.currentTarget.value ).trigger('change');
-				}
+		if ( jQuery(this).find( 'textarea[name="' + descKey + '"]' ).length ) {
+			jQuery( document.body ).on( 'change, input', 'textarea[name="' + descKey + '"]', function ( e ) {
+				jQuery(this).parents( 'form' ).find( 'textarea[name="' + descKey + '"]' ).each( function() {
+					if ( jQuery(this)[0] !== e.currentTarget ) {
+						jQuery(this).parents( 'form' ).find( 'textarea[name="' + descKey + '"]' ).val( e.currentTarget.value ).trigger('change');
+					}
+				});
 			});
-		});
+		}
 	});
 
 
