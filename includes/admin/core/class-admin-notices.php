@@ -451,28 +451,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			}
 		}
 
-
 		/**
 		* EXIF library notice
 		*/
 		public function exif_extension_notice() {
-			$hide_exif_notice = get_option( 'um_hide_exif_notice' );
-
-			if ( ! extension_loaded( 'exif' ) && ! $hide_exif_notice ) {
-				$url = add_query_arg(
-					array(
-						'um_adm_action' => 'um_hide_exif_notice',
-						'_wpnonce'      => wp_create_nonce( 'um_hide_exif_notice' ),
-					)
-				);
+			if ( ! extension_loaded( 'exif' ) ) {
 				$this->add_notice(
 					'exif_disabled',
 					array(
-						'class'   => 'updated',
+						'class'       => 'updated',
 						// translators: %s: query args.
-						'message' => '<p>' . sprintf( __( 'Exif is not enabled on your server. Mobile photo uploads will not be rotated correctly until you enable the exif extension. <a href="%s">Hide this notice</a>', 'ultimate-member' ), $url ) . '</p>',
-					),
-					10
+						'message'     => '<p>' . esc_html__( 'Exif is not enabled on your server. Mobile photo uploads will not be rotated correctly until you enable the exif extension.', 'ultimate-member' ) . '</p>',
+						'dismissible' => true,
+					)
 				);
 			}
 		}

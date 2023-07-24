@@ -117,8 +117,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Columns' ) ) {
 					'post_type'     => 'um_form',
 					'um_adm_action' => 'duplicate_form',
 					'post_id'       => $id,
-					'nonce'         => wp_create_nonce( "um-duplicate_form{$id}" ),
-					'_wpnonce'      => wp_create_nonce( 'duplicate_form' ),
+					'_wpnonce'      => wp_create_nonce( "um-duplicate_form{$id}" ),
 				),
 				admin_url( 'edit.php' )
 			);
