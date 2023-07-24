@@ -1062,7 +1062,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			do_action( 'um_admin_custom_login_metaboxes' );
 		}
 
-
 		/**
 		 * Save directory metabox
 		 *
@@ -1089,11 +1088,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				return;
 			}
 
-			$where = array( 'ID' => $post_id );
-
 			if ( empty( $_POST['post_title'] ) ) {
+				$where = array( 'ID' => $post_id );
 				// translators: %s: Directory id.
 				$_POST['post_title'] = sprintf( __( 'Directory #%s', 'ultimate-member' ), $post_id );
+				$wpdb->update( $wpdb->posts, array( 'post_title' => sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) ), $where );
 			}
 
 			do_action( 'um_before_member_directory_save', $post_id );
@@ -1156,14 +1155,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			update_post_meta( $post_id, '_um_search_filters_gmt', (int) $_POST['um-gmt-offset'] );
 		}
 
-
 		/**
 		 * Save form metabox
 		 *
 		 * @param $post_id
 		 * @param $post
 		 */
-		function save_metabox_form( $post_id, $post ) {
+		public function save_metabox_form( $post_id, $post ) {
 			global $wpdb;
 
 			// validate nonce
@@ -1173,7 +1171,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			}
 
 			// validate post type
-			if ( $post->post_type != 'um_form' ) {
+			if ( 'um_form' !== $post->post_type ) {
 				return;
 			}
 
@@ -1183,10 +1181,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				return;
 			}
 
-			$where = array( 'ID' => $post_id );
 			if ( empty( $_POST['post_title'] ) ) {
+				$where = array( 'ID' => $post_id );
 				// translators: %s: Form id.
 				$_POST['post_title'] = sprintf( __( 'Form #%s', 'ultimate-member' ), $post_id );
+				$wpdb->update( $wpdb->posts, array( 'post_title' => sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) ), $where );
 			}
 
 			// save
