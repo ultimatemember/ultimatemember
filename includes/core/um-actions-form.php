@@ -573,7 +573,9 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 		}
 
 		if ( isset( $array['max_words'] ) && $array['max_words'] > 0 ) {
-			if ( str_word_count( $submitted_data[ $key ], 0, "éèàôù" ) > $array['max_words'] ) {
+			// count words without html tags
+			$without_tags = wp_strip_all_tags( $submitted_data[ $key ] );
+			if ( str_word_count( $without_tags, 0, 'éèàôù' ) > $array['max_words'] ) {
 				// translators: %s: max words.
 				UM()->form()->add_error( $key, sprintf( __( 'You are only allowed to enter a maximum of %s words', 'ultimate-member' ), $array['max_words'] ) );
 			}
