@@ -122,6 +122,13 @@ jQuery(document).ready(function() {
 	jQuery( 'textarea[id="um-meta-bio"]' ).trigger('change');
 
 
+	// Biography (description) fields syncing.
+	jQuery( '.um-profile form' ).on( 'change, input', 'textarea[name="description"]', function ( e ) {
+		var $all_description_fields = jQuery( '#um-meta-bio, #description, textarea[name="description"]', e.delegateTarget );
+		$all_description_fields.val( e.currentTarget.value );
+	} );
+
+
 	jQuery( '.um-profile-edit a.um_delete-item' ).on( 'click', function(e) {
 		e.preventDefault();
 

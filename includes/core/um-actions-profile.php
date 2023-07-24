@@ -1243,8 +1243,7 @@ function um_profile_header( $args ) {
 					<textarea id="um-meta-bio"
 							  data-character-limit="<?php echo esc_attr( UM()->options()->get( 'profile_bio_maxchars' ) ); ?>"
 							  placeholder="<?php esc_attr_e( 'Tell us a bit about yourself...', 'ultimate-member' ); ?>"
-							  name="<?php echo esc_attr( $description_key . '-' . $args['form_id'] ); ?>"
-							  id="<?php echo esc_attr( $description_key . '-' . $args['form_id'] ); ?>"><?php echo UM()->fields()->field_value( $description_key ) ?></textarea>
+							  name="<?php echo esc_attr( $description_key ); ?>"><?php echo UM()->fields()->field_value( $description_key ) ?></textarea>
 					<span class="um-meta-bio-character um-right"><span
 							class="um-bio-limit"><?php echo UM()->options()->get( 'profile_bio_maxchars' ); ?></span></span>
 
