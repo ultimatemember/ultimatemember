@@ -1,7 +1,7 @@
-<?php if ( ! defined( 'ABSPATH' ) ) {
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
 
 /**
  * Validate for errors in account form
@@ -588,55 +588,71 @@ function um_after_account_privacy( $args ) {
 			<label>
 				<?php esc_html_e( 'Download your data', 'ultimate-member' ); ?>
 			</label>
-			<span class="um-tip um-tip-<?php echo is_rtl() ? 'e' : 'w' ?>" original-title="<?php esc_attr_e( 'You can request a file with the information that we believe is most relevant and useful to you.', 'ultimate-member' ); ?>">
+			<span class="um-tip um-tip-<?php echo is_rtl() ? 'e' : 'w'; ?>" title="<?php esc_attr_e( 'You can request a file with the information that we believe is most relevant and useful to you.', 'ultimate-member' ); ?>">
 				<i class="um-icon-help-circled"></i>
 			</span>
 			<div class="um-clear"></div>
 		</div>
-		<?php $completed = $wpdb->get_row(
-			"SELECT ID
-			FROM $wpdb->posts
-			WHERE post_author = $user_id AND
-			      post_type = 'user_request' AND
-			      post_name = 'export_personal_data' AND
-			      post_status = 'request-completed'
-			ORDER BY ID DESC
-			LIMIT 1",
-		ARRAY_A );
+		<?php
+		$completed = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT ID
+				FROM $wpdb->posts
+				WHERE post_author = %d AND
+					  post_type = 'user_request' AND
+					  post_name = 'export_personal_data' AND
+					  post_status = 'request-completed'
+				ORDER BY ID DESC
+				LIMIT 1",
+				$user_id
+			),
+			ARRAY_A
+		);
 
 		if ( ! empty( $completed ) ) {
 
 			$exports_url = wp_privacy_exports_url();
 
 			echo '<p>' . esc_html__( 'You could download your previous data:', 'ultimate-member' ) . '</p>';
-			echo '<a href="'.esc_attr( $exports_url . get_post_meta( $completed['ID'], '_export_file_name', true ) ) . '">' . esc_html__( 'Download Personal Data', 'ultimate-member' ) . '</a>';
+			echo '<a href="' . esc_attr( $exports_url . get_post_meta( $completed['ID'], '_export_file_name', true ) ) . '">' . esc_html__( 'Download Personal Data', 'ultimate-member' ) . '</a>';
 			echo '<p>' . esc_html__( 'You could send a new request for an export of personal your data.', 'ultimate-member' ) . '</p>';
 
 		}
 
 		$pending = $wpdb->get_row(
-			"SELECT ID, post_status
-			FROM $wpdb->posts
-			WHERE post_author = $user_id AND
-			      post_type = 'user_request' AND
-			      post_name = 'export_personal_data' AND
-			      post_status != 'request-completed'
-			ORDER BY ID DESC
-			LIMIT 1",
-		ARRAY_A );
+			$wpdb->prepare(
+				"SELECT ID, post_status
+				FROM $wpdb->posts
+				WHERE post_author = %d AND
+					  post_type = 'user_request' AND
+					  post_name = 'export_personal_data' AND
+					  post_status != 'request-completed'
+				ORDER BY ID DESC
+				LIMIT 1",
+				$user_id
+			),
+			ARRAY_A
+		);
 
-		if ( ! empty( $pending ) && $pending['post_status'] == 'request-pending' ) {
+		if ( ! empty( $pending ) && 'request-pending' === $pending['post_status'] ) {
 			echo '<p>' . esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your export request.', 'ultimate-member' ) . '</p>';
-		} elseif ( ! empty( $pending ) && $pending['post_status'] == 'request-confirmed' ) {
+		} elseif ( ! empty( $pending ) && 'request-confirmed' === $pending['post_status'] ) {
 			echo '<p>' . esc_html__( 'The administrator has not yet approved downloading the data. Please expect an email with a link to your data.', 'ultimate-member' ) . '</p>';
 		} else {
-			if ( UM()->account()->current_password_is_required( 'privacy_download_data' ) ) { ?>
-
+			if ( UM()->account()->current_password_is_required( 'privacy_download_data' ) ) {
+				?>
 				<label name="um-export-data">
 					<?php esc_html_e( 'Enter your current password to confirm a new export of your personal data.', 'ultimate-member' ); ?>
 				</label>
 				<div class="um-field-area">
-					<input id="um-export-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'ultimate-member' )?>">
+					<?php if ( UM()->options()->get( 'toggle_password' ) ) { ?>
+						<div class="um-field-area-password">
+							<input id="um-export-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'ultimate-member' ); ?>">
+							<span class="um-toggle-password"><i class="um-icon-eye"></i></span>
+						</div>
+					<?php } else { ?>
+						<input id="um-export-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'ultimate-member' ); ?>">
+					<?php } ?>
 					<div class="um-field-error um-export-data">
 						<span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span><?php esc_html_e( 'You must enter a password', 'ultimate-member' ); ?>
 					</div>
@@ -664,22 +680,27 @@ function um_after_account_privacy( $args ) {
 			<label>
 				<?php esc_html_e( 'Erase of your data', 'ultimate-member' ); ?>
 			</label>
-			<span class="um-tip um-tip-<?php echo is_rtl() ? 'e' : 'w' ?>" original-title="<?php esc_attr_e( 'You can request erasing of the data that we have about you.', 'ultimate-member' ); ?>">
+			<span class="um-tip um-tip-<?php echo is_rtl() ? 'e' : 'w'; ?>" title="<?php esc_attr_e( 'You can request erasing of the data that we have about you.', 'ultimate-member' ); ?>">
 				<i class="um-icon-help-circled"></i>
 			</span>
 			<div class="um-clear"></div>
 		</div>
 
-		<?php $completed = $wpdb->get_row(
-			"SELECT ID
-			FROM $wpdb->posts
-			WHERE post_author = $user_id AND
-			      post_type = 'user_request' AND
-			      post_name = 'remove_personal_data' AND
-			      post_status = 'request-completed'
-			ORDER BY ID DESC
-			LIMIT 1",
-		ARRAY_A );
+		<?php
+		$completed = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT ID
+				FROM $wpdb->posts
+				WHERE post_author = %d AND
+					  post_type = 'user_request' AND
+					  post_name = 'remove_personal_data' AND
+					  post_status = 'request-completed'
+				ORDER BY ID DESC
+				LIMIT 1",
+				$user_id
+			),
+			ARRAY_A
+		);
 
 		if ( ! empty( $completed ) ) {
 
@@ -689,26 +710,37 @@ function um_after_account_privacy( $args ) {
 		}
 
 		$pending = $wpdb->get_row(
-			"SELECT ID, post_status
-			FROM $wpdb->posts
-			WHERE post_author = $user_id AND
-			      post_type = 'user_request' AND
-			      post_name = 'remove_personal_data' AND
-			      post_status != 'request-completed'
-			ORDER BY ID DESC
-			LIMIT 1",
-		ARRAY_A );
+			$wpdb->prepare(
+				"SELECT ID, post_status
+				FROM $wpdb->posts
+				WHERE post_author = %d AND
+					  post_type = 'user_request' AND
+					  post_name = 'remove_personal_data' AND
+					  post_status != 'request-completed'
+				ORDER BY ID DESC
+				LIMIT 1",
+				$user_id
+			),
+			ARRAY_A
+		);
 
-		if ( ! empty( $pending ) && $pending['post_status'] == 'request-pending' ) {
+		if ( ! empty( $pending ) && 'request-pending' === $pending['post_status'] ) {
 			echo '<p>' . esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your deletion request.', 'ultimate-member' ) . '</p>';
-		} elseif ( ! empty( $pending ) && $pending['post_status'] == 'request-confirmed' ) {
+		} elseif ( ! empty( $pending ) && 'request-confirmed' === $pending['post_status'] ) {
 			echo '<p>' . esc_html__( 'The administrator has not yet approved deleting your data. Please expect an email with a link to your data.', 'ultimate-member' ) . '</p>';
 		} else {
-			if ( UM()->account()->current_password_is_required( 'privacy_erase_data' ) ) { ?>
-
+			if ( UM()->account()->current_password_is_required( 'privacy_erase_data' ) ) {
+				?>
 				<label name="um-erase-data">
 					<?php esc_html_e( 'Enter your current password to confirm the erasure of your personal data.', 'ultimate-member' ); ?>
-					<input id="um-erase-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'ultimate-member' )?>">
+					<?php if ( UM()->options()->get( 'toggle_password' ) ) { ?>
+						<div class="um-field-area-password">
+							<input id="um-erase-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'ultimate-member' ); ?>">
+							<span class="um-toggle-password"><i class="um-icon-eye"></i></span>
+						</div>
+					<?php } else { ?>
+						<input id="um-erase-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'ultimate-member' ); ?>">
+					<?php } ?>
 					<div class="um-field-error um-erase-data">
 						<span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span><?php esc_html_e( 'You must enter a password', 'ultimate-member' ); ?>
 					</div>
