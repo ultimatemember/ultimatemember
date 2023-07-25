@@ -689,6 +689,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'use_um_gravatar_default_image'         => array(
 						'sanitize' => 'bool',
 					),
+					'toggle_password'                       => array(
+						'sanitize' => 'bool',
+					),
 					'require_strongpass'                    => array(
 						'sanitize' => 'bool',
 					),
@@ -1087,6 +1090,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'label'       => __( 'Use Default plugin avatar as Gravatar\'s Default avatar', 'ultimate-member' ),
 										'tooltip'     => __( 'Do you want to use the plugin default avatar instead of the gravatar default photo (If the user did not upload a custom profile photo / avatar)', 'ultimate-member' ),
 										'conditional' => array( 'use_um_gravatar_default_builtin_image', '=', 'default' ),
+									),
+									array(
+										'id'      => 'toggle_password',
+										'type'    => 'checkbox',
+										'label'   => __( 'Show/hide password button', 'ultimate-member' ),
+										'tooltip' => __( 'Enable visibility for show/hide password button for the password field-type.', 'ultimate-member' ),
 									),
 									array(
 										'id'      => 'require_strongpass',

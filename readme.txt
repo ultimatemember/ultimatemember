@@ -171,6 +171,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Enhancements:
 
   - Added: Compatibility with UM:Stripe extension
+  - Added: Show/hide password button for toggle password visibility
 
 * Bugfixes:
 
