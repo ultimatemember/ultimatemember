@@ -172,6 +172,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
   - Added: Compatibility with UM:Stripe extension
   - Added: Show/hide password button for toggle password visibility
+  - Added: JS scripts for syncing biography fields if there are the 1st field in the profile header and the 2nd field in the profile form
 
 * Bugfixes:
 
