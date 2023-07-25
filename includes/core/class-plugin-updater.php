@@ -21,7 +21,7 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 		function __construct() {
 			//cron request to UM()->store_url;
 			add_action( 'um_daily_scheduled_events', array( &$this, 'um_checklicenses' ) );
-			
+
 			// clean update plugin cache
 			add_action( 'upgrader_process_complete', array( &$this, 'clean_update_plugins_cache' ), 20, 2 );
 
@@ -56,10 +56,10 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 			return $should_update;
 		}
 
-		
+
 		/**
 		 * This action is documented in wp-admin/includes/class-wp-upgrader.php
-		 * 
+		 *
 		 * @see file /wp-admin/includes/class-plugin-upgrader.php method bulk_upgrade()
 		 * @since 2.1.1 [2019-11-15]
 		 *
@@ -71,118 +71,113 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 				wp_clean_plugins_cache( true );
 			}
 		}
-		
 
 		/**
 		 * Get all paid UM extensions
 		 *
 		 * @return array
 		 */
-		function get_active_plugins() {
+		public function get_active_plugins() {
 			$paid_extensions = array(
-				'um-bbpress/um-bbpress.php'                             => array(
+				'um-bbpress/um-bbpress.php'               => array(
 					'key'   => 'bbpress',
 					'title' => 'bbPress',
 				),
-				'um-followers/um-followers.php'                         => array(
+				'um-followers/um-followers.php'           => array(
 					'key'   => 'followers',
 					'title' => 'Followers',
 				),
-				'um-friends/um-friends.php'                             => array(
+				'um-friends/um-friends.php'               => array(
 					'key'   => 'friends',
 					'title' => 'Friends',
 				),
-				'um-groups/um-groups.php'                               => array(
+				'um-groups/um-groups.php'                 => array(
 					'key'   => 'groups',
 					'title' => 'Groups',
 				),
-				'um-instagram/um-instagram.php'                         => array(
+				'um-instagram/um-instagram.php'           => array(
 					'key'   => 'instagram',
 					'title' => 'Instagram',
 				),
-				'um-mailchimp/um-mailchimp.php'                         => array(
+				'um-mailchimp/um-mailchimp.php'           => array(
 					'key'   => 'mailchimp',
 					'title' => 'MailChimp',
 				),
-				'um-messaging/um-messaging.php'                         => array(
+				'um-messaging/um-messaging.php'           => array(
 					'key'   => 'messaging',
 					'title' => 'Private Messages',
 				),
-				'um-mycred/um-mycred.php'                               => array(
+				'um-mycred/um-mycred.php'                 => array(
 					'key'   => 'mycred',
 					'title' => 'myCRED',
 				),
-				'um-notices/um-notices.php'                             => array(
+				'um-notices/um-notices.php'               => array(
 					'key'   => 'notices',
 					'title' => 'Notices',
 				),
-				'um-notifications/um-notifications.php'                 => array(
+				'um-notifications/um-notifications.php'   => array(
 					'key'   => 'notifications',
 					'title' => 'Real-time Notifications',
 				),
-				'um-profile-completeness/um-profile-completeness.php'   => array(
+				'um-profile-completeness/um-profile-completeness.php' => array(
 					'key'   => 'profile_completeness',
 					'title' => 'Profile Completeness',
 				),
-				'um-reviews/um-reviews.php'                             => array(
+				'um-reviews/um-reviews.php'               => array(
 					'key'   => 'reviews',
 					'title' => 'User Reviews',
 				),
-				'um-social-activity/um-social-activity.php'             => array(
+				'um-social-activity/um-social-activity.php' => array(
 					'key'   => 'activity',
 					'title' => 'Social Activity',
 				),
-				'um-social-login/um-social-login.php'                   => array(
+				'um-social-login/um-social-login.php'     => array(
 					'key'   => 'social_login',
 					'title' => 'Social Login',
 				),
-				'um-user-tags/um-user-tags.php'                         => array(
+				'um-user-tags/um-user-tags.php'           => array(
 					'key'   => 'user_tags',
 					'title' => 'User Tags',
 				),
-				'um-verified-users/um-verified-users.php'               => array(
+				'um-verified-users/um-verified-users.php' => array(
 					'key'   => 'verified',
 					'title' => 'Verified Users',
 				),
-				'um-woocommerce/um-woocommerce.php'                     => array(
+				'um-woocommerce/um-woocommerce.php'       => array(
 					'key'   => 'woocommerce',
 					'title' => 'WooCommerce',
 				),
-				'um-user-photos/um-user-photos.php'                     => array(
+				'um-user-photos/um-user-photos.php'       => array(
 					'key'   => 'user_photos',
 					'title' => 'User Photos',
 				),
-				'um-private-content/um-private-content.php'             => array(
+				'um-private-content/um-private-content.php' => array(
 					'key'   => 'private_content',
 					'title' => 'Private Content',
 				),
-				'um-user-bookmarks/um-user-bookmarks.php'               => array(
+				'um-user-bookmarks/um-user-bookmarks.php' => array(
 					'key'   => 'user_bookmarks',
 					'title' => 'User Bookmarks',
 				),
-				'um-unsplash/um-unsplash.php'                           => array(
+				'um-unsplash/um-unsplash.php'             => array(
 					'key'   => 'unsplash',
 					'title' => 'Unsplash',
 				),
-				'um-user-locations/um-user-locations.php'               => array(
+				'um-user-locations/um-user-locations.php' => array(
 					'key'   => 'user_locations',
 					'title' => 'User Locations',
 				),
-				'um-profile-tabs/um-profile-tabs.php'                   => array(
+				'um-profile-tabs/um-profile-tabs.php'     => array(
 					'key'   => 'profile_tabs',
 					'title' => 'Profile tabs',
 				),
-				'um-user-notes/um-user-notes.php'                       => array(
+				'um-user-notes/um-user-notes.php'         => array(
 					'key'   => 'user_notes',
 					'title' => 'User Notes',
 				),
-				'um-frontend-posting/um-frontend-posting.php'           => array(
-					'key'   => 'frontend_posting',
-					'title' => 'Frontend Posting',
-				),
-				'um-google-authenticator/um-google-authenticator.php'   => array(
-					'key'   => 'google_authenticator',
-					'title' => 'Google Authenticator',
+				'um-stripe/um-stripe.php'                 => array(
+					'key'   => 'stripe',
+					'title' => 'Stripe',
 				),
 			);
 

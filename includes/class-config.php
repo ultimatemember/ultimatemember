@@ -520,6 +520,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'use_gravatars'                         => 0,
 				'use_um_gravatar_default_builtin_image' => 'default',
 				'use_um_gravatar_default_image'         => 0,
+				'toggle_password'                       => false,
 				'require_strongpass'                    => 0,
 				'password_min_chars'                    => 8,
 				'password_max_chars'                    => 30,

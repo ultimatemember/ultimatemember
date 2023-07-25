@@ -7,7 +7,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
-
 	/**
 	 * Class Admin_Notices
 	 * @package um\admin\core
@@ -19,16 +18,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		 *
 		 * @var array
 		 */
-		var $list = array();
-
+		private $list = array();
 
 		/**
 		 * Admin_Notices constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			add_action( 'admin_init', array( &$this, 'create_languages_folder' ) );
 
-			add_action( 'admin_init', array( &$this, 'create_list' ), 10 );
+			add_action( 'admin_init', array( &$this, 'create_list' ) );
 			add_action( 'admin_notices', array( &$this, 'render_notices' ), 1 );
 
 			add_action( 'wp_ajax_um_dismiss_notice', array( &$this, 'dismiss_notice' ) );
@@ -37,11 +35,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			add_action( 'current_screen', array( &$this, 'create_list_for_screen' ) );
 		}
 
-
 		/**
 		 *
 		 */
-		function create_list() {
+		public function create_list() {
 			$this->old_extensions_notice();
 			$this->install_core_page_notice();
 			$this->exif_extension_notice();
@@ -93,7 +90,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		/**
 		 * @return array
 		 */
-		function get_admin_notices() {
+		public function get_admin_notices() {
 			return $this->list;
 		}
 
@@ -372,7 +369,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			);
 		}
 
-
 		/**
 		 * Regarding page setup
 		 */
@@ -384,9 +380,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				foreach ( $pages as $slug => $page_id ) {
 					$page = get_post( $page_id );
 
-					if ( ! isset( $page->ID ) && in_array( $slug, array_keys( UM()->config()->core_pages ) ) ) {
+					if ( ! isset( $page->ID ) && array_key_exists( $slug, UM()->config()->core_pages ) ) {
+						$url = add_query_arg(
+							array(
+								'um_adm_action' => 'install_core_pages',
+								'_wpnonce'      => wp_create_nonce( 'install_core_pages' ),
+							)
+						);
 
-						ob_start(); ?>
+						ob_start();
+						?>
 
 						<p>
 							<?php
@@ -396,18 +399,23 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 						</p>
 
 						<p>
-							<a href="<?php echo esc_url( add_query_arg( 'um_adm_action', 'install_core_pages' ) ); ?>" class="button button-primary"><?php _e( 'Create Pages', 'ultimate-member' ) ?></a>
+							<a href="<?php echo esc_url( $url ); ?>" class="button button-primary"><?php esc_html_e( 'Create Pages', 'ultimate-member' ); ?></a>
 							&nbsp;
-							<a href="javascript:void(0);" class="button-secondary um_secondary_dimiss"><?php _e( 'No thanks', 'ultimate-member' ) ?></a>
+							<a href="javascript:void(0);" class="button-secondary um_secondary_dimiss"><?php esc_html_e( 'No thanks', 'ultimate-member' ); ?></a>
 						</p>
 
-						<?php $message = ob_get_clean();
+						<?php
+						$message = ob_get_clean();
 
-						$this->add_notice( 'wrong_pages', array(
-							'class'         => 'updated',
-							'message'       => $message,
-							'dismissible'   => true
-						), 20 );
+						$this->add_notice(
+							'wrong_pages',
+							array(
+								'class'       => 'updated',
+								'message'     => $message,
+								'dismissible' => true,
+							),
+							20
+						);
 
 						break;
 					}
@@ -416,42 +424,46 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				if ( isset( $pages['user'] ) ) {
 					$test = get_post( $pages['user'] );
 					if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
-						$this->add_notice( 'wrong_user_page', array(
-							'class'     => 'updated',
-							'message'   => '<p>' . __( 'Ultimate Member Setup Error: User page can not be a child page.', 'ultimate-member' ) . '</p>',
-						), 25 );
+						$this->add_notice(
+							'wrong_user_page',
+							array(
+								'class'   => 'updated',
+								'message' => '<p>' . esc_html__( 'Ultimate Member Setup Error: User page can not be a child page.', 'ultimate-member' ) . '</p>',
+							),
+							25
+						);
 					}
 				}
 
 				if ( isset( $pages['account'] ) ) {
 					$test = get_post( $pages['account'] );
 					if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
-						$this->add_notice( 'wrong_account_page', array(
-							'class'     => 'updated',
-							'message'   => '<p>' . __( 'Ultimate Member Setup Error: Account page can not be a child page.', 'ultimate-member' ) . '</p>',
-						), 30 );
+						$this->add_notice(
+							'wrong_account_page',
+							array(
+								'class'   => 'updated',
+								'message' => '<p>' . esc_html__( 'Ultimate Member Setup Error: Account page can not be a child page.', 'ultimate-member' ) . '</p>',
+							),
+							30
+						);
 					}
 				}
-
 			}
 		}
-
 
 		/**
 		* EXIF library notice
 		*/
 		public function exif_extension_notice() {
-			$hide_exif_notice = get_option( 'um_hide_exif_notice' );
-
-			if ( ! extension_loaded( 'exif' ) && ! $hide_exif_notice ) {
+			if ( ! extension_loaded( 'exif' ) ) {
 				$this->add_notice(
 					'exif_disabled',
 					array(
-						'class'   => 'updated',
+						'class'       => 'updated',
 						// translators: %s: query args.
-						'message' => '<p>' . sprintf( __( 'Exif is not enabled on your server. Mobile photo uploads will not be rotated correctly until you enable the exif extension. <a href="%s">Hide this notice</a>', 'ultimate-member' ), add_query_arg( 'um_adm_action', 'um_hide_exif_notice' ) ) . '</p>',
-					),
-					10
+						'message'     => '<p>' . esc_html__( 'Exif is not enabled on your server. Mobile photo uploads will not be rotated correctly until you enable the exif extension.', 'ultimate-member' ) . '</p>',
+						'dismissible' => true,
+					)
 				);
 			}
 		}
@@ -885,7 +897,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			}
 
 			$global_role = get_option( 'default_role' ); // WP Global settings
-			$caps        = get_role( $global_role )->capabilities;
+			$global_role = get_role( $global_role );
+			$caps        = ( null !== $global_role && ! empty( $global_role->capabilities ) ) ? $global_role->capabilities : array();
 			foreach ( array_keys( $caps ) as $cap ) {
 				if ( in_array( $cap, $arr_banned_caps, true ) ) {
 					ob_start();
@@ -910,7 +923,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			$um_global_role = UM()->options()->get( 'register_role' ); // UM Settings Global settings
 			if ( ! empty( $um_global_role ) ) {
-				$caps = get_role( $um_global_role )->capabilities;
+				$um_global_role = get_role( $um_global_role );
+				$caps           = ( null !== $um_global_role && ! empty( $um_global_role->capabilities ) ) ? $um_global_role->capabilities : array();
 				foreach ( array_keys( $caps ) as $cap ) {
 					if ( in_array( $cap, $arr_banned_caps, true ) ) {
 						ob_start();
@@ -966,7 +980,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					continue;
 				}
 
-				$caps = get_role( $role )->capabilities;
+				$role = get_role( $role );
+				$caps = ( null !== $role && ! empty( $role->capabilities ) ) ? $role->capabilities : array();
 				foreach ( array_keys( $caps ) as $cap ) {
 					if ( in_array( $cap, $arr_banned_caps, true ) ) {
 						$content .= '<br /><a target="_blank" href="' . get_edit_post_link( $form_id ) . '">' . get_the_title( $form_id ) . '</a> contains <strong>administrative role</strong>.';

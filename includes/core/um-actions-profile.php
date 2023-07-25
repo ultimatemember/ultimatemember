@@ -235,6 +235,14 @@ function um_user_edit_profile( $args, $form_data ) {
 				continue;
 			}
 
+			if ( is_array( $array ) ) {
+				$origin_data = UM()->fields()->get_field( $key );
+				if ( is_array( $origin_data ) ) {
+					// Merge data passed with original field data.
+					$array = array_merge( $origin_data, $array );
+				}
+			}
+
 			// required option? 'required_opt' - it's field attribute predefined in the field data in code
 			// @todo can be unnecessary. it's used in 1 place (user account).
 			if ( isset( $array['required_opt'] ) ) {
@@ -283,8 +291,7 @@ function um_user_edit_profile( $args, $form_data ) {
 			 */
 			$has_custom_source = apply_filters( "um_has_dropdown_options_source__{$key}", false );
 			if ( isset( $array['options'] ) && in_array( $array['type'], array( 'select', 'multiselect' ), true ) ) {
-
-				$options = array();
+				$options = $array['options'];
 				if ( ! empty( $array['custom_dropdown_options_source'] ) && function_exists( $array['custom_dropdown_options_source'] ) && ! $has_custom_source ) {
 					if ( ! UM()->fields()->is_source_blacklisted( $array['custom_dropdown_options_source'] ) ) {
 						$callback_result = call_user_func( $array['custom_dropdown_options_source'], $array['options'] );
@@ -293,7 +300,6 @@ function um_user_edit_profile( $args, $form_data ) {
 						}
 					}
 				}
-
 				$array['options'] = apply_filters( "um_custom_dropdown_options__{$key}", $options );
 			}
 
@@ -318,8 +324,20 @@ function um_user_edit_profile( $args, $form_data ) {
 			//the user cannot set invalid value in the hidden input at the page
 			if ( in_array( $array['type'], array( 'multiselect', 'checkbox', 'radio' ), true ) ) {
 				if ( ! empty( $args['submitted'][ $key ] ) && ! empty( $array['options'] ) ) {
-					$args['submitted'][ $key ] = array_map( 'stripslashes', array_map( 'trim', $args['submitted'][ $key ] ) );
-					$args['submitted'][ $key ] = array_intersect( $args['submitted'][ $key ], array_map( 'trim', $array['options'] ) );
+					if ( is_array( $args['submitted'][ $key ] ) ) {
+						$args['submitted'][ $key ] = array_map( 'stripslashes', array_map( 'trim', $args['submitted'][ $key ] ) );
+						if ( is_array( $array['options'] ) ) {
+							$args['submitted'][ $key ] = array_intersect( $args['submitted'][ $key ], array_map( 'trim', $array['options'] ) );
+						} else {
+							$args['submitted'][ $key ] = array_intersect( $args['submitted'][ $key ], array( trim( $array['options'] ) ) );
+						}
+					} else {
+						if ( is_array( $array['options'] ) ) {
+							$args['submitted'][ $key ] = array_intersect( array( stripslashes( trim( $args['submitted'][ $key ] ) ) ), array_map( 'trim', $array['options'] ) );
+						} else {
+							$args['submitted'][ $key ] = array_intersect( array( stripslashes( trim( $args['submitted'][ $key ] ) ) ), array( trim( $array['options'] ) ) );
+						}
+					}
 				}
 
 				// update empty user meta
@@ -1225,8 +1243,7 @@ function um_profile_header( $args ) {
 					<textarea id="um-meta-bio"
 							  data-character-limit="<?php echo esc_attr( UM()->options()->get( 'profile_bio_maxchars' ) ); ?>"
 							  placeholder="<?php esc_attr_e( 'Tell us a bit about yourself...', 'ultimate-member' ); ?>"
-							  name="<?php echo esc_attr( $description_key . '-' . $args['form_id'] ); ?>"
-							  id="<?php echo esc_attr( $description_key . '-' . $args['form_id'] ); ?>"><?php echo UM()->fields()->field_value( $description_key ) ?></textarea>
+							  name="<?php echo esc_attr( $description_key ); ?>"><?php echo UM()->fields()->field_value( $description_key ) ?></textarea>
 					<span class="um-meta-bio-character um-right"><span
 							class="um-bio-limit"><?php echo UM()->options()->get( 'profile_bio_maxchars' ); ?></span></span>
 

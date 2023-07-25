@@ -180,8 +180,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			 *
 			 * @since 1.3.x
 			 * @hook  um_account_shortcode_args_filter
-			 * @deprecated 2.6.8
-			 * @todo Fully deprecate since 2.6.9. Use `shortcode_atts_ultimatemember_account` instead.
+			 * @deprecated 2.6.9
 			 *
 			 * @param {array} $args Shortcode arguments.
 			 *
@@ -194,12 +193,32 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			 * }
 			 * add_filter( 'um_account_shortcode_args_filter', 'my_account_shortcode_args' );
 			 */
-			$args = apply_filters( 'um_account_shortcode_args_filter', $args );
+			$args = apply_filters_deprecated( 'um_account_shortcode_args_filter', array( $args ), '2.6.9', 'shortcode_atts_ultimatemember_account' );
 
 			$account_hash = md5( wp_json_encode( $args ) );
-			if ( in_array( $account_hash, $this->account_exist, true ) ) {
+
+			/**
+			 * Filters variable for enable singleton shortcode loading on the same page.
+			 * Note: Set it to `false` if you don't need to render the same form twice or more on the same page.
+			 *
+			 * @since 2.6.9
+			 *
+			 * @hook  um_ultimatemember_account_shortcode_disable_singleton
+			 *
+			 * @param {bool}  $disable Disabled singleton. By default, it's `true`.
+			 * @param {array} $args    Shortcode arguments.
+			 *
+			 * @return {bool} Disabled singleton or not.
+			 *
+			 * @example <caption>Turn off ability to use ultimatemember_account shortcode twice.</caption>
+			 * add_filter( 'um_ultimatemember_account_shortcode_disable_singleton', '__return_false' );
+			 */
+			$disable_singleton_shortcode = apply_filters( 'um_ultimatemember_account_shortcode_disable_singleton', true, $args );
+			if ( false === $disable_singleton_shortcode && in_array( $account_hash, $this->account_exist, true ) ) {
 				return '';
 			}
+
+			ob_start();
 
 			if ( ! empty( $args['tab'] ) ) {
 

@@ -1,6 +1,14 @@
-<?php if ( ! defined( 'ABSPATH' ) ) {
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+$url = add_query_arg(
+	array(
+		'um_adm_action' => 'purge_temp',
+		'_wpnonce'      => wp_create_nonce( 'purge_temp' ),
+	)
+);
 
 if ( $this->dir_size( 'temp' ) > 0.1 ) { ?>
 
@@ -12,8 +20,8 @@ if ( $this->dir_size( 'temp' ) > 0.1 ) { ?>
 	</p>
 
 	<p>
-		<a href="<?php echo esc_url( add_query_arg( 'um_adm_action', 'purge_temp' ) ); ?>" class="button">
-			<?php _e( 'Purge Temp', 'ultimate-member' ); ?>
+		<a href="<?php echo esc_url( $url ); ?>" class="button">
+			<?php esc_html_e( 'Purge Temp', 'ultimate-member' ); ?>
 		</a>
 	</p>
 

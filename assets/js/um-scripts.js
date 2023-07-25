@@ -713,4 +713,16 @@ jQuery(document).ready(function() {
 		}
 	}
 
+	jQuery( document.body ).on('click', '.um-toggle-password', function (){
+		let parent = jQuery(this).closest('.um-field-area-password');
+		let passwordField = parent.find('input');
+		let type = passwordField.attr('type');
+		if ( 'text' === type ) {
+			passwordField.attr('type', 'password');
+			parent.find('i').toggleClass('um-icon-eye um-icon-eye-disabled');
+		} else {
+			passwordField.attr('type', 'text');
+			parent.find('i').toggleClass('um-icon-eye um-icon-eye-disabled');
+		}
+	});
 });

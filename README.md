@@ -44,7 +44,7 @@ GNU Version 2 or Any Later Version
 
 ### IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-[Official Release Version: 2.6.8](https://github.com/ultimatemember/ultimatemember/releases/tag/2.6.8).
+[Official Release Version: 2.6.9](https://github.com/ultimatemember/ultimatemember/releases/tag/2.6.9).
 
 ## Changelog
 

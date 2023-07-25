@@ -107,10 +107,11 @@ jQuery(document).ready(function() {
 	//jQuery( 'textarea[id="um-meta-bio"]' ).on('change', um_update_bio_countdown ).keyup( um_update_bio_countdown ).trigger('change');
 
 	// Bio characters limit
-	jQuery( document.body ).on( 'change, keyup', 'textarea[id="um-meta-bio"]', function() {
+	jQuery( document.body ).on( 'change keyup', '#um-meta-bio', function() {
 		if ( typeof jQuery(this).val() !== 'undefined' ) {
-			var um_bio_limit = jQuery(this).attr( "data-character-limit" );
+			var um_bio_limit = jQuery(this).data( 'character-limit' );
 			var remaining = um_bio_limit - jQuery(this).val().length;
+
 			jQuery( 'span.um-meta-bio-character span.um-bio-limit' ).text( remaining );
 			if ( remaining  < 5 ) {
 				jQuery('span.um-meta-bio-character').css('color','red');
@@ -119,7 +120,22 @@ jQuery(document).ready(function() {
 			}
 		}
 	});
-	jQuery( 'textarea[id="um-meta-bio"]' ).trigger('change');
+	jQuery( '#um-meta-bio' ).trigger('change');
+
+	// Biography (description) fields syncing.
+	jQuery( '.um-profile form' ).each( function () {
+		let descKey = jQuery(this).data('description_key');
+		if ( jQuery(this).find( 'textarea[name="' + descKey + '"]' ).length ) {
+			jQuery( document.body ).on( 'change input', 'textarea[name="' + descKey + '"]', function ( e ) {
+				jQuery(this).parents( 'form' ).find( 'textarea[name="' + descKey + '"]' ).each( function() {
+					jQuery(this).val( e.currentTarget.value );
+					if ( jQuery('#um-meta-bio')[0] !== e.currentTarget && jQuery('#um-meta-bio')[0] === jQuery(this)[0] ) {
+						jQuery(this).trigger('change');
+					}
+				});
+			});
+		}
+	});
 
 
 	jQuery( '.um-profile-edit a.um_delete-item' ).on( 'click', function(e) {

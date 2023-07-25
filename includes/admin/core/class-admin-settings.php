@@ -689,6 +689,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'use_um_gravatar_default_image'         => array(
 						'sanitize' => 'bool',
 					),
+					'toggle_password'                       => array(
+						'sanitize' => 'bool',
+					),
 					'require_strongpass'                    => array(
 						'sanitize' => 'bool',
 					),
@@ -1087,6 +1090,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'label'       => __( 'Use Default plugin avatar as Gravatar\'s Default avatar', 'ultimate-member' ),
 										'tooltip'     => __( 'Do you want to use the plugin default avatar instead of the gravatar default photo (If the user did not upload a custom profile photo / avatar)', 'ultimate-member' ),
 										'conditional' => array( 'use_um_gravatar_default_builtin_image', '=', 'default' ),
+									),
+									array(
+										'id'      => 'toggle_password',
+										'type'    => 'checkbox',
+										'label'   => __( 'Show/hide password button', 'ultimate-member' ),
+										'tooltip' => __( 'Enable visibility for show/hide password button for the password field-type.', 'ultimate-member' ),
 									),
 									array(
 										'id'      => 'require_strongpass',
@@ -3072,10 +3081,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 */
 		public function settings_override_templates_tab() {
 			$um_check_version = get_transient( 'um_check_template_versions' );
+
+			$check_url = add_query_arg(
+				array(
+					'um_adm_action' => 'check_templates_version',
+					'_wpnonce'      => wp_create_nonce( 'check_templates_version' ),
+				)
+			);
 			?>
 
 			<p class="description" style="margin: 20px 0 0 0;">
-				<a href="<?php echo esc_url( add_query_arg( 'um_adm_action', 'check_templates_version' ) ); ?>" class="button" style="margin-right: 10px;">
+				<a href="<?php echo esc_url( $check_url ); ?>" class="button" style="margin-right: 10px;">
 					<?php esc_html_e( 'Re-check templates', 'ultimate-member' ); ?>
 				</a>
 				<?php
