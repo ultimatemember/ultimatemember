@@ -1241,6 +1241,7 @@ function um_profile_header( $args ) {
 
 				<div class="um-meta-text">
 					<textarea id="um-meta-bio"
+							  data-html="<?php echo esc_attr( UM()->options()->get( 'profile_show_html_bio' ) ); ?>"
 							  data-character-limit="<?php echo esc_attr( UM()->options()->get( 'profile_bio_maxchars' ) ); ?>"
 							  placeholder="<?php esc_attr_e( 'Tell us a bit about yourself...', 'ultimate-member' ); ?>"
 							  name="<?php echo esc_attr( $description_key ); ?>"><?php echo UM()->fields()->field_value( $description_key ) ?></textarea>
