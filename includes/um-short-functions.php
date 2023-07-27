@@ -1663,7 +1663,7 @@ function um_can_edit_field( $data ) {
 			$can_edit = false;
 		} else {
 			if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
-				if ( isset( $data['editable'] ) && $data['editable'] == 0 ) {
+				if ( empty( $data['editable'] ) ) {
 					$can_edit = false;
 				} else {
 					if ( ! um_is_user_himself() ) {
