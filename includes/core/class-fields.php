@@ -2767,7 +2767,22 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					} else {
 						$textarea_field_value = '';
 						if ( ! empty( $field_value ) ) {
-							$textarea_field_value = ! empty( $data['html'] ) ? $field_value : wp_strip_all_tags( $field_value );
+							$profile_custom_settings = get_post_meta( $this->global_args['form_id'], '_um_profile_use_custom_settings', true );
+							if ( 1 === $profile_custom_settings ) {
+								$bio_html = get_post_meta( $this->global_args['form_id'], '_um_profile_show_bio', true );
+							} else {
+								if ( UM()->options()->get( 'profile_show_html_bio' ) ) {
+									$bio_html = 1;
+								} else {
+									$bio_html = 0;
+								}
+							}
+
+							if ( 1 === (int) $bio_html && array_key_exists( 'html', $data ) && 1 === (int) $data['html'] ) {
+								$textarea_field_value = $field_value;
+							} else {
+								$textarea_field_value = wp_strip_all_tags( $field_value );
+							}
 						}
 						$output .= '<textarea  ' . $disabled . '  style="height: ' . esc_attr( $data['height'] ) . ';" class="' . esc_attr( $this->get_class( $key, $data ) ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_id ) . '" placeholder="' . esc_attr( $placeholder ) . '">' . esc_textarea( $textarea_field_value ) . '</textarea>';
 					}

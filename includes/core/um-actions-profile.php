@@ -1237,14 +1237,28 @@ function um_profile_header( $args ) {
 					} ?>
 				</div>
 
-			<?php } elseif ( UM()->fields()->editing == true && $args['show_bio'] ) { ?>
+			<?php } elseif ( UM()->fields()->editing == true && $args['show_bio'] ) {
+				if ( ! empty( $args['custom_fields']['description'] ) ) {
+					if ( array_key_exists( 'html', $args['custom_fields']['description'] ) && 1 === (int) $args['custom_fields']['description']['html'] && 1 === (int) UM()->options()->get( 'profile_show_html_bio' ) ) {
+						$description_value = UM()->fields()->field_value( $description_key );
+					} else {
+						$description_value = wp_strip_all_tags( UM()->fields()->field_value( $description_key ) );
+					}
+				} else {
+					if ( 1 === (int) UM()->options()->get( 'profile_show_html_bio' ) ) {
+						$description_value = UM()->fields()->field_value( $description_key );
+					} else {
+						$description_value = wp_strip_all_tags( UM()->fields()->field_value( $description_key ) );
+					}
+				}
+				?>
 
 				<div class="um-meta-text">
 					<textarea id="um-meta-bio"
 							  data-html="<?php echo esc_attr( UM()->options()->get( 'profile_show_html_bio' ) ); ?>"
 							  data-character-limit="<?php echo esc_attr( UM()->options()->get( 'profile_bio_maxchars' ) ); ?>"
 							  placeholder="<?php esc_attr_e( 'Tell us a bit about yourself...', 'ultimate-member' ); ?>"
-							  name="<?php echo esc_attr( $description_key ); ?>"><?php echo UM()->fields()->field_value( $description_key ) ?></textarea>
+							  name="<?php echo esc_attr( $description_key ); ?>"><?php echo $description_value; ?></textarea>
 					<span class="um-meta-bio-character um-right"><span
 							class="um-bio-limit"><?php echo UM()->options()->get( 'profile_bio_maxchars' ); ?></span></span>
 
