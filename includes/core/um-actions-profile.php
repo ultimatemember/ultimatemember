@@ -1251,16 +1251,22 @@ function um_profile_header( $args ) {
 						$description_value = wp_strip_all_tags( UM()->fields()->field_value( $description_key ) );
 					}
 				}
+				if ( array_key_exists( 'max_chars', $args['custom_fields']['description'] ) ) {
+					$limit = $args['custom_fields']['description']['max_chars'];
+				} else {
+					$limit = UM()->options()->get( 'profile_bio_maxchars' );
+				}
 				?>
 
 				<div class="um-meta-text">
 					<textarea id="um-meta-bio"
 							  data-html="<?php echo esc_attr( UM()->options()->get( 'profile_show_html_bio' ) ); ?>"
-							  data-character-limit="<?php echo esc_attr( UM()->options()->get( 'profile_bio_maxchars' ) ); ?>"
+							  data-character-limit="<?php echo esc_attr( $limit ); ?>"
 							  placeholder="<?php esc_attr_e( 'Tell us a bit about yourself...', 'ultimate-member' ); ?>"
 							  name="<?php echo esc_attr( $description_key ); ?>"><?php echo $description_value; ?></textarea>
-					<span class="um-meta-bio-character um-right"><span
-							class="um-bio-limit"><?php echo UM()->options()->get( 'profile_bio_maxchars' ); ?></span></span>
+					<span class="um-meta-bio-character um-right">
+						<span class="um-bio-limit"><?php echo esc_html( $limit ); ?></span>
+					</span>
 
 					<?php if ( UM()->fields()->is_error( $description_key ) ) {
 						echo UM()->fields()->field_error( UM()->fields()->show_error( $description_key ), true );
