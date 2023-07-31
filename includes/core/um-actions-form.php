@@ -673,16 +673,33 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 			}
 		}
 
-		if ( isset( $submitted_data['description'] ) ) {
+		$description_key  = UM()->profile()->get_show_bio_key( $array );
+		if ( isset( $submitted_data['description'] ) && $description_key === $array['metakey'] ) {
 			$max_chars        = UM()->options()->get( 'profile_bio_maxchars' );
 			$profile_show_bio = UM()->options()->get( 'profile_show_bio' );
-			if ( ! UM()->options()->get( 'profile_show_html_bio' ) ) {
-				$description_value = $submitted_data['description'];
+			$description_key  = UM()->profile()->get_show_bio_key( $array );
+
+			if ( array_key_exists( $description_key, $submitted_data['submitted'] ) ) {
+
+				if ( array_key_exists( 'max_chars', $array ) && ! empty( $array['max_chars'] ) ) {
+					$max_chars = $array['max_chars'];
+				}
+
+				if ( array_key_exists( 'html', $array ) && 1 === (int) $array['html'] && 1 === (int) UM()->options()->get( 'profile_show_html_bio' ) ) {
+					$description_value = wp_strip_all_tags( $submitted_data[ $description_key ] );
+				} else {
+					$description_value = $submitted_data[ $description_key ];
+				}
 			} else {
-				$description_value = wp_strip_all_tags( $submitted_data['description'] );
+				if ( ! UM()->options()->get( 'profile_show_html_bio' ) ) {
+					$description_value = $submitted_data['description'];
+				} else {
+					$description_value = wp_strip_all_tags( $submitted_data['description'] );
+				}
 			}
 
 			if ( $profile_show_bio ) {
+
 				if ( mb_strlen( str_replace( array( "\r\n", "\n", "\r\t", "\t" ), ' ', $description_value ) ) > $max_chars && $max_chars ) {
 					// translators: %s: max chars.
 					UM()->form()->add_error( 'description', sprintf( __( 'Your user description must contain less than %s characters', 'ultimate-member' ), $max_chars ) );
@@ -954,22 +971,6 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 				break;
 
 		}
-
-//		if ( isset( $submitted_data['description'] ) ) {
-//			echo '<pre>';
-//			print_r($submitted_data);
-//			echo '</pre>';
-//			exit();
-//			$max_chars = UM()->options()->get( 'profile_bio_maxchars' );
-//			$profile_show_bio = UM()->options()->get( 'profile_show_bio' );
-//
-//			if ( $profile_show_bio ) {
-//				if ( mb_strlen( str_replace( array( "\r\n", "\n", "\r\t", "\t" ), ' ', $submitted_data['description'] ) ) > $max_chars && $max_chars ) {
-//					// translators: %s: max chars.
-//					UM()->form()->add_error( 'description', sprintf( __( 'Your user description must contain less than %s characters', 'ultimate-member' ), $max_chars ) );
-//				}
-//			}
-//		}
 	} // end if ( isset in args array )
 }
 add_action( 'um_submit_form_errors_hook_', 'um_submit_form_errors_hook_', 10, 2 );
