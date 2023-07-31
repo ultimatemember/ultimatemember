@@ -673,7 +673,7 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 			}
 		}
 
-		$description_key  = UM()->profile()->get_show_bio_key( $array );
+		$description_key = UM()->profile()->get_show_bio_key( $array );
 		if ( isset( $submitted_data['description'] ) && $description_key === $array['metakey'] ) {
 			$max_chars        = UM()->options()->get( 'profile_bio_maxchars' );
 			$profile_show_bio = UM()->options()->get( 'profile_show_bio' );
