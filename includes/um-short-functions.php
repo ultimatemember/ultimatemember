@@ -1592,49 +1592,66 @@ function um_can_view_field( $data ) {
 	return apply_filters( 'um_can_view_field', $can_view, $data );
 }
 
-
 /**
  * Checks if user can view profile
  *
- * @param $user_id
+ * @param int $user_id
  *
  * @return bool
  */
 function um_can_view_profile( $user_id ) {
+	$can_view = true;
+	$user_id  = absint( $user_id );
 	if ( ! is_user_logged_in() ) {
-		return ! UM()->user()->is_private_profile( $user_id );
-	}
+		$can_view = ! UM()->user()->is_private_profile( $user_id );
+	} else {
+		$temp_id = um_user( 'ID' );
+		um_fetch_user( get_current_user_id() );
 
-	$temp_id = um_user('ID');
-	um_fetch_user( get_current_user_id() );
+		if ( get_current_user_id() !== $user_id ) {
+			if ( ! um_user( 'can_view_all' ) ) {
+				um_fetch_user( $temp_id );
+				$can_view = false;
+			} elseif ( ! um_user( 'can_access_private_profile' ) && UM()->user()->is_private_profile( $user_id ) ) {
+				um_fetch_user( $temp_id );
+				$can_view = false;
+			} elseif ( um_user( 'can_view_roles' ) ) {
+				$can_view_roles = um_user( 'can_view_roles' );
 
-	if ( ! um_user( 'can_view_all' ) && $user_id != get_current_user_id() && is_user_logged_in() ) {
-		um_fetch_user( $temp_id );
-		return false;
-	}
+				if ( ! is_array( $can_view_roles ) ) {
+					$can_view_roles = array();
+				}
 
-	if ( ! um_user( 'can_access_private_profile' ) && UM()->user()->is_private_profile( $user_id ) ) {
-		um_fetch_user( $temp_id );
-		return false;
-	}
-
-	if ( um_user( 'can_view_roles' ) && $user_id != get_current_user_id() ) {
-		$can_view_roles = um_user( 'can_view_roles' );
-
-		if ( ! is_array( $can_view_roles ) ) {
-			$can_view_roles = array();
+				if ( count( $can_view_roles ) && count( array_intersect( UM()->roles()->get_all_user_roles( $user_id ), $can_view_roles ) ) <= 0 ) {
+					um_fetch_user( $temp_id );
+					$can_view = false;
+				}
+			}
 		}
 
-		if ( count( $can_view_roles ) && count( array_intersect( UM()->roles()->get_all_user_roles( $user_id ), $can_view_roles ) ) <= 0 ) {
-			um_fetch_user( $temp_id );
-			return false;
-		}
+		um_fetch_user( $temp_id );
 	}
 
-	um_fetch_user( $temp_id );
-	return true;
+	/**
+	 * Filters the marker for user capabilities to view other profile
+	 *
+	 * @param {bool} $can_view Can view profile marker.
+	 * @param {int}  $user_id  User ID requested from profile page.
+	 *
+	 * @return {bool} Can view profile marker.
+	 *
+	 * @since 2.6.10
+	 * @hook um_can_view_profile
+	 *
+	 * @example <caption>Set that only user with ID=5 can be viewed on Profile page.</caption>
+	 * function my_um_can_view_profile( $can_view, $user_id ) {
+	 *     $can_view = 5 === $user_id;
+	 *     return $can_view;
+	 * }
+	 * add_filter( 'um_can_view_profile', 'my_um_can_view_profile', 10, 2 );
+	 */
+	return apply_filters( 'um_can_view_profile', $can_view, $user_id );
 }
-
 
 /**
  * boolean check for not same user
