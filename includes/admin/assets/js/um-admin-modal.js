@@ -231,6 +231,15 @@ function um_admin_modal_add_attr( id, value ) {
 
 jQuery(document).ready(function() {
 
+	// Open links from the "Review Registration Details" modal in a new tab.
+	jQuery( document.body ).on( 'click', '#UM_preview_registration a', function ( e ) {
+		Object.assign( document.createElement( 'a' ), {
+			target: '_blank',
+			rel: 'noopener noreferrer',
+			href: e.currentTarget.href
+		} ).click();
+	} );
+
 	/**
 		disable link
 	**/
