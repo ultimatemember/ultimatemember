@@ -49,12 +49,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 					'value'   => ! empty( $role['_um_can_access_private_profile'] ) ? $role['_um_can_access_private_profile'] : 0,
 				),
 				array(
-					'id'      => '_um_can_access_private_profile',
+					'id'      => '_um_show_profile_not_loggedin',
 					'type'    => 'checkbox',
 					'name'    => '_um_show_profile_not_loggedin',
 					'label'   => __( 'Show their profiles for not logged-in users', 'ultimate-member' ),
 					'tooltip' => __( 'Can this role view private profiles?', 'ultimate-member' ),
-					'value'   => ! empty( $role['_um_show_profile_not_loggedin'] ) ? $role['_um_show_profile_not_loggedin'] : 1,
+					'value'   => ! empty( $role['_um_show_profile_not_loggedin'] ) ? $role['_um_show_profile_not_loggedin'] : 0,
 				),
 				array(
 					'id'      => '_um_profile_noindex',

@@ -133,6 +133,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					'_um_can_access_private_profile' => array(
 						'sanitize' => 'bool',
 					),
+					'_show_profile_not_loggedin'     => array(
+						'sanitize' => 'bool',
+					),
 					'_um_profile_noindex'            => array(
 						'sanitize' => array( $this, 'sanitize_profile_noindex' ),
 					),
