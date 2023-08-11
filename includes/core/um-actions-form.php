@@ -573,9 +573,14 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 		}
 
 		if ( isset( $array['max_words'] ) && $array['max_words'] > 0 ) {
-			// count words without html tags
-			$without_tags = wp_strip_all_tags( $submitted_data[ $key ] );
-			if ( str_word_count( $without_tags, 0, 'éèàôù' ) > $array['max_words'] ) {
+			if ( array_key_exists( 'html', $array ) && 1 === (int) $array['html'] ) {
+				$text_value = wp_strip_all_tags( $submitted_data[ $key ] );
+			} else {
+				// count words without html tags
+				$text_value = $submitted_data[ $key ];
+			}
+
+			if ( str_word_count( $text_value, 0, '0123456789éèàôù' ) > $array['max_words'] ) {
 				// translators: %s: max words.
 				UM()->form()->add_error( $key, sprintf( __( 'You are only allowed to enter a maximum of %s words', 'ultimate-member' ), $array['max_words'] ) );
 			}
@@ -665,6 +670,40 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 			if ( isset( $submitted_data[ $key ] ) && $submitted_data[ $key ] > $array['max'] ) {
 				// translators: %s: max limit.
 				UM()->form()->add_error( $key, sprintf( __( 'Maximum number limit is %s', 'ultimate-member' ), $array['max'] ) );
+			}
+		}
+
+		$description_key = UM()->profile()->get_show_bio_key( $array );
+		if ( isset( $submitted_data['description'] ) && $description_key === $array['metakey'] ) {
+			$max_chars        = UM()->options()->get( 'profile_bio_maxchars' );
+			$profile_show_bio = UM()->options()->get( 'profile_show_bio' );
+			$description_key  = UM()->profile()->get_show_bio_key( $array );
+
+			if ( array_key_exists( $description_key, $submitted_data['submitted'] ) ) {
+
+				if ( array_key_exists( 'max_chars', $array ) && ! empty( $array['max_chars'] ) ) {
+					$max_chars = $array['max_chars'];
+				}
+
+				if ( array_key_exists( 'html', $array ) && 1 === (int) $array['html'] && 1 === (int) UM()->options()->get( 'profile_show_html_bio' ) ) {
+					$description_value = wp_strip_all_tags( $submitted_data[ $description_key ] );
+				} else {
+					$description_value = $submitted_data[ $description_key ];
+				}
+			} else {
+				if ( ! UM()->options()->get( 'profile_show_html_bio' ) ) {
+					$description_value = $submitted_data['description'];
+				} else {
+					$description_value = wp_strip_all_tags( $submitted_data['description'] );
+				}
+			}
+
+			if ( $profile_show_bio ) {
+
+				if ( mb_strlen( str_replace( array( "\r\n", "\n", "\r\t", "\t" ), ' ', $description_value ) ) > $max_chars && $max_chars ) {
+					// translators: %s: max chars.
+					UM()->form()->add_error( 'description', sprintf( __( 'Your user description must contain less than %s characters', 'ultimate-member' ), $max_chars ) );
+				}
 			}
 		}
 
@@ -931,18 +970,6 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 
 				break;
 
-		}
-
-		if ( isset( $submitted_data['description'] ) ) {
-			$max_chars = UM()->options()->get( 'profile_bio_maxchars' );
-			$profile_show_bio = UM()->options()->get( 'profile_show_bio' );
-
-			if ( $profile_show_bio ) {
-				if ( mb_strlen( str_replace( array( "\r\n", "\n", "\r\t", "\t" ), ' ', $submitted_data['description'] ) ) > $max_chars && $max_chars ) {
-					// translators: %s: max chars.
-					UM()->form()->add_error( 'description', sprintf( __( 'Your user description must contain less than %s characters', 'ultimate-member' ), $max_chars ) );
-				}
-			}
 		}
 	} // end if ( isset in args array )
 }

@@ -110,7 +110,12 @@ jQuery(document).ready(function() {
 	jQuery( document.body ).on( 'change keyup', '#um-meta-bio', function() {
 		if ( typeof jQuery(this).val() !== 'undefined' ) {
 			var um_bio_limit = jQuery(this).data( 'character-limit' );
-			var remaining = um_bio_limit - jQuery(this).val().length;
+			var bio_html = jQuery(this).attr('data-html');
+			if ( parseInt( bio_html ) === 1 ){
+				var remaining = um_bio_limit - jQuery(this).val().replace(/(<([^>]+)>)/ig,'').length;
+			} else {
+				var remaining = um_bio_limit - jQuery(this).val().length;
+			}
 
 			jQuery( 'span.um-meta-bio-character span.um-bio-limit' ).text( remaining );
 			if ( remaining  < 5 ) {
