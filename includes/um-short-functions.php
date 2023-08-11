@@ -709,7 +709,7 @@ function um_user_submitted_registration_formatted( $style = false ) {
 			UM()->fields()->get_fields = $fields;
 
 			foreach ( $fields as $key => $array ) {
-				if ( isset( $array['type'] ) && $array['type'] == 'row' ) {
+				if ( isset( $array['type'] ) && 'row' === $array['type'] ) {
 					$rows[ $key ] = $array;
 					unset( UM()->fields()->get_fields[ $key ] ); // not needed now
 				}
@@ -747,7 +747,6 @@ function um_user_submitted_registration_formatted( $style = false ) {
 						$cols_num = $col_split[ $c ];
 
 						// sub row fields
-						$subrow_fields = null;
 						$subrow_fields = UM()->fields()->get_fields_in_subrow( $row_fields, $c );
 
 						if ( is_array( $subrow_fields ) ) {
@@ -766,7 +765,6 @@ function um_user_submitted_registration_formatted( $style = false ) {
 										$output .= um_user_submited_display( $key, $data['title'] );
 									}
 								}
-
 							} elseif ( $cols_num == 2 ) {
 
 								$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
@@ -782,7 +780,6 @@ function um_user_submitted_registration_formatted( $style = false ) {
 										$output .= um_user_submited_display( $key, $data['title'] );
 									}
 								}
-
 							} else {
 
 								$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
@@ -805,29 +802,19 @@ function um_user_submitted_registration_formatted( $style = false ) {
 										$output .= um_user_submited_display( $key, $data['title'] );
 									}
 								}
-
 							}
-
 						}
-
 					}
-
 				}
-
-
 			} // endfor
-
 		}
 	}
-
 
 	if ( $style ) {
 		$output .= '</div>';
 	}
 
-
 	return $output;
-
 }
 
 /**
@@ -882,7 +869,7 @@ function um_user_submited_display( $k, $title, $data = array(), $style = true ) 
 		}
 
 		if ( ! empty( $filedata['original_name'] ) ) {
-			$v = '<a href="' . esc_attr( $baseurl . um_user( 'ID' ) . '/' . $file ) . '">' . esc_html( $filedata['original_name'] ) . '</a>';
+			$v = '<a class="um-preview-upload" target="_blank" href="' . esc_attr( $baseurl . um_user( 'ID' ) . '/' . $file ) . '">' . esc_html( $filedata['original_name'] ) . '</a>';
 		} else {
 			$v = $baseurl . um_user( 'ID' ) . '/' . $file;
 		}

@@ -234,7 +234,7 @@ jQuery(document).ready(function() {
 	/**
 		disable link
 	**/
-	jQuery(document.body).on('click', '.um-admin-builder a, .um-admin-modal a', function(e){
+	jQuery(document.body).on('click', '.um-admin-builder a, .um-admin-modal a:not(.um-preview-upload)', function(e){
 		e.preventDefault();
 		return false;
 	});
