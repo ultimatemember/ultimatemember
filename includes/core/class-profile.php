@@ -439,6 +439,8 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 							}
 
 							if ( $bio_html ) {
+								$data['html'] = true;
+								$value = um_filtered_value( $key, $data );
 								$res = wp_kses_post( make_clickable( wpautop( $value ) ) );
 							} else {
 								$res = esc_html( $value );

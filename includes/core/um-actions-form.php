@@ -710,10 +710,18 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 						$max_chars = $array['max_chars'];
 					}
 
-					if ( ! empty( $array['html'] ) && $bio_html ) {
-						$description_value = wp_strip_all_tags( $submitted_data[ $description_key ] );
+					if ( $show_bio ) {
+						if ( ! empty( $array['html'] ) && $bio_html ) {
+							$description_value = wp_strip_all_tags( $submitted_data[ $description_key ] );
+						} else {
+							$description_value = $submitted_data[ $description_key ];
+						}
 					} else {
-						$description_value = $submitted_data[ $description_key ];
+						if ( ! empty( $array['html'] ) ) {
+							$description_value = wp_strip_all_tags( $submitted_data[ $description_key ] );
+						} else {
+							$description_value = $submitted_data[ $description_key ];
+						}
 					}
 				}
 			}

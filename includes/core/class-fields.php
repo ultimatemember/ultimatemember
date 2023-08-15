@@ -2766,25 +2766,36 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						// User 'description' field uses `<textarea>` block everytime.
 						$textarea_field_value = '';
 						if ( ! empty( $field_value ) ) {
+							$show_bio       = false;
 							$bio_html       = false;
 							$global_setting = UM()->options()->get( 'profile_show_html_bio' );
 							if ( 'profile' === $this->global_args['mode'] ) {
 								if ( ! empty( $this->global_args['use_custom_settings'] ) ) {
 									if ( ! empty( $this->global_args['show_bio'] ) ) {
+										$show_bio = true;
 										$bio_html = ! empty( $global_setting );
 									}
 								} else {
 									$global_show_bio = UM()->options()->get( 'profile_show_bio' );
 									if ( ! empty( $global_show_bio ) ) {
+										$show_bio = true;
 										$bio_html = ! empty( $global_setting );
 									}
 								}
 							}
 
-							if ( true === $bio_html && ! empty( $data['html'] ) ) {
-								$textarea_field_value = $field_value;
+							if ( $show_bio ) {
+								if ( true === $bio_html && ! empty( $data['html'] ) ) {
+									$textarea_field_value = $field_value;
+								} else {
+									$textarea_field_value = wp_strip_all_tags( $field_value );
+								}
 							} else {
-								$textarea_field_value = wp_strip_all_tags( $field_value );
+								if ( ! empty( $data['html'] ) ) {
+									$textarea_field_value = $field_value;
+								} else {
+									$textarea_field_value = wp_strip_all_tags( $field_value );
+								}
 							}
 						}
 						$output .= '<textarea  ' . $disabled . '  style="height: ' . esc_attr( $data['height'] ) . ';" class="' . esc_attr( $this->get_class( $key, $data ) ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_id ) . '" placeholder="' . esc_attr( $placeholder ) . '">' . esc_textarea( $textarea_field_value ) . '</textarea>';
@@ -4276,25 +4287,36 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						$bio_key = UM()->profile()->get_show_bio_key( $this->global_args );
 						if ( $bio_key === $data['metakey'] ) {
+							$show_bio       = false;
 							$bio_html       = false;
 							$global_setting = UM()->options()->get( 'profile_show_html_bio' );
 							if ( 'profile' === $this->global_args['mode'] ) {
 								if ( ! empty( $this->global_args['use_custom_settings'] ) ) {
 									if ( ! empty( $this->global_args['show_bio'] ) ) {
+										$show_bio = true;
 										$bio_html = ! empty( $global_setting );
 									}
 								} else {
 									$global_show_bio = UM()->options()->get( 'profile_show_bio' );
 									if ( ! empty( $global_show_bio ) ) {
+										$show_bio = true;
 										$bio_html = ! empty( $global_setting );
 									}
 								}
 							}
 
-							if ( true === $bio_html && ! empty( $data['html'] ) ) {
-								$res = make_clickable( wpautop( wp_kses_post( $res ) ) );
+							if ( $show_bio ) {
+								if ( true === $bio_html && ! empty( $data['html'] ) ) {
+									$res = wp_kses_post( make_clickable( wpautop( $res ) ) );
+								} else {
+									$res = esc_html( $res );
+								}
 							} else {
-								$res = esc_html( $res );
+								if ( ! empty( $data['html'] ) ) {
+									$res = wp_kses_post( make_clickable( wpautop( $res ) ) );
+								} else {
+									$res = esc_html( $res );
+								}
 							}
 
 							$res = nl2br( $res );
