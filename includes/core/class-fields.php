@@ -1544,37 +1544,34 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			return __( 'Custom Field', 'ultimate-member' );
 		}
 
-
 		/**
 		 * Get form fields
 		 *
 		 * @return array
 		 */
-		function get_fields() {
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_get_form_fields
-			 * @description Extend form fields
-			 * @input_vars
-			 * [{"var":"$fields","type":"array","desc":"Selected filter value"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_get_form_fields', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_get_form_fields', 'my_form_fields', 10, 1 );
-			 * function my_form_fields( $fields ) {
-			 *     // your code here
-			 *     return $fields;
-			 * }
-			 * ?>
-			 */
-			$this->fields = apply_filters( 'um_get_form_fields', array() );
+		public function get_fields() {
+			if ( empty( $this->fields ) ) {
+				/**
+				 * Filters the form fields.
+				 *
+				 * @param {array} $fields Form fields.
+				 *
+				 * @return {array} Form fields.
+				 *
+				 * @since 1.3.x
+				 * @hook um_get_form_fields
+				 *
+				 * @example <caption>Extend form fields.</caption>
+				 * function my_form_fields( $fields ) {
+				 *     // your code here
+				 *     return $fields;
+				 * }
+				 * add_filter( 'um_get_form_fields', 'my_form_fields' );
+				 */
+				$this->fields = apply_filters( 'um_get_form_fields', $this->fields );
+			}
 			return $this->fields;
 		}
-
 
 		/**
 		 * Get specific field
