@@ -184,6 +184,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
   - Fixed: Make links clickable in the Registration Details
   - Fixed: WP_Users_Query on wp-admin > Users screen
   - Fixed: Performance for `um_get_form_fields` hook
+  - Fixed: Admin Modal JS library conflict with bootstrap.js
 
 * Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade
 
