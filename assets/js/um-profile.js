@@ -88,41 +88,22 @@ jQuery(document).ready(function() {
 		return false;
 	});
 
-	/*function um_update_bio_countdown() {
-		//
-		jQuery(this)
-		if ( typeof jQuery('textarea[id="um-meta-bio"]').val() !== 'undefined' ){
-			var um_bio_limit = jQuery('textarea[id="um-meta-bio"]').attr( "data-character-limit" );
-			var remaining = um_bio_limit - jQuery('textarea[id="um-meta-bio"]').val().length;
-			jQuery('span.um-meta-bio-character span.um-bio-limit').text( remaining );
-			if ( remaining  < 5 ) {
-				jQuery('span.um-meta-bio-character').css('color','red');
-			} else {
-				jQuery('span.um-meta-bio-character').css('color','');
-			}
-		}
-	}*/
-
-	//um_update_bio_countdown();
-	//jQuery( 'textarea[id="um-meta-bio"]' ).on('change', um_update_bio_countdown ).keyup( um_update_bio_countdown ).trigger('change');
-
 	// Bio characters limit
 	jQuery( document.body ).on( 'change keyup', '#um-meta-bio', function() {
 		if ( typeof jQuery(this).val() !== 'undefined' ) {
-			var um_bio_limit = jQuery(this).data( 'character-limit' );
-			var bio_html = jQuery(this).attr('data-html');
-			if ( parseInt( bio_html ) === 1 ){
-				var remaining = um_bio_limit - jQuery(this).val().replace(/(<([^>]+)>)/ig,'').length;
-			} else {
-				var remaining = um_bio_limit - jQuery(this).val().length;
+			let um_bio_limit = jQuery(this).data( 'character-limit' );
+			let bio_html     = jQuery(this).data( 'html' );
+
+			let remaining = um_bio_limit - jQuery(this).val().length;
+			if ( parseInt( bio_html ) === 1 ) {
+				remaining = um_bio_limit - jQuery(this).val().replace(/(<([^>]+)>)/ig,'').length;
 			}
 
+			remaining = remaining < 0 ? 0 : remaining;
+
 			jQuery( 'span.um-meta-bio-character span.um-bio-limit' ).text( remaining );
-			if ( remaining  < 5 ) {
-				jQuery('span.um-meta-bio-character').css('color','red');
-			} else {
-				jQuery('span.um-meta-bio-character').css('color','');
-			}
+			let color = remaining < 5 ? 'red' : '';
+			jQuery('span.um-meta-bio-character').css( 'color', color );
 		}
 	});
 	jQuery( '#um-meta-bio' ).trigger('change');
@@ -158,5 +139,4 @@ jQuery(document).ready(function() {
 	jQuery( '.um-profile-nav a' ).on( 'touchend', function(e) {
 		jQuery( e.currentTarget).trigger( "click" );
 	});
-
 });

@@ -1662,7 +1662,7 @@ function um_is_user_himself() {
 function um_can_edit_field( $data ) {
 	$can_edit = true;
 
-	if ( ! empty( UM()->fields()->editing ) && isset( UM()->fields()->set_mode ) && UM()->fields()->set_mode == 'profile' ) {
+	if ( true === UM()->fields()->editing && isset( UM()->fields()->set_mode ) && UM()->fields()->set_mode == 'profile' ) {
 		if ( ! is_user_logged_in() ) {
 			$can_edit = false;
 		} else {
