@@ -997,6 +997,54 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 
 		}
 	} // end if ( isset in args array )
+
+	// Description in header
+	if ( isset( $form_data['mode'] ) && 'profile' === $form_data['mode'] ) {
+		$description_key = UM()->profile()->get_show_bio_key( $form_data );
+		if ( ! UM()->form()->has_error( $description_key ) ) {
+			if ( ! empty( $submitted_data[ $description_key ] ) ) {
+				$field_exists = false;
+				if ( ! empty( $form_data['custom_fields'] ) ) {
+					$custom_fields = maybe_unserialize( $form_data['custom_fields'] );
+					if ( array_key_exists( $description_key, $custom_fields ) ) {
+						$field_exists = true;
+					}
+				}
+
+				if ( ! $field_exists ) {
+					$show_bio       = false;
+					$bio_html       = false;
+					$global_setting = UM()->options()->get( 'profile_show_html_bio' );
+					if ( ! empty( $form_data['use_custom_settings'] ) ) {
+						if ( ! empty( $form_data['show_bio'] ) ) {
+							$show_bio = true;
+							$bio_html = ! empty( $global_setting );
+						}
+					} else {
+						$global_show_bio = UM()->options()->get( 'profile_show_bio' );
+						if ( ! empty( $global_show_bio ) ) {
+							$show_bio = true;
+							$bio_html = ! empty( $global_setting );
+						}
+					}
+
+					if ( $show_bio ) {
+						$max_chars = UM()->options()->get( 'profile_bio_maxchars' );
+						if ( $bio_html ) {
+							$description_value = wp_strip_all_tags( $submitted_data[ $description_key ] );
+						} else {
+							$description_value = $submitted_data[ $description_key ];
+						}
+					}
+
+					if ( ! empty( $description_value ) && ! empty( $max_chars ) && mb_strlen( str_replace( array( "\r\n", "\n", "\r\t", "\t" ), ' ', $description_value ) ) > $max_chars ) {
+						// translators: %s: max chars.
+						UM()->form()->add_error( $description_key, sprintf( __( 'Your user description must contain less than %s characters', 'ultimate-member' ), $max_chars ) );
+					}
+				}
+			}
+		}
+	}
 }
 add_action( 'um_submit_form_errors_hook_', 'um_submit_form_errors_hook_', 10, 2 );
 
