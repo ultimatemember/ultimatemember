@@ -770,6 +770,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 													);
 												}
 												$form[ $k ] = wp_kses( $form[ $k ], $allowed_html );
+												add_filter( 'wp_kses_allowed_html', array( &$this, 'wp_kses_user_desc' ), 10, 2 );
 											} else {
 												$form[ $k ] = sanitize_textarea_field( $form[ $k ] );
 											}
@@ -904,6 +905,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 									);
 								}
 								$form[ $description_key ] = wp_kses( $form[ $description_key ], $allowed_html );
+
+								add_filter( 'wp_kses_allowed_html', array( &$this, 'wp_kses_user_desc' ), 10, 2 );
 							} else {
 								$form[ $description_key ] = sanitize_textarea_field( $form[ $description_key ] );
 							}
@@ -930,6 +933,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 								);
 							}
 							$form[ $description_key ] = wp_kses( $form[ $description_key ], $allowed_html );
+
+							add_filter( 'wp_kses_allowed_html', array( &$this, 'wp_kses_user_desc' ), 10, 2 );
 						} else {
 							$form[ $description_key ] = sanitize_textarea_field( $form[ $description_key ] );
 						}
@@ -938,6 +943,30 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			}
 
 			return $form;
+		}
+
+		public function wp_kses_user_desc( $tags, $context ) {
+			if ( 'user_description' === $context || 'pre_user_description' === $context ) {
+				$allowed_html = UM()->get_allowed_html( 'templates' );
+				if ( empty( $allowed_html['iframe'] ) ) {
+					$allowed_html['iframe'] = array(
+						'allow'           => true,
+						'frameborder'     => true,
+						'loading'         => true,
+						'name'            => true,
+						'referrerpolicy'  => true,
+						'sandbox'         => true,
+						'src'             => true,
+						'srcdoc'          => true,
+						'title'           => true,
+						'width'           => true,
+						'height'          => true,
+						'allowfullscreen' => true,
+					);
+				}
+				$tags = $allowed_html;
+			}
+			return $tags;
 		}
 
 		/**
