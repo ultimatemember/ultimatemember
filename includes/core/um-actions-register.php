@@ -494,6 +494,14 @@ function um_submit_form_register( $args, $form_data ) {
 
 	$user_id = wp_insert_user( $userdata );
 	if ( is_wp_error( $user_id ) ) {
+		// Default WordPress validation if there aren't any Ultimate Member native for the registration fields.
+		if ( 'existing_user_login' === $user_id->get_error_code() ) {
+			UM()->form()->add_error( 'user_login', $user_id->get_error_message() );
+		} elseif ( 'existing_user_email' === $user_id->get_error_code() ) {
+			UM()->form()->add_error( 'user_email', $user_id->get_error_message() );
+		} else {
+			UM()->form()->add_error( 'user_login', $user_id->get_error_message() );
+		}
 		return;
 	}
 
