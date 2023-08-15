@@ -199,7 +199,7 @@ function um_admin_remove_modal() {
 		jQuery('.um_tiny_placeholder').replaceWith( jQuery( $um_tiny_editor ).html() );
 	}
 
-	if ( 'undefined' !== typeof window.UM.admin.allTooltips && window.UM.admin.allTooltips.length > 0 ) {
+	if ( 'undefined' !== typeof window.UM.admin.allTooltips && window.UM.admin.allTooltips.length > 0 && 'function' === typeof window.UM.admin.allTooltips.tooltip ) {
 		window.UM.admin.allTooltips.tooltip('close');
 	}
 	jQuery('.tipsy').hide();
