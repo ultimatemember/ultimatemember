@@ -598,7 +598,7 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 			}
 		}
 
-		if ( isset( $array['max_chars'] ) && $array['max_chars'] > 0 ) {
+		if ( ! empty( $array['max_chars'] ) && UM()->profile()->get_show_bio_key( $submitted_data ) !== $key ) {
 			if ( ! empty( $array['html'] ) ) {
 				// Count words without html tags when HTML is enabled.
 				$text_value = wp_strip_all_tags( $submitted_data[ $key ] );
