@@ -733,7 +733,6 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 * @return array $form
 		 */
 		public function sanitize( $form ) {
-
 			if ( isset( $form['form_id'] ) ) {
 				if ( isset( $this->form_data['custom_fields'] ) ) {
 					$custom_fields = maybe_unserialize( $this->form_data['custom_fields'] );
@@ -862,11 +861,84 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 						}
 					}
 				}
+
+				$show_bio       = false;
+				$bio_html       = false;
+				$global_setting = UM()->options()->get( 'profile_show_html_bio' );
+				if ( ! empty( $form_data['use_custom_settings'] ) ) {
+					if ( ! empty( $form_data['show_bio'] ) ) {
+						$show_bio = true;
+						$bio_html = ! empty( $global_setting );
+					}
+				} else {
+					$global_show_bio = UM()->options()->get( 'profile_show_bio' );
+					if ( ! empty( $global_show_bio ) ) {
+						$show_bio = true;
+						$bio_html = ! empty( $global_setting );
+					}
+				}
+
+				$description_key = UM()->profile()->get_show_bio_key( $this->form_data );
+				if ( $show_bio && ! empty( $form[ $description_key ] ) ) {
+					$field_exists = false;
+					if ( ! empty( $this->form_data['custom_fields'] ) ) {
+						$custom_fields = maybe_unserialize( $this->form_data['custom_fields'] );
+						if ( array_key_exists( $description_key, $custom_fields ) ) {
+							$field_exists = true;
+							if ( ! empty( $custom_fields[ $description_key ]['html'] ) && $bio_html ) {
+								$allowed_html = UM()->get_allowed_html( 'templates' );
+								if ( empty( $allowed_html['iframe'] ) ) {
+									$allowed_html['iframe'] = array(
+										'allow'           => true,
+										'frameborder'     => true,
+										'loading'         => true,
+										'name'            => true,
+										'referrerpolicy'  => true,
+										'sandbox'         => true,
+										'src'             => true,
+										'srcdoc'          => true,
+										'title'           => true,
+										'width'           => true,
+										'height'          => true,
+										'allowfullscreen' => true,
+									);
+								}
+								$form[ $description_key ] = wp_kses( $form[ $description_key ], $allowed_html );
+							} else {
+								$form[ $description_key ] = sanitize_textarea_field( $form[ $description_key ] );
+							}
+						}
+					}
+
+					if ( ! $field_exists ) {
+						if ( $bio_html ) {
+							$allowed_html = UM()->get_allowed_html( 'templates' );
+							if ( empty( $allowed_html['iframe'] ) ) {
+								$allowed_html['iframe'] = array(
+									'allow'           => true,
+									'frameborder'     => true,
+									'loading'         => true,
+									'name'            => true,
+									'referrerpolicy'  => true,
+									'sandbox'         => true,
+									'src'             => true,
+									'srcdoc'          => true,
+									'title'           => true,
+									'width'           => true,
+									'height'          => true,
+									'allowfullscreen' => true,
+								);
+							}
+							$form[ $description_key ] = wp_kses( $form[ $description_key ], $allowed_html );
+						} else {
+							$form[ $description_key ] = sanitize_textarea_field( $form[ $description_key ] );
+						}
+					}
+				}
 			}
 
 			return $form;
 		}
-
 
 		/**
 		 * Display form type as Title
