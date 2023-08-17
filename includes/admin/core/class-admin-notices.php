@@ -808,6 +808,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		 */
 		public function child_theme_required() {
 			if ( ! is_child_theme() ) {
+				if ( ! is_dir( get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' ) ) {
+					return;
+				}
+
 				ob_start();
 				?>
 
