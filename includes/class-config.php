@@ -95,38 +95,36 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'members',
 			);
 
-
 			/**
-			 * UM hook
+			 * Filters Ultimate Member predefined pages.
 			 *
-			 * @type filter
-			 * @title um_core_pages
-			 * @description Extend UM core pages
-			 * @input_vars
-			 * [{"var":"$pages","type":"array","desc":"UM core pages"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_core_pages', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_core_pages', 'my_core_pages', 10, 1 );
+			 * @param {array} $pages Predefined pages.
+			 *
+			 * @return {array} Predefined pages.
+			 *
+			 * @since 1.3.x
+			 * @hook um_core_pages
+			 *
+			 * @example <caption>Extend UM core pages.</caption>
 			 * function my_core_pages( $pages ) {
 			 *     // your code here
 			 *     $pages['my_page_key'] = array( 'title' => __( 'My Page Title', 'my-translate-key' ) );
 			 *     return $pages;
 			 * }
-			 * ?>
+			 * add_filter( 'um_core_pages', 'my_core_pages' );
 			 */
-			$this->core_pages = apply_filters( 'um_core_pages', array(
-				'user'              => array( 'title' => __( 'User', 'ultimate-member' ) ),
-				'login'             => array( 'title' => __( 'Login', 'ultimate-member' ) ),
-				'register'          => array( 'title' => __( 'Register', 'ultimate-member' ) ),
-				'members'           => array( 'title' => __( 'Members', 'ultimate-member' ) ),
-				'logout'            => array( 'title' => __( 'Logout', 'ultimate-member' ) ),
-				'account'           => array( 'title' => __( 'Account', 'ultimate-member' ) ),
-				'password-reset'    => array( 'title' => __( 'Password Reset', 'ultimate-member' ) ),
-			) );
+			$this->core_pages = apply_filters(
+				'um_core_pages',
+				array(
+					'user'           => array( 'title' => __( 'User', 'ultimate-member' ) ),
+					'login'          => array( 'title' => __( 'Login', 'ultimate-member' ) ),
+					'register'       => array( 'title' => __( 'Register', 'ultimate-member' ) ),
+					'members'        => array( 'title' => __( 'Members', 'ultimate-member' ) ),
+					'logout'         => array( 'title' => __( 'Logout', 'ultimate-member' ) ),
+					'account'        => array( 'title' => __( 'Account', 'ultimate-member' ) ),
+					'password-reset' => array( 'title' => __( 'Password Reset', 'ultimate-member' ) ),
+				)
+			);
 
 			$this->core_directory_meta['members'] = array(
 				'_um_core'                      => 'members',

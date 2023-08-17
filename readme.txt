@@ -6,8 +6,8 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
-Tested up to: 6.2
-Stable tag: 2.6.9
+Tested up to: 6.3
+Stable tag: 2.6.10
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -165,6 +165,28 @@ No specific extensions are needed. But we highly recommended keep active these P
 = Important: =
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
+
+= 2.6.10: August 17, 2023 =
+
+* Enhancements:
+
+  - Added: 'um_can_view_profile' hook to operate with profile privacy
+  - Added: 'um_member_directory_core_search_fields' hook to operate with core searching fields in member directory search
+  - Tweak: Standardize the condition for checking not editable fields to `empty( $data['editable'] )`
+  - Tweak: Unified `UM()->fields()->editing` and `UM()->fields()->viewing` to bool variables use true|false in conditions to make `===` or `!==` comparing
+  - Updated: [Hooks Documentation v2](https://ultimatemember.github.io/ultimatemember/hooks/)
+
+* Bugfixes:
+
+  - Fixed: Restriction settings handler when there isn't a WP_Post in query. PHP notices in some cases when WP query is not canonical
+  - Fixed: User description (Biography) field conflict with validation (max chars) in both cases when HTML can be used or not. Case when there are 2 biography fields are displayed on the profile (header + form field)
+  - Fixed: Displaying WordPress native registration errors when unique username|email validation is disabled
+  - Fixed: Make links clickable in the Registration Details
+  - Fixed: WP_Users_Query on wp-admin > Users screen
+  - Fixed: Performance for `um_get_form_fields` hook
+  - Fixed: Admin Modal JS library conflict with bootstrap.js
+
+* Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade
 
 = 2.6.9: July 26, 2023 =
 

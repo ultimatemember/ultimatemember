@@ -709,7 +709,7 @@ function um_user_submitted_registration_formatted( $style = false ) {
 			UM()->fields()->get_fields = $fields;
 
 			foreach ( $fields as $key => $array ) {
-				if ( isset( $array['type'] ) && $array['type'] == 'row' ) {
+				if ( isset( $array['type'] ) && 'row' === $array['type'] ) {
 					$rows[ $key ] = $array;
 					unset( UM()->fields()->get_fields[ $key ] ); // not needed now
 				}
@@ -747,7 +747,6 @@ function um_user_submitted_registration_formatted( $style = false ) {
 						$cols_num = $col_split[ $c ];
 
 						// sub row fields
-						$subrow_fields = null;
 						$subrow_fields = UM()->fields()->get_fields_in_subrow( $row_fields, $c );
 
 						if ( is_array( $subrow_fields ) ) {
@@ -766,7 +765,6 @@ function um_user_submitted_registration_formatted( $style = false ) {
 										$output .= um_user_submited_display( $key, $data['title'] );
 									}
 								}
-
 							} elseif ( $cols_num == 2 ) {
 
 								$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
@@ -782,7 +780,6 @@ function um_user_submitted_registration_formatted( $style = false ) {
 										$output .= um_user_submited_display( $key, $data['title'] );
 									}
 								}
-
 							} else {
 
 								$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
@@ -805,29 +802,19 @@ function um_user_submitted_registration_formatted( $style = false ) {
 										$output .= um_user_submited_display( $key, $data['title'] );
 									}
 								}
-
 							}
-
 						}
-
 					}
-
 				}
-
-
 			} // endfor
-
 		}
 	}
-
 
 	if ( $style ) {
 		$output .= '</div>';
 	}
 
-
 	return $output;
-
 }
 
 /**
@@ -882,7 +869,7 @@ function um_user_submited_display( $k, $title, $data = array(), $style = true ) 
 		}
 
 		if ( ! empty( $filedata['original_name'] ) ) {
-			$v = '<a href="' . esc_attr( $baseurl . um_user( 'ID' ) . '/' . $file ) . '">' . esc_html( $filedata['original_name'] ) . '</a>';
+			$v = '<a class="um-preview-upload" target="_blank" href="' . esc_attr( $baseurl . um_user( 'ID' ) . '/' . $file ) . '">' . esc_html( $filedata['original_name'] ) . '</a>';
 		} else {
 			$v = $baseurl . um_user( 'ID' ) . '/' . $file;
 		}
@@ -1592,49 +1579,66 @@ function um_can_view_field( $data ) {
 	return apply_filters( 'um_can_view_field', $can_view, $data );
 }
 
-
 /**
  * Checks if user can view profile
  *
- * @param $user_id
+ * @param int $user_id
  *
  * @return bool
  */
 function um_can_view_profile( $user_id ) {
+	$can_view = true;
+	$user_id  = absint( $user_id );
 	if ( ! is_user_logged_in() ) {
-		return ! UM()->user()->is_private_profile( $user_id );
-	}
+		$can_view = ! UM()->user()->is_private_profile( $user_id );
+	} else {
+		$temp_id = um_user( 'ID' );
+		um_fetch_user( get_current_user_id() );
 
-	$temp_id = um_user('ID');
-	um_fetch_user( get_current_user_id() );
+		if ( get_current_user_id() !== $user_id ) {
+			if ( ! um_user( 'can_view_all' ) ) {
+				um_fetch_user( $temp_id );
+				$can_view = false;
+			} elseif ( ! um_user( 'can_access_private_profile' ) && UM()->user()->is_private_profile( $user_id ) ) {
+				um_fetch_user( $temp_id );
+				$can_view = false;
+			} elseif ( um_user( 'can_view_roles' ) ) {
+				$can_view_roles = um_user( 'can_view_roles' );
 
-	if ( ! um_user( 'can_view_all' ) && $user_id != get_current_user_id() && is_user_logged_in() ) {
-		um_fetch_user( $temp_id );
-		return false;
-	}
+				if ( ! is_array( $can_view_roles ) ) {
+					$can_view_roles = array();
+				}
 
-	if ( ! um_user( 'can_access_private_profile' ) && UM()->user()->is_private_profile( $user_id ) ) {
-		um_fetch_user( $temp_id );
-		return false;
-	}
-
-	if ( um_user( 'can_view_roles' ) && $user_id != get_current_user_id() ) {
-		$can_view_roles = um_user( 'can_view_roles' );
-
-		if ( ! is_array( $can_view_roles ) ) {
-			$can_view_roles = array();
+				if ( count( $can_view_roles ) && count( array_intersect( UM()->roles()->get_all_user_roles( $user_id ), $can_view_roles ) ) <= 0 ) {
+					um_fetch_user( $temp_id );
+					$can_view = false;
+				}
+			}
 		}
 
-		if ( count( $can_view_roles ) && count( array_intersect( UM()->roles()->get_all_user_roles( $user_id ), $can_view_roles ) ) <= 0 ) {
-			um_fetch_user( $temp_id );
-			return false;
-		}
+		um_fetch_user( $temp_id );
 	}
 
-	um_fetch_user( $temp_id );
-	return true;
+	/**
+	 * Filters the marker for user capabilities to view other profile
+	 *
+	 * @param {bool} $can_view Can view profile marker.
+	 * @param {int}  $user_id  User ID requested from profile page.
+	 *
+	 * @return {bool} Can view profile marker.
+	 *
+	 * @since 2.6.10
+	 * @hook um_can_view_profile
+	 *
+	 * @example <caption>Set that only user with ID=5 can be viewed on Profile page.</caption>
+	 * function my_um_can_view_profile( $can_view, $user_id ) {
+	 *     $can_view = 5 === $user_id;
+	 *     return $can_view;
+	 * }
+	 * add_filter( 'um_can_view_profile', 'my_um_can_view_profile', 10, 2 );
+	 */
+	return apply_filters( 'um_can_view_profile', $can_view, $user_id );
 }
-
 
 /**
  * boolean check for not same user
@@ -1658,12 +1662,12 @@ function um_is_user_himself() {
 function um_can_edit_field( $data ) {
 	$can_edit = true;
 
-	if ( ! empty( UM()->fields()->editing ) && isset( UM()->fields()->set_mode ) && UM()->fields()->set_mode == 'profile' ) {
+	if ( true === UM()->fields()->editing && isset( UM()->fields()->set_mode ) && UM()->fields()->set_mode == 'profile' ) {
 		if ( ! is_user_logged_in() ) {
 			$can_edit = false;
 		} else {
 			if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
-				if ( isset( $data['editable'] ) && $data['editable'] == 0 ) {
+				if ( empty( $data['editable'] ) ) {
 					$can_edit = false;
 				} else {
 					if ( ! um_is_user_himself() ) {

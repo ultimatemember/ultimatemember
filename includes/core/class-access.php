@@ -1843,9 +1843,13 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 * @param \WP_Post|int $post Post ID or object
 		 * @return bool|array
 		 */
-		function get_post_privacy_settings( $post ) {
+		public function get_post_privacy_settings( $post ) {
 			// break for incorrect post
 			if ( empty( $post ) ) {
+				return false;
+			}
+
+			if ( ! is_numeric( $post ) && ! is_a( $post, \WP_Post::class ) ) {
 				return false;
 			}
 

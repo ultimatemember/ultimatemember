@@ -908,11 +908,11 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				$classes .= ' um-in-admin';
 			}
 
-			if ( UM()->fields()->editing == true ) {
+			if ( true === UM()->fields()->editing ) {
 				$classes .= ' um-editing';
 			}
 
-			if ( UM()->fields()->viewing == true ) {
+			if ( true === UM()->fields()->viewing ) {
 				$classes .= ' um-viewing';
 			}
 

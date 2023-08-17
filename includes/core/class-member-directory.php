@@ -95,12 +95,38 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		/**
 		 * Member_Directory constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			add_filter( 'init', array( &$this, 'init_variables' ) );
 
 			add_action( 'template_redirect', array( &$this, 'access_members' ), 555 );
 		}
 
+		/**
+		 * Get the WordPress core searching fields in wp_users query.
+		 * @return array
+		 */
+		private function get_core_search_fields() {
+			/**
+			 * Filters the WordPress core searching fields in wp_users query for UM Member directory query.
+			 *
+			 * @param {array} $core_search_fields Core search fields in wp_users query.
+			 *
+			 * @return {array} Core search fields in wp_users query.
+			 *
+			 * @since 2.6.10
+			 * @hook um_member_directory_core_search_fields
+			 *
+			 * @example <caption>Extends or remove wp_users core search fields.</caption>
+			 * function my_um_member_directory_core_search_fields( $core_search_fields ) {
+			 *     $core_search_fields = array_flip( $core_search_fields );
+			 *     unset( $core_search_fields['user_email'] );
+			 *     $core_search_fields = array_flip( $core_search_fields );
+			 *     return $core_search_fields;
+			 * }
+			 * add_filter( 'um_member_directory_core_search_fields', 'my_um_member_directory_core_search_fields' );
+			 */
+			return apply_filters( 'um_member_directory_core_search_fields', $this->core_search_fields );
+		}
 
 		/**
 		 * @return bool
@@ -587,8 +613,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) : $default_value; ?>
 						<input type="text" autocomplete="off" id="<?php echo $filter; ?>" name="<?php echo $filter; ?>"
 						   placeholder="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
-						          value="<?php echo esc_attr( $filter_from_url ) ?>" class="um-form-field"
-						       aria-label="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>" />
+								  value="<?php echo esc_attr( $filter_from_url ) ?>" class="um-form-field"
+							   aria-label="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>" />
 					<?php
 					break;
 				}
@@ -1697,7 +1723,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					}
 
 					// Add OR instead AND to search in WP core fields user_email, user_login, user_display_name
-					$search_where = $context->get_search_sql( $search, $this->core_search_fields, 'both' );
+					$search_where = $context->get_search_sql( $search, $this->get_core_search_fields(), 'both' );
 
 					$search_where = preg_replace( '/ AND \((.*?)\)/im', "$1 OR", $search_where );
 

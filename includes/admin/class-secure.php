@@ -73,28 +73,20 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 		 */
 		public function filter_users_by_date_registered( $query ) {
 			global $pagenow;
-			if ( is_admin() && 'users.php' === $pagenow ) {
+			if ( 'users.php' === $pagenow && is_admin() ) {
 				// phpcs:disable WordPress.Security.NonceVerification
 				$date_from = isset( $_GET['um_secure_date_from'] ) ? $_GET['um_secure_date_from'] : null;
 				$date_to   = isset( $_GET['um_secure_date_to'] ) ? $_GET['um_secure_date_to'] : null;
 				// phpcs:enable WordPress.Security.NonceVerification
-				if ( ! $date_to ) {
-					$query->set(
-						'date_query',
-						array(
-							'after'     => human_time_diff( $date_from, strtotime( current_time( 'mysql' ) ) ) . ' ago',
-							'inclusive' => true,
-						)
+				if ( $date_from ) {
+					$date_query_attr = array(
+						'after'     => human_time_diff( $date_from, strtotime( current_time( 'mysql' ) ) ) . ' ago',
+						'inclusive' => true,
 					);
-				} elseif ( $date_from && $date_to ) {
-					$query->set(
-						'date_query',
-						array(
-							'after'     => human_time_diff( $date_from, strtotime( current_time( 'mysql' ) ) ) . ' ago',
-							'before'    => human_time_diff( $date_to, strtotime( current_time( 'mysql' ) ) ) . ' ago',
-							'inclusive' => true,
-						)
-					);
+					if ( $date_to ) {
+						$date_query_attr['before'] = human_time_diff( $date_to, strtotime( current_time( 'mysql' ) ) ) . ' ago';
+					}
+					$query->set( 'date_query', $date_query_attr );
 				}
 			}
 
@@ -123,13 +115,24 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 				/**
 				 * Destroy all user sessions except the current logged-in user.
 				 */
-				$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $wpdb->usermeta . '  WHERE meta_key="session_tokens" AND user_id != %d', get_current_user_id() ) );
+				$wpdb->query(
+					$wpdb->prepare(
+						"DELETE
+						FROM {$wpdb->usermeta}
+						WHERE meta_key='session_tokens' AND
+							  user_id != %d",
+						get_current_user_id()
+					)
+				);
 
 				if ( UM()->options()->get( 'display_login_form_notice' ) ) {
 					global $wpdb;
 					$wpdb->query(
 						$wpdb->prepare(
-							"DELETE FROM {$wpdb->usermeta} WHERE user_id != %d AND ( meta_key = 'um_secure_has_reset_password' OR meta_key = 'um_secure_has_reset_password__timestamp' )",
+							"DELETE
+							FROM {$wpdb->usermeta}
+							WHERE user_id != %d AND
+								  ( meta_key = 'um_secure_has_reset_password' OR meta_key = 'um_secure_has_reset_password__timestamp' )",
 							get_current_user_id()
 						)
 					);

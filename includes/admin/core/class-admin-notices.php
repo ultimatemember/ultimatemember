@@ -53,6 +53,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			$this->template_version();
 
+			$this->child_theme_required();
+
 			// removed for now to avoid the bad reviews
 			//$this->reviews_notice();
 
@@ -795,6 +797,39 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 						'class'       => 'error',
 						'message'     => $message,
 						'dismissible' => false,
+					),
+					10
+				);
+			}
+		}
+
+		/**
+		 * Check if there isn't installed child-theme. Child theme is required for safely saved customizations.
+		 */
+		public function child_theme_required() {
+			if ( ! is_child_theme() ) {
+				if ( ! is_dir( get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' ) ) {
+					return;
+				}
+
+				ob_start();
+				?>
+
+				<p>
+					<?php
+					// translators: %s child-theme article link.
+					echo wp_kses( sprintf( __( 'We highly recommend using a <a href="%s">child-theme</a> for Ultimate Member customization, which hasn\'t dependencies with the official themes repo, so your custom files cannot be rewritten after a theme upgrade.<br />Otherwise, the customization files may be deleted after every theme upgrade.', 'ultimate-member' ), 'https://developer.wordpress.org/themes/advanced-topics/child-themes/' ), UM()->get_allowed_html( 'admin_notice' ) );
+					?>
+				</p>
+
+				<?php
+				$message = ob_get_clean();
+				UM()->admin()->notices()->add_notice(
+					'um_is_not_child_theme',
+					array(
+						'class'       => 'notice-warning',
+						'message'     => $message,
+						'dismissible' => true,
 					),
 					10
 				);

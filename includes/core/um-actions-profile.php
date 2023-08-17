@@ -590,7 +590,7 @@ add_action( 'um_after_user_updated', 'um_restore_default_roles', 10, 3 );
  * @param $args
  */
 function um_editing_user_id_input( $args ) {
-	if ( UM()->fields()->editing == 1 && UM()->fields()->set_mode == 'profile' && UM()->user()->target_id ) { ?>
+	if ( true === UM()->fields()->editing && 'profile' === UM()->fields()->set_mode && UM()->user()->target_id ) { ?>
 
 		<input type="hidden" name="user_id" id="user_id" value="<?php echo esc_attr( UM()->user()->target_id ); ?>" />
 		<input type="hidden" name="profile_nonce" id="profile_nonce" value="<?php echo esc_attr( UM()->form()->nonce ); ?>" />
@@ -838,7 +838,7 @@ function um_profile_header_cover_area( $args ) {
 			 * ?>
 			 */
 			do_action( 'um_cover_area_content', um_profile_id() );
-			if ( UM()->fields()->editing ) {
+			if ( true === UM()->fields()->editing ) {
 
 				$hide_remove = um_user( 'cover_photo' ) ? false : ' style="display:none;"';
 
@@ -1075,7 +1075,7 @@ function um_profile_header( $args ) {
 
 					UM()->profile()->new_ui( 'bc', 'div.um-profile-photo', 'click', $items );
 
-				} elseif ( UM()->fields()->editing == true ) {
+				} elseif ( true === UM()->fields()->editing ) {
 
 					$items = array(
 						'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . __( 'Change photo', 'ultimate-member' ) . '</a>',
@@ -1217,49 +1217,90 @@ function um_profile_header( $args ) {
 
 			<?php if ( ! empty( $args['metafields'] ) ) { ?>
 				<div class="um-meta">
-
-					<?php echo UM()->profile()->show_meta( $args['metafields'] ); ?>
-
+					<?php echo UM()->profile()->show_meta( $args['metafields'], $args ); ?>
 				</div>
-			<?php }
+				<?php
+			}
 
-			$description_key = UM()->profile()->get_show_bio_key( $args );
+			$show_bio       = false;
+			$bio_html       = false;
+			$global_setting = UM()->options()->get( 'profile_show_html_bio' );
+			if ( ! empty( $args['use_custom_settings'] ) ) {
+				if ( ! empty( $args['show_bio'] ) ) {
+					$show_bio = true;
+					$bio_html = ! empty( $global_setting );
+				}
+			} else {
+				$global_show_bio = UM()->options()->get( 'profile_show_bio' );
+				if ( ! empty( $global_show_bio ) ) {
+					$show_bio = true;
+					$bio_html = ! empty( $global_setting );
+				}
+			}
 
-			if ( UM()->fields()->viewing == true && um_user( $description_key ) && $args['show_bio'] ) { ?>
+			if ( $show_bio ) {
+				$description_key = UM()->profile()->get_show_bio_key( $args );
 
-				<div class="um-meta-text">
-					<?php $description = get_user_meta( um_user( 'ID' ), $description_key, true );
+				if ( true === UM()->fields()->viewing && um_user( $description_key ) ) {
+					?>
+					<div class="um-meta-text">
+						<?php
+						$description = get_user_meta( um_user( 'ID' ), $description_key, true );
 
-					if ( UM()->options()->get( 'profile_show_html_bio' ) ) {
-						echo make_clickable( wpautop( wp_kses_post( $description ) ) );
+						if ( $bio_html ) {
+							echo wp_kses_post( nl2br( make_clickable( wpautop( $description ) ) ) );
+						} else {
+							echo nl2br( esc_html( $description ) );
+						}
+						?>
+					</div>
+					<?php
+				} elseif ( true === UM()->fields()->editing ) {
+					if ( ! empty( $args['custom_fields'][ $description_key ] ) ) {
+						if ( ! empty( $args['custom_fields'][ $description_key ]['html'] ) && $bio_html ) {
+							$description_value = UM()->fields()->field_value( $description_key );
+						} else {
+							$description_value = wp_strip_all_tags( UM()->fields()->field_value( $description_key ) );
+						}
 					} else {
-						echo esc_html( $description );
-					} ?>
-				</div>
+						if ( $bio_html ) {
+							$description_value = UM()->fields()->field_value( $description_key );
+						} else {
+							$description_value = wp_strip_all_tags( UM()->fields()->field_value( $description_key ) );
+						}
+					}
 
-			<?php } elseif ( UM()->fields()->editing == true && $args['show_bio'] ) { ?>
+					if ( ! empty( $args['custom_fields'][ $description_key ]['max_chars'] ) ) {
+						$limit = $args['custom_fields'][ $description_key ]['max_chars'];
+					} else {
+						$limit = UM()->options()->get( 'profile_bio_maxchars' );
+					}
+					?>
 
-				<div class="um-meta-text">
-					<textarea id="um-meta-bio"
-							  data-character-limit="<?php echo esc_attr( UM()->options()->get( 'profile_bio_maxchars' ) ); ?>"
-							  placeholder="<?php esc_attr_e( 'Tell us a bit about yourself...', 'ultimate-member' ); ?>"
-							  name="<?php echo esc_attr( $description_key ); ?>"><?php echo UM()->fields()->field_value( $description_key ) ?></textarea>
-					<span class="um-meta-bio-character um-right"><span
-							class="um-bio-limit"><?php echo UM()->options()->get( 'profile_bio_maxchars' ); ?></span></span>
-
-					<?php if ( UM()->fields()->is_error( $description_key ) ) {
-						echo UM()->fields()->field_error( UM()->fields()->show_error( $description_key ), true );
-					} ?>
-
-				</div>
-
-			<?php } ?>
+					<div class="um-meta-text">
+						<textarea id="um-meta-bio" data-html="<?php echo esc_attr( $bio_html ); ?>"
+								data-character-limit="<?php echo esc_attr( $limit ); ?>"
+								placeholder="<?php esc_attr_e( 'Tell us a bit about yourself...', 'ultimate-member' ); ?>"
+								name="<?php echo esc_attr( $description_key ); ?>"><?php echo esc_textarea( $description_value ); ?></textarea>
+						<span class="um-meta-bio-character um-right">
+							<span class="um-bio-limit"><?php echo esc_html( $limit ); ?></span>
+						</span>
+						<?php
+						if ( UM()->fields()->is_error( $description_key ) ) {
+							echo UM()->fields()->field_error( UM()->fields()->show_error( $description_key ), true );
+						}
+						?>
+					</div>
+					<?php
+				}
+			}
+			?>
 
 			<div class="um-profile-status <?php echo esc_attr( um_user( 'account_status' ) ); ?>">
 				<span>
 					<?php
 					// translators: %s: profile status.
-					printf( __( 'This user account status is %s', 'ultimate-member' ), um_user( 'account_status_name' ) );
+					echo esc_html( sprintf( __( 'This user account status is %s', 'ultimate-member' ), um_user( 'account_status_name' ) ) );
 					?>
 				</span>
 			</div>
@@ -1285,8 +1326,8 @@ function um_profile_header( $args ) {
 			 * }
 			 * ?>
 			 */
-			do_action( 'um_after_header_meta', um_user( 'ID' ), $args ); ?>
-
+			do_action( 'um_after_header_meta', um_user( 'ID' ), $args );
+			?>
 		</div>
 		<div class="um-clear"></div>
 
@@ -1333,7 +1374,7 @@ function um_pre_profile_shortcode( $args ) {
 		return;
 	}
 
-	if ( UM()->fields()->editing ) {
+	if ( true === UM()->fields()->editing ) {
 		if ( um_get_requested_user() ) {
 			if ( ! UM()->roles()->um_current_user_can( 'edit', um_get_requested_user() ) ) {
 				um_redirect_home( um_get_requested_user(), um_is_myprofile() );
@@ -1341,7 +1382,7 @@ function um_pre_profile_shortcode( $args ) {
 			um_fetch_user( um_get_requested_user() );
 		}
 	} else {
-		UM()->fields()->viewing = 1;
+		UM()->fields()->viewing = true;
 
 		if ( um_get_requested_user() ) {
 			if ( ! um_is_myprofile() && ! um_can_view_profile( um_get_requested_user() ) ) {
@@ -1379,7 +1420,7 @@ function um_add_edit_icon( $args ) {
 
 	// do not proceed if user cannot edit
 
-	if ( UM()->fields()->editing == true ) { ?>
+	if ( true === UM()->fields()->editing ) { ?>
 
 		<div class="um-profile-edit um-profile-headericon">
 			<a href="javascript:void(0);" class="um-profile-edit-a um-profile-save"><i class="um-faicon-check"></i></a>
@@ -1480,7 +1521,7 @@ add_action( 'um_pre_header_editprofile', 'um_add_edit_icon' );
  * @param $args
  */
 function um_add_profile_fields( $args ) {
-	if ( UM()->fields()->editing == true ) {
+	if ( true === UM()->fields()->editing ) {
 
 		echo UM()->fields()->display( 'profile', $args );
 
@@ -1548,7 +1589,7 @@ function um_add_submit_button_to_profile( $args ) {
 	}
 
 	// only when editing
-	if ( UM()->fields()->editing == false ) {
+	if ( false === UM()->fields()->editing ) {
 		return;
 	}
 

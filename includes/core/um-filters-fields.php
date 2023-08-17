@@ -248,16 +248,18 @@ function um_profile_field_filter_hook__textarea( $value, $data ) {
 	if ( ! $value ) {
 		return '';
 	}
-	if ( isset( $data['html'] ) && $data['html'] == 1 ) {
+	if ( ! empty( $data['html'] ) ) {
 		return $value;
 	}
 
+	$description_key = UM()->profile()->get_show_bio_key( UM()->fields()->global_args );
+
 	$value = wp_kses( $value, 'strip' );
 	$value = html_entity_decode( $value );
-	$value = preg_replace('$(https?://[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', ' <a href="$1" target="_blank">$1</a> ', $value." ");
-	$value = preg_replace('$(www\.[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', '<a target="_blank" href="http://$1">$1</a> ', $value." ");
+	$value = preg_replace( '$(https?://[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', ' <a href="$1" target="_blank">$1</a> ', $value . ' ' );
+	$value = preg_replace( '$(www\.[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', '<a target="_blank" href="http://$1">$1</a> ', $value . ' ' );
 
-	if ( ! ( isset( $data['metakey'] ) && 'description' === $data['metakey'] ) ) {
+	if ( ! ( isset( $data['metakey'] ) && $description_key === $data['metakey'] ) ) {
 		$value = wpautop( $value );
 	}
 

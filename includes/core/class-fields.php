@@ -625,11 +625,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$output = null;
 			$output .= '<div class="um-field-label">';
 
-			if ( isset( $data['icon'] ) && $data['icon'] != '' && isset( $this->field_icons ) && $this->field_icons != 'off' && ( $this->field_icons == 'label' || $this->viewing == true ) ) {
+			if ( isset( $data['icon'] ) && $data['icon'] != '' && isset( $this->field_icons ) && $this->field_icons != 'off' && ( $this->field_icons == 'label' || true === $this->viewing ) ) {
 				$output .= '<div class="um-field-label-icon"><i class="' . esc_attr( $data['icon'] ) . '" aria-label="' . esc_attr( $label ) . '"></i></div>';
 			}
 
-			if ( $this->viewing == true ) {
+			if ( true === $this->viewing ) {
 				/**
 				 * UM hook
 				 *
@@ -705,7 +705,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			$output .= '<label' . $for_attr . '>' . __( $label, 'ultimate-member' ) . '</label>';
 
-			if ( ! empty( $data['help'] ) && $this->viewing == false && ! strstr( $key, 'confirm_user_pass' ) ) {
+			if ( ! empty( $data['help'] ) && false === $this->viewing && ! strstr( $key, 'confirm_user_pass' ) ) {
 				if ( ! UM()->mobile()->isMobile() ) {
 					if ( false === $this->disable_tooltips ) {
 						$output .= '<span class="um-tip um-tip-' . ( is_rtl() ? 'e' : 'w' ) . '" title="' . esc_attr__( $data['help'], 'ultimate-member' ) . '"><i class="um-icon-help-circled"></i></span>';
@@ -836,7 +836,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				return stripslashes_deep( UM()->form()->post_form[ $key ] );
 
-			} elseif ( um_user( $key ) && $this->editing == true ) {
+			} elseif ( um_user( $key ) && true === $this->editing ) {
 
 				//show empty value for password fields
 				if ( strstr( $key, 'user_pass' ) || $type == 'password' ) {
@@ -889,7 +889,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				 */
 				$value = apply_filters( "um_edit_{$type}_field_value", $value, $key );
 
-			} elseif ( ( um_user( $key ) || isset( $data['show_anyway'] ) ) && $this->viewing == true ) {
+			} elseif ( ( um_user( $key ) || isset( $data['show_anyway'] ) ) && true === $this->viewing ) {
 
 				return um_filtered_value( $key, $data );
 
@@ -993,7 +993,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 
 			// Default Value for Registration Form and Profile Form editing
-			if ( ! isset( $value ) && ( $this->set_mode == 'register' || $this->editing == true ) ) {
+			if ( ! isset( $value ) && ( $this->set_mode == 'register' || true === $this->editing ) ) {
 
 				/**
 				 * UM hook
@@ -1173,7 +1173,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				 */
 				$data = apply_filters( 'um_is_selected_filter_data', $data, $key, $field_value );
 
-				if ( ! $this->editing || 'custom' == $this->set_mode ) {
+				if ( false === $this->editing || 'custom' === $this->set_mode ) {
 					// show default on register screen if there is default
 					if ( isset( $data['default'] ) ) {
 
@@ -1258,7 +1258,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				}
 			} else {
 
-				if ( $this->editing && 'custom' !== $this->set_mode ) {
+				if ( true === $this->editing && 'custom' !== $this->set_mode ) {
 					if ( um_user( $key ) ) {
 
 						$um_user_value = um_user( $key );
@@ -1544,37 +1544,34 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			return __( 'Custom Field', 'ultimate-member' );
 		}
 
-
 		/**
 		 * Get form fields
 		 *
 		 * @return array
 		 */
-		function get_fields() {
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_get_form_fields
-			 * @description Extend form fields
-			 * @input_vars
-			 * [{"var":"$fields","type":"array","desc":"Selected filter value"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_get_form_fields', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_get_form_fields', 'my_form_fields', 10, 1 );
-			 * function my_form_fields( $fields ) {
-			 *     // your code here
-			 *     return $fields;
-			 * }
-			 * ?>
-			 */
-			$this->fields = apply_filters( 'um_get_form_fields', array() );
+		public function get_fields() {
+			if ( empty( $this->fields ) ) {
+				/**
+				 * Filters the form fields.
+				 *
+				 * @param {array} $fields Form fields.
+				 *
+				 * @return {array} Form fields.
+				 *
+				 * @since 1.3.x
+				 * @hook um_get_form_fields
+				 *
+				 * @example <caption>Extend form fields.</caption>
+				 * function my_form_fields( $fields ) {
+				 *     // your code here
+				 *     return $fields;
+				 * }
+				 * add_filter( 'um_get_form_fields', 'my_form_fields' );
+				 */
+				$this->fields = apply_filters( 'um_get_form_fields', $this->fields );
+			}
 			return $this->fields;
 		}
-
 
 		/**
 		 * Get specific field
@@ -1611,7 +1608,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$array['default'] = null;
 			}
 
-			if ( isset( $array['conditions'] ) && is_array( $array['conditions'] ) && ! $this->viewing ) {
+			if ( isset( $array['conditions'] ) && is_array( $array['conditions'] ) && false === $this->viewing ) {
 				$array['conditional'] = '';
 
 				foreach ( $array['conditions'] as $cond_id => $cond ) {
@@ -2178,7 +2175,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				}
 			}
 
-			if ( ! empty( $this->editing ) && 'profile' === $this->set_mode ) {
+			if ( true === $this->editing && 'profile' === $this->set_mode ) {
 				if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
 					if ( empty( $data['editable'] ) ) {
 						$disabled = ' disabled="disabled" ';
@@ -2716,10 +2713,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$field_name  = $key;
 					$field_value = $this->field_value( $key, $default, $data );
 
+					$bio_key = UM()->profile()->get_show_bio_key( $this->global_args );
+
 					$output .= '<div class="um-field-area">';
 
-					if ( isset( $data['html'] ) && 0 !== $data['html'] && 'description' !== $key ) {
-
+					if ( ! empty( $data['html'] ) && $bio_key !== $key ) {
 						$textarea_settings = array(
 							'media_buttons' => false,
 							'wpautop'       => false,
@@ -2761,13 +2759,44 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						// echo the editor to the buffer
 						wp_editor( $field_value, $key, $textarea_settings );
 
-						// add the contents of the buffer to the output variable
+						// Add the contents of the buffer to the output variable.
 						$output .= ob_get_clean();
 						$output .= '<br /><span class="description">' . esc_html( $placeholder ) . '</span>';
 					} else {
+						// User 'description' field uses `<textarea>` block everytime.
 						$textarea_field_value = '';
 						if ( ! empty( $field_value ) ) {
-							$textarea_field_value = ! empty( $data['html'] ) ? $field_value : wp_strip_all_tags( $field_value );
+							$show_bio       = false;
+							$bio_html       = false;
+							$global_setting = UM()->options()->get( 'profile_show_html_bio' );
+							if ( 'profile' === $this->global_args['mode'] ) {
+								if ( ! empty( $this->global_args['use_custom_settings'] ) ) {
+									if ( ! empty( $this->global_args['show_bio'] ) ) {
+										$show_bio = true;
+										$bio_html = ! empty( $global_setting );
+									}
+								} else {
+									$global_show_bio = UM()->options()->get( 'profile_show_bio' );
+									if ( ! empty( $global_show_bio ) ) {
+										$show_bio = true;
+										$bio_html = ! empty( $global_setting );
+									}
+								}
+							}
+
+							if ( $show_bio ) {
+								if ( true === $bio_html && ! empty( $data['html'] ) ) {
+									$textarea_field_value = $field_value;
+								} else {
+									$textarea_field_value = wp_strip_all_tags( $field_value );
+								}
+							} else {
+								if ( ! empty( $data['html'] ) ) {
+									$textarea_field_value = $field_value;
+								} else {
+									$textarea_field_value = wp_strip_all_tags( $field_value );
+								}
+							}
 						}
 						$output .= '<textarea  ' . $disabled . '  style="height: ' . esc_attr( $data['height'] ) . ';" class="' . esc_attr( $this->get_class( $key, $data ) ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_id ) . '" placeholder="' . esc_attr( $placeholder ) . '">' . esc_textarea( $textarea_field_value ) . '</textarea>';
 					}
@@ -3597,7 +3626,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								$class  = 'um-icon-android-radio-button-off';
 							}
 
-							if ( isset( $data['editable'] ) && 0 === $data['editable'] ) {
+							if ( empty( $data['editable'] ) ) {
 								$col_class .= ' um-field-radio-state-disabled';
 							}
 
@@ -3716,7 +3745,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$class  = 'um-icon-android-checkbox-outline-blank';
 						}
 
-						if ( isset( $data['editable'] ) && 0 === $data['editable'] ) {
+						if ( empty( $data['editable'] ) ) {
 							$col_class .= ' um-field-radio-state-disabled';
 						}
 
@@ -4255,11 +4284,39 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						if ( ! empty( $res ) ) {
 							$res = stripslashes( $res );
 						}
-						if ( 'description' === $data['metakey'] ) {
-							if ( UM()->options()->get( 'profile_show_html_bio' ) ) {
-								$res = make_clickable( wpautop( wp_kses_post( $res ) ) );
+
+						$bio_key = UM()->profile()->get_show_bio_key( $this->global_args );
+						if ( $bio_key === $data['metakey'] ) {
+							$show_bio       = false;
+							$bio_html       = false;
+							$global_setting = UM()->options()->get( 'profile_show_html_bio' );
+							if ( 'profile' === $this->global_args['mode'] ) {
+								if ( ! empty( $this->global_args['use_custom_settings'] ) ) {
+									if ( ! empty( $this->global_args['show_bio'] ) ) {
+										$show_bio = true;
+										$bio_html = ! empty( $global_setting );
+									}
+								} else {
+									$global_show_bio = UM()->options()->get( 'profile_show_bio' );
+									if ( ! empty( $global_show_bio ) ) {
+										$show_bio = true;
+										$bio_html = ! empty( $global_setting );
+									}
+								}
+							}
+
+							if ( $show_bio ) {
+								if ( true === $bio_html && ! empty( $data['html'] ) ) {
+									$res = wp_kses_post( make_clickable( wpautop( $res ) ) );
+								} else {
+									$res = esc_html( $res );
+								}
 							} else {
-								$res = esc_html( $res );
+								if ( ! empty( $data['html'] ) ) {
+									$res = wp_kses_post( make_clickable( wpautop( $res ) ) );
+								} else {
+									$res = esc_html( $res );
+								}
 							}
 
 							$res = nl2br( $res );
