@@ -135,7 +135,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					?>
 
 					<a href="<?php echo esc_url( um_filtered_social_link( $k, $match ) ); ?>"
-					   style="background: <?php echo esc_attr( $arr['color'] ); ?>;" target="_blank" class="um-tip-n"
+					   style="background: <?php echo esc_attr( $arr['color'] ); ?>;" target="<?php echo esc_attr( $arr['url_target'] ?? "_blank" ); ?>" class="um-tip-n"
 					   title="<?php echo esc_attr( $arr['title'] ); ?>"><i class="<?php echo esc_attr( $arr['icon'] ); ?>"></i></a>
 
 					<?php
