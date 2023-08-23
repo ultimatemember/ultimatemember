@@ -500,8 +500,8 @@ class Secure {
 			$content .= $br . $br . $check . esc_html__( 'Themes are up to date.', 'ultimate-member' );
 		}
 
-		if ( isset( $update_themes->current ) && $wp_version !== $update_themes->current ) {
-			$content .= $br . $br . $flag . esc_html__( 'There\'s a new version of WordPress.', 'ultimate-member' ) . '<a target="_blank" href="' . admin_url( 'update-core.php' ) . '">' . esc_html__( 'Update WordPress Now', 'ultimate-member' ) . '</a>';
+		if ( isset( $update_wp_core->updates[0]->current ) && $wp_version !== $update_wp_core->updates[0]->current ) {
+			$content .= $br . $br . $flag . esc_html__( 'There\'s a new version of WordPress.', 'ultimate-member' ) . ' <a target="_blank" href="' . admin_url( 'update-core.php' ) . '">' . esc_html__( 'Update WordPress Now', 'ultimate-member' ) . '</a>';
 		} else {
 			$content .= $br . $br . $check . esc_html__( 'You\'re using the latest version of WordPress', 'ultimate-member' ) . '(' . esc_attr( $wp_version ) . ')';
 		}
