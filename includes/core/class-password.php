@@ -170,7 +170,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				return '';
 			}
 
-			UM()->fields()->set_id = $args['form_id'];
+			UM()->fields()->set_id = absint( $args['form_id'] );
 
 			ob_start();
 

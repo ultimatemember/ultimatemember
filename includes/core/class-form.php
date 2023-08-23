@@ -710,7 +710,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		public function beautify( $form ) {
 			if ( isset( $form['form_id'] ) ) {
 				$this->form_suffix = '-' . $form['form_id'];
-				$this->processing  = $form['form_id'];
+				$this->processing  = absint( $form['form_id'] );
 
 				foreach ( $form as $key => $value ) {
 					if ( strstr( $key, $this->form_suffix ) ) {

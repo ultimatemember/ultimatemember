@@ -4047,7 +4047,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				UM()->form()->nonce = wp_create_nonce( 'um-profile-nonce' . UM()->user()->target_id );
 			}
 
-			$this->set_id = $this->global_args['form_id'];
+			$this->set_id = absint( $this->global_args['form_id'] );
 
 			$this->field_icons = ( isset( $this->global_args['icons'] ) ) ? $this->global_args['icons'] : 'label';
 
@@ -4548,7 +4548,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			UM()->form()->form_suffix = '-' . $this->global_args['form_id'];
 
 			$this->set_mode = $mode;
-			$this->set_id = $this->global_args['form_id'];
+			$this->set_id   = absint( $this->global_args['form_id'] );
 
 			$this->field_icons = ( isset( $this->global_args['icons'] ) ) ? $this->global_args['icons'] : 'label';
 
