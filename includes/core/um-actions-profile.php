@@ -1374,6 +1374,11 @@ function um_pre_profile_shortcode( $args ) {
 		return;
 	}
 
+	// disable for the REST API requests.
+	if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+		return;
+	}
+
 	if ( true === UM()->fields()->editing ) {
 		if ( um_get_requested_user() ) {
 			if ( ! UM()->roles()->um_current_user_can( 'edit', um_get_requested_user() ) ) {
