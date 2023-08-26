@@ -805,6 +805,12 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				}
 			}
 
+			$content = apply_filters( 'um_force_shortcode_render', false, $args );
+			if ( false !== $content ) {
+				ob_get_clean();
+				return $content;
+			}
+
 			/**
 			 * Fires before loading form shortcode.
 			 *

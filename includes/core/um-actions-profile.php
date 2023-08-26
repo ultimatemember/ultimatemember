@@ -1287,7 +1287,7 @@ function um_profile_header( $args ) {
 						</span>
 						<?php
 						if ( UM()->fields()->is_error( $description_key ) ) {
-							echo UM()->fields()->field_error( UM()->fields()->show_error( $description_key ), true );
+							echo UM()->fields()->field_error( UM()->fields()->show_error( $description_key ), "um-meta-bio", true );
 						}
 						?>
 					</div>
@@ -1332,7 +1332,7 @@ function um_profile_header( $args ) {
 		<div class="um-clear"></div>
 
 		<?php if ( UM()->fields()->is_error( 'profile_photo' ) ) {
-			echo UM()->fields()->field_error( UM()->fields()->show_error( 'profile_photo' ), 'force_show' );
+			echo UM()->fields()->field_error( UM()->fields()->show_error( 'profile_photo' ), "profile_photo", 'force_show' );
 		}
 
 		/**
