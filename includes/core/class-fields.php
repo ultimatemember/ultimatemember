@@ -4052,7 +4052,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$this->field_icons = ( isset( $this->global_args['icons'] ) ) ? $this->global_args['icons'] : 'label';
 
 			// start output here
-			$this->get_fields = $this->get_fields();
+			if ( ! empty( $this->global_args['custom_fields'] ) && is_array( $this->global_args['custom_fields'] ) ) {
+				$this->get_fields = $this->global_args['custom_fields'];
+			} else {
+				$this->get_fields = $this->get_fields();
+			}
 
 			if ( ! empty( $this->get_fields ) ) {
 
