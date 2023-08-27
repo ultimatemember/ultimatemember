@@ -3626,7 +3626,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								$class  = 'um-icon-android-radio-button-off';
 							}
 
-							if ( empty( $data['editable'] ) ) {
+							if ( array_key_exists( 'editable', $data ) && empty( $data['editable'] ) ) {
 								$col_class .= ' um-field-radio-state-disabled';
 							}
 
@@ -3745,7 +3745,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$class  = 'um-icon-android-checkbox-outline-blank';
 						}
 
-						if ( empty( $data['editable'] ) ) {
+						if ( array_key_exists( 'editable', $data ) && empty( $data['editable'] ) ) {
 							$col_class .= ' um-field-radio-state-disabled';
 						}
 
