@@ -2205,7 +2205,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			$autocomplete = array_key_exists( 'autocomplete', $data ) ? $data['autocomplete'] : 'off';
 
-			$classes = '';
+			$classes = array();
 			if ( array_key_exists( 'classes', $data ) ) {
 				$classes = explode( ' ', $data['classes'] );
 			}
@@ -4053,7 +4053,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			// start output here
 			if ( ! empty( $this->global_args['custom_fields'] ) && is_array( $this->global_args['custom_fields'] ) ) {
-				$this->get_fields = $this->global_args['custom_fields'];
+				$this->get_fields = apply_filters( 'um_get_form_fields', $this->global_args['custom_fields'] );
 			} else {
 				$this->get_fields = $this->get_fields();
 			}
@@ -4214,11 +4214,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			// Get whole field data.
 			if ( is_array( $data ) ) {
-				$data = $this->get_field( $key );
+				$data = wp_parse_args( $data, $this->get_field( $key ) );
 			}
 
-			//hide if empty type
-			if ( ! array_key_exists( 'type', $data ) || empty( $data['type'] ) ) {
+			// hide if empty type.
+			if ( empty( $data ) || ! array_key_exists( 'type', $data ) || empty( $data['type'] ) ) {
 				return '';
 			}
 			$type = $data['type'];
@@ -4257,7 +4257,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				return '';
 			}
 
-			$classes = '';
+			$classes = array();
 			if ( ! empty( $data['classes'] ) ) {
 				$classes = explode( ' ', $data['classes'] );
 			}
@@ -4557,7 +4557,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$this->field_icons = ( isset( $this->global_args['icons'] ) ) ? $this->global_args['icons'] : 'label';
 
 			// start output here
-			$this->get_fields = $this->get_fields();
+			if ( ! empty( $this->global_args['custom_fields'] ) && is_array( $this->global_args['custom_fields'] ) ) {
+				$this->get_fields = apply_filters( 'um_get_form_fields', $this->global_args['custom_fields'] );
+			} else {
+				$this->get_fields = $this->get_fields();
+			}
 
 			if ( UM()->options()->get( 'profile_empty_text' ) ) {
 
