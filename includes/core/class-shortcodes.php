@@ -648,7 +648,11 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			if ( ! array_key_exists( 'form_id', $args ) ) {
 				return '';
 			}
+
 			$this->form_id = $args['form_id'];
+			if ( empty( $this->form_id ) ) {
+				return '';
+			}
 
 			$this->form_status = get_post_status( $this->form_id );
 			if ( 'publish' !== $this->form_status ) {
