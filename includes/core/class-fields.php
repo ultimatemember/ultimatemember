@@ -15,13 +15,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 
 		/**
-		 * @var string
+		 * @var null|string
 		 */
-		public $set_mode = '';
+		public $set_mode = null;
 
 
 		/**
-		 * @var int form_id
+		 * @var null|int form_id
 		 */
 		public $set_id = null;
 
@@ -1547,30 +1547,39 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		/**
 		 * Get form fields
 		 *
+		 * @var null|int $form_id
+		 *
 		 * @return array
 		 */
 		public function get_fields() {
-			if ( empty( $this->fields ) ) {
+			if ( empty( $this->set_id ) ) {
+				return array();
+			}
+
+			if ( empty( $this->fields[ $this->set_id ] ) ) {
 				/**
 				 * Filters the form fields.
 				 *
-				 * @param {array} $fields Form fields.
+				 * @param {array} $fields  Form fields.
+				 * @param {int}   $form_id Form ID. Since 2.6.11
 				 *
 				 * @return {array} Form fields.
 				 *
 				 * @since 1.3.x
+				 * @since 2.6.11 Added Form ID attribute.
 				 * @hook um_get_form_fields
 				 *
 				 * @example <caption>Extend form fields.</caption>
-				 * function my_form_fields( $fields ) {
+				 * function my_form_fields( $fields, $form_id ) {
 				 *     // your code here
 				 *     return $fields;
 				 * }
-				 * add_filter( 'um_get_form_fields', 'my_form_fields' );
+				 * add_filter( 'um_get_form_fields', 'my_form_fields', 10, 2 );
 				 */
-				$this->fields = apply_filters( 'um_get_form_fields', $this->fields );
+				$this->fields[ $this->set_id ] = apply_filters( 'um_get_form_fields', array(), $this->set_id );
 			}
-			return $this->fields;
+
+			return $this->fields[ $this->set_id ];
 		}
 
 		/**
@@ -1581,7 +1590,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return mixed
 		 * @throws \Exception
 		 */
-		function get_field( $key ) {
+		public function get_field( $key ) {
 			$fields = $this->get_fields();
 
 			if ( isset( $fields ) && is_array( $fields ) && isset( $fields[ $key ] ) ) {
@@ -4034,7 +4043,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return string|null
 		 * @throws \Exception
 		 */
-		function display( $mode, $args ) {
+		public function display( $mode, $args ) {
 			$output = null;
 
 			$this->global_args = $args;
@@ -4540,7 +4549,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return string|null
 		 * @throws \Exception
 		 */
-		function display_view( $mode, $args ) {
+		public function display_view( $mode, $args ) {
 			$output = null;
 
 			$this->global_args = $args;
