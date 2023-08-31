@@ -602,6 +602,16 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 * @return string
 		 */
 		public function ultimatemember( $args = array() ) {
+			// There is possible to use 'shortcode_atts_ultimatemember' filter for getting customized `$args`.
+			$args = shortcode_atts(
+				array(
+					'form_id'  => '',
+					'is_block' => 0,
+				),
+				$args,
+				'ultimatemember'
+			);
+
 			/**
 			 * Filters variable for enable singleton shortcode loading on the same page.
 			 * Note: Set it to `false` if you don't need to render the same form twice or more on the same page.
