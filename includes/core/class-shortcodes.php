@@ -606,11 +606,15 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			$args = shortcode_atts(
 				array(
 					'form_id'  => '',
-					'is_block' => 0,
+					'is_block' => false,
 				),
 				$args,
 				'ultimatemember'
 			);
+
+			// Sanitize shortcode arguments.
+			$args['form_id']  = ! empty( $args['form_id'] ) ? absint( $args['form_id'] ) : '';
+			$args['is_block'] = (bool) $args['is_block'];
 
 			/**
 			 * Filters variable for enable singleton shortcode loading on the same page.
@@ -779,7 +783,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				}
 			}
 
-			if ( isset( $args['is_block'] ) && 1 === (int) $args['is_block'] && 'profile' === $mode && ! is_user_logged_in() ) {
+			if ( 'profile' === $mode && ! empty( $args['is_block'] ) && ! is_user_logged_in() ) {
 				ob_get_clean();
 				return '';
 			}

@@ -2094,7 +2094,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		public function edit_field( $key, $data, $rule = false, $args = array() ) {
 			global $_um_profile_id;
 
-			if ( isset( $data['is_block'] ) && 1 === (int) $data['is_block'] ) {
+			if ( ! empty( $data['is_block'] ) ) {
 				$form_suffix = '';
 			} else {
 				$form_suffix = UM()->form()->form_suffix;
@@ -2106,7 +2106,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$_um_profile_id = um_user( 'ID' );
 			}
 
-			if ( isset( $data['is_block'] ) && 1 === (int) $data['is_block'] && ! is_user_logged_in() ) {
+			if ( ! empty( $data['is_block'] ) && ! is_user_logged_in() ) {
 				$_um_profile_id = 0;
 			}
 
@@ -4124,7 +4124,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 									if ( $col1_fields ) {
 										foreach ( $col1_fields as $key => $data ) {
 											if ( ! empty( $args['is_block'] ) ) {
-												$data['is_block'] = 1;
+												$data['is_block'] = true;
 											}
 											$output .= $this->edit_field( $key, $data );
 										}
@@ -4138,7 +4138,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 									if ( $col1_fields ) {
 										foreach ( $col1_fields as $key => $data ) {
 											if ( ! empty( $args['is_block'] ) ) {
-												$data['is_block'] = 1;
+												$data['is_block'] = true;
 											}
 											$output .= $this->edit_field( $key, $data );
 										}
@@ -4150,7 +4150,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 									if ( $col2_fields ) {
 										foreach ( $col2_fields as $key => $data ) {
 											if ( ! empty( $args['is_block'] ) ) {
-												$data['is_block'] = 1;
+												$data['is_block'] = true;
 											}
 											$output .= $this->edit_field( $key, $data );
 										}
