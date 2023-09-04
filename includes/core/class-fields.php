@@ -2186,7 +2186,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			if ( true === $this->editing && 'profile' === $this->set_mode ) {
 				if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
-					if ( empty( $data['editable'] ) ) {
+					// It's for a legacy case `array_key_exists( 'editable', $data )`.
+					if ( array_key_exists( 'editable', $data ) && empty( $data['editable'] ) ) {
 						$disabled = ' disabled="disabled" ';
 					}
 				}
@@ -3635,7 +3636,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								$class  = 'um-icon-android-radio-button-off';
 							}
 
-							if ( empty( $data['editable'] ) ) {
+							// It's for a legacy case `array_key_exists( 'editable', $data )`.
+							if ( array_key_exists( 'editable', $data ) && empty( $data['editable'] ) ) {
 								$col_class .= ' um-field-radio-state-disabled';
 							}
 
@@ -3754,7 +3756,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$class  = 'um-icon-android-checkbox-outline-blank';
 						}
 
-						if ( empty( $data['editable'] ) ) {
+						// It's for a legacy case `array_key_exists( 'editable', $data )`.
+						if ( array_key_exists( 'editable', $data ) && empty( $data['editable'] ) ) {
 							$col_class .= ' um-field-radio-state-disabled';
 						}
 
