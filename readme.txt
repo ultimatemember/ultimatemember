@@ -168,31 +168,12 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 = 2.6.11: September 06, 2023 =
 
-* Important:
-
-  - Based on the updates of the PHP version and the tightening of code standards to define clear data types, we will change some field attributes and option values.
-    Where it is possible to do it automatically, it will be done with the help of scripts for updating the database between versions.
-    In some places, unfortunately, a logical fork is formed with legacy data, which cannot be considered unambiguously during automatic updating and can lead to unexpected consequences.
-    We need to standardize such places in the code and ask you to manually update the data where necessary.
-    So that you can decide for yourself which data should be generated in a new format through the user interface in the case of a regular user or in code and custom callbacks in the case of developers.
-
-  - For regular users: Check all fields on each profile form and their option named as "Can user edit this field?".
-    You may have an incorrect value for the `editable` attribute in your database for predefined or custom fields.
-    So you need to re-update the fields' settings for the fields that aren't editable.
-  - For developers: The valid data format is boolean `false|true`.
-    We highly recommend to check `editable` field's capability by the built-in function `um_can_edit_field( $field_data );`.
-    If you extends the predefined fields please make sure that there is `editable` attribute set to "true" if you need this field set to editable by default.
-    In the case if there aren't `editable` attribute it will be considered as non-editable.
-    As legacy workaround we check the `editable` field attribute by the `! empty( $field_data['editable'] );` condition, so in case if you had integer format 1|0 for the `editable` attribute it will also work.
-
-* Enhancements:
-
 * Bugfixes:
 
   - Fixed: Empty mail From data when there isn't set an option
   - Fixed: Nonce validation for the admin actions handler
   - Fixed: REST API endpoint List Pages redirecting to the homepage
-  - Fixed: Standardize the 'editable' attribute for the UM fields and hooks that can extend these fields. All fields that can be editable on the User Profile form has to have `editable` attribute set to `true`
+  - Fixed: Standardize the 'editable' attribute for the UM fields and hooks that can extend these fields
   - Fixed: Redirection from default WordPress registration to UM registration page (if it's not a published)
 
 = 2.6.10: August 17, 2023 =
