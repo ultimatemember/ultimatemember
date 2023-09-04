@@ -282,6 +282,27 @@ function um_check_user_status( $user_id, $args, $form_data = null ) {
 			// Add only priority role to URL.
 			$url = add_query_arg( 'um_role', esc_attr( um_user( 'role' ) ), $url );
 			$url = add_query_arg( 'um_form_id', esc_attr( $form_data['form_id'] ), $url );
+			/**
+			 * Filters the redirect URL for user after registration based on its status when need to show message.
+			 *
+			 * @since 2.6.11
+			 * @hook  um_registration_show_message_redirect_url
+			 *
+			 * @param {string} $url       Redirect URL.
+			 * @param {string} $status    User status.
+			 * @param {int}    $user_id   User ID.
+			 * @param {array}  $form_data Form data.
+			 *
+			 * @return {string} Redirect URL.
+			 *
+			 * @example <caption>Change redirect URL for user after registration based on its status when need to show message.</caption>
+			 * function my_um_registration_show_message_redirect_url( $url, $status, $user_id ) {
+			 *     // your code here
+			 *     return $url;
+			 * }
+			 * add_filter( 'um_registration_show_message_redirect_url', 'my_um_registration_show_message_redirect_url', 10, 4 );
+			 */
+			$url = apply_filters( 'um_registration_show_message_redirect_url', $url, $status, um_user( 'ID' ), $form_data );
 			// Not `um_safe_redirect()` because UM()->permalinks()->get_current_url() is situated on the same host.
 			wp_safe_redirect( $url );
 			exit;

@@ -203,7 +203,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 					if ( ! empty( $role ) && ! empty( $role['status'] ) ) {
 						$message_key = $role['status'] . '_message';
-						$this->custom_message = ! empty( $role[ $message_key ] ) ? stripslashes( $role[ $message_key ] ) : '';
+						$this->custom_message = ! empty( $role[ $message_key ] ) ? $this->convert_user_tags( stripslashes( $role[ $message_key ] ) ) : '';
 					}
 				}
 			}
@@ -1143,16 +1143,14 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			return um_convert_tags( $str, array(), false );
 		}
 
-
 		/**
 		 * Convert user tags in a string
 		 *
-		 * @param $str
+		 * @param string $str
 		 *
-		 * @return mixed
+		 * @return string
 		 */
-		function convert_user_tags( $str ) {
-
+		public function convert_user_tags( $str ) {
 			$pattern_array = array(
 				'{first_name}',
 				'{last_name}',
@@ -1160,88 +1158,96 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				'{user_avatar_small}',
 				'{username}',
 				'{nickname}',
+				'{user_email}',
 			);
-
 			/**
-			 * UM hook
+			 * Filters the user placeholders patterns.
 			 *
-			 * @type filter
-			 * @title um_allowed_user_tags_patterns
-			 * @description Extend user placeholders patterns
-			 * @input_vars
-			 * [{"var":"$patterns","type":"array","desc":"Placeholders"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_allowed_user_tags_patterns', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_allowed_user_tags_patterns', 'my_allowed_user_tags', 10, 1 );
+			 * @since 1.3.x
+			 * @hook  um_allowed_user_tags_patterns
+			 *
+			 * @param {array} $patterns User Placeholders.
+			 *
+			 * @return {array} User Placeholders.
+			 *
+			 * @example <caption>Add the `{user_description}` placeholder.</caption>
 			 * function my_allowed_user_tags( $patterns ) {
-			 *     // your code here
+			 *     $patterns[] = '{user_description}';
 			 *     return $patterns;
 			 * }
-			 * ?>
+			 * add_filter( 'um_allowed_user_tags_patterns', 'my_allowed_user_tags' );
 			 */
 			$pattern_array = apply_filters( 'um_allowed_user_tags_patterns', $pattern_array );
-
-			//$matches = false;
 			foreach ( $pattern_array as $pattern ) {
-
 				if ( preg_match( $pattern, $str ) ) {
 
-					$value = '';
+					$value    = '';
+					$usermeta = str_replace( array( '{', '}' ), '', $pattern );
 					if ( is_user_logged_in() ) {
-						$usermeta = str_replace( '{', '', $pattern );
-						$usermeta = str_replace( '}', '', $usermeta );
-
-						if ( $usermeta == 'user_avatar_small' ) {
+						if ( 'user_avatar_small' === $usermeta ) {
 							$value = get_avatar( um_user( 'ID' ), 40 );
 						} elseif ( um_user( $usermeta ) ) {
 							$value = um_user( $usermeta );
 						}
 
-						if ( $usermeta == 'username' ) {
+						if ( 'username' === $usermeta ) {
 							$value = um_user( 'user_login' );
 						}
 
-						if ( $usermeta == 'nickname' ) {
+						if ( 'nickname' === $usermeta ) {
 							$value = um_profile( 'nickname' );
 						}
 
+						if ( 'user_email' === $usermeta ) {
+							$value = um_user( 'user_email' );
+						}
+
 						/**
-						 * UM hook
+						 * Filters the user placeholders value of pattern for logged-in user.
 						 *
-						 * @type filter
-						 * @title um_profile_tag_hook__{$usermeta}
-						 * @description Change usermeta field value
-						 * @input_vars
-						 * [{"var":"$value","type":"array","desc":"Meta field value"},
-						 * {"var":"$user_id","type":"array","desc":"User ID"}]
-						 * @change_log
-						 * ["Since: 2.0"]
-						 * @usage
-						 * <?php add_filter( 'um_profile_tag_hook__{$usermeta}', 'function_name', 10, 2 ); ?>
-						 * @example
-						 * <?php
-						 * add_filter( 'um_profile_tag_hook__{$usermeta}', 'my_profile_tag', 10, 2 );
-						 * function my_profile_tag( $value, $user_id ) {
-						 *     // your code here
+						 * @since 1.3.x
+						 * @hook  um_profile_tag_hook__{$usermeta}
+						 *
+						 * @param {string} $value User meta field value.
+						 * @param {int}    $id    User ID.
+						 *
+						 * @return {string} User meta field value.
+						 *
+						 * @example <caption>Add the replacement value for `{user_description}` placeholder.</caption>
+						 * function my_user_description( $value, $user_id ) {
+						 *     $value = get_user_meta( $user_id, 'user_description', true );
 						 *     return $value;
 						 * }
-						 * ?>
+						 * add_filter( 'um_profile_tag_hook__user_description', 'my_user_description', 10, 2 );
 						 */
 						$value = apply_filters( "um_profile_tag_hook__{$usermeta}", $value, um_user( 'ID' ) );
+					} else {
+						/**
+						 * Filters the user placeholders value of pattern for not logged-in user.
+						 *
+						 * @since 2.6.11
+						 * @hook  um_profile_nopriv_tag_hook__{$usermeta}
+						 *
+						 * @param {string} $value User meta field value.
+						 *
+						 * @return {string} User meta field value.
+						 *
+						 * @example <caption>Add the replacement value for `{user_description}` placeholder for not logged-in user.</caption>
+						 * function my_nopriv_user_description( $value ) {
+						 *     $value = ! empty( $_GET['user_description'] ) ? sanitize_text_field( $_GET['user_description'] ) : '';
+						 *     return $value;
+						 * }
+						 * add_filter( 'um_profile_nopriv_tag_hook__user_description', 'my_nopriv_user_description' );
+						 */
+						$value = apply_filters( "um_profile_nopriv_tag_hook__{$usermeta}", $value );
 					}
 
 					$str = preg_replace( '/' . $pattern . '/', $value, $str );
 				}
-
 			}
 
 			return $str;
 		}
-
 
 		/**
 		 * Shortcode: Show custom content to specific role
