@@ -2378,15 +2378,26 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_editable':
+					// Make a new field editable by default.
+					if ( false === $this->in_edit ) {
+						$this->edit_mode_value = true;
+					}
+
+					// Set to true if `editable` doesn't exist (legacy case). It will be saved to DB as `true` after the first field update.
+					if ( null === $this->edit_mode_value ) {
+						$this->edit_mode_value = true;
+					}
+
+					if ( empty( $this->edit_mode_value ) ) {
+						$this->edit_mode_value = false;
+					}
 					?>
 
 					<div class="um-admin-tri">
-
-						<p><label for="_editable"><?php _e( 'Can user edit this field?', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'This option allows you to set whether or not the user can edit the information in this field. The site admin can edit all fields regardless of the option set here.', 'ultimate-member' ) ); ?></label>
+						<p><label for="_editable"><?php esc_html_e( 'Can user edit this field?', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This option allows you to set whether or not the user can edit the information in this field. The site admin can edit all fields regardless of the option set here.', 'ultimate-member' ) ); ?></label>
 							<input type="hidden" name="_editable" id="_editable_hidden" value="0" />
-							<input type="checkbox" name="_editable" id="_editable" value="1" <?php checked( null === $this->edit_mode_value || $this->edit_mode_value ) ?> />
+							<input type="checkbox" name="_editable" id="_editable" value="1" <?php checked( $this->edit_mode_value ); ?> />
 						</p>
-
 					</div>
 
 					<?php

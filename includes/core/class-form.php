@@ -710,7 +710,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		public function beautify( $form ) {
 			if ( isset( $form['form_id'] ) ) {
 				$this->form_suffix = '-' . $form['form_id'];
-				$this->processing  = $form['form_id'];
+				$this->processing  = absint( $form['form_id'] );
 
 				foreach ( $form as $key => $value ) {
 					if ( strstr( $key, $this->form_suffix ) ) {
@@ -1065,7 +1065,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				if ( strstr( $field_key, 'role_' ) && array_key_exists( 'options', $field_settings ) && is_array( $field_settings['options'] ) ) {
 
 					if ( isset( $this->post_form['mode'] ) && 'profile' === $this->post_form['mode'] ) {
-						if ( empty( $field_settings['editable'] ) || ! um_can_edit_field( $field_settings ) ) {
+						// It's for a legacy case `array_key_exists( 'editable', $field_settings )`.
+						if ( ( array_key_exists( 'editable', $field_settings ) && empty( $field_settings['editable'] ) ) || ! um_can_edit_field( $field_settings ) ) {
 							continue;
 						}
 					}

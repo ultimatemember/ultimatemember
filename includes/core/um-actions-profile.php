@@ -386,10 +386,11 @@ function um_user_edit_profile( $args, $form_data ) {
 		}
 	}
 
-	// Secure selected role
-	if ( ( isset( $fields['role'] ) && ! empty( $fields['role']['editable'] ) && um_can_view_field( $fields['role'] ) ) ||
-		( isset( $fields['role_select'] ) && ! empty( $fields['role_select']['editable'] ) && um_can_view_field( $fields['role_select'] ) ) ||
-		( isset( $fields['role_radio'] ) && ! empty( $fields['role_radio']['editable'] ) && um_can_view_field( $fields['role_radio'] ) ) ) {
+	// Secure selected role.
+	// It's for a legacy case `array_key_exists( 'editable', $fields['role'] )` and similar.
+	if ( ( isset( $fields['role'] ) && ( ! array_key_exists( 'editable', $fields['role'] ) || ! empty( $fields['role']['editable'] ) ) && um_can_view_field( $fields['role'] ) ) ||
+		( isset( $fields['role_select'] ) && ( ! array_key_exists( 'editable', $fields['role_select'] ) || ! empty( $fields['role_select']['editable'] ) ) && um_can_view_field( $fields['role_select'] ) ) ||
+		( isset( $fields['role_radio'] ) && ( ! array_key_exists( 'editable', $fields['role_radio'] ) || ! empty( $fields['role_radio']['editable'] ) ) && um_can_view_field( $fields['role_radio'] ) ) ) {
 
 		if ( ! empty( $args['submitted']['role'] ) ) {
 			global $wp_roles;
@@ -1371,6 +1372,11 @@ add_action( 'um_profile_header', 'um_profile_header', 9 );
 function um_pre_profile_shortcode( $args ) {
 	// It handles only UM Profile forms.
 	if ( ! array_key_exists( 'mode', $args ) || 'profile' !== $args['mode'] ) {
+		return;
+	}
+
+	// disable for the REST API requests.
+	if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
 		return;
 	}
 

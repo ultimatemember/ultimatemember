@@ -15,13 +15,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 
 		/**
-		 * @var string
+		 * @var null|string
 		 */
-		public $set_mode = '';
+		public $set_mode = null;
 
 
 		/**
-		 * @var int form_id
+		 * @var null|int form_id
 		 */
 		public $set_id = null;
 
@@ -1547,30 +1547,39 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		/**
 		 * Get form fields
 		 *
+		 * @var null|int $form_id
+		 *
 		 * @return array
 		 */
 		public function get_fields() {
-			if ( empty( $this->fields ) ) {
+			if ( empty( $this->set_id ) ) {
+				return array();
+			}
+
+			if ( empty( $this->fields[ $this->set_id ] ) ) {
 				/**
 				 * Filters the form fields.
 				 *
-				 * @param {array} $fields Form fields.
+				 * @param {array} $fields  Form fields.
+				 * @param {int}   $form_id Form ID. Since 2.6.11
 				 *
 				 * @return {array} Form fields.
 				 *
 				 * @since 1.3.x
+				 * @since 2.6.11 Added Form ID attribute.
 				 * @hook um_get_form_fields
 				 *
 				 * @example <caption>Extend form fields.</caption>
-				 * function my_form_fields( $fields ) {
+				 * function my_form_fields( $fields, $form_id ) {
 				 *     // your code here
 				 *     return $fields;
 				 * }
-				 * add_filter( 'um_get_form_fields', 'my_form_fields' );
+				 * add_filter( 'um_get_form_fields', 'my_form_fields', 10, 2 );
 				 */
-				$this->fields = apply_filters( 'um_get_form_fields', $this->fields );
+				$this->fields[ $this->set_id ] = apply_filters( 'um_get_form_fields', array(), $this->set_id );
 			}
-			return $this->fields;
+
+			return $this->fields[ $this->set_id ];
 		}
 
 		/**
@@ -1581,7 +1590,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return mixed
 		 * @throws \Exception
 		 */
-		function get_field( $key ) {
+		public function get_field( $key ) {
 			$fields = $this->get_fields();
 
 			if ( isset( $fields ) && is_array( $fields ) && isset( $fields[ $key ] ) ) {
@@ -2085,7 +2094,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		public function edit_field( $key, $data, $rule = false, $args = array() ) {
 			global $_um_profile_id;
 
-			if ( isset( $data['is_block'] ) && 1 === (int) $data['is_block'] ) {
+			if ( ! empty( $data['is_block'] ) ) {
 				$form_suffix = '';
 			} else {
 				$form_suffix = UM()->form()->form_suffix;
@@ -2097,7 +2106,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$_um_profile_id = um_user( 'ID' );
 			}
 
-			if ( isset( $data['is_block'] ) && 1 === (int) $data['is_block'] && ! is_user_logged_in() ) {
+			if ( ! empty( $data['is_block'] ) && ! is_user_logged_in() ) {
 				$_um_profile_id = 0;
 			}
 
@@ -2177,7 +2186,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			if ( true === $this->editing && 'profile' === $this->set_mode ) {
 				if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
-					if ( empty( $data['editable'] ) ) {
+					// It's for a legacy case `array_key_exists( 'editable', $data )`.
+					if ( array_key_exists( 'editable', $data ) && empty( $data['editable'] ) ) {
 						$disabled = ' disabled="disabled" ';
 					}
 				}
@@ -3626,7 +3636,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								$class  = 'um-icon-android-radio-button-off';
 							}
 
-							if ( empty( $data['editable'] ) ) {
+							// It's for a legacy case `array_key_exists( 'editable', $data )`.
+							if ( array_key_exists( 'editable', $data ) && empty( $data['editable'] ) ) {
 								$col_class .= ' um-field-radio-state-disabled';
 							}
 
@@ -3745,7 +3756,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$class  = 'um-icon-android-checkbox-outline-blank';
 						}
 
-						if ( empty( $data['editable'] ) ) {
+						// It's for a legacy case `array_key_exists( 'editable', $data )`.
+						if ( array_key_exists( 'editable', $data ) && empty( $data['editable'] ) ) {
 							$col_class .= ' um-field-radio-state-disabled';
 						}
 
@@ -4034,7 +4046,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return string|null
 		 * @throws \Exception
 		 */
-		function display( $mode, $args ) {
+		public function display( $mode, $args ) {
 			$output = null;
 
 			$this->global_args = $args;
@@ -4047,7 +4059,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				UM()->form()->nonce = wp_create_nonce( 'um-profile-nonce' . UM()->user()->target_id );
 			}
 
-			$this->set_id = $this->global_args['form_id'];
+			$this->set_id = absint( $this->global_args['form_id'] );
 
 			$this->field_icons = ( isset( $this->global_args['icons'] ) ) ? $this->global_args['icons'] : 'label';
 
@@ -4115,7 +4127,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 									if ( $col1_fields ) {
 										foreach ( $col1_fields as $key => $data ) {
 											if ( ! empty( $args['is_block'] ) ) {
-												$data['is_block'] = 1;
+												$data['is_block'] = true;
 											}
 											$output .= $this->edit_field( $key, $data );
 										}
@@ -4129,7 +4141,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 									if ( $col1_fields ) {
 										foreach ( $col1_fields as $key => $data ) {
 											if ( ! empty( $args['is_block'] ) ) {
-												$data['is_block'] = 1;
+												$data['is_block'] = true;
 											}
 											$output .= $this->edit_field( $key, $data );
 										}
@@ -4141,7 +4153,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 									if ( $col2_fields ) {
 										foreach ( $col2_fields as $key => $data ) {
 											if ( ! empty( $args['is_block'] ) ) {
-												$data['is_block'] = 1;
+												$data['is_block'] = true;
 											}
 											$output .= $this->edit_field( $key, $data );
 										}
@@ -4540,7 +4552,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return string|null
 		 * @throws \Exception
 		 */
-		function display_view( $mode, $args ) {
+		public function display_view( $mode, $args ) {
 			$output = null;
 
 			$this->global_args = $args;
@@ -4548,7 +4560,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			UM()->form()->form_suffix = '-' . $this->global_args['form_id'];
 
 			$this->set_mode = $mode;
-			$this->set_id = $this->global_args['form_id'];
+			$this->set_id   = absint( $this->global_args['form_id'] );
 
 			$this->field_icons = ( isset( $this->global_args['icons'] ) ) ? $this->global_args['icons'] : 'label';
 

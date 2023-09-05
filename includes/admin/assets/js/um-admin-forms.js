@@ -1,14 +1,20 @@
 function um_admin_init_users_select() {
-	if ( jQuery('.um-user-select-field').length ) {
+	if ( jQuery('.um-user-select-field:visible').length ) {
 		function avatarformat( data ) {
 			var option;
 			if ( ! data.id ) {
 				return data.text;
 			}
+
 			if ( 'undefined' !== typeof data.img ) {
 				option = jQuery('<span><img style="vertical-align: sub; width: 20px; height: 20px;" src="' + data.img + '" /> ' + data.text + '</span>');
 			} else {
-				var img = data.element.attributes['data-img']['value'];
+				let img;
+				if ( 'undefined' !== typeof data.element ) {
+					if ( 'undefined' !== typeof data.element.attributes['data-img'] ) {
+						img = data.element.attributes['data-img']['value'];
+					}
+				}
 				if ( img ) {
 					option = jQuery('<img style="vertical-align: sub; width: 20px; height: 20px;" src="' + img + '" /> ' + data.text + '</span>');
 				} else {
@@ -78,7 +84,13 @@ function um_admin_init_users_select() {
 			templateResult: avatarformat
 		};
 
-		jQuery('.um-user-select-field').select2( select2_atts );
+		jQuery('.um-user-select-field:visible').each( function() {
+			if ( jQuery(this).hasClass('select2-hidden-accessible') ) {
+				jQuery(this).select2( 'destroy' );
+			}
+		});
+
+		jQuery('.um-user-select-field:visible').select2( select2_atts );
 	}
 }
 
@@ -798,6 +810,7 @@ jQuery(document).ready( function() {
 
 			if ( check_condition( jQuery(this) ) ) {
 				jQuery(this).show();
+				um_admin_init_users_select();
 			} else {
 				jQuery(this).hide();
 			}

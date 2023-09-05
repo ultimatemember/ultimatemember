@@ -1667,7 +1667,8 @@ function um_can_edit_field( $data ) {
 			$can_edit = false;
 		} else {
 			if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
-				if ( empty( $data['editable'] ) ) {
+				// It's for a legacy case `array_key_exists( 'editable', $data )`.
+				if ( array_key_exists( 'editable', $data ) && empty( $data['editable'] ) ) {
 					$can_edit = false;
 				} else {
 					if ( ! um_is_user_himself() ) {
@@ -2303,7 +2304,7 @@ function um_get_default_cover_uri() {
  * @param $data
  * @param null $attrs
  *
- * @return string|array
+ * @return int|string|array
  */
 function um_user( $data, $attrs = null ) {
 

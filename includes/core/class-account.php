@@ -567,7 +567,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		function get_tab_fields( $id, $shortcode_args ) {
 			$output = null;
 
-			UM()->fields()->set_id = $id;
+			UM()->fields()->set_id = absint( $id );
 			UM()->fields()->set_mode = 'account';
 			UM()->fields()->editing = true;
 
@@ -610,8 +610,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					$this->init_displayed_fields( $fields, $id );
 
 					foreach ( $fields as $key => $data ) {
-						if ( isset( $shortcode_args['is_block'] ) && 1 === (int) $shortcode_args['is_block'] ) {
-							$data['is_block'] = 1;
+						if ( ! empty( $shortcode_args['is_block'] ) ) {
+							$data['is_block'] = true;
 						}
 						$output .= UM()->fields()->edit_field( $key, $data );
 					}
@@ -653,8 +653,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					$this->init_displayed_fields( $fields, $id );
 
 					foreach ( $fields as $key => $data ) {
-						if ( isset( $shortcode_args['is_block'] ) && 1 === (int) $shortcode_args['is_block'] ) {
-							$data['is_block'] = 1;
+						if ( ! empty( $shortcode_args['is_block'] ) ) {
+							$data['is_block'] = true;
 						}
 						$output .= UM()->fields()->edit_field( $key, $data );
 					}
@@ -710,8 +710,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					$this->init_displayed_fields( $fields, $id );
 
 					foreach ( $fields as $key => $data ) {
-						if ( isset( $shortcode_args['is_block'] ) && 1 === (int) $shortcode_args['is_block'] ) {
-							$data['is_block'] = 1;
+						if ( ! empty( $shortcode_args['is_block'] ) ) {
+							$data['is_block'] = true;
 						}
 						$output .= UM()->fields()->edit_field( $key, $data );
 					}
@@ -751,8 +751,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					$this->init_displayed_fields( $fields, $id );
 
 					foreach ( $fields as $key => $data ) {
-						if ( isset( $shortcode_args['is_block'] ) && 1 === (int) $shortcode_args['is_block'] ) {
-							$data['is_block'] = 1;
+						if ( ! empty( $shortcode_args['is_block'] ) ) {
+							$data['is_block'] = true;
 						}
 						$output .= UM()->fields()->edit_field( $key, $data );
 					}
