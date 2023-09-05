@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Ultimate Member plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ultimate Member 2.6.10\n"
+"Project-Id-Version: Ultimate Member 2.6.11\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ultimate-member\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-08-28T19:52:14+00:00\n"
+"POT-Creation-Date: 2023-09-05T07:30:50+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: ultimate-member\n"
@@ -17,7 +17,7 @@ msgstr ""
 #. Plugin Name of the plugin
 #. Author of the plugin
 #: includes/admin/core/class-admin-menu.php:149
-#: includes/core/class-user.php:958
+#: includes/core/class-user.php:963
 msgid "Ultimate Member"
 msgstr ""
 
@@ -44,6 +44,7 @@ msgstr ""
 #: includes/admin/class-admin.php:1758
 #: includes/admin/class-secure.php:112
 #: includes/admin/class-secure.php:149
+#: includes/admin/core/class-admin-settings.php:3708
 msgid "Security check"
 msgstr ""
 
@@ -374,7 +375,7 @@ msgstr ""
 #: includes/core/class-form.php:240
 #: includes/core/class-form.php:605
 #: includes/core/class-password.php:466
-#: includes/core/um-actions-profile.php:549
+#: includes/core/um-actions-profile.php:550
 msgid "This is not possible for security reasons."
 msgstr ""
 
@@ -484,8 +485,8 @@ msgstr ""
 #: includes/core/class-builtin.php:1279
 #: includes/core/class-builtin.php:1298
 #: includes/core/class-builtin.php:1315
-#: includes/core/class-user.php:528
-#: includes/core/class-user.php:529
+#: includes/core/class-user.php:533
+#: includes/core/class-user.php:534
 #: includes/core/um-actions-account.php:342
 msgid "Yes"
 msgstr ""
@@ -571,11 +572,11 @@ msgstr ""
 #: includes/admin/core/class-admin-forms.php:1572
 #: includes/admin/core/class-admin-forms.php:1688
 #: includes/admin/core/class-admin-forms.php:1717
-#: includes/core/um-actions-profile.php:849
-#: includes/admin/assets/js/um-admin-forms.js:292
-#: includes/admin/assets/js/um-admin-forms.js:366
-#: includes/admin/assets/js/um-admin-forms.js:643
-#: includes/admin/assets/js/um-admin-forms.js:676
+#: includes/core/um-actions-profile.php:850
+#: includes/admin/assets/js/um-admin-forms.js:304
+#: includes/admin/assets/js/um-admin-forms.js:378
+#: includes/admin/assets/js/um-admin-forms.js:655
+#: includes/admin/assets/js/um-admin-forms.js:688
 msgid "Remove"
 msgstr ""
 
@@ -584,7 +585,7 @@ msgid "Select media"
 msgstr ""
 
 #: includes/admin/core/class-admin-forms.php:1388
-#: includes/admin/assets/js/um-admin-forms.js:724
+#: includes/admin/assets/js/um-admin-forms.js:736
 msgid "Select"
 msgstr ""
 
@@ -595,38 +596,38 @@ msgstr ""
 #: includes/admin/core/class-admin-forms.php:1689
 #: includes/admin/core/class-admin-forms.php:1718
 #: includes/admin/templates/directory/sorting.php:22
-#: includes/admin/assets/js/um-admin-forms.js:294
+#: includes/admin/assets/js/um-admin-forms.js:306
 msgid "Meta key"
 msgstr ""
 
 #: includes/admin/core/class-admin-forms.php:1690
 #: includes/admin/templates/directory/sorting.php:30
-#: includes/admin/assets/js/um-admin-forms.js:295
+#: includes/admin/assets/js/um-admin-forms.js:307
 msgid "Data type"
 msgstr ""
 
 #: includes/admin/core/class-admin-forms.php:1693
 #: includes/admin/templates/directory/sorting.php:39
-#: includes/admin/assets/js/um-admin-forms.js:298
+#: includes/admin/assets/js/um-admin-forms.js:310
 msgid "Order"
 msgstr ""
 
 #: includes/admin/core/class-admin-forms.php:1694
 #: includes/admin/templates/directory/sorting.php:43
-#: includes/admin/assets/js/um-admin-forms.js:299
+#: includes/admin/assets/js/um-admin-forms.js:311
 msgid "ASC"
 msgstr ""
 
 #: includes/admin/core/class-admin-forms.php:1695
 #: includes/admin/templates/directory/sorting.php:44
-#: includes/admin/assets/js/um-admin-forms.js:300
+#: includes/admin/assets/js/um-admin-forms.js:312
 msgid "DESC"
 msgstr ""
 
 #: includes/admin/core/class-admin-forms.php:1697
 #: includes/admin/core/class-admin-forms.php:1719
 #: includes/admin/core/class-admin-metabox.php:2283
-#: includes/admin/assets/js/um-admin-forms.js:302
+#: includes/admin/assets/js/um-admin-forms.js:314
 msgid "Label"
 msgstr ""
 
@@ -1543,10 +1544,10 @@ msgid "The text that appears on the button. e.g. Upload"
 msgstr ""
 
 #: includes/admin/core/class-admin-metabox.php:2035
-#: includes/core/class-fields.php:1900
-#: includes/core/class-fields.php:1941
-#: includes/core/class-fields.php:2872
-#: includes/core/class-fields.php:2975
+#: includes/core/class-fields.php:1909
+#: includes/core/class-fields.php:1950
+#: includes/core/class-fields.php:2882
+#: includes/core/class-fields.php:2985
 msgid "Upload"
 msgstr ""
 
@@ -1786,47 +1787,47 @@ msgstr ""
 msgid "This option allows you to set whether the field must be filled in before the form can be processed."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2385
+#: includes/admin/core/class-admin-metabox.php:2397
 msgid "Can user edit this field?"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2385
+#: includes/admin/core/class-admin-metabox.php:2397
 msgid "This option allows you to set whether or not the user can edit the information in this field. The site admin can edit all fields regardless of the option set here."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2398
+#: includes/admin/core/class-admin-metabox.php:2409
 msgid "Rating System"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2398
+#: includes/admin/core/class-admin-metabox.php:2409
 msgid "Choose whether you want a 5-stars or 10-stars ratings based here."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2400
+#: includes/admin/core/class-admin-metabox.php:2411
 msgid "5  stars rating system"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2401
+#: includes/admin/core/class-admin-metabox.php:2412
 msgid "10 stars rating system"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2411
+#: includes/admin/core/class-admin-metabox.php:2422
 msgid "Choices Callback"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2411
+#: includes/admin/core/class-admin-metabox.php:2422
 msgid "Add a callback source to retrieve choices."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2421
+#: includes/admin/core/class-admin-metabox.php:2432
 msgid "Parent Option"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2421
+#: includes/admin/core/class-admin-metabox.php:2432
 msgid "Dynamically populates the option based from selected parent option."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2423
+#: includes/admin/core/class-admin-metabox.php:2434
 msgid "No Selected"
 msgstr ""
 
@@ -3433,7 +3434,7 @@ msgid "UM Action"
 msgstr ""
 
 #: includes/admin/core/class-admin-users.php:199
-#: includes/core/class-fields.php:2956
+#: includes/core/class-fields.php:2966
 msgid "Apply"
 msgstr ""
 
@@ -3485,7 +3486,7 @@ msgstr ""
 
 #: includes/admin/core/class-admin-users.php:408
 #: includes/admin/templates/dashboard/users.php:28
-#: includes/core/class-user.php:1219
+#: includes/core/class-user.php:1224
 msgid "Approved"
 msgstr ""
 
@@ -3724,7 +3725,7 @@ msgstr ""
 #: includes/admin/core/packages/2.0-beta1/init.php:91
 #: includes/admin/core/packages/2.1.3-beta3/init.php:22
 #: includes/admin/core/packages/2.3.0/init.php:54
-#: includes/admin/assets/js/um-admin-forms.js:174
+#: includes/admin/assets/js/um-admin-forms.js:186
 msgid "There are "
 msgstr ""
 
@@ -3836,7 +3837,7 @@ msgstr ""
 
 #: includes/admin/core/packages/2.1.3-beta3/init.php:23
 #: includes/admin/core/packages/2.3.0/init.php:55
-#: includes/admin/assets/js/um-admin-forms.js:175
+#: includes/admin/assets/js/um-admin-forms.js:187
 msgid "Start metadata upgrading..."
 msgstr ""
 
@@ -3949,7 +3950,7 @@ msgid "Upgrade SkypeID fields metadata for users..."
 msgstr ""
 
 #: includes/admin/core/packages/2.3.0/init.php:54
-#: includes/admin/assets/js/um-admin-forms.js:174
+#: includes/admin/assets/js/um-admin-forms.js:186
 msgid " metadata rows..."
 msgstr ""
 
@@ -4060,12 +4061,12 @@ msgid "Get latest versions"
 msgstr ""
 
 #: includes/admin/templates/dashboard/users.php:60
-#: includes/core/class-user.php:1227
+#: includes/core/class-user.php:1232
 msgid "Pending Review"
 msgstr ""
 
 #: includes/admin/templates/dashboard/users.php:73
-#: includes/core/class-user.php:1223
+#: includes/core/class-user.php:1228
 msgid "Awaiting E-mail Confirmation"
 msgstr ""
 
@@ -4665,14 +4666,14 @@ msgstr ""
 #: includes/admin/templates/modal/forms/fonticons.php:20
 #: includes/admin/templates/role/publish.php:30
 #: includes/class-config.php:242
-#: includes/core/class-fields.php:2957
-#: includes/core/class-fields.php:3082
-#: includes/core/um-actions-profile.php:850
-#: includes/core/um-actions-profile.php:862
-#: includes/core/um-actions-profile.php:1050
-#: includes/core/um-actions-profile.php:1083
-#: includes/core/um-actions-profile.php:1467
-#: includes/core/um-actions-profile.php:1474
+#: includes/core/class-fields.php:2967
+#: includes/core/class-fields.php:3092
+#: includes/core/um-actions-profile.php:851
+#: includes/core/um-actions-profile.php:863
+#: includes/core/um-actions-profile.php:1051
+#: includes/core/um-actions-profile.php:1084
+#: includes/core/um-actions-profile.php:1473
+#: includes/core/um-actions-profile.php:1480
 msgid "Cancel"
 msgstr ""
 
@@ -5372,7 +5373,7 @@ msgstr ""
 #: includes/class-config.php:123
 #: includes/class-config.php:810
 #: includes/core/class-member-directory.php:2412
-#: includes/core/um-actions-profile.php:1473
+#: includes/core/um-actions-profile.php:1479
 #: includes/core/um-actions-user.php:19
 msgid "Logout"
 msgstr ""
@@ -5765,7 +5766,7 @@ msgid "Spotify URL"
 msgstr ""
 
 #: includes/core/class-builtin.php:726
-#: includes/core/class-user.php:2028
+#: includes/core/class-user.php:2033
 msgid "Only me"
 msgstr ""
 
@@ -5994,7 +5995,7 @@ msgid "Cover Photo"
 msgstr ""
 
 #: includes/core/class-builtin.php:1227
-#: includes/core/um-actions-profile.php:810
+#: includes/core/um-actions-profile.php:811
 msgid "Change your cover photo"
 msgstr ""
 
@@ -7892,105 +7893,105 @@ msgstr ""
 msgid "Custom Field"
 msgstr ""
 
-#: includes/core/class-fields.php:1889
+#: includes/core/class-fields.php:1898
 msgid "Please upload a valid image!"
 msgstr ""
 
-#: includes/core/class-fields.php:1903
+#: includes/core/class-fields.php:1912
 msgid "Sorry this is not a valid image."
 msgstr ""
 
-#: includes/core/class-fields.php:1906
+#: includes/core/class-fields.php:1915
 msgid "This image is too large!"
 msgstr ""
 
-#: includes/core/class-fields.php:1909
+#: includes/core/class-fields.php:1918
 msgid "This image is too small!"
 msgstr ""
 
-#: includes/core/class-fields.php:1912
+#: includes/core/class-fields.php:1921
 msgid "You can only upload one image"
 msgstr ""
 
-#: includes/core/class-fields.php:1944
+#: includes/core/class-fields.php:1953
 msgid "Sorry this is not a valid file."
 msgstr ""
 
-#: includes/core/class-fields.php:1947
+#: includes/core/class-fields.php:1956
 msgid "This file is too large!"
 msgstr ""
 
-#: includes/core/class-fields.php:1950
+#: includes/core/class-fields.php:1959
 msgid "This file is too small!"
 msgstr ""
 
-#: includes/core/class-fields.php:1953
+#: includes/core/class-fields.php:1962
 msgid "You can only upload one file"
 msgstr ""
 
-#: includes/core/class-fields.php:2463
+#: includes/core/class-fields.php:2473
 msgid "Current Password"
 msgstr ""
 
-#: includes/core/class-fields.php:2503
+#: includes/core/class-fields.php:2513
 msgid "New Password"
 msgstr ""
 
 #. translators: %s: label.
 #. translators: %s: placeholder.
-#: includes/core/class-fields.php:2554
-#: includes/core/class-fields.php:2572
-#: includes/core/class-fields.php:2575
+#: includes/core/class-fields.php:2564
+#: includes/core/class-fields.php:2582
+#: includes/core/class-fields.php:2585
 msgid "Confirm %s"
 msgstr ""
 
-#: includes/core/class-fields.php:2885
+#: includes/core/class-fields.php:2895
 msgid "Upload Photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2912
-#: includes/core/class-fields.php:2956
-#: includes/core/um-actions-profile.php:1081
+#: includes/core/class-fields.php:2922
+#: includes/core/class-fields.php:2966
+#: includes/core/um-actions-profile.php:1082
 msgid "Change photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2956
-#: includes/core/class-fields.php:3081
+#: includes/core/class-fields.php:2966
+#: includes/core/class-fields.php:3091
 msgid "Processing..."
 msgstr ""
 
-#: includes/core/class-fields.php:2984
+#: includes/core/class-fields.php:2994
 msgid "Upload File"
 msgstr ""
 
-#: includes/core/class-fields.php:3029
+#: includes/core/class-fields.php:3039
 #: includes/core/um-filters-fields.php:361
 msgid "This file has been removed."
 msgstr ""
 
-#: includes/core/class-fields.php:3033
-#: includes/core/class-fields.php:3081
+#: includes/core/class-fields.php:3043
+#: includes/core/class-fields.php:3091
 msgid "Change file"
 msgstr ""
 
-#: includes/core/class-fields.php:3081
+#: includes/core/class-fields.php:3091
 msgid "Save"
 msgstr ""
 
 #. translators: %s: edit user link.
-#: includes/core/class-fields.php:4577
+#: includes/core/class-fields.php:4589
 msgid "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some information!"
 msgstr ""
 
-#: includes/core/class-fields.php:4579
+#: includes/core/class-fields.php:4591
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
-#: includes/core/class-fields.php:4846
+#: includes/core/class-fields.php:4858
 msgid "Please login as administrator."
 msgstr ""
 
-#: includes/core/class-fields.php:4850
+#: includes/core/class-fields.php:4862
 msgid "Invalid action."
 msgstr ""
 
@@ -8060,7 +8061,7 @@ msgstr ""
 msgid "Please agree privacy policy."
 msgstr ""
 
-#: includes/core/class-mail.php:643
+#: includes/core/class-mail.php:645
 #: includes/core/class-password.php:684
 #: includes/core/class-profile.php:535
 msgid "Your set password"
@@ -8184,13 +8185,13 @@ msgstr ""
 
 #: includes/core/class-member-directory.php:2357
 #: includes/core/class-member-directory.php:2401
-#: includes/core/um-actions-profile.php:1440
-#: includes/core/um-actions-profile.php:1471
+#: includes/core/um-actions-profile.php:1446
+#: includes/core/um-actions-profile.php:1477
 msgid "Edit Profile"
 msgstr ""
 
 #: includes/core/class-member-directory.php:2407
-#: includes/core/um-actions-profile.php:1472
+#: includes/core/um-actions-profile.php:1478
 msgid "My Account"
 msgstr ""
 
@@ -8212,7 +8213,7 @@ msgstr ""
 
 #: includes/core/class-password.php:496
 #: includes/core/um-actions-account.php:67
-#: includes/core/um-actions-register.php:301
+#: includes/core/um-actions-register.php:322
 msgid "Passwords may not contain the character \"\\\"."
 msgstr ""
 
@@ -8321,11 +8322,11 @@ msgstr ""
 msgid "This content has been restricted to logged in users only. Please <a href=\"{login_referrer}\">login</a> to view this content."
 msgstr ""
 
-#: includes/core/class-shortcodes.php:764
+#: includes/core/class-shortcodes.php:782
 msgid "You are already registered."
 msgstr ""
 
-#: includes/core/class-shortcodes.php:1017
+#: includes/core/class-shortcodes.php:1041
 msgid "Default Template"
 msgstr ""
 
@@ -8355,19 +8356,19 @@ msgstr ""
 msgid "This file type is not recognized."
 msgstr ""
 
-#: includes/core/class-user.php:1019
+#: includes/core/class-user.php:1024
 msgid "Ultimate Member Role"
 msgstr ""
 
-#: includes/core/class-user.php:1022
+#: includes/core/class-user.php:1027
 msgid "&mdash; No role for Ultimate Member &mdash;"
 msgstr ""
 
-#: includes/core/class-user.php:1231
+#: includes/core/class-user.php:1236
 msgid "Membership Rejected"
 msgstr ""
 
-#: includes/core/class-user.php:1235
+#: includes/core/class-user.php:1240
 msgid "Membership Inactive"
 msgstr ""
 
@@ -8881,35 +8882,35 @@ msgstr ""
 msgid "Your choosed %s"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:770
-#: includes/core/um-actions-profile.php:784
+#: includes/core/um-actions-profile.php:771
+#: includes/core/um-actions-profile.php:785
 msgid "Profile photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:845
-#: includes/core/um-actions-profile.php:861
-#: includes/core/um-actions-profile.php:932
+#: includes/core/um-actions-profile.php:846
+#: includes/core/um-actions-profile.php:862
+#: includes/core/um-actions-profile.php:933
 msgid "Upload a cover photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:845
+#: includes/core/um-actions-profile.php:846
 msgid "Change cover photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1049
+#: includes/core/um-actions-profile.php:1050
 msgid "Upload photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1082
+#: includes/core/um-actions-profile.php:1083
 msgid "Remove photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1283
+#: includes/core/um-actions-profile.php:1284
 msgid "Tell us a bit about yourself..."
 msgstr ""
 
 #. translators: %s: profile status.
-#: includes/core/um-actions-profile.php:1303
+#: includes/core/um-actions-profile.php:1304
 msgid "This user account status is %s"
 msgstr ""
 
@@ -9194,24 +9195,24 @@ msgstr ""
 msgid "This will permanently delete this custom field from a database and from all forms on your site. Are you sure?"
 msgstr ""
 
-#: includes/admin/assets/js/um-admin-forms.js:99
+#: includes/admin/assets/js/um-admin-forms.js:111
 msgid "Wrong AJAX response..."
 msgstr ""
 
-#: includes/admin/assets/js/um-admin-forms.js:100
-#: includes/admin/assets/js/um-admin-forms.js:106
+#: includes/admin/assets/js/um-admin-forms.js:112
+#: includes/admin/assets/js/um-admin-forms.js:118
 msgid "Your upgrade was crashed, please contact with support"
 msgstr ""
 
-#: includes/admin/assets/js/um-admin-forms.js:105
+#: includes/admin/assets/js/um-admin-forms.js:117
 msgid "Something went wrong with AJAX request..."
 msgstr ""
 
-#: includes/admin/assets/js/um-admin-forms.js:130
+#: includes/admin/assets/js/um-admin-forms.js:142
 msgid "Upgrade Process Started..."
 msgstr ""
 
-#: includes/admin/assets/js/um-admin-forms.js:162
+#: includes/admin/assets/js/um-admin-forms.js:174
 msgid "Getting metadata"
 msgstr ""
 
