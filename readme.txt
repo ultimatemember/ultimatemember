@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
 Tested up to: 6.3
-Stable tag: 2.6.10
+Stable tag: 2.6.11
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -166,9 +166,15 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.6.11: September xx, 2023 =
+= 2.6.11: September 06, 2023 =
 
+* Bugfixes:
 
+  - Fixed: Empty mail From data when there isn't set an option
+  - Fixed: Nonce validation for the admin actions handler
+  - Fixed: REST API endpoint List Pages redirecting to the homepage
+  - Fixed: Standardize the 'editable' attribute for the UM fields and hooks that can extend these fields
+  - Fixed: Redirection from default WordPress registration to UM registration page (if it's not a published)
 
 = 2.6.10: August 17, 2023 =
 

@@ -511,25 +511,21 @@ add_filter( 'um_profile_field_filter_hook__', 'um_profile_field_filter_hook__', 
 /**
  * Get form fields
  *
- * @param $array
+ * @param string|array $array
+ * @param int          $form_id
  *
- * @return mixed|string
+ * @return array|string
  */
-function um_get_form_fields( $array ) {
-
-	$form_id = (isset ( UM()->fields()->set_id ) ) ? UM()->fields()->set_id : null;
-	$mode = (isset( UM()->fields()->set_mode ) ) ? UM()->fields()->set_mode : null;
-
-	if ( $form_id && $mode ) {
-		$array = UM()->query()->get_attr('custom_fields', $form_id );
+function um_get_form_fields( $array, $form_id ) {
+	if ( $form_id && UM()->fields()->set_mode ) {
+		$array = UM()->query()->get_attr( 'custom_fields', $form_id );
 	} else {
 		$array = '';
 	}
 
 	return $array;
-
 }
-add_filter( 'um_get_form_fields', 'um_get_form_fields', 99 );
+add_filter( 'um_get_form_fields', 'um_get_form_fields', 99, 2 );
 
 
 /**

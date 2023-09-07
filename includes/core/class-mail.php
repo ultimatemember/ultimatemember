@@ -435,7 +435,9 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			do_action( 'um_before_email_notification_sending', $email, $template, $args );
 
 			$this->attachments = array();
-			$this->headers     = 'From: ' . stripslashes( UM()->options()->get( 'mail_from' ) ) . ' <' . UM()->options()->get( 'mail_from_addr' ) . '>' . "\r\n";
+			$mail_from         = UM()->options()->get( 'mail_from' ) ? UM()->options()->get( 'mail_from' ) : get_bloginfo( 'name' );
+			$mail_from_addr    = UM()->options()->get( 'mail_from_addr' ) ? UM()->options()->get( 'mail_from_addr' ) : get_bloginfo( 'admin_email' );
+			$this->headers     = 'From: ' . stripslashes( $mail_from ) . ' <' . $mail_from_addr . '>' . "\r\n";
 
 			add_filter( 'um_template_tags_patterns_hook', array( UM()->mail(), 'add_placeholder' ), 10, 1 );
 			add_filter( 'um_template_tags_replaces_hook', array( UM()->mail(), 'add_replace_placeholder' ), 10, 1 );

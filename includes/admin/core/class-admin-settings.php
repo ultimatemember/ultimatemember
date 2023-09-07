@@ -3689,6 +3689,7 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 					<p class="submit">
 						<input type="hidden" name="um-addon-hook" value="download_install_info" />
 						<?php submit_button( 'Download Install Info File', 'primary', 'download_install_info', false ); ?>
+						<?php wp_nonce_field( 'um_download_install_info' ); ?>
 					</p>
 				</form>
 
@@ -3700,7 +3701,13 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 		 *
 		 */
 		function um_download_install_info() {
+			
 			if ( ! empty( $_POST['download_install_info'] ) ) {
+				$nonce = $_REQUEST['_wpnonce'];
+				if ( ! wp_verify_nonce( $nonce, 'um_download_install_info' ) || ! current_user_can( 'manage_options' )  ) {
+					die( __( 'Security check', 'ultimate-member' ) ); 
+				} 
+
 				nocache_headers();
 
 				header( "Content-type: text/plain" );

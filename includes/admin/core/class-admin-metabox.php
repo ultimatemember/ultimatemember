@@ -2383,6 +2383,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 						$this->edit_mode_value = true;
 					}
 
+					// Set to true if `editable` doesn't exist (legacy case). It will be saved to DB as `true` after the first field update.
+					if ( null === $this->edit_mode_value ) {
+						$this->edit_mode_value = true;
+					}
+
 					if ( empty( $this->edit_mode_value ) ) {
 						$this->edit_mode_value = false;
 					}

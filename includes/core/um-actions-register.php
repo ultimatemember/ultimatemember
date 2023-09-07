@@ -282,6 +282,27 @@ function um_check_user_status( $user_id, $args, $form_data = null ) {
 			// Add only priority role to URL.
 			$url = add_query_arg( 'um_role', esc_attr( um_user( 'role' ) ), $url );
 			$url = add_query_arg( 'um_form_id', esc_attr( $form_data['form_id'] ), $url );
+			/**
+			 * Filters the redirect URL for user after registration based on its status when need to show message.
+			 *
+			 * @since 2.6.11
+			 * @hook  um_registration_show_message_redirect_url
+			 *
+			 * @param {string} $url       Redirect URL.
+			 * @param {string} $status    User status.
+			 * @param {int}    $user_id   User ID.
+			 * @param {array}  $form_data Form data.
+			 *
+			 * @return {string} Redirect URL.
+			 *
+			 * @example <caption>Change redirect URL for user after registration based on its status when need to show message.</caption>
+			 * function my_um_registration_show_message_redirect_url( $url, $status, $user_id ) {
+			 *     // your code here
+			 *     return $url;
+			 * }
+			 * add_filter( 'um_registration_show_message_redirect_url', 'my_um_registration_show_message_redirect_url', 10, 4 );
+			 */
+			$url = apply_filters( 'um_registration_show_message_redirect_url', $url, $status, um_user( 'ID' ), $form_data );
 			// Not `um_safe_redirect()` because UM()->permalinks()->get_current_url() is situated on the same host.
 			wp_safe_redirect( $url );
 			exit;
@@ -742,12 +763,12 @@ function um_registration_set_profile_full_name( $user_id, $args ) {
 add_action( 'um_registration_set_extra_data', 'um_registration_set_profile_full_name', 10, 2 );
 
 /**
- *  Redirect from default registration to UM registration page
+ * Redirect from default registration to UM registration page
  */
 function um_form_register_redirect() {
-	$page_id       = UM()->options()->get( UM()->options()->get_core_page_id( 'register' ) );
-	$register_post = get_post( $page_id );
-	if ( ! empty( $register_post ) ) {
+	$page_id = UM()->options()->get( UM()->options()->get_core_page_id( 'register' ) );
+	// Do not redirect if the registration page is not published.
+	if ( ! empty( $page_id ) && 'publish' === get_post_status( $page_id ) ) {
 		// Not `um_safe_redirect()` because predefined register page is situated on the same host.
 		wp_safe_redirect( get_permalink( $page_id ) );
 		exit();
