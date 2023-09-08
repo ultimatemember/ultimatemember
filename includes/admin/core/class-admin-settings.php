@@ -1019,6 +1019,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 											'name_dash'  => __( 'First and Last Name with \'-\'', 'ultimate-member' ),
 											'name_plus'  => __( 'First and Last Name with \'+\'', 'ultimate-member' ),
 											'user_id'    => __( 'User ID', 'ultimate-member' ),
+											'hash'       => __( 'Unique hash string', 'ultimate-member' ),
 										),
 										'placeholder' => __( 'Select...', 'ultimate-member' ),
 									),
@@ -2439,9 +2440,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				} elseif ( ! empty( $_POST['um_options']['permalink_base'] ) ) {
 					if ( ! empty( $this->need_change_permalinks ) ) {
-						$users = get_users( array(
-							'fields' => 'ids',
-						) );
+						$users = get_users(
+							array(
+								'fields' => 'ids',
+							)
+						);
 						if ( ! empty( $users ) ) {
 							foreach ( $users as $user_id ) {
 								UM()->user()->generate_profile_slug( $user_id );
@@ -3701,12 +3704,12 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 		 *
 		 */
 		function um_download_install_info() {
-			
+
 			if ( ! empty( $_POST['download_install_info'] ) ) {
 				$nonce = $_REQUEST['_wpnonce'];
 				if ( ! wp_verify_nonce( $nonce, 'um_download_install_info' ) || ! current_user_can( 'manage_options' )  ) {
-					die( __( 'Security check', 'ultimate-member' ) ); 
-				} 
+					die( __( 'Security check', 'ultimate-member' ) );
+				}
 
 				nocache_headers();
 

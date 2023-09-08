@@ -249,9 +249,9 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 		}
 
 		/**
-		* @param $slug
+		* @param string $slug
 		*
-		* @return int|null|string
+		* @return int|bool
 		*/
 		public function slug_exists_user_id( $slug ) {
 			global $wpdb;
@@ -259,16 +259,20 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 			$permalink_base = UM()->options()->get( 'permalink_base' );
 
 			$user_id = $wpdb->get_var(
-				"SELECT user_id
-				FROM {$wpdb->usermeta}
-				WHERE meta_key = 'um_user_profile_url_slug_{$permalink_base}' AND
-					  meta_value = '{$slug}'
-				ORDER BY umeta_id ASC
-				LIMIT 1"
+				$wpdb->prepare(
+					"SELECT user_id
+					FROM {$wpdb->usermeta}
+					WHERE meta_key = %s AND
+						  meta_value = %s
+					ORDER BY umeta_id ASC
+					LIMIT 1",
+					'um_user_profile_url_slug_' . $permalink_base,
+					$slug
+				)
 			);
 
 			if ( ! empty( $user_id ) ) {
-				return $user_id;
+				return absint( $user_id );
 			}
 
 			return false;
@@ -374,9 +378,7 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 
 			$user_in_url = '';
 
-			$full_name = str_replace( "'", "", $full_name );
-			$full_name = str_replace( "&", "", $full_name );
-			$full_name = str_replace( "/", "", $full_name );
+			$full_name = str_replace( array( "'", '&', '/' ), '', $full_name );
 
 			switch ( $permalink_base ) {
 				case 'name': // dotted

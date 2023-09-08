@@ -1,11 +1,11 @@
 <?php
 namespace um\core;
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Rewrite' ) ) {
-
 
 	/**
 	 * Class Rewrite
@@ -13,53 +13,47 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 	 */
 	class Rewrite {
 
-
 		/**
 		 * Rewrite constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			if ( ! defined( 'DOING_AJAX' ) ) {
 				add_action( 'wp_loaded', array( $this, 'maybe_flush_rewrite_rules' ) );
 			}
 
 			//add rewrite rules
-			add_filter( 'query_vars', array( &$this, 'query_vars' ), 10, 1 );
-			add_filter( 'rewrite_rules_array', array( &$this, '_add_rewrite_rules' ), 10, 1 );
+			add_filter( 'query_vars', array( &$this, 'query_vars' ) );
+			add_filter( 'rewrite_rules_array', array( &$this, 'add_rewrite_rules' ) );
 
 			add_action( 'template_redirect', array( &$this, 'redirect_author_page' ), 9999 );
 			add_action( 'template_redirect', array( &$this, 'locate_user_profile' ), 9999 );
 		}
 
-
 		/**
-		 * Update "flush" option for reset rules on wp_loaded hook
+		 * Update "flush" option for reset rules on wp_loaded hook.
 		 */
-		function reset_rules() {
+		public function reset_rules() {
 			update_option( 'um_flush_rewrite_rules', 1 );
 		}
 
-
 		/**
 		 * Reset Rewrite rules if need it.
-		 *
-		 * @return void
 		 */
-		function maybe_flush_rewrite_rules() {
+		public function maybe_flush_rewrite_rules() {
 			if ( get_option( 'um_flush_rewrite_rules' ) ) {
 				flush_rewrite_rules( false );
 				delete_option( 'um_flush_rewrite_rules' );
 			}
 		}
 
-
 		/**
-		 * Modify global query vars
+		 * Modify global query vars.
 		 *
-		 * @param $public_query_vars
+		 * @param array $public_query_vars
 		 *
 		 * @return array
 		 */
-		function query_vars( $public_query_vars ) {
+		public function query_vars( $public_query_vars ) {
 			$public_query_vars[] = 'um_user';
 			$public_query_vars[] = 'um_tab';
 			$public_query_vars[] = 'profiletab';
@@ -74,15 +68,14 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 			return $public_query_vars;
 		}
 
-
 		/**
-		 * Add UM rewrite rules
+		 * Add UM rewrite rules.
 		 *
-		 * @param $rules
+		 * @param array $rules
 		 *
 		 * @return array
 		 */
-		function _add_rewrite_rules( $rules ) {
+		public function add_rewrite_rules( $rules ) {
 			$newrules = array();
 
 			$newrules['um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$'] = 'index.php?um_action=download&um_form=$matches[1]&um_field=$matches[2]&um_user=$matches[3]&um_verify=$matches[4]';
@@ -90,11 +83,10 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 			if ( isset( UM()->config()->permalinks['user'] ) ) {
 
 				$user_page_id = UM()->config()->permalinks['user'];
-				$user = get_post( $user_page_id );
+				$user         = get_post( $user_page_id );
 
 				if ( isset( $user->post_name ) ) {
-
-					$user_slug = $user->post_name;
+					$user_slug                              = $user->post_name;
 					$newrules[ $user_slug . '/([^/]+)/?$' ] = 'index.php?page_id=' . $user_page_id . '&um_user=$matches[1]';
 				}
 
@@ -104,12 +96,11 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 					$active_languages = $sitepress->get_active_languages();
 
 					foreach ( $active_languages as $language_code => $language ) {
-
-						$lang_post_id = wpml_object_id_filter( $user_page_id, 'post', false, $language_code );
+						$lang_post_id  = wpml_object_id_filter( $user_page_id, 'post', false, $language_code );
 						$lang_post_obj = get_post( $lang_post_id );
 
-						if ( isset( $lang_post_obj->post_name ) && $lang_post_obj->post_name != $user->post_name ) {
-							$user_slug = $lang_post_obj->post_name;
+						if ( isset( $lang_post_obj->post_name ) && $lang_post_obj->post_name !== $user->post_name ) {
+							$user_slug                              = $lang_post_obj->post_name;
 							$newrules[ $user_slug . '/([^/]+)/?$' ] = 'index.php?page_id=' . $lang_post_id . '&um_user=$matches[1]&lang=' . $language_code;
 						}
 					}
@@ -117,13 +108,11 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 			}
 
 			if ( isset( UM()->config()->permalinks['account'] ) ) {
-
 				$account_page_id = UM()->config()->permalinks['account'];
-				$account = get_post( $account_page_id );
+				$account         = get_post( $account_page_id );
 
 				if ( isset( $account->post_name ) ) {
-
-					$account_slug = $account->post_name;
+					$account_slug                             = $account->post_name;
 					$newrules[ $account_slug . '/([^/]+)?$' ] = 'index.php?page_id=' . $account_page_id . '&um_tab=$matches[1]';
 				}
 
@@ -133,12 +122,11 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 					$active_languages = $sitepress->get_active_languages();
 
 					foreach ( $active_languages as $language_code => $language ) {
-
-						$lang_post_id = wpml_object_id_filter( $account_page_id, 'post', false, $language_code );
+						$lang_post_id  = wpml_object_id_filter( $account_page_id, 'post', false, $language_code );
 						$lang_post_obj = get_post( $lang_post_id );
 
-						if ( isset( $lang_post_obj->post_name ) && $lang_post_obj->post_name != $account->post_name ) {
-							$account_slug = $lang_post_obj->post_name;
+						if ( isset( $lang_post_obj->post_name ) && $lang_post_obj->post_name !== $account->post_name ) {
+							$account_slug                              = $lang_post_obj->post_name;
 							$newrules[ $account_slug . '/([^/]+)/?$' ] = 'index.php?page_id=' . $lang_post_id . '&um_user=$matches[1]&lang=' . $language_code;
 						}
 					}
@@ -148,46 +136,40 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 			return $newrules + $rules;
 		}
 
-
 		/**
-		 * Author page to user profile redirect
+		 * Author page to user profile redirect.
 		 */
-		function redirect_author_page() {
-			if ( UM()->options()->get( 'author_redirect' ) && is_author() ) {
+		public function redirect_author_page() {
+			if ( is_author() && UM()->options()->get( 'author_redirect' ) ) {
 				$id = get_query_var( 'author' );
 				um_fetch_user( $id );
-				exit( wp_redirect( um_user_profile_url() ) );
+				wp_safe_redirect( um_user_profile_url() );
+				exit;
 			}
 		}
 
-
 		/**
-		 * Locate/display a profile
+		 * Locate/display a profile.
 		 */
-		function locate_user_profile() {
+		public function locate_user_profile() {
+			$permalink_base = UM()->options()->get( 'permalink_base' );
 			if ( um_queried_user() && um_is_core_page( 'user' ) ) {
-
-				if ( UM()->options()->get( 'permalink_base' ) == 'user_login' ) {
-
+				if ( 'user_login' === $permalink_base ) {
 					$user_id = username_exists( um_queried_user() );
-
 					//Try
 					if ( ! $user_id ) {
-						$permalink_base = UM()->options()->get( 'permalink_base' );
-
 						// Search by Profile Slug
 						$args = array(
-							"fields" => 'ids',
+							'fields'     => 'ids',
 							'meta_query' => array(
 								array(
-									'key'       =>  'um_user_profile_url_slug_' . $permalink_base,
-									'value'     => strtolower( um_queried_user() ),
-									'compare'   => '='
-								)
+									'key'     => 'um_user_profile_url_slug_' . $permalink_base,
+									'value'   => strtolower( um_queried_user() ),
+									'compare' => '=',
+								),
 							),
-							'number'    => 1
+							'number'     => 1,
 						);
-
 
 						$ids = new \WP_User_Query( $args );
 						if ( $ids->total_users > 0 ) {
@@ -197,10 +179,10 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 
 					// Try nice name
 					if ( ! $user_id ) {
-						$slug = um_queried_user();
-						$slug = str_replace( '.', '-', $slug );
+						$slug     = um_queried_user();
+						$slug     = str_replace( '.', '-', $slug );
 						$the_user = get_user_by( 'slug', $slug );
-						if ( isset( $the_user->ID ) ){
+						if ( isset( $the_user->ID ) ) {
 							$user_id = $the_user->ID;
 						}
 
@@ -211,56 +193,46 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 						if ( ! $user_id ) {
 							$user_id = UM()->user()->user_exists_by_email_as_username( $slug );
 						}
-
 					}
-
 				}
 
-				if ( UM()->options()->get( 'permalink_base' ) == 'user_id' ) {
+				if ( 'user_id' === $permalink_base ) {
 					$user_id = UM()->user()->user_exists_by_id( um_queried_user() );
 				}
 
-				if ( in_array( UM()->options()->get( 'permalink_base' ), array( 'name', 'name_dash', 'name_dot', 'name_plus' ) ) ) {
+				if ( 'hash' === $permalink_base ) {
+					$user_id = UM()->user()->user_exists_by_hash( um_queried_user() );
+				}
+
+				if ( in_array( $permalink_base, array( 'name', 'name_dash', 'name_dot', 'name_plus' ), true ) ) {
 					$user_id = UM()->user()->user_exists_by_name( um_queried_user() );
 				}
 
 				/** USER EXISTS SET USER AND CONTINUE **/
 
-				if ( $user_id ) {
-
+				if ( ! empty( $user_id ) ) {
 					um_set_requested_user( $user_id );
-
 					/**
-					 * UM hook
+					 * Fires after setting requested user.
 					 *
-					 * @type action
-					 * @title um_access_profile
-					 * @description Action on user access profile
-					 * @input_vars
-					 * [{"var":"$user_id","type":"int","desc":"User ID"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_action( 'um_access_profile', 'function_name', 10, 1 );
-					 * @example
-					 * <?php
+					 * @param {int} $user_id Requested User ID.
+					 *
+					 * @since 1.3.x
+					 * @hook um_access_profile
+					 *
+					 * @example <caption>Some action on user access profile and requested user isset.</caption>
 					 * add_action( 'um_access_profile', 'my_access_profile', 10, 1 );
 					 * function my_access_profile( $user_id ) {
 					 *     // your code here
 					 * }
-					 * ?>
 					 */
 					do_action( 'um_access_profile', $user_id );
-
 				} else {
-
-					exit( wp_redirect( um_get_core_page( 'user' ) ) );
-
+					wp_safe_redirect( um_get_core_page( 'user' ) );
+					exit;
 				}
-
 			} elseif ( um_is_core_page( 'user' ) ) {
-
 				if ( is_user_logged_in() ) { // just redirect to their profile
-
 					$query = UM()->permalinks()->get_query_array();
 
 					$url = um_user_profile_url( um_user( 'ID' ) );
@@ -270,41 +242,33 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 							$url = add_query_arg( $key, $val, $url );
 						}
 					}
-
-					exit( wp_redirect( $url ) );
-				} else {
-
-					/**
-					 * UM hook
-					 *
-					 * @type filter
-					 * @title um_locate_user_profile_not_loggedin__redirect
-					 * @description Change redirect URL from user profile for not logged in user
-					 * @input_vars
-					 * [{"var":"$url","type":"string","desc":"Redirect URL"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage
-					 * <?php add_filter( 'um_locate_user_profile_not_loggedin__redirect', 'function_name', 10, 1 ); ?>
-					 * @example
-					 * <?php
-					 * add_filter( 'um_locate_user_profile_not_loggedin__redirect', 'my_user_profile_not_loggedin__redirect', 10, 1 );
-					 * function my_user_profile_not_loggedin__redirect( $url ) {
-					 *     // your code here
-					 *     return $url;
-					 * }
-					 * ?>
-					 */
-					$redirect_to = apply_filters( 'um_locate_user_profile_not_loggedin__redirect', home_url() );
-					if ( ! empty( $redirect_to ) ) {
-						exit( wp_redirect( $redirect_to ) );
-					}
-
+					wp_safe_redirect( $url );
+					exit;
 				}
 
+				/**
+				 * Filters the redirect URL from user profile for not logged-in user.
+				 *
+				 * @param {string} $url Redirect URL. By default, it's a home page.
+				 *
+				 * @return {string} Redirect URL.
+				 *
+				 * @since 1.3.x
+				 * @hook um_locate_user_profile_not_loggedin__redirect
+				 *
+				 * @example <caption>Change redirect URL from user profile for not logged-in user to WordPress native login.</caption>
+				 * function my_user_profile_not_loggedin__redirect( $url ) {
+				 *     // your code here
+				 *     $url = wp_login_url();
+				 *     return $url;
+				 * }
+				 * add_filter( 'um_locate_user_profile_not_loggedin__redirect', 'my_user_profile_not_loggedin__redirect' );
+				 */
+				$redirect_to = apply_filters( 'um_locate_user_profile_not_loggedin__redirect', home_url() );
+				if ( ! empty( $redirect_to ) ) {
+					um_safe_redirect( $redirect_to );
+				}
 			}
-
 		}
-
 	}
 }

@@ -440,11 +440,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			$md_data = get_user_meta( $object_id, 'um_member_directory_data', true );
 			if ( empty( $md_data ) ) {
 				$md_data = array(
-					'account_status'    => 'approved',
-					'hide_in_members'   => UM()->member_directory()->get_hide_in_members_default(),
-					'profile_photo'     => false,
-					'cover_photo'       => false,
-					'verified'          => false,
+					'account_status'  => 'approved',
+					'hide_in_members' => UM()->member_directory()->get_hide_in_members_default(),
+					'profile_photo'   => false,
+					'cover_photo'     => false,
+					'verified'        => false,
 				);
 			}
 
@@ -457,7 +457,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					break;
 				case 'synced_gravatar_hashed_id':
 					if ( UM()->options()->get( 'use_gravatars' ) ) {
-						$profile_photo = get_user_meta( $object_id, 'profile_photo', true );
+						$profile_photo        = get_user_meta( $object_id, 'profile_photo', true );
 						$synced_profile_photo = get_user_meta( $object_id, 'synced_profile_photo', true );
 
 						$md_data['profile_photo'] = ! empty( $profile_photo ) || ! empty( $synced_profile_photo );
@@ -514,11 +514,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			$md_data = get_user_meta( $object_id, 'um_member_directory_data', true );
 			if ( empty( $md_data ) ) {
 				$md_data = array(
-					'account_status'    => 'approved',
-					'hide_in_members'   => UM()->member_directory()->get_hide_in_members_default(),
-					'profile_photo'     => false,
-					'cover_photo'       => false,
-					'verified'          => false,
+					'account_status'  => 'approved',
+					'hide_in_members' => UM()->member_directory()->get_hide_in_members_default(),
+					'profile_photo'   => false,
+					'cover_photo'     => false,
+					'verified'        => false,
 				);
 			}
 
@@ -527,7 +527,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					$md_data['account_status'] = $_meta_value;
 					break;
 				case 'hide_in_members':
-
 					$hide_in_members = UM()->member_directory()->get_hide_in_members_default();
 					if ( ! empty( $_meta_value ) ) {
 						if ( $_meta_value == 'Yes' || $_meta_value == __( 'Yes', 'ultimate-member' ) ||
@@ -704,14 +703,14 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 *
 		 * @return bool|mixed
 		 */
-		function get_profile_slug( $user_id ) {
+		public function get_profile_slug( $user_id ) {
 			// Permalink base
 			$permalink_base = UM()->options()->get( 'permalink_base' );
-			$profile_slug  = get_user_meta( $user_id, "um_user_profile_url_slug_{$permalink_base}", true );
+			$profile_slug   = get_user_meta( $user_id, "um_user_profile_url_slug_{$permalink_base}", true );
 
 			//get default username permalink if it's empty then return false
 			if ( empty( $profile_slug ) ) {
-				if ( $permalink_base != 'user_login' ) {
+				if ( 'user_login' !== $permalink_base ) {
 					$profile_slug = get_user_meta( $user_id, 'um_user_profile_url_slug_user_login', true );
 				}
 
@@ -722,7 +721,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			return $profile_slug;
 		}
-
 
 		/**
 		 * @param $user_id
@@ -739,6 +737,20 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			return UM()->permalinks()->profile_permalink( $profile_slug );
 		}
 
+		public function generate_user_hash( $user_id ) {
+			$user_id = absint( $user_id );
+			$append  = 0;
+
+			while ( 1 ) {
+				$user_in_url         = '~' . substr( strrev( md5( uniqid( 'um_user_hash' . $append, true ) . $user_id ) ), 0, 18 );
+				$slug_exists_user_id = UM()->permalinks()->slug_exists_user_id( $user_in_url );
+				if ( empty( $slug_exists_user_id ) || $user_id === $slug_exists_user_id ) {
+					break;
+				}
+				$append++;
+			}
+			return $user_in_url;
+		}
 
 		/**
 		 * Generate User Profile Slug and save to meta
@@ -746,7 +758,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param int $user_id
 		 * @param bool $force
 		 */
-		function generate_profile_slug( $user_id, $force = false ) {
+		public function generate_profile_slug( $user_id, $force = false ) {
 			$userdata = get_userdata( $user_id );
 
 			if ( empty( $userdata ) ) {
@@ -757,16 +769,20 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			$current_profile_slug = $this->get_profile_slug( $user_id );
 
-			$user_in_url = '';
+			$user_in_url    = '';
 			$permalink_base = UM()->options()->get( 'permalink_base' );
 
 			// User ID
-			if ( $permalink_base == 'user_id' ) {
+			if ( 'user_id' === $permalink_base ) {
 				$user_in_url = $user_id;
 			}
 
+			if ( 'hash' === $permalink_base ) {
+				$user_in_url = $this->generate_user_hash( $user_id );
+			}
+
 			// Username
-			if ( $permalink_base == 'user_login' ) {
+			if ( 'user_login' === $permalink_base ) {
 
 				$user_in_url = $userdata->user_login;
 
@@ -790,21 +806,25 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			// Fisrt and Last name
 			$full_name_permalinks = array( 'name', 'name_dash', 'name_plus' );
-			if ( in_array( $permalink_base, $full_name_permalinks ) ) {
-				$separated = array( 'name' => '.', 'name_dash' => '-', 'name_plus' => '+' );
-				$separate = $separated[ $permalink_base ];
-				$first_name = $userdata->first_name;
-				$last_name  = $userdata->last_name;
-				$full_name  = trim( sprintf( '%s %s', $first_name, $last_name ) );
-				$full_name = preg_replace( '/\s+/', ' ', $full_name ); // Remove double spaces
+			if ( in_array( $permalink_base, $full_name_permalinks, true ) ) {
+				$separated    = array(
+					'name'      => '.',
+					'name_dash' => '-',
+					'name_plus' => '+',
+				);
+				$separate     = $separated[ $permalink_base ];
+				$first_name   = $userdata->first_name;
+				$last_name    = $userdata->last_name;
+				$full_name    = trim( sprintf( '%s %s', $first_name, $last_name ) );
+				$full_name    = preg_replace( '/\s+/', ' ', $full_name ); // Remove double spaces
 				$profile_slug = UM()->permalinks()->profile_slug( $full_name, $first_name, $last_name );
 
-				$append     = 0;
-				$username   = $full_name;
-				$_username   = $full_name;
+				$append    = 0;
+				$username  = $full_name;
+				$_username = $full_name;
 
 				while ( 1 ) {
-					$username = $_username . ( empty( $append ) ? '' : " $append" );
+					$username            = $_username . ( empty( $append ) ? '' : " $append" );
 					$slug_exists_user_id = UM()->permalinks()->slug_exists_user_id( $profile_slug . ( empty( $append ) ? '' : "{$separate}{$append}" ) );
 					if ( empty( $slug_exists_user_id ) || $user_id == $slug_exists_user_id ) {
 						break;
@@ -839,11 +859,10 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			$user_in_url = apply_filters( 'um_change_user_profile_slug', $user_in_url, $user_id );
 
-			if ( $force || empty( $current_profile_slug ) || $current_profile_slug != $user_in_url ) {
+			if ( $force || empty( $current_profile_slug ) || $current_profile_slug !== $user_in_url ) {
 				update_user_meta( $user_id, "um_user_profile_url_slug_{$permalink_base}", $user_in_url );
 			}
 		}
-
 
 		/**
 		 * Backend user creation
@@ -961,7 +980,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 				if ( $userdata !== 'add-new-user' && $userdata !== 'add-existing-user' ) { ?>
 					<h3 id="um_user_screen_block"><?php esc_html_e( 'Ultimate Member', 'ultimate-member' ); ?></h3>
-				<?php }
+					<?php
+				}
 
 				echo $section_content;
 			}
@@ -998,7 +1018,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				return $content;
 			}
 
-			$style = '';
+			$style     = '';
 			$user_role = false;
 			if ( $userdata !== 'add-new-user' && $userdata !== 'add-existing-user' ) {
 				// Bail if current user cannot edit users
@@ -1010,21 +1030,21 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				if ( $user_role && ! empty( $userdata->roles ) && count( $userdata->roles ) == 1 ) {
 					$style = 'style="display:none;"';
 				}
-
 			}
 
 			$class = ( $userdata == 'add-existing-user' ) ? 'um_role_existing_selector_wrapper' : 'um_role_selector_wrapper';
 
-			ob_start(); ?>
+			ob_start();
+			?>
 
-			<div id="<?php echo esc_attr( $class ) ?>" <?php echo $style ?>>
+			<div id="<?php echo esc_attr( $class ); ?>" <?php echo $style; ?>>
 				<table class="form-table">
 					<tbody>
 					<tr>
 						<th><label for="um-role"><?php esc_html_e( 'Ultimate Member Role', 'ultimate-member' ); ?></label></th>
 						<td>
 							<select name="um-role" id="um-role">
-								<option value="" <?php selected( empty( $user_role ) ) ?>><?php esc_html_e( '&mdash; No role for Ultimate Member &mdash;', 'ultimate-member' ); ?></option>
+								<option value="" <?php selected( empty( $user_role ) ); ?>><?php esc_html_e( '&mdash; No role for Ultimate Member &mdash;', 'ultimate-member' ); ?></option>
 								<?php foreach ( $roles as $role_id => $details ) { ?>
 									<option <?php selected( $user_role, $role_id ); ?> value="<?php echo esc_attr( $role_id ); ?>"><?php echo esc_html( $details['name'] ); ?></option>
 								<?php } ?>
@@ -1035,7 +1055,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				</table>
 			</div>
 
-			<?php $content .= ob_get_clean();
+			<?php
+			$content .= ob_get_clean();
 
 			return $content;
 		}
@@ -1179,21 +1200,21 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 				if ( $user_id ) {
 
-					$this->id = $user_id;
+					$this->id       = $user_id;
 					$this->usermeta = get_user_meta( $user_id );
-					$this->data = get_userdata( $this->id );
+					$this->data     = get_userdata( $this->id );
 
 				} elseif ( is_user_logged_in() && $clean == false ) {
 
-					$this->id = get_current_user_id();
-					$this->usermeta = get_user_meta($this->id);
-					$this->data = get_userdata($this->id);
+					$this->id       = get_current_user_id();
+					$this->usermeta = get_user_meta( $this->id );
+					$this->data     = get_userdata( $this->id );
 
 				} else {
 
-					$this->id = 0;
+					$this->id       = 0;
 					$this->usermeta = null;
-					$this->data = null;
+					$this->data     = null;
 
 				}
 
@@ -1203,54 +1224,54 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					// add user data
 					$this->data = $this->toArray( $this->data );
 
-					foreach ( $this->data as $k=>$v ) {
-						if ( $k == 'roles') {
-							$this->profile['wp_roles'] = implode(',',$v);
-						} else if ( is_array( $v ) ) {
-							foreach($v as $k2 => $v2){
-								$this->profile[$k2] = $v2;
+					foreach ( $this->data as $k => $v ) {
+						if ( $k == 'roles' ) {
+							$this->profile['wp_roles'] = implode( ',', $v );
+						} elseif ( is_array( $v ) ) {
+							foreach ( $v as $k2 => $v2 ) {
+								$this->profile[ $k2 ] = $v2;
 							}
 						} else {
-							$this->profile[$k] = $v;
+							$this->profile[ $k ] = $v;
 						}
 					}
 
 					// add account status
-					if ( !isset( $this->usermeta['account_status'][0] ) )  {
+					if ( ! isset( $this->usermeta['account_status'][0] ) ) {
 						$this->usermeta['account_status'][0] = 'approved';
 					}
 
 					if ( $this->usermeta['account_status'][0] == 'approved' ) {
-						$this->usermeta['account_status_name'][0] = __('Approved','ultimate-member');
+						$this->usermeta['account_status_name'][0] = __( 'Approved', 'ultimate-member' );
 					}
 
 					if ( $this->usermeta['account_status'][0] == 'awaiting_email_confirmation' ) {
-						$this->usermeta['account_status_name'][0] = __('Awaiting E-mail Confirmation','ultimate-member');
+						$this->usermeta['account_status_name'][0] = __( 'Awaiting E-mail Confirmation', 'ultimate-member' );
 					}
 
 					if ( $this->usermeta['account_status'][0] == 'awaiting_admin_review' ) {
-						$this->usermeta['account_status_name'][0] = __('Pending Review','ultimate-member');
+						$this->usermeta['account_status_name'][0] = __( 'Pending Review', 'ultimate-member' );
 					}
 
 					if ( $this->usermeta['account_status'][0] == 'rejected' ) {
-						$this->usermeta['account_status_name'][0] = __('Membership Rejected','ultimate-member');
+						$this->usermeta['account_status_name'][0] = __( 'Membership Rejected', 'ultimate-member' );
 					}
 
 					if ( $this->usermeta['account_status'][0] == 'inactive' ) {
-						$this->usermeta['account_status_name'][0] = __('Membership Inactive','ultimate-member');
+						$this->usermeta['account_status_name'][0] = __( 'Membership Inactive', 'ultimate-member' );
 					}
 
 					// add user meta
 					foreach ( $this->usermeta as $k => $v ) {
-						if ( $k == 'display_name') {
+						if ( $k == 'display_name' ) {
 							continue;
 						}
 						$this->profile[ $k ] = $v[0];
 					}
 
 					// add permissions
-					$user_role = UM()->roles()->get_priority_user_role( $this->id );
-					$this->profile['role'] = $user_role;
+					$user_role              = UM()->roles()->get_priority_user_role( $this->id );
+					$this->profile['role']  = $user_role;
 					$this->profile['roles'] = UM()->roles()->get_all_user_roles( $this->id );
 
 					$role_meta = UM()->roles()->role_data( $user_role );
@@ -1285,7 +1306,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 						return array( $key => $item );
 					}, array_keys( $role_meta ), $role_meta );*/
 
-					$this->profile = array_merge( $this->profile, (array)$role_meta );
+					$this->profile = array_merge( $this->profile, (array) $role_meta );
 
 					$this->profile['super_admin'] = ( is_super_admin( $this->id ) ) ? 1 : 0;
 
@@ -1296,7 +1317,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					$this->setup_cache( $this->id, $this->profile );
 
 				}
-
 			}
 
 		}
@@ -1307,8 +1327,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 *
 		 * @param bool $clean
 		 */
-		function reset( $clean = false ){
-			$this->set(0, $clean);
+		function reset( $clean = false ) {
+			$this->set( 0, $clean );
 		}
 
 		/**
@@ -1645,7 +1665,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 *
 		 */
 		function approve( $repeat = true ) {
-			$user_id = um_user('ID');
+			$user_id = um_user( 'ID' );
 
 			if ( ! $repeat ) {
 				$status = get_user_meta( $user_id, 'account_status', true );
@@ -1828,7 +1848,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			if ( is_multisite() ) {
 
 				if ( ! function_exists( 'wpmu_delete_user' ) ) {
-					require_once( ABSPATH . 'wp-admin/includes/ms.php' );
+					require_once ABSPATH . 'wp-admin/includes/ms.php';
 				}
 
 				wpmu_delete_user( $this->id );
@@ -1836,7 +1856,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			} else {
 
 				if ( ! function_exists( 'wp_delete_user' ) ) {
-					require_once( ABSPATH . 'wp-admin/includes/user.php' );
+					require_once ABSPATH . 'wp-admin/includes/user.php';
 				}
 
 				wp_delete_user( $this->id );
@@ -1951,10 +1971,15 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 
 			foreach ( $actions as $id => $arr ) {
-				$url = add_query_arg( array( 'um_action' => $id, 'uid' => um_profile_id() ) );
+				$url = add_query_arg(
+					array(
+						'um_action' => $id,
+						'uid'       => um_profile_id(),
+					)
+				);
 				/*$url = add_query_arg( 'um_action', $id );
 				$url = add_query_arg( 'uid', um_profile_id(), $url );*/
-				$items[] = '<a href="' . esc_url( $url ) .'" class="real_url ' . esc_attr( $id ) . '-item">' . esc_html( $arr['label'] ) . '</a>';
+				$items[] = '<a href="' . esc_url( $url ) . '" class="real_url ' . esc_attr( $id ) . '-item">' . esc_html( $arr['label'] ) . '</a>';
 			}
 			return $items;
 		}
@@ -2202,19 +2227,25 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			$value = UM()->validation()->safe_name_in_url( $value );
 
-			$ids = get_users( array( 'fields' => 'ID', 'meta_key' => $key, 'meta_value' => $value, 'meta_compare' => '=' ) );
+			$ids = get_users(
+				array(
+					'fields'       => 'ID',
+					'meta_key'     => $key,
+					'meta_value'   => $value,
+					'meta_compare' => '=',
+				)
+			);
 			if ( ! isset( $ids ) || empty( $ids ) ) {
 				return false;
 			}
 
 			foreach ( $ids as $k => $id ) {
 
-				if ( $id == um_user('ID') ) {
+				if ( $id == um_user( 'ID' ) ) {
 					unset( $ids[ $k ] );
 				} else {
 					$duplicates[] = $id;
 				}
-
 			}
 
 			if ( ! empty( $duplicates ) ) {
@@ -2231,28 +2262,27 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 *
 		 * @return bool
 		 */
-		function user_exists_by_name( $value ) {
+		public function user_exists_by_name( $value ) {
 
 			// Permalink base
 			$permalink_base = UM()->options()->get( 'permalink_base' );
 
 			$raw_value = $value;
-			$value = UM()->validation()->safe_name_in_url( $value );
-			$value = um_clean_user_basename( $value );
+			$value     = UM()->validation()->safe_name_in_url( $value );
+			$value     = um_clean_user_basename( $value );
 
 			// Search by Profile Slug
 			$args = array(
-				'fields' => array( 'ID' ),
+				'fields'     => array( 'ID' ),
 				'meta_query' => array(
 					'relation' => 'OR',
 					array(
-						'key'       =>  'um_user_profile_url_slug_' . $permalink_base,
-						'value'     => strtolower( $raw_value ),
-						'compare'   => '=',
+						'key'     => 'um_user_profile_url_slug_' . $permalink_base,
+						'value'   => strtolower( $raw_value ),
+						'compare' => '=',
 					),
 				),
 			);
-
 
 			$ids = new \WP_User_Query( $args );
 
@@ -2263,9 +2293,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			// Search by Display Name or ID
 			$args = array(
-				'fields'            => array( 'ID' ),
-				'search'            => $value,
-				'search_columns'    => array( 'display_name', 'ID' ),
+				'fields'         => array( 'ID' ),
+				'search'         => $value,
+				'search_columns' => array( 'display_name', 'ID' ),
 			);
 
 			$ids = new \WP_User_Query( $args );
@@ -2275,17 +2305,15 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				return $um_user_query->ID;
 			}
 
-
 			// Search By User Login
-			$value = str_replace( ".", "_", $value );
-			$value = str_replace( " ", "", $value );
+			$value = str_replace( array( '.', ' ' ), array( '_', '' ), $value );
 
 			$args = array(
-				'fields'            => array( 'ID' ),
-				'search'            => $value,
-				'search_columns'    => array(
+				'fields'         => array( 'ID' ),
+				'search'         => $value,
+				'search_columns' => array(
 					'user_login',
-				)
+				),
 			);
 
 			$ids = new \WP_User_Query( $args );
@@ -2321,7 +2349,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 		 *
 		 */
-		function user_exists_by_id( $user_id ) {
+		public function user_exists_by_id( $user_id ) {
 			$aux = get_userdata( absint( $user_id ) );
 			if ( $aux == false ) {
 				return false;
@@ -2330,6 +2358,38 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 		}
 
+		/**
+		 * @param string $hash
+		 *
+		 * @return bool|int
+		 */
+		public function user_exists_by_hash( $hash ) {
+			// Permalink base
+			$permalink_base = UM()->options()->get( 'permalink_base' );
+			$raw_value      = $hash;
+
+			// Search by Profile Slug
+			$args = array(
+				'fields'     => array( 'ID' ),
+				'meta_query' => array(
+					'relation' => 'OR',
+					array(
+						'key'     => 'um_user_profile_url_slug_' . $permalink_base,
+						'value'   => strtolower( $raw_value ),
+						'compare' => '=',
+					),
+				),
+			);
+
+			$ids = new \WP_User_Query( $args );
+
+			if ( $ids->total_users > 0 ) {
+				$um_user_query = current( $ids->get_results() );
+				return $um_user_query->ID;
+			}
+
+			return false;
+		}
 
 		/**
 		 * This method checks if a user exists or not in your site based on the user email as username
@@ -2355,7 +2415,12 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			$user_id = false;
 
-			$ids = get_users( array( 'fields' => 'ID', 'meta_key' => 'um_email_as_username_' . $slug ) );
+			$ids = get_users(
+				array(
+					'fields'   => 'ID',
+					'meta_key' => 'um_email_as_username_' . $slug,
+				)
+			);
 			if ( ! empty( $ids[0] ) ) {
 				$user_id = $ids[0];
 			}
@@ -2373,11 +2438,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		function set_gravatar( $user_id ) {
 
 			um_fetch_user( $user_id );
-			$email_address = um_user( 'user_email' );
+			$email_address      = um_user( 'user_email' );
 			$hash_email_address = '';
 
 			if ( $email_address ) {
-				$hash_email_address = md5( $email_address );
+				$hash_email_address                         = md5( $email_address );
 				$this->profile['synced_gravatar_hashed_id'] = $hash_email_address;
 				$this->update_usermeta_info( 'synced_gravatar_hashed_id' );
 			}
