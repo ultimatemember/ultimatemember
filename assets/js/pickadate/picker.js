@@ -647,7 +647,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
         aria(ELEMENT, {
             haspopup: true,
             expanded: false,
-            readonly: false,
+            readonly: true,
             owns: ELEMENT.id + '_root'
         })
     }
