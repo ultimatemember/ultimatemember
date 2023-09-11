@@ -800,6 +800,28 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					$permalink_base = 'user_login';
 				} else {
 					$user_in_url = rawurlencode( get_user_meta( $user_id, $custom_meta, true ) );
+					/**
+					 * Filters the user profile slug when custom meta is set.
+					 *
+					 * @param {string} $slug    User profile slug.
+					 * @param {int}    $user_id User ID.
+					 * @param {string} $metakey Meta key.
+					 *
+					 * @return {string} User profile slug.
+					 *
+					 * @since 2.6.12
+					 * @hook um_custom_meta_permalink_base_generate_user_slug
+					 *
+					 * @example <caption>Use base64encode value as user slug.</caption>
+					 * function my_custom_meta_permalink_base_generate_user_slug( $slug, $user_id, $metakey ) {
+					 *     // your code here
+					 *     $slug = base64encode( $user_id );
+					 *     update_user_meta( $user_id, $metakey, $slug );
+					 *     $slug = rawurlencode( $slug );
+					 *     return $slug;
+					 * }
+					 * add_filter( 'um_custom_meta_permalink_base_generate_user_slug', 'my_custom_meta_permalink_base_generate_user_slug', 10, 3 );
+					 */
 					$user_in_url = apply_filters( 'um_custom_meta_permalink_base_generate_user_slug', $user_in_url, $user_id, $custom_meta );
 				}
 			}
