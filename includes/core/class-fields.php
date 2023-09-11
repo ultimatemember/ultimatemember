@@ -2068,16 +2068,34 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		/**
 		 * Getting the fields that need to be disabled in edit mode (profile)
 		 *
-		 * @param bool $_um_profile_id
+		 * @param bool|int $_um_profile_id
 		 *
 		 * @return array
 		 */
-		function get_restricted_fields_for_edit( $_um_profile_id = false ) {
+		public function get_restricted_fields_for_edit( $_um_profile_id = false ) {
 			// fields that need to be disabled in edit mode (profile)
 			$arr_restricted_fields = array( 'user_email', 'username', 'user_login', 'user_password', '_um_last_login', 'user_registered' );
-			$arr_restricted_fields = apply_filters( 'um_user_profile_restricted_edit_fields', $arr_restricted_fields, $_um_profile_id );
-
-			return $arr_restricted_fields;
+			/**
+			 * Filters the form fields that need to be disabled in edit mode (profile).
+			 *
+			 * @param {array} $fields         Form fields.
+			 * @param {int}   $_um_profile_id User Profile ID.
+			 *
+			 * @return {array} Form fields.
+			 *
+			 * @since 2.0
+			 * @hook um_user_profile_restricted_edit_fields
+			 *
+			 * @example <caption>Make user email field editable on the Profile Page.</caption>
+			 * function my_make_email_editable( $fields, $_um_profile_id ) {
+			 *     $fields = array_flip( $fields );
+			 *     unset( $fields['user_email'] );
+			 *     $fields = array_keys( $fields );
+			 *     return $fields;
+			 * }
+			 * add_filter( 'um_user_profile_restricted_edit_fields', 'my_make_email_editable', 10, 2 );
+			 */
+			return apply_filters( 'um_user_profile_restricted_edit_fields', $arr_restricted_fields, $_um_profile_id );
 		}
 
 		/**
