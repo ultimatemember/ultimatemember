@@ -511,6 +511,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'disable_restriction_pre_queries'       => 0,
 				'uninstall_on_delete'                   => 0,
 				'permalink_base'                        => 'user_login',
+				'permalink_base_custom_meta'            => '',
 				'display_name'                          => 'full_name',
 				'display_name_field'                    => '',
 				'author_redirect'                       => 1,

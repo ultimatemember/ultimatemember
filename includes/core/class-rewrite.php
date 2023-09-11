@@ -153,6 +153,14 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 		 */
 		public function locate_user_profile() {
 			$permalink_base = UM()->options()->get( 'permalink_base' );
+			if ( 'custom_meta' === $permalink_base ) {
+				$custom_meta = UM()->options()->get( 'permalink_base_custom_meta' );
+				if ( empty( $custom_meta ) ) {
+					// Set default permalink base if custom meta is empty.
+					$permalink_base = 'user_login';
+				}
+			}
+
 			if ( um_queried_user() && um_is_core_page( 'user' ) ) {
 				if ( 'user_login' === $permalink_base ) {
 					$user_id = username_exists( um_queried_user() );
@@ -202,6 +210,10 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 
 				if ( 'hash' === $permalink_base ) {
 					$user_id = UM()->user()->user_exists_by_hash( um_queried_user() );
+				}
+
+				if ( 'custom_meta' === $permalink_base ) {
+					$user_id = UM()->user()->user_exists_by_custom_meta( um_queried_user() );
 				}
 
 				if ( in_array( $permalink_base, array( 'name', 'name_dash', 'name_dot', 'name_plus' ), true ) ) {

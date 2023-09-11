@@ -257,6 +257,18 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 			global $wpdb;
 
 			$permalink_base = UM()->options()->get( 'permalink_base' );
+			if ( 'custom_meta' === $permalink_base ) {
+				$custom_meta = UM()->options()->get( 'permalink_base_custom_meta' );
+				if ( empty( $custom_meta ) ) {
+					// Set default permalink base if custom meta is empty.
+					$permalink_base = 'user_login';
+					$meta_key       = 'um_user_profile_url_slug_' . $permalink_base;
+				} else {
+					$meta_key = $custom_meta;
+				}
+			} else {
+				$meta_key = 'um_user_profile_url_slug_' . $permalink_base;
+			}
 
 			$user_id = $wpdb->get_var(
 				$wpdb->prepare(
@@ -266,7 +278,7 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 						  meta_value = %s
 					ORDER BY umeta_id ASC
 					LIMIT 1",
-					'um_user_profile_url_slug_' . $permalink_base,
+					$meta_key,
 					$slug
 				)
 			);

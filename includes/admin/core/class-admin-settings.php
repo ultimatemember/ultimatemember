@@ -7,40 +7,33 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
-
 	/**
 	 * Class Admin_Settings
 	 * @package um\admin\core
 	 */
 	class Admin_Settings {
 
-
 		/**
 		 * @var array
 		 */
 		public $settings_map;
-
 
 		/**
 		 * @var array
 		 */
 		public $settings_structure;
 
-
 		/**
 		 * @var
 		 */
 		private $previous_licenses;
-
 
 		/**
 		 * @var
 		 */
 		private $need_change_permalinks;
 
-
 		private $gravatar_changed = false;
-
 
 		/**
 		 * Admin_Settings constructor.
@@ -668,6 +661,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'permalink_base'                        => array(
 						'sanitize' => 'key',
 					),
+					'permalink_base_custom_meta'            => array(
+						'sanitize' => 'text',
+					),
 					'display_name'                          => array(
 						'sanitize' => 'key',
 					),
@@ -1014,14 +1010,23 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										// translators: %s: Profile page URL
 										'tooltip'     => sprintf( __( 'Here you can control the permalink structure of the user profile URL globally e.g. %s<strong>username</strong>/', 'ultimate-member' ), trailingslashit( um_get_core_page( 'user' ) ) ),
 										'options'     => array(
-											'user_login' => __( 'Username', 'ultimate-member' ),
-											'name'       => __( 'First and Last Name with \'.\'', 'ultimate-member' ),
-											'name_dash'  => __( 'First and Last Name with \'-\'', 'ultimate-member' ),
-											'name_plus'  => __( 'First and Last Name with \'+\'', 'ultimate-member' ),
-											'user_id'    => __( 'User ID', 'ultimate-member' ),
-											'hash'       => __( 'Unique hash string', 'ultimate-member' ),
+											'user_login'  => __( 'Username', 'ultimate-member' ),
+											'name'        => __( 'First and Last Name with \'.\'', 'ultimate-member' ),
+											'name_dash'   => __( 'First and Last Name with \'-\'', 'ultimate-member' ),
+											'name_plus'   => __( 'First and Last Name with \'+\'', 'ultimate-member' ),
+											'user_id'     => __( 'User ID', 'ultimate-member' ),
+											'hash'        => __( 'Unique hash string', 'ultimate-member' ),
+											'custom_meta' => __( 'Custom usermeta', 'ultimate-member' ),
 										),
 										'placeholder' => __( 'Select...', 'ultimate-member' ),
+									),
+									array(
+										'id'          => 'permalink_base_custom_meta',
+										'type'        => 'text',
+										'label'       => __( 'Profile Permalink Base Custom Meta Key', 'ultimate-member' ),
+										'tooltip'     => __( 'Specify the custom field meta key that you want to use as profile permalink base. Meta value should be unique.', 'ultimate-member' ),
+										'conditional' => array( 'permalink_base', '=', 'custom_meta' ),
+										'size'        => 'medium',
 									),
 									array(
 										'id'          => 'display_name',
@@ -1048,6 +1053,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'label'       => __( 'Display Name Custom Field(s)', 'ultimate-member' ),
 										'tooltip'     => __( 'Specify the custom field meta key or custom fields seperated by comma that you want to use to display users name on the frontend of your site', 'ultimate-member' ),
 										'conditional' => array( 'display_name', '=', 'field' ),
+										'size'        => 'medium',
 									),
 									array(
 										'id'      => 'author_redirect',

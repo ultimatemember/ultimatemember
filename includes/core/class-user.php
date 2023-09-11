@@ -706,7 +706,19 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		public function get_profile_slug( $user_id ) {
 			// Permalink base
 			$permalink_base = UM()->options()->get( 'permalink_base' );
-			$profile_slug   = get_user_meta( $user_id, "um_user_profile_url_slug_{$permalink_base}", true );
+			if ( 'custom_meta' === $permalink_base ) {
+				$custom_meta = UM()->options()->get( 'permalink_base_custom_meta' );
+				if ( empty( $custom_meta ) ) {
+					// Set default permalink base if custom meta is empty.
+					$permalink_base = 'user_login';
+					$meta_key       = 'um_user_profile_url_slug_' . $permalink_base;
+				} else {
+					$meta_key = $custom_meta;
+				}
+			} else {
+				$meta_key = 'um_user_profile_url_slug_' . $permalink_base;
+			}
+			$profile_slug = get_user_meta( $user_id, $meta_key, true );
 
 			//get default username permalink if it's empty then return false
 			if ( empty( $profile_slug ) ) {
@@ -779,6 +791,17 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			if ( 'hash' === $permalink_base ) {
 				$user_in_url = $this->generate_user_hash( $user_id );
+			}
+
+			if ( 'custom_meta' === $permalink_base ) {
+				$custom_meta = UM()->options()->get( 'permalink_base_custom_meta' );
+				if ( empty( $custom_meta ) ) {
+					// Set default permalink base if custom meta is empty.
+					$permalink_base = 'user_login';
+				} else {
+					$user_in_url = rawurlencode( get_user_meta( $user_id, $custom_meta, true ) );
+					$user_in_url = apply_filters( 'um_custom_meta_permalink_base_generate_user_slug', $user_in_url, $user_id, $custom_meta );
+				}
 			}
 
 			// Username
@@ -2373,6 +2396,52 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				'fields'     => array( 'ID' ),
 				'meta_query' => array(
 					'relation' => 'OR',
+					array(
+						'key'     => 'um_user_profile_url_slug_' . $permalink_base,
+						'value'   => strtolower( $raw_value ),
+						'compare' => '=',
+					),
+				),
+			);
+
+			$ids = new \WP_User_Query( $args );
+
+			if ( $ids->total_users > 0 ) {
+				$um_user_query = current( $ids->get_results() );
+				return $um_user_query->ID;
+			}
+
+			return false;
+		}
+
+		/**
+		 * @param string $slug
+		 *
+		 * @return bool|int
+		 */
+		public function user_exists_by_custom_meta( $slug ) {
+			$permalink_base = UM()->options()->get( 'permalink_base' );
+			$custom_meta    = UM()->options()->get( 'permalink_base_custom_meta' );
+			if ( empty( $custom_meta ) ) {
+				// Set default permalink base if custom meta is empty.
+				$permalink_base = 'user_login';
+				$meta_key       = 'um_user_profile_url_slug_' . $permalink_base;
+			} else {
+				$meta_key = $custom_meta;
+			}
+
+			$raw_value = $slug;
+
+			// Search by Profile Slug
+			$args = array(
+				'fields'     => array( 'ID' ),
+				'meta_query' => array(
+					'relation' => 'OR',
+					array(
+						'key'     => $meta_key,
+						'value'   => strtolower( $raw_value ),
+						'compare' => '=',
+					),
 					array(
 						'key'     => 'um_user_profile_url_slug_' . $permalink_base,
 						'value'   => strtolower( $raw_value ),
