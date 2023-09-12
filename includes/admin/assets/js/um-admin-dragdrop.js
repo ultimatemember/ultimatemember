@@ -267,7 +267,7 @@ function UM_Rows_Refresh(){
 
 function UM_Add_Icon(){
 
-	var add_icon_html = '<a href="#" class="um-admin-drag-add-field um-admin-tipsy-n" title="Add Field" data-modal="UM_fields" data-modal-size="normal" data-dynamic-content="um_admin_show_fields" data-arg2="'+jQuery('.um-admin-drag-ajax').data('form_id')+'" data-arg1=""><i class="um-icon-plus"></i></a>';
+	var add_icon_html = '<div class="um-admin-drag-add-area"><a href="#" class="um-admin-drag-add-field-group um-admin-tipsy-n button button-primary" title="Add Field Group">Add Field Group</a><a href="#" class="um-admin-drag-add-field um-admin-tipsy-n button" title="Add Field" data-modal="UM_fields" data-modal-size="normal" data-dynamic-content="um_admin_show_fields" data-arg2="'+jQuery('.um-admin-drag-ajax').data('form_id')+'" data-arg1="">Add individual field</a></div>';
 
 	jQuery('.um-admin-drag-col').each(function(){
 		if ( jQuery(this).find('.um-admin-drag-add-field').length == 0 ) {

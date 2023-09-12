@@ -410,3 +410,9 @@ textarea.um-forms-field.um-small-field {
     text-align: left;
     margin: 0 10px 0 0;
 }
+
+.um-form-table .um-forms-line label .um-req {
+	color: #a00;
+	margin: 0 0 0 3px;
+	font-weight: normal;
+}

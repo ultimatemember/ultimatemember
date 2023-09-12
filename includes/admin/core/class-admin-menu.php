@@ -1,15 +1,13 @@
 <?php
 namespace um\admin\core;
 
-
 use \RecursiveDirectoryIterator;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
-
 
 	/**
 	 * Class Admin_Menu
@@ -17,18 +15,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 	 */
 	class Admin_Menu {
 
-
 		/**
 		 * @var string
 		 */
 		var $pagehook;
 		var $slug = 'ultimatemember';
 
-
 		/**
 		 * Admin_Menu constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			add_action( 'admin_menu', array( &$this, 'primary_admin_menu' ), 0 );
 			add_action( 'admin_menu', array( &$this, 'secondary_menu_items' ), 1000 );
 			add_action( 'admin_menu', array( &$this, 'extension_menu' ), 9999 );
@@ -37,7 +33,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 
 			add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1000 );
 		}
-
 
 		/**
 		 * Change the admin footer text on UM admin pages
@@ -141,23 +136,23 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 			}
 		}
 
-
 		/**
 		 * Setup admin menu
 		 */
-		function primary_admin_menu() {
-			$this->pagehook = add_menu_page( __( 'Ultimate Member', 'ultimate-member' ), __( 'Ultimate Member', 'ultimate-member' ), 'manage_options', $this->slug, array( &$this, 'admin_page' ), 'dashicons-admin-users', '42.78578');
+		public function primary_admin_menu() {
+			$this->pagehook = add_menu_page( __( 'Ultimate Member', 'ultimate-member' ), __( 'Ultimate Member', 'ultimate-member' ), 'manage_options', $this->slug, array( &$this, 'admin_page' ), 'dashicons-admin-users', '42.78578' );
 
 			add_action( 'load-' . $this->pagehook, array( &$this, 'on_load_page' ) );
 
 			add_submenu_page( $this->slug, __( 'Dashboard', 'ultimate-member' ), __( 'Dashboard', 'ultimate-member' ), 'manage_options', $this->slug, array( &$this, 'admin_page' ) );
 		}
 
-
 		/**
 		 * Secondary admin menu (after settings)
 		 */
-		function secondary_menu_items() {
+		public function secondary_menu_items() {
+			add_submenu_page( $this->slug, __( 'Field Groups', 'ultimate-member' ), __( 'Field Groups', 'ultimate-member' ), 'manage_options', 'um_field_groups', array( &$this, 'field_groups_page' ) );
+
 			add_submenu_page( $this->slug, __( 'Forms', 'ultimate-member' ), __( 'Forms', 'ultimate-member' ), 'manage_options', 'edit.php?post_type=um_form', '' );
 
 			add_submenu_page( $this->slug, __( 'User Roles', 'ultimate-member' ), __( 'User Roles', 'ultimate-member' ), 'manage_options', 'um_roles', array( &$this, 'um_roles_pages' ) );
@@ -186,6 +181,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 			do_action( 'um_extend_admin_menu' );
 		}
 
+		/**
+		 * Field groups page menu callback
+		 */
+		public function field_groups_page() {
+			if ( empty( $_GET['tab'] ) ) {
+				include_once UM_PATH . 'includes/admin/templates/field-group/groups-list.php';
+			} elseif ( in_array( sanitize_key( $_GET['tab'] ), array( 'add', 'edit' ), true ) ) {
+				include_once UM_PATH . 'includes/admin/templates/field-group/group-edit.php';
+			}
+		}
 
 		/**
 		 * Role page menu callback

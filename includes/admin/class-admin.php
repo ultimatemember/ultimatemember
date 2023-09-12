@@ -2064,5 +2064,68 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			}
 			return UM()->classes['um\admin\secure'];
 		}
+
+		/**
+		 * @since 2.7.0
+		 *
+		 * @param bool|array $data
+		 *
+		 * @return core\Admin_Forms
+		 */
+		public function forms( $data = false ) {
+			$class_name = 'um\admin\forms_' . $data['class'];
+			if ( ! isset( UM()->classes[ $class_name ] ) || empty( UM()->classes[ $class_name ] ) ) {
+				UM()->classes[ $class_name ] = new core\Admin_Forms( $data );
+			}
+			return UM()->classes[ $class_name ];
+		}
+
+		/**
+		 * @since 2.7.0
+		 *
+		 * @return Actions_Listener
+		 */
+		public function actions_listener() {
+			if ( empty( UM()->classes['um\admin\actions_listener'] ) ) {
+				UM()->classes['um\admin\actions_listener'] = new Actions_Listener();
+			}
+			return UM()->classes['um\admin\actions_listener'];
+		}
+
+		/**
+		 * @since 2.7.0
+		 *
+		 * @return Field_Group
+		 */
+		public function field_group() {
+			if ( empty( UM()->classes['um\admin\field_group'] ) ) {
+				UM()->classes['um\admin\field_group'] = new Field_Group();
+			}
+			return UM()->classes['um\admin\field_group'];
+		}
+
+		/**
+		 * @since 2.7.0
+		 *
+		 * @return Form_Builder
+		 */
+		public function form_builder() {
+			if ( empty( UM()->classes['um\admin\form_builder'] ) ) {
+				UM()->classes['um\admin\form_builder'] = new Form_Builder();
+			}
+			return UM()->classes['um\admin\form_builder'];
+		}
+
+		/**
+		 * @since 2.7.0
+		 *
+		 * @return Validation
+		 */
+		public function validation() {
+			if ( empty( UM()->classes['um\admin\validation'] ) ) {
+				UM()->classes['um\admin\validation'] = new Validation();
+			}
+			return UM()->classes['um\admin\validation'];
+		}
 	}
 }

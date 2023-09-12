@@ -6,7 +6,7 @@ function um_form_select_tab( tab, set_val ) {
 	jQuery('.um-admin div#side-sortables').show();
 	jQuery('div[id^="um-admin-form"]').hide();
 	jQuery('#submitdiv').show();
-	jQuery('div#um-admin-form-mode,div#um-admin-form-title,div#um-admin-form-builder,div#um-admin-form-shortcode').show();
+	jQuery('div#um-admin-form-mode,div#um-admin-form-title,div#um-admin-form-builder,div#um-admin-form-builder-new,div#um-admin-form-shortcode').show();
 	jQuery('div[id^="um-admin-form-' + tab.data('role') + '"]').show();
 
 	if ( set_val ) {

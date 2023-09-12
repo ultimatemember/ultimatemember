@@ -5,9 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
-
 
 	/**
 	 * Class Admin_Enqueue
@@ -68,7 +66,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			$this->front_js_baseurl  = um_url . 'assets/js/';
 			$this->front_css_baseurl = um_url . 'assets/css/';
 
-			$this->suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG || defined( 'UM_SCRIPT_DEBUG' ) ) ? '' : '.min';
+			$this->suffix = ( ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) || defined( 'UM_SCRIPT_DEBUG' ) ) ? '' : '.min';
 
 			$this->um_cpt_form_screen = false;
 
@@ -91,6 +89,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 				add_filter( 'block_categories', array( &$this, 'blocks_category' ), 10, 2 );
 			}
 			add_action( 'enqueue_block_assets', array( &$this, 'block_editor' ), 11 );
+
+			add_action( 'load-ultimate-member_page_um_field_groups', array( &$this, 'field_groups_page' ) );
 		}
 
 
@@ -220,7 +220,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			// phpcs:ignore WordPress.Security.NonceVerification
 			if ( ( isset( $_GET['post_type'] ) && 'um_form' === sanitize_key( $_GET['post_type'] ) ) || ( isset( $_GET['post'] ) && 'um_form' === get_post_type( absint( $_GET['post'] ) ) ) ) {
 				$this->um_cpt_form_screen = true;
-				add_action( 'admin_footer', array( $this, 'admin_footer_scripts' ), 20 );
+				add_action( 'admin_footer', array( $this, 'form_builder_wp_editor' ), 20 );
 			}
 		}
 
@@ -452,6 +452,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 
 			wp_register_style( 'um_admin_builder', $this->css_url . 'um-admin-builder.css', array(), ultimatemember_version );
 			wp_enqueue_style( 'um_admin_builder' );
+
+			// NEW
+			wp_register_script( 'um_admin_builder_new', UM_URL . 'assets/js/admin/form-builder' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'wp-i18n', 'wp-url', 'jquery-ui-sortable', 'jquery-ui-draggable', 'um_admin_forms' ), UM_VERSION, true );
+			$field_groups_data = array(
+				'field_tabs'        => UM()->config()->get( 'field_settings_tabs' ),
+				'field_types'       => $this->get_all_field_types(),
+				'conditional_rules' => UM()->config()->get( 'field_conditional_rules' ),
+			);
+			wp_localize_script( 'um_admin_builder_new', 'um_admin_field_groups_data', $field_groups_data );
+			wp_enqueue_script( 'um_admin_builder_new' );
+
+			wp_register_style( 'um_admin_builder_new', UM_URL . 'assets/css/admin/form-builder' . $this->suffix . '.css', array( 'um_admin_forms' ), UM_VERSION );
+			wp_enqueue_style( 'um_admin_builder_new' );
 		}
 
 
@@ -660,7 +673,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		 */
 		public function admin_enqueue_scripts() {
 			if ( UM()->admin()->is_um_screen() ) {
-
 				/*if ( get_post_type() != 'shop_order' ) {
                     UM()->enqueue()->wp_enqueue_scripts();
                 }*/
@@ -720,11 +732,86 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			}
 		}
 
+		/**
+		 * @since 2.7.0
+		 */
+		public function field_groups_page() {
+			add_action( 'admin_enqueue_scripts', array( &$this, 'field_groups_page_scripts' ) );
+			add_action( 'admin_footer', array( $this, 'form_builder_wp_editor' ), 20 );
+		}
+
+		/**
+		 * @since 2.7.0
+		 *
+		 * @return mixed
+		 */
+		private function get_all_field_types() {
+			$static_settings = UM()->config()->get( 'static_field_settings' );
+			$field_types     = UM()->config()->get( 'field_types' );
+
+			foreach ( $field_types as $field_type => &$data ) {
+				if ( ! empty( $data['settings'] ) ) {
+					$data['settings'] = array_merge_recursive( $static_settings, $data['settings'] );
+				} else {
+					$data['settings'] = $static_settings;
+				}
+
+				$data['settings'] = apply_filters( 'um_fields_settings', $data['settings'], $field_type );
+
+				foreach ( $data['settings'] as $tab_key => &$settings_data ) {
+					foreach ( $settings_data as $setting_key => &$setting_data ) {
+						if ( array_key_exists( $tab_key, $static_settings ) && array_key_exists( $setting_key, $static_settings[ $tab_key ] ) ) {
+							$setting_data['static'] = true;
+						}
+					}
+
+					if ( empty( $settings_data ) ) {
+						unset( $data['settings'][ $tab_key ] );
+					}
+				}
+			}
+
+			return $field_types;
+		}
+
+		/**
+		 * @since 2.7.0
+		 */
+		public function field_groups_page_scripts() {
+			// Assets for UM wp-admin forms that are used in settings pages and metaboxes
+			// jquery is required for jQuery using
+			// wp-util is required for wp.ajax.send function
+			// um-tipsy is required for tipsy.js
+			// wp-color-picker is required for colorpickers init
+			// um-helptip is required for help tooltips
+//			$deps = array( 'jquery', 'wp-util', 'wp-i18n', 'wp-color-picker', 'jquery-ui-sortable', 'jquery-ui-slider', 'jquery-ui-draggable', 'select2', 'um-helptip' );
+//
+//			wp_register_script( 'um_admin_forms', $this->js_url . 'um-admin-forms.js', array( 'jquery', 'wp-i18n', 'select2' ), UM_VERSION, true );
+//
+//			wp_register_script( 'um_admin_forms', $this->urls['js'] . 'admin/forms' . $this->suffix . '.js', $deps, UM_VERSION, true );
+//
+//			$deps = array( 'wp-color-picker', 'um-jquery-ui', 'select2' );
+//			wp_register_style( 'um_admin_forms', $this->urls['css'] . 'admin-forms' . $this->suffix . '.css', $deps, UM_VERSION );
+
+			wp_register_script( 'um_admin_field_groups', UM_URL . 'assets/js/admin/field-groups' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'wp-i18n', 'wp-url', 'jquery-ui-sortable', 'jquery-ui-draggable', 'um_admin_forms' ), UM_VERSION, true );
+			$field_groups_data = array(
+				'field_tabs'        => UM()->config()->get( 'field_settings_tabs' ),
+				'field_types'       => $this->get_all_field_types(),
+				'conditional_rules' => UM()->config()->get( 'field_conditional_rules' ),
+			);
+			wp_localize_script( 'um_admin_field_groups', 'um_admin_field_groups_data', $field_groups_data );
+			wp_enqueue_script( 'um_admin_field_groups' );
+
+			wp_register_style( 'um_admin_field_groups', UM_URL . 'assets/css/admin/field-groups' . $this->suffix . '.css', array( 'um_admin_forms' ), UM_VERSION );
+			wp_enqueue_style( 'um_admin_field_groups' );
+		}
 
 		/**
 		 * Print editor scripts if they are not printed by default
+		 *
+		 * @since 2.7.0
 		 */
-		public function admin_footer_scripts() {
+		public function form_builder_wp_editor() {
 			/**
 			 * @var $class \_WP_Editors
 			 */
@@ -741,7 +828,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			}
 
 			if ( ! class_exists( $class, false ) ) {
-				require_once( ABSPATH . WPINC . '/class-wp-editor.php' );
+				require_once ABSPATH . WPINC . '/class-wp-editor.php';
 			}
 
 			$class::force_uncompressed_tinymce();
@@ -749,5 +836,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			$class::editor_js();
 		}
 
+		/**
+		 * Print editor scripts if they are not printed by default
+		 *
+		 * @deprecated 2.7.0
+		 * @todo fully deprecate since 2.7.1
+		 */
+		public function admin_footer_scripts() {
+			_deprecated_function( __METHOD__, '2.7.0', 'form_builder_wp_editor()' );
+			$this->form_builder_wp_editor();
+		}
 	}
 }

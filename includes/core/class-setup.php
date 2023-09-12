@@ -53,12 +53,53 @@ PRIMARY KEY  (umeta_id),
 KEY user_id_indx (user_id),
 KEY meta_key_indx (um_key),
 KEY meta_value_indx (um_value(191))
+) $charset_collate;
+CREATE TABLE {$wpdb->prefix}um_field_groups (
+id bigint(20) unsigned NOT NULL auto_increment,
+group_key varchar(32) NOT NULL default '',
+title varchar(255) default NULL,
+description longtext default NULL,
+status enum('active','inactive','draft','invalid') NOT NULL default 'invalid',
+PRIMARY KEY  (id),
+KEY group_key_indx (group_key),
+KEY status_indx (status)
+) $charset_collate;
+CREATE TABLE {$wpdb->prefix}um_field_groups_meta (
+meta_id bigint(20) unsigned NOT NULL auto_increment,
+group_id bigint(20) unsigned NOT NULL,
+meta_key varchar(255) default NULL,
+meta_value longtext,
+PRIMARY KEY  (meta_id),
+KEY group_id_indx (group_id),
+KEY meta_key (meta_key(191))
+) $charset_collate;
+CREATE TABLE {$wpdb->prefix}um_fields (
+id bigint(20) unsigned NOT NULL auto_increment,
+field_key varchar(32) NOT NULL default '',
+group_id bigint(20) unsigned default NULL,
+title varchar(255) default NULL,
+type varchar(255) NOT NULL default '',
+parent_id bigint(20) unsigned NOT NULL default 0,
+PRIMARY KEY  (id),
+UNIQUE KEY field_key_group_id_indx (field_key,group_id),
+KEY field_key_indx (field_key),
+KEY parent_id_indx (parent_id),
+KEY group_id_indx (group_id),
+KEY type_indx (type)
+) $charset_collate;
+CREATE TABLE {$wpdb->prefix}um_fields_meta (
+meta_id bigint(20) unsigned NOT NULL auto_increment,
+field_id bigint(20) unsigned NOT NULL,
+meta_key varchar(255) default NULL,
+meta_value longtext,
+PRIMARY KEY  (meta_id),
+KEY field_id_indx (field_id),
+KEY meta_key (meta_key(191))
 ) $charset_collate;";
 
-			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 			dbDelta( $sql );
 		}
-
 
 		/**
 		 * Basics

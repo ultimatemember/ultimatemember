@@ -301,6 +301,12 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
   - Fixed: Override templates and custom path for 'members-grid.php', 'members-header.php', 'members-list.php', 'members-pagination.php', 'searchform.php', 'login-to-view.php', 'profile/comments.php', 'profile/comments-single.php', 'profile/posts.php', 'profile/posts-single.php', 'modal/um_upload_single.php', 'modal/um_view_photo.php' template files
   - Fixed: Custom emails data "--- UM Email HTML Templates ---" in Install info
 
+= 2.7.0: xx, 2023 =
+
+* Enhancements:
+
+  - Added: Field Groups functionality
+
 = 2.6.3: June 14, 2023 =
 
 * Enhancements:

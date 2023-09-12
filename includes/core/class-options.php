@@ -1,11 +1,11 @@
 <?php
 namespace um\core;
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Options' ) ) {
-
 
 	/**
 	 * Class Options
@@ -158,5 +158,17 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 			return apply_filters( 'um_core_page_id_filter', 'core_' . $key );
 		}
 
+		/**
+		 * Get predefined page option key
+		 *
+		 * @since 2.7.0
+		 *
+		 * @param string $slug
+		 *
+		 * @return string
+		 */
+		public function get_predefined_page_option_key( $slug ) {
+			return apply_filters( 'um_predefined_page_option_key', "core_{$slug}" );
+		}
 	}
 }
