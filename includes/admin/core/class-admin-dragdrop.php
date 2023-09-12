@@ -35,18 +35,19 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 		 */
 		public function update_order() {
 			UM()->admin()->check_ajax_nonce();
+			// phpcs:disable WordPress.Security.NonceVerification -- already verified here
 
 			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
 				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
 			}
 
-			/**
-			 * @var $form_id
-			 */
-			extract( $_POST );
+			if ( empty( $_POST['form_id'] ) ) {
+				wp_send_json_error( __( 'Invalid form ID.', 'ultimate-member' ) );
+			}
 
-			if ( isset( $form_id ) ) {
-				$form_id = absint( $form_id );
+			$form_id = absint( $_POST['form_id'] );
+			if ( empty( $form_id ) ) {
+				wp_send_json_error( __( 'Invalid form ID.', 'ultimate-member' ) );
 			}
 
 			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
@@ -71,12 +72,11 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 
 				// adding rows
 				if ( 0 === strpos( $key, '_um_row_' ) ) {
-
 					$update_args = null;
 
 					$row_id = str_replace( '_um_row_', '', $key );
 
-					if ( strstr( $_POST[ '_um_rowcols_' . $row_id . '_cols' ], ':' ) ) {
+					if ( false !== strpos( $_POST[ '_um_rowcols_' . $row_id . '_cols' ], ':' ) ) {
 						$cols = sanitize_text_field( $_POST[ '_um_rowcols_' . $row_id . '_cols' ] );
 					} else {
 						$cols = absint( $_POST[ '_um_rowcols_' . $row_id . '_cols' ] );
@@ -105,7 +105,6 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 					}
 
 					$fields[ $key ] = $row_args;
-
 				}
 
 				// change field position
@@ -160,22 +159,23 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 			update_option( 'um_form_rowdata_' . $form_id, $this->row_data );
 
 			UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
+			// phpcs:enable WordPress.Security.NonceVerification -- already verified here
 		}
 
 		/**
 		 * Load form to maintain form order.
 		 */
 		public function load_field_order() {
-
 			$screen = get_current_screen();
 
-			if ( ! isset( $screen->id ) || 'um_form' !== $screen->id ) {
+			if ( ! isset( $screen, $screen->id ) || 'um_form' !== $screen->id ) {
 				return;
 			} ?>
 
 			<div class="um-col-demon-settings" data-in_row="" data-in_sub_row="" data-in_column="" data-in_group=""></div>
 
 			<div class="um-col-demon-row" style="display:none;">
+				<span class="um-admin-row-loading"><span></span></span>
 
 				<div class="um-admin-drag-row-icons">
 					<a href="javascript:void(0);" class="um-admin-drag-rowsub-add um-admin-tipsy-n" title="<?php esc_attr_e( 'Add Row', 'ultimate-member' ); ?>" data-row_action="add_subrow"><i class="um-icon-plus"></i></a>
@@ -187,6 +187,7 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 
 				<div class="um-admin-drag-rowsubs">
 					<div class="um-admin-drag-rowsub">
+						<span class="um-admin-row-loading"><span></span></span>
 
 						<div class="um-admin-drag-ctrls columns">
 							<a href="javascript:void(0);" class="active" data-cols="1"></a>

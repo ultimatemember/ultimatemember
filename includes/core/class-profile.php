@@ -404,14 +404,13 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 			return $this->active_subnav;
 		}
 
-
 		/**
 		 * Show meta in profile
 		 *
 		 * @param array $array Meta Array
 		 * @return string
 		 */
-		function show_meta( $array ) {
+		public function show_meta( $array, $args ) {
 			$output = '';
 
 			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
@@ -427,16 +426,30 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 						$data['in_profile_meta'] = true;
 
 						$value = um_filtered_value( $key, $data );
-						if ( 'description' === $key ) {
-							if ( UM()->options()->get( 'profile_show_html_bio' ) ) {
-								$res = make_clickable( wpautop( wp_kses_post( $value ) ) );
+
+						$description_key = UM()->profile()->get_show_bio_key( $args );
+						if ( $description_key === $key ) {
+							$global_setting = UM()->options()->get( 'profile_show_html_bio' );
+							$bio_html       = ! empty( $global_setting );
+
+							if ( ! empty( $args['custom_fields'][ $description_key ] ) ) {
+								if ( empty( $args['custom_fields'][ $description_key ]['html'] ) ) {
+									$bio_html = false;
+								}
+							}
+
+							if ( $bio_html ) {
+								$data['html'] = true;
+								$value = um_filtered_value( $key, $data );
+								$res = wp_kses_post( make_clickable( wpautop( $value ) ) );
 							} else {
 								$res = esc_html( $value );
 							}
 
 							$value = nl2br( $res );
 						}
-						if ( ! $value && ( ! array_key_exists( 'type', $data ) || ! in_array( $data['type'], $fields_without_metakey ) ) ) {
+
+						if ( ! $value && ( ! array_key_exists( 'type', $data ) || ! in_array( $data['type'], $fields_without_metakey, true ) ) ) {
 							continue;
 						}
 

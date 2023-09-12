@@ -1,12 +1,11 @@
 <?php
 namespace um\core;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Login' ) ) {
-
 
 	/**
 	 * Class Login
@@ -15,73 +14,73 @@ if ( ! class_exists( 'um\core\Login' ) ) {
 	 */
 	class Login {
 
+		/**
+		 * @var string
+		 */
+		public $auth_id = '';
 
 		/**
-		 * Logged-in user ID
+		 * Login constructor.
 		 */
-		var $auth_id = '';
-
-
-		/**
-		 * Register constructor.
-		 */
-		function __construct() {
-			add_action( 'um_after_login_fields',  array( $this, 'add_nonce' ) );
-			add_action( 'um_submit_form_login', array( $this, 'verify_nonce' ), 1, 1 );
+		public function __construct() {
+			add_action( 'um_after_login_fields', array( $this, 'add_nonce' ) );
+			add_action( 'um_submit_form_login', array( $this, 'verify_nonce' ), 1, 2 );
 		}
-
 
 		/**
 		 * Add registration form notice
 		 */
-		function add_nonce() {
+		public function add_nonce() {
 			wp_nonce_field( 'um_login_form' );
 		}
-
 
 		/**
 		 * Verify nonce handler
 		 *
-		 * @param $args
-		 *
-		 * @return mixed
+		 * @param array $args
+		 * @param array $form_data
 		 */
-		function verify_nonce( $args ) {
+		public function verify_nonce( $args, $form_data ) {
 			/**
-			 * UM hook
+			 * Filters allow nonce verifying while UM Login submission.
 			 *
-			 * @type filter
-			 * @title um_login_allow_nonce_verification
-			 * @description Enable/Disable nonce verification of login
-			 * @input_vars
-			 * [{"var":"$allow_nonce","type":"bool","desc":"Enable nonce"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_login_allow_nonce_verification', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_login_allow_nonce_verification', 'my_login_allow_nonce_verification', 10, 1 );
-			 * function my_login_allow_nonce_verification( $allow_nonce ) {
-			 *     // your code here
-			 *     return $allow_nonce;
-			 * }
-			 * ?>
+			 * @param {bool}  $allow_nonce Is allowed verify nonce on login. By default, allowed = `true`.
+			 * @param {array} $form_data   Form's metakeys. Since 2.6.7.
+			 *
+			 * @return {bool} Is allowed verify.
+			 *
+			 * @since 2.0
+			 * @hook um_login_allow_nonce_verification
+			 *
+			 * @example <caption>Disable verifying nonce on the login page.</caption>
+			 * add_filter( 'um_login_allow_nonce_verification', '__return_false' );
 			 */
-			$allow_nonce_verification = apply_filters( 'um_login_allow_nonce_verification', true );
-
-			if ( ! $allow_nonce_verification  ) {
-				return $args;
+			$allow_nonce_verification = apply_filters( 'um_login_allow_nonce_verification', true, $form_data );
+			if ( ! $allow_nonce_verification ) {
+				return;
 			}
 
-			if ( ! wp_verify_nonce( $args['_wpnonce'], 'um_login_form' ) || empty( $args['_wpnonce'] ) || ! isset( $args['_wpnonce'] ) ) {
-				$url = apply_filters( 'um_login_invalid_nonce_redirect_url', add_query_arg( [ 'err' => 'invalid_nonce' ] ) );
-				exit( wp_redirect( $url ) );
+			if ( empty( $args['_wpnonce'] ) || ! wp_verify_nonce( $args['_wpnonce'], 'um_login_form' ) ) {
+				/**
+				 * Filters URL for redirect if login form nonce isn't verified.
+				 *
+				 * @param {string} $error_url URL for redirect if login form nonce isn't verified.
+				 *
+				 * @return {string} URL for redirect.
+				 *
+				 * @since 2.0
+				 * @hook um_login_invalid_nonce_redirect_url
+				 *
+				 * @example <caption>Change URL for redirect if login form nonce isn't verified.</caption>
+				 * function my_um_login_invalid_nonce_redirect_url( $error_url ) {
+				 *     return '{your_custom_url}';
+				 * }
+				 * add_filter( 'um_login_invalid_nonce_redirect_url', 'my_um_login_invalid_nonce_redirect_url' );
+				 */
+				$url = apply_filters( 'um_login_invalid_nonce_redirect_url', add_query_arg( array( 'err' => 'invalid_nonce' ) ) );
+				um_safe_redirect( $url );
+				exit;
 			}
-
-			return $args;
 		}
-
 	}
-
 }

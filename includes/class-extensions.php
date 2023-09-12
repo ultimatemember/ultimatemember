@@ -98,6 +98,7 @@ if ( ! class_exists( 'um\Extensions' ) ) {
 
 				$settings['licenses']['fields'][] = array(
 					'id'        => "um_{$slug}_license_key",
+					// translators: %s: extension name.
 					'label'     => sprintf( __( '%s License Key', 'ultimate-member' ), $extension['title'] ),
 					'item_name' => $extension['item_name'],
 					'author'    => 'Ultimate Member',

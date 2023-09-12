@@ -1755,7 +1755,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 				$redirects = array_unique( $redirects );
 
-				$current_url = UM()->permalinks()->get_current_url( get_option( 'permalink_structure' ) );
+				$current_url = UM()->permalinks()->get_current_url( UM()->is_permalinks );
 				$current_url = untrailingslashit( $current_url );
 				$current_url_slash = trailingslashit( $current_url );
 
@@ -1843,9 +1843,13 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 * @param \WP_Post|int $post Post ID or object
 		 * @return bool|array
 		 */
-		function get_post_privacy_settings( $post ) {
+		public function get_post_privacy_settings( $post ) {
 			// break for incorrect post
 			if ( empty( $post ) ) {
+				return false;
+			}
+
+			if ( ! is_numeric( $post ) && ! is_a( $post, \WP_Post::class ) ) {
 				return false;
 			}
 

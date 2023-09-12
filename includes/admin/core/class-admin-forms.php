@@ -116,10 +116,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				if ( 'info_text' === $data['type'] ) {
 					$arr_kses = array(
 						'a'      => array(
-							'href'   => array(),
-							'title'  => array(),
-							'target' => array(),
-							'class'  => array(),
+							'href'    => array(),
+							'title'   => array(),
+							'target'  => array(),
+							'class'   => array(),
+							'onclick' => array(),
 						),
 						'button' => array(
 							'class' => array(),
@@ -2189,9 +2190,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$html .= '<span class="um-form-fields-section" style="width:' . floor( 100 / $columns ) . '% !important;">';
 
 				foreach ( $section_fields_per_page as $k => $title ) {
-					$id_attr   = ' id="' . esc_attr( $id . '_' . $k ) . '" ';
-					$for_attr  = ' for="' . esc_attr( $id . '_' . $k ) . '" ';
-					$name_attr = ' name="' . $name . '[' . $k . ']" ';
+					$id_attr  = ' id="' . esc_attr( $id . '_' . $k ) . '" ';
+					$for_attr = ' for="' . esc_attr( $id . '_' . $k ) . '" ';
+
+					if ( ! empty( $field_data['assoc'] ) ) {
+						$name_attr  = ' name="' . esc_attr( $name ) . '[]" ';
+						$value_attr = ' value="' . esc_attr( $k ) . '" ';
+					} else {
+						$name_attr  = ' name="' . esc_attr( $name ) . '[' . esc_attr( $k ) . ']" ';
+						$value_attr = ' value="1" ';
+					}
+
+					$disabed_attr = '';
 
 					$data = array(
 						'field_id' => $field_data['id'] . '_' . $k,
@@ -2209,8 +2219,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 						$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
 					}
 
+					if ( isset( $field_data['options_disabled'] ) && in_array( $k, $field_data['options_disabled'], true ) ) {
+						$disabed_attr = ' disabled="disabled"';
+					}
+
 					$html .= "<label $for_attr>
-						<input type=\"checkbox\" " . checked( in_array( $k, $values ), true, false ) . "$id_attr $name_attr $data_attr value=\"1\" $class_attr>
+						<input type=\"checkbox\" " . checked( in_array( $k, $values, true ), true, false ) . "$disabed_attr $id_attr $name_attr $data_attr $value_attr $class_attr>
 						<span>$title</span>
 					</label>";
 				}

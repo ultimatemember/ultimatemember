@@ -95,12 +95,38 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		/**
 		 * Member_Directory constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			add_filter( 'init', array( &$this, 'init_variables' ) );
 
 			add_action( 'template_redirect', array( &$this, 'access_members' ), 555 );
 		}
 
+		/**
+		 * Get the WordPress core searching fields in wp_users query.
+		 * @return array
+		 */
+		private function get_core_search_fields() {
+			/**
+			 * Filters the WordPress core searching fields in wp_users query for UM Member directory query.
+			 *
+			 * @param {array} $core_search_fields Core search fields in wp_users query.
+			 *
+			 * @return {array} Core search fields in wp_users query.
+			 *
+			 * @since 2.6.10
+			 * @hook um_member_directory_core_search_fields
+			 *
+			 * @example <caption>Extends or remove wp_users core search fields.</caption>
+			 * function my_um_member_directory_core_search_fields( $core_search_fields ) {
+			 *     $core_search_fields = array_flip( $core_search_fields );
+			 *     unset( $core_search_fields['user_email'] );
+			 *     $core_search_fields = array_flip( $core_search_fields );
+			 *     return $core_search_fields;
+			 * }
+			 * add_filter( 'um_member_directory_core_search_fields', 'my_um_member_directory_core_search_fields' );
+			 */
+			return apply_filters( 'um_member_directory_core_search_fields', $this->core_search_fields );
+		}
 
 		/**
 		 * @return bool
@@ -343,6 +369,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					}
 
 					if ( isset( $data['type'] ) && in_array( $data['type'], $this->sorting_supported_fields ) ) {
+						// translators: %s: title.
 						if ( isset( $data['title'] ) && array_search( sprintf( __( '%s DESC', 'ultimate-member' ), $data['title'] ), $this->sort_fields ) !== false ) {
 							$data['title'] = $data['title'] . ' (' . $key . ')';
 						}
@@ -352,7 +379,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							continue;
 						}
 
+						// translators: %s: title.
 						$this->sort_fields[ $key . '_desc' ] = sprintf( __( '%s DESC', 'ultimate-member' ), $title );
+						// translators: %s: title.
 						$this->sort_fields[ $key . '_asc' ] = sprintf( __( '%s ASC', 'ultimate-member' ), $title );
 					}
 				}
@@ -584,8 +613,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) : $default_value; ?>
 						<input type="text" autocomplete="off" id="<?php echo $filter; ?>" name="<?php echo $filter; ?>"
 						   placeholder="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
-						          value="<?php echo esc_attr( $filter_from_url ) ?>" class="um-form-field"
-						       aria-label="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>" />
+								  value="<?php echo esc_attr( $filter_from_url ) ?>" class="um-form-field"
+							   aria-label="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>" />
 					<?php
 					break;
 				}
@@ -676,16 +705,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 						$attrs['options'] = UM()->fields()->get_options_from_callback( $attrs, $attrs['type'] );
 					} else {
-						/**
-						 * UM hook
-						 *
-						 * @type filter
-						 * @title um_select_option_value
-						 * @description Enable options pair by field $data
-						 * @input_vars
-						 * [{"var":"$options_pair","type":"null","desc":"Enable pairs"},
-						 * {"var":"$data","type":"array","desc":"Field Data"}]
-						 */
+						/** This filter is documented in includes/core/class-fields.php */
 						$option_pairs = apply_filters( 'um_select_options_pair', null, $attrs );
 					}
 
@@ -1458,11 +1478,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
 					$sorting        = sanitize_text_field( $_POST['sorting'] );
 					$sorting_fields = maybe_serialize( $directory_data['sorting_fields'] );
-
-					foreach ( $sorting_fields as $field ) {
-						if ( isset( $field[ $sorting ] ) ) {
-							$custom_sort_type  = ! empty( $field['type'] ) ? $meta_query->get_cast_for_type( $field['type'] ) : 'CHAR';
-							$custom_sort_order = $field['order'];
+					if ( ! empty( $sorting_fields ) && is_array( $sorting_fields ) ) {
+						foreach ( $sorting_fields as $field ) {
+							if ( isset( $field[ $sorting ] ) ) {
+								$custom_sort_type  = ! empty( $field['type'] ) ? $meta_query->get_cast_for_type( $field['type'] ) : 'CHAR';
+								$custom_sort_order = $field['order'];
+							}
 						}
 					}
 				}
@@ -1702,7 +1723,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					}
 
 					// Add OR instead AND to search in WP core fields user_email, user_login, user_display_name
-					$search_where = $context->get_search_sql( $search, $this->core_search_fields, 'both' );
+					$search_where = $context->get_search_sql( $search, $this->get_core_search_fields(), 'both' );
 
 					$search_where = preg_replace( '/ AND \((.*?)\)/im', "$1 OR", $search_where );
 
@@ -2657,26 +2678,21 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 				wp_send_json_success( $member_directory_response );
 			}
-
 			/**
-			 * UM hook
+			 * Fires just before the users query for getting users in member directory.
 			 *
-			 * @type action
-			 * @title um_user_before_query
-			 * @description Action before users query on member directory
-			 * @input_vars
-			 * [{"var":"$query_args","type":"array","desc":"Query arguments"},
-			 * {"var":"$md_class","type":"um\core\Member_Directory","desc":"Member Directory class"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_user_before_query', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_user_before_query', 'my_user_before_query', 10, 1 );
-			 * function my_user_before_query( $query_args ) {
-			 *     // your code here
+			 * @since 1.3.x
+			 * @since 2.1.0 Added `$member_directory_class` variable.
+			 * @hook um_user_before_query
+			 *
+			 * @param {array}  $args                   Query arguments.
+			 * @param {object} $member_directory_class Member Directory class. Since 2.1.0 version.
+			 *
+			 * @example <caption>Add custom arguments for query.</caption>
+			 * function my_user_before_query( $query_args, $md_class ) {
+			 *     $query_args['{custom_key}'] = 'custom_value';
 			 * }
-			 * ?>
+			 * add_action( 'um_user_before_query', 'my_user_before_query', 10, 2 );
 			 */
 			do_action( 'um_user_before_query', $this->query_args, $this );
 
@@ -2691,24 +2707,19 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			remove_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10 );
 
 			/**
-			 * UM hook
+			 * Fires just after the users query for getting users in member directory.
 			 *
-			 * @type action
-			 * @title um_user_after_query
-			 * @description Action before users query on member directory
-			 * @input_vars
-			 * [{"var":"$query_args","type":"array","desc":"Query arguments"},
-			 * {"var":"$user_query","type":"array","desc":"User Query"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_user_after_query', 'function_name', 10, 2 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_user_after_query', 'my_user_after_query', 10, 2 );
+			 * @since 1.3.x
+			 * @hook um_user_after_query
+			 *
+			 * @param {array}  $query_args Query arguments.
+			 * @param {object} $user_query Query results.
+			 *
+			 * @example <caption>Make some custom action after getting the users in member directory.</caption>
 			 * function my_user_after_query( $query_args, $user_query ) {
 			 *     // your code here
 			 * }
-			 * ?>
+			 * add_action( 'um_user_after_query', 'my_user_after_query', 10, 2 );
 			 */
 			do_action( 'um_user_after_query', $this->query_args, $user_query );
 

@@ -1,12 +1,11 @@
 <?php
 namespace um\core;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Account' ) ) {
-
 
 	/**
 	 * Class Account
@@ -14,41 +13,40 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 	 */
 	class Account {
 
+		/**
+		 * @var array
+		 */
+		private $account_exist = array();
 
 		/**
 		 * @var
 		 */
-		var $tabs;
-
+		public $tabs;
 
 		/**
 		 * @var string
 		 */
-		var $current_tab = 'general';
-
-
-		/**
-		 * @var array
-		 */
-		var $displayed_fields = array();
-
+		public $current_tab = 'general';
 
 		/**
 		 * @var array
 		 */
-		var $tab_output = array();
+		public $displayed_fields = array();
 
+		/**
+		 * @var array
+		 */
+		public $tab_output = array();
 
 		/**
 		 * Account constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			add_shortcode( 'ultimatemember_account', array( &$this, 'ultimatemember_account' ) );
 			add_action( 'template_redirect', array( &$this, 'account_page_restrict' ), 10001 );
 			add_action( 'template_redirect', array( &$this, 'account_submit' ), 10002 );
 			add_filter( 'um_predefined_fields_hook', array( &$this, 'predefined_fields_hook' ), 1 );
 		}
-
 
 		/**
 		 * Init AllTabs for user account
@@ -150,7 +148,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			return apply_filters( 'um_account_page_default_tabs_hook', $tabs );
 		}
 
-
 		/**
 		 * Account Shortcode
 		 *
@@ -159,47 +156,73 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 * @return false|string
 		 * @throws \Exception
 		 */
-		function ultimatemember_account( $args = array() ) {
+		public function ultimatemember_account( $args = array() ) {
 			if ( ! is_user_logged_in() ) {
 				return '';
 			}
 
 			um_fetch_user( get_current_user_id() );
 
-			ob_start();
-
-			$defaults = array(
-				'template'  => 'account',
-				'mode'      => 'account',
-				'form_id'   => 'um_account_id',
+			/** There is possible to use 'shortcode_atts_ultimatemember_account' filter for getting customized $args. This filter is documented in wp-includes/shortcodes.php "shortcode_atts_{$shortcode}" */
+			$args = shortcode_atts(
+				array(
+					'template' => 'account',
+					'mode'     => 'account',
+					'form_id'  => 'um_account_id',
+					'tab'      => '',
+				),
+				$args,
+				'ultimatemember_account'
 			);
-			$args = wp_parse_args( $args, $defaults );
 
 			/**
-			 * UM hook
+			 * Filters Account shortcode arguments.
 			 *
-			 * @type filter
-			 * @title um_account_shortcode_args_filter
-			 * @description Account Shortcode Arguments
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Shortcode Arguments"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_account_shortcode_args_filter', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_account_shortcode_args_filter', 'my_account_shortcode_args', 10, 1 );
+			 * @since 1.3.x
+			 * @hook  um_account_shortcode_args_filter
+			 * @deprecated 2.6.9
+			 *
+			 * @param {array} $args Shortcode arguments.
+			 *
+			 * @return {array} Shortcode arguments.
+			 *
+			 * @example <caption>Change Account arguments.</caption>
 			 * function my_account_shortcode_args( $args ) {
-			 *     // your code here
+			 *     $args['tab'] = 'password';
 			 *     return $args;
 			 * }
-			 * ?>
+			 * add_filter( 'um_account_shortcode_args_filter', 'my_account_shortcode_args' );
 			 */
-			$args = apply_filters( 'um_account_shortcode_args_filter', $args );
+			$args = apply_filters_deprecated( 'um_account_shortcode_args_filter', array( $args ), '2.6.9', 'shortcode_atts_ultimatemember_account' );
+
+			$account_hash = md5( wp_json_encode( $args ) );
+
+			/**
+			 * Filters variable for enable singleton shortcode loading on the same page.
+			 * Note: Set it to `false` if you don't need to render the same form twice or more on the same page.
+			 *
+			 * @since 2.6.9
+			 *
+			 * @hook  um_ultimatemember_account_shortcode_disable_singleton
+			 *
+			 * @param {bool}  $disable Disabled singleton. By default, it's `true`.
+			 * @param {array} $args    Shortcode arguments.
+			 *
+			 * @return {bool} Disabled singleton or not.
+			 *
+			 * @example <caption>Turn off ability to use ultimatemember_account shortcode twice.</caption>
+			 * add_filter( 'um_ultimatemember_account_shortcode_disable_singleton', '__return_false' );
+			 */
+			$disable_singleton_shortcode = apply_filters( 'um_ultimatemember_account_shortcode_disable_singleton', true, $args );
+			if ( false === $disable_singleton_shortcode && in_array( $account_hash, $this->account_exist, true ) ) {
+				return '';
+			}
+
+			ob_start();
 
 			if ( ! empty( $args['tab'] ) ) {
 
-				if ( $args['tab'] == 'account' ) {
+				if ( 'account' === $args['tab'] ) {
 					$args['tab'] = 'general';
 				}
 
@@ -213,101 +236,60 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 							<form method="post" action="">
 								<?php
 								/**
-								 * UM hook
+								 * Fires for render account form hidden fields.
 								 *
-								 * @type action
-								 * @title um_account_page_hidden_fields
-								 * @description Make some action before account tab loading
-								 * @input_vars
-								 * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
-								 * @change_log
-								 * ["Since: 2.0"]
-								 * @usage add_action( 'um_before_template_part', 'function_name', 10, 1 );
-								 * @example
-								 * <?php
-								 * add_action( 'um_account_page_hidden_fields', 'my_account_page_hidden_fields', 10, 1 );
+								 * @since 1.3.x
+								 * @hook um_account_page_hidden_fields
+								 *
+								 * @param {array} $args Account shortcode arguments.
+								 *
+								 * @example <caption>Make some action before account tab loading.</caption>
 								 * function my_account_page_hidden_fields( $args ) {
 								 *     // your code here
 								 * }
-								 * ?>
+								 * add_action( 'um_account_page_hidden_fields', 'my_account_page_hidden_fields' );
 								 */
 								do_action( 'um_account_page_hidden_fields', $args );
 
-								$this->render_account_tab( $args['tab'], $this->tabs[ $args['tab'] ], $args );  ?>
+								$this->render_account_tab( $args['tab'], $this->tabs[ $args['tab'] ], $args );
+								?>
 							</form>
 						</div>
 					</div>
-				<?php }
-
+					<?php
+				}
 			} else {
 
 				$this->init_tabs( $args );
 
+				/**
+				 * Filters Account shortcode default tab.
+				 *
+				 * @since 2.0
+				 * @hook  um_change_default_tab
+				 *
+				 * @param {string} $tab  Current account tab.
+				 * @param {array}  $args Shortcode arguments.
+				 *
+				 * @return {string} Current account tab.
+				 *
+				 * @example <caption>Change Account default tab to Password.</caption>
+				 * function my_um_change_default_tab( $tab, $args ) {
+				 *     $tab = 'password';
+				 *     return $tab;
+				 * }
+				 * add_filter( 'um_change_default_tab', 'my_um_change_default_tab, 10, 2 );
+				 */
 				$this->current_tab = apply_filters( 'um_change_default_tab', $this->current_tab, $args );
 
-				/**
-				 * UM hook
-				 *
-				 * @type action
-				 * @title um_pre_{$mode}_shortcode
-				 * @description Make some action before account tabs loading
-				 * @input_vars
-				 * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_pre_{$mode}_shortcode', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_pre_{$mode}_shortcode', 'my_pre_account_shortcode', 10, 1 );
-				 * function my_pre_account_shortcode( $args ) {
-				 *     // your code here
-				 * }
-				 * ?>
-				 */
+				/** This filter is documented in includes/core/class-shortcodes.php */
 				do_action( "um_pre_{$args['mode']}_shortcode", $args );
-				/**
-				 * UM hook
-				 *
-				 * @type action
-				 * @title um_before_form_is_loaded
-				 * @description Make some action before account tabs loading
-				 * @input_vars
-				 * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_before_form_is_loaded', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_before_form_is_loaded', 'my_before_form_is_loaded', 10, 1 );
-				 * function my_before_form_is_loaded( $args ) {
-				 *     // your code here
-				 * }
-				 * ?>
-				 */
+				/** This filter is documented in includes/core/class-shortcodes.php */
 				do_action( 'um_before_form_is_loaded', $args );
-				/**
-				 * UM hook
-				 *
-				 * @type action
-				 * @title um_before_{$mode}_form_is_loaded
-				 * @description Make some action before account tabs loading
-				 * @input_vars
-				 * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_before_{$mode}_form_is_loaded', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_before_{$mode}_form_is_loaded', 'my_before_account_form_is_loaded', 10, 1 );
-				 * function my_before_account_form_is_loaded( $args ) {
-				 *     // your code here
-				 * }
-				 * ?>
-				 */
+				/** This filter is documented in includes/core/class-shortcodes.php */
 				do_action( "um_before_{$args['mode']}_form_is_loaded", $args );
 
 				UM()->shortcodes()->template_load( $args['template'], $args );
-
 			}
 
 			if ( ! is_admin() && ! defined( 'DOING_AJAX' ) ) {
@@ -317,6 +299,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			$output = ob_get_clean();
 
 			$this->account_fields_hash();
+
+			$this->account_exist[] = $account_hash;
 
 			return $output;
 		}
@@ -583,7 +567,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		function get_tab_fields( $id, $shortcode_args ) {
 			$output = null;
 
-			UM()->fields()->set_id = $id;
+			UM()->fields()->set_id = absint( $id );
 			UM()->fields()->set_mode = 'account';
 			UM()->fields()->editing = true;
 
@@ -626,8 +610,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					$this->init_displayed_fields( $fields, $id );
 
 					foreach ( $fields as $key => $data ) {
-						if ( isset( $shortcode_args['is_block'] ) && 1 === (int) $shortcode_args['is_block'] ) {
-							$data['is_block'] = 1;
+						if ( ! empty( $shortcode_args['is_block'] ) ) {
+							$data['is_block'] = true;
 						}
 						$output .= UM()->fields()->edit_field( $key, $data );
 					}
@@ -669,8 +653,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					$this->init_displayed_fields( $fields, $id );
 
 					foreach ( $fields as $key => $data ) {
-						if ( isset( $shortcode_args['is_block'] ) && 1 === (int) $shortcode_args['is_block'] ) {
-							$data['is_block'] = 1;
+						if ( ! empty( $shortcode_args['is_block'] ) ) {
+							$data['is_block'] = true;
 						}
 						$output .= UM()->fields()->edit_field( $key, $data );
 					}
@@ -726,8 +710,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					$this->init_displayed_fields( $fields, $id );
 
 					foreach ( $fields as $key => $data ) {
-						if ( isset( $shortcode_args['is_block'] ) && 1 === (int) $shortcode_args['is_block'] ) {
-							$data['is_block'] = 1;
+						if ( ! empty( $shortcode_args['is_block'] ) ) {
+							$data['is_block'] = true;
 						}
 						$output .= UM()->fields()->edit_field( $key, $data );
 					}
@@ -767,8 +751,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					$this->init_displayed_fields( $fields, $id );
 
 					foreach ( $fields as $key => $data ) {
-						if ( isset( $shortcode_args['is_block'] ) && 1 === (int) $shortcode_args['is_block'] ) {
-							$data['is_block'] = 1;
+						if ( ! empty( $shortcode_args['is_block'] ) ) {
+							$data['is_block'] = true;
 						}
 						$output .= UM()->fields()->edit_field( $key, $data );
 					}
@@ -924,11 +908,11 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				$classes .= ' um-in-admin';
 			}
 
-			if ( UM()->fields()->editing == true ) {
+			if ( true === UM()->fields()->editing ) {
 				$classes .= ' um-editing';
 			}
 
-			if ( UM()->fields()->viewing == true ) {
+			if ( true === UM()->fields()->viewing ) {
 				$classes .= ' um-viewing';
 			}
 

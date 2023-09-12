@@ -34,7 +34,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<div class="um-item-meta">
 		<span>
-			<?php printf( __( '%s ago', 'ultimate-member' ), human_time_diff( get_the_time( 'U', $post->ID ), current_time( 'timestamp' ) ) ); ?>
+			<?php
+			// translators: %s: years.
+			printf( __( '%s ago', 'ultimate-member' ), human_time_diff( get_the_time( 'U', $post->ID ), current_time( 'timestamp' ) ) );
+			?>
 		</span>
 		<span>
 			<?php _e( 'in', 'ultimate-member' ); ?>: <?php the_category( ', ', '', $post->ID ); ?>
@@ -45,6 +48,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			if ( $num_comments == 0 ) {
 				$comments = __( 'no comments', 'ultimate-member' );
 			} elseif ( $num_comments > 1 ) {
+				// translators: %s: coments number.
 				$comments = sprintf( __( '%s comments', 'ultimate-member' ), $num_comments );
 			} else {
 				$comments = __( '1 comment', 'ultimate-member' );

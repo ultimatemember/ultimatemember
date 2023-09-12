@@ -87,11 +87,15 @@ add_filter( 'um_profile_field_filter_hook__youtube_video', 'um_profile_field_fil
  */
 function um_profile_field_filter_hook__spotify( $value, $data ) {
 	if ( preg_match( '/https:\/\/open.spotify.com\/.*/', $value ) ) {
-		$url = str_replace( 'open.spotify.com/', 'open.spotify.com/embed/', $value );
+		if ( false !== strpos( $value, '/user/' ) ) {
+			$value = '<a href="' . esc_attr( $value ) . '" target="_blank">' . esc_html( $value ) . '</a>';
+		} else {
+			$url = str_replace( 'open.spotify.com/', 'open.spotify.com/embed/', $value );
 
-		$value = '<div class="um-spotify">
+			$value = '<div class="um-spotify">
 				<iframe width="100%" height="352" style="border-radius:12px" frameBorder="0" allowfullscreen="" loading="lazy"  src="' . esc_url( $url ) . '"></iframe>
 				</div>';
+		}
 	} else {
 		return __( 'Invalid Spotify URL', 'ultimate-member' );
 	}
@@ -205,6 +209,7 @@ function um_profile_field_filter_hook__user_registered( $value, $data ) {
 		return '';
 	}
 	$value = strtotime( $value );
+	// translators: %s: date.
 	$value = sprintf( __( 'Joined %s', 'ultimate-member' ), date_i18n( get_option( 'date_format' ), $value ) );
 	return $value;
 }
@@ -243,16 +248,18 @@ function um_profile_field_filter_hook__textarea( $value, $data ) {
 	if ( ! $value ) {
 		return '';
 	}
-	if ( isset( $data['html'] ) && $data['html'] == 1 ) {
+	if ( ! empty( $data['html'] ) ) {
 		return $value;
 	}
 
+	$description_key = UM()->profile()->get_show_bio_key( UM()->fields()->global_args );
+
 	$value = wp_kses( $value, 'strip' );
 	$value = html_entity_decode( $value );
-	$value = preg_replace('$(https?://[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', ' <a href="$1" target="_blank">$1</a> ', $value." ");
-	$value = preg_replace('$(www\.[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', '<a target="_blank" href="http://$1">$1</a> ', $value." ");
+	$value = preg_replace( '$(https?://[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', ' <a href="$1" target="_blank">$1</a> ', $value . ' ' );
+	$value = preg_replace( '$(www\.[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', '<a target="_blank" href="http://$1">$1</a> ', $value . ' ' );
 
-	if ( ! ( isset( $data['metakey'] ) && 'description' === $data['metakey'] ) ) {
+	if ( ! ( isset( $data['metakey'] ) && $description_key === $data['metakey'] ) ) {
 		$value = wpautop( $value );
 	}
 
@@ -439,7 +446,7 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 
 		$value = '<a href="'. esc_attr( $value ) .'" title="' . esc_attr( $alt ) . '" target="' . esc_attr( $data['url_target'] ) . '" ' . $url_rel . '>' . esc_html( $alt ) . '</a>';
 	} else {
-		if ( ( isset( $data['validate'] ) && $data['validate'] !== '' && strstr( $data['validate'], 'url' ) ) || ( isset( $data['type'] ) && $data['type'] == 'url' ) ) {
+		if ( ( isset( $data['validate'] ) && $data['validate'] !== '' && $data['type'] !== 'spotify' && strstr( $data['validate'], 'url' ) ) || ( isset( $data['type'] ) && $data['type'] == 'url' ) ) {
 			$alt = ( isset( $data['url_text'] ) && !empty( $data['url_text'] ) ) ? $data['url_text'] : $value;
 			$url_rel = ( isset( $data['url_rel'] ) && $data['url_rel'] == 'nofollow' ) ? 'rel="nofollow"' : '';
 			if ( ! strstr( $value, 'http' )
@@ -460,6 +467,7 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 				if ( $data['validate'] == 'tiktok_url' ) 		$value = 'https://tiktok.com/' . $value;
 				if ( $data['validate'] == 'twitch_url' ) 		$value = 'https://twitch.tv/' . $value;
 				if ( $data['validate'] == 'reddit_url' ) 		$value = 'https://www.reddit.com/user/' . $value;
+				if ( $data['validate'] == 'spotify_url' ) 		$value = 'https://open.spotify.com/' . $value;
 			}
 
 			if ( strpos( $value, 'http://' ) !== 0 ) {
@@ -473,6 +481,7 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 			if ( UM()->options()->get( 'allow_url_redirect_confirm' ) && $value !== wp_validate_redirect( $value ) ) {
 				$onclick_alert = sprintf(
 					' onclick="' . esc_attr( 'return confirm( "%s" );' ) . '"',
+					// translators: %s: link.
 					esc_js( sprintf( __( 'This link leads to a 3rd-party website. Make sure the link is safe and you really want to go to this website: \'%s\'', 'ultimate-member' ), $value ) )
 				);
 			}
@@ -502,25 +511,21 @@ add_filter( 'um_profile_field_filter_hook__', 'um_profile_field_filter_hook__', 
 /**
  * Get form fields
  *
- * @param $array
+ * @param string|array $array
+ * @param int          $form_id
  *
- * @return mixed|string
+ * @return array|string
  */
-function um_get_form_fields( $array ) {
-
-	$form_id = (isset ( UM()->fields()->set_id ) ) ? UM()->fields()->set_id : null;
-	$mode = (isset( UM()->fields()->set_mode ) ) ? UM()->fields()->set_mode : null;
-
-	if ( $form_id && $mode ) {
-		$array = UM()->query()->get_attr('custom_fields', $form_id );
+function um_get_form_fields( $array, $form_id ) {
+	if ( $form_id && UM()->fields()->set_mode ) {
+		$array = UM()->query()->get_attr( 'custom_fields', $form_id );
 	} else {
 		$array = '';
 	}
 
 	return $array;
-
 }
-add_filter( 'um_get_form_fields', 'um_get_form_fields', 99 );
+add_filter( 'um_get_form_fields', 'um_get_form_fields', 99, 2 );
 
 
 /**
@@ -701,7 +706,9 @@ function um_field_non_utf8_value( $value ) {
 	if ( function_exists( 'mb_detect_encoding' ) ) {
 		$encoding = mb_detect_encoding( $value, 'utf-8, iso-8859-1, ascii', true );
 		if ( strcasecmp( $encoding, 'UTF-8' ) !== 0 ) {
-			$value = iconv( $encoding, 'utf-8', $value );
+			if ( function_exists( 'iconv' ) ) {
+				$value = iconv( $encoding, 'utf-8', $value );
+			}
 		}
 	}
 
@@ -819,16 +826,7 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 			}
 		} elseif ( 'select' == $type || 'radio' == $type ) {
 
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_select_option_value
-			 * @description Enable options pair by field $data
-			 * @input_vars
-			 * [{"var":"$options_pair","type":"null","desc":"Enable pairs"},
-			 * {"var":"$data","type":"array","desc":"Field Data"}]
-			 */
+			/** This filter is documented in includes/core/class-fields.php */
 			$option_pairs = apply_filters( 'um_select_options_pair', null, $data );
 
 			$array = empty( $data['options'] ) ? array() : $data['options'];
@@ -854,16 +852,7 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 	} elseif ( ! empty( $value ) && is_array( $value ) ) {
 		if ( 'multiselect' == $type || 'checkbox' == $type ) {
 
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_select_option_value
-			 * @description Enable options pair by field $data
-			 * @input_vars
-			 * [{"var":"$options_pair","type":"null","desc":"Enable pairs"},
-			 * {"var":"$data","type":"array","desc":"Field Data"}]
-			 */
+			/** This filter is documented in includes/core/class-fields.php */
 			$option_pairs = apply_filters( 'um_select_options_pair', null, $data );
 
 			$arr = $data['options'];
@@ -893,12 +882,13 @@ add_filter( 'um_profile_field_filter_hook__', 'um_profile_field_filter_xss_valid
 /**
  * Trim All form POST submitted data
  *
+ * @todo Maybe deprecate because data is sanitized in earlier code and trim included to `sanitize_text_field()`. Need testing and confirmation.
+ *
  * @param $post_form
- * @param $mode
  *
  * @return mixed
  */
-function um_submit_form_data_trim_fields( $post_form, $mode ) {
+function um_submit_form_data_trim_fields( $post_form ) {
 	foreach ( $post_form as $key => $field ) {
 		if ( is_string( $field ) ) {
 			$post_form[ $key ] = trim( $field );
@@ -907,30 +897,44 @@ function um_submit_form_data_trim_fields( $post_form, $mode ) {
 
 	return $post_form;
 }
-add_filter( 'um_submit_form_data', 'um_submit_form_data_trim_fields', 9, 2 );
+add_filter( 'um_submit_form_data', 'um_submit_form_data_trim_fields', 9, 1 );
 
 
 /**
- * add role_select and role_radio to the $post_form
- * It is necessary for that if on these fields the conditional logic
- * @param $post_form array
- * @param $mode
+ * Add `role_select` and `role_radio` to the $post_form
+ * It is necessary for that if on these fields the conditional logic.
  *
- * @return $post_form
- * @uses   hook filters: um_submit_form_data
+ * @param array $post_form
+ * @param string $mode
+ * @param array $all_cf_metakeys
+ *
+ * @return array
  */
-function um_submit_form_data_role_fields( $post_form, $mode ) {
-	$custom_fields = unserialize( $post_form['custom_fields'] );
-	if ( ! empty( $post_form['role'] ) && array_key_exists( 'role_select', $custom_fields ) ) {
-		$post_form['role_select'] = $post_form['role'];
+function um_submit_form_data_role_fields( $post_form, $mode, $all_cf_metakeys ) {
+	if ( 'login' === $mode ) {
+		return $post_form;
 	}
-	if (! empty( $post_form['role'] ) && array_key_exists( 'role_radio', $custom_fields ) ) {
-		$post_form['role_radio'] = $post_form['role'];
+
+	if ( ! array_key_exists( 'role', $post_form ) ) {
+		return $post_form;
+	}
+
+	$role_fields = array( 'role_select', 'role_radio' );
+
+	$form_has_role_field = count( array_intersect( $all_cf_metakeys, $role_fields ) ) > 0;
+	if ( ! $form_has_role_field ) {
+		return $post_form;
+	}
+
+	foreach ( $role_fields as $role_field ) {
+		if ( in_array( $role_field, $all_cf_metakeys, true ) ) {
+			$post_form[ $role_field ] = $post_form['role'];
+		}
 	}
 
 	return $post_form;
 }
-add_filter( 'um_submit_form_data', 'um_submit_form_data_role_fields', 10, 2 );
+add_filter( 'um_submit_form_data', 'um_submit_form_data_role_fields', 10, 3 );
 
 
 /**

@@ -21,6 +21,7 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		 */
 		public function includes() {
 			$this->field_group();
+			$this->secure();
 		}
 
 		/**
@@ -42,13 +43,25 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		/**
 		 * @since 2.7.0
 		 *
-		 * @return Field_Group()
+		 * @return Field_Group
 		 */
 		public function field_group() {
 			if ( empty( UM()->classes['um\ajax\field_group'] ) ) {
 				UM()->classes['um\ajax\field_group'] = new Field_Group();
 			}
 			return UM()->classes['um\ajax\field_group'];
+		}
+
+		/**
+		 * @since 2.6.8
+		 *
+		 * @return Secure
+		 */
+		public function secure() {
+			if ( empty( UM()->classes['um\ajax\secure'] ) ) {
+				UM()->classes['um\ajax\secure'] = new Secure();
+			}
+			return UM()->classes['um\ajax\secure'];
 		}
 	}
 }

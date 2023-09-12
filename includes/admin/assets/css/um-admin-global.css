@@ -3,6 +3,11 @@
 	color: #555;
 }
 
+.um-admin-notice.notice-warning {
+	border-color: #dba617 !important;
+	color: #555;
+}
+
 .um-admin-notice.upgraded {
 	border-color: #0085ba !important;
 	color: #555;

@@ -1,13 +1,11 @@
 <?php
 namespace um\core;
 
-
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\Password' ) ) {
-
 
 	/**
 	 * Class Password
@@ -15,22 +13,25 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 	 */
 	class Password {
 
+		/**
+		 * @var bool
+		 */
+		private $change_password = false;
 
 		/**
 		 * Password constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			add_shortcode( 'ultimatemember_password', array( &$this, 'ultimatemember_password' ) );
 
 			add_action( 'template_redirect', array( &$this, 'form_init' ), 10001 );
 
 			add_action( 'um_reset_password_errors_hook', array( &$this, 'um_reset_password_errors_hook' ) );
-			add_action( 'um_reset_password_process_hook', array( &$this,'um_reset_password_process_hook' ) );
+			add_action( 'um_reset_password_process_hook', array( &$this, 'um_reset_password_process_hook' ) );
 
 			add_action( 'um_change_password_errors_hook', array( &$this, 'um_change_password_errors_hook' ) );
-			add_action( 'um_change_password_process_hook', array( &$this,'um_change_password_process_hook' ) );
+			add_action( 'um_change_password_process_hook', array( &$this, 'um_change_password_process_hook' ) );
 		}
-
 
 		/**
 		 * Get Reset URL
@@ -74,11 +75,11 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				$classes .= ' um-in-admin';
 			}
 
-			if ( UM()->fields()->editing == true ) {
+			if ( true === UM()->fields()->editing ) {
 				$classes .= ' um-editing';
 			}
 
-			if ( UM()->fields()->viewing == true ) {
+			if ( true === UM()->fields()->viewing ) {
 				$classes .= ' um-viewing';
 			}
 
@@ -107,7 +108,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			return $classes;
 		}
 
-
 		/**
 		 * Shortcode
 		 *
@@ -115,52 +115,49 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 *
 		 * @return string
 		 */
-		function ultimatemember_password( $args = array() ) {
-			ob_start();
-
-			$defaults = array(
-				'template'  => 'password-reset',
-				'mode'      => 'password',
-				'form_id'   => 'um_password_id',
-				'max_width' => '450px',
-				'align'     => 'center',
+		public function ultimatemember_password( $args = array() ) {
+			/** There is possible to use 'shortcode_atts_ultimatemember_password' filter for getting customized $atts. This filter is documented in wp-includes/shortcodes.php "shortcode_atts_{$shortcode}" */
+			$args = shortcode_atts(
+				array(
+					'template'  => 'password-reset',
+					'mode'      => 'password',
+					'form_id'   => 'um_password_id',
+					'max_width' => '450px',
+					'align'     => 'center',
+				),
+				$args,
+				'ultimatemember_password'
 			);
-			$args = wp_parse_args( $args, $defaults );
 
 			if ( empty( $args['use_custom_settings'] ) ) {
 				$args = array_merge( $args, UM()->shortcodes()->get_css_args( $args ) );
 			} else {
 				$args = array_merge( UM()->shortcodes()->get_css_args( $args ), $args );
 			}
-
 			/**
-			 * UM hook
+			 * Filters extend Reset Password Arguments
 			 *
-			 * @type filter
-			 * @title um_reset_password_shortcode_args_filter
-			 * @description Extend Reset Password Arguments
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Shortcode arguments"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_reset_password_shortcode_args_filter', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_reset_password_shortcode_args_filter', 'my_reset_password_shortcode_args', 10, 1 );
+			 * @since 1.3.x
+			 * @hook  um_reset_password_shortcode_args_filter
+			 *
+			 * @param {array} $args Shortcode arguments.
+			 *
+			 * @return {array} Shortcode arguments.
+			 *
+			 * @example <caption>Extend Reset Password Arguments.</caption>
 			 * function my_reset_password_shortcode_args( $args ) {
 			 *     // your code here
 			 *     return $args;
 			 * }
-			 * ?>
+			 * add_filter( 'um_reset_password_shortcode_args_filter', 'my_reset_password_shortcode_args', 10, 1 );
 			 */
 			$args = apply_filters( 'um_reset_password_shortcode_args_filter', $args );
 
-			if ( isset( $this->change_password ) ) {
+			if ( false !== $this->change_password ) {
 				// then COOKIE are valid then get data from them and populate hidden fields for the password reset form
 				$args['template'] = 'password-change';
 				$args['rp_key']   = '';
-				$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
+				$rp_cookie        = 'wp-resetpass-' . COOKIEHASH;
 				if ( isset( $_COOKIE[ $rp_cookie ] ) && 0 < strpos( $_COOKIE[ $rp_cookie ], ':' ) ) {
 					list( $rp_login, $rp_key ) = explode( ':', wp_unslash( $_COOKIE[ $rp_cookie ] ), 2 );
 
@@ -169,85 +166,29 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				}
 			}
 
-			UM()->fields()->set_id = 'um_password_id';
+			if ( empty( $args['mode'] ) || empty( $args['template'] ) ) {
+				return '';
+			}
 
-			/**
-			 * @var $mode
-			 * @var $template
-			 */
-			extract( $args, EXTR_SKIP );
+			UM()->fields()->set_id = absint( $args['form_id'] );
 
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_pre_{$mode}_shortcode
-			 * @description Action pre-load password form shortcode
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Form shortcode pre-loading"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_pre_{$mode}_shortcode', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_pre_{$mode}_shortcode', 'my_pre_password_shortcode', 10, 1 );
-			 * function my_pre_password_shortcode( $args ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( "um_pre_{$mode}_shortcode", $args );
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_before_form_is_loaded
-			 * @description Action pre-load password form shortcode
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Form shortcode pre-loading"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_before_form_is_loaded', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_before_form_is_loaded', 'my_before_form_is_loaded', 10, 1 );
-			 * function my_before_form_is_loaded( $args ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( "um_before_form_is_loaded", $args );
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_before_{$mode}_form_is_loaded
-			 * @description Action pre-load password form shortcode
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Form shortcode pre-loading"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_before_{$mode}_form_is_loaded', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_before_{$mode}_form_is_loaded', 'my_before_form_is_loaded', 10, 1 );
-			 * function my_before_form_is_loaded( $args ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( "um_before_{$mode}_form_is_loaded", $args );
+			ob_start();
 
-			UM()->shortcodes()->template_load( $template, $args );
+			/** This filter is documented in includes/core/class-shortcodes.php */
+			do_action( "um_pre_{$args['mode']}_shortcode", $args );
+			/** This filter is documented in includes/core/class-shortcodes.php */
+			do_action( 'um_before_form_is_loaded', $args );
+			/** This filter is documented in includes/core/class-shortcodes.php */
+			do_action( "um_before_{$args['mode']}_form_is_loaded", $args );
+
+			UM()->shortcodes()->template_load( $args['template'], $args );
 
 			if ( ! is_admin() && ! defined( 'DOING_AJAX' ) ) {
 				UM()->shortcodes()->dynamic_css( $args );
 			}
 
-			$output = ob_get_clean();
-			return $output;
+			return ob_get_clean();
 		}
-
 
 		/**
 		 * Check if a legitimate password reset request is in action
@@ -298,7 +239,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				if ( isset( $_GET['hash'] ) && isset( $_GET['login'] ) ) {
 					$value = sprintf( '%s:%s', wp_unslash( $_GET['login'] ), wp_unslash( $_GET['hash'] ) );
 					$this->setcookie( $rp_cookie, $value );
-
+					// Not `um_safe_redirect()` because password-reset page is predefined page and is situated on the same host.
 					wp_safe_redirect( remove_query_arg( array( 'hash', 'login' ) ) );
 					exit;
 				}
@@ -330,6 +271,10 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			}
 
 			if ( $this->is_reset_request() ) {
+				$form_data = array(
+					'mode' => 'password',
+				);
+
 				UM()->form()->post_form = wp_unslash( $_POST );
 
 				if ( empty( UM()->form()->post_form['mode'] ) ) {
@@ -337,47 +282,43 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				}
 
 				/**
-				 * UM hook
+				 * Fires for handle validate errors on the reset password form submit.
 				 *
-				 * @type action
-				 * @title um_reset_password_errors_hook
-				 * @description Action on reset password submit form
-				 * @input_vars
-				 * [{"var":"$post","type":"array","desc":"Form submitted"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_reset_password_errors_hook', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_reset_password_errors_hook', 'my_reset_password_errors', 10, 1 );
-				 * function my_reset_password_errors( $post ) {
+				 * @since 1.3.x
+				 * @since 2.6.8 Added $form_data attribute.
+				 *
+				 * @hook um_reset_password_errors_hook
+				 *
+				 * @param {array} $submission_data Form submitted data.
+				 * @param {array} $form_data       Form data. Since 2.6.8
+				 *
+				 * @example <caption>Make any custom validation on password reset form.</caption>
+				 * function my_reset_password_errors( $submission_data, $form_data ) {
 				 *     // your code here
 				 * }
-				 * ?>
+				 * add_action( 'um_reset_password_errors_hook', 'my_reset_password_errors', 10, 2 );
 				 */
-				do_action( 'um_reset_password_errors_hook', UM()->form()->post_form );
+				do_action( 'um_reset_password_errors_hook', UM()->form()->post_form, $form_data );
 
 				if ( ! isset( UM()->form()->errors ) ) {
 					/**
-					 * UM hook
+					 * Fires for handle the reset password form when submitted data is valid.
 					 *
-					 * @type action
-					 * @title um_reset_password_process_hook
-					 * @description Action on reset password success submit form
-					 * @input_vars
-					 * [{"var":"$post","type":"array","desc":"Form submitted"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_action( 'um_reset_password_process_hook', 'function_name', 10, 1 );
-					 * @example
-					 * <?php
-					 * add_action( 'um_reset_password_process_hook', 'my_reset_password_process', 10, 1 );
-					 * function my_reset_password_process( $post ) {
+					 * @since 1.3.x
+					 * @since 2.6.8 Added $form_data attribute.
+					 *
+					 * @hook um_reset_password_process_hook
+					 *
+					 * @param {array} $submission_data Form submitted data.
+					 * @param {array} $form_data       Form data. Since 2.6.8
+					 *
+					 * @example <caption>Make any custom action when password reset form is submitted.</caption>
+					 * function my_reset_password_process( $submission_data, $form_data ) {
 					 *     // your code here
 					 * }
-					 * ?>
+					 * add_action( 'um_reset_password_process_hook', 'my_reset_password_process', 10, 2 );
 					 */
-					do_action( 'um_reset_password_process_hook', UM()->form()->post_form );
+					do_action( 'um_reset_password_process_hook', UM()->form()->post_form, $form_data );
 				}
 			}
 
@@ -576,10 +517,12 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				$user_email = um_user( 'user_email' );
 
 				if ( mb_strlen( wp_unslash( $args['user_password'] ) ) < $min_length ) {
+					// translators: %s: min length.
 					UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain at least %d characters', 'ultimate-member' ), $min_length ) );
 				}
 
 				if ( mb_strlen( wp_unslash( $args['user_password'] ) ) > $max_length ) {
+					// translators: %s: max length.
 					UM()->form()->add_error( 'user_password', sprintf( __( 'Your password must contain less than %d characters', 'ultimate-member' ), $max_length ) );
 				}
 

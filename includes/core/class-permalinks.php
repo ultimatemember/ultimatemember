@@ -482,13 +482,20 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 		 * @param $action
 		 * @param $subaction
 		 *
+		 * @deprecated 2.6.9
+		 *
 		 * @return mixed|string|void
 		 */
 		public function admin_act_url( $action, $subaction ) {
-			$url = $this->get_current_url();
-			$url = add_query_arg( 'um_adm_action', $action, $url );
-			$url = add_query_arg( 'sub', $subaction, $url );
-			$url = add_query_arg( 'user_id', um_user( 'ID' ), $url );
+			_deprecated_function( __METHOD__, '2.6.9' );
+			$url = add_query_arg(
+				array(
+					'um_adm_action' => $action,
+					'sub'           => $subaction,
+					'user_id'       => um_user( 'ID' ),
+					'_wpnonce'      => wp_create_nonce( $action ),
+				)
+			);
 			return $url;
 		}
 

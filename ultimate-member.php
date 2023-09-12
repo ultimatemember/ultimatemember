@@ -1,13 +1,18 @@
 <?php
-/*
-Plugin Name: Ultimate Member
-Plugin URI: http://ultimatemember.com/
-Description: The easiest way to create powerful online communities and beautiful user profiles with WordPress
-Version: 2.7.0-alpha
-Author: Ultimate Member
-Author URI: http://ultimatemember.com/
-Text Domain: ultimate-member
-*/
+/**
+ * Plugin Name: Ultimate Member
+ * Plugin URI: http://ultimatemember.com/
+ * Description: The easiest way to create powerful online communities and beautiful user profiles with WordPress
+ * Version: 2.7.0-alpha
+ * Author: Ultimate Member
+ * Author URI: http://ultimatemember.com/
+ * Text Domain: ultimate-member
+ * Domain Path: /languages
+ * Requires at least: 5.5
+ * Requires PHP: 5.6
+ *
+ * @package UM
+ */
 
 defined( 'ABSPATH' ) || exit;
 

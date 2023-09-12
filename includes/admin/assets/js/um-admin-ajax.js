@@ -1,3 +1,31 @@
+function um_builder_delete_field_ajax( callback ) {
+	if ( UM.admin.builder.fieldsToDelete.length > 0 ) {
+		let fieldDelete = UM.admin.builder.fieldsToDelete.shift();
+		let arg1 = jQuery( fieldDelete ).find('[data-silent_action="um_admin_remove_field"]').data('arg1');
+		let arg2 = jQuery( fieldDelete ).find('[data-silent_action="um_admin_remove_field"]').data('arg2');
+
+		jQuery.ajax({
+			url: wp.ajax.settings.url,
+			type: 'POST',
+			data: {
+				action:'um_do_ajax_action',
+				act_id : 'um_admin_remove_field',
+				arg1 : arg1,
+				arg2 : arg2,
+				nonce: um_admin_scripts.nonce
+			},
+			success: function( data ) {
+				um_builder_delete_field_ajax( callback );
+			},
+			error: function( data ) {
+				callback();
+			}
+		});
+	} else {
+		callback();
+	}
+}
+
 jQuery(document).ready(function() {
 
 	jQuery(document).ajaxStart( function() {
@@ -8,6 +36,10 @@ jQuery(document).ready(function() {
 		if ( typeof jQuery(this).attr('disabled') !== 'undefined' ) {
 			return false;
 		}
+
+		var act_id = jQuery(this).data('silent_action');
+		var arg1   = jQuery(this).data('arg1');
+		var arg2   = jQuery(this).data('arg2');
 
 		var in_row = '';
 		var in_sub_row = '';
@@ -21,10 +53,6 @@ jQuery(document).ready(function() {
 			in_column = demon_settings.data('in_column');
 			in_group = demon_settings.data('in_group');
 		}
-
-		var act_id = jQuery(this).data('silent_action');
-		var arg1 = jQuery(this).data('arg1');
-		var arg2 = jQuery(this).data('arg2');
 
 		jQuery('.tipsy').hide();
 

@@ -210,26 +210,22 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			return 0;
 		}
 
-
 		/**
-		 * Get a core field attrs
+		 * Get a core field attrs.
 		 *
-		 * @param $type
+		 * @param string $type Field type.
 		 *
-		 * @return array|mixed
+		 * @return array Field data.
 		 */
-		function get_core_field_attrs( $type ) {
-			return ( isset( $this->core_fields[ $type ] ) ) ? $this->core_fields[ $type ] : array('');
+		public function get_core_field_attrs( $type ) {
+			return array_key_exists( $type, $this->core_fields ) ? $this->core_fields[ $type ] : array( '' );
 		}
-
 
 		/**
 		 * Core Fields
 		 */
-		function set_core_fields() {
-
+		public function set_core_fields() {
 			$this->core_fields = array(
-
 				'row' => array(
 					'name' => 'Row',
 					'in_fields' => false,
@@ -651,21 +647,21 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				),
 
 				/*'group' => array(
-                    'name' => 'Field Group',
-                    'col1' => array('_title','_max_entries'),
-                    'col2' => array('_label','_public','_roles'),
-                    'form_only' => true,
-                    'validate' => array(
-                        '_title' => array(
-                            'mode' => 'required',
-                            'error' => 'You must provide a title'
-                        ),
-                        '_label' => array(
-                            'mode' => 'required',
-                            'error' => 'You must provide a label'
-                        ),
-                    )
-                ),*/
+					'name' => 'Field Group',
+					'col1' => array('_title','_max_entries'),
+					'col2' => array('_label','_public','_roles'),
+					'form_only' => true,
+					'validate' => array(
+						'_title' => array(
+							'mode' => 'required',
+							'error' => 'You must provide a title'
+						),
+						'_label' => array(
+							'mode' => 'required',
+							'error' => 'You must provide a label'
+						),
+					)
+				),*/
 
 			);
 
@@ -744,7 +740,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('Username','ultimate-member'),
 					'required' => 1,
 					'public' => 1,
-					'editable' => 0,
+					'editable' => false,
 					'validate' => 'unique_username',
 					'min_chars' => 3,
 					'max_chars' => 24
@@ -757,7 +753,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('Username or E-mail','ultimate-member'),
 					'required' => 1,
 					'public' => 1,
-					'editable' => 0,
+					'editable' => false,
 					'validate' => 'unique_username_or_email',
 				),
 
@@ -768,7 +764,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('Password','ultimate-member'),
 					'required' => 1,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'min_chars' => 8,
 					'max_chars' => 30,
 					'force_good_pass' => 1,
@@ -783,7 +779,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('First Name','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 				),
 
 				'last_name' => array(
@@ -793,7 +789,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('Last Name','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 				),
 
 				'nickname' => array(
@@ -803,7 +799,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('Nickname','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 				),
 
 				'user_url' => array(
@@ -813,7 +809,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('Website URL','ultimate-member'),
 					'required' => 1,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'validate' => 'url'
 				),
 
@@ -824,7 +820,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('Registration Date','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'edit_forbidden' => 1,
 				),
 
@@ -835,7 +831,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('Last Login','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'edit_forbidden' => 1,
 				),
 
@@ -857,7 +853,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('Secondary E-mail Address','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'validate' => 'unique_email',
 					'autocomplete' => 'off'
 				),
@@ -870,7 +866,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'html' => 0,
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'max_words' => 40,
 					'placeholder' => __('Enter a bit about yourself...','ultimate-member'),
 				),
@@ -882,7 +878,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('Birth Date','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'pretty_format' => 1,
 					'years' => 115,
 					'years_x' => 'past',
@@ -896,7 +892,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('Gender','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'options' => array( __('Male','ultimate-member'), __('Female','ultimate-member') )
 				),
 
@@ -908,7 +904,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'placeholder' => __('Choose a Country','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'options' => $this->get('countries')
 				),
 
@@ -919,7 +915,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('Facebook','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
 					'icon' => 'um-faicon-facebook',
@@ -937,7 +933,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('Twitter','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
 					'icon' => 'um-faicon-twitter',
@@ -955,7 +951,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('LinkedIn','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
 					'icon' => 'um-faicon-linkedin',
@@ -973,7 +969,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('Instagram','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
 					'icon' => 'um-faicon-instagram',
@@ -991,7 +987,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('Skype ID','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
 					'icon' => 'um-faicon-skype',
@@ -1006,7 +1002,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('Viber number','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
 					'icon' => 'um-icon-ios-telephone',
@@ -1020,7 +1016,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('WhatsApp number','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
 					'icon' => 'um-icon-social-whatsapp',
@@ -1034,7 +1030,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('Telegram','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
 					'icon' => 'um-faicon-paper-plane',
@@ -1050,7 +1046,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('Discord ID','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
 					'validate' => 'discord',
@@ -1063,7 +1059,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label'      => __('TikTok','ultimate-member'),
 					'required'   => 0,
 					'public'     => 1,
-					'editable'   => 1,
+					'editable'   => true,
 					'url_target' => '_blank',
 					'url_rel'    => 'nofollow',
 					'icon'       => 'um-icon-ios-musical-note',
@@ -1081,7 +1077,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label'      => __('Twitch','ultimate-member'),
 					'required'   => 0,
 					'public'     => 1,
-					'editable'   => 1,
+					'editable'   => true,
 					'icon'       => 'um-faicon-twitch',
 					'url_target' => '_blank',
 					'url_rel'    => 'nofollow',
@@ -1099,7 +1095,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label'      => __('Reddit','ultimate-member'),
 					'required'   => 0,
 					'public'     => 1,
-					'editable'   => 1,
+					'editable'   => true,
 					'icon'       => 'um-icon-social-reddit',
 					'url_target' => '_blank',
 					'url_rel'    => 'nofollow',
@@ -1117,7 +1113,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label'      => __( 'YouTube', 'ultimate-member' ),
 					'required'   => 0,
 					'public'     => 1,
-					'editable'   => 1,
+					'editable'   => true,
 					'url_target' => '_blank',
 					'url_rel'    => 'nofollow',
 					'icon'       => 'um-faicon-youtube',
@@ -1138,7 +1134,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __( 'SoundCloud', 'ultimate-member' ),
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'url_target' => '_blank',
 					'url_rel' => 'nofollow',
 					'icon' => 'um-faicon-soundcloud',
@@ -1157,7 +1153,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'placeholder' => 'Choose account type',
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'options' => $um_roles,
 				),
 
@@ -1168,7 +1164,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('Account Type','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'options' => $um_roles,
 				),
 
@@ -1180,7 +1176,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'placeholder' => __('Select languages','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'options' => $this->get('languages'),
 				),
 
@@ -1191,7 +1187,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('Phone Number','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'validate' => 'phone_number',
 					'icon' => 'um-faicon-phone',
 				),
@@ -1203,7 +1199,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label' => __('Mobile Number','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
-					'editable' => 1,
+					'editable' => true,
 					'validate' => 'phone_number',
 					'icon' => 'um-faicon-mobile',
 				),
@@ -1246,7 +1242,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'placeholder' => __('Enter your username or email','ultimate-member'),
 					'required' => 1,
 					'public' => 1,
-					'editable' => 0,
+					'editable' => false,
 					'private_use' => true,
 				),
 
@@ -1260,7 +1256,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'help'          => __( 'Who can see your public profile?', 'ultimate-member' ),
 					'required'      => 0,
 					'public'        => 1,
-					'editable'      => 1,
+					'editable'      => true,
 					'default'       => 'Everyone',
 					'options'       => $profile_privacy,
 					'allowclear'    => 0,
@@ -1276,7 +1272,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'help'          => __( 'Hide my profile for robots?', 'ultimate-member' ),
 					'required'      => 0,
 					'public'        => 1,
-					'editable'      => 1,
+					'editable'      => true,
 					'default'       => UM()->roles()->um_user_can( 'profile_noindex' ) ? '1' : '0',
 					'options'       => array(
 						'0'     => __( 'No', 'ultimate-member' ),
@@ -1295,14 +1291,14 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'help'          => __( 'Here you can hide yourself from appearing in public directory', 'ultimate-member' ),
 					'required'      => 0,
 					'public'        => 1,
-					'editable'      => 1,
+					'editable'      => true,
 					'default'       => UM()->member_directory()->get_hide_in_members_default() ? 'Yes' : 'No',
 					'options'       => array(
 						'No'    => __( 'No', 'ultimate-member' ),
 						'Yes'   => __( 'Yes', 'ultimate-member' ),
 					),
 					'account_only'  => true,
-					'required_opt'  => array( 'members_page', 1 ),
+					'required_opt'  => array( 'members_page', true ),
 				),
 
 				'delete_account'        => array(
@@ -1313,7 +1309,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'help'          => __( 'If you confirm, everything related to your profile will be deleted permanently from the site', 'ultimate-member' ),
 					'required'      => 0,
 					'public'        => 1,
-					'editable'      => 1,
+					'editable'      => true,
 					'default'       => __( 'No', 'ultimate-member' ),
 					'options'       => array(
 						__( 'Yes', 'ultimate-member' ),
@@ -1329,7 +1325,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'label'         => __( 'Password', 'ultimate-member' ),
 					'required'      => 1,
 					'public'        => 1,
-					'editable'      => 1,
+					'editable'      => true,
 					'account_only'  => true,
 				),
 
@@ -1379,47 +1375,42 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			}
 		}
 
-
 		/**
-		 * Get all fields without metakeys
+		 * Get all fields without metakeys.
 		 *
 		 * @since 2.0.56
 		 *
 		 * @return array
 		 */
-		function get_fields_without_metakey() {
+		public function get_fields_without_metakey() {
 			$fields_without_metakey = array(
 				'block',
 				'shortcode',
 				'spacing',
 				'divider',
-				'group'
+				'group',
 			);
 
-
 			/**
-			 * UM hook
+			 * Filters the field types without meta key.
 			 *
-			 * @type filter
-			 * @title um_fields_without_metakey
-			 * @description Field Types without meta key
-			 * @input_vars
-			 * [{"var":"$types","type":"array","desc":"Field Types"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_fields_without_metakey', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_fields_without_metakey', 'my_fields_without_metakey', 10, 1 );
-			 * function my_fields_without_metakey( $types ) {
-			 *     // your code here
-			 *     return $types;
+			 * @param {array} $field_types Field types.
+			 *
+			 * @return {array} Field types.
+			 *
+			 * @since 1.3.x
+			 * @hook um_fields_without_metakey
+			 *
+			 * @example <caption>It adds 'location' and 'distance' field-types to fields without metakeys array.</caption>
+			 * function my_custom_um_fields_without_metakey( $field_types ) {
+			 *     $field_types[] = 'location';
+			 *     $field_types[] = 'distance';
+			 *     return $field_types;
 			 * }
-			 * ?>
+			 * add_filter( 'um_fields_without_metakey', 'my_custom_um_fields_without_metakey' );
 			 */
 			return apply_filters( 'um_fields_without_metakey', $fields_without_metakey );
 		}
-
 
 		/**
 		 * May be used to show a dropdown, or source for user meta

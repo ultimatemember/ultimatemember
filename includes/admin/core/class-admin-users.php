@@ -537,20 +537,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 					do_action( "um_admin_user_action_{$bulk_action}_hook" );
 				}
 
-				// Finished. redirect now
-				//if ( $admin_err == 0 ) {
-
 				$uri = $this->set_redirect_uri( admin_url( 'users.php' ) );
-				$uri = add_query_arg( 'update', 'users_updated', $uri );
+				$uri = add_query_arg( 'update', 'um_users_updated', $uri );
 
 				wp_redirect( $uri );
 				exit;
-
-				/*} else {
-					wp_redirect( admin_url( 'users.php?update=err_users_updated' ) );
-					exit;
-				}*/
-
 			} elseif ( ! empty( $_REQUEST['um_bulkedit'] ) ) {
 
 				$uri = $this->set_redirect_uri( admin_url( 'users.php' ) );

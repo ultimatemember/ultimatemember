@@ -25,6 +25,11 @@ $link = apply_filters( 'um_user_profile_comment_url', get_permalink( $comment->c
 		</a>
 	</div>
 	<div class="um-item-meta">
-		<span><?php printf( __( 'On <a href="%1$s">%2$s</a>','ultimate-member' ), $link, $comment_title ); ?></span>
+		<span>
+			<?php
+			// translators: %1$s is a link; %2$s is a title.
+			printf( __( 'On <a href="%1$s">%2$s</a>','ultimate-member' ), $link, $comment_title );
+			?>
+		</span>
 	</div>
 </div>

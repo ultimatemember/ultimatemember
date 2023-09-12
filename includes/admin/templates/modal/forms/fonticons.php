@@ -1,10 +1,16 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
-
+<?php if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} ?>
 
 <div id="UM_fonticons" style="display:none">
 
 	<div class="um-admin-modal-head">
-		<h3><?php printf( __( 'Choose from %s available icons', 'ultimate-member' ), count( UM()->fonticons()->all ) ); ?></h3>
+		<h3>
+			<?php
+			// translators: %s: icons nubber.
+			echo wp_kses( sprintf( __( 'Choose from %s available icons', 'ultimate-member' ), count( UM()->fonticons()->all ) ), UM()->get_allowed_html( 'admin_notice' ) );
+			?>
+		</h3>
 	</div>
 
 	<div class="um-admin-modal-body"></div>

@@ -62,7 +62,7 @@ function um_dynamic_user_profile_title( $title, $id = '' ) {
 		}
 	}
 
-	if ( ! function_exists( 'utf8_decode' ) ) {
+	if ( ! function_exists( 'mb_convert_encoding' ) ) {
 		return $title;
 	}
 

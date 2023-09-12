@@ -61,6 +61,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 */
 		public $is_loaded = false;
 
+		public $set_field_type;
+
 		/**
 		 * Admin_Metabox constructor.
 		 */
@@ -1061,24 +1063,23 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			do_action( 'um_admin_custom_login_metaboxes' );
 		}
 
-
 		/**
 		 * Save directory metabox
 		 *
 		 * @param $post_id
 		 * @param $post
 		 */
-		function save_metabox_directory( $post_id, $post ) {
+		public function save_metabox_directory( $post_id, $post ) {
 			global $wpdb;
 
 			// validate nonce
 			if ( ! isset( $_POST['um_admin_save_metabox_directory_nonce'] ) ||
-			     ! wp_verify_nonce( $_POST['um_admin_save_metabox_directory_nonce'], basename( __FILE__ ) ) ) {
+				! wp_verify_nonce( $_POST['um_admin_save_metabox_directory_nonce'], basename( __FILE__ ) ) ) {
 				return;
 			}
 
 			// validate post type
-			if ( $post->post_type != 'um_directory' ) {
+			if ( 'um_directory' !== $post->post_type ) {
 				return;
 			}
 
@@ -1088,13 +1089,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				return;
 			}
 
-			$where = array( 'ID' => $post_id );
-
 			if ( empty( $_POST['post_title'] ) ) {
+				$where = array( 'ID' => $post_id );
+				// translators: %s: Directory id.
 				$_POST['post_title'] = sprintf( __( 'Directory #%s', 'ultimate-member' ), $post_id );
+				$wpdb->update( $wpdb->posts, array( 'post_title' => sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) ), $where );
 			}
-
-			$wpdb->update( $wpdb->posts, array( 'post_title' => sanitize_text_field( $_POST['post_title'] ) ), $where );
 
 			do_action( 'um_before_member_directory_save', $post_id );
 
@@ -1117,17 +1117,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			$metadata = UM()->admin()->sanitize_member_directory_meta( $_POST['um_metadata'] );
 			foreach ( $metadata as $k => $v ) {
 
-				if ( $k == '_um_show_these_users' && trim( $v ) ) {
+				if ( '_um_show_these_users' === $k && trim( $v ) ) {
 					$v = preg_split( '/[\r\n]+/', $v, -1, PREG_SPLIT_NO_EMPTY );
 				}
 
-				if ( $k == '_um_exclude_these_users' && trim( $v ) ) {
+				if ( '_um_exclude_these_users' === $k && trim( $v ) ) {
 					$v = preg_split( '/[\r\n]+/', $v, -1, PREG_SPLIT_NO_EMPTY );
 				}
 
 				if ( strstr( $k, '_um_' ) ) {
 
-					if ( $k === '_um_is_default' ) {
+					if ( '_um_is_default' === $k ) {
 
 						$mode = UM()->query()->get_attr( 'mode', $post_id );
 
@@ -1143,9 +1143,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 							foreach ( $posts as $p_id ) {
 								delete_post_meta( $p_id, '_um_is_default' );
 							}
-
 						}
-
 					}
 
 					$v = apply_filters( 'um_member_directory_meta_value_before_save', $v, $k, $post_id );
@@ -1158,14 +1156,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			update_post_meta( $post_id, '_um_search_filters_gmt', (int) $_POST['um-gmt-offset'] );
 		}
 
-
 		/**
 		 * Save form metabox
 		 *
 		 * @param $post_id
 		 * @param $post
 		 */
-		function save_metabox_form( $post_id, $post ) {
+		public function save_metabox_form( $post_id, $post ) {
 			global $wpdb;
 
 			// validate nonce
@@ -1175,7 +1172,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			}
 
 			// validate post type
-			if ( $post->post_type != 'um_form' ) {
+			if ( 'um_form' !== $post->post_type ) {
 				return;
 			}
 
@@ -1185,11 +1182,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				return;
 			}
 
-			$where = array( 'ID' => $post_id );
 			if ( empty( $_POST['post_title'] ) ) {
+				$where = array( 'ID' => $post_id );
+				// translators: %s: Form id.
 				$_POST['post_title'] = sprintf( __( 'Form #%s', 'ultimate-member' ), $post_id );
+				$wpdb->update( $wpdb->posts, array( 'post_title' => sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) ), $where );
 			}
-			$wpdb->update( $wpdb->posts, array( 'post_title' => sanitize_text_field( $_POST['post_title'] ) ), $where );
 
 			// save
 			delete_post_meta( $post_id, '_um_profile_metafields' );
@@ -1821,7 +1819,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					?>
 
 					<p><label for="_format_custom"><?php _e( 'Use custom Date format', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This option overrides "Date User-Friendly Format" option. See https://www.php.net/manual/en/function.date.php', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_format_custom" id="_format_custom" value="<?php echo htmlspecialchars( $this->edit_mode_value, ENT_QUOTES ); ?>" placeholder="j M Y" />
+						<input type="text" name="_format_custom" id="_format_custom" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" placeholder="j M Y" />
 					</p>
 
 					<?php
@@ -2192,7 +2190,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					?>
 
 					<p><label for="_title"><?php _e( 'Title', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'This is the title of the field for your reference in the backend. The title will not appear on the front-end of your website.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_title" id="_title" value="<?php echo htmlspecialchars( $this->edit_mode_value, ENT_QUOTES ); ?>" />
+						<input type="text" name="_title" id="_title" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
@@ -2203,7 +2201,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					?>
 
 					<p style="display:none"><label for="_id"><?php _e( 'Unique ID', 'ultimate-member' ) ?></label>
-						<input type="text" name="_id" id="_id" value="<?php echo $this->edit_mode_value; ?>" />
+						<input type="text" name="_id" id="_id" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
@@ -2272,7 +2270,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				<?php } else { ?>
 
 					<p><label for="_default"><?php _e( 'Default Value', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" />
+						<input type="text" name="_default" id="_default" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 				<?php } ?>
@@ -2284,7 +2282,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					?>
 
 					<p><label for="_label"><?php _e( 'Label', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'The field label is the text that appears above the field on your front-end form. Leave blank to not show a label above field.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_label" id="_label" value="<?php echo htmlspecialchars( $this->edit_mode_value, ENT_QUOTES ); ?>" />
+						<input type="text" name="_label" id="_label" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
@@ -2294,7 +2292,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					?>
 
 					<p><label for="_label_confirm_pass"><?php _e( 'Confirm password field label', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'This label is the text that appears above the confirm password field. Leave blank to show default label.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_label_confirm_pass" id="_label_confirm_pass" value="<?php echo htmlspecialchars( $this->edit_mode_value, ENT_QUOTES ); ?>" />
+						<input type="text" name="_label_confirm_pass" id="_label_confirm_pass" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
@@ -2304,7 +2302,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					?>
 
 					<p><label for="_placeholder"><?php _e( 'Placeholder', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'This is the text that appears within the field e.g please enter your email address. Leave blank to not show any placeholder text.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_placeholder" id="_placeholder" value="<?php echo htmlspecialchars( $this->edit_mode_value, ENT_QUOTES ); ?>" />
+						<input type="text" name="_placeholder" id="_placeholder" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
 					<?php
@@ -2381,15 +2379,26 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_editable':
+					// Make a new field editable by default.
+					if ( false === $this->in_edit ) {
+						$this->edit_mode_value = true;
+					}
+
+					// Set to true if `editable` doesn't exist (legacy case). It will be saved to DB as `true` after the first field update.
+					if ( null === $this->edit_mode_value ) {
+						$this->edit_mode_value = true;
+					}
+
+					if ( empty( $this->edit_mode_value ) ) {
+						$this->edit_mode_value = false;
+					}
 					?>
 
 					<div class="um-admin-tri">
-
-						<p><label for="_editable"><?php _e( 'Can user edit this field?', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'This option allows you to set whether or not the user can edit the information in this field. The site admin can edit all fields regardless of the option set here.', 'ultimate-member' ) ); ?></label>
+						<p><label for="_editable"><?php esc_html_e( 'Can user edit this field?', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This option allows you to set whether or not the user can edit the information in this field. The site admin can edit all fields regardless of the option set here.', 'ultimate-member' ) ); ?></label>
 							<input type="hidden" name="_editable" id="_editable_hidden" value="0" />
-							<input type="checkbox" name="_editable" id="_editable" value="1" <?php checked( null === $this->edit_mode_value || $this->edit_mode_value ) ?> />
+							<input type="checkbox" name="_editable" id="_editable" value="1" <?php checked( $this->edit_mode_value ); ?> />
 						</p>
-
 					</div>
 
 					<?php

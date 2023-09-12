@@ -103,7 +103,7 @@ function um_upgrade_usermeta_part230() {
 		$wpdb->prepare(
 			"SELECT user_id,
 				  meta_key,
-				  meta_value 
+				  meta_value
 			FROM {$wpdb->usermeta}
 			WHERE meta_key IN( '" . implode( "','", $fields_for_upgrade ) . "' )
 			LIMIT %d, %d",
@@ -127,9 +127,10 @@ function um_upgrade_usermeta_part230() {
 	}
 
 	$from = ( absint( $_POST['page'] ) * $per_page ) - $per_page + 1;
-	$to = absint( $_POST['page'] ) * $per_page;
+	$to   = absint( $_POST['page'] ) * $per_page;
 
-	wp_send_json_success( array( 'message' => sprintf( __( 'Metadata from %s to %s row were upgraded successfully...', 'ultimate-member' ), $from, $to ) ) );
+	// translators: %1$s is a from; %2$s is a to.
+	wp_send_json_success( array( 'message' => sprintf( __( 'Metadata from %1$s to %2$s row were upgraded successfully...', 'ultimate-member' ), $from, $to ) ) );
 }
 
 

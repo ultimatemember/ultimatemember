@@ -1,3 +1,16 @@
+if ( typeof (window.UM) !== 'object' ) {
+	window.UM = {};
+}
+
+if ( typeof (window.UM.admin) !== 'object' ) {
+	window.UM.admin = {};
+}
+
+UM.admin.builder = {
+	deleteProcess: [],
+	fieldsToDelete: [],
+}
+
 function UM_Drag_and_Drop() {
 	jQuery('.um-admin-drag-col,.um-admin-drag-group').sortable({
 		items: '.um-admin-drag-fld',
@@ -334,17 +347,63 @@ jQuery(document).ready(function() {
 		UM_Rows_Refresh();
 	});
 
-	/* remove element */
+	/* remove element: Row, Subrow */
 	jQuery(document.body).on('click', 'a[data-remove_element^="um-"]',function(){
-		element = jQuery(this).data('remove_element');
+		let deleteButton   = jQuery(this);
+		let element        = jQuery(this).data('remove_element');
+		let loadingWrapper = jQuery(this).parents('.' + element ).children('.um-admin-row-loading');
 
-		jQuery(this).parents('.' +element).find('.um-admin-drag-fld').each(function(){
-			jQuery(this).find('a[data-silent_action="um_admin_remove_field"]').trigger('click');
+		let row    = jQuery(this).parents('.um-admin-drag-row').index();
+		let subrow = jQuery(this).parents('.um-admin-drag-rowsub').index();
+
+		let fieldPosition= {row,subrow};
+		let deleteExists= false;
+		jQuery.each( UM.admin.builder.deleteProcess, function(i) {
+			if ( fieldPosition.row === UM.admin.builder.deleteProcess[i].row && fieldPosition.subrow === UM.admin.builder.deleteProcess[i].subrow ) {
+				deleteExists = true;
+				return false;
+			}
 		});
 
-		jQuery(this).parents('.' +element).remove();
-		jQuery('.tipsy').remove();
-		UM_Rows_Refresh();
+		if ( deleteExists ) {
+			return;
+		}
+
+		loadingWrapper.show();
+
+		UM.admin.builder.deleteProcess.push({row,subrow});
+
+		UM.admin.builder.fieldsToDelete = jQuery(this).parents('.' +element).find('.um-admin-drag-fld').toArray();
+
+		if ( UM.admin.builder.fieldsToDelete.length > 0 ) {
+			um_builder_delete_field_ajax( function () {
+				deleteButton.parents('.' +element).remove();
+				jQuery('.tipsy').remove();
+				UM_Rows_Refresh();
+
+				jQuery.each( UM.admin.builder.deleteProcess, function(i) {
+					if ( fieldPosition.row === UM.admin.builder.deleteProcess[i].row && fieldPosition.subrow === UM.admin.builder.deleteProcess[i].subrow ) {
+						UM.admin.builder.deleteProcess.splice(i, 1);
+						return false;
+					}
+				});
+
+				loadingWrapper.hide();
+			} );
+		} else {
+			jQuery(this).parents('.' +element).remove();
+			jQuery('.tipsy').remove();
+			UM_Rows_Refresh();
+
+			jQuery.each( UM.admin.builder.deleteProcess, function(i) {
+				if ( fieldPosition.row === UM.admin.builder.deleteProcess[i].row && fieldPosition.subrow === UM.admin.builder.deleteProcess[i].subrow ) {
+					UM.admin.builder.deleteProcess.splice(i, 1);
+					return false;
+				}
+			});
+
+			loadingWrapper.hide();
+		}
 	});
 
 	/* dynamically change columns */
