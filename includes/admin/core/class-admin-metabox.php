@@ -1,12 +1,13 @@
 <?php
 namespace um\admin\core;
 
+use WP_Post;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
-
 
 	/**
 	 * Class Admin_Metabox
@@ -1158,15 +1159,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		/**
 		 * Save form metabox
 		 *
-		 * @param $post_id
-		 * @param $post
+		 * @param int $post_id
+		 * @param WP_Post $post
 		 */
 		public function save_metabox_form( $post_id, $post ) {
 			global $wpdb;
 
 			// validate nonce
 			if ( ! isset( $_POST['um_admin_save_metabox_form_nonce'] ) ||
-				 ! wp_verify_nonce( $_POST['um_admin_save_metabox_form_nonce'], basename( __FILE__ ) ) ) {
+				! wp_verify_nonce( $_POST['um_admin_save_metabox_form_nonce'], basename( __FILE__ ) ) ) {
 				return;
 			}
 
@@ -1197,17 +1198,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			$form_meta = UM()->admin()->sanitize_form_meta( $_POST['form'] );
 
 			foreach ( $form_meta as $k => $v ) {
-				if ( strstr( $k, '_um_' ) ) {
-					if ( $k === '_um_is_default' ) {
+				if ( 0 === strpos( $k, '_um_' ) ) {
+					if ( '_um_is_default' === $k ) {
 						$mode = UM()->query()->get_attr( 'mode', $post_id );
 						if ( ! empty( $mode ) ) {
-							$posts = $wpdb->get_col( $wpdb->prepare(
-								"SELECT post_id
-								FROM {$wpdb->postmeta}
-								WHERE meta_key = '_um_mode' AND
-									  meta_value = %s",
-								$mode
-							) );
+							$posts = $wpdb->get_col(
+								$wpdb->prepare(
+									"SELECT post_id
+									FROM {$wpdb->postmeta}
+									WHERE meta_key = '_um_mode' AND
+										  meta_value = %s",
+									$mode
+								)
+							);
 							foreach ( $posts as $p_id ) {
 								delete_post_meta( $p_id, '_um_is_default' );
 							}
@@ -1217,9 +1220,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					update_post_meta( $post_id, $k, $v );
 				}
 			}
-
 		}
-
 
 		/**
 		 * Load modal content
