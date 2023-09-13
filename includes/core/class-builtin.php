@@ -36,6 +36,11 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		/**
 		 * @var array
 		 */
+		public $blacklist_fields = array();
+
+		/**
+		 * @var array
+		 */
 		public $custom_fields = array();
 
 		/**
@@ -50,6 +55,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			add_action( 'init', array( &$this, 'set_core_fields' ), 1 );
 			add_action( 'init', array( &$this, 'set_predefined_fields' ), 1 );
 			add_action( 'init', array( &$this, 'set_custom_fields' ), 1 );
+			add_action( 'init', array( &$this, 'set_blacklist_fields' ), 1 );
 			$this->saved_fields = get_option( 'um_fields', array() );
 		}
 
@@ -149,7 +155,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 *
 		 * @return int|string
 		 */
-		function unique_field_err( $key ) {
+		public function unique_field_err( $key ) {
 			if ( empty( $key ) ) {
 				return __( 'Please provide a meta key', 'ultimate-member' );
 			}
@@ -161,6 +167,9 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			}
 			if ( isset( $this->saved_fields[ $key ] ) ) {
 				return __( 'Your meta key already exists in your fields list', 'ultimate-member' );
+			}
+			if ( in_array( $key, $this->blacklist_fields, true ) ) {
+				return __( 'Your meta key can not be used', 'ultimate-member' );
 			}
 			if ( ! UM()->validation()->safe_string( $key ) ) {
 				return __( 'Your meta key contains illegal characters. Please correct it.', 'ultimate-member' );
@@ -1352,6 +1361,36 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			 * ?>
 			 */
 			$this->predefined_fields = apply_filters( 'um_predefined_fields_hook', $this->predefined_fields );
+		}
+
+
+		public function set_blacklist_fields() {
+
+			$this->blacklist_fields = array(
+				'ID',
+			);
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_blacklist_fields_hook
+			 * @description Extend Blacklist Fields
+			 * @input_vars
+			 * [{"var":"$blacklist_fields","type":"array","desc":"Blacklist Fields"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_blacklist_fields_hook', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_blacklist_fields_hook', 'my_blacklist_fields', 10, 1 );
+			 * function my_blacklist_fields( $blacklist_fields ) {
+			 *     // your code here
+			 *     return $blacklist_fields;
+			 * }
+			 * ?>
+			 */
+			$this->blacklist_fields = apply_filters( 'um_blacklist_fields_hook', $this->blacklist_fields );
 		}
 
 
