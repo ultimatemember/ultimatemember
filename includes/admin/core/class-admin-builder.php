@@ -49,6 +49,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 				return $errors;
 			}
 
+			$blacklist_error = UM()->builtin()->blacklist_field_err( $submission_data['post']['_metakey'] );
+			if ( ! empty( $blacklist_error ) ) {
+				$errors['_metakey'] = $blacklist_error;
+				return $errors;
+			}
+
 			$field_attr = UM()->builtin()->get_core_field_attrs( $submission_data['field_type'] );
 			if ( ! array_key_exists( 'validate', $field_attr ) ) {
 				return $errors;

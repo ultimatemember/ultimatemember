@@ -36,6 +36,11 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		/**
 		 * @var array
 		 */
+		public $blacklist_fields = array();
+
+		/**
+		 * @var array
+		 */
 		public $custom_fields = array();
 
 		/**
@@ -50,6 +55,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			add_action( 'init', array( &$this, 'set_core_fields' ), 1 );
 			add_action( 'init', array( &$this, 'set_predefined_fields' ), 1 );
 			add_action( 'init', array( &$this, 'set_custom_fields' ), 1 );
+			add_action( 'init', array( &$this, 'set_blacklist_fields' ), 1 );
 			$this->saved_fields = get_option( 'um_fields', array() );
 		}
 
@@ -149,7 +155,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 *
 		 * @return int|string
 		 */
-		function unique_field_err( $key ) {
+		public function unique_field_err( $key ) {
 			if ( empty( $key ) ) {
 				return __( 'Please provide a meta key', 'ultimate-member' );
 			}
@@ -164,6 +170,22 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			}
 			if ( ! UM()->validation()->safe_string( $key ) ) {
 				return __( 'Your meta key contains illegal characters. Please correct it.', 'ultimate-member' );
+			}
+
+			return 0;
+		}
+
+
+		/**
+		 * Checks for a blacklist field error
+		 *
+		 * @param $key
+		 *
+		 * @return int|string
+		 */
+		public function blacklist_field_err( $key ) {
+			if ( in_array( strtolower( $key ), UM()->builtin()->blacklist_fields, true ) ) {
+				return __( 'Your meta key can not be used', 'ultimate-member' );
 			}
 
 			return 0;
@@ -1352,6 +1374,32 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			 * ?>
 			 */
 			$this->predefined_fields = apply_filters( 'um_predefined_fields_hook', $this->predefined_fields );
+		}
+
+
+		public function set_blacklist_fields() {
+			$this->blacklist_fields = array(
+				'id',
+			);
+
+			/**
+			 * Filters change metakeys in the blacklist.
+			 *
+			 * @since 2.6.12
+			 * @hook  um_blacklist_fields_hook
+			 *
+			 * @param {array} $blacklist_fields   array of metakeys in the blacklist.
+			 *
+			 * @return {array} Array of metakeys in the blacklis.
+			 *
+			 * @example <caption>Change array of metakeys in the blacklist.</caption>
+			 * function my_um_blacklist_fields_hook( $blacklist_fields ) {
+			 *     // your code here
+			 *     return $blacklist_fields;
+			 * }
+			 * add_filter( 'um_blacklist_fields_hook', 'my_um_blacklist_fields_hook' );
+			 */
+			$this->blacklist_fields = apply_filters( 'um_blacklist_fields_hook', $this->blacklist_fields );
 		}
 
 
