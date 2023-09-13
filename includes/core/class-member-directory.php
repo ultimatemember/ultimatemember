@@ -2475,6 +2475,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 								continue;
 							}
 
+							$privacy = $this->get_field_privacy( $key, $user_id );
+
+							if ( false === (bool) $privacy ) {
+								continue;
+							}
+
 							$value = um_filtered_value( $key );
 
 							if ( ! $value ) {
@@ -2496,6 +2502,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					if ( is_array( $directory_data['reveal_fields'] ) ) {
 						foreach ( $directory_data['reveal_fields'] as $key ) {
 							if ( ! $key ) {
+								continue;
+							}
+
+							$privacy = $this->get_field_privacy( $key, $user_id );
+
+							if ( false === (bool) $privacy ) {
 								continue;
 							}
 
@@ -2532,6 +2544,96 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			um_reset_user_clean();
 
 			return $data_array;
+		}
+
+
+		public function get_field_privacy( $key, $user_id ) {
+			global $wpdb;
+			$meta_key   = '_um_custom_fields';
+			$meta_value = '%"' . $key . '"%';
+
+			$fields = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT meta_value FROM {$wpdb->prefix}postmeta WHERE meta_key = %s AND meta_value LIKE %s",
+					$meta_key,
+					$meta_value
+				)
+			);
+			$show   = true;
+			if ( $fields ) {
+				$current_user_roles = array();
+				if ( is_user_logged_in() ) {
+					$can_edit = UM()->roles()->um_current_user_can( 'edit', $user_id );
+
+					$current_user_roles = UM()->roles()->get_all_user_roles( get_current_user_id() );
+				}
+
+				foreach ( $fields as $field ) {
+					$field   = maybe_unserialize( $field->meta_value );
+					$privacy = $field[ $key ]['public'];
+					$roles   = $field[ $key ]['roles'];
+
+					switch ( $privacy ) {
+						case '1': // Everyone
+							break;
+						case '2': // Members
+							if ( ! is_user_logged_in() ) {
+								$show = false;
+							}
+							break;
+						case '-1': // Only visible to profile owner and admins
+							if ( ! is_user_logged_in() ) {
+								$show = false;
+							} elseif ( get_current_user_id() !== $user_id && ! $can_edit ) {
+								$show = false;
+							}
+							break;
+						case '-2': // Only specific member roles
+							if ( ! is_user_logged_in() ) {
+								$show = false;
+							} elseif ( ! empty( $roles ) && count( array_intersect( $current_user_roles, $roles ) ) <= 0 ) {
+								$show = false;
+							}
+							break;
+						case '-3': // Only visible to profile owner and specific roles
+							if ( ! is_user_logged_in() ) {
+								$show = false;
+							} elseif ( get_current_user_id() !== $user_id && ! empty( $roles ) && count( array_intersect( $current_user_roles, $roles ) ) <= 0 ) {
+								$show = false;
+							}
+							break;
+						default:
+							/**
+							 * Filters the changing field's visibility.
+							 *
+							 * Note: It's "true" by default.
+							 *
+							 * @since 2.6.4
+							 * @hook um_can_view_field_member_directory
+							 *
+							 * @param {bool}  $show  Field's visibility.
+							 * @param {array} $field Field's data.
+							 *
+							 * @return {bool} It's true for showing field.
+							 *
+							 * @example <caption>Change field's visibility.</caption>
+							 * function my_um_can_view_field_member_directory( $show, $field ) {
+							 *     $show = false;
+							 *     return $show;
+							 * }
+							 * add_filter( 'um_can_view_field_member_directory', 'my_um_can_view_field_member_directory', 10, 1 );
+							 */
+							$show = apply_filters( 'um_can_view_field_member_directory', $show, $field );
+							break;
+					}
+
+					if ( false === $show ) {
+						break;
+					}
+				}
+			}
+
+			return $show;
 		}
 
 
