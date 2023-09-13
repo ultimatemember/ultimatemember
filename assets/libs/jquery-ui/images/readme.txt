@@ -1,0 +1,1 @@
+These images are part of the jquery-ui library and used in the file jquery-ui.css

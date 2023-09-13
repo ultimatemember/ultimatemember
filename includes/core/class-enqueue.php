@@ -199,7 +199,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 
 			wp_register_style( 'um_styles', $this->css_baseurl . 'um-styles.css', array(), UM_VERSION );
 
-			wp_register_style( 'um_ui', $this->css_baseurl . 'jquery-ui.css', array(), UM_VERSION );
+			wp_register_style( 'um_ui', UM_URL . 'assets/libs/jquery-ui/jquery-ui' . $this->suffix . '.css', array(), '1.12.1' );
 
 			wp_register_style( 'um_members', $this->css_baseurl . 'um-members.css', array( 'um_ui' ), UM_VERSION );
 			if ( is_rtl() ) {

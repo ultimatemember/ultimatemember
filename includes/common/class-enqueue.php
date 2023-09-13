@@ -28,7 +28,7 @@ class Enqueue {
 	/**
 	 * Enqueue constructor.
 	 *
-	 * @since 3.0
+	 * @since 2.7.0
 	 */
 	public function __construct() {
 		add_action( 'um_core_loaded', array( $this, 'init_variables' ) );
@@ -51,7 +51,7 @@ class Enqueue {
 	}
 
 	/**
-	 * Register common JS/CSS libraries
+	 * Register common JS/CSS libraries.
 	 *
 	 * @since 2.7.0
 	 */
@@ -64,12 +64,9 @@ class Enqueue {
 		wp_register_script( 'um-helptip', $this->urls['libs'] . 'helptip/helptip' . $this->suffix . '.js', array( 'jquery', 'jquery-ui-tooltip' ), '1.0.0', true );
 		wp_register_style( 'um-helptip', $this->urls['libs'] . 'helptip/helptip' . $this->suffix . '.css', array( 'dashicons', 'um-jquery-ui' ), '1.0.0' );
 
-		// old fonticons
-		$um_is_legacy = get_option( 'um_is_legacy' );
-		if ( $um_is_legacy ) {
-			wp_register_style( 'um-fonticons-ii', $this->urls['libs'] . 'fonticons/um-fonticons-ii' . $this->suffix . '.css', array(), UM_VERSION );
-			wp_register_style( 'um-fonticons-fa', $this->urls['libs'] . 'fonticons/um-fonticons-fa' . $this->suffix . '.css', array(), UM_VERSION );
-		}
+		// Legacy Fonticons
+		wp_register_style( 'um-fonticons-ii', $this->urls['libs'] . 'fonticons/um-fonticons-ii' . $this->suffix . '.css', array(), UM_VERSION );
+		wp_register_style( 'um-fonticons-fa', $this->urls['libs'] . 'fonticons/um-fonticons-fa' . $this->suffix . '.css', array(), UM_VERSION );
 
 		// Select2
 		$dequeue_select2 = apply_filters( 'um_dequeue_select2_scripts', false );
@@ -93,12 +90,11 @@ class Enqueue {
 
 		// Common JS scripts for wp-admin and frontend both
 		wp_register_script( 'um-common', $this->urls['js'] . 'common' . $this->suffix . '.js', array( 'jquery' ), UM_VERSION, true );
-		$um_common_variables = apply_filters(
-			'um_common_js_variables',
-			array(
-				'locale' => get_locale(),
-			)
+
+		$um_common_variables = array(
+			'locale' => get_locale(),
 		);
+		$um_common_variables = apply_filters( 'um_common_js_variables', $um_common_variables );
 		wp_localize_script( 'um-common', 'um_common_variables', $um_common_variables );
 		wp_enqueue_script( 'um-common' );
 	}
