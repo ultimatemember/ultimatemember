@@ -1181,6 +1181,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				return;
 			}
 
+			// Set post meta for legacy support in the future.
+			add_post_meta( $post_id, 'um_form_version', UM_VERSION );
+
 			if ( empty( $_POST['post_title'] ) ) {
 				$where = array( 'ID' => $post_id );
 				// translators: %s: Form id.
