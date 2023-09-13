@@ -175,22 +175,20 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			return 0;
 		}
 
-
 		/**
-		 * Checks for a blacklist field error
+		 * Checks for a blacklist field error.
 		 *
-		 * @param $key
+		 * @param string $key Custom field metakey.
 		 *
-		 * @return int|string
+		 * @return int|string Empty or error string.
 		 */
 		public function blacklist_field_err( $key ) {
-			if ( in_array( strtolower( $key ), UM()->builtin()->blacklist_fields, true ) ) {
+			if ( in_array( strtolower( $key ), $this->blacklist_fields, true ) ) {
 				return __( 'Your meta key can not be used', 'ultimate-member' );
 			}
 
 			return 0;
 		}
-
 
 		/**
 		 * Check date range errors (start date)
@@ -475,29 +473,29 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				),
 
 				'date' => array(
-					'name'      => 'Date Picker',
-					'col1'      => array( '_title', '_metakey', '_help', '_default', '_range', '_years', '_years_x', '_range_start', '_range_end', '_visibility' ),
-					'col2'      => array( '_label', '_placeholder', '_public', '_roles', '_format', '_format_custom', '_pretty_format', '_disabled_weekdays' ),
-					'col3'      => array( '_required', '_editable', '_icon' ),
-					'validate'  => array(
-						'_title'        => array(
+					'name'     => 'Date Picker',
+					'col1'     => array( '_title', '_metakey', '_help', '_default', '_range', '_years', '_years_x', '_range_start', '_range_end', '_visibility' ),
+					'col2'     => array( '_label', '_placeholder', '_public', '_roles', '_format', '_format_custom', '_pretty_format', '_disabled_weekdays' ),
+					'col3'     => array( '_required', '_editable', '_icon' ),
+					'validate' => array(
+						'_title'       => array(
 							'mode'  => 'required',
-							'error' => __( 'You must provide a title', 'ultimate-member' )
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
-						'_metakey'      => array(
-							'mode'  => 'unique',
+						'_metakey'     => array(
+							'mode' => 'unique',
 						),
-						'_years'        => array(
+						'_years'       => array(
 							'mode'  => 'numeric',
-							'error' => __( 'Number of years is not valid', 'ultimate-member' )
+							'error' => __( 'Number of years is not valid', 'ultimate-member' ),
 						),
-						'_range_start'  => array(
-							'mode'  => 'range-start',
+						'_range_start' => array(
+							'mode' => 'range-start',
 						),
-						'_range_end'    => array(
-							'mode'  => 'range-end',
+						'_range_end'   => array(
+							'mode' => 'range-end',
 						),
-					)
+					),
 				),
 
 				'time' => array(
@@ -1376,7 +1374,9 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$this->predefined_fields = apply_filters( 'um_predefined_fields_hook', $this->predefined_fields );
 		}
 
-
+		/**
+		 * Set `blacklist_fields` to avoid creating the custom fields with these keys.
+		 */
 		public function set_blacklist_fields() {
 			$this->blacklist_fields = array(
 				'id',
@@ -1388,20 +1388,19 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			 * @since 2.6.12
 			 * @hook  um_blacklist_fields_hook
 			 *
-			 * @param {array} $blacklist_fields   array of metakeys in the blacklist.
+			 * @param {array} $blacklist_fields Blacklisted usermeta keys.
 			 *
-			 * @return {array} Array of metakeys in the blacklis.
+			 * @return {array} Blacklisted usermeta keys.
 			 *
-			 * @example <caption>Change array of metakeys in the blacklist.</caption>
+			 * @example <caption>Change array of metakeys in the blacklist. Adding 'user_email' metakey.</caption>
 			 * function my_um_blacklist_fields_hook( $blacklist_fields ) {
-			 *     // your code here
+			 *     $blacklist_fields[] = 'user_email';
 			 *     return $blacklist_fields;
 			 * }
 			 * add_filter( 'um_blacklist_fields_hook', 'my_um_blacklist_fields_hook' );
 			 */
 			$this->blacklist_fields = apply_filters( 'um_blacklist_fields_hook', $this->blacklist_fields );
 		}
-
 
 		/**
 		 * Custom Fields
