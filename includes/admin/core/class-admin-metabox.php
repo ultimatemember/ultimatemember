@@ -1157,9 +1157,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		}
 
 		/**
-		 * Save form metabox
+		 * Save form metabox.
 		 *
-		 * @param int $post_id
+		 * @param int     $post_id
 		 * @param WP_Post $post
 		 */
 		public function save_metabox_form( $post_id, $post ) {
