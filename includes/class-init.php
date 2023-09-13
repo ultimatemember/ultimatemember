@@ -574,7 +574,6 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->admin_upgrade();
 				$this->admin_settings();
 				$this->columns();
-				$this->admin_enqueue();
 				$this->metabox();
 				$this->users();
 				$this->dragdrop();
@@ -584,7 +583,6 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->theme_updater();
 			} elseif ( $this->is_request( 'frontend' ) ) {
 				$this->frontend()->includes();
-				$this->enqueue();
 				$this->account();
 				$this->password();
 				$this->login();
@@ -922,14 +920,13 @@ if ( ! class_exists( 'UM' ) ) {
 
 		/**
 		 * @since 2.0
+		 * @depecated 2.6.12
 		 *
-		 * @return um\admin\core\Admin_Enqueue()
+		 * @return um\admin\Enqueue
 		 */
-		function admin_enqueue() {
-			if ( empty( $this->classes['admin_enqueue'] ) ) {
-				$this->classes['admin_enqueue'] = new um\admin\core\Admin_Enqueue();
-			}
-			return $this->classes['admin_enqueue'];
+		public function admin_enqueue() {
+			_deprecated_function( __METHOD__, '2.6.12', 'UM()->admin()->enqueue()' );
+			return $this->admin()->enqueue();
 		}
 
 
@@ -1147,20 +1144,15 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['register'];
 		}
 
-
 		/**
 		 * @since 2.0
+		 * @todo Make it deprecated and review extensions.
 		 *
-		 * @return um\core\Enqueue
+		 * @return um\frontend\Enqueue
 		 */
-		function enqueue() {
-			if ( empty( $this->classes['enqueue'] ) ) {
-				$this->classes['enqueue'] = new um\core\Enqueue();
-			}
-
-			return $this->classes['enqueue'];
+		public function enqueue() {
+			return $this->frontend()->enqueue();
 		}
-
 
 		/**
 		 * @since 2.0

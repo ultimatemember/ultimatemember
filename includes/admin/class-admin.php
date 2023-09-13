@@ -86,6 +86,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		}
 
 		public function includes() {
+			$this->enqueue();
 			$this->notices();
 			$this->secure();
 		}
@@ -2039,6 +2040,18 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 				$parent_file = 'ultimatemember';
 			}
 			return $parent_file;
+		}
+
+		/**
+		 * @since 2.6.12
+		 *
+		 * @return Enqueue
+		 */
+		public function enqueue() {
+			if ( empty( UM()->classes['um\admin\enqueue'] ) ) {
+				UM()->classes['um\admin\enqueue'] = new Enqueue();
+			}
+			return UM()->classes['um\admin\enqueue'];
 		}
 
 		/**
