@@ -139,7 +139,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 			// If there isn't template at theme folder, get template file from plugin dir
 			if ( ! $template ) {
-				$path     = ! empty( $this->path_by_slug[ $template_name ] ) ? $this->path_by_slug[ $template_name ] : um_path . 'templates/email';
+				$path     = ! empty( $this->path_by_slug[ $template_name ] ) ? $this->path_by_slug[ $template_name ] : UM_PATH . 'templates/email';
 				$template = trailingslashit( $path ) . $template_name . '.php';
 			}
 
@@ -562,7 +562,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 					$template_path = trailingslashit( get_stylesheet_directory() . '/ultimate-member/email' . $blog_id ) . $template_name_file . '.php';
 					break;
 				case 'plugin':
-					$path          = ! empty( $this->path_by_slug[ $template_name ] ) ? $this->path_by_slug[ $template_name ] : um_path . 'templates/email';
+					$path          = ! empty( $this->path_by_slug[ $template_name ] ) ? $this->path_by_slug[ $template_name ] : UM_PATH . 'templates/email';
 					$template_path = trailingslashit( $path ) . $template_name . '.php';
 					break;
 			}

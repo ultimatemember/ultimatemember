@@ -302,7 +302,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 				if ( $path ) {
 					$template = trailingslashit( trailingslashit( WP_PLUGIN_DIR ) . $path );
 				} else {
-					$template = trailingslashit( um_path );
+					$template = trailingslashit( UM_PATH );
 				}
 				$template .= 'templates' . DIRECTORY_SEPARATOR . $template_name;
 			}

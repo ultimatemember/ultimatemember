@@ -1474,7 +1474,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'tooltip'            => __( 'You can change the default profile picture globally here. Please make sure that the photo is 300x300px.', 'ultimate-member' ),
 										'upload_frame_title' => __( 'Select Default Profile Photo', 'ultimate-member' ),
 										'default'            => array(
-											'url' => um_url . 'assets/img/default_avatar.jpg',
+											'url' => UM_URL . 'assets/img/default_avatar.jpg',
 										),
 									),
 									array(
@@ -2660,7 +2660,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			$emails = UM()->config()->email_notifications;
 
 			if ( empty( $email_key ) || empty( $emails[ $email_key ] ) ) {
-				include_once um_path . 'includes/admin/core/list-tables/emails-list-table.php';
+				include_once UM_PATH . 'includes/admin/core/list-tables/emails-list-table.php';
 			}
 		}
 
@@ -3121,7 +3121,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			</p>
 
 			<?php
-			include_once um_path . 'includes/admin/core/list-tables/version-template-list-table.php';
+			include_once UM_PATH . 'includes/admin/core/list-tables/version-template-list-table.php';
 		}
 
 
@@ -3132,7 +3132,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 */
 		public function get_override_templates( $get_list = false ) {
 			$outdated_files   = array();
-			$scan_files['um'] = $this->scan_template_files( um_path . '/templates/' );
+			$scan_files['um'] = $this->scan_template_files( UM_PATH . '/templates/' );
 			/**
 			 * Filters an array of the template files for scanning versions.
 			 *
@@ -3199,8 +3199,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								$core_path      = $located['core'];
 								$core_file_path = stristr( $core_path, 'wp-content' );
 							} else {
-								$core_path      = um_path . '/templates/' . $core_file;
-								$core_file_path = stristr( um_path . 'templates/' . $core_file, 'wp-content' );
+								$core_path      = UM_PATH . '/templates/' . $core_file;
+								$core_file_path = stristr( UM_PATH . 'templates/' . $core_file, 'wp-content' );
 							}
 							$core_version  = $this->get_file_version( $core_path );
 							$theme_version = $this->get_file_version( $theme_file );
@@ -3312,7 +3312,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			global $wpdb;
 
 			if ( ! class_exists( '\Browser' ) )
-				require_once um_path . 'includes/lib/browser.php';
+				require_once UM_PATH . 'includes/lib/browser.php';
 
 			// Detect browser
 			$browser = new \Browser();

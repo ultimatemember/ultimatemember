@@ -27,8 +27,8 @@ if ( ! class_exists( 'um\core\FontIcons' ) ) {
 			$cached_option = get_option( 'um_cache_fonticons', array() );
 
 			if ( empty( $cached_option ) ) {
-				$files['ii'] = um_path . 'assets/css/um-fonticons-ii.css';
-				$files['fa'] = um_path . 'assets/css/um-fonticons-fa.css';
+				$files['ii'] = UM_PATH . 'assets/css/um-fonticons-ii.css';
+				$files['fa'] = UM_PATH . 'assets/css/um-fonticons-fa.css';
 
 				$array = array();
 				foreach ( $files as $c => $file ) {

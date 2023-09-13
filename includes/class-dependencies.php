@@ -187,20 +187,20 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 		 */
 		public function compare_versions( $um_required_ver, $ext_ver, $ext_key, $ext_title ) {
 
-			if ( version_compare( ultimatemember_version, $um_required_ver, '<' )
+			if ( version_compare( UM_VERSION, $um_required_ver, '<' )
 			     || empty( $this->ext_required_version[$ext_key] )
 			     || version_compare( $this->ext_required_version[$ext_key], $ext_ver, '>' ) ) {
 
 				$message = '';
-				if ( version_compare( ultimatemember_version, $um_required_ver, '<' ) ) {
+				if ( version_compare( UM_VERSION, $um_required_ver, '<' ) ) {
 					// translators: %1$s is a extension name; %2$s is a plugin name; %3$s is a required version.
-					$message = sprintf( __( 'This version of <strong>"%1$s"</strong> requires the core <strong>%2$s</strong> plugin to be <strong>%3$s</strong> or higher.', 'ultimate-member' ), $ext_title, ultimatemember_plugin_name, $um_required_ver ) .
+					$message = sprintf( __( 'This version of <strong>"%1$s"</strong> requires the core <strong>%2$s</strong> plugin to be <strong>%3$s</strong> or higher.', 'ultimate-member' ), $ext_title, UM_PLUGIN_NAME, $um_required_ver ) .
 						'<br />' .
 						// translators: %s: plugin name.
-						sprintf( __( 'Please update <strong>%s</strong> to the latest version.', 'ultimate-member' ), ultimatemember_plugin_name );
+						sprintf( __( 'Please update <strong>%s</strong> to the latest version.', 'ultimate-member' ), UM_PLUGIN_NAME );
 				} elseif ( empty( $this->ext_required_version[ $ext_key ] ) || version_compare( $this->ext_required_version[ $ext_key ], $ext_ver, '>' ) ) {
 					// translators: %1$s is a plugin name; %2$s is a extension name; %3$s is a extension version.
-					$message = sprintf( __( 'Sorry, but this version of <strong>%1$s</strong> does not work with extension <strong>"%2$s" %3$s</strong> version.', 'ultimate-member' ), ultimatemember_plugin_name, $ext_title, $ext_ver ) .
+					$message = sprintf( __( 'Sorry, but this version of <strong>%1$s</strong> does not work with extension <strong>"%2$s" %3$s</strong> version.', 'ultimate-member' ), UM_PLUGIN_NAME, $ext_title, $ext_ver ) .
 						'<br />' .
 						// translators: %s: extension name.
 						sprintf( __( 'Please update extension <strong>"%s"</strong> to the latest version.', 'ultimate-member' ), $ext_title );

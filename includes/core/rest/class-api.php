@@ -538,7 +538,7 @@ if ( ! class_exists( 'um\core\rest\API' ) ) {
 
 				case 'xml' :
 
-					require_once um_path . 'includes/lib/array2xml.php';
+					require_once UM_PATH . 'includes/lib/array2xml.php';
 					$xml = \Array2XML::createXML( 'um', $this->data );
 					echo $xml->saveXML();
 

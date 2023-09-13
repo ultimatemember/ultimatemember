@@ -192,9 +192,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 		 */
 		function um_roles_pages() {
 			if ( empty( $_GET['tab'] ) ) {
-				include_once um_path . 'includes/admin/core/list-tables/roles-list-table.php';
+				include_once UM_PATH . 'includes/admin/core/list-tables/roles-list-table.php';
 			} elseif ( 'add' === sanitize_key( $_GET['tab'] ) || 'edit' === sanitize_key( $_GET['tab'] ) ) {
-				include_once um_path . 'includes/admin/templates/role/role-edit.php';
+				include_once UM_PATH . 'includes/admin/templates/role/role-edit.php';
 			} else {
 				um_js_redirect( add_query_arg( array( 'page' => 'um_roles' ), get_admin_url( 'admin.php' ) ) );
 			}
@@ -301,7 +301,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 
 				<div id="um-metaboxes-general" class="wrap">
 
-					<h1>Ultimate Member <sup><?php echo ultimatemember_version; ?></sup></h1>
+					<h1>Ultimate Member <sup><?php echo UM_VERSION; ?></sup></h1>
 
 					<?php wp_nonce_field( 'um-metaboxes-general' ); ?>
 					<?php wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false ); ?>

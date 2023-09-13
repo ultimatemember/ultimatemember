@@ -232,7 +232,7 @@ $free['terms-conditions'] = array(
 					<div class="plugin-card">
 						<div class="plugin-image-wrapper">
 							<a href="<?php echo esc_url( $info['url'] ); ?>" class="plugin-image<?php if ( false !== strpos( $info['img'], '.svg' ) ) { ?> svg-image<?php } ?>">
-								<img id="<?php echo esc_attr( 'um_' . $key . '_image' ); ?>" src="<?php echo esc_url( um_url . 'assets/img/extensions/' . $info['img'] ); ?>" alt="<?php echo esc_attr( $info['name'] ) ?>" />
+								<img id="<?php echo esc_attr( 'um_' . $key . '_image' ); ?>" src="<?php echo esc_url( UM_URL . 'assets/img/extensions/' . $info['img'] ); ?>" alt="<?php echo esc_attr( $info['name'] ) ?>" />
 							</a>
 						</div>
 						<div class="plugin-card-top">
@@ -261,7 +261,7 @@ $free['terms-conditions'] = array(
 					<div class="plugin-card">
 						<div class="plugin-image-wrapper">
 							<a href="<?php echo esc_url( $info['url'] ); ?>" class="plugin-image<?php if ( false !== strpos( $info['img'], '.svg' ) ) { ?> svg-image<?php } ?>">
-								<img id="<?php echo esc_attr( 'um_' . $key . '_image' ); ?>" src="<?php echo esc_url( um_url . 'assets/img/extensions/' . $info['img'] ); ?>" alt="<?php echo esc_attr( $info['name'] ) ?>" />
+								<img id="<?php echo esc_attr( 'um_' . $key . '_image' ); ?>" src="<?php echo esc_url( UM_URL . 'assets/img/extensions/' . $info['img'] ); ?>" alt="<?php echo esc_attr( $info['name'] ) ?>" />
 							</a>
 						</div>
 						<div class="plugin-card-top">

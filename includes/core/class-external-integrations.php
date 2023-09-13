@@ -455,7 +455,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 
 			//if there isn't template at theme folder get template file from plugin dir
 			if ( ! $template ) {
-				$path = ! empty( UM()->mail()->path_by_slug[ $template_name ] ) ? UM()->mail()->path_by_slug[ $template_name ] : um_path . 'templates/email';
+				$path = ! empty( UM()->mail()->path_by_slug[ $template_name ] ) ? UM()->mail()->path_by_slug[ $template_name ] : UM_PATH . 'templates/email';
 				$template = trailingslashit( $path ) . $template_name . '.php';
 			}
 

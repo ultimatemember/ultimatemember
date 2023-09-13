@@ -36,7 +36,7 @@ if ( ! class_exists( 'um\core\GDPR' ) ) {
 				if ( file_exists( $template_path ) ) {
 					require $template_path;
 				} else {
-					require um_path . 'templates/gdpr-register.php';
+					require UM_PATH . 'templates/gdpr-register.php';
 				}
 			}
 		}

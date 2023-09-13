@@ -69,7 +69,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 				add_action( 'wp_loaded', array( $this, 'initialize_upgrade_packages' ), 0 );
 			}
 
-			add_action( 'in_plugin_update_message-' . um_plugin, array( $this, 'in_plugin_update_message' ) );
+			add_action( 'in_plugin_update_message-' . UM_PLUGIN, array( $this, 'in_plugin_update_message' ) );
 		}
 
 		/**
@@ -92,7 +92,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 		function in_plugin_update_message( $args ) {
 			$show_additional_notice = false;
 			if ( isset( $args['new_version'] ) ) {
-				$old_version_array = explode( '.', ultimatemember_version );
+				$old_version_array = explode( '.', UM_VERSION );
 				$new_version_array = explode( '.', $args['new_version'] );
 
 				if ( $old_version_array[0] < $new_version_array[0] ) {
@@ -175,7 +175,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 
 			$all_packages = $this->get_packages();
 			foreach ( $all_packages as $package ) {
-				if ( version_compare( $um_last_version_upgrade, $package, '<' ) && version_compare( $package, ultimatemember_version, '<=' ) ) {
+				if ( version_compare( $um_last_version_upgrade, $package, '<' ) && version_compare( $package, UM_VERSION, '<=' ) ) {
 					$diff_packages[] = $package;
 				}
 			}
@@ -257,13 +257,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 				<h2>
 					<?php
 					// translators: %s: plugin name.
-					echo wp_kses( sprintf( __( '%s - Upgrade Process', 'ultimate-member' ), ultimatemember_plugin_name ), UM()->get_allowed_html( 'admin_notice' ) );
+					echo wp_kses( sprintf( __( '%s - Upgrade Process', 'ultimate-member' ), UM_PLUGIN_NAME ), UM()->get_allowed_html( 'admin_notice' ) );
 					?>
 				</h2>
 				<p>
 					<?php
 					// translators: %1$s is a plugin version; %2$s is a last version upgrade.
-					echo wp_kses( sprintf( __( 'You have installed <strong>%1$s</strong> version. Your latest DB version is <strong>%2$s</strong>. We recommend creating a backup of your site before running the update process. Do not exit the page before the update process has complete.', 'ultimate-member' ), ultimatemember_version, $um_last_version_upgrade ), UM()->get_allowed_html( 'admin_notice' ) );
+					echo wp_kses( sprintf( __( 'You have installed <strong>%1$s</strong> version. Your latest DB version is <strong>%2$s</strong>. We recommend creating a backup of your site before running the update process. Do not exit the page before the update process has complete.', 'ultimate-member' ), UM_VERSION, $um_last_version_upgrade ), UM()->get_allowed_html( 'admin_notice' ) );
 					?>
 				</p>
 				<p><?php _e( 'After clicking the <strong>"Run"</strong> button, the update process will start. All information will be displayed in the <strong>"Upgrade Log"</strong> field.', 'ultimate-member' ); ?></p>

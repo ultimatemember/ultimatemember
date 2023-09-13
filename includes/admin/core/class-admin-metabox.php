@@ -710,7 +710,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				$path = $matches[0];
 				$box['id'] = preg_replace('~(\\{[^}]+\\})~','', $box['id'] );
 			} else {
-				$path = um_path;
+				$path = UM_PATH;
 			}
 
 			$path = str_replace('{','', $path );
@@ -746,7 +746,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				$path = $matches[0];
 				$box['id'] = preg_replace('~(\\{[^}]+\\})~','', $box['id'] );
 			} else {
-				$path = um_path;
+				$path = UM_PATH;
 			}
 
 			$path = str_replace('{','', $path );
@@ -778,7 +778,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				$path = $matches[0];
 				$box['id'] = preg_replace('~(\\{[^}]+\\})~','', $box['id'] );
 			} else {
-				$path = um_path;
+				$path = UM_PATH;
 			}
 
 			$path = str_replace('{','', $path );
@@ -810,7 +810,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				$path = $matches[0];
 				$box['id'] = preg_replace('~(\\{[^}]+\\})~','', $box['id'] );
 			} else {
-				$path = um_path;
+				$path = UM_PATH;
 			}
 
 			$path = str_replace('{','', $path );
@@ -1229,17 +1229,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			$screen = get_current_screen();
 
 			if ( isset( $screen->id ) && strstr( $screen->id, 'um_form' ) ) {
-				foreach ( glob( um_path . 'includes/admin/templates/modal/forms/*.php' ) as $modal_content ) {
+				foreach ( glob( UM_PATH . 'includes/admin/templates/modal/forms/*.php' ) as $modal_content ) {
 					include_once $modal_content;
 				}
 			}
 
 			if ( $this->init_icon ) {
-				include_once um_path . 'includes/admin/templates/modal/forms/fonticons.php';
+				include_once UM_PATH . 'includes/admin/templates/modal/forms/fonticons.php';
 			}
 
 			if ( 'users' === $screen->id ) {
-				include_once um_path . 'includes/admin/templates/modal/dynamic_registration_preview.php';
+				include_once UM_PATH . 'includes/admin/templates/modal/dynamic_registration_preview.php';
 			}
 
 			// needed on forms only
