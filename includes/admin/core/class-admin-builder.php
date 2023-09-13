@@ -86,6 +86,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					continue;
 				}
 
+				$blacklist_error = UM()->builtin()->blacklist_field_err( $submission_data['post']['_metakey'] );
+				if ( ! empty( $blacklist_error ) ) {
+					$errors['_metakey'] = $blacklist_error;
+				}
+
 				switch ( $arr['mode'] ) {
 					case 'numeric':
 						if ( ! empty( $submission_data['post'][ $post_input ] ) && ! is_numeric( $submission_data['post'][ $post_input ] ) ) {
