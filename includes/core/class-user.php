@@ -790,7 +790,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 
 			if ( 'hash' === $permalink_base ) {
-				$user_in_url = $this->generate_user_hash( $user_id );
+				if ( empty( $current_profile_slug ) ) {
+					$user_in_url = $this->generate_user_hash( $user_id );
+				} else {
+					$user_in_url = $current_profile_slug;
+				}
 			}
 
 			if ( 'custom_meta' === $permalink_base ) {
