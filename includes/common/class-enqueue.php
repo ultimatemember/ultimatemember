@@ -12,18 +12,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Enqueue {
 
 	/**
-	 * @var string scripts' Standard or Minified versions
+	 * @var string scripts' Standard or Minified versions.
 	 *
 	 * @since 2.7.0
 	 */
-	public $suffix;
+	public $suffix = '';
 
 	/**
-	 * @var array URLs for easy using
+	 * @var array URLs for easy using.
 	 *
 	 * @since 2.7.0
 	 */
-	public $urls;
+	public $urls = array();
 
 	/**
 	 * Enqueue constructor.
