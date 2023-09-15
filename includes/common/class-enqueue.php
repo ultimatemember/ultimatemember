@@ -16,14 +16,18 @@ class Enqueue {
 	 *
 	 * @since 2.7.0
 	 */
-	public $suffix = '';
+	public static $suffix = '';
 
 	/**
 	 * @var array URLs for easy using.
 	 *
 	 * @since 2.7.0
 	 */
-	public $urls = array();
+	public static $urls = array(
+		'js'   => UM_URL . 'assets/js/',
+		'css'  => UM_URL . 'assets/css/',
+		'libs' => UM_URL . 'assets/libs/',
+	);
 
 	/**
 	 * Enqueue constructor.
@@ -31,27 +35,32 @@ class Enqueue {
 	 * @since 2.7.0
 	 */
 	public function __construct() {
-		add_action( 'um_core_loaded', array( $this, 'init_variables' ) );
-
 		add_action( 'admin_enqueue_scripts', array( &$this, 'common_libs' ), 9 );
 		add_action( 'wp_enqueue_scripts', array( &$this, 'common_libs' ), 9 );
 	}
 
+	public static function get_url( $type ) {
+		if ( ! in_array( $type, array( 'js', 'css', 'libs' ), true ) ) {
+			return '';
+		}
+
+		return self::$urls[ $type ];
+	}
+
+	public static function get_suffix() {
+		if ( empty( self::$suffix ) ) {
+			self::$suffix = ( ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) || ( defined( 'UM_SCRIPT_DEBUG' ) && UM_SCRIPT_DEBUG ) ) ? '' : '.min';
+		}
+		return self::$suffix;
+	}
+
 	/**
-	 * Init variables for enqueue scripts.
+	 * Register jQuery-UI styles.
 	 *
 	 * @since 2.7.0
 	 */
-	public function init_variables() {
-		$this->suffix = ( ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) || ( defined( 'UM_SCRIPT_DEBUG' ) && UM_SCRIPT_DEBUG ) ) ? '' : '.min';
-
-		$this->urls['js']   = UM_URL . 'assets/js/';
-		$this->urls['css']  = UM_URL . 'assets/css/';
-		$this->urls['libs'] = UM_URL . 'assets/libs/';
-	}
-
 	protected function register_jquery_ui() {
-		wp_register_style( 'um_ui', $this->urls['libs'] . 'jquery-ui/jquery-ui' . $this->suffix . '.css', array(), '1.12.1' );
+		wp_register_style( 'um_ui', self::get_url( 'libs' ) . 'jquery-ui/jquery-ui' . self::get_suffix() . '.css', array(), '1.12.1' );
 	}
 
 	/**
