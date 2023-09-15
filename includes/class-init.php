@@ -1151,6 +1151,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return um\frontend\Enqueue
 		 */
 		public function enqueue() {
+			_deprecated_function( __METHOD__, '2.6.12', 'UM()->frontend()->enqueue()' );
 			return $this->frontend()->enqueue();
 		}
 
