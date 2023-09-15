@@ -683,11 +683,11 @@ final class Enqueue extends \um\common\Enqueue {
 			$this->load_localize_scripts();
 
 			//scripts for frontend preview
-			UM()->enqueue()->load_imagecrop();
-			UM()->enqueue()->load_css();
-			UM()->enqueue()->load_tipsy();
-			UM()->enqueue()->load_modal();
-			UM()->enqueue()->load_responsive();
+			UM()->frontend()->enqueue()->load_imagecrop();
+			UM()->frontend()->enqueue()->load_css();
+			UM()->frontend()->enqueue()->load_tipsy();
+			UM()->frontend()->enqueue()->load_modal();
+			UM()->frontend()->enqueue()->load_responsive();
 
 			wp_register_script( 'um_raty', UM_URL . 'assets/js/um-raty' . $suffix . '.js', array( 'jquery', 'wp-i18n' ), ultimatemember_version, true );
 			wp_register_style( 'um_raty', UM_URL . 'assets/css/um-raty.css', array(), ultimatemember_version );
