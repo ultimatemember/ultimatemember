@@ -77,6 +77,7 @@ final class Enqueue extends \um\common\Enqueue {
 	 *
 	 */
 	function register_scripts() {
+		$suffix          = self::get_suffix();
 		$dequeue_select2 = apply_filters( 'um_dequeue_select2_scripts', false );
 		if ( class_exists( 'WooCommerce' ) || $dequeue_select2 ) {
 			wp_dequeue_style( 'select2' );
@@ -85,11 +86,11 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_dequeue_script( 'select2');
 			wp_deregister_script('select2');
 		}
-		wp_register_script( 'select2', $this->js_baseurl . 'select2/select2.full' . self::get_suffix() . '.js', array( 'jquery' ), '4.0.13', true );
+		wp_register_script( 'select2', $this->js_baseurl . 'select2/select2.full' . $suffix . '.js', array( 'jquery' ), '4.0.13', true );
 
-		wp_register_script( 'um_scrollbar', $this->js_baseurl . 'simplebar' . self::get_suffix() . '.js', array( 'jquery' ), UM_VERSION, true );
+		wp_register_script( 'um_scrollbar', $this->js_baseurl . 'simplebar' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
 
-		wp_register_script( 'um_jquery_form', $this->js_baseurl . 'um-jquery-form' . self::get_suffix() . '.js', array( 'jquery' ), UM_VERSION, true );
+		wp_register_script( 'um_jquery_form', $this->js_baseurl . 'um-jquery-form' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
 		wp_register_script( 'um_fileupload', $this->js_baseurl . 'um-fileupload.js', array( 'jquery', 'um_jquery_form' ), UM_VERSION, true );
 
 		wp_register_script( 'um_datetime', $this->js_baseurl . 'pickadate/picker.js', array( 'jquery' ), UM_VERSION, true );
@@ -106,18 +107,18 @@ final class Enqueue extends \um\common\Enqueue {
 			}
 		}
 
-		wp_register_script( 'um_tipsy', $this->js_baseurl . 'um-tipsy' . self::get_suffix() . '.js', array( 'jquery' ), UM_VERSION, true );
-		wp_register_script( 'um_raty', $this->js_baseurl . 'um-raty' . self::get_suffix() . '.js', array( 'jquery', 'wp-i18n' ), UM_VERSION, true );
-		wp_register_script( 'um_crop', $this->js_baseurl . 'um-crop' . self::get_suffix() . '.js', array( 'jquery' ), UM_VERSION, true );
+		wp_register_script( 'um_tipsy', $this->js_baseurl . 'um-tipsy' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
+		wp_register_script( 'um_raty', $this->js_baseurl . 'um-raty' . $suffix . '.js', array( 'jquery', 'wp-i18n' ), UM_VERSION, true );
+		wp_register_script( 'um_crop', $this->js_baseurl . 'um-crop' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
 
-		wp_register_script( 'um_modal', $this->js_baseurl . 'um-modal' . self::get_suffix() . '.js', array( 'jquery', 'wp-util', 'um_crop' ), UM_VERSION, true );
+		wp_register_script( 'um_modal', $this->js_baseurl . 'um-modal' . $suffix . '.js', array( 'jquery', 'wp-util', 'um_crop' ), UM_VERSION, true );
 
-		wp_register_script('um_functions', $this->js_baseurl . 'um-functions' . self::get_suffix() . '.js', array( 'jquery', 'jquery-masonry', 'wp-util', 'um_scrollbar' ), UM_VERSION, true );
-		wp_register_script( 'um_responsive', $this->js_baseurl . 'um-responsive' . self::get_suffix() . '.js', array( 'jquery', 'um_functions', 'um_crop' ), UM_VERSION, true );
+		wp_register_script('um_functions', $this->js_baseurl . 'um-functions' . $suffix . '.js', array( 'jquery', 'jquery-masonry', 'wp-util', 'um_scrollbar' ), UM_VERSION, true );
+		wp_register_script( 'um_responsive', $this->js_baseurl . 'um-responsive' . $suffix . '.js', array( 'jquery', 'um_functions', 'um_crop' ), UM_VERSION, true );
 
-		wp_register_script( 'um-gdpr', $this->js_baseurl . 'um-gdpr' . self::get_suffix() . '.js', array( 'jquery' ), UM_VERSION, false );
-		wp_register_script('um_conditional', $this->js_baseurl . 'um-conditional' . self::get_suffix() . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
-		wp_register_script('um_scripts', $this->js_baseurl . 'um-scripts' . self::get_suffix() . '.js', array( 'jquery', 'wp-util', 'um_conditional', 'um_datetime', 'um_datetime_date', 'um_datetime_time', /*'um_datetime_legacy',*/ 'select2' ), UM_VERSION, true );
+		wp_register_script( 'um-gdpr', $this->js_baseurl . 'um-gdpr' . $suffix . '.js', array( 'jquery' ), UM_VERSION, false );
+		wp_register_script('um_conditional', $this->js_baseurl . 'um-conditional' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
+		wp_register_script('um_scripts', $this->js_baseurl . 'um-scripts' . $suffix . '.js', array( 'jquery', 'wp-util', 'um_conditional', 'um_datetime', 'um_datetime_date', 'um_datetime_time', /*'um_datetime_legacy',*/ 'select2' ), UM_VERSION, true );
 		/**
 		 * UM hook
 		 *
@@ -151,13 +152,13 @@ final class Enqueue extends \um\common\Enqueue {
 		) );
 		wp_localize_script( 'um_scripts', 'um_scripts', $localize_data );
 
-		wp_register_script('um_dropdown', $this->js_baseurl . 'dropdown' . self::get_suffix() . '.js', array( 'jquery' ), UM_VERSION, true );
+		wp_register_script('um_dropdown', $this->js_baseurl . 'dropdown' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
 
-		wp_register_script('um_members', $this->js_baseurl . 'um-members' . self::get_suffix() . '.js', array( 'jquery', 'wp-util', 'jquery-ui-slider', 'um_dropdown', 'wp-hooks', 'jquery-masonry', 'um_scripts' ), UM_VERSION, true );
-		wp_register_script('um_profile', $this->js_baseurl . 'um-profile' . self::get_suffix() . '.js', array( 'jquery', 'wp-util', 'wp-i18n' ), UM_VERSION, true );
+		wp_register_script('um_members', $this->js_baseurl . 'um-members' . $suffix . '.js', array( 'jquery', 'wp-util', 'jquery-ui-slider', 'um_dropdown', 'wp-hooks', 'jquery-masonry', 'um_scripts' ), UM_VERSION, true );
+		wp_register_script('um_profile', $this->js_baseurl . 'um-profile' . $suffix . '.js', array( 'jquery', 'wp-util', 'wp-i18n' ), UM_VERSION, true );
 
 		$account_deps = apply_filters( 'um_account_scripts_dependencies', array( 'jquery', 'wp-hooks' ) );
-		wp_register_script('um_account', $this->js_baseurl . 'um-account' . self::get_suffix() . '.js', $account_deps, UM_VERSION, true );
+		wp_register_script('um_account', $this->js_baseurl . 'um-account' . $suffix . '.js', $account_deps, UM_VERSION, true );
 
 		wp_register_script( 'um_gchart', 'https://www.google.com/jsapi', array(), UM_VERSION, true );
 	}
