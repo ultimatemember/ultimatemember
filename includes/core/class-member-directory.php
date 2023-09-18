@@ -1625,6 +1625,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				// complex using with change_meta_sql function
 
 				$search = trim( sanitize_text_field( wp_unslash( $_POST['search'] ) ) );
+				$search = preg_replace( '/[^\p{L}\p{N} ]+/u', '', $search );
 
 				$meta_query = array(
 					'relation' => 'OR',
@@ -1669,6 +1670,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				global $wpdb;
 
 				$search = trim( sanitize_text_field( wp_unslash( $_POST['search'] ) ) );
+				$search = preg_replace( '/[^\p{L}\p{N} ]+/u', '', $search );
+
 				if ( ! empty( $search ) ) {
 
 					$meta_value = '%' . $wpdb->esc_like( $search ) . '%';
