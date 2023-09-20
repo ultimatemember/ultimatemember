@@ -200,7 +200,11 @@ function um_admin_remove_modal() {
 	}
 
 	if ( 'undefined' !== typeof window.UM.admin.allTooltips && window.UM.admin.allTooltips.length > 0 && 'function' === typeof window.UM.admin.allTooltips.tooltip ) {
-		window.UM.admin.allTooltips.tooltip('close');
+		try {
+			window.UM.admin.allTooltips.tooltip('close');
+		} catch (error) {
+			console.warn( 'Ultimate Member: The jQuery.fn.tooltip function works wrong, maybe it is overridden.', error );
+		}
 	}
 	jQuery('.tipsy').hide();
 	jQuery('body').removeClass('um-admin-modal-open');
