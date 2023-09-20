@@ -71,9 +71,15 @@ class Enqueue {
 	public function common_libs() {
 		$this->register_jquery_ui();
 
-//		wp_register_script( 'um-tipsy', $this->urls['libs'] . 'tipsy/um-tipsy' . $this->suffix . '.js', array( 'jquery' ), '1.0.0a', true );
-//		wp_register_style( 'um-tipsy', $this->urls['libs'] . 'tipsy/um-tipsy' . $this->suffix . '.css', array(), '1.0.0a' );
-//
+		$suffix = self::get_suffix();
+
+		wp_register_script( 'um_tipsy', self::get_url( 'libs' ) . 'tipsy/tipsy' . $suffix . '.js', array( 'jquery' ), '1.0.0a', true );
+		wp_register_style( 'um_tipsy', self::get_url( 'libs' ) . 'tipsy/tipsy' . $suffix . '.css', array(), '1.0.0a' );
+
+		// Raty JS for rating field-type
+		wp_register_script( 'um_raty', self::get_url( 'libs' ) . 'raty/um-raty' . $suffix . '.js', array( 'jquery', 'wp-i18n' ), '2.6.0', true );
+		wp_register_style( 'um_raty', self::get_url( 'libs' ) . 'raty/um-raty' . $suffix . '.css', array(), '2.6.0' );
+
 //		wp_register_script( 'um-helptip', $this->urls['libs'] . 'helptip/helptip' . $this->suffix . '.js', array( 'jquery', 'jquery-ui-tooltip' ), '1.0.0', true );
 //		wp_register_style( 'um-helptip', $this->urls['libs'] . 'helptip/helptip' . $this->suffix . '.css', array( 'dashicons', 'um_ui' ), '1.0.0' );
 //
@@ -93,9 +99,7 @@ class Enqueue {
 //		wp_register_script( 'select2', $this->urls['libs'] . 'select2/select2.full' . $this->suffix . '.js', array( 'jquery' ), '4.0.13', true );
 //		wp_register_style( 'select2', $this->urls['libs'] . 'select2/select2' . $this->suffix . '.css', array(), '4.0.13' );
 //
-//		// Raty JS for rating field-type
-//		wp_register_script( 'um-raty', $this->urls['libs'] . 'raty/um-raty' . $this->suffix . '.js', array( 'jquery', 'wp-i18n' ), '2.6.0', true );
-//		wp_register_style( 'um-raty', $this->urls['libs'] . 'raty/um-raty' . $this->suffix . '.css', array(), '2.6.0' );
+
 //
 //		// Modal
 //		wp_register_script( 'um-modal', $this->urls['libs'] . 'modal/um-modal' . $this->suffix . '.js', array( 'jquery', 'wp-i18n', 'wp-hooks' ), UM_VERSION, true );

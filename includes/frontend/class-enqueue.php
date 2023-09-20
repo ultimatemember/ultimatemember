@@ -107,8 +107,8 @@ final class Enqueue extends \um\common\Enqueue {
 			}
 		}
 
-		wp_register_script( 'um_tipsy', $this->js_baseurl . 'um-tipsy' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
-		wp_register_script( 'um_raty', $this->js_baseurl . 'um-raty' . $suffix . '.js', array( 'jquery', 'wp-i18n' ), UM_VERSION, true );
+		//wp_register_script( 'um_tipsy', $this->js_baseurl . 'um-tipsy' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
+	//	wp_register_script( 'um_raty', $this->js_baseurl . 'um-raty' . $suffix . '.js', array( 'jquery', 'wp-i18n' ), UM_VERSION, true );
 		wp_register_script( 'um_crop', $this->js_baseurl . 'um-crop' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
 
 		wp_register_script( 'um_modal', $this->js_baseurl . 'um-modal' . $suffix . '.js', array( 'jquery', 'wp-util', 'um_crop' ), UM_VERSION, true );
@@ -173,8 +173,8 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_register_style( 'um_fonticons_ii', $this->css_baseurl . 'um-fonticons-ii.css', array(), UM_VERSION );
 		wp_register_style( 'um_fonticons_fa', $this->css_baseurl . 'um-fonticons-fa.css', array(), UM_VERSION );
 		wp_register_style( 'um_crop', $this->css_baseurl . 'um-crop.css', array(), UM_VERSION );
-		wp_register_style( 'um_tipsy', $this->css_baseurl . 'um-tipsy.css', array(), UM_VERSION );
-		wp_register_style( 'um_raty', $this->css_baseurl . 'um-raty.css', array(), UM_VERSION );
+		//wp_register_style( 'um_tipsy', $this->css_baseurl . 'um-tipsy.css', array(), UM_VERSION );
+		//wp_register_style( 'um_raty', $this->css_baseurl . 'um-raty.css', array(), UM_VERSION );
 		wp_register_style( 'select2', $this->css_baseurl . 'select2/select2.min.css', array(), '4.0.13' );
 		wp_register_style( 'um_fileupload', $this->css_baseurl . 'um-fileupload.css', array(), UM_VERSION );
 		wp_register_style( 'um_datetime', $this->css_baseurl . 'pickadate/default.css', array(), UM_VERSION );
@@ -261,7 +261,7 @@ final class Enqueue extends \um\common\Enqueue {
 
 		$this->load_datetimepicker();
 
-		$this->load_raty();
+		//$this->load_raty();
 
 		//$this->load_scrollto();
 
@@ -269,7 +269,7 @@ final class Enqueue extends \um\common\Enqueue {
 
 		$this->load_imagecrop();
 
-		$this->load_tipsy();
+		//$this->load_tipsy();
 
 		$this->load_functions();
 
@@ -381,16 +381,6 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_enqueue_style('um_scrollbar');
 	}
 
-
-	/**
-	 * Load rating
-	 */
-	function load_raty() {
-		wp_enqueue_script('um_raty');
-		wp_enqueue_style('um_raty');
-	}
-
-
 	/**
 	 * Load crop script
 	 */
@@ -402,10 +392,22 @@ final class Enqueue extends \um\common\Enqueue {
 
 	/**
 	 * Load tipsy
+	 *
+	 * @depecated 2.6.12
 	 */
 	function load_tipsy() {
 		wp_enqueue_script( 'um_tipsy' );
 		wp_enqueue_style( 'um_tipsy' );
+	}
+
+	/**
+	 * Load rating
+	 *
+	 * @depecated 2.6.12
+	 */
+	function load_raty() {
+		wp_enqueue_script('um_raty');
+		wp_enqueue_style('um_raty');
 	}
 
 

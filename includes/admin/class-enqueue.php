@@ -236,7 +236,7 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_register_script( 'um_jquery_form', $this->front_js_baseurl . 'um-jquery-form' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
 		wp_register_script( 'um_fileupload', $this->front_js_baseurl . 'um-fileupload.js', array( 'jquery' ), UM_VERSION, true );
 		wp_register_script( 'um_crop', $this->front_js_baseurl . 'um-crop' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
-		wp_register_script( 'um_tipsy', $this->front_js_baseurl . 'um-tipsy' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
+		//wp_register_script( 'um_tipsy', $this->front_js_baseurl . 'um-tipsy' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
 		wp_register_script( 'um_functions', $this->front_js_baseurl . 'um-functions' . $suffix . '.js', array( 'jquery', 'um_tipsy', 'um_scrollbar' ), UM_VERSION, true );
 
 		wp_register_script( 'um_datetime', $this->front_js_baseurl . 'pickadate/picker.js', array( 'jquery' ), UM_VERSION, true );
@@ -264,7 +264,7 @@ final class Enqueue extends \um\common\Enqueue {
 
 		wp_register_style( 'um_scrollbar', $this->front_css_baseurl . 'simplebar.css', array(), ultimatemember_version );
 		wp_register_style( 'um_crop', $this->front_css_baseurl . 'um-crop.css', array(), ultimatemember_version );
-		wp_register_style( 'um_tipsy', $this->front_css_baseurl . 'um-tipsy.css', array(), ultimatemember_version );
+		//wp_register_style( 'um_tipsy', $this->front_css_baseurl . 'um-tipsy.css', array(), ultimatemember_version );
 		wp_register_style( 'um_responsive', $this->front_css_baseurl . 'um-responsive.css', array(), ultimatemember_version );
 		wp_register_style( 'um_modal', $this->front_css_baseurl . 'um-modal.css', array(), ultimatemember_version );
 		wp_register_style( 'um_styles', $this->front_css_baseurl . 'um-styles.css', array(), ultimatemember_version );
@@ -685,12 +685,12 @@ final class Enqueue extends \um\common\Enqueue {
 			//scripts for frontend preview
 			UM()->frontend()->enqueue()->load_imagecrop();
 			UM()->frontend()->enqueue()->load_css();
-			UM()->frontend()->enqueue()->load_tipsy();
+			// UM()->frontend()->enqueue()->load_tipsy();
 			UM()->frontend()->enqueue()->load_modal();
 			UM()->frontend()->enqueue()->load_responsive();
 
-			wp_register_script( 'um_raty', UM_URL . 'assets/js/um-raty' . $suffix . '.js', array( 'jquery', 'wp-i18n' ), ultimatemember_version, true );
-			wp_register_style( 'um_raty', UM_URL . 'assets/css/um-raty.css', array(), ultimatemember_version );
+			//wp_register_script( 'um_raty', UM_URL . 'assets/js/um-raty' . $suffix . '.js', array( 'jquery', 'wp-i18n' ), ultimatemember_version, true );
+			//wp_register_style( 'um_raty', UM_URL . 'assets/css/um-raty.css', array(), ultimatemember_version );
 
 			wp_register_style( 'um_default_css', UM_URL . 'assets/css/um-old-default.css', '', ultimatemember_version, 'all' );
 			wp_enqueue_style( 'um_default_css' );
