@@ -111,32 +111,32 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			<?php
 		}
 
-
 		/**
-		 * Shows social links
+		 * Shows social links.
 		 */
-		function show_social_urls() {
+		public function show_social_urls() {
 			$social = array();
 
 			$fields = UM()->builtin()->get_all_user_fields();
 			foreach ( $fields as $field => $args ) {
-				if ( isset( $args['advanced'] ) && $args['advanced'] == 'social' ) {
+				if ( array_key_exists( 'advanced', $args ) && 'social' === $args['advanced'] ) {
 					$social[ $field ] = $args;
 				}
 			}
 
 			foreach ( $social as $k => $arr ) {
 				if ( um_profile( $k ) ) {
-					if ( array_key_exists( 'match' , $arr ) ) {
+					if ( array_key_exists( 'match', $arr ) ) {
 						$match = is_array( $arr['match'] ) ? $arr['match'][0] : $arr['match'];
 					} else {
 						$match = null;
 					}
+					$arr['url_target'] = isset( $arr['url_target'] ) ? $arr['url_target'] : '_blank';
 					?>
 
 					<a href="<?php echo esc_url( um_filtered_social_link( $k, $match ) ); ?>"
-					   style="background: <?php echo esc_attr( $arr['color'] ); ?>;" target="_blank" class="um-tip-n"
-					   title="<?php echo esc_attr( $arr['title'] ); ?>"><i class="<?php echo esc_attr( $arr['icon'] ); ?>"></i></a>
+					style="background: <?php echo esc_attr( $arr['color'] ); ?>;" target="<?php echo esc_attr( $arr['url_target'] ); ?>" class="um-tip-n"
+					title="<?php echo esc_attr( $arr['title'] ); ?>"><i class="<?php echo esc_attr( $arr['icon'] ); ?>"></i></a>
 
 					<?php
 				}
