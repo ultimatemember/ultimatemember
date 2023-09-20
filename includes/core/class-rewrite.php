@@ -149,6 +149,66 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 		}
 
 		/**
+		 * Getting the user_id based on the User Profile slug like when Base Permalink setting equals 'user_login'.
+		 *
+		 * @since 2.6.12
+		 *
+		 * @return bool|int|mixed
+		 */
+		private function get_user_id_by_user_login_slug() {
+			$permalink_base = UM()->options()->get( 'permalink_base' );
+			if ( 'custom_meta' === $permalink_base ) {
+				$custom_meta = UM()->options()->get( 'permalink_base_custom_meta' );
+				if ( empty( $custom_meta ) ) {
+					// Set default permalink base if custom meta is empty.
+					$permalink_base = 'user_login';
+				}
+			}
+
+			$user_id = username_exists( um_queried_user() );
+			//Try
+			if ( ! $user_id ) {
+				// Search by Profile Slug
+				$args = array(
+					'fields'     => 'ids',
+					'meta_query' => array(
+						array(
+							'key'     => 'um_user_profile_url_slug_' . $permalink_base,
+							'value'   => strtolower( um_queried_user() ),
+							'compare' => '=',
+						),
+					),
+					'number'     => 1,
+				);
+
+				$ids = new \WP_User_Query( $args );
+				if ( $ids->total_users > 0 ) {
+					$user_id = current( $ids->get_results() );
+				}
+			}
+
+			// Try nice name
+			if ( ! $user_id ) {
+				$slug     = um_queried_user();
+				$slug     = str_replace( '.', '-', $slug );
+				$the_user = get_user_by( 'slug', $slug );
+				if ( isset( $the_user->ID ) ) {
+					$user_id = $the_user->ID;
+				}
+
+				if ( ! $user_id ) {
+					$user_id = UM()->user()->user_exists_by_email_as_username( um_queried_user() );
+				}
+
+				if ( ! $user_id ) {
+					$user_id = UM()->user()->user_exists_by_email_as_username( $slug );
+				}
+			}
+
+			return $user_id;
+		}
+
+		/**
 		 * Locate/display a profile.
 		 */
 		public function locate_user_profile() {
@@ -163,45 +223,7 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 
 			if ( um_queried_user() && um_is_core_page( 'user' ) ) {
 				if ( 'user_login' === $permalink_base ) {
-					$user_id = username_exists( um_queried_user() );
-					//Try
-					if ( ! $user_id ) {
-						// Search by Profile Slug
-						$args = array(
-							'fields'     => 'ids',
-							'meta_query' => array(
-								array(
-									'key'     => 'um_user_profile_url_slug_' . $permalink_base,
-									'value'   => strtolower( um_queried_user() ),
-									'compare' => '=',
-								),
-							),
-							'number'     => 1,
-						);
-
-						$ids = new \WP_User_Query( $args );
-						if ( $ids->total_users > 0 ) {
-							$user_id = current( $ids->get_results() );
-						}
-					}
-
-					// Try nice name
-					if ( ! $user_id ) {
-						$slug     = um_queried_user();
-						$slug     = str_replace( '.', '-', $slug );
-						$the_user = get_user_by( 'slug', $slug );
-						if ( isset( $the_user->ID ) ) {
-							$user_id = $the_user->ID;
-						}
-
-						if ( ! $user_id ) {
-							$user_id = UM()->user()->user_exists_by_email_as_username( um_queried_user() );
-						}
-
-						if ( ! $user_id ) {
-							$user_id = UM()->user()->user_exists_by_email_as_username( $slug );
-						}
-					}
+					$user_id = $this->get_user_id_by_user_login_slug();
 				}
 
 				if ( 'user_id' === $permalink_base ) {
@@ -214,6 +236,10 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 
 				if ( 'custom_meta' === $permalink_base ) {
 					$user_id = UM()->user()->user_exists_by_custom_meta( um_queried_user() );
+					if ( ! $user_id ) {
+						// Try user_login by default.
+						$user_id = $this->get_user_id_by_user_login_slug();
+					}
 				}
 
 				if ( in_array( $permalink_base, array( 'name', 'name_dash', 'name_dot', 'name_plus' ), true ) ) {
