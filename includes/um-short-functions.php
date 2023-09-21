@@ -1915,6 +1915,9 @@ function um_profile( $key ) {
  * @return bool
  */
 function um_youtube_id_from_url( $url ) {
+	$url = preg_replace( '/&ab_channel=.*/', '', $url );
+	$url = preg_replace( '/\?si=.*/', '', $url );
+
 	$pattern =
 		'%^# Match any youtube URL
 		(?:https?://)?  # Optional scheme. Either http or https
@@ -1926,10 +1929,12 @@ function um_youtube_id_from_url( $url ) {
 			/embed/     # Either /embed/
 		  | /v/         # or /v/
 		  | /watch\?v=  # or /watch\?v=
+		  | /shorts/    # or /shorts/ for short videos
 		  )             # End path alternatives.
 		)               # End host alternatives.
 		([\w-]{10,12})  # Allow 10-12 for 11 char youtube id.
 		$%x';
+
 	$result = preg_match( $pattern, $url, $matches );
 	if ( false !== $result && isset( $matches[1] ) ) {
 		return $matches[1];
