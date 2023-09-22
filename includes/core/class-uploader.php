@@ -1280,7 +1280,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				//move temporary file from temp directory to the correct user directory
 				$temp_file_path = UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $filename;
 				if ( file_exists( $temp_file_path ) ) {
-					$extra_hash = hash( 'crc32b', current_time('timestamp') );
+					$extra_hash = hash( 'crc32b', current_time( 'timestamp' ) );
 
 					if ( strpos( $filename , 'stream_photo_' ) !== false ) {
 						$new_filename = str_replace("stream_photo_","stream_photo_{$extra_hash}_", $filename );

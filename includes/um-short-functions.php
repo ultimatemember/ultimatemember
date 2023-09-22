@@ -838,7 +838,7 @@ function um_user_submited_display( $k, $title, $data = array(), $style = true ) 
 		$v = um_user( $k );
 	}
 
-	if ( strstr( $k, 'user_pass' ) || in_array( $k, array( 'g-recaptcha-response', 'request', '_wpnonce', '_wp_http_referer' ) ) ) {
+	if ( strstr( $k, 'user_pass' ) || in_array( $k, array( 'g-recaptcha-response', 'request', '_wpnonce', '_wp_http_referer' ), true ) ) {
 		return '';
 	}
 

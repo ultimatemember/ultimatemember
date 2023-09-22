@@ -1523,7 +1523,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			update_user_meta( $this->id, '_um_last_login', current_time( 'timestamp' ) );
 		}
 
-
 		/**
 		 * Set user's account status
 		 *
