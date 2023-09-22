@@ -1906,17 +1906,16 @@ function um_profile( $key ) {
 	return $value;
 }
 
-
 /**
- * Get youtube video ID from url
+ * Get YouTube video ID from URL.
  *
- * @param $url
+ * @param string $url
  *
- * @return bool
+ * @return bool|string
  */
 function um_youtube_id_from_url( $url ) {
-	$url = preg_replace( '/&ab_channel=.*/', '', $url );
-	$url = preg_replace( '/\?si=.*/', '', $url );
+	$url = preg_replace( '/&ab_channel=.*/', '', $url ); // ADBlock argument.
+	$url = preg_replace( '/\?si=.*/', '', $url ); // referral attribute.
 
 	$pattern =
 		'%^# Match any youtube URL
@@ -1942,7 +1941,6 @@ function um_youtube_id_from_url( $url ) {
 
 	return false;
 }
-
 
 /**
  * Find closest number in an array
