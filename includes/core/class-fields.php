@@ -1711,6 +1711,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					break;
 
+				case 'oembed':
+
+					$array['input'] = 'url';
+
+					break;
+
 				case 'date':
 
 					$array['input'] = 'text';
@@ -2649,6 +2655,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					}
 					break;
 				/* URL */
+				case 'oembed':
 				case 'url':
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 

@@ -665,6 +665,21 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 						),
 					),
 				),
+				'oembed'           => array(
+					'name'     => __( 'oEmbed', 'ultimate-member' ),
+					'col1'     => array( '_title', '_metakey', '_help', '_default', '_visibility' ),
+					'col2'     => array( '_label', '_placeholder', '_public', '_roles', '_validate', '_custom_validate' ),
+					'col3'     => array( '_required', '_editable', '_icon' ),
+					'validate' => array(
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
+						),
+					),
+				),
 
 				/*'group' => array(
 					'name' => 'Field Group',
