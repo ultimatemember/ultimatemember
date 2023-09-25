@@ -4446,6 +4446,21 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					break;
 					/* HTML */
+				case 'oembed':
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
+
+					if ( isset( $data['label'] ) || ! empty( $data['icon'] ) ) {
+						$output .= $this->field_label( $data['label'], $key, $data );
+					}
+					$response = wp_oembed_get( $_field_value );
+					if ( empty( $response ) ) {
+						$response = $_field_value;
+					}
+					$output .= '<div class="um-field-area">';
+					$output .= '<div class="um-field-value">' . $response . '</div>';
+					$output .= '</div>';
+					break;
+					/* HTML */
 				case 'block':
 					$content = array_key_exists( 'content', $data ) ? $data['content'] : '';
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>' . $content . '</div>';
