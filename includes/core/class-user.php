@@ -699,11 +699,12 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 
 		/**
-		 * @param $user_id
+		 * @param int  $user_id
+		 * @param bool $raw
 		 *
 		 * @return bool|mixed
 		 */
-		public function get_profile_slug( $user_id ) {
+		public function get_profile_slug( $user_id, $raw = false ) {
 			// Permalink base
 			$permalink_base = UM()->options()->get( 'permalink_base' );
 			if ( 'custom_meta' === $permalink_base ) {
@@ -719,6 +720,10 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				$meta_key = 'um_user_profile_url_slug_' . $permalink_base;
 			}
 			$profile_slug = get_user_meta( $user_id, $meta_key, true );
+
+			if ( $raw ) {
+				return $profile_slug;
+			}
 
 			//get default username permalink if it's empty then return false
 			if ( empty( $profile_slug ) ) {
@@ -779,7 +784,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			delete_option( "um_cache_userdata_{$user_id}" );
 
-			$current_profile_slug = $this->get_profile_slug( $user_id );
+			$current_profile_slug = $this->get_profile_slug( $user_id, true );
 
 			$user_in_url    = '';
 			$permalink_base = UM()->options()->get( 'permalink_base' );
@@ -847,9 +852,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					update_user_meta( $user_id, "um_email_as_username_{$user_in_url}", $user_email );
 
 				} else {
-
 					$user_in_url = urlencode( $user_in_url );
-
 				}
 			}
 
@@ -897,9 +900,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 						update_user_meta( $user_id, "um_email_as_username_{$user_in_url}", $user_email );
 
 					} else {
-
 						$user_in_url = sanitize_title( $user_in_url );
-
 					}
 				}
 

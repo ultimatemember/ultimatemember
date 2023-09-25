@@ -1,5 +1,7 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
-
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'UM' ) ) {
 

@@ -2458,7 +2458,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						}
 					}
 
-
 					// update for um_member_directory_data metakey
 					if ( isset( $_POST['um_options']['use_gravatars'] ) ) {
 						if ( $this->gravatar_changed ) {
