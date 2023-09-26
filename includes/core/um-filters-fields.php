@@ -23,6 +23,30 @@ add_filter( 'um_edit_label_all_fields', 'um_edit_label_all_fields', 10, 2 );
 
 
 /**
+ * Outputs a oEmbed field
+ *
+ * @param string $value
+ * @param array $data
+ *
+ * @return string
+ */
+function um_profile_field_filter_hook__oembed( $value, $data ) {
+	if ( empty( $value ) ) {
+		return '';
+	}
+	$responce = wp_oembed_get( $value );
+	if ( empty( $responce ) ) {
+		$value = '<a href="' . esc_url( $value ) . '" target="_blank">' . esc_html( $value ) . '</a>';
+	} else {
+		$value = $responce;
+	}
+
+	return $value;
+}
+add_filter( 'um_profile_field_filter_hook__oembed', 'um_profile_field_filter_hook__oembed', 99, 2 );
+
+
+/**
  * Outputs a SoundCloud track
  *
  * @param string $value
@@ -438,49 +462,76 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 	}
 
 	if ( isset( $data['type'] ) && 'text' === $data['type'] && isset( $data['validate'] ) && 'skype' === $data['validate'] ) {
-		$alt = ! empty( $data['url_text'] ) ? $data['url_text'] : $value;
-		$url_rel = ( isset( $data['url_rel'] ) && $data['url_rel'] == 'nofollow' ) ? 'rel="nofollow"' : '';
+		$alt                = ! empty( $data['url_text'] ) ? $data['url_text'] : $value;
+		$url_rel            = ( isset( $data['url_rel'] ) && 'nofollow' === $data['url_rel'] ) ? 'rel="nofollow"' : '';
 		$data['url_target'] = ( isset( $data['url_target'] ) ) ? $data['url_target'] : '_blank';
 
 		if ( false === strstr( $value, 'join.skype.com' ) ) {
 			$value = 'skype:' . $value . '?chat';
 		}
 
-		$value = '<a href="'. esc_attr( $value ) .'" title="' . esc_attr( $alt ) . '" target="' . esc_attr( $data['url_target'] ) . '" ' . $url_rel . '>' . esc_html( $alt ) . '</a>';
+		$value = '<a href="' . esc_attr( $value ) . '" title="' . esc_attr( $alt ) . '" target="' . esc_attr( $data['url_target'] ) . '" ' . $url_rel . '>' . esc_html( $alt ) . '</a>';
 	} else {
-		if ( ( isset( $data['validate'] ) && $data['validate'] !== '' && $data['type'] !== 'spotify' && strstr( $data['validate'], 'url' ) ) || ( isset( $data['type'] ) && $data['type'] == 'url' ) ) {
-			$alt = ( isset( $data['url_text'] ) && !empty( $data['url_text'] ) ) ? $data['url_text'] : $value;
-			$url_rel = ( isset( $data['url_rel'] ) && $data['url_rel'] == 'nofollow' ) ? 'rel="nofollow"' : '';
+		// check $value is oEmbed
+		if ( 'oembed' === $data['type'] ) {
+			return $value;
+		}
+
+		if ( ( isset( $data['validate'] ) && '' !== $data['validate'] && 'spotify' !== $data['type'] && strstr( $data['validate'], 'url' ) ) || ( isset( $data['type'] ) && 'url' === $data['type'] && 'oembed' !== $data['type'] ) ) {
+			$alt     = ( isset( $data['url_text'] ) && ! empty( $data['url_text'] ) ) ? $data['url_text'] : $value;
+			$url_rel = ( isset( $data['url_rel'] ) && 'nofollow' === $data['url_rel'] ) ? 'rel="nofollow"' : '';
 			if ( ! strstr( $value, 'http' )
-			     && !strstr( $value, '://' )
-			     && !strstr( $value, 'www.' )
-			     && !strstr( $value, '.com' )
-			     && !strstr( $value, '.net' )
-			     && !strstr( $value, '.org' )
-			     && !strstr( $value, '.me' )
+				&& ! strstr( $value, '://' )
+				&& ! strstr( $value, 'www.' )
+				&& ! strstr( $value, '.com' )
+				&& ! strstr( $value, '.net' )
+				&& ! strstr( $value, '.org' )
+				&& ! strstr( $value, '.me' )
 			) {
-				if ( $data['validate'] == 'soundcloud_url' ) 	$value = 'https://soundcloud.com/' . $value;
-				if ( $data['validate'] == 'youtube_url' ) 		$value = 'https://youtube.com/user/' . $value;
-				if ( $data['validate'] == 'telegram_url' ) 		$value = 'https://t.me/' . $value;
-				if ( $data['validate'] == 'facebook_url' ) 		$value = 'https://facebook.com/' . $value;
-				if ( $data['validate'] == 'twitter_url' ) 		$value = 'https://twitter.com/' . $value;
-				if ( $data['validate'] == 'linkedin_url' ) 		$value = 'https://linkedin.com/' . $value;
-				if ( $data['validate'] == 'instagram_url' ) 	$value = 'https://instagram.com/' . $value;
-				if ( $data['validate'] == 'tiktok_url' ) 		$value = 'https://tiktok.com/' . $value;
-				if ( $data['validate'] == 'twitch_url' ) 		$value = 'https://twitch.tv/' . $value;
-				if ( $data['validate'] == 'reddit_url' ) 		$value = 'https://www.reddit.com/user/' . $value;
-				if ( $data['validate'] == 'spotify_url' ) 		$value = 'https://open.spotify.com/' . $value;
+				if ( 'soundcloud_url' === $data['validate'] ) {
+					$value = 'https://soundcloud.com/' . $value;
+				}
+				if ( 'youtube_url' === $data['validate'] ) {
+					$value = 'https://youtube.com/user/' . $value;
+				}
+				if ( 'telegram_url' === $data['validate'] ) {
+					$value = 'https://t.me/' . $value;
+				}
+				if ( 'facebook_url' === $data['validate'] ) {
+					$value = 'https://facebook.com/' . $value;
+				}
+				if ( 'twitter_url' === $data['validate'] ) {
+					$value = 'https://twitter.com/' . $value;
+				}
+				if ( 'linkedin_url' === $data['validate'] ) {
+					$value = 'https://linkedin.com/' . $value;
+				}
+				if ( 'instagram_url' === $data['validate'] ) {
+					$value = 'https://instagram.com/' . $value;
+				}
+				if ( 'tiktok_url' === $data['validate'] ) {
+					$value = 'https://tiktok.com/' . $value;
+				}
+				if ( 'twitch_url' === $data['validate'] ) {
+					$value = 'https://twitch.tv/' . $value;
+				}
+				if ( 'reddit_url' === $data['validate'] ) {
+					$value = 'https://www.reddit.com/user/' . $value;
+				}
+				if ( 'spotify_url' === $data['validate'] ) {
+					$value = 'https://open.spotify.com/' . $value;
+				}
 			}
 
 			if ( strpos( $value, 'http://' ) !== 0 ) {
 				$value = 'http://' . $value;
 			}
 
-			$value = str_replace('https://https://','https://',$value);
-			$value = str_replace('http://https://','https://',$value);
+			$value = str_replace( 'https://https://', 'https://', $value );
+			$value = str_replace( 'http://https://', 'https://', $value );
 
 			$onclick_alert = '';
-			if ( UM()->options()->get( 'allow_url_redirect_confirm' ) && $value !== wp_validate_redirect( $value ) ) {
+			if ( UM()->options()->get( 'allow_url_redirect_confirm' ) && wp_validate_redirect( $value ) !== $value ) {
 				$onclick_alert = sprintf(
 					' onclick="' . esc_attr( 'return confirm( "%s" );' ) . '"',
 					// translators: %s: link.
@@ -489,20 +540,20 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 			}
 
 			$data['url_target'] = ( isset( $data['url_target'] ) ) ? $data['url_target'] : '_blank';
-			$value = '<a href="'. esc_url( $value ) .'" title="' . esc_attr( $alt ) . '" target="' . esc_attr( $data['url_target'] ) . '" ' . $url_rel . $onclick_alert . '>' . esc_html( $alt ) . '</a>';
+			$value              = '<a href="' . esc_url( $value ) . '" title="' . esc_attr( $alt ) . '" target="' . esc_attr( $data['url_target'] ) . '" ' . $url_rel . $onclick_alert . '>' . esc_html( $alt ) . '</a>';
 		}
 	}
 
 	if ( ! is_array( $value ) ) {
 		if ( is_email( $value ) ) {
-			$value = '<a href="mailto:'. $value.'" title="'.$value.'">'.$value.'</a>';
+			$value = '<a href="mailto:' . $value . '" title="' . $value . '">' . $value . '</a>';
 		}
 	} else {
 		$value = implode( ', ', $value );
 	}
 
-	$value = str_replace('https://https://','https://',$value);
-	$value = str_replace('http://https://','https://',$value);
+	$value = str_replace( 'https://https://', 'https://', $value );
+	$value = str_replace( 'http://https://', 'https://', $value );
 	//$value = UM()->shortcodes()->emotize( $value );
 	return $value;
 

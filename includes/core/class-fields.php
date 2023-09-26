@@ -1711,6 +1711,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					break;
 
+				case 'oembed':
+
+					$array['input'] = 'url';
+
+					break;
+
 				case 'date':
 
 					$array['input'] = 'text';
@@ -2649,6 +2655,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					}
 					break;
 				/* URL */
+				case 'oembed':
 				case 'url':
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
@@ -4437,6 +4444,21 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 					}
 
+					break;
+					/* oEmbed */
+				case 'oembed':
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
+
+					if ( isset( $data['label'] ) || ! empty( $data['icon'] ) ) {
+						$output .= $this->field_label( $data['label'], $key, $data );
+					}
+					$response = wp_oembed_get( $_field_value );
+					if ( empty( $response ) ) {
+						$response = $_field_value;
+					}
+					$output .= '<div class="um-field-area">';
+					$output .= '<div class="um-field-value">' . $response . '</div>';
+					$output .= '</div>';
 					break;
 					/* HTML */
 				case 'block':
