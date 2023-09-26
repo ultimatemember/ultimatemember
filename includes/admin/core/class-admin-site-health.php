@@ -156,8 +156,62 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 				}
 			}
 
+			// Account settings
+			$account_settings = array(
+				'um-account_tab_password'                 => array(
+					'label' => __( 'Password Account Tab', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'account_tab_password' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-account_tab_privacy'                  => array(
+					'label' => __( 'Privacy Account Tab', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'account_tab_privacy' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-account_tab_notifications'            => array(
+					'label' => __( 'Notifications Account Tab', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'account_tab_notifications' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-account_tab_delete'                   => array(
+					'label' => __( 'Delete Account Tab', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'account_tab_delete' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-delete_account_text'                  => array(
+					'label' => __( 'Account Deletion Custom Text', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'delete_account_text' ),
+				),
+				'um-delete_account_no_pass_required_text' => array(
+					'label' => __( 'Account Deletion without password Custom Text', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'delete_account_no_pass_required_text' ),
+				),
+				'um-account_name'                         => array(
+					'label' => __( 'Add a First & Last Name fields', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'account_name' ) ? $labels['yes'] : $labels['no'],
+				),
+			);
 
-			$account_settings = array();
+			if ( 1 === absint( UM()->options()->get( 'account_name' ) ) ) {
+				$account_settings['um-account_name_disable'] = array(
+					'label' => __( 'Disable First & Last name field editing', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'account_name_disable' ) ? $labels['yes'] : $labels['no'],
+				);
+				$account_settings['um-account_name_require'] = array(
+					'label' => __( 'Require First & Last Name', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'account_name_require' ) ? $labels['yes'] : $labels['no'],
+				);
+			}
+
+			$account_settings['um-account_hide_in_directory'] = array(
+				'label' => __( 'Allow users to hide their profiles from directory', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'account_hide_in_directory' ) ? $labels['yes'] : $labels['no'],
+			);
+
+			if ( 1 === absint( UM()->options()->get( 'account_name' ) ) ) {
+				$account_settings['um-account_hide_in_directory_default'] = array(
+					'label' => __( 'Hide profiles from directory by default', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'account_hide_in_directory_default' ),
+				);
+			}
+
+
 			$uploads_settings = array();
 			$restrict_settings = array();
 			$access_other_settings = array();
