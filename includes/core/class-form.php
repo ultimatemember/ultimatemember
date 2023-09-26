@@ -775,6 +775,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 												$form[ $k ] = sanitize_textarea_field( $form[ $k ] );
 											}
 											break;
+										case 'oembed':
 										case 'url':
 											$f = UM()->builtin()->get_a_field( $k );
 

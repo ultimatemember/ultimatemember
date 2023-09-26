@@ -23,6 +23,30 @@ add_filter( 'um_edit_label_all_fields', 'um_edit_label_all_fields', 10, 2 );
 
 
 /**
+ * Outputs a oEmbed field
+ *
+ * @param string $value
+ * @param array $data
+ *
+ * @return string
+ */
+function um_profile_field_filter_hook__oembed( $value, $data ) {
+	if ( empty( $value ) ) {
+		return '';
+	}
+	$responce = wp_oembed_get( $value );
+	if ( empty( $responce ) ) {
+		$value = '<a href="' . esc_url( $value ) . '" target="_blank">' . esc_html( $value ) . '</a>';
+	} else {
+		$value = $responce;
+	}
+
+	return $value;
+}
+add_filter( 'um_profile_field_filter_hook__oembed', 'um_profile_field_filter_hook__oembed', 99, 2 );
+
+
+/**
  * Outputs a SoundCloud track
  *
  * @param string $value
