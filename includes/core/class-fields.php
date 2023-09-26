@@ -4445,7 +4445,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					}
 
 					break;
-					/* HTML */
+					/* oEmbed */
 				case 'oembed':
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
