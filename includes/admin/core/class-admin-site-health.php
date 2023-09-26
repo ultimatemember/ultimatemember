@@ -65,7 +65,98 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 				),
 			);
 
-			$user_settings = array();
+			// User settings
+			$permalink_base = array(
+				'user_login' => __( 'Username', 'ultimate-member' ),
+				'name'       => __( 'First and Last Name with \'.\'', 'ultimate-member' ),
+				'name_dash'  => __( 'First and Last Name with \'-\'', 'ultimate-member' ),
+				'name_plus'  => __( 'First and Last Name with \'+\'', 'ultimate-member' ),
+				'user_id'    => __( 'User ID', 'ultimate-member' ),
+			);
+			$display_name   = array(
+				'default'        => __( 'Default WP Display Name', 'ultimate-member' ),
+				'nickname'       => __( 'Nickname', 'ultimate-member' ),
+				'username'       => __( 'Username', 'ultimate-member' ),
+				'full_name'      => __( 'First name & last name', 'ultimate-member' ),
+				'sur_name'       => __( 'Last name & first name', 'ultimate-member' ),
+				'initial_name'   => __( 'First name & first initial of last name', 'ultimate-member' ),
+				'initial_name_f' => __( 'First initial of first name & last name', 'ultimate-member' ),
+				'first_name'     => __( 'First name only', 'ultimate-member' ),
+				'field'          => __( 'Custom field(s)', 'ultimate-member' ),
+			);
+
+			$user_settings = array(
+				'um-permalink_base'              => array(
+					'label' => __( 'Profile Permalink Base', 'ultimate-member' ),
+					'value' => isset( $permalink_base[ UM()->options()->get( 'permalink_base' ) ] ) ? $permalink_base[ UM()->options()->get( 'permalink_base' ) ] : $labels['no'],
+				),
+				'um-display_name'                => array(
+					'label' => __( 'User Display Name', 'ultimate-member' ),
+					'value' => isset( $display_name[ UM()->options()->get( 'display_name' ) ] ) ? $display_name[ UM()->options()->get( 'display_name' ) ] : $labels['no'],
+				),
+				'um-author_redirect'             => array(
+					'label' => __( 'Automatically redirect author page to their profile?', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'author_redirect' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-members_page'                => array(
+					'label' => __( 'Enable Members Directory', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'members_page' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-toggle_password'             => array(
+					'label' => __( 'Show/hide password button', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'toggle_password' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-require_strongpass'          => array(
+					'label' => __( 'Require Strong Passwords', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'require_strongpass' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-password_min_chars'          => array(
+					'label' => __( 'Require Strong Passwords', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'password_min_chars' ),
+				),
+				'um-password_max_chars'          => array(
+					'label' => __( 'Require Strong Passwords', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'password_max_chars' ),
+				),
+				'um-profile_noindex'             => array(
+					'label' => __( 'Avoid indexing profile by search engines', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'profile_noindex' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-activation_link_expiry_time' => array(
+					'label' => __( 'Activation link lifetime', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'activation_link_expiry_time' ),
+				),
+				'um-use_gravatars'               => array(
+					'label' => __( 'Use Gravatars?', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'use_gravatars' ) ? $labels['yes'] : $labels['no'],
+				),
+			);
+
+			if ( 1 === absint( UM()->options()->get( 'use_gravatars' ) ) ) {
+				$gravatar_options = array(
+					'default'   => __( 'Default', 'ultimate-member' ),
+					'404'       => __( '404 ( File Not Found response )', 'ultimate-member' ),
+					'mm'        => __( 'Mystery Man', 'ultimate-member' ),
+					'identicon' => __( 'Identicon', 'ultimate-member' ),
+					'monsterid' => __( 'Monsterid', 'ultimate-member' ),
+					'wavatar'   => __( 'Wavatar', 'ultimate-member' ),
+					'retro'     => __( 'Retro', 'ultimate-member' ),
+					'blank'     => __( 'Blank ( a transparent PNG image )', 'ultimate-member' ),
+				);
+
+				$user_settings['um-use_um_gravatar_default_builtin_image'] = array(
+					'label' => __( 'Use Gravatar builtin image', 'ultimate-member' ),
+					'value' => $gravatar_options[ UM()->options()->get( 'use_um_gravatar_default_builtin_image' ) ],
+				);
+				if ( 'default' === UM()->options()->get( 'use_um_gravatar_default_builtin_image' ) ) {
+					$user_settings['um-use_um_gravatar_default_image'] = array(
+						'label' => __( 'Use Default plugin avatar as Gravatar\'s Default avatar', 'ultimate-member' ),
+						'value' => UM()->options()->get( 'use_um_gravatar_default_image' ) ? $labels['yes'] : $labels['no'],
+					);
+				}
+			}
+
+
 			$account_settings = array();
 			$uploads_settings = array();
 			$restrict_settings = array();
