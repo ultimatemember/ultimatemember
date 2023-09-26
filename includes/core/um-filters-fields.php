@@ -31,12 +31,14 @@ add_filter( 'um_edit_label_all_fields', 'um_edit_label_all_fields', 10, 2 );
  * @return string
  */
 function um_profile_field_filter_hook__soundcloud_track( $value, $data ) {
-
+	if ( empty( $value ) ) {
+		return '';
+	}
 	if ( ! is_numeric( $value ) ) {
 		# if we're passed a track url:
 		if ( preg_match( '/https:\/\/soundcloud.com\/.*/', $value ) ) {
 			$value = '<div class="um-soundcloud">
-					<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=' . esc_attr( urlencode( $value ) ) . '&amp;color=ff6600&amp;auto_play=false&amp;show_artwork=true"></iframe>
+					<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=' . esc_url( $value ) . '&amp;color=ff6600&amp;auto_play=false&amp;show_artwork=true"></iframe>
 					</div>';
 			return $value;
 		} else {
