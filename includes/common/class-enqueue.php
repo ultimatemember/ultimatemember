@@ -37,6 +37,7 @@ class Enqueue {
 	public function __construct() {
 		add_action( 'admin_enqueue_scripts', array( &$this, 'common_libs' ), 9 );
 		add_action( 'wp_enqueue_scripts', array( &$this, 'common_libs' ), 9 );
+		add_action( 'enqueue_block_assets', array( &$this, 'common_libs' ), 9 );
 	}
 
 	public static function get_url( $type ) {
@@ -76,17 +77,17 @@ class Enqueue {
 		wp_register_script( 'um_tipsy', self::get_url( 'libs' ) . 'tipsy/tipsy' . $suffix . '.js', array( 'jquery' ), '1.0.0a', true );
 		wp_register_style( 'um_tipsy', self::get_url( 'libs' ) . 'tipsy/tipsy' . $suffix . '.css', array(), '1.0.0a' );
 
-		// Raty JS for rating field-type
+		// Raty JS for rating field-type.
 		wp_register_script( 'um_raty', self::get_url( 'libs' ) . 'raty/um-raty' . $suffix . '.js', array( 'jquery', 'wp-i18n' ), '2.6.0', true );
 		wp_register_style( 'um_raty', self::get_url( 'libs' ) . 'raty/um-raty' . $suffix . '.css', array(), '2.6.0' );
 
+		// Legacy FontIcons.
+		wp_register_style( 'um_fonticons_ii', self::get_url( 'libs' ) . 'legacy/fonticons/fonticons-ii' . $suffix . '.css', array(), UM_VERSION ); // Ionicons
+		wp_register_style( 'um_fonticons_fa', self::get_url( 'libs' ) . 'legacy/fonticons/fonticons-fa' . $suffix . '.css', array(), UM_VERSION ); // FontAwesome
+
 //		wp_register_script( 'um-helptip', $this->urls['libs'] . 'helptip/helptip' . $this->suffix . '.js', array( 'jquery', 'jquery-ui-tooltip' ), '1.0.0', true );
 //		wp_register_style( 'um-helptip', $this->urls['libs'] . 'helptip/helptip' . $this->suffix . '.css', array( 'dashicons', 'um_ui' ), '1.0.0' );
-//
-//		// Legacy Fonticons
-//		wp_register_style( 'um-fonticons-ii', $this->urls['libs'] . 'fonticons/um-fonticons-ii' . $this->suffix . '.css', array(), UM_VERSION );
-//		wp_register_style( 'um-fonticons-fa', $this->urls['libs'] . 'fonticons/um-fonticons-fa' . $this->suffix . '.css', array(), UM_VERSION );
-//
+
 //		// Select2
 //		$dequeue_select2 = apply_filters( 'um_dequeue_select2_scripts', false );
 //		if ( class_exists( 'WooCommerce' ) || $dequeue_select2 ) {
