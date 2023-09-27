@@ -30,6 +30,13 @@ class Enqueue {
 	);
 
 	/**
+	 * @var string scripts' Standard or Minified versions.
+	 *
+	 * @since 2.6.12
+	 */
+	public static $select2_handle = 'select2';
+
+	/**
 	 * Enqueue constructor.
 	 *
 	 * @since 2.6.12
@@ -88,19 +95,37 @@ class Enqueue {
 //		wp_register_script( 'um-helptip', $this->urls['libs'] . 'helptip/helptip' . $this->suffix . '.js', array( 'jquery', 'jquery-ui-tooltip' ), '1.0.0', true );
 //		wp_register_style( 'um-helptip', $this->urls['libs'] . 'helptip/helptip' . $this->suffix . '.css', array( 'dashicons', 'um_ui' ), '1.0.0' );
 
-//		// Select2
-//		$dequeue_select2 = apply_filters( 'um_dequeue_select2_scripts', false );
-//		if ( class_exists( 'WooCommerce' ) || $dequeue_select2 ) {
-//			wp_dequeue_style( 'select2' );
-//			wp_deregister_style( 'select2' );
-//
-//			wp_dequeue_script( 'select2' );
-//			wp_deregister_script( 'select2' );
-//		}
-//		wp_register_script( 'select2', $this->urls['libs'] . 'select2/select2.full' . $this->suffix . '.js', array( 'jquery' ), '4.0.13', true );
-//		wp_register_style( 'select2', $this->urls['libs'] . 'select2/select2' . $this->suffix . '.css', array(), '4.0.13' );
-//
+		// Select2 JS.
+		$dequeue_select2 = apply_filters( 'um_dequeue_select2_scripts', false );
+		if ( class_exists( 'WooCommerce' ) || $dequeue_select2 ) {
+			wp_dequeue_style( self::$select2_handle );
+			wp_deregister_style( self::$select2_handle );
 
+			wp_dequeue_script( self::$select2_handle );
+			wp_deregister_script( self::$select2_handle );
+		}
+		wp_register_script( self::$select2_handle, self::get_url( 'libs' ) . 'select2/select2.full' . $suffix . '.js', array( 'jquery' ), '4.0.13', true );
+		// Load a localized version for Select2.
+		$locale      = get_locale();
+		$base_locale = get_locale();
+		if ( $locale ) {
+			if ( ! file_exists( UM_PATH . 'assets/libs/select2/i18n/' . $locale . '.js' ) ) {
+				$locale = explode( '_', $base_locale );
+				$locale = $locale[0];
+
+				if ( ! file_exists( UM_PATH . 'assets/libs/select2/i18n/' . $locale . '.js' ) ) {
+					$locale = explode( '_', $base_locale );
+					$locale = implode( '-', $locale );
+				}
+			}
+
+			if ( file_exists( UM_PATH . 'assets/libs/select2/i18n/' . $locale . '.js' ) ) {
+				wp_register_script( 'um_select2_locale', self::get_url( 'libs' ) . 'select2/i18n/' . $locale . '.js', array( 'jquery', self::$select2_handle ), '4.0.13', true );
+				self::$select2_handle = 'um_select2_locale';
+			}
+		}
+
+		wp_register_style( 'select2', self::get_url( 'libs' ) . 'select2/select2' . $suffix . '.css', array(), '4.0.13' );
 //
 //		// Modal
 //		wp_register_script( 'um-modal', $this->urls['libs'] . 'modal/um-modal' . $this->suffix . '.js', array( 'jquery', 'wp-i18n', 'wp-hooks' ), UM_VERSION, true );
