@@ -261,9 +261,129 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 				),
 			);
 
+			// Content Restriction settings
+			$restricted_posts      = UM()->options()->get( 'restricted_access_post_metabox' );
+			$restricted_posts_list = '';
+			if ( ! empty( $restricted_posts ) ) {
+				foreach ( $restricted_posts as $key => $posts ) {
+					$restricted_posts_list = empty ( $restricted_posts_list ) ? $key : $restricted_posts_list . ', ' . $key;
+				}
+			}
+			$restricted_taxonomy      = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
+			$restricted_taxonomy_list = '';
+			if ( ! empty( $restricted_taxonomy ) ) {
+				foreach ( $restricted_taxonomy as $key => $posts ) {
+					$restricted_taxonomy_list = empty ( $restricted_taxonomy_list ) ? $key : $restricted_taxonomy_list . ', ' . $key;
+				}
+			}
 
-			$restrict_settings = array();
-			$access_other_settings = array();
+			$restrict_settings = array(
+				'um-accessible' => array(
+					'label' => __( 'Global Site Access', 'ultimate-member' ),
+					'value' => 0 === UM()->options()->get( 'accessible' ) ? __( 'Site accessible to Everyone', 'ultimate-member' ) : __( 'Site accessible to Logged In Users', 'ultimate-member' ),
+				),
+			);
+
+			if ( 2 === absint( UM()->options()->get( 'accessible' ) ) ) {
+				$exclude_uris      = UM()->options()->get( 'access_exclude_uris' );
+				$exclude_uris_list = '';
+				if ( ! empty( $exclude_uris ) ) {
+					foreach ( $exclude_uris as $key => $url ) {
+						$exclude_uris_list = empty( $exclude_uris_list ) ? $url : $exclude_uris_list . ', ' . $url;
+					}
+				}
+				$restrict_settings['um-access_redirect']          = array(
+					'label' => __( 'Custom Redirect URL', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'access_redirect' ),
+				);
+				$restrict_settings['um-access_exclude_uris']      = array(
+					'label' => __( 'Account Deletion Text', 'ultimate-member' ),
+					'value' => $exclude_uris_list,
+				);
+				$restrict_settings['um-home_page_accessible']     = array(
+					'label' => __( 'Allow Homepage to be accessible', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'home_page_accessible' ) ? $labels['yes'] : $labels['no'],
+				);
+				$restrict_settings['um-category_page_accessible'] = array(
+					'label' => __( 'Allow Category pages to be accessible', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'category_page_accessible' ) ? $labels['yes'] : $labels['no'],
+				);
+			}
+
+			$restrict_settings['um-restricted_post_title_replace'] = array(
+				'label' => __( 'Restricted Content Titles', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'restricted_post_title_replace' ) ? $labels['yes'] : $labels['no'],
+			);
+			if ( 1 === absint( UM()->options()->get( 'restricted_post_title_replace' ) ) ) {
+				$restrict_settings['um-restricted_access_post_title'] = array(
+					'label' => __( 'Restricted Content Title Text', 'ultimate-member' ),
+					'value' => stripslashes( UM()->options()->get( 'restricted_access_post_title' ) ),
+				);
+			}
+
+			$restrict_settings['um-restricted_access_message'] = array(
+				'label' => __( 'Restricted Access Message', 'ultimate-member' ),
+				'value' => stripslashes( UM()->options()->get( 'restricted_access_message' ) ),
+			);
+			$restrict_settings['um-restricted_blocks']         = array(
+				'label' => __( 'Enable the "Content Restriction" settings for the Gutenberg Blocks', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'restricted_blocks' ) ? $labels['yes'] : $labels['no'],
+			);
+			if ( 1 === absint( UM()->options()->get( 'restricted_blocks' ) ) ) {
+				$restrict_settings['um-restricted_block_message'] = array(
+					'label' => __( 'Restricted Access Block Message', 'ultimate-member' ),
+					'value' => stripslashes( UM()->options()->get( 'restricted_block_message' ) ),
+				);
+			}
+			$restrict_settings['um-restricted_access_post_metabox']     = array(
+				'label' => __( 'Enable the "Content Restriction" settings for post types', 'ultimate-member' ),
+				'value' => $restricted_posts_list,
+			);
+			$restrict_settings['um-restricted_access_taxonomy_metabox'] = array(
+				'label' => __( 'Enable the "Content Restriction" settings for taxonomies', 'ultimate-member' ),
+				'value' => $restricted_taxonomy_list,
+			);
+
+			// Access other settings
+			$blocked_emails    = str_replace( '<br />', ', ', nl2br( UM()->options()->get( 'blocked_emails' ) ) );
+			$blocked_words     = str_replace( '<br />', ', ', nl2br( UM()->options()->get( 'blocked_words' ) ) );
+			$allowed_callbacks = str_replace( '<br />', ', ', nl2br( UM()->options()->get( 'allowed_choice_callbacks' ) ) );
+
+			$access_other_settings = array(
+				'um-enable_reset_password_limit' => array(
+					'label' => __( 'Enable the Reset Password Limit?', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'enable_reset_password_limit' ) ? $labels['yes'] : $labels['no'],
+				),
+			);
+			if ( 1 === absint( UM()->options()->get( 'enable_reset_password_limit' ) ) ) {
+				$access_other_settings['um-reset_password_limit_number'] = array(
+					'label' => __( 'Reset Password Limit ', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'reset_password_limit_number' ),
+				);
+			}
+			$access_other_settings['um-change_password_request_limit'] = array(
+				'label' => __( 'Change Password request limit ', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'change_password_request_limit' ),
+			);
+			$access_other_settings['um-blocked_emails']                = array(
+				'label' => __( 'Blocked Email Addresses', 'ultimate-member' ),
+				'value' => stripslashes( $blocked_emails ),
+			);
+			$access_other_settings['um-blocked_words']                 = array(
+				'label' => __( 'Banned Usernames', 'ultimate-member' ),
+				'value' => stripslashes( $blocked_words ),
+			);
+			$access_other_settings['um-allowed_choice_callbacks']      = array(
+				'label' => __( 'Allowed Choice Callbacks', 'ultimate-member' ),
+				'value' => stripslashes( $allowed_callbacks ),
+			);
+			$access_other_settings['um-allow_url_redirect_confirm']    = array(
+				'label' => __( 'Allow external link redirect confirm ', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'allow_url_redirect_confirm' ),
+			);
+
+
+
 			$email_settings = array();
 			$misc_settings = array();
 
