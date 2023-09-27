@@ -169,11 +169,7 @@ final class Enqueue extends \um\common\Enqueue {
 	 */
 	public function register_styles() {
 		//FontAwesome and FontIcons styles
-		//wp_register_style( 'um_fonticons_ii', $this->css_baseurl . 'um-fonticons-ii.css', array(), UM_VERSION );
-		//wp_register_style( 'um_fonticons_fa', $this->css_baseurl . 'um-fonticons-fa.css', array(), UM_VERSION );
 		wp_register_style( 'um_crop', $this->css_baseurl . 'um-crop.css', array(), UM_VERSION );
-		//wp_register_style( 'um_tipsy', $this->css_baseurl . 'um-tipsy.css', array(), UM_VERSION );
-		//wp_register_style( 'um_raty', $this->css_baseurl . 'um-raty.css', array(), UM_VERSION );
 		wp_register_style( 'select2', $this->css_baseurl . 'select2/select2.min.css', array(), '4.0.13' );
 		wp_register_style( 'um_fileupload', $this->css_baseurl . 'um-fileupload.css', array(), UM_VERSION );
 		wp_register_style( 'um_datetime', $this->css_baseurl . 'pickadate/default.css', array(), UM_VERSION );
@@ -318,8 +314,6 @@ final class Enqueue extends \um\common\Enqueue {
 	 * @depecated 2.6.12
 	 */
 	function load_fonticons() {
-		wp_enqueue_style( 'um_fonticons_ii' );
-		wp_enqueue_style( 'um_fonticons_fa' );
 	}
 
 

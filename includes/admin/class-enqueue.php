@@ -101,9 +101,7 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_register_style( 'um_responsive', UM_URL . 'assets/css/um-responsive.css', array( 'um_profile', 'um_crop' ), UM_VERSION );
 		wp_register_style( 'um_account', UM_URL . 'assets/css/um-account.css', array(), UM_VERSION );
 		wp_register_style( 'um_default_css', UM_URL . 'assets/css/um-old-default.css', array(), UM_VERSION );
-		//wp_register_style( 'um_fonticons_fa', UM_URL . 'assets/css/um-fonticons-fa.css', array(), UM_VERSION );
 		wp_register_style( 'select2', UM_URL . 'assets/css/select2/select2' . $suffix . '.css', array(), UM_VERSION );
-		//wp_register_style( 'um_fonticons_ii', UM_URL . 'assets/css/um-fonticons-ii.css', array(), UM_VERSION );
 
 		wp_register_script( 'um_admin_blocks_shortcodes', UM_URL . 'assets/js/um-blocks' . $suffix . '.js', array( 'wp-i18n', 'wp-blocks', 'wp-components' ), UM_VERSION, true );
 		wp_set_script_translations( 'um_admin_blocks_shortcodes', 'ultimate-member' );
@@ -183,10 +181,8 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_enqueue_script( 'um_functions' );
 		wp_enqueue_script( 'um_responsive' );
 
-		//wp_enqueue_style( 'um_fonticons_ii' );
 		wp_enqueue_style( 'select2' );
 		wp_enqueue_style( 'um_default_css' );
-	//	wp_enqueue_style( 'um_fonticons_fa' );
 		wp_enqueue_style( 'um_members' );
 		wp_enqueue_style( 'um_styles' );
 		wp_enqueue_style( 'um_profile' );
@@ -489,11 +485,6 @@ final class Enqueue extends \um\common\Enqueue {
 	 * @depecated 2.6.12
 	 */
 	public function load_fonticons() {
-//		wp_register_style( 'um_fonticons_ii', UM_URL . 'assets/css/um-fonticons-ii.css', array(), ultimatemember_version );
-//		wp_enqueue_style( 'um_fonticons_ii' );
-//
-//		wp_register_style( 'um_fonticons_fa', UM_URL . 'assets/css/um-fonticons-fa.css', array(), ultimatemember_version );
-//		wp_enqueue_style( 'um_fonticons_fa' );
 	}
 
 
@@ -504,7 +495,7 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_register_script( 'um_admin_global', $this->js_url . 'um-admin-global.js', array( 'jquery' ), ultimatemember_version, true );
 		wp_enqueue_script( 'um_admin_global' );
 
-		wp_register_style( 'um_admin_global', $this->css_url . 'um-admin-global.css', array(), ultimatemember_version );
+		wp_register_style( 'um_admin_global', $this->css_url . 'um-admin-global.css', array( 'um_fonticons_ii', 'um_fonticons_fa' ), ultimatemember_version );
 		wp_enqueue_style( 'um_admin_global' );
 	}
 
