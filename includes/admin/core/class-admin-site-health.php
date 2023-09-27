@@ -379,12 +379,45 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 			);
 			$access_other_settings['um-allow_url_redirect_confirm']    = array(
 				'label' => __( 'Allow external link redirect confirm ', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'allow_url_redirect_confirm' ),
+				'value' => UM()->options()->get( 'allow_url_redirect_confirm' ) ? $labels['yes'] : $labels['no'],
 			);
 
+			// Email settings
+			$email_settings = array(
+				'um-admin_email'    => array(
+					'label' => __( 'Admin E-mail Address', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'admin_email' ),
+				),
+				'um-mail_from'      => array(
+					'label' => __( 'Mail appears from', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'mail_from' ),
+				),
+				'um-mail_from_addr' => array(
+					'label' => __( 'Mail appears from address', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'mail_from_addr' ),
+				),
+				'um-email_html'     => array(
+					'label' => __( 'Use HTML for E-mails?', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'email_html' ) ? $labels['yes'] : $labels['no'],
+				),
+			);
+
+			$emails = UM()->config()->email_notifications;
+			foreach ( $emails as $key => $email ) {
+				if ( 1 == UM()->options()->get( $key . '_on' ) ) {
+					$email_settings['um-' . $key ] = array(
+						'label' => $email['title'] . __( ' Subject', 'ultimate-member' ),
+						'value' => UM()->options()->get( $key . '_sub'),
+					);
+
+					$email_settings[ 'um-theme_' . $key ] = array(
+						'label' => __( 'Template ', 'ultimate-member' ) . $email['title'] . __( ' in theme?', 'ultimate-member' ),
+						'value' => '' !== locate_template( array( 'ultimate-member/emails/' . $key . '.php' ) ) ? $labels['yes'] : $labels['no'],
+					);
+				}
+			}
 
 
-			$email_settings = array();
 			$misc_settings = array();
 
 			$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $pages_settings, $user_settings, $account_settings, $uploads_settings, $restrict_settings, $access_other_settings, $email_settings, $misc_settings );
