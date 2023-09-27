@@ -404,10 +404,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 
 			$emails = UM()->config()->email_notifications;
 			foreach ( $emails as $key => $email ) {
-				if ( 1 == UM()->options()->get( $key . '_on' ) ) {
-					$email_settings['um-' . $key ] = array(
+				if ( 1 === absint( UM()->options()->get( $key . '_on' ) ) ) {
+					$email_settings[ 'um-' . $key ] = array(
 						'label' => $email['title'] . __( ' Subject', 'ultimate-member' ),
-						'value' => UM()->options()->get( $key . '_sub'),
+						'value' => UM()->options()->get( $key . '_sub' ),
 					);
 
 					$email_settings[ 'um-theme_' . $key ] = array(
@@ -417,10 +417,356 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 				}
 			}
 
+			// Appearance settings
+			$profile_icons_options       = array(
+				'field' => __( 'Show inside text field', 'ultimate-member' ),
+				'label' => __( 'Show with label', 'ultimate-member' ),
+				'off'   => __( 'Turn off', 'ultimate-member' ),
+			);
+			$profile_header_menu_options = array(
+				'bc' => __( 'Bottom of Icon', 'ultimate-member' ),
+				'lc' => __( 'Left of Icon (right for RTL)', 'ultimate-member' ),
+			);
+			$register_align_options      = array(
+				'center' => __( 'Centered', 'ultimate-member' ),
+				'left'   => __( 'Left aligned', 'ultimate-member' ),
+				'right'  => __( 'Right aligned', 'ultimate-member' ),
+			);
+
+			$appearance_settings = array(
+				'um-profile_template'         => array(
+					'label' => __( 'Profile Default Template', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'profile_template' ),
+				),
+				'um-profile_max_width'        => array(
+					'label' => __( 'Profile Maximum Width', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'profile_max_width' ),
+				),
+				'um-profile_area_max_width'   => array(
+					'label' => __( 'Profile Area Maximum Width', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'profile_area_max_width' ),
+				),
+				'um-profile_icons'            => array(
+					'label' => __( 'Profile Field Icons', 'ultimate-member' ),
+					'value' => $profile_icons_options[ UM()->options()->get( 'profile_icons' ) ],
+				),
+				'um-profile_primary_btn_word' => array(
+					'label' => __( 'Profile Primary Button Text', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'profile_primary_btn_word' ),
+				),
+				'um-profile_secondary_btn'    => array(
+					'label' => __( 'Profile Secondary Button', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'profile_secondary_btn' ) ? $labels['yes'] : $labels['no'],
+				),
+			);
+			if ( 1 === absint( UM()->options()->get( 'profile_secondary_btn' ) ) ) {
+				$appearance_settings['um-profile_secondary_btn_word'] = array(
+					'label' => __( 'Profile Secondary Button Text ', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'profile_secondary_btn_word' ),
+				);
+			}
+			$appearance_settings['um-default_avatar']               = array(
+				'label' => __( 'Default Profile Photo', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'default_avatar' )['url'],
+			);
+			$appearance_settings['um-default_cover']                = array(
+				'label' => __( 'Default Cover Photo', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'default_cover' )['url'],
+			);
+			$appearance_settings['um-disable_profile_photo_upload'] = array(
+				'label' => __( 'Disable Profile Photo Upload', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'disable_profile_photo_upload' ) ? $labels['yes'] : $labels['no'],
+			);
+			$appearance_settings['um-profile_photosize']            = array(
+				'label' => __( 'Profile Photo Size', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'profile_photosize' ) . 'x' . UM()->options()->get( 'profile_photosize' ) . 'px',
+			);
+			$appearance_settings['um-profile_cover_enabled']        = array(
+				'label' => __( 'Profile Cover Photos', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'profile_cover_enabled' ) ? $labels['yes'] : $labels['no'],
+			);
+			if ( 1 === absint( UM()->options()->get( 'profile_cover_enabled' ) ) ) {
+				$appearance_settings['um-profile_coversize']   = array(
+					'label' => __( 'Profile Cover Size', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'profile_coversize' ) . 'px',
+				);
+				$appearance_settings['um-profile_cover_ratio'] = array(
+					'label' => __( 'Profile Cover Ratio', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'profile_cover_ratio' ),
+				);
+			}
+			$appearance_settings['um-profile_show_metaicon']     = array(
+				'label' => __( 'Profile Header Meta Text Icon', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'profile_show_metaicon' ) ? $labels['yes'] : $labels['no'],
+			);
+			$appearance_settings['um-profile_show_name']         = array(
+				'label' => __( 'Show display name in profile header', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'profile_show_name' ) ? $labels['yes'] : $labels['no'],
+			);
+			$appearance_settings['um-profile_show_social_links'] = array(
+				'label' => __( 'Show social links in profile header', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'profile_show_social_links' ) ? $labels['yes'] : $labels['no'],
+			);
+			$appearance_settings['um-profile_show_bio']          = array(
+				'label' => __( 'Show user description in header', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'profile_show_bio' ) ? $labels['yes'] : $labels['no'],
+			);
+			$appearance_settings['um-profile_show_html_bio']     = array(
+				'label' => __( 'Enable HTML support for user description', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'profile_show_html_bio' ) ? $labels['yes'] : $labels['no'],
+			);
+			$appearance_settings['um-profile_bio_maxchars']      = array(
+				'label' => __( 'User description maximum chars', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'profile_bio_maxchars' ),
+			);
+			$appearance_settings['um-profile_header_menu']       = array(
+				'label' => __( 'Profile Header Menu Position', 'ultimate-member' ),
+				'value' => $profile_header_menu_options[ UM()->options()->get( 'profile_header_menu' ) ],
+			);
+			$appearance_settings['um-profile_empty_text']        = array(
+				'label' => __( 'Show a custom message if profile is empty', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'profile_empty_text' ) ? $labels['yes'] : $labels['no'],
+			);
+			if ( 1 === absint( UM()->options()->get( 'profile_empty_text' ) ) ) {
+				$appearance_settings['um-profile_empty_text_emo'] = array(
+					'label' => __( 'Show the emoticon', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'profile_empty_text_emo' ),
+				);
+			}
+			$appearance_settings['um-profile_menu'] = array(
+				'label' => __( 'Enable profile menu', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'profile_menu' ) ? $labels['yes'] : $labels['no'],
+			);
+			if ( 1 === absint( UM()->options()->get( 'profile_menu' ) ) ) {
+				/**
+				 * Filters a privacy list extend.
+				 *
+				 * @since 2.6.13
+				 * @hook um_profile_tabs_privacy_list
+				 *
+				 * @param {array} $privacy_option Add options for profile tabs' privacy.
+				 *
+				 * @return {array} Options for profile tabs' privacy.
+				 *
+				 * @example <caption>Add options for profile tabs' privacy.</caption>
+				 * function um_profile_menu_link_attrs( $privacy_option ) {
+				 *     // your code here
+				 *     return $privacy_option;
+				 * }
+				 * add_filter( 'um_profile_tabs_privacy_list', 'um_profile_tabs_privacy_list', 10, 1 );
+				 */
+				$privacy_option = apply_filters(
+					'um_profile_tabs_privacy_list',
+					array(
+						0 => __( 'Anyone', 'ultimate-member' ),
+						1 => __( 'Guests only', 'ultimate-member' ),
+						2 => __( 'Members only', 'ultimate-member' ),
+						3 => __( 'Only the owner', 'ultimate-member' ),
+						4 => __( 'Only specific roles', 'ultimate-member' ),
+						5 => __( 'Owner and specific roles', 'ultimate-member' ),
+					)
+				);
+
+				$appearance_settings['um-profile_tab_main'] = array(
+					'label' => __( 'About Tab', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'profile_tab_main' ) ? $labels['yes'] : $labels['no'],
+				);
+				if ( 1 === absint( UM()->options()->get( 'profile_tab_main' ) ) ) {
+					$appearance_settings['um-profile_tab_main_privacy'] = array(
+						'label' => __( 'Who can see About Tab?', 'ultimate-member' ),
+						'value' => $privacy_option[ UM()->options()->get( 'profile_tab_main_privacy' ) ],
+					);
+				}
+				$appearance_settings['um-profile_tab_posts'] = array(
+					'label' => __( 'Posts Tab', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'profile_tab_posts' ) ? $labels['yes'] : $labels['no'],
+				);
+				if ( 1 === absint( UM()->options()->get( 'profile_tab_posts' ) ) ) {
+					$appearance_settings['um-profile_tab_posts_privacy'] = array(
+						'label' => __( 'Who can see Posts Tab?', 'ultimate-member' ),
+						'value' => $privacy_option[ UM()->options()->get( 'profile_tab_posts_privacy' ) ],
+					);
+				}
+				$appearance_settings['um-profile_tab_comments'] = array(
+					'label' => __( 'Comments Tab', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'profile_tab_comments' ) ? $labels['yes'] : $labels['no'],
+				);
+				if ( 1 === absint( UM()->options()->get( 'profile_tab_comments' ) ) ) {
+					$appearance_settings['um-profile_tab_comments_privacy'] = array(
+						'label' => __( 'Who can see Comments Tab?', 'ultimate-member' ),
+						'value' => $privacy_option[ UM()->options()->get( 'profile_tab_comments_privacy' ) ],
+					);
+				}
+				/**
+				 * Filters appearance settings for Site Health extend.
+				 *
+				 * @since 2.6.13
+				 * @hook um_profile_tabs_site_health
+				 *
+				 * @param {array} $appearance_settings Appearance settings for Site Health.
+				 *
+				 * @return {array} Appearance settings for Site Health.
+				 *
+				 * @example <caption>Add options for appearance settings for Site Health.</caption>
+				 * function um_profile_tabs_site_health( $appearance_settings ) {
+				 *     // your code here
+				 *     return $appearance_settings;
+				 * }
+				 * add_filter( 'um_profile_tabs_site_health', 'um_profile_tabs_site_health', 10, 1 );
+				 */
+				$appearance_settings = apply_filters( 'um_profile_tabs_site_health', $appearance_settings );
+
+				/**
+				 * Filters extend user profile tabs
+				 *
+				 * @since 2.6.13
+				 * @hook um_profile_tabs
+				 *
+				 * @param {array} $tabs tabs list.
+				 *
+				 * @return {array} tabs list.
+				 *
+				 * @example <caption>Add options for profile tabs' privacy.</caption>
+				 * function um_profile_tabs( $tabs ) {
+				 *     // your code here
+				 *     return $tabs;
+				 * }
+				 * add_filter( 'um_profile_tabs', 'um_profile_tabs', 10, 1 );
+				 */
+				$tabs_options = apply_filters(
+					'um_profile_tabs',
+					array(
+						'main'     => array(
+							'name' => __( 'About', 'ultimate-member' ),
+							'icon' => 'um-faicon-user',
+						),
+						'posts'    => array(
+							'name' => __( 'Posts', 'ultimate-member' ),
+							'icon' => 'um-faicon-pencil',
+						),
+						'comments' => array(
+							'name' => __( 'Comments', 'ultimate-member' ),
+							'icon' => 'um-faicon-comment',
+						),
+					)
+				);
+
+				$appearance_settings['um-profile_menu_default_tab'] = array(
+					'label' => __( 'Profile menu default tab', 'ultimate-member' ),
+					'value' => $tabs_options[ UM()->options()->get( 'profile_menu_default_tab' ) ],
+				);
+				$appearance_settings['um-profile_menu_icons']       = array(
+					'label' => __( 'Enable menu icons in desktop view', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'profile_menu_icons' ) ? $labels['yes'] : $labels['no'],
+				);
+			}
+
+			$appearance_settings['um-register_template']         = array(
+				'label' => __( 'Registration Default Template', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'register_template' ),
+			);
+			$appearance_settings['um-register_max_width']        = array(
+				'label' => __( 'Registration Maximum Width', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'register_max_width' ),
+			);
+			$appearance_settings['um-register_align']            = array(
+				'label' => __( 'Registration Shortcode Alignment', 'ultimate-member' ),
+				'value' => $register_align_options[ UM()->options()->get( 'register_align' ) ],
+			);
+			$appearance_settings['um-register_icons']            = array(
+				'label' => __( 'Registration Field Icons', 'ultimate-member' ),
+				'value' => $profile_icons_options[ UM()->options()->get( 'register_icons' ) ],
+			);
+			$appearance_settings['um-register_primary_btn_word'] = array(
+				'label' => __( 'Registration Primary Button Text ', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'register_primary_btn_word' ),
+			);
+			$appearance_settings['um-register_secondary_btn']    = array(
+				'label' => __( 'Registration Secondary Button', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'register_secondary_btn' ) ? $labels['yes'] : $labels['no'],
+			);
+			if ( 1 === absint( UM()->options()->get( 'register_secondary_btn' ) ) ) {
+				$appearance_settings['um-register_secondary_btn_word'] = array(
+					'label' => __( 'Registration Secondary Button Text', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'register_secondary_btn_word' ),
+				);
+				$appearance_settings['um-register_secondary_btn_url']  = array(
+					'label' => __( 'Registration Secondary Button URL', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'register_secondary_btn_url' ),
+				);
+			}
+			$appearance_settings['um-register_role'] = array(
+				'label' => __( 'Registration Default Role', 'ultimate-member' ),
+				'value' => ! empty( UM()->options()->get( 'register_role' ) ) ? UM()->options()->get( 'register_role' ) : __( 'Default', 'ultimate-member' ),
+			);
+
+			$appearance_settings['um-login_template']         = array(
+				'label' => __( 'Login Default Template', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'login_template' ),
+			);
+			$appearance_settings['um-login_max_width']        = array(
+				'label' => __( 'Login Maximum Width', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'login_max_width' ),
+			);
+			$appearance_settings['um-login_align']            = array(
+				'label' => __( 'Login Shortcode Alignment', 'ultimate-member' ),
+				'value' => $register_align_options[ UM()->options()->get( 'login_align' ) ],
+			);
+			$appearance_settings['um-login_icons']            = array(
+				'label' => __( 'Login Field Icons', 'ultimate-member' ),
+				'value' => $profile_icons_options[ UM()->options()->get( 'login_icons' ) ],
+			);
+			$appearance_settings['um-login_primary_btn_word'] = array(
+				'label' => __( 'Login Primary Button Text', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'login_primary_btn_word' ),
+			);
+			$appearance_settings['um-login_secondary_btn']    = array(
+				'label' => __( 'Login Secondary Button', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'login_secondary_btn' ) ? $labels['yes'] : $labels['no'],
+			);
+			if ( 1 === absint( UM()->options()->get( 'login_secondary_btn' ) ) ) {
+				$appearance_settings['um-login_secondary_btn_word'] = array(
+					'label' => __( 'Login Secondary Button Text', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'login_secondary_btn_word' ),
+				);
+				$appearance_settings['um-login_secondary_btn_url']  = array(
+					'label' => __( 'Login Secondary Button URL', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'login_secondary_btn_url' ),
+				);
+			}
+			$appearance_settings['um-login_forgot_pass_link'] = array(
+				'label' => __( 'Login Forgot Password Link', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'login_forgot_pass_link' ) ? $labels['yes'] : $labels['no'],
+			);
+			$appearance_settings['um-login_show_rememberme']  = array(
+				'label' => __( 'Show "Remember Me"', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'login_show_rememberme' ) ? $labels['yes'] : $labels['no'],
+			);
+
 
 			$misc_settings = array();
 
-			$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $pages_settings, $user_settings, $account_settings, $uploads_settings, $restrict_settings, $access_other_settings, $email_settings, $misc_settings );
+
+			/**
+			 * Filters licenses settings for Site Health.
+			 *
+			 * @since 2.6.13
+			 * @hook um_licenses_site_health
+			 *
+			 * @param {array} $license_settings licenses settings for Site Health.
+			 *
+			 * @return {array} licenses settings for Site Health.
+			 *
+			 * @example <caption>Extend licenses settings for Site Health.</caption>
+			 * function um_licenses_site_health( $license_settings ) {
+			 *     // your code here
+			 *     return $license_settings;
+			 * }
+			 * add_filter( 'um_licenses_site_health', 'um_licenses_site_health', 10, 1 );
+			 */
+			$license_settings = apply_filters( 'um_licenses_site_health', array() );
+
+			$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $pages_settings, $user_settings, $account_settings, $uploads_settings, $restrict_settings, $access_other_settings, $email_settings, $misc_settings, $appearance_settings, $license_settings );
 
 			return $info;
 		}
