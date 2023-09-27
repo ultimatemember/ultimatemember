@@ -743,9 +743,53 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 				'value' => UM()->options()->get( 'login_show_rememberme' ) ? $labels['yes'] : $labels['no'],
 			);
 
+			// Misc settings
+			$misc_settings = array(
+				'um-form_asterisk'                   => array(
+					'label' => __( 'Show an asterisk for required fields', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'form_asterisk' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-profile_title'                   => array(
+					'label' => __( 'User Profile Title', 'ultimate-member' ),
+					'value' => stripslashes( UM()->options()->get( 'profile_title' ) ),
+				),
+				'um-profile_desc'                    => array(
+					'label' => __( 'User Profile Dynamic Meta Description', 'ultimate-member' ),
+					'value' => stripslashes( UM()->options()->get( 'profile_desc' ) ),
+				),
+				'um-um_profile_object_cache_stop'    => array(
+					'label' => __( 'Disable Cache User Profile', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'um_profile_object_cache_stop' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-enable_blocks'                   => array(
+					'label' => __( 'Enable Gutenberg Blocks', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'enable_blocks' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-rest_api_version'                => array(
+					'label' => __( 'REST API version', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'rest_api_version' ),
+				),
+				'um-disable_restriction_pre_queries' => array(
+					'label' => __( 'Disable pre-queries for restriction content logic (advanced)', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'disable_restriction_pre_queries' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-member_directory_own_table'      => array(
+					'label' => __( 'Enable custom table for usermeta', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'member_directory_own_table' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-uninstall_on_delete'             => array(
+					'label' => __( 'Remove Data on Uninstall?', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'uninstall_on_delete' ) ? $labels['yes'] : $labels['no'],
+				),
+			);
 
-			$misc_settings = array();
-
+			// Licenses settings
+			$license_settings = array(
+				'um-licenses' => array(
+					'label' => __( 'Licenses', 'ultimate-member' ),
+					'value' => array(),
+				),
+			);
 
 			/**
 			 * Filters licenses settings for Site Health.
@@ -764,9 +808,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 			 * }
 			 * add_filter( 'um_licenses_site_health', 'um_licenses_site_health', 10, 1 );
 			 */
-			$license_settings = apply_filters( 'um_licenses_site_health', array() );
+			$license_settings = apply_filters( 'um_licenses_site_health', $license_settings );
 
-			$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $pages_settings, $user_settings, $account_settings, $uploads_settings, $restrict_settings, $access_other_settings, $email_settings, $misc_settings, $appearance_settings, $license_settings );
+			$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $pages_settings, $user_settings, $account_settings, $uploads_settings, $restrict_settings, $access_other_settings, $email_settings, $appearance_settings, $license_settings, $misc_settings );
 
 			return $info;
 		}
