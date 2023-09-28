@@ -20,6 +20,54 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 			add_filter( 'debug_information', array( $this, 'debug_information' ), 20, 1 );
 		}
 
+		private function get_roles() {
+			return UM()->roles()->get_roles();
+		}
+
+
+		private function get_forms() {
+			$forms_data = get_posts( array( 'post_type' => 'um_form', 'posts_per_page' => -1 ) );
+			$forms = array();
+			foreach ( $forms_data as $form ) {
+				$forms[ 'ID#' . $form->ID ] = $form->post_title;
+			}
+			return $forms;
+		}
+
+
+		private function get_role_meta( $key ) {
+			return get_option( "um_role_{$key}_meta", false );
+		}
+
+
+		private function get_active_modules() {
+			$modules = UM()->modules()->get_list();
+			$active_modules = array();
+			if ( ! empty( $modules ) ) {
+				foreach ( $modules as $slug => $data ) {
+					if ( UM()->modules()->is_active( $slug ) ) {
+						$active_modules[ $slug ] = $data['title'];
+					}
+				}
+			}
+
+			return apply_filters( 'um_debug_information_active_modules', $active_modules );
+		}
+
+
+		private function get_field_data( $info, $key, $field_key, $field ) {
+			$row   = isset( $field['metakey'] ) ? false : true;
+			$title = $row ? __( 'Row: ', 'ultimate-member' ) . $field['id'] : __( 'Field: ', 'ultimate-member' ) . $field['metakey'];
+			$field_info = array(
+				'um-field_'.$field_key => array(
+					'label' => $title,
+					'value' => $field,
+				),
+			);
+
+			return $field_info;
+		}
+
 		/**
 		 * Add our data to Site Health information.
 		 *
@@ -822,7 +870,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 			}
 
 			$secure_allowed_redirect_hosts = UM()->options()->get( 'secure_allowed_redirect_hosts' );
-			$secure_allowed_redirect_hosts = explode(PHP_EOL, $secure_allowed_redirect_hosts );
+			$secure_allowed_redirect_hosts = explode( PHP_EOL, $secure_allowed_redirect_hosts );
 
 			$secure_settings['um-secure_allowed_redirect_hosts'] = array(
 				'label' => __( 'Allowed hosts for safe redirect', 'ultimate-member' ),
@@ -857,6 +905,512 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 			$license_settings = apply_filters( 'um_licenses_site_health', $license_settings );
 
 			$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $pages_settings, $user_settings, $account_settings, $uploads_settings, $restrict_settings, $access_other_settings, $email_settings, $appearance_settings, $license_settings, $misc_settings, $secure_settings );
+
+
+			// User roles settings
+			$roles_array = array();
+			foreach ( $this->get_roles() as $key => $role ) {
+				if ( strpos( $key, 'um_' ) === 0 ) {
+					$key = substr( $key, 3 );
+				}
+				$rolemeta = $this->get_role_meta( $key );
+				if ( false === $rolemeta ) {
+					continue;
+				}
+				$priority = ! empty( $rolemeta['_um_priority'] ) ? $rolemeta['_um_priority'] : 0;
+
+				$k = $priority . '-' . $role;
+				$roles_array[ $k ] =  $role . '(' . $priority . ')';
+			}
+
+			krsort($roles_array, SORT_NUMERIC);
+
+			$info['ultimate-member-user-roles'] = array(
+				'label'       => __( 'User roles', 'ultimate-member' ),
+				'description' => __( 'This debug information about user roles.', 'ultimate-member' ),
+				'fields'      => array(
+					'um-roles'         => array(
+						'label' => __( 'User Roles (priority)', 'ultimate-member' ),
+						'value' => implode(', ', $roles_array ),
+					),
+					'um-register_role' => array(
+						'label' => __( 'Default New User Role', 'ultimate-member' ),
+						'value' => get_option( 'default_role' ),
+					),
+				),
+			);
+
+			foreach ( $this->get_roles() as $key => $role ) {
+				if ( strpos( $key, 'um_' ) === 0 ) {
+					$key = substr( $key, 3 );
+				}
+
+				$rolemeta = $this->get_role_meta( $key );
+				if ( false === $rolemeta ) {
+					continue;
+				}
+
+				$info[ 'ultimate-member-' . $key ] = array(
+					'label'       => ' - ' . $role . __( ' role settings', 'ultimate-member' ),
+					'description' => __( 'This debug information about user role.', 'ultimate-member' ),
+					'fields'      => array(),
+				);
+
+				if ( array_key_exists( '_um_can_access_wpadmin', $rolemeta ) ) {
+					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-' . $key ]['fields'],
+						array(
+							'um-can_access_wpadmin' => array(
+								'label' => __( 'Can access wp-admin?', 'ultimate-member' ),
+								'value' => $rolemeta['_um_can_access_wpadmin'] ? $labels['yes'] : $labels['no'],
+							),
+						)
+					);
+				}
+
+				if ( array_key_exists( '_um_can_not_see_adminbar', $rolemeta ) ) {
+					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-' . $key ]['fields'],
+						array(
+							'um-can_not_see_adminbar' => array(
+								'label' => __( 'Force hiding adminbar in frontend?', 'ultimate-member' ),
+								'value' => $rolemeta['_um_can_not_see_adminbar'] ? $labels['yes'] : $labels['no'],
+							),
+						)
+					);
+				}
+
+				if ( array_key_exists( '_um_can_edit_everyone', $rolemeta ) ) {
+					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-' . $key ]['fields'],
+						array(
+							'um-can_edit_everyone' => array(
+								'label' => __( 'Can edit other member accounts?', 'ultimate-member' ),
+								'value' => $rolemeta['_um_can_edit_everyone'] ? $labels['yes'] : $labels['no'],
+							),
+						)
+					);
+				}
+
+				if ( array_key_exists( '_um_can_edit_everyone', $rolemeta ) && 1 === absint( $rolemeta['_um_can_edit_everyone'] ) ) {
+					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-' . $key ]['fields'],
+						array(
+							'um-can_edit_roles' => array(
+								'label' => __( 'Can edit these user roles only', 'ultimate-member' ),
+								'value' => ! empty( $rolemeta['_um_can_edit_roles'] ) ? implode( ', ', $rolemeta['_um_can_edit_roles'] ) : $labels['all'],
+							),
+						)
+					);
+				}
+
+				if ( array_key_exists( '_um_can_delete_everyone', $rolemeta ) ) {
+					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-' . $key ]['fields'],
+						array(
+							'um-can_delete_everyone' => array(
+								'label' => __( 'Can delete other member accounts?', 'ultimate-member' ),
+								'value' => $rolemeta['_um_can_delete_everyone'] ? $labels['yes'] : $labels['no'],
+							),
+						)
+					);
+				}
+
+				if ( array_key_exists( '_um_can_delete_everyone', $rolemeta ) && 1 === absint( $rolemeta['_um_can_delete_everyone'] ) ) {
+					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-' . $key ]['fields'],
+						array(
+							'um-can_delete_roles' => array(
+								'label' => __( 'Can delete these user roles only', 'ultimate-member' ),
+								'value' => ! empty( $rolemeta['_um_can_delete_roles'] ) ? implode( ', ', $rolemeta['_um_can_delete_roles'] ) : $labels['all'],
+							),
+						)
+					);
+				}
+
+				if ( array_key_exists( '_um_can_edit_profile', $rolemeta ) ) {
+					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-' . $key ]['fields'],
+						array(
+							'um-can_edit_profile' => array(
+								'label' => __( 'Can edit their profile?', 'ultimate-member' ),
+								'value' => $rolemeta['_um_can_edit_profile'] ? $labels['yes'] : $labels['no'],
+							),
+						)
+					);
+				}
+
+				if ( array_key_exists( '_um_can_delete_profile', $rolemeta ) ) {
+					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-' . $key ]['fields'],
+						array(
+							'um-can_delete_profile' => array(
+								'label' => __( 'Can delete their account?', 'ultimate-member' ),
+								'value' => $rolemeta['_um_can_delete_profile'] ? $labels['yes'] : $labels['no'],
+							),
+						)
+					);
+				}
+
+				if ( array_key_exists( '_um_can_view_all', $rolemeta ) ) {
+					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-' . $key ]['fields'],
+						array(
+							'um-can_view_all' => array(
+								'label' => __( 'Can view other member profiles?', 'ultimate-member' ),
+								'value' => $rolemeta['_um_can_view_all'] ? $labels['yes'] : $labels['no'],
+							),
+						)
+					);
+				}
+
+				if ( array_key_exists( '_um_can_view_all', $rolemeta ) && 1 === absint( $rolemeta['_um_can_view_all'] ) ) {
+					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-' . $key ]['fields'],
+						array(
+							'um-can_view_roles' => array(
+								'label' => __( 'Can view these user roles only', 'ultimate-member' ),
+								'value' => ! empty( $rolemeta['_um_can_view_roles'] ) ? implode( ', ', $rolemeta['_um_can_view_roles'] ) : $labels['all'],
+							),
+						)
+					);
+				}
+
+				if ( isset( $rolemeta['_um_profile_noindex'] ) && '' !== $rolemeta['_um_profile_noindex'] ) {
+					$profile_noindex = $rolemeta['_um_profile_noindex'] ? $labels['yes'] : $labels['no'];
+				} else {
+					$profile_noindex = __( 'Default', 'ultimate-member' );
+				}
+				if ( isset( $rolemeta['_um_default_homepage'] ) && '' !== $rolemeta['_um_default_homepage'] ) {
+					$default_homepage = $rolemeta['_um_default_homepage'] ? $labels['yes'] : $labels['no'];
+				} else {
+					$default_homepage = __( 'No such option', 'ultimate-member' );
+				}
+
+				if ( array_key_exists( '_um_can_make_private_profile', $rolemeta ) ) {
+					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-' . $key ]['fields'],
+						array(
+							'um-can_make_private_profile' => array(
+								'label' => __( 'Can make their profile private?', 'ultimate-member' ),
+								'value' => $rolemeta['_um_can_make_private_profile'] ? $labels['yes'] : $labels['no'],
+							),
+						)
+					);
+				}
+
+				if ( array_key_exists( '_um_can_access_private_profile', $rolemeta ) ) {
+					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-' . $key ]['fields'],
+						array(
+							'um-can_access_private_profile' => array(
+								'label' => __( 'Can view/access private profiles?', 'ultimate-member' ),
+								'value' => $rolemeta['_um_can_access_private_profile'] ? $labels['yes'] : $labels['no'],
+							),
+						)
+					);
+				}
+
+				$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+					$info[ 'ultimate-member-' . $key ]['fields'],
+					array(
+						'um-profile_noindex'  => array(
+							'label' => __( 'Avoid indexing profile by search engines', 'ultimate-member' ),
+							'value' => $profile_noindex,
+						),
+						'um-default_homepage' => array(
+							'label' => __( 'Can view default homepage?', 'ultimate-member' ),
+							'value' => $default_homepage,
+						),
+					)
+				);
+
+				if ( isset( $rolemeta['_um_default_homepage'] ) && 0 === absint( $rolemeta['_um_default_homepage'] ) ) {
+					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-' . $key ]['fields'],
+						array(
+							'um-redirect_homepage' => array(
+								'label' => __( 'Custom Homepage Redirect', 'ultimate-member' ),
+								'value' => $rolemeta['_um_redirect_homepage'],
+							),
+						)
+					);
+				}
+
+				$status_options = array(
+					'approved'  => __( 'Auto Approve', 'ultimate-member' ),
+					'checkmail' => __( 'Require Email Activation', 'ultimate-member' ),
+					'pending'   => __( 'Require Admin Review', 'ultimate-member' ),
+				);
+
+				if ( array_key_exists( '_um_status', $rolemeta ) && isset( $status_options[ $rolemeta['_um_status'] ] ) ) {
+					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-' . $key ]['fields'],
+						array(
+							'um-status' => array(
+								'label' => __( 'Registration Status', 'ultimate-member' ),
+								'value' => $status_options[ $rolemeta['_um_status'] ],
+							),
+						)
+					);
+				}
+
+				if ( array_key_exists( '_um_status', $rolemeta ) && 'approved' === $rolemeta['_um_status'] ) {
+					$auto_approve_act = array(
+						'redirect_profile' => __( 'Redirect to profile', 'ultimate-member' ),
+						'redirect_url'     => __( 'Redirect to URL', 'ultimate-member' ),
+					);
+
+					if ( isset( $auto_approve_act[ $rolemeta['_um_auto_approve_act'] ] ) ) {
+						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-' . $key ]['fields'],
+							array(
+								'um-auto_approve_act' => array(
+									'label' => __( 'Custom Homepage Redirect', 'ultimate-member' ),
+									'value' => $auto_approve_act[ $rolemeta['_um_auto_approve_act'] ],
+								),
+							)
+						);
+					}
+
+					if ( 'redirect_url' === $rolemeta['_um_auto_approve_act'] && array_key_exists( '_um_auto_approve_url', $rolemeta ) ) {
+						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-' . $key ]['fields'],
+							array(
+								'um-auto_approve_url' => array(
+									'label' => __( 'Set Custom Redirect URL', 'ultimate-member' ),
+									'value' => $rolemeta['_um_auto_approve_url'],
+								),
+							)
+						);
+					}
+				}
+
+				if ( array_key_exists( '_um_status', $rolemeta ) && 'checkmail' === $rolemeta['_um_status'] ) {
+					$checkmail_action = array(
+						'show_message' => __( 'Show custom message', 'ultimate-member' ),
+						'redirect_url' => __( 'Redirect to URL', 'ultimate-member' ),
+					);
+
+					if ( array_key_exists( '_um_login_email_activate', $rolemeta ) ) {
+						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-' . $key ]['fields'],
+							array(
+								'um-login_email_activate' => array(
+									'label' => __( 'Login user after validating the activation link?', 'ultimate-member' ),
+									'value' => $rolemeta['_um_login_email_activate'] ? $labels['yes'] : $labels['no'],
+								),
+							)
+						);
+					}
+
+					if ( isset( $checkmail_action[ $rolemeta['_um_checkmail_action'] ] ) ) {
+						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-' . $key ]['fields'],
+							array(
+								'um-checkmail_action' => array(
+									'label' => __( 'Action to be taken after registration', 'ultimate-member' ),
+									'value' => $checkmail_action[ $rolemeta['_um_checkmail_action'] ],
+								),
+							)
+						);
+					}
+
+					if ( 'show_message' === $rolemeta['_um_checkmail_action'] ) {
+						if ( array_key_exists( '_um_checkmail_message', $rolemeta ) ) {
+							$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+								$info[ 'ultimate-member-' . $key ]['fields'],
+								array(
+									'um-checkmail_message' => array(
+										'label' => __( 'Personalize the custom message', 'ultimate-member' ),
+										'value' => stripslashes( $rolemeta['_um_checkmail_message'] ),
+									),
+								)
+							);
+						}
+					} else {
+						if ( array_key_exists( '_um_checkmail_url', $rolemeta ) ) {
+							$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+								$info[ 'ultimate-member-' . $key ]['fields'],
+								array(
+									'um-checkmail_url' => array(
+										'label' => __( 'Set Custom Redirect URL', 'ultimate-member' ),
+										'value' => $rolemeta['_um_checkmail_url'],
+									),
+								)
+							);
+						}
+					}
+
+					if ( array_key_exists( '_um_url_email_activate', $rolemeta ) ) {
+						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-' . $key ]['fields'],
+							array(
+								'um-url_email_activate' => array(
+									'label' => __( 'URL redirect after e-mail activation', 'ultimate-member' ),
+									'value' => $rolemeta['_um_url_email_activate'],
+								),
+							)
+						);
+					}
+				}
+
+				if ( array_key_exists( '_um_status', $rolemeta ) && 'pending' === $rolemeta['_um_status'] ) {
+					$pending_action = array(
+						'show_message' => __( 'Show custom message', 'ultimate-member' ),
+						'redirect_url' => __( 'Redirect to URL', 'ultimate-member' ),
+					);
+
+					if ( array_key_exists( '_um_pending_action', $rolemeta ) ) {
+						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-' . $key ]['fields'],
+							array(
+								'um-pending_action' => array(
+									'label' => __( 'Action to be taken after registration', 'ultimate-member' ),
+									'value' => $pending_action[ $rolemeta['_um_pending_action'] ],
+								),
+							)
+						);
+					}
+
+					if ( 'show_message' === $rolemeta['_um_pending_action'] ) {
+						if ( array_key_exists( '_um_pending_message', $rolemeta ) ) {
+							$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+								$info[ 'ultimate-member-' . $key ]['fields'],
+								array(
+									'um-pending_message' => array(
+										'label' => __( 'Personalize the custom message', 'ultimate-member' ),
+										'value' => stripslashes( $rolemeta['_um_pending_message'] ),
+									),
+								)
+							);
+						}
+					} else {
+						if ( array_key_exists( '_um_pending_url', $rolemeta ) ) {
+							$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+								$info[ 'ultimate-member-' . $key ]['fields'],
+								array(
+									'um-pending_url' => array(
+										'label' => __( 'Set Custom Redirect URL', 'ultimate-member' ),
+										'value' => $rolemeta['_um_pending_url'],
+									),
+								)
+							);
+						}
+					}
+				}
+
+				$after_login_options = array(
+					'redirect_profile' => __( 'Redirect to profile', 'ultimate-member' ),
+					'redirect_url'     => __( 'Redirect to URL', 'ultimate-member' ),
+					'refresh'          => __( 'Refresh active page', 'ultimate-member' ),
+					'redirect_admin'   => __( 'Redirect to WordPress Admin', 'ultimate-member' ),
+				);
+
+				if (  array_key_exists( '_um_after_login', $rolemeta ) && isset( $after_login_options[ $rolemeta['_um_after_login'] ] ) ) {
+					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-' . $key ]['fields'],
+						array(
+							'um-after_login' => array(
+								'label' => __( 'Action to be taken after login', 'ultimate-member' ),
+								'value' => $after_login_options[ $rolemeta['_um_after_login'] ],
+							),
+						)
+					);
+				}
+
+				if ( array_key_exists( '_um_login_redirect_url', $rolemeta ) && 'redirect_url' === $rolemeta['_um_login_redirect_url'] ) {
+					if ( array_key_exists( '_um_pending_url', $rolemeta ) ) {
+						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-' . $key ]['fields'],
+							array(
+								'um-login_redirect_url' => array(
+									'label' => __( 'Set Custom Redirect URL', 'ultimate-member' ),
+									'value' => $rolemeta['_um_login_redirect_url'],
+								),
+							)
+						);
+					}
+				}
+
+				$redirect_options = array(
+					'redirect_home' => __( 'Go to Homepage', 'ultimate-member' ),
+					'redirect_url'  => __( 'Go to Custom URL', 'ultimate-member' ),
+				);
+				if ( ! isset( $rolemeta['_um_after_logout'] ) ) {
+					$rolemeta['_um_after_logout'] = 'redirect_home';
+				}
+				if ( array_key_exists( '_um_after_logout', $rolemeta ) && isset( $redirect_options[ $rolemeta['_um_after_logout'] ] ) ) {
+					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-' . $key ]['fields'],
+						array(
+							'um-after_logout' => array(
+								'label' => __( 'Action to be taken after logout', 'ultimate-member' ),
+								'value' => $redirect_options[ $rolemeta['_um_after_logout'] ],
+							),
+						)
+					);
+				}
+
+				if ( 'redirect_url' === $rolemeta['_um_after_logout'] ) {
+					if ( array_key_exists( '_um_logout_redirect_url', $rolemeta ) ) {
+						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-' . $key ]['fields'],
+							array(
+								'um-logout_redirect_url' => array(
+									'label' => __( 'Set Custom Redirect URL', 'ultimate-member' ),
+									'value' => $rolemeta['_um_logout_redirect_url'],
+								),
+							)
+						);
+					}
+				}
+
+				if ( ! isset( $rolemeta['_um_after_delete'] ) ) {
+					$rolemeta['_um_after_delete'] = 'redirect_home';
+				}
+				if ( array_key_exists( '_um_after_delete', $rolemeta ) && isset( $redirect_options[ $rolemeta['_um_after_delete'] ] ) ) {
+					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+						$info[ 'ultimate-member-' . $key ]['fields'],
+						array(
+							'um-after_delete' => array(
+								'label' => __( 'Action to be taken after account is deleted', 'ultimate-member' ),
+								'value' => $redirect_options[ $rolemeta['_um_after_delete'] ],
+							),
+						)
+					);
+				}
+
+				if ( 'redirect_url' === $rolemeta['_um_after_delete'] ) {
+					if ( array_key_exists( '_um_delete_redirect_url', $rolemeta ) ) {
+						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-' . $key ]['fields'],
+							array(
+								'um-delete_redirect_url' => array(
+									'label' => __( 'Set Custom Redirect URL', 'ultimate-member' ),
+									'value' => $rolemeta['_um_delete_redirect_url'],
+								),
+							)
+						);
+					}
+				}
+
+				if ( ! empty( $rolemeta['wp_capabilities'] ) ) {
+					if ( array_key_exists( 'wp_capabilities', $rolemeta ) ) {
+						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-' . $key ]['fields'],
+							array(
+								'um-wp_capabilities' => array(
+									'label' => __( 'WP Capabilities', 'ultimate-member' ),
+									'value' => $rolemeta['wp_capabilities'],
+								),
+							)
+						);
+					}
+				}
+
+				$info = apply_filters( 'um_debug_information_user_role', $info, $key );
+			}
 
 			return $info;
 		}
