@@ -783,6 +783,52 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 				),
 			);
 
+			// Secure settings
+			$secure_settings = array(
+				'um-banned_capabilities'        => array(
+					'label' => __( 'Banned Administrative Capabilities', 'ultimate-member' ),
+					'value' => implode(', ', UM()->options()->get( 'banned_capabilities' ) ),
+				),
+				'um-lock_register_forms'        => array(
+					'label' => __( 'Lock All Register Forms', 'ultimate-member' ),
+					'value' => stripslashes( UM()->options()->get( 'lock_register_forms' ) ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-display_login_form_notice'  => array(
+					'label' => __( 'Display Login form notice to reset passwords', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'display_login_form_notice' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-secure_ban_admins_accounts' => array(
+					'label' => __( 'Enable ban for administrative capabilities', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'secure_ban_admins_accounts' ) ? $labels['yes'] : $labels['no'],
+				),
+			);
+			if ( 1 === absint( UM()->options()->get( 'secure_ban_admins_accounts' ) ) ) {
+				$secure_settings['um-secure_notify_admins_banned_accounts'] = array(
+					'label' => __( 'Notify Administrators', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'secure_notify_admins_banned_accounts' ) ? $labels['yes'] : $labels['no'],
+				);
+				if ( 1 === absint( UM()->options()->get( 'secure_notify_admins_banned_accounts' ) ) ) {
+					$secure_notify_admins_banned_accounts_options = array(
+						'instant' => __( 'Send Immediately', 'ultimate-member' ),
+						'hourly'  => __( 'Hourly', 'ultimate-member' ),
+						'daily'   => __( 'Daily', 'ultimate-member' ),
+					);
+
+					$secure_settings['um-secure_notify_admins_banned_accounts__interval'] = array(
+						'label' => __( 'Notification Schedule', 'ultimate-member' ),
+						'value' => $secure_notify_admins_banned_accounts_options[ UM()->options()->get( 'secure_notify_admins_banned_accounts__interval' ) ],
+					);
+				}
+			}
+
+			$secure_allowed_redirect_hosts = UM()->options()->get( 'secure_allowed_redirect_hosts' );
+			$secure_allowed_redirect_hosts = explode(PHP_EOL, $secure_allowed_redirect_hosts );
+
+			$secure_settings['um-secure_allowed_redirect_hosts'] = array(
+				'label' => __( 'Allowed hosts for safe redirect', 'ultimate-member' ),
+				'value' => $secure_allowed_redirect_hosts,
+			);
+
 			// Licenses settings
 			$license_settings = array(
 				'um-licenses' => array(
@@ -810,7 +856,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 			 */
 			$license_settings = apply_filters( 'um_licenses_site_health', $license_settings );
 
-			$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $pages_settings, $user_settings, $account_settings, $uploads_settings, $restrict_settings, $access_other_settings, $email_settings, $appearance_settings, $license_settings, $misc_settings );
+			$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $pages_settings, $user_settings, $account_settings, $uploads_settings, $restrict_settings, $access_other_settings, $email_settings, $appearance_settings, $license_settings, $misc_settings, $secure_settings );
 
 			return $info;
 		}
