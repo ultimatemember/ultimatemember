@@ -583,7 +583,6 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->admin_navmenu();
 				$this->plugin_updater();
 				$this->theme_updater();
-				$this->site_health();
 			} elseif ( $this->is_request( 'frontend' ) ) {
 				$this->frontend()->includes();
 				$this->account();
@@ -780,19 +779,6 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 			return $this->classes['theme_updater'];
 		}
-
-
-		/**
-		 * @since 2.0.45
-		 * @return um\admin\core\Admin_Site_Health()
-		 */
-		public function site_health() {
-			if ( empty( $this->classes['site_health'] ) ) {
-				$this->classes['site_health'] = new um\admin\core\Admin_Site_Health();
-			}
-			return $this->classes['site_health'];
-		}
-
 
 		/**
 		 * @since 2.0
