@@ -39,22 +39,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 			return get_option( "um_role_{$key}_meta", false );
 		}
 
-
-		private function get_active_modules() {
-			$modules = UM()->modules()->get_list();
-			$active_modules = array();
-			if ( ! empty( $modules ) ) {
-				foreach ( $modules as $slug => $data ) {
-					if ( UM()->modules()->is_active( $slug ) ) {
-						$active_modules[ $slug ] = $data['title'];
-					}
-				}
-			}
-
-			return apply_filters( 'um_debug_information_active_modules', $active_modules );
-		}
-
-
 		private function get_field_data( $info, $key, $field_key, $field ) {
 			$row   = isset( $field['metakey'] ) ? false : true;
 			$title = $row ? __( 'Row: ', 'ultimate-member' ) . $field['id'] : __( 'Field: ', 'ultimate-member' ) . $field['metakey'];
@@ -835,7 +819,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 			$secure_settings = array(
 				'um-banned_capabilities'        => array(
 					'label' => __( 'Banned Administrative Capabilities', 'ultimate-member' ),
-					'value' => implode(', ', UM()->options()->get( 'banned_capabilities' ) ),
+					'value' => implode( ', ', UM()->options()->get( 'banned_capabilities' ) ),
 				),
 				'um-lock_register_forms'        => array(
 					'label' => __( 'Lock All Register Forms', 'ultimate-member' ),
@@ -906,7 +890,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 
 			$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $pages_settings, $user_settings, $account_settings, $uploads_settings, $restrict_settings, $access_other_settings, $email_settings, $appearance_settings, $license_settings, $misc_settings, $secure_settings );
 
-
 			// User roles settings
 			$roles_array = array();
 			foreach ( $this->get_roles() as $key => $role ) {
@@ -919,11 +902,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 				}
 				$priority = ! empty( $rolemeta['_um_priority'] ) ? $rolemeta['_um_priority'] : 0;
 
-				$k = $priority . '-' . $role;
-				$roles_array[ $k ] =  $role . '(' . $priority . ')';
+				$k                 = $priority . '-' . $role;
+				$roles_array[ $k ] = $role . '(' . $priority . ')';
 			}
 
-			krsort($roles_array, SORT_NUMERIC);
+			krsort( $roles_array, SORT_NUMERIC );
 
 			$info['ultimate-member-user-roles'] = array(
 				'label'       => __( 'User roles', 'ultimate-member' ),
@@ -931,7 +914,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 				'fields'      => array(
 					'um-roles'         => array(
 						'label' => __( 'User Roles (priority)', 'ultimate-member' ),
-						'value' => implode(', ', $roles_array ),
+						'value' => implode( ', ', $roles_array ),
 					),
 					'um-register_role' => array(
 						'label' => __( 'Default New User Role', 'ultimate-member' ),
@@ -1307,7 +1290,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 					'redirect_admin'   => __( 'Redirect to WordPress Admin', 'ultimate-member' ),
 				);
 
-				if (  array_key_exists( '_um_after_login', $rolemeta ) && isset( $after_login_options[ $rolemeta['_um_after_login'] ] ) ) {
+				if ( array_key_exists( '_um_after_login', $rolemeta ) && isset( $after_login_options[ $rolemeta['_um_after_login'] ] ) ) {
 					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
 						$info[ 'ultimate-member-' . $key ]['fields'],
 						array(
@@ -1430,7 +1413,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 						$key = substr( $key, 3 );
 					}
 
-					$info['ultimate-member-' . $key ] = array(
+					$info[ 'ultimate-member-' . $key ] = array(
 						'label'       => ' - ' . $form . __( ' form settings', 'ultimate-member' ),
 						'description' => __( 'This debug information for your Ultimate Member form.', 'ultimate-member' ),
 						'fields'      => array(
@@ -1438,24 +1421,24 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 								'label' => __( 'Shortcode', 'ultimate-member' ),
 								'value' => '[ultimatemember form_id="' . $key . '"]',
 							),
-							'um-mode' => array(
+							'um-mode'           => array(
 								'label' => __( 'Type', 'ultimate-member' ),
 								'value' => get_post_meta( $key, '_um_mode', true ),
 							),
 						),
 					);
 
-					if ( 'register' == get_post_meta( $key, '_um_mode', true ) ) {
-						$info['ultimate-member-' . $key ]['fields'] = array_merge(
-							$info['ultimate-member-' . $key ]['fields'],
+					if ( 'register' === get_post_meta( $key, '_um_mode', true ) ) {
+						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-' . $key ]['fields'],
 							array(
-								'um-register_role' => array(
+								'um-register_role'     => array(
 									'label' => __( 'User registration role', 'ultimate-member' ),
-									'value' => 0 == get_post_meta( $key, '_um_register_role', true ) ? $labels['default'] : get_post_meta( $key, '_um_register_role', true ),
+									'value' => 0 === absint( get_post_meta( $key, '_um_register_role', true ) ) ? $labels['default'] : get_post_meta( $key, '_um_register_role', true ),
 								),
 								'um-register_template' => array(
 									'label' => __( 'Template', 'ultimate-member' ),
-									'value' => 0 == get_post_meta( $key, '_um_register_template', true ) ? $labels['default'] : get_post_meta( $key, '_um_register_template', true ),
+									'value' => 0 === absint( get_post_meta( $key, '_um_register_template', true ) ) ? $labels['default'] : get_post_meta( $key, '_um_register_template', true ),
 								),
 								'um-register_primary_btn_word' => array(
 									'label' => __( 'Primary Button Text', 'ultimate-member' ),
@@ -1468,10 +1451,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 							)
 						);
 
-						if ( 1 == get_post_meta( $key, '_um_register_use_gdpr', true ) ) {
+						if ( 1 === absint( get_post_meta( $key, '_um_register_use_gdpr', true ) ) ) {
 							$gdpr_content_id = get_post_meta( $key, '_um_register_use_gdpr_content_id', true );
-							$info['ultimate-member-' . $key ]['fields'] = array_merge(
-								$info['ultimate-member-' . $key ]['fields'],
+
+							$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+								$info[ 'ultimate-member-' . $key ]['fields'],
 								array(
 									'um-register_use_gdpr_content_id' => array(
 										'label' => __( 'Privacy policy content', 'ultimate-member' ),
@@ -1504,13 +1488,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 							foreach ( $fields as $field_key => $field ) {
 								$field_info = $this->get_field_data( $info, $key, $field_key, $field );
 
-								$info['ultimate-member-' . $key ]['fields'] = array_merge(
-									$info['ultimate-member-' . $key ]['fields'],
+								$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+									$info[ 'ultimate-member-' . $key ]['fields'],
 									$field_info
 								);
 							}
 						}
-					} elseif ( 'login' == get_post_meta( $key, '_um_mode', true ) ){
+					} elseif ( 'login' === get_post_meta( $key, '_um_mode', true ) ) {
 						$login_redirect_options = array(
 							'0'                => __( 'Default', 'ultimate-member' ),
 							'redirect_profile' => __( 'Redirect to profile', 'ultimate-member' ),
@@ -1522,12 +1506,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 						$login_after_login = get_post_meta( $key, '_um_login_after_login', true );
 						$login_after_login = '' === $login_after_login ? '0' : $login_after_login;
 
-						$info['ultimate-member-' . $key ]['fields'] = array_merge(
-							$info['ultimate-member-' . $key ]['fields'],
+						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-' . $key ]['fields'],
 							array(
-								'um-login_template' => array(
+								'um-login_template'        => array(
 									'label' => __( 'Template', 'ultimate-member' ),
-									'value' => 0 == get_post_meta( $key, '_um_login_template', true ) ? $labels['default'] : get_post_meta( $key, '_um_login_template', true ),
+									'value' => 0 === absint( get_post_meta( $key, '_um_login_template', true ) ) ? $labels['default'] : get_post_meta( $key, '_um_login_template', true ),
 								),
 								'um-login_primary_btn_word' => array(
 									'label' => __( 'Primary Button Text', 'ultimate-member' ),
@@ -1541,16 +1525,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 									'label' => __( 'Show "Remember Me"?', 'ultimate-member' ),
 									'value' => get_post_meta( $key, '_um_login_show_rememberme', true ) ? $labels['yes'] : $labels['no'],
 								),
-								'um-login_after_login' => array(
+								'um-login_after_login'     => array(
 									'label' => __( 'Redirection after Login', 'ultimate-member' ),
 									'value' => $login_redirect_options[ $login_after_login ],
 								),
 							)
 						);
 
-						if ( 'redirect_url' == get_post_meta( $key, '_um_login_after_login', true ) ) {
-							$info['ultimate-member-' . $key ]['fields'] = array_merge(
-								$info['ultimate-member-' . $key ]['fields'],
+						if ( 'redirect_url' === get_post_meta( $key, '_um_login_after_login', true ) ) {
+							$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+								$info[ 'ultimate-member-' . $key ]['fields'],
 								array(
 									'um-login_redirect_url' => array(
 										'label' => __( 'Set Custom Redirect URL', 'ultimate-member' ),
@@ -1567,23 +1551,23 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 							foreach ( $fields as $field_key => $field ) {
 								$field_info = $this->get_field_data( $info, $key, $field_key, $field );
 
-								$info['ultimate-member-' . $key ]['fields'] = array_merge(
-									$info['ultimate-member-' . $key ]['fields'],
+								$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+									$info[ 'ultimate-member-' . $key ]['fields'],
 									$field_info
 								);
 							}
 						}
-					} elseif ( 'profile' == get_post_meta( $key, '_um_mode', true ) ) {
-						$info['ultimate-member-' . $key ]['fields'] = array_merge(
-							$info['ultimate-member-' . $key ]['fields'],
+					} elseif ( 'profile' === get_post_meta( $key, '_um_mode', true ) ) {
+						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-' . $key ]['fields'],
 							array(
-								'um-profile_role' => array(
+								'um-profile_role'          => array(
 									'label' => __( 'Make this profile form role-specific', 'ultimate-member' ),
 									'value' => ! empty( get_post_meta( $key, '_um_profile_role', true ) ) ? get_post_meta( $key, '_um_profile_role', true ) : $labels['all'],
 								),
-								'um-profile_template' => array(
+								'um-profile_template'      => array(
 									'label' => __( 'Template', 'ultimate-member' ),
-									'value' => 0 == get_post_meta( $key, '_um_profile_template', true ) ? $labels['default'] : get_post_meta( $key, '_um_profile_template', true ),
+									'value' => 0 === absint( get_post_meta( $key, '_um_profile_template', true ) ) ? $labels['default'] : get_post_meta( $key, '_um_profile_template', true ),
 								),
 								'um-profile_primary_btn_word' => array(
 									'label' => __( 'Primary Button Text', 'ultimate-member' ),
@@ -1600,9 +1584,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 							)
 						);
 
-						if ( 0 == get_post_meta( $key, '_um_profile_disable_photo_upload', true ) ) {
-							$info['ultimate-member-' . $key ]['fields'] = array_merge(
-								$info['ultimate-member-' . $key ]['fields'],
+						if ( 0 === absint( get_post_meta( $key, '_um_profile_disable_photo_upload', true ) ) ) {
+							$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+								$info[ 'ultimate-member-' . $key ]['fields'],
 								array(
 									'um-profile_photo_required' => array(
 										'label' => __( 'Make Profile Photo Required', 'ultimate-member' ),
@@ -1612,8 +1596,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 							);
 						}
 
-						$info['ultimate-member-' . $key ]['fields'] = array_merge(
-							$info['ultimate-member-' . $key ]['fields'],
+						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+							$info[ 'ultimate-member-' . $key ]['fields'],
 							array(
 								'um-profile_show_name' => array(
 									'label' => __( 'Show display name in profile header?', 'ultimate-member' ),
@@ -1623,18 +1607,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 									'label' => __( 'Show social links in profile header?', 'ultimate-member' ),
 									'value' => get_post_meta( $key, '_um_profile_show_social_links', true ) ? $labels['yes'] : $labels['no'],
 								),
-								'um-profile_show_bio' => array(
+								'um-profile_show_bio'  => array(
 									'label' => __( 'Show user description in profile header?', 'ultimate-member' ),
 									'value' => get_post_meta( $key, '_um_profile_show_bio', true ) ? $labels['yes'] : $labels['no'],
 								),
-								'um-profile_menu' => array(
+								'um-profile_menu'      => array(
 									'label' => __( 'Enable profile menu', 'ultimate-member' ),
 									'value' => get_post_meta( $key, '_um_profile_menu', true ) ? $labels['yes'] : $labels['no'],
 								),
 							)
 						);
 
-						if ( 1 == get_post_meta( $key, '_um_profile_menu', true ) ) {
+						if ( 1 === absint( get_post_meta( $key, '_um_profile_menu', true ) ) ) {
 							$tab_options = array(
 								0 => __( 'Anyone', 'ultimate-member' ),
 								1 => __( 'Guests only', 'ultimate-member' ),
@@ -1649,8 +1633,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 
 							foreach ( $tabs as $k => $tab ) {
 								$profile_tab = get_post_meta( $key, '_um_profile_tab_' . $k, true );
-								$info['ultimate-member-' . $key ]['fields'] = array_merge(
-									$info['ultimate-member-' . $key ]['fields'],
+
+								$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+									$info[ 'ultimate-member-' . $key ]['fields'],
 									array(
 										'um-profile_tab_' . $k => array(
 											'label' => $tab['name'] . __( ' Tab', 'ultimate-member' ),
@@ -1659,12 +1644,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 									)
 								);
 
-								if ( isset( $profile_tab ) && 1 == $profile_tab ) {
+								if ( isset( $profile_tab ) && 1 === absint( $profile_tab ) ) {
 									$tabs_for_count++;
-									$privacy = '_um_profile_tab_' . $k . '_privacy';
+									$privacy     = '_um_profile_tab_' . $k . '_privacy';
 									$tab_privacy = get_post_meta( $key, $privacy, true );
-									$info['ultimate-member-' . $key ]['fields'] = array_merge(
-										$info['ultimate-member-' . $key ]['fields'],
+
+									$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+										$info[ 'ultimate-member-' . $key ]['fields'],
 										array(
 											'um-profile_tab_' . $k . '_privacy' => array(
 												'label' => __( 'Who can see ', 'ultimate-member' ) . $tab['name'] . __( ' Tab?', 'ultimate-member' ),
@@ -1673,15 +1659,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 										)
 									);
 
-									if ( 4 == $tab_privacy || 5 == $tab_privacy ) {
+									if ( 4 === absint( $tab_privacy ) || 5 === absint( $tab_privacy ) ) {
 										$allowed_tab = '_um_profile_tab_' . $k . '_roles';
 										if ( ! empty( get_post_meta( $key, $allowed_tab, true ) ) ) {
-											$allowed_roles = implode(', ', get_post_meta( $key, $allowed_tab, true ) );
+											$allowed_roles = implode( ', ', get_post_meta( $key, $allowed_tab, true ) );
 										} else {
 											$allowed_roles = 'All';
 										}
-										$info['ultimate-member-' . $key ]['fields'] = array_merge(
-											$info['ultimate-member-' . $key ]['fields'],
+										$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+											$info[ 'ultimate-member-' . $key ]['fields'],
 											array(
 												'um-profile_tab_' . $k . '_privacy_roles' => array(
 													'label' => __( 'Allowed roles for ', 'ultimate-member' ) . $tab['name'] . __( ' Tab', 'ultimate-member' ),
@@ -1694,8 +1680,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 							}
 
 							if ( $tabs_for_count > 0 ) {
-								$info['ultimate-member-' . $key ]['fields'] = array_merge(
-									$info['ultimate-member-' . $key ]['fields'],
+								$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+									$info[ 'ultimate-member-' . $key ]['fields'],
 									array(
 										'um-profile_menu_default_tab' => array(
 											'label' => __( 'Profile menu default tab', 'ultimate-member' ),
@@ -1705,8 +1691,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 								);
 							}
 
-							$info['ultimate-member-' . $key ]['fields'] = array_merge(
-								$info['ultimate-member-' . $key ]['fields'],
+							$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+								$info[ 'ultimate-member-' . $key ]['fields'],
 								array(
 									'um-profile_menu_icons' => array(
 										'label' => __( 'Enable menu icons in desktop view', 'ultimate-member' ),
@@ -1723,8 +1709,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 							foreach ( $fields as $field_key => $field ) {
 								$field_info = $this->get_field_data( $info, $key, $field_key, $field );
 
-								$info['ultimate-member-' . $key ]['fields'] = array_merge(
-									$info['ultimate-member-' . $key ]['fields'],
+								$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+									$info[ 'ultimate-member-' . $key ]['fields'],
 									$field_info
 								);
 							}
@@ -1733,8 +1719,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 						$profile_metafields = get_post_meta( $key, '_um_profile_metafields', true );
 						if ( ! empty( $profile_metafields ) ) {
 							foreach ( $profile_metafields as $k => $field ) {
-								$info['ultimate-member-' . $key ]['fields'] = array_merge(
-									$info['ultimate-member-' . $key ]['fields'],
+								$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
+									$info[ 'ultimate-member-' . $key ]['fields'],
 									array(
 										'um-profile_metafields-' . $k => array(
 											'label' => __( 'Field to show in user meta', 'ultimate-member' ),
@@ -1747,6 +1733,33 @@ if ( ! class_exists( 'um\admin\core\Admin_Site_Health' ) ) {
 					}
 				}
 			}
+
+			$plugins        = get_plugins();
+			$active_plugins = get_option( 'active_plugins', array() );
+			$active_exts    =  array();
+
+			foreach ( $plugins as $plugin_path => $plugin ) {
+				if ( strpos( $plugin_path, 'um-' ) === false ) {
+
+					continue;
+				}
+				if ( ! in_array( $plugin_path, $active_plugins ) ) {
+					continue;
+				}
+				$name = str_replace('Ultimate Member -', '', $plugin['Name'] );
+				$active_exts[] = $name . ': ' . $plugin['Version'] . "\n";
+			}
+
+			$info['ultimate-member-extensions'] = array(
+				'label'       => __( 'Ultimate Member Active Extensions', 'ultimate-member' ),
+				'description' => __( 'This debug information about active extensions.', 'ultimate-member' ),
+				'fields'      => array(
+					'um-extensions' => array(
+						'label' => __( 'Active extensions', 'ultimate-member' ),
+						'value' => $active_exts,
+					),
+				),
+			);
 
 			return $info;
 		}
