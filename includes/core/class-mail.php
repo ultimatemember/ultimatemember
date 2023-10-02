@@ -82,7 +82,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			 * @since 2.0
 			 * @hook um_email_templates_path_by_slug
 			 *
-			 * @example <caption>Extends extend email templates path.</caption>
+			 * @example <caption>Extends email templates path.</caption>
 			 * function my_email_templates_path_by_slug( $paths ) {
 			 *     // your code here
 			 *     return $paths;
@@ -172,9 +172,9 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			/**
 			 * Filters change email template location.
 			 *
-			 * @param {string} $located Template Location.
-			 * @param {string} $slug Template Key.
-			 * @param {array}  $args Template settings.
+			 * @param {string} $located Email template location.
+			 * @param {string} $slug    Email template slug.
+			 * @param {array}  $args    Email template settings.
 			 *
 			 * @return {string} email template location.
 			 *
@@ -254,10 +254,10 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 				 * Filters change email notification template header.
 				 *
 				 * @param {string} $header  Email notification header.
-				 * @param {string} $slug    Email Template Key.
-				 * @param {array}  $args    Email Template settings.
+				 * @param {string} $slug    Email template slug.
+				 * @param {array}  $args    Email template settings.
 				 *
-				 * @return {bool} Email notification header.
+				 * @return {string} Email notification header.
 				 *
 				 * @since 2.0
 				 * @hook um_email_template_html_formatting
@@ -274,8 +274,8 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 				/**
 				 * Action before email template body display.
 				 *
-				 * @param {string} $slug    Email Template Key.
-				 * @param {array}  $args    Email Template settings.
+				 * @param {string} $slug    Email template slug.
+				 * @param {array}  $args    Email template settings.
 				 *
 				 * @since 2.0
 				 * @hook um_email_template_html_formatting
@@ -292,16 +292,16 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 				 * Filters change email notification template body additional attributes.
 				 *
 				 * @param {string} $body_atts  Email notification body attributes.
-				 * @param {string} $slug       Email Template Key.
-				 * @param {array}  $args       Email Template settings.
+				 * @param {string} $slug       Email template slug.
+				 * @param {array}  $args       Email template settings.
 				 *
-				 * @return {bool} Email notification body attributes.
+				 * @return {string} Email notification body attributes.
 				 *
 				 * @since 2.0
 				 * @hook um_email_template_body_attrs
 				 *
 				 * @example <caption>Change email notification template body additional attributes.</caption>
-				 * function my_email_template_body_attrs( $header, $slug, $args ) {
+				 * function my_email_template_body_attrs( $body_atts, $slug, $args ) {
 				 *     // your code here
 				 *     return $body_atts;
 				 * }
@@ -337,21 +337,21 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			/**
 			 * Filters change email notification message content.
 			 *
-			 * @param {string} $message  Message Content.
-			 * @param {string} $slug     Template Key.
-			 * @param {array}  $args     Notification Arguments.
+			 * @param {string} $message  Message content.
+			 * @param {string} $slug     Template slug.
+			 * @param {array}  $args     Notification arguments.
 			 *
-			 * @return {bool} Message Content.
+			 * @return {string} Message Content.
 			 *
 			 * @since 2.0
 			 * @hook um_email_template_body_attrs
 			 *
 			 * @example <caption>Change email notification message content.</caption>
-			 * function my_um_email_send_message_content( $message, $slug, $args ) {
+			 * function my_email_send_message_content( $message, $slug, $args ) {
 			 *     // your code here
 			 *     return $message;
 			 * }
-			 * add_filter( 'um_email_send_message_content', 'my_um_email_send_message_content', 10, 3 );
+			 * add_filter( 'um_email_send_message_content', 'my_email_send_message_content', 10, 3 );
 			 */
 			$message = apply_filters( 'um_email_send_message_content', $message, $slug, $args );
 
@@ -391,11 +391,11 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			 * @hook um_disable_email_notification_sending
 			 *
 			 * @example <caption>Disabling email notifications programmatically.</caption>
-			 * function my_um_disable_email_notification_sending( $disabled, $email, $template, $args ) {
+			 * function my_disable_email_notification_sending( $disabled, $email, $template, $args ) {
 			 *     // your code here
 			 *     return $disabled;
 			 * }
-			 * add_filter( 'um_disable_email_notification_sending', 'my_um_disable_email_notification_sending', 10, 4 );
+			 * add_filter( 'um_disable_email_notification_sending', 'my_disable_email_notification_sending', 10, 4 );
 			 */
 			$hook_disabled = apply_filters( 'um_disable_email_notification_sending', false, $email, $template, $args );
 			if ( false !== $hook_disabled ) {
@@ -415,10 +415,10 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			/**
 			 * Filters email notification subject.
 			 *
-			 * @param {string} $subject  Email Subject.
+			 * @param {string} $subject  Email subject.
 			 * @param {string} $key      Email template key.
 			 *
-			 * @return {string} Email Subject.
+			 * @return {string} Email subject.
 			 *
 			 * @since 2.6.1
 			 * @hook um_email_send_subject
@@ -542,11 +542,11 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			 * @hook um_email_get_template_file_path
 			 *
 			 * @example <caption>Change expected path for email template in theme or plugin.</caption>
-			 * function my_um_email_get_template_file_path( $template_path, $location, $template_name_file ) {
+			 * function my_email_get_template_file_path( $template_path, $location, $template_name_file ) {
 			 *     // your code here
 			 *     return $template_path;
 			 * }
-			 * add_filter( 'um_email_get_template_file_path', 'my_um_email_get_template_file_path' );
+			 * add_filter( 'um_email_get_template_file_path', 'my_email_get_template_file_path' );
 			 */
 			return apply_filters( 'um_email_get_template_file_path', $template_path, $location, $template_name_file );
 		}
