@@ -182,11 +182,11 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			 * @hook um_email_template_path
 			 *
 			 * @example <caption>Change email template location.</caption>
-			 * function my_email_send_subject( $located, $slug, $args ) {
+			 * function my_email_template_path( $located, $slug, $args ) {
 			 *     // your code here
 			 *     return $located;
 			 * }
-			 * add_filter( 'um_email_template_path', 'my_email_send_subject', 10, 3 );
+			 * add_filter( 'um_email_template_path', 'my_email_template_path', 10, 3 );
 			 */
 			$located = apply_filters( 'um_email_template_path', $located, $slug, $args );
 
@@ -347,11 +347,11 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			 * @hook um_email_template_body_attrs
 			 *
 			 * @example <caption>Change email notification message content.</caption>
-			 * function my_email_template_body_attrs( $message, $slug, $args ) {
+			 * function my_um_email_send_message_content( $message, $slug, $args ) {
 			 *     // your code here
 			 *     return $message;
 			 * }
-			 * add_filter( 'um_email_template_body_attrs', 'my_email_template_body_attrs', 10, 3 );
+			 * add_filter( 'um_email_send_message_content', 'my_um_email_send_message_content', 10, 3 );
 			 */
 			$message = apply_filters( 'um_email_send_message_content', $message, $slug, $args );
 
