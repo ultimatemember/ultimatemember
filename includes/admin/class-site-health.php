@@ -507,7 +507,8 @@ class Site_Health {
 			}
 		}
 
-		// Appearance settings
+		// Appearance settings.
+		// > Profile section.
 		$profile_icons_options       = array(
 			'field' => __( 'Show inside text field', 'ultimate-member' ),
 			'label' => __( 'Show with label', 'ultimate-member' ),
@@ -526,6 +527,9 @@ class Site_Health {
 		$profile_templates      = UM()->shortcodes()->get_templates( 'profile' );
 		$profile_template_key   = UM()->options()->get( 'profile_template' );
 		$profile_template_title = array_key_exists( $profile_template_key, $profile_templates ) ? $profile_templates[ $profile_template_key ] : __( 'No template name', 'ultimate-member' );
+		$profile_secondary_btn  = UM()->options()->get( 'profile_secondary_btn' );
+		$profile_cover_enabled  = UM()->options()->get( 'profile_cover_enabled' );
+		$profile_empty_text     = UM()->options()->get( 'profile_empty_text' );
 
 		$appearance_settings = array(
 			'um-profile_template'         => array(
@@ -551,10 +555,10 @@ class Site_Health {
 			),
 			'um-profile_secondary_btn'    => array(
 				'label' => __( 'Profile Secondary Button', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'profile_secondary_btn' ) ? $labels['yes'] : $labels['no'],
+				'value' => $profile_secondary_btn ? $labels['yes'] : $labels['no'],
 			),
 		);
-		if ( 1 === absint( UM()->options()->get( 'profile_secondary_btn' ) ) ) {
+		if ( ! empty( $profile_secondary_btn ) ) {
 			$appearance_settings['um-profile_secondary_btn_word'] = array(
 				'label' => __( 'Profile Secondary Button Text ', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'profile_secondary_btn_word' ),
@@ -578,9 +582,9 @@ class Site_Health {
 		);
 		$appearance_settings['um-profile_cover_enabled']        = array(
 			'label' => __( 'Profile Cover Photos', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'profile_cover_enabled' ) ? $labels['yes'] : $labels['no'],
+			'value' => $profile_cover_enabled ? $labels['yes'] : $labels['no'],
 		);
-		if ( 1 === absint( UM()->options()->get( 'profile_cover_enabled' ) ) ) {
+		if ( ! empty( $profile_cover_enabled ) ) {
 			$appearance_settings['um-profile_coversize']   = array(
 				'label' => __( 'Profile Cover Size', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'profile_coversize' ) . 'px',
@@ -620,19 +624,24 @@ class Site_Health {
 		);
 		$appearance_settings['um-profile_empty_text']        = array(
 			'label' => __( 'Show a custom message if profile is empty', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'profile_empty_text' ) ? $labels['yes'] : $labels['no'],
+			'value' => $profile_empty_text ? $labels['yes'] : $labels['no'],
 		);
-		if ( 1 === absint( UM()->options()->get( 'profile_empty_text' ) ) ) {
+		if ( ! empty( $profile_empty_text ) ) {
 			$appearance_settings['um-profile_empty_text_emo'] = array(
 				'label' => __( 'Show the emoticon', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'profile_empty_text_emo' ),
+				'value' => UM()->options()->get( 'profile_empty_text_emo' ) ? $labels['yes'] : $labels['no'],
 			);
 		}
+
+		// > Profile Menu section.
+		$profile_menu = UM()->options()->get( 'profile_menu' );
+
 		$appearance_settings['um-profile_menu'] = array(
 			'label' => __( 'Enable profile menu', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'profile_menu' ) ? $labels['yes'] : $labels['no'],
+			'value' => $profile_menu ? $labels['yes'] : $labels['no'],
 		);
-		if ( 1 === absint( UM()->options()->get( 'profile_menu' ) ) ) {
+
+		if ( ! empty( $profile_menu ) ) {
 			/**
 			 * Filters a privacy list extend.
 			 *
@@ -650,47 +659,31 @@ class Site_Health {
 			 * }
 			 * add_filter( 'um_profile_tabs_privacy_list', 'um_profile_tabs_privacy_list', 10, 1 );
 			 */
-			$privacy_option = apply_filters(
-				'um_profile_tabs_privacy_list',
-				array(
-					0 => __( 'Anyone', 'ultimate-member' ),
-					1 => __( 'Guests only', 'ultimate-member' ),
-					2 => __( 'Members only', 'ultimate-member' ),
-					3 => __( 'Only the owner', 'ultimate-member' ),
-					4 => __( 'Only specific roles', 'ultimate-member' ),
-					5 => __( 'Owner and specific roles', 'ultimate-member' ),
-				)
-			);
+			$privacy_option = UM()->profile()->tabs_privacy();
 
-			$appearance_settings['um-profile_tab_main'] = array(
-				'label' => __( 'About Tab', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'profile_tab_main' ) ? $labels['yes'] : $labels['no'],
-			);
-			if ( 1 === absint( UM()->options()->get( 'profile_tab_main' ) ) ) {
-				$appearance_settings['um-profile_tab_main_privacy'] = array(
-					'label' => __( 'Who can see About Tab?', 'ultimate-member' ),
-					'value' => $privacy_option[ UM()->options()->get( 'profile_tab_main_privacy' ) ],
+			$tabs = UM()->profile()->tabs();
+			foreach ( $tabs as $id => $tab ) {
+				if ( ! empty( $tab['hidden'] ) ) {
+					continue;
+				}
+
+				$tab_enabled = UM()->options()->get( 'profile_tab_' . $id );
+
+				$appearance_settings[ 'um-profile_tab_' . $id ] = array(
+					// translators: %s Profile Tab Title
+					'label' => sprintf( __( '%s Tab', 'ultimate-member' ), $tab['name'] ),
+					'value' => $tab_enabled ? $labels['yes'] : $labels['no'],
 				);
-			}
-			$appearance_settings['um-profile_tab_posts'] = array(
-				'label' => __( 'Posts Tab', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'profile_tab_posts' ) ? $labels['yes'] : $labels['no'],
-			);
-			if ( 1 === absint( UM()->options()->get( 'profile_tab_posts' ) ) ) {
-				$appearance_settings['um-profile_tab_posts_privacy'] = array(
-					'label' => __( 'Who can see Posts Tab?', 'ultimate-member' ),
-					'value' => $privacy_option[ UM()->options()->get( 'profile_tab_posts_privacy' ) ],
-				);
-			}
-			$appearance_settings['um-profile_tab_comments'] = array(
-				'label' => __( 'Comments Tab', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'profile_tab_comments' ) ? $labels['yes'] : $labels['no'],
-			);
-			if ( 1 === absint( UM()->options()->get( 'profile_tab_comments' ) ) ) {
-				$appearance_settings['um-profile_tab_comments_privacy'] = array(
-					'label' => __( 'Who can see Comments Tab?', 'ultimate-member' ),
-					'value' => $privacy_option[ UM()->options()->get( 'profile_tab_comments_privacy' ) ],
-				);
+
+				if ( ! isset( $tab['default_privacy'] ) ) {
+					if ( ! empty( $tab_enabled ) ) {
+						$appearance_settings[ 'um-profile_tab_' . $id . '_privacy' ] = array(
+							// translators: %s Profile Tab Title
+							'label' => sprintf( __( 'Who can see %s Tab?', 'ultimate-member' ), $tab['name'] ),
+							'value' => $privacy_option[ UM()->options()->get( 'profile_tab_' . $id . '_privacy' ) ],
+						);
+					}
+				}
 			}
 			/**
 			 * Filters appearance settings for Site Health extend.
@@ -756,6 +749,7 @@ class Site_Health {
 			);
 		}
 
+		// > Registration Form section.
 		$appearance_settings['um-register_template']         = array(
 			'label' => __( 'Registration Default Template', 'ultimate-member' ),
 			'value' => UM()->options()->get( 'register_template' ),
