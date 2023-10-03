@@ -4354,7 +4354,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$show_bio       = false;
 							$bio_html       = false;
 							$global_setting = UM()->options()->get( 'profile_show_html_bio' );
-							if ( 'profile' === $this->global_args['mode'] ) {
+							if ( isset( $this->global_args['mode'] ) && 'profile' === $this->global_args['mode'] ) {
 								if ( ! empty( $this->global_args['use_custom_settings'] ) ) {
 									if ( ! empty( $this->global_args['show_bio'] ) ) {
 										$show_bio = true;

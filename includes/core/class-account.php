@@ -312,30 +312,31 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		/**
 		 * Restrict access to Account page
 		 */
-		function account_page_restrict() {
-
+		public function account_page_restrict() {
 			if ( um_is_core_page( 'account' ) ) {
 
-				//redirect to login for not logged in users
+				// Redirect to the login page for not logged-in users.
 				if ( ! is_user_logged_in() ) {
 					$redirect_to = add_query_arg(
 						'redirect_to',
-						urlencode_deep( um_get_core_page( 'account' ) ) ,
+						urlencode_deep( um_get_core_page( 'account' ) ),
 						um_get_core_page( 'login' )
 					);
 
-					exit( wp_redirect( $redirect_to ) );
+					wp_safe_redirect( $redirect_to );
+					exit;
 				}
 
-
-				//set data for fields
-				UM()->fields()->set_mode = 'account';
-				UM()->fields()->editing = true;
+				// Set data for fields.
+				UM()->fields()->set_mode    = 'account';
+				UM()->fields()->editing     = true;
+				UM()->fields()->global_args = array(
+					'mode' => 'account',
+				);
 
 				if ( get_query_var( 'um_tab' ) ) {
 					$this->current_tab = get_query_var( 'um_tab' );
 				}
-
 			}
 		}
 
