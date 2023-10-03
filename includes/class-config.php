@@ -596,6 +596,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'secure_notify_admins_banned_accounts'  => false,
 				'secure_notify_admins_banned_accounts__interval' => 'instant',
 				'secure_allowed_redirect_hosts'         => '',
+				'delete_comments'                       => 0,
 			);
 
 			add_filter( 'um_get_tabs_from_config', '__return_true' );

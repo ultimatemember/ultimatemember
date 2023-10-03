@@ -1229,6 +1229,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'tooltip' => __( 'How long does an activation link live in seconds? Leave empty for endless links.', 'ultimate-member' ),
 										'size'    => 'small',
 									),
+									array(
+										'id'      => 'delete_comments',
+										'type'    => 'checkbox',
+										'label'   => __( 'Deleting user comments after deleting a user', 'ultimate-member' ),
+										'tooltip' => __( 'Do you want to delete a user\'s comments when that user deletes themself or is removed from the admin dashboard from the site?', 'ultimate-member' ),
+									),
 								),
 							),
 							'account' => array(
