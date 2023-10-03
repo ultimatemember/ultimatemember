@@ -173,6 +173,10 @@ class Site_Health {
 				'label' => __( 'Use Gravatars?', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'use_gravatars' ) ? $labels['yes'] : $labels['no'],
 			),
+			'um-delete_comments'             => array(
+				'label' => __( 'Deleting user comments after deleting a user', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'delete_comments' ) ? $labels['yes'] : $labels['no'],
+			),
 		);
 
 		if ( 'custom_meta' === UM()->options()->get( 'permalink_base' ) ) {
