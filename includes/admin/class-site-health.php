@@ -509,7 +509,7 @@ class Site_Health {
 
 		// Appearance settings.
 		// > Profile section.
-		$profile_icons_options       = array(
+		$icons_display_options       = array(
 			'field' => __( 'Show inside text field', 'ultimate-member' ),
 			'label' => __( 'Show with label', 'ultimate-member' ),
 			'off'   => __( 'Turn off', 'ultimate-member' ),
@@ -517,11 +517,6 @@ class Site_Health {
 		$profile_header_menu_options = array(
 			'bc' => __( 'Bottom of Icon', 'ultimate-member' ),
 			'lc' => __( 'Left of Icon (right for RTL)', 'ultimate-member' ),
-		);
-		$register_align_options      = array(
-			'center' => __( 'Centered', 'ultimate-member' ),
-			'left'   => __( 'Left aligned', 'ultimate-member' ),
-			'right'  => __( 'Right aligned', 'ultimate-member' ),
 		);
 
 		$profile_templates      = UM()->shortcodes()->get_templates( 'profile' );
@@ -547,7 +542,7 @@ class Site_Health {
 			),
 			'um-profile_icons'            => array(
 				'label' => __( 'Profile Field Icons', 'ultimate-member' ),
-				'value' => $profile_icons_options[ UM()->options()->get( 'profile_icons' ) ],
+				'value' => $icons_display_options[ UM()->options()->get( 'profile_icons' ) ],
 			),
 			'um-profile_primary_btn_word' => array(
 				'label' => __( 'Profile Primary Button Text', 'ultimate-member' ),
@@ -750,9 +745,21 @@ class Site_Health {
 		}
 
 		// > Registration Form section.
+		$register_templates      = UM()->shortcodes()->get_templates( 'register' );
+		$register_template_key   = UM()->options()->get( 'register_template' );
+		$register_template_title = array_key_exists( $register_template_key, $register_templates ) ? $register_templates[ $register_template_key ] : __( 'No template name', 'ultimate-member' );
+		$register_secondary_btn  = UM()->options()->get( 'register_secondary_btn' );
+
+		$form_align_options = array(
+			'center' => __( 'Centered', 'ultimate-member' ),
+			'left'   => __( 'Left aligned', 'ultimate-member' ),
+			'right'  => __( 'Right aligned', 'ultimate-member' ),
+		);
+
 		$appearance_settings['um-register_template']         = array(
 			'label' => __( 'Registration Default Template', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'register_template' ),
+			// translators: %1$s - register template name, %2$s - register template filename
+			'value' => sprintf( __( '%1$s (filename: %2$s.php)', 'ultimate-member' ), $register_template_title, $register_template_key ),
 		);
 		$appearance_settings['um-register_max_width']        = array(
 			'label' => __( 'Registration Maximum Width', 'ultimate-member' ),
@@ -760,11 +767,11 @@ class Site_Health {
 		);
 		$appearance_settings['um-register_align']            = array(
 			'label' => __( 'Registration Shortcode Alignment', 'ultimate-member' ),
-			'value' => $register_align_options[ UM()->options()->get( 'register_align' ) ],
+			'value' => $form_align_options[ UM()->options()->get( 'register_align' ) ],
 		);
 		$appearance_settings['um-register_icons']            = array(
 			'label' => __( 'Registration Field Icons', 'ultimate-member' ),
-			'value' => $profile_icons_options[ UM()->options()->get( 'register_icons' ) ],
+			'value' => $icons_display_options[ UM()->options()->get( 'register_icons' ) ],
 		);
 		$appearance_settings['um-register_primary_btn_word'] = array(
 			'label' => __( 'Registration Primary Button Text ', 'ultimate-member' ),
@@ -772,9 +779,9 @@ class Site_Health {
 		);
 		$appearance_settings['um-register_secondary_btn']    = array(
 			'label' => __( 'Registration Secondary Button', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'register_secondary_btn' ) ? $labels['yes'] : $labels['no'],
+			'value' => $register_secondary_btn ? $labels['yes'] : $labels['no'],
 		);
-		if ( 1 === absint( UM()->options()->get( 'register_secondary_btn' ) ) ) {
+		if ( ! empty( $register_secondary_btn ) ) {
 			$appearance_settings['um-register_secondary_btn_word'] = array(
 				'label' => __( 'Registration Secondary Button Text', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'register_secondary_btn_word' ),
@@ -789,9 +796,16 @@ class Site_Health {
 			'value' => ! empty( UM()->options()->get( 'register_role' ) ) ? UM()->options()->get( 'register_role' ) : __( 'Default', 'ultimate-member' ),
 		);
 
+		// > Login Form section.
+		$login_templates      = UM()->shortcodes()->get_templates( 'login' );
+		$login_template_key   = UM()->options()->get( 'login_template' );
+		$login_template_title = array_key_exists( $login_template_key, $login_templates ) ? $login_templates[ $login_template_key ] : __( 'No template name', 'ultimate-member' );
+		$login_secondary_btn  = UM()->options()->get( 'login_secondary_btn' );
+
 		$appearance_settings['um-login_template']         = array(
 			'label' => __( 'Login Default Template', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'login_template' ),
+			// translators: %1$s - login template name, %2$s - login template filename
+			'value' => sprintf( __( '%1$s (filename: %2$s.php)', 'ultimate-member' ), $login_template_title, $login_template_key ),
 		);
 		$appearance_settings['um-login_max_width']        = array(
 			'label' => __( 'Login Maximum Width', 'ultimate-member' ),
@@ -799,11 +813,11 @@ class Site_Health {
 		);
 		$appearance_settings['um-login_align']            = array(
 			'label' => __( 'Login Shortcode Alignment', 'ultimate-member' ),
-			'value' => $register_align_options[ UM()->options()->get( 'login_align' ) ],
+			'value' => $form_align_options[ UM()->options()->get( 'login_align' ) ],
 		);
 		$appearance_settings['um-login_icons']            = array(
 			'label' => __( 'Login Field Icons', 'ultimate-member' ),
-			'value' => $profile_icons_options[ UM()->options()->get( 'login_icons' ) ],
+			'value' => $icons_display_options[ UM()->options()->get( 'login_icons' ) ],
 		);
 		$appearance_settings['um-login_primary_btn_word'] = array(
 			'label' => __( 'Login Primary Button Text', 'ultimate-member' ),
@@ -811,9 +825,9 @@ class Site_Health {
 		);
 		$appearance_settings['um-login_secondary_btn']    = array(
 			'label' => __( 'Login Secondary Button', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'login_secondary_btn' ) ? $labels['yes'] : $labels['no'],
+			'value' => $login_secondary_btn ? $labels['yes'] : $labels['no'],
 		);
-		if ( 1 === absint( UM()->options()->get( 'login_secondary_btn' ) ) ) {
+		if ( ! empty( $login_secondary_btn ) ) {
 			$appearance_settings['um-login_secondary_btn_word'] = array(
 				'label' => __( 'Login Secondary Button Text', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'login_secondary_btn_word' ),
@@ -832,7 +846,7 @@ class Site_Health {
 			'value' => UM()->options()->get( 'login_show_rememberme' ) ? $labels['yes'] : $labels['no'],
 		);
 
-		// Misc settings
+		// Misc settings.
 		$misc_settings = array(
 			'um-form_asterisk'                   => array(
 				'label' => __( 'Show an asterisk for required fields', 'ultimate-member' ),
@@ -873,6 +887,8 @@ class Site_Health {
 		);
 
 		// Secure settings
+		$secure_ban_admins_accounts = UM()->options()->get( 'secure_ban_admins_accounts' );
+
 		$secure_settings = array(
 			'um-banned_capabilities'        => array(
 				'label' => __( 'Banned Administrative Capabilities', 'ultimate-member' ),
@@ -880,7 +896,7 @@ class Site_Health {
 			),
 			'um-lock_register_forms'        => array(
 				'label' => __( 'Lock All Register Forms', 'ultimate-member' ),
-				'value' => stripslashes( UM()->options()->get( 'lock_register_forms' ) ) ? $labels['yes'] : $labels['no'],
+				'value' => UM()->options()->get( 'lock_register_forms' ) ? $labels['yes'] : $labels['no'],
 			),
 			'um-display_login_form_notice'  => array(
 				'label' => __( 'Display Login form notice to reset passwords', 'ultimate-member' ),
@@ -888,15 +904,17 @@ class Site_Health {
 			),
 			'um-secure_ban_admins_accounts' => array(
 				'label' => __( 'Enable ban for administrative capabilities', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'secure_ban_admins_accounts' ) ? $labels['yes'] : $labels['no'],
+				'value' => $secure_ban_admins_accounts ? $labels['yes'] : $labels['no'],
 			),
 		);
-		if ( 1 === absint( UM()->options()->get( 'secure_ban_admins_accounts' ) ) ) {
+		if ( ! empty( $secure_ban_admins_accounts ) ) {
+			$secure_notify_admins_banned_accounts = UM()->options()->get( 'secure_notify_admins_banned_accounts' );
+
 			$secure_settings['um-secure_notify_admins_banned_accounts'] = array(
 				'label' => __( 'Notify Administrators', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'secure_notify_admins_banned_accounts' ) ? $labels['yes'] : $labels['no'],
+				'value' => $secure_notify_admins_banned_accounts ? $labels['yes'] : $labels['no'],
 			);
-			if ( 1 === absint( UM()->options()->get( 'secure_notify_admins_banned_accounts' ) ) ) {
+			if ( ! empty( $secure_notify_admins_banned_accounts ) ) {
 				$secure_notify_admins_banned_accounts_options = array(
 					'instant' => __( 'Send Immediately', 'ultimate-member' ),
 					'hourly'  => __( 'Hourly', 'ultimate-member' ),
@@ -918,7 +936,7 @@ class Site_Health {
 			'value' => $secure_allowed_redirect_hosts,
 		);
 
-		// Licenses settings
+		// Licenses settings.
 		$license_settings = array(
 			'um-licenses' => array(
 				'label' => __( 'Licenses', 'ultimate-member' ),
@@ -945,7 +963,7 @@ class Site_Health {
 		 */
 		$license_settings = apply_filters( 'um_licenses_site_health', $license_settings );
 
-		$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $pages_settings, $user_settings, $account_settings, $uploads_settings, $restrict_settings, $access_other_settings, $email_settings, $appearance_settings, $license_settings, $misc_settings, $secure_settings );
+		$info['ultimate-member']['fields'] = array_merge( $info['ultimate-member']['fields'], $pages_settings, $user_settings, $account_settings, $uploads_settings, $restrict_settings, $access_other_settings, $email_settings, $appearance_settings, $misc_settings, $secure_settings, $license_settings );
 
 		// User roles settings
 		$roles_array = array();
@@ -974,7 +992,7 @@ class Site_Health {
 					'value' => implode( ', ', $roles_array ),
 				),
 				'um-register_role' => array(
-					'label' => __( 'Default New User Role', 'ultimate-member' ),
+					'label' => __( 'WordPress Default New User Role', 'ultimate-member' ),
 					'value' => get_option( 'default_role' ),
 				),
 			),
