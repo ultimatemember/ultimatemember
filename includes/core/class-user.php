@@ -569,7 +569,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		/**
 		 * @param $user_id
 		 */
-		function delete_user_handler( $user_id ) {
+		public function delete_user_handler( $user_id ) {
 			um_fetch_user( $user_id );
 
 			$this->deleted_user_id = $user_id;
@@ -612,6 +612,16 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 * ?>
 			 */
 			do_action( 'um_delete_user', um_user( 'ID' ) );
+
+			// remove user's comments
+			if ( UM()->options()->get( 'delete_comments' ) ) {
+				$user = get_user_by( 'id', um_user( 'ID' ) );
+
+				$comments = array_merge( get_comments( 'author_email=' . $user->user_email ), get_comments( 'user_id=' . um_user( 'ID' ) ) );
+				foreach ( $comments as $comment ) {
+					wp_delete_comment( $comment->comment_ID, true );
+				}
+			}
 
 			// send email notifications
 			if ( $this->send_mail_on_delete ) {
