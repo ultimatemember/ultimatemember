@@ -293,7 +293,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					);
 				}
 
-
 				$settings_map[ $page_id ] = array(
 					'sanitize' => 'absint',
 				);
@@ -709,9 +708,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'account_tab_privacy'                   => array(
 						'sanitize' => 'bool',
 					),
-					'account_tab_notifications'             => array(
-						'sanitize' => 'bool',
-					),
 					'account_tab_delete'                    => array(
 						'sanitize' => 'bool',
 					),
@@ -967,6 +963,115 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				)
 			);
 
+			$account_fields = array(
+				array(
+					'id'      => 'account_tab_password',
+					'type'    => 'checkbox',
+					'label'   => __( 'Password Account Tab', 'ultimate-member' ),
+					'tooltip' => __( 'Enable/disable the Password account tab in account page', 'ultimate-member' ),
+				),
+				array(
+					'id'      => 'account_tab_privacy',
+					'type'    => 'checkbox',
+					'label'   => __( 'Privacy Account Tab', 'ultimate-member' ),
+					'tooltip' => __( 'Enable/disable the Privacy account tab in account page', 'ultimate-member' ),
+				),
+			);
+
+			if ( false !== UM()->account()->is_notifications_tab_visible() ) {
+				$account_fields[] = array(
+					'id'      => 'account_tab_notifications',
+					'type'    => 'checkbox',
+					'label'   => __( 'Notifications Account Tab', 'ultimate-member' ),
+					'tooltip' => __( 'Enable/disable the Notifications account tab in account page', 'ultimate-member' ),
+				);
+
+				$settings_map['account_tab_notifications'] = array(
+					'sanitize' => 'bool',
+				);
+			}
+
+			$account_fields = array_merge(
+				$account_fields,
+				array(
+					array(
+						'id'      => 'account_tab_delete',
+						'type'    => 'checkbox',
+						'label'   => __( 'Delete Account Tab', 'ultimate-member' ),
+						'tooltip' => __( 'Enable/disable the Delete account tab in account page', 'ultimate-member' ),
+					),
+					array(
+						'id'      => 'delete_account_text',
+						'type'    => 'textarea', // bug with wp 4.4? should be editor
+						'label'   => __( 'Account Deletion Custom Text', 'ultimate-member' ),
+						'tooltip' => __( 'This is custom text that will be displayed to users before they delete their accounts from your site when password is required.', 'ultimate-member' ),
+						'args'    => array(
+							'textarea_rows' => 6,
+						),
+					),
+					array(
+						'id'      => 'delete_account_no_pass_required_text',
+						'type'    => 'textarea',
+						'label'   => __( 'Account Deletion without password Custom Text', 'ultimate-member' ),
+						'tooltip' => __( 'This is custom text that will be displayed to users before they delete their accounts from your site when password isn\'t required.', 'ultimate-member' ),
+						'args'    => array(
+							'textarea_rows' => 6,
+						),
+					),
+					array(
+						'id'      => 'account_name',
+						'type'    => 'checkbox',
+						'label'   => __( 'Add a First & Last Name fields', 'ultimate-member' ),
+						'tooltip' => __( 'Whether to enable these fields on the user account page by default or hide them.', 'ultimate-member' ),
+					),
+					array(
+						'id'          => 'account_name_disable',
+						'type'        => 'checkbox',
+						'label'       => __( 'Disable First & Last Name fields', 'ultimate-member' ),
+						'tooltip'     => __( 'Whether to allow users changing their first and last name in account page.', 'ultimate-member' ),
+						'conditional' => array( 'account_name', '=', '1' ),
+					),
+					array(
+						'id'          => 'account_name_require',
+						'type'        => 'checkbox',
+						'label'       => __( 'Require First & Last Name', 'ultimate-member' ),
+						'tooltip'     => __( 'Require first and last name?', 'ultimate-member' ),
+						'conditional' => array( 'account_name', '=', '1' ),
+					),
+					array(
+						'id'      => 'account_email',
+						'type'    => 'checkbox',
+						'label'   => __( 'Allow users to change e-mail', 'ultimate-member' ),
+						'tooltip' => __( 'Whether to allow users changing their email in account page.', 'ultimate-member' ),
+					),
+					array(
+						'id'      => 'account_general_password',
+						'type'    => 'checkbox',
+						'label'   => __( 'Password is required?', 'ultimate-member' ),
+						'tooltip' => __( 'Password is required to save account data.', 'ultimate-member' ),
+					),
+					array(
+						'id'          => 'account_hide_in_directory',
+						'type'        => 'checkbox',
+						'label'       => __( 'Allow users to hide their profiles from directory', 'ultimate-member' ),
+						'tooltip'     => __( 'Whether to allow users changing their profile visibility from member directory in account page.', 'ultimate-member' ),
+						'conditional' => array( 'account_tab_privacy', '=', '1' ),
+					),
+					array(
+						'id'          => 'account_hide_in_directory_default',
+						'type'        => 'select',
+						'label'       => __( 'Hide profiles from directory by default', 'ultimate-member' ),
+						'tooltip'     => __( 'Set default value for the "Hide my profile from directory" option', 'ultimate-member' ),
+						'options'     => array(
+							'No'  => __( 'No', 'ultimate-member' ),
+							'Yes' => __( 'Yes', 'ultimate-member' ),
+						),
+						'size'        => 'small',
+						'conditional' => array( 'account_hide_in_directory', '=', '1' ),
+					),
+				)
+			);
+
 			$this->settings_map = apply_filters( 'um_settings_map', $settings_map );
 
 			/**
@@ -1009,15 +1114,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'label'       => __( 'Profile Permalink Base', 'ultimate-member' ),
 										// translators: %s: Profile page URL
 										'tooltip'     => sprintf( __( 'Here you can control the permalink structure of the user profile URL globally e.g. %s<strong>username</strong>/', 'ultimate-member' ), trailingslashit( um_get_core_page( 'user' ) ) ),
-										'options'     => array(
-											'user_login'  => __( 'Username', 'ultimate-member' ),
-											'name'        => __( 'First and Last Name with \'.\'', 'ultimate-member' ),
-											'name_dash'   => __( 'First and Last Name with \'-\'', 'ultimate-member' ),
-											'name_plus'   => __( 'First and Last Name with \'+\'', 'ultimate-member' ),
-											'user_id'     => __( 'User ID', 'ultimate-member' ),
-											'hash'        => __( 'Unique hash string', 'ultimate-member' ),
-											'custom_meta' => __( 'Custom usermeta', 'ultimate-member' ),
-										),
+										'options'     => UM()->config()->permalink_base_options,
 										'placeholder' => __( 'Select...', 'ultimate-member' ),
 									),
 									array(
@@ -1034,17 +1131,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'size'        => 'medium',
 										'label'       => __( 'User Display Name', 'ultimate-member' ),
 										'tooltip'     => __( 'This is the name that will be displayed for users on the front end of your site. Default setting uses first/last name as display name if it exists', 'ultimate-member' ),
-										'options'     => array(
-											'default'        => __( 'Default WP Display Name', 'ultimate-member' ),
-											'nickname'       => __( 'Nickname', 'ultimate-member' ),
-											'username'       => __( 'Username', 'ultimate-member' ),
-											'full_name'      => __( 'First name & last name', 'ultimate-member' ),
-											'sur_name'       => __( 'Last name & first name', 'ultimate-member' ),
-											'initial_name'   => __( 'First name & first initial of last name', 'ultimate-member' ),
-											'initial_name_f' => __( 'First initial of first name & last name', 'ultimate-member' ),
-											'first_name'     => __( 'First name only', 'ultimate-member' ),
-											'field'          => __( 'Custom field(s)', 'ultimate-member' ),
-										),
+										'options'     => UM()->config()->display_name_options,
 										'placeholder' => __( 'Select...', 'ultimate-member' ),
 									),
 									array(
@@ -1146,101 +1233,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							),
 							'account' => array(
 								'title'  => __( 'Account', 'ultimate-member' ),
-								'fields' => array(
-									array(
-										'id'      => 'account_tab_password',
-										'type'    => 'checkbox',
-										'label'   => __( 'Password Account Tab', 'ultimate-member' ),
-										'tooltip' => __( 'Enable/disable the Password account tab in account page', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'account_tab_privacy',
-										'type'    => 'checkbox',
-										'label'   => __( 'Privacy Account Tab', 'ultimate-member' ),
-										'tooltip' => __( 'Enable/disable the Privacy account tab in account page', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'account_tab_notifications',
-										'type'    => 'checkbox',
-										'label'   => __( 'Notifications Account Tab', 'ultimate-member' ),
-										'tooltip' => __( 'Enable/disable the Notifications account tab in account page', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'account_tab_delete',
-										'type'    => 'checkbox',
-										'label'   => __( 'Delete Account Tab', 'ultimate-member' ),
-										'tooltip' => __( 'Enable/disable the Delete account tab in account page', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'delete_account_text',
-										'type'    => 'textarea', // bug with wp 4.4? should be editor
-										'label'   => __( 'Account Deletion Custom Text', 'ultimate-member' ),
-										'tooltip' => __( 'This is custom text that will be displayed to users before they delete their accounts from your site when password is required.', 'ultimate-member' ),
-										'args'    => array(
-											'textarea_rows' => 6,
-										),
-									),
-									array(
-										'id'      => 'delete_account_no_pass_required_text',
-										'type'    => 'textarea',
-										'label'   => __( 'Account Deletion without password Custom Text', 'ultimate-member' ),
-										'tooltip' => __( 'This is custom text that will be displayed to users before they delete their accounts from your site when password isn\'t required.', 'ultimate-member' ),
-										'args'    => array(
-											'textarea_rows' => 6,
-										),
-									),
-									array(
-										'id'      => 'account_name',
-										'type'    => 'checkbox',
-										'label'   => __( 'Add a First & Last Name fields', 'ultimate-member' ),
-										'tooltip' => __( 'Whether to enable these fields on the user account page by default or hide them.', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'account_name_disable',
-										'type'        => 'checkbox',
-										'label'       => __( 'Disable First & Last Name fields', 'ultimate-member' ),
-										'tooltip'     => __( 'Whether to allow users changing their first and last name in account page.', 'ultimate-member' ),
-										'conditional' => array( 'account_name', '=', '1' ),
-									),
-									array(
-										'id'          => 'account_name_require',
-										'type'        => 'checkbox',
-										'label'       => __( 'Require First & Last Name', 'ultimate-member' ),
-										'tooltip'     => __( 'Require first and last name?', 'ultimate-member' ),
-										'conditional' => array( 'account_name', '=', '1' ),
-									),
-									array(
-										'id'      => 'account_email',
-										'type'    => 'checkbox',
-										'label'   => __( 'Allow users to change e-mail', 'ultimate-member' ),
-										'tooltip' => __( 'Whether to allow users changing their email in account page.', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'account_general_password',
-										'type'    => 'checkbox',
-										'label'   => __( 'Password is required?', 'ultimate-member' ),
-										'tooltip' => __( 'Password is required to save account data.', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'account_hide_in_directory',
-										'type'        => 'checkbox',
-										'label'       => __( 'Allow users to hide their profiles from directory', 'ultimate-member' ),
-										'tooltip'     => __( 'Whether to allow users changing their profile visibility from member directory in account page.', 'ultimate-member' ),
-										'conditional' => array( 'account_tab_privacy', '=', '1' ),
-									),
-									array(
-										'id'          => 'account_hide_in_directory_default',
-										'type'        => 'select',
-										'label'       => __( 'Hide profiles from directory by default', 'ultimate-member' ),
-										'tooltip'     => __( 'Set default value for the "Hide my profile from directory" option', 'ultimate-member' ),
-										'options'     => array(
-											'No'  => __( 'No', 'ultimate-member' ),
-											'Yes' => __( 'Yes', 'ultimate-member' ),
-										),
-										'size'        => 'small',
-										'conditional' => array( 'account_hide_in_directory', '=', '1' ),
-									),
-								),
+								'fields' => $account_fields,
 							),
 							'uploads' => array(
 								'title'  => __( 'Uploads', 'ultimate-member' ),

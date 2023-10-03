@@ -55,7 +55,7 @@ class Site_Health {
 	}
 
 	private function get_member_directories() {
-		$query = new \WP_Query;
+		$query              = new \WP_Query();
 		$member_directories = $query->query(
 			array(
 				'post_type'      => 'um_directory',
@@ -95,19 +95,27 @@ class Site_Health {
 			'fields'      => array(),
 		);
 
-		// Pages settings
-		$pages = apply_filters(
-			'um_debug_information_pages',
-			array(
-				'User'           => null !== UM()->options()->get( 'core_user' ) ? get_the_title( UM()->options()->get( 'core_user' ) ) . ' (ID#' . UM()->options()->get( 'core_user' ) . ') | ' . get_permalink( UM()->options()->get( 'core_user' ) ) : $labels['nopages'],
-				'Login'          => null !== UM()->options()->get( 'core_login' ) ? get_the_title( UM()->options()->get( 'core_login' ) ) . ' (ID#' . UM()->options()->get( 'core_login' ) . ') | ' . get_permalink( UM()->options()->get( 'core_login' ) ) : $labels['nopages'],
-				'Register'       => null !== UM()->options()->get( 'core_register' ) ? get_the_title( UM()->options()->get( 'core_register' ) ) . ' (ID#' . UM()->options()->get( 'core_register' ) . ') | ' . get_permalink( UM()->options()->get( 'core_register' ) ) : $labels['nopages'],
-				'Members'        => null !== UM()->options()->get( 'core_members' ) ? get_the_title( UM()->options()->get( 'core_members' ) ) . ' (ID#' . UM()->options()->get( 'core_members' ) . ') | ' . get_permalink( UM()->options()->get( 'core_members' ) ) : $labels['nopages'],
-				'Logout'         => null !== UM()->options()->get( 'core_logout' ) ? get_the_title( UM()->options()->get( 'core_logout' ) ) . ' (ID#' . UM()->options()->get( 'core_logout' ) . ') | ' . get_permalink( UM()->options()->get( 'core_logout' ) ) : $labels['nopages'],
-				'Account'        => null !== UM()->options()->get( 'core_account' ) ? get_the_title( UM()->options()->get( 'core_account' ) ) . ' (ID#' . UM()->options()->get( 'core_account' ) . ') | ' . get_permalink( UM()->options()->get( 'core_account' ) ) : $labels['nopages'],
-				'Password reset' => null !== UM()->options()->get( 'core_password' ) ? get_the_title( UM()->options()->get( 'core_password-reset' ) ) . ' (ID#' . UM()->options()->get( 'core_password-reset' ) . ') | ' . get_permalink( UM()->options()->get( 'core_password-reset' ) ) : $labels['nopages'],
-			)
-		);
+		// Pages settings.
+		$pages            = array();
+		$predefined_pages = UM()->config()->core_pages;
+		foreach ( $predefined_pages as $page_s => $page ) {
+			$page_id    = UM()->options()->get_core_page_id( $page_s );
+			$page_title = ! empty( $page['title'] ) ? $page['title'] : '';
+			if ( empty( $page_title ) ) {
+				continue;
+			}
+
+			$predefined_page_id = UM()->options()->get( $page_id );
+
+			if ( empty( $predefined_page_id ) ) {
+				$pages[ $page_title ] = $labels['nopages'];
+				continue;
+			}
+			// translators: %1$s is a predefined page title; %2$d is a predefined page ID; %3$s is a predefined page permalink.
+			$pages[ $page_title ] = sprintf( __( '%1$s (ID#%2$d) | %3$s', 'ultimate-member' ), get_the_title( $predefined_page_id ), $predefined_page_id, get_permalink( $predefined_page_id ) );
+		}
+
+		$pages = apply_filters( 'um_debug_information_pages', $pages );
 
 		$pages_settings = array(
 			'um-pages' => array(
@@ -117,24 +125,8 @@ class Site_Health {
 		);
 
 		// User settings
-		$permalink_base = array(
-			'user_login' => __( 'Username', 'ultimate-member' ),
-			'name'       => __( 'First and Last Name with \'.\'', 'ultimate-member' ),
-			'name_dash'  => __( 'First and Last Name with \'-\'', 'ultimate-member' ),
-			'name_plus'  => __( 'First and Last Name with \'+\'', 'ultimate-member' ),
-			'user_id'    => __( 'User ID', 'ultimate-member' ),
-		);
-		$display_name   = array(
-			'default'        => __( 'Default WP Display Name', 'ultimate-member' ),
-			'nickname'       => __( 'Nickname', 'ultimate-member' ),
-			'username'       => __( 'Username', 'ultimate-member' ),
-			'full_name'      => __( 'First name & last name', 'ultimate-member' ),
-			'sur_name'       => __( 'Last name & first name', 'ultimate-member' ),
-			'initial_name'   => __( 'First name & first initial of last name', 'ultimate-member' ),
-			'initial_name_f' => __( 'First initial of first name & last name', 'ultimate-member' ),
-			'first_name'     => __( 'First name only', 'ultimate-member' ),
-			'field'          => __( 'Custom field(s)', 'ultimate-member' ),
-		);
+		$permalink_base = UM()->config()->permalink_base_options;
+		$display_name   = UM()->config()->display_name_options;
 
 		$user_settings = array(
 			'um-permalink_base'              => array(
@@ -183,7 +175,33 @@ class Site_Health {
 			),
 		);
 
-		if ( 1 === absint( UM()->options()->get( 'use_gravatars' ) ) ) {
+		if ( 'custom_meta' === UM()->options()->get( 'permalink_base' ) ) {
+			$user_settings = UM()->array_insert_before(
+				$user_settings,
+				'um-display_name',
+				array(
+					'um-permalink_base_custom_meta' => array(
+						'label' => __( 'Profile Permalink Base Custom Meta Key', 'ultimate-member' ),
+						'value' => UM()->options()->get( 'permalink_base_custom_meta' ),
+					),
+				)
+			);
+		}
+
+		if ( 'field' === UM()->options()->get( 'display_name' ) ) {
+			$user_settings = UM()->array_insert_before(
+				$user_settings,
+				'um-author_redirect',
+				array(
+					'um-display_name_field' => array(
+						'label' => __( 'Display Name Custom Field(s)', 'ultimate-member' ),
+						'value' => UM()->options()->get( 'display_name_field' ),
+					),
+				)
+			);
+		}
+
+		if ( UM()->options()->get( 'use_gravatars' ) ) {
 			$gravatar_options = array(
 				'default'   => __( 'Default', 'ultimate-member' ),
 				'404'       => __( '404 ( File Not Found response )', 'ultimate-member' ),
@@ -209,37 +227,46 @@ class Site_Health {
 
 		// Account settings
 		$account_settings = array(
-			'um-account_tab_password'                 => array(
+			'um-account_tab_password' => array(
 				'label' => __( 'Password Account Tab', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'account_tab_password' ) ? $labels['yes'] : $labels['no'],
 			),
-			'um-account_tab_privacy'                  => array(
+			'um-account_tab_privacy'  => array(
 				'label' => __( 'Privacy Account Tab', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'account_tab_privacy' ) ? $labels['yes'] : $labels['no'],
 			),
-			'um-account_tab_notifications'            => array(
-				'label' => __( 'Notifications Account Tab', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'account_tab_notifications' ) ? $labels['yes'] : $labels['no'],
-			),
-			'um-account_tab_delete'                   => array(
-				'label' => __( 'Delete Account Tab', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'account_tab_delete' ) ? $labels['yes'] : $labels['no'],
-			),
-			'um-delete_account_text'                  => array(
-				'label' => __( 'Account Deletion Custom Text', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'delete_account_text' ),
-			),
-			'um-delete_account_no_pass_required_text' => array(
-				'label' => __( 'Account Deletion without password Custom Text', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'delete_account_no_pass_required_text' ),
-			),
-			'um-account_name'                         => array(
-				'label' => __( 'Add a First & Last Name fields', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'account_name' ) ? $labels['yes'] : $labels['no'],
-			),
 		);
 
-		if ( 1 === absint( UM()->options()->get( 'account_name' ) ) ) {
+		if ( false !== UM()->account()->is_notifications_tab_visible() ) {
+			$account_settings['um-account_tab_notifications'] = array(
+				'label' => __( 'Notifications Account Tab', 'ultimate-member' ),
+				'value' => UM()->options()->get( 'account_tab_notifications' ) ? $labels['yes'] : $labels['no'],
+			);
+		}
+
+		$account_settings = array_merge(
+			$account_settings,
+			array(
+				'um-account_tab_delete'                   => array(
+					'label' => __( 'Delete Account Tab', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'account_tab_delete' ) ? $labels['yes'] : $labels['no'],
+				),
+				'um-delete_account_text'                  => array(
+					'label' => __( 'Account Deletion Custom Text', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'delete_account_text' ),
+				),
+				'um-delete_account_no_pass_required_text' => array(
+					'label' => __( 'Account Deletion without password Custom Text', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'delete_account_no_pass_required_text' ),
+				),
+				'um-account_name'                         => array(
+					'label' => __( 'Add a First & Last Name fields', 'ultimate-member' ),
+					'value' => UM()->options()->get( 'account_name' ) ? $labels['yes'] : $labels['no'],
+				),
+			)
+		);
+
+		if ( UM()->options()->get( 'account_name' ) ) {
 			$account_settings['um-account_name_disable'] = array(
 				'label' => __( 'Disable First & Last name field editing', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'account_name_disable' ) ? $labels['yes'] : $labels['no'],
@@ -250,12 +277,22 @@ class Site_Health {
 			);
 		}
 
+		$account_settings['um-account_email'] = array(
+			'label' => __( 'Allow users to change e-mail', 'ultimate-member' ),
+			'value' => UM()->options()->get( 'account_email' ) ? $labels['yes'] : $labels['no'],
+		);
+
+		$account_settings['um-account_general_password'] = array(
+			'label' => __( 'Password is required?', 'ultimate-member' ),
+			'value' => UM()->options()->get( 'account_general_password' ) ? $labels['yes'] : $labels['no'],
+		);
+
 		$account_settings['um-account_hide_in_directory'] = array(
 			'label' => __( 'Allow users to hide their profiles from directory', 'ultimate-member' ),
 			'value' => UM()->options()->get( 'account_hide_in_directory' ) ? $labels['yes'] : $labels['no'],
 		);
 
-		if ( 1 === absint( UM()->options()->get( 'account_name' ) ) ) {
+		if ( UM()->options()->get( 'account_hide_in_directory' ) ) {
 			$account_settings['um-account_hide_in_directory_default'] = array(
 				'label' => __( 'Hide profiles from directory by default', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'account_hide_in_directory_default' ),
@@ -328,27 +365,27 @@ class Site_Health {
 			}
 		}
 
+		$accessible = absint( UM()->options()->get( 'accessible' ) );
+
 		$restrict_settings = array(
 			'um-accessible' => array(
 				'label' => __( 'Global Site Access', 'ultimate-member' ),
-				'value' => 0 === UM()->options()->get( 'accessible' ) ? __( 'Site accessible to Everyone', 'ultimate-member' ) : __( 'Site accessible to Logged In Users', 'ultimate-member' ),
+				'value' => 0 === $accessible ? __( 'Site accessible to Everyone', 'ultimate-member' ) : __( 'Site accessible to Logged In Users', 'ultimate-member' ),
 			),
 		);
 
-		if ( 2 === absint( UM()->options()->get( 'accessible' ) ) ) {
+		if ( 2 === $accessible ) {
 			$exclude_uris      = UM()->options()->get( 'access_exclude_uris' );
 			$exclude_uris_list = '';
 			if ( ! empty( $exclude_uris ) ) {
-				foreach ( $exclude_uris as $key => $url ) {
-					$exclude_uris_list = empty( $exclude_uris_list ) ? $url : $exclude_uris_list . ', ' . $url;
-				}
+				$exclude_uris_list = implode( ', ', $exclude_uris );
 			}
 			$restrict_settings['um-access_redirect']          = array(
 				'label' => __( 'Custom Redirect URL', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'access_redirect' ),
 			);
 			$restrict_settings['um-access_exclude_uris']      = array(
-				'label' => __( 'Account Deletion Text', 'ultimate-member' ),
+				'label' => __( 'Exclude the following URLs', 'ultimate-member' ),
 				'value' => $exclude_uris_list,
 			);
 			$restrict_settings['um-home_page_accessible']     = array(
@@ -365,7 +402,7 @@ class Site_Health {
 			'label' => __( 'Restricted Content Titles', 'ultimate-member' ),
 			'value' => UM()->options()->get( 'restricted_post_title_replace' ) ? $labels['yes'] : $labels['no'],
 		);
-		if ( 1 === absint( UM()->options()->get( 'restricted_post_title_replace' ) ) ) {
+		if ( UM()->options()->get( 'restricted_post_title_replace' ) ) {
 			$restrict_settings['um-restricted_access_post_title'] = array(
 				'label' => __( 'Restricted Content Title Text', 'ultimate-member' ),
 				'value' => stripslashes( UM()->options()->get( 'restricted_access_post_title' ) ),
@@ -380,7 +417,7 @@ class Site_Health {
 			'label' => __( 'Enable the "Content Restriction" settings for the Gutenberg Blocks', 'ultimate-member' ),
 			'value' => UM()->options()->get( 'restricted_blocks' ) ? $labels['yes'] : $labels['no'],
 		);
-		if ( 1 === absint( UM()->options()->get( 'restricted_blocks' ) ) ) {
+		if ( UM()->options()->get( 'restricted_blocks' ) ) {
 			$restrict_settings['um-restricted_block_message'] = array(
 				'label' => __( 'Restricted Access Block Message', 'ultimate-member' ),
 				'value' => stripslashes( UM()->options()->get( 'restricted_block_message' ) ),
@@ -421,7 +458,7 @@ class Site_Health {
 			'value' => stripslashes( $blocked_emails ),
 		);
 		$access_other_settings['um-blocked_words']                 = array(
-			'label' => __( 'Banned Usernames', 'ultimate-member' ),
+			'label' => __( 'Blacklist Words', 'ultimate-member' ),
 			'value' => stripslashes( $blocked_words ),
 		);
 		$access_other_settings['um-allowed_choice_callbacks']      = array(
@@ -455,14 +492,16 @@ class Site_Health {
 
 		$emails = UM()->config()->email_notifications;
 		foreach ( $emails as $key => $email ) {
-			if ( 1 === absint( UM()->options()->get( $key . '_on' ) ) ) {
+			if ( UM()->options()->get( $key . '_on' ) ) {
 				$email_settings[ 'um-' . $key ] = array(
-					'label' => $email['title'] . __( ' Subject', 'ultimate-member' ),
+					// translators: %s is email template title.
+					'label' => sprintf( __( '"%s" Subject', 'ultimate-member' ), $email['title'] ),
 					'value' => UM()->options()->get( $key . '_sub' ),
 				);
 
 				$email_settings[ 'um-theme_' . $key ] = array(
-					'label' => __( 'Template ', 'ultimate-member' ) . $email['title'] . __( ' in theme?', 'ultimate-member' ),
+					// translators: %s is email template title.
+					'label' => sprintf( __( 'Template "%s" in theme?', 'ultimate-member' ), $email['title'] ),
 					'value' => '' !== locate_template( array( 'ultimate-member/emails/' . $key . '.php' ) ) ? $labels['yes'] : $labels['no'],
 				);
 			}
@@ -484,10 +523,15 @@ class Site_Health {
 			'right'  => __( 'Right aligned', 'ultimate-member' ),
 		);
 
+		$profile_templates      = UM()->shortcodes()->get_templates( 'profile' );
+		$profile_template_key   = UM()->options()->get( 'profile_template' );
+		$profile_template_title = array_key_exists( $profile_template_key, $profile_templates ) ? $profile_templates[ $profile_template_key ] : __( 'No template name', 'ultimate-member' );
+
 		$appearance_settings = array(
 			'um-profile_template'         => array(
 				'label' => __( 'Profile Default Template', 'ultimate-member' ),
-				'value' => UM()->options()->get( 'profile_template' ),
+				// translators: %1$s - profile template name, %2$s - profile template filename
+				'value' => sprintf( __( '%1$s (filename: %2$s.php)', 'ultimate-member' ), $profile_template_title, $profile_template_key ),
 			),
 			'um-profile_max_width'        => array(
 				'label' => __( 'Profile Maximum Width', 'ultimate-member' ),
@@ -2148,34 +2192,6 @@ class Site_Health {
 				$info = apply_filters( 'um_debug_member_directory_extend', $info, $key );
 			}
 		}
-
-		// Active extensions
-		$plugins        = get_plugins();
-		$active_plugins = get_option( 'active_plugins', array() );
-		$active_exts    = array();
-
-		foreach ( $plugins as $plugin_path => $plugin ) {
-			if ( strpos( $plugin_path, 'um-' ) === false ) {
-
-				continue;
-			}
-			if ( ! in_array( $plugin_path, $active_plugins, true ) ) {
-				continue;
-			}
-			$name          = str_replace( 'Ultimate Member -', '', $plugin['Name'] );
-			$active_exts[] = $name . ': ' . $plugin['Version'] . "\n";
-		}
-
-		$info['ultimate-member-extensions'] = array(
-			'label'       => __( 'Ultimate Member Active Extensions', 'ultimate-member' ),
-			'description' => __( 'This debug information about active extensions.', 'ultimate-member' ),
-			'fields'      => array(
-				'um-extensions' => array(
-					'label' => __( 'Active extensions', 'ultimate-member' ),
-					'value' => $active_exts,
-				),
-			),
-		);
 
 		return $info;
 	}

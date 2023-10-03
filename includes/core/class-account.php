@@ -49,80 +49,75 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		}
 
 		/**
-		 * Init AllTabs for user account
+		 * Init AllTabs for user account.
 		 *
-		 * @param $args
+		 * @param array $args
 		 *
 		 * @throws \Exception
 		 */
-		function init_tabs( $args ) {
-
+		public function init_tabs( $args ) {
 			$this->tabs = $this->get_tabs();
 
 			ksort( $this->tabs );
 
-			$tabs_structed = array();
+			$tabs_structured = array();
 			foreach ( $this->tabs as $k => $arr ) {
-
 				foreach ( $arr as $id => $info ) {
-
-					if ( ! empty( $args['tab'] ) && $id != $args['tab'] ) {
+					if ( ! empty( $args['tab'] ) && $id !== $args['tab'] ) {
 						continue;
 					}
 
 					$output = $this->get_tab_fields( $id, $args );
 
 					if ( ! empty( $output ) ) {
-						$tabs_structed[ $id ] = $info;
+						$tabs_structured[ $id ] = $info;
 					}
-
 				}
-
 			}
-			$this->tabs = $tabs_structed;
+			$this->tabs = $tabs_structured;
 		}
 
-
 		/**
-		 * Get all Account tabs
+		 * Get all Account tabs.
 		 *
 		 * @return array
 		 */
-		function get_tabs() {
-			$tabs = array();
+		public function get_tabs() {
+			$tabs                 = array();
 			$tabs[100]['general'] = array(
-				'icon'          => 'um-faicon-user',
-				'title'         => __( 'Account', 'ultimate-member' ),
-				'submit_title'  => __( 'Update Account', 'ultimate-member' ),
+				'icon'         => 'um-faicon-user',
+				'title'        => __( 'Account', 'ultimate-member' ),
+				'submit_title' => __( 'Update Account', 'ultimate-member' ),
 			);
 
 			$tabs[200]['password'] = array(
-				'icon'          => 'um-faicon-asterisk',
-				'title'         => __( 'Change Password', 'ultimate-member' ),
-				'submit_title'  => __( 'Update Password', 'ultimate-member' ),
+				'icon'         => 'um-faicon-asterisk',
+				'title'        => __( 'Change Password', 'ultimate-member' ),
+				'submit_title' => __( 'Update Password', 'ultimate-member' ),
 			);
 
 			$tabs[300]['privacy'] = array(
-				'icon'          => 'um-faicon-lock',
-				'title'         => __( 'Privacy', 'ultimate-member' ),
-				'submit_title'  => __( 'Update Privacy', 'ultimate-member' ),
+				'icon'         => 'um-faicon-lock',
+				'title'        => __( 'Privacy', 'ultimate-member' ),
+				'submit_title' => __( 'Update Privacy', 'ultimate-member' ),
 			);
 
+			// Init here, but default account tab content is empty, so it's hidden.
+			// Init required here for the using inside the extensions where is possible to disable email notification.
+			// Default Ultimate Member core notifications cannot be disabled on the user's side.
 			$tabs[400]['notifications'] = array(
-				'icon'          => 'um-faicon-envelope',
-				'title'         => __( 'Notifications', 'ultimate-member' ),
-				'submit_title'  => __( 'Update Notifications', 'ultimate-member' ),
+				'icon'         => 'um-faicon-envelope',
+				'title'        => __( 'Notifications', 'ultimate-member' ),
+				'submit_title' => __( 'Update Notifications', 'ultimate-member' ),
 			);
 
-			//if user cannot delete profile hide delete tab
+			// If user cannot delete profile hide delete tab.
 			if ( um_user( 'can_delete_profile' ) || um_user( 'can_delete_everyone' ) ) {
-
 				$tabs[99999]['delete'] = array(
-					'icon'          => 'um-faicon-trash-o',
-					'title'         => __( 'Delete Account', 'ultimate-member' ),
-					'submit_title'  => __( 'Delete Account', 'ultimate-member' ),
+					'icon'         => 'um-faicon-trash-o',
+					'title'        => __( 'Delete Account', 'ultimate-member' ),
+					'submit_title' => __( 'Delete Account', 'ultimate-member' ),
 				);
-
 			}
 
 			/**
@@ -567,9 +562,9 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		function get_tab_fields( $id, $shortcode_args ) {
 			$output = null;
 
-			UM()->fields()->set_id = absint( $id );
+			UM()->fields()->set_id   = absint( $id );
 			UM()->fields()->set_mode = 'account';
-			UM()->fields()->editing = true;
+			UM()->fields()->editing  = true;
 
 			if ( ! empty( $this->tab_output[ $id ]['content'] ) && ! empty( $this->tab_output[ $id ]['hash'] ) &&
 			     $this->tab_output[ $id ]['hash'] == md5( json_encode( $shortcode_args ) ) ) {
@@ -784,7 +779,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					 */
 					$output = apply_filters( "um_account_content_hook_{$id}", $output, $shortcode_args );
 					break;
-
 			}
 
 			$this->tab_output[ $id ] = array( 'content' => $output, 'hash' => md5( json_encode( $shortcode_args ) ) );
@@ -940,15 +934,14 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			return $classes;
 		}
 
-
 		/**
-		 * Checks account actions require current password
+		 * Checks account actions require current password.
 		 *
-		 * @param $tab_key
+		 * @param string $tab_key
 		 *
 		 * @return bool
 		 */
-		function current_password_is_required( $tab_key ) {
+		public function current_password_is_required( $tab_key ) {
 			$is_required = true;
 
 			switch ( $tab_key ) {
@@ -956,17 +949,22 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					$is_required = UM()->options()->get( 'account_general_password' );
 					break;
 				case 'delete':
-					break;
 				case 'password':
-					break;
 				case 'privacy_erase_data':
 				case 'privacy_download_data':
 					break;
 			}
 
-			$is_required = apply_filters( "um_account_{$tab_key}_require_current", $is_required );
+			return apply_filters( "um_account_{$tab_key}_require_current", $is_required );
+		}
 
-			return $is_required;
+		/**
+		 * Check the conditional hook for getting notifications tab data.
+		 *
+		 * @return bool
+		 */
+		public function is_notifications_tab_visible() {
+			return apply_filters( 'um_account_notifications_tab_enabled', false );
 		}
 	}
 }
