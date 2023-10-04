@@ -176,6 +176,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
   - Added: Profile permalink base options: Unique hash, Custom usermeta
   - Added: UM Form meta `um_form_version` for legacy support in the future
   - Added: Setting "Deleting user comments after deleting a user" for WordPress native logic workaround
+  - Added: `aria-invalid` and `aria-errormessage` attributes to the fields on UM Forms
   - Updated: Structure for enqueue assets PHP classes
   - Updated: [Hooks Documentation v2](https://ultimatemember.github.io/ultimatemember/hooks/)
 
