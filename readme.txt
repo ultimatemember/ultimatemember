@@ -181,6 +181,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 * Bugfixes:
 
+  - Fixed: Member directory search query escaping process
   - Fixed: Added 'ID' metakey to the blacklist. It's not possible to create field with 'ID' metakey to avoid the conflict
   - Fixed: Add/Edit Field metabox and "Field Icon", "Conditional logic" fields
   - Fixed: Init `jquery-slider-ui` script/style on the block editor page
