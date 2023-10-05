@@ -563,13 +563,17 @@ class Site_Health {
 				'value' => UM()->options()->get( 'profile_secondary_btn_word' ),
 			);
 		}
+
+		$default_avatar = UM()->options()->get( 'default_avatar' );
+		$default_cover  = UM()->options()->get( 'default_cover' );
+
 		$appearance_settings['um-default_avatar']               = array(
 			'label' => __( 'Default Profile Photo', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'default_avatar' )['url'],
+			'value' => ! empty( $default_avatar['url'] ) ? $default_avatar['url'] : '',
 		);
 		$appearance_settings['um-default_cover']                = array(
 			'label' => __( 'Default Cover Photo', 'ultimate-member' ),
-			'value' => UM()->options()->get( 'default_cover' )['url'],
+			'value' => ! empty( $default_cover['url'] ) ? $default_cover['url'] : '',
 		);
 		$appearance_settings['um-disable_profile_photo_upload'] = array(
 			'label' => __( 'Disable Profile Photo Upload', 'ultimate-member' ),
