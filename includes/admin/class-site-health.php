@@ -41,9 +41,17 @@ class Site_Health {
 		return get_option( "um_role_{$key}_meta", false );
 	}
 
+	public function array_map( $item ) {
+		if ( is_array( $item ) ) {
+			$item = maybe_serialize( $item );
+		}
+		return $item;
+	}
+
 	private function get_field_data( $info, $key, $field_key, $field ) {
 		$row        = isset( $field['metakey'] ) ? false : true;
 		$title      = $row ? __( 'Row: ', 'ultimate-member' ) . $field['id'] : __( 'Field: ', 'ultimate-member' ) . $field['metakey'];
+		$field      = array_map( array( &$this, 'array_map' ), $field );
 		$field_info = array(
 			'um-field_' . $field_key => array(
 				'label' => $title,
@@ -1567,7 +1575,7 @@ class Site_Health {
 					$info = apply_filters( 'um_debug_information_register_form', $info, $key );
 
 					$fields = get_post_meta( $key, '_um_custom_fields', true );
-					if ( ! empty( $fields ) ) {
+					if ( ! empty( $fields ) && is_array( $fields ) ) {
 						foreach ( $fields as $field_key => $field ) {
 							$field_info = $this->get_field_data( $info, $key, $field_key, $field );
 
@@ -1630,7 +1638,7 @@ class Site_Health {
 					$info = apply_filters( 'um_debug_information_login_form', $info, $key );
 
 					$fields = get_post_meta( $key, '_um_custom_fields', true );
-					if ( ! empty( $fields ) ) {
+					if ( ! empty( $fields ) && is_array( $fields ) ) {
 						foreach ( $fields as $field_key => $field ) {
 							$field_info = $this->get_field_data( $info, $key, $field_key, $field );
 
@@ -1694,101 +1702,11 @@ class Site_Health {
 								'label' => __( 'Show user description in profile header?', 'ultimate-member' ),
 								'value' => get_post_meta( $key, '_um_profile_show_bio', true ) ? $labels['yes'] : $labels['no'],
 							),
-							'um-profile_menu'              => array(
-								'label' => __( 'Enable profile menu', 'ultimate-member' ),
-								'value' => get_post_meta( $key, '_um_profile_menu', true ) ? $labels['yes'] : $labels['no'],
-							),
 						)
 					);
 
-					if ( 1 === absint( get_post_meta( $key, '_um_profile_menu', true ) ) ) {
-						$tab_options = array(
-							0 => __( 'Anyone', 'ultimate-member' ),
-							1 => __( 'Guests only', 'ultimate-member' ),
-							2 => __( 'Members only', 'ultimate-member' ),
-							3 => __( 'Only the owner', 'ultimate-member' ),
-							4 => __( 'Only specific roles', 'ultimate-member' ),
-							5 => __( 'Owner and specific roles', 'ultimate-member' ),
-						);
-
-						$tabs_for_count = 0;
-						$tabs           = UM()->profile()->tabs();
-
-						foreach ( $tabs as $k => $tab ) {
-							$profile_tab = get_post_meta( $key, '_um_profile_tab_' . $k, true );
-
-							$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
-								$info[ 'ultimate-member-' . $key ]['fields'],
-								array(
-									'um-profile_tab_' . $k => array(
-										'label' => $tab['name'] . __( ' Tab', 'ultimate-member' ),
-										'value' => $profile_tab ? $labels['yes'] : $labels['no'],
-									),
-								)
-							);
-
-							if ( isset( $profile_tab ) && 1 === absint( $profile_tab ) ) {
-								$tabs_for_count++;
-								$privacy     = '_um_profile_tab_' . $k . '_privacy';
-								$tab_privacy = get_post_meta( $key, $privacy, true );
-
-								$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
-									$info[ 'ultimate-member-' . $key ]['fields'],
-									array(
-										'um-profile_tab_' . $k . '_privacy' => array(
-											'label' => __( 'Who can see ', 'ultimate-member' ) . $tab['name'] . __( ' Tab?', 'ultimate-member' ),
-											'value' => $tab_options[ $tab_privacy ],
-										),
-									)
-								);
-
-								if ( 4 === absint( $tab_privacy ) || 5 === absint( $tab_privacy ) ) {
-									$allowed_tab = '_um_profile_tab_' . $k . '_roles';
-									if ( ! empty( get_post_meta( $key, $allowed_tab, true ) ) ) {
-										$allowed_roles = implode( ', ', get_post_meta( $key, $allowed_tab, true ) );
-									} else {
-										$allowed_roles = 'All';
-									}
-									$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
-										$info[ 'ultimate-member-' . $key ]['fields'],
-										array(
-											'um-profile_tab_' . $k . '_privacy_roles' => array(
-												'label' => __( 'Allowed roles for ', 'ultimate-member' ) . $tab['name'] . __( ' Tab', 'ultimate-member' ),
-												'value' => $allowed_roles,
-											),
-										)
-									);
-								}
-							}
-						}
-
-						if ( $tabs_for_count > 0 ) {
-							$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
-								$info[ 'ultimate-member-' . $key ]['fields'],
-								array(
-									'um-profile_menu_default_tab' => array(
-										'label' => __( 'Profile menu default tab', 'ultimate-member' ),
-										'value' => $tabs[ get_post_meta( $key, '_um_profile_menu_default_tab', true ) ]['name'],
-									),
-								)
-							);
-						}
-
-						$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
-							$info[ 'ultimate-member-' . $key ]['fields'],
-							array(
-								'um-profile_menu_icons' => array(
-									'label' => __( 'Enable menu icons in desktop view', 'ultimate-member' ),
-									'value' => get_post_meta( $key, '_um_profile_menu_icons', true ) ? $labels['yes'] : $labels['no'],
-								),
-							)
-						);
-
-						$info = apply_filters( 'um_debug_information_tab_form', $info, $key );
-					}
-
 					$fields = get_post_meta( $key, '_um_custom_fields', true );
-					if ( ! empty( $fields ) ) {
+					if ( ! empty( $fields ) && is_array( $fields ) ) {
 						foreach ( $fields as $field_key => $field ) {
 							$field_info = $this->get_field_data( $info, $key, $field_key, $field );
 
@@ -1800,7 +1718,7 @@ class Site_Health {
 					}
 
 					$profile_metafields = get_post_meta( $key, '_um_profile_metafields', true );
-					if ( ! empty( $profile_metafields ) ) {
+					if ( ! empty( $profile_metafields ) && is_array( $profile_metafields ) ) {
 						foreach ( $profile_metafields as $k => $field ) {
 							$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
 								$info[ 'ultimate-member-' . $key ]['fields'],
@@ -2025,7 +1943,7 @@ class Site_Health {
 
 				if ( 1 === absint( get_post_meta( $key, '_um_show_tagline', true ) ) ) {
 					$tagline_fields = get_post_meta( $key, '_um_tagline_fields', true );
-					if ( ! empty( $tagline_fields ) ) {
+					if ( ! empty( $tagline_fields ) && is_array( $tagline_fields ) ) {
 						foreach ( $tagline_fields as $k => $field ) {
 							$label = isset( $options[ $field ] ) ? $options[ $field ] : $field;
 							$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
@@ -2053,7 +1971,7 @@ class Site_Health {
 
 				if ( 1 === absint( get_post_meta( $key, '_um_show_userinfo', true ) ) ) {
 					$reveal_fields = get_post_meta( $key, '_um_reveal_fields', true );
-					if ( ! empty( $reveal_fields ) ) {
+					if ( ! empty( $reveal_fields ) && is_array( $reveal_fields ) ) {
 						foreach ( $reveal_fields as $k => $field ) {
 							$label = isset( $options[ $field ] ) ? $options[ $field ] : $field;
 							$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
@@ -2117,7 +2035,7 @@ class Site_Health {
 					);
 
 					$search_fields = get_post_meta( $key, '_um_search_fields', true );
-					if ( ! empty( $search_fields ) ) {
+					if ( ! empty( $search_fields ) && is_array( $search_fields ) ) {
 						foreach ( $search_fields as $k => $field ) {
 							$label = isset( $options[ $field ] ) ? $options[ $field ] : $field;
 							$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
@@ -2156,7 +2074,7 @@ class Site_Health {
 				}
 
 				$search_filters = get_post_meta( $key, '_um_search_filters', true );
-				if ( ! empty( $search_filters ) ) {
+				if ( ! empty( $search_filters ) && is_array( $search_filters ) ) {
 					foreach ( $search_filters as $k => $field ) {
 						$label = isset( $options[ $k ] ) ? $options[ $k ] : $k;
 						$value = $field;
