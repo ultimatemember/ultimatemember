@@ -791,6 +791,13 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 				}
 				break;
 
+			case 'youtube_video':
+				if ( ! UM()->validation()->is_url( $submitted_data[ $key ], 'youtube.com/watch?v=' ) && ! UM()->validation()->is_url( $submitted_data[ $key ], 'youtu.be' ) && ! UM()->validation()->is_url( $submitted_data[ $key ], 'youtube.com/shorts/' ) ) {
+					// translators: %s: label.
+					UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s URL', 'ultimate-member' ), $array['label'] ) );
+				}
+				break;
+
 			case 'spotify_url':
 				if ( ! UM()->validation()->is_url( $submitted_data[ $key ], 'open.spotify.com' ) ) {
 					// translators: %s: label.
