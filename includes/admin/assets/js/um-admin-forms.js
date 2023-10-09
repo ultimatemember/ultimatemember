@@ -1,5 +1,5 @@
 function um_admin_init_users_select() {
-	if ( jQuery('.um-user-select-field:visible').length ) {
+	if ( jQuery('.um-user-select-field:visible:not(.um-select2-inited)').length ) {
 		function avatarformat( data ) {
 			var option;
 			if ( ! data.id ) {
@@ -84,13 +84,15 @@ function um_admin_init_users_select() {
 			templateResult: avatarformat
 		};
 
-		jQuery('.um-user-select-field:visible').each( function() {
+		let selector = jQuery('.um-user-select-field:visible:not(.um-select2-inited)');
+
+		selector.each( function() {
 			if ( jQuery(this).hasClass('select2-hidden-accessible') ) {
-				jQuery(this).select2( 'destroy' );
+				jQuery(this).removeClass('um-select2-inited').select2( 'destroy' );
 			}
 		});
 
-		jQuery('.um-user-select-field:visible').select2( select2_atts );
+		selector.addClass('um-select2-inited').select2( select2_atts );
 	}
 }
 
