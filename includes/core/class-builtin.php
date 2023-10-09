@@ -1565,6 +1565,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$array['unique_username_or_email'] = __('Unique Username/E-mail','ultimate-member');
 			$array['url']                      = __('Website URL','ultimate-member');
 			$array['youtube_url']              = __('YouTube Profile','ultimate-member');
+			$array['youtube_video']            = __('YouTube Video','ultimate-member');
 			$array['spotify_url']              = __('Spotify URL','ultimate-member');
 			$array['telegram_url']             = __('Telegram URL','ultimate-member');
 			$array['discord']                  = __('Discord ID','ultimate-member');
