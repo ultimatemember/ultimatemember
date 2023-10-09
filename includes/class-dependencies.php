@@ -201,7 +201,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 				} elseif ( empty( $this->ext_required_version[ $ext_key ] ) || version_compare( $this->ext_required_version[ $ext_key ], $ext_ver, '>' ) ) {
 					// translators: %1$s is a plugin name; %2$s is a extension name; %3$s is a extension version.
 					$message = sprintf( __( 'Sorry, but this version of <strong>%1$s</strong> does not work with extension <strong>"%2$s" %3$s</strong> version.', 'ultimate-member' ), UM_PLUGIN_NAME, $ext_title, $ext_ver ) .
-						'<br />' .
+						'<br /> ' .
 						// translators: %s: extension name.
 						sprintf( __( 'Please update extension <strong>"%s"</strong> to the latest version.', 'ultimate-member' ), $ext_title );
 				}
