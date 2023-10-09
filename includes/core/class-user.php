@@ -842,6 +842,25 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					 * add_filter( 'um_custom_meta_permalink_base_generate_user_slug', 'my_custom_meta_permalink_base_generate_user_slug', 10, 3 );
 					 */
 					$user_in_url = apply_filters( 'um_custom_meta_permalink_base_generate_user_slug', $user_in_url, $user_id, $custom_meta );
+
+					if ( empty( $user_in_url ) ) {
+						$user_in_url = $userdata->user_login;
+						if ( is_email( $user_in_url ) ) {
+
+							$user_email  = $user_in_url;
+							$user_in_url = str_replace( '@', '', $user_in_url );
+
+							if ( ( $pos = strrpos( $user_in_url, '.' ) ) !== false ) {
+								$search_length = strlen( '.' );
+								$user_in_url   = substr_replace( $user_in_url, '-', $pos, $search_length );
+							}
+							update_user_meta( $user_id, "um_email_as_username_{$user_in_url}", $user_email );
+
+						} else {
+							$user_in_url = urlencode( $user_in_url );
+						}
+						update_user_meta( $user_id, "um_user_profile_url_slug_user_login", $user_in_url );
+					}
 				}
 			}
 
