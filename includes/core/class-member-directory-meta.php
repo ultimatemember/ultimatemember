@@ -587,24 +587,25 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			}
 
 			if ( ! empty( $_POST['search'] ) ) {
-				$search_line = trim( stripslashes( sanitize_text_field( $_POST['search'] ) ) );
+				$search_line = $this->prepare_search( $_POST['search'] );
+				if ( ! empty( $search_line ) ) {
+					$searches = array();
+					foreach ( $this->core_search_fields as $field ) {
+						$searches[] = $wpdb->prepare( "u.{$field} LIKE %s", '%' . $search_line . '%' );
+					}
 
-				$searches = array();
-				foreach ( $this->core_search_fields as $field ) {
-					$searches[] = $wpdb->prepare( "u.{$field} LIKE %s", '%' . $search_line . '%' );
+					$core_search = implode( ' OR ', $searches );
+
+					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm_search ON umm_search.user_id = u.ID";
+
+					$additional_search = apply_filters( 'um_member_directory_meta_general_search_meta_query', '',$search_line );
+
+					$search_like_string = apply_filters( 'um_member_directory_meta_search_like_type', '%' . $search_line . '%', $search_line );
+
+					$this->where_clauses[] = $wpdb->prepare( "( umm_search.um_value = %s OR umm_search.um_value LIKE %s OR umm_search.um_value LIKE %s OR {$core_search}{$additional_search})", $search_line, $search_like_string, '%' . serialize( (string) $search_line ) . '%' );
+
+					$this->is_search = true;
 				}
-
-				$core_search = implode( ' OR ', $searches );
-
-				$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm_search ON umm_search.user_id = u.ID";
-
-				$additional_search = apply_filters( 'um_member_directory_meta_general_search_meta_query', '', stripslashes( sanitize_text_field( $_POST['search'] ) ) );
-
-				$search_like_string = apply_filters( 'um_member_directory_meta_search_like_type', '%' . $search_line . '%', $search_line );
-
-				$this->where_clauses[] = $wpdb->prepare( "( umm_search.um_value = %s OR umm_search.um_value LIKE %s OR umm_search.um_value LIKE %s OR {$core_search}{$additional_search})", $search_line, $search_like_string, '%' . serialize( (string) $search_line ) . '%' );
-
-				$this->is_search = true;
 			}
 
 			//filters

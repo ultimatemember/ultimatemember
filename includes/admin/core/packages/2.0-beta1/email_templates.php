@@ -50,7 +50,7 @@ function um_upgrade20beta1_get_template_file( $location, $template_name, $html =
 			$template_path = trailingslashit( get_stylesheet_directory() . '/ultimate-member/email' . $blog_id ). $template_name_file . $ext;
 			break;
 		case 'plugin':
-			$path = ! empty( UM()->mail()->path_by_slug[ $template_name ] ) ? UM()->mail()->path_by_slug[ $template_name ] : um_path . 'templates/email';
+			$path = ! empty( UM()->mail()->path_by_slug[ $template_name ] ) ? UM()->mail()->path_by_slug[ $template_name ] : UM_PATH . 'templates/email';
 			$template_path = trailingslashit( $path ) . $template_name . $ext;
 			break;
 	}

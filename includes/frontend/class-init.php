@@ -20,7 +20,21 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		 * @used-by \UM::includes()
 		 */
 		public function includes() {
+			$this->enqueue();
 			$this->secure();
+		}
+
+		/**
+		 * @since 2.6.12
+		 *
+		 * @return Enqueue
+		 */
+		public function enqueue() {
+			if ( empty( UM()->classes['um\frontend\enqueue'] ) ) {
+				UM()->classes['um\frontend\enqueue'] = new Enqueue();
+			}
+
+			return UM()->classes['um\frontend\enqueue'];
 		}
 
 		/**

@@ -86,8 +86,10 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		}
 
 		public function includes() {
+			$this->enqueue();
 			$this->notices();
 			$this->secure();
+			$this->site_health();
 		}
 
 		function init_variables() {
@@ -2042,6 +2044,18 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		}
 
 		/**
+		 * @since 2.6.12
+		 *
+		 * @return Enqueue
+		 */
+		public function enqueue() {
+			if ( empty( UM()->classes['um\admin\enqueue'] ) ) {
+				UM()->classes['um\admin\enqueue'] = new Enqueue();
+			}
+			return UM()->classes['um\admin\enqueue'];
+		}
+
+		/**
 		 * @since 2.0
 		 *
 		 * @return core\Admin_Notices()
@@ -2063,6 +2077,18 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 				UM()->classes['um\admin\secure'] = new Secure();
 			}
 			return UM()->classes['um\admin\secure'];
+		}
+
+		/**
+		 * @since 2.6.12
+		 *
+		 * @return Site_Health
+		 */
+		public function site_health() {
+			if ( empty( UM()->classes['um\admin\site_health'] ) ) {
+				UM()->classes['um\admin\site_health'] = new Site_Health();
+			}
+			return UM()->classes['um\admin\site_health'];
 		}
 	}
 }

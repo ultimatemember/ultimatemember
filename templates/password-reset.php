@@ -6,7 +6,7 @@
  *
  * Call: function ultimatemember_password()
  *
- * @version 2.6.1
+ * @version 2.6.12
  *
  * @var string $mode
  * @var int    $form_id
@@ -14,7 +14,8 @@
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
-} ?>
+}
+?>
 
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?>">
 	<div class="um-form">
@@ -143,28 +144,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 				 * ?>
 				 */
 				do_action( 'um_reset_password_form', $args );
-
-				/**
-				 * UM hook
-				 *
-				 * @type action
-				 * @title um_after_form_fields
-				 * @description Password reset after display form
-				 * @input_vars
-				 * [{"var":"$args","type":"array","desc":"Password reset shortcode arguments"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_after_form_fields', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_after_form_fields', 'my_after_form_fields', 10, 1 );
-				 * function my_after_form_fields( $args ) {
-				 *     // your code here
-				 * }
-				 * ?>
-				 */
+				/** This action is documented in includes/core/um-actions-profile.php */
 				do_action( 'um_after_form_fields', $args );
-			} ?>
+			}
+			?>
 		</form>
 	</div>
 </div>

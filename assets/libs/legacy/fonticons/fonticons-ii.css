@@ -2,11 +2,11 @@
 
 @font-face {
   font-family: "Ionicons";
-  src:url("../font/ionicons.eot?v=2.0.0");
-  src:url("../font/ionicons.eot?v=2.0.0#iefix") format("embedded-opentype"),
-    url("../font/ionicons.woff?v=2.0.0") format("woff"),
-    url("../font/ionicons.ttf?v=2.0.0") format("truetype"),
-    url("../font/ionicons.svg?v=2.0.0#Ionicons") format("svg");
+  src:url("font/ionicons.eot?v=2.0.0");
+  src:url("font/ionicons.eot?v=2.0.0#iefix") format("embedded-opentype"),
+    url("font/ionicons.woff?v=2.0.0") format("woff"),
+    url("font/ionicons.ttf?v=2.0.0") format("truetype"),
+    url("font/ionicons.svg?v=2.0.0#Ionicons") format("svg");
 	font-display: swap;
   font-weight: normal;
   font-style: normal;

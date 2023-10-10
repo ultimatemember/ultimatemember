@@ -1,12 +1,13 @@
 <?php
 namespace um\admin\core;
 
+use WP_Post;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
-
 
 	/**
 	 * Class Admin_Metabox
@@ -93,7 +94,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 */
 		function hide_metabox_restrict_content_shop( $hide ) {
 			if ( function_exists( 'wc_get_page_id' ) && ! empty( $_GET['post'] ) &&
-			     absint( $_GET['post'] ) == wc_get_page_id( 'shop' ) ) {
+				 absint( $_GET['post'] ) == wc_get_page_id( 'shop' ) ) {
 				return true;
 			}
 
@@ -220,7 +221,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		public function save_metabox_custom( $post_id, $post ) {
 			// validate nonce
 			if ( ! isset( $_POST['um_admin_save_metabox_custom_nonce'] ) ||
-			     ! wp_verify_nonce( $_POST['um_admin_save_metabox_custom_nonce'], basename( __FILE__ ) ) ) {
+				 ! wp_verify_nonce( $_POST['um_admin_save_metabox_custom_nonce'], basename( __FILE__ ) ) ) {
 				return;
 			}
 
@@ -324,7 +325,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		function save_metabox_restrict_content( $post_id, $post ) {
 			// validate nonce
 			if ( ! isset( $_POST['um_admin_save_metabox_restrict_content_nonce'] ) ||
-			     ! wp_verify_nonce( $_POST['um_admin_save_metabox_restrict_content_nonce'], basename( __FILE__ ) ) ) {
+				 ! wp_verify_nonce( $_POST['um_admin_save_metabox_restrict_content_nonce'], basename( __FILE__ ) ) ) {
 				return;
 			}
 
@@ -351,7 +352,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		function save_attachment_metabox_restrict_content( $post_id ) {
 			// validate nonce
 			if ( ! isset( $_POST['um_admin_save_metabox_restrict_content_nonce'] )
-			     || ! wp_verify_nonce( $_POST['um_admin_save_metabox_restrict_content_nonce'], basename( __FILE__ ) ) ) {
+				 || ! wp_verify_nonce( $_POST['um_admin_save_metabox_restrict_content_nonce'], basename( __FILE__ ) ) ) {
 				return;
 			}
 
@@ -709,7 +710,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				$path = $matches[0];
 				$box['id'] = preg_replace('~(\\{[^}]+\\})~','', $box['id'] );
 			} else {
-				$path = um_path;
+				$path = UM_PATH;
 			}
 
 			$path = str_replace('{','', $path );
@@ -745,7 +746,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				$path = $matches[0];
 				$box['id'] = preg_replace('~(\\{[^}]+\\})~','', $box['id'] );
 			} else {
-				$path = um_path;
+				$path = UM_PATH;
 			}
 
 			$path = str_replace('{','', $path );
@@ -777,7 +778,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				$path = $matches[0];
 				$box['id'] = preg_replace('~(\\{[^}]+\\})~','', $box['id'] );
 			} else {
-				$path = um_path;
+				$path = UM_PATH;
 			}
 
 			$path = str_replace('{','', $path );
@@ -809,7 +810,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				$path = $matches[0];
 				$box['id'] = preg_replace('~(\\{[^}]+\\})~','', $box['id'] );
 			} else {
-				$path = um_path;
+				$path = UM_PATH;
 			}
 
 			$path = str_replace('{','', $path );
@@ -1156,17 +1157,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		}
 
 		/**
-		 * Save form metabox
+		 * Save form metabox.
 		 *
-		 * @param $post_id
-		 * @param $post
+		 * @param int     $post_id
+		 * @param WP_Post $post
 		 */
 		public function save_metabox_form( $post_id, $post ) {
 			global $wpdb;
 
 			// validate nonce
 			if ( ! isset( $_POST['um_admin_save_metabox_form_nonce'] ) ||
-			     ! wp_verify_nonce( $_POST['um_admin_save_metabox_form_nonce'], basename( __FILE__ ) ) ) {
+				! wp_verify_nonce( $_POST['um_admin_save_metabox_form_nonce'], basename( __FILE__ ) ) ) {
 				return;
 			}
 
@@ -1181,6 +1182,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				return;
 			}
 
+			// Set post meta for legacy support in the future.
+			add_post_meta( $post_id, 'um_form_version', UM_VERSION );
+
 			if ( empty( $_POST['post_title'] ) ) {
 				$where = array( 'ID' => $post_id );
 				// translators: %s: Form id.
@@ -1194,17 +1198,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			$form_meta = UM()->admin()->sanitize_form_meta( $_POST['form'] );
 
 			foreach ( $form_meta as $k => $v ) {
-				if ( strstr( $k, '_um_' ) ) {
-					if ( $k === '_um_is_default' ) {
+				if ( 0 === strpos( $k, '_um_' ) ) {
+					if ( '_um_is_default' === $k ) {
 						$mode = UM()->query()->get_attr( 'mode', $post_id );
 						if ( ! empty( $mode ) ) {
-							$posts = $wpdb->get_col( $wpdb->prepare(
-								"SELECT post_id
-								FROM {$wpdb->postmeta}
-								WHERE meta_key = '_um_mode' AND
-									  meta_value = %s",
-								$mode
-							) );
+							$posts = $wpdb->get_col(
+								$wpdb->prepare(
+									"SELECT post_id
+									FROM {$wpdb->postmeta}
+									WHERE meta_key = '_um_mode' AND
+										  meta_value = %s",
+									$mode
+								)
+							);
 							foreach ( $posts as $p_id ) {
 								delete_post_meta( $p_id, '_um_is_default' );
 							}
@@ -1214,9 +1220,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					update_post_meta( $post_id, $k, $v );
 				}
 			}
-
 		}
-
 
 		/**
 		 * Load modal content
@@ -1225,17 +1229,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			$screen = get_current_screen();
 
 			if ( isset( $screen->id ) && strstr( $screen->id, 'um_form' ) ) {
-				foreach ( glob( um_path . 'includes/admin/templates/modal/forms/*.php' ) as $modal_content ) {
+				foreach ( glob( UM_PATH . 'includes/admin/templates/modal/forms/*.php' ) as $modal_content ) {
 					include_once $modal_content;
 				}
 			}
 
 			if ( $this->init_icon ) {
-				include_once um_path . 'includes/admin/templates/modal/forms/fonticons.php';
+				include_once UM_PATH . 'includes/admin/templates/modal/forms/fonticons.php';
 			}
 
 			if ( 'users' === $screen->id ) {
-				include_once um_path . 'includes/admin/templates/modal/dynamic_registration_preview.php';
+				include_once UM_PATH . 'includes/admin/templates/modal/dynamic_registration_preview.php';
 			}
 
 			// needed on forms only
@@ -1254,7 +1258,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			}
 		}
 
-
 		/**
 		 * Show field input for edit at modal field
 		 *
@@ -1262,7 +1265,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 * @param null $form_id
 		 * @param array $field_args
 		 */
-		function field_input( $attribute, $form_id = null, $field_args = array() ) {
+		public function field_input( $attribute, $form_id = null, $field_args = array() ) {
 
 			if ( $this->in_edit == true ) { // we're editing a field
 				$real_attr = substr( $attribute, 1 );
@@ -1270,9 +1273,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			}
 
 			switch ( $attribute ) {
-
 				default:
-
 					/**
 					 * UM hook
 					 *
@@ -1299,7 +1300,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				case '_visibility':
 					?>
 
-					<p><label for="_visibility"><?php _e( 'Visibility', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Select where this field should appear. This option should only be changed on the profile form and allows you to show a field in one mode only (edit or view) or in both modes.','ultimate-member' ) ); ?></label>
+					<p>
+						<label for="_visibility"><?php esc_html_e( 'Visibility', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select where this field should appear. This option should only be changed on the profile form and allows you to show a field in one mode only (edit or view) or in both modes.','ultimate-member' ) ); ?></label>
 						<select name="_visibility" id="_visibility" style="width: 100%">
 							<option value="all" <?php selected( 'all', $this->edit_mode_value ); ?>><?php _e( 'View everywhere', 'ultimate-member' ) ?></option>
 							<option value="edit" <?php selected( 'edit', $this->edit_mode_value ); ?>><?php _e( 'Edit mode only', 'ultimate-member' ) ?></option>
@@ -1315,104 +1317,91 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				case '_conditional_action2':
 				case '_conditional_action3':
 				case '_conditional_action4':
-				?>
+					?>
 
-				<p>
-					<select name="<?php echo esc_attr( $attribute ); ?>" id="<?php echo esc_attr( $attribute ); ?>" style="width: 90px">
+					<p>
+						<select name="<?php echo esc_attr( $attribute ); ?>" id="<?php echo esc_attr( $attribute ); ?>" style="width: 90px">
+							<option></option>
+							<?php
+							$actions = array( 'show', 'hide' );
+							foreach ( $actions as $action ) {
+								?>
+								<option value="<?php echo esc_attr( $action ); ?>" <?php selected( $action, $this->edit_mode_value ); ?>><?php echo esc_html( $action ); ?></option>
+								<?php
+							}
+							?>
+						</select>
 
-						<option></option>
+						&nbsp;&nbsp;<?php esc_html_e( 'If', 'ultimate-member' ); ?>
+					</p>
 
-						<?php $actions = array( 'show', 'hide' );
-						foreach ( $actions as $action ) { ?>
-
-							<option value="<?php echo esc_attr( $action ); ?>" <?php selected( $action, $this->edit_mode_value ); ?>><?php echo $action; ?></option>
-
-						<?php } ?>
-
-					</select>
-
-					&nbsp;&nbsp;<?php _e( 'If' ); ?>
-				</p>
-
-				<?php
-				break;
+					<?php
+					break;
 
 				case '_conditional_field':
 				case '_conditional_field1':
 				case '_conditional_field2':
 				case '_conditional_field3':
 				case '_conditional_field4':
-				?>
-
-				<p>
-					<select name="<?php echo esc_attr( $attribute ); ?>" id="<?php echo esc_attr( $attribute ); ?>" style="width: 150px">
-
-						<option></option>
-
-						<?php $fields = UM()->query()->get_attr( 'custom_fields', $form_id );
-
-						foreach ( $fields as $key => $array ) {
-							if ( isset( $array['title'] ) &&
-							     ( ! isset( $this->edit_array['metakey'] ) || $key != $this->edit_array['metakey'] ) ) { ?>
-
-								<option value="<?php echo esc_attr( $key ) ?>" <?php selected( $key, $this->edit_mode_value ) ?>><?php echo $array['title'] ?></option>
-
-							<?php }
-						} ?>
-
-					</select>
-				</p>
-
-				<?php
-				break;
+					?>
+					<p>
+						<select name="<?php echo esc_attr( $attribute ); ?>" id="<?php echo esc_attr( $attribute ); ?>" style="width: 150px">
+							<option></option>
+							<?php
+							$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
+							foreach ( $fields as $key => $array ) {
+								if ( isset( $array['title'] ) &&
+									 ( ! isset( $this->edit_array['metakey'] ) || $key != $this->edit_array['metakey'] ) ) {
+									?>
+									<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, $this->edit_mode_value ); ?>><?php echo esc_html( $array['title'] ); ?></option>
+									<?php
+								}
+							}
+							?>
+						</select>
+					</p>
+					<?php
+					break;
 
 				case '_conditional_operator':
 				case '_conditional_operator1':
 				case '_conditional_operator2':
 				case '_conditional_operator3':
 				case '_conditional_operator4':
-				?>
-
-				<p>
-					<select name="<?php echo esc_attr( $attribute ); ?>" id="<?php echo esc_attr( $attribute ); ?>" style="width: 150px">
-
-						<option></option>
-
-						<?php $operators = array(
-							'empty',
-							'not empty',
-							'equals to',
-							'not equals',
-							'greater than',
-							'less than',
-							'contains'
-						);
-
-						foreach ( $operators as $operator ) { ?>
-
-							<option value="<?php echo esc_attr( $operator ); ?>" <?php selected( $operator, $this->edit_mode_value ); ?>><?php echo $operator; ?></option>
-
-						<?php } ?>
-
-					</select>
-				</p>
-
-				<?php
-				break;
+					$operators = array(
+						'empty',
+						'not empty',
+						'equals to',
+						'not equals',
+						'greater than',
+						'less than',
+						'contains',
+					);
+					?>
+					<p>
+						<select name="<?php echo esc_attr( $attribute ); ?>" id="<?php echo esc_attr( $attribute ); ?>" style="width: 150px">
+							<option></option>
+							<?php foreach ( $operators as $operator ) { ?>
+								<option value="<?php echo esc_attr( $operator ); ?>" <?php selected( $operator, $this->edit_mode_value ); ?>><?php echo esc_html( $operator ); ?></option>
+							<?php } ?>
+						</select>
+					</p>
+					<?php
+					break;
 
 				case '_conditional_value':
 				case '_conditional_value1':
 				case '_conditional_value2':
 				case '_conditional_value3':
 				case '_conditional_value4':
-				?>
+					?>
 
-				<p>
-					<input type="text" name="<?php echo esc_attr( $attribute ); ?>" id="<?php echo esc_attr( $attribute ); ?>" value="<?php echo isset( $this->edit_mode_value ) ? $this->edit_mode_value : ''; ?>" placeholder="<?php esc_attr_e( 'Value', 'ultimate-member' ); ?>" style="width: 150px!important;position: relative;top: -1px;" />
-				</p>
+					<p>
+						<input type="text" name="<?php echo esc_attr( $attribute ); ?>" id="<?php echo esc_attr( $attribute ); ?>" value="<?php echo isset( $this->edit_mode_value ) ? esc_attr( $this->edit_mode_value ) : ''; ?>" placeholder="<?php esc_attr_e( 'Value', 'ultimate-member' ); ?>" style="width: 150px!important;position: relative;top: -1px;" />
+					</p>
 
-				<?php
-				break;
+					<?php
+					break;
 
 				case '_validate':
 					?>
@@ -1470,62 +1459,49 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_icon':
-
-					if ( $this->set_field_type == 'row' ) {
+					if ( 'row' === $this->set_field_type ) {
 						$back = 'UM_edit_row';
-
 						?>
+						<p class="_heading_text"><label for="_icon"><?php esc_html_e( 'Icon', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select an icon to appear in the field. Leave blank if you do not want an icon to show in the field.', 'ultimate-member' ) ); ?></label>
+							<a href="javascript:void(0);" class="button" data-modal="UM_fonticons" data-modal-size="normal" data-dynamic-content="um_admin_fonticon_selector" data-arg1="" data-arg2="" data-back="<?php echo esc_attr( $back ); ?>"><?php esc_html_e( 'Choose Icon', 'ultimate-member' ); ?></a>
 
-						<p class="_heading_text"><label for="_icon"><?php _e( 'Icon', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Select an icon to appear in the field. Leave blank if you do not want an icon to show in the field.', 'ultimate-member' ) ); ?></label>
+							<span class="um-admin-icon-value"><?php if ( ! empty( $this->edit_mode_value ) ) { ?><i class="<?php echo esc_attr( $this->edit_mode_value ); ?>"></i><?php } else { ?><?php esc_html_e( 'No Icon', 'ultimate-member' ); ?><?php } ?></span>
 
-							<a href="javascript:void(0);" class="button" data-modal="UM_fonticons" data-modal-size="normal" data-dynamic-content="um_admin_fonticon_selector" data-arg1="" data-arg2="" data-back="<?php echo esc_attr( $back ); ?>"><?php _e( 'Choose Icon', 'ultimate-member' ) ?></a>
+							<input type="hidden" name="_icon" id="_icon" value="<?php echo ! empty( $this->edit_mode_value ) ? esc_attr( $this->edit_mode_value ) : ''; ?>" />
 
-							<span class="um-admin-icon-value"><?php if ( $this->edit_mode_value ) { ?><i class="<?php echo $this->edit_mode_value; ?>"></i><?php } else { ?><?php _e( 'No Icon', 'ultimate-member' ) ?><?php } ?></span>
-
-							<input type="hidden" name="_icon" id="_icon" value="<?php echo (isset( $this->edit_mode_value ) ) ? $this->edit_mode_value : ''; ?>" />
-
-							<?php if ( $this->edit_mode_value ) { ?>
+							<?php if ( ! empty( $this->edit_mode_value ) ) { ?>
 								<span class="um-admin-icon-clear show"><i class="um-icon-android-cancel"></i></span>
 							<?php } else { ?>
 								<span class="um-admin-icon-clear"><i class="um-icon-android-cancel"></i></span>
 							<?php } ?>
-
 						</p>
-
-					<?php } else {
-
+						<?php
+					} else {
 						if ( $this->in_edit ) {
 							$back = 'UM_edit_field';
 						} else {
 							$back = 'UM_add_field';
 						}
-
 						?>
-
 						<div class="um-admin-tri">
+							<p>
+								<label for="_icon"><?php esc_html_e( 'Icon', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select an icon to appear in the field. Leave blank if you do not want an icon to show in the field.', 'ultimate-member' ) ); ?></label>
 
-							<p><label for="_icon"><?php _e( 'Icon', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Select an icon to appear in the field. Leave blank if you do not want an icon to show in the field.', 'ultimate-member' ) ); ?></label>
+								<a href="javascript:void(0);" class="button" data-modal="UM_fonticons" data-modal-size="normal" data-dynamic-content="um_admin_fonticon_selector" data-arg1="" data-arg2="" data-back="<?php echo esc_attr( $back ); ?>"><?php esc_html_e( 'Choose Icon', 'ultimate-member' ); ?></a>
 
-								<a href="javascript:void(0);" class="button" data-modal="UM_fonticons" data-modal-size="normal" data-dynamic-content="um_admin_fonticon_selector" data-arg1="" data-arg2="" data-back="<?php echo esc_attr( $back ); ?>"><?php _e( 'Choose Icon', 'ultimate-member' ) ?></a>
+								<span class="um-admin-icon-value"><?php if ( ! empty( $this->edit_mode_value ) ) { ?><i class="<?php echo esc_attr( $this->edit_mode_value ); ?>"></i><?php } else { ?><?php esc_html_e( 'No Icon', 'ultimate-member' ) ?><?php } ?></span>
 
-								<span class="um-admin-icon-value"><?php if ( $this->edit_mode_value ) { ?><i class="<?php echo $this->edit_mode_value; ?>"></i><?php } else { ?><?php _e( 'No Icon', 'ultimate-member' ) ?><?php } ?></span>
+								<input type="hidden" name="_icon" id="_icon" value="<?php echo ! empty( $this->edit_mode_value ) ? esc_attr( $this->edit_mode_value ) : ''; ?>" />
 
-								<input type="hidden" name="_icon" id="_icon" value="<?php echo (isset( $this->edit_mode_value ) ) ? $this->edit_mode_value : ''; ?>" />
-
-								<?php if ( $this->edit_mode_value ) { ?>
+								<?php if ( ! empty( $this->edit_mode_value ) ) { ?>
 									<span class="um-admin-icon-clear show"><i class="um-icon-android-cancel"></i></span>
 								<?php } else { ?>
 									<span class="um-admin-icon-clear"><i class="um-icon-android-cancel"></i></span>
 								<?php } ?>
-
 							</p>
-
 						</div>
-
 						<?php
-
 					}
-
 					break;
 
 				case '_css_class':
@@ -2445,11 +2421,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 					<?php
 					break;
-
-
 			}
 
+			// Flush class variable.
+			$this->edit_mode_value = null;
 		}
-
 	}
 }

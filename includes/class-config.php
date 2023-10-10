@@ -81,6 +81,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 */
 		public $default_roles_metadata = array();
 
+		public $permalink_base_options = array();
+
+		public $display_name_options = array();
+
 		/**
 		 * Config constructor.
 		 */
@@ -511,6 +515,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'disable_restriction_pre_queries'       => 0,
 				'uninstall_on_delete'                   => 0,
 				'permalink_base'                        => 'user_login',
+				'permalink_base_custom_meta'            => '',
 				'display_name'                          => 'full_name',
 				'display_name_field'                    => '',
 				'author_redirect'                       => 1,
@@ -591,6 +596,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'secure_notify_admins_banned_accounts'  => false,
 				'secure_notify_admins_banned_accounts__interval' => 'instant',
 				'secure_allowed_redirect_hosts'         => '',
+				'delete_comments'                       => 0,
 			);
 
 			add_filter( 'um_get_tabs_from_config', '__return_true' );
@@ -773,6 +779,29 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'_um_status'                        => 'approved',
 					'_um_auto_approve_act'              => 'redirect_profile',
 				),
+			);
+
+			$this->permalink_base_options = array(
+				'user_login'  => __( 'Username', 'ultimate-member' ),
+				'name'        => __( 'First and Last Name with \'.\'', 'ultimate-member' ),
+				'name_dash'   => __( 'First and Last Name with \'-\'', 'ultimate-member' ),
+				'name_plus'   => __( 'First and Last Name with \'+\'', 'ultimate-member' ),
+				'user_id'     => __( 'User ID', 'ultimate-member' ),
+				'hash'        => __( 'Unique hash string', 'ultimate-member' ),
+				'custom_meta' => __( 'Custom usermeta', 'ultimate-member' ),
+			);
+			$this->permalink_base_options = apply_filters( 'um_config_permalink_base_options', $this->permalink_base_options );
+
+			$this->display_name_options = array(
+				'default'        => __( 'Default WP Display Name', 'ultimate-member' ),
+				'nickname'       => __( 'Nickname', 'ultimate-member' ),
+				'username'       => __( 'Username', 'ultimate-member' ),
+				'full_name'      => __( 'First name & last name', 'ultimate-member' ),
+				'sur_name'       => __( 'Last name & first name', 'ultimate-member' ),
+				'initial_name'   => __( 'First name & first initial of last name', 'ultimate-member' ),
+				'initial_name_f' => __( 'First initial of first name & last name', 'ultimate-member' ),
+				'first_name'     => __( 'First name only', 'ultimate-member' ),
+				'field'          => __( 'Custom field(s)', 'ultimate-member' ),
 			);
 		}
 

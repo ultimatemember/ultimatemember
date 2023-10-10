@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
 Tested up to: 6.3
-Stable tag: 2.6.11
+Stable tag: 2.6.12
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -165,6 +165,49 @@ No specific extensions are needed. But we highly recommended keep active these P
 = Important: =
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
+
+= 2.6.12: October 09, 2023 =
+
+* Enhancements:
+
+  - Added: Site Health sections
+  - Added: oEmbed field type
+  - Added: YouTube field type supports YouTube Shorts links
+  - Added: Profile permalink base options: Unique hash, Custom usermeta
+  - Added: UM Form meta `um_form_version` for legacy support in the future
+  - Added: Setting "Deleting user comments after deleting a user" for WordPress native logic workaround
+  - Added: `aria-invalid` and `aria-errormessage` attributes to the fields on UM Forms
+  - Updated: Structure for enqueue assets PHP classes
+  - Updated: [Hooks Documentation v2](https://ultimatemember.github.io/ultimatemember/hooks/)
+
+* Bugfixes:
+
+  - Fixed: Member directory search query escaping process
+  - Fixed: Added 'ID' metakey to the blacklist. It's not possible to create field with 'ID' metakey to avoid the conflict
+  - Fixed: Add/Edit Field metabox and "Field Icon", "Conditional logic" fields
+  - Fixed: Init `jquery-slider-ui` script/style on the block editor page
+  - Fixed: Displaying "Notifications Account Tab" setting
+  - Fixed: Displaying Post Date on the User Profile > Posts tab based on this [article](https://make.wordpress.org/core/2019/09/23/date-time-improvements-wp-5-3/)
+  - Fixed: Small PHP warning, notices and typos
+
+* Deprecated:
+
+  - `UM()->enqueue()` use `UM()->frontend()->enqueue()` method
+  - `UM()->admin_enqueue()` use `UM()->admin()->enqueue()` method
+  - `UM()->admin_enqueue()->suffix` property use `UM()->frontend()->enqueue()::get_suffix()`
+  - `UM()->admin()->enqueue()->suffix` property use `UM()->frontend()->enqueue()::get_suffix()`
+  - Changed directories for the fonts (fonticons + raty), and JS/CSS files related to libs `jquery-ui`, `raty`, `select2`, `tipsy`, `fonticons (FontAwesome + Ionicons)`
+
+* Templates required update:
+
+  - account.php
+  - login.php
+  - password-change.php
+  - password-reset.php
+  - register.php
+  - profile/posts-single.php
+
+* Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade
 
 = 2.6.11: September 06, 2023 =
 

@@ -644,8 +644,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$hidden = '';
 			if ( ! empty( $multiple ) ) {
 				$hidden = "<input type=\"hidden\" $hidden_name_attr value=\"\" />";
+			} else {
+				$options = '<option></option>' . $options;
 			}
-			$html = "$hidden<select $multiple $id_attr $name_attr $class_attr $data_attr data-placeholder=\"" . esc_attr( $placeholder ) . "\" placeholder=\"" . esc_attr( $placeholder ) . "\"><option value=\"\">" . esc_html( $placeholder ) . "</option>$options</select>";
+			$html = "$hidden<select $multiple $id_attr $name_attr $class_attr $data_attr data-placeholder=\"" . esc_attr( $placeholder ) . "\" placeholder=\"" . esc_attr( $placeholder ) . "\">$options</select>";
 
 			return $html;
 		}

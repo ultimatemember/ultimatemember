@@ -61,7 +61,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 			}
 			// phpcs:enable WordPress.Security.NonceVerification
 
-			wp_register_script( 'um_admin_secure', UM()->admin_enqueue()->js_url . 'um-admin-secure.js', array( 'jquery' ), UM_VERSION, true );
+			wp_register_script( 'um_admin_secure', UM()->admin()->enqueue()->js_url . 'um-admin-secure.js', array( 'jquery' ), UM_VERSION, true );
 			wp_enqueue_script( 'um_admin_secure' );
 		}
 

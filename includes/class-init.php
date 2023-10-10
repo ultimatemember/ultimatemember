@@ -1,5 +1,7 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
-
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'UM' ) ) {
 
@@ -215,9 +217,9 @@ if ( ! class_exists( 'UM' ) ) {
 				add_action( 'init', array( &$this, 'old_update_patch' ), 0 );
 
 				//run activation
-				register_activation_hook( um_plugin, array( &$this, 'activation' ) );
+				register_activation_hook( UM_PLUGIN, array( &$this, 'activation' ) );
 
-				register_deactivation_hook( um_plugin, array( &$this, 'deactivation' ) );
+				register_deactivation_hook( UM_PLUGIN, array( &$this, 'deactivation' ) );
 
 				if ( is_multisite() && ! defined( 'DOING_AJAX' ) ) {
 					add_action( 'wp_loaded', array( $this, 'maybe_network_activation' ) );
@@ -430,7 +432,7 @@ if ( ! class_exists( 'UM' ) ) {
 				$array = explode( '\\', strtolower( $class ) );
 				$array[ count( $array ) - 1 ] = 'class-'. end( $array );
 				if ( strpos( $class, 'um_ext' ) === 0 ) {
-					$full_path = str_replace( 'ultimate-member', '', untrailingslashit( um_path ) ) . str_replace( '_', '-', $array[1] ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR;
+					$full_path = str_replace( 'ultimate-member', '', untrailingslashit( UM_PATH ) ) . str_replace( '_', '-', $array[1] ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR;
 					unset( $array[0], $array[1] );
 					$path = implode( DIRECTORY_SEPARATOR, $array );
 					$path = str_replace( '_', '-', $path );
@@ -442,7 +444,7 @@ if ( ! class_exists( 'UM' ) ) {
 						array( 'um\\', '_', '\\' ),
 						array( $slash, '-', $slash ),
 						$class );
-					$full_path =  um_path . 'includes' . $path . '.php';
+					$full_path =  UM_PATH . 'includes' . $path . '.php';
 				}
 
 				if( isset( $full_path ) && file_exists( $full_path ) ) {
@@ -487,7 +489,7 @@ if ( ! class_exists( 'UM' ) ) {
 
 				delete_network_option( get_current_network_id(), 'um_maybe_network_wide_activation' );
 
-				if ( is_plugin_active_for_network( um_plugin ) ) {
+				if ( is_plugin_active_for_network( UM_PLUGIN ) ) {
 					// get all blogs
 					$blogs = get_sites();
 					if ( ! empty( $blogs ) ) {
@@ -510,7 +512,7 @@ if ( ! class_exists( 'UM' ) ) {
 			//first install
 			$version = get_option( 'um_version' );
 			if ( ! $version ) {
-				update_option( 'um_last_version_upgrade', ultimatemember_version );
+				update_option( 'um_last_version_upgrade', UM_VERSION );
 
 				add_option( 'um_first_activation_date', time() );
 
@@ -522,8 +524,8 @@ if ( ! class_exists( 'UM' ) ) {
 				UM()->options()->update( 'rest_api_version', '1.0' );
 			}
 
-			if ( $version != ultimatemember_version ) {
-				update_option( 'um_version', ultimatemember_version );
+			if ( $version != UM_VERSION ) {
+				update_option( 'um_version', UM_VERSION );
 			}
 
 			//run setup
@@ -574,7 +576,6 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->admin_upgrade();
 				$this->admin_settings();
 				$this->columns();
-				$this->admin_enqueue();
 				$this->metabox();
 				$this->users();
 				$this->dragdrop();
@@ -584,7 +585,6 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->theme_updater();
 			} elseif ( $this->is_request( 'frontend' ) ) {
 				$this->frontend()->includes();
-				$this->enqueue();
 				$this->account();
 				$this->password();
 				$this->login();
@@ -780,7 +780,6 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['theme_updater'];
 		}
 
-
 		/**
 		 * @since 2.0
 		 */
@@ -922,14 +921,13 @@ if ( ! class_exists( 'UM' ) ) {
 
 		/**
 		 * @since 2.0
+		 * @depecated 2.6.12
 		 *
-		 * @return um\admin\core\Admin_Enqueue()
+		 * @return um\admin\Enqueue
 		 */
-		function admin_enqueue() {
-			if ( empty( $this->classes['admin_enqueue'] ) ) {
-				$this->classes['admin_enqueue'] = new um\admin\core\Admin_Enqueue();
-			}
-			return $this->classes['admin_enqueue'];
+		public function admin_enqueue() {
+			_deprecated_function( __METHOD__, '2.6.12', 'UM()->admin()->enqueue()' );
+			return $this->admin()->enqueue();
 		}
 
 
@@ -1147,20 +1145,16 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['register'];
 		}
 
-
 		/**
 		 * @since 2.0
+		 * @todo Make it deprecated and review extensions.
 		 *
-		 * @return um\core\Enqueue
+		 * @return um\frontend\Enqueue
 		 */
-		function enqueue() {
-			if ( empty( $this->classes['enqueue'] ) ) {
-				$this->classes['enqueue'] = new um\core\Enqueue();
-			}
-
-			return $this->classes['enqueue'];
+		public function enqueue() {
+			_deprecated_function( __METHOD__, '2.6.12', 'UM()->frontend()->enqueue()' );
+			return $this->frontend()->enqueue();
 		}
-
 
 		/**
 		 * @since 2.0

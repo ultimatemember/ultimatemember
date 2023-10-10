@@ -97,6 +97,7 @@ jQuery(window).on( 'load', function($) {
 			jQuery(mutation.addedNodes).find('.um.um-directory').each(function() {
 				var directory = jQuery(this);
 				um_ajax_get_members( directory );
+				um_slider_filter_init( directory );
 			});
 		});
 	});

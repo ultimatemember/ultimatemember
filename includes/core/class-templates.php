@@ -28,7 +28,7 @@ if ( ! class_exists( 'Templates' ) ) {
 		 * @return string
 		 */
 		function get_template( $slug ) {
-			$file_list = um_path . "templates/{$slug}.php";
+			$file_list = UM_PATH . "templates/{$slug}.php";
 			$theme_file = get_stylesheet_directory() . "/ultimate-member/templates/{$slug}.php";
 
 			if ( file_exists( $theme_file ) ) {

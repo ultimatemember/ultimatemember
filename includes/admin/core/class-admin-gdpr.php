@@ -137,7 +137,7 @@ if ( ! class_exists( 'um\admin\core\Admin_GDPR' ) ) {
 		 */
 		function plugin_add_suggested_privacy_content() {
 			$content = $this->plugin_get_default_privacy_content();
-			wp_add_privacy_policy_content( ultimatemember_plugin_name, $content );
+			wp_add_privacy_policy_content( UM_PLUGIN_NAME, $content );
 		}
 
 
@@ -152,7 +152,7 @@ if ( ! class_exists( 'um\admin\core\Admin_GDPR' ) ) {
 		 */
 		function plugin_register_exporters( $exporters ) {
 			$exporters[] = array(
-				'exporter_friendly_name' => ultimatemember_plugin_name,
+				'exporter_friendly_name' => UM_PLUGIN_NAME,
 				'callback'               => array( &$this, 'data_exporter' )
 			);
 			return $exporters;
@@ -222,7 +222,7 @@ if ( ! class_exists( 'um\admin\core\Admin_GDPR' ) ) {
 				// If you define your own group, the first exporter to
 				// include a label will be used as the group label in the
 				// final exported report
-				$group_label = ultimatemember_plugin_name;
+				$group_label = UM_PLUGIN_NAME;
 
 				// Plugins can add as many items in the item data array as they want
 				//$data = array();
@@ -257,7 +257,7 @@ if ( ! class_exists( 'um\admin\core\Admin_GDPR' ) ) {
 		 */
 		function plugin_register_erasers( $erasers = array() ) {
 			$erasers[] = array(
-				'eraser_friendly_name'  => ultimatemember_plugin_name,
+				'eraser_friendly_name'  => UM_PLUGIN_NAME,
 				'callback'              => array( &$this, 'data_eraser' )
 			);
 			return $erasers;

@@ -36,6 +36,11 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		/**
 		 * @var array
 		 */
+		public $blacklist_fields = array();
+
+		/**
+		 * @var array
+		 */
 		public $custom_fields = array();
 
 		/**
@@ -50,6 +55,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			add_action( 'init', array( &$this, 'set_core_fields' ), 1 );
 			add_action( 'init', array( &$this, 'set_predefined_fields' ), 1 );
 			add_action( 'init', array( &$this, 'set_custom_fields' ), 1 );
+			add_action( 'init', array( &$this, 'set_blacklist_fields' ), 1 );
 			$this->saved_fields = get_option( 'um_fields', array() );
 		}
 
@@ -149,7 +155,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 *
 		 * @return int|string
 		 */
-		function unique_field_err( $key ) {
+		public function unique_field_err( $key ) {
 			if ( empty( $key ) ) {
 				return __( 'Please provide a meta key', 'ultimate-member' );
 			}
@@ -169,6 +175,20 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			return 0;
 		}
 
+		/**
+		 * Checks for a blacklist field error.
+		 *
+		 * @param string $key Custom field metakey.
+		 *
+		 * @return int|string Empty or error string.
+		 */
+		public function blacklist_field_err( $key ) {
+			if ( in_array( strtolower( $key ), $this->blacklist_fields, true ) ) {
+				return __( 'Your meta key can not be used', 'ultimate-member' );
+			}
+
+			return 0;
+		}
 
 		/**
 		 * Check date range errors (start date)
@@ -453,29 +473,29 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				),
 
 				'date' => array(
-					'name'      => 'Date Picker',
-					'col1'      => array( '_title', '_metakey', '_help', '_default', '_range', '_years', '_years_x', '_range_start', '_range_end', '_visibility' ),
-					'col2'      => array( '_label', '_placeholder', '_public', '_roles', '_format', '_format_custom', '_pretty_format', '_disabled_weekdays' ),
-					'col3'      => array( '_required', '_editable', '_icon' ),
-					'validate'  => array(
-						'_title'        => array(
+					'name'     => 'Date Picker',
+					'col1'     => array( '_title', '_metakey', '_help', '_default', '_range', '_years', '_years_x', '_range_start', '_range_end', '_visibility' ),
+					'col2'     => array( '_label', '_placeholder', '_public', '_roles', '_format', '_format_custom', '_pretty_format', '_disabled_weekdays' ),
+					'col3'     => array( '_required', '_editable', '_icon' ),
+					'validate' => array(
+						'_title'       => array(
 							'mode'  => 'required',
-							'error' => __( 'You must provide a title', 'ultimate-member' )
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
 						),
-						'_metakey'      => array(
-							'mode'  => 'unique',
+						'_metakey'     => array(
+							'mode' => 'unique',
 						),
-						'_years'        => array(
+						'_years'       => array(
 							'mode'  => 'numeric',
-							'error' => __( 'Number of years is not valid', 'ultimate-member' )
+							'error' => __( 'Number of years is not valid', 'ultimate-member' ),
 						),
-						'_range_start'  => array(
-							'mode'  => 'range-start',
+						'_range_start' => array(
+							'mode' => 'range-start',
 						),
-						'_range_end'    => array(
-							'mode'  => 'range-end',
+						'_range_end'   => array(
+							'mode' => 'range-end',
 						),
-					)
+					),
 				),
 
 				'time' => array(
@@ -635,6 +655,21 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'col1'     => array('_title','_metakey','_help','_visibility'),
 					'col2'     => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
 					'col3'     => array('_required','_editable','_icon'),
+					'validate' => array(
+						'_title'   => array(
+							'mode'  => 'required',
+							'error' => __( 'You must provide a title', 'ultimate-member' ),
+						),
+						'_metakey' => array(
+							'mode' => 'unique',
+						),
+					),
+				),
+				'oembed'           => array(
+					'name'     => __( 'oEmbed', 'ultimate-member' ),
+					'col1'     => array( '_title', '_metakey', '_help', '_default', '_visibility' ),
+					'col2'     => array( '_label', '_placeholder', '_public', '_roles', '_validate', '_custom_validate' ),
+					'col3'     => array( '_required', '_editable', '_icon' ),
 					'validate' => array(
 						'_title'   => array(
 							'mode'  => 'required',
@@ -1354,6 +1389,33 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$this->predefined_fields = apply_filters( 'um_predefined_fields_hook', $this->predefined_fields );
 		}
 
+		/**
+		 * Set `blacklist_fields` to avoid creating the custom fields with these keys.
+		 */
+		public function set_blacklist_fields() {
+			$this->blacklist_fields = array(
+				'id',
+			);
+
+			/**
+			 * Filters change metakeys in the blacklist.
+			 *
+			 * @since 2.6.12
+			 * @hook  um_blacklist_fields_hook
+			 *
+			 * @param {array} $blacklist_fields Blacklisted usermeta keys.
+			 *
+			 * @return {array} Blacklisted usermeta keys.
+			 *
+			 * @example <caption>Change array of metakeys in the blacklist. Adding 'user_email' metakey.</caption>
+			 * function my_um_blacklist_fields_hook( $blacklist_fields ) {
+			 *     $blacklist_fields[] = 'user_email';
+			 *     return $blacklist_fields;
+			 * }
+			 * add_filter( 'um_blacklist_fields_hook', 'my_um_blacklist_fields_hook' );
+			 */
+			$this->blacklist_fields = apply_filters( 'um_blacklist_fields_hook', $this->blacklist_fields );
+		}
 
 		/**
 		 * Custom Fields
@@ -1503,6 +1565,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$array['unique_username_or_email'] = __('Unique Username/E-mail','ultimate-member');
 			$array['url']                      = __('Website URL','ultimate-member');
 			$array['youtube_url']              = __('YouTube Profile','ultimate-member');
+			$array['youtube_video']            = __('YouTube Video','ultimate-member');
 			$array['spotify_url']              = __('Spotify URL','ultimate-member');
 			$array['telegram_url']             = __('Telegram URL','ultimate-member');
 			$array['discord']                  = __('Discord ID','ultimate-member');

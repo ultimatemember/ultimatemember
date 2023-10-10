@@ -328,7 +328,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				// Avoid Directory Traversal vulnerability by the checking the realpath.
 				// Templates can be situated only in the get_stylesheet_directory() or plugindir templates.
 				$real_file = wp_normalize_path( realpath( $file ) );
-				if ( 0 === strpos( $real_file, wp_normalize_path( um_path . "templates" . DIRECTORY_SEPARATOR ) ) || 0 === strpos( $real_file, wp_normalize_path( get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR ) ) ) {
+				if ( 0 === strpos( $real_file, wp_normalize_path( UM_PATH . "templates" . DIRECTORY_SEPARATOR ) ) || 0 === strpos( $real_file, wp_normalize_path( get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR ) ) ) {
 					include $file;
 				}
 			}
@@ -1003,7 +1003,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 */
 		function template_exists($template) {
 
-			$file = um_path . 'templates/' . $template . '.php';
+			$file = UM_PATH . 'templates/' . $template . '.php';
 			$theme_file = get_stylesheet_directory() . '/ultimate-member/templates/' . $template . '.php';
 
 			if (file_exists($theme_file) || file_exists($file)) {
@@ -1041,7 +1041,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				$array[ $excluded ] = __( 'Default Template', 'ultimate-member' );
 			}
 
-			$paths[] = glob( um_path . 'templates/' . '*.php' );
+			$paths[] = glob( UM_PATH . 'templates/' . '*.php' );
 
 			if ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' ) ) {
 				$paths[] = glob( get_stylesheet_directory() . '/ultimate-member/templates/' . '*.php' );

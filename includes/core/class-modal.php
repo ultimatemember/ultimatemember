@@ -39,7 +39,7 @@ if ( ! class_exists( 'um\core\Modal' ) ) {
 		function load_modal_content() {
 
 			if ( ! is_admin() ) {
-				$modal_templates = glob( um_path . 'templates/modal/*.php' );
+				$modal_templates = glob( UM_PATH . 'templates/modal/*.php' );
 
 				if ( ! empty( $modal_templates ) ) {
 					foreach ( $modal_templates as $modal_content ) {

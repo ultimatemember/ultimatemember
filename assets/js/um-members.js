@@ -637,6 +637,63 @@ function um_run_search( directory ) {
 }
 
 
+function um_slider_filter_init( directory ) {
+	directory.find('.um-slider').each( function() {
+		var slider = jQuery( this );
+		var directory = slider.parents('.um-directory');
+
+		var filter_name = slider.data('field_name');
+
+		var min_default_value = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
+		var max_default_value = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
+		if ( typeof min_default_value == 'undefined' ) {
+			min_default_value = parseInt( slider.data('min') );
+		}
+
+		if ( typeof max_default_value == 'undefined' ) {
+			max_default_value =  parseInt( slider.data('max') );
+		}
+
+		var default_value = [ min_default_value, max_default_value ];
+
+		slider.slider({
+			range: true,
+			min: parseInt( slider.data('min') ),
+			max: parseInt( slider.data('max') ),
+			values: default_value,
+			create: function( event, ui ) {
+				//console.log( ui );
+			},
+			step: 1,
+			slide: function( event, ui ) {
+				um_set_range_label( jQuery( this ), ui );
+			},
+			stop: function( event, ui ) {
+				if ( ! um_is_directory_busy( directory ) ) {
+
+					um_members_show_preloader( directory );
+
+					um_set_url_from_data( directory, 'filter_' + filter_name + '_from', ui.values[0] );
+					um_set_url_from_data( directory, 'filter_' + filter_name + '_to', ui.values[1] );
+
+					//set 1st page after filtration
+					directory.data( 'page', 1 );
+					um_set_url_from_data( directory, 'page', '' );
+					um_ajax_get_members( directory );
+
+					um_change_tag( directory );
+
+					directory.data( 'searched', 1 );
+					directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
+					directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
+				}
+			}
+		});
+
+		um_set_range_label( slider );
+	});
+}
+
 jQuery(document.body).ready( function() {
 
 
@@ -1379,60 +1436,7 @@ jQuery(document.body).ready( function() {
 		}
 
 		//slider filter
-		directory.find('.um-slider').each( function() {
-			var slider = jQuery( this );
-			var directory = slider.parents('.um-directory');
-
-			var filter_name = slider.data('field_name');
-
-			var min_default_value = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
-			var max_default_value = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
-			if ( typeof min_default_value == 'undefined' ) {
-				min_default_value = parseInt( slider.data('min') );
-			}
-
-			if ( typeof max_default_value == 'undefined' ) {
-				max_default_value =  parseInt( slider.data('max') );
-			}
-
-			var default_value = [ min_default_value, max_default_value ];
-
-			slider.slider({
-				range: true,
-				min: parseInt( slider.data('min') ),
-				max: parseInt( slider.data('max') ),
-				values: default_value,
-				create: function( event, ui ) {
-					//console.log( ui );
-				},
-				step: 1,
-				slide: function( event, ui ) {
-					um_set_range_label( jQuery( this ), ui );
-				},
-				stop: function( event, ui ) {
-					if ( ! um_is_directory_busy( directory ) ) {
-
-						um_members_show_preloader( directory );
-
-						um_set_url_from_data( directory, 'filter_' + filter_name + '_from', ui.values[0] );
-						um_set_url_from_data( directory, 'filter_' + filter_name + '_to', ui.values[1] );
-
-						//set 1st page after filtration
-						directory.data( 'page', 1 );
-						um_set_url_from_data( directory, 'page', '' );
-						um_ajax_get_members( directory );
-
-						um_change_tag( directory );
-
-						directory.data( 'searched', 1 );
-						directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
-						directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
-					}
-				}
-			});
-
-			um_set_range_label( slider );
-		});
+		um_slider_filter_init( directory );
 
 
 		//datepicker filter

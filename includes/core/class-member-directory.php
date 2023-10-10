@@ -1614,42 +1614,71 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			return $query;
 		}
 
+		/**
+		 * Prepare the search line. Avoid the using mySQL statement.
+		 *
+		 * @param string $search
+		 *
+		 * @return string
+		 */
+		protected function prepare_search( $search ) {
+			// unslash, sanitize, trim - necessary prepare.
+			$search = trim( sanitize_text_field( wp_unslash( $search ) ) );
+			if ( empty( $search ) ) {
+				return '';
+			}
 
+			// Make the search line empty if it contains the mySQL query statements.
+			$regexp_map = array(
+				'/select(.*?)from/im',
+				'/update(.*?)set/im',
+				'/delete(.*?)from/im',
+			);
+
+			foreach ( $regexp_map as $regexp ) {
+				preg_match( $regexp, $search, $matches );
+				if ( ! empty( $matches ) ) {
+					$search = '';
+					break;
+				}
+			}
+
+			return $search;
+		}
 
 		/**
 		 * Handle general search line request
 		 */
-		function general_search() {
+		public function general_search() {
 			//general search
 			if ( ! empty( $_POST['search'] ) ) {
 				// complex using with change_meta_sql function
+				$search = $this->prepare_search( $_POST['search'] );
+				if ( ! empty( $search ) ) {
+					$meta_query = array(
+						'relation' => 'OR',
+						array(
+							'value'   => $search,
+							'compare' => '=',
+						),
+						array(
+							'value'   => $search,
+							'compare' => 'LIKE',
+						),
+						array(
+							'value'   => serialize( (string) $search ),
+							'compare' => 'LIKE',
+						),
+					);
 
-				$search = trim( sanitize_text_field( wp_unslash( $_POST['search'] ) ) );
+					$meta_query = apply_filters( 'um_member_directory_general_search_meta_query', $meta_query, $search );
 
-				$meta_query = array(
-					'relation' => 'OR',
-					array(
-						'value'     => $search,
-						'compare'   => '=',
-					),
-					array(
-						'value'     => $search,
-						'compare'   => 'LIKE',
-					),
-					array(
-						'value'     => serialize( (string) $search ),
-						'compare'   => 'LIKE',
-					),
-				);
+					$this->query_args['meta_query'][] = $meta_query;
 
-				$meta_query = apply_filters( 'um_member_directory_general_search_meta_query', $meta_query, $search );
-
-				$this->query_args['meta_query'][] = $meta_query;
-
-				$this->is_search = true;
+					$this->is_search = true;
+				}
 			}
 		}
-
 
 		/**
 		 * Change mySQL meta query join attribute
@@ -1662,17 +1691,16 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * @param $primary_id_column
 		 * @param \WP_User_Query $context
 		 *
-		 * @return mixed
+		 * @return array
 		 */
-		function change_meta_sql( $sql, $queries, $type, $primary_table, $primary_id_column, $context ) {
+		public function change_meta_sql( $sql, $queries, $type, $primary_table, $primary_id_column, $context ) {
 			if ( ! empty( $_POST['search'] ) ) {
-				global $wpdb;
-
-				$search = trim( sanitize_text_field( wp_unslash( $_POST['search'] ) ) );
+				$search = $this->prepare_search( $_POST['search'] );
 				if ( ! empty( $search ) ) {
+					global $wpdb;
 
-					$meta_value = '%' . $wpdb->esc_like( $search ) . '%';
-					$search_meta      = $wpdb->prepare( '%s', $meta_value );
+					$meta_value  = '%' . $wpdb->esc_like( $search ) . '%';
+					$search_meta = $wpdb->prepare( '%s', $meta_value );
 
 					preg_match( '~(?<=\{)(.*?)(?=\})~', $search_meta, $matches, PREG_OFFSET_CAPTURE, 0 );
 
@@ -1739,7 +1767,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			return $sql;
 		}
-
 
 		/**
 		 * Handle filters request

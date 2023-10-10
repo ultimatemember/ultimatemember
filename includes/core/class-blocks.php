@@ -131,7 +131,7 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 
 			foreach ( $blocks as $k => $block_data ) {
 				$block_type = str_replace( 'um-block/', '', $k );
-				register_block_type_from_metadata( um_path . 'includes/blocks/' . $block_type, $block_data );
+				register_block_type_from_metadata( UM_PATH . 'includes/blocks/' . $block_type, $block_data );
 			}
 		}
 
