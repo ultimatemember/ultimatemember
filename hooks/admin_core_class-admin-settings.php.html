@@ -40,40 +40,33 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
-
 	/**
 	 * Class Admin_Settings
 	 * @package um\admin\core
 	 */
 	class Admin_Settings {
 
-
 		/**
 		 * @var array
 		 */
 		public $settings_map;
-
 
 		/**
 		 * @var array
 		 */
 		public $settings_structure;
 
-
 		/**
 		 * @var
 		 */
 		private $previous_licenses;
-
 
 		/**
 		 * @var
 		 */
 		private $need_change_permalinks;
 
-
 		private $gravatar_changed = false;
-
 
 		/**
 		 * Admin_Settings constructor.
@@ -332,7 +325,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'size'        => 'small',
 					);
 				}
-
 
 				$settings_map[ $page_id ] = array(
 					'sanitize' => 'absint',
@@ -701,6 +693,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'permalink_base'                        => array(
 						'sanitize' => 'key',
 					),
+					'permalink_base_custom_meta'            => array(
+						'sanitize' => 'text',
+					),
 					'display_name'                          => array(
 						'sanitize' => 'key',
 					),
@@ -744,9 +739,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'sanitize' => 'bool',
 					),
 					'account_tab_privacy'                   => array(
-						'sanitize' => 'bool',
-					),
-					'account_tab_notifications'             => array(
 						'sanitize' => 'bool',
 					),
 					'account_tab_delete'                    => array(
@@ -1004,6 +996,115 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				)
 			);
 
+			$account_fields = array(
+				array(
+					'id'      => 'account_tab_password',
+					'type'    => 'checkbox',
+					'label'   => __( 'Password Account Tab', 'ultimate-member' ),
+					'tooltip' => __( 'Enable/disable the Password account tab in account page', 'ultimate-member' ),
+				),
+				array(
+					'id'      => 'account_tab_privacy',
+					'type'    => 'checkbox',
+					'label'   => __( 'Privacy Account Tab', 'ultimate-member' ),
+					'tooltip' => __( 'Enable/disable the Privacy account tab in account page', 'ultimate-member' ),
+				),
+			);
+
+			if ( false !== UM()->account()->is_notifications_tab_visible() ) {
+				$account_fields[] = array(
+					'id'      => 'account_tab_notifications',
+					'type'    => 'checkbox',
+					'label'   => __( 'Notifications Account Tab', 'ultimate-member' ),
+					'tooltip' => __( 'Enable/disable the Notifications account tab in account page', 'ultimate-member' ),
+				);
+
+				$settings_map['account_tab_notifications'] = array(
+					'sanitize' => 'bool',
+				);
+			}
+
+			$account_fields = array_merge(
+				$account_fields,
+				array(
+					array(
+						'id'      => 'account_tab_delete',
+						'type'    => 'checkbox',
+						'label'   => __( 'Delete Account Tab', 'ultimate-member' ),
+						'tooltip' => __( 'Enable/disable the Delete account tab in account page', 'ultimate-member' ),
+					),
+					array(
+						'id'      => 'delete_account_text',
+						'type'    => 'textarea', // bug with wp 4.4? should be editor
+						'label'   => __( 'Account Deletion Custom Text', 'ultimate-member' ),
+						'tooltip' => __( 'This is custom text that will be displayed to users before they delete their accounts from your site when password is required.', 'ultimate-member' ),
+						'args'    => array(
+							'textarea_rows' => 6,
+						),
+					),
+					array(
+						'id'      => 'delete_account_no_pass_required_text',
+						'type'    => 'textarea',
+						'label'   => __( 'Account Deletion without password Custom Text', 'ultimate-member' ),
+						'tooltip' => __( 'This is custom text that will be displayed to users before they delete their accounts from your site when password isn\'t required.', 'ultimate-member' ),
+						'args'    => array(
+							'textarea_rows' => 6,
+						),
+					),
+					array(
+						'id'      => 'account_name',
+						'type'    => 'checkbox',
+						'label'   => __( 'Add a First &amp; Last Name fields', 'ultimate-member' ),
+						'tooltip' => __( 'Whether to enable these fields on the user account page by default or hide them.', 'ultimate-member' ),
+					),
+					array(
+						'id'          => 'account_name_disable',
+						'type'        => 'checkbox',
+						'label'       => __( 'Disable First &amp; Last Name fields', 'ultimate-member' ),
+						'tooltip'     => __( 'Whether to allow users changing their first and last name in account page.', 'ultimate-member' ),
+						'conditional' => array( 'account_name', '=', '1' ),
+					),
+					array(
+						'id'          => 'account_name_require',
+						'type'        => 'checkbox',
+						'label'       => __( 'Require First &amp; Last Name', 'ultimate-member' ),
+						'tooltip'     => __( 'Require first and last name?', 'ultimate-member' ),
+						'conditional' => array( 'account_name', '=', '1' ),
+					),
+					array(
+						'id'      => 'account_email',
+						'type'    => 'checkbox',
+						'label'   => __( 'Allow users to change e-mail', 'ultimate-member' ),
+						'tooltip' => __( 'Whether to allow users changing their email in account page.', 'ultimate-member' ),
+					),
+					array(
+						'id'      => 'account_general_password',
+						'type'    => 'checkbox',
+						'label'   => __( 'Password is required?', 'ultimate-member' ),
+						'tooltip' => __( 'Password is required to save account data.', 'ultimate-member' ),
+					),
+					array(
+						'id'          => 'account_hide_in_directory',
+						'type'        => 'checkbox',
+						'label'       => __( 'Allow users to hide their profiles from directory', 'ultimate-member' ),
+						'tooltip'     => __( 'Whether to allow users changing their profile visibility from member directory in account page.', 'ultimate-member' ),
+						'conditional' => array( 'account_tab_privacy', '=', '1' ),
+					),
+					array(
+						'id'          => 'account_hide_in_directory_default',
+						'type'        => 'select',
+						'label'       => __( 'Hide profiles from directory by default', 'ultimate-member' ),
+						'tooltip'     => __( 'Set default value for the "Hide my profile from directory" option', 'ultimate-member' ),
+						'options'     => array(
+							'No'  => __( 'No', 'ultimate-member' ),
+							'Yes' => __( 'Yes', 'ultimate-member' ),
+						),
+						'size'        => 'small',
+						'conditional' => array( 'account_hide_in_directory', '=', '1' ),
+					),
+				)
+			);
+
 			$this->settings_map = apply_filters( 'um_settings_map', $settings_map );
 
 			/**
@@ -1046,14 +1147,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'label'       => __( 'Profile Permalink Base', 'ultimate-member' ),
 										// translators: %s: Profile page URL
 										'tooltip'     => sprintf( __( 'Here you can control the permalink structure of the user profile URL globally e.g. %s&lt;strong>username&lt;/strong>/', 'ultimate-member' ), trailingslashit( um_get_core_page( 'user' ) ) ),
-										'options'     => array(
-											'user_login' => __( 'Username', 'ultimate-member' ),
-											'name'       => __( 'First and Last Name with \'.\'', 'ultimate-member' ),
-											'name_dash'  => __( 'First and Last Name with \'-\'', 'ultimate-member' ),
-											'name_plus'  => __( 'First and Last Name with \'+\'', 'ultimate-member' ),
-											'user_id'    => __( 'User ID', 'ultimate-member' ),
-										),
+										'options'     => UM()->config()->permalink_base_options,
 										'placeholder' => __( 'Select...', 'ultimate-member' ),
+									),
+									array(
+										'id'          => 'permalink_base_custom_meta',
+										'type'        => 'text',
+										'label'       => __( 'Profile Permalink Base Custom Meta Key', 'ultimate-member' ),
+										'tooltip'     => __( 'Specify the custom field meta key that you want to use as profile permalink base. Meta value should be unique.', 'ultimate-member' ),
+										'conditional' => array( 'permalink_base', '=', 'custom_meta' ),
+										'size'        => 'medium',
 									),
 									array(
 										'id'          => 'display_name',
@@ -1061,17 +1164,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'size'        => 'medium',
 										'label'       => __( 'User Display Name', 'ultimate-member' ),
 										'tooltip'     => __( 'This is the name that will be displayed for users on the front end of your site. Default setting uses first/last name as display name if it exists', 'ultimate-member' ),
-										'options'     => array(
-											'default'        => __( 'Default WP Display Name', 'ultimate-member' ),
-											'nickname'       => __( 'Nickname', 'ultimate-member' ),
-											'username'       => __( 'Username', 'ultimate-member' ),
-											'full_name'      => __( 'First name &amp; last name', 'ultimate-member' ),
-											'sur_name'       => __( 'Last name &amp; first name', 'ultimate-member' ),
-											'initial_name'   => __( 'First name &amp; first initial of last name', 'ultimate-member' ),
-											'initial_name_f' => __( 'First initial of first name &amp; last name', 'ultimate-member' ),
-											'first_name'     => __( 'First name only', 'ultimate-member' ),
-											'field'          => __( 'Custom field(s)', 'ultimate-member' ),
-										),
+										'options'     => UM()->config()->display_name_options,
 										'placeholder' => __( 'Select...', 'ultimate-member' ),
 									),
 									array(
@@ -1080,6 +1173,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'label'       => __( 'Display Name Custom Field(s)', 'ultimate-member' ),
 										'tooltip'     => __( 'Specify the custom field meta key or custom fields seperated by comma that you want to use to display users name on the frontend of your site', 'ultimate-member' ),
 										'conditional' => array( 'display_name', '=', 'field' ),
+										'size'        => 'medium',
 									),
 									array(
 										'id'      => 'author_redirect',
@@ -1168,105 +1262,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'tooltip' => __( 'How long does an activation link live in seconds? Leave empty for endless links.', 'ultimate-member' ),
 										'size'    => 'small',
 									),
+									array(
+										'id'      => 'delete_comments',
+										'type'    => 'checkbox',
+										'label'   => __( 'Deleting user comments after deleting a user', 'ultimate-member' ),
+										'tooltip' => __( 'Do you want to delete a user\'s comments when that user deletes themself or is removed from the admin dashboard from the site?', 'ultimate-member' ),
+									),
 								),
 							),
 							'account' => array(
 								'title'  => __( 'Account', 'ultimate-member' ),
-								'fields' => array(
-									array(
-										'id'      => 'account_tab_password',
-										'type'    => 'checkbox',
-										'label'   => __( 'Password Account Tab', 'ultimate-member' ),
-										'tooltip' => __( 'Enable/disable the Password account tab in account page', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'account_tab_privacy',
-										'type'    => 'checkbox',
-										'label'   => __( 'Privacy Account Tab', 'ultimate-member' ),
-										'tooltip' => __( 'Enable/disable the Privacy account tab in account page', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'account_tab_notifications',
-										'type'    => 'checkbox',
-										'label'   => __( 'Notifications Account Tab', 'ultimate-member' ),
-										'tooltip' => __( 'Enable/disable the Notifications account tab in account page', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'account_tab_delete',
-										'type'    => 'checkbox',
-										'label'   => __( 'Delete Account Tab', 'ultimate-member' ),
-										'tooltip' => __( 'Enable/disable the Delete account tab in account page', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'delete_account_text',
-										'type'    => 'textarea', // bug with wp 4.4? should be editor
-										'label'   => __( 'Account Deletion Custom Text', 'ultimate-member' ),
-										'tooltip' => __( 'This is custom text that will be displayed to users before they delete their accounts from your site when password is required.', 'ultimate-member' ),
-										'args'    => array(
-											'textarea_rows' => 6,
-										),
-									),
-									array(
-										'id'      => 'delete_account_no_pass_required_text',
-										'type'    => 'textarea',
-										'label'   => __( 'Account Deletion without password Custom Text', 'ultimate-member' ),
-										'tooltip' => __( 'This is custom text that will be displayed to users before they delete their accounts from your site when password isn\'t required.', 'ultimate-member' ),
-										'args'    => array(
-											'textarea_rows' => 6,
-										),
-									),
-									array(
-										'id'      => 'account_name',
-										'type'    => 'checkbox',
-										'label'   => __( 'Add a First &amp; Last Name fields', 'ultimate-member' ),
-										'tooltip' => __( 'Whether to enable these fields on the user account page by default or hide them.', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'account_name_disable',
-										'type'        => 'checkbox',
-										'label'       => __( 'Disable First &amp; Last Name fields', 'ultimate-member' ),
-										'tooltip'     => __( 'Whether to allow users changing their first and last name in account page.', 'ultimate-member' ),
-										'conditional' => array( 'account_name', '=', '1' ),
-									),
-									array(
-										'id'          => 'account_name_require',
-										'type'        => 'checkbox',
-										'label'       => __( 'Require First &amp; Last Name', 'ultimate-member' ),
-										'tooltip'     => __( 'Require first and last name?', 'ultimate-member' ),
-										'conditional' => array( 'account_name', '=', '1' ),
-									),
-									array(
-										'id'      => 'account_email',
-										'type'    => 'checkbox',
-										'label'   => __( 'Allow users to change e-mail', 'ultimate-member' ),
-										'tooltip' => __( 'Whether to allow users changing their email in account page.', 'ultimate-member' ),
-									),
-									array(
-										'id'      => 'account_general_password',
-										'type'    => 'checkbox',
-										'label'   => __( 'Password is required?', 'ultimate-member' ),
-										'tooltip' => __( 'Password is required to save account data.', 'ultimate-member' ),
-									),
-									array(
-										'id'          => 'account_hide_in_directory',
-										'type'        => 'checkbox',
-										'label'       => __( 'Allow users to hide their profiles from directory', 'ultimate-member' ),
-										'tooltip'     => __( 'Whether to allow users changing their profile visibility from member directory in account page.', 'ultimate-member' ),
-										'conditional' => array( 'account_tab_privacy', '=', '1' ),
-									),
-									array(
-										'id'          => 'account_hide_in_directory_default',
-										'type'        => 'select',
-										'label'       => __( 'Hide profiles from directory by default', 'ultimate-member' ),
-										'tooltip'     => __( 'Set default value for the "Hide my profile from directory" option', 'ultimate-member' ),
-										'options'     => array(
-											'No'  => __( 'No', 'ultimate-member' ),
-											'Yes' => __( 'Yes', 'ultimate-member' ),
-										),
-										'size'        => 'small',
-										'conditional' => array( 'account_hide_in_directory', '=', '1' ),
-									),
-								),
+								'fields' => $account_fields,
 							),
 							'uploads' => array(
 								'title'  => __( 'Uploads', 'ultimate-member' ),
@@ -1500,7 +1506,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'tooltip'            => __( 'You can change the default profile picture globally here. Please make sure that the photo is 300x300px.', 'ultimate-member' ),
 										'upload_frame_title' => __( 'Select Default Profile Photo', 'ultimate-member' ),
 										'default'            => array(
-											'url' => um_url . 'assets/img/default_avatar.jpg',
+											'url' => UM_URL . 'assets/img/default_avatar.jpg',
 										),
 									),
 									array(
@@ -2472,16 +2478,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				} elseif ( ! empty( $_POST['um_options']['permalink_base'] ) ) {
 					if ( ! empty( $this->need_change_permalinks ) ) {
-						$users = get_users( array(
-							'fields' => 'ids',
-						) );
+						$users = get_users(
+							array(
+								'fields' => 'ids',
+							)
+						);
 						if ( ! empty( $users ) ) {
 							foreach ( $users as $user_id ) {
 								UM()->user()->generate_profile_slug( $user_id );
 							}
 						}
 					}
-
 
 					// update for um_member_directory_data metakey
 					if ( isset( $_POST['um_options']['use_gravatars'] ) ) {
@@ -2684,7 +2691,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			$emails = UM()->config()->email_notifications;
 
 			if ( empty( $email_key ) || empty( $emails[ $email_key ] ) ) {
-				include_once um_path . 'includes/admin/core/list-tables/emails-list-table.php';
+				include_once UM_PATH . 'includes/admin/core/list-tables/emails-list-table.php';
 			}
 		}
 
@@ -3145,7 +3152,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			&lt;/p>
 
 			&lt;?php
-			include_once um_path . 'includes/admin/core/list-tables/version-template-list-table.php';
+			include_once UM_PATH . 'includes/admin/core/list-tables/version-template-list-table.php';
 		}
 
 
@@ -3156,7 +3163,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 */
 		public function get_override_templates( $get_list = false ) {
 			$outdated_files   = array();
-			$scan_files['um'] = $this->scan_template_files( um_path . '/templates/' );
+			$scan_files['um'] = $this->scan_template_files( UM_PATH . '/templates/' );
 			/**
 			 * Filters an array of the template files for scanning versions.
 			 *
@@ -3223,8 +3230,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								$core_path      = $located['core'];
 								$core_file_path = stristr( $core_path, 'wp-content' );
 							} else {
-								$core_path      = um_path . '/templates/' . $core_file;
-								$core_file_path = stristr( um_path . 'templates/' . $core_file, 'wp-content' );
+								$core_path      = UM_PATH . '/templates/' . $core_file;
+								$core_file_path = stristr( UM_PATH . 'templates/' . $core_file, 'wp-content' );
 							}
 							$core_version  = $this->get_file_version( $core_path );
 							$theme_version = $this->get_file_version( $theme_file );
@@ -3336,7 +3343,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			global $wpdb;
 
 			if ( ! class_exists( '\Browser' ) )
-				require_once um_path . 'includes/lib/browser.php';
+				require_once UM_PATH . 'includes/lib/browser.php';
 
 			// Detect browser
 			$browser = new \Browser();
@@ -3734,12 +3741,12 @@ Use Only Cookies:         			&lt;?php echo ini_get( 'session.use_only_cookies' )
 		 *
 		 */
 		function um_download_install_info() {
-			
+
 			if ( ! empty( $_POST['download_install_info'] ) ) {
 				$nonce = $_REQUEST['_wpnonce'];
 				if ( ! wp_verify_nonce( $nonce, 'um_download_install_info' ) || ! current_user_can( 'manage_options' )  ) {
-					die( __( 'Security check', 'ultimate-member' ) ); 
-				} 
+					die( __( 'Security check', 'ultimate-member' ) );
+				}
 
 				nocache_headers();
 
@@ -3845,7 +3852,7 @@ Use Only Cookies:         			&lt;?php echo ini_get( 'session.use_only_cookies' )
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="track_%257B$status%257D_user_registration.html">track_{$status}_user_registration</a></li><li><a href="um_account_page_hidden_fields.html">um_account_page_hidden_fields</a></li><li><a href="um_admin_ajax_modal_content__hook.html">um_admin_ajax_modal_content__hook</a></li><li><a href="um_admin_ajax_modal_content__hook_%257B$act_id%257D.html">um_admin_ajax_modal_content__hook_{$act_id}</a></li><li><a href="um_after_delete_role.html">um_after_delete_role</a></li><li><a href="um_after_delete_role_meta.html">um_after_delete_role_meta</a></li><li><a href="um_after_everything_output.html">um_after_everything_output</a></li><li><a href="um_after_form.html">um_after_form</a></li><li><a href="um_after_form_fields.html">um_after_form_fields</a></li><li><a href="um_after_save_registration_details.html">um_after_save_registration_details</a></li><li><a href="um_after_%257B$mode%257D_fields.html">um_after_{$mode}_fields</a></li><li><a href="um_ajax_load_posts__%257B$hook%257D.html">um_ajax_load_posts__{$hook}</a></li><li><a href="um_before_form.html">um_before_form</a></li><li><a href="um_before_form_is_loaded.html">um_before_form_is_loaded</a></li><li><a href="um_before_save_registration_details.html">um_before_save_registration_details</a></li><li><a href="um_before_submit_form_post.html">um_before_submit_form_post</a></li><li><a href="um_before_%257B$mode%257D_fields.html">um_before_{$mode}_fields</a></li><li><a href="um_before_%257B$mode%257D_form_is_loaded.html">um_before_{$mode}_form_is_loaded</a></li><li><a href="um_main_%257B$mode%257D_fields.html">um_main_{$mode}_fields</a></li><li><a href="um_on_login_before_redirect.html">um_on_login_before_redirect</a></li><li><a href="um_post_registration_%257B$status%257D_hook.html">um_post_registration_{$status}_hook</a></li><li><a href="um_pre_%257B$mode%257D_shortcode.html">um_pre_{$mode}_shortcode</a></li><li><a href="um_registration_after_auto_login.html">um_registration_after_auto_login</a></li><li><a href="um_registration_complete.html">um_registration_complete</a></li><li><a href="um_registration_set_extra_data.html">um_registration_set_extra_data</a></li><li><a href="um_reset_password_errors_hook.html">um_reset_password_errors_hook</a></li><li><a href="um_reset_password_process_hook.html">um_reset_password_process_hook</a></li><li><a href="um_role_edit_data.html">um_role_edit_data</a></li><li><a href="um_role_row_actions.html">um_role_row_actions</a></li><li><a href="um_run_ajax_function__%257B$hook%257D.html">um_run_ajax_function__{$hook}</a></li><li><a href="um_submit_form_errors_hook.html">um_submit_form_errors_hook</a></li><li><a href="um_submit_form_errors_hook_.html">um_submit_form_errors_hook_</a></li><li><a href="um_submit_form_errors_hook__blockedemails.html">um_submit_form_errors_hook__blockedemails</a></li><li><a href="um_submit_form_errors_hook__blockedips.html">um_submit_form_errors_hook__blockedips</a></li><li><a href="um_submit_form_errors_hook__blockedwords.html">um_submit_form_errors_hook__blockedwords</a></li><li><a href="um_submit_form_errors_hook__profile.html">um_submit_form_errors_hook__profile</a></li><li><a href="um_submit_form_errors_hook__registration.html">um_submit_form_errors_hook__registration</a></li><li><a href="um_submit_form_errors_hook_login.html">um_submit_form_errors_hook_login</a></li><li><a href="um_submit_form_errors_hook_logincheck.html">um_submit_form_errors_hook_logincheck</a></li><li><a href="um_user_after_query.html">um_user_after_query</a></li><li><a href="um_user_before_query.html">um_user_before_query</a></li><li><a href="um_user_before_updating_profile.html">um_user_before_updating_profile</a></li><li><a href="um_user_edit_profile.html">um_user_edit_profile</a></li><li><a href="um_user_login.html">um_user_login</a></li><li><a href="um_user_login_extra_hook.html">um_user_login_extra_hook</a></li><li><a href="um_user_register.html">um_user_register</a></li></ul><h3>Filters</h3><ul><li><a href="um_account_shortcode_args_filter.html">um_account_shortcode_args_filter</a></li><li><a href="um_add_user_frontend_submitted.html">um_add_user_frontend_submitted</a></li><li><a href="um_adm_action_custom_update_notice.html">um_adm_action_custom_update_notice</a></li><li><a href="um_admin_builder_skip_field_validation.html">um_admin_builder_skip_field_validation</a></li><li><a href="um_admin_field_update_error_handling.html">um_admin_field_update_error_handling</a></li><li><a href="um_admin_pre_save_field_to_db.html">um_admin_pre_save_field_to_db</a></li><li><a href="um_admin_pre_save_field_to_form.html">um_admin_pre_save_field_to_form</a></li><li><a href="um_admin_pre_save_fields_hook.html">um_admin_pre_save_fields_hook</a></li><li><a href="um_allowed_redirect_hosts.html">um_allowed_redirect_hosts</a></li><li><a href="um_allowed_user_tags_patterns.html">um_allowed_user_tags_patterns</a></li><li><a href="um_api_output_format.html">um_api_output_format</a></li><li><a href="um_before_save_filter_submitted.html">um_before_save_filter_submitted</a></li><li><a href="um_before_update_profile.html">um_before_update_profile</a></li><li><a href="um_browser_url_redirect_to__filter.html">um_browser_url_redirect_to__filter</a></li><li><a href="um_can_view_profile.html">um_can_view_profile</a></li><li><a href="um_change_default_tab.html">um_change_default_tab</a></li><li><a href="um_change_role_data.html">um_change_role_data</a></li><li><a href="um_checkbox_field_options.html">um_checkbox_field_options</a></li><li><a href="um_checkbox_field_options_%257B$key%257D.html">um_checkbox_field_options_{$key}</a></li><li><a href="um_completeness_field_id.html">um_completeness_field_id</a></li><li><a href="um_core_pages.html">um_core_pages</a></li><li><a href="um_cron_disable.html">um_cron_disable</a></li><li><a href="um_custom_dropdown_options_parent__%257B$form_key%257D.html">um_custom_dropdown_options_parent__{$form_key}</a></li><li><a href="um_custom_dropdown_options_source__%257B$form_key%257D.html">um_custom_dropdown_options_source__{$form_key}</a></li><li><a href="um_custom_error_message_handler.html">um_custom_error_message_handler</a></li><li><a href="um_custom_success_message_handler.html">um_custom_success_message_handler</a></li><li><a href="um_disable_blocks_script.html">um_disable_blocks_script</a></li><li><a href="um_disable_dynamic_global_css.html">um_disable_dynamic_global_css</a></li><li><a href="um_disable_email_notification_sending.html">um_disable_email_notification_sending</a></li><li><a href="um_edit_field_%257B$mode%257D_%257B$type%257D.html">um_edit_field_{$mode}_{$type}</a></li><li><a href="um_edit_profile_url.html">um_edit_profile_url</a></li><li><a href="um_email_get_template_file_path.html">um_email_get_template_file_path</a></li><li><a href="um_excluded_comment_types.html">um_excluded_comment_types</a></li><li><a href="um_external_profile_url.html">um_external_profile_url</a></li><li><a href="um_field_checkbox_item_title.html">um_field_checkbox_item_title</a></li><li><a href="um_fields_without_metakey.html">um_fields_without_metakey</a></li><li><a href="um_form_fields_textarea_settings.html">um_form_fields_textarea_settings</a></li><li><a href="um_get_current_page_url.html">um_get_current_page_url</a></li><li><a href="um_get_field__%257B$key%257D.html">um_get_field__{$key}</a></li><li><a href="um_get_field_%257B$type%257D.html">um_get_field_{$type}</a></li><li><a href="um_get_form_fields.html">um_get_form_fields</a></li><li><a href="um_hook_for_field_%257B$type%257D.html">um_hook_for_field_{$type}</a></li><li><a href="um_is_field_disabled.html">um_is_field_disabled</a></li><li><a href="um_late_escaping_allowed_tags.html">um_late_escaping_allowed_tags</a></li><li><a href="um_localize_permalink_filter.html">um_localize_permalink_filter</a></li><li><a href="um_login_allow_nonce_verification.html">um_login_allow_nonce_verification</a></li><li><a href="um_login_invalid_nonce_redirect_url.html">um_login_invalid_nonce_redirect_url</a></li><li><a href="um_login_redirect_url.html">um_login_redirect_url</a></li><li><a href="um_logout_redirect_url.html">um_logout_redirect_url</a></li><li><a href="um_member_directory_core_search_fields.html">um_member_directory_core_search_fields</a></li><li><a href="um_member_directory_custom_sorting_type.html">um_member_directory_custom_sorting_type</a></li><li><a href="um_multiselect_options.html">um_multiselect_options</a></li><li><a href="um_multiselect_options_%257B$key%257D.html">um_multiselect_options_{$key}</a></li><li><a href="um_multiselect_options_%257B$type%257D.html">um_multiselect_options_{$type}</a></li><li><a href="um_override_templates_get_template_path__%257B$key%257D.html">um_override_templates_get_template_path__{$key}</a></li><li><a href="um_override_templates_scan_files.html">um_override_templates_scan_files</a></li><li><a href="um_pre_args_setup.html">um_pre_args_setup</a></li><li><a href="um_prepare_user_results_array.html">um_prepare_user_results_array</a></li><li><a href="um_prepare_user_results_array_meta.html">um_prepare_user_results_array_meta</a></li><li><a href="um_profile_can_view_main.html">um_profile_can_view_main</a></li><li><a href="um_profile_menu_link_%257B$id%257D_attrs.html">um_profile_menu_link_{$id}_attrs</a></li><li><a href="um_profile_nopriv_tag_hook__%257B$usermeta%257D.html">um_profile_nopriv_tag_hook__{$usermeta}</a></li><li><a href="um_profile_permalink.html">um_profile_permalink</a></li><li><a href="um_profile_tag_hook__%257B$usermeta%257D.html">um_profile_tag_hook__{$usermeta}</a></li><li><a href="um_radio_field_options.html">um_radio_field_options</a></li><li><a href="um_radio_field_options_%257B$key%257D.html">um_radio_field_options_{$key}</a></li><li><a href="um_radio_options_pair__%257B$key%257D.html">um_radio_options_pair__{$key}</a></li><li><a href="um_register_allow_nonce_verification.html">um_register_allow_nonce_verification</a></li><li><a href="um_register_invalid_nonce_redirect_url.html">um_register_invalid_nonce_redirect_url</a></li><li><a href="um_registration_for_loggedin_users.html">um_registration_for_loggedin_users</a></li><li><a href="um_registration_pending_user_redirect.html">um_registration_pending_user_redirect</a></li><li><a href="um_registration_show_message_redirect_url.html">um_registration_show_message_redirect_url</a></li><li><a href="um_registration_user_role.html">um_registration_user_role</a></li><li><a href="um_reset_password_shortcode_args_filter.html">um_reset_password_shortcode_args_filter</a></li><li><a href="um_rest_get_auser.html">um_rest_get_auser</a></li><li><a href="um_rest_userdata.html">um_rest_userdata</a></li><li><a href="um_secure_register_form_banned_capabilities.html">um_secure_register_form_banned_capabilities</a></li><li><a href="um_select_dropdown_dynamic_options.html">um_select_dropdown_dynamic_options</a></li><li><a href="um_select_dropdown_dynamic_options_%257B$key%257D.html">um_select_dropdown_dynamic_options_{$key}</a></li><li><a href="um_select_options_pair.html">um_select_options_pair</a></li><li><a href="um_selectbox_options.html">um_selectbox_options</a></li><li><a href="um_setup_predefined_page_content.html">um_setup_predefined_page_content</a></li><li><a href="um_shortcode_args_filter.html">um_shortcode_args_filter</a></li><li><a href="um_submit_form_data.html">um_submit_form_data</a></li><li><a href="um_submit_post_form.html">um_submit_post_form</a></li><li><a href="um_submitted_data_value.html">um_submitted_data_value</a></li><li><a href="um_ultimatemember_account_shortcode_disable_singleton.html">um_ultimatemember_account_shortcode_disable_singleton</a></li><li><a href="um_ultimatemember_shortcode_disable_singleton.html">um_ultimatemember_shortcode_disable_singleton</a></li><li><a href="um_user_pre_updating_files_array.html">um_user_pre_updating_files_array</a></li><li><a href="um_user_register_submitted__email.html">um_user_register_submitted__email</a></li><li><a href="um_view_field.html">um_view_field</a></li><li><a href="um_view_field_value_%257B$type%257D.html">um_view_field_value_{$type}</a></li><li><a href="um_whitelisted_metakeys.html">um_whitelisted_metakeys</a></li><li><a href="um_wp_safe_redirect_fallback.html">um_wp_safe_redirect_fallback</a></li><li><a href="um_%257B$key%257D_form_edit_field.html">um_{$key}_form_edit_field</a></li><li><a href="um_%257B$key%257D_form_show_field.html">um_{$key}_form_show_field</a></li><li><a href="um_%257B$type%257D_form_show_field.html">um_{$type}_form_show_field</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="track_%257B$status%257D_user_registration.html">track_{$status}_user_registration</a></li><li><a href="um_access_profile.html">um_access_profile</a></li><li><a href="um_account_page_hidden_fields.html">um_account_page_hidden_fields</a></li><li><a href="um_admin_ajax_modal_content__hook.html">um_admin_ajax_modal_content__hook</a></li><li><a href="um_admin_ajax_modal_content__hook_%257B$act_id%257D.html">um_admin_ajax_modal_content__hook_{$act_id}</a></li><li><a href="um_after_delete_role.html">um_after_delete_role</a></li><li><a href="um_after_delete_role_meta.html">um_after_delete_role_meta</a></li><li><a href="um_after_email_notification_sending.html">um_after_email_notification_sending</a></li><li><a href="um_after_email_template_part.html">um_after_email_template_part</a></li><li><a href="um_after_everything_output.html">um_after_everything_output</a></li><li><a href="um_after_form.html">um_after_form</a></li><li><a href="um_after_form_fields.html">um_after_form_fields</a></li><li><a href="um_after_save_registration_details.html">um_after_save_registration_details</a></li><li><a href="um_after_%257B$mode%257D_fields.html">um_after_{$mode}_fields</a></li><li><a href="um_ajax_load_posts__%257B$hook%257D.html">um_ajax_load_posts__{$hook}</a></li><li><a href="um_before_email_notification_sending.html">um_before_email_notification_sending</a></li><li><a href="um_before_email_template_body.html">um_before_email_template_body</a></li><li><a href="um_before_email_template_part.html">um_before_email_template_part</a></li><li><a href="um_before_form.html">um_before_form</a></li><li><a href="um_before_form_is_loaded.html">um_before_form_is_loaded</a></li><li><a href="um_before_save_registration_details.html">um_before_save_registration_details</a></li><li><a href="um_before_submit_form_post.html">um_before_submit_form_post</a></li><li><a href="um_before_%257B$mode%257D_fields.html">um_before_{$mode}_fields</a></li><li><a href="um_before_%257B$mode%257D_form_is_loaded.html">um_before_{$mode}_form_is_loaded</a></li><li><a href="um_main_%257B$mode%257D_fields.html">um_main_{$mode}_fields</a></li><li><a href="um_on_login_before_redirect.html">um_on_login_before_redirect</a></li><li><a href="um_post_registration_%257B$status%257D_hook.html">um_post_registration_{$status}_hook</a></li><li><a href="um_pre_%257B$mode%257D_shortcode.html">um_pre_{$mode}_shortcode</a></li><li><a href="um_registration_after_auto_login.html">um_registration_after_auto_login</a></li><li><a href="um_registration_complete.html">um_registration_complete</a></li><li><a href="um_registration_set_extra_data.html">um_registration_set_extra_data</a></li><li><a href="um_reset_password_errors_hook.html">um_reset_password_errors_hook</a></li><li><a href="um_reset_password_process_hook.html">um_reset_password_process_hook</a></li><li><a href="um_role_edit_data.html">um_role_edit_data</a></li><li><a href="um_role_row_actions.html">um_role_row_actions</a></li><li><a href="um_run_ajax_function__%257B$hook%257D.html">um_run_ajax_function__{$hook}</a></li><li><a href="um_submit_form_errors_hook.html">um_submit_form_errors_hook</a></li><li><a href="um_submit_form_errors_hook_.html">um_submit_form_errors_hook_</a></li><li><a href="um_submit_form_errors_hook__blockedemails.html">um_submit_form_errors_hook__blockedemails</a></li><li><a href="um_submit_form_errors_hook__blockedips.html">um_submit_form_errors_hook__blockedips</a></li><li><a href="um_submit_form_errors_hook__blockedwords.html">um_submit_form_errors_hook__blockedwords</a></li><li><a href="um_submit_form_errors_hook__profile.html">um_submit_form_errors_hook__profile</a></li><li><a href="um_submit_form_errors_hook__registration.html">um_submit_form_errors_hook__registration</a></li><li><a href="um_submit_form_errors_hook_login.html">um_submit_form_errors_hook_login</a></li><li><a href="um_submit_form_errors_hook_logincheck.html">um_submit_form_errors_hook_logincheck</a></li><li><a href="um_user_after_query.html">um_user_after_query</a></li><li><a href="um_user_before_query.html">um_user_before_query</a></li><li><a href="um_user_before_updating_profile.html">um_user_before_updating_profile</a></li><li><a href="um_user_edit_profile.html">um_user_edit_profile</a></li><li><a href="um_user_login.html">um_user_login</a></li><li><a href="um_user_login_extra_hook.html">um_user_login_extra_hook</a></li><li><a href="um_user_register.html">um_user_register</a></li></ul><h3>Filters</h3><ul><li><a href="um_account_shortcode_args_filter.html">um_account_shortcode_args_filter</a></li><li><a href="um_add_user_frontend_submitted.html">um_add_user_frontend_submitted</a></li><li><a href="um_adm_action_custom_update_notice.html">um_adm_action_custom_update_notice</a></li><li><a href="um_admin_builder_skip_field_validation.html">um_admin_builder_skip_field_validation</a></li><li><a href="um_admin_field_update_error_handling.html">um_admin_field_update_error_handling</a></li><li><a href="um_admin_pre_save_field_to_db.html">um_admin_pre_save_field_to_db</a></li><li><a href="um_admin_pre_save_field_to_form.html">um_admin_pre_save_field_to_form</a></li><li><a href="um_admin_pre_save_fields_hook.html">um_admin_pre_save_fields_hook</a></li><li><a href="um_allowed_redirect_hosts.html">um_allowed_redirect_hosts</a></li><li><a href="um_allowed_user_tags_patterns.html">um_allowed_user_tags_patterns</a></li><li><a href="um_api_output_format.html">um_api_output_format</a></li><li><a href="um_before_save_filter_submitted.html">um_before_save_filter_submitted</a></li><li><a href="um_before_update_profile.html">um_before_update_profile</a></li><li><a href="um_blacklist_fields_hook.html">um_blacklist_fields_hook</a></li><li><a href="um_browser_url_redirect_to__filter.html">um_browser_url_redirect_to__filter</a></li><li><a href="um_can_view_profile.html">um_can_view_profile</a></li><li><a href="um_change_default_tab.html">um_change_default_tab</a></li><li><a href="um_change_email_template_file.html">um_change_email_template_file</a></li><li><a href="um_change_role_data.html">um_change_role_data</a></li><li><a href="um_checkbox_field_options.html">um_checkbox_field_options</a></li><li><a href="um_checkbox_field_options_%257B$key%257D.html">um_checkbox_field_options_{$key}</a></li><li><a href="um_completeness_field_id.html">um_completeness_field_id</a></li><li><a href="um_core_pages.html">um_core_pages</a></li><li><a href="um_cron_disable.html">um_cron_disable</a></li><li><a href="um_custom_dropdown_options_parent__%257B$form_key%257D.html">um_custom_dropdown_options_parent__{$form_key}</a></li><li><a href="um_custom_dropdown_options_source__%257B$form_key%257D.html">um_custom_dropdown_options_source__{$form_key}</a></li><li><a href="um_custom_error_message_handler.html">um_custom_error_message_handler</a></li><li><a href="um_custom_meta_permalink_base_generate_user_slug.html">um_custom_meta_permalink_base_generate_user_slug</a></li><li><a href="um_custom_success_message_handler.html">um_custom_success_message_handler</a></li><li><a href="um_disable_blocks_script.html">um_disable_blocks_script</a></li><li><a href="um_disable_dynamic_global_css.html">um_disable_dynamic_global_css</a></li><li><a href="um_disable_email_notification_sending.html">um_disable_email_notification_sending</a></li><li><a href="um_edit_field_%257B$mode%257D_%257B$type%257D.html">um_edit_field_{$mode}_{$type}</a></li><li><a href="um_edit_profile_url.html">um_edit_profile_url</a></li><li><a href="um_email_get_template_file_path.html">um_email_get_template_file_path</a></li><li><a href="um_email_send_message_content.html">um_email_send_message_content</a></li><li><a href="um_email_send_subject.html">um_email_send_subject</a></li><li><a href="um_email_template_body_attrs.html">um_email_template_body_attrs</a></li><li><a href="um_email_template_html_formatting.html">um_email_template_html_formatting</a></li><li><a href="um_email_template_path.html">um_email_template_path</a></li><li><a href="um_email_templates_path_by_slug.html">um_email_templates_path_by_slug</a></li><li><a href="um_excluded_comment_types.html">um_excluded_comment_types</a></li><li><a href="um_external_profile_url.html">um_external_profile_url</a></li><li><a href="um_field_checkbox_item_title.html">um_field_checkbox_item_title</a></li><li><a href="um_fields_without_metakey.html">um_fields_without_metakey</a></li><li><a href="um_form_fields_textarea_settings.html">um_form_fields_textarea_settings</a></li><li><a href="um_get_current_page_url.html">um_get_current_page_url</a></li><li><a href="um_get_field__%257B$key%257D.html">um_get_field__{$key}</a></li><li><a href="um_get_field_%257B$type%257D.html">um_get_field_{$type}</a></li><li><a href="um_get_form_fields.html">um_get_form_fields</a></li><li><a href="um_hook_for_field_%257B$type%257D.html">um_hook_for_field_{$type}</a></li><li><a href="um_is_field_disabled.html">um_is_field_disabled</a></li><li><a href="um_late_escaping_allowed_tags.html">um_late_escaping_allowed_tags</a></li><li><a href="um_licenses_site_health.html">um_licenses_site_health</a></li><li><a href="um_localize_permalink_filter.html">um_localize_permalink_filter</a></li><li><a href="um_locate_email_template.html">um_locate_email_template</a></li><li><a href="um_locate_user_profile_not_loggedin__redirect.html">um_locate_user_profile_not_loggedin__redirect</a></li><li><a href="um_login_allow_nonce_verification.html">um_login_allow_nonce_verification</a></li><li><a href="um_login_invalid_nonce_redirect_url.html">um_login_invalid_nonce_redirect_url</a></li><li><a href="um_login_redirect_url.html">um_login_redirect_url</a></li><li><a href="um_logout_redirect_url.html">um_logout_redirect_url</a></li><li><a href="um_member_directory_core_search_fields.html">um_member_directory_core_search_fields</a></li><li><a href="um_member_directory_custom_sorting_type.html">um_member_directory_custom_sorting_type</a></li><li><a href="um_multiselect_options.html">um_multiselect_options</a></li><li><a href="um_multiselect_options_%257B$key%257D.html">um_multiselect_options_{$key}</a></li><li><a href="um_multiselect_options_%257B$type%257D.html">um_multiselect_options_{$type}</a></li><li><a href="um_override_templates_get_template_path__%257B$key%257D.html">um_override_templates_get_template_path__{$key}</a></li><li><a href="um_override_templates_scan_files.html">um_override_templates_scan_files</a></li><li><a href="um_permalink_base_after_filter%257B$filter_slug%257D.html">um_permalink_base_after_filter{$filter_slug}</a></li><li><a href="um_permalink_base_before_filter.html">um_permalink_base_before_filter</a></li><li><a href="um_pre_args_setup.html">um_pre_args_setup</a></li><li><a href="um_prepare_user_results_array.html">um_prepare_user_results_array</a></li><li><a href="um_prepare_user_results_array_meta.html">um_prepare_user_results_array_meta</a></li><li><a href="um_profile_can_view_main.html">um_profile_can_view_main</a></li><li><a href="um_profile_menu_link_%257B$id%257D_attrs.html">um_profile_menu_link_{$id}_attrs</a></li><li><a href="um_profile_nopriv_tag_hook__%257B$usermeta%257D.html">um_profile_nopriv_tag_hook__{$usermeta}</a></li><li><a href="um_profile_permalink.html">um_profile_permalink</a></li><li><a href="um_profile_tabs.html">um_profile_tabs</a></li><li><a href="um_profile_tabs_privacy_list.html">um_profile_tabs_privacy_list</a></li><li><a href="um_profile_tabs_site_health.html">um_profile_tabs_site_health</a></li><li><a href="um_profile_tag_hook__%257B$usermeta%257D.html">um_profile_tag_hook__{$usermeta}</a></li><li><a href="um_radio_field_options.html">um_radio_field_options</a></li><li><a href="um_radio_field_options_%257B$key%257D.html">um_radio_field_options_{$key}</a></li><li><a href="um_radio_options_pair__%257B$key%257D.html">um_radio_options_pair__{$key}</a></li><li><a href="um_register_allow_nonce_verification.html">um_register_allow_nonce_verification</a></li><li><a href="um_register_invalid_nonce_redirect_url.html">um_register_invalid_nonce_redirect_url</a></li><li><a href="um_registration_for_loggedin_users.html">um_registration_for_loggedin_users</a></li><li><a href="um_registration_pending_user_redirect.html">um_registration_pending_user_redirect</a></li><li><a href="um_registration_show_message_redirect_url.html">um_registration_show_message_redirect_url</a></li><li><a href="um_registration_user_role.html">um_registration_user_role</a></li><li><a href="um_reset_password_shortcode_args_filter.html">um_reset_password_shortcode_args_filter</a></li><li><a href="um_rest_get_auser.html">um_rest_get_auser</a></li><li><a href="um_rest_userdata.html">um_rest_userdata</a></li><li><a href="um_secure_register_form_banned_capabilities.html">um_secure_register_form_banned_capabilities</a></li><li><a href="um_select_dropdown_dynamic_options.html">um_select_dropdown_dynamic_options</a></li><li><a href="um_select_dropdown_dynamic_options_%257B$key%257D.html">um_select_dropdown_dynamic_options_{$key}</a></li><li><a href="um_select_options_pair.html">um_select_options_pair</a></li><li><a href="um_selectbox_options.html">um_selectbox_options</a></li><li><a href="um_setup_predefined_page_content.html">um_setup_predefined_page_content</a></li><li><a href="um_shortcode_args_filter.html">um_shortcode_args_filter</a></li><li><a href="um_submit_form_data.html">um_submit_form_data</a></li><li><a href="um_submit_post_form.html">um_submit_post_form</a></li><li><a href="um_submitted_data_value.html">um_submitted_data_value</a></li><li><a href="um_ultimatemember_account_shortcode_disable_singleton.html">um_ultimatemember_account_shortcode_disable_singleton</a></li><li><a href="um_ultimatemember_shortcode_disable_singleton.html">um_ultimatemember_shortcode_disable_singleton</a></li><li><a href="um_user_pre_updating_files_array.html">um_user_pre_updating_files_array</a></li><li><a href="um_user_profile_restricted_edit_fields.html">um_user_profile_restricted_edit_fields</a></li><li><a href="um_user_register_submitted__email.html">um_user_register_submitted__email</a></li><li><a href="um_view_field.html">um_view_field</a></li><li><a href="um_view_field_value_%257B$type%257D.html">um_view_field_value_{$type}</a></li><li><a href="um_whitelisted_metakeys.html">um_whitelisted_metakeys</a></li><li><a href="um_wp_safe_redirect_fallback.html">um_wp_safe_redirect_fallback</a></li><li><a href="um_%257B$key%257D_form_edit_field.html">um_{$key}_form_edit_field</a></li><li><a href="um_%257B$key%257D_form_show_field.html">um_{$key}_form_show_field</a></li><li><a href="um_%257B$type%257D_form_show_field.html">um_{$type}_form_show_field</a></li></ul>
 </nav>
 
 <br class="clear">

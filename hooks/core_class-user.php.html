@@ -473,11 +473,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			$md_data = get_user_meta( $object_id, 'um_member_directory_data', true );
 			if ( empty( $md_data ) ) {
 				$md_data = array(
-					'account_status'    => 'approved',
-					'hide_in_members'   => UM()->member_directory()->get_hide_in_members_default(),
-					'profile_photo'     => false,
-					'cover_photo'       => false,
-					'verified'          => false,
+					'account_status'  => 'approved',
+					'hide_in_members' => UM()->member_directory()->get_hide_in_members_default(),
+					'profile_photo'   => false,
+					'cover_photo'     => false,
+					'verified'        => false,
 				);
 			}
 
@@ -490,7 +490,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					break;
 				case 'synced_gravatar_hashed_id':
 					if ( UM()->options()->get( 'use_gravatars' ) ) {
-						$profile_photo = get_user_meta( $object_id, 'profile_photo', true );
+						$profile_photo        = get_user_meta( $object_id, 'profile_photo', true );
 						$synced_profile_photo = get_user_meta( $object_id, 'synced_profile_photo', true );
 
 						$md_data['profile_photo'] = ! empty( $profile_photo ) || ! empty( $synced_profile_photo );
@@ -547,11 +547,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			$md_data = get_user_meta( $object_id, 'um_member_directory_data', true );
 			if ( empty( $md_data ) ) {
 				$md_data = array(
-					'account_status'    => 'approved',
-					'hide_in_members'   => UM()->member_directory()->get_hide_in_members_default(),
-					'profile_photo'     => false,
-					'cover_photo'       => false,
-					'verified'          => false,
+					'account_status'  => 'approved',
+					'hide_in_members' => UM()->member_directory()->get_hide_in_members_default(),
+					'profile_photo'   => false,
+					'cover_photo'     => false,
+					'verified'        => false,
 				);
 			}
 
@@ -560,7 +560,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					$md_data['account_status'] = $_meta_value;
 					break;
 				case 'hide_in_members':
-
 					$hide_in_members = UM()->member_directory()->get_hide_in_members_default();
 					if ( ! empty( $_meta_value ) ) {
 						if ( $_meta_value == 'Yes' || $_meta_value == __( 'Yes', 'ultimate-member' ) ||
@@ -603,7 +602,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		/**
 		 * @param $user_id
 		 */
-		function delete_user_handler( $user_id ) {
+		public function delete_user_handler( $user_id ) {
 			um_fetch_user( $user_id );
 
 			$this->deleted_user_id = $user_id;
@@ -646,6 +645,16 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 * ?>
 			 */
 			do_action( 'um_delete_user', um_user( 'ID' ) );
+
+			// remove user's comments
+			if ( UM()->options()->get( 'delete_comments' ) ) {
+				$user = get_user_by( 'id', um_user( 'ID' ) );
+
+				$comments = array_merge( get_comments( 'author_email=' . $user->user_email ), get_comments( 'user_id=' . um_user( 'ID' ) ) );
+				foreach ( $comments as $comment ) {
+					wp_delete_comment( $comment->comment_ID, true );
+				}
+			}
 
 			// send email notifications
 			if ( $this->send_mail_on_delete ) {
@@ -733,18 +742,35 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 
 		/**
-		 * @param $user_id
+		 * @param int  $user_id
+		 * @param bool $raw
 		 *
 		 * @return bool|mixed
 		 */
-		function get_profile_slug( $user_id ) {
+		public function get_profile_slug( $user_id, $raw = false ) {
 			// Permalink base
 			$permalink_base = UM()->options()->get( 'permalink_base' );
-			$profile_slug  = get_user_meta( $user_id, "um_user_profile_url_slug_{$permalink_base}", true );
+			if ( 'custom_meta' === $permalink_base ) {
+				$custom_meta = UM()->options()->get( 'permalink_base_custom_meta' );
+				if ( empty( $custom_meta ) ) {
+					// Set default permalink base if custom meta is empty.
+					$permalink_base = 'user_login';
+					$meta_key       = 'um_user_profile_url_slug_' . $permalink_base;
+				} else {
+					$meta_key = $custom_meta;
+				}
+			} else {
+				$meta_key = 'um_user_profile_url_slug_' . $permalink_base;
+			}
+			$profile_slug = get_user_meta( $user_id, $meta_key, true );
+
+			if ( $raw ) {
+				return $profile_slug;
+			}
 
 			//get default username permalink if it's empty then return false
 			if ( empty( $profile_slug ) ) {
-				if ( $permalink_base != 'user_login' ) {
+				if ( 'user_login' !== $permalink_base ) {
 					$profile_slug = get_user_meta( $user_id, 'um_user_profile_url_slug_user_login', true );
 				}
 
@@ -755,7 +781,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			return $profile_slug;
 		}
-
 
 		/**
 		 * @param $user_id
@@ -772,6 +797,20 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			return UM()->permalinks()->profile_permalink( $profile_slug );
 		}
 
+		public function generate_user_hash( $user_id ) {
+			$user_id = absint( $user_id );
+			$append  = 0;
+
+			while ( 1 ) {
+				$user_in_url         = '~' . substr( strrev( md5( uniqid( 'um_user_hash' . $append, true ) . $user_id ) ), 0, 18 );
+				$slug_exists_user_id = UM()->permalinks()->slug_exists_user_id( $user_in_url );
+				if ( empty( $slug_exists_user_id ) || $user_id === $slug_exists_user_id ) {
+					break;
+				}
+				$append++;
+			}
+			return $user_in_url;
+		}
 
 		/**
 		 * Generate User Profile Slug and save to meta
@@ -779,7 +818,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param int $user_id
 		 * @param bool $force
 		 */
-		function generate_profile_slug( $user_id, $force = false ) {
+		public function generate_profile_slug( $user_id, $force = false ) {
 			$userdata = get_userdata( $user_id );
 
 			if ( empty( $userdata ) ) {
@@ -788,18 +827,78 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			delete_option( "um_cache_userdata_{$user_id}" );
 
-			$current_profile_slug = $this->get_profile_slug( $user_id );
+			$current_profile_slug = $this->get_profile_slug( $user_id, true );
 
-			$user_in_url = '';
+			$user_in_url    = '';
 			$permalink_base = UM()->options()->get( 'permalink_base' );
 
 			// User ID
-			if ( $permalink_base == 'user_id' ) {
+			if ( 'user_id' === $permalink_base ) {
 				$user_in_url = $user_id;
 			}
 
+			if ( 'hash' === $permalink_base ) {
+				if ( empty( $current_profile_slug ) ) {
+					$user_in_url = $this->generate_user_hash( $user_id );
+				} else {
+					$user_in_url = $current_profile_slug;
+				}
+			}
+
+			if ( 'custom_meta' === $permalink_base ) {
+				$custom_meta = UM()->options()->get( 'permalink_base_custom_meta' );
+				if ( empty( $custom_meta ) ) {
+					// Set default permalink base if custom meta is empty.
+					$permalink_base = 'user_login';
+				} else {
+					$user_in_url = rawurlencode( get_user_meta( $user_id, $custom_meta, true ) );
+					/**
+					 * Filters the user profile slug when custom meta is set.
+					 *
+					 * @param {string} $slug    User profile slug.
+					 * @param {int}    $user_id User ID.
+					 * @param {string} $metakey Meta key.
+					 *
+					 * @return {string} User profile slug.
+					 *
+					 * @since 2.6.12
+					 * @hook um_custom_meta_permalink_base_generate_user_slug
+					 *
+					 * @example &lt;caption>Use base64encode value as user slug.&lt;/caption>
+					 * function my_custom_meta_permalink_base_generate_user_slug( $slug, $user_id, $metakey ) {
+					 *     // your code here
+					 *     $slug = base64encode( $user_id );
+					 *     update_user_meta( $user_id, $metakey, $slug );
+					 *     $slug = rawurlencode( $slug );
+					 *     return $slug;
+					 * }
+					 * add_filter( 'um_custom_meta_permalink_base_generate_user_slug', 'my_custom_meta_permalink_base_generate_user_slug', 10, 3 );
+					 */
+					$user_in_url = apply_filters( 'um_custom_meta_permalink_base_generate_user_slug', $user_in_url, $user_id, $custom_meta );
+
+					if ( empty( $user_in_url ) ) {
+						$user_in_url = $userdata->user_login;
+						if ( is_email( $user_in_url ) ) {
+
+							$user_email  = $user_in_url;
+							$user_in_url = str_replace( '@', '', $user_in_url );
+
+							if ( ( $pos = strrpos( $user_in_url, '.' ) ) !== false ) {
+								$search_length = strlen( '.' );
+								$user_in_url   = substr_replace( $user_in_url, '-', $pos, $search_length );
+							}
+							update_user_meta( $user_id, "um_email_as_username_{$user_in_url}", $user_email );
+
+						} else {
+							$user_in_url = urlencode( $user_in_url );
+						}
+						update_user_meta( $user_id, "um_user_profile_url_slug_user_login", $user_in_url );
+					}
+				}
+			}
+
 			// Username
-			if ( $permalink_base == 'user_login' ) {
+			if ( 'user_login' === $permalink_base ) {
 
 				$user_in_url = $userdata->user_login;
 
@@ -815,29 +914,31 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					update_user_meta( $user_id, "um_email_as_username_{$user_in_url}", $user_email );
 
 				} else {
-
 					$user_in_url = urlencode( $user_in_url );
-
 				}
 			}
 
 			// Fisrt and Last name
 			$full_name_permalinks = array( 'name', 'name_dash', 'name_plus' );
-			if ( in_array( $permalink_base, $full_name_permalinks ) ) {
-				$separated = array( 'name' => '.', 'name_dash' => '-', 'name_plus' => '+' );
-				$separate = $separated[ $permalink_base ];
-				$first_name = $userdata->first_name;
-				$last_name  = $userdata->last_name;
-				$full_name  = trim( sprintf( '%s %s', $first_name, $last_name ) );
-				$full_name = preg_replace( '/\s+/', ' ', $full_name ); // Remove double spaces
+			if ( in_array( $permalink_base, $full_name_permalinks, true ) ) {
+				$separated    = array(
+					'name'      => '.',
+					'name_dash' => '-',
+					'name_plus' => '+',
+				);
+				$separate     = $separated[ $permalink_base ];
+				$first_name   = $userdata->first_name;
+				$last_name    = $userdata->last_name;
+				$full_name    = trim( sprintf( '%s %s', $first_name, $last_name ) );
+				$full_name    = preg_replace( '/\s+/', ' ', $full_name ); // Remove double spaces
 				$profile_slug = UM()->permalinks()->profile_slug( $full_name, $first_name, $last_name );
 
-				$append     = 0;
-				$username   = $full_name;
-				$_username   = $full_name;
+				$append    = 0;
+				$username  = $full_name;
+				$_username = $full_name;
 
 				while ( 1 ) {
-					$username = $_username . ( empty( $append ) ? '' : " $append" );
+					$username            = $_username . ( empty( $append ) ? '' : " $append" );
 					$slug_exists_user_id = UM()->permalinks()->slug_exists_user_id( $profile_slug . ( empty( $append ) ? '' : "{$separate}{$append}" ) );
 					if ( empty( $slug_exists_user_id ) || $user_id == $slug_exists_user_id ) {
 						break;
@@ -861,9 +962,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 						update_user_meta( $user_id, "um_email_as_username_{$user_in_url}", $user_email );
 
 					} else {
-
 						$user_in_url = sanitize_title( $user_in_url );
-
 					}
 				}
 
@@ -872,11 +971,10 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			$user_in_url = apply_filters( 'um_change_user_profile_slug', $user_in_url, $user_id );
 
-			if ( $force || empty( $current_profile_slug ) || $current_profile_slug != $user_in_url ) {
+			if ( $force || empty( $current_profile_slug ) || $current_profile_slug !== $user_in_url ) {
 				update_user_meta( $user_id, "um_user_profile_url_slug_{$permalink_base}", $user_in_url );
 			}
 		}
-
 
 		/**
 		 * Backend user creation
@@ -994,7 +1092,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 				if ( $userdata !== 'add-new-user' &amp;&amp; $userdata !== 'add-existing-user' ) { ?>
 					&lt;h3 id="um_user_screen_block">&lt;?php esc_html_e( 'Ultimate Member', 'ultimate-member' ); ?>&lt;/h3>
-				&lt;?php }
+					&lt;?php
+				}
 
 				echo $section_content;
 			}
@@ -1031,7 +1130,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				return $content;
 			}
 
-			$style = '';
+			$style     = '';
 			$user_role = false;
 			if ( $userdata !== 'add-new-user' &amp;&amp; $userdata !== 'add-existing-user' ) {
 				// Bail if current user cannot edit users
@@ -1043,21 +1142,21 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				if ( $user_role &amp;&amp; ! empty( $userdata->roles ) &amp;&amp; count( $userdata->roles ) == 1 ) {
 					$style = 'style="display:none;"';
 				}
-
 			}
 
 			$class = ( $userdata == 'add-existing-user' ) ? 'um_role_existing_selector_wrapper' : 'um_role_selector_wrapper';
 
-			ob_start(); ?>
+			ob_start();
+			?>
 
-			&lt;div id="&lt;?php echo esc_attr( $class ) ?>" &lt;?php echo $style ?>>
+			&lt;div id="&lt;?php echo esc_attr( $class ); ?>" &lt;?php echo $style; ?>>
 				&lt;table class="form-table">
 					&lt;tbody>
 					&lt;tr>
 						&lt;th>&lt;label for="um-role">&lt;?php esc_html_e( 'Ultimate Member Role', 'ultimate-member' ); ?>&lt;/label>&lt;/th>
 						&lt;td>
 							&lt;select name="um-role" id="um-role">
-								&lt;option value="" &lt;?php selected( empty( $user_role ) ) ?>>&lt;?php esc_html_e( '&amp;mdash; No role for Ultimate Member &amp;mdash;', 'ultimate-member' ); ?>&lt;/option>
+								&lt;option value="" &lt;?php selected( empty( $user_role ) ); ?>>&lt;?php esc_html_e( '&amp;mdash; No role for Ultimate Member &amp;mdash;', 'ultimate-member' ); ?>&lt;/option>
 								&lt;?php foreach ( $roles as $role_id => $details ) { ?>
 									&lt;option &lt;?php selected( $user_role, $role_id ); ?> value="&lt;?php echo esc_attr( $role_id ); ?>">&lt;?php echo esc_html( $details['name'] ); ?>&lt;/option>
 								&lt;?php } ?>
@@ -1068,7 +1167,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				&lt;/table>
 			&lt;/div>
 
-			&lt;?php $content .= ob_get_clean();
+			&lt;?php
+			$content .= ob_get_clean();
 
 			return $content;
 		}
@@ -1212,21 +1312,21 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 				if ( $user_id ) {
 
-					$this->id = $user_id;
+					$this->id       = $user_id;
 					$this->usermeta = get_user_meta( $user_id );
-					$this->data = get_userdata( $this->id );
+					$this->data     = get_userdata( $this->id );
 
 				} elseif ( is_user_logged_in() &amp;&amp; $clean == false ) {
 
-					$this->id = get_current_user_id();
-					$this->usermeta = get_user_meta($this->id);
-					$this->data = get_userdata($this->id);
+					$this->id       = get_current_user_id();
+					$this->usermeta = get_user_meta( $this->id );
+					$this->data     = get_userdata( $this->id );
 
 				} else {
 
-					$this->id = 0;
+					$this->id       = 0;
 					$this->usermeta = null;
-					$this->data = null;
+					$this->data     = null;
 
 				}
 
@@ -1236,54 +1336,54 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					// add user data
 					$this->data = $this->toArray( $this->data );
 
-					foreach ( $this->data as $k=>$v ) {
-						if ( $k == 'roles') {
-							$this->profile['wp_roles'] = implode(',',$v);
-						} else if ( is_array( $v ) ) {
-							foreach($v as $k2 => $v2){
-								$this->profile[$k2] = $v2;
+					foreach ( $this->data as $k => $v ) {
+						if ( $k == 'roles' ) {
+							$this->profile['wp_roles'] = implode( ',', $v );
+						} elseif ( is_array( $v ) ) {
+							foreach ( $v as $k2 => $v2 ) {
+								$this->profile[ $k2 ] = $v2;
 							}
 						} else {
-							$this->profile[$k] = $v;
+							$this->profile[ $k ] = $v;
 						}
 					}
 
 					// add account status
-					if ( !isset( $this->usermeta['account_status'][0] ) )  {
+					if ( ! isset( $this->usermeta['account_status'][0] ) ) {
 						$this->usermeta['account_status'][0] = 'approved';
 					}
 
 					if ( $this->usermeta['account_status'][0] == 'approved' ) {
-						$this->usermeta['account_status_name'][0] = __('Approved','ultimate-member');
+						$this->usermeta['account_status_name'][0] = __( 'Approved', 'ultimate-member' );
 					}
 
 					if ( $this->usermeta['account_status'][0] == 'awaiting_email_confirmation' ) {
-						$this->usermeta['account_status_name'][0] = __('Awaiting E-mail Confirmation','ultimate-member');
+						$this->usermeta['account_status_name'][0] = __( 'Awaiting E-mail Confirmation', 'ultimate-member' );
 					}
 
 					if ( $this->usermeta['account_status'][0] == 'awaiting_admin_review' ) {
-						$this->usermeta['account_status_name'][0] = __('Pending Review','ultimate-member');
+						$this->usermeta['account_status_name'][0] = __( 'Pending Review', 'ultimate-member' );
 					}
 
 					if ( $this->usermeta['account_status'][0] == 'rejected' ) {
-						$this->usermeta['account_status_name'][0] = __('Membership Rejected','ultimate-member');
+						$this->usermeta['account_status_name'][0] = __( 'Membership Rejected', 'ultimate-member' );
 					}
 
 					if ( $this->usermeta['account_status'][0] == 'inactive' ) {
-						$this->usermeta['account_status_name'][0] = __('Membership Inactive','ultimate-member');
+						$this->usermeta['account_status_name'][0] = __( 'Membership Inactive', 'ultimate-member' );
 					}
 
 					// add user meta
 					foreach ( $this->usermeta as $k => $v ) {
-						if ( $k == 'display_name') {
+						if ( $k == 'display_name' ) {
 							continue;
 						}
 						$this->profile[ $k ] = $v[0];
 					}
 
 					// add permissions
-					$user_role = UM()->roles()->get_priority_user_role( $this->id );
-					$this->profile['role'] = $user_role;
+					$user_role              = UM()->roles()->get_priority_user_role( $this->id );
+					$this->profile['role']  = $user_role;
 					$this->profile['roles'] = UM()->roles()->get_all_user_roles( $this->id );
 
 					$role_meta = UM()->roles()->role_data( $user_role );
@@ -1318,7 +1418,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 						return array( $key => $item );
 					}, array_keys( $role_meta ), $role_meta );*/
 
-					$this->profile = array_merge( $this->profile, (array)$role_meta );
+					$this->profile = array_merge( $this->profile, (array) $role_meta );
 
 					$this->profile['super_admin'] = ( is_super_admin( $this->id ) ) ? 1 : 0;
 
@@ -1329,7 +1429,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					$this->setup_cache( $this->id, $this->profile );
 
 				}
-
 			}
 
 		}
@@ -1340,8 +1439,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 *
 		 * @param bool $clean
 		 */
-		function reset( $clean = false ){
-			$this->set(0, $clean);
+		function reset( $clean = false ) {
+			$this->set( 0, $clean );
 		}
 
 		/**
@@ -1486,7 +1585,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		function set_last_login() {
 			update_user_meta( $this->id, '_um_last_login', current_time( 'timestamp' ) );
 		}
-
 
 		/**
 		 * Set user's account status
@@ -1678,7 +1776,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 *
 		 */
 		function approve( $repeat = true ) {
-			$user_id = um_user('ID');
+			$user_id = um_user( 'ID' );
 
 			if ( ! $repeat ) {
 				$status = get_user_meta( $user_id, 'account_status', true );
@@ -1861,7 +1959,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			if ( is_multisite() ) {
 
 				if ( ! function_exists( 'wpmu_delete_user' ) ) {
-					require_once( ABSPATH . 'wp-admin/includes/ms.php' );
+					require_once ABSPATH . 'wp-admin/includes/ms.php';
 				}
 
 				wpmu_delete_user( $this->id );
@@ -1869,7 +1967,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			} else {
 
 				if ( ! function_exists( 'wp_delete_user' ) ) {
-					require_once( ABSPATH . 'wp-admin/includes/user.php' );
+					require_once ABSPATH . 'wp-admin/includes/user.php';
 				}
 
 				wp_delete_user( $this->id );
@@ -1984,10 +2082,15 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 
 			foreach ( $actions as $id => $arr ) {
-				$url = add_query_arg( array( 'um_action' => $id, 'uid' => um_profile_id() ) );
+				$url = add_query_arg(
+					array(
+						'um_action' => $id,
+						'uid'       => um_profile_id(),
+					)
+				);
 				/*$url = add_query_arg( 'um_action', $id );
 				$url = add_query_arg( 'uid', um_profile_id(), $url );*/
-				$items[] = '&lt;a href="' . esc_url( $url ) .'" class="real_url ' . esc_attr( $id ) . '-item">' . esc_html( $arr['label'] ) . '&lt;/a>';
+				$items[] = '&lt;a href="' . esc_url( $url ) . '" class="real_url ' . esc_attr( $id ) . '-item">' . esc_html( $arr['label'] ) . '&lt;/a>';
 			}
 			return $items;
 		}
@@ -2235,19 +2338,25 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			$value = UM()->validation()->safe_name_in_url( $value );
 
-			$ids = get_users( array( 'fields' => 'ID', 'meta_key' => $key, 'meta_value' => $value, 'meta_compare' => '=' ) );
+			$ids = get_users(
+				array(
+					'fields'       => 'ID',
+					'meta_key'     => $key,
+					'meta_value'   => $value,
+					'meta_compare' => '=',
+				)
+			);
 			if ( ! isset( $ids ) || empty( $ids ) ) {
 				return false;
 			}
 
 			foreach ( $ids as $k => $id ) {
 
-				if ( $id == um_user('ID') ) {
+				if ( $id == um_user( 'ID' ) ) {
 					unset( $ids[ $k ] );
 				} else {
 					$duplicates[] = $id;
 				}
-
 			}
 
 			if ( ! empty( $duplicates ) ) {
@@ -2264,28 +2373,27 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 *
 		 * @return bool
 		 */
-		function user_exists_by_name( $value ) {
+		public function user_exists_by_name( $value ) {
 
 			// Permalink base
 			$permalink_base = UM()->options()->get( 'permalink_base' );
 
 			$raw_value = $value;
-			$value = UM()->validation()->safe_name_in_url( $value );
-			$value = um_clean_user_basename( $value );
+			$value     = UM()->validation()->safe_name_in_url( $value );
+			$value     = um_clean_user_basename( $value );
 
 			// Search by Profile Slug
 			$args = array(
-				'fields' => array( 'ID' ),
+				'fields'     => array( 'ID' ),
 				'meta_query' => array(
 					'relation' => 'OR',
 					array(
-						'key'       =>  'um_user_profile_url_slug_' . $permalink_base,
-						'value'     => strtolower( $raw_value ),
-						'compare'   => '=',
+						'key'     => 'um_user_profile_url_slug_' . $permalink_base,
+						'value'   => strtolower( $raw_value ),
+						'compare' => '=',
 					),
 				),
 			);
-
 
 			$ids = new \WP_User_Query( $args );
 
@@ -2296,9 +2404,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			// Search by Display Name or ID
 			$args = array(
-				'fields'            => array( 'ID' ),
-				'search'            => $value,
-				'search_columns'    => array( 'display_name', 'ID' ),
+				'fields'         => array( 'ID' ),
+				'search'         => $value,
+				'search_columns' => array( 'display_name', 'ID' ),
 			);
 
 			$ids = new \WP_User_Query( $args );
@@ -2308,17 +2416,15 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				return $um_user_query->ID;
 			}
 
-
 			// Search By User Login
-			$value = str_replace( ".", "_", $value );
-			$value = str_replace( " ", "", $value );
+			$value = str_replace( array( '.', ' ' ), array( '_', '' ), $value );
 
 			$args = array(
-				'fields'            => array( 'ID' ),
-				'search'            => $value,
-				'search_columns'    => array(
+				'fields'         => array( 'ID' ),
+				'search'         => $value,
+				'search_columns' => array(
 					'user_login',
-				)
+				),
 			);
 
 			$ids = new \WP_User_Query( $args );
@@ -2354,7 +2460,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 		 *
 		 */
-		function user_exists_by_id( $user_id ) {
+		public function user_exists_by_id( $user_id ) {
 			$aux = get_userdata( absint( $user_id ) );
 			if ( $aux == false ) {
 				return false;
@@ -2363,6 +2469,84 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 		}
 
+		/**
+		 * @param string $hash
+		 *
+		 * @return bool|int
+		 */
+		public function user_exists_by_hash( $hash ) {
+			// Permalink base
+			$permalink_base = UM()->options()->get( 'permalink_base' );
+			$raw_value      = $hash;
+
+			// Search by Profile Slug
+			$args = array(
+				'fields'     => array( 'ID' ),
+				'meta_query' => array(
+					'relation' => 'OR',
+					array(
+						'key'     => 'um_user_profile_url_slug_' . $permalink_base,
+						'value'   => strtolower( $raw_value ),
+						'compare' => '=',
+					),
+				),
+			);
+
+			$ids = new \WP_User_Query( $args );
+
+			if ( $ids->total_users > 0 ) {
+				$um_user_query = current( $ids->get_results() );
+				return $um_user_query->ID;
+			}
+
+			return false;
+		}
+
+		/**
+		 * @param string $slug
+		 *
+		 * @return bool|int
+		 */
+		public function user_exists_by_custom_meta( $slug ) {
+			$permalink_base = UM()->options()->get( 'permalink_base' );
+			$custom_meta    = UM()->options()->get( 'permalink_base_custom_meta' );
+			if ( empty( $custom_meta ) ) {
+				// Set default permalink base if custom meta is empty.
+				$permalink_base = 'user_login';
+				$meta_key       = 'um_user_profile_url_slug_' . $permalink_base;
+			} else {
+				$meta_key = $custom_meta;
+			}
+
+			$raw_value = $slug;
+
+			// Search by Profile Slug
+			$args = array(
+				'fields'     => array( 'ID' ),
+				'meta_query' => array(
+					'relation' => 'OR',
+					array(
+						'key'     => $meta_key,
+						'value'   => strtolower( $raw_value ),
+						'compare' => '=',
+					),
+					array(
+						'key'     => 'um_user_profile_url_slug_' . $permalink_base,
+						'value'   => strtolower( $raw_value ),
+						'compare' => '=',
+					),
+				),
+			);
+
+			$ids = new \WP_User_Query( $args );
+
+			if ( $ids->total_users > 0 ) {
+				$um_user_query = current( $ids->get_results() );
+				return $um_user_query->ID;
+			}
+
+			return false;
+		}
 
 		/**
 		 * This method checks if a user exists or not in your site based on the user email as username
@@ -2388,7 +2572,12 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			$user_id = false;
 
-			$ids = get_users( array( 'fields' => 'ID', 'meta_key' => 'um_email_as_username_' . $slug ) );
+			$ids = get_users(
+				array(
+					'fields'   => 'ID',
+					'meta_key' => 'um_email_as_username_' . $slug,
+				)
+			);
 			if ( ! empty( $ids[0] ) ) {
 				$user_id = $ids[0];
 			}
@@ -2406,11 +2595,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		function set_gravatar( $user_id ) {
 
 			um_fetch_user( $user_id );
-			$email_address = um_user( 'user_email' );
+			$email_address      = um_user( 'user_email' );
 			$hash_email_address = '';
 
 			if ( $email_address ) {
-				$hash_email_address = md5( $email_address );
+				$hash_email_address                         = md5( $email_address );
 				$this->profile['synced_gravatar_hashed_id'] = $hash_email_address;
 				$this->update_usermeta_info( 'synced_gravatar_hashed_id' );
 			}
@@ -2484,7 +2673,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="track_%257B$status%257D_user_registration.html">track_{$status}_user_registration</a></li><li><a href="um_account_page_hidden_fields.html">um_account_page_hidden_fields</a></li><li><a href="um_admin_ajax_modal_content__hook.html">um_admin_ajax_modal_content__hook</a></li><li><a href="um_admin_ajax_modal_content__hook_%257B$act_id%257D.html">um_admin_ajax_modal_content__hook_{$act_id}</a></li><li><a href="um_after_delete_role.html">um_after_delete_role</a></li><li><a href="um_after_delete_role_meta.html">um_after_delete_role_meta</a></li><li><a href="um_after_everything_output.html">um_after_everything_output</a></li><li><a href="um_after_form.html">um_after_form</a></li><li><a href="um_after_form_fields.html">um_after_form_fields</a></li><li><a href="um_after_save_registration_details.html">um_after_save_registration_details</a></li><li><a href="um_after_%257B$mode%257D_fields.html">um_after_{$mode}_fields</a></li><li><a href="um_ajax_load_posts__%257B$hook%257D.html">um_ajax_load_posts__{$hook}</a></li><li><a href="um_before_form.html">um_before_form</a></li><li><a href="um_before_form_is_loaded.html">um_before_form_is_loaded</a></li><li><a href="um_before_save_registration_details.html">um_before_save_registration_details</a></li><li><a href="um_before_submit_form_post.html">um_before_submit_form_post</a></li><li><a href="um_before_%257B$mode%257D_fields.html">um_before_{$mode}_fields</a></li><li><a href="um_before_%257B$mode%257D_form_is_loaded.html">um_before_{$mode}_form_is_loaded</a></li><li><a href="um_main_%257B$mode%257D_fields.html">um_main_{$mode}_fields</a></li><li><a href="um_on_login_before_redirect.html">um_on_login_before_redirect</a></li><li><a href="um_post_registration_%257B$status%257D_hook.html">um_post_registration_{$status}_hook</a></li><li><a href="um_pre_%257B$mode%257D_shortcode.html">um_pre_{$mode}_shortcode</a></li><li><a href="um_registration_after_auto_login.html">um_registration_after_auto_login</a></li><li><a href="um_registration_complete.html">um_registration_complete</a></li><li><a href="um_registration_set_extra_data.html">um_registration_set_extra_data</a></li><li><a href="um_reset_password_errors_hook.html">um_reset_password_errors_hook</a></li><li><a href="um_reset_password_process_hook.html">um_reset_password_process_hook</a></li><li><a href="um_role_edit_data.html">um_role_edit_data</a></li><li><a href="um_role_row_actions.html">um_role_row_actions</a></li><li><a href="um_run_ajax_function__%257B$hook%257D.html">um_run_ajax_function__{$hook}</a></li><li><a href="um_submit_form_errors_hook.html">um_submit_form_errors_hook</a></li><li><a href="um_submit_form_errors_hook_.html">um_submit_form_errors_hook_</a></li><li><a href="um_submit_form_errors_hook__blockedemails.html">um_submit_form_errors_hook__blockedemails</a></li><li><a href="um_submit_form_errors_hook__blockedips.html">um_submit_form_errors_hook__blockedips</a></li><li><a href="um_submit_form_errors_hook__blockedwords.html">um_submit_form_errors_hook__blockedwords</a></li><li><a href="um_submit_form_errors_hook__profile.html">um_submit_form_errors_hook__profile</a></li><li><a href="um_submit_form_errors_hook__registration.html">um_submit_form_errors_hook__registration</a></li><li><a href="um_submit_form_errors_hook_login.html">um_submit_form_errors_hook_login</a></li><li><a href="um_submit_form_errors_hook_logincheck.html">um_submit_form_errors_hook_logincheck</a></li><li><a href="um_user_after_query.html">um_user_after_query</a></li><li><a href="um_user_before_query.html">um_user_before_query</a></li><li><a href="um_user_before_updating_profile.html">um_user_before_updating_profile</a></li><li><a href="um_user_edit_profile.html">um_user_edit_profile</a></li><li><a href="um_user_login.html">um_user_login</a></li><li><a href="um_user_login_extra_hook.html">um_user_login_extra_hook</a></li><li><a href="um_user_register.html">um_user_register</a></li></ul><h3>Filters</h3><ul><li><a href="um_account_shortcode_args_filter.html">um_account_shortcode_args_filter</a></li><li><a href="um_add_user_frontend_submitted.html">um_add_user_frontend_submitted</a></li><li><a href="um_adm_action_custom_update_notice.html">um_adm_action_custom_update_notice</a></li><li><a href="um_admin_builder_skip_field_validation.html">um_admin_builder_skip_field_validation</a></li><li><a href="um_admin_field_update_error_handling.html">um_admin_field_update_error_handling</a></li><li><a href="um_admin_pre_save_field_to_db.html">um_admin_pre_save_field_to_db</a></li><li><a href="um_admin_pre_save_field_to_form.html">um_admin_pre_save_field_to_form</a></li><li><a href="um_admin_pre_save_fields_hook.html">um_admin_pre_save_fields_hook</a></li><li><a href="um_allowed_redirect_hosts.html">um_allowed_redirect_hosts</a></li><li><a href="um_allowed_user_tags_patterns.html">um_allowed_user_tags_patterns</a></li><li><a href="um_api_output_format.html">um_api_output_format</a></li><li><a href="um_before_save_filter_submitted.html">um_before_save_filter_submitted</a></li><li><a href="um_before_update_profile.html">um_before_update_profile</a></li><li><a href="um_browser_url_redirect_to__filter.html">um_browser_url_redirect_to__filter</a></li><li><a href="um_can_view_profile.html">um_can_view_profile</a></li><li><a href="um_change_default_tab.html">um_change_default_tab</a></li><li><a href="um_change_role_data.html">um_change_role_data</a></li><li><a href="um_checkbox_field_options.html">um_checkbox_field_options</a></li><li><a href="um_checkbox_field_options_%257B$key%257D.html">um_checkbox_field_options_{$key}</a></li><li><a href="um_completeness_field_id.html">um_completeness_field_id</a></li><li><a href="um_core_pages.html">um_core_pages</a></li><li><a href="um_cron_disable.html">um_cron_disable</a></li><li><a href="um_custom_dropdown_options_parent__%257B$form_key%257D.html">um_custom_dropdown_options_parent__{$form_key}</a></li><li><a href="um_custom_dropdown_options_source__%257B$form_key%257D.html">um_custom_dropdown_options_source__{$form_key}</a></li><li><a href="um_custom_error_message_handler.html">um_custom_error_message_handler</a></li><li><a href="um_custom_success_message_handler.html">um_custom_success_message_handler</a></li><li><a href="um_disable_blocks_script.html">um_disable_blocks_script</a></li><li><a href="um_disable_dynamic_global_css.html">um_disable_dynamic_global_css</a></li><li><a href="um_disable_email_notification_sending.html">um_disable_email_notification_sending</a></li><li><a href="um_edit_field_%257B$mode%257D_%257B$type%257D.html">um_edit_field_{$mode}_{$type}</a></li><li><a href="um_edit_profile_url.html">um_edit_profile_url</a></li><li><a href="um_email_get_template_file_path.html">um_email_get_template_file_path</a></li><li><a href="um_excluded_comment_types.html">um_excluded_comment_types</a></li><li><a href="um_external_profile_url.html">um_external_profile_url</a></li><li><a href="um_field_checkbox_item_title.html">um_field_checkbox_item_title</a></li><li><a href="um_fields_without_metakey.html">um_fields_without_metakey</a></li><li><a href="um_form_fields_textarea_settings.html">um_form_fields_textarea_settings</a></li><li><a href="um_get_current_page_url.html">um_get_current_page_url</a></li><li><a href="um_get_field__%257B$key%257D.html">um_get_field__{$key}</a></li><li><a href="um_get_field_%257B$type%257D.html">um_get_field_{$type}</a></li><li><a href="um_get_form_fields.html">um_get_form_fields</a></li><li><a href="um_hook_for_field_%257B$type%257D.html">um_hook_for_field_{$type}</a></li><li><a href="um_is_field_disabled.html">um_is_field_disabled</a></li><li><a href="um_late_escaping_allowed_tags.html">um_late_escaping_allowed_tags</a></li><li><a href="um_localize_permalink_filter.html">um_localize_permalink_filter</a></li><li><a href="um_login_allow_nonce_verification.html">um_login_allow_nonce_verification</a></li><li><a href="um_login_invalid_nonce_redirect_url.html">um_login_invalid_nonce_redirect_url</a></li><li><a href="um_login_redirect_url.html">um_login_redirect_url</a></li><li><a href="um_logout_redirect_url.html">um_logout_redirect_url</a></li><li><a href="um_member_directory_core_search_fields.html">um_member_directory_core_search_fields</a></li><li><a href="um_member_directory_custom_sorting_type.html">um_member_directory_custom_sorting_type</a></li><li><a href="um_multiselect_options.html">um_multiselect_options</a></li><li><a href="um_multiselect_options_%257B$key%257D.html">um_multiselect_options_{$key}</a></li><li><a href="um_multiselect_options_%257B$type%257D.html">um_multiselect_options_{$type}</a></li><li><a href="um_override_templates_get_template_path__%257B$key%257D.html">um_override_templates_get_template_path__{$key}</a></li><li><a href="um_override_templates_scan_files.html">um_override_templates_scan_files</a></li><li><a href="um_pre_args_setup.html">um_pre_args_setup</a></li><li><a href="um_prepare_user_results_array.html">um_prepare_user_results_array</a></li><li><a href="um_prepare_user_results_array_meta.html">um_prepare_user_results_array_meta</a></li><li><a href="um_profile_can_view_main.html">um_profile_can_view_main</a></li><li><a href="um_profile_menu_link_%257B$id%257D_attrs.html">um_profile_menu_link_{$id}_attrs</a></li><li><a href="um_profile_nopriv_tag_hook__%257B$usermeta%257D.html">um_profile_nopriv_tag_hook__{$usermeta}</a></li><li><a href="um_profile_permalink.html">um_profile_permalink</a></li><li><a href="um_profile_tag_hook__%257B$usermeta%257D.html">um_profile_tag_hook__{$usermeta}</a></li><li><a href="um_radio_field_options.html">um_radio_field_options</a></li><li><a href="um_radio_field_options_%257B$key%257D.html">um_radio_field_options_{$key}</a></li><li><a href="um_radio_options_pair__%257B$key%257D.html">um_radio_options_pair__{$key}</a></li><li><a href="um_register_allow_nonce_verification.html">um_register_allow_nonce_verification</a></li><li><a href="um_register_invalid_nonce_redirect_url.html">um_register_invalid_nonce_redirect_url</a></li><li><a href="um_registration_for_loggedin_users.html">um_registration_for_loggedin_users</a></li><li><a href="um_registration_pending_user_redirect.html">um_registration_pending_user_redirect</a></li><li><a href="um_registration_show_message_redirect_url.html">um_registration_show_message_redirect_url</a></li><li><a href="um_registration_user_role.html">um_registration_user_role</a></li><li><a href="um_reset_password_shortcode_args_filter.html">um_reset_password_shortcode_args_filter</a></li><li><a href="um_rest_get_auser.html">um_rest_get_auser</a></li><li><a href="um_rest_userdata.html">um_rest_userdata</a></li><li><a href="um_secure_register_form_banned_capabilities.html">um_secure_register_form_banned_capabilities</a></li><li><a href="um_select_dropdown_dynamic_options.html">um_select_dropdown_dynamic_options</a></li><li><a href="um_select_dropdown_dynamic_options_%257B$key%257D.html">um_select_dropdown_dynamic_options_{$key}</a></li><li><a href="um_select_options_pair.html">um_select_options_pair</a></li><li><a href="um_selectbox_options.html">um_selectbox_options</a></li><li><a href="um_setup_predefined_page_content.html">um_setup_predefined_page_content</a></li><li><a href="um_shortcode_args_filter.html">um_shortcode_args_filter</a></li><li><a href="um_submit_form_data.html">um_submit_form_data</a></li><li><a href="um_submit_post_form.html">um_submit_post_form</a></li><li><a href="um_submitted_data_value.html">um_submitted_data_value</a></li><li><a href="um_ultimatemember_account_shortcode_disable_singleton.html">um_ultimatemember_account_shortcode_disable_singleton</a></li><li><a href="um_ultimatemember_shortcode_disable_singleton.html">um_ultimatemember_shortcode_disable_singleton</a></li><li><a href="um_user_pre_updating_files_array.html">um_user_pre_updating_files_array</a></li><li><a href="um_user_register_submitted__email.html">um_user_register_submitted__email</a></li><li><a href="um_view_field.html">um_view_field</a></li><li><a href="um_view_field_value_%257B$type%257D.html">um_view_field_value_{$type}</a></li><li><a href="um_whitelisted_metakeys.html">um_whitelisted_metakeys</a></li><li><a href="um_wp_safe_redirect_fallback.html">um_wp_safe_redirect_fallback</a></li><li><a href="um_%257B$key%257D_form_edit_field.html">um_{$key}_form_edit_field</a></li><li><a href="um_%257B$key%257D_form_show_field.html">um_{$key}_form_show_field</a></li><li><a href="um_%257B$type%257D_form_show_field.html">um_{$type}_form_show_field</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="track_%257B$status%257D_user_registration.html">track_{$status}_user_registration</a></li><li><a href="um_access_profile.html">um_access_profile</a></li><li><a href="um_account_page_hidden_fields.html">um_account_page_hidden_fields</a></li><li><a href="um_admin_ajax_modal_content__hook.html">um_admin_ajax_modal_content__hook</a></li><li><a href="um_admin_ajax_modal_content__hook_%257B$act_id%257D.html">um_admin_ajax_modal_content__hook_{$act_id}</a></li><li><a href="um_after_delete_role.html">um_after_delete_role</a></li><li><a href="um_after_delete_role_meta.html">um_after_delete_role_meta</a></li><li><a href="um_after_email_notification_sending.html">um_after_email_notification_sending</a></li><li><a href="um_after_email_template_part.html">um_after_email_template_part</a></li><li><a href="um_after_everything_output.html">um_after_everything_output</a></li><li><a href="um_after_form.html">um_after_form</a></li><li><a href="um_after_form_fields.html">um_after_form_fields</a></li><li><a href="um_after_save_registration_details.html">um_after_save_registration_details</a></li><li><a href="um_after_%257B$mode%257D_fields.html">um_after_{$mode}_fields</a></li><li><a href="um_ajax_load_posts__%257B$hook%257D.html">um_ajax_load_posts__{$hook}</a></li><li><a href="um_before_email_notification_sending.html">um_before_email_notification_sending</a></li><li><a href="um_before_email_template_body.html">um_before_email_template_body</a></li><li><a href="um_before_email_template_part.html">um_before_email_template_part</a></li><li><a href="um_before_form.html">um_before_form</a></li><li><a href="um_before_form_is_loaded.html">um_before_form_is_loaded</a></li><li><a href="um_before_save_registration_details.html">um_before_save_registration_details</a></li><li><a href="um_before_submit_form_post.html">um_before_submit_form_post</a></li><li><a href="um_before_%257B$mode%257D_fields.html">um_before_{$mode}_fields</a></li><li><a href="um_before_%257B$mode%257D_form_is_loaded.html">um_before_{$mode}_form_is_loaded</a></li><li><a href="um_main_%257B$mode%257D_fields.html">um_main_{$mode}_fields</a></li><li><a href="um_on_login_before_redirect.html">um_on_login_before_redirect</a></li><li><a href="um_post_registration_%257B$status%257D_hook.html">um_post_registration_{$status}_hook</a></li><li><a href="um_pre_%257B$mode%257D_shortcode.html">um_pre_{$mode}_shortcode</a></li><li><a href="um_registration_after_auto_login.html">um_registration_after_auto_login</a></li><li><a href="um_registration_complete.html">um_registration_complete</a></li><li><a href="um_registration_set_extra_data.html">um_registration_set_extra_data</a></li><li><a href="um_reset_password_errors_hook.html">um_reset_password_errors_hook</a></li><li><a href="um_reset_password_process_hook.html">um_reset_password_process_hook</a></li><li><a href="um_role_edit_data.html">um_role_edit_data</a></li><li><a href="um_role_row_actions.html">um_role_row_actions</a></li><li><a href="um_run_ajax_function__%257B$hook%257D.html">um_run_ajax_function__{$hook}</a></li><li><a href="um_submit_form_errors_hook.html">um_submit_form_errors_hook</a></li><li><a href="um_submit_form_errors_hook_.html">um_submit_form_errors_hook_</a></li><li><a href="um_submit_form_errors_hook__blockedemails.html">um_submit_form_errors_hook__blockedemails</a></li><li><a href="um_submit_form_errors_hook__blockedips.html">um_submit_form_errors_hook__blockedips</a></li><li><a href="um_submit_form_errors_hook__blockedwords.html">um_submit_form_errors_hook__blockedwords</a></li><li><a href="um_submit_form_errors_hook__profile.html">um_submit_form_errors_hook__profile</a></li><li><a href="um_submit_form_errors_hook__registration.html">um_submit_form_errors_hook__registration</a></li><li><a href="um_submit_form_errors_hook_login.html">um_submit_form_errors_hook_login</a></li><li><a href="um_submit_form_errors_hook_logincheck.html">um_submit_form_errors_hook_logincheck</a></li><li><a href="um_user_after_query.html">um_user_after_query</a></li><li><a href="um_user_before_query.html">um_user_before_query</a></li><li><a href="um_user_before_updating_profile.html">um_user_before_updating_profile</a></li><li><a href="um_user_edit_profile.html">um_user_edit_profile</a></li><li><a href="um_user_login.html">um_user_login</a></li><li><a href="um_user_login_extra_hook.html">um_user_login_extra_hook</a></li><li><a href="um_user_register.html">um_user_register</a></li></ul><h3>Filters</h3><ul><li><a href="um_account_shortcode_args_filter.html">um_account_shortcode_args_filter</a></li><li><a href="um_add_user_frontend_submitted.html">um_add_user_frontend_submitted</a></li><li><a href="um_adm_action_custom_update_notice.html">um_adm_action_custom_update_notice</a></li><li><a href="um_admin_builder_skip_field_validation.html">um_admin_builder_skip_field_validation</a></li><li><a href="um_admin_field_update_error_handling.html">um_admin_field_update_error_handling</a></li><li><a href="um_admin_pre_save_field_to_db.html">um_admin_pre_save_field_to_db</a></li><li><a href="um_admin_pre_save_field_to_form.html">um_admin_pre_save_field_to_form</a></li><li><a href="um_admin_pre_save_fields_hook.html">um_admin_pre_save_fields_hook</a></li><li><a href="um_allowed_redirect_hosts.html">um_allowed_redirect_hosts</a></li><li><a href="um_allowed_user_tags_patterns.html">um_allowed_user_tags_patterns</a></li><li><a href="um_api_output_format.html">um_api_output_format</a></li><li><a href="um_before_save_filter_submitted.html">um_before_save_filter_submitted</a></li><li><a href="um_before_update_profile.html">um_before_update_profile</a></li><li><a href="um_blacklist_fields_hook.html">um_blacklist_fields_hook</a></li><li><a href="um_browser_url_redirect_to__filter.html">um_browser_url_redirect_to__filter</a></li><li><a href="um_can_view_profile.html">um_can_view_profile</a></li><li><a href="um_change_default_tab.html">um_change_default_tab</a></li><li><a href="um_change_email_template_file.html">um_change_email_template_file</a></li><li><a href="um_change_role_data.html">um_change_role_data</a></li><li><a href="um_checkbox_field_options.html">um_checkbox_field_options</a></li><li><a href="um_checkbox_field_options_%257B$key%257D.html">um_checkbox_field_options_{$key}</a></li><li><a href="um_completeness_field_id.html">um_completeness_field_id</a></li><li><a href="um_core_pages.html">um_core_pages</a></li><li><a href="um_cron_disable.html">um_cron_disable</a></li><li><a href="um_custom_dropdown_options_parent__%257B$form_key%257D.html">um_custom_dropdown_options_parent__{$form_key}</a></li><li><a href="um_custom_dropdown_options_source__%257B$form_key%257D.html">um_custom_dropdown_options_source__{$form_key}</a></li><li><a href="um_custom_error_message_handler.html">um_custom_error_message_handler</a></li><li><a href="um_custom_meta_permalink_base_generate_user_slug.html">um_custom_meta_permalink_base_generate_user_slug</a></li><li><a href="um_custom_success_message_handler.html">um_custom_success_message_handler</a></li><li><a href="um_disable_blocks_script.html">um_disable_blocks_script</a></li><li><a href="um_disable_dynamic_global_css.html">um_disable_dynamic_global_css</a></li><li><a href="um_disable_email_notification_sending.html">um_disable_email_notification_sending</a></li><li><a href="um_edit_field_%257B$mode%257D_%257B$type%257D.html">um_edit_field_{$mode}_{$type}</a></li><li><a href="um_edit_profile_url.html">um_edit_profile_url</a></li><li><a href="um_email_get_template_file_path.html">um_email_get_template_file_path</a></li><li><a href="um_email_send_message_content.html">um_email_send_message_content</a></li><li><a href="um_email_send_subject.html">um_email_send_subject</a></li><li><a href="um_email_template_body_attrs.html">um_email_template_body_attrs</a></li><li><a href="um_email_template_html_formatting.html">um_email_template_html_formatting</a></li><li><a href="um_email_template_path.html">um_email_template_path</a></li><li><a href="um_email_templates_path_by_slug.html">um_email_templates_path_by_slug</a></li><li><a href="um_excluded_comment_types.html">um_excluded_comment_types</a></li><li><a href="um_external_profile_url.html">um_external_profile_url</a></li><li><a href="um_field_checkbox_item_title.html">um_field_checkbox_item_title</a></li><li><a href="um_fields_without_metakey.html">um_fields_without_metakey</a></li><li><a href="um_form_fields_textarea_settings.html">um_form_fields_textarea_settings</a></li><li><a href="um_get_current_page_url.html">um_get_current_page_url</a></li><li><a href="um_get_field__%257B$key%257D.html">um_get_field__{$key}</a></li><li><a href="um_get_field_%257B$type%257D.html">um_get_field_{$type}</a></li><li><a href="um_get_form_fields.html">um_get_form_fields</a></li><li><a href="um_hook_for_field_%257B$type%257D.html">um_hook_for_field_{$type}</a></li><li><a href="um_is_field_disabled.html">um_is_field_disabled</a></li><li><a href="um_late_escaping_allowed_tags.html">um_late_escaping_allowed_tags</a></li><li><a href="um_licenses_site_health.html">um_licenses_site_health</a></li><li><a href="um_localize_permalink_filter.html">um_localize_permalink_filter</a></li><li><a href="um_locate_email_template.html">um_locate_email_template</a></li><li><a href="um_locate_user_profile_not_loggedin__redirect.html">um_locate_user_profile_not_loggedin__redirect</a></li><li><a href="um_login_allow_nonce_verification.html">um_login_allow_nonce_verification</a></li><li><a href="um_login_invalid_nonce_redirect_url.html">um_login_invalid_nonce_redirect_url</a></li><li><a href="um_login_redirect_url.html">um_login_redirect_url</a></li><li><a href="um_logout_redirect_url.html">um_logout_redirect_url</a></li><li><a href="um_member_directory_core_search_fields.html">um_member_directory_core_search_fields</a></li><li><a href="um_member_directory_custom_sorting_type.html">um_member_directory_custom_sorting_type</a></li><li><a href="um_multiselect_options.html">um_multiselect_options</a></li><li><a href="um_multiselect_options_%257B$key%257D.html">um_multiselect_options_{$key}</a></li><li><a href="um_multiselect_options_%257B$type%257D.html">um_multiselect_options_{$type}</a></li><li><a href="um_override_templates_get_template_path__%257B$key%257D.html">um_override_templates_get_template_path__{$key}</a></li><li><a href="um_override_templates_scan_files.html">um_override_templates_scan_files</a></li><li><a href="um_permalink_base_after_filter%257B$filter_slug%257D.html">um_permalink_base_after_filter{$filter_slug}</a></li><li><a href="um_permalink_base_before_filter.html">um_permalink_base_before_filter</a></li><li><a href="um_pre_args_setup.html">um_pre_args_setup</a></li><li><a href="um_prepare_user_results_array.html">um_prepare_user_results_array</a></li><li><a href="um_prepare_user_results_array_meta.html">um_prepare_user_results_array_meta</a></li><li><a href="um_profile_can_view_main.html">um_profile_can_view_main</a></li><li><a href="um_profile_menu_link_%257B$id%257D_attrs.html">um_profile_menu_link_{$id}_attrs</a></li><li><a href="um_profile_nopriv_tag_hook__%257B$usermeta%257D.html">um_profile_nopriv_tag_hook__{$usermeta}</a></li><li><a href="um_profile_permalink.html">um_profile_permalink</a></li><li><a href="um_profile_tabs.html">um_profile_tabs</a></li><li><a href="um_profile_tabs_privacy_list.html">um_profile_tabs_privacy_list</a></li><li><a href="um_profile_tabs_site_health.html">um_profile_tabs_site_health</a></li><li><a href="um_profile_tag_hook__%257B$usermeta%257D.html">um_profile_tag_hook__{$usermeta}</a></li><li><a href="um_radio_field_options.html">um_radio_field_options</a></li><li><a href="um_radio_field_options_%257B$key%257D.html">um_radio_field_options_{$key}</a></li><li><a href="um_radio_options_pair__%257B$key%257D.html">um_radio_options_pair__{$key}</a></li><li><a href="um_register_allow_nonce_verification.html">um_register_allow_nonce_verification</a></li><li><a href="um_register_invalid_nonce_redirect_url.html">um_register_invalid_nonce_redirect_url</a></li><li><a href="um_registration_for_loggedin_users.html">um_registration_for_loggedin_users</a></li><li><a href="um_registration_pending_user_redirect.html">um_registration_pending_user_redirect</a></li><li><a href="um_registration_show_message_redirect_url.html">um_registration_show_message_redirect_url</a></li><li><a href="um_registration_user_role.html">um_registration_user_role</a></li><li><a href="um_reset_password_shortcode_args_filter.html">um_reset_password_shortcode_args_filter</a></li><li><a href="um_rest_get_auser.html">um_rest_get_auser</a></li><li><a href="um_rest_userdata.html">um_rest_userdata</a></li><li><a href="um_secure_register_form_banned_capabilities.html">um_secure_register_form_banned_capabilities</a></li><li><a href="um_select_dropdown_dynamic_options.html">um_select_dropdown_dynamic_options</a></li><li><a href="um_select_dropdown_dynamic_options_%257B$key%257D.html">um_select_dropdown_dynamic_options_{$key}</a></li><li><a href="um_select_options_pair.html">um_select_options_pair</a></li><li><a href="um_selectbox_options.html">um_selectbox_options</a></li><li><a href="um_setup_predefined_page_content.html">um_setup_predefined_page_content</a></li><li><a href="um_shortcode_args_filter.html">um_shortcode_args_filter</a></li><li><a href="um_submit_form_data.html">um_submit_form_data</a></li><li><a href="um_submit_post_form.html">um_submit_post_form</a></li><li><a href="um_submitted_data_value.html">um_submitted_data_value</a></li><li><a href="um_ultimatemember_account_shortcode_disable_singleton.html">um_ultimatemember_account_shortcode_disable_singleton</a></li><li><a href="um_ultimatemember_shortcode_disable_singleton.html">um_ultimatemember_shortcode_disable_singleton</a></li><li><a href="um_user_pre_updating_files_array.html">um_user_pre_updating_files_array</a></li><li><a href="um_user_profile_restricted_edit_fields.html">um_user_profile_restricted_edit_fields</a></li><li><a href="um_user_register_submitted__email.html">um_user_register_submitted__email</a></li><li><a href="um_view_field.html">um_view_field</a></li><li><a href="um_view_field_value_%257B$type%257D.html">um_view_field_value_{$type}</a></li><li><a href="um_whitelisted_metakeys.html">um_whitelisted_metakeys</a></li><li><a href="um_wp_safe_redirect_fallback.html">um_wp_safe_redirect_fallback</a></li><li><a href="um_%257B$key%257D_form_edit_field.html">um_{$key}_form_edit_field</a></li><li><a href="um_%257B$key%257D_form_show_field.html">um_{$key}_form_show_field</a></li><li><a href="um_%257B$type%257D_form_show_field.html">um_{$type}_form_show_field</a></li></ul>
 </nav>
 
 <br class="clear">
