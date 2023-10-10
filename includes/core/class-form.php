@@ -41,7 +41,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		public $nonce = null;
 
 		/**
-		 * @var null
+		 * @var null|array
 		 */
 		public $errors = null;
 
