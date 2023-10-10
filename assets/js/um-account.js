@@ -31,6 +31,8 @@ jQuery(document).ready(function() {
 		jQuery('.um-account-nav a').removeClass('current');
 		jQuery('.um-account-nav a[data-tab="'+tab_+'"]').addClass('current');
 
+		jQuery(this).parents('.um-account').find('.um-account-main .um-notice').fadeOut();
+
 		wp.hooks.doAction( 'um_after_account_tab_changed', tab_ );
 
 		return false;
