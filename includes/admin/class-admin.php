@@ -2044,7 +2044,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		}
 
 		/**
-		 * @since 2.6.12
+		 * @since 2.7.0
 		 *
 		 * @return Enqueue
 		 */
@@ -2080,7 +2080,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		}
 
 		/**
-		 * @since 2.6.12
+		 * @since 2.7.0
 		 *
 		 * @return Site_Health
 		 */

@@ -524,7 +524,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		/**
 		 * Print field error.
 		 *
-		 * @since 2.6.12 Added $input_id attribute.
+		 * @since 2.7.0 Added $input_id attribute.
 		 *
 		 * @param string $text
 		 * @param string $input_id
@@ -560,7 +560,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		/**
 		 * Print field notice.
 		 *
-		 * @since 2.6.12 Added $input_id attribute.
+		 * @since 2.7.0 Added $input_id attribute.
 		 *
 		 * @param string $text
 		 * @param string $input_id

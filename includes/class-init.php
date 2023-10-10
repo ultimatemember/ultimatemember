@@ -921,12 +921,12 @@ if ( ! class_exists( 'UM' ) ) {
 
 		/**
 		 * @since 2.0
-		 * @depecated 2.6.12
+		 * @depecated 2.7.0
 		 *
 		 * @return um\admin\Enqueue
 		 */
 		public function admin_enqueue() {
-			_deprecated_function( __METHOD__, '2.6.12', 'UM()->admin()->enqueue()' );
+			_deprecated_function( __METHOD__, '2.7.0', 'UM()->admin()->enqueue()' );
 			return $this->admin()->enqueue();
 		}
 
@@ -1152,7 +1152,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return um\frontend\Enqueue
 		 */
 		public function enqueue() {
-			_deprecated_function( __METHOD__, '2.6.12', 'UM()->frontend()->enqueue()' );
+			_deprecated_function( __METHOD__, '2.7.0', 'UM()->frontend()->enqueue()' );
 			return $this->frontend()->enqueue();
 		}
 

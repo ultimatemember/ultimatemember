@@ -151,7 +151,7 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 		/**
 		 * Getting the user_id based on the User Profile slug like when Base Permalink setting equals 'user_login'.
 		 *
-		 * @since 2.6.12
+		 * @since 2.7.0
 		 *
 		 * @return bool|int|mixed
 		 */

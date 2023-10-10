@@ -828,7 +828,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					 *
 					 * @return {string} User profile slug.
 					 *
-					 * @since 2.6.12
+					 * @since 2.7.0
 					 * @hook um_custom_meta_permalink_base_generate_user_slug
 					 *
 					 * @example <caption>Use base64encode value as user slug.</caption>

@@ -14,14 +14,14 @@ class Enqueue {
 	/**
 	 * @var string scripts' Standard or Minified versions.
 	 *
-	 * @since 2.6.12
+	 * @since 2.7.0
 	 */
 	public static $suffix = '';
 
 	/**
 	 * @var array URLs for easy using.
 	 *
-	 * @since 2.6.12
+	 * @since 2.7.0
 	 */
 	public static $urls = array(
 		'js'   => UM_URL . 'assets/js/',
@@ -32,14 +32,14 @@ class Enqueue {
 	/**
 	 * @var string scripts' Standard or Minified versions.
 	 *
-	 * @since 2.6.12
+	 * @since 2.7.0
 	 */
 	public static $select2_handle = 'select2';
 
 	/**
 	 * Enqueue constructor.
 	 *
-	 * @since 2.6.12
+	 * @since 2.7.0
 	 */
 	public function __construct() {
 		add_action( 'admin_enqueue_scripts', array( &$this, 'common_libs' ), 9 );
@@ -65,7 +65,7 @@ class Enqueue {
 	/**
 	 * Register jQuery-UI styles.
 	 *
-	 * @since 2.6.12
+	 * @since 2.7.0
 	 */
 	protected function register_jquery_ui() {
 		wp_register_style( 'um_ui', self::get_url( 'libs' ) . 'jquery-ui/jquery-ui' . self::get_suffix() . '.css', array(), '1.12.1' );
@@ -74,7 +74,7 @@ class Enqueue {
 	/**
 	 * Register common JS/CSS libraries.
 	 *
-	 * @since 2.6.12
+	 * @since 2.7.0
 	 */
 	public function common_libs() {
 		$this->register_jquery_ui();

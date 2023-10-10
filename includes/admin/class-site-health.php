@@ -82,7 +82,7 @@ class Site_Health {
 	/**
 	 * Add our data to Site Health information.
 	 *
-	 * @since 2.6.12
+	 * @since 2.7.0
 	 *
 	 * @param array $info The Site Health information.
 	 *

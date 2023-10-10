@@ -459,7 +459,7 @@ final class Enqueue extends \um\common\Enqueue {
 	/**
 	 * Load Fonticons
 	 *
-	 * @depecated 2.6.12
+	 * @depecated 2.7.0
 	 */
 	public function load_fonticons() {
 	}

@@ -25,7 +25,7 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		}
 
 		/**
-		 * @since 2.6.12
+		 * @since 2.7.0
 		 *
 		 * @return Enqueue
 		 */

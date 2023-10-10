@@ -6,7 +6,7 @@
  *
  * Page: "Profile"
  *
- * @version 2.6.12
+ * @version 2.7.0
  *
  * @var object $post
  */

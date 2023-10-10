@@ -290,7 +290,7 @@ final class Enqueue extends \um\common\Enqueue {
 
 	/**
 	 * Load select-dropdowns JS
-	 * @depecated 2.6.12
+	 * @depecated 2.7.0
 	 */
 	function load_selectjs() {
 	}
@@ -299,7 +299,7 @@ final class Enqueue extends \um\common\Enqueue {
 	/**
 	 * Load Fonticons
 	 *
-	 * @depecated 2.6.12
+	 * @depecated 2.7.0
 	 */
 	function load_fonticons() {
 	}
@@ -375,21 +375,17 @@ final class Enqueue extends \um\common\Enqueue {
 	/**
 	 * Load tipsy
 	 *
-	 * @depecated 2.6.12
+	 * @depecated 2.7.0
 	 */
 	function load_tipsy() {
-		wp_enqueue_script( 'um_tipsy' );
-		wp_enqueue_style( 'um_tipsy' );
 	}
 
 	/**
 	 * Load rating
 	 *
-	 * @depecated 2.6.12
+	 * @depecated 2.7.0
 	 */
 	function load_raty() {
-		wp_enqueue_script('um_raty');
-		wp_enqueue_style('um_raty');
 	}
 
 
