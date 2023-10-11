@@ -607,6 +607,9 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 								$this->post_form['role'] = $role;
 								$maybe_set_default_role  = false;
+
+								// Force adding `role` metakey if there is a role-type field on the form. It's required to User Profile.
+								$this->usermeta_whitelist[] = 'role';
 							}
 						}
 					}
