@@ -398,6 +398,8 @@ function um_user_edit_profile( $args, $form_data ) {
 
 			if ( ! in_array( $args['submitted']['role'], $exclude_roles, true ) ) {
 				$to_update['role'] = $args['submitted']['role'];
+
+				UM()->form()->usermeta_whitelist[] = 'role'; // this is needed for validation in um\core\User::is_metakey_banned().
 			}
 
 			$args['roles_before_upgrade'] = UM()->roles()->get_all_user_roles( $user_id );
