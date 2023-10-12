@@ -539,9 +539,6 @@ function initCrop_UM() {
 					zoomable: false,
 					rotatable: false,
 					dashed: false,
-					done: function(data) {
-						target_img.parent().attr('data-coord', Math.round(data.x) + ',' + Math.round(data.y) + ',' + Math.round(data.width) + ',' + Math.round(data.height) );
-					}
 				};
 
 			} else if ( crop_data == 'cover' ) {
@@ -556,9 +553,6 @@ function initCrop_UM() {
 					zoomable: false,
 					rotatable: false,
 					dashed: false,
-					done: function(data) {
-						target_img.parent().attr('data-coord', Math.round(data.x) + ',' + Math.round(data.y) + ',' + Math.round(data.width) + ',' + Math.round(data.height) );
-					}
 				};
 
 			} else if ( crop_data == 'user' ) {
@@ -571,16 +565,18 @@ function initCrop_UM() {
 					zoomable: false,
 					rotatable: false,
 					dashed: false,
-					done: function(data) {
-						target_img.parent().attr('data-coord', Math.round(data.x) + ',' + Math.round(data.y) + ',' + Math.round(data.width) + ',' + Math.round(data.height) );
-					}
 				};
 
 			}
 
 			if ( crop_data != 0 ) {
-					target_img.cropper( opts );
-					jQuery('.um-single-image-preview img.cropper-hidden').cropper('destroy');
+				// console.log( opts );
+					cropper = new Cropper(target_img[0], opts);
+					console.log(cropper.getCropBoxData())
+					// target_img.cropper( opts );
+				// cropper.destroy();
+				// 	jQuery('.um-single-image-preview img.cropper-hidden').cropper('destroy');
+				// 	jQuery('.um-single-image-preview img.cropper-hidden').cropper.destroy();
 					jQuery('.um-single-image-preview img.lazyloaded').addClass('cropper-hidden');
 					jQuery('.um-single-image-preview img.lazyloaded').removeClass('lazyloaded');
 					jQuery('.um-single-image-preview .cropper-container').append('<div class="um-clear"></div>');
@@ -727,7 +723,8 @@ function um_modal_responsive() {
 }
 
 function um_remove_modal() {
-	jQuery('img.cropper-hidden').cropper('destroy');
+	// jQuery('img.cropper-hidden').cropper('destroy');
+	cropper.destroy();
 
 	jQuery('body,html,textarea').css("overflow", "auto");
 
