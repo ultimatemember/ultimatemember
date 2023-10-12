@@ -908,7 +908,7 @@ class Site_Health {
 		$secure_settings = array(
 			'um-banned_capabilities'        => array(
 				'label' => __( 'Banned Administrative Capabilities', 'ultimate-member' ),
-				'value' => implode( ', ', UM()->options()->get( 'banned_capabilities' ) ),
+				'value' => ! empty( UM()->options()->get( 'banned_capabilities' ) ) ? implode( ', ', UM()->options()->get( 'banned_capabilities' ) ) : '',
 			),
 			'um-lock_register_forms'        => array(
 				'label' => __( 'Lock All Register Forms', 'ultimate-member' ),
