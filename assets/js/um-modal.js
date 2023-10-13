@@ -111,13 +111,14 @@ jQuery(document).ready(function() {
 			mode = $formWrapper.attr('data-mode');
 		}
 
-		var data = cropper.getData();
-		var coord = Math.round(data.x) + ',' + Math.round(data.y) + ',' + Math.round(data.width) + ',' + Math.round(data.height);
-
+		if ( jQuery('.cropper-hidden').length > 0 ) {
+			var data = cropper.getData();
+			var coord = Math.round(data.x) + ',' + Math.round(data.y) + ',' + Math.round(data.width) + ',' + Math.round(data.height);
+		}
 		if ( coord ) {
 
 			jQuery(this).html( jQuery(this).attr('data-processing') ).addClass('disabled');
-			console.log(src);
+
 			jQuery.ajax({
 				url: wp.ajax.settings.url,
 				type: 'POST',
