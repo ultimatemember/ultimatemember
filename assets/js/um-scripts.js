@@ -658,11 +658,22 @@ jQuery(document).ready(function() {
 		});
 
 		me.select2('destroy');
-		me.select2({
-			data: arr_items,
-			allowClear: true,
-			minimumResultsForSearch: 10
-		});
+		if ( me.hasClass( 'um-s1' ) ) {
+			me.select2({
+				data: arr_items,
+				allowClear: true,
+				dropdownParent: me.parent()
+			});
+		} else if ( me.hasClass( 'um-s2' ) ) {
+			me.select2({
+				data: arr_items,
+				allowClear: true,
+				minimumResultsForSearch: 10,
+				dropdownParent: me.parent()
+			});
+		}
+
+
 
 		if ( data.post.members_directory === 'yes' ) {
 			me.find('option').each( function() {

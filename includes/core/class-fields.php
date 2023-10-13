@@ -1465,11 +1465,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @return array $arr_options
 		 */
-		function get_options_from_callback( $data, $type ) {
+		public function get_options_from_callback( $data, $type ) {
 			$arr_options = array();
 
-			if ( in_array( $type, array( 'select', 'multiselect' ) ) && ! empty( $data['custom_dropdown_options_source'] ) ) {
-
+			if ( ! empty( $data['custom_dropdown_options_source'] ) && in_array( $type, array( 'select', 'multiselect' ), true ) ) {
 				if ( $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
 					return $arr_options;
 				}
@@ -1481,7 +1480,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$arr_options = call_user_func( $data['custom_dropdown_options_source'] );
 					}
 				}
-
 			}
 
 			return $arr_options;

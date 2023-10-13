@@ -641,9 +641,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$values_array = ( ! empty( $users_roles['avail_roles'] ) && is_array( $users_roles['avail_roles'] ) ) ? array_keys( array_filter( $users_roles['avail_roles'] ) ) : array();
 					}
 
-					if ( ! empty( $values_array ) && in_array( $attrs['type'], array( 'select', 'multiselect', 'checkbox', 'radio' ) ) ) {
+					if ( ! empty( $values_array ) && in_array( $attrs['type'], array( 'select', 'multiselect', 'checkbox', 'radio' ), true ) ) {
 						$values_array = array_map( 'maybe_unserialize', $values_array );
-						$temp_values = array();
+						$temp_values  = array();
 						foreach ( $values_array as $values ) {
 							if ( is_array( $values ) ) {
 								$temp_values = array_merge( $temp_values, $values );
@@ -654,7 +654,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$values_array = array_unique( $temp_values );
 					}
 
-					if ( $attrs['metakey'] != 'online_status' && empty( $values_array ) ) {
+					if ( 'online_status' !== $attrs['metakey'] && empty( $values_array ) ) {
 						ob_get_clean();
 						return '';
 					}
@@ -721,7 +721,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options', $attrs['options'], $values_array, $attrs );
 
-					if ( empty( $attrs['options'] ) || ! is_array( $attrs['options'] ) ) {
+					if ( ( empty( $attrs['options'] ) || ! is_array( $attrs['options'] ) ) && ! ( ! empty( $attrs['custom_dropdown_options_source'] ) && ! empty( $attrs['parent_dropdown_relationship'] ) ) ) {
 						ob_get_clean();
 						return '';
 					}

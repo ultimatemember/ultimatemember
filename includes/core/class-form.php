@@ -181,7 +181,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				);
 
 				if ( ! empty( $values_array ) ) {
-					$parent_dropdown = isset( $arr_options['field']['parent_dropdown_relationship'] ) ? $arr_options['field']['parent_dropdown_relationship'] : '';
+					$parent_dropdown      = isset( $arr_options['post']['parent_option_name'] ) ? $arr_options['post']['parent_option_name'] : '';
 					$arr_options['items'] = call_user_func( $ajax_source_func, $parent_dropdown );
 
 					if ( array_keys( $arr_options['items'] ) !== range( 0, count( $arr_options['items'] ) - 1 ) ) {
