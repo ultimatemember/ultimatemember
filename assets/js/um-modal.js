@@ -95,7 +95,7 @@ jQuery(document).ready(function() {
 		var key = jQuery(this).attr('data-key');
 		var img_c = jQuery(this).parents('.um-modal-body').find('.um-single-image-preview');
 		var src = img_c.find('img').attr('src');
-		// var coord = img_c.attr('data-coord');
+
 		var file = img_c.find('img').data('file');
 		var user_id = 0;
 		if ( jQuery(this).parents('#um_upload_single').data('user_id')  ) {
@@ -111,10 +111,9 @@ jQuery(document).ready(function() {
 			mode = $formWrapper.attr('data-mode');
 		}
 
-		var data = cropper.getCropBoxData();
-		var coord = Math.round(data.left) + ',' + Math.round(data.top) + ',' + Math.round(data.width) + ',' + Math.round(data.height);
-		// target_img.parent().attr('data-coord', Math.round(data.x) + ',' + Math.round(data.y) + ',' + Math.round(data.width) + ',' + Math.round(data.height) );
-		console.log(coord);
+		var data = cropper.getData();
+		var coord = Math.round(data.x) + ',' + Math.round(data.y) + ',' + Math.round(data.width) + ',' + Math.round(data.height);
+
 		if ( coord ) {
 
 			jQuery(this).html( jQuery(this).attr('data-processing') ).addClass('disabled');
@@ -134,7 +133,7 @@ jQuery(document).ready(function() {
 					nonce: um_scripts.nonce
 				},
 				success: function( response ) {
-console.log(response);
+
 					if ( response.success ) {
 
 						d = new Date();

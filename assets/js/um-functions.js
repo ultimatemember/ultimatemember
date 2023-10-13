@@ -570,13 +570,8 @@ function initCrop_UM() {
 			}
 
 			if ( crop_data != 0 ) {
-				// console.log( opts );
 					cropper = new Cropper(target_img[0], opts);
-					console.log(cropper.getCropBoxData())
-					// target_img.cropper( opts );
-				// cropper.destroy();
-				// 	jQuery('.um-single-image-preview img.cropper-hidden').cropper('destroy');
-				// 	jQuery('.um-single-image-preview img.cropper-hidden').cropper.destroy();
+
 					jQuery('.um-single-image-preview img.lazyloaded').addClass('cropper-hidden');
 					jQuery('.um-single-image-preview img.lazyloaded').removeClass('lazyloaded');
 					jQuery('.um-single-image-preview .cropper-container').append('<div class="um-clear"></div>');
