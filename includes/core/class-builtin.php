@@ -2011,7 +2011,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 						'SD' => __('Sudan','ultimate-member'),
 						'SR' => __('Suriname','ultimate-member'),
 						'SJ' => __('Svalbard and Jan Mayen','ultimate-member'),
-						'SZ' => __('Swaziland','ultimate-member'),
+						'SZ' => __('Eswatini','ultimate-member'),
 						'SE' => __('Sweden','ultimate-member'),
 						'CH' => __('Switzerland','ultimate-member'),
 						'SY' => __('Syrian Arab Republic','ultimate-member'),
