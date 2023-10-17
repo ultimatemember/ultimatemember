@@ -534,14 +534,7 @@ function initCrop_UM() {
 				var opts = {
 					minWidth: min_width,
 					minHeight: min_height,
-					dragCrop: false,
 					aspectRatio: 1.0,
-					zoomable: false,
-					rotatable: false,
-					dashed: false,
-					done: function(data) {
-						target_img.parent().attr('data-coord', Math.round(data.x) + ',' + Math.round(data.y) + ',' + Math.round(data.width) + ',' + Math.round(data.height) );
-					}
 				};
 
 			} else if ( crop_data == 'cover' ) {
@@ -551,14 +544,7 @@ function initCrop_UM() {
 				var opts = {
 					minWidth: min_width,
 					minHeight: min_height,
-					dragCrop: false,
 					aspectRatio: ratio,
-					zoomable: false,
-					rotatable: false,
-					dashed: false,
-					done: function(data) {
-						target_img.parent().attr('data-coord', Math.round(data.x) + ',' + Math.round(data.y) + ',' + Math.round(data.width) + ',' + Math.round(data.height) );
-					}
 				};
 
 			} else if ( crop_data == 'user' ) {
@@ -566,21 +552,21 @@ function initCrop_UM() {
 				var opts = {
 					minWidth: min_width,
 					minHeight: min_height,
-					dragCrop: true,
 					aspectRatio: "auto",
-					zoomable: false,
-					rotatable: false,
-					dashed: false,
-					done: function(data) {
-						target_img.parent().attr('data-coord', Math.round(data.x) + ',' + Math.round(data.y) + ',' + Math.round(data.width) + ',' + Math.round(data.height) );
-					}
 				};
 
 			}
 
 			if ( crop_data != 0 ) {
-					target_img.cropper( opts );
-					jQuery('.um-single-image-preview img.cropper-hidden').cropper('destroy');
+					var selection = target_img.imgAreaSelect({
+						opts,
+						onSelectEnd: function (img, selection) {
+							console.log(img)
+							console.log(selection)
+							target_img.parent().attr('data-coord', Math.round(selection.x2) + ',' + Math.round(selection.y2) + ',' + Math.round(selection.width) + ',' + Math.round(selection.height) )
+						}
+					});
+
 					jQuery('.um-single-image-preview img.lazyloaded').addClass('cropper-hidden');
 					jQuery('.um-single-image-preview img.lazyloaded').removeClass('lazyloaded');
 					jQuery('.um-single-image-preview .cropper-container').append('<div class="um-clear"></div>');
@@ -727,7 +713,8 @@ function um_modal_responsive() {
 }
 
 function um_remove_modal() {
-	jQuery('img.cropper-hidden').cropper('destroy');
+	var target_img = jQuery('.um-modal .um-single-image-preview img').first();
+	target_img.imgAreaSelect( {remove: true} );
 
 	jQuery('body,html,textarea').css("overflow", "auto");
 
