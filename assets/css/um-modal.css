@@ -198,7 +198,3 @@ a.um-modal-btn:visited {
 .um-modal-btn.alt:hover {
 	background: #e5e5e5;
 }
-
-.um-modal .um-single-image-preview.crop img{
-	float:left;
-}

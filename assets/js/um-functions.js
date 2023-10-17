@@ -508,6 +508,10 @@ function initCrop_UM() {
 	var min_height = target_img.parent().attr('data-min_height');
 	var ratio = target_img.parent().attr('data-ratio');
 
+	ratio = ratio.replace('.', ':');
+	min_width = min_width * sizer;
+	min_height = min_height * sizer;
+
 	if ( jQuery('.um-modal').find('#um_upload_single').attr('data-ratio') ) {
 		var ratio =  jQuery('.um-modal').find('#um_upload_single').attr('data-ratio');
 		var ratio_split = ratio.split(':');
@@ -529,47 +533,39 @@ function initCrop_UM() {
 				target_img_parent.css({ 'height': target_img.height(), 'max-height' : max_height + 'px' });
 			}
 
+			var naturalWidth = target_img[0].naturalWidth;
+			var naturalHeight = target_img[0].naturalHeight;
+			var height = target_img[0].height;
+			var width = target_img[0].width;
+			var sizer = naturalWidth/width;
+
 			if ( crop_data == 'square' ) {
-
-				var opts = {
-					minWidth: min_width,
-					minHeight: min_height,
-					aspectRatio: 1.0,
-				};
-
+				ratio = '1:1';
 			} else if ( crop_data == 'cover' ) {
 				if( Math.round( min_width / ratio ) > 0 ){
 					min_height = Math.round( min_width / ratio )
 				}
-				var opts = {
-					minWidth: min_width,
-					minHeight: min_height,
-					aspectRatio: ratio,
-				};
-
 			} else if ( crop_data == 'user' ) {
-
-				var opts = {
-					minWidth: min_width,
-					minHeight: min_height,
-					aspectRatio: "auto",
-				};
-
+				ratio = 'auto';
 			}
 
 			if ( crop_data != 0 ) {
 					var selection = target_img.imgAreaSelect({
-						opts,
+						minWidth: min_width,
+						minHeight: min_height,
+						aspectRatio: ratio,
+						handles: true,
+						show: true,
 						onSelectEnd: function (img, selection) {
 							console.log(img)
 							console.log(selection)
-							target_img.parent().attr('data-coord', Math.round(selection.x2) + ',' + Math.round(selection.y2) + ',' + Math.round(selection.width) + ',' + Math.round(selection.height) )
+							target_img.parent().attr('data-coord', Math.round(selection.x1 * sizer) + ',' + Math.round(selection.y1 * sizer) + ',' + Math.round(selection.width * sizer ) + ',' + Math.round(selection.height * sizer) )
 						}
 					});
 
-					jQuery('.um-single-image-preview img.lazyloaded').addClass('cropper-hidden');
-					jQuery('.um-single-image-preview img.lazyloaded').removeClass('lazyloaded');
-					jQuery('.um-single-image-preview .cropper-container').append('<div class="um-clear"></div>');
+					// jQuery('.um-single-image-preview img.lazyloaded').addClass('cropper-hidden');
+					// jQuery('.um-single-image-preview img.lazyloaded').removeClass('lazyloaded');
+					// jQuery('.um-single-image-preview .cropper-container').append('<div class="um-clear"></div>');
 			}
 
 		}

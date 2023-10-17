@@ -100,7 +100,6 @@ final class Enqueue extends \um\common\Enqueue {
 
 		//wp_register_script( 'um_tipsy', $this->js_baseurl . 'um-tipsy' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
 	//	wp_register_script( 'um_raty', $this->js_baseurl . 'um-raty' . $suffix . '.js', array( 'jquery', 'wp-i18n' ), UM_VERSION, true );
-		wp_register_script( 'um_crop', $this->js_baseurl . 'um-crop' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
 		wp_register_script( 'imgareaselect', includes_url() . 'js/imgareaselect/jquery.imgareaselect' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
 
 		wp_register_script( 'um_modal', $this->js_baseurl . 'um-modal' . $suffix . '.js', array( 'jquery', 'wp-util', 'imgareaselect' ), UM_VERSION, true );
@@ -160,7 +159,6 @@ final class Enqueue extends \um\common\Enqueue {
 	 */
 	public function register_styles() {
 		//FontAwesome and FontIcons styles
-		wp_register_style( 'um_crop', $this->css_baseurl . 'um-crop.css', array(), UM_VERSION );
 		wp_register_style( 'imgareaselect', includes_url() . 'js/imgareaselect/imgareaselect.css', array(), UM_VERSION );
 		wp_register_style( 'um_fileupload', $this->css_baseurl . 'um-fileupload.css', array(), UM_VERSION );
 		wp_register_style( 'um_datetime', $this->css_baseurl . 'pickadate/default.css', array(), UM_VERSION );
@@ -369,9 +367,7 @@ final class Enqueue extends \um\common\Enqueue {
 	 * Load crop script
 	 */
 	function load_imagecrop() {
-		wp_enqueue_script( 'um_crop' );
 		wp_enqueue_script( 'imgareaselect' );
-		wp_enqueue_style( 'um_crop' );
 		wp_enqueue_style( 'imgareaselect' );
 	}
 
