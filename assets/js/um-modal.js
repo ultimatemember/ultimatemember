@@ -58,7 +58,9 @@ jQuery(document).ready(function() {
 				nonce: um_scripts.nonce
 			},
 			success: function() {
-				jQuery('img.cropper-hidden').cropper( 'destroy' );
+				if ( jQuery('.cropper-hidden').length > 0 ) {
+					cropper.destroy();
+				}
 				parent.find('.um-single-image-preview img').attr( 'src', '' );
 				parent.find('.um-single-image-preview').hide();
 				parent.find('.ajax-upload-dragdrop').show();

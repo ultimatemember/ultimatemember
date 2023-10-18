@@ -6,7 +6,9 @@ jQuery( window ).on( 'load',function() {
 jQuery(window).on( 'resize', function() {
 	responsive_Modal();
 
-	jQuery('img.cropper-hidden').cropper('destroy');
+	if ( jQuery('.cropper-hidden').length > 0 ) {
+		cropper.destroy();
+	}
 
 	um_responsive();
 	um_modal_responsive();
