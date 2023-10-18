@@ -558,7 +558,8 @@ function initCrop_UM() {
 			} else if ( crop_data == 'user' ) {
 				new_ratio = 'auto';
 			}
-
+			// there are problems with a crop area on init on modal
+			// need to improve sizer - scaling factor fot the original image size
 			if ( crop_data != 0 ) {
 				var x1 = parseInt(width)/2 - parseInt(min_width)/2;
 				var x2 = parseInt(x1) + parseInt(min_width);
