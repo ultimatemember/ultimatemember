@@ -508,10 +508,6 @@ function initCrop_UM() {
 	var min_height = target_img.parent().attr('data-min_height');
 	var ratio = target_img.parent().attr('data-ratio');
 
-	ratio = ratio.replace('.', ':');
-	min_width = min_width * sizer;
-	min_height = min_height * sizer;
-
 	if ( jQuery('.um-modal').find('#um_upload_single').attr('data-ratio') ) {
 		var ratio =  jQuery('.um-modal').find('#um_upload_single').attr('data-ratio');
 		var ratio_split = ratio.split(':');
@@ -539,33 +535,55 @@ function initCrop_UM() {
 			var width = target_img[0].width;
 			var sizer = naturalWidth/width;
 
+			var min_naturalWidth = parseInt( min_width ) * parseInt( sizer );
+			var min_naturalHeight = parseInt( min_height ) * parseInt( sizer );
+			var new_ratio;
+
 			if ( crop_data == 'square' ) {
-				ratio = '1:1';
+				new_ratio = '1:1';
 			} else if ( crop_data == 'cover' ) {
+				// if( Math.round( min_width / ratio ) > 0 ){
+				// 	min_height = Math.round( min_width / ratio )
+				// }
+				// need to improve this
+				min_width = width / sizer;
 				if( Math.round( min_width / ratio ) > 0 ){
 					min_height = Math.round( min_width / ratio )
 				}
+				console.log( parseInt( min_width ), parseInt( min_height ) );
+				console.log( parseInt( width ), parseInt( height ) );
+				var parts = ratio.split('.');
+				new_ratio = parts[1] + ':' + parts[0];
+
 			} else if ( crop_data == 'user' ) {
-				ratio = 'auto';
+				new_ratio = 'auto';
 			}
 
 			if ( crop_data != 0 ) {
-					var selection = target_img.imgAreaSelect({
-						minWidth: min_width,
-						minHeight: min_height,
-						aspectRatio: ratio,
-						handles: true,
-						show: true,
-						onSelectEnd: function (img, selection) {
-							console.log(img)
-							console.log(selection)
-							target_img.parent().attr('data-coord', Math.round(selection.x1 * sizer) + ',' + Math.round(selection.y1 * sizer) + ',' + Math.round(selection.width * sizer ) + ',' + Math.round(selection.height * sizer) )
-						}
-					});
+				var x1 = parseInt(width)/2 - parseInt(min_width)/2;
+				var x2 = parseInt(x1) + parseInt(min_width);
+				var y1 = parseInt(height)/2 - parseInt(min_height)/2;
+				var y2 = parseInt(y1) + parseInt(min_height);
 
-					// jQuery('.um-single-image-preview img.lazyloaded').addClass('cropper-hidden');
-					// jQuery('.um-single-image-preview img.lazyloaded').removeClass('lazyloaded');
-					// jQuery('.um-single-image-preview .cropper-container').append('<div class="um-clear"></div>');
+				console.log( parseInt( x1 ), parseInt( y1 ), parseInt(x2), parseInt(y2) );
+				target_img.parent().attr('data-coord', Math.round(x1 * sizer) + ',' + Math.round(y1 * sizer) + ',' + Math.round(min_width * sizer ) + ',' + Math.round(min_height * sizer) );
+				console.log( new_ratio);
+				var selection = target_img.imgAreaSelect({
+					minWidth: parseInt(min_width),
+					minHeight: parseInt(min_height),
+					aspectRatio: new_ratio,
+					handles: true,
+					show: true,
+					x1: x1,
+					y1: y1,
+					x2: x2,
+					y2: y2,
+					onSelectEnd: function (img, selection) {
+						console.log(img)
+						console.log(selection)
+						target_img.parent().attr('data-coord', Math.round(selection.x1 * sizer) + ',' + Math.round(selection.y1 * sizer) + ',' + Math.round(selection.width * sizer ) + ',' + Math.round(selection.height * sizer) )
+					}
+				});
 			}
 
 		}
