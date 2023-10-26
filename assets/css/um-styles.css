@@ -456,6 +456,7 @@ p.um-notice.warning a {
 	width: 44px;
 	font-size: 22px;
 	line-height: 1.7em;
+	z-index: 1;
 }
 
 .um-form input[type="text"],
