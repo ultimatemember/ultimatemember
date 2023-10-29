@@ -792,7 +792,7 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 				break;
 
 			case 'youtube_video':
-				if ( ! UM()->validation()->is_url( $submitted_data[ $key ], 'youtube.com/watch?v=' ) && ! UM()->validation()->is_url( $submitted_data[ $key ], 'youtu.be' ) && ! UM()->validation()->is_url( $submitted_data[ $key ], 'youtube.com/shorts/' ) ) {
+				if ( ! UM()->validation()->is_url( $submitted_data[ $key ] ) || false === um_youtube_id_from_url( $submitted_data[ $key ] ) ) {
 					// translators: %s: label.
 					UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s URL', 'ultimate-member' ), $array['label'] ) );
 				}
