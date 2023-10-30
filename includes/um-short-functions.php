@@ -1920,7 +1920,14 @@ function um_youtube_id_from_url( $url ) {
 	$pattern =
 		'%^            # Match any youtube URL
 		(?:https?://)? # Optional scheme. Either http or https
-		(?:www\.)?     # Optional www subdomain
+		(?:                 # Optional subdomain, for example m or www.
+			[a-z0-9]          # Subdomain begins with alpha-num.
+			(?:               # Optionally more than one char.
+				[a-z0-9-]{0,61} # Middle part may have dashes.
+				[a-z0-9]        # Starts and ends with alpha-num.
+			)?                # Subdomain length from 1 to 63.
+			\.                # Required dot separates subdomains.
+		)?                  # Subdomain is optional.
 		(?:            # Group host alternatives
 		  youtu\.be/   # Either youtu.be,
 		| youtube\.com # or youtube.com
