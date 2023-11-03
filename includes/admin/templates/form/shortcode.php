@@ -20,7 +20,7 @@
 		)
 	) )->render_form();*/ ?>
 
-<!--	<div class="um-admin-clear"></div>-->
+<!--	<div class="clear"></div>-->
 
 	<p><?php echo UM()->shortcodes()->get_shortcode( get_the_ID() ); ?></p>
 <!--	<p>--><?php //echo UM()->shortcodes()->get_default_shortcode( get_the_ID() ); ?><!--</p>-->

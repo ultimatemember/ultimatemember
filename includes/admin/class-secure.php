@@ -49,20 +49,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 			add_action( 'um_settings_before_save', array( $this, 'check_secure_changes' ) );
 			add_action( 'um_settings_save', array( $this, 'on_settings_save' ) );
 
-			add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
-
 			add_action( 'wp_ajax_um_secure_scan_affected_users', array( $this, 'ajax_scanner' ) );
-		}
-
-		public function admin_scripts( $hook ) {
-			// phpcs:disable WordPress.Security.NonceVerification
-			if ( 'ultimate-member_page_um_options' !== $hook || ( isset( $_GET['tab'] ) && 'secure' !== $_GET['tab'] ) ) {
-				return;
-			}
-			// phpcs:enable WordPress.Security.NonceVerification
-
-			wp_register_script( 'um_admin_secure', UM()->admin()->enqueue()->js_url . 'um-admin-secure.js', array( 'jquery' ), UM_VERSION, true );
-			wp_enqueue_script( 'um_admin_secure' );
 		}
 
 		/**

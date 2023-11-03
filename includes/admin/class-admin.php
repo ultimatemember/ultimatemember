@@ -59,8 +59,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 * Admin constructor.
 		 */
 		public function __construct() {
-			parent::__construct();
-
 			$this->templates_path = UM_PATH . 'includes/admin/templates/';
 
 			add_action( 'admin_init', array( &$this, 'admin_init' ), 0 );
@@ -77,8 +75,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			add_action( 'um_admin_do_action__check_templates_version', array( &$this, 'check_templates_version' ) );
 
 			add_action( 'um_admin_do_action__install_core_pages', array( &$this, 'install_core_pages' ) );
-
-			add_filter( 'admin_body_class', array( &$this, 'admin_body_class' ), 999 );
 
 			add_action( 'parent_file', array( &$this, 'parent_file' ), 9 );
 			add_filter( 'gettext', array( &$this, 'gettext' ), 10, 4 );
@@ -1590,21 +1586,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $data;
 		}
 
-
-		/**
-		 * Adds class to our admin pages
-		 *
-		 * @param $classes
-		 *
-		 * @return string
-		 */
-		public function admin_body_class( $classes ) {
-			if ( $this->is_um_screen() ) {
-				return "$classes um-admin";
-			}
-			return $classes;
-		}
-
 		/**
 		 *
 		 */
@@ -2012,9 +1993,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 *
 		 * @return string
 		 */
-		function gettext( $translation, $text, $domain ) {
+		public function gettext( $translation, $text, $domain ) {
 			global $post;
-			if ( isset( $post->post_type ) && $this->is_plugin_post_type() ) {
+			if ( isset( $post->post_type ) && $this->screen()->is_own_post_type() ) {
 				$translations = get_translations_for_domain( $domain );
 				if ( $text == 'Publish' ) {
 					return $translations->translate( 'Create' );
@@ -2065,6 +2046,18 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 				UM()->classes['admin_notices'] = new core\Admin_Notices();
 			}
 			return UM()->classes['admin_notices'];
+		}
+
+		/**
+		 * @since 2.7.1
+		 *
+		 * @return Screen
+		 */
+		public function screen() {
+			if ( empty( UM()->classes['um\admin\screen'] ) ) {
+				UM()->classes['um\admin\screen'] = new Screen();
+			}
+			return UM()->classes['um\admin\screen'];
 		}
 
 		/**

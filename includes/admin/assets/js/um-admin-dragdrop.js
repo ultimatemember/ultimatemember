@@ -85,7 +85,7 @@ function UM_Drag_and_Drop() {
 		placeholder: "um-row-placeholder",
 		forcePlaceholderSize:true,
 		out: function(){
-			jQuery('.tipsy').remove();
+			UM.common.tipsy.hide();
 		},
 		update: function(){
 
@@ -110,7 +110,7 @@ function UM_update_rows() {
 		c++;
 		row = jQuery(this);
 		if ( c != 1 ) {
-			row.find('.um-admin-drag-row-icons').append( '<a href="#" class="um-admin-tipsy-n" title="Delete Row" data-remove_element="um-admin-drag-row"><i class="um-faicon-trash-o"></i></a>' );
+			row.find('.um-admin-drag-row-icons').append( '<a href="#" class="um-tip-n" title="Delete Row" data-remove_element="um-admin-drag-row"><i class="um-faicon-trash-o"></i></a>' );
 		}
 	});
 }
@@ -123,7 +123,7 @@ function UM_update_subrows(){
 		c++;
 		row = jQuery(this);
 		if ( c != 1 ) {
-			row.find('.um-admin-drag-rowsub-icons').append('<a href="#" class="um-admin-tipsy-n" title="Delete Row" data-remove_element="um-admin-drag-rowsub"><i class="um-faicon-trash-o"></i></a>');
+			row.find('.um-admin-drag-rowsub-icons').append('<a href="#" class="um-tip-n" title="Delete Row" data-remove_element="um-admin-drag-rowsub"><i class="um-faicon-trash-o"></i></a>');
 		}
 		});
 	});
@@ -267,7 +267,7 @@ function UM_Rows_Refresh(){
 
 function UM_Add_Icon(){
 
-	var add_icon_html = '<a href="#" class="um-admin-drag-add-field um-admin-tipsy-n" title="Add Field" data-modal="UM_fields" data-modal-size="normal" data-dynamic-content="um_admin_show_fields" data-arg2="'+jQuery('.um-admin-drag-ajax').data('form_id')+'" data-arg1=""><i class="um-icon-plus"></i></a>';
+	var add_icon_html = '<a href="#" class="um-admin-drag-add-field um-tip-n" title="Add Field" data-modal="UM_fields" data-modal-size="normal" data-dynamic-content="um_admin_show_fields" data-arg2="'+jQuery('.um-admin-drag-ajax').data('form_id')+'" data-arg1=""><i class="um-icon-plus"></i></a>';
 
 	jQuery('.um-admin-drag-col').each(function(){
 		if ( jQuery(this).find('.um-admin-drag-add-field').length == 0 ) {
@@ -377,8 +377,8 @@ jQuery(document).ready(function() {
 
 		if ( UM.admin.builder.fieldsToDelete.length > 0 ) {
 			um_builder_delete_field_ajax( function () {
+				UM.common.tipsy.hide();
 				deleteButton.parents('.' +element).remove();
-				jQuery('.tipsy').remove();
 				UM_Rows_Refresh();
 
 				jQuery.each( UM.admin.builder.deleteProcess, function(i) {
@@ -391,8 +391,8 @@ jQuery(document).ready(function() {
 				loadingWrapper.hide();
 			} );
 		} else {
+            UM.common.tipsy.hide();
 			jQuery(this).parents('.' +element).remove();
-			jQuery('.tipsy').remove();
 			UM_Rows_Refresh();
 
 			jQuery.each( UM.admin.builder.deleteProcess, function(i) {

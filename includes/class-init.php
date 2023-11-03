@@ -602,7 +602,7 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->user();
 			$this->profile();
 			$this->builtin();
-			$this->form();
+			$this->form()->hooks();
 			$this->permalinks();
 			$this->modal();
 			$this->cron();
@@ -1203,7 +1203,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 *
 		 * @return um\core\Form
 		 */
-		function form() {
+		public function form() {
 			if ( empty( $this->classes['form'] ) ) {
 				$this->classes['form'] = new um\core\Form();
 			}

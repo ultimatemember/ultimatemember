@@ -63,7 +63,7 @@ jQuery(document).ready(function() {
 
 		jQuery('.um-cover-overlay').hide();
 
-		jQuery('.um-cover-e').html('<a href="javascript:void(0);" class="um-cover-add" style="height: 370px;"><span class="um-cover-add-i"><i class="um-icon-plus um-tip-n" original-title="Upload a cover photo"></i></span></a>');
+		jQuery('.um-cover-e').html('<a href="javascript:void(0);" class="um-cover-add" style="height: 370px;"><span class="um-cover-add-i"><i class="um-icon-plus um-tip-n" title="Upload a cover photo"></i></span></a>');
 
 		um_responsive();
 

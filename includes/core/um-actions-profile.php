@@ -1411,6 +1411,8 @@ function um_pre_profile_shortcode( $args ) {
 			}
 		}
 	}
+
+	UM()->fields()->set_mode = 'profile';
 }
 add_action( 'um_pre_profile_shortcode', 'um_pre_profile_shortcode' );
 

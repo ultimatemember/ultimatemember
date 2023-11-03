@@ -14,7 +14,7 @@ function um_admin_live_update_scripts() {
 function um_admin_new_modal( id, ajax, size ) {
 	var modal = jQuery('body').find('.um-admin-overlay');
 
-	jQuery('.tipsy').hide();
+	UM.common.tipsy.hide();
 
 	um_admin_remove_modal();
 
@@ -146,9 +146,8 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 				jQuery('.um-admin-preview-overlay').css('height', jQuery('.um-admin-preview-overlay').siblings('.um').outerHeight(true)*1 + 20 + 'px' );
 			}
 
-			um_init_tooltips();
-
-			um_admin_init_datetimepicker();
+            UM.admin.tooltip.init();
+			UM.admin.datetimePicker.init();
 		},
 		error: function(data) {
 
@@ -199,10 +198,8 @@ function um_admin_remove_modal() {
 		jQuery('.um_tiny_placeholder').replaceWith( jQuery( $um_tiny_editor ).html() );
 	}
 
-	if ( 'undefined' !== typeof window.UM.admin.allTooltips && window.UM.admin.allTooltips.length > 0 && 'function' === typeof window.UM.admin.allTooltips.tooltip ) {
-		window.UM.admin.allTooltips.tooltip('close');
-	}
-	jQuery('.tipsy').hide();
+	UM.admin.tooltip.close();
+	UM.common.tipsy.hide();
 	jQuery('body').removeClass('um-admin-modal-open');
 	jQuery('.um-admin-modal div[id^="UM_"]').hide().appendTo('body');
 	jQuery('.um-admin-modal,.um-admin-overlay').remove();
@@ -322,7 +319,7 @@ jQuery(document).ready(function() {
 	jQuery(document.body).on('click', '.um-admin-remove-condition', function(){
 		var condition = jQuery(this).parents('.um-admin-cur-condition');
 		jQuery('.um-admin-new-condition').removeClass('disabled');
-		jQuery('.tipsy').remove();
+		UM.common.tipsy.hide();
 		condition.remove();
         //need fields refactor
         var conditions = jQuery('.um-admin-cur-condition');
@@ -345,7 +342,7 @@ jQuery(document).ready(function() {
 		remove modal via action
 	**/
 	jQuery(document.body).on('click', '.um-admin-overlay, a[data-action="UM_remove_modal"]', function(){
-		jQuery('.tipsy').hide();
+		UM.common.tipsy.hide();
 		um_admin_remove_modal();
 	});
 
@@ -406,7 +403,7 @@ jQuery(document).ready(function() {
 		}
 		jQuery(this).attr('data-code', '');
 		if ( v_id == '.postbox' ) {
-			jQuery('.tipsy').hide();
+			UM.common.tipsy.hide();
 			um_admin_remove_modal();
 		}
 	});

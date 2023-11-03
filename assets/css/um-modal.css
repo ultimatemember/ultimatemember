@@ -98,7 +98,7 @@
 .um-modal-body {
 	min-height: 3px;
 	padding: 20px;
-	box-sizing: border-box;
+	box-sizing: border-box !important;
 	width: 100%;
 	background: #fff;
 	-moz-border-radius: 0 0 3px 3px;

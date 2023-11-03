@@ -1164,14 +1164,12 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			return $new;
 		}
 
-
 		/**
 		 * @param $user_id
 		 *
 		 * @return mixed|string
 		 */
-		function get_cached_data( $user_id ) {
-
+		public function get_cached_data( $user_id ) {
 			$disallow_cache = UM()->options()->get( 'um_profile_object_cache_stop' );
 			if ( $disallow_cache ) {
 				return '';
@@ -1180,30 +1178,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			if ( is_numeric( $user_id ) && $user_id > 0 ) {
 				$find_user = get_option( "um_cache_userdata_{$user_id}" );
 				if ( $find_user ) {
-					/**
-					 * UM hook
-					 *
-					 * @type filter
-					 * @title um_user_permissions_filter
-					 * @description Change User Permissions
-					 * @input_vars
-					 * [{"var":"$permissions","type":"array","desc":"User Permissions"},
-					 * {"var":"$user_id","type":"int","desc":"User ID"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage
-					 * <?php add_filter( 'um_user_permissions_filter', 'function_name', 10, 2 ); ?>
-					 * @example
-					 * <?php
-					 * add_filter( 'um_user_permissions_filter', 'my_user_permissions', 10, 2 );
-					 * function my_user_permissions( $permissions, $user_id ) {
-					 *     // your code here
-					 *     return $permissions;
-					 * }
-					 * ?>
-					 */
-					$find_user = apply_filters( 'um_user_permissions_filter', $find_user, $user_id );
-					return $find_user;
+					/** This filter is documented in includes/core/class-roles-capabilities.php */
+					return apply_filters( 'um_user_permissions_filter', $find_user, $user_id );
 				}
 			}
 			return '';
@@ -1354,36 +1330,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					$this->profile['roles'] = UM()->roles()->get_all_user_roles( $this->id );
 
 					$role_meta = UM()->roles()->role_data( $user_role );
-					/**
-					 * UM hook
-					 *
-					 * @type filter
-					 * @title um_user_permissions_filter
-					 * @description Change User Permissions
-					 * @input_vars
-					 * [{"var":"$permissions","type":"array","desc":"User Permissions"},
-					 * {"var":"$user_id","type":"int","desc":"User ID"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage
-					 * <?php add_filter( 'um_user_permissions_filter', 'function_name', 10, 2 ); ?>
-					 * @example
-					 * <?php
-					 * add_filter( 'um_user_permissions_filter', 'my_user_permissions', 10, 2 );
-					 * function my_user_permissions( $permissions, $user_id ) {
-					 *     // your code here
-					 *     return $permissions;
-					 * }
-					 * ?>
-					 */
+					/** This filter is documented in includes/core/class-roles-capabilities.php */
 					$role_meta = apply_filters( 'um_user_permissions_filter', $role_meta, $this->id );
-
-					/*$role_meta = array_map( function( $key, $item ) {
-						if ( strpos( $key, '_um_' ) === 0 )
-							$key = str_replace( '_um_', '', $key );
-
-						return array( $key => $item );
-					}, array_keys( $role_meta ), $role_meta );*/
 
 					$this->profile = array_merge( $this->profile, (array) $role_meta );
 

@@ -28,10 +28,6 @@ function um_builder_delete_field_ajax( callback ) {
 
 jQuery(document).ready(function() {
 
-	jQuery(document).ajaxStart( function() {
-		jQuery('.tipsy').hide();
-	});
-
 	jQuery( document.body ).on('click', 'a[data-silent_action^="um_"]', function() {
 		if ( typeof jQuery(this).attr('disabled') !== 'undefined' ) {
 			return false;
@@ -53,8 +49,6 @@ jQuery(document).ready(function() {
 			in_column = demon_settings.data('in_column');
 			in_group = demon_settings.data('in_group');
 		}
-
-		jQuery('.tipsy').hide();
 
 		um_admin_remove_modal();
 		jQuery.ajax({

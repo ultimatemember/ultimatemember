@@ -221,5 +221,5 @@ $profile_show_bio             = ! isset( $post_id ) ? true : get_post_meta( $pos
 		)
 	)->render_form();
 	?>
-	<div class="um-admin-clear"></div>
+	<div class="clear"></div>
 </div>

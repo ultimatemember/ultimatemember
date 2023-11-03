@@ -234,7 +234,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 						}
 
 						if ( ! empty( $data['description'] ) )
-							$html .= '<div class="um-admin-clear"></div><p class="description">' . $data['description'] . '</p>';
+							$html .= '<div class="clear"></div><p class="description">' . $data['description'] . '</p>';
 
 						$html .= '</td></tr>';
 
@@ -256,7 +256,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 							}
 
 							if ( ! empty( $data['description'] ) )
-								$html .= '<div class="um-admin-clear"></div><p class="description">' . $data['description'] . '</p>';
+								$html .= '<div class="clear"></div><p class="description">' . $data['description'] . '</p>';
 
 							$html .= '</td></tr>';
 
@@ -277,7 +277,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 							}
 
 							if ( ! empty( $data['description'] ) )
-								$html .= '<div class="um-admin-clear"></div><p class="description">' . $data['description'] . '</p>';
+								$html .= '<div class="clear"></div><p class="description">' . $data['description'] . '</p>';
 
 							$html .= '</td></tr>';
 

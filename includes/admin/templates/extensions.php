@@ -278,4 +278,4 @@ if ( ! isset( $_REQUEST['filter'] ) || 'premium' === sanitize_key( $_REQUEST['fi
 		</div>
 	</div>
 </div>
-<div class="um-admin-clear"></div>
+<div class="clear"></div>

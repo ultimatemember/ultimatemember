@@ -95,17 +95,6 @@ function um_init_datetimepicker() {
 	});
 }
 
-
-
-function init_tipsy() {
-	if ( typeof( jQuery.fn.tipsy ) === 'function' ) {
-		jQuery('.um-tip-n').tipsy({gravity: 'n', opacity: 1, live: 'a.live', offset: 3 });
-		jQuery('.um-tip-w').tipsy({gravity: 'w', opacity: 1, live: 'a.live', offset: 3 });
-		jQuery('.um-tip-e').tipsy({gravity: 'e', opacity: 1, live: 'a.live', offset: 3 });
-		jQuery('.um-tip-s').tipsy({gravity: 's', opacity: 1, live: 'a.live', offset: 3 });
-	}
-}
-
 jQuery(document).ready(function() {
 
 	jQuery( document.body ).on('click', '.um-dropdown a.real_url', function() {
@@ -195,8 +184,6 @@ jQuery(document).ready(function() {
 		} );
 	}
 
-	init_tipsy();
-
 	if ( typeof( jQuery.fn.um_raty ) === 'function' ) {
 		jQuery('.um-rating').um_raty({
 			half:       false,
@@ -258,67 +245,122 @@ jQuery(document).ready(function() {
 
 	um_init_datetimepicker();
 
-	jQuery(document).on('click', '.um .um-single-image-preview a.cancel', function( e ) {
+	jQuery(document.body).on('click', '.um-single-image-preview a.cancel', function(e) {
 		e.preventDefault();
-		var parent = jQuery(this).parents('.um-field');
 
-		var filename = parent.find( 'input[type="hidden"]#' + parent.data('key') + '-' + jQuery(this).parents('form').find('input[type="hidden"][name="form_id"]').val() ).val();
+		let isModal = false;
+		if ( jQuery(this).parents('.um-modal-body').length > 0 ) {
+			isModal = true;
+		}
 
-		var src = jQuery(this).parents('.um-field').find('.um-single-image-preview img').attr('src');
-		var mode = parent.data('mode');
+		let parent, mode, src, args;
 
-		var args = {
-			data: {
-				mode: mode,
-				filename: filename,
-				src: src,
-				nonce: um_scripts.nonce
-			},
-			success: function() {
-				parent.find('.um-single-image-preview img').attr( 'src', '' );
-				parent.find('.um-single-image-preview').hide();
-				parent.find('.um-btn-auto-width').html( parent.data('upload-label') );
-				parent.find('input[type="hidden"]').val( 'empty_file' );
+		if ( ! isModal ) {
+			parent = jQuery(this).parents('.um-field');
+			mode   = parent.data('mode');
+			src    = parent.find('.um-single-image-preview img').attr('src');
+
+			let filename = parent.find( 'input[type="hidden"]#' + parent.data('key') + '-' + jQuery(this).parents('form').find('input[type="hidden"][name="form_id"]').val() ).val();
+
+			args = {
+				data: {
+					mode: mode,
+					filename: filename,
+					src: src,
+					nonce: um_scripts.nonce
+				},
+				success: function() {
+					parent.find('.um-single-image-preview img').replaceWith('<img src="" alt="" />');
+					parent.find('.um-single-image-preview').removeAttr('style').hide();
+					parent.find('.um-btn-auto-width').html( parent.data('upload-label') );
+					parent.find('input[type="hidden"]').val( 'empty_file' );
+				}
+			};
+
+			if ( mode !== 'register' ) {
+				args.data.user_id = jQuery(this).parents('form').find('#user_id').val();
 			}
-		};
+		} else {
+			parent = jQuery(this).parents('.um-modal-body');
+			mode   = parent.find('.um-single-image-upload').data('set_mode');
+			src    = parent.find('.um-single-image-preview img').attr('src');
 
-		if ( mode !== 'register' ) {
-			args.data.user_id = jQuery(this).parents('form' ).find( '#user_id' ).val();
+			args = {
+				data: {
+					src: src,
+					mode: mode,
+					nonce: um_scripts.nonce
+				},
+				success: function() {
+					wp.hooks.doAction( 'um_after_removing_preview' );
+
+					parent.find('.um-single-image-preview img').replaceWith('<img src="" alt="" />'); // required replaceWith for flushing DOM before re-init Cropper.
+					parent.find('.um-single-image-preview').removeAttr('style').hide();
+					parent.find('.ajax-upload-dragdrop').show();
+					parent.find('.um-modal-btn.um-finish-upload').addClass( 'disabled' );
+
+					um_modal_responsive();
+				}
+			};
 		}
 
 		wp.ajax.send( 'um_remove_file', args );
-
-		return false;
 	});
 
-	jQuery(document).on('click', '.um .um-single-file-preview a.cancel', function( e ) {
+	jQuery(document.body).on('click', '.um-single-file-preview a.cancel', function(e) {
 		e.preventDefault();
-		var parent = jQuery(this).parents('.um-field');
-		var filename = parent.find( 'input[type="hidden"]#' + parent.data('key') + '-' + jQuery(this).parents('form').find('input[type="hidden"][name="form_id"]').val() ).val();
-		var src = jQuery(this).parents('.um-field').find('.um-single-fileinfo a').attr('href');
-		var mode = parent.data('mode');
 
-		var args = {
-			data: {
-				mode: mode,
-				filename: filename,
-				src: src,
-				nonce: um_scripts.nonce
-			},
-			success: function() {
-				parent.find('.um-single-file-preview').hide();
-				parent.find('.um-btn-auto-width').html( parent.data('upload-label') );
-				parent.find('input[type=hidden]').val( 'empty_file' );
-			}
-		};
-
-		if ( mode !== 'register' ) {
-			args.data.user_id = jQuery(this).parents('form' ).find( '#user_id' ).val();
+		let isModal = false;
+		if ( jQuery(this).parents('.um-modal-body').length > 0 ) {
+			isModal = true;
 		}
 
-		wp.ajax.send( 'um_remove_file', args );
+		let parent, mode, src, args;
 
-		return false;
+		if ( ! isModal ) {
+			parent = jQuery(this).parents('.um-field');
+			src    = parent.find('.um-single-fileinfo a').attr('href');
+			mode   = parent.data('mode');
+
+			let filename = parent.find( 'input[type="hidden"]#' + parent.data('key') + '-' + jQuery(this).parents('form').find('input[type="hidden"][name="form_id"]').val() ).val();
+
+			args = {
+				data: {
+					mode: mode,
+					filename: filename,
+					src: src,
+					nonce: um_scripts.nonce
+				},
+				success: function() {
+					parent.find('.um-single-file-preview').hide();
+					parent.find('.um-btn-auto-width').html( parent.data('upload-label') );
+					parent.find('input[type=hidden]').val( 'empty_file' );
+				}
+			};
+
+			if ( mode !== 'register' ) {
+				args.data.user_id = jQuery(this).parents('form' ).find( '#user_id' ).val();
+			}
+		} else {
+			parent = jQuery(this).parents('.um-modal-body');
+			src    = parent.find('.um-single-fileinfo a').attr('href');
+			mode   = parent.find('.um-single-file-upload').data('set_mode');
+
+			args = {
+				data: {
+					src: src,
+					mode: mode,
+					nonce: um_scripts.nonce
+				},
+				success: function() {
+					parent.find('.um-single-file-preview').hide();
+					parent.find('.ajax-upload-dragdrop').show();
+					parent.find('.um-modal-btn.um-finish-upload').addClass('disabled');
+					um_modal_responsive();
+				}
+			};
+		}
+		wp.ajax.send( 'um_remove_file', args );
 	});
 
 	jQuery(document).on('click', '.um-field-group-head:not(.disabled)', function() {

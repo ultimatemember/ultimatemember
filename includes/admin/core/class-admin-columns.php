@@ -80,7 +80,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Columns' ) ) {
 		 * @return array;
 		 */
 		function remove_bulk_actions_um_form_inline( $actions ) {
-			if ( UM()->admin()->is_plugin_post_type() ) {
+			if ( UM()->admin()->screen()->is_own_post_type() ) {
 				unset( $actions['inline hide-if-no-js'] );
 				return $actions;
 			}

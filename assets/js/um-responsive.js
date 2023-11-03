@@ -6,7 +6,7 @@ jQuery( window ).on( 'load',function() {
 jQuery(window).on( 'resize', function() {
 	responsive_Modal();
 
-	jQuery('img.cropper-hidden').cropper('destroy');
+	wp.hooks.doAction( 'um_window_resize' );
 
 	um_responsive();
 	um_modal_responsive();

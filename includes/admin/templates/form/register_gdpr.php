@@ -76,5 +76,5 @@ $register_use_gdpr = ! isset( $post_id ) ? false : get_post_meta( $post_id, '_um
 		)
 	)->render_form();
 	?>
-	<div class="um-admin-clear"></div>
+	<div class="clear"></div>
 </div>

@@ -96,5 +96,5 @@ $_um_search_filters = get_post_meta( $post_id, '_um_search_filters', true ); ?>
 		)
 	)->render_form();
 	?>
-	<div class="um-admin-clear"></div>
+	<div class="clear"></div>
 </div>

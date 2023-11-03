@@ -48,13 +48,13 @@ if ( ! class_exists( 'um\core\AJAX_Common' ) ) {
 
 			add_action( 'wp_ajax_um_remove_file', array( UM()->files(), 'ajax_remove_file' ) );
 			add_action( 'wp_ajax_nopriv_um_remove_file', array( UM()->files(), 'ajax_remove_file' ) );
-			
+
 			add_action( 'wp_ajax_nopriv_um_fileupload', array( UM()->files(), 'ajax_file_upload' ) );
 			add_action( 'wp_ajax_um_fileupload', array( UM()->files(), 'ajax_file_upload' ) );
-			
+
 			add_action( 'wp_ajax_nopriv_um_imageupload', array( UM()->files(), 'ajax_image_upload' ) );
 			add_action( 'wp_ajax_um_imageupload', array( UM()->files(), 'ajax_image_upload' ) );
-			
+
 			add_action( 'wp_ajax_nopriv_um_resize_image', array( UM()->files(), 'ajax_resize_image' ) );
 			add_action( 'wp_ajax_um_resize_image', array( UM()->files(), 'ajax_resize_image' ) );
 

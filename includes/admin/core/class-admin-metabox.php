@@ -144,17 +144,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			return false;
 		}
 
-
 		/**
 		 * Runs on admin head
 		 */
-		function admin_head(){
+		public function admin_head() {
 			global $post;
-			if ( UM()->admin()->is_plugin_post_type() && isset($post->ID) ){
-				$this->postmeta = $this->get_custom_post_meta($post->ID);
+			if ( isset( $post->ID ) && UM()->admin()->screen()->is_own_post_type() ) {
+				$this->postmeta = $this->get_custom_post_meta( $post->ID );
 			}
 		}
-
 
 		/**
 		 * Init the metaboxes
@@ -1267,8 +1265,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 */
 		public function field_input( $attribute, $form_id = null, $field_args = array() ) {
 
-			if ( $this->in_edit == true ) { // we're editing a field
-				$real_attr = substr( $attribute, 1 );
+			if ( $this->in_edit ) {
+				// We're editing a field.
+				$real_attr             = substr( $attribute, 1 );
 				$this->edit_mode_value = isset( $this->edit_array[ $real_attr ] ) ? $this->edit_array[ $real_attr ] : null;
 			}
 

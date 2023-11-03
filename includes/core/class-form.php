@@ -65,11 +65,12 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		public $usermeta_whitelist = array();
 
 		/**
-		 * Form constructor.
+		 * Hook for singleton
+		 * @since 2.7.1
 		 */
-		public function __construct() {
+		public function hooks() {
 			add_action( 'template_redirect', array( &$this, 'form_init' ), 2 );
-			add_action( 'init', array( &$this, 'field_declare' ), 10 );
+			add_action( 'init', array( &$this, 'field_declare' ) );
 		}
 
 		/**
