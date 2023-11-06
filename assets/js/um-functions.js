@@ -625,18 +625,6 @@ function um_modal_size( aclass ) {
 	jQuery('.um-modal:visible').not('.um-modal-hidden').addClass( aclass );
 }
 
-/**
- * Maybe deprecated
- *
- * @deprecated since 2.1.16
- *
- * @param id
- * @param value
- */
-function um_modal_add_attr( id, value ) {
-	jQuery('.um-modal:visible').not('.um-modal-hidden').data( id, value );
-}
-
 function prepare_Modal() {
 	if ( jQuery('.um-popup-overlay').length == 0 ) {
 		jQuery('body').append('<div class="um-popup-overlay"></div>');

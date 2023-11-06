@@ -29,10 +29,6 @@ body.um-admin-modal-open {
     position: relative;
     top: 1px; }
 
-.um-admin-metabox * {
-  -webkit-font-smoothing: antialiased !important;
-  -moz-osx-font-smoothing: grayscale !important; }
-
 .um-admin-metabox h6 {
   font-size: 14px;
   margin: 12px 0 0 0; }

@@ -71,6 +71,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			add_action( 'admin_head', array( &$this, 'admin_head' ), 9 );
 			add_action( 'admin_footer', array( &$this, 'load_modal_content' ), 9 );
 
+			add_action( 'admin_init', array( &$this, 'remove_meta_box' ), 0 );
+			add_filter( 'enter_title_here', array( &$this, 'enter_title_here' ), 10, 2 );
+
 			add_action( 'load-post.php', array( &$this, 'add_metabox' ), 9 );
 			add_action( 'load-post-new.php', array( &$this, 'add_metabox' ), 9 );
 
@@ -85,6 +88,34 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			add_filter( 'um_member_directory_meta_value_before_save', array( UM()->member_directory(), 'before_save_data' ), 10, 3 );
 		}
 
+		public function remove_meta_box() {
+			remove_meta_box( 'submitdiv', 'um_form', 'core' );
+			remove_meta_box( 'slugdiv', 'um_form', 'core' );
+
+			remove_meta_box( 'submitdiv', 'um_directory', 'core' );
+			remove_meta_box( 'slugdiv', 'um_directory', 'core' );
+		}
+
+		/**
+		 * Enter title placeholder
+		 *
+		 * @param string  $title
+		 * @param WP_Post $post
+		 *
+		 * @return string
+		 */
+		public function enter_title_here( $title, $post ) {
+			if ( ! isset( $post->post_type ) ) {
+				return $title;
+			}
+
+			if ( 'um_directory' === $post->post_type ) {
+				$title = __( 'e.g. Member Directory', 'ultimate-member' );
+			} elseif ( 'um_form' === $post->post_type ) {
+				$title = __( 'e.g. New Registration Form', 'ultimate-member' );
+			}
+			return $title;
+		}
 
 		/**
 		 * Hide Woocommerce Shop page restrict content metabox
@@ -161,13 +192,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			global $current_screen;
 
 			if ( $current_screen->id == 'um_form' ) {
-				add_action( 'add_meta_boxes', array(&$this, 'add_metabox_form'), 1 );
-				add_action( 'save_post', array(&$this, 'save_metabox_form'), 10, 2 );
+				add_action( 'add_meta_boxes', array( &$this, 'add_metabox_form' ), 1 );
+				add_action( 'save_post', array( &$this, 'save_metabox_form' ), 10, 2 );
 			}
 
 			if ( $current_screen->id == 'um_directory' ) {
-				add_action( 'add_meta_boxes', array(&$this, 'add_metabox_directory'), 1 );
-				add_action( 'save_post', array(&$this, 'save_metabox_directory'), 10, 2 );
+				add_action( 'add_meta_boxes', array( &$this, 'add_metabox_directory' ), 1 );
+				add_action( 'save_post', array( &$this, 'save_metabox_directory' ), 10, 2 );
 			}
 
 			//restrict content metabox
@@ -825,14 +856,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		/**
 		 * Add directory metabox
 		 */
-		function add_metabox_directory() {
+		public function add_metabox_directory() {
+			add_meta_box('submitdiv', __( 'Publish', 'ultimate-member' ), array( &$this, 'custom_submitdiv' ), 'um_directory', 'side', 'high' );
 			add_meta_box( 'um-admin-form-general', __( 'General Options', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
 			add_meta_box( 'um-admin-form-sorting', __( 'Sorting', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
 			add_meta_box( 'um-admin-form-profile', __( 'Profile Card', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
 			add_meta_box( 'um-admin-form-search', __( 'Search Options', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
 			add_meta_box( 'um-admin-form-pagination', __( 'Results &amp; Pagination', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
 			add_meta_box( 'um-admin-form-shortcode', __( 'Shortcode', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'side', 'default' );
-			add_meta_box( 'um-admin-form-appearance', __( 'Styling: General', 'ultimate-member' ), array( &$this, 'load_metabox_directory'), 'um_directory', 'side', 'default' );
+			add_meta_box( 'um-admin-form-appearance', __( 'Styling: General', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'side', 'default' );
 		}
 
 
@@ -989,7 +1021,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		/**
 		 * Add form metabox
 		 */
-		function add_metabox_form() {
+		public function add_metabox_form() {
+
+			add_meta_box( 'submitdiv', __( 'Publish', 'ultimate-member' ), array( $this, 'custom_submitdiv' ), 'um_form', 'side', 'high' );
 
 			add_meta_box( 'um-admin-form-mode', __( 'Select Form Type', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );
 			add_meta_box( 'um-admin-form-builder', __( 'Form Builder', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );
@@ -1059,6 +1093,57 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			 * ?>
 			 */
 			do_action( 'um_admin_custom_login_metaboxes' );
+		}
+
+		/**
+		 *
+		 */
+		public function custom_submitdiv() {
+			global $post, $current_screen;
+			?>
+
+			<div class="submitbox" id="submitpost">
+				<div id="major-publishing-actions">
+					<?php do_action( 'post_submitbox_start' ); ?>
+					<div id="delete-action">
+						<?php if ( current_user_can( 'delete_post', $post->ID ) ) {
+							if ( ! EMPTY_TRASH_DAYS ) {
+								$delete_text = __( 'Delete Permanently', 'ultimate-member' );
+							} else {
+								$delete_text = __( 'Move to Trash', 'ultimate-member' );
+							} ?>
+							<a class="submitdelete deletion" href="<?php echo esc_url( get_delete_post_link( $post->ID ) ); ?>"> <?php echo esc_html( $delete_text ); ?> </a>
+						<?php } ?>
+					</div>
+					<div id="publishing-action">
+						<span class="spinner"></span>
+						<?php if ( ! in_array( $post->post_status, array( 'publish', 'future', 'private' ) ) || 0 == $post->ID ) {
+
+							$post_type = $post->post_type; // get current post_type
+							$post_type_object = get_post_type_object( $post_type );
+							$can_publish = current_user_can( $post_type_object->cap->publish_posts );
+
+							if ( $can_publish ) { ?>
+								<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e( 'Create', 'ultimate-member' ) ?>" />
+								<?php submit_button( __( 'Create', 'ultimate-member' ), 'primary button-large', 'publish', false, array( 'accesskey' => 'p' ) ); ?>
+							<?php }
+						} else { ?>
+							<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e('Update', 'ultimate-member' ); ?>" />
+							<?php submit_button( __( 'Update', 'ultimate-member' ), 'primary button-large', 'save', false, array( 'accesskey' => 'p' ) ); ?>
+						<?php } ?>
+					</div>
+					<?php
+					if ( isset( $current_screen->base ) && 'post' === $current_screen->base && isset( $current_screen->action ) && 'add' === $current_screen->action ) {
+						if ( isset( $_GET['um_mode'] ) ) {
+							$mode = sanitize_key( $_GET['um_mode'] ); ?>
+							<input type="hidden" name="form[_um_mode]" id="form__um_mode" value="<?php echo esc_attr( $mode ); ?>" />
+						<?php }
+					}?>
+
+					<div class="clear"></div>
+				</div>
+			</div>
+			<?php
 		}
 
 		/**

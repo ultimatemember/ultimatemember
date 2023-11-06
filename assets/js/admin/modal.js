@@ -126,7 +126,11 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 
 			jQuery('.um-admin-modal').find('.um-admin-modal-body').html( data );
 
-			um_responsive();
+			// Make responsive script only when live preview,
+			if ( jQuery('.um-admin-modal').find('.um-admin-modal-body').find('.um').length ) {
+				um_responsive();
+			}
+
 			um_admin_live_update_scripts();
 
 			jQuery( "#_custom_dropdown_options_source" ).trigger('blur');
