@@ -126,10 +126,7 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 
 			jQuery('.um-admin-modal').find('.um-admin-modal-body').html( data );
 
-			// Make responsive script only when live preview,
-			if ( jQuery('.um-admin-modal').find('.um-admin-modal-body').find('.um').length ) {
-				um_responsive();
-			}
+			wp.hooks.doAction( 'um_admin_modal_success_result', jQuery('.um-admin-modal') );
 
 			um_admin_live_update_scripts();
 

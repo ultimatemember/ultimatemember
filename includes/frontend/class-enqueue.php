@@ -101,22 +101,10 @@ final class Enqueue extends \um\common\Enqueue {
 		$um_common_variables = apply_filters( 'um_frontend_common_js_variables', $um_common_variables );
 		wp_localize_script( 'um_frontend_common', 'um_frontend_common_variables', $um_common_variables );
 
-		wp_register_script( 'um_jquery_form', $this->js_baseurl . 'um-jquery-form' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
-		wp_register_script( 'um_fileupload', $this->js_baseurl . 'um-fileupload.js', array( 'jquery', 'um_jquery_form' ), UM_VERSION, true );
+		wp_register_script( 'um_jquery_form', $libs_url . 'jquery-form/jquery-form' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
+		wp_register_script( 'um_fileupload', $libs_url . 'fileupload/fileupload.js', array( 'jquery', 'um_jquery_form' ), UM_VERSION, true );
 
-		wp_register_script( 'um_datetime', $this->js_baseurl . 'pickadate/picker.js', array( 'jquery' ), UM_VERSION, true );
-		wp_register_script( 'um_datetime_date', $this->js_baseurl . 'pickadate/picker.date.js', array( 'jquery', 'um_datetime' ), UM_VERSION, true );
-		wp_register_script( 'um_datetime_time', $this->js_baseurl . 'pickadate/picker.time.js', array( 'jquery', 'um_datetime' ), UM_VERSION, true );
-//			wp_register_script( 'um_datetime_legacy', $this->js_baseurl . 'pickadate/legacy.js', array( 'jquery', 'um_datetime' ), UM_VERSION, true );
-		// load a localized version for date/time
-		$locale = get_locale();
-		if ( $locale ) {
-			if ( file_exists( WP_LANG_DIR . '/plugins/ultimate-member/assets/js/pickadate/' . $locale . '.js' ) ) {
-				wp_register_script('um_datetime_locale', content_url() . '/languages/plugins/ultimate-member/assets/js/pickadate/' . $locale . '.js', array( 'jquery', 'um_datetime' ), UM_VERSION, true );
-			} elseif ( file_exists( UM_PATH . 'assets/js/pickadate/translations/' . $locale . '.js' ) ) {
-				wp_register_script('um_datetime_locale', UM_URL . 'assets/js/pickadate/translations/' . $locale . '.js', array( 'jquery', 'um_datetime' ), UM_VERSION, true );
-			}
-		}
+		wp_register_script( 'um_functions', $js_url . 'um-functions' . $suffix . '.js', array( 'um_frontend_common', 'um_fileupload' ), UM_VERSION, true );
 
 		wp_register_script( 'um_modal', $this->js_baseurl . 'um-modal' . $suffix . '.js', array( 'um_frontend_common' ), UM_VERSION, true );
 
@@ -126,6 +114,12 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_register_script( 'um-gdpr', $this->js_baseurl . 'um-gdpr' . $suffix . '.js', array( 'jquery' ), UM_VERSION, false );
 		wp_register_script( 'um_conditional', $this->js_baseurl . 'um-conditional' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
 		wp_register_script( 'um_scripts', $this->js_baseurl . 'um-scripts' . $suffix . '.js', array( 'um_frontend_common', 'um_conditional', 'um_datetime', 'um_datetime_date', 'um_datetime_time', /*'um_datetime_legacy',*/ self::$select2_handle, 'um_raty' ), UM_VERSION, true );
+
+		$max_upload_size = wp_max_upload_size();
+		if ( ! $max_upload_size ) {
+			$max_upload_size = 0;
+		}
+
 		/**
 		 * UM hook
 		 *
@@ -146,12 +140,6 @@ final class Enqueue extends \um\common\Enqueue {
 		 * }
 		 * ?>
 		 */
-
-		$max_upload_size = wp_max_upload_size();
-		if ( ! $max_upload_size ) {
-			$max_upload_size = 0;
-		}
-
 		$localize_data = apply_filters( 'um_enqueue_localize_data', array(
 			'max_upload_size'   => $max_upload_size,
 			'nonce'             => wp_create_nonce( "um-frontend-nonce" ),
@@ -176,9 +164,6 @@ final class Enqueue extends \um\common\Enqueue {
 	public function register_styles() {
 		//FontAwesome and FontIcons styles
 		wp_register_style( 'um_fileupload', $this->css_baseurl . 'um-fileupload.css', array(), UM_VERSION );
-		wp_register_style( 'um_datetime', $this->css_baseurl . 'pickadate/default.css', array(), UM_VERSION );
-		wp_register_style( 'um_datetime_date', $this->css_baseurl . 'pickadate/default.date.css', array( 'um_datetime' ), UM_VERSION );
-		wp_register_style( 'um_datetime_time', $this->css_baseurl . 'pickadate/default.time.css', array( 'um_datetime' ), UM_VERSION );
 
 		wp_register_style( 'um_rtl', $this->css_baseurl . 'um.rtl.css', array(), UM_VERSION );
 		wp_register_style( 'um_default_css', $this->css_baseurl . 'um-old-default.css', array(), UM_VERSION );
