@@ -72,8 +72,78 @@ UM.admin.builder = {
 				}
 			});
 		}
+	},
+	previewResize: function() {
+		if ( jQuery('.um-admin-modal-body > .um').length ) {
+			jQuery('.um-admin-modal-body > .um').each(function(){
+
+				element_width = jQuery(this).width();
+
+				if ( element_width <= 340 ) {
+
+					jQuery(this).removeClass('uimob340');
+					jQuery(this).removeClass('uimob500');
+					jQuery(this).removeClass('uimob800');
+					jQuery(this).removeClass('uimob960');
+
+					jQuery(this).addClass('uimob340');
+
+				} else if ( element_width <= 500 ) {
+
+					jQuery(this).removeClass('uimob340');
+					jQuery(this).removeClass('uimob500');
+					jQuery(this).removeClass('uimob800');
+					jQuery(this).removeClass('uimob960');
+
+					jQuery(this).addClass('uimob500');
+
+				} else if ( element_width <= 800 ) {
+
+					jQuery(this).removeClass('uimob340');
+					jQuery(this).removeClass('uimob500');
+					jQuery(this).removeClass('uimob800');
+					jQuery(this).removeClass('uimob960');
+
+					jQuery(this).addClass('uimob800');
+
+				} else if ( element_width <= 960 ) {
+
+					jQuery(this).removeClass('uimob340');
+					jQuery(this).removeClass('uimob500');
+					jQuery(this).removeClass('uimob800');
+					jQuery(this).removeClass('uimob960');
+
+					jQuery(this).addClass('uimob960');
+
+				} else if ( element_width > 960 ) {
+
+					jQuery(this).removeClass('uimob340');
+					jQuery(this).removeClass('uimob500');
+					jQuery(this).removeClass('uimob800');
+					jQuery(this).removeClass('uimob960');
+
+				}
+
+				jQuery(this).css('opacity',1);
+			});
+
+			jQuery('.um-admin-modal-body .um-cover, .um-admin-modal-body .um-cover-e').each(function(){
+				var elem = jQuery(this);
+				var ratio = elem.data('ratio');
+				var width = elem.width();
+				var ratios = ratio.split(':');
+
+				calcHeight = Math.round( width / ratios[0] ) + 'px';
+				elem.height( calcHeight );
+				elem.find('.um-cover-add').height( calcHeight );
+			});
+		}
 	}
 }
+
+jQuery(window).on( 'resize', function() {
+	UM.admin.builder.previewResize();
+});
 
 wp.hooks.addAction( 'um_admin_modal_success_result', 'um_admin_builder', function( $adminModal, act_id ) {
 	UM.admin.builder.fieldConditions.refresh();
@@ -91,6 +161,26 @@ wp.hooks.addAction( 'um_admin_modal_success_result', 'um_admin_builder', functio
 	}
 
 	if ( 'um_admin_preview_form' === act_id ) {
+		// Make responsive script only when live preview.
+		UM.admin.builder.previewResize();
+
+		if ( typeof( jQuery.fn.um_raty ) === 'function' ) {
+			jQuery('.um-rating').um_raty({
+				half:       false,
+				starType:   'i',
+				number:     function() {
+					return jQuery(this).attr('data-number');
+				},
+				score:      function() {
+					return jQuery(this).attr('data-score');
+				},
+				scoreName:  function() {
+					return jQuery(this).attr('data-key');
+				},
+				hints:      false,
+			});
+		}
+
 		// Fix for overlay in scrollable preview modal.
 		let $previewOverlay = jQuery('.um-admin-preview-overlay');
 		$previewOverlay.css('height', $previewOverlay.siblings('.um').outerHeight(true)*1 + 20 + 'px' );
@@ -102,13 +192,13 @@ wp.hooks.addAction( 'um_admin_modal_success_result', 'um_admin_builder', functio
 
 wp.hooks.addAction( 'um_admin_modal_resize', 'um_admin_builder', function() {
 	if ( jQuery('#UM_preview_form .um-s1').length ) {
-		jQuery("#UM_preview_form .um-s1").select2({
+		jQuery("#UM_preview_form .um-s1").css({'display':'block'}).select2({
 			allowClear: true
 		});
 	}
 
 	if ( jQuery('#UM_preview_form .um-s2').length ) {
-		jQuery("#UM_preview_form .um-s2").select2({
+		jQuery("#UM_preview_form .um-s2").css({'display':'block'}).select2({
 			allowClear: false,
 			minimumResultsForSearch: 10
 		});

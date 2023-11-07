@@ -281,6 +281,7 @@ jQuery(document).ready(function() {
 		wp.ajax.send( 'um_remove_file', args );
 	});
 
+	// @todo deprecate
 	jQuery(document).on('click', '.um-field-group-head:not(.disabled)', function() {
 		var field = jQuery(this).parents('.um-field-group');
 		var limit = field.data('max_entries');
@@ -308,7 +309,7 @@ jQuery(document).ready(function() {
 
 		}
 	});
-
+	// @todo deprecate
 	jQuery(document).on('click', '.um-field-group-cancel', function( e ) {
 		e.preventDefault();
 		var field = jQuery(this).parents('.um-field-group');

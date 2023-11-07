@@ -168,6 +168,6 @@ class Enqueue {
 		$um_common_variables = apply_filters( 'um_common_js_variables', $um_common_variables );
 		wp_localize_script( 'um_common', 'um_common_variables', $um_common_variables );
 
-		wp_register_style( 'um_common', $css_url . 'common' . $suffix . '.css', array( 'um_tipsy', 'um_datetime_date', 'um_datetime_time' ), UM_VERSION );
+		wp_register_style( 'um_common', $css_url . 'common' . $suffix . '.css', array( 'um_tipsy', 'um_datetime_date', 'um_datetime_time', 'um_fonticons_ii', 'um_fonticons_fa' ), UM_VERSION );
 	}
 }
