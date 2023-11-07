@@ -144,7 +144,7 @@ class Enqueue {
 		wp_register_style( 'um_datetime_date', $libs_url . 'pickadate/default.date' . $suffix . '.css', array( 'um_datetime' ), UM_VERSION );
 		wp_register_style( 'um_datetime_time', $libs_url . 'pickadate/default.time' . $suffix . '.css', array( 'um_datetime' ), UM_VERSION );
 
-		wp_register_script( 'um_common', $js_url . 'common' . $suffix . '.js', array( 'jquery', 'wp-util', 'wp-hooks', 'um_tipsy' ), UM_VERSION, true );
+		wp_register_script( 'um_common', $js_url . 'common' . $suffix . '.js', array( 'jquery', 'wp-util', 'wp-hooks', 'wp-i18n', 'um_tipsy', 'um_datetime_date', 'um_datetime_time' ), UM_VERSION, true );
 		$um_common_variables = array(
 			'locale' => get_locale(),
 		);
@@ -168,6 +168,6 @@ class Enqueue {
 		$um_common_variables = apply_filters( 'um_common_js_variables', $um_common_variables );
 		wp_localize_script( 'um_common', 'um_common_variables', $um_common_variables );
 
-		wp_register_style( 'um_common', $css_url . 'common' . $suffix . '.css', array( 'um_tipsy' ), UM_VERSION );
+		wp_register_style( 'um_common', $css_url . 'common' . $suffix . '.css', array( 'um_tipsy', 'um_datetime_date', 'um_datetime_time' ), UM_VERSION );
 	}
 }

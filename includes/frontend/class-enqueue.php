@@ -74,6 +74,7 @@ final class Enqueue extends \um\common\Enqueue {
 		$suffix   = self::get_suffix();
 		$libs_url = self::get_url( 'libs' );
 		$js_url   = self::get_url( 'js' );
+		$css_url  = self::get_url( 'css' );
 
 		// Cropper.js
 		wp_register_script( 'um_crop', $libs_url . 'cropper/cropper' . $suffix . '.js', array( 'jquery' ), '1.6.1', true );
@@ -101,8 +102,10 @@ final class Enqueue extends \um\common\Enqueue {
 		$um_common_variables = apply_filters( 'um_frontend_common_js_variables', $um_common_variables );
 		wp_localize_script( 'um_frontend_common', 'um_frontend_common_variables', $um_common_variables );
 
+		// uploadFiles scripts + UM custom styles for uploader.
 		wp_register_script( 'um_jquery_form', $libs_url . 'jquery-form/jquery-form' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
 		wp_register_script( 'um_fileupload', $libs_url . 'fileupload/fileupload.js', array( 'jquery', 'um_jquery_form' ), UM_VERSION, true );
+		wp_register_style( 'um_fileupload', $css_url . 'um-fileupload' . $suffix . '.css', array(), UM_VERSION );
 
 		wp_register_script( 'um_functions', $js_url . 'um-functions' . $suffix . '.js', array( 'um_frontend_common', 'um_fileupload' ), UM_VERSION, true );
 
@@ -153,24 +156,19 @@ final class Enqueue extends \um\common\Enqueue {
 
 		$account_deps = apply_filters( 'um_account_scripts_dependencies', array( 'jquery', 'wp-hooks' ) );
 		wp_register_script('um_account', $this->js_baseurl . 'um-account' . $suffix . '.js', $account_deps, UM_VERSION, true );
-
-		wp_register_script( 'um_gchart', 'https://www.google.com/jsapi', array(), UM_VERSION, true );
 	}
-
 
 	/**
 	 * Register styles
 	 */
 	public function register_styles() {
 		//FontAwesome and FontIcons styles
-		wp_register_style( 'um_fileupload', $this->css_baseurl . 'um-fileupload.css', array(), UM_VERSION );
-
 		wp_register_style( 'um_rtl', $this->css_baseurl . 'um.rtl.css', array(), UM_VERSION );
 		wp_register_style( 'um_default_css', $this->css_baseurl . 'um-old-default.css', array(), UM_VERSION );
 		wp_register_style( 'um_modal', $this->css_baseurl . 'um-modal.css', array(), UM_VERSION );
 		wp_register_style( 'um_responsive', $this->css_baseurl . 'um-responsive.css', array( 'um_profile' ), UM_VERSION );
 
-		wp_register_style( 'um_styles', $this->css_baseurl . 'um-styles.css', array( 'um_ui', 'um_tipsy', 'um_raty', 'um_fonticons_ii', 'um_fonticons_fa', 'select2' ), UM_VERSION );
+		wp_register_style( 'um_styles', $this->css_baseurl . 'um-styles.css', array( 'um_ui', 'um_tipsy', 'um_raty', 'um_fonticons_ii', 'um_fonticons_fa', 'select2', 'um_fileupload' ), UM_VERSION );
 
 		wp_register_style( 'um_members', $this->css_baseurl . 'um-members.css', array( 'um_styles' ), UM_VERSION );
 		if ( is_rtl() ) {
@@ -228,9 +226,6 @@ final class Enqueue extends \um\common\Enqueue {
 	 */
 	function load_original() {
 
-		//maybe deprecated
-		//$this->load_google_charts();
-
 		// $this->load_selectjs();
 
 		$this->load_modal();
@@ -238,8 +233,6 @@ final class Enqueue extends \um\common\Enqueue {
 		$this->load_css();
 
 		$this->load_fileupload();
-
-		$this->load_datetimepicker();
 
 		$this->load_functions();
 
@@ -249,14 +242,12 @@ final class Enqueue extends \um\common\Enqueue {
 
 	}
 
-
 	/**
 	 * Include Google charts
+	 * @depecated 2.7.1
 	 */
 	function load_google_charts() {
-		wp_enqueue_script( 'um_gchart' );
 	}
-
 
 	/**
 	 * Load plugin css
@@ -284,10 +275,9 @@ final class Enqueue extends \um\common\Enqueue {
 
 	/**
 	 * Load fileupload JS
+	 * @depecated 2.7.1
 	 */
 	function load_fileupload() {
-		wp_enqueue_script( 'um_fileupload' );
-		wp_enqueue_style( 'um_fileupload' );
 	}
 
 
@@ -314,24 +304,10 @@ final class Enqueue extends \um\common\Enqueue {
 
 	/**
 	 * Load date & time picker
+	 * @depecated 2.7.1
 	 */
 	function load_datetimepicker() {
-		wp_enqueue_script( 'um_datetime' );
-		wp_enqueue_script( 'um_datetime_date' );
-		wp_enqueue_script( 'um_datetime_time' );
-		//wp_enqueue_script( 'um_datetime_legacy' );
-
-		// load a localized version for date/time
-		$locale = get_locale();
-		if ( $locale && ( file_exists( WP_LANG_DIR . '/plugins/ultimate-member/assets/js/pickadate/' . $locale . '.js' ) || file_exists( UM_PATH . 'assets/js/pickadate/translations/' . $locale . '.js' ) ) ) {
-			wp_enqueue_script('um_datetime_locale' );
-		}
-
-		wp_enqueue_style( 'um_datetime' );
-		wp_enqueue_style( 'um_datetime_date' );
-		wp_enqueue_style( 'um_datetime_time' );
 	}
-
 
 	/**
 	 * Load scrollbar

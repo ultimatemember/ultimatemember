@@ -9,7 +9,110 @@ if ( typeof (window.UM.admin) !== 'object' ) {
 UM.admin.builder = {
 	deleteProcess: [],
 	fieldsToDelete: [],
+	fieldConditions: {
+		refresh: function() {
+			let $conditionalRows = jQuery('.um-adm-conditional');
+			if ( $conditionalRows.length > 0 ) {
+				$conditionalRows.each( function() {
+					jQuery(this).trigger('change');
+				});
+			}
+		}
+	},
+	tinyMCE: {
+		editor: {},
+		init: function ( id, content ) {
+			var object = jQuery('#' + id);
+
+			if ( typeof( tinyMCE ) === 'object' && tinyMCE.get( id ) !== null ) {
+				tinyMCE.triggerSave();
+				tinyMCE.EditorManager.execCommand( 'mceRemoveEditor', true, id );
+				"4" === tinyMCE.majorVersion ? window.tinyMCE.execCommand( "mceRemoveEditor", !0, id ) : window.tinyMCE.execCommand( "mceRemoveControl", !0, id );
+				UM.admin.builder.tinyMCE.editor = jQuery('<div>').append( object.parents( '#wp-' + id + '-wrap' ).clone() );
+				object.parents('#wp-' + id + '-wrap').replaceWith('<div class="um_tiny_placeholder"></div>');
+				jQuery('.um-admin-editor:visible').html( jQuery( UM.admin.builder.tinyMCE.editor ).html() );
+
+				var init;
+				if( typeof tinyMCEPreInit.mceInit[ id ] == 'undefined' ){
+					init = tinyMCEPreInit.mceInit[ id ] = tinyMCE.extend( {}, tinyMCEPreInit.mceInit[ id ] );
+				} else {
+					init = tinyMCEPreInit.mceInit[ id ];
+				}
+				if ( typeof(QTags) == 'function' ) {
+					QTags( tinyMCEPreInit.qtInit[ id ] );
+					QTags._buttonsInit();
+				}
+				if ( typeof( window.switchEditors ) === 'object' ) {
+					window.switchEditors.go( id );
+				}
+				tinyMCE.init( init );
+				tinyMCE.get( id ).setContent( content );
+				object.html( content );
+			} else {
+				UM.admin.builder.tinyMCE.editor = jQuery('<div>').append( object.parents('#wp-' + id + '-wrap').clone() );
+				object.parents('#wp-' + id + '-wrap').replaceWith('<div class="um_tiny_placeholder"></div>');
+
+				jQuery('.um-admin-editor:visible').html( jQuery( UM.admin.builder.tinyMCE.editor ).html() );
+
+				if ( typeof(QTags) == 'function' ) {
+					QTags( tinyMCEPreInit.qtInit[ id ] );
+					QTags._buttonsInit();
+				}
+
+				//use duplicate because it's new element
+				jQuery('#' + id).html( content );
+			}
+
+			jQuery( 'body' ).on( 'click', '.wp-switch-editor', function() {
+				var target = jQuery(this);
+
+				if ( target.hasClass( 'wp-switch-editor' ) && typeof( window.switchEditors ) === 'object' ) {
+					var mode = target.hasClass( 'switch-tmce' ) ? 'tmce' : 'html';
+					window.switchEditors.go( id, mode );
+				}
+			});
+		}
+	}
 }
+
+wp.hooks.addAction( 'um_admin_modal_success_result', 'um_admin_builder', function( $adminModal, act_id ) {
+	UM.admin.builder.fieldConditions.refresh();
+
+	jQuery( "#_custom_dropdown_options_source" ).trigger('blur');
+
+	if ( jQuery('.um-admin-editor:visible').length > 0 ) {
+
+		if ( 'um_admin_edit_field_popup' === act_id ) {
+			UM.admin.builder.tinyMCE.init( 'um_editor_edit', jQuery('.um-admin-modal:visible .dynamic-mce-content').html() );
+		} else {
+			UM.admin.builder.tinyMCE.init( 'um_editor_new', '' );
+		}
+
+	}
+
+	if ( 'um_admin_preview_form' === act_id ) {
+		// Fix for overlay in scrollable preview modal.
+		let $previewOverlay = jQuery('.um-admin-preview-overlay');
+		$previewOverlay.css('height', $previewOverlay.siblings('.um').outerHeight(true)*1 + 20 + 'px' );
+	}
+
+	UM.admin.colorPicker.init();
+	UM.common.datetimePicker.init();
+});
+
+wp.hooks.addAction( 'um_admin_modal_remove', 'um_admin_builder', function() {
+	if ( jQuery('.um-admin-editor:visible').length > 0 ) {
+		tinyMCE.triggerSave();
+
+		if ( jQuery('.um-admin-modal:visible').find('form').parent().attr('id') == 'UM_edit_field' ) {
+			jQuery('#wp-um_editor_edit-wrap').remove();
+		} else {
+			jQuery('#wp-um_editor_new-wrap').remove();
+		}
+
+		jQuery('.um_tiny_placeholder').replaceWith( jQuery( UM.admin.builder.tinyMCE.editor ).html() );
+	}
+});
 
 function UM_Drag_and_Drop() {
 	jQuery('.um-admin-drag-col,.um-admin-drag-group').sortable({
@@ -467,7 +570,7 @@ jQuery( document ).ready( function() {
 			in_group = demon_settings.data('in_group');
 		}
 
-		um_admin_remove_modal();
+		UM.admin.modal.remove();
 		jQuery.ajax({
 			url: wp.ajax.settings.url,
 			type: 'POST',
@@ -484,7 +587,7 @@ jQuery( document ).ready( function() {
 			},
 			success: function( data ) {
 				demon_settings.data('in_row', '').data('in_sub_row', '').data('in_column', '').data('in_group', '');
-				um_admin_modal_responsive();
+				UM.admin.modal.resize();
 				um_admin_update_builder();
 			},
 			error: function( data ) {
@@ -583,11 +686,11 @@ jQuery( document ).ready( function() {
 							}
 						});
 
-						um_admin_modal_responsive();
+						UM.admin.modal.resize();
 					} else {
 						jQuery('.um-col-demon-settings').data('in_row', '').data('in_sub_row', '').data('in_column', '').data('in_group', '');
 						UM.common.tipsy.hide();
-						um_admin_remove_modal();
+						UM.admin.modal.remove();
 						um_admin_update_builder();
 					}
 				} else {
@@ -624,7 +727,7 @@ jQuery( document ).ready( function() {
 			link.find('i').removeClass().addClass('um-icon-plus');
 			link.removeClass('active');
 		}
-		um_admin_modal_responsive();
+		UM.admin.modal.resize();
 	});
 
 
@@ -651,8 +754,8 @@ jQuery( document ).ready( function() {
 			jQuery(template).removeClass("um-admin-cur-condition-template");
 			jQuery(template).addClass("um-admin-cur-condition");
 
-			um_admin_live_update_scripts();
-			um_admin_modal_responsive();
+			UM.admin.builder.fieldConditions.refresh();
+			UM.admin.modal.resize();
 		} else {
 			jQuery(this).addClass('disabled');
 			alert( 'You already have 5 rules' );
@@ -682,8 +785,8 @@ jQuery( document ).ready( function() {
 		content.find('input[type=text]').val('');
 		content.find('select').val('');
 		jQuery('.um-admin-new-condition').removeClass('disabled');
-		um_admin_live_update_scripts();
-		um_admin_modal_responsive();
+		UM.admin.builder.fieldConditions.refresh();
+		UM.admin.modal.resize();
 	});
 
 	/**
@@ -707,8 +810,8 @@ jQuery( document ).ready( function() {
 			jQuery( this ).find('[id^="_conditional_value"]').attr('name', '_conditional_value' + id);
 			jQuery( this ).find('[id^="_conditional_value"]').attr('id', '_conditional_value' + id);
 		} );
-		um_admin_live_update_scripts();
-		um_admin_modal_responsive();
+		UM.admin.builder.fieldConditions.refresh();
+		UM.admin.modal.resize();
 	});
 
 

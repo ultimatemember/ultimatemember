@@ -1,13 +1,50 @@
-var $um_tiny_editor = {};
+if ( typeof (window.UM) !== 'object' ) {
+	window.UM = {};
+}
 
+if ( typeof (window.UM.admin) !== 'object' ) {
+	window.UM.admin = {};
+}
 
-function um_admin_live_update_scripts() {
-	jQuery('.um-adm-conditional').each( function() {
-		jQuery(this).trigger('change');
-	});
+UM.admin.modal = {
+	preload: function () {
+		jQuery('.um-admin-modal:visible').addClass('loading');
+		jQuery('.um-admin-modal-body:visible').empty();
+	},
+	loaded: function() {
+		jQuery('.um-admin-modal:visible').removeClass('loading');
+	},
+	setSize: function ( size ) {
+		jQuery('.um-admin-modal:visible').addClass( size );
+	},
+	setAttr: function( id, value ) {
+		jQuery('.um-admin-modal:visible').data( id, value );
+	},
+	remove: function () {
+		wp.hooks.doAction( 'um_admin_modal_remove' );
 
-	if ( jQuery('.um-admin-colorpicker').length ) {
-		jQuery('.um-admin-colorpicker').wpColorPicker();
+		UM.admin.tooltip.close();
+		UM.common.tipsy.hide();
+		jQuery('body').removeClass('um-admin-modal-open');
+		jQuery('.um-admin-modal div[id^="UM_"]').hide().appendTo('body');
+		jQuery('.um-admin-modal,.um-admin-overlay').remove();
+	},
+	resize: function () {
+		var required_margin = jQuery('.um-admin-modal:visible').innerHeight() / 2 + 'px';
+		jQuery('.um-admin-modal:visible').css({'margin-top': '-' + required_margin });
+
+		if ( jQuery('#UM_preview_form .um-s1').length ) {
+			jQuery("#UM_preview_form .um-s1").select2({
+				allowClear: true
+			});
+		}
+
+		if ( jQuery('#UM_preview_form .um-s2').length ) {
+			jQuery("#UM_preview_form .um-s2").select2({
+				allowClear: false,
+				minimumResultsForSearch: 10
+			});
+		}
 	}
 }
 
@@ -16,7 +53,7 @@ function um_admin_new_modal( id, ajax, size ) {
 
 	UM.common.tipsy.hide();
 
-	um_admin_remove_modal();
+	UM.admin.modal.remove();
 
 	jQuery('body').addClass('um-admin-modal-open').append('<div class="um-admin-overlay"></div><div class="um-admin-modal"></div>');
 	jQuery('#' + id).prependTo('.um-admin-modal');
@@ -26,81 +63,30 @@ function um_admin_new_modal( id, ajax, size ) {
 	jQuery('.um-admin-modal-head').append('<a href="javascript:void(0);" data-action="UM_remove_modal" class="um-admin-modal-close"><i class="um-faicon-times"></i></a>');
 
 	if ( ajax == true ) {
-		um_admin_modal_size( size );
-		um_admin_modal_preload();
-		um_admin_modal_responsive();
+		UM.admin.modal.setSize( size );
+		UM.admin.modal.preload();
+		UM.admin.modal.resize();
 	} else {
-		um_admin_modal_responsive();
+		UM.admin.modal.resize();
 	}
 }
-
-function um_tinymce_init( id, content ) {
-	var object = jQuery('#' + id);
-
-	if ( typeof( tinyMCE ) === 'object' && tinyMCE.get( id ) !== null ) {
-		tinyMCE.triggerSave();
-		tinyMCE.EditorManager.execCommand( 'mceRemoveEditor', true, id );
-		"4" === tinyMCE.majorVersion ? window.tinyMCE.execCommand( "mceRemoveEditor", !0, id ) : window.tinyMCE.execCommand( "mceRemoveControl", !0, id );
-		$um_tiny_editor = jQuery('<div>').append( object.parents( '#wp-' + id + '-wrap' ).clone() );
-		object.parents('#wp-' + id + '-wrap').replaceWith('<div class="um_tiny_placeholder"></div>');
-		jQuery('.um-admin-editor:visible').html( jQuery( $um_tiny_editor ).html() );
-
-		var init;
-		if( typeof tinyMCEPreInit.mceInit[ id ] == 'undefined' ){
-			init = tinyMCEPreInit.mceInit[ id ] = tinyMCE.extend( {}, tinyMCEPreInit.mceInit[ id ] );
-		} else {
-			init = tinyMCEPreInit.mceInit[ id ];
-		}
-		if ( typeof(QTags) == 'function' ) {
-			QTags( tinyMCEPreInit.qtInit[ id ] );
-			QTags._buttonsInit();
-		}
-		if ( typeof( window.switchEditors ) === 'object' ) {
-			window.switchEditors.go( id );
-		}
-		tinyMCE.init( init );
-		tinyMCE.get( id ).setContent( content );
-		object.html( content );
-	} else {
-		$um_tiny_editor = jQuery('<div>').append( object.parents('#wp-' + id + '-wrap').clone() );
-		object.parents('#wp-' + id + '-wrap').replaceWith('<div class="um_tiny_placeholder"></div>');
-
-		jQuery('.um-admin-editor:visible').html( jQuery( $um_tiny_editor ).html() );
-
-		if ( typeof(QTags) == 'function' ) {
-			QTags( tinyMCEPreInit.qtInit[ id ] );
-			QTags._buttonsInit();
-		}
-
-		//use duplicate because it's new element
-		jQuery('#' + id).html( content );
-	}
-
-	jQuery( 'body' ).on( 'click', '.wp-switch-editor', function() {
-		var target = jQuery(this);
-
-		if ( target.hasClass( 'wp-switch-editor' ) && typeof( window.switchEditors ) === 'object' ) {
-			var mode = target.hasClass( 'switch-tmce' ) ? 'tmce' : 'html';
-			window.switchEditors.go( id, mode );
-		}
-	});
-}
-
 
 function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
-	in_row = '';
-	in_sub_row = '';
-	in_column = '';
-	in_group = '';
+	let in_row     = '';
+	let in_sub_row = '';
+	let in_column  = '';
+	let in_group   = '';
 
-	if ( jQuery('.um-col-demon-settings').data('in_column') ) {
-		in_row = jQuery('.um-col-demon-settings').data('in_row');
-		in_sub_row = jQuery('.um-col-demon-settings').data('in_sub_row');
-		in_column = jQuery('.um-col-demon-settings').data('in_column');
-		in_group = jQuery('.um-col-demon-settings').data('in_group');
+	let $hiddenModalData = jQuery('.um-col-demon-settings');
+
+	if ( $hiddenModalData.data('in_column') ) {
+		in_row = $hiddenModalData.data('in_row');
+		in_sub_row = $hiddenModalData.data('in_sub_row');
+		in_column = $hiddenModalData.data('in_column');
+		in_group = $hiddenModalData.data('in_group');
 	}
 
-	var form_mode = jQuery('input[type=hidden][id=form__um_mode]').val();
+	let form_mode = jQuery('input[type="hidden"][id="form__um_mode"]').val();
 
 	jQuery.ajax({
 		url: wp.ajax.settings.url,
@@ -119,36 +105,16 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 			form_mode: form_mode
 		},
 		complete: function(){
-			um_admin_modal_loaded();
-			um_admin_modal_responsive();
+			UM.admin.modal.loaded();
+			UM.admin.modal.resize();
 		},
 		success: function(data) {
+			let $adminModal = jQuery('.um-admin-modal');
+			$adminModal.find('.um-admin-modal-body').html( data );
 
-			jQuery('.um-admin-modal').find('.um-admin-modal-body').html( data );
+			wp.hooks.doAction( 'um_admin_modal_success_result', $adminModal, act_id );
 
-			wp.hooks.doAction( 'um_admin_modal_success_result', jQuery('.um-admin-modal') );
-
-			um_admin_live_update_scripts();
-
-			jQuery( "#_custom_dropdown_options_source" ).trigger('blur');
-
-			if ( jQuery('.um-admin-editor:visible').length > 0 ) {
-
-				if ( act_id == 'um_admin_edit_field_popup' ) {
-					um_tinymce_init( 'um_editor_edit', jQuery('.um-admin-modal:visible .dynamic-mce-content').html() );
-				} else {
-					um_tinymce_init( 'um_editor_new', '' );
-				}
-
-			}
-
-			if ( act_id === 'um_admin_preview_form' ) {
-				//fix for overlay in scrollable preview modal
-				jQuery('.um-admin-preview-overlay').css('height', jQuery('.um-admin-preview-overlay').siblings('.um').outerHeight(true)*1 + 20 + 'px' );
-			}
-
-            UM.admin.tooltip.init();
-			UM.admin.datetimePicker.init();
+			UM.admin.tooltip.init();
 		},
 		error: function(data) {
 
@@ -157,86 +123,18 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 	return false;
 }
 
-function um_admin_modal_responsive() {
-	var required_margin = jQuery('.um-admin-modal:visible').innerHeight() / 2 + 'px';
-	jQuery('.um-admin-modal:visible').css({'margin-top': '-' + required_margin });
-
-	if ( jQuery('#UM_preview_form .um-s1').length ) {
-		jQuery("#UM_preview_form .um-s1").select2({
-			allowClear: true
-		});
-	}
-
-	if ( jQuery('#UM_preview_form .um-s2').length ) {
-		jQuery("#UM_preview_form .um-s2").select2({
-			allowClear: false,
-			minimumResultsForSearch: 10
-		});
-	}
-}
-
-function um_admin_remove_modal() {
-
-	if ( jQuery('.um-admin-editor:visible').length > 0 ) {
-		tinyMCE.triggerSave();
-
-		if ( jQuery('.um-admin-modal:visible').find('form').parent().attr('id') == 'UM_edit_field' ) {
-			jQuery('#wp-um_editor_edit-wrap').remove();
-
-			/*tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_edit');
-			jQuery('.um-hidden-editor-edit').html( jQuery('.um-admin-editor:visible').contents() );
-			tinyMCE.execCommand('mceAddEditor', true, 'um_editor_edit');*/
-
-		} else {
-			jQuery('#wp-um_editor_new-wrap').remove();
-
-			/*tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_new');
-			jQuery('.um-hidden-editor-new').html( jQuery('.um-admin-editor:visible').contents() );
-			tinyMCE.execCommand('mceAddEditor', true, 'um_editor_new');*/
-
-		}
-
-		jQuery('.um_tiny_placeholder').replaceWith( jQuery( $um_tiny_editor ).html() );
-	}
-
-	UM.admin.tooltip.close();
-	UM.common.tipsy.hide();
-	jQuery('body').removeClass('um-admin-modal-open');
-	jQuery('.um-admin-modal div[id^="UM_"]').hide().appendTo('body');
-	jQuery('.um-admin-modal,.um-admin-overlay').remove();
-}
-
-function um_admin_modal_preload() {
-	jQuery('.um-admin-modal:visible').addClass('loading');
-	jQuery('.um-admin-modal-body:visible').empty();
-}
-
-function um_admin_modal_loaded() {
-	jQuery('.um-admin-modal:visible').removeClass('loading');
-}
-
-function um_admin_modal_size( aclass ) {
-	jQuery('.um-admin-modal:visible').addClass(aclass);
-}
-
-function um_admin_modal_add_attr( id, value ) {
-	jQuery('.um-admin-modal:visible').data( id, value );
-}
-
 /**
 	Custom modal scripting starts
 **/
 
 jQuery(document).ready(function() {
 
-
-
 	/**
 		remove modal via action
 	**/
 	jQuery(document.body).on('click', '.um-admin-overlay, a[data-action="UM_remove_modal"]', function(){
 		UM.common.tipsy.hide();
-		um_admin_remove_modal();
+		UM.admin.modal.remove();
 	});
 
 	/**
@@ -268,8 +166,6 @@ jQuery(document).ready(function() {
 
 	});
 
-
-
 	/**
 		submit font icon
 	**/
@@ -289,7 +185,7 @@ jQuery(document).ready(function() {
 		jQuery(this).attr('data-code', '');
 		if ( v_id == '.postbox' ) {
 			UM.common.tipsy.hide();
-			um_admin_remove_modal();
+			UM.admin.modal.remove();
 		}
 	});
 
@@ -318,8 +214,6 @@ jQuery(document).ready(function() {
 		} else {
 			jQuery('.um-admin-icons span:hidden').show();
 		}
-		um_admin_modal_responsive();
+		UM.admin.modal.resize();
 	});
-
-}); // end jQuery(document).ready
-
+});
