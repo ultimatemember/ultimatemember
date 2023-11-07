@@ -131,7 +131,7 @@ class Enqueue {
 		wp_register_script( 'um_datetime_date', $libs_url . 'pickadate/picker.date' . $suffix . '.js', array( 'um_datetime' ), UM_VERSION, true );
 		wp_register_script( 'um_datetime_time', $libs_url . 'pickadate/picker.time' . $suffix . '.js', array( 'um_datetime' ), UM_VERSION, true );
 		// Load a localized version for date/time.
-		$locale = get_locale();
+		$locale = UM()->get_locale( $suffix );
 		if ( $locale ) {
 			if ( file_exists( WP_LANG_DIR . '/plugins/ultimate-member/assets/js/pickadate/' . $locale . $suffix . '.js' ) ) {
 				wp_register_script( 'um_datetime_locale', content_url() . '/languages/plugins/ultimate-member/assets/js/pickadate/' . $locale . $suffix . '.js', array( 'jquery', 'um_datetime' ), UM_VERSION, true );

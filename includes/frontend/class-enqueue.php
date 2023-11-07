@@ -240,6 +240,8 @@ final class Enqueue extends \um\common\Enqueue {
 
 		$this->load_customjs();
 
+		$this->load_datetimepicker();
+
 	}
 
 	/**
@@ -307,6 +309,19 @@ final class Enqueue extends \um\common\Enqueue {
 	 * @depecated 2.7.1
 	 */
 	function load_datetimepicker() {
+		wp_enqueue_script( 'um_datetime' );
+		wp_enqueue_script( 'um_datetime_date' );
+		wp_enqueue_script( 'um_datetime_time' );
+
+		// load a localized version for date/time
+		$locale = UM()->get_locale();
+		if ( $locale && ( file_exists( WP_LANG_DIR . '/plugins/ultimate-member/assets/js/pickadate/' . $locale . '.js' ) || file_exists( UM_PATH . 'assets/libs/pickadate/translations/' . $locale . '.js' ) ) ) {
+			wp_enqueue_script( 'um_datetime_locale' );
+		}
+
+		wp_enqueue_style( 'um_datetime' );
+		wp_enqueue_style( 'um_datetime_date' );
+		wp_enqueue_style( 'um_datetime_time' );
 	}
 
 	/**
