@@ -100,6 +100,21 @@ wp.hooks.addAction( 'um_admin_modal_success_result', 'um_admin_builder', functio
 	UM.common.datetimePicker.init();
 });
 
+wp.hooks.addAction( 'um_admin_modal_resize', 'um_admin_builder', function() {
+	if ( jQuery('#UM_preview_form .um-s1').length ) {
+		jQuery("#UM_preview_form .um-s1").select2({
+			allowClear: true
+		});
+	}
+
+	if ( jQuery('#UM_preview_form .um-s2').length ) {
+		jQuery("#UM_preview_form .um-s2").select2({
+			allowClear: false,
+			minimumResultsForSearch: 10
+		});
+	}
+});
+
 wp.hooks.addAction( 'um_admin_modal_remove', 'um_admin_builder', function() {
 	if ( jQuery('.um-admin-editor:visible').length > 0 ) {
 		tinyMCE.triggerSave();
