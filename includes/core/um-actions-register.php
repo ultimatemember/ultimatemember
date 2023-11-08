@@ -465,7 +465,7 @@ function um_submit_form_register( $args, $form_data ) {
 	$args['submitted'] = array_merge( $args['submitted'], $credentials );
 
 	// Set registration timestamp.
-	$timestamp                      = current_time( 'timestamp' ); // @todo Working on timestamps.
+	$timestamp                      = time(); // @todo Working on timestamps.
 	$args['submitted']['timestamp'] = $timestamp;
 	$args['timestamp']              = $timestamp;
 
