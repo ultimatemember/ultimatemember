@@ -749,63 +749,62 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 */
 		public function get_locale( $suffix = '' ) {
 			$locale = get_locale();
-			if ( file_exists( WP_LANG_DIR . '/plugins/ultimate-member/assets/js/pickadate/' . $locale . $suffix . '.js' ) || file_exists( UM_PATH . 'assets/libs/pickadate/translations/' . $locale . $suffix . '.js' ) ) {
-				return $locale;
-			}
-			if ( false !== strpos( $locale, 'es_' ) ) {
-				$locale = 'es_ES';
-			} elseif ( false !== strpos( $locale, 'de_' ) ) {
-				$locale = 'de_DE';
-			} else {
-				switch ( $locale ) {
-					case 'uk':
-						$locale = 'uk_UA';
-						break;
-					case 'ja':
-						$locale = 'ja_JP';
-						break;
-					case 'ka_GE':
-						$locale = 'ge_GEO';
-						break;
-					case 'ary':
-						$locale = 'ar';
-						break;
-					case 'ca':
-						$locale = 'ca_ES';
-						break;
-					case 'el':
-						$locale = 'el_GR';
-						break;
-					case 'et':
-						$locale = 'et_EE';
-						break;
-					case 'eu':
-						$locale = 'eu_ES';
-						break;
-					case 'fa_AF':
-						$locale = 'fa_IR';
-						break;
-					case 'fi':
-						$locale = 'fi_FI';
-						break;
-					case 'hr':
-						$locale = 'hr_HR';
-						break;
-					case 'km':
-						$locale = 'km_KH';
-						break;
-					case 'lv':
-						$locale = 'lv_LV';
-						break;
-					case 'th':
-						$locale = 'th_TH';
-						break;
-					case 'vi':
-						$locale = 'vi_VN';
-						break;
-					case 'sr_SR':
-						$locale = 'sr_RS_lt';
-						break;
+			if ( ! file_exists( WP_LANG_DIR . '/plugins/ultimate-member/assets/js/pickadate/' . $locale . $suffix . '.js' ) && ! file_exists( UM_PATH . 'assets/libs/pickadate/translations/' . $locale . $suffix . '.js' ) ) {
+				if ( false !== strpos( $locale, 'es_' ) ) {
+					$locale = 'es_ES';
+				} elseif ( false !== strpos( $locale, 'de_' ) ) {
+					$locale = 'de_DE';
+				} else {
+					switch ( $locale ) {
+						case 'uk':
+							$locale = 'uk_UA';
+							break;
+						case 'ja':
+							$locale = 'ja_JP';
+							break;
+						case 'ka_GE':
+							$locale = 'ge_GEO';
+							break;
+						case 'ary':
+							$locale = 'ar';
+							break;
+						case 'ca':
+							$locale = 'ca_ES';
+							break;
+						case 'el':
+							$locale = 'el_GR';
+							break;
+						case 'et':
+							$locale = 'et_EE';
+							break;
+						case 'eu':
+							$locale = 'eu_ES';
+							break;
+						case 'fa_AF':
+							$locale = 'fa_IR';
+							break;
+						case 'fi':
+							$locale = 'fi_FI';
+							break;
+						case 'hr':
+							$locale = 'hr_HR';
+							break;
+						case 'km':
+							$locale = 'km_KH';
+							break;
+						case 'lv':
+							$locale = 'lv_LV';
+							break;
+						case 'th':
+							$locale = 'th_TH';
+							break;
+						case 'vi':
+							$locale = 'vi_VN';
+							break;
+						case 'sr_SR':
+							$locale = 'sr_RS_lt';
+							break;
+					}
 				}
 			}
 
