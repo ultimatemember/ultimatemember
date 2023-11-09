@@ -875,21 +875,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					<div class="um-admin-btns">
 						<?php
 						if ( UM()->builtin()->custom_fields ) {
-							foreach ( UM()->builtin()->custom_fields as $field_key => $field_data ) {
-								if ( empty( $field_data['title'] ) || empty( $field_data['type'] ) ) {
+							foreach ( UM()->builtin()->custom_fields as $field_key => $array ) {
+								if ( empty( $array['title'] ) || empty( $array['type'] ) ) {
 									continue;
 								}
 								?>
 								<?php // translators: %s is a field metakey. ?>
-								<a href="javascript:void(0);" class="button with-icon" <?php disabled( in_array( $field_key, $form_fields, true ) ); ?> data-silent_action="um_admin_add_field_from_list" data-arg1="<?php echo esc_attr( $field_key ); ?>" data-arg2="<?php echo esc_attr( $arg2 ); ?>" title="<?php echo esc_attr( sprintf( __( 'Meta Key - %s', 'ultimate-member' ), $field_key ) ); ?>"><?php echo esc_html( um_trim_string( $field_data['title'] ) ); ?> <small>(<?php echo esc_html( ucfirst( $field_data['type'] ) ); ?>)</small><span class="remove"></span></a>
+								<a href="javascript:void(0);" class="button with-icon" <?php disabled( in_array( $field_key, $form_fields, true ) ) ?> data-silent_action="um_admin_add_field_from_list" data-arg1="<?php echo esc_attr( $field_key ); ?>" data-arg2="<?php echo esc_attr( $arg2 ); ?>" title="<?php echo esc_attr( sprintf( __( 'Meta Key - %s', 'ultimate-member' ), $field_key ) ); ?>">
+									<?php echo esc_html( um_trim_string( stripslashes( $array['title'] ) ) ); ?> (<?php echo esc_html( ucfirst( $array['type'] ) ); ?>)
+									<span class="remove dashicons dashicons-dismiss"></span>
+								</a>
+
 								<?php
 							}
-						} else {
-							?>
-							<p><?php esc_html_e( 'You did not create any custom fields.', 'ultimate-member' ); ?></p>
-							<?php
 						}
 						?>
+
+						<p class="um-no-custom-fields"<?php if ( UM()->builtin()->custom_fields ) { ?> style="display: none;"<?php } ?>>
+							<?php esc_html_e( 'You did not create any custom fields.', 'ultimate-member' ); ?>
+						</p>
 					</div>
 					<?php
 					$output = ob_get_clean();

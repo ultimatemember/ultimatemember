@@ -104,7 +104,7 @@ final class Enqueue extends \um\common\Enqueue {
 
 		// uploadFiles scripts + UM custom styles for uploader.
 		wp_register_script( 'um_jquery_form', $libs_url . 'jquery-form/jquery-form' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
-		wp_register_script( 'um_fileupload', $libs_url . 'fileupload/fileupload.js', array( 'jquery', 'um_jquery_form' ), UM_VERSION, true );
+		wp_register_script( 'um_fileupload', $libs_url . 'fileupload/fileupload.js', array( 'um_jquery_form' ), UM_VERSION, true );
 		wp_register_style( 'um_fileupload', $css_url . 'um-fileupload' . $suffix . '.css', array(), UM_VERSION );
 
 		wp_register_script( 'um_functions', $js_url . 'um-functions' . $suffix . '.js', array( 'um_frontend_common', 'um_fileupload' ), UM_VERSION, true );
@@ -168,7 +168,7 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_register_style( 'um_modal', $this->css_baseurl . 'um-modal.css', array(), UM_VERSION );
 		wp_register_style( 'um_responsive', $this->css_baseurl . 'um-responsive.css', array( 'um_profile' ), UM_VERSION );
 
-		wp_register_style( 'um_styles', $this->css_baseurl . 'um-styles.css', array( 'um_ui', 'um_tipsy', 'um_raty', 'um_fonticons_ii', 'um_fonticons_fa', 'select2', 'um_fileupload' ), UM_VERSION );
+		wp_register_style( 'um_styles', $this->css_baseurl . 'um-styles.css', array( 'um_ui', 'um_tipsy', 'um_raty', 'um_fonticons_ii', 'um_fonticons_fa', 'select2', 'um_fileupload', 'um_common' ), UM_VERSION );
 
 		wp_register_style( 'um_members', $this->css_baseurl . 'um-members.css', array( 'um_styles' ), UM_VERSION );
 		if ( is_rtl() ) {
