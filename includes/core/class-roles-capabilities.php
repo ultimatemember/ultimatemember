@@ -655,7 +655,7 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 		 *
 		 * @return array
 		 */
-		function get_roles( $add_default = false, $exclude = null ) {
+		public function get_roles( $add_default = false, $exclude = null ) {
 			global $wp_roles;
 
 			if ( empty( $wp_roles ) ) {
@@ -670,11 +670,19 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 
 			if ( $exclude ) {
 				foreach ( $exclude as $role ) {
-					unset ( $roles[ $role ] );
+					unset( $roles[ $role ] );
 				}
 			}
 
-			$roles = array_map( 'stripslashes', $roles );
+			$roles = array_map(
+				function( $role ) {
+					if ( is_string( $role ) ) {
+						return stripslashes( $role );
+					}
+					return $role;
+				},
+				$roles
+			);
 
 			return $roles;
 		}
