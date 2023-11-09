@@ -2479,7 +2479,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				case '_custom_dropdown_options_source':
 					?>
 
-					<p><label for="_custom_dropdown_options_source"><?php _e( 'Choices Callback', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Add a callback source to retrieve choices.', 'ultimate-member' ) ); ?></label>
+					<p><label for="_custom_dropdown_options_source"><?php esc_html_e( 'Choices Callback', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Add a callback source to retrieve choices.', 'ultimate-member' ) ); ?></label>
 						<input type="text" name="_custom_dropdown_options_source" id="_custom_dropdown_options_source" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 					</p>
 
@@ -2489,17 +2489,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				case '_parent_dropdown_relationship':
 					?>
 
-					<p><label for="_parent_dropdown_relationship"><?php _e( 'Parent Option', 'ultimate-member' ) ?><?php UM()->tooltip( __( 'Dynamically populates the option based from selected parent option.', 'ultimate-member' ) ); ?></label>
+					<p><label for="_parent_dropdown_relationship"><?php esc_html_e( 'Parent Option', 'ultimate-member' ); ?><?php UM()->tooltip( __( 'Dynamically populates the option based from selected parent option.', 'ultimate-member' ) ); ?></label>
 						<select name="_parent_dropdown_relationship" id="_parent_dropdown_relationship" style="width: 100%">
-							<option value=""><?php _e( 'No Selected', 'ultimate-member' ) ?></option>
-
-							<?php if ( UM()->builtin()->custom_fields ) {
-								foreach ( UM()->builtin()->custom_fields as $field_key => $array ) {
-									if ( in_array( $array['type'], array( 'select' ) ) && ( ! isset( $field_args['metakey'] ) || $field_args['metakey'] != $array['metakey'] ) && isset( $array['title'] ) ) { ?>
-										<option value="<?php echo esc_attr( $array['metakey'] ) ?>" <?php selected( $array['metakey'], $this->edit_mode_value ) ?>><?php echo $array['title'] ?></option>
-									<?php }
+							<option value=""><?php esc_html_e( 'No Selected', 'ultimate-member' ); ?></option>
+							<?php
+							if ( UM()->builtin()->custom_fields ) {
+								foreach ( UM()->builtin()->custom_fields as $array ) {
+									if ( array_key_exists( 'type', $array ) && 'select' === $array['type'] && ( ! isset( $field_args['metakey'] ) || $field_args['metakey'] != $array['metakey'] ) && isset( $array['title'] ) ) {
+										?>
+										<option value="<?php echo esc_attr( $array['metakey'] ); ?>" <?php selected( $array['metakey'], $this->edit_mode_value ); ?>><?php echo esc_html( $array['title'] ); ?></option>
+										<?php
+									}
 								}
-							} ?>
+							}
+							?>
 						</select>
 					</p>
 
