@@ -27,11 +27,11 @@ class Screen {
 		$is_um_screen = false;
 		if ( ! empty( $current_screen ) && isset( $current_screen->id ) ) {
 			$screen_id = $current_screen->id;
-			if ( strstr( $screen_id, 'ultimatemember' ) ||
+			if ( 'nav-menus' === $screen_id ||
+				strstr( $screen_id, 'ultimatemember' ) ||
 				strstr( $screen_id, 'um_' ) ||
 				strstr( $screen_id, 'user' ) ||
-				strstr( $screen_id, 'profile' ) ||
-				'nav-menus' === $screen_id ) {
+				strstr( $screen_id, 'profile' ) ) {
 				$is_um_screen = true;
 			}
 		}

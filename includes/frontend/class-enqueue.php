@@ -116,7 +116,7 @@ final class Enqueue extends \um\common\Enqueue {
 
 		wp_register_script( 'um-gdpr', $this->js_baseurl . 'um-gdpr' . $suffix . '.js', array( 'jquery' ), UM_VERSION, false );
 		wp_register_script( 'um_conditional', $this->js_baseurl . 'um-conditional' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
-		wp_register_script( 'um_scripts', $this->js_baseurl . 'um-scripts' . $suffix . '.js', array( 'um_frontend_common', 'um_conditional', 'um_datetime', 'um_datetime_date', 'um_datetime_time', /*'um_datetime_legacy',*/ self::$select2_handle, 'um_raty' ), UM_VERSION, true );
+		wp_register_script( 'um_scripts', $this->js_baseurl . 'um-scripts' . $suffix . '.js', array( 'um_frontend_common', 'um_conditional', self::$select2_handle, 'um_raty' ), UM_VERSION, true );
 
 		$max_upload_size = wp_max_upload_size();
 		if ( ! $max_upload_size ) {

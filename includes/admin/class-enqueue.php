@@ -57,8 +57,6 @@ final class Enqueue extends \um\common\Enqueue {
 	public function __construct() {
 		parent::__construct();
 
-		$this->css_url = UM_URL . 'includes/admin/assets/css/';
-
 		$this->front_js_baseurl  = UM_URL . 'assets/js/';
 		$this->front_css_baseurl = UM_URL . 'assets/css/';
 
@@ -102,19 +100,9 @@ final class Enqueue extends \um\common\Enqueue {
 	 */
 	public function block_editor() {
 		$suffix   = self::get_suffix();
-		$libs_url = self::get_url( 'libs' );
+		$js_url   = self::get_url( 'js' );
 
-		wp_register_style( 'um_members', UM_URL . 'assets/css/um-members.css', array( 'um_ui' ), UM_VERSION );
-		if ( is_rtl() ) {
-			wp_register_style( 'um_members_rtl', UM_URL . 'assets/css/um-members-rtl.css', array( 'um_members' ), UM_VERSION );
-		}
-		wp_register_style( 'um_styles', UM_URL . 'assets/css/um-styles.css', array( 'um_ui', 'um_tipsy', 'um_raty', 'um_fonticons_ii', 'um_fonticons_fa', 'select2' ), UM_VERSION );
-		wp_register_style( 'um_profile', UM_URL . 'assets/css/um-profile.css', array(), UM_VERSION );
-		wp_register_style( 'um_responsive', UM_URL . 'assets/css/um-responsive.css', array( 'um_profile', 'um_crop' ), UM_VERSION );
-		wp_register_style( 'um_account', UM_URL . 'assets/css/um-account.css', array(), UM_VERSION );
-		wp_register_style( 'um_default_css', UM_URL . 'assets/css/um-old-default.css', array(), UM_VERSION );
-
-		wp_register_script( 'um_admin_blocks_shortcodes', UM_URL . 'assets/js/um-blocks' . $suffix . '.js', array( 'wp-i18n', 'wp-blocks', 'wp-components' ), UM_VERSION, true );
+		wp_register_script( 'um_admin_blocks_shortcodes', $js_url . 'admin/block-renderer' . $suffix . '.js', array( 'wp-i18n', 'wp-blocks', 'wp-components' ), UM_VERSION, true );
 		wp_set_script_translations( 'um_admin_blocks_shortcodes', 'ultimate-member' );
 
 		if ( ! empty( UM()->account()->get_tab_fields( 'notifications', array() ) ) ) {
@@ -150,11 +138,8 @@ final class Enqueue extends \um\common\Enqueue {
 
 		wp_enqueue_script( 'um_admin_blocks_shortcodes' );
 
-		wp_register_script( 'um_datetime', UM_URL . 'assets/js/pickadate/picker.js', array( 'jquery' ), UM_VERSION, true );
-		wp_register_script( 'um_datetime_date', UM_URL . 'assets/js/pickadate/picker.date.js', array( 'jquery', 'um_datetime' ), UM_VERSION, true );
-		wp_register_script( 'um_datetime_time', UM_URL . 'assets/js/pickadate/picker.time.js', array( 'jquery', 'um_datetime' ), UM_VERSION, true );
 		wp_register_script( 'um_conditional', UM_URL . 'assets/js/um-conditional' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
-		wp_register_script( 'um_scripts', UM_URL . 'assets/js/um-scripts' . $suffix . '.js', array( 'jquery', 'wp-util', 'um_conditional', 'um_datetime', 'um_datetime_date', 'um_datetime_time', self::$select2_handle ), UM_VERSION, true );
+		wp_register_script( 'um_scripts', UM_URL . 'assets/js/um-scripts' . $suffix . '.js', array( 'jquery', 'wp-util', 'um_conditional', 'um_common', self::$select2_handle ), UM_VERSION, true );
 		$max_upload_size = wp_max_upload_size();
 		if ( ! $max_upload_size ) {
 			$max_upload_size = 0;
@@ -178,15 +163,22 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_register_script( 'um_responsive', UM_URL . 'assets/js/um-responsive' . $suffix . '.js', array( 'jquery', 'um_functions', 'um_crop' ), UM_VERSION, true );
 
 		// render blocks
-		wp_enqueue_script( 'um_datetime' );
-		wp_enqueue_script( 'um_datetime_date' );
-		wp_enqueue_script( 'um_datetime_time' );
 		wp_enqueue_script( 'um_conditional' );
 		wp_enqueue_script( 'um_dropdown' );
 		wp_enqueue_script( 'um_members' );
 		wp_enqueue_script( 'um_account' );
 		wp_enqueue_script( 'um_functions' );
 		wp_enqueue_script( 'um_responsive' );
+
+		wp_register_style( 'um_members', UM_URL . 'assets/css/um-members.css', array( 'um_ui' ), UM_VERSION );
+		if ( is_rtl() ) {
+			wp_register_style( 'um_members_rtl', UM_URL . 'assets/css/um-members-rtl.css', array( 'um_members' ), UM_VERSION );
+		}
+		wp_register_style( 'um_styles', UM_URL . 'assets/css/um-styles.css', array( 'um_ui', 'um_tipsy', 'um_raty', 'um_fonticons_ii', 'um_fonticons_fa', 'select2' ), UM_VERSION );
+		wp_register_style( 'um_profile', UM_URL . 'assets/css/um-profile.css', array(), UM_VERSION );
+		wp_register_style( 'um_responsive', UM_URL . 'assets/css/um-responsive.css', array( 'um_profile', 'um_crop' ), UM_VERSION );
+		wp_register_style( 'um_account', UM_URL . 'assets/css/um-account.css', array(), UM_VERSION );
+		wp_register_style( 'um_default_css', UM_URL . 'assets/css/um-old-default.css', array(), UM_VERSION );
 
 		wp_enqueue_style( 'um_default_css' );
 		wp_enqueue_style( 'um_members' );
@@ -195,7 +187,7 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_enqueue_style( 'um_responsive' );
 		wp_enqueue_style( 'um_account' );
 
-		$custom_css = '.um{opacity: 1;}.um_request_name {display: none !important;}';
+		$custom_css = '.wp-block .um{opacity: 1;}.um_request_name {display: none !important;}';
 
 		wp_add_inline_style( 'um_styles', $custom_css );
 
@@ -420,8 +412,8 @@ final class Enqueue extends \um\common\Enqueue {
 		$js_url  = self::get_url( 'js' );
 		$css_url = self::get_url( 'css' );
 
-		wp_register_script( 'um_block_js', $js_url . 'admin/block' . $suffix . '.js', array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-hooks' ), UM_VERSION, true );
-		wp_set_script_translations( 'um_block_js', 'ultimate-member' );
+		wp_register_script( 'um_block_restrictions', $js_url . 'admin/block-restrictions' . $suffix . '.js', array( 'wp-i18n', 'wp-blocks', 'wp-components', 'wp-hooks' ), UM_VERSION, true );
+		wp_set_script_translations( 'um_block_restrictions', 'ultimate-member' );
 
 		$restrict_options = array();
 		$roles            = UM()->roles()->get_roles();
@@ -433,8 +425,8 @@ final class Enqueue extends \um\common\Enqueue {
 				);
 			}
 		}
-		wp_localize_script( 'um_block_js', 'um_restrict_roles', $restrict_options );
-		wp_enqueue_script( 'um_block_js' );
+		wp_localize_script( 'um_block_restrictions', 'um_restrict_roles', $restrict_options );
+		wp_enqueue_script( 'um_block_restrictions' );
 
 		wp_register_style( 'um_block_css', $css_url . 'admin/block' . $suffix . '.css', array(), UM_VERSION );
 		wp_enqueue_style( 'um_block_css' );

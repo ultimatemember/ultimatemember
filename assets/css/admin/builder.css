@@ -477,3 +477,93 @@
 .um-admin-cur-condition-template {
 	display: none;
 }
+
+.dynamic-mce-content {display: none}
+
+/*
+	- Conditional fields
+*/
+
+.um-admin-btn-toggle {
+	padding: 10px 0;
+}
+
+.um-admin-btn-toggle p {
+	margin: 0 5px 0 0 !important;
+}
+
+.um-admin-btn-toggle p.um-admin-reset-conditions {
+	margin: 0 0 5px 0 !important;
+}
+
+.um-admin-btn-toggle a {
+	text-decoration: none;
+	color: #999;
+}
+
+.um-admin-btn-toggle a.active, .um-admin-btn-toggle a.active:hover {
+	color: #0085ba;
+}
+
+.um-admin-btn-toggle i {
+	margin: 0 5px 0 0 !important;
+	height: 100%;
+	color: #666;
+	position: relative;
+	top: 1px;
+}
+
+.um-admin-btn-content {
+	display: none;
+	padding: 5px 0 0 0;
+}
+
+.um-admin-btn-content p {
+	float: left;
+	margin-right: 10px !important;
+	padding: 0 !important;
+}
+
+.um-admin-btn-content p.um-admin-conditions-notice {
+	width: 100%;
+	margin: 0 0 9px 0 !important;
+}
+
+.um-admin-btn-content .um-admin-cur-condition:not(:last-child) {
+	margin: 0 0 5px 0;
+}
+
+/*
+	- Buttons and Links
+*/
+.um-admin-btns {
+	line-height: 1.5em;
+	margin: 0 0 5px 0;
+}
+
+.um-admin-btns a {
+	margin: 0 3px 8px 0!important;
+	font-size: 12px !important;
+	display: inline-block !important;
+	position: relative;
+}
+
+.um-admin-btns a.button.with-icon {
+	padding-right: 25px !important;
+}
+.um-admin-btns a span {
+	color: #aaa;
+	position: absolute !important;
+	width: 25px;
+	text-align: center;
+	right: 0;
+	top: 0;
+	font-size: 15px !important;
+}
+
+.um-admin-btns a span.remove:before{
+	font-family: "Ionicons" !important;
+	content: "\f128";
+}
+.um-admin-btns a span:hover{color: #cb3838}
+
