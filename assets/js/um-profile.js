@@ -15,7 +15,7 @@ jQuery(document).ready(function() {
 
 	jQuery( document.body ).on( 'click', '.um-profile-save', function(e){
 		e.preventDefault();
-		jQuery(this).parents('.um').find('form').trigger('submit');
+		jQuery(this).parents('.um.um-profile.um-editing').find('form').trigger('submit');
 		return false;
 	});
 

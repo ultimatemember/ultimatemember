@@ -390,7 +390,7 @@ jQuery(document).ready(function() {
 			});
 		} else {
 			var args = jQuery(this).data('args');
-			var container = jQuery(this).parents('.um').find('.um-ajax-items');
+			var container = jQuery(this).parents('.um.um-profile.um-viewing').find('.um-ajax-items');
 
 			jQuery.ajax({
 				url: wp.ajax.settings.url,

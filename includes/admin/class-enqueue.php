@@ -108,10 +108,9 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_register_script( 'um_admin_blocks_shortcodes', $js_url . 'admin/block-renderer' . $suffix . '.js', array( 'wp-i18n', 'wp-blocks', 'wp-components' ), UM_VERSION, true );
 		wp_set_script_translations( 'um_admin_blocks_shortcodes', 'ultimate-member' );
 
-		if ( ! empty( UM()->account()->get_tab_fields( 'notifications', array() ) ) ) {
-			$notifications_enabled = 1;
-		} else {
-			$notifications_enabled = 0;
+		$notifications_enabled = 0;
+		if ( false !== UM()->account()->is_notifications_tab_visible() ) {
+			$notifications_enabled = UM()->options()->get( 'account_tab_notifications' );
 		}
 
 		$um_account_settings = array(

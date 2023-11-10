@@ -152,10 +152,10 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_register_script('um_dropdown', $this->js_baseurl . 'dropdown' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
 
 		wp_register_script('um_members', $this->js_baseurl . 'um-members' . $suffix . '.js', array( 'jquery', 'wp-util', 'jquery-ui-slider', 'um_dropdown', 'wp-hooks', 'jquery-masonry', 'um_scripts' ), UM_VERSION, true );
-		wp_register_script('um_profile', $this->js_baseurl . 'um-profile' . $suffix . '.js', array( 'jquery', 'wp-util', 'wp-i18n' ), UM_VERSION, true );
+		wp_register_script('um_profile', $this->js_baseurl . 'um-profile' . $suffix . '.js', array( 'jquery', 'wp-util', 'wp-i18n', 'um_scripts' ), UM_VERSION, true );
 		wp_set_script_translations( 'um_profile', 'ultimate-member' );
 
-		$account_deps = apply_filters( 'um_account_scripts_dependencies', array( 'jquery', 'wp-hooks' ) );
+		$account_deps = apply_filters( 'um_account_scripts_dependencies', array( 'jquery', 'wp-hooks', 'um_scripts' ) );
 		wp_register_script('um_account', $this->js_baseurl . 'um-account' . $suffix . '.js', $account_deps, UM_VERSION, true );
 	}
 
