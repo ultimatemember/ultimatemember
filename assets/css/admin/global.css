@@ -31,12 +31,12 @@ ul#adminmenu > li#toplevel_page_ultimatemember.current > a.current:after {
         opacity: 0.9; }
 
 /* UM Tooltip ( future helptip ) */
-.ui-tooltip.um_tooltip {
+.um .ui-tooltip.um_tooltip {
   padding: 8px;
   color: #eee !important;
   background: rgba(0, 0, 0, 0.85) !important;
   position: absolute;
-  z-index: 1000000;
+  z-index: 10002;
   max-width: 300px;
   font-size: 12px;
   border-radius: 5px;
