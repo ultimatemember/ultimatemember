@@ -1194,7 +1194,7 @@ function um_user_last_login_timestamp( $user_id ) {
  */
 function um_user_last_login( $user_id ) {
 	$value = get_user_meta( $user_id, '_um_last_login', true );
-	return ! empty( $value ) ? UM()->datetime()->time_diff( $value, current_time( 'timestamp' ) ) : '';
+	return ! empty( $value ) ? UM()->datetime()->time_diff( $value, um_get_local_site_time() ) : '';
 }
 
 
@@ -1969,11 +1969,11 @@ function um_closest_num( $array, $number ) {
  * @return bool|string
  */
 function um_get_cover_uri( $image, $attrs ) {
-	$uri = false;
+	$uri        = false;
 	$uri_common = false;
-	$ext = '.' . pathinfo( $image, PATHINFO_EXTENSION );
+	$ext        = '.' . pathinfo( $image, PATHINFO_EXTENSION );
 
-	$ratio = str_replace(':1','',UM()->options()->get( 'profile_cover_ratio' ) );
+	$ratio  = str_replace( ':1', '', UM()->options()->get( 'profile_cover_ratio' ) );
 	$height = round( $attrs / $ratio );
 
 	if ( is_multisite() ) {
@@ -1984,24 +1984,24 @@ function um_get_cover_uri( $image, $attrs ) {
 		$multisite_fix_url = str_replace( '/sites/' . get_current_blog_id() . '/', '/', $multisite_fix_url );
 
 		if ( file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "cover_photo{$ext}" ) ) {
-			$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/cover_photo{$ext}?" . current_time( 'timestamp' );
+			$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/cover_photo{$ext}?" . um_get_local_site_time();
 		}
 
 		if ( file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "cover_photo-{$attrs}{$ext}" ) ) {
-			$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/cover_photo-{$attrs}{$ext}?" . current_time( 'timestamp' );
-		}elseif ( file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "cover_photo-{$attrs}x{$height}{$ext}" ) ) {
-			$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/cover_photo-{$attrs}x{$height}{$ext}?". current_time( 'timestamp' );
+			$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/cover_photo-{$attrs}{$ext}?" . um_get_local_site_time();
+		} elseif ( file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "cover_photo-{$attrs}x{$height}{$ext}" ) ) {
+			$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/cover_photo-{$attrs}x{$height}{$ext}?" . um_get_local_site_time();
 		}
 	}
 
 	if ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "cover_photo{$ext}" ) ) {
-		$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/cover_photo{$ext}?" . current_time( 'timestamp' );
+		$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/cover_photo{$ext}?" . um_get_local_site_time();
 	}
 
 	if ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "cover_photo-{$attrs}{$ext}" ) ) {
-		$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/cover_photo-{$attrs}{$ext}?" . current_time( 'timestamp' );
-	}elseif ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "cover_photo-{$attrs}x{$height}{$ext}" ) ) {
-		$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/cover_photo-{$attrs}x{$height}{$ext}?". current_time( 'timestamp' );
+		$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/cover_photo-{$attrs}{$ext}?" . um_get_local_site_time();
+	} elseif ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "cover_photo-{$attrs}x{$height}{$ext}" ) ) {
+		$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/cover_photo-{$attrs}x{$height}{$ext}?" . um_get_local_site_time();
 	}
 
 	if ( ! empty( $uri_common ) && empty( $uri ) ) {
@@ -2116,7 +2116,7 @@ function um_get_avatar_uri( $image, $attrs ) {
 	 * }
 	 * ?>
 	 */
-	$cache_time = apply_filters( 'um_filter_avatar_cache_time', current_time( 'timestamp' ), um_user( 'ID' ) );
+	$cache_time = apply_filters( 'um_filter_avatar_cache_time', um_get_local_site_time(), um_user( 'ID' ) );
 	if ( ! empty( $cache_time ) ) {
 		$uri .= "?{$cache_time}";
 	}
@@ -2959,4 +2959,23 @@ function um_wp_safe_redirect_fallback( $url, $status ) {
 	 * add_filter( 'um_wp_safe_redirect_fallback', 'my_um_wp_safe_redirect_fallback', 10, 2 );
 	 */
 	return apply_filters( 'um_wp_safe_redirect_fallback', home_url( '/' ), $url, $status );
+}
+
+
+/**
+ * Get local site time in timestamp
+ *
+ * @return int
+ */
+function um_get_local_site_time() {
+	$time_difference_hours = get_option( 'gmt_offset' );
+	$current_timestamp     = time();
+
+	$date = new DateTime();
+	$date->setTimestamp( $current_timestamp );
+	$date->modify( "+$time_difference_hours hours" );
+	$new_timestamp = $date->getTimestamp();
+
+	// Выводим новую временную метку
+	return $new_timestamp;
 }

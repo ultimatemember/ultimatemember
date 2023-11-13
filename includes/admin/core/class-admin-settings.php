@@ -2775,7 +2775,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 											$messages[] = sprintf(
 												// translators: %1$s is a expiry date; %2$s is a renew link.
 												__( 'Your license key expired on %1$s. Please <a href="%2$s" target="_blank">renew your license key</a>.', 'ultimate-member' ),
-												date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+												date_i18n( get_option( 'date_format' ), strtotime( $license->expires, um_get_local_site_time() ) ),
 												'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
 											);
 
@@ -2894,7 +2894,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										$messages[] = sprintf(
 											// translators: %1$s is a expiry date; %2$s is a renew link.
 											__( 'Your license key expired on %1$s. Please <a href="%2$s" target="_blank">renew your license key</a>.', 'ultimate-member' ),
-											date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+											date_i18n( get_option( 'date_format' ), strtotime( $license->expires, um_get_local_site_time() ) ),
 											'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
 										);
 
@@ -2976,7 +2976,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 										$class = 'valid';
 
-										$now        = current_time( 'timestamp' );
+										$now        = um_get_local_site_time();
 										$expiration = strtotime( $license->expires, $now );
 
 										if( 'lifetime' === $license->expires ) {
@@ -2990,7 +2990,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 											$messages[] = sprintf(
 												// translators: %1$s is a expiry date; %2$s is a renew link.
 												__( 'Your license key expires soon! It expires on %1$s. <a href="%2$s" target="_blank">Renew your license key</a>.', 'ultimate-member' ),
-												date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+												date_i18n( get_option( 'date_format' ), strtotime( $license->expires, um_get_local_site_time() ) ),
 												'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
 											);
 
@@ -3001,7 +3001,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 											$messages[] = sprintf(
 												// translators: %s: expiry date.
 												__( 'Your license key expires on %s.', 'ultimate-member' ),
-												date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) )
+												date_i18n( get_option( 'date_format' ), strtotime( $license->expires, um_get_local_site_time() ) )
 											);
 
 											$license_status = 'license-expiration-date-notice';

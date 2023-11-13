@@ -146,7 +146,7 @@ if ( ! class_exists( 'um\core\Date_Time' ) ) {
 			$then_ts = strtotime( $then );
 			$then_year = date( 'Y', $then_ts );
 			$age = date( 'Y' ) - $then_year;
-			if ( strtotime( '+' . $age . ' years', $then_ts ) > current_time( 'timestamp' ) ) {
+			if ( strtotime( '+' . $age . ' years', $then_ts ) > um_get_local_site_time() ) {
 				$age--;
 			}
 			if ( $age == 1 ) {
