@@ -138,25 +138,3 @@ p._icon_search {
     text-align: center;
     padding: 15px 20px;
     display: inline-block; }
-
-span.um-admin-icon-value {
-  margin: 0 10px;
-  font-size: 13px; }
-  span.um-admin-icon-value i {
-    font-size: 28px;
-    color: #0085ba;
-    position: relative;
-    top: 5px; }
-
-span.um-admin-icon-clear {
-  display: none;
-  cursor: pointer;
-  position: relative;
-  color: #ccc; }
-  span.um-admin-icon-clear.show {
-    display: inline-block; }
-  span.um-admin-icon-clear:hover {
-    color: #777; }
-  span.um-admin-icon-clear i {
-    font-size: 20px;
-    vertical-align: middle; }

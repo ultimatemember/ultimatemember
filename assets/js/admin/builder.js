@@ -955,16 +955,6 @@ jQuery( document ).ready( function() {
 
 	});
 
-	/**
-		choose font icon
-	 **/
-	jQuery(document.body).on('click', '.um-admin-icons span', function(){
-		var icon = jQuery(this).attr('data-code');
-		jQuery(this).parent().find('span').removeClass('highlighted');
-		jQuery(this).addClass('highlighted');
-		jQuery('#UM_fonticons').find('a.um-admin-modal-back').attr("data-code", icon);
-	});
-
 	if ( !jQuery('.um-admin-drag').length ) {
 		return false;
 	}

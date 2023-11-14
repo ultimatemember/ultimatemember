@@ -1546,18 +1546,21 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					if ( 'row' === $this->set_field_type ) {
 						$back = 'UM_edit_row';
 						?>
-						<p class="_heading_text"><label for="_icon"><?php esc_html_e( 'Icon', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select an icon to appear in the field. Leave blank if you do not want an icon to show in the field.', 'ultimate-member' ) ); ?></label>
-							<a href="javascript:void(0);" class="button" data-modal="UM_fonticons" data-modal-size="normal" data-dynamic-content="um_admin_fonticon_selector" data-arg1="" data-arg2="" data-back="<?php echo esc_attr( $back ); ?>"><?php esc_html_e( 'Choose Icon', 'ultimate-member' ); ?></a>
+						<p class="_heading_text">
+							<label for="_icon"><?php esc_html_e( 'Icon', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select an icon to appear in the field. Leave blank if you do not want an icon to show in the field.', 'ultimate-member' ) ); ?></label>
+							<span class="um_admin_fonticon_wrapper">
+								<a href="javascript:void(0);" class="button" data-modal="UM_fonticons" data-modal-size="normal" data-dynamic-content="um_admin_fonticon_selector" data-arg1="" data-arg2="" data-back="<?php echo esc_attr( $back ); ?>"><?php esc_html_e( 'Choose Icon', 'ultimate-member' ); ?></a>
 
-							<span class="um-admin-icon-value"><?php if ( ! empty( $this->edit_mode_value ) ) { ?><i class="<?php echo esc_attr( $this->edit_mode_value ); ?>"></i><?php } else { ?><?php esc_html_e( 'No Icon', 'ultimate-member' ); ?><?php } ?></span>
+								<span class="um-admin-icon-value"><?php if ( ! empty( $this->edit_mode_value ) ) { ?><i class="<?php echo esc_attr( $this->edit_mode_value ); ?>"></i><?php } else { ?><?php esc_html_e( 'No Icon', 'ultimate-member' ); ?><?php } ?></span>
 
-							<input type="hidden" name="_icon" id="_icon" value="<?php echo ! empty( $this->edit_mode_value ) ? esc_attr( $this->edit_mode_value ) : ''; ?>" />
+								<input type="hidden" name="_icon" id="_icon" value="<?php echo ! empty( $this->edit_mode_value ) ? esc_attr( $this->edit_mode_value ) : ''; ?>" />
 
-							<?php if ( ! empty( $this->edit_mode_value ) ) { ?>
-								<span class="um-admin-icon-clear show"><i class="um-icon-android-cancel"></i></span>
-							<?php } else { ?>
-								<span class="um-admin-icon-clear"><i class="um-icon-android-cancel"></i></span>
-							<?php } ?>
+								<?php if ( ! empty( $this->edit_mode_value ) ) { ?>
+									<span class="um-admin-icon-clear show"><i class="um-icon-android-cancel"></i></span>
+								<?php } else { ?>
+									<span class="um-admin-icon-clear"><i class="um-icon-android-cancel"></i></span>
+								<?php } ?>
+							</span>
 						</p>
 						<?php
 					} else {
@@ -1570,18 +1573,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 						<div class="um-admin-tri">
 							<p>
 								<label for="_icon"><?php esc_html_e( 'Icon', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select an icon to appear in the field. Leave blank if you do not want an icon to show in the field.', 'ultimate-member' ) ); ?></label>
+								<span class="um_admin_fonticon_wrapper">
+									<a href="javascript:void(0);" class="button" data-modal="UM_fonticons" data-modal-size="normal" data-dynamic-content="um_admin_fonticon_selector" data-arg1="" data-arg2="" data-back="<?php echo esc_attr( $back ); ?>"><?php esc_html_e( 'Choose Icon', 'ultimate-member' ); ?></a>
 
-								<a href="javascript:void(0);" class="button" data-modal="UM_fonticons" data-modal-size="normal" data-dynamic-content="um_admin_fonticon_selector" data-arg1="" data-arg2="" data-back="<?php echo esc_attr( $back ); ?>"><?php esc_html_e( 'Choose Icon', 'ultimate-member' ); ?></a>
+									<span class="um-admin-icon-value"><?php if ( ! empty( $this->edit_mode_value ) ) { ?><i class="<?php echo esc_attr( $this->edit_mode_value ); ?>"></i><?php } else { ?><?php esc_html_e( 'No Icon', 'ultimate-member' ) ?><?php } ?></span>
 
-								<span class="um-admin-icon-value"><?php if ( ! empty( $this->edit_mode_value ) ) { ?><i class="<?php echo esc_attr( $this->edit_mode_value ); ?>"></i><?php } else { ?><?php esc_html_e( 'No Icon', 'ultimate-member' ) ?><?php } ?></span>
+									<input type="hidden" name="_icon" id="_icon" value="<?php echo ! empty( $this->edit_mode_value ) ? esc_attr( $this->edit_mode_value ) : ''; ?>" />
 
-								<input type="hidden" name="_icon" id="_icon" value="<?php echo ! empty( $this->edit_mode_value ) ? esc_attr( $this->edit_mode_value ) : ''; ?>" />
-
-								<?php if ( ! empty( $this->edit_mode_value ) ) { ?>
-									<span class="um-admin-icon-clear show"><i class="um-icon-android-cancel"></i></span>
-								<?php } else { ?>
-									<span class="um-admin-icon-clear"><i class="um-icon-android-cancel"></i></span>
-								<?php } ?>
+									<?php if ( ! empty( $this->edit_mode_value ) ) { ?>
+										<span class="um-admin-icon-clear show"><i class="um-icon-android-cancel"></i></span>
+									<?php } else { ?>
+										<span class="um-admin-icon-clear"><i class="um-icon-android-cancel"></i></span>
+									<?php } ?>
+								</span>
 							</p>
 						</div>
 						<?php
