@@ -655,6 +655,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 						}
 					} elseif ( false !== strpos( $key, 'um_editor' ) ) {
 						if ( 'block' === $array['post']['_type'] ) {
+							$val                          = str_replace( "\r\n\r\n", '<br>', $val );
 							$save[ $field_id ]['content'] = wp_kses_post( $val );
 						} else {
 							$save[ $field_id ]['content'] = sanitize_textarea_field( $val );
