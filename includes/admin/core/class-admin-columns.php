@@ -84,6 +84,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Columns' ) ) {
 				'um_form',
 				'um_directory',
 			);
+			$remove_quick_edit = apply_filters( 'um_cpt_remove_quick_edit', $remove_quick_edit );
 
 			if ( in_array( $post->post_type, $remove_quick_edit, true ) ) {
 				unset( $actions['inline hide-if-no-js'] );
