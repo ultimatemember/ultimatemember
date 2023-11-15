@@ -105,6 +105,14 @@ UM.common = {
 				});
 			});
 		}
+	},
+	select: {
+		isSelected: function( selected, current ){
+			if ( selected === current ) {
+				return ' selected="selected"';
+			}
+			return "";
+		}
 	}
 }
 

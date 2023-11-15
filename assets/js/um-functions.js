@@ -698,11 +698,3 @@ jQuery(function(){
 	}
 
 });
-
-
-function um_selected( selected, current ){
-
-	if( selected == current ){
-		return "selected='selected'";
-	}
-}

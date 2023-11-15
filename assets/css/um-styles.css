@@ -19,7 +19,6 @@
 	display: none;
 }
 
-.um:not(.um-admin) *,
 .um:not(.um-admin) *:before,
 .um:not(.um-admin) *:after {
 	box-sizing: content-box;
