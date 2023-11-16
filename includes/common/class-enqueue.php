@@ -194,9 +194,9 @@ class Enqueue {
 		wp_register_style( 'select2', $libs_url . 'select2/select2' . $suffix . '.css', array(), '4.0.13' );
 
 		// Date-time picker (Pickadate.JS)
-		wp_register_script( 'um_datetime', $libs_url . 'pickadate/picker' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
-		wp_register_script( 'um_datetime_date', $libs_url . 'pickadate/picker.date' . $suffix . '.js', array( 'um_datetime' ), UM_VERSION, true );
-		wp_register_script( 'um_datetime_time', $libs_url . 'pickadate/picker.time' . $suffix . '.js', array( 'um_datetime' ), UM_VERSION, true );
+		wp_register_script( 'um_datetime', $libs_url . 'pickadate/picker' . $suffix . '.js', array( 'jquery' ), '3.6.2', true );
+		wp_register_script( 'um_datetime_date', $libs_url . 'pickadate/picker.date' . $suffix . '.js', array( 'um_datetime' ), '3.6.2', true );
+		wp_register_script( 'um_datetime_time', $libs_url . 'pickadate/picker.time' . $suffix . '.js', array( 'um_datetime' ), '3.6.2', true );
 
 		$common_js_deps = array( 'jquery', 'wp-util', 'wp-hooks', 'wp-i18n', 'um_tipsy', 'um_datetime_date', 'um_datetime_time' );
 
@@ -204,17 +204,17 @@ class Enqueue {
 		$locale = $this->get_pickadate_locale();
 		if ( $locale ) {
 			if ( file_exists( WP_LANG_DIR . '/plugins/ultimate-member/assets/js/pickadate/' . $locale . $suffix . '.js' ) ) {
-				wp_register_script( 'um_datetime_locale', content_url() . '/languages/plugins/ultimate-member/assets/js/pickadate/' . $locale . $suffix . '.js', array( 'jquery', 'um_datetime' ), UM_VERSION, true );
+				wp_register_script( 'um_datetime_locale', content_url() . '/languages/plugins/ultimate-member/assets/js/pickadate/' . $locale . $suffix . '.js', array( 'jquery', 'um_datetime' ), '3.6.2', true );
 				$common_js_deps[] = 'um_datetime_locale';
 			} elseif ( file_exists( UM_PATH . 'assets/libs/pickadate/translations/' . $locale . $suffix . '.js' ) ) {
-				wp_register_script( 'um_datetime_locale', $libs_url . 'pickadate/translations/' . $locale . $suffix . '.js', array( 'jquery', 'um_datetime' ), UM_VERSION, true );
+				wp_register_script( 'um_datetime_locale', $libs_url . 'pickadate/translations/' . $locale . $suffix . '.js', array( 'jquery', 'um_datetime' ), '3.6.2', true );
 				$common_js_deps[] = 'um_datetime_locale';
 			}
 		}
 
-		wp_register_style( 'um_datetime', $libs_url . 'pickadate/default' . $suffix . '.css', array(), UM_VERSION );
-		wp_register_style( 'um_datetime_date', $libs_url . 'pickadate/default.date' . $suffix . '.css', array( 'um_datetime' ), UM_VERSION );
-		wp_register_style( 'um_datetime_time', $libs_url . 'pickadate/default.time' . $suffix . '.css', array( 'um_datetime' ), UM_VERSION );
+		wp_register_style( 'um_datetime', $libs_url . 'pickadate/default' . $suffix . '.css', array(), '3.6.2' );
+		wp_register_style( 'um_datetime_date', $libs_url . 'pickadate/default.date' . $suffix . '.css', array( 'um_datetime' ), '3.6.2' );
+		wp_register_style( 'um_datetime_time', $libs_url . 'pickadate/default.time' . $suffix . '.css', array( 'um_datetime' ), '3.6.2' );
 
 		wp_register_script( 'um_common', $js_url . 'common' . $suffix . '.js', $common_js_deps, UM_VERSION, true );
 		$um_common_variables = array(

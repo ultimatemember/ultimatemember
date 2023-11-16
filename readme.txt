@@ -6,8 +6,8 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
-Tested up to: 6.3
-Stable tag: 2.7.0
+Tested up to: 6.4
+Stable tag: 2.8.0
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -166,9 +166,39 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.7.1: October xx, 2023 =
+= 2.8.0: November 30, 2023 =
 
+* Enhancements:
 
+  - Refactored: wp-admin assets. Separated or merged some file based on the wp-admin screens
+  - Tweak: SASS pre-processor is used for wp-admin styles.
+  - Tweak: Using minified JS and CSS in wp-admin assets
+  - Tweak: Added PHP class UM()->admin()->screen() for screen control in wp-admin
+  - Updated: jquery-ui styles to 1.13.2 version. Prefixed with .um class.
+  - Updated: Cropper.JS to 1.6.1 version
+  - Note: Select2.JS version 4.0.13
+  - Refreshed: Tipsy.JS to 1.0.0a version. Removed custom changes and restored library base code
+  - Refreshed: Raty.JS to 2.6.0 version. Restored library base code
+  - Refreshed: Pickadate.JS to 3.6.2 version. Restored library base code
+  - Updated: Used `um-tip-{x}` classes to make Tipsy.JS initialization commonly for wp-admin and frontend
+  - Updated: wp-admin forms class and render icon type field
+  - Updated: Using `custom_submitdiv` on the UM Form screen to avoid custom styling for unnecessary metabox functionality. Just to render the necessary metabox content with only submission tools.
+
+* Bugfixes:
+
+  - Fixed: Pickadate.JS (datetime picker) localizations using
+  - Fixed: PHP notices on the SiteHealth page
+  - Fixed: Using 'um_user_permissions_filter' hook and it's arguments.
+
+* Deprecated:
+
+  - Simplebar.JS library in Ultimate Member core. It's used only in extensions.
+  - Removed outdated styles and scripts for 1.3.x first install page
+  - `UM()->is_um_screen()` function. Please use `UM()->admin()->screen()->is_own_screen()` instead
+  - `UM()->is_plugin_post_type()` function. Please use `UM()->admin()->screen()->is_own_post_type()` instead
+  - `UM()->is_restricted_entity()` function. Please use `UM()->admin()->screen()->is_restricted_entity()` instead
+  - `UM()->cpt_list()` function. Please use `UM()->common()->cpt()->get_list()` instead
+  - `um-admin-clear` CSS class. It duplicates WordPress native `clear`. Using WordPress native.
 
 = 2.7.0: October 11, 2023 =
 
