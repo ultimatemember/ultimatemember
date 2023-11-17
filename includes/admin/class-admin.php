@@ -24,36 +24,30 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 */
 		public $role_meta;
 
-
 		/**
 		 * @var array
 		 */
 		public $restriction_term_meta;
-
 
 		/**
 		 * @var array
 		 */
 		public $member_directory_meta;
 
-
 		/**
 		 * @var array
 		 */
 		public $form_meta;
-
 
 		/**
 		 * @var array
 		 */
 		public $builder_input;
 
-
 		/**
 		 * @var array
 		 */
 		public $restriction_post_meta;
-
 
 		/**
 		 * Admin constructor.
@@ -88,7 +82,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			$this->site_health();
 		}
 
-		function init_variables() {
+		public function init_variables() {
 			$this->role_meta = apply_filters(
 				'um_role_meta_map',
 				array(
@@ -837,7 +831,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			);
 		}
 
-
 		/**
 		 * @param array|string $value
 		 *
@@ -888,7 +881,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $value;
 		}
 
-
 		/**
 		 * @param array|string $value
 		 *
@@ -912,7 +904,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $value;
 		}
 
-
 		/**
 		 * @param array|string $value
 		 *
@@ -935,7 +926,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			return $value;
 		}
-
 
 		/**
 		 * @param array|string $value
@@ -966,7 +956,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $value;
 		}
 
-
 		/**
 		 * @param array|string $value
 		 *
@@ -983,7 +972,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $value;
 		}
 
-
 		/**
 		 * @param array|string $value
 		 *
@@ -999,7 +987,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			return $value;
 		}
-
 
 		/**
 		 * @param array|string $value
@@ -1024,7 +1011,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $value;
 		}
 
-
 		/**
 		 * @param array|string $value
 		 *
@@ -1048,7 +1034,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $value;
 		}
 
-
 		/**
 		 * @param array|string $value
 		 *
@@ -1063,7 +1048,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			return $value;
 		}
-
 
 		/**
 		 * @param $value
@@ -1154,7 +1138,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $data;
 		}
 
-
 		/**
 		 * Sanitize post restriction meta fields when wp-admin form has been submitted
 		 *
@@ -1210,7 +1193,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $data;
 		}
 
-
 		/**
 		 * Sanitize term restriction meta fields when wp-admin form has been submitted
 		 *
@@ -1265,7 +1247,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			return $data;
 		}
-
 
 		/**
 		 * Sanitize member directory meta when wp-admin form has been submitted
@@ -1341,7 +1322,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			return $data;
 		}
-
 
 		/**
 		 * Sanitize builder field meta when wp-admin form has been submitted
@@ -1431,7 +1411,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $data;
 		}
 
-
 		/**
 		 * Sanitize form meta when wp-admin form has been submitted
 		 *
@@ -1506,7 +1485,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			return $data;
 		}
-
 
 		/**
 		 * Sanitize options when wp-admin form has been submitted
@@ -2007,7 +1985,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $translation;
 		}
 
-
 		/**
 		 * Fix parent file for correct highlighting
 		 *
@@ -2015,7 +1992,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 *
 		 * @return string
 		 */
-		function parent_file( $parent_file ) {
+		public function parent_file( $parent_file ) {
 			global $current_screen;
 			$screen_id = $current_screen->id;
 			if ( strstr( $screen_id, 'um_' ) ) {
