@@ -14,7 +14,7 @@ gulp.task( 'default', function ( done ) {
 
 	gulp.src(['assets/sass/*.sass']).pipe( sass().on( 'error', sass.logError ) ).pipe( gulp.dest( 'assets/css' ) );
 
-    gulp.src(['assets/js/*.js','!assets/js/um-fileupload.js', '!assets/js/*.min.js']) // path to your files
+    gulp.src(['assets/js/*.js','!assets/js/*.min.js']) // path to your files
         .pipe( uglify() )
         .pipe( rename({ suffix: '.min' }) )
         .pipe( gulp.dest( 'assets/js/' ) );
@@ -27,6 +27,11 @@ gulp.task( 'default', function ( done ) {
 		.pipe( cleanCSS() )
 		.pipe( rename( { suffix: '.min' } ) )
 		.pipe( gulp.dest( 'assets/css/admin/' ) );
+
+	gulp.src(['assets/css/*.css', '!assets/css/*.min.css',])
+		.pipe( cleanCSS() )
+		.pipe( rename( { suffix: '.min' } ) )
+		.pipe( gulp.dest( 'assets/css/' ) );
 
 	// full CSS files
 	gulp.src(['assets/css/admin/*.sass'])

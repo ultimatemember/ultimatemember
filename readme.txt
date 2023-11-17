@@ -172,7 +172,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
   - Refactored: wp-admin assets. Separated or merged some file based on the wp-admin screens
   - Tweak: SASS pre-processor is used for wp-admin styles.
-  - Tweak: Using minified JS and CSS in wp-admin assets
+  - Tweak: Using minified JS and CSS in wp-admin and frontend assets
   - Tweak: Added PHP class UM()->admin()->screen() for screen control in wp-admin
   - Updated: jquery-ui styles to 1.13.2 version. Prefixed with .um class.
   - Updated: Cropper.JS to 1.6.1 version
@@ -180,9 +180,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
   - Refreshed: Tipsy.JS to 1.0.0a version. Removed custom changes and restored library base code
   - Refreshed: Raty.JS to 2.6.0 version. Restored library base code
   - Refreshed: Pickadate.JS to 3.6.2 version. Restored library base code
-  - Updated: Used `um-tip-{x}` classes to make Tipsy.JS initialization commonly for wp-admin and frontend
+  - Updated: Used `um-tip-{x}` classes to make Tipsy.JS initialization commonly for wp-admin and frontend.
   - Updated: wp-admin forms class and render icon type field
-  - Updated: Using `custom_submitdiv` on the UM Form screen to avoid custom styling for unnecessary metabox functionality. Just to render the necessary metabox content with only submission tools.
+  - Updated: Using `custom_submitdiv` on the UM Form and UM Member Directory screen to avoid custom styling for unnecessary metabox functionality. Just to render the necessary metabox content with only submission tools.
 
 * Bugfixes:
 
@@ -192,13 +192,26 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 * Deprecated:
 
-  - Simplebar.JS library in Ultimate Member core. It's used only in extensions.
+  - Removed Simplebar.JS library in Ultimate Member core. It's used only in extensions.
   - Removed outdated styles and scripts for 1.3.x first install page
+  - `UM()->admin()->enqueue()->js_url` param. Please use `UM()->admin()->enqueue()::get_url( 'js' );` or `self::get_url( 'js' );` instead
+  - `UM()->admin()->enqueue()->css_url` param. Please use `UM()->admin()->enqueue()::get_url( 'css' );` or `self::get_url( 'js' );` instead
+  - `UM()->frontend()->enqueue()->js_url` param. Please use `UM()->frontend()->enqueue()::get_url( 'js' );` or `self::get_url( 'js' );` instead
+  - `UM()->frontend()->enqueue()->css_url` param. Please use `UM()->frontend()->enqueue()::get_url( 'css' );` or `self::get_url( 'js' );` instead
+  - Fully `UM()->admin()->enqueue()->front_js_baseurl` param.
+  - Fully `UM()->admin()->enqueue()->front_css_baseurl` param.
+  - Fully `UM()->admin()->enqueue()->post_page` param.
+  - Fully `UM()->frontend()->enqueue()->load_google_charts()` function. Outdated.
+  - Fully `UM()->frontend()->enqueue()->load_fileupload()` function. Used scripts/styles dependencies to load script in the necessary place.
+  - Fully `UM()->frontend()->enqueue()->load_datetimepicker()` function.  Used scripts/styles dependencies to load script in the necessary place.
+  - Fully `UM()->frontend()->enqueue()->load_scrollbar()` function. Outdated
+  - Fully `UM()->frontend()->enqueue()->load_imagecrop()` function. Used scripts/styles dependencies to load script in the necessary place.
   - `UM()->is_um_screen()` function. Please use `UM()->admin()->screen()->is_own_screen()` instead
   - `UM()->is_plugin_post_type()` function. Please use `UM()->admin()->screen()->is_own_post_type()` instead
   - `UM()->is_restricted_entity()` function. Please use `UM()->admin()->screen()->is_restricted_entity()` instead
   - `UM()->cpt_list()` function. Please use `UM()->common()->cpt()->get_list()` instead
-  - `um-admin-clear` CSS class. It duplicates WordPress native `clear`. Using WordPress native.
+  - `um-admin-clear` CSS class. It duplicates WordPress native `clear`. Using WordPress native instead.
+  - `um-admin-tipsy-{x}` classes to make Tipsy.JS initialization commonly for wp-admin and frontend by `um-tip-{x}` class.
 
 = 2.7.0: October 11, 2023 =
 

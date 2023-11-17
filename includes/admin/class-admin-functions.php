@@ -30,36 +30,36 @@ if ( ! class_exists( 'um\admin\Admin_Functions' ) ) {
 		/**
 		 * Boolean check if we're viewing UM backend
 		 *
-		 * @deprecated 2.7.1
+		 * @deprecated 2.8.0
 		 *
 		 * @return bool
 		 */
 		public function is_um_screen() {
-			_deprecated_function( __METHOD__, '2.7.1', 'UM()->admin()->screen()->is_own_screen()' );
+			_deprecated_function( __METHOD__, '2.8.0', 'UM()->admin()->screen()->is_own_screen()' );
 			return UM()->admin()->screen()->is_own_screen();
 		}
 
 		/**
 		 * Check if current page load UM post type
 		 *
-		 * @deprecated 2.7.1
+		 * @deprecated 2.8.0
 		 *
 		 * @return bool
 		 */
 		public function is_plugin_post_type() {
-			_deprecated_function( __METHOD__, '2.7.1', 'UM()->admin()->screen()->is_own_post_type()' );
+			_deprecated_function( __METHOD__, '2.8.0', 'UM()->admin()->screen()->is_own_post_type()' );
 			return UM()->admin()->screen()->is_own_post_type();
 		}
 
 		/**
 		 * If page now show content with restricted post/taxonomy
 		 *
-		 * @deprecated 2.7.1
+		 * @deprecated 2.8.0
 		 *
 		 * @return bool
 		 */
 		public function is_restricted_entity() {
-			_deprecated_function( __METHOD__, '2.7.1', 'UM()->admin()->screen()->is_restricted_entity()' );
+			_deprecated_function( __METHOD__, '2.8.0', 'UM()->admin()->screen()->is_restricted_entity()' );
 			return UM()->admin()->screen()->is_restricted_entity();
 		}
 	}

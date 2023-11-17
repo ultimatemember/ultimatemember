@@ -2049,7 +2049,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		}
 
 		/**
-		 * @since 2.7.1
+		 * @since 2.8.0
 		 *
 		 * @return Screen
 		 */

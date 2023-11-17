@@ -90,7 +90,7 @@ if ( ! class_exists( 'um\common\CPT' ) ) {
 		}
 
 		/**
-		 * @since 2.7.1
+		 * @since 2.8.0
 		 * @return array
 		 */
 		public function get_list() {
@@ -123,7 +123,7 @@ if ( ! class_exists( 'um\common\CPT' ) ) {
 		/**
 		 * @param null|string $post_type
 		 *
-		 * @since 2.7.1
+		 * @since 2.8.0
 		 *
 		 * @return array
 		 */

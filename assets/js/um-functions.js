@@ -168,17 +168,6 @@ UM.dropdown = {
 	}
 };
 
-
-/**
- * Hide all menus
- * @deprecated since 2.1.16, use UM.dropdown.hideAll() instead
- * @returns    {undefined}
- */
-function UM_hide_menus() {
-	UM.dropdown.hideAll();
-}
-
-
 /**
  * Update menu position
  */

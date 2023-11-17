@@ -684,7 +684,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 		/**
 		 * @note Removed for now to avoid the bad reviews.
-		 * @deprecated 2.7.1
+		 * @deprecated 2.8.0
 		 */
 		private function reviews_notice() {
 			$first_activation_date = get_option( 'um_first_activation_date', false );

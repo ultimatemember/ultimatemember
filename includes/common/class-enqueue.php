@@ -47,6 +47,14 @@ class Enqueue {
 		add_action( 'enqueue_block_assets', array( &$this, 'common_libs' ), 9 );
 	}
 
+	/**
+	 * Get assets URL.
+	 * @since 2.7.0
+	 *
+	 * @param string $type Can be "js", "css" or "libs".
+	 *
+	 * @return string
+	 */
 	public static function get_url( $type ) {
 		if ( ! in_array( $type, array( 'js', 'css', 'libs' ), true ) ) {
 			return '';
@@ -55,6 +63,13 @@ class Enqueue {
 		return self::$urls[ $type ];
 	}
 
+	/**
+	 * Get scripts minified suffix.
+	 *
+	 * @since 2.7.0
+	 *
+	 * @return string
+	 */
 	public static function get_suffix() {
 		if ( empty( self::$suffix ) ) {
 			self::$suffix = ( ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) || ( defined( 'UM_SCRIPT_DEBUG' ) && UM_SCRIPT_DEBUG ) ) ? '' : '.min';
@@ -71,6 +86,13 @@ class Enqueue {
 		wp_register_style( 'um_ui', self::get_url( 'libs' ) . 'jquery-ui/jquery-ui' . self::get_suffix() . '.css', array(), '1.13.2' );
 	}
 
+	/**
+	 * Get Pickadate.JS locale.
+	 *
+	 * @since 2.8.0
+	 *
+	 * @return string
+	 */
 	private function get_pickadate_locale() {
 		$suffix = self::get_suffix();
 		$locale = get_locale();
@@ -135,6 +157,24 @@ class Enqueue {
 			}
 		}
 
+		/**
+		 * Filters Ultimate Member Pickadate.JS locale.
+		 *
+		 * @since 2.8.0
+		 * @hook um_get_pickadate_locale
+		 *
+		 * @param {string} $locale Pickadate.JS locale.
+		 * @param {string} $suffix Ultimate Member scripts suffix.
+		 *
+		 * @return {string} Pickadate.JS locale.
+		 *
+		 * @example <caption>Change Ultimate Member Pickadate.JS locale.</caption>
+		 * function custom_um_get_pickadate_locale( $locale, $suffix ) {
+		 *     $locale = 'th_TH';
+		 *     return $locale;
+		 * }
+		 * add_filter( 'um_get_pickadate_locale', 'custom_um_get_pickadate_locale', 10, 2 );
+		 */
 		return apply_filters( 'um_get_pickadate_locale', $locale, $suffix );
 	}
 
@@ -156,6 +196,7 @@ class Enqueue {
 
 		// Raty JS for rating field-type.
 		wp_register_script( 'um_raty', $libs_url . 'raty/um-raty' . $suffix . '.js', array( 'jquery', 'wp-i18n' ), '2.6.0', true );
+		wp_set_script_translations( 'um_raty', 'ultimate-member' );
 		wp_register_style( 'um_raty', $libs_url . 'raty/um-raty' . $suffix . '.css', array(), '2.6.0' );
 
 		// Legacy FontIcons.
@@ -163,6 +204,23 @@ class Enqueue {
 		wp_register_style( 'um_fonticons_fa', $libs_url . 'legacy/fonticons/fonticons-fa' . $suffix . '.css', array(), UM_VERSION ); // FontAwesome
 
 		// Select2 JS.
+		/**
+		 * Filters marker for dequeue select2.JS library.
+		 *
+		 * @since 2.0.0
+		 * @hook um_dequeue_select2_scripts
+		 *
+		 * @param {bool} $dequeue_select2 Dequeue select2 assets marker. Set to `true` for dequeue scripts.
+		 *
+		 * @return {bool} Dequeue select2 assets. By default `false`.
+		 *
+		 * @example <caption>Dequeue select2 assets.</caption>
+		 * function custom_um_dequeue_select2_scripts( $dequeue_select2 ) {
+		 *     $dequeue_select2 = true;
+		 *     return $dequeue_select2;
+		 * }
+		 * add_filter( 'um_dequeue_select2_scripts', 'custom_um_dequeue_select2_scripts' );
+		 */
 		$dequeue_select2 = apply_filters( 'um_dequeue_select2_scripts', false );
 		if ( class_exists( 'WooCommerce' ) || $dequeue_select2 ) {
 			wp_dequeue_style( self::$select2_handle );
@@ -223,7 +281,7 @@ class Enqueue {
 		/**
 		 * Filters data array for localize frontend common scripts.
 		 *
-		 * @since 2.7.1
+		 * @since 2.8.0
 		 * @hook um_common_js_variables
 		 *
 		 * @param {array} $variables Data to localize.

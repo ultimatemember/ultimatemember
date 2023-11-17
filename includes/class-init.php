@@ -921,7 +921,7 @@ if ( ! class_exists( 'UM' ) ) {
 
 		/**
 		 * @since 2.0
-		 * @depecated 2.7.0
+		 * @deprecated 2.7.0
 		 *
 		 * @return um\admin\Enqueue
 		 */

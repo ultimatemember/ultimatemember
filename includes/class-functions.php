@@ -335,12 +335,12 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 
 		/**
-		 * @deprecated 2.7.1
+		 * @deprecated 2.8.0
 		 *
 		 * @return array
 		 */
 		public function cpt_list() {
-			_deprecated_function( __METHOD__, '2.7.1', 'UM()->common()->cpt()->get_list()' );
+			_deprecated_function( __METHOD__, '2.8.0', 'UM()->common()->cpt()->get_list()' );
 			return UM()->common()->cpt()->get_list();
 		}
 

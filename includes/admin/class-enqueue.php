@@ -12,53 +12,46 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 final class Enqueue extends \um\common\Enqueue {
 
-
 	/**
 	 * @var string
-	 * @deprecated 2.7.1
+	 * @deprecated 2.8.0
 	 */
 	public $js_url;
 
-
 	/**
 	 * @var string
+	 * @deprecated 2.8.0
 	 */
 	public $css_url;
 
-
 	/**
 	 * @var string
+	 * @deprecated 2.8.0
 	 */
 	public $front_js_baseurl;
 
-
 	/**
 	 * @var string
+	 * @deprecated 2.8.0
 	 */
 	public $front_css_baseurl;
 
+	/**
+	 * @var bool
+	 * @deprecated 2.8.0
+	 */
+	public $post_page;
 
 	/**
 	 * @var bool
 	 */
 	private static $um_cpt_form_screen = false;
 
-
-	/**
-	 * @var bool
-	 * @deprecated 2.7.1
-	 */
-	public $post_page;
-
-
 	/**
 	 * Enqueue constructor.
 	 */
 	public function __construct() {
 		parent::__construct();
-
-		$this->front_js_baseurl  = UM_URL . 'assets/js/';
-		$this->front_css_baseurl = UM_URL . 'assets/css/';
 
 		add_filter( 'admin_body_class', array( &$this, 'admin_body_class' ), 999 );
 
@@ -82,7 +75,7 @@ final class Enqueue extends \um\common\Enqueue {
 	/**
 	 * Adds class to our admin pages
 	 *
-	 * @since 2.7.1
+	 * @since 2.8.0
 	 *
 	 * @param $classes
 	 *
@@ -96,7 +89,9 @@ final class Enqueue extends \um\common\Enqueue {
 	}
 
 	/**
-	 * Enqueue Gutenberg Block Editor assets
+	 * Enqueue Gutenberg Block Editor assets.
+	 *
+	 * @since 2.6.1
 	 */
 	public function block_editor() {
 		$suffix  = self::get_suffix();
@@ -135,33 +130,49 @@ final class Enqueue extends \um\common\Enqueue {
 				'enabled' => UM()->options()->get( 'account_tab_delete' ),
 			),
 		);
+
+		/**
+		 * Filters data array for localize wp-admin Gutenberg scripts for account block.
+		 *
+		 * @since 2.6.1
+		 * @hook um_extend_account_settings
+		 *
+		 * @param {array} $um_account_settings Data to localize.
+		 *
+		 * @return {array} Data to localize.
+		 *
+		 * @example <caption>Add `my_custom_variable` to wp-admin blocks shortcodes scripts to be callable via `um_account_settings.my_custom_variable` in JS.</caption>
+		 * function um_custom_extend_account_settings( $um_account_settings ) {
+		 *     return $um_account_settings;
+		 * }
+		 * add_filter( 'um_extend_account_settings', 'um_custom_extend_account_settings' );
+		 */
 		$um_account_settings = apply_filters( 'um_extend_account_settings', $um_account_settings );
 		wp_localize_script( 'um_admin_blocks_shortcodes', 'um_account_settings', $um_account_settings );
 		wp_enqueue_script( 'um_admin_blocks_shortcodes' );
 
-		wp_register_script( 'um_conditional', UM_URL . 'assets/js/um-conditional' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
-		wp_register_script( 'um_scripts', UM_URL . 'assets/js/um-scripts' . $suffix . '.js', array( 'jquery', 'wp-util', 'um_conditional', 'um_common', self::$select2_handle ), UM_VERSION, true );
+		wp_register_script( 'um_conditional', $js_url . 'um-conditional' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
+		wp_register_script( 'um_scripts', $js_url . 'um-scripts' . $suffix . '.js', array( 'jquery', 'wp-util', 'um_conditional', 'um_common', self::$select2_handle ), UM_VERSION, true );
 		$max_upload_size = wp_max_upload_size();
 		if ( ! $max_upload_size ) {
 			$max_upload_size = 0;
 		}
 
-		$localize_data = apply_filters(
-			'um_enqueue_localize_data',
-			array(
-				'max_upload_size' => $max_upload_size,
-				'nonce'           => wp_create_nonce( 'um-frontend-nonce' ),
-			)
+		$localize_data = array(
+			'max_upload_size' => $max_upload_size,
+			'nonce'           => wp_create_nonce( 'um-frontend-nonce' ),
 		);
+		/** This filter is documented in includes/frontend/class-enqueue.php */
+		$localize_data = apply_filters( 'um_enqueue_localize_data', $localize_data );
 		wp_localize_script( 'um_scripts', 'um_scripts', $localize_data );
 
-		wp_register_script( 'um_dropdown', UM_URL . 'assets/js/dropdown' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
-		wp_register_script( 'um_members', UM_URL . 'assets/js/um-members' . $suffix . '.js', array( 'jquery', 'wp-util', 'jquery-ui-slider', 'um_dropdown', 'wp-hooks', 'jquery-masonry', 'um_scripts' ), UM_VERSION, true );
+		wp_register_script( 'um_dropdown', $js_url . 'dropdown' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
+		wp_register_script( 'um_members', $js_url . 'um-members' . $suffix . '.js', array( 'jquery', 'wp-util', 'jquery-ui-slider', 'um_dropdown', 'wp-hooks', 'jquery-masonry', 'um_scripts' ), UM_VERSION, true );
 
-		wp_register_script( 'um_account', UM_URL . 'assets/js/um-account' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
+		wp_register_script( 'um_account', $js_url . 'um-account' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
 
-		wp_register_script( 'um_functions', UM_URL . 'assets/js/um-functions' . $suffix . '.js', array( 'jquery', 'jquery-masonry', 'wp-util' ), UM_VERSION, true );
-		wp_register_script( 'um_responsive', UM_URL . 'assets/js/um-responsive' . $suffix . '.js', array( 'jquery', 'um_functions', 'um_crop' ), UM_VERSION, true );
+		wp_register_script( 'um_functions', $js_url . 'um-functions' . $suffix . '.js', array( 'jquery', 'jquery-masonry', 'wp-util' ), UM_VERSION, true );
+		wp_register_script( 'um_responsive', $js_url . 'um-responsive' . $suffix . '.js', array( 'jquery', 'um_functions', 'um_crop' ), UM_VERSION, true );
 
 		// render blocks
 		wp_enqueue_script( 'um_conditional' );
@@ -171,15 +182,18 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_enqueue_script( 'um_functions' );
 		wp_enqueue_script( 'um_responsive' );
 
-		wp_register_style( 'um_members', UM_URL . 'assets/css/um-members.css', array( 'um_ui' ), UM_VERSION );
+		wp_register_style( 'um_members', $css_url . 'um-members' . $suffix . '.css', array( 'um_ui' ), UM_VERSION );
+		// RTL styles.
 		if ( is_rtl() ) {
-			wp_register_style( 'um_members_rtl', UM_URL . 'assets/css/um-members-rtl.css', array( 'um_members' ), UM_VERSION );
+			wp_style_add_data( 'um_members', 'rtl', true );
+			wp_style_add_data( 'um_members', 'suffix', $suffix );
 		}
-		wp_register_style( 'um_styles', UM_URL . 'assets/css/um-styles.css', array( 'um_ui', 'um_tipsy', 'um_raty', 'um_fonticons_ii', 'um_fonticons_fa', 'select2' ), UM_VERSION );
-		wp_register_style( 'um_profile', UM_URL . 'assets/css/um-profile.css', array(), UM_VERSION );
-		wp_register_style( 'um_responsive', UM_URL . 'assets/css/um-responsive.css', array( 'um_profile', 'um_crop' ), UM_VERSION );
-		wp_register_style( 'um_account', UM_URL . 'assets/css/um-account.css', array(), UM_VERSION );
-		wp_register_style( 'um_default_css', UM_URL . 'assets/css/um-old-default.css', array(), UM_VERSION );
+
+		wp_register_style( 'um_styles', $css_url . 'um-styles' . $suffix . '.css', array( 'um_ui', 'um_tipsy', 'um_raty', 'um_fonticons_ii', 'um_fonticons_fa', 'select2' ), UM_VERSION );
+		wp_register_style( 'um_profile', $css_url . 'um-profile' . $suffix . '.css', array(), UM_VERSION );
+		wp_register_style( 'um_responsive', $css_url . 'um-responsive' . $suffix . '.css', array( 'um_profile', 'um_crop' ), UM_VERSION );
+		wp_register_style( 'um_account', $css_url . 'um-account' . $suffix . '.css', array(), UM_VERSION );
+		wp_register_style( 'um_default_css', $css_url . 'um-old-default' . $suffix . '.css', array(), UM_VERSION );
 
 		wp_enqueue_style( 'um_default_css' );
 		wp_enqueue_style( 'um_members' );
@@ -195,6 +209,8 @@ final class Enqueue extends \um\common\Enqueue {
 
 	/**
 	 * Load Gutenberg scripts.
+	 *
+	 * @since 2.0.37
 	 */
 	private function load_gutenberg_js() {
 		/** This filter is documented in includes/core/class-blocks.php */
@@ -231,18 +247,30 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_register_style( 'um_block_css', $css_url . 'admin/block' . $suffix . '.css', array(), UM_VERSION );
 		wp_enqueue_style( 'um_block_css' );
 
+		/**
+		 * Fires for enqueue assets for WordPress Gutenberg editor.
+		 *
+		 * @since 2.1.10
+		 * @hook um_load_gutenberg_js
+		 *
+		 * @example <caption>Make some action on enqueue assets for WordPress Gutenberg editor.</caption>
+		 * function my_load_gutenberg_js() {
+		 *     // your code here
+		 * }
+		 * add_action( 'um_load_gutenberg_js', 'my_load_gutenberg_js' );
+		 */
 		do_action( 'um_load_gutenberg_js' );
 	}
 
 	/**
-	 * @since 2.7.1
+	 * @since 2.8.0
 	 */
 	public function navmenu_scripts() {
 		add_action( 'admin_enqueue_scripts', array( &$this, 'enqueue_navmenu_scripts' ) );
 	}
 
 	/**
-	 * @since 2.7.1
+	 * @since 2.8.0
 	 */
 	public function enqueue_navmenu_scripts() {
 		$suffix  = self::get_suffix();
@@ -277,18 +305,18 @@ final class Enqueue extends \um\common\Enqueue {
 	}
 
 	/**
-	 * @since 2.7.1
+	 * @since 2.8.0
 	 */
 	public function posts_page() {
-		if ( isset( $_GET['post_type'] ) && 'um_form' === sanitize_key( $_GET['post_type'] ) ) {
+		if ( isset( $_GET['post_type'] ) && 'um_form' === sanitize_key( $_GET['post_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			add_action( 'admin_enqueue_scripts', array( &$this, 'forms_page_scripts' ) );
-		} elseif ( isset( $_GET['post_type'] ) && 'um_directory' === sanitize_key( $_GET['post_type'] ) ) {
+		} elseif ( isset( $_GET['post_type'] ) && 'um_directory' === sanitize_key( $_GET['post_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			add_action( 'admin_enqueue_scripts', array( &$this, 'directories_page_scripts' ) );
 		}
 	}
 
 	/**
-	 * @since 2.7.1
+	 * @since 2.8.0
 	 */
 	public function forms_page_scripts() {
 		$suffix  = self::get_suffix();
@@ -298,7 +326,7 @@ final class Enqueue extends \um\common\Enqueue {
 	}
 
 	/**
-	 * @since 2.7.1
+	 * @since 2.8.0
 	 */
 	public function directories_page_scripts() {
 		$suffix  = self::get_suffix();
@@ -309,6 +337,8 @@ final class Enqueue extends \um\common\Enqueue {
 
 	/**
 	 * Load Forms
+	 *
+	 * @since 2.0.0
 	 */
 	public function load_forms() {
 		$suffix  = self::get_suffix();
@@ -327,6 +357,24 @@ final class Enqueue extends \um\common\Enqueue {
 				admin_url( 'admin.php' )
 			),
 		);
+
+		/**
+		 * Filters data array for localize wp-admin forms scripts.
+		 *
+		 * @since 2.8.0
+		 * @hook um_admin_forms_data_localize
+		 *
+		 * @param {array} $forms_data Data to localize.
+		 *
+		 * @return {array} Data to localize.
+		 *
+		 * @example <caption>Add `my_custom_variable` to wp-admin forms scripts to be callable via `um_forms_data.my_custom_variable` in JS.</caption>
+		 * function um_custom_admin_forms_data_localize( $variables ) {
+		 *     $variables['{my_custom_variable}'] = '{my_custom_variable_value}';
+		 *     return $variables;
+		 * }
+		 * add_filter( 'um_admin_forms_data_localize', 'um_custom_admin_forms_data_localize' );
+		 */
 		$forms_data = apply_filters( 'um_admin_forms_data_localize', $forms_data );
 
 		wp_localize_script( 'um_admin_forms', 'um_forms_data', $forms_data );
@@ -343,6 +391,8 @@ final class Enqueue extends \um\common\Enqueue {
 
 	/**
 	 * Load modal
+	 *
+	 * @since 2.0.0
 	 */
 	public function load_modal() {
 		$suffix  = self::get_suffix();
@@ -359,6 +409,8 @@ final class Enqueue extends \um\common\Enqueue {
 
 	/**
 	 * Load Builder
+	 *
+	 * @since 2.0.0
 	 */
 	public function load_builder() {
 		$this->enqueue_frontend_preview_assets();
@@ -382,6 +434,8 @@ final class Enqueue extends \um\common\Enqueue {
 
 	/**
 	 * Assets for FRONTEND PREVIEW.
+	 *
+	 * @since 2.0.37
 	 */
 	private function enqueue_frontend_preview_assets() {
 		$suffix  = self::get_suffix();
@@ -396,10 +450,26 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_register_style( 'um_default_css', $css_url . 'um-old-default' . $suffix . '.css', array( 'um_fileupload', 'um_responsive', 'um_modal', 'um_styles', 'um_profile', 'um_misc' ), UM_VERSION );
 
 		wp_enqueue_style( 'um_default_css' );
+
+		/**
+		 * Fires for enqueue assets on the UM form builder live preview.
+		 *
+		 * @since 2.8.0
+		 * @hook um_enqueue_frontend_preview_assets
+		 *
+		 * @example <caption>Make some action on enqueue assets on the UM form builder live preview.</caption>
+		 * function my_enqueue_frontend_preview_assets() {
+		 *     // your code here
+		 * }
+		 * add_action( 'um_enqueue_frontend_preview_assets', 'my_enqueue_frontend_preview_assets' );
+		 */
+		do_action( 'um_enqueue_frontend_preview_assets' );
 	}
 
 	/**
-	 * Load global css
+	 * Load global assets.
+	 *
+	 * @since 2.0.18
 	 */
 	public function load_global_scripts() {
 		$suffix  = self::get_suffix();
@@ -413,7 +483,7 @@ final class Enqueue extends \um\common\Enqueue {
 		/**
 		 * Filters data array for localize wp-admin global scripts.
 		 *
-		 * @since 2.0
+		 * @since 2.0.0
 		 * @hook um_admin_enqueue_localize_data
 		 *
 		 * @param {array} $variables Data to localize.
@@ -438,6 +508,8 @@ final class Enqueue extends \um\common\Enqueue {
 	/**
 	 * Add Gutenberg category for UM shortcodes.
 	 *
+	 * @since 2.0.41
+	 *
 	 * @param array $categories
 	 *
 	 * @return array
@@ -461,6 +533,8 @@ final class Enqueue extends \um\common\Enqueue {
 
 	/**
 	 * Enqueue scripts and styles.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param string $hook wp-admin screen.
 	 */
@@ -523,7 +597,7 @@ final class Enqueue extends \um\common\Enqueue {
 	}
 
 	/**
-	 *
+	 * @since 2.0.43
 	 */
 	public function enqueue_cpt_scripts() {
 		if ( ( isset( $_GET['post_type'] ) && 'um_form' === sanitize_key( $_GET['post_type'] ) ) || ( isset( $_GET['post'] ) && 'um_form' === get_post_type( absint( $_GET['post'] ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
@@ -535,12 +609,11 @@ final class Enqueue extends \um\common\Enqueue {
 	}
 
 	/**
-	 * Print editor scripts if they are not printed by default
+	 * Print editor scripts if they are not printed by default.
+	 *
+	 * @since 2.1.4
 	 */
 	public function admin_footer_scripts() {
-		/**
-		 * @var $class \_WP_Editors
-		 */
 		$class = '\_WP_Editors';
 
 		if ( did_action( 'print_default_editor_scripts' ) ) {
@@ -563,7 +636,7 @@ final class Enqueue extends \um\common\Enqueue {
 	}
 
 	/**
-	 * @since 2.7.1
+	 * @since 2.8.0
 	 * @param array $form_data
 	 *
 	 * @return array

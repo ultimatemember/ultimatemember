@@ -8,16 +8,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Screen
  *
- * @since 2.7.1
+ * @since 2.8.0
  *
  * @package um\admin
  */
 class Screen {
 
 	/**
-	 * Boolean check if we're viewing UM backend
+	 * Boolean check if we're viewing UM backend.
 	 *
-	 * @since 2.7.1
+	 * @since 2.8.0
 	 *
 	 * @return bool
 	 */
@@ -44,13 +44,30 @@ class Screen {
 			$is_um_screen = true;
 		}
 
+		/**
+		 * Filters marker about displaying Ultimate Member screen in wp-admin or another one.
+		 *
+		 * @since 2.8.0
+		 * @hook um_is_ultimatememeber_admin_screen
+		 *
+		 * @param {array} $variables Data to localize.
+		 *
+		 * @return {array} Data to localize.
+		 *
+		 * @example <caption>Add `my_custom_variable` to common scripts to be callable via `um_common_variables.my_custom_variable` in JS.</caption>
+		 * function um_custom_common_js_variables( $variables ) {
+		 *     $variables['{my_custom_variable}'] = '{my_custom_variable_value}';
+		 *     return $variables;
+		 * }
+		 * add_filter( 'um_common_js_variables', 'um_custom_common_js_variables' );
+		 */
 		return apply_filters( 'um_is_ultimatememeber_admin_screen', $is_um_screen );
 	}
 
 	/**
 	 * Check if current page load UM post type.
 	 *
-	 * @since 2.7.1
+	 * @since 2.8.0
 	 *
 	 * @return bool
 	 */
@@ -75,7 +92,7 @@ class Screen {
 	/**
 	 * If page now show content with restricted post/taxonomy.
 	 *
-	 * @since 2.7.1
+	 * @since 2.8.0
 	 *
 	 * @return bool
 	 */

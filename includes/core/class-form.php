@@ -66,7 +66,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 		/**
 		 * Hook for singleton
-		 * @since 2.7.1
+		 * @since 2.8.0
 		 */
 		public function hooks() {
 			add_action( 'template_redirect', array( &$this, 'form_init' ), 2 );
