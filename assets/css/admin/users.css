@@ -1,0 +1,29 @@
+.um-admin.users-php .subsubsub li.subsep {
+  display: block;
+  visibility: hidden;
+  height: 0; }
+
+.um-admin-modal .um-admin-infobox label {
+  font-weight: bold;
+  display: block;
+  color: #333;
+  cursor: default; }
+
+.um-admin-modal .um-admin-infobox p {
+  color: #666;
+  padding-top: 15px; }
+
+.um-admin-modal .um-admin-infobox > p:not(:first-child) {
+  border-top: 1px solid #e5e5e5; }
+
+.um-admin-modal .um-admin-infobox > p:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+
+.um-admin-modal .um-admin-infobox > .um-row > p {
+  border-top: 1px solid #e5e5e5; }
+  .um-admin-modal .um-admin-infobox > .um-row > p:last-child {
+    margin-bottom: 0; }
+
+#UM_preview_registration .um-admin-modal-foot {
+  display: none; }

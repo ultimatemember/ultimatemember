@@ -335,32 +335,13 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 
 		/**
-		 * @return mixed|void
+		 * @deprecated 2.8.0
+		 *
+		 * @return array
 		 */
-		function cpt_list() {
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_cpt_list
-			 * @description Extend UM Custom Post Types
-			 * @input_vars
-			 * [{"var":"$list","type":"array","desc":"Custom Post Types list"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_cpt_list', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_cpt_list', 'my_cpt_list', 10, 1 );
-			 * function my_admin_pending_queue( $list ) {
-			 *     // your code here
-			 *     return $list;
-			 * }
-			 * ?>
-			 */
-			$cpt = apply_filters( 'um_cpt_list', array( 'um_form', 'um_directory' ) );
-			return $cpt;
+		public function cpt_list() {
+			_deprecated_function( __METHOD__, '2.8.0', 'UM()->common()->cpt()->get_list()' );
+			return UM()->common()->cpt()->get_list();
 		}
 
 

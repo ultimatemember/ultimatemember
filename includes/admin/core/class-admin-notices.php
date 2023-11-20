@@ -55,7 +55,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			$this->child_theme_required();
 
-			// removed for now to avoid the bad reviews
+			// Removed for now to avoid the bad reviews.
 			//$this->reviews_notice();
 
 			//$this->future_changed();
@@ -83,7 +83,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		}
 
 		public function create_list_for_screen() {
-			if ( UM()->admin()->is_um_screen() ) {
+			if ( UM()->admin()->screen()->is_own_screen() ) {
 				$this->secure_settings();
 			}
 		}
@@ -403,7 +403,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 						<p>
 							<a href="<?php echo esc_url( $url ); ?>" class="button button-primary"><?php esc_html_e( 'Create Pages', 'ultimate-member' ); ?></a>
 							&nbsp;
-							<a href="javascript:void(0);" class="button-secondary um_secondary_dimiss"><?php esc_html_e( 'No thanks', 'ultimate-member' ); ?></a>
+							<a href="javascript:void(0);" class="button-secondary um_secondary_dismiss"><?php esc_html_e( 'No thanks', 'ultimate-member' ); ?></a>
 						</p>
 
 						<?php
@@ -682,23 +682,23 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			}
 		}
 
-
 		/**
-		 *
+		 * @note Removed for now to avoid the bad reviews.
+		 * @deprecated 2.8.0
 		 */
-		function reviews_notice() {
-
+		private function reviews_notice() {
 			$first_activation_date = get_option( 'um_first_activation_date', false );
 
 			if ( empty( $first_activation_date ) ) {
 				return;
 			}
 
-			if ( $first_activation_date + 2*WEEK_IN_SECONDS > time() ) {
+			if ( $first_activation_date + 2 * WEEK_IN_SECONDS > time() ) {
 				return;
 			}
 
-			ob_start(); ?>
+			ob_start();
+			?>
 
 			<div id="um_start_review_notice">
 				<p>
@@ -713,7 +713,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					<a href="javascript:void(0);" id="um_add_review_bad"><?php _e('I don\'t like the plugin', 'ultimate-member' ) ?></a>
 				</p>
 			</div>
-			<div class="um_hidden_notice" data-key="love">
+			<div class="um-hidden-notice" data-key="love">
 				<p>
 					<?php printf( __( 'Great! We\'re happy to hear that you love the plugin. It would be amazing if you could let others know why you like %s by leaving a review of the plugin. This will help %s to grow and become more popular and would be massively appreciated by us!' ), UM_PLUGIN_NAME, UM_PLUGIN_NAME ); ?>
 				</p>
@@ -722,7 +722,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					<a href="https://wordpress.org/support/plugin/ultimate-member/reviews/?rate=5#new-post" target="_blank" class="button button-primary um_review_link"><?php _e( 'Leave Review', 'ultimate-member' ) ?></a>
 				</p>
 			</div>
-			<div class="um_hidden_notice" data-key="good">
+			<div class="um-hidden-notice" data-key="good">
 				<p>
 					<?php _e( 'We\'re glad to hear that you like the plugin but we would love to get your feedback so we can make the plugin better.' ); ?>
 				</p>
@@ -731,7 +731,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					<a href="https://ultimatemember.com/feedback/" target="_blank" class="button button-primary um_review_link"><?php _e( 'Provide Feedback', 'ultimate-member' ) ?></a>
 				</p>
 			</div>
-			<div class="um_hidden_notice" data-key="bad">
+			<div class="um-hidden-notice" data-key="bad">
 				<p>
 					<?php printf( __( 'We\'re sorry to hear that. If you\'re having the issue with the plugin you can create a topic on our <a href="%s" target="_blank">support forum</a> and we will try and help you out with the issue. Alternatively if you have an idea on how we can make the plugin better or want to tell us what you don\'t like about the plugin you can tell us know by giving us feedback.' ), 'https://wordpress.org/support/plugin/ultimate-member' ); ?>
 				</p>

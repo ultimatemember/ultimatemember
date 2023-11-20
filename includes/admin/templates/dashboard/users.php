@@ -90,4 +90,4 @@
 	</table>
 
 </div>
-<div class="um-admin-clear"></div>
+<div class="clear"></div>

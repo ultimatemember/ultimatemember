@@ -102,5 +102,5 @@ $register_secondary_btn = ! isset( $post_id ) ? UM()->options()->get( 'register_
 		)
 	)->render_form();
 	?>
-	<div class="um-admin-clear"></div>
+	<div class="clear"></div>
 </div>

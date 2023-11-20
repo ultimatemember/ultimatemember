@@ -33,5 +33,5 @@ $_um_search_fields = empty( $_um_search_fields ) ? array() : $_um_search_fields;
 		)
 	)->render_form();
 	?>
-	<div class="um-admin-clear"></div>
+	<div class="clear"></div>
 </div>

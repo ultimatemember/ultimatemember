@@ -656,7 +656,7 @@ class Site_Health {
 			/**
 			 * Filters a privacy list extend.
 			 *
-			 * @since 2.6.13
+			 * @since 2.7.0
 			 * @hook um_profile_tabs_privacy_list
 			 *
 			 * @param {array} $privacy_option Add options for profile tabs' privacy.
@@ -699,7 +699,7 @@ class Site_Health {
 			/**
 			 * Filters appearance settings for Site Health extend.
 			 *
-			 * @since 2.6.13
+			 * @since 2.7.0
 			 * @hook um_profile_tabs_site_health
 			 *
 			 * @param {array} $appearance_settings Appearance settings for Site Health.
@@ -716,9 +716,9 @@ class Site_Health {
 			$appearance_settings = apply_filters( 'um_profile_tabs_site_health', $appearance_settings );
 
 			/**
-			 * Filters extend user profile tabs
+			 * Filters user profile tabs
 			 *
-			 * @since 2.6.13
+			 * @since 2.7.0
 			 * @hook um_profile_tabs
 			 *
 			 * @param {array} $tabs tabs list.
@@ -963,7 +963,7 @@ class Site_Health {
 		/**
 		 * Filters licenses settings for Site Health.
 		 *
-		 * @since 2.6.13
+		 * @since 2.7.0
 		 * @hook um_licenses_site_health
 		 *
 		 * @param {array} $license_settings licenses settings for Site Health.

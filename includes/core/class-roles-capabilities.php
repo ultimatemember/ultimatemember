@@ -749,54 +749,52 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			return $return;
 		}
 
-
 		/**
-		 * User can ( role settings )
+		 * User can (role settings)
 		 *
 		 * @param $permission
 		 * @return bool|mixed
 		 */
-		function um_user_can( $permission ) {
-			if ( ! is_user_logged_in() )
+		public function um_user_can( $permission ) {
+			if ( ! is_user_logged_in() ) {
 				return false;
+			}
 
 			$user_id = get_current_user_id();
-			$role = UM()->roles()->get_priority_user_role( $user_id );
+			$role    = UM()->roles()->get_priority_user_role( $user_id );
 
 			$permissions = $this->role_data( $role );
-
 			/**
-			 * UM hook
+			 * Filters User Permissions.
 			 *
-			 * @type filter
-			 * @title um_user_permissions_filter
-			 * @description Change User Permissions
-			 * @input_vars
-			 * [{"var":"$permissions","type":"array","desc":"User Permissions"},
-			 * {"var":"$user_id","type":"int","desc":"User ID"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_user_permissions_filter', 'function_name', 10, 2 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_user_permissions_filter', 'my_user_permissions', 10, 2 );
+			 * @param {array} $permissions User Permissions.
+			 * @param {int}   $user_id     User ID.
+			 *
+			 * @return {array} User Permissions.
+			 *
+			 * @since 2.0
+			 * @hook um_user_permissions_filter
+			 *
+			 * @example <caption>Add custom user permissions.</caption>
 			 * function my_user_permissions( $permissions, $user_id ) {
 			 *     // your code here
 			 *     return $permissions;
 			 * }
-			 * ?>
+			 * add_filter( 'um_user_permissions_filter', 'my_user_permissions', 10, 2 );
 			 */
 			$permissions = apply_filters( 'um_user_permissions_filter', $permissions, $user_id );
 
-			if ( isset( $permissions[ $permission ] ) && is_serialized( $permissions[ $permission ] ) )
-				return unserialize( $permissions[ $permission ] );
+			if ( isset( $permissions[ $permission ] ) && is_serialized( $permissions[ $permission ] ) ) {
+				return maybe_unserialize( $permissions[ $permission ] );
+			}
 
-			if ( isset( $permissions[ $permission ] ) && is_array( $permissions[ $permission ] ) )
+			if ( isset( $permissions[ $permission ] ) && is_array( $permissions[ $permission ] ) ) {
 				return $permissions[ $permission ];
+			}
 
-			if ( isset( $permissions[ $permission ] ) && $permissions[ $permission ] == 1 )
+			if ( isset( $permissions[ $permission ] ) && $permissions[ $permission ] == 1 ) {
 				return true;
+			}
 
 			return false;
 		}

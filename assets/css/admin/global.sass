@@ -1,0 +1,69 @@
+@import "selectors"
+@import "colors"
+
+ul#adminmenu
+  li#toplevel_page_ultimatemember
+    a.wp-has-current-submenu:after
+      display: none !important
+    &.wp-has-submenu.wp-not-current-submenu:hover:after
+      right: -9999999px
+  & > li#toplevel_page_ultimatemember.current > a.current:after
+    display: none !important
+
+.#{$prefix}admin-notice
+  border-color: #{$um-base}
+  color: #555
+  &.error
+    border-color: #dc3232
+  &.notice-warning
+    border-color: #dba617
+  a
+    text-decoration: none
+    color: #{$um-base}
+    &:hover
+      color: #44b0ec
+    &.button-primary
+      background-color: #{$um-base}
+      border-color: #{$um-base}
+      &:hover
+        background-color: #{$um-base-hover}
+        border-color: #{$um-base-hover}
+    &.button-secondary
+      opacity: 0.7
+      &:hover
+        opacity: 0.9
+
+/* UM Tooltip ( future helptip ) */
+.um .ui-tooltip
+  &.#{$helptip}
+    padding: 8px
+    color: $grey-text !important
+    background: $overlay !important
+    position: absolute
+    z-index: 10002
+    max-width: 300px
+    font-size: 12px
+    border-radius: 5px
+    border: none !important
+    text-shadow: none !important
+
+.#{$helptip}
+  cursor: pointer
+  vertical-align: middle
+  &:hover
+    opacity: 1
+    &:before
+      opacity: 0.8
+  &.dashicons
+    height: 22px
+    &:before
+      @extend .#{$helptip}.dashicons
+  &.dashicons-editor-help:before
+    float: left
+    font-size: 20px
+    line-height: 20px
+    color: $overlay !important
+
+// wp.org reviews admin notice: Removed for now to avoid the bad reviews
+//.#{$prefix}hidden-notice
+//  display: none

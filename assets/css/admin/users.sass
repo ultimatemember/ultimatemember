@@ -1,0 +1,34 @@
+@import "selectors"
+
+.#{$prefix}admin.users-php
+  .subsubsub
+    li.subsep
+      display: block
+      visibility: hidden
+      height: 0
+
+.um-admin-modal
+  .um-admin-infobox
+    label
+      font-weight: bold
+      display: block
+      color: #333
+      cursor: default
+    p
+      color: #666
+      padding-top: 15px
+    & > p
+      &:not(:first-child)
+        border-top: 1px solid #e5e5e5
+      &:first-child
+        margin-top: 0
+        padding-top: 0
+    & > .um-row
+      & > p
+        border-top: 1px solid #e5e5e5
+        &:last-child
+          margin-bottom: 0
+
+#UM_preview_registration
+  .um-admin-modal-foot
+    display: none

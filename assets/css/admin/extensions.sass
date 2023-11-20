@@ -1,0 +1,138 @@
+@import "selectors"
+@import "mixins"
+
+#um-extensions-wrap
+  #the-list
+    margin: 0
+    width: 100%
+    display: grid
+    grid-template-rows: auto 1fr
+    grid-template-columns: repeat(3, 1fr)
+    grid-gap: 10px
+    grid-auto-rows: minmax(max-content, auto)
+    -ms-grid-template-rows: auto 1fr
+    -ms-grid-template-columns: repeat(3, 1fr)
+    -ms-grid-gap: 10px
+    -ms-grid-auto-rows: minmax(max-content, auto)
+    align-items: center
+  .plugin-card
+    +flex( column, flex-start, stretch, nowrap )
+    width: 100%
+    margin: 0
+    padding: 20px
+  .plugin-image-wrapper
+    +flex( row, center, center, nowrap )
+    color: #fff
+    height: 70px
+    width: 70px
+    margin: 0 auto
+    border-radius: 60px
+    box-shadow: 0 2px 9px rgba(50,50,93,0.21)
+    border: solid 4px #fff
+    overflow: hidden
+    a
+      width: 100%
+      height: 100%
+      margin: 0
+      padding: 0
+      background-color: #7856ff
+
+  a.plugin-image
+    display: block
+    img
+      display: block
+    &.svg-image
+      +flex( row, center, center, nowrap )
+      img
+        filter: invert(1)
+        background-color: transparent
+        width: 38px
+        height: auto
+    &:not(.svg-image)
+      img
+        width: 70px
+        margin: 0
+        height: 70px
+        padding: 0
+
+  #um_bbpress_image
+    background-color: #fff !important
+    filter: none !important
+    width: 70px !important
+
+  #um_mycred_image
+    background-color: #fff
+
+  #um_groups_image,
+  #um_profile-tabs_image,
+  #um_user-tags_image,
+  #um_friends_image,
+  #um_user-reviews_image,
+  #um_verified-users_image,
+  #um_private-content_image,
+  #um_online-users_image
+    width: 36px !important
+
+  #um_notices_image,
+  #um_social-activity_image,
+  #um_profile-completeness_image,
+  #um_private-messages_image,
+  #um_user-photos_image,
+  #um_terms-conditions_image
+    width: 29px !important
+
+  #um_social-login_image
+    width: 28px !important
+
+  #um_real-time-notifications_image,
+  #um_user-notes_image
+    width: 26px !important
+
+  #um_followers_image,
+  #um_user-locations_image
+    width: 32px !important
+
+  #um_user-bookmarks_image
+    width: 23px !important
+
+  .plugin-card-top
+    margin: 0
+    padding: 20px 0 0 0
+    width: 100%
+    min-height: 100px
+    h3
+      text-align: center
+      margin: 0 0 20px 0
+      padding: 0
+    .desc
+      text-align: center
+      margin: 0 !important
+      padding: 0 !important
+
+  .plugin-action-links
+    +flex( row, space-between, baseline, nowrap )
+    width: 100%
+    padding: 20px 0 0 0
+
+
+@media (max-width: 1152px)
+  #um-extensions-wrap
+    .plugin-card-top
+      min-height: 120px
+
+@media (max-width: 992px)
+  #um-extensions-wrap
+    #the-list
+      grid-template-columns: repeat(2, 1fr)
+      -ms-grid-template-columns: repeat(2, 1fr)
+
+@media (max-width: 782px)
+  #um-extensions-wrap
+    #the-list
+      grid-template-columns: repeat(1, 1fr)
+      -ms-grid-template-columns: repeat(1, 1fr)
+
+@media screen and (max-width: 782px)
+  #um-extensions-wrap
+    .plugin-card-top
+      min-height: 80px

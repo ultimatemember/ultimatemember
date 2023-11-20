@@ -24,43 +24,35 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 */
 		public $role_meta;
 
-
 		/**
 		 * @var array
 		 */
 		public $restriction_term_meta;
-
 
 		/**
 		 * @var array
 		 */
 		public $member_directory_meta;
 
-
 		/**
 		 * @var array
 		 */
 		public $form_meta;
-
 
 		/**
 		 * @var array
 		 */
 		public $builder_input;
 
-
 		/**
 		 * @var array
 		 */
 		public $restriction_post_meta;
 
-
 		/**
 		 * Admin constructor.
 		 */
 		public function __construct() {
-			parent::__construct();
-
 			$this->templates_path = UM_PATH . 'includes/admin/templates/';
 
 			add_action( 'admin_init', array( &$this, 'admin_init' ), 0 );
@@ -78,8 +70,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			add_action( 'um_admin_do_action__install_core_pages', array( &$this, 'install_core_pages' ) );
 
-			add_filter( 'admin_body_class', array( &$this, 'admin_body_class' ), 999 );
-
 			add_action( 'parent_file', array( &$this, 'parent_file' ), 9 );
 			add_filter( 'gettext', array( &$this, 'gettext' ), 10, 4 );
 			add_filter( 'post_updated_messages', array( &$this, 'post_updated_messages' ) );
@@ -92,7 +82,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			$this->site_health();
 		}
 
-		function init_variables() {
+		public function init_variables() {
 			$this->role_meta = apply_filters(
 				'um_role_meta_map',
 				array(
@@ -841,7 +831,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			);
 		}
 
-
 		/**
 		 * @param array|string $value
 		 *
@@ -892,7 +881,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $value;
 		}
 
-
 		/**
 		 * @param array|string $value
 		 *
@@ -916,7 +904,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $value;
 		}
 
-
 		/**
 		 * @param array|string $value
 		 *
@@ -939,7 +926,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			return $value;
 		}
-
 
 		/**
 		 * @param array|string $value
@@ -970,7 +956,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $value;
 		}
 
-
 		/**
 		 * @param array|string $value
 		 *
@@ -987,7 +972,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $value;
 		}
 
-
 		/**
 		 * @param array|string $value
 		 *
@@ -1003,7 +987,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			return $value;
 		}
-
 
 		/**
 		 * @param array|string $value
@@ -1028,7 +1011,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $value;
 		}
 
-
 		/**
 		 * @param array|string $value
 		 *
@@ -1052,7 +1034,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $value;
 		}
 
-
 		/**
 		 * @param array|string $value
 		 *
@@ -1067,7 +1048,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			return $value;
 		}
-
 
 		/**
 		 * @param $value
@@ -1158,7 +1138,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $data;
 		}
 
-
 		/**
 		 * Sanitize post restriction meta fields when wp-admin form has been submitted
 		 *
@@ -1214,7 +1193,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $data;
 		}
 
-
 		/**
 		 * Sanitize term restriction meta fields when wp-admin form has been submitted
 		 *
@@ -1269,7 +1247,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			return $data;
 		}
-
 
 		/**
 		 * Sanitize member directory meta when wp-admin form has been submitted
@@ -1345,7 +1322,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			return $data;
 		}
-
 
 		/**
 		 * Sanitize builder field meta when wp-admin form has been submitted
@@ -1435,7 +1411,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $data;
 		}
 
-
 		/**
 		 * Sanitize form meta when wp-admin form has been submitted
 		 *
@@ -1510,7 +1485,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			return $data;
 		}
-
 
 		/**
 		 * Sanitize options when wp-admin form has been submitted
@@ -1588,21 +1562,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			$data = apply_filters( 'um_save_settings_sanitize', $data );
 
 			return $data;
-		}
-
-
-		/**
-		 * Adds class to our admin pages
-		 *
-		 * @param $classes
-		 *
-		 * @return string
-		 */
-		public function admin_body_class( $classes ) {
-			if ( $this->is_um_screen() ) {
-				return "$classes um-admin";
-			}
-			return $classes;
 		}
 
 		/**
@@ -2012,9 +1971,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 *
 		 * @return string
 		 */
-		function gettext( $translation, $text, $domain ) {
+		public function gettext( $translation, $text, $domain ) {
 			global $post;
-			if ( isset( $post->post_type ) && $this->is_plugin_post_type() ) {
+			if ( isset( $post->post_type ) && $this->screen()->is_own_post_type() ) {
 				$translations = get_translations_for_domain( $domain );
 				if ( $text == 'Publish' ) {
 					return $translations->translate( 'Create' );
@@ -2026,7 +1985,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			return $translation;
 		}
 
-
 		/**
 		 * Fix parent file for correct highlighting
 		 *
@@ -2034,7 +1992,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 *
 		 * @return string
 		 */
-		function parent_file( $parent_file ) {
+		public function parent_file( $parent_file ) {
 			global $current_screen;
 			$screen_id = $current_screen->id;
 			if ( strstr( $screen_id, 'um_' ) ) {
@@ -2065,6 +2023,18 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 				UM()->classes['admin_notices'] = new core\Admin_Notices();
 			}
 			return UM()->classes['admin_notices'];
+		}
+
+		/**
+		 * @since 2.8.0
+		 *
+		 * @return Screen
+		 */
+		public function screen() {
+			if ( empty( UM()->classes['um\admin\screen'] ) ) {
+				UM()->classes['um\admin\screen'] = new Screen();
+			}
+			return UM()->classes['um\admin\screen'];
 		}
 
 		/**

@@ -1,0 +1,18 @@
+@import "selectors"
+
+.#{$prefix}admin.post-type-um_directory
+  .wp-list-table.posts
+    .manage-column
+      &.column-id
+        width: 60px
+      &.column-shortcode
+        width: 35%
+    .column-is_default
+      width: 120px
+      text-align: center !important
+
+@media screen and (max-width: 782px)
+  .#{$prefix}admin.post-type-um_directory
+    .wp-list-table.posts
+      td.column-is_default
+        text-align: left !important

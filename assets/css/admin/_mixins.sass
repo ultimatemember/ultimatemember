@@ -1,0 +1,44 @@
+=flex ($direction, $justify, $align, $wrap)
+  display: flex
+  flex-direction: $direction
+  justify-content: $justify
+  align-items: $align
+  flex-wrap: $wrap
+
+=border-box
+  box-sizing: border-box
+  -moz-box-sizing: border-box
+  -webkit-box-sizing: border-box
+
+// Figma xs shadow
+=box-shadow-xs
+  box-shadow: 0 1px 2px rgba( 16, 24, 40, 0.05 )
+// Figma lg shadow
+=box-shadow-lg
+  box-shadow: 0 12px 16px -4px rgba(16, 24, 40, 0.08), 0 4px 6px -2px rgba(16, 24, 40, 0.03)
+// Figma md shadow
+=box-shadow-md
+  box-shadow: 0 4px 8px -2px rgba(16, 24, 40, 0.1), 0 2px 4px -2px rgba(16, 24, 40, 0.06)
+
+=transition ($time, $action)
+  -webkit-transition: $time $action
+  -moz-transition: $time $action
+  -ms-transition: $time $action
+  -o-transition: $time $action
+  transition: $time $action
+
+
+=keyframes ($name)
+  @-webkit-keyframes #{$name}
+    @content
+  @-moz-keyframes #{$name}
+    @content
+  @-ms-keyframes #{$name}
+    @content
+  @keyframes #{$name}
+    @content
+
+=border-radius ($tl, $tr, $br, $bl)
+  border-radius: $tl $tr $br $bl
+  -moz-border-radius: $tl $tr $br $bl
+  -webkit-border-radius: $tl $tr $br $bl

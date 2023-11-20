@@ -1,0 +1,212 @@
+@import "selectors"
+@import "mixins"
+@import "colors"
+
+##{$prefix}settings-wrap
+  .subsubsub
+    +flex( row, flex-start, center, wrap )
+    margin-left: -3px
+    margin-right: -3px
+    a
+      margin: 0 3px
+
+.#{$prefix}settings-section
+  .description
+    font-style: italic
+
+.#{$prefix}notification-status
+  margin-right: 18px
+  font-size: 28px
+  line-height: 22px
+  color: #{$admin-warning}
+  float: left
+  +border-box
+  &.#{$prefix}notification-is-active
+    color: #{$admin-ok}
+
+.#{$prefix}email-configure
+  span
+    line-height: 24px
+
+.#{$prefix}long-field
+  width: 100%
+
+.#{$prefix}medium-field
+  width: 50%
+
+.#{$prefix}small-field
+  width: 25%
+
+.column-configure
+  width: 60px
+  text-align: center
+
+th.column-email.column-primary
+  padding-left: 48px
+
+
+.#{$prefix}form-table
+  .#{$prefix}forms-line
+    td
+      padding-right: 0
+
+##{$prefix}settings-template-versions
+  .wp-list-table
+    .column-core_version
+      width: 100px
+      text-align: center
+    .column-theme_version
+      width: 100px
+      text-align: center
+    .column-status
+      width: 260px
+
+##{$prefix}settings-form
+  float: left
+  width: 100%
+  margin: 0
+  .subsubsub
+    float: left
+    width: 100%
+
+
+.#{$prefix}settings-line
+  .multi-checkbox-line
+    float: left
+    width: 100%
+    clear: both
+    margin: 0 0 10px 0
+    padding: 0
+
+  .multi-checkbox-column
+    float: left
+    margin: 0
+    padding: 0
+
+    label
+      float: left
+      width: 100%
+
+
+.wrap-licenses
+  .form-table,
+  thead,
+  tbody,
+  tfoot,
+  tr,
+  td,
+  th,
+  caption
+    display: block
+  .form-table
+    tr
+      float: left
+      margin: 0 15px 15px 0
+      background: #fff
+      border: 1px solid #ccc
+      width: 30.5%
+      max-width: 350px
+      padding: 14px
+      min-height: 240px
+      position: relative
+      box-sizing: border-box
+    th
+      background: #f9f9f9
+      padding: 14px
+      border-bottom: 1px solid #ccc
+      margin: -14px -14px 20px
+      width: 100%
+
+    td
+      padding: 0
+
+  td
+    input
+      &.regular-text
+        margin: 0 0 8px
+        width: 100%
+  .edd-license-data
+    &[class*="edd-license-"]
+      position: absolute
+      background: #fafafa
+      padding: 14px
+      border-top: 1px solid #eee
+      margin: 20px -14px -14px
+      min-height: 67px
+      width: 100%
+      bottom: 14px
+      box-sizing: border-box
+      a
+        color: #444
+        &:hover
+          text-decoration: none
+
+    &.license-expires-soon-notice
+      background-color: #00a0d2
+      color: #fff
+      border-color: #00a0d2
+      a
+        color: #fff
+        &:hover
+          text-decoration: none
+    &.edd-license-expired
+      background-color: #e24e4e
+      color: #fff
+      border-color: #e24e4e
+      a
+        color: #fff
+        &:hover
+          text-decoration: none
+
+    &.edd-license-valid
+      background-color: #5abc55
+      color: #fff
+      border-color: #5abc55
+
+    &.edd-license-error,
+    &.edd-license-missing,
+    &.edd-license-invalid,
+    &.edd-license-site_inactive,
+    &.edd-license-item_name_mismatch
+      background-color: #ffebcd
+      border-color: #ffebcd
+
+    p
+      font-size: 13px
+      margin-top: 0
+
+  & ~ p.submit
+    clear: both
+
+@media screen and (max-width: 980px)
+  .wrap-licenses .form-table tr
+    width: calc( 50% - 15px )
+    max-width: none
+
+@media screen and (max-width: 782px)
+  ##{$prefix}settings-template-versions
+    .wp-list-table
+      .column-core_version,
+      .column-theme_version
+        width: auto
+        text-align: left
+
+  .wrap-licenses
+    .form-table tr
+      width: 100%
+      margin-right: 0
+      max-width: none
+
+  .#{$prefix}settings-line
+    .multi-checkbox-column
+      width: 100% !important
+      label
+        line-height: 30px !important
+  .#{$prefix}medium-field
+    width: 100%
+  .#{$prefix}small-field
+    width: 50%
+
+.um_setting_ajax_button_response.complete
+  color: #{$admin-ok}
+  font-style: italic

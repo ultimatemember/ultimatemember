@@ -78,7 +78,7 @@ jQuery(window).on( 'load', function($) {
 					jQuery(this).find('.um-account-tab[data-tab="'+current_tab+'"]').show();
 					jQuery(this).find('.um-account-tab:not(:visible)').find( 'input, select, textarea' ).not( ':disabled' ).addClass('um_account_inactive').prop( 'disabled', true ).attr( 'disabled', true );
 					um_responsive();
-					um_modal_responsive();
+					// um_modal_responsive();
 				}
 			});
 		});

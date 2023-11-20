@@ -1,0 +1,44 @@
+@import "selectors"
+@import "colors"
+
+##{$prefix}roles
+  .row-actions
+    .reset
+      a
+        color: #{$delete-link}
+        &:hover
+          color: red
+
+
+.wp-list-table.roles
+  .column-core,
+  .column-users
+    width: 15%
+    text-align: center !important
+  .column-admin_access,
+  .column-priority
+    width: 10%
+    text-align: center !important
+
+@media screen and (max-width: 782px)
+  .wp-list-table.roles
+    .column-core,
+    .column-users,
+    .column-admin_access,
+    .column-priority
+      text-align: left !important
+
+##{$prefix}admin-form-wp-capabilities
+  .#{$prefix}metadata-line
+    th
+      width: auto
+    td
+      width: 20px
+
+#um_edit_role
+  #titlewrap > span
+    width: 40px
+    font-size: 24px
+    float: left
+    display: block
+    line-height: 37px

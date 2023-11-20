@@ -234,7 +234,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 						}
 
 						if ( ! empty( $data['description'] ) )
-							$html .= '<div class="um-admin-clear"></div><p class="description">' . $data['description'] . '</p>';
+							$html .= '<div class="clear"></div><p class="description">' . $data['description'] . '</p>';
 
 						$html .= '</td></tr>';
 
@@ -256,7 +256,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 							}
 
 							if ( ! empty( $data['description'] ) )
-								$html .= '<div class="um-admin-clear"></div><p class="description">' . $data['description'] . '</p>';
+								$html .= '<div class="clear"></div><p class="description">' . $data['description'] . '</p>';
 
 							$html .= '</td></tr>';
 
@@ -277,7 +277,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 							}
 
 							if ( ! empty( $data['description'] ) )
-								$html .= '<div class="um-admin-clear"></div><p class="description">' . $data['description'] . '</p>';
+								$html .= '<div class="clear"></div><p class="description">' . $data['description'] . '</p>';
 
 							$html .= '</td></tr>';
 
@@ -534,29 +534,31 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 *
 		 * @return bool|string
 		 */
-		function render_icon( $field_data ) {
-
+		public function render_icon( $field_data ) {
 			if ( empty( $field_data['id'] ) ) {
 				return false;
 			}
 
-			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
+			// Required modal scripts for proper functioning
+			UM()->admin()->enqueue()->load_modal();
+
+			$id      = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
 			$id_attr = ' id="' . esc_attr( $id ) . '" ';
 
-			$name = $field_data['id'];
-			$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
-			$name_attr = ' name="' . $name . '" ';
+			$name      = $field_data['id'];
+			$name      = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
+			$name_attr = ' name="' . esc_attr( $name ) . '" ';
 
-			$value = $this->get_field_value( $field_data );
-			$value_attr = ' value="' . $value . '" ';
+			$value      = $this->get_field_value( $field_data );
+			$value_attr = ' value="' . esc_attr( $value ) . '" ';
 
-			$html = '<span class="um_admin_fonticon_wrapper"><a href="javascript:void(0);" class="button" data-modal="UM_fonticons" data-modal-size="normal" data-dynamic-content="um_admin_fonticon_selector" data-arg1="" data-arg2="" data-back="">' . __( 'Choose Icon', 'ultimate-member' ) . '</a>
+			$html = '<span class="um_admin_fonticon_wrapper"><a href="javascript:void(0);" class="button" data-modal="UM_fonticons" data-modal-size="normal" data-dynamic-content="um_admin_fonticon_selector" data-arg1="" data-arg2="" data-back="" data-icon_field="' . esc_attr( $id ) . '">' . esc_html__( 'Choose Icon', 'ultimate-member' ) . '</a>
 				<span class="um-admin-icon-value">';
 
 			if ( ! empty( $value ) ) {
-				$html .= '<i class="' . $value . '"></i>';
+				$html .= '<i class="' . esc_attr( $value ) . '"></i>';
 			} else {
-				$html .= __( 'No Icon', 'ultimate-member' );
+				$html .= esc_html__( 'No Icon', 'ultimate-member' );
 			}
 
 			$html .= '</span><input type="hidden" ' . $name_attr . ' ' . $id_attr . ' ' . $value_attr . ' />';
@@ -569,11 +571,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$html .= '</span></span>';
 
+			// Required include the fonticons modal *.php file.
 			UM()->metabox()->init_icon = true;
 
 			return $html;
 		}
-
 
 		/**
 		 * @param $field_data
