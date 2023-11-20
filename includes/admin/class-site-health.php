@@ -686,8 +686,9 @@ class Site_Health {
 					'value' => $tab_enabled ? $labels['yes'] : $labels['no'],
 				);
 
-				if ( ! isset( $tab['default_privacy'] ) ) {
-					if ( ! empty( $tab_enabled ) ) {
+				if ( ! isset( $tab['default_privacy'] ) && ! empty( $tab_enabled ) ) {
+					$privacy = UM()->options()->get( 'profile_tab_' . $id . '_privacy' );
+					if ( is_numeric( $privacy ) ) {
 						$appearance_settings[ 'um-profile_tab_' . $id . '_privacy' ] = array(
 							// translators: %s Profile Tab Title
 							'label' => sprintf( __( 'Who can see %s Tab?', 'ultimate-member' ), $tab['name'] ),
