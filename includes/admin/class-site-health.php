@@ -906,8 +906,8 @@ class Site_Health {
 		$secure_ban_admins_accounts = UM()->options()->get( 'secure_ban_admins_accounts' );
 
 		$banned_capabilities_opt = UM()->options()->get( 'banned_capabilities' );
-		$banned_capabilities = array();
-		if ( ! empty( $banned_capabilities_opt )  ) {
+		$banned_capabilities     = array();
+		if ( ! empty( $banned_capabilities_opt ) ) {
 			if ( is_string( $banned_capabilities_opt ) ) {
 				$banned_capabilities = array( $banned_capabilities_opt );
 			} else {
@@ -1692,19 +1692,19 @@ class Site_Health {
 					$info[ 'ultimate-member-' . $key ]['fields'] = array_merge(
 						$info[ 'ultimate-member-' . $key ]['fields'],
 						array(
-							'um-profile_role'                 => array(
+							'um-profile_role'             => array(
 								'label' => __( 'Make this profile form role-specific', 'ultimate-member' ),
 								'value' => ! empty( get_post_meta( $key, '_um_profile_role', true ) ) ? get_post_meta( $key, '_um_profile_role', true ) : $labels['all'],
 							),
-							'um-profile_template'             => array(
+							'um-profile_template'         => array(
 								'label' => __( 'Template', 'ultimate-member' ),
 								'value' => 0 === absint( get_post_meta( $key, '_um_profile_template', true ) ) ? $labels['default'] : get_post_meta( $key, '_um_profile_template', true ),
 							),
-							'um-profile_primary_btn_word'     => array(
+							'um-profile_primary_btn_word' => array(
 								'label' => __( 'Primary Button Text', 'ultimate-member' ),
 								'value' => ! get_post_meta( $key, '_um_profile_primary_btn_word', true ) ? $labels['default'] : get_post_meta( $key, '_um_profile_primary_btn_word', true ),
 							),
-							'um-profile_cover_enabled'        => array(
+							'um-profile_cover_enabled'    => array(
 								'label' => __( 'Enable Cover Photos', 'ultimate-member' ),
 								'value' => get_post_meta( $key, '_um_profile_cover_enabled', true ) ? $labels['yes'] : $labels['no'],
 							),
@@ -2188,15 +2188,15 @@ class Site_Health {
 				$info[ 'ultimate-member-directory-' . $key ]['fields'] = array_merge(
 					$info[ 'ultimate-member-directory-' . $key ]['fields'],
 					array(
-						'um-directory-must_search'              => array(
+						'um-directory-must_search'        => array(
 							'label' => __( 'Show results only after search/filtration', 'ultimate-member' ),
 							'value' => get_post_meta( $key, '_um_must_search', true ) ? $labels['yes'] : $labels['no'],
 						),
-						'um-directory-max_users'                => array(
+						'um-directory-max_users'          => array(
 							'label' => __( 'Maximum number of profiles', 'ultimate-member' ),
 							'value' => get_post_meta( $key, '_um_max_users', true ),
 						),
-						'um-directory-profiles_per_page'        => array(
+						'um-directory-profiles_per_page'  => array(
 							'label' => __( 'Number of profiles per page', 'ultimate-member' ),
 							'value' => get_post_meta( $key, '_um_profiles_per_page', true ),
 						),
@@ -2204,15 +2204,15 @@ class Site_Health {
 							'label' => __( 'Maximum number of profiles', 'ultimate-member' ),
 							'value' => get_post_meta( $key, '_um_profiles_per_page_mobile', true ),
 						),
-						'um-directory-directory_header'         => array(
+						'um-directory-directory_header'   => array(
 							'label' => __( 'Results Text', 'ultimate-member' ),
 							'value' => get_post_meta( $key, '_um_directory_header', true ),
 						),
-						'um-directory-directory_header_single'  => array(
+						'um-directory-directory_header_single' => array(
 							'label' => __( 'Single Result Text', 'ultimate-member' ),
 							'value' => get_post_meta( $key, '_um_directory_header_single', true ),
 						),
-						'um-directory-directory_no_users'       => array(
+						'um-directory-directory_no_users' => array(
 							'label' => __( 'Custom text if no users were found', 'ultimate-member' ),
 							'value' => get_post_meta( $key, '_um_directory_no_users', true ),
 						),
