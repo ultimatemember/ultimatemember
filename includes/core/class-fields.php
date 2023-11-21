@@ -849,8 +849,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			// normal state
 			if ( isset( UM()->form()->post_form[ $key ] ) ) {
-				//show empty value for password fields
-				if ( strstr( $key, 'user_pass' ) && $this->set_mode != 'password' ) {
+				// Show empty value for password fields.
+				if ( 'password' !== $this->set_mode && false !== strpos( $key, 'user_pass' ) ) {
 					return '';
 				}
 
@@ -862,10 +862,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				return stripslashes_deep( UM()->form()->post_form[ $key ] );
 
-			} elseif ( um_user( $key ) && true === $this->editing ) {
+			} elseif ( true === $this->editing && um_user( $key ) ) {
 
-				//show empty value for password fields
-				if ( strstr( $key, 'user_pass' ) || $type == 'password' ) {
+				// Show empty value for password fields.
+				if ( 'password' === $type || false !== strpos( $key, 'user_pass' ) ) {
 					return '';
 				}
 
@@ -915,7 +915,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				 */
 				$value = apply_filters( "um_edit_{$type}_field_value", $value, $key );
 
-			} elseif ( ( um_user( $key ) || isset( $data['show_anyway'] ) ) && true === $this->viewing ) {
+			} elseif ( true === $this->viewing && ( um_user( $key ) || isset( $data['show_anyway'] ) ) ) {
 
 				return um_filtered_value( $key, $data );
 
@@ -4432,7 +4432,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$id_attr = ' id="' . esc_attr( $key . UM()->form()->form_suffix ) . '"';
 						}
 
-						if ( empty( $res ) ) {
+						if ( empty( $res ) && ! ( 'number' === $type && '' !== $res ) ) {
 							$output = '';
 						} else {
 							$output .= '<div class="um-field-area">';

@@ -752,7 +752,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 											$form[ $k ] = apply_filters( 'um_sanitize_form_field', $form[ $k ], $field );
 											break;
 										case 'number':
-											$form[ $k ] = (int) $form[ $k ];
+											$form[ $k ] = '' !== $form[ $k ] ? (int) $form[ $k ] : '';
 											break;
 										case 'textarea':
 											if ( ! empty( $field['html'] ) || ( UM()->profile()->get_show_bio_key( $form ) === $k && UM()->options()->get( 'profile_show_html_bio' ) ) ) {
