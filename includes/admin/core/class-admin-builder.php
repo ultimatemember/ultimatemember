@@ -655,6 +655,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 						}
 					} elseif ( false !== strpos( $key, 'um_editor' ) ) {
 						if ( 'block' === $array['post']['_type'] ) {
+							// the nl2br() function does not work as expected, there is an extra empty line left
+							// use str_replace for correct work
 							$val                          = str_replace( "\r\n\r\n", '<br>', $val );
 							$save[ $field_id ]['content'] = wp_kses_post( $val );
 						} else {
