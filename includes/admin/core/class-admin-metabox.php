@@ -1355,6 +1355,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				$real_attr             = substr( $attribute, 1 );
 				$this->edit_mode_value = isset( $this->edit_array[ $real_attr ] ) ? $this->edit_array[ $real_attr ] : null;
 			}
+			$form_data = UM()->query()->post_data( $form_id );
 
 			switch ( $attribute ) {
 				default:
@@ -1488,6 +1489,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_validate':
+					if ( 'login' === $form_data['mode'] && in_array( $field_args['metakey'], array( 'username', 'user_login', 'user_email' ) ) ) {
+						return;
+					}
 					?>
 
 					<p><label for="_validate"><?php _e( 'Validate', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Does this field require a special validation', 'ultimate-member' ) ); ?></label>
