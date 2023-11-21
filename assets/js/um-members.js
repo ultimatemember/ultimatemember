@@ -694,6 +694,197 @@ function um_slider_filter_init( directory ) {
 	});
 }
 
+function um_datepicker_filter_init( directory ) {
+	directory.find('.um-datepicker-filter').each( function() {
+		var elem = jQuery(this);
+
+		var min = new Date( elem.data('date_min')*1000 );
+		var max = new Date( elem.data('date_max')*1000 );
+
+		var $input = elem.pickadate({
+			selectYears: true,
+			min: min,
+			max: max,
+			formatSubmit: 'yyyy/mm/dd',
+			hiddenName: true,
+			onOpen: function() {
+				elem.blur();
+			},
+			onClose: function() {
+				elem.blur();
+			},
+			onSet: function( context ) {
+
+				if ( ! context.select ) {
+					return;
+				}
+
+				var directory = elem.parents('.um-directory');
+
+				if ( um_is_directory_busy( directory ) ) {
+					return;
+				}
+
+				um_members_show_preloader( directory );
+
+				var filter_name = elem.data( 'filter_name' );
+				var range = elem.data( 'range' );
+
+				var current_value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
+				var current_value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
+				if ( typeof current_value_from === "undefined" ) {
+					current_value_from = min / 1000;
+				}
+				if ( typeof current_value_to === "undefined" ) {
+					current_value_to = max / 1000;
+				}
+
+				var select_val = context.select / 1000;
+				var change_val = elem.val();
+
+				if ( range === 'from' ) {
+					current_value_from = select_val;
+				} else if ( range === 'to' ) {
+					current_value_to = select_val;
+				}
+
+				um_set_url_from_data( directory, 'filter_' + filter_name + '_from', current_value_from );
+				um_set_url_from_data( directory, 'filter_' + filter_name + '_to', current_value_to );
+
+				//set 1st page after filtration
+				directory.data( 'page', 1 );
+				um_set_url_from_data( directory, 'page', '' );
+
+				um_ajax_get_members( directory );
+
+				um_change_tag( directory );
+
+				directory.data( 'searched', 1 );
+				directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
+				directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
+			}
+		});
+
+		var $picker = $input.pickadate('picker');
+		var $fname = elem.data('filter_name');
+		var $frange = elem.data('range');
+		var $directory = elem.parents('.um-directory');
+
+		var query_value = um_get_data_for_directory( $directory, 'filter_' + $fname + '_' + $frange );
+		if ( typeof query_value !== 'undefined' ) {
+			$picker.set( 'select', query_value*1000 );
+		}
+
+	});
+}
+
+function um_timepicker_filter_init( directory ) {
+	directory.find('.um-timepicker-filter').each( function() {
+		var elem = jQuery(this);
+		var elemID = elem.attr('id');
+		var elem_filter_name = elem.data('filter_name');
+
+		//using arrays formatted as [HOUR,MINUTE]
+		var min = elem.attr('data-min');
+		var max = elem.attr('data-max');
+
+		var picker_min = min.split(':');
+		var picker_max = max.split(':');
+
+		var $input = elem.pickatime({
+			format:         elem.data('format'),
+			interval:       parseInt( elem.data('intervals') ),
+			min: [picker_min[0],picker_min[1]],
+			max: [picker_max[0],picker_max[1]],
+			formatSubmit:   'HH:i',
+			hiddenName:     true,
+			onOpen:         function() { elem.blur(); },
+			onClose:        function() { elem.blur(); },
+			onSet:          function( context ) {
+
+				if ( ! context.select ) {
+					return;
+				}
+
+				var directory = elem.parents('.um-directory');
+
+				if ( um_is_directory_busy( directory ) ) {
+					return;
+				}
+
+				um_members_show_preloader( directory );
+
+				var filter_name = elem.data( 'filter_name' );
+				var range = elem.data( 'range' );
+
+				var current_value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
+				var current_value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
+				if ( typeof current_value_from === "undefined" ) {
+					current_value_from = min;
+				}
+				if ( typeof current_value_to === "undefined" ) {
+					current_value_to = max;
+				}
+
+				if ( typeof context.select !== 'undefined' ) {
+					var select_val = um_time_convert( context.select, range );
+
+					//var select_val = context.select / 60;
+
+					if ( range === 'from' ) {
+						current_value_from = select_val;
+					} else if ( range === 'to' ) {
+						current_value_to = select_val;
+					}
+				} else {
+					if ( range === 'from' ) {
+						current_value_from = min;
+					} else if ( range === 'to' ) {
+						current_value_to = max;
+					}
+				}
+
+				var time = jQuery( '#' + elemID ).val();
+
+				if ( elem.data('range') === 'from' ) {
+					jQuery( '#' + elem_filter_name + '_to' ).pickatime('picker').set('min', time);
+				} else {
+					jQuery( '#' + elem_filter_name + '_from').pickatime('picker').set('max', time);
+				}
+
+				um_set_url_from_data( directory, 'filter_' + filter_name + '_from', current_value_from );
+				um_set_url_from_data( directory, 'filter_' + filter_name + '_to', current_value_to );
+
+				//set 1st page after filtration
+				directory.data( 'page', 1 );
+				um_set_url_from_data( directory, 'page', '' );
+
+				um_ajax_get_members( directory );
+
+				um_change_tag( directory );
+
+				directory.data( 'searched', 1 );
+				directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
+				directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
+
+			}
+		});
+
+		// first loading timepicker select
+		var $picker = $input.pickatime('picker');
+		var $fname = elem.data('filter_name');
+		var $frange = elem.data('range');
+		var $directory = elem.parents('.um-directory');
+
+		var query_value = um_get_data_for_directory( $directory, 'filter_' + $fname + '_' + $frange );
+		if ( typeof query_value !== 'undefined' ) {
+			var arr = query_value.split(':');
+			$picker.set( 'select', arr[0]*60 + arr[1]*1 );
+		}
+
+	});
+}
+
 jQuery(document.body).ready( function() {
 
 
@@ -1438,196 +1629,11 @@ jQuery(document.body).ready( function() {
 		//slider filter
 		um_slider_filter_init( directory );
 
-
 		//datepicker filter
-		directory.find('.um-datepicker-filter').each( function() {
-			var elem = jQuery(this);
-
-			var min = new Date( elem.data('date_min')*1000 );
-			var max = new Date( elem.data('date_max')*1000 );
-
-			var $input = elem.pickadate({
-				selectYears: true,
-				min: min,
-				max: max,
-				formatSubmit: 'yyyy/mm/dd',
-				hiddenName: true,
-				onOpen: function() {
-					elem.blur();
-				},
-				onClose: function() {
-					elem.blur();
-				},
-				onSet: function( context ) {
-
-					if ( ! context.select ) {
-						return;
-					}
-
-					var directory = elem.parents('.um-directory');
-
-					if ( um_is_directory_busy( directory ) ) {
-						return;
-					}
-
-					um_members_show_preloader( directory );
-
-					var filter_name = elem.data( 'filter_name' );
-					var range = elem.data( 'range' );
-
-					var current_value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
-					var current_value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
-					if ( typeof current_value_from === "undefined" ) {
-						current_value_from = min / 1000;
-					}
-					if ( typeof current_value_to === "undefined" ) {
-						current_value_to = max / 1000;
-					}
-
-					var select_val = context.select / 1000;
-					var change_val = elem.val();
-
-					if ( range === 'from' ) {
-						current_value_from = select_val;
-					} else if ( range === 'to' ) {
-						current_value_to = select_val;
-					}
-
-					um_set_url_from_data( directory, 'filter_' + filter_name + '_from', current_value_from );
-					um_set_url_from_data( directory, 'filter_' + filter_name + '_to', current_value_to );
-
-					//set 1st page after filtration
-					directory.data( 'page', 1 );
-					um_set_url_from_data( directory, 'page', '' );
-
-					um_ajax_get_members( directory );
-
-					um_change_tag( directory );
-
-					directory.data( 'searched', 1 );
-					directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
-					directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
-				}
-			});
-
-			var $picker = $input.pickadate('picker');
-			var $fname = elem.data('filter_name');
-			var $frange = elem.data('range');
-			var $directory = elem.parents('.um-directory');
-
-			var query_value = um_get_data_for_directory( $directory, 'filter_' + $fname + '_' + $frange );
-			if ( typeof query_value !== 'undefined' ) {
-				$picker.set( 'select', query_value*1000 );
-			}
-
-		});
-
+		um_datepicker_filter_init( directory );
 
 		//timepicker filter
-		directory.find('.um-timepicker-filter').each( function() {
-			var elem = jQuery(this);
-			var elemID = elem.attr('id');
-			var elem_filter_name = elem.data('filter_name');
-
-			//using arrays formatted as [HOUR,MINUTE]
-			var min = elem.attr('data-min');
-			var max = elem.attr('data-max');
-
-			var picker_min = min.split(':');
-			var picker_max = max.split(':');
-
-			var $input = elem.pickatime({
-				format:         elem.data('format'),
-				interval:       parseInt( elem.data('intervals') ),
-				min: [picker_min[0],picker_min[1]],
-				max: [picker_max[0],picker_max[1]],
-				formatSubmit:   'HH:i',
-				hiddenName:     true,
-				onOpen:         function() { elem.blur(); },
-				onClose:        function() { elem.blur(); },
-				onSet:          function( context ) {
-
-					if ( ! context.select ) {
-						return;
-					}
-
-					var directory = elem.parents('.um-directory');
-
-					if ( um_is_directory_busy( directory ) ) {
-						return;
-					}
-
-					um_members_show_preloader( directory );
-
-					var filter_name = elem.data( 'filter_name' );
-					var range = elem.data( 'range' );
-
-					var current_value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
-					var current_value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
-					if ( typeof current_value_from === "undefined" ) {
-						current_value_from = min;
-					}
-					if ( typeof current_value_to === "undefined" ) {
-						current_value_to = max;
-					}
-
-					if ( typeof context.select !== 'undefined' ) {
-						var select_val = um_time_convert( context.select, range );
-
-						//var select_val = context.select / 60;
-
-						if ( range === 'from' ) {
-							current_value_from = select_val;
-						} else if ( range === 'to' ) {
-							current_value_to = select_val;
-						}
-					} else {
-						if ( range === 'from' ) {
-							current_value_from = min;
-						} else if ( range === 'to' ) {
-							current_value_to = max;
-						}
-					}
-
-					var time = jQuery( '#' + elemID ).val();
-
-					if ( elem.data('range') === 'from' ) {
-						jQuery( '#' + elem_filter_name + '_to' ).pickatime('picker').set('min', time);
-					} else {
-						jQuery( '#' + elem_filter_name + '_from').pickatime('picker').set('max', time);
-					}
-
-					um_set_url_from_data( directory, 'filter_' + filter_name + '_from', current_value_from );
-					um_set_url_from_data( directory, 'filter_' + filter_name + '_to', current_value_to );
-
-					//set 1st page after filtration
-					directory.data( 'page', 1 );
-					um_set_url_from_data( directory, 'page', '' );
-
-					um_ajax_get_members( directory );
-
-					um_change_tag( directory );
-
-					directory.data( 'searched', 1 );
-					directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
-					directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
-
-				}
-			});
-
-			// first loading timepicker select
-			var $picker = $input.pickatime('picker');
-			var $fname = elem.data('filter_name');
-			var $frange = elem.data('range');
-			var $directory = elem.parents('.um-directory');
-
-			var query_value = um_get_data_for_directory( $directory, 'filter_' + $fname + '_' + $frange );
-			if ( typeof query_value !== 'undefined' ) {
-				var arr = query_value.split(':');
-				$picker.set( 'select', arr[0]*60 + arr[1]*1 );
-			}
-
-		});
+		um_timepicker_filter_init( directory );
 
 		wp.hooks.doAction( 'um_member_directory_on_init', directory, hash );
 
