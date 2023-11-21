@@ -2976,6 +2976,5 @@ function um_get_local_site_time() {
 	$date->modify( "+$time_difference_hours hours" );
 	$new_timestamp = $date->getTimestamp();
 
-	// Выводим новую временную метку
 	return $new_timestamp;
 }
