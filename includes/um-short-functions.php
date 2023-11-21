@@ -1918,20 +1918,31 @@ function um_youtube_id_from_url( $url ) {
 	$url = preg_replace( '/\?si=.*/', '', $url ); // referral attribute.
 
 	$pattern =
-		'%^# Match any youtube URL
-		(?:https?://)?  # Optional scheme. Either http or https
-		(?:www\.)?      # Optional www subdomain
-		(?:             # Group host alternatives
-		  youtu\.be/    # Either youtu.be,
-		| youtube\.com  # or youtube.com
-		  (?:           # Group path alternatives
-			/embed/     # Either /embed/
-		  | /v/         # or /v/
-		  | /watch\?v=  # or /watch\?v=
-		  | /shorts/    # or /shorts/ for short videos
-		  )             # End path alternatives.
-		)               # End host alternatives.
-		([\w-]{10,12})  # Allow 10-12 for 11 char youtube id.
+		'%^            # Match any youtube URL
+		(?:https?://)? # Optional scheme. Either http or https
+		(?:                 # Optional subdomain, for example m or www.
+			[a-z0-9]          # Subdomain begins with alpha-num.
+			(?:               # Optionally more than one char.
+				[a-z0-9-]{0,61} # Middle part may have dashes.
+				[a-z0-9]        # Starts and ends with alpha-num.
+			)?                # Subdomain length from 1 to 63.
+			\.                # Required dot separates subdomains.
+		)?                  # Subdomain is optional.
+		(?:            # Group host alternatives
+		  youtu\.be/   # Either youtu.be,
+		| youtube\.com # or youtube.com
+		  (?:          # Group path alternatives
+			/embed/      # Either /embed/
+		  | /v/        # or /v/
+		  | /watch\?v= # or /watch\?v=
+		  | /shorts/   # or /shorts/ for short videos
+		  )            # End path alternatives.
+		)              # End host alternatives.
+		([\w-]{10,12}) # Allow 10-12 for 11 char youtube id.
+		(?:            # Additional parameters
+		  (?:\?|\&)
+		  \w+=[^&$]+
+		)*
 		$%x';
 
 	$result = preg_match( $pattern, $url, $matches );
