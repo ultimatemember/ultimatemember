@@ -513,6 +513,12 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 			}
 		}
 
+		// Validate the Required condition for the Number field. Set the Minimum Number option to allow 0 value.
+		if ( isset( $array['type'] ) && 'number' === $array['type'] && ! isset( $array['min'] ) && ! empty( $array['required'] ) && empty( $submitted_data[ $key ] ) ) {
+			// translators: %s: title.
+			UM()->form()->add_error( $key, sprintf( __( '%s is required.', 'ultimate-member' ), $array['title'] ) );
+		}
+
 		if ( isset( $array['type'] ) && $array['type'] == 'checkbox' && isset( $array['required'] ) && $array['required'] == 1 && ! isset( $submitted_data[ $key ] ) ) {
 			// translators: %s: title.
 			UM()->form()->add_error( $key, sprintf( __( '%s is required.', 'ultimate-member' ), $array['title'] ) );
