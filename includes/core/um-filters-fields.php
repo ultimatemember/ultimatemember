@@ -1007,18 +1007,34 @@ add_filter( 'um_edit_url_field_value', 'um_edit_url_field_value', 10, 2 );
 
 
 /**
- * Change field label from "Birth Date" to "Age" in the directory and in the profile view.
+ * Change field label from "Birth Date" to "Age" in the profile view.
  *
  * @param string $label Field Label.
- * @param string $key   Field Key.
+ * @param string $data  Field data.
  *
  * @return string
  */
-function um_view_label_birth_date( $label, $key = 'birth_date' ) {
-	if ( 'birth_date' === $key ) {
+function um_view_label_birth_date( $label, $data ) {
+	if ( ! empty( $data['pretty_format'] ) ) {
 		$label = __( 'Age', 'ultimate-member' );
 	}
 	return $label;
 }
-add_filter( 'um_view_label_birth_date', 'um_view_label_birth_date', 10, 1 );
-add_filter( 'um_change_field_label', 'um_view_label_birth_date', 10, 2 );
+add_filter( 'um_view_label_birth_date', 'um_view_label_birth_date', 10, 2 );
+
+/**
+ * Change field label from "Birth Date" to "Age" in the member directory.
+ *
+ * @param string $label Field Label.
+ * @param string $key   Field Key.
+ * @param string $data  Field data.
+ *
+ * @return string
+ */
+function um_md_label_birth_date( $label, $key, $data ) {
+	if ( 'birth_date' === $key && ! empty( $data['pretty_format'] ) ) {
+		$label = __( 'Age', 'ultimate-member' );
+	}
+	return $label;
+}
+add_filter( 'um_change_field_label', 'um_md_label_birth_date', 10, 3 );
