@@ -11,15 +11,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 function um_submit_form_errors_hook_login( $submitted_data ) {
 	$user_password = $submitted_data['user_password'];
 
-	if ( isset( $submitted_data['username'] ) && $submitted_data['username'] == '' ) {
+	if ( isset( $submitted_data['username'] ) && '' === $submitted_data['username'] ) {
 		UM()->form()->add_error( 'username', __( 'Please enter your username or email', 'ultimate-member' ) );
 	}
 
-	if ( isset( $submitted_data['user_login'] ) && $submitted_data['user_login'] == '' ) {
+	if ( isset( $submitted_data['user_login'] ) && '' === $submitted_data['user_login'] ) {
 		UM()->form()->add_error( 'user_login', __( 'Please enter your username', 'ultimate-member' ) );
 	}
 
-	if ( isset( $submitted_data['user_email'] ) && $submitted_data['user_email'] == '' ) {
+	if ( isset( $submitted_data['user_email'] ) && ( '' === $submitted_data['user_email'] || ! is_email( $submitted_data['user_email'] ) ) ) {
 		UM()->form()->add_error( 'user_email', __( 'Please enter your email', 'ultimate-member' ) );
 	}
 
@@ -28,7 +28,7 @@ function um_submit_form_errors_hook_login( $submitted_data ) {
 		$field = 'username';
 		if ( is_email( $submitted_data['username'] ) ) {
 			$data = get_user_by('email', $submitted_data['username'] );
-			$user_name = isset( $data->user_login ) ? $data->user_login : null;
+			$user_name = isset( $data->user_login ) ? $data->user_login : '';
 		} else {
 			$user_name  = $submitted_data['username'];
 		}
@@ -36,7 +36,7 @@ function um_submit_form_errors_hook_login( $submitted_data ) {
 		$authenticate = $submitted_data['user_email'];
 		$field = 'user_email';
 		$data = get_user_by('email', $submitted_data['user_email'] );
-		$user_name = isset( $data->user_login ) ? $data->user_login : null;
+		$user_name = isset( $data->user_login ) ? $data->user_login : '';
 	} else {
 		$field = 'user_login';
 		$user_name = $submitted_data['user_login'];
