@@ -1,7 +1,7 @@
-<?php if ( ! defined( 'ABSPATH' ) ) {
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
 
 /**
  * Field is required?
@@ -13,14 +13,13 @@
  */
 function um_edit_label_all_fields( $label, $data ) {
 	$asterisk = UM()->options()->get( 'form_asterisk' );
-	if ( $asterisk && isset( $data['required'] ) && $data['required'] == 1 ) {
-		$label = $label . '<span class="um-req" title="' . esc_attr__( 'Required', 'ultimate-member' ) . '">*</span>';
+	if ( $asterisk && ! empty( $data['required'] ) ) {
+		$label .= '<span class="um-req" title="' . esc_attr__( 'Required', 'ultimate-member' ) . '">*</span>';
 	}
 
 	return $label;
 }
 add_filter( 'um_edit_label_all_fields', 'um_edit_label_all_fields', 10, 2 );
-
 
 /**
  * Outputs a oEmbed field
