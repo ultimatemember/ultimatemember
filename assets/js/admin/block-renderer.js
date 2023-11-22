@@ -2,7 +2,7 @@ jQuery(window).on( 'load', function($) {
 	var observer = new MutationObserver(function(mutations) {
 		mutations.forEach(function(mutation) {
 			jQuery(mutation.addedNodes).find('.um.um-directory').each(function() {
-				// jQuery('.um-directory input, .um-directory select, .um-directory button').attr('disabled', 'disabled');
+				jQuery('.um-directory button').attr('disabled', 'disabled');
 				jQuery('.um-directory a').attr('href', '');
 
 				if ( typeof( jQuery.fn.select2 ) === 'function' ) {
