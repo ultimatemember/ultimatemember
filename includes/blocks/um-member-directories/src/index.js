@@ -98,6 +98,8 @@ jQuery(window).on( 'load', function($) {
 				var directory = jQuery(this);
 				um_ajax_get_members( directory );
 				um_slider_filter_init( directory );
+				um_datepicker_filter_init( directory );
+				um_timepicker_filter_init( directory );
 			});
 		});
 	});
