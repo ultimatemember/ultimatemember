@@ -116,6 +116,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		public function ajax_select_options() {
 			UM()->check_ajax_nonce();
 
+			// phpcs:disable WordPress.Security.NonceVerification
+
 			$arr_options           = array();
 			$arr_options['status'] = 'success';
 			$arr_options['post']   = $_POST;
@@ -164,9 +166,9 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			if ( isset( $_POST['form_id'] ) ) {
 				UM()->fields()->set_id = absint( $_POST['form_id'] );
 			}
-			UM()->fields()->set_mode  = 'profile';
-			$form_fields              = UM()->fields()->get_fields();
-			$arr_options['fields']    = $form_fields;
+			UM()->fields()->set_mode = 'profile';
+			$form_fields             = UM()->fields()->get_fields();
+			$arr_options['fields']   = $form_fields;
 
 			if ( isset( $arr_options['post']['members_directory'] ) && 'yes' === $arr_options['post']['members_directory'] ) {
 				global $wpdb;
@@ -242,6 +244,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					}
 				}
 
+				// phpcs:enable WordPress.Security.NonceVerification
 				wp_send_json( $arr_options );
 			}
 		}
