@@ -66,13 +66,16 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 				$date_to   = isset( $_GET['um_secure_date_to'] ) ? $_GET['um_secure_date_to'] : null;
 				// phpcs:enable WordPress.Security.NonceVerification
 				if ( $date_from ) {
+
 					$date_query_attr = array(
-						'after'     => human_time_diff( $date_from, strtotime( current_time( 'mysql' ) ) ) . ' ago',
-						'inclusive' => true,
+						'after'  => wp_date( 'F j, Y', strtotime( '-1 day', $date_from ) ),
+						'before' => wp_date( 'F j, Y', strtotime( '+1 day', $date_from ) ),
 					);
+
 					if ( $date_to ) {
-						$date_query_attr['before'] = human_time_diff( $date_to, strtotime( current_time( 'mysql' ) ) ) . ' ago';
+						$date_query_attr['before'] = wp_date( 'F j, Y', strtotime( '+1 day', $date_to ) );
 					}
+
 					$query->set( 'date_query', $date_query_attr );
 				}
 			}
@@ -202,7 +205,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 			$scan_status       = get_option( 'um_secure_scan_status' );
 			$last_scanned_time = get_option( 'um_secure_last_time_scanned' );
 			if ( ! empty( $last_scanned_time ) ) {
-				$scanner_content .= human_time_diff( strtotime( $last_scanned_time ), strtotime( current_time( 'mysql' ) ) ) . ' ' . esc_html__( 'ago', 'ultimate-member' );
+				$scanner_content .= human_time_diff( $last_scanned_time, current_datetime()->format( 'U' ) ) . ' ' . esc_html__( 'ago', 'ultimate-member' );
 				if ( 'started' === $scan_status ) {
 					$scanner_content .= ' - ' . esc_html__( 'Not Completed.', 'ultimate-member' );
 				}
@@ -325,7 +328,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 					$restore_account_url = admin_url( 'users.php?user_id=' . $user_id . '&um_secure_restore_account=1&_wpnonce=' . $nonce );
 					$action              = ' &#183; <a href=" ' . esc_attr( $restore_account_url ) . ' " onclick=\'return confirm("' . esc_js( __( 'Are you sure that you want to restore this account after getting flagged for suspicious activity?', 'ultimate-member' ) ) . '");\'><small>' . esc_html__( 'Restore Account', 'ultimate-member' ) . '</small></a>';
 					if ( ! empty( $datetime ) ) {
-						$val .= '<div><small>' . human_time_diff( strtotime( $datetime ), strtotime( current_time( 'mysql' ) ) ) . ' ' . __( 'ago', 'ultimate-member' ) . '</small>' . $action . '</div>';
+						$val .= '<div><small>' . human_time_diff( $datetime, current_datetime()->format( 'U' ) ) . ' ' . __( 'ago', 'ultimate-member' ) . '</small>' . $action . '</div>';
 					}
 				}
 				um_reset_user();
