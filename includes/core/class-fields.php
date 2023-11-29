@@ -74,7 +74,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * Fields constructor.
 		 */
 		public function __construct() {
-			$this->timestamp = current_time( 'timestamp' );
+			$this->timestamp = time();
 		}
 
 		/**
