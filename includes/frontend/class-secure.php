@@ -176,7 +176,7 @@ if ( ! class_exists( 'um\frontend\Secure' ) ) {
 					$errors->add( 'um_block_old_password', __( 'Your new password cannot be same as old password.', 'ultimate-member' ) );
 				} else {
 					update_user_meta( $user->ID, 'um_secure_has_reset_password', true );
-					update_user_meta( $user->ID, 'um_secure_has_reset_password__timestamp', current_time( 'mysql' ) );
+					update_user_meta( $user->ID, 'um_secure_has_reset_password__timestamp', current_time( 'mysql', true ) );
 				}
 			}
 		}
@@ -279,7 +279,7 @@ if ( ! class_exists( 'um\frontend\Secure' ) ) {
 
 			if ( UM()->options()->get( 'display_login_form_notice' ) ) {
 				update_user_meta( $user_id, 'um_secure_has_reset_password', true );
-				update_user_meta( $user_id, 'um_secure_has_reset_password__timestamp', current_time( 'mysql' ) );
+				update_user_meta( $user_id, 'um_secure_has_reset_password__timestamp', current_time( 'mysql', true ) );
 			}
 		}
 	}

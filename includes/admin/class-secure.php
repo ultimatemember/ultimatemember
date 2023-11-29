@@ -167,7 +167,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 				// Don't need to reset a password.
 				if ( UM()->options()->get( 'display_login_form_notice' ) ) {
 					update_user_meta( $user_id, 'um_secure_has_reset_password', true );
-					update_user_meta( $user_id, 'um_secure_has_reset_password__timestamp', current_time( 'mysql' ) );
+					update_user_meta( $user_id, 'um_secure_has_reset_password__timestamp', current_time( 'mysql', true ) );
 				}
 
 				// Clear Cache.
