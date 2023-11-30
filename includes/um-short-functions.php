@@ -1168,18 +1168,17 @@ function um_is_temp_file( $filename ) {
 	return false;
 }
 
-
 /**
  * Get user's last login timestamp
  *
- * @param $user_id
+ * @param int $user_id
  *
- * @return mixed|string
+ * @return int|string
  */
 function um_user_last_login_timestamp( $user_id ) {
 	$value = get_user_meta( $user_id, '_um_last_login', true );
 	if ( $value ) {
-		return $value;
+		return strtotime( $value );
 	}
 
 	return '';
@@ -1193,8 +1192,8 @@ function um_user_last_login_timestamp( $user_id ) {
  * @return string
  */
 function um_user_last_login( $user_id ) {
-	$value = get_user_meta( $user_id, '_um_last_login', true );
-	return ! empty( $value ) ? UM()->datetime()->time_diff( $value, current_time( 'timestamp' ) ) : '';
+	$value = get_user_meta( $user_id, '_um_last_login', true ); // Datetime format in UTC.
+	return ! empty( $value ) ? UM()->datetime()->time_diff( strtotime( $value ) ) : ''; // Compare with default time() in 2nd attribute.
 }
 
 /**

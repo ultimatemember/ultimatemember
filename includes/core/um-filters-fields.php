@@ -254,7 +254,6 @@ function um_profile_field_filter_hook__last_login( $value, $data ) {
 	if ( ! $value ) {
 		return '';
 	}
-	//$value = sprintf( __('Last login: %s','ultimate-member'), um_user_last_login( um_user('ID') ) );
 	$value = um_user_last_login( um_user( 'ID' ) );
 	return $value;
 }
@@ -331,12 +330,11 @@ function um_profile_field_filter_hook__time( $value, $data ) {
 }
 add_filter( 'um_profile_field_filter_hook__time', 'um_profile_field_filter_hook__time', 99, 2 );
 
-
 /**
- * Date field
+ * Date field.
  *
- * @param $value
- * @param $data
+ * @param string $value Date string.
+ * @param array  $data  Field data.
  *
  * @return string
  */
@@ -344,17 +342,18 @@ function um_profile_field_filter_hook__date( $value, $data ) {
 	if ( ! $value ) {
 		return '';
 	}
-	if ( isset( $data['pretty_format'] ) && $data['pretty_format'] == 1 ) {
+
+	if ( ! empty( $data['pretty_format'] ) ) {
 		$value = UM()->datetime()->get_age( $value );
 	} else {
 		$format = empty( $data['format_custom'] ) ? $data['format'] : $data['format_custom'];
-		$value = date_i18n( $format, strtotime( $value ) );
+		// Don't handle static dates via timezone because can be -1 day for minus UTC timezones (e.g. America).
+		$value = wp_date( $format, strtotime( $value ), new \DateTimeZone( 'UTC' ) );
 	}
 
 	return $value;
 }
 add_filter( 'um_profile_field_filter_hook__date', 'um_profile_field_filter_hook__date', 99, 2 );
-
 
 /**
  * File field
@@ -368,7 +367,7 @@ function um_profile_field_filter_hook__file( $value, $data ) {
 		return '';
 	}
 	$file_type = wp_check_filetype( $value );
-	$uri = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
+	$uri       = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
 
 	$removed = false;
 	if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value ) ) {

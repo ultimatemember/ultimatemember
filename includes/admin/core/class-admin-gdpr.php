@@ -67,7 +67,7 @@ if ( ! class_exists( 'um\admin\core\Admin_GDPR' ) ) {
 				'um_user_profile_url_slug_name_dash'    => __( 'Profile Slug "First and Last Name with \'-\'"', 'ultimate-member' ),
 				'um_user_profile_url_slug_name_plus'    => __( 'Profile Slug "First and Last Name with \'+\'"', 'ultimate-member' ),
 				'um_user_profile_url_slug_user_id'      => __( 'Profile Slug "User ID"', 'ultimate-member' ),
-				'_um_last_login'                        => __( 'Last Login Timestamp', 'ultimate-member' ),
+				'_um_last_login'                        => __( 'Last Login date', 'ultimate-member' ),
 
 				//Private content extension
 				'_um_private_content_post_id'           => __( 'Private Content Post ID', 'ultimate-member' ),

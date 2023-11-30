@@ -1895,10 +1895,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				case '_pretty_format':
 					?>
 
-					<p><label for="_pretty_format"><?php _e( 'Displayed Date Format', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Whether you wish to show the date in full or only show the years e.g. 25 Years', 'ultimate-member' ) ); ?></label>
+					<p><label for="_pretty_format"><?php esc_html_e( 'Displayed Date Format', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Whether you wish to show the date in full or only show the years e.g. 25 Years', 'ultimate-member' ) ); ?></label>
 						<select name="_pretty_format" id="_pretty_format" style="width: 100%">
-							<option value="0" <?php selected( 0, $this->edit_mode_value ); ?>><?php _e( 'Show full date', 'ultimate-member' ) ?></option>
-							<option value="1" <?php selected( 1, $this->edit_mode_value ); ?>><?php _e( 'Show years only', 'ultimate-member' ) ?></option>
+							<option value="0" <?php selected( 0, $this->edit_mode_value ); ?>><?php esc_html_e( 'Show full date', 'ultimate-member' ); ?></option>
+							<option value="1" <?php selected( 1, $this->edit_mode_value ); ?>><?php esc_html_e( 'Show years only', 'ultimate-member' ); ?></option>
 						</select>
 					</p>
 

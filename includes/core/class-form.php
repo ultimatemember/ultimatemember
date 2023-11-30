@@ -509,7 +509,6 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				// Add required usermeta for register.
 				if ( 'register' === $this->form_data['mode'] ) {
 					$cf_metakeys[] = 'form_id';
-					$cf_metakeys[] = 'timestamp';
 				}
 
 				/**

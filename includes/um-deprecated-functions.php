@@ -167,9 +167,11 @@ function um_get_redirect_url( $key ) {
  * @return string
  */
 function um_user_last_login_date( $user_id ) {
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 	$value = get_user_meta( $user_id, '_um_last_login', true );
-	if ($value)
+	if ( $value ) {
 		return date_i18n( 'F d, Y', $value );
+	}
 
 	return '';
 }
