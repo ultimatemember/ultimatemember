@@ -188,15 +188,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		/**
 		 * Init the metaboxes
 		 */
-		function add_metabox() {
+		public function add_metabox() {
 			global $current_screen;
 
-			if ( $current_screen->id == 'um_form' ) {
+			if ( 'um_form' === $current_screen->id ) {
 				add_action( 'add_meta_boxes', array( &$this, 'add_metabox_form' ), 1 );
 				add_action( 'save_post', array( &$this, 'save_metabox_form' ), 10, 2 );
-			}
-
-			if ( $current_screen->id == 'um_directory' ) {
+			} elseif ( 'um_directory' === $current_screen->id ) {
 				add_action( 'add_meta_boxes', array( &$this, 'add_metabox_directory' ), 1 );
 				add_action( 'save_post', array( &$this, 'save_metabox_directory' ), 10, 2 );
 			}
@@ -857,7 +855,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 * Add directory metabox
 		 */
 		public function add_metabox_directory() {
-			add_meta_box('submitdiv', __( 'Publish', 'ultimate-member' ), array( &$this, 'custom_submitdiv' ), 'um_directory', 'side', 'high' );
+			add_meta_box( 'submitdiv', __( 'Publish', 'ultimate-member' ), array( &$this, 'custom_submitdiv' ), 'um_directory', 'side', 'high' );
 			add_meta_box( 'um-admin-form-general', __( 'General Options', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
 			add_meta_box( 'um-admin-form-sorting', __( 'Sorting', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
 			add_meta_box( 'um-admin-form-profile', __( 'Profile Card', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
@@ -1017,16 +1015,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			}
 		}
 
-
 		/**
 		 * Add form metabox
 		 */
 		public function add_metabox_form() {
-
 			add_meta_box( 'submitdiv', __( 'Publish', 'ultimate-member' ), array( $this, 'custom_submitdiv' ), 'um_form', 'side', 'high' );
 
-			add_meta_box( 'um-admin-form-mode', __( 'Select Form Type', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );
-			add_meta_box( 'um-admin-form-builder', __( 'Form Builder', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );
+			if ( defined( 'UM_LEGACY_BUILDER_OFF' ) && UM_LEGACY_BUILDER_OFF ) {
+				// Do new metabox.
+			} else {
+				add_meta_box( 'um-admin-form-mode', __( 'Select Form Type', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );
+				add_meta_box( 'um-admin-form-builder', __( 'Form Builder', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );
+			}
+
 			add_meta_box( 'um-admin-form-shortcode', __( 'Shortcode', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
 
 			add_meta_box( 'um-admin-form-register_customize', __( 'Customize this form', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'side', 'default' );
