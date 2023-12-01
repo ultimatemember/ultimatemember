@@ -166,7 +166,7 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.8.0: November 30, 2023 =
+= 2.8.0: December 6, 2023 =
 
 * Enhancements:
 
@@ -198,6 +198,8 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
   - `UM()->admin()->enqueue()->css_url` param. Please use `UM()->admin()->enqueue()::get_url( 'css' );` or `self::get_url( 'js' );` instead
   - `UM()->frontend()->enqueue()->js_url` param. Please use `UM()->frontend()->enqueue()::get_url( 'js' );` or `self::get_url( 'js' );` instead
   - `UM()->frontend()->enqueue()->css_url` param. Please use `UM()->frontend()->enqueue()::get_url( 'css' );` or `self::get_url( 'js' );` instead
+  - Fully `UM()->permalinks()->um_rel_canonical_()` function. Because since version 2.1.7 there is used `um_profile_remove_wpseo();` alternative
+  - Fully `UM()->permalinks()->admin_act_url()` function. Since update for wp-admin links when there is nonce this function isn't used
   - Fully `UM()->admin()->enqueue()->front_js_baseurl` param.
   - Fully `UM()->admin()->enqueue()->front_css_baseurl` param.
   - Fully `UM()->admin()->enqueue()->post_page` param.

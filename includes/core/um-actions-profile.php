@@ -584,31 +584,28 @@ function um_restore_default_roles( $user_id, $args, $to_update ) {
 }
 add_action( 'um_after_user_updated', 'um_restore_default_roles', 10, 3 );
 
-
 /**
  * If editing another user
  *
  * @param $args
  */
 function um_editing_user_id_input( $args ) {
-	if ( true === UM()->fields()->editing && 'profile' === UM()->fields()->set_mode && UM()->user()->target_id ) { ?>
-
+	if ( true === UM()->fields()->editing && 'profile' === UM()->fields()->set_mode && UM()->user()->target_id ) {
+		?>
 		<input type="hidden" name="user_id" id="user_id" value="<?php echo esc_attr( UM()->user()->target_id ); ?>" />
 		<input type="hidden" name="profile_nonce" id="profile_nonce" value="<?php echo esc_attr( UM()->form()->nonce ); ?>" />
-
-	<?php }
+		<?php
+	}
 }
 add_action( 'um_after_form_fields', 'um_editing_user_id_input' );
 
-
-/**
- * Remove Yoast from front end for the Profile page
- *
- * @see   https://gist.github.com/amboutwe/1c847f9c706ff6f8c9eca76abea23fb6
- * @since 2.1.6
- */
-if ( !function_exists( 'um_profile_remove_wpseo' ) ) {
-
+if ( ! function_exists( 'um_profile_remove_wpseo' ) ) {
+	/**
+	 * Remove Yoast from front end for the Profile page
+	 *
+	 * @see   https://gist.github.com/amboutwe/1c847f9c706ff6f8c9eca76abea23fb6
+	 * @since 2.1.6
+	 */
 	function um_profile_remove_wpseo() {
 		if ( um_is_core_page( 'user' ) && um_get_requested_user() ) {
 
@@ -631,7 +628,6 @@ if ( !function_exists( 'um_profile_remove_wpseo' ) ) {
 			}
 		}
 	}
-
 }
 add_action( 'get_header', 'um_profile_remove_wpseo', 8 );
 
