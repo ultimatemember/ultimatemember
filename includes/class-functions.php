@@ -418,6 +418,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'usemap'   => true,
 							'width'    => true,
 						),
+						'ol'       => array(),
 						'ul'       => array(),
 						'li'       => array(),
 						'h1'       => array(
@@ -643,6 +644,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'dir'   => true,
 							'lang'  => true,
 						),
+						'ol'       => array(),
 						'ul'       => array(),
 						'li'       => array(),
 						'time'     => array(
@@ -683,6 +685,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 				),
 				'em'     => array(),
 				'i'      => array(),
+				'b'      => array(),
 				'q'      => array(
 					'cite' => true,
 				),
