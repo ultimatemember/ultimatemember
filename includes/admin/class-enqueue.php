@@ -58,6 +58,7 @@ final class Enqueue extends \um\common\Enqueue {
 		add_action( 'admin_enqueue_scripts', array( &$this, 'admin_enqueue_scripts' ) );
 
 		add_action( 'load-customize.php', array( &$this, 'navmenu_scripts' ) );
+		add_action( 'load-nav-menus.php', array( &$this, 'navmenu_scripts' ) );
 		add_action( 'load-edit.php', array( &$this, 'posts_page' ) );
 
 		add_action( 'load-post-new.php', array( &$this, 'enqueue_cpt_scripts' ) );
