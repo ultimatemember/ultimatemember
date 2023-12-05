@@ -1628,7 +1628,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$array = ( isset( UM()->builtin()->predefined_fields[ $key ] ) ) ? UM()->builtin()->predefined_fields[ $key ] : UM()->builtin()->all_user_fields[ $key ];
 			}
 
-			if ( empty( $array['type'] ) {
+			if ( empty( $array['type'] ) ) {
 				return '';
 			}
 
