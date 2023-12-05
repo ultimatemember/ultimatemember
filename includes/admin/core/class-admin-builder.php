@@ -333,32 +333,31 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			die;
 		}
 
-
 		/**
-		 * Sort array function
+		 * Sort sub-row fields by position.
+		 * Callback for `uasort()` function
 		 *
-		 * @param array $arr
-		 * @param string $col
-		 * @param int $dir
+		 * @param array $a Array item.
+		 * @param array $b Array item.
 		 *
-		 * @return array
+		 * @return int
 		 */
-		function array_sort_by_column( $arr, $col, $dir = SORT_ASC ) {
-			$sort_col = array();
-
-			foreach ( $arr as $key => $row ) {
-				if ( ! empty( $row[ $col ] ) ) {
-					$sort_col[ $key ] = $row[ $col ];
-				}
+		public function sorting_fields_by_position( $a, $b ) {
+			if ( empty( $a['position'] ) ) {
+				$a['position'] = 0;
 			}
 
-			if ( ! empty( $sort_col ) ) {
-				array_multisort( $sort_col, $dir, $arr );
+			if ( empty( $b['position'] ) ) {
+				$b['position'] = 0;
 			}
+			$a['position'] = absint( $a['position'] );
+			$b['position'] = absint( $b['position'] );
 
-			return $arr;
+			if ( $a['position'] === $b['position'] ) {
+				return 0;
+			}
+			return ( $a['position'] < $b['position'] ) ? -1 : 1;
 		}
-
 
 		/**
 		 * Get fields in row
@@ -523,7 +522,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 									<div class="um-admin-drag-col">
 										<?php
 										if ( is_array( $subrow_fields ) ) {
-											$subrow_fields = $this->array_sort_by_column( $subrow_fields, 'position' );
+											uasort( $subrow_fields, array( &$this, 'sorting_fields_by_position' ) );
 											foreach ( $subrow_fields as $key => $keyarray ) {
 												if ( ! array_key_exists( 'type', $keyarray ) || ! array_key_exists( 'title', $keyarray ) ) {
 													continue;

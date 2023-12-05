@@ -4168,7 +4168,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							}
 
 							// sub row fields
-							$subrow_fields = null;
 							$subrow_fields = $this->get_fields_in_subrow( $row_fields, $c );
 
 							if ( is_array( $subrow_fields ) ) {
@@ -4710,7 +4709,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							}
 
 							// sub row fields
-							$subrow_fields = null;
 							$subrow_fields = $this->get_fields_in_subrow( $row_fields, $c );
 
 							if ( is_array( $subrow_fields ) ) {
