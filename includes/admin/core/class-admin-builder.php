@@ -343,17 +343,24 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 *
 		 * @return array
 		 */
-		function array_sort_by_column( $arr, $col, $dir = SORT_ASC ) {
+		public function array_sort_by_column( $arr, $col, $dir = SORT_ASC ) {
 			$sort_col = array();
+			$keys     = array();
 
 			foreach ( $arr as $key => $row ) {
+				$keys[] = $key;
 				if ( ! empty( $row[ $col ] ) ) {
 					$sort_col[ $key ] = $row[ $col ];
 				}
 			}
 
 			if ( ! empty( $sort_col ) ) {
-				array_multisort( $sort_col, $dir, $arr );
+				array_multisort( $sort_col, $dir, $keys );
+				$sorted_arr = array();
+				foreach ( $keys as $key ) {
+					$sorted_arr[ $key ] = $arr[ $key ];
+				}
+				return $sorted_arr;
 			}
 
 			return $arr;
