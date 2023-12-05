@@ -1628,6 +1628,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$array = ( isset( UM()->builtin()->predefined_fields[ $key ] ) ) ? UM()->builtin()->predefined_fields[ $key ] : UM()->builtin()->all_user_fields[ $key ];
 			}
 
+			if ( empty( $array['type'] ) {
+				return '';
+			}
+
 			$array['classes'] = null;
 
 			if ( ! isset( $array['placeholder'] ) ) {
@@ -4121,7 +4125,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				// find rows
 				foreach ( $this->get_fields as $key => $array ) {
-					if ( $array['type'] == 'row' ) {
+					if ( isset( $array['type'] ) && 'row' === $array['type'] ) {
 						$this->rows[ $key ] = $array;
 						unset( $this->get_fields[ $key ] ); // not needed anymore
 					}
@@ -4662,7 +4666,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				// find rows
 				foreach ( $this->get_fields as $key => $array ) {
-					if ( $array['type'] == 'row' ) {
+					if ( isset( $array['type'] ) && 'row' === $array['type'] ) {
 						$this->rows[ $key ] = $array;
 						unset( $this->get_fields[ $key ] ); // not needed anymore
 					}
