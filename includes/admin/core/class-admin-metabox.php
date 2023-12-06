@@ -1357,6 +1357,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				$this->edit_mode_value = isset( $this->edit_array[ $real_attr ] ) ? $this->edit_array[ $real_attr ] : null;
 			}
 			$form_data = UM()->query()->post_data( $form_id );
+			if ( empty( $form_data['mode'] ) && ! empty( $_POST['form_mode'] ) ) {
+				// Case when we add new form with no form mode in postmeta. Then get form mode from AJAX request.
+				$form_data['mode'] = sanitize_key( $_POST['form_mode'] );
+			}
 
 			switch ( $attribute ) {
 				default:
@@ -1490,7 +1494,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_validate':
-					if ( 'login' === $form_data['mode'] && in_array( $field_args['metakey'], array( 'username', 'user_login', 'user_email' ) ) ) {
+					if ( array_key_exists( 'mode', $form_data ) && 'login' === $form_data['mode'] && in_array( $field_args['metakey'], array( 'username', 'user_login', 'user_email' ), true ) ) {
 						return;
 					}
 					?>

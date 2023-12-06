@@ -1014,7 +1014,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 							<?php
 							if ( is_array( $field_type_data['col1'] ) ) {
 								foreach ( $field_type_data['col1'] as $opt ) {
-									$metabox->field_input( $opt );
+									$metabox->field_input( $opt, $arg2 );
 								}
 							}
 							?>
@@ -1023,7 +1023,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 							<?php
 							if ( array_key_exists( 'col2', $field_type_data ) && is_array( $field_type_data['col2'] ) ) {
 								foreach ( $field_type_data['col2'] as $opt ) {
-									$metabox->field_input( $opt );
+									$metabox->field_input( $opt, $arg2 );
 								}
 							}
 							?>
@@ -1032,7 +1032,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 						<?php
 						if ( array_key_exists( 'col3', $field_type_data ) && is_array( $field_type_data['col3'] ) ) {
 							foreach ( $field_type_data['col3'] as $opt ) {
-								$metabox->field_input( $opt );
+								$metabox->field_input( $opt, $arg2 );
 							}
 						}
 						?>
@@ -1040,7 +1040,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 						<?php
 						if ( array_key_exists( 'col_full', $field_type_data ) && is_array( $field_type_data['col_full'] ) ) {
 							foreach ( $field_type_data['col_full'] as $opt ) {
-								$metabox->field_input( $opt );
+								$metabox->field_input( $opt, $arg2 );
 							}
 						}
 
