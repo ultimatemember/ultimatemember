@@ -216,6 +216,8 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
   - `um-admin-clear` CSS class. It duplicates WordPress native `clear`. Using WordPress native instead.
   - `um-admin-tipsy-{x}` classes to make Tipsy.JS initialization commonly for wp-admin and frontend by `um-tip-{x}` class.
 
+* Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade
+
 = 2.7.0: October 11, 2023 =
 
 * Enhancements:
