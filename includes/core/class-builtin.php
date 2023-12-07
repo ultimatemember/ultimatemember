@@ -860,13 +860,13 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				),
 
 				'_um_last_login' => array(
-					'title' => __('Last Login','ultimate-member'),
-					'metakey' => '_um_last_login',
-					'type' => 'text',
-					'label' => __('Last Login','ultimate-member'),
-					'required' => 0,
-					'public' => 1,
-					'editable' => true,
+					'title'          => __( 'Last Login', 'ultimate-member' ),
+					'metakey'        => '_um_last_login',
+					'type'           => 'text',
+					'label'          => __( 'Last Login', 'ultimate-member' ),
+					'required'       => 0,
+					'public'         => 1,
+					'editable'       => true,
 					'edit_forbidden' => 1,
 				),
 
@@ -907,17 +907,17 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				),
 
 				'birth_date' => array(
-					'title' => __('Birth Date','ultimate-member'),
-					'metakey' => 'birth_date',
-					'type' => 'date',
-					'label' => __('Birth Date','ultimate-member'),
-					'required' => 0,
-					'public' => 1,
-					'editable' => true,
+					'title'         => __( 'Birth Date', 'ultimate-member' ),
+					'metakey'       => 'birth_date',
+					'type'          => 'date',
+					'label'         => __( 'Birth Date', 'ultimate-member' ),
+					'required'      => 0,
+					'public'        => 1,
+					'editable'      => true,
 					'pretty_format' => 1,
-					'years' => 115,
-					'years_x' => 'past',
-					'icon' => 'um-faicon-calendar'
+					'years'         => 115,
+					'years_x'       => 'past',
+					'icon'          => 'um-faicon-calendar',
 				),
 
 				'gender' => array(

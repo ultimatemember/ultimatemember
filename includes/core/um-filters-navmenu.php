@@ -1,5 +1,7 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! is_admin() ) {
 	/**
@@ -39,7 +41,6 @@ if ( ! is_admin() ) {
 	}
 	add_filter( 'wp_nav_menu_objects', 'um_add_custom_message_to_menu', 9999, 2 );
 
-
 	/**
 	 * Conditional menu items
 	 *
@@ -70,62 +71,48 @@ if ( ! is_admin() ) {
 
 			$visible = true;
 
-			// hide any item that is the child of a hidden item
-			if ( isset( $item->menu_item_parent ) && in_array( $item->menu_item_parent, $hide_children_of ) ) {
-				$visible = false;
+			// Hide any item that is the child of a hidden item.
+			if ( isset( $item->menu_item_parent ) && in_array( $item->menu_item_parent, $hide_children_of, true ) ) {
+				$visible            = false;
 				$hide_children_of[] = $item->ID; // for nested menus
 			}
 
 			if ( isset( $mode ) && $visible ) {
-
-				switch( $mode ) {
-
+				switch ( $mode ) {
 					case 2:
-						if ( is_user_logged_in() && ! empty( $roles ) ) {
-							if ( current_user_can( 'administrator' ) ) {
-								$visible = true;
+						if ( ! empty( $roles ) && is_user_logged_in() ) {
+							$current_user_roles = um_user( 'roles' );
+							if ( empty( $current_user_roles ) ) {
+								$visible = false;
 							} else {
-								$current_user_roles = um_user( 'roles' );
-								if ( empty( $current_user_roles ) ) {
-									$visible = false;
-								} else {
-									$visible = ( count( array_intersect( $current_user_roles, (array)$roles ) ) > 0 ) ? true : false;
-								}
+								$visible = ( count( array_intersect( $current_user_roles, (array) $roles ) ) > 0 ) ? true : false;
 							}
 						} else {
-							$visible = is_user_logged_in() ? true : false;
+							$visible = is_user_logged_in();
 						}
 						break;
-
 					case 1:
-						$visible = ! is_user_logged_in() ? true : false;
+						$visible = ! is_user_logged_in();
 						break;
-
 				}
-
 			}
-
 			/**
-			 * UM hook
+			 * Filters menu item visibility base on Ultimate Member visibility settings.
 			 *
-			 * @type filter
-			 * @title um_nav_menu_roles_item_visibility
-			 * @description Add filter to work with plugins that don't use traditional roles
-			 * @input_vars
-			 * [{"var":"$visible","type":"bool","desc":"Visible?"},
-			 * {"var":"$item","type":"object","desc":"Menu Item"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_nav_menu_roles_item_visibility', 'function_name', 10, 2 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_nav_menu_roles_item_visibility', 'my_nav_menu_roles_item_visibility', 10, 2 );
+			 * @since 1.3.x
+			 * @hook um_nav_menu_roles_item_visibility
+			 *
+			 * @param {bool}   $visible Menu item visibility.
+			 * @param {object} $item    Menu item instance.
+			 *
+			 * @return {bool} Menu item visibility.
+			 *
+			 * @example <caption>Make the menu item visible for some custom reason.</caption>
 			 * function my_nav_menu_roles_item_visibility( $visible, $item ) {
-			 *     // your code here
+			 *     $visible = true;
 			 *     return $visible;
 			 * }
-			 * ?>
+			 * add_filter( 'um_nav_menu_roles_item_visibility', 'my_nav_menu_roles_item_visibility', 10, 2 );
 			 */
 			$visible = apply_filters( 'um_nav_menu_roles_item_visibility', $visible, $item );
 
@@ -134,9 +121,7 @@ if ( ! is_admin() ) {
 				$hide_children_of[] = $item->ID; // store ID of item
 			} else {
 				$filtered_items[] = $item;
-				continue;
 			}
-
 		}
 
 		um_reset_user();
@@ -144,7 +129,6 @@ if ( ! is_admin() ) {
 		return $filtered_items;
 	}
 	add_filter( 'wp_nav_menu_objects', 'um_conditional_nav_menu', 9999, 2 );
-
 
 	/**
 	 * Conditional menu items

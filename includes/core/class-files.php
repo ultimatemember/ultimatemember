@@ -259,11 +259,10 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			exit;
 		}
 
-
 		/**
 		 * Remove file by AJAX
 		 */
-		function ajax_remove_file() {
+		public function ajax_remove_file() {
 			UM()->check_ajax_nonce();
 
 			if ( empty( $_POST['src'] ) ) {
@@ -283,14 +282,11 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			$mode = sanitize_key( $_POST['mode'] );
 
 			if ( $mode == 'register' || empty( $_POST['user_id'] ) ) {
-
 				$is_temp = um_is_temp_upload( $src );
 				if ( ! $is_temp ) {
 					wp_send_json_success();
 				}
-
 			} else {
-
 				$user_id = absint( $_POST['user_id'] );
 
 				if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
@@ -303,7 +299,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 						wp_send_json_success();
 					}
 				}
-
 			}
 
 			if ( $this->delete_file( $src ) ) {

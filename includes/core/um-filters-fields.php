@@ -1,7 +1,7 @@
-<?php if ( ! defined( 'ABSPATH' ) ) {
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
 
 /**
  * Field is required?
@@ -13,14 +13,13 @@
  */
 function um_edit_label_all_fields( $label, $data ) {
 	$asterisk = UM()->options()->get( 'form_asterisk' );
-	if ( $asterisk && isset( $data['required'] ) && $data['required'] == 1 ) {
-		$label = $label . '<span class="um-req" title="' . esc_attr__( 'Required', 'ultimate-member' ) . '">*</span>';
+	if ( $asterisk && ! empty( $data['required'] ) ) {
+		$label .= '<span class="um-req" title="' . esc_attr__( 'Required', 'ultimate-member' ) . '">*</span>';
 	}
 
 	return $label;
 }
 add_filter( 'um_edit_label_all_fields', 'um_edit_label_all_fields', 10, 2 );
-
 
 /**
  * Outputs a oEmbed field
@@ -94,10 +93,11 @@ function um_profile_field_filter_hook__youtube_video( $value, $data ) {
 		return '';
 	}
 	$value = ( strstr( $value, 'http' ) || strstr( $value, '://' ) ) ? um_youtube_id_from_url( $value ) : $value;
-	$value = '<div class="um-youtube">
-					<iframe width="600" height="450" src="https://www.youtube.com/embed/' . $value . '" frameborder="0" allowfullscreen></iframe>
-					</div>';
-
+	if ( false !== $value ) {
+		$value = '<div class="um-youtube">'
+			. '<iframe width="600" height="450" src="https://www.youtube.com/embed/' . $value . '" frameborder="0" allowfullscreen></iframe>'
+			. '</div>';
+	}
 	return $value;
 }
 add_filter( 'um_profile_field_filter_hook__youtube_video', 'um_profile_field_filter_hook__youtube_video', 99, 2 );
@@ -254,7 +254,6 @@ function um_profile_field_filter_hook__last_login( $value, $data ) {
 	if ( ! $value ) {
 		return '';
 	}
-	//$value = sprintf( __('Last login: %s','ultimate-member'), um_user_last_login( um_user('ID') ) );
 	$value = um_user_last_login( um_user( 'ID' ) );
 	return $value;
 }
@@ -331,12 +330,11 @@ function um_profile_field_filter_hook__time( $value, $data ) {
 }
 add_filter( 'um_profile_field_filter_hook__time', 'um_profile_field_filter_hook__time', 99, 2 );
 
-
 /**
- * Date field
+ * Date field.
  *
- * @param $value
- * @param $data
+ * @param string $value Date string.
+ * @param array  $data  Field data.
  *
  * @return string
  */
@@ -344,17 +342,18 @@ function um_profile_field_filter_hook__date( $value, $data ) {
 	if ( ! $value ) {
 		return '';
 	}
-	if ( isset( $data['pretty_format'] ) && $data['pretty_format'] == 1 ) {
+
+	if ( ! empty( $data['pretty_format'] ) ) {
 		$value = UM()->datetime()->get_age( $value );
 	} else {
 		$format = empty( $data['format_custom'] ) ? $data['format'] : $data['format_custom'];
-		$value = date_i18n( $format, strtotime( $value ) );
+		// Don't handle static dates via timezone because can be -1 day for minus UTC timezones (e.g. America).
+		$value = wp_date( $format, strtotime( $value ), new \DateTimeZone( 'UTC' ) );
 	}
 
 	return $value;
 }
 add_filter( 'um_profile_field_filter_hook__date', 'um_profile_field_filter_hook__date', 99, 2 );
-
 
 /**
  * File field
@@ -368,7 +367,7 @@ function um_profile_field_filter_hook__file( $value, $data ) {
 		return '';
 	}
 	$file_type = wp_check_filetype( $value );
-	$uri = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
+	$uri       = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
 
 	$removed = false;
 	if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value ) ) {
@@ -477,7 +476,7 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 			return $value;
 		}
 
-		if ( ( isset( $data['validate'] ) && '' !== $data['validate'] && 'spotify' !== $data['type'] && strstr( $data['validate'], 'url' ) ) || ( isset( $data['type'] ) && 'url' === $data['type'] && 'oembed' !== $data['type'] ) ) {
+		if ( ( isset( $data['validate'] ) && isset( $data['type'] ) && '' !== $data['validate'] && 'spotify' !== $data['type'] && strstr( $data['validate'], 'url' ) ) || ( isset( $data['type'] ) && 'url' === $data['type'] && 'oembed' !== $data['type'] ) ) {
 			$alt     = ( isset( $data['url_text'] ) && ! empty( $data['url_text'] ) ) ? $data['url_text'] : $value;
 			$url_rel = ( isset( $data['url_rel'] ) && 'nofollow' === $data['url_rel'] ) ? 'rel="nofollow"' : '';
 			if ( ! strstr( $value, 'http' )
@@ -1003,3 +1002,37 @@ function um_edit_url_field_value( $value, $key ) {
 	return $value;
 }
 add_filter( 'um_edit_url_field_value', 'um_edit_url_field_value', 10, 2 );
+
+
+/**
+ * Change field label from "Birth Date" to "Age" in the profile view.
+ *
+ * @param string $label Field Label.
+ * @param string $data  Field data.
+ *
+ * @return string
+ */
+function um_view_label_birth_date( $label, $data ) {
+	if ( ! empty( $data['pretty_format'] ) ) {
+		$label = __( 'Age', 'ultimate-member' );
+	}
+	return $label;
+}
+add_filter( 'um_view_label_birth_date', 'um_view_label_birth_date', 10, 2 );
+
+/**
+ * Change field label from "Birth Date" to "Age" in the member directory.
+ *
+ * @param string $label Field Label.
+ * @param string $key   Field Key.
+ * @param string $data  Field data.
+ *
+ * @return string
+ */
+function um_md_label_birth_date( $label, $key, $data ) {
+	if ( 'birth_date' === $key && ! empty( $data['pretty_format'] ) ) {
+		$label = __( 'Age', 'ultimate-member' );
+	}
+	return $label;
+}
+add_filter( 'um_change_field_label', 'um_md_label_birth_date', 10, 3 );

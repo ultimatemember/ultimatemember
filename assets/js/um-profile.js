@@ -15,7 +15,7 @@ jQuery(document).ready(function() {
 
 	jQuery( document.body ).on( 'click', '.um-profile-save', function(e){
 		e.preventDefault();
-		jQuery(this).parents('.um').find('form').trigger('submit');
+		jQuery(this).parents('.um.um-profile.um-editing').find('form').trigger('submit');
 		return false;
 	});
 
@@ -63,7 +63,7 @@ jQuery(document).ready(function() {
 
 		jQuery('.um-cover-overlay').hide();
 
-		jQuery('.um-cover-e').html('<a href="javascript:void(0);" class="um-cover-add" style="height: 370px;"><span class="um-cover-add-i"><i class="um-icon-plus um-tip-n" original-title="Upload a cover photo"></i></span></a>');
+		jQuery('.um-cover-e').html('<a href="javascript:void(0);" class="um-cover-add" style="height: 370px;"><span class="um-cover-add-i"><i class="um-icon-plus um-tip-n" title="Upload a cover photo"></i></span></a>');
 
 		um_responsive();
 

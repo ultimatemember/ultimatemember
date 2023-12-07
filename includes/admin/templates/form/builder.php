@@ -17,7 +17,7 @@ if ( empty( UM()->builder()->form_id ) ) {
 
 	</div>
 
-	<div class="um-admin-clear"></div>
+	<div class="clear"></div>
 
 	<div class="um-admin-drag">
 
@@ -25,7 +25,7 @@ if ( empty( UM()->builder()->form_id ) ) {
 			<?php UM()->builder()->show_builder(); ?>
 		</div>
 
-		<div class="um-admin-drag-addrow um-admin-tipsy-n" title="<?php esc_attr_e( 'Add Master Row', 'ultimate-member' ); ?>"
+		<div class="um-admin-drag-addrow um-tip-n" title="<?php esc_attr_e( 'Add Master Row', 'ultimate-member' ); ?>"
 		     data-row_action="add_row">
 			<i class="um-icon-plus"></i>
 		</div>

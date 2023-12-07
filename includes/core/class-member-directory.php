@@ -364,7 +364,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			if ( ! empty( UM()->builtin()->saved_fields ) ) {
 				foreach ( UM()->builtin()->saved_fields as $key => $data ) {
-					if ( $key == '_um_last_login' ) {
+					if ( '_um_last_login' === $key ) {
 						continue;
 					}
 
@@ -419,7 +419,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			if ( ! empty( UM()->builtin()->saved_fields ) ) {
 				foreach ( UM()->builtin()->saved_fields as $key => $data ) {
 
-					if ( $key == '_um_last_login' ) {
+					if ( '_um_last_login' === $key ) {
 						continue;
 					}
 
@@ -527,10 +527,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			}
 
 			$field_key = $filter;
-			if ( $filter == 'last_login' ) {
+			if ( 'last_login' === $filter ) {
 				$field_key = '_um_last_login';
-			}
-			if ( $filter == 'role' ) {
+			} elseif ( 'role' === $filter ) {
 				$field_key = 'role_select';
 			}
 
@@ -641,9 +640,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$values_array = ( ! empty( $users_roles['avail_roles'] ) && is_array( $users_roles['avail_roles'] ) ) ? array_keys( array_filter( $users_roles['avail_roles'] ) ) : array();
 					}
 
-					if ( ! empty( $values_array ) && in_array( $attrs['type'], array( 'select', 'multiselect', 'checkbox', 'radio' ) ) ) {
+					if ( ! empty( $values_array ) && in_array( $attrs['type'], array( 'select', 'multiselect', 'checkbox', 'radio' ), true ) ) {
 						$values_array = array_map( 'maybe_unserialize', $values_array );
-						$temp_values = array();
+						$temp_values  = array();
 						foreach ( $values_array as $values ) {
 							if ( is_array( $values ) ) {
 								$temp_values = array_merge( $temp_values, $values );
@@ -654,7 +653,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$values_array = array_unique( $temp_values );
 					}
 
-					if ( $attrs['metakey'] != 'online_status' && empty( $values_array ) ) {
+					if ( 'online_status' !== $attrs['metakey'] && empty( $values_array ) ) {
 						ob_get_clean();
 						return '';
 					}
@@ -721,7 +720,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options', $attrs['options'], $values_array, $attrs );
 
-					if ( empty( $attrs['options'] ) || ! is_array( $attrs['options'] ) ) {
+					if ( ( empty( $attrs['options'] ) || ! is_array( $attrs['options'] ) ) && ! ( ! empty( $attrs['custom_dropdown_options_source'] ) && ! empty( $attrs['parent_dropdown_relationship'] ) ) ) {
 						ob_get_clean();
 						return '';
 					}
@@ -812,29 +811,28 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					break;
 				}
-				case 'datepicker': {
-
+				case 'datepicker':
 					$range = $this->datepicker_filters_range( $filter );
 
 					$label = ! empty( $attrs['label'] ) ? $attrs['label'] : $attrs['title'];
 
-					if ( $range ) { ?>
-
+					if ( $range ) {
+						$min = strtotime( $range[0] );
+						$max = strtotime( $range[1] );
+						?>
 						<input type="text" id="<?php echo $filter; ?>_from" name="<?php echo $filter; ?>_from" class="um-datepicker-filter"
 							   placeholder="<?php esc_attr_e( sprintf( '%s From', stripslashes( $label ) ), 'ultimate-member' ); ?>"
 							   data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
-							   data-date_min="<?php echo $range[0] ?>" data-date_max="<?php echo $range[1] ?>"
+							   data-date_min="<?php echo esc_attr( $min ); ?>" data-date_max="<?php echo esc_attr( $max ); ?>"
 							   data-filter_name="<?php echo $filter; ?>" data-range="from" data-value="<?php echo ! empty( $default_value ) ? esc_attr( strtotime( min( $default_value ) ) ) : '' ?>" />
 						<input type="text" id="<?php echo $filter; ?>_to" name="<?php echo $filter; ?>_to" class="um-datepicker-filter"
 							   placeholder="<?php esc_attr_e( sprintf( '%s To', stripslashes( $label ) ), 'ultimate-member' ); ?>"
 							   data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
-							   data-date_min="<?php echo $range[0] ?>" data-date_max="<?php echo $range[1] ?>"
+							   data-date_min="<?php echo esc_attr( $min ); ?>" data-date_max="<?php echo esc_attr( $max ); ?>"
 							   data-filter_name="<?php echo $filter; ?>" data-range="to" data-value="<?php echo ! empty( $default_value ) ? esc_attr( strtotime( max( $default_value ) ) ) : '' ?>" />
-
-					<?php }
-
+						<?php
+					}
 					break;
-				}
 				case 'timepicker': {
 
 					$range = $this->timepicker_filters_range( $filter );
@@ -996,19 +994,16 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			return $placeholders;
 		}
 
-
 		/**
 		 * @param $filter
 		 *
 		 * @return mixed
 		 */
-		function datepicker_filters_range( $filter ) {
+		public function datepicker_filters_range( $filter ) {
 			global $wpdb;
 
 			switch ( $filter ) {
-
-				default: {
-
+				default:
 					global $wpdb;
 					$meta = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT meta_value
 						FROM {$wpdb->usermeta}
@@ -1024,22 +1019,22 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$range = apply_filters( "um_member_directory_filter_{$filter}_datepicker", $range );
 
 					break;
-				}
-				case 'last_login': {
-					$meta = $wpdb->get_col( "SELECT DISTINCT meta_value
+				case 'last_login':
+					$meta = $wpdb->get_row(
+						"SELECT DISTINCT COUNT(*) AS total,
+							MIN(meta_value) AS min,
+							MAX(meta_value) AS max
 						FROM {$wpdb->usermeta}
-						WHERE meta_key='_um_last_login'
-						ORDER BY meta_value DESC" );
-
-					if ( empty( $meta ) || count( $meta ) === 1 ) {
+						WHERE meta_key = '_um_last_login'",
+						ARRAY_A
+					);
+					if ( empty( $meta['total'] ) || 1 === absint( $meta['total'] ) ) {
 						$range = false;
-					} elseif ( ! empty( $meta ) ) {
-						$range = array( min( $meta ), max( $meta ) );
+					} elseif ( array_key_exists( 'min', $meta ) && array_key_exists( 'max', $meta ) ) {
+						$range = array( $meta['min'], $meta['max'] );
 					}
-
 					break;
-				}
-				case 'user_registered': {
+				case 'user_registered':
 					$meta = $wpdb->get_col(
 						"SELECT DISTINCT user_registered
 						FROM {$wpdb->users}
@@ -1053,13 +1048,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					}
 
 					break;
-				}
-
 			}
 
 			return $range;
 		}
-
 
 		/**
 		 * @param $filter
@@ -1349,7 +1341,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			if ( ! empty( UM()->builtin()->saved_fields ) ) {
 				foreach ( UM()->builtin()->saved_fields as $key => $data ) {
-					if ( $key == '_um_last_login' ) {
+					if ( '_um_last_login' === $key ) {
 						continue;
 					}
 
@@ -1402,22 +1394,22 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				$this->query_args['orderby'] = array( $sortby . '_c' => 'ASC' );
 				unset( $this->query_args['order'] );
 
-			} elseif ( $sortby == 'last_login' ) {
-
-				$this->query_args['orderby'] = array( 'um_last_login' => 'DESC' );
+			} elseif ( 'last_login' === $sortby ) {
+				$this->query_args['orderby']      = array( 'um_last_login' => 'DESC' );
 				$this->query_args['meta_query'][] = array(
-					'relation' => 'OR',
+					'relation'      => 'OR',
 					array(
-						'key'   => '_um_last_login',
-						'compare'   => 'EXISTS',
+						'key'     => '_um_last_login',
+						'compare' => 'EXISTS',
+						'type'    => 'DATETIME',
 					),
 					'um_last_login' => array(
-						'key'   => '_um_last_login',
-						'compare'   => 'NOT EXISTS',
+						'key'     => '_um_last_login',
+						'compare' => 'NOT EXISTS',
+						'type'    => 'DATETIME',
 					),
 				);
 				unset( $this->query_args['order'] );
-
 			} elseif ( $sortby == 'last_first_name' ) {
 
 				$this->query_args['meta_query'][] = array(
@@ -1534,12 +1526,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 				if ( strstr( $sortby, '_desc' ) ) {
 					$sortby = str_replace( '_desc', '', $sortby );
-					$order = 'DESC';
+					$order  = 'DESC';
 				}
 
 				if ( strstr( $sortby, '_asc' ) ) {
 					$sortby = str_replace( '_asc', '', $sortby );
-					$order = 'ASC';
+					$order  = 'ASC';
 				}
 
 				$this->query_args['orderby'] = $sortby;
@@ -1549,7 +1541,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 				add_filter( 'pre_user_query', array( &$this, 'sortby_randomly' ), 10, 1 );
 			}
-
 
 			/**
 			 * UM hook
@@ -1984,9 +1975,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 						break;
 					case 'birth_date':
-
 						$from_date = date( 'Y/m/d', mktime( 0,0,0, date( 'm', time() ), date( 'd', time() ), date( 'Y', time() - min( $value ) * YEAR_IN_SECONDS ) ) );
-						$to_date = date( 'Y/m/d', mktime( 0,0,0, date( 'm', time() ), date( 'd', time() ) + 1, date( 'Y', time() - ( max( $value ) + 1 ) * YEAR_IN_SECONDS ) ) );
+						$to_date   = date( 'Y/m/d', mktime( 0,0,0, date( 'm', time() ), date( 'd', time() ) + 1, date( 'Y', time() - ( max( $value ) + 1 ) * YEAR_IN_SECONDS ) ) );
 
 						$meta_query = array(
 							array(
@@ -1995,7 +1985,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 								'compare'   => 'BETWEEN',
 								'type'      => 'DATE',
 								'inclusive' => true,
-							)
+							),
 						);
 
 						$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
@@ -2010,8 +2000,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							$offset = (int) $_POST['gmt_offset'];
 						}
 
-						$from_date = date( 'Y-m-d H:s:i', strtotime( date( 'Y-m-d H:s:i', min( $value ) ) . "+$offset hours" ) );
-						$to_date = date( 'Y-m-d H:s:i', strtotime( date( 'Y-m-d H:s:i', max( $value ) ) . "+$offset hours" ) );
+						$from_date = date( 'Y-m-d H:i:s', strtotime( date( 'Y-m-d H:i:s', min( $value ) ) . "+$offset hours" ) );
+						$to_date = date( 'Y-m-d H:i:s', strtotime( date( 'Y-m-d H:i:s', max( $value ) ) . "+$offset hours" ) );
 
 						$date_query = array(
 							array(
@@ -2032,7 +2022,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 						break;
 					case 'last_login':
-
 						$offset = 0;
 						if ( isset( $_POST['gmt_offset'] ) && is_numeric( $_POST['gmt_offset'] ) ) {
 							$offset = (int) $_POST['gmt_offset'];
@@ -2043,10 +2032,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$meta_query = array(
 							array(
 								'key'       => '_um_last_login',
-								'value'     =>  array( $from_date, $to_date ),
+								'value'     => array( gmdate( 'Y-m-d H:i:s', $from_date ), gmdate( 'Y-m-d H:i:s', $to_date ) ),
 								'compare'   => 'BETWEEN',
 								'inclusive' => true,
-							)
+								'type'      => 'DATETIME',
+							),
 						);
 
 						$this->custom_filters_in_query[ $field ] = $value;
@@ -2054,7 +2044,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
 						break;
 				}
-
 			}
 		}
 
@@ -2262,8 +2251,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							$offset = $gmt_offset;
 						}
 
-						$from_date = date( 'Y-m-d H:s:i', strtotime( date( 'Y-m-d H:s:i', min( $value ) ) . "+$offset hours" ) );
-						$to_date = date( 'Y-m-d H:s:i', strtotime( date( 'Y-m-d H:s:i', max( $value ) ) . "+$offset hours" ) );
+						$from_date = date( 'Y-m-d H:i:s', strtotime( date( 'Y-m-d H:i:s', min( $value ) ) . "+$offset hours" ) );
+						$to_date = date( 'Y-m-d H:i:s', strtotime( date( 'Y-m-d H:i:s', max( $value ) ) . "+$offset hours" ) );
 
 						$date_query = array(
 							array(
@@ -2287,15 +2276,16 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							$offset = $gmt_offset;
 						}
 
-						$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
-						$to_date   = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
+						$from_date  = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
+						$to_date    = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
 						$meta_query = array(
 							array(
 								'key'       => '_um_last_login',
-								'value'     =>  array( $from_date, $to_date ),
+								'value'     => array( $from_date, $to_date ),
 								'compare'   => 'BETWEEN',
 								'inclusive' => true,
-							)
+								'type'      => 'DATETIME',
+							),
 						);
 
 						$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );

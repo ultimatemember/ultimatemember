@@ -74,7 +74,7 @@ if ( ! class_exists( 'um\core\GDPR' ) ) {
 		 */
 		public function add_agreement_date( $submitted ) {
 			if ( isset( $submitted['use_gdpr_agreement'] ) ) {
-				$submitted['use_gdpr_agreement'] = time();
+				$submitted['use_gdpr_agreement'] = current_time( 'mysql', true );
 			}
 
 			return $submitted;
@@ -87,7 +87,8 @@ if ( ! class_exists( 'um\core\GDPR' ) ) {
 		 */
 		public function email_registration_data( $submitted ) {
 			if ( ! empty( $submitted['use_gdpr_agreement'] ) ) {
-				$submitted['GDPR Applied'] = wp_date( get_option( 'date_format', 'Y-m-d' ) . ' ' . get_option( 'time_format', 'H:i:s' ), $submitted['use_gdpr_agreement'] );
+				$title               = __( 'GDPR Applied', 'ultimate-member' );
+				$submitted[ $title ] = wp_date( get_option( 'date_format', 'F j, Y' ) . ' ' . get_option( 'time_format', 'g:i a' ), strtotime( $submitted['use_gdpr_agreement'] ) );
 				unset( $submitted['use_gdpr_agreement'] );
 			}
 

@@ -178,12 +178,12 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 				<span class="um-admin-row-loading"><span></span></span>
 
 				<div class="um-admin-drag-row-icons">
-					<a href="javascript:void(0);" class="um-admin-drag-rowsub-add um-admin-tipsy-n" title="<?php esc_attr_e( 'Add Row', 'ultimate-member' ); ?>" data-row_action="add_subrow"><i class="um-icon-plus"></i></a>
-					<a href="javascript:void(0);" class="um-admin-drag-row-edit um-admin-tipsy-n" title="<?php esc_attr_e( 'Edit Row', 'ultimate-member' ); ?>" data-modal="UM_edit_row" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="row" data-arg2="<?php echo esc_attr( get_the_ID() ); ?>"><i class="um-faicon-pencil"></i></a>
+					<a href="javascript:void(0);" class="um-admin-drag-rowsub-add um-tip-n" title="<?php esc_attr_e( 'Add Row', 'ultimate-member' ); ?>" data-row_action="add_subrow"><i class="um-icon-plus"></i></a>
+					<a href="javascript:void(0);" class="um-admin-drag-row-edit um-tip-n" title="<?php esc_attr_e( 'Edit Row', 'ultimate-member' ); ?>" data-modal="UM_edit_row" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="row" data-arg2="<?php echo esc_attr( get_the_ID() ); ?>"><i class="um-faicon-pencil"></i></a>
 					<span class="um-admin-drag-row-start"><i class="um-icon-arrow-move"></i></span>
-					<a href="javascript:void(0);" class="um-admin-tipsy-n" title="<?php esc_attr_e( 'Delete Row', 'ultimate-member' ); ?>" data-remove_element="um-admin-drag-row"><i class="um-faicon-trash-o"></i></a>
+					<a href="javascript:void(0);" class="um-tip-n" title="<?php esc_attr_e( 'Delete Row', 'ultimate-member' ); ?>" data-remove_element="um-admin-drag-row"><i class="um-faicon-trash-o"></i></a>
 				</div>
-				<div class="um-admin-clear"></div>
+				<div class="clear"></div>
 
 				<div class="um-admin-drag-rowsubs">
 					<div class="um-admin-drag-rowsub">
@@ -197,15 +197,15 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 
 						<div class="um-admin-drag-rowsub-icons">
 							<span class="um-admin-drag-rowsub-start"><i class="um-icon-arrow-move"></i></span>
-							<a href="javascript:void(0);" class="um-admin-tipsy-n" title="<?php esc_attr_e( 'Delete Row', 'ultimate-member' ); ?>" data-remove_element="um-admin-drag-rowsub"><i class="um-faicon-trash-o"></i></a>
-						</div><div class="um-admin-clear"></div>
+							<a href="javascript:void(0);" class="um-tip-n" title="<?php esc_attr_e( 'Delete Row', 'ultimate-member' ); ?>" data-remove_element="um-admin-drag-rowsub"><i class="um-faicon-trash-o"></i></a>
+						</div><div class="clear"></div>
 
 						<div class="um-admin-drag-col">
 						</div>
 
 						<div class="um-admin-drag-col-dynamic"></div>
 
-						<div class="um-admin-clear"></div>
+						<div class="clear"></div>
 
 					</div>
 				</div>
@@ -222,15 +222,15 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 
 				<div class="um-admin-drag-rowsub-icons">
 					<span class="um-admin-drag-rowsub-start"><i class="um-icon-arrow-move"></i></span>
-					<a href="javascript:void(0);" class="um-admin-tipsy-n" title="<?php esc_attr_e( 'Delete Row', 'ultimate-member' ); ?>" data-remove_element="um-admin-drag-rowsub"><i class="um-faicon-trash-o"></i></a>
-				</div><div class="um-admin-clear"></div>
+					<a href="javascript:void(0);" class="um-tip-n" title="<?php esc_attr_e( 'Delete Row', 'ultimate-member' ); ?>" data-remove_element="um-admin-drag-rowsub"><i class="um-faicon-trash-o"></i></a>
+				</div><div class="clear"></div>
 
 				<div class="um-admin-drag-col">
 				</div>
 
 				<div class="um-admin-drag-col-dynamic"></div>
 
-				<div class="um-admin-clear"></div>
+				<div class="clear"></div>
 
 			</div>
 

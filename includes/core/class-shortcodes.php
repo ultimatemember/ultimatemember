@@ -242,15 +242,14 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			}
 		}
 
-
 		/**
-		 * Extend body classes
+		 * Extend body classes.
 		 *
-		 * @param $classes
+		 * @param array $classes
 		 *
 		 * @return array
 		 */
-		function body_class( $classes ) {
+		public function body_class( $classes ) {
 			$array = UM()->config()->permalinks;
 			if ( ! $array ) {
 				return $classes;
@@ -258,7 +257,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 			foreach ( $array as $slug => $info ) {
 				if ( um_is_core_page( $slug ) ) {
-
+					$classes[] = 'um';
 					$classes[] = 'um-page-' . $slug;
 
 					if ( is_user_logged_in() ) {
@@ -266,7 +265,6 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 					} else {
 						$classes[] = 'um-page-loggedout';
 					}
-
 				}
 			}
 
@@ -673,6 +671,8 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				return '';
 			}
 
+			UM()->fields()->set_id = absint( $this->form_id );
+
 			// get data into one global array
 			$post_data = UM()->query()->post_data( $this->form_id );
 			$args      = array_merge( $args, $post_data );
@@ -716,11 +716,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 			if ( 'directory' === $args['mode'] ) {
 				wp_enqueue_script( 'um_members' );
-				if ( is_rtl() ) {
-					wp_enqueue_style( 'um_members_rtl' );
-				} else {
-					wp_enqueue_style( 'um_members' );
-				}
+				wp_enqueue_style( 'um_members' );
 			}
 
 			if ( 'directory' !== $args['mode'] ) {

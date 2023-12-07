@@ -74,7 +74,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * Fields constructor.
 		 */
 		public function __construct() {
-			$this->timestamp = current_time( 'timestamp' );
+			$this->timestamp = time();
 		}
 
 		/**
@@ -596,150 +596,150 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		/**
 		 * Checks if field has a server-side error
 		 *
-		 * @param  string $key
+		 * @param string $key
 		 *
-		 * @return boolean
+		 * @return bool
 		 */
-		function is_error( $key ) {
+		public function is_error( $key ) {
 			return UM()->form()->has_error( $key );
 		}
 
 		/**
 		 * Checks if field has a notice
 		 *
-		 * @param  string $key
+		 * @param string $key
 		 *
-		 * @return boolean
+		 * @return bool
 		 */
-		function is_notice( $key ) {
+		public function is_notice( $key ) {
 			return UM()->form()->has_notice( $key );
 		}
-
 
 		/**
 		 * Returns field error
 		 *
-		 * @param  string $key
+		 * @param string $key
 		 *
 		 * @return string
 		 */
-		function show_error( $key ) {
+		public function show_error( $key ) {
 			return UM()->form()->errors[ $key ];
 		}
 
 		/**
 		 * Returns field notices
 		 *
-		 * @param  string $key
+		 * @param string $key
 		 *
 		 * @return string
 		 */
-		function show_notice( $key ) {
+		public function show_notice( $key ) {
 			return UM()->form()->notices[ $key ];
 		}
 
-
 		/**
-		 *  Display field label
+		 *  Display field label.
 		 *
-		 * @param  string $label
-		 * @param  string $key
-		 * @param  array $data
+		 * @param string $label Field label.
+		 * @param string $key   Field key.
+		 * @param array  $data  Field data.
 		 *
-		 * @return  string
+		 * @return string
 		 */
-		function field_label( $label, $key, $data ) {
-			$output = null;
+		public function field_label( $label, $key, $data ) {
+			$output  = null;
 			$output .= '<div class="um-field-label">';
 
-			if ( isset( $data['icon'] ) && $data['icon'] != '' && isset( $this->field_icons ) && $this->field_icons != 'off' && ( $this->field_icons == 'label' || true === $this->viewing ) ) {
+			if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'off' !== $this->field_icons && ( 'label' === $this->field_icons || true === $this->viewing ) ) {
 				$output .= '<div class="um-field-label-icon"><i class="' . esc_attr( $data['icon'] ) . '" aria-label="' . esc_attr( $label ) . '"></i></div>';
 			}
 
 			if ( true === $this->viewing ) {
 				/**
-				 * UM hook
+				 * Filters Ultimate Member field label on the Profile form: View mode.
+				 * Note: $key it's field metakey.
 				 *
-				 * @type filter
-				 * @title um_view_label_{$key}
-				 * @description Change field label on view by field $key
-				 * @input_vars
-				 * [{"var":"$label","type":"string","desc":"Field Label"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_filter( 'um_view_label_{$key}', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_filter( 'um_view_label_{$key}', 'my_view_label', 10, 1 );
-				 * function my_view_label( $label ) {
-				 *     // your code here
+				 * @since 2.0.0
+				 * @since 2.8.0 Added $data attribute.
+				 *
+				 * @hook um_view_label_{$key}
+				 *
+				 * @param {string} $label Field label.
+				 * @param {string} $data  Field data.
+				 *
+				 * @return {string} Field label.
+				 *
+				 * @example <caption>Change first name field label on the Profile form: view mode.</caption>
+				 * function my_change_first_name_label( $label, $data ) {
+				 *     $label = 'My label';
 				 *     return $label;
 				 * }
-				 * ?>
+				 * add_filter( 'um_view_label_first_name', 'my_change_first_name_label', 10, 2 );
 				 */
-				$label = apply_filters( "um_view_label_{$key}", $label );
+				$label = apply_filters( "um_view_label_{$key}", $label, $data );
 			} else {
 				/**
-				 * UM hook
+				 * Filters Ultimate Member field label on the Profile form: Edit mode.
+				 * Note: $key it's field metakey.
 				 *
-				 * @type filter
-				 * @title um_edit_label_{$key}
-				 * @description Change field label on edit by field $key
-				 * @input_vars
-				 * [{"var":"$label","type":"string","desc":"Field Label"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_filter( 'um_edit_label_{$key}', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_filter( 'um_edit_label_{$key}', 'my_edit_label', 10, 1 );
-				 * function my_edit_label( $label ) {
-				 *     // your code here
+				 * @since 2.0.0
+				 * @since 2.8.0 Added $data attribute.
+				 *
+				 * @hook um_edit_label_{$key}
+				 *
+				 * @param {string} $label Field label.
+				 * @param {string} $data  Field data.
+				 *
+				 * @return {string} Field label.
+				 *
+				 * @example <caption>Change first name field label on the Profile form: edit mode.</caption>
+				 * function my_change_first_name_label( $label, $data ) {
+				 *     $label = 'My label';
 				 *     return $label;
 				 * }
-				 * ?>
+				 * add_filter( 'um_edit_label_first_name', 'my_change_first_name_label', 10, 2 );
 				 */
-				$label = apply_filters( "um_edit_label_{$key}", $label );
+				$label = apply_filters( "um_edit_label_{$key}", $label, $data );
 				/**
-				 * UM hook
+				 * Filters Ultimate Member field label on the Profile form: Edit mode.
 				 *
-				 * @type filter
-				 * @title um_edit_label_all_fields
-				 * @description Change field label on view by field $key
-				 * @input_vars
-				 * [{"var":"$label","type":"string","desc":"Field Label"},
-				 * {"var":"$data","type":"array","desc":"Field Data"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_filter( 'um_edit_label_all_fields', 'function_name', 10, 2 );
-				 * @example
-				 * <?php
-				 * add_filter( 'um_edit_label_all_fields', 'my_edit_label_all_fields', 10, 2 );
-				 * function my_edit_label_all_fields( $label, $data ) {
-				 *     // your code here
+				 * @since 2.0.0
+				 *
+				 * @hook um_edit_label_all_fields
+				 *
+				 * @param {string} $label Field label.
+				 * @param {string} $data  Field data.
+				 *
+				 * @return {string} Field label.
+				 *
+				 * @example <caption>Change first name field label on the Profile form: edit mode.</caption>
+				 * function my_change_first_name_label( $label, $data ) {
+				 *     if ( 'first_name' === $data['metakey'] ) {
+				 *         $label = 'My label';
+				 *     }
 				 *     return $label;
 				 * }
-				 * ?>
+				 * add_filter( 'um_edit_label_all_fields', 'my_change_first_name_label', 10, 2 );
 				 */
 				$label = apply_filters( 'um_edit_label_all_fields', $label, $data );
 			}
 
 			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
-			$for_attr = '';
-			if ( ! in_array( $data['type'], $fields_without_metakey ) ) {
+			$for_attr               = '';
+			if ( ! in_array( $data['type'], $fields_without_metakey, true ) ) {
 				$for_attr = ' for="' . esc_attr( $key . UM()->form()->form_suffix ) . '"';
 			}
 
 			$output .= '<label' . $for_attr . '>' . __( $label, 'ultimate-member' ) . '</label>';
 
-			if ( ! empty( $data['help'] ) && false === $this->viewing && ! strstr( $key, 'confirm_user_pass' ) ) {
+			if ( ! empty( $data['help'] ) && false === $this->viewing && false === strpos( $key, 'confirm_user_pass' ) ) {
 				if ( ! UM()->mobile()->isMobile() ) {
 					if ( false === $this->disable_tooltips ) {
 						$output .= '<span class="um-tip um-tip-' . ( is_rtl() ? 'e' : 'w' ) . '" title="' . esc_attr__( $data['help'], 'ultimate-member' ) . '"><i class="um-icon-help-circled"></i></span>';
 					}
 				}
 
-				if ( UM()->mobile()->isMobile() || false !== $this->disable_tooltips ) {
+				if ( false !== $this->disable_tooltips || UM()->mobile()->isMobile() ) {
 					$output .= '<span class="um-tip-text">' . __( $data['help'], 'ultimate-member' ) . '</span>';
 				}
 			}
@@ -749,9 +749,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			return $output;
 		}
 
-
 		/**
-		 * Output field classes
+		 * Output field classes.
 		 *
 		 * @param  string $key
 		 * @param  array  $data
@@ -759,7 +758,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @return string
 		 */
-		function get_class( $key, $data, $add = null ) {
+		public function get_class( $key, $data, $add = null ) {
 			$classes = null;
 
 			$classes .= 'um-form-field ';
@@ -850,8 +849,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			// normal state
 			if ( isset( UM()->form()->post_form[ $key ] ) ) {
-				//show empty value for password fields
-				if ( strstr( $key, 'user_pass' ) && $this->set_mode != 'password' ) {
+				// Show empty value for password fields.
+				if ( 'password' !== $this->set_mode && false !== strpos( $key, 'user_pass' ) ) {
 					return '';
 				}
 
@@ -863,10 +862,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				return stripslashes_deep( UM()->form()->post_form[ $key ] );
 
-			} elseif ( um_user( $key ) && true === $this->editing ) {
+			} elseif ( true === $this->editing && um_user( $key ) ) {
 
-				//show empty value for password fields
-				if ( strstr( $key, 'user_pass' ) || $type == 'password' ) {
+				// Show empty value for password fields.
+				if ( 'password' === $type || false !== strpos( $key, 'user_pass' ) ) {
 					return '';
 				}
 
@@ -916,7 +915,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				 */
 				$value = apply_filters( "um_edit_{$type}_field_value", $value, $key );
 
-			} elseif ( ( um_user( $key ) || isset( $data['show_anyway'] ) ) && true === $this->viewing ) {
+			} elseif ( true === $this->viewing && ( um_user( $key ) || isset( $data['show_anyway'] ) ) ) {
 
 				return um_filtered_value( $key, $data );
 
@@ -1465,11 +1464,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @return array $arr_options
 		 */
-		function get_options_from_callback( $data, $type ) {
+		public function get_options_from_callback( $data, $type ) {
 			$arr_options = array();
 
-			if ( in_array( $type, array( 'select', 'multiselect' ) ) && ! empty( $data['custom_dropdown_options_source'] ) ) {
-
+			if ( ! empty( $data['custom_dropdown_options_source'] ) && in_array( $type, array( 'select', 'multiselect' ), true ) ) {
 				if ( $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
 					return $arr_options;
 				}
@@ -1481,7 +1479,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$arr_options = call_user_func( $data['custom_dropdown_options_source'] );
 					}
 				}
-
 			}
 
 			return $arr_options;
@@ -1525,27 +1522,29 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 
 			/**
-			 * UM hook
+			 * Filters Ultimate Member field label.
 			 *
-			 * @type filter
-			 * @title um_change_field_label
-			 * @description Change Field Label
-			 * @input_vars
-			 * [{"var":"$label","type":"string","desc":"Field Label"},
-			 * {"var":"$key","type":"string","desc":"Field Key"}]
-			 * @change_log
-			 * ["Since: 2.0.30"]
-			 * @usage add_filter( 'um_change_field_label', 'function_name', 10, 2 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_change_field_label', 'my_change_field_label', 10, 2 );
-			 * function my_form_fields( $label, $key ) {
-			 *     // your code here
+			 * @since 2.0.30
+			 * @since 2.8.0 Added $data attribute.
+			 *
+			 * @hook um_change_field_label
+			 *
+			 * @param {string} $label Field label.
+			 * @param {string} $key   Field key.
+			 * @param {array}  $data  Field data.
+			 *
+			 * @return {string} Field label.
+			 *
+			 * @example <caption>Change first name field label.</caption>
+			 * function my_change_field_label( $label, $key, $data ) {
+			 *     if ( 'first_name' === $key ) {
+			 *         $label = 'My label';
+			 *     }
 			 *     return $label;
 			 * }
-			 * ?>
+			 * add_filter( 'um_change_field_label', 'my_change_field_label', 10, 3 );
 			 */
-			$label = apply_filters( 'um_change_field_label', $label, $key );
+			$label = apply_filters( 'um_change_field_label', $label, $key, $fields[ $key ] );
 
 			$label = sprintf( __( '%s', 'ultimate-member' ), $label );
 			return $label;
@@ -1627,6 +1626,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					return '';
 				}
 				$array = ( isset( UM()->builtin()->predefined_fields[ $key ] ) ) ? UM()->builtin()->predefined_fields[ $key ] : UM()->builtin()->all_user_fields[ $key ];
+			}
+
+			if ( empty( $array['type'] ) ) {
+				return '';
 			}
 
 			$array['classes'] = null;
@@ -4122,7 +4125,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				// find rows
 				foreach ( $this->get_fields as $key => $array ) {
-					if ( $array['type'] == 'row' ) {
+					if ( isset( $array['type'] ) && 'row' === $array['type'] ) {
 						$this->rows[ $key ] = $array;
 						unset( $this->get_fields[ $key ] ); // not needed anymore
 					}
@@ -4165,7 +4168,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							}
 
 							// sub row fields
-							$subrow_fields = null;
 							$subrow_fields = $this->get_fields_in_subrow( $row_fields, $c );
 
 							if ( is_array( $subrow_fields ) ) {
@@ -4433,7 +4435,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$id_attr = ' id="' . esc_attr( $key . UM()->form()->form_suffix ) . '"';
 						}
 
-						if ( empty( $res ) ) {
+						if ( empty( $res ) && ! ( 'number' === $type && '' !== $res ) ) {
 							$output = '';
 						} else {
 							$output .= '<div class="um-field-area">';
@@ -4663,7 +4665,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				// find rows
 				foreach ( $this->get_fields as $key => $array ) {
-					if ( $array['type'] == 'row' ) {
+					if ( isset( $array['type'] ) && 'row' === $array['type'] ) {
 						$this->rows[ $key ] = $array;
 						unset( $this->get_fields[ $key ] ); // not needed anymore
 					}
@@ -4707,7 +4709,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							}
 
 							// sub row fields
-							$subrow_fields = null;
 							$subrow_fields = $this->get_fields_in_subrow( $row_fields, $c );
 
 							if ( is_array( $subrow_fields ) ) {

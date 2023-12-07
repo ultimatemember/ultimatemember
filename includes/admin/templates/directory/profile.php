@@ -116,5 +116,5 @@ $fields = apply_filters( 'um_admin_extend_directory_options_profile', $fields );
 		)
 	)->render_form();
 	?>
-	<div class="um-admin-clear"></div>
+	<div class="clear"></div>
 </div>

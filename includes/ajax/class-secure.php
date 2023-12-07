@@ -39,7 +39,7 @@ class Secure {
 		if ( empty( $last_scanned_capability ) ) {
 			delete_option( 'um_secure_scanned_details' );
 			update_option( 'um_secure_scan_status', 'started' );
-			update_option( 'um_secure_last_time_scanned', current_time( 'mysql' ) );
+			update_option( 'um_secure_last_time_scanned', current_time( 'mysql', true ) );
 		}
 
 		$scan_details = get_option( 'um_secure_scanned_details', array() );
@@ -206,6 +206,7 @@ class Secure {
 					$sessions_manager = WP_Session_Tokens::get_instance( $user->ID );
 					// Remove all the session data for all users.
 					$sessions_manager->destroy_all();
+
 				}
 			}
 
@@ -219,8 +220,8 @@ class Secure {
 					'number'     => -1,
 					'exclude'    => $arr_suspected_accounts,
 					'date_query' => array(
-						'after'  => gmdate( 'F d, Y', strtotime( '-1 day', $oldest_date ) ),
-						'before' => gmdate( 'F d, Y', strtotime( '+1 day', $newest_date ) ),
+						'after'  => gmdate( get_option( 'date_format', 'F j, Y' ), strtotime( '-1 day', $oldest_date ) ),
+						'before' => gmdate( get_option( 'date_format', 'F j, Y' ), strtotime( '+1 day', $newest_date ) ),
 					),
 				)
 			);

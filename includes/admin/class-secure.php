@@ -49,20 +49,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 			add_action( 'um_settings_before_save', array( $this, 'check_secure_changes' ) );
 			add_action( 'um_settings_save', array( $this, 'on_settings_save' ) );
 
-			add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
-
 			add_action( 'wp_ajax_um_secure_scan_affected_users', array( $this, 'ajax_scanner' ) );
-		}
-
-		public function admin_scripts( $hook ) {
-			// phpcs:disable WordPress.Security.NonceVerification
-			if ( 'ultimate-member_page_um_options' !== $hook || ( isset( $_GET['tab'] ) && 'secure' !== $_GET['tab'] ) ) {
-				return;
-			}
-			// phpcs:enable WordPress.Security.NonceVerification
-
-			wp_register_script( 'um_admin_secure', UM()->admin()->enqueue()->js_url . 'um-admin-secure.js', array( 'jquery' ), UM_VERSION, true );
-			wp_enqueue_script( 'um_admin_secure' );
 		}
 
 		/**
@@ -79,13 +66,16 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 				$date_to   = isset( $_GET['um_secure_date_to'] ) ? $_GET['um_secure_date_to'] : null;
 				// phpcs:enable WordPress.Security.NonceVerification
 				if ( $date_from ) {
+
 					$date_query_attr = array(
-						'after'     => human_time_diff( $date_from, strtotime( current_time( 'mysql' ) ) ) . ' ago',
-						'inclusive' => true,
+						'after'  => gmdate( get_option( 'date_format', 'F j, Y' ), strtotime( '-1 day', $date_from ) ),
+						'before' => gmdate( get_option( 'date_format', 'F j, Y' ), strtotime( '+1 day', $date_from ) ),
 					);
+
 					if ( $date_to ) {
-						$date_query_attr['before'] = human_time_diff( $date_to, strtotime( current_time( 'mysql' ) ) ) . ' ago';
+						$date_query_attr['before'] = gmdate( get_option( 'date_format', 'F j, Y' ), strtotime( '+1 day', $date_to ) );
 					}
+
 					$query->set( 'date_query', $date_query_attr );
 				}
 			}
@@ -177,7 +167,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 				// Don't need to reset a password.
 				if ( UM()->options()->get( 'display_login_form_notice' ) ) {
 					update_user_meta( $user_id, 'um_secure_has_reset_password', true );
-					update_user_meta( $user_id, 'um_secure_has_reset_password__timestamp', current_time( 'mysql' ) );
+					update_user_meta( $user_id, 'um_secure_has_reset_password__timestamp', current_time( 'mysql', true ) );
 				}
 
 				// Clear Cache.
@@ -215,7 +205,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 			$scan_status       = get_option( 'um_secure_scan_status' );
 			$last_scanned_time = get_option( 'um_secure_last_time_scanned' );
 			if ( ! empty( $last_scanned_time ) ) {
-				$scanner_content .= human_time_diff( strtotime( $last_scanned_time ), strtotime( current_time( 'mysql' ) ) ) . ' ' . esc_html__( 'ago', 'ultimate-member' );
+				$scanner_content .= human_time_diff( strtotime( $last_scanned_time ) ) . ' ' . esc_html__( 'ago', 'ultimate-member' );
 				if ( 'started' === $scan_status ) {
 					$scanner_content .= ' - ' . esc_html__( 'Not Completed.', 'ultimate-member' );
 				}
@@ -338,7 +328,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 					$restore_account_url = admin_url( 'users.php?user_id=' . $user_id . '&um_secure_restore_account=1&_wpnonce=' . $nonce );
 					$action              = ' &#183; <a href=" ' . esc_attr( $restore_account_url ) . ' " onclick=\'return confirm("' . esc_js( __( 'Are you sure that you want to restore this account after getting flagged for suspicious activity?', 'ultimate-member' ) ) . '");\'><small>' . esc_html__( 'Restore Account', 'ultimate-member' ) . '</small></a>';
 					if ( ! empty( $datetime ) ) {
-						$val .= '<div><small>' . human_time_diff( strtotime( $datetime ), strtotime( current_time( 'mysql' ) ) ) . ' ' . __( 'ago', 'ultimate-member' ) . '</small>' . $action . '</div>';
+						$val .= '<div><small>' . human_time_diff( strtotime( $datetime ) ) . ' ' . __( 'ago', 'ultimate-member' ) . '</small>' . $action . '</div>';
 					}
 				}
 				um_reset_user();

@@ -2,7 +2,7 @@
 	- Layout
 */
 
-.um {
+.um:not(.um-admin) {
 	width: 100%;
 	text-align: left;
 	box-sizing: border-box;
@@ -19,9 +19,8 @@
 	display: none;
 }
 
-.um *,
-.um *:before,
-.um *:after {
+.um:not(.um-admin) *:before,
+.um:not(.um-admin) *:after {
 	box-sizing: content-box;
 }
 
@@ -40,14 +39,14 @@
 	border-bottom: 0 !important;
 }
 
-.um a:focus,
+.um:not(.um-admin) a:focus,
 .um-modal a:focus {
 	outline: 0 !important;
 }
 
-.um a .image-overlay,
-.um a:hover .image-overlay,
-.um a:hover .image-overlay * {
+.um:not(.um-admin) a .image-overlay,
+.um:not(.um-admin) a:hover .image-overlay,
+.um:not(.um-admin) a:hover .image-overlay * {
 	display: none !important;
 	width: 0 !important;
 	height: 0 !important;
@@ -60,13 +59,13 @@
 }
 .um.um-in-admin .um-tip {display: none !important}
 
-.um:not(.um-directory) input,
-.um:not(.um-directory) select,
-.um:not(.um-directory) textarea{
+.um:not(.um-admin):not(.um-directory) input,
+.um:not(.um-admin):not(.um-directory) select,
+.um:not(.um-admin):not(.um-directory) textarea{
 	font-size: 15px;
 }
 
-.um * {
+.um:not(.um-admin) * {
 	-webkit-font-smoothing: antialiased !important;
 	-moz-osx-font-smoothing: grayscale !important;
 }
@@ -456,6 +455,7 @@ p.um-notice.warning a {
 	width: 44px;
 	font-size: 22px;
 	line-height: 1.7em;
+	z-index: 1;
 }
 
 .um-form input[type="text"],

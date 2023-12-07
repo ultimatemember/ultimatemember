@@ -513,6 +513,12 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 			}
 		}
 
+		// Validate the Required condition for the Number field. Set the Minimum Number option to allow 0 value.
+		if ( isset( $array['type'] ) && 'number' === $array['type'] && ! empty( $array['required'] ) && '' === $submitted_data[ $key ] ) {
+			// translators: %s: title.
+			UM()->form()->add_error( $key, sprintf( __( '%s is required.', 'ultimate-member' ), $array['title'] ) );
+		}
+
 		if ( isset( $array['type'] ) && $array['type'] == 'checkbox' && isset( $array['required'] ) && $array['required'] == 1 && ! isset( $submitted_data[ $key ] ) ) {
 			// translators: %s: title.
 			UM()->form()->add_error( $key, sprintf( __( '%s is required.', 'ultimate-member' ), $array['title'] ) );
@@ -792,7 +798,7 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 				break;
 
 			case 'youtube_video':
-				if ( ! UM()->validation()->is_url( $submitted_data[ $key ], 'youtube.com/watch?v=' ) && ! UM()->validation()->is_url( $submitted_data[ $key ], 'youtu.be' ) && ! UM()->validation()->is_url( $submitted_data[ $key ], 'youtube.com/shorts/' ) ) {
+				if ( ! UM()->validation()->is_url( $submitted_data[ $key ] ) || false === um_youtube_id_from_url( $submitted_data[ $key ] ) ) {
 					// translators: %s: label.
 					UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s URL', 'ultimate-member' ), $array['label'] ) );
 				}

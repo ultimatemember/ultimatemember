@@ -405,8 +405,8 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 						}
 					}
 
-					$from_date = date( 'Y-m-d H:s:i', strtotime( min( $value ) ) + $offset * HOUR_IN_SECONDS ); // client time zone offset
-					$to_date = date( 'Y-m-d H:s:i', strtotime( max( $value ) ) + $offset * HOUR_IN_SECONDS + DAY_IN_SECONDS - 1 ); // time 23:59
+					$from_date = date( 'Y-m-d H:i:s', strtotime( min( $value ) ) + $offset * HOUR_IN_SECONDS ); // client time zone offset
+					$to_date = date( 'Y-m-d H:i:s', strtotime( max( $value ) ) + $offset * HOUR_IN_SECONDS + DAY_IN_SECONDS - 1 ); // time 23:59
 
 					$this->where_clauses[] = $wpdb->prepare( "u.user_registered BETWEEN %s AND %s", $from_date, $to_date );
 
@@ -416,7 +416,6 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 					break;
 				case 'last_login':
-
 					$offset = 0;
 					if ( ! $is_default ) {
 						if ( isset( $_POST['gmt_offset'] ) && is_numeric( $_POST['gmt_offset'] ) ) {
@@ -429,8 +428,8 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 						}
 					}
 
-					$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
-					$to_date   = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
+					$from_date = gmdate( 'Y-m-d H:i:s', (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ) ); // client time zone offset
+					$to_date   = gmdate( 'Y-m-d H:i:s', (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1 ); // time 23:59
 
 					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_slug}{$i} ON {$join_slug}{$i}.user_id = u.ID";
 
@@ -764,11 +763,10 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 				$this->sql_order = " ORDER BY CAST( umm_sort.um_value AS CHAR ) {$order} ";
 
-			} elseif ( $sortby == 'last_login' ) {
+			} elseif ( 'last_login' === $sortby ) {
 
-				$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm_sort ON ( umm_sort.user_id = u.ID AND umm_sort.um_key = '_um_last_login' )";
-
-				$this->sql_order = " ORDER BY CAST( umm_sort.um_value AS SIGNED ) DESC ";
+				$this->joins[]   = "LEFT JOIN {$wpdb->prefix}um_metadata umm_sort ON ( umm_sort.user_id = u.ID AND umm_sort.um_key = '_um_last_login' )";
+				$this->sql_order = ' ORDER BY CAST( umm_sort.um_value AS DATETIME ) DESC ';
 
 			} elseif ( $sortby == 'last_first_name' ) {
 

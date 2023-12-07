@@ -248,9 +248,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 						<?php $metabox->field_input( '_conditional_operator', $form_id ); ?>
 						<?php $metabox->field_input( '_conditional_value', $form_id ); ?>
 
-						<p><a href="javascript:void(0);" class="um-admin-remove-condition button um-admin-tipsy-n" title="Remove condition"><i class="um-icon-close" style="margin-right:0!important"></i></a></p>
+						<p><a href="javascript:void(0);" class="um-admin-remove-condition button um-tip-n" title="Remove condition"><i class="um-icon-close" style="margin-right:0!important"></i></a></p>
 
-						<div class="um-admin-clear"></div>
+						<div class="clear"></div>
 					</div>
 					<p class="um-admin-conditions-notice">
 						<small>
@@ -259,10 +259,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 							<br><?php _e( 'Use the condition operator `contains` if the parent field has multiple options.', 'ultimate-member' ); ?>
 						</small>
 					</p>
-					<p><a href="javascript:void(0);" class="um-admin-new-condition button button-primary um-admin-tipsy-n" title="Add new condition"><?php _e( 'Add new rule', 'ultimate-member' ); ?></a></p>
+					<p><a href="javascript:void(0);" class="um-admin-new-condition button button-primary um-tip-n" title="Add new condition"><?php _e( 'Add new rule', 'ultimate-member' ); ?></a></p>
 					<p class="um-admin-reset-conditions"><a href="javascript:void(0);" class="button"><?php _e( 'Reset all rules', 'ultimate-member' ); ?></a></p>
 
-					<div class="um-admin-clear"></div>
+					<div class="clear"></div>
 
 					<?php if ( isset( $edit_array['conditions'] ) && count( $edit_array['conditions'] ) != 0 ) {
 
@@ -277,9 +277,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 								<?php $metabox->field_input( '_conditional_operator' . $k, $form_id ); ?>
 								<?php $metabox->field_input( '_conditional_value' . $k, $form_id ); ?>
 
-								<p><a href="#" class="um-admin-remove-condition button um-admin-tipsy-n" title="Remove condition"><i class="um-icon-close" style="margin-right:0!important"></i></a></p>
+								<p><a href="#" class="um-admin-remove-condition button um-tip-n" title="Remove condition"><i class="um-icon-close" style="margin-right:0!important"></i></a></p>
 
-								<div class="um-admin-clear"></div>
+								<div class="clear"></div>
 							</div>
 
 							<?php
@@ -294,9 +294,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 							<?php $metabox->field_input( '_conditional_operator', $form_id ); ?>
 							<?php $metabox->field_input( '_conditional_value', $form_id ); ?>
 
-							<p><a href="#" class="um-admin-remove-condition button um-admin-tipsy-n" title="Remove condition"><i class="um-icon-close" style="margin-right:0!important"></i></a></p>
+							<p><a href="#" class="um-admin-remove-condition button um-tip-n" title="Remove condition"><i class="um-icon-close" style="margin-right:0!important"></i></a></p>
 
-							<div class="um-admin-clear"></div>
+							<div class="clear"></div>
 						</div>
 
 					<?php } ?>
@@ -333,32 +333,31 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			die;
 		}
 
-
 		/**
-		 * Sort array function
+		 * Sort sub-row fields by position.
+		 * Callback for `uasort()` function
 		 *
-		 * @param array $arr
-		 * @param string $col
-		 * @param int $dir
+		 * @param array $a Array item.
+		 * @param array $b Array item.
 		 *
-		 * @return array
+		 * @return int
 		 */
-		function array_sort_by_column( $arr, $col, $dir = SORT_ASC ) {
-			$sort_col = array();
-
-			foreach ( $arr as $key => $row ) {
-				if ( ! empty( $row[ $col ] ) ) {
-					$sort_col[ $key ] = $row[ $col ];
-				}
+		public function sorting_fields_by_position( $a, $b ) {
+			if ( empty( $a['position'] ) ) {
+				$a['position'] = 0;
 			}
 
-			if ( ! empty( $sort_col ) ) {
-				array_multisort( $sort_col, $dir, $arr );
+			if ( empty( $b['position'] ) ) {
+				$b['position'] = 0;
 			}
+			$a['position'] = absint( $a['position'] );
+			$b['position'] = absint( $b['position'] );
 
-			return $arr;
+			if ( $a['position'] === $b['position'] ) {
+				return 0;
+			}
+			return ( $a['position'] < $b['position'] ) ? -1 : 1;
 		}
-
 
 		/**
 		 * Get fields in row
@@ -419,11 +418,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					<span class="um-admin-row-loading"><span></span></span>
 					<!-- Master Row Actions -->
 					<div class="um-admin-drag-row-icons">
-						<a href="javascript:void(0);" class="um-admin-drag-rowsub-add um-admin-tipsy-n" title="<?php esc_attr_e( 'Add Row', 'ultimate-member' ); ?>" data-row_action="add_subrow"><i class="um-icon-plus"></i></a>
-						<a href="javascript:void(0);" class="um-admin-drag-row-edit um-admin-tipsy-n" title="<?php esc_attr_e( 'Edit Row', 'ultimate-member' ); ?>" data-modal="UM_edit_row" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="row" data-arg2="<?php echo esc_attr( $this->form_id ); ?>" data-arg3="_um_row_1"><i class="um-faicon-pencil"></i></a>
+						<a href="javascript:void(0);" class="um-admin-drag-rowsub-add um-tip-n" title="<?php esc_attr_e( 'Add Row', 'ultimate-member' ); ?>" data-row_action="add_subrow"><i class="um-icon-plus"></i></a>
+						<a href="javascript:void(0);" class="um-admin-drag-row-edit um-tip-n" title="<?php esc_attr_e( 'Edit Row', 'ultimate-member' ); ?>" data-modal="UM_edit_row" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="row" data-arg2="<?php echo esc_attr( $this->form_id ); ?>" data-arg3="_um_row_1"><i class="um-faicon-pencil"></i></a>
 						<span class="um-admin-drag-row-start"><i class="um-icon-arrow-move"></i></span>
 					</div>
-					<div class="um-admin-clear"></div>
+					<div class="clear"></div>
 					<div class="um-admin-drag-rowsubs">
 						<div class="um-admin-drag-rowsub">
 							<span class="um-admin-row-loading"><span></span></span>
@@ -436,11 +435,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 							<!-- Sub Row Actions -->
 							<div class="um-admin-drag-rowsub-icons">
 								<span class="um-admin-drag-rowsub-start"><i class="um-icon-arrow-move"></i></span>
-							</div><div class="um-admin-clear"></div>
+							</div><div class="clear"></div>
 							<!-- Columns -->
 							<div class="um-admin-drag-col"></div>
 							<div class="um-admin-drag-col-dynamic"></div>
-							<div class="um-admin-clear"></div>
+							<div class="clear"></div>
 						</div>
 					</div>
 				</div>
@@ -473,14 +472,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 						<span class="um-admin-row-loading"><span></span></span>
 						<!-- Master Row Actions -->
 						<div class="um-admin-drag-row-icons">
-							<a href="javascript:void(0);" class="um-admin-drag-rowsub-add um-admin-tipsy-n" title="<?php esc_attr_e( 'Add Row', 'ultimate-member' ); ?>" data-row_action="add_subrow"><i class="um-icon-plus"></i></a>
-							<a href="javascript:void(0);" class="um-admin-drag-row-edit um-admin-tipsy-n" title="<?php esc_attr_e( 'Edit Row', 'ultimate-member' ); ?>" data-modal="UM_edit_row" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="row" data-arg2="<?php echo esc_attr( $this->form_id ); ?>" data-arg3="<?php echo esc_attr( $row_id ); ?>"><i class="um-faicon-pencil"></i></a>
+							<a href="javascript:void(0);" class="um-admin-drag-rowsub-add um-tip-n" title="<?php esc_attr_e( 'Add Row', 'ultimate-member' ); ?>" data-row_action="add_subrow"><i class="um-icon-plus"></i></a>
+							<a href="javascript:void(0);" class="um-admin-drag-row-edit um-tip-n" title="<?php esc_attr_e( 'Edit Row', 'ultimate-member' ); ?>" data-modal="UM_edit_row" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="row" data-arg2="<?php echo esc_attr( $this->form_id ); ?>" data-arg3="<?php echo esc_attr( $row_id ); ?>"><i class="um-faicon-pencil"></i></a>
 							<span class="um-admin-drag-row-start"><i class="um-icon-arrow-move"></i></span>
 							<?php if ( '_um_row_1' !== $row_id ) { ?>
-								<a href="javascript:void(0);" class="um-admin-tipsy-n" title="<?php esc_attr_e( 'Delete Row', 'ultimate-member' ); ?>" data-remove_element="um-admin-drag-row"><i class="um-faicon-trash-o"></i></a>
+								<a href="javascript:void(0);" class="um-tip-n" title="<?php esc_attr_e( 'Delete Row', 'ultimate-member' ); ?>" data-remove_element="um-admin-drag-row"><i class="um-faicon-trash-o"></i></a>
 							<?php } ?>
 						</div>
-						<div class="um-admin-clear"></div>
+						<div class="clear"></div>
 						<div class="um-admin-drag-rowsubs">
 							<?php
 							$row_fields = $this->get_fields_by_row( $row_id );
@@ -515,15 +514,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 									<div class="um-admin-drag-rowsub-icons">
 										<span class="um-admin-drag-rowsub-start"><i class="um-icon-arrow-move"></i></span>
 										<?php if ( $c > 0 ) { ?>
-											<a href="javascript:void(0);" class="um-admin-tipsy-n" title="<?php esc_attr_e( 'Delete Row', 'ultimate-member' ); ?>" data-remove_element="um-admin-drag-rowsub"><i class="um-faicon-trash-o"></i></a>
+											<a href="javascript:void(0);" class="um-tip-n" title="<?php esc_attr_e( 'Delete Row', 'ultimate-member' ); ?>" data-remove_element="um-admin-drag-rowsub"><i class="um-faicon-trash-o"></i></a>
 										<?php } ?>
 									</div>
-									<div class="um-admin-clear"></div>
+									<div class="clear"></div>
 									<!-- Columns -->
 									<div class="um-admin-drag-col">
 										<?php
 										if ( is_array( $subrow_fields ) ) {
-											$subrow_fields = $this->array_sort_by_column( $subrow_fields, 'position' );
+											uasort( $subrow_fields, array( &$this, 'sorting_fields_by_position' ) );
 											foreach ( $subrow_fields as $key => $keyarray ) {
 												if ( ! array_key_exists( 'type', $keyarray ) || ! array_key_exists( 'title', $keyarray ) ) {
 													continue;
@@ -550,15 +549,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 													</div>
 													<div class="um-admin-drag-fld-type um-field-type-<?php echo esc_attr( $field_type ); ?>"><?php echo esc_html( $field_name ); ?></div>
 													<div class="um-admin-drag-fld-icons um-field-type-<?php echo esc_attr( $field_type ); ?>">
-														<a href="javascript:void(0);" class="um-admin-tipsy-n" title="<?php esc_attr_e( 'Edit', 'ultimate-member' ); ?>" data-modal="UM_edit_field" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="<?php echo esc_attr( $field_type ); ?>" data-arg2="<?php echo esc_attr( $this->form_id ); ?>" data-arg3="<?php echo esc_attr( $key ); ?>"><i class="um-faicon-pencil"></i></a>
-														<a href="javascript:void(0);" class="um-admin-tipsy-n um_admin_duplicate_field" title="<?php esc_attr_e( 'Duplicate', 'ultimate-member' ); ?>" data-silent_action="um_admin_duplicate_field" data-arg1="<?php echo esc_attr( $key ); ?>" data-arg2="<?php echo esc_attr( $this->form_id ); ?>"><i class="um-faicon-files-o"></i></a>
+														<a href="javascript:void(0);" class="um-tip-n" title="<?php esc_attr_e( 'Edit', 'ultimate-member' ); ?>" data-modal="UM_edit_field" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="<?php echo esc_attr( $field_type ); ?>" data-arg2="<?php echo esc_attr( $this->form_id ); ?>" data-arg3="<?php echo esc_attr( $key ); ?>"><i class="um-faicon-pencil"></i></a>
+														<a href="javascript:void(0);" class="um-tip-n um_admin_duplicate_field" title="<?php esc_attr_e( 'Duplicate', 'ultimate-member' ); ?>" data-silent_action="um_admin_duplicate_field" data-arg1="<?php echo esc_attr( $key ); ?>" data-arg2="<?php echo esc_attr( $this->form_id ); ?>"><i class="um-faicon-files-o"></i></a>
 														<?php if ( 'group' === $field_type ) { ?>
-															<a href="javascript:void(0);" class="um-admin-tipsy-n" title="<?php esc_attr_e( 'Delete Group', 'ultimate-member' ); ?>" data-remove_element="um-admin-drag-fld.um-field-type-group" data-silent_action="um_admin_remove_field" data-arg1="<?php echo esc_attr( $key ); ?>" data-arg2="<?php echo esc_attr( $this->form_id ); ?>"><i class="um-faicon-trash-o"></i></a>
+															<a href="javascript:void(0);" class="um-tip-n" title="<?php esc_attr_e( 'Delete Group', 'ultimate-member' ); ?>" data-remove_element="um-admin-drag-fld.um-field-type-group" data-silent_action="um_admin_remove_field" data-arg1="<?php echo esc_attr( $key ); ?>" data-arg2="<?php echo esc_attr( $this->form_id ); ?>"><i class="um-faicon-trash-o"></i></a>
 														<?php } else { ?>
-															<a href="javascript:void(0);" class="um-admin-tipsy-n" title="<?php esc_attr_e( 'Delete', 'ultimate-member' ); ?>" data-silent_action="um_admin_remove_field" data-arg1="<?php echo esc_attr( $key ); ?>" data-arg2="<?php echo esc_attr( $this->form_id ); ?>"><i class="um-faicon-trash-o"></i></a>
+															<a href="javascript:void(0);" class="um-tip-n" title="<?php esc_attr_e( 'Delete', 'ultimate-member' ); ?>" data-silent_action="um_admin_remove_field" data-arg1="<?php echo esc_attr( $key ); ?>" data-arg2="<?php echo esc_attr( $this->form_id ); ?>"><i class="um-faicon-trash-o"></i></a>
 														<?php } ?>
 													</div>
-													<div class="um-admin-clear"></div>
+													<div class="clear"></div>
 													<?php if ( 'group' === $field_type ) { ?>
 														<div class="um-admin-drag-group"></div>
 													<?php } ?>
@@ -569,7 +568,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 										?>
 									</div>
 									<div class="um-admin-drag-col-dynamic"></div>
-									<div class="um-admin-clear"></div>
+									<div class="clear"></div>
 								</div>
 								<?php
 							}
@@ -655,6 +654,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 						}
 					} elseif ( false !== strpos( $key, 'um_editor' ) ) {
 						if ( 'block' === $array['post']['_type'] ) {
+							// the nl2br() function does not work as expected, there is an extra empty line left
+							// use str_replace for correct work
+							$val                          = str_replace( "\r\n\r\n", '<br>', $val );
 							$save[ $field_id ]['content'] = wp_kses_post( $val );
 						} else {
 							$save[ $field_id ]['content'] = sanitize_textarea_field( $val );
@@ -821,10 +823,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					</div>
 					<div class="um-admin-icons">
 						<?php foreach ( UM()->fonticons()->all as $icon ) { ?>
-							<span data-code="<?php echo esc_attr( $icon ); ?>" title="<?php echo esc_attr( $icon ); ?>" class="um-admin-tipsy-n"><i class="<?php echo esc_attr( $icon ); ?>"></i></span>
+							<span data-code="<?php echo esc_attr( $icon ); ?>" title="<?php echo esc_attr( $icon ); ?>" class="um-tip-n"><i class="<?php echo esc_attr( $icon ); ?>"></i></span>
 						<?php } ?>
 					</div>
-					<div class="um-admin-clear"></div>
+					<div class="clear"></div>
 					<?php
 					$output = ob_get_clean();
 					break;
@@ -875,21 +877,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					<div class="um-admin-btns">
 						<?php
 						if ( UM()->builtin()->custom_fields ) {
-							foreach ( UM()->builtin()->custom_fields as $field_key => $field_data ) {
-								if ( empty( $field_data['title'] ) || empty( $field_data['type'] ) ) {
+							foreach ( UM()->builtin()->custom_fields as $field_key => $array ) {
+								if ( empty( $array['title'] ) || empty( $array['type'] ) ) {
 									continue;
 								}
 								?>
 								<?php // translators: %s is a field metakey. ?>
-								<a href="javascript:void(0);" class="button with-icon" <?php disabled( in_array( $field_key, $form_fields, true ) ); ?> data-silent_action="um_admin_add_field_from_list" data-arg1="<?php echo esc_attr( $field_key ); ?>" data-arg2="<?php echo esc_attr( $arg2 ); ?>" title="<?php echo esc_attr( sprintf( __( 'Meta Key - %s', 'ultimate-member' ), $field_key ) ); ?>"><?php echo esc_html( um_trim_string( $field_data['title'] ) ); ?> <small>(<?php echo esc_html( ucfirst( $field_data['type'] ) ); ?>)</small><span class="remove"></span></a>
+								<a href="javascript:void(0);" class="button with-icon" <?php disabled( in_array( $field_key, $form_fields, true ) ) ?> data-silent_action="um_admin_add_field_from_list" data-arg1="<?php echo esc_attr( $field_key ); ?>" data-arg2="<?php echo esc_attr( $arg2 ); ?>" title="<?php echo esc_attr( sprintf( __( 'Meta Key - %s', 'ultimate-member' ), $field_key ) ); ?>">
+									<?php echo esc_html( um_trim_string( stripslashes( $array['title'] ) ) ); ?> (<?php echo esc_html( ucfirst( $array['type'] ) ); ?>)
+									<span class="remove dashicons dashicons-dismiss"></span>
+								</a>
+
 								<?php
 							}
-						} else {
-							?>
-							<p><?php esc_html_e( 'You did not create any custom fields.', 'ultimate-member' ); ?></p>
-							<?php
 						}
 						?>
+
+						<p class="um-no-custom-fields"<?php if ( UM()->builtin()->custom_fields ) { ?> style="display: none;"<?php } ?>>
+							<?php esc_html_e( 'You did not create any custom fields.', 'ultimate-member' ); ?>
+						</p>
 					</div>
 					<?php
 					$output = ob_get_clean();
@@ -962,7 +968,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 							}
 							?>
 						</div>
-						<div class="um-admin-clear"></div>
+						<div class="clear"></div>
 						<?php
 						if ( array_key_exists( 'col3', $field_type_data ) && is_array( $field_type_data['col3'] ) ) {
 							foreach ( $field_type_data['col3'] as $opt ) {
@@ -970,7 +976,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 							}
 						}
 						?>
-						<div class="um-admin-clear"></div>
+						<div class="clear"></div>
 						<?php
 						if ( array_key_exists( 'col_full', $field_type_data ) && is_array( $field_type_data['col_full'] ) ) {
 							foreach ( $field_type_data['col_full'] as $opt ) {
@@ -1008,7 +1014,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 							<?php
 							if ( is_array( $field_type_data['col1'] ) ) {
 								foreach ( $field_type_data['col1'] as $opt ) {
-									$metabox->field_input( $opt );
+									$metabox->field_input( $opt, $arg2 );
 								}
 							}
 							?>
@@ -1017,24 +1023,24 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 							<?php
 							if ( array_key_exists( 'col2', $field_type_data ) && is_array( $field_type_data['col2'] ) ) {
 								foreach ( $field_type_data['col2'] as $opt ) {
-									$metabox->field_input( $opt );
+									$metabox->field_input( $opt, $arg2 );
 								}
 							}
 							?>
 						</div>
-						<div class="um-admin-clear"></div>
+						<div class="clear"></div>
 						<?php
 						if ( array_key_exists( 'col3', $field_type_data ) && is_array( $field_type_data['col3'] ) ) {
 							foreach ( $field_type_data['col3'] as $opt ) {
-								$metabox->field_input( $opt );
+								$metabox->field_input( $opt, $arg2 );
 							}
 						}
 						?>
-						<div class="um-admin-clear"></div>
+						<div class="clear"></div>
 						<?php
 						if ( array_key_exists( 'col_full', $field_type_data ) && is_array( $field_type_data['col_full'] ) ) {
 							foreach ( $field_type_data['col_full'] as $opt ) {
-								$metabox->field_input( $opt );
+								$metabox->field_input( $opt, $arg2 );
 							}
 						}
 

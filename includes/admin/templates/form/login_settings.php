@@ -34,5 +34,5 @@
 		)
 	)->render_form();
 	?>
-	<div class="um-admin-clear"></div>
+	<div class="clear"></div>
 </div>

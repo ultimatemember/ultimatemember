@@ -65,11 +65,12 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		public $usermeta_whitelist = array();
 
 		/**
-		 * Form constructor.
+		 * Hook for singleton
+		 * @since 2.8.0
 		 */
-		public function __construct() {
+		public function hooks() {
 			add_action( 'template_redirect', array( &$this, 'form_init' ), 2 );
-			add_action( 'init', array( &$this, 'field_declare' ), 10 );
+			add_action( 'init', array( &$this, 'field_declare' ) );
 		}
 
 		/**
@@ -114,6 +115,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 */
 		public function ajax_select_options() {
 			UM()->check_ajax_nonce();
+
+			// phpcs:disable WordPress.Security.NonceVerification
 
 			$arr_options           = array();
 			$arr_options['status'] = 'success';
@@ -163,9 +166,9 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			if ( isset( $_POST['form_id'] ) ) {
 				UM()->fields()->set_id = absint( $_POST['form_id'] );
 			}
-			UM()->fields()->set_mode  = 'profile';
-			$form_fields              = UM()->fields()->get_fields();
-			$arr_options['fields']    = $form_fields;
+			UM()->fields()->set_mode = 'profile';
+			$form_fields             = UM()->fields()->get_fields();
+			$arr_options['fields']   = $form_fields;
 
 			if ( isset( $arr_options['post']['members_directory'] ) && 'yes' === $arr_options['post']['members_directory'] ) {
 				global $wpdb;
@@ -181,7 +184,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				);
 
 				if ( ! empty( $values_array ) ) {
-					$parent_dropdown = isset( $arr_options['field']['parent_dropdown_relationship'] ) ? $arr_options['field']['parent_dropdown_relationship'] : '';
+					$parent_dropdown      = isset( $arr_options['post']['parent_option_name'] ) ? $arr_options['post']['parent_option_name'] : '';
 					$arr_options['items'] = call_user_func( $ajax_source_func, $parent_dropdown );
 
 					if ( array_keys( $arr_options['items'] ) !== range( 0, count( $arr_options['items'] ) - 1 ) ) {
@@ -241,6 +244,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					}
 				}
 
+				// phpcs:enable WordPress.Security.NonceVerification
 				wp_send_json( $arr_options );
 			}
 		}
@@ -505,7 +509,6 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				// Add required usermeta for register.
 				if ( 'register' === $this->form_data['mode'] ) {
 					$cf_metakeys[] = 'form_id';
-					$cf_metakeys[] = 'timestamp';
 				}
 
 				/**
@@ -607,6 +610,9 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 								$this->post_form['role'] = $role;
 								$maybe_set_default_role  = false;
+
+								// Force adding `role` metakey if there is a role-type field on the form. It's required to User Profile.
+								$this->usermeta_whitelist[] = 'role';
 							}
 						}
 					}
@@ -748,7 +754,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 											$form[ $k ] = apply_filters( 'um_sanitize_form_field', $form[ $k ], $field );
 											break;
 										case 'number':
-											$form[ $k ] = (int) $form[ $k ];
+											$form[ $k ] = '' !== $form[ $k ] ? (int) $form[ $k ] : '';
 											break;
 										case 'textarea':
 											if ( ! empty( $field['html'] ) || ( UM()->profile()->get_show_bio_key( $form ) === $k && UM()->options()->get( 'profile_show_html_bio' ) ) ) {
@@ -780,7 +786,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 											$f = UM()->builtin()->get_a_field( $k );
 
 											if ( is_array( $f ) && array_key_exists( 'match', $f ) && array_key_exists( 'advanced', $f ) && 'social' === $f['advanced'] ) {
-												$v = sanitize_text_field( $form[ $k ] );
+												$v = esc_url_raw( $form[ $k ] );
 
 												// Make a proper social link
 												if ( ! empty( $v ) ) {

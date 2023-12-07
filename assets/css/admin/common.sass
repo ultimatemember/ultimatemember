@@ -1,0 +1,87 @@
+@import "selectors"
+@import "colors"
+
+.#{$prefix}adm-ico
+  font-size: 18px
+  width: 18px
+  text-align: center
+  display: inline-block
+  color: #{$admin-ok}
+  &.inactive
+    color: #{$admin-warning}
+  &.pointer
+    cursor: pointer
+
+body.#{$prefix}admin-modal-open
+  overflow: hidden
+
+.#{$prefix}admin
+  #major-publishing-actions
+    background-color: #fff !important
+    border-top: 0
+  a.button,
+  a.button-primary
+    i
+      font-size: 15px !important
+      height: 15px !important
+      width: 15px !important
+      text-align: center !important
+      margin: 0 5px 0 0 !important
+      display: inline-block
+      &:before
+        position: relative
+        top: 1px
+
+.#{$prefix}admin-metabox
+  h6
+    font-size: 14px
+    margin: 12px 0 0 0
+  h3
+    padding-left: 0 !important
+  h4
+    font-size: 14px
+    background: #f5f5f5
+    padding: 8px 4px
+    color: #333
+  p
+    margin: 10px 0 0 0
+  label
+    display: block
+    cursor: default
+    padding: 0 !important
+    font-size: 13px
+    color: #666
+
+  input[type="text"]
+    height: auto !important
+    width: 100%
+    max-width: 100%
+    display: block
+    box-sizing: border-box !important
+    font-size: 13px !important
+    line-height: 1.4em !important
+    padding: 4px 10px !important
+    &:disabled
+      opacity: 0.7 !important
+      color: #aaa !important
+    &.small
+      width: 54px
+    &.#{$prefix}admin-error
+      border-color: #{$admin-warning} !important
+
+  textarea
+    width: 100%
+    max-width: 100%
+    display: block
+    box-sizing: border-box !important
+    font-size: 13px !important
+    line-height: 1.4em !important
+    padding: 8px !important
+    color: #888 !important
+    min-height: 100px
+    height: 100px
+    &.tall
+      min-height: 200px
+      height: 200px
+    &.#{$prefix}admin-error
+      border-color: #{$admin-warning} !important

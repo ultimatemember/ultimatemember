@@ -14,10 +14,46 @@ gulp.task( 'default', function ( done ) {
 
 	gulp.src(['assets/sass/*.sass']).pipe( sass().on( 'error', sass.logError ) ).pipe( gulp.dest( 'assets/css' ) );
 
-    gulp.src(['assets/js/*.js','!assets/js/um-fileupload.js', '!assets/js/*.min.js']) // path to your files
+    gulp.src(['assets/js/*.js','!assets/js/*.min.js']) // path to your files
         .pipe( uglify() )
         .pipe( rename({ suffix: '.min' }) )
         .pipe( gulp.dest( 'assets/js/' ) );
+
+	gulp.src(['assets/js/admin/*.js','!assets/js/admin/*.min.js']) // path to your files
+        .pipe( uglify() )
+        .pipe( rename({ suffix: '.min' }) )
+        .pipe( gulp.dest( 'assets/js/admin/' ) );
+	gulp.src(['assets/css/admin/*.css', '!assets/css/admin/*.min.css',])
+		.pipe( cleanCSS() )
+		.pipe( rename( { suffix: '.min' } ) )
+		.pipe( gulp.dest( 'assets/css/admin/' ) );
+
+	gulp.src(['assets/css/*.css', '!assets/css/*.min.css',])
+		.pipe( cleanCSS() )
+		.pipe( rename( { suffix: '.min' } ) )
+		.pipe( gulp.dest( 'assets/css/' ) );
+
+	// full CSS files
+	gulp.src(['assets/css/admin/*.sass'])
+		.pipe( sass().on( 'error', sass.logError ) )
+		.pipe( gulp.dest( 'assets/css/admin/' ) );
+	// min CSS files
+	gulp.src(['assets/css/admin/*.sass'])
+		.pipe( sass().on( 'error', sass.logError ) )
+		.pipe( cleanCSS() )
+		.pipe( rename( { suffix: '.min' } ) )
+		.pipe( gulp.dest( 'assets/css/admin/' ) );
+
+	// full CSS files
+	gulp.src(['assets/css/*.sass'])
+		.pipe( sass().on( 'error', sass.logError ) )
+		.pipe( gulp.dest( 'assets/css/' ) );
+	// min CSS files
+	gulp.src(['assets/css/*.sass'])
+		.pipe( sass().on( 'error', sass.logError ) )
+		.pipe( cleanCSS() )
+		.pipe( rename( { suffix: '.min' } ) )
+		.pipe( gulp.dest( 'assets/css/' ) );
 
 	gulp.src(['assets/libs/legacy/fonticons/*.css', '!assets/libs/legacy/fonticons/*.min.css',])
 		.pipe( cleanCSS() )
@@ -43,6 +79,20 @@ gulp.task( 'default', function ( done ) {
 		.pipe( uglify() )
 		.pipe( rename({ suffix: '.min' }) )
 		.pipe( gulp.dest( 'assets/libs/tipsy/' ) );
+
+	// Pickadate lib
+	gulp.src(['assets/libs/pickadate/*.css', '!assets/libs/pickadate/*.min.css',])
+		.pipe( cleanCSS() )
+		.pipe( rename( { suffix: '.min' } ) )
+		.pipe( gulp.dest( 'assets/libs/pickadate/' ) );
+	gulp.src(['assets/libs/pickadate/*.js', '!assets/libs/pickadate/*.min.js',])
+		.pipe( uglify() )
+		.pipe( rename({ suffix: '.min' }) )
+		.pipe( gulp.dest( 'assets/libs/pickadate/' ) );
+	gulp.src(['assets/libs/pickadate/translations/*.js', '!assets/libs/pickadate/translations/*.min.js',])
+		.pipe( uglify() )
+		.pipe( rename({ suffix: '.min' }) )
+		.pipe( gulp.dest( 'assets/libs/pickadate/translations/' ) );
 
     done();
 });

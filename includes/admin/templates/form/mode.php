@@ -26,4 +26,4 @@ $is_core = get_post_meta( get_the_ID(), '_um_core', true ); ?>
 
 	<input type="hidden" name="form[_um_mode]" id="form__um_mode" value="<?php echo esc_attr( UM()->query()->get_meta_value( '_um_mode', null, 'register' ) ); ?>" />
 </div>
-<div class="um-admin-clear"></div>
+<div class="clear"></div>
