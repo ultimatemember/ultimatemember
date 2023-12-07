@@ -423,6 +423,9 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 			add_filter( 'um_template_tags_patterns_hook', array( UM()->mail(), 'add_placeholder' ) );
 			add_filter( 'um_template_tags_replaces_hook', array( UM()->mail(), 'add_replace_placeholder' ) );
+			if ( array_key_exists( 'generated_pass', $args ) && 1 === absint( $args['generated_pass'] ) ) {
+				add_filter( 'um_template_tags_replaces_hook', array( UM()->mail(), 'add_replace_placeholder_set_password' ) );
+			}
 
 			/**
 			 * Filters email notification subject.
@@ -621,6 +624,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			$placeholders[] = '{admin_email}';
 			$placeholders[] = '{submitted_registration}';
 			$placeholders[] = '{login_url}';
+			$placeholders[] = '{login_button}';
 			$placeholders[] = '{password}';
 			$placeholders[] = '{account_activation_link}';
 			return $placeholders;
@@ -639,8 +643,26 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			$replace_placeholders[] = um_admin_email();
 			$replace_placeholders[] = um_user_submitted_registration_formatted();
 			$replace_placeholders[] = um_get_core_page( 'login' );
+			$replace_placeholders[] = esc_html__( 'Login to our site', 'ultimate-member' );
 			$replace_placeholders[] = esc_html__( 'Your set password', 'ultimate-member' );
 			$replace_placeholders[] = um_user( 'account_activation_link' );
+			return $replace_placeholders;
+		}
+
+
+		public function add_replace_placeholder_set_password( $replace_placeholders ) {
+			$key = array_search( um_get_core_page( 'login' ), $replace_placeholders, true );
+			if ( false !== $key ) {
+				$url = UM()->password()->reset_url();
+				$replace_placeholders[ $key ] = add_query_arg( array( 'set_pass' => 'new_user' ), $url );
+			}
+
+			$button     = esc_html__( 'Login to our site', 'ultimate-member' );
+			$button_key = array_search( $button, $replace_placeholders , true );
+			if ( false !== $key ) {
+				$url                                 = UM()->password()->reset_url();
+				$replace_placeholders[ $button_key ] = esc_html__( 'Set your password', 'ultimate-member' );
+			}
 			return $replace_placeholders;
 		}
 	}

@@ -1690,7 +1690,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		?>
 		 *
 		 */
-		function approve( $repeat = true ) {
+		function approve( $repeat = true, $args = array() ) {
 			$user_id = um_user( 'ID' );
 
 			if ( ! $repeat ) {
@@ -1712,7 +1712,13 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			} else {
 				//$userdata = get_userdata( $user_id );
 				//get_password_reset_key( $userdata );
-				UM()->mail()->send( um_user( 'user_email' ), 'welcome_email' );
+				$welcome_email_args = array();
+				if ( true === (bool) $args['generated_pass'] ) {
+					$welcome_email_args = array(
+						'generated_pass' => 1,
+					);
+				}
+				UM()->mail()->send( um_user( 'user_email' ), 'welcome_email', $welcome_email_args );
 			}
 
 			$this->set_status( 'approved' );
