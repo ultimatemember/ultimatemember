@@ -186,8 +186,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 * Bugfixes:
 
+  - Fixed: Using fields with numeric keys in Form Builder
   - Fixed: Pickadate.JS (datetime picker) localizations using
-  - Fixed: PHP notices on the SiteHealth page
+  - Fixed: PHP notices on the SiteHealth and Form Builder pages
   - Fixed: Using 'um_user_permissions_filter' hook and it's arguments.
 
 * Deprecated:
