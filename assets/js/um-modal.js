@@ -112,7 +112,7 @@ jQuery(document).ready(function() {
 			mode = $formWrapper.attr('data-mode');
 		}
 
-		if ( jQuery('.cropper-hidden').length > 0 ) {
+		if ( jQuery('.cropper-hidden').length > 0 && UM.frontend.cropper.obj ) {
 			var data = UM.frontend.cropper.obj.getData();
 			var coord = Math.round(data.x) + ',' + Math.round(data.y) + ',' + Math.round(data.width) + ',' + Math.round(data.height);
 
