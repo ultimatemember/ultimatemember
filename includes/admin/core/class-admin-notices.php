@@ -640,17 +640,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 				$url = add_query_arg( array( 'page' => 'um_upgrade' ), admin_url( 'admin.php' ) );
 
-				ob_start(); ?>
+				ob_start();
+				?>
 
 				<p>
-					<?php
-					// translators: %1$s is a plugin name; %2$s is a plugin version; %3$s is a plugin name; %4$s is a plugin version; %5$s is a upgrade link.
-					echo wp_kses( sprintf( __( '<strong>%1$s version %2$s</strong> needs to be updated to work correctly.<br />It is necessary to update the structure of the database and options that are associated with <strong>%3$s %4$s</strong>.<br />Please visit <a href="%5$s">"Upgrade"</a> page and run the upgrade process.', 'ultimate-member' ), UM_PLUGIN_NAME, UM_VERSION, UM_PLUGIN_NAME, UM_VERSION, $url ), UM()->get_allowed_html( 'admin_notice' ) );
-					?>
+					<strong><?php echo esc_html( UM_PLUGIN_NAME . ' ' . UM_VERSION . ' ' . __( 'version needs to be updated to work correctly.', 'ultimate-member' ) ); ?></strong>
+					<br />
+					<?php esc_html_e( 'It is necessary to update the structure of the database and options that are associated with current version', 'ultimate-member' ); ?>
+					<br />
+					<?php esc_html_e( 'Please run the upgrade process on this ', 'ultimate-member' ); ?><a href="<?php echo esc_url( $url ); ?>"><?php esc_html_e( 'page', 'ultimate-member' ); ?></a>
 				</p>
 
 				<p>
-					<a href="<?php echo esc_url( $url ) ?>" class="button button-primary"><?php _e( 'Visit Upgrade Page', 'ultimate-member' ) ?></a>
+					<a href="<?php echo esc_url( $url ) ?>" class="button button-primary"><?php esc_html_e( 'Visit Upgrade Page', 'ultimate-member' ); ?></a>
 					&nbsp;
 				</p>
 
