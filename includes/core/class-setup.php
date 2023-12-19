@@ -206,7 +206,7 @@ KEY meta_value_indx (um_value(191))
 					$content = '[ultimatemember_password]';
 				} elseif ( 'user' === $slug ) {
 					$content = '[ultimatemember form_id="' . $setup_shortcodes['profile'] . '"]';
-				} else {
+				} elseif ( ! empty( $setup_shortcodes[ $slug ] ) ) {
 					$content = '[ultimatemember form_id="' . $setup_shortcodes[ $slug ] . '"]';
 				}
 
