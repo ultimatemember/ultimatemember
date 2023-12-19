@@ -1368,13 +1368,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$upload_frame_title = ! empty( $field_data['upload_frame_title'] ) ? $field_data['upload_frame_title'] : __( 'Select media', 'ultimate-member' );
 
-			$image_id = ! empty( $value['id'] ) ? $value['id'] : '';
-			$image_width = ! empty( $value['width'] ) ? $value['width'] : '';
-			$image_height = ! empty( $value['height'] ) ? $value['height'] : '';
+			$image_id        = ! empty( $value['id'] ) ? $value['id'] : '';
+			$image_width     = ! empty( $value['width'] ) ? $value['width'] : '';
+			$image_height    = ! empty( $value['height'] ) ? $value['height'] : '';
 			$image_thumbnail = ! empty( $value['thumbnail'] ) ? $value['thumbnail'] : '';
-			$image_url = ! empty( $value['url'] ) ? $value['url'] : '';
+			$image_url       = ! empty( $value['url'] ) ? $value['url'] : '';
 
-			$html = "<div class=\"um-media-upload\">" .
+			$wrapper_classes = array();
+			if ( ! isset( $field_data['preview'] ) || false !== $field_data['preview'] ) {
+				$wrapper_classes[] = 'um-media-preview-enabled';
+			}
+			$wrapper_classes = implode( ' ', $wrapper_classes );
+			$wrapper_classes = ! empty( $wrapper_classes ) ? ' ' . $wrapper_classes : '';
+
+			$html = '<div class="um-media-upload' . $wrapper_classes . '">' .
 					"<input type=\"hidden\" class=\"um-media-upload-data-id\" name=\"{$name}[id]\" id=\"{$id}_id\" value=\"$image_id\">" .
 					"<input type=\"hidden\" class=\"um-media-upload-data-width\" name=\"{$name}[width]\" id=\"{$id}_width\" value=\"$image_width\">" .
 					"<input type=\"hidden\" class=\"um-media-upload-data-height\" name=\"{$name}[height]\" id=\"{$id}_height\" value=\"$image_height\">" .
