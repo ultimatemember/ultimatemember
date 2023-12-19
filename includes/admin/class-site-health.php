@@ -1796,7 +1796,7 @@ class Site_Health {
 			'role_radio'           => __( 'Roles (Radio)', 'ultimate-member' ),
 			'whatsapp'             => __( 'WhatsApp number', 'ultimate-member' ),
 			'facebook'             => __( 'Facebook', 'ultimate-member' ),
-			'twitter'              => __( 'Twitter', 'ultimate-member' ),
+			'twitter'              => __( 'X (formerly Twitter)', 'ultimate-member' ),
 			'viber'                => __( 'Viber number', 'ultimate-member' ),
 			'skype'                => __( 'Skype ID', 'ultimate-member' ),
 			'telegram'             => __( 'Telegram', 'ultimate-member' ),
