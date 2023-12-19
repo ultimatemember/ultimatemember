@@ -961,22 +961,22 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'match' => 'https://facebook.com/',
 				),
 
-				'twitter' => array(
-					'title' => __('Twitter','ultimate-member'),
-					'metakey' => 'twitter',
-					'type' => 'url',
-					'label' => __('Twitter','ultimate-member'),
-					'required' => 0,
-					'public' => 1,
-					'editable' => true,
+				'twitter'              => array(
+					'title'      => __( 'X (formerly Twitter)', 'ultimate-member' ),
+					'metakey'    => 'twitter',
+					'type'       => 'url',
+					'label'      => __( 'X', 'ultimate-member' ),
+					'required'   => 0,
+					'public'     => 1,
+					'editable'   => true,
 					'url_target' => '_blank',
-					'url_rel' => 'nofollow',
-					'icon' => 'um-faicon-twitter',
-					'validate' => 'twitter_url',
-					'url_text' => 'Twitter',
-					'advanced' => 'social',
-					'color' => '#4099FF',
-					'match' => 'https://twitter.com/',
+					'url_rel'    => 'nofollow',
+					'icon'       => 'um-faicon-twitter', // 'fa-brands fa-x-twitter' for new FA styles
+					'validate'   => 'twitter_url',
+					'url_text'   => 'X',
+					'advanced'   => 'social',
+					'color'      => '#4099FF', // #0f1419 for X symbol
+					'match'      => 'https://twitter.com/',
 				),
 
 				'linkedin' => array(
@@ -1557,7 +1557,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$array['phone_number']             = __('Phone Number','ultimate-member');
 			$array['skype']                    = __('Skype ID','ultimate-member');
 			$array['soundcloud']               = __( 'SoundCloud Profile', 'ultimate-member' );
-			$array['twitter_url']              = __('Twitter URL','ultimate-member');
+			$array['twitter_url']              = __( 'X (formerly Twitter) URL', 'ultimate-member' );
 			$array['is_email']                 = __('E-mail( Not Unique )','ultimate-member');
 			$array['unique_email']             = __('Unique E-mail','ultimate-member');
 			$array['unique_value']             = __('Unique Metakey value','ultimate-member');

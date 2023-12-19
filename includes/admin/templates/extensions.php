@@ -77,7 +77,7 @@ $premium['social-login'] = array(
 	'url'  => 'https://ultimatemember.com/extensions/social-login/',
 	'img'  => 'social-login.svg',
 	'name' => 'Social Login',
-	'desc' => 'Let users register & login to your site via Facebook, Twitter, G+, LinkedIn, and more',
+	'desc' => 'Let users register & login to your site via Facebook, X (formerly Twitter), G+, LinkedIn, and more',
 );
 
 $premium['user-tags'] = array(
