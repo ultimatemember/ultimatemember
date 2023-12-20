@@ -2787,7 +2787,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				&lt;input type="hidden" name="__umnonce" value="&lt;?php echo esc_attr( $um_settings_nonce ); ?>" />
 				&lt;table class="form-table um-settings-section">
 					&lt;tbody>
-					&lt;?php foreach ( $section_fields as $field_data ) {
+					&lt;?php
+					foreach ( $section_fields as $field_data ) {
 						$option_value = UM()->options()->get( $field_data['id'] );
 						$value = isset( $option_value ) &amp;&amp; ! empty( $option_value ) ? $option_value : ( isset( $field_data['default'] ) ? $field_data['default'] : '' );
 
@@ -3018,27 +3019,39 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									&lt;input type="hidden" name="licenses_settings" value="1" />
 									&lt;?php $um_settings_nonce = wp_create_nonce( 'um-settings-nonce' ); ?>
 									&lt;input type="hidden" name="__umnonce" value="&lt;?php echo esc_attr( $um_settings_nonce ); ?>" />
-									&lt;input type="text" id="um_options_&lt;?php echo esc_attr( $field_data['id'] ); ?>" name="um_options[&lt;?php echo esc_attr( $field_data['id'] ); ?>]" value="&lt;?php echo $value ?>" class="um-option-field um-long-field" data-field_id="&lt;?php echo esc_attr( $field_data['id'] ); ?>" />
-									&lt;?php if ( ! empty( $field_data['description'] ) ) { ?>
-										&lt;div class="description">&lt;?php echo $field_data['description']; ?>&lt;/div>
-									&lt;?php } ?>
+									&lt;input type="text" id="um_options_&lt;?php echo esc_attr( $field_data['id'] ); ?>" name="um_options[&lt;?php echo esc_attr( $field_data['id'] ); ?>]" value="&lt;?php echo esc_attr( $value ); ?>" class="um-option-field um-long-field" data-field_id="&lt;?php echo esc_attr( $field_data['id'] ); ?>" />
+									&lt;?php
+									if ( ! empty( $field_data['description'] ) ) {
+										?>
+										&lt;div class="description">&lt;?php echo esc_html( $field_data['description'] ); ?>&lt;/div>
+										&lt;?php
+									}
 
-									&lt;?php if ( ! empty( $value ) &amp;&amp; ( ( is_object( $license ) &amp;&amp; 'valid' === $license->license ) || 'valid' === $license ) ) { ?>
-										&lt;input type="button" class="button um_license_deactivate" id="&lt;?php echo esc_attr( $field_data['id'] ) ?>_deactivate" value="&lt;?php esc_attr_e( 'Clear License',  'ultimate-member' ) ?>"/>
-									&lt;?php } elseif ( empty( $value ) ) { ?>
-										&lt;input type="submit" name="submit" id="submit" class="button button-primary" value="&lt;?php esc_attr_e( 'Activate', 'ultimate-member' ) ?>" />
-									&lt;?php } else { ?>
-										&lt;input type="submit" name="submit" id="submit" class="button button-primary" value="&lt;?php esc_attr_e( 'Re-Activate', 'ultimate-member' ) ?>" />
-										&lt;input type="button" class="button um_license_deactivate" id="&lt;?php echo esc_attr( $field_data['id'] ) ?>_deactivate" value="&lt;?php esc_attr_e( 'Clear License',  'ultimate-member' ) ?>"/>
-									&lt;?php }
+									if ( ! empty( $value ) &amp;&amp; ( ( is_object( $license ) &amp;&amp; 'valid' === $license->license ) || 'valid' === $license ) ) {
+										?>
+										&lt;input type="button" class="button um_license_deactivate" id="&lt;?php echo esc_attr( $field_data['id'] ); ?>_deactivate" value="&lt;?php esc_attr_e( 'Clear License', 'ultimate-member' ); ?>"/>
+										&lt;?php
+									} elseif ( empty( $value ) ) {
+										?>
+										&lt;input type="submit" name="submit" id="submit" class="button button-primary um_license_activate" value="&lt;?php esc_attr_e( 'Activate', 'ultimate-member' ); ?>" />
+										&lt;?php
+									} else {
+										?>
+										&lt;input type="submit" name="submit" id="submit" class="button button-primary um_license_reactivate" value="&lt;?php esc_attr_e( 'Re-Activate', 'ultimate-member' ); ?>" />
+										&lt;input type="button" class="button um_license_deactivate" id="&lt;?php echo esc_attr( $field_data['id'] ); ?>_deactivate" value="&lt;?php esc_attr_e( 'Clear License', 'ultimate-member' ); ?>"/>
+										&lt;?php
+									}
 
 									if ( ! empty( $messages ) ) {
-										foreach ( $messages as $message ) { ?>
-											&lt;div class="edd-license-data edd-license-&lt;?php echo esc_attr( $class . ' ' . $license_status ) ?>">
-												&lt;p>&lt;?php echo $message ?>&lt;/p>
+										foreach ( $messages as $message ) {
+											?>
+											&lt;div class="edd-license-data edd-license-&lt;?php echo esc_attr( $class . ' ' . $license_status ); ?>">
+												&lt;p>&lt;?php echo wp_kses( $message, UM()->get_allowed_html( 'admin_notice' ) ); ?>&lt;/p>
 											&lt;/div>
-										&lt;?php }
-									} ?>
+											&lt;?php
+										}
+									}
+									?>
 								&lt;/form>
 							&lt;/td>
 						&lt;/tr>
