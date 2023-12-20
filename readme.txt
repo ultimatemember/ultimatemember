@@ -168,7 +168,18 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 = 2.8.1: December 20, 2023 =
 
+* Enhancements:
+
+  - Updated: Twitter texts to X
+  - Added: Safeguards against clickjacking attacks on UM Forms
+
 * Bugfixes:
+
+  - Fixed: Displaying notice to avoid using wrong symbols
+  - Fixed: UM > Settings button styles
+  - Fixed: Error notice when creating page via extensions
+  - Fixed: Workaround for Cropper.JS if UM.frontend.cropper.obj undefined (Cropper hasn't been properly inited for UM objects)
+  - Fixed: The visibility of sub-items of hidden menu items
 
 = 2.8.0: December 11, 2023 =
 
