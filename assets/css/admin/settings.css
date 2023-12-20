@@ -191,3 +191,9 @@ th.column-email.column-primary {
 .um_setting_ajax_button_response.complete {
   color: #7acf58;
   font-style: italic; }
+
+.wp-core-ui .button.um_license_activate, .wp-core-ui .button.um_license_deactivate, .wp-core-ui .button.um_license_reactivate {
+  margin-top: 5px; }
+
+.um-media-upload .um-media-upload-url {
+  margin-bottom: 5px; }

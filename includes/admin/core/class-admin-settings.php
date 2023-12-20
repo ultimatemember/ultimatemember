@@ -2754,7 +2754,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				<input type="hidden" name="__umnonce" value="<?php echo esc_attr( $um_settings_nonce ); ?>" />
 				<table class="form-table um-settings-section">
 					<tbody>
-					<?php foreach ( $section_fields as $field_data ) {
+					<?php
+					foreach ( $section_fields as $field_data ) {
 						$option_value = UM()->options()->get( $field_data['id'] );
 						$value = isset( $option_value ) && ! empty( $option_value ) ? $option_value : ( isset( $field_data['default'] ) ? $field_data['default'] : '' );
 
@@ -2985,27 +2986,39 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									<input type="hidden" name="licenses_settings" value="1" />
 									<?php $um_settings_nonce = wp_create_nonce( 'um-settings-nonce' ); ?>
 									<input type="hidden" name="__umnonce" value="<?php echo esc_attr( $um_settings_nonce ); ?>" />
-									<input type="text" id="um_options_<?php echo esc_attr( $field_data['id'] ); ?>" name="um_options[<?php echo esc_attr( $field_data['id'] ); ?>]" value="<?php echo $value ?>" class="um-option-field um-long-field" data-field_id="<?php echo esc_attr( $field_data['id'] ); ?>" />
-									<?php if ( ! empty( $field_data['description'] ) ) { ?>
-										<div class="description"><?php echo $field_data['description']; ?></div>
-									<?php } ?>
+									<input type="text" id="um_options_<?php echo esc_attr( $field_data['id'] ); ?>" name="um_options[<?php echo esc_attr( $field_data['id'] ); ?>]" value="<?php echo esc_attr( $value ); ?>" class="um-option-field um-long-field" data-field_id="<?php echo esc_attr( $field_data['id'] ); ?>" />
+									<?php
+									if ( ! empty( $field_data['description'] ) ) {
+										?>
+										<div class="description"><?php echo esc_html( $field_data['description'] ); ?></div>
+										<?php
+									}
 
-									<?php if ( ! empty( $value ) && ( ( is_object( $license ) && 'valid' === $license->license ) || 'valid' === $license ) ) { ?>
-										<input type="button" class="button um_license_deactivate" id="<?php echo esc_attr( $field_data['id'] ) ?>_deactivate" value="<?php esc_attr_e( 'Clear License',  'ultimate-member' ) ?>"/>
-									<?php } elseif ( empty( $value ) ) { ?>
-										<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Activate', 'ultimate-member' ) ?>" />
-									<?php } else { ?>
-										<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Re-Activate', 'ultimate-member' ) ?>" />
-										<input type="button" class="button um_license_deactivate" id="<?php echo esc_attr( $field_data['id'] ) ?>_deactivate" value="<?php esc_attr_e( 'Clear License',  'ultimate-member' ) ?>"/>
-									<?php }
+									if ( ! empty( $value ) && ( ( is_object( $license ) && 'valid' === $license->license ) || 'valid' === $license ) ) {
+										?>
+										<input type="button" class="button um_license_deactivate" id="<?php echo esc_attr( $field_data['id'] ); ?>_deactivate" value="<?php esc_attr_e( 'Clear License', 'ultimate-member' ); ?>"/>
+										<?php
+									} elseif ( empty( $value ) ) {
+										?>
+										<input type="submit" name="submit" id="submit" class="button button-primary um_license_activate" value="<?php esc_attr_e( 'Activate', 'ultimate-member' ); ?>" />
+										<?php
+									} else {
+										?>
+										<input type="submit" name="submit" id="submit" class="button button-primary um_license_reactivate" value="<?php esc_attr_e( 'Re-Activate', 'ultimate-member' ); ?>" />
+										<input type="button" class="button um_license_deactivate" id="<?php echo esc_attr( $field_data['id'] ); ?>_deactivate" value="<?php esc_attr_e( 'Clear License', 'ultimate-member' ); ?>"/>
+										<?php
+									}
 
 									if ( ! empty( $messages ) ) {
-										foreach ( $messages as $message ) { ?>
-											<div class="edd-license-data edd-license-<?php echo esc_attr( $class . ' ' . $license_status ) ?>">
-												<p><?php echo $message ?></p>
+										foreach ( $messages as $message ) {
+											?>
+											<div class="edd-license-data edd-license-<?php echo esc_attr( $class . ' ' . $license_status ); ?>">
+												<p><?php echo wp_kses( $message, UM()->get_allowed_html( 'admin_notice' ) ); ?></p>
 											</div>
-										<?php }
-									} ?>
+											<?php
+										}
+									}
+									?>
 								</form>
 							</td>
 						</tr>

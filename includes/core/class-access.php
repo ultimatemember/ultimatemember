@@ -76,6 +76,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 			// check the site's accessible more priority have Individual Post/Term Restriction settings
 			add_action( 'template_redirect', array( &$this, 'template_redirect' ), 1000 );
+			add_action( 'template_redirect', array( &$this, 'send_frame_options_header' ), 1010 );
 			add_action( 'um_access_check_blog_page_settings', array( &$this, 'um_access_check_blog_page_settings' ) );
 			add_action( 'um_access_check_individual_term_settings', array( &$this, 'um_access_check_individual_term_settings' ) );
 			add_action( 'um_access_check_global_settings', array( &$this, 'um_access_check_global_settings' ) );
@@ -1792,6 +1793,23 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			}
 
 			return false;
+		}
+
+
+		/**
+		 * Sends a HTTP header to limit rendering of pages to same origin iframes when loading sensitive pages.
+		 *
+		 * Can be disabled with: remove_action( 'template_redirect', array( UM()->access(), 'send_frame_options_header' ), 1010 );
+		 *
+		 * @since  2.8.0
+		 */
+		public function send_frame_options_header() {
+			if ( um_is_core_page( 'account' )
+				|| um_is_core_page( 'login' )
+				|| um_is_core_page( 'password-reset' )
+				|| um_is_core_page( 'register' ) ) {
+				send_frame_options_header();
+			}
 		}
 
 

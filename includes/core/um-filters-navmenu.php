@@ -72,9 +72,9 @@ if ( ! is_admin() ) {
 			$visible = true;
 
 			// Hide any item that is the child of a hidden item.
-			if ( isset( $item->menu_item_parent ) && in_array( $item->menu_item_parent, $hide_children_of, true ) ) {
+			if ( isset( $item->menu_item_parent ) && in_array( absint( $item->menu_item_parent ), $hide_children_of, true ) ) {
 				$visible            = false;
-				$hide_children_of[] = $item->ID; // for nested menus
+				$hide_children_of[] = absint( $item->ID ); // for nested menus
 			}
 
 			if ( isset( $mode ) && $visible ) {
@@ -118,7 +118,7 @@ if ( ! is_admin() ) {
 
 			// unset non-visible item
 			if ( ! $visible ) {
-				$hide_children_of[] = $item->ID; // store ID of item
+				$hide_children_of[] = absint( $item->ID ); // store ID of item
 			} else {
 				$filtered_items[] = $item;
 			}

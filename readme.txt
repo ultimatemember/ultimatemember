@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
 Tested up to: 6.4
-Stable tag: 2.8.0
+Stable tag: 2.8.1
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -165,6 +165,21 @@ No specific extensions are needed. But we highly recommended keep active these P
 = Important: =
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
+
+= 2.8.1: December 20, 2023 =
+
+* Enhancements:
+
+  - Updated: Twitter texts to X
+  - Added: Safeguards against clickjacking attacks on UM Forms
+
+* Bugfixes:
+
+  - Fixed: Displaying notice to avoid using wrong symbols
+  - Fixed: UM > Settings button styles
+  - Fixed: Error notice when creating page via extensions
+  - Fixed: Workaround for Cropper.JS if UM.frontend.cropper.obj undefined (Cropper hasn't been properly inited for UM objects)
+  - Fixed: The visibility of sub-items of hidden menu items
 
 = 2.8.0: December 11, 2023 =
 
