@@ -3,14 +3,17 @@ jQuery( window ).on( 'load',function() {
 	um_modal_responsive();
 });
 
-jQuery(window).on( 'resize', function() {
+// Resize using debounce.
+// * https://medium.com/geekculture/debounce-handle-browser-resize-like-a-pro-994cd522e14b
+// * https://davidwalsh.name/javascript-debounce-function
+jQuery(window).on( 'resize', _.debounce( function() {
 	responsive_Modal();
 
 	wp.hooks.doAction( 'um_window_resize' );
 
 	um_responsive();
 	um_modal_responsive();
-});
+}, 100 ) );
 
 wp.hooks.addAction( 'um_admin_modal_success_result', 'um_frontend_responsive', function( $adminModal ) {
 	// Make responsive script only when live preview,
