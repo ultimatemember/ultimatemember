@@ -59,7 +59,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			//custom content for override templates tab
 			add_action( 'plugins_loaded', array( $this, 'um_check_template_version' ), 10 );
-			add_filter( 'um_settings_section_override_templates__content', array( $this, 'settings_override_templates_tab' ), 10, 2 );
 
 			add_filter( 'um_settings_structure', array( $this, 'sorting_licenses_options' ), 9999, 1 );
 
@@ -1800,7 +1799,69 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'licenses'     => array(
 						'title' => __( 'Licenses', 'ultimate-member' ),
 					),
-					'misc'         => array(
+					'advanced'           => array(
+						'title'    => __( 'Advanced', 'ultimate-member' ),
+						'sections' => array(
+							''                   => array(
+								'title'  => __( 'General', 'ultimate-member' ),
+								'fields' => array(
+									array(
+										'id'          => 'rest_api_version',
+										'type'        => 'select',
+										'label'       => __( 'REST API version', 'ultimate-member' ),
+										'description' => __( 'This controls the REST API version, we recommend to use the last version', 'ultimate-member' ),
+										'options'     => array(
+											'1.0' => __( '1.0 version', 'ultimate-member' ),
+											'2.0' => __( '2.0 version', 'ultimate-member' ),
+										),
+									),
+									array(
+										'id'          => 'uninstall_on_delete',
+										'type'        => 'checkbox',
+										'label'       => __( 'Remove Data on Uninstall?', 'ultimate-member' ),
+										'description' => __( 'Check this box if you would like Ultimate Member to completely remove all of its data when the plugin/extensions are deleted.', 'ultimate-member' ),
+									),
+								),
+							),
+							'override_templates' => array(
+								'title'         => __( 'Override templates', 'ultimate-member' ),
+								'form_sections' => array(
+									array(
+										'id'          => 'override_templates_options',
+										'type'        => 'form_section',
+										'title'       => __( 'Override templates', 'ultimate-member' ),
+										// translators: %s: Link to the docs article.
+										'description' => sprintf( __( 'You may get more details about overriding templates <a href="%s" target="_blank">here</a>.', 'ultimate-member' ), 'https://docs.ultimatemember.com/article/1516-templates-map' ), /** @noinspection HtmlUnknownTarget */
+										'fields'      => array(
+											array(
+												'type' => 'override_templates',
+											),
+										),
+									),
+								),
+							),
+							'features'           => array(
+								'title'  => __( 'Features', 'ultimate-member' ),
+								'fields' => array(
+									array(
+										'id'          => 'enable_blocks',
+										'type'        => 'checkbox',
+										'label'       => __( 'Enable Gutenberg Blocks', 'ultimate-member' ),
+										'description' => __( 'Check this box if you would like to use Ultimate Member blocks in Gutenberg editor. Important some themes have the conflicts with Gutenberg editor.', 'ultimate-member' ),
+									),
+									// backward compatibility option leave it disabled for better security and ability to exclude posts/terms pre-query
+									// otherwise we're filtering only results and restricted posts/terms can be visible
+									array(
+										'id'          => 'disable_restriction_pre_queries',
+										'type'        => 'checkbox',
+										'label'       => __( 'Disable pre-queries for restriction content logic (advanced)', 'ultimate-member' ),
+										'description' => __( 'Please enable this option only in the cases when you have big or unnecessary queries on your site with active restriction logic. If you want to exclude posts only from the results queries instead of pre_get_posts and fully-hidden post logic also please enable this option. It activates the restriction content logic until 2.2.x version without latest security enhancements', 'ultimate-member' ),
+									),
+								),
+							),
+						),
+					),
+					'misc'               => array(
 						'title'  => __( 'Misc', 'ultimate-member' ),
 						'fields' => array(
 							array(
@@ -1830,37 +1891,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								'label'   => __( 'Disable Cache User Profile', 'ultimate-member' ),
 								'tooltip' => __( 'Check this box if you would like to disable Ultimate Member user\'s cache.', 'ultimate-member' ),
 							),
-							array(
-								'id'      => 'enable_blocks',
-								'type'    => 'checkbox',
-								'label'   => __( 'Enable Gutenberg Blocks', 'ultimate-member' ),
-								'tooltip' => __( 'Check this box if you would like to use Ultimate Member blocks in Gutenberg editor. Important some themes have the conflicts with Gutenberg editor.', 'ultimate-member' ),
-							),
-							array(
-								'id'      => 'rest_api_version',
-								'type'    => 'select',
-								'label'   => __( 'REST API version', 'ultimate-member' ),
-								'tooltip' => __( 'This controls the REST API version, we recommend to use the last version', 'ultimate-member' ),
-								'options' => array(
-									'1.0' => __( '1.0 version', 'ultimate-member' ),
-									'2.0' => __( '2.0 version', 'ultimate-member' ),
-								),
-							),
-							// backward compatibility option leave it disabled for better security and ability to exclude posts/terms pre-query
-							// otherwise we filtering only results and restricted posts/terms can be visible
-							array(
-								'id'      => 'disable_restriction_pre_queries',
-								'type'    => 'checkbox',
-								'label'   => __( 'Disable pre-queries for restriction content logic (advanced)', 'ultimate-member' ),
-								'tooltip' => __( 'Please enable this option only in the cases when you have big or unnecessary queries on your site with active restriction logic. If you want to exclude posts only from the results queries instead of pre_get_posts and fully-hidden post logic also please enable this option. It activates the restriction content logic until 2.2.x version without latest security enhancements', 'ultimate-member' ),
-							),
 							$same_page_update,
-							array(
-								'id'      => 'uninstall_on_delete',
-								'type'    => 'checkbox',
-								'label'   => __( 'Remove Data on Uninstall?', 'ultimate-member' ),
-								'tooltip' => __( 'Check this box if you would like Ultimate Member to completely remove all of its data when the plugin/extensions are deleted.', 'ultimate-member' ),
-							),
 						),
 					),
 					'install_info' => array(
@@ -1868,14 +1899,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'fields' => array(
 							array(
 								'type' => 'install_info',
-							),
-						),
-					),
-					'override_templates' => array(
-						'title'  => __( 'Override templates', 'ultimate-member' ),
-						'fields' => array(
-							array(
-								'type' => 'override_templates',
 							),
 						),
 					),
@@ -1952,24 +1975,21 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			add_submenu_page( 'ultimatemember', __( 'Settings', 'ultimate-member' ), __( 'Settings', 'ultimate-member' ), 'manage_options', 'um_options', array( &$this, 'settings_page' ) );
 		}
 
-
 		/**
-		 * Settings page callback
+		 * Settings page callback.
 		 */
-		function settings_page() {
-			$current_tab = empty( $_GET['tab'] ) ? '' : sanitize_key( $_GET['tab'] );
+		public function settings_page() {
+			$current_tab    = empty( $_GET['tab'] ) ? '' : sanitize_key( $_GET['tab'] );
 			$current_subtab = empty( $_GET['section'] ) ? '' : sanitize_key( $_GET['section'] );
 
 			$settings_struct = $this->settings_structure[ $current_tab ];
 
-			//remove not option hidden fields
+			// Remove not option hidden fields
 			if ( ! empty( $settings_struct['fields'] ) ) {
 				foreach ( $settings_struct['fields'] as $field_key => $field_options ) {
-
-					if ( isset( $field_options['is_option'] ) && $field_options['is_option'] === false ) {
+					if ( isset( $field_options['is_option'] ) && false === $field_options['is_option'] ) {
 						unset( $settings_struct['fields'][ $field_key ] );
 					}
-
 				}
 			}
 
@@ -1983,7 +2003,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				}
 			}
 
-			echo '<div id="um-settings-wrap" class="wrap"><h2>' .  __( 'Ultimate Member - Settings', 'ultimate-member' ) . '</h2>';
+			echo '<div id="um-settings-wrap" class="wrap"><h2>' . esc_html__( 'Ultimate Member - Settings', 'ultimate-member' ) . '</h2>';
 
 			echo $this->generate_tabs_menu() . $this->generate_subtabs_menu( $current_tab );
 
@@ -2006,7 +2026,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			 */
 			do_action( "um_settings_page_before_" . $current_tab . "_" . $current_subtab . "_content" );
 
-			if ( in_array( $current_tab, apply_filters('um_settings_custom_tabs', array( 'licenses', 'install_info', 'override_templates' ) ) ) || in_array( $current_subtab, apply_filters( 'um_settings_custom_subtabs', array(), $current_tab ) ) ) {
+			if ( in_array( $current_tab, apply_filters('um_settings_custom_tabs', array( 'licenses', 'install_info' ) ) ) || in_array( $current_subtab, apply_filters( 'um_settings_custom_subtabs', array(), $current_tab ) ) ) {
 
 				/**
 				 * UM hook
@@ -2027,7 +2047,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				 */
 				do_action( "um_settings_page_" . $current_tab . "_" . $current_subtab . "_before_section" );
 
-				$section_fields = $this->get_section_fields( $current_tab, $current_subtab );
+				$section_fields   = $this->get_section_fields( $current_tab, $current_subtab );
 				$settings_section = $this->render_settings_section( $section_fields, $current_tab, $current_subtab );
 
 				/**
@@ -2082,7 +2102,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					 */
 					do_action( "um_settings_page_" . $current_tab . "_" . $current_subtab . "_before_section" );
 
-					$section_fields = $this->get_section_fields( $current_tab, $current_subtab );
+					$section_fields   = $this->get_section_fields( $current_tab, $current_subtab );
 					$settings_section = $this->render_settings_section( $section_fields, $current_tab, $current_subtab );
 
 					/**
@@ -2676,6 +2696,35 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			$in_theme = UM()->mail()->template_in_theme( $email_key );
 
+			$section_fields = array(
+				array(
+					'id'    => 'um_email_template',
+					'type'  => 'hidden',
+					'value' => $email_key,
+				),
+				array(
+					'id'      => $email_key . '_on',
+					'type'    => 'checkbox',
+					'label'   => $emails[ $email_key ]['title'],
+					'tooltip' => $emails[ $email_key ]['description'],
+				),
+				array(
+					'id'          => $email_key . '_sub',
+					'type'        => 'text',
+					'label'       => __( 'Subject Line', 'ultimate-member' ),
+					'conditional' => array( $email_key . '_on', '=', 1 ),
+					'tooltip'     => __( 'This is the subject line of the e-mail', 'ultimate-member' ),
+				),
+				array(
+					'id'          => $email_key,
+					'type'        => 'email_template',
+					'label'       => __( 'Message Body', 'ultimate-member' ),
+					'conditional' => array( $email_key . '_on', '=', 1 ),
+					'tooltip'     => __( 'This is the content of the e-mail', 'ultimate-member' ),
+					'value'       => UM()->mail()->get_email_template( $email_key ),
+					'in_theme'    => $in_theme,
+				),
+			);
 			/**
 			 * UM hook
 			 *
@@ -2697,39 +2746,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			 * }
 			 * ?>
 			 */
-			$section_fields = apply_filters( 'um_admin_settings_email_section_fields', array(
-				array(
-					'id'    => 'um_email_template',
-					'type'  => 'hidden',
-					'value' => $email_key,
-				),
-				array(
-					'id'        => $email_key . '_on',
-					'type'      => 'checkbox',
-					'label'     => $emails[ $email_key ]['title'],
-					'tooltip'   => $emails[ $email_key ]['description'],
-				),
-				array(
-					'id'            => $email_key . '_sub',
-					'type'          => 'text',
-					'label'         => __( 'Subject Line', 'ultimate-member' ),
-					'conditional'   => array( $email_key . '_on', '=', 1 ),
-					'tooltip'       => __( 'This is the subject line of the e-mail', 'ultimate-member' ),
-				),
-				array(
-					'id'            => $email_key,
-					'type'          => 'email_template',
-					'label'         => __( 'Message Body', 'ultimate-member' ),
-					'conditional'   => array( $email_key . '_on', '=', 1 ),
-					'tooltip'       => __( 'This is the content of the e-mail', 'ultimate-member' ),
-					'value'         => UM()->mail()->get_email_template( $email_key ),
-					'in_theme'      => $in_theme
-				),
-			), $email_key );
+			$section_fields = apply_filters( 'um_admin_settings_email_section_fields', $section_fields, $email_key );
 
 			return $this->render_settings_section( $section_fields, 'email', $email_key );
 		}
-
 
 		/**
 		 *
@@ -2738,16 +2758,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			wp_enqueue_media();
 		}
 
-
 		/**
 		 * @param $html
 		 * @param $section_fields
 		 *
 		 * @return string
 		 */
-		function settings_licenses_tab( $html, $section_fields ) {
-			ob_start(); ?>
-
+		public function settings_licenses_tab( $html, $section_fields ) {
+			ob_start();
+			?>
 			<div class="wrap-licenses">
 				<input type="hidden" id="licenses_settings" name="licenses_settings" value="1">
 				<?php $um_settings_nonce = wp_create_nonce( 'um-settings-nonce' ); ?>
@@ -3027,8 +3046,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				</table>
 			</div>
 			<?php
-			$section = ob_get_clean();
-			return $section;
+			return ob_get_clean();
 		}
 
 		/**
@@ -3707,9 +3725,8 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 			return $raw_value."\n";
 		}
 
-
 		/**
-		 * Render settings section
+		 * Render settings section.
 		 *
 		 * @param array $section_fields
 		 * @param string $current_tab
@@ -3717,17 +3734,18 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 		 *
 		 * @return string
 		 */
-		function render_settings_section( $section_fields, $current_tab, $current_subtab ) {
+		public function render_settings_section( $section_fields, $current_tab, $current_subtab ) {
 			ob_start();
 
-			UM()->admin_forms_settings( array(
-				'class'     => 'um_options-' . $current_tab . '-' . $current_subtab . ' um-third-column',
-				'prefix_id' => 'um_options',
-				'fields'    => $section_fields
-			) )->render_form(); ?>
+			UM()->admin_forms_settings(
+				array(
+					'class'     => 'um_options-' . $current_tab . '-' . $current_subtab . ' um-third-column',
+					'prefix_id' => 'um_options',
+					'fields'    => $section_fields,
+				)
+			)->render_form();
 
-			<?php $section = ob_get_clean();
-
+			$section = ob_get_clean();
 			return $section;
 		}
 

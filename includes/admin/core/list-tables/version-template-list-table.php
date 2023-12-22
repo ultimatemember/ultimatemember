@@ -210,6 +210,7 @@ $list_table->prepare_items();
 
 <form action="" method="get" name="um-settings-template-versions" id="um-settings-template-versions">
 	<input type="hidden" name="page" value="um_options" />
-	<input type="hidden" name="tab" value="override_templates" />
+	<input type="hidden" name="tab" value="advanced" />
+	<input type="hidden" name="section" value="override_templates" />
 	<?php $list_table->display(); ?>
 </form>

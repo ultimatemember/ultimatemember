@@ -780,7 +780,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		 */
 		public function template_version() {
 			if ( true === (bool) get_option( 'um_override_templates_outdated' ) ) {
-				$link = admin_url( 'admin.php?page=um_options&tab=override_templates' );
+				$link = admin_url( 'admin.php?page=um_options&tab=advanced&section=override_templates' );
 				ob_start();
 				?>
 
