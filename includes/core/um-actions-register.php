@@ -132,9 +132,9 @@ function um_send_registration_notification( $user_id, $args ) {
 	if ( ! empty( $emails ) ) {
 		foreach ( $emails as $email ) {
 			if ( um_user( 'account_status' ) != 'pending' ) {
-				UM()->mail()->send( $email, 'notification_new_user', array( 'admin' => true ) );
+				UM()->common()->mail()->send( $email, 'notification_new_user', array( 'admin' => true ) );
 			} else {
-				UM()->mail()->send( $email, 'notification_review', array( 'admin' => true ) );
+				UM()->common()->mail()->send( $email, 'notification_review', array( 'admin' => true ) );
 			}
 		}
 	}

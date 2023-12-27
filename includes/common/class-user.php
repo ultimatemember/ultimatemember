@@ -534,14 +534,14 @@ if ( ! class_exists( 'um\common\User' ) ) {
 			if ( $this->has_status( $user_id, 'approved' ) ) {
 				$userdata = get_userdata( $user_id );
 				// Don't send email notification to not approved user.
-				UM()->mail()->send( $userdata->user_email, 'deletion_email' );
+				UM()->common()->mail()->send( $userdata->user_email, 'deletion_email' );
 			}
 
 			// Send email notifications to administrator about user deletion anyway
 			$emails = um_multi_admin_email();
 			if ( ! empty( $emails ) ) {
 				foreach ( $emails as $email ) {
-					UM()->mail()->send( $email, 'notification_deletion', array( 'admin' => true ) );
+					UM()->common()->mail()->send( $email, 'notification_deletion', array( 'admin' => true ) );
 				}
 			}
 		}

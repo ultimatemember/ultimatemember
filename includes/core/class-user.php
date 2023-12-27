@@ -408,12 +408,12 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			// send email notifications
 			if ( $this->send_mail_on_delete ) {
-				UM()->mail()->send( um_user( 'user_email' ), 'deletion_email' );
+				UM()->common()->mail()->send( um_user( 'user_email' ), 'deletion_email' );
 
 				$emails = um_multi_admin_email();
 				if ( ! empty( $emails ) ) {
 					foreach ( $emails as $email ) {
-						UM()->mail()->send( $email, 'notification_deletion', array( 'admin' => true ) );
+						UM()->common()->mail()->send( $email, 'notification_deletion', array( 'admin' => true ) );
 					}
 				}
 			}
@@ -1442,7 +1442,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ), 10, 1 );
 			add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ), 10, 1 );
 
-			UM()->mail()->send( um_user( 'user_email' ), 'reset-password' );
+			UM()->common()->mail()->send( um_user( 'user_email' ), 'reset-password' );
 		}
 
 
@@ -1456,7 +1456,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				um_fetch_user( $user_id );
 			}
 
-			UM()->mail()->send( um_user( 'user_email' ), 'password-changed' );
+			UM()->common()->mail()->send( um_user( 'user_email' ), 'password-changed' );
 
 			if ( ! empty( $user_id ) ) {
 				um_reset_user();
@@ -1496,12 +1496,12 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 				$this->maybe_generate_password_reset_key( $userdata );
 
-				UM()->mail()->send( um_user( 'user_email' ), 'approved_email' );
+				UM()->common()->mail()->send( um_user( 'user_email' ), 'approved_email' );
 
 			} else {
 				//$userdata = get_userdata( $user_id );
 				//get_password_reset_key( $userdata );
-				UM()->mail()->send( um_user( 'user_email' ), 'welcome_email' );
+				UM()->common()->mail()->send( um_user( 'user_email' ), 'welcome_email' );
 			}
 
 			$this->set_status( 'approved' );
@@ -1537,7 +1537,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		function email_pending() {
 			$this->assign_secretkey();
 			$this->set_status( 'awaiting_email_confirmation' );
-			UM()->mail()->send( um_user( 'user_email' ), 'checkmail_email' );
+			UM()->common()->mail()->send( um_user( 'user_email' ), 'checkmail_email' );
 		}
 
 
@@ -1558,7 +1558,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 */
 		function pending() {
 			$this->set_status( 'awaiting_admin_review' );
-			UM()->mail()->send( um_user( 'user_email' ), 'pending_email' );
+			UM()->common()->mail()->send( um_user( 'user_email' ), 'pending_email' );
 		}
 
 
@@ -1580,7 +1580,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 */
 		function reject() {
 			$this->set_status( 'rejected' );
-			UM()->mail()->send( um_user( 'user_email' ), 'rejected_email' );
+			UM()->common()->mail()->send( um_user( 'user_email' ), 'rejected_email' );
 		}
 
 
@@ -1622,7 +1622,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 */
 			do_action( 'um_after_user_is_inactive', um_user( 'ID' ) );
 
-			UM()->mail()->send( um_user( 'user_email' ), 'inactive_email' );
+			UM()->common()->mail()->send( um_user( 'user_email' ), 'inactive_email' );
 		}
 
 
