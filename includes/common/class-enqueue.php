@@ -98,6 +98,10 @@ if ( ! class_exists( 'um\common\Enqueue' ) ) {
 		 * @since 3.0
 		 */
 		function common_libs() {
+			if ( empty( $this->urls ) ) {
+				$this->init_variables();
+			}
+
 			wp_register_style( 'um-jquery-ui', $this->urls['libs'] . 'jquery-ui/jquery-ui' . $this->suffix . '.css', array(), '1.12.1' );
 
 			wp_register_script( 'um-tipsy', $this->urls['libs'] . 'tipsy/um-tipsy' . $this->suffix . '.js', array( 'jquery' ), '1.0.0a', true );

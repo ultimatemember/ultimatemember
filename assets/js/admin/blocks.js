@@ -225,10 +225,12 @@ um_block_restrict_settings = wp.hooks.applyFilters( 'um_admin_blocks_restrict_se
  * @returns {*}
  */
 function um_add_block_attributes( settings ) {
-	var _lodash = lodash,
-		assign = _lodash.assign;
+	if ( 'undefined' !== typeof lodash ) {
+		var _lodash = lodash,
+			assign = _lodash.assign;
 
-	settings.attributes = assign( settings.attributes, um_block_restrict_settings );
+		settings.attributes = assign( settings.attributes, um_block_restrict_settings );
+	}
 	return settings;
 }
 
