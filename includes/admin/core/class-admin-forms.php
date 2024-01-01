@@ -52,7 +52,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 * @param bool $echo
 		 * @return string
 		 */
-		function render_form( $echo = true ) {
+		public function render_form( $echo = true ) {
 
 			if ( empty( $this->form_data['fields'] ) ) {
 				return '';

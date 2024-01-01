@@ -589,6 +589,12 @@ final class Enqueue extends \um\common\Enqueue {
 				wp_enqueue_script( 'um_admin_secure' );
 			}
 
+			// phpcs:ignore WordPress.Security.NonceVerification
+			if ( isset( $_GET['tab'] ) && 'appearance' === $_GET['tab'] && empty( $_GET['section'] ) ) {
+				// Init WP Media Uploader on the UM > Settings > Appearance > Profile screen.
+				wp_enqueue_media();
+			}
+
 			wp_register_style( 'um_admin_settings', $css_url . 'admin/settings' . $suffix . '.css', array(), UM_VERSION );
 			wp_enqueue_style( 'um_admin_settings' );
 
