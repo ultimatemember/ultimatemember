@@ -297,8 +297,9 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 			);
 
 			$settings['advanced']['sections']['secure'] = array(
-				'title'  => __( 'Secure', 'ultimate-member' ),
-				'fields' => $secure_fields,
+				'title'       => __( 'Secure', 'ultimate-member' ),
+				'description' => __( 'This feature scans for suspicious registered accounts, bans the usage of administrative capabilities to site subscribers/members, allows the website administrators to force all users to reset their passwords, preventing users from logging-in using their old passwords that may have been exposed.', 'ultimate-member' ),
+				'fields'      => $secure_fields,
 			);
 
 			return $settings;

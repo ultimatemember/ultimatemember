@@ -351,9 +351,10 @@ final class Enqueue extends \um\common\Enqueue {
 		$forms_data = array(
 			'successfully_redirect' => add_query_arg(
 				array(
-					'page' => 'um_options',
-					'tab'  => 'misc',
-					'msg'  => 'updated',
+					'page'    => 'um_options',
+					'tab'     => 'advanced',
+					'section' => 'features',
+					'msg'     => 'updated',
 				),
 				admin_url( 'admin.php' )
 			),

@@ -130,9 +130,9 @@ jQuery(document).ready( function() {
 	jQuery( document.body ).on( 'click', '.um-forms-field[data-log-object]', function() {
 		var obj = jQuery( this ).data( 'log-object' );
 		if ( jQuery( this ).is( ':checked' ) ) {
-			jQuery( this ).siblings( '.um-same-page-update-' + obj ).show();
+			jQuery( this ).parents('label').siblings( '.um-same-page-update-' + obj ).show();
 		} else {
-			jQuery( this ).siblings( '.um-same-page-update-' + obj ).hide();
+			jQuery( this ).parents('label').siblings( '.um-same-page-update-' + obj ).hide();
 		}
 	});
 

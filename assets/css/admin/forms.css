@@ -1,7 +1,7 @@
 .um-form-table .um-forms-line[data-conditional] {
   display: none; }
 
-.um-form-table .um-forms-line[data-field_type="checkbox"] td label {
+.um-form-table .um-forms-line[data-field_type="checkbox"] td label, .um-form-table .um-forms-line[data-field_type="same_page_update"] td label {
   font-style: italic; }
 
 .um-form-table .um-forms-line label .um-req {

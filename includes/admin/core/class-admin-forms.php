@@ -168,8 +168,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 						}
 
-						if ( ! empty( $data['description'] ) )
+						if ( ! empty( $data['description'] ) && ! in_array( $data['type'], array( 'same_page_update', 'checkbox' ), true ) ) {
 							$html .= '<p class="description">' . $data['description'] . '</p>';
+						}
 
 						$html .= '</div>';
 
@@ -189,8 +190,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 							}
 
-							if ( ! empty( $data['description'] ) )
+							if ( ! empty( $data['description'] ) && ! in_array( $data['type'], array( 'same_page_update', 'checkbox' ), true ) ) {
 								$html .= '<p class="description">' . $data['description'] . '</p>';
+							}
 
 							$html .= '</div>';
 
@@ -208,8 +210,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 							}
 
-							if ( ! empty( $data['description'] ) )
+							if ( ! empty( $data['description'] ) && ! in_array( $data['type'], array( 'same_page_update', 'checkbox' ), true ) ) {
 								$html .= '<p class="description">' . $data['description'] . '</p>';
+							}
 
 							$html .= '</div>';
 
@@ -232,8 +235,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 						}
 
-						if ( ! empty( $data['description'] ) )
+						if ( ! empty( $data['description'] ) && ! in_array( $data['type'], array( 'same_page_update', 'checkbox' ), true ) ) {
 							$html .= '<div class="clear"></div><p class="description">' . $data['description'] . '</p>';
+						}
 
 						$html .= '</td></tr>';
 
@@ -254,8 +258,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 							}
 
-							if ( ! empty( $data['description'] ) )
+							if ( ! empty( $data['description'] ) && ! in_array( $data['type'], array( 'same_page_update', 'checkbox' ), true ) ) {
 								$html .= '<div class="clear"></div><p class="description">' . $data['description'] . '</p>';
+							}
 
 							$html .= '</td></tr>';
 
@@ -275,15 +280,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 							}
 
-							if ( ! empty( $data['description'] ) )
+							if ( ! empty( $data['description'] ) && ! in_array( $data['type'], array( 'same_page_update', 'checkbox' ), true ) ) {
 								$html .= '<div class="clear"></div><p class="description">' . $data['description'] . '</p>';
+							}
 
 							$html .= '</td></tr>';
-
 						}
 					}
 				}
-
 			} else {
 				$html .= $this->render_hidden( $data );
 			}
@@ -926,10 +930,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 *
 		 * @return bool|string
 		 */
-		function render_checkbox( $field_data ) {
+		public function render_checkbox( $field_data ) {
 
-			if ( empty( $field_data['id'] ) )
+			if ( empty( $field_data['id'] ) ) {
 				return false;
+			}
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
 			$id_attr = ' id="' . esc_attr( $id ) . '" ';
@@ -940,7 +945,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
 
 			$data = array(
-				'field_id' => $field_data['id']
+				'field_id' => $field_data['id'],
 			);
 
 			if ( ! empty( $field_data['data'] ) ) {
@@ -958,20 +963,22 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$value = $this->get_field_value( $field_data );
 
-			$html = "<input type=\"hidden\" $id_attr_hidden $name_attr value=\"0\" />
-			<input type=\"checkbox\" $id_attr $class_attr $name_attr $data_attr " . checked( $value, true, false ) . " value=\"1\" />";
+			$description = ! empty( $field_data['description'] ) ? $field_data['description'] : '';
 
-
-			return $html;
+			$field_html = "<input type=\"checkbox\" $id_attr $class_attr $name_attr $data_attr " . checked( $value, true, false ) . " value=\"1\" " . disabled( ! empty( $field_data['disabled'] ), true, false ) . " />";
+			if ( '' !== $description ) {
+				$field_html = "<label>$field_html $description</label>";
+			}
+			$html = "<input type=\"hidden\" $id_attr_hidden $name_attr value=\"0\" " . disabled( ! empty( $field_data['disabled'] ), true, false ) . " />{$field_html}";
+			return apply_filters( 'um_admin_render_checkbox_field_html', $html, $field_data );
 		}
-
 
 		/**
 		 * @param $field_data
 		 *
 		 * @return bool|string
 		 */
-		function render_same_page_update( $field_data ) {
+		public function render_same_page_update( $field_data ) {
 
 			if ( empty( $field_data['id'] ) ) {
 				return false;
@@ -1008,8 +1015,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$value = $this->get_field_value( $field_data );
 
-			$html = "<input type=\"hidden\" $id_attr_hidden $name_attr value=\"0\" />
-			<input type=\"checkbox\" $id_attr $class_attr $name_attr $data_attr " . checked( $value, true, false ) . " value=\"1\" />";
+			$description = ! empty( $field_data['description'] ) ? $field_data['description'] : '';
+
+			$field_html = "<input type=\"checkbox\" $id_attr $class_attr $name_attr $data_attr " . checked( $value, true, false ) . " value=\"1\" " . disabled( ! empty( $field_data['disabled'] ), true, false ) . " />";
+			if ( '' !== $description ) {
+				$field_html = "<label>$field_html $description</label>";
+			}
+			$html = "<input type=\"hidden\" $id_attr_hidden $name_attr value=\"0\" " . disabled( ! empty( $field_data['disabled'] ), true, false ) . " />{$field_html}";
 
 			if ( ! empty( $field_data['upgrade_cb'] ) ) {
 				$html .= '<div class="um-same-page-update-wrapper um-same-page-update-' . esc_attr( $field_data['upgrade_cb'] ) . '"><div class="um-same-page-update-description">' . $field_data['upgrade_description'] . '</div><input type="button" data-upgrade_cb="' . $field_data['upgrade_cb'] . '" class="button button-primary um-admin-form-same-page-update" value="' . esc_attr__( 'Run', 'ultimate-member' ) . '"/>
@@ -1018,7 +1030,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			return $html;
 		}
-
 
 		/**
 		 * @param $field_data
