@@ -849,7 +849,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				<?php esc_html_e( 'Ultimate Member has a new additional feature to secure your Ultimate Member forms to prevent attacks from injecting accounts with administrative roles &amp; capabilities.', 'ultimate-member' ); ?>
 			</p>
 			<p>
-				<a class="button button-primary" href="<?php echo esc_attr( admin_url( 'admin.php?page=um_options&tab=secure&um_dismiss_notice=secure_settings&um_admin_nonce=' . wp_create_nonce( 'um-admin-nonce' ) ) ); ?>"><?php esc_html_e( 'Manage Security Settings', 'ultimate-member' ); ?></a>
+				<a class="button button-primary" href="<?php echo esc_attr( admin_url( 'admin.php?page=um_options&tab=advanced&section=secure&um_dismiss_notice=secure_settings&um_admin_nonce=' . wp_create_nonce( 'um-admin-nonce' ) ) ); ?>"><?php esc_html_e( 'Manage Security Settings', 'ultimate-member' ); ?></a>
 				<a class="button" target="_blank" href="https://docs.ultimatemember.com/article/1869-security-feature"><?php esc_html_e( 'Read the documentation', 'ultimate-member' ); ?></a>
 			</p>
 			<?php

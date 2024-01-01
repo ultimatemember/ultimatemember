@@ -91,8 +91,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 		public function admin_init() {
 			global $wpdb;
 			// Dismiss admin notice after the first visit to Secure settings page.
-			if ( isset( $_REQUEST['page'] ) && isset( $_REQUEST['tab'] ) &&
-				'um_options' === sanitize_key( $_REQUEST['page'] ) && 'secure' === sanitize_key( $_REQUEST['tab'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			if ( isset( $_REQUEST['page'], $_REQUEST['tab'], $_REQUEST['section'] ) && 'um_options' === sanitize_key( $_REQUEST['page'] ) && 'advanced' === sanitize_key( $_REQUEST['tab'] ) && 'secure' === sanitize_key( $_REQUEST['section'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				UM()->admin()->notices()->dismiss( 'secure_settings' );
 			}
 
@@ -297,7 +296,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 				)
 			);
 
-			$settings['secure'] = array(
+			$settings['advanced']['sections']['secure'] = array(
 				'title'  => __( 'Secure', 'ultimate-member' ),
 				'fields' => $secure_fields,
 			);

@@ -64,7 +64,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			ob_start();
 
 			foreach ( $this->form_data['fields'] as $field_data ) {
-				if ( isset( $field_data['type'] ) && 'hidden' == $field_data['type'] ) {
+				if ( isset( $field_data['type'] ) && 'hidden' === $field_data['type'] ) {
 					echo $this->render_form_row( $field_data );
 				}
 			}

@@ -48,7 +48,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			//custom content for licenses tab
 			add_filter( 'um_settings_section_licenses__custom_content', array( $this, 'settings_licenses_tab' ), 10, 3 );
-			add_filter( 'um_settings_section_advanced_override_templates_custom_content', array( $this, 'settings_override_templates_tab' ), 10, 3 );
+			add_filter( 'um_settings_section_advanced_override_templates_custom_content', array( $this, 'settings_override_templates_tab' ) );
+
+			// @todo remove since 2.9.0
+			add_filter( 'um_settings_section_install_info__custom_content', array( $this, 'settings_install_info' ) );
 
 			//custom content for override templates tab
 			add_action( 'plugins_loaded', array( $this, 'um_check_template_version' ), 10 );
@@ -420,7 +423,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			$duplicates         = array();
 			$taxonomies_options = array();
 			$exclude_taxonomies = UM()->excluded_taxonomies();
-			$all_taxonomies     = get_taxonomies( array( 'public' => true, 'show_ui' => true ), 'objects' );
+			$all_taxonomies     = get_taxonomies(
+				array(
+					'public'  => true,
+					'show_ui' => true,
+				),
+				'objects'
+			);
 			foreach ( $all_taxonomies as $key => $taxonomy ) {
 				if ( in_array( $key, $exclude_taxonomies, true ) ) {
 					continue;
@@ -445,7 +454,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					}
 				}
 			}
-
 
 			$restricted_access_taxonomy_metabox_value = array();
 			$restricted_access_taxonomy_metabox       = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
@@ -1789,7 +1797,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'licenses'     => array(
 						'title' => __( 'Licenses', 'ultimate-member' ),
 					),
-					'advanced'           => array(
+					'advanced'     => array(
 						'title'    => __( 'Advanced', 'ultimate-member' ),
 						'sections' => array(
 							''                   => array(
@@ -1851,7 +1859,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							),
 						),
 					),
-					'misc'               => array(
+					'misc'         => array(
 						'title'  => __( 'Misc', 'ultimate-member' ),
 						'fields' => array(
 							array(
@@ -1891,12 +1899,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								'type' => 'install_info',
 							),
 						),
-					),
+					), // @todo remove since 2.9.0
 				)
 			);
-
 		}
-
 
 		/**
 		 * @param array $settings
@@ -2980,10 +2986,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		}
 
 		/**
-		 * HTML for Settings > Override Templates tab.
-		 * @return void
+		 * HTML for Settings > Advanced > Override Templates tab.
+		 *
+		 * @return string
 		 */
-		public function settings_override_templates_tab( $html, $current_tab, $current_subtab ) {
+		public function settings_override_templates_tab() {
 			$um_check_version = get_transient( 'um_check_template_versions' );
 
 			$check_url = add_query_arg(
@@ -3019,6 +3026,35 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			<?php
 			include_once UM_PATH . 'includes/admin/core/list-tables/version-template-list-table.php';
 
+			return ob_get_clean();
+		}
+
+		/**
+		 * HTML for Settings > Install Info tab.
+		 *
+		 * @todo remove since 2.9.0
+		 *
+		 * @return string
+		 */
+		public function settings_install_info() {
+			ob_start();
+			?>
+			<p class="description" style="margin: 20px 0 0 0;">
+				<?php
+				/** @noinspection HtmlUnknownTarget */
+				// translators: %s: Link to the Site Health > Info.
+				echo wp_kses( sprintf( __( 'This settings tab is deprecated. And it will be fully removed since 2.9.0 version. Please get the installation info from <a href="%s">there</a>.', 'ultimate-member' ), add_query_arg( 'tab', 'debug', admin_url( 'site-health.php' ) ) ), UM()->get_allowed_html( 'admin_notice' ) );
+				?>
+			</p>
+			<p class="description" style="margin: 20px 0 0 0;">
+				<?php
+				/** @noinspection HtmlUnknownTarget */
+				// translators: %s: Link to the Site Health article.
+				echo wp_kses( sprintf( __( 'Check more information about Site Health and how to get the Installation Info <a href="%s" target="_blank">here</a>.', 'ultimate-member' ), 'https://docs.ultimatemember.com/article/1879-ultimate-member-site-health' ), UM()->get_allowed_html( 'admin_notice' ) );
+				?>
+			</p>
+
+			<?php
 			return ob_get_clean();
 		}
 
