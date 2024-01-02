@@ -2683,8 +2683,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		/**
 		 * Set settings field per email notification.
 		 *
-		 * @param bool   $section_fields
-		 * @param string $tab
+		 * @param bool|array $section_fields
+		 * @param string     $tab
 		 *
 		 * @return bool|array
 		 */
@@ -2702,7 +2702,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			$in_theme = UM()->mail()->template_in_theme( $email_key );
 
-			$back_link = add_query_arg( array( 'page' => 'um_options', 'tab' => 'email' ), admin_url( 'admin.php' ) );
+			$back_link = add_query_arg(
+				array(
+					'page' => 'um_options',
+					'tab'  => 'email',
+				),
+				admin_url( 'admin.php' )
+			);
 
 			$this->settings_structure['email']['title']       = '<a class="um-back-button" href="' . esc_url( $back_link ) . '" title="' . esc_attr__( 'Back', 'ultimate-member' ) . '">&#8592;</a>' . $emails[ $email_key ]['title'];
 			$this->settings_structure['email']['description'] = $emails[ $email_key ]['description'];
@@ -2716,24 +2722,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				array(
 					'id'             => $email_key . '_on',
 					'type'           => 'checkbox',
-					//'label'          => $emails[ $email_key ]['title'],
 					'label'          => __( 'Enable/Disable', 'ultimate-member' ),
 					'checkbox_label' => __( 'Enable this email notification', 'ultimate-member' ),
-//					'description'    => $emails[ $email_key ]['description'],
 				),
 				array(
 					'id'          => $email_key . '_sub',
 					'type'        => 'text',
 					'label'       => __( 'Subject', 'ultimate-member' ),
 					'conditional' => array( $email_key . '_on', '=', 1 ),
-//					'description' => __( 'This is the subject line of the e-mail', 'ultimate-member' ),
 				),
 				array(
 					'id'          => $email_key,
 					'type'        => 'email_template',
 					'label'       => __( 'Email Content', 'ultimate-member' ),
 					'conditional' => array( $email_key . '_on', '=', 1 ),
-//					'description' => __( 'This is the content of the e-mail', 'ultimate-member' ),
 					'value'       => UM()->mail()->get_email_template( $email_key ),
 					'in_theme'    => $in_theme,
 				),
