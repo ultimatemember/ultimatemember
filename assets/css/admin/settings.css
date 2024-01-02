@@ -56,6 +56,12 @@ th.column-email.column-primary {
   #um-settings-form .subsubsub {
     float: left;
     width: 100%; }
+  #um-settings-form h2.title a.um-back-button {
+    font-weight: normal;
+    font-size: 30px;
+    line-height: 1;
+    text-decoration: none;
+    margin-right: 5px; }
 
 .um-settings-line .multi-checkbox-line {
   float: left;

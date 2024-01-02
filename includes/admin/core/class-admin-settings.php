@@ -1410,7 +1410,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						),
 					),
 					'email'        => array(
-						'title'         => __( 'Email', 'ultimate-member' ),
+						'title'         => __( 'Emails', 'ultimate-member' ),
 						'form_sections' => array(
 							'email_sender'   => array(
 								'title'       => __( 'Email sender options', 'ultimate-member' ),
@@ -2049,6 +2049,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			$current_tab    = empty( $_GET['tab'] ) ? '' : sanitize_key( $_GET['tab'] );
 			$current_subtab = empty( $_GET['section'] ) ? '' : sanitize_key( $_GET['section'] );
 
+			$temp_structure = $this->settings_structure; // Don't remove this temp variable. Internal workaround for Email Tab integration.
+
 			$custom_content = apply_filters( 'um_settings_section_' . $current_tab . '_' . $current_subtab . '_custom_content', false, $current_tab, $current_subtab );
 
 			if ( false === $custom_content ) {
@@ -2057,6 +2059,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			} else {
 				$settings_section = $custom_content;
 			}
+
+			$this->settings_structure = $temp_structure; // Don't remove this temp variable. Internal workaround for Email Tab integration.
 
 			echo '<div id="um-settings-wrap" class="wrap"><h1>' . esc_html__( 'Ultimate Member - Settings', 'ultimate-member' ) . '</h1>';
 
@@ -2698,6 +2702,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			$in_theme = UM()->mail()->template_in_theme( $email_key );
 
+			$back_link = add_query_arg( array( 'page' => 'um_options', 'tab' => 'email' ), admin_url( 'admin.php' ) );
+
+			$this->settings_structure['email']['title']       = '<a class="um-back-button" href="' . esc_url( $back_link ) . '" title="' . esc_attr__( 'Back', 'ultimate-member' ) . '">&#8592;</a>' . $emails[ $email_key ]['title'];
+			$this->settings_structure['email']['description'] = $emails[ $email_key ]['description'];
+
 			$section_fields = array(
 				array(
 					'id'    => 'um_email_template',
@@ -2705,24 +2714,26 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'value' => $email_key,
 				),
 				array(
-					'id'      => $email_key . '_on',
-					'type'    => 'checkbox',
-					'label'   => $emails[ $email_key ]['title'],
-					'tooltip' => $emails[ $email_key ]['description'],
+					'id'             => $email_key . '_on',
+					'type'           => 'checkbox',
+					//'label'          => $emails[ $email_key ]['title'],
+					'label'          => __( 'Enable/Disable', 'ultimate-member' ),
+					'checkbox_label' => __( 'Enable this email notification', 'ultimate-member' ),
+//					'description'    => $emails[ $email_key ]['description'],
 				),
 				array(
 					'id'          => $email_key . '_sub',
 					'type'        => 'text',
-					'label'       => __( 'Subject Line', 'ultimate-member' ),
+					'label'       => __( 'Subject', 'ultimate-member' ),
 					'conditional' => array( $email_key . '_on', '=', 1 ),
-					'tooltip'     => __( 'This is the subject line of the e-mail', 'ultimate-member' ),
+//					'description' => __( 'This is the subject line of the e-mail', 'ultimate-member' ),
 				),
 				array(
 					'id'          => $email_key,
 					'type'        => 'email_template',
-					'label'       => __( 'Message Body', 'ultimate-member' ),
+					'label'       => __( 'Email Content', 'ultimate-member' ),
 					'conditional' => array( $email_key . '_on', '=', 1 ),
-					'tooltip'     => __( 'This is the content of the e-mail', 'ultimate-member' ),
+//					'description' => __( 'This is the content of the e-mail', 'ultimate-member' ),
 					'value'       => UM()->mail()->get_email_template( $email_key ),
 					'in_theme'    => $in_theme,
 				),
@@ -3329,7 +3340,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					ob_start();
 					if ( ! empty( $form_section_fields['title'] ) ) {
 						?>
-						<h2 class="title"><?php echo esc_html( $form_section_fields['title'] ); ?></h2>
+						<h2 class="title"><?php echo wp_kses( $form_section_fields['title'], UM()->get_allowed_html( 'admin_notice' ) ); ?></h2>
 						<?php
 					}
 
@@ -3371,7 +3382,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				if ( ! empty( $section_title ) ) {
 					?>
-					<h2 class="title"><?php echo esc_html( $section_title ); ?></h2>
+					<h2 class="title"><?php echo wp_kses( $section_title, UM()->get_allowed_html( 'admin_notice' ) ); ?></h2>
 					<?php
 				}
 
