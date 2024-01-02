@@ -598,6 +598,9 @@ final class Enqueue extends \um\common\Enqueue {
 		} elseif ( 'ultimate-member_page_ultimatemember-extensions' === $hook ) {
 			wp_register_style( 'um_admin_extensions', $css_url . 'admin/extensions' . $suffix . '.css', array(), UM_VERSION );
 			wp_enqueue_style( 'um_admin_extensions' );
+		} elseif ( 'ultimate-member_page_um_status_page' === $hook ) {
+			wp_register_style( 'um_admin_settings', $css_url . 'admin/settings' . $suffix . '.css', array(), UM_VERSION );
+			wp_enqueue_style( 'um_admin_settings' );
 		}
 	}
 
