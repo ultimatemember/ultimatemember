@@ -42,13 +42,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			//init settings structure
 			add_action( 'admin_init', array( &$this, 'init_variables' ), 9 );
 
-			//settings structure handlers
+			// settings structure handlers
 			add_action( 'um_settings_page_before_email__content', array( $this, 'settings_before_email_tab' ) );
 			add_filter( 'um_settings_section_custom_fields', array( $this, 'email_section_custom_fields' ), 10, 2 );
 
+			add_filter( 'um_settings_form_section_advanced_override_templates_override_templates_custom_content', array( $this, 'settings_override_templates_tab' ) );
+
 			//custom content for licenses tab
 			add_filter( 'um_settings_section_licenses__custom_content', array( $this, 'settings_licenses_tab' ), 10, 3 );
-			add_filter( 'um_settings_section_advanced_override_templates_custom_content', array( $this, 'settings_override_templates_tab' ) );
 
 			// @todo remove since 2.9.0
 			add_filter( 'um_settings_section_install_info__custom_content', array( $this, 'settings_install_info' ) );
@@ -636,10 +637,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			$latest_truncate = get_option( 'um_member_directory_truncated', false );
 
 			$same_page_update = array(
-				'id'          => 'member_directory_own_table',
-				'type'        => 'same_page_update',
-				'label'       => __( 'Enable custom table for usermeta', 'ultimate-member' ),
-				'description' => __( 'Check this box if you would like to enable the use of a custom table for user metadata. Improved performance for member directory searches.', 'ultimate-member' ),
+				'id'             => 'member_directory_own_table',
+				'type'           => 'same_page_update',
+				'label'          => __( 'Custom usermeta table', 'ultimate-member' ),
+				'checkbox_label' => __( 'Enable custom table for usermeta', 'ultimate-member' ),
+				'description'    => __( 'Check this box if you would like to enable the use of a custom table for user metadata. Improved performance for member directory searches.', 'ultimate-member' ),
 			);
 
 			if ( empty( $latest_update ) || ( ! empty( $latest_truncate ) && $latest_truncate > $latest_update ) ) {
@@ -1142,22 +1144,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'size'        => 'medium',
 											),
 											array(
-												'id'          => 'author_redirect',
-												'type'        => 'checkbox',
-												'label'       => __( 'Automatically redirect author page to their profile?', 'ultimate-member' ),
-												'description' => __( 'If enabled, author pages will automatically redirect to the user\'s profile page', 'ultimate-member' ),
+												'id'             => 'author_redirect',
+												'type'           => 'checkbox',
+												'label'          => __( 'Hide author pages', 'ultimate-member' ),
+												'checkbox_label' => __( 'Enable automatically redirect author page to their profile', 'ultimate-member' ),
+												'description'    => __( 'If enabled, author pages will automatically redirect to the user\'s profile page', 'ultimate-member' ),
 											),
 											array(
-												'id'          => 'members_page',
-												'type'        => 'checkbox',
-												'label'       => __( 'Enable Members Directory', 'ultimate-member' ),
-												'description' => __( 'Control whether to enable or disable member directories on this site', 'ultimate-member' ),
+												'id'             => 'members_page',
+												'type'           => 'checkbox',
+												'label'          => __( 'Members Directory', 'ultimate-member' ),
+												'checkbox_label' => __( 'Enable Members Directory', 'ultimate-member' ),
+												'description'    => __( 'Control whether to enable or disable member directories on this site', 'ultimate-member' ),
 											),
 											array(
-												'id'          => 'use_gravatars',
-												'type'        => 'checkbox',
-												'label'       => __( 'Use Gravatar', 'ultimate-member' ),
-												'description' => __( 'Do you want to use Gravatar instead of the default plugin profile photo (If the user did not upload a custom profile photo/avatar)?', 'ultimate-member' ),
+												'id'             => 'use_gravatars',
+												'type'           => 'checkbox',
+												'label'          => __( 'Use Gravatar', 'ultimate-member' ),
+												'checkbox_label' => __( 'Enable Gravatar', 'ultimate-member' ),
+												'description'    => __( 'Do you want to use Gravatar instead of the default plugin profile photo (If the user did not upload a custom profile photo/avatar)?', 'ultimate-member' ),
 											),
 											array(
 												'id'          => 'use_um_gravatar_default_builtin_image',
@@ -1178,17 +1183,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'size'        => 'medium',
 											),
 											array(
-												'id'          => 'use_um_gravatar_default_image',
-												'type'        => 'checkbox',
-												'label'       => __( 'Use Default plugin avatar as Gravatar\'s Default avatar', 'ultimate-member' ),
-												'description' => __( 'Do you want to use the plugin default avatar instead of the gravatar default photo (If the user did not upload a custom profile photo / avatar)', 'ultimate-member' ),
-												'conditional' => array( 'use_um_gravatar_default_builtin_image', '=', 'default' ),
+												'id'             => 'use_um_gravatar_default_image',
+												'type'           => 'checkbox',
+												'label'          => __( 'Replace Gravatar\'s Default avatar', 'ultimate-member' ),
+												'checkbox_label' => __( 'Set Default plugin avatar as Gravatar\'s Default avatar', 'ultimate-member' ),
+												'description'    => __( 'Do you want to use the plugin default avatar instead of the gravatar default photo (If the user did not upload a custom profile photo/avatar)', 'ultimate-member' ),
+												'conditional'    => array( 'use_um_gravatar_default_builtin_image', '=', 'default' ),
 											),
 											array(
-												'id'          => 'delete_comments',
-												'type'        => 'checkbox',
-												'label'       => __( 'Deleting user comments after deleting a user', 'ultimate-member' ),
-												'description' => __( 'Do you want to delete a user\'s comments when that user deletes themself or is removed from the admin dashboard from the site?', 'ultimate-member' ),
+												'id'             => 'delete_comments',
+												'type'           => 'checkbox',
+												'label'          => __( 'Delete user comments', 'ultimate-member' ),
+												'checkbox_label' => __( 'Enable deleting user comments after deleting a user', 'ultimate-member' ),
+												'description'    => __( 'Do you want to delete a user\'s comments when that user deletes themself or is removed from the admin dashboard from the site?', 'ultimate-member' ),
 											),
 										),
 									),
@@ -1197,16 +1204,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'description' => __( 'Password & Security settings.', 'ultimate-member' ),
 										'fields'      => array(
 											array(
-												'id'          => 'toggle_password',
-												'type'        => 'checkbox',
-												'label'       => __( 'Show/hide password button', 'ultimate-member' ),
-												'description' => __( 'Enable visibility for show/hide password button for the password field-type.', 'ultimate-member' ),
+												'id'             => 'toggle_password',
+												'type'           => 'checkbox',
+												'label'          => __( 'Toggle Password Visibility', 'ultimate-member' ),
+												'checkbox_label' => __( 'Enable password show/hide button', 'ultimate-member' ),
+												'description'    => __( 'Enable visibility for show/hide password button for the password field-type.', 'ultimate-member' ),
 											),
 											array(
-												'id'          => 'require_strongpass',
-												'type'        => 'checkbox',
-												'label'       => __( 'Require Strong Passwords', 'ultimate-member' ),
-												'description' => __( 'Enable this option to apply strong password rules to all password fields (user registration, password reset and password change).', 'ultimate-member' ),
+												'id'             => 'require_strongpass',
+												'type'           => 'checkbox',
+												'label'          => __( 'Require Strong Passwords', 'ultimate-member' ),
+												'checkbox_label' => __( 'Enable strong passwords', 'ultimate-member' ),
+												'description'    => __( 'Enable this option to apply strong password rules to all password fields (user registration, password reset and password change).', 'ultimate-member' ),
 											),
 											array(
 												'id'          => 'password_min_chars',
@@ -1401,31 +1410,44 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						),
 					),
 					'email'        => array(
-						'title'  => __( 'Email', 'ultimate-member' ),
-						'fields' => array(
-							array(
-								'id'      => 'admin_email',
-								'type'    => 'text',
-								'label'   => __( 'Admin E-mail Address', 'ultimate-member' ),
-								'tooltip' => __( 'e.g. admin@companyname.com', 'ultimate-member' ),
+						'title'         => __( 'Email', 'ultimate-member' ),
+						'form_sections' => array(
+							'email_sender'   => array(
+								'title'       => __( 'Email sender options', 'ultimate-member' ),
+								'description' => __( 'How the sender appears in outgoing Ultimate Member emails.', 'ultimate-member' ),
+								'fields'      => array(
+									array(
+										'id'          => 'admin_email',
+										'type'        => 'text',
+										'label'       => __( 'Admin E-mail Address', 'ultimate-member' ),
+										'description' => __( 'e.g. admin@companyname.com', 'ultimate-member' ),
+									),
+									array(
+										'id'          => 'mail_from',
+										'type'        => 'text',
+										'label'       => __( 'Mail appears from', 'ultimate-member' ),
+										'description' => __( 'e.g. Site Name', 'ultimate-member' ),
+									),
+									array(
+										'id'          => 'mail_from_addr',
+										'type'        => 'text',
+										'label'       => __( 'Mail appears from address', 'ultimate-member' ),
+										'description' => __( 'e.g. admin@companyname.com', 'ultimate-member' ),
+									),
+								),
 							),
-							array(
-								'id'      => 'mail_from',
-								'type'    => 'text',
-								'label'   => __( 'Mail appears from', 'ultimate-member' ),
-								'tooltip' => __( 'e.g. Site Name', 'ultimate-member' ),
-							),
-							array(
-								'id'      => 'mail_from_addr',
-								'type'    => 'text',
-								'label'   => __( 'Mail appears from address', 'ultimate-member' ),
-								'tooltip' => __( 'e.g. admin@companyname.com', 'ultimate-member' ),
-							),
-							array(
-								'id'      => 'email_html',
-								'type'    => 'checkbox',
-								'label'   => __( 'Use HTML for E-mails?', 'ultimate-member' ),
-								'tooltip' => __( 'If you plan use e-mails with HTML, please make sure that this option is enabled. Otherwise, HTML will be displayed as plain text.', 'ultimate-member' ),
+							'email_template' => array(
+								'title'       => __( 'Email template', 'ultimate-member' ),
+								'description' => __( 'Section to customize email templates settings.', 'ultimate-member' ),
+								'fields'      => array(
+									array(
+										'id'             => 'email_html',
+										'type'           => 'checkbox',
+										'label'          => __( 'Content type', 'ultimate-member' ),
+										'checkbox_label' => __( 'Enable HTML for E-mails', 'ultimate-member' ),
+										'description'    => __( 'If you plan use e-mails with HTML, please make sure that this option is enabled. Otherwise, HTML will be displayed as plain text.', 'ultimate-member' ),
+									),
+								),
 							),
 						),
 					),
@@ -1840,15 +1862,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								'title'  => __( 'General', 'ultimate-member' ),
 								'fields' => array(
 									array(
-										'id'    => 'form_asterisk',
-										'type'  => 'checkbox',
-										'label' => __( 'Show an asterisk for required fields', 'ultimate-member' ),
+										'id'             => 'form_asterisk',
+										'type'           => 'checkbox',
+										'label'          => __( 'Required fields\' asterisk', 'ultimate-member' ),
+										'checkbox_label' => __( 'Show an asterisk for required fields', 'ultimate-member' ),
 									),
 									array(
-										'id'          => 'um_profile_object_cache_stop',
-										'type'        => 'checkbox',
-										'label'       => __( 'Disable Cache User Profile', 'ultimate-member' ),
-										'description' => __( 'Check this box if you would like to disable Ultimate Member user\'s cache.', 'ultimate-member' ),
+										'id'             => 'um_profile_object_cache_stop',
+										'type'           => 'checkbox',
+										'label'          => __( 'Cache User Profile', 'ultimate-member' ),
+										'checkbox_label' => __( 'Disable user data cache', 'ultimate-member' ),
+										'description'    => __( 'Check this box if you would like to disable Ultimate Member user\'s cache.', 'ultimate-member' ),
 									),
 									array(
 										'id'          => 'rest_api_version',
@@ -1861,25 +1885,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										),
 									),
 									array(
-										'id'          => 'uninstall_on_delete',
-										'type'        => 'checkbox',
-										'label'       => __( 'Remove Data on Uninstall?', 'ultimate-member' ),
-										'description' => __( 'Check this box if you would like Ultimate Member to completely remove all of its data when the plugin/extensions are deleted.', 'ultimate-member' ),
+										'id'             => 'uninstall_on_delete',
+										'type'           => 'checkbox',
+										'label'          => __( 'Remove Data on Uninstall?', 'ultimate-member' ),
+										'checkbox_label' => __( 'Enable flushing data', 'ultimate-member' ),
+										'description'    => __( 'Check this box if you would like Ultimate Member to completely remove all of its data when the plugin/extensions are deleted.', 'ultimate-member' ),
 									),
 								),
 							),
 							'override_templates' => array(
 								'title'         => __( 'Override templates', 'ultimate-member' ),
 								'form_sections' => array(
-									array(
-										'id'          => 'override_templates_options',
-										'type'        => 'form_section',
+									'override_templates' => array(
 										'title'       => __( 'Override templates', 'ultimate-member' ),
 										// translators: %s: Link to the docs article.
-										'description' => sprintf( __( 'You may get more details about overriding templates <a href="%s" target="_blank">here</a>.', 'ultimate-member' ), 'https://docs.ultimatemember.com/article/1516-templates-map' ), /** @noinspection HtmlUnknownTarget */
+										'description' => sprintf( __( 'You can find a list of template file changes with each release. You can check the latest templates and their statuses, and see if they\'re outdated or updated. You may get more details about overriding templates <a href="%s" target="_blank">here</a>.', 'ultimate-member' ), 'https://docs.ultimatemember.com/article/1516-templates-map' ), /** @noinspection HtmlUnknownTarget */
 										'fields'      => array(
 											array(
-												'type' => 'override_templates',
+												'id'   => 'override_templates_list_table',
+												'type' => 'override_templates_list_table',
 											),
 										),
 									),
@@ -1893,10 +1917,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'description' => __( 'Start using new features that are being progressively rolled out to improve the users management experience.', 'ultimate-member' ),
 										'fields'      => array(
 											array(
-												'id'          => 'enable_blocks',
-												'type'        => 'checkbox',
-												'label'       => __( 'Enable Gutenberg Blocks', 'ultimate-member' ),
-												'description' => __( 'Check this box if you would like to use Ultimate Member blocks in Gutenberg editor. Important some themes have the conflicts with Gutenberg editor.', 'ultimate-member' ),
+												'id'             => 'enable_blocks',
+												'type'           => 'checkbox',
+												'label'          => __( 'Gutenberg Blocks', 'ultimate-member' ),
+												'checkbox_label' => __( 'Enable Gutenberg Blocks', 'ultimate-member' ),
+												'description'    => __( 'Check this box if you would like to use Ultimate Member blocks in Gutenberg editor. Important some themes have the conflicts with Gutenberg editor.', 'ultimate-member' ),
 											),
 											$same_page_update,
 										),
@@ -1906,10 +1931,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'description' => __( 'These features are either experimental or incomplete, enable them at your own risk!', 'ultimate-member' ),
 										'fields'      => array(
 											array(
-												'id'          => 'disable_legacy_fonicons',
-												'type'        => 'checkbox',
-												'label'       => __( 'Disable legacy fonticons', 'ultimate-member' ),
-												'description' => __( 'Check this box if you would like to disable legacy Ultimate Member fonticons used outdated versions of FontAwesome and Ionicons libraries.', 'ultimate-member' ),
+												'id'             => 'disable_legacy_fonicons',
+												'type'           => 'checkbox',
+												'label'          => __( 'Legacy fonticons', 'ultimate-member' ),
+												'checkbox_label' => __( 'Disable legacy fonticons', 'ultimate-member' ),
+												'description'    => __( 'Check this box if you would like to disable legacy Ultimate Member fonticons used outdated versions of FontAwesome and Ionicons libraries.', 'ultimate-member' ),
 											),
 										),
 									),
@@ -1920,10 +1946,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 											// backward compatibility option leave it disabled for better security and ability to exclude posts/terms pre-query
 											// otherwise we're filtering only results and restricted posts/terms can be visible
 											array(
-												'id'          => 'disable_restriction_pre_queries',
-												'type'        => 'checkbox',
-												'label'       => __( 'Disable pre-queries for restriction content logic', 'ultimate-member' ),
-												'description' => __( 'Please enable this option only in the cases when you have big or unnecessary queries on your site with active restriction logic. If you want to exclude posts only from the results queries instead of pre_get_posts and fully-hidden post logic also please enable this option. It activates the restriction content logic until 2.2.x version without latest security enhancements.', 'ultimate-member' ),
+												'id'             => 'disable_restriction_pre_queries',
+												'type'           => 'checkbox',
+												'label'          => __( 'Restriction content pre-queries', 'ultimate-member' ),
+												'checkbox_label' => __( 'Disable pre-queries for restriction content logic', 'ultimate-member' ),
+												'description'    => __( 'Please enable this option only in the cases when you have big or unnecessary queries on your site with active restriction logic. If you want to exclude posts only from the results queries instead of pre_get_posts and fully-hidden post logic also please enable this option. It activates the restriction content logic until 2.2.x version without latest security enhancements.', 'ultimate-member' ),
 											),
 										),
 									),
@@ -2125,7 +2152,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							}
 						}
 
-						if ( ! empty( $tab['fields'] ) || ! empty( $tab['sections'] ) ) {
+						if ( ! empty( $tab['fields'] ) || ! empty( $tab['sections'] ) || ! empty( $tab['form_sections'] ) ) {
 							$menu_tabs[ $slug ] = $tab['title'];
 						}
 					}
@@ -3037,7 +3064,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 *
 		 * @return string
 		 */
-		public function settings_override_templates_tab() {
+		public function settings_override_templates_tab( $content ) {
 			$um_check_version = get_transient( 'um_check_template_versions' );
 
 			$check_url = add_query_arg(
@@ -3049,7 +3076,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			ob_start();
 			?>
 
-			<p class="description" style="margin: 20px 0 0 0;">
+			<p>
 				<a href="<?php echo esc_url( $check_url ); ?>" class="button" style="margin-right: 10px;">
 					<?php esc_html_e( 'Re-check templates', 'ultimate-member' ); ?>
 				</a>
@@ -3062,18 +3089,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				}
 				?>
 			</p>
-			<p class="description" style="margin: 20px 0 0 0;">
-				<?php
-				/** @noinspection HtmlUnknownTarget */
-				// translators: %s: Link to the docs article.
-				echo wp_kses( sprintf( __( 'You may get more details about overriding templates <a href="%s" target="_blank">here</a>.', 'ultimate-member' ), 'https://docs.ultimatemember.com/article/1516-templates-map' ), UM()->get_allowed_html( 'admin_notice' ) );
-				?>
-			</p>
+			<div class="clear"></div>
 
 			<?php
 			include_once UM_PATH . 'includes/admin/core/list-tables/version-template-list-table.php';
 
-			return ob_get_clean();
+			$content = ob_get_clean();
+			return $content;
 		}
 
 		/**
@@ -3086,14 +3108,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		public function settings_install_info() {
 			ob_start();
 			?>
-			<p class="description" style="margin: 20px 0 0 0;">
+			<h2 class="title"><?php esc_html_e( 'Install Info', 'ultimate-member' ); ?></h2>
+			<p>
 				<?php
 				/** @noinspection HtmlUnknownTarget */
 				// translators: %s: Link to the Site Health > Info.
 				echo wp_kses( sprintf( __( 'This settings tab is deprecated. And it will be fully removed since 2.9.0 version. Please get the installation info from <a href="%s">there</a>.', 'ultimate-member' ), add_query_arg( 'tab', 'debug', admin_url( 'site-health.php' ) ) ), UM()->get_allowed_html( 'admin_notice' ) );
 				?>
 			</p>
-			<p class="description" style="margin: 20px 0 0 0;">
+			<p>
 				<?php
 				/** @noinspection HtmlUnknownTarget */
 				// translators: %s: Link to the Site Health article.
@@ -3293,7 +3316,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 * @return string
 		 */
 		public function render_settings_section( $section_fields, $current_tab, $current_subtab ) {
-			ob_start();
+			$settings_section = '';
 
 			if ( ! empty( $section_fields['form_sections'] ) ) {
 				foreach ( $section_fields['form_sections'] as $section_key => $form_section_fields ) {
@@ -3301,6 +3324,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						continue;
 					}
 
+					$custom_form_section_content = apply_filters( "um_settings_form_section_{$current_tab}_{$current_subtab}_{$section_key}_custom_content", false );
+
+					ob_start();
 					if ( ! empty( $form_section_fields['title'] ) ) {
 						?>
 						<h2 class="title"><?php echo esc_html( $form_section_fields['title'] ); ?></h2>
@@ -3313,13 +3339,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						<?php
 					}
 
-					UM()->admin_forms_settings(
-						array(
-							'class'     => 'um_options-' . $current_tab . '-' . $current_subtab . '-' . $section_key . ' um-third-column',
-							'prefix_id' => 'um_options',
-							'fields'    => $form_section_fields['fields'],
-						)
-					)->render_form();
+					if ( false === $custom_form_section_content ) {
+						UM()->admin_forms_settings(
+							array(
+								'class'     => 'um_options-' . $current_tab . '-' . $current_subtab . '-' . $section_key . ' um-third-column',
+								'prefix_id' => 'um_options',
+								'fields'    => $form_section_fields['fields'],
+							)
+						)->render_form();
+					} else {
+						echo $custom_form_section_content;
+					}
+
+					$settings_section .= ob_get_clean();
 				}
 			} else {
 				$settings_structure = $this->settings_structure[ $current_tab ];
@@ -3334,6 +3366,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					$section_title       = array_key_exists( 'title', $settings_structure ) ? $settings_structure['title'] : '';
 					$section_description = array_key_exists( 'description', $settings_structure ) ? $settings_structure['description'] : '';
 				}
+
+				ob_start();
 
 				if ( ! empty( $section_title ) ) {
 					?>
@@ -3354,9 +3388,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'fields'    => $section_fields,
 					)
 				)->render_form();
+
+				$settings_section .= ob_get_clean();
 			}
 
-			return ob_get_clean();
+			return $settings_section;
 		}
 
 		/**

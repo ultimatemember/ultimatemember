@@ -168,7 +168,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 						}
 
-						if ( ! empty( $data['description'] ) && ! in_array( $data['type'], array( 'same_page_update', 'checkbox' ), true ) ) {
+						if ( ! empty( $data['description'] ) ) {
 							$html .= '<p class="description">' . $data['description'] . '</p>';
 						}
 
@@ -190,7 +190,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 							}
 
-							if ( ! empty( $data['description'] ) && ! in_array( $data['type'], array( 'same_page_update', 'checkbox' ), true ) ) {
+							if ( ! empty( $data['description'] ) ) {
 								$html .= '<p class="description">' . $data['description'] . '</p>';
 							}
 
@@ -210,7 +210,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 							}
 
-							if ( ! empty( $data['description'] ) && ! in_array( $data['type'], array( 'same_page_update', 'checkbox' ), true ) ) {
+							if ( ! empty( $data['description'] ) ) {
 								$html .= '<p class="description">' . $data['description'] . '</p>';
 							}
 
@@ -235,7 +235,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 						}
 
-						if ( ! empty( $data['description'] ) && ! in_array( $data['type'], array( 'same_page_update', 'checkbox' ), true ) ) {
+						if ( ! empty( $data['description'] ) ) {
 							$html .= '<div class="clear"></div><p class="description">' . $data['description'] . '</p>';
 						}
 
@@ -258,7 +258,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 							}
 
-							if ( ! empty( $data['description'] ) && ! in_array( $data['type'], array( 'same_page_update', 'checkbox' ), true ) ) {
+							if ( ! empty( $data['description'] ) ) {
 								$html .= '<div class="clear"></div><p class="description">' . $data['description'] . '</p>';
 							}
 
@@ -280,7 +280,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 							}
 
-							if ( ! empty( $data['description'] ) && ! in_array( $data['type'], array( 'same_page_update', 'checkbox' ), true ) ) {
+							if ( ! empty( $data['description'] ) ) {
 								$html .= '<div class="clear"></div><p class="description">' . $data['description'] . '</p>';
 							}
 
@@ -963,11 +963,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$value = $this->get_field_value( $field_data );
 
-			$description = ! empty( $field_data['description'] ) ? $field_data['description'] : '';
+			$checkbox_label = ! empty( $field_data['checkbox_label'] ) ? $field_data['checkbox_label'] : '';
 
 			$field_html = "<input type=\"checkbox\" $id_attr $class_attr $name_attr $data_attr " . checked( $value, true, false ) . " value=\"1\" " . disabled( ! empty( $field_data['disabled'] ), true, false ) . " />";
-			if ( '' !== $description ) {
-				$field_html = "<label>$field_html $description</label>";
+			if ( '' !== $checkbox_label ) {
+				$field_html = "<label>$field_html $checkbox_label</label>";
 			}
 			$html = "<input type=\"hidden\" $id_attr_hidden $name_attr value=\"0\" " . disabled( ! empty( $field_data['disabled'] ), true, false ) . " />{$field_html}";
 			return apply_filters( 'um_admin_render_checkbox_field_html', $html, $field_data );
@@ -993,7 +993,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
 
 			$data = array(
-				'field_id' => $field_data['id']
+				'field_id' => $field_data['id'],
 			);
 
 			if ( ! empty( $field_data['data'] ) ) {
@@ -1015,11 +1015,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$value = $this->get_field_value( $field_data );
 
-			$description = ! empty( $field_data['description'] ) ? $field_data['description'] : '';
+			$checkbox_label = ! empty( $field_data['checkbox_label'] ) ? $field_data['checkbox_label'] : '';
 
 			$field_html = "<input type=\"checkbox\" $id_attr $class_attr $name_attr $data_attr " . checked( $value, true, false ) . " value=\"1\" " . disabled( ! empty( $field_data['disabled'] ), true, false ) . " />";
-			if ( '' !== $description ) {
-				$field_html = "<label>$field_html $description</label>";
+			if ( '' !== $checkbox_label ) {
+				$field_html = "<label>$field_html $checkbox_label</label>";
 			}
 			$html = "<input type=\"hidden\" $id_attr_hidden $name_attr value=\"0\" " . disabled( ! empty( $field_data['disabled'] ), true, false ) . " />{$field_html}";
 
@@ -1746,51 +1746,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$html .= "</ul><a href=\"javascript:void(0);\" class=\"button button-primary um-multi-selects-add-option\" data-name=\"$name\">{$field_data['add_text']}</a>";
 
-			return $html;
-		}
-
-		/**
-		 * @param array $field_data
-		 *
-		 * @return string
-		 */
-		public function render_form_section( $field_data ) {
-			$html = '<h3>' . esc_html( $field_data['title'] ) . '</h3>';
-			if ( ! empty( $field_data['content'] ) ) {
-				$html .= '<div id="um_' . esc_attr( $field_data['id'] ) . '_description"><p>' . wp_kses( $field_data['content'] , UM()->get_allowed_html( 'admin_notice' ) ) . '</p></div>';
-			}
-			return $html;
-		}
-
-		public function render_override_templates( $field_data ) {
-			$um_check_version = get_transient( 'um_check_template_versions' );
-
-			$check_url = add_query_arg(
-				array(
-					'um_adm_action' => 'check_templates_version',
-					'_wpnonce'      => wp_create_nonce( 'check_templates_version' ),
-				)
-			);
-			?>
-
-			<p class="description" style="margin: 20px 0 0 0;">
-				<a href="<?php echo esc_url( $check_url ); ?>" class="button" style="margin-right: 10px;">
-					<?php esc_html_e( 'Re-check templates', 'ultimate-member' ); ?>
-				</a>
-				<?php
-				if ( false !== $um_check_version ) {
-					// translators: %s: Last checking templates time.
-					echo esc_html( sprintf( __( 'Last update: %s. You could re-check changes manually.', 'ultimate-member' ), wp_date( get_option( 'date_format', 'F j, Y' ) . ' ' . get_option( 'time_format', 'g:i a' ), $um_check_version ) ) );
-				} else {
-					esc_html_e( 'Templates haven\'t check yet. You could check changes manually.', 'ultimate-member' );
-				}
-				?>
-			</p>
-
-			<?php
-			ob_start();
-			include_once UM_PATH . 'includes/admin/core/list-tables/version-template-list-table.php';
-			$html = ob_get_clean();
 			return $html;
 		}
 

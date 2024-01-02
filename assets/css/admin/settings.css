@@ -26,8 +26,8 @@
   width: 25%; }
 
 .column-configure {
-  width: 60px;
-  text-align: center; }
+  width: 10%;
+  text-align: right; }
 
 th.column-email.column-primary {
   padding-left: 48px; }
@@ -35,16 +35,19 @@ th.column-email.column-primary {
 .um-form-table .um-forms-line td {
   padding-right: 0; }
 
-#um-settings-template-versions .wp-list-table .column-core_version {
-  width: 100px;
-  text-align: center; }
+#um-settings-emails {
+  margin: 15px 0; }
 
-#um-settings-template-versions .wp-list-table .column-theme_version {
-  width: 100px;
-  text-align: center; }
-
-#um-settings-template-versions .wp-list-table .column-status {
-  width: 260px; }
+#um-settings-template-versions {
+  margin: 15px 0; }
+  #um-settings-template-versions .wp-list-table .column-core_version {
+    width: 100px;
+    text-align: center; }
+  #um-settings-template-versions .wp-list-table .column-theme_version {
+    width: 100px;
+    text-align: center; }
+  #um-settings-template-versions .wp-list-table .column-status {
+    width: 260px; }
 
 #um-settings-form {
   float: left;

@@ -163,6 +163,16 @@ class UM_Versions_List_Table extends WP_List_Table {
 		$icon = 1 === $item['status_code'] ? 'um-notification-is-active dashicons-yes' : 'dashicons-no-alt';
 		return $item['status'] . ' <span class="dashicons um-notification-status ' . esc_attr( $icon ) . '"></span>';
 	}
+
+	/**
+	 * Generates the table navigation above or below the table
+	 *
+	 * @since 3.1.0
+	 * @param string $which
+	 */
+	protected function display_tablenav( $which ) {
+		// Stop displaying tablenav.
+	}
 }
 
 $list_table = new UM_Versions_List_Table(

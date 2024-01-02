@@ -1,9 +1,6 @@
 .um-form-table .um-forms-line[data-conditional] {
   display: none; }
 
-.um-form-table .um-forms-line[data-field_type="checkbox"] td label, .um-form-table .um-forms-line[data-field_type="same_page_update"] td label {
-  font-style: italic; }
-
 .um-form-table .um-forms-line label .um-req {
   color: #a00;
   margin: 0 0 0 3px;
@@ -67,10 +64,6 @@
   width: 100%;
   display: block;
   margin: 0 0 5px 0; }
-
-.um-form-table .description {
-  font-style: italic;
-  clear: both; }
 
 .um_admin_fonticon_wrapper {
   display: flex;

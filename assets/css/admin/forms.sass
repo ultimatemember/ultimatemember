@@ -7,11 +7,6 @@
   .#{$prefix}forms-line
     &[data-conditional]
       display: none
-    &[data-field_type="checkbox"],
-    &[data-field_type="same_page_update"]
-      td
-        label
-          font-style: italic
     label
       .#{$prefix}req
         color: $required-asterisk
@@ -96,9 +91,9 @@
             width: 100%
             display: block
             margin: 0 0 5px 0
-  .description
-    font-style: italic
-    clear: both
+  //.description
+  //  font-style: italic
+  //  clear: both
 
 .um_admin_fonticon_wrapper
   +flex( row, flex-start, center, nowrap )

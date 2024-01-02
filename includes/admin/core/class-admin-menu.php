@@ -57,7 +57,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 				}
 			}
 
-			if ( empty( $settings_struct['fields'] ) && empty( $settings_struct['sections'] ) ) {
+			if ( empty( $settings_struct['fields'] ) && empty( $settings_struct['sections'] ) && empty( $settings_struct['form_sections'] ) ) {
 				wp_safe_redirect( add_query_arg( array( 'page' => 'um_options' ), admin_url( 'admin.php' ) ) );
 				exit;
 			}
