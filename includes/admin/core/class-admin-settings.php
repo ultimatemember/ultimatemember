@@ -2343,8 +2343,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			}
 		}
 
-
-		function set_default_if_empty( $settings ) {
+		public function set_default_if_empty( $settings ) {
 			$tab = '';
 			if ( ! empty( $_GET['tab'] ) ) {
 				$tab = sanitize_key( $_GET['tab'] );
@@ -2354,7 +2353,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			if ( ! empty( $_GET['section'] ) ) {
 				$section = sanitize_key( $_GET['section'] );
 			}
-
 
 			if ( 'access' === $tab && empty( $section ) ) {
 				if ( ! array_key_exists( 'access_exclude_uris', $settings ) ) {
@@ -2365,14 +2363,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			return $settings;
 		}
 
-
 		/**
-		 * Remove empty values from multi text fields
+		 * Remove empty values from multi text fields.
 		 *
-		 * @param $settings
+		 * @param array $settings
 		 * @return array
 		 */
-		function remove_empty_values( $settings ) {
+		public function remove_empty_values( $settings ) {
 			$tab = '';
 			if ( ! empty( $_GET['tab'] ) ) {
 				$tab = sanitize_key( $_GET['tab'] );
@@ -2383,9 +2380,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$section = sanitize_key( $_GET['section'] );
 			}
 
-			if ( isset( $this->settings_structure[ $tab ]['sections'][ $section ]['fields'] ) ) {
+			if ( ! empty( $this->settings_structure[ $tab ]['sections'][ $section ]['form_sections'] ) ) {
+				$fields = array();
+				foreach ( $this->settings_structure[ $tab ]['sections'][ $section ]['form_sections'] as $section_key => $section_data ) {
+					if ( ! empty( $section_data['fields'] ) ) {
+						$fields[] = $section_data['fields'];
+					}
+				}
+				$fields = array_merge( ...$fields );
+			} elseif ( ! empty( $this->settings_structure[ $tab ]['sections'][ $section ]['fields'] ) ) {
 				$fields = $this->settings_structure[ $tab ]['sections'][ $section ]['fields'];
-			} else {
+			} elseif ( ! empty( $this->settings_structure[ $tab ]['form_sections'] ) ) {
+				$fields = array();
+				foreach ( $this->settings_structure[ $tab ]['form_sections'] as $section_key => $section_data ) {
+					if ( ! empty( $section_data['fields'] ) ) {
+						$fields[] = $section_data['fields'];
+					}
+				}
+				$fields = array_merge( ...$fields );
+			} elseif ( ! empty( $this->settings_structure[ $tab ]['fields'] ) ) {
 				$fields = $this->settings_structure[ $tab ]['fields'];
 			}
 
@@ -2393,22 +2406,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				return $settings;
 			}
 
-
 			$filtered_settings = array();
 			foreach ( $settings as $key => $value ) {
-
 				$filtered_settings[ $key ] = $value;
 
 				foreach ( $fields as $field ) {
-					if ( $field['id'] == $key && isset( $field['type'] ) && $field['type'] == 'multi_text' ) {
-						$filtered_settings[ $key ] = array_filter( $settings[ $key ] );
+					if ( $field['id'] === $key && array_key_exists( 'type', $field ) && 'multi_text' === $field['type'] ) {
+						$filtered_settings[ $key ] = array_filter( $value );
 					}
 				}
 			}
 
 			return $filtered_settings;
 		}
-
 
 		/**
 		 *
