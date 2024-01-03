@@ -64,7 +64,12 @@ if ( ! is_admin() ) {
 		foreach ( $menu_items as $item ) {
 			if ( empty( $item->ID ) ) {
 				// Left item with empty ID for the cases like in MegaMenu when generated submenu doesn't have the menu item ID.
-				$filtered_items[] = $item;
+				if ( ! empty( $item->is_mega_menu ) ) {
+					if ( isset( $item->menu_item_parent ) && in_array( absint( $item->menu_item_parent ), $hide_children_of, true ) ) {
+						continue;
+					}
+					$filtered_items[] = $item;
+				}
 				continue;
 			}
 
