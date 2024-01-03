@@ -305,7 +305,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 				 * }
 				 * add_filter( 'um_email_template_body_attrs', 'my_email_template_body_attrs', 10, 3 );
 				 */
-				$body_attrs = apply_filters( 'um_email_template_body_attrs', 'style="background: #f2f2f2;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;"', $slug, $args );
+				$body_attrs = apply_filters( 'um_email_template_body_attrs', 'style="background: #fff;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;"', $slug, $args );
 				?>
 
 				<body <?php echo $body_attrs; ?>>
