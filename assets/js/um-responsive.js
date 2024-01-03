@@ -13,7 +13,7 @@ jQuery(window).on( 'resize', _.debounce( function() {
 
 	um_responsive();
 	um_modal_responsive();
-}, 100 ) );
+}, 300 ) );
 
 wp.hooks.addAction( 'um_admin_modal_success_result', 'um_frontend_responsive', function( $adminModal ) {
 	// Make responsive script only when live preview,
