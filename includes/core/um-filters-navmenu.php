@@ -63,6 +63,8 @@ if ( ! is_admin() ) {
 		//other filter
 		foreach ( $menu_items as $item ) {
 			if ( empty( $item->ID ) ) {
+				// Left item with empty ID for the cases like in MegaMenu when generated submenu doesn't have the menu item ID.
+				$filtered_items[] = $item;
 				continue;
 			}
 
