@@ -257,7 +257,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 			foreach ( $array as $slug => $info ) {
 				if ( um_is_core_page( $slug ) ) {
-					$classes[] = 'um';
+					$classes[] = 'um-page';
 					$classes[] = 'um-page-' . $slug;
 
 					if ( is_user_logged_in() ) {
