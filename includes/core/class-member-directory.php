@@ -817,8 +817,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$label = ! empty( $attrs['label'] ) ? $attrs['label'] : $attrs['title'];
 
 					if ( $range ) {
-						$min = strtotime( $range[0] );
-						$max = strtotime( $range[1] );
+						$min = $range[0];
+						$max = $range[1];
 						?>
 						<input type="text" id="<?php echo $filter; ?>_from" name="<?php echo $filter; ?>_from" class="um-datepicker-filter"
 							   placeholder="<?php esc_attr_e( sprintf( '%s From', stripslashes( $label ) ), 'ultimate-member' ); ?>"
