@@ -53,7 +53,8 @@
   width: 35%;
 }
 .um .picker__select--year {
-  width: 22.5%;
+  width: 22.5% !important;
+  float: none !important;
 }
 .um .picker__select--month:focus,
 .um .picker__select--year:focus {
@@ -125,9 +126,9 @@
   content: " ";
   border-top: .5em solid transparent;
   border-bottom: .5em solid transparent;
-  
+
   border-right: 0.5em solid #fff;
-  
+
   width: 0;
   height: 0;
   display: block;
@@ -149,9 +150,9 @@
 }
 .um .picker__nav--next:before {
   border-right: 0;
-  
+
   border-left: 0.5em solid #fff;
-  
+
 }
 .um-popup .picker__nav--next:before {
   border-right: 0;
@@ -227,7 +228,7 @@
 }
 @media (min-height: 33.875em) {
   .um .picker__weekday {
-  
+
   }
 }
 /**

@@ -270,7 +270,8 @@ class Enqueue {
 			}
 		}
 
-		wp_register_style( 'um_datetime', $libs_url . 'pickadate/default' . $suffix . '.css', array(), '3.6.2' );
+		wp_register_style( 'um_default_css', $css_url . 'um-old-default' . $suffix . '.css', array(), '3.6.2' );
+		wp_register_style( 'um_datetime', $libs_url . 'pickadate/default' . $suffix . '.css', array( 'um_default_css' ), '3.6.2' );
 		wp_register_style( 'um_datetime_date', $libs_url . 'pickadate/default.date' . $suffix . '.css', array( 'um_datetime' ), '3.6.2' );
 		wp_register_style( 'um_datetime_time', $libs_url . 'pickadate/default.time' . $suffix . '.css', array( 'um_datetime' ), '3.6.2' );
 
