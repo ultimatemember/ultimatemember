@@ -179,6 +179,63 @@ class Enqueue {
 	}
 
 	/**
+	 * Select2 JS and CSS assets register function.
+	 *
+	 *
+	 */
+	public function register_select2() {
+		$suffix   = self::get_suffix();
+		$libs_url = self::get_url( 'libs' );
+
+		/**
+		 * Filters marker for dequeue select2.JS library.
+		 *
+		 * @since 2.0.0
+		 * @hook um_dequeue_select2_scripts
+		 *
+		 * @param {bool} $dequeue_select2 Dequeue select2 assets marker. Set to `true` for dequeue scripts.
+		 *
+		 * @return {bool} Dequeue select2 assets. By default `false`.
+		 *
+		 * @example <caption>Dequeue select2 assets.</caption>
+		 * function custom_um_dequeue_select2_scripts( $dequeue_select2 ) {
+		 *     $dequeue_select2 = true;
+		 *     return $dequeue_select2;
+		 * }
+		 * add_filter( 'um_dequeue_select2_scripts', 'custom_um_dequeue_select2_scripts' );
+		 */
+		$dequeue_select2 = apply_filters( 'um_dequeue_select2_scripts', false );
+		if ( class_exists( 'WooCommerce' ) || $dequeue_select2 ) {
+			wp_dequeue_style( 'select2' );
+			wp_deregister_style( 'select2' );
+
+			wp_dequeue_script( 'select2' );
+			wp_deregister_script( 'select2' );
+		}
+		wp_register_script( 'select2', $libs_url . 'select2/select2.full' . $suffix . '.js', array( 'jquery' ), '4.0.13', true );
+		// Load a localized version for Select2.
+		$locale      = get_locale();
+		$base_locale = get_locale();
+		if ( $locale ) {
+			if ( ! file_exists( UM_PATH . 'assets/libs/select2/i18n/' . $locale . '.js' ) ) {
+				$locale = explode( '_', $base_locale );
+				$locale = $locale[0];
+
+				if ( ! file_exists( UM_PATH . 'assets/libs/select2/i18n/' . $locale . '.js' ) ) {
+					$locale = explode( '_', $base_locale );
+					$locale = implode( '-', $locale );
+				}
+			}
+
+			if ( file_exists( UM_PATH . 'assets/libs/select2/i18n/' . $locale . '.js' ) ) {
+				wp_register_script( 'um_select2_locale', $libs_url . 'select2/i18n/' . $locale . '.js', array( 'jquery', 'select2' ), '4.0.13', true );
+				self::$select2_handle = 'um_select2_locale';
+			}
+		}
+		wp_register_style( 'select2', $libs_url . 'select2/select2' . $suffix . '.css', array(), '4.0.13' );
+	}
+
+	/**
 	 * Register common JS/CSS libraries.
 	 *
 	 * @since 2.7.0
@@ -204,52 +261,7 @@ class Enqueue {
 		wp_register_style( 'um_fonticons_fa', $libs_url . 'legacy/fonticons/fonticons-fa' . $suffix . '.css', array(), UM_VERSION ); // FontAwesome
 
 		// Select2 JS.
-		/**
-		 * Filters marker for dequeue select2.JS library.
-		 *
-		 * @since 2.0.0
-		 * @hook um_dequeue_select2_scripts
-		 *
-		 * @param {bool} $dequeue_select2 Dequeue select2 assets marker. Set to `true` for dequeue scripts.
-		 *
-		 * @return {bool} Dequeue select2 assets. By default `false`.
-		 *
-		 * @example <caption>Dequeue select2 assets.</caption>
-		 * function custom_um_dequeue_select2_scripts( $dequeue_select2 ) {
-		 *     $dequeue_select2 = true;
-		 *     return $dequeue_select2;
-		 * }
-		 * add_filter( 'um_dequeue_select2_scripts', 'custom_um_dequeue_select2_scripts' );
-		 */
-		$dequeue_select2 = apply_filters( 'um_dequeue_select2_scripts', false );
-		if ( class_exists( 'WooCommerce' ) || $dequeue_select2 ) {
-			wp_dequeue_style( self::$select2_handle );
-			wp_deregister_style( self::$select2_handle );
-
-			wp_dequeue_script( self::$select2_handle );
-			wp_deregister_script( self::$select2_handle );
-		}
-		wp_register_script( self::$select2_handle, $libs_url . 'select2/select2.full' . $suffix . '.js', array( 'jquery' ), '4.0.13', true );
-		// Load a localized version for Select2.
-		$locale      = get_locale();
-		$base_locale = get_locale();
-		if ( $locale ) {
-			if ( ! file_exists( UM_PATH . 'assets/libs/select2/i18n/' . $locale . '.js' ) ) {
-				$locale = explode( '_', $base_locale );
-				$locale = $locale[0];
-
-				if ( ! file_exists( UM_PATH . 'assets/libs/select2/i18n/' . $locale . '.js' ) ) {
-					$locale = explode( '_', $base_locale );
-					$locale = implode( '-', $locale );
-				}
-			}
-
-			if ( file_exists( UM_PATH . 'assets/libs/select2/i18n/' . $locale . '.js' ) ) {
-				wp_register_script( 'um_select2_locale', $libs_url . 'select2/i18n/' . $locale . '.js', array( 'jquery', self::$select2_handle ), '4.0.13', true );
-				self::$select2_handle = 'um_select2_locale';
-			}
-		}
-		wp_register_style( 'select2', $libs_url . 'select2/select2' . $suffix . '.css', array(), '4.0.13' );
+		$this->register_select2();
 
 		// Date-time picker (Pickadate.JS)
 		wp_register_script( 'um_datetime', $libs_url . 'pickadate/picker' . $suffix . '.js', array( 'jquery' ), '3.6.2', true );
