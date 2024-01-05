@@ -22,7 +22,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 		/**
 		 * Admin_Navmenu constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			self::$fields = array(
 				'um_nav_public' => __( 'Display Mode', 'ultimate-member' ),
 				'um_nav_roles'  => __( 'By Role', 'ultimate-member' ),
@@ -47,9 +47,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 		 */
 		public function wp_nav_menu_item_custom_fields( $item_id, $item, $depth, $args, $id = null ) {
 
-			$um_nav_public = get_post_meta( $item->ID, 'menu-item-um_nav_public', true );
+			$um_nav_public   = get_post_meta( $item->ID, 'menu-item-um_nav_public', true );
 			$_nav_roles_meta = get_post_meta( $item->ID, 'menu-item-um_nav_roles', true );
-			$um_nav_roles = array();
+			$um_nav_roles    = array();
 			if ( $_nav_roles_meta ) {
 				foreach ( $_nav_roles_meta as $key => $value ) {
 					if ( is_int( $key ) ) {
@@ -95,9 +95,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 						$html .= '</span>';
 						$i++;
 					}
+
 					echo $html;
 					?>
 				</p>
+				<?php do_action( 'um_wp_nav_menu_custom_fields', $item_id ); ?>
 				<div class="clear"></div>
 			</div>
 			<?php
@@ -116,7 +118,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 		 * @param int $menu_item_db_id
 		 * @param array $menu_item_args
 		 */
-		function _save( $menu_id, $menu_item_db_id, $menu_item_args ) {
+		public function _save( $menu_id, $menu_item_db_id, $menu_item_args ) {
+			// phpcs:disable WordPress.Security.NonceVerification
 			if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 				return;
 			}
@@ -125,6 +128,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 				return;
 			}
 
+			self::$fields = apply_filters( 'um_wp_nav_menu_fields', self::$fields );
+
 			foreach ( self::$fields as $_key => $label ) {
 
 				$key = sprintf( 'menu-item-%s', $_key );
@@ -132,11 +137,21 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 				// Sanitize
 				if ( ! empty( $_POST[ $key ][ $menu_item_db_id ] ) ) {
 					// Do some checks here...
-					$value = is_array( $_POST[ $key ][ $menu_item_db_id ] ) ?
-						array_map( 'sanitize_key', array_keys( $_POST[ $key ][ $menu_item_db_id ] ) ) : (int) $_POST[ $key ][ $menu_item_db_id ];
+					if ( is_array( $_POST[ $key ][ $menu_item_db_id ] ) ) {
+						$value          = $_POST[ $key ][ $menu_item_db_id ];
+						$sanitized_keys = array_map( 'sanitize_key', array_keys( $value ) );
+						$value          = $sanitized_keys;
+					} else {
+						if ( 'on' === $_POST[ $key ][ $menu_item_db_id ] ) {
+							$value = 1;
+						} else {
+							$value = (int) $_POST[ $key ][ $menu_item_db_id ];
+						}
+					}
 				} else {
 					$value = null;
 				}
+				// phpcs:enable WordPress.Security.NonceVerification
 
 				// Update
 				if ( ! is_null( $value ) ) {
