@@ -61,35 +61,36 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 			?>
 			<div class="um-nav-edit">
 				<div class="clear"></div>
-				<h4 style="margin-bottom: 0.6em;"><?php _e( 'Ultimate Member Menu Settings', 'ultimate-member' ) ?></h4>
+				<h4 style="margin-bottom: 0.6em;"><?php esc_html_e( 'Ultimate Member Menu Settings', 'ultimate-member' ); ?></h4>
 
 				<p class="description description-wide um-nav-mode">
 					<label for="edit-menu-item-um_nav_public-<?php echo esc_attr( $item_id ); ?>">
-						<?php _e( "Who can see this menu link?", 'ultimate-member' ); ?><br/>
+						<?php esc_html_e( 'Who can see this menu link?', 'ultimate-member' ); ?><br/>
 						<select id="edit-menu-item-um_nav_public-<?php echo esc_attr( $item_id ); ?>" name="menu-item-um_nav_public[<?php echo esc_attr( $item_id ); ?>]" style="width:100%;">
-							<option value="0" <?php selected( $um_nav_public, 0 ); ?>><?php _e( 'Everyone', 'ultimate-member' ) ?></option>
-							<option value="1" <?php selected( $um_nav_public, 1 ); ?>><?php _e( 'Logged Out Users', 'ultimate-member' ) ?></option>
-							<option value="2" <?php selected( $um_nav_public, 2 ); ?>><?php _e( 'Logged In Users', 'ultimate-member' ) ?></option>
+							<option value="0" <?php selected( $um_nav_public, 0 ); ?>><?php esc_html_e( 'Everyone', 'ultimate-member' ); ?></option>
+							<option value="1" <?php selected( $um_nav_public, 1 ); ?>><?php esc_html_e( 'Logged Out Users', 'ultimate-member' ); ?></option>
+							<option value="2" <?php selected( $um_nav_public, 2 ); ?>><?php esc_html_e( 'Logged In Users', 'ultimate-member' ); ?></option>
 						</select>
 					</label>
 				</p>
 
-				<p class="description description-wide um-nav-roles" <?php echo $um_nav_public == 2 ? 'style="display: block;"' : ''; ?>><?php _e( "Select the member roles that can see this link", 'ultimate-member' ) ?><br>
+				<p class="description description-wide um-nav-roles" <?php echo 2 === absint( $um_nav_public ) ? 'style="display: block;"' : ''; ?>><?php esc_html_e( 'Select the member roles that can see this link', 'ultimate-member' ); ?><br>
 
 					<?php
-					$i = 0;
-					$html = '';
-					$columns = apply_filters( 'wp_nav_menu_item:um_nav_columns', 2, $item_id, $item );
+					$i        = 0;
+					$html     = '';
+					$columns  = apply_filters( 'wp_nav_menu_item:um_nav_columns', 2, $item_id, $item );
 					$per_page = ceil( count( $options ) / $columns );
 					while ( $i < $columns ) {
 						$section_fields_per_page = array_slice( $options, $i * $per_page, $per_page );
+
 						$html .= '<span class="um-form-fields-section" style="width:' . floor( 100 / $columns ) . '% !important;">';
 
 						foreach ( $section_fields_per_page as $k => $title ) {
-							$id_attr = ' id="edit-menu-item-um_nav_roles-' . $item_id . '_' . $k . '" ';
-							$for_attr = ' for="edit-menu-item-um_nav_roles-' . $item_id . '_' . $k . '" ';
-							$checked_attr = checked( in_array($k,$um_nav_roles), true, false );
-							$html .= "<label {$for_attr}> <input type='checkbox' {$id_attr} name='menu-item-um_nav_roles[{$item_id}][{$k}]' value='1' {$checked_attr} /> <span>{$title}</span> </label>";
+							$id_attr      = ' id="edit-menu-item-um_nav_roles-' . $item_id . '_' . $k . '" ';
+							$for_attr     = ' for="edit-menu-item-um_nav_roles-' . $item_id . '_' . $k . '" ';
+							$checked_attr = checked( in_array( $k, $um_nav_roles, true ), true, false );
+							$html        .= "<label {$for_attr}> <input type='checkbox' {$id_attr} name='menu-item-um_nav_roles[{$item_id}][{$k}]' value='1' {$checked_attr} /> <span>{$title}</span> </label>";
 						}
 
 						$html .= '</span>';
