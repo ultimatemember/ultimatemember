@@ -100,7 +100,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 					echo $html;
 					?>
 				</p>
-				<?php do_action( 'um_wp_nav_menu_custom_fields', $item_id ); ?>
+				<?php do_action( 'um_wp_nav_menu_custom_fields', $item_id, $um_nav_public ); ?>
 				<div class="clear"></div>
 			</div>
 			<?php
