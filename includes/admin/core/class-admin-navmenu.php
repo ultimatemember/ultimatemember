@@ -22,7 +22,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 		/**
 		 * Admin_Navmenu constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			self::$fields = array(
 				'um_nav_public' => __( 'Display Mode', 'ultimate-member' ),
 				'um_nav_roles'  => __( 'By Role', 'ultimate-member' ),
@@ -47,9 +47,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 		 */
 		public function wp_nav_menu_item_custom_fields( $item_id, $item, $depth, $args, $id = null ) {
 
-			$um_nav_public = get_post_meta( $item->ID, 'menu-item-um_nav_public', true );
+			$um_nav_public   = get_post_meta( $item->ID, 'menu-item-um_nav_public', true );
 			$_nav_roles_meta = get_post_meta( $item->ID, 'menu-item-um_nav_roles', true );
-			$um_nav_roles = array();
+			$um_nav_roles    = array();
 			if ( $_nav_roles_meta ) {
 				foreach ( $_nav_roles_meta as $key => $value ) {
 					if ( is_int( $key ) ) {
@@ -61,43 +61,46 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 			?>
 			<div class="um-nav-edit">
 				<div class="clear"></div>
-				<h4 style="margin-bottom: 0.6em;"><?php _e( 'Ultimate Member Menu Settings', 'ultimate-member' ) ?></h4>
+				<h4 style="margin-bottom: 0.6em;"><?php esc_html_e( 'Ultimate Member Menu Settings', 'ultimate-member' ); ?></h4>
 
 				<p class="description description-wide um-nav-mode">
 					<label for="edit-menu-item-um_nav_public-<?php echo esc_attr( $item_id ); ?>">
-						<?php _e( "Who can see this menu link?", 'ultimate-member' ); ?><br/>
+						<?php esc_html_e( 'Who can see this menu link?', 'ultimate-member' ); ?><br/>
 						<select id="edit-menu-item-um_nav_public-<?php echo esc_attr( $item_id ); ?>" name="menu-item-um_nav_public[<?php echo esc_attr( $item_id ); ?>]" style="width:100%;">
-							<option value="0" <?php selected( $um_nav_public, 0 ); ?>><?php _e( 'Everyone', 'ultimate-member' ) ?></option>
-							<option value="1" <?php selected( $um_nav_public, 1 ); ?>><?php _e( 'Logged Out Users', 'ultimate-member' ) ?></option>
-							<option value="2" <?php selected( $um_nav_public, 2 ); ?>><?php _e( 'Logged In Users', 'ultimate-member' ) ?></option>
+							<option value="0" <?php selected( $um_nav_public, 0 ); ?>><?php esc_html_e( 'Everyone', 'ultimate-member' ); ?></option>
+							<option value="1" <?php selected( $um_nav_public, 1 ); ?>><?php esc_html_e( 'Logged Out Users', 'ultimate-member' ); ?></option>
+							<option value="2" <?php selected( $um_nav_public, 2 ); ?>><?php esc_html_e( 'Logged In Users', 'ultimate-member' ); ?></option>
 						</select>
 					</label>
 				</p>
 
-				<p class="description description-wide um-nav-roles" <?php echo $um_nav_public == 2 ? 'style="display: block;"' : ''; ?>><?php _e( "Select the member roles that can see this link", 'ultimate-member' ) ?><br>
+				<p class="description description-wide um-nav-roles" <?php echo 2 === absint( $um_nav_public ) ? 'style="display: block;"' : ''; ?>><?php esc_html_e( 'Select the member roles that can see this link', 'ultimate-member' ); ?><br>
 
 					<?php
-					$i = 0;
-					$html = '';
-					$columns = apply_filters( 'wp_nav_menu_item:um_nav_columns', 2, $item_id, $item );
+					$i        = 0;
+					$html     = '';
+					$columns  = apply_filters( 'wp_nav_menu_item:um_nav_columns', 2, $item_id, $item );
 					$per_page = ceil( count( $options ) / $columns );
 					while ( $i < $columns ) {
 						$section_fields_per_page = array_slice( $options, $i * $per_page, $per_page );
+
 						$html .= '<span class="um-form-fields-section" style="width:' . floor( 100 / $columns ) . '% !important;">';
 
 						foreach ( $section_fields_per_page as $k => $title ) {
-							$id_attr = ' id="edit-menu-item-um_nav_roles-' . $item_id . '_' . $k . '" ';
-							$for_attr = ' for="edit-menu-item-um_nav_roles-' . $item_id . '_' . $k . '" ';
-							$checked_attr = checked( in_array($k,$um_nav_roles), true, false );
-							$html .= "<label {$for_attr}> <input type='checkbox' {$id_attr} name='menu-item-um_nav_roles[{$item_id}][{$k}]' value='1' {$checked_attr} /> <span>{$title}</span> </label>";
+							$id_attr      = ' id="edit-menu-item-um_nav_roles-' . $item_id . '_' . $k . '" ';
+							$for_attr     = ' for="edit-menu-item-um_nav_roles-' . $item_id . '_' . $k . '" ';
+							$checked_attr = checked( in_array( $k, $um_nav_roles, true ), true, false );
+							$html        .= "<label {$for_attr}> <input type='checkbox' {$id_attr} name='menu-item-um_nav_roles[{$item_id}][{$k}]' value='1' {$checked_attr} /> <span>{$title}</span> </label>";
 						}
 
 						$html .= '</span>';
 						$i++;
 					}
+
 					echo $html;
 					?>
 				</p>
+				<?php do_action( 'um_wp_nav_menu_custom_fields', $item_id, $um_nav_public ); ?>
 				<div class="clear"></div>
 			</div>
 			<?php
@@ -116,7 +119,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 		 * @param int $menu_item_db_id
 		 * @param array $menu_item_args
 		 */
-		function _save( $menu_id, $menu_item_db_id, $menu_item_args ) {
+		public function _save( $menu_id, $menu_item_db_id, $menu_item_args ) {
+			// phpcs:disable WordPress.Security.NonceVerification
 			if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 				return;
 			}
@@ -125,6 +129,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 				return;
 			}
 
+			self::$fields = apply_filters( 'um_wp_nav_menu_fields', self::$fields );
+
 			foreach ( self::$fields as $_key => $label ) {
 
 				$key = sprintf( 'menu-item-%s', $_key );
@@ -132,11 +138,21 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 				// Sanitize
 				if ( ! empty( $_POST[ $key ][ $menu_item_db_id ] ) ) {
 					// Do some checks here...
-					$value = is_array( $_POST[ $key ][ $menu_item_db_id ] ) ?
-						array_map( 'sanitize_key', array_keys( $_POST[ $key ][ $menu_item_db_id ] ) ) : (int) $_POST[ $key ][ $menu_item_db_id ];
+					if ( is_array( $_POST[ $key ][ $menu_item_db_id ] ) ) {
+						$value          = $_POST[ $key ][ $menu_item_db_id ];
+						$sanitized_keys = array_map( 'sanitize_key', array_keys( $value ) );
+						$value          = $sanitized_keys;
+					} else {
+						if ( 'on' === $_POST[ $key ][ $menu_item_db_id ] ) {
+							$value = 1;
+						} else {
+							$value = (int) $_POST[ $key ][ $menu_item_db_id ];
+						}
+					}
 				} else {
 					$value = null;
 				}
+				// phpcs:enable WordPress.Security.NonceVerification
 
 				// Update
 				if ( ! is_null( $value ) ) {
