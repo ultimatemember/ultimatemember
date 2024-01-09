@@ -158,16 +158,16 @@ input[type="number"].um-forms-field {
       background: #44b0ec;
       border: 1px solid #44b0ec !important;
       margin-top: -1px; }
-    .um-md-default-filters-option-line .um-field-wrapper2 select {
+    .um-md-default-filters-option-line .um-field-wrapper2 > select {
       width: 100%;
       float: left; }
-    .um-md-default-filters-option-line .um-field-wrapper2 input {
+    .um-md-default-filters-option-line .um-field-wrapper2 > input {
       width: 100%;
       float: left; }
-      .um-md-default-filters-option-line .um-field-wrapper2 input.um-timepicker-filter, .um-md-default-filters-option-line .um-field-wrapper2 input.um-datepicker-filter {
+      .um-md-default-filters-option-line .um-field-wrapper2 > input.um-timepicker-filter, .um-md-default-filters-option-line .um-field-wrapper2 > input.um-datepicker-filter {
         width: calc( 50% - 7px) !important;
         float: left; }
-        .um-md-default-filters-option-line .um-field-wrapper2 input.um-timepicker-filter:first-child, .um-md-default-filters-option-line .um-field-wrapper2 input.um-datepicker-filter:first-child {
+        .um-md-default-filters-option-line .um-field-wrapper2 > input.um-timepicker-filter:first-child, .um-md-default-filters-option-line .um-field-wrapper2 > input.um-datepicker-filter:first-child {
           margin-right: 11px; }
     .um-md-default-filters-option-line .um-field-wrapper2 .um-slider {
       margin: 5px 9px 0 9px;

@@ -85,3 +85,31 @@ body.um-admin-modal-open {
     height: 200px; }
   .um-admin-metabox textarea.um-admin-error {
     border-color: #c74a4a !important; }
+
+.um .picker__box,
+.um .picker__nav--prev:hover,
+.um .picker__nav--next:hover {
+  background: #0085ba; }
+
+.um .picker__footer,
+.um .picker__header,
+.um .picker__day--infocus:hover,
+.um .picker__day--outfocus:hover,
+.um .picker__day--highlighted:hover,
+.um .picker--focused .picker__day--highlighted,
+.um .picker__list-item:hover,
+.um .picker__list-item--highlighted:hover,
+.um .picker--focused .picker__list-item--highlighted,
+.um .picker__list-item--selected,
+.um .picker__list-item--selected:hover,
+.um .picker--focused .picker__list-item--selected {
+  background: #008ec2; }
+
+body.um .picker .picker__frame {
+  top: 32px; }
+
+body.um .picker .picker__footer > button:not(:disabled):not(.button) {
+  color: #fff; }
+
+body.um .picker .picker__footer > button.picker__button--close {
+  margin-top: 5px; }
