@@ -32,6 +32,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 			add_action( 'wp_update_nav_menu_item', array( &$this, '_save' ), 10, 3 );
 
 			add_action( 'wp_nav_menu_item_custom_fields', array( $this, 'wp_nav_menu_item_custom_fields' ), 20, 5 );
+			// @todo Appearance > Customize > Menus section without UM settings
+			// add_action( 'wp_nav_menu_item_custom_fields_customize_template', array( $this, 'wp_nav_menu_item_custom_fields_customize_template' ), 20, 5 );
 		}
 
 
@@ -106,6 +108,29 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 			<?php
 		}
 
+		/**
+		 * @todo Appearance > Customize > Menus section without UM settings
+		 * @return void
+		 */
+		public function wp_nav_menu_item_custom_fields_customize_template() {
+			?>
+			<div class="clear"></div>
+
+			<h4 style="margin-bottom: 0.6em;"><?php esc_html_e( 'Ultimate Member Menu Settings', 'ultimate-member' ); ?></h4>
+
+			<p class="description description-wide um-nav-mode">
+				<label for="edit-menu-item-um_nav_public-{{ data.menu_item_id }}">
+					<?php esc_html_e( 'Who can see this menu link?', 'ultimate-member' ); ?><br/>
+					<select id="edit-menu-item-um_nav_public-{{ data.menu_item_id }}"
+							name="menu-item-um_nav_public[{{ data.menu_item_id }}]" style="width:100%;">
+						<option value="0"><?php esc_html_e( 'Everyone', 'ultimate-member' ); ?></option>
+						<option value="1"><?php esc_html_e( 'Logged Out Users', 'ultimate-member' ); ?></option>
+						<option value="2"><?php esc_html_e( 'Logged In Users', 'ultimate-member' ); ?></option>
+					</select>
+				</label>
+			</p>
+			<?php
+		}
 
 		/**
 		 *
@@ -115,8 +140,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 
 
 		/**
-		 * @param int $menu_id
-		 * @param int $menu_item_db_id
+		 * @param int   $menu_id
+		 * @param int   $menu_item_db_id
 		 * @param array $menu_item_args
 		 */
 		public function _save( $menu_id, $menu_item_db_id, $menu_item_args ) {
@@ -139,15 +164,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 				if ( ! empty( $_POST[ $key ][ $menu_item_db_id ] ) ) {
 					// Do some checks here...
 					if ( is_array( $_POST[ $key ][ $menu_item_db_id ] ) ) {
-						$value          = $_POST[ $key ][ $menu_item_db_id ];
-						$sanitized_keys = array_map( 'sanitize_key', array_keys( $value ) );
-						$value          = $sanitized_keys;
+						$value = array_map( 'sanitize_key', array_keys( $_POST[ $key ][ $menu_item_db_id ] ) );
 					} else {
-						if ( 'on' === $_POST[ $key ][ $menu_item_db_id ] ) {
-							$value = 1;
-						} else {
-							$value = (int) $_POST[ $key ][ $menu_item_db_id ];
-						}
+						$value = (int) $_POST[ $key ][ $menu_item_db_id ];
 					}
 				} else {
 					$value = null;
@@ -164,7 +183,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 		}
 
 		/**
-		 *
+		 * @todo Deprecate
 		 */
 		function _wp_template() {
 			?>
