@@ -73,7 +73,12 @@ UM.common = {
 					format: elem.attr( 'data-format' ),
 					formatSubmit: 'yyyy/mm/dd',
 					hiddenName: true,
-					onOpen: function() { elem.blur(); },
+					onOpen: function() {
+						elem.blur();
+						if ( elem.parents('body').hasClass('wp-admin') ) {
+							elem.siblings('.picker').find('.picker__button--close').addClass('button')
+						}
+					},
 					onClose: function() { elem.blur(); }
 				};
 
