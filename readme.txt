@@ -183,6 +183,11 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
   - Fixed: select2 conflict with Impreza theme
   - Fixed: cropper conflict with Avada theme and active Fusion Image lazyload
   - Fixed: MegaMenu conflict with nav menu items conditional settings (e.g. Newsletter theme)
+  - Fixed: PHP Fatal error when there isn't a proper WP_Post object in UM User Profile > Posts loop
+
+* Templates required update:
+
+  - profile/posts-single.php
 
 * Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade
 
