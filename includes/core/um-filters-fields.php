@@ -811,42 +811,42 @@ add_filter('um_profile_field_filter_hook__multiselect','um_option_match_callback
 add_filter('um_field_select_default_value','um_option_match_callback_view_field', 10, 2);
 add_filter('um_field_multiselect_default_value','um_option_match_callback_view_field', 10, 2);
 
-
 /**
  * Apply textdomain in select/multi-select options
  *
- * @param  $value string
- * @param  $data  array
+ * @param  string $value
+ * @param  array  $data
+ *
  * @return string
  * @uses   hook filters: um_profile_field_filter_hook__select, um_profile_field_filter_hook__multiselect
  */
-
 function um_profile_field__select_translate( $value, $data ) {
+	if ( empty( $value ) ) {
+		return $value;
+	}
 
-	if ( empty( $value  ) ) return $value;
+	$options = explode( ', ', $value );
 
-	$options = explode(", ", $value );
 	$arr_options = array();
-	if( is_array( $options ) ){
+	if ( is_array( $options ) ) {
 		foreach ( $options as $item ) {
 			$arr_options[] = __( $item, 'ultimate-member' );
 		}
 	}
 
-	$value = implode(", ", $arr_options);
-
-	return $value;
+	return implode( ', ', $arr_options );
 }
 add_filter( 'um_profile_field_filter_hook__select','um_profile_field__select_translate', 10, 2 );
 add_filter( 'um_profile_field_filter_hook__multiselect','um_profile_field__select_translate', 10, 2 );
 
-
 /**
- * Cleaning on XSS injection
- * @param  $value string
- * @param  $data  array
- * @param  string $type
- * @return string $value
+ * Cleaning on XSS injection.
+ *
+ * @param  int|string|array $value
+ * @param  array            $data
+ * @param  string           $type
+ *
+ * @return int|string
  * @uses   hook filters: um_profile_field_filter_hook__
  */
 function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
@@ -854,7 +854,7 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 		$value            = stripslashes( $value );
 		$data['validate'] = isset( $data['validate'] ) ? $data['validate'] : '';
 
-		if ( 'text' === $type && ! in_array( $data['validate'], array( 'unique_email' ), true ) || 'password' === $type ) {
+		if ( ( 'text' === $type && 'unique_email' !== $data['validate'] ) || 'password' === $type ) {
 			$value = esc_attr( $value );
 		} elseif ( 'url' === $type ) {
 			$value = esc_url( $value );
@@ -931,7 +931,6 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 	return $value;
 }
 add_filter( 'um_profile_field_filter_hook__', 'um_profile_field_filter_xss_validation', 10, 3 );
-
 
 /**
  * Trim All form POST submitted data
