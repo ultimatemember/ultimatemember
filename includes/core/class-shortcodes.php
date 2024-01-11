@@ -160,6 +160,45 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			$this->emoji[':innocent:'] = $base_uri . '72x72/1f607.png';
 			$this->emoji[':smirk:'] = $base_uri . '72x72/1f60f.png';
 			$this->emoji[':expressionless:'] = $base_uri . '72x72/1f611.png';
+
+			if ( defined( 'UM_NEW_DESIGN' ) && UM_NEW_DESIGN ) {
+				add_shortcode( 'ultimatemember_design_scheme', array( &$this, 'design_scheme' ) );
+				add_shortcode( 'ultimatemember_profile', array( &$this, 'new_profile' ) );
+			}
+		}
+
+		public function design_scheme( $args ) {
+			wp_enqueue_style( 'um_new_design' );
+			ob_start();
+			?>
+			<span class="um-ajax-spinner"></span>
+			<?php
+			return ob_get_clean();
+		}
+
+		public function new_profile( $args = array() ) {
+			$args = shortcode_atts(
+				array(
+					'form_id' => '',
+				),
+				$args,
+				'ultimatemember_profile'
+			);
+
+			$form_id = absint( $args['form_id'] );
+
+			$user       = get_userdata( um_user( 'ID' ) );
+			$user_roles = (array) $user->roles;
+
+			wp_enqueue_style( 'um_new_profile' );
+
+			$content = '';
+			if ( um_is_on_edit_profile() ) {
+				$content = UM()->get_template( 'v3/profile/edit.php', '', array( 'form_id' => $form_id, 'roles' => $user_roles ) );
+			} else {
+				$content = UM()->get_template( 'v3/profile/base.php', '', array( 'form_id' => $form_id, 'roles' => $user_roles ) );
+			}
+			return $content;
 		}
 
 		/**

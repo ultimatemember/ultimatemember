@@ -74,101 +74,107 @@ final class Enqueue extends \um\common\Enqueue {
 		$libs_url = self::get_url( 'libs' );
 		$js_url   = self::get_url( 'js' );
 
-		// Cropper.js
-		wp_register_script( 'um_crop', $libs_url . 'cropper/cropper' . $suffix . '.js', array( 'jquery' ), '1.6.1', true );
-		wp_register_style( 'um_crop', $libs_url . 'cropper/cropper' . $suffix . '.css', array(), '1.6.1' );
+		if ( defined( 'UM_NEW_DESIGN' ) && UM_NEW_DESIGN ) {
+			$css_url = self::get_url( 'css' );
+			wp_register_style( 'um_new_design', $css_url . 'new-design' . $suffix . '.css', array(), UM_VERSION );
+			wp_register_style( 'um_new_profile', $css_url . 'new-profile' . $suffix . '.css', array(), UM_VERSION );
+		} else {
+			// Cropper.js
+			wp_register_script( 'um_crop', $libs_url . 'cropper/cropper' . $suffix . '.js', array( 'jquery' ), '1.6.1', true );
+			wp_register_style( 'um_crop', $libs_url . 'cropper/cropper' . $suffix . '.css', array(), '1.6.1' );
 
-		wp_register_script( 'um_frontend_common', $js_url . 'common-frontend' . $suffix . '.js', array( 'um_common', 'um_crop' ), UM_VERSION, true );
-		$um_common_variables = array();
-		/**
-		 * Filters data array for localize frontend common scripts.
-		 *
-		 * @since 2.8.0
-		 * @hook um_frontend_common_js_variables
-		 *
-		 * @param {array} $variables Data to localize.
-		 *
-		 * @return {array} Data to localize.
-		 *
-		 * @example <caption>Add `my_custom_variable` to common frontend scripts to be callable via `um_frontend_common_variables.my_custom_variable` in JS.</caption>
-		 * function um_custom_frontend_common_js_variables( $variables ) {
-		 *     $variables['{my_custom_variable}'] = '{my_custom_variable_value}';
-		 *     return $variables;
-		 * }
-		 * add_filter( 'um_frontend_common_js_variables', 'um_custom_frontend_common_js_variables' );
-		 */
-		$um_common_variables = apply_filters( 'um_frontend_common_js_variables', $um_common_variables );
-		wp_localize_script( 'um_frontend_common', 'um_frontend_common_variables', $um_common_variables );
+			wp_register_script( 'um_frontend_common', $js_url . 'common-frontend' . $suffix . '.js', array( 'um_common', 'um_crop' ), UM_VERSION, true );
+			$um_common_variables = array();
+			/**
+			 * Filters data array for localize frontend common scripts.
+			 *
+			 * @since 2.8.0
+			 * @hook um_frontend_common_js_variables
+			 *
+			 * @param {array} $variables Data to localize.
+			 *
+			 * @return {array} Data to localize.
+			 *
+			 * @example <caption>Add `my_custom_variable` to common frontend scripts to be callable via `um_frontend_common_variables.my_custom_variable` in JS.</caption>
+			 * function um_custom_frontend_common_js_variables( $variables ) {
+			 *     $variables['{my_custom_variable}'] = '{my_custom_variable_value}';
+			 *     return $variables;
+			 * }
+			 * add_filter( 'um_frontend_common_js_variables', 'um_custom_frontend_common_js_variables' );
+			 */
+			$um_common_variables = apply_filters( 'um_frontend_common_js_variables', $um_common_variables );
+			wp_localize_script( 'um_frontend_common', 'um_frontend_common_variables', $um_common_variables );
 
-		// uploadFiles scripts + UM custom styles for uploader.
-		wp_register_script( 'um_jquery_form', $libs_url . 'jquery-form/jquery-form' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
-		wp_register_script( 'um_fileupload', $libs_url . 'fileupload/fileupload.js', array( 'um_jquery_form' ), UM_VERSION, true );
+			// uploadFiles scripts + UM custom styles for uploader.
+			wp_register_script( 'um_jquery_form', $libs_url . 'jquery-form/jquery-form' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
+			wp_register_script( 'um_fileupload', $libs_url . 'fileupload/fileupload.js', array( 'um_jquery_form' ), UM_VERSION, true );
 
-		wp_register_script( 'um_functions', $js_url . 'um-functions' . $suffix . '.js', array( 'um_frontend_common', 'um_fileupload' ), UM_VERSION, true );
+			wp_register_script( 'um_functions', $js_url . 'um-functions' . $suffix . '.js', array( 'um_frontend_common', 'um_fileupload' ), UM_VERSION, true );
 
-		wp_register_script( 'um_modal', $js_url . 'um-modal' . $suffix . '.js', array( 'um_frontend_common' ), UM_VERSION, true );
+			wp_register_script( 'um_modal', $js_url . 'um-modal' . $suffix . '.js', array( 'um_frontend_common' ), UM_VERSION, true );
 
-		wp_register_script( 'um_functions', $js_url . 'um-functions' . $suffix . '.js', array( 'um_frontend_common', 'jquery-masonry' ), UM_VERSION, true );
-		wp_register_script( 'um_responsive', $js_url . 'um-responsive' . $suffix . '.js', array( 'um_functions' ), UM_VERSION, true );
+			wp_register_script( 'um_functions', $js_url . 'um-functions' . $suffix . '.js', array( 'um_frontend_common', 'jquery-masonry' ), UM_VERSION, true );
+			wp_register_script( 'um_responsive', $js_url . 'um-responsive' . $suffix . '.js', array( 'um_functions' ), UM_VERSION, true );
 
-		wp_register_script( 'um-gdpr', $js_url . 'um-gdpr' . $suffix . '.js', array( 'jquery' ), UM_VERSION, false );
-		wp_register_script( 'um_conditional', $js_url . 'um-conditional' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
-		wp_register_script( 'um_scripts', $js_url . 'um-scripts' . $suffix . '.js', array( 'um_frontend_common', 'um_conditional', self::$select2_handle, 'um_raty' ), UM_VERSION, true );
+			wp_register_script( 'um-gdpr', $js_url . 'um-gdpr' . $suffix . '.js', array( 'jquery' ), UM_VERSION, false );
+			wp_register_script( 'um_conditional', $js_url . 'um-conditional' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
+			wp_register_script( 'um_scripts', $js_url . 'um-scripts' . $suffix . '.js', array( 'um_frontend_common', 'um_conditional', self::$select2_handle, 'um_raty' ), UM_VERSION, true );
 
-		$max_upload_size = wp_max_upload_size();
-		if ( ! $max_upload_size ) {
-			$max_upload_size = 0;
+			$max_upload_size = wp_max_upload_size();
+			if ( ! $max_upload_size ) {
+				$max_upload_size = 0;
+			}
+
+			$localize_data = array(
+				'max_upload_size' => $max_upload_size,
+				'nonce'           => wp_create_nonce( 'um-frontend-nonce' ),
+			);
+			/**
+			 * Filters data array for localize frontend scripts.
+			 *
+			 * @param {array} $variables Data to localize.
+			 *
+			 * @return {array} Data to localize.
+			 *
+			 * @since 2.0.0
+			 * @hook um_enqueue_localize_data
+			 *
+			 * @example <caption>Extend UM localized data.</caption>
+			 * function my_enqueue_localize_data( $variables ) {
+			 *     // your code here
+			 *     return $variables;
+			 * }
+			 * add_filter( 'um_enqueue_localize_data', 'my_enqueue_localize_data' );
+			 */
+			$localize_data = apply_filters( 'um_enqueue_localize_data', $localize_data );
+			wp_localize_script( 'um_scripts', 'um_scripts', $localize_data );
+
+			wp_register_script( 'um_dropdown', $js_url . 'dropdown' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
+
+			wp_register_script( 'um_members', $js_url . 'um-members' . $suffix . '.js', array( 'jquery', 'wp-util', 'jquery-ui-slider', 'um_dropdown', 'wp-hooks', 'jquery-masonry', 'um_scripts' ), UM_VERSION, true );
+			wp_register_script( 'um_profile', $js_url . 'um-profile' . $suffix . '.js', array( 'jquery', 'wp-util', 'wp-i18n', 'um_scripts' ), UM_VERSION, true );
+			wp_set_script_translations( 'um_profile', 'ultimate-member' );
+
+			/**
+			 * Filters account script dependencies.
+			 *
+			 * @since 2.1.8
+			 * @hook um_account_scripts_dependencies
+			 *
+			 * @param {array} $deps JS script dependencies.
+			 *
+			 * @return {array} JS script dependencies.
+			 *
+			 * @example <caption>Add `wp-util` as a dependencies script.</caption>
+			 * function um_custom_account_scripts_dependencies( $deps ) {
+			 *     $deps[] = 'wp-util';
+			 *     return $deps;
+			 * }
+			 * add_filter( 'um_account_scripts_dependencies', 'um_custom_account_scripts_dependencies' );
+			 */
+			$account_deps = apply_filters( 'um_account_scripts_dependencies', array( 'jquery', 'wp-hooks', 'um_scripts' ) );
+			wp_register_script( 'um_account', $js_url . 'um-account' . $suffix . '.js', $account_deps, UM_VERSION, true );
 		}
-
-		$localize_data = array(
-			'max_upload_size' => $max_upload_size,
-			'nonce'           => wp_create_nonce( 'um-frontend-nonce' ),
-		);
-		/**
-		 * Filters data array for localize frontend scripts.
-		 *
-		 * @param {array} $variables Data to localize.
-		 *
-		 * @return {array} Data to localize.
-		 *
-		 * @since 2.0.0
-		 * @hook um_enqueue_localize_data
-		 *
-		 * @example <caption>Extend UM localized data.</caption>
-		 * function my_enqueue_localize_data( $variables ) {
-		 *     // your code here
-		 *     return $variables;
-		 * }
-		 * add_filter( 'um_enqueue_localize_data', 'my_enqueue_localize_data' );
-		 */
-		$localize_data = apply_filters( 'um_enqueue_localize_data', $localize_data );
-		wp_localize_script( 'um_scripts', 'um_scripts', $localize_data );
-
-		wp_register_script( 'um_dropdown', $js_url . 'dropdown' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
-
-		wp_register_script( 'um_members', $js_url . 'um-members' . $suffix . '.js', array( 'jquery', 'wp-util', 'jquery-ui-slider', 'um_dropdown', 'wp-hooks', 'jquery-masonry', 'um_scripts' ), UM_VERSION, true );
-		wp_register_script( 'um_profile', $js_url . 'um-profile' . $suffix . '.js', array( 'jquery', 'wp-util', 'wp-i18n', 'um_scripts' ), UM_VERSION, true );
-		wp_set_script_translations( 'um_profile', 'ultimate-member' );
-
-		/**
-		 * Filters account script dependencies.
-		 *
-		 * @since 2.1.8
-		 * @hook um_account_scripts_dependencies
-		 *
-		 * @param {array} $deps JS script dependencies.
-		 *
-		 * @return {array} JS script dependencies.
-		 *
-		 * @example <caption>Add `wp-util` as a dependencies script.</caption>
-		 * function um_custom_account_scripts_dependencies( $deps ) {
-		 *     $deps[] = 'wp-util';
-		 *     return $deps;
-		 * }
-		 * add_filter( 'um_account_scripts_dependencies', 'um_custom_account_scripts_dependencies' );
-		 */
-		$account_deps = apply_filters( 'um_account_scripts_dependencies', array( 'jquery', 'wp-hooks', 'um_scripts' ) );
-		wp_register_script( 'um_account', $js_url . 'um-account' . $suffix . '.js', $account_deps, UM_VERSION, true );
 	}
 
 	/**
@@ -180,29 +186,33 @@ final class Enqueue extends \um\common\Enqueue {
 		$suffix  = self::get_suffix();
 		$css_url = self::get_url( 'css' );
 
-		wp_register_style( 'um_fileupload', $css_url . 'um-fileupload' . $suffix . '.css', array(), UM_VERSION );
+		if ( defined( 'UM_NEW_DESIGN' ) && UM_NEW_DESIGN ) {
 
-		//FontAwesome and FontIcons styles
-		wp_register_style( 'um_rtl', $css_url . 'um.rtl' . $suffix . '.css', array(), UM_VERSION );
-		wp_register_style( 'um_default_css', $css_url . 'um-old-default' . $suffix . '.css', array(), UM_VERSION );
-		wp_register_style( 'um_modal', $css_url . 'um-modal' . $suffix . '.css', array(), UM_VERSION );
-		wp_register_style( 'um_responsive', $css_url . 'um-responsive' . $suffix . '.css', array(), UM_VERSION );
+		} else {
+			wp_register_style( 'um_fileupload', $css_url . 'um-fileupload' . $suffix . '.css', array(), UM_VERSION );
 
-		// Workaround when select2 deregistered (e.g. Woo + Impreza theme activated).
-		$this->register_select2();
+			//FontAwesome and FontIcons styles
+			wp_register_style( 'um_rtl', $css_url . 'um.rtl' . $suffix . '.css', array(), UM_VERSION );
+			wp_register_style( 'um_default_css', $css_url . 'um-old-default' . $suffix . '.css', array(), UM_VERSION );
+			wp_register_style( 'um_modal', $css_url . 'um-modal' . $suffix . '.css', array(), UM_VERSION );
+			wp_register_style( 'um_responsive', $css_url . 'um-responsive' . $suffix . '.css', array(), UM_VERSION );
 
-		wp_register_style( 'um_styles', $css_url . 'um-styles' . $suffix . '.css', array( 'um_ui', 'um_tipsy', 'um_raty', 'um_fonticons_ii', 'um_fonticons_fa', 'select2', 'um_fileupload', 'um_common', 'um_responsive', 'um_modal' ), UM_VERSION );
+			// Workaround when select2 deregistered (e.g. Woo + Impreza theme activated).
+			$this->register_select2();
 
-		wp_register_style( 'um_members', $css_url . 'um-members' . $suffix . '.css', array( 'um_styles' ), UM_VERSION );
-		// RTL styles.
-		if ( is_rtl() ) {
-			wp_style_add_data( 'um_members', 'rtl', true );
-			wp_style_add_data( 'um_members', 'suffix', $suffix );
+			wp_register_style( 'um_styles', $css_url . 'um-styles' . $suffix . '.css', array( 'um_ui', 'um_tipsy', 'um_raty', 'um_fonticons_ii', 'um_fonticons_fa', 'select2', 'um_fileupload', 'um_common', 'um_responsive', 'um_modal' ), UM_VERSION );
+
+			wp_register_style( 'um_members', $css_url . 'um-members' . $suffix . '.css', array( 'um_styles' ), UM_VERSION );
+			// RTL styles.
+			if ( is_rtl() ) {
+				wp_style_add_data( 'um_members', 'rtl', true );
+				wp_style_add_data( 'um_members', 'suffix', $suffix );
+			}
+
+			wp_register_style( 'um_profile', $css_url . 'um-profile' . $suffix . '.css', array( 'um_styles', 'um_crop' ), UM_VERSION );
+			wp_register_style( 'um_account', $css_url . 'um-account' . $suffix . '.css', array( 'um_styles' ), UM_VERSION );
+			wp_register_style( 'um_misc', $css_url . 'um-misc' . $suffix . '.css', array( 'um_styles' ), UM_VERSION );
 		}
-
-		wp_register_style( 'um_profile', $css_url . 'um-profile' . $suffix . '.css', array( 'um_styles', 'um_crop' ), UM_VERSION );
-		wp_register_style( 'um_account', $css_url . 'um-account' . $suffix . '.css', array( 'um_styles' ), UM_VERSION );
-		wp_register_style( 'um_misc', $css_url . 'um-misc' . $suffix . '.css', array( 'um_styles' ), UM_VERSION );
 	}
 
 	/**

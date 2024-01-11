@@ -144,11 +144,61 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 		 * Setup admin menu
 		 */
 		function primary_admin_menu() {
+			if ( defined( 'UM_NEW_DESIGN' ) && UM_NEW_DESIGN ) {
+				add_menu_page( __( 'UM Design BETA', 'ultimate-member' ), __( 'UM Design BETA', 'ultimate-member' ), 'manage_options', 'um-admin-design', array( &$this, 'admin_design_page' ), 'dashicons-admin-customizer' );
+			}
+
 			$this->pagehook = add_menu_page( __( 'Ultimate Member', 'ultimate-member' ), __( 'Ultimate Member', 'ultimate-member' ), 'manage_options', $this->slug, array( &$this, 'admin_page' ), 'dashicons-admin-users', '42.78578');
 
 			add_action( 'load-' . $this->pagehook, array( &$this, 'on_load_page' ) );
 
 			add_submenu_page( $this->slug, __( 'Dashboard', 'ultimate-member' ), __( 'Dashboard', 'ultimate-member' ), 'manage_options', $this->slug, array( &$this, 'admin_page' ) );
+		}
+
+		public function admin_design_page() {
+			?>
+			<div id="um-admin-design-sample" class="wrap">
+				<div class="notice notice-error">
+					<h3 class="notice-title"><?php _e( 'Its error title' ); ?></h3>
+					<p>Error description.</p>
+				</div>
+
+				<div class="notice-error notice">
+					<p>Error notice.</p>
+				</div>
+
+				<div class="notice notice-error notice-alt">
+					<p>Error alt notice.</p>
+				</div>
+
+				<div class="notice notice-error notice-large">
+					<p>Error large notice.</p>
+				</div>
+
+				<div class="notice-info notice">
+					<p>Info notice.</p>
+				</div>
+
+				<div class="notice-warning notice">
+					<p>Warning notice.</p>
+				</div>
+
+				<div class="notice-success notice">
+					<p>Success notice.</p>
+				</div>
+
+				<div class="notice-error notice is-dismissible">
+					<p>Dismissible notice.</p>
+				</div>
+				<input type="submit" class="button button-primary" value="Primary button"/>
+				<input type="button" class="button" value="Secondary button"/>
+				<button type="submit" class="button button-primary">Primary button</button>
+				<button type="button" class="button">Secondary button</button>
+				<span class="spinner"></span>
+				<span class="spinner is-active"></span>
+				<div class="clear"></div>
+			</div>
+			<?php
 		}
 
 
