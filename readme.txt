@@ -166,7 +166,7 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.8.2: January 11, 2024 =
+= 2.8.2: January 15, 2024 =
 
 * Enhancements:
 
@@ -184,6 +184,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
   - Fixed: cropper conflict with Avada theme and active Fusion Image lazyload
   - Fixed: MegaMenu conflict with nav menu items conditional settings (e.g. Newsletter theme)
   - Fixed: PHP Fatal error when there isn't a proper WP_Post object in UM User Profile > Posts loop
+  - Fixed: Account styles
 
 * Templates required update:
 
