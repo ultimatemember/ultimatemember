@@ -20,7 +20,20 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		 * @used-by \UM::includes()
 		 */
 		public function includes() {
+			$this->pages();
 			$this->secure();
+		}
+
+		/**
+		 * @since 2.8.3
+		 *
+		 * @return Pages
+		 */
+		public function pages() {
+			if ( empty( UM()->classes['um\ajax\pages'] ) ) {
+				UM()->classes['um\ajax\pages'] = new Pages();
+			}
+			return UM()->classes['um\ajax\pages'];
 		}
 
 		/**

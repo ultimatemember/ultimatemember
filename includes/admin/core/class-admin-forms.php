@@ -1093,6 +1093,79 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			return $html;
 		}
 
+		/**
+		 * @param $field_data
+		 *
+		 * @since 2.8.3
+		 *
+		 * @return bool|string
+		 */
+		public function render_page_select( $field_data ) {
+			if ( empty( $field_data['id'] ) ) {
+				return false;
+			}
+
+			$multiple = ! empty( $field_data['multi'] ) ? 'multiple' : '';
+
+			$id = ( ! empty( $this->form_data['prefix_id'] ) ? sanitize_title( $this->form_data['prefix_id'] ) : '' ) . '_' . $field_data['id'];
+			$id_attr = ' id="' . esc_attr( $id ) . '" ';
+
+			$class = ! empty( $field_data['class'] ) ? $field_data['class'] . ' ' : ' ';
+			$class .= ! empty( $field_data['size'] ) ? 'um-' . $field_data['size'] . '-field' : 'um-long-field';
+			$class_attr = ' class="um-forms-field um-pages-select2 ' . esc_attr( $class ) . '" ';
+
+			$data = array(
+				'field_id' => $field_data['id'],
+			);
+
+			if ( ! empty( $field_data['placeholder'] ) ) {
+				$data['placeholder'] = $field_data['placeholder'];
+			}
+
+			$data_attr = '';
+			foreach ( $data as $key => $value ) {
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
+			}
+
+			$name = $field_data['id'];
+			$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
+			$hidden_name_attr = ' name="' . $name . '" ';
+			$name = $name . ( ! empty( $field_data['multi'] ) ? '[]' : '' );
+			$name_attr = ' name="' . $name . '" ';
+
+			$value = $this->get_field_value( $field_data );
+
+			$options = '<option value="">' . esc_html( $data['placeholder'] ) . '</option>';
+			if ( ! empty( $field_data['options'] ) ) {
+				foreach ( $field_data['options'] as $key => $option ) {
+					if ( ! empty( $field_data['multi'] ) ) {
+
+						if ( ! is_array( $value ) || empty( $value ) ) {
+							$value = array();
+						}
+
+						$options .= '<option value="' . $key . '" ' . selected( in_array( $key, $value ), true, false ) . '>' . esc_html( $option ) . '</option>';
+					} else {
+						$options .= '<option value="' . $key . '" ' . selected( (string)$key == $value, true, false ) . '>' . esc_html( $option ) . '</option>';
+					}
+				}
+			}
+
+			$hidden = '';
+			if ( ! empty( $multiple ) ) {
+				$hidden = "<input type=\"hidden\" $hidden_name_attr value=\"\" />";
+			}
+
+			$button = '';
+			$slug   = str_replace( 'core_', '', $field_data['id'] );
+			if ( ! um_get_predefined_page_id( $slug ) || 'publish' !== get_post_status( um_get_predefined_page_id( $slug ) ) ) {
+				$button = '&nbsp;<a href="' . esc_url( add_query_arg( array( 'um_adm_action' => 'install_predefined_page', 'um_page_slug' => $slug ) ) ) . '" class="button button-primary">' . esc_html__( 'Create Default', 'ultimate-member' ) . '</a>';
+			}
+
+			$html = "$hidden<select $multiple $id_attr $name_attr $class_attr $data_attr>$options</select>$button";
+
+			return $html;
+		}
 
 		/**
 		 * @param $field_data

@@ -228,7 +228,8 @@ if ( ! class_exists( 'UM' ) ) {
 				// init widgets
 				add_action( 'widgets_init', array( &$this, 'widgets_init' ) );
 
-				//include short non class functions
+				// Include short non-class functions
+				require_once 'um-core-functions.php';
 				require_once 'um-short-functions.php';
 				require_once 'um-deprecated-functions.php';
 			}
@@ -585,8 +586,6 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->theme_updater();
 			} elseif ( $this->is_request( 'frontend' ) ) {
 				$this->frontend()->includes();
-				$this->account();
-				$this->password();
 				$this->login();
 				$this->register();
 				$this->user_posts();
@@ -594,6 +593,8 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 
 			//common includes
+			$this->account();
+			$this->password();
 			$this->rewrite();
 			$this->mail();
 			$this->rest_api();

@@ -253,36 +253,130 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				),
 			);
 
-			$core_pages = UM()->config()->core_pages;
+//			$core_pages = UM()->config()->core_pages;
+//
+//			foreach ( $core_pages as $page_s => $page ) {
+//				$have_pages = UM()->query()->wp_pages();
+//				$page_id    = UM()->options()->get_core_page_id( $page_s );
+//
+//				$page_title = ! empty( $page['title'] ) ? $page['title'] : '';
+//
+//				if ( 'reached_maximum_limit' === $have_pages ) {
+//					$general_pages_fields[] = array(
+//						'id'          => $page_id,
+//						'type'        => 'text',
+//						// translators: %s: Page title
+//						'label'       => sprintf( __( '%s page', 'ultimate-member' ), $page_title ),
+//						'placeholder' => __( 'Add page ID', 'ultimate-member' ),
+//						'compiler'    => true,
+//						'size'        => 'small',
+//					);
+//				} else {
+//					$general_pages_fields[] = array(
+//						'id'          => $page_id,
+//						'type'        => 'select',
+//						// translators: %s: Page title
+//						'label'       => sprintf( __( '%s page', 'ultimate-member' ), $page_title ),
+//						'options'     => UM()->query()->wp_pages(),
+//						'placeholder' => __( 'Choose a page...', 'ultimate-member' ),
+//						'compiler'    => true,
+//						'size'        => 'small',
+//					);
+//				}
+//
+//				$settings_map[ $page_id ] = array(
+//					'sanitize' => 'absint',
+//				);
+//			}
 
-			foreach ( $core_pages as $page_s => $page ) {
-				$have_pages = UM()->query()->wp_pages();
-				$page_id    = UM()->options()->get_core_page_id( $page_s );
-
+			foreach ( UM()->config()->get( 'predefined_pages' ) as $slug => $page ) {
+				$page_id    = UM()->options()->get_predefined_page_option_key( $slug );
 				$page_title = ! empty( $page['title'] ) ? $page['title'] : '';
 
-				if ( 'reached_maximum_limit' === $have_pages ) {
-					$general_pages_fields[] = array(
-						'id'          => $page_id,
-						'type'        => 'text',
-						// translators: %s: Page title
-						'label'       => sprintf( __( '%s page', 'ultimate-member' ), $page_title ),
-						'placeholder' => __( 'Add page ID', 'ultimate-member' ),
-						'compiler'    => true,
-						'size'        => 'small',
-					);
+				$options    = array();
+				$page_value = '';
+
+				$pre_result = apply_filters( 'um_admin_settings_pages_list_value', false, $page_id );
+				if ( false === $pre_result ) {
+					if ( ! empty( $opt_value = UM()->options()->get( $page_id ) ) ) {
+						if ( 'publish' === get_post_status( $opt_value ) ) {
+							$title = get_the_title( $opt_value );
+							$title = ( mb_strlen( $title ) > 50 ) ? mb_substr( $title, 0, 49 ) . '...' : $title;
+							$title = sprintf( __( '%s (ID: %s)', 'ultimate-member' ), $title, $opt_value );
+
+							$options    = array( $opt_value => $title );
+							$page_value = $opt_value;
+						}
+					}
 				} else {
-					$general_pages_fields[] = array(
-						'id'          => $page_id,
-						'type'        => 'select',
-						// translators: %s: Page title
-						'label'       => sprintf( __( '%s page', 'ultimate-member' ), $page_title ),
-						'options'     => UM()->query()->wp_pages(),
-						'placeholder' => __( 'Choose a page...', 'ultimate-member' ),
-						'compiler'    => true,
-						'size'        => 'small',
-					);
+					// `page_value` variable that we transfer from 3rd-party hook for getting filtered option value also
+					$page_value = $pre_result['page_value'];
+					unset( $pre_result['page_value'] );
+
+					$options = $pre_result;
 				}
+
+				$page_setting_description = '';
+				if ( ! empty( $page_value ) ) {
+					$content = get_the_content( null, false, $page_value );
+					switch ( $slug ) {
+						case 'account':
+							if ( $page_value === um_get_predefined_page_id( 'user' ) ) {
+								$page_setting_description = __( '<strong>Warning:</strong> Account page and User page must be separate pages.', 'ultimate-member' );
+							} elseif ( ! has_shortcode( $content, 'ultimatemember_account' ) ) {
+								$page_setting_description = __( '<strong>Warning:</strong> Account page must contain shortcode <code>[ultimatemember_account]</code>.', 'ultimate-member' );
+							} elseif ( function_exists( 'wc_get_page_id' ) && wc_get_page_id( 'myaccount' ) === um_get_predefined_page_id( 'account' ) ) {
+								$page_setting_description = __( '<strong>Warning:</strong> Account page and WooCommerce "My account" page should be separate pages.', 'ultimate-member' );
+							}
+							break;
+						case 'login':
+							if ( $page_value === um_get_predefined_page_id( 'logout' ) ) {
+								$page_setting_description = __( '<strong>Warning:</strong> Login page and Logout page must be separate pages.', 'ultimate-member' );
+							} elseif ( ! has_shortcode( $content, 'ultimatemember' ) ) {
+								$page_setting_description = __( '<strong>Warning:</strong> Login page must contain a login form shortcode. You can get existing shortcode or create a new one <a href="edit.php?post_type=um_form" target="_blank">here</a>.', 'ultimate-member' );
+							}
+							break;
+						case 'logout':
+							if ( $page_value === (int) get_option( 'page_on_front' ) ) {
+								$page_setting_description = __( '<strong>Warning:</strong> Home page and Logout page must be separate pages.', 'ultimate-member' );
+							} elseif ( $page_value === um_get_predefined_page_id( 'login' ) ) {
+								$page_setting_description = __( '<strong>Warning:</strong> Login page and Logout page must be separate pages.', 'ultimate-member' );
+							}
+							break;
+						case 'password-reset':
+							if ( ! has_shortcode( $content, 'ultimatemember_password' ) ) {
+								$page_setting_description = __( '<strong>Warning:</strong> Password Reset page must contain shortcode <code>[ultimatemember_password]</code>.', 'ultimate-member' );
+							}
+							break;
+						case 'register':
+							if ( ! has_shortcode( $content, 'ultimatemember' ) ) {
+								$page_setting_description = __( '<strong>Warning:</strong> Register page must contain a registration form shortcode. You can get existing shortcode or create a new one <a href="edit.php?post_type=um_form" target="_blank">here</a>.', 'ultimate-member' );
+							}
+							break;
+						case 'user':
+							if ( $page_value === um_get_predefined_page_id( 'account' ) ) {
+								$description = __( '<strong>Warning:</strong> Account page and User page must be separate pages.', 'ultimate-member' );
+							} elseif ( ! has_shortcode( $content, 'ultimatemember' ) ) {
+								$page_setting_description = __( '<strong>Warning:</strong> User page must contain a profile form shortcode. You can get existing shortcode or create a new one <a href="edit.php?post_type=um_form" target="_blank">here</a>.', 'ultimate-member' );
+							}
+							break;
+						default:
+							$page_setting_description = apply_filters( 'um_pages_settings_description', $page_setting_description, $content, $slug );
+							break;
+					}
+				}
+
+				$general_pages_fields[] = array(
+					'id'          => $page_id,
+					'type'        => 'page_select',
+					// translators: %s: Page title
+					'label'       => sprintf( __( '%s page', 'ultimate-member' ), $page_title ),
+					'options'     => $options,
+					'value'       => $page_value,
+					'placeholder' => __( 'Choose a page...', 'ultimate-member' ),
+					'size'        => 'small',
+					'description' => $page_setting_description,
+				);
 
 				$settings_map[ $page_id ] = array(
 					'sanitize' => 'absint',

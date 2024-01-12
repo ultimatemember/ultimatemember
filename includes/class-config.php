@@ -32,6 +32,13 @@ if ( ! class_exists( 'um\Config' ) ) {
 		public $core_pages;
 
 		/**
+		 * @since 2.8.3
+		 *
+		 * @var array
+		 */
+		public $predefined_pages;
+
+		/**
 		 * @var array
 		 */
 		public $core_directory_meta = array();
@@ -841,6 +848,90 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'password-reset'    => array( 'title' => __( 'Password Reset', 'ultimate-member' ) ),
 			) );
 		}
-		//end class
+
+		/**
+		 * Get variable from config
+		 *
+		 * @param string $key
+		 *
+		 * @return mixed
+		 *
+		 * @since 2.8.3
+		 */
+		public function get( $key ) {
+			if ( empty( $this->$key ) ) {
+				$this->{'init_' . $key}();
+			}
+			return apply_filters( 'um_config_get', $this->$key, $key );
+		}
+
+		/**
+		 * Init plugin core pages.
+		 *
+		 * @since 2.8.3
+		 */
+		public function init_predefined_pages() {
+			$core_forms       = get_option( 'um_core_forms', array() );
+			$setup_shortcodes = array_merge(
+				array(
+					'profile'  => '',
+					'login'    => '',
+					'register' => '',
+				),
+				$core_forms
+			);
+
+			$this->predefined_pages = array(
+				'user'           => array(
+					'title'   => __( 'User', 'ultimate-member' ),
+					'content' => ! empty( $setup_shortcodes['profile'] ) ? '[ultimatemember form_id="' . $setup_shortcodes['profile'] . '"]' : '',
+				),
+				'login'          => array(
+					'title'   => __( 'Login', 'ultimate-member' ),
+					'content' => ! empty( $setup_shortcodes['login'] ) ? '[ultimatemember form_id="' . $setup_shortcodes['login'] . '"]' : '',
+				),
+				'register'       => array(
+					'title'   => __( 'Register', 'ultimate-member' ),
+					'content' => ! empty( $setup_shortcodes['register'] ) ? '[ultimatemember form_id="' . $setup_shortcodes['register'] . '"]' : '',
+				),
+				'logout'         => array(
+					'title'   => __( 'Logout', 'ultimate-member' ),
+					'content' => '',
+				),
+				'account'        => array(
+					'title'   => __( 'Account', 'ultimate-member' ),
+					'content' => '[ultimatemember_account]',
+				),
+				'password-reset' => array(
+					'title'   => __( 'Password Reset', 'ultimate-member' ),
+					'content' => '[ultimatemember_password]',
+				),
+			);
+
+			/**
+			 * Filters Ultimate Member predefined pages.
+			 *
+			 * @param {array} $pages Predefined pages.
+			 *
+			 * @return {array} Predefined pages.
+			 *
+			 * @since 2.8.3
+			 * @hook um_predefined_pages
+			 *
+			 * @example <caption>Extend UM core pages.</caption>
+			 * function my_predefined_pages( $pages ) {
+			 *     // your code here
+			 *     $pages['my_page_key'] = array( 'title' => __( 'My Page Title', 'my-translate-key' ) );
+			 *     return $pages;
+			 * }
+			 * add_filter( 'um_predefined_pages', 'my_predefined_pages' );
+			 */
+			$this->predefined_pages = apply_filters( 'um_predefined_pages', $this->predefined_pages );
+
+			// since 2.8.3 legacy hook
+			// @todo remove in 3.0 version
+			$this->predefined_pages = apply_filters( 'um_core_pages', $this->predefined_pages );
+			$this->core_pages       = $this->predefined_pages;
+		}
 	}
 }
