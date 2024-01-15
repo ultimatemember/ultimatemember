@@ -1,15 +1,15 @@
-# Copyright (C) 2023 Ultimate Member
+# Copyright (C) 2024 Ultimate Member
 # This file is distributed under the same license as the Ultimate Member plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ultimate Member 2.8.1\n"
+"Project-Id-Version: Ultimate Member 2.8.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ultimate-member\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-12-20T20:39:58+00:00\n"
+"POT-Creation-Date: 2024-01-15T10:58:42+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: ultimate-member\n"
@@ -1534,8 +1534,8 @@ msgstr ""
 
 #: includes/admin/class-site-health.php:1785
 #: includes/core/class-member-directory.php:405
-#: includes/core/um-filters-fields.php:1017
-#: includes/core/um-filters-fields.php:1034
+#: includes/core/um-filters-fields.php:1018
+#: includes/core/um-filters-fields.php:1035
 msgid "Age"
 msgstr ""
 
@@ -2100,8 +2100,8 @@ msgstr ""
 #: includes/core/um-actions-profile.php:846
 #: assets/js/admin/forms.js:306
 #: assets/js/admin/forms.js:380
-#: assets/js/admin/forms.js:657
-#: assets/js/admin/forms.js:690
+#: assets/js/admin/forms.js:659
+#: assets/js/admin/forms.js:692
 msgid "Remove"
 msgstr ""
 
@@ -2110,7 +2110,7 @@ msgid "Select media"
 msgstr ""
 
 #: includes/admin/core/class-admin-forms.php:1399
-#: assets/js/admin/forms.js:738
+#: assets/js/admin/forms.js:740
 msgid "Select"
 msgstr ""
 
@@ -2318,8 +2318,9 @@ msgstr ""
 #: includes/admin/core/class-admin-metabox.php:451
 #: includes/admin/core/class-admin-metabox.php:602
 #: includes/admin/core/class-admin-metabox.php:2385
-#: includes/admin/core/class-admin-navmenu.php:70
-#: includes/admin/core/class-admin-navmenu.php:168
+#: includes/admin/core/class-admin-navmenu.php:72
+#: includes/admin/core/class-admin-navmenu.php:126
+#: includes/admin/core/class-admin-navmenu.php:203
 #: includes/admin/templates/access/restrict_content.php:65
 #: includes/core/class-builtin.php:760
 #: assets/js/admin/block-restrictions.js:102
@@ -2358,7 +2359,7 @@ msgstr ""
 
 #: includes/admin/core/class-admin-metabox.php:469
 #: includes/admin/core/class-admin-metabox.php:621
-msgid "Would you like to display 404 error on the term's archive page and terms' posts single pages when users haven't access?"
+msgid "Would you like to display a 404 page for users who do not have access to this term on the term's archive page and terms' posts single pages?"
 msgstr ""
 
 #: includes/admin/core/class-admin-metabox.php:470
@@ -3394,28 +3395,32 @@ msgstr ""
 msgid "By Role"
 msgstr ""
 
-#: includes/admin/core/class-admin-navmenu.php:64
-#: includes/admin/core/class-admin-navmenu.php:160
+#: includes/admin/core/class-admin-navmenu.php:66
+#: includes/admin/core/class-admin-navmenu.php:119
+#: includes/admin/core/class-admin-navmenu.php:195
 msgid "Ultimate Member Menu Settings"
 msgstr ""
 
-#: includes/admin/core/class-admin-navmenu.php:68
-#: includes/admin/core/class-admin-navmenu.php:164
+#: includes/admin/core/class-admin-navmenu.php:70
+#: includes/admin/core/class-admin-navmenu.php:123
+#: includes/admin/core/class-admin-navmenu.php:199
 msgid "Who can see this menu link?"
 msgstr ""
 
-#: includes/admin/core/class-admin-navmenu.php:71
-#: includes/admin/core/class-admin-navmenu.php:171
+#: includes/admin/core/class-admin-navmenu.php:73
+#: includes/admin/core/class-admin-navmenu.php:127
+#: includes/admin/core/class-admin-navmenu.php:206
 msgid "Logged Out Users"
 msgstr ""
 
-#: includes/admin/core/class-admin-navmenu.php:72
-#: includes/admin/core/class-admin-navmenu.php:174
+#: includes/admin/core/class-admin-navmenu.php:74
+#: includes/admin/core/class-admin-navmenu.php:128
+#: includes/admin/core/class-admin-navmenu.php:209
 msgid "Logged In Users"
 msgstr ""
 
-#: includes/admin/core/class-admin-navmenu.php:77
-#: includes/admin/core/class-admin-navmenu.php:180
+#: includes/admin/core/class-admin-navmenu.php:79
+#: includes/admin/core/class-admin-navmenu.php:215
 msgid "Select the member roles that can see this link"
 msgstr ""
 
@@ -5012,7 +5017,7 @@ msgid "Leave empty if you want to display a post for all logged in users"
 msgstr ""
 
 #: includes/admin/templates/access/restrict_content.php:84
-msgid "Would you like to display 404 page when users haven't access?"
+msgid "Would you like to display a 404 page for users who do not have access to this page?"
 msgstr ""
 
 #: includes/admin/templates/access/restrict_content.php:85
@@ -6359,7 +6364,7 @@ msgstr ""
 #. translators: %s: The message after registration process based on a role data and user status after registration
 #. translators: %s: Restricted blog page message.
 #. translators: %s: Restricted taxonomy message.
-#: includes/core/class-access.php:738
+#: includes/core/class-access.php:774
 #: includes/core/class-fields.php:1549
 #: includes/core/um-actions-account.php:510
 #: templates/message.php:23
@@ -8923,15 +8928,20 @@ msgstr ""
 msgid "The \"unassigned\" $status has been removed. Use `UM()->setup()->set_default_user_status()` for setting up default user account status."
 msgstr ""
 
-#: includes/core/class-shortcodes.php:407
+#: includes/core/class-shortcodes.php:409
 msgid "This content has been restricted to logged in users only. Please <a href=\"{login_referrer}\">login</a> to view this content."
 msgstr ""
 
-#: includes/core/class-shortcodes.php:778
+#: includes/core/class-shortcodes.php:494
+#: includes/core/class-shortcodes.php:515
+msgid "Go to profile"
+msgstr ""
+
+#: includes/core/class-shortcodes.php:837
 msgid "You are already registered."
 msgstr ""
 
-#: includes/core/class-shortcodes.php:1037
+#: includes/core/class-shortcodes.php:1096
 msgid "Default Template"
 msgstr ""
 
@@ -9725,21 +9735,21 @@ msgid "This user has not made any comments."
 msgstr ""
 
 #. translators: %s: human time diff.
-#: templates/profile/posts-single.php:43
+#: templates/profile/posts-single.php:45
 msgid "%s ago"
 msgstr ""
 
 #. translators: %s: categories list.
-#: templates/profile/posts-single.php:49
+#: templates/profile/posts-single.php:53
 msgid "in: %s"
 msgstr ""
 
-#: templates/profile/posts-single.php:56
+#: templates/profile/posts-single.php:61
 msgid "no comments"
 msgstr ""
 
 #. translators: %s: comments number.
-#: templates/profile/posts-single.php:59
+#: templates/profile/posts-single.php:64
 msgid "%s comment"
 msgid_plural "%s comments"
 msgstr[0] ""
