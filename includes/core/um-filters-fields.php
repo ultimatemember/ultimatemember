@@ -811,79 +811,79 @@ add_filter('um_profile_field_filter_hook__multiselect','um_option_match_callback
 add_filter('um_field_select_default_value','um_option_match_callback_view_field', 10, 2);
 add_filter('um_field_multiselect_default_value','um_option_match_callback_view_field', 10, 2);
 
-
 /**
  * Apply textdomain in select/multi-select options
  *
- * @param  $value string
- * @param  $data  array
+ * @param  string $value
+ * @param  array  $data
+ *
  * @return string
  * @uses   hook filters: um_profile_field_filter_hook__select, um_profile_field_filter_hook__multiselect
  */
-
 function um_profile_field__select_translate( $value, $data ) {
+	if ( empty( $value ) ) {
+		return $value;
+	}
 
-	if ( empty( $value  ) ) return $value;
+	$options = explode( ', ', $value );
 
-	$options = explode(", ", $value );
 	$arr_options = array();
-	if( is_array( $options ) ){
+	if ( is_array( $options ) ) {
 		foreach ( $options as $item ) {
 			$arr_options[] = __( $item, 'ultimate-member' );
 		}
 	}
 
-	$value = implode(", ", $arr_options);
-
-	return $value;
+	return implode( ', ', $arr_options );
 }
 add_filter( 'um_profile_field_filter_hook__select','um_profile_field__select_translate', 10, 2 );
 add_filter( 'um_profile_field_filter_hook__multiselect','um_profile_field__select_translate', 10, 2 );
 
-
 /**
- * Cleaning on XSS injection
- * @param  $value string
- * @param  $data  array
- * @param  string $type
- * @return string $value
+ * Cleaning on XSS injection.
+ *
+ * @param  int|string|array $value
+ * @param  array            $data
+ * @param  string           $type
+ *
+ * @return int|string
  * @uses   hook filters: um_profile_field_filter_hook__
  */
 function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 	if ( ! empty( $value ) && is_string( $value ) ) {
-		$value = stripslashes( $value );
+		$value            = stripslashes( $value );
 		$data['validate'] = isset( $data['validate'] ) ? $data['validate'] : '';
 
-		if ( 'text' == $type && ! in_array( $data['validate'], array( 'unique_email' ) ) || 'password' == $type ) {
+		if ( ( 'text' === $type && 'unique_email' !== $data['validate'] ) || 'password' === $type ) {
 			$value = esc_attr( $value );
-		} elseif ( $type == 'url' ) {
+		} elseif ( 'url' === $type ) {
 			$value = esc_url( $value );
-		} elseif ( 'textarea' == $type ) {
+		} elseif ( 'textarea' === $type ) {
 			if ( empty( $data['html'] ) ) {
 				$value = wp_kses_post( $value );
 			}
-		} elseif ( 'rating' == $type ) {
+		} elseif ( 'rating' === $type ) {
 			if ( ! is_numeric( $value ) ) {
 				$value = 0;
 			} else {
-				if ( $data['number'] == 5 ) {
-					if ( ! in_array( $value, range( 1, 5 ) ) ) {
+				if ( 5 === absint( $data['number'] ) ) {
+					if ( ! in_array( $value, range( 1, 5 ), true ) ) {
 						$value = 0;
 					}
-				} elseif ( $data['number'] == 10 ) {
-					if ( ! in_array( $value, range( 1, 10 ) ) ) {
+				} elseif ( 10 === $data['number'] ) {
+					if ( ! in_array( $value, range( 1, 10 ), true ) ) {
 						$value = 0;
 					}
 				}
 			}
-		} elseif ( 'select' == $type || 'radio' == $type ) {
+		} elseif ( 'select' === $type || 'radio' === $type ) {
 
 			/** This filter is documented in includes/core/class-fields.php */
 			$option_pairs = apply_filters( 'um_select_options_pair', null, $data );
 
 			$array = empty( $data['options'] ) ? array() : $data['options'];
 
-			if ( $data['metakey'] == 'country' && empty( $array ) ) {
+			if ( 'country' === $data['metakey'] && empty( $array ) ) {
 				$array = UM()->builtin()->get( 'countries' );
 			}
 
@@ -892,6 +892,8 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 			} else {
 				$arr = $array;
 			}
+
+			$arr = array_map( 'stripslashes', $arr );
 
 			if ( ! empty( $arr ) && ! in_array( $value, array_map( 'trim', $arr ) ) && empty( $data['custom_dropdown_options_source'] ) ) {
 				$value = '';
@@ -902,7 +904,7 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 			}
 		}
 	} elseif ( ! empty( $value ) && is_array( $value ) ) {
-		if ( 'multiselect' == $type || 'checkbox' == $type ) {
+		if ( 'multiselect' === $type || 'checkbox' === $type ) {
 
 			/** This filter is documented in includes/core/class-fields.php */
 			$option_pairs = apply_filters( 'um_select_options_pair', null, $data );
@@ -913,8 +915,8 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 			}
 
 			if ( ! empty( $arr ) && empty( $data['custom_dropdown_options_source'] ) ) {
-				$arr = wp_unslash( $arr );
-				$arr = wp_slash( array_map( 'trim', $arr ) );
+				$arr   = wp_unslash( $arr );
+				$arr   = wp_slash( array_map( 'trim', $arr ) );
 				$value = array_intersect( $value, $arr );
 			}
 
@@ -929,7 +931,6 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 	return $value;
 }
 add_filter( 'um_profile_field_filter_hook__', 'um_profile_field_filter_xss_validation', 10, 3 );
-
 
 /**
  * Trim All form POST submitted data

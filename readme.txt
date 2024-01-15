@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
 Tested up to: 6.4
-Stable tag: 2.8.1
+Stable tag: 2.8.2
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -165,6 +165,34 @@ No specific extensions are needed. But we highly recommended keep active these P
 = Important: =
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
+
+= 2.8.2: January 15, 2024 =
+
+* Enhancements:
+
+  - Added: The `data` protocol for embedding base64 encoded logos in emails
+  - Added: Hook `um_access_restricted_post_instance` for filtering the restricted post instance
+  - Added: Shortcode `[um_author_profile_link]` for getting user Profile URL
+  - Updated: Using underscore.js native debounce method for resize handler
+  - Updated: Texts spelling
+
+* Bugfixes:
+
+  - Fixed: AJAX requests conflict with `um_current_locale` attribute
+  - Fixed: Pickadate styling (Date & Time fields) in wp-admin screen
+  - Fixed: RTL styling and removed `um` class from UM frontend predefined pages
+  - Fixed: select2 conflict with Impreza theme
+  - Fixed: cropper conflict with Avada theme and active Fusion Image lazyload
+  - Fixed: MegaMenu conflict with nav menu items conditional settings (e.g. Newsletter theme)
+  - Fixed: PHP Fatal error when there isn't a proper WP_Post object in UM User Profile > Posts loop
+  - Fixed: Account styles
+  - Fixed: Saving `um_form_version` postmeta
+
+* Templates required update:
+
+  - profile/posts-single.php
+
+* Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade
 
 = 2.8.1: December 20, 2023 =
 

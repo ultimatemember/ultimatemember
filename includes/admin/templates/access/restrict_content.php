@@ -81,7 +81,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		array(
 			'id'          => '_um_access_hide_from_queries',
 			'type'        => 'checkbox',
-			'label'       => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Hide from queries', 'ultimate-member' ) : __( 'Would you like to display 404 page when users haven\'t access?', 'ultimate-member' ),
+			'label'       => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Hide from queries', 'ultimate-member' ) : __( 'Would you like to display a 404 page for users who do not have access to this page?', 'ultimate-member' ),
 			'tooltip'     => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Exclude only from WP queries results', 'ultimate-member' ) : __( 'Recommended to be enabled. Restricted post will be hidden by exclusion from WP Query. The safest and most effective method that hides post and its comments from all requests, RSS feeds, etc. on your site', 'ultimate-member' ),
 			'value'       => ! empty( $data['_um_access_hide_from_queries'] ) ? $data['_um_access_hide_from_queries'] : '',
 			'conditional' => array( '_um_accessible', '!=', '0' ),

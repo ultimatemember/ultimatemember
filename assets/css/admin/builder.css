@@ -110,6 +110,9 @@
     float: right; }
   .um-admin-half p:first-child {
     margin-top: 0; }
+  .um-admin-half .um {
+    opacity: 1;
+    margin-bottom: 0 !important; }
 
 .um-admin-tri {
   float: left;

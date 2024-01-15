@@ -383,9 +383,12 @@ function um_build_template( directory, data ) {
 
 		directory.addClass('um-loaded');
 
-		if (directory.find('.um-members.um-members-grid').length) {
-			UM_Member_Grid(directory.find('.um-members.um-members-grid'));
-		}
+		// It's made via hook because resize is triggered with debounce delay.
+		wp.hooks.addAction( 'um_window_resize', 'um_members', function() {
+			if (directory.find('.um-members.um-members-grid').length) {
+				UM_Member_Grid(directory.find('.um-members.um-members-grid'));
+			}
+		});
 
 		jQuery(document).trigger('um_build_template', [directory, data]);
 		jQuery(window).trigger('resize');

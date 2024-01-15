@@ -62,6 +62,15 @@
 	color: #555;
 }
 
+div.uimob340 .um-account-main div.um-account-heading.uimob340-hide,
+div.uimob500 .um-account-main div.um-account-heading.uimob500-hide {
+	display:none;
+}
+
+.um-account-side .um-account-link {
+	box-sizing: content-box;
+}
+
 .um-account-main div.um-account-heading i {
 	margin-right: 10px;
 	font-size: 26px;
@@ -193,8 +202,9 @@
 	border-right: 1px solid #ccc;
 	color: #444;
 	float: left;
-	padding: 0px 15px;
+	padding: 0 15px;
 	font-weight: normal !important;
+	box-sizing: content-box;
 }
 
 .um-account-side li a span.um-account-icon i {
