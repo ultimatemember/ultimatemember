@@ -74,6 +74,10 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			add_shortcode( 'um_show_content', array( &$this, 'um_shortcode_show_content_for_role' ) );
 			add_shortcode( 'ultimatemember_searchform', array( &$this, 'ultimatemember_searchform' ) );
 
+			if ( ! shortcode_exists( 'um_profile_link' ) ) {
+				add_shortcode( 'um_profile_link', array( &$this, 'um_profile_link' ) );
+			}
+
 			add_filter( 'body_class', array( &$this, 'body_class' ), 0 );
 
 			add_filter( 'um_shortcode_args_filter', array( &$this, 'display_logout_form' ), 99 );
@@ -456,6 +460,42 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 			$output = ob_get_clean();
 			return $output;
+		}
+
+
+		/**
+		 * Display profile link.
+		 *
+		 * @since 2.8.0
+		 *
+		 * Example 1: [um_profile_link]
+		 * Example 2: [um_profile_link title="Go to profile" user_id="29"]
+		 *
+		 * @param array  $attr {
+		 *     Attributes of the shortcode.
+		 *
+		 *     @type string class    A link class.
+		 *     @type string title    A link text.
+		 *     @type int    user_id  User ID. Author ID if empty.
+		 * }
+		 * @return string|void Profile link HTML or profile link URL if the link text is empty.
+		 */
+		public function um_profile_link( $attr ) {
+
+			$defaults_atts = array(
+				'class'   => 'um-link um-profile-link',
+				'title'   => '',
+				'user_id' => is_singular() ? get_post()->post_author : ( is_author() ? get_the_author_meta( 'ID' ) : 0 ),
+			);
+
+			$atts = shortcode_atts( $defaults_atts, $attr, 'um_profile_link' );
+
+			if ( empty( $atts['user_id'] ) ) {
+				return;
+			}
+			$url = um_user_profile_url( $atts['user_id'] );
+
+			return empty( $atts['title'] ) ? $url : '<a class="' . esc_attr( $atts['class'] ) . '" href="' . esc_url( $url ) . '">' . esc_html( $atts['title'] ) . '</a>';
 		}
 
 
