@@ -185,6 +185,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
   - Fixed: MegaMenu conflict with nav menu items conditional settings (e.g. Newsletter theme)
   - Fixed: PHP Fatal error when there isn't a proper WP_Post object in UM User Profile > Posts loop
   - Fixed: Account styles
+  - Fixed: Saving `um_form_version` postmeta
 
 * Templates required update:
 
