@@ -465,17 +465,20 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 *
 		 * @since 2.8.2
 		 *
-		 * Example 1: [um_author_profile_link]
-		 * Example 2: [um_author_profile_link title="Go to profile" user_id="29"]
+		 * Example 1: [um_author_profile_link] current post author User Profile URL
+		 * Example 2: [um_author_profile_link title="User profile" user_id="29"]
+		 * Example 3: [um_author_profile_link title="User profile" user_id="29"]Visit Author Profile[/um_author_profile_link]
+		 * Example 4: [um_author_profile_link raw="1"] for result like http://localhost:8000/user/janedoe/
 		 *
 		 * @param array  $attr {
 		 *     Attributes of the shortcode.
 		 *
-		 *     @type string class   A link class.
-		 *     @type string title   A link text.
-		 *     @type int    user_id User ID. Author ID if empty.
-		 *     @type bool   raw     Get raw URL or link layout. `false` by default.
+		 *     @type string $class   A link class.
+		 *     @type string $title   A link text.
+		 *     @type int    $user_id User ID. Author ID if empty.
+		 *     @type bool   $raw     Get raw URL or link layout. `false` by default.
 		 * }
+		 * @param string $content
 		 * @return string Profile link HTML or profile link URL if the link text is empty.
 		 */
 		public function author_profile_link( $attr = array(), $content = '' ) {

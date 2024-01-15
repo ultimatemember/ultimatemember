@@ -172,6 +172,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
   - Added: The `data` protocol for embedding base64 encoded logos in emails
   - Added: Hook `um_access_restricted_post_instance` for filtering the restricted post instance
+  - Added: Shortcode `[um_author_profile_link]` for getting user Profile URL
   - Updated: Using underscore.js native debounce method for resize handler
   - Updated: Texts spelling
 
