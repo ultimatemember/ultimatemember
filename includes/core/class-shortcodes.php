@@ -74,9 +74,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			add_shortcode( 'um_show_content', array( &$this, 'um_shortcode_show_content_for_role' ) );
 			add_shortcode( 'ultimatemember_searchform', array( &$this, 'ultimatemember_searchform' ) );
 
-			if ( ! shortcode_exists( 'um_profile_link' ) ) {
-				add_shortcode( 'um_profile_link', array( &$this, 'um_profile_link' ) );
-			}
+			add_shortcode( 'um_author_profile_link', array( &$this, 'author_profile_link' ) );
 
 			add_filter( 'body_class', array( &$this, 'body_class' ), 0 );
 
@@ -462,42 +460,60 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			return $output;
 		}
 
-
 		/**
-		 * Display profile link.
+		 * Display post author's link to UM User Profile.
 		 *
-		 * @since 2.8.0
+		 * @since 2.8.2
 		 *
-		 * Example 1: [um_profile_link]
-		 * Example 2: [um_profile_link title="Go to profile" user_id="29"]
+		 * Example 1: [um_author_profile_link]
+		 * Example 2: [um_author_profile_link title="Go to profile" user_id="29"]
 		 *
 		 * @param array  $attr {
 		 *     Attributes of the shortcode.
 		 *
-		 *     @type string class    A link class.
-		 *     @type string title    A link text.
-		 *     @type int    user_id  User ID. Author ID if empty.
+		 *     @type string class   A link class.
+		 *     @type string title   A link text.
+		 *     @type int    user_id User ID. Author ID if empty.
+		 *     @type bool   raw     Get raw URL or link layout. `false` by default.
 		 * }
-		 * @return string|void Profile link HTML or profile link URL if the link text is empty.
+		 * @return string Profile link HTML or profile link URL if the link text is empty.
 		 */
-		public function um_profile_link( $attr ) {
+		public function author_profile_link( $attr = array(), $content = '' ) {
+			$default_user_id = 0;
+			if ( is_singular() ) {
+				$default_user_id = get_post()->post_author;
+			} elseif ( is_author() ) {
+				$default_user_id = get_the_author_meta( 'ID' );
+			}
 
 			$defaults_atts = array(
 				'class'   => 'um-link um-profile-link',
-				'title'   => '',
-				'user_id' => is_singular() ? get_post()->post_author : ( is_author() ? get_the_author_meta( 'ID' ) : 0 ),
+				'title'   => __( 'Go to profile', 'ultimate-member' ),
+				'user_id' => $default_user_id,
+				'raw'     => false,
 			);
 
-			$atts = shortcode_atts( $defaults_atts, $attr, 'um_profile_link' );
+			$atts = shortcode_atts( $defaults_atts, $attr, 'um_author_profile_link' );
 
 			if ( empty( $atts['user_id'] ) ) {
-				return;
+				return '';
 			}
-			$url = um_user_profile_url( $atts['user_id'] );
 
-			return empty( $atts['title'] ) ? $url : '<a class="' . esc_attr( $atts['class'] ) . '" href="' . esc_url( $url ) . '">' . esc_html( $atts['title'] ) . '</a>';
+			$user_id = absint( $atts['user_id'] );
+			$url     = um_user_profile_url( $user_id );
+			if ( empty( $url ) ) {
+				return '';
+			}
+
+			if ( ! empty( $atts['raw'] ) ) {
+				return $url;
+			}
+
+			$title     = ! empty( $atts['title'] ) ? $atts['title'] : __( 'Go to profile', 'ultimate-member' );
+			$link_html = empty( $content ) ? $title : $content;
+
+			return '<a class="' . esc_attr( $atts['class'] ) . '" href="' . esc_url( $url ) . '" title="' . esc_attr( $title ) . '">' . wp_kses_post( $link_html ) . '</a>';
 		}
-
 
 		/**
 		 * @param array $args
