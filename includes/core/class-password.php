@@ -599,6 +599,11 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 					}
 					$this->setcookie( $rp_cookie, false );
 
+					$password_generated = get_user_meta( $user->ID, 'um_password_generated', true );
+					if ( $password_generated ) {
+						delete_user_meta( $user->ID, 'um_password_generated' );
+					}
+
 					/**
 					 * UM hook
 					 *

@@ -8,12 +8,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @param int $user_id
  */
-function um_post_registration_approved_hook( $user_id, $args ) {
+function um_post_registration_approved_hook( $user_id ) {
 	um_fetch_user( $user_id );
 
-	UM()->user()->approve( true, $args );
+	UM()->user()->approve( true );
 }
-add_action( 'um_post_registration_approved_hook', 'um_post_registration_approved_hook', 10, 2 );
+add_action( 'um_post_registration_approved_hook', 'um_post_registration_approved_hook', 10, 1 );
 
 /**
  * Account needs email validation.
@@ -417,8 +417,10 @@ function um_submit_form_register( $args, $form_data ) {
 		$user_email = $args['user_email'];
 	}
 
+	$generate_password = false;
 	if ( ! isset( $args['user_password'] ) ) {
-		$user_password = UM()->validation()->generate( 8 );
+		$generate_password = true;
+		$user_password     = UM()->validation()->generate( 8 );
 	} else {
 		$user_password = $args['user_password'];
 	}
@@ -456,9 +458,6 @@ function um_submit_form_register( $args, $form_data ) {
 		'user_password' => $user_password,
 		'user_email'    => trim( $user_email ),
 	);
-	if ( ! isset( $args['user_password'] ) ) {
-		$credentials['generated_pass'] = true;
-	}
 
 	// @todo test when ready maybe remove
 	if ( ! empty( $args['submitted'] ) ) {
@@ -521,6 +520,10 @@ function um_submit_form_register( $args, $form_data ) {
 			UM()->form()->add_error( 'user_login', $user_id->get_error_message() );
 		}
 		return;
+	}
+
+	if ( true === $generate_password ) {
+		update_user_meta( $user_id, 'um_password_generated', true );
 	}
 
 	/**
