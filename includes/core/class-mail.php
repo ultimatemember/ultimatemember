@@ -643,13 +643,15 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			$replace_placeholders[] = um_get_core_page( 'login' );
 			$replace_placeholders[] = esc_html__( 'Your set password', 'ultimate-member' );
 			$replace_placeholders[] = um_user( 'account_activation_link' );
-			if ( true === (bool) get_user_meta( um_user( 'ID' ), 'um_password_generated', true ) ) {
-				$replace_placeholders[] = um_user( 'password_reset_link' );
-				$replace_placeholders[] = esc_html__( 'Set your password', 'ultimate-member' );
-			} else {
+
+			if ( 'pending' === um_user( 'status' ) || ! get_user_meta( um_user( 'ID' ), 'um_password_generated', true ) ) {
 				$replace_placeholders[] = um_get_core_page( 'login' );
 				$replace_placeholders[] = esc_html__( 'Login to our site', 'ultimate-member' );
+			} else {
+				$replace_placeholders[] = um_user( 'password_reset_link' );
+				$replace_placeholders[] = esc_html__( 'Set your password', 'ultimate-member' );
 			}
+
 			return $replace_placeholders;
 		}
 	}
