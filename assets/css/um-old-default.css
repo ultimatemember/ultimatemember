@@ -241,6 +241,7 @@ div.uimob800 .um-account-side li a.current:hover
 }
 
 .um .um-profile-photo a.um-profile-photo-img,
+.um .um-profile-photo span.um-profile-photo-img,
 .um .um-profile-photo img,
 .um .um-profile-photo span.um-profile-photo-overlay
 {
@@ -266,6 +267,7 @@ div.uimob800 .um-account-side li a.current:hover
 }
 
 .um-profile.um .um-profile-headericon a:hover,
+.um-profile.um .um-profile-edit-a.um-dropdown-shown,
 .um-profile.um .um-profile-edit-a.active {
     color: #3ba1da;
 }

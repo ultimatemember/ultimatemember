@@ -38,6 +38,19 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		}
 
 		/**
+		 * @since 2.8.3
+		 *
+		 * @return Layouts
+		 */
+		public static function layouts() {
+			if ( empty( UM()->classes['um\frontend\layouts'] ) ) {
+				UM()->classes['um\frontend\layouts'] = new Layouts();
+			}
+
+			return UM()->classes['um\frontend\layouts'];
+		}
+
+		/**
 		 * @since 2.6.8
 		 *
 		 * @return Secure

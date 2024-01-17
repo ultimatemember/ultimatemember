@@ -351,8 +351,6 @@ function um_ajax_get_members( directory, args ) {
 			wp.hooks.doAction( 'um_member_directory_loaded', directory, answer );
 			//jQuery( document ).trigger('um_members_rendered', [ directory, answer ] );
 
-			um_init_new_dropdown();
-
 			um_members_hide_preloader( directory );
 		},
 		error: function( data ) {
@@ -392,6 +390,8 @@ function um_build_template( directory, data ) {
 
 		jQuery(document).trigger('um_build_template', [directory, data]);
 		jQuery(window).trigger('resize');
+
+		wp.hooks.doAction( 'um_member_directory_build_template', directory );
 
 		UM.common.tipsy.init();
 	}
@@ -967,8 +967,6 @@ jQuery(document.body).ready( function() {
 			directory.data( 'view_type', layout );
 
 			um_build_template( directory, data );
-
-			um_init_new_dropdown();
 		}
 		um_members_hide_preloader( directory );
 	});

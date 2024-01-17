@@ -60,6 +60,22 @@ gulp.task( 'default', function ( done ) {
 		.pipe( rename( { suffix: '.min' } ) )
 		.pipe( gulp.dest( 'assets/libs/legacy/fonticons/' ) );
 
+	// Dropdown lib
+	// full CSS files
+	gulp.src(['assets/libs/dropdown/*.sass'])
+		.pipe( sass().on( 'error', sass.logError ) )
+		.pipe( gulp.dest( 'assets/libs/dropdown/' ) );
+	// min CSS files
+	gulp.src(['assets/libs/dropdown/*.sass'])
+		.pipe( sass().on( 'error', sass.logError ) )
+		.pipe( cleanCSS() )
+		.pipe( rename( { suffix: '.min' } ) )
+		.pipe( gulp.dest( 'assets/libs/dropdown/' ) );
+	gulp.src(['assets/libs/dropdown/*.js', '!assets/libs/dropdown/*.min.js',])
+		.pipe( uglify() )
+		.pipe( rename({ suffix: '.min' }) )
+		.pipe( gulp.dest( 'assets/libs/dropdown/' ) );
+
 	// Raty lib
 	gulp.src(['assets/libs/raty/*.css', '!assets/libs/raty/*.min.css',])
 		.pipe( cleanCSS() )

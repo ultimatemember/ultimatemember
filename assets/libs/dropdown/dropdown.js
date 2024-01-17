@@ -16,17 +16,21 @@
 				self.hideAll();
 
 				/* add dropdown into the <body> */
-				self.$menu = self.$element.find('.um-new-dropdown');
+				self.$menu = self.$element.find('.um-dropdown');
 				if ( !self.$menu.length ) {
-					self.$menu = $('div.um-new-dropdown[data-element="' + self.data.element + '"]').first();
+					self.$menu = $('div.um-dropdown[data-element="' + self.data.element + '"]:not([data-cloned="1"])').first();
 				}
 
 				self.$dropdown = self.$menu.clone();
+
 				self.$dropdown.on('click', 'li a', self.itemHandler).attr('data-cloned', '1'); /* add the handler for menu items */
 				$(window).on('resize', self.updatePosition); /* update the position on window resize */
 
-				var parent = '' !== self.data.parent ? self.data.parent : document.body;
-				$(parent).append(self.$dropdown);
+				if ( '' !== self.data.parent ) {
+					self.$menu.parents( self.data.parent ).append( self.$dropdown );
+				} else {
+					$( document.body ).append( self.$dropdown );
+				}
 
 				/* trigger event */
 				self.$element.trigger('um_new_dropdown_render', {
@@ -36,9 +40,12 @@
 					obj: self.$element
 				});
 
+				wp.hooks.doAction( 'um_dropdown_render', self.$dropdown, self.data.trigger, self.data.elemen, self.$element );
+
 				/* set styles and show */
 				self.$dropdown.css(self.calculatePosition()).show();
-				self.$element.addClass('um-new-dropdown-shown').data('um-new-dropdown-show', true);
+
+				self.$element.addClass('um-dropdown-shown').data('um-dropdown-show', true);
 
 				return self;
 			},
@@ -47,19 +54,19 @@
 				if ( self.$dropdown && self.$dropdown.is(':visible') ) {
 					$(window).off('resize', self.updatePosition);
 					self.$dropdown.remove();
-					self.$element.removeClass('um-new-dropdown-shown').data('um-new-dropdown-show', false);
+					self.$element.removeClass('um-dropdown-shown').data('um-dropdown-show', false);
 				}
 
 				return self;
 			},
 
 			hideAll: function () {
-				if ( self.$element.data('um-new-dropdown-show') ) {
+				if ( self.$element.data('um-dropdown-show') ) {
 					self.hide();
 				}
 
-				$( 'div.um-new-dropdown[data-cloned="1"]' ).remove();
-				$('.um-new-dropdown-shown').removeClass('um-new-dropdown-shown').data('um-new-dropdown-show', false);
+				$( 'div.um-dropdown[data-cloned="1"]' ).remove();
+				$('.um-dropdown-shown').removeClass('um-dropdown-shown').data('um-dropdown-show', false);
 
 				return self;
 			},
@@ -68,11 +75,16 @@
 				var rect = self.$element.get(0).getBoundingClientRect(),
 					height = self.$dropdown.innerHeight() || 150,
 					width = self.data.width || 150,
-					place = '';
+					place = self.data.place || '';
+
+				var css = {
+					position: 'absolute',
+					width: width + 'px'
+				};
 
 				var offset;
 				if ( '' !== self.data.parent ) {
-					var parentPos = $( self.data.parent ).offset();
+					var parentPos = self.$menu.parents( self.data.parent ).offset();
 					var childPos = self.$element.offset();
 
 					offset = {
@@ -83,45 +95,59 @@
 					offset = self.$element.offset();
 				}
 
-				var base_width = '' !== self.data.parent ? $( self.data.parent )[0].offsetWidth : window.innerWidth;
-				var base_height = '' !== self.data.parent ? $( self.data.parent )[0].offsetHeight : window.innerHeight;
+				if ( '' === place ) {
+					var base_width = window.innerWidth;
+					var base_height = window.innerHeight;
+					if ( '' !== self.data.parent ) {
+						base_width = self.$menu.parents( self.data.parent )[0].offsetWidth;
+						base_height = self.$menu.parents( self.data.parent )[0].offsetHeight;
+					}
 
-				var css = {
-					position: 'absolute',
-					width: width + 'px'
-				};
+					/* vertical position */
+					if ( base_height - rect.bottom > height ) {
+						css.top = offset.top + rect.height + 'px';
+						place += 'bottom';
+					} else {
+						place += 'top';
+						css.top = offset.top - height + 'px';
+					}
 
-				/* vertical position */
-				if ( base_height - rect.bottom > height ) {
-					css.top = offset.top + rect.height + 'px';
-					place += 'bottom';
+					/* horisontal position */
+					if ( offset.left > width || offset.left > base_width / 2 ) {
+						css.left = offset.left + rect.width - width + 'px';
+						place += '-left';
+					} else {
+						css.left = offset.left + 'px';
+						place += '-right';
+					}
 				} else {
-					place += 'top';
-					css.top = offset.top - height + 'px';
-				}
+					var places = place.split('-');
+					if ( 'bottom' === places[0] ) {
+						css.top = offset.top + rect.height + 'px';
+					} else if ( 'top' === places[0] ) {
+						css.top = offset.top - height + 'px';
+					}
 
-				/* horisontal position */
-				if ( offset.left > width || offset.left > base_width / 2 ) {
-					css.left = offset.left + rect.width - width + 'px';
-					place += '-left';
-				} else {
-					css.left = offset.left + 'px';
-					place += '-right';
+					if ( 'left' === places[1] ) {
+						css.left = offset.left + rect.width - width + 'px';
+					} else if ( 'right' === places[1] ) {
+						css.left = offset.left + 'px';
+					}
 				}
 
 				/* border */
 				switch ( place ) {
 					case 'bottom-right':
-						css.borderRadius = '0px 5px 5px 5px';
+						css.borderRadius = '0 5px 5px 5px';
 						break;
 					case 'bottom-left':
-						css.borderRadius = '5px 0px 5px 5px';
+						css.borderRadius = '5px 0 5px 5px';
 						break;
 					case 'top-right':
-						css.borderRadius = '5px 5px 5px 0px';
+						css.borderRadius = '5px 5px 5px 0';
 						break;
 					case 'top-left':
-						css.borderRadius = '5px 5px 0px 5px';
+						css.borderRadius = '5px 5px 0 5px';
 						break;
 				}
 
@@ -144,7 +170,7 @@
 				self.$menu.find('li a[class="' + attrClass + '"]').trigger('click');
 
 				/* hide dropdown */
-				if ( self.$element.data('um-new-dropdown-show') ) {
+				if ( self.$element.data('um-dropdown-show') ) {
 					self.hide();
 				}
 			},
@@ -154,7 +180,7 @@
 
 				self.$element = $(e.currentTarget);
 
-				if ( self.$element.data('um-new-dropdown-show') ) {
+				if ( self.$element.data('um-dropdown-show') ) {
 					self.hide();
 				} else {
 					self.show();
@@ -174,7 +200,7 @@
 			self.$element = $( self.data.element ).first();
 		}
 
-		self.$dropdown = $(document.body).children('div[data-element="' + self.data.element + '"]');
+		self.$dropdown = $(document.body).children('div[data-element="' + self.data.element + '"]:not([data-cloned="1"])');
 
 		if ( typeof self.data.initted === 'undefined' ) {
 			// single init based on 'initted' data and add 'action' handler for the 'link'
@@ -196,7 +222,7 @@
 			um_dropdownMenu.globalHandlersInitted = true;
 			//var globalParent = '' !== self.data.parent ? self.data.parent : document.body;
 			$( document.body ).on('click', function(e) {
-				if ( ! $( e.target ).closest('.um-new-dropdown').length ) {
+				if ( ! $( e.target ).closest('.um-dropdown').length ) {
 					self.hideAll();
 				}
 			});
@@ -221,12 +247,7 @@
 
 })(jQuery);
 
-
+// @todo remove function from Groups and Notifications.
 function um_init_new_dropdown() {
-	jQuery('.um-new-dropdown').um_dropdownMenu();
+	jQuery('.um-dropdown').um_dropdownMenu();
 }
-
-/* Init all dropdown menus on page load */
-jQuery( document ).ready( function($) {
-	um_init_new_dropdown();
-});
