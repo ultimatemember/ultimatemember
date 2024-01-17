@@ -57,7 +57,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 			foreach ( $fields as $key => $data ) {
 				$output .= UM()->fields()->edit_field( $key, $data );
 			}
-			echo wp_kses( $output, UM()->get_allowed_html( 'templates' ) ); ?>
+			echo wp_kses( $output, UM()->get_allowed_html( 'templates' ) );
+			?>
 
 			<div class="um-col-alt um-col-alt-b">
 
