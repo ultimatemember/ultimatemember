@@ -396,7 +396,7 @@ function um_submit_account_details( $args ) {
 	 */
 	do_action( 'um_account_pre_update_profile', $changes, $user_id );
 
-	if ( isset( $changes['first_name'] ) || isset( $changes['last_name'] ) || isset( $changes['nickname'] ) ) {
+	if ( isset( $changes['first_name'] ) || isset( $changes['last_name'] ) || isset( $changes['nickname'] ) || isset( $changes['user_email'] )  ) {
 		$user = get_userdata( $user_id );
 		if ( ! empty( $user ) && ! is_wp_error( $user ) ) {
 			UM()->user()->previous_data['display_name'] = $user->display_name;
@@ -409,6 +409,9 @@ function um_submit_account_details( $args ) {
 			}
 			if ( isset( $changes['nickname'] ) ) {
 				UM()->user()->previous_data['nickname'] = $user->nickname;
+			}
+			if ( isset( $changes['user_email'] ) ) {
+				UM()->user()->previous_data['user_email'] = $user->user_email;
 			}
 		}
 	}
@@ -461,13 +464,21 @@ function um_submit_account_details( $args ) {
 
 	$url = '';
 	if ( um_is_core_page( 'account' ) ) {
+		if ( UM()->user()->previous_data['user_email'] !== $changes['user_email'] ) {
+			$url = um_get_core_page( 'login' );
+			$url = add_query_arg( 'updated', 'account', $url );
+			wp_destroy_current_session();
+			wp_logout();
+			session_unset();
+			um_js_redirect( $url );
+		}
 
 		$url = UM()->account()->tab_link( $tab );
 
 		$url = add_query_arg( 'updated', 'account', $url );
 
 		if ( function_exists( 'icl_get_current_language' ) ) {
-			if ( icl_get_current_language() != icl_get_default_language() ) {
+			if ( icl_get_current_language() !== icl_get_default_language() ) {
 				$url = UM()->permalinks()->get_current_url( true );
 				$url = add_query_arg( 'updated', 'account', $url );
 
