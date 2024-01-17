@@ -57,12 +57,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 			foreach ( $fields as $key => $data ) {
 				$output .= UM()->fields()->edit_field( $key, $data );
 			}
-			echo $output; ?>
+			echo wp_kses( $output, UM()->get_allowed_html( 'templates' ) ); ?>
 
 			<div class="um-col-alt um-col-alt-b">
 
 				<div class="um-center">
-					<input type="submit" value="<?php esc_attr_e( 'Change password', 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
+					<?php if ( get_user_meta( um_user( 'ID' ), 'um_password_generated', true ) ) { ?>
+						<input type="submit" value="<?php esc_attr_e( 'Set password', 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
+					<?php } else { ?>
+						<input type="submit" value="<?php esc_attr_e( 'Change password', 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
+					<?php } ?>
 				</div>
 
 				<div class="um-clear"></div>
