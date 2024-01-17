@@ -6,8 +6,9 @@
  *
  * Call: function ultimatemember_password()
  *
- * @version 2.7.0
+ * @version 2.8.3
  *
+ * @var string $rp_mode
  * @var string $mode
  * @var string $rp_key
  * @var int    $form_id
@@ -63,7 +64,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="um-col-alt um-col-alt-b">
 
 				<div class="um-center">
-					<?php if ( get_user_meta( um_user( 'ID' ), 'um_password_generated', true ) ) { ?>
+					<?php if ( 'pw_set' === $rp_mode ) { ?>
 						<input type="submit" value="<?php esc_attr_e( 'Set password', 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
 					<?php } else { ?>
 						<input type="submit" value="<?php esc_attr_e( 'Change password', 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />

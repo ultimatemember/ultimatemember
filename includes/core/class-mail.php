@@ -644,7 +644,8 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			$replace_placeholders[] = esc_html__( 'Your set password', 'ultimate-member' );
 			$replace_placeholders[] = um_user( 'account_activation_link' );
 
-			if ( 'pending' === um_user( 'status' ) || ! get_user_meta( um_user( 'ID' ), 'um_password_generated', true ) ) {
+			$set_password_required = get_user_meta( um_user( 'ID' ), 'um_set_password_required', true );
+			if ( empty( $set_password_required ) || 'pending' === um_user( 'status' ) ) {
 				$replace_placeholders[] = um_get_core_page( 'login' );
 				$replace_placeholders[] = esc_html__( 'Login to our site', 'ultimate-member' );
 			} else {

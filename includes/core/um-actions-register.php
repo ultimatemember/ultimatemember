@@ -11,9 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 function um_post_registration_approved_hook( $user_id ) {
 	um_fetch_user( $user_id );
 
-	UM()->user()->approve( true );
+	UM()->user()->approve();
 }
-add_action( 'um_post_registration_approved_hook', 'um_post_registration_approved_hook', 10, 1 );
+add_action( 'um_post_registration_approved_hook', 'um_post_registration_approved_hook' );
 
 /**
  * Account needs email validation.
@@ -523,7 +523,7 @@ function um_submit_form_register( $args, $form_data ) {
 	}
 
 	if ( true === $generate_password ) {
-		update_user_meta( $user_id, 'um_password_generated', true );
+		update_user_meta( $user_id, 'um_set_password_required', true );
 	}
 
 	/**

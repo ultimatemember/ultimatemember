@@ -5,7 +5,7 @@
  *
  * This template can be overridden by copying it to {your-theme}/ultimate-member/email/welcome_email.php
  *
- * @version 2.6.1
+ * @version 2.8.3
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

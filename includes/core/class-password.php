@@ -155,6 +155,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 			if ( false !== $this->change_password ) {
 				// then COOKIE are valid then get data from them and populate hidden fields for the password reset form
+				$args['rp_mode']  = 'pw_change';
 				$args['template'] = 'password-change';
 				$args['rp_key']   = '';
 				$rp_cookie        = 'wp-resetpass-' . COOKIEHASH;
@@ -163,6 +164,14 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 					$args['login']  = $rp_login;
 					$args['rp_key'] = $rp_key;
+
+					$rp_user_obj = get_user_by( 'login', $rp_login );
+					if ( false !== $rp_user_obj ) {
+						$set_password_required = get_user_meta( $rp_user_obj->ID, 'um_set_password_required', true );
+						if ( ! empty( $set_password_required ) ) {
+							$args['rp_mode'] = 'pw_set';
+						}
+					}
 				}
 			}
 
@@ -599,9 +608,9 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 					}
 					$this->setcookie( $rp_cookie, false );
 
-					$password_generated = get_user_meta( $user->ID, 'um_password_generated', true );
-					if ( $password_generated ) {
-						delete_user_meta( $user->ID, 'um_password_generated' );
+					$password_generated = get_user_meta( $user->ID, 'um_set_password_required', true );
+					if ( ! empty( $password_generated ) ) {
+						delete_user_meta( $user->ID, 'um_set_password_required' );
 					}
 
 					/**
