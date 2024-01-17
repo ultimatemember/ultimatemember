@@ -464,7 +464,7 @@ function um_submit_account_details( $args ) {
 
 	$url = '';
 	if ( um_is_core_page( 'account' ) ) {
-		if ( UM()->user()->previous_data['user_email'] !== $changes['user_email'] ) {
+		if ( isset( UM()->user()->previous_data['user_email'] ) && UM()->user()->previous_data['user_email'] !== $changes['user_email'] ) {
 			$url = um_get_core_page( 'login' );
 			$url = add_query_arg( 'updated', 'account', $url );
 			wp_destroy_current_session();
