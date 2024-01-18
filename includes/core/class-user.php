@@ -1690,7 +1690,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		?>
 		 *
 		 */
-		function approve( $repeat = true ) {
+		public function approve( $repeat = true ) {
 			$user_id = um_user( 'ID' );
 
 			if ( ! $repeat ) {
@@ -1702,7 +1702,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			delete_option( "um_cache_userdata_{$user_id}" );
 
-			if ( um_user( 'account_status' ) == 'awaiting_admin_review' ) {
+			if ( 'awaiting_admin_review' === um_user( 'account_status' ) ) {
 				$userdata = get_userdata( $user_id );
 
 				$this->maybe_generate_password_reset_key( $userdata );

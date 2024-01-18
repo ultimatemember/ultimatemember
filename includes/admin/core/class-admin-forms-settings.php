@@ -1,11 +1,11 @@
 <?php
 namespace um\admin\core;
 
-// Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\admin\core\Admin_Forms_Settings' ) ) {
-
 
 	/**
 	 * Class Admin_Forms_Settings
@@ -17,41 +17,42 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms_Settings' ) ) {
 		 * Admin_Forms constructor.
 		 * @param bool $form_data
 		 */
-		function __construct( $form_data = false ) {
-
+		public function __construct( $form_data = false ) {
 			parent::__construct( $form_data );
-
 		}
-
 
 		/**
-		 * Get field value
+		 * Get field value.
 		 *
-		 * @param array $field_data
+		 * @param array  $field_data
 		 * @param string $i
+		 *
 		 * @return string|array
 		 */
-		function get_field_value( $field_data, $i = '' ) {
-			$default = isset( $field_data['default' . $i] ) ? $field_data['default' . $i] : UM()->options()->get_default( $field_data['id' . $i] );
+		public function get_field_value( $field_data, $i = '' ) {
+			$default_key = 'default' . $i;
+			$value_key   = 'value' . $i;
+			$id_key      = 'id' . $i;
 
-			if ( $field_data['type'] == 'checkbox' || $field_data['type'] == 'multi_checkbox' ) {
-				if ( isset( $field_data['value' . $i] ) ) {
-					return $field_data['value' . $i];
-				} else {
-					$value = UM()->options()->get( $field_data['id' . $i] );
-					$value = is_string( $value ) ? stripslashes( $value ) : $value;
-					return '' !== $value ? $value : $default;
+			$default = isset( $field_data[ $default_key ] ) ? $field_data[ $default_key ] : UM()->options()->get_default( $field_data[ $id_key ] );
+
+			if ( in_array( $field_data['type'], array( 'checkbox', 'multi_checkbox' ), true ) ) {
+				if ( isset( $field_data[ $value_key ] ) ) {
+					return $field_data[ $value_key ];
 				}
-			} else {
-				if ( isset( $field_data['value' . $i] ) ) {
-					return $field_data['value'. $i];
-				} else {
-					$value = UM()->options()->get( $field_data['id' . $i] );
-					$value = is_string( $value ) ? stripslashes( $value ) : $value;
-					return isset( $value ) ? $value : $default;
-				}
+
+				$value = UM()->options()->get( $field_data[ $id_key ] );
+				$value = is_string( $value ) ? stripslashes( $value ) : $value;
+				return '' !== $value ? $value : $default;
 			}
-		}
 
+			if ( isset( $field_data[ $value_key ] ) ) {
+				return $field_data[ $value_key ];
+			}
+
+			$value = UM()->options()->get( $field_data[ $id_key ] );
+			$value = is_string( $value ) ? stripslashes( $value ) : $value;
+			return isset( $value ) ? $value : $default;
+		}
 	}
 }

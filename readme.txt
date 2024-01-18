@@ -166,12 +166,13 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.8.2: January 11, 2024 =
+= 2.8.2: January 15, 2024 =
 
 * Enhancements:
 
   - Added: The `data` protocol for embedding base64 encoded logos in emails
   - Added: Hook `um_access_restricted_post_instance` for filtering the restricted post instance
+  - Added: Shortcode `[um_author_profile_link]` for getting user Profile URL
   - Updated: Using underscore.js native debounce method for resize handler
   - Updated: Texts spelling
 
@@ -184,6 +185,8 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
   - Fixed: cropper conflict with Avada theme and active Fusion Image lazyload
   - Fixed: MegaMenu conflict with nav menu items conditional settings (e.g. Newsletter theme)
   - Fixed: PHP Fatal error when there isn't a proper WP_Post object in UM User Profile > Posts loop
+  - Fixed: Account styles
+  - Fixed: Saving `um_form_version` postmeta
 
 * Templates required update:
 

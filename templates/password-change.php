@@ -6,19 +6,18 @@
  *
  * Call: function ultimatemember_password()
  *
- * @version 2.7.0
+ * @version 2.8.3
  *
- * @var string $mode
- * @var string $rp_key
- * @var int    $form_id
- * @var array  $args
+ * @var string $rp_mode 'pw_set' or 'pw_change' for display it differently.
+ * @var string $rp_key  Reset password key.
+ * @var array  $args    Change password arguments
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 ?>
 
-<div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?>">
+<div class="um <?php echo esc_attr( $this->get_class( 'password' ) ); ?> um-um_password_id">
 
 	<div class="um-form">
 
@@ -29,23 +28,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 			<?php
 			/**
-			 * UM hook
+			 * Fires at the start of the password change form. Just after hiddens.
 			 *
-			 * @type action
-			 * @title um_change_password_page_hidden_fields
-			 * @description Password change hidden fields
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Password change shortcode arguments"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_change_password_page_hidden_fields', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_change_password_page_hidden_fields', 'my_change_password_page_hidden_fields', 10, 1 );
-			 * function my_change_password_page_hidden_fields( $args ) {
-			 *     // your code here
+			 * @since 1.3.x
+			 * @hook um_change_password_page_hidden_fields
+			 *
+			 * @param {array} $cp_args Change password form arguments.
+			 *
+			 * @example <caption>Add hidden field at the start of the change password form.</caption>
+			 * function my_custom_change_password_page_hidden_fields( $cp_args ) {
+			 *     echo '<input type="hidden" name="my_custom_cp_input" value="1" />'
 			 * }
-			 * ?>
+			 * add_action( 'um_change_password_page_hidden_fields', 'my_custom_change_password_page_hidden_fields' );
 			 */
 			do_action( 'um_change_password_page_hidden_fields', $args );
 
@@ -57,38 +51,37 @@ if ( ! defined( 'ABSPATH' ) ) {
 			foreach ( $fields as $key => $data ) {
 				$output .= UM()->fields()->edit_field( $key, $data );
 			}
-			echo $output; ?>
+			if ( $output ) {
+				echo wp_kses( $output, UM()->get_allowed_html( 'templates' ) );
+			}
+			?>
 
 			<div class="um-col-alt um-col-alt-b">
-
 				<div class="um-center">
-					<input type="submit" value="<?php esc_attr_e( 'Change password', 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
+					<?php if ( 'pw_set' === $rp_mode ) { ?>
+						<input type="submit" value="<?php esc_attr_e( 'Set password', 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
+					<?php } else { ?>
+						<input type="submit" value="<?php esc_attr_e( 'Change password', 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
+					<?php } ?>
 				</div>
 
 				<div class="um-clear"></div>
-
 			</div>
 
 			<?php
-
 			/**
-			 * UM hook
+			 * Fires at the end of the password change form.
 			 *
-			 * @type action
-			 * @title um_change_password_form
-			 * @description Password change form content
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Password change shortcode arguments"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_change_password_form', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_change_password_form', 'my_change_password_form', 10, 1 );
-			 * function my_change_password_form( $args ) {
-			 *     // your code here
+			 * @since 1.3.x
+			 * @hook um_change_password_form
+			 *
+			 * @param {array} $cp_args Change password form arguments.
+			 *
+			 * @example <caption>Add hidden field at the start of the change password form.</caption>
+			 * function my_custom_change_password_form( $cp_args ) {
+			 *     echo '<input type="hidden" name="my_custom_cp_input" value="1" />'
 			 * }
-			 * ?>
+			 * add_action( 'um_change_password_form', 'my_custom_change_password_form' );
 			 */
 			do_action( 'um_change_password_form', $args );
 			/** This action is documented in includes/core/um-actions-profile.php */

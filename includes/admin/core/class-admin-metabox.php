@@ -1021,7 +1021,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		public function add_metabox_form() {
 			add_meta_box( 'submitdiv', __( 'Publish', 'ultimate-member' ), array( $this, 'custom_submitdiv' ), 'um_form', 'side', 'high' );
 
-			if ( defined( 'UM_LEGACY_BUILDER_OFF' ) && UM_LEGACY_BUILDER_OFF ) {
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_form_builder' ) ) {
 				// Do new metabox.
 			} else {
 				add_meta_box( 'um-admin-form-mode', __( 'Select Form Type', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );
@@ -1267,7 +1267,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			}
 
 			// Set post meta for legacy support in the future.
-			add_post_meta( $post_id, 'um_form_version', UM_VERSION );
+			add_post_meta( $post_id, 'um_form_version', UM_VERSION, true );
 
 			if ( empty( $_POST['post_title'] ) ) {
 				$where = array( 'ID' => $post_id );

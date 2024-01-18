@@ -91,8 +91,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 		public function admin_init() {
 			global $wpdb;
 			// Dismiss admin notice after the first visit to Secure settings page.
-			if ( isset( $_REQUEST['page'] ) && isset( $_REQUEST['tab'] ) &&
-				'um_options' === sanitize_key( $_REQUEST['page'] ) && 'secure' === sanitize_key( $_REQUEST['tab'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			if ( isset( $_REQUEST['page'], $_REQUEST['tab'], $_REQUEST['section'] ) && 'um_options' === sanitize_key( $_REQUEST['page'] ) && 'advanced' === sanitize_key( $_REQUEST['tab'] ) && 'secure' === sanitize_key( $_REQUEST['section'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				UM()->admin()->notices()->dismiss( 'secure_settings' );
 			}
 
@@ -236,16 +235,18 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 					'description' => __( 'Scan your site to check for vulnerabilities prior to Ultimate Member version 2.6.7 and get recommendations to secure your site.', 'ultimate-member' ),
 				),
 				array(
-					'id'          => 'lock_register_forms',
-					'type'        => 'checkbox',
-					'label'       => __( 'Lock All Register Forms', 'ultimate-member' ),
-					'description' => __( 'This prevents all users from registering with Ultimate Member on your site.', 'ultimate-member' ),
+					'id'             => 'lock_register_forms',
+					'type'           => 'checkbox',
+					'label'          => __( 'Lock All Register Forms', 'ultimate-member' ),
+					'checkbox_label' => __( 'Lock Forms', 'ultimate-member' ),
+					'description'    => __( 'This prevents all users from registering with Ultimate Member on your site.', 'ultimate-member' ),
 				),
 				array(
-					'id'          => 'display_login_form_notice',
-					'type'        => 'checkbox',
-					'label'       => __( 'Display Login form notice to reset passwords', 'ultimate-member' ),
-					'description' => __( 'Enforces users to reset their passwords( one-time ) and prevent from entering old password.', 'ultimate-member' ),
+					'id'             => 'display_login_form_notice',
+					'type'           => 'checkbox',
+					'label'          => __( 'Display Login form notice to reset passwords', 'ultimate-member' ),
+					'checkbox_label' => __( 'Enable Login form notice', 'ultimate-member' ),
+					'description'    => __( 'Enforces users to reset their passwords (one-time) and prevent from entering old password.', 'ultimate-member' ),
 				),
 			);
 
@@ -265,17 +266,19 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 				$secure_fields,
 				array(
 					array(
-						'id'          => 'secure_ban_admins_accounts',
-						'type'        => 'checkbox',
-						'label'       => __( 'Enable ban for administrative capabilities', 'ultimate-member' ),
-						'description' => __( ' When someone tries to inject capabilities to the Account, Profile & Register forms submission, it will be banned.', 'ultimate-member' ),
+						'id'             => 'secure_ban_admins_accounts',
+						'type'           => 'checkbox',
+						'label'          => __( 'Administrative capabilities ban', 'ultimate-member' ),
+						'checkbox_label' => __( 'Enable ban for administrative capabilities', 'ultimate-member' ),
+						'description'    => __( ' When someone tries to inject capabilities to the Account, Profile & Register forms submission, it will be banned.', 'ultimate-member' ),
 					),
 					array(
-						'id'          => 'secure_notify_admins_banned_accounts',
-						'type'        => 'checkbox',
-						'label'       => __( 'Notify Administrators', 'ultimate-member' ),
-						'description' => __( 'When enabled, All administrators will be notified when someone has suspicious activities in the Account, Profile & Register forms.', 'ultimate-member' ),
-						'conditional' => array( 'secure_ban_admins_accounts', '=', 1 ),
+						'id'             => 'secure_notify_admins_banned_accounts',
+						'type'           => 'checkbox',
+						'label'          => __( 'Notify Administrators', 'ultimate-member' ),
+						'checkbox_label' => __( 'Enable notification', 'ultimate-member' ),
+						'description'    => __( 'When enabled, All administrators will be notified when someone has suspicious activities in the Account, Profile & Register forms.', 'ultimate-member' ),
+						'conditional'    => array( 'secure_ban_admins_accounts', '=', 1 ),
 					),
 					array(
 						'id'          => 'secure_notify_admins_banned_accounts__interval',
@@ -292,14 +295,15 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 						'id'          => 'secure_allowed_redirect_hosts',
 						'type'        => 'textarea',
 						'label'       => __( 'Allowed hosts for safe redirect (one host per line)', 'ultimate-member' ),
-						'description' => __( 'Extend allowed hosts for frontend pages redirects', 'ultimate-member' ),
+						'description' => __( 'Extend allowed hosts for frontend pages redirects.', 'ultimate-member' ),
 					),
 				)
 			);
 
-			$settings['secure'] = array(
-				'title'  => __( 'Secure', 'ultimate-member' ),
-				'fields' => $secure_fields,
+			$settings['advanced']['sections']['secure'] = array(
+				'title'       => __( 'Secure', 'ultimate-member' ),
+				'description' => __( 'This feature scans for suspicious registered accounts, bans the usage of administrative capabilities to site subscribers/members, allows the website administrators to force all users to reset their passwords, preventing users from logging-in using their old passwords that may have been exposed.', 'ultimate-member' ),
+				'fields'      => $secure_fields,
 			);
 
 			return $settings;
