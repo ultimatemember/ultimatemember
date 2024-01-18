@@ -6,7 +6,7 @@
  *
  * Page: "Profile"
  *
- * @version 2.7.0
+ * @version 2.8.2
  *
  * @var object $post
  */
@@ -34,21 +34,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 	}
 
 	$unix_published_date = get_post_datetime( $post, 'date', 'gmt' );
+	$categories_list     = get_the_category_list( ', ', '', $post->ID );
 	?>
 
 	<div class="um-item-meta">
-		<span>
-			<?php
-			// translators: %s: human time diff.
-			echo esc_html( sprintf( __( '%s ago', 'ultimate-member' ), human_time_diff( $unix_published_date->getTimestamp() ) ) );
-			?>
-		</span>
-		<span>
-			<?php
-			// translators: %s: categories list.
-			echo wp_kses( sprintf( __( 'in: %s', 'ultimate-member' ), get_the_category_list( ', ', '', $post->ID ) ), UM()->get_allowed_html( 'templates' ) );
-			?>
-		</span>
+		<?php if ( false !== $unix_published_date ) { ?>
+			<span>
+				<?php
+				// translators: %s: human time diff.
+				echo esc_html( sprintf( __( '%s ago', 'ultimate-member' ), human_time_diff( $unix_published_date->getTimestamp() ) ) );
+				?>
+			</span>
+		<?php } ?>
+		<?php if ( ! empty( $categories_list ) ) { ?>
+			<span>
+				<?php
+				// translators: %s: categories list.
+				echo wp_kses( sprintf( __( 'in: %s', 'ultimate-member' ), $categories_list ), UM()->get_allowed_html( 'templates' ) );
+				?>
+			</span>
+		<?php } ?>
 		<span>
 			<?php
 			$num_comments = absint( get_comments_number( $post ) );

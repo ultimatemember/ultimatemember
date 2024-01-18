@@ -85,3 +85,32 @@ body.#{$prefix}admin-modal-open
       height: 200px
     &.#{$prefix}admin-error
       border-color: #{$admin-warning} !important
+
+.um
+  .picker__box,
+  .picker__nav--prev:hover,
+  .picker__nav--next:hover
+    background: #{$um-base}
+  .picker__footer,
+  .picker__header,
+  .picker__day--infocus:hover,
+  .picker__day--outfocus:hover,
+  .picker__day--highlighted:hover,
+  .picker--focused .picker__day--highlighted,
+  .picker__list-item:hover,
+  .picker__list-item--highlighted:hover,
+  .picker--focused .picker__list-item--highlighted,
+  .picker__list-item--selected,
+  .picker__list-item--selected:hover,
+  .picker--focused .picker__list-item--selected
+    background: #{$um-base-hover}
+
+body.um
+  .picker
+    .picker__frame
+      top: 32px
+    .picker__footer
+      & > button:not(:disabled):not(.button)
+        color: #fff
+      & > button.picker__button--close
+        margin-top: 5px

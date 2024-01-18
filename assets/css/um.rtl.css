@@ -1,5 +1,9 @@
-.um {
+.rtl .um {
 	direction: rtl !important;
+	text-align: right;
+}
+
+.rtl .um:not(.um-admin) {
 	text-align: right;
 }
 

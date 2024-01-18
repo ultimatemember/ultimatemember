@@ -417,8 +417,10 @@ function um_submit_form_register( $args, $form_data ) {
 		$user_email = $args['user_email'];
 	}
 
+	$generate_password = false;
 	if ( ! isset( $args['user_password'] ) ) {
-		$user_password = UM()->validation()->generate( 8 );
+		$generate_password = true;
+		$user_password     = UM()->validation()->generate( 8 );
 	} else {
 		$user_password = $args['user_password'];
 	}
@@ -518,6 +520,10 @@ function um_submit_form_register( $args, $form_data ) {
 			UM()->form()->add_error( 'user_login', $user_id->get_error_message() );
 		}
 		return;
+	}
+
+	if ( true === $generate_password ) {
+		update_user_meta( $user_id, 'um_set_password_required', true );
 	}
 
 	/**

@@ -489,6 +489,7 @@ jQuery(document).ready( function() {
 			hiddenName: true,
 			onOpen: function() {
 				elem.blur();
+				elem.siblings('.picker').find('.picker__button--close').addClass('button');
 			},
 			onClose: function() {
 				elem.blur();
@@ -597,6 +598,7 @@ jQuery(document).ready( function() {
 						hiddenName: true,
 						onOpen: function() {
 							elem.blur();
+							elem.siblings('.picker').find('.picker__button--close').addClass('button');
 						},
 						onClose: function() {
 							elem.blur();
