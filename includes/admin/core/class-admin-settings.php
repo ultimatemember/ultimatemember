@@ -2025,11 +2025,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'description' => __( 'These features are either experimental or incomplete, enable them at your own risk!', 'ultimate-member' ),
 										'fields'      => array(
 											array(
-												'id'             => 'disable_legacy_fonicons',
+												'id'             => 'enable_new_ui',
+												'type'           => 'checkbox',
+												'label'          => __( 'Design scheme', 'ultimate-member' ),
+												'checkbox_label' => __( 'Enable new UI (for developers only)', 'ultimate-member' ),
+												'description'    => __( 'Check this box if you would like to enable new UI.', 'ultimate-member' ),
+											),
+											array(
+												'id'             => 'enable_new_form_builder',
+												'type'           => 'checkbox',
+												'label'          => __( 'Form Builder', 'ultimate-member' ),
+												'checkbox_label' => __( 'Enable new Form Builder (for developers only)', 'ultimate-member' ),
+												'description'    => __( 'Check this box if you would like to enable new Form Builder.', 'ultimate-member' ),
+											),
+											array(
+												'id'             => 'enable_legacy_fonticons',
 												'type'           => 'checkbox',
 												'label'          => __( 'Legacy fonticons', 'ultimate-member' ),
-												'checkbox_label' => __( 'Disable legacy fonticons', 'ultimate-member' ),
-												'description'    => __( 'Check this box if you would like to disable legacy Ultimate Member fonticons used outdated versions of FontAwesome and Ionicons libraries.', 'ultimate-member' ),
+												'checkbox_label' => __( 'Enable legacy fonticons', 'ultimate-member' ),
+												'description'    => __( 'Check this box if you would like to enable legacy Ultimate Member fonticons used outdated versions of FontAwesome and Ionicons libraries.', 'ultimate-member' ),
 											),
 										),
 									),
@@ -2062,6 +2076,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					), // @todo remove since 2.9.0
 				)
 			);
+
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE ) {
+
+			} else {
+				unset( $this->settings_structure['advanced']['sections']['features']['form_sections']['beta_features'] );
+			}
 		}
 
 		/**

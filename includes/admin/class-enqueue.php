@@ -555,7 +555,7 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_enqueue_style( 'um_admin_common' );
 
 			if ( self::$um_cpt_form_screen ) {
-				if ( defined( 'UM_LEGACY_BUILDER_OFF' ) && UM_LEGACY_BUILDER_OFF ) {
+				if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_form_builder' ) ) {
 					// Do new assets.
 				} else {
 					$this->load_builder();
