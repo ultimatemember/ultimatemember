@@ -74,7 +74,7 @@ final class Enqueue extends \um\common\Enqueue {
 		$libs_url = self::get_url( 'libs' );
 		$js_url   = self::get_url( 'js' );
 
-		if ( defined( 'UM_NEW_DESIGN' ) && UM_NEW_DESIGN ) {
+		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 			$css_url = self::get_url( 'css' );
 			wp_register_style( 'um_new_design', $css_url . 'new-design' . $suffix . '.css', array(), UM_VERSION );
 			wp_register_style( 'um_new_profile', $css_url . 'new-profile' . $suffix . '.css', array(), UM_VERSION );
@@ -191,7 +191,7 @@ final class Enqueue extends \um\common\Enqueue {
 		$libs_url = self::get_url( 'libs' );
 		$css_url  = self::get_url( 'css' );
 
-		if ( defined( 'UM_NEW_DESIGN' ) && UM_NEW_DESIGN ) {
+		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 
 		} else {
 			wp_register_style( 'um_fileupload', $css_url . 'um-fileupload' . $suffix . '.css', array(), UM_VERSION );

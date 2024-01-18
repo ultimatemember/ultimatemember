@@ -163,7 +163,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			$this->emoji[':smirk:'] = $base_uri . '72x72/1f60f.png';
 			$this->emoji[':expressionless:'] = $base_uri . '72x72/1f611.png';
 
-			if ( defined( 'UM_NEW_DESIGN' ) && UM_NEW_DESIGN ) {
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 				add_shortcode( 'ultimatemember_design_scheme', array( &$this, 'design_scheme' ) );
 				add_shortcode( 'ultimatemember_profile', array( &$this, 'new_profile' ) );
 			}

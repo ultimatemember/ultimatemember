@@ -180,11 +180,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 		 * Setup admin menu
 		 */
 		function primary_admin_menu() {
-			if ( defined( 'UM_NEW_DESIGN' ) && UM_NEW_DESIGN ) {
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 				add_menu_page( __( 'UM Design BETA', 'ultimate-member' ), __( 'UM Design BETA', 'ultimate-member' ), 'manage_options', 'um-admin-design', array( &$this, 'admin_design_page' ), 'dashicons-admin-customizer' );
 			}
 
-			$this->pagehook = add_menu_page( __( 'Ultimate Member', 'ultimate-member' ), __( 'Ultimate Member', 'ultimate-member' ), 'manage_options', $this->slug, array( &$this, 'admin_page' ), 'dashicons-admin-users', '42.78578');
+			$this->pagehook = add_menu_page( __( 'Ultimate Member', 'ultimate-member' ), __( 'Ultimate Member', 'ultimate-member' ), 'manage_options', $this->slug, array( &$this, 'admin_page' ), 'dashicons-admin-users', '42.78578' );
 
 			add_action( 'load-' . $this->pagehook, array( &$this, 'on_load_page' ) );
 
