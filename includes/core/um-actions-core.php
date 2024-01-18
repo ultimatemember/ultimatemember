@@ -100,10 +100,11 @@ function um_action_request_process() {
 				wp_die( esc_html__( 'You do not have permission to make this action.', 'ultimate-member' ) );
 			}
 
+			um_fetch_user( $uid );
+
 			add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ), 10, 1 );
 			add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ), 10, 1 );
 
-			um_fetch_user( $uid );
 			UM()->user()->approve();
 			exit( wp_redirect( UM()->permalinks()->get_current_url( true ) ) );
 			break;

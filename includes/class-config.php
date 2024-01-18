@@ -334,8 +334,8 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'subject'       => 'Welcome to {site_name}!',
 					'body'          => 'Hi {display_name},<br /><br />' .
 					                   'Thank you for signing up with {site_name}! Your account is now active.<br /><br />' .
-					                   'To login please visit the following url:<br /><br />' .
-					                   '{login_url} <br /><br />' .
+					                   '{action_title}:<br /><br />' .
+					                   '{action_url} <br /><br />' .
 					                   'Your account e-mail: {email} <br />' .
 					                   'Your account username: {username} <br /><br />' .
 					                   'If you have any problems, please contact us at {admin_email}<br /><br />' .

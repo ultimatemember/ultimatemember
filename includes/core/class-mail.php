@@ -623,6 +623,8 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			$placeholders[] = '{login_url}';
 			$placeholders[] = '{password}';
 			$placeholders[] = '{account_activation_link}';
+			$placeholders[] = '{action_url}';
+			$placeholders[] = '{action_title}';
 			return $placeholders;
 		}
 
@@ -641,6 +643,16 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			$replace_placeholders[] = um_get_core_page( 'login' );
 			$replace_placeholders[] = esc_html__( 'Your set password', 'ultimate-member' );
 			$replace_placeholders[] = um_user( 'account_activation_link' );
+
+			$set_password_required = get_user_meta( um_user( 'ID' ), 'um_set_password_required', true );
+			if ( empty( $set_password_required ) || 'pending' === um_user( 'status' ) ) {
+				$replace_placeholders[] = um_get_core_page( 'login' );
+				$replace_placeholders[] = esc_html__( 'Login to our site', 'ultimate-member' );
+			} else {
+				$replace_placeholders[] = um_user( 'password_reset_link' );
+				$replace_placeholders[] = esc_html__( 'Set your password', 'ultimate-member' );
+			}
+
 			return $replace_placeholders;
 		}
 	}
