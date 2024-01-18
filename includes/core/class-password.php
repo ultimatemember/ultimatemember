@@ -608,8 +608,8 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 					}
 					$this->setcookie( $rp_cookie, false );
 
-					$password_generated = get_user_meta( $user->ID, 'um_set_password_required', true );
-					if ( ! empty( $password_generated ) ) {
+					$set_password_required = get_user_meta( $user->ID, 'um_set_password_required', true );
+					if ( ! empty( $set_password_required ) ) {
 						delete_user_meta( $user->ID, 'um_set_password_required' );
 					}
 
