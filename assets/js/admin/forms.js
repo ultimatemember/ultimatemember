@@ -97,6 +97,52 @@ function um_admin_init_users_select() {
 }
 
 
+function um_admin_init_pages_select() {
+	// multiple select with AJAX search
+	jQuery('.um-pages-select2').select2({
+		ajax: {
+			url: wp.ajax.settings.url,
+			dataType: 'json',
+			delay: 250, // delay in ms while typing when to perform a AJAX search
+			data: function( params ) {
+				return {
+					search: params.term, // search query
+					action: 'um_get_pages_list', // AJAX action for admin-ajax.php
+					page: params.page || 1, // infinite scroll pagination
+					nonce: um_admin_scripts.nonce
+				};
+			},
+			processResults: function( data, params ) {
+				params.page = params.page || 1;
+				var options = [];
+
+				if ( data ) {
+
+					// data is the array of arrays, and each of them contains ID and the Label of the option
+					jQuery.each( data, function( index, text ) { // do not forget that "index" is just auto incremented value
+						if ( index === 'total_count' ) {
+							return;
+						}
+						options.push( { id: text[0], text: text[1]  } );
+					});
+
+				}
+
+				return {
+					results: options,
+					pagination: {
+						more: ( params.page * 10 ) < data.total_count
+					}
+				};
+			},
+			cache: true
+		},
+		placeholder: jQuery(this).data('placeholder'),
+		minimumInputLength: 0, // the minimum of symbols to input before perform a search
+		allowClear: true,
+	});
+}
+
 /**
  *
  * @param field_key
@@ -123,6 +169,7 @@ function um_same_page_something_wrong( field_key ) {
 
 jQuery(document).ready( function() {
 	um_admin_init_users_select();
+	um_admin_init_pages_select();
 
 	/**
 	 * Same page upgrade field
@@ -130,9 +177,9 @@ jQuery(document).ready( function() {
 	jQuery( document.body ).on( 'click', '.um-forms-field[data-log-object]', function() {
 		var obj = jQuery( this ).data( 'log-object' );
 		if ( jQuery( this ).is( ':checked' ) ) {
-			jQuery( this ).siblings( '.um-same-page-update-' + obj ).show();
+			jQuery( this ).parents('label').siblings( '.um-same-page-update-' + obj ).show();
 		} else {
-			jQuery( this ).siblings( '.um-same-page-update-' + obj ).hide();
+			jQuery( this ).parents('label').siblings( '.um-same-page-update-' + obj ).hide();
 		}
 	});
 
