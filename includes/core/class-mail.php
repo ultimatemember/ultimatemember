@@ -642,7 +642,13 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			$replace_placeholders[] = um_user_submitted_registration_formatted();
 			$replace_placeholders[] = um_get_core_page( 'login' );
 			$replace_placeholders[] = esc_html__( 'Your set password', 'ultimate-member' );
-			$replace_placeholders[] = um_user( 'account_activation_link' );
+
+			$um_changed_user_email_action = get_user_meta( um_user( 'ID' ), 'um_changed_user_email_action', true );
+			if ( 'checkmail' === $um_changed_user_email_action ) {
+				$replace_placeholders[] = um_user( 'account_confirmation_link' );
+			} else {
+				$replace_placeholders[] = um_user( 'account_activation_link' );
+			}
 
 			$set_password_required = get_user_meta( um_user( 'ID' ), 'um_set_password_required', true );
 			if ( empty( $set_password_required ) || 'pending' === um_user( 'status' ) ) {

@@ -16,22 +16,23 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 		/**
 		 * @var
 		 */
-		var $core;
+		public $core;
 
 		/**
 		 * @var
 		 */
-		var $current_url;
+		public $current_url;
 
 		/**
 		 * Permalinks constructor.
 		 */
 		public function __construct() {
-			add_action( 'init',  array( &$this, 'set_current_url' ), 0 );
+			add_action( 'init', array( &$this, 'set_current_url' ), 0 );
 
-			add_action( 'init',  array( &$this, 'check_for_querystrings' ), 1 );
+			add_action( 'init', array( &$this, 'check_for_querystrings' ), 1 );
 
-			add_action( 'init',  array( &$this, 'activate_account_via_email_link' ), 1 );
+			add_action( 'init', array( &$this, 'activate_account_via_email_link' ), 1 );
+			add_action( 'init', array( &$this, 'confirm_account_via_email_link' ), 1 );
 		}
 
 		/**
@@ -180,6 +181,47 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 
 				exit( wp_redirect( $redirect ) );
 			}
+		}
+
+		public function confirm_account_via_email_link() {
+			if ( isset( $_REQUEST['act'] ) && 'confirm_via_email' === sanitize_key( $_REQUEST['act'] ) && isset( $_REQUEST['hash'] ) && is_string( $_REQUEST['hash'] ) && strlen( $_REQUEST['hash'] ) == 40 && isset( $_REQUEST['user_id'] ) && is_numeric( $_REQUEST['user_id'] ) ) { // valid token
+
+			}
+		}
+
+		/**
+		 * Makes an confirmation link for any user
+		 *
+		 * @return bool|string
+		 */
+		public function confirmation_url() {
+			if ( ! um_user( 'account_secret_hash' ) ) {
+				return false;
+			}
+
+			/**
+			 * Filters change confirmation user URL.
+			 *
+			 * @param {string} $url Predefined URL.
+			 *
+			 * @return {string} Changed URL.
+			 *
+			 * @since 2.8.3
+			 * @hook um_confirmation_url
+			 *
+			 * @example <caption>Change confirmation user URL.</caption>
+			 * function my_um_confirmation_url( $url ) {
+			 *     // your code here
+			 *     return $url;
+			 * }
+			 * add_filter( 'um_confirmation_url', 'my_um_confirmation_url' );
+			 */
+			$url = apply_filters( 'um_confirmation_url', home_url() );
+			$url = add_query_arg( 'act', 'confirm_via_email', $url );
+			$url = add_query_arg( 'hash', um_user( 'account_secret_hash' ), $url );
+			$url = add_query_arg( 'user_id', um_user( 'ID' ), $url );
+
+			return $url;
 		}
 
 		/**
