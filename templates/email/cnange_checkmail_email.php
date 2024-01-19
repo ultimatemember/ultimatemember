@@ -21,9 +21,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<div style="padding: 0 30px 30px 30px;border-bottom: 3px solid #eeeeee;">
 
-		<div style="padding: 30px 0;font-size: 24px;text-align: center;line-height: 40px;">Thank you for signing up!<span style="display: block;">Please click the following link to confirm your email address.</span></div>
+		<div style="padding: 30px 0;font-size: 24px;text-align: center;line-height: 40px;">Thank you for signing up!<span style="display: block;"> Please click the following link to confirm your email address.</span></div>
 
-		<div style="padding: 10px 0 50px 0;text-align: center;"><a href="{account_activation_link}" style="background: #555555;color: #fff;padding: 12px 30px;text-decoration: none;border-radius: 3px;letter-spacing: 0.3px;">Activate your Account</a></div>
+		<div style="padding: 10px 0 50px 0;text-align: center;"><a href="{account_activation_link}" style="background: #555555;color: #fff;padding: 12px 30px;text-decoration: none;border-radius: 3px;letter-spacing: 0.3px;">Confirm your email address change</a></div>
 
 		<div style="padding: 15px;background: #eee;border-radius: 3px;text-align: center;">Need help? <a href="mailto:{admin_email}" style="color: #3ba1da;text-decoration: none;">contact  us</a> today.</div>
 
