@@ -589,6 +589,25 @@ add_action( 'um_account_pre_update_profile', 'um_disable_native_email_notificati
 
 
 /**
+ * Add data in general tab
+ *
+ * @param $args
+ */
+function um_after_account_general( $args ) {
+	$user_id = get_current_user_id();
+
+	$um_changed_user_email_action = get_user_meta( um_user( 'ID' ), 'um_changed_user_email_action', true );
+	if ( 'checkmail' === $um_changed_user_email_action ) {
+		echo '<p><i class="um-icon-alert-circled" aria-label="E-mail Address"></i> ' . esc_html__( 'You changed your email. Please check your new mailbox and confirm your email address.', 'ultimate-member' ) . '</p>';
+	} elseif ( 'pending' === $um_changed_user_email_action ) {
+		echo '<p><i class="um-icon-alert-circled" aria-label="E-mail Address"></i> ' . esc_html__( 'You changed your email. The site administrator will check your new email and confirm or reject your it.', 'ultimate-member' ) . '</p>';
+	}
+}
+add_action( 'um_after_account_general', 'um_after_account_general' );
+
+
+
+/**
  * Add export and erase user's data in privacy tab
  *
  * @param $args
