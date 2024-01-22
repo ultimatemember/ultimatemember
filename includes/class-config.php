@@ -374,16 +374,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 						'recipient'   => 'user',
 					),
 					'pending_change_email'   => array(
-						'key'         => 'pending_change_email',
-						'title'       => __( 'Verify changing account email', 'ultimate-member' ),
-						'subject'     => 'Please confirm the change of your email address',
-						'body'        => 'Hi {display_name},<br /><br />' .
-										'You have changed your email in your account settings. The site administrator will check your new email and confirm or reject it.<br /><br />' .
-										'If you have any problems, please contact us at {admin_email}<br /><br />' .
-										'Thanks, <br />' .
-										'{site_name}',
-						'description' => __( 'Whether to send the user an email when their account email address has changed and will be verified by the administrator', 'ultimate-member' ),
-						'recipient'   => 'user',
+						'key'            => 'pending_change_email',
+						'title'          => __( 'Verify changing account email', 'ultimate-member' ),
+						'subject'        => '[{site_name}] User change account email',
+						'body'           => '{display_name} has just changed their email on {site_name}. To view their profile click here:<br /><br />' .
+											'{user_profile_link}<br /><br />',
+						'description'    => __( 'Whether to send the user an email when their account email address has changed and will be verified by the administrator', 'ultimate-member' ),
+						'recipient'      => 'admin',
+						'default_active' => true,
 					),
 					'pending_email'          => array(
 						'key'         => 'pending_email',

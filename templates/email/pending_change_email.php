@@ -21,9 +21,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<div style="padding: 0 30px 30px 30px;border-bottom: 3px solid #eeeeee;">
 
-		<div style="padding: 30px 0;font-size: 24px;text-align: center;line-height: 40px;">You have changed your email in your account settings. The site administrator will check your new email and confirm or reject it.</div>
+		<div style="padding: 30px 0;font-size: 24px;text-align: center;line-height: 40px;">{display_name} has just changed an account email on {site_name}.</span></div>
 
-		<div style="padding: 15px;background: #eee;border-radius: 3px;text-align: center;">Need help? <a href="mailto:{admin_email}" style="color: #3ba1da;text-decoration: none;">contact  us</a> today.</div>
+		<div style="padding: 10px 0 50px 0;text-align: center;">To view their profile click here: <a href="{user_profile_link}" style="color: #3ba1da;text-decoration: none;">{user_profile_link}</a></div>
 
 	</div>
 
