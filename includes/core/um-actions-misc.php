@@ -115,6 +115,9 @@ function um_add_update_notice( $args ) {
 			case 'account_active':
 				$success = __( 'Your account is now active! You can login.', 'ultimate-member' );
 				break;
+			case 'account_confirmed':
+				$success = __( 'Your account changes have been saved.', 'ultimate-member' );
+				break;
 		}
 	}
 
