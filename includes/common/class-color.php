@@ -69,6 +69,22 @@ class Color {
 		return $u;
 	}
 
+	public function hex_inverse_bw( $color ) {
+		$t = $color;
+
+		if (is_string($color)) {
+			$t = $this->hex2rgb($color);
+		}
+
+		$r = $t[0];
+		$g = $t[1];
+		$b = $t[2];
+
+		$luminance = (0.2126*$r + 0.7152*$g + 0.0722*$b);
+
+		return $luminance < 140 ? "#ffffff" : "#000000";
+	}
+
 	/**
 	 * tone
 	 *

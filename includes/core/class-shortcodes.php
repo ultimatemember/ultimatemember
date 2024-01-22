@@ -174,6 +174,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			wp_enqueue_script( 'um_new_design' );
 
 			$start_color = UM()->options()->get( 'button_backcolor' );
+			$start_fg_color = UM()->common()::color()->hex_inverse_bw( $start_color );
 			ob_start();
 			?>
 			<div class="um">
@@ -182,19 +183,21 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 					$t_index = 0.1;
 					while ( $t_index < 0.9 ) {
 						$tint = UM()->common()::color()->tint( $start_color, $t_index );
+						$fg_color = UM()->common()::color()->hex_inverse_bw( $tint );
 						?>
-						<div style="width: 50px; height: 50px; background-color: <?php echo esc_attr( $tint ); ?>"><?php echo $t_index; ?></div>
+						<div style="width: 50px; height: 50px; background-color: <?php echo esc_attr( $tint );?>; color: <?php echo esc_attr( $fg_color ); ?>"><?php echo $t_index; ?></div>
 						<?php
 						$t_index += 0.1;
 					}
 					?>
-					<div style="width: 50px; height: 50px; background-color: <?php echo esc_attr( $start_color ); ?>">1</div>
+					<div style="width: 50px; height: 50px; background-color: <?php echo esc_attr( $start_color ); ?>; color: <?php echo esc_attr( $start_fg_color ); ?>">1</div>
 					<?php
 					$sh_index = 0.9;
 					while ( $sh_index > 0.1 ) {
 						$shade = UM()->common()::color()->shade( $start_color, $sh_index );
+						$fg_color = UM()->common()::color()->hex_inverse_bw( $shade );
 						?>
-						<div style="width: 50px; height: 50px; background-color: <?php echo esc_attr( $shade ); ?>"><?php echo $sh_index; ?></div>
+						<div style="width: 50px; height: 50px; background-color: <?php echo esc_attr( $shade );?>; color: <?php echo esc_attr( $fg_color ); ?>"><?php echo $sh_index; ?></div>
 						<?php
 						$sh_index -= 0.1;
 					}
