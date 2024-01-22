@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<div style="padding: 0 30px 30px 30px;border-bottom: 3px solid #eeeeee;">
 
-		<div style="padding: 30px 0;font-size: 24px;text-align: center;line-height: 40px;">{display_name} has just applied for membership to {site_name} and is waiting to be reviewed.</span></div>
+		<div style="padding: 30px 0;font-size: 24px;text-align: center;line-height: 40px;">{display_name} has just applied for membership to {site_name} and is waiting to be reviewed.</div>
 
 		<div style="padding: 10px 0 50px 0;text-align: center;">To review this member please click the following link: <a href="{user_profile_link}" style="color: #3ba1da;text-decoration: none;">{user_profile_link}</a></div>
 
