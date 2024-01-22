@@ -1051,6 +1051,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'secure_allowed_redirect_hosts'        => array(
 						'sanitize' => 'textarea',
 					),
+					'button_backcolor'                      => array(
+						'sanitize' => 'color',
+					),
+					'button_backcolor_hover'                => array(
+						'sanitize' => 'color',
+					),
+					'button_forecolor'                      => array(
+						'sanitize' => 'color',
+					),
 				)
 			);
 
@@ -2030,6 +2039,24 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'label'          => __( 'Design scheme', 'ultimate-member' ),
 												'checkbox_label' => __( 'Enable new UI (for developers only)', 'ultimate-member' ),
 												'description'    => __( 'Check this box if you would like to enable new UI.', 'ultimate-member' ),
+											),
+											array(
+												'id'          => 'button_backcolor',
+												'type'        => 'color',
+												'label'       => __( 'Button Background Color', 'ultimate-member' ),
+												'conditional' => array( 'enable_new_ui', '=', '1' ),
+											),
+											array(
+												'id'          => 'button_backcolor_hover',
+												'type'        => 'color',
+												'label'       => __( 'Button Background Hover Color', 'ultimate-member' ),
+												'conditional' => array( 'enable_new_ui', '=', '1' ),
+											),
+											array(
+												'id'          => 'button_forecolor',
+												'type'        => 'color',
+												'label'       => __( 'Button Text Color', 'ultimate-member' ),
+												'conditional' => array( 'enable_new_ui', '=', '1' ),
 											),
 											array(
 												'id'             => 'enable_new_form_builder',

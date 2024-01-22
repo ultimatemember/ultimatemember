@@ -2,6 +2,40 @@
 @import "../../css/mixins"
 @import "../../css/colors"
 
+.#{$prefix}dropdown-wrapper
+  min-width: $icon-size
+  min-height: $icon-size
+  .#{$prefix}dropdown-toggle
+    position: relative
+    +border-box
+    cursor: pointer
+    &:before
+      content: ""
+      position: absolute
+      top: 0
+      left: 0
+      mask-size: contain
+      -webkit-mask-size: contain
+      mask-position: center
+      -webkit-mask-position: center
+      mask-repeat: no-repeat
+      -webkit-mask-repeat: no-repeat
+      mask-image: url(../../icons/dots-vertical.svg)
+      -webkit-mask-image: url(../../icons/dots-vertical.svg)
+      width: $icon-size
+      height: $icon-size
+      background-color: $gray-400
+      text-indent: 500%
+      white-space: nowrap
+      overflow: hidden
+    &:hover
+      &:before
+        background-color: $gray-600
+    &.#{$prefix}dropdown-shown,
+    &:focus
+      &:before
+        background-color: $gray-700
+
 .#{$prefix}dropdown
   font-size: 16px
   margin: 0
@@ -10,11 +44,10 @@
   background: #fff
   z-index: 10
   display: none
-  border: 1px solid $border
-  box-shadow: 0 7px 14px 0 $shadow1, 0 3px 6px 0 $shadow2
-  -webkit-box-shadow: 0 7px 14px 0 $shadow1, 0 3px 6px 0 $shadow2
+  border: 1px solid $gray-200
+  +box-shadow-lg
   +border-box
-  +border-radius(5px, 5px, 5px, 5px)
+  +border-radius($block-border-radius, $block-border-radius, $block-border-radius, $block-border-radius)
   ul
     margin: 0
     padding: 0

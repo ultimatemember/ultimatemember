@@ -55,3 +55,58 @@
   outline: 0;
   padding: 0;
   vertical-align: baseline; }
+
+.um {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap; }
+  .um .um-button {
+    border-radius: 8px;
+    text-align: center;
+    font-size: inherit;
+    font-weight: 600;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+    background-color: var(--um-blocks-button-bg-color, #fff);
+    color: var(--um-blocks-button-fg-color, var(--um-gray-700, #344054));
+    border: 1px solid var(--um-blocks-button-bg-color, var(--um-gray-300, #d0d5dd));
+    cursor: pointer; }
+    .um .um-button:hover {
+      color: var(--um-blocks-button-fg-color, var(--um-gray-800, #1d2939));
+      background-color: var(--um-blocks-button-bg-hover-color, var(--um-gray-50, #f9fafb)); }
+    .um .um-button:focus {
+      background-color: var(--um-blocks-button-bg-color, #fff);
+      color: var(--um-blocks-button-fg-color, var(--um-gray-700, #344054));
+      box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 0 0 4px #f2f4f7; }
+    .um .um-button:disabled {
+      cursor: default;
+      color: var(--um-blocks-button-fg-color, var(--um-gray-300, #d0d5dd));
+      background-color: var(--um-blocks-button-bg-disabled-color, var(--um-blocks-button-bg-color, #fff));
+      border: 1px solid var(--um-blocks-button-bg-disabled-color, var(--um-gray-200, #eaecf0)); }
+    .um .um-button.um-button-size-m {
+      padding: 10px 16px;
+      font-size: 14px;
+      line-height: 20px; }
+    .um .um-button.um-button-size-l {
+      padding: 10px 18px;
+      font-size: 16px;
+      line-height: 24px; }
+    .um .um-button.um-button-size-xl {
+      padding: 12px 20px;
+      font-size: 16px;
+      line-height: 24px; }
+    .um .um-button.um-button-primary {
+      background-color: var(--um-blocks-button-primary-bg-color, #7f56d9);
+      border: 1px solid var(--um-blocks-button-primary-bg-color, #7f56d9);
+      color: var(--um-blocks-button-primary-fg-color, #fff); }
+      .um .um-button.um-button-primary:hover {
+        background-color: var(--um-blocks-button-primary-bg-hover-color, #6941c6);
+        border: 1px solid var(--um-blocks-button-primary-bg-hover-color, #6941c6);
+        color: var(--um-blocks-button-primary-fg-color, #fff); }
+      .um .um-button.um-button-primary:focus {
+        background-color: var(--um-blocks-button-primary-bg-color, #7f56d9);
+        box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 0 0 4px #f4ebff; }
+      .um .um-button.um-button-primary:disabled {
+        background-color: var(--um-blocks-button-primary-bg-disabled-color, #e9d7fe);
+        border: 1px solid var(--um-blocks-button-primary-bg-disabled-color, #e9d7fe); }

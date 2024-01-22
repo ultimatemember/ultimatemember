@@ -171,9 +171,39 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 		public function design_scheme( $args ) {
 			wp_enqueue_style( 'um_new_design' );
+			wp_enqueue_script( 'um_new_design' );
 			ob_start();
 			?>
-			<span class="um-ajax-spinner"></span>
+			<div class="um">
+				<span class="um-ajax-spinner"></span>
+
+				<?php
+				$items = array(
+					'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . __( 'Change photo', 'ultimate-member' ) . '</a>',
+					'<a href="javascript:void(0);" class="um-reset-profile-photo" data-user_id="' . esc_attr( um_profile_id() ) . '" data-default_src="' . esc_url( um_get_default_avatar_uri() ) . '">' . __( 'Remove photo', 'ultimate-member' ) . '</a>',
+				);
+				UM()->frontend()::layouts()::dropdown_menu( 'um-dropdown-toggle-test', 'click', $items );
+				?>
+				<form>
+					<?php
+					UM()->frontend()::layouts()::button( 'Cancel M', array( 'size' => 'm' ) );
+					UM()->frontend()::layouts()::button( 'Cancel L' );
+					UM()->frontend()::layouts()::button( 'Cancel XL', array( 'size' => 'xl' ) );
+
+					UM()->frontend()::layouts()::button( 'Cancel M', array( 'size' => 'm', 'disabled' => true ) );
+					UM()->frontend()::layouts()::button( 'Cancel L', array( 'disabled' => true ) );
+					UM()->frontend()::layouts()::button( 'Cancel XL', array( 'size' => 'xl', 'disabled' => true ) );
+
+					UM()->frontend()::layouts()::button( 'Submit M', array( 'type' => 'submit', 'primary' => true, 'size' => 'm' ) );
+					UM()->frontend()::layouts()::button( 'Submit L', array( 'type' => 'submit', 'primary' => true ) );
+					UM()->frontend()::layouts()::button( 'Submit XL', array( 'type' => 'submit', 'primary' => true, 'size' => 'xl' ) );
+
+					UM()->frontend()::layouts()::button( 'Submit M', array( 'type' => 'submit', 'primary' => true, 'size' => 'm', 'disabled' => true ) );
+					UM()->frontend()::layouts()::button( 'Submit L', array( 'type' => 'submit', 'primary' => true, 'disabled' => true ) );
+					UM()->frontend()::layouts()::button( 'Submit XL', array( 'type' => 'submit', 'primary' => true, 'size' => 'xl', 'disabled' => true ) );
+					?>
+				</form>
+			</div>
 			<?php
 			return ob_get_clean();
 		}

@@ -604,6 +604,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'secure_notify_admins_banned_accounts__interval' => 'instant',
 				'secure_allowed_redirect_hosts'         => '',
 				'delete_comments'                       => 0,
+				'button_backcolor'                      => '#7f56d9',
+				'button_backcolor_hover'                => '#6941c6',
+				'button_forecolor'                      => '#fff',
 			);
 
 			add_filter( 'um_get_tabs_from_config', '__return_true' );

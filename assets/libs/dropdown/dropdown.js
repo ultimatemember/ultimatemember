@@ -136,20 +136,20 @@
 				}
 
 				/* border */
-				switch ( place ) {
-					case 'bottom-right':
-						css.borderRadius = '0 5px 5px 5px';
-						break;
-					case 'bottom-left':
-						css.borderRadius = '5px 0 5px 5px';
-						break;
-					case 'top-right':
-						css.borderRadius = '5px 5px 5px 0';
-						break;
-					case 'top-left':
-						css.borderRadius = '5px 5px 0 5px';
-						break;
-				}
+				// switch ( place ) {
+				// 	case 'bottom-right':
+				// 		css.borderRadius = '0 5px 5px 5px';
+				// 		break;
+				// 	case 'bottom-left':
+				// 		css.borderRadius = '5px 0 5px 5px';
+				// 		break;
+				// 	case 'top-right':
+				// 		css.borderRadius = '5px 5px 5px 0';
+				// 		break;
+				// 	case 'top-left':
+				// 		css.borderRadius = '5px 5px 0 5px';
+				// 		break;
+				// }
 
 				return css;
 			},

@@ -37,6 +37,7 @@ final class Enqueue extends \um\common\Enqueue {
 	 */
 	public function scripts_enqueue_priority() {
 		add_action( 'wp_enqueue_scripts', array( &$this, 'wp_enqueue_scripts' ), $this->get_priority() );
+		add_action( 'enqueue_block_assets', array( &$this, 'add_to_global_styles' ) );
 	}
 
 	/**
@@ -73,11 +74,24 @@ final class Enqueue extends \um\common\Enqueue {
 		$suffix   = self::get_suffix();
 		$libs_url = self::get_url( 'libs' );
 		$js_url   = self::get_url( 'js' );
+		$css_url  = self::get_url( 'css' );
 
 		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-			$css_url = self::get_url( 'css' );
-			wp_register_style( 'um_new_design', $css_url . 'new-design' . $suffix . '.css', array(), UM_VERSION );
-			wp_register_style( 'um_new_profile', $css_url . 'new-profile' . $suffix . '.css', array(), UM_VERSION );
+			// New one.
+			wp_register_script( 'um_dropdown', $libs_url . 'dropdown/dropdown' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
+			wp_register_style( 'um_dropdown', $libs_url . 'dropdown/dropdown' . $suffix . '.css', array(), UM_VERSION );
+
+			//wp_register_style( 'um_new_profile', $css_url . 'new-profile' . $suffix . '.css', array(), UM_VERSION );
+
+			// Cropper.js
+			wp_register_script( 'um_crop', $libs_url . 'cropper/cropper' . $suffix . '.js', array( 'jquery' ), '1.6.1', true );
+			wp_register_style( 'um_crop', $libs_url . 'cropper/cropper' . $suffix . '.css', array(), '1.6.1' );
+
+			wp_register_script( 'um_frontend_common', $js_url . 'common-frontend' . $suffix . '.js', array( 'um_common', 'um_crop', 'um_dropdown' ), UM_VERSION, true );
+
+			wp_register_script( 'um_new_design', $js_url . 'new-design' . $suffix . '.js', array( 'um_frontend_common' ), UM_VERSION, true );
+			wp_register_style( 'um_new_design', $css_url . 'new-design' . $suffix . '.css', array( 'um_dropdown', 'um_crop' ), UM_VERSION );
+
 		} else {
 			// Cropper.js
 			wp_register_script( 'um_crop', $libs_url . 'cropper/cropper' . $suffix . '.js', array( 'jquery' ), '1.6.1', true );
@@ -247,6 +261,65 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_enqueue_style( 'um_default_css' );
 
 		$this->old_css_settings();
+	}
+
+	/**
+	 * Adds our custom button colors to the global stylesheet.
+	 *
+	 * @since 2.8.3
+	 */
+	public function add_to_global_styles() {
+		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			$styles = apply_filters(
+				'um_inline_styles_variables',
+				array(
+					'--um-blocks-error-color:#d92d20;',
+					'--um-gray-25:#fcfcfd;',
+					'--um-gray-50:#f9fafb;',
+					'--um-gray-100:#f2f4f7;',
+					'--um-gray-200:#eaecf0;',
+					'--um-gray-300:#d0d5dd;',
+					'--um-gray-400:#98a2b3;',
+					'--um-gray-500:#667085;',
+					'--um-gray-600:#475467;',
+					'--um-gray-700:#344054;',
+					'--um-gray-800:#1d2939;',
+					'--um-gray-900:#101828;',
+				)
+			);
+			$rules  = array();
+
+			$backcolor = UM()->options()->get( 'button_backcolor' );
+			if ( empty( $backcolor ) ) {
+				$backcolor = '#7f56d9';
+			}
+			$styles[] = "--um-blocks-button-primary-bg-color:{$backcolor};";
+
+			$backcolor_hover = UM()->options()->get( 'button_backcolor_hover' );
+			if ( empty( $backcolor_hover ) ) {
+				$backcolor_hover = '#6941c6';
+			}
+			$styles[] = "--um-blocks-button-primary-bg-hover-color:{$backcolor_hover};";
+
+			$forecolor = UM()->options()->get( 'button_forecolor' );
+			if ( empty( $forecolor ) ) {
+				$forecolor = '#fff';
+			}
+			$styles[] = "--um-blocks-button-primary-fg-color:{$forecolor};";
+
+//			$rules[] = '.um .um-form .um-form-buttons-section input, .um .um-form .um-form-buttons-section button{color: var(--um-blocks-button-fg-color);background-color: var(--um-blocks-button-bg-color);}';
+
+			if ( empty( $styles ) ) {
+				return;
+			}
+			$inline_style = 'body{' . implode( ' ', $styles ) . '}';
+			if ( ! empty( $rules ) ) {
+				$inline_style .= implode( ' ', $rules );
+			}
+
+			$stylesheet = 'wp-block-library';
+			wp_add_inline_style( $stylesheet, $inline_style );
+		}
 	}
 
 	/**
