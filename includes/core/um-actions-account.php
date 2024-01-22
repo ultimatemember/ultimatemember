@@ -600,7 +600,7 @@ function um_after_account_general( $args ) {
 	if ( 'checkmail' === $um_changed_user_email_action ) {
 		echo '<p><i class="um-icon-alert-circled" aria-label="E-mail Address"></i> ' . esc_html__( 'You changed your email. Please check your new mailbox and confirm your email address.', 'ultimate-member' ) . '</p>';
 	} elseif ( 'pending' === $um_changed_user_email_action ) {
-		echo '<p><i class="um-icon-alert-circled" aria-label="E-mail Address"></i> ' . esc_html__( 'You changed your email. The site administrator will check your new email and confirm or reject your it.', 'ultimate-member' ) . '</p>';
+		echo '<p><i class="um-icon-alert-circled" aria-label="E-mail Address"></i> ' . esc_html__( 'You changed your email. The site administrator will check your new email and confirm or reject it.', 'ultimate-member' ) . '</p>';
 	}
 }
 add_action( 'um_after_account_general', 'um_after_account_general' );
