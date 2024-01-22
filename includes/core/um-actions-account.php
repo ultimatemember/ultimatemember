@@ -396,7 +396,7 @@ function um_submit_account_details( $args ) {
 	 */
 	do_action( 'um_account_pre_update_profile', $changes, $user_id );
 
-	if ( isset( $changes['first_name'] ) || isset( $changes['last_name'] ) || isset( $changes['nickname'] ) || isset( $changes['user_email'] )  ) {
+	if ( isset( $changes['first_name'] ) || isset( $changes['last_name'] ) || isset( $changes['nickname'] ) || isset( $changes['user_email'] ) ) {
 		$user = get_userdata( $user_id );
 		if ( ! empty( $user ) && ! is_wp_error( $user ) ) {
 			UM()->user()->previous_data['display_name'] = $user->display_name;
@@ -464,7 +464,7 @@ function um_submit_account_details( $args ) {
 
 	$url = '';
 	if ( um_is_core_page( 'account' ) ) {
-		if ( isset( UM()->user()->previous_data['user_email'] ) && UM()->user()->previous_data['user_email'] !== $changes['user_email'] ) {
+		if ( isset( UM()->user()->previous_data['user_email'] ) && UM()->user()->previous_data['user_email'] !== $changes['user_email'] && ! empty( UM()->options()->get( 'flush_login_sessions' ) ) ) {
 			$url = um_get_core_page( 'login' );
 			$url = add_query_arg( 'updated', 'account', $url );
 			wp_destroy_current_session();

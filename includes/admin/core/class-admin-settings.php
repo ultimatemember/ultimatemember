@@ -1043,6 +1043,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'tooltip' => __( 'Whether to allow users changing their email in account page.', 'ultimate-member' ),
 					),
 					array(
+						'id'          => 'flush_login_sessions',
+						'type'        => 'checkbox',
+						'label'       => __( 'Flush login sessions on other devices', 'ultimate-member' ),
+						'tooltip'     => __( 'Forced logout from the site after changing email.', 'ultimate-member' ),
+						'conditional' => array( 'account_email', '=', '1' ),
+					),
+					array(
 						'id'      => 'account_general_password',
 						'type'    => 'checkbox',
 						'label'   => __( 'Password is required?', 'ultimate-member' ),
