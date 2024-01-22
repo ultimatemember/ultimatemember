@@ -360,8 +360,8 @@ if ( ! class_exists( 'um\Config' ) ) {
 						'description' => __( 'Whether to send the user an email when his account needs e-mail activation', 'ultimate-member' ),
 						'recipient'   => 'user',
 					),
-					'cnange_checkmail_email' => array(
-						'key'         => 'cnange_checkmail_email',
+					'change_checkmail_email' => array(
+						'key'         => 'change_checkmail_email',
 						'title'       => __( 'Changed account activation email', 'ultimate-member' ),
 						'subject'     => 'Please confirm the change of your email address',
 						'body'        => 'Hi {display_name},<br /><br />' .

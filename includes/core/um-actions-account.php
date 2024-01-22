@@ -570,7 +570,7 @@ function um_account_updated_notification( $user_id, $changed ) {
 	UM()->mail()->send( um_user( 'user_email' ), 'changedaccount_email' );
 	if ( 'checkmail' === $um_changed_user_email_action ) {
 		UM()->user()->email_update_pending();
-		UM()->mail()->send( um_user( 'user_email' ), 'cnange_checkmail_email' );
+		UM()->mail()->send( um_user( 'user_email' ), 'change_checkmail_email' );
 	}
 }
 add_action( 'um_after_user_account_updated', 'um_account_updated_notification', 20, 2 );
