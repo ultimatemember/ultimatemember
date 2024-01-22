@@ -136,7 +136,7 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 					}
 					um_reset_user();
 				} else {
-					$redirect = um_get_core_page( 'account', 'account_confirmed' );
+					$redirect  = um_get_core_page( 'account', 'account_confirmed' );
 					$new_email = get_user_meta( $user_id, 'um_changed_user_email', true );
 
 					$args = array(
