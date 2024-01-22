@@ -135,7 +135,7 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 						$redirect = um_user( 'password_reset_link' );
 					}
 					um_reset_user();
-				} else {
+				} elseif ( 'confirm_via_email' === $act ) {
 					$redirect  = um_get_core_page( 'account', 'account_confirmed' );
 					$new_email = get_user_meta( $user_id, 'um_changed_user_email', true );
 
@@ -147,6 +147,12 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 
 					delete_user_meta( $user_id, 'um_changed_user_email' );
 					delete_user_meta( $user_id, 'um_changed_user_email_action' );
+
+					if ( ! empty( UM()->options()->get( 'flush_login_sessions' ) ) ) {
+						wp_destroy_current_session();
+						wp_logout();
+						session_unset();
+					}
 				}
 
 				$user_role      = UM()->roles()->get_priority_user_role( $user_id );
