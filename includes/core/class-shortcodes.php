@@ -172,10 +172,40 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		public function design_scheme( $args ) {
 			wp_enqueue_style( 'um_new_design' );
 			wp_enqueue_script( 'um_new_design' );
+
+			$start_color = UM()->options()->get( 'button_backcolor' );
 			ob_start();
 			?>
 			<div class="um">
-				<span class="um-ajax-spinner"></span>
+				<div style="display:flex;justify-content: flex-start;align-items:baseline; flex-wrap: wrap;margin-bottom:20px;">
+					<?php
+					$t_index = 0.1;
+					while ( $t_index < 0.9 ) {
+						$tint = UM()->common()::color()->tint( $start_color, $t_index );
+						?>
+						<div style="width: 50px; height: 50px; background-color: <?php echo esc_attr( $tint ); ?>"><?php echo $t_index; ?></div>
+						<?php
+						$t_index += 0.1;
+					}
+					?>
+					<div style="width: 50px; height: 50px; background-color: <?php echo esc_attr( $start_color ); ?>">1</div>
+					<?php
+					$sh_index = 0.9;
+					while ( $sh_index > 0.1 ) {
+						$shade = UM()->common()::color()->shade( $start_color, $sh_index );
+						?>
+						<div style="width: 50px; height: 50px; background-color: <?php echo esc_attr( $shade ); ?>"><?php echo $sh_index; ?></div>
+						<?php
+						$sh_index -= 0.1;
+					}
+					?>
+				</div>
+				<span class="um-ajax-spinner-svg">
+					<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+					<path d="M30 16C30 17.8385 29.6379 19.659 28.9343 21.3576C28.2308 23.0561 27.1995 24.5995 25.8995 25.8995C24.5995 27.1995 23.0561 28.2307 21.3576 28.9343C19.659 29.6379 17.8385 30 16 30C14.1615 30 12.341 29.6379 10.6424 28.9343C8.94387 28.2307 7.40052 27.1995 6.1005 25.8995C4.80048 24.5995 3.76925 23.0561 3.06569 21.3576C2.36212 19.659 2 17.8385 2 16C2 14.1615 2.36212 12.341 3.06569 10.6424C3.76926 8.94387 4.80049 7.40052 6.10051 6.1005C7.40053 4.80048 8.94388 3.76925 10.6424 3.06568C12.341 2.36212 14.1615 2 16 2C17.8385 2 19.659 2.36212 21.3576 3.06569C23.0561 3.76926 24.5995 4.80049 25.8995 6.10051C27.1995 7.40053 28.2308 8.94388 28.9343 10.6424C29.6379 12.341 30 14.1615 30 16L30 16Z" stroke="#F2F4F7" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+					<path d="M16 2C17.8385 2 19.659 2.36212 21.3576 3.06569C23.0561 3.76925 24.5995 4.80049 25.8995 6.10051C27.1995 7.40053 28.2308 8.94388 28.9343 10.6424C29.6379 12.341 30 14.1615 30 16" stroke="#7F56D9" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</span>
 
 				<?php
 				$items = array(

@@ -73,5 +73,17 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			}
 			return UM()->classes['um\common\site_health'];
 		}
+
+		/**
+		 * @since 2.8.3
+		 *
+		 * @return Color
+		 */
+		public static function color() {
+			if ( empty( UM()->classes['um\common\color'] ) ) {
+				UM()->classes['um\common\color'] = new Color();
+			}
+			return UM()->classes['um\common\color'];
+		}
 	}
 }
