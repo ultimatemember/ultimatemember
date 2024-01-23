@@ -168,9 +168,8 @@ function um_action_request_process() {
 			delete_user_meta( $uid, 'um_changed_user_email_action' );
 
 			if ( ! empty( UM()->options()->get( 'flush_login_sessions' ) ) ) {
-				wp_destroy_current_session();
-				wp_logout();
-				session_unset();
+				$sessions = WP_Session_Tokens::get_instance( $uid );
+				$sessions->destroy_all();
 			}
 
 			exit( wp_redirect( UM()->permalinks()->get_current_url( true ) ) );

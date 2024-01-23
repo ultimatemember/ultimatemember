@@ -149,7 +149,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 				case 'um_approve_membership':
 				case 'um_reenable':
-
 					add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ), 10, 1 );
 					add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ), 10, 1 );
 
@@ -161,7 +160,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 					break;
 
 				case 'um_resend_activation':
-
 					add_filter( 'um_template_tags_patterns_hook', array( UM()->user(), 'add_activation_placeholder' ), 10, 1 );
 					add_filter( 'um_template_tags_replaces_hook', array( UM()->user(), 'add_activation_replace_placeholder' ), 10, 1 );
 
@@ -174,9 +172,30 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 				case 'um_delete':
 					if ( is_admin() ) {
-						wp_die( __( 'This action is not allowed in backend.', 'ultimate-member' ) );
+						wp_die( esc_html__( 'This action is not allowed in backend.', 'ultimate-member' ) );
 					}
 					UM()->user()->delete();
+					break;
+				case 'um_approve_new_email':
+					$new_email = get_user_meta( UM()->user()->id, 'um_changed_user_email', true );
+
+					$args = array(
+						'ID'         => UM()->user()->id,
+						'user_email' => sanitize_email( $new_email ),
+					);
+					wp_update_user( $args );
+
+					delete_user_meta( UM()->user()->id, 'um_changed_user_email' );
+					delete_user_meta( UM()->user()->id, 'um_changed_user_email_action' );
+
+					if ( ! empty( UM()->options()->get( 'flush_login_sessions' ) ) ) {
+						$sessions = \WP_Session_Tokens::get_instance( UM()->user()->id );
+						$sessions->destroy_all();
+					}
+					break;
+				case 'um_reject_new_email':
+					delete_user_meta( UM()->user()->id, 'um_changed_user_email' );
+					delete_user_meta( UM()->user()->id, 'um_changed_user_email_action' );
 					break;
 			}
 		}
@@ -236,30 +255,39 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			 * }
 			 * ?>
 			 */
-			$actions = apply_filters( 'um_admin_bulk_user_actions_hook', array(
-				'um_approve_membership' => array(
-					'label' => __( 'Approve Membership', 'ultimate-member' )
-				),
-				'um_reject_membership'  => array(
-					'label' => __( 'Reject Membership', 'ultimate-member' )
-				),
-				'um_put_as_pending'     => array(
-					'label' => __( 'Put as Pending Review', 'ultimate-member' )
-				),
-				'um_resend_activation'  => array(
-					'label' => __( 'Resend Activation E-mail', 'ultimate-member' )
-				),
-				'um_deactivate'         => array(
-					'label' => __( 'Deactivate', 'ultimate-member' )
-				),
-				'um_reenable'           => array(
-					'label' => __( 'Reactivate', 'ultimate-member' )
+			$actions = apply_filters(
+				'um_admin_bulk_user_actions_hook',
+				array(
+					'um_approve_membership' => array(
+						'label' => __( 'Approve Membership', 'ultimate-member' ),
+					),
+					'um_reject_membership'  => array(
+						'label' => __( 'Reject Membership', 'ultimate-member' ),
+					),
+					'um_put_as_pending'     => array(
+						'label' => __( 'Put as Pending Review', 'ultimate-member' ),
+					),
+					'um_resend_activation'  => array(
+						'label' => __( 'Resend Activation E-mail', 'ultimate-member' ),
+					),
+					'um_deactivate'         => array(
+						'label' => __( 'Deactivate', 'ultimate-member' ),
+					),
+					'um_reenable'           => array(
+						'label' => __( 'Reactivate', 'ultimate-member' ),
+					),
+					'um_approve_new_email'  => array(
+						'label' => __( 'Approve new email', 'ultimate-member' ),
+					),
+					'um_reject_new_email'   => array(
+						'label' => __( 'Reject new email', 'ultimate-member' ),
+					),
 				)
-			) );
+			);
 
 			$output = '';
 			foreach ( $actions as $id => $action_data ) {
-				$output .= '<option value="' . $id . '" '. disabled( isset( $arr['disabled'] ), true, false ) . '>' . $action_data['label'] . '</option>';
+				$output .= '<option value="' . esc_attr( $id ) . '" ' . disabled( isset( $arr['disabled'] ), true, false ) . '>' . $action_data['label'] . '</option>';
 			}
 			return $output;
 		}
