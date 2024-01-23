@@ -154,7 +154,8 @@
       padding: 0 24px 24px 24px;
       row-gap: 8px;
       color: var(--um-gray-900, #101828);
-      word-wrap: break-word; }
+      word-wrap: break-word;
+      word-break: break-word; }
     .um .um-box .um-box-footer {
       display: flex;
       flex-direction: row;

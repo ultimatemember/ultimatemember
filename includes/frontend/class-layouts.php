@@ -182,7 +182,7 @@ class Layouts {
 
 				<?php
 				if ( ! empty( $args['actions'] ) ) {
-					self::dropdown_menu( 'um-box-dropdown-toggle', 'click', $args['actions'] );
+					self::dropdown_menu( 'um-box-dropdown-toggle', 'click', array( 'items' => $args['actions'] ) );
 				}
 				?>
 			</div>
