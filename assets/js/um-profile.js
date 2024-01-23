@@ -19,6 +19,10 @@ jQuery(document).ready(function() {
 		return false;
 	});
 
+	jQuery( document.body ).on( 'click', '.um-profile-edit-a', function(e){
+		jQuery(this).addClass('active');
+	});
+
 	jQuery( document.body ).on( 'click', '.um-cover a.um-cover-add, .um-photo a', function(e){
 		e.preventDefault();
 	});
@@ -37,7 +41,7 @@ jQuery(document).ready(function() {
 		user_id = jQuery(this).attr('data-user_id');
 		metakey = 'profile_photo';
 
-		// UM.dropdown.hideAll();
+		UM.dropdown.hideAll();
 
 		jQuery.ajax({
 			url: wp.ajax.settings.url,
@@ -80,7 +84,7 @@ jQuery(document).ready(function() {
 			}
 		});
 
-		//UM.dropdown.hideAll();
+		UM.dropdown.hideAll();
 		return false;
 	});
 

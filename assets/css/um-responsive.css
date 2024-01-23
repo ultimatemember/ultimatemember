@@ -161,8 +161,7 @@ div.uimob340 .um-header.no-cover .um-profile-photo {
 	left: auto;
 }
 
-div.uimob340 .um-profile-photo a.um-profile-photo-img,
-div.uimob340 .um-profile-photo span.um-profile-photo-img {
+div.uimob340 .um-profile-photo a.um-profile-photo-img {
 	width: 100px !important;
 	height: 100px !important;
 	margin: 0 auto !important;
@@ -173,8 +172,7 @@ div.uimob340 .um-profile-photo span.um-profile-photo-img {
 	left: auto !important;
 }
 
-div.uimob340 .um-header.no-cover .um-profile-photo a.um-profile-photo-img,
-div.uimob340 .um-header.no-cover .um-profile-photo span.um-profile-photo-img {
+div.uimob340 .um-header.no-cover .um-profile-photo a.um-profile-photo-img {
 	width: 120px !important;
 	height: 120px !important;
 }
@@ -365,8 +363,7 @@ div.uimob500 .um-header.no-cover .um-profile-photo {
 	left: auto;
 }
 
-div.uimob500 .um-profile-photo a.um-profile-photo-img,
-div.uimob500 .um-profile-photo span.um-profile-photo-img {
+div.uimob500 .um-profile-photo a.um-profile-photo-img {
 	width: 100px !important;
 	height: 100px !important;
 	margin: 0 auto !important;
@@ -377,8 +374,7 @@ div.uimob500 .um-profile-photo span.um-profile-photo-img {
 	left: auto !important;
 }
 
-div.uimob500 .um-header.no-cover .um-profile-photo a.um-profile-photo-img,
-div.uimob500 .um-header.no-cover .um-profile-photo span.um-profile-photo-img {
+div.uimob500 .um-header.no-cover .um-profile-photo a.um-profile-photo-img {
 	width: 120px !important;
 	height: 120px !important;
 }
@@ -547,15 +543,13 @@ div.uimob800 .um-profile-photo {
 	width: 150px !important;
 }
 
-div.uimob800 .um-profile-photo a.um-profile-photo-img,
-div.uimob800 .um-profile-photo span.um-profile-photo-img {
+div.uimob800 .um-profile-photo a.um-profile-photo-img {
 	width: 140px !important;
 	height: 140px !important;
 	top: -70px !important;
 }
 
-div.uimob800 .um-header.no-cover .um-profile-photo a.um-profile-photo-img,
-div.uimob800 .um-header.no-cover .um-profile-photo span.um-profile-photo-img {
+div.uimob800 .um-header.no-cover .um-profile-photo a.um-profile-photo-img {
 	top: auto !important;
 }
 
@@ -580,8 +574,7 @@ div.uimob960 .um-profile-photo {
 	width: 200px !important;
 }
 
-div.uimob960 .um-profile-photo a.um-profile-photo-img,
-div.uimob960 .um-profile-photo span.um-profile-photo-img {
+div.uimob960 .um-profile-photo a.um-profile-photo-img {
 	width: 140px !important;
 	height: 140px !important;
 	top: -70px !important;

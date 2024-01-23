@@ -171,8 +171,7 @@
 	text-align: center !important;
 }
 
-.um-header.no-cover a.um-profile-photo-img,
-.um-header.no-cover span.um-profile-photo-img {
+.um-header.no-cover a.um-profile-photo-img {
 	position: relative !important;
 	top: auto !important;
 	left: auto !important;
@@ -199,8 +198,7 @@
 	box-sizing: border-box;
 }
 
-.um-profile-photo a.um-profile-photo-img,
-.um-profile-photo span.um-profile-photo-img {
+.um-profile-photo a.um-profile-photo-img {
 	float: left;
 	position: absolute;
 	background: #fff;
@@ -211,8 +209,7 @@
 	left: 0;
 }
 
-.um-profile-photo a.um-profile-photo-img img,
-.um-profile-photo span.um-profile-photo-img img {
+.um-profile-photo a.um-profile-photo-img img {
 	width: 100%;
 	height: auto;
 }

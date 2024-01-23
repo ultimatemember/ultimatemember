@@ -18,13 +18,11 @@ $meta_padding = ( $args['photosize'] + 60 ) . 'px';
 			max-width: <?php echo esc_attr( $args['area_max_width'] ); ?>;
 		}
 	<?php } ?>
-	.um-<?php echo esc_attr( $args['form_id'] ); ?>.um .um-profile-photo a.um-profile-photo-img,
-	.um-<?php echo esc_attr( $args['form_id'] ); ?>.um .um-profile-photo span.um-profile-photo-img {
+	.um-<?php echo esc_attr( $args['form_id'] ); ?>.um .um-profile-photo a.um-profile-photo-img {
 		width: <?php echo esc_attr( $args['photosize'] ); ?>px;
 		height: <?php echo esc_attr( $args['photosize'] ); ?>px;
 	}
-	.um-<?php echo esc_attr( $args['form_id'] ); ?>.um .um-profile-photo a.um-profile-photo-img,
-	.um-<?php echo esc_attr( $args['form_id'] ); ?>.um .um-profile-photo span.um-profile-photo-img {
+	.um-<?php echo esc_attr( $args['form_id'] ); ?>.um .um-profile-photo a.um-profile-photo-img {
 		top: -<?php echo esc_attr( $photosize_up ); ?>px;
 	}
 	<?php if ( is_rtl() ) { ?>
