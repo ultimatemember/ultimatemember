@@ -42,24 +42,35 @@
   margin: 0
   position: absolute
   height: auto
-  background: #fff
+  background: $um-white
   z-index: 10
   display: none
   border: 1px solid $gray-200
+  border-radius: $dropdown-border-radius
   +box-shadow-lg
   +border-box
-  +border-radius($block-border-radius, $block-border-radius, $block-border-radius, $block-border-radius)
   ul
     margin: 0
-    padding: 0
+    padding: 4px 0
+    border-bottom: 1px solid $gray-200
     li
       list-style-type: none
-      padding: 0
+      padding: 2px 6px
       margin: 0
       a
         display: block
-        padding: 8px 12px
-        line-height: 1
+        padding: 9px 10px
+        font-weight: $semi-bold-weight
+        font-size: $sm-size
+        line-height: $sm-line-height
+        color: $gray-700
+        text-decoration: none
+        &:hover
+          color: $gray-800
+        &:focus
+          color: $gray-700
+    &:last-child
+      border-bottom: none
 
 .#{$prefix}dropdown-arr
   position: absolute
