@@ -18,7 +18,14 @@ function um_admin_user_actions_hook( $actions, $user_id ) {
 
 	$can_edit_users = null !== $role && current_user_can( 'edit_users' ) && $role->has_cap( 'edit_users' );
 	if ( $can_edit_users ) {
-		$account_status = um_user( 'account_status' );
+		$account_status               = um_user( 'account_status' );
+		$um_changed_user_email_action = get_user_meta( $user_id, 'um_changed_user_email_action', true );
+		$um_changed_user_email        = get_user_meta( $user_id, 'um_changed_user_email', true );
+
+		if ( 'pending' === $um_changed_user_email_action && ! empty( $um_changed_user_email ) ) {
+			$actions['um_approve_new_email'] = array( 'label' => __( 'Approve new email', 'ultimate-member' ) );
+			$actions['um_reject_new_email']  = array( 'label' => __( 'Reject new email', 'ultimate-member' ) );
+		}
 
 		if ( 'awaiting_admin_review' === $account_status ) {
 			$actions['um_approve_membership'] = array( 'label' => __( 'Approve Membership', 'ultimate-member' ) );
