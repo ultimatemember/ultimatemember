@@ -213,13 +213,53 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 					?>
 				</form>
 				<h3>Dropdown</h3>
+				<div style="display: flex; justify-content: flex-start; flex-wrap: wrap; align-items: start; gap: 24px;">
 				<?php
 				$items = array(
 					'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . __( 'Change photo', 'ultimate-member' ) . '</a>',
 					'<a href="javascript:void(0);" class="um-reset-profile-photo" data-user_id="' . esc_attr( um_profile_id() ) . '" data-default_src="' . esc_url( um_get_default_avatar_uri() ) . '">' . __( 'Remove photo', 'ultimate-member' ) . '</a>',
 				);
-				UM()->frontend()::layouts()::dropdown_menu( 'um-dropdown-toggle-test', 'click', $items );
+				UM()->frontend()::layouts()::dropdown_menu( 'um-dropdown-toggle-test', 'click', array( 'items' => $items ) );
+
+				$items2 = array(
+					array(
+						'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . __( 'Change photo', 'ultimate-member' ) . '</a>',
+						'<a href="javascript:void(0);" class="um-reset-profile-photo" data-user_id="' . esc_attr( um_profile_id() ) . '" data-default_src="' . esc_url( um_get_default_avatar_uri() ) . '">' . __( 'Remove photo', 'ultimate-member' ) . '</a>',
+					),
+					array(
+						'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . __( 'Change photo', 'ultimate-member' ) . '</a>',
+						'<a href="javascript:void(0);" class="um-reset-profile-photo" data-user_id="' . esc_attr( um_profile_id() ) . '" data-default_src="' . esc_url( um_get_default_avatar_uri() ) . '">' . __( 'Remove photo', 'ultimate-member' ) . '</a>',
+					),
+					array(
+						'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . __( 'Change photo', 'ultimate-member' ) . '</a>',
+						'<a href="javascript:void(0);" class="um-reset-profile-photo" data-user_id="' . esc_attr( um_profile_id() ) . '" data-default_src="' . esc_url( um_get_default_avatar_uri() ) . '">' . __( 'Remove photo', 'ultimate-member' ) . '</a>',
+					),
+				);
+				UM()->frontend()::layouts()::dropdown_menu( 'um-dropdown-toggle-test2', 'click', array( 'items' => $items2 ) );
+
+				$items3 = array(
+					array(
+						'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . __( 'Change photo', 'ultimate-member' ) . '</a>',
+						'<a href="javascript:void(0);" class="um-reset-profile-photo" data-user_id="' . esc_attr( um_profile_id() ) . '" data-default_src="' . esc_url( um_get_default_avatar_uri() ) . '">' . __( 'Remove photo', 'ultimate-member' ) . '</a>',
+					),
+					array(
+						'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . __( 'Change photo', 'ultimate-member' ) . '</a>',
+						'<a href="javascript:void(0);" class="um-reset-profile-photo" data-user_id="' . esc_attr( um_profile_id() ) . '" data-default_src="' . esc_url( um_get_default_avatar_uri() ) . '">' . __( 'Remove photo', 'ultimate-member' ) . '</a>',
+					),
+					array(
+						'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . __( 'Change photo', 'ultimate-member' ) . '</a>',
+						'<a href="javascript:void(0);" class="um-reset-profile-photo" data-user_id="' . esc_attr( um_profile_id() ) . '" data-default_src="' . esc_url( um_get_default_avatar_uri() ) . '">' . __( 'Remove photo', 'ultimate-member' ) . '</a>',
+					),
+				);
+				UM()->frontend()::layouts()::dropdown_menu( 'um-dropdown-toggle-test3', 'click', array( 'items' => $items3, 'header' => 'Dropdown header text', 'width' => 230 ) );
+
+				$items4 = array(
+					'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . __( 'Change photo', 'ultimate-member' ) . '</a>',
+					'<a href="javascript:void(0);" class="um-reset-profile-photo" data-user_id="' . esc_attr( um_profile_id() ) . '" data-default_src="' . esc_url( um_get_default_avatar_uri() ) . '">' . __( 'Remove photo', 'ultimate-member' ) . '</a>',
+				);
+				UM()->frontend()::layouts()::dropdown_menu( 'um-dropdown-toggle-test4', 'click', array( 'items' => $items4, 'header' => 'Dropdown header text', 'width' => 300 ) );
 				?>
+				</div>
 				<h3>Card component</h3>
 				<div style="display: flex; justify-content: flex-start; flex-wrap: wrap; align-items: start; gap: 24px;">
 					<?php echo UM()->frontend()::layouts()::box( 'CONTENT', array( 'title' => 'Card title' ) ); ?>

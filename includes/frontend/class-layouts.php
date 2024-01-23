@@ -20,28 +20,54 @@ class Layouts {
 	 * @param array  $items
 	 * @param string $parent
 	 */
-	public static function dropdown_menu( $element, $trigger, $items = array(), $parent = '' ) {
+	public static function dropdown_menu( $element, $trigger, $args = array(), $parent = '' ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'items'  => array(),
+				'header' => '',
+				'width'  => '150',
+			)
+		);
+
+		if ( empty( $args['items'] ) ) {
+			return;
+		}
+
+		$items = $args['items'];
+
 		// !!!!Important: all links in the dropdown items must have "class" attribute
 		?>
 		<div class="um-dropdown-wrapper">
 			<div class="um-dropdown-toggle <?php echo esc_attr( $element ); ?>"></div>
-			<div class="um-dropdown" data-element=".<?php echo esc_attr( $element ); ?>" data-trigger="<?php echo esc_attr( $trigger ); ?>" data-parent="<?php echo esc_attr( $parent ); ?>">
+			<div class="um-dropdown<?php if ( empty( $args['header'] ) ) { ?> um-dropdown-no-header<?php } ?>" data-element=".<?php echo esc_attr( $element ); ?>" data-trigger="<?php echo esc_attr( $trigger ); ?>" data-parent="<?php echo esc_attr( $parent ); ?>" data-width="<?php echo esc_attr( $args['width'] ); ?>">
+				<?php if ( ! empty( $args['header'] ) ) { ?>
+					<div class="um-dropdown-header">
+						<?php echo wp_kses( $args['header'], UM()->get_allowed_html( 'templates' ) ); ?>
+					</div>
+				<?php } ?>
 				<ul>
 					<?php
+					$i = 0;
 					foreach ( $items as $v ) {
 						if ( is_array( $v ) ) {
-							?>
-							</ul>
-							<?php foreach ( $v as $sub_v ) { ?>
+							foreach ( $v as $sub_v ) {
+								?>
 								<li><?php echo wp_kses_post( $sub_v ); ?></li>
-							<?php } ?>
-							<ul>
-							<?php
+								<?php
+							}
+							if ( count( $items ) - 1 !== $i ) {
+								?>
+								</ul>
+								<ul>
+								<?php
+							}
 						} else {
 							?>
 							<li><?php echo wp_kses_post( $v ); ?></li>
 							<?php
 						}
+						$i++;
 					}
 					?>
 				</ul>

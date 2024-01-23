@@ -49,6 +49,9 @@
   border-radius: $dropdown-border-radius
   +box-shadow-lg
   +border-box
+  .#{$prefix}dropdown-header
+    padding: 12px 16px
+    border-bottom: 1px solid $gray-200
   ul
     margin: 0
     padding: 4px 0
@@ -71,19 +74,3 @@
           color: $gray-700
     &:last-child
       border-bottom: none
-
-.#{$prefix}dropdown-arr
-  position: absolute
-  font-size: 24px
-  width: 24px
-  height: 24px
-  overflow: hidden
-  z-index: 15
-  color: #eee
-  *
-    display: block
-    width: 24px
-    height: 24px
-    vertical-align: bottom
-    overflow: hidden
-    line-height: 24px
