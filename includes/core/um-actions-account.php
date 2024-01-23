@@ -571,6 +571,13 @@ function um_account_updated_notification( $user_id, $changed ) {
 	if ( 'checkmail' === $um_changed_user_email_action ) {
 		UM()->user()->email_update_pending();
 		UM()->mail()->send( um_user( 'user_email' ), 'change_checkmail_email' );
+	} elseif ( 'pending' === $um_changed_user_email_action ) {
+		$emails = um_multi_admin_email();
+		if ( ! empty( $emails ) ) {
+			foreach ( $emails as $email ) {
+				UM()->mail()->send( $email, 'pending_change_email', array( 'admin' => true ) );
+			}
+		}
 	}
 }
 add_action( 'um_after_user_account_updated', 'um_account_updated_notification', 20, 2 );
