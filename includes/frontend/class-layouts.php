@@ -120,6 +120,59 @@ class Layouts {
 		return ob_get_clean();
 	}
 
+	public static function box( $content, $args = array() ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'title'   => '',
+				'primary' => false,
+				'classes' => array(),
+				'footer'  => '',
+				'actions' => array(),
+			)
+		);
+
+		$classes = array(
+			'um-box',
+		);
+		if ( empty( $args['footer'] ) ) {
+			$classes[] = 'um-box-no-footer';
+		}
+
+		if ( ! empty( $args['classes'] ) ) {
+			$classes = array_merge( $classes, $args['classes'] );
+		}
+		$classes = implode( ' ', $classes );
+
+		ob_start();
+		?>
+		<div class="<?php echo esc_attr( $classes ); ?>">
+			<div class="um-box-header<?php if ( empty( $args['title'] ) ) { ?> um-box-no-title<?php } ?><?php if ( empty( $args['actions'] ) ) { ?> um-box-no-actions<?php } ?>">
+				<?php if ( ! empty( $args['title'] ) ) { ?>
+					<span class="um-box-title">
+						<?php echo esc_html( $args['title'] ); ?>
+					</span>
+				<?php } ?>
+
+				<?php
+				if ( ! empty( $args['actions'] ) ) {
+					self::dropdown_menu( 'um-box-dropdown-toggle', 'click', $args['actions'] );
+				}
+				?>
+			</div>
+			<div class="um-box-content">
+				<?php echo wp_kses( $content, UM()->get_allowed_html( 'templates' ) ); ?>
+			</div>
+			<?php if ( ! empty( $args['footer'] ) ) { ?>
+				<div class="um-box-footer">
+					<?php echo wp_kses( $args['footer'], UM()->get_allowed_html( 'templates' ) ); ?>
+				</div>
+			<?php } ?>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
 	/**
 	 * New menu JS
 	 *

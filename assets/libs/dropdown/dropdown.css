@@ -6,12 +6,13 @@
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
-    cursor: pointer; }
+    cursor: pointer;
+    height: 20px; }
     .um-dropdown-wrapper .um-dropdown-toggle:before {
       content: "";
       position: absolute;
       top: 0;
-      left: 0;
+      right: -8px;
       mask-size: contain;
       -webkit-mask-size: contain;
       mask-position: center;

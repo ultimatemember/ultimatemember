@@ -84,3 +84,49 @@
       &:disabled
         background-color: $button-primary-bg-disabled
         border: 1px solid $button-primary-bg-disabled
+
+  .#{$prefix}box
+    +flex( column, flex-start, stretch, nowrap )
+    border-radius: 12px
+    border: 1px solid $gray-200
+    background: $um-white
+    overflow: hidden
+    +box-shadow-sm
+    .#{$prefix}box-header
+      +flex( row, space-between, baseline, nowrap )
+      column-gap: $column-gap
+      padding: $box-padding $box-padding $row-gap $box-padding
+      .#{$prefix}box-title
+        color: $gray-600
+        font-size: $sm-size
+        line-height: $sm-line-height
+        font-weight: $bold-weight
+      &.#{$prefix}box-no-title
+        justify-content: flex-end
+    .#{$prefix}box-content
+      +flex( row, flex-start, baseline, wrap )
+      padding: 0 $box-padding $box-padding $box-padding
+      row-gap: $row-gap
+      color: $gray-900
+    .#{$prefix}box-footer
+      +flex( row, flex-end, baseline, wrap )
+      padding: 16px $box-padding
+      border-top: 1px solid $gray-200
+    &.#{$prefix}box-no-footer
+      row-gap: $row-gap
+      padding: $box-padding
+      .#{$prefix}box-header
+        padding: 0
+      .#{$prefix}box-content
+        padding: 0
+
+  .#{$prefix}link
+    font-size: $sm-size
+    line-height: $sm-line-height
+    color: $link-color
+    text-decoration: none
+    font-weight: $bold-weight
+    &:hover
+      color: $link-hover-color
+    &:focus
+      color: $link-focus-color
