@@ -40,6 +40,79 @@ class Color {
 		return array_map($h, array_map($f, $color_1), array_map($g, $color_2));
 	}
 
+	public function get_weight( $base_color, $color, $type = 'tint' ) {
+		$t1 = $base_color;
+		$t2 = $color;
+
+		if ( is_string( $base_color ) ) {
+			$t1 = $this->hex2rgb( $base_color );
+		}
+
+		if ( is_string( $base_color ) ) {
+			$t2 = $this->hex2rgb( $color );
+		}
+
+		$base_r = $t1[0];
+		$col2_r = $t2[0];
+
+		if ( 'tint' === $type ) {
+			$mix_r = 255;
+		} else {
+			$mix_r = 0;
+		}
+
+		$weight = ( $mix_r - $col2_r ) / ( $mix_r - $base_r );
+
+		return $weight;
+	}
+
+	public function generate_palette( $base_color ) {
+		$palette = array(
+			'600' => array(
+				'bg' => $base_color,
+				'fg' => UM()->common()::color()->hex_inverse_bw( $base_color ),
+			),
+		);
+
+		$tint_map = array(
+			'500' => 0.7578125,
+			'400' => 0.5703125,
+			'300' => 0.3203125,
+			'200' => 0.171875,
+			'100' => 0.0859375,
+			'50'  => 0.046875,
+			'25'  => 0.0234375,
+		);
+
+		foreach ( $tint_map as $k => $weight ) {
+			$bg            = UM()->common()::color()->tint( $base_color, $weight );
+			$fg            = UM()->common()::color()->hex_inverse_bw( $bg );
+			$palette[ $k ] = array(
+				'bg' => $bg,
+				'fg' => $fg,
+			);
+		}
+
+		$shade_map = array(
+			'700' => 0.8267716535433071,
+			'800' => 0.6535433070866141,
+			'900' => 0.5196850393700787,
+		);
+
+		foreach ( $shade_map as $k => $weight ) {
+			$bg            = UM()->common()::color()->shade( $base_color, $weight );
+			$fg            = UM()->common()::color()->hex_inverse_bw( $bg );
+			$palette[ $k ] = array(
+				'bg' => $bg,
+				'fg' => $fg,
+			);
+		}
+
+		ksort( $palette, SORT_NUMERIC );
+
+		return $palette;
+	}
+
 	/**
 	 * tint
 	 *

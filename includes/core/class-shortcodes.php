@@ -173,50 +173,26 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			wp_enqueue_style( 'um_new_design' );
 			wp_enqueue_script( 'um_new_design' );
 
-			$start_color = UM()->options()->get( 'button_backcolor' );
-			$start_fg_color = UM()->common()::color()->hex_inverse_bw( $start_color );
+			$palette = UM()->common()::color()->generate_palette( UM()->options()->get( 'primary_color' ) );
 			ob_start();
 			?>
 			<div class="um">
+				<h3>Figma palette</h3>
 				<div style="display:flex;justify-content: flex-start;align-items:baseline; flex-wrap: wrap;margin-bottom:20px;">
-					<?php
-					$t_index = 0.1;
-					while ( $t_index < 0.9 ) {
-						$tint = UM()->common()::color()->tint( $start_color, $t_index );
-						$fg_color = UM()->common()::color()->hex_inverse_bw( $tint );
-						?>
-						<div style="width: 50px; height: 50px; background-color: <?php echo esc_attr( $tint );?>; color: <?php echo esc_attr( $fg_color ); ?>"><?php echo $t_index; ?></div>
-						<?php
-						$t_index += 0.1;
-					}
-					?>
-					<div style="width: 50px; height: 50px; background-color: <?php echo esc_attr( $start_color ); ?>; color: <?php echo esc_attr( $start_fg_color ); ?>">1</div>
-					<?php
-					$sh_index = 0.9;
-					while ( $sh_index > 0.1 ) {
-						$shade = UM()->common()::color()->shade( $start_color, $sh_index );
-						$fg_color = UM()->common()::color()->hex_inverse_bw( $shade );
-						?>
-						<div style="width: 50px; height: 50px; background-color: <?php echo esc_attr( $shade );?>; color: <?php echo esc_attr( $fg_color ); ?>"><?php echo $sh_index; ?></div>
-						<?php
-						$sh_index -= 0.1;
-					}
-					?>
+					<?php foreach ( $palette as $title => $colors ) { ?>
+						<div style="width: 50px; height: 50px; background-color: <?php echo esc_attr( $colors['bg'] );?>; color: <?php echo esc_attr( $colors['fg'] ); ?>"><?php echo $title; ?></div>
+					<?php } ?>
 				</div>
-				<span class="um-ajax-spinner-svg">
-					<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-					<path d="M30 16C30 17.8385 29.6379 19.659 28.9343 21.3576C28.2308 23.0561 27.1995 24.5995 25.8995 25.8995C24.5995 27.1995 23.0561 28.2307 21.3576 28.9343C19.659 29.6379 17.8385 30 16 30C14.1615 30 12.341 29.6379 10.6424 28.9343C8.94387 28.2307 7.40052 27.1995 6.1005 25.8995C4.80048 24.5995 3.76925 23.0561 3.06569 21.3576C2.36212 19.659 2 17.8385 2 16C2 14.1615 2.36212 12.341 3.06569 10.6424C3.76926 8.94387 4.80049 7.40052 6.10051 6.1005C7.40053 4.80048 8.94388 3.76925 10.6424 3.06568C12.341 2.36212 14.1615 2 16 2C17.8385 2 19.659 2.36212 21.3576 3.06569C23.0561 3.76926 24.5995 4.80049 25.8995 6.10051C27.1995 7.40053 28.2308 8.94388 28.9343 10.6424C29.6379 12.341 30 14.1615 30 16L30 16Z" stroke="#F2F4F7" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-					<path d="M16 2C17.8385 2 19.659 2.36212 21.3576 3.06569C23.0561 3.76925 24.5995 4.80049 25.8995 6.10051C27.1995 7.40053 28.2308 8.94388 28.9343 10.6424C29.6379 12.341 30 14.1615 30 16" stroke="#7F56D9" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-					</svg>
-				</span>
 
-				<?php
-				$items = array(
-					'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . __( 'Change photo', 'ultimate-member' ) . '</a>',
-					'<a href="javascript:void(0);" class="um-reset-profile-photo" data-user_id="' . esc_attr( um_profile_id() ) . '" data-default_src="' . esc_url( um_get_default_avatar_uri() ) . '">' . __( 'Remove photo', 'ultimate-member' ) . '</a>',
-				);
-				UM()->frontend()::layouts()::dropdown_menu( 'um-dropdown-toggle-test', 'click', $items );
-				?>
+				<h3>AJAX loaders</h3>
+				<p>m</p>
+				<?php echo UM()->frontend()::layouts()::ajax_loader( 'm' ); ?>
+				<p>l</p>
+				<?php echo UM()->frontend()::layouts()::ajax_loader(); ?>
+				<p>xl</p>
+				<?php echo UM()->frontend()::layouts()::ajax_loader( 'xl' ); ?>
+
+				<h3>Buttons</h3>
 				<form>
 					<?php
 					UM()->frontend()::layouts()::button( 'Cancel M', array( 'size' => 'm' ) );
@@ -236,6 +212,14 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 					UM()->frontend()::layouts()::button( 'Submit XL', array( 'type' => 'submit', 'primary' => true, 'size' => 'xl', 'disabled' => true ) );
 					?>
 				</form>
+				<h3>Dropdown</h3>
+				<?php
+				$items = array(
+					'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . __( 'Change photo', 'ultimate-member' ) . '</a>',
+					'<a href="javascript:void(0);" class="um-reset-profile-photo" data-user_id="' . esc_attr( um_profile_id() ) . '" data-default_src="' . esc_url( um_get_default_avatar_uri() ) . '">' . __( 'Remove photo', 'ultimate-member' ) . '</a>',
+				);
+				UM()->frontend()::layouts()::dropdown_menu( 'um-dropdown-toggle-test', 'click', $items );
+				?>
 			</div>
 			<?php
 			return ob_get_clean();

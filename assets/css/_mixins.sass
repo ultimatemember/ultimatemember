@@ -1,3 +1,5 @@
+@import "colors"
+
 =flex ($direction, $justify, $align, $wrap)
   display: flex
   flex-direction: $direction
@@ -15,7 +17,7 @@
   box-shadow: 0 1px 2px rgba( 16, 24, 40, 0.05 )
 // Figma xs focused shadow grey-100
 =box-shadow-xs-focused
-  box-shadow: 0 1px 2px rgba( 16, 24, 40, 0.05 ), 0 0 0 4px #f2f4f7
+  box-shadow: 0 1px 2px rgba( 16, 24, 40, 0.05 ), 0 0 0 4px $gray-100
 // Figma xs focused shadow primary
 =box-shadow-xs-primary-focused
   box-shadow: 0 1px 2px rgba( 16, 24, 40, 0.05 ), 0 0 0 4px #f4ebff

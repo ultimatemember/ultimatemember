@@ -1,60 +1,69 @@
-@-webkit-keyframes um-ajax-spinning {
+@-webkit-keyframes um-svg-spin {
   0% {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg); }
   100% {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg); } }
 
-@-moz-keyframes um-ajax-spinning {
+@-moz-keyframes um-svg-spin {
   0% {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg); }
   100% {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg); } }
 
-@-ms-keyframes um-ajax-spinning {
+@-ms-keyframes um-svg-spin {
   0% {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg); }
   100% {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg); } }
 
-@keyframes um-ajax-spinning {
+@keyframes um-svg-spin {
   0% {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg); }
   100% {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg); } }
 
-.um-ajax-spinner {
-  -webkit-transition: 0.1s opacity;
-  -moz-transition: 0.1s opacity;
-  -ms-transition: 0.1s opacity;
-  -o-transition: 0.1s opacity;
-  transition: 0.1s opacity;
-  color: #c6c6c6 !important;
-  -webkit-animation: um-ajax-spinning 1.1s infinite linear;
-  animation: um-ajax-spinning 1.1s infinite linear;
-  border-top: 0.2em solid rgba(198, 198, 198, 0.2);
-  border-right: 0.2em solid rgba(198, 198, 198, 0.2);
-  border-bottom: 0.2em solid rgba(198, 198, 198, 0.2);
-  border-left: .2em solid #c6c6c6;
-  font-size: 1.75em;
-  filter: alpha(opacity=0);
-  -ms-transform: translateZ(0);
-  transform: translateZ(0);
-  border-radius: 50%;
-  display: block;
-  width: 2.5em;
-  height: 2.5em;
-  margin: 0;
-  outline: 0;
-  padding: 0;
-  vertical-align: baseline; }
+.um-ajax-spinner-svg {
+  position: relative; }
+  .um-ajax-spinner-svg svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    -webkit-animation: um-svg-spin 2s linear infinite;
+    -moz-animation: um-svg-spin 2s linear infinite;
+    animation: um-svg-spin 2s linear infinite; }
+  .um-ajax-spinner-svg.um-ajax-spinner-m {
+    width: 32px;
+    height: 32px; }
+  .um-ajax-spinner-svg.um-ajax-spinner-l {
+    width: 48px;
+    height: 48px; }
+  .um-ajax-spinner-svg.um-ajax-spinner-xl {
+    width: 66px;
+    height: 66px; }
 
 .um {
   display: flex;
@@ -78,7 +87,7 @@
     .um .um-button:focus {
       background-color: var(--um-blocks-button-bg-color, #fff);
       color: var(--um-blocks-button-fg-color, var(--um-gray-700, #344054));
-      box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 0 0 4px #f2f4f7; }
+      box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 0 0 4px var(--um-gray-100, #f2f4f7); }
     .um .um-button:disabled {
       cursor: default;
       color: var(--um-blocks-button-fg-color, var(--um-gray-300, #d0d5dd));
@@ -97,16 +106,16 @@
       font-size: 16px;
       line-height: 24px; }
     .um .um-button.um-button-primary {
-      background-color: var(--um-blocks-button-primary-bg-color, #7f56d9);
-      border: 1px solid var(--um-blocks-button-primary-bg-color, #7f56d9);
-      color: var(--um-blocks-button-primary-fg-color, #fff); }
+      background-color: var(--um-primary-600-bg, #7f56d9);
+      border: 1px solid var(--um-primary-600-bg, #7f56d9);
+      color: var(--um-primary-600-fg, #fff); }
       .um .um-button.um-button-primary:hover {
-        background-color: var(--um-blocks-button-primary-bg-hover-color, #6941c6);
-        border: 1px solid var(--um-blocks-button-primary-bg-hover-color, #6941c6);
-        color: var(--um-blocks-button-primary-fg-color, #fff); }
+        background-color: var(--um-primary-700-bg, #6941c6);
+        border: 1px solid var(--um-primary-700-bg, #6941c6);
+        color: var(--um-primary-600-fg, #fff); }
       .um .um-button.um-button-primary:focus {
-        background-color: var(--um-blocks-button-primary-bg-color, #7f56d9);
+        background-color: var(--um-primary-600-bg, #7f56d9);
         box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 0 0 4px #f4ebff; }
       .um .um-button.um-button-primary:disabled {
-        background-color: var(--um-blocks-button-primary-bg-disabled-color, #e9d7fe);
-        border: 1px solid var(--um-blocks-button-primary-bg-disabled-color, #e9d7fe); }
+        background-color: var(--um-primary-200-bg, #e9d7fe);
+        border: 1px solid var(--um-primary-200-bg, #e9d7fe); }

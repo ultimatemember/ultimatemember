@@ -273,7 +273,6 @@ final class Enqueue extends \um\common\Enqueue {
 			$styles = apply_filters(
 				'um_inline_styles_variables',
 				array(
-					'--um-blocks-error-color:#d92d20;',
 					'--um-gray-25:#fcfcfd;',
 					'--um-gray-50:#f9fafb;',
 					'--um-gray-100:#f2f4f7;',
@@ -287,28 +286,13 @@ final class Enqueue extends \um\common\Enqueue {
 					'--um-gray-900:#101828;',
 				)
 			);
-			$rules  = array();
-
-			$backcolor = UM()->options()->get( 'button_backcolor' );
-			if ( empty( $backcolor ) ) {
-				$backcolor = '#7f56d9';
+			$palette = UM()->common()::color()->generate_palette( UM()->options()->get( 'primary_color' ) );
+			foreach ( $palette as $title => $colors ) {
+				$styles[] = '--um-primary-' . $title . '-bg:' . esc_attr( $colors['bg'] ) . ';';
+				$styles[] = '--um-primary-' . $title . '-fg:' . esc_attr( $colors['fg'] ) . ';';
 			}
-			$styles[] = "--um-blocks-button-primary-bg-color:{$backcolor};";
 
-			$backcolor_hover = UM()->options()->get( 'button_backcolor_hover' );
-			if ( empty( $backcolor_hover ) ) {
-				$backcolor_hover = '#6941c6';
-			}
-			$styles[] = "--um-blocks-button-primary-bg-hover-color:{$backcolor_hover};";
-
-			$forecolor = UM()->options()->get( 'button_forecolor' );
-			if ( empty( $forecolor ) ) {
-				$forecolor = '#fff';
-			}
-			$styles[] = "--um-blocks-button-primary-fg-color:{$forecolor};";
-
-//			$rules[] = '.um .um-form .um-form-buttons-section input, .um .um-form .um-form-buttons-section button{color: var(--um-blocks-button-fg-color);background-color: var(--um-blocks-button-bg-color);}';
-
+			$rules = array();
 			if ( empty( $styles ) ) {
 				return;
 			}

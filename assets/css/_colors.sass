@@ -6,14 +6,11 @@ $shadow2: rgba(0,0,0,.07)
 
 // NEW COLORS since v3
 $required-asterisk: #a00
-$error-text: var(--um-blocks-error-color, #d92d20)
 
 $um-font-size: 14px
 
 $um-white: #fff
 $um-black: #000
-$wp-admin-primary: #2271b1
-$wp-admin-text: #3c434a
 
 // Figma shades of gray colors
 $gray-25: var(--um-gray-25, #fcfcfd)
@@ -28,24 +25,59 @@ $gray-700: var(--um-gray-700, #344054)
 $gray-800: var(--um-gray-800, #1d2939)
 $gray-900: var(--um-gray-900, #101828)
 
+// Figma shades of primary colors
+$primary-25: var(--um-primary-25-bg, #fcfaff)
+$primary-50: var(--um-primary-50-bg, #f9f5ff)
+$primary-100: var(--um-primary-100-bg, #f4ebff)
+$primary-200: var(--um-primary-200-bg, #e9d7fe)
+$primary-300: var(--um-primary-300-bg, #d6bbfb)
+$primary-400: var(--um-primary-400-bg, #b692f6)
+$primary-500: var(--um-primary-500-bg, #9e77ed)
+$primary-600: var(--um-primary-600-bg, #7f56d9)
+$primary-700: var(--um-primary-700-bg, #6941c6)
+$primary-800: var(--um-primary-800-bg, #53389e)
+$primary-900: var(--um-primary-900-bg, #42307d)
+
 // Figma shades of error colors
-$error-25: var(--um-error-25, #fcfcfd)
-$error-50: var(--um-error-50, #f9fafb)
+$error-25: var(--um-error-25, #fffbfa)
+$error-50: var(--um-error-50, #fef3f2)
 $error-100: var(--um-error-100, #fee4e2)
-$error-200: var(--um-error-200, #eaecf0)
-$error-300: var(--um-error-300, #d0d5dd)
-$error-400: var(--um-error-400, #98a2b3)
-$error-500: var(--um-error-500, #667085)
-$error-600: var(--um-error-600, #475467)
+$error-200: var(--um-error-200, #fecdca)
+$error-300: var(--um-error-300, #fda29b)
+$error-400: var(--um-error-400, #f97066)
+$error-500: var(--um-error-500, #f04438)
+$error-600: var(--um-error-600, #d92d20)
 $error-700: var(--um-error-700, #b42318)
-$error-800: var(--um-error-800, #1d2939)
-$error-900: var(--um-error-900, #101828)
+$error-800: var(--um-error-800, #912018)
+$error-900: var(--um-error-900, #7a271a)
 
-$um-primary: var(--um-blocks-button-bg-color, #eee)
-$um-primary-hover: var(--um-blocks-button-bg-hover-color, #ddd)
-$um-text: var(--um-blocks-button-fg-color, #333)
+// Figma shades of warning colors
+$warning-25: var(--um-warning-25, #fffcf5)
+$warning-50: var(--um-warning-50, #fffaeb)
+$warning-100: var(--um-warning-100, #fef0c7)
+$warning-200: var(--um-warning-200, #fedf89)
+$warning-300: var(--um-warning-300, #fec84b)
+$warning-400: var(--um-warning-400, #fdb022)
+$warning-500: var(--um-warning-500, #f79009)
+$warning-600: var(--um-warning-600, #dc6803)
+$warning-700: var(--um-warning-700, #b54708)
+$warning-800: var(--um-warning-800, #93370d)
+$warning-900: var(--um-warning-900, #7a2e0e)
 
-$button-bg: var(--um-blocks-button-bg-color, #fff)
+// Figma shades of success colors
+$success-25: var(--um-success-25, #f6fef9)
+$success-50: var(--um-success-50, #ecfdf3)
+$success-100: var(--um-success-100, #d1fadf)
+$success-200: var(--um-success-200, #a6f4c5)
+$success-300: var(--um-success-300, #6ce9a6)
+$success-400: var(--um-success-400, #32d583)
+$success-500: var(--um-success-500, #12b76a)
+$success-600: var(--um-success-600, #039855)
+$success-700: var(--um-success-700, #027a48)
+$success-800: var(--um-success-800, #05603a)
+$success-900: var(--um-success-900, #054f31)
+
+$button-bg: var(--um-blocks-button-bg-color, $um-white)
 $button-bg-hover: var(--um-blocks-button-bg-hover-color, $gray-50)
 $button-bg-disabled: var(--um-blocks-button-bg-disabled-color, $button-bg)
 $button-border-color: var(--um-blocks-button-bg-color, $gray-300)
@@ -54,10 +86,10 @@ $button-color: var(--um-blocks-button-fg-color, $gray-700)
 $button-color-hover: var(--um-blocks-button-fg-color, $gray-800)
 $button-color-disabled: var(--um-blocks-button-fg-color, $gray-300)
 
-$button-primary-bg: var(--um-blocks-button-primary-bg-color, #7f56d9)
-$button-primary-bg-hover: var(--um-blocks-button-primary-bg-hover-color, #6941c6)
-$button-primary-bg-disabled: var(--um-blocks-button-primary-bg-disabled-color, #e9d7fe)
-$button-primary-color: var(--um-blocks-button-primary-fg-color, #fff)
+$button-primary-bg: $primary-600
+$button-primary-bg-hover: $primary-700
+$button-primary-bg-disabled: $primary-200
+$button-primary-color: var(--um-primary-600-fg, $um-white)
 
 $button-border-radius: 8px
 
@@ -76,8 +108,8 @@ $bold-weight: 600 // CSS bold = 700, so it will be applied if there aren't 600 w
 $label-size: 15px
 
 // Links variables
-$link-color: $um-primary
-$link-hover-color: $um-primary-hover
+$link-color: $primary-600
+$link-hover-color: $primary-700
 
 
 

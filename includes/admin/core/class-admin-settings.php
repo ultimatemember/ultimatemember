@@ -1051,13 +1051,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'secure_allowed_redirect_hosts'        => array(
 						'sanitize' => 'textarea',
 					),
-					'button_backcolor'                      => array(
-						'sanitize' => 'color',
-					),
-					'button_backcolor_hover'                => array(
-						'sanitize' => 'color',
-					),
-					'button_forecolor'                      => array(
+					'primary_color'                      => array(
 						'sanitize' => 'color',
 					),
 				)
@@ -2041,21 +2035,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'description'    => __( 'Check this box if you would like to enable new UI.', 'ultimate-member' ),
 											),
 											array(
-												'id'          => 'button_backcolor',
+												'id'          => 'primary_color',
 												'type'        => 'color',
-												'label'       => __( 'Button Background Color', 'ultimate-member' ),
-												'conditional' => array( 'enable_new_ui', '=', '1' ),
-											),
-											array(
-												'id'          => 'button_backcolor_hover',
-												'type'        => 'color',
-												'label'       => __( 'Button Background Hover Color', 'ultimate-member' ),
-												'conditional' => array( 'enable_new_ui', '=', '1' ),
-											),
-											array(
-												'id'          => 'button_forecolor',
-												'type'        => 'color',
-												'label'       => __( 'Button Text Color', 'ultimate-member' ),
+												'label'       => __( 'Primary Color', 'ultimate-member' ),
 												'conditional' => array( 'enable_new_ui', '=', '1' ),
 											),
 											array(
