@@ -97,13 +97,7 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_register_script( 'um_crop', $libs_url . 'cropper/cropper' . $suffix . '.js', array( 'jquery' ), '1.6.1', true );
 			wp_register_style( 'um_crop', $libs_url . 'cropper/cropper' . $suffix . '.css', array(), '1.6.1' );
 
-			// Old one.
-			// wp_register_script( 'um_dropdown', $js_url . 'dropdown' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
-
-			// New one.
-			wp_register_script( 'um_dropdown', $libs_url . 'dropdown/dropdown' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
-
-			wp_register_script( 'um_frontend_common', $js_url . 'common-frontend' . $suffix . '.js', array( 'um_common', 'um_crop', 'um_dropdown' ), UM_VERSION, true );
+			wp_register_script( 'um_frontend_common', $js_url . 'common-frontend' . $suffix . '.js', array( 'um_common', 'um_crop' ), UM_VERSION, true );
 			$um_common_variables = array();
 			/**
 			 * Filters data array for localize frontend common scripts.
@@ -169,6 +163,8 @@ final class Enqueue extends \um\common\Enqueue {
 			$localize_data = apply_filters( 'um_enqueue_localize_data', $localize_data );
 			wp_localize_script( 'um_scripts', 'um_scripts', $localize_data );
 
+			wp_register_script( 'um_dropdown', $js_url . 'dropdown' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
+
 			wp_register_script( 'um_members', $js_url . 'um-members' . $suffix . '.js', array( 'jquery', 'wp-util', 'jquery-ui-slider', 'um_dropdown', 'wp-hooks', 'jquery-masonry', 'um_scripts' ), UM_VERSION, true );
 			wp_register_script( 'um_profile', $js_url . 'um-profile' . $suffix . '.js', array( 'jquery', 'wp-util', 'wp-i18n', 'um_scripts' ), UM_VERSION, true );
 			wp_set_script_translations( 'um_profile', 'ultimate-member' );
@@ -219,9 +215,7 @@ final class Enqueue extends \um\common\Enqueue {
 			// Workaround when select2 deregistered (e.g. Woo + Impreza theme activated).
 			$this->register_select2();
 
-			wp_register_style( 'um_dropdown', $libs_url . 'dropdown/dropdown' . $suffix . '.css', array(), UM_VERSION );
-
-			wp_register_style( 'um_styles', $css_url . 'um-styles' . $suffix . '.css', array( 'um_ui', 'um_tipsy', 'um_raty', 'um_fonticons_ii', 'um_fonticons_fa', 'select2', 'um_fileupload', 'um_common', 'um_responsive', 'um_modal', 'um_dropdown' ), UM_VERSION );
+			wp_register_style( 'um_styles', $css_url . 'um-styles' . $suffix . '.css', array( 'um_ui', 'um_tipsy', 'um_raty', 'um_fonticons_ii', 'um_fonticons_fa', 'select2', 'um_fileupload', 'um_common', 'um_responsive', 'um_modal' ), UM_VERSION );
 
 			wp_register_style( 'um_members', $css_url . 'um-members' . $suffix . '.css', array( 'um_styles' ), UM_VERSION );
 			// RTL styles.

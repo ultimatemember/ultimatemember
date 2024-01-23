@@ -47,7 +47,7 @@ function um_add_form_honeypot_css() {
 		</style>
 	<?php
 }
-// add_action( 'wp_head', 'um_add_form_honeypot_css' );
+add_action( 'wp_head', 'um_add_form_honeypot_css' );
 
 /**
  * Empty the honeypot value
@@ -61,4 +61,4 @@ function um_add_form_honeypot_js() {
 		</script>
 	<?php
 }
-// add_action( 'wp_footer', 'um_add_form_honeypot_js', 99999999999999999 );
+add_action( 'wp_footer', 'um_add_form_honeypot_js', 99999999999999999 );
