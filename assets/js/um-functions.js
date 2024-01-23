@@ -171,11 +171,11 @@ UM.dropdown = {
 /**
  * Update menu position
  */
-// function UM_domenus() {
-// 	jQuery('.um-dropdown').each( function( i, menu ) {
-// 		UM.dropdown.setPosition( menu );
-// 	});
-// }
+function UM_domenus() {
+	jQuery('.um-dropdown').each( function( i, menu ) {
+		UM.dropdown.setPosition( menu );
+	});
+}
 
 
 function UM_check_password_matched() {
@@ -267,7 +267,7 @@ function um_responsive(){
 
 	});
 
-	//UM_domenus();
+	UM_domenus();
 }
 
 
@@ -496,7 +496,7 @@ function um_new_modal( id, size, isPhoto, source ) {
 
 	UM.common.tipsy.hide();
 
-	//UM.dropdown.hideAll();
+	UM.dropdown.hideAll();
 
 	jQuery( 'body,html,textarea' ).css( 'overflow', 'hidden' );
 

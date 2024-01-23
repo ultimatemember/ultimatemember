@@ -22,11 +22,11 @@ jQuery(document).ready(function() {
 		window.location = jQuery(this).attr('href');
 	});
 
-	// jQuery( document.body ).on( 'click', '.um-trigger-menu-on-click', function() {
-	// 	var menu = jQuery(this).find('.um-dropdown');
-	// 	UM.dropdown.show( menu );
-	// 	return false;
-	// });
+	jQuery( document.body ).on( 'click', '.um-trigger-menu-on-click', function() {
+		var menu = jQuery(this).find('.um-dropdown');
+		UM.dropdown.show( menu );
+		return false;
+	});
 
 	jQuery( document.body ).on('click', '.um-dropdown-hide', function() {
 		UM.dropdown.hideAll();

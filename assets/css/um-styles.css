@@ -763,6 +763,71 @@ a.um-link-alt {
 a.um-link-alt:hover {text-decoration: underline !important;}
 
 /*
+	- Dropdown menu
+*/
+
+.um-dropdown {
+	position: absolute;
+	height: auto;
+	background: #fff;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	z-index: 55;
+	display: none;
+	border: 1px solid #e5e5e5;
+	box-sizing: border-box;
+	-webkit-box-shadow: 0 0 2px rgba(0,0,0,0.1);
+	box-shadow: 0 0 1px rgba(0,0,0,0.1);
+}
+
+.um-dropdown ul,
+.um-dropdown li {
+	list-style-type: none !important;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+.um-dropdown ul {
+	background: #fff;
+	position: relative;
+	z-index: 16;
+}
+
+.um-dropdown li a {
+	display: block;
+	padding: 8px 12px;
+	color: #666;
+	font-size: 14px;
+	line-height: 18px;
+}
+
+.um-dropdown li:last-child a {
+	border-top: 1px solid #e5e5e5;
+	padding: 12px;
+}
+
+.um-dropdown li a:hover {
+
+}
+
+.um-dropdown-b {
+	position: relative;
+}
+
+.um-dropdown-arr {
+	position: absolute;
+	font-size: 24px;
+	width: 24px;
+	height: 24px;
+	overflow: hidden;
+	z-index: 15;
+	color: #eee;
+}
+
+.um-dropdown-arr * { display: block !important; width: 24px !important; height: 24px !important; vertical-align: bottom !important; overflow: hidden !important; line-height: 24px !important; }
+
+/*
 	- Misc.
 */
 
