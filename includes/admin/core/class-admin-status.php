@@ -13,13 +13,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Status' ) ) {
 	 */
 	class Admin_Status {
 
+
+		public $status_structure = array();
+
+
 		/**
 		 * Admin_Status constructor.
 		 */
 		public function __construct() {
 			add_action( 'um_extend_admin_menu', array( &$this, 'um_extend_admin_menu' ), 5 );
 
-			add_filter( 'um_status_section_notices_center__content', array( $this, 'settings_notices_center_tab' ), 10, 2 );
+			add_filter( 'um_status_section_notices_center__content', array( $this, 'settings_notices_center_tab' ), 10 );
 		}
 
 
@@ -32,7 +36,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Status' ) ) {
 		 * Status page menu callback
 		 */
 		public function um_status_page() {
-			$status_structure = apply_filters(
+			$this->status_structure = apply_filters(
 				'um_status_structure',
 				array(
 					'notices_center' => array(
@@ -46,10 +50,48 @@ if ( ! class_exists( 'um\admin\core\Admin_Status' ) ) {
 				)
 			);
 
-			echo '<div id="um-settings-wrap" class="wrap"><h2>' . esc_html__( 'Ultimate Member - Status', 'ultimate-member' ) . '</h2>';
-			echo '<h2 class="nav-tab-wrapper um-nav-tab-wrapper">';
+			$current_tab = empty( $_GET['tab'] ) ? 'notices_center' : sanitize_key( $_GET['tab'] ); // phpcs:ignore WordPress.Security.NonceVerification
+
+			echo '<div id="um-settings-wrap" class="wrap">';
+			echo '<h2>' . esc_html__( 'Ultimate Member - Status', 'ultimate-member' ) . '</h2>';
+			echo wp_kses( $this->generate_tabs_menu(), UM()->get_allowed_html( 'admin' ) );
+			echo '<div class="clear"></div>';
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_settings_page_{$current_tab}_{$current_subtab}_before_section
+			 * @description Show some content before section content at settings page
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_settings_page_{$current_tab}_{$current_subtab}_before_section', 'function_name', 10 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_settings_page_{$current_tab}_{$current_subtab}_before_section', 'my_settings_page_before_section', 10 );
+			 * function my_settings_page_before_section() {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( "um_status_page_{$current_tab}_before_section" );
+
+			apply_filters( 'um_status_section_' . $current_tab . '__content', $current_tab );
+
+			echo '</div>';
+		}
+
+
+		/**
+		 * Generate pages tabs.
+		 *
+		 * @param string $page
+		 * @return string
+		 */
+		private function generate_tabs_menu( $page = 'settings' ) {
+			$tabs = '<nav class="nav-tab-wrapper um-nav-tab-wrapper">';
+
 			$menu_tabs = array();
-			foreach ( $status_structure as $slug => $tab ) {
+			foreach ( $this->status_structure as $slug => $tab ) {
 				if ( ! empty( $tab['fields'] ) ) {
 					foreach ( $tab['fields'] as $field_key => $field_options ) {
 						if ( isset( $field_options['is_option'] ) && false === $field_options['is_option'] ) {
@@ -58,135 +100,24 @@ if ( ! class_exists( 'um\admin\core\Admin_Status' ) ) {
 					}
 				}
 
-				if ( ! empty( $tab['fields'] ) || ! empty( $tab['sections'] ) ) {
+				if ( ! empty( $tab['fields'] ) || ! empty( $tab['sections'] ) || ! empty( $tab['form_sections'] ) ) {
 					$menu_tabs[ $slug ] = $tab['title'];
 				}
 			}
 
-			// phpcs:disable WordPress.Security.NonceVerification
-			$current_tab = empty( $_GET['tab'] ) ? 'notices_center' : sanitize_key( $_GET['tab'] );
-
+			$current_tab = empty( $_GET['tab'] ) ? 'notices_center' : sanitize_key( $_GET['tab'] ); // phpcs:ignore WordPress.Security.NonceVerification
 			foreach ( $menu_tabs as $name => $label ) {
-				$active = ( $current_tab === $name ) ? 'nav-tab-active' : '';
-				echo '<a href="' . esc_url( admin_url( 'admin.php?page=um_status_page' . ( empty( $name ) ? '' : '&tab=' . esc_attr( $name ) ) ) ) . '" class="nav-tab ' . esc_attr( $active ) . '">' . esc_html( $label ) . '</a>';
+				$active = $current_tab === $name ? 'nav-tab-active' : '';
+
+				$args = array( 'page' => 'um_status_page' );
+				if ( ! empty( $name ) ) {
+					$args['tab'] = $name;
+				}
+				$tab_url = add_query_arg( $args, admin_url( 'admin.php' ) );
+				$tabs   .= '<a href="' . esc_url( $tab_url ) . '" class="nav-tab ' . esc_attr( $active ) . '">' . esc_html( $label ) . '</a>';
 			}
 
-			$menu_subtabs = array();
-			foreach ( $status_structure as $slug => $subtab ) {
-				$menu_subtabs[ $slug ] = $subtab['title'];
-			}
-			echo '</h2>';
-
-			echo '<div><ul class="subsubsub">';
-
-			$current_tab    = empty( $_GET['tab'] ) ? 'notices_center' : sanitize_key( $_GET['tab'] );
-			$current_subtab = empty( $_GET['section'] ) ? '' : sanitize_key( $_GET['section'] );
-			// phpcs:enable WordPress.Security.NonceVerification
-
-			foreach ( $menu_subtabs as $name => $label ) {
-				$active = ( $current_subtab === $name ) ? 'current' : '';
-				echo '<a href="' . esc_url( admin_url( 'admin.php?page=um_status_page' . ( empty( $current_tab ) ? '' : '&tab=' . esc_attr( $current_tab ) ) . ( empty( $name ) ? '' : '&section=' . esc_attr( $name ) ) ) ) . '" class="' . esc_attr( $active ) . '">'
-							. esc_html( $label ) . '</a> | ';
-			}
-
-			echo '</ul></div>';
-			echo '</div>';
-
-			$section_fields   = $this->get_section_fields( $current_tab, $current_subtab );
-			$settings_section = $this->render_status_section( $section_fields, $current_tab, $current_subtab );
-
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_settings_section_{$current_tab}_{$current_subtab}_content
-			 *
-			 * @description Render settings section
-			 * @input_vars
-			 * [{"var":"$content","type":"string","desc":"Section content"},
-			 * {"var":"$section_fields","type":"array","desc":"Section Fields"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_settings_section_{$current_tab}_{$current_subtab}_content', 'function_name', 10, 2 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_settings_section_{$current_tab}_{$current_subtab}_content', 'my_settings_section', 10, 2 );
-			 * function my_settings_section( $content ) {
-			 *     // your code here
-			 *     return $content;
-			 * }
-			 * ?>
-			 */
-			echo apply_filters( 'um_status_section_' . $current_tab . '_' . $current_subtab . '_content',
-				$settings_section,
-				$section_fields
-			);
-		}
-
-
-		/**
-		 * @param $tab
-		 * @param $section
-		 *
-		 * @return array
-		 */
-		public function get_section_fields( $tab, $section ) {
-			$status_structure = apply_filters(
-				'um_status_structure',
-				array(
-					'notices_center' => array(
-						'title'  => __( 'Notices Center', 'ultimate-member' ),
-						'fields' => array(
-							array(
-								'type' => 'notices_center',
-							),
-						),
-					),
-				)
-			);
-
-			if ( '' === $tab ) {
-				$tab = 'notices_center';
-			}
-
-			if ( empty( $status_structure[ $tab ] ) ) {
-				return array();
-			}
-
-			if ( ! empty( $status_structure[ $tab ]['sections'][ $section ]['fields'] ) ) {
-				return $status_structure[ $tab ]['sections'][ $section ]['fields'];
-			} elseif ( ! empty( $status_structure[ $tab ]['fields'] ) ) {
-				return $status_structure[ $tab ]['fields'];
-			}
-
-			return array();
-		}
-
-
-		/**
-		 * Render settings section
-		 *
-		 * @param array $section_fields
-		 * @param string $current_tab
-		 * @param string $current_subtab
-		 *
-		 * @return string
-		 */
-		public function render_status_section( $section_fields, $current_tab, $current_subtab ) {
-			ob_start();
-
-			UM()->admin_forms_settings(
-				array(
-					'class'     => 'um_status-' . $current_tab . '-' . $current_subtab . ' um-third-column',
-					'prefix_id' => 'um_status',
-					'fields'    => $section_fields,
-				)
-			)->render_form(); ?>
-
-			<?php
-			$section = ob_get_clean();
-
-			return $section;
+			return $tabs . '</nav>';
 		}
 
 
@@ -194,10 +125,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Status' ) ) {
 		 * @param $html
 		 * @param $section_fields
 		 */
-		public function settings_notices_center_tab( $html, $section_fields ) {
+		public function settings_notices_center_tab() {
 			$notices = array();
 			$notices = $this->old_extensions_notice( $notices );
 			$notices = $this->install_core_page_notice( $notices );
+			$notices = $this->exif_extension_notice( $notices );
 
 			usort(
 				$notices,
@@ -205,6 +137,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Status' ) ) {
 					return $a['priority'] - $b['priority'];
 				}
 			);
+
 			include_once UM()->admin()->templates_path . 'status/notices.php';
 		}
 
@@ -260,13 +193,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Status' ) ) {
 				}
 			}
 
+			// @todo need this check after
 //			if ( ! $show ) {
 //				return;
 //			}
 
 			$notices[] = array(
 				'id'       => 'old_extensions',
-				'priority' => 0,
+				'priority' => 10,
 				'class'    => 'error',
 				// translators: %1$s is a plugin name; %2$s is a plugin version; %3$s is a plugin name; %4$s is a doc link.
 				'message'  => '<p>' . sprintf( __( '<strong>%1$s %2$s</strong> requires 2.0 extensions. You have pre 2.0 extensions installed on your site. <br /> Please update %3$s extensions to latest versions. For more info see this <a href="%4$s" target="_blank">doc</a>.', 'ultimate-member' ), UM_PLUGIN_NAME, UM_VERSION, UM_PLUGIN_NAME, 'https://docs.ultimatemember.com/article/201-how-to-update-your-site' ) . '</p>',
@@ -330,7 +264,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Status' ) ) {
 					if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
 						$notices[] = array(
 							'id'       => 'wrong_user_page',
-							'priority' => 25,
+							'priority' => 30,
 							'class'    => 'updated',
 							'message'  => '<p>' . esc_html__( 'Ultimate Member Setup Error: User page can not be a child page.', 'ultimate-member' ) . '</p>',
 						);
@@ -342,19 +276,36 @@ if ( ! class_exists( 'um\admin\core\Admin_Status' ) ) {
 					if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
 						$notices[] = array(
 							'id'       => 'wrong_account_page',
-							'priority' => 30,
+							'priority' => 40,
 							'class'    => 'updated',
 							'message'  => '<p>' . esc_html__( 'Ultimate Member Setup Error: Account page can not be a child page.', 'ultimate-member' ) . '</p>',
 						);
 					}
 				}
 
-				// DELETE THIS
+				// @todo DELETE THIS
 				$notices[] = array(
 					'id'       => 'wrong_account_page',
-					'priority' => 30,
+					'priority' => 1,
 					'class'    => 'updated',
 					'message'  => '<p>' . esc_html__( 'Ultimate Member Setup Error: Account page can not be a child page.', 'ultimate-member' ) . '</p>',
+				);
+			}
+
+			return $notices;
+		}
+
+
+		/**
+		 * EXIF library notice
+		 */
+		public function exif_extension_notice( $notices ) {
+			if ( ! extension_loaded( 'exif' ) ) {
+				$notices[] = array(
+					'id'       => 'exif_disabled',
+					'priority' => 50,
+					'class'    => 'updated',
+					'message'  => '<p>' . esc_html__( 'Exif is not enabled on your server. Mobile photo uploads will not be rotated correctly until you enable the exif extension.', 'ultimate-member' ) . '</p>',
 				);
 			}
 
