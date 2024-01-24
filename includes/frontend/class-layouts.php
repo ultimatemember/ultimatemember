@@ -17,9 +17,16 @@ class Layouts {
 	 *
 	 * Note: !!!!Important: all links in the dropdown items must have "class" attribute.
 	 *
-	 * @param string $element Additional class for `um-dropdown-toggle` element to make the dropdown unique.
-	 * @param array  $items   Dropdown Menu Items.
-	 * @param array  $args    Dropdown Menu additional arguments
+	 * @param string           $element Additional class for `um-dropdown-toggle` element to make the dropdown unique. Unique event callback is assigned to this class.
+	 * @param array[]|string[] $items   Dropdown Menu Items.
+	 * @param array            $args    {
+	 *     Dropdown Menu additional arguments.
+	 *
+	 *     @type string $event  Event in JS that will be used for trigger displaying menu. Uses jQuery events, 'click' by default.
+	 *     @type string $header HTML that would be used as the dropdown menu header.
+	 *     @type int    $width  Dropdown menu predefined width.
+	 *     @type string $parent Parent element for rendering dropdown menu after show event. If empty then <body>.
+	 * }
 	 *
 	 * @return string
 	 */
@@ -27,10 +34,10 @@ class Layouts {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'event'  => 'click', // Event in JS that will be used for trigger displaying menu.
-				'header' => '',      // HTML that would be used as the dropdown menu header.
-				'width'  => '150',   // Dropdown menu predefined width.
-				'parent' => '',      // Parent element for rendering dropdown menu after show event. If empty then <body>.
+				'event'  => 'click',
+				'header' => '',
+				'width'  => 150,
+				'parent' => '',
 			)
 		);
 
@@ -83,9 +90,22 @@ class Layouts {
 	}
 
 	/**
-	 * @param string $type 'button|submit'
+	 * Button element.
 	 *
-	 * @return void
+	 * Note: Uses <button> HTML tag.
+	 *
+	 * @param string $content HTML inner content of the button.
+	 * @param array  $args    {
+	 *     Button additional arguments.
+	 *
+	 *     @type string   $type     HTML button type attribute. Uses 'button', 'submit'. Default 'button'.
+	 *     @type bool     $primary  Marker for using primary or secondary UI. Default `false`.
+	 *     @type string   $size     Button size. Uses 'm', 'l', 'xl'. Default 'l'.
+	 *     @type string[] $classes  Additional button's classes.
+	 *     @type bool     $disabled Disabled button attribute. Default `false`.
+	 * }
+	 *
+	 * @return string
 	 */
 	public static function button( $content, $args = array() ) {
 		$args = wp_parse_args(
@@ -93,7 +113,6 @@ class Layouts {
 			array(
 				'type'     => 'button',
 				'primary'  => false,
-				'content'  => '',
 				'size'     => 'l',
 				'classes'  => array(),
 				'disabled' => false,
@@ -111,17 +130,17 @@ class Layouts {
 			$classes = array_merge( $classes, $args['classes'] );
 		}
 		$classes = implode( ' ', $classes );
+		ob_start();
 		?>
-
 		<button type="<?php echo esc_attr( $args['type'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" <?php disabled( $args['disabled'] ); ?>><?php echo wp_kses_post( $content ); ?></button>
-
 		<?php
+		return ob_get_clean();
 	}
 
 	/**
-	 * Generates the content of AJAX loader.
+	 * AJAX loader element.
 	 *
-	 * @param string $size m|l|xl AJAX spinner size.
+	 * @param string $size Spinner size. Uses 'm', 'l', 'xl'. Default 'l'.
 	 *
 	 * @return string
 	 */
@@ -170,12 +189,26 @@ class Layouts {
 		return $content[ $size ];
 	}
 
+	/**
+	 * Box element.
+	 *
+	 * @param string $content Box HTML content.
+	 * @param array  $args    {
+	 *     Box additional arguments.
+	 *
+	 *     @type string           $title   Box title. Displayed in header if not empty.
+	 *     @type string[]         $classes Additional box classes.
+	 *     @type string           $footer  Box footer content. Displayed in if not empty.
+	 *     @type array[]|string[] $actions Dropdown menu actions. Displayed in header if not empty.
+	 * }
+	 *
+	 * @return string
+	 */
 	public static function box( $content, $args = array() ) {
 		$args = wp_parse_args(
 			$args,
 			array(
 				'title'   => '',
-				'primary' => false,
 				'classes' => array(),
 				'footer'  => '',
 				'actions' => array(),
