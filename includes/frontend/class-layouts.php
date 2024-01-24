@@ -13,30 +13,35 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Layouts {
 
 	/**
-	 * Unified dropdown menu
+	 * Dropdown menu.
 	 *
-	 * @param string $element
-	 * @param string $trigger
-	 * @param array  $items
-	 * @param string $parent
+	 * Note: !!!!Important: all links in the dropdown items must have "class" attribute.
+	 *
+	 * @param string $element Additional class for `um-dropdown-toggle` element to make the dropdown unique.
+	 * @param array  $items   Dropdown Menu Items.
+	 * @param array  $args    Dropdown Menu additional arguments
+	 *
+	 * @return string
 	 */
-	public static function dropdown_menu( $element, $trigger, $args = array(), $parent = '' ) {
+	public static function dropdown_menu( $element, $items, $args = array() ) {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'items'  => array(),
-				'header' => '',
-				'width'  => '150',
+				'event'  => 'click', // Event in JS that will be used for trigger displaying menu.
+				'header' => '',      // HTML that would be used as the dropdown menu header.
+				'width'  => '150',   // Dropdown menu predefined width.
+				'parent' => '',      // Parent element for rendering dropdown menu after show event. If empty then <body>.
 			)
 		);
 
-		if ( empty( $args['items'] ) ) {
-			return;
+		if ( empty( $items ) ) {
+			return '';
 		}
 
-		$items = $args['items'];
+		$trigger = $args['event'];
+		$parent  = $args['parent'];
 
-		// !!!!Important: all links in the dropdown items must have "class" attribute
+		ob_start();
 		?>
 		<div class="um-dropdown-wrapper">
 			<div class="um-dropdown-toggle <?php echo esc_attr( $element ); ?>"></div>
@@ -73,8 +78,8 @@ class Layouts {
 				</ul>
 			</div>
 		</div>
-
 		<?php
+		return ob_get_clean();
 	}
 
 	/**
@@ -113,7 +118,24 @@ class Layouts {
 		<?php
 	}
 
+	/**
+	 * Generates the content of AJAX loader.
+	 *
+	 * @param string $size m|l|xl AJAX spinner size.
+	 *
+	 * @return string
+	 */
 	public static function ajax_loader( $size = 'l' ) {
+		if ( ! in_array( $size, array( 'm', 'l', 'xl' ), true ) ) {
+			return '';
+		}
+
+		static $content = array();
+
+		if ( ! empty( $content[ $size ] ) ) {
+			return $content[ $size ];
+		}
+
 		ob_start();
 		?>
 		<span class="um-ajax-spinner-svg um-ajax-spinner-<?php echo esc_attr( $size ); ?>">
@@ -143,7 +165,9 @@ class Layouts {
 			?>
 		</span>
 		<?php
-		return ob_get_clean();
+		$content[ $size ] = ob_get_clean();
+
+		return $content[ $size ];
 	}
 
 	public static function box( $content, $args = array() ) {
@@ -182,7 +206,7 @@ class Layouts {
 
 				<?php
 				if ( ! empty( $args['actions'] ) ) {
-					self::dropdown_menu( 'um-box-dropdown-toggle', 'click', array( 'items' => $args['actions'] ) );
+					echo self::dropdown_menu( 'um-box-dropdown-toggle', $args['actions'] );
 				}
 				?>
 			</div>
