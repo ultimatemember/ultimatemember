@@ -466,7 +466,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				array(
 					'id'          => '_um_access_hide_from_queries',
 					'type'        => 'checkbox',
-					'label'       => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Hide from queries', 'ultimate-member' ) : __( 'Would you like to display 404 error on the term\'s archive page and terms\' posts single pages when users haven\'t access?', 'ultimate-member' ),
+					'label'       => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Hide from queries', 'ultimate-member' ) : __( 'Would you like to display a 404 page for users who do not have access to this term on the term\'s archive page and terms\' posts single pages?', 'ultimate-member' ),
 					'description' => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Exclude only from WP queries results', 'ultimate-member' ) : __( 'Recommended to be enabled. Restricted term\'s archive page and all terms\' posts will be hidden by exclusion from WP Query. The safest and most effective method that hides post and its comments from all requests, RSS feeds, etc. on your site', 'ultimate-member' ),
 					'value'       => 1,
 					'conditional' => array( '_um_accessible', '!=', '0' ),
@@ -618,7 +618,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				array(
 					'id'          => '_um_access_hide_from_queries',
 					'type'        => 'checkbox',
-					'label'       => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Hide from queries', 'ultimate-member' ) : __( 'Would you like to display 404 error on the term\'s archive page and terms\' posts single pages when users haven\'t access?', 'ultimate-member' ),
+					'label'       => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Hide from queries', 'ultimate-member' ) : __( 'Would you like to display a 404 page for users who do not have access to this term on the term\'s archive page and terms\' posts single pages?', 'ultimate-member' ),
 					'description' => UM()->options()->get( 'disable_restriction_pre_queries' ) ? __( 'Exclude only from WP queries results', 'ultimate-member' ) : __( 'Recommended to be enabled. Restricted term\'s archive page and all terms\' posts will be hidden by exclusion from WP Query. The safest and most effective method that hides post and its comments from all requests, RSS feeds, etc. on your site', 'ultimate-member' ),
 					'value'       => ! empty( $data['_um_access_hide_from_queries'] ) ? $data['_um_access_hide_from_queries'] : '',
 					'conditional' => array( '_um_accessible', '!=', '0' ),
@@ -1021,7 +1021,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		public function add_metabox_form() {
 			add_meta_box( 'submitdiv', __( 'Publish', 'ultimate-member' ), array( $this, 'custom_submitdiv' ), 'um_form', 'side', 'high' );
 
-			if ( defined( 'UM_LEGACY_BUILDER_OFF' ) && UM_LEGACY_BUILDER_OFF ) {
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_form_builder' ) ) {
 				// Do new metabox.
 			} else {
 				add_meta_box( 'um-admin-form-mode', __( 'Select Form Type', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );
@@ -1267,7 +1267,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			}
 
 			// Set post meta for legacy support in the future.
-			add_post_meta( $post_id, 'um_form_version', UM_VERSION );
+			add_post_meta( $post_id, 'um_form_version', UM_VERSION, true );
 
 			if ( empty( $_POST['post_title'] ) ) {
 				$where = array( 'ID' => $post_id );

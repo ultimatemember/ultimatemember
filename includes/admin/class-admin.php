@@ -1842,8 +1842,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			$url = add_query_arg(
 				array(
-					'page' => 'um_options',
-					'tab'  => 'override_templates',
+					'page'    => 'um_options',
+					'tab'     => 'advanced',
+					'section' => 'override_templates',
 				),
 				admin_url( 'admin.php' )
 			);

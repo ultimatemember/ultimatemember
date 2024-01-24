@@ -91,7 +91,7 @@ UM.frontend = {
 			}
 		},
 		destroy: function() {
-			if ( jQuery('.cropper-container').length > 0 ) {
+			if ( jQuery('.cropper-container').length > 0 && UM.frontend.cropper.obj ) {
 				UM.frontend.cropper.obj.destroy(); // destroy Cropper.JS method
 				UM.frontend.cropper.obj = null; // flush our own object
 			}

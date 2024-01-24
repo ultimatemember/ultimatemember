@@ -2,13 +2,13 @@
 @import "mixins"
 @import "colors"
 
-##{$prefix}settings-wrap
-  .subsubsub
-    +flex( row, flex-start, center, wrap )
-    margin-left: -3px
-    margin-right: -3px
-    a
-      margin: 0 3px
+//##{$prefix}settings-wrap
+//  .subsubsub
+//    +flex( row, flex-start, center, wrap )
+//    margin-left: -3px
+//    margin-right: -3px
+//    a
+//      margin: 0 3px
 
 .#{$prefix}settings-section
   .description
@@ -38,8 +38,8 @@
   width: 25%
 
 .column-configure
-  width: 60px
-  text-align: center
+  width: 10%
+  text-align: right
 
 th.column-email.column-primary
   padding-left: 48px
@@ -50,7 +50,11 @@ th.column-email.column-primary
     td
       padding-right: 0
 
+##{$prefix}settings-emails
+  margin: 15px 0
+
 ##{$prefix}settings-template-versions
+  margin: 15px 0
   .wp-list-table
     .column-core_version
       width: 100px
@@ -68,6 +72,13 @@ th.column-email.column-primary
   .subsubsub
     float: left
     width: 100%
+  h2.title
+    a.um-back-button
+      font-weight: normal
+      font-size: 30px
+      line-height: 1
+      text-decoration: none
+      margin-right: 5px
 
 
 .#{$prefix}settings-line
