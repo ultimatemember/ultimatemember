@@ -39,26 +39,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		 *
 		 */
 		public function create_list() {
-			$this->exif_extension_notice();
+			$this->old_extensions_notice();
 			$this->show_update_messages();
 			$this->check_wrong_install_folder();
 			$this->need_upgrade();
 			$this->check_wrong_licenses();
 
-			$this->lock_registration();
-
 			$this->extensions_page();
 
 			$this->template_version();
-
-			$this->child_theme_required();
 
 			// Removed for now to avoid the bad reviews.
 			//$this->reviews_notice();
 
 			//$this->future_changed();
-
-			$this->common_secure();
 
 			/**
 			 * UM hook
@@ -226,35 +220,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			}
 		}
 
-
-		/**
-		 * Checking if the "Membership - Anyone can register" WordPress general setting is active
-		 */
-		public function lock_registration() {
-			$users_can_register = get_option( 'users_can_register' );
-			if ( ! $users_can_register ) {
-				return;
-			}
-
-			$allowed_html = array(
-				'a'      => array(
-					'href' => array(),
-				),
-				'strong' => array(),
-			);
-
-			$this->add_notice(
-				'lock_registration',
-				array(
-					'class'       => 'info',
-					// translators: %s: Setting link.
-					'message'     => '<p>' . wp_kses( sprintf( __( 'The <strong>"Membership - Anyone can register"</strong> option on the general settings <a href="%s">page</a> is enabled. This means users can register via the standard WordPress wp-login.php page. If you do not want users to be able to register via this page and only register via the Ultimate Member registration form, you should deactivate this option. You can dismiss this notice if you wish to keep the wp-login.php registration page open.', 'ultimate-member' ), admin_url( 'options-general.php' ) . '#users_can_register' ), $allowed_html ) . '</p>',
-					'dismissible' => true,
-				),
-				10
-			);
-		}
-
 		/**
 		 * Checking if the "Membership - Anyone can register" WordPress general setting is active
 		 */
@@ -307,21 +272,71 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 
 		/**
-		* EXIF library notice
-		*/
-		public function exif_extension_notice() {
-			if ( ! extension_loaded( 'exif' ) ) {
-				$this->add_notice(
-					'exif_disabled',
-					array(
-						'class'       => 'updated',
-						// translators: %s: query args.
-						'message'     => '<p>' . esc_html__( 'Exif is not enabled on your server. Mobile photo uploads will not be rotated correctly until you enable the exif extension.', 'ultimate-member' ) . '</p>',
-						'dismissible' => true,
-					)
-				);
+		 * Show notice for customers with old extension's versions
+		 */
+		public function old_extensions_notice() {
+			$show = false;
+
+			$old_extensions = array(
+				'bbpress',
+				'followers',
+				'friends',
+				'instagram',
+				'mailchimp',
+				'messaging',
+				'mycred',
+				'notices',
+				'notifications',
+				'online',
+				'private-content',
+				'profile-completeness',
+				'recaptcha',
+				'reviews',
+				'social-activity',
+				'social-login',
+				'terms-conditions',
+				'user-tags',
+				'verified-users',
+				'woocommerce',
+			);
+
+			$slugs = array_map(
+				function( $item ) {
+					return 'um-' . $item . '/um-' . $item . '.php';
+				},
+				$old_extensions
+			);
+
+			$active_plugins = UM()->dependencies()->get_active_plugins();
+			foreach ( $slugs as $slug ) {
+				if ( in_array( $slug, $active_plugins ) ) {
+					$path = wp_normalize_path( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $slug );
+					if ( ! file_exists( $path ) ) {
+						continue;
+					}
+					$plugin_data = get_plugin_data( $path );
+					if ( version_compare( '2.0', $plugin_data['Version'], '>' ) ) {
+						$show = true;
+						break;
+					}
+				}
 			}
+
+			if ( ! $show ) {
+				return;
+			}
+
+			$this->add_notice(
+				'old_extensions',
+				array(
+					'class'   => 'error',
+					// translators: %1$s is a plugin name; %2$s is a plugin version; %3$s is a plugin name; %4$s is a doc link.
+					'message' => '<p>' . sprintf( __( '<strong>%1$s %2$s</strong> requires 2.0 extensions. You have pre 2.0 extensions installed on your site. <br /> Please update %3$s extensions to latest versions. For more info see this <a href="%4$s" target="_blank">doc</a>.', 'ultimate-member' ), UM_PLUGIN_NAME, UM_VERSION, UM_PLUGIN_NAME, 'https://docs.ultimatemember.com/article/201-how-to-update-your-site' ) . '</p>',
+				),
+				0
+			);
 		}
+
 
 		/**
 		 * Updating users
@@ -419,11 +434,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		/**
 		 * Check if plugin is installed with correct folder
 		 */
-		function check_wrong_install_folder() {
+		public function check_wrong_install_folder() {
 			$invalid_folder = false;
 
 			$slug_array = explode( '/', UM_PLUGIN );
-			if ( $slug_array[0] != 'ultimate-member' ) {
+			if ( 'ultimate-member' !== $slug_array[0] ) {
 				$invalid_folder = true;
 			}
 
@@ -441,8 +456,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		}
 
 
-		function check_wrong_licenses() {
-			$invalid_license = 0;
+		public function check_wrong_licenses() {
+			$invalid_license           = 0;
 			$arr_inactive_license_keys = array();
 
 			if ( empty( UM()->admin_settings()->settings_structure['licenses']['fields'] ) ) {
@@ -452,10 +467,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			foreach ( UM()->admin_settings()->settings_structure['licenses']['fields'] as $field_data ) {
 				$license = get_option( "{$field_data['id']}_edd_answer" );
 
-				if ( ( is_object( $license ) && 'valid' == $license->license ) || 'valid' == $license )
+				if ( ( is_object( $license ) && 'valid' === $license->license ) || 'valid' === $license ) {
 					continue;
+				}
 
-				if ( ( is_object( $license ) && 'inactive' == $license->license ) || 'inactive' == $license ) {
+				if ( ( is_object( $license ) && 'inactive' === $license->license ) || 'inactive' === $license ) {
 					$arr_inactive_license_keys[] = $license->item_name;
 				}
 
@@ -488,7 +504,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		}
 
 
-		function need_upgrade() {
+		public function need_upgrade() {
 			if ( ! empty( UM()->admin_upgrade()->necessary_packages ) ) {
 
 				$url = add_query_arg( array( 'page' => 'um_upgrade' ), admin_url( 'admin.php' ) );
@@ -505,23 +521,31 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				</p>
 
 				<p>
-					<a href="<?php echo esc_url( $url ) ?>" class="button button-primary"><?php esc_html_e( 'Visit Upgrade Page', 'ultimate-member' ); ?></a>
+					<a href="<?php echo esc_url( $url ); ?>" class="button button-primary"><?php esc_html_e( 'Visit Upgrade Page', 'ultimate-member' ); ?></a>
 					&nbsp;
 				</p>
 
 				<?php $message = ob_get_clean();
 
-				$this->add_notice( 'upgrade', array(
-					'class'     => 'error',
-					'message'   => $message,
-				), 4 );
+				$this->add_notice(
+					'upgrade',
+					array(
+						'class'     => 'error',
+						'message'   => $message,
+					),
+					4
+				);
 			} else {
 				if ( isset( $_GET['msg'] ) && 'updated' === sanitize_key( $_GET['msg'] ) ) {
 					if ( isset( $_GET['page'] ) && 'um_options' === sanitize_key( $_GET['page'] ) ) {
-						$this->add_notice( 'settings_upgrade', array(
-							'class'     => 'updated',
-							'message'   => '<p>' . __( 'Settings successfully upgraded', 'ultimate-member' ) . '</p>',
-						), 4 );
+						$this->add_notice(
+							'settings_upgrade',
+							array(
+								'class'   => 'updated',
+								'message' => '<p>' . esc_html__( 'Settings successfully upgraded', 'ultimate-member' ) . '</p>',
+							),
+							4
+						);
 					} else {
 						$this->add_notice(
 							'upgrade',
@@ -659,39 +683,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		}
 
 		/**
-		 * Check if there isn't installed child-theme. Child theme is required for safely saved customizations.
-		 */
-		public function child_theme_required() {
-			if ( ! is_child_theme() ) {
-				if ( ! is_dir( get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' ) ) {
-					return;
-				}
-
-				ob_start();
-				?>
-
-				<p>
-					<?php
-					// translators: %s child-theme article link.
-					echo wp_kses( sprintf( __( 'We highly recommend using a <a href="%s">child-theme</a> for Ultimate Member customization, which hasn\'t dependencies with the official themes repo, so your custom files cannot be rewritten after a theme upgrade.<br />Otherwise, the customization files may be deleted after every theme upgrade.', 'ultimate-member' ), 'https://developer.wordpress.org/themes/advanced-topics/child-themes/' ), UM()->get_allowed_html( 'admin_notice' ) );
-					?>
-				</p>
-
-				<?php
-				$message = ob_get_clean();
-				UM()->admin()->notices()->add_notice(
-					'um_is_not_child_theme',
-					array(
-						'class'       => 'notice-warning',
-						'message'     => $message,
-						'dismissible' => true,
-					),
-					10
-				);
-			}
-		}
-
-		/**
 		 * First time installed Secure settings.
 		 */
 		public function secure_settings() {
@@ -711,191 +702,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				'secure_settings',
 				array(
 					'class'       => 'warning',
-					'message'     => $message,
-					'dismissible' => true,
-				),
-				1
-			);
-		}
-
-		public function common_secure() {
-			if ( UM()->options()->get( 'lock_register_forms' ) ) {
-				ob_start();
-				?>
-				<p>
-					<?php esc_html_e( 'Your Register forms are now locked. You can unlock them in Ultimate Member > Settings > Secure > Lock All Register Forms.', 'ultimate-member' ); ?>
-				</p>
-				<?php
-				$message = ob_get_clean();
-				$this->add_notice(
-					'common_secure_register',
-					array(
-						'class'       => 'warning',
-						'message'     => $message,
-						'dismissible' => true,
-					),
-					1
-				);
-			}
-
-			if ( UM()->options()->get( 'display_login_form_notice' ) ) {
-				ob_start();
-				?>
-				<p>
-					<?php esc_html_e( 'Mandatory password changes has been enabled. You can disable them in Ultimate Member > Settings > Secure > Display Login form notice to reset passwords.', 'ultimate-member' ); ?>
-				</p>
-				<?php
-				$message = ob_get_clean();
-				$this->add_notice(
-					'common_secure_password_reset',
-					array(
-						'class'       => 'warning',
-						'message'     => $message,
-						'dismissible' => true,
-					),
-					1
-				);
-			}
-
-			if ( UM()->options()->get( 'secure_ban_admins_accounts' ) ) {
-				ob_start();
-				?>
-				<p>
-					<?php esc_html_e( 'Ban for administrative capabilities is enabled. You can disable them in Ultimate Member > Settings > Secure > Enable ban for administrative capabilities.', 'ultimate-member' ); ?>
-				</p>
-				<?php
-				$message = ob_get_clean();
-				$this->add_notice(
-					'common_secure_suspicious_activity',
-					array(
-						'class'       => 'warning',
-						'message'     => $message,
-						'dismissible' => true,
-					),
-					1
-				);
-			}
-
-			$this->check_new_user_role();
-			$this->check_registration_forms();
-		}
-
-		private function check_new_user_role() {
-			$arr_banned_caps = UM()->options()->get( 'banned_capabilities' );
-			if ( empty( $arr_banned_caps ) ) {
-				return;
-			}
-
-			$global_role = get_option( 'default_role' ); // WP Global settings
-			$global_role = get_role( $global_role );
-			$caps        = ( null !== $global_role && ! empty( $global_role->capabilities ) ) ? $global_role->capabilities : array();
-			foreach ( array_keys( $caps ) as $cap ) {
-				if ( in_array( $cap, $arr_banned_caps, true ) ) {
-					ob_start();
-					?>
-					<p>
-						<?php esc_html_e( 'The role selected in WordPress native "Settings > New User Default Role" setting has Administrative capabilities.', 'ultimate-member' ); ?>
-					</p>
-					<?php
-					$message = ob_get_clean();
-					$this->add_notice(
-						'default_role_suspicious_activity',
-						array(
-							'class'       => 'notice-warning',
-							'message'     => $message,
-							'dismissible' => true,
-						),
-						1
-					);
-					break;
-				}
-			}
-
-			$um_global_role = UM()->options()->get( 'register_role' ); // UM Settings Global settings
-			if ( ! empty( $um_global_role ) ) {
-				$um_global_role = get_role( $um_global_role );
-				$caps           = ( null !== $um_global_role && ! empty( $um_global_role->capabilities ) ) ? $um_global_role->capabilities : array();
-				foreach ( array_keys( $caps ) as $cap ) {
-					if ( in_array( $cap, $arr_banned_caps, true ) ) {
-						ob_start();
-						?>
-						<p>
-							<?php esc_html_e( 'The role selected in "Ultimate Member > Settings > Appearance > Registration Form > Registration Default Role" setting has Administrative capabilities.', 'ultimate-member' ); ?>
-						</p>
-						<?php
-						$message = ob_get_clean();
-						$this->add_notice(
-							'register_role_suspicious_activity',
-							array(
-								'class'       => 'notice-warning',
-								'message'     => $message,
-								'dismissible' => true,
-							),
-							1
-						);
-						break;
-					}
-				}
-			}
-		}
-
-		private function check_registration_forms() {
-			$arr_banned_caps = UM()->options()->get( 'banned_capabilities' );
-			if ( empty( $arr_banned_caps ) ) {
-				return;
-			}
-
-			$um_forms = get_posts(
-				array(
-					'post_type'   => 'um_form',
-					'meta_query'  => array(
-						array(
-							'key'   => '_um_mode',
-							'value' => 'register',
-						),
-						array(
-							'key'   => '_um_register_use_custom_settings',
-							'value' => true,
-						),
-					),
-					'numberposts' => -1,
-					'fields'      => 'ids',
-				)
-			);
-
-			$content = '';
-			foreach ( $um_forms as $form_id ) {
-				$role = get_post_meta( $form_id, '_um_register_role', true );
-				if ( empty( $role ) ) {
-					continue;
-				}
-
-				$role = get_role( $role );
-				$caps = ( null !== $role && ! empty( $role->capabilities ) ) ? $role->capabilities : array();
-				foreach ( array_keys( $caps ) as $cap ) {
-					if ( in_array( $cap, $arr_banned_caps, true ) ) {
-						$content .= '<br /><a target="_blank" href="' . get_edit_post_link( $form_id ) . '">' . get_the_title( $form_id ) . '</a> contains <strong>administrative role</strong>.';
-						break;
-					}
-				}
-			}
-
-			if ( empty( $content ) ) {
-				return;
-			}
-
-			ob_start();
-			?>
-			<p>
-				<?php // translators: %s are link(s) to the forms. ?>
-				<?php echo wp_kses( sprintf( __( 'Register forms have Administrative roles, we recommend that you assign a non-admin roles to secure the forms. %s', 'ultimate-member' ), $content ), UM()->get_allowed_html( 'admin_notice' ) ); ?>
-			</p>
-			<?php
-			$message = ob_get_clean();
-			$this->add_notice(
-				'forms_secure_suspicious_activity',
-				array(
-					'class'       => 'notice-warning',
 					'message'     => $message,
 					'dismissible' => true,
 				),

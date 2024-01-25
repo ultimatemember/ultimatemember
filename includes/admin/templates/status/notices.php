@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <p>
 	<?php esc_html_e( 'Here you can see all your Ultimate member notices that may cause problems with your site.', 'ultimate-member' ); ?>
 </p>
-<div class="um-status-notices">
+<div id="um-status-notices">
 	<table class="wp-list-table widefat fixed striped table-view-list us-notices-table widefat">
 		<?php foreach ( $notices as $notice ) { ?>
 			<tr class="error">
