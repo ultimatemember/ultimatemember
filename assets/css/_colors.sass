@@ -77,6 +77,11 @@ $success-700: var(--um-success-700, #027a48)
 $success-800: var(--um-success-800, #05603a)
 $success-900: var(--um-success-900, #054f31)
 
+// Border radius
+$radius-m: 6px
+$radius-l: 8px
+$radius-xl: 12px
+
 $button-bg: var(--um-blocks-button-bg-color, $um-white)
 $button-bg-hover: var(--um-blocks-button-bg-hover-color, $gray-50)
 $button-bg-disabled: var(--um-blocks-button-bg-disabled-color, $button-bg)
@@ -91,13 +96,13 @@ $button-primary-bg-hover: $primary-700
 $button-primary-bg-disabled: $primary-200
 $button-primary-color: var(--um-primary-600-fg, $um-white)
 
-$button-border-radius: 8px
+$button-border-radius: $radius-l
 
 $icon-size: 20px
-$block-border-radius: 8px
+$block-border-radius: $radius-l
 
 // Text input variables
-$text-input-border-radius: 6px
+$text-input-border-radius: $radius-m
 $text-input-bg: $um-white
 $text-input-color: $um-black
 $text-input-border-color: $gray-300
@@ -128,5 +133,4 @@ $l-line-height: 28px
 $row-gap: 8px
 $column-gap: 8px
 $box-padding: 24px
-$box-border-radius: 12px
-$dropdown-border-radius: 8px
+$box-border-radius: $radius-xl

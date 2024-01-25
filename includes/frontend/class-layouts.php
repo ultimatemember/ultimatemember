@@ -256,6 +256,25 @@ class Layouts {
 		return ob_get_clean();
 	}
 
+	public static function single_avatar( $user_id, $args = array() ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'size' => 'm',
+				'type' => 'round',
+			)
+		);
+
+		$avatar = get_avatar( $user_id, 26 );
+		ob_start();
+		?>
+		<div class="um-avatar un-avatar-<?php echo esc_attr( $args['size'] ); ?>">
+
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
 	/**
 	 * New menu JS
 	 *

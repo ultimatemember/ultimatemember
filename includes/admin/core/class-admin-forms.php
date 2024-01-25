@@ -1,12 +1,11 @@
 <?php
 namespace um\admin\core;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
-
 
 	/**
 	 * Class Admin_Forms
@@ -14,23 +13,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 	 */
 	class Admin_Forms {
 
-
 		/**
 		 * @var bool
 		 */
 		var $form_data;
 
-
 		/**
 		 * Admin_Forms constructor.
 		 * @param bool $form_data
 		 */
-		function __construct( $form_data = false ) {
+		public function __construct( $form_data = false ) {
 			if ( $form_data ) {
 				$this->form_data = $form_data;
 			}
 		}
-
 
 		/**
 		 * Set Form Data
@@ -39,11 +35,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 *
 		 * @return $this
 		 */
-		function set_data( $data ) {
+		public function set_data( $data ) {
 			$this->form_data = $data;
 			return $this;
 		}
-
 
 		/**
 		 * Render form
@@ -1409,6 +1404,122 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			}
 
 			$html .= "</ul><a href=\"javascript:void(0);\" class=\"button button-primary um-multi-text-add-option\" data-name=\"$name\">{$field_data['add_text']}</a>";
+
+			return $html;
+		}
+
+		/**
+		 * @param $field_data
+		 *
+		 * @return bool|string
+		 */
+		public function render_avatar_sizes( $field_data ) {
+			if ( empty( $field_data['id'] ) ) {
+				return false;
+			}
+
+			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
+
+			$class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
+			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
+
+			$data = array(
+				'field_id'   => $field_data['id'],
+				'id_attr'    => $id,
+				'item_class' => "um-avatar-size-option-line",
+			);
+
+			$data_attr = '';
+			foreach ( $data as $key => $value ) {
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
+			}
+
+			$name = $field_data['id'];
+			$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
+			$name = "{$name}[]";
+			$name_attr = ' name="' . $name . '" ';
+
+			$values = $this->get_field_value( $field_data );
+
+			$html = "<input type=\"text\" class=\"um-hidden-avatar-size\" $data_attr />";
+			$html .= "<table class=\"um-avatar-sizes-list\"><thead><th class=\"um-avatar-size-default\">" . esc_html__( 'Global default', 'ultimate-member' ) . "</th><th class=\"um-avatar-size\">" . esc_html__( 'Size in px', 'ultimate-member' ) . "</th></thead><tbody>";
+
+			$default_sizes = array(
+				'original' => array(
+					'title'    => __( 'Original', 'ultimate-member' ),
+					'value'    => __( 'Original', 'ultimate-member' ),
+					'editable' => false,
+				),
+				'16'       => array(
+					'title'    => __( '16x16px', 'ultimate-member' ),
+					'value'    => 16,
+					'editable' => false,
+				),
+				'32'       => array(
+					'title'    => __( '32x32px', 'ultimate-member' ),
+					'value'    => 32,
+					'editable' => false,
+				),
+				'40'       => array(
+					'title'    => __( '40x40px', 'ultimate-member' ),
+					'value'    => 40,
+					'editable' => true,
+				),
+				'64'       => array(
+					'title'    => __( '64x64px', 'ultimate-member' ),
+					'value'    => 64,
+					'editable' => false,
+				),
+				'80'       => array(
+					'title'    => __( '80x80px', 'ultimate-member' ),
+					'value'    => 80,
+					'editable' => true,
+				),
+				'128'      => array(
+					'title'    => __( '128x128px', 'ultimate-member' ),
+					'value'    => 128,
+					'editable' => false,
+					'default'  => true,
+				),
+				'190'      => array(
+					'title'    => __( '190x190px', 'ultimate-member' ),
+					'value'    => 190,
+					'editable' => true,
+				),
+			);
+
+			foreach ( $default_sizes as $default_size_key => $default_size_data ) {
+				$html .= "<tr>
+					<th class=\"um-avatar-size-default\"><label aria-label=\"" . esc_attr( sprintf( __( 'Set "%s" size as global default for avatar', 'ultimate-member' ), $default_size_data['title'] ) ) . "\"><input type=\"radio\" name=\"um_options[profile_photosize]\" value=\"" . esc_attr( $default_size_key ) . "\" " . checked( ! empty( $default_size_data['default'] ), true, false ) . " /></label></th>
+					<td class=\"um-avatar-size\">
+						<input type=\"text\" id=\"{$id}-original\" $name_attr $class_attr $data_attr value=\"" . esc_attr( $default_size_data['value'] ) . "\" " . disabled( ! $default_size_data['editable'], true, false ) . ' ' . wp_readonly( ! $default_size_data['editable'], true, false ) . " />
+					</td>
+				</tr>";
+			}
+
+			if ( ! empty( $values ) ) {
+				foreach ( $values as $k => $value ) {
+					$value = esc_attr( $value );
+					$id_attr = ' id="' . esc_attr( $id . '-' . $k ) . '" ';
+
+					$html .= "<li class=\"um-multi-text-option-line {$size}\"><span class=\"um-field-wrapper\">
+						<input type=\"text\" $id_attr $name_attr $class_attr $data_attr value=\"$value\" /></span>
+						<span class=\"um-field-control\"><a href=\"javascript:void(0);\" class=\"um-text-delete\">" . __( 'Remove', 'ultimate-member' ) . "</a></span></li>";
+				}
+			} elseif ( ! empty( $field_data['show_default_number'] ) && is_numeric( $field_data['show_default_number'] ) && $field_data['show_default_number'] > 0 ) {
+				$i = 0;
+				while( $i < $field_data['show_default_number'] ) {
+					$id_attr = ' id="' . esc_attr( $id . '-' . $i ) . '" ';
+
+					$html .= "<li class=\"um-multi-text-option-line {$size}\"><span class=\"um-field-wrapper\">
+						 <input type=\"text\" $id_attr $name_attr $class_attr $data_attr value=\"\" /></span>
+						<span class=\"um-field-control\"><a href=\"javascript:void(0);\" class=\"um-text-delete\">" . __( 'Remove', 'ultimate-member' ) . "</a></span></li>";
+
+					$i++;
+				}
+			}
+
+			$html .= "</tbody></table><a href=\"javascript:void(0);\" class=\"button button-primary um-avatar-sizes-add-option\" data-name=\"$name\">{$field_data['add_text']}</a>";
 
 			return $html;
 		}
