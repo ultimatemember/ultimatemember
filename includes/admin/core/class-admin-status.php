@@ -252,14 +252,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Status' ) ) {
 						);
 					}
 				}
-
-				// @todo DELETE THIS
-				$notices[] = array(
-					'id'       => 'wrong_account_page',
-					'priority' => 1,
-					'class'    => 'updated',
-					'message'  => '<p>' . esc_html__( 'Ultimate Member Setup Error: Account page can not be a child page.', 'ultimate-member' ) . '</p>',
-				);
 			}
 
 			return $notices;
