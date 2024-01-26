@@ -2150,15 +2150,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								'description' => __( 'Sets a maximum size for the uploaded photo', 'ultimate-member' ),
 							),
 							array(
-								'id'          => 'photo_thumb_sizes',
-								'type'        => 'multi_text',
-								'size'        => 'small',
-								'label'       => __( 'Custom Avatar Thumbnail Sizes (px)', 'ultimate-member' ),
-								'description' => __( 'Here you can define which custom thumbnail sizes will be created for each profile photo upload.', 'ultimate-member' ),
-								'validate'    => 'numeric',
-								'add_text'    => __( 'Add New Size', 'ultimate-member' ),
-							),
-							array(
 								'id'             => 'disable_profile_photo_upload',
 								'type'           => 'checkbox',
 								'label'          => __( 'Disable Profile Photo Upload', 'ultimate-member' ),

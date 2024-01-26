@@ -39,6 +39,13 @@ if ( ! class_exists( 'um\Config' ) ) {
 		public $predefined_pages;
 
 		/**
+		 * @since 2.8.3
+		 *
+		 * @var array
+		 */
+		public $avatar_thumbnail_sizes;
+
+		/**
 		 * @var array
 		 */
 		public $core_directory_meta = array();
@@ -935,21 +942,21 @@ if ( ! class_exists( 'um\Config' ) ) {
 		}
 
 		public function init_avatar_thumbnail_sizes() {
-			$sizes = array( 16, 32, 64,128, 256 );
-			$default_sizes = array(
-				'40'       => array(
-					'title'    => __( '40x40px', 'ultimate-member' ),
-					'value'    => 40,
-				),
-				'80'       => array(
-					'title'    => __( '80x80px', 'ultimate-member' ),
-					'value'    => 80,
-				),
-				'190'      => array(
-					'title'    => __( '190x190px', 'ultimate-member' ),
-					'value'    => 190,
-				),
-			);
+			$this->avatar_thumbnail_sizes = array( 24, 32, 48, 64, 128, 256 );
+//			$default_sizes = array(
+//				'40'       => array(
+//					'title'    => __( '40x40px', 'ultimate-member' ),
+//					'value'    => 40,
+//				),
+//				'80'       => array(
+//					'title'    => __( '80x80px', 'ultimate-member' ),
+//					'value'    => 80,
+//				),
+//				'190'      => array(
+//					'title'    => __( '190x190px', 'ultimate-member' ),
+//					'value'    => 190,
+//				),
+//			);
 		}
 	}
 }

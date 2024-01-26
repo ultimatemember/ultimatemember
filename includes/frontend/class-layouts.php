@@ -275,14 +275,14 @@ class Layouts {
 
 		$thumb_size = 32;
 		if ( 's' === $args['size'] ) {
-			$thumb_size = 16;
+			$thumb_size = 24;
 		} elseif ( 'l' === $args['size'] ) {
 			$thumb_size = 64;
 		} elseif ( 'xl' === $args['size'] ) {
 			$thumb_size = 128;
 		}
 
-		$avatar = get_avatar( $user_id, $thumb_size );
+		$avatar = get_avatar( $user_id, $thumb_size, '', '', array( 'loading' => 'lazy' ) );
 
 		ob_start();
 		?>
