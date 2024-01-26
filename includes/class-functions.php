@@ -741,5 +741,24 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 			return $allowed_html;
 		}
+
+		/**
+		 * Find the closest number in an array.
+		 *
+		 * @param int[] $array
+		 * @param int   $number
+		 *
+		 * @return int
+		 */
+		public function get_closest_value( $array, $number ) {
+			sort( $array );
+			foreach ( $array as $a ) {
+				if ( $a >= $number ) {
+					return $a;
+				}
+			}
+
+			return end( $array );
+		}
 	}
 }

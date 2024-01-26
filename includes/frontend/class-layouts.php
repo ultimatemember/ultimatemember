@@ -256,7 +256,15 @@ class Layouts {
 		return ob_get_clean();
 	}
 
-	public static function single_avatar( $user_id, $args = array() ) {
+	public static function single_avatar( $user_id = false, $args = array() ) {
+		if ( false === $user_id && is_user_logged_in() ) {
+			$user_id = get_current_user_id();
+		}
+
+		if ( empty( $user_id ) ) {
+			return '';
+		}
+
 		$args = wp_parse_args(
 			$args,
 			array(
@@ -265,11 +273,21 @@ class Layouts {
 			)
 		);
 
-		$avatar = get_avatar( $user_id, 26 );
+		$thumb_size = 32;
+		if ( 's' === $args['size'] ) {
+			$thumb_size = 16;
+		} elseif ( 'l' === $args['size'] ) {
+			$thumb_size = 64;
+		} elseif ( 'xl' === $args['size'] ) {
+			$thumb_size = 128;
+		}
+
+		$avatar = get_avatar( $user_id, $thumb_size );
+
 		ob_start();
 		?>
-		<div class="um-avatar un-avatar-<?php echo esc_attr( $args['size'] ); ?>">
-
+		<div class="um-avatar um-avatar-<?php echo esc_attr( $args['size'] ); ?> um-avatar-<?php echo esc_attr( $args['type'] ); ?>">
+			<?php echo $avatar; ?>
 		</div>
 		<?php
 		return ob_get_clean();

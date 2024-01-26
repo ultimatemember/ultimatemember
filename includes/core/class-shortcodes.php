@@ -177,6 +177,20 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			ob_start();
 			?>
 			<div class="um">
+				<h3>Avatars</h3>
+				<p>s</p>
+				<?php echo UM()->frontend()::layouts()::single_avatar( get_current_user_id(), array( 'size' => 's' ) ); ?>
+				<?php echo UM()->frontend()::layouts()::single_avatar( get_current_user_id(), array( 'size' => 's', 'type' => 'square' ) ); ?>
+				<p>m</p>
+				<?php echo UM()->frontend()::layouts()::single_avatar(); ?>
+				<?php echo UM()->frontend()::layouts()::single_avatar( get_current_user_id(), array( 'size' => 'm', 'type' => 'square' ) ); ?>
+				<p>l</p>
+				<?php echo UM()->frontend()::layouts()::single_avatar( get_current_user_id(), array( 'size' => 'l' ) ); ?>
+				<?php echo UM()->frontend()::layouts()::single_avatar( get_current_user_id(), array( 'size' => 'l', 'type' => 'square' ) ); ?>
+				<p>xl</p>
+				<?php echo UM()->frontend()::layouts()::single_avatar( get_current_user_id(), array( 'size' => 'xl' ) ); ?>
+				<?php echo UM()->frontend()::layouts()::single_avatar( get_current_user_id(), array( 'size' => 'xl', 'type' => 'square' ) ); ?>
+
 				<h3>Figma palette</h3>
 				<div style="display:flex;justify-content: flex-start;align-items:baseline; flex-wrap: wrap;margin-bottom:20px;">
 					<?php foreach ( $palette as $title => $colors ) { ?>

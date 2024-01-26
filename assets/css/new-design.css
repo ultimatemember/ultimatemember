@@ -181,3 +181,27 @@
       color: var(--um-primary-800-bg, #53389e); }
     .um .um-link:focus {
       color: var(--um-primary-700-bg, #6941c6); }
+  .um .um-avatar {
+    margin: 0;
+    padding: 0; }
+    .um .um-avatar img {
+      display: block;
+      width: 100%;
+      float: left;
+      margin: 0;
+      padding: 0; }
+    .um .um-avatar.um-avatar-s {
+      width: 16px;
+      height: 16px; }
+    .um .um-avatar.um-avatar-m {
+      width: 32px;
+      height: 32px; }
+    .um .um-avatar.um-avatar-l {
+      width: 64px;
+      height: 64px; }
+    .um .um-avatar.um-avatar-xl {
+      width: 128px;
+      height: 128px; }
+    .um .um-avatar.um-avatar-round {
+      overflow: hidden;
+      border-radius: 100%; }
