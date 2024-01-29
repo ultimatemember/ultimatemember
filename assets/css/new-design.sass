@@ -179,6 +179,30 @@
       margin: 0
       padding: 0
       position: relative
+      .#{$prefix}profile-photo
+        &:hover
+          & ~ .#{$prefix}profile-photo-uploader-overflow
+            display: block
+    .#{$prefix}profile-photo-uploader-overflow
+      cursor: pointer
+      position: absolute
+      top: 3px
+      left: 3px
+      bottom: 3px
+      right: 3px
+      background: rgba(0, 0, 0, 0.2)
+      border-radius: 100%
+      display: none
+      svg
+        transform: scale(2)
+        stroke: $um-white
+        position: absolute
+        top: calc( 50% - 12px )
+        left: calc( 50% - 12px )
+        > *
+          stroke: $um-white
+      &:hover
+        display: block
     .#{$prefix}profile-photo-overflow
       backdrop-filter: blur(10px)
       position: absolute

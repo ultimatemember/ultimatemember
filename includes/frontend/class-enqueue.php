@@ -89,8 +89,11 @@ final class Enqueue extends \um\common\Enqueue {
 
 			wp_register_script( 'um_frontend_common', $js_url . 'common-frontend' . $suffix . '.js', array( 'um_common', 'um_crop', 'um_dropdown' ), UM_VERSION, true );
 
+			wp_register_script( 'um_modal', $libs_url . 'modal/modal' . $suffix . '.js', array( 'um_frontend_common' ), UM_VERSION, true );
+			wp_register_style( 'um_modal', $libs_url . 'modal/modal' . $suffix . '.css', array(), UM_VERSION );
+
 			wp_register_script( 'um_new_design', $js_url . 'new-design' . $suffix . '.js', array( 'um_frontend_common' ), UM_VERSION, true );
-			wp_register_style( 'um_new_design', $css_url . 'new-design' . $suffix . '.css', array( 'um_dropdown', 'um_crop' ), UM_VERSION );
+			wp_register_style( 'um_new_design', $css_url . 'new-design' . $suffix . '.css', array( 'um_dropdown', 'um_crop', 'um_modal' ), UM_VERSION );
 
 		} else {
 			// Cropper.js

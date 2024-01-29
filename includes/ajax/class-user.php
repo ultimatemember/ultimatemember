@@ -50,7 +50,7 @@ class User {
 
 		wp_send_json_success(
 			array(
-				'current_avatar' => get_avatar( $user_id, 128, '', '', array( 'loading' => 'lazy' ) ),
+				'avatar'         => get_avatar( $user_id, 128, '', '', array( 'loading' => 'lazy' ) ),
 				'dropdown_items' => $dropdown_items,
 			)
 		);

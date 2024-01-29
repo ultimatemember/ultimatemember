@@ -76,6 +76,22 @@ gulp.task( 'default', function ( done ) {
 		.pipe( rename({ suffix: '.min' }) )
 		.pipe( gulp.dest( 'assets/libs/dropdown/' ) );
 
+	// Modal lib
+	// full CSS files
+	gulp.src(['assets/libs/modal/*.sass'])
+		.pipe( sass().on( 'error', sass.logError ) )
+		.pipe( gulp.dest( 'assets/libs/modal/' ) );
+	// min CSS files
+	gulp.src(['assets/libs/modal/*.sass'])
+		.pipe( sass().on( 'error', sass.logError ) )
+		.pipe( cleanCSS() )
+		.pipe( rename( { suffix: '.min' } ) )
+		.pipe( gulp.dest( 'assets/libs/modal/' ) );
+	gulp.src(['assets/libs/modal/*.js', '!assets/libs/modal/*.min.js',])
+		.pipe( uglify() )
+		.pipe( rename({ suffix: '.min' }) )
+		.pipe( gulp.dest( 'assets/libs/modal/' ) );
+
 	// Raty lib
 	gulp.src(['assets/libs/raty/*.css', '!assets/libs/raty/*.min.css',])
 		.pipe( cleanCSS() )
