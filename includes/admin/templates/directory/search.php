@@ -10,8 +10,9 @@ $_um_roles_search_value = empty( $_um_roles_search_value ) ? array() : $_um_role
 $_um_roles_filter_value = get_post_meta( $post_id, '_um_roles_can_filter', true );
 $_um_roles_filter_value = empty( $_um_roles_filter_value ) ? array() : $_um_roles_filter_value;
 
-$_um_search_fields  = get_post_meta( $post_id, '_um_search_fields', true );
-$_um_search_filters = get_post_meta( $post_id, '_um_search_filters', true ); ?>
+$_um_search_exclude_fields = get_post_meta( $post_id, '_um_search_exclude_fields', true );
+$_um_search_fields         = get_post_meta( $post_id, '_um_search_fields', true );
+$_um_search_filters        = get_post_meta( $post_id, '_um_search_filters', true ); ?>
 
 
 <div class="um-admin-metabox">
@@ -37,6 +38,17 @@ $_um_search_filters = get_post_meta( $post_id, '_um_search_filters', true ); ?>
 					'options'     => UM()->roles()->get_roles(),
 					'columns'     => 3,
 					'conditional' => array( '_um_search', '=', 1 ),
+				),
+				array(
+					'id'                  => '_um_search_exclude_fields',
+					'type'                => 'multi_selects',
+					'label'               => __( 'Choose fields to exclude from search', 'ultimate-member' ),
+					'value'               => $_um_search_exclude_fields,
+					'conditional'         => array( '_um_filters', '=', 1 ),
+					'options'             => UM()->member_directory()->filter_fields,
+					'add_text'            => __( 'Add New Custom Field to Exclude', 'ultimate-member' ),
+					'show_default_number' => 0,
+					'sorting'             => true,
 				),
 				array(
 					'id'      => '_um_filters',
