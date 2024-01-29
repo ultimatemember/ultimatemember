@@ -1642,34 +1642,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 */
 		public function general_search() {
 			//general search
-			// phpcs:disable WordPress.Security.NonceVerification
 			if ( ! empty( $_POST['search'] ) ) {
 				// complex using with change_meta_sql function
 				$search = $this->prepare_search( $_POST['search'] );
 				if ( ! empty( $search ) ) {
-					$directory_id   = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
-					$exclude_fields = get_post_meta( $directory_id, '_um_search_exclude_fields', true );
-					if ( ! empty( $exclude_fields ) ) {
-						global $wpdb;
-						$exclude_users = array();
-						$search_meta   = '%' . $wpdb->esc_like( $search ) . '%';
-						foreach ( $exclude_fields as $field ) {
-							$field_users = $wpdb->get_col(
-								$wpdb->prepare(
-									"SELECT user_id
-									FROM {$wpdb->usermeta}
-									WHERE meta_key = %s
-									AND meta_value LIKE %s",
-									$field,
-									$search_meta
-								)
-							);
-
-							$exclude_users = array_merge( $exclude_users, $field_users );
-						}
-						$exclude_users = array_unique( $exclude_users );
-					}
-
 					$meta_query = array(
 						'relation' => 'OR',
 						array(
@@ -1689,17 +1665,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$meta_query = apply_filters( 'um_member_directory_general_search_meta_query', $meta_query, $search );
 
 					$this->query_args['meta_query'][] = $meta_query;
-					if ( ! empty( $exclude_users ) ) {
-						if ( ! empty( $this->query_args['exclude'] ) ) {
-							$exclude_users = array_unique( array_merge( $exclude_users, $this->query_args['exclude'] ) );
-						}
-						$this->query_args['exclude'] = $exclude_users;
-					}
 
 					$this->is_search = true;
 				}
 			}
-			// phpcs:enable WordPress.Security.NonceVerification
 		}
 
 		/**
@@ -1784,6 +1753,14 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$sql['where'],
 						1
 					);
+				}
+			}
+
+			$directory_id   = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
+			$exclude_fields = get_post_meta( $directory_id, '_um_search_exclude_fields', true );
+			if ( ! empty( $exclude_fields ) ) {
+				foreach ( $exclude_fields as $field ) {
+					$sql['join'] = str_replace( ",'" . $field . "'", '', $sql['join'] );
 				}
 			}
 
