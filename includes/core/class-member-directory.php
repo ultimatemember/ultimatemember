@@ -1690,6 +1690,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					$this->query_args['meta_query'][] = $meta_query;
 					if ( ! empty( $exclude_users ) ) {
+						if ( ! empty( $this->query_args['exclude'] ) ) {
+							$exclude_users = array_unique( array_merge( $exclude_users, $this->query_args['exclude'] ) );
+						}
 						$this->query_args['exclude'] = $exclude_users;
 					}
 
