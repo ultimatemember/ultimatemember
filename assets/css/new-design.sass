@@ -157,3 +157,42 @@
     &.#{$prefix}avatar-round
       overflow: hidden
       border-radius: 100%
+    &.#{$prefix}profile-photo
+      border: 4px solid $um-white
+      +box-shadow-lg
+      +border-box
+      img
+        height: auto
+
+  .#{$prefix}profile-photo-uploader
+    +flex( row, flex-start, start, nowrap )
+    +border-box
+    margin: 0
+    padding: 0
+    position: relative
+    .#{$prefix}dropdown-wrapper
+      min-width: auto
+      width: 4px
+      right: 4px
+      position: relative
+    .#{$prefix}profile-photo-wrapper
+      margin: 0
+      padding: 0
+      position: relative
+    .#{$prefix}profile-photo-overflow
+      backdrop-filter: blur(10px)
+      position: absolute
+      top: 3px
+      left: 3px
+      bottom: 3px
+      right: 3px
+      background: rgba(255, 255, 255, 0.2)
+      border-radius: 100%
+      display: none
+      .#{$prefix}ajax-spinner-svg
+        position: absolute
+        top: calc( 50% - 24px )
+        left: calc( 50% - 24px )
+    &.#{$prefix}processing
+      .#{$prefix}profile-photo-overflow
+        display: block

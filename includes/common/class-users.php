@@ -179,4 +179,79 @@ class Users {
 
 		return $args;
 	}
+
+	/**
+	 * Delete a main user photo.
+	 *
+	 * @param int    $user_id User ID.
+	 * @param string $type    User photo type. Uses 'profile_photo', 'cover_photo'
+	 *
+	 * @return bool
+	 */
+	public function delete_photo( $user_id, $type ) {
+		delete_user_meta( $user_id, $type );
+		delete_user_meta( $user_id, $type . '_metadata_temp' );
+
+		/**
+		 * Fires for make actions after delete user profile or cover photo meta and before delete related files.
+		 *
+		 * Internal Ultimate Member Pro callbacks:
+		 * ### um_after_remove_profile_photo:
+		 * * myCRED deduct points.
+		 * * Social Login synced photo.
+		 * ### um_after_remove_cover_photo:
+		 * * myCRED deduct points.
+		 * * Unsplash cover photo.
+		 *
+		 * @since 1.3.x
+		 * @hook um_after_remove_{$type}
+		 *
+		 * @param {int} $user_id User ID.
+		 *
+		 * @example <caption>Make any custom action after delete profile photo.</caption>
+		 * function my_custom_remove_profile_photo( $user_id ) {
+		 *     // your code here
+		 * }
+		 * add_action( 'um_after_remove_profile_photo', 'my_custom_remove_profile_photo' );
+		 *
+		 * @example <caption>Make any custom action after delete cover photo.</caption>
+		 * function my_custom_remove_cover_photo( $user_id ) {
+		 *     // your code here
+		 * }
+		 * add_action( 'um_after_remove_cover_photo', 'my_custom_remove_cover_photo' );
+		 */
+		do_action( "um_after_remove_{$type}", $user_id );
+
+		$dir = UM()->files()->upload_basedir . $user_id . DIRECTORY_SEPARATOR;
+		chdir( $dir );
+
+		// Searching files via the pattern and remove them.
+		$matches = glob( $type . '*', GLOB_MARK );
+		if ( is_array( $matches ) && ! empty( $matches ) ) {
+			foreach ( $matches as $match ) {
+				if ( is_file( $dir . $match ) ) {
+					unlink( $dir . $match );
+				}
+			}
+		}
+
+		// Checking if the user's directory is empty.
+		if ( count( glob( "$dir/*" ) ) === 0 ) {
+			rmdir( $dir );
+		}
+
+		// Flush the user's cache.
+		$this->remove_cache( $user_id );
+
+		return ! $this->has_photo( $user_id, $type );
+	}
+
+	public function remove_cache( $user_id ) {
+		delete_option( "um_cache_userdata_{$user_id}" );
+	}
+
+	public function has_photo( $user_id, $type ) {
+		$meta = get_user_meta( $user_id, $type, true );
+		return ! empty( $meta );
+	}
 }

@@ -177,6 +177,10 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			ob_start();
 			?>
 			<div class="um">
+				<h3>Avatar uploader</h3>
+
+				<?php echo UM()->frontend()::layouts()::avatar_uploader(); ?>
+
 				<h3>Avatars</h3>
 				<p>s</p>
 				<?php echo UM()->frontend()::layouts()::single_avatar( get_current_user_id(), array( 'size' => 's' ) ); ?>

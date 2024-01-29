@@ -256,6 +256,20 @@ class Layouts {
 		return ob_get_clean();
 	}
 
+	/**
+	 * Avatar layout.
+	 *
+	 * @param bool|int $user_id User ID.
+	 * @param array    $args    {
+	 *     Avatar additional arguments.
+	 *
+	 *     @type string   $size          Avatar size. Uses 's', 'm', 'l', 'xl'. Default 'm'.
+	 *     @type string   $type          Avatar type. Uses 'square', 'round'. Default 'round'.
+	 *     @type string[] $wrapper_class Avatar wrapper additional classes.
+	 * }
+	 *
+	 * @return string
+	 */
 	public static function single_avatar( $user_id = false, $args = array() ) {
 		if ( false === $user_id && is_user_logged_in() ) {
 			$user_id = get_current_user_id();
@@ -268,10 +282,21 @@ class Layouts {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'size' => 'm',
-				'type' => 'round',
+				'size'          => 'm',
+				'type'          => 'round',
+				'wrapper_class' => array(),
 			)
 		);
+
+		$wrapper_classes = array(
+			'um-avatar',
+			'um-avatar-' . $args['size'],
+			'um-avatar-' . $args['type'],
+		);
+		if ( ! empty( $args['wrapper_class'] ) ) {
+			$wrapper_classes = array_merge( $wrapper_classes, $args['wrapper_class'] );
+		}
+		$wrapper_classes = implode( ' ', $wrapper_classes );
 
 		$thumb_size = 32;
 		if ( 's' === $args['size'] ) {
@@ -286,8 +311,66 @@ class Layouts {
 
 		ob_start();
 		?>
-		<div class="um-avatar um-avatar-<?php echo esc_attr( $args['size'] ); ?> um-avatar-<?php echo esc_attr( $args['type'] ); ?>">
+		<div class="<?php echo esc_attr( $wrapper_classes ); ?>">
 			<?php echo $avatar; ?>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Avatar uploader layout.
+	 *
+	 * @param bool|int $user_id User ID.
+	 *
+	 * @return string
+	 */
+	public static function avatar_uploader( $user_id = false ) {
+		if ( false === $user_id && is_user_logged_in() ) {
+			$user_id = get_current_user_id();
+		}
+
+		if ( empty( $user_id ) ) {
+			return '';
+		}
+
+		$items = array();
+		//if ( UM()->common()->users()->has_photo( $user_id, 'profile_photo' ) ) {
+			$items[] = '<a href="#" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . esc_html__( 'Change photo', 'ultimate-member' ) . '</a>';
+			$items[] = '<a href="#" class="um-reset-profile-photo" data-user_id="' . esc_attr( $user_id ) . '" data-nonce="' . wp_create_nonce( 'um_remove_profile_photo' ) . '">' . esc_html__( 'Remove photo', 'ultimate-member' ) . '</a>';
+//		} else {
+//			$items[] = '<a href="#" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . esc_html__( 'Set photo', 'ultimate-member' ) . '</a>';
+//		}
+
+		/**
+		 * Filters action links in dropdown menu for profile photo.
+		 *
+		 * @since 1.3.x
+		 * @since 2.8.3 added $user_id attribute
+		 * @hook um_user_photo_menu_edit
+		 *
+		 * @param {array} $items   Action links in dropdown for profile photo.
+		 * @param {int}   $user_id User ID. Since 2.8.3.
+		 *
+		 * @example <caption>Make any custom action after delete cover photo.</caption>
+		 * function my_custom_user_photo_menu_edit( $items, $user_id ) {
+		 *     $items[] = '<a href="#" class="um-custom-action" data-user_id="' . esc_attr( $user_id ) . '">' . esc_html__( 'Custom action', 'ultimate-member' ) . '</a>';
+		 *     return $items;
+		 * }
+		 * add_filter( 'um_user_photo_menu_edit', 'my_custom_user_photo_menu_edit', 10, 2 );
+		 */
+		$items = apply_filters( 'um_user_photo_menu_edit', $items, $user_id );
+
+		ob_start();
+		?>
+		<div class="um-profile-photo-uploader">
+			<div class="um-profile-photo-wrapper">
+				<?php echo self::single_avatar( $user_id, array( 'size' => 'xl', 'wrapper_class' => array( 'um-profile-photo' ) ) ); ?>
+				<div class="um-profile-photo-overflow">
+					<?php echo self::ajax_loader(); ?>
+				</div>
+			</div>
+			<?php echo self::dropdown_menu( 'um-avatar-dropdown-toggle', $items ); ?>
 		</div>
 		<?php
 		return ob_get_clean();
