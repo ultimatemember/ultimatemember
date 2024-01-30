@@ -100,6 +100,8 @@
       color: var(--um-blocks-button-fg-color, var(--um-gray-300, #d0d5dd));
       background-color: var(--um-blocks-button-bg-disabled-color, var(--um-blocks-button-bg-color, #fff));
       border: 1px solid var(--um-blocks-button-bg-disabled-color, var(--um-gray-200, #eaecf0)); }
+    .um .um-button.um-button-full-width {
+      width: 100%; }
     .um .um-button.um-button-size-m {
       padding: 10px 16px;
       font-size: 14px;

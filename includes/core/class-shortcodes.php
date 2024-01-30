@@ -213,6 +213,9 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				<h3>Buttons</h3>
 				<form>
 					<?php
+					echo UM()->frontend()::layouts()::button( 'Cancel Fullwidth', array( 'width' => 'full' ) );
+					echo UM()->frontend()::layouts()::button( 'Submit Fullwidth', array( 'type' => 'submit', 'primary' => true, 'width' => 'full' ) );
+
 					echo UM()->frontend()::layouts()::button( 'Cancel M', array( 'size' => 'm' ) );
 					echo UM()->frontend()::layouts()::button( 'Cancel L' );
 					echo UM()->frontend()::layouts()::button( 'Cancel XL', array( 'size' => 'xl' ) );

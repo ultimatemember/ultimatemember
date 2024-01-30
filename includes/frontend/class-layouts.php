@@ -116,6 +116,7 @@ class Layouts {
 				'size'     => 'l',
 				'classes'  => array(),
 				'disabled' => false,
+				'width'    => '',
 			)
 		);
 
@@ -126,9 +127,15 @@ class Layouts {
 		if ( false !== $args['primary'] ) {
 			$classes[] = 'um-button-primary';
 		}
+
+		if ( 'full' === $args['width'] ) {
+			$classes[] = 'um-button-full-width';
+		}
+
 		if ( ! empty( $args['classes'] ) ) {
 			$classes = array_merge( $classes, $args['classes'] );
 		}
+
 		$classes = implode( ' ', $classes );
 		ob_start();
 		?>
