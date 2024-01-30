@@ -305,9 +305,9 @@ class Layouts {
 		}
 		$wrapper_classes = implode( ' ', $wrapper_classes );
 
-		$thumb_size = 32;
+		$thumb_size = 40;
 		if ( 's' === $args['size'] ) {
-			$thumb_size = 24;
+			$thumb_size = 32;
 		} elseif ( 'l' === $args['size'] ) {
 			$thumb_size = 64;
 		} elseif ( 'xl' === $args['size'] ) {

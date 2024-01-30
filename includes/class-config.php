@@ -942,7 +942,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 		}
 
 		public function init_avatar_thumbnail_sizes() {
-			$this->avatar_thumbnail_sizes = array( 24, 32, 48, 64, 128, 256 );
+			$this->avatar_thumbnail_sizes = array( 32, 40, 64, 80, 128, 256 );
 			$this->avatar_thumbnail_sizes = apply_filters( 'um_avatar_thumbnail_sizes', $this->avatar_thumbnail_sizes );
 		}
 	}

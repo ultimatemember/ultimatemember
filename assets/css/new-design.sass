@@ -1,6 +1,8 @@
 @import "selectors"
 @import "mixins"
+@import "box"
 @import "colors"
+@import "typography"
 
 +keyframes(um-svg-spin)
   0%
@@ -43,6 +45,7 @@
 .um
   +flex( column, flex-start, stretch, nowrap )
 
+  // Buttons
   .#{$prefix}button
     border-radius: $button-border-radius
     text-align: center
@@ -94,6 +97,8 @@
         background-color: $button-primary-bg-disabled
         border: 1px solid $button-primary-bg-disabled
 
+
+  // Box
   .#{$prefix}box
     +flex( column, flex-start, stretch, nowrap )
     border-radius: $box-border-radius
@@ -131,6 +136,8 @@
       .#{$prefix}box-content
         padding: 0
 
+
+  // Link
   .#{$prefix}link
     font-size: $sm-size
     line-height: $sm-line-height
@@ -142,6 +149,8 @@
     &:focus
       color: $link-focus-color
 
+
+  // Avatar
   .#{$prefix}avatar
     margin: 0
     padding: 0
@@ -152,11 +161,11 @@
       margin: 0
       padding: 0
     &.#{$prefix}avatar-s
-      width: 24px
-      height: 24px
-    &.#{$prefix}avatar-m
       width: 32px
       height: 32px
+    &.#{$prefix}avatar-m
+      width: 40px
+      height: 40px
     &.#{$prefix}avatar-l
       width: 64px
       height: 64px
@@ -166,13 +175,9 @@
     &.#{$prefix}avatar-round
       overflow: hidden
       border-radius: 100%
-    &.#{$prefix}profile-photo
-      border: 4px solid $um-white
-      +box-shadow-lg
-      +border-box
-      img
-        height: auto
 
+
+  // Avatar uploader
   .#{$prefix}profile-photo-uploader
     +flex( row, flex-start, start, nowrap )
     +border-box
@@ -189,6 +194,11 @@
       padding: 0
       position: relative
       .#{$prefix}profile-photo
+        border: 4px solid $um-white
+        +box-shadow-lg
+        +border-box
+        img
+          height: auto
         &:hover
           & ~ .#{$prefix}profile-photo-uploader-overflow
             display: block
