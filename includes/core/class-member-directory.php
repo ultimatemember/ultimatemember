@@ -1739,6 +1739,14 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 								$sql['join']
 							);
 						}
+
+						$directory_id   = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
+						$exclude_fields = get_post_meta( $directory_id, '_um_search_exclude_fields', true );
+						if ( ! empty( $exclude_fields ) ) {
+							foreach ( $exclude_fields as $field ) {
+								$sql['join'] = str_replace( ",'" . $field . "'", '', $sql['join'] );
+							}
+						}
 					}
 
 					// Add OR instead AND to search in WP core fields user_email, user_login, user_display_name
@@ -1753,14 +1761,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$sql['where'],
 						1
 					);
-				}
-			}
-
-			$directory_id   = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
-			$exclude_fields = get_post_meta( $directory_id, '_um_search_exclude_fields', true );
-			if ( ! empty( $exclude_fields ) ) {
-				foreach ( $exclude_fields as $field ) {
-					$sql['join'] = str_replace( ",'" . $field . "'", '', $sql['join'] );
 				}
 			}
 
