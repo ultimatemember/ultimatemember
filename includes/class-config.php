@@ -554,7 +554,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'account_general_password'              => 0,
 				'account_hide_in_directory'             => 1,
 				'account_hide_in_directory_default'     => 'No',
-				'photo_thumb_sizes'                     => array(),
+				'photo_thumb_sizes'                     => array( 40, 80, 190 ),
 				'cover_thumb_sizes'                     => array( 300, 600 ),
 				'accessible'                            => 0,
 				'access_redirect'                       => '',
@@ -943,20 +943,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 
 		public function init_avatar_thumbnail_sizes() {
 			$this->avatar_thumbnail_sizes = array( 24, 32, 48, 64, 128, 256 );
-//			$default_sizes = array(
-//				'40'       => array(
-//					'title'    => __( '40x40px', 'ultimate-member' ),
-//					'value'    => 40,
-//				),
-//				'80'       => array(
-//					'title'    => __( '80x80px', 'ultimate-member' ),
-//					'value'    => 80,
-//				),
-//				'190'      => array(
-//					'title'    => __( '190x190px', 'ultimate-member' ),
-//					'value'    => 190,
-//				),
-//			);
+			$this->avatar_thumbnail_sizes = apply_filters( 'um_avatar_thumbnail_sizes', $this->avatar_thumbnail_sizes );
 		}
 	}
 }
