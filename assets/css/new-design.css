@@ -249,11 +249,10 @@
       border-radius: 100%;
       display: none; }
       .um .um-profile-photo-uploader .um-profile-photo-uploader-overflow svg {
-        transform: scale(2);
         stroke: #fff;
         position: absolute;
-        top: calc( 50% - 12px);
-        left: calc( 50% - 12px); }
+        top: calc( 50% - 22px);
+        left: calc( 50% - 22px); }
         .um .um-profile-photo-uploader .um-profile-photo-uploader-overflow svg > * {
           stroke: #fff; }
       .um .um-profile-photo-uploader .um-profile-photo-uploader-overflow:hover {

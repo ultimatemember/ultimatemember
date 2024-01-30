@@ -28,7 +28,6 @@ class Users {
 
 	public function add_filters() {
 		add_filter( 'pre_get_avatar_data', array( $this, 'change_avatar' ), 10, 2 );
-		// add_filter( 'pre_get_avatar_data', array( $this, 'change_avatar' ), 10, 2 );
 	}
 
 	public function remove_filters( $avatar_defaults ) {
@@ -87,25 +86,6 @@ class Users {
 			$ext       = '.' . pathinfo( $profile_photo, PATHINFO_EXTENSION );
 			$all_sizes = UM()->config()->get( 'avatar_thumbnail_sizes' );
 			sort( $all_sizes );
-
-//			$rraa = array();
-//			foreach ( $all_sizes as $sub_size ) {
-//				$rraa[ $sub_size ] = array( 'width' => $sub_size, 'height' => $sub_size, 'crop' => false );
-//			}
-//
-//			$image_editor = wp_get_image_editor( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "profile_photo{$ext}" );
-//
-//			$image_editor->multi_resize( $rraa );
-//			//$image_editor->save();
-//			//var_dump( $image_editor );
-
-
-//			if ( file_exists( $original_path ) ) {
-//				list( $original_width, $original_height ) = getimagesize( $original_path );
-//				if ( ! in_array( $original_width, $all_sizes, true ) ) {
-//					$all_sizes[] = $original_width;
-//				}
-//			}
 
 			$size = '';
 			if ( array_key_exists( 'size', $args ) ) {

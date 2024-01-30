@@ -334,13 +334,13 @@ class Layouts {
 			return '';
 		}
 
-		$items = array();
-		if ( UM()->common()->users()->has_photo( $user_id, 'profile_photo' ) ) {
-			$items[] = '<a href="#" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . esc_html__( 'Change photo', 'ultimate-member' ) . '</a>';
-			$items[] = '<a href="#" class="um-reset-profile-photo" data-user_id="' . esc_attr( $user_id ) . '" data-nonce="' . wp_create_nonce( 'um_remove_profile_photo' ) . '">' . esc_html__( 'Remove photo', 'ultimate-member' ) . '</a>';
-		} else {
-			$items[] = '<a href="#" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . esc_html__( 'Set photo', 'ultimate-member' ) . '</a>';
-		}
+//		$items = array();
+//		if ( UM()->common()->users()->has_photo( $user_id, 'profile_photo' ) ) {
+//			$items[] = '<a href="#" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . esc_html__( 'Change photo', 'ultimate-member' ) . '</a>';
+//			$items[] = '<a href="#" class="um-reset-profile-photo" data-user_id="' . esc_attr( $user_id ) . '" data-nonce="' . wp_create_nonce( 'um_remove_profile_photo' ) . '">' . esc_html__( 'Remove photo', 'ultimate-member' ) . '</a>';
+//		} else {
+//			$items[] = '<a href="#" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . esc_html__( 'Set photo', 'ultimate-member' ) . '</a>';
+//		}
 
 		/**
 		 * Filters action links in dropdown menu for profile photo.
@@ -359,7 +359,7 @@ class Layouts {
 		 * }
 		 * add_filter( 'um_user_photo_menu_edit', 'my_custom_user_photo_menu_edit', 10, 2 );
 		 */
-		$items = apply_filters( 'um_user_photo_menu_edit', $items, $user_id );
+//		$items = apply_filters( 'um_user_photo_menu_edit', $items, $user_id );
 
 		$uploader_overflow = '';
 		if ( ! UM()->options()->get( 'disable_profile_photo_upload' ) ) {
@@ -368,11 +368,11 @@ class Layouts {
 				$title = __( 'Change photo', 'ultimate-member' );
 			}
 			$uploader_overflow = '<div class="um-profile-photo-uploader-overflow" title="' . esc_attr( $title ) . '" data-user_id="' . esc_attr( $user_id ) . '" data-nonce="' . wp_create_nonce( 'um_upload_profile_photo' ) . '" data-apply_nonce="' . wp_create_nonce( 'um_upload_profile_photo_apply' ) . '" data-decline_nonce="' . wp_create_nonce( 'um_upload_profile_photo_decline' ) . '">
-					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-						<path d="M2 8.37722C2 8.0269 2 7.85174 2.01462 7.70421C2.1556 6.28127 3.28127 5.1556 4.70421 5.01462C4.85174 5 5.03636 5 5.40558 5C5.54785 5 5.61899 5 5.67939 4.99634C6.45061 4.94963 7.12595 4.46288 7.41414 3.746C7.43671 3.68986 7.45781 3.62657 7.5 3.5C7.54219 3.37343 7.56329 3.31014 7.58586 3.254C7.87405 2.53712 8.54939 2.05037 9.32061 2.00366C9.38101 2 9.44772 2 9.58114 2H14.4189C14.5523 2 14.619 2 14.6794 2.00366C15.4506 2.05037 16.126 2.53712 16.4141 3.254C16.4367 3.31014 16.4578 3.37343 16.5 3.5C16.5422 3.62657 16.5633 3.68986 16.5859 3.746C16.874 4.46288 17.5494 4.94963 18.3206 4.99634C18.381 5 18.4521 5 18.5944 5C18.9636 5 19.1483 5 19.2958 5.01462C20.7187 5.1556 21.8444 6.28127 21.9854 7.70421C22 7.85174 22 8.0269 22 8.37722V16.2C22 17.8802 22 18.7202 21.673 19.362C21.3854 19.9265 20.9265 20.3854 20.362 20.673C19.7202 21 18.8802 21 17.2 21H6.8C5.11984 21 4.27976 21 3.63803 20.673C3.07354 20.3854 2.6146 19.9265 2.32698 19.362C2 18.7202 2 17.8802 2 16.2V8.37722Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-						<path d="M12 16.5C14.2091 16.5 16 14.7091 16 12.5C16 10.2909 14.2091 8.5 12 8.5C9.79086 8.5 8 10.2909 8 12.5C8 14.7091 9.79086 16.5 12 16.5Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-					</svg>
-				</div>';
+				<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-camera" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M5 7h1a2 2 0 0 0 2 -2a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2" />
+					<path d="M9 13a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+				</svg>
+			</div>';
 		}
 
 		ob_start();
