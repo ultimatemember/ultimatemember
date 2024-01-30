@@ -55,6 +55,13 @@
     -webkit-animation: um-svg-spin 1s linear infinite;
     -moz-animation: um-svg-spin 1s linear infinite;
     animation: um-svg-spin 1s linear infinite; }
+  .um-ajax-spinner-svg.um-ajax-spinner-s {
+    width: 24px;
+    height: 24px; }
+    .um-ajax-spinner-svg.um-ajax-spinner-s svg {
+      transform: scale(0.5);
+      width: 24px;
+      height: 24px; }
   .um-ajax-spinner-svg.um-ajax-spinner-m {
     width: 32px;
     height: 32px; }
@@ -225,11 +232,6 @@
     margin: 0;
     padding: 0;
     position: relative; }
-    .um .um-profile-photo-uploader .um-dropdown-wrapper {
-      min-width: auto;
-      width: 4px;
-      right: 4px;
-      position: relative; }
     .um .um-profile-photo-uploader .um-profile-photo-wrapper {
       margin: 0;
       padding: 0;
@@ -270,5 +272,7 @@
         position: absolute;
         top: calc( 50% - 24px);
         left: calc( 50% - 24px); }
+    .um .um-profile-photo-uploader.um-processing .um-profile-photo-uploader-overflow {
+      display: none; }
     .um .um-profile-photo-uploader.um-processing .um-profile-photo-overflow {
       display: block; }

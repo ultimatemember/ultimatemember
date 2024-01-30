@@ -27,7 +27,7 @@
 
 /* modal */
 .#{$prefix}modal
-  border-radius: 3px
+  border-radius: $radius-m
   bottom: -50px
   box-sizing: border-box
   display: block
@@ -55,7 +55,7 @@
     -moz-osx-font-smoothing: grayscale
 
   & > .#{$prefix}modal-close
-    color: $button-color
+    color: $primary-fg
     cursor: pointer
     display: block
     font-size: 24px
@@ -81,10 +81,20 @@
       width: 100%
       overflow: auto
 
-    .#{$prefix}modal-body
-      .#{$prefix}single-image-preview.crop
-        img
-          float: left
+  .#{$prefix}modal-body
+    .#{$prefix}profile-photo-crop-wrapper
+      width: 100%
+      margin: 0
+      padding: 0
+      img
+        float: left
+        width: 100%
+        height: auto
+        margin: 0
+        padding: 0
+    .#{$prefix}single-image-preview.crop
+      img
+        float: left
 
   &.loading
     background-color: $um-white
@@ -96,54 +106,31 @@
 
 
   .#{$prefix}modal-header
-    background-color: $button-primary-bg
-    border-radius: 3px 3px 0 0
+    background-color: $primary-600
+    border-radius: $radius-m $radius-m 0 0
     height: 44px
     line-height: 40px
-    color: $button-color
+    color: $primary-fg
     padding: 2px 20px
-    box-sizing: border-box
+    +border-box
     font-size: 17px
+
+  .#{$prefix}modal-body
+    +flex( column, flex-start, stretch, nowrap )
+    row-gap: $row-gap
 
   .#{$prefix}modal-footer
     background-color: $um-white
-    -moz-border-radius: 0 0 3px 3px
-    -webkit-border-radius: 0 0 3px 3px
-    border-radius: 0 0 3px 3px
+    border-radius: 0 0 $radius-m $radius-m
     padding: 0.5em
     text-align: right
 
+  .#{$prefix}modal-buttons-wrapper
+    +flex( row, flex-start, center, nowrap )
+    column-gap: $column-gap
+    margin: 0
+    padding: 0
+    width: 100%
+    .#{$prefix}ajax-spinner-svg
+      display: none
 
-  .#{$prefix}modal-btn
-    cursor: pointer
-    line-height: 34px
-    height: 34px
-    display: inline-block
-    -moz-border-radius: 3px
-    -webkit-border-radius: 3px
-    border-radius: 3px
-    padding: 0 20px
-    text-align: center
-    color: $um-white
-    vertical-align: middle
-    font-size: 14px
-    box-sizing: border-box
-    transition: 0.2s
-    text-decoration: none
-
-    &:hover
-      background: #44b0ec
-      color: #fff
-
-    &.alt
-      color: #666
-      background: #eee
-      &:hover
-        background: #e5e5e5
-
-    &.disabled
-      opacity: 0.5
-      cursor: default
-      &:hover
-        opacity: 0.5
-        cursor: default

@@ -22,7 +22,7 @@
 
 /* modal */
 .um-modal {
-  border-radius: 3px;
+  border-radius: 6px;
   bottom: -50px;
   box-sizing: border-box;
   display: block;
@@ -47,7 +47,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale; }
   .um-modal > .um-modal-close {
-    color: var(--um-blocks-button-fg-color, var(--um-gray-700, #344054));
+    color: var(--um-primary-600-fg, #fff);
     cursor: pointer;
     display: block;
     font-size: 24px;
@@ -69,53 +69,52 @@
     padding: 20px;
     width: 100%;
     overflow: auto; }
-  .um-modal .um-modal-header .um-modal-body .um-single-image-preview.crop img {
+  .um-modal .um-modal-body .um-profile-photo-crop-wrapper {
+    width: 100%;
+    margin: 0;
+    padding: 0; }
+    .um-modal .um-modal-body .um-profile-photo-crop-wrapper img {
+      float: left;
+      width: 100%;
+      height: auto;
+      margin: 0;
+      padding: 0; }
+  .um-modal .um-modal-body .um-single-image-preview.crop img {
     float: left; }
   .um-modal.loading {
     background-color: #fff; }
   .um-modal .um-modal-header {
     background-color: var(--um-primary-600-bg, #7f56d9);
-    border-radius: 3px 3px 0 0;
+    border-radius: 6px 6px 0 0;
     height: 44px;
     line-height: 40px;
-    color: var(--um-blocks-button-fg-color, var(--um-gray-700, #344054));
+    color: var(--um-primary-600-fg, #fff);
     padding: 2px 20px;
     box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
     font-size: 17px; }
+  .um-modal .um-modal-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    row-gap: 8px; }
   .um-modal .um-modal-footer {
     background-color: #fff;
-    -moz-border-radius: 0 0 3px 3px;
-    -webkit-border-radius: 0 0 3px 3px;
-    border-radius: 0 0 3px 3px;
+    border-radius: 0 0 6px 6px;
     padding: 0.5em;
     text-align: right; }
-  .um-modal .um-modal-btn {
-    cursor: pointer;
-    line-height: 34px;
-    height: 34px;
-    display: inline-block;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-    padding: 0 20px;
-    text-align: center;
-    color: #fff;
-    vertical-align: middle;
-    font-size: 14px;
-    box-sizing: border-box;
-    transition: 0.2s;
-    text-decoration: none; }
-    .um-modal .um-modal-btn:hover {
-      background: #44b0ec;
-      color: #fff; }
-    .um-modal .um-modal-btn.alt {
-      color: #666;
-      background: #eee; }
-      .um-modal .um-modal-btn.alt:hover {
-        background: #e5e5e5; }
-    .um-modal .um-modal-btn.disabled {
-      opacity: 0.5;
-      cursor: default; }
-      .um-modal .um-modal-btn.disabled:hover {
-        opacity: 0.5;
-        cursor: default; }
+  .um-modal .um-modal-buttons-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
+    column-gap: 8px;
+    margin: 0;
+    padding: 0;
+    width: 100%; }
+    .um-modal .um-modal-buttons-wrapper .um-ajax-spinner-svg {
+      display: none; }

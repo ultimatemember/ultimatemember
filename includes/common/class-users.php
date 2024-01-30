@@ -167,6 +167,10 @@ class Users {
 				}
 			}
 		} else {
+			if ( array_key_exists( 'um-cache', $args ) && false === $args['um-cache'] ) {
+				$url = add_query_arg( array( 't' => time() ), $url );
+			}
+
 			$args['url'] = set_url_scheme( $url );
 			//$args['um_uploaded']  = true;
 			$args['found_avatar'] = true;

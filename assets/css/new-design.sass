@@ -23,6 +23,13 @@
     -webkit-animation: um-svg-spin 1s linear infinite
     -moz-animation: um-svg-spin 1s linear infinite
     animation: um-svg-spin 1s linear infinite
+  &.#{$prefix}ajax-spinner-s
+    width: 24px
+    height: 24px
+    svg
+      transform: scale(0.5)
+      width: 24px
+      height: 24px
   &.#{$prefix}ajax-spinner-m
     width: 32px
     height: 32px
@@ -170,11 +177,11 @@
     margin: 0
     padding: 0
     position: relative
-    .#{$prefix}dropdown-wrapper
-      min-width: auto
-      width: 4px
-      right: 4px
-      position: relative
+    //.#{$prefix}dropdown-wrapper
+    //  min-width: auto
+    //  width: 4px
+    //  right: 4px
+    //  position: relative
     .#{$prefix}profile-photo-wrapper
       margin: 0
       padding: 0
@@ -218,5 +225,7 @@
         top: calc( 50% - 24px )
         left: calc( 50% - 24px )
     &.#{$prefix}processing
+      .#{$prefix}profile-photo-uploader-overflow
+        display: none
       .#{$prefix}profile-photo-overflow
         display: block

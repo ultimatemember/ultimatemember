@@ -207,6 +207,10 @@
 			let $modal = this.getModal();
 
 			if ( $modal && $modal.length ) {
+				let options = $modal.get( 0 ).umModalOptions;
+				if ( options.source ) {
+					options.source.data( 'data-um-modal-opened', false ).removeAttr( 'data-um-modal-opened' );
+				}
 
 				/**
 				 * UM Hook
@@ -311,6 +315,10 @@
 		hide: function (modal) {
 			let $modal = this.getModal( modal );
 			if ( $modal ) {
+				let options = $modal.get( 0 ).umModalOptions;
+				if ( options.source ) {
+					options.source.data( 'data-um-modal-opened', false ).removeAttr( 'data-um-modal-opened' );
+				}
 				$modal.detach();
 
 				/**
@@ -472,6 +480,10 @@
 				this.addOverlay().after( $modal );
 				this.responsive( $modal );
 				$modal.animate( {opacity: 1}, options.duration );
+
+				if ( options.source ) {
+					options.source.data( 'data-um-modal-opened', true ).attr( 'data-um-modal-opened', '1' );
+				}
 
 				/**
 				 * UM Hook

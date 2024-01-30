@@ -1,5 +1,7 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
-
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'UM_Functions' ) ) {
 
@@ -759,6 +761,34 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			}
 
 			return end( $array );
+		}
+
+		/**
+		 * Disable page caching and set or clear cookie.
+		 *
+		 * @param string $name
+		 * @param string $value
+		 * @param int    $expire
+		 * @param string $path
+		 *
+		 * @since 2.8.3
+		 */
+		public function setcookie( $name, $value = '', $expire = 0, $path = '' ) {
+			if ( empty( $value ) ) {
+				$expire = absint( time() - YEAR_IN_SECONDS );
+			}
+			if ( empty( $path ) ) {
+				list( $path ) = explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) );
+			}
+
+			$levels = ob_get_level();
+			for ( $i = 0; $i < $levels; $i++ ) {
+				// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+				@ob_end_clean();
+			}
+
+			nocache_headers();
+			setcookie( $name, $value, $expire, $path, COOKIE_DOMAIN, is_ssl(), true );
 		}
 	}
 }
