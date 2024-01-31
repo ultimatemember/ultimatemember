@@ -3,27 +3,37 @@ $hover: #ccc
 $shadow1: rgba(50,50,93,.1)
 $shadow2: rgba(0,0,0,.07)
 
-
 // NEW COLORS since v3
 $required-asterisk: #a00
-
-$um-font-size: 14px
 
 $um-white: #fff
 $um-black: #000
 
+$palette: 25,50,100,200,300,400,500,600,700,800,900
+
+// Figma shades of gray default colors
+$default-gray: (25:#fcfcfd,50:#f9fafb,100:#f2f4f7,200:#eaecf0,300:#d0d5dd,400:#98a2b3,500:#667085,600:#475467,700:#344054,800:#1d2939,900:#101828)
+@function default_color( $type, $number )
+  @if map-has-key($default-gray,$number)
+    @if $type == 'gray'
+      @return map-get( $default-gray, $number )
+
+@function color( $type, $number )
+  @if $type == 'gray'
+    @return var(--um-gray-#{$number},map-get( $default-gray, $number ))
+
 // Figma shades of gray colors
-$gray-25: var(--um-gray-25, #fcfcfd)
-$gray-50: var(--um-gray-50, #f9fafb)
-$gray-100: var(--um-gray-100, #f2f4f7)
-$gray-200: var(--um-gray-200, #eaecf0)
-$gray-300: var(--um-gray-300, #d0d5dd)
-$gray-400: var(--um-gray-400, #98a2b3)
-$gray-500: var(--um-gray-500, #667085)
-$gray-600: var(--um-gray-600, #475467)
-$gray-700: var(--um-gray-700, #344054)
-$gray-800: var(--um-gray-800, #1d2939)
-$gray-900: var(--um-gray-900, #101828)
+$gray-25: var(--um-gray-25, default_color('gray',25) )
+$gray-50: var(--um-gray-50, default_color('gray',50))
+$gray-100: var(--um-gray-100, default_color('gray',100))
+$gray-200: var(--um-gray-200, default_color('gray',200))
+$gray-300: var(--um-gray-300, default_color('gray',300))
+$gray-400: var(--um-gray-400, default_color('gray',400))
+$gray-500: var(--um-gray-500, default_color('gray',500))
+$gray-600: var(--um-gray-600, default_color('gray',600))
+$gray-700: var(--um-gray-700, default_color('gray',700))
+$gray-800: var(--um-gray-800, default_color('gray',800))
+$gray-900: var(--um-gray-900, default_color('gray',900))
 
 // Figma shades of primary colors
 $primary-25: var(--um-primary-25-bg, #fcfaff)
@@ -79,11 +89,6 @@ $success-700: var(--um-success-700, #027a48)
 $success-800: var(--um-success-800, #05603a)
 $success-900: var(--um-success-900, #054f31)
 
-// Border radius
-$radius-m: 6px
-$radius-l: 8px
-$radius-xl: 12px
-
 $button-bg: var(--um-blocks-button-bg-color, $um-white)
 $button-bg-hover: var(--um-blocks-button-bg-hover-color, $gray-50)
 $button-bg-disabled: var(--um-blocks-button-bg-disabled-color, $button-bg)
@@ -91,20 +96,19 @@ $button-border-color: var(--um-blocks-button-bg-color, $gray-300)
 $button-border-color-disabled: var(--um-blocks-button-bg-disabled-color, $gray-200)
 $button-color: var(--um-blocks-button-fg-color, $gray-700)
 $button-color-hover: var(--um-blocks-button-fg-color, $gray-800)
-$button-color-disabled: var(--um-blocks-button-fg-color, $gray-300)
+$button-color-disabled: var(--um-blocks-button-fg-color, $gray-400)
 
 $button-primary-bg: $primary-600
 $button-primary-bg-hover: $primary-700
-$button-primary-bg-disabled: $primary-200
+$button-primary-bg-disabled: $gray-100
+$button-primary-border-color-disabled: $gray-200
 $button-primary-color: $primary-fg
-
-$button-border-radius: $radius-l
+$button-primary-color-disabled: $gray-400
 
 $icon-size: 20px
-$block-border-radius: $radius-l
 
 // Text input variables
-$text-input-border-radius: $radius-m
+//$text-input-border-radius: $radius-m
 $text-input-bg: $um-white
 $text-input-color: $um-black
 $text-input-border-color: $gray-300
@@ -119,20 +123,6 @@ $link-color: $primary-700
 $link-hover-color: $primary-800
 $link-focus-color: $primary-700
 
-
-
-// Text sizes:
-
-$sm-size: 14px
-$sm-line-height: 20px
-
-$m-size: 16px
-$m-line-height: 24px
-
-$l-size: 18px
-$l-line-height: 28px
-
 $row-gap: 8px
 $column-gap: 8px
 $box-padding: 24px
-$box-border-radius: $radius-xl

@@ -215,11 +215,11 @@ class Color {
 	/**
 	 * hex2rgb
 	 *
-	 * @param  mixed $hex
+	 * @param  string $hex
 	 *
-	 * @return void
+	 * @return array
 	 */
-	function hex2rgb($hex = '#000000')
+	public function hex2rgb($hex = '#000000')
 	{
 		$f = function ($x) {
 			return hexdec($x);

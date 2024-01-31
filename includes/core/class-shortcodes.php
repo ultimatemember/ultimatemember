@@ -212,9 +212,31 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 				<h3>Buttons</h3>
 				<form>
+					<h4>Link type <code>&lt;a&gt;&lt;/a&gt;</code></h4>
+					<?php
+					echo UM()->frontend()::layouts()::button( 'Cancel Fullwidth', array( 'type' => 'link', 'width' => 'full' ) );
+					echo UM()->frontend()::layouts()::button( 'Cancel Fullwidth Disabled', array( 'type' => 'link', 'width' => 'full', 'disabled' => true ) );
+
+					echo UM()->frontend()::layouts()::button( 'Submit Fullwidth', array( 'type' => 'link', 'url' => 'google.com', 'target' => '_blank', 'design' => 'primary', 'width' => 'full' ) );
+					echo UM()->frontend()::layouts()::button( 'Submit Fullwidth Disabled', array( 'type' => 'link', 'url' => 'google.com', 'target' => '_blank', 'design' => 'primary', 'width' => 'full', 'disabled' => true ) );
+					?>
+					<h4>Button type <code>&lt;button&gt;&lt;/button&gt;</code></h4>
+					<p>Button styles</p>
+					<div style="display:flex;justify-content: flex-start;align-items:baseline; flex-wrap: wrap;margin-bottom:20px;gap:8px">
+						<?php
+						echo UM()->frontend()::layouts()::button( 'Primary', array( 'design' => 'primary' ) );
+						echo UM()->frontend()::layouts()::button( 'Secondary gray' );
+						echo UM()->frontend()::layouts()::button( 'Secondary color', array( 'design' => 'secondary-color' ) );
+						echo UM()->frontend()::layouts()::button( 'Tertiary gray', array( 'design' => 'tertiary-gray' ) );
+						echo UM()->frontend()::layouts()::button( 'Tertiary color', array( 'design' => 'tertiary-color' ) );
+						echo UM()->frontend()::layouts()::button( 'Link gray', array( 'design' => 'link-gray' ) );
+						echo UM()->frontend()::layouts()::button( 'Link color', array( 'design' => 'link-color' ) );
+						?>
+					</div>
+					<p>Button sizes and states</p>
 					<?php
 					echo UM()->frontend()::layouts()::button( 'Cancel Fullwidth', array( 'width' => 'full' ) );
-					echo UM()->frontend()::layouts()::button( 'Submit Fullwidth', array( 'type' => 'submit', 'primary' => true, 'width' => 'full' ) );
+					echo UM()->frontend()::layouts()::button( 'Submit Fullwidth', array( 'type' => 'submit', 'design' => 'primary', 'width' => 'full' ) );
 
 					echo UM()->frontend()::layouts()::button( 'Cancel M', array( 'size' => 'm' ) );
 					echo UM()->frontend()::layouts()::button( 'Cancel L' );
@@ -224,13 +246,13 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 					echo UM()->frontend()::layouts()::button( 'Cancel L', array( 'disabled' => true ) );
 					echo UM()->frontend()::layouts()::button( 'Cancel XL', array( 'size' => 'xl', 'disabled' => true ) );
 
-					echo UM()->frontend()::layouts()::button( 'Submit M', array( 'type' => 'submit', 'primary' => true, 'size' => 'm' ) );
-					echo UM()->frontend()::layouts()::button( 'Submit L', array( 'type' => 'submit', 'primary' => true ) );
-					echo UM()->frontend()::layouts()::button( 'Submit XL', array( 'type' => 'submit', 'primary' => true, 'size' => 'xl' ) );
+					echo UM()->frontend()::layouts()::button( 'Submit M', array( 'type' => 'submit', 'design' => 'primary', 'size' => 'm' ) );
+					echo UM()->frontend()::layouts()::button( 'Submit L', array( 'type' => 'submit', 'design' => 'primary' ) );
+					echo UM()->frontend()::layouts()::button( 'Submit XL', array( 'type' => 'submit', 'design' => 'primary', 'size' => 'xl' ) );
 
-					echo UM()->frontend()::layouts()::button( 'Submit M', array( 'type' => 'submit', 'primary' => true, 'size' => 'm', 'disabled' => true ) );
-					echo UM()->frontend()::layouts()::button( 'Submit L', array( 'type' => 'submit', 'primary' => true, 'disabled' => true ) );
-					echo UM()->frontend()::layouts()::button( 'Submit XL', array( 'type' => 'submit', 'primary' => true, 'size' => 'xl', 'disabled' => true ) );
+					echo UM()->frontend()::layouts()::button( 'Submit M', array( 'type' => 'submit', 'design' => 'primary', 'size' => 'm', 'disabled' => true ) );
+					echo UM()->frontend()::layouts()::button( 'Submit L', array( 'type' => 'submit', 'design' => 'primary', 'disabled' => true ) );
+					echo UM()->frontend()::layouts()::button( 'Submit XL', array( 'type' => 'submit', 'design' => 'primary', 'size' => 'xl', 'disabled' => true ) );
 					?>
 				</form>
 				<h3>Dropdown</h3>

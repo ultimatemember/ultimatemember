@@ -98,11 +98,14 @@ class Layouts {
 	 * @param array  $args    {
 	 *     Button additional arguments.
 	 *
-	 *     @type string   $type     HTML button type attribute. Uses 'button', 'submit'. Default 'button'.
-	 *     @type bool     $primary  Marker for using primary or secondary UI. Default `false`.
+	 *     @type string   $type     HTML button type attribute. Uses 'button', 'submit', 'link'. Default 'button'.
+	 *     @type string   $design   Button UI type. Default 'secondary-gray'. Uses 'primary','secondary-gray','secondary-color','tertiary-gray','tertiary-color','link-gray','link-color'.
 	 *     @type string   $size     Button size. Uses 'm', 'l', 'xl'. Default 'l'.
 	 *     @type string[] $classes  Additional button's classes.
 	 *     @type bool     $disabled Disabled button attribute. Default `false`.
+	 *     @type string   $url      Disabled button attribute. Default `#`.
+	 *     @type string   $target   Disabled button attribute. Default `false`.
+	 *     @type string   $width    Button width. Default empty means based on content. Uses 'full' for making button 100% width.
 	 * }
 	 *
 	 * @return string
@@ -112,24 +115,33 @@ class Layouts {
 			$args,
 			array(
 				'type'     => 'button',
-				'primary'  => false,
+				'design'   => 'secondary-gray',
 				'size'     => 'l',
 				'classes'  => array(),
 				'disabled' => false,
+				'url'      => '#',
+				'target'   => '_self',
 				'width'    => '',
 			)
 		);
 
 		$classes = array(
 			'um-button',
+			'um-button-' . $args['design'],
 			'um-button-size-' . $args['size'],
 		);
-		if ( false !== $args['primary'] ) {
-			$classes[] = 'um-button-primary';
-		}
 
 		if ( 'full' === $args['width'] ) {
 			$classes[] = 'um-button-full-width';
+		}
+
+		if ( 'link' === $args['type'] ) {
+			$classes[] = 'um-link-button';
+			if ( false !== $args['disabled'] ) {
+				$classes[]      = 'um-link-button-disabled';
+				$args['url']    = '#';
+				$args['target'] = '_self';
+			}
 		}
 
 		if ( ! empty( $args['classes'] ) ) {
@@ -138,9 +150,15 @@ class Layouts {
 
 		$classes = implode( ' ', $classes );
 		ob_start();
-		?>
-		<button type="<?php echo esc_attr( $args['type'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" <?php disabled( $args['disabled'] ); ?>><?php echo wp_kses_post( $content ); ?></button>
-		<?php
+		if ( 'link' === $args['type'] ) {
+			?>
+			<a href="<?php echo esc_url( $args['url'] ); ?>" target="<?php echo esc_attr( $args['target'] ); ?>" class="<?php echo esc_attr( $classes ); ?>"><?php echo wp_kses_post( $content ); ?></a>
+			<?php
+		} else {
+			?>
+			<button type="<?php echo esc_attr( $args['type'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" <?php disabled( $args['disabled'] ); ?>><?php echo wp_kses_post( $content ); ?></button>
+			<?php
+		}
 		return ob_get_clean();
 	}
 

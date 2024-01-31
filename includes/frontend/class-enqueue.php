@@ -283,10 +283,41 @@ final class Enqueue extends \um\common\Enqueue {
 					'--um-gray-900:#101828;',
 				)
 			);
+
+			$shadow_shades = array( 3, 5, 6, 8, 10, 14, 18 );
+			foreach ( $shadow_shades as $opacity ) {
+				$alpha    = $opacity / 100;
+				$styles[] = "--um-gray-900-a-{$opacity}:rgba(16,24,40,{$alpha});";
+			}
+
+			$gray_ring_shades = array( 14, 20 );
+			foreach ( $gray_ring_shades as $opacity ) {
+				$alpha    = $opacity / 100;
+				$styles[] = "--um-gray-400-a-{$opacity}:rgba(152,162,179,{$alpha});";
+			}
+
+			$error_ring_shades = array( 24 );
+			foreach ( $error_ring_shades as $opacity ) {
+				$alpha    = $opacity / 100;
+				$styles[] = "--um-error-500-a-{$opacity}:rgba(240,68,56,{$alpha});";
+			}
+
 			$palette = UM()->common()::color()->generate_palette( UM()->options()->get( 'primary_color' ) );
 			foreach ( $palette as $title => $colors ) {
 				$styles[] = '--um-primary-' . $title . '-bg:' . esc_attr( $colors['bg'] ) . ';';
 				$styles[] = '--um-primary-' . $title . '-fg:' . esc_attr( $colors['fg'] ) . ';';
+			}
+
+			$primary_ring_shades = array( 24 );
+			foreach ( $primary_ring_shades as $opacity ) {
+				$alpha = $opacity / 100;
+				if ( ! empty( $palette['500']['bg'] ) ) {
+					$rgb      = UM()->common()::color()->hex2rgb( $palette['500']['bg'] );
+					$rgb      = implode( ',', $rgb );
+					$styles[] = "--um-primary-500-a-{$opacity}:rgba({$rgb},{$alpha});";
+				} else {
+					$styles[] = "--um-primary-500-a-{$opacity}:rgba(158,119,237,{$alpha});";
+				}
 			}
 
 			$rules = array();
