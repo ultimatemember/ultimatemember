@@ -593,7 +593,11 @@ function um_modal_responsive() {
 		if ( w <= 500 ) {
 			modal.animate({ 'bottom' : 0 }, 300);
 		} else {
-			modal.animate({ 'bottom' : half_gap }, 300);
+			if ( h - parseInt(half_gap) > h ) {
+				modal.animate({ 'bottom' : 0 }, 300);
+			} else {
+				modal.animate({ 'bottom' : half_gap }, 300);
+			}
 		}
 	}
 }
