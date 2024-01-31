@@ -238,6 +238,23 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 						echo UM()->frontend()::layouts()::button( 'Link Destructive', array( 'design' => 'link-destructive' ) );
 						?>
 					</div>
+					<p>Disabled Buttons</p>
+					<div style="display:flex;justify-content: flex-start;align-items:baseline; flex-wrap: wrap;margin-bottom:20px;gap:8px">
+						<?php
+						echo UM()->frontend()::layouts()::button( 'Primary', array( 'design' => 'primary', 'disabled' => true ) );
+						echo UM()->frontend()::layouts()::button( 'Secondary gray', array( 'disabled' => true ) );
+						echo UM()->frontend()::layouts()::button( 'Secondary color', array( 'design' => 'secondary-color', 'disabled' => true ) );
+						echo UM()->frontend()::layouts()::button( 'Tertiary gray', array( 'design' => 'tertiary-gray', 'disabled' => true ) );
+						echo UM()->frontend()::layouts()::button( 'Tertiary color', array( 'design' => 'tertiary-color', 'disabled' => true ) );
+						echo UM()->frontend()::layouts()::button( 'Link gray', array( 'design' => 'link-gray', 'disabled' => true ) );
+						echo UM()->frontend()::layouts()::button( 'Link color', array( 'design' => 'link-color', 'disabled' => true ) );
+
+						echo UM()->frontend()::layouts()::button( 'Primary Destructive', array( 'design' => 'primary-destructive', 'disabled' => true ) );
+						echo UM()->frontend()::layouts()::button( 'Secondary Destructive', array( 'design' => 'secondary-destructive', 'disabled' => true ) );
+						echo UM()->frontend()::layouts()::button( 'Tertiary Destructive', array( 'design' => 'tertiary-destructive', 'disabled' => true ) );
+						echo UM()->frontend()::layouts()::button( 'Link Destructive', array( 'design' => 'link-destructive', 'disabled' => true ) );
+						?>
+					</div>
 					<p>Button sizes and states</p>
 					<?php
 					echo UM()->frontend()::layouts()::button( 'Cancel Fullwidth', array( 'width' => 'full' ) );
