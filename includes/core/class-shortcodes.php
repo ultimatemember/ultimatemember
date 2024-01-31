@@ -219,6 +219,32 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 					echo UM()->frontend()::layouts()::button( 'Submit Fullwidth', array( 'type' => 'link', 'url' => 'google.com', 'target' => '_blank', 'design' => 'primary', 'width' => 'full' ) );
 					echo UM()->frontend()::layouts()::button( 'Submit Fullwidth Disabled', array( 'type' => 'link', 'url' => 'google.com', 'target' => '_blank', 'design' => 'primary', 'width' => 'full', 'disabled' => true ) );
+
+					echo UM()->frontend()::layouts()::button( 'Primary', array( 'type' => 'link', 'design' => 'primary' ) );
+					echo UM()->frontend()::layouts()::button( 'Secondary gray', array( 'type' => 'link' ) );
+					echo UM()->frontend()::layouts()::button( 'Secondary color', array( 'type' => 'link', 'design' => 'secondary-color' ) );
+					echo UM()->frontend()::layouts()::button( 'Tertiary gray', array( 'type' => 'link', 'design' => 'tertiary-gray' ) );
+					echo UM()->frontend()::layouts()::button( 'Tertiary color', array( 'type' => 'link', 'design' => 'tertiary-color' ) );
+					echo UM()->frontend()::layouts()::button( 'Link gray', array( 'type' => 'link', 'design' => 'link-gray' ) );
+					echo UM()->frontend()::layouts()::button( 'Link color', array( 'type' => 'link', 'design' => 'link-color' ) );
+
+					echo UM()->frontend()::layouts()::button( 'Primary Destructive', array( 'type' => 'link', 'design' => 'primary-destructive' ) );
+					echo UM()->frontend()::layouts()::button( 'Secondary Destructive', array( 'type' => 'link', 'design' => 'secondary-destructive' ) );
+					echo UM()->frontend()::layouts()::button( 'Tertiary Destructive', array( 'type' => 'link', 'design' => 'tertiary-destructive' ) );
+					echo UM()->frontend()::layouts()::button( 'Link Destructive', array( 'type' => 'link', 'design' => 'link-destructive' ) );
+
+					echo UM()->frontend()::layouts()::button( 'Primary', array( 'type' => 'link', 'design' => 'primary', 'disabled' => true ) );
+					echo UM()->frontend()::layouts()::button( 'Secondary gray', array( 'type' => 'link', 'disabled' => true ) );
+					echo UM()->frontend()::layouts()::button( 'Secondary color', array( 'type' => 'link', 'design' => 'secondary-color', 'disabled' => true ) );
+					echo UM()->frontend()::layouts()::button( 'Tertiary gray', array( 'type' => 'link', 'design' => 'tertiary-gray', 'disabled' => true ) );
+					echo UM()->frontend()::layouts()::button( 'Tertiary color', array( 'type' => 'link', 'design' => 'tertiary-color', 'disabled' => true ) );
+					echo UM()->frontend()::layouts()::button( 'Link gray', array( 'type' => 'link', 'design' => 'link-gray', 'disabled' => true ) );
+					echo UM()->frontend()::layouts()::button( 'Link color', array( 'type' => 'link', 'design' => 'link-color', 'disabled' => true ) );
+
+					echo UM()->frontend()::layouts()::button( 'Primary Destructive', array( 'type' => 'link', 'design' => 'primary-destructive', 'disabled' => true ) );
+					echo UM()->frontend()::layouts()::button( 'Secondary Destructive', array( 'type' => 'link', 'design' => 'secondary-destructive', 'disabled' => true ) );
+					echo UM()->frontend()::layouts()::button( 'Tertiary Destructive', array( 'type' => 'link', 'design' => 'tertiary-destructive', 'disabled' => true ) );
+					echo UM()->frontend()::layouts()::button( 'Link Destructive', array( 'type' => 'link', 'design' => 'link-destructive', 'disabled' => true ) );
 					?>
 					<h4>Button type <code>&lt;button&gt;&lt;/button&gt;</code></h4>
 					<p>Button styles</p>

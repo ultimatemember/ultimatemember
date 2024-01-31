@@ -176,6 +176,16 @@
         background-color: var(--um-gray-100, #f2f4f7);
         border: 1px solid var(--um-gray-200, #eaecf0);
         color: var(--um-gray-400, #98a2b3); }
+      .um .um-button.um-button-primary-destructive.um-link-button-disabled {
+        background-color: var(--um-gray-100, #f2f4f7);
+        border: 1px solid var(--um-gray-200, #eaecf0);
+        color: var(--um-gray-400, #98a2b3); }
+        .um .um-button.um-button-primary-destructive.um-link-button-disabled:hover, .um .um-button.um-button-primary-destructive.um-link-button-disabled:focus {
+          cursor: default;
+          background-color: var(--um-gray-100, #f2f4f7);
+          border: 1px solid var(--um-gray-200, #eaecf0);
+          color: var(--um-gray-400, #98a2b3);
+          box-shadow: none; }
     .um .um-button.um-button-secondary-destructive {
       background-color: #fff;
       border: 1px solid var(--um-error-300, #fda29b);
@@ -193,6 +203,16 @@
         color: var(--um-blocks-button-fg-color, var(--um-gray-400, #98a2b3));
         background-color: var(--um-blocks-button-bg-disabled-color, var(--um-blocks-button-bg-color, #fff));
         border: 1px solid var(--um-blocks-button-bg-disabled-color, var(--um-gray-200, #eaecf0)); }
+      .um .um-button.um-button-secondary-destructive.um-link-button-disabled {
+        color: var(--um-blocks-button-fg-color, var(--um-gray-400, #98a2b3));
+        background-color: var(--um-blocks-button-bg-disabled-color, var(--um-blocks-button-bg-color, #fff));
+        border: 1px solid var(--um-blocks-button-bg-disabled-color, var(--um-gray-200, #eaecf0)); }
+        .um .um-button.um-button-secondary-destructive.um-link-button-disabled:hover, .um .um-button.um-button-secondary-destructive.um-link-button-disabled:focus {
+          cursor: default;
+          color: var(--um-blocks-button-fg-color, var(--um-gray-400, #98a2b3));
+          background-color: var(--um-blocks-button-bg-disabled-color, var(--um-blocks-button-bg-color, #fff));
+          border: 1px solid var(--um-blocks-button-bg-disabled-color, var(--um-gray-200, #eaecf0));
+          box-shadow: none; }
     .um .um-button.um-button-tertiary-destructive {
       background-color: transparent;
       color: var(--um-error-700, #b42318);
@@ -214,6 +234,18 @@
         background-color: transparent;
         border: none;
         box-shadow: none; }
+      .um .um-button.um-button-tertiary-destructive.um-link-button-disabled {
+        cursor: default;
+        color: var(--um-gray-400, #98a2b3);
+        background-color: transparent;
+        border: none;
+        box-shadow: none; }
+        .um .um-button.um-button-tertiary-destructive.um-link-button-disabled:hover, .um .um-button.um-button-tertiary-destructive.um-link-button-disabled:focus {
+          cursor: default;
+          color: var(--um-gray-400, #98a2b3);
+          background-color: transparent;
+          border: none;
+          box-shadow: none; }
     .um .um-button.um-button-link-destructive {
       background-color: transparent;
       color: var(--um-error-700, #b42318);
@@ -236,6 +268,18 @@
         background-color: transparent;
         border: none;
         box-shadow: none; }
+      .um .um-button.um-button-link-destructive.um-link-button-disabled {
+        cursor: default;
+        color: var(--um-gray-400, #98a2b3);
+        background-color: transparent;
+        border: none;
+        box-shadow: none; }
+        .um .um-button.um-button-link-destructive.um-link-button-disabled:hover, .um .um-button.um-button-link-destructive.um-link-button-disabled:focus {
+          cursor: default;
+          color: var(--um-gray-400, #98a2b3);
+          background-color: transparent;
+          border: none;
+          box-shadow: none; }
     .um .um-button.um-button-secondary-color {
       background-color: #fff;
       color: var(--um-primary-700-bg, #6941c6);
@@ -255,6 +299,18 @@
         background-color: #fff;
         border: 1px solid var(--um-gray-200, #eaecf0);
         box-shadow: none; }
+      .um .um-button.um-button-secondary-color.um-link-button-disabled {
+        cursor: default;
+        color: var(--um-gray-400, #98a2b3);
+        background-color: #fff;
+        border: 1px solid var(--um-gray-200, #eaecf0);
+        box-shadow: none; }
+        .um .um-button.um-button-secondary-color.um-link-button-disabled:hover, .um .um-button.um-button-secondary-color.um-link-button-disabled:focus {
+          cursor: default;
+          color: var(--um-gray-400, #98a2b3);
+          background-color: #fff;
+          border: 1px solid var(--um-gray-200, #eaecf0);
+          box-shadow: none; }
     .um .um-button.um-button-tertiary-gray {
       background-color: transparent;
       color: var(--um-gray-600, #475467);
@@ -276,6 +332,18 @@
         background-color: transparent;
         border: none;
         box-shadow: none; }
+      .um .um-button.um-button-tertiary-gray.um-link-button-disabled {
+        cursor: default;
+        color: var(--um-gray-400, #98a2b3);
+        background-color: transparent;
+        border: none;
+        box-shadow: none; }
+        .um .um-button.um-button-tertiary-gray.um-link-button-disabled:hover, .um .um-button.um-button-tertiary-gray.um-link-button-disabled:focus {
+          cursor: default;
+          color: var(--um-gray-400, #98a2b3);
+          background-color: transparent;
+          border: none;
+          box-shadow: none; }
     .um .um-button.um-button-tertiary-color {
       background-color: transparent;
       color: var(--um-primary-700-bg, #6941c6);
@@ -297,6 +365,18 @@
         background-color: transparent;
         border: none;
         box-shadow: none; }
+      .um .um-button.um-button-tertiary-color.um-link-button-disabled {
+        cursor: default;
+        color: var(--um-gray-400, #98a2b3);
+        background-color: transparent;
+        border: none;
+        box-shadow: none; }
+        .um .um-button.um-button-tertiary-color.um-link-button-disabled:hover, .um .um-button.um-button-tertiary-color.um-link-button-disabled:focus {
+          cursor: default;
+          color: var(--um-gray-400, #98a2b3);
+          background-color: transparent;
+          border: none;
+          box-shadow: none; }
     .um .um-button.um-button-link-gray {
       background-color: transparent;
       color: var(--um-gray-600, #475467);
@@ -319,6 +399,18 @@
         background-color: transparent;
         border: none;
         box-shadow: none; }
+      .um .um-button.um-button-link-gray.um-link-button-disabled {
+        cursor: default;
+        color: var(--um-gray-400, #98a2b3);
+        background-color: transparent;
+        border: none;
+        box-shadow: none; }
+        .um .um-button.um-button-link-gray.um-link-button-disabled:hover, .um .um-button.um-button-link-gray.um-link-button-disabled:focus {
+          cursor: default;
+          color: var(--um-gray-400, #98a2b3);
+          background-color: transparent;
+          border: none;
+          box-shadow: none; }
     .um .um-button.um-button-link-color {
       background-color: transparent;
       color: var(--um-primary-700-bg, #6941c6);
@@ -341,6 +433,18 @@
         background-color: transparent;
         border: none;
         box-shadow: none; }
+      .um .um-button.um-button-link-color.um-link-button-disabled {
+        cursor: default;
+        color: var(--um-gray-400, #98a2b3);
+        background-color: transparent;
+        border: none;
+        box-shadow: none; }
+        .um .um-button.um-button-link-color.um-link-button-disabled:hover, .um .um-button.um-button-link-color.um-link-button-disabled:focus {
+          cursor: default;
+          color: var(--um-gray-400, #98a2b3);
+          background-color: transparent;
+          border: none;
+          box-shadow: none; }
   .um .um-box {
     display: flex;
     flex-direction: column;
