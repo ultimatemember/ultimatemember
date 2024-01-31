@@ -231,6 +231,11 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 						echo UM()->frontend()::layouts()::button( 'Tertiary color', array( 'design' => 'tertiary-color' ) );
 						echo UM()->frontend()::layouts()::button( 'Link gray', array( 'design' => 'link-gray' ) );
 						echo UM()->frontend()::layouts()::button( 'Link color', array( 'design' => 'link-color' ) );
+
+						echo UM()->frontend()::layouts()::button( 'Primary Destructive', array( 'design' => 'primary-destructive' ) );
+						echo UM()->frontend()::layouts()::button( 'Secondary Destructive', array( 'design' => 'secondary-destructive' ) );
+						echo UM()->frontend()::layouts()::button( 'Tertiary Destructive', array( 'design' => 'tertiary-destructive' ) );
+						echo UM()->frontend()::layouts()::button( 'Link Destructive', array( 'design' => 'link-destructive' ) );
 						?>
 					</div>
 					<p>Button sizes and states</p>

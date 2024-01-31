@@ -130,6 +130,84 @@
           border: 1px solid $button-primary-border-color-disabled
           color: $button-primary-color-disabled
           box-shadow: none
+    &.#{$prefix}button-primary-destructive
+      background-color: $error-600
+      border: 1px solid $error-600
+      color: $um-white
+      &:hover
+        background-color: $error-700
+        border: 1px solid $error-700
+        color: $um-white
+      &:focus
+        background-color: $error-600
+        border: 1px solid $error-600
+        box-shadow: $ring-error-shadow-xs
+        color: $um-white
+      &:disabled
+        background-color: $button-primary-bg-disabled
+        border: 1px solid $button-primary-border-color-disabled
+        color: $button-primary-color-disabled
+
+    &.#{$prefix}button-secondary-destructive
+      background-color: $um-white
+      border: 1px solid $error-300
+      color: $error-700
+      &:hover
+        background-color: $error-50
+        border: 1px solid $error-300
+        color: $error-800
+      &:focus
+        background-color: $um-white
+        border: 1px solid $error-300
+        box-shadow: $ring-error-shadow-xs
+        color: $error-700
+      &:disabled
+        color: $button-color-disabled
+        background-color: $button-bg-disabled
+        border: 1px solid $button-border-color-disabled
+    &.#{$prefix}button-tertiary-destructive
+      background-color: transparent
+      color: $error-700
+      border: none
+      box-shadow: none
+      &:hover
+        color: $error-800
+        background-color: $error-50
+        border: none
+        box-shadow: none
+      &:focus
+        color: $error-700
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &:disabled
+        cursor: default
+        color: $gray-400
+        background-color: transparent
+        border: none
+        box-shadow: none
+    &.#{$prefix}button-link-destructive
+      background-color: transparent
+      color: $error-700
+      border: none
+      border-radius: none
+      box-shadow: none
+      &:hover
+        color: $error-800
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &:focus
+        color: $error-700
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &:disabled
+        cursor: default
+        color: $gray-400
+        background-color: transparent
+        border: none
+        box-shadow: none
 
     &.#{$prefix}button-secondary-color
       background-color: $um-white
@@ -149,6 +227,92 @@
         color: $gray-400
         background-color: $um-white
         border: 1px solid $gray-200
+        box-shadow: none
+    &.#{$prefix}button-tertiary-gray
+      background-color: transparent
+      color: $gray-600
+      border: none
+      box-shadow: none
+      &:hover
+        color: $gray-700
+        background-color: $gray-50
+        border: none
+        box-shadow: none
+      &:focus
+        color: $gray-600
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &:disabled
+        cursor: default
+        color: $gray-400
+        background-color: transparent
+        border: none
+        box-shadow: none
+    &.#{$prefix}button-tertiary-color
+      background-color: transparent
+      color: $primary-700
+      border: none
+      box-shadow: none
+      &:hover
+        color: $primary-800
+        background-color: $primary-50
+        border: none
+        box-shadow: none
+      &:focus
+        color: $primary-700
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &:disabled
+        cursor: default
+        color: $gray-400
+        background-color: transparent
+        border: none
+        box-shadow: none
+    &.#{$prefix}button-link-gray
+      background-color: transparent
+      color: $gray-600
+      border: none
+      border-radius: none
+      box-shadow: none
+      &:hover
+        color: $gray-700
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &:focus
+        color: $gray-600
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &:disabled
+        cursor: default
+        color: $gray-400
+        background-color: transparent
+        border: none
+        box-shadow: none
+    &.#{$prefix}button-link-color
+      background-color: transparent
+      color: $primary-700
+      border: none
+      border-radius: none
+      box-shadow: none
+      &:hover
+        color: $primary-800
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &:focus
+        color: $primary-700
+        background-color: transparent
+        border: none
+        box-shadow: none
+      &:disabled
+        cursor: default
+        color: $gray-400
+        background-color: transparent
+        border: none
         box-shadow: none
 
 
