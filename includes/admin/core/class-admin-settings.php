@@ -3577,7 +3577,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			 *
 			 * @example <caption>Add 'mailto' protocol.</caption>
 			 * function my_um_save_email_allowed_protocols( $allowed_protocols ) {
-			 *     $allowed_html[] = 'mailto';
+			 *     $allowed_protocols[] = 'mailto';
 			 *     return $allowed_protocols;
 			 * }
 			 * add_filter( 'um_save_email_allowed_protocols', 'my_um_save_email_allowed_protocols' );
