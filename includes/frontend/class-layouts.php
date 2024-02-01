@@ -98,9 +98,9 @@ class Layouts {
 	 * @param array  $args    {
 	 *     Button additional arguments.
 	 *
-	 *     @type string   $type     HTML button type attribute. Uses 'button', 'submit', 'link'. Default 'button'.
+	 *     @type string   $type     HTML button type attribute. Uses 'button','submit','link'. Default 'button'.
 	 *     @type string   $design   Button UI type. Default 'secondary-gray'. Uses 'primary','secondary-gray','secondary-color','tertiary-gray','tertiary-color','link-gray','link-color','primary-destructive','secondary-destructive','tertiary-destructive','link-destructive'.
-	 *     @type string   $size     Button size. Uses 'm', 'l', 'xl'. Default 'l'.
+	 *     @type string   $size     Button size. Uses 's','m','l','xl'. Default 'l'.
 	 *     @type string[] $classes  Additional button's classes.
 	 *     @type bool     $disabled Disabled button attribute. Default `false`.
 	 *     @type string   $url      Disabled button attribute. Default `#`.

@@ -286,6 +286,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 					echo UM()->frontend()::layouts()::button( 'Cancel Fullwidth', array( 'width' => 'full' ) );
 					echo UM()->frontend()::layouts()::button( 'Submit Fullwidth', array( 'type' => 'submit', 'design' => 'primary', 'width' => 'full' ) );
 
+					echo UM()->frontend()::layouts()::button( 'Cancel S', array( 'size' => 's' ) );
 					echo UM()->frontend()::layouts()::button( 'Cancel M', array( 'size' => 'm' ) );
 					echo UM()->frontend()::layouts()::button( 'Cancel L' );
 					echo UM()->frontend()::layouts()::button( 'Cancel XL', array( 'size' => 'xl' ) );
@@ -294,6 +295,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 					echo UM()->frontend()::layouts()::button( 'Cancel L', array( 'disabled' => true ) );
 					echo UM()->frontend()::layouts()::button( 'Cancel XL', array( 'size' => 'xl', 'disabled' => true ) );
 
+					echo UM()->frontend()::layouts()::button( 'Submit M', array( 'type' => 'submit', 'design' => 'primary', 'size' => 's' ) );
 					echo UM()->frontend()::layouts()::button( 'Submit M', array( 'type' => 'submit', 'design' => 'primary', 'size' => 'm' ) );
 					echo UM()->frontend()::layouts()::button( 'Submit L', array( 'type' => 'submit', 'design' => 'primary' ) );
 					echo UM()->frontend()::layouts()::button( 'Submit XL', array( 'type' => 'submit', 'design' => 'primary', 'size' => 'xl' ) );
