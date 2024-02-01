@@ -3543,7 +3543,48 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			}
 
 			$template = $settings['um_email_template'];
-			$content  = wp_kses( stripslashes( $settings[ $template ] ), 'post', array( 'data' ) );
+
+			/**
+			 * Filters the extend allowed HTML in email template.
+			 *
+			 * @param {string} $allowed_html allowed HTML.
+			 *
+			 * @return {string|array} allowed HTML.
+			 *
+			 * @since 2.8.3
+			 * @hook um_save_email_allowed_html
+			 *
+			 * @example <caption>Add 'em' tag to allowed HTML.</caption>
+			 * function my_um_save_email_allowed_html( $allowed_html ) {
+			 *     $allowed_html['custom_tag'] = array(
+			 *          'em' => array(),
+			 *     }
+			 *     return $allowed_html;
+			 * }
+			 * add_filter( 'um_save_email_allowed_html', 'my_um_save_email_allowed_html' );
+			 */
+			$allowed_html = apply_filters( 'um_save_email_allowed_html', 'post' );
+
+			/**
+			 * Filters the extend allowed protocols in email template.
+			 *
+			 * @param {array} $allowed_protocols allowed protocols.
+			 *
+			 * @return {array} allowed protocols.
+			 *
+			 * @since 2.8.3
+			 * @hook um_save_email_allowed_protocols
+			 *
+			 * @example <caption>Add 'mailto' protocol.</caption>
+			 * function my_um_save_email_allowed_protocols( $allowed_protocols ) {
+			 *     $allowed_html[] = 'mailto';
+			 *     return $allowed_protocols;
+			 * }
+			 * add_filter( 'um_save_email_allowed_protocols', 'my_um_save_email_allowed_protocols' );
+			 */
+			$allowed_protocols = apply_filters( 'um_save_email_allowed_protocols', array( 'data', 'http', 'https' ) );
+
+			$content = wp_kses( stripslashes( $settings[ $template ] ), $allowed_html, $allowed_protocols );
 
 			$theme_template_path = UM()->mail()->get_template_file( 'theme', $template );
 			if ( ! file_exists( $theme_template_path ) ) {
@@ -3556,7 +3597,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				fclose( $fp );
 			}
 
-			if ( isset( $result ) && $result !== false ) {
+			if ( isset( $result ) && false !== $result ) {
 				unset( $settings['um_email_template'] );
 				unset( $settings[ $template ] );
 			}
