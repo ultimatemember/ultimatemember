@@ -60,9 +60,9 @@
       .um-dropdown ul li a {
         display: block;
         padding: 9px 10px;
-        font-weight: 500;
-        font-size: 14px;
-        line-height: 20px;
+        font-size: var(--um-text-font-size-sm, 14px);
+        line-height: var(--um-text-line-height-sm, 20px);
+        font-weight: var(--um-text-font-weight-semibold, 600);
         color: var(--um-gray-700, #344054);
         text-decoration: none;
         border-radius: 6px; }

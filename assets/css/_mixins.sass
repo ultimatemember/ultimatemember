@@ -1,5 +1,6 @@
 @import "box"
 @import "colors"
+@import "typography"
 
 =flex ($direction, $justify, $align, $wrap)
   display: flex
@@ -35,3 +36,8 @@
   border-radius: $tl $tr $br $bl
   -moz-border-radius: $tl $tr $br $bl
   -webkit-border-radius: $tl $tr $br $bl
+
+=typography ($type, $size, $weight)
+  font-size: typography( $type, 'font-size', $size )
+  line-height: typography( $type, 'line-height', $size )
+  font-weight: typography( $type, 'font-weight', $weight )

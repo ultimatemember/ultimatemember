@@ -49,8 +49,6 @@
   .#{$prefix}button // button has predefined styles for default secondary-gray
     border-radius: $radius-l
     text-align: center
-    font-size: inherit
-    font-weight: $bold-weight
     box-shadow: $shadow-xs
     background-color: $button-bg
     color: $button-color
@@ -72,20 +70,16 @@
       width: 100%
     &.#{$prefix}button-size-s
       padding: 8px 14px
-      font-size: $sm-size
-      line-height: $sm-line-height
+      +typography( text, sm, semibold )
     &.#{$prefix}button-size-m
       padding: 10px 16px
-      font-size: $sm-size
-      line-height: $sm-line-height
+      +typography( text, sm, semibold )
     &.#{$prefix}button-size-l
       padding: 10px 18px
-      font-size: $m-size
-      line-height: $m-line-height
+      +typography( text, md, semibold )
     &.#{$prefix}button-size-xl
       padding: 12px 20px
-      font-size: $m-size
-      line-height: $m-line-height
+      +typography( text, md, semibold )
     &.#{$prefix}link-button
       text-decoration: none
       display: inline-block
@@ -448,9 +442,7 @@
       padding: $box-padding $box-padding $row-gap $box-padding
       .#{$prefix}box-title
         color: $gray-600
-        font-size: $sm-size
-        line-height: $sm-line-height
-        font-weight: $bold-weight
+        +typography( text, sm, bold )
       &.#{$prefix}box-no-title
         justify-content: flex-end
     .#{$prefix}box-content
@@ -475,11 +467,9 @@
 
   // Link
   .#{$prefix}link
-    font-size: $sm-size
-    line-height: $sm-line-height
+    +typography( text, sm, bold )
     color: $link-color
     text-decoration: none
-    font-weight: $bold-weight
     &:hover
       color: $link-hover-color
     &:focus
