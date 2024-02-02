@@ -602,3 +602,28 @@
       display: none; }
     .um .um-profile-photo-uploader.um-processing .um-profile-photo-overflow {
       display: block; }
+  .um label {
+    color: var(--um-gray-700, #344054);
+    font-size: var(--um-text-font-size-sm, 14px);
+    line-height: var(--um-text-line-height-sm, 20px);
+    font-weight: var(--um-text-font-weight-medium, 500); }
+  .um input {
+    border-radius: 8px;
+    border: 1px solid var(--um-gray-300, #d0d5dd);
+    background: #fff;
+    box-shadow: 0 1px 2px var(--um-gray-900-a-5, rgba(16, 24, 40, 0.05));
+    padding: 8px 12px;
+    color: var(--um-gray-900, #101828);
+    font-size: var(--um-text-font-size-md, 16px);
+    line-height: var(--um-text-line-height-md, 24px);
+    font-weight: var(--um-text-font-weight-regular, 400); }
+    .um input:focus, .um input:focus-visible {
+      border: 1px solid var(--um-primary-300-bg, #d6bbfb);
+      box-shadow: 0 0 0 4px var(--um-primary-500-a-24, rgba(158, 119, 237, 0.24)), 0 1px 2px var(--um-gray-900-a-5, rgba(16, 24, 40, 0.05));
+      background: #fff;
+      outline: none; }
+    .um input:disabled {
+      background: var(--um-gray-50, #f9fafb);
+      color: var(--um-gray-500, #667085); }
+    .um input[type="text"]::placeholder {
+      color: var(--um-gray-500, #667085); }

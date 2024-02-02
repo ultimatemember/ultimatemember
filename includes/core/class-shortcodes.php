@@ -210,6 +210,10 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				<p>xl</p>
 				<?php echo UM()->frontend()::layouts()::ajax_loader( 'xl' ); ?>
 
+				<h3>Inputs</h3>
+				<form>
+					<?php echo UM()->frontend()::layouts()::input(); ?>
+				</form>
 				<h3>Buttons</h3>
 				<form>
 					<h4>Link type <code>&lt;a&gt;&lt;/a&gt;</code></h4>

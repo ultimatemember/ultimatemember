@@ -416,6 +416,18 @@ class Layouts {
 		return ob_get_clean();
 	}
 
+
+	public static function input() {
+		ob_start();
+		?>
+		<label for="aaa">Label aa</label>
+		<input id="aaa" type="text" placeholder="Type here" />
+		<label for="aaa">Label bb</label>
+		<input id="bbb" type="text" placeholder="Disabled" disabled/>
+		<?php
+		return ob_get_clean();
+	}
+
 	/**
 	 * New menu JS
 	 *
