@@ -3542,8 +3542,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				return $settings;
 			}
 
+			$wp_default_protocols = wp_allowed_protocols();
+			$protocols            = array_merge( $wp_default_protocols, array( 'data' ) );
+
 			$template = $settings['um_email_template'];
-			$content  = wp_kses( stripslashes( $settings[ $template ] ), 'post', array( 'data' ) );
+			$content  = wp_kses( stripslashes( $settings[ $template ] ), 'post', $protocols );
 
 			$theme_template_path = UM()->mail()->get_template_file( 'theme', $template );
 			if ( ! file_exists( $theme_template_path ) ) {
