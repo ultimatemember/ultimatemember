@@ -997,9 +997,8 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 
 			case 'english':
 				if ( '' !== $submitted_data[ $key ] ) {
-
 					if ( ! preg_match( '/^[a-zA-Z]*$/u', str_replace( ' ', '', $submitted_data[ $key ] ) ) ) {
-						UM()->form()->add_error( $key, __( 'You must provide english letters', 'ultimate-member' ) );
+						UM()->form()->add_error( $key, __( 'You must provide English letters.', 'ultimate-member' ) );
 					}
 				}
 
