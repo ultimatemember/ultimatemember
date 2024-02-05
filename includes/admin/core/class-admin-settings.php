@@ -2045,6 +2045,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'checkbox_label' => __( 'Enable legacy fonticons', 'ultimate-member' ),
 												'description'    => __( 'Check this box if you would like to enable legacy Ultimate Member fonticons used outdated versions of FontAwesome and Ionicons libraries.', 'ultimate-member' ),
 											),
+											array(
+												'id'             => 'enable_restriction_settings_v3',
+												'type'           => 'checkbox',
+												'label'          => __( 'Restriction settings v3', 'ultimate-member' ),
+												'checkbox_label' => __( 'Enable restriction settings v3', 'ultimate-member' ),
+												'description'    => __( 'Check this box if you would like to enable Restriction settings v3 with new access rules.', 'ultimate-member' ),
+											),
 										),
 									),
 									'legacy_features' => array(
