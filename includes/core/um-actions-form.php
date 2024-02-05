@@ -896,7 +896,6 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 				} elseif ( ! UM()->validation()->safe_username( $submitted_data[ $key ] ) ) {
 					UM()->form()->add_error( $key, __( 'Your username contains invalid characters', 'ultimate-member' ) );
 				}
-
 				break;
 
 			case 'unique_username_or_email':
@@ -909,24 +908,23 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 				} elseif ( ! UM()->validation()->safe_username( $submitted_data[ $key ] ) ) {
 					UM()->form()->add_error( $key, __( 'Your username contains invalid characters', 'ultimate-member' ) );
 				}
-
 				break;
 
 			case 'unique_email':
 				$submitted_data[ $key ] = trim( $submitted_data[ $key ] );
 
-				if ( in_array( $key, array( 'user_email' ), true ) ) {
+				if ( 'user_email' === $key ) {
 					if ( ! isset( $submitted_data['user_id'] ) ) {
 						$submitted_data['user_id'] = um_get_requested_user();
 					}
 
 					$email_exists = email_exists( $submitted_data[ $key ] );
 
-					if ( '' === $submitted_data[ $key ] && in_array( $key, array( 'user_email' ), true ) ) {
+					if ( '' === $submitted_data[ $key ] ) {
 						UM()->form()->add_error( $key, __( 'You must provide your email', 'ultimate-member' ) );
-					} elseif ( in_array( $mode, array( 'register' ), true ) && $email_exists ) {
+					} elseif ( 'register' === $mode && $email_exists ) {
 						UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
-					} elseif ( in_array( $mode, array( 'profile' ), true ) && $email_exists && $email_exists !== $submitted_data['user_id'] ) {
+					} elseif ( 'profile' === $mode && $email_exists && $email_exists !== $submitted_data['user_id'] ) {
 						UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
 					} elseif ( ! is_email( $submitted_data[ $key ] ) ) {
 						UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
@@ -950,16 +948,13 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 						}
 					}
 				}
-
 				break;
 
 			case 'is_email':
 				$submitted_data[ $key ] = trim( $submitted_data[ $key ] );
-
 				if ( '' !== $submitted_data[ $key ] && ! is_email( $submitted_data[ $key ] ) ) {
 					UM()->form()->add_error( $key, __( 'This is not a valid email', 'ultimate-member' ) );
 				}
-
 				break;
 
 			case 'unique_value':
@@ -986,22 +981,18 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 
 			case 'alphabetic':
 				if ( '' !== $submitted_data[ $key ] ) {
-
 					if ( ! preg_match( '/^\p{L}+$/u', str_replace( ' ', '', $submitted_data[ $key ] ) ) ) {
 						UM()->form()->add_error( $key, __( 'You must provide alphabetic letters', 'ultimate-member' ) );
 					}
 				}
-
 				break;
 
 			case 'lowercase':
 				if ( '' !== $submitted_data[ $key ] ) {
-
 					if ( ! ctype_lower( str_replace( ' ', '', $submitted_data[ $key ] ) ) ) {
 						UM()->form()->add_error( $key, __( 'You must provide lowercase letters.', 'ultimate-member' ) );
 					}
 				}
-
 				break;
 
 		}
