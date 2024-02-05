@@ -29,7 +29,7 @@
 
 /* modal */
 .#{$prefix}modal
-  border-radius: $radius-m
+  border-radius: $radius-sm
   bottom: -50px
   box-sizing: border-box
   display: block
@@ -109,7 +109,7 @@
 
   .#{$prefix}modal-header
     background-color: $primary-600
-    border-radius: $radius-m $radius-m 0 0
+    border-radius: $radius-sm $radius-sm 0 0
     height: 44px
     line-height: 40px
     color: $primary-fg
@@ -119,17 +119,17 @@
 
   .#{$prefix}modal-body
     +flex( column, flex-start, stretch, nowrap )
-    row-gap: $row-gap
+    row-gap: $spacing-md
 
   .#{$prefix}modal-footer
     background-color: $um-white
-    border-radius: 0 0 $radius-m $radius-m
+    border-radius: 0 0 $radius-sm $radius-sm
     padding: 0.5em
     text-align: right
 
   .#{$prefix}modal-buttons-wrapper
     +flex( row, flex-start, center, nowrap )
-    column-gap: $column-gap
+    column-gap: $spacing-md
     margin: 0
     padding: 0
     width: 100%

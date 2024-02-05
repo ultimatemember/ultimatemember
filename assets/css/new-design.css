@@ -602,6 +602,11 @@
       display: none; }
     .um .um-profile-photo-uploader.um-processing .um-profile-photo-overflow {
       display: block; }
+  .um .um-field-hint {
+    color: var(--um-gray-600, #475467);
+    font-size: var(--um-text-font-size-sm, 14px);
+    line-height: var(--um-text-line-height-sm, 20px);
+    font-weight: var(--um-text-font-weight-regular, 400); }
   .um label {
     color: var(--um-gray-700, #344054);
     font-size: var(--um-text-font-size-sm, 14px);

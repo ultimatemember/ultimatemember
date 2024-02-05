@@ -47,7 +47,7 @@
 
   // Buttons
   .#{$prefix}button // button has predefined styles for default secondary-gray
-    border-radius: $radius-l
+    border-radius: $radius-md
     text-align: center
     box-shadow: $shadow-xs
     background-color: $button-bg
@@ -69,16 +69,16 @@
     &.#{$prefix}button-full-width
       width: 100%
     &.#{$prefix}button-size-s
-      padding: 8px 14px
+      padding: $spacing-md 14px
       +typography( text, sm, semibold )
     &.#{$prefix}button-size-m
-      padding: 10px 16px
+      padding: 10px $spacing-xl
       +typography( text, sm, semibold )
     &.#{$prefix}button-size-l
       padding: 10px 18px
       +typography( text, md, semibold )
     &.#{$prefix}button-size-xl
-      padding: 12px 20px
+      padding: $spacing-lg $spacing-2xl
       +typography( text, md, semibold )
     &.#{$prefix}link-button
       text-decoration: none
@@ -438,8 +438,8 @@
     box-shadow: $shadow-sm
     .#{$prefix}box-header
       +flex( row, space-between, baseline, nowrap )
-      column-gap: $column-gap
-      padding: $box-padding $box-padding $row-gap $box-padding
+      column-gap: $spacing-md
+      padding: $spacing-3xl $spacing-3xl $spacing-md $spacing-3xl
       .#{$prefix}box-title
         color: $gray-600
         +typography( text, sm, bold )
@@ -447,18 +447,18 @@
         justify-content: flex-end
     .#{$prefix}box-content
       +flex( row, flex-start, baseline, wrap )
-      padding: 0 $box-padding $box-padding $box-padding
-      row-gap: $row-gap
+      padding: 0 $spacing-3xl $spacing-3xl $spacing-3xl
+      row-gap: $spacing-md
       color: $gray-900
       word-wrap: break-word
       word-break: break-word
     .#{$prefix}box-footer
       +flex( row, flex-end, baseline, wrap )
-      padding: 16px $box-padding
+      padding: $spacing-xl $spacing-3xl
       border-top: 1px solid $gray-200
     &.#{$prefix}box-no-footer
-      row-gap: $row-gap
-      padding: $box-padding
+      row-gap: $spacing-md
+      padding: $spacing-3xl
       .#{$prefix}box-header
         padding: 0
       .#{$prefix}box-content
@@ -568,15 +568,18 @@
         display: block
 
   // Form components
+  .#{$prefix}field-hint
+    color: $gray-600
+    +typography( text, sm, regular )
   label
     color: $gray-700
     +typography( text, sm, medium )
   input
-    border-radius: $radius-l
+    border-radius: $radius-md
     border: 1px solid $gray-300
     background: $um-white
     box-shadow: $shadow-xs
-    padding: 8px 12px
+    padding: $spacing-md $spacing-lg
     color: $gray-900
     +typography( text, md, regular )
     &:focus,

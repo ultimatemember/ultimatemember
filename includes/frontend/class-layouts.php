@@ -417,13 +417,36 @@ class Layouts {
 	}
 
 
+	public static function form( $args = array() ) {
+		// 1) responsive: column with labels + column with fields. Issue: there isn't possible to build multi-column fields
+		// for small width display we show label above the field.
+		// 2) force multi-columns with top label above the field. Possible to hide labels and show them as placeholders. Possible to place fields 2 or 3 columns
+		ob_start();
+		?>
+		<form action="">
+			<div class="um-form-row">
+				<div class="um-form-cols">
+					<div class="um-form-col-1">
+
+					</div>
+					<div class="um-form-col-2">
+
+					</div>
+				</div>
+			</div>
+		</form>
+		<?php
+		return ob_get_clean();
+	}
+
 	public static function input() {
 		ob_start();
 		?>
 		<label for="aaa">Label aa</label>
 		<input id="aaa" type="text" placeholder="Type here" />
 		<label for="aaa">Label bb</label>
-		<input id="bbb" type="text" placeholder="Disabled" disabled/>
+		<input id="bbb" type="text" placeholder="Disabled" disabled />
+		<p class="um-field-hint">Hint message</p>
 		<?php
 		return ob_get_clean();
 	}
