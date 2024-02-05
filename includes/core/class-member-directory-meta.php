@@ -785,9 +785,11 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 				/** This filter is documented in includes/core/class-member-directory.php */
 				$custom_sort_type = apply_filters( 'um_member_directory_custom_sorting_type', $custom_sort_type, $sortby, $directory_data );
+				$custom_sort_type = esc_sql( $custom_sort_type );
+				$custom_sort_type = in_array( strtoupper( $custom_sort_type ), $this->sort_data_types, true ) ? $custom_sort_type : 'CHAR';
 
-				$custom_sort_type  = esc_sql( $custom_sort_type );
 				$custom_sort_order = esc_sql( $custom_sort_order );
+				$custom_sort_order = in_array( strtoupper( $custom_sort_order ), array( 'ASC', 'DESC' ), true ) ? $custom_sort_order : 'ASC';
 				$this->sql_order   = " ORDER BY CAST( umm_sort.um_value AS {$custom_sort_type} ) {$custom_sort_order} ";
 
 			} elseif ( count( $numeric_sorting_keys ) && in_array( $sortby, $numeric_sorting_keys, true ) ) {
@@ -803,12 +805,14 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				}
 
 				$order           = esc_sql( $order );
+				$order           = in_array( strtoupper( $order ), array( 'ASC', 'DESC' ), true ) ? $order : 'ASC';
 				$this->joins[]   = $wpdb->prepare( "LEFT JOIN {$wpdb->prefix}um_metadata umm_sort ON ( umm_sort.user_id = u.ID AND umm_sort.um_key = %s )", $sortby );
 				$this->sql_order = " ORDER BY CAST( umm_sort.um_value AS SIGNED ) {$order}, u.user_registered DESC ";
 
 			} elseif ( 'username' === $sortby ) {
 
 				$order           = esc_sql( $order );
+				$order           = in_array( strtoupper( $order ), array( 'ASC', 'DESC' ), true ) ? $order : 'ASC';
 				$this->sql_order = " ORDER BY u.user_login {$order} ";
 
 			} elseif ( 'display_name' === $sortby ) {
@@ -817,6 +821,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				if ( 'username' === $display_name ) {
 
 					$order           = esc_sql( $order );
+					$order           = in_array( strtoupper( $order ), array( 'ASC', 'DESC' ), true ) ? $order : 'ASC';
 					$this->sql_order = " ORDER BY u.user_login {$order} ";
 
 				} else {
@@ -824,6 +829,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm_sort ON ( umm_sort.user_id = u.ID AND umm_sort.um_key = 'full_name' )";
 
 					$order           = esc_sql( $order );
+					$order           = in_array( strtoupper( $order ), array( 'ASC', 'DESC' ), true ) ? $order : 'ASC';
 					$this->sql_order = " ORDER BY CAST( umm_sort.um_value AS CHAR ) {$order}, u.display_name {$order} ";
 
 				}
@@ -832,6 +838,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				$this->joins[] = $wpdb->prepare( "LEFT JOIN {$wpdb->prefix}um_metadata umm_sort ON ( umm_sort.user_id = u.ID AND umm_sort.um_key = %s )", $sortby );
 
 				$order           = esc_sql( $order );
+				$order           = in_array( strtoupper( $order ), array( 'ASC', 'DESC' ), true ) ? $order : 'ASC';
 				$this->sql_order = " ORDER BY CAST( umm_sort.um_value AS CHAR ) {$order} ";
 
 			} elseif ( 'last_login' === $sortby ) {
@@ -862,7 +869,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				// Get seed from session variable if it exists
 				$seed = false;
 				if ( isset( $_SESSION['um_member_directory_seed'] ) ) {
-					$seed = $_SESSION['um_member_directory_seed'];
+					$seed = (int) $_SESSION['um_member_directory_seed'];
 				}
 
 				// Set new seed if none exists
@@ -891,10 +898,12 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				if ( in_array( $sortby, $metakeys, true ) ) {
 					$this->joins[]   = $wpdb->prepare( "LEFT JOIN {$wpdb->prefix}um_metadata umm_sort ON ( umm_sort.user_id = u.ID AND umm_sort.um_key = %s )", $sortby );
 					$order           = esc_sql( $order );
+					$order           = in_array( strtoupper( $order ), array( 'ASC', 'DESC' ), true ) ? $order : 'ASC';
 					$this->sql_order = " ORDER BY CAST( umm_sort.um_value AS CHAR ) {$order} ";
-				} else {
+				} elseif ( in_array( $sortby, $this->core_search_fields, true ) ) {
 					$sortby          = esc_sql( $sortby );
 					$order           = esc_sql( $order );
+					$order           = in_array( strtoupper( $order ), array( 'ASC', 'DESC' ), true ) ? $order : 'ASC';
 					$this->sql_order = " ORDER BY u.{$sortby} {$order} ";
 				}
 			}
