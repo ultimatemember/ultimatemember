@@ -85,7 +85,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 			}
 
 			$old_version = get_option( 'theme_version ' . $theme->get( 'Name' ) );
-			$version = $theme->get( 'Version' );
+			$version     = $theme->get( 'Version' );
 			if ( $old_version === $version ) {
 				return;
 			}
@@ -98,14 +98,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 			$um_dir = $theme->get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member';
 			@mkdir( $um_dir, 0777, true );
 
-			$src = realpath( $temp_dir );
+			$src  = realpath( $temp_dir );
 			$dest = realpath( $um_dir );
 			if ( $src && $dest ) {
 				self::recurse_copy( $src, $dest );
-				error_log( "UM Log. Theme '" . $theme->get( 'template' ) . "' templates restored." );
+				error_log( "UM Log. Theme '" . $theme->get( 'Name' ) . "' templates restored." );
 				UM()->files()->remove_dir( $src );
 			} else {
-				error_log( "UM Error. Can not restore theme templates." );
+				error_log( 'UM Error. Can not restore theme templates.' );
 			}
 
 			delete_option( 'theme_version ' . $theme->get( 'Name' ) );
@@ -140,13 +140,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 			$temp_dir = UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $theme->get( 'template' );
 			@mkdir( $temp_dir, 0777, true );
 
-			$src = realpath( $um_dir );
+			$src  = realpath( $um_dir );
 			$dest = realpath( $temp_dir );
 			if ( $src && $dest ) {
 				self::recurse_copy( $src, $dest );
-				error_log( "UM Log. Theme '" . $theme->get( 'template' ) . "' templates saved." );
+				error_log( "UM Log. Theme '" . $theme->get( 'Name' ) . "' templates saved." );
 			} else {
-				error_log( "UM Error. Can not save theme templates." );
+				error_log( 'UM Error. Can not save theme templates.' );
 			}
 
 			update_option( 'theme_version ' . $theme->get( 'Name' ), $theme->get( 'Version' ) );
@@ -156,7 +156,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 
 		/**
 		 * Filter: upgrader_package_options
-		 * 
+		 *
 		 * @param array $options
 		 * @return array
 		 */
@@ -170,7 +170,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 
 		/**
 		 * Action: upgrader_process_complete
-		 * 
+		 *
 		 * @param \WP_Upgrader $WP_Upgrader
 		 * @param array $options
 		 */
