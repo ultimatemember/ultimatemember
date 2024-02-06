@@ -166,6 +166,35 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
+= 2.8.3: February 12, 2024 =
+
+* Enhancements:
+
+  - Tweak: Ultimate Member > Settings redesign
+
+* Bugfixes:
+
+  - Fixed: aria-invalid attribute for the user description field
+  - Fixed: wp_kses protocols for email notifications content
+  - Fixed: PHP notice while registration form validation
+  - Fixed: Field validations (English letters, Alpha-numeric types)
+  - Fixed: Hidden buttons in the modal when uploading profile and cover photo
+  - Fixed: Theme updater log message
+  - Fixed: Search line shortcode layout
+  - Fixed: PHP notice while login form submission
+  - Fixed: Email notifications HTML layout
+  - Fixed: Default email notification body color
+
+* Templates required update:
+
+  - email/notification_deletion.php
+  - email/notification_new_user.php
+  - email/notification_review.php
+  - email/welcome_email.php
+  - password-change.php
+
+* Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade
+
 = 2.8.2: January 15, 2024 =
 
 * Enhancements:
