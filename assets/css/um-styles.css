@@ -898,12 +898,20 @@ small.um-max-filesize span{
 
 .um-search-area .um-search-field {
 	width: 100%;
+	margin: 0;
 }
 
 .um-search-area .um-search-icon {
 	position: absolute;
-	top: 7px;
+	height: 100%;
 	right: 10px;
+	top: 0;
+}
+.um-faicon-search:before {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
 }
 
 /*
