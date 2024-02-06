@@ -987,6 +987,14 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 				}
 				break;
 
+			case 'alpha_numeric':
+				if ( '' !== $submitted_data[ $key ] ) {
+					if ( ! preg_match( '/^[\p{L}0-9\s]+$/u', str_replace( ' ', '', $submitted_data[ $key ] ) ) ) {
+						UM()->form()->add_error( $key, __( 'You must provide alphabetic letters or numbers', 'ultimate-member' ) );
+					}
+				}
+				break;
+
 			case 'lowercase':
 				if ( '' !== $submitted_data[ $key ] ) {
 					if ( ! ctype_lower( str_replace( ' ', '', $submitted_data[ $key ] ) ) ) {
