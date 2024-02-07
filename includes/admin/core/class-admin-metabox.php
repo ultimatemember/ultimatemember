@@ -1187,6 +1187,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			delete_post_meta( $post_id, '_um_tagline_fields' );
 			delete_post_meta( $post_id, '_um_reveal_fields' );
 			delete_post_meta( $post_id, '_um_search_fields' );
+			delete_post_meta( $post_id, '_um_search_exclude_fields' );
+			delete_post_meta( $post_id, '_um_search_include_fields' );
 			delete_post_meta( $post_id, '_um_roles_can_search' );
 			delete_post_meta( $post_id, '_um_roles_can_filter' );
 			delete_post_meta( $post_id, '_um_show_these_users' );
