@@ -1216,7 +1216,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				),
 			);
 
-			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_restriction_settings_v3' ) ) {
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'disable_restriction_settings_v2' ) ) {
 				$access_sections[''] = $access_sections_other;
 			} else {
 				$access_sections['']      = array(
@@ -2058,6 +2058,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'label'          => __( 'Restriction settings v3', 'ultimate-member' ),
 												'checkbox_label' => __( 'Enable restriction settings v3', 'ultimate-member' ),
 												'description'    => __( 'Check this box if you would like to enable Restriction settings v3 with new access rules.', 'ultimate-member' ),
+											),
+											array(
+												'id'             => 'disable_restriction_settings_v2',
+												'type'           => 'checkbox',
+												'label'          => __( 'Restriction settings v2', 'ultimate-member' ),
+												'checkbox_label' => __( 'Disable restriction settings v3', 'ultimate-member' ),
+												'description'    => __( 'Check this box if you would like to disable Restriction settings v2.', 'ultimate-member' ),
+												'conditional'    => array(
+													'enable_restriction_settings_v3',
+													'=',
+													1,
+												),
 											),
 										),
 									),
