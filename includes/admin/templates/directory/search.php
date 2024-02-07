@@ -11,6 +11,7 @@ $_um_roles_filter_value = get_post_meta( $post_id, '_um_roles_can_filter', true 
 $_um_roles_filter_value = empty( $_um_roles_filter_value ) ? array() : $_um_roles_filter_value;
 
 $_um_search_exclude_fields = get_post_meta( $post_id, '_um_search_exclude_fields', true );
+$_um_search_include_fields = get_post_meta( $post_id, '_um_search_include_fields', true );
 $_um_search_fields         = get_post_meta( $post_id, '_um_search_fields', true );
 $_um_search_filters        = get_post_meta( $post_id, '_um_search_filters', true ); ?>
 
@@ -47,6 +48,17 @@ $_um_search_filters        = get_post_meta( $post_id, '_um_search_filters', true
 					'conditional'         => array( '_um_filters', '=', 1 ),
 					'options'             => UM()->member_directory()->filter_fields,
 					'add_text'            => __( 'Add New Custom Field to Exclude', 'ultimate-member' ),
+					'show_default_number' => 0,
+					'sorting'             => true,
+				),
+				array(
+					'id'                  => '_um_search_include_fields',
+					'type'                => 'multi_selects',
+					'label'               => __( 'Choose fields to include to search', 'ultimate-member' ),
+					'value'               => $_um_search_include_fields,
+					'conditional'         => array( '_um_filters', '=', 1 ),
+					'options'             => UM()->member_directory()->filter_fields,
+					'add_text'            => __( 'Add New Custom Field to Include', 'ultimate-member' ),
 					'show_default_number' => 0,
 					'sorting'             => true,
 				),
