@@ -921,7 +921,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 			 * @example <caption>Extend UM core pages.</caption>
 			 * function my_predefined_pages( $pages ) {
 			 *     // your code here
-			 *     $pages['my_page_key'] = array( 'title' => __( 'My Page Title', 'my-translate-key' ) );
+			 *     $pages['my_page_key'] = array( 'title' => __( 'My Page Title', 'my-translate-key' ), 'content' => 'my-page-predefined-content' );
 			 *     return $pages;
 			 * }
 			 * add_filter( 'um_predefined_pages', 'my_predefined_pages' );
