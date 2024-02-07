@@ -603,15 +603,24 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 					$directory_id   = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
 					$exclude_fields = get_post_meta( $directory_id, '_um_search_exclude_fields', true );
+					$include_fields = get_post_meta( $directory_id, '_um_search_include_fields', true );
 					if ( ! empty( $exclude_fields ) ) {
-						$exclude_fields_sql = 'AND umm_search.um_key NOT IN (';
+						$custom_fields_sql = 'AND umm_search.um_key NOT IN (';
 						foreach ( $exclude_fields as $exclude_field ) {
-							$exclude_fields_sql .= "'" . $exclude_field . "',";
+							$custom_fields_sql .= "'" . $exclude_field . "',";
 						}
-						$exclude_fields_sql  = rtrim( $exclude_fields_sql, ',' );
-						$exclude_fields_sql .= ') ';
+						$custom_fields_sql  = rtrim( $custom_fields_sql, ',' );
+						$custom_fields_sql .= ') ';
 					}
-					$this->where_clauses[] = $wpdb->prepare( "( umm_search.um_value = %s OR umm_search.um_value LIKE %s OR umm_search.um_value LIKE %s OR {$core_search}{$additional_search}) {$exclude_fields_sql}", $search_line, $search_like_string, '%' . serialize( (string) $search_line ) . '%' );
+					if ( ! empty( $include_fields ) ) {
+						$custom_fields_sql = 'AND umm_search.um_key IN (';
+						foreach ( $include_fields as $include_field ) {
+							$custom_fields_sql .= "'" . $include_field . "',";
+						}
+						$custom_fields_sql  = rtrim( $custom_fields_sql, ',' );
+						$custom_fields_sql .= ') ';
+					}
+					$this->where_clauses[] = $wpdb->prepare( "( umm_search.um_value = %s OR umm_search.um_value LIKE %s OR umm_search.um_value LIKE %s OR {$core_search}{$additional_search}) {$custom_fields_sql}", $search_line, $search_like_string, '%' . serialize( (string) $search_line ) . '%' );
 
 					$this->is_search = true;
 				}
