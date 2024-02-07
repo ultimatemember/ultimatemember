@@ -170,7 +170,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 * Enhancements:
 
-  - Tweak: Ultimate Member > Settings redesign
+  - Tweak: Ultimate Member > Settings redesign. More details about setting up. Tooltips changed to descriptions.
 
 * Bugfixes:
 
