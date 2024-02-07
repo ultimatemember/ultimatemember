@@ -184,6 +184,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
   - Fixed: PHP notice while login form submission
   - Fixed: Email notifications HTML layout
   - Fixed: Default email notification body color
+  - Fixed: Ignore username slug when custom meta slug exists when parse user from query
 
 * Templates required update:
 
