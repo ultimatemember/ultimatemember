@@ -1576,7 +1576,8 @@ function um_submit_form_profile( $args, $form_data ) {
 	 * function my_user_edit_profile( $post, $form_data ) {
 	 *     // your code here
 	 * }
-	 * add_action( 'um_user_edit_profile', 'my_user_edit_profile', 10, 2 );
+	 * // Don't use priority >= 10 because there is native Ultimate Member handler on it.
+	 * add_action( 'um_user_edit_profile', 'my_user_edit_profile', 9, 2 );
 	 */
 	do_action( 'um_user_edit_profile', $args, $form_data );
 }
