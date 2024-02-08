@@ -174,6 +174,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 * Bugfixes:
 
+  - Fixed: Member directory queries to custom usermeta table properly escaped and validated
   - Fixed: aria-invalid attribute for the user description field
   - Fixed: wp_kses protocols for email notifications content
   - Fixed: PHP notice while registration form validation
