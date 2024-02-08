@@ -21,8 +21,8 @@ if ( isset( $_GET['action'] ) ) {
 			// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
 			$rule_keys = array();
 			if ( isset( $_REQUEST['id'] ) ) {
-				check_admin_referer( 'um_rule_delete' . sanitize_title( $_REQUEST['id'] ) . get_current_user_id() );
-				$rule_keys = (array) sanitize_title( $_REQUEST['id'] );
+				check_admin_referer( 'um_restriction_delete' . sanitize_title( $_REQUEST['id'] ) . get_current_user_id() );
+				$rule_keys = (array) absint( $_REQUEST['id'] );
 			} elseif ( isset( $_REQUEST['item'] ) ) {
 				check_admin_referer( 'bulk-' . sanitize_key( __( 'Rules', 'ultimate-member' ) ) );
 				$rule_keys = array_map( 'sanitize_title', $_REQUEST['item'] );
@@ -34,7 +34,6 @@ if ( isset( $_GET['action'] ) ) {
 
 			$um_rules = get_option( 'um_restriction_rules', array() );
 
-			$um_custom_roles = array();
 			foreach ( $rule_keys as $k => $rule_key ) {
 				$rule_meta = get_option( "um_restriction_rule_{$rule_key}" );
 
@@ -49,7 +48,7 @@ if ( isset( $_GET['action'] ) ) {
 				 * @param {string} $rule_key  Rule key.
 				 * @param {array}  $rule_meta Rule meta.
 				 *
-				 * @example <caption>Make any custom action after deleting UM role.</caption>
+				 * @example <caption>Make any custom action after deleting UM rule.</caption>
 				 * function my_um_after_delete_restriction_rule( $rule_key, $rule_meta ) {
 				 *     // your code here
 				 * }
@@ -57,7 +56,7 @@ if ( isset( $_GET['action'] ) ) {
 				 */
 				do_action( 'um_after_delete_restriction_rule', $rule_key, $rule_meta );
 
-				$um_rules = array_diff( $um_rules, array( $rule_key ) );
+				unset( $um_rules[ $rule_key ] );
 			}
 
 			update_option( 'um_restriction_rules', $um_rules );
@@ -81,7 +80,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 
 
 /**
- * Class UM_Roles_List_Table
+ * Class UM_Restrictions_List_Table
  */
 class UM_Restrictions_List_Table extends WP_List_Table {
 
@@ -123,7 +122,7 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 
 
 	/**
-	 * UM_Roles_List_Table constructor.
+	 * UM_Restrictions_List_Table constructor.
 	 *
 	 * @param array $args
 	 */
@@ -283,7 +282,7 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 	 * @return string
 	 */
 	public function column_cb( $item ) {
-		return sprintf( '<input type="checkbox" name="item[]" value="%s" />', $item['key'] );
+		return sprintf( '<input type="checkbox" name="item[]" value="%s" />', $item['id'] );
 	}
 
 
@@ -296,10 +295,10 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 		$actions = array();
 		// for backward compatibility based on #906 pull-request (https://github.com/ultimatemember/ultimatemember/pull/906)
 		// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
-		$id = urlencode( $item['key'] );
+		$id = urlencode( $item['id'] );
 
 		$actions['edit']   = '<a href="admin.php?page=um_restriction_rules&tab=edit&id=' . esc_attr( $id ) . '">' . __( 'Edit', 'ultimate-member' ) . '</a>';
-		$actions['delete'] = '<a href="admin.php?page=um_restriction_rules&action=delete&id=' . esc_attr( $id ) . '&_wpnonce=' . wp_create_nonce( 'um_restriction_delete' . $item['key'] . get_current_user_id() ) . '" onclick="return confirm( \'' . __( 'Are you sure you want to delete this restriction rule?', 'ultimate-member' ) . '\' );">' . __( 'Delete', 'ultimate-member' ) . '</a>';
+		$actions['delete'] = '<a href="admin.php?page=um_restriction_rules&action=delete&id=' . esc_attr( $id ) . '&_wpnonce=' . wp_create_nonce( 'um_restriction_delete' . $item['id'] . get_current_user_id() ) . '" onclick="return confirm( \'' . __( 'Are you sure you want to delete this restriction rule?', 'ultimate-member' ) . '\' );">' . __( 'Delete', 'ultimate-member' ) . '</a>';
 
 		/**
 		 * Filters the role actions in WP ListTable Ultimate Member > Access Rules screen.
@@ -389,13 +388,7 @@ $list_table->set_sortable_columns(
 	)
 );
 
-$rules_array = get_option( 'um_restriction_rules', array() );
-$rules       = array();
-foreach ( $rules_array as $rule ) {
-	$data        = get_option( "um_restriction_rule_{$rule['id']}" );
-	$data['key'] = $rule['id'];
-	$rules[]     = $data;
-}
+$rules = get_option( 'um_restriction_rules', array() );
 
 switch ( strtolower( $order ) ) {
 	case 'asc':
@@ -445,7 +438,7 @@ $list_table->um_set_pagination_args(
 	?>
 
 	<form action="" method="get" name="um-roles" id="um-roles" style="float: left;margin-right: 10px;">
-		<input type="hidden" name="page" value="um_roles" />
+		<input type="hidden" name="page" value="um_restriction_rules" />
 		<?php $list_table->display(); ?>
 	</form>
 </div>
