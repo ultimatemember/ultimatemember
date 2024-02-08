@@ -213,16 +213,31 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			$this->restriction_rule_meta = apply_filters(
 				'um_restriction_rule_meta_map',
 				array(
-					'_um_priority'    => array(
+					'_um_priority'       => array(
 						'sanitize' => 'int',
 					),
-					'_um_description' => array(
+					'_um_description'    => array(
 						'sanitize' => 'textarea',
 					),
-					'_um_status'      => array(
+					'_um_status'         => array(
 						'sanitize' => 'sanitize_array_key',
 						'default'  => 'active',
 						'array'    => array( 'active', 'inactive' ),
+					),
+					'_um_action'         => array(
+						'sanitize' => 'int',
+					),
+					'_um_message_type'   => array(
+						'sanitize' => 'int',
+					),
+					'_um_custom_message' => array(
+						'sanitize' => 'wp_kses',
+					),
+					'_um_redirect'       => array(
+						'sanitize' => 'int',
+					),
+					'_um_redirect_url'   => array(
+						'sanitize' => 'url',
 					),
 				)
 			);
@@ -1186,7 +1201,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					add_filter( 'um_role_meta_sanitize_' . $k, $this->restriction_rule_meta[ $k ]['sanitize'], 10, 1 );
 				}
 
-				// @todo v3 remove code
 				switch ( $this->restriction_rule_meta[ $k ]['sanitize'] ) {
 					default:
 						$sanitized[ $k ] = apply_filters( 'um_restriction_rule_meta_sanitize_' . $k, $data[ $k ] );
@@ -1200,15 +1214,12 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					case 'textarea':
 						$sanitized[ $k ] = sanitize_textarea_field( $v );
 						break;
-//					case 'wp_kses':
-//						$sanitized[ $k ] = wp_kses_post( $v );
-//						break;
-//					case 'url':
-//						$sanitized[ $k ] = esc_url_raw( $v );
-//						break;
-//					case 'textarea':
-//						$sanitized[ $k ] = sanitize_textarea_field( $v );
-//						break;
+					case 'wp_kses':
+						$sanitized[ $k ] = wp_kses_post( $v );
+						break;
+					case 'url':
+						$sanitized[ $k ] = esc_url_raw( $v );
+						break;
 					case 'sanitize_array_key':
 						if ( ! array_key_exists( 'default', $this->restriction_rule_meta[ $k ] ) || ! array_key_exists( 'array', $this->restriction_rule_meta[ $k ] ) ) {
 							continue 2;

@@ -45,8 +45,9 @@ do_action( 'um_restriction_rules_add_meta_boxes', 'um_rule_meta' );
  */
 do_action( 'um_restriction_rules_add_meta_boxes_um_rule_meta' );
 
-$data   = array();
-$option = array();
+$data      = array();
+$rule_meta = array();
+$option    = array();
 global $wp_roles;
 
 // phpcs:disable WordPress.Security.NonceVerification
@@ -56,7 +57,9 @@ if ( ! empty( $_GET['id'] ) ) {
 	// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
 	$rule_id = sanitize_title( $_GET['id'] );
 
-	$data = get_option( "um_restriction_rule_{$rule_id}" );
+	$rule_meta  = get_option( "um_restriction_rule_{$rule_id}" );
+	$data_ruled = get_option( 'um_restriction_rules' );
+	$data       = $data_ruled[ $rule_id ];
 }
 
 if ( ! empty( $_POST['um_restriction_rules'] ) ) {
@@ -76,7 +79,10 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 	}
 
 	if ( empty( $rule_error ) ) {
-		$data = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules'] );
+		$data         = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules'] );
+		$data_action  = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_action'] );
+		$data_include = array();
+		$data_exclude = array();
 
 		// @todo v3 type hardcode
 		$data['type'] = 'post';
@@ -137,6 +143,8 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 
 			update_option( 'um_restriction_rules', $rules );
 
+			$rule_meta['action'] = $data_action;
+
 			/**
 			 * Filters the restriction rule meta before save it to DB.
 			 *
@@ -150,13 +158,13 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 			 * @return {array}  Rule meta.
 			 *
 			 * @example <caption>Add custom metadata for rule on saving.</caption>
-			 * function my_um_restriction_rule_edit_data( $data, $restriction_id, $update ) {
-			 *     $data['{meta_key}'] = {meta_value}; // set your meta key and meta value
-			 *     return $data;
+			 * function my_um_restriction_rule_edit_data( $rule_meta, $restriction_id, $update ) {
+			 *     $rule_meta['{meta_key}'] = {meta_value}; // set your meta key and meta value
+			 *     return $rule_meta;
 			 * }
 			 * add_filter( 'um_restriction_rule_edit_data', 'my_um_restriction_rule_edit_data', 10, 3 );
 			 */
-			$rule_meta = apply_filters( 'um_restriction_rule_edit_data', $data, $restriction_id, $update );
+			$rule_meta = apply_filters( 'um_restriction_rule_edit_data', $rule_meta, $restriction_id, $update );
 			unset( $rule_meta['id'] );
 
 			update_option( "um_restriction_rule_{$restriction_id}", $rule_meta );
@@ -243,6 +251,7 @@ $screen_id = $current_screen->id; ?>
 				$object = array(
 					'data'   => $data,
 					'option' => $option,
+					'action' => ! empty( $rule_meta['action'] ) ? $rule_meta['action'] : array(),
 				);
 				?>
 
