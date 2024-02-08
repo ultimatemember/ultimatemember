@@ -217,7 +217,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						'sanitize' => 'int',
 					),
 					'_um_description' => array(
-						'sanitize' => 'wp_kses',
+						'sanitize' => 'textarea',
 					),
 					'_um_status'      => array(
 						'sanitize' => 'sanitize_array_key',
@@ -1186,6 +1186,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					add_filter( 'um_role_meta_sanitize_' . $k, $this->restriction_rule_meta[ $k ]['sanitize'], 10, 1 );
 				}
 
+				// @todo v3 remove code
 				switch ( $this->restriction_rule_meta[ $k ]['sanitize'] ) {
 					default:
 						$sanitized[ $k ] = apply_filters( 'um_restriction_rule_meta_sanitize_' . $k, $data[ $k ] );
@@ -1196,9 +1197,12 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					case 'bool':
 						$sanitized[ $k ] = (bool) $v;
 						break;
-					case 'wp_kses':
-						$sanitized[ $k ] = wp_kses_post( $v );
+					case 'textarea':
+						$sanitized[ $k ] = sanitize_textarea_field( $v );
 						break;
+//					case 'wp_kses':
+//						$sanitized[ $k ] = wp_kses_post( $v );
+//						break;
 //					case 'url':
 //						$sanitized[ $k ] = esc_url_raw( $v );
 //						break;

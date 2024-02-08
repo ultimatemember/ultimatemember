@@ -1054,8 +1054,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 			$rules_metaboxes = array(
 				array(
-					'id'       => 'um-admin-form-general',
-					'title'    => __( 'General Settings', 'ultimate-member' ),
+					'id'       => 'um-admin-form-rules',
+					'title'    => __( 'Restriction Rules Settings', 'ultimate-member' ),
+					'callback' => $callback,
+					'screen'   => 'um_restriction_rule_meta',
+					'context'  => 'normal',
+					'priority' => 'default',
+				),
+				array(
+					'id'       => 'um-admin-form-action',
+					'title'    => __( 'Action', 'ultimate-member' ),
 					'callback' => $callback,
 					'screen'   => 'um_restriction_rule_meta',
 					'context'  => 'normal',

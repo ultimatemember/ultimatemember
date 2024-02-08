@@ -298,7 +298,7 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 		// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
 		$id = urlencode( $item['key'] );
 
-		$actions['edit']   = '<a href="admin.php?page=um_roles&tab=edit&id=' . esc_attr( $id ) . '">' . __( 'Edit', 'ultimate-member' ) . '</a>';
+		$actions['edit']   = '<a href="admin.php?page=um_restriction_rules&tab=edit&id=' . esc_attr( $id ) . '">' . __( 'Edit', 'ultimate-member' ) . '</a>';
 		$actions['delete'] = '<a href="admin.php?page=um_restriction_rules&action=delete&id=' . esc_attr( $id ) . '&_wpnonce=' . wp_create_nonce( 'um_restriction_delete' . $item['key'] . get_current_user_id() ) . '" onclick="return confirm( \'' . __( 'Are you sure you want to delete this restriction rule?', 'ultimate-member' ) . '\' );">' . __( 'Delete', 'ultimate-member' ) . '</a>';
 
 		/**
@@ -325,19 +325,9 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 
 	/**
 	 * @param $item
-	 *
-	 * @return string
-	 */
-	public function column_id( $item ) {
-		return $item['key'];
-	}
-
-
-	/**
-	 * @param $item
 	 */
 	public function column_priority( $item ) {
-		echo ! empty( $item['_um_priority'] ) ? $item['_um_priority'] : '-';
+		echo ! empty( $item['priority'] ) ? $item['priority'] : '-';
 	}
 
 
@@ -345,7 +335,7 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 	 * @param $item
 	 */
 	public function column_status( $item ) {
-		echo esc_html( $item['_um_status'] );
+		echo esc_html( $item['status'] );
 	}
 
 
@@ -353,7 +343,7 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 	 * @param $item
 	 */
 	public function column_descr( $item ) {
-		echo wp_kses( $item['_um_description'], UM()->get_allowed_html( 'admin_notice' ) );
+		echo wp_kses( $item['description'], UM()->get_allowed_html( 'admin_notice' ) );
 	}
 
 
@@ -386,7 +376,6 @@ $list_table->set_bulk_actions(
 $list_table->set_columns(
 	array(
 		'title'    => __( 'Role Title', 'ultimate-member' ),
-		'id'       => __( 'ID', 'ultimate-member' ),
 		'descr'    => __( 'Description', 'ultimate-member' ),
 		'type'     => __( 'Rule type', 'ultimate-member' ),
 		'status'   => __( 'Status', 'ultimate-member' ),
@@ -403,8 +392,8 @@ $list_table->set_sortable_columns(
 $rules_array = get_option( 'um_restriction_rules', array() );
 $rules       = array();
 foreach ( $rules_array as $rule ) {
-	$data        = get_option( "um_restriction_rule_{$rule}" );
-	$data['key'] = $rule;
+	$data        = get_option( "um_restriction_rule_{$rule['id']}" );
+	$data['key'] = $rule['id'];
 	$rules[]     = $data;
 }
 

@@ -20,22 +20,22 @@ $rule = $object['data']; ?>
 			'prefix_id' => 'um_restriction_rules',
 			'fields'    => array(
 				array(
-					'id'      => '_um_priority',
+					'id'      => 'priority',
 					'type'    => 'text',
-					'label'   => __( 'Role Priority', 'ultimate-member' ),
+					'label'   => __( 'Rule Priority', 'ultimate-member' ),
 					'tooltip' => __( 'The higher the number, the higher the priority', 'ultimate-member' ),
-					'value'   => ! empty( $rule['_um_priority'] ) ? $rule['_um_priority'] : '',
+					'value'   => ! empty( $rule['priority'] ) ? $rule['priority'] : '',
 				),
 				array(
-					'id'      => '_um_status',
+					'id'      => 'status',
 					'type'    => 'select',
 					'options' => array(
 						'active'   => __( 'Active', 'ultimate-member' ),
 						'inactive' => __( 'Inactive', 'ultimate-member' ),
 					),
-					'label'   => __( 'Role Priority', 'ultimate-member' ),
+					'label'   => __( 'Status', 'ultimate-member' ),
 					'tooltip' => __( 'The higher the number, the higher the priority', 'ultimate-member' ),
-					'value'   => ! empty( $rule['_um_status'] ) ? $rule['_um_status'] : 'active',
+					'value'   => ! empty( $rule['status'] ) ? $rule['status'] : 'active',
 				),
 			),
 		)

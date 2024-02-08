@@ -78,6 +78,9 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 	if ( empty( $rule_error ) ) {
 		$data = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules'] );
 
+		// @todo v3 type hardcode
+		$data['type'] = 'post';
+
 		if ( 'add' === sanitize_key( $_GET['tab'] ) ) {
 
 			$data['title'] = trim( esc_html( wp_strip_all_tags( $data['title'] ) ) );
@@ -104,11 +107,6 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 			// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
 			$restriction_id = sanitize_title( $_GET['id'] );
 
-			$pre_rule_meta = get_option( "um_restriction_rule_{$restriction_id}", array() );
-			if ( isset( $pre_rule_meta['title'] ) ) {
-				$data['title'] = $pre_rule_meta['title'];
-			}
-
 			$redirect = add_query_arg(
 				array(
 					'page' => 'um_restriction_rules',
@@ -121,21 +119,23 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 		}
 
 		if ( '' === $rule_error ) {
+			$rules      = get_option( 'um_restriction_rules', array() );
+			$update     = true;
+			$data['id'] = $restriction_id;
 
-			$update = true;
 			if ( 'add' === sanitize_key( $_GET['tab'] ) ) {
-				$rules   = get_option( 'um_restriction_rules', array() );
-				$rules[] = $restriction_id;
-
-				update_option( 'um_restriction_rules', $rules );
+				$rules[ $restriction_id ] = $data;
 
 				if ( isset( $auto_increment ) ) {
 					$auto_increment++;
 					UM()->options()->update( 'custom_restriction_rules_increment', $auto_increment );
 				}
-
 				$update = false;
+			} else {
+				$rules[ $restriction_id ] = $data;
 			}
+
+			update_option( 'um_restriction_rules', $rules );
 
 			/**
 			 * Filters the restriction rule meta before save it to DB.
@@ -232,12 +232,9 @@ $screen_id = $current_screen->id; ?>
 				<div id="post-body-content">
 					<div id="titlediv">
 						<div id="titlewrap">
-							<?php if ( 'add' === sanitize_key( $_GET['tab'] ) ) { ?>
 								<label for="title" class="screen-reader-text"><?php esc_html_e( 'Title', 'ultimate-member' ); ?></label>
 								<input type="text" name="um_restriction_rules[title]" placeholder="<?php esc_html_e( 'Enter Title Here', 'ultimate-member' ); ?>" id="title" value="<?php echo isset( $data['title'] ) ? esc_attr( $data['title'] ) : ''; ?>" />
-							<?php } else { ?>
-								<span style="display: block;line-height: 37px;font-size: 24px;float: left;width:100%;"><?php echo isset( $data['title'] ) ? esc_html( stripslashes( $data['title'] ) ) : ''; ?></span>
-							<?php } ?>
+								<br><br><textarea style="width: 100%;" name="um_restriction_rules[description]" id="description"><?php echo isset( $data['description'] ) ? esc_attr( $data['description'] ) : esc_html__( 'Restriction Rule Description', 'ultimate-member' ); ?></textarea>
 						</div>
 					</div>
 				</div>
