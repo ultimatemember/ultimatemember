@@ -5049,5 +5049,85 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			return $html_atts;
 		}
+
+
+		/**
+		 * Get registered entities
+		 *
+		 * @since  2.8.x
+		 *
+		 * @return string/array
+		 */
+		public function registered_types_conditions() {
+			UM()->admin()->check_ajax_nonce();
+
+			// phpcs:disable WordPress.Security.NonceVerification -- already verified here
+			$option       = $_POST['option'];
+			$responce     = '';
+			$defult_label = '';
+
+			if ( ! empty( $option ) ) {
+				switch ( $option ) {
+					default:
+						$responce = 'disabled';
+						break;
+					case 'page':
+						$defult_label = __( 'Select Pgae', 'ultimate-member' );
+						$entity       = get_posts(
+							array(
+								'post_type'      => 'page',
+								'posts_per_page' => -1,
+								'fields'         => 'ids',
+								'order_by'       => 'id',
+								'order'          => 'ASC',
+							)
+						);
+
+						foreach ( $entity as $id ) {
+							$responce .= '<option value="' . $id . '">' . esc_html__( 'ID#' ) . $id . ': ' . get_the_title( $id ) . '</option>';
+						}
+
+						break;
+					case 'post':
+						$defult_label = __( 'Select Post', 'ultimate-member' );
+						$entity       = get_posts(
+							array(
+								'post_type'      => 'post',
+								'posts_per_page' => -1,
+								'fields'         => 'ids',
+							)
+						);
+
+						$responce .= '<option>' . $defult_label . '</option>';
+						foreach ( $entity as $id ) {
+							$responce .= '<option value="' . $id . '">' . esc_html__( 'ID#' ) . $id . ': ' . get_the_title( $id ) . '</option>';
+						}
+						break;
+				}
+			}
+
+			/**
+			 * Filters Ultimate Member change registered entities.
+			 *
+			 * @param {array} $pages Predefined pages.
+			 *
+			 * @return {array} Predefined pages.
+			 *
+			 * @since 2.8.x
+			 * @hook um_registered_types_conditions
+			 *
+			 * @example <caption>Add an option "All entities".</caption>
+			 * function my_um_registered_types_conditionss( $responce ) {
+			 *     // your code here
+			 *     $responce .= '<option value="all">All entities</option>';
+			 *     return $responce;
+			 * }
+			 * add_filter( 'um_registered_types_conditions', 'my_um_registered_types_conditionss' );
+			 */
+			$responce = apply_filters( 'um_registered_types_conditions', $responce );
+
+			wp_send_json_success( $responce );
+			// phpcs:enable WordPress.Security.NonceVerification -- already verified here
+		}
 	}
 }

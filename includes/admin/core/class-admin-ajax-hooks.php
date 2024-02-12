@@ -1,9 +1,10 @@
 <?php
 namespace um\admin\core;
 
-
 // Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 
 if ( ! class_exists( 'um\admin\core\Admin_Ajax_Hooks' ) ) {
@@ -19,7 +20,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Ajax_Hooks' ) ) {
 		/**
 		 * Admin_Columns constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			add_action( 'wp_ajax_um_do_ajax_action', array( UM()->fields(), 'do_ajax_action' ) );
 			add_action( 'wp_ajax_um_update_builder', array( UM()->builder(), 'update_builder' ) );
 			add_action( 'wp_ajax_um_update_order', array( UM()->dragdrop(), 'update_order' ) );
@@ -32,6 +33,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Ajax_Hooks' ) ) {
 			add_action( 'wp_ajax_um_same_page_update', array( UM()->admin_settings(), 'same_page_update_ajax' ) );
 
 			add_action( 'wp_ajax_um_get_users', array( UM()->users(), 'get_users' ) );
+
+			add_action( 'wp_ajax_um_registered_types_conditions', array( UM()->fields(), 'registered_types_conditions' ) );
 		}
 
 	}

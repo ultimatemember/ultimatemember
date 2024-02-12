@@ -1823,6 +1823,87 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		}
 
 		/**
+		 * @param $field_data
+		 *
+		 * @return bool|string
+		 */
+		public function render_entities_conditions( $field_data ) {
+			if ( empty( $field_data['id'] ) ) {
+				return false;
+			}
+
+			$id               = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
+			$id_attr          = ' id="' . esc_attr( $id ) . '" ';
+			$id_attr_responce = ' id="' . esc_attr( $id ) . '_responce" ';
+
+			$class               = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
+			$class              .= ! empty( $field_data['size'] ) ? $field_data['size'] : '';
+			$class_attr          = ' class="um-entities-conditions um-forms-field ' . esc_attr( $class ) . '" ';
+			$class_attr_responce = ' class="um-entities-conditions-responce um-forms-field ' . esc_attr( $class ) . '" ';
+
+			$data = array(
+				'field_id' => $field_data['id'],
+			);
+
+			$data_attr = '';
+			foreach ( $data as $key => $value ) {
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
+			}
+
+			$name      = $field_data['id'];
+			$name      = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
+			$name_attr = ' name="' . $name . '" ';
+
+			$name_responce      = $field_data['id'];
+			$name_responce      = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name_responce . '_responce]' : $name_responce;
+			$name_attr_responce = ' name="' . $name_responce . '" ';
+
+			if ( empty( $field_data['scope'] ) || 'all' === $field_data['scope'] ) {
+				// @todo V3 all registered types
+				$scope = array(
+					'post' => __( 'Post', 'ultimate-member' ),
+					'page' => __( 'Page', 'ultimate-member' ),
+				);
+			} else {
+				$scope = $field_data['scope'];
+			}
+
+			if ( in_array( 'page', $scope, true ) ) {
+				$pages = get_posts(
+					array(
+						'post_type'      => 'page',
+						'posts_per_page' => -1,
+						'fields'         => 'ids',
+					)
+				);
+			}
+
+			$value = $this->get_field_value( $field_data );
+
+			$html  = '<div class="um-entities-conditions-wrap">';
+			$html .= '<div class="um-entities-conditions-row">';
+			$html .= '<select ' . $class_attr . $id_attr . $name_attr . $data_attr . '>';
+			$html .= '<option>' . __( 'Select entity', 'ultimate-member' ) . '</option>';
+			$html .= '<option value="site">' . __( 'Entire website', 'ultimate-member' ) . '</option>';
+
+			foreach ( $scope as $key => $label ) {
+				$html .= '<option value="' . $key . '">' . $label . '</option>';
+			}
+
+			$html .= '</select>';
+			$html .= '<select ' . $id_attr_responce . $name_attr_responce . $class_attr_responce . $data_attr . '>';
+			$html .= '</select>';
+			$html .= '<span title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="add-row">+</span>';
+			$html .= '<span title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="remove-row">-</span>';
+			$html .= '</div>';
+			$html .= '</div>';
+
+//			$html = "<textarea $id_attr $class_attr $name_attr $data_attr >$value</textarea>";
+
+			return $html;
+		}
+
+		/**
 		 * Get field value
 		 *
 		 * @param array $field_data

@@ -1153,4 +1153,58 @@ jQuery(document).ready( function() {
 		return false;
 	}
 
+	jQuery( '.um-entities-conditions-wrap' ).on( 'change', '.um-entities-conditions', function()  {
+		var wrapper = jQuery( this ).closest( '.um-entities-conditions-row' );
+		var id      = jQuery( this ).attr( 'id' );
+		var option  = jQuery( this ).find( ':selected' ).val();
+
+		jQuery.ajax(
+			{
+				url: wp.ajax.settings.url,
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					action: 'um_registered_types_conditions',
+					nonce: um_admin_scripts.nonce,
+					option: option,
+					id: id
+				},
+				success: function( response ) {
+					if ( 'disabled' !== response.data ) {
+						wrapper.find( '.um-entities-conditions-responce' ).removeAttr( 'disabled' );
+						wrapper.find( '.um-entities-conditions-responce' ).html( response.data );
+					} else {
+						wrapper.find( '.um-entities-conditions-responce' ).html( '' );
+						wrapper.find( '.um-entities-conditions-responce' ).attr( 'disabled', 'disabled' );
+					}
+				},
+				error: function( error ) {
+					console.log( error )
+				}
+			}
+		);
+	});
+
+	jQuery( '.um-entities-conditions-wrap' ).on( 'click', '.add-row', function()  {
+		var el      = jQuery( '.um-entities-conditions-row:first' ).clone();
+		var wrapper = jQuery( this ).closest( '.um-entities-conditions-wrap' );
+
+		el.find( '.um-entities-conditions-responce option' ).remove();
+		el.find( '.um-entities-conditions option' ).removeAttr( 'selected' );
+
+		wrapper.append( el );
+		wrapper.find( '.um-entities-conditions-row:last' ).find( 'select' ).removeAttr( 'disabled' );
+	});
+
+	jQuery( '.um-entities-conditions-wrap' ).on( 'click', '.remove-row', function()  {
+		var wrapper = jQuery( this ).closest( '.um-entities-conditions-wrap' );
+		var row     = jQuery( this ).closest( '.um-entities-conditions-row' );
+		console.log( wrapper.find( '.um-entities-conditions-row' ).length );
+		if ( wrapper.find( '.um-entities-conditions-row' ).length > 1 ) {
+			row.remove();
+		} else {
+			row.find( '.um-entities-conditions option, .um-entities-conditions-responce option' ).removeAttr( 'selected' );
+			wrapper.find( '.um-entities-conditions-row' ).find( 'select' ).removeAttr( 'disabled' );
+		}
+	});
 });
