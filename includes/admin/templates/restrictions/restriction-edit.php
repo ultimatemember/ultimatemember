@@ -81,14 +81,22 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 		$data        = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules'] );
 		$data_action = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_action'] );
 		if ( ! empty( $_POST['um_restriction_rules_include']['_um_include_entity'] ) && ! empty( $_POST['um_restriction_rules_include']['_um_include_ids'] ) ) {
-			$include = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_include'] );
+			foreach ( $_POST['um_restriction_rules_include']['_um_include_entity'] as $key => $value ) {
+				if ( 'none' === $value ) {
+					unset( $_POST['um_restriction_rules_include']['_um_include_entity'][ $key ] );
+					unset( $_POST['um_restriction_rules_include']['_um_include_ids'][ $key ] );
+				}
+			}
+			foreach ( $_POST['um_restriction_rules_include']['_um_include_ids'] as $key => $value ) {
+				if ( '0' === $value ) {
+					unset( $_POST['um_restriction_rules_include']['_um_include_entity'][ $key ] );
+					unset( $_POST['um_restriction_rules_include']['_um_include_ids'][ $key ] );
+				}
+			}
 
-//			exit();
-//			$include_ids    = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_include']['include_ids'] );
-//			$data_include   = array_merge( $include_entity, $include_ids );
-//			$data_include   = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_include'] );
+			$data_include = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_include'] );
 		}
-		$data_exclude   = array();
+		$data_exclude = array();
 
 		// @todo v3 type hardcode
 		$data['type'] = 'post';
@@ -150,6 +158,9 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 			update_option( 'um_restriction_rules', $rules );
 
 			$rule_meta['action'] = $data_action;
+			if ( ! empty( $data_include ) ) {
+				$rule_meta['include'] = $data_include;
+			}
 
 			/**
 			 * Filters the restriction rule meta before save it to DB.
@@ -255,9 +266,10 @@ $screen_id = $current_screen->id; ?>
 
 				<?php
 				$object = array(
-					'data'   => $data,
-					'option' => $option,
-					'action' => ! empty( $rule_meta['action'] ) ? $rule_meta['action'] : array(),
+					'data'    => $data,
+					'option'  => $option,
+					'action'  => ! empty( $rule_meta['action'] ) ? $rule_meta['action'] : array(),
+					'include' => ! empty( $rule_meta['include'] ) ? $rule_meta['include'] : array(),
 				);
 				?>
 

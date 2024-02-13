@@ -1139,7 +1139,12 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			if ( '_um_include_entity' === $key || '_um_exclude_entity' === $key ) {
 				$value = array_map( 'sanitize_key', array_filter( $value ) );
 			} else {
-				$value = absint( $value );
+				$value = array_map(
+					function( $val ) {
+						return 'all' === $val || 'site' === $val ? sanitize_key( $val ) : absint( $val );
+					},
+					$value
+				);
 			}
 
 			return $value;

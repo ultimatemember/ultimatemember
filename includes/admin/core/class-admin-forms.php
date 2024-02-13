@@ -1883,7 +1883,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$html  = '<div class="um-entities-conditions-wrap">';
 			$html .= '<div class="um-entities-conditions-row">';
 			$html .= '<select ' . $class_attr . $id_attr . $name_attr . $data_attr . '>';
-			$html .= '<option value="0">' . __( 'Select entity', 'ultimate-member' ) . '</option>';
+			$html .= '<option value="none">' . __( 'Select entity', 'ultimate-member' ) . '</option>';
 			$html .= '<option value="site">' . __( 'Entire website', 'ultimate-member' ) . '</option>';
 
 			foreach ( $scope as $key => $label ) {
@@ -1892,6 +1892,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$html .= '</select>';
 			$html .= '<select ' . $id_attr_responce . $name_attr_responce . $class_attr_responce . $data_attr . '>';
+			$html .= '<option value="0"></option>';
 			$html .= '</select>';
 			$html .= '<span title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="add-row">+</span>';
 			$html .= '<span title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="remove-row">-</span>';

@@ -5084,6 +5084,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						);
 
 						$responce .= '<option value="0">' . $defult_label . '</option>';
+						$responce .= '<option value="all">' . __( 'All Pages', 'ultimate-member' ) . '</option>';
 						foreach ( $entity as $id ) {
 							$responce .= '<option value="' . $id . '">' . esc_html__( 'ID#' ) . $id . ': ' . get_the_title( $id ) . '</option>';
 						}
@@ -5100,6 +5101,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						);
 
 						$responce .= '<option value="0">' . $defult_label . '</option>';
+						$responce .= '<option value="all">' . __( 'All Posts', 'ultimate-member' ) . '</option>';
 						foreach ( $entity as $id ) {
 							$responce .= '<option value="' . $id . '">' . esc_html__( 'ID#' ) . $id . ': ' . get_the_title( $id ) . '</option>';
 						}

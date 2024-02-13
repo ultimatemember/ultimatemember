@@ -1177,7 +1177,7 @@ jQuery(document).ready( function() {
 						var name = wrapper.find( '.um-entities-conditions-responce' ).attr( 'name' );
 						wrapper.find( '.um-entities-conditions-responce' ).html( '' );
 						wrapper.find( '.um-entities-conditions-responce' ).attr( 'disabled', 'disabled' );
-						wrapper.find( '.um-entities-conditions-responce' ).after('<input type="hidden" name="' + name + '" value="all">');
+						wrapper.find( '.um-entities-conditions-responce' ).after('<input type="hidden" name="' + name + '" value="site">');
 					}
 				},
 				error: function( error ) {
@@ -1191,7 +1191,8 @@ jQuery(document).ready( function() {
 		var el      = jQuery( '.um-entities-conditions-row:first' ).clone();
 		var wrapper = jQuery( this ).closest( '.um-entities-conditions-wrap' );
 
-		el.find( '.um-entities-conditions-responce option, input' ).remove();
+		el.find( '.um-entities-conditions-responce option[value!="0"], input' ).remove();
+		el.find( '.um-entities-conditions-responce option' ).html('');
 		el.find( '.um-entities-conditions option' ).removeAttr( 'selected' );
 
 		wrapper.append( el );
@@ -1207,6 +1208,8 @@ jQuery(document).ready( function() {
 		} else {
 			row.find( '.um-entities-conditions option, .um-entities-conditions-responce option' ).removeAttr( 'selected' );
 			wrapper.find( '.um-entities-conditions-row' ).find( 'select' ).removeAttr( 'disabled' );
+			wrapper.find( '.um-entities-conditions-responce option[value!="0"], input' ).remove();
+			wrapper.find( '.um-entities-conditions-responce option' ).html('');
 		}
 	});
 });
