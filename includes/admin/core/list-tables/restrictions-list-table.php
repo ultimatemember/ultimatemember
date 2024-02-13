@@ -326,7 +326,7 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 	 * @param $item
 	 */
 	public function column_priority( $item ) {
-		echo ! empty( $item['priority'] ) ? $item['priority'] : '-';
+		echo ! empty( $item['_um_priority'] ) ? $item['_um_priority'] : '-';
 	}
 
 
@@ -334,7 +334,7 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 	 * @param $item
 	 */
 	public function column_status( $item ) {
-		echo esc_html( $item['status'] );
+		echo esc_html( $item['_um_status'] );
 	}
 
 
@@ -342,7 +342,7 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 	 * @param $item
 	 */
 	public function column_descr( $item ) {
-		echo wp_kses( $item['description'], UM()->get_allowed_html( 'admin_notice' ) );
+		echo wp_kses( $item['_um_description'], UM()->get_allowed_html( 'admin_notice' ) );
 	}
 
 

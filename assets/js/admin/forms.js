@@ -1164,7 +1164,7 @@ jQuery(document).ready( function() {
 				type: 'POST',
 				dataType: 'json',
 				data: {
-					action: 'um_registered_types_conditions',
+					action: 'um_registered_entities_conditions',
 					nonce: um_admin_scripts.nonce,
 					option: option,
 					id: id
@@ -1174,8 +1174,10 @@ jQuery(document).ready( function() {
 						wrapper.find( '.um-entities-conditions-responce' ).removeAttr( 'disabled' );
 						wrapper.find( '.um-entities-conditions-responce' ).html( response.data );
 					} else {
+						var name = wrapper.find( '.um-entities-conditions-responce' ).attr( 'name' );
 						wrapper.find( '.um-entities-conditions-responce' ).html( '' );
 						wrapper.find( '.um-entities-conditions-responce' ).attr( 'disabled', 'disabled' );
+						wrapper.find( '.um-entities-conditions-responce' ).after('<input type="hidden" name="' + name + '" value="all">');
 					}
 				},
 				error: function( error ) {
@@ -1189,7 +1191,7 @@ jQuery(document).ready( function() {
 		var el      = jQuery( '.um-entities-conditions-row:first' ).clone();
 		var wrapper = jQuery( this ).closest( '.um-entities-conditions-wrap' );
 
-		el.find( '.um-entities-conditions-responce option' ).remove();
+		el.find( '.um-entities-conditions-responce option, input' ).remove();
 		el.find( '.um-entities-conditions option' ).removeAttr( 'selected' );
 
 		wrapper.append( el );

@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				'prefix_id' => 'um_restriction_rules_include',
 				'fields'    => array(
 					array(
-						'id'    => 'include',
+						'id'    => '_um_include',
 						'type'  => 'entities_conditions',
 						'label' => __( 'Include', 'ultimate-member' ),
 						'value' => ! empty( $rule['include'] ) ? $rule['include'] : '',

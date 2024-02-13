@@ -34,7 +34,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Ajax_Hooks' ) ) {
 
 			add_action( 'wp_ajax_um_get_users', array( UM()->users(), 'get_users' ) );
 
-			add_action( 'wp_ajax_um_registered_types_conditions', array( UM()->fields(), 'registered_types_conditions' ) );
+			add_action( 'wp_ajax_um_registered_entities_conditions', array( UM()->fields(), 'registered_entities_conditions' ) );
 		}
 
 	}

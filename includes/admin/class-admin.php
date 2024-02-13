@@ -239,6 +239,18 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					'_um_redirect_url'   => array(
 						'sanitize' => 'url',
 					),
+					'_um_include_entity' => array(
+						'sanitize' => array( $this, 'sanitize_registered_entities' ),
+					),
+					'_um_include_ids'    => array(
+						'sanitize' => array( $this, 'sanitize_registered_entities' ),
+					),
+					'_um_exclude_entity' => array(
+						'sanitize' => array( $this, 'sanitize_registered_entities' ),
+					),
+					'_um_exclude_ids'    => array(
+						'sanitize' => array( $this, 'sanitize_registered_entities' ),
+					),
 				)
 			);
 
@@ -1117,6 +1129,23 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		}
 
 		/**
+		 * Sanitize user meta fields when wp-admin form has been submitted
+		 *
+		 * @param array $data
+		 *
+		 * @return array
+		 */
+		public function sanitize_registered_entities( $value, $key ) {
+			if ( '_um_include_entity' === $key || '_um_exclude_entity' === $key ) {
+				$value = array_map( 'sanitize_key', array_filter( $value ) );
+			} else {
+				$value = absint( $value );
+			}
+
+			return $value;
+		}
+
+		/**
 		 * Sanitize role meta fields when wp-admin form has been submitted
 		 *
 		 * @param array $data
@@ -1184,6 +1213,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 */
 		public function sanitize_restriction_rule_meta( $data ) {
 			$sanitized = array();
+
 			foreach ( $data as $k => $v ) {
 				if ( ! array_key_exists( $k, $this->restriction_rule_meta ) ) {
 					// @todo remove since 2.2.x and leave only continue
@@ -1198,12 +1228,12 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 				}
 
 				if ( is_callable( $this->restriction_rule_meta[ $k ]['sanitize'], true, $callable_name ) ) {
-					add_filter( 'um_role_meta_sanitize_' . $k, $this->restriction_rule_meta[ $k ]['sanitize'], 10, 1 );
+					add_filter( 'um_restriction_rule_meta_sanitize_' . $k, $this->restriction_rule_meta[ $k ]['sanitize'], 10, 2 );
 				}
 
 				switch ( $this->restriction_rule_meta[ $k ]['sanitize'] ) {
 					default:
-						$sanitized[ $k ] = apply_filters( 'um_restriction_rule_meta_sanitize_' . $k, $data[ $k ] );
+						$sanitized[ $k ] = apply_filters( 'um_restriction_rule_meta_sanitize_' . $k, $data[ $k ], $k );
 						break;
 					case 'int':
 						$sanitized[ $k ] = (int) $v;

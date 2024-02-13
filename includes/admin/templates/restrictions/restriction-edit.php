@@ -63,7 +63,6 @@ if ( ! empty( $_GET['id'] ) ) {
 }
 
 if ( ! empty( $_POST['um_restriction_rules'] ) ) {
-
 	$restriction_id = '';
 	$redirect       = '';
 	$rule_error     = '';
@@ -79,10 +78,17 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 	}
 
 	if ( empty( $rule_error ) ) {
-		$data         = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules'] );
-		$data_action  = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_action'] );
-		$data_include = array();
-		$data_exclude = array();
+		$data        = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules'] );
+		$data_action = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_action'] );
+		if ( ! empty( $_POST['um_restriction_rules_include']['_um_include_entity'] ) && ! empty( $_POST['um_restriction_rules_include']['_um_include_ids'] ) ) {
+			$include = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_include'] );
+
+//			exit();
+//			$include_ids    = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_include']['include_ids'] );
+//			$data_include   = array_merge( $include_entity, $include_ids );
+//			$data_include   = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_include'] );
+		}
+		$data_exclude   = array();
 
 		// @todo v3 type hardcode
 		$data['type'] = 'post';
@@ -242,7 +248,7 @@ $screen_id = $current_screen->id; ?>
 						<div id="titlewrap">
 								<label for="title" class="screen-reader-text"><?php esc_html_e( 'Title', 'ultimate-member' ); ?></label>
 								<input type="text" name="um_restriction_rules[title]" placeholder="<?php esc_html_e( 'Enter Title Here', 'ultimate-member' ); ?>" id="title" value="<?php echo isset( $data['title'] ) ? esc_attr( $data['title'] ) : ''; ?>" />
-								<br><br><textarea style="width: 100%;" name="um_restriction_rules[description]" id="description"><?php echo isset( $data['description'] ) ? esc_attr( $data['description'] ) : esc_html__( 'Restriction Rule Description', 'ultimate-member' ); ?></textarea>
+								<br><br><textarea style="width: 100%;" name="um_restriction_rules[_um_description]" id="description"><?php echo isset( $data['_um_description'] ) ? esc_attr( $data['_um_description'] ) : esc_html__( 'Restriction Rule Description', 'ultimate-member' ); ?></textarea>
 						</div>
 					</div>
 				</div>

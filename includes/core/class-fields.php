@@ -5058,7 +5058,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @return string/array
 		 */
-		public function registered_types_conditions() {
+		public function registered_entities_conditions() {
 			UM()->admin()->check_ajax_nonce();
 
 			// phpcs:disable WordPress.Security.NonceVerification -- already verified here
@@ -5072,7 +5072,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$responce = 'disabled';
 						break;
 					case 'page':
-						$defult_label = __( 'Select Pgae', 'ultimate-member' );
+						$defult_label = __( 'Select Page', 'ultimate-member' );
 						$entity       = get_posts(
 							array(
 								'post_type'      => 'page',
@@ -5083,6 +5083,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							)
 						);
 
+						$responce .= '<option value="0">' . $defult_label . '</option>';
 						foreach ( $entity as $id ) {
 							$responce .= '<option value="' . $id . '">' . esc_html__( 'ID#' ) . $id . ': ' . get_the_title( $id ) . '</option>';
 						}
@@ -5098,7 +5099,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							)
 						);
 
-						$responce .= '<option>' . $defult_label . '</option>';
+						$responce .= '<option value="0">' . $defult_label . '</option>';
 						foreach ( $entity as $id ) {
 							$responce .= '<option value="' . $id . '">' . esc_html__( 'ID#' ) . $id . ': ' . get_the_title( $id ) . '</option>';
 						}

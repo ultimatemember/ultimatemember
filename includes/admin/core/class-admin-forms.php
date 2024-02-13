@@ -1850,12 +1850,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
 			}
 
-			$name      = $field_data['id'];
-			$name      = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
+			$name      = $field_data['id'] . '_entity';
+			$name      = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . '][]' : $name;
 			$name_attr = ' name="' . $name . '" ';
 
 			$name_responce      = $field_data['id'];
-			$name_responce      = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name_responce . '_responce]' : $name_responce;
+			$name_responce      = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name_responce . '_ids][]' : $name_responce;
 			$name_attr_responce = ' name="' . $name_responce . '" ';
 
 			if ( empty( $field_data['scope'] ) || 'all' === $field_data['scope'] ) {
@@ -1883,7 +1883,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$html  = '<div class="um-entities-conditions-wrap">';
 			$html .= '<div class="um-entities-conditions-row">';
 			$html .= '<select ' . $class_attr . $id_attr . $name_attr . $data_attr . '>';
-			$html .= '<option>' . __( 'Select entity', 'ultimate-member' ) . '</option>';
+			$html .= '<option value="0">' . __( 'Select entity', 'ultimate-member' ) . '</option>';
 			$html .= '<option value="site">' . __( 'Entire website', 'ultimate-member' ) . '</option>';
 
 			foreach ( $scope as $key => $label ) {
@@ -1897,8 +1897,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$html .= '<span title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="remove-row">-</span>';
 			$html .= '</div>';
 			$html .= '</div>';
-
-//			$html = "<textarea $id_attr $class_attr $name_attr $data_attr >$value</textarea>";
 
 			return $html;
 		}
