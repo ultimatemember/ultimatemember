@@ -1188,8 +1188,8 @@ jQuery(document).ready( function() {
 	});
 
 	jQuery( '.um-entities-conditions-wrap' ).on( 'click', '.add-row', function()  {
-		var el      = jQuery( '.um-entities-conditions-row:first' ).clone();
 		var wrapper = jQuery( this ).closest( '.um-entities-conditions-wrap' );
+		var el      = wrapper.find( '.um-entities-conditions-row:first' ).clone();
 
 		el.find( '.um-entities-conditions-responce option[value!="0"], input' ).remove();
 		el.find( '.um-entities-conditions-responce option' ).html('');

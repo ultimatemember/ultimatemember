@@ -1850,12 +1850,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
 			}
 
-			$name      = $field_data['id'] . '_entity';
-			$name      = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . '][]' : $name;
+			$name      = $field_data['id'] . '_um_entity';
+			$name      = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[_um_entity][]' : $name;
 			$name_attr = ' name="' . $name . '" ';
 
 			$name_responce      = $field_data['id'];
-			$name_responce      = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name_responce . '_ids][]' : $name_responce;
+			$name_responce      = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[_um_ids][]' : $name_responce;
 			$name_attr_responce = ' name="' . $name_responce . '" ';
 
 			if ( empty( $field_data['scope'] ) || 'all' === $field_data['scope'] ) {
@@ -1891,11 +1891,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$scope = apply_filters( 'um_entities_conditions_scope', $scope, $field_data );
 
 			$value = $this->get_field_value( $field_data );
+//echo '<pre>';
+//print_r($value);
+//echo '</pre>';
 
 			$html = '<div class="um-entities-conditions-wrap">';
 			if ( ! empty( $value ) ) {
-				$entity = $value['_um_include_entity'];
-				$ids    = $value['_um_include_ids'];
+				$entity = $value['_um_entity'];
+				$ids    = $value['_um_ids'];
 
 				foreach ( $entity as $entity_key => $entity_value ) {
 					if ( 'site' !== $entity_value ) {

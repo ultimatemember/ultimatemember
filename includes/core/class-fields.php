@@ -5067,7 +5067,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$defult_label = __( 'Select', 'ultimate-member' );
 			$all_label    = __( 'All', 'ultimate-member' );
 
-			if ( ! empty( $option ) ) {
+			if ( ! empty( $option ) && 'site' !== $option ) {
 				$post_types = get_post_types( array( 'public' => true ), 'names' );
 				if ( in_array( $option, $post_types, true ) ) {
 					$entity = get_posts(
@@ -5086,6 +5086,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$responce .= '<option value="' . $id . '">' . esc_html__( 'ID#' ) . $id . ': ' . get_the_title( $id ) . '</option>';
 					}
 				}
+			}
+
+			if ( 'site' === $option ) {
+				$responce = 'disabled';
 			}
 
 			/**

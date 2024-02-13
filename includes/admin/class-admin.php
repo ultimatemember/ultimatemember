@@ -239,16 +239,10 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					'_um_redirect_url'   => array(
 						'sanitize' => 'url',
 					),
-					'_um_include_entity' => array(
+					'_um_entity'         => array(
 						'sanitize' => array( $this, 'sanitize_registered_entities' ),
 					),
-					'_um_include_ids'    => array(
-						'sanitize' => array( $this, 'sanitize_registered_entities' ),
-					),
-					'_um_exclude_entity' => array(
-						'sanitize' => array( $this, 'sanitize_registered_entities' ),
-					),
-					'_um_exclude_ids'    => array(
+					'_um_ids'            => array(
 						'sanitize' => array( $this, 'sanitize_registered_entities' ),
 					),
 				)
@@ -1136,7 +1130,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 * @return array
 		 */
 		public function sanitize_registered_entities( $value, $key ) {
-			if ( '_um_include_entity' === $key || '_um_exclude_entity' === $key ) {
+			if ( '_um_entity' === $key ) {
 				$value = array_map( 'sanitize_key', array_filter( $value ) );
 			} else {
 				$value = array_map(
