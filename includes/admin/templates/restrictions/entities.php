@@ -14,7 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div class="um-admin-metabox">
 	<?php
-	$rule = $object['include'];
+	$include = $object['include'];
+	$exclude = $object['exclude'];
 
 	UM()->admin_forms(
 		array(
@@ -25,7 +26,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 					'id'    => '_um_include',
 					'type'  => 'entities_conditions',
 					'label' => __( 'Include', 'ultimate-member' ),
-					'value' => ! empty( $rule ) ? $rule : '',
+					'value' => ! empty( $include ) ? $include : '',
+					'scope' => array(
+						'site' => __( 'Entire website', 'ultimate-member' ),
+						'post' => __( 'Post', 'ultimate-member' ),
+						'page' => __( 'Page', 'ultimate-member' ),
+					),
+				),
+			),
+		)
+	)->render_form();
+
+	UM()->admin_forms(
+		array(
+			'class'     => 'um-restriction-rule-exclude um-half-column',
+			'prefix_id' => 'um_restriction_rules_exclude',
+			'fields'    => array(
+				array(
+					'id'    => '_um_exclude',
+					'type'  => 'entities_conditions',
+					'label' => __( 'Exclude', 'ultimate-member' ),
+					'value' => ! empty( $exclude ) ? $exclude : '',
 					'scope' => array(
 						'site' => __( 'Entire website', 'ultimate-member' ),
 						'post' => __( 'Post', 'ultimate-member' ),

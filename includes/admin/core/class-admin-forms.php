@@ -1894,8 +1894,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$html = '<div class="um-entities-conditions-wrap">';
 			if ( ! empty( $value ) ) {
-				$entity     = $value['_um_include_entity'];
-				$ids        = $value['_um_include_ids'];
+				$entity = $value['_um_include_entity'];
+				$ids    = $value['_um_include_ids'];
 
 				foreach ( $entity as $entity_key => $entity_value ) {
 					if ( 'site' !== $entity_value ) {
