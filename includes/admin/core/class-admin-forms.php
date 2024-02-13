@@ -1869,11 +1869,31 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$scope = $field_data['scope'];
 			}
 
+			/**
+			 * Filters Ultimate Member change registered entities scope.
+			 *
+			 * @param {array} $scope      Entities scope.
+			 * @param {array} $field_data Field's data.
+			 *
+			 * @return {array} Entities scope.
+			 *
+			 * @since 2.8.x
+			 * @hook um_registered_types_conditions
+			 *
+			 * @example <caption>Remove page post type</caption>
+			 * function my_um_entities_conditions_scope( $scope, $field_data ) {
+			 *     // your code here
+			 *     unset( $scope['page'] );
+			 *     return $scope;
+			 * }
+			 * add_filter( 'um_entities_conditions_scope', 'my_um_entities_conditions_scope', 10, 2 );
+			 */
+			$scope = apply_filters( 'um_entities_conditions_scope', $scope, $field_data );
+
 			$value = $this->get_field_value( $field_data );
 
 			$html = '<div class="um-entities-conditions-wrap">';
 			if ( ! empty( $value ) ) {
-				$post_types = get_post_types( array( 'public' => true ), 'names' );
 				$entity     = $value['_um_include_entity'];
 				$ids        = $value['_um_include_ids'];
 
