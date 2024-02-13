@@ -5064,48 +5064,27 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			// phpcs:disable WordPress.Security.NonceVerification -- already verified here
 			$option       = $_POST['option'];
 			$responce     = '';
-			$defult_label = '';
+			$defult_label = __( 'Select', 'ultimate-member' );
+			$all_label    = __( 'All', 'ultimate-member' );
 
 			if ( ! empty( $option ) ) {
-				switch ( $option ) {
-					default:
-						$responce = 'disabled';
-						break;
-					case 'page':
-						$defult_label = __( 'Select Page', 'ultimate-member' );
-						$entity       = get_posts(
-							array(
-								'post_type'      => 'page',
-								'posts_per_page' => -1,
-								'fields'         => 'ids',
-								'order_by'       => 'id',
-								'order'          => 'ASC',
-							)
-						);
+				$post_types = get_post_types( array( 'public' => true ), 'names' );
+				if ( in_array( $option, $post_types, true ) ) {
+					$entity = get_posts(
+						array(
+							'post_type'      => $option,
+							'posts_per_page' => -1,
+							'fields'         => 'ids',
+							'order_by'       => 'id',
+							'order'          => 'ASC',
+						)
+					);
 
-						$responce .= '<option value="0">' . $defult_label . '</option>';
-						$responce .= '<option value="all">' . __( 'All Pages', 'ultimate-member' ) . '</option>';
-						foreach ( $entity as $id ) {
-							$responce .= '<option value="' . $id . '">' . esc_html__( 'ID#' ) . $id . ': ' . get_the_title( $id ) . '</option>';
-						}
-
-						break;
-					case 'post':
-						$defult_label = __( 'Select Post', 'ultimate-member' );
-						$entity       = get_posts(
-							array(
-								'post_type'      => 'post',
-								'posts_per_page' => -1,
-								'fields'         => 'ids',
-							)
-						);
-
-						$responce .= '<option value="0">' . $defult_label . '</option>';
-						$responce .= '<option value="all">' . __( 'All Posts', 'ultimate-member' ) . '</option>';
-						foreach ( $entity as $id ) {
-							$responce .= '<option value="' . $id . '">' . esc_html__( 'ID#' ) . $id . ': ' . get_the_title( $id ) . '</option>';
-						}
-						break;
+					$responce .= '<option value="0">' . $defult_label . '</option>';
+					$responce .= '<option value="all">' . $all_label . '</option>';
+					foreach ( $entity as $id ) {
+						$responce .= '<option value="' . $id . '">' . esc_html__( 'ID#' ) . $id . ': ' . get_the_title( $id ) . '</option>';
+					}
 				}
 			}
 

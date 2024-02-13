@@ -99,7 +99,7 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 		$data_exclude = array();
 
 		// @todo v3 type hardcode
-		$data['type'] = 'post';
+		$data['_um_type'] = 'post';
 
 		if ( 'add' === sanitize_key( $_GET['tab'] ) ) {
 

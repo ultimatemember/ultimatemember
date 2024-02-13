@@ -1861,6 +1861,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			if ( empty( $field_data['scope'] ) || 'all' === $field_data['scope'] ) {
 				// @todo V3 all registered types
 				$scope = array(
+					'site' => __( 'Entire website', 'ultimate-member' ),
 					'post' => __( 'Post', 'ultimate-member' ),
 					'page' => __( 'Page', 'ultimate-member' ),
 				);
@@ -1868,38 +1869,87 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$scope = $field_data['scope'];
 			}
 
-			if ( in_array( 'page', $scope, true ) ) {
-				$pages = get_posts(
+			$value = $this->get_field_value( $field_data );
+
+			$html = '<div class="um-entities-conditions-wrap">';
+			if ( ! empty( $value ) ) {
+				$post_types = get_post_types( array( 'public' => true ), 'names' );
+				$entity     = $value['_um_include_entity'];
+				$ids        = $value['_um_include_ids'];
+
+				foreach ( $entity as $entity_key => $entity_value ) {
+					if ( 'site' !== $entity_value ) {
+						$entities = $this->get_entites( $entity_value );
+					}
+
+					$html .= '<div class="um-entities-conditions-row">';
+					$html .= '<select ' . $class_attr . $id_attr . $name_attr . $data_attr . '>';
+					$html .= '<option value="none">' . __( 'Select entity', 'ultimate-member' ) . '</option>';
+					foreach ( $scope as $key => $label ) {
+						$html .= '<option value="' . $key . '" ' . selected( $key === $entity_value, true, false ) . '>' . $label . '</option>';
+					}
+					$html .= '</select>';
+
+					$disabled = '';
+					if ( 'site' === $entity_value ) {
+						$disabled = ' disabled="disabled" ';
+						$html    .= '<input type="hidden" name="' . $name_responce . '" value="site" />';
+					}
+					$html .= '<select ' . $id_attr_responce . $name_attr_responce . $class_attr_responce . $data_attr . $disabled . '>';
+					$html .= '<option value="0">' . esc_html__( 'Select', 'ultimate-member' ) . '</option>';
+					if ( ! empty( $entities ) ) {
+						if ( 'site' !== $entity_value ) {
+							$html .= '<option value="all" ' . selected( 'all' === $ids[ $entity_key ], true, false ) . '>' . esc_html__( 'All', 'ultimate-member' ) . '</option>';
+						}
+						foreach ( $entities as $id ) {
+							if ( 'site' !== $entity_value ) {
+								$html .= '<option value="' . $id . '" ' . selected( $id === $ids[ $entity_key ], true, false ) . '>' . esc_html__( 'ID#' ) . $id . ': ' . get_the_title( $id ) . '</option>';
+							}
+						}
+					}
+					$html .= '</select>';
+
+					$html .= '<span title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="add-row">+</span>';
+					$html .= '<span title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="remove-row">-</span>';
+					$html .= '</div>';
+				}
+			} else {
+				$html .= '<div class="um-entities-conditions-row">';
+				$html .= '<select ' . $class_attr . $id_attr . $name_attr . $data_attr . '>';
+				$html .= '<option value="none">' . __( 'Select entity', 'ultimate-member' ) . '</option>';
+				foreach ( $scope as $key => $label ) {
+					$html .= '<option value="' . $key . '">' . $label . '</option>';
+				}
+				$html .= '</select>';
+
+				$html .= '<select ' . $id_attr_responce . $name_attr_responce . $class_attr_responce . $data_attr . '>';
+				$html .= '<option value="0"></option>';
+				$html .= '</select>';
+
+				$html .= '<span title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="add-row">+</span>';
+				$html .= '<span title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="remove-row">-</span>';
+				$html .= '</div>';
+			}
+			$html .= '</div>';
+
+			return $html;
+		}
+
+		public function get_entites( $entity ) {
+			$post_types = get_post_types( array( 'public' => true ), 'names' );
+			if ( in_array( $entity, $post_types, true ) ) {
+				$entities = get_posts(
 					array(
-						'post_type'      => 'page',
+						'post_type'      => $entity,
 						'posts_per_page' => -1,
 						'fields'         => 'ids',
+						'order_by'       => 'id',
+						'order'          => 'ASC',
 					)
 				);
 			}
 
-			$value = $this->get_field_value( $field_data );
-
-			$html  = '<div class="um-entities-conditions-wrap">';
-			$html .= '<div class="um-entities-conditions-row">';
-			$html .= '<select ' . $class_attr . $id_attr . $name_attr . $data_attr . '>';
-			$html .= '<option value="none">' . __( 'Select entity', 'ultimate-member' ) . '</option>';
-			$html .= '<option value="site">' . __( 'Entire website', 'ultimate-member' ) . '</option>';
-
-			foreach ( $scope as $key => $label ) {
-				$html .= '<option value="' . $key . '">' . $label . '</option>';
-			}
-
-			$html .= '</select>';
-			$html .= '<select ' . $id_attr_responce . $name_attr_responce . $class_attr_responce . $data_attr . '>';
-			$html .= '<option value="0"></option>';
-			$html .= '</select>';
-			$html .= '<span title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="add-row">+</span>';
-			$html .= '<span title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="remove-row">-</span>';
-			$html .= '</div>';
-			$html .= '</div>';
-
-			return $html;
+			return $entities;
 		}
 
 		/**
