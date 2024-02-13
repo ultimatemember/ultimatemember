@@ -872,13 +872,15 @@ if ( ! class_exists( 'um\Config' ) ) {
 		 */
 		public function init_predefined_pages() {
 			$core_forms       = get_option( 'um_core_forms', array() );
+			$core_directories = get_option( 'um_core_directories', array() );
 			$setup_shortcodes = array_merge(
 				array(
 					'profile'  => '',
 					'login'    => '',
 					'register' => '',
+					'members'  => '',
 				),
-				$core_forms
+				array_merge( $core_forms, $core_directories )
 			);
 
 			$this->predefined_pages = array(
@@ -893,6 +895,10 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'register'       => array(
 					'title'   => __( 'Register', 'ultimate-member' ),
 					'content' => ! empty( $setup_shortcodes['register'] ) ? '[ultimatemember form_id="' . $setup_shortcodes['register'] . '"]' : '',
+				),
+				'members'        => array(
+					'title'   => __( 'Members', 'ultimate-member' ),
+					'content' => ! empty( $setup_shortcodes['members'] ) ? '[ultimatemember form_id="' . $setup_shortcodes['members'] . '"]' : '',
 				),
 				'logout'         => array(
 					'title'   => __( 'Logout', 'ultimate-member' ),
