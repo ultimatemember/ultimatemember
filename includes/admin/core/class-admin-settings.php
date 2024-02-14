@@ -1116,6 +1116,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'description' => __( 'General users settings.', 'ultimate-member' ),
 										'fields'      => array(
 											array(
+												'id'          => 'register_role',
+												'type'        => 'select',
+												'label'       => __( 'Registration Default Role', 'ultimate-member' ),
+												'description' => __( 'This will be the role assigned to users registering through Ultimate Member registration forms. By default, this setting will follow the core WordPress setting "New User Default Role" unless you specify a different role.', 'ultimate-member' ),
+												'default'     => um_get_metadefault( 'register_role' ),
+												'options'     => UM()->roles()->get_roles( __( 'Default', 'ultimate-member' ) ),
+												'size'        => 'small',
+											),
+											array(
 												'id'          => 'permalink_base',
 												'type'        => 'select',
 												'size'        => 'small',
@@ -1429,7 +1438,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								'form_sections' => array(
 									'uploads'       => array(
 										'title'       => __( 'Uploads', 'ultimate-member' ),
-										'description' => __( 'Allows you to control options related to user uploads. This allows you to optimize the photos for your site.', 'ultimate-member' ),
+										'description' => __( 'This page allows you to manage user upload options, enabling you to optimize photos for your site.', 'ultimate-member' ),
 										'fields'      => array(
 											array(
 												'id'             => 'image_orientation_by_exif',
@@ -1896,21 +1905,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							'registration_form' => array(
 								'title'         => __( 'Registration Form', 'ultimate-member' ),
 								'form_sections' => array(
-									'user_role' => array(
-										'title'       => __( 'User Role', 'ultimate-member' ),
-										'description' => __( 'This section allows you to set default user role assigned after registration.', 'ultimate-member' ),
-										'fields'      => array(
-											array(
-												'id'          => 'register_role',
-												'type'        => 'select',
-												'label'       => __( 'Registration Default Role', 'ultimate-member' ),
-												'description' => __( 'This will be the default role assigned to users registering thru registration form.', 'ultimate-member' ),
-												'default'     => um_get_metadefault( 'register_role' ),
-												'options'     => UM()->roles()->get_roles( __( 'Default', 'ultimate-member' ) ),
-												'size'        => 'small',
-											),
-										),
-									),
 									'template'  => array(
 										'title'       => __( 'Template', 'ultimate-member' ),
 										'description' => __( 'This section allows you to customize the user registration template and size.', 'ultimate-member' ),
