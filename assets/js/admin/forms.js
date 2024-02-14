@@ -1154,9 +1154,10 @@ jQuery(document).ready( function() {
 	}
 
 	jQuery( '.um-entities-conditions-wrap' ).on( 'change', '.um-entities-conditions', function()  {
-		var wrapper = jQuery( this ).closest( '.um-entities-conditions-row' );
-		var id      = jQuery( this ).attr( 'id' );
-		var option  = jQuery( this ).find( ':selected' ).val();
+		var wrapper  = jQuery( this ).closest( '.um-entities-conditions-row' );
+		var id       = jQuery( this ).attr( 'id' );
+		var option   = jQuery( this ).find( ':selected' ).val();
+		var original = wrapper.find( '.um-entities-conditions' ).data( 'original' );
 		if ( 'none' === option ) {
 			wrapper.find( '.um-entities-conditions-responce' ).removeAttr( 'disabled' ).removeAttr( 'multiple' );
 			wrapper.find( '.um-entities-conditions-responce' ).html( '' );
@@ -1177,12 +1178,15 @@ jQuery(document).ready( function() {
 							wrapper.find( '.um-entities-conditions-responce' ).removeAttr( 'disabled' );
 							wrapper.find( '.um-entities-conditions-responce' ).attr( 'multiple', 'multiple' );
 							wrapper.find( '.um-entities-conditions-responce' ).html( response.data );
+
+							wrapper.find( '.um-entities-conditions' ).attr( 'name', original + '[' + option + ']' );
+							wrapper.find( '.um-entities-conditions-responce' ).attr( 'name', original + '[' + option + '][]' );
 						} else {
 							var name = wrapper.find( '.um-entities-conditions-responce' ).attr( 'name' );
 							wrapper.find( '.um-entities-conditions-responce' ).html( '' );
 							wrapper.find( '.um-entities-conditions-responce' ).removeAttr( 'multiple' );
 							wrapper.find( '.um-entities-conditions-responce' ).attr( 'disabled', 'disabled' );
-							wrapper.find( '.um-entities-conditions-responce' ).after( '<input type="hidden" name="' + name + '" value="site">' );
+							wrapper.find( '.um-entities-conditions-responce' ).after( '<input type="hidden" name="' + original + '[site]' + '" value="1">' );
 						}
 					},
 					error: function( error ) {
@@ -1198,8 +1202,10 @@ jQuery(document).ready( function() {
 		var el      = wrapper.find( '.um-entities-conditions-row:first' ).clone();
 
 		el.find( '.um-entities-conditions-responce option[value!="0"], input' ).remove();
-		el.find( '.um-entities-conditions-responce option' ).html('');
+		el.find( '.um-entities-conditions-responce option' ).html( '' );
 		el.find( '.um-entities-conditions option' ).removeAttr( 'selected' );
+		el.find( '.um-entities-conditions, .um-entities-conditions-responce' ).removeAttr( 'name' );
+		el.find( '.um-entities-conditions-responce' ).removeAttr( 'multiple' );
 
 		wrapper.append( el );
 		wrapper.find( '.um-entities-conditions-row:last' ).find( 'select' ).removeAttr( 'disabled' );
@@ -1215,7 +1221,7 @@ jQuery(document).ready( function() {
 			row.find( '.um-entities-conditions option, .um-entities-conditions-responce option' ).removeAttr( 'selected' );
 			wrapper.find( '.um-entities-conditions-row' ).find( 'select' ).removeAttr( 'disabled' );
 			wrapper.find( '.um-entities-conditions-responce option[value!="0"], input' ).remove();
-			wrapper.find( '.um-entities-conditions-responce option' ).html('');
+			wrapper.find( '.um-entities-conditions-responce option' ).html( '' );
 		}
 	});
 });

@@ -5062,8 +5062,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			UM()->admin()->check_ajax_nonce();
 
 			// phpcs:disable WordPress.Security.NonceVerification -- already verified here
-			$option       = $_POST['option'];
-			$responce     = '';
+			$option   = $_POST['option'];
+			$responce = '';
 			if ( ! empty( $option ) && 'site' !== $option ) {
 				$post_types = get_post_types( array( 'public' => true ), 'names' );
 				if ( in_array( $option, $post_types, true ) ) {

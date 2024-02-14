@@ -239,10 +239,10 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					'_um_redirect_url'   => array(
 						'sanitize' => 'url',
 					),
-					'_um_entity'         => array(
+					'_um_include'        => array(
 						'sanitize' => array( $this, 'sanitize_registered_entities' ),
 					),
-					'_um_ids'            => array(
+					'_um_exclude'        => array(
 						'sanitize' => array( $this, 'sanitize_registered_entities' ),
 					),
 				)
@@ -1129,16 +1129,20 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 *
 		 * @return array
 		 */
-		public function sanitize_registered_entities( $value, $key ) {
-			if ( '_um_entity' === $key ) {
-				$value = array_map( 'sanitize_key', array_filter( $value ) );
+		public function sanitize_registered_entities( $value ) {
+			if ( is_array( $value ) ) {
+				foreach ( $value as $key => $val ) {
+					$key = sanitize_key( $key );
+					if ( is_array( $val ) ) {
+						$val = array_map( 'absint', $val );
+					} else {
+						$val = absint( $val );
+					}
+
+					$value[ $key ] = $val;
+				}
 			} else {
-				$value = array_map(
-					function( $val ) {
-						return 'all' === $val || 'site' === $val ? sanitize_key( $val ) : absint( $val );
-					},
-					$value
-				);
+				$value = absint( $value );
 			}
 
 			return $value;
@@ -1227,12 +1231,12 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 				}
 
 				if ( is_callable( $this->restriction_rule_meta[ $k ]['sanitize'], true, $callable_name ) ) {
-					add_filter( 'um_restriction_rule_meta_sanitize_' . $k, $this->restriction_rule_meta[ $k ]['sanitize'], 10, 2 );
+					add_filter( 'um_restriction_rule_meta_sanitize_' . $k, $this->restriction_rule_meta[ $k ]['sanitize'], 10, 1 );
 				}
 
 				switch ( $this->restriction_rule_meta[ $k ]['sanitize'] ) {
 					default:
-						$sanitized[ $k ] = apply_filters( 'um_restriction_rule_meta_sanitize_' . $k, $data[ $k ], $k );
+						$sanitized[ $k ] = apply_filters( 'um_restriction_rule_meta_sanitize_' . $k, $data[ $k ] );
 						break;
 					case 'int':
 						$sanitized[ $k ] = (int) $v;

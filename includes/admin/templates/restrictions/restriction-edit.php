@@ -80,36 +80,10 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 	if ( empty( $rule_error ) ) {
 		$data        = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules'] );
 		$data_action = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_action'] );
-		if ( ! empty( $_POST['um_restriction_rules_include']['_um_entity'] ) && ! empty( $_POST['um_restriction_rules_include']['_um_ids'] ) ) {
-			foreach ( $_POST['um_restriction_rules_include']['_um_entity'] as $key => $value ) {
-				if ( 'none' === $value ) {
-					unset( $_POST['um_restriction_rules_include']['_um_entity'][ $key ] );
-					unset( $_POST['um_restriction_rules_include']['_um_ids'][ $key ] );
-				}
-			}
-			foreach ( $_POST['um_restriction_rules_include']['_um_ids'] as $key => $value ) {
-				if ( '0' === $value ) {
-					unset( $_POST['um_restriction_rules_include']['_um_entity'][ $key ] );
-					unset( $_POST['um_restriction_rules_include']['_um_ids'][ $key ] );
-				}
-			}
-
+		if ( ! empty( $_POST['um_restriction_rules_include'] ) ) {
 			$data_include = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_include'] );
 		}
-		if ( ! empty( $_POST['um_restriction_rules_exclude']['_um_entity'] ) && ! empty( $_POST['um_restriction_rules_exclude']['_um_ids'] ) ) {
-			foreach ( $_POST['um_restriction_rules_exclude']['_um_entity'] as $key => $value ) {
-				if ( 'none' === $value ) {
-					unset( $_POST['um_restriction_rules_exclude']['_um_entity'][ $key ] );
-					unset( $_POST['um_restriction_rules_exclude']['_um_ids'][ $key ] );
-				}
-			}
-			foreach ( $_POST['um_restriction_rules_exclude']['_um_ids'] as $key => $value ) {
-				if ( '0' === $value ) {
-					unset( $_POST['um_restriction_rules_exclude']['_um_entity'][ $key ] );
-					unset( $_POST['um_restriction_rules_exclude']['_um_ids'][ $key ] );
-				}
-			}
-
+		if ( ! empty( $_POST['um_restriction_rules_exclude'] ) ) {
 			$data_exclude = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_exclude'] );
 		}
 
