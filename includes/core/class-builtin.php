@@ -273,7 +273,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				),
 
 				'tel' => array(
-					'name' => __( 'Telephone Box', 'ultimate-member' ),
+					'name' => __( 'Telephone', 'ultimate-member' ),
 					'col1' => array('_title','_metakey','_help','_default','_min_chars','_visibility'),
 					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate','_max_chars'),
 					'col3' => array('_required','_editable','_icon'),
