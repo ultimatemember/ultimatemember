@@ -90,11 +90,6 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 		 */
 		public function admin_init() {
 			global $wpdb;
-			// Dismiss admin notice after the first visit to Secure settings page.
-			if ( isset( $_REQUEST['page'], $_REQUEST['tab'], $_REQUEST['section'] ) && 'um_options' === sanitize_key( $_REQUEST['page'] ) && 'advanced' === sanitize_key( $_REQUEST['tab'] ) && 'secure' === sanitize_key( $_REQUEST['section'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-				UM()->admin()->notices()->dismiss( 'secure_settings' );
-			}
-
 			if ( isset( $_REQUEST['um_secure_expire_all_sessions'] ) && ! wp_doing_ajax() ) {
 				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'um-secure-expire-session-nonce' ) || ! current_user_can( 'manage_options' ) ) {
 					// This nonce is not valid or current logged-in user has no administrative rights.
@@ -300,8 +295,8 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 				)
 			);
 
-			$settings['advanced']['sections']['secure'] = array(
-				'title'       => __( 'Secure', 'ultimate-member' ),
+			$settings['advanced']['sections']['security'] = array(
+				'title'       => __( 'Security', 'ultimate-member' ),
 				'description' => __( 'This feature scans for suspicious registered accounts, bans the usage of administrative capabilities to site subscribers/members, allows the website administrators to force all users to reset their passwords, preventing users from logging-in using their old passwords that may have been exposed.', 'ultimate-member' ),
 				'fields'      => $secure_fields,
 			);

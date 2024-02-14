@@ -507,7 +507,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				),
 				'suspicious-activity'   => array(
 					'key'            => 'suspicious-activity',
-					'title'          => __( 'Secure: Suspicious Account Activity', 'ultimate-member' ),
+					'title'          => __( 'Security: Suspicious Account Activity', 'ultimate-member' ),
 					'subject'        => __( '[{site_name}] Suspicious Account Activity', 'ultimate-member' ),
 					'body'           => 'This is to inform you that there are suspicious activities with the following accounts: {user_profile_link}',
 					'description'    => __( 'Whether to receive notification when suspicious account activity is detected.', 'ultimate-member' ),

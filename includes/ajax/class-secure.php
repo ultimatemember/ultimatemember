@@ -285,7 +285,7 @@ class Secure {
 			$lock_register_forms_url = admin_url( 'admin.php?page=um_options&tab=advanced&section=secure&um_secure_lock_register_forms=1&_wpnonce=' . wp_create_nonce( 'um_secure_lock_register_forms' ) );
 			$content                .= $br . esc_html__( '1. Please temporarily lock all your active Register forms.', 'ultimate-member' );
 			$content                .= ' <a href="' . esc_attr( $lock_register_forms_url ) . '" target="_blank">' . esc_html__( 'Click here to lock them now.', 'ultimate-member' ) . '</a>';
-			$content                .= ' ' . esc_html__( 'You can unblock the Register forms later. Just go to Ultimate Member > Settings > Secure > uncheck the option "Lock All Register Forms".', 'ultimate-member' );
+			$content                .= ' ' . esc_html__( 'You can unblock the Register forms later. Just go to Ultimate Member > Settings > Advanced > Security and uncheck the option "Lock All Register Forms".', 'ultimate-member' );
 			$content                .= $br . $br;
 			$suspicious_accounts_url = admin_url( 'users.php?um_status=inactive' );
 
