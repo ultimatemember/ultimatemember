@@ -1105,7 +1105,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'sections' => array(
 							''        => array(
 								'title'       => __( 'Pages', 'ultimate-member' ),
-								'description' => __( 'This section allows you to assign a page to one of the core elements required for the plugin to function properly. The plugin automatically creates and configures required pages on installation.<br />You only need to use this tab, if you accidentally deleted pages that were automatically created when the plugin was activated for the first time.', 'ultimate-member' ),
+								'description' => __( 'This section enables you to assign a page to one of the core elements necessary for the plugin\'s proper function. The plugin automatically creates and configures the required pages upon installation.<br />You only need to use this tab if you accidentally deleted pages that were automatically created during the initial plugin activation.', 'ultimate-member' ),
 								'fields'      => $general_pages_fields,
 							),
 							'users'   => array(
@@ -1154,7 +1154,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'id'             => 'author_redirect',
 												'type'           => 'checkbox',
 												'label'          => __( 'Hide author pages', 'ultimate-member' ),
-												'checkbox_label' => __( 'Enable automatically redirect author page to their profile', 'ultimate-member' ),
+												'checkbox_label' => __( 'Enable author page redirect to user profile', 'ultimate-member' ),
 												'description'    => __( 'If enabled, author pages will automatically redirect to the user\'s profile page.', 'ultimate-member' ),
 											),
 											array(
@@ -1202,7 +1202,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'type'           => 'checkbox',
 												'label'          => __( 'Delete user comments', 'ultimate-member' ),
 												'checkbox_label' => __( 'Enable deleting user comments after deleting a user', 'ultimate-member' ),
-												'description'    => __( 'Do you want to delete a user\'s comments when that user deletes themself or is removed from the admin dashboard from the site?', 'ultimate-member' ),
+												'description'    => __( 'Do you want to automatically delete a user\'s comments when they delete their account or are removed from the admin dashboard?', 'ultimate-member' ),
 											),
 										),
 									),
@@ -1214,8 +1214,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'id'             => 'toggle_password',
 												'type'           => 'checkbox',
 												'label'          => __( 'Toggle Password Visibility', 'ultimate-member' ),
-												'checkbox_label' => __( 'Enable password show/hide button', 'ultimate-member' ),
-												'description'    => __( 'Enable visibility for show/hide password button for the password field-type.', 'ultimate-member' ),
+												'checkbox_label' => __( 'Enable password show/hide icon on password field', 'ultimate-member' ),
+												'description'    => __( 'Enable users to view their inputted password before submitting the form.', 'ultimate-member' ),
 											),
 											array(
 												'id'             => 'require_strongpass',
@@ -1244,14 +1244,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'id'          => 'activation_link_expiry_time',
 												'type'        => 'number',
 												'label'       => __( 'Email activation link expiration (days)', 'ultimate-member' ),
-												'description' => __( 'For user registrations that require an email link to be clicked to confirm account. How long would you like the activation link to be active for before it expires? If this field is left blank the activation link will not expire.', 'ultimate-member' ),
+												'description' => __( 'For user registrations requiring email confirmation via a link, how long should the activation link remain active before expiring? If this field is left blank, the activation link will not expire.', 'ultimate-member' ),
 												'size'        => 'small',
 											),
 										),
 									),
 									'seo'      => array(
 										'title'       => __( 'SEO', 'ultimate-member' ),
-										'description' => __( 'SEO settings for the User Profiles.', 'ultimate-member' ),
+										'description' => __( 'SEO settings for the user profiles.', 'ultimate-member' ),
 										'fields'      => array(
 											array(
 												'id'          => 'profile_noindex',
