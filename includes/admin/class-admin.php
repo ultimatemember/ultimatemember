@@ -1904,19 +1904,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 * Manual check templates versions.
 		 */
 		public function check_templates_version() {
-			$templates = UM()->admin_settings()->get_override_templates( true );
-			$out_date  = false;
-
-			foreach ( $templates as $template ) {
-				if ( 0 === $template['status_code'] ) {
-					$out_date = true;
-					break;
-				}
-			}
-
-			if ( false === $out_date ) {
-				delete_option( 'um_override_templates_outdated' );
-			}
+			UM()->common()->theme()->check_outdated_templates();
 
 			$url = add_query_arg(
 				array(
