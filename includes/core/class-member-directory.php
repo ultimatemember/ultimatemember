@@ -58,7 +58,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 		var $filter_types = array();
 
-
+		/**
+		 * Fields used for searching from wp_users table.
+		 *
+		 * @var string[]
+		 */
 		var $core_search_fields = array(
 			'user_login',
 			'user_url',
@@ -67,6 +71,19 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			'user_nicename',
 		);
 
+		/**
+		 * Fields used for sorting from wp_users table.
+		 *
+		 * @var string[]
+		 */
+		var $core_users_fields = array(
+			'user_login',
+			'user_url',
+			'display_name',
+			'user_email',
+			'user_nicename',
+			'user_registered',
+		);
 
 		/**
 		 * @var

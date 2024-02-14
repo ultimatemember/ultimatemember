@@ -900,7 +900,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 					$order           = esc_sql( $order );
 					$order           = in_array( strtoupper( $order ), array( 'ASC', 'DESC' ), true ) ? $order : 'ASC';
 					$this->sql_order = " ORDER BY CAST( umm_sort.um_value AS CHAR ) {$order} ";
-				} elseif ( in_array( $sortby, $this->core_search_fields, true ) ) {
+				} elseif ( in_array( $sortby, $this->core_users_fields, true ) ) {
 					$sortby          = esc_sql( $sortby );
 					$order           = esc_sql( $order );
 					$order           = in_array( strtoupper( $order ), array( 'ASC', 'DESC' ), true ) ? $order : 'ASC';
