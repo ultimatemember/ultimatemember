@@ -1302,23 +1302,23 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'id'             => 'account_name_disable',
 												'type'           => 'checkbox',
 												'label'          => __( 'Disable First & Last name field editing', 'ultimate-member' ),
-												'checkbox_label' => __( 'Disabled First & Last name', 'ultimate-member' ),
-												'description'    => __( 'If enabled, this will prevent users from changing their First & Last name fields on the account page.', 'ultimate-member' ),
+												'checkbox_label' => __( 'Enable to prevent First & Last name editing by users', 'ultimate-member' ),
+												'description'    => __( 'If enabled, this feature will prevent users from changing their first and last names on the account page.', 'ultimate-member' ),
 												'conditional'    => array( 'account_name', '=', '1' ),
 											),
 											array(
 												'id'             => 'account_name_require',
 												'type'           => 'checkbox',
 												'label'          => __( 'Require First & Last Name', 'ultimate-member' ),
-												'checkbox_label' => __( 'Required First & Last Name', 'ultimate-member' ),
-												'description'    => __( 'If enabled, users will not be allowed to remove their first or last names when updating their account page.', 'ultimate-member' ),
+												'checkbox_label' => __( 'First and last name fields are required', 'ultimate-member' ),
+												'description'    => __( 'If enabled, users will not be allowed to remove their first or last names when updating their account information.', 'ultimate-member' ),
 												'conditional'    => array( 'account_name', '=', '1' ),
 											),
 											array(
 												'id'             => 'account_email',
 												'type'           => 'checkbox',
 												'label'          => __( 'Allow users to change email', 'ultimate-member' ),
-												'checkbox_label' => __( 'Enable changing email via Account', 'ultimate-member' ),
+												'checkbox_label' => __( 'Enable changing email via the account page', 'ultimate-member' ),
 												'description'    => __( 'If disabled, users will not be allowed to change their email address on the account page.', 'ultimate-member' ),
 											),
 											array(
@@ -1332,41 +1332,41 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									),
 									'password_tab'      => array(
 										'title'       => __( 'Change password tab', 'ultimate-member' ),
-										'description' => __( 'Allows you to enable/disable the password tab from the account page.', 'ultimate-member' ),
+										'description' => __( 'Enables you to toggle the change password tab on the account page.', 'ultimate-member' ),
 										'fields'      => array(
 											array(
 												'id'             => 'account_tab_password',
 												'type'           => 'checkbox',
 												'label'          => __( 'Password Account Tab', 'ultimate-member' ),
 												'checkbox_label' => __( 'Display password change account tab', 'ultimate-member' ),
-												'description'    => __( 'Enable/disable the Password account tab in account page.', 'ultimate-member' ),
+												'description'    => __( 'Enable or disable the "Password" tab on the account page.', 'ultimate-member' ),
 											),
 										),
 									),
 									'privacy_tab'       => array(
 										'title'       => __( 'Privacy tab', 'ultimate-member' ),
-										'description' => __( 'Allows you to enable/disable the privacy tab from the account page. You should disable this tab if you do not want users from being able to alter their privacy settings.', 'ultimate-member' ),
+										'description' => __( 'Enables you to toggle the privacy tab on the account page. Disable this tab to prevent users from altering their privacy settings.', 'ultimate-member' ),
 										'fields'      => array(
 											array(
 												'id'             => 'account_tab_privacy',
 												'type'           => 'checkbox',
 												'label'          => __( 'Privacy Account Tab', 'ultimate-member' ),
 												'checkbox_label' => __( 'Display privacy account tab', 'ultimate-member' ),
-												'description'    => __( 'Enable/disable the Privacy account tab in account page.', 'ultimate-member' ),
+												'description'    => __( 'Enable or disable the "Privacy" tab on the account page.', 'ultimate-member' ),
 											),
 											array(
 												'id'             => 'account_hide_in_directory',
 												'type'           => 'checkbox',
 												'label'          => __( 'Allow users to hide their profiles from directory', 'ultimate-member' ),
 												'checkbox_label' => __( 'Enable users ability to alter their profile visibility in member directories', 'ultimate-member' ),
-												'description'    => __( 'Whether to allow users changing their profile visibility from member directory in account page.', 'ultimate-member' ),
+												'description'    => __( 'If enabled, this will allow users to change their profile visibility in the member directory from the account page.', 'ultimate-member' ),
 												'conditional'    => array( 'account_tab_privacy', '=', '1' ),
 											),
 											array(
 												'id'          => 'account_hide_in_directory_default',
 												'type'        => 'select',
 												'label'       => __( 'Hide profiles from directory by default', 'ultimate-member' ),
-												'description' => __( 'Set default value for the "Hide my profile from directory" option.', 'ultimate-member' ),
+												'description' => __( 'Set the default value for the "Hide my profile from directory" option.', 'ultimate-member' ),
 												'options'     => array(
 													'No'  => __( 'No', 'ultimate-member' ),
 													'Yes' => __( 'Yes', 'ultimate-member' ),
@@ -1378,27 +1378,27 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									),
 									'notifications_tab' => array(
 										'title'       => __( 'Notifications tab', 'ultimate-member' ),
-										'description' => __( 'Allows you to enable/disable the Notifications account tab on the account page.', 'ultimate-member' ),
+										'description' => __( 'Enables you to toggle the notifications tab on the account page. Disable this tab to prevent users from altering their notifications settings.', 'ultimate-member' ),
 										'fields'      => array(
 											array(
 												'id'             => 'account_tab_notifications',
 												'type'           => 'checkbox',
 												'label'          => __( 'Notifications Account Tab', 'ultimate-member' ),
 												'checkbox_label' => __( 'Display notifications account tab', 'ultimate-member' ),
-												'description'    => __( 'Enable/disable the Notifications account tab in account page.', 'ultimate-member' ),
+												'description'    => __( 'Enable or disable the "Notifications" tab on the account page.', 'ultimate-member' ),
 											),
 										),
 									),
 									'delete_tab'        => array(
 										'title'       => __( 'Delete tab', 'ultimate-member' ),
-										'description' => __( 'Allows you to enable/disable the delete account tab from the account page. You should disable this tab if you do not want users from being able to alter their delete their own accounts.', 'ultimate-member' ),
+										'description' => __( 'Enables you to enable or disable the "Delete Account" tab on the account page. Disable this tab if you wish to prevent users from being able to delete their own accounts.', 'ultimate-member' ),
 										'fields'      => array(
 											array(
-												'id'          => 'account_tab_delete',
-												'type'        => 'checkbox',
-												'label'       => __( 'Delete Account Tab', 'ultimate-member' ),
+												'id'             => 'account_tab_delete',
+												'type'           => 'checkbox',
+												'label'          => __( 'Delete Account Tab', 'ultimate-member' ),
 												'checkbox_label' => __( 'Display delete account tab', 'ultimate-member' ),
-												'description' => __( 'Enable/disable the Delete account tab in account page.', 'ultimate-member' ),
+												'description'    => __( 'Enable/disable the Delete account tab in account page.', 'ultimate-member' ),
 											),
 											array(
 												'id'          => 'delete_account_text',
