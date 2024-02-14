@@ -5064,9 +5064,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			// phpcs:disable WordPress.Security.NonceVerification -- already verified here
 			$option       = $_POST['option'];
 			$responce     = '';
-			$defult_label = __( 'Select', 'ultimate-member' );
-			$all_label    = __( 'All', 'ultimate-member' );
-
 			if ( ! empty( $option ) && 'site' !== $option ) {
 				$post_types = get_post_types( array( 'public' => true ), 'names' );
 				if ( in_array( $option, $post_types, true ) ) {
@@ -5080,8 +5077,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						)
 					);
 
-					$responce .= '<option value="0">' . $defult_label . '</option>';
-					$responce .= '<option value="all">' . $all_label . '</option>';
 					foreach ( $entity as $id ) {
 						$responce .= '<option value="' . $id . '">' . esc_html__( 'ID#' ) . $id . ': ' . get_the_title( $id ) . '</option>';
 					}

@@ -1157,34 +1157,40 @@ jQuery(document).ready( function() {
 		var wrapper = jQuery( this ).closest( '.um-entities-conditions-row' );
 		var id      = jQuery( this ).attr( 'id' );
 		var option  = jQuery( this ).find( ':selected' ).val();
-
-		jQuery.ajax(
-			{
-				url: wp.ajax.settings.url,
-				type: 'POST',
-				dataType: 'json',
-				data: {
-					action: 'um_registered_entities_conditions',
-					nonce: um_admin_scripts.nonce,
-					option: option,
-					id: id
-				},
-				success: function( response ) {
-					if ( 'disabled' !== response.data ) {
-						wrapper.find( '.um-entities-conditions-responce' ).removeAttr( 'disabled' );
-						wrapper.find( '.um-entities-conditions-responce' ).html( response.data );
-					} else {
-						var name = wrapper.find( '.um-entities-conditions-responce' ).attr( 'name' );
-						wrapper.find( '.um-entities-conditions-responce' ).html( '' );
-						wrapper.find( '.um-entities-conditions-responce' ).attr( 'disabled', 'disabled' );
-						wrapper.find( '.um-entities-conditions-responce' ).after('<input type="hidden" name="' + name + '" value="site">');
+		if ( 'none' === option ) {
+			wrapper.find( '.um-entities-conditions-responce' ).removeAttr( 'disabled' ).removeAttr( 'multiple' );
+			wrapper.find( '.um-entities-conditions-responce' ).html( '' );
+		} else {
+			jQuery.ajax(
+				{
+					url: wp.ajax.settings.url,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						action: 'um_registered_entities_conditions',
+						nonce: um_admin_scripts.nonce,
+						option: option,
+						id: id
+					},
+					success: function( response ) {
+						if ( 'disabled' !== response.data ) {
+							wrapper.find( '.um-entities-conditions-responce' ).removeAttr( 'disabled' );
+							wrapper.find( '.um-entities-conditions-responce' ).attr( 'multiple', 'multiple' );
+							wrapper.find( '.um-entities-conditions-responce' ).html( response.data );
+						} else {
+							var name = wrapper.find( '.um-entities-conditions-responce' ).attr( 'name' );
+							wrapper.find( '.um-entities-conditions-responce' ).html( '' );
+							wrapper.find( '.um-entities-conditions-responce' ).removeAttr( 'multiple' );
+							wrapper.find( '.um-entities-conditions-responce' ).attr( 'disabled', 'disabled' );
+							wrapper.find( '.um-entities-conditions-responce' ).after( '<input type="hidden" name="' + name + '" value="site">' );
+						}
+					},
+					error: function( error ) {
+						console.log( error )
 					}
-				},
-				error: function( error ) {
-					console.log( error )
 				}
-			}
-		);
+			);
+		}
 	});
 
 	jQuery( '.um-entities-conditions-wrap' ).on( 'click', '.add-row', function()  {

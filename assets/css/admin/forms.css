@@ -427,7 +427,14 @@ span.um-admin-icon-clear i {
   vertical-align: middle;
 }
 
+.um-entities-conditions-row {
+  margin: 0 0 5px;
+}
+.um-entities-conditions-row .um-entities-conditions-responce {
+  vertical-align: top;
+}
 .um-entities-conditions-row select {
+  resize: vertical;
   width: 40%;
 }
 .um-entities-conditions-row span {
