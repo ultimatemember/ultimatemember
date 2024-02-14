@@ -16,22 +16,22 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 		/**
 		 * @var
 		 */
-		var $core;
+		public $core;
 
 		/**
 		 * @var
 		 */
-		var $current_url;
+		public $current_url;
 
 		/**
 		 * Permalinks constructor.
 		 */
 		public function __construct() {
-			add_action( 'init',  array( &$this, 'set_current_url' ), 0 );
+			add_action( 'init', array( &$this, 'set_current_url' ), 0 );
 
-			add_action( 'init',  array( &$this, 'check_for_querystrings' ), 1 );
+			add_action( 'init', array( &$this, 'check_for_querystrings' ), 1 );
 
-			add_action( 'init',  array( &$this, 'activate_account_via_email_link' ), 1 );
+			add_action( 'init', array( &$this, 'activate_account_via_email_link' ), 1 );
 		}
 
 		/**
@@ -109,33 +109,53 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 		 * Activates an account via email
 		 */
 		public function activate_account_via_email_link() {
-			if ( isset( $_REQUEST['act'] ) && 'activate_via_email' === sanitize_key( $_REQUEST['act'] ) && isset( $_REQUEST['hash'] ) && is_string( $_REQUEST['hash'] ) && strlen( $_REQUEST['hash'] ) == 40 &&
-				 isset( $_REQUEST['user_id'] ) && is_numeric( $_REQUEST['user_id'] ) ) { // valid token
-
+			// phpcs:disable WordPress.Security.NonceVerification
+			if ( isset( $_REQUEST['act'] ) && ( 'activate_via_email' === sanitize_key( $_REQUEST['act'] ) || 'confirm_via_email' === sanitize_key( $_REQUEST['act'] ) ) && isset( $_REQUEST['hash'] ) && is_string( $_REQUEST['hash'] ) && 40 === strlen( $_REQUEST['hash'] ) && isset( $_REQUEST['user_id'] ) && is_numeric( $_REQUEST['user_id'] ) ) { // valid token
+				$act     = sanitize_key( $_REQUEST['act'] );
 				$user_id = absint( $_REQUEST['user_id'] );
 				delete_option( "um_cache_userdata_{$user_id}" );
 
 				$account_secret_hash = get_user_meta( $user_id, 'account_secret_hash', true );
 				if ( empty( $account_secret_hash ) || strtolower( sanitize_text_field( $_REQUEST['hash'] ) ) !== strtolower( $account_secret_hash ) ) {
-					wp_die( __( 'This activation link is expired or have already been used.', 'ultimate-member' ) );
+					wp_die( esc_html__( 'This activation link is expired or have already been used.', 'ultimate-member' ) );
 				}
 
 				$account_secret_hash_expiry = get_user_meta( $user_id, 'account_secret_hash_expiry', true );
 				if ( ! empty( $account_secret_hash_expiry ) && time() > $account_secret_hash_expiry ) {
-					wp_die( __( 'This activation link is expired.', 'ultimate-member' ) );
+					wp_die( esc_html__( 'This activation link is expired.', 'ultimate-member' ) );
 				}
 
-				$redirect              = um_get_core_page( 'login', 'account_active' );
-				$set_password_required = get_user_meta( $user_id, 'um_set_password_required', true );
+				if ( 'activate_via_email' === $act ) {
+					$redirect              = um_get_core_page( 'login', 'account_active' );
+					$set_password_required = get_user_meta( $user_id, 'um_set_password_required', true );
 
-				um_fetch_user( $user_id );
-				UM()->user()->approve();
-				if ( ! empty( $set_password_required ) ) {
-					$redirect = um_user( 'password_reset_link' );
+					um_fetch_user( $user_id );
+					UM()->user()->approve();
+					if ( ! empty( $set_password_required ) ) {
+						$redirect = um_user( 'password_reset_link' );
+					}
+					um_reset_user();
+				} elseif ( 'confirm_via_email' === $act ) {
+					$redirect  = um_get_core_page( 'account', 'account_confirmed' );
+					$new_email = get_user_meta( $user_id, 'um_changed_user_email', true );
+
+					$args = array(
+						'ID'         => $user_id,
+						'user_email' => sanitize_email( $new_email ),
+					);
+					wp_update_user( $args );
+
+					delete_user_meta( $user_id, 'um_changed_user_email' );
+					delete_user_meta( $user_id, 'um_changed_user_email_action' );
+
+					if ( ! empty( UM()->options()->get( 'flush_login_sessions' ) ) ) {
+						wp_destroy_current_session();
+						wp_logout();
+						session_unset();
+					}
 				}
-				um_reset_user();
 
-				$user_role = UM()->roles()->get_priority_user_role( $user_id );
+				$user_role      = UM()->roles()->get_priority_user_role( $user_id );
 				$user_role_data = UM()->roles()->role_data( $user_role );
 
 				// log in automatically
@@ -153,33 +173,64 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 				}
 
 				/**
-				 * UM hook
+				 * Action on user activation.
 				 *
-				 * @type action
-				 * @title um_after_email_confirmation
-				 * @description Action on user activation
-				 * @input_vars
-				 * [{"var":"$user_id","type":"int","desc":"User ID"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_after_email_confirmation', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_after_email_confirmation', 'my_after_email_confirmation', 10, 1 );
+				 * @param {integer} $user_id    User ID.
+				 *
+				 * @since 2.0
+				 * @hook um_after_email_confirmation
+				 *
+				 * @example <caption>Action on user activation.</caption>
 				 * function my_after_email_confirmation( $user_id ) {
 				 *     // your code here
 				 * }
-				 * ?>
+				 * add_action( 'um_after_email_confirmation', 'my_after_email_confirmation', 10, 1 );
 				 */
 				do_action( 'um_after_email_confirmation', $user_id );
 
-				if ( empty( $set_password_required ) ) {
+				if ( 'activate_via_email' === $act && empty( $set_password_required ) ) {
 					$redirect = empty( $user_role_data['url_email_activate'] ) ? um_get_core_page( 'login', 'account_active' ) : trim( $user_role_data['url_email_activate'] ); // Role setting "URL redirect after e-mail activation"
 				}
 				$redirect = apply_filters( 'um_after_email_confirmation_redirect', $redirect, $user_id, $login );
 
 				exit( wp_redirect( $redirect ) );
 			}
+			// phpcs:enable WordPress.Security.NonceVerification
+		}
+
+		/**
+		 * Makes an confirmation link for any user
+		 *
+		 * @return bool|string
+		 */
+		public function confirmation_url() {
+			if ( ! um_user( 'account_secret_hash' ) ) {
+				return false;
+			}
+
+			/**
+			 * Filters change confirmation user URL.
+			 *
+			 * @param {string} $url Predefined URL.
+			 *
+			 * @return {string} Changed URL.
+			 *
+			 * @since 2.8.3
+			 * @hook um_confirmation_url
+			 *
+			 * @example <caption>Change confirmation user URL.</caption>
+			 * function my_um_confirmation_url( $url ) {
+			 *     // your code here
+			 *     return $url;
+			 * }
+			 * add_filter( 'um_confirmation_url', 'my_um_confirmation_url' );
+			 */
+			$url = apply_filters( 'um_confirmation_url', home_url() );
+			$url = add_query_arg( 'act', 'confirm_via_email', $url );
+			$url = add_query_arg( 'hash', um_user( 'account_secret_hash' ), $url );
+			$url = add_query_arg( 'user_id', um_user( 'ID' ), $url );
+
+			return $url;
 		}
 
 		/**

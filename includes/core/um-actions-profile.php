@@ -1832,3 +1832,35 @@ function um_profile_menu( $args ) {
 
 }
 add_action( 'um_profile_menu', 'um_profile_menu', 9 );
+
+/**
+ * Display notice to confirm user email
+ *
+ * @param array $args
+ */
+function um_pending_email_confirmation( $user_id, $args ) {
+	$um_changed_user_email_action = get_user_meta( $user_id, 'um_changed_user_email_action', true );
+	if ( 'pending' === $um_changed_user_email_action ) {
+		$um_changed_user_email = get_user_meta( $user_id, 'um_changed_user_email', true );
+		$user_info             = get_userdata( $user_id );
+
+		$role           = get_role( UM()->roles()->get_priority_user_role( get_current_user_id() ) );
+		$can_edit_users = null !== $role && current_user_can( 'edit_users' ) && $role->has_cap( 'edit_users' );
+		if ( $can_edit_users ) {
+			?>
+			<div class="um-profile-status awaiting_admin_review">
+				<span>
+					<?php
+					echo esc_html__( 'This user want to change their email.', 'ultimate-member' ) . '<br>';
+					// translators: %s: profile old email
+					echo esc_html( sprintf( __( 'The old email is %s', 'ultimate-member' ), $user_info->user_email ) ) . '<br>';
+					// translators: %s: profile new email
+					echo esc_html( sprintf( __( 'The new one is %s', 'ultimate-member' ), $um_changed_user_email ) );
+					?>
+				</span>
+			</div>
+			<?php
+		}
+	}
+}
+add_action( 'um_after_header_meta', 'um_pending_email_confirmation', 10, 2 );

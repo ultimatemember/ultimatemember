@@ -151,6 +151,38 @@ function um_action_request_process() {
 			UM()->user()->delete();
 			exit( wp_redirect( UM()->permalinks()->get_current_url( true ) ) );
 			break;
+		case 'um_approve_new_email':
+			if ( ! $can_edit_users ) {
+				wp_die( esc_html__( 'You do not have permission to make this action.', 'ultimate-member' ) );
+			}
+
+			$new_email = get_user_meta( $uid, 'um_changed_user_email', true );
+
+			$args = array(
+				'ID'         => $uid,
+				'user_email' => sanitize_email( $new_email ),
+			);
+			wp_update_user( $args );
+
+			delete_user_meta( $uid, 'um_changed_user_email' );
+			delete_user_meta( $uid, 'um_changed_user_email_action' );
+
+			if ( ! empty( UM()->options()->get( 'flush_login_sessions' ) ) ) {
+				$sessions = WP_Session_Tokens::get_instance( $uid );
+				$sessions->destroy_all();
+			}
+
+			exit( wp_redirect( UM()->permalinks()->get_current_url( true ) ) );
+			break;
+		case 'um_reject_new_email':
+			if ( ! $can_edit_users ) {
+				wp_die( esc_html__( 'You do not have permission to make this action.', 'ultimate-member' ) );
+			}
+			delete_user_meta( $uid, 'um_changed_user_email' );
+			delete_user_meta( $uid, 'um_changed_user_email_action' );
+
+			exit( wp_redirect( UM()->permalinks()->get_current_url( true ) ) );
+			break;
 
 	}
 }

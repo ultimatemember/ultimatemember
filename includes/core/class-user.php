@@ -1743,6 +1743,14 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 
 		/**
+		 * Pending email update
+		 */
+		public function email_update_pending() {
+			$this->assign_secretkey();
+		}
+
+
+		/**
 		 * Pending email
 		 */
 		function email_pending() {

@@ -396,7 +396,7 @@ function um_submit_account_details( $args ) {
 	 */
 	do_action( 'um_account_pre_update_profile', $changes, $user_id );
 
-	if ( isset( $changes['first_name'] ) || isset( $changes['last_name'] ) || isset( $changes['nickname'] ) ) {
+	if ( isset( $changes['first_name'] ) || isset( $changes['last_name'] ) || isset( $changes['nickname'] ) || isset( $changes['user_email'] ) ) {
 		$user = get_userdata( $user_id );
 		if ( ! empty( $user ) && ! is_wp_error( $user ) ) {
 			UM()->user()->previous_data['display_name'] = $user->display_name;
@@ -410,6 +410,19 @@ function um_submit_account_details( $args ) {
 			if ( isset( $changes['nickname'] ) ) {
 				UM()->user()->previous_data['nickname'] = $user->nickname;
 			}
+			if ( isset( $changes['user_email'] ) ) {
+				UM()->user()->previous_data['user_email'] = $user->user_email;
+			}
+		}
+	}
+
+	if ( isset( UM()->user()->previous_data['user_email'] ) && UM()->user()->previous_data['user_email'] !== $changes['user_email'] ) {
+		$role           = UM()->roles()->get_priority_user_role( $user_id );
+		$user_role_data = UM()->roles()->role_data( $role );
+		if ( 'approved' !== $user_role_data['status'] && 1 === absint( $user_role_data['changing_email_action'] ) ) {
+			update_user_meta( $user_id, 'um_changed_user_email', sanitize_email( $changes['user_email'] ) );
+			update_user_meta( $user_id, 'um_changed_user_email_action', sanitize_key( $user_role_data['status'] ) );
+			unset( $changes['user_email'] );
 		}
 	}
 
@@ -461,7 +474,6 @@ function um_submit_account_details( $args ) {
 
 	$url = '';
 	if ( um_is_core_page( 'account' ) ) {
-
 		$url = UM()->account()->tab_link( $tab );
 
 		$url = add_query_arg( 'updated', 'account', $url );
@@ -553,7 +565,20 @@ add_action( 'um_after_user_account_updated', 'um_after_user_account_updated_perm
  */
 function um_account_updated_notification( $user_id, $changed ) {
 	um_fetch_user( $user_id );
+	$um_changed_user_email_action = get_user_meta( $user_id, 'um_changed_user_email_action', true );
+
 	UM()->mail()->send( um_user( 'user_email' ), 'changedaccount_email' );
+	if ( 'checkmail' === $um_changed_user_email_action ) {
+		UM()->user()->email_update_pending();
+		UM()->mail()->send( um_user( 'user_email' ), 'change_checkmail_email' );
+	} elseif ( 'pending' === $um_changed_user_email_action ) {
+		$emails = um_multi_admin_email();
+		if ( ! empty( $emails ) ) {
+			foreach ( $emails as $email ) {
+				UM()->mail()->send( $email, 'pending_change_email', array( 'admin' => true ) );
+			}
+		}
+	}
 }
 add_action( 'um_after_user_account_updated', 'um_account_updated_notification', 20, 2 );
 
@@ -568,6 +593,25 @@ function um_disable_native_email_notificatiion( $changed, $user_id ) {
 	add_filter( 'send_email_change_email', '__return_false' );
 }
 add_action( 'um_account_pre_update_profile', 'um_disable_native_email_notificatiion', 10, 2 );
+
+
+/**
+ * Add data in general tab
+ *
+ * @param $args
+ */
+function um_after_account_general( $args ) {
+	$user_id = get_current_user_id();
+
+	$um_changed_user_email_action = get_user_meta( um_user( 'ID' ), 'um_changed_user_email_action', true );
+	if ( 'checkmail' === $um_changed_user_email_action ) {
+		echo '<p><i class="um-icon-alert-circled" aria-label="E-mail Address"></i> ' . esc_html__( 'You changed your email. Please check your new mailbox and confirm your email address.', 'ultimate-member' ) . '</p>';
+	} elseif ( 'pending' === $um_changed_user_email_action ) {
+		echo '<p><i class="um-icon-alert-circled" aria-label="E-mail Address"></i> ' . esc_html__( 'You changed your email. The site administrator will check your new email and confirm or reject it.', 'ultimate-member' ) . '</p>';
+	}
+}
+add_action( 'um_after_account_general', 'um_after_account_general' );
+
 
 
 /**

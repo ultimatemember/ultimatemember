@@ -2556,6 +2556,10 @@ function um_user( $data, $attrs = null ) {
 			return UM()->password()->reset_url();
 			break;
 
+		case 'account_confirmation_link':
+			return UM()->permalinks()->confirmation_url();
+			break;
+
 		case 'account_activation_link':
 			return UM()->permalinks()->activate_url();
 			break;
