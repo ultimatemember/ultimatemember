@@ -295,10 +295,16 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 				)
 			);
 
-			$settings['advanced']['sections']['security'] = array(
-				'title'       => __( 'Security', 'ultimate-member' ),
-				'description' => __( 'This feature scans for suspicious registered accounts, bans the usage of administrative capabilities to site subscribers/members, allows the website administrators to force all users to reset their passwords, preventing users from logging-in using their old passwords that may have been exposed.', 'ultimate-member' ),
-				'fields'      => $secure_fields,
+			$settings['advanced']['sections'] = UM()->array_insert_before(
+				$settings['advanced']['sections'],
+				'developers',
+				array(
+					'security' => array(
+						'title'       => __( 'Security', 'ultimate-member' ),
+						'description' => __( 'This feature scans for suspicious registered accounts, bans the usage of administrative capabilities to site subscribers/members, allows the website administrators to force all users to reset their passwords, preventing users from logging-in using their old passwords that may have been exposed.', 'ultimate-member' ),
+						'fields'      => $secure_fields,
+					),
+				)
 			);
 
 			return $settings;

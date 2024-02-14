@@ -1562,28 +1562,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'description' => __( 'Allows to manage blocked data of signed up user.', 'ultimate-member' ),
 										'fields'      => array(
 											array(
-												'id'      => 'blocked_emails',
-												'type'    => 'textarea',
-												'label'   => __( 'Blocked Email Addresses (Enter one email per line)', 'ultimate-member' ),
+												'id'          => 'blocked_emails',
+												'type'        => 'textarea',
+												'label'       => __( 'Blocked Email Addresses (Enter one email per line)', 'ultimate-member' ),
 												'description' => __( 'This will block the specified e-mail addresses from being able to sign up or sign in to your site. To block an entire domain, use something like `*@domain.com`.', 'ultimate-member' ),
 											),
 											array(
-												'id'      => 'blocked_words',
-												'type'    => 'textarea',
-												'label'   => __( 'Blacklist Words (Enter one word per line)', 'ultimate-member' ),
-												'description' => __( 'This option lets you specify blacklist of words to prevent anyone from signing up with such a word as their username.', 'ultimate-member' ),
-											),
-										),
-									),
-									'fields'   => array(
-										'title'       => __( 'Fields', 'ultimate-member' ),
-										'description' => __( 'Allows to manage fields settings.', 'ultimate-member' ),
-										'fields'      => array(
-											array(
-												'id'          => 'allowed_choice_callbacks',
+												'id'          => 'blocked_words',
 												'type'        => 'textarea',
-												'label'       => __( 'Allowed Choice Callbacks (Enter one PHP function per line)', 'ultimate-member' ),
-												'description' => __( 'This option lets you specify the choice callback functions to prevent anyone from using 3rd-party functions that may put your site at risk.', 'ultimate-member' ),
+												'label'       => __( 'Blacklist Words (Enter one word per line)', 'ultimate-member' ),
+												'description' => __( 'This option lets you specify blacklist of words to prevent anyone from signing up with such a word as their username.', 'ultimate-member' ),
 											),
 										),
 									),
@@ -2131,16 +2119,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'description'    => __( 'Check this box if you would like to disable Ultimate Member user\'s cache.', 'ultimate-member' ),
 									),
 									array(
-										'id'          => 'rest_api_version',
-										'type'        => 'select',
-										'label'       => __( 'REST API version', 'ultimate-member' ),
-										'description' => __( 'This controls the REST API version, we recommend to use the last version.', 'ultimate-member' ),
-										'options'     => array(
-											'1.0' => __( '1.0 version', 'ultimate-member' ),
-											'2.0' => __( '2.0 version', 'ultimate-member' ),
-										),
-									),
-									array(
 										'id'             => 'uninstall_on_delete',
 										'type'           => 'checkbox',
 										'label'          => __( 'Remove Data on Uninstall?', 'ultimate-member' ),
@@ -2221,6 +2199,39 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'label'          => __( 'Restriction content pre-queries', 'ultimate-member' ),
 												'checkbox_label' => __( 'Disable pre-queries for restriction content logic', 'ultimate-member' ),
 												'description'    => __( 'Please enable this option only in the cases when you have big or unnecessary queries on your site with active restriction logic. If you want to exclude posts only from the results queries instead of pre_get_posts and fully-hidden post logic also please enable this option. It activates the restriction content logic until 2.2.x version without latest security enhancements.', 'ultimate-member' ),
+											),
+										),
+									),
+								),
+							),
+							'developers'         => array(
+								'title'  => __( 'Developers', 'ultimate-member' ),
+								'form_sections' => array(
+									'fields'   => array(
+										'title'       => __( 'Fields', 'ultimate-member' ),
+										'description' => __( 'Allows to manage fields settings.', 'ultimate-member' ),
+										'fields'      => array(
+											array(
+												'id'          => 'allowed_choice_callbacks',
+												'type'        => 'textarea',
+												'label'       => __( 'Allowed Choice Callbacks (Enter one PHP function per line)', 'ultimate-member' ),
+												'description' => __( 'This option lets you specify the choice callback functions to prevent anyone from using 3rd-party functions that may put your site at risk.', 'ultimate-member' ),
+											),
+										),
+									),
+									'rest_api' => array(
+										'title'       => __( 'REST API', 'ultimate-member' ),
+										'description' => '',
+										'fields'      => array(
+											array(
+												'id'          => 'rest_api_version',
+												'type'        => 'select',
+												'label'       => __( 'Version', 'ultimate-member' ),
+												'description' => __( 'This controls the REST API version, we recommend to use the last version.', 'ultimate-member' ),
+												'options'     => array(
+													'1.0' => __( '1.0 version', 'ultimate-member' ),
+													'2.0' => __( '2.0 version', 'ultimate-member' ),
+												),
 											),
 										),
 									),
