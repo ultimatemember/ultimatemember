@@ -51,9 +51,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			//custom content for licenses tab
 			add_filter( 'um_settings_section_licenses__custom_content', array( $this, 'settings_licenses_tab' ), 10, 3 );
 
-			// @todo remove since 2.9.0
-			add_filter( 'um_settings_section_install_info__custom_content', array( $this, 'settings_install_info' ) );
-
 			//custom content for override templates tab
 			add_action( 'plugins_loaded', array( $this, 'um_check_template_version' ), 10 );
 
@@ -2232,13 +2229,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						),
 					),
 					'install_info' => array(
-						'title'  => __( 'Install Info', 'ultimate-member' ),
-						'fields' => array(
-							array(
-								'type' => 'install_info',
-							),
-						),
-					), // @todo remove since 2.9.0
+						'title' => __( 'System info', 'ultimate-member' ),
+						'link'  => add_query_arg( array( 'tab' => 'debug' ), admin_url( 'site-health.php' ) ),
+					),
 				)
 			);
 
@@ -2370,7 +2363,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			do_action( "um_settings_page_before_{$current_tab}_{$current_subtab}_content" );
 
 			$form_wrapper = true;
-			if ( in_array( $current_tab, array( 'licenses', 'install_info' ), true ) ) {
+			if ( 'licenses' === $current_tab ) {
 				$form_wrapper = false;
 			}
 			if ( 'advanced' === $current_tab && 'override_templates' === $current_subtab ) {
@@ -2441,19 +2434,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 						if ( ! empty( $tab['fields'] ) || ! empty( $tab['sections'] ) || ! empty( $tab['form_sections'] ) ) {
 							$menu_tabs[ $slug ] = $tab['title'];
+						} elseif ( ! empty( $tab['link'] ) ) {
+							$menu_tabs[ $slug ] = $tab['title'];
 						}
 					}
 
 					$current_tab = empty( $_GET['tab'] ) ? '' : sanitize_key( $_GET['tab'] );
 					foreach ( $menu_tabs as $name => $label ) {
-						$active = $current_tab === $name ? 'nav-tab-active' : '';
-
-						$args = array( 'page' => 'um_options' );
-						if ( ! empty( $name ) ) {
-							$args['tab'] = $name;
+						if ( ! empty( $this->settings_structure[ $name ]['link'] ) ) {
+							$active  = '';
+							$tab_url = $this->settings_structure[ $name ]['link'];
+						} else {
+							$active = $current_tab === $name ? 'nav-tab-active' : '';
+							$args   = array( 'page' => 'um_options' );
+							if ( ! empty( $name ) ) {
+								$args['tab'] = $name;
+							}
+							$tab_url = add_query_arg( $args, admin_url( 'admin.php' ) );
 						}
-						$tab_url = add_query_arg( $args, admin_url( 'admin.php' ) );
-						$tabs   .= '<a href="' . esc_url( $tab_url ) . '" class="nav-tab ' . esc_attr( $active ) . '">' . esc_html( $label ) . '</a>';
+						$tabs .= '<a href="' . esc_url( $tab_url ) . '" class="nav-tab ' . esc_attr( $active ) . '">' . esc_html( $label ) . '</a>';
 					}
 
 					break;
@@ -3402,36 +3401,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			$content = ob_get_clean();
 			return $content;
-		}
-
-		/**
-		 * HTML for Settings > Install Info tab.
-		 *
-		 * @todo remove since 2.9.0
-		 *
-		 * @return string
-		 */
-		public function settings_install_info() {
-			ob_start();
-			?>
-			<h2 class="title"><?php esc_html_e( 'Install Info', 'ultimate-member' ); ?></h2>
-			<p>
-				<?php
-				/** @noinspection HtmlUnknownTarget */
-				// translators: %s: Link to the Site Health > Info.
-				echo wp_kses( sprintf( __( 'This settings tab is deprecated. And it will be fully removed since 2.9.0 version. Please get the installation info from <a href="%s">there</a>.', 'ultimate-member' ), add_query_arg( 'tab', 'debug', admin_url( 'site-health.php' ) ) ), UM()->get_allowed_html( 'admin_notice' ) );
-				?>
-			</p>
-			<p>
-				<?php
-				/** @noinspection HtmlUnknownTarget */
-				// translators: %s: Link to the Site Health article.
-				echo wp_kses( sprintf( __( 'Check more information about Site Health and how to get the Installation Info <a href="%s" target="_blank">here</a>.', 'ultimate-member' ), 'https://docs.ultimatemember.com/article/1879-ultimate-member-site-health' ), UM()->get_allowed_html( 'admin_notice' ) );
-				?>
-			</p>
-
-			<?php
-			return ob_get_clean();
 		}
 
 		/**
