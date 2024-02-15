@@ -13,10 +13,66 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Site_Health {
 
 	/**
+	 * String of a badge color.
+	 * Options: blue, green, red, orange, purple and gray.
+	 *
+	 * @see https://make.wordpress.org/core/2019/04/25/site-health-check-in-5-2/
+	 *
+	 * @since 2.8.3
+	 */
+	const BADGE_COLOR = 'blue';
+
+	/**
 	 * Site_Health constructor.
 	 */
 	public function __construct() {
 		add_filter( 'debug_information', array( $this, 'debug_information' ), 20 );
+		add_filter( 'site_status_tests', array( $this, 'register_site_status_tests' ) );
+	}
+
+	public function register_site_status_tests( $tests ) {
+		$tests['direct']['um_override_templates'] = array(
+			'label' => esc_html__( 'Are the Ultimate Member templates out of date?', 'ultimate-member' ),
+			'test'  => array( $this, 'override_templates_test' ),
+		);
+
+		return $tests;
+	}
+
+	public function override_templates_test() {
+		$result = array(
+			'label'       => __( 'You have the most recent version of custom Ultimate Member templates', 'ultimate-member' ),
+			'status'      => 'good',
+			'badge'       => array(
+				'label' => UM_PLUGIN_NAME,
+				'color' => self::BADGE_COLOR,
+			),
+			'description' => sprintf(
+				'<p>%s</p>',
+				__( 'Your custom Ultimate Member templates that are situated in the theme have the most recent version and are ready to use.', 'ultimate-member' )
+			),
+			'actions'     => '',
+			'test'        => 'um_override_templates',
+		);
+
+		UM()->common()->theme()->check_outdated_templates();
+
+		if ( true === (bool) get_option( 'um_override_templates_outdated' ) ) {
+			$result['label']          = __( 'Your custom templates are out of date', 'ultimate-member' );
+			$result['status']         = 'critical';
+			$result['badge']['color'] = 'red';
+			$result['description']    = sprintf(
+				'<p>%s</p>',
+				__( 'Your custom Ultimate Member templates that are situated in the theme are out of date and may break the website\'s functionality.', 'ultimate-member' )
+			);
+			$result['actions']        = sprintf(
+				'<p><a href="%s">%s</a></p>',
+				admin_url( 'admin.php?page=um_options&tab=advanced&section=override_templates' ),
+				esc_html__( 'Check status and update', 'ultimate-member' )
+			);
+		}
+
+		return $result;
 	}
 
 	private function get_roles() {
