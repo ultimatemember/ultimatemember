@@ -245,6 +245,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					'_um_exclude'        => array(
 						'sanitize' => array( $this, 'sanitize_registered_entities' ),
 					),
+					'_um_users'          => array(
+						'sanitize' => array( $this, 'sanitize_registered_users' ),
+					),
 				)
 			);
 
@@ -1125,7 +1128,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		/**
 		 * Sanitize user meta fields when wp-admin form has been submitted
 		 *
-		 * @param array $data
+		 * @param array $value
 		 *
 		 * @return array
 		 */
@@ -1143,6 +1146,35 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 				}
 			} else {
 				$value = absint( $value );
+			}
+
+			return $value;
+		}
+
+		/**
+		 * Sanitize user meta fields when wp-admin form has been submitted
+		 *
+		 * @param array $value
+		 *
+		 * @return array
+		 */
+		public function sanitize_registered_users( $value ) {
+			foreach ( $value as $key => $val ) {
+				if ( ! empty( $val['ids'] ) ) {
+					$key            = sanitize_key( $key );
+					$val['compare'] = sanitize_key( $val['compare'] );
+					foreach ( $val['ids'] as $k => $id ) {
+						if ( 'user' === $key ) {
+							$val['ids'][ $k ] = absint( $id );
+						} else {
+							$val['ids'][ $k ] = sanitize_key( $id );
+						}
+					}
+
+					$value[ $key ] = $val;
+				} else {
+					unset( $value[ $key ] );
+				}
 			}
 
 			return $value;

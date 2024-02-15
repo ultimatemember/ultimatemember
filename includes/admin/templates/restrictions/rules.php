@@ -14,21 +14,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div class="um-admin-metabox">
 	<?php
-	$rule = $object['data'];
+	$rules = $object['rules'];
 
-//	UM()->admin_forms(
-//		array(
-//			'class'     => 'um-restriction-rule-admin um-half-column',
-//			'prefix_id' => 'um_restriction_rules',
-//			'fields'    => array(
-//				array(
-//					'id'    => '_um_description',
-//					'type'  => 'textarea',
-//					'label' => __( 'Rule Description', 'ultimate-member' ),
-//					'value' => ! empty( $rule['_um_description'] ) ? $rule['_um_description'] : '',
-//				),
-//			),
-//		)
-//	)->render_form();
+	UM()->admin_forms(
+		array(
+			'class'     => 'um-restriction-rule-users um-half-column',
+			'prefix_id' => 'um_restriction_rules_users',
+			'fields'    => array(
+				array(
+					'id'    => '_um_users',
+					'type'  => 'users_conditions',
+					'label' => __( 'Rules', 'ultimate-member' ),
+					'value' => ! empty( $rules ) ? $rules : array(),
+				),
+			),
+		)
+	)->render_form();
 	?>
 </div>

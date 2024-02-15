@@ -437,7 +437,8 @@ span.um-admin-icon-clear i {
   resize: vertical;
   width: 40%;
 }
-.um-entities-conditions-row span {
+
+.conditions-row {
   display: inline-block;
   width: 36px;
   height: 30px;
@@ -450,6 +451,17 @@ span.um-admin-icon-clear i {
   cursor: pointer;
   vertical-align: middle;
 }
-.um-entities-conditions-row span:hover {
+.conditions-row:hover {
   color: #2271b1;
+}
+
+.um-users-conditions-row {
+  margin: 0 0 5px;
+}
+.um-users-conditions-row .um-users-conditions-responce {
+  vertical-align: top;
+}
+.um-users-conditions-row select {
+  resize: vertical;
+  width: 27%;
 }

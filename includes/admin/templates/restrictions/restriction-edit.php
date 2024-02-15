@@ -80,11 +80,14 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 	if ( empty( $rule_error ) ) {
 		$data        = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules'] );
 		$data_action = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_action'] );
-		if ( ! empty( $_POST['um_restriction_rules_include'] ) ) {
+		if ( ! empty( $_POST['um_restriction_rules_include']['_um_include'] ) ) {
 			$data_include = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_include'] );
 		}
-		if ( ! empty( $_POST['um_restriction_rules_exclude'] ) ) {
+		if ( ! empty( $_POST['um_restriction_rules_exclude']['_um_exclude'] ) ) {
 			$data_exclude = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_exclude'] );
+		}
+		if ( ! empty( $_POST['um_restriction_rules_users']['_um_users'] ) ) {
+			$data_rules = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_users'] );
 		}
 
 		// @todo v3 type hardcode
@@ -152,6 +155,9 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 			}
 			if ( ! empty( $data_include ) ) {
 				$rule_meta['exclude'] = $data_exclude;
+			}
+			if ( ! empty( $data_rules ) ) {
+				$rule_meta['rules'] = $data_rules;
 			}
 
 			/**
@@ -263,6 +269,7 @@ $screen_id = $current_screen->id; ?>
 					'action'  => ! empty( $rule_meta['action'] ) ? $rule_meta['action'] : array(),
 					'include' => ! empty( $rule_meta['include'] ) ? $rule_meta['include'] : array(),
 					'exclude' => ! empty( $rule_meta['exclude'] ) ? $rule_meta['exclude'] : array(),
+					'rules'   => ! empty( $rule_meta['rules'] ) ? $rule_meta['rules'] : array(),
 				);
 				?>
 

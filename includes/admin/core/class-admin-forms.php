@@ -1935,8 +1935,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					}
 					$html .= '</select>';
 
-					$html .= '<span title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="add-row">+</span>';
-					$html .= '<span title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="remove-row">-</span>';
+					$html .= '<span title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="conditions-row add-row">+</span>';
+					$html .= '<span title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="conditions-row remove-row">-</span>';
 					$html .= '</div>';
 				}
 			} else {
@@ -1952,8 +1952,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$html .= '<option value="0"></option>';
 				$html .= '</select>';
 
-				$html .= '<span title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="add-row">+</span>';
-				$html .= '<span title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="remove-row">-</span>';
+				$html .= '<span title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="conditions-row add-row">+</span>';
+				$html .= '<span title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="conditions-row remove-row">-</span>';
 				$html .= '</div>';
 			}
 			$html .= '</div>';
@@ -1976,6 +1976,153 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			}
 
 			return $entities;
+		}
+
+		/**
+		 * @param $field_data
+		 *
+		 * @return bool|string
+		 */
+		public function render_users_conditions( $field_data ) {
+			if ( empty( $field_data['id'] ) ) {
+				return false;
+			}
+
+			$id            = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
+			$field_data_id = $field_data['id'];
+			$id_attr       = ' id="' . esc_attr( $id ) . '" ';
+
+			$class               = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
+			$class              .= ! empty( $field_data['size'] ) ? $field_data['size'] : '';
+			$class_attr          = ' class="um-users-conditions um-forms-field ' . esc_attr( $class ) . '" ';
+			$class_attr_compare  = ' class="um-users-conditions-compare um-forms-field ' . esc_attr( $class ) . '" ';
+			$class_attr_responce = ' class="um-users-conditions-responce um-forms-field ' . esc_attr( $class ) . '" ';
+
+			$data = array(
+				'field_id' => $field_data_id,
+			);
+
+			$data_attr = '';
+			foreach ( $data as $key => $value ) {
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
+			}
+
+			$name      = $field_data_id . '_um_entity';
+			$name      = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : $name;
+			$name_attr = ' name="' . $name . '[' . $field_data_id . ']" ';
+
+			$original_name = ' data-original="' . $name . '[' . $field_data_id . ']" ';
+
+			$scope = array(
+				'none' => __( 'Select rule object', 'ultimate-member' ),
+				'auth' => __( 'Authentification', 'ultimate-member' ),
+				'user' => __( 'User', 'ultimate-member' ),
+				'role' => __( 'User Role', 'ultimate-member' ),
+			);
+
+			$compare = array(
+				'equal'    => __( 'equal', 'ultimate-member' ),
+				'notequal' => __( 'doesn\'t equal', 'ultimate-member' ),
+			);
+
+			$value = $this->get_field_value( $field_data );
+
+			$html = '<div class="um-users-conditions-wrap">';
+			if ( ! empty( $value[ $field_data_id ] ) ) {
+
+				foreach ( $value[ $field_data_id ] as $rule_key => $rule ) {
+					$name_attr          = ' name="' . $name . '[' . $field_data_id . '][' . $rule_key . ']" ';
+					$name_attr_compare  = ' name="' . $name . '[' . $field_data_id . '][' . $rule_key . '][compare]" ';
+					$name_attr_responce = ' name="' . $name . '[' . $field_data_id . '][' . $rule_key . '][ids][]" ';
+
+					$html .= '<div class="um-users-conditions-row">';
+
+					$html .= '<select ' . $original_name . $class_attr . $id_attr . $name_attr . $data_attr . '>';
+					foreach ( $scope as $key => $label ) {
+						$html .= '<option value="' . $key . '" ' . selected( $key === $rule_key, true, false ) . '>' . $label . '</option>';
+					}
+					$html .= '</select>';
+
+					$html .= '<select ' . $original_name . $class_attr_compare . $id_attr . $name_attr_compare . $data_attr . '>';
+					foreach ( $compare as $key => $label ) {
+						$html .= '<option value="' . $key . '" ' . selected( $key === $rule['compare'], true, false ) . '>' . $label . '</option>';
+					}
+					$html .= '</select>';
+
+					$multiple = '';
+					if ( 'user' === $rule_key || 'role' === $rule_key ) {
+						$multiple = ' multiple="multiple" ';
+					}
+					$options = $this->get_users_options( $rule_key );
+					$html   .= '<select ' . $original_name . $class_attr_responce . $id_attr . $name_attr_responce . $data_attr . $multiple . '>';
+					foreach ( $options as $option_key => $option ) {
+						$html .= '<option value="' . $option_key . '" ' . selected( in_array( $option_key, $rule['ids'], true ), true, false ) . '>' . $option . '</option>';
+					}
+					$html .= '</select>';
+
+					$html .= '<span title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="conditions-row add-row">+</span>';
+					$html .= '<span title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="conditions-row remove-row">-</span>';
+					$html .= '</div>';
+				}
+			} else {
+				$html .= '<div class="um-users-conditions-row">';
+
+				$html .= '<select ' . $original_name . $class_attr . $id_attr . $name_attr . $data_attr . '>';
+				foreach ( $scope as $key => $label ) {
+					$html .= '<option value="' . $key . '">' . $label . '</option>';
+				}
+				$html .= '</select>';
+
+				$html .= '<select ' . $original_name . $class_attr_compare . $id_attr . $name_attr . $data_attr . '>';
+				foreach ( $compare as $key => $label ) {
+					$html .= '<option value="' . $key . '">' . $label . '</option>';
+				}
+				$html .= '</select>';
+
+				$html .= '<select ' . $original_name . $class_attr_responce . $id_attr . $name_attr . $data_attr . '>';
+				$html .= '<option value="0"></option>';
+				$html .= '</select>';
+
+				$html .= '<span title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="conditions-row add-row">+</span>';
+				$html .= '<span title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="conditions-row remove-row">-</span>';
+				$html .= '</div>';
+			}
+			$html .= '</div>';
+
+			return $html;
+		}
+
+		public function get_users_options( $type ) {
+			$options = array();
+			switch ( $type ) {
+				case 'auth':
+					$options = array(
+						'loggedin'    => __( 'Logged-in', 'ultimate-member' ),
+						'notloggedin' => __( 'Not logged-in', 'ultimate-member' ),
+					);
+					break;
+				case 'user':
+					$users = get_users(
+						array(
+							'fields' => array( 'display_name', 'ID', 'user_login' ),
+						)
+					);
+
+					foreach ( $users as $user ) {
+						$name      = '' !== $user->display_name ? $user->display_name : $user->user_login;
+						$options[ $user->ID ] = $name;
+					}
+					break;
+				case 'role':
+					$roles   = get_editable_roles();
+					$options = array();
+					foreach ( $roles as $role => $role_data ) {
+						$options[ $role ] = $role_data['name'];
+					}
+					break;
+			}
+
+			return $options;
 		}
 
 		/**

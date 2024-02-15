@@ -5110,5 +5110,70 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			wp_send_json_success( $responce );
 			// phpcs:enable WordPress.Security.NonceVerification -- already verified here
 		}
+
+
+		/**
+		 * Get registered users and user roles
+		 *
+		 * @since  2.8.x
+		 *
+		 * @return string/array
+		 */
+		public function registered_users_conditions() {
+			UM()->admin()->check_ajax_nonce();
+
+			// phpcs:disable WordPress.Security.NonceVerification -- already verified here
+			$option   = $_POST['option'];
+			$responce = '';
+			if ( ! empty( $option ) ) {
+				switch ( $option ) {
+					case 'auth':
+						$responce .= '<option value="loggedin">' . esc_html__( 'Logged-in', 'ultimate-member' ) . '</option>';
+						$responce .= '<option value="notloggedin">' . esc_html__( 'Not logged-in', 'ultimate-member' ) . '</option>';
+						break;
+					case 'user':
+						$users = get_users(
+							array(
+								'fields' => array( 'display_name', 'ID', 'user_login' ),
+							)
+						);
+
+						foreach ( $users as $user ) {
+							$name      = '' !== $user->display_name ? $user->display_name : $user->user_login;
+							$responce .= '<option value="' . $user->ID . '">' . $name . '</option>';
+						}
+						break;
+					case 'role':
+						$roles = get_editable_roles();
+						foreach ( $roles as $role => $data ) {
+							$responce .= '<option value="' . $role . '">' . $data['name'] . '</option>';
+						}
+						break;
+				}
+			}
+
+			/**
+			 * Filters Ultimate Member change registered entities.
+			 *
+			 * @param {array} $pages Predefined pages.
+			 *
+			 * @return {array} Predefined pages.
+			 *
+			 * @since 2.8.x
+			 * @hook um_registered_types_conditions
+			 *
+			 * @example <caption>Add an option "All entities".</caption>
+			 * function my_um_registered_types_conditionss( $responce ) {
+			 *     // your code here
+			 *     $responce .= '<option value="all">All entities</option>';
+			 *     return $responce;
+			 * }
+			 * add_filter( 'um_registered_types_conditions', 'my_um_registered_types_conditionss' );
+			 */
+			$responce = apply_filters( 'um_registered_types_conditions', $responce );
+
+			wp_send_json_success( $responce );
+			// phpcs:enable WordPress.Security.NonceVerification -- already verified here
+		}
 	}
 }

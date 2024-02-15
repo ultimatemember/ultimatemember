@@ -1153,9 +1153,9 @@ jQuery(document).ready( function() {
 		return false;
 	}
 
+	// Content restriction v3
 	jQuery( '.um-entities-conditions-wrap' ).on( 'change', '.um-entities-conditions', function()  {
 		var wrapper  = jQuery( this ).closest( '.um-entities-conditions-row' );
-		var id       = jQuery( this ).attr( 'id' );
 		var option   = jQuery( this ).find( ':selected' ).val();
 		var original = wrapper.find( '.um-entities-conditions' ).data( 'original' );
 		if ( 'none' === option ) {
@@ -1170,8 +1170,7 @@ jQuery(document).ready( function() {
 					data: {
 						action: 'um_registered_entities_conditions',
 						nonce: um_admin_scripts.nonce,
-						option: option,
-						id: id
+						option: option
 					},
 					success: function( response ) {
 						if ( 'disabled' !== response.data ) {
@@ -1214,7 +1213,6 @@ jQuery(document).ready( function() {
 	jQuery( '.um-entities-conditions-wrap' ).on( 'click', '.remove-row', function()  {
 		var wrapper = jQuery( this ).closest( '.um-entities-conditions-wrap' );
 		var row     = jQuery( this ).closest( '.um-entities-conditions-row' );
-		console.log( wrapper.find( '.um-entities-conditions-row' ).length );
 		if ( wrapper.find( '.um-entities-conditions-row' ).length > 1 ) {
 			row.remove();
 		} else {
@@ -1222,6 +1220,72 @@ jQuery(document).ready( function() {
 			wrapper.find( '.um-entities-conditions-row' ).find( 'select' ).removeAttr( 'disabled' );
 			wrapper.find( '.um-entities-conditions-responce option[value!="0"], input' ).remove();
 			wrapper.find( '.um-entities-conditions-responce option' ).html( '' );
+		}
+	});
+
+	jQuery( '.um-users-conditions-wrap' ).on( 'change', '.um-users-conditions', function()  {
+		var wrapper  = jQuery( this ).closest( '.um-users-conditions-row' );
+		var option   = jQuery( this ).find( ':selected' ).val();
+		var original = wrapper.find( '.um-users-conditions' ).data( 'original' );
+		if ( 'none' === option ) {
+			wrapper.find( 'select' ).removeAttr( 'name' );
+			wrapper.find( '.um-users-conditions-responce' ).removeAttr( 'multiple' );
+			wrapper.find( '.um-users-conditions-responce' ).html( '' );
+		} else {
+			jQuery.ajax(
+				{
+					url: wp.ajax.settings.url,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						action: 'um_registered_users_conditions',
+						nonce: um_admin_scripts.nonce,
+						option: option
+					},
+					success: function( response ) {
+						console.log(response)
+						if ( 'auth' !== option ) {
+							wrapper.find( '.um-users-conditions-responce' ).attr( 'multiple', 'multiple' );
+						} else {
+							wrapper.find( '.um-users-conditions-responce' ).removeAttr( 'multiple' );
+						}
+						wrapper.find( '.um-users-conditions' ).attr( 'name', original + '[' + option + ']' );
+						wrapper.find( '.um-users-conditions-compare' ).attr( 'name', original + '[' + option + '][compare]' );
+						wrapper.find( '.um-users-conditions-responce' ).attr( 'name', original + '[' + option + '][ids][]' );
+						wrapper.find( '.um-users-conditions-responce' ).html( response.data );
+					},
+					error: function( error ) {
+						console.log( error )
+					}
+				}
+			);
+		}
+	});
+
+	jQuery( '.um-users-conditions-wrap' ).on( 'click', '.add-row', function()  {
+		var wrapper = jQuery( this ).closest( '.um-users-conditions-wrap' );
+		var el      = wrapper.find( '.um-users-conditions-row:first' ).clone();
+
+		el.find( '.um-users-conditions-responce option[value!="0"]' ).remove();
+		el.find( '.um-users-conditions-responce option' ).html( '' );
+		el.find( '.um-users-conditions option' ).removeAttr( 'selected' );
+		el.find( '.um-users-conditions,.um-users-conditions-compare , .um-users-conditions-responce' ).removeAttr( 'name' );
+		el.find( '.um-users-conditions-responce' ).removeAttr( 'multiple' );
+		el.find( '.um-users-conditions-compare option:first' ).prop( 'selected', true );
+
+		wrapper.append( el );
+	});
+
+	jQuery( '.um-users-conditions-wrap' ).on( 'click', '.remove-row', function()  {
+		var wrapper = jQuery( this ).closest( '.um-users-conditions-wrap' );
+		var row     = jQuery( this ).closest( '.um-users-conditions-row' );
+		if ( wrapper.find( '.um-users-conditions-row' ).length > 1 ) {
+			row.remove();
+		} else {
+			row.find( '.um-users-conditions option, .um-entities-conditions-responce option' ).removeAttr( 'selected' );
+			wrapper.find( '.um-users-conditions-row' ).find( 'select' ).removeAttr( 'disabled' );
+			wrapper.find( '.um-users-conditions-responce option[value!="0"]' ).remove();
+			wrapper.find( '.um-users-conditions-responce option' ).html( '' );
 		}
 	});
 });
