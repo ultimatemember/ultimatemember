@@ -51,9 +51,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			//custom content for licenses tab
 			add_filter( 'um_settings_section_licenses__custom_content', array( $this, 'settings_licenses_tab' ), 10, 3 );
 
-			//custom content for override templates tab
-			add_action( 'plugins_loaded', array( $this, 'um_check_template_version' ), 10 );
-
 			add_filter( 'um_settings_structure', array( $this, 'sorting_licenses_options' ), 9999, 1 );
 
 			//save handlers
@@ -2244,6 +2241,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				unset( $this->settings_structure['']['sections']['account']['form_sections']['notifications_tab'] );
 			}
 
+			// Hide sub tab if there aren't custom templates in theme.
+			$custom_templates = UM()->common()->theme()->get_custom_templates_list();
+			if ( empty( $custom_templates ) ) {
+				unset( $this->settings_structure['advanced']['sections']['override_templates'] );
+			}
+
 			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE ) {
 
 			} else {
@@ -3356,26 +3359,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		}
 
 		/**
-		 * Periodically checking the versions of templates.
-		 *
-		 * @since 2.6.1
-		 *
-		 * @return void
-		 */
-		public function um_check_template_version() {
-			$um_check_version = get_transient( 'um_check_template_versions' );
-			if ( false === $um_check_version ) {
-				$this->get_override_templates();
-			}
-		}
-
-		/**
 		 * HTML for Settings > Advanced > Override Templates tab.
 		 *
 		 * @return string
 		 */
-		public function settings_override_templates_tab( $content ) {
-			$um_check_version = get_transient( 'um_check_template_versions' );
+		public function settings_override_templates_tab() {
+			$um_check_version = time();
+			$custom_templates = get_transient( 'um_custom_templates_list' );
+			if ( false !== $custom_templates && array_key_exists( 'time', $custom_templates ) ) {
+				$um_check_version = $custom_templates['time'];
+			}
 
 			$check_url = add_query_arg(
 				array(
@@ -3383,147 +3376,23 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'_wpnonce'      => wp_create_nonce( 'check_templates_version' ),
 				)
 			);
+
 			ob_start();
 			?>
-
 			<p>
 				<a href="<?php echo esc_url( $check_url ); ?>" class="button" style="margin-right: 10px;">
 					<?php esc_html_e( 'Re-check templates', 'ultimate-member' ); ?>
 				</a>
 				<?php
-				if ( false !== $um_check_version ) {
 					// translators: %s: Last checking templates time.
 					echo esc_html( sprintf( __( 'Last update: %s. You could re-check changes manually.', 'ultimate-member' ), wp_date( get_option( 'date_format', 'F j, Y' ) . ' ' . get_option( 'time_format', 'g:i a' ), $um_check_version ) ) );
-				} else {
-					esc_html_e( 'Templates haven\'t check yet. You could check changes manually.', 'ultimate-member' );
-				}
 				?>
 			</p>
 			<div class="clear"></div>
-
 			<?php
 			include_once UM_PATH . 'includes/admin/core/list-tables/version-template-list-table.php';
-
-			$content = ob_get_clean();
-			return $content;
+			return ob_get_clean();
 		}
-
-		/**
-		 * @param $get_list boolean
-		 *
-		 * @return array|void
-		 */
-		public function get_override_templates( $get_list = false ) {
-			$outdated_files   = array();
-			$scan_files['um'] = self::scan_template_files( UM_PATH . '/templates/' );
-			/**
-			 * Filters an array of the template files for scanning versions.
-			 *
-			 * @since 2.6.1
-			 * @hook um_override_templates_scan_files
-			 *
-			 * @param {array} $scan_files Template files for scanning versions.
-			 *
-			 * @return {array} Template files for scanning versions.
-			 */
-			$scan_files = apply_filters( 'um_override_templates_scan_files', $scan_files );
-			$out_date   = false;
-
-			set_transient( 'um_check_template_versions', time(), 12 * HOUR_IN_SECONDS );
-
-			foreach ( $scan_files as $key => $files ) {
-				foreach ( $files as $file ) {
-					if ( false === strpos( $file, 'email/' ) ) {
-						$located = array();
-						/**
-						 * Filters an array of the template files for scanning versions based on $key.
-						 *
-						 * Note: $key - means um or extension key.
-						 *
-						 * @since 2.6.1
-						 * @hook um_override_templates_get_template_path__{$key}
-						 *
-						 * @param {array}  $located Template file paths for scanning versions.
-						 * @param {string} $file    Template file name.
-						 *
-						 * @return {array} Template file paths for scanning versions.
-						 */
-						$located = apply_filters( "um_override_templates_get_template_path__{$key}", $located, $file );
-
-						$exceptions = array(
-							'members-grid.php',
-							'members-header.php',
-							'members-list.php',
-							'members-pagination.php',
-							'searchform.php',
-							'login-to-view.php',
-							'profile/comments.php',
-							'profile/comments-single.php',
-							'profile/posts.php',
-							'profile/posts-single.php',
-							'modal/um_upload_single.php',
-							'modal/um_view_photo.php',
-						);
-
-						if ( ! empty( $located ) ) {
-							$theme_file = $located['theme'];
-						} elseif ( in_array( $file, $exceptions, true ) && file_exists( get_stylesheet_directory() . '/ultimate-member/' . $file ) ) {
-							$theme_file = get_stylesheet_directory() . '/ultimate-member/' . $file;
-						} elseif ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' . $file ) ) {
-							$theme_file = get_stylesheet_directory() . '/ultimate-member/templates/' . $file;
-						} else {
-							$theme_file = false;
-						}
-
-						if ( ! empty( $theme_file ) ) {
-							$core_file = $file;
-
-							if ( ! empty( $located ) ) {
-								$core_path      = $located['core'];
-								$core_file_path = stristr( $core_path, 'wp-content' );
-							} else {
-								$core_path      = UM_PATH . '/templates/' . $core_file;
-								$core_file_path = stristr( UM_PATH . 'templates/' . $core_file, 'wp-content' );
-							}
-							$core_version  = self::get_file_version( $core_path );
-							$theme_version = self::get_file_version( $theme_file );
-
-							$status      = esc_html__( 'Theme version up to date', 'ultimate-member' );
-							$status_code = 1;
-							if ( version_compare( $theme_version, $core_version, '<' ) ) {
-								$status      = esc_html__( 'Theme version is out of date', 'ultimate-member' );
-								$status_code = 0;
-							}
-							if ( '' === $theme_version ) {
-								$status      = esc_html__( 'Theme version is empty', 'ultimate-member' );
-								$status_code = 0;
-							}
-							if ( 0 === $status_code ) {
-								$out_date = true;
-								update_option( 'um_override_templates_outdated', true );
-							}
-							$outdated_files[] = array(
-								'core_version'  => $core_version,
-								'theme_version' => $theme_version,
-								'core_file'     => $core_file_path,
-								'theme_file'    => stristr( $theme_file, 'wp-content' ),
-								'status'        => $status,
-								'status_code'   => $status_code,
-							);
-						}
-					}
-				}
-			}
-
-			if ( false === $out_date ) {
-				delete_option( 'um_override_templates_outdated' );
-			}
-			update_option( 'um_template_statuses', $outdated_files );
-			if ( true === $get_list ) {
-				return $outdated_files;
-			}
-		}
-
 
 		/**
 		 * Scan the template files.
@@ -3532,58 +3401,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 * @return array
 		 */
 		public static function scan_template_files( $template_path ) {
-			$files  = @scandir( $template_path ); // @codingStandardsIgnoreLine.
-			$result = array();
-
-			if ( ! empty( $files ) ) {
-
-				foreach ( $files as $value ) {
-
-					if ( ! in_array( $value, array( '.', '..' ), true ) ) {
-
-						if ( is_dir( $template_path . DIRECTORY_SEPARATOR . $value ) ) {
-							$sub_files = self::scan_template_files( $template_path . DIRECTORY_SEPARATOR . $value );
-							foreach ( $sub_files as $sub_file ) {
-								$result[] = $value . DIRECTORY_SEPARATOR . $sub_file;
-							}
-						} else {
-							$result[] = $value;
-						}
-					}
-				}
-			}
-			return $result;
-		}
-
-		/**
-		 * @param $file string
-		 *
-		 * @return string
-		 */
-		public static function get_file_version( $file ) {
-			// Avoid notices if file does not exist.
-			if ( ! file_exists( $file ) ) {
-				return '';
-			}
-
-			// We don't need to write to the file, so just open for reading.
-			$fp = fopen( $file, 'r' ); // @codingStandardsIgnoreLine.
-
-			// Pull only the first 8kiB of the file in.
-			$file_data = fread( $fp, 8192 ); // @codingStandardsIgnoreLine.
-
-			// PHP will close a file handle, but we are good citizens.
-			fclose( $fp ); // @codingStandardsIgnoreLine.
-
-			// Make sure we catch CR-only line endings.
-			$file_data = str_replace( "\r", "\n", $file_data );
-			$version   = '';
-
-			if ( preg_match( '/^[ \t\/*#@]*' . preg_quote( '@version', '/' ) . '(.*)$/mi', $file_data, $match ) && $match[1] ) {
-				$version = _cleanup_header_comment( $match[1] );
-			}
-
-			return $version;
+			return UM()->common()->theme()::scan_template_files( $template_path );
 		}
 
 		/**

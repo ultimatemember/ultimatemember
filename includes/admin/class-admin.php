@@ -1904,7 +1904,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 * Manual check templates versions.
 		 */
 		public function check_templates_version() {
-			UM()->common()->theme()->check_outdated_templates();
+			UM()->common()->theme()->flush_transient_templates_data();
 
 			$url = add_query_arg(
 				array(

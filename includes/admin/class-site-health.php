@@ -31,10 +31,14 @@ class Site_Health {
 	}
 
 	public function register_site_status_tests( $tests ) {
-		$tests['direct']['um_override_templates'] = array(
-			'label' => esc_html__( 'Are the Ultimate Member templates out of date?', 'ultimate-member' ),
-			'test'  => array( $this, 'override_templates_test' ),
-		);
+		$custom_templates = UM()->common()->theme()->get_custom_templates_list();
+
+		if ( ! empty( $custom_templates ) ) {
+			$tests['direct']['um_override_templates'] = array(
+				'label' => esc_html__( 'Are the Ultimate Member templates out of date?', 'ultimate-member' ),
+				'test'  => array( $this, 'override_templates_test' ),
+			);
+		}
 
 		return $tests;
 	}
@@ -55,9 +59,7 @@ class Site_Health {
 			'test'        => 'um_override_templates',
 		);
 
-		UM()->common()->theme()->check_outdated_templates();
-
-		if ( true === (bool) get_option( 'um_override_templates_outdated' ) ) {
+		if ( UM()->common()->theme()->is_outdated_template_exist() ) {
 			$result['label']          = __( 'Your custom templates are out of date', 'ultimate-member' );
 			$result['status']         = 'critical';
 			$result['badge']['color'] = 'red';
