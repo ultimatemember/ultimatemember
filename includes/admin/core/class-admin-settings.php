@@ -2205,34 +2205,23 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								),
 							),
 							'developers'         => array(
-								'title'  => __( 'Developers', 'ultimate-member' ),
-								'form_sections' => array(
-									'fields'   => array(
-										'title'       => __( 'Fields', 'ultimate-member' ),
-										'description' => __( 'Allows to manage fields settings.', 'ultimate-member' ),
-										'fields'      => array(
-											array(
-												'id'          => 'allowed_choice_callbacks',
-												'type'        => 'textarea',
-												'label'       => __( 'Allowed Choice Callbacks (Enter one PHP function per line)', 'ultimate-member' ),
-												'description' => __( 'This option lets you specify the choice callback functions to prevent anyone from using 3rd-party functions that may put your site at risk.', 'ultimate-member' ),
-											),
-										),
+								'title'       => __( 'Developers', 'ultimate-member' ),
+								'description' => __( 'This section allows you to manage settings that will be more developer-friendly. If you are not a developer, edit these settings at your own risk.', 'ultimate-member' ),
+								'fields'      => array(
+									array(
+										'id'          => 'allowed_choice_callbacks',
+										'type'        => 'textarea',
+										'label'       => __( 'Allowed Choice Callbacks (Enter one PHP function per line)', 'ultimate-member' ),
+										'description' => __( 'This option lets you specify the choice callback functions to prevent anyone from using 3rd-party functions that may put your site at risk.', 'ultimate-member' ),
 									),
-									'rest_api' => array(
-										'title'       => __( 'REST API', 'ultimate-member' ),
-										'description' => '',
-										'fields'      => array(
-											array(
-												'id'          => 'rest_api_version',
-												'type'        => 'select',
-												'label'       => __( 'Version', 'ultimate-member' ),
-												'description' => __( 'This controls the REST API version, we recommend to use the last version.', 'ultimate-member' ),
-												'options'     => array(
-													'1.0' => __( '1.0 version', 'ultimate-member' ),
-													'2.0' => __( '2.0 version', 'ultimate-member' ),
-												),
-											),
+									array(
+										'id'          => 'rest_api_version',
+										'type'        => 'select',
+										'label'       => __( 'Version', 'ultimate-member' ),
+										'description' => __( 'This controls the REST API version, we recommend to use the last version.', 'ultimate-member' ),
+										'options'     => array(
+											'1.0' => __( '1.0 version', 'ultimate-member' ),
+											'2.0' => __( '2.0 version', 'ultimate-member' ),
 										),
 									),
 								),
