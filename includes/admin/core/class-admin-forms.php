@@ -1154,7 +1154,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$button = '';
 			$slug   = str_replace( 'core_', '', $field_data['id'] );
 			if ( ! um_get_predefined_page_id( $slug ) || 'publish' !== get_post_status( um_get_predefined_page_id( $slug ) ) ) {
-				$button = '&nbsp;<a href="' . esc_url( add_query_arg( array( 'um_adm_action' => 'install_predefined_page', 'um_page_slug' => $slug ) ) ) . '" class="button button-primary">' . esc_html__( 'Create Default', 'ultimate-member' ) . '</a>';
+				$button = '&nbsp;<a href="' . esc_url( add_query_arg( array( 'um_adm_action' => 'install_predefined_page', 'um_page_slug' => $slug, '_wpnonce' => wp_create_nonce( 'install_predefined_page' ), ) ) ) . '" class="button button-primary">' . esc_html__( 'Create Default', 'ultimate-member' ) . '</a>';
 			}
 
 			$html = "$hidden<select $multiple $id_attr $name_attr $class_attr $data_attr>$options</select>$button";
@@ -1845,6 +1845,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$value = is_string( $value ) ? stripslashes( $value ) : $value;
 
 			return $value;
+		}
+
+		public function render_external_link( $data ) {
+			$defaults = array(
+				'url'  => '',
+				'html' => '',
+			);
+			$data     = wp_parse_args( $data, $defaults );
+			if ( empty( $data['url'] ) || empty( $data['html'] ) ) {
+				return '';
+			}
+			ob_start();
+			?>
+			<a target="_blank" href="<?php echo esc_url( $data['url'] ); ?>">
+				<?php echo esc_html( $data['html'] ); ?>
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="um-external-link-icon" aria-hidden="true" focusable="false"><path d="M19.5 4.5h-7V6h4.44l-5.97 5.97 1.06 1.06L18 7.06v4.44h1.5v-7Zm-13 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3H17v3a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h3V5.5h-3Z"></path></svg>
+			</a>
+			<?php
+			return ob_get_clean();
 		}
 	}
 }

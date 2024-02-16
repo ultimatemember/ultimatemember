@@ -18,7 +18,7 @@ if ( ! class_exists( 'um\common\Screen' ) ) {
 		 * Screen constructor.
 		 */
 		public function __construct() {
-			add_filter( 'body_class', array( &$this, 'remove_admin_bar' ), 1000, 1 );
+			add_filter( 'body_class', array( &$this, 'remove_admin_bar' ), 1000 );
 		}
 
 		/**

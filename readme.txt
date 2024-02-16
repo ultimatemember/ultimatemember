@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
 Tested up to: 6.4
-Stable tag: 2.8.2
+Stable tag: 2.8.3
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -165,6 +165,39 @@ No specific extensions are needed. But we highly recommended keep active these P
 = Important: =
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
+
+= 2.8.3: February 19, 2024 =
+
+* Enhancements:
+
+  - Added: Link to the Ultimate Member docs
+  - Tweak: Ultimate Member > Settings redesign. More details about setting up. Tooltips changed to descriptions.
+
+* Bugfixes:
+
+  - Fixed: Member directory queries to custom usermeta table properly escaped and validated
+  - Fixed: Member directory custom sorting when wp_usermeta table is used
+  - Fixed: aria-invalid attribute for the user description field
+  - Fixed: wp_kses protocols for email notifications content
+  - Fixed: PHP notice while registration form validation
+  - Fixed: Field validations (English letters, Alpha-numeric types)
+  - Fixed: Hidden buttons in the modal when uploading profile and cover photo
+  - Fixed: Theme updater log message
+  - Fixed: Search line shortcode layout
+  - Fixed: PHP notice while login form submission
+  - Fixed: Email notifications HTML layout
+  - Fixed: Default email notification body color
+  - Fixed: Ignore username slug when custom meta slug exists when parse user from query
+
+* Templates required update:
+
+  - email/notification_deletion.php
+  - email/notification_new_user.php
+  - email/notification_review.php
+  - email/welcome_email.php
+  - password-change.php
+
+* Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade
 
 = 2.8.2: January 15, 2024 =
 

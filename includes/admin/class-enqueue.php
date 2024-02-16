@@ -584,8 +584,8 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_enqueue_style( 'um_admin_roles' );
 		} elseif ( 'ultimate-member_page_um_options' === $hook ) {
 			// phpcs:ignore WordPress.Security.NonceVerification
-			if ( isset( $_GET['tab'], $_GET['section'] ) && 'advanced' === $_GET['tab'] && 'secure' === $_GET['section'] ) {
-				wp_register_script( 'um_admin_secure', $js_url . 'admin/secure' . $suffix . '.js', array( 'jquery', 'wp-i18n' ), UM_VERSION, true );
+			if ( isset( $_GET['tab'], $_GET['section'] ) && 'advanced' === $_GET['tab'] && 'security' === $_GET['section'] ) {
+				wp_register_script( 'um_admin_secure', $js_url . 'admin/security' . $suffix . '.js', array( 'jquery', 'wp-i18n' ), UM_VERSION, true );
 				wp_set_script_translations( 'um_admin_secure', 'ultimate-member' );
 				wp_enqueue_script( 'um_admin_secure' );
 			}

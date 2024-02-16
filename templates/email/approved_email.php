@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 			<div style="background: #eee;color: #444;padding: 12px 15px; border-radius: 3px;font-weight: bold;font-size: 16px;">Account Information</div>
 
-			<div style="padding: 10px 15px 0 15px;color: #333;"><span style="color:#999">Your account e-mail:</span> <span style="font-weight:bold">{email}</span></div>
+			<div style="padding: 10px 15px 0 15px;color: #333;"><span style="color:#999">Your account email:</span> <span style="font-weight:bold">{email}</span></div>
 			<div style="padding: 10px 15px 0 15px;color: #333;"><span style="color:#999">Your account username:</span> <span style="font-weight:bold">{username}</span></div>
 			<div style="padding: 10px 15px 0 15px;color: #333;"><span style="color:#999">Set your password:</span> <span style="font-weight:bold"><a href="{password_reset_link}" style="color: #3ba1da;text-decoration: none;">{password_reset_link}</a></span></div>
 

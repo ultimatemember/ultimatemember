@@ -70,7 +70,7 @@
 			</td>
 			<td class="last t">
 				<a href="<?php echo esc_url( admin_url( 'users.php?um_status=awaiting_email_confirmation' ) ); ?>" class="warning">
-					<?php _e( 'Awaiting E-mail Confirmation', 'ultimate-member' ); ?>
+					<?php _e( 'Awaiting Email Confirmation', 'ultimate-member' ); ?>
 				</a>
 			</td>
 		</tr>

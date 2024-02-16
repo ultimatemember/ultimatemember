@@ -65,6 +65,13 @@
   display: block;
   margin: 0 0 5px 0; }
 
+.um-external-link-icon {
+  width: 1em;
+  height: 1em;
+  margin: 0;
+  vertical-align: middle;
+  fill: currentcolor; }
+
 .um_admin_fonticon_wrapper {
   display: flex;
   flex-direction: row;

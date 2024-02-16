@@ -273,7 +273,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				),
 
 				'tel' => array(
-					'name' => __( 'Telephone Box', 'ultimate-member' ),
+					'name' => __( 'Telephone', 'ultimate-member' ),
 					'col1' => array('_title','_metakey','_help','_default','_min_chars','_visibility'),
 					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate','_max_chars'),
 					'col3' => array('_required','_editable','_icon'),
@@ -782,10 +782,10 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				),
 
 				'username' => array(
-					'title' => __('Username or E-mail','ultimate-member'),
+					'title' => __('Username or Email','ultimate-member'),
 					'metakey' => 'username',
 					'type' => 'text',
-					'label' => __('Username or E-mail','ultimate-member'),
+					'label' => __('Username or Email','ultimate-member'),
 					'required' => 1,
 					'public' => 1,
 					'editable' => false,
@@ -871,10 +871,10 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				),
 
 				'user_email' => array(
-					'title' => __('E-mail Address','ultimate-member'),
+					'title' => __('Email Address','ultimate-member'),
 					'metakey' => 'user_email',
 					'type' => 'text',
-					'label' => __('E-mail Address','ultimate-member'),
+					'label' => __('Email Address','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
 					'validate' => 'unique_email',
@@ -882,10 +882,10 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				),
 
 				'secondary_user_email' => array(
-					'title' => __('Secondary E-mail Address','ultimate-member'),
+					'title' => __('Secondary Email Address','ultimate-member'),
 					'metakey' => 'secondary_user_email',
 					'type' => 'text',
-					'label' => __('Secondary E-mail Address','ultimate-member'),
+					'label' => __('Secondary Email Address','ultimate-member'),
 					'required' => 0,
 					'public' => 1,
 					'editable' => true,
@@ -1271,7 +1271,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				),
 
 				'username_b' => array(
-					'title' => __('Username or E-mail','ultimate-member'),
+					'title' => __('Username or Email','ultimate-member'),
 					'metakey' => 'username_b',
 					'type' => 'text',
 					'placeholder' => __('Enter your username or email','ultimate-member'),
@@ -1558,11 +1558,11 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$array['skype']                    = __('Skype ID','ultimate-member');
 			$array['soundcloud']               = __( 'SoundCloud Profile', 'ultimate-member' );
 			$array['twitter_url']              = __( 'X (formerly Twitter) URL', 'ultimate-member' );
-			$array['is_email']                 = __('E-mail( Not Unique )','ultimate-member');
-			$array['unique_email']             = __('Unique E-mail','ultimate-member');
+			$array['is_email']                 = __('Email( Not Unique )','ultimate-member');
+			$array['unique_email']             = __('Unique Email','ultimate-member');
 			$array['unique_value']             = __('Unique Metakey value','ultimate-member');
 			$array['unique_username']          = __('Unique Username','ultimate-member');
-			$array['unique_username_or_email'] = __('Unique Username/E-mail','ultimate-member');
+			$array['unique_username_or_email'] = __('Unique Username/Email','ultimate-member');
 			$array['url']                      = __('Website URL','ultimate-member');
 			$array['youtube_url']              = __('YouTube Profile','ultimate-member');
 			$array['youtube_video']            = __('YouTube Video','ultimate-member');

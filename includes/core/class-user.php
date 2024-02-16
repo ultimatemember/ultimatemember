@@ -1301,7 +1301,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					}
 
 					if ( $this->usermeta['account_status'][0] == 'awaiting_email_confirmation' ) {
-						$this->usermeta['account_status_name'][0] = __( 'Awaiting E-mail Confirmation', 'ultimate-member' );
+						$this->usermeta['account_status_name'][0] = __( 'Awaiting Email Confirmation', 'ultimate-member' );
 					}
 
 					if ( $this->usermeta['account_status'][0] == 'awaiting_admin_review' ) {
@@ -1676,7 +1676,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 
 		/**
-		 * This method approves a user membership and sends them an optional welcome/approval e-mail.
+		 * This method approves a user membership and sends them an optional welcome/approval email.
 		 *
 		 * @usage <?php UM()->user()->approve(); ?>
 		 *
@@ -1758,7 +1758,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 
 		/**
-		 * This method puts a user under manual review by administrator and sends them an optional e-mail.
+		 * This method puts a user under manual review by administrator and sends them an optional email.
 		 *
 		 * @usage <?php UM()->user()->pending(); ?>
 		 *
@@ -1784,7 +1784,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 
 		/**
-		 * This method rejects a user membership and sends them an optional e-mail.
+		 * This method rejects a user membership and sends them an optional email.
 		 *
 		 * @usage <?php UM()->user()->reject(); ?>
 		 *
@@ -1811,7 +1811,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 
 		/**
-		 * This method deactivates a user membership and sends them an optional e-mail.
+		 * This method deactivates a user membership and sends them an optional email.
 		 *
 		 * @usage <?php UM()->user()->deactivate(); ?>
 		 *

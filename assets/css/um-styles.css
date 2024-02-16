@@ -898,12 +898,32 @@ small.um-max-filesize span{
 
 .um-search-area .um-search-field {
 	width: 100%;
+	margin: 0;
+	padding-left: 25px;
+}
+
+.rtl .um-search-area .um-search-field {
+	padding-right: 25px;
+	padding-left: initial;
 }
 
 .um-search-area .um-search-icon {
 	position: absolute;
-	top: 7px;
-	right: 10px;
+	height: 100%;
+	left: 6px;
+	top: 0;
+}
+
+.rtl .um-search-area .um-search-icon {
+	right: 6px;
+	left: initial;
+}
+
+.um-faicon-search:before {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
 }
 
 /*

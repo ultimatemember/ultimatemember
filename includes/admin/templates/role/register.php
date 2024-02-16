@@ -76,8 +76,8 @@
 			array(
 				'id'		=> '_um_url_email_activate',
 				'type'		=> 'text',
-				'label'    		=> __( 'URL redirect after e-mail activation', 'ultimate-member' ),
-				'tooltip' 	=> __( 'If you want users to go to a specific page other than login page after e-mail activation, enter the URL here.', 'ultimate-member' ),
+				'label'    		=> __( 'URL redirect after email activation', 'ultimate-member' ),
+				'tooltip' 	=> __( 'If you want users to go to a specific page other than login page after email activation, enter the URL here.', 'ultimate-member' ),
 				'value' 		=> ! empty( $role['_um_url_email_activate'] ) ? __( $role['_um_url_email_activate'], 'ultimate-member' ) : '',
 				'conditional'	=> array( '_um_status', '=', 'checkmail' ),
 			),
