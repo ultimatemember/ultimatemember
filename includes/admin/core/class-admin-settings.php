@@ -2087,8 +2087,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'title'    => __( 'Advanced', 'ultimate-member' ),
 						'sections' => array(
 							''                   => array(
-								'title'  => __( 'General', 'ultimate-member' ),
-								'fields' => array(
+								'title'       => __( 'General', 'ultimate-member' ),
+								'description' => sprintf( __( 'Advanced settings section is designed to help you fine-tune your website or add extra features. <a href="%s" target="_blank">Learn more about advanced settings section.</a>.', 'ultimate-member' ), 'https://docs.ultimatemember.com/article/1902-advanced-tab' ),
+								'fields'      => array(
 									array(
 										'id'             => 'form_asterisk',
 										'type'           => 'checkbox',
