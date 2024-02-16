@@ -78,7 +78,7 @@ function um_wp_form_errors_hook_logincheck( $user ) {
 				$error = new WP_Error( $status, __( 'Your account has not been approved yet.', 'ultimate-member' ) );
 				break;
 			case 'awaiting_email_confirmation':
-				$error = new WP_Error( $status, __( 'Your account is awaiting e-mail verification.', 'ultimate-member' ) );
+				$error = new WP_Error( $status, __( 'Your account is awaiting email verification.', 'ultimate-member' ) );
 				break;
 			case 'rejected':
 				$error = new WP_Error( $status, __( 'Your membership request has been rejected.', 'ultimate-member' ) );

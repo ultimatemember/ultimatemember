@@ -1099,7 +1099,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'sections' => array(
 							''        => array(
 								'title'       => __( 'Pages', 'ultimate-member' ),
-								'description' => __( 'This section enables you to assign a page to one of the core elements necessary for the plugin\'s proper function. The plugin automatically creates and configures the required pages upon installation.<br />You only need to use this tab if you accidentally deleted pages that were automatically created during the initial plugin activation.', 'ultimate-member' ),
+								'description' => sprintf( __( 'This section enables you to assign a page to one of the core elements necessary for the plugin\'s proper function. The plugin automatically creates and configures the required pages upon installation.<br />You only need to use this tab if you accidentally deleted pages that were automatically created during the initial plugin activation. <a href="%s" target="_blank">Learn more about manually creating pages</a>.', 'ultimate-member' ), 'https://docs.ultimatemember.com/article/1903-creating-plugin-core-pages-manually' ),
 								'fields'      => $general_pages_fields,
 							),
 							'users'   => array(
@@ -1562,7 +1562,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'id'          => 'blocked_emails',
 												'type'        => 'textarea',
 												'label'       => __( 'Blocked Email Addresses (Enter one email per line)', 'ultimate-member' ),
-												'description' => __( 'This will block the specified e-mail addresses from being able to sign up or sign in to your site. To block an entire domain, use something like `*@domain.com`.', 'ultimate-member' ),
+												'description' => __( 'This will block the specified email addresses from being able to sign up or sign in to your site. To block an entire domain, use something like `*@domain.com`.', 'ultimate-member' ),
 											),
 											array(
 												'id'          => 'blocked_words',
@@ -1586,7 +1586,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									array(
 										'id'          => 'admin_email',
 										'type'        => 'text',
-										'label'       => __( 'Admin E-mail Address', 'ultimate-member' ),
+										'label'       => __( 'Admin Email Address', 'ultimate-member' ),
 										'description' => __( 'e.g. admin@companyname.com.', 'ultimate-member' ),
 									),
 									array(
@@ -1611,8 +1611,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'id'             => 'email_html',
 										'type'           => 'checkbox',
 										'label'          => __( 'Content type', 'ultimate-member' ),
-										'checkbox_label' => __( 'Enable HTML for E-mails', 'ultimate-member' ),
-										'description'    => __( 'If you plan use e-mails with HTML, please make sure that this option is enabled. Otherwise, HTML will be displayed as plain text.', 'ultimate-member' ),
+										'checkbox_label' => __( 'Enable HTML for Emails', 'ultimate-member' ),
+										'description'    => __( 'If you plan use emails with HTML, please make sure that this option is enabled. Otherwise, HTML will be displayed as plain text.', 'ultimate-member' ),
 									),
 								),
 							),
@@ -2193,7 +2193,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								'form_sections' => array(
 									'developers' => array(
 										'title'       => __( 'Developers', 'ultimate-member' ),
-										'description' => __( 'This section allows you to manage settings that will be more developer-friendly. If you are not a developer, edit these settings at your own risk.', 'ultimate-member' ),
+										'description' => __( 'This section is designed to modify settings that are tailored for developers. If you are not a developer, please be cautious when changing these settings.', 'ultimate-member' ),
 										'fields'      => array(
 											array(
 												'id'          => 'allowed_choice_callbacks',

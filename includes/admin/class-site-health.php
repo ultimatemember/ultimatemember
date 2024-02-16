@@ -348,7 +348,7 @@ class Site_Health {
 		}
 
 		$account_settings['um-account_email'] = array(
-			'label' => __( 'Allow users to change e-mail', 'ultimate-member' ),
+			'label' => __( 'Allow users to change email', 'ultimate-member' ),
 			'value' => UM()->options()->get( 'account_email' ) ? $labels['yes'] : $labels['no'],
 		);
 
@@ -543,7 +543,7 @@ class Site_Health {
 		// Email settings
 		$email_settings = array(
 			'um-admin_email'    => array(
-				'label' => __( 'Admin E-mail Address', 'ultimate-member' ),
+				'label' => __( 'Admin Email Address', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'admin_email' ),
 			),
 			'um-mail_from'      => array(
@@ -555,7 +555,7 @@ class Site_Health {
 				'value' => UM()->options()->get( 'mail_from_addr' ),
 			),
 			'um-email_html'     => array(
-				'label' => __( 'Use HTML for E-mails?', 'ultimate-member' ),
+				'label' => __( 'Use HTML for Emails?', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'email_html' ) ? $labels['yes'] : $labels['no'],
 			),
 		);
@@ -1420,7 +1420,7 @@ class Site_Health {
 						$info[ 'ultimate-member-' . $key ]['fields'],
 						array(
 							'um-url_email_activate' => array(
-								'label' => __( 'URL redirect after e-mail activation', 'ultimate-member' ),
+								'label' => __( 'URL redirect after email activation', 'ultimate-member' ),
 								'value' => $rolemeta['_um_url_email_activate'],
 							),
 						)
@@ -1846,7 +1846,7 @@ class Site_Health {
 			'first_name'           => __( 'First Name', 'ultimate-member' ),
 			'last_name'            => __( 'Last Name', 'ultimate-member' ),
 			'nickname'             => __( 'Nickname', 'ultimate-member' ),
-			'secondary_user_email' => __( 'Secondary E-mail Address', 'ultimate-member' ),
+			'secondary_user_email' => __( 'Secondary Email Address', 'ultimate-member' ),
 			'description'          => __( 'Biography', 'ultimate-member' ),
 			'phone_number'         => __( 'Phone Number', 'ultimate-member' ),
 			'mobile_number'        => __( 'Mobile Number', 'ultimate-member' ),

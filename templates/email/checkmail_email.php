@@ -1,7 +1,7 @@
 <?php
 /**
  * Template for the "Account Activation Email".
- * Whether to send the user an email when his account needs e-mail activation.
+ * Whether to send the user an email when his account needs email activation.
  *
  * This template can be overridden by copying it to {your-theme}/ultimate-member/email/checkmail_email.php
  *

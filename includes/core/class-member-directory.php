@@ -425,7 +425,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				'first_name'            => __( 'First Name', 'ultimate-member' ),
 				'last_name'             => __( 'Last Name', 'ultimate-member' ),
 				'nickname'              => __( 'Nickname', 'ultimate-member' ),
-				'secondary_user_email'  => __( 'Secondary E-mail Address', 'ultimate-member' ),
+				'secondary_user_email'  => __( 'Secondary Email Address', 'ultimate-member' ),
 				'description'           => __( 'Biography', 'ultimate-member' ),
 				'phone_number'          => __( 'Phone Number', 'ultimate-member' ),
 				'mobile_number'         => __( 'Mobile Number', 'ultimate-member' ),

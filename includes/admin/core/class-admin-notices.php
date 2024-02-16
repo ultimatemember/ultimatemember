@@ -779,7 +779,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				<p>
 					<?php
 					// translators: %s child-theme article link.
-					echo wp_kses( sprintf( __( 'We highly recommend using a <a href="%s">child-theme</a> for Ultimate Member customization, which hasn\'t dependencies with the official themes repo, so your custom files cannot be rewritten after a theme upgrade.<br />Otherwise, the customization files may be deleted after every theme upgrade.', 'ultimate-member' ), 'https://developer.wordpress.org/themes/advanced-topics/child-themes/' ), UM()->get_allowed_html( 'admin_notice' ) );
+					echo wp_kses( sprintf( __( 'We recommend using a <a href="%s">child-theme</a> for Ultimate Member customization. Unlike official theme repositories, child themes don\'t have dependencies that could lead to your custom files being overwritten during a theme upgrade.<br />Without a child theme, your customization files may be deleted after every theme update.', 'ultimate-member' ), 'https://developer.wordpress.org/themes/advanced-topics/child-themes/' ), UM()->get_allowed_html( 'admin_notice' ) );
 					?>
 				</p>
 
