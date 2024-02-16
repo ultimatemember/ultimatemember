@@ -256,7 +256,7 @@ $screen_id = $current_screen->id; ?>
 					<div id="titlediv">
 						<div id="titlewrap">
 								<label for="title" class="screen-reader-text"><?php esc_html_e( 'Title', 'ultimate-member' ); ?></label>
-								<input type="text" name="um_restriction_rules[title]" placeholder="<?php esc_html_e( 'Enter Title Here', 'ultimate-member' ); ?>" id="title" value="<?php echo isset( $data['title'] ) ? esc_attr( $data['title'] ) : ''; ?>" />
+								<input type="text" name="um_restriction_rules[title]" required placeholder="<?php esc_html_e( 'Enter Title Here', 'ultimate-member' ); ?>" id="title" value="<?php echo isset( $data['title'] ) ? esc_attr( $data['title'] ) : ''; ?>" />
 								<br><br><textarea style="width: 100%;" name="um_restriction_rules[_um_description]" id="description"><?php echo isset( $data['_um_description'] ) ? esc_attr( $data['_um_description'] ) : esc_html__( 'Restriction Rule Description', 'ultimate-member' ); ?></textarea>
 						</div>
 					</div>

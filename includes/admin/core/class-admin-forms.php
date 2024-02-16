@@ -448,24 +448,26 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 *
 		 * @return bool|string
 		 */
-		function render_number( $field_data ) {
+		public function render_number( $field_data ) {
 
 			if ( empty( $field_data['id'] ) ) {
 				return false;
 			}
 
-			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
+			$id      = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
 			$id_attr = ' id="' . esc_attr( $id ) . '" ';
 
-			$class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
-			$class .= ! empty( $field_data['size'] ) ? 'um-' . $field_data['size'] . '-field' : 'um-long-field';
+			$class      = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
+			$class     .= ! empty( $field_data['size'] ) ? 'um-' . $field_data['size'] . '-field' : 'um-long-field';
 			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
+			$min        = isset( $field_data['min'] ) ? ' min="' . esc_attr( $field_data['min'] ) . '" ' : '';
+			$max        = isset( $field_data['max'] ) ? ' max="' . esc_attr( $field_data['max'] ) . '" ' : '';
 
 			$data = array(
-				'field_id' => $field_data['id']
+				'field_id' => $field_data['id'],
 			);
 
-			if ( ! empty( $field_data['attr'] ) && is_array( $field_data['attr'] ) ){
+			if ( ! empty( $field_data['attr'] ) && is_array( $field_data['attr'] ) ) {
 				$data = array_merge( $data, $field_data['attr'] );
 			}
 
@@ -476,14 +478,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$placeholder_attr = ! empty( $field_data['placeholder'] ) ? ' placeholder="' . esc_attr( $field_data['placeholder'] ) . '"' : '';
 
-			$name = $field_data['id'];
-			$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
+			$name      = $field_data['id'];
+			$name      = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
 			$name_attr = ' name="' . $name . '" ';
 
-			$value = $this->get_field_value( $field_data );
+			$value      = $this->get_field_value( $field_data );
 			$value_attr = ' value="' . esc_attr( $value ) . '" ';
 
-			$html = "<input type=\"number\" $id_attr $class_attr $name_attr $data_attr $value_attr $placeholder_attr />";
+			$html = "<input type=\"number\" $min $max $id_attr $class_attr $name_attr $data_attr $value_attr $placeholder_attr />";
 
 			return $html;
 		}

@@ -21,7 +21,8 @@ $rule = $object['data']; ?>
 			'fields'    => array(
 				array(
 					'id'      => '_um_priority',
-					'type'    => 'text',
+					'type'    => 'number',
+					'min'     => 0,
 					'label'   => __( 'Rule Priority', 'ultimate-member' ),
 					'tooltip' => __( 'The higher the number, the higher the priority', 'ultimate-member' ),
 					'value'   => ! empty( $rule['_um_priority'] ) ? $rule['_um_priority'] : '',
