@@ -1626,7 +1626,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								'form_sections' => array(
 									'template'      => array(
 										'title'       => __( 'Template', 'ultimate-member' ),
-										'description' => __( 'This section allows you to customize the user profile template and size.', 'ultimate-member' ),
+										'description' => sprintf( __( 'This section allows you to customize the user profile template and size. <a href="%s" target="_blank">Learn more about custom profile template creation</a>.', 'ultimate-member' ), 'https://docs.ultimatemember.com/article/120-adding-your-custom-profile-templates' ),
 										'fields'      => array(
 											array(
 												'id'          => 'profile_template',
@@ -2118,7 +2118,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									'override_templates' => array(
 										'title'       => __( 'Override templates', 'ultimate-member' ),
 										// translators: %s: Link to the docs article.
-										'description' => sprintf( __( 'You can find a list of template file changes with each release. You can check the latest templates and their statuses, and see if they\'re outdated or updated. You may get more details about overriding templates <a href="%s" target="_blank">here</a>.', 'ultimate-member' ), 'https://docs.ultimatemember.com/article/1516-templates-map' ), /** @noinspection HtmlUnknownTarget */
+										'description' => sprintf( __( 'You can find a list of template file changes with each release. <a href="%s" target="_blank">Learn more about overriding templates</a>.<br />You can check the latest templates and their statuses, and see if they\'re outdated or updated. <a href="%s" target="_blank">Learn more about fixing outdated templates</a>.', 'ultimate-member' ), 'https://docs.ultimatemember.com/article/1516-templates-map', 'https://docs.ultimatemember.com/article/1847-fixing-outdated-ultimate-member-templates' ), /** @noinspection HtmlUnknownTarget */
 										'fields'      => array(
 											array(
 												'id'   => 'override_templates_list_table',
