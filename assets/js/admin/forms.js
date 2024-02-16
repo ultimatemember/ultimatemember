@@ -1227,10 +1227,15 @@ jQuery(document).ready( function() {
 		var wrapper  = jQuery( this ).closest( '.um-users-conditions-row' );
 		var option   = jQuery( this ).find( ':selected' ).val();
 		var original = wrapper.find( '.um-users-conditions' ).data( 'original' );
+		var selected_attr = wrapper.find( '.um-users-conditions' ).data( 'selected' );
+
 		if ( 'none' === option ) {
 			wrapper.find( 'select' ).removeAttr( 'name' );
 			wrapper.find( '.um-users-conditions-responce' ).removeAttr( 'multiple' );
 			wrapper.find( '.um-users-conditions-responce' ).html( '' );
+			if ( selected_attr ) {
+				jQuery( '.um-users-conditions #um_option_' + selected_attr ).removeAttr( 'disabled' );
+			}
 		} else {
 			jQuery.ajax(
 				{
@@ -1249,10 +1254,17 @@ jQuery(document).ready( function() {
 						} else {
 							wrapper.find( '.um-users-conditions-responce' ).removeAttr( 'multiple' );
 						}
+						if ( selected_attr ) {
+							jQuery( '.um-users-conditions #um_option_' + selected_attr ).removeAttr( 'disabled' );
+						}
 						wrapper.find( '.um-users-conditions' ).attr( 'name', original + '[' + option + ']' );
 						wrapper.find( '.um-users-conditions-compare' ).attr( 'name', original + '[' + option + '][compare]' );
 						wrapper.find( '.um-users-conditions-responce' ).attr( 'name', original + '[' + option + '][ids][]' );
 						wrapper.find( '.um-users-conditions-responce' ).html( response.data );
+
+						jQuery( '.um-users-conditions-wrap .um-users-conditions #um_option_' + option ).attr( 'disabled', 'disabled' );
+						wrapper.find( '#um_option_' + option ).removeAttr( 'disabled' );
+						jQuery( '.um-users-conditions-wrap' )
 					},
 					error: function( error ) {
 						console.log( error )
@@ -1265,6 +1277,11 @@ jQuery(document).ready( function() {
 	jQuery( '.um-users-conditions-wrap' ).on( 'click', '.add-row', function()  {
 		var wrapper = jQuery( this ).closest( '.um-users-conditions-wrap' );
 		var el      = wrapper.find( '.um-users-conditions-row:first' ).clone();
+		var limit   = wrapper.attr( 'data-count' ) - 1;
+		var count   = wrapper.find( '.um-users-conditions-row' ).length;
+		if ( parseInt( count ) === parseInt( limit ) ) {
+			return;
+		}
 
 		el.find( '.um-users-conditions-responce option[value!="0"]' ).remove();
 		el.find( '.um-users-conditions-responce option' ).html( '' );
@@ -1273,12 +1290,30 @@ jQuery(document).ready( function() {
 		el.find( '.um-users-conditions-responce' ).removeAttr( 'multiple' );
 		el.find( '.um-users-conditions-compare option:first' ).prop( 'selected', true );
 
+		jQuery( '.um-users-conditions' ).each( function (){
+			var selected = jQuery( this ).find( 'option:selected' ).val();
+			if ( 'none' !== selected ) {
+				el.find( '#um_option_' + selected ).attr( 'disabled', 'disabled' );
+			}
+		});
+
 		wrapper.append( el );
+
+		if ( parseInt( count ) + 1 === parseInt( limit ) ) {
+			jQuery( '.conditions-row.add-row' ).hide();
+		}
 	});
 
 	jQuery( '.um-users-conditions-wrap' ).on( 'click', '.remove-row', function()  {
-		var wrapper = jQuery( this ).closest( '.um-users-conditions-wrap' );
-		var row     = jQuery( this ).closest( '.um-users-conditions-row' );
+		var wrapper  = jQuery( this ).closest( '.um-users-conditions-wrap' );
+		var row      = jQuery( this ).closest( '.um-users-conditions-row' );
+		var limit    = wrapper.attr( 'data-count' ) - 1;
+		var count    = wrapper.find( '.um-users-conditions-row' ).length;
+		var selected = row.find( '.um-users-conditions option:selected' ).val();
+		if ( 'none' !== selected ) {
+			jQuery( '.um-users-conditions' ).find( '#um_option_' + selected ).removeAttr( 'disabled' );
+		}
+
 		if ( wrapper.find( '.um-users-conditions-row' ).length > 1 ) {
 			row.remove();
 		} else {
@@ -1286,6 +1321,10 @@ jQuery(document).ready( function() {
 			wrapper.find( '.um-users-conditions-row' ).find( 'select' ).removeAttr( 'disabled' );
 			wrapper.find( '.um-users-conditions-responce option[value!="0"]' ).remove();
 			wrapper.find( '.um-users-conditions-responce option' ).html( '' );
+		}
+
+		if ( parseInt( count ) === parseInt( limit ) ) {
+			jQuery( '.conditions-row.add-row' ).show();
 		}
 	});
 });

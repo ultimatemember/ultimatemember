@@ -2013,12 +2013,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$original_name = ' data-original="' . $name . '[' . $field_data_id . ']" ';
 
-			$scope = array(
+			$scope       = array(
 				'none' => __( 'Select rule object', 'ultimate-member' ),
 				'auth' => __( 'Authentification', 'ultimate-member' ),
 				'user' => __( 'User', 'ultimate-member' ),
 				'role' => __( 'User Role', 'ultimate-member' ),
 			);
+			$scope_count = count( $scope );
 
 			$compare = array(
 				'equal'    => __( 'equal', 'ultimate-member' ),
@@ -2027,19 +2028,27 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$value = $this->get_field_value( $field_data );
 
-			$html = '<div class="um-users-conditions-wrap">';
+			$html = '<div class="um-users-conditions-wrap" data-count="' . $scope_count . '">';
 			if ( ! empty( $value[ $field_data_id ] ) ) {
+				foreach ( $value[ $field_data_id ] as $rule_key => $rule ) {
+					$selected_array[] = $rule_key;
+				}
 
 				foreach ( $value[ $field_data_id ] as $rule_key => $rule ) {
 					$name_attr          = ' name="' . $name . '[' . $field_data_id . '][' . $rule_key . ']" ';
 					$name_attr_compare  = ' name="' . $name . '[' . $field_data_id . '][' . $rule_key . '][compare]" ';
 					$name_attr_responce = ' name="' . $name . '[' . $field_data_id . '][' . $rule_key . '][ids][]" ';
+					$selected           = ' data-selected="' . $rule_key . '" ';
 
 					$html .= '<div class="um-users-conditions-row">';
 
-					$html .= '<select ' . $original_name . $class_attr . $id_attr . $name_attr . $data_attr . '>';
+					$html .= '<select ' . $selected . $original_name . $class_attr . $id_attr . $name_attr . $data_attr . '>';
 					foreach ( $scope as $key => $label ) {
-						$html .= '<option value="' . $key . '" ' . selected( $key === $rule_key, true, false ) . '>' . $label . '</option>';
+						$disabled = '';
+						if ( in_array( $key, $selected_array, true ) && $rule_key !== $key ) {
+							$disabled = ' disabled="disabled" ';
+						}
+						$html .= '<option id="um_option_' . $key . '" value="' . $key . '" ' . selected( $key === $rule_key, true, false ) . $disabled . '>' . $label . '</option>';
 					}
 					$html .= '</select>';
 
@@ -2069,7 +2078,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 				$html .= '<select ' . $original_name . $class_attr . $id_attr . $name_attr . $data_attr . '>';
 				foreach ( $scope as $key => $label ) {
-					$html .= '<option value="' . $key . '">' . $label . '</option>';
+					$html .= '<option id="um_option_' . $key . '" value="' . $key . '">' . $label . '</option>';
 				}
 				$html .= '</select>';
 
@@ -2109,7 +2118,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					);
 
 					foreach ( $users as $user ) {
-						$name      = '' !== $user->display_name ? $user->display_name : $user->user_login;
+						$name                 = '' !== $user->display_name ? $user->display_name : $user->user_login;
 						$options[ $user->ID ] = $name;
 					}
 					break;
