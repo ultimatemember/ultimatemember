@@ -1899,6 +1899,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$entity = $value[ $field_data_id ];
 
 				foreach ( $entity as $entity_key => $ids ) {
+					if ( empty( $ids ) ) {
+						$ids = array();
+					}
 					if ( 'site' !== $entity_key ) {
 						$entities = $this->get_entites( $entity_key );
 					}
@@ -1922,7 +1925,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					}
 
 					$multiple = '';
-					if ( is_array( $ids ) ) {
+					if ( is_array( $ids ) && ! empty( $ids ) ) {
 						$multiple = ' multiple="multiple" ';
 					}
 					$html .= '<select ' . $original_name . $multiple . $id_attr_responce . $name_attr_responce . $class_attr_responce . $data_attr . $disabled . '>';
@@ -1937,8 +1940,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					}
 					$html .= '</select>';
 
-					$html .= '<span title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="conditions-row add-row">+</span>';
-					$html .= '<span title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="conditions-row remove-row">-</span>';
+					$html .= '<button title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="conditions-row add-row">+</button>';
+					$html .= '<button title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="conditions-row remove-row">-</button>';
 					$html .= '</div>';
 				}
 			} else {
@@ -1954,8 +1957,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$html .= '<option value="0"></option>';
 				$html .= '</select>';
 
-				$html .= '<span title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="conditions-row add-row">+</span>';
-				$html .= '<span title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="conditions-row remove-row">-</span>';
+				$html .= '<button title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="conditions-row add-row">+</button>';
+				$html .= '<button disabled title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="conditions-row remove-row">-</button>';
 				$html .= '</div>';
 			}
 			$html .= '</div>';
@@ -2071,8 +2074,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					}
 					$html .= '</select>';
 
-					$html .= '<span title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="conditions-row add-row">+</span>';
-					$html .= '<span title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="conditions-row remove-row">-</span>';
+					$html .= '<button title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="conditions-row add-row">+</button>';
+					$html .= '<button title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="conditions-row remove-row">-</button>';
 					$html .= '</div>';
 				}
 			} else {
@@ -2094,8 +2097,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$html .= '<option value="0"></option>';
 				$html .= '</select>';
 
-				$html .= '<span title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="conditions-row add-row">+</span>';
-				$html .= '<span title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="conditions-row remove-row">-</span>';
+				$html .= '<button title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="conditions-row add-row">+</button>';
+				$html .= '<button disabled title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="conditions-row remove-row">-</button>';
 				$html .= '</div>';
 			}
 			$html .= '</div>';
