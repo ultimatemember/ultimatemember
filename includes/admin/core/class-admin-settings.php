@@ -2090,7 +2090,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'sections' => array(
 							''                   => array(
 								'title'       => __( 'General', 'ultimate-member' ),
-								'description' => sprintf( __( 'Advanced settings section is designed to help you fine-tune your website or add extra features. <a href="%s" target="_blank">Learn more about advanced settings section.</a>.', 'ultimate-member' ), 'https://docs.ultimatemember.com/article/1902-advanced-tab' ),
+								'description' => sprintf( __( 'Advanced settings section is designed to help you fine-tune your website or add extra features. <a href="%s" target="_blank">Learn more about advanced settings section</a>.', 'ultimate-member' ), 'https://docs.ultimatemember.com/article/1902-advanced-tab' ),
 								'fields'      => array(
 									array(
 										'id'             => 'form_asterisk',
@@ -2207,7 +2207,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 											array(
 												'id'          => 'rest_api_version',
 												'type'        => 'select',
-												'label'       => __( 'Version', 'ultimate-member' ),
+												'label'       => __( 'REST API Version', 'ultimate-member' ),
 												'description' => __( 'This controls the REST API version, we recommend to use the last version.', 'ultimate-member' ),
 												'options'     => array(
 													'1.0' => __( '1.0 version', 'ultimate-member' ),
@@ -2233,7 +2233,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							),
 						),
 					),
-					'install_info' => array(
+					'system_info' => array(
 						'title' => __( 'System info', 'ultimate-member' ),
 						'link'  => add_query_arg( array( 'tab' => 'debug' ), admin_url( 'site-health.php' ) ),
 					),
