@@ -895,16 +895,16 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				}
 
 				$metakeys = get_option( 'um_usermeta_fields', array() );
-				if ( in_array( $sortby, $metakeys, true ) ) {
-					$this->joins[]   = $wpdb->prepare( "LEFT JOIN {$wpdb->prefix}um_metadata umm_sort ON ( umm_sort.user_id = u.ID AND umm_sort.um_key = %s )", $sortby );
-					$order           = esc_sql( $order );
-					$order           = in_array( strtoupper( $order ), array( 'ASC', 'DESC' ), true ) ? $order : 'ASC';
-					$this->sql_order = " ORDER BY CAST( umm_sort.um_value AS CHAR ) {$order} ";
-				} elseif ( in_array( $sortby, $this->core_users_fields, true ) ) {
+				if ( in_array( $sortby, $this->core_users_fields, true ) ) {
 					$sortby          = esc_sql( $sortby );
 					$order           = esc_sql( $order );
 					$order           = in_array( strtoupper( $order ), array( 'ASC', 'DESC' ), true ) ? $order : 'ASC';
 					$this->sql_order = " ORDER BY u.{$sortby} {$order} ";
+				} elseif ( in_array( $sortby, $metakeys, true ) ) {
+					$this->joins[]   = $wpdb->prepare( "LEFT JOIN {$wpdb->prefix}um_metadata umm_sort ON ( umm_sort.user_id = u.ID AND umm_sort.um_key = %s )", $sortby );
+					$order           = esc_sql( $order );
+					$order           = in_array( strtoupper( $order ), array( 'ASC', 'DESC' ), true ) ? $order : 'ASC';
+					$this->sql_order = " ORDER BY CAST( umm_sort.um_value AS CHAR ) {$order} ";
 				}
 			}
 
