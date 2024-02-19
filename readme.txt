@@ -172,6 +172,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
   - New UI
 
+= 2.8.4: March xx, 2024 =
+
+
 = 2.8.3: February 19, 2024 =
 
 * Enhancements:
