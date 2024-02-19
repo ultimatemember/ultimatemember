@@ -2281,17 +2281,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE ) {
 				if ( UM()->options()->get( 'enable_no_conflict_avatar' ) ) {
-					foreach ( $this->settings_structure['appearance']['sections']['']['fields'] as $field_k => $field ) {
-						if ( 'default_avatar' === $field['id'] || 'disable_profile_photo_upload' === $field['id'] || 'profile_photosize' === $field['id'] ) {
-							unset( $this->settings_structure['appearance']['sections']['']['fields'][ $field_k ] );
-						}
-					}
-
-					foreach ( $this->settings_structure['']['sections']['uploads']['fields'] as $field_k => $field ) {
-						if ( 'profile_photo_max_size' === $field['id'] || 'photo_thumb_sizes' === $field['id'] ) {
-							unset( $this->settings_structure['']['sections']['uploads']['fields'][ $field_k ] );
-						}
-					}
+					unset( $this->settings_structure['appearance']['sections']['']['form_sections']['profile_photo'], $this->settings_structure['']['sections']['uploads']['form_sections']['profile_photo'] );
 
 					if ( ! get_option( 'show_avatars' ) ) {
 						unset( $this->settings_structure['']['sections']['users']['form_sections']['avatar'] );
