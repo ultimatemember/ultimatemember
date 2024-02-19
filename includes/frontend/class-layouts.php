@@ -371,11 +371,11 @@ class Layouts {
 		 * Filters action links in dropdown menu for profile photo.
 		 *
 		 * @since 1.3.x
-		 * @since 2.8.3 added $user_id attribute
+		 * @since 2.8.4 added $user_id attribute
 		 * @hook um_user_photo_menu_edit
 		 *
 		 * @param {array} $items   Action links in dropdown for profile photo.
-		 * @param {int}   $user_id User ID. Since 2.8.3.
+		 * @param {int}   $user_id User ID. Since 2.8.4.
 		 *
 		 * @example <caption>Make any custom action after delete cover photo.</caption>
 		 * function my_custom_user_photo_menu_edit( $items, $user_id ) {

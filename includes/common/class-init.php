@@ -41,7 +41,7 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 		}
 
 		/**
-		 * @since 2.8.3
+		 * @since 2.8.4
 		 *
 		 * @return Filesystem
 		 */
@@ -89,7 +89,7 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 		}
 
 		/**
-		 * @since 2.8.3
+		 * @since 2.8.4
 		 *
 		 * @return Color
 		 */
@@ -103,18 +103,6 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 		/**
 		 * @since 2.8.3
 		 *
-		 * @return Users
-		 */
-		public function users() {
-			if ( empty( UM()->classes['um\common\users'] ) ) {
-				UM()->classes['um\common\users'] = new Users();
-			}
-			return UM()->classes['um\common\users'];
-    }
-		
-		/**
-		 * @since 2.8.3
-     *
 		 * @return Theme
 		 */
 		public function theme() {
@@ -122,6 +110,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\theme'] = new Theme();
 			}
 			return UM()->classes['um\common\theme'];
+		}
+
+		/**
+		 * @since 2.8.4
+		 *
+		 * @return Users
+		 */
+		public function users() {
+			if ( empty( UM()->classes['um\common\users'] ) ) {
+				UM()->classes['um\common\users'] = new Users();
+			}
+			return UM()->classes['um\common\users'];
 		}
 	}
 }

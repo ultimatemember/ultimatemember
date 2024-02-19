@@ -16,28 +16,28 @@ class Filesystem {
 	/**
 	 * @var array
 	 *
-	 * @since 2.8.3
+	 * @since 2.8.4
 	 */
 	public $upload_dir = array();
 
 	/**
 	 * @var array
 	 *
-	 * @since 2.8.3
+	 * @since 2.8.4
 	 */
 	public $upload_url = array();
 
 	/**
 	 * @var string
 	 *
-	 * @since 2.8.3
+	 * @since 2.8.4
 	 */
 	public $temp_upload_dir = '';
 
 	/**
 	 * @var string
 	 *
-	 * @since 2.8.3
+	 * @since 2.8.4
 	 */
 	public $temp_upload_url = '';
 
@@ -51,7 +51,7 @@ class Filesystem {
 	/**
 	 * Init uploading URL and directory
 	 *
-	 * @since 2.8.3
+	 * @since 2.8.4
 	 */
 	public function init_paths() {
 		$this->temp_upload_dir = $this->get_upload_dir( 'ultimatemember/temp' );
@@ -63,7 +63,7 @@ class Filesystem {
 	 *
 	 * Can duplicate this function functionality `remove_old_files`
 	 *
-	 * @since 2.8.3
+	 * @since 2.8.4
 	 */
 	public function clear_temp_dir() {
 		global $wp_filesystem;
@@ -78,7 +78,7 @@ class Filesystem {
 		/**
 		 * Filters the maximum file age in the temp folder. By default, it's 24 hours.
 		 *
-		 * @since 2.8.3
+		 * @since 2.8.4
 		 * @hook um_filesystem_max_file_age
 		 *
 		 * @param {int} $file_age Temp file age in seconds.
@@ -123,7 +123,7 @@ class Filesystem {
 	 *
 	 * @return string
 	 *
-	 * @since 2.8.3
+	 * @since 2.8.4
 	 */
 	public function get_upload_dir( $dir = '', $blog_id = null ) {
 		/** @var $wp_filesystem WP_Filesystem_Base */
@@ -171,7 +171,7 @@ class Filesystem {
 	 *
 	 * @return string
 	 *
-	 * @since 2.8.3
+	 * @since 2.8.4
 	 */
 	public function get_upload_url( $url = '', $blog_id = null ) {
 		if ( ! $blog_id ) {
@@ -205,7 +205,7 @@ class Filesystem {
 	 *
 	 * @return string
 	 *
-	 * @since 2.8.3
+	 * @since 2.8.4
 	 */
 	public function format_bytes( $size, $precision = 1 ) {
 		if ( is_numeric( $size ) ) {

@@ -263,7 +263,7 @@ final class Enqueue extends \um\common\Enqueue {
 	/**
 	 * Adds our custom button colors to the global stylesheet.
 	 *
-	 * @since 2.8.3
+	 * @since 2.8.4
 	 */
 	public function add_to_global_styles() {
 		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {

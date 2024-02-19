@@ -771,7 +771,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 * @param int    $expire
 		 * @param string $path
 		 *
-		 * @since 2.8.3
+		 * @since 2.8.4
 		 */
 		public function setcookie( $name, $value = '', $expire = 0, $path = '' ) {
 			if ( empty( $value ) ) {

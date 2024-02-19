@@ -209,7 +209,7 @@ class User {
 	 *
 	 * @return string
 	 *
-	 * @since 2.8.3
+	 * @since 2.8.4
 	 */
 	public function unique_filename( $dir, $name, $ext ) {
 		$hashed = hash( 'ripemd160', time() . wp_rand( 10, 1000 ) . $name );

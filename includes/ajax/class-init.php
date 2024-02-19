@@ -50,7 +50,7 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		}
 
 		/**
-		 * @since 2.8.3
+		 * @since 2.8.4
 		 *
 		 * @return User
 		 */
