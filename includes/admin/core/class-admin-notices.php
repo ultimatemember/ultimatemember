@@ -576,9 +576,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			}
 		}
 
-
-		function check_wrong_licenses() {
-			$invalid_license = 0;
+		public function check_wrong_licenses() {
+			$invalid_license           = 0;
 			$arr_inactive_license_keys = array();
 
 			if ( empty( UM()->admin_settings()->settings_structure['licenses']['fields'] ) ) {
@@ -588,10 +587,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			foreach ( UM()->admin_settings()->settings_structure['licenses']['fields'] as $field_data ) {
 				$license = get_option( "{$field_data['id']}_edd_answer" );
 
-				if ( ( is_object( $license ) && 'valid' == $license->license ) || 'valid' == $license )
+				if ( ( is_object( $license ) && isset( $license->license ) && 'valid' === $license->license ) || 'valid' === $license ) {
 					continue;
+				}
 
-				if ( ( is_object( $license ) && 'inactive' == $license->license ) || 'inactive' == $license ) {
+				if ( ( is_object( $license ) && isset( $license->license ) && 'inactive' === $license->license ) || 'inactive' === $license ) {
 					$arr_inactive_license_keys[] = $license->item_name;
 				}
 
@@ -603,7 +603,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					'license_key',
 					array(
 						'class'   => 'error',
-						// translators: %1$s is a inactive license number; %2$s is a plugin name; %3$s is a store link.
+						// translators: %1$s is an inactive license number; %2$s is a plugin name; %3$s is a store link.
 						'message' => '<p>' . sprintf( __( 'There are %1$s inactive %2$s license keys for this site. This site is not authorized to get plugin updates. You can active this site on <a href="%3$s">www.ultimatemember.com</a>.', 'ultimate-member' ), count( $arr_inactive_license_keys ), UM_PLUGIN_NAME, UM()->store_url ) . '</p>',
 					),
 					3
@@ -611,12 +611,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			}
 
 			if ( $invalid_license ) {
+				$licenses_page_url = add_query_arg(
+					array(
+						'page' => 'um_options',
+						'tab'  => 'licenses',
+					),
+					admin_url( 'admin.php' )
+				);
+
 				$this->add_notice(
 					'license_key',
 					array(
 						'class'   => 'error',
-						// translators: %1$s is a invalid license; %2$s is a plugin name; %3$s is a license link.
-						'message' => '<p>' . sprintf( __( 'You have %1$s invalid or expired license keys for %2$s. Please go to the <a href="%3$s">Licenses page</a> to correct this issue.', 'ultimate-member' ), $invalid_license, UM_PLUGIN_NAME, add_query_arg( array( 'page' => 'um_options', 'tab' => 'licenses' ), admin_url( 'admin.php' ) ) ) . '</p>',
+						// translators: %1$s is an invalid license; %2$s is a plugin name; %3$s is a license link.
+						'message' => '<p>' . sprintf( __( 'You have %1$s invalid or expired license keys for %2$s. Please go to the <a href="%3$s">Licenses page</a> to correct this issue.', 'ultimate-member' ), $invalid_license, UM_PLUGIN_NAME, $licenses_page_url ) . '</p>',
 					),
 					3
 				);

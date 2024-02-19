@@ -1,6 +1,8 @@
 <?php
 namespace um\admin\core;
 
+use DateTimeZone;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -3086,14 +3088,31 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					<tbody>
 					<?php
 					foreach ( $section_fields as $field_data ) {
-						$option_value = UM()->options()->get( $field_data['id'] );
-						$value        = isset( $option_value ) && ! empty( $option_value ) ? $option_value : ( isset( $field_data['default'] ) ? $field_data['default'] : '' );
+						$option_value  = UM()->options()->get( $field_data['id'] );
+						$default_value = isset( $field_data['default'] ) ? $field_data['default'] : '';
+						$value         = ! empty( $option_value ) ? $option_value : $default_value;
 
 						$license = get_option( "{$field_data['id']}_edd_answer" );
 
 						if ( is_object( $license ) && ! empty( $value ) ) {
-							// activate_license 'invalid' on anything other than valid, so if there was an error capture it
-							if ( empty( $license->success ) ) {
+							// Activate_license 'invalid' on anything other than valid, so if there was an error capture it
+							if ( is_wp_error( $license ) ) {
+								$class       = 'error';
+								$errors_data = array();
+								$error_codes = $license->get_error_codes();
+								if ( ! empty( $error_codes ) ) {
+									foreach ( $error_codes as $error_code ) {
+										// translators: %1$s is an error code; %2$s is an error message.
+										$errors_data[] = sprintf( __( 'code: %1$s, message: %2$s;', 'ultimate-member' ), $error_code, $license->get_error_messages( $error_code ) );
+									}
+								}
+								$errors_data = ! empty( $errors_data ) ? implode( ' ', $errors_data ) : '';
+
+								// translators: %1$s is an error data; %2$s is a support link.
+								$messages[] = sprintf( __( 'There was an error with this license key: %1$s. Please <a href="%2$s">contact our support team</a>.', 'ultimate-member' ), $errors_data, 'https://ultimatemember.com/support' );
+
+								$license_status = 'license-' . $class . '-notice';
+							} elseif ( empty( $license->success ) ) {
 
 								if ( ! empty( $license->error ) ) {
 									switch ( $license->error ) {
@@ -3102,7 +3121,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 											$messages[] = sprintf(
 												// translators: %1$s is an expiry date; %2$s is a renewal link.
 												__( 'Your license key expired on %1$s. Please <a href="%2$s" target="_blank">renew your license key</a>.', 'ultimate-member' ),
-												wp_date( get_option( 'date_format', 'F j, Y' ), strtotime( $license->expires ), new \DateTimeZone( 'UTC' ) ),
+												wp_date( get_option( 'date_format', 'F j, Y' ), strtotime( $license->expires ), new DateTimeZone( 'UTC' ) ),
 												'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
 											);
 
@@ -3197,7 +3216,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										$messages[] = sprintf(
 											// translators: %1$s is a expiry date; %2$s is a renew link.
 											__( 'Your license key expired on %1$s. Please <a href="%2$s" target="_blank">renew your license key</a>.', 'ultimate-member' ),
-											wp_date( get_option( 'date_format', 'F j, Y' ), strtotime( $license->expires ), new \DateTimeZone( 'UTC' ) ),
+											wp_date( get_option( 'date_format', 'F j, Y' ), strtotime( $license->expires ), new DateTimeZone( 'UTC' ) ),
 											'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
 										);
 
@@ -3273,7 +3292,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 											$messages[] = sprintf(
 												// translators: %1$s is an expiry date; %2$s is a renewal link.
 												__( 'Your license key expires soon! It expires on %1$s. <a href="%2$s" target="_blank">Renew your license key</a>.', 'ultimate-member' ),
-												wp_date( get_option( 'date_format', 'F j, Y' ), strtotime( $license->expires ), new \DateTimeZone( 'UTC' ) ),
+												wp_date( get_option( 'date_format', 'F j, Y' ), strtotime( $license->expires ), new DateTimeZone( 'UTC' ) ),
 												'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
 											);
 
@@ -3284,7 +3303,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 											$messages[] = sprintf(
 												// translators: %s: expiry date.
 												__( 'Your license key expires on %s.', 'ultimate-member' ),
-												wp_date( get_option( 'date_format', 'F j, Y' ), strtotime( $license->expires ), new \DateTimeZone( 'UTC' ) )
+												wp_date( get_option( 'date_format', 'F j, Y' ), strtotime( $license->expires ), new DateTimeZone( 'UTC' ) )
 											);
 
 											$license_status = 'license-expiration-date-notice';
@@ -3323,7 +3342,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										<?php
 									}
 
-									if ( ! empty( $value ) && ( ( is_object( $license ) && 'valid' === $license->license ) || 'valid' === $license ) ) {
+									if ( ! empty( $value ) && ( ( is_object( $license ) && isset( $license->license ) && 'valid' === $license->license ) || 'valid' === $license ) ) {
 										?>
 										<input type="button" class="button um_license_deactivate" id="<?php echo esc_attr( $field_data['id'] ); ?>_deactivate" value="<?php esc_attr_e( 'Clear License', 'ultimate-member' ); ?>"/>
 										<?php
