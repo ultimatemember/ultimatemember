@@ -295,10 +295,10 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 		$actions = array();
 		// for backward compatibility based on #906 pull-request (https://github.com/ultimatemember/ultimatemember/pull/906)
 		// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
-		$id = urlencode( $item['id'] );
+		$id = rawurlencode( $item['id'] );
 
 		$actions['edit']   = '<a href="admin.php?page=um_restriction_rules&tab=edit&id=' . esc_attr( $id ) . '">' . __( 'Edit', 'ultimate-member' ) . '</a>';
-		$actions['delete'] = '<a href="admin.php?page=um_restriction_rules&action=delete&id=' . esc_attr( $id ) . '&_wpnonce=' . wp_create_nonce( 'um_restriction_delete' . $item['id'] . get_current_user_id() ) . '" onclick="return confirm( \'' . __( 'Are you sure you want to delete this restriction rule?', 'ultimate-member' ) . '\' );">' . __( 'Delete', 'ultimate-member' ) . '</a>';
+		$actions['delete'] = '<a href="admin.php?page=um_restriction_rules&action=delete&id=' . esc_attr( $id ) . '&_wpnonce=' . wp_create_nonce( 'um_restriction_delete' . $item['id'] . get_current_user_id() ) . '" onclick="return confirm( \'' . __( 'Are you sure you want to delete this restriction rule?', 'ultimate-member' ) . '\' )">' . __( 'Delete', 'ultimate-member' ) . '</a>';
 
 		/**
 		 * Filters the role actions in WP ListTable Ultimate Member > Access Rules screen.
@@ -326,7 +326,7 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 	 * @param $item
 	 */
 	public function column_priority( $item ) {
-		echo ! empty( $item['_um_priority'] ) ? $item['_um_priority'] : '-';
+		echo ! empty( $item['_um_priority'] ) ? absint( $item['_um_priority'] ) : '-';
 	}
 
 
@@ -335,6 +335,14 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 	 */
 	public function column_status( $item ) {
 		echo esc_html( $item['_um_status'] );
+	}
+
+
+	/**
+	 * @param $item
+	 */
+	public function column_type( $item ) {
+		echo esc_html( $item['_um_type'] );
 	}
 
 
@@ -363,8 +371,8 @@ $list_table = new UM_Restrictions_List_Table(
 	)
 );
 
-$per_page = 20;
-$paged    = $list_table->get_pagenum();
+$restriction_per_page = 20;
+$restriction_paged    = $list_table->get_pagenum();
 
 $list_table->set_bulk_actions(
 	array(
@@ -410,19 +418,24 @@ switch ( strtolower( $order ) ) {
 }
 
 $list_table->prepare_items();
-$list_table->items = array_slice( $rules, ( $paged - 1 ) * $per_page, $per_page );
+$list_table->items = array_slice( $rules, ( $restriction_paged - 1 ) * $restriction_per_page, $restriction_per_page );
 $list_table->um_set_pagination_args(
 	array(
 		'total_items' => count( $rules ),
-		'per_page'    => $per_page,
+		'per_page'    => $restriction_per_page,
 	)
+);
+
+$url_args = array(
+	'page' => 'um_restriction_rules',
+	'tab'  => 'add',
 );
 ?>
 
 <div class="wrap">
 	<h2>
 		<?php esc_html_e( 'Restriction rules', 'ultimate-member' ); ?>
-		<a class="add-new-h2" href="<?php echo esc_url( add_query_arg( array( 'page' => 'um_restriction_rules', 'tab' => 'add' ), admin_url( 'admin.php' ) ) ); ?>">
+		<a class="add-new-h2" href="<?php echo esc_url( add_query_arg( $url_args, admin_url( 'admin.php' ) ) ); ?>">
 			<?php esc_html_e( 'Add New', 'ultimate-member' ); ?>
 		</a>
 	</h2>
