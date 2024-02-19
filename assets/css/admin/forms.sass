@@ -496,7 +496,7 @@ span.um-admin-icon-clear
   select
     resize: vertical
     width: 40%
-.conditions-row
+.conditions-row-action
   display: inline-block
   width: 36px
   height: 30px
@@ -508,6 +508,11 @@ span.um-admin-icon-clear
   font-size: 20px
   cursor: pointer
   vertical-align: middle
+  background: #fff
+  padding: 0
+  &[disabled]
+    cursor: not-allowed
+    opacity: .5
   &:hover
     color: #2271b1
 .um-users-conditions-row

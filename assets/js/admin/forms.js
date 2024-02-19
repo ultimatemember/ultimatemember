@@ -1214,6 +1214,7 @@ jQuery(document).ready( function() {
 	jQuery( '.um-entities-conditions-wrap' ).on( 'click', '.remove-row', function()  {
 		var wrapper = jQuery( this ).closest( '.um-entities-conditions-wrap' );
 		var row     = jQuery( this ).closest( '.um-entities-conditions-row' );
+		console.log(wrapper.find( '.um-entities-conditions-row' ).length)
 		if ( wrapper.find( '.um-entities-conditions-row' ).length > 1 ) {
 			row.remove();
 		}
