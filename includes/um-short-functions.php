@@ -1751,7 +1751,7 @@ function um_can_edit_my_profile() {
 
 
 /**
- * Short for admin e-mail
+ * Short for admin email
  *
  * @return mixed|string|void
  */
@@ -1761,7 +1761,7 @@ function um_admin_email() {
 
 
 /**
- * Get admin e-mails
+ * Get admin emails
  *
  * @return array
  */

@@ -247,7 +247,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 					'label' => __( 'Put as Pending Review', 'ultimate-member' )
 				),
 				'um_resend_activation'  => array(
-					'label' => __( 'Resend Activation E-mail', 'ultimate-member' )
+					'label' => __( 'Resend Activation Email', 'ultimate-member' )
 				),
 				'um_deactivate'         => array(
 					'label' => __( 'Deactivate', 'ultimate-member' )
@@ -407,7 +407,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			$status = array(
 				'approved'                    => __( 'Approved', 'ultimate-member' ),
 				'awaiting_admin_review'       => __( 'Pending review', 'ultimate-member' ),
-				'awaiting_email_confirmation' => __( 'Waiting e-mail confirmation', 'ultimate-member' ),
+				'awaiting_email_confirmation' => __( 'Waiting email confirmation', 'ultimate-member' ),
 				'inactive'                    => __( 'Inactive', 'ultimate-member' ),
 				'rejected'                    => __( 'Rejected', 'ultimate-member' ),
 			);

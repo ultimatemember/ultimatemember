@@ -43,7 +43,7 @@
 				'id'        => '_um_can_delete_everyone',
 				'type'      => 'checkbox',
 				'label'     => __( 'Can delete other member accounts?', 'ultimate-member' ),
-				'tooltip'   => __( 'Allow this role to edit accounts of other members', 'ultimate-member' ),
+				'tooltip'   => __( 'Allow this role to delete other user accounts.', 'ultimate-member' ),
 				'value'     => ! empty( $role['_um_can_delete_everyone'] ) ? $role['_um_can_delete_everyone'] : 0,
 			),
 			array(

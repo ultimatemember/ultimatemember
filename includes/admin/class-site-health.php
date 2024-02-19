@@ -13,10 +13,68 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Site_Health {
 
 	/**
+	 * String of a badge color.
+	 * Options: blue, green, red, orange, purple and gray.
+	 *
+	 * @see https://make.wordpress.org/core/2019/04/25/site-health-check-in-5-2/
+	 *
+	 * @since 2.8.3
+	 */
+	const BADGE_COLOR = 'blue';
+
+	/**
 	 * Site_Health constructor.
 	 */
 	public function __construct() {
 		add_filter( 'debug_information', array( $this, 'debug_information' ), 20 );
+		add_filter( 'site_status_tests', array( $this, 'register_site_status_tests' ) );
+	}
+
+	public function register_site_status_tests( $tests ) {
+		$custom_templates = UM()->common()->theme()->get_custom_templates_list();
+
+		if ( ! empty( $custom_templates ) ) {
+			$tests['direct']['um_override_templates'] = array(
+				'label' => esc_html__( 'Are the Ultimate Member templates out of date?', 'ultimate-member' ),
+				'test'  => array( $this, 'override_templates_test' ),
+			);
+		}
+
+		return $tests;
+	}
+
+	public function override_templates_test() {
+		$result = array(
+			'label'       => __( 'You have the most recent version of custom Ultimate Member templates', 'ultimate-member' ),
+			'status'      => 'good',
+			'badge'       => array(
+				'label' => UM_PLUGIN_NAME,
+				'color' => self::BADGE_COLOR,
+			),
+			'description' => sprintf(
+				'<p>%s</p>',
+				__( 'Your custom Ultimate Member templates that are situated in the theme have the most recent version and are ready to use.', 'ultimate-member' )
+			),
+			'actions'     => '',
+			'test'        => 'um_override_templates',
+		);
+
+		if ( UM()->common()->theme()->is_outdated_template_exist() ) {
+			$result['label']          = __( 'Your custom templates are out of date', 'ultimate-member' );
+			$result['status']         = 'critical';
+			$result['badge']['color'] = 'red';
+			$result['description']    = sprintf(
+				'<p>%s</p>',
+				__( 'Your custom Ultimate Member templates that are situated in the theme are out of date and may break the website\'s functionality.', 'ultimate-member' )
+			);
+			$result['actions']        = sprintf(
+				'<p><a href="%s">%s</a></p>',
+				admin_url( 'admin.php?page=um_options&tab=advanced&section=override_templates' ),
+				esc_html__( 'Check status and update', 'ultimate-member' )
+			);
+		}
+
+		return $result;
 	}
 
 	private function get_roles() {
@@ -290,7 +348,7 @@ class Site_Health {
 		}
 
 		$account_settings['um-account_email'] = array(
-			'label' => __( 'Allow users to change e-mail', 'ultimate-member' ),
+			'label' => __( 'Allow users to change email', 'ultimate-member' ),
 			'value' => UM()->options()->get( 'account_email' ) ? $labels['yes'] : $labels['no'],
 		);
 
@@ -485,7 +543,7 @@ class Site_Health {
 		// Email settings
 		$email_settings = array(
 			'um-admin_email'    => array(
-				'label' => __( 'Admin E-mail Address', 'ultimate-member' ),
+				'label' => __( 'Admin Email Address', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'admin_email' ),
 			),
 			'um-mail_from'      => array(
@@ -497,7 +555,7 @@ class Site_Health {
 				'value' => UM()->options()->get( 'mail_from_addr' ),
 			),
 			'um-email_html'     => array(
-				'label' => __( 'Use HTML for E-mails?', 'ultimate-member' ),
+				'label' => __( 'Use HTML for Emails?', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'email_html' ) ? $labels['yes'] : $labels['no'],
 			),
 		);
@@ -1362,7 +1420,7 @@ class Site_Health {
 						$info[ 'ultimate-member-' . $key ]['fields'],
 						array(
 							'um-url_email_activate' => array(
-								'label' => __( 'URL redirect after e-mail activation', 'ultimate-member' ),
+								'label' => __( 'URL redirect after email activation', 'ultimate-member' ),
 								'value' => $rolemeta['_um_url_email_activate'],
 							),
 						)
@@ -1788,7 +1846,7 @@ class Site_Health {
 			'first_name'           => __( 'First Name', 'ultimate-member' ),
 			'last_name'            => __( 'Last Name', 'ultimate-member' ),
 			'nickname'             => __( 'Nickname', 'ultimate-member' ),
-			'secondary_user_email' => __( 'Secondary E-mail Address', 'ultimate-member' ),
+			'secondary_user_email' => __( 'Secondary Email Address', 'ultimate-member' ),
 			'description'          => __( 'Biography', 'ultimate-member' ),
 			'phone_number'         => __( 'Phone Number', 'ultimate-member' ),
 			'mobile_number'        => __( 'Mobile Number', 'ultimate-member' ),

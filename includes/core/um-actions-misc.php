@@ -168,7 +168,7 @@ function um_add_update_notice( $args ) {
 				$err = __( 'Your account has not been approved yet.', 'ultimate-member' );
 				break;
 			case 'awaiting_email_confirmation':
-				$err = __( 'Your account is awaiting e-mail verification.', 'ultimate-member' );
+				$err = __( 'Your account is awaiting email verification.', 'ultimate-member' );
 				break;
 			case 'rejected':
 				$err = __( 'Your membership request has been rejected.', 'ultimate-member' );

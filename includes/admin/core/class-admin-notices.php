@@ -31,8 +31,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			add_action( 'wp_ajax_um_dismiss_notice', array( &$this, 'dismiss_notice' ) );
 			add_action( 'admin_init', array( &$this, 'force_dismiss_notice' ) );
-
-			add_action( 'current_screen', array( &$this, 'create_list_for_screen' ) );
 		}
 
 		/**
@@ -50,8 +48,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$this->lock_registration();
 
 			$this->extensions_page();
-
-			$this->template_version();
 
 			$this->child_theme_required();
 
@@ -81,13 +77,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			 */
 			do_action( 'um_admin_create_notices' );
 		}
-
-		public function create_list_for_screen() {
-			if ( UM()->admin()->screen()->is_own_screen() ) {
-				$this->secure_settings();
-			}
-		}
-
 
 		/**
 		 * @return array
@@ -587,9 +576,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			}
 		}
 
-
-		function check_wrong_licenses() {
-			$invalid_license = 0;
+		public function check_wrong_licenses() {
+			$invalid_license           = 0;
 			$arr_inactive_license_keys = array();
 
 			if ( empty( UM()->admin_settings()->settings_structure['licenses']['fields'] ) ) {
@@ -599,10 +587,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			foreach ( UM()->admin_settings()->settings_structure['licenses']['fields'] as $field_data ) {
 				$license = get_option( "{$field_data['id']}_edd_answer" );
 
-				if ( ( is_object( $license ) && 'valid' == $license->license ) || 'valid' == $license )
+				if ( ( is_object( $license ) && isset( $license->license ) && 'valid' === $license->license ) || 'valid' === $license ) {
 					continue;
+				}
 
-				if ( ( is_object( $license ) && 'inactive' == $license->license ) || 'inactive' == $license ) {
+				if ( ( is_object( $license ) && isset( $license->license ) && 'inactive' === $license->license ) || 'inactive' === $license ) {
 					$arr_inactive_license_keys[] = $license->item_name;
 				}
 
@@ -614,7 +603,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					'license_key',
 					array(
 						'class'   => 'error',
-						// translators: %1$s is a inactive license number; %2$s is a plugin name; %3$s is a store link.
+						// translators: %1$s is an inactive license number; %2$s is a plugin name; %3$s is a store link.
 						'message' => '<p>' . sprintf( __( 'There are %1$s inactive %2$s license keys for this site. This site is not authorized to get plugin updates. You can active this site on <a href="%3$s">www.ultimatemember.com</a>.', 'ultimate-member' ), count( $arr_inactive_license_keys ), UM_PLUGIN_NAME, UM()->store_url ) . '</p>',
 					),
 					3
@@ -622,12 +611,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			}
 
 			if ( $invalid_license ) {
+				$licenses_page_url = add_query_arg(
+					array(
+						'page' => 'um_options',
+						'tab'  => 'licenses',
+					),
+					admin_url( 'admin.php' )
+				);
+
 				$this->add_notice(
 					'license_key',
 					array(
 						'class'   => 'error',
-						// translators: %1$s is a invalid license; %2$s is a plugin name; %3$s is a license link.
-						'message' => '<p>' . sprintf( __( 'You have %1$s invalid or expired license keys for %2$s. Please go to the <a href="%3$s">Licenses page</a> to correct this issue.', 'ultimate-member' ), $invalid_license, UM_PLUGIN_NAME, add_query_arg( array( 'page' => 'um_options', 'tab' => 'licenses' ), admin_url( 'admin.php' ) ) ) . '</p>',
+						// translators: %1$s is an invalid license; %2$s is a plugin name; %3$s is a license link.
+						'message' => '<p>' . sprintf( __( 'You have %1$s invalid or expired license keys for %2$s. Please go to the <a href="%3$s">Licenses page</a> to correct this issue.', 'ultimate-member' ), $invalid_license, UM_PLUGIN_NAME, $licenses_page_url ) . '</p>',
 					),
 					3
 				);
@@ -776,36 +773,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		}
 
 		/**
-		 * Check Templates Versions notice
-		 */
-		public function template_version() {
-			if ( true === (bool) get_option( 'um_override_templates_outdated' ) ) {
-				$link = admin_url( 'admin.php?page=um_options&tab=override_templates' );
-				ob_start();
-				?>
-
-				<p>
-					<?php
-					// translators: %s override templates page link.
-					echo wp_kses( sprintf( __( 'Your templates are out of date. Please visit <a href="%s">override templates status page</a> and update templates.', 'ultimate-member' ), $link ), UM()->get_allowed_html( 'admin_notice' ) );
-					?>
-				</p>
-
-				<?php
-				$message = ob_get_clean();
-				UM()->admin()->notices()->add_notice(
-					'um_override_templates_notice',
-					array(
-						'class'       => 'error',
-						'message'     => $message,
-						'dismissible' => false,
-					),
-					10
-				);
-			}
-		}
-
-		/**
 		 * Check if there isn't installed child-theme. Child theme is required for safely saved customizations.
 		 */
 		public function child_theme_required() {
@@ -820,7 +787,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				<p>
 					<?php
 					// translators: %s child-theme article link.
-					echo wp_kses( sprintf( __( 'We highly recommend using a <a href="%s">child-theme</a> for Ultimate Member customization, which hasn\'t dependencies with the official themes repo, so your custom files cannot be rewritten after a theme upgrade.<br />Otherwise, the customization files may be deleted after every theme upgrade.', 'ultimate-member' ), 'https://developer.wordpress.org/themes/advanced-topics/child-themes/' ), UM()->get_allowed_html( 'admin_notice' ) );
+					echo wp_kses( sprintf( __( 'We recommend using a <a href="%s">child-theme</a> for Ultimate Member customization. Unlike official theme repositories, child themes don\'t have dependencies that could lead to your custom files being overwritten during a theme upgrade.<br />Without a child theme, your customization files may be deleted after every theme update.', 'ultimate-member' ), 'https://developer.wordpress.org/themes/advanced-topics/child-themes/' ), UM()->get_allowed_html( 'admin_notice' ) );
 					?>
 				</p>
 
@@ -838,39 +805,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			}
 		}
 
-		/**
-		 * First time installed Secure settings.
-		 */
-		public function secure_settings() {
-			ob_start();
-			?>
-			<p>
-				<strong><?php esc_html_e( 'Important Update', 'ultimate-member' ); ?></strong><br/>
-				<?php esc_html_e( 'Ultimate Member has a new additional feature to secure your Ultimate Member forms to prevent attacks from injecting accounts with administrative roles &amp; capabilities.', 'ultimate-member' ); ?>
-			</p>
-			<p>
-				<a class="button button-primary" href="<?php echo esc_attr( admin_url( 'admin.php?page=um_options&tab=secure&um_dismiss_notice=secure_settings&um_admin_nonce=' . wp_create_nonce( 'um-admin-nonce' ) ) ); ?>"><?php esc_html_e( 'Manage Security Settings', 'ultimate-member' ); ?></a>
-				<a class="button" target="_blank" href="https://docs.ultimatemember.com/article/1869-security-feature"><?php esc_html_e( 'Read the documentation', 'ultimate-member' ); ?></a>
-			</p>
-			<?php
-			$message = ob_get_clean();
-			$this->add_notice(
-				'secure_settings',
-				array(
-					'class'       => 'warning',
-					'message'     => $message,
-					'dismissible' => true,
-				),
-				1
-			);
-		}
-
 		public function common_secure() {
 			if ( UM()->options()->get( 'lock_register_forms' ) ) {
 				ob_start();
 				?>
 				<p>
-					<?php esc_html_e( 'Your Register forms are now locked. You can unlock them in Ultimate Member > Settings > Secure > Lock All Register Forms.', 'ultimate-member' ); ?>
+					<?php esc_html_e( 'Your Register forms are now locked. You can unlock them in Ultimate Member > Settings > Advanced > Security > Lock All Register Forms.', 'ultimate-member' ); ?>
 				</p>
 				<?php
 				$message = ob_get_clean();
@@ -889,7 +829,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				ob_start();
 				?>
 				<p>
-					<?php esc_html_e( 'Mandatory password changes has been enabled. You can disable them in Ultimate Member > Settings > Secure > Display Login form notice to reset passwords.', 'ultimate-member' ); ?>
+					<?php esc_html_e( 'Mandatory password changes has been enabled. You can disable them in Ultimate Member > Settings > Advanced > Security > Display Login form notice to reset passwords.', 'ultimate-member' ); ?>
 				</p>
 				<?php
 				$message = ob_get_clean();
@@ -908,7 +848,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				ob_start();
 				?>
 				<p>
-					<?php esc_html_e( 'Ban for administrative capabilities is enabled. You can disable them in Ultimate Member > Settings > Secure > Enable ban for administrative capabilities.', 'ultimate-member' ); ?>
+					<?php esc_html_e( 'Ban for administrative capabilities is enabled. You can disable them in Ultimate Member > Settings > Advanced > Security > Enable ban for administrative capabilities.', 'ultimate-member' ); ?>
 				</p>
 				<?php
 				$message = ob_get_clean();

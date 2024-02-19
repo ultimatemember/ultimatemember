@@ -157,15 +157,15 @@ function um_submit_account_errors_hook( $args ) {
 			if ( isset( $args['user_email'] ) ) {
 
 				if ( strlen( trim( $args['user_email'] ) ) === 0 ) {
-					UM()->form()->add_error( 'user_email', __( 'You must provide your e-mail', 'ultimate-member' ) );
+					UM()->form()->add_error( 'user_email', __( 'You must provide your email', 'ultimate-member' ) );
 				}
 
 				if ( ! is_email( $args['user_email'] ) ) {
-					UM()->form()->add_error( 'user_email', __( 'Please provide a valid e-mail', 'ultimate-member' ) );
+					UM()->form()->add_error( 'user_email', __( 'Please provide a valid email', 'ultimate-member' ) );
 				}
 
 				if ( email_exists( $args['user_email'] ) && email_exists( $args['user_email'] ) !== get_current_user_id() ) {
-					UM()->form()->add_error( 'user_email', __( 'Please provide a valid e-mail', 'ultimate-member' ) );
+					UM()->form()->add_error( 'user_email', __( 'Please provide a valid email', 'ultimate-member' ) );
 				}
 			}
 

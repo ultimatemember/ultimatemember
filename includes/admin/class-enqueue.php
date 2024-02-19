@@ -351,9 +351,10 @@ final class Enqueue extends \um\common\Enqueue {
 		$forms_data = array(
 			'successfully_redirect' => add_query_arg(
 				array(
-					'page' => 'um_options',
-					'tab'  => 'misc',
-					'msg'  => 'updated',
+					'page'    => 'um_options',
+					'tab'     => 'advanced',
+					'section' => 'features',
+					'msg'     => 'updated',
 				),
 				admin_url( 'admin.php' )
 			),
@@ -554,7 +555,7 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_enqueue_style( 'um_admin_common' );
 
 			if ( self::$um_cpt_form_screen ) {
-				if ( defined( 'UM_LEGACY_BUILDER_OFF' ) && UM_LEGACY_BUILDER_OFF ) {
+				if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_form_builder' ) ) {
 					// Do new assets.
 				} else {
 					$this->load_builder();
@@ -583,10 +584,16 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_enqueue_style( 'um_admin_roles' );
 		} elseif ( 'ultimate-member_page_um_options' === $hook ) {
 			// phpcs:ignore WordPress.Security.NonceVerification
-			if ( isset( $_GET['tab'] ) && 'secure' === $_GET['tab'] ) {
-				wp_register_script( 'um_admin_secure', $js_url . 'admin/secure' . $suffix . '.js', array( 'jquery', 'wp-i18n' ), UM_VERSION, true );
-				wp_set_script_translations( 'um_admin_secure', 'ultimate-member' );
-				wp_enqueue_script( 'um_admin_secure' );
+			if ( isset( $_GET['tab'], $_GET['section'] ) && 'advanced' === $_GET['tab'] && 'security' === $_GET['section'] ) {
+				wp_register_script( 'um_admin_security', $js_url . 'admin/security' . $suffix . '.js', array( 'jquery', 'wp-i18n' ), UM_VERSION, true );
+				wp_set_script_translations( 'um_admin_security', 'ultimate-member' );
+				wp_enqueue_script( 'um_admin_security' );
+			}
+
+			// phpcs:ignore WordPress.Security.NonceVerification
+			if ( isset( $_GET['tab'] ) && 'appearance' === $_GET['tab'] && empty( $_GET['section'] ) ) {
+				// Init WP Media Uploader on the UM > Settings > Appearance > Profile screen.
+				wp_enqueue_media();
 			}
 
 			wp_register_style( 'um_admin_settings', $css_url . 'admin/settings' . $suffix . '.css', array(), UM_VERSION );

@@ -58,8 +58,7 @@ class UM_Versions_List_Table extends WP_List_Table {
 		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, array(), $sortable );
 
-		$templates = get_option( 'um_template_statuses', array() );
-		$templates = is_array( $templates ) ? $templates : array();
+		$templates = UM()->common()->theme()->build_templates_data();
 
 		@uasort(
 			$templates,
@@ -163,6 +162,16 @@ class UM_Versions_List_Table extends WP_List_Table {
 		$icon = 1 === $item['status_code'] ? 'um-notification-is-active dashicons-yes' : 'dashicons-no-alt';
 		return $item['status'] . ' <span class="dashicons um-notification-status ' . esc_attr( $icon ) . '"></span>';
 	}
+
+	/**
+	 * Generates the table navigation above or below the table
+	 *
+	 * @since 3.1.0
+	 * @param string $which
+	 */
+	protected function display_tablenav( $which ) {
+		// Stop displaying tablenav.
+	}
 }
 
 $list_table = new UM_Versions_List_Table(
@@ -210,6 +219,7 @@ $list_table->prepare_items();
 
 <form action="" method="get" name="um-settings-template-versions" id="um-settings-template-versions">
 	<input type="hidden" name="page" value="um_options" />
-	<input type="hidden" name="tab" value="override_templates" />
+	<input type="hidden" name="tab" value="advanced" />
+	<input type="hidden" name="section" value="override_templates" />
 	<?php $list_table->display(); ?>
 </form>

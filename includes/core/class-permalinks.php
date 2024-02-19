@@ -125,8 +125,14 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 					wp_die( __( 'This activation link is expired.', 'ultimate-member' ) );
 				}
 
+				$redirect              = um_get_core_page( 'login', 'account_active' );
+				$set_password_required = get_user_meta( $user_id, 'um_set_password_required', true );
+
 				um_fetch_user( $user_id );
 				UM()->user()->approve();
+				if ( ! empty( $set_password_required ) ) {
+					$redirect = um_user( 'password_reset_link' );
+				}
 				um_reset_user();
 
 				$user_role = UM()->roles()->get_priority_user_role( $user_id );
@@ -167,7 +173,9 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 				 */
 				do_action( 'um_after_email_confirmation', $user_id );
 
-				$redirect = empty( $user_role_data['url_email_activate'] ) ? um_get_core_page( 'login', 'account_active' ) : trim( $user_role_data['url_email_activate'] ); // Role setting "URL redirect after e-mail activation"
+				if ( empty( $set_password_required ) ) {
+					$redirect = empty( $user_role_data['url_email_activate'] ) ? um_get_core_page( 'login', 'account_active' ) : trim( $user_role_data['url_email_activate'] ); // Role setting "URL redirect after email activation"
+				}
 				$redirect = apply_filters( 'um_after_email_confirmation_redirect', $redirect, $user_id, $login );
 
 				exit( wp_redirect( $redirect ) );

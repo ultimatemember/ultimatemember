@@ -52,7 +52,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 * @param bool $echo
 		 * @return string
 		 */
-		function render_form( $echo = true ) {
+		public function render_form( $echo = true ) {
 
 			if ( empty( $this->form_data['fields'] ) ) {
 				return '';
@@ -64,7 +64,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			ob_start();
 
 			foreach ( $this->form_data['fields'] as $field_data ) {
-				if ( isset( $field_data['type'] ) && 'hidden' == $field_data['type'] ) {
+				if ( isset( $field_data['type'] ) && 'hidden' === $field_data['type'] ) {
 					echo $this->render_form_row( $field_data );
 				}
 			}
@@ -97,19 +97,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			}
 		}
 
-
 		/**
 		 * @param array $data
 		 *
 		 * @return string
 		 */
-		function render_form_row( $data ) {
+		public function render_form_row( $data ) {
 
 			if ( empty( $data['type'] ) ) {
 				return '';
 			}
 
-			if ( !empty( $data['value'] ) && $data['type'] != 'email_template' ) {
+			if ( ! empty( $data['value'] ) && $data['type'] != 'email_template' ) {
 				$data['value'] = wp_unslash( $data['value'] );
 
 				/*for multi_text*/
@@ -169,8 +168,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 						}
 
-						if ( ! empty( $data['description'] ) )
+						if ( ! empty( $data['description'] ) ) {
 							$html .= '<p class="description">' . $data['description'] . '</p>';
+						}
 
 						$html .= '</div>';
 
@@ -190,8 +190,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 							}
 
-							if ( ! empty( $data['description'] ) )
+							if ( ! empty( $data['description'] ) ) {
 								$html .= '<p class="description">' . $data['description'] . '</p>';
+							}
 
 							$html .= '</div>';
 
@@ -209,8 +210,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 							}
 
-							if ( ! empty( $data['description'] ) )
+							if ( ! empty( $data['description'] ) ) {
 								$html .= '<p class="description">' . $data['description'] . '</p>';
+							}
 
 							$html .= '</div>';
 
@@ -233,8 +235,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 						}
 
-						if ( ! empty( $data['description'] ) )
+						if ( ! empty( $data['description'] ) ) {
 							$html .= '<div class="clear"></div><p class="description">' . $data['description'] . '</p>';
+						}
 
 						$html .= '</td></tr>';
 
@@ -255,8 +258,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 							}
 
-							if ( ! empty( $data['description'] ) )
+							if ( ! empty( $data['description'] ) ) {
 								$html .= '<div class="clear"></div><p class="description">' . $data['description'] . '</p>';
+							}
 
 							$html .= '</td></tr>';
 
@@ -276,15 +280,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 							}
 
-							if ( ! empty( $data['description'] ) )
+							if ( ! empty( $data['description'] ) ) {
 								$html .= '<div class="clear"></div><p class="description">' . $data['description'] . '</p>';
+							}
 
 							$html .= '</td></tr>';
-
 						}
 					}
 				}
-
 			} else {
 				$html .= $this->render_hidden( $data );
 			}
@@ -927,10 +930,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 *
 		 * @return bool|string
 		 */
-		function render_checkbox( $field_data ) {
+		public function render_checkbox( $field_data ) {
 
-			if ( empty( $field_data['id'] ) )
+			if ( empty( $field_data['id'] ) ) {
 				return false;
+			}
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
 			$id_attr = ' id="' . esc_attr( $id ) . '" ';
@@ -941,7 +945,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
 
 			$data = array(
-				'field_id' => $field_data['id']
+				'field_id' => $field_data['id'],
 			);
 
 			if ( ! empty( $field_data['data'] ) ) {
@@ -959,20 +963,22 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$value = $this->get_field_value( $field_data );
 
-			$html = "<input type=\"hidden\" $id_attr_hidden $name_attr value=\"0\" />
-			<input type=\"checkbox\" $id_attr $class_attr $name_attr $data_attr " . checked( $value, true, false ) . " value=\"1\" />";
+			$checkbox_label = ! empty( $field_data['checkbox_label'] ) ? $field_data['checkbox_label'] : '';
 
-
-			return $html;
+			$field_html = "<input type=\"checkbox\" $id_attr $class_attr $name_attr $data_attr " . checked( $value, true, false ) . " value=\"1\" " . disabled( ! empty( $field_data['disabled'] ), true, false ) . " />";
+			if ( '' !== $checkbox_label ) {
+				$field_html = "<label>$field_html $checkbox_label</label>";
+			}
+			$html = "<input type=\"hidden\" $id_attr_hidden $name_attr value=\"0\" " . disabled( ! empty( $field_data['disabled'] ), true, false ) . " />{$field_html}";
+			return apply_filters( 'um_admin_render_checkbox_field_html', $html, $field_data );
 		}
-
 
 		/**
 		 * @param $field_data
 		 *
 		 * @return bool|string
 		 */
-		function render_same_page_update( $field_data ) {
+		public function render_same_page_update( $field_data ) {
 
 			if ( empty( $field_data['id'] ) ) {
 				return false;
@@ -987,7 +993,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
 
 			$data = array(
-				'field_id' => $field_data['id']
+				'field_id' => $field_data['id'],
 			);
 
 			if ( ! empty( $field_data['data'] ) ) {
@@ -1009,8 +1015,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$value = $this->get_field_value( $field_data );
 
-			$html = "<input type=\"hidden\" $id_attr_hidden $name_attr value=\"0\" />
-			<input type=\"checkbox\" $id_attr $class_attr $name_attr $data_attr " . checked( $value, true, false ) . " value=\"1\" />";
+			$checkbox_label = ! empty( $field_data['checkbox_label'] ) ? $field_data['checkbox_label'] : '';
+
+			$field_html = "<input type=\"checkbox\" $id_attr $class_attr $name_attr $data_attr " . checked( $value, true, false ) . " value=\"1\" " . disabled( ! empty( $field_data['disabled'] ), true, false ) . " />";
+			if ( '' !== $checkbox_label ) {
+				$field_html = "<label>$field_html $checkbox_label</label>";
+			}
+			$html = "<input type=\"hidden\" $id_attr_hidden $name_attr value=\"0\" " . disabled( ! empty( $field_data['disabled'] ), true, false ) . " />{$field_html}";
 
 			if ( ! empty( $field_data['upgrade_cb'] ) ) {
 				$html .= '<div class="um-same-page-update-wrapper um-same-page-update-' . esc_attr( $field_data['upgrade_cb'] ) . '"><div class="um-same-page-update-description">' . $field_data['upgrade_description'] . '</div><input type="button" data-upgrade_cb="' . $field_data['upgrade_cb'] . '" class="button button-primary um-admin-form-same-page-update" value="' . esc_attr__( 'Run', 'ultimate-member' ) . '"/>
@@ -1019,7 +1030,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			return $html;
 		}
-
 
 		/**
 		 * @param $field_data
@@ -1083,6 +1093,79 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			return $html;
 		}
 
+		/**
+		 * @param $field_data
+		 *
+		 * @since 2.8.3
+		 *
+		 * @return bool|string
+		 */
+		public function render_page_select( $field_data ) {
+			if ( empty( $field_data['id'] ) ) {
+				return false;
+			}
+
+			$multiple = ! empty( $field_data['multi'] ) ? 'multiple' : '';
+
+			$id = ( ! empty( $this->form_data['prefix_id'] ) ? sanitize_title( $this->form_data['prefix_id'] ) : '' ) . '_' . $field_data['id'];
+			$id_attr = ' id="' . esc_attr( $id ) . '" ';
+
+			$class = ! empty( $field_data['class'] ) ? $field_data['class'] . ' ' : ' ';
+			$class .= ! empty( $field_data['size'] ) ? 'um-' . $field_data['size'] . '-field' : 'um-long-field';
+			$class_attr = ' class="um-forms-field um-pages-select2 ' . esc_attr( $class ) . '" ';
+
+			$data = array(
+				'field_id' => $field_data['id'],
+			);
+
+			if ( ! empty( $field_data['placeholder'] ) ) {
+				$data['placeholder'] = $field_data['placeholder'];
+			}
+
+			$data_attr = '';
+			foreach ( $data as $key => $value ) {
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
+			}
+
+			$name = $field_data['id'];
+			$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
+			$hidden_name_attr = ' name="' . $name . '" ';
+			$name = $name . ( ! empty( $field_data['multi'] ) ? '[]' : '' );
+			$name_attr = ' name="' . $name . '" ';
+
+			$value = $this->get_field_value( $field_data );
+
+			$options = '<option value="">' . esc_html( $data['placeholder'] ) . '</option>';
+			if ( ! empty( $field_data['options'] ) ) {
+				foreach ( $field_data['options'] as $key => $option ) {
+					if ( ! empty( $field_data['multi'] ) ) {
+
+						if ( ! is_array( $value ) || empty( $value ) ) {
+							$value = array();
+						}
+
+						$options .= '<option value="' . $key . '" ' . selected( in_array( $key, $value ), true, false ) . '>' . esc_html( $option ) . '</option>';
+					} else {
+						$options .= '<option value="' . $key . '" ' . selected( (string)$key == $value, true, false ) . '>' . esc_html( $option ) . '</option>';
+					}
+				}
+			}
+
+			$hidden = '';
+			if ( ! empty( $multiple ) ) {
+				$hidden = "<input type=\"hidden\" $hidden_name_attr value=\"\" />";
+			}
+
+			$button = '';
+			$slug   = str_replace( 'core_', '', $field_data['id'] );
+			if ( ! um_get_predefined_page_id( $slug ) || 'publish' !== get_post_status( um_get_predefined_page_id( $slug ) ) ) {
+				$button = '&nbsp;<a href="' . esc_url( add_query_arg( array( 'um_adm_action' => 'install_predefined_page', 'um_page_slug' => $slug, '_wpnonce' => wp_create_nonce( 'install_predefined_page' ), ) ) ) . '" class="button button-primary">' . esc_html__( 'Create Default', 'ultimate-member' ) . '</a>';
+			}
+
+			$html = "$hidden<select $multiple $id_attr $name_attr $class_attr $data_attr>$options</select>$button";
+
+			return $html;
+		}
 
 		/**
 		 * @param $field_data
@@ -1739,7 +1822,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			return $html;
 		}
 
-
 		/**
 		 * Get field value
 		 *
@@ -1769,6 +1851,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$value = is_string( $value ) ? stripslashes( $value ) : $value;
 
 			return $value;
+		}
+
+		public function render_external_link( $data ) {
+			$defaults = array(
+				'url'  => '',
+				'html' => '',
+			);
+			$data     = wp_parse_args( $data, $defaults );
+			if ( empty( $data['url'] ) || empty( $data['html'] ) ) {
+				return '';
+			}
+			ob_start();
+			?>
+			<a target="_blank" href="<?php echo esc_url( $data['url'] ); ?>">
+				<?php echo esc_html( $data['html'] ); ?>
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="um-external-link-icon" aria-hidden="true" focusable="false"><path d="M19.5 4.5h-7V6h4.44l-5.97 5.97 1.06 1.06L18 7.06v4.44h1.5v-7Zm-13 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3H17v3a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h3V5.5h-3Z"></path></svg>
+			</a>
+			<?php
+			return ob_get_clean();
 		}
 	}
 }

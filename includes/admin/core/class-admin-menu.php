@@ -16,18 +16,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 	 */
 	class Admin_Menu {
 
-
 		/**
 		 * @var string
 		 */
 		var $pagehook;
 		var $slug = 'ultimatemember';
 
-
 		/**
 		 * Admin_Menu constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			add_action( 'admin_menu', array( &$this, 'primary_admin_menu' ), 0 );
 			add_action( 'admin_menu', array( &$this, 'secondary_menu_items' ), 1000 );
 			add_action( 'admin_menu', array( &$this, 'extension_menu' ), 9999 );
@@ -35,8 +33,46 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 			add_action( 'admin_head', array( $this, 'menu_order_count' ) );
 
 			add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1000 );
+
+			add_action( 'load-ultimate-member_page_um_options', array( &$this, 'maybe_settings_redirect' ) );
 		}
 
+		/**
+		 * Trigger redirect on the Settings screen if there is a wrong tab or section.
+		 *
+		 * @since 2.8.2
+		 */
+		public function maybe_settings_redirect() {
+			$current_tab    = empty( $_GET['tab'] ) ? '' : sanitize_key( $_GET['tab'] );
+			$current_subtab = empty( $_GET['section'] ) ? '' : sanitize_key( $_GET['section'] );
+
+			$settings_struct = UM()->admin_settings()->settings_structure[ $current_tab ];
+
+			// Remove not option hidden fields.
+			if ( ! empty( $settings_struct['fields'] ) ) {
+				foreach ( $settings_struct['fields'] as $field_key => $field_options ) {
+					if ( isset( $field_options['is_option'] ) && false === $field_options['is_option'] ) {
+						unset( $settings_struct['fields'][ $field_key ] );
+					}
+				}
+			}
+
+			if ( empty( $settings_struct['fields'] ) && empty( $settings_struct['sections'] ) && empty( $settings_struct['form_sections'] ) ) {
+				wp_safe_redirect( add_query_arg( array( 'page' => 'um_options' ), admin_url( 'admin.php' ) ) );
+				exit;
+			}
+
+			if ( ! empty( $settings_struct['sections'] ) ) {
+				if ( empty( $settings_struct['sections'][ $current_subtab ] ) ) {
+					$args = array( 'page' => 'um_options' );
+					if ( ! empty( $current_tab ) ) {
+						$args['tab'] = $current_tab;
+					}
+					wp_safe_redirect( add_query_arg( $args, admin_url( 'admin.php' ) ) );
+					exit;
+				}
+			}
+		}
 
 		/**
 		 * Change the admin footer text on UM admin pages
@@ -143,8 +179,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 		/**
 		 * Setup admin menu
 		 */
-		function primary_admin_menu() {
-			$this->pagehook = add_menu_page( __( 'Ultimate Member', 'ultimate-member' ), __( 'Ultimate Member', 'ultimate-member' ), 'manage_options', $this->slug, array( &$this, 'admin_page' ), 'dashicons-admin-users', '42.78578');
+		public function primary_admin_menu() {
+			$this->pagehook = add_menu_page( __( 'Ultimate Member', 'ultimate-member' ), __( 'Ultimate Member', 'ultimate-member' ), 'manage_options', $this->slug, array( &$this, 'admin_page' ), 'dashicons-admin-users', '42.78578' );
 
 			add_action( 'load-' . $this->pagehook, array( &$this, 'on_load_page' ) );
 
@@ -155,7 +191,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 		/**
 		 * Secondary admin menu (after settings)
 		 */
-		function secondary_menu_items() {
+		public function secondary_menu_items() {
+			add_submenu_page( $this->slug, __( 'Settings', 'ultimate-member' ), __( 'Settings', 'ultimate-member' ), 'manage_options', 'um_options', array( UM()->admin_settings(), 'settings_page' ) );
+
 			add_submenu_page( $this->slug, __( 'Forms', 'ultimate-member' ), __( 'Forms', 'ultimate-member' ), 'manage_options', 'edit.php?post_type=um_form', '' );
 
 			add_submenu_page( $this->slug, __( 'User Roles', 'ultimate-member' ), __( 'User Roles', 'ultimate-member' ), 'manage_options', 'um_roles', array( &$this, 'um_roles_pages' ) );

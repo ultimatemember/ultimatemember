@@ -1021,7 +1021,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		public function add_metabox_form() {
 			add_meta_box( 'submitdiv', __( 'Publish', 'ultimate-member' ), array( $this, 'custom_submitdiv' ), 'um_form', 'side', 'high' );
 
-			if ( defined( 'UM_LEGACY_BUILDER_OFF' ) && UM_LEGACY_BUILDER_OFF ) {
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_form_builder' ) ) {
 				// Do new metabox.
 			} else {
 				add_meta_box( 'um-admin-form-mode', __( 'Select Form Type', 'ultimate-member' ), array( &$this, 'load_metabox_form' ), 'um_form', 'normal', 'default' );
@@ -1494,7 +1494,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_validate':
-					if ( array_key_exists( 'mode', $form_data ) && 'login' === $form_data['mode'] && in_array( $field_args['metakey'], array( 'username', 'user_login', 'user_email' ), true ) ) {
+					if ( array_key_exists( 'mode', $form_data ) && 'login' === $form_data['mode'] && array_key_exists( 'metakey', $field_args ) && in_array( $field_args['metakey'], array( 'username', 'user_login', 'user_email' ), true ) ) {
 						return;
 					}
 					?>

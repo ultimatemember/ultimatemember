@@ -1,6 +1,8 @@
 <?php
 namespace um\admin;
 
+use WP_Query;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -69,6 +71,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			add_action( 'um_admin_do_action__check_templates_version', array( &$this, 'check_templates_version' ) );
 
 			add_action( 'um_admin_do_action__install_core_pages', array( &$this, 'install_core_pages' ) );
+			add_action( 'um_admin_do_action__install_predefined_page', array( &$this, 'install_predefined_page' ) );
 
 			add_action( 'parent_file', array( &$this, 'parent_file' ), 9 );
 			add_filter( 'gettext', array( &$this, 'gettext' ), 10, 4 );
@@ -1617,31 +1620,106 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		public function install_core_pages() {
 			UM()->setup()->install_default_pages();
 
-			//check empty pages in settings
-			$empty_pages = array();
-
-			$pages = UM()->config()->permalinks;
-			if ( $pages && is_array( $pages ) ) {
-				foreach ( $pages as $slug => $page_id ) {
-					$page = get_post( $page_id );
-
-					if ( ! isset( $page->ID ) && array_key_exists( $slug, UM()->config()->core_pages ) ) {
-						$empty_pages[] = $slug;
-					}
-				}
-			}
-
-			//if there aren't empty pages - then hide pages notice
-			if ( empty( $empty_pages ) ) {
-				$hidden_notices   = get_option( 'um_hidden_admin_notices', array() );
-				$hidden_notices[] = 'wrong_pages';
-
-				update_option( 'um_hidden_admin_notices', $hidden_notices );
-			}
+			// Auto dismiss 'wrong_pages' notice if it's visible
+			$this->dismiss_wrong_pages();
 
 			$url = add_query_arg( array( 'page' => 'um_options' ), admin_url( 'admin.php' ) );
 			wp_safe_redirect( $url );
 			exit;
+		}
+
+		/**
+		 * Install predefined page based on $_REQUEST['um_page_slug'] argument.
+		 */
+		public function install_predefined_page() {
+			if ( ! current_user_can( 'manage_options' ) ) {
+				$url = add_query_arg( array( 'page' => 'um_options' ), admin_url( 'admin.php' ) );
+				wp_safe_redirect( $url );
+				exit;
+			}
+
+			$predefined_pages = array_keys( UM()->config()->get( 'predefined_pages' ) );
+
+			// phpcs:ignore WordPress.Security.NonceVerification -- early nonce verification based on `um_adm_action`
+			$page_slug = array_key_exists( 'um_page_slug', $_REQUEST ) ? sanitize_key( $_REQUEST['um_page_slug'] ) : '';
+
+			if ( empty( $page_slug ) || ! in_array( $page_slug, $predefined_pages, true ) ) {
+				$url = add_query_arg( array( 'page' => 'um_options' ), admin_url( 'admin.php' ) );
+				wp_safe_redirect( $url );
+				exit;
+			}
+
+			$post_ids = new WP_Query(
+				array(
+					'post_type'      => 'page',
+					'meta_query'     => array(
+						array(
+							'key'   => '_um_core',
+							'value' => $page_slug,
+						),
+					),
+					'posts_per_page' => -1,
+					'fields'         => 'ids',
+				)
+			);
+
+			$post_ids = $post_ids->get_posts();
+
+			if ( ! empty( $post_ids ) ) {
+				foreach ( $post_ids as $post_id ) {
+					delete_post_meta( $post_id, '_um_core' );
+				}
+			}
+
+			UM()->setup()->predefined_page( $page_slug );
+
+			// Auto dismiss 'wrong_pages' notice if it's visible
+			$this->dismiss_wrong_pages();
+
+			$url = add_query_arg(
+				array(
+					'page'   => 'um_options',
+					'update' => 'um_settings_updated',
+				),
+				admin_url( 'admin.php' )
+			);
+			wp_safe_redirect( $url );
+			exit;
+		}
+
+		/**
+		 * Dismiss 'wrong_pages' notice if it's visible.
+		 */
+		public function dismiss_wrong_pages() {
+			// Check empty pages in settings.
+			$empty_pages = array();
+
+			$predefined_pages = array_keys( UM()->config()->get( 'predefined_pages' ) );
+			foreach ( $predefined_pages as $slug ) {
+				$page_id = um_get_predefined_page_id( $slug );
+				if ( ! $page_id ) {
+					$empty_pages[] = $slug;
+					continue;
+				}
+
+				$page = get_post( $page_id );
+				if ( ! $page ) {
+					$empty_pages[] = $slug;
+					continue;
+				}
+			}
+
+			// If there aren't empty pages - then hide pages notice
+			if ( empty( $empty_pages ) ) {
+				$hidden_notices = get_option( 'um_hidden_admin_notices', array() );
+				if ( ! is_array( $hidden_notices ) ) {
+					$hidden_notices = array();
+				}
+
+				$hidden_notices[] = 'wrong_pages';
+
+				update_option( 'um_hidden_admin_notices', $hidden_notices );
+			}
 		}
 
 		/**
@@ -1826,24 +1904,13 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 * Manual check templates versions.
 		 */
 		public function check_templates_version() {
-			$templates = UM()->admin_settings()->get_override_templates( true );
-			$out_date  = false;
-
-			foreach ( $templates as $template ) {
-				if ( 0 === $template['status_code'] ) {
-					$out_date = true;
-					break;
-				}
-			}
-
-			if ( false === $out_date ) {
-				delete_option( 'um_override_templates_outdated' );
-			}
+			UM()->common()->theme()->flush_transient_templates_data();
 
 			$url = add_query_arg(
 				array(
-					'page' => 'um_options',
-					'tab'  => 'override_templates',
+					'page'    => 'um_options',
+					'tab'     => 'advanced',
+					'section' => 'override_templates',
 				),
 				admin_url( 'admin.php' )
 			);

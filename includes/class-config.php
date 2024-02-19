@@ -32,6 +32,13 @@ if ( ! class_exists( 'um\Config' ) ) {
 		public $core_pages;
 
 		/**
+		 * @since 2.8.3
+		 *
+		 * @var array
+		 */
+		public $predefined_pages;
+
+		/**
 		 * @var array
 		 */
 		public $core_directory_meta = array();
@@ -275,14 +282,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 			) );
 
 			$this->core_form_meta['register'] = array(
-				'_um_custom_fields' => 'a:6:{s:10:"user_login";a:15:{s:5:"title";s:8:"Username";s:7:"metakey";s:10:"user_login";s:4:"type";s:4:"text";s:5:"label";s:8:"Username";s:8:"required";i:1;s:6:"public";i:1;s:8:"editable";b:0;s:8:"validate";s:15:"unique_username";s:9:"min_chars";i:3;s:9:"max_chars";i:24;s:8:"position";s:1:"1";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:10:"user_email";a:13:{s:5:"title";s:14:"E-mail Address";s:7:"metakey";s:10:"user_email";s:4:"type";s:4:"text";s:5:"label";s:14:"E-mail Address";s:8:"required";i:0;s:6:"public";i:1;s:8:"editable";b:1;s:8:"validate";s:12:"unique_email";s:8:"position";s:1:"4";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:13:"user_password";a:16:{s:5:"title";s:8:"Password";s:7:"metakey";s:13:"user_password";s:4:"type";s:8:"password";s:5:"label";s:8:"Password";s:8:"required";i:1;s:6:"public";i:1;s:8:"editable";b:1;s:9:"min_chars";i:8;s:9:"max_chars";i:30;s:15:"force_good_pass";i:1;s:18:"force_confirm_pass";i:1;s:8:"position";s:1:"5";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:10:"first_name";a:12:{s:5:"title";s:10:"First Name";s:7:"metakey";s:10:"first_name";s:4:"type";s:4:"text";s:5:"label";s:10:"First Name";s:8:"required";i:0;s:6:"public";i:1;s:8:"editable";b:1;s:8:"position";s:1:"2";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:9:"last_name";a:12:{s:5:"title";s:9:"Last Name";s:7:"metakey";s:9:"last_name";s:4:"type";s:4:"text";s:5:"label";s:9:"Last Name";s:8:"required";i:0;s:6:"public";i:1;s:8:"editable";b:1;s:8:"position";s:1:"3";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:9:"_um_row_1";a:4:{s:4:"type";s:3:"row";s:2:"id";s:9:"_um_row_1";s:8:"sub_rows";s:1:"1";s:4:"cols";s:1:"1";}}',
+				'_um_custom_fields' => 'a:6:{s:10:"user_login";a:15:{s:5:"title";s:8:"Username";s:7:"metakey";s:10:"user_login";s:4:"type";s:4:"text";s:5:"label";s:8:"Username";s:8:"required";i:1;s:6:"public";i:1;s:8:"editable";b:0;s:8:"validate";s:15:"unique_username";s:9:"min_chars";i:3;s:9:"max_chars";i:24;s:8:"position";s:1:"1";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:10:"user_email";a:13:{s:5:"title";s:14:"Email Address";s:7:"metakey";s:10:"user_email";s:4:"type";s:4:"text";s:5:"label";s:14:"E-mail Address";s:8:"required";i:0;s:6:"public";i:1;s:8:"editable";b:1;s:8:"validate";s:12:"unique_email";s:8:"position";s:1:"4";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:13:"user_password";a:16:{s:5:"title";s:8:"Password";s:7:"metakey";s:13:"user_password";s:4:"type";s:8:"password";s:5:"label";s:8:"Password";s:8:"required";i:1;s:6:"public";i:1;s:8:"editable";b:1;s:9:"min_chars";i:8;s:9:"max_chars";i:30;s:15:"force_good_pass";i:1;s:18:"force_confirm_pass";i:1;s:8:"position";s:1:"5";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:10:"first_name";a:12:{s:5:"title";s:10:"First Name";s:7:"metakey";s:10:"first_name";s:4:"type";s:4:"text";s:5:"label";s:10:"First Name";s:8:"required";i:0;s:6:"public";i:1;s:8:"editable";b:1;s:8:"position";s:1:"2";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:9:"last_name";a:12:{s:5:"title";s:9:"Last Name";s:7:"metakey";s:9:"last_name";s:4:"type";s:4:"text";s:5:"label";s:9:"Last Name";s:8:"required";i:0;s:6:"public";i:1;s:8:"editable";b:1;s:8:"position";s:1:"3";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:9:"_um_row_1";a:4:{s:4:"type";s:3:"row";s:2:"id";s:9:"_um_row_1";s:8:"sub_rows";s:1:"1";s:4:"cols";s:1:"1";}}',
 				'_um_mode' => 'register',
 				'_um_core' => 'register',
 				'_um_register_use_custom_settings' => 0,
 			);
 
 			$this->core_form_meta['login'] = array(
-				'_um_custom_fields' => 'a:3:{s:8:"username";a:13:{s:5:"title";s:18:"Username or E-mail";s:7:"metakey";s:8:"username";s:4:"type";s:4:"text";s:5:"label";s:18:"Username or E-mail";s:8:"required";i:1;s:6:"public";i:1;s:8:"editable";b:0;s:8:"validate";s:24:"unique_username_or_email";s:8:"position";s:1:"1";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:13:"user_password";a:16:{s:5:"title";s:8:"Password";s:7:"metakey";s:13:"user_password";s:4:"type";s:8:"password";s:5:"label";s:8:"Password";s:8:"required";i:1;s:6:"public";i:1;s:8:"editable";b:1;s:9:"min_chars";i:8;s:9:"max_chars";i:30;s:15:"force_good_pass";i:1;s:18:"force_confirm_pass";i:1;s:8:"position";s:1:"2";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:9:"_um_row_1";a:4:{s:4:"type";s:3:"row";s:2:"id";s:9:"_um_row_1";s:8:"sub_rows";s:1:"1";s:4:"cols";s:1:"1";}}',
+				'_um_custom_fields' => 'a:3:{s:8:"username";a:13:{s:5:"title";s:18:"Username or Email";s:7:"metakey";s:8:"username";s:4:"type";s:4:"text";s:5:"label";s:18:"Username or E-mail";s:8:"required";i:1;s:6:"public";i:1;s:8:"editable";b:0;s:8:"validate";s:24:"unique_username_or_email";s:8:"position";s:1:"1";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:13:"user_password";a:16:{s:5:"title";s:8:"Password";s:7:"metakey";s:13:"user_password";s:4:"type";s:8:"password";s:5:"label";s:8:"Password";s:8:"required";i:1;s:6:"public";i:1;s:8:"editable";b:1;s:9:"min_chars";i:8;s:9:"max_chars";i:30;s:15:"force_good_pass";i:1;s:18:"force_confirm_pass";i:1;s:8:"position";s:1:"2";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:9:"_um_row_1";a:4:{s:4:"type";s:3:"row";s:2:"id";s:9:"_um_row_1";s:8:"sub_rows";s:1:"1";s:4:"cols";s:1:"1";}}',
 				'_um_mode' => 'login',
 				'_um_core' => 'login',
 				'_um_login_use_custom_settings' => 0,
@@ -334,9 +341,9 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'subject'       => 'Welcome to {site_name}!',
 					'body'          => 'Hi {display_name},<br /><br />' .
 					                   'Thank you for signing up with {site_name}! Your account is now active.<br /><br />' .
-					                   'To login please visit the following url:<br /><br />' .
-					                   '{login_url} <br /><br />' .
-					                   'Your account e-mail: {email} <br />' .
+					                   '{action_title}:<br /><br />' .
+					                   '{action_url} <br /><br />' .
+					                   'Your account email: {email} <br />' .
 					                   'Your account username: {username} <br /><br />' .
 					                   'If you have any problems, please contact us at {admin_email}<br /><br />' .
 					                   'Thanks,<br />' .
@@ -355,7 +362,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 					                   'If you have any problems, please contact us at {admin_email}<br /><br />' .
 					                   'Thanks, <br />' .
 					                   '{site_name}',
-					'description'   => __('Whether to send the user an email when his account needs e-mail activation','ultimate-member'),
+					'description'   => __('Whether to send the user an email when his account needs email activation','ultimate-member'),
 					'recipient'   => 'user'
 				),
 				'pending_email' => array(
@@ -379,7 +386,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 					                   'Thank you for signing up with {site_name}! Your account has been approved and is now active.<br /><br />' .
 					                   'To login please visit the following url:<br /><br />' .
 					                   '{login_url}<br /><br />' .
-					                   'Your account e-mail: {email}<br />' .
+					                   'Your account email: {email}<br />' .
 					                   'Your account username: {username}<br />' .
 					                   'Set your account password: {password_reset_link}<br /><br />' .
 					                   'If you have any problems, please contact us at {admin_email}<br /><br />' .
@@ -500,7 +507,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				),
 				'suspicious-activity'   => array(
 					'key'            => 'suspicious-activity',
-					'title'          => __( 'Secure: Suspicious Account Activity', 'ultimate-member' ),
+					'title'          => __( 'Security: Suspicious Account Activity', 'ultimate-member' ),
 					'subject'        => __( '[{site_name}] Suspicious Account Activity', 'ultimate-member' ),
 					'body'           => 'This is to inform you that there are suspicious activities with the following accounts: {user_profile_link}',
 					'description'    => __( 'Whether to receive notification when suspicious account activity is detected.', 'ultimate-member' ),
@@ -841,6 +848,96 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'password-reset'    => array( 'title' => __( 'Password Reset', 'ultimate-member' ) ),
 			) );
 		}
-		//end class
+
+		/**
+		 * Get variable from config
+		 *
+		 * @param string $key
+		 *
+		 * @return mixed
+		 *
+		 * @since 2.8.3
+		 */
+		public function get( $key ) {
+			if ( empty( $this->$key ) ) {
+				$this->{'init_' . $key}();
+			}
+			return apply_filters( 'um_config_get', $this->$key, $key );
+		}
+
+		/**
+		 * Init plugin core pages.
+		 *
+		 * @since 2.8.3
+		 */
+		public function init_predefined_pages() {
+			$core_forms       = get_option( 'um_core_forms', array() );
+			$core_directories = get_option( 'um_core_directories', array() );
+			$setup_shortcodes = array_merge(
+				array(
+					'profile'  => '',
+					'login'    => '',
+					'register' => '',
+					'members'  => '',
+				),
+				array_merge( $core_forms, $core_directories )
+			);
+
+			$this->predefined_pages = array(
+				'user'           => array(
+					'title'   => __( 'User', 'ultimate-member' ),
+					'content' => ! empty( $setup_shortcodes['profile'] ) ? '[ultimatemember form_id="' . $setup_shortcodes['profile'] . '"]' : '',
+				),
+				'login'          => array(
+					'title'   => __( 'Login', 'ultimate-member' ),
+					'content' => ! empty( $setup_shortcodes['login'] ) ? '[ultimatemember form_id="' . $setup_shortcodes['login'] . '"]' : '',
+				),
+				'register'       => array(
+					'title'   => __( 'Register', 'ultimate-member' ),
+					'content' => ! empty( $setup_shortcodes['register'] ) ? '[ultimatemember form_id="' . $setup_shortcodes['register'] . '"]' : '',
+				),
+				'members'        => array(
+					'title'   => __( 'Members', 'ultimate-member' ),
+					'content' => ! empty( $setup_shortcodes['members'] ) ? '[ultimatemember form_id="' . $setup_shortcodes['members'] . '"]' : '',
+				),
+				'logout'         => array(
+					'title'   => __( 'Logout', 'ultimate-member' ),
+					'content' => '',
+				),
+				'account'        => array(
+					'title'   => __( 'Account', 'ultimate-member' ),
+					'content' => '[ultimatemember_account]',
+				),
+				'password-reset' => array(
+					'title'   => __( 'Password Reset', 'ultimate-member' ),
+					'content' => '[ultimatemember_password]',
+				),
+			);
+
+			/**
+			 * Filters Ultimate Member predefined pages.
+			 *
+			 * @param {array} $pages Predefined pages.
+			 *
+			 * @return {array} Predefined pages.
+			 *
+			 * @since 2.8.3
+			 * @hook um_predefined_pages
+			 *
+			 * @example <caption>Extend UM core pages.</caption>
+			 * function my_predefined_pages( $pages ) {
+			 *     // your code here
+			 *     $pages['my_page_key'] = array( 'title' => __( 'My Page Title', 'my-translate-key' ), 'content' => 'my-page-predefined-content' );
+			 *     return $pages;
+			 * }
+			 * add_filter( 'um_predefined_pages', 'my_predefined_pages' );
+			 */
+			$this->predefined_pages = apply_filters( 'um_predefined_pages', $this->predefined_pages );
+
+			// since 2.8.3 legacy hook
+			// @todo remove in 3.0 version
+			$this->predefined_pages = apply_filters( 'um_core_pages', $this->predefined_pages );
+			$this->core_pages       = $this->predefined_pages;
+		}
 	}
 }

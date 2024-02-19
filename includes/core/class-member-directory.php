@@ -58,7 +58,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 		var $filter_types = array();
 
-
+		/**
+		 * Fields used for searching from wp_users table.
+		 *
+		 * @var string[]
+		 */
 		var $core_search_fields = array(
 			'user_login',
 			'user_url',
@@ -67,6 +71,19 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			'user_nicename',
 		);
 
+		/**
+		 * Fields used for sorting from wp_users table.
+		 *
+		 * @var string[]
+		 */
+		var $core_users_fields = array(
+			'user_login',
+			'user_url',
+			'display_name',
+			'user_email',
+			'user_nicename',
+			'user_registered',
+		);
 
 		/**
 		 * @var
@@ -408,7 +425,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				'first_name'            => __( 'First Name', 'ultimate-member' ),
 				'last_name'             => __( 'Last Name', 'ultimate-member' ),
 				'nickname'              => __( 'Nickname', 'ultimate-member' ),
-				'secondary_user_email'  => __( 'Secondary E-mail Address', 'ultimate-member' ),
+				'secondary_user_email'  => __( 'Secondary Email Address', 'ultimate-member' ),
 				'description'           => __( 'Biography', 'ultimate-member' ),
 				'phone_number'          => __( 'Phone Number', 'ultimate-member' ),
 				'mobile_number'         => __( 'Mobile Number', 'ultimate-member' ),
@@ -1314,24 +1331,24 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$this->query_args['paged'] = ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
 		}
 
-
 		/**
 		 * Add sorting attributes for \WP_Users_Query
 		 *
 		 * @param array $directory_data Member Directory options
 		 */
-		function sorting_query( $directory_data ) {
+		public function sorting_query( $directory_data ) {
 			// sort members by
 			$this->query_args['order'] = 'ASC';
+
 			$sortby = ! empty( $_POST['sorting'] ) ? sanitize_text_field( $_POST['sorting'] ) : $directory_data['sortby'];
-			$sortby = ( $sortby == 'other' ) ? $directory_data['sortby_custom'] : $sortby;
+			$sortby = ( 'other' === $sortby ) ? $directory_data['sortby_custom'] : $sortby;
 
 			$custom_sort = array();
 			if ( ! empty( $directory_data['sorting_fields'] ) ) {
 				$sorting_fields = maybe_unserialize( $directory_data['sorting_fields'] );
 				foreach ( $sorting_fields as $field ) {
 					if ( is_array( $field ) ) {
-						$field_keys = array_keys( $field );
+						$field_keys    = array_keys( $field );
 						$custom_sort[] = $field_keys[0];
 					}
 				}
@@ -1384,7 +1401,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$this->query_args['order'] = 'ASC';
 				}
 
-			} elseif ( in_array( $sortby, array( 'last_name', 'first_name', 'nickname' ) ) ) {
+			} elseif ( in_array( $sortby, array( 'last_name', 'first_name', 'nickname' ), true ) ) {
 
 				$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $sortby . '_c' => array(
 					'key'       => $sortby,
@@ -1426,7 +1443,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				$this->query_args['orderby'] = array( 'last_name_c' => 'ASC', 'first_name_c' => 'ASC' );
 				unset( $this->query_args['order'] );
 
-			} elseif ( count( $numeric_sorting_keys ) && in_array( $sortby, $numeric_sorting_keys ) ) {
+			} elseif ( count( $numeric_sorting_keys ) && in_array( $sortby, $numeric_sorting_keys, true ) ) {
 
 				$order = 'DESC';
 				if ( strstr( $sortby, '_desc' ) ) {
@@ -1458,18 +1475,23 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					)
 				);
 
-				$this->query_args['orderby'] = array( $sortby . '_ns' => $order, 'user_registered' => 'DESC' );
+				$this->query_args['orderby'] = array(
+					$sortby . '_ns'   => $order,
+					'user_registered' => 'DESC',
+				);
 				unset( $this->query_args['order'] );
 
-			} elseif ( ( ! empty( $directory_data['sortby_custom'] ) && $sortby == $directory_data['sortby_custom'] ) || in_array( $sortby, $custom_sort ) ) {
+			} elseif ( ( ! empty( $directory_data['sortby_custom'] ) && $sortby === $directory_data['sortby_custom'] ) || in_array( $sortby, $custom_sort, true ) ) {
 				$custom_sort_order = ! empty( $directory_data['sortby_custom_order'] ) ? $directory_data['sortby_custom_order'] : 'ASC';
 
 				$meta_query       = new \WP_Meta_Query();
 				$custom_sort_type = ! empty( $directory_data['sortby_custom_type'] ) ? $meta_query->get_cast_for_type( $directory_data['sortby_custom_type'] ) : 'CHAR';
+
 				if ( ! empty( $directory_data['sorting_fields'] ) ) {
 					// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
 					$sorting        = sanitize_text_field( $_POST['sorting'] );
-					$sorting_fields = maybe_serialize( $directory_data['sorting_fields'] );
+					$sorting_fields = maybe_unserialize( $directory_data['sorting_fields'] );
+
 					if ( ! empty( $sorting_fields ) && is_array( $sorting_fields ) ) {
 						foreach ( $sorting_fields as $field ) {
 							if ( isset( $field[ $sorting ] ) ) {
@@ -2629,13 +2651,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			// Prepare default user query values
 			$this->query_args = array(
-				'fields'        => 'ids',
-				'number'        => 0,
-				'meta_query'    => array(
-					'relation' => 'AND'
+				'fields'     => 'ids',
+				'number'     => 0,
+				'meta_query' => array(
+					'relation' => 'AND',
 				),
 			);
-
 
 			// handle different restrictions
 			$this->restriction_options();
@@ -2770,7 +2791,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$this->cover_size = apply_filters( 'um_member_directory_cover_image_size', $this->cover_size, $directory_data );
 
-			$avatar_size = UM()->options()->get( 'profile_photosize' );
+			$avatar_size       = UM()->options()->get( 'profile_photosize' );
 			$this->avatar_size = str_replace( 'px', '', $avatar_size );
 			$this->avatar_size = apply_filters( 'um_member_directory_avatar_image_size', $this->avatar_size, $directory_data );
 

@@ -99,6 +99,15 @@ class UM_Emails_List_Table extends WP_List_Table {
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 	}
 
+	/**
+	 * Generates the table navigation above or below the table
+	 *
+	 * @since 3.1.0
+	 * @param string $which
+	 */
+	protected function display_tablenav( $which ) {
+		// Stop displaying tablenav.
+	}
 
 	/**
 	 * @param object $item
@@ -221,12 +230,14 @@ class UM_Emails_List_Table extends WP_List_Table {
 	function column_email( $item ) {
 		$active = UM()->options()->get( $item['key'] . '_on' );
 
-		$icon = ! empty( $active ) ? 'um-notification-is-active dashicons-yes' : 'dashicons-no-alt';
-		$link = add_query_arg( array( 'email' => $item['key'] ) );
-		$text = '<span class="dashicons um-notification-status ' . esc_attr( $icon ) . '"></span><a href="' . esc_url( $link ) . '"><strong>' . $item['title'] . '</strong></a>';
+		$icon       = ! empty( $active ) ? 'um-notification-is-active dashicons-yes' : 'dashicons-no-alt';
+		$icon_title = ! empty( $active ) ? __( 'Enabled', 'ultimate-member' ) : __( 'Disabled', 'ultimate-member' );
+
+		$link = add_query_arg( array( 'email' => $item['key'] ), remove_query_arg( 'paged' ) );
+		$text = '<span class="dashicons um-notification-status ' . esc_attr( $icon ) . '" title="' . esc_attr( $icon_title ) . '"></span><a href="' . esc_url( $link ) . '"><strong>' . esc_html( $item['title'] ) . '</strong></a>';
 
 		if ( ! empty( $item['description'] ) ) {
-			$text .= ' <span class="um_tooltip dashicons dashicons-editor-help" title="' . esc_attr__( $item['description'], 'ultimate-member' ) . '"></span>';
+			$text .= ' <span class="um_tooltip dashicons dashicons-editor-help" title="' . esc_attr( $item['description'] ) . '"></span>';
 		}
 
 		return $text;
@@ -239,11 +250,11 @@ class UM_Emails_List_Table extends WP_List_Table {
 	 * @return string
 	 */
 	function column_recipients( $item ) {
-		if ( $item['recipient'] == 'admin' ) {
+		if ( 'admin' === $item['recipient'] ) {
 			return UM()->options()->get( 'admin_email' );
-		} else {
-			return __( 'Member', 'ultimate-member' );
 		}
+
+		return __( 'Member', 'ultimate-member' );
 	}
 
 
@@ -253,7 +264,8 @@ class UM_Emails_List_Table extends WP_List_Table {
 	 * @return string
 	 */
 	function column_configure( $item ) {
-		return '<a class="button um-email-configure" href="' . add_query_arg( array( 'email' => $item['key'] ) ) . '" title="' . esc_attr__( 'Edit template', 'ultimate-member' ) . '"><span class="dashicons dashicons-admin-generic"></span></a>';
+		$edit_link = add_query_arg( array( 'email' => $item['key'] ), remove_query_arg( 'paged' ) );
+		return '<a class="button um-email-configure" href="' . esc_url( $edit_link ) . '" title="' . esc_attr__( 'Manage', 'ultimate-member' ) . '">' . esc_html__( 'Manage', 'ultimate-member' ) . '</a>';
 	}
 
 
@@ -276,13 +288,13 @@ class UM_Emails_List_Table extends WP_List_Table {
 }
 
 $ListTable = new UM_Emails_List_Table( array(
-	'singular'  => __( 'Email Notification', 'ultimate-member' ),
-	'plural'    => __( 'Email Notifications', 'ultimate-member' ),
-	'ajax'      => false
+	'singular' => __( 'Email Notification', 'ultimate-member' ),
+	'plural'   => __( 'Email Notifications', 'ultimate-member' ),
+	'ajax'     => false,
 ));
 
-$per_page   = 20;
-$paged      = $ListTable->get_pagenum();
+$per_page = 999;
+$paged    = $ListTable->get_pagenum();
 
 /**
  * UM hook
@@ -306,9 +318,9 @@ $paged      = $ListTable->get_pagenum();
  * ?>
  */
 $columns = apply_filters( 'um_email_templates_columns', array(
-	'email'         => __( 'Email', 'ultimate-member' ),
-	'recipients'    => __( 'Recipient(s)', 'ultimate-member' ),
-	'configure'     => '',
+	'email'      => __( 'Email', 'ultimate-member' ),
+	'recipients' => __( 'Recipient(s)', 'ultimate-member' ),
+	'configure'  => '',
 ) );
 
 $ListTable->set_columns( $columns );
@@ -317,18 +329,21 @@ $emails = UM()->config()->email_notifications;
 
 $ListTable->prepare_items();
 $ListTable->items = array_slice( $emails, ( $paged - 1 ) * $per_page, $per_page );
-$ListTable->wpc_set_pagination_args( array( 'total_items' => count( $emails ), 'per_page' => $per_page ) ); ?>
+$ListTable->wpc_set_pagination_args( array( 'total_items' => count( $emails ), 'per_page' => $per_page ) );
+?>
 
-<p class="description" style="margin: 20px 0 0 0;">
-	<?php
-	// translators: %s: doc link.
-	echo wp_kses( sprintf( __( 'You may get more details about email notifications customization <a href="%s">here</a>', 'ultimate-member' ), 'https://docs.ultimatemember.com/article/1335-email-templates' ), UM()->get_allowed_html( 'admin_notice' ) );
-	?>
+<h2 class="title"><?php esc_html_e( 'Email notifications', 'ultimate-member' ); ?></h2>
+<p>
+	<?php esc_html_e( 'Email notifications sent from Ultimate Member are listed below. Click on an email to configure it.', 'ultimate-member' ); ?>
+	<br />
+	<?php esc_html_e( 'Emails should be sent from an email using your website\'s domain name. We highly recommend using a SMTP service email delivery.', 'ultimate-member' ); ?>
+	<?php echo wp_kses( sprintf( __( 'Please see this <a href="%s" target="_blank">doc</a> for more information.', 'ultimate-member' ), 'https://docs.ultimatemember.com/article/116-not-receiving-user-emails-or-admin-notifications' ), UM()->get_allowed_html( 'admin_notice' ) ); ?>
 </p>
-
+<div class="clear"></div>
 <form action="" method="get" name="um-settings-emails" id="um-settings-emails">
 	<input type="hidden" name="page" value="um_options" />
 	<input type="hidden" name="tab" value="email" />
 
 	<?php $ListTable->display(); ?>
 </form>
+<div class="clear"></div>
