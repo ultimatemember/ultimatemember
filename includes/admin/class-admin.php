@@ -1159,21 +1159,24 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 * @return array
 		 */
 		public function sanitize_registered_users( $value ) {
-			foreach ( $value as $key => $val ) {
-				if ( ! empty( $val['ids'] ) ) {
-					$key            = sanitize_key( $key );
-					$val['compare'] = sanitize_key( $val['compare'] );
-					foreach ( $val['ids'] as $k => $id ) {
-						if ( 'user' === $key ) {
-							$val['ids'][ $k ] = absint( $id );
-						} else {
-							$val['ids'][ $k ] = sanitize_key( $id );
+			foreach ( $value as $group => $group_val ) {
+				$group = absint( $group );
+				foreach ( $group_val as $key => $val ) {
+					if ( ! empty( $val['ids'] ) ) {
+						$key            = sanitize_key( $key );
+						$val['compare'] = sanitize_key( $val['compare'] );
+						foreach ( $val['ids'] as $k => $id ) {
+							if ( 'user' === $key ) {
+								$val['ids'][ $k ] = absint( $id );
+							} else {
+								$val['ids'][ $k ] = sanitize_key( $id );
+							}
 						}
-					}
 
-					$value[ $key ] = $val;
-				} else {
-					unset( $value[ $key ] );
+						$value[ $group ][ $key ] = $val;
+					} else {
+						unset( $value[ $group ][ $key ] );
+					}
 				}
 			}
 
