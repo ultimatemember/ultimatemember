@@ -1196,7 +1196,8 @@ jQuery(document).ready( function() {
 		}
 	});
 
-	jQuery( '.um-entities-conditions-wrap' ).on( 'click', '.add-row', function()  {
+	jQuery( '.um-entities-conditions-wrap' ).on( 'click', '.add-row', function(e)  {
+		e.preventDefault();
 		var wrapper = jQuery( this ).closest( '.um-entities-conditions-wrap' );
 		var el      = wrapper.find( '.um-entities-conditions-row:first' ).clone();
 
@@ -1211,7 +1212,8 @@ jQuery(document).ready( function() {
 		wrapper.find( '.remove-row' ).removeAttr( 'disabled' );
 	});
 
-	jQuery( '.um-entities-conditions-wrap' ).on( 'click', '.remove-row', function()  {
+	jQuery( '.um-entities-conditions-wrap' ).on( 'click', '.remove-row', function(e)  {
+		e.preventDefault();
 		var wrapper = jQuery( this ).closest( '.um-entities-conditions-wrap' );
 		var row     = jQuery( this ).closest( '.um-entities-conditions-row' );
 		console.log(wrapper.find( '.um-entities-conditions-row' ).length)
@@ -1226,8 +1228,8 @@ jQuery(document).ready( function() {
 	jQuery( '.um-users-conditions-wrap' ).on( 'change', '.um-users-conditions', function()  {
 		var wrapper  = jQuery( this ).closest( '.um-users-conditions-row' );
 		var option   = jQuery( this ).find( ':selected' ).val();
+		var num      = jQuery( this ).closest( '.um-users-conditions-row-group' ).attr( 'data-group' );
 		var original = wrapper.find( '.um-users-conditions' ).data( 'original' );
-		var selected_attr = wrapper.find( '.um-users-conditions' ).data( 'selected' );
 
 		if ( 'none' === option ) {
 			wrapper.find( 'select' ).removeAttr( 'name' );
@@ -1245,20 +1247,15 @@ jQuery(document).ready( function() {
 						option: option
 					},
 					success: function( response ) {
-						console.log(response)
 						if ( 'auth' !== option ) {
 							wrapper.find( '.um-users-conditions-responce' ).attr( 'multiple', 'multiple' );
 						} else {
 							wrapper.find( '.um-users-conditions-responce' ).removeAttr( 'multiple' );
 						}
-						wrapper.find( '.um-users-conditions' ).attr( 'name', original + '[' + option + ']' );
-						wrapper.find( '.um-users-conditions-compare' ).attr( 'name', original + '[' + option + '][compare]' );
-						wrapper.find( '.um-users-conditions-responce' ).attr( 'name', original + '[' + option + '][ids][]' );
+						wrapper.find( '.um-users-conditions' ).attr( 'name', original + '[' + parseInt( num ) + '][' + option + ']' );
+						wrapper.find( '.um-users-conditions-compare' ).attr( 'name', original + '[' + parseInt( num ) + '][' + option + '][compare]' );
+						wrapper.find( '.um-users-conditions-responce' ).attr( 'name', original + '[' + parseInt( num ) + '][' + option + '][ids][]' );
 						wrapper.find( '.um-users-conditions-responce' ).html( response.data );
-
-						jQuery( '.um-users-conditions-wrap .um-users-conditions #um_option_' + option ).attr( 'disabled', 'disabled' );
-						wrapper.find( '#um_option_' + option ).removeAttr( 'disabled' );
-						jQuery( '.um-users-conditions-wrap' )
 					},
 					error: function( error ) {
 						console.log( error )
@@ -1268,11 +1265,10 @@ jQuery(document).ready( function() {
 		}
 	});
 
-	jQuery( '.um-users-conditions-wrap' ).on( 'click', '.add-row', function()  {
-		var wrapper = jQuery( this ).closest( '.um-users-conditions-wrap' );
+	jQuery( '.um-users-conditions-wrap' ).on( 'click', '.add-row', function(e)  {
+		e.preventDefault();
+		var wrapper = jQuery( this ).closest( '.um-users-conditions-row-group' );
 		var el      = wrapper.find( '.um-users-conditions-row:first' ).clone();
-		var limit   = wrapper.attr( 'data-count' ) - 1;
-		var count   = wrapper.find( '.um-users-conditions-row' ).length;
 
 		el.find( '.um-users-conditions-responce option[value!="0"]' ).remove();
 		el.find( '.um-users-conditions-responce option' ).html( '' );
@@ -1281,24 +1277,15 @@ jQuery(document).ready( function() {
 		el.find( '.um-users-conditions-responce' ).removeAttr( 'multiple' );
 		el.find( '.um-users-conditions-compare option:first' ).prop( 'selected', true );
 
-		jQuery( '.um-users-conditions' ).each( function (){
-			var selected = jQuery( this ).find( 'option:selected' ).val();
-			if ( 'none' !== selected ) {
-				el.find( '#um_option_' + selected ).attr( 'disabled', 'disabled' );
-			}
-		});
-
 		wrapper.append( el );
 
 		wrapper.find( '.remove-row' ).removeAttr( 'disabled' );
 	});
 
-	jQuery( '.um-users-conditions-wrap' ).on( 'click', '.remove-row', function()  {
-		var wrapper  = jQuery( this ).closest( '.um-users-conditions-wrap' );
-		var row      = jQuery( this ).closest( '.um-users-conditions-row' );
-		var limit    = wrapper.attr( 'data-count' ) - 1;
-		var count    = wrapper.find( '.um-users-conditions-row' ).length;
-		var selected = row.find( '.um-users-conditions option:selected' ).val();
+	jQuery( '.um-users-conditions-wrap' ).on( 'click', '.remove-row', function(e)  {
+		e.preventDefault();
+		var wrapper = jQuery( this ).closest( '.um-users-conditions-wrap' );
+		var row     = jQuery( this ).closest( '.um-users-conditions-row' );
 
 		if ( wrapper.find( '.um-users-conditions-row' ).length > 1 ) {
 			row.remove();
@@ -1315,5 +1302,56 @@ jQuery(document).ready( function() {
 		if ( 1 === wrapper.find( '.um-users-conditions-row' ).length ) {
 			wrapper.find( '.remove-row' ).attr( 'disabled', 'disabled' );
 		}
+
+		jQuery( '.um-users-conditions-row-group' ).each( function() {
+			if ( 0 === jQuery( this ).find( '.um-users-conditions-row' ).length ) {
+				var elems = jQuery( this ).nextAll('.um-users-conditions-row-group');
+				jQuery( this ).remove();
+
+				if ( elems ) {
+					elems.each( function() {
+						var old_index        = jQuery( this ).attr( 'data-group' );
+						var old_name         = jQuery( this ).find( '.um-users-conditions' ).attr( 'name' );
+						var old_name_compare = jQuery( this ).find( '.um-users-conditions-compare' ).attr( 'name' );
+						var old_name_ids     = jQuery( this ).find( '.um-users-conditions-responce' ).attr( 'name' );
+						var new_index        = parseInt( old_index ) - 1;
+						jQuery( this ).attr( 'data-group', new_index );
+
+						if ( old_name ) {
+							var new_name = old_name.replace( old_index, new_index );
+							jQuery( this ).find( '.um-users-conditions' ).attr( 'name', new_name );
+						}
+						if ( old_name_compare ) {
+							var new_name_compare = old_name_compare.replace(old_index, new_index);
+							jQuery( this ).find( '.um-users-conditions-compare' ).attr( 'name', new_name_compare );
+						}
+						if ( old_name_ids ) {
+							var new_name_ids = old_name_ids.replace(old_index, new_index);
+							jQuery( this ).find( '.um-users-conditions-responce' ).attr( 'name', new_name_ids );
+						}
+					});
+				}
+			}
+		});
+	});
+
+	jQuery( '.um-users-conditions-wrap' ).on( 'click', '.add-group-row', function(e)  {
+		e.preventDefault();
+		var wrapper = jQuery( this ).closest( '.um-users-conditions-wrap' );
+		var el      = jQuery( '.um-users-conditions-row-group:first' ).clone();
+		var num     = jQuery( '.um-users-conditions-row-group:last' ).attr( 'data-group' );
+
+		el.find( '.um-users-conditions-row' ).not( ':first' ).remove();
+		el.find( '.um-users-conditions-responce option[value!="0"]' ).remove();
+		el.find( '.um-users-conditions-responce option' ).html( '' );
+		el.find( '.um-users-conditions option' ).removeAttr( 'selected' );
+		el.find( '.um-users-conditions,.um-users-conditions-compare , .um-users-conditions-responce' ).removeAttr( 'name' );
+		el.find( '.um-users-conditions-responce' ).removeAttr( 'multiple' );
+		el.find( '.um-users-conditions-compare option:first' ).prop( 'selected', true );
+		el.attr( 'data-group', parseInt( num ) + 1 );
+
+		jQuery( this ).before( el );
+
+		wrapper.find( '.conditions-row-action' ).removeAttr( 'disabled' );
 	});
 });

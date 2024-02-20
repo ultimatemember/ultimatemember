@@ -515,6 +515,19 @@ span.um-admin-icon-clear
     opacity: .5
   &:hover
     color: #2271b1
+
+
+.um-users-conditions-row-group
+  margin: 0 0 30px
+  &:first-child
+    .um-users-conditions-separator
+      display: none
+  .um-users-conditions-separator
+    text-align: center
+    font-size: 10px
+    font-weight: 700
+    margin: 0 0 5px
+    display: block
 .um-users-conditions-row
   margin: 0 0 5px
   .um-users-conditions-responce
@@ -522,3 +535,18 @@ span.um-admin-icon-clear
   select
     resize: vertical
     width: 27%
+.conditions-group-action
+  display: inline-block
+  margin: 0 2px
+  padding: 5px
+  border: none
+  border-radius: 3px
+  cursor: pointer
+  &[disabled]
+    cursor: not-allowed
+    opacity: .5
+  &.add-group-row
+    background: #2271b1
+    color: #fff
+    &:hover
+      background: #135e96

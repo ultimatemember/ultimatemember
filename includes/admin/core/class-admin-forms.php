@@ -2081,6 +2081,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					$html .= '</div>';
 				}
 			} else {
+				$html .= '<div class="um-users-conditions-row-group" data-group="1">';
+				$html .= '<div class="um-users-conditions-separator">' . esc_html__( 'OR' ) . '</div>';
 				$html .= '<div class="um-users-conditions-row">';
 
 				$html .= '<select ' . $original_name . $class_attr . $id_attr . $name_attr . $data_attr . '>';
@@ -2102,6 +2104,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$html .= '<button title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="conditions-row-action add-row">+</button>';
 				$html .= '<button disabled title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="conditions-row-action remove-row">-</button>';
 				$html .= '</div>';
+
+				$html .= '</div>';
+				$html .= '<button class="conditions-group-action add-group-row">' . esc_html__( 'Add group rule' ) . '</button>';
 			}
 			$html .= '</div>';
 

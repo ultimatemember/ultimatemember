@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	UM()->admin_forms(
 		array(
-			'class'     => 'um-restriction-rule-users um-half-column',
+			'class'     => 'um-restriction-rule-users um-top-label',
 			'prefix_id' => 'um_restriction_rules_users',
 			'fields'    => array(
 				array(

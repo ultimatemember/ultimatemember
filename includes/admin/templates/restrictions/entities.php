@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	UM()->admin_forms(
 		array(
-			'class'     => 'um-restriction-rule-include um-half-column',
+			'class'     => 'um-restriction-rule-include um-top-label',
 			'prefix_id' => 'um_restriction_rules_include',
 			'fields'    => array(
 				array(
@@ -39,7 +39,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	UM()->admin_forms(
 		array(
-			'class'     => 'um-restriction-rule-exclude um-half-column',
+			'class'     => 'um-restriction-rule-exclude um-top-label',
 			'prefix_id' => 'um_restriction_rules_exclude',
 			'fields'    => array(
 				array(

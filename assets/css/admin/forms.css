@@ -461,6 +461,20 @@ span.um-admin-icon-clear i {
   color: #2271b1;
 }
 
+.um-users-conditions-row-group {
+  margin: 0 0 30px;
+}
+.um-users-conditions-row-group:first-child .um-users-conditions-separator {
+  display: none;
+}
+.um-users-conditions-row-group .um-users-conditions-separator {
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  margin: 0 0 5px;
+  display: block;
+}
+
 .um-users-conditions-row {
   margin: 0 0 5px;
 }
@@ -470,4 +484,24 @@ span.um-admin-icon-clear i {
 .um-users-conditions-row select {
   resize: vertical;
   width: 27%;
+}
+
+.conditions-group-action {
+  display: inline-block;
+  margin: 0 2px;
+  padding: 5px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.conditions-group-action[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.conditions-group-action.add-group-row {
+  background: #2271b1;
+  color: #fff;
+}
+.conditions-group-action.add-group-row:hover {
+  background: #135e96;
 }
