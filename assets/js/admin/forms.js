@@ -1159,6 +1159,7 @@ jQuery(document).ready( function() {
 		var option   = jQuery( this ).find( ':selected' ).val();
 		var original = wrapper.find( '.um-entities-conditions' ).data( 'original' );
 		if ( 'none' === option ) {
+			wrapper.find( 'select, input' ).removeAttr( 'name' );
 			wrapper.find( '.um-entities-conditions-responce' ).removeAttr( 'disabled' ).removeAttr( 'multiple' );
 			wrapper.find( '.um-entities-conditions-responce' ).html( '' );
 		} else {

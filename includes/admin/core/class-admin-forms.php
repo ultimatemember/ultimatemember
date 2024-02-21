@@ -2036,50 +2036,55 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$value = $this->get_field_value( $field_data );
 
 			$html = '<div class="um-users-conditions-wrap" data-count="' . $scope_count . '">';
+
 			if ( ! empty( $value[ $field_data_id ] ) ) {
-				foreach ( $value[ $field_data_id ] as $rule_key => $rule ) {
-					$selected_array[] = $rule_key;
-				}
+				$i = 1;
+				foreach ( $value[ $field_data_id ] as $group_key => $group ) {
+					$html .= '<div class="um-users-conditions-row-group" data-group="' . esc_attr( $i ) . '">';
+					$html .= '<div class="um-users-conditions-separator">' . esc_html__( 'OR' ) . '</div>';
 
-				foreach ( $value[ $field_data_id ] as $rule_key => $rule ) {
-					$name_attr          = ' name="' . $name . '[' . $field_data_id . '][' . $rule_key . ']" ';
-					$name_attr_compare  = ' name="' . $name . '[' . $field_data_id . '][' . $rule_key . '][compare]" ';
-					$name_attr_responce = ' name="' . $name . '[' . $field_data_id . '][' . $rule_key . '][ids][]" ';
-					$selected           = ' data-selected="' . $rule_key . '" ';
+					if ( ! empty( $group ) ) {
+						$disabled_remove_button = 1 === count( $group ) ? 'disabled' : '';
+						foreach ( $group as $rule_key => $rule ) {
+							$name_attr          = ' name="' . $name . '[' . $field_data_id . '][' . $i . '][' . $rule_key . ']" ';
+							$name_attr_compare  = ' name="' . $name . '[' . $field_data_id . '][' . $i . '][' . $rule_key . '][compare]" ';
+							$name_attr_responce = ' name="' . $name . '[' . $field_data_id . '][' . $i . '][' . $rule_key . '][ids][]" ';
 
-					$html .= '<div class="um-users-conditions-row">';
+							$html .= '<div class="um-users-conditions-row">';
 
-					$html .= '<select ' . $selected . $original_name . $class_attr . $id_attr . $name_attr . $data_attr . '>';
-					foreach ( $scope as $key => $label ) {
-						$disabled = '';
-						if ( in_array( $key, $selected_array, true ) && $rule_key !== $key ) {
-							$disabled = ' disabled="disabled" ';
+							$html .= '<select ' . $original_name . $class_attr . $id_attr . $name_attr . $data_attr . '>';
+							foreach ( $scope as $key => $label ) {
+								$html .= '<option id="um_option_' . $key . '" value="' . $key . '" ' . selected( $key === $rule_key, true, false ) . '>' . $label . '</option>';
+							}
+							$html .= '</select>';
+
+							$html .= '<select ' . $original_name . $class_attr_compare . $id_attr . $name_attr_compare . $data_attr . '>';
+							foreach ( $compare as $key => $label ) {
+								$html .= '<option value="' . $key . '" ' . selected( $key === $rule['compare'], true, false ) . '>' . $label . '</option>';
+							}
+							$html .= '</select>';
+
+							$multiple = '';
+							if ( 'user' === $rule_key || 'role' === $rule_key ) {
+								$multiple = ' multiple="multiple" ';
+							}
+							$options = $this->get_users_options( $rule_key );
+							$html   .= '<select ' . $multiple . $original_name . $class_attr_responce . $id_attr . $name_attr_responce . $data_attr . '>';
+							foreach ( $options as $option_key => $option ) {
+								$html .= '<option value="' . $option_key . '" ' . selected( in_array( $option_key, $rule['ids'], true ), true, false ) . '>' . $option . '</option>';
+							}
+							$html .= '</select>';
+
+							$html .= '<button title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="conditions-row-action add-row">+</button>';
+							$html .= '<button ' . $disabled_remove_button . ' title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="conditions-row-action remove-row">-</button>';
+							$html .= '</div>';
 						}
-						$html .= '<option id="um_option_' . $key . '" value="' . $key . '" ' . selected( $key === $rule_key, true, false ) . $disabled . '>' . $label . '</option>';
 					}
-					$html .= '</select>';
-
-					$html .= '<select ' . $original_name . $class_attr_compare . $id_attr . $name_attr_compare . $data_attr . '>';
-					foreach ( $compare as $key => $label ) {
-						$html .= '<option value="' . $key . '" ' . selected( $key === $rule['compare'], true, false ) . '>' . $label . '</option>';
-					}
-					$html .= '</select>';
-
-					$multiple = '';
-					if ( 'user' === $rule_key || 'role' === $rule_key ) {
-						$multiple = ' multiple="multiple" ';
-					}
-					$options = $this->get_users_options( $rule_key );
-					$html   .= '<select ' . $original_name . $class_attr_responce . $id_attr . $name_attr_responce . $data_attr . $multiple . '>';
-					foreach ( $options as $option_key => $option ) {
-						$html .= '<option value="' . $option_key . '" ' . selected( in_array( $option_key, $rule['ids'], true ), true, false ) . '>' . $option . '</option>';
-					}
-					$html .= '</select>';
-
-					$html .= '<button title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="conditions-row-action add-row">+</button>';
-					$html .= '<button title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="conditions-row-action remove-row">-</button>';
 					$html .= '</div>';
+
+					$i++;
 				}
+				$html .= '<button class="conditions-group-action add-group-row">' . esc_html__( 'Add group rule' ) . '</button>';
 			} else {
 				$html .= '<div class="um-users-conditions-row-group" data-group="1">';
 				$html .= '<div class="um-users-conditions-separator">' . esc_html__( 'OR' ) . '</div>';

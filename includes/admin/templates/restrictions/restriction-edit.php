@@ -78,8 +78,11 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 	}
 
 	if ( empty( $rule_error ) ) {
-		$data        = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules'] );
-		$data_action = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_action'] );
+		$data         = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules'] );
+		$data_action  = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_action'] );
+		$data_include = array();
+		$data_exclude = array();
+		$data_rules   = array();
 		if ( ! empty( $_POST['um_restriction_rules_include']['_um_include'] ) ) {
 			$data_include = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_include'] );
 		}
@@ -151,16 +154,10 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 
 			update_option( 'um_restriction_rules', $rules );
 
-			$rule_meta['action'] = $data_action;
-			if ( ! empty( $data_include ) ) {
-				$rule_meta['include'] = $data_include;
-			}
-			if ( ! empty( $data_include ) ) {
-				$rule_meta['exclude'] = $data_exclude;
-			}
-			if ( ! empty( $data_rules ) ) {
-				$rule_meta['rules'] = $data_rules;
-			}
+			$rule_meta['action']  = $data_action;
+			$rule_meta['include'] = $data_include;
+			$rule_meta['exclude'] = $data_exclude;
+			$rule_meta['rules']   = $data_rules;
 
 			/**
 			 * Filters the restriction rule meta before save it to DB.
