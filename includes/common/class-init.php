@@ -77,6 +77,19 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 		}
 
 		/**
+		 * @return Shortcodes
+		 *
+		 * @since 2.8.4
+		 */
+		public function shortcodes() {
+			if ( empty( UM()->classes['um\common\shortcodes'] ) ) {
+				UM()->classes['um\common\shortcodes'] = new Shortcodes();
+			}
+
+			return UM()->classes['um\common\shortcodes'];
+		}
+
+		/**
 		 * @since 2.6.8
 		 *
 		 * @return Site_Health

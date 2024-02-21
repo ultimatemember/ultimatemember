@@ -1158,18 +1158,14 @@ if ( ! class_exists( 'UM' ) ) {
 		}
 
 		/**
+		 * @return um\common\Shortcodes
 		 * @since 2.0
+		 * @todo deprecate and use UM()->common()->shortcodes() instead
 		 *
-		 * @return um\core\Shortcodes
 		 */
-		function shortcodes() {
-			if ( empty( $this->classes['shortcodes'] ) ) {
-				$this->classes['shortcodes'] = new um\core\Shortcodes();
-			}
-
-			return $this->classes['shortcodes'];
+		public function shortcodes() {
+			return $this->common()->shortcodes();
 		}
-
 
 		/**
 		 * @since 2.0

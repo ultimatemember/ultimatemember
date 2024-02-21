@@ -30,6 +30,7 @@ final class Enqueue extends \um\common\Enqueue {
 	public function __construct() {
 		parent::__construct();
 		add_action( 'init', array( &$this, 'scripts_enqueue_priority' ) );
+		add_filter( 'body_class', array( &$this, 'body_class' ), 0 );
 	}
 
 	/**
@@ -38,6 +39,39 @@ final class Enqueue extends \um\common\Enqueue {
 	public function scripts_enqueue_priority() {
 		add_action( 'wp_enqueue_scripts', array( &$this, 'wp_enqueue_scripts' ), $this->get_priority() );
 		add_action( 'enqueue_block_assets', array( &$this, 'add_to_global_styles' ) );
+	}
+
+	/**
+	 * Extend body classes.
+	 *
+	 * @param array $classes
+	 *
+	 * @return array
+	 */
+	public function body_class( $classes ) {
+		$array = UM()->config()->get( 'predefined_pages' );
+		if ( empty( $array ) || ! is_array( $array ) ) {
+			return $classes;
+		}
+
+		foreach ( array_keys( $array ) as $slug ) {
+			if ( um_is_core_page( $slug ) ) {
+				$classes[] = 'um-page';
+				$classes[] = 'um-page-' . $slug;
+
+				if ( is_user_logged_in() ) {
+					$classes[] = 'um-page-loggedin';
+
+					if ( 'user' === $slug && um_is_user_himself() ) {
+						$classes[] = 'um-own-profile';
+					}
+				} else {
+					$classes[] = 'um-page-loggedout';
+				}
+			}
+		}
+
+		return $classes;
 	}
 
 	/**

@@ -418,21 +418,179 @@ class Layouts {
 
 
 	public static function form( $args = array() ) {
-		// 1) responsive: column with labels + column with fields. Issue: there isn't possible to build multi-column fields
-		// for small width display we show label above the field.
-		// 2) force multi-columns with top label above the field. Possible to hide labels and show them as placeholders. Possible to place fields 2 or 3 columns
 		ob_start();
 		?>
-		<form action="">
-			<div class="um-form-row">
-				<div class="um-form-cols">
-					<div class="um-form-col-1">
-
+		<form action="" class="um-form-new">
+			<div class="um-form-rows">
+				<div class="um-form-row">
+					<div class="um-form-cols um-form-cols-1">
+						<div class="um-form-col um-form-col-1">
+							<label for="aaa">Disabled input label</label>
+							<input id="bbb" type="text" placeholder="Disabled" disabled />
+							<p class="um-field-hint">Hint message</p>
+						</div>
 					</div>
-					<div class="um-form-col-2">
-
+					<div class="um-form-cols um-form-cols-2">
+						<div class="um-form-col um-form-col-1">
+							<label for="aaa">Label of Password</label>
+							<input id="bbb" type="password" />
+							<p class="um-field-hint">Hint message</p>
+						</div>
+						<div class="um-form-col um-form-col-2">
+							<label for="aaa">Label of Email</label>
+							<input id="bbb" type="email" />
+							<p class="um-field-hint">Hint message</p>
+						</div>
+					</div>
+					<div class="um-form-cols um-form-cols-3">
+						<div class="um-form-col um-form-col-1">
+							<label for="aaa">Label of telephone</label>
+							<input id="bbb" type="tel" />
+							<p class="um-field-hint">Hint message</p>
+						</div>
+						<div class="um-form-col um-form-col-2">
+							<label for="aaa">Label of number</label>
+							<input id="bbb" type="number" />
+							<p class="um-field-hint">Hint message</p>
+						</div>
+						<div class="um-form-col um-form-col-3">
+							<label for="aaa">Label of text</label>
+							<input id="bbb" type="text" placeholder="Placeholder" />
+							<p class="um-field-hint">Hint message</p>
+						</div>
 					</div>
 				</div>
+
+				<div class="um-form-row">
+					<div class="um-form-cols um-form-cols-1">
+						<div class="um-form-col um-form-col-1">
+							<label for="aaa">Label of url</label>
+							<input id="bbb" type="url" />
+							<p class="um-field-hint">Hint message</p>
+						</div>
+					</div>
+					<div class="um-form-cols um-form-cols-1">
+						<div class="um-form-col um-form-col-1">
+							<label for="aaa">Label of textarea</label>
+							<textarea placeholder="Put text..."></textarea>
+							<p class="um-field-hint">Hint message</p>
+						</div>
+					</div>
+					<div class="um-form-cols um-form-cols-1">
+						<div class="um-form-col um-form-col-1">
+							<label for="aaa">Label of date</label>
+							<input id="bbb" type="date" />
+							<p class="um-field-hint">Hint message</p>
+						</div>
+					</div>
+					<div class="um-form-cols um-form-cols-1">
+						<div class="um-form-col um-form-col-1">
+							<label for="aaa">Label of time</label>
+							<input id="bbb" type="time" />
+							<p class="um-field-hint">Hint message</p>
+						</div>
+					</div>
+					<div class="um-form-cols um-form-cols-1">
+						<div class="um-form-col um-form-col-1">
+							<label for="aaa">Label of month</label>
+							<input id="bbb" type="month" />
+							<p class="um-field-hint">Hint message</p>
+						</div>
+					</div>
+					<div class="um-form-cols um-form-cols-1">
+						<div class="um-form-col um-form-col-1">
+							<label for="aaa">Label of week</label>
+							<input id="bbb" type="week" />
+							<p class="um-field-hint">Hint message</p>
+						</div>
+					</div>
+					<div class="um-form-cols um-form-cols-1">
+						<div class="um-form-col um-form-col-1">
+							<label for="aaa">Label of datetime-local</label>
+							<input id="bbb" type="datetime-local" />
+							<p class="um-field-hint">Hint message</p>
+						</div>
+					</div>
+					<div class="um-form-cols um-form-cols-1">
+						<div class="um-form-col um-form-col-1">
+							<label for="aaa">Label of file</label>
+							<input id="bbb" type="file" />
+							<p class="um-field-hint">Hint message</p>
+						</div>
+					</div>
+					<div class="um-form-cols um-form-cols-1">
+						<div class="um-form-col um-form-col-1">
+							<label for="aaa">Label of сolor</label>
+							<input id="bbb" type="color" />
+							<p class="um-field-hint">Hint message</p>
+						</div>
+					</div>
+					<div class="um-form-cols um-form-cols-1">
+						<div class="um-form-col um-form-col-1">
+							<label for="aaa">Label of select</label>
+							<select>
+								<option value="1">1</option>
+								<option value="2">2</option>
+							</select>
+							<p class="um-field-hint">Hint message</p>
+						</div>
+					</div>
+					<div class="um-form-cols um-form-cols-1">
+						<div class="um-form-col um-form-col-1">
+							<label for="aaa">Label of multi-select</label>
+							<select multiple>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+							</select>
+							<p class="um-field-hint">Hint message</p>
+						</div>
+					</div>
+					<div class="um-form-cols um-form-cols-1">
+						<div class="um-form-col um-form-col-1">
+							<label for="aaa">Label of radio</label>
+							<label><input name="bbb" type="radio" value="1" />Option 1</label>
+							<label><input name="bbb" type="radio" value="2" />Option 2</label>
+							<label><input name="bbb" type="radio" value="3" />Option 3</label>
+							<p class="um-field-hint">Hint message</p>
+						</div>
+					</div>
+					<div class="um-form-cols um-form-cols-1">
+						<div class="um-form-col um-form-col-1">
+							<label for="aaa">Label of checkbox</label>
+							<label><input name="ccc[]" type="checkbox" value="1" />Option 1</label>
+							<label><input name="ccc[]" type="checkbox" value="2" />Option 2</label>
+							<label><input name="ccc[]" type="checkbox" value="3" />Option 3</label>
+							<p class="um-field-hint">Hint message</p>
+						</div>
+					</div>
+					<div class="um-form-cols um-form-cols-1">
+						<div class="um-form-col um-form-col-1">
+							<label for="aaa">Label of range</label>
+							<div class="range_container">
+								<div class="sliders_control">
+									<input id="fromSlider" type="range" value="10" min="0" max="100"/>
+									<input id="toSlider" type="range" value="30" min="0" max="100"/>
+								</div>
+<!--								<div class="form_control">-->
+<!--									<div class="form_control_container">-->
+<!--										<div class="form_control_container__time">Min</div>-->
+<!--										<input class="form_control_container__time__input" type="number" id="fromInput" value="10" min="0" max="100"/>-->
+<!--									</div>-->
+<!--									<div class="form_control_container">-->
+<!--										<div class="form_control_container__time">Max</div>-->
+<!--										<input class="form_control_container__time__input" type="number" id="toInput" value="30" min="0" max="100"/>-->
+<!--									</div>-->
+<!--								</div>-->
+							</div>
+							<p class="um-field-hint">Hint message</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="um-form-submit">
+				<?php echo self::button( 'Submit', array( 'type' => 'submit', 'design' => 'primary', 'width' => 'full' ) ); ?>
+				<?php echo self::button( 'Cancel', array( 'width' => 'full' ) ); ?>
 			</div>
 		</form>
 		<?php

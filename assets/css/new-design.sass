@@ -4,6 +4,21 @@
 @import "colors"
 @import "typography"
 
+@mixin thumb
+  box-shadow: $shadow-md
+  border-radius: $radius-xl
+  border: 2px solid $primary-600
+  background: $um-white
+  cursor: pointer
+  height: $spacing-3xl
+  width: $spacing-3xl
+  margin-top: -$spacing-md
+
+@mixin track
+  cursor: default
+  height: $spacing-md
+  transition: all .2s ease
+
 +keyframes(um-svg-spin)
   0%
     -ms-transform: rotate(0deg)
@@ -568,29 +583,286 @@
         display: block
 
   // Form components
-  .#{$prefix}field-hint
-    color: $gray-600
-    +typography( text, sm, regular )
-  label
-    color: $gray-700
-    +typography( text, sm, medium )
-  input
-    border-radius: $radius-md
-    border: 1px solid $gray-300
-    background: $um-white
-    box-shadow: $shadow-xs
-    padding: $spacing-md $spacing-lg
-    color: $gray-900
-    +typography( text, md, regular )
-    &:focus,
-    &:focus-visible
-      border: 1px solid $primary-300
-      box-shadow: $ring-brand-shadow-xs
-      background: $um-white
-      outline: none
-    &:disabled
-      background: $gray-50
-      color: $gray-500
-    &[type="text"]
-      &::placeholder
-        color: $gray-500
+  .#{$prefix}form-new
+    +flex( column, stretch, start, nowrap )
+    +border-box
+    margin: 0
+    padding: 0
+    row-gap: $spacing-3xl
+    .#{$prefix}form-rows
+      +flex( column, stretch, start, nowrap )
+      +border-box
+      margin: 0
+      padding: 0
+      width: 100%
+      row-gap: $spacing-2xl
+      .#{$prefix}form-row
+        +flex( column, stretch, start, nowrap )
+        +border-box
+        margin: 0
+        padding: 0
+        width: 100%
+        row-gap: $spacing-2xl
+        .#{$prefix}form-cols
+          +flex( row, flex-start, baseline, nowrap )
+          +border-box
+          margin: 0
+          padding: 0
+          width: 100%
+          column-gap: $spacing-lg
+          .#{$prefix}form-col
+            +flex( column, stretch, start, nowrap )
+            +border-box
+            margin: 0
+            padding: 0
+            row-gap: $spacing-sm
+            .#{$prefix}field-hint
+              +border-box
+              margin: 0
+              padding: 0
+              width: 100%
+              color: $gray-600
+              +typography( text, sm, regular )
+            label
+              +border-box
+              width: 100%
+              color: $gray-700
+              +typography( text, sm, medium )
+            input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+            select,
+            textarea
+              +border-box
+              width: 100%
+              border-radius: $radius-md
+              border: 1px solid $gray-300
+              background: $um-white
+              box-shadow: $shadow-xs
+              padding: $spacing-md $spacing-lg
+              color: $gray-900
+              +typography( text, md, regular )
+              &:focus,
+              &:focus-visible
+                border: 1px solid $primary-300
+                box-shadow: $ring-brand-shadow-xs
+                background: $um-white
+                outline: none
+              &:disabled
+                background: $gray-50
+                color: $gray-500
+              &::placeholder
+                color: $gray-500
+            input[type="color"]
+              -webkit-appearance: none
+              -moz-appearance: none
+              appearance: none
+              +border-box
+              border-radius: $radius-md
+              border: 1px solid $gray-300
+              box-shadow: $shadow-xs
+              padding: 0
+              background: $um-white
+              height: 42px
+              min-width: 64px
+              &::-webkit-color-swatch,
+              &::-moz-color-swatch
+                border: 1px solid $um-white
+                border-radius: $radius-md
+            //input[type="range"]
+            //  //overflow: hidden
+            //  width: 100%
+            //  -webkit-appearance: none
+            //  margin: $spacing-md 0
+            //  background-color: $gray-200
+            //  border-radius: $radius-xs
+            //  &:hover
+            //    background-color: $gray-300
+            //    &::-webkit-slider-thumb
+            //      border-color: $primary-700
+            //    &::-webkit-slider-runnable-track
+            //      color: $primary-700
+            //      cursor: pointer
+            //  &::-webkit-slider-thumb
+            //    +thumb
+            //    -webkit-appearance: none
+            //    box-shadow: -80px 0 0 8px #43e5f7
+            //  &::-moz-range-thumb
+            //    +thumb
+            //  &::-ms-thumb
+            //    +thumb
+            //  ::-moz-focus-outer
+            //    border: 0
+            //  &:focus
+            //    outline: none
+            //    &::-webkit-slider-runnable-track
+            //      color: $primary-700
+            //  //  &::-ms-fill-lower
+            //  //    background: $track-color
+            //  //  &::-ms-fill-upper
+            //  //    background: lighten($track-color, $contrast)
+            //  &::-webkit-slider-runnable-track
+            //    +track
+            //    -webkit-appearance: none
+            //    box-shadow: none
+            //    color: $primary-600
+            //    border: none
+            //    border-radius: $radius-xs
+            //    margin-top: -1px
+            //  //&::-moz-range-track
+            //  //  box-shadow: none
+            //  //  +track
+            //  //  background: $track-color
+            //  //  border: $track-border-width solid $track-border-color
+            //  //  border-radius: $track-radius
+            //  //  height: math.div($track-height, 2)
+            //  //&::-ms-track
+            //  //  +track
+            //  //  background: transparent
+            //  //  border-color: transparent
+            //  //  color: transparent
+            //  //
+            //  &::-ms-fill-lower
+            //    box-shadow: none
+            //    background: $primary-600
+            //    border: none
+            //    border-radius: $radius-xs
+            //  &::-ms-fill-upper
+            //    box-shadow: none
+            //    background: $primary-600
+            //    border: none
+            //    border-radius: $radius-xs
+            //
+            //  &:disabled
+            //    &::-webkit-slider-thumb,
+            //    &::-moz-range-thumb,
+            //    &::-ms-thumb,
+            //    &::-webkit-slider-runnable-track,
+            //    &::-ms-fill-lower,
+            //    &::-ms-fill-upper
+            //      cursor: not-allowed
+          &.#{$prefix}form-cols-1
+            .#{$prefix}form-col
+              width: 100%
+          &.#{$prefix}form-cols-2
+            .#{$prefix}form-col
+              width: 50%
+          &.#{$prefix}form-cols-3
+            .#{$prefix}form-col
+              width: calc( 100% / 3 )
+    .#{$prefix}form-submit
+      +border-box
+      +flex( column, stretch, start, nowrap )
+      width: 100%
+      margin: 0
+      padding: 0
+      row-gap: $spacing-xl
+
+
+  //input[type='range']
+  //  overflow: hidden
+  //  width: 80px
+  //  -webkit-appearance: none
+  //  background-color: #9a905d
+  //
+  //  &::-webkit-slider-runnable-track
+  //    height: 10px
+  //    -webkit-appearance: none
+  //    color: #13bba4
+  //    margin-top: -1px
+  //
+  //  &::-webkit-slider-thumb
+  //    width: 10px
+  //    -webkit-appearance: none
+  //    height: 10px
+  //    cursor: ew-resize
+  //    background: #434343
+  //    box-shadow: -80px 0 0 80px #43e5f7
+
+
+
+.range_container
+  display: flex
+  flex-direction: column
+  width: 100%
+  margin: 0
+  padding: 0
+
+.sliders_control
+  position: relative
+  height: $spacing-md
+  padding: $spacing-md 0
+//
+//.form_control
+//  position: relative
+//  display: flex
+//  justify-content: space-between
+//  font-size: 24px
+//  color: #635a5a
+
+
+input[type="range"]#fromSlider::-webkit-slider-thumb
+  margin-top: $spacing-md
+
+input[type="range"]::-webkit-slider-thumb
+  -webkit-appearance: none
+  pointer-events: all
+  box-shadow: $shadow-md
+  border-radius: $radius-xl
+  border: 2px solid $primary-600
+  background: $um-white
+  cursor: pointer
+  height: $spacing-3xl
+  width: $spacing-3xl
+
+input[type=range]::-moz-range-thumb
+  -webkit-appearance: none
+  pointer-events: all
+  width: 24px
+  height: 24px
+  background-color: #fff
+  border-radius: 50%
+  box-shadow: 0 0 0 1px #C6C6C6
+  cursor: pointer
+
+input[type="range"]::-webkit-slider-thumb:hover
+  border: 2px solid $primary-700
+
+input[type=range]::-webkit-slider-thumb:active
+  border: 2px solid $primary-600
+  //box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe
+  //-webkit-box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe
+
+//input[type="number"]
+//  color: #8a8383
+//  width: 50px
+//  height: 30px
+//  font-size: 20px
+//  border: none
+//
+//input[type=number]::-webkit-inner-spin-button,
+//input[type=number]::-webkit-outer-spin-button
+//  opacity: 1
+
+input[type="range"]
+  -webkit-appearance: none
+  appearance: none
+  width: 100%
+  position: absolute
+  background-color: $gray-200
+  pointer-events: none
+  height: $spacing-md
+  transition: all .2s ease
+  border-radius: $radius-xs
+
+.sliders_control:hover
+  input[type="range"]
+    background-color: $gray-300
+    &::-webkit-slider-thumb
+      border: 2px solid $primary-700
+
+#fromSlider
+  height: 0
+  z-index: 1
+
+
+
+
