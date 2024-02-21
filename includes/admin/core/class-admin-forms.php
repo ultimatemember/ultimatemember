@@ -2044,7 +2044,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					$html .= '<div class="um-users-conditions-separator">' . esc_html__( 'OR' ) . '</div>';
 
 					if ( ! empty( $group ) ) {
-						$disabled_remove_button = 1 === count( $group ) ? 'disabled' : '';
+						$disabled_remove_button = 1 === count( $group ) && 1 === count( $value[ $field_data_id ] ) ? 'disabled' : '';
 						foreach ( $group as $rule_key => $rule ) {
 							$name_attr          = ' name="' . $name . '[' . $field_data_id . '][' . $i . '][' . $rule_key . ']" ';
 							$name_attr_compare  = ' name="' . $name . '[' . $field_data_id . '][' . $i . '][' . $rule_key . '][compare]" ';
