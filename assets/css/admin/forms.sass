@@ -489,16 +489,16 @@ span.um-admin-icon-clear
     font-size: 20px
     vertical-align: middle
 
-.um-entities-conditions-row
+.#{$prefix}entities-conditions-row
   margin: 0 0 5px
-  .um-entities-conditions-responce
+  .#{$prefix}entities-conditions-responce
     vertical-align: top
   select
     resize: vertical
     width: calc( 50% - 40px )
     height: 36px
 
-.um-conditions-row-action
+.#{$prefix}conditions-row-action
   width: 36px
   height: 36px
   margin: 0 0 0 2px !important
@@ -507,18 +507,12 @@ span.um-admin-icon-clear
   &:hover
     color: #2271b1
 
-.um-users-conditions-row-group
-  margin: 0 0 30px
+.#{$prefix}users-conditions-row-group
+  margin: 0 0 10px
   &:first-child
     .um-users-conditions-separator
       display: none
-  .um-users-conditions-separator
-    text-align: center
-    font-size: 10px
-    font-weight: 700
-    margin: 0 0 5px
-    display: block
-.um-users-conditions-row
+.#{$prefix}users-conditions-row
   margin: 0 0 5px
   .um-users-conditions-responce
     vertical-align: top
@@ -528,8 +522,20 @@ span.um-admin-icon-clear
     height: 36px
     &.um-users-conditions-compare
       width: calc( 33.3% - 82px )
-.um-conditions-group-action
+.#{$prefix}conditions-group-action
   min-width: 100px
   width: auto
   display: block !important
   margin: 0 auto !important
+.#{$prefix}users-conditions-separator,
+.#{$prefix}users-conditions-connector
+  text-align: center
+  font-size: 11px
+  font-weight: 700
+  margin: 0 0 5px
+  display: block
+  color: #98a2b3
+.um-users-conditions-row
+  &:nth-child(2)
+    .um-users-conditions-connector
+        display: none

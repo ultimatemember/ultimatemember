@@ -1351,7 +1351,7 @@ jQuery(document).ready( function() {
 		el.find( '.um-users-conditions-compare option:first' ).prop( 'selected', true );
 		el.attr( 'data-group', parseInt( num ) + 1 );
 
-		jQuery( this ).before( el );
+		jQuery( this ).closest( '.um-conditions-group-action-wrap' ).before( el );
 
 		wrapper.find( '.um-conditions-row-action' ).removeAttr( 'disabled' );
 	});
