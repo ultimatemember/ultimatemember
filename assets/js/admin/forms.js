@@ -1353,6 +1353,6 @@ jQuery(document).ready( function() {
 
 		jQuery( this ).before( el );
 
-		wrapper.find( '.conditions-row-action' ).removeAttr( 'disabled' );
+		wrapper.find( '.um-conditions-row-action' ).removeAttr( 'disabled' );
 	});
 });
