@@ -1366,6 +1366,10 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 
 			);
 
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				$this->predefined_fields['username_b']['label'] = __( 'Username or Email Address', 'ultimate-member' );
+			}
+
 			/**
 			 * UM hook
 			 *

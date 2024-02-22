@@ -735,6 +735,19 @@
   padding: 0;
   row-gap: 24px;
 }
+.um .um-form-new .um-form-supporting-text {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  color: var(--um-gray-600, #475467);
+  font-size: var(--um-text-font-size-md, 16px);
+  line-height: var(--um-text-line-height-md, 24px);
+  font-weight: var(--um-text-font-weight-regular, 400);
+  text-align: center;
+}
 .um .um-form-new .um-form-rows {
   display: flex;
   flex-direction: column;
@@ -790,6 +803,48 @@
   padding: 0;
   row-gap: 6px;
 }
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: start;
+  flex-wrap: nowrap;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  row-gap: 6px;
+  width: 100%;
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]), .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--um-gray-300, #d0d5dd);
+  background: #fff;
+  box-shadow: 0 1px 2px var(--um-gray-900-a-5, rgba(16, 24, 40, 0.05));
+  padding: 8px 12px;
+  color: var(--um-gray-900, #101828);
+  font-size: var(--um-text-font-size-md, 16px);
+  line-height: var(--um-text-line-height-md, 24px);
+  font-weight: var(--um-text-font-weight-regular, 400);
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea:focus-visible {
+  border: 1px solid var(--um-primary-300-bg, #d6bbfb);
+  box-shadow: 0 0 0 4px var(--um-primary-500-a-24, rgba(158, 119, 237, 0.24)), 0 1px 2px var(--um-gray-900-a-5, rgba(16, 24, 40, 0.05));
+  background: #fff;
+  outline: none;
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea:disabled {
+  background: var(--um-gray-50, #f9fafb);
+  color: var(--um-gray-500, #667085);
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color])::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea::placeholder {
+  color: var(--um-gray-500, #667085);
+}
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-hint {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -811,6 +866,11 @@
   font-size: var(--um-text-font-size-sm, 14px);
   line-height: var(--um-text-line-height-sm, 20px);
   font-weight: var(--um-text-font-weight-medium, 500);
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col label .um-req {
+  color: #a00;
+  margin: 0 0 0 3px;
+  font-weight: normal;
 }
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]), .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea {
   box-sizing: border-box;

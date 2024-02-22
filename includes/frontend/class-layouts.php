@@ -122,6 +122,7 @@ class Layouts {
 				'url'      => '#',
 				'target'   => '_self',
 				'width'    => '',
+				'id'       => '',
 			)
 		);
 
@@ -152,11 +153,11 @@ class Layouts {
 		ob_start();
 		if ( 'link' === $args['type'] ) {
 			?>
-			<a href="<?php echo esc_url( $args['url'] ); ?>" target="<?php echo esc_attr( $args['target'] ); ?>" class="<?php echo esc_attr( $classes ); ?>"><?php echo wp_kses_post( $content ); ?></a>
+			<a id="<?php echo esc_attr( $args['id'] ); ?>" href="<?php echo esc_url( $args['url'] ); ?>" target="<?php echo esc_attr( $args['target'] ); ?>" class="<?php echo esc_attr( $classes ); ?>"><?php echo wp_kses_post( $content ); ?></a>
 			<?php
 		} else {
 			?>
-			<button type="<?php echo esc_attr( $args['type'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" <?php disabled( $args['disabled'] ); ?>><?php echo wp_kses_post( $content ); ?></button>
+			<button id="<?php echo esc_attr( $args['id'] ); ?>" type="<?php echo esc_attr( $args['type'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" <?php disabled( $args['disabled'] ); ?>><?php echo wp_kses_post( $content ); ?></button>
 			<?php
 		}
 		return ob_get_clean();

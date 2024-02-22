@@ -190,7 +190,14 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			/** This filter is documented in includes/core/class-shortcodes.php */
 			do_action( "um_before_{$args['mode']}_form_is_loaded", $args );
 
-			UM()->shortcodes()->template_load( $args['template'], $args );
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				wp_enqueue_style( 'um_new_design' );
+				wp_enqueue_script( 'um_new_design' );
+
+				UM()->shortcodes()->template_load( 'v3/' . $args['template'], $args );
+			} else {
+				UM()->shortcodes()->template_load( $args['template'], $args );
+			}
 
 			if ( ! is_admin() && ! defined( 'DOING_AJAX' ) ) {
 				UM()->shortcodes()->dynamic_css( $args );
@@ -205,7 +212,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 * @return bool
 		 */
 		function is_reset_request() {
-			if ( um_is_core_page( 'password-reset' ) && isset( $_POST['_um_password_reset'] ) ) {
+			if ( um_is_predefined_page( 'password-reset' ) && isset( $_POST['_um_password_reset'] ) ) {
 				return true;
 			}
 

@@ -589,6 +589,14 @@
     margin: 0
     padding: 0
     row-gap: $spacing-3xl
+    .#{$prefix}form-supporting-text
+      +border-box
+      margin: 0
+      padding: 0
+      width: 100%
+      color: $gray-600
+      +typography( text, md, regular )
+      text-align: center
     .#{$prefix}form-rows
       +flex( column, stretch, start, nowrap )
       +border-box
@@ -616,6 +624,36 @@
             margin: 0
             padding: 0
             row-gap: $spacing-sm
+            .#{$prefix}field
+              +flex( column, stretch, start, nowrap )
+              +border-box
+              margin: 0
+              padding: 0
+              row-gap: $spacing-sm
+              width: 100%
+              & > input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+              & > select,
+              & > textarea
+                +border-box
+                width: 100%
+                border-radius: $radius-md
+                border: 1px solid $gray-300
+                background: $um-white
+                box-shadow: $shadow-xs
+                padding: $spacing-md $spacing-lg
+                color: $gray-900
+                +typography( text, md, regular )
+                &:focus,
+                &:focus-visible
+                  border: 1px solid $primary-300
+                  box-shadow: $ring-brand-shadow-xs
+                  background: $um-white
+                  outline: none
+                &:disabled
+                  background: $gray-50
+                  color: $gray-500
+                &::placeholder
+                  color: $gray-500
             .#{$prefix}field-hint
               +border-box
               margin: 0
@@ -628,6 +666,10 @@
               width: 100%
               color: $gray-700
               +typography( text, sm, medium )
+              .#{$prefix}req
+                color: #a00
+                margin: 0 0 0 3px
+                font-weight: normal
             & > input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
             & > select,
             & > textarea
