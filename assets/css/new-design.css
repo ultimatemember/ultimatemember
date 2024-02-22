@@ -845,6 +845,9 @@
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color])::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea::placeholder {
   color: var(--um-gray-500, #667085);
 }
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]).um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select.um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea.um-error {
+  border-color: var(--um-error-500, #f04438);
+}
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-hint {
   box-sizing: border-box;
   -moz-box-sizing: border-box;

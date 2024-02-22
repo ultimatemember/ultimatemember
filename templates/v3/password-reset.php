@@ -15,15 +15,18 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+// phpcs:ignore WordPress.Security.NonceVerification
+$updated_attr = isset( $_GET['updated'] ) ? sanitize_key( $_GET['updated'] ) : '';
 ?>
 
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?>">
 	<form method="post" action="" class="um-form-new">
-		<?php if ( isset( $_GET['updated'] ) && 'checkemail' === sanitize_key( $_GET['updated'] ) ) { ?>
+		<?php if ( 'checkemail' === $updated_attr ) { ?>
 			<div class="um-form-supporting-text">
 				<?php esc_html_e( 'If an account matching the provided details exists, we will send a password reset link. Please check your inbox.', 'ultimate-member' ); ?>
 			</div>
-		<?php } elseif ( isset( $_GET['updated'] ) && 'password_changed' === sanitize_key( $_GET['updated'] ) ) { ?>
+		<?php } elseif ( 'password_changed' === $updated_attr ) { ?>
 			<div class="um-form-supporting-text">
 				<?php esc_html_e( 'You have successfully changed password.', 'ultimate-member' ); ?>
 			</div>
@@ -53,22 +56,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 			 */
 			do_action( 'um_reset_password_page_hidden_fields', $args );
 
-			if ( ! empty( $_GET['updated'] ) ) {
+			if ( ! empty( $updated_attr ) ) {
 				?>
 				<div class="um-form-supporting-text">
 					<?php
-					if ( 'expiredkey' === sanitize_key( $_GET['updated'] ) ) {
+					if ( 'expiredkey' === $updated_attr ) {
 						esc_html_e( 'Your password reset link has expired. Please request a new link below.', 'ultimate-member' );
-					} elseif ( 'invalidkey' === sanitize_key( $_GET['updated'] ) ) {
+					} elseif ( 'invalidkey' === $updated_attr ) {
 						esc_html_e( 'Your password reset link appears to be invalid. Please request a new link below.', 'ultimate-member' );
 					}
 					?>
 				</div>
-			<?php } else { ?>
+				<?php
+			} else {
+				?>
 				<div class="um-form-supporting-text">
 					<?php esc_html_e( 'To reset your password, please enter your email address or username below.', 'ultimate-member' ); ?>
 				</div>
-			<?php } ?>
+				<?php
+			}
+			?>
 
 			<div class="um-form-rows">
 				<div class="um-form-row">
@@ -109,9 +116,30 @@ if ( ! defined( 'ABSPATH' ) ) {
 				do_action( 'um_after_password_reset_fields', $args );
 				?>
 			</div>
+
 			<div class="um-form-submit">
-				<?php echo UM()->frontend()::layouts()::button( __( 'Reset password', 'ultimate-member' ), array( 'type' => 'submit', 'design' => 'primary', 'width' => 'full', 'id' => 'um-submit-btn' ) );
-				echo UM()->frontend()::layouts()::button( 'Back to login', array( 'type' => 'link', 'url' => um_get_predefined_page_url( 'login' ), 'design' => 'link-gray', 'width' => 'full', ) ); ?>
+				<?php
+				$login_page_url = um_get_predefined_page_url( 'login' );
+
+				echo UM()->frontend()::layouts()::button(
+					__( 'Reset password', 'ultimate-member' ),
+					array(
+						'type'   => 'submit',
+						'design' => 'primary',
+						'width'  => 'full',
+						'id'     => 'um-submit-btn',
+					)
+				);
+				echo UM()->frontend()::layouts()::button(
+					__( 'Back to login', 'ultimate-member' ),
+					array(
+						'type'   => 'link',
+						'url'    => $login_page_url,
+						'design' => 'link-gray',
+						'width'  => 'full',
+					)
+				);
+				?>
 			</div>
 
 			<?php
