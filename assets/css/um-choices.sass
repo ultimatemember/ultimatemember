@@ -38,6 +38,21 @@ $choices-z-index: 1
         line-height: initial
         box-shadow: $shadow-xs
       &[data-type*=select-one]
+        &::after
+          content: " "
+          mask: url(../icons/chevron-down.svg)
+          -webkit-mask: url(../icons/chevron-down.svg)
+          width: 20px
+          height: 20px
+          opacity: 1
+          background-color: $gray-500
+          border: none
+          margin-top: -10px
+        &.is-open
+          &::after
+            mask: url(../icons/chevron-up.svg)
+            -webkit-mask: url(../icons/chevron-up.svg)
+            margin-top: -10px
         .choices__inner
           padding: $spacing-md $spacing-lg
           min-height: auto

@@ -336,6 +336,22 @@
   line-height: initial;
   box-shadow: 0 1px 2px var(--um-gray-900-a-5, rgba(16, 24, 40, 0.05));
 }
+.um .um-form-col .choices[data-type*=select-one]::after {
+  content: " ";
+  mask: url(../icons/chevron-down.svg);
+  -webkit-mask: url(../icons/chevron-down.svg);
+  width: 20px;
+  height: 20px;
+  opacity: 1;
+  background-color: var(--um-gray-500, #667085);
+  border: none;
+  margin-top: -10px;
+}
+.um .um-form-col .choices[data-type*=select-one].is-open::after {
+  mask: url(../icons/chevron-up.svg);
+  -webkit-mask: url(../icons/chevron-up.svg);
+  margin-top: -10px;
+}
 .um .um-form-col .choices[data-type*=select-one] .choices__inner {
   padding: 8px 12px;
   min-height: auto;
