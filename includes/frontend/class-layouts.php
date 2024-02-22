@@ -419,6 +419,9 @@ class Layouts {
 
 	public static function form( $args = array() ) {
 		ob_start();
+
+		UM()->frontend()->form()->display();
+
 		?>
 		<form action="" class="um-form-new">
 			<div class="um-form-rows">
@@ -537,8 +540,29 @@ class Layouts {
 					</div>
 					<div class="um-form-cols um-form-cols-1">
 						<div class="um-form-col um-form-col-1">
+							<label for="aaa">Label of select</label>
+							<select class="js-choice">
+								<option value="1">1</option>
+								<option value="2">2</option>
+							</select>
+							<p class="um-field-hint">Hint message</p>
+						</div>
+					</div>
+					<div class="um-form-cols um-form-cols-1">
+						<div class="um-form-col um-form-col-1">
 							<label for="aaa">Label of multi-select</label>
 							<select multiple>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+							</select>
+							<p class="um-field-hint">Hint message</p>
+						</div>
+					</div>
+					<div class="um-form-cols um-form-cols-1">
+						<div class="um-form-col um-form-col-1">
+							<label for="aaa">Label of multi-select</label>
+							<select class="js-choice" multiple>
 								<option value="1">1</option>
 								<option value="2">2</option>
 								<option value="3">3</option>

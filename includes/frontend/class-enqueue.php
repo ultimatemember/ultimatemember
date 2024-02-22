@@ -115,6 +115,9 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_register_script( 'um_dropdown', $libs_url . 'dropdown/dropdown' . $suffix . '.js', array( 'jquery', 'wp-hooks' ), UM_VERSION, true );
 			wp_register_style( 'um_dropdown', $libs_url . 'dropdown/dropdown' . $suffix . '.css', array(), UM_VERSION );
 
+			wp_register_script( 'um_choices', $libs_url . 'choices-js/choices' . $suffix . '.js', array(), '10.2.0', true );
+			wp_register_style( 'um_choices', $css_url . 'um-choices' . $suffix . '.css', array(), UM_VERSION );
+
 			//wp_register_style( 'um_new_profile', $css_url . 'new-profile' . $suffix . '.css', array(), UM_VERSION );
 
 			// Cropper.js
@@ -126,8 +129,8 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_register_script( 'um_modal', $libs_url . 'modal/modal' . $suffix . '.js', array( 'um_frontend_common' ), UM_VERSION, true );
 			wp_register_style( 'um_modal', $libs_url . 'modal/modal' . $suffix . '.css', array(), UM_VERSION );
 
-			wp_register_script( 'um_new_design', $js_url . 'new-design' . $suffix . '.js', array( 'um_frontend_common', 'plupload' ), UM_VERSION, true );
-			wp_register_style( 'um_new_design', $css_url . 'new-design' . $suffix . '.css', array( 'um_dropdown', 'um_crop', 'um_modal' ), UM_VERSION );
+			wp_register_script( 'um_new_design', $js_url . 'new-design' . $suffix . '.js', array( 'um_frontend_common', 'plupload', 'um_choices' ), UM_VERSION, true );
+			wp_register_style( 'um_new_design', $css_url . 'new-design' . $suffix . '.css', array( 'um_dropdown', 'um_crop', 'um_modal', 'um_choices' ), UM_VERSION );
 
 		} else {
 			// Cropper.js

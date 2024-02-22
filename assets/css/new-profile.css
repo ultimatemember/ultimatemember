@@ -3,4 +3,5 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
-  flex-wrap: nowrap; }
+  flex-wrap: nowrap;
+}

@@ -40,6 +40,19 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		/**
 		 * @since 2.8.4
 		 *
+		 * @return form\Form
+		 */
+		public function form() {
+			if ( empty( UM()->classes['um\frontend\form\form'] ) ) {
+				UM()->classes['um\frontend\form\form'] = new form\Form();
+			}
+
+			return UM()->classes['um\frontend\form\form'];
+		}
+
+		/**
+		 * @since 2.8.4
+		 *
 		 * @return Layouts
 		 */
 		public static function layouts() {

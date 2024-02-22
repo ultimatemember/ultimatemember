@@ -628,9 +628,9 @@
               width: 100%
               color: $gray-700
               +typography( text, sm, medium )
-            input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
-            select,
-            textarea
+            & > input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+            & > select,
+            & > textarea
               +border-box
               width: 100%
               border-radius: $radius-md
@@ -651,7 +651,7 @@
                 color: $gray-500
               &::placeholder
                 color: $gray-500
-            input[type="color"]
+            & > input[type="color"]
               -webkit-appearance: none
               -moz-appearance: none
               appearance: none
