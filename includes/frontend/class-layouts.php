@@ -530,27 +530,45 @@ class Layouts {
 					</div>
 					<div class="um-form-cols um-form-cols-1">
 						<div class="um-form-col um-form-col-1">
-							<label for="aaa">Label of select</label>
-							<select>
+							<label for="aaa">Label of native select</label>
+							<select placeholder="select placeholder">
+								<option value="">None</option>
 								<option value="1">1</option>
 								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
 							</select>
 							<p class="um-field-hint">Hint message</p>
 						</div>
 					</div>
 					<div class="um-form-cols um-form-cols-1">
 						<div class="um-form-col um-form-col-1">
-							<label for="aaa">Label of select</label>
-							<select class="js-choice">
+							<label for="aaa">Label of choices-js select</label>
+							<select class="js-choice" placeholder="select placeholder">
+								<option value="">None</option>
 								<option value="1">1</option>
 								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
 							</select>
 							<p class="um-field-hint">Hint message</p>
 						</div>
 					</div>
 					<div class="um-form-cols um-form-cols-1">
 						<div class="um-form-col um-form-col-1">
-							<label for="aaa">Label of multi-select</label>
+							<label for="aaa">Label of native multi-select</label>
 							<select multiple>
 								<option value="1">1</option>
 								<option value="2">2</option>
@@ -561,7 +579,7 @@ class Layouts {
 					</div>
 					<div class="um-form-cols um-form-cols-1">
 						<div class="um-form-col um-form-col-1">
-							<label for="aaa">Label of multi-select</label>
+							<label for="aaa">Label of choices-js multi-select</label>
 							<select class="js-choice" multiple>
 								<option value="1">1</option>
 								<option value="2">2</option>
