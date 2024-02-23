@@ -193,11 +193,9 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 				wp_enqueue_style( 'um_new_design' );
 				wp_enqueue_script( 'um_new_design' );
-
-				UM()->shortcodes()->template_load( 'v3/' . $args['template'], $args );
-			} else {
-				UM()->shortcodes()->template_load( $args['template'], $args );
 			}
+
+			UM()->shortcodes()->template_load( $args['template'], $args );
 
 			if ( ! is_admin() && ! defined( 'DOING_AJAX' ) ) {
 				UM()->shortcodes()->dynamic_css( $args );

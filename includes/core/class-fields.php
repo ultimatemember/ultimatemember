@@ -4384,7 +4384,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						$sub_rows = ( isset( $row_array['sub_rows'] ) ) ? $row_array['sub_rows'] : 1;
 						for ( $c = 0; $c < $sub_rows; $c++ ) {
-
+							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+								$output .= '<div class="um-form-row">';
+							}
 							// cols
 							$cols = isset( $row_array['cols'] ) ? $row_array['cols'] : 1;
 							if ( is_numeric( $cols ) ) {
@@ -4405,9 +4407,17 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 								$subrow_fields = $this->array_sort_by_column( $subrow_fields, 'position' );
 
+								if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+									$output .= '<div class="um-form-cols um-form-cols-' . esc_attr( $cols_num ) . '">';
+								}
+
 								if ( $cols_num == 1 ) {
 
-									$output .= '<div class="um-col-1">';
+									if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+										$output .= '<div class="um-form-col um-form-col-1">';
+									} else {
+										$output .= '<div class="um-col-1">';
+									}
 									$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
 									if ( $col1_fields ) {
 										foreach ( $col1_fields as $key => $data ) {
@@ -4421,7 +4431,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 								} else if ($cols_num == 2) {
 
-									$output .= '<div class="um-col-121">';
+									if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+										$output .= '<div class="um-form-col um-form-col-1">';
+									} else {
+										$output .= '<div class="um-col-121">';
+									}
+
 									$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
 									if ( $col1_fields ) {
 										foreach ( $col1_fields as $key => $data ) {
@@ -4433,7 +4448,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 									}
 									$output .= '</div>';
 
-									$output .= '<div class="um-col-122">';
+									if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+										$output .= '<div class="um-form-col um-form-col-2">';
+									} else {
+										$output .= '<div class="um-col-122">';
+									}
+
 									$col2_fields = $this->get_fields_in_column( $subrow_fields, 2 );
 									if ( $col2_fields ) {
 										foreach ( $col2_fields as $key => $data ) {
@@ -4443,11 +4463,18 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 											$output .= $this->edit_field( $key, $data );
 										}
 									}
-									$output .= '</div><div class="um-clear"></div>';
-
+									if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+										$output .= '</div>';
+									} else {
+										$output .= '</div><div class="um-clear"></div>';
+									}
 								} else {
+									if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+										$output .= '<div class="um-form-col um-form-col-1">';
+									} else {
+										$output .= '<div class="um-col-131">';
+									}
 
-									$output .= '<div class="um-col-131">';
 									$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
 									if ( $col1_fields ) {
 										foreach ( $col1_fields as $key => $data ) {
@@ -4455,8 +4482,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 										}
 									}
 									$output .= '</div>';
-
-									$output .= '<div class="um-col-132">';
+									if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+										$output .= '<div class="um-form-col um-form-col-2">';
+									} else {
+										$output .= '<div class="um-col-132">';
+									}
 									$col2_fields = $this->get_fields_in_column( $subrow_fields, 2 );
 									if ( $col2_fields ) {
 										foreach ( $col2_fields as $key => $data ) {
@@ -4464,28 +4494,37 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 										}
 									}
 									$output .= '</div>';
-
-									$output .= '<div class="um-col-133">';
+									if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+										$output .= '<div class="um-form-col um-form-col-3">';
+									} else {
+										$output .= '<div class="um-col-133">';
+									}
 									$col3_fields = $this->get_fields_in_column( $subrow_fields, 3 );
 									if ( $col3_fields ) {
 										foreach ( $col3_fields as $key => $data ) {
 											$output .= $this->edit_field( $key, $data );
 										}
 									}
-									$output .= '</div><div class="um-clear"></div>';
-
+									if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+										$output .= '</div>';
+									} else {
+										$output .= '</div><div class="um-clear"></div>';
+									}
 								}
 
+								if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+									$output .= '</div>';
+								}
 							}
 
+							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+								$output .= '</div>';
+							}
 						}
 
 						$output .= '</div>';
-
 					}
-
 				}
-
 			}
 
 			return $output;
@@ -5141,8 +5180,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$css_borderradius = 'border-radius: ' . esc_attr( $borderradius ) . ';';
 				}
 			}
-
-			$output .= '<div class="um-row ' . esc_attr( $row_id . ' ' . $css_class ) . '" style="' . esc_attr( $css_padding . $css_background . $css_margin . $css_border . $css_borderstyle . $css_bordercolor . $css_borderradius . $css_text_color ) . '">';
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				$output .= '<div class="um-form-rows ' . esc_attr( $row_id . ' ' . $css_class ) . '" style="' . esc_attr( $css_padding . $css_background . $css_margin . $css_border . $css_borderstyle . $css_bordercolor . $css_borderradius . $css_text_color ) . '">';
+			} else {
+				$output .= '<div class="um-row ' . esc_attr( $row_id . ' ' . $css_class ) . '" style="' . esc_attr( $css_padding . $css_background . $css_margin . $css_border . $css_borderstyle . $css_bordercolor . $css_borderradius . $css_text_color ) . '">';
+			}
 			return $output;
 		}
 

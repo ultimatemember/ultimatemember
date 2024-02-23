@@ -821,6 +821,10 @@
           &.#{$prefix}form-cols-2
             .#{$prefix}form-col
               width: 50%
+              &.#{$prefix}form-col-right
+                align-items: end
+                .#{$prefix}um-field
+                  align-items: end
           &.#{$prefix}form-cols-3
             .#{$prefix}form-col
               width: calc( 100% / 3 )
@@ -831,6 +835,13 @@
       margin: 0
       padding: 0
       row-gap: $spacing-xl
+      .#{$prefix}center
+        +typography( text, sm, regular )
+        width: 100%
+        margin: 0
+        padding: 0
+        text-align: center
+        color: $gray-600
 
 
   //input[type='range']

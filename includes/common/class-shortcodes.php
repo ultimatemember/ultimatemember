@@ -926,6 +926,10 @@ class Shortcodes {
 			extract( $args, EXTR_SKIP );
 		}
 
+		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			$tpl = 'v3/' . $tpl;
+		}
+
 		$file       = UM_PATH . "templates/{$tpl}.php";
 		$theme_file = get_stylesheet_directory() . "/ultimate-member/templates/{$tpl}.php";
 		if ( file_exists( $theme_file ) ) {
@@ -1217,6 +1221,11 @@ class Shortcodes {
 		// get data into one global array
 		$post_data = UM()->query()->post_data( $this->form_id );
 		$args      = array_merge( $args, $post_data );
+
+		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			wp_enqueue_style( 'um_new_design' );
+			wp_enqueue_script( 'um_new_design' );
+		}
 
 		ob_start();
 

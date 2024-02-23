@@ -991,6 +991,12 @@
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols.um-form-cols-2 .um-form-col {
   width: 50%;
 }
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols.um-form-cols-2 .um-form-col.um-form-col-right {
+  align-items: end;
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols.um-form-cols-2 .um-form-col.um-form-col-right .um-um-field {
+  align-items: end;
+}
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols.um-form-cols-3 .um-form-col {
   width: 33.3333333333%;
 }
@@ -1007,6 +1013,16 @@
   margin: 0;
   padding: 0;
   row-gap: 16px;
+}
+.um .um-form-new .um-form-submit .um-center {
+  font-size: var(--um-text-font-size-sm, 14px);
+  line-height: var(--um-text-line-height-sm, 20px);
+  font-weight: var(--um-text-font-weight-regular, 400);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  color: var(--um-gray-600, #475467);
 }
 
 .range_container {
