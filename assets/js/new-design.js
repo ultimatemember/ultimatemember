@@ -315,27 +315,34 @@ function setToggleAccessible(currentTarget) {
 }
 
 const fromSlider = document.querySelector('#fromSlider');
+console.log( fromSlider );
 const toSlider = document.querySelector('#toSlider');
 const controlSlider = document.querySelector('.sliders_control');
 // const fromInput = document.querySelector('#fromInput');
 // const toInput = document.querySelector('#toInput');
-fillSlider(fromSlider, toSlider, '#eaecf0', '#7f56d9', toSlider);
-setToggleAccessible(toSlider);
+if ( fromSlider && toSlider ) {
+	fillSlider(fromSlider, toSlider, '#eaecf0', '#7f56d9', toSlider);
+	setToggleAccessible(toSlider);
 
-fromSlider.oninput = () => controlFromSlider(fromSlider, toSlider/*, fromInput*/);
-toSlider.oninput = () => controlToSlider(fromSlider, toSlider/*, toInput*/);
+	fromSlider.oninput = () => controlFromSlider(fromSlider, toSlider/*, fromInput*/);
+	toSlider.oninput = () => controlToSlider(fromSlider, toSlider/*, toInput*/);
 
+}
+
+if ( controlSlider ) {
+	controlSlider.addEventListener('mouseover', function() {
+		fillSlider(fromSlider, toSlider, '#d0d5dd', '#6941c6', toSlider);
+	});
+
+	controlSlider.addEventListener('mouseout', function() {
+		fillSlider(fromSlider, toSlider, '#eaecf0', '#7f56d9', toSlider);
+	});
+}
 
 // controlSlider.onhover = () => fillSlider(fromSlider, toSlider, '#d0d5dd', '#6941c6', toSlider);
 
 
-controlSlider.addEventListener('mouseover', function() {
-	fillSlider(fromSlider, toSlider, '#d0d5dd', '#6941c6', toSlider);
-});
 
-controlSlider.addEventListener('mouseout', function() {
-	fillSlider(fromSlider, toSlider, '#eaecf0', '#7f56d9', toSlider);
-});
 // fromInput.oninput = () => controlFromInput(fromSlider, fromInput, toInput, toSlider);
 // toInput.oninput = () => controlToInput(toSlider, fromInput, toInput, toSlider);
 
@@ -350,7 +357,21 @@ jQuery(document).ready( function($) {
 			let choices = new Choices($(this)[0]);
 		}
 	});
-})
+
+	jQuery( document.body ).on('click', '.um-toggle-password', function (){
+		let parent = jQuery(this).closest('.um-field-area-password');
+		let passwordField = parent.find('input');
+		let type = passwordField.attr('type');
+		if ( 'text' === type ) {
+			passwordField.attr('type', 'password');
+			jQuery(this).toggleClass('um-icon-eye um-icon-eye-disabled');
+		} else {
+			passwordField.attr('type', 'text');
+			jQuery(this).toggleClass('um-icon-eye um-icon-eye-disabled');
+		}
+	});
+});
+
 // // Pass reference
 // const choices = new Choices('[data-trigger]');
 // const choices = new Choices('.js-choice');

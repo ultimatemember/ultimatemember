@@ -624,7 +624,8 @@
             margin: 0
             padding: 0
             row-gap: $spacing-sm
-            .#{$prefix}field
+            .#{$prefix}field,
+            .#{$prefix}field-area-password
               +flex( column, stretch, start, nowrap )
               +border-box
               margin: 0
@@ -655,7 +656,31 @@
                 &::placeholder
                   color: $gray-500
                 &.um-error
-                  border-color: $error-500
+                  border-color: $error-300
+                  &:focus,
+                  &:focus-visible
+                    box-shadow: $ring-error-shadow-xs
+            .#{$prefix}field-area-password
+              position: relative
+              .#{$prefix}toggle-password
+                transition: all .2s linear
+                cursor: pointer
+                display: block
+                position: absolute
+                right: 10px
+                top: 50%
+                margin-top: -10px
+                width: 20px
+                height: 20px
+                background-color: $primary-600
+                &:hover
+                  background-color: $primary-700
+                &.um-icon-eye
+                  mask: url(../icons/eye.svg)
+                  -webkit-mask: url(../icons/eye.svg)
+                &.um-icon-eye-disabled
+                  mask: url(../icons/eye-off.svg)
+                  -webkit-mask: url(../icons/eye-off.svg)
             .#{$prefix}field-hint
               +border-box
               margin: 0
@@ -663,6 +688,8 @@
               width: 100%
               color: $gray-600
               +typography( text, sm, regular )
+              &.#{$prefix}field-error
+                color: $error-500
             label
               +border-box
               width: 100%
@@ -695,6 +722,11 @@
                 color: $gray-500
               &::placeholder
                 color: $gray-500
+              &.um-error
+                border-color: $error-300
+                &:focus,
+                &:focus-visible
+                  box-shadow: $ring-error-shadow-xs
             & > input[type="color"]
               -webkit-appearance: none
               -moz-appearance: none

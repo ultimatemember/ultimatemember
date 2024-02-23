@@ -539,19 +539,35 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			$error_id = 'um-error-for-' . $input_id;
 
-			if ( $force_show ) {
-				$output = '<div class="um-field-error" id="' . esc_attr( $error_id ) . '"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</div>';
-				return $output;
-			}
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				if ( $force_show ) {
+					return '<p class="um-field-hint um-field-error"  id="' . esc_attr( $error_id ) . '">' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</p>';
+				}
 
-			if ( isset( $this->set_id ) && UM()->form()->processing === $this->set_id ) {
-				$output = '<div class="um-field-error" id="' . esc_attr( $error_id ) . '"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</div>';
+				if ( isset( $this->set_id ) && UM()->form()->processing === $this->set_id ) {
+					$output = '<p class="um-field-hint um-field-error"  id="' . esc_attr( $error_id ) . '">' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</p>';
+				} else {
+					$output = '';
+				}
+
+				if ( ! UM()->form()->processing ) {
+					$output = '<p class="um-field-hint um-field-error"  id="' . esc_attr( $error_id ) . '">' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</p>';
+				}
 			} else {
-				$output = '';
-			}
+				if ( $force_show ) {
+					$output = '<div class="um-field-error" id="' . esc_attr( $error_id ) . '"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</div>';
+					return $output;
+				}
 
-			if ( ! UM()->form()->processing ) {
-				$output = '<div class="um-field-error" id="' . esc_attr( $error_id ) . '"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</div>';
+				if ( isset( $this->set_id ) && UM()->form()->processing === $this->set_id ) {
+					$output = '<div class="um-field-error" id="' . esc_attr( $error_id ) . '"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</div>';
+				} else {
+					$output = '';
+				}
+
+				if ( ! UM()->form()->processing ) {
+					$output = '<div class="um-field-error" id="' . esc_attr( $error_id ) . '"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</div>';
+				}
 			}
 
 			return $output;
@@ -575,19 +591,35 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			$notice_id = 'um-notice-for-' . $input_id;
 
-			if ( $force_show ) {
-				$output = '<div class="um-field-notice" id="' . esc_attr( $notice_id ) . '"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</div>';
-				return $output;
-			}
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				if ( $force_show ) {
+					return '<p class="um-field-hint um-field-notice"  id="' . esc_attr( $notice_id ) . '">' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</p>';
+				}
 
-			if ( isset( $this->set_id ) && UM()->form()->processing === $this->set_id ) {
-				$output = '<div class="um-field-notice" id="' . esc_attr( $notice_id ) . '"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</div>';
+				if ( isset( $this->set_id ) && UM()->form()->processing === $this->set_id ) {
+					$output = '<p class="um-field-hint um-field-notice"  id="' . esc_attr( $notice_id ) . '">' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</p>';
+				} else {
+					$output = '';
+				}
+
+				if ( ! UM()->form()->processing ) {
+					$output = '<p class="um-field-hint um-field-notice"  id="' . esc_attr( $notice_id ) . '">' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</p>';
+				}
 			} else {
-				$output = '';
-			}
+				if ( $force_show ) {
+					$output = '<div class="um-field-notice" id="' . esc_attr( $notice_id ) . '"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</div>';
+					return $output;
+				}
 
-			if ( ! UM()->form()->processing ) {
-				$output = '<div class="um-field-notice" id="' . esc_attr( $notice_id ) . '"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</div>';
+				if ( isset( $this->set_id ) && UM()->form()->processing === $this->set_id ) {
+					$output = '<div class="um-field-notice" id="' . esc_attr( $notice_id ) . '"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</div>';
+				} else {
+					$output = '';
+				}
+
+				if ( ! UM()->form()->processing ) {
+					$output = '<div class="um-field-notice" id="' . esc_attr( $notice_id ) . '"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . wp_kses( $text, UM()->get_allowed_html( 'templates' ) ) . '</div>';
+				}
 			}
 
 			return $output;
@@ -2431,6 +2463,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$output .= $this->field_error( $this->show_error( $key ), $field_name );
 						} elseif ( $this->is_notice( $key ) ) {
 							$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						} elseif ( ! empty( $data['help'] ) ) {
+							$output .= '<p class="um-field-hint">' . esc_html( $data['help'] ) . '</p>';
 						}
 					} else {
 						$output .= '<div class="um-field-area">';
@@ -2528,51 +2562,161 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				case 'password':
 					$original_key = $key;
 
-					if ( 'single_user_password' === $key ) {
-						$key = $original_key;
+					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+						if ( 'single_user_password' === $key ) {
+							$key = $original_key;
 
-						$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
-
-						if ( isset( $data['label'] ) ) {
-							$output .= $this->field_label( $data['label'], $key, $data );
-						}
-
-						$output .= '<div class="um-field-area">';
-
-						if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-							$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
-						}
-
-						$field_name  = $key . $form_suffix;
-						$field_value = $this->field_value( $key, $default, $data );
-
-						if ( UM()->options()->get( 'toggle_password' ) ) {
-							$output .= '<div class="um-field-area-password">
-									<input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>
-									<span class="um-toggle-password"><i class="um-icon-eye"></i></span>
-								</div>
-							</div>';
-						} else {
-							$output .= '<input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>
-
-							</div>';
-						}
-
-						if ( $this->is_error( $key ) ) {
-							$output .= $this->field_error( $this->show_error( $key ), $field_name );
-						} elseif ( $this->is_notice( $key ) ) {
-							$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
-						}
-
-						$output .= '</div>';
-					} else {
-						if ( ( 'account' === $this->set_mode || um_is_core_page( 'account' ) ) && UM()->account()->current_password_is_required( 'password' ) ) {
-
-							$key     = 'current_' . $original_key;
 							$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
 							if ( isset( $data['label'] ) ) {
-								$output .= $this->field_label( __( 'Current Password', 'ultimate-member' ), $key, $data );
+								$output .= $this->field_label( $data['label'], $key, $data );
+							}
+
+							$field_name  = $key . $form_suffix;
+							$field_value = $this->field_value( $key, $default, $data );
+
+							if ( UM()->options()->get( 'toggle_password' ) ) {
+								$output .= '<div class="um-field-area-password">
+									<input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>
+									<span class="um-toggle-password um-icon-eye"></span>
+								</div>';
+							} else {
+								$output .= '<input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
+							}
+
+							if ( $this->is_error( $key ) ) {
+								$output .= $this->field_error( $this->show_error( $key ), $field_name );
+							} elseif ( $this->is_notice( $key ) ) {
+								$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+							} elseif ( ! empty( $data['help'] ) ) {
+								$output .= '<p class="um-field-hint">' . esc_html( $data['help'] ) . '</p>';
+							}
+
+							$output .= '</div>';
+						} else {
+							if ( ( 'account' === $this->set_mode || um_is_core_page( 'account' ) ) && UM()->account()->current_password_is_required( 'password' ) ) {
+
+								$key     = 'current_' . $original_key;
+								$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
+
+								if ( isset( $data['label'] ) ) {
+									$output .= $this->field_label( __( 'Current Password', 'ultimate-member' ), $key, $data );
+								}
+
+								$field_name  = $key . $form_suffix;
+								$field_value = $this->field_value( $key, $default, $data );
+
+								if ( UM()->options()->get( 'toggle_password' ) ) {
+									$output .= '<div class="um-field-area-password">
+										<input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>
+										<span class="um-toggle-password um-icon-eye"></span>
+									</div>';
+								} else {
+									$output .= '<input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
+								}
+
+								if ( $this->is_error( $key ) ) {
+									$output .= $this->field_error( $this->show_error( $key ), $field_name );
+								} elseif ( $this->is_notice( $key ) ) {
+									$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+								} elseif ( ! empty( $data['help'] ) ) {
+									$output .= '<p class="um-field-hint">' . esc_html( $data['help'] ) . '</p>';
+								}
+
+								$output .= '</div>';
+							}
+
+							$key = $original_key;
+
+							$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
+
+							if ( ( 'account' === $this->set_mode && um_is_core_page( 'account' ) ) || ( 'password' === $this->set_mode && um_is_core_page( 'password-reset' ) ) ) {
+
+								$output .= $this->field_label( __( 'New Password', 'ultimate-member' ), $key, $data );
+
+							} elseif ( isset( $data['label'] ) ) {
+
+								$output .= $this->field_label( $data['label'], $key, $data );
+
+							}
+
+							$name = $key . $form_suffix;
+							if ( 'password' === $this->set_mode && um_is_core_page( 'password-reset' ) ) {
+								$name = $key;
+							}
+
+							$field_value = $this->field_value( $key, $default, $data );
+							if ( UM()->options()->get( 'toggle_password' ) ) {
+								$output .= '<div class="um-field-area-password">
+									<input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $name ) . '" id="' . esc_attr( $key . $form_suffix ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $name ) . '/>
+									<span class="um-toggle-password um-icon-eye"></span>
+								</div>';
+							} else {
+								$output .= '<input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $name ) . '" id="' . esc_attr( $key . $form_suffix ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $name ) . '/>';
+							}
+
+							if ( $this->is_error( $key ) ) {
+								$output .= $this->field_error( $this->show_error( $key ), $name );
+							} elseif ( $this->is_notice( $key ) ) {
+								$output .= $this->field_notice( $this->show_notice( $key ), $name );
+							} elseif ( ! empty( $data['help'] ) ) {
+								$output .= '<p class="um-field-hint">' . esc_html( $data['help'] ) . '</p>';
+							}
+
+							$output .= '</div>';
+
+							if ( 'login' !== $this->set_mode && ! empty( $data['force_confirm_pass'] ) ) {
+
+								$key     = 'confirm_' . $original_key;
+								$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
+
+								if ( ! empty( $data['label_confirm_pass'] ) ) {
+									$output .= $this->field_label( $data['label_confirm_pass'], $key, $data );
+								} elseif ( isset( $data['label'] ) ) {
+									// translators: %s: label.
+									$output .= $this->field_label( sprintf( __( 'Confirm %s', 'ultimate-member' ), $data['label'] ), $key, $data );
+								}
+
+								$name = $key . $form_suffix;
+								if ( 'password' === $this->set_mode && um_is_core_page( 'password-reset' ) ) {
+									$name = $key;
+								}
+
+								if ( ! empty( $data['label_confirm_pass'] ) ) {
+									$placeholder = $data['label_confirm_pass'];
+								} elseif ( ! empty( $placeholder ) && ! isset( $data['label'] ) ) {
+									// translators: %s: placeholder.
+									$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $placeholder );
+								} elseif ( isset( $data['label'] ) ) {
+									// translators: %s: label.
+									$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $data['label'] );
+								}
+
+								if ( UM()->options()->get( 'toggle_password' ) ) {
+									$output .= '<div class="um-field-area-password"><input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $name ) . '" id="' . esc_attr( $key . $form_suffix ) . '" value="' . esc_attr( $this->field_value( $key, $default, $data ) ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $name ) . '/><span class="um-toggle-password um-icon-eye"></span></div>';
+								} else {
+									$output .= '<input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $name ) . '" id="' . esc_attr( $key . $form_suffix ) . '" value="' . esc_attr( $this->field_value( $key, $default, $data ) ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $name ) . '/>';
+								}
+
+								if ( $this->is_error( $key ) ) {
+									$output .= $this->field_error( $this->show_error( $key ), $name );
+								} elseif ( $this->is_notice( $key ) ) {
+									$output .= $this->field_notice( $this->show_notice( $key ), $name );
+								} elseif ( ! empty( $data['help'] ) ) {
+									$output .= '<p class="um-field-hint">' . esc_html( $data['help'] ) . '</p>';
+								}
+
+								$output .= '</div>';
+							}
+						}
+					} else {
+						if ( 'single_user_password' === $key ) {
+							$key = $original_key;
+
+							$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
+
+							if ( isset( $data['label'] ) ) {
+								$output .= $this->field_label( $data['label'], $key, $data );
 							}
 
 							$output .= '<div class="um-field-area">';
@@ -2586,14 +2730,14 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 							if ( UM()->options()->get( 'toggle_password' ) ) {
 								$output .= '<div class="um-field-area-password">
-										<input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>
-										<span class="um-toggle-password"><i class="um-icon-eye"></i></span>
-									</div>
-								</div>';
+									<input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>
+									<span class="um-toggle-password"><i class="um-icon-eye"></i></span>
+								</div>
+							</div>';
 							} else {
 								$output .= '<input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>
 
-								</div>';
+							</div>';
 							}
 
 							if ( $this->is_error( $key ) ) {
@@ -2603,67 +2747,59 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							}
 
 							$output .= '</div>';
-
-						}
-
-						$key = $original_key;
-
-						$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
-
-						if ( ( 'account' === $this->set_mode && um_is_core_page( 'account' ) ) || ( 'password' === $this->set_mode && um_is_core_page( 'password-reset' ) ) ) {
-
-							$output .= $this->field_label( __( 'New Password', 'ultimate-member' ), $key, $data );
-
-						} elseif ( isset( $data['label'] ) ) {
-
-							$output .= $this->field_label( $data['label'], $key, $data );
-
-						}
-
-						$output .= '<div class="um-field-area">';
-
-						if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-							$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
-						}
-
-						$name = $key . $form_suffix;
-						if ( 'password' === $this->set_mode && um_is_core_page( 'password-reset' ) ) {
-							$name = $key;
-						}
-
-						$field_value = $this->field_value( $key, $default, $data );
-						if ( UM()->options()->get( 'toggle_password' ) ) {
-							$output .= '<div class="um-field-area-password">
-									<input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $name ) . '" id="' . esc_attr( $key . $form_suffix ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $name ) . '/>
-									<span class="um-toggle-password"><i class="um-icon-eye"></i></span>
-								</div>
-							</div>';
 						} else {
-							$output .= '<input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $name ) . '" id="' . esc_attr( $key . $form_suffix ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $name ) . '/>
+							if ( ( 'account' === $this->set_mode || um_is_core_page( 'account' ) ) && UM()->account()->current_password_is_required( 'password' ) ) {
 
-							</div>';
-						}
+								$key     = 'current_' . $original_key;
+								$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
-						if ( $this->is_error( $key ) ) {
-							$output .= $this->field_error( $this->show_error( $key ), $name );
-						} elseif ( $this->is_notice( $key ) ) {
-							$output .= $this->field_notice( $this->show_notice( $key ), $name );
-						}
+								if ( isset( $data['label'] ) ) {
+									$output .= $this->field_label( __( 'Current Password', 'ultimate-member' ), $key, $data );
+								}
 
-						$output .= '</div>';
+								$output .= '<div class="um-field-area">';
 
-						if ( 'login' !== $this->set_mode && ! empty( $data['force_confirm_pass'] ) ) {
+								if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
+									$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
+								}
 
-							$key     = 'confirm_' . $original_key;
+								$field_name  = $key . $form_suffix;
+								$field_value = $this->field_value( $key, $default, $data );
+
+								if ( UM()->options()->get( 'toggle_password' ) ) {
+									$output .= '<div class="um-field-area-password">
+										<input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>
+										<span class="um-toggle-password"><i class="um-icon-eye"></i></span>
+									</div>
+								</div>';
+								} else {
+									$output .= '<input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>
+
+								</div>';
+								}
+
+								if ( $this->is_error( $key ) ) {
+									$output .= $this->field_error( $this->show_error( $key ), $field_name );
+								} elseif ( $this->is_notice( $key ) ) {
+									$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+								}
+
+								$output .= '</div>';
+
+							}
+
+							$key = $original_key;
+
 							$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
-							if ( ! empty( $data['label_confirm_pass'] ) ) {
-								$label_confirm_pass = __( $data['label_confirm_pass'], 'ultimate-member' );
-								$output            .= $this->field_label( $label_confirm_pass, $key, $data );
+							if ( ( 'account' === $this->set_mode && um_is_core_page( 'account' ) ) || ( 'password' === $this->set_mode && um_is_core_page( 'password-reset' ) ) ) {
+
+								$output .= $this->field_label( __( 'New Password', 'ultimate-member' ), $key, $data );
+
 							} elseif ( isset( $data['label'] ) ) {
-								$data['label'] = __( $data['label'], 'ultimate-member' );
-								// translators: %s: label.
-								$output .= $this->field_label( sprintf( __( 'Confirm %s', 'ultimate-member' ), $data['label'] ), $key, $data );
+
+								$output .= $this->field_label( $data['label'], $key, $data );
+
 							}
 
 							$output .= '<div class="um-field-area">';
@@ -2677,23 +2813,18 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								$name = $key;
 							}
 
-							if ( ! empty( $data['label_confirm_pass'] ) ) {
-								$placeholder = __( $data['label_confirm_pass'], 'ultimate-member' );
-							} elseif ( ! empty( $placeholder ) && ! isset( $data['label'] ) ) {
-								// translators: %s: placeholder.
-								$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $placeholder );
-							} elseif ( isset( $data['label'] ) ) {
-								// translators: %s: label.
-								$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $data['label'] );
-							}
-
+							$field_value = $this->field_value( $key, $default, $data );
 							if ( UM()->options()->get( 'toggle_password' ) ) {
-								$output .= '<div class="um-field-area-password"><input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $name ) . '" id="' . esc_attr( $key . $form_suffix ) . '" value="' . esc_attr( $this->field_value( $key, $default, $data ) ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $name ) . '/><span class="um-toggle-password"><i class="um-icon-eye"></i></span></div>';
+								$output .= '<div class="um-field-area-password">
+									<input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $name ) . '" id="' . esc_attr( $key . $form_suffix ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $name ) . '/>
+									<span class="um-toggle-password"><i class="um-icon-eye"></i></span>
+								</div>
+							</div>';
 							} else {
-								$output .= '<input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $name ) . '" id="' . esc_attr( $key . $form_suffix ) . '" value="' . esc_attr( $this->field_value( $key, $default, $data ) ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $name ) . '/>';
-							}
+								$output .= '<input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $name ) . '" id="' . esc_attr( $key . $form_suffix ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $name ) . '/>
 
-							$output .= '</div>';
+							</div>';
+							}
 
 							if ( $this->is_error( $key ) ) {
 								$output .= $this->field_error( $this->show_error( $key ), $name );
@@ -2702,6 +2833,58 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							}
 
 							$output .= '</div>';
+
+							if ( 'login' !== $this->set_mode && ! empty( $data['force_confirm_pass'] ) ) {
+
+								$key     = 'confirm_' . $original_key;
+								$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
+
+								if ( ! empty( $data['label_confirm_pass'] ) ) {
+									$label_confirm_pass = __( $data['label_confirm_pass'], 'ultimate-member' );
+									$output            .= $this->field_label( $label_confirm_pass, $key, $data );
+								} elseif ( isset( $data['label'] ) ) {
+									$data['label'] = __( $data['label'], 'ultimate-member' );
+									// translators: %s: label.
+									$output .= $this->field_label( sprintf( __( 'Confirm %s', 'ultimate-member' ), $data['label'] ), $key, $data );
+								}
+
+								$output .= '<div class="um-field-area">';
+
+								if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
+									$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
+								}
+
+								$name = $key . $form_suffix;
+								if ( 'password' === $this->set_mode && um_is_core_page( 'password-reset' ) ) {
+									$name = $key;
+								}
+
+								if ( ! empty( $data['label_confirm_pass'] ) ) {
+									$placeholder = __( $data['label_confirm_pass'], 'ultimate-member' );
+								} elseif ( ! empty( $placeholder ) && ! isset( $data['label'] ) ) {
+									// translators: %s: placeholder.
+									$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $placeholder );
+								} elseif ( isset( $data['label'] ) ) {
+									// translators: %s: label.
+									$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $data['label'] );
+								}
+
+								if ( UM()->options()->get( 'toggle_password' ) ) {
+									$output .= '<div class="um-field-area-password"><input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $name ) . '" id="' . esc_attr( $key . $form_suffix ) . '" value="' . esc_attr( $this->field_value( $key, $default, $data ) ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $name ) . '/><span class="um-toggle-password"><i class="um-icon-eye"></i></span></div>';
+								} else {
+									$output .= '<input class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $name ) . '" id="' . esc_attr( $key . $form_suffix ) . '" value="' . esc_attr( $this->field_value( $key, $default, $data ) ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $name ) . '/>';
+								}
+
+								$output .= '</div>';
+
+								if ( $this->is_error( $key ) ) {
+									$output .= $this->field_error( $this->show_error( $key ), $name );
+								} elseif ( $this->is_notice( $key ) ) {
+									$output .= $this->field_notice( $this->show_notice( $key ), $name );
+								}
+
+								$output .= '</div>';
+							}
 						}
 					}
 					break;

@@ -803,7 +803,8 @@
   padding: 0;
   row-gap: 6px;
 }
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field {
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password {
   display: flex;
   flex-direction: column;
   justify-content: stretch;
@@ -817,7 +818,10 @@
   row-gap: 6px;
   width: 100%;
 }
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]), .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea {
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]), .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]),
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > select,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > textarea {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -832,21 +836,71 @@
   line-height: var(--um-text-line-height-md, 24px);
   font-weight: var(--um-text-font-weight-regular, 400);
 }
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea:focus-visible {
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > select:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > select:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > textarea:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > textarea:focus-visible {
   border: 1px solid var(--um-primary-300-bg, #d6bbfb);
   box-shadow: 0 0 0 4px var(--um-primary-500-a-24, rgba(158, 119, 237, 0.24)), 0 1px 2px var(--um-gray-900-a-5, rgba(16, 24, 40, 0.05));
   background: #fff;
   outline: none;
 }
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea:disabled {
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea:disabled,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):disabled,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > select:disabled,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > textarea:disabled {
   background: var(--um-gray-50, #f9fafb);
   color: var(--um-gray-500, #667085);
 }
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color])::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea::placeholder {
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color])::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea::placeholder,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color])::placeholder,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > select::placeholder,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > textarea::placeholder {
   color: var(--um-gray-500, #667085);
 }
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]).um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select.um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea.um-error {
-  border-color: var(--um-error-500, #f04438);
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]).um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select.um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea.um-error,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]).um-error,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > select.um-error,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > textarea.um-error {
+  border-color: var(--um-error-300, #fda29b);
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]).um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]).um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select.um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select.um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea.um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea.um-error:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]).um-error:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]).um-error:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > select.um-error:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > select.um-error:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > textarea.um-error:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > textarea.um-error:focus-visible {
+  box-shadow: 0 0 0 4px var(--um-error-500-a-24, rgba(240, 68, 56, 0.24)), 0 1px 2px var(--um-gray-900-a-5, rgba(16, 24, 40, 0.05));
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password {
+  position: relative;
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password .um-toggle-password {
+  transition: all 0.2s linear;
+  cursor: pointer;
+  display: block;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  margin-top: -10px;
+  width: 20px;
+  height: 20px;
+  background-color: var(--um-primary-600-bg, #7f56d9);
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password .um-toggle-password:hover {
+  background-color: var(--um-primary-700-bg, #6941c6);
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password .um-toggle-password.um-icon-eye {
+  mask: url(../icons/eye.svg);
+  -webkit-mask: url(../icons/eye.svg);
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password .um-toggle-password.um-icon-eye-disabled {
+  mask: url(../icons/eye-off.svg);
+  -webkit-mask: url(../icons/eye-off.svg);
 }
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-hint {
   box-sizing: border-box;
@@ -859,6 +913,9 @@
   font-size: var(--um-text-font-size-sm, 14px);
   line-height: var(--um-text-line-height-sm, 20px);
   font-weight: var(--um-text-font-weight-regular, 400);
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-hint.um-field-error {
+  color: var(--um-error-500, #f04438);
 }
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col label {
   box-sizing: border-box;
@@ -902,6 +959,12 @@
 }
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color])::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea::placeholder {
   color: var(--um-gray-500, #667085);
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]).um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select.um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea.um-error {
+  border-color: var(--um-error-300, #fda29b);
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]).um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]).um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select.um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select.um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea.um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea.um-error:focus-visible {
+  box-shadow: 0 0 0 4px var(--um-error-500-a-24, rgba(240, 68, 56, 0.24)), 0 1px 2px var(--um-gray-900-a-5, rgba(16, 24, 40, 0.05));
 }
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=color] {
   -webkit-appearance: none;
