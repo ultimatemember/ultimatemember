@@ -42,7 +42,7 @@ $error_message = ! empty( $args['use_gdpr_error_text'] ) ? $args['use_gdpr_error
 							}
 							?>
 						</div>
-						<a href="javascript:void(0);" class="um-toggle-gdpr" data-toggle-state="hidden" data-toggle-show="<?php echo esc_attr( $toggle_show ); ?>" data-toggle-hide="<?php echo esc_attr( $toggle_hide ); ?>">
+						<a href="javascript:void(0);" class="um-link um-toggle-gdpr" data-toggle-state="hidden" data-toggle-show="<?php echo esc_attr( $toggle_show ); ?>" data-toggle-hide="<?php echo esc_attr( $toggle_hide ); ?>">
 							<?php echo esc_html( $toggle_title ); ?>
 						</a>
 					</div>
