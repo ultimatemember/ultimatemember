@@ -1581,58 +1581,98 @@ function um_submit_form_profile( $args, $form_data ) {
 }
 add_action( 'um_submit_form_profile', 'um_submit_form_profile', 10, 2 );
 
-/**
- * Show the submit button (highest priority)
- *
- * @param $args
- */
-function um_add_submit_button_to_profile( $args ) {
-	// DO NOT add when reviewing user's details
-	if ( UM()->user()->preview == true && is_admin() ) {
-		return;
+
+
+if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+	/**
+	 * Show the submit button (highest priority)
+	 *
+	 * @param $args
+	 */
+	function um_add_submit_button_to_profile( $args ) {
+		// DO NOT add when reviewing user's details
+		if ( is_admin() && UM()->user()->preview ) {
+			return;
+		}
+
+		// only when editing
+		if ( false === UM()->fields()->editing ) {
+			return;
+		}
+
+		if ( ! isset( $args['primary_btn_word'] ) || '' === $args['primary_btn_word'] ) {
+			$args['primary_btn_word'] = UM()->options()->get( 'profile_primary_btn_word' );
+		}
+		?>
+		<div class="um-form-submit">
+			<?php
+			echo UM()->frontend()::layouts()::button(
+				$args['primary_btn_word'],
+				array(
+					'type'   => 'submit',
+					'design' => 'primary',
+					'width'  => 'full',
+					'id'     => 'um-submit-btn',
+				)
+			);
+			?>
+		</div>
+		<?php
 	}
+	add_action( 'um_after_profile_fields', 'um_add_submit_button_to_profile', 1000 );
+} else {
+	/**
+	 * Show the submit button (highest priority)
+	 *
+	 * @param $args
+	 */
+	function um_add_submit_button_to_profile( $args ) {
+		// DO NOT add when reviewing user's details
+		if ( UM()->user()->preview == true && is_admin() ) {
+			return;
+		}
 
-	// only when editing
-	if ( false === UM()->fields()->editing ) {
-		return;
+		// only when editing
+		if ( false === UM()->fields()->editing ) {
+			return;
+		}
+
+		if ( ! isset( $args['primary_btn_word'] ) || $args['primary_btn_word'] == '' ){
+			$args['primary_btn_word'] = UM()->options()->get( 'profile_primary_btn_word' );
+		}
+		if ( ! isset( $args['secondary_btn_word'] ) || $args['secondary_btn_word'] == '' ){
+			$args['secondary_btn_word'] = UM()->options()->get( 'profile_secondary_btn_word' );
+		} ?>
+
+		<div class="um-col-alt">
+
+			<?php if ( ! empty( $args['secondary_btn'] ) ) { ?>
+
+				<div class="um-left um-half">
+					<input type="submit" value="<?php esc_attr_e( wp_unslash( $args['primary_btn_word'] ), 'ultimate-member' ); ?>" class="um-button" />
+				</div>
+				<div class="um-right um-half">
+					<a href="<?php echo esc_url( um_edit_my_profile_cancel_uri() ); ?>" class="um-button um-alt">
+						<?php _e( wp_unslash( $args['secondary_btn_word'] ), 'ultimate-member' ); ?>
+					</a>
+				</div>
+
+			<?php } else { ?>
+
+				<div class="um-center">
+					<input type="submit" value="<?php esc_attr_e( wp_unslash( $args['primary_btn_word'] ), 'ultimate-member' ); ?>" class="um-button" />
+				</div>
+
+			<?php } ?>
+
+			<div class="um-clear"></div>
+
+		</div>
+
+		<?php
 	}
-
-	if ( ! isset( $args['primary_btn_word'] ) || $args['primary_btn_word'] == '' ){
-		$args['primary_btn_word'] = UM()->options()->get( 'profile_primary_btn_word' );
-	}
-	if ( ! isset( $args['secondary_btn_word'] ) || $args['secondary_btn_word'] == '' ){
-		$args['secondary_btn_word'] = UM()->options()->get( 'profile_secondary_btn_word' );
-	} ?>
-
-	<div class="um-col-alt">
-
-		<?php if ( ! empty( $args['secondary_btn'] ) ) { ?>
-
-			<div class="um-left um-half">
-				<input type="submit" value="<?php esc_attr_e( wp_unslash( $args['primary_btn_word'] ), 'ultimate-member' ); ?>" class="um-button" />
-			</div>
-			<div class="um-right um-half">
-				<a href="<?php echo esc_url( um_edit_my_profile_cancel_uri() ); ?>" class="um-button um-alt">
-					<?php _e( wp_unslash( $args['secondary_btn_word'] ), 'ultimate-member' ); ?>
-				</a>
-			</div>
-
-		<?php } else { ?>
-
-			<div class="um-center">
-				<input type="submit" value="<?php esc_attr_e( wp_unslash( $args['primary_btn_word'] ), 'ultimate-member' ); ?>" class="um-button" />
-			</div>
-
-		<?php } ?>
-
-		<div class="um-clear"></div>
-
-	</div>
-
-	<?php
+	add_action( 'um_after_profile_fields', 'um_add_submit_button_to_profile', 1000 );
 }
-add_action( 'um_after_profile_fields', 'um_add_submit_button_to_profile', 1000 );
-
 
 /**
  * Display the available profile tabs
