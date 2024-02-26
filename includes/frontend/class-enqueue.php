@@ -118,6 +118,8 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_register_script( 'um_choices', $libs_url . 'choices-js/choices' . $suffix . '.js', array(), '10.2.0', true );
 			wp_register_style( 'um_choices', $css_url . 'um-choices' . $suffix . '.css', array(), UM_VERSION );
 
+			wp_register_script( 'um-gdpr', $js_url . 'um-gdpr' . $suffix . '.js', array( 'jquery' ), UM_VERSION, false );
+
 			//wp_register_style( 'um_new_profile', $css_url . 'new-profile' . $suffix . '.css', array(), UM_VERSION );
 
 			// Cropper.js

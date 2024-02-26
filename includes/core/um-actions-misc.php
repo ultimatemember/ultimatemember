@@ -149,7 +149,7 @@ function um_add_update_notice( $args ) {
 					$err = __( 'An error has been encountered', 'ultimate-member' );
 				}
 				break;
-			case 'registration_disabled':
+			case 'registration_disabled': // @todo maybe remove because not used
 				$err = __( 'Registration is currently disabled', 'ultimate-member' );
 				break;
 			case 'blocked_email':

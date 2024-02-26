@@ -1267,6 +1267,8 @@ class Shortcodes {
 		if ( 'directory' === $args['mode'] ) {
 			wp_enqueue_script( 'um_members' );
 			wp_enqueue_style( 'um_members' );
+		} elseif ( 'register' === $args['mode'] ) {
+			wp_enqueue_script( 'um-gdpr' );
 		}
 
 		if ( 'directory' !== $args['mode'] ) {

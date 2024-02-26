@@ -801,7 +801,7 @@
   -webkit-box-sizing: border-box;
   margin: 0;
   padding: 0;
-  row-gap: 6px;
+  row-gap: 20px;
 }
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field,
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password {

@@ -5141,6 +5141,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$css_bordercolor = 'border-color: ' . esc_attr( $bordercolor ) . ';';
 			}
 
+			$header = '';
 			// Show the heading.
 			if ( $heading ) {
 				if ( ! empty( $borderradius ) ) {
@@ -5159,18 +5160,33 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$css_heading_margin       = $css_margin . 'margin-bottom: 0px;';
 				$css_heading_text_color   = ! empty( $row_array['heading_text_color'] ) ? 'color: ' . esc_attr( $row_array['heading_text_color'] ) . ';' : '';
 
-				$output .= '<div class="um-row-heading" style="' . esc_attr( $css_heading_margin . $css_heading_padding . $css_heading_border . $css_heading_background_color . $css_heading_text_color ) . '">';
+				if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+					$header .= '<div class="um-row-heading" style="' . esc_attr( $css_heading_margin . $css_heading_padding . $css_heading_border . $css_heading_background_color . $css_heading_text_color ) . '">';
 
-				if ( ! empty( $row_array['icon'] ) ) {
-					$css_icon_color = ! empty( $row_array['icon_color'] ) ? 'color: ' . esc_attr( $row_array['icon_color'] ) . ';' : '';
-					$output        .= '<span class="um-row-heading-icon" style="' . esc_attr( $css_icon_color ) . '"><i class="' . esc_attr( $row_array['icon'] ) . '"></i></span>';
+					if ( ! empty( $row_array['icon'] ) ) {
+						$css_icon_color = ! empty( $row_array['icon_color'] ) ? 'color: ' . esc_attr( $row_array['icon_color'] ) . ';' : '';
+						$header        .= '<span class="um-row-heading-icon" style="' . esc_attr( $css_icon_color ) . '"><i class="' . esc_attr( $row_array['icon'] ) . '"></i></span>';
+					}
+
+					if ( ! empty( $row_array['heading_text'] ) ) {
+						$header .= esc_html( $row_array['heading_text'] );
+					}
+
+					$header .= '</div>';
+				} else {
+					$output .= '<div class="um-row-heading" style="' . esc_attr( $css_heading_margin . $css_heading_padding . $css_heading_border . $css_heading_background_color . $css_heading_text_color ) . '">';
+
+					if ( ! empty( $row_array['icon'] ) ) {
+						$css_icon_color = ! empty( $row_array['icon_color'] ) ? 'color: ' . esc_attr( $row_array['icon_color'] ) . ';' : '';
+						$output        .= '<span class="um-row-heading-icon" style="' . esc_attr( $css_icon_color ) . '"><i class="' . esc_attr( $row_array['icon'] ) . '"></i></span>';
+					}
+
+					if ( ! empty( $row_array['heading_text'] ) ) {
+						$output .= esc_html( $row_array['heading_text'] );
+					}
+
+					$output .= '</div>';
 				}
-
-				if ( ! empty( $row_array['heading_text'] ) ) {
-					$output .= esc_html( $row_array['heading_text'] );
-				}
-
-				$output .= '</div>';
 
 				$css_border .= 'border-top-width: 0px;';
 				$css_margin .= 'margin-top: 0px;';
@@ -5181,7 +5197,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				}
 			}
 			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-				$output .= '<div class="um-form-rows ' . esc_attr( $row_id . ' ' . $css_class ) . '" style="' . esc_attr( $css_padding . $css_background . $css_margin . $css_border . $css_borderstyle . $css_bordercolor . $css_borderradius . $css_text_color ) . '">';
+				$output .= '<div class="um-form-rows ' . esc_attr( $row_id . ' ' . $css_class ) . '" style="' . esc_attr( $css_padding . $css_background . $css_margin . $css_border . $css_borderstyle . $css_bordercolor . $css_borderradius . $css_text_color ) . '">' . $header;
 			} else {
 				$output .= '<div class="um-row ' . esc_attr( $row_id . ' ' . $css_class ) . '" style="' . esc_attr( $css_padding . $css_background . $css_margin . $css_border . $css_borderstyle . $css_bordercolor . $css_borderradius . $css_text_color ) . '">';
 			}

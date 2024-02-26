@@ -549,123 +549,179 @@ function um_submit_form_register( $args, $form_data ) {
 }
 add_action( 'um_submit_form_register', 'um_submit_form_register', 10, 2 );
 
-/**
- * Show the submit button
- *
- * @param $args
- */
-function um_add_submit_button_to_register( $args ) {
-	$primary_btn_word = $args['primary_btn_word'];
+if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 	/**
-	 * UM hook
+	 * Show the submit button
 	 *
-	 * @type filter
-	 * @title um_register_form_button_one
-	 * @description Change Register Form Primary button
-	 * @input_vars
-	 * [{"var":"$primary_btn_word","type":"string","desc":"Button text"},
-	 * {"var":"$args","type":"array","desc":"Registration Form arguments"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage
-	 * <?php add_filter( 'um_register_form_button_one', 'function_name', 10, 2 ); ?>
-	 * @example
-	 * <?php
-	 * add_filter( 'um_register_form_button_one', 'my_register_form_button_one', 10, 2 );
-	 * function my_register_form_button_one( $primary_btn_word, $args ) {
-	 *     // your code here
-	 *     return $primary_btn_word;
-	 * }
-	 * ?>
+	 * @param $args
 	 */
-	$primary_btn_word = apply_filters('um_register_form_button_one', $primary_btn_word, $args );
+	function um_add_submit_button_to_register( $args ) {
+		$primary_btn_word = $args['primary_btn_word'];
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_register_form_button_one
+		 * @description Change Register Form Primary button
+		 * @input_vars
+		 * [{"var":"$primary_btn_word","type":"string","desc":"Button text"},
+		 * {"var":"$args","type":"array","desc":"Registration Form arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_register_form_button_one', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_register_form_button_one', 'my_register_form_button_one', 10, 2 );
+		 * function my_register_form_button_one( $primary_btn_word, $args ) {
+		 *     // your code here
+		 *     return $primary_btn_word;
+		 * }
+		 * ?>
+		 */
+		$primary_btn_word = apply_filters('um_register_form_button_one', $primary_btn_word, $args );
 
-	if ( ! isset( $primary_btn_word ) || $primary_btn_word == '' ){
-		$primary_btn_word = UM()->options()->get( 'register_primary_btn_word' );
+		if ( ! isset( $primary_btn_word ) || '' === $primary_btn_word ) {
+			$primary_btn_word = UM()->options()->get( 'register_primary_btn_word' );
+		}
+		?>
+
+		<div class="um-form-submit">
+			<?php
+			echo UM()->frontend()::layouts()::button(
+				$primary_btn_word,
+				array(
+					'type'   => 'submit',
+					'design' => 'primary',
+					'width'  => 'full',
+					'id'     => 'um-submit-btn',
+				)
+			);
+			?>
+			<span class="um-center"><?php echo wp_kses_post( sprintf( __( 'Already have an account? %s', 'ultimate-member' ), '<a href="' . um_get_predefined_page_url( 'login' ) . '" class="um-link">' . __( 'Log in', 'ultimate-member' ) . '</a>' ) ); ?></span>
+		</div>
+		<?php
 	}
-
-	$secondary_btn_word = $args['secondary_btn_word'];
+	add_action( 'um_after_register_fields', 'um_add_submit_button_to_register', 1000 );
+} else {
 	/**
-	 * UM hook
+	 * Show the submit button
 	 *
-	 * @type filter
-	 * @title um_register_form_button_two
-	 * @description Change Registration Form Secondary button
-	 * @input_vars
-	 * [{"var":"$secondary_btn_word","type":"string","desc":"Button text"},
-	 * {"var":"$args","type":"array","desc":"Registration Form arguments"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage
-	 * <?php add_filter( 'um_register_form_button_two', 'function_name', 10, 2 ); ?>
-	 * @example
-	 * <?php
-	 * add_filter( 'um_register_form_button_two', 'my_register_form_button_two', 10, 2 );
-	 * function my_register_form_button_two( $secondary_btn_word, $args ) {
-	 *     // your code here
-	 *     return $secondary_btn_word;
-	 * }
-	 * ?>
+	 * @param $args
 	 */
-	$secondary_btn_word = apply_filters( 'um_register_form_button_two', $secondary_btn_word, $args );
+	function um_add_submit_button_to_register( $args ) {
+		$primary_btn_word = $args['primary_btn_word'];
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_register_form_button_one
+		 * @description Change Register Form Primary button
+		 * @input_vars
+		 * [{"var":"$primary_btn_word","type":"string","desc":"Button text"},
+		 * {"var":"$args","type":"array","desc":"Registration Form arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_register_form_button_one', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_register_form_button_one', 'my_register_form_button_one', 10, 2 );
+		 * function my_register_form_button_one( $primary_btn_word, $args ) {
+		 *     // your code here
+		 *     return $primary_btn_word;
+		 * }
+		 * ?>
+		 */
+		$primary_btn_word = apply_filters('um_register_form_button_one', $primary_btn_word, $args );
 
-	if ( ! isset( $secondary_btn_word ) || $secondary_btn_word == '' ){
-		$secondary_btn_word = UM()->options()->get( 'register_secondary_btn_word' );
+		if ( ! isset( $primary_btn_word ) || $primary_btn_word == '' ){
+			$primary_btn_word = UM()->options()->get( 'register_primary_btn_word' );
+		}
+
+		$secondary_btn_word = $args['secondary_btn_word'];
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_register_form_button_two
+		 * @description Change Registration Form Secondary button
+		 * @input_vars
+		 * [{"var":"$secondary_btn_word","type":"string","desc":"Button text"},
+		 * {"var":"$args","type":"array","desc":"Registration Form arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_register_form_button_two', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_register_form_button_two', 'my_register_form_button_two', 10, 2 );
+		 * function my_register_form_button_two( $secondary_btn_word, $args ) {
+		 *     // your code here
+		 *     return $secondary_btn_word;
+		 * }
+		 * ?>
+		 */
+		$secondary_btn_word = apply_filters( 'um_register_form_button_two', $secondary_btn_word, $args );
+
+		if ( ! isset( $secondary_btn_word ) || $secondary_btn_word == '' ){
+			$secondary_btn_word = UM()->options()->get( 'register_secondary_btn_word' );
+		}
+
+		$secondary_btn_url = ( isset( $args['secondary_btn_url'] ) && $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_core_page('login');
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_register_form_button_two_url
+		 * @description Change Registration Form Secondary button URL
+		 * @input_vars
+		 * [{"var":"$secondary_btn_url","type":"string","desc":"Button URL"},
+		 * {"var":"$args","type":"array","desc":"Registration Form arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_register_form_button_two_url', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_register_form_button_two_url', 'my_register_form_button_two_url', 10, 2 );
+		 * function my_register_form_button_two_url( $secondary_btn_url, $args ) {
+		 *     // your code here
+		 *     return $secondary_btn_url;
+		 * }
+		 * ?>
+		 */
+		$secondary_btn_url = apply_filters('um_register_form_button_two_url', $secondary_btn_url, $args ); ?>
+
+		<div class="um-col-alt">
+
+			<?php if ( ! empty( $args['secondary_btn'] ) ) { ?>
+
+				<div class="um-left um-half">
+					<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ) ?>" class="um-button" id="um-submit-btn" />
+				</div>
+				<div class="um-right um-half">
+					<a href="<?php echo esc_url( $secondary_btn_url ); ?>" class="um-button um-alt">
+						<?php _e( wp_unslash( $secondary_btn_word ),'ultimate-member' ); ?>
+					</a>
+				</div>
+
+			<?php } else { ?>
+
+				<div class="um-center">
+					<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ) ?>" class="um-button" id="um-submit-btn" />
+				</div>
+
+			<?php } ?>
+
+			<div class="um-clear"></div>
+
+		</div>
+
+		<?php
 	}
-
-	$secondary_btn_url = ( isset( $args['secondary_btn_url'] ) && $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_core_page('login');
-	/**
-	 * UM hook
-	 *
-	 * @type filter
-	 * @title um_register_form_button_two_url
-	 * @description Change Registration Form Secondary button URL
-	 * @input_vars
-	 * [{"var":"$secondary_btn_url","type":"string","desc":"Button URL"},
-	 * {"var":"$args","type":"array","desc":"Registration Form arguments"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage
-	 * <?php add_filter( 'um_register_form_button_two_url', 'function_name', 10, 2 ); ?>
-	 * @example
-	 * <?php
-	 * add_filter( 'um_register_form_button_two_url', 'my_register_form_button_two_url', 10, 2 );
-	 * function my_register_form_button_two_url( $secondary_btn_url, $args ) {
-	 *     // your code here
-	 *     return $secondary_btn_url;
-	 * }
-	 * ?>
-	 */
-	$secondary_btn_url = apply_filters('um_register_form_button_two_url', $secondary_btn_url, $args ); ?>
-
-	<div class="um-col-alt">
-
-		<?php if ( ! empty( $args['secondary_btn'] ) ) { ?>
-
-			<div class="um-left um-half">
-				<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ) ?>" class="um-button" id="um-submit-btn" />
-			</div>
-			<div class="um-right um-half">
-				<a href="<?php echo esc_url( $secondary_btn_url ); ?>" class="um-button um-alt">
-					<?php _e( wp_unslash( $secondary_btn_word ),'ultimate-member' ); ?>
-				</a>
-			</div>
-
-		<?php } else { ?>
-
-			<div class="um-center">
-				<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ) ?>" class="um-button" id="um-submit-btn" />
-			</div>
-
-		<?php } ?>
-
-		<div class="um-clear"></div>
-
-	</div>
-
-	<?php
+	add_action( 'um_after_register_fields', 'um_add_submit_button_to_register', 1000 );
 }
-add_action( 'um_after_register_fields', 'um_add_submit_button_to_register', 1000 );
 
 
 /**
