@@ -1097,3 +1097,85 @@ input[type=range] {
   height: 0;
   z-index: 1;
 }
+
+.um.um-account {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  column-gap: 24px;
+}
+.um.um-account .um-account-side {
+  min-width: 160px;
+}
+.um.um-account .um-account-side ul {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  row-gap: 8px;
+}
+.um.um-account .um-account-side ul li {
+  width: 100%;
+}
+.um.um-account .um-account-side ul li a.um-link {
+  font-size: var(--um-text-font-size-sm, 14px);
+  line-height: var(--um-text-line-height-sm, 20px);
+  font-weight: var(--um-text-font-weight-bold, 700);
+  width: 100%;
+  text-align: left;
+  display: inline-block;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+.um.um-account .um-account-side ul li a.um-link.current {
+  color: var(--um-primary-700-bg, #6941c6);
+  background-color: var(--um-primary-200-bg, #e9d7fe);
+}
+.um.um-account .um-account-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  width: calc(100% - 160px);
+}
+.um.um-account .um-account-main .um-account-tab {
+  width: 100%;
+  row-gap: 24px;
+  display: none;
+}
+.um.um-account .um-account-main[data-current_tab=general] .um-account-tab[data-tab=general] {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+}
+.um.um-account .um-account-main[data-current_tab=password] .um-account-tab[data-tab=password] {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+}
+.um.um-account .um-account-main[data-current_tab=privacy] .um-account-tab[data-tab=privacy] {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+}
+.um.um-account .um-account-main[data-current_tab=delete] .um-account-tab[data-tab=delete] {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+}

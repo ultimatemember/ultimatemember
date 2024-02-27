@@ -484,17 +484,24 @@ add_action( 'um_submit_account_details', 'um_submit_account_details' );
 /**
  * Hidden inputs for account form
  *
- * @param $args
+ * @param array  $args
+ * @param string $tab_id
  */
-function um_account_page_hidden_fields( $args ) {
+function um_account_page_hidden_fields( $args, $tab_id = null ) {
 	?>
-
 	<input type="hidden" name="_um_account" id="_um_account" value="1" />
-	<input type="hidden" name="_um_account_tab" id="_um_account_tab" value="<?php echo esc_attr( UM()->account()->current_tab ); ?>" />
-
 	<?php
+	if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+		?>
+		<input type="hidden" name="_um_account_tab" id="_um_account_tab" value="<?php echo esc_attr( $tab_id ); ?>" />
+		<?php
+	} else {
+		?>
+		<input type="hidden" name="_um_account_tab" id="_um_account_tab" value="<?php echo esc_attr( UM()->account()->current_tab ); ?>" />
+		<?php
+	}
 }
-add_action( 'um_account_page_hidden_fields', 'um_account_page_hidden_fields' );
+add_action( 'um_account_page_hidden_fields', 'um_account_page_hidden_fields', 10, 2 );
 
 
 /**

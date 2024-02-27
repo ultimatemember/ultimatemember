@@ -213,6 +213,11 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				return '';
 			}
 
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				wp_enqueue_style( 'um_new_design' );
+				wp_enqueue_script( 'um_new_design' );
+			}
+
 			ob_start();
 
 			if ( ! empty( $args['tab'] ) ) {
@@ -244,7 +249,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 								 * }
 								 * add_action( 'um_account_page_hidden_fields', 'my_account_page_hidden_fields' );
 								 */
-								do_action( 'um_account_page_hidden_fields', $args );
+								do_action( 'um_account_page_hidden_fields', $args, $args['tab'] );
 
 								$this->render_account_tab( $args['tab'], $this->tabs[ $args['tab'] ], $args );
 								?>
@@ -796,39 +801,139 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 *
 		 * @throws \Exception
 		 */
-		function render_account_tab( $tab_id, $tab_data, $args ) {
-
+		public function render_account_tab( $tab_id, $tab_data, $args ) {
 			$output = $this->get_tab_fields( $tab_id, $args );
+			if ( ! $output ) {
+				return;
+			}
 
-			if ( $output ) {
+			if ( ! empty( $tab_data['with_header'] ) ) {
+				?>
+				<div class="um-account-heading uimob340-hide uimob500-hide"><i class="<?php echo esc_attr( $tab_data['icon'] ); ?>"></i><?php echo esc_html( $tab_data['title'] ); ?></div>
+				<?php
+			}
 
-				if ( ! empty ( $tab_data['with_header'] ) ) { ?>
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_before_account_{$tab_id}
+			 * @description Make some action before show account tab
+			 * @input_vars
+			 * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_before_account_{$tab_id}', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_before_account_{$tab_id}', 'my_before_account_tab', 10, 1 );
+			 * function my_before_account_tab( $args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( "um_before_account_{$tab_id}", $args );
 
-					<div class="um-account-heading uimob340-hide uimob500-hide"><i class="<?php echo esc_attr( $tab_data['icon'] ) ?>"></i><?php echo esc_html( $tab_data['title'] ); ?></div>
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				?>
+				<form method="post" action="" class="um-form-new">
+					<div class="um-form-rows">
+						<div class="um-form-row">
+							<div class="um-form-cols um-form-cols-1">
+								<div class="um-form-col um-form-col-1">
+									<?php
+									echo $output;
 
-				<?php }
+									/**
+									 * UM hook
+									 *
+									 * @type action
+									 * @title um_after_account_{$tab_id}
+									 * @description Make some action after show account tab
+									 * @input_vars
+									 * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
+									 * @change_log
+									 * ["Since: 2.0"]
+									 * @usage add_action( 'um_after_account_{$tab_id}', 'function_name', 10, 1 );
+									 * @example
+									 * <?php
+									 * add_action( 'um_after_account_{$tab_id}', 'my_after_account_tab', 10, 1 );
+									 * function my_after_account_tab( $args ) {
+									 *     // your code here
+									 * }
+									 * ?>
+									 */
+									do_action( "um_after_account_{$tab_id}", $args );
+									?>
+								</div>
+							</div>
+						</div>
+					</div>
+					<?php
+					if ( ! isset( $tab_data['show_button'] ) || false !== $tab_data['show_button'] ) {
+						?>
+						<div class="um-form-submit">
+							<input type="hidden" name="um_account_nonce_<?php echo esc_attr( $tab_id ) ?>" value="<?php echo esc_attr( wp_create_nonce( 'um_update_account_' . $tab_id ) ) ?>" />
 
-				/**
-				 * UM hook
-				 *
-				 * @type action
-				 * @title um_before_account_{$tab_id}
-				 * @description Make some action before show account tab
-				 * @input_vars
-				 * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_before_account_{$tab_id}', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_before_account_{$tab_id}', 'my_before_account_tab', 10, 1 );
-				 * function my_before_account_tab( $args ) {
-				 *     // your code here
-				 * }
-				 * ?>
-				 */
-				do_action( "um_before_account_{$tab_id}", $args );
+							<?php
+							/**
+							 * UM hook
+							 *
+							 * @type action
+							 * @title um_account_page_hidden_fields
+							 * @description Show hidden fields on account form
+							 * @input_vars
+							 * [{"var":"$args","type":"array","desc":"Account shortcode arguments"}]
+							 * @change_log
+							 * ["Since: 2.0","Since: 2.9.0 - Added $tab_id"]
+							 * @usage add_action( 'um_account_page_hidden_fields', 'function_name', 10, 1 );
+							 * @example
+							 * <?php
+							 * add_action( 'um_account_page_hidden_fields', 'my_account_page_hidden_fields', 10, 1 );
+							 * function my_account_page_hidden_fields( $args ) {
+							 *     // your code here
+							 * }
+							 * ?>
+							 */
+							do_action( 'um_account_page_hidden_fields', $args, $tab_id );
 
+							$submit_title = ! empty( $tab_data['submit_title'] ) ? $tab_data['submit_title'] : $tab_data['title'];
+							echo UM()->frontend()::layouts()::button(
+								$submit_title,
+								array(
+									'type'   => 'submit',
+									'design' => 'primary',
+									'width'  => 'full',
+									'id'     => 'um_account_submit_' . $tab_id,
+								)
+							);
+
+							/**
+							 * UM hook
+							 *
+							 * @type action
+							 * @title um_after_account_{$tab_id}_button
+							 * @description Make some action after show account tab button
+							 * @change_log
+							 * ["Since: 2.0"]
+							 * @usage add_action( 'um_after_account_{$tab_id}_button', 'function_name', 10 );
+							 * @example
+							 * <?php
+							 * add_action( 'um_after_account_{$tab_id}_button', 'my_after_account_tab_button', 10 );
+							 * function my_after_account_tab_button() {
+							 *     // your code here
+							 * }
+							 * ?>
+							 */
+							do_action( "um_after_account_{$tab_id}_button" );
+							?>
+						</div>
+						<?php
+					}
+					?>
+				</form>
+				<?php
+			} else {
 				echo $output;
 
 				/**
@@ -852,7 +957,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				 */
 				do_action( "um_after_account_{$tab_id}", $args );
 
-				if ( ! isset( $tab_data['show_button'] ) || false !== $tab_data['show_button'] ) { ?>
+				if ( ! isset( $tab_data['show_button'] ) || false !== $tab_data['show_button'] ) {
+					?>
 
 					<div class="um-col-alt um-col-alt-b">
 						<div class="um-left">
@@ -884,7 +990,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						<div class="um-clear"></div>
 					</div>
 
-				<?php }
+					<?php
+				}
 			}
 		}
 
