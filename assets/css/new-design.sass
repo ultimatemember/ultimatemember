@@ -660,6 +660,8 @@
                   &:focus,
                   &:focus-visible
                     box-shadow: $ring-error-shadow-xs
+              .wp-core-ui.wp-editor-wrap
+                width: 100%
             .#{$prefix}field-area-password
               position: relative
               .#{$prefix}toggle-password
@@ -727,6 +729,8 @@
                 &:focus,
                 &:focus-visible
                   box-shadow: $ring-error-shadow-xs
+            .wp-core-ui.wp-editor-wrap
+              width: 100%
             & > input[type="color"]
               -webkit-appearance: none
               -moz-appearance: none
@@ -954,45 +958,67 @@ input[type="range"]
 
 
 // Account
+.um
+  .#{$prefix}tabs-wrapper.#{$prefix}vertical-tabs
+    +flex( row, flex-start, flex-start, nowrap )
+    column-gap: $spacing-3xl
+    .#{$prefix}tabs-list
+      min-width: 160px
+      ul
+        +flex( column, flex-start, stretch, nowrap )
+        list-style: none
+        margin: 0
+        padding: 0
+        row-gap: $spacing-xs
+        li
+          width: 100%
+          a.um-link
+            color: $gray-600
+            +typography( text, sm, semibold )
+            width: 100%
+            text-align: left
+            display: inline-block
+            +border-box
+            border-radius: $radius-sm
+            padding: $spacing-md $spacing-lg
+            background-color: transparent
+            &:hover
+              color: $gray-700
+              background-color: $gray-50
+          &.#{$prefix}current-tab
+            a.um-link
+              color: $primary-700
+              background-color: $primary-200
+              &:hover
+                color: $primary-700
+                background-color: $primary-200
+      select
+        display: none
+    .#{$prefix}tabs-content
+      +flex( column, flex-start, stretch, nowrap )
+      width: calc(100% - 160px)
+      .#{$prefix}tab-content
+        width: 100%
+        row-gap: $spacing-3xl
+        display: none
+        &.#{$prefix}current-tab
+          +flex( column, flex-start, stretch, nowrap )
 
 .um.#{$prefix}account
-  +flex( row, flex-start, flex-start, nowrap )
-  column-gap: $spacing-3xl
-  .#{$prefix}account-side
-    min-width: 160px
-    ul
-      +flex( column, flex-start, stretch, nowrap )
-      list-style: none
+  .#{$prefix}tabs-wrapper.#{$prefix}vertical-tabs
+    width: 100%
+
+.um
+  .#{$prefix}section-header
+    +flex( column, flex-start, stretch, nowrap )
+    row-gap: $spacing-xs
+    .#{$prefix}section-title
+      +typography( text, lg, semibold )
+      color: $gray-900
       margin: 0
       padding: 0
-      row-gap: $spacing-md
-      li
-        width: 100%
-        a.um-link
-          +typography( text, sm, bold )
-          width: 100%
-          text-align: left
-          display: inline-block
-          +border-box
-          &.current
-            color: $primary-700
-            background-color: $primary-200
-  .#{$prefix}account-main
-    +flex( column, flex-start, stretch, nowrap )
-    width: calc(100% - 160px)
-    .#{$prefix}account-tab
-      width: 100%
-      row-gap: $spacing-3xl
-      display: none
-    &[data-current_tab="general"]
-      .#{$prefix}account-tab[data-tab="general"]
-        +flex( column, flex-start, stretch, nowrap )
-    &[data-current_tab="password"]
-      .#{$prefix}account-tab[data-tab="password"]
-        +flex( column, flex-start, stretch, nowrap )
-    &[data-current_tab="privacy"]
-      .#{$prefix}account-tab[data-tab="privacy"]
-        +flex( column, flex-start, stretch, nowrap )
-    &[data-current_tab="delete"]
-      .#{$prefix}account-tab[data-tab="delete"]
-        +flex( column, flex-start, stretch, nowrap )
+    .#{$prefix}section-supporting-text
+      +typography( text, sm, regular )
+      color: $gray-600
+      margin: 0
+      padding: 0

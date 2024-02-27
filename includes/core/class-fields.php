@@ -2492,31 +2492,47 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				case 'tel':
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
+					$field_name  = $key . $form_suffix;
+					$field_value = $this->field_value( $key, $default, $data );
+
 					if ( isset( $data['label'] ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
 
-					$output .= '<div class="um-field-area">';
+					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+						$output .= '<input ' . $disabled . ' autocomplete="' . esc_attr( $autocomplete ) . '" class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
+						if ( ! empty( $disabled ) ) {
+							$output .= $this->disabled_hidden_field( $field_name, $field_value );
+						}
 
-					if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
-					}
+						if ( $this->is_error( $key ) ) {
+							$output .= $this->field_error( $this->show_error( $key ), $field_name );
+						} elseif ( $this->is_notice( $key ) ) {
+							$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						} elseif ( ! empty( $data['help'] ) ) {
+							$output .= '<p class="um-field-hint">' . esc_html( $data['help'] ) . '</p>';
+						}
+					} else {
 
-					$field_name  = $key . $form_suffix;
-					$field_value = $this->field_value( $key, $default, $data );
+						$output .= '<div class="um-field-area">';
 
-					$output .= '<input ' . $disabled . ' autocomplete="' . esc_attr( $autocomplete ) . '" class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>
+						if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
+							$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
+						}
 
-						</div>';
+						$output .= '<input ' . $disabled . ' autocomplete="' . esc_attr( $autocomplete ) . '" class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>
 
-					if ( ! empty( $disabled ) ) {
-						$output .= $this->disabled_hidden_field( $field_name, $field_value );
-					}
+							</div>';
 
-					if ( $this->is_error( $key ) ) {
-						$output .= $this->field_error( $this->show_error( $key ), $field_name );
-					} elseif ( $this->is_notice( $key ) ) {
-						$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						if ( ! empty( $disabled ) ) {
+							$output .= $this->disabled_hidden_field( $field_name, $field_value );
+						}
+
+						if ( $this->is_error( $key ) ) {
+							$output .= $this->field_error( $this->show_error( $key ), $field_name );
+						} elseif ( $this->is_notice( $key ) ) {
+							$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						}
 					}
 
 					$output .= '</div>';
@@ -2524,16 +2540,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				/* Number */
 				case 'number':
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
-
-					if ( isset( $data['label'] ) ) {
-						$output .= $this->field_label( $data['label'], $key, $data );
-					}
-
-					$output .= '<div class="um-field-area">';
-
-					if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
-					}
 
 					$number_limit = '';
 					if ( isset( $data['min'] ) ) {
@@ -2546,14 +2552,39 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$field_name  = $key . $form_suffix;
 					$field_value = $this->field_value( $key, $default, $data );
 
-					$output .= '<input ' . $disabled . ' class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="number" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $number_limit . ' ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>
+					if ( isset( $data['label'] ) ) {
+						$output .= $this->field_label( $data['label'], $key, $data );
+					}
+					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+						$output .= '<input ' . $disabled . ' autocomplete="' . esc_attr( $autocomplete ) . '" class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="number" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $number_limit . ' ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
+						if ( ! empty( $disabled ) ) {
+							$output .= $this->disabled_hidden_field( $field_name, $field_value );
+						}
 
-						</div>';
+						if ( $this->is_error( $key ) ) {
+							$output .= $this->field_error( $this->show_error( $key ), $field_name );
+						} elseif ( $this->is_notice( $key ) ) {
+							$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						} elseif ( ! empty( $data['help'] ) ) {
+							$output .= '<p class="um-field-hint">' . esc_html( $data['help'] ) . '</p>';
+						}
+					} else {
 
-					if ( $this->is_error( $key ) ) {
-						$output .= $this->field_error( $this->show_error( $key ), $field_name );
-					} elseif ( $this->is_notice( $key ) ) {
-						$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						$output .= '<div class="um-field-area">';
+
+						if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
+							$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
+						}
+
+						$output .= '<input ' . $disabled . ' class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="number" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $number_limit . ' ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>
+
+							</div>';
+
+						if ( $this->is_error( $key ) ) {
+							$output .= $this->field_error( $this->show_error( $key ), $field_name );
+						} elseif ( $this->is_notice( $key ) ) {
+							$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						}
 					}
 
 					$output .= '</div>';
@@ -3011,102 +3042,200 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$bio_key = UM()->profile()->get_show_bio_key( $this->global_args );
 
-					$output .= '<div class="um-field-area">';
+					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+						if ( ! empty( $data['html'] ) && $bio_key !== $key ) {
+							$textarea_settings = array(
+								'media_buttons' => false,
+								'wpautop'       => false,
+								'editor_class'  => $this->get_class( $key, $data ),
+								'editor_height' => $data['height'],
+								'tinymce'       => array(
+									'toolbar1' => 'formatselect,bullist,numlist,bold,italic,underline,forecolor,blockquote,hr,removeformat,link,unlink,undo,redo',
+									'toolbar2' => '',
+								),
+							);
 
-					if ( ! empty( $data['html'] ) && $bio_key !== $key ) {
-						$textarea_settings = array(
-							'media_buttons' => false,
-							'wpautop'       => false,
-							'editor_class'  => $this->get_class( $key, $data ),
-							'editor_height' => $data['height'],
-							'tinymce'       => array(
-								'toolbar1' => 'formatselect,bullist,numlist,bold,italic,underline,forecolor,blockquote,hr,removeformat,link,unlink,undo,redo',
-								'toolbar2' => '',
-							),
-						);
+							if ( ! empty( $disabled ) ) {
+								$textarea_settings['tinymce']['readonly'] = true;
+							}
+
+							/**
+							 * Filters WP Editor options for textarea init.
+							 *
+							 * @since 1.3.x
+							 * @hook  um_form_fields_textarea_settings
+							 *
+							 * @param {array} $textarea_settings WP Editor settings.
+							 * @param {array} $data              Field data. Since 2.6.5
+							 *
+							 * @return {array} WP Editor settings.
+							 *
+							 * @example <caption>Change WP Editor options.</caption>
+							 * function function_name( $textarea_settings, $data ) {
+							 *     // your code here
+							 *     return $textarea_settings;
+							 * }
+							 * add_filter( 'um_form_fields_textarea_settings', 'function_name', 10, 2 );
+							 */
+							$textarea_settings = apply_filters( 'um_form_fields_textarea_settings', $textarea_settings, $data );
+
+							// turn on the output buffer
+							ob_start();
+
+							// echo the editor to the buffer
+							wp_editor( $field_value, $key, $textarea_settings );
+
+							// Add the contents of the buffer to the output variable.
+							$output .= ob_get_clean();
+							$output .= '<br /><span class="description">' . esc_html( $placeholder ) . '</span>';
+						} else {
+							// User 'description' field uses `<textarea>` block everytime.
+							$textarea_field_value = '';
+							if ( ! empty( $field_value ) ) {
+								$show_bio       = false;
+								$bio_html       = false;
+								$global_setting = UM()->options()->get( 'profile_show_html_bio' );
+								if ( isset( $this->global_args['mode'] ) && 'profile' === $this->global_args['mode'] ) {
+									if ( ! empty( $this->global_args['use_custom_settings'] ) ) {
+										if ( ! empty( $this->global_args['show_bio'] ) ) {
+											$show_bio = true;
+											$bio_html = ! empty( $global_setting );
+										}
+									} else {
+										$global_show_bio = UM()->options()->get( 'profile_show_bio' );
+										if ( ! empty( $global_show_bio ) ) {
+											$show_bio = true;
+											$bio_html = ! empty( $global_setting );
+										}
+									}
+								}
+
+								if ( $show_bio ) {
+									if ( true === $bio_html && ! empty( $data['html'] ) ) {
+										$textarea_field_value = $field_value;
+									} else {
+										$textarea_field_value = wp_strip_all_tags( $field_value );
+									}
+								} else {
+									if ( ! empty( $data['html'] ) ) {
+										$textarea_field_value = $field_value;
+									} else {
+										$textarea_field_value = wp_strip_all_tags( $field_value );
+									}
+								}
+							}
+							$output .= '<textarea  ' . $disabled . '  style="height: ' . esc_attr( $data['height'] ) . ';" class="' . esc_attr( $this->get_class( $key, $data ) ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_id ) . '" placeholder="' . esc_attr( $placeholder ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '>' . esc_textarea( $textarea_field_value ) . '</textarea>';
+						}
 
 						if ( ! empty( $disabled ) ) {
-							$textarea_settings['tinymce']['readonly'] = true;
+							$output .= $this->disabled_hidden_field( $field_name, $field_value );
 						}
 
-						/**
-						 * Filters WP Editor options for textarea init.
-						 *
-						 * @since 1.3.x
-						 * @hook  um_form_fields_textarea_settings
-						 *
-						 * @param {array} $textarea_settings WP Editor settings.
-						 * @param {array} $data              Field data. Since 2.6.5
-						 *
-						 * @return {array} WP Editor settings.
-						 *
-						 * @example <caption>Change WP Editor options.</caption>
-						 * function function_name( $textarea_settings, $data ) {
-						 *     // your code here
-						 *     return $textarea_settings;
-						 * }
-						 * add_filter( 'um_form_fields_textarea_settings', 'function_name', 10, 2 );
-						 */
-						$textarea_settings = apply_filters( 'um_form_fields_textarea_settings', $textarea_settings, $data );
-
-						// turn on the output buffer
-						ob_start();
-
-						// echo the editor to the buffer
-						wp_editor( $field_value, $key, $textarea_settings );
-
-						// Add the contents of the buffer to the output variable.
-						$output .= ob_get_clean();
-						$output .= '<br /><span class="description">' . esc_html( $placeholder ) . '</span>';
+						if ( $this->is_error( $key ) ) {
+							$output .= $this->field_error( $this->show_error( $key ), $field_name );
+						} elseif ( $this->is_notice( $key ) ) {
+							$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						} elseif ( ! empty( $data['help'] ) ) {
+							$output .= '<p class="um-field-hint">' . esc_html( $data['help'] ) . '</p>';
+						}
 					} else {
-						// User 'description' field uses `<textarea>` block everytime.
-						$textarea_field_value = '';
-						if ( ! empty( $field_value ) ) {
-							$show_bio       = false;
-							$bio_html       = false;
-							$global_setting = UM()->options()->get( 'profile_show_html_bio' );
-							if ( isset( $this->global_args['mode'] ) && 'profile' === $this->global_args['mode'] ) {
-								if ( ! empty( $this->global_args['use_custom_settings'] ) ) {
-									if ( ! empty( $this->global_args['show_bio'] ) ) {
-										$show_bio = true;
-										$bio_html = ! empty( $global_setting );
-									}
-								} else {
-									$global_show_bio = UM()->options()->get( 'profile_show_bio' );
-									if ( ! empty( $global_show_bio ) ) {
-										$show_bio = true;
-										$bio_html = ! empty( $global_setting );
-									}
-								}
+						$output .= '<div class="um-field-area">';
+
+						if ( ! empty( $data['html'] ) && $bio_key !== $key ) {
+							$textarea_settings = array(
+								'media_buttons' => false,
+								'wpautop'       => false,
+								'editor_class'  => $this->get_class( $key, $data ),
+								'editor_height' => $data['height'],
+								'tinymce'       => array(
+									'toolbar1' => 'formatselect,bullist,numlist,bold,italic,underline,forecolor,blockquote,hr,removeformat,link,unlink,undo,redo',
+									'toolbar2' => '',
+								),
+							);
+
+							if ( ! empty( $disabled ) ) {
+								$textarea_settings['tinymce']['readonly'] = true;
 							}
 
-							if ( $show_bio ) {
-								if ( true === $bio_html && ! empty( $data['html'] ) ) {
-									$textarea_field_value = $field_value;
-								} else {
-									$textarea_field_value = wp_strip_all_tags( $field_value );
+							/**
+							 * Filters WP Editor options for textarea init.
+							 *
+							 * @since 1.3.x
+							 * @hook  um_form_fields_textarea_settings
+							 *
+							 * @param {array} $textarea_settings WP Editor settings.
+							 * @param {array} $data              Field data. Since 2.6.5
+							 *
+							 * @return {array} WP Editor settings.
+							 *
+							 * @example <caption>Change WP Editor options.</caption>
+							 * function function_name( $textarea_settings, $data ) {
+							 *     // your code here
+							 *     return $textarea_settings;
+							 * }
+							 * add_filter( 'um_form_fields_textarea_settings', 'function_name', 10, 2 );
+							 */
+							$textarea_settings = apply_filters( 'um_form_fields_textarea_settings', $textarea_settings, $data );
+
+							// turn on the output buffer
+							ob_start();
+
+							// echo the editor to the buffer
+							wp_editor( $field_value, $key, $textarea_settings );
+
+							// Add the contents of the buffer to the output variable.
+							$output .= ob_get_clean();
+							$output .= '<br /><span class="description">' . esc_html( $placeholder ) . '</span>';
+						} else {
+							// User 'description' field uses `<textarea>` block everytime.
+							$textarea_field_value = '';
+							if ( ! empty( $field_value ) ) {
+								$show_bio       = false;
+								$bio_html       = false;
+								$global_setting = UM()->options()->get( 'profile_show_html_bio' );
+								if ( isset( $this->global_args['mode'] ) && 'profile' === $this->global_args['mode'] ) {
+									if ( ! empty( $this->global_args['use_custom_settings'] ) ) {
+										if ( ! empty( $this->global_args['show_bio'] ) ) {
+											$show_bio = true;
+											$bio_html = ! empty( $global_setting );
+										}
+									} else {
+										$global_show_bio = UM()->options()->get( 'profile_show_bio' );
+										if ( ! empty( $global_show_bio ) ) {
+											$show_bio = true;
+											$bio_html = ! empty( $global_setting );
+										}
+									}
 								}
-							} else {
-								if ( ! empty( $data['html'] ) ) {
-									$textarea_field_value = $field_value;
+
+								if ( $show_bio ) {
+									if ( true === $bio_html && ! empty( $data['html'] ) ) {
+										$textarea_field_value = $field_value;
+									} else {
+										$textarea_field_value = wp_strip_all_tags( $field_value );
+									}
 								} else {
-									$textarea_field_value = wp_strip_all_tags( $field_value );
+									if ( ! empty( $data['html'] ) ) {
+										$textarea_field_value = $field_value;
+									} else {
+										$textarea_field_value = wp_strip_all_tags( $field_value );
+									}
 								}
 							}
+							$output .= '<textarea  ' . $disabled . '  style="height: ' . esc_attr( $data['height'] ) . ';" class="' . esc_attr( $this->get_class( $key, $data ) ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_id ) . '" placeholder="' . esc_attr( $placeholder ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '>' . esc_textarea( $textarea_field_value ) . '</textarea>';
 						}
-						$output .= '<textarea  ' . $disabled . '  style="height: ' . esc_attr( $data['height'] ) . ';" class="' . esc_attr( $this->get_class( $key, $data ) ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_id ) . '" placeholder="' . esc_attr( $placeholder ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '>' . esc_textarea( $textarea_field_value ) . '</textarea>';
-					}
 
-					$output .= '</div>';
+						$output .= '</div>';
 
-					if ( ! empty( $disabled ) ) {
-						$output .= $this->disabled_hidden_field( $field_name, $field_value );
-					}
+						if ( ! empty( $disabled ) ) {
+							$output .= $this->disabled_hidden_field( $field_name, $field_value );
+						}
 
-					if ( $this->is_error( $key ) ) {
-						$output .= $this->field_error( $this->show_error( $key ), $field_name );
-					} elseif ( $this->is_notice( $key ) ) {
-						$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						if ( $this->is_error( $key ) ) {
+							$output .= $this->field_error( $this->show_error( $key ), $field_name );
+						} elseif ( $this->is_notice( $key ) ) {
+							$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						}
 					}
 
 					$output .= '</div>';

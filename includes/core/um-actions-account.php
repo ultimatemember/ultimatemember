@@ -504,36 +504,40 @@ function um_account_page_hidden_fields( $args, $tab_id = null ) {
 add_action( 'um_account_page_hidden_fields', 'um_account_page_hidden_fields', 10, 2 );
 
 
-/**
- * Before delete account tab content
- */
-function um_before_account_delete() {
-	if ( UM()->account()->current_password_is_required( 'delete' ) ) {
-		$text = UM()->options()->get( 'delete_account_text' );
-	} else {
-		$text = UM()->options()->get( 'delete_account_no_pass_required_text' );
-	}
+if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 
-	printf( __( '%s', 'ultimate-member' ), wpautop( htmlspecialchars( $text ) ) );
-}
-add_action( 'um_before_account_delete', 'um_before_account_delete' );
+} else {
+	/**
+	 * Before delete account tab content
+	 */
+	function um_before_account_delete() {
+		if ( UM()->account()->current_password_is_required( 'delete' ) ) {
+			$text = UM()->options()->get( 'delete_account_text' );
+		} else {
+			$text = UM()->options()->get( 'delete_account_no_pass_required_text' );
+		}
 
-/**
- * Before notifications account tab content.
- *
- * @param array $args
- *
- * @throws Exception
- */
-function um_before_account_notifications( $args = array() ) {
-	$output = UM()->account()->get_tab_fields( 'notifications', $args );
-	if ( substr_count( $output, '_enable_new_' ) ) {
-		?>
-		<p><?php esc_html_e( 'Select what email notifications you want to receive', 'ultimate-member' ); ?></p>
-		<?php
+		printf( __( '%s', 'ultimate-member' ), wpautop( htmlspecialchars( $text ) ) );
 	}
+	add_action( 'um_before_account_delete', 'um_before_account_delete' );
+
+	/**
+	 * Before notifications account tab content.
+	 *
+	 * @param array $args
+	 *
+	 * @throws Exception
+	 */
+	function um_before_account_notifications( $args = array() ) {
+		$output = UM()->account()->get_tab_fields( 'notifications', $args );
+		if ( substr_count( $output, '_enable_new_' ) ) {
+			?>
+			<p><?php esc_html_e( 'Select what email notifications you want to receive', 'ultimate-member' ); ?></p>
+			<?php
+		}
+	}
+	add_action( 'um_before_account_notifications', 'um_before_account_notifications' );
 }
-add_action( 'um_before_account_notifications', 'um_before_account_notifications' );
 
 /**
  * Update Profile URL, display name, full name.

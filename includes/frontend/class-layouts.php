@@ -425,6 +425,80 @@ class Layouts {
 		return ob_get_clean();
 	}
 
+	public static function tabs( $args = array() ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'wrapper_class' => '',
+				'orientation'   => 'vertical',
+				'color'         => 'primary',
+				'tabs'          => array(
+					'id' => array(
+						'title'   => __( 'Tab title', 'ultimate-member' ),
+						'content' => __( 'Tab content', 'ultimate-member' ),
+						'url'     => '#',
+						'current' => true,
+					),
+				),
+			)
+		);
+
+		$wrapper_classes = array(
+			'um-tabs-wrapper',
+			'um-' . $args['orientation'] . '-tabs',
+			'um-' . $args['color'] . '-color-tabs',
+		);
+		if ( ! empty( $args['wrapper_class'] ) ) {
+			$wrapper_classes = array_merge( $wrapper_classes, $args['wrapper_class'] );
+		}
+		$wrapper_classes = implode( ' ', $wrapper_classes );
+
+		$current_tab = array_keys( $args['tabs'] )[0];
+		foreach ( $args['tabs'] as $tab_id => $tab_data ) {
+			if ( ! empty( $tab_data['current'] ) ) {
+				$current_tab = $tab_id;
+			}
+		}
+
+		$desktop_list = '';
+		$mobile_list  = '';
+		$content      = '';
+		foreach ( $args['tabs'] as $tab_id => $tab_data ) {
+			$current_class = $current_tab === $tab_id ? 'um-current-tab' : '';
+			ob_start();
+			?>
+			<li class="<?php echo esc_attr( $current_class ); ?>">
+				<a class="um-link" href="<?php echo esc_url( $tab_data['url'] ); ?>" data-tab="<?php echo esc_attr( $tab_id ); ?>"><?php echo esc_html( $tab_data['title'] ); ?></a>
+			</li>
+			<?php
+			$desktop_list .= ob_get_clean();
+
+			ob_start();
+			?>
+			<option value="<?php echo esc_attr( $tab_id ); ?>" <?php selected( $current_tab === $tab_id ); ?> data-href="<?php echo esc_url( $tab_data['url'] ); ?>">
+				<?php echo esc_html( $tab_data['title'] ); ?>
+			</option>
+			<?php
+			$mobile_list .= ob_get_clean();
+
+			ob_start();
+			?>
+			<div class="um-tab-content <?php echo esc_attr( $current_class ); ?>" data-tab="<?php echo esc_attr( $tab_id ); ?>"><?php echo wp_kses( $tab_data['content'], UM()->get_allowed_html( 'templates' ) ); ?></div>
+			<?php
+			$content .= ob_get_clean();
+		}
+
+		$list_html = '<ul>' . $desktop_list . '</ul><select>' . $mobile_list . '</select>';
+
+		ob_start();
+		?>
+		<div class="<?php echo esc_attr( $wrapper_classes ); ?>">
+			<div class="um-tabs-list"><?php echo wp_kses( $list_html, UM()->get_allowed_html( 'templates' ) ); ?></div>
+			<div class="um-tabs-content"><?php echo wp_kses( $content, UM()->get_allowed_html( 'templates' ) ); ?></div>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
 
 	public static function form( $args = array() ) {
 		ob_start();

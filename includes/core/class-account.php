@@ -109,14 +109,22 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				'icon'         => 'um-faicon-envelope',
 				'title'        => __( 'Notifications', 'ultimate-member' ),
 				'submit_title' => __( 'Update Notifications', 'ultimate-member' ),
+				'description'  => __( 'Select what email notifications you want to receive', 'ultimate-member' ),
 			);
 
 			// If user cannot delete profile hide delete tab.
 			if ( um_user( 'can_delete_profile' ) || um_user( 'can_delete_everyone' ) ) {
+				if ( UM()->account()->current_password_is_required( 'delete' ) ) {
+					$text = UM()->options()->get( 'delete_account_text' );
+				} else {
+					$text = UM()->options()->get( 'delete_account_no_pass_required_text' );
+				}
+
 				$tabs[99999]['delete'] = array(
 					'icon'         => 'um-faicon-trash-o',
 					'title'        => __( 'Delete Account', 'ultimate-member' ),
 					'submit_title' => __( 'Delete Account', 'ultimate-member' ),
+					'description'  => htmlspecialchars( $text ),
 				);
 			}
 
@@ -807,10 +815,26 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				return;
 			}
 
-			if ( ! empty( $tab_data['with_header'] ) ) {
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 				?>
-				<div class="um-account-heading uimob340-hide uimob500-hide"><i class="<?php echo esc_attr( $tab_data['icon'] ); ?>"></i><?php echo esc_html( $tab_data['title'] ); ?></div>
+				<div class="um-section-header">
+					<p class="um-section-title"><?php echo esc_html( $tab_data['title'] ); ?></p>
+					<?php if ( ! empty( $tab_data['description'] ) ) { ?>
+						<p class="um-section-supporting-text"><?php echo esc_html( $tab_data['description'] ); ?></p>
+					<?php } ?>
+				</div>
 				<?php
+			} else {
+				if ( ! empty( $tab_data['with_header'] ) ) {
+					?>
+					<div class="um-account-heading uimob340-hide uimob500-hide"><i class="<?php echo esc_attr( $tab_data['icon'] ); ?>"></i><?php echo esc_html( $tab_data['title'] ); ?></div>
+					<?php
+				}
+			}
+
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				/** This action is documented in includes/core/um-actions-profile.php */
+				do_action( 'um_before_form', $args );
 			}
 
 			/**

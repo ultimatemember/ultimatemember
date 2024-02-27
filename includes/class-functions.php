@@ -618,6 +618,18 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'required'     => true,
 							'autocomplete' => true,
 						),
+						'button'   => array(
+							'type'         => true,
+							'name'         => true,
+							'value'        => true,
+							'placeholder'  => true,
+							'readonly'     => true,
+							'disabled'     => true,
+							'checked'      => true,
+							'selected'     => true,
+							'required'     => true,
+							'autocomplete' => true,
+						),
 						'img'      => array(
 							'alt'      => true,
 							'align'    => true,
@@ -639,6 +651,15 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'align' => true,
 						),
 						'h3'       => array(
+							'align' => true,
+						),
+						'h4'       => array(
+							'align' => true,
+						),
+						'h5'       => array(
+							'align' => true,
+						),
+						'h6'       => array(
 							'align' => true,
 						),
 						'p'        => array(
