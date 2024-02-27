@@ -170,133 +170,133 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 
 
-= 2.8.3: February 19, 2024 =
+= 2.8.3 2024-02-19 =
 
-* Enhancements:
+**Enhancements**
 
-  - Added: Link to the Ultimate Member docs
-  - Tweak: Ultimate Member > Settings redesign. More details about setting up. Tooltips changed to descriptions.
+* Added: Link to the Ultimate Member docs
+* Tweak: Ultimate Member > Settings redesign. More details about setting up. Tooltips changed to descriptions.
 
-* Bugfixes:
+**Bugfixes**
 
-  - Fixed: Member directory queries to custom usermeta table properly escaped and validated
-  - Fixed: Member directory custom sorting when wp_usermeta table is used
-  - Fixed: aria-invalid attribute for the user description field
-  - Fixed: wp_kses protocols for email notifications content
-  - Fixed: PHP notice while registration form validation
-  - Fixed: Field validations (English letters, Alpha-numeric types)
-  - Fixed: Hidden buttons in the modal when uploading profile and cover photo
-  - Fixed: Theme updater log message
-  - Fixed: Search line shortcode layout
-  - Fixed: PHP notice while login form submission
-  - Fixed: Email notifications HTML layout
-  - Fixed: Default email notification body color
-  - Fixed: Ignore username slug when custom meta slug exists when parse user from query
+* Fixed: Member directory queries to custom usermeta table properly escaped and validated
+* Fixed: Member directory custom sorting when wp_usermeta table is used
+* Fixed: aria-invalid attribute for the user description field
+* Fixed: wp_kses protocols for email notifications content
+* Fixed: PHP notice while registration form validation
+* Fixed: Field validations (English letters, Alpha-numeric types)
+* Fixed: Hidden buttons in the modal when uploading profile and cover photo
+* Fixed: Theme updater log message
+* Fixed: Search line shortcode layout
+* Fixed: PHP notice while login form submission
+* Fixed: Email notifications HTML layout
+* Fixed: Default email notification body color
+* Fixed: Ignore username slug when custom meta slug exists when parse user from query
 
-* Templates required update:
+**Templates required update**
 
-  - email/notification_deletion.php
-  - email/notification_new_user.php
-  - email/notification_review.php
-  - email/welcome_email.php
-  - password-change.php
+* email/notification_deletion.php
+* email/notification_new_user.php
+* email/notification_review.php
+* email/welcome_email.php
+* password-change.php
 
-* Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
 
-= 2.8.2: January 15, 2024 =
+= 2.8.2 2024-01-15 =
 
-* Enhancements:
+**Enhancements**
 
-  - Added: The `data` protocol for embedding base64 encoded logos in emails
-  - Added: Hook `um_access_restricted_post_instance` for filtering the restricted post instance
-  - Added: Shortcode `[um_author_profile_link]` for getting user Profile URL
-  - Updated: Using underscore.js native debounce method for resize handler
-  - Updated: Texts spelling
+* Added: The `data` protocol for embedding base64 encoded logos in emails
+* Added: Hook `um_access_restricted_post_instance` for filtering the restricted post instance
+* Added: Shortcode `[um_author_profile_link]` for getting user Profile URL
+* Updated: Using underscore.js native debounce method for resize handler
+* Updated: Texts spelling
 
-* Bugfixes:
+**Bugfixes**
 
-  - Fixed: AJAX requests conflict with `um_current_locale` attribute
-  - Fixed: Pickadate styling (Date & Time fields) in wp-admin screen
-  - Fixed: RTL styling and removed `um` class from UM frontend predefined pages
-  - Fixed: select2 conflict with Impreza theme
-  - Fixed: cropper conflict with Avada theme and active Fusion Image lazyload
-  - Fixed: MegaMenu conflict with nav menu items conditional settings (e.g. Newsletter theme)
-  - Fixed: PHP Fatal error when there isn't a proper WP_Post object in UM User Profile > Posts loop
-  - Fixed: Account styles
-  - Fixed: Saving `um_form_version` postmeta
+* Fixed: AJAX requests conflict with `um_current_locale` attribute
+* Fixed: Pickadate styling (Date & Time fields) in wp-admin screen
+* Fixed: RTL styling and removed `um` class from UM frontend predefined pages
+* Fixed: select2 conflict with Impreza theme
+* Fixed: cropper conflict with Avada theme and active Fusion Image lazyload
+* Fixed: MegaMenu conflict with nav menu items conditional settings (e.g. Newsletter theme)
+* Fixed: PHP Fatal error when there isn't a proper WP_Post object in UM User Profile > Posts loop
+* Fixed: Account styles
+* Fixed: Saving `um_form_version` postmeta
 
-* Templates required update:
+**Templates required update**
 
-  - profile/posts-single.php
+* profile/posts-single.php
 
-* Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
 
-= 2.8.1: December 20, 2023 =
+= 2.8.1: 2023-12-20 =
 
-* Enhancements:
+**Enhancements**
 
-  - Updated: Twitter texts to X
-  - Added: Safeguards against clickjacking attacks on UM Forms
+* Updated: Twitter texts to X
+* Added: Safeguards against clickjacking attacks on UM Forms
 
-* Bugfixes:
+**Bugfixes**
 
-  - Fixed: Displaying notice to avoid using wrong symbols
-  - Fixed: UM > Settings button styles
-  - Fixed: Error notice when creating page via extensions
-  - Fixed: Workaround for Cropper.JS if UM.frontend.cropper.obj undefined (Cropper hasn't been properly inited for UM objects)
-  - Fixed: The visibility of sub-items of hidden menu items
+* Fixed: Displaying notice to avoid using wrong symbols
+* Fixed: UM > Settings button styles
+* Fixed: Error notice when creating page via extensions
+* Fixed: Workaround for Cropper.JS if UM.frontend.cropper.obj undefined (Cropper hasn't been properly inited for UM objects)
+* Fixed: The visibility of sub-items of hidden menu items
 
-= 2.8.0: December 11, 2023 =
+= 2.8.0: 2023-12-11 =
 
-* Enhancements:
+**Enhancements**
 
-  - Refactored: wp-admin assets. Separated or merged some file based on the wp-admin screens
-  - Tweak: SASS pre-processor is used for wp-admin styles.
-  - Tweak: Using minified JS and CSS in wp-admin and frontend assets
-  - Tweak: Added PHP class UM()->admin()->screen() for screen control in wp-admin
-  - Updated: jquery-ui styles to 1.13.2 version. Prefixed with .um class.
-  - Updated: Cropper.JS to 1.6.1 version
-  - Note: Select2.JS version 4.0.13
-  - Refreshed: Tipsy.JS to 1.0.0a version. Removed custom changes and restored library base code
-  - Refreshed: Raty.JS to 2.6.0 version. Restored library base code
-  - Refreshed: Pickadate.JS to 3.6.2 version. Restored library base code
-  - Updated: Used `um-tip-{x}` classes to make Tipsy.JS initialization commonly for wp-admin and frontend.
-  - Updated: wp-admin forms class and render icon type field
-  - Updated: Using `custom_submitdiv` on the UM Form and UM Member Directory screen to avoid custom styling for unnecessary metabox functionality. Just to render the necessary metabox content with only submission tools.
+* Refactored: wp-admin assets. Separated or merged some file based on the wp-admin screens
+* Tweak: SASS pre-processor is used for wp-admin styles.
+* Tweak: Using minified JS and CSS in wp-admin and frontend assets
+* Tweak: Added PHP class UM()->admin()->screen() for screen control in wp-admin
+* Updated: jquery-ui styles to 1.13.2 version. Prefixed with .um class.
+* Updated: Cropper.JS to 1.6.1 version
+* Note: Select2.JS version 4.0.13
+* Refreshed: Tipsy.JS to 1.0.0a version. Removed custom changes and restored library base code
+* Refreshed: Raty.JS to 2.6.0 version. Restored library base code
+* Refreshed: Pickadate.JS to 3.6.2 version. Restored library base code
+* Updated: Used `um-tip-{x}` classes to make Tipsy.JS initialization commonly for wp-admin and frontend.
+* Updated: wp-admin forms class and render icon type field
+* Updated: Using `custom_submitdiv` on the UM Form and UM Member Directory screen to avoid custom styling for unnecessary metabox functionality. Just to render the necessary metabox content with only submission tools.
 
-* Bugfixes:
+**Bugfixes**
 
-  - Fixed: Using fields with numeric keys in Form Builder
-  - Fixed: Pickadate.JS (datetime picker) localizations using
-  - Fixed: PHP notices on the SiteHealth and Form Builder pages
-  - Fixed: Using 'um_user_permissions_filter' hook and it's arguments.
+* Fixed: Using fields with numeric keys in Form Builder
+* Fixed: Pickadate.JS (datetime picker) localizations using
+* Fixed: PHP notices on the SiteHealth and Form Builder pages
+* Fixed: Using 'um_user_permissions_filter' hook and it's arguments.
 
-* Deprecated:
+**Deprecated**
 
-  - Removed Simplebar.JS library in Ultimate Member core. It's used only in extensions.
-  - Removed outdated styles and scripts for 1.3.x first install page
-  - `UM()->admin()->enqueue()->js_url` param. Please use `UM()->admin()->enqueue()::get_url( 'js' );` or `self::get_url( 'js' );` instead
-  - `UM()->admin()->enqueue()->css_url` param. Please use `UM()->admin()->enqueue()::get_url( 'css' );` or `self::get_url( 'js' );` instead
-  - `UM()->frontend()->enqueue()->js_url` param. Please use `UM()->frontend()->enqueue()::get_url( 'js' );` or `self::get_url( 'js' );` instead
-  - `UM()->frontend()->enqueue()->css_url` param. Please use `UM()->frontend()->enqueue()::get_url( 'css' );` or `self::get_url( 'js' );` instead
-  - Fully `UM()->permalinks()->um_rel_canonical_()` function. Because since version 2.1.7 there is used `um_profile_remove_wpseo();` alternative
-  - Fully `UM()->permalinks()->admin_act_url()` function. Since update for wp-admin links when there is nonce this function isn't used
-  - Fully `UM()->admin()->enqueue()->front_js_baseurl` param.
-  - Fully `UM()->admin()->enqueue()->front_css_baseurl` param.
-  - Fully `UM()->admin()->enqueue()->post_page` param.
-  - Fully `UM()->frontend()->enqueue()->load_google_charts()` function. Outdated.
-  - Fully `UM()->frontend()->enqueue()->load_fileupload()` function. Used scripts/styles dependencies to load script in the necessary place.
-  - Fully `UM()->frontend()->enqueue()->load_datetimepicker()` function.  Used scripts/styles dependencies to load script in the necessary place.
-  - Fully `UM()->frontend()->enqueue()->load_scrollbar()` function. Outdated
-  - Fully `UM()->frontend()->enqueue()->load_imagecrop()` function. Used scripts/styles dependencies to load script in the necessary place.
-  - `UM()->is_um_screen()` function. Please use `UM()->admin()->screen()->is_own_screen()` instead
-  - `UM()->is_plugin_post_type()` function. Please use `UM()->admin()->screen()->is_own_post_type()` instead
-  - `UM()->is_restricted_entity()` function. Please use `UM()->admin()->screen()->is_restricted_entity()` instead
-  - `UM()->cpt_list()` function. Please use `UM()->common()->cpt()->get_list()` instead
-  - `um-admin-clear` CSS class. It duplicates WordPress native `clear`. Using WordPress native instead.
-  - `um-admin-tipsy-{x}` classes to make Tipsy.JS initialization commonly for wp-admin and frontend by `um-tip-{x}` class.
+* Removed Simplebar.JS library in Ultimate Member core. It's used only in extensions.
+* Removed outdated styles and scripts for 1.3.x first install page
+* `UM()->admin()->enqueue()->js_url` param. Please use `UM()->admin()->enqueue()::get_url( 'js' );` or `self::get_url( 'js' );` instead
+* `UM()->admin()->enqueue()->css_url` param. Please use `UM()->admin()->enqueue()::get_url( 'css' );` or `self::get_url( 'js' );` instead
+* `UM()->frontend()->enqueue()->js_url` param. Please use `UM()->frontend()->enqueue()::get_url( 'js' );` or `self::get_url( 'js' );` instead
+* `UM()->frontend()->enqueue()->css_url` param. Please use `UM()->frontend()->enqueue()::get_url( 'css' );` or `self::get_url( 'js' );` instead
+* Fully `UM()->permalinks()->um_rel_canonical_()` function. Because since version 2.1.7 there is used `um_profile_remove_wpseo();` alternative
+* Fully `UM()->permalinks()->admin_act_url()` function. Since update for wp-admin links when there is nonce this function isn't used
+* Fully `UM()->admin()->enqueue()->front_js_baseurl` param.
+* Fully `UM()->admin()->enqueue()->front_css_baseurl` param.
+* Fully `UM()->admin()->enqueue()->post_page` param.
+* Fully `UM()->frontend()->enqueue()->load_google_charts()` function. Outdated.
+* Fully `UM()->frontend()->enqueue()->load_fileupload()` function. Used scripts/styles dependencies to load script in the necessary place.
+* Fully `UM()->frontend()->enqueue()->load_datetimepicker()` function.  Used scripts/styles dependencies to load script in the necessary place.
+* Fully `UM()->frontend()->enqueue()->load_scrollbar()` function. Outdated
+* Fully `UM()->frontend()->enqueue()->load_imagecrop()` function. Used scripts/styles dependencies to load script in the necessary place.
+* `UM()->is_um_screen()` function. Please use `UM()->admin()->screen()->is_own_screen()` instead
+* `UM()->is_plugin_post_type()` function. Please use `UM()->admin()->screen()->is_own_post_type()` instead
+* `UM()->is_restricted_entity()` function. Please use `UM()->admin()->screen()->is_restricted_entity()` instead
+* `UM()->cpt_list()` function. Please use `UM()->common()->cpt()->get_list()` instead
+* `um-admin-clear` CSS class. It duplicates WordPress native `clear`. Using WordPress native instead.
+* `um-admin-tipsy-{x}` classes to make Tipsy.JS initialization commonly for wp-admin and frontend by `um-tip-{x}` class.
 
-* Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
 
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
