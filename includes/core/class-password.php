@@ -490,6 +490,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 			if ( isset( $args['user_password'] ) && empty( $args['user_password'] ) ) {
 				UM()->form()->add_error( 'user_password', __( 'You must enter a new password', 'ultimate-member' ) );
+				return;
 			}
 
 			if ( isset( $args['user_password'] ) ) {
