@@ -353,6 +353,107 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 		echo wp_kses( $item['_um_description'], UM()->get_allowed_html( 'admin_notice' ) );
 	}
 
+	/**
+	 * @param $item
+	 */
+	public function column_entities( $item ) {
+		$option     = get_option( 'um_restriction_rule_' . $item['id'] );
+		$post_types = get_post_types( array( 'public' => true ), 'names' );
+
+		$output = '';
+		if ( ! empty( $option['include']['_um_include'] ) ) {
+			$output .= esc_html__( 'Include', 'ultimate-member' ) . ': ';
+			foreach ( $option['include']['_um_include'] as $key => $entity ) {
+				if ( 'site' === $key ) {
+					$output .= esc_html__( 'Website', 'ultimate-member' ) . ', ';
+				}
+
+				if ( in_array( $key, $post_types, true ) ) {
+					$obj     = get_post_type_object( $key );
+					$output .= $obj->labels->singular_name . ', ';
+				}
+			}
+			$last_position = strrpos( $output, ', ' );
+			if ( false !== $last_position ) {
+				$output = substr( $output, 0, $last_position );
+			}
+		}
+		if ( ! empty( $option['exclude']['_um_exclude'] ) ) {
+			if ( '' !== $output ) {
+				$output .= '<br>';
+			}
+			$output .= esc_html__( 'Include', 'ultimate-member' ) . ': ';
+			foreach ( $option['exclude']['_um_exclude'] as $key => $entity ) {
+				if ( 'site' === $key ) {
+					$output .= esc_html__( 'Website', 'ultimate-member' ) . ', ';
+				}
+
+				if ( in_array( $key, $post_types, true ) ) {
+					$obj     = get_post_type_object( $key );
+					$output .= $obj->labels->singular_name . ', ';
+				}
+			}
+			$last_position = strrpos( $output, ', ' );
+			if ( false !== $last_position ) {
+				$output = substr( $output, 0, $last_position );
+			}
+		}
+		echo wp_kses( $output, UM()->get_allowed_html( 'admin_notice' ) );
+	}
+
+	/**
+	 * @param $item
+	 */
+	public function column_rules( $item ) {
+		$option = get_option( 'um_restriction_rule_' . $item['id'] );
+		$output = '';
+		if ( ! empty( $option['rules']['_um_users'] ) ) {
+			foreach ( $option['rules']['_um_users'] as $key => $rule ) {
+				$num     = absint( $key ) + 1;
+				$output .= esc_html__( 'Group #', 'ultimate-member' ) . $num . ': ';
+				foreach ( $rule as $k => $v ) {
+					switch ( $k ) {
+						case 'auth':
+							$output .= esc_html__( 'Authentification', 'ultimate-member' ) . ', ';
+							break;
+						case 'role':
+							$output .= esc_html__( 'Role', 'ultimate-member' ) . ', ';
+							break;
+						case 'user':
+							$output .= esc_html__( 'User', 'ultimate-member' ) . ', ';
+							break;
+					}
+				}
+				$last_position = strrpos( $output, ', ' );
+				if ( false !== $last_position ) {
+					$output = substr( $output, 0, $last_position );
+				}
+				$output .= '<br>';
+			}
+		}
+
+		echo wp_kses( $output, UM()->get_allowed_html( 'admin_notice' ) );
+	}
+
+	/**
+	 * @param $item
+	 */
+	public function column_action( $item ) {
+		$action = get_option( 'um_restriction_rule_' . $item['id'] );
+		switch ( $action['action']['_um_action'] ) {
+			case 0:
+				$label = esc_html__( 'Show access restricted message', 'ultimate-member' );
+				break;
+			case 1:
+				$label = esc_html__( 'Redirect user', 'ultimate-member' );
+				break;
+			case 2:
+				$label = esc_html__( 'Display 404', 'ultimate-member' );
+				break;
+		}
+		echo wp_kses( $label, UM()->get_allowed_html( 'admin_notice' ) );
+	}
+
 
 	/**
 	 * @param array $attr
@@ -386,6 +487,9 @@ $list_table->set_columns(
 		'descr'    => __( 'Description', 'ultimate-member' ),
 /*		'type'     => __( 'Rule type', 'ultimate-member' ), // @todo uncomment as soon as type isn't hardcoded*/
 		'status'   => __( 'Status', 'ultimate-member' ),
+		'entities' => __( 'Entities', 'ultimate-member' ),
+		'rules'    => __( 'Rules', 'ultimate-member' ),
+		'action'   => __( 'Action', 'ultimate-member' ),
 		'priority' => __( 'Priority', 'ultimate-member' ),
 	)
 );
