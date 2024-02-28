@@ -752,7 +752,7 @@ class Layouts {
 											<span class="um-supporting-text">supporting label</span>
 										</span>
 									</label>
-									<label class="um-checkbox-label um-size-md"><input name="cccc[]" type="checkbox" value="2" />Option 2</label>
+									<label class="um-checkbox-label um-size-md"><input id="um-indeterminate" name="cccc[]" type="checkbox" value="2" />Option 2</label>
 									<label class="um-checkbox-label um-size-md"><input name="cccc[]" type="checkbox" value="3" />Option 3</label>
 								</div>
 								<p class="um-field-hint">Hint message</p>

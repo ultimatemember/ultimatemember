@@ -370,6 +370,9 @@ jQuery(document).ready( function($) {
 			jQuery(this).toggleClass('um-icon-eye um-icon-eye-disabled');
 		}
 	});
+
+	// test case
+	$("#um-indeterminate").prop("indeterminate", true);
 });
 
 // // Pass reference
@@ -463,3 +466,13 @@ jQuery(document).ready( function($) {
 // 	callbackOnInit: null,
 // 	callbackOnCreateTemplates: null
 // });
+
+
+
+
+// const inputs = document.querySelector("#um-indeterminate");
+// console.log( inputs );
+// for (let i = 0; i < inputs.length; i++) {
+// 	console.log( inputs[i] );
+// 	inputs[i].indeterminate = true;
+// }
