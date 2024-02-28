@@ -1162,25 +1162,29 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			if ( ! empty( $value ) ) {
 				foreach ( $value as $group => $group_val ) {
 					$group = absint( $group );
-					foreach ( $group_val as $key => $val ) {
-						if ( ! empty( $val['ids'] ) ) {
-							$key            = sanitize_key( $key );
-							$val['compare'] = sanitize_key( $val['compare'] );
-							foreach ( $val['ids'] as $k => $id ) {
-								if ( 'user' === $key ) {
-									$val['ids'][ $k ] = absint( $id );
-								} else {
-									$val['ids'][ $k ] = sanitize_key( $id );
+					if ( ! empty( $group_val ) ) {
+						foreach ( $group_val as $key => $val ) {
+							if ( ! empty( $val['ids'] ) ) {
+								$key            = sanitize_key( $key );
+								$val['compare'] = sanitize_key( $val['compare'] );
+								foreach ( $val['ids'] as $k => $id ) {
+									if ( 'user' === $key ) {
+										$val['ids'][ $k ] = absint( $id );
+									} else {
+										$val['ids'][ $k ] = sanitize_key( $id );
+									}
 								}
-							}
 
-							$value[ $group ][ $key ] = $val;
-						} else {
-							unset( $value[ $group ][ $key ] );
+								$value[ $group ][ $key ] = $val;
+							} else {
+								unset( $value[ $group ] );
+							}
 						}
 					}
 				}
 			}
+
+			$value = array_values( $value );
 
 			return $value;
 		}

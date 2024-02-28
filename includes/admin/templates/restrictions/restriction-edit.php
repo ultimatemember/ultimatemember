@@ -89,6 +89,7 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 		if ( ! empty( $_POST['um_restriction_rules_exclude']['_um_exclude'] ) ) {
 			$data_exclude = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_exclude'] );
 		}
+
 		if ( ! empty( $_POST['um_restriction_rules_users']['_um_users'] ) ) {
 			$_POST['um_restriction_rules_users']['_um_users'] = array_values( $_POST['um_restriction_rules_users']['_um_users'] );
 
