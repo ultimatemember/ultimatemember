@@ -1940,10 +1940,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					}
 					$html .= '</select>';
 
-					$disabled_remove_button = 1 === count( $entity ) ? 'disabled' : '';
-
 					$html .= '<button title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="um-conditions-row-action add-row button">+</button>';
-					$html .= '<button ' . $disabled_remove_button . ' title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="um-conditions-row-action remove-row button">-</button>';
+					$html .= '<button title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="um-conditions-row-action remove-row button">-</button>';
 					$html .= '</div>';
 				}
 			} else {
@@ -2044,7 +2042,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					$html .= '<div class="um-users-conditions-separator">' . esc_html__( 'OR' ) . '</div>';
 
 					if ( ! empty( $group ) ) {
-						$disabled_remove_button = 1 === count( $group ) && 1 === count( $value[ $field_data_id ] ) ? 'disabled' : '';
 						foreach ( $group as $rule_key => $rule ) {
 							$name_attr          = ' name="' . $name . '[' . $field_data_id . '][' . $i . '][' . $rule_key . ']" ';
 							$name_attr_compare  = ' name="' . $name . '[' . $field_data_id . '][' . $i . '][' . $rule_key . '][compare]" ';
@@ -2072,12 +2069,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 							$options = $this->get_users_options( $rule_key );
 							$html   .= '<select ' . $multiple . $original_name . $class_attr_responce . $id_attr . $name_attr_responce . $data_attr . '>';
 							foreach ( $options as $option_key => $option ) {
-								$html .= '<option value="' . $option_key . '" ' . selected( in_array( $option_key, $rule['ids'], true ), true, false ) . '>' . $option . '</option>';
+								if ( 'user' === $rule_key ) {
+									$label = esc_html__( 'ID#', 'ultimate-member' ) . $option_key . ': ' . $option;
+								} elseif ( 'role' === $rule_key ) {
+									$label = $option_key . ': ' . $option;
+								} else {
+									$label = $option;
+								}
+								$html .= '<option value="' . $option_key . '" ' . selected( in_array( $option_key, $rule['ids'], true ), true, false ) . '>' . $label . '</option>';
 							}
 							$html .= '</select>';
 
 							$html .= '<button title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="um-conditions-row-action add-row button">+</button>';
-							$html .= '<button ' . $disabled_remove_button . ' title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="um-conditions-row-action remove-row button">-</button>';
+							$html .= '<button title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="um-conditions-row-action remove-row button">-</button>';
 
 							$html .= '</div>';
 						}

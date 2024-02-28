@@ -5140,13 +5140,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						foreach ( $users as $user ) {
 							$name      = '' !== $user->display_name ? $user->display_name : $user->user_login;
-							$responce .= '<option value="' . $user->ID . '">' . $name . '</option>';
+							$responce .= '<option value="' . $user->ID . '">' . esc_html__( 'ID#', 'ultimate-member' ) . $user->ID . ': ' . $name . '</option>';
 						}
 						break;
 					case 'role':
 						$roles = get_editable_roles();
 						foreach ( $roles as $role => $data ) {
-							$responce .= '<option value="' . $role . '">' . $data['name'] . '</option>';
+							$responce .= '<option value="' . $role . '">' . $role . ': ' . $data['name'] . '</option>';
 						}
 						break;
 				}

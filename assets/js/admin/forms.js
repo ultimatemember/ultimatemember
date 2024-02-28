@@ -1217,12 +1217,13 @@ jQuery(document).ready( function() {
 		e.preventDefault();
 		var wrapper = jQuery( this ).closest( '.um-entities-conditions-wrap' );
 		var row     = jQuery( this ).closest( '.um-entities-conditions-row' );
-		console.log(wrapper.find( '.um-entities-conditions-row' ).length)
 		if ( wrapper.find( '.um-entities-conditions-row' ).length > 1 ) {
 			row.remove();
-		}
-		if ( 1 === wrapper.find( '.um-entities-conditions-row' ).length ) {
-			wrapper.find( '.remove-row' ).attr( 'disabled', 'disabled' );
+		} else {
+			wrapper.find( 'select' ).removeAttr( 'disabled' ).removeAttr( 'multiple' );
+			wrapper.find( 'select option' ).removeAttr( 'selected' );
+			wrapper.find( '.um-entities-conditions-responce' ).html( '' );
+			wrapper.find( 'input' ).remove();
 		}
 	});
 
@@ -1292,16 +1293,13 @@ jQuery(document).ready( function() {
 			row.remove();
 		} else {
 			row.find( '.um-users-conditions option, .um-entities-conditions-responce option' ).removeAttr( 'selected' );
-			wrapper.find( '.um-users-conditions-row' ).find( 'select' ).removeAttr( 'disabled' );
+			wrapper.find( '.um-users-conditions-row' ).find( 'select' ).removeAttr( 'disabled' ).removeAttr( 'multiple' );
 			wrapper.find( '.um-users-conditions-responce option[value!="0"]' ).remove();
 			wrapper.find( '.um-users-conditions-responce option' ).html( '' );
 		}
 
 		if ( wrapper.find( '.um-users-conditions-row' ).length > 1 ) {
 			row.remove();
-		}
-		if ( 1 === wrapper.find( '.um-users-conditions-row' ).length ) {
-			wrapper.find( '.remove-row' ).attr( 'disabled', 'disabled' );
 		}
 
 		jQuery( '.um-users-conditions-row-group' ).each( function() {
