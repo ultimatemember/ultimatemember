@@ -613,82 +613,154 @@ class Layouts {
 					</div>
 					<div class="um-form-cols um-form-cols-1">
 						<div class="um-form-col um-form-col-1">
-							<label for="aaa">Label of native select</label>
-							<select placeholder="select placeholder">
-								<option value="">None</option>
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-								<option value="4">4</option>
-								<option value="5">5</option>
-								<option value="6">6</option>
-								<option value="7">7</option>
-								<option value="8">8</option>
-								<option value="9">9</option>
-								<option value="10">10</option>
-							</select>
-							<p class="um-field-hint">Hint message</p>
+							<div class="um-field">
+								<label for="aaa">Label of native select</label>
+								<select placeholder="select placeholder">
+									<option value="">None</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+									<option value="9">9</option>
+									<option value="10">10</option>
+								</select>
+								<p class="um-field-hint">Hint message</p>
+							</div>
 						</div>
 					</div>
 					<div class="um-form-cols um-form-cols-1">
 						<div class="um-form-col um-form-col-1">
-							<label for="aaa">Label of choices-js select</label>
-							<select class="js-choice" placeholder="select placeholder">
-								<option value="">None</option>
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-								<option value="4">4</option>
-								<option value="5">5</option>
-								<option value="6">6</option>
-								<option value="7">7</option>
-								<option value="8">8</option>
-								<option value="9">9</option>
-								<option value="10">10</option>
-							</select>
-							<p class="um-field-hint">Hint message</p>
+							<div class="um-field">
+								<label for="aaa">Label of choices-js select</label>
+								<select class="js-choice" placeholder="select placeholder">
+									<option value="">None</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+									<option value="9">9</option>
+									<option value="10">10</option>
+								</select>
+								<p class="um-field-hint">Hint message</p>
+							</div>
 						</div>
 					</div>
 					<div class="um-form-cols um-form-cols-1">
 						<div class="um-form-col um-form-col-1">
-							<label for="aaa">Label of native multi-select</label>
-							<select multiple>
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-							</select>
-							<p class="um-field-hint">Hint message</p>
+							<div class="um-field">
+								<label for="aaa">Label of native multi-select</label>
+								<select multiple>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+								</select>
+								<p class="um-field-hint">Hint message</p>
+							</div>
 						</div>
 					</div>
 					<div class="um-form-cols um-form-cols-1">
 						<div class="um-form-col um-form-col-1">
-							<label for="aaa">Label of choices-js multi-select</label>
-							<select class="js-choice" multiple>
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-							</select>
-							<p class="um-field-hint">Hint message</p>
+							<div class="um-field">
+								<label for="aaa">Label of choices-js multi-select</label>
+								<select class="js-choice" multiple>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+								</select>
+								<p class="um-field-hint">Hint message</p>
+							</div>
 						</div>
 					</div>
 					<div class="um-form-cols um-form-cols-1">
 						<div class="um-form-col um-form-col-1">
-							<label for="aaa">Label of radio</label>
-							<label><input name="bbb" type="radio" value="1" />Option 1</label>
-							<label><input name="bbb" type="radio" value="2" />Option 2</label>
-							<label><input name="bbb" type="radio" value="3" />Option 3</label>
-							<p class="um-field-hint">Hint message</p>
+							<div class="um-field">
+								<label for="aaa">Label of radio sm</label>
+								<div class="um-field-radio-area">
+									<label class="um-radio-label um-size-sm um-supporting-text">
+										<input name="bbb" type="radio" value="1" />
+										<span class="um-label-content">
+											<span class="um-text">Option 1</span>
+											<br />
+											<span class="um-supporting-text">supporting label</span>
+										</span>
+									</label>
+									<label class="um-radio-label um-size-sm"><input name="bbb" type="radio" value="2" />Option 2</label>
+									<label class="um-radio-label um-size-sm"><input name="bbb" type="radio" value="3" />Option 3</label>
+								</div>
+								<p class="um-field-hint">Hint message</p>
+							</div>
 						</div>
 					</div>
 					<div class="um-form-cols um-form-cols-1">
 						<div class="um-form-col um-form-col-1">
-							<label for="aaa">Label of checkbox</label>
-							<label><input name="ccc[]" type="checkbox" value="1" />Option 1</label>
-							<label><input name="ccc[]" type="checkbox" value="2" />Option 2</label>
-							<label><input name="ccc[]" type="checkbox" value="3" />Option 3</label>
-							<p class="um-field-hint">Hint message</p>
+							<div class="um-field">
+								<label for="aaa">Label of radio lg</label>
+								<div class="um-field-radio-area">
+									<label class="um-radio-label um-size-md um-supporting-text">
+										<input name="bbbb" type="radio" value="1" />
+										<span class="um-label-content">
+											<span class="um-text">Option 1</span>
+											<br />
+											<span class="um-supporting-text">supporting label</span>
+										</span>
+									</label>
+									<label class="um-radio-label um-size-md"><input name="bbbb" type="radio" value="2" />Option 2</label>
+									<label class="um-radio-label um-size-md"><input name="bbbb" type="radio" value="3" />Option 3</label>
+								</div>
+								<p class="um-field-hint">Hint message</p>
+							</div>
 						</div>
 					</div>
+					<div class="um-form-cols um-form-cols-1">
+						<div class="um-form-col um-form-col-1">
+							<div class="um-field">
+								<label for="aaa">Label of checkbox sm</label>
+								<div class="um-field-checkbox-area">
+									<label class="um-checkbox-label um-size-sm um-supporting-text">
+										<input name="ccc[]" type="checkbox" value="1" />
+										<span class="um-checkbox-content">
+											<span class="um-text">Option 1</span>
+											<br />
+											<span class="um-supporting-text">supporting label</span>
+										</span>
+									</label>
+									<label class="um-checkbox-label um-size-sm"><input name="ccc[]" type="checkbox" value="2" />Option 2</label>
+									<label class="um-checkbox-label um-size-sm"><input name="ccc[]" type="checkbox" value="3" />Option 3</label>
+								</div>
+								<p class="um-field-hint">Hint message</p>
+							</div>
+						</div>
+					</div>
+					<div class="um-form-cols um-form-cols-1">
+						<div class="um-form-col um-form-col-1">
+							<div class="um-field">
+								<label for="aaa">Label of checkbox lg</label>
+								<div class="um-field-checkbox-area">
+									<label class="um-checkbox-label um-size-md um-supporting-text">
+										<input name="cccc[]" type="checkbox" value="1" />
+										<span class="um-checkbox-content">
+											<span class="um-text">Option 1</span>
+											<br />
+											<span class="um-supporting-text">supporting label</span>
+										</span>
+									</label>
+									<label class="um-checkbox-label um-size-md"><input name="cccc[]" type="checkbox" value="2" />Option 2</label>
+									<label class="um-checkbox-label um-size-md"><input name="cccc[]" type="checkbox" value="3" />Option 3</label>
+								</div>
+								<p class="um-field-hint">Hint message</p>
+							</div>
+						</div>
+					</div>
+
+
 					<div class="um-form-cols um-form-cols-1">
 						<div class="um-form-col um-form-col-1">
 							<label for="aaa">Label of range</label>
