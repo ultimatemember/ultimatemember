@@ -2063,7 +2063,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'id'             => 'disable_restriction_settings_v2',
 												'type'           => 'checkbox',
 												'label'          => __( 'Restriction settings v2', 'ultimate-member' ),
-												'checkbox_label' => __( 'Disable restriction settings v3', 'ultimate-member' ),
+												'checkbox_label' => __( 'Disable restriction settings v2', 'ultimate-member' ),
 												'description'    => __( 'Check this box if you would like to disable Restriction settings v2.', 'ultimate-member' ),
 												'conditional'    => array(
 													'enable_restriction_settings_v3',

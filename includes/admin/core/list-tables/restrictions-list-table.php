@@ -334,7 +334,7 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 	 * @param $item
 	 */
 	public function column_status( $item ) {
-		echo esc_html( $item['_um_status'] );
+		echo 'active' === $item['_um_status'] ? esc_html__( 'Active', 'ultimate-member' ) : esc_html__( 'Inactive', 'ultimate-member' );
 	}
 
 
@@ -384,7 +384,7 @@ $list_table->set_columns(
 	array(
 		'title'    => __( 'Role Title', 'ultimate-member' ),
 		'descr'    => __( 'Description', 'ultimate-member' ),
-		'type'     => __( 'Rule type', 'ultimate-member' ),
+/*		'type'     => __( 'Rule type', 'ultimate-member' ), // @todo uncomment as soon as type isn't hardcoded*/
 		'status'   => __( 'Status', 'ultimate-member' ),
 		'priority' => __( 'Priority', 'ultimate-member' ),
 	)

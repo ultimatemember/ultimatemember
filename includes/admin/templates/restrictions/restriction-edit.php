@@ -55,7 +55,7 @@ if ( ! empty( $_GET['id'] ) ) {
 
 	// uses sanitize_title instead of sanitize_key for backward compatibility based on #906 pull-request (https://github.com/ultimatemember/ultimatemember/pull/906)
 	// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
-	$rule_id = sanitize_title( $_GET['id'] );
+	$rule_id = absint( $_GET['id'] );
 
 	$rule_meta  = get_option( "um_restriction_rule_{$rule_id}" );
 	$data_ruled = get_option( 'um_restriction_rules' );
@@ -119,10 +119,10 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 				),
 				admin_url( 'admin.php' )
 			);
-		} elseif ( 'edit' === sanitize_key( $_GET['tab'] ) && ! empty( $_GET['id'] ) ) {
+		} elseif ( ! empty( $_GET['id'] ) && 'edit' === sanitize_key( $_GET['tab'] ) ) {
 			// uses sanitize_title instead of sanitize_key for backward compatibility based on #906 pull-request (https://github.com/ultimatemember/ultimatemember/pull/906)
 			// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
-			$restriction_id = sanitize_title( $_GET['id'] );
+			$restriction_id = absint( $_GET['id'] );
 
 			$redirect = add_query_arg(
 				array(
@@ -162,12 +162,12 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 			/**
 			 * Filters the restriction rule meta before save it to DB.
 			 *
-			 * @since 2.8.x
+			 * @since 2.9.0
 			 * @hook  um_restriction_rule_edit_data
 			 *
 			 * @param {array}   $data            Rule meta.
-			 * @param {string}  $restriction_id  Role key.
-			 * @param {bool}    $update          Create or update role. "True" if update.
+			 * @param {string}  $restriction_id  Rule ID.
+			 * @param {bool}    $update          Create or update rule. "True" if update.
 			 *
 			 * @return {array}  Rule meta.
 			 *
@@ -182,8 +182,6 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 			unset( $rule_meta['id'] );
 
 			update_option( "um_restriction_rule_{$restriction_id}", $rule_meta );
-
-			UM()->user()->remove_cache_all_users();
 
 			um_js_redirect( $redirect );
 		}
@@ -254,9 +252,10 @@ $screen_id = $current_screen->id; ?>
 				<div id="post-body-content">
 					<div id="titlediv">
 						<div id="titlewrap">
-								<label for="title" class="screen-reader-text"><?php esc_html_e( 'Title', 'ultimate-member' ); ?></label>
-								<input type="text" name="um_restriction_rules[title]" required placeholder="<?php esc_html_e( 'Enter Title Here', 'ultimate-member' ); ?>" id="title" value="<?php echo isset( $data['title'] ) ? esc_attr( $data['title'] ) : ''; ?>" />
-								<br><br><textarea style="width: 100%;" name="um_restriction_rules[_um_description]" id="description"><?php echo isset( $data['_um_description'] ) ? esc_attr( $data['_um_description'] ) : esc_html__( 'Restriction Rule Description', 'ultimate-member' ); ?></textarea>
+							<label for="title" class="screen-reader-text"><?php esc_html_e( 'Title', 'ultimate-member' ); ?></label>
+							<input type="text" name="um_restriction_rules[title]" required placeholder="<?php esc_html_e( 'Enter Title Here', 'ultimate-member' ); ?>" id="title" value="<?php echo isset( $data['title'] ) ? esc_attr( $data['title'] ) : ''; ?>" />
+							<br /><br />
+							<textarea style="width: 100%;" name="um_restriction_rules[_um_description]" id="description" placeholder="<?php esc_attr_e( 'Restriction Rule Description', 'ultimate-member' ); ?>"><?php echo isset( $data['_um_description'] ) ? esc_attr( $data['_um_description'] ) : ''; ?></textarea>
 						</div>
 					</div>
 				</div>

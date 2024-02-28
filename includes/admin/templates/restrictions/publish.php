@@ -4,7 +4,7 @@
  *
  * @param array $object
  *
- * @since 2.0
+ * @since 2.9.0
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -35,7 +35,6 @@ $rule = $object['data']; ?>
 						'inactive' => __( 'Inactive', 'ultimate-member' ),
 					),
 					'label'   => __( 'Status', 'ultimate-member' ),
-					'tooltip' => __( 'The higher the number, the higher the priority', 'ultimate-member' ),
 					'value'   => ! empty( $rule['_um_status'] ) ? $rule['_um_status'] : 'active',
 				),
 			),
