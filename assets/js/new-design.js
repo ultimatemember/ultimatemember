@@ -353,6 +353,8 @@ jQuery(document).ready( function($) {
 	$('.js-choice').each( function() {
 		if ( $(this).attr( 'multiple' ) ) {
 			let choices = new Choices($(this)[0], {removeItemButton: true});
+		} else if ( $(this).hasClass( 'um-no-search' ) ) {
+			let choices = new Choices($(this)[0], {searchEnabled: false});
 		} else {
 			let choices = new Choices($(this)[0]);
 		}
