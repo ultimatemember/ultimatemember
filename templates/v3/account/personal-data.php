@@ -81,30 +81,28 @@ $remove_pending = $wpdb->get_row(
 	<div class="um-form-rows">
 		<div class="um-form-rows-heading">
 			<div class="um-text"><?php esc_html_e( 'Download your data', 'ultimate-member' ); ?></div>
-			<div class="um-supporting-text"><?php esc_html_e( 'You can request a file with the information that we believe is most relevant and useful to you.', 'ultimate-member' ); ?></div>
+			<div class="um-supporting-text">
+				<?php
+				if ( ! empty( $export_completed ) ) {
+					$exports_url = wp_privacy_exports_url();
+					printf( __( 'You could %s your previous data or send a new request for an export of personal your data.', 'ultimate-member' ), '<a class="um-link" href="' . esc_attr( $exports_url . get_post_meta( $export_completed['ID'], '_export_file_name', true ) ) . '">' . esc_html__( 'download', 'ultimate-member' ) . '</a>' );
+				} else {
+					esc_html_e( 'You can request a file with the information that we believe is most relevant and useful to you.', 'ultimate-member' );
+				}
+				?>
+			</div>
 		</div>
 		<div class="um-form-row">
-			<?php if ( ! empty( $export_completed ) ) { ?>
-				<div class="um-form-cols um-form-cols-1">
-					<div class="um-form-col um-form-col-1">
-						<?php
-						$exports_url = wp_privacy_exports_url();
-						echo '<p>' . esc_html__( 'You could download your previous data:', 'ultimate-member' ) . '</p>';
-						echo '<a href="' . esc_attr( $exports_url . get_post_meta( $export_completed['ID'], '_export_file_name', true ) ) . '">' . esc_html__( 'Download Personal Data', 'ultimate-member' ) . '</a>';
-						echo '<p>' . esc_html__( 'You could send a new request for an export of personal your data.', 'ultimate-member' ) . '</p>';
-						?>
-					</div>
-				</div>
-			<?php } ?>
 			<div class="um-form-cols um-form-cols-1">
 				<div class="um-form-col um-form-col-1">
 					<?php
 					if ( ! empty( $export_pending ) && 'request-pending' === $export_pending['post_status'] ) {
-						echo '<p>' . esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your export request.', 'ultimate-member' ) . '</p>';
+						echo '<p class="um-supporting-text">' . esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your export request.', 'ultimate-member' ) . '</p>';
 					} elseif ( ! empty( $export_pending ) && 'request-confirmed' === $export_pending['post_status'] ) {
-						echo '<p>' . esc_html__( 'The administrator has not yet approved downloading the data. Please expect an email with a link to your data.', 'ultimate-member' ) . '</p>';
+						echo '<p class="um-supporting-text">' . esc_html__( 'The administrator has not yet approved downloading the data. Please expect an email with a link to your data.', 'ultimate-member' ) . '</p>';
 					} else {
 						if ( UM()->account()->current_password_is_required( 'privacy_download_data' ) ) {
+							UM()->form()->form_suffix = '-export-request';
 							$fields = UM()->builtin()->get_specific_fields( 'single_user_password' );
 							foreach ( $fields as $key => $data ) {
 								if ( 'single_user_password' === $key ) {
@@ -137,6 +135,9 @@ $remove_pending = $wpdb->get_row(
 					'id'      => 'um_account_request_download_data',
 					'data'    => array(
 						'action' => 'um-export-data',
+						'nonce'  => wp_create_nonce( 'um-export-data' ),
+						'error'  => __( 'Password is required.', 'ultimate-member' ),
+						'hint'   => __( 'Enter your current password to confirm a new export of your personal data.', 'ultimate-member' ),
 					),
 					'classes' => array(
 						'um-request-button',
@@ -144,6 +145,8 @@ $remove_pending = $wpdb->get_row(
 					),
 				)
 			);
+
+			echo UM()->frontend()::layouts()::ajax_loader( 'm' );
 			?>
 		</div>
 	<?php } ?>
@@ -155,28 +158,27 @@ $remove_pending = $wpdb->get_row(
 	<div class="um-form-rows">
 		<div class="um-form-rows-heading">
 			<div class="um-text"><?php esc_html_e( 'Erase of your data', 'ultimate-member' ); ?></div>
-			<div class="um-supporting-text"><?php esc_html_e( 'You can request erasing of the data that we have about you.', 'ultimate-member' ); ?></div>
+			<div class="um-supporting-text">
+				<?php
+				if ( ! empty( $remove_completed ) ) {
+					esc_html__( 'Your personal data has been deleted. You could send a new request for deleting your personal data.', 'ultimate-member' );
+				} else {
+					esc_html_e( 'You can request erasing of the data that we have about you.', 'ultimate-member' );
+				}
+				?>
+			</div>
 		</div>
 		<div class="um-form-row">
-			<?php if ( ! empty( $remove_completed ) ) { ?>
-				<div class="um-form-cols um-form-cols-1">
-					<div class="um-form-col um-form-col-1">
-						<?php
-						echo '<p>' . esc_html__( 'Your personal data has been deleted.', 'ultimate-member' ) . '</p>';
-						echo '<p>' . esc_html__( 'You could send a new request for deleting your personal data.', 'ultimate-member' ) . '</p>';
-						?>
-					</div>
-				</div>
-			<?php } ?>
 			<div class="um-form-cols um-form-cols-1">
 				<div class="um-form-col um-form-col-1">
 					<?php
 					if ( ! empty( $remove_pending ) && 'request-pending' === $remove_pending['post_status'] ) {
-						echo '<p>' . esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your deletion request.', 'ultimate-member' ) . '</p>';
+						echo '<p class="um-supporting-text">' . esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your deletion request.', 'ultimate-member' ) . '</p>';
 					} elseif ( ! empty( $remove_pending ) && 'request-confirmed' === $remove_pending['post_status'] ) {
-						echo '<p>' . esc_html__( 'The administrator has not yet approved deleting your data. Please expect an email with a link to your data.', 'ultimate-member' ) . '</p>';
+						echo '<p class="um-supporting-text">' . esc_html__( 'The administrator has not yet approved deleting your data. Please expect an email with a link to your data.', 'ultimate-member' ) . '</p>';
 					} else {
 						if ( UM()->account()->current_password_is_required( 'privacy_erase_data' ) ) {
+							UM()->form()->form_suffix = '-erase-request';
 							$fields = UM()->builtin()->get_specific_fields( 'single_user_password' );
 							foreach ( $fields as $key => $data ) {
 								if ( 'single_user_password' === $key ) {
@@ -208,6 +210,9 @@ $remove_pending = $wpdb->get_row(
 					'id'      => 'um_account_request_erase_data',
 					'data'    => array(
 						'action' => 'um-erase-data',
+						'nonce'  => wp_create_nonce( 'um-erase-data' ),
+						'error'  => __( 'Password is required.', 'ultimate-member' ),
+						'hint'   => __( 'Enter your current password to confirm the erasure of your personal data.', 'ultimate-member' ),
 					),
 					'classes' => array(
 						'um-request-button',
@@ -215,7 +220,12 @@ $remove_pending = $wpdb->get_row(
 					),
 				)
 			);
+
+			echo UM()->frontend()::layouts()::ajax_loader( 'm' );
 			?>
 		</div>
 	<?php } ?>
 </form>
+
+<?php
+UM()->form()->form_suffix = ''; // flush form suffix.

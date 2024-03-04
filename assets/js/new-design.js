@@ -373,40 +373,157 @@ jQuery(document).ready( function($) {
 		}
 	});
 
-	jQuery(document.body).on( 'click', '.um-request-button', function(e) {
+	// jQuery(document.body).on( 'click', '.um-request-button', function(e) {
+	// 	e.preventDefault();
+	//
+	// 	let request_action = jQuery(this).data('action');
+	//
+	// 	let passwordField = jQuery(this).parents('form').find('#single_user_password');
+	//
+	// 	let password = passwordField.val();
+	//
+	// 	jQuery('.um-field-area-response.' + request_action).hide();
+	//
+	// 	if ( jQuery('#' + request_action).length && password === '' ) {
+	// 		jQuery('.um-field-error.' + request_action).show();
+	// 	} else {
+	// 		jQuery('.um-field-error.' + request_action).hide();
+	// 		var request = {
+	// 			request_action: request_action,
+	// 			nonce: um_scripts.nonce
+	// 		};
+	//
+	// 		if ( jQuery('#' + request_action).length ) {
+	// 			request.password = password;
+	// 		}
+	//
+	// 		wp.ajax.send( 'um_request_user_data', {
+	// 			data: request,
+	// 			success: function (data) {
+	// 				jQuery('.um-field-area-response.' + request_action).text( data.answer ).show();
+	// 			},
+	// 			error: function (data) {
+	// 				console.log(data);
+	// 			}
+	// 		});
+	// 	}
+	// });
+
+	jQuery(document.body).on( 'keydown', '#single_user_password-export-request', function(e) {
+		if ( jQuery(this).hasClass('um-error') ) {
+			let hintMessage = jQuery(this).parents('form').find('#um_account_request_download_data').data('hint');
+
+			let fieldWrapper = jQuery(this).parents('.um-field');
+			fieldWrapper.find('.um-field-hint').removeClass( 'um-field-error' ).removeAttr('id').html( hintMessage );
+			jQuery(this).removeClass( 'um-error' ).removeAttr('aria-errormessage');
+		}
+	});
+
+	jQuery(document.body).on( 'keydown', '#single_user_password-erase-request', function(e) {
+		if ( jQuery(this).hasClass('um-error') ) {
+			let hintMessage = jQuery(this).parents('form').find('#um_account_request_erase_data').data('hint');
+
+			let fieldWrapper = jQuery(this).parents('.um-field');
+			fieldWrapper.find('.um-field-hint').removeClass( 'um-field-error' ).removeAttr('id').html( hintMessage );
+			jQuery(this).removeClass( 'um-error' ).removeAttr('aria-errormessage');
+		}
+	});
+
+
+	jQuery(document.body).on( 'click', '#um_account_request_download_data', function(e) {
 		e.preventDefault();
 
-		let request_action = jQuery(this).data('action');
+		let requestData = {
+			nonce: jQuery(this).data('nonce')
+		};
 
-		let passwordField = jQuery(this).parents('form').find('#single_user_password');
+		let loader = jQuery(this).siblings('.um-ajax-spinner-svg');
+		loader.show();
 
-		let password = passwordField.val();
+		let passwordField = jQuery(this).parents('form').find('#single_user_password-export-request');
+		let errorID = 'um-error-for-single_user_password-export-request';
+		let fieldWrapper = passwordField.parents('.um-field');
 
-		jQuery('.um-field-area-response.' + request_action).hide();
-
-		if ( jQuery('#' + request_action).length && password === '' ) {
-			jQuery('.um-field-error.' + request_action).show();
-		} else {
-			jQuery('.um-field-error.' + request_action).hide();
-			var request = {
-				request_action: request_action,
-				nonce: um_scripts.nonce
-			};
-
-			if ( jQuery('#' + request_action).length ) {
-				request.password = password;
+		if ( passwordField.length ) {
+			let password = passwordField.val();
+			if ( '' === password ) {
+				fieldWrapper.find('.um-field-hint').data('hint',fieldWrapper.find('.um-field-hint').html()).addClass( 'um-field-error' ).attr('id', errorID).html( jQuery(this).data('error') );
+				passwordField.addClass( 'um-error' ).attr('aria-errormessage', errorID);
+				loader.hide();
+				return;
 			}
+			requestData.password = passwordField.val();
+		}
 
-			wp.ajax.send( 'um_request_user_data', {
-				data: request,
-				success: function (data) {
-					jQuery('.um-field-area-response.' + request_action).text( data.answer ).show();
+		wp.ajax.send(
+			'um_personal_data_export',
+			{
+				data: requestData,
+				success: function(data) {
+					passwordField.parents('.um-form-new').find('.um-form-submit').remove();
+					passwordField.parents('.um-form-col').html( '<p class="um-supporting-text">' + data + '</p>' );
+					loader.hide();
 				},
 				error: function (data) {
-					console.log(data);
+					if ( data['single_user_password-export-request'] ) {
+						let errorID = 'um-error-for-single_user_password-export-request';
+
+						let fieldWrapper = passwordField.parents('.um-field');
+						fieldWrapper.find('.um-field-hint').data('hint',fieldWrapper.find('.um-field-hint').html()).addClass( 'um-field-error' ).attr('id', errorID).html( data['single_user_password-export-request'] );
+						passwordField.addClass( 'um-error' ).attr('aria-errormessage', errorID);
+					}
+					loader.hide();
 				}
-			});
+			}
+		);
+	});
+
+	jQuery(document.body).on( 'click', '#um_account_request_erase_data', function(e) {
+		e.preventDefault();
+
+		let requestData = {
+			nonce: jQuery(this).data('nonce')
+		};
+
+		let loader = jQuery(this).siblings('.um-ajax-spinner-svg');
+		loader.show();
+
+		let passwordField = jQuery(this).parents('form').find('#single_user_password-erase-request');
+		let errorID = 'um-error-for-single_user_password-erase-request';
+		let fieldWrapper = passwordField.parents('.um-field');
+
+		if ( passwordField.length ) {
+			let password = passwordField.val();
+			if ( '' === password ) {
+				fieldWrapper.find('.um-field-hint').data('hint',fieldWrapper.find('.um-field-hint').html()).addClass( 'um-field-error' ).attr('id', errorID).html( jQuery(this).data('error') );
+				passwordField.addClass( 'um-error' ).attr('aria-errormessage', errorID);
+				loader.hide();
+				return;
+			}
+			requestData.password = passwordField.val();
 		}
+
+		wp.ajax.send(
+			'um_personal_data_erase',
+			{
+				data: requestData,
+				success: function(data) {
+					passwordField.parents('.um-form-new').find('.um-form-submit').remove();
+					passwordField.parents('.um-form-col').html( '<p class="um-supporting-text">' + data + '</p>' );
+					loader.hide();
+				},
+				error: function (data) {
+					if ( data['single_user_password-erase-request'] ) {
+						let errorID = 'um-error-for-single_user_password-erase-request';
+
+						let fieldWrapper = passwordField.parents('.um-field');
+						fieldWrapper.find('.um-field-hint').data('hint',fieldWrapper.find('.um-field-hint').html()).addClass( 'um-field-error' ).attr('id', errorID).html( data['single_user_password-erase-request'] );
+						passwordField.addClass( 'um-error' ).attr('aria-errormessage', errorID);
+					}
+					loader.hide();
+				}
+			}
+		);
 	});
 
 	// test case

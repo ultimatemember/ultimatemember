@@ -1240,6 +1240,14 @@ input[type="range"]
       .#{$prefix}tab-content[data-tab="personal-data"]
         row-gap: 0
 
+        form.#{$prefix}form-new
+          .#{$prefix}form-submit
+            +flex( row, flex-start, center, nowrap )
+            row-gap: initial
+            column-gap: $spacing-2xl
+            .#{$prefix}ajax-spinner-svg
+              display: none
+
 .um
   .#{$prefix}divider
     overflow: hidden
@@ -1252,3 +1260,11 @@ input[type="range"]
       border: 1px solid $gray-200
       +border-box
       height: 1px
+
+.um
+  .#{$prefix}form-col
+    p.#{$prefix}supporting-text
+      +typography( text, sm, regular )
+      color: $gray-600
+      padding: 0
+      margin: 0

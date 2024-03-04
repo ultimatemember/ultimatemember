@@ -565,6 +565,20 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'href'  => true,
 							'media' => true,
 						),
+						'svg'      => array(
+							'xmlns'   => true,
+							'width'   => true,
+							'height'  => true,
+							'viewBox' => true,
+							'fill'    => true,
+						),
+						'path'     => array(
+							'd'               => true,
+							'stroke'          => true,
+							'stroke-width'    => true,
+							'stroke-linecap'  => true,
+							'stroke-linejoin' => true,
+						),
 						'form'     => array(
 							'action'         => true,
 							'accept'         => true,

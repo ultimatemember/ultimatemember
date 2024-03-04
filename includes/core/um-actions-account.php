@@ -582,7 +582,13 @@ add_action( 'um_account_pre_update_profile', 'um_disable_native_email_notificati
 
 
 if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-
+	function um_custom_redirect_personal_data_confirmed( $request_id ) {
+		$um_request = get_post_meta( $request_id, 'um_account_request', true );
+		if ( ! empty( $um_request ) ) {
+			um_safe_redirect( UM()->account()->tab_link( 'personal-data' ) );
+		}
+	}
+	add_action( 'user_request_action_confirmed', 'um_custom_redirect_personal_data_confirmed' );
 } else {
 	/**
 	 * Add export and erase user's data in privacy tab
@@ -777,58 +783,60 @@ if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_ne
 
 		<?php
 	}
-}
 
-function um_request_user_data() {
-	UM()->check_ajax_nonce();
+	function um_request_user_data() {
+		UM()->check_ajax_nonce();
 
-	if ( ! isset( $_POST['request_action'] ) ) {
-		wp_send_json_error( __( 'Wrong request.', 'ultimate-member' ) );
-	}
-
-	$user_id        = get_current_user_id();
-	$password       = ! empty( $_POST['password'] ) ? sanitize_text_field( $_POST['password'] ) : '';
-	$user           = get_userdata( $user_id );
-	$hash           = $user->data->user_pass;
-	$request_action = sanitize_key( $_POST['request_action'] );
-
-	if ( 'um-export-data' === $request_action ) {
-		if ( UM()->account()->current_password_is_required( 'privacy_download_data' ) ) {
-			if ( ! wp_check_password( $password, $hash ) ) {
-				$answer = esc_html__( 'The password you entered is incorrect.', 'ultimate-member' );
-				wp_send_json_success( array( 'answer' => $answer ) );
-			}
+		if ( ! isset( $_POST['request_action'] ) ) {
+			wp_send_json_error( __( 'Wrong request.', 'ultimate-member' ) );
 		}
-	} elseif ( 'um-erase-data' === $request_action ) {
-		if ( UM()->account()->current_password_is_required( 'privacy_erase_data' ) ) {
-			if ( ! wp_check_password( $password, $hash ) ) {
-				$answer = esc_html__( 'The password you entered is incorrect.', 'ultimate-member' );
-				wp_send_json_success( array( 'answer' => $answer ) );
-			}
-		}
-	}
 
-	if ( 'um-export-data' === $request_action ) {
-		$request_id = wp_create_user_request( $user->data->user_email, 'export_personal_data' );
-	} elseif ( 'um-erase-data' === $request_action ) {
-		$request_id = wp_create_user_request( $user->data->user_email, 'remove_personal_data' );
-	}
+		$user_id        = get_current_user_id();
+		$password       = ! empty( $_POST['password'] ) ? sanitize_text_field( $_POST['password'] ) : '';
+		$user           = get_userdata( $user_id );
+		$hash           = $user->data->user_pass;
+		$request_action = sanitize_key( $_POST['request_action'] );
 
-	if ( ! isset( $request_id ) || empty( $request_id ) ) {
-		wp_send_json_error( __( 'Wrong request.', 'ultimate-member' ) );
-	}
-
-	if ( is_wp_error( $request_id ) ) {
-		$answer = esc_html( $request_id->get_error_message() );
-	} else {
-		wp_send_user_request( $request_id );
 		if ( 'um-export-data' === $request_action ) {
-			$answer = esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your export request.', 'ultimate-member' );
+			if ( UM()->account()->current_password_is_required( 'privacy_download_data' ) ) {
+				if ( ! wp_check_password( $password, $hash ) ) {
+					$answer = esc_html__( 'The password you entered is incorrect.', 'ultimate-member' );
+					wp_send_json_success( array( 'answer' => $answer ) );
+				}
+			}
 		} elseif ( 'um-erase-data' === $request_action ) {
-			$answer = esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your deletion request.', 'ultimate-member' );
+			if ( UM()->account()->current_password_is_required( 'privacy_erase_data' ) ) {
+				if ( ! wp_check_password( $password, $hash ) ) {
+					$answer = esc_html__( 'The password you entered is incorrect.', 'ultimate-member' );
+					wp_send_json_success( array( 'answer' => $answer ) );
+				}
+			}
 		}
-	}
 
-	wp_send_json_success( array( 'answer' => $answer ) );
+		if ( 'um-export-data' === $request_action ) {
+			$request_id = wp_create_user_request( $user->data->user_email, 'export_personal_data' );
+		} elseif ( 'um-erase-data' === $request_action ) {
+			$request_id = wp_create_user_request( $user->data->user_email, 'remove_personal_data' );
+		}
+
+		if ( ! isset( $request_id ) || empty( $request_id ) ) {
+			wp_send_json_error( __( 'Wrong request.', 'ultimate-member' ) );
+		}
+
+		if ( is_wp_error( $request_id ) ) {
+			$answer = esc_html( $request_id->get_error_message() );
+		} else {
+			wp_send_user_request( $request_id );
+			if ( 'um-export-data' === $request_action ) {
+				$answer = esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your export request.', 'ultimate-member' );
+			} elseif ( 'um-erase-data' === $request_action ) {
+				$answer = esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your deletion request.', 'ultimate-member' );
+			}
+		}
+
+		wp_send_json_success( array( 'answer' => $answer ) );
+	}
+	add_action( 'wp_ajax_um_request_user_data', 'um_request_user_data' );
 }
-add_action( 'wp_ajax_um_request_user_data', 'um_request_user_data' );
+
+
