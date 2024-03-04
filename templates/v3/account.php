@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	foreach ( UM()->account()->tabs as $id => $info ) {
 		$tab_enabled = UM()->options()->get( 'account_tab_' . $id );
 
-		if ( isset( $info['custom'] ) || ! empty( $tab_enabled ) || 'general' === $id ) {
+		if ( isset( $info['without_setting'] ) || ! empty( $tab_enabled ) || 'general' === $id ) {
 			$current = UM()->account()->current_tab === $id;
 
 			ob_start();

@@ -604,6 +604,19 @@
       padding: 0
       width: 100%
       row-gap: $spacing-2xl
+      .#{$prefix}form-rows-heading
+        +flex( column, stretch, start, nowrap )
+        +border-box
+        margin: 0
+        padding: 0
+        width: 100%
+        row-gap: $spacing-xxs
+        .#{$prefix}text
+          color: $gray-700
+          +typography( text, sm, semibold )
+        .#{$prefix}supporting-text
+          color: $gray-600
+          +typography( text, sm, regular )
       .#{$prefix}form-row
         +flex( column, stretch, start, nowrap )
         +border-box
@@ -1220,3 +1233,22 @@ input[type="range"]
       color: $gray-600
       margin: 0
       padding: 0
+
+.um
+  .#{$prefix}tabs-wrapper.#{$prefix}vertical-tabs
+    .#{$prefix}tabs-content
+      .#{$prefix}tab-content[data-tab="personal-data"]
+        row-gap: 0
+
+.um
+  .#{$prefix}divider
+    overflow: hidden
+    height: 1px
+    margin: 20px 0
+    hr
+      margin: 0
+      padding: 0
+      color: $gray-200
+      border: 1px solid $gray-200
+      +border-box
+      height: 1px

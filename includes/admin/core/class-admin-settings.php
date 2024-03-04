@@ -2287,6 +2287,28 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			}
 
 			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE ) {
+				if ( UM()->options()->get( 'enable_new_ui' ) ) {
+					$this->settings_structure['']['sections']['account']['form_sections'] = UM()->array_insert_before(
+						$this->settings_structure['']['sections']['account']['form_sections'],
+						'delete_tab',
+						array(
+							'personal_data_tab' => array(
+								'title'       => __( 'Personal data tab', 'ultimate-member' ),
+								'description' => __( 'Enables you to toggle the personal data tab on the account page. Disable this tab to prevent users from exporting, deleting or anonymizing known data for a given user.', 'ultimate-member' ),
+								'fields'      => array(
+									array(
+										'id'             => 'account_tab_personal-data',
+										'type'           => 'checkbox',
+										'label'          => __( 'Personal Data Account Tab', 'ultimate-member' ),
+										'checkbox_label' => __( 'Display Personal Data account tab', 'ultimate-member' ),
+										'description'    => __( 'Enable or disable the "Personal Data" tab on the account page.', 'ultimate-member' ),
+									),
+								),
+							),
+						)
+					);
+				}
+
 				if ( UM()->options()->get( 'enable_no_conflict_avatar' ) ) {
 					unset( $this->settings_structure['appearance']['sections']['']['form_sections']['profile_photo'], $this->settings_structure['']['sections']['uploads']['form_sections']['profile_photo'] );
 

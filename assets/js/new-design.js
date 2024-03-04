@@ -373,6 +373,42 @@ jQuery(document).ready( function($) {
 		}
 	});
 
+	jQuery(document.body).on( 'click', '.um-request-button', function(e) {
+		e.preventDefault();
+
+		let request_action = jQuery(this).data('action');
+
+		let passwordField = jQuery(this).parents('form').find('#single_user_password');
+
+		let password = passwordField.val();
+
+		jQuery('.um-field-area-response.' + request_action).hide();
+
+		if ( jQuery('#' + request_action).length && password === '' ) {
+			jQuery('.um-field-error.' + request_action).show();
+		} else {
+			jQuery('.um-field-error.' + request_action).hide();
+			var request = {
+				request_action: request_action,
+				nonce: um_scripts.nonce
+			};
+
+			if ( jQuery('#' + request_action).length ) {
+				request.password = password;
+			}
+
+			wp.ajax.send( 'um_request_user_data', {
+				data: request,
+				success: function (data) {
+					jQuery('.um-field-area-response.' + request_action).text( data.answer ).show();
+				},
+				error: function (data) {
+					console.log(data);
+				}
+			});
+		}
+	});
+
 	// test case
 	$("#um-indeterminate").prop("indeterminate", true);
 });

@@ -4299,49 +4299,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					break;
 				/* Bool Checkbox */
 				case 'bool':
-					$options = array();
-					if ( isset( $data['options'] ) && is_array( $data['options'] ) ) {
-						$options = $data['options'];
-					}
-
-					/**
-					 * Filters checkbox options.
-					 *
-					 * @since 1.3.x
-					 * @hook  um_checkbox_field_options
-					 *
-					 * @param {array} $options Checkbox Options.
-					 * @param {array} $data    Field Data.
-					 *
-					 * @return {array} Checkbox Options.
-					 *
-					 * @example <caption>Extend checkbox options.</caption>
-					 * function um_checkbox_field_options( $options, $data ) {
-					 *     // your code here
-					 *     return $options;
-					 * }
-					 * add_filter( 'um_checkbox_field_options', 'um_checkbox_field_options', 10, 2 );
-					 */
-					$options = apply_filters( 'um_checkbox_field_options', $options, $data );
-					/**
-					 * Filters checkbox options by field $key.
-					 *
-					 * @since 1.3.x
-					 * @hook  um_checkbox_field_options_{$key}
-					 *
-					 * @param {array} $options Checkbox Options.
-					 *
-					 * @return {array} Checkbox Options.
-					 *
-					 * @example <caption>Extend checkbox options.</caption>
-					 * function my_checkbox_options( $options ) {
-					 *     // your code here
-					 *     return $options;
-					 * }
-					 * add_filter( 'um_checkbox_field_options_{$key}', 'my_checkbox_options', 10, 1 );
-					 */
-					$options = apply_filters( "um_checkbox_field_options_{$key}", $options );
-
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . ' ' . $this->aria_valid_attributes( $this->is_error( $key ), $key ) . '>';
 
 					if ( isset( $data['label'] ) ) {
@@ -4349,7 +4306,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					}
 
 					$output .= '<div class="um-field-checkbox-area">';
-					$output .= '<label class="um-checkbox-label um-size-md"><input ' . $disabled . ' name="' . esc_attr( $key ) . '" ' . checked( $this->is_selected( $key, true, $data ), true, false ) . ' type="checkbox" value="1" />' . esc_html( $data['checkbox_label'] ) . '</label>';
+					if ( ! empty( $data['checkbox_label_supported'] ) ) {
+						$output .= '<label class="um-checkbox-label um-size-md um-supporting-text"><input ' . $disabled . ' name="' . esc_attr( $key ) . '" ' . checked( $this->is_selected( $key, true, $data ), true, false ) . ' type="checkbox" value="1" /><span class="um-checkbox-content"><span class="um-text">' . esc_html( $data['checkbox_label'] ) . '</span><br /><span class="um-supporting-text">' . esc_html( $data['checkbox_label_supported'] ) . '</span></span></label>';
+					} else {
+						$output .= '<label class="um-checkbox-label um-size-md"><input ' . $disabled . ' name="' . esc_attr( $key ) . '" ' . checked( $this->is_selected( $key, true, $data ), true, false ) . ' type="checkbox" value="1" />' . esc_html( $data['checkbox_label'] ) . '</label>';
+					}
 					$output .= '</div>';
 
 					if ( ! empty( $disabled ) && $this->is_selected( $key, true, $data ) ) {

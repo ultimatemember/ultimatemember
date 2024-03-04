@@ -25,7 +25,7 @@ $error_message = ! empty( $args['use_gdpr_error_text'] ) ? $args['use_gdpr_error
 
 ?>
 
-<div class="um-form-rows um-grpr-row">
+<div class="um-form-rows um-gdpr-row">
 	<div class="um-form-row">
 		<div class="um-form-cols um-form-cols-1">
 			<div class="um-form-col um-form-col-1">

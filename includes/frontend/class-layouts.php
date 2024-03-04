@@ -806,6 +806,14 @@ class Layouts {
 		return ob_get_clean();
 	}
 
+	public static function divider() {
+		ob_start();
+		?>
+		<div class="um-divider"><hr /></div>
+		<?php
+		return ob_get_clean();
+	}
+
 	/**
 	 * New menu JS
 	 *
