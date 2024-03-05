@@ -86,7 +86,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			$tabs                 = array();
 			$tabs[100]['general'] = array(
 				'icon'         => 'um-faicon-user',
-				'title'        => __( 'Account', 'ultimate-member' ),
+				'title'        => __( 'My details', 'ultimate-member' ),
 				'submit_title' => __( 'Update Account', 'ultimate-member' ),
 			);
 
@@ -126,16 +126,16 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				}
 
 				if ( UM()->account()->current_password_is_required( 'delete' ) ) {
-					$text = UM()->options()->get( 'delete_account_text' );
+					$text = __( 'Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account enter your password below.', 'ultimate-member' );
 				} else {
-					$text = UM()->options()->get( 'delete_account_no_pass_required_text' );
+					$text = __( 'Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account, click on the button below.', 'ultimate-member' );
 				}
 
 				$tabs[99999]['delete'] = array(
 					'icon'         => 'um-faicon-trash-o',
 					'title'        => __( 'Delete Account', 'ultimate-member' ),
 					'submit_title' => __( 'Delete Account', 'ultimate-member' ),
-					'description'  => htmlspecialchars( $text ),
+					'description'  => $text,
 				);
 			}
 
@@ -332,7 +332,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			update_user_meta( um_user( 'ID' ), 'um_account_secure_fields', UM()->account()->displayed_fields );
 		}
 
-
 		/**
 		 * Restrict access to Account page
 		 */
@@ -351,6 +350,26 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					exit;
 				}
 
+				$account_tab = get_query_var( 'um_tab' );
+				if ( ! empty( $account_tab ) ) {
+					$exists = false;
+					foreach ( $this->get_tabs() as $priority => $tabs ) {
+						if ( array_key_exists( $account_tab, $tabs ) ) {
+							ob_start();
+							$this->render_account_tab( $account_tab, $tabs[ $account_tab ], array() );
+							$content = ob_get_clean();
+
+							if ( ! empty( $content ) ) {
+								$exists = true;
+							}
+						}
+					}
+					if ( ! $exists ) {
+						wp_safe_redirect( um_get_core_page( 'account' ) );
+						exit;
+					}
+				}
+
 				// Set data for fields.
 				UM()->fields()->set_mode    = 'account';
 				UM()->fields()->editing     = true;
@@ -363,7 +382,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				}
 			}
 		}
-
 
 		/**
 		 * Submit Account handler

@@ -2307,6 +2307,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							),
 						)
 					);
+
+					// removed Account deletion text
+					unset( $this->settings_structure['']['sections']['account']['form_sections']['delete_tab']['fields'][1], $this->settings_structure['']['sections']['account']['form_sections']['delete_tab']['fields'][2] );
 				}
 
 				if ( UM()->options()->get( 'enable_no_conflict_avatar' ) ) {

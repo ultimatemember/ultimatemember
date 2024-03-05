@@ -972,6 +972,8 @@
   font-size: var(--um-text-font-size-sm, 14px);
   line-height: var(--um-text-line-height-sm, 20px);
   font-weight: var(--um-text-font-weight-medium, 500);
+  margin: 0;
+  padding: 0;
 }
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col label .um-req {
   color: #a00;
