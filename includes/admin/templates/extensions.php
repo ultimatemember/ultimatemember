@@ -166,12 +166,12 @@ $premium['profile-tabs'] = array(
 	'desc' => 'Add custom tabs to profiles',
 );
 
-//$premium['stripe'] = array(
-//	'url' => 'https://ultimatemember.com/extensions/stripe/',
-//	'img'  => 'stripe.png',
-//	'name' => 'Stripe',
-//	'desc' => 'Sell paid memberships to access your website via Stripe subscriptions',
-//);
+$premium['stripe'] = array(
+	'url' => 'https://ultimatemember.com/extensions/stripe/',
+	'img'  => 'stripe.png',
+	'name' => 'Stripe',
+	'desc' => 'Sell paid memberships to access your website via Stripe subscriptions',
+);
 
 $free['jobboardwp'] = array(
 	'url'  => 'https://wordpress.org/plugins/um-jobboardwp',
