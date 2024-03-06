@@ -1041,6 +1041,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'rest_api_version'                      => array(
 						'sanitize' => 'text',
 					),
+					'disable_restriction_pre_queries'       => array(
+						'sanitize' => 'bool',
+					),
 					'uninstall_on_delete'                   => array(
 						'sanitize' => 'bool',
 					),

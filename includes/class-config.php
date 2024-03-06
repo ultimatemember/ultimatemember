@@ -204,29 +204,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'_um_secondary_color',
 			);
 
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_core_form_meta_all
-			 * @description Extend UM forms meta keys
-			 * @input_vars
-			 * [{"var":"$meta","type":"array","desc":"UM forms meta"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_core_form_meta_all', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_core_form_meta_all', 'my_core_form_meta', 10, 1 );
-			 * function my_core_form_meta( $meta ) {
-			 *     // your code here
-			 *     $meta['my_meta_key'] = 'my_meta_value';
-			 *     return $meta;
-			 * }
-			 * ?>
-			 */
-			$this->core_form_meta_all = apply_filters( 'um_core_form_meta_all', array(
+			$this->core_form_meta_all = array(
 				/*Profile Form*/
 				'_um_profile_show_name'             => 1,
 				'_um_profile_show_social_links'     => 0,
@@ -279,62 +257,49 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'_um_directory_template'            => 'members',
 				'_um_directory_header'              => __( '{total_users} Members', 'ultimate-member' ),
 				'_um_directory_header_single'       => __( '{total_users} Member', 'ultimate-member' ),
-			) );
+			);
+			/**
+			 * Filters the list of Ultimate Member forms meta.
+			 *
+			 * @param {array} $form_meta UM Forms meta.
+			 *
+			 * @return {array} Forms meta.
+			 *
+			 * @since 1.3.x
+			 * @hook um_core_form_meta_all
+			 *
+			 * @example <caption>Add custom admin notice after {custom_update_key} action.</caption>
+			 * function my_um_core_form_meta_all( $form_meta ) {
+			 *      // your code here
+			 *      $meta['my_meta_key'] = 'my_meta_value';
+			 *      return $meta;
+			 * }
+			 * add_filter( 'um_core_form_meta_all', 'my_um_core_form_meta_all' );
+			 */
+			$this->core_form_meta_all = apply_filters( 'um_core_form_meta_all', $this->core_form_meta_all );
 
 			$this->core_form_meta['register'] = array(
-				'_um_custom_fields' => 'a:6:{s:10:"user_login";a:15:{s:5:"title";s:8:"Username";s:7:"metakey";s:10:"user_login";s:4:"type";s:4:"text";s:5:"label";s:8:"Username";s:8:"required";i:1;s:6:"public";i:1;s:8:"editable";b:0;s:8:"validate";s:15:"unique_username";s:9:"min_chars";i:3;s:9:"max_chars";i:24;s:8:"position";s:1:"1";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:10:"user_email";a:13:{s:5:"title";s:14:"Email Address";s:7:"metakey";s:10:"user_email";s:4:"type";s:4:"text";s:5:"label";s:14:"E-mail Address";s:8:"required";i:0;s:6:"public";i:1;s:8:"editable";b:1;s:8:"validate";s:12:"unique_email";s:8:"position";s:1:"4";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:13:"user_password";a:16:{s:5:"title";s:8:"Password";s:7:"metakey";s:13:"user_password";s:4:"type";s:8:"password";s:5:"label";s:8:"Password";s:8:"required";i:1;s:6:"public";i:1;s:8:"editable";b:1;s:9:"min_chars";i:8;s:9:"max_chars";i:30;s:15:"force_good_pass";i:1;s:18:"force_confirm_pass";i:1;s:8:"position";s:1:"5";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:10:"first_name";a:12:{s:5:"title";s:10:"First Name";s:7:"metakey";s:10:"first_name";s:4:"type";s:4:"text";s:5:"label";s:10:"First Name";s:8:"required";i:0;s:6:"public";i:1;s:8:"editable";b:1;s:8:"position";s:1:"2";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:9:"last_name";a:12:{s:5:"title";s:9:"Last Name";s:7:"metakey";s:9:"last_name";s:4:"type";s:4:"text";s:5:"label";s:9:"Last Name";s:8:"required";i:0;s:6:"public";i:1;s:8:"editable";b:1;s:8:"position";s:1:"3";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:9:"_um_row_1";a:4:{s:4:"type";s:3:"row";s:2:"id";s:9:"_um_row_1";s:8:"sub_rows";s:1:"1";s:4:"cols";s:1:"1";}}',
-				'_um_mode' => 'register',
-				'_um_core' => 'register',
+				'_um_custom_fields'                => 'a:6:{s:10:"user_login";a:15:{s:5:"title";s:8:"Username";s:7:"metakey";s:10:"user_login";s:4:"type";s:4:"text";s:5:"label";s:8:"Username";s:8:"required";i:1;s:6:"public";i:1;s:8:"editable";b:0;s:8:"validate";s:15:"unique_username";s:9:"min_chars";i:3;s:9:"max_chars";i:24;s:8:"position";s:1:"1";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:10:"user_email";a:13:{s:5:"title";s:14:"Email Address";s:7:"metakey";s:10:"user_email";s:4:"type";s:4:"text";s:5:"label";s:14:"E-mail Address";s:8:"required";i:0;s:6:"public";i:1;s:8:"editable";b:1;s:8:"validate";s:12:"unique_email";s:8:"position";s:1:"4";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:13:"user_password";a:16:{s:5:"title";s:8:"Password";s:7:"metakey";s:13:"user_password";s:4:"type";s:8:"password";s:5:"label";s:8:"Password";s:8:"required";i:1;s:6:"public";i:1;s:8:"editable";b:1;s:9:"min_chars";i:8;s:9:"max_chars";i:30;s:15:"force_good_pass";i:1;s:18:"force_confirm_pass";i:1;s:8:"position";s:1:"5";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:10:"first_name";a:12:{s:5:"title";s:10:"First Name";s:7:"metakey";s:10:"first_name";s:4:"type";s:4:"text";s:5:"label";s:10:"First Name";s:8:"required";i:0;s:6:"public";i:1;s:8:"editable";b:1;s:8:"position";s:1:"2";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:9:"last_name";a:12:{s:5:"title";s:9:"Last Name";s:7:"metakey";s:9:"last_name";s:4:"type";s:4:"text";s:5:"label";s:9:"Last Name";s:8:"required";i:0;s:6:"public";i:1;s:8:"editable";b:1;s:8:"position";s:1:"3";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:9:"_um_row_1";a:4:{s:4:"type";s:3:"row";s:2:"id";s:9:"_um_row_1";s:8:"sub_rows";s:1:"1";s:4:"cols";s:1:"1";}}',
+				'_um_mode'                         => 'register',
+				'_um_core'                         => 'register',
 				'_um_register_use_custom_settings' => 0,
 			);
 
 			$this->core_form_meta['login'] = array(
-				'_um_custom_fields' => 'a:3:{s:8:"username";a:13:{s:5:"title";s:18:"Username or Email";s:7:"metakey";s:8:"username";s:4:"type";s:4:"text";s:5:"label";s:18:"Username or E-mail";s:8:"required";i:1;s:6:"public";i:1;s:8:"editable";b:0;s:8:"validate";s:24:"unique_username_or_email";s:8:"position";s:1:"1";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:13:"user_password";a:16:{s:5:"title";s:8:"Password";s:7:"metakey";s:13:"user_password";s:4:"type";s:8:"password";s:5:"label";s:8:"Password";s:8:"required";i:1;s:6:"public";i:1;s:8:"editable";b:1;s:9:"min_chars";i:8;s:9:"max_chars";i:30;s:15:"force_good_pass";i:1;s:18:"force_confirm_pass";i:1;s:8:"position";s:1:"2";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:9:"_um_row_1";a:4:{s:4:"type";s:3:"row";s:2:"id";s:9:"_um_row_1";s:8:"sub_rows";s:1:"1";s:4:"cols";s:1:"1";}}',
-				'_um_mode' => 'login',
-				'_um_core' => 'login',
+				'_um_custom_fields'             => 'a:3:{s:8:"username";a:13:{s:5:"title";s:18:"Username or Email";s:7:"metakey";s:8:"username";s:4:"type";s:4:"text";s:5:"label";s:18:"Username or E-mail";s:8:"required";i:1;s:6:"public";i:1;s:8:"editable";b:0;s:8:"validate";s:24:"unique_username_or_email";s:8:"position";s:1:"1";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:13:"user_password";a:16:{s:5:"title";s:8:"Password";s:7:"metakey";s:13:"user_password";s:4:"type";s:8:"password";s:5:"label";s:8:"Password";s:8:"required";i:1;s:6:"public";i:1;s:8:"editable";b:1;s:9:"min_chars";i:8;s:9:"max_chars";i:30;s:15:"force_good_pass";i:1;s:18:"force_confirm_pass";i:1;s:8:"position";s:1:"2";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:9:"_um_row_1";a:4:{s:4:"type";s:3:"row";s:2:"id";s:9:"_um_row_1";s:8:"sub_rows";s:1:"1";s:4:"cols";s:1:"1";}}',
+				'_um_mode'                      => 'login',
+				'_um_core'                      => 'login',
 				'_um_login_use_custom_settings' => 0,
 			);
 
 			$this->core_form_meta['profile'] = array(
-				'_um_custom_fields' => 'a:1:{s:9:"_um_row_1";a:4:{s:4:"type";s:3:"row";s:2:"id";s:9:"_um_row_1";s:8:"sub_rows";s:1:"1";s:4:"cols";s:1:"1";}}',
-				'_um_mode' => 'profile',
-				'_um_core' => 'profile',
+				'_um_custom_fields'               => 'a:1:{s:9:"_um_row_1";a:4:{s:4:"type";s:3:"row";s:2:"id";s:9:"_um_row_1";s:8:"sub_rows";s:1:"1";s:4:"cols";s:1:"1";}}',
+				'_um_mode'                        => 'profile',
+				'_um_core'                        => 'profile',
 				'_um_profile_use_custom_settings' => 0,
 			);
 
-
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_email_notifications
-			 * @description Extend UM email notifications
-			 * @input_vars
-			 * [{"var":"$emails","type":"array","desc":"UM email notifications"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_email_notifications', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_email_notifications', 'my_email_notifications', 10, 1 );
-			 * function my_email_notifications( $emails ) {
-			 *     // your code here
-			 *    $emails['my_email'] = array(
-			 *        'key'           => 'my_email',
-			 *        'title'         => __( 'my_email_title','ultimate-member' ),
-			 *        'subject'       => 'my_email_subject',
-			 *        'body'          => 'my_email_body',
-			 *        'description'   => 'my_email_description',
-			 *        'recipient'     => 'user', // set 'admin' for make administrator as recipient
-			 *        'default_active' => true // can be false for make disabled by default
-			 *     );
-			 *
-			 *     return $emails;
-			 * }
-			 * ?>
-			 */
-			$this->email_notifications = apply_filters( 'um_email_notifications', array(
+			$this->email_notifications = array(
 				'welcome_email' => array(
 					'key'           => 'welcome_email',
 					'title'         => __( 'Account Welcome Email','ultimate-member' ),
@@ -514,24 +479,55 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'recipient'      => 'admin',
 					'default_active' => true,
 				),
-			) );
+			);
+			/**
+			 * Filters the list of Ultimate Member email notifications.
+			 *
+			 * @param {array} $email_notifications Email notifications.
+			 *
+			 * @return {array} Email notifications.
+			 *
+			 * @since 2.0.0
+			 * @hook um_email_notifications
+			 *
+			 * @example <caption>Add custom admin notice after {custom_update_key} action.</caption>
+			 * function my_um_email_notifications( $notifications ) {
+			 *     // your code here
+			 *     $emails['my_email'] = array(
+			 *         'key'           => 'my_email',
+			 *         'title'         => __( 'my_email_title','ultimate-member' ),
+			 *         'subject'       => 'my_email_subject',
+			 *         'body'          => 'my_email_body',
+			 *         'description'   => 'my_email_description',
+			 *         'recipient'     => 'user', // set 'admin' for make administrator as recipient
+			 *         'default_active' => true // can be false for make disabled by default
+			 *      );
+			 *
+			 *      return $emails;
+			 * }
+			 * add_filter( 'um_email_notifications', 'my_um_email_notifications' );
+			 */
+			$this->email_notifications = apply_filters( 'um_email_notifications', $this->email_notifications );
 
-			//settings defaults
+			// Settings defaults.
 			$this->settings_defaults = array(
-				'restricted_access_post_metabox'        => array( 'post' => 1, 'page' => 1 ),
-				'disable_restriction_pre_queries'       => 0,
-				'uninstall_on_delete'                   => 0,
+				'restricted_access_post_metabox'        => array(
+					'post' => 1,
+					'page' => 1,
+				),
+				'disable_restriction_pre_queries'       => false,
+				'uninstall_on_delete'                   => false,
 				'permalink_base'                        => 'user_login',
 				'permalink_base_custom_meta'            => '',
 				'display_name'                          => 'full_name',
 				'display_name_field'                    => '',
-				'author_redirect'                       => 1,
+				'author_redirect'                       => true,
 				'members_page'                          => true,
-				'use_gravatars'                         => 0,
+				'use_gravatars'                         => false,
 				'use_um_gravatar_default_builtin_image' => 'default',
-				'use_um_gravatar_default_image'         => 0,
+				'use_um_gravatar_default_image'         => false,
 				'toggle_password'                       => false,
-				'require_strongpass'                    => 0,
+				'require_strongpass'                    => false,
 				'password_min_chars'                    => 8,
 				'password_max_chars'                    => 30,
 				'account_tab_password'                  => 1,
