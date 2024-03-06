@@ -2393,8 +2393,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 				if ( UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
 					$actions['um-editprofile'] = array(
-						'title' => __( 'Edit Profile', 'ultimate-member' ),
-						'url' => um_edit_profile_url(),
+						'title' => esc_html__( 'Edit Profile', 'ultimate-member' ),
+						'url'   => um_edit_profile_url(),
 					);
 				}
 
@@ -2425,8 +2425,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$url = add_query_arg( array( 'um_action' => $id, 'uid' => $user_id ), um_get_core_page( 'user' ) );
 
 						$actions[ $id ] = array(
-							'title' => $arr['label'],
-							'url'   => $url,
+							'title' => esc_html( $arr['label'] ),
+							'url'   => esc_url( $url ),
 						);
 					}
 				}
@@ -2437,24 +2437,23 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 				if ( empty( UM()->user()->cannot_edit ) ) {
 					$actions['um-editprofile'] = array(
-						'title' => __( 'Edit Profile', 'ultimate-member' ),
+						'title' => esc_html__( 'Edit Profile', 'ultimate-member' ),
 						'url'   => um_edit_profile_url(),
 					);
 				}
 
 				$actions['um-myaccount'] = array(
-					'title' => __( 'My Account', 'ultimate-member' ),
+					'title' => esc_html__( 'My Account', 'ultimate-member' ),
 					'url'   => um_get_core_page( 'account' ),
 				);
 
 				$actions['um-logout'] = array(
-					'title' => __( 'Logout', 'ultimate-member' ),
+					'title' => esc_html__( 'Logout', 'ultimate-member' ),
 					'url'   => um_get_core_page( 'logout' ),
 				);
 
 				$actions = apply_filters( 'um_member_directory_my_user_card_actions', $actions, $user_id );
 			}
-
 
 			return $actions;
 		}
@@ -2472,7 +2471,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$dropdown_actions = $this->build_user_actions_list( $user_id );
 
-			$actions = array();
+			$actions  = array();
 			$can_edit = UM()->roles()->um_current_user_can( 'edit', $user_id );
 
 			// Replace hook 'um_members_just_after_name'
@@ -2486,21 +2485,21 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$hook_after_user_name = ob_get_clean();
 
 			$data_array = array(
-				'card_anchor'           => substr( md5( $user_id ), 10, 5 ),
-				'id'                    => $user_id,
-				'role'                  => um_user( 'role' ),
-				'account_status'        => um_user( 'account_status' ),
-				'account_status_name'   => um_user( 'account_status_name' ),
-				'cover_photo'           => um_user( 'cover_photo', $this->cover_size ),
-				'display_name'          => um_user( 'display_name' ),
-				'profile_url'           => um_user_profile_url(),
-				'can_edit'              => $can_edit,
-				'edit_profile_url'      => um_edit_profile_url(),
-				'avatar'                => get_avatar( $user_id, $this->avatar_size ),
-				'display_name_html'     => um_user( 'display_name', 'html' ),
-				'dropdown_actions'      => $dropdown_actions,
-				'hook_just_after_name'  => preg_replace( '/^\s+/im', '', $hook_just_after_name ),
-				'hook_after_user_name'  => preg_replace( '/^\s+/im', '', $hook_after_user_name ),
+				'card_anchor'          => esc_html( substr( md5( $user_id ), 10, 5 ) ),
+				'id'                   => absint( $user_id ),
+				'role'                 => esc_html( um_user( 'role' ) ),
+				'account_status'       => esc_html( um_user( 'account_status' ) ),
+				'account_status_name'  => esc_html( um_user( 'account_status_name' ) ),
+				'cover_photo'          => wp_kses( um_user( 'cover_photo', $this->cover_size ), UM()->get_allowed_html( 'templates' ) ),
+				'display_name'         => esc_html( um_user( 'display_name' ) ),
+				'profile_url'          => esc_url( um_user_profile_url() ),
+				'can_edit'             => (bool) $can_edit,
+				'edit_profile_url'     => esc_url( um_edit_profile_url() ),
+				'avatar'               => wp_kses( get_avatar( $user_id, $this->avatar_size ), UM()->get_allowed_html( 'templates' ) ),
+				'display_name_html'    => wp_kses( um_user( 'display_name', 'html' ), UM()->get_allowed_html( 'templates' ) ),
+				'dropdown_actions'     => $dropdown_actions,
+				'hook_just_after_name' => wp_kses( preg_replace( '/^\s+/im', '', $hook_just_after_name ), UM()->get_allowed_html( 'templates' ) ),
+				'hook_after_user_name' => wp_kses( preg_replace( '/^\s+/im', '', $hook_after_user_name ), UM()->get_allowed_html( 'templates' ) ),
 			);
 
 			if ( ! empty( $directory_data['show_tagline'] ) ) {
@@ -2520,7 +2519,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 								continue;
 							}
 
-							$data_array[ $key ] = $value;
+							$data_array[ $key ] = wp_kses( $value, UM()->get_allowed_html( 'templates' ) );
 						}
 					}
 				}
@@ -2551,8 +2550,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 								) );
 							}
 
-							$data_array[ "label_{$key}" ] = __( $label, 'ultimate-member' );
-							$data_array[ $key ] = $value;
+							$data_array[ "label_{$key}" ] = esc_html__( $label, 'ultimate-member' );
+							$data_array[ $key ] = wp_kses( $value, UM()->get_allowed_html( 'templates' ) );
 						}
 					}
 				}
@@ -2562,7 +2561,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					UM()->fields()->show_social_urls();
 					$social_urls = ob_get_clean();
 
-					$data_array['social_urls'] = $social_urls;
+					$data_array['social_urls'] = wp_kses( $social_urls, UM()->get_allowed_html( 'templates' ) );
 				}
 			}
 
