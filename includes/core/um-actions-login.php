@@ -322,147 +322,227 @@ function um_submit_form_login( $submitted_data, $form_data ) {
 }
 add_action( 'um_submit_form_login', 'um_submit_form_login', 10, 2 );
 
-/**
- * Show the submit button
- *
- * @param $args
- */
-function um_add_submit_button_to_login( $args ) {
-	/**
-	 * UM hook
-	 *
-	 * @type filter
-	 * @title um_login_form_button_one
-	 * @description Change Login Form Primary button
-	 * @input_vars
-	 * [{"var":"$primary_btn_word","type":"string","desc":"Button text"},
-	 * {"var":"$args","type":"array","desc":"Login Form arguments"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage
-	 * <?php add_filter( 'um_login_form_button_one', 'function_name', 10, 2 ); ?>
-	 * @example
-	 * <?php
-	 * add_filter( 'um_login_form_button_one', 'my_login_form_button_one', 10, 2 );
-	 * function my_login_form_button_one( $primary_btn_word, $args ) {
-	 *     // your code here
-	 *     return $primary_btn_word;
-	 * }
-	 * ?>
-	 */
-	$primary_btn_word = apply_filters('um_login_form_button_one', $args['primary_btn_word'], $args );
 
-	if ( ! isset( $primary_btn_word ) || $primary_btn_word == '' ){
-		$primary_btn_word = UM()->options()->get( 'login_primary_btn_word' );
+
+if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+	/**
+	 * Show the submit button
+	 *
+	 * @param $args
+	 */
+	function um_add_submit_button_to_login( $args ) {
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_login_form_button_one
+		 * @description Change Login Form Primary button
+		 * @input_vars
+		 * [{"var":"$primary_btn_word","type":"string","desc":"Button text"},
+		 * {"var":"$args","type":"array","desc":"Login Form arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_login_form_button_one', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_login_form_button_one', 'my_login_form_button_one', 10, 2 );
+		 * function my_login_form_button_one( $primary_btn_word, $args ) {
+		 *     // your code here
+		 *     return $primary_btn_word;
+		 * }
+		 * ?>
+		 */
+		$primary_btn_word = apply_filters('um_login_form_button_one', $args['primary_btn_word'], $args );
+
+		if ( ! isset( $primary_btn_word ) || $primary_btn_word == '' ){
+			$primary_btn_word = UM()->options()->get( 'login_primary_btn_word' );
+		}
+
+		$cols_class = ! empty( $args['forgot_pass_link'] ) ? 2 : 1;
+		?>
+
+		<div class="um-form-rows">
+			<div class="um-form-row">
+				<div class="um-form-cols um-form-cols-<?php echo esc_attr( $cols_class ); ?>">
+					<div class="um-form-col um-form-col-1">
+						<?php
+						if ( ! empty( $args['show_rememberme'] ) ) {
+							UM()->fields()->checkbox( 'rememberme', __( 'Keep me signed in', 'ultimate-member' ), false );
+						}
+						?>
+					</div>
+					<?php if ( ! empty( $args['forgot_pass_link'] ) ) { ?>
+						<div class="um-form-col um-form-col-2 um-form-col-right">
+							<?php $rp_url = um_get_predefined_page_url( 'password-reset' ); ?>
+							<a class="um-link" href="<?php echo esc_url( $rp_url ); ?>"><?php esc_html_e( 'Forgot password', 'ultimate-member' ); ?></a>
+						</div>
+					<?php } ?>
+				</div>
+			</div>
+		</div>
+
+		<div class="um-form-submit">
+			<?php
+			echo UM()->frontend()::layouts()::button(
+				$primary_btn_word,
+				array(
+					'type'   => 'submit',
+					'design' => 'primary',
+					'width'  => 'full',
+					'id'     => 'um-submit-btn',
+				)
+			);
+			?>
+			<span class="um-center"><?php echo wp_kses_post( sprintf( __( 'Don\'t have an account? %s', 'ultimate-member' ), '<a href="' . um_get_predefined_page_url( 'register' ) . '" class="um-link">' . __( 'Sign up', 'ultimate-member' ) . '</a>' ) ); ?></span>
+		</div>
+
+		<?php
 	}
-
+	add_action( 'um_after_login_fields', 'um_add_submit_button_to_login', 1000 );
+} else {
 	/**
-	 * UM hook
+	 * Show the submit button
 	 *
-	 * @type filter
-	 * @title um_login_form_button_two
-	 * @description Change Login Form Secondary button
-	 * @input_vars
-	 * [{"var":"$secondary_btn_word","type":"string","desc":"Button text"},
-	 * {"var":"$args","type":"array","desc":"Login Form arguments"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage
-	 * <?php add_filter( 'um_login_form_button_two', 'function_name', 10, 2 ); ?>
-	 * @example
-	 * <?php
-	 * add_filter( 'um_login_form_button_two', 'my_login_form_button_two', 10, 2 );
-	 * function my_login_form_button_two( $secondary_btn_word, $args ) {
-	 *     // your code here
-	 *     return $secondary_btn_word;
-	 * }
-	 * ?>
+	 * @param $args
 	 */
-	$secondary_btn_word = apply_filters( 'um_login_form_button_two', $args['secondary_btn_word'], $args );
+	function um_add_submit_button_to_login( $args ) {
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_login_form_button_one
+		 * @description Change Login Form Primary button
+		 * @input_vars
+		 * [{"var":"$primary_btn_word","type":"string","desc":"Button text"},
+		 * {"var":"$args","type":"array","desc":"Login Form arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_login_form_button_one', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_login_form_button_one', 'my_login_form_button_one', 10, 2 );
+		 * function my_login_form_button_one( $primary_btn_word, $args ) {
+		 *     // your code here
+		 *     return $primary_btn_word;
+		 * }
+		 * ?>
+		 */
+		$primary_btn_word = apply_filters('um_login_form_button_one', $args['primary_btn_word'], $args );
 
-	if ( ! isset( $secondary_btn_word ) || $secondary_btn_word == '' ){
-		$secondary_btn_word = UM()->options()->get( 'login_secondary_btn_word' );
-	}
+		if ( ! isset( $primary_btn_word ) || $primary_btn_word == '' ){
+			$primary_btn_word = UM()->options()->get( 'login_primary_btn_word' );
+		}
 
-	$secondary_btn_url = ! empty( $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_core_page( 'register' );
-	/**
-	 * UM hook
-	 *
-	 * @type filter
-	 * @title um_login_form_button_two_url
-	 * @description Change Login Form Secondary button URL
-	 * @input_vars
-	 * [{"var":"$secondary_btn_url","type":"string","desc":"Button URL"},
-	 * {"var":"$args","type":"array","desc":"Login Form arguments"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage
-	 * <?php add_filter( 'um_login_form_button_two_url', 'function_name', 10, 2 ); ?>
-	 * @example
-	 * <?php
-	 * add_filter( 'um_login_form_button_two_url', 'my_login_form_button_two_url', 10, 2 );
-	 * function my_login_form_button_two_url( $secondary_btn_url, $args ) {
-	 *     // your code here
-	 *     return $secondary_btn_url;
-	 * }
-	 * ?>
-	 */
-	$secondary_btn_url = apply_filters( 'um_login_form_button_two_url', $secondary_btn_url, $args ); ?>
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_login_form_button_two
+		 * @description Change Login Form Secondary button
+		 * @input_vars
+		 * [{"var":"$secondary_btn_word","type":"string","desc":"Button text"},
+		 * {"var":"$args","type":"array","desc":"Login Form arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_login_form_button_two', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_login_form_button_two', 'my_login_form_button_two', 10, 2 );
+		 * function my_login_form_button_two( $secondary_btn_word, $args ) {
+		 *     // your code here
+		 *     return $secondary_btn_word;
+		 * }
+		 * ?>
+		 */
+		$secondary_btn_word = apply_filters( 'um_login_form_button_two', $args['secondary_btn_word'], $args );
 
-	<div class="um-col-alt">
+		if ( ! isset( $secondary_btn_word ) || $secondary_btn_word == '' ){
+			$secondary_btn_word = UM()->options()->get( 'login_secondary_btn_word' );
+		}
 
-		<?php if ( ! empty( $args['show_rememberme'] ) ) {
-			UM()->fields()->checkbox( 'rememberme', __( 'Keep me signed in', 'ultimate-member' ), false ); ?>
+		$secondary_btn_url = ! empty( $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_core_page( 'register' );
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_login_form_button_two_url
+		 * @description Change Login Form Secondary button URL
+		 * @input_vars
+		 * [{"var":"$secondary_btn_url","type":"string","desc":"Button URL"},
+		 * {"var":"$args","type":"array","desc":"Login Form arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_login_form_button_two_url', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_login_form_button_two_url', 'my_login_form_button_two_url', 10, 2 );
+		 * function my_login_form_button_two_url( $secondary_btn_url, $args ) {
+		 *     // your code here
+		 *     return $secondary_btn_url;
+		 * }
+		 * ?>
+		 */
+		$secondary_btn_url = apply_filters( 'um_login_form_button_two_url', $secondary_btn_url, $args ); ?>
+
+		<div class="um-col-alt">
+
+			<?php if ( ! empty( $args['show_rememberme'] ) ) {
+				UM()->fields()->checkbox( 'rememberme', __( 'Keep me signed in', 'ultimate-member' ), false ); ?>
+				<div class="um-clear"></div>
+			<?php }
+
+			if ( ! empty( $args['secondary_btn'] ) ) { ?>
+
+				<div class="um-left um-half">
+					<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
+				</div>
+				<div class="um-right um-half">
+					<a href="<?php echo esc_url( $secondary_btn_url ); ?>" class="um-button um-alt">
+						<?php _e( wp_unslash( $secondary_btn_word ), 'ultimate-member' ); ?>
+					</a>
+				</div>
+
+			<?php } else { ?>
+
+				<div class="um-center">
+					<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
+				</div>
+
+			<?php } ?>
+
 			<div class="um-clear"></div>
-		<?php }
 
-		if ( ! empty( $args['secondary_btn'] ) ) { ?>
+		</div>
 
-			<div class="um-left um-half">
-				<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
-			</div>
-			<div class="um-right um-half">
-				<a href="<?php echo esc_url( $secondary_btn_url ); ?>" class="um-button um-alt">
-					<?php _e( wp_unslash( $secondary_btn_word ), 'ultimate-member' ); ?>
-				</a>
-			</div>
+		<?php
+	}
+	add_action( 'um_after_login_fields', 'um_add_submit_button_to_login', 1000 );
 
-		<?php } else { ?>
+	/**
+	 * Display a forgot password link
+	 *
+	 * @param $args
+	 */
+	function um_after_login_submit( $args ) {
+		if ( empty( $args['forgot_pass_link'] ) ) {
+			return;
+		}
+		?>
 
-			<div class="um-center">
-				<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
-			</div>
+		<div class="um-col-alt-b">
+			<a href="<?php echo esc_url( um_get_core_page( 'password-reset' ) ); ?>" class="um-link-alt">
+				<?php esc_html_e( 'Forgot your password?', 'ultimate-member' ); ?>
+			</a>
+		</div>
 
-		<?php } ?>
-
-		<div class="um-clear"></div>
-
-	</div>
-
-	<?php
+		<?php
+	}
+	add_action( 'um_after_login_fields', 'um_after_login_submit', 1001 );
 }
-add_action( 'um_after_login_fields', 'um_add_submit_button_to_login', 1000 );
-
-
-/**
- * Display a forgot password link
- *
- * @param $args
- */
-function um_after_login_submit( $args ) {
-	if ( empty( $args['forgot_pass_link'] ) ) {
-		return;
-	} ?>
-
-	<div class="um-col-alt-b">
-		<a href="<?php echo esc_url( um_get_core_page( 'password-reset' ) ); ?>" class="um-link-alt">
-			<?php _e( 'Forgot your password?', 'ultimate-member' ); ?>
-		</a>
-	</div>
-
-	<?php
-}
-add_action( 'um_after_login_fields', 'um_after_login_submit', 1001 );
 
 
 /**

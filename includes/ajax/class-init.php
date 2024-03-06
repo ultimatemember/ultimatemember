@@ -20,8 +20,22 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		 * @used-by \UM::includes()
 		 */
 		public function includes() {
+			$this->account();
 			$this->pages();
 			$this->secure();
+			$this->user();
+		}
+
+		/**
+		 * @since 2.9.0
+		 *
+		 * @return Account
+		 */
+		public function account() {
+			if ( empty( UM()->classes['um\ajax\account'] ) ) {
+				UM()->classes['um\ajax\account'] = new Account();
+			}
+			return UM()->classes['um\ajax\account'];
 		}
 
 		/**
@@ -46,6 +60,18 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 				UM()->classes['um\ajax\secure'] = new Secure();
 			}
 			return UM()->classes['um\ajax\secure'];
+		}
+
+		/**
+		 * @since 2.8.4
+		 *
+		 * @return User
+		 */
+		public function user() {
+			if ( empty( UM()->classes['um\ajax\user'] ) ) {
+				UM()->classes['um\ajax\user'] = new User();
+			}
+			return UM()->classes['um\ajax\user'];
 		}
 	}
 }

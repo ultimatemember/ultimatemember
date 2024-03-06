@@ -1,12 +1,11 @@
 <?php
 namespace um\admin\core;
 
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
-
 
 	/**
 	 * Class Admin_Forms
@@ -14,23 +13,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 	 */
 	class Admin_Forms {
 
-
 		/**
 		 * @var bool
 		 */
 		var $form_data;
 
-
 		/**
 		 * Admin_Forms constructor.
 		 * @param bool $form_data
 		 */
-		function __construct( $form_data = false ) {
+		public function __construct( $form_data = false ) {
 			if ( $form_data ) {
 				$this->form_data = $form_data;
 			}
 		}
-
 
 		/**
 		 * Set Form Data
@@ -39,11 +35,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 *
 		 * @return $this
 		 */
-		function set_data( $data ) {
+		public function set_data( $data ) {
 			$this->form_data = $data;
 			return $this;
 		}
-
 
 		/**
 		 * Render form
@@ -1157,9 +1152,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			}
 
 			$button = '';
-			$slug   = str_replace( 'core_', '', $field_data['id'] );
-			if ( ! um_get_predefined_page_id( $slug ) || 'publish' !== get_post_status( um_get_predefined_page_id( $slug ) ) ) {
-				$button = '&nbsp;<a href="' . esc_url( add_query_arg( array( 'um_adm_action' => 'install_predefined_page', 'um_page_slug' => $slug, '_wpnonce' => wp_create_nonce( 'install_predefined_page' ), ) ) ) . '" class="button button-primary">' . esc_html__( 'Create Default', 'ultimate-member' ) . '</a>';
+			if ( ! array_key_exists( 'predefined', $field_data ) || false !== $field_data['predefined'] ) {
+				$slug = str_replace( 'core_', '', $field_data['id'] );
+				if ( ! um_get_predefined_page_id( $slug ) || 'publish' !== get_post_status( um_get_predefined_page_id( $slug ) ) ) {
+					$button = '&nbsp;<a href="' . esc_url( add_query_arg( array( 'um_adm_action' => 'install_predefined_page', 'um_page_slug' => $slug, '_wpnonce' => wp_create_nonce( 'install_predefined_page' ), ) ) ) . '" class="button button-primary">' . esc_html__( 'Create Default', 'ultimate-member' ) . '</a>';
+				}
 			}
 
 			$html = "$hidden<select $multiple $id_attr $name_attr $class_attr $data_attr>$options</select>$button";
@@ -1412,7 +1409,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			return $html;
 		}
-
 
 		/**
 		 * @param $field_data

@@ -1,5 +1,7 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Do not apply to backend default avatars
@@ -13,7 +15,6 @@ function um_avatar_defaults( $avatar_defaults ) {
 	return $avatar_defaults;
 }
 add_filter( 'avatar_defaults', 'um_avatar_defaults', 99999 );
-
 
 /**
  * Get user UM avatars
@@ -42,8 +43,8 @@ function um_get_avatar( $avatar = '', $id_or_email='', $size = '96', $avatar_cla
 
 	return $avatar;
 }
-add_filter( 'get_avatar', 'um_get_avatar', 99999, 5 );
 
+add_filter( 'get_avatar', 'um_get_avatar', 99999, 5 );
 
 if ( ! function_exists( 'um_filter_get_avatar_url' ) ) {
 

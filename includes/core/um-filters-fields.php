@@ -553,7 +553,6 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 
 	$value = str_replace( 'https://https://', 'https://', $value );
 	$value = str_replace( 'http://https://', 'https://', $value );
-	//$value = UM()->shortcodes()->emotize( $value );
 	return $value;
 
 }

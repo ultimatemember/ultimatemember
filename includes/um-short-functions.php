@@ -1038,7 +1038,11 @@ function um_filtered_value( $key, $data = false ) {
 	 * ?>
 	 */
 	$value = apply_filters( "um_profile_field_filter_hook__{$type}", $value, $data );
-	$value = UM()->shortcodes()->emotize( $value );
+
+	if ( UM()->options()->get( 'enable_custom_emoji' ) ) {
+		$value = UM()->shortcodes()->emotize( $value );
+	}
+	$value = wp_staticize_emoji( $value );
 	return $value;
 }
 

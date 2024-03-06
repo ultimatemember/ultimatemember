@@ -1557,6 +1557,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					case 'text':
 						$sanitized[ $k ] = sanitize_text_field( $v );
 						break;
+					case 'color':
+						$sanitized[ $k ] = sanitize_hex_color( $v );
+						break;
 				}
 			}
 

@@ -393,6 +393,8 @@ function um_build_template( directory, data ) {
 		jQuery(document).trigger('um_build_template', [directory, data]);
 		jQuery(window).trigger('resize');
 
+		wp.hooks.doAction( 'um_member_directory_build_template', directory );
+
 		UM.common.tipsy.init();
 	}
 }

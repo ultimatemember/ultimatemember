@@ -39,6 +39,13 @@ if ( ! class_exists( 'um\Config' ) ) {
 		public $predefined_pages;
 
 		/**
+		 * @since 2.8.4
+		 *
+		 * @var array
+		 */
+		public $avatar_thumbnail_sizes;
+
+		/**
 		 * @var array
 		 */
 		public $core_directory_meta = array();
@@ -604,7 +611,12 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'secure_notify_admins_banned_accounts__interval' => 'instant',
 				'secure_allowed_redirect_hosts'         => '',
 				'delete_comments'                       => 0,
+				'primary_color'                         => '#7f56d9',
 			);
+
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				$this->settings_defaults['account_tab_personal-data'] = true;
+			}
 
 			add_filter( 'um_get_tabs_from_config', '__return_true' );
 
@@ -620,14 +632,14 @@ if ( ! class_exists( 'um\Config' ) ) {
 
 				if ( ! isset( $tab['default_privacy'] ) ) {
 					$this->settings_defaults[ 'profile_tab_' . $id . '_privacy' ] = 0;
-					$this->settings_defaults[ 'profile_tab_' . $id . '_roles' ] = '';
+					$this->settings_defaults[ 'profile_tab_' . $id . '_roles' ]   = '';
 				}
 			}
 
 			foreach ( $this->email_notifications as $key => $notification ) {
-				$this->settings_defaults[ $key . '_on' ] = ! empty( $notification['default_active'] );
+				$this->settings_defaults[ $key . '_on' ]  = ! empty( $notification['default_active'] );
 				$this->settings_defaults[ $key . '_sub' ] = $notification['subject'];
-				$this->settings_defaults[ $key ] = $notification['body'];
+				$this->settings_defaults[ $key ]          = $notification['body'];
 			}
 
 			foreach ( $this->core_pages as $page_s => $page ) {
@@ -833,7 +845,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 			return $permalink;
 		}
 
-
 		/**
 		 * @todo make config class not cycled
 		 */
@@ -938,6 +949,11 @@ if ( ! class_exists( 'um\Config' ) ) {
 			// @todo remove in 3.0 version
 			$this->predefined_pages = apply_filters( 'um_core_pages', $this->predefined_pages );
 			$this->core_pages       = $this->predefined_pages;
+		}
+
+		public function init_avatar_thumbnail_sizes() {
+			$this->avatar_thumbnail_sizes = array( 32, 40, 64, 80, 128, 256 );
+			$this->avatar_thumbnail_sizes = apply_filters( 'um_avatar_thumbnail_sizes', $this->avatar_thumbnail_sizes );
 		}
 	}
 }

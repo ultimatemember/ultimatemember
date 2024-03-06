@@ -38,6 +38,32 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		}
 
 		/**
+		 * @since 2.8.4
+		 *
+		 * @return form\Form
+		 */
+		public function form() {
+			if ( empty( UM()->classes['um\frontend\form\form'] ) ) {
+				UM()->classes['um\frontend\form\form'] = new form\Form();
+			}
+
+			return UM()->classes['um\frontend\form\form'];
+		}
+
+		/**
+		 * @since 2.8.4
+		 *
+		 * @return Layouts
+		 */
+		public static function layouts() {
+			if ( empty( UM()->classes['um\frontend\layouts'] ) ) {
+				UM()->classes['um\frontend\layouts'] = new Layouts();
+			}
+
+			return UM()->classes['um\frontend\layouts'];
+		}
+
+		/**
 		 * @since 2.6.8
 		 *
 		 * @return Secure

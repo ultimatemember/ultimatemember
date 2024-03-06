@@ -1158,18 +1158,14 @@ if ( ! class_exists( 'UM' ) ) {
 		}
 
 		/**
+		 * @return um\common\Shortcodes
 		 * @since 2.0
+		 * @todo deprecate and use UM()->common()->shortcodes() instead
 		 *
-		 * @return um\core\Shortcodes
 		 */
-		function shortcodes() {
-			if ( empty( $this->classes['shortcodes'] ) ) {
-				$this->classes['shortcodes'] = new um\core\Shortcodes();
-			}
-
-			return $this->classes['shortcodes'];
+		public function shortcodes() {
+			return $this->common()->shortcodes();
 		}
-
 
 		/**
 		 * @since 2.0
@@ -1538,7 +1534,9 @@ if ( ! class_exists( 'UM' ) ) {
 			require_once 'core/um-filters-fields.php';
 			require_once 'core/um-filters-files.php';
 			require_once 'core/um-filters-navmenu.php';
-			require_once 'core/um-filters-avatars.php';
+			if ( ! ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_no_conflict_avatar' ) ) ) {
+				require_once 'core/um-filters-avatars.php';
+			}
 			require_once 'core/um-filters-user.php';
 
 			require_once 'core/um-filters-profile.php';
