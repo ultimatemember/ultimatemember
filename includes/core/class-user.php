@@ -1607,7 +1607,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			$expiry_time = UM()->options()->get( 'activation_link_expiry_time' );
 			if ( ! empty( $expiry_time ) && is_numeric( $expiry_time ) ) {
-				$this->profile['account_secret_hash_expiry'] = time() + $expiry_time;
+				$this->profile['account_secret_hash_expiry'] = time() + $expiry_time * DAY_IN_SECONDS;
 				$this->update_usermeta_info( 'account_secret_hash_expiry' );
 			}
 

@@ -623,7 +623,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return string
 		 */
 		public function show_error( $key ) {
-			return UM()->form()->errors[ $key ];
+			if ( empty( UM()->form()->errors ) ) {
+				return '';
+			}
+			return array_key_exists( $key, UM()->form()->errors ) ? UM()->form()->errors[ $key ] : '';
 		}
 
 		/**
@@ -634,7 +637,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return string
 		 */
 		public function show_notice( $key ) {
-			return UM()->form()->notices[ $key ];
+			if ( empty( UM()->form()->notices ) ) {
+				return '';
+			}
+			return array_key_exists( $key, UM()->form()->notices ) ? UM()->form()->notices[ $key ] : '';
 		}
 
 		/**
