@@ -450,6 +450,55 @@ final class Enqueue extends \um\common\Enqueue {
 
 			$stylesheet = 'wp-block-library';
 			wp_add_inline_style( $stylesheet, $inline_style );
+
+			$dynamic_styles = '';
+			$forms_query    = get_posts(
+				array(
+					'post_type'      => array( 'um_form', 'um_directory' ),
+					'post_status'    => 'publish',
+					'posts_per_page' => -1,
+					'fields'         => 'ids',
+				)
+			);
+
+			foreach ( $forms_query as $form_id ) {
+				$form_data = UM()->query()->post_data( $form_id );
+
+				if ( isset( $form_data['max_width'] ) && $form_data['max_width'] ) {
+					$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um {max-width: ' . esc_attr( $form_data['max_width'] ) . ';}';
+				}
+				if ( isset( $form_data['align'] ) && in_array( $form_data['align'], array( 'left', 'right' ), true ) ) {
+					$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um {margin-' . esc_attr( $form_data['align'] ) . ': 0px !important;}';
+				}
+
+				if ( 'profile' === $form_data['mode'] ) {
+
+					if ( ! isset( $form_data['photosize'] ) || 'original' === $form_data['photosize'] ) {
+						$form_data['photosize'] = um_get_metadefault( 'profile_photosize' ); // Cannot be more than metadefault value.
+					}
+
+					$form_data['photosize'] = absint( $form_data['photosize'] );
+
+					$photosize_up = ( $form_data['photosize'] / 2 ) + 10;
+					$meta_padding = ( $form_data['photosize'] + 60 ) . 'px';
+
+					if ( ! empty( $form_data['area_max_width'] ) ) {
+						$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um .um-profile-body {max-width: ' . esc_attr( $form_data['area_max_width'] ) . ';}';
+						$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um .um-profile-body .um-form-new {width: ' . esc_attr( $form_data['area_max_width'] ) . ';}';
+					}
+
+					$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um .um-profile-photo a.um-profile-photo-img {width: ' . esc_attr( $form_data['photosize'] ) . 'px; height: ' . esc_attr( $form_data['photosize'] ) . 'px;}';
+					$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um .um-profile-photo a.um-profile-photo-img {top: -' . esc_attr( $photosize_up ) . 'px;}';
+
+					if ( is_rtl() ) {
+						$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um .um-profile-meta {padding-right: ' . esc_attr( $meta_padding ) . ';}';
+					} else {
+						$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um .um-profile-meta {padding-left: ' . esc_attr( $meta_padding ) . ';}';
+					}
+				}
+			}
+
+			wp_add_inline_style( $stylesheet, $dynamic_styles );
 		}
 	}
 
