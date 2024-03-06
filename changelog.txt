@@ -1,5 +1,19 @@
 ﻿== Changelog ==
 
+= 2.8.4: March 6, 2024 =
+
+* Enhancements:
+
+  - Tweak: Added separate file for full changelog. readme.txt shows only a few latest versions
+
+* Bugfixes:
+
+  - Fixed: Member directory data sanitizing (CVE-2024-2123)
+  - Fixed: Activation link time changed from seconds to days
+  - Fixed: Password validation error
+  - Fixed: Password reset url for the approved user who didn't set their password after registration without password
+  - Fixed: Conflict with WebP Uploads
+
 = 2.8.3: February 19, 2024 =
 
 * Enhancements:

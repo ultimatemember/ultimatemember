@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
 Tested up to: 6.4
-Stable tag: 2.8.3
+Stable tag: 2.8.4
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -42,6 +42,7 @@ Read about all of the plugin's features at [Ultimate Member](https://ultimatemem
 
 Ultimate Member has a range of extensions that allow you to extend the power of the plugin. You can purchase all of these extensions at a significant discount with our [All Access Pass](https://ultimatemember.com/pricing/) or you can purchase extensions individually.
 
+* [Stripe](https://ultimatemember.com/extensions/stripe/) - Sell paid memberships to access your website via Stripe subscriptions
 * [User Notes](https://ultimatemember.com/extensions/user-notes/) - Allow users to create public and private notes from their profile
 * [Profile Tabs](https://ultimatemember.com/extensions/profile-tabs/) - Allow to add the custom tabs to profiles
 * [User Locations](https://ultimatemember.com/extensions/user-locations/) - Allow to display users on a map on the member directory page and allow users to add their location via their profile
@@ -166,9 +167,19 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.8.4: March xx, 2024 =
+= 2.8.4 2024-03-06 =
 
+**Enhancements**
 
+* Tweak: Added separate file for full changelog. readme.txt shows only a few latest versions
+
+**Bugfixes**
+
+* Fixed: Member directory data sanitizing (CVE-2024-2123)
+* Fixed: Activation link time changed from seconds to days
+* Fixed: Password validation error
+* Fixed: Password reset url for the approved user who didn't set their password after registration without password
+* Fixed: Conflict with WebP Uploads
 
 = 2.8.3 2024-02-19 =
 
@@ -301,6 +312,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.8.4 =
+This version fixes a security related bug. Upgrade immediately.
 
 = 2.8.3 =
 This version fixes a security related bug. Upgrade immediately.
