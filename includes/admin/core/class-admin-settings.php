@@ -249,42 +249,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				),
 			);
 
-//			$core_pages = UM()->config()->core_pages;
-//
-//			foreach ( $core_pages as $page_s => $page ) {
-//				$have_pages = UM()->query()->wp_pages();
-//				$page_id    = UM()->options()->get_core_page_id( $page_s );
-//
-//				$page_title = ! empty( $page['title'] ) ? $page['title'] : '';
-//
-//				if ( 'reached_maximum_limit' === $have_pages ) {
-//					$general_pages_fields[] = array(
-//						'id'          => $page_id,
-//						'type'        => 'text',
-//						// translators: %s: Page title
-//						'label'       => sprintf( __( '%s page', 'ultimate-member' ), $page_title ),
-//						'placeholder' => __( 'Add page ID', 'ultimate-member' ),
-//						'compiler'    => true,
-//						'size'        => 'small',
-//					);
-//				} else {
-//					$general_pages_fields[] = array(
-//						'id'          => $page_id,
-//						'type'        => 'select',
-//						// translators: %s: Page title
-//						'label'       => sprintf( __( '%s page', 'ultimate-member' ), $page_title ),
-//						'options'     => UM()->query()->wp_pages(),
-//						'placeholder' => __( 'Choose a page...', 'ultimate-member' ),
-//						'compiler'    => true,
-//						'size'        => 'small',
-//					);
-//				}
-//
-//				$settings_map[ $page_id ] = array(
-//					'sanitize' => 'absint',
-//				);
-//			}
-
 			foreach ( UM()->config()->get( 'predefined_pages' ) as $slug => $page ) {
 				$page_id    = UM()->options()->get_predefined_page_option_key( $slug );
 				$page_title = ! empty( $page['title'] ) ? $page['title'] : '';

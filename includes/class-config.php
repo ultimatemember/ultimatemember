@@ -627,7 +627,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 			}
 
 			foreach ( $this->core_pages as $page_s => $page ) {
-				$page_id = UM()->options()->get_core_page_id( $page_s );
+				$page_id = UM()->options()->get_predefined_page_option_key( $page_s );
 
 				$this->settings_defaults[ $page_id ] = '';
 			}
@@ -781,7 +781,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 			}
 
 			foreach ( $core_pages as $page_key ) {
-				$page_option_key = UM()->options()->get_core_page_id( $page_key );
+				$page_option_key = UM()->options()->get_predefined_page_option_key( $page_key );
 				$permalink[ $page_key ] = UM()->options()->get( $page_option_key );
 			}
 

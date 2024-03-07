@@ -165,7 +165,7 @@ class Site_Health {
 		$pages            = array();
 		$predefined_pages = UM()->config()->core_pages;
 		foreach ( $predefined_pages as $page_s => $page ) {
-			$page_id    = UM()->options()->get_core_page_id( $page_s );
+			$page_id    = UM()->options()->get_predefined_page_option_key( $page_s );
 			$page_title = ! empty( $page['title'] ) ? $page['title'] : '';
 			if ( empty( $page_title ) ) {
 				continue;
