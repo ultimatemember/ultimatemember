@@ -235,7 +235,6 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 		}
 
-
 		/**
 		 * Loading UM textdomain
 		 *
@@ -246,71 +245,61 @@ if ( ! class_exists( 'UM' ) ) {
 			$language_locale = get_user_locale();
 
 			/**
-			 * UM hook
+			 * Filters the language locale before loading textdomain.
 			 *
-			 * @type filter
-			 * @title um_language_locale
-			 * @description Change UM language locale
-			 * @input_vars
-			 * [{"var":"$locale","type":"string","desc":"UM language locale"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_language_locale', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_language_locale', 'my_language_locale', 10, 1 );
-			 * function my_language_locale( $locale ) {
-			 *     // your code here
-			 *     return $locale;
+			 * @since 1.3.x
+			 * @hook um_language_locale
+			 *
+			 * @param {string} $language_locale Current language locale.
+			 *
+			 * @return {string} Maybe changed language locale.
+			 *
+			 * @example <caption>Change UM language locale.</caption>
+			 * function my_um_language_locale( $language_locale ) {
+			 *     $language_locale = 'es_ES';
+			 *     return $language_locale;
 			 * }
-			 * ?>
+			 * add_filter( 'um_language_locale', 'my_um_language_locale' );
 			 */
 			$language_locale = apply_filters( 'um_language_locale', $language_locale );
 
-
 			/**
-			 * UM hook
+			 * Filters the plugin's textdomain.
 			 *
-			 * @type filter
-			 * @title um_language_textdomain
-			 * @description Change UM textdomain
-			 * @input_vars
-			 * [{"var":"$domain","type":"string","desc":"UM Textdomain"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_language_textdomain', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_language_textdomain', 'my_textdomain', 10, 1 );
-			 * function my_textdomain( $domain ) {
-			 *     // your code here
-			 *     return $domain;
+			 * @param {string} $textdomain Plugin's textdomain.
+			 *
+			 * @return {string} Maybe changed plugin's textdomain.
+			 *
+			 * @since 1.3.x
+			 * @hook um_language_textdomain
+			 *
+			 * @example <caption>Change UM language locale.</caption>
+			 * function my_um_language_textdomain( $textdomain ) {
+			 *     $language_locale = 'ultimate-member-custom';
+			 *     return $textdomain;
 			 * }
-			 * ?>
+			 * add_filter( 'um_language_textdomain', 'my_um_language_textdomain' );
 			 */
 			$language_domain = apply_filters( 'um_language_textdomain', 'ultimate-member' );
 
 			$language_file = WP_LANG_DIR . '/plugins/' . $language_domain . '-' . $language_locale . '.mo';
 
 			/**
-			 * UM hook
+			 * Filters the path to the language file (*.mo).
 			 *
-			 * @type filter
-			 * @title um_language_file
-			 * @description Change UM language file path
-			 * @input_vars
-			 * [{"var":"$language_file","type":"string","desc":"UM language file path"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_language_file', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_language_file', 'my_language_file', 10, 1 );
-			 * function my_language_file( $language_file ) {
-			 *     // your code here
+			 * @param {string} $language_file Default path to the language file.
+			 *
+			 * @return {string} Language file path.
+			 *
+			 * @since 1.3.x
+			 * @hook um_language_file
+			 *
+			 * @example <caption>Change UM language file path.</caption>
+			 * function my_um_language_file( $language_file ) {
+			 *     $language_file = '{path-to-language-file}';
 			 *     return $language_file;
 			 * }
-			 * ?>
+			 * add_filter( 'um_language_file', 'my_um_language_file' );
 			 */
 			$language_file = apply_filters( 'um_language_file', $language_file );
 
@@ -320,7 +309,6 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 			load_textdomain( $language_domain, $language_file );
 		}
-
 
 		/**
 		 * 1.3.x active extensions deactivate for properly running 2.0.x AJAX upgrades
