@@ -104,7 +104,7 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_register_script( 'um_admin_blocks_shortcodes', $js_url . 'admin/block-renderer' . $suffix . '.js', array( 'wp-i18n', 'wp-blocks', 'wp-components' ), UM_VERSION, true );
 		wp_set_script_translations( 'um_admin_blocks_shortcodes', 'ultimate-member' );
 
-		$notifications_enabled = 0;
+		$notifications_enabled = false;
 		if ( false !== UM()->account()->is_notifications_tab_visible() ) {
 			$notifications_enabled = UM()->options()->get( 'account_tab_notifications' );
 		}
@@ -112,7 +112,7 @@ final class Enqueue extends \um\common\Enqueue {
 		$um_account_settings = array(
 			'general'       => array(
 				'label'   => __( 'General', 'ultimate-member' ),
-				'enabled' => 1,
+				'enabled' => true,
 			),
 			'password'      => array(
 				'label'   => __( 'Password', 'ultimate-member' ),

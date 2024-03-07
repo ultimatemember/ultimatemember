@@ -530,65 +530,65 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'require_strongpass'                    => false,
 				'password_min_chars'                    => 8,
 				'password_max_chars'                    => 30,
-				'account_tab_password'                  => 1,
-				'account_tab_privacy'                   => 1,
-				'account_tab_notifications'             => 1,
-				'account_tab_delete'                    => 1,
+				'account_tab_password'                  => true,
+				'account_tab_privacy'                   => true,
+				'account_tab_notifications'             => true,
+				'account_tab_delete'                    => true,
 				'delete_account_text'                   => __( 'Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account enter your password below.', 'ultimate-member' ),
 				'delete_account_no_pass_required_text'  => __( 'Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account, click on the button below.', 'ultimate-member' ),
-				'account_name'                          => 1,
-				'account_name_disable'                  => 0,
-				'account_name_require'                  => 1,
-				'account_email'                         => 1,
-				'account_general_password'              => 0,
-				'account_hide_in_directory'             => 1,
+				'account_name'                          => true,
+				'account_name_disable'                  => false,
+				'account_name_require'                  => true,
+				'account_email'                         => true,
+				'account_general_password'              => false,
+				'account_hide_in_directory'             => true,
 				'account_hide_in_directory_default'     => 'No',
 				'photo_thumb_sizes'                     => array( 40, 80, 190 ),
 				'cover_thumb_sizes'                     => array( 300, 600 ),
 				'accessible'                            => 0,
 				'access_redirect'                       => '',
 				'access_exclude_uris'                   => array(),
-				'home_page_accessible'                  => 1,
-				'category_page_accessible'              => 1,
-				'restricted_post_title_replace'         => 1,
+				'home_page_accessible'                  => true,
+				'category_page_accessible'              => true,
+				'restricted_post_title_replace'         => true,
 				'restricted_access_post_title'          => __( 'Restricted content', 'ultimate-member' ),
 				'restricted_access_message'             => '',
-				'restricted_blocks'                     => 0,
-				'enable_blocks'                         => 0,
+				'restricted_blocks'                     => false,
+				'enable_blocks'                         => false,
 				'restricted_block_message'              => '',
-				'enable_reset_password_limit'           => 1,
+				'enable_reset_password_limit'           => true,
 				'reset_password_limit_number'           => 3,
 				'change_password_request_limit'         => false,
 				'blocked_emails'                        => '',
 				'blocked_words'                         => 'admin' . "\r\n" . 'administrator' . "\r\n" . 'webmaster' . "\r\n" . 'support' . "\r\n" . 'staff',
 				'allowed_choice_callbacks'              => '',
-				'allow_url_redirect_confirm'            => 1,
+				'allow_url_redirect_confirm'            => true,
 				'default_avatar'                        => '',
 				'default_cover'                         => '',
-				'disable_profile_photo_upload'          => 0,
-				'profile_show_metaicon'                 => 0,
-				'profile_menu'                          => 1,
+				'disable_profile_photo_upload'          => false,
+				'profile_show_metaicon'                 => false,
+				'profile_menu'                          => true,
 				'profile_menu_default_tab'              => 'main',
-				'profile_menu_icons'                    => 1,
-				'form_asterisk'                         => 0,
+				'profile_menu_icons'                    => true,
+				'form_asterisk'                         => false,
 				'profile_title'                         => '{display_name} | {site_name}',
 				'profile_desc'                          => '{display_name} is on {site_name}. Join {site_name} to view {display_name}\'s profile',
 				'admin_email'                           => get_bloginfo( 'admin_email' ),
 				'mail_from'                             => get_bloginfo( 'name' ),
 				'mail_from_addr'                        => get_bloginfo( 'admin_email' ),
-				'email_html'                            => 1,
-				'image_orientation_by_exif'             => 0,
+				'email_html'                            => true,
+				'image_orientation_by_exif'             => false,
 				'image_compression'                     => 60,
 				'image_max_width'                       => 1000,
 				'cover_min_width'                       => 1000,
 				'profile_photo_max_size'                => 999999999,
 				'cover_photo_max_size'                  => 999999999,
 				'custom_roles_increment'                => 1,
-				'um_profile_object_cache_stop'          => 0,
+				'um_profile_object_cache_stop'          => false,
 				'rest_api_version'                      => '2.0',
-				'member_directory_own_table'            => 0,
+				'member_directory_own_table'            => false,
 				'profile_show_bio'                      => false,
-				'profile_show_html_bio'                 => 0,
+				'profile_show_html_bio'                 => false,
 				'profile_bio_maxchars'                  => 180,
 				'profile_noindex'                       => 0,
 				'activation_link_expiry_time'           => '',
@@ -599,7 +599,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'secure_notify_admins_banned_accounts'  => false,
 				'secure_notify_admins_banned_accounts__interval' => 'instant',
 				'secure_allowed_redirect_hosts'         => '',
-				'delete_comments'                       => 0,
+				'delete_comments'                       => false,
 			);
 
 			add_filter( 'um_get_tabs_from_config', '__return_true' );
@@ -616,25 +616,25 @@ if ( ! class_exists( 'um\Config' ) ) {
 
 				if ( ! isset( $tab['default_privacy'] ) ) {
 					$this->settings_defaults[ 'profile_tab_' . $id . '_privacy' ] = 0;
-					$this->settings_defaults[ 'profile_tab_' . $id . '_roles' ] = '';
+					$this->settings_defaults[ 'profile_tab_' . $id . '_roles' ]   = '';
 				}
 			}
 
 			foreach ( $this->email_notifications as $key => $notification ) {
-				$this->settings_defaults[ $key . '_on' ] = ! empty( $notification['default_active'] );
+				$this->settings_defaults[ $key . '_on' ]  = ! empty( $notification['default_active'] );
 				$this->settings_defaults[ $key . '_sub' ] = $notification['subject'];
-				$this->settings_defaults[ $key ] = $notification['body'];
+				$this->settings_defaults[ $key ]          = $notification['body'];
 			}
 
 			foreach ( $this->core_pages as $page_s => $page ) {
 				$page_id = UM()->options()->get_core_page_id( $page_s );
+
 				$this->settings_defaults[ $page_id ] = '';
 			}
 
-			foreach( $this->core_form_meta_all as $key => $value ) {
+			foreach ( $this->core_form_meta_all as $key => $value ) {
 				$this->settings_defaults[ str_replace( '_um_', '', $key ) ] = $value;
 			}
-
 
 			/**
 			 * UM hook
@@ -660,8 +660,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 			$this->settings_defaults = apply_filters( 'um_default_settings_values', $this->settings_defaults );
 
 			$this->permalinks = $this->get_core_pages();
-
-
 
 			$this->default_roles_metadata = array(
 				/*
@@ -807,7 +805,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'field'          => __( 'Custom field(s)', 'ultimate-member' ),
 			);
 		}
-
 
 		/**
 		 * Get UM Pages

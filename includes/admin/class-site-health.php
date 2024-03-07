@@ -513,7 +513,7 @@ class Site_Health {
 				'value' => UM()->options()->get( 'enable_reset_password_limit' ) ? $labels['yes'] : $labels['no'],
 			),
 		);
-		if ( 1 === absint( UM()->options()->get( 'enable_reset_password_limit' ) ) ) {
+		if ( UM()->options()->get( 'enable_reset_password_limit' ) ) {
 			$access_other_settings['um-reset_password_limit_number'] = array(
 				'label' => __( 'Reset Password Limit ', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'reset_password_limit_number' ),

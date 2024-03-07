@@ -786,6 +786,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'use_um_gravatar_default_image'         => array(
 						'sanitize' => 'bool',
 					),
+					'delete_comments'                       => array(
+						'sanitize' => 'bool',
+					),
 					'toggle_password'                       => array(
 						'sanitize' => 'bool',
 					),
@@ -1416,7 +1419,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'args'        => array(
 													'textarea_rows' => 6,
 												),
-												'conditional' => array( 'account_tab_delete', '=', '1' ),
 											),
 											array(
 												'id'          => 'delete_account_no_pass_required_text',
@@ -1426,7 +1428,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'args'        => array(
 													'textarea_rows' => 6,
 												),
-												'conditional' => array( 'account_tab_delete', '=', '0' ),
 											),
 										),
 									),
