@@ -1873,35 +1873,54 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 								case 'select':
 									if ( is_array( $value ) ) {
-										$field_query = array( 'relation' => 'OR' );
+										/**
+										 * Filters change select filter relation.
+										 *
+										 * @param {array}  $args query args.
+										 * @param {string} $field field key.
+										 *
+										 * @return {array} query args.
+										 *
+										 * @since 2.8.5
+										 * @hook um_members_directory_filter_select
+										 *
+										 * @example <caption>Change relation to 'AND'.</caption>
+										 * function my_um_members_directory_filter_select( $args, $field ) {
+										 *     // your code here
+										 *     $args = array( 'relation' => 'AND' )
+										 *     return $args;
+										 * }
+										 * add_filter( 'um_members_directory_filter_select', 'my_um_members_directory_filter_select', 10, 2 );
+										 */
+										$field_query = apply_filters( 'um_members_directory_filter_select', array( 'relation' => 'OR' ), $field );
 
 										foreach ( $value as $single_val ) {
 											$single_val = trim( stripslashes( $single_val ) );
 
 											$arr_meta_query = array(
 												array(
-													'key'       => $field,
-													'value'     => $single_val,
-													'compare'   => '=',
+													'key'     => $field,
+													'value'   => $single_val,
+													'compare' => '=',
 												),
 												array(
-													'key'       => $field,
-													'value'     => serialize( (string) $single_val ),
-													'compare'   => 'LIKE',
+													'key'     => $field,
+													'value'   => serialize( (string) $single_val ),
+													'compare' => 'LIKE',
 												),
 												array(
-													'key'       => $field,
-													'value'     => '"' . $single_val . '"',
-													'compare'   => 'LIKE',
-												)
+													'key'     => $field,
+													'value'   => '"' . $single_val . '"',
+													'compare' => 'LIKE',
+												),
 											);
 
 											if ( is_numeric( $single_val ) ) {
 
 												$arr_meta_query[] = array(
-													'key'       => $field,
-													'value'     => serialize( (int) $single_val ),
-													'compare'   => 'LIKE',
+													'key'     => $field,
+													'value'   => serialize( absint( $single_val ) ),
+													'compare' => 'LIKE',
 												);
 
 											}
@@ -2141,35 +2160,36 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 										$value = array( $value );
 									}
 
-									$field_query = array( 'relation' => 'OR' );
+									/** This filter is documented in includes/core/class-member-directory.php */
+									$field_query = apply_filters( 'um_members_directory_filter_select', array( 'relation' => 'OR' ), $field );
 
 									foreach ( $value as $single_val ) {
 										$single_val = trim( $single_val );
 
 										$arr_meta_query = array(
 											array(
-												'key'       => $field,
-												'value'     => $single_val,
-												'compare'   => '=',
+												'key'     => $field,
+												'value'   => $single_val,
+												'compare' => '=',
 											),
 											array(
-												'key'       => $field,
-												'value'     => serialize( (string) $single_val ),
-												'compare'   => 'LIKE',
+												'key'     => $field,
+												'value'   => serialize( (string) $single_val ),
+												'compare' => 'LIKE',
 											),
 											array(
-												'key'       => $field,
-												'value'     => '"' . $single_val . '"',
-												'compare'   => 'LIKE',
-											)
+												'key'     => $field,
+												'value'   => '"' . $single_val . '"',
+												'compare' => 'LIKE',
+											),
 										);
 
 										if ( is_numeric( $single_val ) ) {
 
 											$arr_meta_query[] = array(
-												'key'       => $field,
-												'value'     => serialize( (int) $single_val ),
-												'compare'   => 'LIKE',
+												'key'     => $field,
+												'value'   => serialize( absint( $single_val ) ),
+												'compare' => 'LIKE',
 											);
 
 										}
