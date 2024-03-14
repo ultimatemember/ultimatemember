@@ -4281,7 +4281,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			if ( '_um_last_login' === $key ) {
 				$profile_id      = um_user( 'ID' );
 				$show_last_login = get_user_meta( $profile_id, 'show_last_login', true );
-				if ( 'No' === $show_last_login[0] ) {
+				if ( ! empty( $show_last_login ) && 'No' === $show_last_login[0] ) {
 					return '';
 				}
 			}
