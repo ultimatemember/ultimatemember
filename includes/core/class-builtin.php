@@ -1336,6 +1336,23 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'required_opt'  => array( 'members_page', true ),
 				),
 
+				'show_last_login'      => array(
+					'title'         => __( 'Show my last login?', 'ultimate-member' ),
+					'metakey'       => 'show_last_login',
+					'type'          => 'radio',
+					'label'         => __( 'Show my last login?', 'ultimate-member' ),
+					'help'          => __( 'Here you can hide last login field on profile page', 'ultimate-member' ),
+					'required'      => 0,
+					'public'        => 1,
+					'editable'      => true,
+					'default'       => 1,
+					'options'       => array(
+						'No'    => __( 'No', 'ultimate-member' ),
+						'Yes'   => __( 'Yes', 'ultimate-member' ),
+					),
+					'account_only'  => true,
+				),
+
 				'delete_account'        => array(
 					'title'         => __( 'Delete Account', 'ultimate-member' ),
 					'metakey'       => 'delete_account',

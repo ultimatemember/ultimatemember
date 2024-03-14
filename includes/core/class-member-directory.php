@@ -2512,6 +2512,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							if ( ! $key ) {
 								continue;
 							}
+							if ( '_um_last_login' === $key ) {
+								$show_last_login = get_user_meta( $user_id, 'show_last_login', true );
+								if ( 'No' === $show_last_login[0] ) {
+									continue;
+								}
+							}
 
 							$value = um_filtered_value( $key );
 
@@ -2535,6 +2541,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						foreach ( $directory_data['reveal_fields'] as $key ) {
 							if ( ! $key ) {
 								continue;
+							}
+							if ( '_um_last_login' === $key ) {
+								$show_last_login = get_user_meta( $user_id, 'show_last_login', true );
+								if ( 'No' === $show_last_login[0] ) {
+									continue;
+								}
 							}
 
 							$value = um_filtered_value( $key );
