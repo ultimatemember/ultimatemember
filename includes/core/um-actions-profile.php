@@ -644,7 +644,7 @@ function um_profile_dynamic_meta_desc() {
 
 		$user_id = um_get_requested_user();
 
-		if ( $user_id !== um_user('ID') ) {
+		if ( um_user( 'ID' ) !== $user_id) {
 			um_fetch_user( $user_id );
 		}
 
@@ -742,13 +742,40 @@ function um_profile_dynamic_meta_desc() {
 		}
 
 		$person = array(
-			"@context"      => "http://schema.org",
-			"@type"         => "Person",
-			"name"          => esc_attr( $title ),
-			"description"   => esc_attr( stripslashes( $description ) ),
-			"image"         => esc_url( $image ),
-			"url"           => esc_url( $url ),
+			'@context'     => 'http://schema.org',
+			'@type'        => 'ProfilePage',
+			'dateCreated'  => um_user( 'user_registered' ),
+			'dateModified' => gmdate( 'Y-m-d H:i:s', um_user( 'last_update' ) ),
+			'mainEntity'   => array(
+				'@type'         => 'Person',
+				'name'          => esc_attr( $title ),
+				'alternateName' => um_user( 'user_login' ),
+				'description'   => esc_attr( stripslashes( $description ) ),
+				'image'         => esc_url( $image ),
+				'sameAs'        => array(
+					$url,
+				),
+			),
 		);
+
+		/**
+		 * Filters changing the shema.org of profile's person.
+		 *
+		 * @param {array} $person Data of the profile person.
+		 * @param {int}   $user_id User ID.
+		 *
+		 * @return {array} Changed person's data.
+		 *
+		 * @since 2.8.0
+		 * @hook um_profile_dynamic_meta_profile_schema
+		 *
+		 * @example <caption>Change name of person.</caption>
+		 * function my_um_profile_dynamic_meta_profile_schema( $core_search_fields ) {
+		 *     $person['mainEntity']['name'] = 'John Doe';
+		 * }
+		 * add_filter( 'um_profile_dynamic_meta_profile_schema', 'my_um_profile_dynamic_meta_profile_schema' );
+		 */
+		$person = apply_filters( 'um_profile_dynamic_meta_profile_schema', $person, $user_id );
 
 		um_reset_user();
 		?>
@@ -781,7 +808,7 @@ function um_profile_dynamic_meta_desc() {
 		<meta name="twitter:image:alt" content="<?php esc_attr_e( 'Profile photo', 'ultimate-member' ); ?>"/>
 		<meta name="twitter:url" content="<?php echo esc_url( $url ); ?>"/>
 
-		<script type="application/ld+json"><?php echo json_encode( $person ); ?></script>
+		<script type="application/ld+json"><?php echo wp_json_encode( $person ); ?></script>
 
 		<!-- END - Ultimate Member profile SEO meta tags -->
 		<?php
