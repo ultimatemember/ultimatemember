@@ -348,7 +348,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 								 * add_filter( 'um_members_directory_filter_select_meta', 'my_um_members_directory_filter_select_meta', 10, 2 );
 								 */
 								$relation = apply_filters( 'um_members_directory_filter_select_meta', 'OR', $field );
-								$values   = implode( ' ' . $relation . ' ', $values_array );
+								$values   = implode( ' ' . esc_sql( $relation ) . ' ', $values_array );
 
 								// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_alias and $values variables are pre-escaped or $wpdb->prepare.
 								$this->where_clauses[] = $wpdb->prepare( "( {$join_alias}.um_key = %s AND ( {$values} ) )", $field );
