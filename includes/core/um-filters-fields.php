@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function um_edit_label_all_fields( $label, $data ) {
 	$asterisk = UM()->options()->get( 'form_asterisk' );
 	if ( $asterisk && ! empty( $data['required'] ) ) {
-		$label .= '<span class="um-req" title="' . esc_attr__( 'Required', 'ultimate-member' ) . '">*</span>';
+		$label = __( $label, 'ultimate-member' ) . '<span class="um-req" title="' . esc_attr__( 'Required', 'ultimate-member' ) . '">*</span>';
 	}
 
 	return $label;
