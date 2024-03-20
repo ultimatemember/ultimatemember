@@ -2548,7 +2548,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							}
 							if ( '_um_last_login' === $key ) {
 								$show_last_login = get_user_meta( $user_id, 'show_last_login', true );
-								if ( 'No' === $show_last_login[0] ) {
+								if ( ! empty( $show_last_login ) && 'No' === $show_last_login[0] ) {
 									continue;
 								}
 							}
@@ -2578,7 +2578,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							}
 							if ( '_um_last_login' === $key ) {
 								$show_last_login = get_user_meta( $user_id, 'show_last_login', true );
-								if ( 'No' === $show_last_login[0] ) {
+								if ( ! empty( $show_last_login ) && 'No' === $show_last_login[0] ) {
 									continue;
 								}
 							}
