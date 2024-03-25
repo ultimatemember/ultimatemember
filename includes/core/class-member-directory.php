@@ -1819,7 +1819,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 				switch ( $field ) {
 					default:
-
 						$filter_type = $this->filter_types[ $field ];
 
 						/**
@@ -1975,7 +1974,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						if ( ! empty( $field_query ) && $field_query !== true ) {
 							$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $field_query ) );
 						}
-
 						break;
 					case 'role':
 						$value = array_map( 'strtolower', $value );
@@ -1991,7 +1989,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							$this->query_args['role__in'] = array_merge( $default_role, $um_role );
 						} else {
 							$this->query_args['role__in'] = $value;
-						};
+						}
 
 						$this->custom_filters_in_query[ $field ] = $this->query_args['role__in'];
 
@@ -2016,7 +2014,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 						break;
 					case 'user_registered':
-
 						$offset = 0;
 						if ( isset( $_POST['gmt_offset'] ) && is_numeric( $_POST['gmt_offset'] ) ) {
 							$offset = (int) $_POST['gmt_offset'];
@@ -2064,6 +2061,36 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$this->custom_filters_in_query[ $field ] = $value;
 
 						$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
+						break;
+					case 'gender':
+						if ( is_array( $value ) ) {
+							$field_query = array( 'relation' => 'OR' );
+
+							foreach ( $value as $single_val ) {
+								$single_val = trim( stripslashes( $single_val ) );
+
+								$arr_meta_query = array(
+									array(
+										'key'     => $field,
+										'value'   => $single_val,
+										'compare' => '=',
+									),
+									array(
+										'key'     => $field,
+										'value'   => '"' . $single_val . '"',
+										'compare' => 'LIKE',
+									),
+								);
+
+								$field_query = array_merge( $field_query, $arr_meta_query );
+							}
+						}
+
+						if ( ! empty( $field_query ) ) {
+							$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $field_query ) );
+
+							$this->custom_filters_in_query[ $field ] = $value;
+						}
 						break;
 				}
 			}

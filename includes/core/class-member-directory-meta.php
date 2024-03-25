@@ -496,6 +496,33 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 					}
 					break;
 
+				case 'gender':
+					if ( ! is_array( $value ) ) {
+						$value = array( $value );
+					}
+
+					// $join_alias is pre-escaped.
+					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_alias} ON {$join_alias}.user_id = u.ID";
+
+					$values_array = array();
+					foreach ( $value as $single_val ) {
+						$single_val = trim( stripslashes( $single_val ) );
+
+						// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_alias and $compare variables are pre-escaped.
+						$values_array[] = $wpdb->prepare( "{$join_alias}.um_value LIKE %s", '%"' . $wpdb->esc_like( $single_val ) . '"%' );
+						$values_array[] = $wpdb->prepare( "{$join_alias}.um_value = %s", $single_val );
+						// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_alias is pre-escaped.
+					}
+
+					$values = implode( ' OR ', $values_array );
+
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_alias and $values variables are pre-escaped or $wpdb->prepare.
+					$this->where_clauses[] = $wpdb->prepare( "( {$join_alias}.um_key = %s AND ( {$values} ) )", $field );
+
+					if ( ! $is_default ) {
+						$this->custom_filters_in_query[ $field ] = $value;
+					}
+					break;
 			}
 		}
 
