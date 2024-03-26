@@ -2205,17 +2205,26 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 									break;
 								case 'datepicker':
-
 									$offset = 0;
 									if ( is_numeric( $gmt_offset ) ) {
 										$offset = $gmt_offset;
 									}
 
-									$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
-									$to_date   = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
+									if ( ! empty( $value[0] ) ) {
+										$min = $value[0];
+									} else {
+										$range = $this->datepicker_filters_range( $field );
+										$min   = gmdate( 'Y/m/d', $range[0] );
+									}
+									if ( ! empty( $value[1] ) ) {
+										$max = $value[1];
+									} else {
+										$max = gmdate( 'Y/m/d' );
+									}
+
 									$field_query = array(
 										'key'       => $field,
-										'value'     =>  array( $from_date, $to_date ),
+										'value'     => array( $min, $max ),
 										'compare'   => 'BETWEEN',
 										'inclusive' => true,
 									);
@@ -2314,12 +2323,31 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							$offset = $gmt_offset;
 						}
 
-						$from_date  = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
-						$to_date    = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
+						$value = array_map(
+							function( $date ) {
+								return is_numeric( $date ) ? $date : strtotime( $date );
+							},
+							$value
+						);
+
+						if ( ! empty( $value[0] ) ) {
+							$min = $value[0];
+						} else {
+							$range = $this->datepicker_filters_range( 'last_login' );
+							$min   = strtotime( gmdate( 'Y/m/d', $range[0] ) );
+						}
+						if ( ! empty( $value[1] ) ) {
+							$max = $value[1];
+						} else {
+							$max = strtotime( gmdate( 'Y/m/d' ) );
+						}
+						$from_date = (int) $min + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
+						$to_date   = (int) $max + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
+
 						$meta_query = array(
 							array(
 								'key'       => '_um_last_login',
-								'value'     => array( $from_date, $to_date ),
+								'value'     => array( gmdate( 'Y-m-d H:i:s', $from_date ), gmdate( 'Y-m-d H:i:s', $to_date ) ),
 								'compare'   => 'BETWEEN',
 								'inclusive' => true,
 								'type'      => 'DATETIME',
