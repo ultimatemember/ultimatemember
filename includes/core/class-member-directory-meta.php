@@ -368,11 +368,17 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 									}
 								}
 
-								$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
-								$to_date   = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
-								// @todo: rewrite date() in WP5.3 standards.
-								$from_date = date( 'Y/m/d', $from_date );
-								$to_date   = date( 'Y/m/d', $to_date );
+								if ( ! empty( $value[0] ) ) {
+									$from_date = $value[0];
+								} else {
+									$range     = $this->datepicker_filters_range( $field );
+									$from_date = gmdate( 'Y/m/d', $range[0] );
+								}
+								if ( ! empty( $value[1] ) ) {
+									$to_date = $value[1];
+								} else {
+									$to_date = gmdate( 'Y/m/d' );
+								}
 
 								// $join_alias is pre-escaped.
 								$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_alias} ON {$join_alias}.user_id = u.ID";
@@ -483,14 +489,35 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 						}
 					}
 
-					$from_date = gmdate( 'Y-m-d H:i:s', (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ) ); // client time zone offset
-					$to_date   = gmdate( 'Y-m-d H:i:s', (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1 ); // time 23:59
+					$value = array_map(
+						function( $date ) {
+							return is_numeric( $date ) ? $date : strtotime( $date );
+						},
+						$value
+					);
+					if ( ! empty( $value[0] ) ) {
+						$min = $value[0];
+					} else {
+						$range = $this->datepicker_filters_range( 'last_login' );
+						$min   = strtotime( gmdate( 'Y/m/d', $range[0] ) );
+					}
+					if ( ! empty( $value[1] ) ) {
+						$max = $value[1];
+					} else {
+						$max = strtotime( gmdate( 'Y/m/d' ) );
+					}
+
+					$from_date = gmdate( 'Y-m-d H:i:s', (int) $min + ( $offset * HOUR_IN_SECONDS ) ); // client time zone offset
+					$to_date   = gmdate( 'Y-m-d H:i:s', (int) $max + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1 ); // time 23:59
 
 					// $join_alias is pre-escaped.
-					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_alias} ON {$join_alias}.user_id = u.ID";
-					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_alias is pre-escaped.
-					$this->where_clauses[] = $wpdb->prepare( "( {$join_alias}.um_key = '_um_last_login' AND {$join_alias}.um_value BETWEEN %s AND %s )", $from_date, $to_date );
+					$join_alias_last_login = esc_sql( $join_slug . '_last_login' );
 
+					$this->joins[] = "LEFT JOIN ( SELECT user_id, um_value FROM {$wpdb->prefix}um_metadata WHERE um_key = '_um_last_login' ) AS {$join_alias} ON {$join_alias}.user_id = u.ID";
+					$this->joins[] = "LEFT JOIN ( SELECT user_id, um_value FROM {$wpdb->prefix}um_metadata WHERE um_key = 'show_last_login' ) AS {$join_alias_last_login} ON {$join_alias_last_login}.user_id = u.ID";
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_alias is pre-escaped.
+					$this->where_clauses[] = $wpdb->prepare( "( {$join_alias}.um_value BETWEEN %s AND %s )", $from_date, $to_date );
+					$this->where_clauses[] = $wpdb->prepare( "( {$join_alias_last_login}.um_value IS NULL OR {$join_alias_last_login}.um_value != %s )", 'a:1:{i:0;s:2:"No";}' );
 					if ( ! $is_default ) {
 						$this->custom_filters_in_query[ $field ] = $value;
 					}
