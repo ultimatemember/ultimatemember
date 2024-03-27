@@ -3092,7 +3092,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$fonticon    = UM()->files()->get_fonticon_by_ext( $file_type['ext'] );
 
 							$output .= '<div class="um-single-fileinfo">';
-							$output .= '<a href="' . esc_attr( $file_url ) . '" target="_blank">';
+							$output .= '<a href="' . esc_url( $file_url ) . '" target="_blank">';
 							$output .= '<span class="icon" style="background:' . esc_attr( $fonticon_bg ) . '"><i class="' . esc_attr( $fonticon ) . '"></i></span>';
 							$output .= '<span class="filename">' . esc_html( $file_field_name ) . '</span>';
 							$output .= '</a></div></div>';

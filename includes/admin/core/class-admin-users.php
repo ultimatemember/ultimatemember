@@ -274,7 +274,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		public function user_row_actions( $actions, $user_object ) {
 			$user_id = $user_object->ID;
 
-			$actions['frontend_profile'] = '<a href="' . um_user_profile_url( $user_id ) . '">' . __( 'View profile', 'ultimate-member' ) . '</a>';
+			$actions['frontend_profile'] = '<a href="' . esc_url( um_user_profile_url( $user_id ) ) . '">' . __( 'View profile', 'ultimate-member' ) . '</a>';
 
 			$submitted = get_user_meta( $user_id, 'submitted', true );
 			if ( ! empty( $submitted ) ) {
