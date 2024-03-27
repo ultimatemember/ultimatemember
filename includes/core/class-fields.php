@@ -653,13 +653,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return string
 		 */
 		public function field_label( $label, $key, $data ) {
-			$output  = null;
-			$output .= '<div class="um-field-label">';
-
-			if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'off' !== $this->field_icons && ( 'label' === $this->field_icons || true === $this->viewing ) ) {
-				$output .= '<div class="um-field-label-icon"><i class="' . esc_attr( $data['icon'] ) . '" aria-label="' . esc_attr( $label ) . '"></i></div>';
-			}
-
 			if ( true === $this->viewing ) {
 				/**
 				 * Filters Ultimate Member field label on the Profile form: View mode.
@@ -730,13 +723,26 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$label = apply_filters( 'um_edit_label_all_fields', $label, $data );
 			}
 
+			$output  = null;
+			$output .= '<div class="um-field-label">';
+
+			if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'off' !== $this->field_icons && ( 'label' === $this->field_icons || true === $this->viewing ) ) {
+				$output .= '<div class="um-field-label-icon"><i class="' . esc_attr( $data['icon'] ) . '" aria-label="' . esc_attr( $label ) . '"></i></div>';
+			}
+
 			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
 			$for_attr               = '';
 			if ( ! in_array( $data['type'], $fields_without_metakey, true ) ) {
 				$for_attr = ' for="' . esc_attr( $key . UM()->form()->form_suffix ) . '"';
 			}
 
-			$output .= '<label' . $for_attr . '>' . __( $label, 'ultimate-member' ) . '</label>';
+			$output .= '<label' . $for_attr . '>' . esc_html__( $label, 'ultimate-member' );
+
+			if ( ! empty( $data['required'] ) && UM()->options()->get( 'form_asterisk' ) ) {
+				$output .= '<span class="um-req" title="' . esc_attr__( 'Required', 'ultimate-member' ) . '">*</span>';
+			}
+
+			$output .= '</label>';
 
 			if ( ! empty( $data['help'] ) && false === $this->viewing && false === strpos( $key, 'confirm_user_pass' ) ) {
 				if ( ! UM()->mobile()->isMobile() ) {
