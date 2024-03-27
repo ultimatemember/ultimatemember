@@ -95,9 +95,10 @@ final class Enqueue extends \um\common\Enqueue {
 	 * @since 2.6.1
 	 */
 	public function block_editor() {
-		$suffix  = self::get_suffix();
-		$js_url  = self::get_url( 'js' );
-		$css_url = self::get_url( 'css' );
+		$suffix   = self::get_suffix();
+		$js_url   = self::get_url( 'js' );
+		$css_url  = self::get_url( 'css' );
+		$libs_url = self::get_url( 'libs' );
 
 		$this->load_gutenberg_js();
 
@@ -192,9 +193,13 @@ final class Enqueue extends \um\common\Enqueue {
 
 		wp_register_style( 'um_styles', $css_url . 'um-styles' . $suffix . '.css', array( 'um_ui', 'um_tipsy', 'um_raty', 'um_fonticons_ii', 'um_fonticons_fa', 'select2' ), UM_VERSION );
 		wp_register_style( 'um_profile', $css_url . 'um-profile' . $suffix . '.css', array(), UM_VERSION );
-		wp_register_style( 'um_responsive', $css_url . 'um-responsive' . $suffix . '.css', array( 'um_profile', 'um_crop' ), UM_VERSION );
+		wp_register_style( 'um_responsive', $css_url . 'um-responsive' . $suffix . '.css', array( 'um_profile' ), UM_VERSION );
 		wp_register_style( 'um_account', $css_url . 'um-account' . $suffix . '.css', array(), UM_VERSION );
 		wp_register_style( 'um_default_css', $css_url . 'um-old-default' . $suffix . '.css', array(), UM_VERSION );
+
+		wp_register_style( 'um_datetime', $libs_url . 'pickadate/default' . $suffix . '.css', array(), '3.6.2' );
+		wp_register_style( 'um_datetime_date', $libs_url . 'pickadate/default.date' . $suffix . '.css', array( 'um_datetime' ), '3.6.2' );
+		wp_register_style( 'um_datetime_time', $libs_url . 'pickadate/default.time' . $suffix . '.css', array( 'um_datetime' ), '3.6.2' );
 
 		wp_enqueue_style( 'um_default_css' );
 		wp_enqueue_style( 'um_members' );
@@ -202,6 +207,9 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_enqueue_style( 'um_profile' );
 		wp_enqueue_style( 'um_responsive' );
 		wp_enqueue_style( 'um_account' );
+
+		wp_enqueue_style( 'um_datetime_date' );
+		wp_enqueue_style( 'um_datetime_time' );
 
 		$custom_css = '.wp-block .um{opacity: 1;}.um_request_name {display: none !important;}';
 
