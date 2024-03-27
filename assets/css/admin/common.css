@@ -127,9 +127,3 @@ body.um .picker .picker__footer > button:not(:disabled):not(.button) {
 body.um .picker .picker__footer > button.picker__button--close {
   margin-top: 5px;
 }
-
-#um-metaboxes-contentbox-1 a,
-#um-metaboxes-contentbox-2 a,
-#um-metaboxes-contentbox-3 a {
-  white-space: normal;
-}
