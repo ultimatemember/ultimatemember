@@ -260,6 +260,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					if ( ! empty( $value ) ) {
 						foreach ( $value as $k ) {
 							$filter_type = $this->filter_types[ $k ];
+							// phpcs:disable WordPress.Security.NonceVerification -- already verified here
 							if ( ! empty( $filter_type ) ) {
 								if ( 'slider' === $filter_type ) {
 									if ( ! empty( $_POST[ $k ] ) ) {
@@ -269,7 +270,14 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 											$temp_value[ $k ] = (int) $_POST[ $k ];
 										}
 									}
-								} elseif ( 'timepicker' === $filter_type || 'datepicker' === $filter_type ) {
+								} elseif ( 'datepicker' === $filter_type ) {
+									if ( ! empty( $_POST[ $k . '_from' ] ) ) {
+										$temp_value[ $k ][0] = sanitize_text_field( $_POST[ $k . '_from' ] );
+									}
+									if ( ! empty( $_POST[ $k . '_to' ] ) ) {
+										$temp_value[ $k ][1] = sanitize_text_field( $_POST[ $k . '_to' ] );
+									}
+								} elseif ( 'timepicker' === $filter_type ) {
 									if ( ! empty( $_POST[ $k . '_from' ] ) && ! empty( $_POST[ $k . '_to' ] ) ) {
 										$temp_value[ $k ] = array(
 											sanitize_text_field( $_POST[ $k . '_from' ] ),
@@ -292,6 +300,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 									}
 								}
 							}
+							// phpcs:enable WordPress.Security.NonceVerification -- already verified here
 						}
 					}
 
@@ -833,25 +842,33 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					$label = ! empty( $attrs['label'] ) ? $attrs['label'] : $attrs['title'];
 
+					$default_value_min = '';
+					$default_value_max = '';
+					if ( ! empty( $default_value[0] ) ) {
+						$default_value_min = $default_value[0];
+					}
+					if ( ! empty( $default_value[1] ) ) {
+						$default_value_max = $default_value[1];
+					}
+
 					if ( $range ) {
 						$min = $range[0];
 						$max = $range[1];
 						?>
 						<input type="text" id="<?php echo $filter; ?>_from" name="<?php echo $filter; ?>_from" class="um-datepicker-filter"
-							   placeholder="<?php esc_attr_e( sprintf( '%s From', stripslashes( $label ) ), 'ultimate-member' ); ?>"
-							   data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
-							   data-date_min="<?php echo esc_attr( $min ); ?>" data-date_max="<?php echo esc_attr( $max ); ?>"
-							   data-filter_name="<?php echo $filter; ?>" data-range="from" data-value="<?php echo ! empty( $default_value ) ? esc_attr( strtotime( min( $default_value ) ) ) : '' ?>" />
+							placeholder="<?php esc_attr_e( sprintf( '%s From', stripslashes( $label ) ), 'ultimate-member' ); ?>"
+							data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
+							data-date_min="<?php echo esc_attr( $min ); ?>" data-date_max="<?php echo esc_attr( $max ); ?>"
+							ata-filter_name="<?php echo $filter; ?>" data-range="from" data-value="<?php echo ! empty( $default_value_min ) ? esc_attr( strtotime( $default_value_min ) ) : '' ?>" />
 						<input type="text" id="<?php echo $filter; ?>_to" name="<?php echo $filter; ?>_to" class="um-datepicker-filter"
-							   placeholder="<?php esc_attr_e( sprintf( '%s To', stripslashes( $label ) ), 'ultimate-member' ); ?>"
-							   data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
-							   data-date_min="<?php echo esc_attr( $min ); ?>" data-date_max="<?php echo esc_attr( $max ); ?>"
-							   data-filter_name="<?php echo $filter; ?>" data-range="to" data-value="<?php echo ! empty( $default_value ) ? esc_attr( strtotime( max( $default_value ) ) ) : '' ?>" />
+							placeholder="<?php esc_attr_e( sprintf( '%s To', stripslashes( $label ) ), 'ultimate-member' ); ?>"
+							data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
+							data-date_min="<?php echo esc_attr( $min ); ?>" data-date_max="<?php echo esc_attr( $max ); ?>"
+							data-filter_name="<?php echo $filter; ?>" data-range="to" data-value="<?php echo ! empty( $default_value_max ) ? esc_attr( strtotime( $default_value_max ) ) : '' ?>" />
 						<?php
 					}
 					break;
-				case 'timepicker': {
-
+				case 'timepicker':
 					$range = $this->timepicker_filters_range( $filter );
 
 					$label = ! empty( $attrs['label'] ) ? $attrs['label'] : $attrs['title'];
@@ -868,25 +885,24 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							break;
 					}
 
-					if ( $range ) { ?>
-
+					if ( $range ) {
+						?>
 						<input type="text" id="<?php echo $filter; ?>_from" name="<?php echo $filter; ?>_from" class="um-timepicker-filter"
-							   placeholder="<?php esc_attr_e( sprintf( '%s From', stripslashes( $label ) ), 'ultimate-member' ); ?>"
-							   data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
-							   data-min="<?php echo $range[0] ?>" data-max="<?php echo $range[1] ?>"
-							   data-format="<?php echo esc_attr( $js_format ) ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ) ?>"
-							   data-filter_name="<?php echo $filter; ?>" data-range="from" />
+							placeholder="<?php esc_attr_e( sprintf( '%s From', stripslashes( $label ) ), 'ultimate-member' ); ?>"
+							data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
+							data-min="<?php echo $range[0] ?>" data-max="<?php echo $range[1] ?>"
+							data-format="<?php echo esc_attr( $js_format ) ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ) ?>"
+							data-filter_name="<?php echo $filter; ?>" data-range="from" />
 						<input type="text" id="<?php echo $filter; ?>_to" name="<?php echo $filter; ?>_to" class="um-timepicker-filter"
-							   placeholder="<?php esc_attr_e( sprintf( '%s To', stripslashes( $label ) ), 'ultimate-member' ); ?>"
-							   data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
-							   data-min="<?php echo $range[0] ?>" data-max="<?php echo $range[1] ?>"
-							   data-format="<?php echo esc_attr( $js_format ) ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ) ?>"
-							   data-filter_name="<?php echo $filter; ?>" data-range="to" />
-
-					<?php }
+							placeholder="<?php esc_attr_e( sprintf( '%s To', stripslashes( $label ) ), 'ultimate-member' ); ?>"
+							data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
+							data-min="<?php echo $range[0] ?>" data-max="<?php echo $range[1] ?>"
+							data-format="<?php echo esc_attr( $js_format ) ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ) ?>"
+							data-filter_name="<?php echo $filter; ?>" data-range="to" />
+						<?php
+					}
 
 					break;
-				}
 			}
 
 			$filter = ob_get_clean();
@@ -2216,17 +2232,26 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 									break;
 								case 'datepicker':
-
 									$offset = 0;
 									if ( is_numeric( $gmt_offset ) ) {
 										$offset = $gmt_offset;
 									}
 
-									$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
-									$to_date   = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
+									if ( ! empty( $value[0] ) ) {
+										$min = $value[0];
+									} else {
+										$range = $this->datepicker_filters_range( $field );
+										$min   = gmdate( 'Y/m/d', $range[0] );
+									}
+									if ( ! empty( $value[1] ) ) {
+										$max = $value[1];
+									} else {
+										$max = gmdate( 'Y/m/d' );
+									}
+
 									$field_query = array(
 										'key'       => $field,
-										'value'     =>  array( $from_date, $to_date ),
+										'value'     => array( $min, $max ),
 										'compare'   => 'BETWEEN',
 										'inclusive' => true,
 									);
@@ -2325,12 +2350,31 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							$offset = $gmt_offset;
 						}
 
-						$from_date  = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
-						$to_date    = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
+						$value = array_map(
+							function( $date ) {
+								return is_numeric( $date ) ? $date : strtotime( $date );
+							},
+							$value
+						);
+
+						if ( ! empty( $value[0] ) ) {
+							$min = $value[0];
+						} else {
+							$range = $this->datepicker_filters_range( 'last_login' );
+							$min   = strtotime( gmdate( 'Y/m/d', $range[0] ) );
+						}
+						if ( ! empty( $value[1] ) ) {
+							$max = $value[1];
+						} else {
+							$max = strtotime( gmdate( 'Y/m/d' ) );
+						}
+						$from_date = (int) $min + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
+						$to_date   = (int) $max + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
+
 						$meta_query = array(
 							array(
 								'key'       => '_um_last_login',
-								'value'     => array( $from_date, $to_date ),
+								'value'     => array( gmdate( 'Y-m-d H:i:s', $from_date ), gmdate( 'Y-m-d H:i:s', $to_date ) ),
 								'compare'   => 'BETWEEN',
 								'inclusive' => true,
 								'type'      => 'DATETIME',
