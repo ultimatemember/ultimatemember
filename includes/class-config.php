@@ -591,6 +591,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'profile_show_html_bio'                 => false,
 				'profile_bio_maxchars'                  => 180,
 				'profile_noindex'                       => 0,
+				'show_last_login'                       => 1,
 				'activation_link_expiry_time'           => '',
 				'lock_register_forms'                   => false,
 				'display_login_form_notice'             => false,
