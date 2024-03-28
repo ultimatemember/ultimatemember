@@ -820,10 +820,16 @@ jQuery(document).ready( function() {
 
 		jQuery('.um-clear-image').on('click', function(e) {
 			var clear_button = jQuery(this);
-			var default_image_url = clear_button.siblings('.um-forms-field').data('default');
+			var default_image_url = '';
+			if ( undefined !== clear_button.siblings('.um-forms-field').data('default') ) {
+				default_image_url = clear_button.siblings('.um-forms-field').data('default');
+			}
 			clear_button.siblings('.um-set-image').show();
 			clear_button.hide();
 			clear_button.siblings('.icon_preview').attr( 'src', default_image_url );
+			if ( '' === default_image_url ) {
+				clear_button.siblings('.icon_preview').hide();
+			}
 			clear_button.siblings('.um-media-upload-data-id').val('');
 			clear_button.siblings('.um-media-upload-data-width').val('');
 			clear_button.siblings('.um-media-upload-data-height').val('');
