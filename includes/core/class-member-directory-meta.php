@@ -328,7 +328,27 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 									// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_alias is pre-escaped.
 								}
 
-								$values = implode( ' OR ', $values_array );
+								/**
+								 * Filters change select filter relation.
+								 *
+								 * @param {string} $relation.
+								 * @param {string} $field field key.
+								 *
+								 * @return {string} relation.
+								 *
+								 * @since 2.8.5
+								 * @hook um_members_directory_filter_select_meta
+								 *
+								 * @example <caption>Change relation to 'AND'.</caption>
+								 * function my_um_members_directory_filter_select_meta( $relation, $field ) {
+								 *     // your code here
+								 *     $relation = 'AND';
+								 *     return $relation;
+								 * }
+								 * add_filter( 'um_members_directory_filter_select_meta', 'my_um_members_directory_filter_select_meta', 10, 2 );
+								 */
+								$relation = apply_filters( 'um_members_directory_filter_select_meta', 'OR', $field );
+								$values   = implode( ' ' . esc_sql( $relation ) . ' ', $values_array );
 
 								// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_alias and $values variables are pre-escaped or $wpdb->prepare.
 								$this->where_clauses[] = $wpdb->prepare( "( {$join_alias}.um_key = %s AND ( {$values} ) )", $field );
