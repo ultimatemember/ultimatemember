@@ -1785,6 +1785,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * Handle filters request
 		 */
 		function filters( $directory_data ) {
+			global $wpdb;
 			//filters
 			$filter_query = array();
 			if ( ! empty( $directory_data['search_fields'] ) ) {
@@ -1817,9 +1818,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					continue;
 				}
 
+				/** This filter is documented in includes/core/class-member-directory-meta.php */
+				$relation = apply_filters( 'um_members_directory_select_filter_relation', 'OR', $field );
+
 				switch ( $field ) {
 					default:
-
 						$filter_type = $this->filter_types[ $field ];
 
 						/**
@@ -1873,35 +1876,35 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 								case 'select':
 									if ( is_array( $value ) ) {
-										$field_query = array( 'relation' => 'OR' );
+										$field_query = array( 'relation' => esc_sql( $relation ) );
 
 										foreach ( $value as $single_val ) {
 											$single_val = trim( stripslashes( $single_val ) );
 
 											$arr_meta_query = array(
 												array(
-													'key'       => $field,
-													'value'     => $single_val,
-													'compare'   => '=',
+													'key'     => $field,
+													'value'   => $single_val,
+													'compare' => '=',
 												),
 												array(
-													'key'       => $field,
-													'value'     => serialize( (string) $single_val ),
-													'compare'   => 'LIKE',
+													'key'     => $field,
+													'value'   => serialize( (string) $single_val ),
+													'compare' => 'LIKE',
 												),
 												array(
-													'key'       => $field,
-													'value'     => '"' . $single_val . '"',
-													'compare'   => 'LIKE',
-												)
+													'key'     => $field,
+													'value'   => '"' . $single_val . '"',
+													'compare' => 'LIKE',
+												),
 											);
 
 											if ( is_numeric( $single_val ) ) {
 
 												$arr_meta_query[] = array(
-													'key'       => $field,
-													'value'     => serialize( (int) $single_val ),
-													'compare'   => 'LIKE',
+													'key'     => $field,
+													'value'   => serialize( absint( $single_val ) ),
+													'compare' => 'LIKE',
 												);
 
 											}
@@ -1975,26 +1978,39 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						if ( ! empty( $field_query ) && $field_query !== true ) {
 							$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $field_query ) );
 						}
-
 						break;
 					case 'role':
 						$value = array_map( 'strtolower', $value );
 
-						if ( ! empty( $this->query_args['role__in'] ) ) {
-							$this->query_args['role__in'] = is_array( $this->query_args['role__in'] ) ? $this->query_args['role__in'] : array( $this->query_args['role__in'] );
-							$default_role = array_intersect( $this->query_args['role__in'], $value );
-							$um_role = array_diff( $value, $default_role );
-
-							foreach ( $um_role as $key => &$val ) {
-								$val = 'um_' . str_replace( ' ', '-', $val );
+						if ( 'OR' !== $relation ) {
+							$role__in_clauses = array( 'relation' => $relation );
+							foreach ( $value as $role ) {
+								$role__in_clauses[] = array(
+									'key'     => $wpdb->get_blog_prefix() . 'capabilities',
+									'value'   => '"' . $role . '"',
+									'compare' => 'LIKE',
+								);
 							}
-							$this->query_args['role__in'] = array_merge( $default_role, $um_role );
+
+							$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $role__in_clauses ) );
+
+							$this->custom_filters_in_query[ $field ] = $value;
 						} else {
-							$this->query_args['role__in'] = $value;
-						};
+							if ( ! empty( $this->query_args['role__in'] ) ) {
+								$this->query_args['role__in'] = is_array( $this->query_args['role__in'] ) ? $this->query_args['role__in'] : array( $this->query_args['role__in'] );
+								$default_role = array_intersect( $this->query_args['role__in'], $value );
+								$um_role = array_diff( $value, $default_role );
 
-						$this->custom_filters_in_query[ $field ] = $this->query_args['role__in'];
+								foreach ( $um_role as $key => &$val ) {
+									$val = 'um_' . str_replace( ' ', '-', $val );
+								}
+								$this->query_args['role__in'] = array_merge( $default_role, $um_role );
+							} else {
+								$this->query_args['role__in'] = $value;
+							}
 
+							$this->custom_filters_in_query[ $field ] = $this->query_args['role__in'];
+						}
 						break;
 					case 'birth_date':
 						$from_date = date( 'Y/m/d', mktime( 0,0,0, date( 'm', time() ), date( 'd', time() ), date( 'Y', time() - min( $value ) * YEAR_IN_SECONDS ) ) );
@@ -2016,7 +2032,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 						break;
 					case 'user_registered':
-
 						$offset = 0;
 						if ( isset( $_POST['gmt_offset'] ) && is_numeric( $_POST['gmt_offset'] ) ) {
 							$offset = (int) $_POST['gmt_offset'];
@@ -2064,6 +2079,36 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$this->custom_filters_in_query[ $field ] = $value;
 
 						$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
+						break;
+					case 'gender':
+						if ( is_array( $value ) ) {
+							$field_query = array( 'relation' => $relation );
+
+							foreach ( $value as $single_val ) {
+								$single_val = trim( stripslashes( $single_val ) );
+
+								$arr_meta_query = array(
+									array(
+										'key'     => $field,
+										'value'   => $single_val,
+										'compare' => '=',
+									),
+									array(
+										'key'     => $field,
+										'value'   => '"' . $single_val . '"',
+										'compare' => 'LIKE',
+									),
+								);
+
+								$field_query = array_merge( $field_query, $arr_meta_query );
+							}
+						}
+
+						if ( ! empty( $field_query ) ) {
+							$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $field_query ) );
+
+							$this->custom_filters_in_query[ $field ] = $value;
+						}
 						break;
 				}
 			}
@@ -2141,35 +2186,36 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 										$value = array( $value );
 									}
 
-									$field_query = array( 'relation' => 'OR' );
+									/** This filter is documented in includes/core/class-member-directory.php */
+									$field_query = apply_filters( 'um_members_directory_filter_select', array( 'relation' => 'OR' ), $field );
 
 									foreach ( $value as $single_val ) {
 										$single_val = trim( $single_val );
 
 										$arr_meta_query = array(
 											array(
-												'key'       => $field,
-												'value'     => $single_val,
-												'compare'   => '=',
+												'key'     => $field,
+												'value'   => $single_val,
+												'compare' => '=',
 											),
 											array(
-												'key'       => $field,
-												'value'     => serialize( (string) $single_val ),
-												'compare'   => 'LIKE',
+												'key'     => $field,
+												'value'   => serialize( (string) $single_val ),
+												'compare' => 'LIKE',
 											),
 											array(
-												'key'       => $field,
-												'value'     => '"' . $single_val . '"',
-												'compare'   => 'LIKE',
-											)
+												'key'     => $field,
+												'value'   => '"' . $single_val . '"',
+												'compare' => 'LIKE',
+											),
 										);
 
 										if ( is_numeric( $single_val ) ) {
 
 											$arr_meta_query[] = array(
-												'key'       => $field,
-												'value'     => serialize( (int) $single_val ),
-												'compare'   => 'LIKE',
+												'key'     => $field,
+												'value'   => serialize( absint( $single_val ) ),
+												'compare' => 'LIKE',
 											);
 
 										}

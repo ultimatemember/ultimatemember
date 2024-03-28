@@ -4,24 +4,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Field is required?
- *
- * @param $label
- * @param $data
- *
- * @return string
- */
-function um_edit_label_all_fields( $label, $data ) {
-	$asterisk = UM()->options()->get( 'form_asterisk' );
-	if ( $asterisk && ! empty( $data['required'] ) ) {
-		$label .= '<span class="um-req" title="' . esc_attr__( 'Required', 'ultimate-member' ) . '">*</span>';
-	}
-
-	return $label;
-}
-add_filter( 'um_edit_label_all_fields', 'um_edit_label_all_fields', 10, 2 );
-
-/**
  * Outputs a oEmbed field
  *
  * @param string $value

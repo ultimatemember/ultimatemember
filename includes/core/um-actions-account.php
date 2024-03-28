@@ -552,8 +552,13 @@ add_action( 'um_after_user_account_updated', 'um_after_user_account_updated_perm
  * @param $changed
  */
 function um_account_updated_notification( $user_id, $changed ) {
-	um_fetch_user( $user_id );
-	UM()->mail()->send( um_user( 'user_email' ), 'changedaccount_email' );
+	// phpcs:disable WordPress.Security.NonceVerification
+	if ( 'password' !== $_POST['_um_account_tab'] || ! UM()->options()->get( 'changedpw_email_on' ) ) {
+		// Avoid email duplicates (account changed and password changed) on the password change tab.
+		um_fetch_user( $user_id );
+		UM()->mail()->send( um_user( 'user_email' ), 'changedaccount_email' );
+	}
+	// phpcs:enable WordPress.Security.NonceVerification
 }
 add_action( 'um_after_user_account_updated', 'um_account_updated_notification', 20, 2 );
 

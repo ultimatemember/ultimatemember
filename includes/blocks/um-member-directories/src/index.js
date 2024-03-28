@@ -101,6 +101,10 @@ jQuery(window).on( 'load', function($) {
 				um_datepicker_filter_init( directory );
 				um_timepicker_filter_init( directory );
 			});
+			jQuery(mutation.addedNodes).find('.um-member').each(function() {
+				var directory = jQuery(this).parent();
+				UM_Member_Grid(directory);
+			});
 		});
 	});
 

@@ -766,7 +766,7 @@ add_action( 'um_registration_set_extra_data', 'um_registration_set_profile_full_
  * Redirect from default registration to UM registration page
  */
 function um_form_register_redirect() {
-	$page_id = UM()->options()->get( UM()->options()->get_core_page_id( 'register' ) );
+	$page_id = UM()->options()->get( UM()->options()->get_predefined_page_option_key( 'register' ) );
 	// Do not redirect if the registration page is not published.
 	if ( ! empty( $page_id ) && 'publish' === get_post_status( $page_id ) ) {
 		// Not `um_safe_redirect()` because predefined register page is situated on the same host.

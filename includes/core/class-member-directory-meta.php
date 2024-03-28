@@ -224,6 +224,27 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 			$blog_id = get_current_blog_id();
 
+			/**
+			 * Filters member directory select-type filter relation in query.
+			 *
+			 * @param {string} $relation Relation `OR` or `AND`. `OR` by default.
+			 * @param {string} $field    Field key.
+			 *
+			 * @return {string} Relation.
+			 *
+			 * @since 2.8.5
+			 * @hook um_members_directory_select_filter_relation
+			 *
+			 * @example <caption>Change relation to 'AND'.</caption>
+			 * function my_um_members_directory_select_filter_relation( $relation, $field ) {
+			 *     // your code here
+			 *     $relation = 'AND';
+			 *     return $relation;
+			 * }
+			 * add_filter( 'um_members_directory_select_filter_relation', 'my_um_members_directory_select_filter_relation', 10, 2 );
+			 */
+			$relation = apply_filters( 'um_members_directory_select_filter_relation', 'OR', $field );
+
 			switch ( $field ) {
 				default:
 					$filter_type = $this->filter_types[ $field ];
@@ -328,7 +349,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 									// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_alias is pre-escaped.
 								}
 
-								$values = implode( ' OR ', $values_array );
+								$values = implode( ' ' . esc_sql( $relation ) . ' ', $values_array );
 
 								// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_alias and $values variables are pre-escaped or $wpdb->prepare.
 								$this->where_clauses[] = $wpdb->prepare( "( {$join_alias}.um_key = %s AND ( {$values} ) )", $field );
@@ -421,7 +442,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 					}
 
 					// $roles_clauses is pre-prepared.
-					$this->where_clauses[] = '( ' . implode( ' OR ', $roles_clauses ) . ' )';
+					$this->where_clauses[] = '( ' . implode( ' ' . esc_sql( $relation ) . ' ', $roles_clauses ) . ' )';
 
 					if ( ! $is_default ) {
 						$this->custom_filters_in_query[ $field ] = $value;
@@ -496,6 +517,33 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 					}
 					break;
 
+				case 'gender':
+					if ( ! is_array( $value ) ) {
+						$value = array( $value );
+					}
+
+					// $join_alias is pre-escaped.
+					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_alias} ON {$join_alias}.user_id = u.ID";
+
+					$values_array = array();
+					foreach ( $value as $single_val ) {
+						$single_val = trim( stripslashes( $single_val ) );
+
+						// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_alias and $compare variables are pre-escaped.
+						$values_array[] = $wpdb->prepare( "{$join_alias}.um_value LIKE %s", '%"' . $wpdb->esc_like( $single_val ) . '"%' );
+						$values_array[] = $wpdb->prepare( "{$join_alias}.um_value = %s", $single_val );
+						// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_alias is pre-escaped.
+					}
+
+					$values = implode( ' ' . esc_sql( $relation ) . ' ', $values_array );
+
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_alias and $values variables are pre-escaped or $wpdb->prepare.
+					$this->where_clauses[] = $wpdb->prepare( "( {$join_alias}.um_key = %s AND ( {$values} ) )", $field );
+
+					if ( ! $is_default ) {
+						$this->custom_filters_in_query[ $field ] = $value;
+					}
+					break;
 			}
 		}
 
