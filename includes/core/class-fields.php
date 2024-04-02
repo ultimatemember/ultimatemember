@@ -4284,6 +4284,14 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @throws \Exception
 		 */
 		public function view_field( $key, $data, $rule = false ) {
+			if ( '_um_last_login' === $key ) {
+				$profile_id      = um_user( 'ID' );
+				$show_last_login = get_user_meta( $profile_id, 'um_show_last_login', true );
+				if ( ! empty( $show_last_login ) && 'no' === $show_last_login[0] ) {
+					return '';
+				}
+			}
+
 			$output = '';
 
 			// Get whole field data.

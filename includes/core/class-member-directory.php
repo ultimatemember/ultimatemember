@@ -2067,12 +2067,25 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
 						$to_date   = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
 						$meta_query = array(
+							'relation' => 'AND',
 							array(
 								'key'       => '_um_last_login',
 								'value'     => array( gmdate( 'Y-m-d H:i:s', $from_date ), gmdate( 'Y-m-d H:i:s', $to_date ) ),
 								'compare'   => 'BETWEEN',
 								'inclusive' => true,
 								'type'      => 'DATETIME',
+							),
+							array(
+								'relation' => 'OR',
+								array(
+									'key'     => 'um_show_last_login',
+									'compare' => 'NOT EXISTS',
+								),
+								array(
+									'key'     => 'um_show_last_login',
+									'value'   => 'a:1:{i:0;s:2:"no";}',
+									'compare' => '!=',
+								),
 							),
 						);
 
@@ -2344,15 +2357,36 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							$offset = $gmt_offset;
 						}
 
-						$from_date  = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
-						$to_date    = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
+						$value = array_map(
+							function( $date ) {
+								return is_numeric( $date ) ? $date : strtotime( $date );
+							},
+							$value
+						);
+
+						$from_date = gmdate( 'Y-m-d H:i:s', (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ) ); // client time zone offset
+						$to_date   = gmdate( 'Y-m-d H:i:s', (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1 ); // time 23:59
+
 						$meta_query = array(
+							'relation' => 'AND',
 							array(
 								'key'       => '_um_last_login',
 								'value'     => array( $from_date, $to_date ),
 								'compare'   => 'BETWEEN',
 								'inclusive' => true,
 								'type'      => 'DATETIME',
+							),
+							array(
+								'relation' => 'OR',
+								array(
+									'key'     => 'um_show_last_login',
+									'compare' => 'NOT EXISTS',
+								),
+								array(
+									'key'     => 'um_show_last_login',
+									'value'   => 'a:1:{i:0;s:2:"no";}',
+									'compare' => '!=',
+								),
 							),
 						);
 
@@ -2559,6 +2593,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 								continue;
 							}
 
+							if ( '_um_last_login' === $key ) {
+								$show_last_login = get_user_meta( $user_id, 'um_show_last_login', true );
+								if ( ! empty( $show_last_login ) && 'no' === $show_last_login[0] ) {
+									continue;
+								}
+							}
+
 							$value = um_filtered_value( $key );
 
 							if ( ! $value ) {
@@ -2581,6 +2622,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						foreach ( $directory_data['reveal_fields'] as $key ) {
 							if ( ! $key ) {
 								continue;
+							}
+
+							if ( '_um_last_login' === $key ) {
+								$show_last_login = get_user_meta( $user_id, 'um_show_last_login', true );
+								if ( ! empty( $show_last_login ) && 'no' === $show_last_login[0] ) {
+									continue;
+								}
 							}
 
 							$value = um_filtered_value( $key );

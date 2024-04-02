@@ -330,7 +330,7 @@ function um_submit_account_details( $args ) {
 			$v = sanitize_text_field( $v );
 		} elseif ( 'user_email' === $k ) {
 			$v = sanitize_email( $v );
-		} elseif ( 'hide_in_members' === $k ) {
+		} elseif ( 'hide_in_members' === $k || 'um_show_last_login' === $k ) {
 			$v = array_map( 'sanitize_text_field', $v );
 		}
 
@@ -348,6 +348,13 @@ function um_submit_account_details( $args ) {
 				delete_user_meta( $user_id, 'hide_in_members' );
 				unset( $changes['hide_in_members'] );
 			}
+		}
+	}
+
+	if ( isset( $changes['um_show_last_login'] ) ) {
+		if ( 'yes' === $changes['um_show_last_login'] || array_intersect( array( 'yes' ), $changes['um_show_last_login'] ) ) {
+			delete_user_meta( $user_id, 'um_show_last_login' );
+			unset( $changes['um_show_last_login'] );
 		}
 	}
 

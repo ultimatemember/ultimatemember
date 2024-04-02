@@ -504,13 +504,22 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 						}
 					}
 
+					$value = array_map(
+						function( $date ) {
+							return is_numeric( $date ) ? $date : strtotime( $date );
+						},
+						$value
+					);
+
 					$from_date = gmdate( 'Y-m-d H:i:s', (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ) ); // client time zone offset
 					$to_date   = gmdate( 'Y-m-d H:i:s', (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1 ); // time 23:59
 
 					// $join_alias is pre-escaped.
 					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_alias} ON {$join_alias}.user_id = u.ID";
+					$join_alias_ll = $join_alias . '_show_las_login';
+					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_alias_ll} ON {$join_alias_ll}.user_id = u.ID AND {$join_alias_ll}.um_key = 'um_show_last_login'";
 					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_alias is pre-escaped.
-					$this->where_clauses[] = $wpdb->prepare( "( {$join_alias}.um_key = '_um_last_login' AND {$join_alias}.um_value BETWEEN %s AND %s )", $from_date, $to_date );
+					$this->where_clauses[] = $wpdb->prepare( "( {$join_alias}.um_key = '_um_last_login' AND {$join_alias}.um_value BETWEEN %s AND %s AND ( {$join_alias_ll}.um_value IS NULL OR {$join_alias_ll}.um_value != %s ) )", $from_date, $to_date, 'a:1:{i:0;s:2:"no";}' );
 
 					if ( ! $is_default ) {
 						$this->custom_filters_in_query[ $field ] = $value;
