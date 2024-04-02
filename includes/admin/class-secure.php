@@ -331,7 +331,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 					$val                .= '<div><small>' . esc_html__( 'Blocked Due to Suspicious Activity', 'ultimate-member' ) . '</small></div>';
 					$nonce               = wp_create_nonce( 'um-security-restore-account-nonce-' . $user_id );
 					$restore_account_url = admin_url( 'users.php?user_id=' . $user_id . '&um_secure_restore_account=1&_wpnonce=' . $nonce );
-					$action              = ' &#183; <a href=" ' . esc_attr( $restore_account_url ) . ' " onclick=\'return confirm("' . esc_js( __( 'Are you sure that you want to restore this account after getting flagged for suspicious activity?', 'ultimate-member' ) ) . '");\'><small>' . esc_html__( 'Restore Account', 'ultimate-member' ) . '</small></a>';
+					$action              = ' &#183; <a href=" ' . esc_url( $restore_account_url ) . ' " onclick=\'return confirm("' . esc_js( __( 'Are you sure that you want to restore this account after getting flagged for suspicious activity?', 'ultimate-member' ) ) . '");\'><small>' . esc_html__( 'Restore Account', 'ultimate-member' ) . '</small></a>';
 					if ( ! empty( $datetime ) ) {
 						$val .= '<div><small>' . human_time_diff( strtotime( $datetime ) ) . ' ' . __( 'ago', 'ultimate-member' ) . '</small>' . $action . '</div>';
 					}

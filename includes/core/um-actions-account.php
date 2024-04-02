@@ -624,7 +624,7 @@ function um_after_account_privacy( $args ) {
 			$exports_url = wp_privacy_exports_url();
 
 			echo '<p>' . esc_html__( 'You could download your previous data:', 'ultimate-member' ) . '</p>';
-			echo '<a href="' . esc_attr( $exports_url . get_post_meta( $completed['ID'], '_export_file_name', true ) ) . '">' . esc_html__( 'Download Personal Data', 'ultimate-member' ) . '</a>';
+			echo '<a href="' . esc_url( $exports_url . get_post_meta( $completed['ID'], '_export_file_name', true ) ) . '">' . esc_html__( 'Download Personal Data', 'ultimate-member' ) . '</a>';
 			echo '<p>' . esc_html__( 'You could send a new request for an export of personal your data.', 'ultimate-member' ) . '</p>';
 
 		}
