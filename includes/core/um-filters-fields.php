@@ -4,24 +4,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Field is required?
- *
- * @param $label
- * @param $data
- *
- * @return string
- */
-function um_edit_label_all_fields( $label, $data ) {
-	$asterisk = UM()->options()->get( 'form_asterisk' );
-	if ( $asterisk && ! empty( $data['required'] ) ) {
-		$label .= '<span class="um-req" title="' . esc_attr__( 'Required', 'ultimate-member' ) . '">*</span>';
-	}
-
-	return $label;
-}
-add_filter( 'um_edit_label_all_fields', 'um_edit_label_all_fields', 10, 2 );
-
-/**
  * Outputs a oEmbed field
  *
  * @param string $value
@@ -114,7 +96,7 @@ add_filter( 'um_profile_field_filter_hook__youtube_video', 'um_profile_field_fil
 function um_profile_field_filter_hook__spotify( $value, $data ) {
 	if ( preg_match( '/https:\/\/open.spotify.com\/.*/', $value ) ) {
 		if ( false !== strpos( $value, '/user/' ) ) {
-			$value = '<a href="' . esc_attr( $value ) . '" target="_blank">' . esc_html( $value ) . '</a>';
+			$value = '<a href="' . esc_url( $value ) . '" target="_blank">' . esc_html( $value ) . '</a>';
 		} else {
 			$url = str_replace( 'open.spotify.com/', 'open.spotify.com/embed/', $value );
 
@@ -162,12 +144,10 @@ add_filter( 'um_profile_field_filter_hook__vimeo_video', 'um_profile_field_filte
  * @return int|string
  */
 function um_profile_field_filter_hook__phone( $value, $data ) {
-	$value = '<a href="tel:' . esc_attr( $value ) . '" rel="nofollow" title="' . esc_attr( $data['title'] ) . '">' . esc_html( $value ) . '</a>';
+	$value = '<a href="' . esc_url( 'tel:' . $value ) . '" rel="nofollow" title="' . esc_attr( $data['title'] ) . '">' . esc_html( $value ) . '</a>';
 	return $value;
 }
-add_filter( 'um_profile_field_filter_hook__phone_number', 'um_profile_field_filter_hook__phone', 99, 2 );
-add_filter( 'um_profile_field_filter_hook__mobile_number', 'um_profile_field_filter_hook__phone', 99, 2 );
-
+add_filter( 'um_profile_field_filter_hook__tel', 'um_profile_field_filter_hook__phone', 99, 2 );
 
 /**
  * Outputs a viber link
@@ -178,8 +158,9 @@ add_filter( 'um_profile_field_filter_hook__mobile_number', 'um_profile_field_fil
  * @return int|string
  */
 function um_profile_field_filter_hook__viber( $value, $data ) {
-	$value = str_replace('+', '', $value);
-	$value = '<a href="viber://chat?number=%2B' . esc_attr( $value ) . '" target="_blank"  rel="nofollow" title="' . esc_attr( $data['title'] ) . '">' . esc_html( $value ) . '</a>';
+	$value = str_replace( '+', '', $value );
+	$url   = 'viber://chat?number=%2B' . $value;
+	$value = '<a href="' . esc_url( $url, array( 'viber' ) ) . '" target="_blank"  rel="nofollow" title="' . esc_attr( $data['title'] ) . '">' . esc_html( $value ) . '</a>';
 	return $value;
 }
 add_filter( 'um_profile_field_filter_hook__viber', 'um_profile_field_filter_hook__viber', 99, 2 );
@@ -194,8 +175,9 @@ add_filter( 'um_profile_field_filter_hook__viber', 'um_profile_field_filter_hook
  * @return int|string
  */
 function um_profile_field_filter_hook__whatsapp( $value, $data ) {
-	$value = str_replace('+', '', $value);
-	$value = '<a href="https://api.whatsapp.com/send?phone=' . esc_attr( $value ) . '" target="_blank"  rel="nofollow" title="' . esc_attr( $data['title'] ) . '">' . esc_html( $value ) . '</a>';
+	$value = str_replace( '+', '', $value );
+	$url   = add_query_arg( array( 'phone' => $value ), 'https://api.whatsapp.com/send' );
+	$value = '<a href="' . esc_url( $url ) . '" target="_blank"  rel="nofollow" title="' . esc_attr( $data['title'] ) . '">' . esc_html( $value ) . '</a>';
 	return $value;
 }
 add_filter( 'um_profile_field_filter_hook__whatsapp', 'um_profile_field_filter_hook__whatsapp', 99, 2 );
@@ -391,7 +373,7 @@ function um_profile_field_filter_hook__file( $value, $data ) {
 		}
 		$value = '<div class="um-single-file-preview show">
                         <div class="um-single-fileinfo">
-                            <a href="' . esc_attr( $uri )  . '" target="_blank">
+                            <a href="' . esc_url( $uri )  . '" target="_blank">
                                 <span class="icon" style="background:'. UM()->files()->get_fonticon_bg_by_ext( $file_type['ext'] ) . '"><i class="'. UM()->files()->get_fonticon_by_ext( $file_type['ext'] ) .'"></i></span>
                                 <span class="filename">' . esc_attr( $value ) . '</span>
                             </a>
@@ -465,11 +447,13 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 		$url_rel            = ( isset( $data['url_rel'] ) && 'nofollow' === $data['url_rel'] ) ? 'rel="nofollow"' : '';
 		$data['url_target'] = ( isset( $data['url_target'] ) ) ? $data['url_target'] : '_blank';
 
+		$protocols = wp_allowed_protocols();
 		if ( false === strstr( $value, 'join.skype.com' ) ) {
 			$value = 'skype:' . $value . '?chat';
+			$protocols[] = 'skype';
 		}
 
-		$value = '<a href="' . esc_attr( $value ) . '" title="' . esc_attr( $alt ) . '" target="' . esc_attr( $data['url_target'] ) . '" ' . $url_rel . '>' . esc_html( $alt ) . '</a>';
+		$value = '<a href="' . esc_url( $value, $protocols ) . '" title="' . esc_attr( $alt ) . '" target="' . esc_attr( $data['url_target'] ) . '" ' . $url_rel . '>' . esc_html( $alt ) . '</a>';
 	} else {
 		// check $value is oEmbed
 		if ( 'oembed' === $data['type'] ) {
@@ -545,7 +529,7 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 
 	if ( ! is_array( $value ) ) {
 		if ( is_email( $value ) ) {
-			$value = '<a href="mailto:' . $value . '" title="' . $value . '">' . $value . '</a>';
+			$value = '<a href="' . esc_url( 'mailto:' . $value ) . '" title="' . $value . '">' . $value . '</a>';
 		}
 	} else {
 		$value = implode( ', ', $value );

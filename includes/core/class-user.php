@@ -1301,7 +1301,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					}
 
 					if ( $this->usermeta['account_status'][0] == 'awaiting_email_confirmation' ) {
-						$this->usermeta['account_status_name'][0] = __( 'Awaiting E-mail Confirmation', 'ultimate-member' );
+						$this->usermeta['account_status_name'][0] = __( 'Awaiting Email Confirmation', 'ultimate-member' );
 					}
 
 					if ( $this->usermeta['account_status'][0] == 'awaiting_admin_review' ) {
@@ -1607,7 +1607,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			$expiry_time = UM()->options()->get( 'activation_link_expiry_time' );
 			if ( ! empty( $expiry_time ) && is_numeric( $expiry_time ) ) {
-				$this->profile['account_secret_hash_expiry'] = time() + $expiry_time;
+				$this->profile['account_secret_hash_expiry'] = time() + $expiry_time * DAY_IN_SECONDS;
 				$this->update_usermeta_info( 'account_secret_hash_expiry' );
 			}
 
@@ -1676,7 +1676,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 
 		/**
-		 * This method approves a user membership and sends them an optional welcome/approval e-mail.
+		 * This method approves a user membership and sends them an optional welcome/approval email.
 		 *
 		 * @usage <?php UM()->user()->approve(); ?>
 		 *
@@ -1758,7 +1758,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 
 		/**
-		 * This method puts a user under manual review by administrator and sends them an optional e-mail.
+		 * This method puts a user under manual review by administrator and sends them an optional email.
 		 *
 		 * @usage <?php UM()->user()->pending(); ?>
 		 *
@@ -1784,7 +1784,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 
 		/**
-		 * This method rejects a user membership and sends them an optional e-mail.
+		 * This method rejects a user membership and sends them an optional email.
 		 *
 		 * @usage <?php UM()->user()->reject(); ?>
 		 *
@@ -1811,7 +1811,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 
 		/**
-		 * This method deactivates a user membership and sends them an optional e-mail.
+		 * This method deactivates a user membership and sends them an optional email.
 		 *
 		 * @usage <?php UM()->user()->deactivate(); ?>
 		 *

@@ -24,6 +24,7 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			$this->screen();
 			$this->secure()->hooks();
 			$this->site_health();
+			$this->theme()->hooks();
 		}
 
 		/**
@@ -72,6 +73,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\site_health'] = new Site_Health();
 			}
 			return UM()->classes['um\common\site_health'];
+		}
+
+		/**
+		 * @since 2.8.3
+		 *
+		 * @return Theme
+		 */
+		public function theme() {
+			if ( empty( UM()->classes['um\common\theme'] ) ) {
+				UM()->classes['um\common\theme'] = new Theme();
+			}
+			return UM()->classes['um\common\theme'];
 		}
 	}
 }

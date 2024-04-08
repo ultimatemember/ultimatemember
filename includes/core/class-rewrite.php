@@ -162,6 +162,13 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 				if ( empty( $custom_meta ) ) {
 					// Set default permalink base if custom meta is empty.
 					$permalink_base = 'user_login';
+				} else {
+					// Ignore username slug if custom meta slug exists.
+					$user_id          = username_exists( um_queried_user() );
+					$custom_permalink = get_user_meta( $user_id, 'um_user_profile_url_slug_' . $permalink_base, true );
+					if ( ! empty( $custom_permalink ) && um_queried_user() !== $custom_permalink ) {
+						return false;
+					}
 				}
 			}
 

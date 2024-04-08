@@ -1496,7 +1496,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_validate':
-					if ( array_key_exists( 'mode', $form_data ) && 'login' === $form_data['mode'] && in_array( $field_args['metakey'], array( 'username', 'user_login', 'user_email' ), true ) ) {
+					if ( array_key_exists( 'mode', $form_data ) && 'login' === $form_data['mode'] && array_key_exists( 'metakey', $field_args ) && in_array( $field_args['metakey'], array( 'username', 'user_login', 'user_email' ), true ) ) {
 						return;
 					}
 					?>

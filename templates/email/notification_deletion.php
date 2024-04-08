@@ -5,7 +5,7 @@
  *
  * This template can be overridden by copying it to {your-theme}/ultimate-member/email/notification_deletion.php
  *
- * @version 2.6.1
+ * @version 2.8.3
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<div style="padding: 0 30px 30px 30px;border-bottom: 3px solid #eeeeee;">
 
-		<div style="padding: 30px 0;font-size: 24px;text-align: center;line-height: 40px;">{display_name} has just deleted their {site_name} account.</span></div>
+		<div style="padding: 30px 0;font-size: 24px;text-align: center;line-height: 40px;">{display_name} has just deleted their {site_name} account.</div>
 
 	</div>
 

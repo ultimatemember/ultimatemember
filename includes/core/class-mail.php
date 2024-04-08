@@ -351,8 +351,8 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			 */
 			$message = apply_filters( 'um_email_send_message_content', $message, $slug, $args );
 
-			add_filter( 'um_template_tags_patterns_hook', array( &$this, 'add_placeholder' ) );
-			add_filter( 'um_template_tags_replaces_hook', array( &$this, 'add_replace_placeholder' ) );
+//			add_filter( 'um_template_tags_patterns_hook', array( &$this, 'add_placeholder' ) );
+//			add_filter( 'um_template_tags_replaces_hook', array( &$this, 'add_replace_placeholder' ) );
 
 			// Convert tags in email template.
 			return um_convert_tags( $message, $args );
@@ -421,8 +421,8 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			$mail_from_addr    = UM()->options()->get( 'mail_from_addr' ) ? UM()->options()->get( 'mail_from_addr' ) : get_bloginfo( 'admin_email' );
 			$this->headers     = 'From: ' . stripslashes( $mail_from ) . ' <' . $mail_from_addr . '>' . "\r\n";
 
-			add_filter( 'um_template_tags_patterns_hook', array( UM()->mail(), 'add_placeholder' ) );
-			add_filter( 'um_template_tags_replaces_hook', array( UM()->mail(), 'add_replace_placeholder' ) );
+			add_filter( 'um_template_tags_patterns_hook', array( $this, 'add_placeholder' ) );
+			add_filter( 'um_template_tags_replaces_hook', array( $this, 'add_replace_placeholder' ) );
 
 			/**
 			 * Filters email notification subject.
