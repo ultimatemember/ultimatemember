@@ -720,8 +720,27 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 					$search_like_string = apply_filters( 'um_member_directory_meta_search_like_type', '%' . $wpdb->esc_like( $search_line ) . '%', $search_line );
 
+					$directory_id   = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
+					$exclude_fields = get_post_meta( $directory_id, '_um_search_exclude_fields', true );
+					$include_fields = get_post_meta( $directory_id, '_um_search_include_fields', true );
+					if ( ! empty( $exclude_fields ) ) {
+						$custom_fields_sql = 'AND umm_search.um_key NOT IN (';
+						foreach ( $exclude_fields as $exclude_field ) {
+							$custom_fields_sql .= "'" . $exclude_field . "',";
+						}
+						$custom_fields_sql  = rtrim( $custom_fields_sql, ',' );
+						$custom_fields_sql .= ') ';
+					}
+					if ( ! empty( $include_fields ) ) {
+						$custom_fields_sql = 'AND umm_search.um_key IN (';
+						foreach ( $include_fields as $include_field ) {
+							$custom_fields_sql .= "'" . $include_field . "',";
+						}
+						$custom_fields_sql  = rtrim( $custom_fields_sql, ',' );
+						$custom_fields_sql .= ') ';
+					}
 					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $core_search and $additional_search are pre-prepared.
-					$this->where_clauses[] = $wpdb->prepare( "( umm_search.um_value = %s OR umm_search.um_value LIKE %s OR umm_search.um_value LIKE %s OR {$core_search}{$additional_search})", $search_line, $search_like_string, '%' . $wpdb->esc_like( maybe_serialize( (string) $search_line ) ) . '%' );
+					$this->where_clauses[] = $wpdb->prepare( "( umm_search.um_value = %s OR umm_search.um_value LIKE %s OR umm_search.um_value LIKE %s OR {$core_search}{$additional_search}) {$custom_fields_sql}", $search_line, $search_like_string, '%' . $wpdb->esc_like( maybe_serialize( (string) $search_line ) ) . '%' );
 
 					$this->is_search = true;
 				}

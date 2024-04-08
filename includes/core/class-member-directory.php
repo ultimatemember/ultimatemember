@@ -1734,22 +1734,30 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					$sql['where'] = str_replace( '#%&', '{' . $matches[0][0] . '}', $sql['where'] );
 
+					$directory_id   = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
+					$exclude_fields = get_post_meta( $directory_id, '_um_search_exclude_fields', true );
+					$include_fields = get_post_meta( $directory_id, '_um_search_include_fields', true );
+
 					if ( isset( $join_matches[1] ) ) {
 						$meta_join_for_search = trim( $join_matches[1] );
 
 						// skip private invisible fields
 						$custom_fields = array();
-						foreach ( array_keys( UM()->builtin()->all_user_fields ) as $field_key ) {
-							if ( empty( $field_key ) ) {
-								continue;
-							}
+						if ( empty( $include_fields ) ) {
+							foreach ( array_keys( UM()->builtin()->all_user_fields ) as $field_key ) {
+								if ( empty( $field_key ) ) {
+									continue;
+								}
 
-							$data = UM()->fields()->get_field( $field_key );
-							if ( ! um_can_view_field( $data ) ) {
-								continue;
-							}
+								$data = UM()->fields()->get_field( $field_key );
+								if ( ! um_can_view_field( $data ) ) {
+									continue;
+								}
 
-							$custom_fields[] = $field_key;
+								$custom_fields[] = $field_key;
+							}
+						} else {
+							$custom_fields = $include_fields;
 						}
 
 						$custom_fields = apply_filters( 'um_general_search_custom_fields', $custom_fields );
@@ -1760,6 +1768,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 								"$1 AND " . $meta_join_for_search . ".meta_key IN( '" . implode( "','", $custom_fields ) . "' ) $2",
 								$sql['join']
 							);
+						}
+
+						if ( ! empty( $exclude_fields ) ) {
+							foreach ( $exclude_fields as $field ) {
+								$sql['join'] = str_replace( ",'" . $field . "'", '', $sql['join'] );
+							}
 						}
 					}
 
