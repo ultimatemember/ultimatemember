@@ -172,6 +172,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 * Added: "Hide my last login" via the Account > Privacy setting
 * Added: Exclude and Include fields for member directory searching
+* Tweak: Compatibility with WordPress 6.5
 
 **Bugfixes**
 
@@ -179,6 +180,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: wp-admin Ultimate Member > Dashboard layouts
 * Fixed: Required fields labels
 * Fixed: Change password and update account email notifications duplicates
+* Fixed: Reset Password urlencoded username
 * Fixed: Clear media JS in wp-admin settings
 
 **Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
