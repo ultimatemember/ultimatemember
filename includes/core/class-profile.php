@@ -418,6 +418,13 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 			if ( ! empty( $array ) ) {
 				foreach ( $array as $key ) {
 					if ( $key ) {
+						if ( '_um_last_login' === $key ) {
+							$show_last_login = get_user_meta( um_user( 'ID' ), 'um_show_last_login', true );
+							if ( ! empty( $show_last_login ) && 'no' === $show_last_login[0] ) {
+								continue;
+							}
+						}
+
 						$data = array();
 						if ( isset( UM()->builtin()->all_user_fields[ $key ] ) ) {
 							$data = UM()->builtin()->all_user_fields[ $key ];

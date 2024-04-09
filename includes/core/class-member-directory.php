@@ -42,6 +42,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 */
 		var $filter_fields = array();
 
+		/**
+		 * @var array
+		 */
+		public $searching_fields = array();
+
 
 		/**
 		 * @var array
@@ -122,7 +127,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * Get the WordPress core searching fields in wp_users query.
 		 * @return array
 		 */
-		private function get_core_search_fields() {
+		protected function get_core_search_fields() {
 			/**
 			 * Filters the WordPress core searching fields in wp_users query for UM Member directory query.
 			 *
@@ -433,6 +438,25 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$this->filter_supported_fields = apply_filters( 'um_members_directory_custom_field_types_supported_filter', array( 'date', 'time', 'select', 'multiselect', 'radio', 'checkbox', 'rating', 'text', 'textarea', 'number' ) );
 
+			$core_search_keys = $this->get_core_search_fields();
+
+			$this->searching_fields = array();
+			if ( ! empty( UM()->builtin()->all_user_fields() ) ) {
+				foreach ( UM()->builtin()->all_user_fields() as $key => $data ) {
+					if ( in_array( $key, $core_search_keys, true ) ) {
+						if ( isset( $data['title'] ) && array_search( $data['title'], $this->searching_fields, true ) !== false ) {
+							$data['title'] = $data['title'] . ' (' . $key . ')';
+						}
+
+						$title = isset( $data['title'] ) ? $data['title'] : ( isset( $data['label'] ) ? $data['label'] : '' );
+						if ( empty( $title ) ) {
+							continue;
+						}
+
+						$this->searching_fields[ $key ] = $title;
+					}
+				}
+			}
 			if ( ! empty( UM()->builtin()->saved_fields ) ) {
 				foreach ( UM()->builtin()->saved_fields as $key => $data ) {
 
@@ -458,6 +482,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$this->filter_fields = apply_filters( 'um_members_directory_filter_fields', $this->filter_fields );
 
 			ksort( $this->filter_fields );
+
+			$this->searching_fields = array_merge( $this->searching_fields, $this->filter_fields );
+			asort( $this->searching_fields );
 
 			$this->filter_types = apply_filters( 'um_members_directory_filter_types', array(
 				'country'               => 'select',
@@ -1734,27 +1761,50 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					$sql['where'] = str_replace( '#%&', '{' . $matches[0][0] . '}', $sql['where'] );
 
+					$directory_id   = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
+					$exclude_fields = get_post_meta( $directory_id, '_um_search_exclude_fields', true );
+					$include_fields = get_post_meta( $directory_id, '_um_search_include_fields', true );
+
 					if ( isset( $join_matches[1] ) ) {
 						$meta_join_for_search = trim( $join_matches[1] );
 
 						// skip private invisible fields
 						$custom_fields = array();
-						foreach ( array_keys( UM()->builtin()->all_user_fields ) as $field_key ) {
-							if ( empty( $field_key ) ) {
-								continue;
-							}
+						if ( empty( $include_fields ) ) {
+							foreach ( array_keys( UM()->builtin()->all_user_fields ) as $field_key ) {
+								if ( empty( $field_key ) ) {
+									continue;
+								}
 
-							$data = UM()->fields()->get_field( $field_key );
-							if ( ! um_can_view_field( $data ) ) {
-								continue;
-							}
+								$data = UM()->fields()->get_field( $field_key );
+								if ( ! um_can_view_field( $data ) ) {
+									continue;
+								}
 
-							$custom_fields[] = $field_key;
+								$custom_fields[] = $field_key;
+							}
+						} else {
+							foreach ( $include_fields as $field_key ) {
+								if ( empty( $field_key ) ) {
+									continue;
+								}
+
+								$data = UM()->fields()->get_field( $field_key );
+								if ( ! um_can_view_field( $data ) ) {
+									continue;
+								}
+
+								$custom_fields[] = $field_key;
+							}
 						}
 
 						$custom_fields = apply_filters( 'um_general_search_custom_fields', $custom_fields );
 
 						if ( ! empty( $custom_fields ) ) {
+							if ( ! empty( $exclude_fields ) ) {
+								$custom_fields = array_diff( $custom_fields, $exclude_fields );
+							}
+
 							$sql['join'] = preg_replace(
 								'/(' . $meta_join_for_search . ' ON \( ' . $wpdb->users . '\.ID = ' . $meta_join_for_search . '\.user_id )(\))/im',
 								"$1 AND " . $meta_join_for_search . ".meta_key IN( '" . implode( "','", $custom_fields ) . "' ) $2",
@@ -1763,18 +1813,28 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						}
 					}
 
-					// Add OR instead AND to search in WP core fields user_email, user_login, user_display_name
-					$search_where = $context->get_search_sql( $search, $this->get_core_search_fields(), 'both' );
+					$core_search = $this->get_core_search_fields();
+					if ( ! empty( $include_fields ) ) {
+						$core_search = array_intersect( $core_search, $include_fields );
+					}
+					if ( ! empty( $exclude_fields ) ) {
+						$core_search = array_diff( $core_search, $exclude_fields );
+					}
 
-					$search_where = preg_replace( '/ AND \((.*?)\)/im', "$1 OR", $search_where );
+					if ( ! empty( $core_search ) ) {
+						// Add OR instead AND to search in WP core fields user_email, user_login, user_display_name
+						$search_where = $context->get_search_sql( $search, $core_search, 'both' );
 
-					// str_replace( '/', '\/', wp_slash( $search ) ) means that we add backslashes to special symbols + add backslash to slash(/) symbol for proper regular pattern.
-					$sql['where'] = preg_replace(
-						'/(' . $meta_join_for_search . '.meta_value = \'' . str_replace( '/', '\/', wp_slash( $search ) ) . '\')/im',
-						trim( $search_where ) . " $1",
-						$sql['where'],
-						1
-					);
+						$search_where = preg_replace( '/ AND \((.*?)\)/im', "$1 OR", $search_where );
+
+						// str_replace( '/', '\/', wp_slash( $search ) ) means that we add backslashes to special symbols + add backslash to slash(/) symbol for proper regular pattern.
+						$sql['where'] = preg_replace(
+							'/(' . $meta_join_for_search . '.meta_value = \'' . str_replace( '/', '\/', wp_slash( $search ) ) . '\')/im',
+							trim( $search_where ) . " $1",
+							$sql['where'],
+							1
+						);
+					}
 				}
 			}
 
@@ -1785,6 +1845,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * Handle filters request
 		 */
 		function filters( $directory_data ) {
+			global $wpdb;
 			//filters
 			$filter_query = array();
 			if ( ! empty( $directory_data['search_fields'] ) ) {
@@ -1817,9 +1878,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					continue;
 				}
 
+				/** This filter is documented in includes/core/class-member-directory-meta.php */
+				$relation = apply_filters( 'um_members_directory_select_filter_relation', 'OR', $field );
+
 				switch ( $field ) {
 					default:
-
 						$filter_type = $this->filter_types[ $field ];
 
 						/**
@@ -1873,35 +1936,35 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 								case 'select':
 									if ( is_array( $value ) ) {
-										$field_query = array( 'relation' => 'OR' );
+										$field_query = array( 'relation' => esc_sql( $relation ) );
 
 										foreach ( $value as $single_val ) {
 											$single_val = trim( stripslashes( $single_val ) );
 
 											$arr_meta_query = array(
 												array(
-													'key'       => $field,
-													'value'     => $single_val,
-													'compare'   => '=',
+													'key'     => $field,
+													'value'   => $single_val,
+													'compare' => '=',
 												),
 												array(
-													'key'       => $field,
-													'value'     => serialize( (string) $single_val ),
-													'compare'   => 'LIKE',
+													'key'     => $field,
+													'value'   => serialize( (string) $single_val ),
+													'compare' => 'LIKE',
 												),
 												array(
-													'key'       => $field,
-													'value'     => '"' . $single_val . '"',
-													'compare'   => 'LIKE',
-												)
+													'key'     => $field,
+													'value'   => '"' . $single_val . '"',
+													'compare' => 'LIKE',
+												),
 											);
 
 											if ( is_numeric( $single_val ) ) {
 
 												$arr_meta_query[] = array(
-													'key'       => $field,
-													'value'     => serialize( (int) $single_val ),
-													'compare'   => 'LIKE',
+													'key'     => $field,
+													'value'   => serialize( absint( $single_val ) ),
+													'compare' => 'LIKE',
 												);
 
 											}
@@ -1975,26 +2038,39 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						if ( ! empty( $field_query ) && $field_query !== true ) {
 							$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $field_query ) );
 						}
-
 						break;
 					case 'role':
 						$value = array_map( 'strtolower', $value );
 
-						if ( ! empty( $this->query_args['role__in'] ) ) {
-							$this->query_args['role__in'] = is_array( $this->query_args['role__in'] ) ? $this->query_args['role__in'] : array( $this->query_args['role__in'] );
-							$default_role = array_intersect( $this->query_args['role__in'], $value );
-							$um_role = array_diff( $value, $default_role );
-
-							foreach ( $um_role as $key => &$val ) {
-								$val = 'um_' . str_replace( ' ', '-', $val );
+						if ( 'OR' !== $relation ) {
+							$role__in_clauses = array( 'relation' => $relation );
+							foreach ( $value as $role ) {
+								$role__in_clauses[] = array(
+									'key'     => $wpdb->get_blog_prefix() . 'capabilities',
+									'value'   => '"' . $role . '"',
+									'compare' => 'LIKE',
+								);
 							}
-							$this->query_args['role__in'] = array_merge( $default_role, $um_role );
+
+							$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $role__in_clauses ) );
+
+							$this->custom_filters_in_query[ $field ] = $value;
 						} else {
-							$this->query_args['role__in'] = $value;
-						};
+							if ( ! empty( $this->query_args['role__in'] ) ) {
+								$this->query_args['role__in'] = is_array( $this->query_args['role__in'] ) ? $this->query_args['role__in'] : array( $this->query_args['role__in'] );
+								$default_role = array_intersect( $this->query_args['role__in'], $value );
+								$um_role = array_diff( $value, $default_role );
 
-						$this->custom_filters_in_query[ $field ] = $this->query_args['role__in'];
+								foreach ( $um_role as $key => &$val ) {
+									$val = 'um_' . str_replace( ' ', '-', $val );
+								}
+								$this->query_args['role__in'] = array_merge( $default_role, $um_role );
+							} else {
+								$this->query_args['role__in'] = $value;
+							}
 
+							$this->custom_filters_in_query[ $field ] = $this->query_args['role__in'];
+						}
 						break;
 					case 'birth_date':
 						$from_date = date( 'Y/m/d', mktime( 0,0,0, date( 'm', time() ), date( 'd', time() ), date( 'Y', time() - min( $value ) * YEAR_IN_SECONDS ) ) );
@@ -2016,7 +2092,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 						break;
 					case 'user_registered':
-
 						$offset = 0;
 						if ( isset( $_POST['gmt_offset'] ) && is_numeric( $_POST['gmt_offset'] ) ) {
 							$offset = (int) $_POST['gmt_offset'];
@@ -2052,6 +2127,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
 						$to_date   = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
 						$meta_query = array(
+							'relation' => 'AND',
 							array(
 								'key'       => '_um_last_login',
 								'value'     => array( gmdate( 'Y-m-d H:i:s', $from_date ), gmdate( 'Y-m-d H:i:s', $to_date ) ),
@@ -2059,11 +2135,53 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 								'inclusive' => true,
 								'type'      => 'DATETIME',
 							),
+							array(
+								'relation' => 'OR',
+								array(
+									'key'     => 'um_show_last_login',
+									'compare' => 'NOT EXISTS',
+								),
+								array(
+									'key'     => 'um_show_last_login',
+									'value'   => 'a:1:{i:0;s:2:"no";}',
+									'compare' => '!=',
+								),
+							),
 						);
 
 						$this->custom_filters_in_query[ $field ] = $value;
 
 						$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
+						break;
+					case 'gender':
+						if ( is_array( $value ) ) {
+							$field_query = array( 'relation' => $relation );
+
+							foreach ( $value as $single_val ) {
+								$single_val = trim( stripslashes( $single_val ) );
+
+								$arr_meta_query = array(
+									array(
+										'key'     => $field,
+										'value'   => $single_val,
+										'compare' => '=',
+									),
+									array(
+										'key'     => $field,
+										'value'   => '"' . $single_val . '"',
+										'compare' => 'LIKE',
+									),
+								);
+
+								$field_query = array_merge( $field_query, $arr_meta_query );
+							}
+						}
+
+						if ( ! empty( $field_query ) ) {
+							$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $field_query ) );
+
+							$this->custom_filters_in_query[ $field ] = $value;
+						}
 						break;
 				}
 			}
@@ -2141,35 +2259,36 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 										$value = array( $value );
 									}
 
-									$field_query = array( 'relation' => 'OR' );
+									/** This filter is documented in includes/core/class-member-directory.php */
+									$field_query = apply_filters( 'um_members_directory_filter_select', array( 'relation' => 'OR' ), $field );
 
 									foreach ( $value as $single_val ) {
 										$single_val = trim( $single_val );
 
 										$arr_meta_query = array(
 											array(
-												'key'       => $field,
-												'value'     => $single_val,
-												'compare'   => '=',
+												'key'     => $field,
+												'value'   => $single_val,
+												'compare' => '=',
 											),
 											array(
-												'key'       => $field,
-												'value'     => serialize( (string) $single_val ),
-												'compare'   => 'LIKE',
+												'key'     => $field,
+												'value'   => serialize( (string) $single_val ),
+												'compare' => 'LIKE',
 											),
 											array(
-												'key'       => $field,
-												'value'     => '"' . $single_val . '"',
-												'compare'   => 'LIKE',
-											)
+												'key'     => $field,
+												'value'   => '"' . $single_val . '"',
+												'compare' => 'LIKE',
+											),
 										);
 
 										if ( is_numeric( $single_val ) ) {
 
 											$arr_meta_query[] = array(
-												'key'       => $field,
-												'value'     => serialize( (int) $single_val ),
-												'compare'   => 'LIKE',
+												'key'     => $field,
+												'value'   => serialize( absint( $single_val ) ),
+												'compare' => 'LIKE',
 											);
 
 										}
@@ -2298,15 +2417,36 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							$offset = $gmt_offset;
 						}
 
-						$from_date  = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
-						$to_date    = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
+						$value = array_map(
+							function( $date ) {
+								return is_numeric( $date ) ? $date : strtotime( $date );
+							},
+							$value
+						);
+
+						$from_date = gmdate( 'Y-m-d H:i:s', (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ) ); // client time zone offset
+						$to_date   = gmdate( 'Y-m-d H:i:s', (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1 ); // time 23:59
+
 						$meta_query = array(
+							'relation' => 'AND',
 							array(
 								'key'       => '_um_last_login',
 								'value'     => array( $from_date, $to_date ),
 								'compare'   => 'BETWEEN',
 								'inclusive' => true,
 								'type'      => 'DATETIME',
+							),
+							array(
+								'relation' => 'OR',
+								array(
+									'key'     => 'um_show_last_login',
+									'compare' => 'NOT EXISTS',
+								),
+								array(
+									'key'     => 'um_show_last_login',
+									'value'   => 'a:1:{i:0;s:2:"no";}',
+									'compare' => '!=',
+								),
 							),
 						);
 
@@ -2513,6 +2653,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 								continue;
 							}
 
+							if ( '_um_last_login' === $key ) {
+								$show_last_login = get_user_meta( $user_id, 'um_show_last_login', true );
+								if ( ! empty( $show_last_login ) && 'no' === $show_last_login[0] ) {
+									continue;
+								}
+							}
+
 							$value = um_filtered_value( $key );
 
 							if ( ! $value ) {
@@ -2535,6 +2682,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						foreach ( $directory_data['reveal_fields'] as $key ) {
 							if ( ! $key ) {
 								continue;
+							}
+
+							if ( '_um_last_login' === $key ) {
+								$show_last_login = get_user_meta( $user_id, 'um_show_last_login', true );
+								if ( ! empty( $show_last_login ) && 'no' === $show_last_login[0] ) {
+									continue;
+								}
 							}
 
 							$value = um_filtered_value( $key );

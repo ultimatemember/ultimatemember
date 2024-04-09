@@ -653,13 +653,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return string
 		 */
 		public function field_label( $label, $key, $data ) {
-			$output  = null;
-			$output .= '<div class="um-field-label">';
-
-			if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'off' !== $this->field_icons && ( 'label' === $this->field_icons || true === $this->viewing ) ) {
-				$output .= '<div class="um-field-label-icon"><i class="' . esc_attr( $data['icon'] ) . '" aria-label="' . esc_attr( $label ) . '"></i></div>';
-			}
-
 			if ( true === $this->viewing ) {
 				/**
 				 * Filters Ultimate Member field label on the Profile form: View mode.
@@ -730,13 +723,26 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$label = apply_filters( 'um_edit_label_all_fields', $label, $data );
 			}
 
+			$output  = null;
+			$output .= '<div class="um-field-label">';
+
+			if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'off' !== $this->field_icons && ( 'label' === $this->field_icons || true === $this->viewing ) ) {
+				$output .= '<div class="um-field-label-icon"><i class="' . esc_attr( $data['icon'] ) . '" aria-label="' . esc_attr( $label ) . '"></i></div>';
+			}
+
 			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
 			$for_attr               = '';
 			if ( ! in_array( $data['type'], $fields_without_metakey, true ) ) {
 				$for_attr = ' for="' . esc_attr( $key . UM()->form()->form_suffix ) . '"';
 			}
 
-			$output .= '<label' . $for_attr . '>' . __( $label, 'ultimate-member' ) . '</label>';
+			$output .= '<label' . $for_attr . '>' . esc_html__( $label, 'ultimate-member' );
+
+			if ( ! empty( $data['required'] ) && UM()->options()->get( 'form_asterisk' ) ) {
+				$output .= '<span class="um-req" title="' . esc_attr__( 'Required', 'ultimate-member' ) . '">*</span>';
+			}
+
+			$output .= '</label>';
 
 			if ( ! empty( $data['help'] ) && false === $this->viewing && false === strpos( $key, 'confirm_user_pass' ) ) {
 				if ( ! UM()->mobile()->isMobile() ) {
@@ -3092,7 +3098,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$fonticon    = UM()->files()->get_fonticon_by_ext( $file_type['ext'] );
 
 							$output .= '<div class="um-single-fileinfo">';
-							$output .= '<a href="' . esc_attr( $file_url ) . '" target="_blank">';
+							$output .= '<a href="' . esc_url( $file_url ) . '" target="_blank">';
 							$output .= '<span class="icon" style="background:' . esc_attr( $fonticon_bg ) . '"><i class="' . esc_attr( $fonticon ) . '"></i></span>';
 							$output .= '<span class="filename">' . esc_html( $file_field_name ) . '</span>';
 							$output .= '</a></div></div>';
@@ -4278,6 +4284,14 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @throws \Exception
 		 */
 		public function view_field( $key, $data, $rule = false ) {
+			if ( '_um_last_login' === $key ) {
+				$profile_id      = um_user( 'ID' );
+				$show_last_login = get_user_meta( $profile_id, 'um_show_last_login', true );
+				if ( ! empty( $show_last_login ) && 'no' === $show_last_login[0] ) {
+					return '';
+				}
+			}
+
 			$output = '';
 
 			// Get whole field data.

@@ -330,7 +330,7 @@ function um_submit_account_details( $args ) {
 			$v = sanitize_text_field( $v );
 		} elseif ( 'user_email' === $k ) {
 			$v = sanitize_email( $v );
-		} elseif ( 'hide_in_members' === $k ) {
+		} elseif ( 'hide_in_members' === $k || 'um_show_last_login' === $k ) {
 			$v = array_map( 'sanitize_text_field', $v );
 		}
 
@@ -348,6 +348,13 @@ function um_submit_account_details( $args ) {
 				delete_user_meta( $user_id, 'hide_in_members' );
 				unset( $changes['hide_in_members'] );
 			}
+		}
+	}
+
+	if ( isset( $changes['um_show_last_login'] ) ) {
+		if ( 'yes' === $changes['um_show_last_login'] || array_intersect( array( 'yes' ), $changes['um_show_last_login'] ) ) {
+			delete_user_meta( $user_id, 'um_show_last_login' );
+			unset( $changes['um_show_last_login'] );
 		}
 	}
 
@@ -552,8 +559,13 @@ add_action( 'um_after_user_account_updated', 'um_after_user_account_updated_perm
  * @param $changed
  */
 function um_account_updated_notification( $user_id, $changed ) {
-	um_fetch_user( $user_id );
-	UM()->mail()->send( um_user( 'user_email' ), 'changedaccount_email' );
+	// phpcs:disable WordPress.Security.NonceVerification
+	if ( 'password' !== $_POST['_um_account_tab'] || ! UM()->options()->get( 'changedpw_email_on' ) ) {
+		// Avoid email duplicates (account changed and password changed) on the password change tab.
+		um_fetch_user( $user_id );
+		UM()->mail()->send( um_user( 'user_email' ), 'changedaccount_email' );
+	}
+	// phpcs:enable WordPress.Security.NonceVerification
 }
 add_action( 'um_after_user_account_updated', 'um_account_updated_notification', 20, 2 );
 
@@ -612,7 +624,7 @@ function um_after_account_privacy( $args ) {
 			$exports_url = wp_privacy_exports_url();
 
 			echo '<p>' . esc_html__( 'You could download your previous data:', 'ultimate-member' ) . '</p>';
-			echo '<a href="' . esc_attr( $exports_url . get_post_meta( $completed['ID'], '_export_file_name', true ) ) . '">' . esc_html__( 'Download Personal Data', 'ultimate-member' ) . '</a>';
+			echo '<a href="' . esc_url( $exports_url . get_post_meta( $completed['ID'], '_export_file_name', true ) ) . '">' . esc_html__( 'Download Personal Data', 'ultimate-member' ) . '</a>';
 			echo '<p>' . esc_html__( 'You could send a new request for an export of personal your data.', 'ultimate-member' ) . '</p>';
 
 		}

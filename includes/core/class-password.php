@@ -57,7 +57,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				array(
 					'act'   => 'reset_password',
 					'hash'  => $reset_key,
-					'login' => $user_data->user_login,
+					'login' => rawurlencode( $user_data->user_login ),
 				),
 				um_get_core_page( 'password-reset' )
 			);

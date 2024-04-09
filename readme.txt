@@ -2,12 +2,11 @@
 Author URI: https://ultimatemember.com/
 Plugin URI: https://ultimatemember.com/
 Contributors: ultimatemember, champsupertramp, nsinelnikov
-Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
-Tested up to: 6.4
-Stable tag: 2.8.4
+Tested up to: 6.5
+Stable tag: 2.8.5
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -167,6 +166,25 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
+= 2.8.5 2024-04-09 =
+
+**Enhancements**
+
+* Added: "Hide my last login" via the Account > Privacy setting
+* Added: Exclude and Include fields for member directory searching
+* Tweak: Compatibility with WordPress 6.5
+
+**Bugfixes**
+
+* Fixed: URL attributes escaping (CVE-2024-2765)
+* Fixed: wp-admin Ultimate Member > Dashboard layouts
+* Fixed: Required fields labels
+* Fixed: Change password and update account email notifications duplicates
+* Fixed: Reset Password urlencoded username
+* Fixed: Clear media JS in wp-admin settings
+
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
+
 = 2.8.4 2024-03-06 =
 
 **Enhancements**
@@ -180,6 +198,8 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: Password validation error
 * Fixed: Password reset url for the approved user who didn't set their password after registration without password
 * Fixed: Conflict with WebP Uploads
+
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
 
 = 2.8.3 2024-02-19 =
 
@@ -312,6 +332,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.8.5 =
+This version fixes a security related bug. Upgrade immediately.
 
 = 2.8.4 =
 This version fixes a security related bug. Upgrade immediately.

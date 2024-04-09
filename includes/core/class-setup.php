@@ -213,7 +213,7 @@ KEY meta_value_indx (um_value(191))
 			$options = get_option( 'um_options', array() );
 
 			foreach ( $core_pages as $slug => $page_id ) {
-				$key             = UM()->options()->get_core_page_id( $slug );
+				$key             = UM()->options()->get_predefined_page_option_key( $slug );
 				$options[ $key ] = $page_id;
 			}
 

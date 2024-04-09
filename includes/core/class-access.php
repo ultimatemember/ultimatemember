@@ -1772,10 +1772,10 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					$access = UM()->options()->get( 'accessible' );
 
 					if ( $access == 2 ) {
-						//global settings for accessible home page
+						// Global settings for accessible home page
 						$home_page_accessible = UM()->options()->get( 'home_page_accessible' );
 
-						if ( $home_page_accessible == 0 ) {
+						if ( ! $home_page_accessible ) {
 							//get redirect URL if not set get login page by default
 							$redirect = UM()->options()->get( 'access_redirect' );
 							if ( ! $redirect ) {
@@ -1795,9 +1795,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					$access = UM()->options()->get( 'accessible' );
 
 					if ( $access == 2 ) {
-						//global settings for accessible home page
+						// Global settings for accessible home page
 						$category_page_accessible = UM()->options()->get( 'category_page_accessible' );
-						if ( $category_page_accessible == 0 ) {
+						if ( ! $category_page_accessible ) {
 							//get redirect URL if not set get login page by default
 							$redirect = UM()->options()->get( 'access_redirect' );
 							if ( ! $redirect ) {

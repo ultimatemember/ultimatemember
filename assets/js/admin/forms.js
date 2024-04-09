@@ -433,6 +433,14 @@ jQuery(document).ready( function() {
 		addClass('um-forms-field um-long-field').removeClass('um-hidden-multi-selects').attr('id', list.data('id_attr') + '-' + k);
 	});
 
+	jQuery('.um-multi-selects-add-option[data-name="um_metadata[_um_search_exclude_fields][]"]').on('click', function() {
+		jQuery('.um-multi-selects-list[data-field_id="_um_search_include_fields"] li.um-multi-selects-option-line').remove();
+	});
+
+	jQuery('.um-multi-selects-add-option[data-name="um_metadata[_um_search_include_fields][]"]').on('click', function() {
+		jQuery('.um-multi-selects-list[data-field_id="_um_search_exclude_fields"] li.um-multi-selects-option-line').remove();
+	});
+
 	var um_local_date = new Date();
 	var um_gmt_hours = -um_local_date.getTimezoneOffset() / 60;
 	jQuery('input[name="um-gmt-offset"]').val( um_gmt_hours );
@@ -819,11 +827,18 @@ jQuery(document).ready( function() {
 		});
 
 		jQuery('.um-clear-image').on('click', function(e) {
-			var clear_button = jQuery(this);
-			var default_image_url = clear_button.siblings('.um-forms-field').data('default');
+			let clear_button = jQuery(this);
+			let default_image_url = clear_button.siblings('.um-forms-field').data('default');
+			if ( undefined === default_image_url ) {
+				default_image_url = '';
+			}
+
 			clear_button.siblings('.um-set-image').show();
 			clear_button.hide();
 			clear_button.siblings('.icon_preview').attr( 'src', default_image_url );
+			if ( '' === default_image_url ) {
+				clear_button.siblings('.icon_preview').hide();
+			}
 			clear_button.siblings('.um-media-upload-data-id').val('');
 			clear_button.siblings('.um-media-upload-data-width').val('');
 			clear_button.siblings('.um-media-upload-data-height').val('');
