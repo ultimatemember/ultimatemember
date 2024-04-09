@@ -1,5 +1,20 @@
 ﻿== Changelog ==
 
+= 2.8.5: April 9, 2024 =
+
+* Enhancements:
+
+  - Added: "Hide my last login" via the Account > Privacy setting
+  - Added: Exclude and Include fields for member directory searching
+
+* Bugfixes:
+
+  - Fixed: URL attributes escaping (CVE-2024-2765)
+  - Fixed: wp-admin Ultimate Member > Dashboard layouts
+  - Fixed: Required fields labels
+  - Fixed: Change password and update account email notifications duplicates
+  - Fixed: Clear media JS in wp-admin settings
+
 = 2.8.4: March 6, 2024 =
 
 * Enhancements:

@@ -52,7 +52,8 @@
   width: 100%;
 }
 #um-users-overview-table td {
-  width: 50%;
+  width: auto;
+  min-width: 120px;
   vertical-align: middle;
   padding: 0 0 0 5px;
   box-sizing: border-box;

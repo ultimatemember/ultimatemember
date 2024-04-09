@@ -42,6 +42,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 */
 		var $filter_fields = array();
 
+		/**
+		 * @var array
+		 */
+		public $searching_fields = array();
+
 
 		/**
 		 * @var array
@@ -122,7 +127,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * Get the WordPress core searching fields in wp_users query.
 		 * @return array
 		 */
-		private function get_core_search_fields() {
+		protected function get_core_search_fields() {
 			/**
 			 * Filters the WordPress core searching fields in wp_users query for UM Member directory query.
 			 *
@@ -433,6 +438,25 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$this->filter_supported_fields = apply_filters( 'um_members_directory_custom_field_types_supported_filter', array( 'date', 'time', 'select', 'multiselect', 'radio', 'checkbox', 'rating', 'text', 'textarea', 'number' ) );
 
+			$core_search_keys = $this->get_core_search_fields();
+
+			$this->searching_fields = array();
+			if ( ! empty( UM()->builtin()->all_user_fields() ) ) {
+				foreach ( UM()->builtin()->all_user_fields() as $key => $data ) {
+					if ( in_array( $key, $core_search_keys, true ) ) {
+						if ( isset( $data['title'] ) && array_search( $data['title'], $this->searching_fields, true ) !== false ) {
+							$data['title'] = $data['title'] . ' (' . $key . ')';
+						}
+
+						$title = isset( $data['title'] ) ? $data['title'] : ( isset( $data['label'] ) ? $data['label'] : '' );
+						if ( empty( $title ) ) {
+							continue;
+						}
+
+						$this->searching_fields[ $key ] = $title;
+					}
+				}
+			}
 			if ( ! empty( UM()->builtin()->saved_fields ) ) {
 				foreach ( UM()->builtin()->saved_fields as $key => $data ) {
 
@@ -458,6 +482,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$this->filter_fields = apply_filters( 'um_members_directory_filter_fields', $this->filter_fields );
 
 			ksort( $this->filter_fields );
+
+			$this->searching_fields = array_merge( $this->searching_fields, $this->filter_fields );
+			asort( $this->searching_fields );
 
 			$this->filter_types = apply_filters( 'um_members_directory_filter_types', array(
 				'country'               => 'select',
@@ -1757,38 +1784,57 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 								$custom_fields[] = $field_key;
 							}
 						} else {
-							$custom_fields = $include_fields;
+							foreach ( $include_fields as $field_key ) {
+								if ( empty( $field_key ) ) {
+									continue;
+								}
+
+								$data = UM()->fields()->get_field( $field_key );
+								if ( ! um_can_view_field( $data ) ) {
+									continue;
+								}
+
+								$custom_fields[] = $field_key;
+							}
 						}
 
 						$custom_fields = apply_filters( 'um_general_search_custom_fields', $custom_fields );
 
 						if ( ! empty( $custom_fields ) ) {
+							if ( ! empty( $exclude_fields ) ) {
+								$custom_fields = array_diff( $custom_fields, $exclude_fields );
+							}
+
 							$sql['join'] = preg_replace(
 								'/(' . $meta_join_for_search . ' ON \( ' . $wpdb->users . '\.ID = ' . $meta_join_for_search . '\.user_id )(\))/im',
 								"$1 AND " . $meta_join_for_search . ".meta_key IN( '" . implode( "','", $custom_fields ) . "' ) $2",
 								$sql['join']
 							);
 						}
-
-						if ( ! empty( $exclude_fields ) ) {
-							foreach ( $exclude_fields as $field ) {
-								$sql['join'] = str_replace( ",'" . $field . "'", '', $sql['join'] );
-							}
-						}
 					}
 
-					// Add OR instead AND to search in WP core fields user_email, user_login, user_display_name
-					$search_where = $context->get_search_sql( $search, $this->get_core_search_fields(), 'both' );
+					$core_search = $this->get_core_search_fields();
+					if ( ! empty( $include_fields ) ) {
+						$core_search = array_intersect( $core_search, $include_fields );
+					}
+					if ( ! empty( $exclude_fields ) ) {
+						$core_search = array_diff( $core_search, $exclude_fields );
+					}
 
-					$search_where = preg_replace( '/ AND \((.*?)\)/im', "$1 OR", $search_where );
+					if ( ! empty( $core_search ) ) {
+						// Add OR instead AND to search in WP core fields user_email, user_login, user_display_name
+						$search_where = $context->get_search_sql( $search, $core_search, 'both' );
 
-					// str_replace( '/', '\/', wp_slash( $search ) ) means that we add backslashes to special symbols + add backslash to slash(/) symbol for proper regular pattern.
-					$sql['where'] = preg_replace(
-						'/(' . $meta_join_for_search . '.meta_value = \'' . str_replace( '/', '\/', wp_slash( $search ) ) . '\')/im',
-						trim( $search_where ) . " $1",
-						$sql['where'],
-						1
-					);
+						$search_where = preg_replace( '/ AND \((.*?)\)/im', "$1 OR", $search_where );
+
+						// str_replace( '/', '\/', wp_slash( $search ) ) means that we add backslashes to special symbols + add backslash to slash(/) symbol for proper regular pattern.
+						$sql['where'] = preg_replace(
+							'/(' . $meta_join_for_search . '.meta_value = \'' . str_replace( '/', '\/', wp_slash( $search ) ) . '\')/im',
+							trim( $search_where ) . " $1",
+							$sql['where'],
+							1
+						);
+					}
 				}
 			}
 
