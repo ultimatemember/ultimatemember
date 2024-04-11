@@ -553,7 +553,6 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->builtin();
 			$this->form()->hooks();
 			$this->permalinks();
-			$this->modal();
 			$this->cron();
 			$this->mobile();
 			$this->external_integrations();
@@ -877,6 +876,17 @@ if ( ! class_exists( 'UM' ) ) {
 		public function admin_enqueue() {
 			_deprecated_function( __METHOD__, '2.7.0', 'UM()->admin()->enqueue()' );
 			return $this->admin()->enqueue();
+		}
+
+		/**
+		 * @since 2.0
+		 * @deprecated 2.8.6
+		 *
+		 * @return um\frontend\Modal
+		 */
+		function modal() {
+			_deprecated_function( __METHOD__, '2.8.6', 'UM()->frontend()->modal()' );
+			return $this->frontend()->modal();
 		}
 
 
@@ -1386,21 +1396,6 @@ if ( ! class_exists( 'UM' ) ) {
 
 			return $this->classes['logout'];
 		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * @return um\core\Modal
-		 */
-		function modal() {
-			if ( empty( $this->classes['modal'] ) ) {
-				$this->classes['modal'] = new um\core\Modal();
-			}
-
-			return $this->classes['modal'];
-		}
-
 
 		/**
 		 * @since 2.0
