@@ -1912,6 +1912,9 @@ function um_profile( $key ) {
  * @return bool|string
  */
 function um_youtube_id_from_url( $url ) {
+	if ( ! $url ) {
+		return true;
+	}
 	$url = preg_replace( '/&ab_channel=.*/', '', $url ); // ADBlock argument.
 	$url = preg_replace( '/\?si=.*/', '', $url ); // referral attribute.
 
