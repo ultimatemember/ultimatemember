@@ -1607,9 +1607,15 @@ function um_can_view_profile( $user_id ) {
 					$can_view_roles = array();
 				}
 
-				if ( count( $can_view_roles ) && count( array_intersect( UM()->roles()->get_all_user_roles( $user_id ), $can_view_roles ) ) <= 0 ) {
+				$all_roles = UM()->roles()->get_all_user_roles( $user_id );
+				if ( empty( $all_roles ) ) {
 					um_fetch_user( $temp_id );
 					$can_view = false;
+				} else {
+					if ( count( $can_view_roles ) && count( array_intersect( $all_roles, $can_view_roles ) ) <= 0 ) {
+						um_fetch_user( $temp_id );
+						$can_view = false;
+					}
 				}
 			}
 		}
