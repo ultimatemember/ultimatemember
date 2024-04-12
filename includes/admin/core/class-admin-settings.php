@@ -70,7 +70,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			add_filter( 'um_change_settings_before_save', array( $this, 'set_default_if_empty' ), 9, 1 );
 			add_filter( 'um_change_settings_before_save', array( $this, 'remove_empty_values' ), 10, 1 );
-			add_action( 'wp_trash_post', array( $this, 'change_default_form' ) );
 		}
 
 
@@ -3515,55 +3514,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			}
 
 			return $settings;
-		}
-
-
-		public function change_default_form( $form_id ) {
-			if ( 'um_form' === get_post_type( $form_id ) ) {
-				$core_forms = get_option( 'um_core_forms', array() );
-				$mode       = get_post_meta( $form_id, '_um_mode', true );
-				if ( isset( $mode ) && absint( $form_id ) === absint( $core_forms[ $mode ] ) ) {
-					$args = array(
-						'post_type'      => 'um_form',
-						'meta_key'       => '_um_mode',
-						'meta_value'     => $mode,
-						'posts_per_page' => 1,
-						'orderby'        => 'date',
-						'post_status'    => 'publish',
-						'order'          => 'DESC',
-						'fields'         => 'ids',
-						'post__not_in'   => array( $form_id ),
-					);
-
-					$forms = get_posts( $args );
-					if ( ! empty( $forms ) ) {
-						$new_form_id         = $forms[0];
-						$core_forms[ $mode ] = $new_form_id;
-
-						/**
-						 * Filters Ultimate Member default forms ids.
-						 *
-						 * @param {array} $core_forms Default forms ids.
-						 * @param {int}   $form_id    Deleted form ID.
-						 *
-						 * @return {array} Default forms ids.
-						 *
-						 * @since 2.8.x
-						 * @hook um_default_forms_ids
-						 *
-						 * @example <caption>Set default profile form ID as 1.</caption>
-						 * function my_um_default_forms_ids( $core_forms, $form_id ) {
-						 *     // your code here
-						 *     $core_forms['profile'] = 1;
-						 *     return $core_forms;
-						 * }
-						 * add_filter( 'um_default_forms_ids', 'my_um_default_forms_ids', 10, 2 );
-						 */
-						$core_forms = apply_filters( 'um_default_forms_ids', $core_forms, $form_id );
-						update_option( 'um_core_forms', $core_forms );
-					}
-				}
-			}
 		}
 	}
 }
