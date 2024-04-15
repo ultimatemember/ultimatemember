@@ -508,7 +508,9 @@ jQuery(document).ready( function() {
 		});
 
 		var $picker = $input.pickadate('picker');
-		$picker.set( 'select', elem.data('value')*1000 );
+		if ( elem.data('value') ) {
+			$picker.set( 'select', elem.data('value')*1000 );
+		}
 	});
 
 

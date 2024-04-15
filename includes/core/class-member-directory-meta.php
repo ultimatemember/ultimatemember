@@ -389,11 +389,20 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 									}
 								}
 
-								$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
-								$to_date   = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
-								// @todo: rewrite date() in WP5.3 standards.
-								$from_date = date( 'Y/m/d', $from_date );
-								$to_date   = date( 'Y/m/d', $to_date );
+								if ( ! empty( $value[0] ) ) {
+									$min = $value[0];
+								} else {
+									$range = $this->datepicker_filters_range( $field );
+									$min   = strtotime( gmdate( 'Y/m/d', $range[0] ) );
+								}
+								if ( ! empty( $value[1] ) ) {
+									$max = $value[1];
+								} else {
+									$max = strtotime( gmdate( 'Y/m/d' ) );
+								}
+
+								$from_date = (int) $min + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
+								$to_date   = (int) $max + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
 
 								// $join_alias is pre-escaped.
 								$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_alias} ON {$join_alias}.user_id = u.ID";
@@ -511,8 +520,20 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 						$value
 					);
 
-					$from_date = gmdate( 'Y-m-d H:i:s', (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ) ); // client time zone offset
-					$to_date   = gmdate( 'Y-m-d H:i:s', (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1 ); // time 23:59
+					if ( ! empty( $value[0] ) ) {
+						$min = $value[0];
+					} else {
+						$range = $this->datepicker_filters_range( 'last_login' );
+						$min   = strtotime( gmdate( 'Y/m/d', $range[0] ) );
+					}
+					if ( ! empty( $value[1] ) ) {
+						$max = $value[1];
+					} else {
+						$max = strtotime( gmdate( 'Y/m/d' ) );
+					}
+
+					$from_date = gmdate( 'Y-m-d H:i:s', (int) $min + ( $offset * HOUR_IN_SECONDS ) ); // client time zone offset
+					$to_date   = gmdate( 'Y-m-d H:i:s', (int) $max + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1 ); // time 23:59
 
 					// $join_alias is pre-escaped.
 					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_alias} ON {$join_alias}.user_id = u.ID";
