@@ -569,13 +569,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				return '';
 			}
 
-			if ( $default_value === false ) {
+			if ( false === $default_value ) {
 				$default_filters = array();
 				if ( ! empty( $directory_data['search_filters'] ) ) {
 					$default_filters = maybe_unserialize( $directory_data['search_filters'] );
 				}
 
-				if ( ! empty( $default_filters[ $filter ] ) && $this->filter_types[ $filter ] != 'select' ) {
+				if ( ! empty( $default_filters[ $filter ] ) && 'select' !== $this->filter_types[ $filter ] ) {
 					return '';
 				}
 			}
@@ -907,6 +907,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					switch ( $attrs['format'] ) {
 						case 'g:i a':
+						default:
 							$js_format = 'h:i a';
 							break;
 						case 'g:i A':
@@ -917,8 +918,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							break;
 					}
 
-					$default_value_min = $range[0];
-					$default_value_max = $range[1];
+					$default_value_min = '';
+					$default_value_max = '';
 					if ( ! empty( $default_value[0] ) ) {
 						$default_value_min = $default_value[0];
 					}
@@ -1134,37 +1135,28 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 *
 		 * @return mixed
 		 */
-		function timepicker_filters_range( $filter ) {
+		protected function timepicker_filters_range( $filter ) {
+			global $wpdb;
+			$meta = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT DISTINCT meta_value
+					FROM {$wpdb->usermeta}
+					WHERE meta_key = %s
+					ORDER BY meta_value DESC",
+					$filter
+				)
+			);
 
-			switch ( $filter ) {
+			$meta = array_filter( $meta );
 
-				default: {
-
-					global $wpdb;
-					$meta = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT meta_value
-						FROM {$wpdb->usermeta}
-						WHERE meta_key = %s
-						ORDER BY meta_value DESC", $filter ) );
-
-					$meta = array_filter( $meta );
-
-					if ( empty( $meta ) || count( $meta ) === 1 ) {
-						$range = false;
-					} elseif ( ! empty( $meta ) ) {
-						$range = array( min( $meta ), max( $meta ) );
-					}
-
-
-					$range = apply_filters( "um_member_directory_filter_{$filter}_timepicker", $range );
-
-					break;
-				}
-
+			if ( empty( $meta ) || count( $meta ) === 1 ) {
+				$range = false;
+			} elseif ( ! empty( $meta ) ) {
+				$range = array( min( $meta ), max( $meta ) );
 			}
 
-			return $range;
+			return apply_filters( "um_member_directory_filter_{$filter}_timepicker", $range );
 		}
-
 
 		/**
 		 * @param $borndate

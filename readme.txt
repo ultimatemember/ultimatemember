@@ -170,7 +170,15 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 **Enhancements**
 
+* Added: Member Directory > Admin Filtering supports datepicker and timepicker filter-types with only "From" or "To" filled value
+* Added: Ability to customize modal templates upload-single.php and view-photo.php
+
 **Bugfixes**
+
+* Fixed: Using HTML in the block restriction message. Replaced escaper to wp_kses sanitize while saving
+* Fixed: Getting user capabilities without role
+* Fixed: YouTube validation when field value is empty
+* Fixed: Social URLs sanitizing where user can put his social username (e.g. Instagram, Facebook)
 
 = 2.8.5 2024-04-09 =
 
