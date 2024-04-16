@@ -416,6 +416,18 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 								break;
 
 							case 'timepicker':
+								if ( ! empty( $value[0] ) ) {
+									$value[0] = $value[0] . ':00';
+								} else {
+									$range    = $this->timepicker_filters_range( $field );
+									$value[0] = $range[0] . ':00';
+								}
+								if ( ! empty( $value[1] ) ) {
+									$value[1] = $value[1] . ':00';
+								} else {
+									$range    = $this->timepicker_filters_range( $field );
+									$value[1] = $range[1] . ':00';
+								}
 								// $join_alias is pre-escaped.
 								$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_alias} ON {$join_alias}.user_id = u.ID";
 								if ( $value[0] === $value[1] ) {
