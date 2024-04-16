@@ -523,7 +523,11 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->admin();
 				$this->admin_menu();
 				$this->admin_upgrade();
-				$this->admin_settings();
+				if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE ) {
+
+				} else {
+					$this->admin_settings();
+				}
 				$this->columns();
 				$this->metabox();
 				$this->users();
@@ -784,20 +788,6 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['admin_navmenu'];
 		}
 
-
-		/**
-		 * @since 2.0
-		 *
-		 * @return um\admin\core\Admin_Settings()
-		 */
-		function admin_settings() {
-			if ( empty( $this->classes['admin_settings'] ) ) {
-				$this->classes['admin_settings'] = new um\admin\core\Admin_Settings();
-			}
-			return $this->classes['admin_settings'];
-		}
-
-
 		/**
 		 * @since 2.0
 		 *
@@ -866,6 +856,24 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['admin_columns'];
 		}
 
+		/**
+		 * @since 2.0
+//		 * @deprecated 2.8.6
+		 *
+		 * @return um\admin\core\Admin_Settings|um\admin\Settings
+//		 * @return
+		 */
+		function admin_settings() {
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE ) {
+				_deprecated_function( __METHOD__, '2.7.0', 'UM()->admin()->settings()' );
+				return $this->admin()->settings();
+			}
+
+			if ( empty( $this->classes['admin_settings'] ) ) {
+				$this->classes['admin_settings'] = new um\admin\core\Admin_Settings();
+			}
+			return $this->classes['admin_settings'];
+		}
 
 		/**
 		 * @since 2.0

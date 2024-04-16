@@ -580,6 +580,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$invalid_license           = 0;
 			$arr_inactive_license_keys = array();
 
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE ) {
+				return;
+			}
+
 			if ( empty( UM()->admin_settings()->settings_structure['licenses']['fields'] ) ) {
 				return;
 			}

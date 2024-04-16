@@ -82,6 +82,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			$this->enqueue();
 			$this->notices();
 			$this->secure();
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE ) {
+				$this->settings();
+			}
 			$this->site_health();
 		}
 
@@ -2114,6 +2117,18 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 				UM()->classes['um\admin\secure'] = new Secure();
 			}
 			return UM()->classes['um\admin\secure'];
+		}
+
+		/**
+		 * @since 2.8.6
+		 *
+		 * @return Settings
+		 */
+		public function settings() {
+			if ( empty( UM()->classes['um\admin\settings'] ) ) {
+				UM()->classes['um\admin\settings'] = new Settings();
+			}
+			return UM()->classes['um\admin\settings'];
 		}
 
 		/**

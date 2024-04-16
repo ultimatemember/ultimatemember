@@ -43,10 +43,21 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 		 * @since 2.8.2
 		 */
 		public function maybe_settings_redirect() {
-			$current_tab    = empty( $_GET['tab'] ) ? '' : sanitize_key( $_GET['tab'] );
-			$current_subtab = empty( $_GET['section'] ) ? '' : sanitize_key( $_GET['section'] );
+			global $um_settings_current_tab, $um_settings_current_subtab;
 
-			$settings_struct = UM()->admin_settings()->settings_structure[ $current_tab ];
+			// $current_tab    = empty( $_GET['tab'] ) ? '' : sanitize_key( $_GET['tab'] );
+			// $current_subtab = empty( $_GET['section'] ) ? '' : sanitize_key( $_GET['section'] );
+
+			$um_settings_current_tab    = empty( $_GET['tab'] ) ? '' : sanitize_key( urldecode( $_GET['tab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+			$um_settings_current_subtab = empty( $_GET['section'] ) ? '' : sanitize_key( urldecode( $_GET['section'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+
+			return;
+
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE ) {
+				$settings_struct = UM()->admin()->settings()->settings_structure[ $current_tab ];
+			} else {
+				$settings_struct = UM()->admin_settings()->settings_structure[ $current_tab ];
+			}
 
 			// Remove not option hidden fields.
 			if ( ! empty( $settings_struct['fields'] ) ) {
@@ -192,7 +203,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 		 * Secondary admin menu (after settings)
 		 */
 		public function secondary_menu_items() {
-			add_submenu_page( $this->slug, __( 'Settings', 'ultimate-member' ), __( 'Settings', 'ultimate-member' ), 'manage_options', 'um_options', array( UM()->admin_settings(), 'settings_page' ) );
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE ) {
+				add_submenu_page( $this->slug, __( 'Settings', 'ultimate-member' ), __( 'Settings', 'ultimate-member' ), 'manage_options', 'um_options', array( &$this, 'settings' ) );
+			} else {
+				add_submenu_page( $this->slug, __( 'Settings', 'ultimate-member' ), __( 'Settings', 'ultimate-member' ), 'manage_options', 'um_options', array( UM()->admin_settings(), 'settings_page' ) );
+			}
 
 			add_submenu_page( $this->slug, __( 'Forms', 'ultimate-member' ), __( 'Forms', 'ultimate-member' ), 'manage_options', 'edit.php?post_type=um_form', '' );
 
@@ -222,6 +237,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 			do_action( 'um_extend_admin_menu' );
 		}
 
+		/**
+		 * Settings page callback
+		 *
+		 * @since 2.8.6
+		 */
+		public function settings() {
+			include_once UM_PATH . 'includes/admin/templates/settings/settings.php';
+		}
 
 		/**
 		 * Role page menu callback
