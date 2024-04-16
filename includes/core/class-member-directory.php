@@ -284,11 +284,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 									$temp_value[ $k ][1] = sanitize_text_field( $_POST[ $k . '_to' ] );
 								}
 							} elseif ( 'timepicker' === $filter_type ) {
-								if ( ! empty( $_POST[ $k . '_from' ] ) && ! empty( $_POST[ $k . '_to' ] ) ) {
-									$temp_value[ $k ] = array(
-										sanitize_text_field( $_POST[ $k . '_from' ] ),
-										sanitize_text_field( $_POST[ $k . '_to' ] ),
-									);
+								if ( ! empty( $_POST[ $k . '_from' ] ) ) {
+									$temp_value[ $k ][0] = sanitize_text_field( $_POST[ $k . '_from' ] );
+								}
+								if ( ! empty( $_POST[ $k . '_to' ] ) ) {
+									$temp_value[ $k ][1] = sanitize_text_field( $_POST[ $k . '_to' ] );
 								}
 							} elseif ( 'select' === $filter_type ) {
 								if ( ! empty( $_POST[ $k ] ) ) {
@@ -917,6 +917,15 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							break;
 					}
 
+					$default_value_min = $range[0];
+					$default_value_max = $range[1];
+					if ( ! empty( $default_value[0] ) ) {
+						$default_value_min = $default_value[0];
+					}
+					if ( ! empty( $default_value[1] ) ) {
+						$default_value_max = $default_value[1];
+					}
+
 					if ( $range ) {
 						?>
 						<input type="text" id="<?php echo esc_attr( $filter ); ?>_from" name="<?php echo esc_attr( $filter ); ?>_from" class="um-timepicker-filter"
@@ -925,14 +934,14 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							data-filter-label="<?php echo esc_attr( $label ); ?>"
 							data-min="<?php echo esc_attr( $range[0] ); ?>" data-max="<?php echo esc_attr( $range[1] ); ?>"
 							data-format="<?php echo esc_attr( $js_format ); ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ); ?>"
-							data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="from" />
+							data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="from" data-value="<?php echo ! empty( $default_value_min ) ? esc_attr( $default_value_min ) : ''; ?>" />
 						<input type="text" id="<?php echo esc_attr( $filter ); ?>_to" name="<?php echo esc_attr( $filter ); ?>_to" class="um-timepicker-filter"
 							<?php // translators: %s: Timepicker filter label. ?>
 							placeholder="<?php echo esc_attr( sprintf( __( '%s To', 'ultimate-member' ), $label ) ); ?>"
 							data-filter-label="<?php echo esc_attr( $label ); ?>"
 							data-min="<?php echo esc_attr( $range[0] ); ?>" data-max="<?php echo esc_attr( $range[1] ); ?>"
 							data-format="<?php echo esc_attr( $js_format ); ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ); ?>"
-							data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="to" />
+							data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="to" data-value="<?php echo ! empty( $default_value_max ) ? esc_attr( $default_value_max ) : ''; ?>" />
 						<?php
 					}
 
@@ -2354,10 +2363,23 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 									break;
 								case 'timepicker':
-									if ( $value[0] == $value[1] ) {
+									if ( ! empty( $value[0] ) ) {
+										$value[0] = $value[0] . ':00';
+									} else {
+										$range    = $this->timepicker_filters_range( $field );
+										$value[0] = $range[0] . ':00';
+									}
+									if ( ! empty( $value[1] ) ) {
+										$value[1] = $value[1] . ':00';
+									} else {
+										$range    = $this->timepicker_filters_range( $field );
+										$value[1] = $range[1] . ':00';
+									}
+
+									if ( $value[0] === $value[1] ) {
 										$field_query = array(
-											'key'       => $field,
-											'value'     => $value[0],
+											'key'   => $field,
+											'value' => $value[0],
 										);
 									} else {
 										$field_query = array(
