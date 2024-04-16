@@ -18,7 +18,7 @@ if ( ! class_exists( 'um\common\CPT' ) ) {
 
 		public function hooks() {
 			add_action( 'init', array( &$this, 'create_post_types' ), 1 );
-			add_action( 'wp_trash_post', array( $this, 'change_default_form' ) );
+			add_action( 'transition_post_status', array( &$this, 'change_default_form' ), 10, 3 );
 		}
 
 		/**
@@ -138,28 +138,24 @@ if ( ! class_exists( 'um\common\CPT' ) ) {
 		}
 
 
-		public function change_default_form( $form_id ) {
-			if ( 'um_form' === get_post_type( $form_id ) ) {
+		/**
+		 * Update default forms
+		 *
+		 * @since 2.8.6
+		 *
+		 * @param string $new_status New post status
+		 * @param string $old_status Old post status
+		 * @param object $post Post object
+		 */
+		public function custom_function_on_post_status_change( $new_status, $old_status, $post ) {
+			//			a:3:{s:8:"register";i:5;s:5:"login";i:6;s:7:"profile";i:1138;}
+			if ( 'um_form' === $post->post_type ) {
+				$form_id    = $post->ID;
 				$core_forms = get_option( 'um_core_forms', array() );
-				$mode       = get_post_meta( $form_id, '_um_mode', true );
-				if ( isset( $mode ) && absint( $form_id ) === absint( $core_forms[ $mode ] ) ) {
-					$args = array(
-						'post_type'      => 'um_form',
-						'meta_key'       => '_um_mode',
-						'meta_value'     => $mode,
-						'posts_per_page' => 1,
-						'orderby'        => 'date',
-						'post_status'    => 'publish',
-						'order'          => 'DESC',
-						'fields'         => 'ids',
-						'post__not_in'   => array( $form_id ),
-					);
-
-					$forms = get_posts( $args );
-					if ( ! empty( $forms ) ) {
-						$new_form_id         = $forms[0];
-						$core_forms[ $mode ] = $new_form_id;
-
+				if ( 'publish' === get_post_status( $form_id ) ) {
+					$mode = sanitize_key( $_POST['form']['_um_mode'] ); // phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+					if ( empty( $core_forms[ $mode ] ) || 'publish' !== get_post_status( $core_forms[ $mode ] ) ) {
+						$core_forms[ $mode ] = $form_id;
 						/**
 						 * Filters Ultimate Member default forms ids.
 						 *
@@ -169,18 +165,61 @@ if ( ! class_exists( 'um\common\CPT' ) ) {
 						 * @return {array} Default forms ids.
 						 *
 						 * @since 2.8.6
-						 * @hook um_default_forms_ids
+						 * @hook um_default_forms_ids_on_create
 						 *
 						 * @example <caption>Set default profile form ID as 1.</caption>
-						 * function my_um_default_forms_ids( $core_forms, $form_id ) {
+						 * function my_um_default_forms_ids_on_create( $core_forms, $form_id ) {
 						 *     // your code here
 						 *     $core_forms['profile'] = 1;
 						 *     return $core_forms;
 						 * }
-						 * add_filter( 'um_default_forms_ids', 'my_um_default_forms_ids', 10, 2 );
+						 * add_filter( 'um_default_forms_ids_on_create', 'my_um_default_forms_ids_on_create', 10, 2 );
 						 */
-						$core_forms = apply_filters( 'um_default_forms_ids', $core_forms, $form_id );
+						$core_forms = apply_filters( 'um_default_forms_ids_on_create', $core_forms, $form_id );
 						update_option( 'um_core_forms', $core_forms );
+					}
+				} elseif ( 'trash' === $new_status ) {
+					$mode = get_post_meta( $form_id, '_um_mode', true );
+					if ( isset( $mode ) && absint( $form_id ) === absint( $core_forms[ $mode ] ) ) {
+						$args = array(
+							'post_type'      => 'um_form',
+							'meta_key'       => '_um_mode',
+							'meta_value'     => $mode,
+							'posts_per_page' => 1,
+							'orderby'        => 'date',
+							'post_status'    => 'publish',
+							'order'          => 'DESC',
+							'fields'         => 'ids',
+							'post__not_in'   => array( $form_id ),
+						);
+
+						$forms = get_posts( $args );
+						if ( ! empty( $forms ) ) {
+							$new_form_id         = $forms[0];
+							$core_forms[ $mode ] = $new_form_id;
+
+							/**
+							 * Filters Ultimate Member default forms ids.
+							 *
+							 * @param {array} $core_forms Default forms ids.
+							 * @param {int}   $form_id    Deleted form ID.
+							 *
+							 * @return {array} Default forms ids.
+							 *
+							 * @since 2.8.6
+							 * @hook um_default_forms_ids_on_delete
+							 *
+							 * @example <caption>Set default profile form ID as 1.</caption>
+							 * function my_um_default_forms_ids_on_delete( $core_forms, $form_id ) {
+							 *     // your code here
+							 *     $core_forms['profile'] = 1;
+							 *     return $core_forms;
+							 * }
+							 * add_filter( 'um_default_forms_ids_on_delete', 'my_um_default_forms_ids_on_delete', 10, 2 );
+							 */
+							$core_forms = apply_filters( 'um_default_forms_ids_on_delete', $core_forms, $form_id );
+							update_option( 'um_core_forms', $core_forms );
+						}
 					}
 				}
 			}
