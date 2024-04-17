@@ -39,6 +39,13 @@ class Enqueue {
 	public static $fonticons_handlers = array();
 
 	/**
+	 * FontAwesome version.
+	 *
+	 * @var string
+	 */
+	public static $fa_version = '6.5.2';
+
+	/**
 	 * Enqueue constructor.
 	 *
 	 * @since 2.7.0
@@ -267,7 +274,7 @@ class Enqueue {
 		// @todo new version
 		if ( empty( $first_activation_date ) || $first_activation_date >= 1713342395 || UM()->options()->get( 'enable_new_fonticons' ) ) {
 			// First install set this option to true by default and use new FontAwesome icons
-			wp_register_style( 'um_fontawesome', $css_url . 'um-fontawesome' . $suffix . '.css', array(), '6.5.2' ); // New FontAwesome
+			wp_register_style( 'um_fontawesome', $css_url . 'um-fontawesome' . $suffix . '.css', array(), self::$fa_version ); // New FontAwesome
 			$fonticons_handlers[] = 'um_fontawesome';
 		}
 		self::$fonticons_handlers = $fonticons_handlers;

@@ -541,41 +541,81 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			if ( empty( $field_data['id'] ) ) {
 				return false;
 			}
+			$html = '';
 
-			// Required modal scripts for proper functioning
-			UM()->admin()->enqueue()->load_modal();
+			$first_activation_date = get_option( 'um_first_activation_date', false );
+			// @todo new version
+			if ( empty( $first_activation_date ) || $first_activation_date >= 1713342395 || UM()->options()->get( 'enable_new_fonticons' ) ) {
+				UM()->setup()->set_icons_options();
 
-			$id      = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
-			$id_attr = ' id="' . esc_attr( $id ) . '" ';
+				$um_icons_list = get_option( 'um_icons_list' );
 
-			$name      = $field_data['id'];
-			$name      = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
-			$name_attr = ' name="' . esc_attr( $name ) . '" ';
+				if ( 'row' === $this->set_field_type ) {
+					?>
 
-			$value      = $this->get_field_value( $field_data );
-			$value_attr = ' value="' . esc_attr( $value ) . '" ';
+					<p class="_heading_text">
+						<label for="_icon"><?php esc_html_e( 'Icon', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select an icon to appear in the field. Leave blank if you do not want an icon to show in the field.', 'ultimate-member' ) ); ?></label>
+						<select name="_icon" id="_icon" class="um-icon-select-field" data-placeholder="<?php esc_attr_e( 'Select Icon', 'ultimate-member' ); ?>" >
+							<option value=""><?php esc_html_e( 'Select Icon', 'ultimate-member' ); ?></option>
+							<?php if ( ! empty( $this->edit_mode_value ) && array_key_exists( $this->edit_mode_value, $um_icons_list ) ) { ?>
+								<option value="<?php echo esc_attr( $this->edit_mode_value ); ?>" selected><?php echo esc_html( $um_icons_list[ $this->edit_mode_value ]['label'] ); ?></option>
+							<?php } ?>
+						</select>
+					</p>
 
-			$html = '<span class="um_admin_fonticon_wrapper"><a href="javascript:void(0);" class="button" data-modal="UM_fonticons" data-modal-size="normal" data-dynamic-content="um_admin_fonticon_selector" data-arg1="" data-arg2="" data-back="" data-icon_field="' . esc_attr( $id ) . '">' . esc_html__( 'Choose Icon', 'ultimate-member' ) . '</a>
-				<span class="um-admin-icon-value">';
+				<?php } else { ?>
 
-			if ( ! empty( $value ) ) {
-				$html .= '<i class="' . esc_attr( $value ) . '"></i>';
+					<div class="um-admin-tri">
+						<p>
+							<label for="_icon"><?php esc_html_e( 'Icon', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select an icon to appear in the field. Leave blank if you do not want an icon to show in the field.', 'ultimate-member' ) ); ?></label>
+							<select name="_icon" id="_icon" class="um-icon-select-field" data-placeholder="<?php esc_attr_e( 'Select Icon', 'ultimate-member' ); ?>">
+								<option value=""><?php esc_html_e( 'Select Icon', 'ultimate-member' ); ?></option>
+								<?php if ( ! empty( $this->edit_mode_value ) && array_key_exists( $this->edit_mode_value, $um_icons_list ) ) { ?>
+									<option value="<?php echo esc_attr( $this->edit_mode_value ); ?>" selected><?php echo esc_html( $um_icons_list[ $this->edit_mode_value ]['label'] ); ?></option>
+								<?php } ?>
+							</select>
+						</p>
+					</div>
+
+					<?php
+
+				}
 			} else {
-				$html .= esc_html__( 'No Icon', 'ultimate-member' );
+				// Required modal scripts for proper functioning
+				UM()->admin()->enqueue()->load_modal();
+
+				$id      = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
+				$id_attr = ' id="' . esc_attr( $id ) . '" ';
+
+				$name      = $field_data['id'];
+				$name      = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
+				$name_attr = ' name="' . esc_attr( $name ) . '" ';
+
+				$value      = $this->get_field_value( $field_data );
+				$value_attr = ' value="' . esc_attr( $value ) . '" ';
+
+				$html = '<span class="um_admin_fonticon_wrapper"><a href="javascript:void(0);" class="button" data-modal="UM_fonticons" data-modal-size="normal" data-dynamic-content="um_admin_fonticon_selector" data-arg1="" data-arg2="" data-back="" data-icon_field="' . esc_attr( $id ) . '">' . esc_html__( 'Choose Icon', 'ultimate-member' ) . '</a>
+					<span class="um-admin-icon-value">';
+
+				if ( ! empty( $value ) ) {
+					$html .= '<i class="' . esc_attr( $value ) . '"></i>';
+				} else {
+					$html .= esc_html__( 'No Icon', 'ultimate-member' );
+				}
+
+				$html .= '</span><input type="hidden" ' . $name_attr . ' ' . $id_attr . ' ' . $value_attr . ' />';
+
+				if ( ! empty( $value ) ) {
+					$html .= '<span class="um-admin-icon-clear show"><i class="um-icon-android-cancel"></i></span>';
+				} else {
+					$html .= '<span class="um-admin-icon-clear"><i class="um-icon-android-cancel"></i></span>';
+				}
+
+				$html .= '</span></span>';
+
+				// Required include the fonticons modal *.php file.
+				UM()->metabox()->init_icon = true;
 			}
-
-			$html .= '</span><input type="hidden" ' . $name_attr . ' ' . $id_attr . ' ' . $value_attr . ' />';
-
-			if ( ! empty( $value ) ) {
-				$html .= '<span class="um-admin-icon-clear show"><i class="um-icon-android-cancel"></i></span>';
-			} else {
-				$html .= '<span class="um-admin-icon-clear"><i class="um-icon-android-cancel"></i></span>';
-			}
-
-			$html .= '</span></span>';
-
-			// Required include the fonticons modal *.php file.
-			UM()->metabox()->init_icon = true;
 
 			return $html;
 		}

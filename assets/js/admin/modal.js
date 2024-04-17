@@ -30,7 +30,12 @@ UM.admin.modal = {
 		UM.common.tipsy.hide();
 
 		jQuery('body').removeClass('um-admin-modal-open');
-		jQuery('.um-admin-modal div[id^="UM_"]').hide().appendTo('body');
+
+		let $modalBlock = jQuery('.um-admin-modal div[id^="UM_"]');
+		let $modalInner = $modalBlock.find( '.um-admin-modal-body.um-admin-metabox' );
+		$modalInner.html('').attr('data-select2-id', null);
+		$modalBlock.hide().appendTo('body');
+
 		jQuery('.um-admin-modal,.um-admin-overlay').remove();
 	},
 	resize: function () {

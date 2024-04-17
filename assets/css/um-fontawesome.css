@@ -6261,7 +6261,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: block;
-  src: url("../webfonts/fa-brands-400.woff2") format("woff2"), url("../webfonts/fa-brands-400.ttf") format("truetype");
+  src: url("../libs/fontawesome/webfonts/fa-brands-400.woff2") format("woff2"), url("../libs/fontawesome/webfonts/fa-brands-400.ttf") format("truetype");
 }
 .um .fab,
 .um .fa-brands {
@@ -7851,7 +7851,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: block;
-  src: url("../webfonts/fa-regular-400.woff2") format("woff2"), url("../webfonts/fa-regular-400.ttf") format("truetype");
+  src: url("../libs/fontawesome/webfonts/fa-regular-400.woff2") format("woff2"), url("../libs/fontawesome/webfonts/fa-regular-400.ttf") format("truetype");
 }
 .um .far,
 .um .fa-regular {
@@ -7866,7 +7866,7 @@
   font-style: normal;
   font-weight: 900;
   font-display: block;
-  src: url("../webfonts/fa-solid-900.woff2") format("woff2"), url("../webfonts/fa-solid-900.ttf") format("truetype");
+  src: url("../libs/fontawesome/webfonts/fa-solid-900.woff2") format("woff2"), url("../libs/fontawesome/webfonts/fa-solid-900.ttf") format("truetype");
 }
 .um .fas,
 .um .fa-solid {
