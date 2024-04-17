@@ -191,7 +191,9 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_style_add_data( 'um_members', 'suffix', $suffix );
 		}
 
-		wp_register_style( 'um_styles', $css_url . 'um-styles' . $suffix . '.css', array( 'um_ui', 'um_tipsy', 'um_raty', 'um_fonticons_ii', 'um_fonticons_fa', 'select2' ), UM_VERSION );
+		$deps = array_merge( array( 'um_ui', 'um_tipsy', 'um_raty', 'select2' ), self::$fonticons_handlers );
+
+		wp_register_style( 'um_styles', $css_url . 'um-styles' . $suffix . '.css', $deps, UM_VERSION );
 		wp_register_style( 'um_profile', $css_url . 'um-profile' . $suffix . '.css', array(), UM_VERSION );
 		wp_register_style( 'um_responsive', $css_url . 'um-responsive' . $suffix . '.css', array( 'um_profile' ), UM_VERSION );
 		wp_register_style( 'um_account', $css_url . 'um-account' . $suffix . '.css', array(), UM_VERSION );

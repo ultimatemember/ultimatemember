@@ -600,7 +600,15 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'secure_notify_admins_banned_accounts__interval' => 'instant',
 				'secure_allowed_redirect_hosts'         => '',
 				'delete_comments'                       => false,
+				'enable_new_fonticons'                  => false,
 			);
+
+			$first_activation_date = get_option( 'um_first_activation_date', false );
+			// @todo new version
+			if ( empty( $first_activation_date ) || $first_activation_date >= 1713342395 ) {
+				// first install set this option to true by default
+				$this->settings_defaults['enable_new_fonticons'] = true;
+			}
 
 			add_filter( 'um_get_tabs_from_config', '__return_true' );
 

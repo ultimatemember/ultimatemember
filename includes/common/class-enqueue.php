@@ -36,6 +36,8 @@ class Enqueue {
 	 */
 	public static $select2_handle = 'select2';
 
+	public static $fonticons_handlers = array();
+
 	/**
 	 * Enqueue constructor.
 	 *
@@ -259,6 +261,16 @@ class Enqueue {
 		// Legacy FontIcons.
 		wp_register_style( 'um_fonticons_ii', $libs_url . 'legacy/fonticons/fonticons-ii' . $suffix . '.css', array(), UM_VERSION ); // Ionicons
 		wp_register_style( 'um_fonticons_fa', $libs_url . 'legacy/fonticons/fonticons-fa' . $suffix . '.css', array(), UM_VERSION ); // FontAwesome
+		$fonticons_handlers = array( 'um_fonticons_ii', 'um_fonticons_fa' );
+		// New FontIcons from FontAwesome.
+		$first_activation_date = get_option( 'um_first_activation_date', false );
+		// @todo new version
+		if ( empty( $first_activation_date ) || $first_activation_date >= 1713342395 || UM()->options()->get( 'enable_new_fonticons' ) ) {
+			// First install set this option to true by default and use new FontAwesome icons
+			wp_register_style( 'um_fontawesome', $css_url . 'um-fontawesome' . $suffix . '.css', array(), '6.5.2' ); // New FontAwesome
+			$fonticons_handlers[] = 'um_fontawesome';
+		}
+		self::$fonticons_handlers = $fonticons_handlers;
 
 		// Select2 JS.
 		$this->register_select2();
@@ -310,6 +322,7 @@ class Enqueue {
 		$um_common_variables = apply_filters( 'um_common_js_variables', $um_common_variables );
 		wp_localize_script( 'um_common', 'um_common_variables', $um_common_variables );
 
-		wp_register_style( 'um_common', $css_url . 'common' . $suffix . '.css', array( 'um_tipsy', 'um_datetime_date', 'um_datetime_time', 'um_fonticons_ii', 'um_fonticons_fa' ), UM_VERSION );
+		$common_css_deps = array_merge( array( 'um_tipsy', 'um_datetime_date', 'um_datetime_time' ), self::$fonticons_handlers );
+		wp_register_style( 'um_common', $css_url . 'common' . $suffix . '.css', $common_css_deps, UM_VERSION );
 	}
 }
