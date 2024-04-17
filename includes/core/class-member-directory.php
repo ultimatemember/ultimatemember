@@ -1465,16 +1465,31 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			} elseif ( 'last_login' === $sortby ) {
 				$this->query_args['orderby']      = array( 'um_last_login' => 'DESC' );
 				$this->query_args['meta_query'][] = array(
-					'relation'      => 'OR',
+					'relation' => 'AND',
 					array(
-						'key'     => '_um_last_login',
-						'compare' => 'EXISTS',
-						'type'    => 'DATETIME',
+						'relation'      => 'OR',
+						array(
+							'key'     => '_um_last_login',
+							'compare' => 'EXISTS',
+							'type'    => 'DATETIME',
+						),
+						'um_last_login' => array(
+							'key'     => '_um_last_login',
+							'compare' => 'NOT EXISTS',
+							'type'    => 'DATETIME',
+						),
 					),
-					'um_last_login' => array(
-						'key'     => '_um_last_login',
-						'compare' => 'NOT EXISTS',
-						'type'    => 'DATETIME',
+					array(
+						'relation' => 'OR',
+						array(
+							'key'     => 'um_show_last_login',
+							'compare' => 'NOT EXISTS',
+						),
+						array(
+							'key'     => 'um_show_last_login',
+							'value'   => 'a:1:{i:0;s:2:"no";}',
+							'compare' => '!=',
+						),
 					),
 				);
 				unset( $this->query_args['order'] );
