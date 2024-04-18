@@ -1051,6 +1051,16 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			$sql_where  = implode( ' AND ', $this->where_clauses );
 			$sql_where  = ! empty( $sql_where ) ? 'AND ' . $sql_where : '';
 
+			$query = array(
+				'select'    => $this->select,
+				'sql_where' => $sql_where,
+				'having'    => $this->having,
+				'sql_limit' => $this->sql_limit,
+			);
+
+			/** This filter is documented in includes/core/class-member-directory.php */
+			do_action( 'um_user_before_query', $query, $this );
+
 			/*
 			 *
 			 * SQL_CALC_FOUND_ROWS is deprecated as of MySQL 8.0.17
@@ -1066,13 +1076,6 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				{$sql_having}
 				{$this->sql_order}
 				{$this->sql_limit}"
-			);
-
-			$query = array(
-				'select'    => $this->select,
-				'sql_where' => $sql_where,
-				'having'    => $this->having,
-				'sql_limit' => $this->sql_limit,
 			);
 
 			$total_users = (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' );
