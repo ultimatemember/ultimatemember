@@ -1300,6 +1300,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			delete_post_meta( $post_id, '_um_tagline_fields' );
 			delete_post_meta( $post_id, '_um_reveal_fields' );
 			delete_post_meta( $post_id, '_um_search_fields' );
+			delete_post_meta( $post_id, '_um_search_exclude_fields' );
+			delete_post_meta( $post_id, '_um_search_include_fields' );
 			delete_post_meta( $post_id, '_um_roles_can_search' );
 			delete_post_meta( $post_id, '_um_roles_can_filter' );
 			delete_post_meta( $post_id, '_um_show_these_users' );
@@ -1607,7 +1609,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_validate':
-					if ( array_key_exists( 'mode', $form_data ) && 'login' === $form_data['mode'] && in_array( $field_args['metakey'], array( 'username', 'user_login', 'user_email' ), true ) ) {
+					if ( array_key_exists( 'mode', $form_data ) && 'login' === $form_data['mode'] && array_key_exists( 'metakey', $field_args ) && in_array( $field_args['metakey'], array( 'username', 'user_login', 'user_email' ), true ) ) {
 						return;
 					}
 					?>

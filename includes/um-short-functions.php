@@ -870,7 +870,7 @@ function um_user_submited_display( $k, $title, $data = array(), $style = true ) 
 		}
 
 		if ( ! empty( $filedata['original_name'] ) ) {
-			$v = '<a class="um-preview-upload" target="_blank" href="' . esc_attr( $baseurl . um_user( 'ID' ) . '/' . $file ) . '">' . esc_html( $filedata['original_name'] ) . '</a>';
+			$v = '<a class="um-preview-upload" target="_blank" href="' . esc_url( $baseurl . um_user( 'ID' ) . '/' . $file ) . '">' . esc_html( $filedata['original_name'] ) . '</a>';
 		} else {
 			$v = $baseurl . um_user( 'ID' ) . '/' . $file;
 		}
@@ -1751,7 +1751,7 @@ function um_can_edit_my_profile() {
 
 
 /**
- * Short for admin e-mail
+ * Short for admin email
  *
  * @return mixed|string|void
  */
@@ -1761,7 +1761,7 @@ function um_admin_email() {
 
 
 /**
- * Get admin e-mails
+ * Get admin emails
  *
  * @return array
  */

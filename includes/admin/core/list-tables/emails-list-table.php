@@ -336,8 +336,8 @@ $ListTable->wpc_set_pagination_args( array( 'total_items' => count( $emails ), '
 <p>
 	<?php esc_html_e( 'Email notifications sent from Ultimate Member are listed below. Click on an email to configure it.', 'ultimate-member' ); ?>
 	<br />
-	<?php esc_html_e( 'To ensure your website\'s notifications arrive in your and your customers\' inboxes, we recommend connecting your email address to your domain and setting up a dedicated SMTP server.', 'ultimate-member' ); ?>
-	<?php echo wp_kses( sprintf( __( 'You may get more details about email notifications customization <a href="%s">here</a>.', 'ultimate-member' ), 'https://docs.ultimatemember.com/article/1335-email-templates' ), UM()->get_allowed_html( 'admin_notice' ) ); ?>
+	<?php esc_html_e( 'Emails should be sent from an email using your website\'s domain name. We highly recommend using a SMTP service email delivery.', 'ultimate-member' ); ?>
+	<?php echo wp_kses( sprintf( __( 'Please see this <a href="%s" target="_blank">doc</a> for more information.', 'ultimate-member' ), 'https://docs.ultimatemember.com/article/116-not-receiving-user-emails-or-admin-notifications' ), UM()->get_allowed_html( 'admin_notice' ) ); ?>
 </p>
 <div class="clear"></div>
 <form action="" method="get" name="um-settings-emails" id="um-settings-emails">

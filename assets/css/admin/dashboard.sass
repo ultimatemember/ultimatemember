@@ -30,30 +30,10 @@
     font-size: 14px
     border-bottom: 1px solid #ECECEC
 
-  .table
-    float: left
-    width: 45%
-    td
-      white-space: nowrap
-      font-size: 12px
-
   a.warning
     color: #{$admin-warning} !important
     background: transparent !important
     border: 0
-
-  .table_right
-    float: right
-    width: 45%
-
-  td.b
-    padding-right: 6px
-    text-align: right
-    font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif
-    font-size: 14px
-    width: 1%
-    a
-      font-size: 18px
 
   .norm
     i
@@ -72,3 +52,30 @@
       display: inline-block
       text-align: right
       margin-right: 10px
+
+#um-users-overview-table
+  width: 100%
+  td
+    width: auto
+    min-width: 120px
+    vertical-align: middle
+    padding: 0 0 0 5px
+    box-sizing: border-box
+    &:first-child
+      padding: 0 5px 0 0
+  td > span
+    width: 100%
+    direction: ltr
+    display: grid
+    grid-gap: 6px
+    grid-template-columns: repeat(2, minmax(20px, auto))
+    align-content: start
+    align-items: center
+    justify-content: start
+    justify-items: center
+    a
+      word-break: break-word
+      &.count
+        justify-self: end
+        font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif
+        font-size: 18px

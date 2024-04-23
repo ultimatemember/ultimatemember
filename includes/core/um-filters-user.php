@@ -34,7 +34,7 @@ function um_admin_user_actions_hook( $actions, $user_id ) {
 		}
 
 		if ( 'awaiting_email_confirmation' === $account_status ) {
-			$actions['um_resend_activation'] = array( 'label' => __( 'Resend Activation E-mail', 'ultimate-member' ) );
+			$actions['um_resend_activation'] = array( 'label' => __( 'Resend Activation Email', 'ultimate-member' ) );
 		}
 
 		if ( 'inactive' !== $account_status ) {
