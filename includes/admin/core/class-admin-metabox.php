@@ -1555,13 +1555,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_icon':
+					UM()->setup()->set_icons_options();
+					$um_icons_list = get_option( 'um_icons_list' );
+
 					$first_activation_date = get_option( 'um_first_activation_date', false );
 					// @todo new version
-					if ( empty( $first_activation_date ) || $first_activation_date >= 1713342395 ) {
-						UM()->setup()->set_icons_options();
-
-						$um_icons_list = get_option( 'um_icons_list' );
-
+					if ( empty( $first_activation_date ) || $first_activation_date >= 1713342395 || empty( $this->edit_mode_value ) || array_key_exists( $this->edit_mode_value, $um_icons_list ) ) {
 						if ( 'row' === $this->set_field_type ) {
 							?>
 
@@ -1590,88 +1589,42 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 							</div>
 
 							<?php
-
 						}
 					} else {
+						if ( 'row' === $this->set_field_type ) {
+							?>
 
-						UM()->setup()->set_icons_options();
+							<p class="_heading_text">
+								<label for="um_ui_icon_new"><?php esc_html_e( 'Icon', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select an icon to appear in the field. Leave blank if you do not want an icon to show in the field.', 'ultimate-member' ) ); ?></label>
+								<select name="um_ui_icon_new" id="um_ui_icon_new" class="um-icon-select-field" data-placeholder="<?php esc_attr_e( 'Select Icon', 'ultimate-member' ); ?>" >
+									<option value=""><?php esc_html_e( 'Select Icon', 'ultimate-member' ); ?></option>
+								</select>
+								<span class="um_admin_fonticon_wrapper">
+									<span><?php esc_html_e( 'Icon is outdated. Please set the new one above.', 'ultimate-member' ); ?></span>
+									<input type="hidden" name="_icon" id="_icon" class="um_old_icon_field_value" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
+									<span class="um-admin-icon-value"><i class="<?php echo esc_attr( $this->edit_mode_value ); ?>"></i></span>
+									<span class="um-admin-icon-clear show"><i class="um-icon-android-cancel"></i></span>
+								</span>
+							</p>
 
-						$um_icons_list = get_option( 'um_icons_list' );
+						<?php } else { ?>
 
-						if ( empty( $this->edit_mode_value ) || array_key_exists( $this->edit_mode_value, $um_icons_list ) ) {
-							if ( 'row' === $this->set_field_type ) {
-								?>
-
-								<p class="_heading_text">
-									<label for="_icon"><?php esc_html_e( 'Icon', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select an icon to appear in the field. Leave blank if you do not want an icon to show in the field.', 'ultimate-member' ) ); ?></label>
-									<select name="_icon" id="_icon" class="um-icon-select-field" data-placeholder="<?php esc_attr_e( 'Select Icon', 'ultimate-member' ); ?>" >
-										<option value=""><?php esc_html_e( 'Select Icon', 'ultimate-member' ); ?></option>
-										<?php if ( ! empty( $this->edit_mode_value ) && array_key_exists( $this->edit_mode_value, $um_icons_list ) ) { ?>
-											<option value="<?php echo esc_attr( $this->edit_mode_value ); ?>" selected><?php echo esc_html( $um_icons_list[ $this->edit_mode_value ]['label'] ); ?></option>
-										<?php } ?>
-									</select>
-								</p>
-
-							<?php } else { ?>
-
-								<div class="um-admin-tri">
-									<p>
-										<label for="_icon"><?php esc_html_e( 'Icon', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select an icon to appear in the field. Leave blank if you do not want an icon to show in the field.', 'ultimate-member' ) ); ?></label>
-										<select name="_icon" id="_icon" class="um-icon-select-field" data-placeholder="<?php esc_attr_e( 'Select Icon', 'ultimate-member' ); ?>">
-											<option value=""><?php esc_html_e( 'Select Icon', 'ultimate-member' ); ?></option>
-											<?php if ( ! empty( $this->edit_mode_value ) && array_key_exists( $this->edit_mode_value, $um_icons_list ) ) { ?>
-												<option value="<?php echo esc_attr( $this->edit_mode_value ); ?>" selected><?php echo esc_html( $um_icons_list[ $this->edit_mode_value ]['label'] ); ?></option>
-											<?php } ?>
-										</select>
-									</p>
-								</div>
-
-								<?php
-
-							}
-						} else {
-							if ( 'row' === $this->set_field_type ) {
-								?>
-
-								<p class="_heading_text">
+							<div class="um-admin-tri">
+								<p>
 									<label for="um_ui_icon_new"><?php esc_html_e( 'Icon', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select an icon to appear in the field. Leave blank if you do not want an icon to show in the field.', 'ultimate-member' ) ); ?></label>
-									<select name="um_ui_icon_new" id="um_ui_icon_new" class="um-icon-select-field" data-placeholder="<?php esc_attr_e( 'Select Icon', 'ultimate-member' ); ?>" >
+									<select name="um_ui_icon_new" id="um_ui_icon_new" class="um-icon-select-field" data-placeholder="<?php esc_attr_e( 'Select Icon', 'ultimate-member' ); ?>">
 										<option value=""><?php esc_html_e( 'Select Icon', 'ultimate-member' ); ?></option>
-										<?php if ( ! empty( $this->edit_mode_value ) && array_key_exists( $this->edit_mode_value, $um_icons_list ) ) { ?>
-											<option value="<?php echo esc_attr( $this->edit_mode_value ); ?>" selected><?php echo esc_html( $um_icons_list[ $this->edit_mode_value ]['label'] ); ?></option>
-										<?php } ?>
 									</select>
 									<span class="um_admin_fonticon_wrapper">
 										<span><?php esc_html_e( 'Icon is outdated. Please set the new one above.', 'ultimate-member' ); ?></span>
-										<input type="hidden" name="_icon" id="_icon" value="<?php echo ! empty( $this->edit_mode_value ) ? esc_attr( $this->edit_mode_value ) : ''; ?>" />
+										<input type="hidden" name="_icon" id="_icon" class="um_old_icon_field_value" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 										<span class="um-admin-icon-value"><i class="<?php echo esc_attr( $this->edit_mode_value ); ?>"></i></span>
 										<span class="um-admin-icon-clear show"><i class="um-icon-android-cancel"></i></span>
 									</span>
 								</p>
+							</div>
 
-							<?php } else { ?>
-
-								<div class="um-admin-tri">
-									<p>
-										<label for="um_ui_icon_new"><?php esc_html_e( 'Icon', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select an icon to appear in the field. Leave blank if you do not want an icon to show in the field.', 'ultimate-member' ) ); ?></label>
-										<select name="um_ui_icon_new" id="um_ui_icon_new" class="um-icon-select-field" data-placeholder="<?php esc_attr_e( 'Select Icon', 'ultimate-member' ); ?>">
-											<option value=""><?php esc_html_e( 'Select Icon', 'ultimate-member' ); ?></option>
-											<?php if ( ! empty( $this->edit_mode_value ) && array_key_exists( $this->edit_mode_value, $um_icons_list ) ) { ?>
-												<option value="<?php echo esc_attr( $this->edit_mode_value ); ?>" selected><?php echo esc_html( $um_icons_list[ $this->edit_mode_value ]['label'] ); ?></option>
-											<?php } ?>
-										</select>
-										<span class="um_admin_fonticon_wrapper">
-											<span><?php esc_html_e( 'Icon is outdated. Please set the new one above.', 'ultimate-member' ); ?></span>
-											<input type="hidden" name="_icon" id="_icon" value="<?php echo ! empty( $this->edit_mode_value ) ? esc_attr( $this->edit_mode_value ) : ''; ?>" />
-											<span class="um-admin-icon-value"><i class="<?php echo esc_attr( $this->edit_mode_value ); ?>"></i></span>
-											<span class="um-admin-icon-clear show"><i class="um-icon-android-cancel"></i></span>
-										</span>
-									</p>
-								</div>
-
-								<?php
-
-							}
+							<?php
 						}
 					}
 					break;
