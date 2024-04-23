@@ -3070,8 +3070,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								$error_codes = $license->get_error_codes();
 								if ( ! empty( $error_codes ) ) {
 									foreach ( $error_codes as $error_code ) {
+										$error_code_messages = $license->get_error_messages( $error_code );
+										$error_code_messages = implode( ', ', $error_code_messages );
 										// translators: %1$s is an error code; %2$s is an error message.
-										$errors_data[] = sprintf( __( 'code: %1$s, message: %2$s;', 'ultimate-member' ), $error_code, $license->get_error_messages( $error_code ) );
+										$errors_data[] = sprintf( __( 'code: %1$s, message: %2$s;', 'ultimate-member' ), $error_code, $error_code_messages );
 									}
 								}
 								$errors_data = ! empty( $errors_data ) ? implode( ' ', $errors_data ) : '';
