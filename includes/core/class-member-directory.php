@@ -1463,8 +1463,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				unset( $this->query_args['order'] );
 
 			} elseif ( 'last_login' === $sortby ) {
-				$this->query_args['orderby']      = array( 'um_last_login' => 'DESC' );
-				// Please use custom meta table for better results and sorting.
+				$this->query_args['orderby'] = array( 'um_last_login' => 'DESC' );
+				// Please use custom meta table for better results and sorting. Here we only hide the users without visible last login date.
 				$this->query_args['meta_query'][] = array(
 					'relation' => 'AND',
 					array(
