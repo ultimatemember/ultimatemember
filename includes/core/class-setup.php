@@ -191,7 +191,27 @@ KEY meta_value_indx (um_value(191))
 					$content = '[ultimatemember form_id="' . $setup_shortcodes[ $slug ] . '"]';
 				}
 
-				/** This filter is documented in includes/core/class-setup.php */
+				/**
+				 * Filters Ultimate Member predefined pages content when set up the predefined page.
+				 *
+				 * @param {string} $content Predefined page content.
+				 * @param {string} $slug    Predefined page slug (key).
+				 *
+				 * @return {string} Predefined page content.
+				 *
+				 * @since 2.1.0
+				 * @hook um_setup_predefined_page_content
+				 *
+				 * @example <caption>Set Ultimate Member predefined pages content with key = 'my_page_key'.</caption>
+				 * function my_um_setup_predefined_page_content( $content, $slug ) {
+				 *     // your code here
+				 *     if ( 'my_page_key' === $slug ) {
+				 *         $content = __( 'My Page content', 'my-translate-key' );
+				 *     }
+				 *     return $pages;
+				 * }
+				 * add_filter( 'um_setup_predefined_page_content', 'my_um_setup_predefined_page_content' );
+				 */
 				$content = apply_filters( 'um_setup_predefined_page_content', $content, $slug );
 
 				$user_page = array(
@@ -213,7 +233,7 @@ KEY meta_value_indx (um_value(191))
 			$options = get_option( 'um_options', array() );
 
 			foreach ( $core_pages as $slug => $page_id ) {
-				$key             = UM()->options()->get_predefined_page_option_key( $slug );
+				$key             = UM()->options()->get_core_page_id( $slug );
 				$options[ $key ] = $page_id;
 			}
 
@@ -221,72 +241,6 @@ KEY meta_value_indx (um_value(191))
 
 			// reset rewrite rules after first install of core pages
 			UM()->rewrite()->reset_rules();
-		}
-
-		public function predefined_page( $slug, $with_rewrite = true ) {
-			$page_exists = UM()->query()->find_post_id( 'page', '_um_core', $slug );
-			if ( $page_exists ) {
-				return;
-			}
-
-			$predefined_pages = UM()->config()->get( 'predefined_pages' );
-			if ( empty( $predefined_pages ) || ! array_key_exists( $slug, $predefined_pages ) ) {
-				return;
-			}
-
-			$data = $predefined_pages[ $slug ];
-
-			if ( empty( $data['title'] ) ) {
-				return;
-			}
-
-			$content = ! empty( $data['content'] ) ? $data['content'] : '';
-			/**
-			 * Filters Ultimate Member predefined pages content when set up the predefined page.
-			 *
-			 * @param {string} $content Predefined page content.
-			 * @param {string} $slug    Predefined page slug (key).
-			 *
-			 * @return {string} Predefined page content.
-			 *
-			 * @since 2.1.0
-			 * @hook um_setup_predefined_page_content
-			 *
-			 * @example <caption>Set Ultimate Member predefined pages content with key = 'my_page_key'.</caption>
-			 * function my_um_setup_predefined_page_content( $content, $slug ) {
-			 *     // your code here
-			 *     if ( 'my_page_key' === $slug ) {
-			 *         $content = __( 'My Page content', 'my-translate-key' );
-			 *     }
-			 *     return $pages;
-			 * }
-			 * add_filter( 'um_setup_predefined_page_content', 'my_um_setup_predefined_page_content' );
-			 */
-			$content = apply_filters( 'um_setup_predefined_page_content', $content, $slug );
-
-			$user_page = array(
-				'post_title'     => $data['title'],
-				'post_content'   => $content,
-				'post_name'      => $slug,
-				'post_type'      => 'page',
-				'post_status'    => 'publish',
-				'post_author'    => get_current_user_id(),
-				'comment_status' => 'closed',
-			);
-
-			$post_id = wp_insert_post( $user_page );
-			if ( empty( $post_id ) || is_wp_error( $post_id ) ) {
-				return;
-			}
-
-			update_post_meta( $post_id, '_um_core', $slug );
-
-			UM()->options()->update( UM()->options()->get_predefined_page_option_key( $slug ), $post_id );
-
-			if ( $with_rewrite ) {
-				// Reset rewrite rules after page creation and option upgrade.
-				UM()->rewrite()->reset_rules();
-			}
 		}
 
 		/**

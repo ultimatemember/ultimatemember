@@ -58,7 +58,8 @@ class UM_Versions_List_Table extends WP_List_Table {
 		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, array(), $sortable );
 
-		$templates = UM()->common()->theme()->build_templates_data();
+		$templates = get_option( 'um_template_statuses', array() );
+		$templates = is_array( $templates ) ? $templates : array();
 
 		@uasort(
 			$templates,

@@ -968,29 +968,28 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		/**
 		 * Profile photo image process
 		 *
-		 * @param  array  $response
+		 * @param  array $response
 		 * @param  string $image_path
 		 * @param  string $src
 		 * @param  string $key
-		 * @param  int    $user_id
+		 * @param  integer $user_id
 		 * @param  string $coord
-		 * @param  array  $crop
+		 * @param  array $crop
 		 *
 		 * @since 2.0.22
 		 *
 		 * @return array
 		 */
 		public function profile_photo( $response, $image_path, $src, $key, $user_id, $coord, $crop ) {
-			$sizes   = UM()->options()->get( 'photo_thumb_sizes' );
+			$sizes = UM()->options()->get( 'photo_thumb_sizes' );
+
 			$quality = UM()->options()->get( 'image_compression' );
 
 			$image = wp_get_image_editor( $image_path ); // Return an implementation that extends WP_Image_Editor
 
 			$temp_image_path = $image_path;
-
-			// Refresh image_path to make temporary image permanently after upload
-			$photo_ext  = pathinfo( $image_path, PATHINFO_EXTENSION );
-			$image_path = pathinfo( $image_path, PATHINFO_DIRNAME ) . DIRECTORY_SEPARATOR . $key . '.' . $photo_ext;
+			//refresh image_path to make temporary image permanently after upload
+			$image_path = pathinfo( $image_path, PATHINFO_DIRNAME ) . DIRECTORY_SEPARATOR . $key . '.' . pathinfo( $image_path, PATHINFO_EXTENSION );
 
 			if ( ! is_wp_error( $image ) ) {
 				$src_x = $crop[0];
@@ -1005,16 +1004,12 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 					$image->resize( $max_w, $src_h );
 				}
 
-				$save_result = $image->save( $image_path );
-
-				if ( is_wp_error( $save_result ) ) {
-					// translators: %s is the file src.
-					wp_send_json_error( sprintf( __( 'Unable to crop image file: %s', 'ultimate-member' ), $src ) );
-				}
+				$image->save( $image_path );
 
 				$image->set_quality( $quality );
 
 				$sizes_array = array();
+
 				foreach ( $sizes as $size ) {
 					$sizes_array[] = array( 'width' => $size );
 				}
@@ -1025,49 +1020,50 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 				unlink( $temp_image_path );
 
-				$basename = $key . '_temp.' . $photo_ext;
-				$src      = str_replace( '/' . $basename, '/' . $save_result['file'], $src );
+				$src = str_replace( '/' . $key . '_temp.', '/' . $key . '.',  $src );
 
-				$response['image']['source_url']  = $src;
-				$response['image']['source_path'] = $save_result['path'];
-				$response['image']['filename']    = $save_result['file'];
+				$response['image']['source_url'] = $src;
+				$response['image']['source_path'] = $image_path;
+				$response['image']['filename'] = wp_basename( $image_path );
 
-				update_user_meta( $this->user_id, $key, $save_result['file'] );
+				update_user_meta( $this->user_id, $key, wp_basename( wp_basename( $image_path ) ) );
 				delete_user_meta( $this->user_id, "{$key}_metadata_temp" );
 			} else {
-				// translators: %s is the file src.
-				wp_send_json_error( sprintf( __( 'Unable to crop image file: %s', 'ultimate-member' ), $src ) );
+				wp_send_json_error( esc_js( __( "Unable to crop image file: {$src}", 'ultimate-member' ) ) );
 			}
 
 			return $response;
 		}
 
+
 		/**
 		 * Cover photo image process
 		 *
 		 * @param  string $src
-		 * @param  int    $user_id
+		 * @param  integer $user_id
 		 * @param  string $coord
-		 * @param  array  $crop
-		 * @param  array  $response
+		 * @param  array $crop
+		 * @param  array $response
 		 *
 		 * @since 2.0.22
 		 *
 		 * @return array
 		 */
 		public function cover_photo( $response, $image_path, $src, $key, $user_id, $coord, $crop ) {
-			$sizes   = UM()->options()->get( 'cover_thumb_sizes' );
+
+			$sizes = UM()->options()->get( 'cover_thumb_sizes' );
+
 			$quality = UM()->options()->get( 'image_compression' );
 
 			$image = wp_get_image_editor( $image_path ); // Return an implementation that extends WP_Image_Editor
 
 			$temp_image_path = $image_path;
 
-			// Refresh image_path to make temporary image permanently after upload
-			$photo_ext  = pathinfo( $image_path, PATHINFO_EXTENSION );
-			$image_path = pathinfo( $image_path, PATHINFO_DIRNAME ) . DIRECTORY_SEPARATOR . $key . '.' . $photo_ext;
+			//refresh image_path to make temporary image permanently after upload
+			$image_path = pathinfo( $image_path, PATHINFO_DIRNAME ) . DIRECTORY_SEPARATOR . $key . '.' . pathinfo( $image_path, PATHINFO_EXTENSION );
 
 			if ( ! is_wp_error( $image ) ) {
+
 				$src_x = $crop[0];
 				$src_y = $crop[1];
 				$src_w = $crop[2];
@@ -1080,12 +1076,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 					$image->resize( $max_w, $src_h );
 				}
 
-				$save_result = $image->save( $image_path );
-
-				if ( is_wp_error( $save_result ) ) {
-					// translators: %s is the file src.
-					wp_send_json_error( sprintf( __( 'Unable to crop image file: %s', 'ultimate-member' ), $src ) );
-				}
+				$image->save( $image_path );
 
 				$image->set_quality( $quality );
 
@@ -1099,7 +1090,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 				// change filenames of resized images
 				foreach ( $resize as $row ) {
-					$new_filename = str_replace( "x{$row['height']}", '', $row['file'] );
+					$new_filename = str_replace( "x{$row['height']}" , '', $row['file'] );
 					$old_filename = $row['file'];
 
 					rename( dirname( $image_path ) . DIRECTORY_SEPARATOR . $old_filename, dirname( $image_path ) . DIRECTORY_SEPARATOR . $new_filename );
@@ -1107,18 +1098,16 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 				unlink( $temp_image_path );
 
-				$basename = $key . '_temp.' . $photo_ext;
-				$src      = str_replace( '/' . $basename, '/' . $save_result['file'], $src );
+				$src = str_replace( '/' . $key . '_temp.', '/' . $key . '.',  $src );
 
-				$response['image']['source_url']  = $src;
-				$response['image']['source_path'] = $save_result['path'];
-				$response['image']['filename']    = $save_result['file'];
+				$response['image']['source_url'] = $src;
+				$response['image']['source_path'] = $image_path;
+				$response['image']['filename'] = wp_basename( $image_path );
 
-				update_user_meta( $this->user_id, $key, $save_result['file'] );
+				update_user_meta( $this->user_id, $key, wp_basename( wp_basename( $image_path ) ) );
 				delete_user_meta( $this->user_id, "{$key}_metadata_temp" );
 			} else {
-				// translators: %s is the file src.
-				wp_send_json_error( sprintf( __( 'Unable to crop image file: %s', 'ultimate-member' ), $src ) );
+				wp_send_json_error( esc_js( __( "Unable to crop image file: {$src}", 'ultimate-member' ) ) );
 			}
 
 			return $response;
@@ -1206,15 +1195,15 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 			$response = array(
 				'image' => array(
-					'source_url'  => $src,
-					'source_path' => $image_path,
-					'filename'    => wp_basename( $image_path ),
+					'source_url'    => $src,
+					'source_path'   => $image_path,
+					'filename'      => wp_basename( $image_path ),
 				),
 			);
 
 			$response = apply_filters( "um_upload_image_process__{$key}", $response, $image_path, $src, $key, $user_id, $coord, $crop );
 
-			if ( ! in_array( $key, array( 'profile_photo', 'cover_photo' ), true ) ) {
+			if ( ! in_array( $key, array( 'profile_photo', 'cover_photo' ) ) ) {
 				$response = apply_filters( 'um_upload_stream_image_process', $response, $image_path, $src, $key, $user_id, $coord, $crop );
 			}
 

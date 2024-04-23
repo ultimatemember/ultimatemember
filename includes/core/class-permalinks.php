@@ -174,7 +174,7 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 				do_action( 'um_after_email_confirmation', $user_id );
 
 				if ( empty( $set_password_required ) ) {
-					$redirect = empty( $user_role_data['url_email_activate'] ) ? um_get_core_page( 'login', 'account_active' ) : trim( $user_role_data['url_email_activate'] ); // Role setting "URL redirect after email activation"
+					$redirect = empty( $user_role_data['url_email_activate'] ) ? um_get_core_page( 'login', 'account_active' ) : trim( $user_role_data['url_email_activate'] ); // Role setting "URL redirect after e-mail activation"
 				}
 				$redirect = apply_filters( 'um_after_email_confirmation_redirect', $redirect, $user_id, $login );
 

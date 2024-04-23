@@ -1,14 +1,12 @@
-<?php
-if ( ! defined( 'ABSPATH' ) ) {
+<?php if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$role = $object['data'];
-?>
+$role = $object['data']; ?>
 
 <div class="um-admin-metabox">
 	<?php
-	$form = UM()->admin_forms(
+	UM()->admin_forms(
 		array(
 			'class'     => 'um-role-publish um-top-label',
 			'prefix_id' => 'role',
@@ -22,8 +20,7 @@ $role = $object['data'];
 				),
 			),
 		)
-	);
-	$form->render_form();
+	)->render_form();
 	?>
 </div>
 
@@ -34,10 +31,3 @@ $role = $object['data'];
 		<div class="clear"></div>
 	</div>
 </div>
-<?php
-echo $form->render_external_link(
-	array(
-		'html' => __( 'Learn more about role priorities', 'ultimate-member' ),
-		'url'  => 'https://docs.ultimatemember.com/article/1494-how-to-set-role-priority-for-user-roles',
-	)
-);

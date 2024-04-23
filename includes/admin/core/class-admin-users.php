@@ -247,7 +247,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 					'label' => __( 'Put as Pending Review', 'ultimate-member' )
 				),
 				'um_resend_activation'  => array(
-					'label' => __( 'Resend Activation Email', 'ultimate-member' )
+					'label' => __( 'Resend Activation E-mail', 'ultimate-member' )
 				),
 				'um_deactivate'         => array(
 					'label' => __( 'Deactivate', 'ultimate-member' )
@@ -274,7 +274,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		public function user_row_actions( $actions, $user_object ) {
 			$user_id = $user_object->ID;
 
-			$actions['frontend_profile'] = '<a href="' . esc_url( um_user_profile_url( $user_id ) ) . '">' . __( 'View profile', 'ultimate-member' ) . '</a>';
+			$actions['frontend_profile'] = '<a href="' . um_user_profile_url( $user_id ) . '">' . __( 'View profile', 'ultimate-member' ) . '</a>';
 
 			$submitted = get_user_meta( $user_id, 'submitted', true );
 			if ( ! empty( $submitted ) ) {
@@ -407,7 +407,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			$status = array(
 				'approved'                    => __( 'Approved', 'ultimate-member' ),
 				'awaiting_admin_review'       => __( 'Pending review', 'ultimate-member' ),
-				'awaiting_email_confirmation' => __( 'Waiting email confirmation', 'ultimate-member' ),
+				'awaiting_email_confirmation' => __( 'Waiting e-mail confirmation', 'ultimate-member' ),
 				'inactive'                    => __( 'Inactive', 'ultimate-member' ),
 				'rejected'                    => __( 'Rejected', 'ultimate-member' ),
 			);

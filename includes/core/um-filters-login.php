@@ -53,46 +53,45 @@ function um_wp_form_errors_hook_ip_test( $user, $username, $password ) {
 }
 add_filter( 'authenticate', 'um_wp_form_errors_hook_ip_test', 10, 3 );
 
+
 /**
  * Login checks through the WordPress admin login.
  *
- * @param WP_Error|WP_User $user
+ * @param $user
+ * @param $username
+ * @param $password
  *
  * @return WP_Error|WP_User
  */
-function um_wp_form_errors_hook_logincheck( $user ) {
-	if ( is_wp_error( $user ) ) {
-		return $user;
-	}
+function um_wp_form_errors_hook_logincheck( $user, $username, $password ) {
 
 	if ( isset( $user->ID ) ) {
+
 		um_fetch_user( $user->ID );
 		$status = um_user( 'account_status' );
 
-		$error = null;
-		switch ( $status ) {
+		switch( $status ) {
 			case 'inactive':
-				$error = new WP_Error( $status, __( 'Your account has been disabled.', 'ultimate-member' ) );
+				return new WP_Error( $status, __( 'Your account has been disabled.', 'ultimate-member' ) );
 				break;
 			case 'awaiting_admin_review':
-				$error = new WP_Error( $status, __( 'Your account has not been approved yet.', 'ultimate-member' ) );
+				return new WP_Error( $status, __( 'Your account has not been approved yet.', 'ultimate-member' ) );
 				break;
 			case 'awaiting_email_confirmation':
-				$error = new WP_Error( $status, __( 'Your account is awaiting email verification.', 'ultimate-member' ) );
+				return new WP_Error( $status, __( 'Your account is awaiting e-mail verification.', 'ultimate-member' ) );
 				break;
 			case 'rejected':
-				$error = new WP_Error( $status, __( 'Your membership request has been rejected.', 'ultimate-member' ) );
+				return new WP_Error( $status, __( 'Your membership request has been rejected.', 'ultimate-member' ) );
 				break;
 		}
 
-		if ( null !== $error ) {
-			return $error;
-		}
 	}
 
 	return $user;
+
 }
-add_filter( 'authenticate', 'um_wp_form_errors_hook_logincheck', 50 );
+add_filter( 'authenticate', 'um_wp_form_errors_hook_logincheck', 50, 3 );
+
 
 /**
  * Change lost password url in UM Login form

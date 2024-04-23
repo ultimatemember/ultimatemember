@@ -5,7 +5,7 @@
  *
  * This template can be overridden by copying it to {your-theme}/ultimate-member/email/notification_deletion.php
  *
- * @version 2.8.3
+ * @version 2.6.1
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

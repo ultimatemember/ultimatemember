@@ -38,26 +38,21 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 *
 		 * @return bool|string
 		 */
-		public function reset_url() {
-			static $reset_key = null;
-
+		function reset_url() {
 			$user_id = um_user( 'ID' );
 
 			delete_option( "um_cache_userdata_{$user_id}" );
 
-			// New reset password key via WordPress native field. It maybe already exists here but generated twice to make sure that emailed with a proper and fresh hash.
-			// But doing that only once in 1 request using static variable. Different email placeholders can use reset_url() and we have to use 1 time generated to avoid invalid keys.
+			//new reset password key via WordPress native field. It maybe already exists here but generated twice to make sure that emailed with a proper and fresh hash
 			$user_data = get_userdata( $user_id );
-			if ( empty( $reset_key ) ) {
-				$reset_key = UM()->user()->maybe_generate_password_reset_key( $user_data );
-			}
+			$key       = UM()->user()->maybe_generate_password_reset_key( $user_data );
 
 			// this link looks like WordPress native link e.g. wp-login.php?action=rp&key={hash}&login={user_login}
 			$url = add_query_arg(
 				array(
 					'act'   => 'reset_password',
-					'hash'  => $reset_key,
-					'login' => rawurlencode( $user_data->user_login ),
+					'hash'  => $key,
+					'login' => $user_data->user_login,
 				),
 				um_get_core_page( 'password-reset' )
 			);
@@ -495,7 +490,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 			if ( isset( $args['user_password'] ) && empty( $args['user_password'] ) ) {
 				UM()->form()->add_error( 'user_password', __( 'You must enter a new password', 'ultimate-member' ) );
-				return;
 			}
 
 			if ( isset( $args['user_password'] ) ) {

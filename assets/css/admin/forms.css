@@ -71,14 +71,6 @@
   margin: 0 0 5px 0;
 }
 
-.um-external-link-icon {
-  width: 1em;
-  height: 1em;
-  margin: 0;
-  vertical-align: middle;
-  fill: currentcolor;
-}
-
 .um_admin_fonticon_wrapper {
   display: flex;
   flex-direction: row;
@@ -433,4 +425,71 @@ span.um-admin-icon-clear:hover {
 span.um-admin-icon-clear i {
   font-size: 20px;
   vertical-align: middle;
+}
+
+.um-entities-conditions-row {
+  margin: 0 0 5px;
+}
+.um-entities-conditions-row .um-entities-conditions-responce {
+  vertical-align: top;
+}
+.um-entities-conditions-row select {
+  resize: vertical;
+  width: calc(50% - 40px);
+  height: 36px;
+}
+
+.um-conditions-row-action {
+  width: 36px;
+  height: 36px;
+  margin: 0 0 0 2px !important;
+}
+.um-conditions-row-action[disabled] {
+  opacity: 0.5;
+}
+.um-conditions-row-action:hover {
+  color: #2271b1;
+}
+
+.um-users-conditions-row-group {
+  margin: 0 0 10px;
+}
+.um-users-conditions-row-group:first-child .um-users-conditions-separator {
+  display: none;
+}
+
+.um-users-conditions-row {
+  margin: 0 0 5px;
+}
+.um-users-conditions-row .um-users-conditions-responce {
+  vertical-align: top;
+}
+.um-users-conditions-row select {
+  resize: vertical;
+  width: 33.3%;
+  height: 36px;
+}
+.um-users-conditions-row select.um-users-conditions-compare {
+  width: calc(33.3% - 82px);
+}
+
+.um-conditions-group-action {
+  min-width: 100px;
+  width: auto;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+.um-users-conditions-separator,
+.um-users-conditions-connector {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  margin: 0 0 5px;
+  display: block;
+  color: #98a2b3;
+}
+
+.um-users-conditions-row:nth-child(2) .um-users-conditions-connector {
+  display: none;
 }

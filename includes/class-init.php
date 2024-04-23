@@ -235,40 +235,92 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 		}
 
+
 		/**
-		 * Loading UM textdomain.
+		 * Loading UM textdomain
 		 *
-		 * Note: 'ultimate-member' is a default textdomain.
-		 *
-		 * @since 2.8.5 WordPress native functions are used to make this function clear.
+		 * 'ultimate-member' by default
 		 */
 		public function localize() {
-			$default_domain = dirname( plugin_basename( UM_PLUGIN ) );
+			// The function `get_user_locale()` will return `get_locale()` result by default if user or its locale is empty.
+			$language_locale = get_user_locale();
+
 			/**
-			 * Filters the plugin's textdomain.
+			 * UM hook
 			 *
-			 * @param {string} $domain Plugin's textdomain.
+			 * @type filter
+			 * @title um_language_locale
+			 * @description Change UM language locale
+			 * @input_vars
+			 * [{"var":"$locale","type":"string","desc":"UM language locale"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_language_locale', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_language_locale', 'my_language_locale', 10, 1 );
+			 * function my_language_locale( $locale ) {
+			 *     // your code here
+			 *     return $locale;
+			 * }
+			 * ?>
+			 */
+			$language_locale = apply_filters( 'um_language_locale', $language_locale );
+
+
+			/**
+			 * UM hook
 			 *
-			 * @return {string} Maybe changed plugin's textdomain.
-			 *
-			 * @since 1.3.x
-			 * @hook um_language_textdomain
-			 *
-			 * @example <caption>Change UM language locale.</caption>
-			 * function my_um_language_textdomain( $domain ) {
-			 *     $domain = 'ultimate-member-custom';
+			 * @type filter
+			 * @title um_language_textdomain
+			 * @description Change UM textdomain
+			 * @input_vars
+			 * [{"var":"$domain","type":"string","desc":"UM Textdomain"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_language_textdomain', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_language_textdomain', 'my_textdomain', 10, 1 );
+			 * function my_textdomain( $domain ) {
+			 *     // your code here
 			 *     return $domain;
 			 * }
-			 * add_filter( 'um_language_textdomain', 'my_um_language_textdomain' );
+			 * ?>
 			 */
-			$domain = apply_filters( 'um_language_textdomain', $default_domain );
+			$language_domain = apply_filters( 'um_language_textdomain', 'ultimate-member' );
+
+			$language_file = WP_LANG_DIR . '/plugins/' . $language_domain . '-' . $language_locale . '.mo';
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_language_file
+			 * @description Change UM language file path
+			 * @input_vars
+			 * [{"var":"$language_file","type":"string","desc":"UM language file path"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_language_file', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_language_file', 'my_language_file', 10, 1 );
+			 * function my_language_file( $language_file ) {
+			 *     // your code here
+			 *     return $language_file;
+			 * }
+			 * ?>
+			 */
+			$language_file = apply_filters( 'um_language_file', $language_file );
 
 			// Unload textdomain if it has already loaded.
-			if ( is_textdomain_loaded( $domain ) ) {
-				unload_textdomain( $domain, true );
+			if ( is_textdomain_loaded( $language_domain ) ) {
+				unload_textdomain( $language_domain, true );
 			}
-			load_plugin_textdomain( $domain, false, $default_domain . '/languages' );
+			load_textdomain( $language_domain, $language_file );
 		}
+
 
 		/**
 		 * 1.3.x active extensions deactivate for properly running 2.0.x AJAX upgrades
