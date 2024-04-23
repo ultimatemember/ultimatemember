@@ -1248,7 +1248,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							if ( $block['attrs']['um_message_type'] == '1' ) {
 								$block_content = $default_message;
 							} elseif ( $block['attrs']['um_message_type'] == '2' ) {
-								$block_content = isset( $block['attrs']['um_message_content'] ) ? esc_textarea( $block['attrs']['um_message_content'] ) : '';
+								$block_content = isset( $block['attrs']['um_message_content'] ) ? wp_kses_post( $block['attrs']['um_message_content'] ) : '';
 							}
 						}
 					} else {
@@ -1272,7 +1272,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 								if ( $block['attrs']['um_message_type'] == '1' ) {
 									$block_content = $default_message;
 								} elseif ( $block['attrs']['um_message_type'] == '2' ) {
-									$block_content = isset( $block['attrs']['um_message_content'] ) ? esc_textarea( $block['attrs']['um_message_content'] ) : '';
+									$block_content = isset( $block['attrs']['um_message_content'] ) ? wp_kses_post( $block['attrs']['um_message_content'] ) : '';
 								}
 							}
 						}
@@ -1286,7 +1286,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							if ( $block['attrs']['um_message_type'] == '1' ) {
 								$block_content = $default_message;
 							} elseif ( $block['attrs']['um_message_type'] == '2' ) {
-								$block_content = isset( $block['attrs']['um_message_content'] ) ? esc_textarea( $block['attrs']['um_message_content'] ) : '';
+								$block_content = isset( $block['attrs']['um_message_content'] ) ? wp_kses_post( $block['attrs']['um_message_content'] ) : '';
 							}
 						}
 					}

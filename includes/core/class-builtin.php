@@ -273,7 +273,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				),
 
 				'tel' => array(
-					'name' => __( 'Telephone Box', 'ultimate-member' ),
+					'name' => __( 'Telephone', 'ultimate-member' ),
 					'col1' => array('_title','_metakey','_help','_default','_min_chars','_visibility'),
 					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate','_max_chars'),
 					'col3' => array('_required','_editable','_icon'),
@@ -768,98 +768,98 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 
 			$this->predefined_fields = array(
 
-				'user_login' => array(
-					'title' => __('Username','ultimate-member'),
-					'metakey' => 'user_login',
-					'type' => 'text',
-					'label' => __('Username','ultimate-member'),
-					'required' => 1,
-					'public' => 1,
-					'editable' => false,
-					'validate' => 'unique_username',
+				'user_login'           => array(
+					'title'     => __( 'Username', 'ultimate-member' ),
+					'metakey'   => 'user_login',
+					'type'      => 'text',
+					'label'     => __( 'Username', 'ultimate-member' ),
+					'required'  => 1,
+					'public'    => 1,
+					'editable'  => false,
+					'validate'  => 'unique_username',
 					'min_chars' => 3,
-					'max_chars' => 24
+					'max_chars' => 24,
 				),
 
-				'username' => array(
-					'title' => __('Username or E-mail','ultimate-member'),
-					'metakey' => 'username',
-					'type' => 'text',
-					'label' => __('Username or E-mail','ultimate-member'),
+				'username'             => array(
+					'title'    => __( 'Username or Email', 'ultimate-member' ),
+					'metakey'  => 'username',
+					'type'     => 'text',
+					'label'    => __( 'Username or Email', 'ultimate-member' ),
 					'required' => 1,
-					'public' => 1,
+					'public'   => 1,
 					'editable' => false,
 					'validate' => 'unique_username_or_email',
 				),
 
-				'user_password' => array(
-					'title' => __('Password','ultimate-member'),
-					'metakey' => 'user_password',
-					'type' => 'password',
-					'label' => __('Password','ultimate-member'),
-					'required' => 1,
-					'public' => 1,
-					'editable' => true,
-					'min_chars' => 8,
-					'max_chars' => 30,
-					'force_good_pass' => 1,
+				'user_password'        => array(
+					'title'              => __( 'Password', 'ultimate-member' ),
+					'metakey'            => 'user_password',
+					'type'               => 'password',
+					'label'              => __( 'Password', 'ultimate-member' ),
+					'required'           => 1,
+					'public'             => 1,
+					'editable'           => true,
+					'min_chars'          => 8,
+					'max_chars'          => 30,
+					'force_good_pass'    => 1,
 					'force_confirm_pass' => 1,
-					'label_confirm_pass' => __('Confirm Password','ultimate-member')
+					'label_confirm_pass' => __( 'Confirm Password', 'ultimate-member' ),
 				),
 
-				'first_name' => array(
-					'title' => __('First Name','ultimate-member'),
-					'metakey' => 'first_name',
-					'type' => 'text',
-					'label' => __('First Name','ultimate-member'),
+				'first_name'           => array(
+					'title'    => __( 'First Name', 'ultimate-member' ),
+					'metakey'  => 'first_name',
+					'type'     => 'text',
+					'label'    => __( 'First Name', 'ultimate-member' ),
 					'required' => 0,
-					'public' => 1,
+					'public'   => 1,
 					'editable' => true,
 				),
 
-				'last_name' => array(
-					'title' => __('Last Name','ultimate-member'),
-					'metakey' => 'last_name',
-					'type' => 'text',
-					'label' => __('Last Name','ultimate-member'),
+				'last_name'            => array(
+					'title'    => __( 'Last Name', 'ultimate-member' ),
+					'metakey'  => 'last_name',
+					'type'     => 'text',
+					'label'    => __( 'Last Name', 'ultimate-member' ),
 					'required' => 0,
-					'public' => 1,
+					'public'   => 1,
 					'editable' => true,
 				),
 
-				'nickname' => array(
-					'title' => __('Nickname','ultimate-member'),
-					'metakey' => 'nickname',
-					'type' => 'text',
-					'label' => __('Nickname','ultimate-member'),
+				'nickname'             => array(
+					'title'    => __( 'Nickname', 'ultimate-member' ),
+					'metakey'  => 'nickname',
+					'type'     => 'text',
+					'label'    => __( 'Nickname', 'ultimate-member' ),
 					'required' => 0,
-					'public' => 1,
+					'public'   => 1,
 					'editable' => true,
 				),
 
-				'user_url' => array(
-					'title' => __('Website URL','ultimate-member'),
-					'metakey' => 'user_url',
-					'type' => 'url',
-					'label' => __('Website URL','ultimate-member'),
+				'user_url'             => array(
+					'title'    => __( 'Website URL', 'ultimate-member' ),
+					'metakey'  => 'user_url',
+					'type'     => 'url',
+					'label'    => __( 'Website URL', 'ultimate-member' ),
 					'required' => 1,
-					'public' => 1,
+					'public'   => 1,
 					'editable' => true,
-					'validate' => 'url'
+					'validate' => 'url',
 				),
 
-				'user_registered' => array(
-					'title' => __('Registration Date','ultimate-member'),
-					'metakey' => 'user_registered',
-					'type' => 'text',
-					'label' => __('Registration Date','ultimate-member'),
-					'required' => 0,
-					'public' => 1,
-					'editable' => true,
+				'user_registered'      => array(
+					'title'          => __( 'Registration Date', 'ultimate-member' ),
+					'metakey'        => 'user_registered',
+					'type'           => 'text',
+					'label'          => __( 'Registration Date', 'ultimate-member' ),
+					'required'       => 0,
+					'public'         => 1,
+					'editable'       => true,
 					'edit_forbidden' => 1,
 				),
 
-				'_um_last_login' => array(
+				'_um_last_login'       => array(
 					'title'          => __( 'Last Login', 'ultimate-member' ),
 					'metakey'        => '_um_last_login',
 					'type'           => 'text',
@@ -870,43 +870,43 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'edit_forbidden' => 1,
 				),
 
-				'user_email' => array(
-					'title' => __('E-mail Address','ultimate-member'),
-					'metakey' => 'user_email',
-					'type' => 'text',
-					'label' => __('E-mail Address','ultimate-member'),
-					'required' => 0,
-					'public' => 1,
-					'validate' => 'unique_email',
-					'autocomplete' => 'off'
+				'user_email'           => array(
+					'title'        => __( 'Email Address', 'ultimate-member' ),
+					'metakey'      => 'user_email',
+					'type'         => 'text',
+					'label'        => __( 'Email Address', 'ultimate-member' ),
+					'required'     => 0,
+					'public'       => 1,
+					'validate'     => 'unique_email',
+					'autocomplete' => 'off',
 				),
 
 				'secondary_user_email' => array(
-					'title' => __('Secondary E-mail Address','ultimate-member'),
-					'metakey' => 'secondary_user_email',
-					'type' => 'text',
-					'label' => __('Secondary E-mail Address','ultimate-member'),
-					'required' => 0,
-					'public' => 1,
-					'editable' => true,
-					'validate' => 'unique_email',
-					'autocomplete' => 'off'
+					'title'        => __( 'Secondary Email Address', 'ultimate-member' ),
+					'metakey'      => 'secondary_user_email',
+					'type'         => 'text',
+					'label'        => __( 'Secondary Email Address', 'ultimate-member' ),
+					'required'     => 0,
+					'public'       => 1,
+					'editable'     => true,
+					'validate'     => 'unique_email',
+					'autocomplete' => 'off',
 				),
 
-				'description' => array(
-					'title' => __('Biography','ultimate-member'),
-					'metakey' => 'description',
-					'type' => 'textarea',
-					'label' => __('Biography','ultimate-member'),
-					'html' => 0,
-					'required' => 0,
-					'public' => 1,
-					'editable' => true,
-					'max_words' => 40,
-					'placeholder' => __('Enter a bit about yourself...','ultimate-member'),
+				'description'          => array(
+					'title'       => __( 'Biography', 'ultimate-member' ),
+					'metakey'     => 'description',
+					'type'        => 'textarea',
+					'label'       => __( 'Biography', 'ultimate-member' ),
+					'html'        => 0,
+					'required'    => 0,
+					'public'      => 1,
+					'editable'    => true,
+					'max_words'   => 40,
+					'placeholder' => __( 'Enter a bit about yourself...', 'ultimate-member' ),
 				),
 
-				'birth_date' => array(
+				'birth_date'           => array(
 					'title'         => __( 'Birth Date', 'ultimate-member' ),
 					'metakey'       => 'birth_date',
 					'type'          => 'date',
@@ -920,45 +920,48 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'icon'          => 'um-faicon-calendar',
 				),
 
-				'gender' => array(
-					'title' => __('Gender','ultimate-member'),
-					'metakey' => 'gender',
-					'type' => 'radio',
-					'label' => __('Gender','ultimate-member'),
+				'gender'               => array(
+					'title'    => __( 'Gender', 'ultimate-member' ),
+					'metakey'  => 'gender',
+					'type'     => 'radio',
+					'label'    => __( 'Gender', 'ultimate-member' ),
 					'required' => 0,
-					'public' => 1,
+					'public'   => 1,
 					'editable' => true,
-					'options' => array( __('Male','ultimate-member'), __('Female','ultimate-member') )
+					'options'  => array(
+						__( 'Male', 'ultimate-member' ),
+						__( 'Female', 'ultimate-member' ),
+					),
 				),
 
-				'country' => array(
-					'title' => __('Country','ultimate-member'),
-					'metakey' => 'country',
-					'type' => 'select',
-					'label' => __('Country','ultimate-member'),
-					'placeholder' => __('Choose a Country','ultimate-member'),
-					'required' => 0,
-					'public' => 1,
-					'editable' => true,
-					'options' => $this->get('countries')
+				'country'              => array(
+					'title'       => __( 'Country', 'ultimate-member' ),
+					'metakey'     => 'country',
+					'type'        => 'select',
+					'label'       => __( 'Country', 'ultimate-member' ),
+					'placeholder' => __( 'Choose a Country', 'ultimate-member' ),
+					'required'    => 0,
+					'public'      => 1,
+					'editable'    => true,
+					'options'     => $this->get( 'countries' ),
 				),
 
-				'facebook' => array(
-					'title' => __('Facebook','ultimate-member'),
-					'metakey' => 'facebook',
-					'type' => 'url',
-					'label' => __('Facebook','ultimate-member'),
-					'required' => 0,
-					'public' => 1,
-					'editable' => true,
+				'facebook'             => array(
+					'title'      => __( 'Facebook', 'ultimate-member' ),
+					'metakey'    => 'facebook',
+					'type'       => 'url',
+					'label'      => __( 'Facebook', 'ultimate-member' ),
+					'required'   => 0,
+					'public'     => 1,
+					'editable'   => true,
 					'url_target' => '_blank',
-					'url_rel' => 'nofollow',
-					'icon' => 'um-faicon-facebook',
-					'validate' => 'facebook_url',
-					'url_text' => 'Facebook',
-					'advanced' => 'social',
-					'color' => '#3B5999',
-					'match' => 'https://facebook.com/',
+					'url_rel'    => 'nofollow',
+					'icon'       => 'um-faicon-facebook',
+					'validate'   => 'facebook_url',
+					'url_text'   => 'Facebook',
+					'advanced'   => 'social',
+					'color'      => '#3B5999',
+					'match'      => 'https://facebook.com/',
 				),
 
 				'twitter'              => array(
@@ -979,119 +982,119 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'match'      => 'https://twitter.com/',
 				),
 
-				'linkedin' => array(
-					'title' => __('LinkedIn','ultimate-member'),
-					'metakey' => 'linkedin',
-					'type' => 'url',
-					'label' => __('LinkedIn','ultimate-member'),
-					'required' => 0,
-					'public' => 1,
-					'editable' => true,
+				'linkedin'             => array(
+					'title'      => __( 'LinkedIn', 'ultimate-member' ),
+					'metakey'    => 'linkedin',
+					'type'       => 'url',
+					'label'      => __( 'LinkedIn', 'ultimate-member' ),
+					'required'   => 0,
+					'public'     => 1,
+					'editable'   => true,
 					'url_target' => '_blank',
-					'url_rel' => 'nofollow',
-					'icon' => 'um-faicon-linkedin',
-					'validate' => 'linkedin_url',
-					'url_text' => 'LinkedIn',
-					'advanced' => 'social',
-					'color' => '#0976b4',
-					'match' => 'https://linkedin.com/',
+					'url_rel'    => 'nofollow',
+					'icon'       => 'um-faicon-linkedin',
+					'validate'   => 'linkedin_url',
+					'url_text'   => 'LinkedIn',
+					'advanced'   => 'social',
+					'color'      => '#0976b4',
+					'match'      => 'https://linkedin.com/',
 				),
 
-				'instagram' => array(
-					'title' => __('Instagram','ultimate-member'),
-					'metakey' => 'instagram',
-					'type' => 'url',
-					'label' => __('Instagram','ultimate-member'),
-					'required' => 0,
-					'public' => 1,
-					'editable' => true,
+				'instagram'            => array(
+					'title'      => __( 'Instagram', 'ultimate-member' ),
+					'metakey'    => 'instagram',
+					'type'       => 'url',
+					'label'      => __( 'Instagram', 'ultimate-member' ),
+					'required'   => 0,
+					'public'     => 1,
+					'editable'   => true,
 					'url_target' => '_blank',
-					'url_rel' => 'nofollow',
-					'icon' => 'um-faicon-instagram',
-					'validate' => 'instagram_url',
-					'url_text' => 'Instagram',
-					'advanced' => 'social',
-					'color' => 'radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%)',
-					'match' => 'https://instagram.com/',
+					'url_rel'    => 'nofollow',
+					'icon'       => 'um-faicon-instagram',
+					'validate'   => 'instagram_url',
+					'url_text'   => 'Instagram',
+					'advanced'   => 'social',
+					'color'      => 'radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%)',
+					'match'      => 'https://instagram.com/',
 				),
 
-				'skype' => array(
-					'title' => __('Skype ID','ultimate-member'),
-					'metakey' => 'skype',
-					'type' => 'text',
-					'label' => __('Skype ID','ultimate-member'),
-					'required' => 0,
-					'public' => 1,
-					'editable' => true,
+				'skype'                => array(
+					'title'      => __( 'Skype ID', 'ultimate-member' ),
+					'metakey'    => 'skype',
+					'type'       => 'text',
+					'label'      => __( 'Skype ID', 'ultimate-member' ),
+					'required'   => 0,
+					'public'     => 1,
+					'editable'   => true,
 					'url_target' => '_blank',
-					'url_rel' => 'nofollow',
-					'icon' => 'um-faicon-skype',
-					'validate' => 'skype',
-					'url_text' => __( 'Join chat', 'ultimate-member' ),
+					'url_rel'    => 'nofollow',
+					'icon'       => 'um-faicon-skype',
+					'validate'   => 'skype',
+					'url_text'   => __( 'Join chat', 'ultimate-member' ),
 				),
 
-				'viber' => array(
-					'title' => __('Viber number','ultimate-member'),
-					'metakey' => 'viber',
-					'type' => 'text',
-					'label' => __('Viber number','ultimate-member'),
-					'required' => 0,
-					'public' => 1,
-					'editable' => true,
+				'viber'                => array(
+					'title'      => __( 'Viber number', 'ultimate-member' ),
+					'metakey'    => 'viber',
+					'type'       => 'text',
+					'label'      => __( 'Viber number', 'ultimate-member' ),
+					'required'   => 0,
+					'public'     => 1,
+					'editable'   => true,
 					'url_target' => '_blank',
-					'url_rel' => 'nofollow',
-					'icon' => 'um-icon-ios-telephone',
-					'validate' => 'phone_number',
+					'url_rel'    => 'nofollow',
+					'icon'       => 'um-icon-ios-telephone',
+					'validate'   => 'phone_number',
 				),
 
-				'whatsapp' => array(
-					'title' => __('WhatsApp number','ultimate-member'),
-					'metakey' => 'whatsapp',
-					'type' => 'text',
-					'label' => __('WhatsApp number','ultimate-member'),
-					'required' => 0,
-					'public' => 1,
-					'editable' => true,
+				'whatsapp'             => array(
+					'title'      => __( 'WhatsApp number', 'ultimate-member' ),
+					'metakey'    => 'whatsapp',
+					'type'       => 'text',
+					'label'      => __( 'WhatsApp number', 'ultimate-member' ),
+					'required'   => 0,
+					'public'     => 1,
+					'editable'   => true,
 					'url_target' => '_blank',
-					'url_rel' => 'nofollow',
-					'icon' => 'um-icon-social-whatsapp',
-					'validate' => 'phone_number',
+					'url_rel'    => 'nofollow',
+					'icon'       => 'um-icon-social-whatsapp',
+					'validate'   => 'phone_number',
 				),
 
-				'telegram' => array(
-					'title' => __('Telegram','ultimate-member'),
-					'metakey' => 'telegram',
-					'type' => 'url',
-					'label' => __('Telegram','ultimate-member'),
-					'required' => 0,
-					'public' => 1,
-					'editable' => true,
+				'telegram'             => array(
+					'title'      => __( 'Telegram', 'ultimate-member' ),
+					'metakey'    => 'telegram',
+					'type'       => 'url',
+					'label'      => __( 'Telegram', 'ultimate-member' ),
+					'required'   => 0,
+					'public'     => 1,
+					'editable'   => true,
 					'url_target' => '_blank',
-					'url_rel' => 'nofollow',
-					'icon' => 'um-faicon-paper-plane',
-					'validate' => 'telegram_url',
-					'url_text' => 'Telegram',
-					'match' => 'https://t.me/',
+					'url_rel'    => 'nofollow',
+					'icon'       => 'um-faicon-paper-plane',
+					'validate'   => 'telegram_url',
+					'url_text'   => 'Telegram',
+					'match'      => 'https://t.me/',
 				),
 
-				'discord' => array(
-					'title' => __('Discord','ultimate-member'),
-					'metakey' => 'discord',
-					'type' => 'text',
-					'label' => __('Discord ID','ultimate-member'),
-					'required' => 0,
-					'public' => 1,
-					'editable' => true,
+				'discord'              => array(
+					'title'      => __( 'Discord', 'ultimate-member' ),
+					'metakey'    => 'discord',
+					'type'       => 'text',
+					'label'      => __( 'Discord ID', 'ultimate-member' ),
+					'required'   => 0,
+					'public'     => 1,
+					'editable'   => true,
 					'url_target' => '_blank',
-					'url_rel' => 'nofollow',
-					'validate' => 'discord',
+					'url_rel'    => 'nofollow',
+					'validate'   => 'discord',
 				),
 
-				'tiktok' => array(
-					'title'      => __('TikTok','ultimate-member'),
+				'tiktok'               => array(
+					'title'      => __( 'TikTok', 'ultimate-member' ),
 					'metakey'    => 'tiktok',
 					'type'       => 'url',
-					'label'      => __('TikTok','ultimate-member'),
+					'label'      => __( 'TikTok', 'ultimate-member' ),
 					'required'   => 0,
 					'public'     => 1,
 					'editable'   => true,
@@ -1105,11 +1108,11 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'match'      => 'https://tiktok.com/@',
 				),
 
-				'twitch' => array(
-					'title'      => __('Twitch','ultimate-member'),
+				'twitch'               => array(
+					'title'      => __( 'Twitch', 'ultimate-member' ),
 					'metakey'    => 'twitch',
 					'type'       => 'url',
-					'label'      => __('Twitch','ultimate-member'),
+					'label'      => __( 'Twitch', 'ultimate-member' ),
 					'required'   => 0,
 					'public'     => 1,
 					'editable'   => true,
@@ -1123,11 +1126,11 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'match'      => 'https://twitch.tv/',
 				),
 
-				'reddit' => array(
-					'title'      => __('Reddit','ultimate-member'),
+				'reddit'               => array(
+					'title'      => __( 'Reddit', 'ultimate-member' ),
 					'metakey'    => 'reddit',
 					'type'       => 'url',
-					'label'      => __('Reddit','ultimate-member'),
+					'label'      => __( 'Reddit', 'ultimate-member' ),
 					'required'   => 0,
 					'public'     => 1,
 					'editable'   => true,
@@ -1141,7 +1144,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'match'      => 'https://www.reddit.com/user/',
 				),
 
-				'youtube' => array(
+				'youtube'              => array(
 					'title'      => __( 'YouTube', 'ultimate-member' ),
 					'metakey'    => 'youtube',
 					'type'       => 'url',
@@ -1162,81 +1165,81 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					),
 				),
 
-				'soundcloud' => array(
-					'title' => __( 'SoundCloud', 'ultimate-member' ),
-					'metakey' => 'soundcloud',
-					'type' => 'url',
-					'label' => __( 'SoundCloud', 'ultimate-member' ),
-					'required' => 0,
-					'public' => 1,
-					'editable' => true,
+				'soundcloud'           => array(
+					'title'      => __( 'SoundCloud', 'ultimate-member' ),
+					'metakey'    => 'soundcloud',
+					'type'       => 'url',
+					'label'      => __( 'SoundCloud', 'ultimate-member' ),
+					'required'   => 0,
+					'public'     => 1,
+					'editable'   => true,
 					'url_target' => '_blank',
-					'url_rel' => 'nofollow',
-					'icon' => 'um-faicon-soundcloud',
-					'validate' => 'soundcloud_url',
-					'url_text' => 'SoundCloud',
-					'advanced' => 'social',
-					'color' => '#f50',
-					'match' => 'https://soundcloud.com/',
+					'url_rel'    => 'nofollow',
+					'icon'       => 'um-faicon-soundcloud',
+					'validate'   => 'soundcloud_url',
+					'url_text'   => 'SoundCloud',
+					'advanced'   => 'social',
+					'color'      => '#f50',
+					'match'      => 'https://soundcloud.com/',
 				),
 
-				'role_select' => array(
-					'title' => __('Roles (Dropdown)','ultimate-member'),
-					'metakey' => 'role_select',
-					'type' => 'select',
-					'label' => __('Account Type','ultimate-member'),
-					'placeholder' => 'Choose account type',
+				'role_select'          => array(
+					'title'       => __( 'Roles (Dropdown)', 'ultimate-member' ),
+					'metakey'     => 'role_select',
+					'type'        => 'select',
+					'label'       => __( 'Account Type', 'ultimate-member' ),
+					'placeholder' => __( 'Choose account type', 'ultimate-member' ),
+					'required'    => 0,
+					'public'      => 1,
+					'editable'    => true,
+					'options'     => $um_roles,
+				),
+
+				'role_radio'           => array(
+					'title'    => __( 'Roles (Radio)', 'ultimate-member' ),
+					'metakey'  => 'role_radio',
+					'type'     => 'radio',
+					'label'    => __( 'Account Type', 'ultimate-member' ),
 					'required' => 0,
-					'public' => 1,
+					'public'   => 1,
 					'editable' => true,
-					'options' => $um_roles,
+					'options'  => $um_roles,
 				),
 
-				'role_radio' => array(
-					'title' => __('Roles (Radio)','ultimate-member'),
-					'metakey' => 'role_radio',
-					'type' => 'radio',
-					'label' => __('Account Type','ultimate-member'),
-					'required' => 0,
-					'public' => 1,
-					'editable' => true,
-					'options' => $um_roles,
+				'languages'            => array(
+					'title'       => __( 'Languages', 'ultimate-member' ),
+					'metakey'     => 'languages',
+					'type'        => 'multiselect',
+					'label'       => __( 'Languages Spoken', 'ultimate-member' ),
+					'placeholder' => __( 'Select languages', 'ultimate-member' ),
+					'required'    => 0,
+					'public'      => 1,
+					'editable'    => true,
+					'options'     => $this->get( 'languages' ),
 				),
 
-				'languages' => array(
-					'title' => __('Languages','ultimate-member'),
-					'metakey' => 'languages',
-					'type' => 'multiselect',
-					'label' => __('Languages Spoken','ultimate-member'),
-					'placeholder' => __('Select languages','ultimate-member'),
+				'phone_number'         => array(
+					'title'    => __( 'Phone Number', 'ultimate-member' ),
+					'metakey'  => 'phone_number',
+					'type'     => 'tel',
+					'label'    => __( 'Phone Number', 'ultimate-member' ),
 					'required' => 0,
-					'public' => 1,
-					'editable' => true,
-					'options' => $this->get('languages'),
-				),
-
-				'phone_number' => array(
-					'title' => __('Phone Number','ultimate-member'),
-					'metakey' => 'phone_number',
-					'type' => 'tel',
-					'label' => __('Phone Number','ultimate-member'),
-					'required' => 0,
-					'public' => 1,
-					'editable' => true,
-					'validate' => 'phone_number',
-					'icon' => 'um-faicon-phone',
-				),
-
-				'mobile_number' => array(
-					'title' => __('Mobile Number','ultimate-member'),
-					'metakey' => 'mobile_number',
-					'type' => 'tel',
-					'label' => __('Mobile Number','ultimate-member'),
-					'required' => 0,
-					'public' => 1,
+					'public'   => 1,
 					'editable' => true,
 					'validate' => 'phone_number',
-					'icon' => 'um-faicon-mobile',
+					'icon'     => 'um-faicon-phone',
+				),
+
+				'mobile_number'        => array(
+					'title'    => __( 'Mobile Number', 'ultimate-member' ),
+					'metakey'  => 'mobile_number',
+					'type'     => 'tel',
+					'label'    => __( 'Mobile Number', 'ultimate-member' ),
+					'required' => 0,
+					'public'   => 1,
+					'editable' => true,
+					'validate' => 'phone_number',
+					'icon'     => 'um-faicon-mobile',
 				),
 
 				// private use ( not public list )
@@ -1271,7 +1274,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				),
 
 				'username_b' => array(
-					'title' => __('Username or E-mail','ultimate-member'),
+					'title' => __('Username or Email','ultimate-member'),
 					'metakey' => 'username_b',
 					'type' => 'text',
 					'placeholder' => __('Enter your username or email','ultimate-member'),
@@ -1336,6 +1339,23 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'required_opt'  => array( 'members_page', true ),
 				),
 
+				'um_show_last_login'    => array(
+					'title'         => __( 'Show my last login?', 'ultimate-member' ),
+					'metakey'       => 'um_show_last_login',
+					'type'          => 'radio',
+					'label'         => __( 'Show my last login?', 'ultimate-member' ),
+					'help'          => __( 'Here you can hide last login field on profile page and card in member directory', 'ultimate-member' ),
+					'required'      => 0,
+					'public'        => 1,
+					'editable'      => true,
+					'default'       => 'yes',
+					'options'       => array(
+						'no'  => __( 'No', 'ultimate-member' ),
+						'yes' => __( 'Yes', 'ultimate-member' ),
+					),
+					'account_only'  => true,
+				),
+
 				'delete_account'        => array(
 					'title'         => __( 'Delete Account', 'ultimate-member' ),
 					'metakey'       => 'delete_account',
@@ -1348,43 +1368,47 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'default'       => __( 'No', 'ultimate-member' ),
 					'options'       => array(
 						__( 'Yes', 'ultimate-member' ),
-						__( 'No', 'ultimate-member' )
+						__( 'No', 'ultimate-member' ),
 					),
 					'account_only'  => true,
 				),
 
 				'single_user_password'  => array(
-					'title'         => __( 'Password', 'ultimate-member' ),
-					'metakey'       => 'single_user_password',
-					'type'          => 'password',
-					'label'         => __( 'Password', 'ultimate-member' ),
-					'required'      => 1,
-					'public'        => 1,
-					'editable'      => true,
-					'account_only'  => true,
+					'title'        => __( 'Password', 'ultimate-member' ),
+					'metakey'      => 'single_user_password',
+					'type'         => 'password',
+					'label'        => __( 'Password', 'ultimate-member' ),
+					'required'     => 1,
+					'public'       => 1,
+					'editable'     => true,
+					'account_only' => true,
 				),
-
 			);
 
 			/**
-			 * UM hook
+			 * Filters Ultimate Member predefined fields.
 			 *
-			 * @type filter
-			 * @title um_predefined_fields_hook
-			 * @description Extend Predefined Fields
-			 * @input_vars
-			 * [{"var":"$predefined_fields","type":"array","desc":"Predefined Fields"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_predefined_fields_hook', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_predefined_fields_hook', 'my_predefined_fields', 10, 1 );
-			 * function my_predefined_fields( $predefined_fields ) {
-			 *     // your code here
-			 *     return $predefined_fields;
+			 * @param {array} $fields Predefined fields.
+			 *
+			 * @return {array} Predefined fields.
+			 *
+			 * @since 1.3.x
+			 * @hook  um_predefined_fields_hook
+			 *
+			 * @example <caption>Add predefined field.</caption>
+			 * function my_predefined_fields( $fields ) {
+			 *     $fields['um_custom'] = array(
+			 *         'title'        => __( 'Custom text field', 'ultimate-member' ),
+			 *         'metakey'      => 'um_custom',
+			 *         'type'         => 'text',
+			 *         'label'        => __( 'Custom text field', 'ultimate-member' ),
+			 *         'required'     => 1,
+			 *         'public'       => 1,
+			 *         'editable'     => true,
+			 *     );
+			 *     return $fields;
 			 * }
-			 * ?>
+			 * add_filter( 'um_predefined_fields_hook', 'my_predefined_fields' );
 			 */
 			$this->predefined_fields = apply_filters( 'um_predefined_fields_hook', $this->predefined_fields );
 		}
@@ -1558,11 +1582,11 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$array['skype']                    = __('Skype ID','ultimate-member');
 			$array['soundcloud']               = __( 'SoundCloud Profile', 'ultimate-member' );
 			$array['twitter_url']              = __( 'X (formerly Twitter) URL', 'ultimate-member' );
-			$array['is_email']                 = __('E-mail( Not Unique )','ultimate-member');
-			$array['unique_email']             = __('Unique E-mail','ultimate-member');
+			$array['is_email']                 = __('Email( Not Unique )','ultimate-member');
+			$array['unique_email']             = __('Unique Email','ultimate-member');
 			$array['unique_value']             = __('Unique Metakey value','ultimate-member');
 			$array['unique_username']          = __('Unique Username','ultimate-member');
-			$array['unique_username_or_email'] = __('Unique Username/E-mail','ultimate-member');
+			$array['unique_username_or_email'] = __('Unique Username/Email','ultimate-member');
 			$array['url']                      = __('Website URL','ultimate-member');
 			$array['youtube_url']              = __('YouTube Profile','ultimate-member');
 			$array['youtube_video']            = __('YouTube Video','ultimate-member');

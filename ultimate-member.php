@@ -3,7 +3,7 @@
  * Plugin Name: Ultimate Member
  * Plugin URI: http://ultimatemember.com/
  * Description: The easiest way to create powerful online communities and beautiful user profiles with WordPress
- * Version: 2.8.3-alpha
+ * Version: 2.8.6-alpha
  * Author: Ultimate Member
  * Author URI: http://ultimatemember.com/
  * Text Domain: ultimate-member
@@ -32,7 +32,7 @@ define( 'UM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'UM_PLUGIN', plugin_basename( __FILE__ ) );
 define( 'UM_VERSION', $plugin_data['Version'] );
 define( 'UM_PLUGIN_NAME', $plugin_data['Name'] );
-define( 'UM_DEV_MODE', true );
+// define( 'UM_DEV_MODE', true );
 
 require_once 'includes/class-functions.php';
 require_once 'includes/class-init.php';
