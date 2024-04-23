@@ -186,16 +186,30 @@ jQuery(document).ready(function() {
 	/**
 		restore font icon
 	**/
+	// jQuery(document.body).on('click', 'span.um-admin-icon-clear', function(){
+	// 	var element = jQuery(this).parents('p');
+	// 	jQuery('#UM_fonticons a.um-admin-modal-back').attr('data-code', '');
+	// 	element.find('input[type="hidden"]').val('');
+	// 	element.find('.um-admin-icon-value').html( wp.i18n.__( 'No Icon', 'ultimate-member' ) );
+	//
+	// 	element = jQuery(this).parents('td');
+	// 	element.find('input[type="hidden"]').val('');
+	// 	element.find('.um-admin-icon-value').html( wp.i18n.__( 'No Icon', 'ultimate-member' ) );
+	// 	jQuery(this).removeClass('show');
+	// });
+
 	jQuery(document.body).on('click', 'span.um-admin-icon-clear', function(){
 		var element = jQuery(this).parents('p');
 		jQuery('#UM_fonticons a.um-admin-modal-back').attr('data-code', '');
 		element.find('input[type="hidden"]').val('');
-		element.find('.um-admin-icon-value').html( wp.i18n.__( 'No Icon', 'ultimate-member' ) );
+		element.find('.um_admin_fonticon_wrapper').hide();
+	//	element.find('.um-admin-icon-value').html( wp.i18n.__( 'No Icon', 'ultimate-member' ) );
 
 		element = jQuery(this).parents('td');
 		element.find('input[type="hidden"]').val('');
-		element.find('.um-admin-icon-value').html( wp.i18n.__( 'No Icon', 'ultimate-member' ) );
-		jQuery(this).removeClass('show');
+		element.find('.um_admin_fonticon_wrapper').hide();
+		//element.find('.um-admin-icon-value').html( wp.i18n.__( 'No Icon', 'ultimate-member' ) );
+		//jQuery(this).removeClass('show');
 	});
 
 	/**

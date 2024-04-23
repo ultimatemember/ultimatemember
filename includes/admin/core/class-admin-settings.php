@@ -2112,13 +2112,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'checkbox_label' => __( 'Enable Gutenberg Blocks', 'ultimate-member' ),
 												'description'    => __( 'Check this box if you would like to use Ultimate Member blocks in Gutenberg editor. Important some themes have the conflicts with Gutenberg editor.', 'ultimate-member' ),
 											),
-											array(
-												'id'             => 'enable_new_fonticons',
-												'type'           => 'checkbox',
-												'label'          => __( 'New fonticons', 'ultimate-member' ),
-												'checkbox_label' => __( 'Enable new fonticons', 'ultimate-member' ),
-												'description'    => __( 'Check this box if you would like to enable new Ultimate Member fonticons used latest version of FontAwesome library.', 'ultimate-member' ),
-											),
 											$same_page_update,
 										),
 									),
@@ -2229,12 +2222,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			} else {
 				unset( $this->settings_structure['advanced']['sections']['features']['form_sections']['beta_features'] );
-
-				$first_activation_date = get_option( 'um_first_activation_date', false );
-				// @todo new version
-				if ( empty( $first_activation_date ) || $first_activation_date >= 1713342395 ) {
-					unset( $this->settings_structure['advanced']['sections']['features']['form_sections']['features']['fields'][1] );
-				}
 			}
 		}
 

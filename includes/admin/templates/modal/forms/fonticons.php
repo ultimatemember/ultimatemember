@@ -6,9 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $first_activation_date = get_option( 'um_first_activation_date', false );
 // @todo new version
-if ( empty( $first_activation_date ) || $first_activation_date >= 1713342395 || UM()->options()->get( 'enable_new_fonticons' ) ) {
-
-} else {
+if ( ! empty( $first_activation_date ) && $first_activation_date < 1713342395 ) {
 	?>
 	<div id="UM_fonticons" style="display:none">
 

@@ -97,7 +97,14 @@ UM.admin = {
 					select2_atts.dropdownParent = $iconSelector.parents('._heading_text');
 				}
 
-				$iconSelector.select2( select2_atts );
+				$iconSelector.select2( select2_atts ).on( 'change', function () {
+					// handle outdated icons and remove them after select new one.
+					let oldWrapper = $iconSelector.siblings('.um_admin_fonticon_wrapper');
+					if ( oldWrapper.length > 0 ) {
+						oldWrapper.find('#_icon').val( $iconSelector.val() );
+						oldWrapper.hide();
+					}
+				});
 			}
 		}
 	}

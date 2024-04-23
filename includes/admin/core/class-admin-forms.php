@@ -545,7 +545,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$first_activation_date = get_option( 'um_first_activation_date', false );
 			// @todo new version
-			if ( empty( $first_activation_date ) || $first_activation_date >= 1713342395 || UM()->options()->get( 'enable_new_fonticons' ) ) {
+			if ( empty( $first_activation_date ) || $first_activation_date >= 1713342395 ) {
 				UM()->setup()->set_icons_options();
 
 				$um_icons_list = get_option( 'um_icons_list' );

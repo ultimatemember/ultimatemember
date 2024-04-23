@@ -270,13 +270,10 @@ class Enqueue {
 		wp_register_style( 'um_fonticons_fa', $libs_url . 'legacy/fonticons/fonticons-fa' . $suffix . '.css', array(), UM_VERSION ); // FontAwesome
 		$fonticons_handlers = array( 'um_fonticons_ii', 'um_fonticons_fa' );
 		// New FontIcons from FontAwesome.
-		$first_activation_date = get_option( 'um_first_activation_date', false );
 		// @todo new version
-		if ( empty( $first_activation_date ) || $first_activation_date >= 1713342395 || UM()->options()->get( 'enable_new_fonticons' ) ) {
-			// First install set this option to true by default and use new FontAwesome icons
-			wp_register_style( 'um_fontawesome', $css_url . 'um-fontawesome' . $suffix . '.css', array(), self::$fa_version ); // New FontAwesome
-			$fonticons_handlers[] = 'um_fontawesome';
-		}
+		// First install set this option to true by default and use new FontAwesome icons
+		wp_register_style( 'um_fontawesome', $css_url . 'um-fontawesome' . $suffix . '.css', array(), self::$fa_version ); // New FontAwesome
+		$fonticons_handlers[] = 'um_fontawesome';
 		self::$fonticons_handlers = $fonticons_handlers;
 
 		// Select2 JS.
