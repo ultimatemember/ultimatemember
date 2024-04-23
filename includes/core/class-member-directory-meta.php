@@ -959,7 +959,8 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			} elseif ( 'last_login' === $sortby ) {
 
 				$this->joins[]   = "LEFT JOIN {$wpdb->prefix}um_metadata umm_sort ON ( umm_sort.user_id = u.ID AND umm_sort.um_key = '_um_last_login' )";
-				$this->sql_order = ' ORDER BY CAST( umm_sort.um_value AS DATETIME ) DESC ';
+				$this->joins[]   = "LEFT JOIN {$wpdb->prefix}um_metadata umm_show_login ON ( umm_show_login.user_id = u.ID AND umm_show_login.um_key = 'um_show_last_login' )";
+				$this->sql_order = $wpdb->prepare( ' ORDER BY CASE ISNULL(NULLIF(umm_show_login.um_value,%s)) WHEN 0 THEN %s ELSE CAST( umm_sort.um_value AS DATETIME ) END DESC ', 'a:1:{i:0;s:3:"yes";}', '1970-01-01 00:00:00' );
 
 			} elseif ( 'last_first_name' === $sortby ) {
 

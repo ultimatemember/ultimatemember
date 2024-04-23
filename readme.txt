@@ -180,6 +180,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: YouTube validation when field value is empty
 * Fixed: Social URLs sanitizing where user can put his social username (e.g. Instagram, Facebook)
 * Fixed: Using only published forms and member directories IDs on predefined pages installation
+* Fixed: Member Directory before query hook when custom meta table is active
 
 = 2.8.5 2024-04-09 =
 
