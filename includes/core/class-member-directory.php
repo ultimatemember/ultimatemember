@@ -1480,7 +1480,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				);
 				unset( $this->query_args['order'] );
 
-				add_filter( 'pre_user_query', array( &$this, 'sortby_last_login' ), 10, 1 );
+				add_filter( 'pre_user_query', array( &$this, 'sortby_last_login' ) );
 			} elseif ( $sortby == 'last_first_name' ) {
 
 				$this->query_args['meta_query'][] = array(
@@ -1692,8 +1692,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		public function sortby_last_login( $query ) {
 			if ( array_key_exists( 'um_last_login', $query->query_vars['orderby'] ) ) {
 				global $wpdb;
-				$query->query_from   .= " LEFT JOIN {$wpdb->prefix}usermeta AS umm_sort ON ( umm_sort.user_id = wp_users.ID AND umm_sort.meta_key = '_um_last_login' ) ";
-				$query->query_from   .= " LEFT JOIN {$wpdb->prefix}usermeta AS umm_show_login ON ( umm_show_login.user_id = wp_users.ID AND umm_show_login.meta_key = 'um_show_last_login' ) ";
+				$query->query_from   .= " LEFT JOIN {$wpdb->prefix}usermeta AS umm_sort ON ( umm_sort.user_id = {$wpdb->prefix}users.ID AND umm_sort.meta_key = '_um_last_login' ) ";
+				$query->query_from   .= " LEFT JOIN {$wpdb->prefix}usermeta AS umm_show_login ON ( umm_show_login.user_id = {$wpdb->prefix}users.ID AND umm_show_login.meta_key = 'um_show_last_login' ) ";
 				$query->query_orderby = " ORDER BY CASE ISNULL(NULLIF(umm_show_login.meta_value,'a:1:{i:0;s:3:\"yes\";}')) WHEN 0 THEN '1970-01-01 00:00:00' ELSE CAST( umm_sort.meta_value AS DATETIME ) END DESC ";
 			}
 			return $query;
