@@ -91,10 +91,8 @@ UM.admin = {
 					containerCssClass : 'um-select2-icon-container'
 				};
 
-				if ( $iconSelector.parents('.um-admin-tri').length ) {
-					select2_atts.dropdownParent = $iconSelector.parents('.um-admin-tri');
-				} else if ( $iconSelector.parents('._heading_text').length ) {
-					select2_atts.dropdownParent = $iconSelector.parents('._heading_text');
+				if ( $iconSelector.parents('.um-icon-select-field-wrapper').length ) {
+					select2_atts.dropdownParent = $iconSelector.parents('.um-icon-select-field-wrapper');
 				}
 
 				$iconSelector.select2( select2_atts ).on( 'change', function () {
