@@ -62,8 +62,9 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 			}
 
 			return UM()->classes['um\frontend\layouts'];
-		
-    /**
+		}
+
+		/**
 		 * @since 2.8.6
 		 *
 		 * @return Modal
