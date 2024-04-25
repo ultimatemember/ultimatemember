@@ -1085,9 +1085,12 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'required'   => 0,
 					'public'     => 1,
 					'editable'   => true,
+					'icon'       => 'fab fa-discord',
 					'url_target' => '_blank',
+					'url_text'   => __( 'Discord', 'ultimate-member' ),
 					'url_rel'    => 'nofollow',
 					'validate'   => 'discord',
+					'color'      => '#7289da',
 				),
 
 				'tiktok'               => array(
