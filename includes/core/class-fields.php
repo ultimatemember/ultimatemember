@@ -767,18 +767,18 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$output .= '<label' . $for_attr . '>' . wp_kses_post( $label ) . '</label>';
 			} else {
 				$output .= '<div class="um-field-label">';
-			
+
 				if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'off' !== $this->field_icons && ( 'label' === $this->field_icons || true === $this->viewing ) ) {
 					$output .= '<div class="um-field-label-icon"><i class="' . esc_attr( $data['icon'] ) . '" aria-label="' . esc_attr( $label ) . '"></i></div>';
 				}
 
 				$output .= '<label' . $for_attr . '>' . esc_html__( $label, 'ultimate-member' );
 
-			  if ( ! empty( $data['required'] ) && UM()->options()->get( 'form_asterisk' ) ) {
-				  $output .= '<span class="um-req" title="' . esc_attr__( 'Required', 'ultimate-member' ) . '">*</span>';
-			  }
+				if ( ! empty( $data['required'] ) && UM()->options()->get( 'form_asterisk' ) ) {
+					$output .= '<span class="um-req" title="' . esc_attr__( 'Required', 'ultimate-member' ) . '">*</span>';
+				}
 
-			  $output .= '</label>';
+				$output .= '</label>';
 
 				if ( ! empty( $data['help'] ) && false === $this->viewing && false === strpos( $key, 'confirm_user_pass' ) ) {
 					if ( ! UM()->mobile()->isMobile() ) {
