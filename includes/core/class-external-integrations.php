@@ -604,7 +604,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		 */
 		function render_status_icon( $link, $text, $img ) {
 
-			$icon_html = '<a href="' . $link . '" title="' . $text . '">';
+			$icon_html = '<a href="' . esc_url( $link ) . '" title="' . esc_attr( $text ) . '">';
 			$icon_html .= '<img style="padding:1px;margin:2px;" border="0" src="'
 			              . ICL_PLUGIN_URL . '/res/img/'
 			              . $img . '" alt="'

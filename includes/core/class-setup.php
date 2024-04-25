@@ -97,13 +97,8 @@ KEY meta_value_indx (um_value(191))
 
 						$form_id = wp_insert_post( $form );
 
-						foreach ( UM()->config()->core_form_meta[ $id ] as $key => $value ) {
-							if ( '_um_custom_fields' === $key ) {
-								$array = maybe_unserialize( $value );
-								update_post_meta( $form_id, $key, $array );
-							} else {
-								update_post_meta( $form_id, $key, $value );
-							}
+						foreach ( UM()->config()->core_form_meta[ $id ] as $meta_key => $meta_value ) {
+							update_post_meta( $form_id, $meta_key, $meta_value );
 						}
 
 						$core_forms[ $id ] = $form_id;
@@ -132,13 +127,8 @@ KEY meta_value_indx (um_value(191))
 
 						$form_id = wp_insert_post( $form );
 
-						foreach ( UM()->config()->core_directory_meta[ $id ] as $key => $value ) {
-							if ( '_um_custom_fields' === $key ) {
-								$array = maybe_unserialize( $value );
-								update_post_meta( $form_id, $key, $array );
-							} else {
-								update_post_meta( $form_id, $key, $value );
-							}
+						foreach ( UM()->config()->core_directory_meta[ $id ] as $meta_key => $meta_value ) {
+							update_post_meta( $form_id, $meta_key, $meta_value );
 						}
 
 						$core_directories[ $id ] = $form_id;
@@ -213,7 +203,7 @@ KEY meta_value_indx (um_value(191))
 			$options = get_option( 'um_options', array() );
 
 			foreach ( $core_pages as $slug => $page_id ) {
-				$key             = UM()->options()->get_core_page_id( $slug );
+				$key             = UM()->options()->get_predefined_page_option_key( $slug );
 				$options[ $key ] = $page_id;
 			}
 

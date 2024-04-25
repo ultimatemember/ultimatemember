@@ -224,6 +224,27 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 			$blog_id = get_current_blog_id();
 
+			/**
+			 * Filters member directory select-type filter relation in query.
+			 *
+			 * @param {string} $relation Relation `OR` or `AND`. `OR` by default.
+			 * @param {string} $field    Field key.
+			 *
+			 * @return {string} Relation.
+			 *
+			 * @since 2.8.5
+			 * @hook um_members_directory_select_filter_relation
+			 *
+			 * @example <caption>Change relation to 'AND'.</caption>
+			 * function my_um_members_directory_select_filter_relation( $relation, $field ) {
+			 *     // your code here
+			 *     $relation = 'AND';
+			 *     return $relation;
+			 * }
+			 * add_filter( 'um_members_directory_select_filter_relation', 'my_um_members_directory_select_filter_relation', 10, 2 );
+			 */
+			$relation = apply_filters( 'um_members_directory_select_filter_relation', 'OR', $field );
+
 			switch ( $field ) {
 				default:
 					$filter_type = $this->filter_types[ $field ];
@@ -328,7 +349,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 									// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_alias is pre-escaped.
 								}
 
-								$values = implode( ' OR ', $values_array );
+								$values = implode( ' ' . esc_sql( $relation ) . ' ', $values_array );
 
 								// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_alias and $values variables are pre-escaped or $wpdb->prepare.
 								$this->where_clauses[] = $wpdb->prepare( "( {$join_alias}.um_key = %s AND ( {$values} ) )", $field );
@@ -368,11 +389,20 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 									}
 								}
 
-								$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
-								$to_date   = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
-								// @todo: rewrite date() in WP5.3 standards.
-								$from_date = date( 'Y/m/d', $from_date );
-								$to_date   = date( 'Y/m/d', $to_date );
+								if ( ! empty( $value[0] ) ) {
+									$min = $value[0];
+								} else {
+									$range = $this->datepicker_filters_range( $field );
+									$min   = strtotime( gmdate( 'Y/m/d', $range[0] ) );
+								}
+								if ( ! empty( $value[1] ) ) {
+									$max = $value[1];
+								} else {
+									$max = strtotime( gmdate( 'Y/m/d' ) );
+								}
+
+								$from_date = (int) $min + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
+								$to_date   = (int) $max + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
 
 								// $join_alias is pre-escaped.
 								$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_alias} ON {$join_alias}.user_id = u.ID";
@@ -386,6 +416,18 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 								break;
 
 							case 'timepicker':
+								if ( ! empty( $value[0] ) ) {
+									$value[0] = $value[0] . ':00';
+								} else {
+									$range    = $this->timepicker_filters_range( $field );
+									$value[0] = $range[0] . ':00';
+								}
+								if ( ! empty( $value[1] ) ) {
+									$value[1] = $value[1] . ':00';
+								} else {
+									$range    = $this->timepicker_filters_range( $field );
+									$value[1] = $range[1] . ':00';
+								}
 								// $join_alias is pre-escaped.
 								$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_alias} ON {$join_alias}.user_id = u.ID";
 								if ( $value[0] === $value[1] ) {
@@ -421,7 +463,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 					}
 
 					// $roles_clauses is pre-prepared.
-					$this->where_clauses[] = '( ' . implode( ' OR ', $roles_clauses ) . ' )';
+					$this->where_clauses[] = '( ' . implode( ' ' . esc_sql( $relation ) . ' ', $roles_clauses ) . ' )';
 
 					if ( ! $is_default ) {
 						$this->custom_filters_in_query[ $field ] = $value;
@@ -483,19 +525,67 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 						}
 					}
 
-					$from_date = gmdate( 'Y-m-d H:i:s', (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ) ); // client time zone offset
-					$to_date   = gmdate( 'Y-m-d H:i:s', (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1 ); // time 23:59
+					$value = array_map(
+						function( $date ) {
+							return is_numeric( $date ) ? $date : strtotime( $date );
+						},
+						$value
+					);
+
+					if ( ! empty( $value[0] ) ) {
+						$min = $value[0];
+					} else {
+						$range = $this->datepicker_filters_range( 'last_login' );
+						$min   = strtotime( gmdate( 'Y/m/d', $range[0] ) );
+					}
+					if ( ! empty( $value[1] ) ) {
+						$max = $value[1];
+					} else {
+						$max = strtotime( gmdate( 'Y/m/d' ) );
+					}
+
+					$from_date = gmdate( 'Y-m-d H:i:s', (int) $min + ( $offset * HOUR_IN_SECONDS ) ); // client time zone offset
+					$to_date   = gmdate( 'Y-m-d H:i:s', (int) $max + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1 ); // time 23:59
 
 					// $join_alias is pre-escaped.
 					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_alias} ON {$join_alias}.user_id = u.ID";
+					$join_alias_ll = $join_alias . '_show_las_login';
+					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_alias_ll} ON {$join_alias_ll}.user_id = u.ID AND {$join_alias_ll}.um_key = 'um_show_last_login'";
 					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_alias is pre-escaped.
-					$this->where_clauses[] = $wpdb->prepare( "( {$join_alias}.um_key = '_um_last_login' AND {$join_alias}.um_value BETWEEN %s AND %s )", $from_date, $to_date );
+					$this->where_clauses[] = $wpdb->prepare( "( {$join_alias}.um_key = '_um_last_login' AND {$join_alias}.um_value BETWEEN %s AND %s AND ( {$join_alias_ll}.um_value IS NULL OR {$join_alias_ll}.um_value != %s ) )", $from_date, $to_date, 'a:1:{i:0;s:2:"no";}' );
 
 					if ( ! $is_default ) {
 						$this->custom_filters_in_query[ $field ] = $value;
 					}
 					break;
 
+				case 'gender':
+					if ( ! is_array( $value ) ) {
+						$value = array( $value );
+					}
+
+					// $join_alias is pre-escaped.
+					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_alias} ON {$join_alias}.user_id = u.ID";
+
+					$values_array = array();
+					foreach ( $value as $single_val ) {
+						$single_val = trim( stripslashes( $single_val ) );
+
+						// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_alias and $compare variables are pre-escaped.
+						$values_array[] = $wpdb->prepare( "{$join_alias}.um_value LIKE %s", '%"' . $wpdb->esc_like( $single_val ) . '"%' );
+						$values_array[] = $wpdb->prepare( "{$join_alias}.um_value = %s", $single_val );
+						// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_alias is pre-escaped.
+					}
+
+					$values = implode( ' ' . esc_sql( $relation ) . ' ', $values_array );
+
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $join_alias and $values variables are pre-escaped or $wpdb->prepare.
+					$this->where_clauses[] = $wpdb->prepare( "( {$join_alias}.um_key = %s AND ( {$values} ) )", $field );
+
+					if ( ! $is_default ) {
+						$this->custom_filters_in_query[ $field ] = $value;
+					}
+					break;
 			}
 		}
 
@@ -649,13 +739,29 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				// phpcs:enable WordPress.Security.NonceVerification -- verified via `UM()->check_ajax_nonce();`.
 				if ( ! empty( $search_line ) ) {
 					$searches = array();
-					foreach ( $this->core_search_fields as $field ) {
-						$field = esc_sql( $field );
-						// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $field is pre-escaped.
-						$searches[] = $wpdb->prepare( "u.{$field} LIKE %s", '%' . $wpdb->esc_like( $search_line ) . '%' );
+
+					$exclude_fields = get_post_meta( $directory_id, '_um_search_exclude_fields', true );
+					$include_fields = get_post_meta( $directory_id, '_um_search_include_fields', true );
+
+					$core_search = $this->get_core_search_fields();
+					if ( ! empty( $include_fields ) ) {
+						$core_search = array_intersect( $core_search, $include_fields );
+					}
+					if ( ! empty( $exclude_fields ) ) {
+						$core_search = array_diff( $core_search, $exclude_fields );
+					}
+					if ( ! empty( $core_search ) ) {
+						foreach ( $core_search as $field ) {
+							$field = esc_sql( $field );
+							// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $field is pre-escaped.
+							$searches[] = $wpdb->prepare( "u.{$field} LIKE %s", '%' . $wpdb->esc_like( $search_line ) . '%' );
+						}
 					}
 
 					$core_search = implode( ' OR ', $searches );
+					if ( ! empty( $core_search ) ) {
+						$core_search = ' OR ' . $core_search;
+					}
 
 					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm_search ON umm_search.user_id = u.ID";
 
@@ -663,8 +769,17 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 					$search_like_string = apply_filters( 'um_member_directory_meta_search_like_type', '%' . $wpdb->esc_like( $search_line ) . '%', $search_line );
 
+					$custom_fields_sql = '';
+
+					if ( ! empty( $exclude_fields ) ) {
+						$custom_fields_sql = " AND umm_search.um_key NOT IN ('" . implode( "','", $exclude_fields ) . "') ";
+					}
+					if ( ! empty( $include_fields ) ) {
+						$custom_fields_sql = " AND umm_search.um_key IN ('" . implode( "','", $include_fields ) . "') ";
+					}
+
 					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $core_search and $additional_search are pre-prepared.
-					$this->where_clauses[] = $wpdb->prepare( "( umm_search.um_value = %s OR umm_search.um_value LIKE %s OR umm_search.um_value LIKE %s OR {$core_search}{$additional_search})", $search_line, $search_like_string, '%' . $wpdb->esc_like( maybe_serialize( (string) $search_line ) ) . '%' );
+					$this->where_clauses[] = $wpdb->prepare( "( umm_search.um_value = %s OR umm_search.um_value LIKE %s OR umm_search.um_value LIKE %s{$core_search}{$additional_search}){$custom_fields_sql}", $search_line, $search_like_string, '%' . $wpdb->esc_like( maybe_serialize( (string) $search_line ) ) . '%' );
 
 					$this->is_search = true;
 				}
@@ -844,7 +959,8 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			} elseif ( 'last_login' === $sortby ) {
 
 				$this->joins[]   = "LEFT JOIN {$wpdb->prefix}um_metadata umm_sort ON ( umm_sort.user_id = u.ID AND umm_sort.um_key = '_um_last_login' )";
-				$this->sql_order = ' ORDER BY CAST( umm_sort.um_value AS DATETIME ) DESC ';
+				$this->joins[]   = "LEFT JOIN {$wpdb->prefix}um_metadata umm_show_login ON ( umm_show_login.user_id = u.ID AND umm_show_login.um_key = 'um_show_last_login' )";
+				$this->sql_order = $wpdb->prepare( ' ORDER BY CASE ISNULL(NULLIF(umm_show_login.um_value,%s)) WHEN 0 THEN %s ELSE CAST( umm_sort.um_value AS DATETIME ) END DESC ', 'a:1:{i:0;s:3:"yes";}', '1970-01-01 00:00:00' );
 
 			} elseif ( 'last_first_name' === $sortby ) {
 
@@ -936,6 +1052,16 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			$sql_where  = implode( ' AND ', $this->where_clauses );
 			$sql_where  = ! empty( $sql_where ) ? 'AND ' . $sql_where : '';
 
+			$query = array(
+				'select'    => $this->select,
+				'sql_where' => $sql_where,
+				'having'    => $this->having,
+				'sql_limit' => $this->sql_limit,
+			);
+
+			/** This filter is documented in includes/core/class-member-directory.php */
+			do_action( 'um_user_before_query', $query, $this );
+
 			/*
 			 *
 			 * SQL_CALC_FOUND_ROWS is deprecated as of MySQL 8.0.17
@@ -951,13 +1077,6 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				{$sql_having}
 				{$this->sql_order}
 				{$this->sql_limit}"
-			);
-
-			$query = array(
-				'select'    => $this->select,
-				'sql_where' => $sql_where,
-				'having'    => $this->having,
-				'sql_limit' => $this->sql_limit,
 			);
 
 			$total_users = (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' );

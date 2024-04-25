@@ -786,7 +786,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 											$f = UM()->builtin()->get_a_field( $k );
 
 											if ( is_array( $f ) && array_key_exists( 'match', $f ) && array_key_exists( 'advanced', $f ) && 'social' === $f['advanced'] ) {
-												$v = esc_url_raw( $form[ $k ] );
+												$v = $form[ $k ];
 
 												// Make a proper social link
 												if ( ! empty( $v ) ) {
@@ -833,7 +833,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 													}
 												}
 
-												$form[ $k ] = $v;
+												$form[ $k ] = esc_url_raw( $v );
 											} else {
 												$form[ $k ] = esc_url_raw( $form[ $k ] );
 											}

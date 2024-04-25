@@ -25,6 +25,7 @@
   font-size: 14px;
   border-bottom: 1px solid #ECECEC;
 }
+
 .um-metabox-holder .table {
   float: left;
   width: 45%;
@@ -33,11 +34,13 @@
   white-space: nowrap;
   font-size: 12px;
 }
+
 .um-metabox-holder a.warning {
   color: #c74a4a !important;
   background: transparent !important;
   border: 0;
 }
+
 .um-metabox-holder .table_right {
   float: right;
   width: 45%;
@@ -52,6 +55,7 @@
 .um-metabox-holder td.b a {
   font-size: 18px;
 }
+
 .um-metabox-holder .norm i {
   display: inline-block;
   width: 30px;
@@ -68,4 +72,37 @@
   display: inline-block;
   text-align: right;
   margin-right: 10px;
+}
+
+#um-users-overview-table {
+  width: 100%;
+}
+#um-users-overview-table td {
+  width: auto;
+  min-width: 120px;
+  vertical-align: middle;
+  padding: 0 0 0 5px;
+  box-sizing: border-box;
+}
+#um-users-overview-table td:first-child {
+  padding: 0 5px 0 0;
+}
+#um-users-overview-table td > span {
+  width: 100%;
+  direction: ltr;
+  display: grid;
+  grid-gap: 6px;
+  grid-template-columns: repeat(2, minmax(20px, auto));
+  align-content: start;
+  align-items: center;
+  justify-content: start;
+  justify-items: center;
+}
+#um-users-overview-table td > span a {
+  word-break: break-word;
+}
+#um-users-overview-table td > span a.count {
+  justify-self: end;
+  font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
+  font-size: 18px;
 }
