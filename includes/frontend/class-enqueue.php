@@ -471,7 +471,7 @@ final class Enqueue extends \um\common\Enqueue {
 					$dynamic_styles .= '.um-' . esc_attr( $form_data['form_id'] ) . '.um {margin-' . esc_attr( $form_data['align'] ) . ': 0px !important;}';
 				}
 
-				if ( 'profile' === $form_data['mode'] ) {
+				if ( array_key_exists( 'mode', $form_data ) && 'profile' === $form_data['mode'] ) {
 
 					if ( ! isset( $form_data['photosize'] ) || 'original' === $form_data['photosize'] ) {
 						$form_data['photosize'] = um_get_metadefault( 'profile_photosize' ); // Cannot be more than metadefault value.

@@ -1417,6 +1417,20 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'account_only'   => true,
 					'required_opt'   => array( 'members_page', true ),
 				);
+
+				$this->predefined_fields['um_show_last_login'] = array(
+					'title'          => __( 'Show my last login', 'ultimate-member' ),
+					'metakey'        => 'um_show_last_login',
+					'type'           => 'bool',
+					'label'          => __( 'Show my last login', 'ultimate-member' ),
+					'checkbox_label' => __( 'Show my last login', 'ultimate-member' ),
+					'help'           => __( 'Here you can hide last login field on profile page and card in member directory', 'ultimate-member' ),
+					'required'       => 0,
+					'public'         => 1,
+					'editable'       => true,
+					'default'        => true,
+					'account_only'   => true,
+				);
 			}
 
 			/**
