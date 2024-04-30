@@ -850,7 +850,7 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 				$value = 0;
 			} else {
 				if ( 5 === absint( $data['number'] ) ) {
-					if ( ! in_array( $value, range( 1, 5 ), true ) ) {
+					if ( ! in_array( absint( $value ), range( 1, 5 ), true ) ) {
 						$value = 0;
 					}
 				} elseif ( 10 === $data['number'] ) {
