@@ -1587,7 +1587,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 								<option value=""><?php esc_html_e( 'Select Icon', 'ultimate-member' ); ?></option>
 							</select>
 							<span class="um_admin_fonticon_wrapper">
-								<span><?php esc_html_e( 'Icon is outdated. Please set the new one above.', 'ultimate-member' ); ?></span>
+								<span><?php esc_html_e( 'The selected icon is using an outdated version. Please select the icon above to use latest version.', 'ultimate-member' ); ?></span>
 								<input type="hidden" name="_icon" id="_icon" class="um_old_icon_field_value" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
 								<span class="um-admin-icon-value"><i class="<?php echo esc_attr( $this->edit_mode_value ); ?>"></i></span>
 								<span class="um-admin-icon-clear show"><i class="um-icon-android-cancel"></i></span>

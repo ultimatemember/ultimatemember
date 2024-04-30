@@ -572,7 +572,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$html .= '<select name="um_ui_icon_new" id="um_ui_icon_new" class="um-icon-select-field" data-placeholder="' . esc_attr__( 'Select Icon', 'ultimate-member' ) . '" ><option value="">' . esc_html__( 'Select Icon', 'ultimate-member' ) . '</option>';
 				$html .= '</select>';
 
-				$html .= '<span class="um_admin_fonticon_wrapper"><span cla>' . esc_html__( 'Icon is outdated. Please set the new one above.', 'ultimate-member' ) . '</span>
+				$html .= '<span class="um_admin_fonticon_wrapper"><span>' . esc_html__( 'The selected icon is using an outdated version. Please select the icon above to use latest version.', 'ultimate-member' ) . '</span>
 					<span class="um-admin-icon-value">';
 
 				$html .= '<i class="' . esc_attr( $value ) . '"></i>';
