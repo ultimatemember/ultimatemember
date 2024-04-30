@@ -679,16 +679,15 @@ add_filter( 'um_get_custom_field_array', 'um_get_custom_field_array', 99, 2 );
  * @return mixed
  */
 function um_force_utf8_fields( $value, $data, $type = '' ) {
-
-	if( ! UM()->options()->get('um_force_utf8_strings') )
+	if ( ! UM()->options()->get( 'um_force_utf8_strings' ) ) {
 		return $value;
-
-		$value = um_force_utf8_string( $value );
-
-		return $value;
-
 	}
-add_filter('um_profile_field_filter_hook__','um_force_utf8_fields', 9, 3 );
+
+	$value = um_force_utf8_string( $value );
+
+	return $value;
+}
+add_filter( 'um_profile_field_filter_hook__', 'um_force_utf8_fields', 9, 3 );
 
 
 /**
@@ -855,7 +854,7 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 						$value = 0;
 					}
 				} elseif ( 10 === $data['number'] ) {
-					if ( ! in_array( $value, range( 1, 10 ), true ) ) {
+					if ( ! in_array( absint( $value ), range( 1, 10 ), true ) ) {
 						$value = 0;
 					}
 				}
