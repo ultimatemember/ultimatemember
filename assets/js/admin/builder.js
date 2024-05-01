@@ -188,6 +188,7 @@ wp.hooks.addAction( 'um_admin_modal_success_result', 'um_admin_builder', functio
 
 	UM.admin.colorPicker.init();
 	UM.common.datetimePicker.init();
+	UM.admin.iconSelector.init();
 });
 
 wp.hooks.addAction( 'um_admin_modal_resize', 'um_admin_builder', function() {

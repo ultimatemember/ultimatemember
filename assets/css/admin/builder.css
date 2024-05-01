@@ -140,6 +140,13 @@
   width: 33%;
   position: relative;
 }
+.um-admin-tri[data-select2-id] {
+  position: relative;
+}
+
+._heading_text[data-select2-id] {
+  position: relative;
+}
 
 .um-admin-error-block,
 .um-admin-success-block {
