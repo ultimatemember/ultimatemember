@@ -265,6 +265,16 @@ function defaultTask( done ) {
 		.pipe( rename({ suffix: '.min' }) )
 		.pipe( dest( 'assets/libs/tipsy/' ) );
 
+	// UM Confirm lib
+	src(['assets/libs/um-confirm/*.css', '!assets/libs/um-confirm/*.min.css',])
+		.pipe( cleanCSS() )
+		.pipe( rename( { suffix: '.min' } ) )
+		.pipe( dest( 'assets/libs/um-confirm/' ) );
+	src(['assets/libs/um-confirm/*.js', '!assets/libs/um-confirm/*.min.js',])
+		.pipe( uglify() )
+		.pipe( rename({ suffix: '.min' }) )
+		.pipe( dest( 'assets/libs/um-confirm/' ) );
+
 	// Pickadate lib
 	src(['assets/libs/pickadate/*.css', '!assets/libs/pickadate/*.min.css',])
 		.pipe( cleanCSS() )
