@@ -326,30 +326,30 @@ final class Enqueue extends \um\common\Enqueue {
 //			wp_register_style( 'um_profile', $css_url . 'um-profile' . $suffix . '.css', array( 'um_styles', 'um_crop' ), UM_VERSION );
 //			wp_register_style( 'um_misc', $css_url . 'um-misc' . $suffix . '.css', array( 'um_styles' ), UM_VERSION );
 		} else {
-      wp_register_style( 'um_fileupload', $css_url . 'um-fileupload' . $suffix . '.css', array(), UM_VERSION );
+			wp_register_style( 'um_fileupload', $css_url . 'um-fileupload' . $suffix . '.css', array(), UM_VERSION );
 
-      //FontAwesome and FontIcons styles
-      wp_register_style( 'um_rtl', $css_url . 'um.rtl' . $suffix . '.css', array(), UM_VERSION );
-      wp_register_style( 'um_default_css', $css_url . 'um-old-default' . $suffix . '.css', array(), UM_VERSION );
-      wp_register_style( 'um_modal', $css_url . 'um-modal' . $suffix . '.css', array(), UM_VERSION );
-      wp_register_style( 'um_responsive', $css_url . 'um-responsive' . $suffix . '.css', array(), UM_VERSION );
+			//FontAwesome and FontIcons styles
+			wp_register_style( 'um_rtl', $css_url . 'um.rtl' . $suffix . '.css', array(), UM_VERSION );
+			wp_register_style( 'um_default_css', $css_url . 'um-old-default' . $suffix . '.css', array(), UM_VERSION );
+			wp_register_style( 'um_modal', $css_url . 'um-modal' . $suffix . '.css', array(), UM_VERSION );
+			wp_register_style( 'um_responsive', $css_url . 'um-responsive' . $suffix . '.css', array(), UM_VERSION );
 
-      // Workaround when select2 deregistered (e.g. Woo + Impreza theme activated).
-      $this->register_select2();
+			// Workaround when select2 deregistered (e.g. Woo + Impreza theme activated).
+			$this->register_select2();
 
-      $deps = array_merge( array( 'um_ui', 'um_tipsy', 'um_raty', 'select2', 'um_fileupload', 'um_common', 'um_responsive', 'um_modal' ), self::$fonticons_handlers );
-      wp_register_style( 'um_styles', $css_url . 'um-styles' . $suffix . '.css', $deps, UM_VERSION );
+			$deps = array_merge( array( 'um_ui', 'um_tipsy', 'um_raty', 'select2', 'um_fileupload', 'um_common', 'um_responsive', 'um_modal' ), self::$fonticons_handlers );
+			wp_register_style( 'um_styles', $css_url . 'um-styles' . $suffix . '.css', $deps, UM_VERSION );
 
-      wp_register_style( 'um_members', $css_url . 'um-members' . $suffix . '.css', array( 'um_styles' ), UM_VERSION );
-      // RTL styles.
-      if ( is_rtl() ) {
-        wp_style_add_data( 'um_members', 'rtl', true );
-        wp_style_add_data( 'um_members', 'suffix', $suffix );
-      }
+			wp_register_style( 'um_members', $css_url . 'um-members' . $suffix . '.css', array( 'um_styles' ), UM_VERSION );
+			// RTL styles.
+			if ( is_rtl() ) {
+				wp_style_add_data( 'um_members', 'rtl', true );
+				wp_style_add_data( 'um_members', 'suffix', $suffix );
+			}
 
-      wp_register_style( 'um_profile', $css_url . 'um-profile' . $suffix . '.css', array( 'um_styles', 'um_crop' ), UM_VERSION );
-      wp_register_style( 'um_account', $css_url . 'um-account' . $suffix . '.css', array( 'um_styles' ), UM_VERSION );
-      wp_register_style( 'um_misc', $css_url . 'um-misc' . $suffix . '.css', array( 'um_styles' ), UM_VERSION );
+			wp_register_style( 'um_profile', $css_url . 'um-profile' . $suffix . '.css', array( 'um_styles', 'um_crop' ), UM_VERSION );
+			wp_register_style( 'um_account', $css_url . 'um-account' . $suffix . '.css', array( 'um_styles' ), UM_VERSION );
+			wp_register_style( 'um_misc', $css_url . 'um-misc' . $suffix . '.css', array( 'um_styles' ), UM_VERSION );
 		}
 	}
 
