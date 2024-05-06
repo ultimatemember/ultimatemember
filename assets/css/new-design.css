@@ -611,9 +611,11 @@
 }
 .um .um-link:hover {
   color: var(--um-primary-800-bg, #53389e);
+  outline: none;
 }
 .um .um-link:focus {
   color: var(--um-primary-700-bg, #6941c6);
+  outline: none;
 }
 .um .um-avatar {
   margin: 0;
