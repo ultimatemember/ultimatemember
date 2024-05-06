@@ -173,6 +173,13 @@ $premium['stripe'] = array(
 	'desc' => 'Sell paid memberships to access your website via Stripe subscriptions',
 );
 
+//$premium['zapier'] = array(
+//	'url' => 'https://ultimatemember.com/extensions/zapier/',
+//	'img'  => 'zapier.png',
+//	'name' => 'Zapier',
+//	'desc' => 'Integrates your Zapier with Ultimate Member',
+//);
+
 $free['jobboardwp'] = array(
 	'url'  => 'https://wordpress.org/plugins/um-jobboardwp',
 	'img'  => 'jobboardwp.png',
