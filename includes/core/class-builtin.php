@@ -251,7 +251,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'in_fields' => false,
 					'form_only' => true,
 					'conditional_support' => 0,
-					'icon' => 'um-faicon-pencil',
+					'icon' => 'fas fa-pencil',
 					'col1' => array('_id','_background','_text_color','_padding','_margin','_border','_borderradius','_borderstyle','_bordercolor'),
 					'col2' => array('_heading','_heading_text','_heading_background_color','_heading_text_color','_icon','_icon_color','_css_class'),
 				),
@@ -259,8 +259,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'text' => array(
 					'name' => 'Text Box',
 					'col1' => array('_title','_metakey','_help','_default','_min_chars','_visibility'),
-					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate','_max_chars'),
-					'col3' => array('_required','_editable','_icon'),
+					'col2' => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate','_max_chars'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -275,8 +275,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'tel' => array(
 					'name' => __( 'Telephone', 'ultimate-member' ),
 					'col1' => array('_title','_metakey','_help','_default','_min_chars','_visibility'),
-					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate','_max_chars'),
-					'col3' => array('_required','_editable','_icon'),
+					'col2' => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate','_max_chars'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -291,8 +291,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'number' => array(
 					'name' => __('Number','ultimate-member'),
 					'col1' => array('_title','_metakey','_help','_default','_min','_visibility'),
-					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate','_max'),
-					'col3' => array('_required','_editable','_icon'),
+					'col2' => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate','_max'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -307,8 +307,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'textarea' => array(
 					'name' => 'Textarea',
 					'col1' => array('_title','_metakey','_help','_height','_max_chars','_max_words','_visibility'),
-					'col2' => array('_label','_placeholder','_public','_roles','_default','_html'),
-					'col3' => array('_required','_editable','_icon'),
+					'col2' => array('_label','_icon','_placeholder','_public','_roles','_default','_html'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -323,8 +323,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'select' => array(
 					'name' => 'Dropdown',
 					'col1' => array('_title','_metakey','_help','_default','_options','_visibility'),
-					'col2' => array('_label','_placeholder','_public','_roles','_custom_dropdown_options_source','_parent_dropdown_relationship'),
-					'col3' => array('_required','_editable','_icon'),
+					'col2' => array('_label','_icon','_placeholder','_public','_roles','_custom_dropdown_options_source','_parent_dropdown_relationship'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -343,8 +343,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'multiselect' => array(
 					'name' => 'Multi-Select',
 					'col1' => array('_title','_metakey','_help','_default','_options','_visibility'),
-					'col2' => array('_label','_placeholder','_public','_roles','_min_selections','_max_selections','_custom_dropdown_options_source'),
-					'col3' => array('_required','_editable','_icon'),
+					'col2' => array('_label','_icon','_placeholder','_public','_roles','_min_selections','_max_selections','_custom_dropdown_options_source'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -363,8 +363,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'radio' => array(
 					'name' => 'Radio',
 					'col1' => array('_title','_metakey','_help','_default','_options','_visibility'),
-					'col2' => array('_label','_public','_roles'),
-					'col3' => array('_required','_editable','_icon'),
+					'col2' => array('_label','_icon','_public','_roles'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -383,8 +383,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'checkbox' => array(
 					'name' => 'Checkbox',
 					'col1' => array('_title','_metakey','_help','_default','_options','_visibility'),
-					'col2' => array('_label','_public','_roles','_max_selections'),
-					'col3' => array('_required','_editable','_icon'),
+					'col2' => array('_label','_icon','_public','_roles','_max_selections'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -403,8 +403,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'url' => array(
 					'name' => 'URL',
 					'col1' => array('_title','_metakey','_help','_default','_url_text','_visibility'),
-					'col2' => array('_label','_placeholder','_url_target','_url_rel','_public','_roles','_validate','_custom_validate'),
-					'col3' => array('_required','_editable','_icon'),
+					'col2' => array('_label','_icon','_placeholder','_url_target','_url_rel','_public','_roles','_validate','_custom_validate'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -419,8 +419,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'password' => array(
 					'name' => 'Password',
 					'col1' => array('_title','_metakey','_help','_min_chars','_max_chars','_visibility'),
-					'col2' => array('_label','_placeholder','_public','_roles','_force_good_pass','_force_confirm_pass','_label_confirm_pass'),
-					'col3' => array('_required','_editable','_icon'),
+					'col2' => array('_label','_icon','_placeholder','_public','_roles','_force_good_pass','_force_confirm_pass','_label_confirm_pass'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -435,8 +435,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'image' => array(
 					'name' => 'Image Upload',
 					'col1' => array('_title','_metakey','_help','_allowed_types','_max_size','_crop','_visibility'),
-					'col2' => array('_label','_public','_roles','_upload_text','_upload_help_text','_button_text'),
-					'col3' => array('_required','_editable','_icon'),
+					'col2' => array('_label','_icon','_public','_roles','_upload_text','_upload_help_text','_button_text'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -455,8 +455,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'file' => array(
 					'name' => 'File Upload',
 					'col1' => array('_title','_metakey','_help','_allowed_types','_max_size','_visibility'),
-					'col2' => array('_label','_public','_roles','_upload_text','_upload_help_text','_button_text'),
-					'col3' => array('_required','_editable','_icon'),
+					'col2' => array('_label','_icon','_public','_roles','_upload_text','_upload_help_text','_button_text'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -475,8 +475,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'date' => array(
 					'name'     => 'Date Picker',
 					'col1'     => array( '_title', '_metakey', '_help', '_default', '_range', '_years', '_years_x', '_range_start', '_range_end', '_visibility' ),
-					'col2'     => array( '_label', '_placeholder', '_public', '_roles', '_format', '_format_custom', '_pretty_format', '_disabled_weekdays' ),
-					'col3'     => array( '_required', '_editable', '_icon' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_format', '_format_custom', '_pretty_format', '_disabled_weekdays' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
 						'_title'       => array(
 							'mode'  => 'required',
@@ -501,8 +501,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'time' => array(
 					'name' => 'Time Picker',
 					'col1' => array('_title','_metakey','_help','_format','_visibility'),
-					'col2' => array('_label','_placeholder','_default','_public','_roles','_intervals'),
-					'col3' => array('_required','_editable','_icon'),
+					'col2' => array('_label','_icon','_placeholder','_default','_public','_roles','_intervals'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -517,8 +517,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'rating' => array(
 					'name' => 'Rating',
 					'col1' => array('_title','_metakey','_help','_visibility'),
-					'col2' => array('_label','_public','_roles','_number','_default'),
-					'col3' => array('_required','_editable','_icon'),
+					'col2' => array('_label','_icon','_public','_roles','_number','_default'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -590,8 +590,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'googlemap' => array(
 					'name' => 'Google Map',
 					'col1' => array('_title','_metakey','_help','_visibility'),
-					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
-					'col3' => array('_required','_editable','_icon'),
+					'col2' => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -606,8 +606,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'youtube_video' => array(
 					'name' => 'YouTube Video',
 					'col1' => array('_title','_metakey','_help','_visibility'),
-					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
-					'col3' => array('_required','_editable','_icon'),
+					'col2' => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -622,8 +622,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'vimeo_video' => array(
 					'name' => 'Vimeo Video',
 					'col1' => array('_title','_metakey','_help','_visibility'),
-					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
-					'col3' => array('_required','_editable','_icon'),
+					'col2' => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -638,8 +638,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'soundcloud_track' => array(
 					'name' => 'SoundCloud Track',
 					'col1' => array('_title','_metakey','_help','_visibility'),
-					'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
-					'col3' => array('_required','_editable','_icon'),
+					'col2' => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate'),
+					'col3' => array('_required','_editable'),
 					'validate' => array(
 						'_title' => array(
 							'mode' => 'required',
@@ -653,8 +653,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'spotify' => array(
 					'name'     => __( 'Spotify URL', 'ultimate-member' ),
 					'col1'     => array('_title','_metakey','_help','_visibility'),
-					'col2'     => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
-					'col3'     => array('_required','_editable','_icon'),
+					'col2'     => array('_label','_icon','_placeholder','_public','_roles','_validate','_custom_validate'),
+					'col3'     => array('_required','_editable'),
 					'validate' => array(
 						'_title'   => array(
 							'mode'  => 'required',
@@ -668,8 +668,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'oembed'           => array(
 					'name'     => __( 'oEmbed', 'ultimate-member' ),
 					'col1'     => array( '_title', '_metakey', '_help', '_default', '_visibility' ),
-					'col2'     => array( '_label', '_placeholder', '_public', '_roles', '_validate', '_custom_validate' ),
-					'col3'     => array( '_required', '_editable', '_icon' ),
+					'col2'     => array( '_label', '_icon', '_placeholder', '_public', '_roles', '_validate', '_custom_validate' ),
+					'col3'     => array( '_required', '_editable' ),
 					'validate' => array(
 						'_title'   => array(
 							'mode'  => 'required',
@@ -917,7 +917,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'pretty_format' => 1,
 					'years'         => 115,
 					'years_x'       => 'past',
-					'icon'          => 'um-faicon-calendar',
+					'icon'          => 'far fa-calendar-days',
 				),
 
 				'gender'               => array(
@@ -956,7 +956,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable'   => true,
 					'url_target' => '_blank',
 					'url_rel'    => 'nofollow',
-					'icon'       => 'um-faicon-facebook',
+					'icon'       => 'fab fa-facebook-f',
 					'validate'   => 'facebook_url',
 					'url_text'   => 'Facebook',
 					'advanced'   => 'social',
@@ -974,11 +974,11 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable'   => true,
 					'url_target' => '_blank',
 					'url_rel'    => 'nofollow',
-					'icon'       => 'um-faicon-twitter', // 'fa-brands fa-x-twitter' for new FA styles
+					'icon'       => 'fab fa-square-x-twitter',
 					'validate'   => 'twitter_url',
 					'url_text'   => 'X',
 					'advanced'   => 'social',
-					'color'      => '#4099FF', // #0f1419 for X symbol
+					'color'      => '#0f1419',
 					'match'      => 'https://twitter.com/',
 				),
 
@@ -992,7 +992,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable'   => true,
 					'url_target' => '_blank',
 					'url_rel'    => 'nofollow',
-					'icon'       => 'um-faicon-linkedin',
+					'icon'       => 'fab fa-linkedin-in',
 					'validate'   => 'linkedin_url',
 					'url_text'   => 'LinkedIn',
 					'advanced'   => 'social',
@@ -1010,7 +1010,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable'   => true,
 					'url_target' => '_blank',
 					'url_rel'    => 'nofollow',
-					'icon'       => 'um-faicon-instagram',
+					'icon'       => 'fab fa-instagram',
 					'validate'   => 'instagram_url',
 					'url_text'   => 'Instagram',
 					'advanced'   => 'social',
@@ -1028,7 +1028,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable'   => true,
 					'url_target' => '_blank',
 					'url_rel'    => 'nofollow',
-					'icon'       => 'um-faicon-skype',
+					'icon'       => 'fab fa-skype',
 					'validate'   => 'skype',
 					'url_text'   => __( 'Join chat', 'ultimate-member' ),
 				),
@@ -1043,7 +1043,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable'   => true,
 					'url_target' => '_blank',
 					'url_rel'    => 'nofollow',
-					'icon'       => 'um-icon-ios-telephone',
+					'icon'       => 'fab fa-viber',
 					'validate'   => 'phone_number',
 				),
 
@@ -1057,7 +1057,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable'   => true,
 					'url_target' => '_blank',
 					'url_rel'    => 'nofollow',
-					'icon'       => 'um-icon-social-whatsapp',
+					'icon'       => 'fab fa-whatsapp',
 					'validate'   => 'phone_number',
 				),
 
@@ -1071,7 +1071,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable'   => true,
 					'url_target' => '_blank',
 					'url_rel'    => 'nofollow',
-					'icon'       => 'um-faicon-paper-plane',
+					'icon'       => 'fab fa-telegram',
 					'validate'   => 'telegram_url',
 					'url_text'   => 'Telegram',
 					'match'      => 'https://t.me/',
@@ -1085,9 +1085,12 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'required'   => 0,
 					'public'     => 1,
 					'editable'   => true,
+					'icon'       => 'fab fa-discord',
 					'url_target' => '_blank',
+					'url_text'   => __( 'Discord', 'ultimate-member' ),
 					'url_rel'    => 'nofollow',
 					'validate'   => 'discord',
+					'color'      => '#7289da',
 				),
 
 				'tiktok'               => array(
@@ -1100,7 +1103,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable'   => true,
 					'url_target' => '_blank',
 					'url_rel'    => 'nofollow',
-					'icon'       => 'um-icon-ios-musical-note',
+					'icon'       => 'fab fa-tiktok',
 					'validate'   => 'tiktok_url',
 					'url_text'   => 'TikTok',
 					'advanced'   => 'social',
@@ -1116,7 +1119,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'required'   => 0,
 					'public'     => 1,
 					'editable'   => true,
-					'icon'       => 'um-faicon-twitch',
+					'icon'       => 'fab fa-twitch',
 					'url_target' => '_blank',
 					'url_rel'    => 'nofollow',
 					'validate'   => 'twitch_url',
@@ -1134,7 +1137,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'required'   => 0,
 					'public'     => 1,
 					'editable'   => true,
-					'icon'       => 'um-icon-social-reddit',
+					'icon'       => 'fab fa-reddit-alien',
 					'url_target' => '_blank',
 					'url_rel'    => 'nofollow',
 					'validate'   => 'reddit_url',
@@ -1154,7 +1157,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable'   => true,
 					'url_target' => '_blank',
 					'url_rel'    => 'nofollow',
-					'icon'       => 'um-faicon-youtube',
+					'icon'       => 'fab fa-youtube',
 					'validate'   => 'youtube_url',
 					'url_text'   => __( 'YouTube', 'ultimate-member' ),
 					'advanced'   => 'social',
@@ -1175,7 +1178,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable'   => true,
 					'url_target' => '_blank',
 					'url_rel'    => 'nofollow',
-					'icon'       => 'um-faicon-soundcloud',
+					'icon'       => 'fab fa-soundcloud',
 					'validate'   => 'soundcloud_url',
 					'url_text'   => 'SoundCloud',
 					'advanced'   => 'social',
@@ -1227,7 +1230,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'public'   => 1,
 					'editable' => true,
 					'validate' => 'phone_number',
-					'icon'     => 'um-faicon-phone',
+					'icon'     => 'fas fa-phone',
 				),
 
 				'mobile_number'        => array(
@@ -1239,7 +1242,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'public'   => 1,
 					'editable' => true,
 					'validate' => 'phone_number',
-					'icon'     => 'um-faicon-mobile',
+					'icon'     => 'fas fa-mobile-screen',
 				),
 
 				// private use ( not public list )
@@ -1250,7 +1253,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'type' => 'image',
 					'label' => __('Change your profile photo','ultimate-member'),
 					'upload_text' => __('Upload your photo here','ultimate-member'),
-					'icon' => 'um-faicon-camera',
+					'icon' => 'fas fa-camera',
 					'crop' => 1,
 					'max_size' => ( UM()->options()->get('profile_photo_max_size') ) ? UM()->options()->get('profile_photo_max_size') : 999999999,
 					'min_width' => str_replace('px','',UM()->options()->get('profile_photosize')),
@@ -1264,7 +1267,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'type' => 'image',
 					'label' => __('Change your cover photo','ultimate-member'),
 					'upload_text' => __('Upload profile cover here','ultimate-member'),
-					'icon' => 'um-faicon-picture-o',
+					'icon' => 'far fa-image',
 					'crop' => 2,
 					'max_size' => ( UM()->options()->get('cover_photo_max_size') ) ? UM()->options()->get('cover_photo_max_size') : 999999999,
 					'modal_size' => 'large',

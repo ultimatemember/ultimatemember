@@ -191,7 +191,9 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_style_add_data( 'um_members', 'suffix', $suffix );
 		}
 
-		wp_register_style( 'um_styles', $css_url . 'um-styles' . $suffix . '.css', array( 'um_ui', 'um_tipsy', 'um_raty', 'um_fonticons_ii', 'um_fonticons_fa', 'select2' ), UM_VERSION );
+		$deps = array_merge( array( 'um_ui', 'um_tipsy', 'um_raty', 'select2' ), self::$fonticons_handlers );
+
+		wp_register_style( 'um_styles', $css_url . 'um-styles' . $suffix . '.css', $deps, UM_VERSION );
 		wp_register_style( 'um_profile', $css_url . 'um-profile' . $suffix . '.css', array(), UM_VERSION );
 		wp_register_style( 'um_responsive', $css_url . 'um-responsive' . $suffix . '.css', array( 'um_profile' ), UM_VERSION );
 		wp_register_style( 'um_account', $css_url . 'um-account' . $suffix . '.css', array(), UM_VERSION );
@@ -390,7 +392,8 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_localize_script( 'um_admin_forms', 'um_forms_data', $forms_data );
 		wp_enqueue_script( 'um_admin_forms' );
 
-		wp_register_style( 'um_admin_forms', $css_url . 'admin/forms' . $suffix . '.css', array( 'wp-color-picker', 'um_ui', 'select2' ), UM_VERSION );
+		$deps = array_merge( array( 'wp-color-picker', 'um_ui', 'select2' ), self::$fonticons_handlers );
+		wp_register_style( 'um_admin_forms', $css_url . 'admin/forms' . $suffix . '.css', $deps, UM_VERSION );
 		// RTL styles.
 		if ( is_rtl() ) {
 			wp_style_add_data( 'um_admin_forms', 'rtl', true );

@@ -178,6 +178,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 * Added: Member Directory > Admin Filtering supports datepicker and timepicker filter-types with only "From" or "To" filled value
 * Added: Ability to customize modal templates upload-single.php and view-photo.php
+* Added: New FA. Find this string `1713342395` and change to the current time of the version release
 
 **Bugfixes**
 

@@ -21,6 +21,7 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		 */
 		public function includes() {
 			$this->account();
+			$this->forms();
 			$this->pages();
 			$this->secure();
 			$this->user();
@@ -36,6 +37,18 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 				UM()->classes['um\ajax\account'] = new Account();
 			}
 			return UM()->classes['um\ajax\account'];
+		}
+
+		/**
+		 * @since 2.8.6
+		 *
+		 * @return Forms
+		 */
+		public function forms() {
+			if ( empty( UM()->classes['um\ajax\forms'] ) ) {
+				UM()->classes['um\ajax\forms'] = new Forms();
+			}
+			return UM()->classes['um\ajax\forms'];
 		}
 
 		/**

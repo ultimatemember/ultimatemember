@@ -50,6 +50,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'social-activity'      => '2.2.0',
 			'social-login'         => '2.2.0',
 			'stripe'               => '1.0.0',
+			'zapier'               => '1.0.0',
 			'terms-conditions'     => '2.1.6',
 			'unsplash'             => '2.0.2',
 			'user-bookmarks'       => '2.1.4',

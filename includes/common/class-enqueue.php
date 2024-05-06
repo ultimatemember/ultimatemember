@@ -36,6 +36,15 @@ class Enqueue {
 	 */
 	public static $select2_handle = 'select2';
 
+	public static $fonticons_handlers = array();
+
+	/**
+	 * FontAwesome version.
+	 *
+	 * @var string
+	 */
+	public static $fa_version = '6.5.2';
+
 	/**
 	 * Enqueue constructor.
 	 *
@@ -251,6 +260,9 @@ class Enqueue {
 		wp_register_script( 'um_tipsy', $libs_url . 'tipsy/tipsy' . $suffix . '.js', array( 'jquery' ), '1.0.0a', true );
 		wp_register_style( 'um_tipsy', $libs_url . 'tipsy/tipsy' . $suffix . '.css', array(), '1.0.0a' );
 
+		wp_register_script( 'um_confirm', $libs_url . 'um-confirm/um-confirm' . $suffix . '.js', array( 'jquery' ), '1.0', true );
+		wp_register_style( 'um_confirm', $libs_url . 'um-confirm/um-confirm' . $suffix . '.css', array(), '1.0' );
+
 		// Raty JS for rating field-type.
 		wp_register_script( 'um_raty', $libs_url . 'raty/um-raty' . $suffix . '.js', array( 'jquery', 'wp-i18n' ), '2.6.0', true );
 		wp_set_script_translations( 'um_raty', 'ultimate-member' );
@@ -259,6 +271,13 @@ class Enqueue {
 		// Legacy FontIcons.
 		wp_register_style( 'um_fonticons_ii', $libs_url . 'legacy/fonticons/fonticons-ii' . $suffix . '.css', array(), UM_VERSION ); // Ionicons
 		wp_register_style( 'um_fonticons_fa', $libs_url . 'legacy/fonticons/fonticons-fa' . $suffix . '.css', array(), UM_VERSION ); // FontAwesome
+		$fonticons_handlers = array( 'um_fonticons_ii', 'um_fonticons_fa' );
+		// New FontIcons from FontAwesome.
+		// @todo new version
+		// First install set this option to true by default and use new FontAwesome icons
+		wp_register_style( 'um_fontawesome', $css_url . 'um-fontawesome' . $suffix . '.css', array(), self::$fa_version ); // New FontAwesome
+		$fonticons_handlers[]     = 'um_fontawesome';
+		self::$fonticons_handlers = $fonticons_handlers;
 
 		// Select2 JS.
 		$this->register_select2();
@@ -268,7 +287,7 @@ class Enqueue {
 		wp_register_script( 'um_datetime_date', $libs_url . 'pickadate/picker.date' . $suffix . '.js', array( 'um_datetime' ), '3.6.2', true );
 		wp_register_script( 'um_datetime_time', $libs_url . 'pickadate/picker.time' . $suffix . '.js', array( 'um_datetime' ), '3.6.2', true );
 
-		$common_js_deps = array( 'jquery', 'wp-util', 'wp-hooks', 'wp-i18n', 'um_tipsy', 'um_datetime_date', 'um_datetime_time' );
+		$common_js_deps = array( 'jquery', 'wp-util', 'wp-hooks', 'wp-i18n', 'um_tipsy', 'um_confirm', 'um_datetime_date', 'um_datetime_time' );
 
 		// Load a localized version for date/time.
 		$locale = $this->get_pickadate_locale();
@@ -310,6 +329,7 @@ class Enqueue {
 		$um_common_variables = apply_filters( 'um_common_js_variables', $um_common_variables );
 		wp_localize_script( 'um_common', 'um_common_variables', $um_common_variables );
 
-		wp_register_style( 'um_common', $css_url . 'common' . $suffix . '.css', array( 'um_tipsy', 'um_datetime_date', 'um_datetime_time', 'um_fonticons_ii', 'um_fonticons_fa' ), UM_VERSION );
+		$common_css_deps = array_merge( array( 'um_tipsy', 'um_confirm', 'um_datetime_date', 'um_datetime_time' ), self::$fonticons_handlers );
+		wp_register_style( 'um_common', $css_url . 'common' . $suffix . '.css', $common_css_deps, UM_VERSION );
 	}
 }
