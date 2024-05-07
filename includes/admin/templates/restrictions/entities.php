@@ -27,11 +27,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 					'type'  => 'entities_conditions',
 					'label' => __( 'Include', 'ultimate-member' ),
 					'value' => ! empty( $include ) ? $include : '',
-					'scope' => array(
-						'site' => __( 'Entire website', 'ultimate-member' ),
-						'post' => __( 'Post', 'ultimate-member' ),
-						'page' => __( 'Page', 'ultimate-member' ),
-					),
 				),
 			),
 		)
@@ -47,11 +42,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 					'type'  => 'entities_conditions',
 					'label' => __( 'Exclude', 'ultimate-member' ),
 					'value' => ! empty( $exclude ) ? $exclude : '',
-					'scope' => array(
-						'site' => __( 'Entire website', 'ultimate-member' ),
-						'post' => __( 'Post', 'ultimate-member' ),
-						'page' => __( 'Page', 'ultimate-member' ),
-					),
 				),
 			),
 		)

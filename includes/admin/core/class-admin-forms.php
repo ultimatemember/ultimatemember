@@ -1862,9 +1862,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			if ( empty( $field_data['scope'] ) || 'all' === $field_data['scope'] ) {
 				// @todo V3 all registered types
 				$scope = array(
-					'site' => __( 'Entire website', 'ultimate-member' ),
-					'post' => __( 'Post', 'ultimate-member' ),
-					'page' => __( 'Page', 'ultimate-member' ),
+					'site'     => __( 'Entire website', 'ultimate-member' ),
+					'post'     => __( 'Post', 'ultimate-member' ),
+					'page'     => __( 'Page', 'ultimate-member' ),
+					'tags'     => __( 'Tags', 'ultimate-member' ),
+					'category' => __( 'Category', 'ultimate-member' ),
 				);
 			} else {
 				$scope = $field_data['scope'];

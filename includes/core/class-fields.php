@@ -5064,6 +5064,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			// phpcs:disable WordPress.Security.NonceVerification -- already verified here
 			$option   = $_POST['option'];
 			$responce = '';
+
 			if ( ! empty( $option ) && 'site' !== $option ) {
 				$post_types = get_post_types( array( 'public' => true ), 'names' );
 				if ( in_array( $option, $post_types, true ) ) {
@@ -5078,7 +5079,45 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					);
 
 					foreach ( $entity as $id ) {
-						$responce .= '<option value="' . $id . '">' . esc_html__( 'ID#' ) . $id . ': ' . get_the_title( $id ) . '</option>';
+						$responce .= '<option value="' . esc_attr( $id ) . '">' . esc_html__( 'ID#' ) . esc_attr( $id ) . ': ' . get_the_title( $id ) . '</option>';
+					}
+				}
+				if ( 'tags' === $option ) {
+					$tags = get_tags(
+						array(
+							'hide_empty' => false,
+						)
+					);
+					if ( ! empty( $tags ) ) {
+						foreach ( $tags as $tag ) {
+							$responce .= '<option value="' . esc_attr( $tag->term_id ) . '">' . esc_html__( 'ID#' ) . esc_attr( $tag->term_id ) . ': ' . esc_html( $tag->name ) . '</option>';
+						}
+					}
+				}
+				if ( 'category' === $option ) {
+					$categories = get_categories(
+						array(
+							'hide_empty' => false,
+							'parent'     => 0,
+						)
+					);
+					if ( ! empty( $categories ) ) {
+						foreach ( $categories as $category ) {
+							$responce .= '<option value="' . esc_attr( $category->term_id ) . '">' . esc_html__( 'ID#' ) . esc_attr( $category->term_id ) . ': ' . esc_html( $category->name ) . '</option>';
+
+							$child_categories = get_categories(
+								array(
+									'hide_empty' => false,
+									'parent'     => $category->term_id,
+								)
+							);
+
+							if ( ! empty( $child_categories ) ) {
+								foreach ( $child_categories as $child_category ) {
+									$responce .= '<option value="' . esc_attr( $child_category->term_id ) . '">-- ' . esc_html__( 'ID#' ) . esc_attr( $child_category->term_id ) . ': ' . esc_html( $child_category->name ) . '</option>';
+								}
+							}
+						}
 					}
 				}
 			}
