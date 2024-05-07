@@ -413,9 +413,6 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 				$output .= esc_html__( 'Group #', 'ultimate-member' ) . $num . ': ';
 				foreach ( $rule as $k => $v ) {
 					switch ( $k ) {
-						case 'auth':
-							$output .= esc_html__( 'Authentification', 'ultimate-member' ) . ', ';
-							break;
 						case 'role':
 							$output .= esc_html__( 'Role', 'ultimate-member' ) . ', ';
 							break;

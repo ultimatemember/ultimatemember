@@ -22,10 +22,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 			'prefix_id' => 'um_restriction_rules_users',
 			'fields'    => array(
 				array(
-					'id'    => '_um_users',
-					'type'  => 'users_conditions',
-					'label' => __( 'Rules', 'ultimate-member' ),
-					'value' => ! empty( $rules ) ? $rules : array(),
+					'id'      => '_um_authentification',
+					'type'    => 'select',
+					'label'   => __( 'Authentification rule', 'ultimate-member' ),
+					'value'   => ! empty( $rules['_um_authentification'] ) ? $rules['_um_authentification'] : 'loggedin',
+					'default' => 'loggedin',
+					'options' => array(
+						'loggedin'  => __( 'Logged in users', 'ultimate-member' ),
+						'loggedout' => __( 'Logged out users', 'ultimate-member' ),
+					),
+				),
+				array(
+					'id'          => '_um_users',
+					'type'        => 'users_conditions',
+					'conditional' => array( '_um_authentification', '!=', 'loggedout' ),
+					'label'       => __( 'Rules', 'ultimate-member' ),
+					'value'       => ! empty( $rules ) ? $rules : array(),
 				),
 			),
 		)

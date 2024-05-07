@@ -2020,7 +2020,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$scope       = array(
 				'none' => __( 'Select rule object', 'ultimate-member' ),
-				'auth' => __( 'Authentification', 'ultimate-member' ),
 				'user' => __( 'User', 'ultimate-member' ),
 				'role' => __( 'User Role', 'ultimate-member' ),
 			);
