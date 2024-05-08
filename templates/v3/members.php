@@ -241,7 +241,7 @@ $postid = ! empty( $post->ID ) ? $post->ID : '';
 	 data-hash="<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ) ?>" data-base-post="<?php echo esc_attr( $postid ) ?>"
 	 data-must-search="<?php echo esc_attr( $must_search ); ?>" data-searched="<?php echo $not_searched ? '0' : '1'; ?>"
 	 data-view_type="<?php echo esc_attr( $current_view ) ?>" data-page="<?php echo esc_attr( $current_page ) ?>"
-	 data-sorting="<?php echo esc_attr( $sort_from_url ) ?>">
+	 data-sorting="<?php echo esc_attr( $sort_from_url ) ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_member_directory' ) ); ?>">
 	<div class="um-members-overlay"><div class="um-ajax-loading"></div></div>
 
 	<div class="um-member-directory-header um-form">

@@ -1245,6 +1245,11 @@ class Shortcodes {
 		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 			wp_enqueue_style( 'um_new_design' );
 			wp_enqueue_script( 'um_new_design' );
+
+			if ( 'directory' === $post_data['mode'] ) {
+				wp_enqueue_style( 'um_directory' );
+				wp_enqueue_script( 'um_directory' );
+			}
 		}
 
 		ob_start();

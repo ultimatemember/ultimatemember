@@ -1,0 +1,205 @@
+@import "selectors"
+@import "mixins"
+@import "box"
+@import "colors"
+@import "typography"
+
+.#{$prefix}directory
+  +flex( column,flex-start,stretch,nowrap )
+  width: 100%
+
+  .#{$prefix}member-directory-header
+    +flex( column, flex-start, stretch, nowrap )
+    width: 100%
+    .#{$prefix}member-directory-header-row
+      &.#{$prefix}member-directory-filters-bar
+        padding: 0 0 10px 0
+      &:not(.#{$prefix}member-directory-filters-bar)
+        +flex( row, flex-start, baseline, nowrap )
+        margin: 0 0 10px 0
+      &.#{$prefix}header-row-invisible
+        margin: 0
+      &.#{$prefix}member-directory-search-row
+        justify-content: flex-end
+      .#{$prefix}member-directory-search-line
+        +flex( row, flex-start, center, nowrap )
+        width: 60%
+        label
+          flex: 1
+          margin: 0 10px 0 0
+          min-width: 90px
+          max-width: 85%
+          span
+            display: none
+            margin: 0 5px 0 0
+          .#{$prefix}search-line
+            -webkit-appearance: textfield
+            width: 100%
+            +border-box
+        .#{$prefix}do-search
+          min-width: 15%
+          width: auto
+      .#{$prefix}member-directory-nav-line
+        +flex( row, space-between, center, nowrap )
+        width: 100%
+        .#{$prefix}member-directory-view-type
+          font-size: 30px
+          line-height: 30px
+          margin: 0 10px 0 0
+          width: 30px
+          .#{$prefix}member-directory-view-type-a
+            color: $border
+            display: none
+          &.#{$prefix}disabled
+            cursor: default
+            a
+              cursor: default
+          &:not( .#{$prefix}disabled )
+            .#{$prefix}member-directory-view-type-a
+              &:hover
+                color: $hover
+              &:focus
+                color: $border
+        .#{$prefix}member-directory-sorting
+          +flex( row, flex-start, baseline, nowrap )
+          flex: 5
+          .#{$prefix}member-directory-sorting-a
+            +flex( row, flex-start, baseline, nowrap )
+            position: relative
+            cursor: pointer
+            a
+              margin: 0 5px 0 0
+            i
+              &.#{$prefix}faicon-caret-down
+                display: inline
+              &.#{$prefix}faicon-caret-up
+                display: none
+            &.#{$prefix}member-directory-sorting-visible
+              i
+                &.#{$prefix}faicon-caret-down
+                  display: none
+                &.#{$prefix}faicon-caret-up
+                  display: inline
+            .#{$prefix}new-dropdown
+              top : 24px
+              width: 200px
+              left: -12px
+              li
+                a[data-selected="1"]
+                  display: none
+        .#{$prefix}member-directory-filters
+          +flex( row, flex-end, baseline, nowrap )
+          flex: 2
+          text-align: right
+          .#{$prefix}member-directory-filters-a
+            +flex( row, flex-start, baseline, nowrap )
+            cursor: pointer
+            a
+              margin: 0 5px 0 0
+            i
+              &.#{$prefix}faicon-caret-down
+                display: inline
+              &.#{$prefix}faicon-caret-up
+                display: none
+            &.#{$prefix}member-directory-filters-visible
+              i
+                &.#{$prefix}faicon-caret-down
+                  display: none
+                &.#{$prefix}faicon-caret-up
+                  display: inline
+
+      .#{$prefix}search
+        margin: 0
+        width: 100%
+        display: grid
+
+        grid-template-rows: auto 1fr
+        grid-template-columns: repeat(3, 1fr)
+        grid-gap: 10px
+        grid-auto-rows: minmax(max-content, auto)
+        -ms-grid-template-rows: auto 1fr
+        -ms-grid-template-columns: repeat(3, 1fr)
+        -ms-grid-gap: 10px
+        -ms-grid-auto-rows: minmax(max-content, auto)
+        align-items: center
+        .#{$prefix}search-filter
+          +flex( row, flex-start, baseline, nowrap )
+          width: 100%
+          position: relative
+
+          .select2-container
+            float: left
+            width: 100% !important
+
+          .#{$prefix}s1
+            width: 100%
+          &.#{$prefix}text-filter-type
+            input
+              width: 100%
+          &.#{$prefix}slider-filter-type
+            flex-direction: column
+            align-items: stretch
+            .#{$prefix}slider
+              width: calc( 100% - 16px )
+              .ui-slider-range.ui-widget-header
+                background: #44b0ec
+                border: 1px solid #44b0ec !important
+                margin-top: -1px
+
+              &.ui-slider.ui-slider-horizontal
+                border: 1px solid #ddd !important
+                box-sizing: border-box
+                margin: 4px 8px 0 8px
+
+            .#{$prefix}slider-range
+              +flex( row, flex-start, baseline, nowrap )
+              margin: 6px 0 0 8px
+              font-size: 0.8em
+          &.#{$prefix}datepicker-filter-type,
+          &.#{$prefix}timepicker-filter-type
+            +flex( row, flex-start, baseline, nowrap )
+            input
+              width: calc( 50% - 5px )
+              margin: 0 5px 0 0 !important
+              +border-box
+              //float: left
+              &:nth-child(even)
+                margin: 0 0 0 5px !important
+        &[style*="overflow: hidden;"]
+          .#{$prefix}search-filter
+            pointer-events: none
+        &.#{$prefix}search-invisible
+          display: none
+
+      .#{$prefix}filtered-line
+        +flex( row, flex-start, baseline, wrap )
+        //margin: 5px 0 0 0
+        margin: 0
+        padding: 0
+        box-sizing: border-box
+        border: none
+        .#{$prefix}members-filter-tag
+          +flex( row, flex-start, center, nowrap )
+          margin: 0 10px 5px 0
+          padding: 0 10px
+          border-radius: 3px
+          cursor: default
+          background: #f1f1f1
+          font-size: 13px
+          &:first-child
+            margin-left: 0
+          .#{$prefix}members-filter-remove
+            float: right
+            display: inline-block
+            margin-left: 10px
+            cursor: pointer
+            font-weight: bold
+            font-size: 20px
+            &:hover
+              color: #a00
+
+        .#{$prefix}clear-filters
+          display: none
+          a
+            padding: 3px 10px
+            margin: 0 10px
