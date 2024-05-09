@@ -5081,8 +5081,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					foreach ( $entity as $id ) {
 						$responce .= '<option value="' . esc_attr( $id ) . '">' . esc_html__( 'ID#' ) . esc_attr( $id ) . ': ' . get_the_title( $id ) . '</option>';
 					}
-				}
-				if ( 'tags' === $option ) {
+				} elseif ( 'tags' === $option ) {
 					$tags = get_tags(
 						array(
 							'hide_empty' => false,
@@ -5093,8 +5092,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$responce .= '<option value="' . esc_attr( $tag->term_id ) . '">' . esc_html__( 'ID#' ) . esc_attr( $tag->term_id ) . ': ' . esc_html( $tag->name ) . '</option>';
 						}
 					}
-				}
-				if ( 'category' === $option ) {
+				} elseif ( 'category' === $option ) {
 					$categories = get_categories(
 						array(
 							'hide_empty' => false,

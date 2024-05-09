@@ -19,8 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	UM()->admin_forms(
 		array(
-			'class'     => 'um-restriction-rule-include um-top-label',
-			'prefix_id' => 'um_restriction_rules_include',
+			'class'     => 'um-restriction-rule-content um-top-label',
+			'prefix_id' => 'um_restriction_rule_content',
 			'fields'    => array(
 				array(
 					'id'    => '_um_include',
@@ -28,16 +28,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 					'label' => __( 'Include', 'ultimate-member' ),
 					'value' => ! empty( $include ) ? $include : '',
 				),
-			),
-		)
-	)->render_form();
-
-	UM()->admin_forms(
-		array(
-			'class'     => 'um-restriction-rule-exclude um-top-label',
-			'prefix_id' => 'um_restriction_rules_exclude',
-			'fields'    => array(
 				array(
+					'conditional' => array( '_um_include', '!=', '' ),
 					'id'    => '_um_exclude',
 					'type'  => 'entities_conditions',
 					'label' => __( 'Exclude', 'ultimate-member' ),
@@ -46,5 +38,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 			),
 		)
 	)->render_form();
+
+//	UM()->admin_forms(
+//		array(
+//			'class'     => 'um-restriction-rule-exclude um-top-label',
+//			'prefix_id' => 'um_restriction_rules_exclude',
+//			'fields'    => array(
+//				array(
+//					'id'    => '_um_exclude',
+//					'type'  => 'entities_conditions',
+//					'label' => __( 'Exclude', 'ultimate-member' ),
+//					'value' => ! empty( $exclude ) ? $exclude : '',
+//				),
+//			),
+//		)
+//	)->render_form();
 	?>
 </div>

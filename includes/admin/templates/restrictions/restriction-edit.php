@@ -83,11 +83,11 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 		$data_include = array();
 		$data_exclude = array();
 		$data_rules   = array();
-		if ( ! empty( $_POST['um_restriction_rules_include']['_um_include'] ) ) {
-			$data_include = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_include'] );
+		if ( ! empty( $_POST['um_restriction_rule_content']['_um_include'] ) ) {
+			$data_include['_um_include'] = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rule_content']['_um_include'] );
 		}
-		if ( ! empty( $_POST['um_restriction_rules_exclude']['_um_exclude'] ) ) {
-			$data_exclude = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_exclude'] );
+		if ( ! empty( $_POST['um_restriction_rule_content']['_um_exclude'] ) ) {
+			$data_exclude['_um_exclude'] = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rule_content']['_um_exclude'] );
 		}
 
 		if ( ! empty( $_POST['um_restriction_rules_users']['_um_users'] ) ) {

@@ -1904,6 +1904,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					if ( empty( $ids ) ) {
 						$ids = array();
 					}
+
+					$ids = array_map(
+						function( $value ) {
+							return absint( $value );
+						},
+						$ids
+					);
+
 					if ( 'site' !== $entity_key ) {
 						$entities = $this->get_entites( $entity_key );
 					}
@@ -1933,9 +1941,23 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					$html .= '<select ' . $original_name . $multiple . $id_attr_responce . $name_attr_responce . $class_attr_responce . $data_attr . $disabled . '>';
 					if ( ! empty( $entities ) ) {
 						if ( 'site' !== $entity_key ) {
-							foreach ( $entities as $id ) {
+							foreach ( $entities as $value ) {
 								if ( 'site' !== $entity_key ) {
-									$html .= '<option value="' . $id . '" ' . selected( in_array( $id, $ids, true ), true, false ) . '>' . esc_html__( 'ID#' ) . $id . ': ' . get_the_title( $id ) . '</option>';
+									$space = '';
+									if ( strpos( $value, ':' ) !== false ) {
+										$values = explode( ':', $value );
+										$id     = $values[0];
+										$name   = $values[1];
+										if ( strpos( $name, '|' ) !== false ) {
+											$child_name = explode( '|', $name );
+											$space      = $child_name[1];
+											$name       = $child_name[0];
+										}
+									} else {
+										$id   = $value;
+										$name = get_the_title( $id );
+									}
+									$html .= '<option value="' . $id . '" ' . selected( in_array( absint( $id ), $ids, true ), true, false ) . '>' . esc_html( $space ) . esc_html__( 'ID#' ) . esc_html( $id ) . ': ' . esc_html( $name ) . '</option>';
 								}
 							}
 						}
@@ -1980,6 +2002,40 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 						'order'          => 'ASC',
 					)
 				);
+			} elseif ( 'tags' === $entity ) {
+				$tags = get_tags(
+					array(
+						'hide_empty' => false,
+					)
+				);
+				if ( ! empty( $tags ) ) {
+					foreach ( $tags as $tag ) {
+						$entities[] = $tag->term_id . ':' . $tag->term_id;
+					}
+				}
+			} elseif ( 'category' === $entity ) {
+				$categories = get_categories(
+					array(
+						'hide_empty' => false,
+						'parent'     => 0,
+					)
+				);
+				if ( ! empty( $categories ) ) {
+					foreach ( $categories as $category ) {
+						$entities[]       = $category->term_id . ':' . $category->name;
+						$child_categories = get_categories(
+							array(
+								'hide_empty' => false,
+								'parent'     => $category->term_id,
+							)
+						);
+						if ( ! empty( $child_categories ) ) {
+							foreach ( $child_categories as $child_category ) {
+								$entities[] = $child_category->term_id . ':' . $child_category->name . '|-- ';
+							}
+						}
+					}
+				}
 			}
 
 			return $entities;
@@ -2053,13 +2109,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 							$html .= '<select ' . $original_name . $class_attr . $id_attr . $name_attr . $data_attr . '>';
 							foreach ( $scope as $key => $label ) {
-								$html .= '<option id="um_option_' . $key . '" value="' . $key . '" ' . selected( $key === $rule_key, true, false ) . '>' . $label . '</option>';
+								$html .= '<option id="um_option_' . esc_attr( $key ) . '" value="' . esc_attr( $key ) . '" ' . selected( $key === $rule_key, true, false ) . '>' . esc_html( $label ) . '</option>';
 							}
 							$html .= '</select>';
 
 							$html .= '<select ' . $original_name . $class_attr_compare . $id_attr . $name_attr_compare . $data_attr . '>';
 							foreach ( $compare as $key => $label ) {
-								$html .= '<option value="' . $key . '" ' . selected( $key === $rule['compare'], true, false ) . '>' . $label . '</option>';
+								$html .= '<option value="' . esc_attr( $key ) . '" ' . selected( $key === $rule['compare'], true, false ) . '>' . esc_html( $label ) . '</option>';
 							}
 							$html .= '</select>';
 
@@ -2077,7 +2133,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 								} else {
 									$label = $option;
 								}
-								$html .= '<option value="' . $option_key . '" ' . selected( in_array( $option_key, $rule['ids'], true ), true, false ) . '>' . $label . '</option>';
+								$html .= '<option value="' . esc_attr( $option_key ) . '" ' . selected( in_array( $option_key, $rule['ids'], true ), true, false ) . '>' . esc_html( $label ) . '</option>';
 							}
 							$html .= '</select>';
 
@@ -2102,13 +2158,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$html .= '<div class="um-users-conditions-connector">' . esc_html__( 'AND' ) . '</div>';
 				$html .= '<select ' . $original_name . $class_attr . $id_attr . $name_attr . $data_attr . '>';
 				foreach ( $scope as $key => $label ) {
-					$html .= '<option id="um_option_' . $key . '" value="' . $key . '">' . $label . '</option>';
+					$html .= '<option id="um_option_' . esc_attr( $key ) . '" value="' . esc_attr( $key ) . '">' . esc_html( $label ) . '</option>';
 				}
 				$html .= '</select>';
 
 				$html .= '<select ' . $original_name . $class_attr_compare . $id_attr . $name_attr . $data_attr . '>';
 				foreach ( $compare as $key => $label ) {
-					$html .= '<option value="' . $key . '">' . $label . '</option>';
+					$html .= '<option value="' . esc_attr( $key ) . '">' . esc_html( $label ) . '</option>';
 				}
 				$html .= '</select>';
 
