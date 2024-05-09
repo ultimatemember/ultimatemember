@@ -408,6 +408,8 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 		$option = get_option( 'um_restriction_rule_' . $item['id'] );
 		$output = '';
 		if ( ! empty( $option['rules']['_um_users'] ) ) {
+			$output .= esc_html__( 'Logged in users:', 'ultimate-member' );
+			$output .= '<br>';
 			foreach ( $option['rules']['_um_users'] as $key => $rule ) {
 				$num     = absint( $key ) + 1;
 				$output .= esc_html__( 'Group #', 'ultimate-member' ) . $num . ': ';
@@ -427,6 +429,8 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 				}
 				$output .= '<br>';
 			}
+		} else {
+			$output = esc_html__( 'Logged out users', 'ultimate-member' );
 		}
 
 		echo wp_kses( $output, UM()->get_allowed_html( 'admin_notice' ) );
