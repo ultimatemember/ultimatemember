@@ -7,7 +7,7 @@ Requires PHP: 5.6
 Requires at least: 5.5
 Tested up to: 6.5
 Stable tag: 2.8.5
-License: GNU Version 2 or Any Later Version
+License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
 The #1 plugin for front-end user profiles, user registration & login forms, member directories, content restriction, user roles and more.
