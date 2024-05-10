@@ -1199,9 +1199,25 @@ jQuery(document).ready( function() {
 		}
 	});
 
-	jQuery( '.um-entities-conditions-wrap' ).on( 'click', '.add-row', function(e)  {
+	jQuery( '#um_add_protection_rule' ).on( 'click', function(e)  {
 		e.preventDefault();
-		var wrapper = jQuery( this ).closest( '.um-entities-conditions-wrap' );
+		var wrapper = jQuery( this ).closest( '.um-restriction-rule-content' ).find( '.um-protection-include-wrap' );
+		var el      = wrapper.find( '.um-entities-conditions-row:first' ).clone();
+
+		el.find( '.um-entities-conditions-responce option[value!="0"], input' ).remove();
+		el.find( '.um-entities-conditions-responce option' ).html( '' );
+		el.find( '.um-entities-conditions option' ).removeAttr( 'selected' );
+		el.find( '.um-entities-conditions, .um-entities-conditions-responce' ).removeAttr( 'name' );
+		el.find( '.um-entities-conditions-responce' ).removeAttr( 'multiple' );
+
+		wrapper.append( el );
+		wrapper.find( '.um-entities-conditions-row:last' ).find( 'select' ).removeAttr( 'disabled' );
+		wrapper.find( '.remove-row' ).removeAttr( 'disabled' );
+	});
+
+	jQuery( '#um_add_exclusion_rule' ).on( 'click', function(e)  {
+		e.preventDefault();
+		var wrapper = jQuery( this ).closest( '.um-restriction-rule-content' ).find( '.um-protection-exclude-wrap' );
 		var el      = wrapper.find( '.um-entities-conditions-row:first' ).clone();
 
 		el.find( '.um-entities-conditions-responce option[value!="0"], input' ).remove();

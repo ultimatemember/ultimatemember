@@ -493,3 +493,11 @@ span.um-admin-icon-clear i {
 .um-users-conditions-row:nth-child(2) .um-users-conditions-connector {
   display: none;
 }
+
+.um-protection-buttons {
+  display: flex;
+  justify-content: center;
+}
+.um-protection-buttons button {
+  margin: 0 5px !important;
+}

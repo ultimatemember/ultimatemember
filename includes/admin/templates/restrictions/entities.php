@@ -24,34 +24,30 @@ if ( ! defined( 'ABSPATH' ) ) {
 			'fields'    => array(
 				array(
 					'id'    => '_um_include',
+					'class' => 'um-protection-include',
 					'type'  => 'entities_conditions',
 					'label' => __( 'Include', 'ultimate-member' ),
 					'value' => ! empty( $include ) ? $include : '',
 				),
 				array(
 					'conditional' => array( '_um_include', '!=', '' ),
-					'id'    => '_um_exclude',
-					'type'  => 'entities_conditions',
-					'label' => __( 'Exclude', 'ultimate-member' ),
-					'value' => ! empty( $exclude ) ? $exclude : '',
+					'id'          => '_um_exclude',
+					'class'       => 'um-protection-exclude',
+					'type'        => 'entities_conditions',
+					'label'       => __( 'Exclude', 'ultimate-member' ),
+					'value'       => ! empty( $exclude ) ? $exclude : '',
+				),
+				array(
+					'id'      => 'add_protection_rule',
+					'type'    => 'buttons_group',
+					'class'   => 'um-protection-buttons',
+					'buttons' => array(
+						'um_add_protection_rule' => __( 'Add protection rule', 'ultimate-member' ),
+						'um_add_exclusion_rule'  => __( 'Add exclusion rule', 'ultimate-member' ),
+					),
 				),
 			),
 		)
 	)->render_form();
-
-//	UM()->admin_forms(
-//		array(
-//			'class'     => 'um-restriction-rule-exclude um-top-label',
-//			'prefix_id' => 'um_restriction_rules_exclude',
-//			'fields'    => array(
-//				array(
-//					'id'    => '_um_exclude',
-//					'type'  => 'entities_conditions',
-//					'label' => __( 'Exclude', 'ultimate-member' ),
-//					'value' => ! empty( $exclude ) ? $exclude : '',
-//				),
-//			),
-//		)
-//	)->render_form();
 	?>
 </div>

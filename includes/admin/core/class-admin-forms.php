@@ -1582,6 +1582,33 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		/**
 		 * @param $field_data
 		 *
+		 * @return bool|string
+		 */
+		public function render_buttons_group( $field_data ) {
+			if ( empty( $field_data['id'] ) ) {
+				return false;
+			}
+
+			$id      = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
+			$id_attr = ' id="' . esc_attr( $id ) . '" ';
+
+			$class      = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
+			$class_attr = ' class="' . esc_attr( $class ) . '" ';
+
+			$html = "<div $id_attr $class_attr>";
+			foreach ( $field_data['buttons'] as $button_id => $button ) {
+				$button_id_attr = ' id="' . esc_attr( $button_id ) . '" ';
+				$html          .= "<button type=\"button\" class='button' $button_id_attr />$button</button>";
+			}
+			$html .= '</div>';
+
+			return $html;
+		}
+
+
+		/**
+		 * @param $field_data
+		 *
 		 * @return mixed
 		 */
 		function render_info_text( $field_data ) {
@@ -1895,7 +1922,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$value = $this->get_field_value( $field_data );
 
-			$html = '<div class="um-entities-conditions-wrap">';
+			$html = '<div class="um-entities-conditions-wrap ' . $class . '-wrap">';
 
 			if ( ! empty( $value[ $field_data_id ] ) ) {
 				$entity = $value[ $field_data_id ];
@@ -1945,26 +1972,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 								if ( 'site' !== $entity_key ) {
 									$space = '';
 									if ( strpos( $value, ':' ) !== false ) {
-										$values = explode( ':', $value );
-										$id     = $values[0];
-										$name   = $values[1];
-										if ( strpos( $name, '|' ) !== false ) {
-											$child_name = explode( '|', $name );
+										$values    = explode( ':', $value );
+										$id        = $values[0];
+										$post_name = $values[1];
+										if ( strpos( $post_name, '|' ) !== false ) {
+											$child_name = explode( '|', $post_name );
 											$space      = $child_name[1];
-											$name       = $child_name[0];
+											$post_name  = $child_name[0];
 										}
 									} else {
-										$id   = $value;
-										$name = get_the_title( $id );
+										$id        = $value;
+										$post_name = get_the_title( $id );
 									}
-									$html .= '<option value="' . $id . '" ' . selected( in_array( absint( $id ), $ids, true ), true, false ) . '>' . esc_html( $space ) . esc_html__( 'ID#' ) . esc_html( $id ) . ': ' . esc_html( $name ) . '</option>';
+									$html .= '<option value="' . $id . '" ' . selected( in_array( absint( $id ), $ids, true ), true, false ) . '>' . esc_html( $space ) . esc_html__( 'ID#' ) . esc_html( $id ) . ': ' . esc_html( $post_name ) . '</option>';
 								}
 							}
 						}
 					}
 					$html .= '</select>';
 
-					$html .= '<button title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="um-conditions-row-action add-row button">+</button>';
 					$html .= '<button title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="um-conditions-row-action remove-row button">-</button>';
 					$html .= '</div>';
 				}
@@ -1981,7 +2007,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$html .= '<option value="0"></option>';
 				$html .= '</select>';
 
-				$html .= '<button title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="um-conditions-row-action add-row button">+</button>';
 				$html .= '<button disabled title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="um-conditions-row-action remove-row button">-</button>';
 				$html .= '</div>';
 			}
@@ -2010,7 +2035,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				);
 				if ( ! empty( $tags ) ) {
 					foreach ( $tags as $tag ) {
-						$entities[] = $tag->term_id . ':' . $tag->term_id;
+						$entities[] = $tag->term_id . ':' . $tag->name;
 					}
 				}
 			} elseif ( 'category' === $entity ) {
@@ -2227,10 +2252,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 * @param string $i
 		 * @return string|array
 		 */
-		function get_field_value( $field_data, $i = '' ) {
+		public function get_field_value( $field_data, $i = '' ) {
 
 			$default = '';
-			if ( $field_data['type'] === 'multi_checkbox' ) {
+			if ( 'multi_checkbox' === $field_data['type'] ) {
 				$default = array();
 				if ( isset( $field_data['default'] ) ) {
 					$default = is_array( $field_data['default'] ) ? $field_data['default'] : array( $field_data['default'] );
@@ -2240,7 +2265,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$default = $field_data[ 'default' . $i ];
 			}
 
-			if ( $field_data['type'] == 'checkbox' || $field_data['type'] == 'multi_checkbox' ) {
+			if ( 'checkbox' === $field_data['type'] || 'multi_checkbox' === $field_data['type'] ) {
 				$value = ( isset( $field_data[ 'value' . $i ] ) && '' !== $field_data[ 'value' . $i ] ) ? $field_data[ 'value' . $i ] : $default;
 			} else {
 				$value = isset( $field_data[ 'value' . $i ] ) ? $field_data[ 'value' . $i ] : $default;

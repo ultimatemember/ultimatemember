@@ -367,10 +367,13 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 				if ( 'site' === $key ) {
 					$output .= esc_html__( 'Website', 'ultimate-member' ) . ', ';
 				}
-
 				if ( in_array( $key, $post_types, true ) ) {
 					$obj     = get_post_type_object( $key );
 					$output .= $obj->labels->singular_name . ', ';
+				} elseif ( 'tags' === $key ) {
+					$output .= 'Tags, ';
+				} elseif ( 'category' === $key ) {
+					$output .= 'Category, ';
 				}
 			}
 			$last_position = strrpos( $output, ', ' );
@@ -382,7 +385,7 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 			if ( '' !== $output ) {
 				$output .= '<br>';
 			}
-			$output .= esc_html__( 'Include', 'ultimate-member' ) . ': ';
+			$output .= esc_html__( 'Exclude', 'ultimate-member' ) . ': ';
 			foreach ( $option['exclude']['_um_exclude'] as $key => $entity ) {
 				if ( 'site' === $key ) {
 					$output .= esc_html__( 'Website', 'ultimate-member' ) . ', ';
@@ -391,6 +394,10 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 				if ( in_array( $key, $post_types, true ) ) {
 					$obj     = get_post_type_object( $key );
 					$output .= $obj->labels->singular_name . ', ';
+				} elseif ( 'tags' === $key ) {
+					$output .= 'Tags, ';
+				} elseif ( 'category' === $key ) {
+					$output .= 'Category, ';
 				}
 			}
 			$last_position = strrpos( $output, ', ' );
