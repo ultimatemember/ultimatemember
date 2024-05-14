@@ -30,7 +30,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 					'value' => ! empty( $include ) ? $include : '',
 				),
 				array(
-					'conditional' => array( '_um_include', '!=', '' ),
 					'id'          => '_um_exclude',
 					'class'       => 'um-protection-exclude',
 					'type'        => 'entities_conditions',

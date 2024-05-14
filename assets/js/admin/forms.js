@@ -1199,7 +1199,7 @@ jQuery(document).ready( function() {
 		}
 	});
 
-	jQuery( '#um_add_protection_rule' ).on( 'click', function(e)  {
+	jQuery( '#um_add_protection_rule' ).on( 'click', function( e )  {
 		e.preventDefault();
 		var wrapper = jQuery( this ).closest( '.um-restriction-rule-content' ).find( '.um-protection-include-wrap' );
 		var el      = wrapper.find( '.um-entities-conditions-row:first' ).clone();
@@ -1215,11 +1215,19 @@ jQuery(document).ready( function() {
 		wrapper.find( '.remove-row' ).removeAttr( 'disabled' );
 	});
 
-	jQuery( '#um_add_exclusion_rule' ).on( 'click', function(e)  {
+	jQuery( '#um_add_exclusion_rule' ).on( 'click', function( e )  {
 		e.preventDefault();
 		var wrapper = jQuery( this ).closest( '.um-restriction-rule-content' ).find( '.um-protection-exclude-wrap' );
-		var el      = wrapper.find( '.um-entities-conditions-row:first' ).clone();
+		var clone   = jQuery( this ).closest( '.um-restriction-rule-content' ).find( '.um-protection-include-wrap' );
+		var el      = clone.find( '.um-entities-conditions-row:first' ).clone();
+		jQuery( this ).closest( '.um-restriction-rule-content' ).find( '.um-forms-line' ).show();
 
+		el.find( '.um-entities-conditions' ).attr( 'data-original', 'um_restriction_rule_content[_um_exclude]' );
+		el.find( '.um-entities-conditions' ).attr( 'data-field_id', '_um_exclude' );
+		el.find( '.um-entities-conditions' ).removeClass( 'um-protection-include' ).addClass( 'um-protection-exclude' );
+		el.find( '.um-entities-conditions-responce' ).attr( 'data-original', 'um_restriction_rule_content[_um_include]' );
+		el.find( '.um-entities-conditions-responce' ).attr( 'data-field_id', '_um_exclude' );
+		el.find( '.um-entities-conditions-responce' ).removeClass( 'um-protection-include' ).addClass( 'um-protection-exclude' );
 		el.find( '.um-entities-conditions-responce option[value!="0"], input' ).remove();
 		el.find( '.um-entities-conditions-responce option' ).html( '' );
 		el.find( '.um-entities-conditions option' ).removeAttr( 'selected' );
@@ -1231,7 +1239,7 @@ jQuery(document).ready( function() {
 		wrapper.find( '.remove-row' ).removeAttr( 'disabled' );
 	});
 
-	jQuery( '.um-entities-conditions-wrap' ).on( 'click', '.remove-row', function(e)  {
+	jQuery( '.um-entities-conditions-wrap' ).on( 'click', '.remove-row', function( e )  {
 		e.preventDefault();
 		var wrapper = jQuery( this ).closest( '.um-entities-conditions-wrap' );
 		var row     = jQuery( this ).closest( '.um-entities-conditions-row' );
@@ -1242,6 +1250,73 @@ jQuery(document).ready( function() {
 			wrapper.find( 'select option' ).removeAttr( 'selected' );
 			wrapper.find( '.um-entities-conditions-responce' ).html( '' );
 			wrapper.find( 'input' ).remove();
+
+			if( jQuery( this ).closest( '.um-protection-include-wrap' ).length ) {
+				jQuery( '.um-protection-exclude-wrap' ).closest( '.um-forms-line' ).hide();
+				jQuery( '#um_add_exclusion_rule' ).attr( 'disabled', 'disabled' );
+				jQuery( '.um-protection-exclude-wrap .um-entities-conditions-row' ).remove();
+			}
+		}
+	});
+
+	if ( 1 > jQuery( '.um-protection-include-wrap .um-entities-conditions-row' ).length ) {
+
+	} else {
+		if ( 0 === parseInt( jQuery( '.um-protection-include-wrap .um-entities-conditions-row .um-entities-conditions-responce' ).val() ) ) {
+			jQuery( '.um-protection-exclude-wrap' ).closest( '.um-forms-line' ).hide();
+			jQuery( '#um_add_exclusion_rule' ).attr( 'disabled', 'disabled' );
+		} else {
+			jQuery( '.um-protection-exclude-wrap' ).closest( '.um-forms-line' ).show();
+		}
+	}
+	jQuery( document ).on( 'change', '.um-protection-include-wrap .um-entities-conditions-responce', function()  {
+		var empty = true;
+		jQuery( '.um-protection-include-wrap .um-entities-conditions-responce' ).each( function () {
+			var value = jQuery( this ).val();
+			if ( null === value ) {
+				value = 1;
+			}
+			if ( Array.isArray( value ) ) {
+				if ( value.length !== 0 ) {
+					empty = false;
+					return;
+				}
+			} else {
+				if ( 0 !== parseInt( value ) && null !== value ) {
+					empty = false;
+					return;
+				}
+			}
+		});
+
+		if ( false === empty ) {
+			jQuery( '#um_add_exclusion_rule' ).removeAttr( 'disabled', 'disabled' );
+		} else {
+			jQuery( '.um-protection-exclude-wrap' ).closest( '.um-forms-line' ).hide();
+			jQuery( '#um_add_exclusion_rule' ).attr( 'disabled', 'disabled' );
+			jQuery( '.um-protection-exclude-wrap .um-entities-conditions-row' ).remove();
+		}
+	});
+
+	jQuery( document ).on( 'change', '.um-protection-include-wrap .um-entities-conditions', function()  {
+		var empty = false;
+		if ( 'site' === jQuery( this ).val() ) {
+			empty = true;
+		} else {
+			jQuery( this ).find( '.um-entities-conditions-responce' ).each( function () {
+				if ( 0 !== parseInt( jQuery( this ).val() ) ) {
+					var empty = true;
+					return;
+				}
+			});
+		}
+
+		if ( true === empty ) {
+			jQuery( '#um_add_exclusion_rule' ).removeAttr( 'disabled', 'disabled' );
+		} else {
+			jQuery( '.um-protection-exclude-wrap' ).closest( '.um-forms-line' ).hide();
+			jQuery( '#um_add_exclusion_rule' ).attr( 'disabled', 'disabled' );
+			jQuery( '.um-protection-exclude-wrap .um-entities-conditions-row' ).remove();
 		}
 	});
 
@@ -1285,7 +1360,7 @@ jQuery(document).ready( function() {
 		}
 	});
 
-	jQuery( '.um-users-conditions-wrap' ).on( 'click', '.add-row', function(e)  {
+	jQuery( '.um-users-conditions-wrap' ).on( 'click', '.add-row', function( e )  {
 		e.preventDefault();
 		var wrapper = jQuery( this ).closest( '.um-users-conditions-row-group' );
 		var el      = wrapper.find( '.um-users-conditions-row:first' ).clone();
@@ -1302,7 +1377,7 @@ jQuery(document).ready( function() {
 		wrapper.find( '.remove-row' ).removeAttr( 'disabled' );
 	});
 
-	jQuery( '.um-users-conditions-wrap' ).on( 'click', '.remove-row', function(e)  {
+	jQuery( '.um-users-conditions-wrap' ).on( 'click', '.remove-row', function( e )  {
 		e.preventDefault();
 		var wrapper = jQuery( this ).closest( '.um-users-conditions-wrap' );
 		var row     = jQuery( this ).closest( '.um-users-conditions-row' );
@@ -1322,7 +1397,7 @@ jQuery(document).ready( function() {
 
 		jQuery( '.um-users-conditions-row-group' ).each( function() {
 			if ( 0 === jQuery( this ).find( '.um-users-conditions-row' ).length ) {
-				var elems = jQuery( this ).nextAll('.um-users-conditions-row-group');
+				var elems = jQuery( this ).nextAll( '.um-users-conditions-row-group' );
 				jQuery( this ).remove();
 
 				if ( elems ) {
@@ -1339,11 +1414,11 @@ jQuery(document).ready( function() {
 							jQuery( this ).find( '.um-users-conditions' ).attr( 'name', new_name );
 						}
 						if ( old_name_compare ) {
-							var new_name_compare = old_name_compare.replace(old_index, new_index);
+							var new_name_compare = old_name_compare.replace( old_index, new_index );
 							jQuery( this ).find( '.um-users-conditions-compare' ).attr( 'name', new_name_compare );
 						}
 						if ( old_name_ids ) {
-							var new_name_ids = old_name_ids.replace(old_index, new_index);
+							var new_name_ids = old_name_ids.replace( old_index, new_index );
 							jQuery( this ).find( '.um-users-conditions-responce' ).attr( 'name', new_name_ids );
 						}
 					});

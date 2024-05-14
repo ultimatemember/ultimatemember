@@ -1932,12 +1932,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 						$ids = array();
 					}
 
-					$ids = array_map(
-						function( $value ) {
-							return absint( $value );
-						},
-						$ids
-					);
+					if ( is_array( $ids ) ) {
+						$ids = array_map(
+							function ( $value ) {
+								return absint( $value );
+							},
+							$ids
+						);
+					}
 
 					if ( 'site' !== $entity_key ) {
 						$entities = $this->get_entites( $entity_key );
@@ -1949,7 +1951,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					$name_attr_responce = ' name="' . $name . '[' . $field_data_id . '][' . $entity_key . '][]" ';
 
 					$html .= '<div class="um-entities-conditions-row">';
-					$html .= '<select ' . $original_name . $class_attr . $id_attr . $name_attr . $data_attr . '>';
+					$html .= '<select ' . $original_name . $class_attr . $name_attr . $data_attr . '>';
 					$html .= '<option value="none">' . __( 'Select entity', 'ultimate-member' ) . '</option>';
 					foreach ( $scope as $key => $label ) {
 						$html .= '<option value="' . $key . '" ' . selected( $key === $entity_key, true, false ) . '>' . $label . '</option>';
@@ -1965,7 +1967,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					if ( is_array( $ids ) && ! empty( $ids ) ) {
 						$multiple = ' multiple="multiple" ';
 					}
-					$html .= '<select ' . $original_name . $multiple . $id_attr_responce . $name_attr_responce . $class_attr_responce . $data_attr . $disabled . '>';
+					$html .= '<select ' . $original_name . $multiple . $name_attr_responce . $class_attr_responce . $data_attr . $disabled . '>';
 					if ( ! empty( $entities ) ) {
 						if ( 'site' !== $entity_key ) {
 							foreach ( $entities as $value ) {
@@ -1995,20 +1997,22 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					$html .= '</div>';
 				}
 			} else {
-				$html .= '<div class="um-entities-conditions-row">';
-				$html .= '<select ' . $original_name . $class_attr . $id_attr . $name_attr . $data_attr . '>';
-				$html .= '<option value="none">' . __( 'Select entity', 'ultimate-member' ) . '</option>';
-				foreach ( $scope as $key => $label ) {
-					$html .= '<option value="' . $key . '">' . $label . '</option>';
+				if ( 'um_restriction_rule_content__um_include' === $id ) {
+					$html .= '<div class="um-entities-conditions-row">';
+					$html .= '<select ' . $original_name . $class_attr . $name_attr . $data_attr . '>';
+					$html .= '<option value="none">' . __( 'Select entity', 'ultimate-member' ) . '</option>';
+					foreach ( $scope as $key => $label ) {
+						$html .= '<option value="' . $key . '">' . $label . '</option>';
+					}
+					$html .= '</select>';
+
+					$html .= '<select ' . $original_name . $name_attr . $class_attr_responce . $data_attr . '>';
+					$html .= '<option value="0"></option>';
+					$html .= '</select>';
+
+					$html .= '<button disabled title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="um-conditions-row-action remove-row button">-</button>';
+					$html .= '</div>';
 				}
-				$html .= '</select>';
-
-				$html .= '<select ' . $original_name . $id_attr_responce . $name_attr . $class_attr_responce . $data_attr . '>';
-				$html .= '<option value="0"></option>';
-				$html .= '</select>';
-
-				$html .= '<button disabled title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="um-conditions-row-action remove-row button">-</button>';
-				$html .= '</div>';
 			}
 			$html .= '</div>';
 
