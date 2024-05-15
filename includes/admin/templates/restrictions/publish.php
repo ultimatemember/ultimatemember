@@ -20,14 +20,6 @@ $rule = $object['data']; ?>
 			'prefix_id' => 'um_restriction_rules',
 			'fields'    => array(
 				array(
-					'id'      => '_um_priority',
-					'type'    => 'number',
-					'min'     => 0,
-					'label'   => __( 'Rule Priority', 'ultimate-member' ),
-					'tooltip' => __( 'The higher the number, the higher the priority', 'ultimate-member' ),
-					'value'   => ! empty( $rule['_um_priority'] ) ? $rule['_um_priority'] : '',
-				),
-				array(
 					'id'      => '_um_status',
 					'type'    => 'select',
 					'options' => array(

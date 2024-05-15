@@ -36,6 +36,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Ajax_Hooks' ) ) {
 
 			add_action( 'wp_ajax_um_registered_entities_conditions', array( UM()->fields(), 'registered_entities_conditions' ) );
 			add_action( 'wp_ajax_um_registered_users_conditions', array( UM()->fields(), 'registered_users_conditions' ) );
+			add_action( 'wp_ajax_um_restriction_rules_order', array( UM()->dragdrop(), 'um_restriction_rules_order' ) );
 		}
 
 	}

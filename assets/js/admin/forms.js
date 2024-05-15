@@ -1446,4 +1446,32 @@ jQuery(document).ready( function() {
 
 		wrapper.find( '.um-conditions-row-action' ).removeAttr( 'disabled' );
 	});
+
+	jQuery( '#um-restriction-rules #the-list' ).sortable({
+		update: function( event, ui ) {
+			var indexes = {};
+
+			jQuery( '#um-restriction-rules #the-list tr' ).each( function( index ) {
+				var id        = jQuery( this ).find( '.check-column input' ).val();
+				indexes[ id ] = index;
+			});
+			jQuery.ajax(
+				{
+					url: wp.ajax.settings.url,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						action: 'um_restriction_rules_order',
+						nonce: um_admin_scripts.nonce,
+						indexes: indexes
+					},
+					success: function( response ) {
+					},
+					error: function( error ) {
+						console.log( error )
+					}
+				}
+			);
+		}
+	});
 });

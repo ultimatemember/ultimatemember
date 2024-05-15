@@ -325,14 +325,6 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 	/**
 	 * @param $item
 	 */
-	public function column_priority( $item ) {
-		echo ! empty( $item['_um_priority'] ) ? absint( $item['_um_priority'] ) : '-';
-	}
-
-
-	/**
-	 * @param $item
-	 */
 	public function column_status( $item ) {
 		echo 'active' === $item['_um_status'] ? esc_html__( 'Active', 'ultimate-member' ) : esc_html__( 'Inactive', 'ultimate-member' );
 	}
@@ -480,7 +472,7 @@ $list_table = new UM_Restrictions_List_Table(
 	)
 );
 
-$restriction_per_page = 20;
+$restriction_per_page = 9999999;
 $restriction_paged    = $list_table->get_pagenum();
 
 $list_table->set_bulk_actions(
@@ -498,36 +490,17 @@ $list_table->set_columns(
 		'entities' => __( 'Entities', 'ultimate-member' ),
 		'rules'    => __( 'Rules', 'ultimate-member' ),
 		'action'   => __( 'Action', 'ultimate-member' ),
-		'priority' => __( 'Priority', 'ultimate-member' ),
-	)
-);
-
-$list_table->set_sortable_columns(
-	array(
-		'title' => 'title',
 	)
 );
 
 $rules = get_option( 'um_restriction_rules', array() );
+usort(
+	$rules,
+	function( $a, $b ) {
+		return $a['_um_priority'] - $b['_um_priority'];
+	}
+);
 
-switch ( strtolower( $order ) ) {
-	case 'asc':
-		uasort(
-			$rules,
-			function( $a, $b ) {
-				return strnatcmp( $a['title'], $b['title'] );
-			}
-		);
-		break;
-	case 'desc':
-		uasort(
-			$rules,
-			function( $a, $b ) {
-				return strnatcmp( $a['title'], $b['title'] ) * -1;
-			}
-		);
-		break;
-}
 
 $list_table->prepare_items();
 $list_table->items = array_slice( $rules, ( $restriction_paged - 1 ) * $restriction_per_page, $restriction_per_page );
@@ -562,7 +535,7 @@ $url_args = array(
 	}
 	?>
 
-	<form action="" method="get" name="um-roles" id="um-roles" style="float: left;margin-right: 10px;">
+	<form action="" method="get" name="um-restriction-rules" id="um-restriction-rules" style="float: left;margin-right: 10px;">
 		<input type="hidden" name="page" value="um_restriction_rules" />
 		<?php $list_table->display(); ?>
 	</form>

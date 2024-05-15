@@ -142,11 +142,13 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 		}
 
 		if ( '' === $rule_error ) {
-			$rules      = get_option( 'um_restriction_rules', array() );
-			$update     = true;
-			$data['id'] = $restriction_id;
+			$rules       = get_option( 'um_restriction_rules', array() );
+			$rules_count = count( $rules );
+			$update      = true;
+			$data['id']  = $restriction_id;
 
 			if ( 'add' === sanitize_key( $_GET['tab'] ) ) {
+				$data['_um_priority']     = $rules_count;
 				$rules[ $restriction_id ] = $data;
 
 				if ( isset( $auto_increment ) ) {

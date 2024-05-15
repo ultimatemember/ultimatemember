@@ -2105,11 +2105,32 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$original_name = ' data-original="' . $name . '[' . $field_data_id . ']" ';
 
-			$scope       = array(
+			$scope = array(
 				'none' => __( 'Select rule object', 'ultimate-member' ),
 				'user' => __( 'User', 'ultimate-member' ),
 				'role' => __( 'User Role', 'ultimate-member' ),
 			);
+
+			/**
+			 * Filters Ultimate Member users scope.
+			 *
+			 * @param {array} $scope    Users scope.
+			 *
+			 * @return {array} Users scope.
+			 *
+			 * @since 2.8.x
+			 * @hook um_users_conditions_scope
+			 *
+			 * @example <caption>Remove user role</caption>
+			 * function my_um_entities_conditions_scope( $scope ) {
+			 *     // your code here
+			 *     unset( $scope['role'] );
+			 *     return $scope;
+			 * }
+			 * add_filter( 'um_users_conditions_scope', 'my_um_users_conditions_scope', 10, 1 );
+			 */
+			$scope = apply_filters( 'um_users_conditions_scope', $scope );
+
 			$scope_count = count( $scope );
 
 			$compare = array(
