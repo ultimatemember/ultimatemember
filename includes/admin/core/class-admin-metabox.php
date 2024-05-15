@@ -1055,7 +1055,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			$rules_metaboxes = array(
 				array(
 					'id'       => 'um-admin-form-rules',
-					'title'    => __( 'Restriction Rules Settings', 'ultimate-member' ),
+					'title'    => __( 'Access', 'ultimate-member' ),
 					'callback' => $callback,
 					'screen'   => 'um_restriction_rule_meta',
 					'context'  => 'normal',
@@ -1063,7 +1063,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				),
 				array(
 					'id'       => 'um-admin-form-entities',
-					'title'    => __( 'Restricted Entities', 'ultimate-member' ),
+					'title'    => __( 'Content', 'ultimate-member' ),
 					'callback' => $callback,
 					'screen'   => 'um_restriction_rule_meta',
 					'context'  => 'normal',
