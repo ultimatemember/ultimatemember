@@ -21,6 +21,7 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		 */
 		public function includes() {
 			$this->enqueue();
+			$this->modal();
 			$this->secure();
 		}
 
@@ -35,6 +36,19 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 			}
 
 			return UM()->classes['um\frontend\enqueue'];
+		}
+
+		/**
+		 * @since 2.8.6
+		 *
+		 * @return Modal
+		 */
+		public function modal() {
+			if ( empty( UM()->classes['um\frontend\modal'] ) ) {
+				UM()->classes['um\frontend\modal'] = new Modal();
+			}
+
+			return UM()->classes['um\frontend\modal'];
 		}
 
 		/**

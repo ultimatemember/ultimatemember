@@ -1,5 +1,36 @@
 ﻿== Changelog ==
 
+= 2.8.6 May 22, 2024 =
+
+* Enhancements:
+
+  - Added: Member Directory > Admin Filtering supports datepicker and timepicker filter-types with only "From" or "To" filled value
+  - Added: Ability to customize modal templates upload-single.php and view-photo.php
+  - Added: New FontAwesome library. Version 6.5.2
+
+* Bugfixes:
+
+  - Fixed: Using HTML in the block restriction message. Replaced escaper to wp_kses sanitize while saving
+  - Fixed: Getting user capabilities without role
+  - Fixed: YouTube validation when field value is empty
+  - Fixed: Social URLs sanitizing where user can put his social username (e.g. Instagram, Facebook)
+  - Fixed: Using only published forms and member directories IDs on predefined pages installation
+  - Fixed: Member Directory before query hook when custom meta table is active
+  - Fixed: Unique email validation
+  - Fixed: Displaying asterisk on the Profile > View Mode
+  - Fixed: PHP errors while upgrade from 1.3.x version
+  - Fixed: Rating field view
+  - Fixed: Sorting by last login value when "Hide my last login" is set
+  - Fixed: PHP errors while uploading files
+  - Fixed: Parsing error on the license activation
+
+* Templates required update:
+
+  - Renamed templates/modal/um_upload_single.php → templates/modal/upload-single.php
+  - Renamed templates/modal/um_view_photo.php → templates/modal/view-photo.php
+
+* Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade
+
 = 2.8.5: April 9, 2024 =
 
 * Enhancements:

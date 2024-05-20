@@ -97,13 +97,8 @@ KEY meta_value_indx (um_value(191))
 
 						$form_id = wp_insert_post( $form );
 
-						foreach ( UM()->config()->core_form_meta[ $id ] as $key => $value ) {
-							if ( '_um_custom_fields' === $key ) {
-								$array = maybe_unserialize( $value );
-								update_post_meta( $form_id, $key, $array );
-							} else {
-								update_post_meta( $form_id, $key, $value );
-							}
+						foreach ( UM()->config()->core_form_meta[ $id ] as $meta_key => $meta_value ) {
+							update_post_meta( $form_id, $meta_key, $meta_value );
 						}
 
 						$core_forms[ $id ] = $form_id;
@@ -132,13 +127,8 @@ KEY meta_value_indx (um_value(191))
 
 						$form_id = wp_insert_post( $form );
 
-						foreach ( UM()->config()->core_directory_meta[ $id ] as $key => $value ) {
-							if ( '_um_custom_fields' === $key ) {
-								$array = maybe_unserialize( $value );
-								update_post_meta( $form_id, $key, $array );
-							} else {
-								update_post_meta( $form_id, $key, $value );
-							}
+						foreach ( UM()->config()->core_directory_meta[ $id ] as $meta_key => $meta_value ) {
+							update_post_meta( $form_id, $meta_key, $meta_value );
 						}
 
 						$core_directories[ $id ] = $form_id;
@@ -350,6 +340,50 @@ KEY meta_value_indx (um_value(191))
 
 			foreach ( $result as $user_id ) {
 				update_user_meta( $user_id, 'account_status', 'approved' );
+			}
+		}
+
+		/**
+		 *
+		 */
+		public function set_icons_options() {
+			$fa_version    = get_option( 'um_fa_version' );
+			$um_icons_list = get_option( 'um_icons_list' );
+
+			if ( empty( $um_icons_list ) || UM()->admin()->enqueue()::$fa_version !== $fa_version ) {
+				update_option( 'um_fa_version', UM()->admin()->enqueue()::$fa_version, false );
+
+				$common_icons = array();
+
+				$icons = file_get_contents( UM_PATH . 'assets/libs/fontawesome/metadata/icons.json' );
+				$icons = json_decode( $icons );
+
+				foreach ( $icons as $key => $data ) {
+					if ( ! isset( $data->styles ) ) {
+						continue;
+					}
+
+					foreach ( $data->styles as $style ) {
+						$style_class = '';
+						if ( 'solid' === $style ) {
+							$style_class = 'fas fa-';
+						} elseif ( 'regular' === $style ) {
+							$style_class = 'far fa-';
+						} elseif ( 'brands' === $style ) {
+							$style_class = 'fab fa-';
+						}
+
+						$label  = count( $data->styles ) > 1 ? $data->label . ' (' . $style . ')' : $data->label;
+						$search = array_unique( array_merge( $data->search->terms, array( $key, strtolower( $data->label ) ) ) );
+
+						$common_icons[ $style_class . $key ] = array(
+							'label'  => $label,
+							'search' => $search,
+						);
+					}
+				}
+
+				update_option( 'um_icons_list', $common_icons, false );
 			}
 		}
 	}

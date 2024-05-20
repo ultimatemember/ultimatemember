@@ -237,8 +237,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * can be disabled by "Enable Members Directory" option
 		 *
 		 */
-		function access_members() {
-			if ( UM()->options()->get( 'members_page' ) == 0 && um_is_core_page( 'members' ) ) {
+		public function access_members() {
+			if ( um_is_predefined_page( 'members' ) && ! UM()->options()->get( 'members_page' ) ) {
 				um_redirect_home();
 			}
 		}
@@ -252,97 +252,107 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * @return array
 		 */
 		public function before_save_data( $value, $key, $post_id ) {
-
 			$post = get_post( $post_id );
 
-			if ( 'um_directory' === $post->post_type ) {
+			if ( 'um_directory' !== $post->post_type ) {
+				return $value;
+			}
 
-				if ( ! empty( $value ) && in_array( $key, array( '_um_view_types', '_um_roles', '_um_roles_can_search', '_um_roles_can_filter' ), true ) ) {
-					$value = array_keys( $value );
-				} elseif ( '_um_search_filters' === $key ) {
-					$temp_value = array();
+			if ( ! empty( $value ) && in_array( $key, array( '_um_view_types', '_um_roles', '_um_roles_can_search', '_um_roles_can_filter' ), true ) ) {
+				$value = array_keys( $value );
+			} elseif ( '_um_search_filters' === $key ) {
+				$temp_value = array();
 
-					if ( ! empty( $value ) ) {
-						foreach ( $value as $k ) {
-							$filter_type = $this->filter_types[ $k ];
-							if ( ! empty( $filter_type ) ) {
-								if ( 'slider' === $filter_type ) {
-									if ( ! empty( $_POST[ $k ] ) ) {
-										if ( count( $_POST[ $k ] ) > 1 ) {
-											$temp_value[ $k ] = array_map( 'intval', $_POST[ $k ] );
-										} else {
-											$temp_value[ $k ] = (int) $_POST[ $k ];
-										}
+				// phpcs:disable WordPress.Security.NonceVerification -- already verified here
+				if ( ! empty( $value ) ) {
+					foreach ( $value as $k ) {
+						$filter_type = $this->filter_types[ $k ];
+						if ( ! empty( $filter_type ) ) {
+							if ( 'slider' === $filter_type ) {
+								if ( ! empty( $_POST[ $k ] ) ) {
+									if ( count( $_POST[ $k ] ) > 1 ) {
+										$temp_value[ $k ] = array_map( 'intval', $_POST[ $k ] );
+									} else {
+										$temp_value[ $k ] = (int) $_POST[ $k ];
 									}
-								} elseif ( 'timepicker' === $filter_type || 'datepicker' === $filter_type ) {
-									if ( ! empty( $_POST[ $k . '_from' ] ) && ! empty( $_POST[ $k . '_to' ] ) ) {
-										$temp_value[ $k ] = array(
-											sanitize_text_field( $_POST[ $k . '_from' ] ),
-											sanitize_text_field( $_POST[ $k . '_to' ] ),
-										);
+								}
+							} elseif ( 'datepicker' === $filter_type ) {
+								if ( ! empty( $_POST[ $k . '_from' ] ) ) {
+									$temp_value[ $k ][0] = sanitize_text_field( $_POST[ $k . '_from' ] );
+								}
+								if ( ! empty( $_POST[ $k . '_to' ] ) ) {
+									$temp_value[ $k ][1] = sanitize_text_field( $_POST[ $k . '_to' ] );
+								}
+							} elseif ( 'timepicker' === $filter_type ) {
+								if ( ! empty( $_POST[ $k . '_from' ] ) ) {
+									$temp_value[ $k ][0] = sanitize_text_field( $_POST[ $k . '_from' ] );
+								}
+								if ( ! empty( $_POST[ $k . '_to' ] ) ) {
+									$temp_value[ $k ][1] = sanitize_text_field( $_POST[ $k . '_to' ] );
+								}
+							} elseif ( 'select' === $filter_type ) {
+								if ( ! empty( $_POST[ $k ] ) ) {
+									if ( is_array( $_POST[ $k ] ) ) {
+										$temp_value[ $k ] = array_map( 'trim', $_POST[ $k ] );
+									} else {
+										$temp_value[ $k ] = array( trim( $_POST[ $k ] ) );
 									}
-								} elseif ( 'select' === $filter_type ) {
-									if ( ! empty( $_POST[ $k ] ) ) {
-										if ( is_array( $_POST[ $k ] ) ) {
-											$temp_value[ $k ] = array_map( 'trim', $_POST[ $k ] );
-										} else {
-											$temp_value[ $k ] = array( trim( $_POST[ $k ] ) );
-										}
 
-										$temp_value[ $k ] = array_map( 'sanitize_text_field', $temp_value[ $k ] );
-									}
-								} else {
-									if ( ! empty( $_POST[ $k ] ) ) {
-										$temp_value[ $k ] = trim( sanitize_text_field( $_POST[ $k ] ) );
-									}
+									$temp_value[ $k ] = array_map( 'sanitize_text_field', $temp_value[ $k ] );
+								}
+							} else {
+								if ( ! empty( $_POST[ $k ] ) ) {
+									$temp_value[ $k ] = trim( sanitize_text_field( $_POST[ $k ] ) );
 								}
 							}
 						}
 					}
-
-					$value = $temp_value;
-				} elseif ( '_um_sorting_fields' === $key ) {
-					if ( ! empty( $value['other_data'] ) ) {
-						$other_data = $value['other_data'];
-						unset( $value['other_data'] );
-
-						foreach ( $value as $k => &$row ) {
-							if ( ! empty( $other_data[ $k ]['meta_key'] ) ) {
-								$metakey = sanitize_text_field( $other_data[ $k ]['meta_key'] );
-								if ( ! empty( $metakey ) ) {
-									if ( ! empty( $other_data[ $k ]['label'] ) ) {
-										$metalabel = wp_strip_all_tags( $other_data[ $k ]['label'] );
-									}
-									if ( ! empty( $other_data[ $k ]['data_type'] ) ) {
-										$data_type = sanitize_text_field( $other_data[ $k ]['data_type'] );
-									}
-									if ( ! empty( $other_data[ $k ]['order'] ) ) {
-										$order = sanitize_text_field( $other_data[ $k ]['order'] );
-									}
-									$row = array(
-										$metakey => $metakey,
-										'label'  => ! empty( $metalabel ) ? $metalabel : $metakey,
-										'type'   => ! empty( $data_type ) ? $data_type : '',
-										'order'  => ! empty( $order ) ? $order : '',
-									);
-								}
-							}
-						}
-					}
-				} elseif ( '_um_sortby_custom' === $key ) {
-					$value = sanitize_text_field( $value );
-				} elseif ( '_um_sortby_custom_label' === $key ) {
-					$value = wp_strip_all_tags( $value );
-				} elseif ( '_um_sortby_custom_type' === $key ) {
-					$value = sanitize_text_field( $value );
-				} elseif ( '_um_sortby_custom_order' === $key ) {
-					$value = sanitize_text_field( $value );
 				}
+
+				$value = $temp_value;
+
+				// phpcs:enable WordPress.Security.NonceVerification -- already verified here
+			} elseif ( '_um_sorting_fields' === $key ) {
+				if ( ! empty( $value['other_data'] ) ) {
+					$other_data = $value['other_data'];
+					unset( $value['other_data'] );
+
+					foreach ( $value as $k => &$row ) {
+						if ( ! empty( $other_data[ $k ]['meta_key'] ) ) {
+							$metakey = sanitize_text_field( $other_data[ $k ]['meta_key'] );
+							if ( ! empty( $metakey ) ) {
+								if ( ! empty( $other_data[ $k ]['label'] ) ) {
+									$metalabel = wp_strip_all_tags( $other_data[ $k ]['label'] );
+								}
+								if ( ! empty( $other_data[ $k ]['data_type'] ) ) {
+									$data_type = sanitize_text_field( $other_data[ $k ]['data_type'] );
+								}
+								if ( ! empty( $other_data[ $k ]['order'] ) ) {
+									$order = sanitize_text_field( $other_data[ $k ]['order'] );
+								}
+								$row = array(
+									$metakey => $metakey,
+									'label'  => ! empty( $metalabel ) ? $metalabel : $metakey,
+									'type'   => ! empty( $data_type ) ? $data_type : '',
+									'order'  => ! empty( $order ) ? $order : '',
+								);
+							}
+						}
+					}
+					unset( $row );
+				}
+			} elseif ( '_um_sortby_custom' === $key ) {
+				$value = sanitize_text_field( $value );
+			} elseif ( '_um_sortby_custom_label' === $key ) {
+				$value = wp_strip_all_tags( $value );
+			} elseif ( '_um_sortby_custom_type' === $key ) {
+				$value = sanitize_text_field( $value );
+			} elseif ( '_um_sortby_custom_order' === $key ) {
+				$value = sanitize_text_field( $value );
 			}
 
 			return $value;
 		}
-
 
 		/**
 		 *
@@ -553,19 +563,19 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 *
 		 * @return string $filter
 		 */
-		function show_filter( $filter, $directory_data, $default_value = false, $admin = false ) {
+		public function show_filter( $filter, $directory_data, $default_value = false, $admin = false ) {
 
 			if ( empty( $this->filter_types[ $filter ] ) ) {
 				return '';
 			}
 
-			if ( $default_value === false ) {
+			if ( false === $default_value ) {
 				$default_filters = array();
 				if ( ! empty( $directory_data['search_filters'] ) ) {
 					$default_filters = maybe_unserialize( $directory_data['search_filters'] );
 				}
 
-				if ( ! empty( $default_filters[ $filter ] ) && $this->filter_types[ $filter ] != 'select' ) {
+				if ( ! empty( $default_filters[ $filter ] ) && 'select' !== $this->filter_types[ $filter ] ) {
 					return '';
 				}
 			}
@@ -639,28 +649,29 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			ob_start();
 
 			switch ( $this->filter_types[ $filter ] ) {
-				default: {
-
+				default:
 					do_action( "um_member_directory_filter_type_{$this->filter_types[ $filter ]}", $filter, $directory_data, $unique_hash, $attrs, $default_value );
-
 					break;
-				}
-				case 'text': {
+
+				case 'text':
 					$label = '';
 					if ( isset( $attrs['label'] ) ) {
 						$label = $attrs['label'];
-					} elseif ( ! isset( $attrs['label'] ) && isset( $attrs['title'] ) ) {
+					} elseif ( isset( $attrs['title'] ) ) {
 						$label = $attrs['title'];
 					}
 
-					$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) : $default_value; ?>
-						<input type="text" autocomplete="off" id="<?php echo $filter; ?>" name="<?php echo $filter; ?>"
-						   placeholder="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
-								  value="<?php echo esc_attr( $filter_from_url ) ?>" class="um-form-field"
-							   aria-label="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>" />
+					$label = stripslashes( $label );
+
+					$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) : $default_value;
+					?>
+					<input type="text" autocomplete="off" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?>"
+						placeholder="<?php echo esc_attr( $label ); ?>"
+						value="<?php echo esc_attr( $filter_from_url ); ?>" class="um-form-field"
+						aria-label="<?php echo esc_attr( $label ); ?>" />
 					<?php
 					break;
-				}
+
 				case 'select': {
 
 					// getting value from GET line
@@ -859,32 +870,44 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$range = $this->datepicker_filters_range( $filter );
 
 					$label = ! empty( $attrs['label'] ) ? $attrs['label'] : $attrs['title'];
+					$label = stripslashes( $label );
+
+					$default_value_min = '';
+					$default_value_max = '';
+					if ( ! empty( $default_value[0] ) ) {
+						$default_value_min = $default_value[0];
+					}
+					if ( ! empty( $default_value[1] ) ) {
+						$default_value_max = $default_value[1];
+					}
 
 					if ( $range ) {
-						$min = $range[0];
-						$max = $range[1];
+						list( $min, $max ) = $range;
 						?>
-						<input type="text" id="<?php echo $filter; ?>_from" name="<?php echo $filter; ?>_from" class="um-datepicker-filter"
-							   placeholder="<?php esc_attr_e( sprintf( '%s From', stripslashes( $label ) ), 'ultimate-member' ); ?>"
-							   data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
-							   data-date_min="<?php echo esc_attr( $min ); ?>" data-date_max="<?php echo esc_attr( $max ); ?>"
-							   data-filter_name="<?php echo $filter; ?>" data-range="from" data-value="<?php echo ! empty( $default_value ) ? esc_attr( strtotime( min( $default_value ) ) ) : '' ?>" />
-						<input type="text" id="<?php echo $filter; ?>_to" name="<?php echo $filter; ?>_to" class="um-datepicker-filter"
-							   placeholder="<?php esc_attr_e( sprintf( '%s To', stripslashes( $label ) ), 'ultimate-member' ); ?>"
-							   data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
-							   data-date_min="<?php echo esc_attr( $min ); ?>" data-date_max="<?php echo esc_attr( $max ); ?>"
-							   data-filter_name="<?php echo $filter; ?>" data-range="to" data-value="<?php echo ! empty( $default_value ) ? esc_attr( strtotime( max( $default_value ) ) ) : '' ?>" />
+						<input type="text" id="<?php echo esc_attr( $filter ); ?>_from" name="<?php echo esc_attr( $filter ); ?>_from" class="um-datepicker-filter"
+							<?php // translators: %s: Datetime filter label. ?>
+							placeholder="<?php echo esc_attr( sprintf( __( '%s From', 'ultimate-member' ), $label ) ); ?>"
+							data-filter-label="<?php echo esc_attr( $label ); ?>"
+							data-date_min="<?php echo esc_attr( $min ); ?>" data-date_max="<?php echo esc_attr( $max ); ?>"
+							data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="from" data-value="<?php echo ! empty( $default_value_min ) ? esc_attr( strtotime( $default_value_min ) ) : ''; ?>" />
+						<input type="text" id="<?php echo esc_attr( $filter ); ?>_to" name="<?php echo esc_attr( $filter ); ?>_to" class="um-datepicker-filter"
+							<?php // translators: %s: Datetime filter label. ?>
+							placeholder="<?php echo esc_attr( sprintf( __( '%s To', 'ultimate-member' ), $label ) ); ?>"
+							data-filter-label="<?php echo esc_attr( $label ); ?>"
+							data-date_min="<?php echo esc_attr( $min ); ?>" data-date_max="<?php echo esc_attr( $max ); ?>"
+							data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="to" data-value="<?php echo ! empty( $default_value_max ) ? esc_attr( strtotime( $default_value_max ) ) : ''; ?>" />
 						<?php
 					}
 					break;
-				case 'timepicker': {
-
+				case 'timepicker':
 					$range = $this->timepicker_filters_range( $filter );
 
 					$label = ! empty( $attrs['label'] ) ? $attrs['label'] : $attrs['title'];
+					$label = stripslashes( $label );
 
 					switch ( $attrs['format'] ) {
 						case 'g:i a':
+						default:
 							$js_format = 'h:i a';
 							break;
 						case 'g:i A':
@@ -895,25 +918,35 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							break;
 					}
 
-					if ( $range ) { ?>
+					$default_value_min = '';
+					$default_value_max = '';
+					if ( ! empty( $default_value[0] ) ) {
+						$default_value_min = $default_value[0];
+					}
+					if ( ! empty( $default_value[1] ) ) {
+						$default_value_max = $default_value[1];
+					}
 
-						<input type="text" id="<?php echo $filter; ?>_from" name="<?php echo $filter; ?>_from" class="um-timepicker-filter"
-							   placeholder="<?php esc_attr_e( sprintf( '%s From', stripslashes( $label ) ), 'ultimate-member' ); ?>"
-							   data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
-							   data-min="<?php echo $range[0] ?>" data-max="<?php echo $range[1] ?>"
-							   data-format="<?php echo esc_attr( $js_format ) ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ) ?>"
-							   data-filter_name="<?php echo $filter; ?>" data-range="from" />
-						<input type="text" id="<?php echo $filter; ?>_to" name="<?php echo $filter; ?>_to" class="um-timepicker-filter"
-							   placeholder="<?php esc_attr_e( sprintf( '%s To', stripslashes( $label ) ), 'ultimate-member' ); ?>"
-							   data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
-							   data-min="<?php echo $range[0] ?>" data-max="<?php echo $range[1] ?>"
-							   data-format="<?php echo esc_attr( $js_format ) ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ) ?>"
-							   data-filter_name="<?php echo $filter; ?>" data-range="to" />
-
-					<?php }
+					if ( $range ) {
+						?>
+						<input type="text" id="<?php echo esc_attr( $filter ); ?>_from" name="<?php echo esc_attr( $filter ); ?>_from" class="um-timepicker-filter"
+							<?php // translators: %s: Timepicker filter label. ?>
+							placeholder="<?php echo esc_attr( sprintf( __( '%s From', 'ultimate-member' ), $label ) ); ?>"
+							data-filter-label="<?php echo esc_attr( $label ); ?>"
+							data-min="<?php echo esc_attr( $range[0] ); ?>" data-max="<?php echo esc_attr( $range[1] ); ?>"
+							data-format="<?php echo esc_attr( $js_format ); ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ); ?>"
+							data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="from" data-value="<?php echo ! empty( $default_value_min ) ? esc_attr( $default_value_min ) : ''; ?>" />
+						<input type="text" id="<?php echo esc_attr( $filter ); ?>_to" name="<?php echo esc_attr( $filter ); ?>_to" class="um-timepicker-filter"
+							<?php // translators: %s: Timepicker filter label. ?>
+							placeholder="<?php echo esc_attr( sprintf( __( '%s To', 'ultimate-member' ), $label ) ); ?>"
+							data-filter-label="<?php echo esc_attr( $label ); ?>"
+							data-min="<?php echo esc_attr( $range[0] ); ?>" data-max="<?php echo esc_attr( $range[1] ); ?>"
+							data-format="<?php echo esc_attr( $js_format ); ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ); ?>"
+							data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="to" data-value="<?php echo ! empty( $default_value_max ) ? esc_attr( $default_value_max ) : ''; ?>" />
+						<?php
+					}
 
 					break;
-				}
 			}
 
 			$filter = ob_get_clean();
@@ -1102,37 +1135,28 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 *
 		 * @return mixed
 		 */
-		function timepicker_filters_range( $filter ) {
+		protected function timepicker_filters_range( $filter ) {
+			global $wpdb;
+			$meta = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT DISTINCT meta_value
+					FROM {$wpdb->usermeta}
+					WHERE meta_key = %s
+					ORDER BY meta_value DESC",
+					$filter
+				)
+			);
 
-			switch ( $filter ) {
+			$meta = array_filter( $meta );
 
-				default: {
-
-					global $wpdb;
-					$meta = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT meta_value
-						FROM {$wpdb->usermeta}
-						WHERE meta_key = %s
-						ORDER BY meta_value DESC", $filter ) );
-
-					$meta = array_filter( $meta );
-
-					if ( empty( $meta ) || count( $meta ) === 1 ) {
-						$range = false;
-					} elseif ( ! empty( $meta ) ) {
-						$range = array( min( $meta ), max( $meta ) );
-					}
-
-
-					$range = apply_filters( "um_member_directory_filter_{$filter}_timepicker", $range );
-
-					break;
-				}
-
+			if ( empty( $meta ) || count( $meta ) === 1 ) {
+				$range = false;
+			} elseif ( ! empty( $meta ) ) {
+				$range = array( min( $meta ), max( $meta ) );
 			}
 
-			return $range;
+			return apply_filters( "um_member_directory_filter_{$filter}_timepicker", $range );
 		}
-
 
 		/**
 		 * @param $borndate
@@ -1439,7 +1463,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				unset( $this->query_args['order'] );
 
 			} elseif ( 'last_login' === $sortby ) {
-				$this->query_args['orderby']      = array( 'um_last_login' => 'DESC' );
+				$this->query_args['orderby'] = array( 'um_last_login' => 'DESC' );
+				// Please use custom meta table for better results and sorting. Here we only hide the users without visible last login date.
 				$this->query_args['meta_query'][] = array(
 					'relation'      => 'OR',
 					array(
@@ -1454,6 +1479,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					),
 				);
 				unset( $this->query_args['order'] );
+
+				add_filter( 'pre_user_query', array( &$this, 'sortby_last_login' ) );
 			} elseif ( $sortby == 'last_first_name' ) {
 
 				$this->query_args['meta_query'][] = array(
@@ -1651,6 +1678,24 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				$query->query_orderby = 'ORDER by RAND(' . $seed . ')';
 			}
 
+			return $query;
+		}
+
+
+		/**
+		 * Sorting by last login
+		 *
+		 * @param object $query
+		 *
+		 * @return mixed
+		 */
+		public function sortby_last_login( $query ) {
+			if ( array_key_exists( 'um_last_login', $query->query_vars['orderby'] ) ) {
+				global $wpdb;
+				$query->query_from   .= " LEFT JOIN {$wpdb->prefix}usermeta AS umm_sort ON ( umm_sort.user_id = {$wpdb->prefix}users.ID AND umm_sort.meta_key = '_um_last_login' ) ";
+				$query->query_from   .= " LEFT JOIN {$wpdb->prefix}usermeta AS umm_show_login ON ( umm_show_login.user_id = {$wpdb->prefix}users.ID AND umm_show_login.meta_key = 'um_show_last_login' ) ";
+				$query->query_orderby = " ORDER BY CASE ISNULL(NULLIF(umm_show_login.meta_value,'a:1:{i:0;s:3:\"yes\";}')) WHEN 0 THEN '1970-01-01 00:00:00' ELSE CAST( umm_sort.meta_value AS DATETIME ) END DESC ";
+			}
 			return $query;
 		}
 
@@ -2193,7 +2238,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 *
 		 * @param $directory_data
 		 */
-		function default_filters( $directory_data ) {
+		public function default_filters( $directory_data ) {
 			$default_filters = array();
 			if ( ! empty( $directory_data['search_filters'] ) ) {
 				$default_filters = maybe_unserialize( $directory_data['search_filters'] );
@@ -2209,7 +2254,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 				switch ( $field ) {
 					default:
-
 						$filter_type = $this->filter_types[ $field ];
 
 						/**
@@ -2239,19 +2283,15 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 							switch ( $filter_type ) {
 								default:
-
 									$field_query = apply_filters( "um_query_args_{$field}_{$filter_type}__filter", false, $field, $value, $filter_type );
-
 									break;
 
 								case 'text':
-
 									$field_query = array(
-										'key'       => $field,
-										'value'     => $value,
-										'compare'   => apply_filters( 'um_members_directory_filter_text', '=', $field ),
+										'key'     => $field,
+										'value'   => $value,
+										'compare' => apply_filters( 'um_members_directory_filter_text', '=', $field ),
 									);
-
 									break;
 
 								case 'select':
@@ -2298,38 +2338,61 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 									break;
 								case 'slider':
-
 									$field_query = array(
 										'key'       => $field,
 										'value'     => $value,
 										'compare'   => 'BETWEEN',
 										'inclusive' => true,
 									);
-
 									break;
-								case 'datepicker':
 
+								case 'datepicker':
 									$offset = 0;
 									if ( is_numeric( $gmt_offset ) ) {
 										$offset = $gmt_offset;
 									}
 
-									$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
-									$to_date   = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
+									if ( ! empty( $value[0] ) ) {
+										$min = $value[0];
+									} else {
+										$range = $this->datepicker_filters_range( $field );
+										$min   = strtotime( gmdate( 'Y/m/d', $range[0] ) );
+									}
+									if ( ! empty( $value[1] ) ) {
+										$max = $value[1];
+									} else {
+										$max = strtotime( gmdate( 'Y/m/d' ) );
+									}
+
+									$from_date = (int) $min + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
+									$to_date   = (int) $max + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
+
 									$field_query = array(
 										'key'       => $field,
-										'value'     =>  array( $from_date, $to_date ),
+										'value'     => array( $from_date, $to_date ),
 										'compare'   => 'BETWEEN',
 										'inclusive' => true,
 									);
 
 									break;
 								case 'timepicker':
+									if ( ! empty( $value[0] ) ) {
+										$value[0] = $value[0] . ':00';
+									} else {
+										$range    = $this->timepicker_filters_range( $field );
+										$value[0] = $range[0] . ':00';
+									}
+									if ( ! empty( $value[1] ) ) {
+										$value[1] = $value[1] . ':00';
+									} else {
+										$range    = $this->timepicker_filters_range( $field );
+										$value[1] = $range[1] . ':00';
+									}
 
-									if ( $value[0] == $value[1] ) {
+									if ( $value[0] === $value[1] ) {
 										$field_query = array(
-											'key'       => $field,
-											'value'     => $value[0],
+											'key'   => $field,
+											'value' => $value[0],
 										);
 									} else {
 										$field_query = array(
@@ -2340,10 +2403,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 											'inclusive' => true,
 										);
 									}
-
 									break;
 							}
-
 						}
 
 						if ( ! empty( $field_query ) && $field_query !== true ) {
@@ -2366,12 +2427,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							$this->query_args['role__in'] = array_merge( $default_role, $um_role );
 						} else {
 							$this->query_args['role__in'] = $value;
-						};
+						}
 
 						break;
 					case 'birth_date':
 						$from_date = date( 'Y/m/d', mktime( 0,0,0, date( 'm', time() ), date( 'd', time() ), date( 'Y', time() - min( $value ) * YEAR_IN_SECONDS ) ) );
-						$to_date = date( 'Y/m/d', mktime( 0,0,0, date( 'm', time() ), date( 'd', time() ) + 1, date( 'Y', time() - ( max( $value ) + 1 ) * YEAR_IN_SECONDS ) ) );
+						$to_date   = date( 'Y/m/d', mktime( 0,0,0, date( 'm', time() ), date( 'd', time() ) + 1, date( 'Y', time() - ( max( $value ) + 1 ) * YEAR_IN_SECONDS ) ) );
 
 						$meta_query = array(
 							array(
@@ -2380,7 +2441,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 								'compare'   => 'BETWEEN',
 								'type'      => 'DATE',
 								'inclusive' => true,
-							)
+							),
 						);
 
 						$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
@@ -2393,7 +2454,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						}
 
 						$from_date = date( 'Y-m-d H:i:s', strtotime( date( 'Y-m-d H:i:s', min( $value ) ) . "+$offset hours" ) );
-						$to_date = date( 'Y-m-d H:i:s', strtotime( date( 'Y-m-d H:i:s', max( $value ) ) . "+$offset hours" ) );
+						$to_date   = date( 'Y-m-d H:i:s', strtotime( date( 'Y-m-d H:i:s', max( $value ) ) . "+$offset hours" ) );
 
 						$date_query = array(
 							array(
@@ -2424,8 +2485,20 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							$value
 						);
 
-						$from_date = gmdate( 'Y-m-d H:i:s', (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ) ); // client time zone offset
-						$to_date   = gmdate( 'Y-m-d H:i:s', (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1 ); // time 23:59
+						if ( ! empty( $value[0] ) ) {
+							$min = $value[0];
+						} else {
+							$range = $this->datepicker_filters_range( 'last_login' );
+							$min   = strtotime( gmdate( 'Y/m/d', $range[0] ) );
+						}
+						if ( ! empty( $value[1] ) ) {
+							$max = $value[1];
+						} else {
+							$max = strtotime( gmdate( 'Y/m/d' ) );
+						}
+
+						$from_date = gmdate( 'Y-m-d H:i:s', (int) $min + ( $offset * HOUR_IN_SECONDS ) ); // client time zone offset
+						$to_date   = gmdate( 'Y-m-d H:i:s', (int) $max + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1 ); // time 23:59
 
 						$meta_query = array(
 							'relation' => 'AND',

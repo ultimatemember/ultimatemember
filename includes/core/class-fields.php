@@ -738,7 +738,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			$output .= '<label' . $for_attr . '>' . esc_html__( $label, 'ultimate-member' );
 
-			if ( ! empty( $data['required'] ) && UM()->options()->get( 'form_asterisk' ) ) {
+			if ( ! $this->viewing && ! empty( $data['required'] ) && UM()->options()->get( 'form_asterisk' ) ) {
 				$output .= '<span class="um-req" title="' . esc_attr__( 'Required', 'ultimate-member' ) . '">*</span>';
 			}
 

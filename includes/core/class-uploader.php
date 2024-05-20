@@ -1300,18 +1300,16 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 					}
 
 					$submitted = get_user_meta( $user_id, 'submitted', true );
-					$submitted = ! empty( $submitted ) ? $submitted : array();
+					$submitted = ( ! empty( $submitted ) && is_array( $submitted ) ) ? $submitted : array();
 
 					$submitted[ $key ] = $new_filename;
 					update_user_meta( $user_id, 'submitted', $submitted );
 
 					if ( $move_only ) {
-
 						$file = $user_basedir . DIRECTORY_SEPARATOR . $filename;
 						if ( rename( $temp_file_path, $file ) ) {
 							$new_files[ $key ] = $filename;
 						}
-
 					} else {
 
 						$file = $user_basedir . DIRECTORY_SEPARATOR . $new_filename;

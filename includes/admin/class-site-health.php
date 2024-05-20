@@ -40,6 +40,14 @@ class Site_Health {
 			);
 		}
 
+		$first_activation_date = get_option( 'um_first_activation_date', false );
+		if ( ! empty( $first_activation_date ) && $first_activation_date < 1716336000 ) {
+			$tests['direct']['um_outdated_icons'] = array(
+				'label' => esc_html__( 'Are the icons in Ultimate Member Forms and Settings out of date?', 'ultimate-member' ),
+				'test'  => array( $this, 'outdated_icons_test' ),
+			);
+		}
+
 		return $tests;
 	}
 
@@ -72,6 +80,131 @@ class Site_Health {
 				admin_url( 'admin.php?page=um_options&tab=advanced&section=override_templates' ),
 				esc_html__( 'Check status and update', 'ultimate-member' )
 			);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * @return bool|array
+	 */
+	private function get_outdated_icons() {
+		$result = array(
+			'description' => '',
+			'actions'     => '',
+		);
+
+		$old_icons = UM()->fonticons()->all;
+
+		$forms = get_posts(
+			array(
+				'post_type'      => 'um_form',
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+			)
+		);
+
+		$forms_count = 0;
+		$break_forms = array();
+		if ( ! empty( $forms ) ) {
+			foreach ( $forms as $form_id ) {
+				$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
+				if ( empty( $fields ) ) {
+					continue;
+				}
+				foreach ( $fields as $field ) {
+					if ( empty( $field['icon'] ) ) {
+						continue;
+					}
+
+					if ( in_array( $field['icon'], $old_icons, true ) ) {
+						$break_forms[] = array(
+							'id'    => $form_id,
+							'title' => get_the_title( $form_id ),
+							'link'  => get_edit_post_link( $form_id ),
+						);
+						$forms_count++;
+						continue 2;
+					}
+				}
+			}
+		}
+
+		if ( 0 < $forms_count ) {
+			$result['description'] .= sprintf(
+				'<p>%s</p>',
+				__( 'Your fields\' icons in the Ultimate Member Forms are out of date.', 'ultimate-member' )
+			);
+
+			if ( ! empty( $break_forms ) ) {
+				$result['description'] .= sprintf(
+					'<p>%s',
+					__( 'Related to Ultimate Member Forms: ', 'ultimate-member' )
+				);
+
+				$form_links = array();
+				foreach ( $break_forms as $break_form ) {
+					$form_links[] = sprintf(
+						'<a href="%s" target="_blank">%s (#ID: %s)</a>',
+						esc_url( $break_form['link'] ),
+						esc_html( $break_form['title'] ),
+						esc_html( $break_form['id'] )
+					);
+				}
+
+				$result['description'] .= sprintf(
+					'%s</p><hr />',
+					implode( ', ', $form_links )
+				);
+			}
+
+			$result['actions'] .= sprintf(
+				'<p><a href="%s">%s</a></p>',
+				admin_url( 'edit.php?post_type=um_form' ),
+				esc_html__( 'Edit form fields and update', 'ultimate-member' )
+			);
+		}
+
+		$result = apply_filters( 'um_get_outdated_icons_result', $result, $old_icons );
+
+		if ( ! empty( $result['description'] ) ) {
+			$result['description'] .= sprintf(
+				'<p>%s</p>',
+				__( 'As soon as legacy icons will be removed old icons may break the website\'s functionality.', 'ultimate-member' )
+			);
+		}
+
+		if ( ! empty( $result['description'] ) && ! empty( $result['actions'] ) ) {
+			return $result;
+		}
+
+		return false;
+	}
+
+	public function outdated_icons_test() {
+		$result = array(
+			'label'       => __( 'You have the most recent version of icons in Ultimate Member forms and settings', 'ultimate-member' ),
+			'status'      => 'good',
+			'badge'       => array(
+				'label' => UM_PLUGIN_NAME,
+				'color' => self::BADGE_COLOR,
+			),
+			'description' => sprintf(
+				'<p>%s</p>',
+				__( 'Your fields in the Ultimate Member Forms and settings have the most recent version and are ready to use.', 'ultimate-member' )
+			),
+			'actions'     => '',
+			'test'        => 'um_outdated_icons',
+		);
+
+		$outdated_icons = $this->get_outdated_icons();
+
+		if ( false !== $outdated_icons ) {
+			$result['label']          = __( 'Some field icons and (or) Ultimate Member settings icons are out of date', 'ultimate-member' );
+			$result['status']         = 'recommended';
+			$result['badge']['color'] = 'orange';
+			$result['description']    = $outdated_icons['description'];
+			$result['actions']        = $outdated_icons['actions'];
 		}
 
 		return $result;

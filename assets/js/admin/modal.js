@@ -30,7 +30,12 @@ UM.admin.modal = {
 		UM.common.tipsy.hide();
 
 		jQuery('body').removeClass('um-admin-modal-open');
-		jQuery('.um-admin-modal div[id^="UM_"]').hide().appendTo('body');
+
+		let $modalBlock = jQuery('.um-admin-modal div[id^="UM_"]');
+		let $modalInner = $modalBlock.find( '.um-admin-modal-body.um-admin-metabox' );
+		$modalInner.html('').attr('data-select2-id', null);
+		$modalBlock.hide().appendTo('body');
+
 		jQuery('.um-admin-modal,.um-admin-overlay').remove();
 	},
 	resize: function () {
@@ -181,16 +186,30 @@ jQuery(document).ready(function() {
 	/**
 		restore font icon
 	**/
+	// jQuery(document.body).on('click', 'span.um-admin-icon-clear', function(){
+	// 	var element = jQuery(this).parents('p');
+	// 	jQuery('#UM_fonticons a.um-admin-modal-back').attr('data-code', '');
+	// 	element.find('input[type="hidden"]').val('');
+	// 	element.find('.um-admin-icon-value').html( wp.i18n.__( 'No Icon', 'ultimate-member' ) );
+	//
+	// 	element = jQuery(this).parents('td');
+	// 	element.find('input[type="hidden"]').val('');
+	// 	element.find('.um-admin-icon-value').html( wp.i18n.__( 'No Icon', 'ultimate-member' ) );
+	// 	jQuery(this).removeClass('show');
+	// });
+
 	jQuery(document.body).on('click', 'span.um-admin-icon-clear', function(){
 		var element = jQuery(this).parents('p');
 		jQuery('#UM_fonticons a.um-admin-modal-back').attr('data-code', '');
 		element.find('input[type="hidden"]').val('');
-		element.find('.um-admin-icon-value').html( wp.i18n.__( 'No Icon', 'ultimate-member' ) );
+		element.find('.um_admin_fonticon_wrapper').hide();
+	//	element.find('.um-admin-icon-value').html( wp.i18n.__( 'No Icon', 'ultimate-member' ) );
 
 		element = jQuery(this).parents('td');
 		element.find('input[type="hidden"]').val('');
-		element.find('.um-admin-icon-value').html( wp.i18n.__( 'No Icon', 'ultimate-member' ) );
-		jQuery(this).removeClass('show');
+		element.find('.um_admin_fonticon_wrapper').hide();
+		//element.find('.um-admin-icon-value').html( wp.i18n.__( 'No Icon', 'ultimate-member' ) );
+		//jQuery(this).removeClass('show');
 	});
 
 	/**

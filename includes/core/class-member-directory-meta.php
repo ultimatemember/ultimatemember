@@ -389,11 +389,20 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 									}
 								}
 
-								$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
-								$to_date   = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
-								// @todo: rewrite date() in WP5.3 standards.
-								$from_date = date( 'Y/m/d', $from_date );
-								$to_date   = date( 'Y/m/d', $to_date );
+								if ( ! empty( $value[0] ) ) {
+									$min = $value[0];
+								} else {
+									$range = $this->datepicker_filters_range( $field );
+									$min   = strtotime( gmdate( 'Y/m/d', $range[0] ) );
+								}
+								if ( ! empty( $value[1] ) ) {
+									$max = $value[1];
+								} else {
+									$max = strtotime( gmdate( 'Y/m/d' ) );
+								}
+
+								$from_date = (int) $min + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
+								$to_date   = (int) $max + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
 
 								// $join_alias is pre-escaped.
 								$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_alias} ON {$join_alias}.user_id = u.ID";
@@ -407,6 +416,18 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 								break;
 
 							case 'timepicker':
+								if ( ! empty( $value[0] ) ) {
+									$value[0] = $value[0] . ':00';
+								} else {
+									$range    = $this->timepicker_filters_range( $field );
+									$value[0] = $range[0] . ':00';
+								}
+								if ( ! empty( $value[1] ) ) {
+									$value[1] = $value[1] . ':00';
+								} else {
+									$range    = $this->timepicker_filters_range( $field );
+									$value[1] = $range[1] . ':00';
+								}
 								// $join_alias is pre-escaped.
 								$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_alias} ON {$join_alias}.user_id = u.ID";
 								if ( $value[0] === $value[1] ) {
@@ -511,8 +532,20 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 						$value
 					);
 
-					$from_date = gmdate( 'Y-m-d H:i:s', (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ) ); // client time zone offset
-					$to_date   = gmdate( 'Y-m-d H:i:s', (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1 ); // time 23:59
+					if ( ! empty( $value[0] ) ) {
+						$min = $value[0];
+					} else {
+						$range = $this->datepicker_filters_range( 'last_login' );
+						$min   = strtotime( gmdate( 'Y/m/d', $range[0] ) );
+					}
+					if ( ! empty( $value[1] ) ) {
+						$max = $value[1];
+					} else {
+						$max = strtotime( gmdate( 'Y/m/d' ) );
+					}
+
+					$from_date = gmdate( 'Y-m-d H:i:s', (int) $min + ( $offset * HOUR_IN_SECONDS ) ); // client time zone offset
+					$to_date   = gmdate( 'Y-m-d H:i:s', (int) $max + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1 ); // time 23:59
 
 					// $join_alias is pre-escaped.
 					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_alias} ON {$join_alias}.user_id = u.ID";
@@ -926,7 +959,8 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			} elseif ( 'last_login' === $sortby ) {
 
 				$this->joins[]   = "LEFT JOIN {$wpdb->prefix}um_metadata umm_sort ON ( umm_sort.user_id = u.ID AND umm_sort.um_key = '_um_last_login' )";
-				$this->sql_order = ' ORDER BY CAST( umm_sort.um_value AS DATETIME ) DESC ';
+				$this->joins[]   = "LEFT JOIN {$wpdb->prefix}um_metadata umm_show_login ON ( umm_show_login.user_id = u.ID AND umm_show_login.um_key = 'um_show_last_login' )";
+				$this->sql_order = $wpdb->prepare( ' ORDER BY CASE ISNULL(NULLIF(umm_show_login.um_value,%s)) WHEN 0 THEN %s ELSE CAST( umm_sort.um_value AS DATETIME ) END DESC ', 'a:1:{i:0;s:3:"yes";}', '1970-01-01 00:00:00' );
 
 			} elseif ( 'last_first_name' === $sortby ) {
 
@@ -1018,6 +1052,16 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			$sql_where  = implode( ' AND ', $this->where_clauses );
 			$sql_where  = ! empty( $sql_where ) ? 'AND ' . $sql_where : '';
 
+			$query = array(
+				'select'    => $this->select,
+				'sql_where' => $sql_where,
+				'having'    => $this->having,
+				'sql_limit' => $this->sql_limit,
+			);
+
+			/** This filter is documented in includes/core/class-member-directory.php */
+			do_action( 'um_user_before_query', $query, $this );
+
 			/*
 			 *
 			 * SQL_CALC_FOUND_ROWS is deprecated as of MySQL 8.0.17
@@ -1033,13 +1077,6 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				{$sql_having}
 				{$this->sql_order}
 				{$this->sql_limit}"
-			);
-
-			$query = array(
-				'select'    => $this->select,
-				'sql_where' => $sql_where,
-				'having'    => $this->having,
-				'sql_limit' => $this->sql_limit,
 			);
 
 			$total_users = (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' );
