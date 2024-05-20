@@ -203,3 +203,27 @@
           a
             padding: 3px 10px
             margin: 0 10px
+
+
+  .#{$prefix}members-wrapper
+    &.#{$prefix}members-grid
+      margin: 0
+      width: 100%
+      display: grid
+      grid-template-rows: auto 1fr
+      grid-template-columns: repeat(2, 1fr)
+      grid-gap: 10px
+      grid-auto-rows: minmax(max-content, auto)
+      -ms-grid-template-rows: auto 1fr
+      -ms-grid-template-columns: repeat(2, 1fr)
+      -ms-grid-gap: 10px
+      -ms-grid-auto-rows: minmax(max-content, auto)
+      align-items: stretch
+
+    .#{$prefix}member-name
+      +typography( header, xs, semibold )
+      color: $gray-900
+      text-align: center
+
+  .um-members-pagination-box
+    margin-top: $spacing-lg

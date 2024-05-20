@@ -21,6 +21,9 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		 */
 		public function includes() {
 			$this->account();
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				$this->directory();
+			}
 			$this->forms();
 			$this->pages();
 			$this->secure();
@@ -37,6 +40,23 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 				UM()->classes['um\ajax\account'] = new Account();
 			}
 			return UM()->classes['um\ajax\account'];
+		}
+
+		/**
+		 * @since 2.9.0
+		 *
+		 * @return Directory|Directory_Meta
+		 */
+		public function directory() {
+			if ( empty( UM()->classes['um\ajax\directory'] ) ) {
+				if ( UM()->options()->get( 'member_directory_own_table' ) ) {
+					UM()->classes['um\ajax\directory'] = new Directory_Meta();
+				} else {
+					UM()->classes['um\ajax\directory'] = new Directory();
+				}
+			}
+
+			return UM()->classes['um\ajax\directory'];
 		}
 
 		/**
@@ -85,6 +105,16 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 				UM()->classes['um\ajax\user'] = new User();
 			}
 			return UM()->classes['um\ajax\user'];
+		}
+
+		public function esc_html_spaces( $html ) {
+			$html = preg_replace(
+				array( '/^\s+/im', '/\\r\\n/im', '/\\n/im', '/\\t+/im' ),
+				array( '', ' ', ' ', ' ' ),
+				$html
+			);
+
+			return $html;
 		}
 	}
 }

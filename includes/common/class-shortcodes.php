@@ -582,6 +582,14 @@ class Shortcodes {
 		ob_start();
 		?>
 		<div class="um">
+			<h3>Pagination</h3>
+
+			<?php echo UM()->frontend()::layouts()::pagination( array( 'page' => 1, 'total' => 0, 'per_page' => 5 ) ); ?>
+			<?php echo UM()->frontend()::layouts()::pagination( array( 'total' => 0, 'per_page' => 5, 'page' => 1, ) ); ?>
+			<?php echo UM()->frontend()::layouts()::pagination( array( 'page' => 2, 'total' => 10, 'per_page' => 2 ) ); ?>
+			<?php echo UM()->frontend()::layouts()::pagination( array( 'page' => 1, 'total' => 5, 'per_page' => 5 ) ); ?>
+			<?php echo UM()->frontend()::layouts()::pagination( array( 'page' => 8, 'total' => 500, 'per_page' => 20 ) ); ?>
+
 			<h3>Avatar uploader</h3>
 
 			<?php echo UM()->frontend()::layouts()::avatar_uploader(); ?>
@@ -928,7 +936,11 @@ class Shortcodes {
 		}
 
 		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-			$tpl = 'v3/' . $tpl;
+			if ( 'members' === $tpl ) {
+				$tpl = 'v3/directory/wrapper';
+			} else {
+				$tpl = 'v3/' . $tpl;
+			}
 		}
 
 		$file       = UM_PATH . "templates/{$tpl}.php";
@@ -1290,8 +1302,12 @@ class Shortcodes {
 		}
 
 		if ( 'directory' === $args['mode'] ) {
-			wp_enqueue_script( 'um_members' );
-			wp_enqueue_style( 'um_members' );
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+
+			} else {
+				wp_enqueue_script( 'um_members' );
+				wp_enqueue_style( 'um_members' );
+			}
 		} elseif ( 'register' === $args['mode'] ) {
 			wp_enqueue_script( 'um-gdpr' );
 		}
@@ -1464,6 +1480,240 @@ class Shortcodes {
 		 * @param {array} $args Form shortcode arguments.
 		 */
 		do_action( "um_before_{$mode}_form_is_loaded", $args );
+
+		if ( 'directory' === $mode && defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			// Get default and real arguments
+			$config_args = array();
+			foreach ( UM()->config()->core_directory_meta['members'] as $config_k => $config_v ) {
+				$config_args[ str_replace( '_um_', '', $config_k ) ] = $config_v;
+			}
+
+			$args = wp_parse_args( $args, $config_args );
+
+			$unique_hash         = substr( md5( $args['form_id'] ), 10, 5 );
+			$args['unique_hash'] = $unique_hash;
+
+			global $post;
+			$args['post_id'] = ! empty( $post->ID ) ? $post->ID : '';
+
+			// Current user priority role.
+			$priority_user_role = false;
+			if ( is_user_logged_in() ) {
+				$priority_user_role = UM()->roles()->get_priority_user_role( um_user( 'ID' ) );
+			}
+
+			$args = apply_filters( 'um_member_directory_arguments_on_load', $args );
+
+			// Views.
+			$single_view = false;
+
+			if ( ! empty( $args['view_types'] ) && is_array( $args['view_types'] ) ) {
+				$args['view_types'] = array_filter(
+					$args['view_types'],
+					function ( $item ) {
+						return array_key_exists( $item, UM()->member_directory()->view_types );
+					}
+				);
+			}
+
+			if ( empty( $args['view_types'] ) || ! is_array( $args['view_types'] ) ) {
+				$args['view_types'] = array( 'grid', 'list' );
+			}
+
+			if ( 1 === count( $args['view_types'] ) ) {
+				$single_view  = true;
+				$current_view = $args['view_types'][0];
+				$default_view = $current_view;
+			} else {
+				$args['default_view'] = ! empty( $args['default_view'] ) ? $args['default_view'] : $args['view_types'][0];
+				$default_view         = $args['default_view'];
+				$current_view         = ( ! empty( $_GET[ 'view_type_' . $unique_hash ] ) && in_array( $_GET[ 'view_type_' . $unique_hash ], $args['view_types'], true ) ) ? sanitize_text_field( $_GET[ 'view_type_' . $unique_hash ] ) : $args['default_view'];
+			}
+
+			$args['default_view'] = $default_view;
+			$args['single_view']  = $single_view;
+			$args['current_view'] = $current_view;
+
+			// Pagination.
+			$args['current_page'] = ( ! empty( $_GET[ 'page_' . $unique_hash ] ) && is_numeric( $_GET[ 'page_' . $unique_hash ] ) ) ? absint( $_GET[ 'page_' . $unique_hash ] ) : 1;
+
+			// Sorting.
+			$default_sorting = ! empty( $args['sortby'] ) ? $args['sortby'] : 'user_registered_desc';
+			if ( 'other' === $default_sorting && ! empty( $args['sortby_custom'] ) ) {
+				$default_sorting = $args['sortby_custom'];
+			}
+			$args['default_sorting'] = $default_sorting;
+
+			$sort_from_url   = '';
+			$sorting_options = array();
+			if ( ! empty( $args['enable_sorting'] ) ) {
+				$custom_sorting_titles = array();
+				$sorting_options       = empty( $args['sorting_fields'] ) ? array() : $args['sorting_fields'];
+
+				$sorting_options_prepared = array();
+				if ( ! empty( $sorting_options ) ) {
+					foreach ( $sorting_options as $option ) {
+						if ( is_array( $option ) ) {
+							$option_keys                = array_keys( $option );
+							$sorting_options_prepared[] = $option_keys[0];
+
+							$custom_sorting_titles[ $option_keys[0] ] = ! empty( $option['label'] ) ? $option['label'] : $option[ $option_keys[0] ];
+						} else {
+							$sorting_options_prepared[] = $option;
+						}
+					}
+				}
+
+				$all_sorting_options = UM()->member_directory()->sort_fields;
+
+				if ( ! in_array( $default_sorting, $sorting_options_prepared, true ) ) {
+					$sorting_options_prepared[] = $default_sorting;
+
+					$label = $default_sorting;
+					if ( ! empty( $args['sortby_custom_label'] ) && 'other' === $args['sortby'] ) {
+						$label = $args['sortby_custom_label'];
+					} elseif ( ! empty( $all_sorting_options[ $default_sorting ] ) ) {
+						$label = $all_sorting_options[ $default_sorting ];
+					}
+
+					$label = ( 'random' === $label ) ? __( 'Random', 'ultimate-member' ) : $label;
+
+					$custom_sorting_titles[ $default_sorting ] = $label;
+				}
+
+				if ( ! empty( $sorting_options_prepared ) ) {
+					$sorting_options = array_intersect_key( array_merge( $all_sorting_options, $custom_sorting_titles ), array_flip( $sorting_options_prepared ) );
+				}
+
+				$sorting_options = apply_filters( 'um_member_directory_pre_display_sorting', $sorting_options, $args );
+				$sort_from_url   = ( ! empty( $_GET[ 'sort_' . $unique_hash ] ) && in_array( sanitize_text_field( $_GET[ 'sort_' . $unique_hash ] ), array_keys( $sorting_options ), true ) ) ? sanitize_text_field( $_GET[ 'sort_' . $unique_hash ] ) : $default_sorting;
+			}
+
+			$args['sort_from_url']   = $sort_from_url;
+			$args['sorting_options'] = $sorting_options;
+
+			// Search.
+			$search          = isset( $args['search'] ) ? $args['search'] : false;
+			$show_search     = empty( $args['roles_can_search'] ) || ( ! empty( $priority_user_role ) && in_array( $priority_user_role, $args['roles_can_search'], true ) );
+			$search_from_url = '';
+			if ( $search && $show_search ) {
+				$search_from_url = ! empty( $_GET[ 'search_' . $unique_hash ] ) ? stripslashes( sanitize_text_field( $_GET[ 'search_' . $unique_hash ] ) ) : '';
+			}
+
+			$args['search']          = $search;
+			$args['show_search']     = $show_search;
+			$args['search_from_url'] = $search_from_url;
+
+			// Filters.
+			$filters        = isset( $args['filters'] ) ? $args['filters'] : false;
+			$show_filters   = empty( $args['roles_can_filter'] ) || ( ! empty( $priority_user_role ) && in_array( $priority_user_role, $args['roles_can_filter'], true ) );
+			$search_filters = array();
+			if ( isset( $args['search_fields'] ) ) {
+				$search_filters = apply_filters( 'um_frontend_member_search_filters', array_unique( array_filter( $args['search_fields'] ) ) );
+			}
+
+			if ( ! empty( $search_filters ) ) {
+				$search_filters = array_filter(
+					$search_filters,
+					function( $item ) {
+						return array_key_exists( $item, UM()->member_directory()->filter_fields );
+					}
+				);
+
+				$search_filters = array_values( $search_filters );
+			}
+
+			// Hide filter fields based on the field visibility.
+			foreach ( $search_filters as $key => $filter ) {
+				$filter_data = UM()->fields()->get_field( $filter );
+				if ( ! um_can_view_field( $filter_data ) ) {
+					unset( $search_filters[ $key ] );
+				}
+			}
+
+			$args['filters']        = $filters;
+			$args['show_filters']   = $show_filters;
+			$args['search_filters'] = $search_filters;
+
+			// Classes
+			$classes = '';
+			if ( $search && $show_search ) {
+				$classes .= ' um-member-with-search';
+			}
+
+			if ( $filters && $show_filters && count( $search_filters ) ) {
+				$classes .= ' um-member-with-filters';
+			}
+
+			if ( ! $single_view ) {
+				$classes .= ' um-member-with-view';
+			}
+
+			if ( ! empty( $args['enable_sorting'] ) && ! empty( $sorting_options ) && count( $sorting_options ) > 1 ) {
+				$classes .= ' um-member-with-sorting';
+			}
+
+			$args['classes'] = $classes;
+
+			$filters_collapsible = true;
+			$filters_expanded    = ! empty( $args['filters_expanded'] ) ? true : false;
+			if ( $filters_expanded ) {
+				$filters_collapsible = ! empty( $args['filters_is_collapsible'] ) ? true : false;
+			}
+
+			$args['filters_collapsible'] = $filters_collapsible;
+			$args['filters_expanded']    = $filters_expanded;
+
+			$must_search  = 0;
+			$not_searched = false;
+			if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $search_filters ) ) ) && isset( $args['must_search'] ) && $args['must_search'] == 1 ) {
+				$must_search  = 1;
+				$not_searched = true;
+				if ( $search && $show_search && ! empty( $search_from_url ) ) {
+					$not_searched = false;
+				} elseif ( $filters && $show_filters && count( $search_filters ) ) {
+					foreach ( $search_filters as $filter ) {
+						// getting value from GET line
+						switch ( UM()->member_directory()->filter_types[ $filter ] ) {
+							default:
+								$not_searched = apply_filters( 'um_member_directory_filter_value_from_url', $not_searched, $filter );
+								break;
+
+							case 'select':
+								// getting value from GET line
+								$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? explode( '||', sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ) : array();
+								if ( ! empty( $filter_from_url ) ) {
+									$not_searched = false;
+								}
+								break;
+
+							case 'slider':
+								// getting value from GET line
+								$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) : '';
+								if ( ! empty( $filter_from_url ) ) {
+									$not_searched = false;
+								}
+								break;
+
+							case 'datepicker':
+							case 'timepicker':
+								// getting value from GET line
+								$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) : '';
+								if ( ! empty( $filter_from_url ) ) {
+									$not_searched = false;
+								}
+								break;
+						}
+					}
+				}
+			}
+
+			$args['must_search']  = $must_search;
+			$args['not_searched'] = $not_searched;
+
+			// send $args variable to the templates
+			$args['t_args'] = $args;
+		}
 
 		$this->template_load( $args['template'], $args );
 

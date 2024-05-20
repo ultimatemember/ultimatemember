@@ -2558,13 +2558,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			if ( ! empty( $total_pages ) ) {
 				$index1 = 0 - ( $current_page - 2 ) + 1;
-				$to = $current_page + 2;
+				$to     = $current_page + 2;
 				if ( $index1 > 0 ) {
 					$to += $index1;
 				}
 
 				$index2 = $total_pages - ( $current_page + 2 );
-				$from = $current_page - 2;
+				$from   = $current_page - 2;
 				if ( $index2 < 0 ) {
 					$from += $index2;
 				}
@@ -2575,7 +2575,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				);
 			}
 
-
 			$pagination_data = array(
 				'pages_to_show' => ( ! empty( $pages_to_show ) && count( $pages_to_show ) > 1 ) ? array_values( $pages_to_show ) : array(),
 				'current_page'  => $current_page,
@@ -2583,7 +2582,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				'total_users'   => $total_users,
 			);
 
-			$pagination_data['header'] = $this->convert_tags( $directory_data['header'], $pagination_data );
+			$pagination_data['header']        = $this->convert_tags( $directory_data['header'], $pagination_data );
 			$pagination_data['header_single'] = $this->convert_tags( $directory_data['header_single'], $pagination_data );
 
 			return $pagination_data;

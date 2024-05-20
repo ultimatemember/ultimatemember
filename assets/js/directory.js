@@ -334,12 +334,13 @@ function um_ajax_get_members( directory, args ) {
 
 			um_build_template( directory, answer );
 
-			var pagination_template = wp.template( 'um-members-pagination' );
-			directory.find('.um-members-pagination-box').html( pagination_template( answer ) );
+			// var pagination_template = wp.template( 'um-members-pagination' );
+			//directory.find('.um-members-pagination-box').html( pagination_template( answer ) );
+			directory.find('.um-members-pagination-box').html( answer.pagination );
 
-			directory.data( 'total_pages', answer.pagination.total_pages );
+			directory.data( 'total_pages', answer.total_pages );
 
-			if ( answer.pagination.total_pages ) {
+			if ( answer.total_pages ) {
 				directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
 				directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
 			} else {
@@ -347,9 +348,7 @@ function um_ajax_get_members( directory, args ) {
 				directory.find( '.um-member-directory-view-type' ).addClass( 'um-disabled' );
 			}
 
-			//args.directory = directory;
 			wp.hooks.doAction( 'um_member_directory_loaded', directory, answer );
-			//jQuery( document ).trigger('um_members_rendered', [ directory, answer ] );
 
 			um_init_new_dropdown();
 
@@ -365,30 +364,29 @@ function um_ajax_get_members( directory, args ) {
 
 
 function um_build_template( directory, data ) {
-	var layout = directory.data('view_type');
-	var template = wp.template( 'um-member-' + layout + '-' + um_members_get_hash( directory ) );
+	let layout = directory.data('view_type');
+	// var template = wp.template( 'um-member-' + layout + '-' + um_members_get_hash( directory ) );
 
 	if( jQuery('.um-' + um_members_get_hash( directory )).length ) {
-		directory.find('.um-members-grid, .um-members-list').remove();
-		directory.find('.um-members-wrapper').prepend(template(data.users));
+		directory.find('.um-members-wrapper').html('').prepend(data[ 'content_' + layout ]);
 
-		var header_template = wp.template('um-members-header');
-		directory.find('.um-members-intro').remove();
-
-		var generate_header = wp.hooks.applyFilters('um_member_directory_generate_header', false, directory);
-
-		if ((typeof data.is_search != 'undefined' && data.is_search) || generate_header) {
-			directory.find('.um-members-wrapper').prepend(header_template(data));
-		}
+		// var header_template = wp.template('um-members-header');
+		// directory.find('.um-members-intro').remove();
+		//
+		// var generate_header = wp.hooks.applyFilters('um_member_directory_generate_header', false, directory);
+		//
+		// if ((typeof data.is_search != 'undefined' && data.is_search) || generate_header) {
+		// 	directory.find('.um-members-wrapper').prepend(header_template(data));
+		// }
 
 		directory.addClass('um-loaded');
 
 		// It's made via hook because resize is triggered with debounce delay.
-		wp.hooks.addAction( 'um_window_resize', 'um_members', function() {
-			if (directory.find('.um-members.um-members-grid').length) {
-				UM_Member_Grid(directory.find('.um-members.um-members-grid'));
-			}
-		});
+		// wp.hooks.addAction( 'um_window_resize', 'um_members', function() {
+		// 	if (directory.find('.um-members.um-members-grid').length) {
+		// 		UM_Member_Grid(directory.find('.um-members.um-members-grid'));
+		// 	}
+		// });
 
 		jQuery(document).trigger('um_build_template', [directory, data]);
 		jQuery(window).trigger('resize');
@@ -1050,19 +1048,19 @@ jQuery(document.body).ready( function() {
 	 */
 
 
-	jQuery( document.body ).on( 'click', '.um-directory .pagi:not(.current)', function() {
+	jQuery( document.body ).on( 'click', '.um-directory .um-pagination-item:not(.current)', function() {
 		if ( jQuery(this).hasClass('disabled') ) {
 			return;
 		}
 
-		var directory = jQuery(this).parents('.um-directory');
+		let directory = jQuery(this).parents('.um-directory');
 		if ( um_is_directory_busy( directory ) ) {
 			return;
 		}
 
 		um_members_show_preloader( directory );
 
-		var page;
+		let page;
 		if ( 'first' === jQuery(this).data('page') ) {
 			page = 1;
 		} else if ( 'prev' === jQuery(this).data('page') ) {
@@ -1076,18 +1074,17 @@ jQuery(document.body).ready( function() {
 		}
 
 		if ( page === 1 ) {
-			directory.find('.pagi[data-page="first"], .pagi[data-page="prev"]').addClass('disabled');
-			directory.find('.pagi[data-page="prev"], .pagi[data-page="last"]').removeClass('disabled');
+			directory.find('.um-pagination-item[data-page="prev"]').addClass('disabled');
+			directory.find('.um-pagination-item[data-page="next"]').removeClass('disabled');
 		} else if ( page === parseInt( directory.data( 'total_pages' ) ) ) {
-			directory.find('.pagi[data-page="prev"], .pagi[data-page="last"]').addClass('disabled');
-			directory.find('.pagi[data-page="first"], .pagi[data-page="prev"]').removeClass('disabled');
+			directory.find('.um-pagination-item[data-page="next"]').addClass('disabled');
+			directory.find('.um-pagination-item[data-page="prev"]').removeClass('disabled');
 		} else {
-			directory.find('.pagi[data-page="prev"], .pagi[data-page="last"]').removeClass('disabled');
-			directory.find('.pagi[data-page="first"], .pagi[data-page="prev"]').removeClass('disabled');
+			directory.find('.um-pagination-item[data-page="prev"], .um-pagination-item[data-page="next"]').removeClass('disabled');
 		}
 
-		directory.find('.pagi').removeClass('current');
-		directory.find('.pagi[data-page="' + page + '"]').addClass('current');
+		directory.find('.um-pagination-item').removeClass('current');
+		directory.find('.um-pagination-item[data-page="' + page + '"]').addClass('current');
 
 		directory.data( 'page', page );
 		if ( page === 1 ) {
@@ -1098,32 +1095,31 @@ jQuery(document.body).ready( function() {
 
 		um_ajax_get_members( directory );
 	});
-
 
 	//mobile pagination
-	jQuery( document.body ).on( 'change', '.um-directory .um-members-pagi-dropdown', function() {
-		var directory = jQuery(this).parents('.um-directory');
-
-		if ( um_is_directory_busy( directory ) ) {
-			return;
-		}
-
-		um_members_show_preloader( directory );
-
-		var page = jQuery(this).val();
-
-		directory.find('.pagi').removeClass('current');
-		directory.find('.pagi[data-page="' + page + '"]').addClass('current');
-
-		directory.data( 'page', page );
-		if ( page === 1 ) {
-			um_set_url_from_data( directory, 'page', '' );
-		} else {
-			um_set_url_from_data( directory, 'page', page );
-		}
-
-		um_ajax_get_members( directory );
-	});
+	// jQuery( document.body ).on( 'change', '.um-directory .um-members-pagi-dropdown', function() {
+	// 	var directory = jQuery(this).parents('.um-directory');
+	//
+	// 	if ( um_is_directory_busy( directory ) ) {
+	// 		return;
+	// 	}
+	//
+	// 	um_members_show_preloader( directory );
+	//
+	// 	var page = jQuery(this).val();
+	//
+	// 	directory.find('.pagi').removeClass('current');
+	// 	directory.find('.pagi[data-page="' + page + '"]').addClass('current');
+	//
+	// 	directory.data( 'page', page );
+	// 	if ( page === 1 ) {
+	// 		um_set_url_from_data( directory, 'page', '' );
+	// 	} else {
+	// 		um_set_url_from_data( directory, 'page', page );
+	// 	}
+	//
+	// 	um_ajax_get_members( directory );
+	// });
 
 
 	/**

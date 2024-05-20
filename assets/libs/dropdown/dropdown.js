@@ -16,7 +16,7 @@
 				self.hideAll();
 
 				/* add dropdown into the <body> */
-				self.$menu = self.$element.find('.um-dropdown');
+				self.$menu = self.$element.parents('.um-dropdown-wrapper').find('.um-dropdown');
 				if ( !self.$menu.length ) {
 					self.$menu = $('div.um-dropdown[data-element="' + self.data.element + '"]:not([data-cloned="1"])').first();
 				}
@@ -36,11 +36,11 @@
 				self.$element.trigger('um_new_dropdown_render', {
 					dropdown_layout: self.$dropdown,
 					trigger: self.data.trigger,
-					element: self.data.elemen,
+					element: self.data.element,
 					obj: self.$element
 				});
 
-				wp.hooks.doAction( 'um_dropdown_render', self.$dropdown, self.data.trigger, self.data.elemen, self.$element );
+				wp.hooks.doAction( 'um_dropdown_render', self.$dropdown, self.data.trigger, self.data.element, self.$element );
 
 				/* set styles and show */
 				self.$dropdown.css(self.calculatePosition()).show();

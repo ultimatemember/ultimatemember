@@ -8,7 +8,9 @@
  *
  * @version 2.6.1
  *
- * @var array  $args
+ * @var array  $t_args
+ * @var string $unique_hash
+ * @var string $form_id
  * @var bool   $cover_photos
  * @var bool   $profile_photo
  * @var bool   $show_name
@@ -22,10 +24,9 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+?>
 
-$unique_hash = substr( md5( $args['form_id'] ), 10, 5 ); ?>
-
-<script type="text/template" id="tmpl-um-member-grid-<?php echo esc_attr( $unique_hash ) ?>">
+<script type="text/template" id="tmpl-um-member-grid-<?php echo esc_attr( $unique_hash ); ?>">
 	<div class="um-members um-members-grid">
 		<div class="um-gutter-sizer"></div>
 
@@ -52,7 +53,7 @@ $unique_hash = substr( md5( $args['form_id'] ), 10, 5 ); ?>
 						<div class="um-member-photo radius-<?php echo esc_attr( UM()->options()->get( 'profile_photocorner' ) ); ?>">
 							<a href="{{{user.profile_url}}}" title="<# if ( user.display_name ) { #>{{{user.display_name}}}<# } #>">
 								{{{user.avatar}}}
-								<?php do_action( 'um_members_in_profile_photo_tmpl', $args ); ?>
+								<?php do_action( 'um_members_in_profile_photo_tmpl', $t_args ); ?>
 							</a>
 						</div>
 					<?php } ?>
@@ -70,7 +71,7 @@ $unique_hash = substr( md5( $args['form_id'] ), 10, 5 ); ?>
 						<?php }
 
 						// please use for buttons priority > 100
-						do_action( 'um_members_just_after_name_tmpl', $args ); ?>
+						do_action( 'um_members_just_after_name_tmpl', $t_args ); ?>
 						{{{user.hook_just_after_name}}}
 
 
@@ -83,7 +84,7 @@ $unique_hash = substr( md5( $args['form_id'] ), 10, 5 ); ?>
 						<# } #>
 
 
-						<?php do_action( 'um_members_after_user_name_tmpl', $args ); ?>
+						<?php do_action( 'um_members_after_user_name_tmpl', $t_args ); ?>
 						{{{user.hook_after_user_name}}}
 
 

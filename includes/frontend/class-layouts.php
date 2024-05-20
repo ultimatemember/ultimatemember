@@ -242,10 +242,12 @@ class Layouts {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'title'   => '',
-				'classes' => array(),
-				'footer'  => '',
-				'actions' => array(),
+				'id'               => '',
+				'title'            => '',
+				'classes'          => array(),
+				'footer'           => '',
+				'actions'          => array(),
+				'actions_position' => 'right',
 			)
 		);
 
@@ -255,6 +257,11 @@ class Layouts {
 		if ( empty( $args['footer'] ) ) {
 			$classes[] = 'um-box-no-footer';
 		}
+		if ( empty( $args['actions'] ) ) {
+			$classes[] = 'um-box-no-actions';
+		} else {
+			$classes[] = 'um-box-' . $args['actions_position'] . '-actions';
+		}
 
 		if ( ! empty( $args['classes'] ) ) {
 			$classes = array_merge( $classes, $args['classes'] );
@@ -263,7 +270,7 @@ class Layouts {
 
 		ob_start();
 		?>
-		<div class="<?php echo esc_attr( $classes ); ?>">
+		<div id="<?php echo esc_attr( $args['id'] ); ?>" class="<?php echo esc_attr( $classes ); ?>">
 			<div class="um-box-header<?php if ( empty( $args['title'] ) ) { ?> um-box-no-title<?php } ?><?php if ( empty( $args['actions'] ) ) { ?> um-box-no-actions<?php } ?>">
 				<?php if ( ! empty( $args['title'] ) ) { ?>
 					<span class="um-box-title">
@@ -286,6 +293,36 @@ class Layouts {
 				</div>
 			<?php } ?>
 		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	public static function badge( $label, $args = array() ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'size'  => 'm', // s,m,l
+				'type'  => 'color', // color, pill-outline, pill-color
+				'color' => 'gray', // gray, brand,error,warning,success
+				'class' => array(),
+			)
+		);
+
+		$classes = array(
+			'um-badge',
+			'um-badge-' . $args['size'],
+			'um-badge-' . $args['type'],
+		);
+		if ( ! empty( $args['class'] ) ) {
+			$classes = array_merge( $classes, $args['class'] );
+		}
+		$classes = implode( ' ', $classes );
+
+		ob_start();
+		?>
+		<span class="<?php echo esc_attr( $classes ); ?>">
+			<?php echo esc_html( $label ); ?>
+		</span>
 		<?php
 		return ob_get_clean();
 	}
@@ -812,6 +849,117 @@ class Layouts {
 		<div class="um-divider"><hr /></div>
 		<?php
 		return ob_get_clean();
+	}
+
+	public static function pagination( $args = array() ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'page'     => 1,
+				'total'    => 0,
+				'per_page' => 0,
+			)
+		);
+
+		if ( empty( $args['total'] ) ) {
+			return '';
+		}
+
+		$pagination_data = self::calculate_pagination( ...$args );
+
+		if ( 1 >= $pagination_data['pages_count'] || empty( $pagination_data['pages'] ) ) {
+			return '';
+		}
+
+		return UM()->get_template( 'components/pagination.php', '', $pagination_data );
+	}
+
+	/**
+	 * Get data array for pagination
+	 *
+	 * @return array
+	 */
+	private static function calculate_pagination( $page, $total, $per_page = 0 ) {
+		$pages       = array();
+		$per_page    = empty( $per_page ) ? $total : $per_page;
+		$pages_count = absint( ceil( $total / $per_page ) );
+
+		if ( $pages_count <= 7 ) {
+			$pages = array(
+				1 => array(
+					'label'   => '1',
+					'current' => false,
+				),
+				2 => array(
+					'label'   => '2',
+					'current' => false,
+				),
+				3 => array(
+					'label'   => '3',
+					'current' => false,
+				),
+				4 => array(
+					'label'   => '4',
+					'current' => false,
+				),
+				5 => array(
+					'label'   => '5',
+					'current' => false,
+				),
+				6 => array(
+					'label'   => '6',
+					'current' => false,
+				),
+				7 => array(
+					'label'   => '7',
+					'current' => false,
+				),
+			);
+			$pages = array_filter(
+				$pages,
+				function( $key ) use ( $pages_count ) {
+					return $key <= $pages_count;
+				},
+				ARRAY_FILTER_USE_KEY
+			);
+		} else {
+			$next_dot = true;
+			for ( $i = 1; $i <= $pages_count; $i++ ) {
+				if ( $i > 3 && $i <= $pages_count - 3 ) {
+					if ( $i === $page ) {
+						$pages[ $i ] = array(
+							'label'   => (string) $i,
+							'current' => $i === $page,
+						);
+						$next_dot    = true;
+					} elseif ( $next_dot ) {
+						$next_dot    = false;
+						$pages[ $i ] = array(
+							'label'   => __( '...', 'ultimate-member' ),
+							'current' => $i === $page,
+						);
+					}
+				} else {
+					$pages[ $i ] = array(
+						'label'   => (string) $i,
+						'current' => $i === $page,
+					);
+				}
+			}
+		}
+		$pages[ $page ]['current'] = true;
+
+		$pagination_data = array(
+			'pages'             => $pages,
+			'page'              => $page,
+			'per_page'          => $per_page,
+			'pages_count'       => $pages_count,
+			'total'             => $total,
+			'previous_disabled' => 1 === $page,
+			'next_disabled'     => $page === $pages_count,
+		);
+
+		return apply_filters( 'um_handle_pagination_arguments', $pagination_data );
 	}
 
 	/**
