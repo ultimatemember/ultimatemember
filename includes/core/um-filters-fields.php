@@ -456,7 +456,7 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 		$value = '<a href="' . esc_url( $value, $protocols ) . '" title="' . esc_attr( $alt ) . '" target="' . esc_attr( $data['url_target'] ) . '" ' . $url_rel . '>' . esc_html( $alt ) . '</a>';
 	} else {
 		// check $value is oEmbed
-		if ( 'oembed' === $data['type'] ) {
+		if ( array_key_exists( 'type', $data ) && 'oembed' === $data['type'] ) {
 			return $value;
 		}
 
