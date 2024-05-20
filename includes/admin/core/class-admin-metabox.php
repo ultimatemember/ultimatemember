@@ -1569,7 +1569,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					$wrapper_classes = implode( ' ', $wrapper_classes );
 
 					// @todo new version
-					if ( empty( $first_activation_date ) || $first_activation_date >= 1713342395 || empty( $this->edit_mode_value ) || array_key_exists( $this->edit_mode_value, $um_icons_list ) ) {
+					if ( empty( $first_activation_date ) || $first_activation_date >= 1716336000 || empty( $this->edit_mode_value ) || array_key_exists( $this->edit_mode_value, $um_icons_list ) ) {
 						?>
 						<p class="<?php echo esc_attr( $wrapper_classes ); ?>">
 							<label for="_icon"><?php esc_html_e( 'Icon', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select an icon to appear in the field. Leave blank if you do not want an icon to show in the field.', 'ultimate-member' ) ); ?></label>

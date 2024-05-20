@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
 Tested up to: 6.5
-Stable tag: 2.8.5
+Stable tag: 2.8.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -166,13 +166,13 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.8.6 2024-04-xx =
+= 2.8.6 2024-05-22 =
 
 **Enhancements**
 
 * Added: Member Directory > Admin Filtering supports datepicker and timepicker filter-types with only "From" or "To" filled value
 * Added: Ability to customize modal templates upload-single.php and view-photo.php
-* Added: New FA. Find this string `1713342395` and change to the current time of the version release
+* Added: New FontAwesome library. Version 6.5.2
 
 **Bugfixes**
 
@@ -182,6 +182,20 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: Social URLs sanitizing where user can put his social username (e.g. Instagram, Facebook)
 * Fixed: Using only published forms and member directories IDs on predefined pages installation
 * Fixed: Member Directory before query hook when custom meta table is active
+* Fixed: Unique email validation
+* Fixed: Displaying asterisk on the Profile > View Mode
+* Fixed: PHP errors while upgrade from 1.3.x version
+* Fixed: Rating field view
+* Fixed: Sorting by last login value when "Hide my last login" is set
+* Fixed: PHP errors while uploading files
+* Fixed: Parsing error on the license activation
+
+**Templates required update**
+
+* Renamed templates/modal/um_upload_single.php → templates/modal/upload-single.php
+* Renamed templates/modal/um_view_photo.php → templates/modal/view-photo.php
+
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
 
 = 2.8.5 2024-04-09 =
 
