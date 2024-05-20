@@ -924,7 +924,7 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 						UM()->form()->add_error( $key, __( 'You must provide your email', 'ultimate-member' ) );
 					} elseif ( 'register' === $mode && $email_exists ) {
 						UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
-					} elseif ( 'profile' === $mode && $email_exists && $email_exists !== $submitted_data['user_id'] ) {
+					} elseif ( 'profile' === $mode && $email_exists && absint( $email_exists ) !== absint( $submitted_data['user_id'] ) ) {
 						UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
 					} elseif ( ! is_email( $submitted_data[ $key ] ) ) {
 						UM()->form()->add_error( $key, __( 'The email you entered is incorrect', 'ultimate-member' ) );
