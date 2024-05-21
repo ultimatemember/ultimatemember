@@ -2828,6 +2828,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						 */
 						$textarea_settings = apply_filters( 'um_form_fields_textarea_settings', $textarea_settings, $data );
 
+						$field_value = empty( $field_value ) ? '' : $field_value;
+
 						// turn on the output buffer
 						ob_start();
 
