@@ -1281,8 +1281,92 @@ input[type="range"]
       padding: 0
       margin: 0
 
-// Pagination
+// Badges
+.um
+  .#{$prefix}badge
+    text-align: center
+    border: 1px solid
+    &.#{$prefix}badge-s
+      padding: $spacing-xxs $spacing-md
+      +typography( text, xs, medium )
+    &.#{$prefix}badge-m
+      padding: $spacing-xxs 10px
+      +typography( text, sm, medium )
+    &.#{$prefix}badge-l
+      padding: $spacing-xs $spacing-lg
+      +typography( text, sm, medium )
+    &.#{$prefix}badge-color
+      border-radius: $radius-sm
+      &.#{$prefix}badge-s
+        padding: $spacing-xxs $spacing-sm
+      &.#{$prefix}badge-m
+        padding: $spacing-xxs $spacing-md
+      &.#{$prefix}badge-l
+        padding: $spacing-xs 10px
+      &.#{$prefix}badge-color-gray
+        border-color: $gray-200
+        background: $gray-50
+        color: $gray-700
+      &.#{$prefix}badge-color-brand
+        border-color: $primary-200
+        background: $primary-50
+        color: $primary-700
+      &.#{$prefix}badge-color-error
+        border-color: $error-200
+        background: $error-50
+        color: $error-700
+      &.#{$prefix}badge-color-warning
+        border-color: $warning-200
+        background: $warning-50
+        color: $warning-700
+      &.#{$prefix}badge-color-success
+        border-color: $success-200
+        background: $success-50
+        color: $success-700
+    &.#{$prefix}badge-pill-outline
+      border-width: 1.5px
+      border-radius: $radius-2xl
+      background: transparent
+      &.#{$prefix}badge-color-gray
+        border-color: $gray-600
+        color: $gray-700
+      &.#{$prefix}badge-color-brand
+        border-color: $primary-600
+        color: $primary-700
+      &.#{$prefix}badge-color-error
+        border-color: $error-600
+        color: $error-700
+      &.#{$prefix}badge-color-warning
+        border-color: $warning-600
+        color: $warning-700
+      &.#{$prefix}badge-color-success
+        border-color: $success-600
+        color: $success-700
+    &.#{$prefix}badge-pill-color
+      border-radius: $radius-2xl
+      &.#{$prefix}badge-color-gray
+        border-color: $gray-200
+        background: $gray-50
+        color: $gray-700
+      &.#{$prefix}badge-color-brand
+        border-color: $primary-200
+        background: $primary-50
+        color: $primary-700
+      &.#{$prefix}badge-color-error
+        border-color: $error-200
+        background: $error-50
+        color: $error-700
+      &.#{$prefix}badge-color-warning
+        border-color: $warning-200
+        background: $warning-50
+        color: $warning-700
+      &.#{$prefix}badge-color-success
+        border-color: $success-200
+        background: $success-50
+        color: $success-700
 
+
+// Pagination
 .um
   .#{$prefix}pagination
     +border-box

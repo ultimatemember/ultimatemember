@@ -312,6 +312,7 @@ class Layouts {
 			'um-badge',
 			'um-badge-' . $args['size'],
 			'um-badge-' . $args['type'],
+			'um-badge-color-' . $args['color'],
 		);
 		if ( ! empty( $args['class'] ) ) {
 			$classes = array_merge( $classes, $args['class'] );

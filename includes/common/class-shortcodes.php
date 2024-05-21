@@ -582,6 +582,68 @@ class Shortcodes {
 		ob_start();
 		?>
 		<div class="um">
+			<h3>Badges</h3>
+			<div style="display:flex;flex-direction:row;justify-content:flex-start;flex-wrap: wrap;align-items:center">
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 's' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label' ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 'l' ) ); ?>
+
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 's', 'type'  => 'pill-outline' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array( 'type'  => 'pill-outline' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 'l', 'type'  => 'pill-outline' ) ); ?>
+
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 's', 'type'  => 'pill-color' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array( 'type'  => 'pill-color' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 'l', 'type'  => 'pill-color' ) ); ?>
+
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 's', 'color' => 'brand' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array( 'color' => 'brand' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 'l', 'color' => 'brand' ) ); ?>
+
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 's', 'type'  => 'pill-outline', 'color' => 'brand' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array( 'type'  => 'pill-outline', 'color' => 'brand' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 'l', 'type'  => 'pill-outline', 'color' => 'brand' ) ); ?>
+
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 's', 'type'  => 'pill-color', 'color' => 'brand' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array( 'type'  => 'pill-color', 'color' => 'brand' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 'l', 'type'  => 'pill-color', 'color' => 'brand' ) ); ?>
+
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 's', 'color' => 'error' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array( 'color' => 'error' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 'l', 'color' => 'error' ) ); ?>
+
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 's', 'type'  => 'pill-outline', 'color' => 'error' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array( 'type'  => 'pill-outline', 'color' => 'error' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 'l', 'type'  => 'pill-outline', 'color' => 'error' ) ); ?>
+
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 's', 'type'  => 'pill-color', 'color' => 'error' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array( 'type'  => 'pill-color', 'color' => 'error' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 'l', 'type'  => 'pill-color', 'color' => 'error' ) ); ?>
+
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 's', 'color' => 'warning' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array( 'color' => 'warning' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 'l', 'color' => 'warning' ) ); ?>
+
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 's', 'type'  => 'pill-outline', 'color' => 'warning' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array( 'type'  => 'pill-outline', 'color' => 'warning' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 'l', 'type'  => 'pill-outline', 'color' => 'warning' ) ); ?>
+
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 's', 'type'  => 'pill-color', 'color' => 'warning' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array( 'type'  => 'pill-color', 'color' => 'warning' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 'l', 'type'  => 'pill-color', 'color' => 'warning' ) ); ?>
+
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 's', 'color' => 'success' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array( 'color' => 'success' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 'l', 'color' => 'success' ) ); ?>
+
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 's', 'type'  => 'pill-outline', 'color' => 'success' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array( 'type'  => 'pill-outline', 'color' => 'success' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 'l', 'type'  => 'pill-outline', 'color' => 'success' ) ); ?>
+
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 's', 'type'  => 'pill-color', 'color' => 'success' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array( 'type'  => 'pill-color', 'color' => 'success' ) ); ?>
+			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 'l', 'type'  => 'pill-color', 'color' => 'success' ) ); ?>
+			</div>
 			<h3>Pagination</h3>
 
 			<?php echo UM()->frontend()::layouts()::pagination( array( 'page' => 1, 'total' => 0, 'per_page' => 5 ) ); ?>
