@@ -1944,6 +1944,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					if ( 'site' !== $entity_key ) {
 						$entities = $this->get_entites( $entity_key );
 					}
+					if ( 'site' === $entity_key || 'none' === $entity_key ) {
+						$class_attr          = ' class="um-entities-conditions um-forms-field ' . esc_attr( $class ) . ' um-entities-conditions-full" ';
+						$class_attr_responce = ' class="um-entities-conditions-responce um-forms-field ' . esc_attr( $class ) . ' um-entities-conditions-responce-hide" ';
+					}
 					$disabled        = '';
 					$option_disabled = '';
 
@@ -1998,6 +2002,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				}
 			} else {
 				if ( 'um_restriction_rule_content__um_include' === $id ) {
+					$class_attr          = ' class="um-entities-conditions um-forms-field ' . esc_attr( $class ) . ' um-entities-conditions-full" ';
+					$class_attr_responce = ' class="um-entities-conditions-responce um-forms-field ' . esc_attr( $class ) . ' um-entities-conditions-responce-hide" ';
+
 					$html .= '<div class="um-entities-conditions-row">';
 					$html .= '<select ' . $original_name . $class_attr . $name_attr . $data_attr . '>';
 					$html .= '<option value="none">' . __( 'Select entity', 'ultimate-member' ) . '</option>';

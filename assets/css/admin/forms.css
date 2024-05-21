@@ -430,12 +430,18 @@ span.um-admin-icon-clear i {
 .um-entities-conditions-row {
   margin: 0 0 5px;
 }
+.um-entities-conditions-row .um-entities-conditions-full {
+  width: calc(100% - 40px);
+}
 .um-entities-conditions-row .um-entities-conditions-responce {
   vertical-align: top;
 }
+.um-entities-conditions-row .um-entities-conditions-responce-hide {
+  display: none;
+}
 .um-entities-conditions-row select {
   resize: vertical;
-  width: calc(50% - 40px);
+  width: calc(50% - 21px);
   height: 36px;
 }
 

@@ -24,7 +24,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 				array(
 					'id'      => '_um_authentification',
 					'type'    => 'select',
-					'label'   => __( 'Authentification rule', 'ultimate-member' ),
 					'value'   => ! empty( $rules['_um_authentification'] ) ? $rules['_um_authentification'] : 'loggedin',
 					'default' => 'loggedin',
 					'options' => array(

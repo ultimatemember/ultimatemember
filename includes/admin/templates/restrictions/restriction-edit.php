@@ -58,8 +58,8 @@ if ( ! empty( $_GET['id'] ) ) {
 	$rule_id = absint( $_GET['id'] );
 
 	$rule_meta  = get_option( "um_restriction_rule_{$rule_id}" );
-	$data_ruled = get_option( 'um_restriction_rules' );
-	$data       = $data_ruled[ $rule_id ];
+	$data_rules = get_option( 'um_restriction_rules' );
+	$data       = $data_rules[ $rule_id ];
 }
 
 if ( ! empty( $_POST['um_restriction_rules'] ) ) {
@@ -157,6 +157,8 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 				}
 				$update = false;
 			} else {
+				$id                       = $data['id'];
+				$data['_um_priority']     = $rules[ $id ]['_um_priority'];
 				$rules[ $restriction_id ] = $data;
 			}
 

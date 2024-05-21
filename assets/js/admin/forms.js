@@ -1164,6 +1164,9 @@ jQuery(document).ready( function() {
 			wrapper.find( 'select, input' ).removeAttr( 'name' );
 			wrapper.find( '.um-entities-conditions-responce' ).removeAttr( 'disabled' ).removeAttr( 'multiple' );
 			wrapper.find( '.um-entities-conditions-responce' ).html( '' );
+
+			wrapper.find( '.um-entities-conditions-responce' ).addClass( 'um-entities-conditions-responce-hide' );
+			wrapper.find( '.um-entities-conditions' ).addClass( 'um-entities-conditions-full' );
 		} else {
 			jQuery.ajax(
 				{
@@ -1178,6 +1181,9 @@ jQuery(document).ready( function() {
 					success: function( response ) {
 						if ( 'disabled' !== response.data ) {
 							wrapper.find( '.um-entities-conditions-responce' ).removeAttr( 'disabled' );
+							wrapper.find( '.um-entities-conditions-responce' ).removeClass( 'um-entities-conditions-responce-hide' );
+							wrapper.find( '.um-entities-conditions' ).removeClass( 'um-entities-conditions-full' );
+
 							wrapper.find( '.um-entities-conditions-responce' ).attr( 'multiple', 'multiple' );
 							wrapper.find( '.um-entities-conditions-responce' ).html( response.data );
 
@@ -1188,6 +1194,8 @@ jQuery(document).ready( function() {
 							wrapper.find( '.um-entities-conditions-responce' ).html( '' );
 							wrapper.find( '.um-entities-conditions-responce' ).removeAttr( 'multiple' );
 							wrapper.find( '.um-entities-conditions-responce' ).attr( 'disabled', 'disabled' );
+							wrapper.find( '.um-entities-conditions-responce' ).addClass( 'um-entities-conditions-responce-hide' );
+							wrapper.find( '.um-entities-conditions' ).addClass( 'um-entities-conditions-full' );
 							wrapper.find( '.um-entities-conditions-responce' ).after( '<input type="hidden" name="' + original + '[site]' + '" value="1">' );
 						}
 					},
@@ -1233,6 +1241,9 @@ jQuery(document).ready( function() {
 		el.find( '.um-entities-conditions option' ).removeAttr( 'selected' );
 		el.find( '.um-entities-conditions, .um-entities-conditions-responce' ).removeAttr( 'name' );
 		el.find( '.um-entities-conditions-responce' ).removeAttr( 'multiple' );
+
+		el.find( '.um-entities-conditions' ).addClass( 'um-entities-conditions-full' );
+		el.find( '.um-entities-conditions-responce' ).addClass( 'um-entities-conditions-responce-hide' );
 
 		wrapper.append( el );
 		wrapper.find( '.um-entities-conditions-row:last' ).find( 'select' ).removeAttr( 'disabled' );

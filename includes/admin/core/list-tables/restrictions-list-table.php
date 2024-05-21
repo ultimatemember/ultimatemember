@@ -63,6 +63,56 @@ if ( isset( $_GET['action'] ) ) {
 
 			um_js_redirect( add_query_arg( 'msg', 'd', $redirect ) );
 			break;
+
+		case 'activate':
+			$rule_keys = array();
+			if ( isset( $_REQUEST['id'] ) ) {
+				check_admin_referer( 'um_restriction_activate' . sanitize_title( $_REQUEST['id'] ) . get_current_user_id() );
+				$rule_keys = (array) absint( $_REQUEST['id'] );
+			} elseif ( isset( $_REQUEST['item'] ) ) {
+				check_admin_referer( 'bulk-' . sanitize_key( __( 'Rules', 'ultimate-member' ) ) );
+				$rule_keys = array_map( 'sanitize_title', $_REQUEST['item'] );
+			}
+
+			if ( ! count( $rule_keys ) ) {
+				um_js_redirect( $redirect );
+			}
+
+			$um_rules = get_option( 'um_restriction_rules', array() );
+
+			foreach ( $rule_keys as $k => $rule_key ) {
+				$um_rules[ $rule_key ]['_um_status'] = 'active';
+			}
+
+			update_option( 'um_restriction_rules', $um_rules );
+
+			um_js_redirect( add_query_arg( 'msg', 'act', $redirect ) );
+			break;
+
+		case 'deactivate':
+			$rule_keys = array();
+			if ( isset( $_REQUEST['id'] ) ) {
+				check_admin_referer( 'um_restriction_deactivate' . sanitize_title( $_REQUEST['id'] ) . get_current_user_id() );
+				$rule_keys = (array) absint( $_REQUEST['id'] );
+			} elseif ( isset( $_REQUEST['item'] ) ) {
+				check_admin_referer( 'bulk-' . sanitize_key( __( 'Rules', 'ultimate-member' ) ) );
+				$rule_keys = array_map( 'sanitize_title', $_REQUEST['item'] );
+			}
+
+			if ( ! count( $rule_keys ) ) {
+				um_js_redirect( $redirect );
+			}
+
+			$um_rules = get_option( 'um_restriction_rules', array() );
+
+			foreach ( $rule_keys as $k => $rule_key ) {
+				$um_rules[ $rule_key ]['_um_status'] = 'inactive';
+			}
+
+			update_option( 'um_restriction_rules', $um_rules );
+
+			um_js_redirect( add_query_arg( 'msg', 'deact', $redirect ) );
+			break;
 	}
 }
 
@@ -282,6 +332,9 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 	 * @return string
 	 */
 	public function column_cb( $item ) {
+		if ( empty( $item['id'] ) ) {
+			return;
+		}
 		return sprintf( '<input type="checkbox" name="item[]" value="%s" />', $item['id'] );
 	}
 
@@ -292,12 +345,21 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 	 * @return string
 	 */
 	public function column_title( $item ) {
+		if ( empty( $item['id'] ) ) {
+			return;
+		}
+
 		$actions = array();
 		// for backward compatibility based on #906 pull-request (https://github.com/ultimatemember/ultimatemember/pull/906)
 		// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
 		$id = rawurlencode( $item['id'] );
 
-		$actions['edit']   = '<a href="admin.php?page=um_restriction_rules&tab=edit&id=' . esc_attr( $id ) . '">' . __( 'Edit', 'ultimate-member' ) . '</a>';
+		$actions['edit'] = '<a href="admin.php?page=um_restriction_rules&tab=edit&id=' . esc_attr( $id ) . '">' . __( 'Edit', 'ultimate-member' ) . '</a>';
+		if ( 'active' === $item['_um_status'] ) {
+			$actions['deactivate'] = '<a href="admin.php?page=um_restriction_rules&action=deactivate&id=' . esc_attr( $id ) . '&_wpnonce=' . wp_create_nonce( 'um_restriction_deactivate' . $item['id'] . get_current_user_id() ) . '" onclick="return confirm( \'' . __( 'Are you sure you want to deactivate this restriction rule?', 'ultimate-member' ) . '\' )">' . __( 'Deactivate', 'ultimate-member' ) . '</a>';
+		} else {
+			$actions['activate'] = '<a href="admin.php?page=um_restriction_rules&action=activate&id=' . esc_attr( $id ) . '&_wpnonce=' . wp_create_nonce( 'um_restriction_activate' . $item['id'] . get_current_user_id() ) . '" onclick="return confirm( \'' . __( 'Are you sure you want to activate this restriction rule?', 'ultimate-member' ) . '\' )">' . __( 'Activate', 'ultimate-member' ) . '</a>';
+		}
 		$actions['delete'] = '<a href="admin.php?page=um_restriction_rules&action=delete&id=' . esc_attr( $id ) . '&_wpnonce=' . wp_create_nonce( 'um_restriction_delete' . $item['id'] . get_current_user_id() ) . '" onclick="return confirm( \'' . __( 'Are you sure you want to delete this restriction rule?', 'ultimate-member' ) . '\' )">' . __( 'Delete', 'ultimate-member' ) . '</a>';
 
 		/**
@@ -326,6 +388,9 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 	 * @param $item
 	 */
 	public function column_status( $item ) {
+		if ( empty( $item['id'] ) ) {
+			return;
+		}
 		echo 'active' === $item['_um_status'] ? esc_html__( 'Active', 'ultimate-member' ) : esc_html__( 'Inactive', 'ultimate-member' );
 	}
 
@@ -334,6 +399,9 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 	 * @param $item
 	 */
 	public function column_type( $item ) {
+		if ( empty( $item['id'] ) ) {
+			return;
+		}
 		echo esc_html( $item['_um_type'] );
 	}
 
@@ -342,6 +410,9 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 	 * @param $item
 	 */
 	public function column_descr( $item ) {
+		if ( empty( $item['id'] ) ) {
+			return;
+		}
 		echo wp_kses( $item['_um_description'], UM()->get_allowed_html( 'admin_notice' ) );
 	}
 
@@ -349,6 +420,9 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 	 * @param $item
 	 */
 	public function column_entities( $item ) {
+		if ( empty( $item['id'] ) ) {
+			return;
+		}
 		$option     = get_option( 'um_restriction_rule_' . $item['id'] );
 		$post_types = get_post_types( array( 'public' => true ), 'names' );
 
@@ -404,6 +478,9 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 	 * @param $item
 	 */
 	public function column_rules( $item ) {
+		if ( empty( $item['id'] ) ) {
+			return;
+		}
 		$option = get_option( 'um_restriction_rule_' . $item['id'] );
 		$output = '';
 		if ( ! empty( $option['rules']['_um_users'] ) ) {
@@ -439,6 +516,9 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 	 * @param $item
 	 */
 	public function column_action( $item ) {
+		if ( empty( $item['id'] ) ) {
+			return;
+		}
 		$action = get_option( 'um_restriction_rule_' . $item['id'] );
 		switch ( $action['action']['_um_action'] ) {
 			case 0:
@@ -477,7 +557,9 @@ $restriction_paged    = $list_table->get_pagenum();
 
 $list_table->set_bulk_actions(
 	array(
-		'delete' => __( 'Delete', 'ultimate-member' ),
+		'delete'     => __( 'Delete', 'ultimate-member' ),
+		'activate'   => __( 'Activate', 'ultimate-member' ),
+		'deactivate' => __( 'Deactivate', 'ultimate-member' ),
 	)
 );
 
@@ -494,6 +576,11 @@ $list_table->set_columns(
 );
 
 $rules = get_option( 'um_restriction_rules', array() );
+foreach ( $rules as $k => $rule ) {
+	if ( empty( $rule['id'] ) ) {
+		unset( $rules[ $k ] );
+	}
+}
 usort(
 	$rules,
 	function( $a, $b ) {
@@ -529,7 +616,13 @@ $url_args = array(
 	if ( ! empty( $_GET['msg'] ) ) {
 		switch ( sanitize_key( $_GET['msg'] ) ) {
 			case 'd':
-				echo '<div id="message" class="updated fade"><p>' . esc_html__( 'Restriction Rule <strong>Deleted</strong> Successfully.', 'ultimate-member' ) . '</p></div>';
+				echo '<div id="message" class="updated fade"><p>' . esc_html__( 'Restriction Rule Deleted Successfully.', 'ultimate-member' ) . '</p></div>';
+				break;
+			case 'act':
+				echo '<div id="message" class="updated fade"><p>' . esc_html__( 'Restriction Rule Activated Successfully.', 'ultimate-member' ) . '</p></div>';
+				break;
+			case 'deact':
+				echo '<div id="message" class="updated fade"><p>' . esc_html__( 'Restriction Rule Deactivated Successfully.', 'ultimate-member' ) . '</p></div>';
 				break;
 		}
 	}
