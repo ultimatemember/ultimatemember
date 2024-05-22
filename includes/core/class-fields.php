@@ -685,7 +685,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return string
 		 */
 		public function field_label( $label, $key, $data ) {
-			$output = null;
+			$output = '';
 
 			if ( true === $this->viewing ) {
 				/**
@@ -756,45 +756,44 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				 */
 				$label = apply_filters( 'um_edit_label_all_fields', $label, $data );
 			}
-      
-      $output  = null;
-      if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+
+			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
+			$for_attr               = '';
+			if ( ! in_array( $data['type'], $fields_without_metakey, true ) ) {
+				$for_attr = ' for="' . esc_attr( $key . UM()->form()->form_suffix ) . '"';
+			}
+
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 				$output .= '<label' . $for_attr . '>' . wp_kses_post( $label ) . '</label>';
 			} else {
-        $fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
-        $for_attr               = '';
-        if ( ! in_array( $data['type'], $fields_without_metakey, true ) ) {
-          $for_attr = ' for="' . esc_attr( $key . UM()->form()->form_suffix ) . '"';
-        }
-        
-        $output .= '<div class="um-field-label">';
+				$output .= '<div class="um-field-label">';
 
-        if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'off' !== $this->field_icons && ( 'label' === $this->field_icons || true === $this->viewing ) ) {
-          $output .= '<div class="um-field-label-icon"><i class="' . esc_attr( $data['icon'] ) . '" aria-label="' . esc_attr( $label ) . '"></i></div>';
-        }
-        
-        $output .= '<label' . $for_attr . '>' . esc_html__( $label, 'ultimate-member' );
+				if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'off' !== $this->field_icons && ( 'label' === $this->field_icons || true === $this->viewing ) ) {
+					$output .= '<div class="um-field-label-icon"><i class="' . esc_attr( $data['icon'] ) . '" aria-label="' . esc_attr( $label ) . '"></i></div>';
+				}
 
-        if ( ! $this->viewing && ! empty( $data['required'] ) && UM()->options()->get( 'form_asterisk' ) ) {
-          $output .= '<span class="um-req" title="' . esc_attr__( 'Required', 'ultimate-member' ) . '">*</span>';
-        }
+				$output .= '<label' . $for_attr . '>' . esc_html__( $label, 'ultimate-member' );
 
-        $output .= '</label>';
+				if ( ! $this->viewing && ! empty( $data['required'] ) && UM()->options()->get( 'form_asterisk' ) ) {
+					$output .= '<span class="um-req" title="' . esc_attr__( 'Required', 'ultimate-member' ) . '">*</span>';
+				}
 
-        if ( ! empty( $data['help'] ) && false === $this->viewing && false === strpos( $key, 'confirm_user_pass' ) ) {
-          if ( ! UM()->mobile()->isMobile() ) {
-            if ( false === $this->disable_tooltips ) {
-              $output .= '<span class="um-tip um-tip-' . ( is_rtl() ? 'e' : 'w' ) . '" title="' . esc_attr__( $data['help'], 'ultimate-member' ) . '"><i class="um-icon-help-circled"></i></span>';
-            }
-          }
+				$output .= '</label>';
 
-          if ( false !== $this->disable_tooltips || UM()->mobile()->isMobile() ) {
-            $output .= '<span class="um-tip-text">' . __( $data['help'], 'ultimate-member' ) . '</span>';
-          }
-        }
+				if ( ! empty( $data['help'] ) && false === $this->viewing && false === strpos( $key, 'confirm_user_pass' ) ) {
+					if ( ! UM()->mobile()->isMobile() ) {
+						if ( false === $this->disable_tooltips ) {
+							$output .= '<span class="um-tip um-tip-' . ( is_rtl() ? 'e' : 'w' ) . '" title="' . esc_attr__( $data['help'], 'ultimate-member' ) . '"><i class="um-icon-help-circled"></i></span>';
+						}
+					}
 
-        $output .= '<div class="um-clear"></div></div>';
-      }
+					if ( false !== $this->disable_tooltips || UM()->mobile()->isMobile() ) {
+						$output .= '<span class="um-tip-text">' . __( $data['help'], 'ultimate-member' ) . '</span>';
+					}
+				}
+
+				$output .= '<div class="um-clear"></div></div>';
+			}
 
 			return $output;
 		}
