@@ -554,7 +554,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$first_activation_date = get_option( 'um_first_activation_date', false );
 
 			// @todo new version
-			if ( empty( $first_activation_date ) || $first_activation_date >= 1713342395 || empty( $value ) || array_key_exists( $value, $um_icons_list ) ) {
+			if ( empty( $first_activation_date ) || $first_activation_date >= 1716336000 || empty( $value ) || array_key_exists( $value, $um_icons_list ) ) {
 				$html .= '<select ' . $name_attr . ' ' . $id_attr . ' class="um-icon-select-field" data-placeholder="' . esc_attr__( 'Select Icon', 'ultimate-member' ) . '" ><option value="">' . esc_html__( 'Select Icon', 'ultimate-member' ) . '</option>';
 				if ( ! empty( $value ) && array_key_exists( $value, $um_icons_list ) ) {
 					$html .= '<option ' . $value_attr . ' selected>' . esc_html( $um_icons_list[ $value ]['label'] ) . '</option>';

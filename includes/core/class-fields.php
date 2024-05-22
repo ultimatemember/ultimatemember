@@ -756,44 +756,45 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				 */
 				$label = apply_filters( 'um_edit_label_all_fields', $label, $data );
 			}
-
-			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
-			$for_attr               = '';
-			if ( ! in_array( $data['type'], $fields_without_metakey, true ) ) {
-				$for_attr = ' for="' . esc_attr( $key . UM()->form()->form_suffix ) . '"';
-			}
-
-			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+      
+      $output  = null;
+      if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 				$output .= '<label' . $for_attr . '>' . wp_kses_post( $label ) . '</label>';
 			} else {
-				$output .= '<div class="um-field-label">';
+        $fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
+        $for_attr               = '';
+        if ( ! in_array( $data['type'], $fields_without_metakey, true ) ) {
+          $for_attr = ' for="' . esc_attr( $key . UM()->form()->form_suffix ) . '"';
+        }
+        
+        $output .= '<div class="um-field-label">';
 
-				if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'off' !== $this->field_icons && ( 'label' === $this->field_icons || true === $this->viewing ) ) {
-					$output .= '<div class="um-field-label-icon"><i class="' . esc_attr( $data['icon'] ) . '" aria-label="' . esc_attr( $label ) . '"></i></div>';
-				}
+        if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'off' !== $this->field_icons && ( 'label' === $this->field_icons || true === $this->viewing ) ) {
+          $output .= '<div class="um-field-label-icon"><i class="' . esc_attr( $data['icon'] ) . '" aria-label="' . esc_attr( $label ) . '"></i></div>';
+        }
+        
+        $output .= '<label' . $for_attr . '>' . esc_html__( $label, 'ultimate-member' );
 
-				$output .= '<label' . $for_attr . '>' . esc_html__( $label, 'ultimate-member' );
+        if ( ! $this->viewing && ! empty( $data['required'] ) && UM()->options()->get( 'form_asterisk' ) ) {
+          $output .= '<span class="um-req" title="' . esc_attr__( 'Required', 'ultimate-member' ) . '">*</span>';
+        }
 
-				if ( ! empty( $data['required'] ) && UM()->options()->get( 'form_asterisk' ) ) {
-					$output .= '<span class="um-req" title="' . esc_attr__( 'Required', 'ultimate-member' ) . '">*</span>';
-				}
+        $output .= '</label>';
 
-				$output .= '</label>';
+        if ( ! empty( $data['help'] ) && false === $this->viewing && false === strpos( $key, 'confirm_user_pass' ) ) {
+          if ( ! UM()->mobile()->isMobile() ) {
+            if ( false === $this->disable_tooltips ) {
+              $output .= '<span class="um-tip um-tip-' . ( is_rtl() ? 'e' : 'w' ) . '" title="' . esc_attr__( $data['help'], 'ultimate-member' ) . '"><i class="um-icon-help-circled"></i></span>';
+            }
+          }
 
-				if ( ! empty( $data['help'] ) && false === $this->viewing && false === strpos( $key, 'confirm_user_pass' ) ) {
-					if ( ! UM()->mobile()->isMobile() ) {
-						if ( false === $this->disable_tooltips ) {
-							$output .= '<span class="um-tip um-tip-' . ( is_rtl() ? 'e' : 'w' ) . '" title="' . esc_attr__( $data['help'], 'ultimate-member' ) . '"><i class="um-icon-help-circled"></i></span>';
-						}
-					}
+          if ( false !== $this->disable_tooltips || UM()->mobile()->isMobile() ) {
+            $output .= '<span class="um-tip-text">' . __( $data['help'], 'ultimate-member' ) . '</span>';
+          }
+        }
 
-					if ( false !== $this->disable_tooltips || UM()->mobile()->isMobile() ) {
-						$output .= '<span class="um-tip-text">' . __( $data['help'], 'ultimate-member' ) . '</span>';
-					}
-				}
-
-				$output .= '<div class="um-clear"></div></div>';
-			}
+        $output .= '<div class="um-clear"></div></div>';
+      }
 
 			return $output;
 		}
@@ -1550,24 +1551,24 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			return '';
 		}
 
-
 		/**
 		 * Get field label
 		 *
-		 * @param  string $key
+		 * @param string $key Field meta key
 		 *
 		 * @return string
 		 */
-		function get_label( $key ) {
-			$label = '';
+		public function get_label( $key ) {
+			$label      = '';
+			$fields     = UM()->builtin()->all_user_fields;
+			$field_data = array_key_exists( $key, $fields ) ? $fields[ $key ] : array();
 
-			$fields = UM()->builtin()->all_user_fields;
-			if ( isset( $fields[ $key ]['label'] ) ) {
-				$label = stripslashes( $fields[ $key ]['label'] );
+			if ( array_key_exists( 'label', $field_data ) ) {
+				$label = stripslashes( $field_data['label'] );
 			}
 
-			if ( empty( $label ) && isset( $fields[ $key ]['title'] ) ) {
-				$label = stripslashes( $fields[ $key ]['title'] );
+			if ( empty( $label ) && array_key_exists( 'title', $field_data ) ) {
+				$label = stripslashes( $field_data['title'] );
 			}
 
 			/**
@@ -1593,12 +1594,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			 * }
 			 * add_filter( 'um_change_field_label', 'my_change_field_label', 10, 3 );
 			 */
-			$label = apply_filters( 'um_change_field_label', $label, $key, $fields[ $key ] );
+			$label = apply_filters( 'um_change_field_label', $label, $key, $field_data );
 
-			$label = sprintf( __( '%s', 'ultimate-member' ), $label );
-			return $label;
+			return sprintf( __( '%s', 'ultimate-member' ), $label );
 		}
-
 
 		/**
 		 * Get field title
@@ -3090,6 +3089,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							 * add_filter( 'um_form_fields_textarea_settings', 'function_name', 10, 2 );
 							 */
 							$textarea_settings = apply_filters( 'um_form_fields_textarea_settings', $textarea_settings, $data );
+
+              $field_value = empty( $field_value ) ? '' : $field_value;
 
 							// turn on the output buffer
 							ob_start();

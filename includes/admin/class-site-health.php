@@ -41,7 +41,7 @@ class Site_Health {
 		}
 
 		$first_activation_date = get_option( 'um_first_activation_date', false );
-		if ( ! empty( $first_activation_date ) && $first_activation_date < 1713342395 ) {
+		if ( ! empty( $first_activation_date ) && $first_activation_date < 1716336000 ) {
 			$tests['direct']['um_outdated_icons'] = array(
 				'label' => esc_html__( 'Are the icons in Ultimate Member Forms and Settings out of date?', 'ultimate-member' ),
 				'test'  => array( $this, 'outdated_icons_test' ),
