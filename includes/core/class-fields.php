@@ -623,7 +623,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return string
 		 */
 		public function show_error( $key ) {
-			return UM()->form()->errors[ $key ];
+			if ( empty( UM()->form()->errors ) ) {
+				return '';
+			}
+			return array_key_exists( $key, UM()->form()->errors ) ? UM()->form()->errors[ $key ] : '';
 		}
 
 		/**
@@ -634,7 +637,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return string
 		 */
 		public function show_notice( $key ) {
-			return UM()->form()->notices[ $key ];
+			if ( empty( UM()->form()->notices ) ) {
+				return '';
+			}
+			return array_key_exists( $key, UM()->form()->notices ) ? UM()->form()->notices[ $key ] : '';
 		}
 
 		/**
@@ -647,13 +653,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return string
 		 */
 		public function field_label( $label, $key, $data ) {
-			$output  = null;
-			$output .= '<div class="um-field-label">';
-
-			if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'off' !== $this->field_icons && ( 'label' === $this->field_icons || true === $this->viewing ) ) {
-				$output .= '<div class="um-field-label-icon"><i class="' . esc_attr( $data['icon'] ) . '" aria-label="' . esc_attr( $label ) . '"></i></div>';
-			}
-
 			if ( true === $this->viewing ) {
 				/**
 				 * Filters Ultimate Member field label on the Profile form: View mode.
@@ -724,13 +723,26 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$label = apply_filters( 'um_edit_label_all_fields', $label, $data );
 			}
 
+			$output  = null;
+			$output .= '<div class="um-field-label">';
+
+			if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'off' !== $this->field_icons && ( 'label' === $this->field_icons || true === $this->viewing ) ) {
+				$output .= '<div class="um-field-label-icon"><i class="' . esc_attr( $data['icon'] ) . '" aria-label="' . esc_attr( $label ) . '"></i></div>';
+			}
+
 			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
 			$for_attr               = '';
 			if ( ! in_array( $data['type'], $fields_without_metakey, true ) ) {
 				$for_attr = ' for="' . esc_attr( $key . UM()->form()->form_suffix ) . '"';
 			}
 
-			$output .= '<label' . $for_attr . '>' . __( $label, 'ultimate-member' ) . '</label>';
+			$output .= '<label' . $for_attr . '>' . esc_html__( $label, 'ultimate-member' );
+
+			if ( ! $this->viewing && ! empty( $data['required'] ) && UM()->options()->get( 'form_asterisk' ) ) {
+				$output .= '<span class="um-req" title="' . esc_attr__( 'Required', 'ultimate-member' ) . '">*</span>';
+			}
+
+			$output .= '</label>';
 
 			if ( ! empty( $data['help'] ) && false === $this->viewing && false === strpos( $key, 'confirm_user_pass' ) ) {
 				if ( ! UM()->mobile()->isMobile() ) {
@@ -1501,24 +1513,24 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			return '';
 		}
 
-
 		/**
 		 * Get field label
 		 *
-		 * @param  string $key
+		 * @param string $key Field meta key
 		 *
 		 * @return string
 		 */
-		function get_label( $key ) {
-			$label = '';
+		public function get_label( $key ) {
+			$label      = '';
+			$fields     = UM()->builtin()->all_user_fields;
+			$field_data = array_key_exists( $key, $fields ) ? $fields[ $key ] : array();
 
-			$fields = UM()->builtin()->all_user_fields;
-			if ( isset( $fields[ $key ]['label'] ) ) {
-				$label = stripslashes( $fields[ $key ]['label'] );
+			if ( array_key_exists( 'label', $field_data ) ) {
+				$label = stripslashes( $field_data['label'] );
 			}
 
-			if ( empty( $label ) && isset( $fields[ $key ]['title'] ) ) {
-				$label = stripslashes( $fields[ $key ]['title'] );
+			if ( empty( $label ) && array_key_exists( 'title', $field_data ) ) {
+				$label = stripslashes( $field_data['title'] );
 			}
 
 			/**
@@ -1544,12 +1556,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			 * }
 			 * add_filter( 'um_change_field_label', 'my_change_field_label', 10, 3 );
 			 */
-			$label = apply_filters( 'um_change_field_label', $label, $key, $fields[ $key ] );
+			$label = apply_filters( 'um_change_field_label', $label, $key, $field_data );
 
-			$label = sprintf( __( '%s', 'ultimate-member' ), $label );
-			return $label;
+			return sprintf( __( '%s', 'ultimate-member' ), $label );
 		}
-
 
 		/**
 		 * Get field title
@@ -2818,6 +2828,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						 */
 						$textarea_settings = apply_filters( 'um_form_fields_textarea_settings', $textarea_settings, $data );
 
+						$field_value = empty( $field_value ) ? '' : $field_value;
+
 						// turn on the output buffer
 						ob_start();
 
@@ -3086,7 +3098,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$fonticon    = UM()->files()->get_fonticon_by_ext( $file_type['ext'] );
 
 							$output .= '<div class="um-single-fileinfo">';
-							$output .= '<a href="' . esc_attr( $file_url ) . '" target="_blank">';
+							$output .= '<a href="' . esc_url( $file_url ) . '" target="_blank">';
 							$output .= '<span class="icon" style="background:' . esc_attr( $fonticon_bg ) . '"><i class="' . esc_attr( $fonticon ) . '"></i></span>';
 							$output .= '<span class="filename">' . esc_html( $file_field_name ) . '</span>';
 							$output .= '</a></div></div>';
@@ -4272,6 +4284,14 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @throws \Exception
 		 */
 		public function view_field( $key, $data, $rule = false ) {
+			if ( '_um_last_login' === $key ) {
+				$profile_id      = um_user( 'ID' );
+				$show_last_login = get_user_meta( $profile_id, 'um_show_last_login', true );
+				if ( ! empty( $show_last_login ) && 'no' === $show_last_login[0] ) {
+					return '';
+				}
+			}
+
 			$output = '';
 
 			// Get whole field data.
@@ -5048,169 +5068,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$html_atts .= $conditional;
 
 			return $html_atts;
-		}
-
-
-		/**
-		 * Get registered entities
-		 *
-		 * @since  2.8.x
-		 *
-		 * @return string/array
-		 */
-		public function registered_entities_conditions() {
-			UM()->admin()->check_ajax_nonce();
-
-			// phpcs:disable WordPress.Security.NonceVerification -- already verified here
-			$option   = $_POST['option'];
-			$responce = '';
-
-			if ( ! empty( $option ) && 'site' !== $option ) {
-				$post_types = get_post_types( array( 'public' => true ), 'names' );
-				if ( in_array( $option, $post_types, true ) ) {
-					$entity = get_posts(
-						array(
-							'post_type'      => $option,
-							'posts_per_page' => -1,
-							'fields'         => 'ids',
-							'order_by'       => 'id',
-							'order'          => 'ASC',
-						)
-					);
-
-					foreach ( $entity as $id ) {
-						$responce .= '<option value="' . esc_attr( $id ) . '">' . esc_html__( 'ID#' ) . esc_attr( $id ) . ': ' . get_the_title( $id ) . '</option>';
-					}
-				} elseif ( 'tags' === $option ) {
-					$tags = get_tags(
-						array(
-							'hide_empty' => false,
-						)
-					);
-					if ( ! empty( $tags ) ) {
-						foreach ( $tags as $tag ) {
-							$responce .= '<option value="' . esc_attr( $tag->term_id ) . '">' . esc_html__( 'ID#' ) . esc_attr( $tag->term_id ) . ': ' . esc_html( $tag->name ) . '</option>';
-						}
-					}
-				} elseif ( 'category' === $option ) {
-					$categories = get_categories(
-						array(
-							'hide_empty' => false,
-							'parent'     => 0,
-						)
-					);
-					if ( ! empty( $categories ) ) {
-						foreach ( $categories as $category ) {
-							$responce .= '<option value="' . esc_attr( $category->term_id ) . '">' . esc_html__( 'ID#' ) . esc_attr( $category->term_id ) . ': ' . esc_html( $category->name ) . '</option>';
-
-							$child_categories = get_categories(
-								array(
-									'hide_empty' => false,
-									'parent'     => $category->term_id,
-								)
-							);
-
-							if ( ! empty( $child_categories ) ) {
-								foreach ( $child_categories as $child_category ) {
-									$responce .= '<option value="' . esc_attr( $child_category->term_id ) . '">-- ' . esc_html__( 'ID#' ) . esc_attr( $child_category->term_id ) . ': ' . esc_html( $child_category->name ) . '</option>';
-								}
-							}
-						}
-					}
-				}
-			}
-
-			if ( 'site' === $option ) {
-				$responce = 'disabled';
-			}
-
-			/**
-			 * Filters Ultimate Member change registered entities.
-			 *
-			 * @param {array} $pages Predefined pages.
-			 *
-			 * @return {array} Predefined pages.
-			 *
-			 * @since 2.8.x
-			 * @hook um_registered_types_conditions
-			 *
-			 * @example <caption>Add an option "All entities".</caption>
-			 * function my_um_registered_types_conditionss( $responce ) {
-			 *     // your code here
-			 *     $responce .= '<option value="all">All entities</option>';
-			 *     return $responce;
-			 * }
-			 * add_filter( 'um_registered_types_conditions', 'my_um_registered_types_conditionss' );
-			 */
-			$responce = apply_filters( 'um_registered_types_conditions', $responce );
-
-			wp_send_json_success( $responce );
-			// phpcs:enable WordPress.Security.NonceVerification -- already verified here
-		}
-
-
-		/**
-		 * Get registered users and user roles
-		 *
-		 * @since  2.8.x
-		 *
-		 * @return string/array
-		 */
-		public function registered_users_conditions() {
-			UM()->admin()->check_ajax_nonce();
-
-			// phpcs:disable WordPress.Security.NonceVerification -- already verified here
-			$option   = $_POST['option'];
-			$responce = '';
-			if ( ! empty( $option ) ) {
-				switch ( $option ) {
-					case 'auth':
-						$responce .= '<option value="loggedin">' . esc_html__( 'Logged-in', 'ultimate-member' ) . '</option>';
-						$responce .= '<option value="notloggedin">' . esc_html__( 'Not logged-in', 'ultimate-member' ) . '</option>';
-						break;
-					case 'user':
-						$users = get_users(
-							array(
-								'fields' => array( 'display_name', 'ID', 'user_login' ),
-							)
-						);
-
-						foreach ( $users as $user ) {
-							$name      = '' !== $user->display_name ? $user->display_name : $user->user_login;
-							$responce .= '<option value="' . $user->ID . '">' . esc_html__( 'ID#', 'ultimate-member' ) . $user->ID . ': ' . $name . '</option>';
-						}
-						break;
-					case 'role':
-						$roles = get_editable_roles();
-						foreach ( $roles as $role => $data ) {
-							$responce .= '<option value="' . $role . '">' . $role . ': ' . $data['name'] . '</option>';
-						}
-						break;
-				}
-			}
-
-			/**
-			 * Filters Ultimate Member change registered entities.
-			 *
-			 * @param {array} $pages Predefined pages.
-			 *
-			 * @return {array} Predefined pages.
-			 *
-			 * @since 2.8.x
-			 * @hook um_registered_types_conditions
-			 *
-			 * @example <caption>Add an option "All entities".</caption>
-			 * function my_um_registered_types_conditionss( $responce ) {
-			 *     // your code here
-			 *     $responce .= '<option value="all">All entities</option>';
-			 *     return $responce;
-			 * }
-			 * add_filter( 'um_registered_types_conditions', 'my_um_registered_types_conditionss' );
-			 */
-			$responce = apply_filters( 'um_registered_types_conditions', $responce );
-
-			wp_send_json_success( $responce );
-			// phpcs:enable WordPress.Security.NonceVerification -- already verified here
 		}
 	}
 }

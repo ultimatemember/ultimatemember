@@ -118,6 +118,26 @@ UM.common = {
 			}
 			return "";
 		}
+	},
+	form: {
+		vanillaSerialize: function ( formID ) {
+			let form = document.querySelector('#' + formID);
+			let data = new FormData( form );
+
+			let obj = {};
+			for (let [key, value] of data) {
+				if (obj[key] !== undefined) {
+					if (!Array.isArray(obj[key])) {
+						obj[key] = [obj[key]];
+					}
+					obj[key].push(value);
+				} else {
+					obj[key] = value;
+				}
+			}
+
+			return obj;
+		}
 	}
 }
 

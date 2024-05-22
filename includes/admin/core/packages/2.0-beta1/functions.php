@@ -150,7 +150,7 @@ function um_upgrade_cpt20beta1() {
 
 	um_maybe_unset_time_limit();
 
-	include 'um_cpt.php';
+	include 'um-cpt.php';
 	wp_send_json_success( array( 'message' => __( 'UM Custom Posts was upgraded successfully', 'ultimate-member' ) ) );
 }
 
@@ -318,7 +318,7 @@ function um_upgrade_email_templates20beta1() {
 
 	um_maybe_unset_time_limit();
 
-	include 'email_templates.php';
+	include 'email-templates.php';
 
 	update_option( 'um_last_version_upgrade', '2.0-beta1' );
 	delete_option( 'um_roles_associations' );
