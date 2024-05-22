@@ -179,10 +179,6 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 					'key'   => 'stripe',
 					'title' => 'Stripe',
 				),
-				'um-zapier/um-zapier.php'                 => array(
-					'key'   => 'zapier',
-					'title' => 'Zapier',
-				),
 			);
 
 			$active_um_plugins = array();

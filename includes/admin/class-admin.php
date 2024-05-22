@@ -667,7 +667,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						'sanitize' => 'text',
 					),
 					'_icon'                           => array(
-						'sanitize' => 'text',
+						'sanitize' => 'key',
 					),
 					'_css_class'                      => array(
 						'sanitize' => 'text',
@@ -1904,9 +1904,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 				'post_title'  => sprintf( __( 'Duplicate of %s', 'ultimate-member' ), get_the_title( $post_id ) ),
 				'post_status' => 'publish',
 				'post_author' => get_current_user_id(),
-				'meta_input'  => array(
-					'_um_mode' => get_post_meta( $post_id, '_um_mode', true ),
-				),
 			);
 
 			$n_id = wp_insert_post( $n );

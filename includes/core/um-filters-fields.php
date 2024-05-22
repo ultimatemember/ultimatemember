@@ -472,7 +472,7 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 		$value = '<a href="' . esc_attr( $value ) . '" title="' . esc_attr( $alt ) . '" target="' . esc_attr( $data['url_target'] ) . '" ' . $url_rel . '>' . esc_html( $alt ) . '</a>';
 	} else {
 		// check $value is oEmbed
-		if ( array_key_exists( 'type', $data ) && 'oembed' === $data['type'] ) {
+		if ( 'oembed' === $data['type'] ) {
 			return $value;
 		}
 
@@ -695,15 +695,16 @@ add_filter( 'um_get_custom_field_array', 'um_get_custom_field_array', 99, 2 );
  * @return mixed
  */
 function um_force_utf8_fields( $value, $data, $type = '' ) {
-	if ( ! UM()->options()->get( 'um_force_utf8_strings' ) ) {
+
+	if( ! UM()->options()->get('um_force_utf8_strings') )
 		return $value;
+
+		$value = um_force_utf8_string( $value );
+
+		return $value;
+
 	}
-
-	$value = um_force_utf8_string( $value );
-
-	return $value;
-}
-add_filter( 'um_profile_field_filter_hook__', 'um_force_utf8_fields', 9, 3 );
+add_filter('um_profile_field_filter_hook__','um_force_utf8_fields', 9, 3 );
 
 
 /**
@@ -866,11 +867,11 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 				$value = 0;
 			} else {
 				if ( 5 === absint( $data['number'] ) ) {
-					if ( ! in_array( absint( $value ), range( 1, 5 ), true ) ) {
+					if ( ! in_array( $value, range( 1, 5 ), true ) ) {
 						$value = 0;
 					}
 				} elseif ( 10 === $data['number'] ) {
-					if ( ! in_array( absint( $value ), range( 1, 10 ), true ) ) {
+					if ( ! in_array( $value, range( 1, 10 ), true ) ) {
 						$value = 0;
 					}
 				}
