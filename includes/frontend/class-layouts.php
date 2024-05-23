@@ -22,6 +22,7 @@ class Layouts {
 	 * @param array            $args    {
 	 *     Dropdown Menu additional arguments.
 	 *
+	 *     @type string $type   View type for dropdown. Can be 'dots' or 'button' or 'link'. It's 'dots' by default.
 	 *     @type string $event  Event in JS that will be used for trigger displaying menu. Uses jQuery events, 'click' by default.
 	 *     @type string $header HTML that would be used as the dropdown menu header.
 	 *     @type int    $width  Dropdown menu predefined width.
@@ -34,10 +35,12 @@ class Layouts {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'event'  => 'click',
-				'header' => '',
-				'width'  => 150,
-				'parent' => '',
+				'type'         => 'dots',
+				'button_label' => '',
+				'event'        => 'click',
+				'header'       => '',
+				'width'        => 150,
+				'parent'       => '',
 			)
 		);
 
@@ -45,13 +48,43 @@ class Layouts {
 			return '';
 		}
 
-		$trigger = $args['event'];
-		$parent  = $args['parent'];
+		$trigger        = $args['event'];
+		$parent         = $args['parent'];
+		$toggle_classes = array( 'um-dropdown-toggle', 'um-dropdown-toggle-' . $args['type'], $element );
+
+		$type_html = '';
+		if ( 'dots' !== $args['type'] ) {
+			if ( ! empty( $args['button_label'] ) ) {
+				if ( 'button' === $args['type'] ) {
+					$type_html = self::button(
+						$args['button_label'],
+						array(
+							'type'    => 'link',
+							'icon_trailing' => '<span class="um-dropdown-chevron"></span>',
+							'design'  => 'secondary-gray',
+							'size'    => 's',
+							'classes' => array(),
+						)
+					);
+				} elseif ( 'link' === $args['type'] ) {
+					$type_html = self::button(
+						$args['button_label'],
+						array(
+							'type'    => 'link',
+							'icon_trailing' => '<span class="um-dropdown-chevron"></span>',
+							'design'  => 'link-gray',
+							'size'    => 's',
+							'classes' => array(),
+						)
+					);
+				}
+			}
+		}
 
 		ob_start();
 		?>
 		<div class="um-dropdown-wrapper">
-			<div class="um-dropdown-toggle <?php echo esc_attr( $element ); ?>"></div>
+			<div class="<?php echo esc_attr( implode( ' ', $toggle_classes ) ); ?>"><?php echo wp_kses( $type_html, UM()->get_allowed_html( 'templates' ) ); ?></div>
 			<div class="um-dropdown<?php if ( empty( $args['header'] ) ) { ?> um-dropdown-no-header<?php } ?>" data-element=".<?php echo esc_attr( $element ); ?>" data-trigger="<?php echo esc_attr( $trigger ); ?>" data-parent="<?php echo esc_attr( $parent ); ?>" data-width="<?php echo esc_attr( $args['width'] ); ?>">
 				<?php if ( ! empty( $args['header'] ) ) { ?>
 					<div class="um-dropdown-header">
@@ -114,16 +147,18 @@ class Layouts {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'type'     => 'button',
-				'design'   => 'secondary-gray',
-				'size'     => 'l',
-				'classes'  => array(),
-				'disabled' => false,
-				'url'      => '#',
-				'target'   => '_self',
-				'width'    => '',
-				'id'       => '',
-				'data'     => array(),
+				'type'          => 'button',
+				'icon_leading'  => null,
+				'icon_trailing' => null,
+				'design'        => 'secondary-gray',
+				'size'          => 'l',
+				'classes'       => array(),
+				'disabled'      => false,
+				'url'           => '#',
+				'target'        => '_self',
+				'width'         => '',
+				'id'            => '',
+				'data'          => array(),
 			)
 		);
 
@@ -146,6 +181,14 @@ class Layouts {
 			}
 		}
 
+		if ( ! empty( $args['icon_leading'] ) ) {
+			$classes[] = 'um-button-icon-leading';
+		}
+
+		if ( ! empty( $args['icon_trailing'] ) ) {
+			$classes[] = 'um-button-icon-trailing';
+		}
+
 		if ( ! empty( $args['classes'] ) ) {
 			$classes = array_merge( $classes, $args['classes'] );
 		}
@@ -161,11 +204,11 @@ class Layouts {
 		ob_start();
 		if ( 'link' === $args['type'] ) {
 			?>
-			<a id="<?php echo esc_attr( $args['id'] ); ?>" href="<?php echo esc_url( $args['url'] ); ?>" target="<?php echo esc_attr( $args['target'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" <?php echo $data_atts; ?>><?php echo wp_kses_post( $content ); ?></a>
+			<a id="<?php echo esc_attr( $args['id'] ); ?>" href="<?php echo esc_url( $args['url'] ); ?>" target="<?php echo esc_attr( $args['target'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" <?php echo $data_atts; ?>><?php echo wp_kses_post( $args['icon_leading'] . $content . $args['icon_trailing'] ); ?></a>
 			<?php
 		} else {
 			?>
-			<button id="<?php echo esc_attr( $args['id'] ); ?>" type="<?php echo esc_attr( $args['type'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" <?php disabled( $args['disabled'] ); ?> <?php echo $data_atts; ?>><?php echo wp_kses_post( $content ); ?></button>
+			<button id="<?php echo esc_attr( $args['id'] ); ?>" type="<?php echo esc_attr( $args['type'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" <?php disabled( $args['disabled'] ); ?> <?php echo $data_atts; ?>><?php echo wp_kses_post( $args['icon_leading'] . $content . $args['icon_trailing'] ); ?></button>
 			<?php
 		}
 		return ob_get_clean();
@@ -870,6 +913,52 @@ class Layouts {
 		ob_start();
 		?>
 		<div class="um-divider"><hr /></div>
+		<?php
+		return ob_get_clean();
+	}
+
+	public static function buttons_group( $buttons, $args ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'size'    => 'auto', // auto || equal
+				'classes' => array(),
+			)
+		);
+
+		$args['classes'][] = 'um-buttons-group';
+		$args['classes'][] = 'um-buttons-group-' . $args['size'];
+		ob_start();
+		?>
+		<div class="<?php echo esc_attr( implode( ' ', $args['classes'] ) ); ?>">
+		<?php
+		foreach ( $buttons as $button ) {
+			$button = wp_parse_args(
+				$button,
+				array(
+					'classes' => array(),
+					'label'   => '',
+					'data'    => array(),
+				)
+			);
+
+			if ( empty( $button['label'] ) ) {
+				continue;
+			}
+
+			$button['classes'][] = 'um-button-in-group';
+
+			$data_attr = array();
+			foreach ( $button['data'] as $data_k => $data_v ) {
+				$data_attr[] = 'data-' . $data_k . '="' . esc_attr( $data_v ) . '"';
+			}
+			$data_attr = implode( ' ', $data_attr );
+			?>
+			<span class="<?php echo esc_attr( implode( ' ', $button['classes'] ) ); ?>" <?php echo $data_attr; ?>><?php echo esc_html( $button['label'] ); ?></span>
+			<?php
+		}
+		?>
+		</div>
 		<?php
 		return ob_get_clean();
 	}

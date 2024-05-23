@@ -1662,7 +1662,8 @@ class Directory extends \um\common\Directory {
 			'pagination'  => UM()->ajax()->esc_html_spaces( $pagination ),
 			'total_pages' => absint( ceil( $pagination_args['total'] / $pagination_args['per_page'] ) ),
 			'is_search'   => $this->is_search,
-//			'users'       => $users,
+			// translators: %d is the count of users
+			'counter'     => $pagination_args['total'] > 0 ? esc_html( sprintf( _n( '%d Member', '%d Members', $pagination_args['total'], 'ultimate-member' ), $pagination_args['total'] ) ) : '',
 		);
 
 		foreach ( $directory_data['view_types'] as $view_type ) {

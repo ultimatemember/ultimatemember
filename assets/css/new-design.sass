@@ -102,6 +102,10 @@
       text-decoration: none
       display: inline-block
       box-sizing: border-box
+    &.#{$prefix}button-icon-trailing,
+    &.#{$prefix}button-icon-icon_leading
+      +flex( row, flex-start, center, nowrap )
+      column-gap: $spacing-xs
     &.#{$prefix}link-button-disabled
       cursor: not-allowed
       color: $button-color-disabled
@@ -1364,8 +1368,64 @@ input[type="range"]
         background: $success-50
         color: $success-700
 
+// Buttons group
+.um
+  .#{$prefix}buttons-group
+    margin: 0
+    padding: 0
+    box-shadow: $shadow-xs
+    border-radius: $radius-md
+    overflow: hidden
+    &.#{$prefix}buttons-group-auto
+      +flex( row, flex-start, baseline, nowrap )
+    &.#{$prefix}buttons-group-equal
+      display: grid
+      grid-auto-columns: minmax(0, 1fr)
+      grid-auto-flow: column
+    .#{$prefix}button-in-group
+      +border-box
+      text-align: center
+      cursor: pointer
+      display: inline-block
+      padding: $spacing-md $spacing-xl
+      transition: all .2s linear
+      +typography( text, sm, semibold )
+      color: $button-color
+      background-color: $button-bg
+      border-right: 1px solid $button-border-color
+      border-top: 1px solid $button-border-color
+      border-bottom: 1px solid $button-border-color
+      &:hover
+        color: $button-color-hover
+        background-color: $button-bg-hover
+      &.current
+        cursor: default
+        background-color: $button-bg-hover
+        color: $button-color-hover
+        &:hover
+          color: $button-color-hover
+          background-color: $button-bg-hover
+      &.disabled
+        cursor: not-allowed
+        color: $button-color-disabled
+        background-color: $button-bg-disabled
+        border-top: 1px solid  $button-border-color-disabled
+        border-bottom: 1px solid  $button-border-color-disabled
+        &:hover
+          color: $button-color-disabled
+          background-color: $button-bg-disabled
+      &:first-child
+        border-radius: $radius-md 0 0 $radius-md
+        border-left: 1px solid $button-border-color
+        &.disabled
+          border-left: 1px solid $button-border-color-disabled
+      &:last-child
+        border-radius: 0 $radius-md $radius-md 0
+        &.disabled
+          border-right: 1px solid $button-border-color-disabled
 
 // Pagination
+// Note: It partially uses the buttons group style
 .um
   .#{$prefix}pagination
     +border-box
@@ -1378,50 +1438,25 @@ input[type="range"]
       width: 100%
       margin: 0
       padding: 0
-      .#{$prefix}pagination-item
-        +border-box
+      .#{$prefix}pagination-item.#{$prefix}pagination-arrow
         text-align: center
-        cursor: pointer
-        display: inline-block
-        padding: $spacing-md
-        width: 40px
+        padding: $spacing-md $spacing-xl
+        min-width: 80px
         height: 40px
-        transition: all .2s linear
-        +typography( text, sm, semibold )
-        color: $button-color
-        background-color: $button-bg
-        border-right: 1px solid $button-border-color
-        border-top: 1px solid $button-border-color
-        border-bottom: 1px solid $button-border-color
-        box-shadow: $shadow-xs
-        &:hover
-          color: $button-color-hover
-          background-color: $button-bg-hover
-        &.#{$prefix}pagination-arrow
-          width: auto
-          min-width: 80px
-          padding: $spacing-md $spacing-xl
-          &[data-page="prev"]
-            border-radius: $radius-md 0 0 $radius-md
-            border-left: 1px solid $button-border-color
-            &.disabled
-              border-right: 1px solid $button-border-color
-              border-left: 1px solid $button-border-color-disabled
-          &[data-page="next"]
-            border-radius: 0 $radius-md $radius-md 0
-        &.current
-          cursor: default
-          background-color: $button-bg-hover
-          color: $button-color-hover
-          &:hover
-            color: $button-color-hover
-            background-color: $button-bg-hover
-        &.disabled
-          cursor: not-allowed
-          color: $button-color-disabled
-          border-right: 1px solid $button-border-color-disabled
-          border-top: 1px solid  $button-border-color-disabled
-          border-bottom: 1px solid  $button-border-color-disabled
+        &:first-child
+          border-right: 0
+          &.disabled
+            border-right: 0
+      .#{$prefix}pagination-pages-grid
+        display: grid
+        grid-auto-columns: minmax(0, 1fr)
+        grid-auto-flow: column
+        .#{$prefix}pagination-item
+          min-width: 40px
+          height: 40px
+          text-align: center
+          padding: $spacing-md
+          border-radius: 0
 
     .#{$prefix}pagination-view-mobile
       +flex( row, space-between, center, nowrap )

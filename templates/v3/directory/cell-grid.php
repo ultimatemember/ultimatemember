@@ -66,7 +66,7 @@ if ( $directory_data['cover_photos'] && $member['cover_photo'] ) {
 
 echo wp_kses(
 	UM()->frontend()::layouts()::dropdown_menu(
-		'um-box-dropdown-toggle',
+		'um-member-actions-toggle',
 		$member['dropdown_actions'],
 		array( 'width' => 210 )
 	),

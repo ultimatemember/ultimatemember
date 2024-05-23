@@ -4,12 +4,12 @@
  *
  * @version 2.9.0
  *
- * @var int  $pages
- * @var int  $page
- * @var int  $per_page
- * @var int  $pages_count
- * @var bool $previous_disabled
- * @var bool $next_disabled
+ * @var array $pages
+ * @var int   $page
+ * @var int   $per_page
+ * @var int   $pages_count
+ * @var bool  $previous_disabled
+ * @var bool  $next_disabled
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -60,28 +60,35 @@ if ( ! defined( 'ABSPATH' ) ) {
 		?>
 	</div>
 	<div class="um-pagination-view-list um-responsive um-ui-s um-ui-m um-ui-l um-ui-xl">
-		<?php
-		$prev_classes = array( 'um-pagination-item', 'um-pagination-arrow' );
-		if ( $previous_disabled ) {
-			$prev_classes[] = 'disabled';
-		}
-		?>
-		<span class="<?php echo esc_attr( implode( ' ', $prev_classes ) ); ?>" data-page="prev" aria-label="<?php esc_attr_e( 'Previous page', 'ultimate-member' ); ?>"><?php esc_html_e( 'Previous', 'ultimate-member' ); ?></span>
-		<?php
-		foreach ( $pages as $page_index => $page_data ) {
-			$page_classes = array( 'um-pagination-item' );
-			if ( ! empty( $page_data['current'] ) ) {
-				$page_classes[] = 'current';
+		<!--below imitation of buttons group-->
+		<div class="um-pagination-view-list-inner um-buttons-group um-buttons-group-auto">
+			<?php
+			$prev_classes = array( 'um-pagination-item', 'um-pagination-arrow', 'um-button-in-group' );
+			if ( $previous_disabled ) {
+				$prev_classes[] = 'disabled';
 			}
 			?>
-			<span class="<?php echo esc_attr( implode( ' ', $page_classes ) ); ?>" data-page="<?php echo esc_attr( $page_index ); ?>"><?php echo esc_html( $page_data['label'] ); ?></span>
+			<span class="<?php echo esc_attr( implode( ' ', $prev_classes ) ); ?>" data-page="prev" aria-label="<?php esc_attr_e( 'Previous page', 'ultimate-member' ); ?>"><?php esc_html_e( 'Previous', 'ultimate-member' ); ?></span>
+			<div class="um-pagination-pages-grid">
+				<?php
+				foreach ( $pages as $page_index => $page_data ) {
+					$page_classes = array( 'um-pagination-item', 'um-button-in-group' );
+					if ( ! empty( $page_data['current'] ) ) {
+						$page_classes[] = 'current';
+					}
+					?>
+					<span class="<?php echo esc_attr( implode( ' ', $page_classes ) ); ?>" data-page="<?php echo esc_attr( $page_index ); ?>"><?php echo esc_html( $page_data['label'] ); ?></span>
+					<?php
+				}
+				?>
+			</div>
 			<?php
-		}
-		$next_classes = array( 'um-pagination-item', 'um-pagination-arrow' );
-		if ( $next_disabled ) {
-			$next_classes[] = 'disabled';
-		}
-		?>
-		<span class="<?php echo esc_attr( implode( ' ', $next_classes ) ); ?>" data-page="next" aria-label="<?php esc_attr_e( 'Next page', 'ultimate-member' ); ?>"><?php esc_html_e( 'Next', 'ultimate-member' ); ?></span>
+			$next_classes = array( 'um-pagination-item', 'um-pagination-arrow', 'um-button-in-group' );
+			if ( $next_disabled ) {
+				$next_classes[] = 'disabled';
+			}
+			?>
+			<span class="<?php echo esc_attr( implode( ' ', $next_classes ) ); ?>" data-page="next" aria-label="<?php esc_attr_e( 'Next page', 'ultimate-member' ); ?>"><?php esc_html_e( 'Next', 'ultimate-member' ); ?></span>
+		</div>
 	</div>
 </div>

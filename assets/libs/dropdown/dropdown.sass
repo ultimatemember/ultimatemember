@@ -10,34 +10,67 @@
   .#{$prefix}dropdown-toggle
     position: relative
     +border-box
-    cursor: pointer
-    height: $icon-size
-    &:before
-      content: ""
-      position: absolute
-      top: 0
-      right: -8px
-      mask-size: contain
-      -webkit-mask-size: contain
-      mask-position: center
-      -webkit-mask-position: center
-      mask-repeat: no-repeat
-      -webkit-mask-repeat: no-repeat
-      mask-image: url(../../icons/dots-vertical.svg)
-      -webkit-mask-image: url(../../icons/dots-vertical.svg)
-      width: $icon-size
+    &.#{$prefix}dropdown-toggle-dots
+      cursor: pointer
       height: $icon-size
-      background-color: $gray-400
-      text-indent: 500%
-      white-space: nowrap
-      overflow: hidden
-    &:hover
       &:before
-        background-color: $gray-600
-    &.#{$prefix}dropdown-shown,
-    &:focus
-      &:before
-        background-color: $gray-700
+        content: ""
+        position: absolute
+        top: 0
+        right: -8px
+        mask-size: contain
+        -webkit-mask-size: contain
+        mask-position: center
+        -webkit-mask-position: center
+        mask-repeat: no-repeat
+        -webkit-mask-repeat: no-repeat
+        mask-image: url(../../icons/dots-vertical.svg)
+        -webkit-mask-image: url(../../icons/dots-vertical.svg)
+        width: $icon-size
+        height: $icon-size
+        background-color: $gray-400
+        text-indent: 500%
+        white-space: nowrap
+        overflow: hidden
+      &:hover
+        &:before
+          background-color: $gray-600
+      &.#{$prefix}dropdown-shown,
+      &:focus
+        &:before
+          background-color: $gray-700
+    &.#{$prefix}dropdown-toggle-button,
+    &.#{$prefix}dropdown-toggle-link
+      .#{$prefix}link-button
+        .#{$prefix}dropdown-chevron
+          width: $icon-size
+          height: $icon-size
+          position: relative
+          &:after
+            content: ""
+            position: absolute
+            top: 0
+            right: 0
+            mask-size: contain
+            -webkit-mask-size: contain
+            mask-position: center
+            -webkit-mask-position: center
+            mask-repeat: no-repeat
+            -webkit-mask-repeat: no-repeat
+            mask-image: url(../../icons/chevron-down.svg)
+            -webkit-mask-image: url(../../icons/chevron-down.svg)
+            width: $icon-size
+            height: $icon-size
+            background-color: $gray-700
+            text-indent: 500%
+            white-space: nowrap
+            overflow: hidden
+      &.#{$prefix}dropdown-shown
+        .#{$prefix}link-button
+          .#{$prefix}dropdown-chevron
+            &:after
+              mask-image: url(../../icons/chevron-up.svg)
+              -webkit-mask-image: url(../../icons/chevron-up.svg)
 
 .#{$prefix}dropdown
   font-size: 16px

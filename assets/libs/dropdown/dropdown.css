@@ -7,10 +7,12 @@
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
+}
+.um-dropdown-wrapper .um-dropdown-toggle.um-dropdown-toggle-dots {
   cursor: pointer;
   height: 20px;
 }
-.um-dropdown-wrapper .um-dropdown-toggle:before {
+.um-dropdown-wrapper .um-dropdown-toggle.um-dropdown-toggle-dots:before {
   content: "";
   position: absolute;
   top: 0;
@@ -30,11 +32,40 @@
   white-space: nowrap;
   overflow: hidden;
 }
-.um-dropdown-wrapper .um-dropdown-toggle:hover:before {
+.um-dropdown-wrapper .um-dropdown-toggle.um-dropdown-toggle-dots:hover:before {
   background-color: var(--um-gray-600, #475467);
 }
-.um-dropdown-wrapper .um-dropdown-toggle.um-dropdown-shown:before, .um-dropdown-wrapper .um-dropdown-toggle:focus:before {
+.um-dropdown-wrapper .um-dropdown-toggle.um-dropdown-toggle-dots.um-dropdown-shown:before, .um-dropdown-wrapper .um-dropdown-toggle.um-dropdown-toggle-dots:focus:before {
   background-color: var(--um-gray-700, #344054);
+}
+.um-dropdown-wrapper .um-dropdown-toggle.um-dropdown-toggle-button .um-link-button .um-dropdown-chevron, .um-dropdown-wrapper .um-dropdown-toggle.um-dropdown-toggle-link .um-link-button .um-dropdown-chevron {
+  width: 20px;
+  height: 20px;
+  position: relative;
+}
+.um-dropdown-wrapper .um-dropdown-toggle.um-dropdown-toggle-button .um-link-button .um-dropdown-chevron:after, .um-dropdown-wrapper .um-dropdown-toggle.um-dropdown-toggle-link .um-link-button .um-dropdown-chevron:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  mask-size: contain;
+  -webkit-mask-size: contain;
+  mask-position: center;
+  -webkit-mask-position: center;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+  mask-image: url(../../icons/chevron-down.svg);
+  -webkit-mask-image: url(../../icons/chevron-down.svg);
+  width: 20px;
+  height: 20px;
+  background-color: var(--um-gray-700, #344054);
+  text-indent: 500%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.um-dropdown-wrapper .um-dropdown-toggle.um-dropdown-toggle-button.um-dropdown-shown .um-link-button .um-dropdown-chevron:after, .um-dropdown-wrapper .um-dropdown-toggle.um-dropdown-toggle-link.um-dropdown-shown .um-link-button .um-dropdown-chevron:after {
+  mask-image: url(../../icons/chevron-up.svg);
+  -webkit-mask-image: url(../../icons/chevron-up.svg);
 }
 
 .um-dropdown {

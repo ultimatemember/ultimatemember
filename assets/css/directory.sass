@@ -204,6 +204,19 @@
             padding: 3px 10px
             margin: 0 10px
 
+  .#{$prefix}member-directory-header
+    .#{$prefix}member-view-switcher
+      margin-right: $spacing-3xl
+    .#{$prefix}members-counter
+      +typography( text, lg, semibold )
+    .#{$prefix}member-directory-sorting
+      +flex( row, flex-start, baseline, nowrap )
+      column-gap: $spacing-md
+      & > span
+        +typography( text, sm, semibold )
+      .#{$prefix}dropdown-wrapper
+        min-width: auto
+        min-height: auto
 
   .#{$prefix}members-wrapper
     &.#{$prefix}members-grid

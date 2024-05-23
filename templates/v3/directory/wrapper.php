@@ -38,10 +38,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-foreach ( $view_types as $view_type ) {
-	$basename = UM()->member_directory()->get_type_basename( $view_type );
-	UM()->get_template( 'v3/members-' . $view_type . '.php', $basename, $args, true );
-}
+//foreach ( $view_types as $view_type ) {
+//	$basename = UM()->member_directory()->get_type_basename( $view_type );
+//	UM()->get_template( 'v3/members-' . $view_type . '.php', $basename, $args, true );
+//}
 ?>
 
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ); ?>"
@@ -70,65 +70,11 @@ foreach ( $view_types as $view_type ) {
 			<?php
 		}
 
-		if ( ( ! empty( $args['enable_sorting'] ) && ! empty( $sorting_options ) && count( $sorting_options ) > 1 ) ||
-			( $filters && $show_filters && count( $search_filters ) ) ||
-			! $single_view ) {
+		if ( $filters && $show_filters && count( $search_filters ) ) {
 			?>
 			<div class="um-member-directory-header-row">
 				<div class="um-member-directory-nav-line">
 					<?php
-					if ( ! $single_view ) {
-						$view_types = 0;
-
-						foreach ( UM()->member_directory()->view_types as $key => $value ) {
-							if ( in_array( $key, $args['view_types'], true ) ) {
-								if ( empty( $view_types ) ) {
-									?>
-									<span class="um-member-directory-view-type<?php if ( $not_searched ) { ?> um-disabled<?php } ?>">
-									<?php
-								}
-								// translators: %s: title.
-								$data_title = sprintf( __( 'Change to %s', 'ultimate-member' ), $value['title'] );
-								$view_types++;
-								?>
-
-								<a href="javascript:void(0)"
-									class="um-member-directory-view-type-a<?php if ( ! $not_searched ) { ?> um-tip-n<?php } ?>"
-									data-type="<?php echo esc_attr( $key ); ?>"
-									data-default="<?php echo ( $default_view === $key ) ? 1 : 0; ?>"
-									title="<?php echo esc_attr( $data_title ); ?>"
-									default-title="<?php echo esc_attr( $value['title'] ); ?>"
-									next-item="" ><i class="<?php echo esc_attr( $value['icon'] ); ?>"></i></a>
-								<?php
-							}
-						}
-
-						if ( ! empty( $view_types ) ) {
-							?>
-							</span>
-							<?php
-						}
-					}
-
-					if ( ! empty( $args['enable_sorting'] ) && ! empty( $sorting_options ) && count( $sorting_options ) > 1 ) { ?>
-						<div class="um-member-directory-sorting">
-							<span><?php _e( 'Sort by:', 'ultimate-member' ); ?>&nbsp;</span>
-							<div class="um-member-directory-sorting-a">
-								<a href="javascript:void(0);" class="um-member-directory-sorting-a-text"><?php echo $sorting_options[ $sort_from_url ] ?></a>
-								&nbsp;<i class="um-faicon-caret-down"></i><i class="um-faicon-caret-up"></i>
-							</div>
-						</div>
-
-						<?php $items = array();
-
-						foreach ( $sorting_options as $value => $title ) {
-							$items[] = '<a href="javascript:void(0);" data-directory-hash="' . esc_attr( substr( md5( $form_id ), 10, 5 ) ) . '" class="um-sortyng-by-' . esc_attr( $value ) . '" data-value="' . esc_attr( $value ) . '" data-selected="' . ( ( $sort_from_url == $value ) ? '1' : '0' ) . '" data-default="' . ( ( $default_sorting == $value ) ? '1' : '0' ) . '">' . $title . '</a>'; ?>
-						<?php }
-
-						UM()->member_directory()->dropdown_menu( '.um-member-directory-sorting-a', 'click', $items ); ?>
-
-					<?php }
-
 					if ( $filters && $show_filters && count( $search_filters ) && $filters_collapsible ) { ?>
 						<span class="um-member-directory-filters">
 							<span class="um-member-directory-filters-a<?php if ( $filters_expanded ) { ?> um-member-directory-filters-visible<?php } ?>">
@@ -195,7 +141,67 @@ foreach ( $view_types as $view_type ) {
 		?>
 	</div>
 
-	<div class="um-members-counter"></div>
+	<div class="um-member-directory-header">
+		<div class="um-member-directory-header-row">
+			<?php
+			if ( ! $single_view ) {
+				$button_args = array();
+				foreach ( UM()->member_directory()->view_types as $key => $value ) {
+					if ( in_array( $key, $view_types, true ) ) {
+						$b_classes = array( 'um-member-directory-view-type-' . $key );
+						if ( $current_view === $key ) {
+							$b_classes[] = 'current';
+						}
+						$button_args[] = array(
+							'label'   => $value['title'],
+							'classes' => $b_classes,
+							'data'    => array(
+								'type'    => $key,
+								'default' => $default_view === $key,
+							),
+						);
+					}
+				}
+
+				echo wp_kses(
+					UM()->frontend()::layouts()::buttons_group(
+						$button_args,
+						array(
+							'size'    => 'equal',
+							'classes' => array( 'um-member-view-switcher' ),
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				);
+			}
+			?>
+			<div class="um-members-counter"></div>
+
+			<?php if ( ! empty( $enable_sorting ) && ! empty( $sorting_options ) && count( $sorting_options ) > 1 ) { ?>
+				<div class="um-member-directory-sorting">
+					<span><?php esc_html_e( 'Sort by:', 'ultimate-member' ); ?></span>
+					<?php
+					$items = array();
+					foreach ( $sorting_options as $value => $title ) {
+						$items[] = '<a href="javascript:void(0);" data-directory-hash="' . esc_attr( substr( md5( $form_id ), 10, 5 ) ) . '" class="um-sortyng-by-' . esc_attr( $value ) . '" data-value="' . esc_attr( $value ) . '" data-selected="' . ( ( $sort_from_url == $value ) ? '1' : '0' ) . '" data-default="' . ( ( $default_sorting == $value ) ? '1' : '0' ) . '">' . $title . '</a>';
+					}
+					echo wp_kses(
+						UM()->frontend()::layouts()::dropdown_menu(
+							'um-members-sorting-toggle',
+							$items,
+							array(
+								'type'          => 'button',
+								'button_label'  => $sorting_options[ $sort_from_url ],
+								'width'         => 210,
+							)
+						),
+						UM()->get_allowed_html( 'templates' )
+					);
+					?>
+				</div>
+			<?php } ?>
+		</div>
+	</div>
 
 	<?php $wrapper_classes = array( 'um-members-wrapper', 'um-members-' . $current_view ); ?>
 	<div class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>"></div>

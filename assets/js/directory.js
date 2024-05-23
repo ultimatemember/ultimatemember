@@ -370,6 +370,12 @@ function um_build_template( directory, data ) {
 	if( jQuery('.um-' + um_members_get_hash( directory )).length ) {
 		directory.find('.um-members-wrapper').html('').prepend(data[ 'content_' + layout ]);
 
+		if ( '' !== data.counter ) {
+			directory.find('.um-members-counter').text( data.counter ).show();
+		} else {
+			directory.find('.um-members-counter').text( data.counter ).hide();
+		}
+
 		// var header_template = wp.template('um-members-header');
 		// directory.find('.um-members-intro').remove();
 		//
@@ -910,60 +916,58 @@ jQuery(document.body).ready( function() {
 
 
 	//UI for change view type button
-	jQuery( document.body ).on( 'mouseover', '.um-directory .um-member-directory-view-type', function() {
-		if ( jQuery(this).hasClass('um-disabled') ) {
-			return;
-		}
-
-		var $obj = jQuery(this).find('.um-member-directory-view-type-a:visible');
-
-		$obj.hide();
-
-		if ( $obj.next().length ) {
-			$obj.next().show().tipsy('show');
-		} else {
-			jQuery(this).find( '.um-member-directory-view-type-a:first' ).show().tipsy('show');
-		}
-	}).on( 'mouseout', '.um-directory .um-member-directory-view-type', function() {
-		if ( jQuery(this).hasClass('um-disabled') ) {
-			return;
-		}
-
-		jQuery(this).find('.um-member-directory-view-type-a').hide().tipsy('hide');
-		jQuery(this).find('.um-member-directory-view-type-a[data-type="' + jQuery(this).parents( '.um-directory' ).data('view_type') + '"]').show();
-	});
+	// jQuery( document.body ).on( 'mouseover', '.um-directory .um-member-directory-view-type', function() {
+	// 	if ( jQuery(this).hasClass('um-disabled') ) {
+	// 		return;
+	// 	}
+	//
+	// 	var $obj = jQuery(this).find('.um-member-directory-view-type-a:visible');
+	//
+	// 	$obj.hide();
+	//
+	// 	if ( $obj.next().length ) {
+	// 		$obj.next().show().tipsy('show');
+	// 	} else {
+	// 		jQuery(this).find( '.um-member-directory-view-type-a:first' ).show().tipsy('show');
+	// 	}
+	// }).on( 'mouseout', '.um-directory .um-member-directory-view-type', function() {
+	// 	if ( jQuery(this).hasClass('um-disabled') ) {
+	// 		return;
+	// 	}
+	//
+	// 	jQuery(this).find('.um-member-directory-view-type-a').hide().tipsy('hide');
+	// 	jQuery(this).find('.um-member-directory-view-type-a[data-type="' + jQuery(this).parents( '.um-directory' ).data('view_type') + '"]').show();
+	// });
 
 	//change layout handler
-	jQuery( document.body ).on( 'click', '.um-directory .um-member-directory-view-type-a', function() {
-		var directory = jQuery(this).parents('.um-directory');
+	jQuery( document.body ).on( 'click', '.um-directory .um-member-view-switcher:not(.um-disabled) .um-button-in-group:not(.current)', function() {
+		let $this = jQuery(this);
+		let directory = $this.parents('.um-directory');
 		if ( um_is_directory_busy( directory ) ) {
 			return false;
 		}
 
-		var $this = jQuery(this);
-		var views = $this.parents('.um-member-directory-view-type');
-
-		if ( views.hasClass('um-disabled') ) {
-			return;
-		}
-
 		um_members_show_preloader( directory );
 
-		var $obj = views.find('.um-member-directory-view-type-a:visible');
-
-		$obj.hide();
-
-		if ( $obj.next().length ) {
-			$obj.next().show().tipsy('show');
-		} else {
-			views.find( '.um-member-directory-view-type-a:first' ).show().tipsy('show');
-		}
-
-		var data = um_member_directory_last_data[ um_members_get_hash( directory ) ];
+		let data = um_member_directory_last_data[ um_members_get_hash( directory ) ];
 		if ( data !== null ) {
-			var layout = $this.data('type');
 
-			um_set_url_from_data( directory, 'view_type', layout );
+			let prevType = $this.parents('.um-member-view-switcher').find('.um-button-in-group.current').data('type');
+			directory.find('.um-members-wrapper.um-members-' + prevType).removeClass('um-members-' + prevType);
+
+			$this.parents('.um-member-view-switcher').find('.um-button-in-group').removeClass('current');
+			$this.addClass('current');
+
+			let layout = $this.data('type');
+			let defaultView = $this.data('default');
+
+			directory.find('.um-members-wrapper').addClass('um-members-' + layout);
+
+			if ( defaultView ) {
+				um_set_url_from_data( directory, 'view_type', '' );
+			} else {
+				um_set_url_from_data( directory, 'view_type', layout );
+			}
 			directory.data( 'view_type', layout );
 
 			um_build_template( directory, data );
