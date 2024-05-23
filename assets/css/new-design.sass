@@ -487,6 +487,70 @@
       .#{$prefix}box-content
         padding: 0
 
+    &.#{$prefix}member
+      +flex( column, flex-start, center, nowrap )
+      &.#{$prefix}member-with-cover
+        padding: 0 0 $spacing-3xl 0
+        .#{$prefix}member-photos
+          position: relative
+          +flex( column, flex-start, center, nowrap )
+          .#{$prefix}avatar
+            position: absolute
+            bottom: -$spacing-7xl
+            z-index: 2
+          .#{$prefix}member-cover
+            z-index: 1
+        .#{$prefix}member-cover
+          +flex( row, center, center, nowrap )
+          width: 100%
+          height: auto
+          margin: 0
+          padding: 0
+          img
+            width: 100%
+            height: auto
+            margin: 0
+            padding: 0
+            object-fit: scale-down
+            &[data-ratio="1.6:1"]
+              aspect-ratio: 1.6/1
+            &[data-ratio="2.7:1"]
+              aspect-ratio: 2.7/1
+            &[data-ratio="2.2:1"]
+              aspect-ratio: 2.2/1
+            &[data-ratio="3.2:1"]
+              aspect-ratio: 3.2/1
+        .#{$prefix}dropdown-wrapper
+          width: 100%
+          height: calc( $spacing-7xl - $spacing-md )
+          +border-box
+          padding: 0 $spacing-lg
+          .#{$prefix}dropdown-toggle
+            float: right
+            width: 20px
+        .#{$prefix}member-box-main
+          width: 100%
+          padding: 0 $spacing-3xl
+          margin: 0
+          +border-box
+          +flex( column, flex-start, center, wrap )
+          row-gap: $spacing-md
+          .#{$prefix}member-meta
+            width: 100%
+            padding: 0
+            margin: 0
+            +border-box
+            +flex( column, flex-start, stretch, wrap )
+            row-gap: $spacing-md
+            & ~ #{$prefix}member-less
+              display: none
+            & ~ #{$prefix}member-more
+              display: initial
+            .#{$prefix}member-meta-visible
+              & ~ #{$prefix}member-less
+                display: initial
+              & ~ #{$prefix}member-more
+                display: none
 
   // Link
   .#{$prefix}link

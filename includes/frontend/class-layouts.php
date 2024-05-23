@@ -248,6 +248,7 @@ class Layouts {
 				'footer'           => '',
 				'actions'          => array(),
 				'actions_position' => 'right',
+				'pre_header'       => '',
 			)
 		);
 
@@ -268,30 +269,51 @@ class Layouts {
 		}
 		$classes = implode( ' ', $classes );
 
+		if ( ! empty( $args['title'] ) || ! empty( $args['actions'] ) || ! empty( $args['footer'] ) ) {
+			$content = '<div class="um-box-content">' . $content . '</div>';
+		}
+
 		ob_start();
 		?>
 		<div id="<?php echo esc_attr( $args['id'] ); ?>" class="<?php echo esc_attr( $classes ); ?>">
-			<div class="um-box-header<?php if ( empty( $args['title'] ) ) { ?> um-box-no-title<?php } ?><?php if ( empty( $args['actions'] ) ) { ?> um-box-no-actions<?php } ?>">
-				<?php if ( ! empty( $args['title'] ) ) { ?>
-					<span class="um-box-title">
-						<?php echo esc_html( $args['title'] ); ?>
-					</span>
-				<?php } ?>
-
-				<?php
-				if ( ! empty( $args['actions'] ) ) {
-					echo self::dropdown_menu( 'um-box-dropdown-toggle', $args['actions'] );
+			<?php
+			if ( ! empty( $args['title'] ) || ! empty( $args['actions'] ) ) {
+				$header_classes = array(
+					'um-box-header',
+				);
+				if ( empty( $args['title'] ) ) {
+					$header_classes[] = 'um-box-no-title';
+				}
+				if ( empty( $args['actions'] ) ) {
+					$header_classes[] = 'um-box-no-actions';
 				}
 				?>
-			</div>
-			<div class="um-box-content">
-				<?php echo wp_kses( $content, UM()->get_allowed_html( 'templates' ) ); ?>
-			</div>
-			<?php if ( ! empty( $args['footer'] ) ) { ?>
+				<div class="<?php echo esc_attr( implode( ' ', $header_classes ) ); ?>">
+					<?php if ( ! empty( $args['title'] ) ) { ?>
+						<span class="um-box-title">
+							<?php echo esc_html( $args['title'] ); ?>
+						</span>
+					<?php } ?>
+
+					<?php
+					if ( ! empty( $args['actions'] ) ) {
+						echo wp_kses( self::dropdown_menu( 'um-box-dropdown-toggle', $args['actions'] ), UM()->get_allowed_html( 'templates' ) );
+					}
+					?>
+				</div>
+				<?php
+			}
+
+			echo wp_kses( $content, UM()->get_allowed_html( 'templates' ) );
+
+			if ( ! empty( $args['footer'] ) ) {
+				?>
 				<div class="um-box-footer">
 					<?php echo wp_kses( $args['footer'], UM()->get_allowed_html( 'templates' ) ); ?>
 				</div>
-			<?php } ?>
+				<?php
+			}
+			?>
 		</div>
 		<?php
 		return ob_get_clean();

@@ -625,6 +625,114 @@
 .um .um-box.um-box-no-footer .um-box-content {
   padding: 0;
 }
+.um .um-box.um-member {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+.um .um-box.um-member.um-member-with-cover {
+  padding: 0 0 24px 0;
+}
+.um .um-box.um-member.um-member-with-cover .um-member-photos {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+.um .um-box.um-member.um-member-with-cover .um-member-photos .um-avatar {
+  position: absolute;
+  bottom: -64px;
+  z-index: 2;
+}
+.um .um-box.um-member.um-member-with-cover .um-member-photos .um-member-cover {
+  z-index: 1;
+}
+.um .um-box.um-member.um-member-with-cover .um-member-cover {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0;
+}
+.um .um-box.um-member.um-member-with-cover .um-member-cover img {
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  object-fit: scale-down;
+}
+.um .um-box.um-member.um-member-with-cover .um-member-cover img[data-ratio="1.6:1"] {
+  aspect-ratio: 1.6/1;
+}
+.um .um-box.um-member.um-member-with-cover .um-member-cover img[data-ratio="2.7:1"] {
+  aspect-ratio: 2.7/1;
+}
+.um .um-box.um-member.um-member-with-cover .um-member-cover img[data-ratio="2.2:1"] {
+  aspect-ratio: 2.2/1;
+}
+.um .um-box.um-member.um-member-with-cover .um-member-cover img[data-ratio="3.2:1"] {
+  aspect-ratio: 3.2/1;
+}
+.um .um-box.um-member.um-member-with-cover .um-dropdown-wrapper {
+  width: 100%;
+  height: 56px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  padding: 0 12px;
+}
+.um .um-box.um-member.um-member-with-cover .um-dropdown-wrapper .um-dropdown-toggle {
+  float: right;
+  width: 20px;
+}
+.um .um-box.um-member.um-member-with-cover .um-member-box-main {
+  width: 100%;
+  padding: 0 24px;
+  margin: 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+.um .um-box.um-member.um-member-with-cover .um-member-box-main .um-member-meta {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+.um .um-box.um-member.um-member-with-cover .um-member-box-main .um-member-meta ~ um-member-less {
+  display: none;
+}
+.um .um-box.um-member.um-member-with-cover .um-member-box-main .um-member-meta ~ um-member-more {
+  display: initial;
+}
+.um .um-box.um-member.um-member-with-cover .um-member-box-main .um-member-meta .um-member-meta-visible ~ um-member-less {
+  display: initial;
+}
+.um .um-box.um-member.um-member-with-cover .um-member-box-main .um-member-meta .um-member-meta-visible ~ um-member-more {
+  display: none;
+}
 .um .um-link {
   font-size: var(--um-text-font-size-sm, 14px);
   line-height: var(--um-text-line-height-sm, 20px);
