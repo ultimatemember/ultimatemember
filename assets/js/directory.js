@@ -1014,7 +1014,9 @@ jQuery(document.body).ready( function() {
 	 * Sorting
 	 */
 
-	jQuery( document.body ).on( 'click', '.um-new-dropdown[data-element=".um-member-directory-sorting-a"] li a', function() {
+	jQuery( document.body ).on( 'click', '.um-members-sorting', function(e) {
+		e.preventDefault();
+
 		if ( jQuery( this ).data('selected') === 1 ) {
 			return;
 		}
@@ -1036,9 +1038,9 @@ jQuery(document.body).ready( function() {
 
 		um_ajax_get_members( directory );
 
-		directory.find('.um-new-dropdown[data-element=".um-member-directory-sorting-a"]').find('a').data('selected', 0).prop('data-selected', 0).attr('data-selected', 0);
-		directory.find('.um-new-dropdown[data-element=".um-member-directory-sorting-a"] a[data-value="' + sort + '"]').data('selected', 1).prop('data-selected', 1).attr('data-selected', 1);
-		directory.find('.um-member-directory-sorting-a').find('> a').html( sorting_label );
+		// directory.find('.um-new-dropdown[data-element=".um-member-directory-sorting-a"]').find('a').data('selected', 0).prop('data-selected', 0).attr('data-selected', 0);
+		// directory.find('.um-new-dropdown[data-element=".um-member-directory-sorting-a"] a[data-value="' + sort + '"]').data('selected', 1).prop('data-selected', 1).attr('data-selected', 1);
+		// directory.find('.um-member-directory-sorting-a').find('> a').html( sorting_label );
 	});
 
 	/**

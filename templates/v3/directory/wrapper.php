@@ -183,7 +183,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<?php
 					$items = array();
 					foreach ( $sorting_options as $value => $title ) {
-						$items[] = '<a href="javascript:void(0);" data-directory-hash="' . esc_attr( substr( md5( $form_id ), 10, 5 ) ) . '" class="um-sortyng-by-' . esc_attr( $value ) . '" data-value="' . esc_attr( $value ) . '" data-selected="' . ( ( $sort_from_url == $value ) ? '1' : '0' ) . '" data-default="' . ( ( $default_sorting == $value ) ? '1' : '0' ) . '">' . $title . '</a>';
+						$items[] = '<a href="#" data-directory-hash="' . esc_attr( substr( md5( $form_id ), 10, 5 ) ) . '" class="um-members-sorting um-sorting-by-' . esc_attr( $value ) . '" data-value="' . esc_attr( $value ) . '" data-selected="' . ( ( $sort_from_url == $value ) ? '1' : '0' ) . '" data-default="' . ( ( $default_sorting == $value ) ? '1' : '0' ) . '">' . $title . '</a>';
 					}
 					echo wp_kses(
 						UM()->frontend()::layouts()::dropdown_menu(
