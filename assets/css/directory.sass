@@ -219,11 +219,28 @@
       -ms-grid-gap: 10px
       -ms-grid-auto-rows: minmax(max-content, auto)
       align-items: stretch
-
-    .#{$prefix}member-name
-      +typography( header, xs, semibold )
-      color: $gray-900
-      text-align: center
+      .#{$prefix}member-name
+        +typography( header, xs, semibold )
+        color: $gray-900
+        text-align: center
+        width: 100%
+        word-break: break-word
+  &.#{$prefix}ui-xs
+    .#{$prefix}members-wrapper
+      &.#{$prefix}members-grid
+        grid-template-columns: repeat(1, 1fr)
+        -ms-grid-template-columns: repeat(1, 1fr)
+  &.#{$prefix}ui-m,
+  &.#{$prefix}ui-l
+    .#{$prefix}members-wrapper
+      &.#{$prefix}members-grid
+        grid-template-columns: repeat(3, 1fr)
+        -ms-grid-template-columns: repeat(3, 1fr)
+  &.#{$prefix}ui-xl
+    .#{$prefix}members-wrapper
+      &.#{$prefix}members-grid
+        grid-template-columns: repeat(4, 1fr)
+        -ms-grid-template-columns: repeat(4, 1fr)
 
   .um-members-pagination-box
     margin-top: $spacing-lg

@@ -535,21 +535,47 @@
           +border-box
           +flex( column, flex-start, center, wrap )
           row-gap: $spacing-md
+          .#{$prefix}member-tagline
+            +typography( text, md, regular )
+            color: $gray-600
+            word-break: break-word
           .#{$prefix}member-meta
             width: 100%
             padding: 0
             margin: 0
             +border-box
-            +flex( column, flex-start, stretch, wrap )
             row-gap: $spacing-md
-            & ~ #{$prefix}member-less
+            display: grid
+            grid-template-rows: 0fr
+            transition: grid-template-rows 0.5s ease-in-out
+            .#{$prefix}member-meta-inner
+              width: 100%
+              padding: 0
+              margin: 0
+              +flex( column, flex-start, stretch, wrap )
+              overflow: hidden
+              row-gap: $spacing-md
+            .#{$prefix}member-metaline
+              width: 100%
+              padding: 0
+              margin: 0
+              word-break: break-word
+              +typography( text, md, regular )
+              color: $gray-600
+              strong
+                +typography( text, md, semibold )
+                color: $gray-700
+            &.#{$prefix}member-meta-no-animate
+              grid-template-rows: 1fr
+            & ~ .#{$prefix}member-less
               display: none
-            & ~ #{$prefix}member-more
+            & ~ .#{$prefix}member-more
               display: initial
-            .#{$prefix}member-meta-visible
-              & ~ #{$prefix}member-less
+            &.#{$prefix}member-meta-visible
+              grid-template-rows: 1fr
+              & ~ .#{$prefix}member-less
                 display: initial
-              & ~ #{$prefix}member-more
+              & ~ .#{$prefix}member-more
                 display: none
 
   // Link

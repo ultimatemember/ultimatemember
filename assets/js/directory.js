@@ -1047,7 +1047,6 @@ jQuery(document.body).ready( function() {
 	 * Pagination
 	 */
 
-
 	jQuery( document.body ).on( 'click', '.um-directory .um-pagination-item:not(.current)', function() {
 		if ( jQuery(this).hasClass('disabled') ) {
 			return;
@@ -1096,31 +1095,61 @@ jQuery(document.body).ready( function() {
 		um_ajax_get_members( directory );
 	});
 
-	//mobile pagination
-	// jQuery( document.body ).on( 'change', '.um-directory .um-members-pagi-dropdown', function() {
-	// 	var directory = jQuery(this).parents('.um-directory');
-	//
-	// 	if ( um_is_directory_busy( directory ) ) {
-	// 		return;
-	// 	}
-	//
-	// 	um_members_show_preloader( directory );
-	//
-	// 	var page = jQuery(this).val();
-	//
-	// 	directory.find('.pagi').removeClass('current');
-	// 	directory.find('.pagi[data-page="' + page + '"]').addClass('current');
-	//
-	// 	directory.data( 'page', page );
-	// 	if ( page === 1 ) {
-	// 		um_set_url_from_data( directory, 'page', '' );
-	// 	} else {
-	// 		um_set_url_from_data( directory, 'page', page );
-	// 	}
-	//
-	// 	um_ajax_get_members( directory );
-	// });
+	jQuery( document.body ).on( 'change', '.um-directory .um-pagination-current-page-input', function() {
+		if ( jQuery(this).hasClass('disabled') ) {
+			return;
+		}
 
+		let directory = jQuery(this).parents('.um-directory');
+		if ( um_is_directory_busy( directory ) ) {
+			return;
+		}
+
+		let currentPage = parseInt( directory.data( 'page' ) );
+		let page        = parseInt( jQuery(this).val() );
+		let totalPages  = parseInt( directory.data( 'total_pages' ) );
+		if ( currentPage === page ) {
+			return;
+		}
+
+		if ( page < 1 ) {
+			jQuery(this).val( 1 );
+			page = 1;
+		}
+
+		if ( page > totalPages ) {
+			jQuery(this).val( totalPages );
+			page = totalPages;
+		}
+
+		um_members_show_preloader( directory );
+
+		if ( page === 1 ) {
+			directory.find('.um-pagination-item[data-page="prev"]').addClass('disabled');
+			directory.find('.um-pagination-item[data-page="next"]').removeClass('disabled');
+		} else if ( page === totalPages ) {
+			directory.find('.um-pagination-item[data-page="next"]').addClass('disabled');
+			directory.find('.um-pagination-item[data-page="prev"]').removeClass('disabled');
+		} else {
+			directory.find('.um-pagination-item[data-page="prev"], .um-pagination-item[data-page="next"]').removeClass('disabled');
+		}
+
+		directory.data( 'page', page );
+		if ( page === 1 ) {
+			um_set_url_from_data( directory, 'page', '' );
+		} else {
+			um_set_url_from_data( directory, 'page', page );
+		}
+
+		um_ajax_get_members( directory );
+	});
+
+	jQuery( document.body ).on( 'keypress', '.um-directory .um-pagination-current-page-input', function(e) {
+		if ( 13 === e.which ) {
+			jQuery(this).trigger('change');
+			return false;
+		}
+	});
 
 	/**
 	 * END: Pagination
@@ -1131,55 +1160,39 @@ jQuery(document.body).ready( function() {
 	 * Profile Cards actions
 	 */
 
-	jQuery( document.body ).on('click', '.um-directory .um-members.um-members-list .um-member-more a', function(e){
+	// jQuery( document.body ).on('click', '.um-directory .um-members.um-members-list .um-member-more a', function(e){
+	// 	e.preventDefault();
+	//
+	// 	var block = jQuery(this).parents('.um-member');
+	//
+	// 	block.find('.um-member-more').hide();
+	// 	block.find('.um-member-meta-main').slideDown();
+	// 	block.find('.um-member-less').fadeIn();
+	//
+	// 	return false;
+	// });
+	//
+	// jQuery( document.body ).on('click', '.um-directory .um-members.um-members-list .um-member-less a', function(e){
+	// 	e.preventDefault();
+	//
+	// 	var block = jQuery(this).parents('.um-member');
+	//
+	// 	block.find('.um-member-less').hide();
+	// 	block.find('.um-member-meta-main').slideUp();
+	// 	block.find('.um-member-more').fadeIn();
+	//
+	// 	return false;
+	// });
+
+	jQuery( document.body ).on('click', '.um-member .um-meta-toggle', function(e){
 		e.preventDefault();
 
-		var block = jQuery(this).parents('.um-member');
+		let block = jQuery(this).parents('.um-member');
+		let textAfter  = jQuery(this).data('toggle-text');
+		let textBefore = jQuery(this).text();
 
-		block.find('.um-member-more').hide();
-		block.find('.um-member-meta-main').slideDown();
-		block.find('.um-member-less').fadeIn();
-
-		return false;
-	});
-
-	jQuery( document.body ).on('click', '.um-directory .um-members.um-members-list .um-member-less a', function(e){
-		e.preventDefault();
-
-		var block = jQuery(this).parents('.um-member');
-
-		block.find('.um-member-less').hide();
-		block.find('.um-member-meta-main').slideUp();
-		block.find('.um-member-more').fadeIn();
-
-		return false;
-	});
-
-
-	jQuery( document.body ).on('click', '.um-directory .um-members.um-members-grid .um-member-more a', function(e){
-		e.preventDefault();
-
-		var block = jQuery(this).parents('.um-member');
-		var container = jQuery(this).parents('.um-members');
-		block.find('.um-member-more').hide();
-		block.find('.um-member-meta').slideDown( function(){ UM_Member_Grid( container ) } );
-		block.find('.um-member-less').fadeIn( );
-
-		setTimeout(function(){ UM_Member_Grid( container ) }, 100);
-
-		return false;
-	});
-
-	jQuery( document.body ).on('click', '.um-directory .um-members.um-members-grid .um-member-less a', function(e){
-		e.preventDefault();
-
-		var block = jQuery(this).parents('.um-member');
-		var container = jQuery(this).parents('.um-members');
-		block.find('.um-member-less').hide();
-		block.find('.um-member-meta').slideUp( function() {
-			block.find('.um-member-more').fadeIn();
-			UM_Member_Grid( container );
-		});
+		block.find('.um-member-meta').toggleClass('um-member-meta-visible');
+		jQuery(this).data('toggle-text',textBefore).text(textAfter);
 
 		return false;
 	});

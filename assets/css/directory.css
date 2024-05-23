@@ -303,12 +303,26 @@
   -ms-grid-auto-rows: minmax(max-content, auto);
   align-items: stretch;
 }
-.um-directory .um-members-wrapper .um-member-name {
+.um-directory .um-members-wrapper.um-members-grid .um-member-name {
   font-size: var(--um-header-font-size-xs, 24px);
   line-height: var(--um-header-line-height-xs, 32px);
   font-weight: var(--um-header-font-weight-semibold, 600);
   color: var(--um-gray-900, #101828);
   text-align: center;
+  width: 100%;
+  word-break: break-word;
+}
+.um-directory.um-ui-xs .um-members-wrapper.um-members-grid {
+  grid-template-columns: repeat(1, 1fr);
+  -ms-grid-template-columns: repeat(1, 1fr);
+}
+.um-directory.um-ui-m .um-members-wrapper.um-members-grid, .um-directory.um-ui-l .um-members-wrapper.um-members-grid {
+  grid-template-columns: repeat(3, 1fr);
+  -ms-grid-template-columns: repeat(3, 1fr);
+}
+.um-directory.um-ui-xl .um-members-wrapper.um-members-grid {
+  grid-template-columns: repeat(4, 1fr);
+  -ms-grid-template-columns: repeat(4, 1fr);
 }
 .um-directory .um-members-pagination-box {
   margin-top: 12px;

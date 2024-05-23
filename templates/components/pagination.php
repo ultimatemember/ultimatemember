@@ -38,7 +38,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		);
 		?>
 		<?php // translators: %s is total pages count. ?>
-		<label><?php esc_html_e( 'Page', 'ultimate-member' ); ?><input type="number" value="<?php echo esc_attr( $page ); ?>" min="1" max="<?php echo esc_attr( $pages_count ); ?>" /><?php echo esc_html( sprintf( __( 'of %s', 'ultimate-member' ), $pages_count ) ); ?></label>
+		<label><?php esc_html_e( 'Page', 'ultimate-member' ); ?><input type="number" class="um-pagination-current-page-input" value="<?php echo esc_attr( $page ); ?>" min="1" max="<?php echo esc_attr( $pages_count ); ?>" /><?php echo esc_html( sprintf( __( 'of %s', 'ultimate-member' ), $pages_count ) ); ?></label>
 		<?php
 		echo wp_kses(
 			UM()->frontend()::layouts()::button(
