@@ -219,12 +219,105 @@
       -ms-grid-gap: 10px
       -ms-grid-auto-rows: minmax(max-content, auto)
       align-items: stretch
-      .#{$prefix}member-name
-        +typography( header, xs, semibold )
-        color: $gray-900
-        text-align: center
-        width: 100%
-        word-break: break-word
+
+      .#{$prefix}box
+        &.#{$prefix}member
+          +flex( column, flex-start, center, nowrap )
+          &.#{$prefix}member-with-cover
+            padding: 0 0 $spacing-3xl 0
+            .#{$prefix}member-photos
+              position: relative
+              +flex( column, flex-start, center, nowrap )
+              .#{$prefix}avatar
+                position: absolute
+                bottom: -$spacing-7xl
+                z-index: 2
+              .#{$prefix}member-cover
+                z-index: 1
+            .#{$prefix}member-cover
+              +flex( row, center, center, nowrap )
+              width: 100%
+              height: auto
+              margin: 0
+              padding: 0
+              img
+                width: 100%
+                height: auto
+                margin: 0
+                padding: 0
+                object-fit: scale-down
+                &[data-ratio="1.6:1"]
+                  aspect-ratio: 1.6/1
+                &[data-ratio="2.7:1"]
+                  aspect-ratio: 2.7/1
+                &[data-ratio="2.2:1"]
+                  aspect-ratio: 2.2/1
+                &[data-ratio="3.2:1"]
+                  aspect-ratio: 3.2/1
+            .#{$prefix}dropdown-wrapper
+              width: 100%
+              height: calc( $spacing-7xl - $spacing-md )
+              +border-box
+              padding: 0 $spacing-lg
+              .#{$prefix}dropdown-toggle
+                float: right
+                width: 20px
+            .#{$prefix}member-box-main
+              width: 100%
+              padding: 0 $spacing-3xl
+              margin: 0
+              +border-box
+              +flex( column, flex-start, center, wrap )
+              row-gap: $spacing-md
+              .#{$prefix}member-name
+                +typography( header, xs, semibold )
+                color: $gray-900
+                text-align: center
+                width: 100%
+                word-break: break-word
+              .#{$prefix}member-tagline
+                +typography( text, md, regular )
+                color: $gray-600
+                word-break: break-word
+              .#{$prefix}member-meta
+                width: 100%
+                padding: 0
+                margin: 0
+                +border-box
+                row-gap: $spacing-md
+                display: grid
+                grid-template-rows: 0fr
+                transition: grid-template-rows 0.5s ease-in-out
+                .#{$prefix}member-meta-inner
+                  width: 100%
+                  padding: 0
+                  margin: 0
+                  +flex( column, flex-start, stretch, wrap )
+                  overflow: hidden
+                  row-gap: $spacing-md
+                .#{$prefix}member-metaline
+                  width: 100%
+                  padding: 0
+                  margin: 0
+                  word-break: break-word
+                  +typography( text, md, regular )
+                  color: $gray-600
+                  strong
+                    +typography( text, md, semibold )
+                    color: $gray-700
+                &.#{$prefix}member-meta-no-animate
+                  grid-template-rows: 1fr
+                & ~ .#{$prefix}member-less
+                  display: none
+                & ~ .#{$prefix}member-more
+                  display: initial
+                &.#{$prefix}member-meta-visible
+                  grid-template-rows: 1fr
+                  & ~ .#{$prefix}member-less
+                    display: initial
+                  & ~ .#{$prefix}member-more
+                    display: none
+
   &.#{$prefix}ui-xs
     .#{$prefix}members-wrapper
       &.#{$prefix}members-grid
