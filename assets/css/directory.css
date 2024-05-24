@@ -153,7 +153,7 @@
   height: auto;
   margin: 0;
   padding: 0;
-  object-fit: scale-down;
+  object-fit: cover;
 }
 .um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-member-cover img[data-ratio="1.6:1"] {
   aspect-ratio: 1.6/1;
