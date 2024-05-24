@@ -56,20 +56,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php
 		do_action( 'um_members_directory_before_head', $args, $form_id, $not_searched );
 
-		if ( $search && $show_search ) {
-			?>
-			<div class="um-member-directory-header-row um-member-directory-search-row">
-				<div class="um-member-directory-search-line">
-					<label>
-						<span><?php esc_html_e( 'Search:', 'ultimate-member' ); ?></span>
-						<input type="search" class="um-search-line" placeholder="<?php esc_attr_e( 'Search', 'ultimate-member' ); ?>"  value="<?php echo esc_attr( $search_from_url ); ?>" aria-label="<?php esc_attr_e( 'Search', 'ultimate-member' ); ?>" speech />
-					</label>
-					<input type="button" class="um-do-search um-button" value="<?php esc_attr_e( 'Search', 'ultimate-member' ); ?>" />
-				</div>
-			</div>
-			<?php
-		}
-
 		if ( $filters && $show_filters && count( $search_filters ) ) {
 			?>
 			<div class="um-member-directory-header-row">
@@ -142,64 +128,99 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div>
 
 	<div class="um-member-directory-header">
-		<div class="um-member-directory-header-row">
-			<?php
-			if ( ! $single_view ) {
-				$button_args = array();
-				foreach ( UM()->member_directory()->view_types as $key => $value ) {
-					if ( in_array( $key, $view_types, true ) ) {
-						$b_classes = array( 'um-member-directory-view-type-' . $key );
-						if ( $current_view === $key ) {
-							$b_classes[] = 'current';
-						}
-						$button_args[] = array(
-							'label'   => $value['title'],
-							'classes' => $b_classes,
-							'data'    => array(
-								'type'    => $key,
-								'default' => $default_view === $key,
+		<?php if ( ( $search && $show_search ) || ( $filters && $show_filters && count( $search_filters ) && $filters_collapsible ) ) { ?>
+			<div class="um-member-directory-header-row um-member-directory-search-filters">
+				<?php if ( $search && $show_search ) { ?>
+					<div class="um-member-directory-search-wrapper">
+						<label class="um-member-directory-search-line">
+							<span><?php esc_html_e( 'Search:', 'ultimate-member' ); ?></span>
+							<input type="search" class="um-search-line" placeholder="<?php esc_attr_e( 'Search', 'ultimate-member' ); ?>" value="<?php echo esc_attr( $search_from_url ); ?>" aria-label="<?php esc_attr_e( 'Search', 'ultimate-member' ); ?>" speech />
+						</label>
+						<?php
+						echo wp_kses(
+							UM()->frontend()::layouts()::button(
+								__( 'Search', 'ultimate-member' ),
+								array(
+									'design'  => 'primary',
+									'size'    => 'm',
+									'classes' => array( 'um-do-search' ),
+								)
 							),
+							UM()->get_allowed_html( 'templates' )
 						);
-					}
-				}
+						?>
+					</div>
+				<?php } ?>
 
-				echo wp_kses(
-					UM()->frontend()::layouts()::buttons_group(
-						$button_args,
-						array(
-							'size'    => 'equal',
-							'classes' => array( 'um-member-view-switcher' ),
-						)
-					),
-					UM()->get_allowed_html( 'templates' )
-				);
-			}
-			?>
-			<div class="um-members-counter"></div>
+				<?php do_action( 'um_members_directory_between_search_filters', $args, $form_id, $not_searched ); ?>
 
-			<?php if ( ! empty( $enable_sorting ) && ! empty( $sorting_options ) && count( $sorting_options ) > 1 ) { ?>
-				<div class="um-member-directory-sorting">
-					<span><?php esc_html_e( 'Sort by:', 'ultimate-member' ); ?></span>
-					<?php
-					$items = array();
-					foreach ( $sorting_options as $value => $title ) {
-						$items[] = '<a href="#" data-directory-hash="' . esc_attr( substr( md5( $form_id ), 10, 5 ) ) . '" class="um-members-sorting um-sorting-by-' . esc_attr( $value ) . '" data-value="' . esc_attr( $value ) . '" data-selected="' . ( ( $sort_from_url == $value ) ? '1' : '0' ) . '" data-default="' . ( ( $default_sorting == $value ) ? '1' : '0' ) . '">' . $title . '</a>';
+				<?php if ( $filters && $show_filters && $filters_collapsible && count( $search_filters ) ) { ?>
+					<input type="button" class="um-filters-toggle um-button" value="<?php esc_attr_e( 'Filters', 'ultimate-member' ); ?>" />
+				<?php } ?>
+			</div>
+		<?php } ?>
+
+		<div class="um-member-directory-header-row-grid">
+			<div class="um-member-directory-header-left-cell">
+				<?php
+				if ( ! $single_view ) {
+					$button_args = array();
+					foreach ( UM()->member_directory()->view_types as $key => $value ) {
+						if ( in_array( $key, $view_types, true ) ) {
+							$b_classes = array( 'um-member-directory-view-type-' . $key );
+							if ( $current_view === $key ) {
+								$b_classes[] = 'current';
+							}
+							$button_args[] = array(
+								'label'   => $value['title'],
+								'classes' => $b_classes,
+								'data'    => array(
+									'type'    => $key,
+									'default' => $default_view === $key,
+								),
+							);
+						}
 					}
+
 					echo wp_kses(
-						UM()->frontend()::layouts()::dropdown_menu(
-							'um-members-sorting-toggle',
-							$items,
+						UM()->frontend()::layouts()::buttons_group(
+							$button_args,
 							array(
-								'type'          => 'button',
-								'button_label'  => $sorting_options[ $sort_from_url ],
-								'width'         => 210,
+								'size'    => 'equal',
+								'classes' => array( 'um-member-view-switcher' ),
 							)
 						),
 						UM()->get_allowed_html( 'templates' )
 					);
-					?>
-				</div>
-			<?php } ?>
+				}
+				?>
+				<div class="um-members-counter"></div>
+			</div>
+			<div class="um-member-directory-header-right-cell">
+				<?php if ( ! empty( $enable_sorting ) && ! empty( $sorting_options ) && count( $sorting_options ) > 1 ) { ?>
+					<div class="um-member-directory-sorting">
+						<span><?php esc_html_e( 'Sort by:', 'ultimate-member' ); ?></span>
+						<?php
+						$items = array();
+						foreach ( $sorting_options as $value => $title ) {
+							$items[] = '<a href="#" data-directory-hash="' . esc_attr( substr( md5( $form_id ), 10, 5 ) ) . '" class="um-members-sorting um-sorting-by-' . esc_attr( $value ) . '" data-value="' . esc_attr( $value ) . '" data-selected="' . ( ( $sort_from_url == $value ) ? '1' : '0' ) . '" data-default="' . ( ( $default_sorting == $value ) ? '1' : '0' ) . '">' . $title . '</a>';
+						}
+						echo wp_kses(
+							UM()->frontend()::layouts()::dropdown_menu(
+								'um-members-sorting-toggle',
+								$items,
+								array(
+									'type'          => 'button',
+									'button_label'  => $sorting_options[ $sort_from_url ],
+									'width'         => 210,
+								)
+							),
+							UM()->get_allowed_html( 'templates' )
+						);
+						?>
+					</div>
+				<?php } ?>
+			</div>
 		</div>
 	</div>
 

@@ -166,7 +166,12 @@
 				e.stopPropagation();
 
 				/* trigger 'click' in the original menu */
-				var attrClass = $(e.currentTarget).attr('class');
+				let attrClass = $(e.currentTarget).attr('class');
+				// Avoid empty links and add # symbol to link
+				if ( '#' === self.$menu.find('li a[class="' + attrClass + '"]').attr('href') ) {
+					e.preventDefault();
+				}
+
 				self.$menu.find('li a[class="' + attrClass + '"]').trigger('click');
 
 				/* hide dropdown */

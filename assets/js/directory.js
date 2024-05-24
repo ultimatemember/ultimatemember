@@ -1013,7 +1013,6 @@ jQuery(document.body).ready( function() {
 	/**
 	 * Sorting
 	 */
-
 	jQuery( document.body ).on( 'click', '.um-members-sorting', function(e) {
 		e.preventDefault();
 
@@ -1030,17 +1029,22 @@ jQuery(document.body).ready( function() {
 
 		um_members_show_preloader( directory );
 
-		var sorting_label = jQuery( this ).html();
+		var sorting_label = jQuery( this ).text();
 		var sort = jQuery(this).data('value');
+		var defaultSorting = jQuery(this).data('default');
 
 		directory.data( 'sorting', sort );
-		um_set_url_from_data( directory, 'sort', sort );
+		if ( defaultSorting ) {
+			um_set_url_from_data( directory, 'sort', '' );
+		} else {
+			um_set_url_from_data( directory, 'sort', sort );
+		}
 
 		um_ajax_get_members( directory );
 
-		// directory.find('.um-new-dropdown[data-element=".um-member-directory-sorting-a"]').find('a').data('selected', 0).prop('data-selected', 0).attr('data-selected', 0);
-		// directory.find('.um-new-dropdown[data-element=".um-member-directory-sorting-a"] a[data-value="' + sort + '"]').data('selected', 1).prop('data-selected', 1).attr('data-selected', 1);
-		// directory.find('.um-member-directory-sorting-a').find('> a').html( sorting_label );
+		directory.find('.um-dropdown[data-element=".um-members-sorting-toggle"]').find('a').data('selected', 0).prop('data-selected', 0).attr('data-selected', 0);
+		directory.find('.um-dropdown[data-element=".um-members-sorting-toggle"] a[data-value="' + sort + '"]').data('selected', 1).prop('data-selected', 1).attr('data-selected', 1);
+		directory.find('.um-members-sorting-toggle .um-button-content').text( sorting_label );
 	});
 
 	/**

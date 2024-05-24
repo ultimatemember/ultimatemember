@@ -201,6 +201,10 @@ class Layouts {
 		}
 		$data_atts = implode( ' ', $data_atts );
 
+		if ( ! empty( $args['icon_leading'] ) || ! empty( $args['icon_trailing'] ) ) {
+			$content = '<span class="um-button-content">' . $content . '</span>';
+		}
+
 		ob_start();
 		if ( 'link' === $args['type'] ) {
 			?>
