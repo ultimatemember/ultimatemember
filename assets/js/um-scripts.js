@@ -1,21 +1,3 @@
-function um_sanitize_value( value, el ) {
-	var element = document.createElement( 'div' );
-	element.innerText = value;
-	var sanitized_value = element.innerHTML;
-	if ( el ) {
-		jQuery( el ).val( sanitized_value );
-	}
-
-	return sanitized_value;
-}
-
-function um_unsanitize_value( input ) {
-	var e = document.createElement( 'textarea' );
-	e.innerHTML = input;
-	// handle case of empty input
-	return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
-}
-
 jQuery(document).ready(function() {
 
 	jQuery( document.body ).on('click', '.um-dropdown a.real_url', function() {
