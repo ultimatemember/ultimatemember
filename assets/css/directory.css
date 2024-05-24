@@ -49,10 +49,10 @@
   justify-content: flex-start;
   align-items: center;
   flex-wrap: nowrap;
+  column-gap: 8px;
 }
 .um-directory .um-member-directory-header .um-member-directory-search-filters .um-filters-toggle {
-  margin-left: 10px;
-  width: 200px;
+  max-width: 200px;
 }
 .um-directory .um-member-directory-header .um-member-directory-search-filters .um-member-directory-search-wrapper {
   display: flex;
@@ -61,9 +61,11 @@
   align-items: center;
   flex-wrap: nowrap;
   width: 100%;
+  column-gap: 8px;
 }
 .um-directory .um-member-directory-header .um-member-directory-search-filters .um-member-directory-search-wrapper label.um-member-directory-search-line {
-  margin: 0 10px 0 0;
+  margin: 0;
+  padding: 0;
   width: 100%;
 }
 .um-directory .um-member-directory-header .um-member-directory-search-filters .um-member-directory-search-wrapper label.um-member-directory-search-line > span {

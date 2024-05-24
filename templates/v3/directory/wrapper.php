@@ -154,9 +154,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 				<?php do_action( 'um_members_directory_between_search_filters', $args, $form_id, $not_searched ); ?>
 
-				<?php if ( $filters && $show_filters && $filters_collapsible && count( $search_filters ) ) { ?>
-					<input type="button" class="um-filters-toggle um-button" value="<?php esc_attr_e( 'Filters', 'ultimate-member' ); ?>" />
-				<?php } ?>
+				<?php
+				if ( $filters && $show_filters && $filters_collapsible && count( $search_filters ) ) {
+					echo wp_kses(
+						UM()->frontend()::layouts()::button(
+							__( 'Filters', 'ultimate-member' ),
+							array(
+								'size'    => 'm',
+								'classes' => array( 'um-filters-toggle' ),
+							)
+						),
+						UM()->get_allowed_html( 'templates' )
+					);
+				}
+				?>
 			</div>
 		<?php } ?>
 

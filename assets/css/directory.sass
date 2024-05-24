@@ -223,20 +223,22 @@
 
     .#{$prefix}member-directory-search-filters
       +flex( row, flex-start, center, nowrap )
-      .um-filters-toggle
-        margin-left: 10px
-        width: 200px
+      column-gap: $spacing-md
+      .#{$prefix}filters-toggle
+        max-width: 200px
       .um-member-directory-search-wrapper
         +flex( row, flex-start, center, nowrap )
         width: 100%
+        column-gap: $spacing-md
         label.um-member-directory-search-line
-          margin: 0 10px 0 0
+          margin: 0
+          padding: 0
           width: 100%
           & > span
             display: none
           .um-search-line
             width: 100%
-        .um-do-search
+        .#{$prefix}do-search
           max-width: 200px
     .#{$prefix}member-view-switcher
       margin-right: $spacing-3xl
