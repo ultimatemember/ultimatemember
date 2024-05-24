@@ -1368,6 +1368,7 @@ input[type="range"]
         background: $success-50
         color: $success-700
 
+
 // Buttons group
 .um
   .#{$prefix}buttons-group
@@ -1497,3 +1498,32 @@ input[type="range"]
       button
         width: auto
         min-width: 80px
+
+.um
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="button"]):not([type="submit"]),
+  select,
+  textarea
+    +border-box
+    border-radius: $radius-md
+    border: 1px solid $gray-300
+    background: $um-white
+    box-shadow: $shadow-xs
+    padding: $spacing-md $spacing-lg
+    color: $gray-900
+    +typography( text, md, regular )
+    &:focus,
+    &:focus-visible
+      border: 1px solid $primary-300
+      box-shadow: $ring-brand-shadow-xs
+      background: $um-white
+      outline: none
+    &:disabled
+      background: $gray-50
+      color: $gray-500
+    &::placeholder
+      color: $gray-500
+    &.um-error
+      border-color: $error-300
+      &:focus,
+      &:focus-visible
+        box-shadow: $ring-error-shadow-xs

@@ -43,34 +43,37 @@
   align-items: baseline;
   flex-wrap: nowrap;
 }
-.um-directory .um-member-directory-header .um-member-directory-search-line {
+.um-directory .um-member-directory-header .um-member-directory-search-filters {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
   flex-wrap: nowrap;
-  width: 60%;
 }
-.um-directory .um-member-directory-header .um-member-directory-search-line label {
-  flex: 1;
-  margin: 0 10px 0 0;
-  min-width: 90px;
-  max-width: 85%;
+.um-directory .um-member-directory-header .um-member-directory-search-filters .um-filters-toggle {
+  margin-left: 10px;
+  width: 200px;
 }
-.um-directory .um-member-directory-header .um-member-directory-search-line label span {
-  display: none;
-  margin: 0 5px 0 0;
-}
-.um-directory .um-member-directory-header .um-member-directory-search-line label .um-search-line {
-  -webkit-appearance: textfield;
+.um-directory .um-member-directory-header .um-member-directory-search-filters .um-member-directory-search-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
   width: 100%;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
 }
-.um-directory .um-member-directory-header .um-member-directory-search-line .um-do-search {
-  min-width: 15%;
-  width: auto;
+.um-directory .um-member-directory-header .um-member-directory-search-filters .um-member-directory-search-wrapper label.um-member-directory-search-line {
+  margin: 0 10px 0 0;
+  width: 100%;
+}
+.um-directory .um-member-directory-header .um-member-directory-search-filters .um-member-directory-search-wrapper label.um-member-directory-search-line > span {
+  display: none;
+}
+.um-directory .um-member-directory-header .um-member-directory-search-filters .um-member-directory-search-wrapper label.um-member-directory-search-line .um-search-line {
+  width: 100%;
+}
+.um-directory .um-member-directory-header .um-member-directory-search-filters .um-member-directory-search-wrapper .um-do-search {
+  max-width: 200px;
 }
 .um-directory .um-member-directory-header .um-member-view-switcher {
   margin-right: 24px;

@@ -308,14 +308,14 @@ function um_ajax_get_members( directory, args ) {
 				var filter_name = filter.find('select').attr('name');
 				var value = um_get_data_for_directory( directory, 'filter_' + filter_name );
 				if ( typeof value != 'undefined' ) {
-					value = um_unsanitize_value( value );
+					value = UM.common.form.unsanitizeValue( value );
 					request[ filter_name ] = value.split( '||' );
 				}
 			} else if ( filter.hasClass( 'um-text-filter-type' ) && filter.find('input[type="text"]').length ) {
 				var filter_name = filter.find('input[type="text"]').attr('name');
 				var value = um_get_data_for_directory( directory, 'filter_' + filter_name );
 				if ( typeof value != 'undefined' ) {
-					value = um_unsanitize_value( value );
+					value = UM.common.form.unsanitizeValue( value );
 					request[ filter_name ] = value;
 				}
 			} else {
@@ -513,7 +513,7 @@ function um_get_filters_data( directory ) {
 			if ( typeof filter_value == 'undefined' ) {
 				filter_value = [];
 			} else {
-				filter_value = um_unsanitize_value( filter_value );
+				filter_value = UM.common.form.unsanitizeValue( filter_value );
 				filter_value = filter_value.split( '||' );
 			}
 
@@ -604,7 +604,7 @@ function um_run_search( directory ) {
 
 	var pre_search = um_get_data_for_directory( directory, 'search' );
 
-	var search = um_sanitize_value( directory.find('.um-search-line').val() );
+	var search = UM.common.form.sanitizeValue( directory.find('.um-search-line').val() );
 	if ( search === pre_search || ( search === '' && typeof pre_search == 'undefined' ) ) {
 		um_members_hide_preloader( directory );
 		return;
@@ -1240,7 +1240,7 @@ jQuery(document.body).ready( function() {
 	//filtration process
 	jQuery( document.body ).on( 'change', '.um-directory .um-search-filter select', function() {
 		var selected_val_raw = jQuery(this).val();
-		var selected_val = um_sanitize_value( selected_val_raw );
+		var selected_val = UM.common.form.sanitizeValue( selected_val_raw );
 
 		if ( selected_val === '' ) {
 			return;
@@ -1306,7 +1306,7 @@ jQuery(document.body).ready( function() {
 			return;
 		}
 
-		var current_value = um_sanitize_value( jQuery(this).val() );
+		var current_value = UM.common.form.sanitizeValue( jQuery(this).val() );
 		var filter_name = jQuery(this).prop('name');
 		var url_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
 
@@ -1344,7 +1344,7 @@ jQuery(document.body).ready( function() {
 				return;
 			}
 
-			var current_value = um_sanitize_value( jQuery(this).val() );
+			var current_value = UM.common.form.sanitizeValue( jQuery(this).val() );
 			var filter_name = jQuery(this).prop('name');
 			var url_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
 
@@ -1399,7 +1399,7 @@ jQuery(document.body).ready( function() {
 			if ( typeof current_value == 'undefined' ) {
 				current_value = [];
 			} else {
-				current_value = um_unsanitize_value( current_value );
+				current_value = UM.common.form.unsanitizeValue( current_value );
 				current_value = current_value.split( '||' );
 			}
 
@@ -1527,7 +1527,7 @@ jQuery(document.body).ready( function() {
 				if ( typeof current_value == 'undefined' ) {
 					current_value = [];
 				} else {
-					current_value = um_unsanitize_value( current_value );
+					current_value = UM.common.form.unsanitizeValue( current_value );
 					current_value = current_value.split( '||' );
 				}
 

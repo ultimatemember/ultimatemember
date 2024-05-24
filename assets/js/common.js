@@ -137,6 +137,21 @@ UM.common = {
 			}
 
 			return obj;
+		},
+		sanitizeValue: function ( value, el ) {
+			let element = document.createElement( 'div' );
+			element.innerText = value;
+			let sanitized_value = element.innerHTML;
+			if ( el ) {
+				jQuery( el ).val( sanitized_value );
+			}
+			return sanitized_value;
+		},
+		unsanitizeValue: function( input ) {
+			let e = document.createElement( 'textarea' );
+			e.innerHTML = input;
+			// handle case of empty input
+			return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
 		}
 	}
 }
