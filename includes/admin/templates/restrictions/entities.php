@@ -30,11 +30,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 					'value' => ! empty( $include ) ? $include : '',
 				),
 				array(
-					'id'          => '_um_exclude',
-					'class'       => 'um-protection-exclude',
-					'type'        => 'entities_conditions',
-					'label'       => __( 'Exclude', 'ultimate-member' ),
-					'value'       => ! empty( $exclude ) ? $exclude : '',
+					'id'    => '_um_exclude',
+					'class' => 'um-protection-exclude',
+					'type'  => 'entities_conditions',
+					'label' => __( 'Exclude', 'ultimate-member' ),
+					'value' => ! empty( $exclude ) ? $exclude : '',
 				),
 				array(
 					'id'      => 'add_protection_rule',

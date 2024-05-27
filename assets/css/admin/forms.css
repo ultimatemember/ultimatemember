@@ -496,14 +496,43 @@ span.um-admin-icon-clear i {
   color: #98a2b3;
 }
 
-.um-users-conditions-row:nth-child(2) .um-users-conditions-connector {
-  display: none;
-}
-
 .um-protection-buttons {
   display: flex;
   justify-content: center;
 }
 .um-protection-buttons button {
   margin: 0 5px !important;
+}
+
+.um-users-conditions-row-hidden,
+.um-entities-conditions-row-hidden {
+  display: none;
+}
+
+.um-users-conditions-row .select2-container,
+.um-entities-conditions-row .select2-container {
+  width: 48% !important;
+  vertical-align: top;
+}
+.um-users-conditions-row .select2-container li,
+.um-entities-conditions-row .select2-container li {
+  margin: 1px 2px !important;
+}
+.um-users-conditions-row .select2-container .select2-search__field,
+.um-entities-conditions-row .select2-container .select2-search__field {
+  min-height: 18px !important;
+  height: 18px !important;
+  margin: 0 !important;
+}
+.um-users-conditions-row .select2-container .select2-selection,
+.um-entities-conditions-row .select2-container .select2-selection {
+  min-height: 36px;
+  padding: 6px 0 0;
+}
+
+.um-users-conditions-row:nth-child(2) .um-users-conditions-connector {
+  display: none;
+}
+.um-users-conditions-row .select2-container {
+  width: 33% !important;
 }

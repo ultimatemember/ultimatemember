@@ -79,6 +79,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			);
 		}
 
+		public function get_roles() {
+			UM()->admin()->check_ajax_nonce();
+			$roles   = get_editable_roles();
+			foreach ( $roles as $role => $role_data ) {
+				$options[ $role ] = $role_data['name'];
+			}
+
+			wp_send_json_success(
+				array(
+					'roles'       => $roles
+				)
+			);
+		}
+
 		/**
 		 * Restrict the edit/delete users via wp-admin screen by the UM role capabilities
 		 *

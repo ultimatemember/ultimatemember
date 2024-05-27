@@ -1,5 +1,5 @@
 function um_admin_init_users_select() {
-	if ( jQuery('.um-user-select-field:visible:not(.um-select2-inited)').length ) {
+	if ( jQuery( '.um-user-select-field:visible:not(.um-select2-inited)' ).length ) {
 		function avatarformat( data ) {
 			var option;
 			if ( ! data.id ) {
@@ -7,7 +7,7 @@ function um_admin_init_users_select() {
 			}
 
 			if ( 'undefined' !== typeof data.img ) {
-				option = jQuery('<span><img style="vertical-align: sub; width: 20px; height: 20px;" src="' + data.img + '" /> ' + data.text + '</span>');
+				option = jQuery( '<span><img style="vertical-align: sub; width: 20px; height: 20px;" src="' + data.img + '" /> ' + data.text + '</span>' );
 			} else {
 				let img;
 				if ( 'undefined' !== typeof data.element ) {
@@ -16,13 +16,16 @@ function um_admin_init_users_select() {
 					}
 				}
 				if ( img ) {
-					option = jQuery('<img style="vertical-align: sub; width: 20px; height: 20px;" src="' + img + '" /> ' + data.text + '</span>');
+					option = jQuery( '<img style="vertical-align: sub; width: 20px; height: 20px;" src="' + img + '" /> ' + data.text + '</span>' );
 				} else {
-					option = jQuery('<span>' + data.text + '</span>');
+					option = jQuery( '<span>' + data.text + '</span>' );
 				}
 			}
 			return option;
 		}
+
+		var action = 'um_get_users';
+		var scope  = 'users';
 
 		var select2_atts = {
 			ajax: {
@@ -30,19 +33,25 @@ function um_admin_init_users_select() {
 				dataType: 'json',
 				delay: 250, // delay in ms while typing when to perform a AJAX search
 				data: function( params ) {
+					if ( jQuery( this ).attr( 'data-parent' ) ) {
+						action = 'um_get_' + jQuery( this ).attr( 'data-parent' );
+						scope  = jQuery( this ).attr( 'data-parent' );
+					}
+
 					var args = {
-						action: 'um_get_users', // AJAX action for admin-ajax.php
+						action: action, // AJAX action for admin-ajax.php
 						search: params.term, // search query
 						page: params.page || 1, // infinite scroll pagination
+						scope: scope,
 						nonce: um_admin_scripts.nonce
 					};
 
-					jQuery.each( jQuery(this)[0].attributes, function() {
+					jQuery.each( jQuery( this )[0].attributes, function() {
 						// this.attributes is not a plain object, but an array
 						// of attribute nodes, which contain both the name and value
 						if ( this.specified ) {
 							if ( -1 !== this.name.indexOf( 'data-ajax-args-' ) ) {
-								var arg_name = this.name.replace( 'data-ajax-args-', '' ).trim();
+								var arg_name     = this.name.replace( 'data-ajax-args-', '' ).trim();
 								args[ arg_name ] = this.value;
 							}
 						}
@@ -54,14 +63,22 @@ function um_admin_init_users_select() {
 					params.page = params.page || 1;
 					var options = [];
 
-					if ( response.data.users ) {
-						jQuery.each( response.data.users, function( index, text ) {
-							if ( typeof text.img !== 'undefined' ) {
-								options.push({ id: text.ID, text: text.user_login + ' (#' + text.ID + ')', img: text.img });
-							} else {
-								options.push( { id: text.ID, text: text.user_login + ' (#' + text.ID + ')' } );
-							}
-						});
+					if ( 'users' === scope ) {
+						if ( response.data.users ) {
+							jQuery.each( response.data.users, function( index, text ) {
+								if ( typeof text.img !== 'undefined' ) {
+									options.push({ id: text.ID, text: text.user_login + ' (#' + text.ID + ')', img: text.img });
+								} else {
+									options.push( { id: text.ID, text: text.user_login + ' (#' + text.ID + ')' } );
+								}
+							});
+						}
+					} else {
+						if ( response.data.roles ) {
+							jQuery.each( response.data.roles, function( index, text ) {
+								options.push( { id: index, text: text.name + ' (#' + index + ')' } );
+							});
+						}
 					}
 
 					return {
@@ -79,35 +96,48 @@ function um_admin_init_users_select() {
 			allowHtml: true,
 			dropdownCssClass: 'um-select2-users-dropdown',
 			containerCssClass : 'um-select2-users-container',
-			placeholder: jQuery(this).data('placeholder'),
+			placeholder: jQuery( this ).data( 'placeholder' ),
 			templateSelection: avatarformat,
 			templateResult: avatarformat
 		};
 
-		let selector = jQuery('.um-user-select-field:visible:not(.um-select2-inited)');
+		let selector = jQuery( '.um-user-select-field:visible:not(.um-select2-inited)' );
 
 		selector.each( function() {
-			if ( jQuery(this).hasClass('select2-hidden-accessible') ) {
-				jQuery(this).removeClass('um-select2-inited').select2( 'destroy' );
+			if ( jQuery( this ).hasClass( 'select2-hidden-accessible' ) ) {
+				jQuery( this ).removeClass( 'um-select2-inited' ).select2( 'destroy' );
 			}
 		});
 
-		selector.addClass('um-select2-inited').select2( select2_atts );
+		selector.addClass( 'um-select2-inited' ).select2( select2_atts );
 	}
 }
 
 
 function um_admin_init_pages_select() {
 	// multiple select with AJAX search
-	jQuery('.um-pages-select2').select2({
+	var action = 'um_get_pages_list';
+	var scope  = 'page';
+
+	jQuery( '.um-pages-select2' ).select2({
 		ajax: {
 			url: wp.ajax.settings.url,
 			dataType: 'json',
 			delay: 250, // delay in ms while typing when to perform a AJAX search
 			data: function( params ) {
+				if ( jQuery( this ).attr( 'data-parent' ) ) {
+					if ( 'page' === jQuery( this ).attr( 'data-parent' ) || 'post' === jQuery( this ).attr( 'data-parent' ) ) {
+						action = 'um_get_pages_list';
+					} else {
+						action = 'um_get_' + jQuery( this ).attr( 'data-parent' ) + '_list';
+					}
+					scope = jQuery( this ).attr( 'data-parent' );
+				}
+
 				return {
 					search: params.term, // search query
-					action: 'um_get_pages_list', // AJAX action for admin-ajax.php
+					action: action, // AJAX action for admin-ajax.php
+					scope: scope,
 					page: params.page || 1, // infinite scroll pagination
 					nonce: um_admin_scripts.nonce
 				};
@@ -137,7 +167,7 @@ function um_admin_init_pages_select() {
 			},
 			cache: true
 		},
-		placeholder: jQuery(this).data('placeholder'),
+		placeholder: jQuery( this ).data( 'placeholder' ),
 		minimumInputLength: 0, // the minimum of symbols to input before perform a search
 		allowClear: true,
 	});
@@ -1160,6 +1190,14 @@ jQuery(document).ready( function() {
 		var wrapper  = jQuery( this ).closest( '.um-entities-conditions-row' );
 		var option   = jQuery( this ).find( ':selected' ).val();
 		var original = wrapper.find( '.um-entities-conditions' ).data( 'original' );
+
+		wrapper.find( '.um-entities-conditions-responce' ).attr( 'data-parent', option );
+
+		if ( wrapper.find( '.um-entities-conditions-responce' ).hasClass( 'um-pages-select2' ) ) {
+			wrapper.find( '.um-entities-conditions-responce' ).select2( 'destroy' );
+			wrapper.find( '.um-entities-conditions-responce' ).html( '' );
+			wrapper.find( '.um-entities-conditions-responce' ).removeClass( 'um-pages-select2' ).removeClass( 'select2-hidden-accessible' );
+		}
 		if ( 'none' === option ) {
 			wrapper.find( 'select, input' ).removeAttr( 'name' );
 			wrapper.find( '.um-entities-conditions-responce' ).removeAttr( 'disabled' ).removeAttr( 'multiple' );
@@ -1167,56 +1205,30 @@ jQuery(document).ready( function() {
 
 			wrapper.find( '.um-entities-conditions-responce' ).addClass( 'um-entities-conditions-responce-hide' );
 			wrapper.find( '.um-entities-conditions' ).addClass( 'um-entities-conditions-full' );
+		} else if ( 'site' === option ) {
+			wrapper.find( '.um-entities-conditions-responce' ).html( '' );
+			wrapper.find( '.um-entities-conditions-responce' ).removeAttr( 'multiple' );
+			wrapper.find( '.um-entities-conditions-responce' ).attr( 'disabled', 'disabled' );
+			wrapper.find( '.um-entities-conditions-responce' ).addClass( 'um-entities-conditions-responce-hide' );
+			wrapper.find( '.um-entities-conditions' ).addClass( 'um-entities-conditions-full' );
+			wrapper.find( '.um-entities-conditions-responce' ).after( '<input type="hidden" name="' + original + '[site]' + '" value="1">' );
 		} else {
-			jQuery.ajax(
-				{
-					url: wp.ajax.settings.url,
-					type: 'POST',
-					dataType: 'json',
-					data: {
-						action: 'um_registered_entities_conditions',
-						nonce: um_admin_scripts.nonce,
-						option: option
-					},
-					success: function( response ) {
-						if ( 'disabled' !== response.data ) {
-							wrapper.find( '.um-entities-conditions-responce' ).removeAttr( 'disabled' );
-							wrapper.find( '.um-entities-conditions-responce' ).removeClass( 'um-entities-conditions-responce-hide' );
-							wrapper.find( '.um-entities-conditions' ).removeClass( 'um-entities-conditions-full' );
+			wrapper.find( '.um-entities-conditions-responce' ).addClass( 'um-pages-select2' );
 
-							wrapper.find( '.um-entities-conditions-responce' ).attr( 'multiple', 'multiple' );
-							wrapper.find( '.um-entities-conditions-responce' ).html( response.data );
-
-							wrapper.find( '.um-entities-conditions' ).attr( 'name', original + '[' + option + ']' );
-							wrapper.find( '.um-entities-conditions-responce' ).attr( 'name', original + '[' + option + '][]' );
-						} else {
-							var name = wrapper.find( '.um-entities-conditions-responce' ).attr( 'name' );
-							wrapper.find( '.um-entities-conditions-responce' ).html( '' );
-							wrapper.find( '.um-entities-conditions-responce' ).removeAttr( 'multiple' );
-							wrapper.find( '.um-entities-conditions-responce' ).attr( 'disabled', 'disabled' );
-							wrapper.find( '.um-entities-conditions-responce' ).addClass( 'um-entities-conditions-responce-hide' );
-							wrapper.find( '.um-entities-conditions' ).addClass( 'um-entities-conditions-full' );
-							wrapper.find( '.um-entities-conditions-responce' ).after( '<input type="hidden" name="' + original + '[site]' + '" value="1">' );
-						}
-					},
-					error: function( error ) {
-						console.log( error )
-					}
-				}
-			);
+			wrapper.find( '.um-entities-conditions-responce' ).removeAttr( 'disabled' );
+			wrapper.find( '.um-entities-conditions-responce' ).removeClass( 'um-entities-conditions-responce-hide' );
+			wrapper.find( '.um-entities-conditions' ).removeClass( 'um-entities-conditions-full' );
+			wrapper.find( '.um-entities-conditions-responce' ).attr( 'multiple', 'multiple' );
+			wrapper.find( '.um-entities-conditions' ).attr( 'name', original + '[' + option + ']' );
+			wrapper.find( '.um-entities-conditions-responce' ).attr( 'name', original + '[' + option + '][]' );
+			um_admin_init_pages_select();
 		}
 	});
 
 	jQuery( '#um_add_protection_rule' ).on( 'click', function( e )  {
 		e.preventDefault();
 		var wrapper = jQuery( this ).closest( '.um-restriction-rule-content' ).find( '.um-protection-include-wrap' );
-		var el      = wrapper.find( '.um-entities-conditions-row:first' ).clone();
-
-		el.find( '.um-entities-conditions-responce option[value!="0"], input' ).remove();
-		el.find( '.um-entities-conditions-responce option' ).html( '' );
-		el.find( '.um-entities-conditions option' ).removeAttr( 'selected' );
-		el.find( '.um-entities-conditions, .um-entities-conditions-responce' ).removeAttr( 'name' );
-		el.find( '.um-entities-conditions-responce' ).removeAttr( 'multiple' );
+		var el      = jQuery( '.um-entities-conditions-row-hidden .um-entities-conditions-row:first' ).clone();
 
 		wrapper.append( el );
 		wrapper.find( '.um-entities-conditions-row:last' ).find( 'select' ).removeAttr( 'disabled' );
@@ -1227,7 +1239,7 @@ jQuery(document).ready( function() {
 		e.preventDefault();
 		var wrapper = jQuery( this ).closest( '.um-restriction-rule-content' ).find( '.um-protection-exclude-wrap' );
 		var clone   = jQuery( this ).closest( '.um-restriction-rule-content' ).find( '.um-protection-include-wrap' );
-		var el      = clone.find( '.um-entities-conditions-row:first' ).clone();
+		var el      = jQuery( '.um-entities-conditions-row-hidden .um-entities-conditions-row:first' ).clone();
 		jQuery( this ).closest( '.um-restriction-rule-content' ).find( '.um-forms-line' ).show();
 
 		el.find( '.um-entities-conditions' ).attr( 'data-original', 'um_restriction_rule_content[_um_exclude]' );
@@ -1273,11 +1285,13 @@ jQuery(document).ready( function() {
 	if ( 1 > jQuery( '.um-protection-include-wrap .um-entities-conditions-row' ).length ) {
 
 	} else {
-		if ( 0 === parseInt( jQuery( '.um-protection-include-wrap .um-entities-conditions-row .um-entities-conditions-responce' ).val() ) ) {
-			jQuery( '.um-protection-exclude-wrap' ).closest( '.um-forms-line' ).hide();
+		if ( null === jQuery( '.um-protection-include-wrap .um-entities-conditions-row .um-entities-conditions-responce' ).val() ) {
 			jQuery( '#um_add_exclusion_rule' ).attr( 'disabled', 'disabled' );
 		} else {
 			jQuery( '.um-protection-exclude-wrap' ).closest( '.um-forms-line' ).show();
+		}
+		if (typeof jQuery( '.um-protection-exclude-wrap .um-entities-conditions-row .um-entities-conditions-responce' ).val() === "undefined") {
+			jQuery( '.um-protection-exclude-wrap' ).closest( '.um-forms-line' ).hide();
 		}
 	}
 	jQuery( document ).on( 'change', '.um-protection-include-wrap .um-entities-conditions-responce', function()  {
@@ -1314,9 +1328,10 @@ jQuery(document).ready( function() {
 		if ( 'site' === jQuery( this ).val() ) {
 			empty = true;
 		} else {
-			jQuery( this ).find( '.um-entities-conditions-responce' ).each( function () {
+			var wrapper = jQuery( this ).closest( '.um-protection-include-wrap' );
+			wrapper.find( '.um-entities-conditions-responce' ).each( function () {
 				if ( 0 !== parseInt( jQuery( this ).val() ) ) {
-					var empty = true;
+					empty = true;
 					return;
 				}
 			});
@@ -1337,49 +1352,37 @@ jQuery(document).ready( function() {
 		var num      = jQuery( this ).closest( '.um-users-conditions-row-group' ).attr( 'data-group' );
 		var original = wrapper.find( '.um-users-conditions' ).data( 'original' );
 
+		wrapper.find( '.um-users-conditions-responce' ).attr( 'data-parent', option );
+
+		if ( wrapper.find( '.um-users-conditions-responce' ).hasClass( 'um-select2-inited' ) ) {
+			wrapper.find( '.um-users-conditions-responce' ).select2( 'destroy' );
+			wrapper.find( '.um-users-conditions-responce' ).html( '' );
+			wrapper.find( '.um-users-conditions-responce' ).removeClass( 'um-select2-inited' ).removeClass( 'select2-hidden-accessible' );
+		}
+
 		if ( 'none' === option ) {
 			wrapper.find( 'select' ).removeAttr( 'name' );
 			wrapper.find( '.um-users-conditions-responce' ).removeAttr( 'multiple' );
 			wrapper.find( '.um-users-conditions-responce' ).html( '' );
 		} else {
-			jQuery.ajax(
-				{
-					url: wp.ajax.settings.url,
-					type: 'POST',
-					dataType: 'json',
-					data: {
-						action: 'um_registered_users_conditions',
-						nonce: um_admin_scripts.nonce,
-						option: option
-					},
-					success: function( response ) {
-						if ( 'auth' !== option ) {
-							wrapper.find( '.um-users-conditions-responce' ).attr( 'multiple', 'multiple' );
-						} else {
-							wrapper.find( '.um-users-conditions-responce' ).removeAttr( 'multiple' );
-						}
-						wrapper.find( '.um-users-conditions' ).attr( 'name', original + '[' + parseInt( num ) + '][' + option + ']' );
-						wrapper.find( '.um-users-conditions-compare' ).attr( 'name', original + '[' + parseInt( num ) + '][' + option + '][compare]' );
-						wrapper.find( '.um-users-conditions-responce' ).attr( 'name', original + '[' + parseInt( num ) + '][' + option + '][ids][]' );
-						wrapper.find( '.um-users-conditions-responce' ).html( response.data );
-					},
-					error: function( error ) {
-						console.log( error )
-					}
-				}
-			);
+			jQuery( '.um-users-conditions-responce' ).addClass( 'um-user-select-field' );
+			wrapper.find( '.um-users-conditions-responce' ).attr( 'multiple', 'multiple' );
+			wrapper.find( '.um-users-conditions' ).attr( 'name', original + '[' + parseInt( num ) + '][' + option + ']' );
+			wrapper.find( '.um-users-conditions-compare' ).attr( 'name', original + '[' + parseInt( num ) + '][' + option + '][compare]' );
+			wrapper.find( '.um-users-conditions-responce' ).attr( 'name', original + '[' + parseInt( num ) + '][' + option + '][ids][]' );
+			um_admin_init_users_select();
 		}
 	});
 
 	jQuery( '.um-users-conditions-wrap' ).on( 'click', '.add-row', function( e )  {
 		e.preventDefault();
 		var wrapper = jQuery( this ).closest( '.um-users-conditions-row-group' );
-		var el      = wrapper.find( '.um-users-conditions-row:first' ).clone();
+		var el      = jQuery( '.um-users-conditions-row-hidden .um-users-conditions-row' ).clone();
 
 		el.find( '.um-users-conditions-responce option[value!="0"]' ).remove();
 		el.find( '.um-users-conditions-responce option' ).html( '' );
 		el.find( '.um-users-conditions option' ).removeAttr( 'selected' );
-		el.find( '.um-users-conditions,.um-users-conditions-compare , .um-users-conditions-responce' ).removeAttr( 'name' );
+		el.find( '.um-users-conditions, .um-users-conditions-compare, .um-users-conditions-responce' ).removeAttr( 'name' );
 		el.find( '.um-users-conditions-responce' ).removeAttr( 'multiple' );
 		el.find( '.um-users-conditions-compare option:first' ).prop( 'selected', true );
 
@@ -1441,7 +1444,7 @@ jQuery(document).ready( function() {
 	jQuery( '.um-users-conditions-wrap' ).on( 'click', '.add-group-row', function(e)  {
 		e.preventDefault();
 		var wrapper = jQuery( this ).closest( '.um-users-conditions-wrap' );
-		var el      = jQuery( '.um-users-conditions-row-group:first' ).clone();
+		var el      = jQuery( '.um-users-conditions-row-hidden .um-users-conditions-row-group' ).clone();
 		var num     = jQuery( '.um-users-conditions-row-group:last' ).attr( 'data-group' );
 
 		el.find( '.um-users-conditions-row' ).not( ':first' ).remove();
@@ -1452,6 +1455,7 @@ jQuery(document).ready( function() {
 		el.find( '.um-users-conditions-responce' ).removeAttr( 'multiple' );
 		el.find( '.um-users-conditions-compare option:first' ).prop( 'selected', true );
 		el.attr( 'data-group', parseInt( num ) + 1 );
+		el.find( '.um-users-conditions-responce' ).addClass( 'um-user-select-field' );
 
 		jQuery( this ).closest( '.um-conditions-group-action-wrap' ).before( el );
 

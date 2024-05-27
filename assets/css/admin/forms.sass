@@ -539,12 +539,32 @@ span.um-admin-icon-clear
   margin: 0 0 5px
   display: block
   color: #98a2b3
-.um-users-conditions-row
-  &:nth-child(2)
-    .um-users-conditions-connector
-        display: none
 .um-protection-buttons
   display: flex
   justify-content: center
   button
     margin: 0 5px !important
+.#{$prefix}users-conditions-row-hidden,
+.#{$prefix}entities-conditions-row-hidden
+  display: none
+.#{$prefix}users-conditions-row,
+.#{$prefix}entities-conditions-row
+  .select2-container
+    width: 48% !important
+    vertical-align: top
+    li
+      margin: 1px 2px !important
+    .select2-search__field
+      min-height: 18px !important
+      height: 18px !important
+      margin: 0 !important
+    .select2-selection
+      min-height: 36px
+      padding: 6px 0 0
+.#{$prefix}users-conditions-row
+  &:nth-child(2)
+    .#{$prefix}users-conditions-connector
+      display: none
+  .select2-container
+    width: 33% !important
+
