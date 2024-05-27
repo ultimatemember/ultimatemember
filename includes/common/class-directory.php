@@ -12,6 +12,39 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Directory {
 
+	/**
+	 * Fields used for searching from wp_users table.
+	 *
+	 * @var string[]
+	 */
+	public $core_search_fields = array(
+		'user_login',
+		'user_url',
+		'display_name',
+		'user_email',
+		'user_nicename',
+	);
+
+	/**
+	 * @var array
+	 */
+	public $filter_types = array();
+
+	/**
+	 * @var array
+	 */
+	public $filter_fields = array();
+
+	/**
+	 * @var array
+	 */
+	public $searching_fields = array();
+
+	/**
+	 * @var array
+	 */
+	public $filter_supported_fields = array();
+
 	public $cover_size;
 
 	public $avatar_size;
@@ -20,6 +53,163 @@ class Directory {
 	 * Directory constructor.
 	 */
 	public function __construct() {
+		add_filter( 'init', array( &$this, 'init_variables' ) );
+	}
+
+	/**
+	 *
+	 */
+	public function init_variables() {
+
+		// Filters
+		$this->filter_fields = array(
+			'country'              => __( 'Country', 'ultimate-member' ),
+			'gender'               => __( 'Gender', 'ultimate-member' ),
+			'languages'            => __( 'Languages', 'ultimate-member' ),
+			'role'                 => __( 'Roles', 'ultimate-member' ),
+			'birth_date'           => __( 'Age', 'ultimate-member' ),
+			'last_login'           => __( 'Last Login', 'ultimate-member' ),
+			'user_registered'      => __( 'User Registered', 'ultimate-member' ),
+			'first_name'           => __( 'First Name', 'ultimate-member' ),
+			'last_name'            => __( 'Last Name', 'ultimate-member' ),
+			'nickname'             => __( 'Nickname', 'ultimate-member' ),
+			'secondary_user_email' => __( 'Secondary Email Address', 'ultimate-member' ),
+			'description'          => __( 'Biography', 'ultimate-member' ),
+			'phone_number'         => __( 'Phone Number', 'ultimate-member' ),
+			'mobile_number'        => __( 'Mobile Number', 'ultimate-member' ),
+		);
+
+		$this->filter_supported_fields = apply_filters( 'um_members_directory_custom_field_types_supported_filter', array( 'date', 'time', 'select', 'multiselect', 'radio', 'checkbox', 'rating', 'text', 'textarea', 'number' ) );
+
+		$core_search_keys = $this->get_core_search_fields();
+
+		$this->searching_fields = array();
+		if ( ! empty( UM()->builtin()->all_user_fields() ) ) {
+			foreach ( UM()->builtin()->all_user_fields() as $key => $data ) {
+				if ( in_array( $key, $core_search_keys, true ) ) {
+					if ( isset( $data['title'] ) && array_search( $data['title'], $this->searching_fields, true ) !== false ) {
+						$data['title'] = $data['title'] . ' (' . $key . ')';
+					}
+
+					$title = isset( $data['title'] ) ? $data['title'] : ( isset( $data['label'] ) ? $data['label'] : '' );
+					if ( empty( $title ) ) {
+						continue;
+					}
+
+					$this->searching_fields[ $key ] = $title;
+				}
+			}
+		}
+		if ( ! empty( UM()->builtin()->saved_fields ) ) {
+			foreach ( UM()->builtin()->saved_fields as $key => $data ) {
+
+				if ( '_um_last_login' === $key ) {
+					continue;
+				}
+
+				if ( isset( $data['type'] ) && in_array( $data['type'], $this->filter_supported_fields ) ) {
+					if ( isset( $data['title'] ) && array_search( $data['title'], $this->filter_fields ) !== false ) {
+						$data['title'] = $data['title'] . ' (' . $key . ')';
+					}
+
+					$title = isset( $data['title'] ) ? $data['title'] : ( isset( $data['label'] ) ? $data['label'] : '' );
+					if ( empty( $title ) ) {
+						continue;
+					}
+
+					$this->filter_fields[ $key ] = $title;
+				}
+			}
+		}
+
+		$this->filter_fields = apply_filters( 'um_members_directory_filter_fields', $this->filter_fields );
+
+		ksort( $this->filter_fields );
+
+		$this->searching_fields = array_merge( $this->searching_fields, $this->filter_fields );
+		asort( $this->searching_fields );
+
+		$this->filter_types = apply_filters( 'um_members_directory_filter_types', array(
+			'country'               => 'select',
+			'gender'                => 'select',
+			'languages'             => 'select',
+			'role'                  => 'select',
+			'birth_date'            => 'slider',
+			'last_login'            => 'datepicker',
+			'user_registered'       => 'datepicker',
+			'first_name'            => 'text',
+			'last_name'             => 'text',
+			'nickname'              => 'text',
+			'secondary_user_email'  => 'text',
+			'description'           => 'text',
+			'phone_number'          => 'text',
+			'mobile_number'         => 'text',
+		) );
+
+		$fields = UM()->builtin()->all_user_fields;
+
+		$custom_fields_types = array_flip( array_keys( $this->filter_fields ) );
+		foreach ( $custom_fields_types as $key => &$value ) {
+			if ( ! isset( $fields[ $key ] ) ) {
+				unset( $custom_fields_types[ $key ] );
+			} else {
+				switch ( $fields[ $key ]['type'] ) {
+					default:
+						$value = apply_filters( 'um_custom_field_filter_type', 'select', $fields[ $key ] );
+						break;
+					case 'text':
+					case 'textarea':
+						$value = 'text';
+						break;
+					case 'date':
+						$value = 'datepicker';
+						break;
+					case 'time':
+						$value = 'timepicker';
+						break;
+					case 'select':
+					case 'multiselect':
+					case 'radio':
+					case 'checkbox':
+						$value = 'select';
+						break;
+					case 'number':
+					case 'rating':
+						$value = 'slider';
+						break;
+				}
+			}
+		}
+		unset( $value );
+
+		$this->filter_types = array_merge( $custom_fields_types, $this->filter_types );
+	}
+
+	/**
+	 * Get the WordPress core searching fields in wp_users query.
+	 * @return array
+	 */
+	protected function get_core_search_fields() {
+		/**
+		 * Filters the WordPress core searching fields in wp_users query for UM Member directory query.
+		 *
+		 * @param {array} $core_search_fields Core search fields in wp_users query.
+		 *
+		 * @return {array} Core search fields in wp_users query.
+		 *
+		 * @since 2.6.10
+		 * @hook um_member_directory_core_search_fields
+		 *
+		 * @example <caption>Extends or remove wp_users core search fields.</caption>
+		 * function my_um_member_directory_core_search_fields( $core_search_fields ) {
+		 *     $core_search_fields = array_flip( $core_search_fields );
+		 *     unset( $core_search_fields['user_email'] );
+		 *     $core_search_fields = array_flip( $core_search_fields );
+		 *     return $core_search_fields;
+		 * }
+		 * add_filter( 'um_member_directory_core_search_fields', 'my_um_member_directory_core_search_fields' );
+		 */
+		return apply_filters( 'um_member_directory_core_search_fields', $this->core_search_fields );
 	}
 
 	/**
@@ -40,6 +230,10 @@ class Directory {
 		}
 
 		return (int) $directory_id;
+	}
+
+	public function get_directory_hash( $form_id ) {
+		return substr( md5( $form_id ), 10, 5 );
 	}
 
 	/**

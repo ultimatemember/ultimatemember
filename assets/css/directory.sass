@@ -211,6 +211,23 @@
     .#{$prefix}member-directory-header-row
       +flex( row, flex-start, stretch, nowrap )
       width: 100%
+    .#{$prefix}member-directory-filters-bar
+      margin: 0
+      width: 100%
+      display: grid
+      grid-template-rows: auto 1fr
+      grid-template-columns: repeat(2, 1fr)
+      grid-gap: $spacing-md
+      grid-auto-rows: minmax(max-content, auto)
+      -ms-grid-template-rows: auto 1fr
+      -ms-grid-template-columns: repeat(2, 1fr)
+      -ms-grid-gap: $spacing-md
+      -ms-grid-auto-rows: minmax(max-content, auto)
+      .#{$prefix}filters-header
+        +typography( text, md, semibold )
+        color: $gray-700
+        width: 100%
+        grid-column: 1 / 4
     .#{$prefix}member-directory-header-row-grid
       width: 100%
       display: grid
@@ -365,19 +382,42 @@
                     display: initial
                   & ~ .#{$prefix}member-more
                     display: none
+          &.#{$prefix}member-no-actions // not logged-in user
+            .#{$prefix}member-photos
+              margin-bottom: calc( $spacing-7xl - $spacing-md )
 
   &.#{$prefix}ui-xs
+    .#{$prefix}member-directory-header
+      .#{$prefix}member-directory-filters-bar
+        grid-template-columns: repeat(1, 1fr)
+        -ms-grid-template-columns: repeat(1, 1fr)
     .#{$prefix}members-wrapper
       &.#{$prefix}members-grid
         grid-template-columns: repeat(1, 1fr)
         -ms-grid-template-columns: repeat(1, 1fr)
-  &.#{$prefix}ui-m,
+  &.#{$prefix}ui-m
+    .#{$prefix}member-directory-header
+      .#{$prefix}member-directory-filters-bar
+        grid-template-columns: repeat(2, 1fr)
+        -ms-grid-template-columns: repeat(2, 1fr)
+    .#{$prefix}members-wrapper
+      &.#{$prefix}members-grid
+        grid-template-columns: repeat(3, 1fr)
+        -ms-grid-template-columns: repeat(3, 1fr)
   &.#{$prefix}ui-l
+    .#{$prefix}member-directory-header
+      .#{$prefix}member-directory-filters-bar
+        grid-template-columns: repeat(3, 1fr)
+        -ms-grid-template-columns: repeat(3, 1fr)
     .#{$prefix}members-wrapper
       &.#{$prefix}members-grid
         grid-template-columns: repeat(3, 1fr)
         -ms-grid-template-columns: repeat(3, 1fr)
   &.#{$prefix}ui-xl
+    .#{$prefix}member-directory-header
+      .#{$prefix}member-directory-filters-bar
+        grid-template-columns: repeat(3, 1fr)
+        -ms-grid-template-columns: repeat(3, 1fr)
     .#{$prefix}members-wrapper
       &.#{$prefix}members-grid
         grid-template-columns: repeat(4, 1fr)

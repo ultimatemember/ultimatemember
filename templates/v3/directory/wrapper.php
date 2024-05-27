@@ -171,6 +171,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</div>
 		<?php } ?>
 
+		<?php if ( $filters && $show_filters && is_array( $search_filters ) && count( $search_filters ) ) { ?>
+			<div class="um-member-directory-header-row um-member-directory-filters-bar<?php if ( ! $filters_expanded ) { ?> um-header-row-invisible<?php } ?>">
+				<div class="um-filters-header">
+					<?php esc_html_e( 'Filters', 'ultimate-member' ); ?>
+					<a href="javascript:void(0);" class="um-link um-clear-filters-a" title="<?php esc_attr_e( 'Remove all filters', 'ultimate-member' ); ?>"><?php esc_html_e( 'Clear all', 'ultimate-member' ); ?></a>
+				</div>
+				<?php
+				foreach ( $search_filters as $filter ) {
+					$filter_content = UM()->frontend()->directory()->show_filter( $filter, $args );
+					if ( empty( $filter_content ) ) {
+						continue;
+					}
+
+					$type = UM()->member_directory()->filter_types[ $filter ]; ?>
+
+					<div class="um-search-filter um-<?php echo esc_attr( $type ) ?>-filter-type">
+						<?php echo $filter_content; ?>
+					</div>
+				<?php } ?>
+			</div>
+		<?php } ?>
+
 		<div class="um-member-directory-header-row-grid">
 			<div class="um-member-directory-header-left-cell">
 				<?php
@@ -214,16 +236,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<?php
 						$items = array();
 						foreach ( $sorting_options as $value => $title ) {
-							$items[] = '<a href="#" data-directory-hash="' . esc_attr( substr( md5( $form_id ), 10, 5 ) ) . '" class="um-members-sorting um-sorting-by-' . esc_attr( $value ) . '" data-value="' . esc_attr( $value ) . '" data-selected="' . ( ( $sort_from_url == $value ) ? '1' : '0' ) . '" data-default="' . ( ( $default_sorting == $value ) ? '1' : '0' ) . '">' . $title . '</a>';
+							$items[] = '<a href="#" data-directory-hash="' . esc_attr( substr( md5( $form_id ), 10, 5 ) ) . '" class="um-members-sorting um-sorting-by-' . esc_attr( $value ) . '" data-value="' . esc_attr( $value ) . '" data-selected="' . ( ( $sort_from_url === $value ) ? '1' : '0' ) . '" data-default="' . ( ( $default_sorting === $value ) ? '1' : '0' ) . '">' . $title . '</a>';
 						}
 						echo wp_kses(
 							UM()->frontend()::layouts()::dropdown_menu(
 								'um-members-sorting-toggle',
 								$items,
 								array(
-									'type'          => 'button',
-									'button_label'  => $sorting_options[ $sort_from_url ],
-									'width'         => 210,
+									'type'         => 'button',
+									'button_label' => $sorting_options[ $sort_from_url ],
+									'width'        => 210,
 								)
 							),
 							UM()->get_allowed_html( 'templates' )

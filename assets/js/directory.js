@@ -899,16 +899,16 @@ function um_timepicker_filter_init( directory ) {
 jQuery(document.body).ready( function() {
 
 
-	jQuery( '.um-directory .um-search-filter select' ).each( function() {
-		if ( jQuery(this).find('option:not(:disabled)').length === 1 ) {
-			jQuery(this).prop('disabled', true);
-		}
-
-		var obj = jQuery(this);
-		obj.select2('destroy').select2({
-			dropdownParent: obj.parent()
-		});
-	});
+	// jQuery( '.um-directory .um-search-filter select' ).each( function() {
+	// 	if ( jQuery(this).find('option:not(:disabled)').length === 1 ) {
+	// 		jQuery(this).prop('disabled', true);
+	// 	}
+	//
+	// 	var obj = jQuery(this);
+	// 	obj.select2('destroy').select2({
+	// 		dropdownParent: obj.parent()
+	// 	});
+	// });
 
 	/**
 	 * Change View Type Handlers

@@ -26,97 +26,125 @@ $choices-z-index: 1
 
 .um
   @import "../libs/choices-js/choices.scss"
-
-  .um-form-col
-    .choices
-      width: 100%
+  .choices
+    width: 100%
+    font-size: initial
+    .choices__inner
+      +border-box
+      border-color: $gray-300
       font-size: initial
-      .choices__inner
-        +border-box
-        border-color: $gray-300
-        font-size: initial
-        line-height: initial
-        box-shadow: $shadow-xs
-      &[data-type*=select-one]
+      line-height: initial
+      box-shadow: $shadow-xs
+    &[data-type*=select-one]
+      &::after
+        content: " "
+        mask: url(../icons/chevron-down.svg)
+        -webkit-mask: url(../icons/chevron-down.svg)
+        width: 20px
+        height: 20px
+        opacity: 1
+        background-color: $gray-500
+        border: none
+        margin-top: -10px
+      &.is-open
         &::after
-          content: " "
-          mask: url(../icons/chevron-down.svg)
-          -webkit-mask: url(../icons/chevron-down.svg)
-          width: 20px
-          height: 20px
-          opacity: 1
-          background-color: $gray-500
-          border: none
+          mask: url(../icons/chevron-up.svg)
+          -webkit-mask: url(../icons/chevron-up.svg)
           margin-top: -10px
-        &.is-open
-          &::after
-            mask: url(../icons/chevron-up.svg)
-            -webkit-mask: url(../icons/chevron-up.svg)
-            margin-top: -10px
-        .choices__inner
-          padding: $spacing-md $spacing-lg
-          min-height: auto
-          .choices__list--single
-            padding-left: 0
-            padding-top: 0
-            padding-bottom: 0
-      &.is-focused
-        overflow: visible
-        .choices__inner
-          border: 1px solid $primary-300
-          box-shadow: $ring-brand-shadow-xs
-          background: $um-white
-          outline: none
-          overflow: visible
-      .choices__list
-        +border-box
-        &.choices__list--dropdown,
-        &[aria-expanded]
-          top: calc( 100% + 4px )
-          border-radius: $radius-md
-          box-shadow: $shadow-lg
-          border: 1px solid $gray-200
-          & > input[type="search"].choices__input.choices__input--cloned
-            +border-box
-            width: calc( 100% - 2*$spacing-md )
-            border-radius: $radius-md
-            border: 1px solid $gray-200
+      .choices__inner
+        padding: $spacing-md $spacing-lg
+        min-height: auto
+        .choices__list--single
+          padding-left: 0
+          padding-top: 0
+          padding-bottom: 0
+    &[data-type*=select-multiple]
+      .choices__inner
+        padding: $spacing-md $spacing-lg
+        min-height: auto
+        .choices__list--multiple
+          padding-left: 0
+          padding-top: 0
+          padding-bottom: 0
+          .choices__item
+            border-radius: $radius-sm
+            border: 1px solid $gray-300
             background: $um-white
+            +typography( text, sm, medium )
+            color: $gray-700
+            padding: $spacing-xxs $spacing-sm
+            margin: 0 $spacing-sm 0 0
+        input[type="search"]
+          margin: 0 !important
+          padding: 0 !important
+          border: 0 !important
+          border-radius: 0 !important
+          box-shadow: none !important
+          &:hover,
+          &:focus,
+          &:focus-visible
+            margin: 0 !important
+            padding: 0 !important
+            border: 0 !important
+            border-radius: 0 !important
+            box-shadow: none !important
+    &.is-focused
+      overflow: visible
+      .choices__inner
+        border: 1px solid $primary-300
+        box-shadow: $ring-brand-shadow-xs
+        background: $um-white
+        outline: none
+        overflow: visible
+    .choices__list
+      +border-box
+      &.choices__list--dropdown,
+      &[aria-expanded]
+        top: calc( 100% + 4px )
+        border-radius: $radius-md
+        box-shadow: $shadow-lg
+        border: 1px solid $gray-200
+        & > input[type="search"].choices__input.choices__input--cloned
+          +border-box
+          width: calc( 100% - 2*$spacing-md )
+          border-radius: $radius-md
+          border: 1px solid $gray-200
+          background: $um-white
+          box-shadow: $shadow-xs
+          padding: $spacing-md $spacing-lg
+          color: $gray-900
+          margin: $spacing-md $spacing-md 0 $spacing-md
+          +typography( text, md, regular )
+          &:focus,
+          &:focus-visible
+            border: 1px solid $gray-200
             box-shadow: $shadow-xs
-            padding: $spacing-md $spacing-lg
+            background: $um-white
+            outline: none
+          &:disabled
+            background: $gray-50
+            color: $gray-500
+          &::placeholder
+            color: $gray-500
+        & > .choices__list[role="listbox"]
+          padding: $spacing-sm
+        //.choices__item.choices__item--choice.is-selected.choices__item--selectable is-highlighted
+        .choices__item.choices__item--choice
+          padding-left: $spacing-md
+          padding-top: $spacing-md
+          padding-bottom: $spacing-md
+          &.choices__item--selectable
             color: $gray-900
-            margin: $spacing-md $spacing-md 0 $spacing-md
             +typography( text, md, regular )
-            &:focus,
-            &:focus-visible
-              border: 1px solid $gray-200
-              box-shadow: $shadow-xs
-              background: $um-white
-              outline: none
-            &:disabled
+            &.is-highlighted
               background: $gray-50
-              color: $gray-500
-            &::placeholder
-              color: $gray-500
-          & > .choices__list[role="listbox"]
-            padding: $spacing-sm
-          //.choices__item.choices__item--choice.is-selected.choices__item--selectable is-highlighted
-          .choices__item.choices__item--choice
-            padding-left: $spacing-md
-            padding-top: $spacing-md
-            padding-bottom: $spacing-md
-            &.choices__item--selectable
-              color: $gray-900
-              +typography( text, md, regular )
-              &.is-highlighted
-                background: $gray-50
-                border-radius: $radius-sm
-              &.is-selected
-                &::after
-                  content: " "
-                  mask: url(../icons/check.svg)
-                  -webkit-mask: url(../icons/check.svg)
-                  width: 20px
-                  height: 20px
-                  opacity: 1
-                  background-color: $primary-600
+              border-radius: $radius-sm
+            &.is-selected
+              &::after
+                content: " "
+                mask: url(../icons/check.svg)
+                -webkit-mask: url(../icons/check.svg)
+                width: 20px
+                height: 20px
+                opacity: 1
+                background-color: $primary-600

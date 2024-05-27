@@ -20,9 +20,23 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		 * @used-by \UM::includes()
 		 */
 		public function includes() {
+			$this->directory();
 			$this->enqueue();
 			$this->modal();
 			$this->secure();
+		}
+
+		/**
+		 * @since 2.9.0
+		 *
+		 * @return Directory
+		 */
+		public function directory() {
+			if ( empty( UM()->classes['um\frontend\directory'] ) ) {
+				UM()->classes['um\frontend\directory'] = new Directory();
+			}
+
+			return UM()->classes['um\frontend\directory'];
 		}
 
 		/**

@@ -42,6 +42,10 @@ if ( ! $directory_data['profile_photo'] ) {
 	$card_classes[] = 'um-member-no-photo';
 }
 
+if ( empty( $member['dropdown_actions'] ) ) {
+	$card_classes[] = 'um-member-no-actions';
+}
+
 ob_start();
 
 if ( $directory_data['cover_photos'] && $member['cover_photo'] ) {
@@ -72,7 +76,6 @@ echo wp_kses(
 	),
 	UM()->get_allowed_html( 'templates' )
 );
-
 ?>
 <div class="um-member-box-main">
 	<?php
