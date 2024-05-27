@@ -658,7 +658,21 @@
               padding: 0
               row-gap: $spacing-sm
               width: 100%
-              & > input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+              & > input[type="date"],
+              & > input[type="datetime"],
+              & > input[type="datetime-local"],
+              & > input[type="email"],
+              & > input[type="file"],
+              & > input[type="image"],
+              & > input[type="month"],
+              & > input[type="number"],
+              & > input[type="password"],
+              & > input[type="search"],
+              & > input[type="tel"],
+              & > input[type="text"],
+              & > input[type="time"],
+              & > input[type="url"],
+              & > input[type="week"],
               & > select,
               & > textarea
                 +border-box
@@ -927,7 +941,21 @@
                   align-items: start
                   input[type="checkbox"]
                     margin: $spacing-xxs 0 0 0
-            & > input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+            & > input[type="date"],
+            & > input[type="datetime"],
+            & > input[type="datetime-local"],
+            & > input[type="email"],
+            & > input[type="file"],
+            & > input[type="image"],
+            & > input[type="month"],
+            & > input[type="number"],
+            & > input[type="password"],
+            & > input[type="search"],
+            & > input[type="tel"],
+            & > input[type="text"],
+            & > input[type="time"],
+            & > input[type="url"],
+            & > input[type="week"],
             & > select,
             & > textarea
               +border-box
@@ -1501,7 +1529,21 @@ input[type="range"]
         min-width: 80px
 
 .um
-  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="button"]):not([type="submit"]),
+  input[type="date"],
+  input[type="datetime"],
+  input[type="datetime-local"],
+  input[type="email"],
+  input[type="file"],
+  input[type="image"],
+  input[type="month"],
+  input[type="number"],
+  input[type="password"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="text"],
+  input[type="time"],
+  input[type="url"],
+  input[type="week"],
   select,
   textarea
     +border-box

@@ -52,83 +52,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<div class="um-members-overlay"><div class="um-ajax-loading"></div></div>
 
-	<div class="um-member-directory-header um-form">
+	<div class="um-member-directory-header">
 		<?php
 		do_action( 'um_members_directory_before_head', $args, $form_id, $not_searched );
 
-		if ( $filters && $show_filters && count( $search_filters ) ) {
-			?>
-			<div class="um-member-directory-header-row">
-				<div class="um-member-directory-nav-line">
-					<?php
-					if ( $filters && $show_filters && count( $search_filters ) && $filters_collapsible ) { ?>
-						<span class="um-member-directory-filters">
-							<span class="um-member-directory-filters-a<?php if ( $filters_expanded ) { ?> um-member-directory-filters-visible<?php } ?>">
-								<a href="javascript:void(0);">
-									<?php _e( 'More filters', 'ultimate-member' ); ?>
-								</a>
-								&nbsp;<i class="um-faicon-caret-down"></i><i class="um-faicon-caret-up"></i>
-							</span>
-						</span>
-					<?php } ?>
-				</div>
-			</div>
-		<?php } ?>
-
-
-		<?php if ( $filters && $show_filters && count( $search_filters ) ) {
-
-			if ( is_array( $search_filters ) ) { ?>
-				<script type="text/template" id="tmpl-um-members-filtered-line">
-					<# if ( data.filters.length > 0 ) { #>
-						<# _.each( data.filters, function( filter, key, list ) { #>
-							<div class="um-members-filter-tag">
-								<# if ( filter.type == 'slider' ) { #>
-									{{{filter.value_label}}}
-								<# } else { #>
-									<strong>{{{filter.label}}}</strong>: {{{filter.value_label}}}
-								<# } #>
-								<div class="um-members-filter-remove um-tip-n" data-name="{{{filter.name}}}"
-									 data-value="{{{filter.value}}}" data-range="{{{filter.range}}}"
-									 data-type="{{{filter.type}}}" title="<?php esc_attr_e( 'Remove filter', 'ultimate-member' ) ?>">&times;</div>
-							</div>
-						<# }); #>
-					<# } #>
-				</script>
-
-				<div class="um-member-directory-header-row um-member-directory-filters-bar<?php if ( ! $filters_expanded ) { ?> um-header-row-invisible<?php } ?>">
-					<div class="um-search um-search-<?php echo count( $search_filters ) ?><?php if ( ! $filters_expanded ) { ?> um-search-invisible<?php } ?>">
-						<?php $i = 0;
-						foreach ( $search_filters as $filter ) {
-							$filter_content = UM()->member_directory()->show_filter( $filter, $args );
-							if ( empty( $filter_content ) ) {
-								continue;
-							}
-
-							$type = UM()->member_directory()->filter_types[ $filter ]; ?>
-
-							<div class="um-search-filter um-<?php echo esc_attr( $type ) ?>-filter-type <?php echo ( $i != 0 && $i%2 !== 0 ) ? 'um-search-filter-2' : '' ?>">
-								<?php echo $filter_content; ?>
-							</div>
-
-							<?php $i++;
-						} ?>
-					</div>
-				</div>
-				<div class="um-member-directory-header-row">
-					<div class="um-filtered-line">
-						<div class="um-clear-filters"><a href="javascript:void(0);" class="um-clear-filters-a" title="<?php esc_attr_e( 'Remove all filters', 'ultimate-member' ) ?>"><?php _e( 'Clear all', 'ultimate-member' ); ?></a></div>
-					</div>
-				</div>
-				<?php
-			}
-		}
-		do_action( 'um_members_directory_head', $args, $form_id, $not_searched );
-		?>
-	</div>
-
-	<div class="um-member-directory-header">
-		<?php if ( ( $search && $show_search ) || ( $filters && $show_filters && count( $search_filters ) && $filters_collapsible ) ) { ?>
+		if ( ( $search && $show_search ) || ( $filters && $show_filters && count( $search_filters ) && $filters_collapsible ) ) { ?>
 			<div class="um-member-directory-header-row um-member-directory-search-filters">
 				<?php if ( $search && $show_search ) { ?>
 					<div class="um-member-directory-search-wrapper">

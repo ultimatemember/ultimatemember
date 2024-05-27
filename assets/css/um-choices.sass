@@ -60,34 +60,60 @@ $choices-z-index: 1
           padding-bottom: 0
     &[data-type*=select-multiple]
       .choices__inner
+        +flex( row, flex-start, baseline, wrap )
         padding: $spacing-md $spacing-lg
         min-height: auto
+        gap: $spacing-md
         .choices__list--multiple
+          +flex( row, flex-start, baseline, wrap )
+          gap: $spacing-md
           padding-left: 0
           padding-top: 0
           padding-bottom: 0
           .choices__item
+            +flex( row, flex-start, center, nowrap )
             border-radius: $radius-sm
             border: 1px solid $gray-300
             background: $um-white
             +typography( text, sm, medium )
             color: $gray-700
             padding: $spacing-xxs $spacing-sm
-            margin: 0 $spacing-sm 0 0
+            margin: 0
+            gap: $spacing-sm
+            button
+              background-image: none
+              background-color: $gray-400
+              border: none
+              box-shadow: none
+              opacity: 1
+              mask: url(../icons/x.svg)
+              -webkit-mask: url(../icons/x.svg)
+              width: 16px
+              height: 16px
+              margin: 0
+              padding: 0
+              background-size: auto
+              &:hover,
+              &:focus,
+              &:focus-visible
+                background-color: $gray-500
+                border: none
+                box-shadow: none
+                opacity: 1
         input[type="search"]
-          margin: 0 !important
-          padding: 0 !important
-          border: 0 !important
-          border-radius: 0 !important
-          box-shadow: none !important
+          margin: 0
+          padding: 0
+          border: 0
+          border-radius: 0
+          box-shadow: none
           &:hover,
           &:focus,
           &:focus-visible
-            margin: 0 !important
-            padding: 0 !important
-            border: 0 !important
-            border-radius: 0 !important
-            box-shadow: none !important
+            margin: 0
+            padding: 0
+            border: 0
+            border-radius: 0
+            box-shadow: none
     &.is-focused
       overflow: visible
       .choices__inner

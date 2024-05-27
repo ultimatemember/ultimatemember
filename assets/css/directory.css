@@ -42,7 +42,24 @@
   font-weight: var(--um-text-font-weight-semibold, 600);
   color: var(--um-gray-700, #344054);
   width: 100%;
-  grid-column: 1/4;
+  grid-column: 1/3;
+}
+.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter {
+  position: relative;
+}
+.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter input[type=search],
+.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter input[type=text] {
+  width: 100%;
+  margin: 0;
+}
+.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter .choices {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter .choices .choices__list--dropdown,
+.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter .choices .choices__list[aria-expanded] {
+  z-index: 2;
 }
 .um-directory .um-member-directory-header .um-member-directory-header-row-grid {
   width: 100%;
@@ -300,6 +317,9 @@
   grid-template-columns: repeat(1, 1fr);
   -ms-grid-template-columns: repeat(1, 1fr);
 }
+.um-directory.um-ui-xs .um-member-directory-header .um-member-directory-filters-bar .um-filters-header {
+  grid-column: 1/2;
+}
 .um-directory.um-ui-xs .um-members-wrapper.um-members-grid {
   grid-template-columns: repeat(1, 1fr);
   -ms-grid-template-columns: repeat(1, 1fr);
@@ -307,6 +327,9 @@
 .um-directory.um-ui-m .um-member-directory-header .um-member-directory-filters-bar {
   grid-template-columns: repeat(2, 1fr);
   -ms-grid-template-columns: repeat(2, 1fr);
+}
+.um-directory.um-ui-m .um-member-directory-header .um-member-directory-filters-bar .um-filters-header {
+  grid-column: 1/3;
 }
 .um-directory.um-ui-m .um-members-wrapper.um-members-grid {
   grid-template-columns: repeat(3, 1fr);
@@ -316,6 +339,9 @@
   grid-template-columns: repeat(3, 1fr);
   -ms-grid-template-columns: repeat(3, 1fr);
 }
+.um-directory.um-ui-l .um-member-directory-header .um-member-directory-filters-bar .um-filters-header {
+  grid-column: 1/4;
+}
 .um-directory.um-ui-l .um-members-wrapper.um-members-grid {
   grid-template-columns: repeat(3, 1fr);
   -ms-grid-template-columns: repeat(3, 1fr);
@@ -323,6 +349,9 @@
 .um-directory.um-ui-xl .um-member-directory-header .um-member-directory-filters-bar {
   grid-template-columns: repeat(3, 1fr);
   -ms-grid-template-columns: repeat(3, 1fr);
+}
+.um-directory.um-ui-xl .um-member-directory-header .um-member-directory-filters-bar .um-filters-header {
+  grid-column: 1/4;
 }
 .um-directory.um-ui-xl .um-members-wrapper.um-members-grid {
   grid-template-columns: repeat(4, 1fr);

@@ -877,8 +877,22 @@
   row-gap: 6px;
   width: 100%;
 }
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]), .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea,
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]),
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=date], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=datetime], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=datetime-local], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=email], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=file], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=image], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=month], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=number], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=password], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=search], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=tel], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=text], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=time], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=url], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=week], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=date],
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=datetime],
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=datetime-local],
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=email],
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=file],
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=image],
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=month],
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=number],
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=password],
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=search],
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=tel],
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=text],
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=time],
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=url],
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=week],
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > select,
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > textarea {
   box-sizing: border-box;
@@ -895,9 +909,37 @@
   line-height: var(--um-text-line-height-md, 24px);
   font-weight: var(--um-text-font-weight-regular, 400);
 }
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea:focus-visible,
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):focus,
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=date]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=date]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=datetime]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=datetime]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=datetime-local]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=datetime-local]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=email]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=email]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=file]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=file]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=image]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=image]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=month]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=month]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=number]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=number]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=password]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=password]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=search]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=search]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=tel]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=tel]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=text]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=text]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=time]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=time]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=url]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=url]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=week]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=week]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=date]:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=date]:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=datetime]:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=datetime]:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=datetime-local]:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=datetime-local]:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=email]:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=email]:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=file]:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=file]:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=image]:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=image]:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=month]:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=month]:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=number]:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=number]:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=password]:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=password]:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=search]:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=search]:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=tel]:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=tel]:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=text]:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=text]:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=time]:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=time]:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=url]:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=url]:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=week]:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=week]:focus-visible,
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > select:focus,
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > select:focus-visible,
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > textarea:focus,
@@ -907,28 +949,98 @@
   background: #fff;
   outline: none;
 }
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea:disabled,
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):disabled,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=date]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=datetime]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=datetime-local]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=email]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=file]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=image]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=month]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=number]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=password]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=search]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=tel]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=text]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=time]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=url]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=week]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea:disabled,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=date]:disabled,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=datetime]:disabled,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=datetime-local]:disabled,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=email]:disabled,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=file]:disabled,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=image]:disabled,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=month]:disabled,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=number]:disabled,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=password]:disabled,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=search]:disabled,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=tel]:disabled,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=text]:disabled,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=time]:disabled,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=url]:disabled,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=week]:disabled,
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > select:disabled,
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > textarea:disabled {
   background: var(--um-gray-50, #f9fafb);
   color: var(--um-gray-500, #667085);
 }
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color])::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea::placeholder,
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color])::placeholder,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=date]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=datetime]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=datetime-local]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=email]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=file]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=image]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=month]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=number]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=password]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=search]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=tel]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=text]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=time]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=url]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=week]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea::placeholder,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=date]::placeholder,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=datetime]::placeholder,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=datetime-local]::placeholder,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=email]::placeholder,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=file]::placeholder,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=image]::placeholder,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=month]::placeholder,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=number]::placeholder,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=password]::placeholder,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=search]::placeholder,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=tel]::placeholder,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=text]::placeholder,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=time]::placeholder,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=url]::placeholder,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=week]::placeholder,
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > select::placeholder,
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > textarea::placeholder {
   color: var(--um-gray-500, #667085);
 }
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]).um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select.um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea.um-error,
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]).um-error,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=date].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=datetime].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=datetime-local].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=email].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=file].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=image].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=month].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=number].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=password].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=search].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=tel].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=text].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=time].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=url].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=week].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select.um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea.um-error,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=date].um-error,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=datetime].um-error,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=datetime-local].um-error,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=email].um-error,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=file].um-error,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=image].um-error,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=month].um-error,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=number].um-error,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=password].um-error,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=search].um-error,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=tel].um-error,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=text].um-error,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=time].um-error,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=url].um-error,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=week].um-error,
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > select.um-error,
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > textarea.um-error {
   border-color: var(--um-error-300, #fda29b);
 }
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]).um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]).um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select.um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select.um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea.um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea.um-error:focus-visible,
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]).um-error:focus,
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]).um-error:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=date].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=date].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=datetime].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=datetime].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=datetime-local].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=datetime-local].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=email].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=email].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=file].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=file].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=image].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=image].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=month].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=month].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=number].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=number].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=password].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=password].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=search].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=search].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=tel].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=tel].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=text].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=text].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=time].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=time].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=url].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=url].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=week].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=week].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select.um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > select.um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea.um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea.um-error:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=date].um-error:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=date].um-error:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=datetime].um-error:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=datetime].um-error:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=datetime-local].um-error:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=datetime-local].um-error:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=email].um-error:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=email].um-error:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=file].um-error:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=file].um-error:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=image].um-error:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=image].um-error:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=month].um-error:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=month].um-error:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=number].um-error:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=number].um-error:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=password].um-error:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=password].um-error:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=search].um-error:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=search].um-error:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=tel].um-error:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=tel].um-error:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=text].um-error:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=text].um-error:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=time].um-error:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=time].um-error:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=url].um-error:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=url].um-error:focus-visible,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=week].um-error:focus,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=week].um-error:focus-visible,
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > select.um-error:focus,
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > select.um-error:focus-visible,
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > textarea.um-error:focus,
@@ -1253,7 +1365,7 @@
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col label.um-checkbox-label.um-supporting-text input[type=checkbox] {
   margin: 2px 0 0 0;
 }
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]), .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea {
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=date], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime-local], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=email], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=file], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=image], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=month], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=number], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=password], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=search], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=tel], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=text], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=time], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=url], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=week], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -1268,23 +1380,23 @@
   line-height: var(--um-text-line-height-md, 24px);
   font-weight: var(--um-text-font-weight-regular, 400);
 }
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea:focus-visible {
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=date]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=date]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime-local]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime-local]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=email]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=email]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=file]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=file]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=image]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=image]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=month]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=month]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=number]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=number]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=password]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=password]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=search]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=search]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=tel]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=tel]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=text]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=text]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=time]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=time]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=url]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=url]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=week]:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=week]:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea:focus-visible {
   border: 1px solid var(--um-primary-300-bg, #d6bbfb);
   box-shadow: 0 0 0 4px var(--um-primary-500-a-24, rgba(158, 119, 237, 0.24)), 0 1px 2px var(--um-gray-900-a-5, rgba(16, 24, 40, 0.05));
   background: #fff;
   outline: none;
 }
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea:disabled {
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=date]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime-local]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=email]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=file]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=image]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=month]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=number]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=password]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=search]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=tel]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=text]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=time]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=url]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=week]:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select:disabled, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea:disabled {
   background: var(--um-gray-50, #f9fafb);
   color: var(--um-gray-500, #667085);
 }
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color])::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea::placeholder {
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=date]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime-local]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=email]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=file]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=image]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=month]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=number]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=password]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=search]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=tel]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=text]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=time]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=url]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=week]::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select::placeholder, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea::placeholder {
   color: var(--um-gray-500, #667085);
 }
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]).um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select.um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea.um-error {
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=date].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime-local].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=email].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=file].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=image].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=month].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=number].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=password].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=search].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=tel].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=text].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=time].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=url].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=week].um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select.um-error, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea.um-error {
   border-color: var(--um-error-300, #fda29b);
 }
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]).um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]).um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select.um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select.um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea.um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea.um-error:focus-visible {
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=date].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=date].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime-local].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime-local].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=email].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=email].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=file].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=file].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=image].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=image].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=month].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=month].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=number].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=number].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=password].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=password].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=search].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=search].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=tel].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=tel].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=text].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=text].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=time].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=time].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=url].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=url].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=week].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=week].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select.um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select.um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea.um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea.um-error:focus-visible {
   box-shadow: 0 0 0 4px var(--um-error-500-a-24, rgba(240, 68, 56, 0.24)), 0 1px 2px var(--um-gray-900-a-5, rgba(16, 24, 40, 0.05));
 }
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .wp-core-ui.wp-editor-wrap,
@@ -1860,7 +1972,21 @@ input[type=range] {
   min-width: 80px;
 }
 
-.um input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=button]):not([type=submit]),
+.um input[type=date],
+.um input[type=datetime],
+.um input[type=datetime-local],
+.um input[type=email],
+.um input[type=file],
+.um input[type=image],
+.um input[type=month],
+.um input[type=number],
+.um input[type=password],
+.um input[type=search],
+.um input[type=tel],
+.um input[type=text],
+.um input[type=time],
+.um input[type=url],
+.um input[type=week],
 .um select,
 .um textarea {
   box-sizing: border-box;
@@ -1876,7 +2002,35 @@ input[type=range] {
   line-height: var(--um-text-line-height-md, 24px);
   font-weight: var(--um-text-font-weight-regular, 400);
 }
-.um input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=button]):not([type=submit]):focus, .um input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=button]):not([type=submit]):focus-visible,
+.um input[type=date]:focus, .um input[type=date]:focus-visible,
+.um input[type=datetime]:focus,
+.um input[type=datetime]:focus-visible,
+.um input[type=datetime-local]:focus,
+.um input[type=datetime-local]:focus-visible,
+.um input[type=email]:focus,
+.um input[type=email]:focus-visible,
+.um input[type=file]:focus,
+.um input[type=file]:focus-visible,
+.um input[type=image]:focus,
+.um input[type=image]:focus-visible,
+.um input[type=month]:focus,
+.um input[type=month]:focus-visible,
+.um input[type=number]:focus,
+.um input[type=number]:focus-visible,
+.um input[type=password]:focus,
+.um input[type=password]:focus-visible,
+.um input[type=search]:focus,
+.um input[type=search]:focus-visible,
+.um input[type=tel]:focus,
+.um input[type=tel]:focus-visible,
+.um input[type=text]:focus,
+.um input[type=text]:focus-visible,
+.um input[type=time]:focus,
+.um input[type=time]:focus-visible,
+.um input[type=url]:focus,
+.um input[type=url]:focus-visible,
+.um input[type=week]:focus,
+.um input[type=week]:focus-visible,
 .um select:focus,
 .um select:focus-visible,
 .um textarea:focus,
@@ -1886,23 +2040,93 @@ input[type=range] {
   background: #fff;
   outline: none;
 }
-.um input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=button]):not([type=submit]):disabled,
+.um input[type=date]:disabled,
+.um input[type=datetime]:disabled,
+.um input[type=datetime-local]:disabled,
+.um input[type=email]:disabled,
+.um input[type=file]:disabled,
+.um input[type=image]:disabled,
+.um input[type=month]:disabled,
+.um input[type=number]:disabled,
+.um input[type=password]:disabled,
+.um input[type=search]:disabled,
+.um input[type=tel]:disabled,
+.um input[type=text]:disabled,
+.um input[type=time]:disabled,
+.um input[type=url]:disabled,
+.um input[type=week]:disabled,
 .um select:disabled,
 .um textarea:disabled {
   background: var(--um-gray-50, #f9fafb);
   color: var(--um-gray-500, #667085);
 }
-.um input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=button]):not([type=submit])::placeholder,
+.um input[type=date]::placeholder,
+.um input[type=datetime]::placeholder,
+.um input[type=datetime-local]::placeholder,
+.um input[type=email]::placeholder,
+.um input[type=file]::placeholder,
+.um input[type=image]::placeholder,
+.um input[type=month]::placeholder,
+.um input[type=number]::placeholder,
+.um input[type=password]::placeholder,
+.um input[type=search]::placeholder,
+.um input[type=tel]::placeholder,
+.um input[type=text]::placeholder,
+.um input[type=time]::placeholder,
+.um input[type=url]::placeholder,
+.um input[type=week]::placeholder,
 .um select::placeholder,
 .um textarea::placeholder {
   color: var(--um-gray-500, #667085);
 }
-.um input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=button]):not([type=submit]).um-error,
+.um input[type=date].um-error,
+.um input[type=datetime].um-error,
+.um input[type=datetime-local].um-error,
+.um input[type=email].um-error,
+.um input[type=file].um-error,
+.um input[type=image].um-error,
+.um input[type=month].um-error,
+.um input[type=number].um-error,
+.um input[type=password].um-error,
+.um input[type=search].um-error,
+.um input[type=tel].um-error,
+.um input[type=text].um-error,
+.um input[type=time].um-error,
+.um input[type=url].um-error,
+.um input[type=week].um-error,
 .um select.um-error,
 .um textarea.um-error {
   border-color: var(--um-error-300, #fda29b);
 }
-.um input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=button]):not([type=submit]).um-error:focus, .um input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=button]):not([type=submit]).um-error:focus-visible,
+.um input[type=date].um-error:focus, .um input[type=date].um-error:focus-visible,
+.um input[type=datetime].um-error:focus,
+.um input[type=datetime].um-error:focus-visible,
+.um input[type=datetime-local].um-error:focus,
+.um input[type=datetime-local].um-error:focus-visible,
+.um input[type=email].um-error:focus,
+.um input[type=email].um-error:focus-visible,
+.um input[type=file].um-error:focus,
+.um input[type=file].um-error:focus-visible,
+.um input[type=image].um-error:focus,
+.um input[type=image].um-error:focus-visible,
+.um input[type=month].um-error:focus,
+.um input[type=month].um-error:focus-visible,
+.um input[type=number].um-error:focus,
+.um input[type=number].um-error:focus-visible,
+.um input[type=password].um-error:focus,
+.um input[type=password].um-error:focus-visible,
+.um input[type=search].um-error:focus,
+.um input[type=search].um-error:focus-visible,
+.um input[type=tel].um-error:focus,
+.um input[type=tel].um-error:focus-visible,
+.um input[type=text].um-error:focus,
+.um input[type=text].um-error:focus-visible,
+.um input[type=time].um-error:focus,
+.um input[type=time].um-error:focus-visible,
+.um input[type=url].um-error:focus,
+.um input[type=url].um-error:focus-visible,
+.um input[type=week].um-error:focus,
+.um input[type=week].um-error:focus-visible,
 .um select.um-error:focus,
 .um select.um-error:focus-visible,
 .um textarea.um-error:focus,
