@@ -25,14 +25,17 @@
  * @var string $search
  * @var bool   $show_search
  * @var string $search_from_url
+ * @var bool   $has_search
  * @var bool   $filters
  * @var bool   $show_filters
  * @var array  $search_filters
+ * @var bool   $has_filters
  * @var string $classes
  * @var bool   $filters_collapsible
  * @var bool   $filters_expanded
  * @var bool   $must_search
  * @var bool   $not_searched
+ * @var bool   $not_filtered
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -48,12 +51,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="um-members-overlay"><div class="um-ajax-loading"></div></div>
 
 	<div class="um-member-directory-header">
-		<?php
-		do_action( 'um_members_directory_before_head', $args, $form_id, $not_searched );
+		<?php do_action( 'um_members_directory_before_head', $args, $form_id, $not_searched ); ?>
 
-		if ( ( $search && $show_search ) || ( $filters && $show_filters && count( $search_filters ) && $filters_collapsible ) ) { ?>
+		<?php if ( $has_search || ( $has_filters && $filters_collapsible ) ) { ?>
 			<div class="um-member-directory-header-row um-member-directory-search-filters">
-				<?php if ( $search && $show_search ) { ?>
+				<?php if ( $has_search ) { ?>
 					<div class="um-member-directory-search-wrapper">
 						<label class="um-member-directory-search-line">
 							<span><?php esc_html_e( 'Search:', 'ultimate-member' ); ?></span>
@@ -78,7 +80,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<?php do_action( 'um_members_directory_between_search_filters', $args, $form_id, $not_searched ); ?>
 
 				<?php
-				if ( $filters && $show_filters && $filters_collapsible && count( $search_filters ) ) {
+				if ( $has_filters && $filters_collapsible ) {
 					echo wp_kses(
 						UM()->frontend()::layouts()::button(
 							__( 'Filters', 'ultimate-member' ),
@@ -94,23 +96,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</div>
 		<?php } ?>
 
-		<?php if ( $filters && $show_filters && is_array( $search_filters ) && count( $search_filters ) ) { ?>
+		<?php if ( $has_filters ) { ?>
 			<div class="um-member-directory-header-row um-member-directory-filters-bar<?php if ( ! $filters_expanded ) { ?> um-header-row-invisible<?php } ?>">
 				<div class="um-filters-header">
 					<?php esc_html_e( 'Filters', 'ultimate-member' ); ?>
-					<a href="javascript:void(0);" class="um-link um-clear-filters-a" title="<?php esc_attr_e( 'Remove all filters', 'ultimate-member' ); ?>"><?php esc_html_e( 'Clear all', 'ultimate-member' ); ?></a>
+					<a href="javascript:void(0);" class="um-link um-clear-filters-a <?php if ( $not_filtered ) { ?>um-display-none<?php } ?>" title="<?php esc_attr_e( 'Remove all filters', 'ultimate-member' ); ?>"><?php esc_html_e( 'Clear all', 'ultimate-member' ); ?></a>
 				</div>
-				<?php
-				foreach ( $search_filters as $filter ) {
-					$filter_content = UM()->frontend()->directory()->show_filter( $filter, $args );
-					if ( empty( $filter_content ) ) {
-						continue;
-					}
-
-					$type = UM()->member_directory()->filter_types[ $filter ]; ?>
-
-					<div class="um-search-filter um-<?php echo esc_attr( $type ) ?>-filter-type">
-						<?php echo $filter_content; ?>
+				<?php foreach ( $search_filters as $filter => $filter_data ) { ?>
+					<div class="um-search-filter um-<?php echo esc_attr( $filter_data['type'] ); ?>-filter-type">
+						<?php echo wp_kses( $filter_data['content'], UM()->get_allowed_html( 'templates' ) ); ?>
 					</div>
 				<?php } ?>
 			</div>

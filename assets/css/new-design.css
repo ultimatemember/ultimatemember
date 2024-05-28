@@ -2133,3 +2133,7 @@ input[type=range] {
 .um textarea.um-error:focus-visible {
   box-shadow: 0 0 0 4px var(--um-error-500-a-24, rgba(240, 68, 56, 0.24)), 0 1px 2px var(--um-gray-900-a-5, rgba(16, 24, 40, 0.05));
 }
+
+.um .um-display-none {
+  display: none;
+}

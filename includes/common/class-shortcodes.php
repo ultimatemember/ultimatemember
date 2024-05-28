@@ -978,6 +978,7 @@ class Shortcodes {
 	function load_template( $tpl ) {
 		$loop = ( $this->loop ) ? $this->loop : array();
 
+		$args = array();
 		if ( isset( $this->set_args ) && is_array( $this->set_args ) ) {
 			$args = $this->set_args;
 
@@ -985,13 +986,15 @@ class Shortcodes {
 
 			$args = apply_filters( 'um_template_load_args', $args, $tpl );
 
-			/*
+			/**
 			 * This use of extract() cannot be removed. There are many possible ways that
 			 * templates could depend on variables that it creates existing, and no way to
 			 * detect and deprecate it.
 			 *
 			 * Passing the EXTR_SKIP flag is the safest option, ensuring globals and
 			 * function variables cannot be overwritten.
+			 *
+			 * @var array $search_filters
 			 */
 			// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 			extract( $args, EXTR_SKIP );
@@ -1656,54 +1659,82 @@ class Shortcodes {
 
 			// Search.
 			$search          = isset( $args['search'] ) ? $args['search'] : false;
-			$show_search     = empty( $args['roles_can_search'] ) || ( ! empty( $priority_user_role ) && in_array( $priority_user_role, $args['roles_can_search'], true ) );
 			$search_from_url = '';
-			if ( $search && $show_search ) {
-				$search_from_url = ! empty( $_GET[ 'search_' . $unique_hash ] ) ? stripslashes( sanitize_text_field( $_GET[ 'search_' . $unique_hash ] ) ) : '';
+			$show_search     = false;
+			if ( ! empty( $search ) ) {
+				$show_search = empty( $args['roles_can_search'] ) || ( ! empty( $priority_user_role ) && in_array( $priority_user_role, $args['roles_can_search'], true ) );
+				if ( $show_search ) {
+					$search_from_url = ! empty( $_GET[ 'search_' . $unique_hash ] ) ? stripslashes( sanitize_text_field( $_GET[ 'search_' . $unique_hash ] ) ) : '';
+				}
 			}
 
 			$args['search']          = $search;
 			$args['show_search']     = $show_search;
+			$args['has_search']      = $search && $show_search;
 			$args['search_from_url'] = $search_from_url;
 
 			// Filters.
 			$filters        = isset( $args['filters'] ) ? $args['filters'] : false;
-			$show_filters   = empty( $args['roles_can_filter'] ) || ( ! empty( $priority_user_role ) && in_array( $priority_user_role, $args['roles_can_filter'], true ) );
+			$show_filters   = false;
 			$search_filters = array();
-			if ( isset( $args['search_fields'] ) ) {
-				$search_filters = apply_filters( 'um_frontend_member_search_filters', array_unique( array_filter( $args['search_fields'] ) ) );
-			}
+			if ( ! empty( $filters ) ) {
+				$show_filters = empty( $args['roles_can_filter'] ) || ( ! empty( $priority_user_role ) && in_array( $priority_user_role, $args['roles_can_filter'], true ) );
 
-			if ( ! empty( $search_filters ) ) {
-				$search_filters = array_filter(
-					$search_filters,
-					function( $item ) {
-						return array_key_exists( $item, UM()->member_directory()->filter_fields );
+				if ( $show_filters ) {
+					if ( isset( $args['search_fields'] ) ) {
+						$search_filters = apply_filters( 'um_frontend_member_search_filters', array_unique( array_filter( $args['search_fields'] ) ) );
 					}
-				);
 
-				$search_filters = array_values( $search_filters );
-			}
+					if ( ! empty( $search_filters ) ) {
+						$search_filters = array_filter(
+							$search_filters,
+							function( $item ) {
+								return array_key_exists( $item, UM()->member_directory()->filter_fields );
+							}
+						);
 
-			// Hide filter fields based on the field visibility.
-			foreach ( $search_filters as $key => $filter ) {
-				$filter_data = UM()->fields()->get_field( $filter );
-				if ( ! um_can_view_field( $filter_data ) ) {
-					unset( $search_filters[ $key ] );
+						$search_filters = array_values( $search_filters );
+					}
+
+					$temp_search_filters = array();
+					// Hide filter fields based on the field visibility.
+					foreach ( $search_filters as $filter ) {
+						$filter_data = UM()->fields()->get_field( $filter );
+						if ( ! um_can_view_field( $filter_data ) ) {
+							continue;
+						}
+
+						$filter_content = UM()->frontend()->directory()->show_filter( $filter, $args );
+						if ( empty( $filter_content ) ) {
+							continue;
+						}
+
+						$temp_search_filters[ $filter ] = array(
+							'type'    => UM()->member_directory()->filter_types[ $filter ],
+							'content' => $filter_content,
+						);
+					}
+					$search_filters = $temp_search_filters;
+
+					if ( empty( $search_filters ) ) {
+						$filters      = false;
+						$show_filters = false;
+					}
 				}
 			}
 
 			$args['filters']        = $filters;
 			$args['show_filters']   = $show_filters;
 			$args['search_filters'] = $search_filters;
+			$args['has_filters']    = $filters && $show_filters && ! empty( $search_filters );
 
 			// Classes
 			$classes = '';
-			if ( $search && $show_search ) {
+			if ( $args['has_search'] ) {
 				$classes .= ' um-member-with-search';
 			}
 
-			if ( $filters && $show_filters && count( $search_filters ) ) {
+			if ( $args['has_filters'] ) {
 				$classes .= ' um-member-with-filters';
 			}
 
@@ -1718,34 +1749,38 @@ class Shortcodes {
 			$args['classes'] = $classes;
 
 			$filters_collapsible = true;
-			$filters_expanded    = ! empty( $args['filters_expanded'] ) ? true : false;
+			$filters_expanded    = ! empty( $args['filters_expanded'] );
 			if ( $filters_expanded ) {
-				$filters_collapsible = ! empty( $args['filters_is_collapsible'] ) ? true : false;
+				$filters_collapsible = ! empty( $args['filters_is_collapsible'] );
 			}
 
-			$args['filters_collapsible'] = $filters_collapsible;
-			$args['filters_expanded']    = $filters_expanded;
-
-			$must_search  = 0;
-			$not_searched = false;
-			if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $search_filters ) ) ) && isset( $args['must_search'] ) && $args['must_search'] == 1 ) {
-				$must_search  = 1;
+			$not_searched = null;
+			$not_filtered = null;
+			if ( $args['has_search'] || $args['has_filters'] ) {
 				$not_searched = true;
-				if ( $search && $show_search && ! empty( $search_from_url ) ) {
+				if ( $args['has_search'] && ! empty( $search_from_url ) ) {
 					$not_searched = false;
-				} elseif ( $filters && $show_filters && count( $search_filters ) ) {
-					foreach ( $search_filters as $filter ) {
+				}
+				if ( $args['has_filters'] ) {
+					$not_filtered = true;
+					foreach ( $search_filters as $filter => $filter_data ) {
 						// getting value from GET line
-						switch ( UM()->member_directory()->filter_types[ $filter ] ) {
+						switch ( UM()->frontend()->directory()->filter_types[ $filter ] ) {
 							default:
 								$not_searched = apply_filters( 'um_member_directory_filter_value_from_url', $not_searched, $filter );
+								if ( ! $not_searched ) {
+									$filters_expanded = true;
+									$not_filtered     = false;
+								}
 								break;
 
 							case 'select':
 								// getting value from GET line
 								$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? explode( '||', sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ) : array();
 								if ( ! empty( $filter_from_url ) ) {
-									$not_searched = false;
+									$filters_expanded = true;
+									$not_searched     = false;
+									$not_filtered     = false;
 								}
 								break;
 
@@ -1753,7 +1788,9 @@ class Shortcodes {
 								// getting value from GET line
 								$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) : '';
 								if ( ! empty( $filter_from_url ) ) {
-									$not_searched = false;
+									$filters_expanded = true;
+									$not_searched     = false;
+									$not_filtered     = false;
 								}
 								break;
 
@@ -1762,7 +1799,9 @@ class Shortcodes {
 								// getting value from GET line
 								$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) : '';
 								if ( ! empty( $filter_from_url ) ) {
-									$not_searched = false;
+									$filters_expanded = true;
+									$not_searched     = false;
+									$not_filtered     = false;
 								}
 								break;
 						}
@@ -1770,8 +1809,12 @@ class Shortcodes {
 				}
 			}
 
-			$args['must_search']  = $must_search;
+			$args['must_search']  = ! empty( $args['must_search'] ) && ( $args['has_search'] || $args['has_filters'] );
 			$args['not_searched'] = $not_searched;
+			$args['not_filtered'] = $not_filtered;
+
+			$args['filters_collapsible'] = $filters_collapsible;
+			$args['filters_expanded']    = $filters_expanded;
 
 			// send $args variable to the templates
 			$args['t_args'] = $args;

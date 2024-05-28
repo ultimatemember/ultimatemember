@@ -23,6 +23,9 @@
   flex-wrap: nowrap;
   width: 100%;
 }
+.um-directory .um-member-directory-header .um-member-directory-header-row.um-header-row-invisible {
+  display: none;
+}
 .um-directory .um-member-directory-header .um-member-directory-filters-bar {
   margin: 0;
   width: 100%;

@@ -1212,29 +1212,37 @@ jQuery(document.body).ready( function() {
 	 */
 
 
-	//filters controls
-	jQuery('.um-member-directory-filters-a').on( 'click', function() {
-		var obj = jQuery(this);
-		var search_bar = obj.parents('.um-directory').find('.um-search');
+	// filters controls
 
-		if ( search_bar.is( ':visible' ) ) {
-			search_bar.slideUp( 250, function(){
-				obj.toggleClass('um-member-directory-filters-visible');
-				search_bar.parents('.um-member-directory-header-row').toggleClass('um-header-row-invisible');
-			});
-		} else {
-			search_bar.slideDown({
-				duration: 250,
-				start: function() {
-					jQuery(this).css({
-						display: "grid"
-					});
-					obj.toggleClass('um-member-directory-filters-visible');
-					search_bar.parents('.um-member-directory-header-row').toggleClass('um-header-row-invisible');
-				}
-			} );
-		}
+	jQuery( document.body ).on('click', '.um-filters-toggle', function(e){
+		e.preventDefault();
+
+		jQuery(this).parents('.um-directory').find('.um-member-directory-filters-bar').toggleClass('um-header-row-invisible');
+		return false;
 	});
+
+	// jQuery('.um-member-directory-filters-a').on( 'click', function() {
+	// 	var obj = jQuery(this);
+	// 	var search_bar = obj.parents('.um-directory').find('.um-search');
+	//
+	// 	if ( search_bar.is( ':visible' ) ) {
+	// 		search_bar.slideUp( 250, function(){
+	// 			obj.toggleClass('um-member-directory-filters-visible');
+	// 			search_bar.parents('.um-member-directory-header-row').toggleClass('um-header-row-invisible');
+	// 		});
+	// 	} else {
+	// 		search_bar.slideDown({
+	// 			duration: 250,
+	// 			start: function() {
+	// 				jQuery(this).css({
+	// 					display: "grid"
+	// 				});
+	// 				obj.toggleClass('um-member-directory-filters-visible');
+	// 				search_bar.parents('.um-member-directory-header-row').toggleClass('um-header-row-invisible');
+	// 			}
+	// 		} );
+	// 	}
+	// });
 
 
 	//filtration process
