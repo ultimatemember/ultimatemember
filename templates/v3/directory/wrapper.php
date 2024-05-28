@@ -98,15 +98,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		<?php if ( $has_filters ) { ?>
 			<div class="um-member-directory-header-row um-member-directory-filters-bar<?php if ( ! $filters_expanded ) { ?> um-header-row-invisible<?php } ?>">
-				<div class="um-filters-header">
-					<?php esc_html_e( 'Filters', 'ultimate-member' ); ?>
-					<a href="javascript:void(0);" class="um-link um-clear-filters-a <?php if ( $not_filtered ) { ?>um-display-none<?php } ?>" title="<?php esc_attr_e( 'Remove all filters', 'ultimate-member' ); ?>"><?php esc_html_e( 'Clear all', 'ultimate-member' ); ?></a>
-				</div>
-				<?php foreach ( $search_filters as $filter => $filter_data ) { ?>
-					<div class="um-search-filter um-<?php echo esc_attr( $filter_data['type'] ); ?>-filter-type">
-						<?php echo wp_kses( $filter_data['content'], UM()->get_allowed_html( 'templates' ) ); ?>
+				<div class="um-filters-inner<?php if ( $filters_expanded ) { ?> um-filters-inner-visible<?php } ?>">
+					<div class="um-filters-header">
+						<?php esc_html_e( 'Filters', 'ultimate-member' ); ?>
+						<a href="javascript:void(0);" class="um-link um-clear-filters-a <?php if ( $not_filtered ) { ?>um-display-none<?php } ?>" title="<?php esc_attr_e( 'Remove all filters', 'ultimate-member' ); ?>"><?php esc_html_e( 'Clear all', 'ultimate-member' ); ?></a>
 					</div>
-				<?php } ?>
+					<?php foreach ( $search_filters as $filter => $filter_data ) { ?>
+						<div class="um-search-filter um-<?php echo esc_attr( $filter_data['type'] ); ?>-filter-type" data-filter-name="<?php echo esc_attr( $filter ); ?>">
+							<?php echo wp_kses( $filter_data['content'], UM()->get_allowed_html( 'templates' ) ); ?>
+						</div>
+					<?php } ?>
+				</div>
 			</div>
 		<?php } ?>
 

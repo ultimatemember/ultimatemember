@@ -211,26 +211,39 @@
     .#{$prefix}member-directory-header-row
       +flex( row, flex-start, stretch, nowrap )
       width: 100%
-      &.#{$prefix}header-row-invisible
-        display: none
     .#{$prefix}member-directory-filters-bar
-      margin: 0
       width: 100%
+      padding: 0
+      margin: 0
+      +border-box
+      row-gap: 8px
       display: grid
-      grid-template-rows: auto 1fr
-      grid-template-columns: repeat(2, 1fr)
-      grid-gap: $spacing-md
-      grid-auto-rows: minmax(max-content, auto)
-      -ms-grid-template-rows: auto 1fr
-      -ms-grid-template-columns: repeat(2, 1fr)
-      -ms-grid-gap: $spacing-md
-      -ms-grid-auto-rows: minmax(max-content, auto)
-      .#{$prefix}filters-header
-        +typography( text, md, semibold )
-        color: $gray-700
+      grid-template-rows: 1fr
+      transition: grid-template-rows 0.5s ease-in-out
+      justify-content: normal
+      &.#{$prefix}header-row-invisible
+        grid-template-rows: 0fr
+      .#{$prefix}filters-inner
+        overflow: hidden
+        margin: 0
         width: 100%
-        grid-column: 1 / 3
-        +flex( row, space-between, baseline, nowrap )
+        display: grid
+        grid-template-rows: auto 1fr
+        grid-template-columns: repeat(2, 1fr)
+        grid-gap: $spacing-md
+        grid-auto-rows: minmax(max-content, auto)
+        -ms-grid-template-rows: auto 1fr
+        -ms-grid-template-columns: repeat(2, 1fr)
+        -ms-grid-gap: $spacing-md
+        -ms-grid-auto-rows: minmax(max-content, auto)
+        &.#{$prefix}filters-inner-visible
+          overflow: visible
+        .#{$prefix}filters-header
+          +typography( text, md, semibold )
+          color: $gray-700
+          width: 100%
+          grid-column: 1 / 3
+          +flex( row, space-between, baseline, nowrap )
       .#{$prefix}search-filter
         position: relative
         input[type="search"],
