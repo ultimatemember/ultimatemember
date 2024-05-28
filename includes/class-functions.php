@@ -566,11 +566,15 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'media' => true,
 						),
 						'svg'      => array(
-							'xmlns'   => true,
-							'width'   => true,
-							'height'  => true,
-							'viewBox' => true,
-							'fill'    => true,
+							'xmlns'           => true,
+							'width'           => true,
+							'height'          => true,
+							'viewBox'         => true,
+							'fill'            => true,
+							'stroke-width'    => true,
+							'stroke'          => true,
+							'stroke-linecap'  => true,
+							'stroke-linejoin' => true,
 						),
 						'path'     => array(
 							'd'               => true,
@@ -578,6 +582,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'stroke-width'    => true,
 							'stroke-linecap'  => true,
 							'stroke-linejoin' => true,
+							'fill'            => true,
 						),
 						'form'     => array(
 							'action'         => true,

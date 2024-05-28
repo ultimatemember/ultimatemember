@@ -37,11 +37,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
-//foreach ( $view_types as $view_type ) {
-//	$basename = UM()->member_directory()->get_type_basename( $view_type );
-//	UM()->get_template( 'v3/members-' . $view_type . '.php', $basename, $args, true );
-//}
 ?>
 
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ); ?>"

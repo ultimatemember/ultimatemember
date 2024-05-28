@@ -208,11 +208,11 @@ class Layouts {
 		ob_start();
 		if ( 'link' === $args['type'] ) {
 			?>
-			<a id="<?php echo esc_attr( $args['id'] ); ?>" href="<?php echo esc_url( $args['url'] ); ?>" target="<?php echo esc_attr( $args['target'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" <?php echo $data_atts; ?>><?php echo wp_kses_post( $args['icon_leading'] . $content . $args['icon_trailing'] ); ?></a>
+			<a id="<?php echo esc_attr( $args['id'] ); ?>" href="<?php echo esc_url( $args['url'] ); ?>" target="<?php echo esc_attr( $args['target'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" <?php echo $data_atts; ?>><?php echo wp_kses( $args['icon_leading'] . $content . $args['icon_trailing'], UM()->get_allowed_html( 'templates' ) ); ?></a>
 			<?php
 		} else {
 			?>
-			<button id="<?php echo esc_attr( $args['id'] ); ?>" type="<?php echo esc_attr( $args['type'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" <?php disabled( $args['disabled'] ); ?> <?php echo $data_atts; ?>><?php echo wp_kses_post( $args['icon_leading'] . $content . $args['icon_trailing'] ); ?></button>
+			<button id="<?php echo esc_attr( $args['id'] ); ?>" type="<?php echo esc_attr( $args['type'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" <?php disabled( $args['disabled'] ); ?> <?php echo $data_atts; ?>><?php echo wp_kses( $args['icon_leading'] . $content . $args['icon_trailing'], UM()->get_allowed_html( 'templates' ) ); ?></button>
 			<?php
 		}
 		return ob_get_clean();
