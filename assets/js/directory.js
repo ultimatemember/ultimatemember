@@ -1290,15 +1290,16 @@ jQuery(document.body).ready( function() {
 		let directory = jQuery(this).parents('.um-directory');
 		let hash      = UM.frontend.directories.getHash( directory );
 
-		let directoryObj = UM.frontend.directories.list[ hash ];
-		if ( directoryObj.isBusy ) {
-			return;
-		}
-
-		directoryObj.preloaderShow();
+		// let directoryObj = UM.frontend.directories.list[ hash ];
+		// if ( directoryObj.isBusy ) {
+		// 	return;
+		// }
+		//
+		// directoryObj.preloaderShow();
 
 		// um_members_show_preloader( directory );
 
+		let $filtersBar = directory.find('.um-member-directory-filters-bar');
 		var filter_name = jQuery(this).prop('name');
 
 		var current_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
@@ -1308,44 +1309,28 @@ jQuery(document.body).ready( function() {
 			current_value = current_value.split( '||' );
 		}
 
-		if ( -1 === jQuery.inArray( selected_val, current_value ) ) {
-			current_value.push( selected_val );
-			current_value = current_value.join( '||' );
-
-			um_set_url_from_data( directory, 'filter_' + filter_name, current_value );
-
-			//set 1st page after filtration
-			directory.data( 'page', 1 );
-			um_set_url_from_data( directory, 'page', '' );
+		if ( selected_val.length ) {
+			um_set_url_from_data( directory, 'filter_' + filter_name, selected_val.join( '||' ) );
+			$filtersBar.find('.um-clear-filters-a').removeClass('um-display-none');
+			directory.data( 'searched', 1 );
+			directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
+			directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
+		} else {
+			um_set_url_from_data( directory, 'filter_' + filter_name, '' );
 		}
 
-		//disable options and disable select if all options are disabled
-		jQuery(this).find('option[value="' + selected_val_raw + '"]').prop('disabled', true).hide();
-		if ( jQuery(this).find('option:not(:disabled)').length === 1 ) {
-			jQuery(this).prop('disabled', true);
-		}
-
-		// var obj = jQuery(this);
-		// obj.select2('destroy').select2({
-		// 	dropdownParent: obj.parent()
-		// });
-		// obj.val('').trigger( 'change' );
+		// set 1st page after filtration
+		directory.data( 'page', 1 );
+		um_set_url_from_data( directory, 'page', '' );
 
 		um_ajax_get_members( directory );
 
-		um_change_tag( directory );
+		// um_change_tag( directory );
 
-		directory.data( 'searched', 1 );
-		directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
-		directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
+
 		// if ( directory.find( '.um-search-filter select[data-um-parent="' + filter_name + '"]' ).length > 0 ) {
 		// 	jQuery(this).trigger('change');
 		// }
-
-		let $filtersBar = directory.find('.um-member-directory-filters-bar');
-		if ( '' !== current_value ) {
-			$filtersBar.find('.um-clear-filters-a').removeClass('um-display-none');
-		}
 	});
 
 
