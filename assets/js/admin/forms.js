@@ -1274,9 +1274,13 @@ jQuery(document).ready( function() {
 			wrapper.find( '.um-entities-conditions-responce' ).html( '' );
 			wrapper.find( 'input' ).remove();
 
-			if( jQuery( this ).closest( '.um-protection-include-wrap' ).length ) {
+			if ( jQuery( this ).closest( '.um-protection-include-wrap' ).length ) {
 				jQuery( '.um-protection-exclude-wrap' ).closest( '.um-forms-line' ).hide();
 				jQuery( '#um_add_exclusion_rule' ).attr( 'disabled', 'disabled' );
+				jQuery( '.um-protection-exclude-wrap .um-entities-conditions-row' ).remove();
+			}
+			if ( 1 === jQuery( this ).closest( '.um-protection-exclude-wrap' ).length ) {
+				jQuery( '.um-protection-exclude-wrap' ).closest( '.um-forms-line' ).hide();
 				jQuery( '.um-protection-exclude-wrap .um-entities-conditions-row' ).remove();
 			}
 		}

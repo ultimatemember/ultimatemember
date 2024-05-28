@@ -1133,19 +1133,24 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 * @return array
 		 */
 		public function sanitize_registered_entities( $value ) {
-			if ( is_array( $value ) ) {
-				foreach ( $value as $key => $val ) {
-					$key = sanitize_key( $key );
-					if ( is_array( $val ) ) {
-						$val = array_map( 'absint', $val );
-					} else {
-						$val = absint( $val );
+			if ( ! empty( $value ) ) {
+				if ( is_array( $value ) ) {
+					foreach ( $value as $key => $val ) {
+						$key = sanitize_key( $key );
+						if ( is_array( $val ) ) {
+							$val = array_map( 'absint', $val );
+						} else {
+							$val = absint( $val );
+						}
+						if ( ! empty( $val ) ) {
+							$value[ $key ] = $val;
+						} else {
+							unset( $value[ $key ] );
+						}
 					}
-
-					$value[ $key ] = $val;
+				} else {
+					$value = absint( $value );
 				}
-			} else {
-				$value = absint( $value );
 			}
 
 			return $value;

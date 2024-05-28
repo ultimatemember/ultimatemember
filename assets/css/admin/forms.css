@@ -529,6 +529,10 @@ span.um-admin-icon-clear i {
   min-height: 36px;
   padding: 6px 0 0;
 }
+.um-users-conditions-row .select2-container--disabled,
+.um-entities-conditions-row .select2-container--disabled {
+  display: none;
+}
 
 .um-users-conditions-row:nth-child(2) .um-users-conditions-connector {
   display: none;

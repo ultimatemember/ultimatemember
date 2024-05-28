@@ -83,11 +83,13 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 		$data_include = array();
 		$data_exclude = array();
 		$data_rules   = array();
+
 		if ( ! empty( $_POST['um_restriction_rule_content']['_um_include'] ) ) {
-			$data_include['_um_include'] = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rule_content']['_um_include'] );
+			$data_include = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rule_content'] );
 		}
+
 		if ( ! empty( $_POST['um_restriction_rule_content']['_um_exclude'] ) ) {
-			$data_exclude['_um_exclude'] = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rule_content']['_um_exclude'] );
+			$data_exclude = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rule_content'] );
 		}
 
 		if ( 'loggedout' !== $_POST['um_restriction_rules_users']['_um_authentification'] ) {
