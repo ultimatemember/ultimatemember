@@ -156,6 +156,7 @@ class Layouts {
 				'disabled'      => false,
 				'url'           => '#',
 				'target'        => '_self',
+				'title'         => '',
 				'width'         => '',
 				'id'            => '',
 				'data'          => array(),
@@ -208,7 +209,7 @@ class Layouts {
 		ob_start();
 		if ( 'link' === $args['type'] ) {
 			?>
-			<a id="<?php echo esc_attr( $args['id'] ); ?>" href="<?php echo esc_url( $args['url'] ); ?>" target="<?php echo esc_attr( $args['target'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" <?php echo $data_atts; ?>><?php echo wp_kses( $args['icon_leading'] . $content . $args['icon_trailing'], UM()->get_allowed_html( 'templates' ) ); ?></a>
+			<a id="<?php echo esc_attr( $args['id'] ); ?>" href="<?php echo esc_url( $args['url'] ); ?>" target="<?php echo esc_attr( $args['target'] ); ?>" title="<?php echo esc_attr( $args['title'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" <?php echo $data_atts; ?>><?php echo wp_kses( $args['icon_leading'] . $content . $args['icon_trailing'], UM()->get_allowed_html( 'templates' ) ); ?></a>
 			<?php
 		} else {
 			?>
@@ -292,6 +293,7 @@ class Layouts {
 				'id'               => '',
 				'title'            => '',
 				'classes'          => array(),
+				'header'           => '',
 				'footer'           => '',
 				'actions'          => array(),
 				'actions_position' => 'right',
@@ -324,7 +326,7 @@ class Layouts {
 		?>
 		<div id="<?php echo esc_attr( $args['id'] ); ?>" class="<?php echo esc_attr( $classes ); ?>">
 			<?php
-			if ( ! empty( $args['title'] ) || ! empty( $args['actions'] ) ) {
+			if ( ! empty( $args['title'] ) || ! empty( $args['actions'] ) || ! empty( $args['header'] ) ) {
 				$header_classes = array(
 					'um-box-header',
 				);
@@ -345,6 +347,12 @@ class Layouts {
 					<?php
 					if ( ! empty( $args['actions'] ) ) {
 						echo wp_kses( self::dropdown_menu( 'um-box-dropdown-toggle', $args['actions'] ), UM()->get_allowed_html( 'templates' ) );
+					}
+					?>
+
+					<?php
+					if ( ! empty( $args['header'] ) ) {
+						echo wp_kses( $args['header'], UM()->get_allowed_html( 'templates' ) );
 					}
 					?>
 				</div>

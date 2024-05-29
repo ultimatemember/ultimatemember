@@ -636,6 +636,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'readonly'     => true,
 							'required'     => true,
 							'autocomplete' => true,
+							'placeholder'  => true,
 						),
 						'button'   => array(
 							'type'         => true,

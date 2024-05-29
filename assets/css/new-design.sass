@@ -71,6 +71,8 @@
     color: $button-color
     border: 1px solid $button-border-color
     cursor: pointer
+    svg
+      overflow: visible
     &:hover
       color: $button-color-hover
       background-color: $button-bg-hover
@@ -246,7 +248,7 @@
       background-color: transparent
       color: $error-700
       border: none
-      border-radius: none
+      border-radius: 0
       box-shadow: none
       &:hover
         color: $error-800
@@ -382,7 +384,7 @@
       background-color: transparent
       color: $gray-600
       border: none
-      border-radius: none
+      border-radius: 0
       box-shadow: none
       &:hover
         color: $gray-700
@@ -417,7 +419,7 @@
       background-color: transparent
       color: $primary-700
       border: none
-      border-radius: none
+      border-radius: 0
       box-shadow: none
       &:hover
         color: $primary-800
@@ -467,6 +469,10 @@
         +typography( text, sm, bold )
       &.#{$prefix}box-no-title
         justify-content: flex-end
+        &.#{$prefix}box-no-actions
+          justify-content: flex-start
+      &.#{$prefix}box-no-actions
+          justify-content: flex-start
     &.#{$prefix}box-left-actions
       .#{$prefix}box-header
         flex-direction: row-reverse
