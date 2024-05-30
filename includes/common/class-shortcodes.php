@@ -579,9 +579,237 @@ class Shortcodes {
 		wp_enqueue_script( 'um_new_design' );
 
 		$palette = UM()->common()::color()->generate_palette( UM()->options()->get( 'primary_color' ) );
+
+		$types = array(
+			'submit',
+			'button',
+			'reset',
+		);
+
+		$sizes = array(
+			's',
+			'm',
+			'l',
+			'xl',
+		);
+
+		$disables = array(
+			false,
+			true,
+		);
+
+		$widths = array(
+			'auto',
+			'full',
+		);
+
+		$designs = array(
+			'primary',
+			'secondary-gray',
+			'secondary-color',
+			'tertiary-gray',
+			'tertiary-color',
+			'link-gray',
+			'link-color',
+			'primary-destructive',
+			'secondary-destructive',
+			'tertiary-destructive',
+			'link-destructive',
+		);
+
+		$icon_positions = array(
+			null,
+			'leading',
+			'trailing',
+			'content',
+		);
+
+		$icons = array(
+			null,
+			'<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-activity-heartbeat" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#7f56d9" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M3 12h4.5l1.5 -6l4 12l2 -9l1.5 3h4.5" />
+</svg>',
+//			'<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-adjustments-alt" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#7f56d9" fill="none" stroke-linecap="round" stroke-linejoin="round">
+//  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+//  <path d="M4 8h4v4h-4z" />
+//  <path d="M6 4l0 4" />
+//  <path d="M6 12l0 8" />
+//  <path d="M10 14h4v4h-4z" />
+//  <path d="M12 4l0 10" />
+//  <path d="M12 18l0 2" />
+//  <path d="M16 5h4v4h-4z" />
+//  <path d="M18 4l0 1" />
+//  <path d="M18 9l0 11" />
+//</svg>',
+//			'<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-3d-cube-sphere" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#7f56d9" fill="none" stroke-linecap="round" stroke-linejoin="round">
+//  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+//  <path d="M6 17.6l-2 -1.1v-2.5" />
+//  <path d="M4 10v-2.5l2 -1.1" />
+//  <path d="M10 4.1l2 -1.1l2 1.1" />
+//  <path d="M18 6.4l2 1.1v2.5" />
+//  <path d="M20 14v2.5l-2 1.12" />
+//  <path d="M14 19.9l-2 1.1l-2 -1.1" />
+//  <path d="M12 12l2 -1.1" />
+//  <path d="M18 8.6l2 -1.1" />
+//  <path d="M12 12l0 2.5" />
+//  <path d="M12 18.5l0 2.5" />
+//  <path d="M12 12l-2 -1.12" />
+//  <path d="M6 8.6l-2 -1.1" />
+//</svg>',
+		);
+
 		ob_start();
 		?>
 		<div class="um">
+			<h3>Buttons</h3>
+			<div style="display: flex; gap:8px;flex-direction:column;align-items:center;justify-content:stretch;flex-wrap:nowrap;width:100%;">
+				<?php
+				$base_content = 'Button';
+
+				foreach ( $disables as $disabled ) {
+					$button_args = array(
+						'disabled' => $disabled,
+					);
+
+					foreach ( $types as $type ) {
+						$button_args['type'] = $type;
+
+						foreach ( $sizes as $size ) {
+							$button_args['size'] = $size;
+
+							foreach ( $widths as $width ) {
+								$button_args['width'] = $width;
+
+								foreach ( $designs as $design ) {
+									$button_args['design'] = $design;
+
+									foreach ( $icon_positions as $icon_position ) {
+										if ( is_null( $icon_position ) ) {
+											?>
+											<div class="um-box um-box-no-footer" style="display: flex; gap:8px;flex-direction:column;align-items:center;justify-content:flex-start;flex-wrap:nowrap;width:100%;">
+												<div style="display: flex; gap:8px;flex-direction:row;align-items:baseline;justify-content:flex-start;flex-wrap:nowrap;width:100%;">
+													<?php
+													echo wp_kses(
+														UM()->frontend()::layouts()::button( $base_content, $button_args ),
+														UM()->get_allowed_html( 'templates' )
+													);
+													?>
+												</div>
+												<div style="width: 100%;">
+													<h5>Snippet:</h5>
+													<code style="float:left;width: 100%;overflow:auto;border:1px solid #aaa; background: #eee;">
+														<pre>
+<?php echo esc_html( '<?php' ) . '<br />'; ?>
+echo wp_kses(
+	UM()->frontend()::layouts()::button(
+		'Button',
+		array(
+<?php if ( 'button' !== $button_args['type'] ) { ?>
+			'type' => '<?php echo $button_args['type']; ?>',
+<?php } ?>
+<?php if ( 'l' !== $button_args['size'] ) { ?>
+			'size' => '<?php echo $button_args['size']; ?>',
+<?php } ?>
+<?php if ( $button_args['disabled'] ) { ?>
+			'disabled' => true,
+<?php } ?>
+<?php if ( 'full' === $button_args['width'] ) { ?>
+			'width' => '<?php echo $button_args['width']; ?>',
+<?php } ?>
+<?php if ( 'secondary-gray' === $button_args['design'] ) { ?>
+			'design' => '<?php echo $button_args['design']; ?>',
+<?php } ?>
+		)
+	),
+	UM()->get_allowed_html( 'templates' )
+);
+<?php echo '?>'; ?>
+														</pre>
+													</code>
+												</div>
+											</div>
+											<?php
+										} else {
+											$button_args['icon_position'] = $icon_position;
+
+											foreach ( $icons as $icon ) {
+												if ( is_null( $icon ) ) {
+													continue;
+												}
+
+												$content             = $base_content;
+												$button_args['icon'] = $icon;
+												if ( 'content' === $button_args['icon_position'] ) {
+													$content             = $icon;
+													$button_args['icon'] = null;
+												}
+
+												?>
+												<div class="um-box um-box-no-footer" style="display: flex; gap:8px;flex-direction:column;align-items:center;justify-content:flex-start;flex-wrap:nowrap;width:100%;">
+													<div style="display: flex; gap:8px;flex-direction:row;align-items:baseline;justify-content:flex-start;flex-wrap:nowrap;width:100%;">
+														<?php
+														echo wp_kses(
+															UM()->frontend()::layouts()::button( $content, $button_args ),
+															UM()->get_allowed_html( 'templates' )
+														);
+														?>
+													</div>
+													<div style="width: 100%;">
+														<h5>Snippet:</h5>
+														<code style="float:left;width: 100%;overflow:auto;border:1px solid #aaa; background: #eee;">
+															<pre>
+<?php echo esc_html( '<?php' ) . '<br />'; ?>
+<?php echo ( $button_args['icon'] || 'content' === $button_args['icon_position'] ) ? esc_html( '$svg_html = \'SVG html from https://tablericons.com/. Size 20px, Stroke 1.5px\';' ) . '<br />' : ''; ?>
+echo wp_kses(
+	UM()->frontend()::layouts()::button(
+<?php if ( 'content' === $button_args['icon_position'] ) { ?>
+		$svg_html
+<?php } else { ?>
+		'<?php echo esc_html( $content ); ?>',
+<?php } ?>
+		array(
+<?php if ( 'button' !== $button_args['type'] ) { ?>
+			'type'          => '<?php echo $button_args['type']; ?>',
+<?php } ?>
+<?php if ( 'l' !== $button_args['size'] ) { ?>
+			'size'          => '<?php echo $button_args['size']; ?>',
+<?php } ?>
+<?php if ( $button_args['disabled'] ) { ?>
+			'disabled'      => true,
+<?php } ?>
+<?php if ( 'full' === $button_args['width'] ) { ?>
+			'width'         => '<?php echo $button_args['width']; ?>',
+<?php } ?>
+<?php if ( 'secondary-gray' === $button_args['design'] ) { ?>
+			'design'        => '<?php echo $button_args['design']; ?>',
+<?php } ?>
+			'icon_position' => '<?php echo $button_args['icon_position']; ?>',
+<?php if ( $button_args['icon'] ) { ?>
+			'icon'          => $svg_html,
+<?php } ?>
+		)
+	),
+	UM()->get_allowed_html( 'templates' )
+);
+<?php echo '?>'; ?>
+															</pre>
+														</code>
+													</div>
+												</div>
+												<?php
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				?>
+			</div>
+			<h3>Links</h3>
+
 			<h3>Badges</h3>
 			<div style="display:flex;flex-direction:row;justify-content:flex-start;flex-wrap: wrap;align-items:center">
 			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 's' ) ); ?>

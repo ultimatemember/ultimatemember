@@ -131,7 +131,102 @@ class Layouts {
 	 * @param array  $args    {
 	 *     Button additional arguments.
 	 *
-	 *     @type string   $type     HTML button type attribute. Uses 'button','submit','link'. Default 'button'.
+	 *     @type string   $type     HTML button type attribute. Uses 'button','submit','link','icon-button','icon-link'. Default 'button'. button||submit||reset
+	 *     @type string   $design   Button UI type. Default 'secondary-gray'. Uses 'primary','secondary-gray','secondary-color','tertiary-gray','tertiary-color','link-gray','link-color','primary-destructive','secondary-destructive','tertiary-destructive','link-destructive'.
+	 *     @type string   $size     Button size. Uses 's','m','l','xl'. Default 'l'.
+	 *     @type string[] $classes  Additional button's classes.
+	 *     @type bool     $disabled Disabled button attribute. Default `false`.
+	 *     @type string   $width    Button width. Default empty means based on content. Uses 'full' for making button 100% width.
+	 * }
+	 *
+	 * @return string
+	 */
+	public static function button( $content, $args = array() ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'type'          => 'button',
+				'icon_position' => null,    // leading || trailing || content
+				'icon'          => null,
+				'design'        => 'secondary-gray',
+				'size'          => 'l',
+				'width'         => 'auto',
+				'id'            => '',
+				'classes'       => array(),
+				'data'          => array(),
+				'disabled'      => false,
+				'title'         => '',
+			)
+		);
+
+		$classes = array(
+			'um-button',
+			'um-button-' . $args['design'],
+			'um-button-size-' . $args['size'],
+		);
+
+		if ( 'full' === $args['width'] ) {
+			$classes[] = 'um-button-full-width';
+		}
+
+		$has_icon = false;
+		if ( ! empty( $args['icon_position'] ) ) {
+			if ( ! empty( $args['icon'] ) && in_array( $args['icon_position'], array( 'leading', 'trailing' ), true ) ) {
+				$icon     = '<span class="um-button-icon">' . $args['icon'] . '</span>';
+				$has_icon = true;
+
+				$content = '<span class="um-button-content">' . $content . '</span>';
+				if ( 'leading' === $args['icon_position'] ) {
+					$content = $icon . $content;
+				} else {
+					$content .= $icon;
+				}
+			}
+
+			if ( ! $has_icon && 'content' === $args['icon_position'] ) {
+				if ( ! empty( $args['icon'] ) && 0 === strpos( $args['icon'], '<svg' ) ) {
+					$has_icon = true;
+					$content  = $args['icon'];
+				} elseif ( ! empty( $content ) && 0 === strpos( $content, '<svg' ) ) {
+					$has_icon = true;
+				}
+			}
+		}
+
+		if ( $has_icon ) {
+			$classes[] = 'um-button-has-icon';
+			$classes[] = 'um-button-icon-' . $args['icon_position'];
+		}
+
+		if ( ! empty( $args['classes'] ) ) {
+			$classes = array_merge( $classes, $args['classes'] );
+		}
+
+		$classes = implode( ' ', $classes );
+
+		$data_atts = array();
+		foreach ( $args['data'] as $data_k => $data_v ) {
+			$data_atts[] = 'data-' . $data_k . '="' . esc_attr( $data_v ) . '"';
+		}
+		$data_atts = implode( ' ', $data_atts );
+
+		ob_start();
+		?>
+		<button id="<?php echo esc_attr( $args['id'] ); ?>" type="<?php echo esc_attr( $args['type'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" title="<?php echo esc_attr( $args['title'] ); ?>" <?php disabled( $args['disabled'] ); ?> <?php echo $data_atts; ?>><?php echo wp_kses( $content, UM()->get_allowed_html( 'templates' ) ); ?></button>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Button element.
+	 *
+	 * Note: Uses <button> HTML tag.
+	 *
+	 * @param string $content HTML inner content of the button.
+	 * @param array  $args    {
+	 *     Button additional arguments.
+	 *
+	 *     @type string   $type     HTML button type attribute. Uses 'button','submit','link','icon-button','icon-link'. Default       'button'||'link'
 	 *     @type string   $design   Button UI type. Default 'secondary-gray'. Uses 'primary','secondary-gray','secondary-color','tertiary-gray','tertiary-color','link-gray','link-color','primary-destructive','secondary-destructive','tertiary-destructive','link-destructive'.
 	 *     @type string   $size     Button size. Uses 's','m','l','xl'. Default 'l'.
 	 *     @type string[] $classes  Additional button's classes.
@@ -143,13 +238,13 @@ class Layouts {
 	 *
 	 * @return string
 	 */
-	public static function button( $content, $args = array() ) {
+	public static function link( $content, $args = array() ) {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'type'          => 'button',
-				'icon_leading'  => null,
-				'icon_trailing' => null,
+				'id'            => '',
+				'icon_position' => null,    // leading || trailing || content
+				'icon'          => null,
 				'design'        => 'secondary-gray',
 				'size'          => 'l',
 				'classes'       => array(),
@@ -158,7 +253,6 @@ class Layouts {
 				'target'        => '_self',
 				'title'         => '',
 				'width'         => '',
-				'id'            => '',
 				'data'          => array(),
 			)
 		);
@@ -173,13 +267,21 @@ class Layouts {
 			$classes[] = 'um-button-full-width';
 		}
 
-		if ( 'link' === $args['type'] ) {
+		if ( 'link' === $args['type'] || 'icon-link' === $args['type'] ) {
 			$classes[] = 'um-link-button';
 			if ( false !== $args['disabled'] ) {
 				$classes[]      = 'um-link-button-disabled';
 				$args['url']    = '#';
 				$args['target'] = '_self';
 			}
+		}
+
+		if ( 'icon-link' === $args['type'] ) {
+			$classes[] = 'um-icon-link';
+		}
+
+		if ( 'icon-button' === $args['type'] ) {
+			$classes[] = 'um-icon-button';
 		}
 
 		if ( ! empty( $args['icon_leading'] ) ) {
@@ -207,15 +309,9 @@ class Layouts {
 		}
 
 		ob_start();
-		if ( 'link' === $args['type'] ) {
-			?>
-			<a id="<?php echo esc_attr( $args['id'] ); ?>" href="<?php echo esc_url( $args['url'] ); ?>" target="<?php echo esc_attr( $args['target'] ); ?>" title="<?php echo esc_attr( $args['title'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" <?php echo $data_atts; ?>><?php echo wp_kses( $args['icon_leading'] . $content . $args['icon_trailing'], UM()->get_allowed_html( 'templates' ) ); ?></a>
-			<?php
-		} else {
-			?>
-			<button id="<?php echo esc_attr( $args['id'] ); ?>" type="<?php echo esc_attr( $args['type'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" <?php disabled( $args['disabled'] ); ?> <?php echo $data_atts; ?>><?php echo wp_kses( $args['icon_leading'] . $content . $args['icon_trailing'], UM()->get_allowed_html( 'templates' ) ); ?></button>
-			<?php
-		}
+		?>
+		<a id="<?php echo esc_attr( $args['id'] ); ?>" href="<?php echo esc_url( $args['url'] ); ?>" target="<?php echo esc_attr( $args['target'] ); ?>" title="<?php echo esc_attr( $args['title'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" <?php echo $data_atts; ?>><?php echo wp_kses( $args['icon_leading'] . $content . $args['icon_trailing'], UM()->get_allowed_html( 'templates' ) ); ?></a>
+		<?php
 		return ob_get_clean();
 	}
 

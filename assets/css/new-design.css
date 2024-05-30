@@ -111,72 +111,111 @@
   flex-wrap: nowrap;
 }
 .um .um-button {
-  border-radius: 8px;
   text-align: center;
-  box-shadow: 0 1px 2px var(--um-gray-900-a-5, rgba(16, 24, 40, 0.05));
-  background-color: var(--um-blocks-button-bg-color, #fff);
-  color: var(--um-blocks-button-fg-color, var(--um-gray-700, #344054));
-  border: 1px solid var(--um-blocks-button-bg-color, var(--um-gray-300, #d0d5dd));
   cursor: pointer;
-}
-.um .um-button svg {
-  overflow: visible;
-}
-.um .um-button:hover {
-  color: var(--um-blocks-button-fg-color, var(--um-gray-800, #1d2939));
-  background-color: var(--um-blocks-button-bg-hover-color, var(--um-gray-50, #f9fafb));
-}
-.um .um-button:focus {
-  background-color: var(--um-blocks-button-bg-color, #fff);
-  color: var(--um-blocks-button-fg-color, var(--um-gray-700, #344054));
-  box-shadow: 0 0 0 4px var(--um-gray-400-a-14, rgba(152, 162, 179, 0.14)), 0 1px 2px var(--um-gray-900-a-5, rgba(16, 24, 40, 0.05));
-  outline: none;
-}
-.um .um-button:disabled {
-  cursor: not-allowed;
-  color: var(--um-blocks-button-fg-color, var(--um-gray-400, #98a2b3));
-  background-color: var(--um-blocks-button-bg-disabled-color, var(--um-blocks-button-bg-color, #fff));
-  border: 1px solid var(--um-blocks-button-bg-disabled-color, var(--um-gray-200, #eaecf0));
+  border-radius: 8px;
+  padding: 0;
+  margin: 0;
 }
 .um .um-button.um-button-full-width {
   width: 100%;
 }
-.um .um-button.um-button-size-s {
+.um .um-button:not(.um-button-has-icon.um-button-icon-content).um-button-size-s {
   padding: 8px 14px;
   font-size: var(--um-text-font-size-sm, 14px);
   line-height: var(--um-text-line-height-sm, 20px);
   font-weight: var(--um-text-font-weight-semibold, 600);
 }
-.um .um-button.um-button-size-m {
+.um .um-button:not(.um-button-has-icon.um-button-icon-content).um-button-size-m {
   padding: 10px 16px;
   font-size: var(--um-text-font-size-sm, 14px);
   line-height: var(--um-text-line-height-sm, 20px);
   font-weight: var(--um-text-font-weight-semibold, 600);
 }
-.um .um-button.um-button-size-l {
+.um .um-button:not(.um-button-has-icon.um-button-icon-content).um-button-size-l {
   padding: 10px 18px;
   font-size: var(--um-text-font-size-md, 16px);
   line-height: var(--um-text-line-height-md, 24px);
   font-weight: var(--um-text-font-weight-semibold, 600);
 }
-.um .um-button.um-button-size-xl {
+.um .um-button:not(.um-button-has-icon.um-button-icon-content).um-button-size-xl {
   padding: 12px 20px;
   font-size: var(--um-text-font-size-md, 16px);
   line-height: var(--um-text-line-height-md, 24px);
   font-weight: var(--um-text-font-weight-semibold, 600);
 }
-.um .um-button.um-link-button {
-  text-decoration: none;
-  display: inline-block;
-  box-sizing: border-box;
-}
-.um .um-button.um-button-icon-trailing, .um .um-button.um-button-icon-icon_leading {
+.um .um-button.um-button-has-icon {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
   flex-wrap: nowrap;
+}
+.um .um-button.um-button-has-icon svg {
+  stroke: currentColor;
+  overflow: visible;
+}
+.um .um-button.um-button-has-icon.um-button-icon-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+.um .um-button.um-button-has-icon.um-button-icon-content.um-button-size-s {
+  padding: 8px;
+}
+.um .um-button.um-button-has-icon.um-button-icon-content.um-button-size-m {
+  padding: 10px;
+}
+.um .um-button.um-button-has-icon.um-button-icon-content.um-button-size-l {
+  padding: 12px;
+}
+.um .um-button.um-button-has-icon.um-button-icon-content.um-button-size-xl {
+  padding: 14px;
+}
+.um .um-button.um-button-has-icon.um-button-icon-trailing.um-button-size-s, .um .um-button.um-button-has-icon.um-button-icon-trailing.um-button-size-m, .um .um-button.um-button-has-icon.um-button-icon-leading.um-button-size-s, .um .um-button.um-button-has-icon.um-button-icon-leading.um-button-size-m {
   column-gap: 4px;
+}
+.um .um-button.um-button-has-icon.um-button-icon-trailing.um-button-size-l, .um .um-button.um-button-has-icon.um-button-icon-trailing.um-button-size-xl, .um .um-button.um-button-has-icon.um-button-icon-leading.um-button-size-l, .um .um-button.um-button-has-icon.um-button-icon-leading.um-button-size-xl {
+  column-gap: 6px;
+}
+.um .um-button.um-button-has-icon.um-button-icon-trailing .um-button-icon, .um .um-button.um-button-has-icon.um-button-icon-leading .um-button-icon {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  font-size: unset;
+  line-height: unset;
+  font-weight: unset;
+}
+.um .um-button.um-button-secondary-gray {
+  box-shadow: 0 1px 2px var(--um-gray-900-a-5, rgba(16, 24, 40, 0.05));
+  background-color: var(--um-blocks-button-bg-color, #fff);
+  color: var(--um-blocks-button-fg-color, var(--um-gray-700, #344054));
+  border: 1px solid var(--um-blocks-button-bg-color, var(--um-gray-300, #d0d5dd));
+}
+.um .um-button.um-button-secondary-gray:hover {
+  color: var(--um-blocks-button-fg-color, var(--um-gray-800, #1d2939));
+  background-color: var(--um-blocks-button-bg-hover-color, var(--um-gray-50, #f9fafb));
+}
+.um .um-button.um-button-secondary-gray:focus {
+  background-color: var(--um-blocks-button-bg-color, #fff);
+  color: var(--um-blocks-button-fg-color, var(--um-gray-700, #344054));
+  box-shadow: 0 0 0 4px var(--um-gray-400-a-14, rgba(152, 162, 179, 0.14)), 0 1px 2px var(--um-gray-900-a-5, rgba(16, 24, 40, 0.05));
+  outline: none;
+}
+.um .um-button.um-button-secondary-gray:disabled {
+  cursor: not-allowed;
+  color: var(--um-blocks-button-fg-color, var(--um-gray-400, #98a2b3));
+  background-color: var(--um-blocks-button-bg-disabled-color, var(--um-blocks-button-bg-color, #fff));
+  border: 1px solid var(--um-blocks-button-bg-disabled-color, var(--um-gray-200, #eaecf0));
+}
+.um .um-button.um-link-button {
+  text-decoration: none;
+  display: inline-block;
+  box-sizing: border-box;
 }
 .um .um-button.um-link-button-disabled {
   cursor: not-allowed;
@@ -569,6 +608,7 @@
   border: none;
   box-shadow: none;
 }
+
 .um .um-box {
   display: flex;
   flex-direction: column;
@@ -580,6 +620,9 @@
   background: #fff;
   overflow: hidden;
   box-shadow: 0 1px 2px var(--um-gray-900-a-6, rgba(16, 24, 40, 0.06)), 0 1px 3px var(--um-gray-900-a-10, rgba(16, 24, 40, 0.1));
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 .um .um-box .um-box-header {
   display: flex;
@@ -642,6 +685,7 @@
 .um .um-box.um-box-no-footer .um-box-content {
   padding: 0;
 }
+
 .um .um-link {
   font-size: var(--um-text-font-size-sm, 14px);
   line-height: var(--um-text-line-height-sm, 20px);
@@ -657,6 +701,7 @@
   color: var(--um-primary-700-bg, #6941c6);
   outline: none;
 }
+
 .um .um-avatar {
   margin: 0;
   padding: 0;
@@ -688,6 +733,7 @@
   overflow: hidden;
   border-radius: 100%;
 }
+
 .um .um-profile-photo-uploader {
   display: flex;
   flex-direction: row;
@@ -764,6 +810,7 @@
 .um .um-profile-photo-uploader.um-processing .um-profile-photo-overflow {
   display: block;
 }
+
 .um .um-form-new {
   display: flex;
   flex-direction: column;
@@ -1055,6 +1102,10 @@
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > textarea.um-error:focus,
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > textarea.um-error:focus-visible {
   box-shadow: 0 0 0 4px var(--um-error-500-a-24, rgba(240, 68, 56, 0.24)), 0 1px 2px var(--um-gray-900-a-5, rgba(16, 24, 40, 0.05));
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > textarea {
+  font-family: inherit;
 }
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field .wp-core-ui.wp-editor-wrap,
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password .wp-core-ui.wp-editor-wrap {
@@ -1407,6 +1458,9 @@
 }
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=date].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=date].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime-local].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime-local].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=email].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=email].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=file].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=file].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=image].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=image].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=month].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=month].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=number].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=number].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=password].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=password].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=search].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=search].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=tel].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=tel].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=text].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=text].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=time].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=time].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=url].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=url].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=week].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=week].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select.um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select.um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea.um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea.um-error:focus-visible {
   box-shadow: 0 0 0 4px var(--um-error-500-a-24, rgba(240, 68, 56, 0.24)), 0 1px 2px var(--um-gray-900-a-5, rgba(16, 24, 40, 0.05));
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea {
+  font-family: inherit;
 }
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .wp-core-ui.wp-editor-wrap,
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .choices {
@@ -2141,6 +2195,9 @@ input[type=range] {
 .um textarea.um-error:focus,
 .um textarea.um-error:focus-visible {
   box-shadow: 0 0 0 4px var(--um-error-500-a-24, rgba(240, 68, 56, 0.24)), 0 1px 2px var(--um-gray-900-a-5, rgba(16, 24, 40, 0.05));
+}
+.um textarea {
+  font-family: inherit;
 }
 
 .um .um-display-none {

@@ -64,50 +64,77 @@
 
   // Buttons
   .#{$prefix}button // button has predefined styles for default secondary-gray
-    border-radius: $radius-md
     text-align: center
-    box-shadow: $shadow-xs
-    background-color: $button-bg
-    color: $button-color
-    border: 1px solid $button-border-color
     cursor: pointer
-    svg
-      overflow: visible
-    &:hover
-      color: $button-color-hover
-      background-color: $button-bg-hover
-    &:focus
-      background-color: $button-bg
-      color: $button-color
-      box-shadow: $ring-gray-shadow-xs
-      outline: none
-    &:disabled
-      cursor: not-allowed
-      color: $button-color-disabled
-      background-color: $button-bg-disabled
-      border: 1px solid $button-border-color-disabled
+    border-radius: $radius-md
+    padding: 0
+    margin: 0
     &.#{$prefix}button-full-width
       width: 100%
-    &.#{$prefix}button-size-s
-      padding: $spacing-md 14px
-      +typography( text, sm, semibold )
-    &.#{$prefix}button-size-m
-      padding: 10px $spacing-xl
-      +typography( text, sm, semibold )
-    &.#{$prefix}button-size-l
-      padding: 10px 18px
-      +typography( text, md, semibold )
-    &.#{$prefix}button-size-xl
-      padding: $spacing-lg $spacing-2xl
-      +typography( text, md, semibold )
+    &:not(.#{$prefix}button-has-icon.#{$prefix}button-icon-content)
+      &.#{$prefix}button-size-s
+        padding: $spacing-md 14px
+        +typography( text, sm, semibold )
+      &.#{$prefix}button-size-m
+        padding: 10px $spacing-xl
+        +typography( text, sm, semibold )
+      &.#{$prefix}button-size-l
+        padding: 10px 18px
+        +typography( text, md, semibold )
+      &.#{$prefix}button-size-xl
+        padding: $spacing-lg $spacing-2xl
+        +typography( text, md, semibold )
+    &.#{$prefix}button-has-icon
+      +flex( row, flex-start, center, nowrap )
+      svg
+        stroke: currentColor
+        overflow: visible
+      &.#{$prefix}button-icon-content
+        +flex( row, center, center, nowrap )
+        &.#{$prefix}button-size-s
+          padding: $spacing-md
+        &.#{$prefix}button-size-m
+          padding: 10px
+        &.#{$prefix}button-size-l
+          padding: $spacing-lg
+        &.#{$prefix}button-size-xl
+          padding: 14px
+      &.#{$prefix}button-icon-trailing,
+      &.#{$prefix}button-icon-leading
+        &.#{$prefix}button-size-s,
+        &.#{$prefix}button-size-m
+          column-gap: $spacing-xs
+        &.#{$prefix}button-size-l,
+        &.#{$prefix}button-size-xl
+          column-gap: $spacing-sm
+        .#{$prefix}button-icon
+          +flex( row, center, center, nowrap )
+          font-size: unset
+          line-height: unset
+          font-weight: unset
+
+    &.#{$prefix}button-secondary-gray
+      box-shadow: $shadow-xs
+      background-color: $button-bg
+      color: $button-color
+      border: 1px solid $button-border-color
+      &:hover
+        color: $button-color-hover
+        background-color: $button-bg-hover
+      &:focus
+        background-color: $button-bg
+        color: $button-color
+        box-shadow: $ring-gray-shadow-xs
+        outline: none
+      &:disabled
+        cursor: not-allowed
+        color: $button-color-disabled
+        background-color: $button-bg-disabled
+        border: 1px solid $button-border-color-disabled
     &.#{$prefix}link-button
       text-decoration: none
       display: inline-block
       box-sizing: border-box
-    &.#{$prefix}button-icon-trailing,
-    &.#{$prefix}button-icon-icon_leading
-      +flex( row, flex-start, center, nowrap )
-      column-gap: $spacing-xs
     &.#{$prefix}link-button-disabled
       cursor: not-allowed
       color: $button-color-disabled
@@ -452,7 +479,8 @@
           box-shadow: none
 
 
-  // Box
+// Box
+.um
   .#{$prefix}box
     +flex( column, flex-start, stretch, nowrap )
     border-radius: $radius-xl
@@ -460,6 +488,7 @@
     background: $um-white
     overflow: hidden
     box-shadow: $shadow-sm
+    +border-box
     .#{$prefix}box-header
       +flex( row, space-between, baseline, nowrap )
       column-gap: $spacing-md
@@ -497,7 +526,9 @@
       .#{$prefix}box-content
         padding: 0
 
-  // Link
+
+// Link
+.um
   .#{$prefix}link
     +typography( text, sm, bold )
     color: $link-color
@@ -510,7 +541,8 @@
       outline: none
 
 
-  // Avatar
+// Avatar
+.um
   .#{$prefix}avatar
     margin: 0
     padding: 0
@@ -537,7 +569,8 @@
       border-radius: 100%
 
 
-  // Avatar uploader
+// Avatar uploader
+.um
   .#{$prefix}profile-photo-uploader
     +flex( row, flex-start, start, nowrap )
     +border-box
@@ -601,7 +634,9 @@
       .#{$prefix}profile-photo-overflow
         display: block
 
-  // Form components
+
+// Form components
+.um
   .#{$prefix}form-new
     +flex( column, stretch, start, nowrap )
     +border-box
@@ -706,6 +741,8 @@
                   &:focus,
                   &:focus-visible
                     box-shadow: $ring-error-shadow-xs
+              & > textarea
+                font-family: inherit
               .wp-core-ui.wp-editor-wrap
                 width: 100%
             .#{$prefix}field-area-password
@@ -989,6 +1026,8 @@
                 &:focus,
                 &:focus-visible
                   box-shadow: $ring-error-shadow-xs
+            & > textarea
+              font-family: inherit
             .wp-core-ui.wp-editor-wrap,
             .choices
               width: 100%
@@ -1298,6 +1337,7 @@ input[type="range"]
             .#{$prefix}ajax-spinner-svg
               display: none
 
+// Divider
 .um
   .#{$prefix}divider
     overflow: hidden
@@ -1534,6 +1574,7 @@ input[type="range"]
         width: auto
         min-width: 80px
 
+// Fields common styling
 .um
   input[type="date"],
   input[type="datetime"],
@@ -1576,7 +1617,10 @@ input[type="range"]
       &:focus,
       &:focus-visible
         box-shadow: $ring-error-shadow-xs
+  textarea
+    font-family: inherit
 
+// Misc
 .um
   .#{$prefix}display-none
     display: none
