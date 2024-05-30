@@ -809,7 +809,204 @@ echo wp_kses(
 				?>
 			</div>
 			<h3>Links</h3>
+			<div style="display: flex; gap:8px;flex-direction:column;align-items:center;justify-content:stretch;flex-wrap:nowrap;width:100%;">
+				<div class="um-box um-box-no-footer" style="display: flex; gap:8px;flex-direction:column;align-items:center;justify-content:flex-start;flex-wrap:nowrap;width:100%;">
+					<div style="display: flex; gap:8px;flex-direction:row;align-items:baseline;justify-content:flex-start;flex-wrap:nowrap;width:100%;">
+						<?php
+						echo wp_kses(
+							UM()->frontend()::layouts()::link( 'Raw link', array( 'disabled' => true ) ),
+							UM()->get_allowed_html( 'templates' )
+						);
+						?>
+					</div>
+					<div style="width: 100%;">
+						<h5>Snippet:</h5>
+						<code style="float:left;width: 100%;overflow:auto;border:1px solid #aaa; background: #eee;">
+							<pre>
+<?php echo esc_html( '<?php' ) . '<br />'; ?>
+echo wp_kses(
+UM()->frontend()::layouts()::link(
+	'Raw link',
+	array(
+		'disabled' => true,
+	)
+),
+UM()->get_allowed_html( 'templates' )
+);
+<?php echo '?>'; ?>
+							</pre>
+						</code>
+					</div>
+				</div>
+				<div class="um-box um-box-no-footer" style="display: flex; gap:8px;flex-direction:column;align-items:center;justify-content:flex-start;flex-wrap:nowrap;width:100%;">
+					<div style="display: flex; gap:8px;flex-direction:row;align-items:baseline;justify-content:flex-start;flex-wrap:nowrap;width:100%;">
+						<?php
+						echo wp_kses(
+							UM()->frontend()::layouts()::link( 'Raw link' ),
+							UM()->get_allowed_html( 'templates' )
+						);
+						?>
+					</div>
+					<div style="width: 100%;">
+						<h5>Snippet:</h5>
+						<code style="float:left;width: 100%;overflow:auto;border:1px solid #aaa; background: #eee;">
+							<pre>
+<?php echo esc_html( '<?php' ) . '<br />'; ?>
+echo wp_kses(
+UM()->frontend()::layouts()::link(
+	'Raw link',
+	array(
+		'disabled' => true,
+	)
+),
+UM()->get_allowed_html( 'templates' )
+);
+<?php echo '?>'; ?>
+							</pre>
+						</code>
+					</div>
+				</div>
+				<?php
+				$base_content = 'Link Button';
 
+				foreach ( $disables as $disabled ) {
+					$link_args = array(
+						'disabled' => $disabled,
+						'type'     => 'button',
+					);
+
+					foreach ( $sizes as $size ) {
+						$link_args['size'] = $size;
+
+						foreach ( $widths as $width ) {
+							$link_args['width'] = $width;
+
+							foreach ( $designs as $design ) {
+								$link_args['design'] = $design;
+
+								foreach ( $icon_positions as $icon_position ) {
+									if ( is_null( $icon_position ) ) {
+										?>
+										<div class="um-box um-box-no-footer" style="display: flex; gap:8px;flex-direction:column;align-items:center;justify-content:flex-start;flex-wrap:nowrap;width:100%;">
+											<div style="display: flex; gap:8px;flex-direction:row;align-items:baseline;justify-content:flex-start;flex-wrap:nowrap;width:100%;">
+												<?php
+												echo wp_kses(
+													UM()->frontend()::layouts()::link( $base_content, $link_args ),
+													UM()->get_allowed_html( 'templates' )
+												);
+												?>
+											</div>
+											<div style="width: 100%;">
+												<h5>Snippet:</h5>
+												<code style="float:left;width: 100%;overflow:auto;border:1px solid #aaa; background: #eee;">
+													<pre>
+<?php echo esc_html( '<?php' ) . '<br />'; ?>
+echo wp_kses(
+UM()->frontend()::layouts()::link(
+	'Button',
+	array(
+<?php if ( 'link' !== $link_args['type'] ) { ?>
+'type' => '<?php echo $link_args['type']; ?>',
+<?php } ?>
+														<?php if ( 'l' !== $link_args['size'] ) { ?>
+															'size' => '<?php echo $link_args['size']; ?>',
+														<?php } ?>
+														<?php if ( $link_args['disabled'] ) { ?>
+															'disabled' => true,
+														<?php } ?>
+														<?php if ( 'full' === $link_args['width'] ) { ?>
+															'width' => '<?php echo $link_args['width']; ?>',
+														<?php } ?>
+														<?php if ( 'secondary-gray' === $link_args['design'] ) { ?>
+															'design' => '<?php echo $link_args['design']; ?>',
+														<?php } ?>
+	)
+),
+UM()->get_allowed_html( 'templates' )
+);
+<?php echo '?>'; ?>
+													</pre>
+												</code>
+											</div>
+										</div>
+										<?php
+									} else {
+										$link_args['icon_position'] = $icon_position;
+
+										foreach ( $icons as $icon ) {
+											if ( is_null( $icon ) ) {
+												continue;
+											}
+
+											$content             = $base_content;
+											$link_args['icon'] = $icon;
+											if ( 'content' === $link_args['icon_position'] ) {
+												$content             = $icon;
+												$link_args['icon'] = null;
+											}
+
+											?>
+											<div class="um-box um-box-no-footer" style="display: flex; gap:8px;flex-direction:column;align-items:center;justify-content:flex-start;flex-wrap:nowrap;width:100%;">
+												<div style="display: flex; gap:8px;flex-direction:row;align-items:baseline;justify-content:flex-start;flex-wrap:nowrap;width:100%;">
+													<?php
+													echo wp_kses(
+														UM()->frontend()::layouts()::link( $content, $link_args ),
+														UM()->get_allowed_html( 'templates' )
+													);
+													?>
+												</div>
+												<div style="width: 100%;">
+													<h5>Snippet:</h5>
+													<code style="float:left;width: 100%;overflow:auto;border:1px solid #aaa; background: #eee;">
+														<pre>
+<?php echo esc_html( '<?php' ) . '<br />'; ?>
+															<?php echo ( $link_args['icon'] || 'content' === $link_args['icon_position'] ) ? esc_html( '$svg_html = \'SVG html from https://tablericons.com/. Size 20px, Stroke 1.5px\';' ) . '<br />' : ''; ?>
+echo wp_kses(
+UM()->frontend()::layouts()::link(
+<?php if ( 'content' === $link_args['icon_position'] ) { ?>
+$svg_html
+<?php } else { ?>
+'<?php echo esc_html( $content ); ?>',
+<?php } ?>
+	array(
+<?php if ( 'link' !== $link_args['type'] ) { ?>
+'type'          => '<?php echo $link_args['type']; ?>',
+<?php } ?>
+															<?php if ( 'l' !== $link_args['size'] ) { ?>
+																'size'          => '<?php echo $link_args['size']; ?>',
+															<?php } ?>
+															<?php if ( $link_args['disabled'] ) { ?>
+																'disabled'      => true,
+															<?php } ?>
+															<?php if ( 'full' === $link_args['width'] ) { ?>
+																'width'         => '<?php echo $link_args['width']; ?>',
+															<?php } ?>
+															<?php if ( 'secondary-gray' === $link_args['design'] ) { ?>
+																'design'        => '<?php echo $link_args['design']; ?>',
+															<?php } ?>
+		'icon_position' => '<?php echo $link_args['icon_position']; ?>',
+<?php if ( $link_args['icon'] ) { ?>
+'icon'          => $svg_html,
+<?php } ?>
+	)
+),
+UM()->get_allowed_html( 'templates' )
+);
+<?php echo '?>'; ?>
+														</pre>
+													</code>
+												</div>
+											</div>
+											<?php
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				?>
+			</div>
 			<h3>Badges</h3>
 			<div style="display:flex;flex-direction:row;justify-content:flex-start;flex-wrap: wrap;align-items:center">
 			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 's' ) ); ?>

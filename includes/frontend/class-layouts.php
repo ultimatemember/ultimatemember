@@ -166,7 +166,7 @@ class Layouts {
 		);
 
 		if ( 'full' === $args['width'] ) {
-			$classes[] = 'um-button-full-width';
+			$classes[] = 'um-full-width';
 		}
 
 		$has_icon = false;
@@ -218,7 +218,7 @@ class Layouts {
 	}
 
 	/**
-	 * Button element.
+	 * Link element.
 	 *
 	 * Note: Uses <button> HTML tag.
 	 *
@@ -242,54 +242,83 @@ class Layouts {
 		$args = wp_parse_args(
 			$args,
 			array(
+				'type'          => 'raw',            // values: raw || button
+				'icon_position' => null,             // for type="button" values: leading || trailing || content
+				'icon'          => null,             // for type="button" + icon_position="leading || trailing"
+				'design'        => 'secondary-gray', // for type="button"
+				'size'          => 'l',              // for type="button"
+				'width'         => '',               // for type="button"
 				'id'            => '',
-				'icon_position' => null,    // leading || trailing || content
-				'icon'          => null,
-				'design'        => 'secondary-gray',
-				'size'          => 'l',
 				'classes'       => array(),
+				'data'          => array(),
 				'disabled'      => false,
-				'url'           => '#',
 				'target'        => '_self',
 				'title'         => '',
-				'width'         => '',
-				'data'          => array(),
+				'url'           => '#',
 			)
 		);
 
-		$classes = array(
-			'um-button',
-			'um-button-' . $args['design'],
-			'um-button-size-' . $args['size'],
-		);
+		$classes = array( 'um-link' );
 
-		if ( 'full' === $args['width'] ) {
-			$classes[] = 'um-button-full-width';
+		if ( false !== $args['disabled'] ) {
+			$classes[] = 'um-link-disabled';
 		}
 
-		if ( 'link' === $args['type'] || 'icon-link' === $args['type'] ) {
-			$classes[] = 'um-link-button';
-			if ( false !== $args['disabled'] ) {
-				$classes[]      = 'um-link-button-disabled';
-				$args['url']    = '#';
-				$args['target'] = '_self';
+		if ( 'raw' === $args['type'] ) {
+			if ( ! empty( $args['classes'] ) ) {
+				$classes = array_merge( $classes, $args['classes'] );
+			}
+
+			// Handles raw link
+			$classes = implode( ' ', $classes );
+
+			$data_atts = array();
+			foreach ( $args['data'] as $data_k => $data_v ) {
+				$data_atts[] = 'data-' . $data_k . '="' . esc_attr( $data_v ) . '"';
+			}
+			$data_atts = implode( ' ', $data_atts );
+
+			ob_start();
+			?>
+			<a id="<?php echo esc_attr( $args['id'] ); ?>" href="<?php echo esc_url( $args['url'] ); ?>" target="<?php echo esc_attr( $args['target'] ); ?>" title="<?php echo esc_attr( $args['title'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" <?php echo $data_atts; ?>><?php echo wp_kses( $content, UM()->get_allowed_html( 'templates' ) ); ?></a>
+			<?php
+			return ob_get_clean();
+		}
+
+		$classes[] = 'um-link-button';
+		$classes[] = 'um-link-button-' . $args['design'];
+		$classes[] = 'um-link-button-size-' . $args['size'];
+		if ( 'full' === $args['width'] ) {
+			$classes[] = 'um-full-width';
+		}
+
+		$has_icon = false;
+		if ( ! empty( $args['icon_position'] ) ) {
+			if ( ! empty( $args['icon'] ) && in_array( $args['icon_position'], array( 'leading', 'trailing' ), true ) ) {
+				$icon     = '<span class="um-link-button-icon">' . $args['icon'] . '</span>';
+				$has_icon = true;
+
+				$content = '<span class="um-link-button-content">' . $content . '</span>';
+				if ( 'leading' === $args['icon_position'] ) {
+					$content = $icon . $content;
+				} else {
+					$content .= $icon;
+				}
+			}
+
+			if ( ! $has_icon && 'content' === $args['icon_position'] ) {
+				if ( ! empty( $args['icon'] ) && 0 === strpos( $args['icon'], '<svg' ) ) {
+					$has_icon = true;
+					$content  = $args['icon'];
+				} elseif ( ! empty( $content ) && 0 === strpos( $content, '<svg' ) ) {
+					$has_icon = true;
+				}
 			}
 		}
 
-		if ( 'icon-link' === $args['type'] ) {
-			$classes[] = 'um-icon-link';
-		}
-
-		if ( 'icon-button' === $args['type'] ) {
-			$classes[] = 'um-icon-button';
-		}
-
-		if ( ! empty( $args['icon_leading'] ) ) {
-			$classes[] = 'um-button-icon-leading';
-		}
-
-		if ( ! empty( $args['icon_trailing'] ) ) {
-			$classes[] = 'um-button-icon-trailing';
+		if ( $has_icon ) {
+			$classes[] = 'um-link-button-has-icon';
+			$classes[] = 'um-link-button-icon-' . $args['icon_position'];
 		}
 
 		if ( ! empty( $args['classes'] ) ) {
@@ -310,7 +339,7 @@ class Layouts {
 
 		ob_start();
 		?>
-		<a id="<?php echo esc_attr( $args['id'] ); ?>" href="<?php echo esc_url( $args['url'] ); ?>" target="<?php echo esc_attr( $args['target'] ); ?>" title="<?php echo esc_attr( $args['title'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" <?php echo $data_atts; ?>><?php echo wp_kses( $args['icon_leading'] . $content . $args['icon_trailing'], UM()->get_allowed_html( 'templates' ) ); ?></a>
+		<a id="<?php echo esc_attr( $args['id'] ); ?>" href="<?php echo esc_url( $args['url'] ); ?>" target="<?php echo esc_attr( $args['target'] ); ?>" title="<?php echo esc_attr( $args['title'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" <?php echo $data_atts; ?>><?php echo wp_kses( $content, UM()->get_allowed_html( 'templates' ) ); ?></a>
 		<?php
 		return ob_get_clean();
 	}

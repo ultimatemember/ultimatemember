@@ -69,8 +69,6 @@
     border-radius: $radius-md
     padding: 0
     margin: 0
-    &.#{$prefix}button-full-width
-      width: 100%
     &:not(.#{$prefix}button-has-icon.#{$prefix}button-icon-content)
       &.#{$prefix}button-size-s
         padding: $spacing-md 14px
@@ -527,19 +525,347 @@
         padding: 0
 
 
-// Link
+// Link + Link Button
 .um
   .#{$prefix}link
-    +typography( text, sm, bold )
-    color: $link-color
     text-decoration: none
-    &:hover
-      color: $link-hover-color
-      outline: none
-    &:focus
-      color: $link-focus-color
-      outline: none
+    outline: none
+    &.#{$prefix}link-disabled
+      pointer-events: none
+      box-shadow: none
+      &:hover,
+      &:focus
+        box-shadow: none
+    &:not(.#{$prefix}link-button)
+      +typography( text, sm, bold )
+      color: $link-color
+      &:hover
+        color: $link-hover-color
+        outline: none
+      &:focus
+        color: $link-focus-color
+        outline: none
+      &.#{$prefix}link-disabled
+        color: $gray-400
+        background-color: transparent
+        border: none
+        &:hover,
+        &:focus
+          color: $gray-400
+          background-color: transparent
+          border: none
+    &.#{$prefix}link-button
+      text-align: center
+      cursor: pointer
+      border-radius: $radius-md
+      padding: 0
+      margin: 0
+      display: inline-block
+      box-sizing: border-box
+      &.#{$prefix}link-disabled
+        pointer-events: none
+        box-shadow: none
+        &:hover,
+        &:focus
+          box-shadow: none
+      &:not(.#{$prefix}link-button-has-icon.#{$prefix}link-button-icon-content)
+        &.#{$prefix}link-button-size-s
+          padding: $spacing-md 14px
+          +typography( text, sm, semibold )
+        &.#{$prefix}link-button-size-m
+          padding: 10px $spacing-xl
+          +typography( text, sm, semibold )
+        &.#{$prefix}link-button-size-l
+          padding: 10px 18px
+          +typography( text, md, semibold )
+        &.#{$prefix}link-button-size-xl
+          padding: $spacing-lg $spacing-2xl
+          +typography( text, md, semibold )
+      &.#{$prefix}link-button-has-icon
+        +flex( row, flex-start, center, nowrap )
+        svg
+          stroke: currentColor
+          overflow: visible
+        &.#{$prefix}link-button-icon-content
+          +flex( row, center, center, nowrap )
+          &.#{$prefix}link-button-size-s
+            padding: $spacing-md
+          &.#{$prefix}link-button-size-m
+            padding: 10px
+          &.#{$prefix}link-button-size-l
+            padding: $spacing-lg
+          &.#{$prefix}link-button-size-xl
+            padding: 14px
+        &.#{$prefix}link-button-icon-trailing,
+        &.#{$prefix}link-button-icon-leading
+          &.#{$prefix}link-button-size-s,
+          &.#{$prefix}link-button-size-m
+            column-gap: $spacing-xs
+          &.#{$prefix}link-button-size-l,
+          &.#{$prefix}link-button-size-xl
+            column-gap: $spacing-sm
+          .#{$prefix}link-button-icon
+            +flex( row, center, center, nowrap )
+            font-size: unset
+            line-height: unset
+            font-weight: unset
+      &.#{$prefix}link-button-secondary-gray
+        box-shadow: $shadow-xs
+        background-color: $button-bg
+        color: $button-color
+        border: 1px solid $button-border-color
+        &:hover
+          color: $button-color-hover
+          background-color: $button-bg-hover
+        &:focus
+          background-color: $button-bg
+          color: $button-color
+          box-shadow: $ring-gray-shadow-xs
+          outline: none
+        &.#{$prefix}link-disabled
+          color: $button-color-disabled
+          background-color: $button-bg-disabled
+          border: 1px solid $button-border-color-disabled
+          &:hover,
+          &:focus
+            color: $button-color-disabled
+            background-color: $button-bg-disabled
+            border: 1px solid $button-border-color-disabled
+      &.#{$prefix}link-button-primary
+        background-color: $button-primary-bg
+        border: 1px solid $button-primary-bg
+        color: $button-primary-color
+        &:hover
+          background-color: $button-primary-bg-hover
+          border: 1px solid $button-primary-bg-hover
+          color: $button-primary-color
+        &:focus
+          background-color: $button-primary-bg
+          border: 1px solid $button-primary-bg
+          box-shadow: $ring-brand-shadow-xs
+        &.#{$prefix}link-disabled
+          background-color: $button-primary-bg-disabled
+          border: 1px solid $button-primary-border-color-disabled
+          color: $button-primary-color-disabled
+          &:hover,
+          &:focus
+            background-color: $button-primary-bg-disabled
+            border: 1px solid $button-primary-border-color-disabled
+            color: $button-primary-color-disabled
+      &.#{$prefix}link-button-primary-destructive
+        background-color: $error-600
+        border: 1px solid $error-600
+        color: $um-white
+        &:hover
+          background-color: $error-700
+          border: 1px solid $error-700
+          color: $um-white
+        &:focus
+          background-color: $error-600
+          border: 1px solid $error-600
+          box-shadow: $ring-error-shadow-xs
+          color: $um-white
+        &.#{$prefix}link-disabled
+          background-color: $button-primary-bg-disabled
+          border: 1px solid $button-primary-border-color-disabled
+          color: $button-primary-color-disabled
+          &:hover,
+          &:focus
+            background-color: $button-primary-bg-disabled
+            border: 1px solid $button-primary-border-color-disabled
+            color: $button-primary-color-disabled
 
+      &.#{$prefix}link-button-secondary-destructive
+        background-color: $um-white
+        border: 1px solid $error-300
+        color: $error-700
+        &:hover
+          background-color: $error-50
+          border: 1px solid $error-300
+          color: $error-800
+        &:focus
+          background-color: $um-white
+          border: 1px solid $error-300
+          box-shadow: $ring-error-shadow-xs
+          color: $error-700
+        &.#{$prefix}link-disabled
+          color: $button-color-disabled
+          background-color: $button-bg-disabled
+          border: 1px solid $button-border-color-disabled
+          &:hover,
+          &:focus
+            color: $button-color-disabled
+            background-color: $button-bg-disabled
+            border: 1px solid $button-border-color-disabled
+      &.#{$prefix}link-button-tertiary-destructive
+        background-color: transparent
+        color: $error-700
+        border: none
+        box-shadow: none
+        &:hover
+          color: $error-800
+          background-color: $error-50
+          border: none
+          box-shadow: none
+        &:focus
+          color: $error-700
+          background-color: transparent
+          border: none
+          box-shadow: none
+        &.#{$prefix}link-disabled
+          color: $gray-400
+          background-color: transparent
+          border: none
+          &:hover,
+          &:focus
+            color: $gray-400
+            background-color: transparent
+            border: none
+      &.#{$prefix}link-button-link-destructive
+        background-color: transparent
+        color: $error-700
+        border: none
+        border-radius: 0
+        box-shadow: none
+        &:hover
+          color: $error-800
+          background-color: transparent
+          border: none
+          box-shadow: none
+        &:focus
+          color: $error-700
+          background-color: transparent
+          border: none
+          box-shadow: none
+        &.#{$prefix}link-disabled
+          color: $gray-400
+          background-color: transparent
+          border: none
+          &:hover,
+          &:focus
+            color: $gray-400
+            background-color: transparent
+            border: none
+      &.#{$prefix}link-button-secondary-color
+        background-color: $um-white
+        color: $primary-700
+        border: 1px solid $primary-300
+        &:hover
+          color: $primary-800
+          background-color: $primary-50
+          border: 1px solid $primary-300
+        &:focus
+          border: 1px solid $primary-300
+          background-color: $um-white
+          color: $primary-700
+          box-shadow: $ring-brand-shadow-xs
+        &.#{$prefix}link-disabled
+          color: $gray-400
+          background-color: $um-white
+          border: 1px solid $gray-200
+          &:hover,
+          &:focus
+            color: $gray-400
+            background-color: $um-white
+            border: 1px solid $gray-200
+      &.#{$prefix}link-button-tertiary-gray
+        background-color: transparent
+        color: $gray-600
+        border: none
+        box-shadow: none
+        &:hover
+          color: $gray-700
+          background-color: $gray-50
+          border: none
+          box-shadow: none
+        &:focus
+          color: $gray-600
+          background-color: transparent
+          border: none
+          box-shadow: none
+        &.#{$prefix}link-disabled
+          color: $gray-400
+          background-color: transparent
+          border: none
+          &:hover,
+          &:focus
+            color: $gray-400
+            background-color: transparent
+            border: none
+      &.#{$prefix}link-button-tertiary-color
+        background-color: transparent
+        color: $primary-700
+        border: none
+        box-shadow: none
+        &:hover
+          color: $primary-800
+          background-color: $primary-50
+          border: none
+          box-shadow: none
+        &:focus
+          color: $primary-700
+          background-color: transparent
+          border: none
+          box-shadow: none
+        &.#{$prefix}link-disabled
+          color: $gray-400
+          background-color: transparent
+          border: none
+          &:hover,
+          &:focus
+            color: $gray-400
+            background-color: transparent
+            border: none
+      &.#{$prefix}link-button-link-gray
+        background-color: transparent
+        color: $gray-600
+        border: none
+        border-radius: 0
+        box-shadow: none
+        &:hover
+          color: $gray-700
+          background-color: transparent
+          border: none
+          box-shadow: none
+        &:focus
+          color: $gray-600
+          background-color: transparent
+          border: none
+          box-shadow: none
+        &.#{$prefix}link-disabled
+          color: $gray-400
+          background-color: transparent
+          border: none
+          &:hover,
+          &:focus
+            color: $gray-400
+            background-color: transparent
+            border: none
+      &.#{$prefix}link-button-link-color
+        background-color: transparent
+        color: $primary-700
+        border: none
+        border-radius: 0
+        box-shadow: none
+        &:hover
+          color: $primary-800
+          background-color: transparent
+          border: none
+          box-shadow: none
+        &:focus
+          color: $primary-700
+          background-color: transparent
+          border: none
+          box-shadow: none
+        &.#{$prefix}link-disabled
+          color: $gray-400
+          background-color: transparent
+          border: none
+          &:hover,
+          &:focus
+            color: $gray-400
+            background-color: transparent
+            border: none
 
 // Avatar
 .um
@@ -1622,5 +1948,7 @@ input[type="range"]
 
 // Misc
 .um
+  .#{$prefix}full-width
+    width: 100%
   .#{$prefix}display-none
     display: none
