@@ -1133,6 +1133,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 * @return array
 		 */
 		public function sanitize_registered_entities( $value ) {
+
 			if ( ! empty( $value ) ) {
 				if ( is_array( $value ) ) {
 					foreach ( $value as $key => $val ) {
@@ -1140,7 +1141,11 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						if ( is_array( $val ) ) {
 							$val = array_map( 'absint', $val );
 						} else {
-							$val = absint( $val );
+							if ( 'site' === $val ) {
+								$val = 1;
+							} else {
+								$val = absint( $val );
+							}
 						}
 						if ( ! empty( $val ) ) {
 							$value[ $key ] = $val;
@@ -1182,12 +1187,19 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 								$value[ $group ][ $key ] = $val;
 							} else {
-								unset( $value[ $group ] );
+								unset( $value[ $group ][ $key ] );
 							}
 						}
 					}
 				}
 			}
+
+			$value = array_filter(
+				$value,
+				function( $item ) {
+					return ! empty( $item );
+				}
+			);
 
 			$value = array_values( $value );
 

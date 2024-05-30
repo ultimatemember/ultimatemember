@@ -1868,8 +1868,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$class               = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
 			$class              .= ! empty( $field_data['size'] ) ? $field_data['size'] : '';
-			$class_attr          = ' class="um-entities-conditions um-forms-field ' . esc_attr( $class ) . '" ';
-			$class_attr_responce = ' class="um-entities-conditions-responce um-forms-field ' . esc_attr( $class ) . '" ';
 
 			$data = array(
 				'field_id' => $field_data_id,
@@ -1960,9 +1958,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 						);
 					}
 
+					$class_attr          = ' class="um-entities-conditions um-forms-field ' . esc_attr( $class ) . '" ';
+					$class_attr_responce = ' class="um-entities-conditions-responce um-forms-field ' . esc_attr( $class ) . '" ';
+
 					if ( 'site' !== $entity_key ) {
 						$entities = $this->get_entites( $entity_key, $ids );
 					}
+
 					if ( 'site' === $entity_key || 'none' === $entity_key ) {
 						$class_attr          = ' class="um-entities-conditions um-forms-field ' . esc_attr( $class ) . ' um-entities-conditions-full" ';
 						$class_attr_responce = ' class="um-entities-conditions-responce um-forms-field ' . esc_attr( $class ) . ' um-entities-conditions-responce-hide" ';
@@ -1983,7 +1985,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 					if ( 'site' === $entity_key ) {
 						$disabled = ' disabled="disabled" ';
-						$html    .= '<input type="hidden" name="' . $name . '[' . $field_data_id . '][site]" value="site" />';
+						$html    .= '<input type="hidden" class="um-entities-conditions-responce-input" name="' . $name . '[' . $field_data_id . '][site]" value="site" />';
 					}
 
 					$multiple = '';

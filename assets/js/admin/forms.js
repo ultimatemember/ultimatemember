@@ -1193,6 +1193,7 @@ jQuery(document).ready( function() {
 
 		wrapper.find( '.um-entities-conditions-responce' ).attr( 'data-parent', option );
 
+		console.log( wrapper.find( '.um-entities-conditions-responce' ) );
 		if ( wrapper.find( '.um-entities-conditions-responce' ).hasClass( 'um-pages-select2' ) ) {
 			wrapper.find( '.um-entities-conditions-responce' ).select2( 'destroy' );
 			wrapper.find( '.um-entities-conditions-responce' ).html( '' );
@@ -1205,13 +1206,14 @@ jQuery(document).ready( function() {
 
 			wrapper.find( '.um-entities-conditions-responce' ).addClass( 'um-entities-conditions-responce-hide' );
 			wrapper.find( '.um-entities-conditions' ).addClass( 'um-entities-conditions-full' );
+			wrapper.find( '.um-entities-conditions-responce-input' ).remove();
 		} else if ( 'site' === option ) {
 			wrapper.find( '.um-entities-conditions-responce' ).html( '' );
 			wrapper.find( '.um-entities-conditions-responce' ).removeAttr( 'multiple' );
 			wrapper.find( '.um-entities-conditions-responce' ).attr( 'disabled', 'disabled' );
 			wrapper.find( '.um-entities-conditions-responce' ).addClass( 'um-entities-conditions-responce-hide' );
 			wrapper.find( '.um-entities-conditions' ).addClass( 'um-entities-conditions-full' );
-			wrapper.find( '.um-entities-conditions-responce' ).after( '<input type="hidden" name="' + original + '[site]' + '" value="1">' );
+			wrapper.find( '.um-entities-conditions-responce' ).after( '<input type="hidden" class="um-entities-conditions-responce-input" name="' + original + '[site]' + '" value="1">' );
 		} else {
 			wrapper.find( '.um-entities-conditions-responce' ).addClass( 'um-pages-select2' );
 
@@ -1221,6 +1223,7 @@ jQuery(document).ready( function() {
 			wrapper.find( '.um-entities-conditions-responce' ).attr( 'multiple', 'multiple' );
 			wrapper.find( '.um-entities-conditions' ).attr( 'name', original + '[' + option + ']' );
 			wrapper.find( '.um-entities-conditions-responce' ).attr( 'name', original + '[' + option + '][]' );
+			wrapper.find( '.um-entities-conditions-responce-input' ).remove();
 			um_admin_init_pages_select();
 		}
 	});
@@ -1274,27 +1277,40 @@ jQuery(document).ready( function() {
 			wrapper.find( '.um-entities-conditions-responce' ).html( '' );
 			wrapper.find( 'input' ).remove();
 
-			if ( jQuery( this ).closest( '.um-protection-include-wrap' ).length ) {
+			if ( 1 === jQuery( this ).closest( '.um-protection-include-wrap' ).length ) {
 				jQuery( '.um-protection-exclude-wrap' ).closest( '.um-forms-line' ).hide();
 				jQuery( '#um_add_exclusion_rule' ).attr( 'disabled', 'disabled' );
 				jQuery( '.um-protection-exclude-wrap .um-entities-conditions-row' ).remove();
+				jQuery( this ).closest( '.um-protection-include-wrap' ).find( '.um-entities-conditions' ).addClass( 'um-entities-conditions-full' );
+				if ( jQuery( this ).closest( '.um-protection-include-wrap' ).find( '.um-entities-conditions-responce' ).hasClass( 'um-pages-select2' ) ) {
+					jQuery( this ).closest( '.um-protection-include-wrap' ).find( '.um-entities-conditions-responce' ).select2( 'destroy' );
+					jQuery( this ).closest( '.um-protection-include-wrap' ).find( '.um-entities-conditions-responce' ).removeClass( 'um-pages-select2' );
+				}
+				jQuery( this ).closest( '.um-protection-include-wrap' ).find( '.um-entities-conditions-responce' ).addClass( 'um-entities-conditions-responce-hide' );
+				if ( jQuery( this ).closest( '.um-protection-include-wrap' ).find( '.um-pages-select2' ).length ) {
+					jQuery( this ).closest( '.um-protection-include-wrap' ).find( '.um-pages-select2' ).select2( 'destroy' );
+				}
 			}
 			if ( 1 === jQuery( this ).closest( '.um-protection-exclude-wrap' ).length ) {
 				jQuery( '.um-protection-exclude-wrap' ).closest( '.um-forms-line' ).hide();
 				jQuery( '.um-protection-exclude-wrap .um-entities-conditions-row' ).remove();
+				if ( jQuery( this ).closest( '.um-protection-exclude-wrap' ).find( '.um-pages-select2' ).length ) {
+					jQuery( this ).closest( '.um-protection-exclude-wrap' ).find( '.um-pages-select2' ).select2( 'destroy' );
+				}
 			}
 		}
 	});
 
-	if ( 1 > jQuery( '.um-protection-include-wrap .um-entities-conditions-row' ).length ) {
-
-	} else {
+	if ( jQuery( '.um-protection-include-wrap .um-entities-conditions-row' ).length ) {
 		if ( null === jQuery( '.um-protection-include-wrap .um-entities-conditions-row .um-entities-conditions-responce' ).val() ) {
-			jQuery( '#um_add_exclusion_rule' ).attr( 'disabled', 'disabled' );
+			if ( 'site' !== jQuery( '.um-protection-include-wrap .um-entities-conditions-row .um-entities-conditions-responce-input' ).val() ) {
+				jQuery( '#um_add_exclusion_rule' ).attr( 'disabled', 'disabled' );
+			}
+
 		} else {
 			jQuery( '.um-protection-exclude-wrap' ).closest( '.um-forms-line' ).show();
 		}
-		if (typeof jQuery( '.um-protection-exclude-wrap .um-entities-conditions-row .um-entities-conditions-responce' ).val() === "undefined") {
+		if ( typeof jQuery( '.um-protection-exclude-wrap .um-entities-conditions-row .um-entities-conditions-responce' ).val() === 'undefined' ) {
 			jQuery( '.um-protection-exclude-wrap' ).closest( '.um-forms-line' ).hide();
 		}
 	}

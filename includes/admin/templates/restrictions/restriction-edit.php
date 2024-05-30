@@ -95,14 +95,16 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 		if ( 'loggedout' !== $_POST['um_restriction_rules_users']['_um_authentification'] ) {
 			if ( ! empty( $_POST['um_restriction_rules_users']['_um_users'] ) ) {
 				$_POST['um_restriction_rules_users']['_um_users'] = array_values( $_POST['um_restriction_rules_users']['_um_users'] );
-				$data_rules = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_users'] );
-
-				$data_rules['_um_authentification'] = 'loggedin';
+				$data_rules                                       = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_users'] );
+				$data_rules['_um_authentification']               = 'loggedin';
 			}
 		} else {
 			$data_rules['_um_authentification'] = 'loggedout';
 		}
-
+echo '<pre>';
+print_r($data_rules);
+echo '</pre>';
+//exit();
 		// @todo v3 type hardcode
 		$data['_um_type'] = 'post';
 
