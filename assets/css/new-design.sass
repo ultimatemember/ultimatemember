@@ -487,43 +487,38 @@
     overflow: hidden
     box-shadow: $shadow-sm
     +border-box
+    row-gap: $spacing-lg
+    padding: $spacing-3xl
     .#{$prefix}box-header
       +flex( row, space-between, baseline, nowrap )
       column-gap: $spacing-md
-      padding: $spacing-3xl $spacing-3xl $spacing-md $spacing-3xl
+      +border-box
       .#{$prefix}box-title
         color: $gray-600
         +typography( text, sm, bold )
-      &.#{$prefix}box-no-title
+      &.#{$prefix}box-header-no-title
         justify-content: flex-end
-        &.#{$prefix}box-no-actions
+        &.#{$prefix}box-header-no-actions
           justify-content: flex-start
-      &.#{$prefix}box-no-actions
+      &.#{$prefix}box-header-no-actions
           justify-content: flex-start
-    &.#{$prefix}box-left-actions
-      .#{$prefix}box-header
+      &.#{$prefix}box-header-left-actions
         flex-direction: row-reverse
         .#{$prefix}box-dropdown-toggle:before
           right: 8px
     .#{$prefix}box-content
-      +flex( row, flex-start, baseline, wrap )
-      padding: 0 $spacing-3xl $spacing-3xl $spacing-3xl
+      +flex( column, flex-start, stretch, nowrap )
+      +border-box
       row-gap: $spacing-md
       color: $gray-900
       word-wrap: break-word
       word-break: break-word
     .#{$prefix}box-footer
-      +flex( row, flex-end, baseline, wrap )
-      padding: $spacing-xl $spacing-3xl
-      border-top: 1px solid $gray-200
-    &.#{$prefix}box-no-footer
+      +flex( column, flex-start, stretch, nowrap )
+      +border-box
       row-gap: $spacing-md
-      padding: $spacing-3xl
-      .#{$prefix}box-header
-        padding: 0
-      .#{$prefix}box-content
-        padding: 0
-
+      padding: $spacing-lg 0 0 0
+      border-top: 1px solid $gray-200
 
 // Link + Link Button
 .um
@@ -1062,7 +1057,7 @@
                   color: $gray-500
                 &::placeholder
                   color: $gray-500
-                &.um-error
+                &.#{$prefix}error
                   border-color: $error-300
                   &:focus,
                   &:focus-visible
@@ -1086,10 +1081,10 @@
                 background-color: $primary-600
                 &:hover
                   background-color: $primary-700
-                &.um-icon-eye
+                &.#{$prefix}icon-eye
                   mask: url(../icons/eye.svg)
                   -webkit-mask: url(../icons/eye.svg)
-                &.um-icon-eye-disabled
+                &.#{$prefix}icon-eye-disabled
                   mask: url(../icons/eye-off.svg)
                   -webkit-mask: url(../icons/eye-off.svg)
             .#{$prefix}field-hint
@@ -1347,7 +1342,7 @@
                 color: $gray-500
               &::placeholder
                 color: $gray-500
-              &.um-error
+              &.#{$prefix}error
                 border-color: $error-300
                 &:focus,
                 &:focus-visible
@@ -1453,7 +1448,7 @@
               width: 50%
               &.#{$prefix}form-col-right
                 align-items: end
-                .#{$prefix}um-field
+                .#{$prefix}field
                   align-items: end
           &.#{$prefix}form-cols-3
             .#{$prefix}form-col
@@ -1598,7 +1593,7 @@ input[type="range"]
         row-gap: $spacing-xs
         li
           width: 100%
-          a.um-link
+          a.#{$prefix}link
             color: $gray-600
             +typography( text, sm, semibold )
             width: 100%
@@ -1612,7 +1607,7 @@ input[type="range"]
               color: $gray-700
               background-color: $gray-50
           &.#{$prefix}current-tab
-            a.um-link
+            a.#{$prefix}link
               color: $primary-700
               background-color: $primary-200
               &:hover
@@ -1938,7 +1933,7 @@ input[type="range"]
       color: $gray-500
     &::placeholder
       color: $gray-500
-    &.um-error
+    &.#{$prefix}error
       border-color: $error-300
       &:focus,
       &:focus-visible

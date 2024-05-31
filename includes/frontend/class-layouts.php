@@ -422,20 +422,24 @@ class Layouts {
 				'footer'           => '',
 				'actions'          => array(),
 				'actions_position' => 'right',
-				'pre_header'       => '',
 			)
 		);
 
 		$classes = array(
 			'um-box',
 		);
+
+		$has_header = false;
+		if ( ! empty( $args['title'] ) || ! empty( $args['actions'] ) || ! empty( $args['header'] ) ) {
+			$has_header = true;
+		}
+
+		if ( ! $has_header ) {
+			$classes[] = 'um-box-no-header';
+		}
+
 		if ( empty( $args['footer'] ) ) {
 			$classes[] = 'um-box-no-footer';
-		}
-		if ( empty( $args['actions'] ) ) {
-			$classes[] = 'um-box-no-actions';
-		} else {
-			$classes[] = 'um-box-' . $args['actions_position'] . '-actions';
 		}
 
 		if ( ! empty( $args['classes'] ) ) {
@@ -443,7 +447,7 @@ class Layouts {
 		}
 		$classes = implode( ' ', $classes );
 
-		if ( ! empty( $args['title'] ) || ! empty( $args['actions'] ) || ! empty( $args['footer'] ) ) {
+		if ( ! empty( $args['header'] ) || ! empty( $args['footer'] ) ) {
 			$content = '<div class="um-box-content">' . $content . '</div>';
 		}
 
@@ -451,33 +455,35 @@ class Layouts {
 		?>
 		<div id="<?php echo esc_attr( $args['id'] ); ?>" class="<?php echo esc_attr( $classes ); ?>">
 			<?php
-			if ( ! empty( $args['title'] ) || ! empty( $args['actions'] ) || ! empty( $args['header'] ) ) {
+			if ( $has_header ) {
 				$header_classes = array(
 					'um-box-header',
 				);
-				if ( empty( $args['title'] ) ) {
-					$header_classes[] = 'um-box-no-title';
-				}
-				if ( empty( $args['actions'] ) ) {
-					$header_classes[] = 'um-box-no-actions';
+
+				if ( empty( $args['header'] ) ) {
+					if ( empty( $args['title'] ) ) {
+						$header_classes[] = 'um-box-header-no-title';
+					}
+					if ( empty( $args['actions'] ) ) {
+						$header_classes[] = 'um-box-header-no-actions';
+					} else {
+						$header_classes[] = 'um-box-header' . $args['actions_position'] . '-actions';
+					}
 				}
 				?>
 				<div class="<?php echo esc_attr( implode( ' ', $header_classes ) ); ?>">
-					<?php if ( ! empty( $args['title'] ) ) { ?>
-						<span class="um-box-title">
-							<?php echo esc_html( $args['title'] ); ?>
-						</span>
-					<?php } ?>
-
-					<?php
-					if ( ! empty( $args['actions'] ) ) {
-						echo wp_kses( self::dropdown_menu( 'um-box-dropdown-toggle', $args['actions'] ), UM()->get_allowed_html( 'templates' ) );
-					}
-					?>
-
 					<?php
 					if ( ! empty( $args['header'] ) ) {
 						echo wp_kses( $args['header'], UM()->get_allowed_html( 'templates' ) );
+					} else {
+						if ( ! empty( $args['title'] ) ) {
+							?>
+							<span class="um-box-title"><?php echo wp_kses( $args['title'], UM()->get_allowed_html( 'templates' ) ); ?></span>
+							<?php
+						}
+						if ( ! empty( $args['actions'] ) ) {
+							echo wp_kses( self::dropdown_menu( 'um-box-dropdown-toggle', $args['actions'] ), UM()->get_allowed_html( 'templates' ) );
+						}
 					}
 					?>
 				</div>
