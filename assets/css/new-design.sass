@@ -1510,6 +1510,8 @@
   position: relative
   height: $spacing-md
   padding: $spacing-md 0
+  input[type="range"]
+    margin: 0
 //
 //.form_control
 //  position: relative
@@ -1952,6 +1954,50 @@ input[type="range"]
   input[type="datetime-local"],
   input[type="time"]
     font-family: inherit
+
+// Field wrapper common styling
+.um
+  .#{$prefix}field-wrapper
+    +flex( column, flex-start, stretch, nowrap )
+    row-gap: $spacing-sm
+    padding: 0
+    margin: 0
+    position: relative
+    +border-box
+    > label
+      +typography( text, sm, medium )
+      color: $gray-700
+      padding: 0
+      margin: 0
+    p.#{$prefix}supporting-text
+      +typography( text, sm, regular )
+      color: $gray-600
+      padding: 0
+      margin: 0
+    input[type="date"],
+    input[type="datetime"],
+    input[type="datetime-local"],
+    input[type="email"],
+    input[type="file"],
+    input[type="image"],
+    input[type="month"],
+    input[type="number"],
+    input[type="password"],
+    input[type="search"],
+    input[type="tel"],
+    input[type="text"],
+    input[type="time"],
+    input[type="url"],
+    input[type="week"],
+    select,
+    textarea
+      +border-box
+      width: 100%
+      margin: 0
+    .choices
+      width: 100%
+      padding: 0
+      margin: 0
 
 // Misc
 .um

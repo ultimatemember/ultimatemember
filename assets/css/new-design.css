@@ -1945,6 +1945,9 @@
   height: 8px;
   padding: 8px 0;
 }
+.sliders_control input[type=range] {
+  margin: 0;
+}
 
 input[type=range]#fromSlider::-webkit-slider-thumb {
   margin-top: 8px;
@@ -2609,6 +2612,65 @@ input[type=range] {
 .um input[type=datetime-local],
 .um input[type=time] {
   font-family: inherit;
+}
+
+.um .um-field-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  row-gap: 6px;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+.um .um-field-wrapper > label {
+  font-size: var(--um-text-font-size-sm, 14px);
+  line-height: var(--um-text-line-height-sm, 20px);
+  font-weight: var(--um-text-font-weight-medium, 500);
+  color: var(--um-gray-700, #344054);
+  padding: 0;
+  margin: 0;
+}
+.um .um-field-wrapper p.um-supporting-text {
+  font-size: var(--um-text-font-size-sm, 14px);
+  line-height: var(--um-text-line-height-sm, 20px);
+  font-weight: var(--um-text-font-weight-regular, 400);
+  color: var(--um-gray-600, #475467);
+  padding: 0;
+  margin: 0;
+}
+.um .um-field-wrapper input[type=date],
+.um .um-field-wrapper input[type=datetime],
+.um .um-field-wrapper input[type=datetime-local],
+.um .um-field-wrapper input[type=email],
+.um .um-field-wrapper input[type=file],
+.um .um-field-wrapper input[type=image],
+.um .um-field-wrapper input[type=month],
+.um .um-field-wrapper input[type=number],
+.um .um-field-wrapper input[type=password],
+.um .um-field-wrapper input[type=search],
+.um .um-field-wrapper input[type=tel],
+.um .um-field-wrapper input[type=text],
+.um .um-field-wrapper input[type=time],
+.um .um-field-wrapper input[type=url],
+.um .um-field-wrapper input[type=week],
+.um .um-field-wrapper select,
+.um .um-field-wrapper textarea {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+}
+.um .um-field-wrapper .choices {
+  width: 100%;
+  padding: 0;
+  margin: 0;
 }
 
 .um .um-full-width {

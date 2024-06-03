@@ -70,17 +70,12 @@
   flex-wrap: nowrap;
 }
 .um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter {
-  position: relative;
-}
-.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter input[type=search],
-.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter input[type=text] {
-  width: 100%;
-  margin: 0;
-}
-.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter .choices {
-  width: 100%;
-  padding: 0;
-  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  row-gap: 8px;
 }
 .um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter .choices .choices__list--dropdown,
 .um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter .choices .choices__list[aria-expanded] {
