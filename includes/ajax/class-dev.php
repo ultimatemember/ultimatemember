@@ -67,7 +67,7 @@ echo wp_kses(
 <?php if ( 'full' === $args['width'] ) { ?>
 			'width' => '<?php echo $args['width']; ?>',
 <?php } ?>
-<?php if ( 'secondary-gray' === $args['design'] ) { ?>
+<?php if ( 'secondary-gray' !== $args['design'] ) { ?>
 			'design' => '<?php echo $args['design']; ?>',
 <?php } ?>
 		)
@@ -104,7 +104,7 @@ echo wp_kses(
 <?php if ( 'full' === $args['width'] ) { ?>
 			'width'         => '<?php echo $args['width']; ?>',
 <?php } ?>
-<?php if ( 'secondary-gray' === $args['design'] ) { ?>
+<?php if ( 'secondary-gray' !== $args['design'] ) { ?>
 			'design'        => '<?php echo $args['design']; ?>',
 <?php } ?>
 			'icon_position' => '<?php echo $args['icon_position']; ?>',
