@@ -22,6 +22,7 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		public function includes() {
 			$this->account();
 			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				$this->dev();
 				$this->directory();
 			}
 			$this->forms();
@@ -40,6 +41,19 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 				UM()->classes['um\ajax\account'] = new Account();
 			}
 			return UM()->classes['um\ajax\account'];
+		}
+
+		/**
+		 * @since 2.9.0
+		 *
+		 * @return Dev
+		 */
+		public function dev() {
+			if ( empty( UM()->classes['um\ajax\dev'] ) ) {
+				UM()->classes['um\ajax\dev'] = new Dev();
+			}
+
+			return UM()->classes['um\ajax\dev'];
 		}
 
 		/**

@@ -663,151 +663,84 @@ class Shortcodes {
 		?>
 		<div class="um">
 			<h3>Buttons</h3>
-			<div style="display: flex; gap:8px;flex-direction:column;align-items:center;justify-content:stretch;flex-wrap:nowrap;width:100%;">
-				<?php
-				$base_content = 'Button';
+			<script>
+				jQuery(document).ready( function($) {
+					$(document.body).on('click', '#get_button_snippet', function(){
+						let request = UM.common.form.vanillaSerialize( 'um-get-button' );
+						wp.ajax.send(
+							'um_get_button_snippet',
+							{
+								data: request,
+								success: function(response) {
+									$('#um-button-preview').html( response );
+								},
+								error: function(response) {
 
-				foreach ( $disables as $disabled ) {
-					$button_args = array(
-						'disabled' => $disabled,
-					);
-
-					foreach ( $types as $type ) {
-						$button_args['type'] = $type;
-
-						foreach ( $sizes as $size ) {
-							$button_args['size'] = $size;
-
-							foreach ( $widths as $width ) {
-								$button_args['width'] = $width;
-
-								foreach ( $designs as $design ) {
-									$button_args['design'] = $design;
-
-									foreach ( $icon_positions as $icon_position ) {
-										if ( is_null( $icon_position ) ) {
-											?>
-											<div class="um-box um-box-no-footer" style="display: flex; gap:8px;flex-direction:column;align-items:center;justify-content:flex-start;flex-wrap:nowrap;width:100%;">
-												<div style="display: flex; gap:8px;flex-direction:row;align-items:baseline;justify-content:flex-start;flex-wrap:nowrap;width:100%;">
-													<?php
-													echo wp_kses(
-														UM()->frontend()::layouts()::button( $base_content, $button_args ),
-														UM()->get_allowed_html( 'templates' )
-													);
-													?>
-												</div>
-												<div style="width: 100%;">
-													<h5>Snippet:</h5>
-													<code style="float:left;width: 100%;overflow:auto;border:1px solid #aaa; background: #eee;">
-														<pre>
-<?php echo esc_html( '<?php' ) . '<br />'; ?>
-echo wp_kses(
-	UM()->frontend()::layouts()::button(
-		'Button',
-		array(
-<?php if ( 'button' !== $button_args['type'] ) { ?>
-			'type' => '<?php echo $button_args['type']; ?>',
-<?php } ?>
-<?php if ( 'l' !== $button_args['size'] ) { ?>
-			'size' => '<?php echo $button_args['size']; ?>',
-<?php } ?>
-<?php if ( $button_args['disabled'] ) { ?>
-			'disabled' => true,
-<?php } ?>
-<?php if ( 'full' === $button_args['width'] ) { ?>
-			'width' => '<?php echo $button_args['width']; ?>',
-<?php } ?>
-<?php if ( 'secondary-gray' === $button_args['design'] ) { ?>
-			'design' => '<?php echo $button_args['design']; ?>',
-<?php } ?>
-		)
-	),
-	UM()->get_allowed_html( 'templates' )
-);
-<?php echo '?>'; ?>
-														</pre>
-													</code>
-												</div>
-											</div>
-											<?php
-										} else {
-											$button_args['icon_position'] = $icon_position;
-
-											foreach ( $icons as $icon ) {
-												if ( is_null( $icon ) ) {
-													continue;
-												}
-
-												$content             = $base_content;
-												$button_args['icon'] = $icon;
-												if ( 'content' === $button_args['icon_position'] ) {
-													$content             = $icon;
-													$button_args['icon'] = null;
-												}
-
-												?>
-												<div class="um-box um-box-no-footer" style="display: flex; gap:8px;flex-direction:column;align-items:center;justify-content:flex-start;flex-wrap:nowrap;width:100%;">
-													<div style="display: flex; gap:8px;flex-direction:row;align-items:baseline;justify-content:flex-start;flex-wrap:nowrap;width:100%;">
-														<?php
-														echo wp_kses(
-															UM()->frontend()::layouts()::button( $content, $button_args ),
-															UM()->get_allowed_html( 'templates' )
-														);
-														?>
-													</div>
-													<div style="width: 100%;">
-														<h5>Snippet:</h5>
-														<code style="float:left;width: 100%;overflow:auto;border:1px solid #aaa; background: #eee;">
-															<pre>
-<?php echo esc_html( '<?php' ) . '<br />'; ?>
-<?php echo ( $button_args['icon'] || 'content' === $button_args['icon_position'] ) ? esc_html( '$svg_html = \'SVG html from https://tablericons.com/. Size 20px, Stroke 1.5px\';' ) . '<br />' : ''; ?>
-echo wp_kses(
-	UM()->frontend()::layouts()::button(
-<?php if ( 'content' === $button_args['icon_position'] ) { ?>
-		$svg_html
-<?php } else { ?>
-		'<?php echo esc_html( $content ); ?>',
-<?php } ?>
-		array(
-<?php if ( 'button' !== $button_args['type'] ) { ?>
-			'type'          => '<?php echo $button_args['type']; ?>',
-<?php } ?>
-<?php if ( 'l' !== $button_args['size'] ) { ?>
-			'size'          => '<?php echo $button_args['size']; ?>',
-<?php } ?>
-<?php if ( $button_args['disabled'] ) { ?>
-			'disabled'      => true,
-<?php } ?>
-<?php if ( 'full' === $button_args['width'] ) { ?>
-			'width'         => '<?php echo $button_args['width']; ?>',
-<?php } ?>
-<?php if ( 'secondary-gray' === $button_args['design'] ) { ?>
-			'design'        => '<?php echo $button_args['design']; ?>',
-<?php } ?>
-			'icon_position' => '<?php echo $button_args['icon_position']; ?>',
-<?php if ( $button_args['icon'] ) { ?>
-			'icon'          => $svg_html,
-<?php } ?>
-		)
-	),
-	UM()->get_allowed_html( 'templates' )
-);
-<?php echo '?>'; ?>
-															</pre>
-														</code>
-													</div>
-												</div>
-												<?php
-											}
-										}
-									}
-								}
+								},
 							}
-						}
-					}
-				}
-				?>
+						)
+					});
+				});
+			</script>
+			<form id="um-get-button" style="display: flex; gap:8px;flex-direction:column;align-items:flex-start;justify-content:flex-start;flex-wrap:nowrap;width:100%;">
+				<label>Type
+				<select name="type">
+					<option value="submit">Submit</option>
+					<option value="button">Button</option>
+					<option value="reset">Reset</option>
+				</select>
+				</label>
+				<label>Size
+				<select name="size">
+					<option value="s">S</option>
+					<option value="m">M</option>
+					<option value="l">L</option>
+					<option value="xl">XL</option>
+				</select>
+				</label>
+				<label>Design
+				<select name="design">
+					<option value="primary">primary</option>
+					<option value="secondary-gray">secondary-gray</option>
+					<option value="secondary-color">secondary-color</option>
+					<option value="tertiary-gray">tertiary-gray</option>
+					<option value="tertiary-color">tertiary-color</option>
+					<option value="link-gray">link-gray</option>
+					<option value="link-color">link-color</option>
+					<option value="primary-destructive">primary-destructive</option>
+					<option value="secondary-destructive">secondary-destructive</option>
+					<option value="tertiary-destructive">tertiary-destructive</option>
+					<option value="link-destructive">link-destructive</option>
+				</select>
+				</label>
+				<label>Content
+				<input type="text" name="content" value="Button"/>
+				</label>
+				<label>Icon position
+				<select name="icon_position">
+					<option value="">None</option>
+					<option value="trailing">Trailing</option>
+					<option value="leading">Leading</option>
+					<option value="content">Content</option>
+				</select>
+				</label>
+				<label>Icon SVG HTML
+				<input type="text" name="icon" value="" />
+				</label>
+				<label>Disabled
+				<input type="checkbox" name="disabled" value="1" />
+				</label>
+				<label>Full-width
+				<input type="checkbox" name="full-width" value="1" />
+				</label>
+				<button type="button" id="get_button_snippet">Get snippet + preview</button>
+				<input type="hidden" name="nonce" value="<?php echo esc_attr( wp_create_nonce( 'get_button' ) ); ?>">
+			</form>
+			<div class="um-box">
+				<h4>Preview</h4>
+				<div id="um-button-preview" style="display: flex; gap:8px;flex-direction:column;align-items:flex-start;justify-content:flex-start;flex-wrap:nowrap;width:100%;"></div>
 			</div>
+
 			<h3>Links</h3>
 			<div style="display: flex; gap:8px;flex-direction:column;align-items:center;justify-content:stretch;flex-wrap:nowrap;width:100%;">
 				<div class="um-box um-box-no-footer" style="display: flex; gap:8px;flex-direction:column;align-items:center;justify-content:flex-start;flex-wrap:nowrap;width:100%;">
