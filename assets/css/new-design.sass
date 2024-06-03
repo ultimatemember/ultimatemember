@@ -1062,7 +1062,11 @@
                   &:focus,
                   &:focus-visible
                     box-shadow: $ring-error-shadow-xs
-              & > textarea
+              & > textarea,
+              & > input[type="date"],
+              & > input[type="datetime"],
+              & > input[type="datetime-local"],
+              & > input[type="time"]
                 font-family: inherit
               .wp-core-ui.wp-editor-wrap
                 width: 100%
@@ -1347,7 +1351,11 @@
                 &:focus,
                 &:focus-visible
                   box-shadow: $ring-error-shadow-xs
-            & > textarea
+            & > textarea,
+            & > input[type="date"],
+            & > input[type="datetime"],
+            & > input[type="datetime-local"],
+            & > input[type="time"]
               font-family: inherit
             .wp-core-ui.wp-editor-wrap,
             .choices
@@ -1938,7 +1946,11 @@ input[type="range"]
       &:focus,
       &:focus-visible
         box-shadow: $ring-error-shadow-xs
-  textarea
+  textarea,
+  input[type="date"],
+  input[type="datetime"],
+  input[type="datetime-local"],
+  input[type="time"]
     font-family: inherit
 
 // Misc

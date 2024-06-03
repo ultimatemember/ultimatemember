@@ -497,4 +497,219 @@ class Directory {
 
 		return $data_array;
 	}
+
+	/**
+	 * @param string $filter
+	 * @param array $directory_data
+	 *
+	 * @return mixed
+	 */
+	protected function slider_filters_range( $filter, $directory_data ) {
+		global $wpdb;
+
+		$range = false;
+
+		switch ( $filter ) {
+
+			default: {
+
+				$meta = $wpdb->get_row( $wpdb->prepare(
+					"SELECT MIN( CONVERT( meta_value, DECIMAL ) ) as min_meta,
+						MAX( CONVERT( meta_value, DECIMAL ) ) as max_meta,
+						COUNT( DISTINCT meta_value ) as amount
+						FROM {$wpdb->usermeta}
+						WHERE meta_key = %s",
+					$filter
+				), ARRAY_A );
+
+				if ( isset( $meta['min_meta'] ) && isset( $meta['max_meta'] ) && isset( $meta['amount'] ) && $meta['amount'] > 1 ) {
+					$range = array( (float) $meta['min_meta'], (float) $meta['max_meta'] );
+				}
+
+				$range = apply_filters( 'um_member_directory_filter_slider_common', $range, $directory_data, $filter );
+				$range = apply_filters( "um_member_directory_filter_{$filter}_slider", $range, $directory_data );
+
+				break;
+			}
+			case 'birth_date': {
+
+//					$meta = $wpdb->get_col(
+//						"SELECT meta_value
+//						FROM {$wpdb->usermeta}
+//						WHERE meta_key = 'birth_date' AND
+//						      meta_value != ''"
+//					);
+//
+//					if ( empty( $meta ) || count( $meta ) < 2 ) {
+//						$range = false;
+//					} elseif ( is_array( $meta ) ) {
+//						$birth_dates = array_filter( array_map( 'strtotime', $meta ), 'is_numeric' );
+//						sort( $birth_dates );
+//						$min_meta = array_shift( $birth_dates );
+//						$max_meta = array_pop( $birth_dates );
+//						$range = array( $this->borndate( $max_meta ), $this->borndate( $min_meta ) );
+//					}
+
+				$meta = $wpdb->get_row(
+					"SELECT MIN( meta_value ) as min_meta,
+						MAX( meta_value ) as max_meta,
+						COUNT( DISTINCT meta_value ) as amount
+						FROM {$wpdb->usermeta}
+						WHERE meta_key = 'birth_date' AND
+							  meta_value != ''",
+					ARRAY_A );
+
+				if ( isset( $meta['min_meta'] ) && isset( $meta['max_meta'] ) && isset( $meta['amount'] ) && $meta['amount'] > 1 ) {
+					$range = array( $this->borndate( strtotime( $meta['max_meta'] ) ), $this->borndate( strtotime( $meta['min_meta'] ) ) );
+				}
+
+				break;
+			}
+
+		}
+
+		return $range;
+	}
+
+	/**
+	 * @param $filter
+	 *
+	 * @return mixed
+	 */
+	protected function slider_range_placeholder( $filter, $attrs ) {
+		switch ( $filter ) {
+			default: {
+				$label = ! empty( $attrs['label'] ) ? $attrs['label'] : $filter;
+				$label = ucwords( str_replace( array( 'um_', '_' ), array( '', ' ' ), $label ) );
+				$placeholders = apply_filters( 'um_member_directory_filter_slider_range_placeholder', false, $filter );
+
+				if ( ! $placeholders ) {
+					switch ( $attrs['type'] ) {
+						default:
+							$placeholders = array(
+								"<strong>$label:</strong>&nbsp;{value}",
+								"<strong>$label:</strong>&nbsp;{min_range} - {max_range}",
+							);
+							break;
+						case 'rating':
+							$placeholders = array(
+								"<strong>$label:</strong>&nbsp;{value}" . __( ' stars', 'ultimate-member' ),
+								"<strong>$label:</strong>&nbsp;{min_range} - {max_range}" . __( ' stars', 'ultimate-member' )
+							);
+							break;
+					}
+				}
+
+				break;
+			}
+			case 'birth_date': {
+				$placeholders = array(
+					__( '<strong>Age:</strong>&nbsp;{value} years old', 'ultimate-member' ),
+					__( '<strong>Age:</strong>&nbsp;{min_range} - {max_range} years old', 'ultimate-member' )
+				);
+				break;
+			}
+		}
+
+		return $placeholders;
+	}
+
+	/**
+	 * @param $filter
+	 *
+	 * @return mixed
+	 */
+	public function datepicker_filters_range( $filter ) {
+		global $wpdb;
+
+		switch ( $filter ) {
+			default:
+				global $wpdb;
+				$meta = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT meta_value
+						FROM {$wpdb->usermeta}
+						WHERE meta_key = %s
+						ORDER BY meta_value DESC", $filter ) );
+
+				if ( empty( $meta ) || count( $meta ) === 1 ) {
+					$range = false;
+				} elseif ( ! empty( $meta ) ) {
+					$range = array( strtotime( min( $meta ) ), strtotime( max( $meta ) ) );
+				}
+
+				$range = apply_filters( "um_member_directory_filter_{$filter}_datepicker", $range );
+
+				break;
+			case 'last_login':
+				$meta = $wpdb->get_row(
+					"SELECT DISTINCT COUNT(*) AS total,
+							MIN(meta_value) AS min,
+							MAX(meta_value) AS max
+						FROM {$wpdb->usermeta}
+						WHERE meta_key = '_um_last_login'",
+					ARRAY_A
+				);
+				if ( empty( $meta['total'] ) || 1 === absint( $meta['total'] ) ) {
+					$range = false;
+				} elseif ( array_key_exists( 'min', $meta ) && array_key_exists( 'max', $meta ) ) {
+					$range = array( strtotime( $meta['min'] ), strtotime( $meta['max'] ) );
+				}
+				break;
+			case 'user_registered':
+				$meta = $wpdb->get_col(
+					"SELECT DISTINCT user_registered
+						FROM {$wpdb->users}
+						ORDER BY user_registered DESC"
+				);
+
+				if ( empty( $meta ) || count( $meta ) === 1 ) {
+					$range = false;
+				} elseif ( ! empty( $meta ) ) {
+					$range = array( strtotime( min( $meta ) ), strtotime( max( $meta ) ) );
+				}
+
+				break;
+		}
+
+		return $range;
+	}
+
+	/**
+	 * @param $filter
+	 *
+	 * @return mixed
+	 */
+	protected function timepicker_filters_range( $filter ) {
+		global $wpdb;
+		$meta = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT DISTINCT meta_value
+					FROM {$wpdb->usermeta}
+					WHERE meta_key = %s
+					ORDER BY meta_value DESC",
+				$filter
+			)
+		);
+
+		$meta = array_filter( $meta );
+
+		if ( empty( $meta ) || count( $meta ) === 1 ) {
+			$range = false;
+		} elseif ( ! empty( $meta ) ) {
+			$range = array( min( $meta ), max( $meta ) );
+		}
+
+		return apply_filters( "um_member_directory_filter_{$filter}_timepicker", $range );
+	}
+
+	/**
+	 * @param $borndate
+	 *
+	 * @return false|string
+	 */
+	private function borndate( $borndate ) {
+		if ( date( 'm', $borndate ) > date( 'm' ) || ( date( 'm', $borndate ) === date( 'm' ) && date( 'd', $borndate ) > date( 'd' ) ) ) {
+			return ( date( 'Y' ) - date( 'Y', $borndate ) - 1 );
+		}
+		return ( date( 'Y' ) - date( 'Y', $borndate ) );
+	}
 }

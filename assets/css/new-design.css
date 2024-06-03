@@ -1506,8 +1506,12 @@
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > textarea.um-error:focus-visible {
   box-shadow: 0 0 0 4px var(--um-error-500-a-24, rgba(240, 68, 56, 0.24)), 0 1px 2px var(--um-gray-900-a-5, rgba(16, 24, 40, 0.05));
 }
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea,
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > textarea {
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > textarea, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=date], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=datetime], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=datetime-local], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field > input[type=time],
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > textarea,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=date],
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=datetime],
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=datetime-local],
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password > input[type=time] {
   font-family: inherit;
 }
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field .wp-core-ui.wp-editor-wrap,
@@ -1862,7 +1866,7 @@
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=date].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=date].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime-local].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime-local].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=email].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=email].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=file].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=file].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=image].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=image].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=month].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=month].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=number].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=number].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=password].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=password].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=search].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=search].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=tel].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=tel].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=text].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=text].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=time].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=time].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=url].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=url].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=week].um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=week].um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select.um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > select.um-error:focus-visible, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea.um-error:focus, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea.um-error:focus-visible {
   box-shadow: 0 0 0 4px var(--um-error-500-a-24, rgba(240, 68, 56, 0.24)), 0 1px 2px var(--um-gray-900-a-5, rgba(16, 24, 40, 0.05));
 }
-.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea {
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > textarea, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=date], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=datetime-local], .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col > input[type=time] {
   font-family: inherit;
 }
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .wp-core-ui.wp-editor-wrap,
@@ -2599,7 +2603,11 @@ input[type=range] {
 .um textarea.um-error:focus-visible {
   box-shadow: 0 0 0 4px var(--um-error-500-a-24, rgba(240, 68, 56, 0.24)), 0 1px 2px var(--um-gray-900-a-5, rgba(16, 24, 40, 0.05));
 }
-.um textarea {
+.um textarea,
+.um input[type=date],
+.um input[type=datetime],
+.um input[type=datetime-local],
+.um input[type=time] {
   font-family: inherit;
 }
 

@@ -1060,6 +1060,50 @@ class Layouts {
 		return ob_get_clean();
 	}
 
+	public static function range( $args ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'min'   => 0,
+				'max'   => 100,
+				'name'  => '',
+				'value' => 0,
+			)
+		);
+
+		$value = is_array( $args['value'] ) ? $args['value'] : array( $args['value'], $args['value'] );
+
+		$fields = array(
+			'from' => array(
+				'name'  => $args['name'] ? $args['name'] . '_min' : 'min',
+				'min'   => $args['min'],
+				'max'   => $args['max'],
+				'value' => min( $value ),
+			),
+			'to'   => array(
+				'name'  => $args['name'] ? $args['name'] . '_max' : 'max',
+				'min'   => $args['min'],
+				'max'   => $args['max'],
+				'value' => max( $value ),
+			),
+		);
+
+//		$args['classes'][] = 'um-buttons-group';
+//		$args['classes'][] = 'um-buttons-group-' . $args['size'];
+
+		ob_start();
+		?>
+		<div class="range_container">
+			<div class="sliders_control">
+				<?php foreach ( $fields as $field_k => $field ) { ?>
+					<input id="<?php echo esc_attr( $field_k ); ?>Slider" type="range" value="<?php echo esc_attr( $field['value'] ); ?>" min="<?php echo esc_attr( $field['min'] ); ?>" max="<?php echo esc_attr( $field['max'] ); ?>" name="<?php echo esc_attr( $field['name'] ); ?>" />
+				<?php } ?>
+			</div>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
 	public static function buttons_group( $buttons, $args ) {
 		$args = wp_parse_args(
 			$args,

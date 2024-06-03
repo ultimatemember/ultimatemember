@@ -133,22 +133,22 @@ class Directory extends \um\common\Directory {
 
 				$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) : $default_value;
 				?>
+				<label for="<?php echo esc_attr( $filter ); ?>"><?php echo esc_html( stripslashes( $label ) ); ?></label>
 				<input type="text" autocomplete="off" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?>"
-				       placeholder="<?php echo esc_attr( $label ); ?>"
-				       value="<?php echo esc_attr( $filter_from_url ); ?>" class="um-form-field"
-				       aria-label="<?php echo esc_attr( $label ); ?>" />
+						placeholder="<?php echo esc_attr( $label ); ?>"
+						value="<?php echo esc_attr( $filter_from_url ); ?>" class="um-form-field"
+						aria-label="<?php echo esc_attr( $label ); ?>" />
 				<?php
 				break;
 
-			case 'select': {
-
+			case 'select':
 				// getting value from GET line
 				$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? explode( '||', sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ) : array();
 
 				// new
 				global $wpdb;
 
-				if ( $attrs['metakey'] != 'role_select' ) {
+				if ( $attrs['metakey'] !== 'role_select' ) {
 					$values_array = $wpdb->get_col(
 						$wpdb->prepare(
 							"SELECT DISTINCT meta_value
@@ -271,7 +271,7 @@ class Directory extends \um\common\Directory {
 					$label = $attrs['title'];
 				}
 				?>
-
+				<label for="<?php echo esc_attr( $filter ); ?>"><?php echo esc_html( stripslashes( $label ) ); ?></label>
 				<select class="js-choice" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?><?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>[]<?php } ?>"
 				        data-placeholder="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
 				        aria-label="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
@@ -317,22 +317,30 @@ class Directory extends \um\common\Directory {
 					} ?>
 
 				</select>
+				<?php
+				break;
 
-				<?php break;
-			}
-			case 'slider': {
+			case 'slider':
 				$range = $this->slider_filters_range( $filter, $directory_data );
 				if ( $range ) {
-					list( $single_placeholder, $plural_placeholder ) = $this->slider_range_placeholder( $filter, $attrs ); ?>
-
-					<input type="hidden" id="<?php echo $filter; ?>_min" name="<?php echo $filter; ?>[]" class="um_range_min" value="<?php echo ! empty( $default_value ) ? esc_attr( min( $default_value ) ) : '' ?>" />
-					<input type="hidden" id="<?php echo $filter; ?>_max" name="<?php echo $filter; ?>[]" class="um_range_max" value="<?php echo ! empty( $default_value ) ? esc_attr( max( $default_value ) ) : '' ?>" />
-					<div class="um-slider" data-field_name="<?php echo $filter; ?>" data-min="<?php echo esc_attr( $range[0] ); ?>" data-max="<?php echo esc_attr( $range[1] ); ?>"></div>
+					echo wp_kses(
+						UM()->frontend()::layouts()::range(
+							array(
+								'name'  => $filter,
+								'value' => $default_value,
+								'min'   => $range[0],
+								'max'   => $range[1],
+							)
+						),
+						UM()->get_allowed_html( 'templates' )
+					);
+					list( $single_placeholder, $plural_placeholder ) = $this->slider_range_placeholder( $filter, $attrs );
+					?>
 					<div class="um-slider-range" data-placeholder-s="<?php echo esc_attr( $single_placeholder ); ?>" data-placeholder-p="<?php echo esc_attr( $plural_placeholder ); ?>" data-label="<?php echo ( ! empty( $attrs['label'] ) ) ? esc_attr__( stripslashes( $attrs['label'] ), 'ultimate-member' ) : ''; ?>"></div>
-				<?php }
-
+					<?php
+				}
 				break;
-			}
+
 			case 'datepicker':
 				$range = $this->datepicker_filters_range( $filter );
 
@@ -351,13 +359,15 @@ class Directory extends \um\common\Directory {
 				if ( $range ) {
 					list( $min, $max ) = $range;
 					?>
-					<input type="text" id="<?php echo esc_attr( $filter ); ?>_from" name="<?php echo esc_attr( $filter ); ?>_from" class="um-datepicker-filter"
+					<label for="<?php echo esc_attr( $filter ); ?>_from"><?php echo esc_html( sprintf( __( '%s From', 'ultimate-member' ), $label ) ); ?></label>
+					<input type="date" id="<?php echo esc_attr( $filter ); ?>_from" name="<?php echo esc_attr( $filter ); ?>_from" class="um-filter"
 						<?php // translators: %s: Datetime filter label. ?>
 						   placeholder="<?php echo esc_attr( sprintf( __( '%s From', 'ultimate-member' ), $label ) ); ?>"
 						   data-filter-label="<?php echo esc_attr( $label ); ?>"
 						   data-date_min="<?php echo esc_attr( $min ); ?>" data-date_max="<?php echo esc_attr( $max ); ?>"
 						   data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="from" data-value="<?php echo ! empty( $default_value_min ) ? esc_attr( strtotime( $default_value_min ) ) : ''; ?>" />
-					<input type="text" id="<?php echo esc_attr( $filter ); ?>_to" name="<?php echo esc_attr( $filter ); ?>_to" class="um-datepicker-filter"
+					<label for="<?php echo esc_attr( $filter ); ?>_to"><?php echo esc_html( sprintf( __( '%s To', 'ultimate-member' ), $label ) ); ?></label>
+					<input type="date" id="<?php echo esc_attr( $filter ); ?>_to" name="<?php echo esc_attr( $filter ); ?>_to" class="um-filter"
 						<?php // translators: %s: Datetime filter label. ?>
 						   placeholder="<?php echo esc_attr( sprintf( __( '%s To', 'ultimate-member' ), $label ) ); ?>"
 						   data-filter-label="<?php echo esc_attr( $label ); ?>"
@@ -396,14 +406,16 @@ class Directory extends \um\common\Directory {
 
 				if ( $range ) {
 					?>
-					<input type="text" id="<?php echo esc_attr( $filter ); ?>_from" name="<?php echo esc_attr( $filter ); ?>_from" class="um-timepicker-filter"
+					<label for="<?php echo esc_attr( $filter ); ?>_from"><?php echo esc_html( sprintf( __( '%s From', 'ultimate-member' ), $label ) ); ?></label>
+					<input type="time" id="<?php echo esc_attr( $filter ); ?>_from" name="<?php echo esc_attr( $filter ); ?>_from" class="um-filter"
 						<?php // translators: %s: Timepicker filter label. ?>
 						   placeholder="<?php echo esc_attr( sprintf( __( '%s From', 'ultimate-member' ), $label ) ); ?>"
 						   data-filter-label="<?php echo esc_attr( $label ); ?>"
 						   data-min="<?php echo esc_attr( $range[0] ); ?>" data-max="<?php echo esc_attr( $range[1] ); ?>"
 						   data-format="<?php echo esc_attr( $js_format ); ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ); ?>"
 						   data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="from" data-value="<?php echo ! empty( $default_value_min ) ? esc_attr( $default_value_min ) : ''; ?>" />
-					<input type="text" id="<?php echo esc_attr( $filter ); ?>_to" name="<?php echo esc_attr( $filter ); ?>_to" class="um-timepicker-filter"
+					<label for="<?php echo esc_attr( $filter ); ?>_to"><?php echo esc_html( sprintf( __( '%s To', 'ultimate-member' ), $label ) ); ?></label>
+					<input type="time" id="<?php echo esc_attr( $filter ); ?>_to" name="<?php echo esc_attr( $filter ); ?>_to" class="um-filter"
 						<?php // translators: %s: Timepicker filter label. ?>
 						   placeholder="<?php echo esc_attr( sprintf( __( '%s To', 'ultimate-member' ), $label ) ); ?>"
 						   data-filter-label="<?php echo esc_attr( $label ); ?>"
@@ -416,7 +428,6 @@ class Directory extends \um\common\Directory {
 				break;
 		}
 
-		$filter = ob_get_clean();
-		return $filter;
+		return ob_get_clean();
 	}
 }
