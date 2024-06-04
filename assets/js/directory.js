@@ -1253,15 +1253,19 @@ jQuery(document.body).ready( function() {
 	jQuery( document.body ).on('click', '.um-filters-toggle', function(e){
 		e.preventDefault();
 
+		let $toggleButton = jQuery(this);
+
 		if ( umFiltersToggleTimeout ) {
 			return;
 		}
 		umFiltersToggleTimeout = true;
 		let $filtersBar = jQuery(this).parents('.um-directory').find('.um-member-directory-filters-bar');
 		$filtersBar.toggleClass('um-header-row-invisible');
+		$toggleButton.toggleClass('um-filters-shown');
 
 		let toggleCb = function ( force ) {
 			$filtersBar.find('.um-filters-inner').toggleClass('um-filters-inner-visible');
+			//$toggleButton.toggleClass('um-filters-shown');
 			if ( ! force ) {
 				umFiltersToggleTimeout = false;
 			}
@@ -1311,7 +1315,7 @@ jQuery(document.body).ready( function() {
 
 		if ( selected_val.length ) {
 			um_set_url_from_data( directory, 'filter_' + filter_name, selected_val.join( '||' ) );
-			$filtersBar.find('.um-clear-filters-a').removeClass('um-display-none');
+			$filtersBar.find('.um-clear-filters-a').removeClass('um-visibility-hidden');
 			directory.data( 'searched', 1 );
 			directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
 			directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
@@ -1373,7 +1377,7 @@ jQuery(document.body).ready( function() {
 
 		let $filtersBar = directory.find('.um-member-directory-filters-bar');
 		if ( '' !== current_value ) {
-			$filtersBar.find('.um-clear-filters-a').removeClass('um-display-none');
+			$filtersBar.find('.um-clear-filters-a').removeClass('um-visibility-hidden');
 		}
 	});
 
@@ -1419,7 +1423,7 @@ jQuery(document.body).ready( function() {
 
 		let $filtersBar = directory.find('.um-member-directory-filters-bar');
 		if ( '' !== current_value ) {
-			$filtersBar.find('.um-clear-filters-a').removeClass('um-display-none');
+			$filtersBar.find('.um-clear-filters-a').removeClass('um-visibility-hidden');
 		}
 	});
 
@@ -1561,7 +1565,7 @@ jQuery(document.body).ready( function() {
 
 		um_members_show_preloader( directory );
 
-		jQuery(this).addClass( 'um-display-none' );
+		jQuery(this).addClass( 'um-visibility-hidden' );
 
 		let $filtersBar = directory.find('.um-member-directory-filters-bar');
 		$filtersBar.find('.um-search-filter').each( function () {

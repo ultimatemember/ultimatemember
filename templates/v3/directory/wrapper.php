@@ -81,12 +81,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 				<?php
 				if ( $has_filters && $filters_collapsible ) {
+					$filter_toggle_classes = array( 'um-filters-toggle' );
+					if ( $filters_expanded ) {
+						$filter_toggle_classes[] = 'um-filters-shown';
+					}
 					echo wp_kses(
 						UM()->frontend()::layouts()::button(
 							__( 'Filters', 'ultimate-member' ),
 							array(
-								'size'    => 'm',
-								'classes' => array( 'um-filters-toggle' ),
+								'size'          => 'm',
+								'icon'          => '<span class="um-toggle-chevron"></span>',
+								'icon_position' => 'trailing',
+								'classes'       => $filter_toggle_classes,
 							)
 						),
 						UM()->get_allowed_html( 'templates' )
@@ -99,15 +105,48 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php if ( $has_filters ) { ?>
 			<div class="um-member-directory-header-row um-member-directory-filters-bar<?php if ( ! $filters_expanded ) { ?> um-header-row-invisible<?php } ?>">
 				<div class="um-filters-inner<?php if ( $filters_expanded ) { ?> um-filters-inner-visible<?php } ?>">
-					<div class="um-filters-header">
-						<?php esc_html_e( 'Filters', 'ultimate-member' ); ?>
-						<a href="javascript:void(0);" class="um-link um-clear-filters-a <?php if ( $not_filtered ) { ?>um-display-none<?php } ?>" title="<?php esc_attr_e( 'Remove all filters', 'ultimate-member' ); ?>"><?php esc_html_e( 'Clear all', 'ultimate-member' ); ?></a>
-					</div>
+<!--					<div class="um-filters-header">-->
+<!--						--><?php //esc_html_e( 'Filters', 'ultimate-member' ); ?>
+<!--						<a href="javascript:void(0);" class="um-link um-clear-filters-a --><?php //if ( $not_filtered ) { ?><!--um-display-none--><?php //} ?><!--" title="--><?php //esc_attr_e( 'Remove all filters', 'ultimate-member' ); ?><!--">--><?php //esc_html_e( 'Clear all', 'ultimate-member' ); ?><!--</a>-->
+<!--					</div>-->
 					<?php foreach ( $search_filters as $filter => $filter_data ) { ?>
 						<div class="um-search-filter um-<?php echo esc_attr( $filter_data['type'] ); ?>-filter-type" data-filter-name="<?php echo esc_attr( $filter ); ?>">
 							<?php echo wp_kses( $filter_data['content'], UM()->get_allowed_html( 'templates' ) ); ?>
 						</div>
 					<?php } ?>
+					<div class="um-filters-footer">
+						<?php
+						$clear_classes = array( 'um-clear-filters-a' );
+						if ( $not_filtered ) {
+							$clear_classes[] = 'um-visibility-hidden';
+						}
+
+						echo wp_kses(
+							UM()->frontend()::layouts()::button(
+								__( 'Clear all', 'ultimate-member' ),
+								array(
+									'size'    => 'm',
+									'design'  => 'link-gray',
+									'title'   => __( 'Remove all filters', 'ultimate-member' ),
+									'classes' => $clear_classes,
+								)
+							),
+							UM()->get_allowed_html( 'templates' )
+						);
+						echo wp_kses(
+							UM()->frontend()::layouts()::button(
+								__( 'Apply filters', 'ultimate-member' ),
+								array(
+									'size'    => 'm',
+									'design'  => 'primary',
+									'classes' => array( 'um-apply-filters' ),
+								)
+							),
+							UM()->get_allowed_html( 'templates' )
+						);
+						?>
+<!--						<a href="javascript:void(0);" class="um-link um-clear-filters-a --><?php //if ( $not_filtered ) { ?><!--um-display-none--><?php //} ?><!--" title="--><?php //esc_attr_e( 'Remove all filters', 'ultimate-member' ); ?><!--">--><?php //esc_html_e( 'Clear all', 'ultimate-member' ); ?><!--</a>-->
+					</div>
 				</div>
 			</div>
 		<?php } ?>

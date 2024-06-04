@@ -2703,3 +2703,6 @@ input[type=range]:hover, input[type=range]:focus, input[type=range]:focus-visibl
 .um .um-display-none {
   display: none;
 }
+.um .um-visibility-hidden {
+  visibility: hidden;
+}

@@ -648,6 +648,7 @@ class Shortcodes {
 				<label>Icon SVG HTML
 				<input type="text" name="icon" value="" />
 				</label>
+				<p class="description">You can get icons <a href="https://tabler.io/icons" target="_blank">here</a>. Size = 20px. Stroke = 1.5</p>
 				<label>Disabled
 				<input type="checkbox" name="disabled" value="1" />
 				</label>
@@ -726,6 +727,7 @@ class Shortcodes {
 				<label>Icon SVG HTML
 					<input type="text" name="icon" value="" />
 				</label>
+				<p class="description">You can get icons <a href="https://tabler.io/icons" target="_blank">here</a>. Size = 20px. Stroke = 1.5</p>
 				<label>Disabled
 					<input type="checkbox" name="disabled" value="1" />
 				</label>
