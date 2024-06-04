@@ -1994,6 +1994,10 @@ input[type=range] {
   height: 8px;
   transition: all 0.2s ease;
   border-radius: 4px;
+  outline: none;
+}
+input[type=range]:hover, input[type=range]:focus, input[type=range]:focus-visible {
+  outline: none;
 }
 
 .sliders_control:hover input[type=range] {

@@ -59,33 +59,37 @@ class Layouts {
 					$type_html = self::button(
 						$args['button_label'],
 						array(
-							'type'    => 'link',
-							'icon_trailing' => '<span class="um-dropdown-chevron"></span>',
-							'design'  => 'secondary-gray',
-							'size'    => 's',
-							'classes' => array(),
+							'type'          => 'button',
+							'icon'          => '<span class="um-dropdown-chevron"></span>',
+							'icon_position' => 'trailing',
+							'design'        => 'secondary-gray',
+							'size'          => 's',
 						)
 					);
 				} elseif ( 'link' === $args['type'] ) {
-					$type_html = self::button(
+					$type_html = self::link(
 						$args['button_label'],
 						array(
-							'type'    => 'link',
-							'icon_trailing' => '<span class="um-dropdown-chevron"></span>',
-							'design'  => 'link-gray',
-							'size'    => 's',
-							'classes' => array(),
+							'type'          => 'button',
+							'icon'          => '<span class="um-dropdown-chevron"></span>',
+							'icon_position' => 'trailing',
+							'design'        => 'link-gray',
+							'size'          => 's',
 						)
 					);
 				}
 			}
 		}
 
+		$dropdown_classes = array( 'um-dropdown' );
+		if ( empty( $args['header'] ) ) {
+			$dropdown_classes[] = 'um-dropdown-no-header';
+		}
 		ob_start();
 		?>
 		<div class="um-dropdown-wrapper">
 			<div class="<?php echo esc_attr( implode( ' ', $toggle_classes ) ); ?>"><?php echo wp_kses( $type_html, UM()->get_allowed_html( 'templates' ) ); ?></div>
-			<div class="um-dropdown<?php if ( empty( $args['header'] ) ) { ?> um-dropdown-no-header<?php } ?>" data-element=".<?php echo esc_attr( $element ); ?>" data-trigger="<?php echo esc_attr( $trigger ); ?>" data-parent="<?php echo esc_attr( $parent ); ?>" data-width="<?php echo esc_attr( $args['width'] ); ?>">
+			<div class="<?php echo esc_attr( implode( ' ', $dropdown_classes ) ); ?>" data-element=".<?php echo esc_attr( $element ); ?>" data-trigger="<?php echo esc_attr( $trigger ); ?>" data-parent="<?php echo esc_attr( $parent ); ?>" data-width="<?php echo esc_attr( $args['width'] ); ?>">
 				<?php if ( ! empty( $args['header'] ) ) { ?>
 					<div class="um-dropdown-header">
 						<?php echo wp_kses( $args['header'], UM()->get_allowed_html( 'templates' ) ); ?>
@@ -565,6 +569,7 @@ class Layouts {
 				'size'          => 'm',
 				'type'          => 'round',
 				'wrapper_class' => array(),
+				'clickable'     => false,
 			)
 		);
 
@@ -592,7 +597,66 @@ class Layouts {
 		ob_start();
 		?>
 		<div class="<?php echo esc_attr( $wrapper_classes ); ?>" data-user_id="<?php echo esc_attr( $user_id ); ?>">
+			<?php if ( ! empty( $args['clickable'] ) ) { ?>
+				<a href="<?php esc_url( $args['clickable'] ); ?>" >
+			<?php } ?>
 			<?php echo $avatar; ?>
+			<?php if ( ! empty( $args['clickable'] ) ) { ?>
+				</a>
+			<?php } ?>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	public static function small_data( $user_id, $args = array() ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'clickable'   => get_current_user_id() !== $user_id,
+				'supporting'  => '',
+				'classes'     => array(),
+				'avatar_size' => 'l',
+			)
+		);
+
+		ob_start();
+		?>
+		<div class="um-small-data">
+			<?php
+			echo wp_kses(
+				UM()->frontend()::layouts()::single_avatar(
+					$user_id,
+					array( 'size' => $args['avatar_size'] )
+				),
+				UM()->get_allowed_html( 'templates' )
+			);
+			um_fetch_user( $user_id );
+
+			if ( ! empty( $args['clickable'] ) ) {
+				?>
+				<a href="<?php esc_url( $args['clickable'] ); ?>"><?php echo esc_html( um_user( 'display_name' ) ); ?></a>
+				<?php
+			} else {
+				?>
+				<span class="um-user-display-name"><?php echo esc_html( um_user( 'display_name' ) ); ?></span>
+				<?php
+			}
+
+			um_reset_user();
+			if ( ! empty( $args['supporting'] ) ) {
+				?>
+				<span class="um-supporting-text">
+					<?php
+					echo wp_kses(
+						$args['supporting'],
+						UM()->get_allowed_html( 'templates' )
+					);
+					?>
+				</span>
+				<?php
+			}
+			?>
 		</div>
 		<?php
 		return ob_get_clean();
@@ -1088,9 +1152,6 @@ class Layouts {
 			),
 		);
 
-//		$args['classes'][] = 'um-buttons-group';
-//		$args['classes'][] = 'um-buttons-group-' . $args['size'];
-
 		ob_start();
 		?>
 		<div class="range_container">
@@ -1259,28 +1320,5 @@ class Layouts {
 		);
 
 		return apply_filters( 'um_handle_pagination_arguments', $pagination_data );
-	}
-
-	/**
-	 * New menu JS
-	 *
-	 * @param string $element
-	 * @param string $trigger
-	 * @param string $item
-	 * @param string $additional_attributes
-	 * @param string $parent
-	 */
-	public static function dropdown_menu_js( $element, $trigger, $item, $additional_attributes = '', $parent = '' ) {
-		?>
-
-		<div class="um-new-dropdown" data-element="<?php echo $element; ?>" data-trigger="<?php echo $trigger; ?>" data-parent="<?php echo $parent; ?>">
-			<ul>
-				<# _.each( <?php echo $item; ?>.dropdown_actions, function( action, key, list ) { #>
-				<li><a href="<# if ( typeof action.url != 'undefined' ) { #>{{{action.url}}}<# } else { #>javascript:void(0);<# }#>" class="{{{key}}}"<?php echo $additional_attributes ? " $additional_attributes" : '' ?>>{{{action.title}}}</a></li>
-				<# }); #>
-			</ul>
-		</div>
-
-		<?php
 	}
 }

@@ -32,7 +32,6 @@ class Directory extends \um\common\Directory {
 	 * @return string $filter
 	 */
 	public function show_filter( $filter, $directory_data, $default_value = false, $admin = false ) {
-
 		if ( empty( $this->filter_types[ $filter ] ) ) {
 			return '';
 		}
@@ -154,9 +153,9 @@ class Directory extends \um\common\Directory {
 					$values_array = $wpdb->get_col(
 						$wpdb->prepare(
 							"SELECT DISTINCT meta_value
-								FROM $wpdb->usermeta
-								WHERE meta_key = %s AND
-									  meta_value != ''",
+							FROM $wpdb->usermeta
+							WHERE meta_key = %s AND
+								  meta_value != ''",
 							$attrs['metakey']
 						)
 					);
@@ -384,20 +383,18 @@ class Directory extends \um\common\Directory {
 						<?php // translators: %s: Datetime filter label. ?>
 						<label for="<?php echo esc_attr( $filter ); ?>_from"><?php echo esc_html( sprintf( __( '%s From', 'ultimate-member' ), $label ) ); ?></label>
 						<input type="date" id="<?php echo esc_attr( $filter ); ?>_from" name="<?php echo esc_attr( $filter ); ?>_from" class="um-filter"
-							<?php // translators: %s: Datetime filter label. ?>
-							placeholder="<?php echo esc_attr( sprintf( __( '%s From', 'ultimate-member' ), $label ) ); ?>"
 							data-filter-label="<?php echo esc_attr( $label ); ?>"
 							data-date_min="<?php echo esc_attr( $min ); ?>" data-date_max="<?php echo esc_attr( $max ); ?>"
+							min="<?php echo esc_attr( $min ); ?>" max="<?php echo esc_attr( $max ); ?>"
 							data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="from" data-value="<?php echo ! empty( $default_value_min ) ? esc_attr( strtotime( $default_value_min ) ) : ''; ?>" />
 					</div>
 					<div class="um-field-wrapper">
 						<?php // translators: %s: Datetime filter label. ?>
 						<label for="<?php echo esc_attr( $filter ); ?>_to"><?php echo esc_html( sprintf( __( '%s To', 'ultimate-member' ), $label ) ); ?></label>
 						<input type="date" id="<?php echo esc_attr( $filter ); ?>_to" name="<?php echo esc_attr( $filter ); ?>_to" class="um-filter"
-							<?php // translators: %s: Datetime filter label. ?>
-							placeholder="<?php echo esc_attr( sprintf( __( '%s To', 'ultimate-member' ), $label ) ); ?>"
 							data-filter-label="<?php echo esc_attr( $label ); ?>"
 							data-date_min="<?php echo esc_attr( $min ); ?>" data-date_max="<?php echo esc_attr( $max ); ?>"
+							min="<?php echo esc_attr( $min ); ?>" max="<?php echo esc_attr( $max ); ?>"
 							data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="to" data-value="<?php echo ! empty( $default_value_max ) ? esc_attr( strtotime( $default_value_max ) ) : ''; ?>" />
 					</div>
 					<?php
@@ -408,19 +405,6 @@ class Directory extends \um\common\Directory {
 
 				$label = ! empty( $attrs['label'] ) ? $attrs['label'] : $attrs['title'];
 				$label = stripslashes( $label );
-
-				switch ( $attrs['format'] ) {
-					case 'g:i a':
-					default:
-						$js_format = 'h:i a';
-						break;
-					case 'g:i A':
-						$js_format = 'h:i A';
-						break;
-					case 'H:i':
-						$js_format = 'HH:i';
-						break;
-				}
 
 				$default_value_min = '';
 				$default_value_max = '';
@@ -438,10 +422,9 @@ class Directory extends \um\common\Directory {
 						<label for="<?php echo esc_attr( $filter ); ?>_from"><?php echo esc_html( sprintf( __( '%s From', 'ultimate-member' ), $label ) ); ?></label>
 						<input type="time" id="<?php echo esc_attr( $filter ); ?>_from" name="<?php echo esc_attr( $filter ); ?>_from" class="um-filter"
 							<?php // translators: %s: Timepicker filter label. ?>
-							placeholder="<?php echo esc_attr( sprintf( __( '%s From', 'ultimate-member' ), $label ) ); ?>"
 							data-filter-label="<?php echo esc_attr( $label ); ?>"
 							data-min="<?php echo esc_attr( $range[0] ); ?>" data-max="<?php echo esc_attr( $range[1] ); ?>"
-							data-format="<?php echo esc_attr( $js_format ); ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ); ?>"
+							min="<?php echo esc_attr( $range[0] ); ?>" max="<?php echo esc_attr( $range[1] ); ?>"
 							data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="from" data-value="<?php echo ! empty( $default_value_min ) ? esc_attr( $default_value_min ) : ''; ?>" />
 					</div>
 					<div class="um-field-wrapper">
@@ -449,10 +432,9 @@ class Directory extends \um\common\Directory {
 						<label for="<?php echo esc_attr( $filter ); ?>_to"><?php echo esc_html( sprintf( __( '%s To', 'ultimate-member' ), $label ) ); ?></label>
 						<input type="time" id="<?php echo esc_attr( $filter ); ?>_to" name="<?php echo esc_attr( $filter ); ?>_to" class="um-filter"
 							<?php // translators: %s: Timepicker filter label. ?>
-							placeholder="<?php echo esc_attr( sprintf( __( '%s To', 'ultimate-member' ), $label ) ); ?>"
 							data-filter-label="<?php echo esc_attr( $label ); ?>"
 							data-min="<?php echo esc_attr( $range[0] ); ?>" data-max="<?php echo esc_attr( $range[1] ); ?>"
-							data-format="<?php echo esc_attr( $js_format ); ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ); ?>"
+							min="<?php echo esc_attr( $range[0] ); ?>" max="<?php echo esc_attr( $range[1] ); ?>"
 							data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="to" data-value="<?php echo ! empty( $default_value_max ) ? esc_attr( $default_value_max ) : ''; ?>" />
 					</div>
 					<?php

@@ -1574,6 +1574,11 @@ input[type="range"]
   height: $spacing-md
   transition: all .2s ease
   border-radius: $radius-xs
+  outline: none
+  &:hover,
+  &:focus,
+  &:focus-visible
+    outline: none
 
 .sliders_control:hover
   input[type="range"]

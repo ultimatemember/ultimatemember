@@ -41,7 +41,7 @@
           background-color: $gray-700
     &.#{$prefix}dropdown-toggle-button,
     &.#{$prefix}dropdown-toggle-link
-      .#{$prefix}link-button
+      > .#{$prefix}button
         .#{$prefix}dropdown-chevron
           width: $icon-size
           height: $icon-size
@@ -66,7 +66,7 @@
             white-space: nowrap
             overflow: hidden
       &.#{$prefix}dropdown-shown
-        .#{$prefix}link-button
+        > #{$prefix}button
           .#{$prefix}dropdown-chevron
             &:after
               mask-image: url(../../icons/chevron-up.svg)
