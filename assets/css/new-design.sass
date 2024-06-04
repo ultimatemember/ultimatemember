@@ -1524,6 +1524,13 @@
 input[type="range"]#fromSlider::-webkit-slider-thumb
   margin-top: $spacing-md
 
+input[type="range"]#fromSlider::-moz-range-thumb
+  margin-top: $spacing-md
+  padding-top: $spacing-md
+  top: $spacing-md
+  position: relative
+  display: block
+
 input[type="range"]::-webkit-slider-thumb
   -webkit-appearance: none
   pointer-events: all
@@ -1534,21 +1541,34 @@ input[type="range"]::-webkit-slider-thumb
   cursor: pointer
   height: $spacing-3xl
   width: $spacing-3xl
+  +border-box
 
-input[type=range]::-moz-range-thumb
+input[type="range"]::-moz-range-thumb
   -webkit-appearance: none
   pointer-events: all
-  width: 24px
-  height: 24px
-  background-color: #fff
-  border-radius: 50%
-  box-shadow: 0 0 0 1px #C6C6C6
+  box-shadow: $shadow-md
+  border-radius: $radius-xl
+  border: 2px solid $primary-600
+  background: $um-white
   cursor: pointer
+  height: $spacing-3xl
+  width: $spacing-3xl
+  +border-box
+
+//input[type="range"]::-moz-range-thumb
+//  -webkit-appearance: none
+//  pointer-events: all
+//  width: 24px
+//  height: 24px
+//  background-color: #fff
+//  border-radius: 50%
+//  box-shadow: 0 0 0 1px #C6C6C6
+//  cursor: pointer
 
 input[type="range"]::-webkit-slider-thumb:hover
   border: 2px solid $primary-700
 
-input[type=range]::-webkit-slider-thumb:active
+input[type="range"]::-webkit-slider-thumb:active
   border: 2px solid $primary-600
   //box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe
   //-webkit-box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe
@@ -1590,6 +1610,9 @@ input[type="range"]
   height: 0
   z-index: 1
 
+@-moz-document url-prefix()
+  #fromSlider
+    top: $spacing-lg
 
 
 
