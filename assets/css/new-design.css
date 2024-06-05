@@ -2188,19 +2188,19 @@ input[type=range]:hover, input[type=range]:focus, input[type=range]:focus-visibl
 .um .um-small-data .um-avatar {
   grid-row: 1/3;
 }
-.um .um-small-data .um-user-display-name-a {
-  font-size: var(--um-text-font-size-lg, 18px);
-  line-height: var(--um-text-line-height-lg, 28px);
-  font-weight: var(--um-text-font-weight-semibold, 600);
-  color: var(--um-gray-900, #101828);
-}
-.um .um-small-data .um-user-display-name-a:hover {
-  color: var(--um-gray-900, #101828);
-}
 .um .um-small-data .um-user-display-name {
   font-size: var(--um-text-font-size-lg, 18px);
   line-height: var(--um-text-line-height-lg, 28px);
   font-weight: var(--um-text-font-weight-semibold, 600);
+  color: var(--um-gray-900, #101828);
+}
+.um .um-small-data .um-user-display-name.um-link {
+  font-size: var(--um-text-font-size-lg, 18px);
+  line-height: var(--um-text-line-height-lg, 28px);
+  font-weight: var(--um-text-font-weight-semibold, 600);
+  color: var(--um-gray-900, #101828);
+}
+.um .um-small-data .um-user-display-name.um-link:hover {
   color: var(--um-gray-900, #101828);
 }
 .um .um-small-data .um-supporting-text {
@@ -2211,6 +2211,14 @@ input[type=range]:hover, input[type=range]:focus, input[type=range]:focus-visibl
   text-overflow: ellipsis;
   padding: 0;
   margin: 0;
+}
+.um .um-small-data.um-data-no-supporting {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  row-gap: 0;
 }
 
 .um .um-badge {

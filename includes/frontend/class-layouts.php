@@ -641,9 +641,16 @@ class Layouts {
 			'url_title' => $args['url_title'],
 		);
 
+		$wrapper_classes = array( 'um-small-data' );
+		if ( empty( $args['supporting'] ) ) {
+			$wrapper_classes[] = 'um-data-no-supporting';
+		}
+
+		$wrapper_classes = array_merge( $wrapper_classes, $args['classes'] );
+
 		ob_start();
 		?>
-		<div class="um-small-data">
+		<div class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>">
 			<?php
 			echo wp_kses(
 				self::single_avatar(
@@ -656,7 +663,7 @@ class Layouts {
 
 			if ( ! empty( $args['clickable'] ) ) {
 				?>
-				<a class="um-user-display-name-a um-link um-header-link" href="<?php echo esc_url( $args['url'] ); ?>" href="<?php echo esc_attr( $args['url_title'] ); ?>"><?php echo esc_html( um_user( 'display_name' ) ); ?></a>
+				<a class="um-user-display-name um-link um-header-link" href="<?php echo esc_url( $args['url'] ); ?>" href="<?php echo esc_attr( $args['url_title'] ); ?>"><?php echo esc_html( um_user( 'display_name' ) ); ?></a>
 				<?php
 			} else {
 				?>
