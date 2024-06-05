@@ -2178,6 +2178,41 @@ input[type=range]:hover, input[type=range]:focus, input[type=range]:focus-visibl
   margin: 0;
 }
 
+.um .um-small-data {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: auto 1fr;
+  column-gap: 12px;
+  row-gap: 4px;
+}
+.um .um-small-data .um-avatar {
+  grid-row: 1/3;
+}
+.um .um-small-data .um-user-display-name-a {
+  font-size: var(--um-text-font-size-lg, 18px);
+  line-height: var(--um-text-line-height-lg, 28px);
+  font-weight: var(--um-text-font-weight-semibold, 600);
+  color: var(--um-gray-900, #101828);
+}
+.um .um-small-data .um-user-display-name-a:hover {
+  color: var(--um-gray-900, #101828);
+}
+.um .um-small-data .um-user-display-name {
+  font-size: var(--um-text-font-size-lg, 18px);
+  line-height: var(--um-text-line-height-lg, 28px);
+  font-weight: var(--um-text-font-weight-semibold, 600);
+  color: var(--um-gray-900, #101828);
+}
+.um .um-small-data .um-supporting-text {
+  font-size: var(--um-text-font-size-sm, 14px);
+  line-height: var(--um-text-line-height-sm, 20px);
+  font-weight: var(--um-text-font-weight-regular, 400);
+  color: var(--um-gray-600, #475467);
+  text-overflow: ellipsis;
+  padding: 0;
+  margin: 0;
+}
+
 .um .um-badge {
   text-align: center;
   border: 1px solid;

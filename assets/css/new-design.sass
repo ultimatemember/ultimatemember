@@ -1718,6 +1718,30 @@ input[type="range"]
       padding: 0
       margin: 0
 
+.um
+  .#{$prefix}small-data
+    display: grid
+    grid-template-rows: auto 1fr
+    grid-template-columns: auto 1fr
+    column-gap: $spacing-lg
+    row-gap: $spacing-xs
+    .#{$prefix}avatar
+      grid-row: 1 / 3
+    .#{$prefix}user-display-name-a
+      +typography( text, lg, semibold )
+      color: $gray-900
+      &:hover
+        color: $gray-900
+    .#{$prefix}user-display-name
+      +typography( text, lg, semibold )
+      color: $gray-900
+    .#{$prefix}supporting-text
+      +typography( text, sm, regular )
+      color: $gray-600
+      text-overflow: ellipsis
+      padding: 0
+      margin: 0
+
 // Badges
 .um
   .#{$prefix}badge

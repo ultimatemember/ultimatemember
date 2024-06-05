@@ -742,6 +742,15 @@ class Shortcodes {
 				<div id="um-link-preview" style="display: flex; gap:8px;flex-direction:column;align-items:flex-start;justify-content:flex-start;flex-wrap:nowrap;width:100%;"></div>
 			</div>
 
+			<h3>User data</h3>
+			<div style="display:flex;flex-direction:column;justify-content:flex-start;flex-wrap: nowrap;align-items:stretch">
+				<p>Default current user</p>
+				<?php echo UM()->frontend()::layouts()::small_data(); ?>
+				<p>User by ID</p>
+				<?php echo UM()->frontend()::layouts()::small_data( 88 ); ?>
+				<p>User by ID + supporting text</p>
+				<?php echo UM()->frontend()::layouts()::small_data( 88, array( 'supporting' => 'Some text' ) ); ?>
+			</div>
 			<h3>Badges</h3>
 			<div style="display:flex;flex-direction:row;justify-content:flex-start;flex-wrap: wrap;align-items:center">
 			<?php echo UM()->frontend()::layouts()::badge( 'Label', array('size'  => 's' ) ); ?>
@@ -817,6 +826,8 @@ class Shortcodes {
 			<?php echo UM()->frontend()::layouts()::avatar_uploader(); ?>
 
 			<h3>Avatars</h3>
+			<p>Clickable</p>
+			<?php echo UM()->frontend()::layouts()::single_avatar( get_current_user_id(), array( 'size' => 'l', 'clickable' => true ) ); ?>
 			<p>s</p>
 			<?php echo UM()->frontend()::layouts()::single_avatar( get_current_user_id(), array( 'size' => 's' ) ); ?>
 			<?php echo UM()->frontend()::layouts()::single_avatar( get_current_user_id(), array( 'size' => 's', 'type' => 'square' ) ); ?>

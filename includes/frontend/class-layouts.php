@@ -570,8 +570,12 @@ class Layouts {
 				'type'          => 'round',
 				'wrapper_class' => array(),
 				'clickable'     => false,
+				'url'           => um_user_profile_url( $user_id ),
+				'url_title'     => __( 'Visit profile', 'ultimate-member' ),
 			)
 		);
+
+		$args['url'] = empty( $args['url'] ) ? um_user_profile_url( $user_id ) : $args['url'];
 
 		$wrapper_classes = array(
 			'um-avatar',
@@ -598,7 +602,7 @@ class Layouts {
 		?>
 		<div class="<?php echo esc_attr( $wrapper_classes ); ?>" data-user_id="<?php echo esc_attr( $user_id ); ?>">
 			<?php if ( ! empty( $args['clickable'] ) ) { ?>
-				<a href="<?php esc_url( $args['clickable'] ); ?>" >
+				<a href="<?php echo esc_url( $args['url'] ); ?>" title="<?php echo esc_attr( $args['url_title'] ); ?>">
 			<?php } ?>
 			<?php echo $avatar; ?>
 			<?php if ( ! empty( $args['clickable'] ) ) { ?>
@@ -609,15 +613,32 @@ class Layouts {
 		return ob_get_clean();
 	}
 
-	public static function small_data( $user_id, $args = array() ) {
+	public static function small_data( $user_id = null, $args = array() ) {
+		if ( is_null( $user_id ) && is_user_logged_in() ) {
+			$user_id = get_current_user_id();
+		}
+
+		if ( empty( $user_id ) ) {
+			return '';
+		}
+
 		$args = wp_parse_args(
 			$args,
 			array(
+				'avatar_size' => 'l',
 				'clickable'   => get_current_user_id() !== $user_id,
+				'url'         => um_user_profile_url( $user_id ),
+				'url_title'   => __( 'Visit profile', 'ultimate-member' ),
 				'supporting'  => '',
 				'classes'     => array(),
-				'avatar_size' => 'l',
 			)
+		);
+
+		$avatar_args = array(
+			'size'      => $args['avatar_size'],
+			'clickable' => $args['clickable'],
+			'url'       => $args['url'],
+			'url_title' => $args['url_title'],
 		);
 
 		ob_start();
@@ -625,9 +646,9 @@ class Layouts {
 		<div class="um-small-data">
 			<?php
 			echo wp_kses(
-				UM()->frontend()::layouts()::single_avatar(
+				self::single_avatar(
 					$user_id,
-					array( 'size' => $args['avatar_size'] )
+					$avatar_args
 				),
 				UM()->get_allowed_html( 'templates' )
 			);
@@ -635,7 +656,7 @@ class Layouts {
 
 			if ( ! empty( $args['clickable'] ) ) {
 				?>
-				<a href="<?php esc_url( $args['clickable'] ); ?>"><?php echo esc_html( um_user( 'display_name' ) ); ?></a>
+				<a class="um-user-display-name-a um-link um-header-link" href="<?php echo esc_url( $args['url'] ); ?>" href="<?php echo esc_attr( $args['url_title'] ); ?>"><?php echo esc_html( um_user( 'display_name' ) ); ?></a>
 				<?php
 			} else {
 				?>
