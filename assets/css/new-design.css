@@ -2740,12 +2740,33 @@ input[type=range]:hover, input[type=range]:focus, input[type=range]:focus-visibl
   margin: 0;
 }
 
+.um .um-toggle-block {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 0.5s ease-in-out;
+}
+.um .um-toggle-block.um-toggle-block-collapsed {
+  grid-template-rows: 0fr;
+}
+.um .um-toggle-block .um-toggle-block-inner {
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+.um .um-toggle-block .um-toggle-block-inner.um-visible {
+  overflow: visible;
+}
+
 .um .um-full-width {
   width: 100%;
 }
 .um .um-display-none {
   display: none;
 }
-.um .um-visibility-hidden {
+.um .um-hidden {
   visibility: hidden;
+}
+.um .um-visible {
+  visibility: visible;
 }

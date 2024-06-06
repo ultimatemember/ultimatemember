@@ -4,240 +4,37 @@
 @import "colors"
 @import "typography"
 
-.#{$prefix}directory
-  +flex( column, flex-start, stretch, nowrap )
-  width: 100%
-  row-gap: $spacing-lg
-
-  //.#{$prefix}member-directory-header
-  //  +flex( column, flex-start, stretch, nowrap )
-  //  width: 100%
-  //  .#{$prefix}member-directory-header-row
-  //    &.#{$prefix}member-directory-filters-bar
-  //      padding: 0 0 10px 0
-  //    &:not(.#{$prefix}member-directory-filters-bar)
-  //      +flex( row, flex-start, baseline, nowrap )
-  //      margin: 0 0 10px 0
-  //    &.#{$prefix}header-row-invisible
-  //      margin: 0
-  //    &.#{$prefix}member-directory-search-row
-  //      justify-content: flex-end
-  //    .#{$prefix}member-directory-search-line
-  //      +flex( row, flex-start, center, nowrap )
-  //      width: 60%
-  //      label
-  //        flex: 1
-  //        margin: 0 10px 0 0
-  //        min-width: 90px
-  //        max-width: 85%
-  //        span
-  //          display: none
-  //          margin: 0 5px 0 0
-  //        .#{$prefix}search-line
-  //          -webkit-appearance: textfield
-  //          width: 100%
-  //          +border-box
-  //      .#{$prefix}do-search
-  //        min-width: 15%
-  //        width: auto
-  //    .#{$prefix}member-directory-nav-line
-  //      +flex( row, space-between, center, nowrap )
-  //      width: 100%
-  //      .#{$prefix}member-directory-view-type
-  //        font-size: 30px
-  //        line-height: 30px
-  //        margin: 0 10px 0 0
-  //        width: 30px
-  //        .#{$prefix}member-directory-view-type-a
-  //          color: $border
-  //          display: none
-  //        &.#{$prefix}disabled
-  //          cursor: default
-  //          a
-  //            cursor: default
-  //        &:not( .#{$prefix}disabled )
-  //          .#{$prefix}member-directory-view-type-a
-  //            &:hover
-  //              color: $hover
-  //            &:focus
-  //              color: $border
-  //      .#{$prefix}member-directory-sorting
-  //        +flex( row, flex-start, baseline, nowrap )
-  //        flex: 5
-  //        .#{$prefix}member-directory-sorting-a
-  //          +flex( row, flex-start, baseline, nowrap )
-  //          position: relative
-  //          cursor: pointer
-  //          a
-  //            margin: 0 5px 0 0
-  //          i
-  //            &.#{$prefix}faicon-caret-down
-  //              display: inline
-  //            &.#{$prefix}faicon-caret-up
-  //              display: none
-  //          &.#{$prefix}member-directory-sorting-visible
-  //            i
-  //              &.#{$prefix}faicon-caret-down
-  //                display: none
-  //              &.#{$prefix}faicon-caret-up
-  //                display: inline
-  //          .#{$prefix}new-dropdown
-  //            top : 24px
-  //            width: 200px
-  //            left: -12px
-  //            li
-  //              a[data-selected="1"]
-  //                display: none
-  //      .#{$prefix}member-directory-filters
-  //        +flex( row, flex-end, baseline, nowrap )
-  //        flex: 2
-  //        text-align: right
-  //        .#{$prefix}member-directory-filters-a
-  //          +flex( row, flex-start, baseline, nowrap )
-  //          cursor: pointer
-  //          a
-  //            margin: 0 5px 0 0
-  //          i
-  //            &.#{$prefix}faicon-caret-down
-  //              display: inline
-  //            &.#{$prefix}faicon-caret-up
-  //              display: none
-  //          &.#{$prefix}member-directory-filters-visible
-  //            i
-  //              &.#{$prefix}faicon-caret-down
-  //                display: none
-  //              &.#{$prefix}faicon-caret-up
-  //                display: inline
-  //
-  //    .#{$prefix}search
-  //      margin: 0
-  //      width: 100%
-  //      display: grid
-  //
-  //      grid-template-rows: auto 1fr
-  //      grid-template-columns: repeat(3, 1fr)
-  //      grid-gap: 10px
-  //      grid-auto-rows: minmax(max-content, auto)
-  //      -ms-grid-template-rows: auto 1fr
-  //      -ms-grid-template-columns: repeat(3, 1fr)
-  //      -ms-grid-gap: 10px
-  //      -ms-grid-auto-rows: minmax(max-content, auto)
-  //      align-items: center
-  //      .#{$prefix}search-filter
-  //        +flex( row, flex-start, baseline, nowrap )
-  //        width: 100%
-  //        position: relative
-  //
-  //        .select2-container
-  //          float: left
-  //          width: 100% !important
-  //
-  //        .#{$prefix}s1
-  //          width: 100%
-  //        &.#{$prefix}text-filter-type
-  //          input
-  //            width: 100%
-  //        &.#{$prefix}slider-filter-type
-  //          flex-direction: column
-  //          align-items: stretch
-  //          .#{$prefix}slider
-  //            width: calc( 100% - 16px )
-  //            .ui-slider-range.ui-widget-header
-  //              background: #44b0ec
-  //              border: 1px solid #44b0ec !important
-  //              margin-top: -1px
-  //
-  //            &.ui-slider.ui-slider-horizontal
-  //              border: 1px solid #ddd !important
-  //              box-sizing: border-box
-  //              margin: 4px 8px 0 8px
-  //
-  //          .#{$prefix}slider-range
-  //            +flex( row, flex-start, baseline, nowrap )
-  //            margin: 6px 0 0 8px
-  //            font-size: 0.8em
-  //        &.#{$prefix}datepicker-filter-type,
-  //        &.#{$prefix}timepicker-filter-type
-  //          +flex( row, flex-start, baseline, nowrap )
-  //          input
-  //            width: calc( 50% - 5px )
-  //            margin: 0 5px 0 0 !important
-  //            +border-box
-  //            //float: left
-  //            &:nth-child(even)
-  //              margin: 0 0 0 5px !important
-  //      &[style*="overflow: hidden;"]
-  //        .#{$prefix}search-filter
-  //          pointer-events: none
-  //      &.#{$prefix}search-invisible
-  //        display: none
-  //
-  //    .#{$prefix}filtered-line
-  //      +flex( row, flex-start, baseline, wrap )
-  //      //margin: 5px 0 0 0
-  //      margin: 0
-  //      padding: 0
-  //      box-sizing: border-box
-  //      border: none
-  //      .#{$prefix}members-filter-tag
-  //        +flex( row, flex-start, center, nowrap )
-  //        margin: 0 10px 5px 0
-  //        padding: 0 10px
-  //        border-radius: 3px
-  //        cursor: default
-  //        background: #f1f1f1
-  //        font-size: 13px
-  //        &:first-child
-  //          margin-left: 0
-  //        .#{$prefix}members-filter-remove
-  //          float: right
-  //          display: inline-block
-  //          margin-left: 10px
-  //          cursor: pointer
-  //          font-weight: bold
-  //          font-size: 20px
-  //          &:hover
-  //            color: #a00
-  //
-  //      .#{$prefix}clear-filters
-  //        display: none
-  //        a
-  //          padding: 3px 10px
-  //          margin: 0 10px
-
-  .#{$prefix}member-directory-header
+.um
+  &.#{$prefix}directory
     +flex( column, flex-start, stretch, nowrap )
-    row-gap: $spacing-md
-    .#{$prefix}member-directory-header-row
-      +flex( row, flex-start, stretch, nowrap )
-      width: 100%
-    .#{$prefix}member-directory-filters-bar
-      width: 100%
-      padding: 0
-      margin: 0
-      +border-box
-      row-gap: 8px
-      display: grid
-      grid-template-rows: 1fr
-      transition: grid-template-rows 0.5s ease-in-out
-      justify-content: normal
-      &.#{$prefix}header-row-invisible
-        grid-template-rows: 0fr
-      .#{$prefix}filters-inner
-        overflow: hidden
-        margin: 0
+    width: 100%
+    row-gap: $spacing-lg
+    .#{$prefix}member-directory-header
+      +flex( column, flex-start, stretch, nowrap )
+      row-gap: $spacing-md
+      .#{$prefix}member-directory-header-row
         width: 100%
-        display: grid
-        grid-template-rows: auto 1fr
-        grid-template-columns: repeat(2, 1fr)
-        grid-gap: $spacing-md
-        grid-auto-rows: minmax(max-content, auto)
-        -ms-grid-template-rows: auto 1fr
-        -ms-grid-template-columns: repeat(2, 1fr)
-        -ms-grid-gap: $spacing-md
-        -ms-grid-auto-rows: minmax(max-content, auto)
-        &.#{$prefix}filters-inner-visible
-          overflow: visible
+        &:not(.#{$prefix}member-directory-filters-bar)
+          +flex( row, flex-start, stretch, nowrap )
+      .#{$prefix}member-directory-filters-bar
+        padding: 0
+        margin: 0
+        +border-box
+        row-gap: 8px
+        justify-content: normal
+        .#{$prefix}filters-form
+          margin: 0
+          padding: 0
+          width: 100%
+          display: grid
+          grid-template-rows: auto 1fr
+          grid-template-columns: repeat(2, 1fr)
+          grid-gap: $spacing-md
+          grid-auto-rows: minmax(max-content, auto)
+          -ms-grid-template-rows: auto 1fr
+          -ms-grid-template-columns: repeat(2, 1fr)
+          -ms-grid-gap: $spacing-md
+          -ms-grid-auto-rows: minmax(max-content, auto)
         .#{$prefix}filters-header,
         .#{$prefix}filters-footer
           +typography( text, md, semibold )
@@ -247,245 +44,229 @@
           +flex( row, space-between, baseline, nowrap )
           .#{$prefix}clear-filters-a
             padding-left: 0
-      .#{$prefix}search-filter
-        +flex( column, flex-start, stretch, nowrap )
-        row-gap: $spacing-md
-        .choices
-          .choices__list--dropdown,
-          .choices__list[aria-expanded]
-            z-index: 3
-    .#{$prefix}member-directory-header-row-grid
-      width: 100%
-      display: grid
-      grid-auto-columns: minmax(0, 1fr)
-      grid-auto-flow: column
-      .#{$prefix}member-directory-header-left-cell
-        +flex( row, flex-start, baseline, nowrap )
-      .#{$prefix}member-directory-header-right-cell
-        +flex( row, flex-end, baseline, nowrap )
+        .#{$prefix}search-filter
+          +flex( column, flex-start, stretch, nowrap )
+          row-gap: $spacing-md
+          .choices
+            .choices__list--dropdown,
+            .choices__list[aria-expanded]
+              z-index: 3
+      .#{$prefix}member-directory-header-row-grid
+        width: 100%
+        display: grid
+        grid-auto-columns: minmax(0, 1fr)
+        grid-auto-flow: column
+        .#{$prefix}member-directory-header-left-cell
+          +flex( row, flex-start, baseline, nowrap )
+        .#{$prefix}member-directory-header-right-cell
+          +flex( row, flex-end, baseline, nowrap )
 
-    .#{$prefix}member-directory-search-filters
-      +flex( row, flex-start, center, nowrap )
-      column-gap: $spacing-md
-      .#{$prefix}filters-toggle
-        max-width: 200px
-        .#{$prefix}toggle-chevron
-          width: $icon-size
-          height: $icon-size
-          position: relative
-          &:after
-            content: ""
-            position: absolute
-            top: 0
-            right: 0
-            mask-size: contain
-            -webkit-mask-size: contain
-            mask-position: center
-            -webkit-mask-position: center
-            mask-repeat: no-repeat
-            -webkit-mask-repeat: no-repeat
-            mask-image: url(../icons/chevron-down.svg)
-            -webkit-mask-image: url(../icons/chevron-down.svg)
+      .#{$prefix}member-directory-search-filters
+        +flex( row, flex-start, center, nowrap )
+        column-gap: $spacing-md
+        .#{$prefix}filters-toggle
+          max-width: 200px
+          .#{$prefix}toggle-chevron
             width: $icon-size
             height: $icon-size
-            background-color: $gray-700
-            text-indent: 500%
-            white-space: nowrap
-            overflow: hidden
-        &.#{$prefix}filters-shown
-          .#{$prefix}toggle-chevron
+            position: relative
             &:after
-              mask-image: url(../icons/chevron-up.svg)
-              -webkit-mask-image: url(../icons/chevron-up.svg)
-      .um-member-directory-search-wrapper
-        +flex( row, flex-start, center, nowrap )
-        width: 100%
-        column-gap: $spacing-md
-        label.um-member-directory-search-line
-          margin: 0
-          padding: 0
+              content: ""
+              position: absolute
+              top: 0
+              right: 0
+              mask-size: contain
+              -webkit-mask-size: contain
+              mask-position: center
+              -webkit-mask-position: center
+              mask-repeat: no-repeat
+              -webkit-mask-repeat: no-repeat
+              mask-image: url(../icons/chevron-down.svg)
+              -webkit-mask-image: url(../icons/chevron-down.svg)
+              width: $icon-size
+              height: $icon-size
+              background-color: $gray-700
+              text-indent: 500%
+              white-space: nowrap
+              overflow: hidden
+          &.#{$prefix}toggle-button-active
+            .#{$prefix}toggle-chevron
+              &:after
+                mask-image: url(../icons/chevron-up.svg)
+                -webkit-mask-image: url(../icons/chevron-up.svg)
+        .um-member-directory-search-wrapper
+          +flex( row, flex-start, center, nowrap )
           width: 100%
-          & > span
-            display: none
-          .um-search-line
+          column-gap: $spacing-md
+          label.um-member-directory-search-line
+            margin: 0
+            padding: 0
             width: 100%
-        .#{$prefix}do-search
-          max-width: 200px
-    .#{$prefix}member-view-switcher
-      margin-right: $spacing-3xl
-    .#{$prefix}members-counter
-      +typography( text, lg, semibold )
-    .#{$prefix}member-directory-sorting
-      +flex( row, flex-start, baseline, nowrap )
-      column-gap: $spacing-md
-      & > span
-        +typography( text, sm, semibold )
-      .#{$prefix}dropdown-wrapper
-        min-width: auto
-        min-height: auto
-
-  .#{$prefix}members-wrapper
-    &.#{$prefix}members-grid
-      margin: 0
-      width: 100%
-      display: grid
-      grid-template-rows: auto 1fr
-      grid-template-columns: repeat(2, 1fr)
-      grid-gap: 10px
-      grid-auto-rows: minmax(max-content, auto)
-      -ms-grid-template-rows: auto 1fr
-      -ms-grid-template-columns: repeat(2, 1fr)
-      -ms-grid-gap: 10px
-      -ms-grid-auto-rows: minmax(max-content, auto)
-      align-items: stretch
-
-      .#{$prefix}box
-        &.#{$prefix}member
-          +flex( column, flex-start, center, nowrap )
-          &.#{$prefix}member-with-cover
-            padding: 0 0 $spacing-3xl 0
-            .#{$prefix}member-photos
-              position: relative
-              +flex( column, flex-start, center, nowrap )
-              .#{$prefix}avatar
-                position: absolute
-                bottom: -$spacing-7xl
-                z-index: 2
-              .#{$prefix}member-cover
-                z-index: 1
-            .#{$prefix}member-cover
-              +flex( row, center, center, nowrap )
+            & > span
+              display: none
+            .um-search-line
               width: 100%
-              height: auto
-              margin: 0
-              padding: 0
-              img
+          .#{$prefix}do-search
+            max-width: 200px
+      .#{$prefix}member-view-switcher
+        margin-right: $spacing-3xl
+      .#{$prefix}members-counter
+        +typography( text, lg, semibold )
+      .#{$prefix}member-directory-sorting
+        +flex( row, flex-start, baseline, nowrap )
+        column-gap: $spacing-md
+        & > span
+          +typography( text, sm, semibold )
+        .#{$prefix}dropdown-wrapper
+          min-width: auto
+          min-height: auto
+
+    .#{$prefix}members-wrapper
+      &.#{$prefix}members-grid
+        margin: 0
+        width: 100%
+        display: grid
+        grid-template-rows: auto 1fr
+        grid-template-columns: repeat(2, 1fr)
+        grid-gap: 10px
+        grid-auto-rows: minmax(max-content, auto)
+        -ms-grid-template-rows: auto 1fr
+        -ms-grid-template-columns: repeat(2, 1fr)
+        -ms-grid-gap: 10px
+        -ms-grid-auto-rows: minmax(max-content, auto)
+        align-items: stretch
+
+        .#{$prefix}box
+          &.#{$prefix}member
+            +flex( column, flex-start, center, nowrap )
+            &.#{$prefix}member-with-cover
+              padding: 0 0 $spacing-3xl 0
+              .#{$prefix}member-photos
+                position: relative
+                +flex( column, flex-start, center, nowrap )
+                .#{$prefix}avatar
+                  position: absolute
+                  bottom: -$spacing-7xl
+                  z-index: 2
+                .#{$prefix}member-cover
+                  z-index: 1
+              .#{$prefix}member-cover
+                +flex( row, center, center, nowrap )
                 width: 100%
                 height: auto
                 margin: 0
                 padding: 0
-                object-fit: cover
-                &[data-ratio="1.6:1"]
-                  aspect-ratio: 1.6/1
-                &[data-ratio="2.7:1"]
-                  aspect-ratio: 2.7/1
-                &[data-ratio="2.2:1"]
-                  aspect-ratio: 2.2/1
-                &[data-ratio="3.2:1"]
-                  aspect-ratio: 3.2/1
-            .#{$prefix}dropdown-wrapper
-              width: 100%
-              height: calc( $spacing-7xl - $spacing-md )
-              +border-box
-              padding: 0 $spacing-lg
-              .#{$prefix}dropdown-toggle
-                float: right
-                width: 20px
-            .#{$prefix}member-box-main
-              width: 100%
-              padding: 0 $spacing-3xl
-              margin: 0
-              +border-box
-              +flex( column, flex-start, center, wrap )
-              row-gap: $spacing-md
-              .#{$prefix}member-name
-                +typography( header, xs, semibold )
-                color: $gray-900
-                text-align: center
+                img
+                  width: 100%
+                  height: auto
+                  margin: 0
+                  padding: 0
+                  object-fit: cover
+                  &[data-ratio="1.6:1"]
+                    aspect-ratio: 1.6/1
+                  &[data-ratio="2.7:1"]
+                    aspect-ratio: 2.7/1
+                  &[data-ratio="2.2:1"]
+                    aspect-ratio: 2.2/1
+                  &[data-ratio="3.2:1"]
+                    aspect-ratio: 3.2/1
+              .#{$prefix}dropdown-wrapper
                 width: 100%
-                word-break: break-word
-              .#{$prefix}member-tagline
-                +typography( text, md, regular )
-                color: $gray-600
-                word-break: break-word
-              .#{$prefix}member-meta
+                height: calc( $spacing-7xl - $spacing-md )
+                +border-box
+                padding: 0 $spacing-lg
+                .#{$prefix}dropdown-toggle
+                  float: right
+                  width: 20px
+              .#{$prefix}member-box-main
                 width: 100%
-                padding: 0
+                padding: 0 $spacing-3xl
                 margin: 0
                 +border-box
+                +flex( column, flex-start, center, wrap )
                 row-gap: $spacing-md
-                display: grid
-                grid-template-rows: 0fr
-                transition: grid-template-rows 0.5s ease-in-out
-                .#{$prefix}member-meta-inner
+                .#{$prefix}member-name
+                  +typography( header, xs, semibold )
+                  color: $gray-900
+                  text-align: center
                   width: 100%
-                  padding: 0
-                  margin: 0
-                  +flex( column, flex-start, stretch, wrap )
-                  overflow: hidden
-                  row-gap: $spacing-md
-                .#{$prefix}member-metaline
-                  width: 100%
-                  padding: 0
-                  margin: 0
                   word-break: break-word
+                .#{$prefix}member-tagline
                   +typography( text, md, regular )
                   color: $gray-600
-                  strong
-                    +typography( text, md, semibold )
-                    color: $gray-700
-                &.#{$prefix}member-meta-no-animate
-                  grid-template-rows: 1fr
-                & ~ .#{$prefix}member-less
-                  display: none
-                & ~ .#{$prefix}member-more
-                  display: initial
-                &.#{$prefix}member-meta-visible
-                  grid-template-rows: 1fr
-                  & ~ .#{$prefix}member-less
-                    display: initial
-                  & ~ .#{$prefix}member-more
-                    display: none
-          &.#{$prefix}member-no-actions // not logged-in user
-            .#{$prefix}member-photos
-              margin-bottom: calc( $spacing-7xl - $spacing-md )
+                  word-break: break-word
+                .#{$prefix}member-meta
+                  width: 100%
+                  padding: 0
+                  margin: 0
+                  +border-box
+                  row-gap: $spacing-md
+                  .#{$prefix}member-meta-inner
+                    +flex( column, flex-start, stretch, wrap )
+                    row-gap: $spacing-md
+                  .#{$prefix}member-metaline
+                    width: 100%
+                    padding: 0
+                    margin: 0
+                    word-break: break-word
+                    +typography( text, md, regular )
+                    color: $gray-600
+                    strong
+                      +typography( text, md, semibold )
+                      color: $gray-700
+                  &.#{$prefix}member-meta-no-animate
+                    display: grid
+                    grid-template-rows: 1fr
+            &.#{$prefix}member-no-actions // not logged-in user
+              .#{$prefix}member-photos
+                margin-bottom: calc( $spacing-7xl - $spacing-md )
 
-  &.#{$prefix}ui-xs
-    .#{$prefix}member-directory-header
-      .#{$prefix}member-directory-filters-bar
-        grid-template-columns: repeat(1, 1fr)
-        -ms-grid-template-columns: repeat(1, 1fr)
-        .#{$prefix}filters-header,
-        .#{$prefix}filters-footer
-          grid-column: 1 / 2
-    .#{$prefix}members-wrapper
-      &.#{$prefix}members-grid
-        grid-template-columns: repeat(1, 1fr)
-        -ms-grid-template-columns: repeat(1, 1fr)
-  &.#{$prefix}ui-m
-    .#{$prefix}member-directory-header
-      .#{$prefix}member-directory-filters-bar
-        grid-template-columns: repeat(2, 1fr)
-        -ms-grid-template-columns: repeat(2, 1fr)
-        .#{$prefix}filters-header,
-        .#{$prefix}filters-footer
-          grid-column: 1 / 3
-    .#{$prefix}members-wrapper
-      &.#{$prefix}members-grid
-        grid-template-columns: repeat(3, 1fr)
-        -ms-grid-template-columns: repeat(3, 1fr)
-  &.#{$prefix}ui-l
-    .#{$prefix}member-directory-header
-      .#{$prefix}member-directory-filters-bar
-        grid-template-columns: repeat(3, 1fr)
-        -ms-grid-template-columns: repeat(3, 1fr)
-        .#{$prefix}filters-header,
-        .#{$prefix}filters-footer
-          grid-column: 1 / 4
-    .#{$prefix}members-wrapper
-      &.#{$prefix}members-grid
-        grid-template-columns: repeat(3, 1fr)
-        -ms-grid-template-columns: repeat(3, 1fr)
-  &.#{$prefix}ui-xl
-    .#{$prefix}member-directory-header
-      .#{$prefix}member-directory-filters-bar
-        grid-template-columns: repeat(3, 1fr)
-        -ms-grid-template-columns: repeat(3, 1fr)
-        .#{$prefix}filters-header,
-        .#{$prefix}filters-footer
-          grid-column: 1 / 4
-    .#{$prefix}members-wrapper
-      &.#{$prefix}members-grid
-        grid-template-columns: repeat(4, 1fr)
-        -ms-grid-template-columns: repeat(4, 1fr)
+    &.#{$prefix}ui-xs
+      .#{$prefix}member-directory-header
+        .#{$prefix}member-directory-filters-bar
+          grid-template-columns: repeat(1, 1fr)
+          -ms-grid-template-columns: repeat(1, 1fr)
+          .#{$prefix}filters-header,
+          .#{$prefix}filters-footer
+            grid-column: 1 / 2
+      .#{$prefix}members-wrapper
+        &.#{$prefix}members-grid
+          grid-template-columns: repeat(1, 1fr)
+          -ms-grid-template-columns: repeat(1, 1fr)
+    &.#{$prefix}ui-m
+      .#{$prefix}member-directory-header
+        .#{$prefix}member-directory-filters-bar
+          grid-template-columns: repeat(2, 1fr)
+          -ms-grid-template-columns: repeat(2, 1fr)
+          .#{$prefix}filters-header,
+          .#{$prefix}filters-footer
+            grid-column: 1 / 3
+      .#{$prefix}members-wrapper
+        &.#{$prefix}members-grid
+          grid-template-columns: repeat(3, 1fr)
+          -ms-grid-template-columns: repeat(3, 1fr)
+    &.#{$prefix}ui-l
+      .#{$prefix}member-directory-header
+        .#{$prefix}member-directory-filters-bar
+          grid-template-columns: repeat(3, 1fr)
+          -ms-grid-template-columns: repeat(3, 1fr)
+          .#{$prefix}filters-header,
+          .#{$prefix}filters-footer
+            grid-column: 1 / 4
+      .#{$prefix}members-wrapper
+        &.#{$prefix}members-grid
+          grid-template-columns: repeat(3, 1fr)
+          -ms-grid-template-columns: repeat(3, 1fr)
+    &.#{$prefix}ui-xl
+      .#{$prefix}member-directory-header
+        .#{$prefix}member-directory-filters-bar
+          grid-template-columns: repeat(3, 1fr)
+          -ms-grid-template-columns: repeat(3, 1fr)
+          .#{$prefix}filters-header,
+          .#{$prefix}filters-footer
+            grid-column: 1 / 4
+      .#{$prefix}members-wrapper
+        &.#{$prefix}members-grid
+          grid-template-columns: repeat(4, 1fr)
+          -ms-grid-template-columns: repeat(4, 1fr)
 

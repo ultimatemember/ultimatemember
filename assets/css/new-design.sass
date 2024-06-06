@@ -2054,11 +2054,29 @@ input[type="range"]
       padding: 0
       margin: 0
 
+// Toggle sections displayed after button/link click
+.um
+  .#{$prefix}toggle-block
+    display: grid
+    grid-template-rows: 1fr
+    transition: grid-template-rows 0.5s ease-in-out
+    &.#{$prefix}toggle-block-collapsed
+      grid-template-rows: 0fr
+    .#{$prefix}toggle-block-inner
+      overflow: hidden
+      margin: 0
+      padding: 0
+      width: 100%
+      &.#{$prefix}visible
+        overflow: visible
+
 // Misc
 .um
   .#{$prefix}full-width
     width: 100%
   .#{$prefix}display-none
     display: none
-  .#{$prefix}visibility-hidden
+  .#{$prefix}hidden
     visibility: hidden
+  .#{$prefix}visible
+    visibility: visible

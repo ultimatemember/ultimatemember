@@ -315,7 +315,7 @@ function setToggleAccessible(currentTarget) {
 }
 
 const fromSlider = document.querySelector('#fromSlider');
-console.log( fromSlider );
+
 const toSlider = document.querySelector('#toSlider');
 const controlSlider = document.querySelector('.sliders_control');
 // const fromInput = document.querySelector('#fromInput');
@@ -326,7 +326,6 @@ if ( fromSlider && toSlider ) {
 
 	fromSlider.oninput = () => controlFromSlider(fromSlider, toSlider/*, fromInput*/);
 	toSlider.oninput = () => controlToSlider(fromSlider, toSlider/*, toInput*/);
-
 }
 
 if ( controlSlider ) {
@@ -336,6 +335,14 @@ if ( controlSlider ) {
 
 	controlSlider.addEventListener('mouseout', function() {
 		fillSlider(fromSlider, toSlider, '#eaecf0', '#7f56d9', toSlider);
+	});
+
+	const sliderForm = controlSlider.closest('form');
+	sliderForm.addEventListener('reset', function() {
+		setTimeout(function() {
+			// executes after the form has been reset. Reset need 1 second time.
+			fillSlider(fromSlider, toSlider, '#eaecf0', '#7f56d9', toSlider);
+		}, 1);
 	});
 }
 

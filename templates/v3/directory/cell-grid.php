@@ -147,11 +147,11 @@ echo wp_kses(
 
 		if ( $show_block ) {
 			?>
-			<div class="um-member-meta <?php if ( ! $directory_data['userinfo_animate'] ) { echo 'um-member-meta-no-animate'; } ?>">
+			<div class="um-member-meta<?php if ( ! $directory_data['userinfo_animate'] ) { echo ' um-member-meta-no-animate'; } else { echo ' um-toggle-block um-toggle-block-collapsed'; } ?>">
 				<?php
 				if ( $directory_data['userinfo_animate'] ) {
 					?>
-					<div class="um-member-meta-inner">
+					<div class="um-member-meta-inner um-toggle-block-inner">
 					<?php
 				}
 				foreach ( $directory_data['reveal_fields'] as $key ) {
@@ -180,7 +180,7 @@ echo wp_kses(
 			<?php
 			if ( $directory_data['userinfo_animate'] ) {
 				?>
-				<a class="um-link um-meta-toggle" data-toggle-text="<?php esc_attr_e( 'Hide details', 'ultimate-member' ); ?>" href="#"><?php esc_html_e( 'More details', 'ultimate-member' ); ?></a>
+				<a class="um-link um-meta-toggle" data-um-toggle=".um-member-meta" data-toggle-text="<?php esc_attr_e( 'Hide details', 'ultimate-member' ); ?>" href="#"><?php esc_html_e( 'More details', 'ultimate-member' ); ?></a>
 				<?php
 			}
 		}

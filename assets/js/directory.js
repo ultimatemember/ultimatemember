@@ -59,7 +59,7 @@ function um_get_data_for_directory( directory, search_key ) {
 	var hash = um_members_get_hash( directory );
 	var data = {};
 
-	var url_data = um_parse_current_url();
+	var url_data = UM.frontend.url.parseData();
 	jQuery.each( url_data, function( key ) {
 		if ( key.indexOf( '_' + hash ) !== -1 && url_data[ key ] !== '' ) {
 			data[ key.replace( '_' + hash, '' ) ] = url_data[ key ];
@@ -247,7 +247,6 @@ function um_time_convert( time, range ) {
 }
 
 function um_ajax_get_members( directory, args ) {
-
 	/**
 	 * Operates with the next data:
 	 *
@@ -440,27 +439,6 @@ function um_build_template( directory, data ) {
 }
 
 
-
-// function UM_Member_Grid( container ) {
-// 	if ( container.find( '.um-member' ).length ) {
-// 		container.imagesLoaded( function() {
-//
-// 			var masonry_args = wp.hooks.applyFilters( 'um_member_directory_grid_masonry_attrs', {
-// 				itemSelector: '.um-member',
-// 				columnWidth: '.um-member',
-// 				gutter: '.um-gutter-sizer'
-// 			}, container );
-//
-// 			var $grid = container.masonry( masonry_args );
-//
-// 			$grid.on( 'layoutComplete', function( event, laidOutItems ) {
-// 				jQuery( document ).trigger( "um_grid_initialized", [ event, laidOutItems ] );
-// 			});
-// 		});
-// 	}
-// }
-
-
 function um_get_filters_data( directory ) {
 	var filters_data = [];
 
@@ -608,29 +586,6 @@ function um_get_filters_data( directory ) {
 }
 
 
-function um_change_tag( directory ) {
-	var filters_data = um_get_filters_data( directory );
-
-	directory.find('.um-members-filter-tag').remove();
-
-	var filtered_line = directory.find('.um-filtered-line');
-	if ( filtered_line.length ) {
-		var filters_template = wp.template( 'um-members-filtered-line' );
-		filtered_line.prepend( filters_template( {'filters': filters_data} ) );
-
-		if ( directory.find( '.um-members-filter-remove' ).length === 0 ) {
-			directory.find('.um-clear-filters').hide();
-			directory.find('.um-clear-filters').parents('.um-member-directory-header-row').addClass( 'um-header-row-invisible' );
-		} else {
-			directory.find('.um-clear-filters').show();
-			directory.find('.um-clear-filters').parents('.um-member-directory-header-row').removeClass( 'um-header-row-invisible' );
-		}
-	}
-
-
-}
-
-
 
 function um_run_search( directory ) {
 	if ( um_is_directory_busy( directory ) ) {
@@ -728,7 +683,7 @@ function um_slider_filter_init( directory ) {
 					um_set_url_from_data( directory, 'page', '' );
 					um_ajax_get_members( directory );
 
-					um_change_tag( directory );
+					// um_change_tag( directory );
 
 					directory.data( 'searched', 1 );
 					directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
@@ -741,239 +696,12 @@ function um_slider_filter_init( directory ) {
 	});
 }
 
-function um_datepicker_filter_init( directory ) {
-	directory.find('.um-datepicker-filter').each( function() {
-		var elem = jQuery(this);
-
-		var min = new Date( elem.data('date_min')*1000 );
-		var max = new Date( elem.data('date_max')*1000 );
-
-		var $input = elem.pickadate({
-			selectYears: true,
-			min: min,
-			max: max,
-			formatSubmit: 'yyyy/mm/dd',
-			hiddenName: true,
-			onOpen: function() {
-				elem.blur();
-			},
-			onClose: function() {
-				elem.blur();
-			},
-			onSet: function( context ) {
-
-				if ( ! context.select ) {
-					return;
-				}
-
-				var directory = elem.parents('.um-directory');
-
-				if ( um_is_directory_busy( directory ) ) {
-					return;
-				}
-
-				um_members_show_preloader( directory );
-
-				var filter_name = elem.data( 'filter_name' );
-				var range = elem.data( 'range' );
-
-				var current_value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
-				var current_value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
-				if ( typeof current_value_from === "undefined" ) {
-					current_value_from = min / 1000;
-				}
-				if ( typeof current_value_to === "undefined" ) {
-					current_value_to = max / 1000;
-				}
-
-				var select_val = context.select / 1000;
-				var change_val = elem.val();
-
-				if ( range === 'from' ) {
-					current_value_from = select_val;
-				} else if ( range === 'to' ) {
-					current_value_to = select_val;
-				}
-
-				um_set_url_from_data( directory, 'filter_' + filter_name + '_from', current_value_from );
-				um_set_url_from_data( directory, 'filter_' + filter_name + '_to', current_value_to );
-
-				//set 1st page after filtration
-				directory.data( 'page', 1 );
-				um_set_url_from_data( directory, 'page', '' );
-
-				um_ajax_get_members( directory );
-
-				um_change_tag( directory );
-
-				directory.data( 'searched', 1 );
-				directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
-				directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
-			}
-		});
-
-		var $picker = $input.pickadate('picker');
-		var $fname = elem.data('filter_name');
-		var $frange = elem.data('range');
-		var $directory = elem.parents('.um-directory');
-
-		var query_value = um_get_data_for_directory( $directory, 'filter_' + $fname + '_' + $frange );
-		if ( typeof query_value !== 'undefined' ) {
-			$picker.set( 'select', query_value*1000 );
-		}
-
-	});
-}
-
-function um_timepicker_filter_init( directory ) {
-	directory.find('.um-timepicker-filter').each( function() {
-		var elem = jQuery(this);
-		var elemID = elem.attr('id');
-		var elem_filter_name = elem.data('filter_name');
-
-		//using arrays formatted as [HOUR,MINUTE]
-		var min = elem.attr('data-min');
-		var max = elem.attr('data-max');
-
-		var picker_min = min.split(':');
-		var picker_max = max.split(':');
-
-		var $input = elem.pickatime({
-			format:         elem.data('format'),
-			interval:       parseInt( elem.data('intervals') ),
-			min: [picker_min[0],picker_min[1]],
-			max: [picker_max[0],picker_max[1]],
-			formatSubmit:   'HH:i',
-			hiddenName:     true,
-			onOpen:         function() { elem.blur(); },
-			onClose:        function() { elem.blur(); },
-			onSet:          function( context ) {
-
-				if ( ! context.select ) {
-					return;
-				}
-
-				var directory = elem.parents('.um-directory');
-
-				if ( um_is_directory_busy( directory ) ) {
-					return;
-				}
-
-				um_members_show_preloader( directory );
-
-				var filter_name = elem.data( 'filter_name' );
-				var range = elem.data( 'range' );
-
-				var current_value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
-				var current_value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
-				if ( typeof current_value_from === "undefined" ) {
-					current_value_from = min;
-				}
-				if ( typeof current_value_to === "undefined" ) {
-					current_value_to = max;
-				}
-
-				if ( typeof context.select !== 'undefined' ) {
-					var select_val = um_time_convert( context.select, range );
-
-					//var select_val = context.select / 60;
-
-					if ( range === 'from' ) {
-						current_value_from = select_val;
-					} else if ( range === 'to' ) {
-						current_value_to = select_val;
-					}
-				} else {
-					if ( range === 'from' ) {
-						current_value_from = min;
-					} else if ( range === 'to' ) {
-						current_value_to = max;
-					}
-				}
-
-				var time = jQuery( '#' + elemID ).val();
-
-				if ( elem.data('range') === 'from' ) {
-					jQuery( '#' + elem_filter_name + '_to' ).pickatime('picker').set('min', time);
-				} else {
-					jQuery( '#' + elem_filter_name + '_from').pickatime('picker').set('max', time);
-				}
-
-				um_set_url_from_data( directory, 'filter_' + filter_name + '_from', current_value_from );
-				um_set_url_from_data( directory, 'filter_' + filter_name + '_to', current_value_to );
-
-				//set 1st page after filtration
-				directory.data( 'page', 1 );
-				um_set_url_from_data( directory, 'page', '' );
-
-				um_ajax_get_members( directory );
-
-				um_change_tag( directory );
-
-				directory.data( 'searched', 1 );
-				directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
-				directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
-
-			}
-		});
-
-		// first loading timepicker select
-		var $picker = $input.pickatime('picker');
-		var $fname = elem.data('filter_name');
-		var $frange = elem.data('range');
-		var $directory = elem.parents('.um-directory');
-
-		var query_value = um_get_data_for_directory( $directory, 'filter_' + $fname + '_' + $frange );
-		if ( typeof query_value !== 'undefined' ) {
-			var arr = query_value.split(':');
-			$picker.set( 'select', arr[0]*60 + arr[1]*1 );
-		}
-
-	});
-}
 
 jQuery(document.body).ready( function() {
-
-
-	// jQuery( '.um-directory .um-search-filter select' ).each( function() {
-	// 	if ( jQuery(this).find('option:not(:disabled)').length === 1 ) {
-	// 		jQuery(this).prop('disabled', true);
-	// 	}
-	//
-	// 	var obj = jQuery(this);
-	// 	obj.select2('destroy').select2({
-	// 		dropdownParent: obj.parent()
-	// 	});
-	// });
 
 	/**
 	 * Change View Type Handlers
 	 */
-
-
-	//UI for change view type button
-	// jQuery( document.body ).on( 'mouseover', '.um-directory .um-member-directory-view-type', function() {
-	// 	if ( jQuery(this).hasClass('um-disabled') ) {
-	// 		return;
-	// 	}
-	//
-	// 	var $obj = jQuery(this).find('.um-member-directory-view-type-a:visible');
-	//
-	// 	$obj.hide();
-	//
-	// 	if ( $obj.next().length ) {
-	// 		$obj.next().show().tipsy('show');
-	// 	} else {
-	// 		jQuery(this).find( '.um-member-directory-view-type-a:first' ).show().tipsy('show');
-	// 	}
-	// }).on( 'mouseout', '.um-directory .um-member-directory-view-type', function() {
-	// 	if ( jQuery(this).hasClass('um-disabled') ) {
-	// 		return;
-	// 	}
-	//
-	// 	jQuery(this).find('.um-member-directory-view-type-a').hide().tipsy('hide');
-	// 	jQuery(this).find('.um-member-directory-view-type-a[data-type="' + jQuery(this).parents( '.um-directory' ).data('view_type') + '"]').show();
-	// });
 
 	//change layout handler
 	jQuery( document.body ).on( 'click', '.um-directory .um-member-view-switcher:not(.um-disabled) .um-button-in-group:not(.current)', function() {
@@ -1023,15 +751,14 @@ jQuery(document.body).ready( function() {
 	 * General Search
 	 */
 
-
-	//searching
+	// Searching
 	jQuery( document.body ).on( 'click', '.um-directory .um-do-search', function() {
 		var directory = jQuery(this).parents('.um-directory');
 		um_run_search( directory );
 	});
 
 
-	//make search on Enter click
+	// Make search on Enter click
 	jQuery( document.body ).on( 'keypress', '.um-directory .um-search-line', function(e) {
 		if ( e.which === 13 ) {
 			var directory = jQuery(this).parents('.um-directory');
@@ -1039,12 +766,9 @@ jQuery(document.body).ready( function() {
 		}
 	});
 
-
 	/**
 	 * END: General Search
 	 */
-
-
 
 	/**
 	 * Sorting
@@ -1086,8 +810,6 @@ jQuery(document.body).ready( function() {
 	/**
 	 * END: Sorting
 	 */
-
-
 
 	/**
 	 * Pagination
@@ -1202,87 +924,6 @@ jQuery(document.body).ready( function() {
 	 */
 
 
-	/**
-	 * Profile Cards actions
-	 */
-
-	// jQuery( document.body ).on('click', '.um-directory .um-members.um-members-list .um-member-more a', function(e){
-	// 	e.preventDefault();
-	//
-	// 	var block = jQuery(this).parents('.um-member');
-	//
-	// 	block.find('.um-member-more').hide();
-	// 	block.find('.um-member-meta-main').slideDown();
-	// 	block.find('.um-member-less').fadeIn();
-	//
-	// 	return false;
-	// });
-	//
-	// jQuery( document.body ).on('click', '.um-directory .um-members.um-members-list .um-member-less a', function(e){
-	// 	e.preventDefault();
-	//
-	// 	var block = jQuery(this).parents('.um-member');
-	//
-	// 	block.find('.um-member-less').hide();
-	// 	block.find('.um-member-meta-main').slideUp();
-	// 	block.find('.um-member-more').fadeIn();
-	//
-	// 	return false;
-	// });
-
-	jQuery( document.body ).on('click', '.um-member .um-meta-toggle', function(e){
-		e.preventDefault();
-
-		let block = jQuery(this).parents('.um-member');
-		let textAfter  = jQuery(this).data('toggle-text');
-		let textBefore = jQuery(this).text();
-
-		block.find('.um-member-meta').toggleClass('um-member-meta-visible');
-		jQuery(this).data('toggle-text',textBefore).text(textAfter);
-
-		return false;
-	});
-
-	/**
-	 * END: Profile Cards actions
-	 */
-
-
-	// filters controls
-	let umFiltersToggleTimeout = false;
-	jQuery( document.body ).on('click', '.um-filters-toggle', function(e){
-		e.preventDefault();
-
-		let $toggleButton = jQuery(this);
-
-		if ( umFiltersToggleTimeout ) {
-			return;
-		}
-		umFiltersToggleTimeout = true;
-		let $filtersBar = jQuery(this).parents('.um-directory').find('.um-member-directory-filters-bar');
-		$filtersBar.toggleClass('um-header-row-invisible');
-		$toggleButton.toggleClass('um-filters-shown');
-
-		let toggleCb = function ( force ) {
-			$filtersBar.find('.um-filters-inner').toggleClass('um-filters-inner-visible');
-			//$toggleButton.toggleClass('um-filters-shown');
-			if ( ! force ) {
-				umFiltersToggleTimeout = false;
-			}
-		};
-
-		if ( $filtersBar.hasClass('um-header-row-invisible') ) {
-			toggleCb( true );
-			setTimeout( function (){
-				umFiltersToggleTimeout = false;
-			}, 500 );
-		} else {
-			setTimeout( toggleCb, 500);
-		}
-
-		return false;
-	});
-
 	// Filtration process
 	jQuery( document.body ).on( 'change', '.um-directory .um-search-filter select', function() {
 		let selected_val_raw = jQuery(this).val();
@@ -1315,7 +956,7 @@ jQuery(document.body).ready( function() {
 
 		if ( selected_val.length ) {
 			um_set_url_from_data( directory, 'filter_' + filter_name, selected_val.join( '||' ) );
-			$filtersBar.find('.um-clear-filters-a').removeClass('um-visibility-hidden');
+			$filtersBar.find('.um-clear-filters-a').removeClass('um-hidden');
 			directory.data( 'searched', 1 );
 			directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
 			directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
@@ -1366,18 +1007,15 @@ jQuery(document.body).ready( function() {
 
 		um_ajax_get_members( directory );
 
-		um_change_tag( directory );
+//		um_change_tag( directory );
 
 		directory.data( 'searched', 1 );
 		directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
 		directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
 
-		console.log(current_value);
-		console.log(typeof current_value);
-
 		let $filtersBar = directory.find('.um-member-directory-filters-bar');
 		if ( '' !== current_value ) {
-			$filtersBar.find('.um-clear-filters-a').removeClass('um-visibility-hidden');
+			$filtersBar.find('.um-clear-filters-a').removeClass('um-hidden');
 		}
 	});
 
@@ -1415,7 +1053,7 @@ jQuery(document.body).ready( function() {
 
 		um_ajax_get_members( directory );
 
-		um_change_tag( directory );
+//		um_change_tag( directory );
 
 		directory.data( 'searched', 1 );
 		directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
@@ -1423,139 +1061,16 @@ jQuery(document.body).ready( function() {
 
 		let $filtersBar = directory.find('.um-member-directory-filters-bar');
 		if ( '' !== current_value ) {
-			$filtersBar.find('.um-clear-filters-a').removeClass('um-visibility-hidden');
+			$filtersBar.find('.um-clear-filters-a').removeClass('um-hidden');
 		}
 	});
 
-
-
-	// jQuery( document.body ).on( 'click', '.um-directory .um-members-filter-remove', function() {
-	// 	var directory = jQuery(this).parents('.um-directory');
-	//
-	// 	if ( um_is_directory_busy(directory) || ! directory ) {
-	// 		return;
-	// 	}
-	//
-	// 	um_members_show_preloader( directory );
-	//
-	// 	var removeItem = jQuery(this).data('value');
-	// 	var filter_name = jQuery(this).data('name');
-	//
-	// 	var type = jQuery(this).data('type');
-	// 	if ( type === 'text' ) {
-	// 		um_set_url_from_data( directory, 'filter_' + filter_name,'' );
-	//
-	// 		jQuery( '.um-search-filter input[name="' + filter_name + '"]' ).val('');
-	//
-	// 	} else if ( type === 'select' ) {
-	//
-	// 		var current_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
-	// 		if ( typeof current_value == 'undefined' ) {
-	// 			current_value = [];
-	// 		} else {
-	// 			current_value = UM.common.form.unsanitizeValue( current_value );
-	// 			current_value = current_value.split( '||' );
-	// 		}
-	//
-	// 		if ( -1 !== jQuery.inArray( removeItem.toString(), current_value ) ) {
-	// 			current_value = jQuery.grep( current_value, function( value ) {
-	// 				return value !== removeItem.toString();
-	// 			});
-	// 		}
-	//
-	// 		if ( ! current_value.length ) {
-	// 			current_value = '';
-	// 		}
-	//
-	// 		um_set_url_from_data( directory, 'filter_' + filter_name, current_value );
-	//
-	// 		var select = jQuery( '.um-search-filter select[name="' + filter_name + '"]' );
-	// 		select.find('option[value="' + removeItem + '"]').prop('disabled', false).show();
-	//
-	// 		//disable options and disable select if all options are disabled
-	// 		if ( select.find('option:not(:disabled)').length > 1 ) {
-	// 			select.prop('disabled', false);
-	// 		}
-	//
-	// 		// select.select2('destroy').select2({
-	// 		// 	dropdownParent: select.parent()
-	// 		// });
-	//
-	// 		if ( directory.find( '.um-search-filter select[data-um-parent="' +  filter_name + '"]' ).length > 0 ) {
-	// 			select.trigger('change');
-	// 		}
-	//
-	// 	} else if ( type === 'slider' ) {
-	// 		um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
-	// 		um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
-	//
-	//
-	// 		var $slider = jQuery( '.um-search-filter #' + filter_name + '_min' ).siblings('.um-slider');
-	// 		var options = $slider.slider( 'option' );
-	//
-	// 		$slider.slider( 'values', [ options.min, options.max ] );
-	//
-	// 		jQuery( '.um-search-filter #' + filter_name + '_min' ).val('');
-	// 		jQuery( '.um-search-filter #' + filter_name + '_max' ).val('');
-	//
-	// 		um_set_range_label( $slider );
-	// 	} else if ( type === 'datepicker' ) {
-	// 		um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
-	// 		um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
-	//
-	// 		jQuery( '.um-search-filter #' + filter_name + '_from' ).val('');
-	// 		jQuery( '.um-search-filter #' + filter_name + '_to' ).val('');
-	// 	} else if ( type === 'timepicker' ) {
-	// 		um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
-	// 		um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
-	//
-	// 		jQuery( '.um-search-filter #' + filter_name + '_from' ).val('');
-	// 		jQuery( '.um-search-filter #' + filter_name + '_to' ).val('');
-	// 	} else {
-	// 		wp.hooks.doAction( 'um_member_directory_filter_remove', type, directory, filter_name, removeItem );
-	// 	}
-	//
-	//
-	// 	//set 1st page after filtration
-	// 	directory.data( 'page', 1 );
-	// 	um_set_url_from_data( directory, 'page', '' );
-	//
-	// 	jQuery(this).tipsy('hide');
-	// 	jQuery(this).parents('.um-members-filter-tag').remove();
-	//
-	// 	if ( directory.find( '.um-members-filter-remove' ).length === 0 ) {
-	// 		directory.find('.um-clear-filters').hide();
-	// 	} else {
-	// 		directory.find('.um-clear-filters').show();
-	// 	}
-	//
-	// 	var ignore_after_search = false;
-	// 	ignore_after_search = wp.hooks.applyFilters( 'um_member_directory_ignore_after_search', ignore_after_search, directory );
-	//
-	// 	if ( ! ignore_after_search ) {
-	// 		var show_after_search = directory.data('must-search');
-	// 		if ( show_after_search === 1 ) {
-	// 			var search = um_get_search( directory );
-	// 			if ( directory.find( '.um-members-filter-remove' ).length === 0 && ! search ) {
-	// 				directory.data( 'searched', 0 );
-	// 				directory.find('.um-members-grid, .um-members-list, .um-members-intro').remove();
-	// 				directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', true );
-	// 				directory.find( '.um-member-directory-view-type' ).addClass( 'um-disabled' );
-	//
-	// 				wp.hooks.doAction( 'um_member_directory_clear_not_searched', directory );
-	//
-	// 				um_members_hide_preloader( directory );
-	// 				return;
-	// 			}
-	// 		}
-	// 	}
-	//
-	// 	directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
-	// 	directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
-	//
-	// 	um_ajax_get_members( directory );
-	// });
-
+	jQuery( document.body ).on( 'reset', '.um-directory .um-filters-form', function() {
+		var directory = jQuery(this).parents('.um-directory');
+		if ( um_is_directory_busy( directory ) ) {
+			return;
+		}
+	});
 
 	jQuery( document.body ).on( 'click', '.um-directory .um-clear-filters-a', function() {
 		var directory = jQuery(this).parents('.um-directory');
@@ -1565,7 +1080,7 @@ jQuery(document.body).ready( function() {
 
 		um_members_show_preloader( directory );
 
-		jQuery(this).addClass( 'um-visibility-hidden' );
+		jQuery(this).addClass( 'um-hidden' );
 
 		let $filtersBar = directory.find('.um-member-directory-filters-bar');
 		$filtersBar.find('.um-search-filter').each( function () {
@@ -1644,82 +1159,82 @@ jQuery(document.body).ready( function() {
 			}
 		});
 
-		directory.find( '.um-members-filter-remove' ).each( function() {
-			var removeItem = jQuery(this).data('value');
-			var filter_name = jQuery(this).data('name');
-
-			var type = jQuery(this).data('type');
-			if ( type === 'text' ) {
-				um_set_url_from_data( directory, 'filter_' + filter_name,'' );
-
-				jQuery( '.um-search-filter input[name="' + filter_name + '"]' ).val('');
-
-			} else if ( type === 'select' ) {
-
-				var current_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
-				if ( typeof current_value == 'undefined' ) {
-					current_value = [];
-				} else {
-					current_value = UM.common.form.unsanitizeValue( current_value );
-					current_value = current_value.split( '||' );
-				}
-
-				if ( -1 !== jQuery.inArray( removeItem.toString(), current_value ) ) {
-					current_value = jQuery.grep( current_value, function( value ) {
-						return value !== removeItem.toString();
-					});
-				}
-
-				if ( ! current_value.length ) {
-					current_value = '';
-				}
-
-				um_set_url_from_data( directory, 'filter_' + filter_name, current_value );
-
-				var select = jQuery( '.um-search-filter select[name="' + filter_name + '"]' );
-				select.find('option[value="' + removeItem + '"]').prop('disabled', false).show();
-
-				//disable options and disable select if all options are disabled
-				if ( select.find('option:not(:disabled)').length > 1 ) {
-					select.prop('disabled', false);
-				}
-				// select.select2('destroy').select2({
-				// 	dropdownParent: select.parent()
-				// });
-
-				if ( directory.find( '.um-search-filter select[data-um-parent="' +  filter_name + '"]' ).length > 0 ) {
-					select.trigger('change');
-				}
-
-			} else if ( type === 'slider' ) {
-				um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
-				um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
-
-				var $slider = jQuery( '.um-search-filter #' + filter_name + '_min' ).siblings('.um-slider');
-				var options = $slider.slider( 'option' );
-
-				$slider.slider( 'values', [ options.min, options.max ] );
-
-				jQuery( '.um-search-filter #' + filter_name + '_min' ).val('');
-				jQuery( '.um-search-filter #' + filter_name + '_max' ).val('');
-
-				um_set_range_label( $slider );
-			} else if ( type === 'datepicker' ) {
-				um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
-				um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
-
-				jQuery( '.um-search-filter #' + filter_name + '_from' ).val('');
-				jQuery( '.um-search-filter #' + filter_name + '_to' ).val('');
-			} else if ( type === 'timepicker' ) {
-				um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
-				um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
-
-				jQuery( '.um-search-filter #' + filter_name + '_from' ).val('');
-				jQuery( '.um-search-filter #' + filter_name + '_to' ).val('');
-			} else {
-				wp.hooks.doAction( 'um_member_directory_clear_filters', type, directory, filter_name, removeItem );
-			}
-		});
+		// directory.find( '.um-members-filter-remove' ).each( function() {
+		// 	var removeItem = jQuery(this).data('value');
+		// 	var filter_name = jQuery(this).data('name');
+		//
+		// 	var type = jQuery(this).data('type');
+		// 	if ( type === 'text' ) {
+		// 		um_set_url_from_data( directory, 'filter_' + filter_name,'' );
+		//
+		// 		jQuery( '.um-search-filter input[name="' + filter_name + '"]' ).val('');
+		//
+		// 	} else if ( type === 'select' ) {
+		//
+		// 		var current_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
+		// 		if ( typeof current_value == 'undefined' ) {
+		// 			current_value = [];
+		// 		} else {
+		// 			current_value = UM.common.form.unsanitizeValue( current_value );
+		// 			current_value = current_value.split( '||' );
+		// 		}
+		//
+		// 		if ( -1 !== jQuery.inArray( removeItem.toString(), current_value ) ) {
+		// 			current_value = jQuery.grep( current_value, function( value ) {
+		// 				return value !== removeItem.toString();
+		// 			});
+		// 		}
+		//
+		// 		if ( ! current_value.length ) {
+		// 			current_value = '';
+		// 		}
+		//
+		// 		um_set_url_from_data( directory, 'filter_' + filter_name, current_value );
+		//
+		// 		var select = jQuery( '.um-search-filter select[name="' + filter_name + '"]' );
+		// 		select.find('option[value="' + removeItem + '"]').prop('disabled', false).show();
+		//
+		// 		//disable options and disable select if all options are disabled
+		// 		if ( select.find('option:not(:disabled)').length > 1 ) {
+		// 			select.prop('disabled', false);
+		// 		}
+		// 		// select.select2('destroy').select2({
+		// 		// 	dropdownParent: select.parent()
+		// 		// });
+		//
+		// 		if ( directory.find( '.um-search-filter select[data-um-parent="' +  filter_name + '"]' ).length > 0 ) {
+		// 			select.trigger('change');
+		// 		}
+		//
+		// 	} else if ( type === 'slider' ) {
+		// 		um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
+		// 		um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
+		//
+		// 		var $slider = jQuery( '.um-search-filter #' + filter_name + '_min' ).siblings('.um-slider');
+		// 		var options = $slider.slider( 'option' );
+		//
+		// 		$slider.slider( 'values', [ options.min, options.max ] );
+		//
+		// 		jQuery( '.um-search-filter #' + filter_name + '_min' ).val('');
+		// 		jQuery( '.um-search-filter #' + filter_name + '_max' ).val('');
+		//
+		// 		um_set_range_label( $slider );
+		// 	} else if ( type === 'datepicker' ) {
+		// 		um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
+		// 		um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
+		//
+		// 		jQuery( '.um-search-filter #' + filter_name + '_from' ).val('');
+		// 		jQuery( '.um-search-filter #' + filter_name + '_to' ).val('');
+		// 	} else if ( type === 'timepicker' ) {
+		// 		um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
+		// 		um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
+		//
+		// 		jQuery( '.um-search-filter #' + filter_name + '_from' ).val('');
+		// 		jQuery( '.um-search-filter #' + filter_name + '_to' ).val('');
+		// 	} else {
+		// 		wp.hooks.doAction( 'um_member_directory_clear_filters', type, directory, filter_name, removeItem );
+		// 	}
+		// });
 
 		//set 1st page after filtration
 		directory.data( 'page', 1 );
@@ -1776,23 +1291,14 @@ jQuery(document.body).ready( function() {
 		let directoryObj = new UM.frontend.directory( hash );
 		UM.frontend.directories.list[ hash ] = directoryObj;
 
-		// slideup/slidedown animation fix for grid filters bar
-		// if ( directory.find('.um-search').length ) {
-		// 	if ( ! directory.find('.um-search').is(':visible') ) {
-		// 		directory.find('.um-search').css({
-		// 			display: "grid"
-		// 		}).slideUp( 1 );
-		// 	}
-		// }
-
 		//slider filter
 		um_slider_filter_init( directory );
 
 		//datepicker filter
-		um_datepicker_filter_init( directory );
+//		um_datepicker_filter_init( directory );
 
 		//timepicker filter
-		um_timepicker_filter_init( directory );
+//		um_timepicker_filter_init( directory );
 
 		wp.hooks.doAction( 'um_member_directory_on_init', directory, hash );
 
@@ -1815,7 +1321,7 @@ jQuery(document.body).ready( function() {
 		if ( ! prevent_default ) {
 			um_members_show_preloader( directory );
 			um_ajax_get_members( directory, {first_load:true} );
-			um_change_tag( directory );
+//			um_change_tag( directory );
 		}
 	});
 
@@ -1954,9 +1460,24 @@ jQuery(document.body).ready( function() {
 
 			if ( ! prevent_default ) {
 				um_ajax_get_members( directory );
-				um_change_tag( directory );
+//				um_change_tag( directory );
 			}
 		});
 	});
 
+});
+
+
+// Set toggle block based on parent.
+wp.hooks.addFilter( 'um_toggle_block', 'um_member_directory', function( $toggleBlock, $toggleButton ) {
+	if ( $toggleButton.hasClass('um-meta-toggle') ) {
+		$toggleBlock = $toggleButton.parents('.um-member').find( $toggleButton.data('um-toggle') );
+		let textAfter  = $toggleButton.data('toggle-text');
+		let textBefore = $toggleButton.text();
+		$toggleButton.data('toggle-text',textBefore).text(textAfter);
+	} else if ( $toggleButton.hasClass('um-filters-toggle') ) {
+		$toggleBlock = $toggleButton.parents('.um-directory').find( $toggleButton.data('um-toggle') );
+	}
+
+	return $toggleBlock;
 });

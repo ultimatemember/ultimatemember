@@ -626,6 +626,7 @@ class Layouts {
 			$args,
 			array(
 				'avatar_size' => 'l',
+				'header'      => '',
 				'clickable'   => get_current_user_id() !== $user_id,
 				'url'         => um_user_profile_url( $user_id ),
 				'url_title'   => __( 'Visit profile', 'ultimate-member' ),
@@ -661,13 +662,21 @@ class Layouts {
 			);
 			um_fetch_user( $user_id );
 
-			if ( ! empty( $args['clickable'] ) ) {
-				?>
-				<a class="um-user-display-name um-link um-header-link" href="<?php echo esc_url( $args['url'] ); ?>" href="<?php echo esc_attr( $args['url_title'] ); ?>"><?php echo esc_html( um_user( 'display_name' ) ); ?></a>
-				<?php
+			if ( empty( $args['header'] ) ) {
+				if ( ! empty( $args['clickable'] ) ) {
+					?>
+					<a class="um-user-display-name um-link um-header-link" href="<?php echo esc_url( $args['url'] ); ?>" href="<?php echo esc_attr( $args['url_title'] ); ?>"><?php echo esc_html( um_user( 'display_name' ) ); ?></a>
+					<?php
+				} else {
+					?>
+					<span class="um-user-display-name"><?php echo esc_html( um_user( 'display_name' ) ); ?></span>
+					<?php
+				}
 			} else {
 				?>
-				<span class="um-user-display-name"><?php echo esc_html( um_user( 'display_name' ) ); ?></span>
+				<span class="um-data-header">
+					<?php echo wp_kses( $args['header'], UM()->get_allowed_html( 'templates' ) ); ?>
+				</span>
 				<?php
 			}
 

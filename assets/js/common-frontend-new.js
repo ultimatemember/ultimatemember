@@ -102,6 +102,43 @@ UM.frontend = {
 			jQuery('.um-dropdown').um_dropdownMenu();
 		}
 	},
+	toggleElements: {
+		init: function () {
+			jQuery( document.body ).on('click', '[data-um-toggle]', function(e){
+				e.preventDefault();
+
+				let $toggleButton = jQuery(this);
+
+				if ( $toggleButton.data('um-toggle-ignore') ) {
+					return;
+				}
+				$toggleButton.data('um-toggle-ignore', true);
+
+				let $toggleBlock = jQuery( $toggleButton.data('um-toggle') );
+				$toggleBlock = wp.hooks.applyFilters( 'um_toggle_block', $toggleBlock, $toggleButton );
+				$toggleBlock.toggleClass('um-toggle-block-collapsed');
+				$toggleButton.toggleClass('um-toggle-button-active');
+
+				let toggleCb = function ( force ) {
+					$toggleBlock.find('.um-toggle-block-inner').toggleClass('um-visible');
+					if ( ! force ) {
+						$toggleButton.data('um-toggle-ignore', false);
+					}
+				};
+
+				if ( $toggleBlock.hasClass('um-toggle-block-collapsed') ) {
+					toggleCb( true );
+					setTimeout( function (){
+						$toggleButton.data('um-toggle-ignore', false);
+					}, 500 );
+				} else {
+					setTimeout( toggleCb, 500);
+				}
+
+				return false;
+			});
+		}
+	},
 	responsive: {
 		resolutions: { //important order by ASC
 			xs: 320,
@@ -152,6 +189,19 @@ UM.frontend = {
 				});
 			});
 		}
+	},
+	url: {
+		parseData: function () {
+			let data = {};
+
+			let query = window.location.search.substring(1);
+			let attrs = query.split( '&' );
+			jQuery.each( attrs, function( i ) {
+				let attr = attrs[ i ].split( '=' );
+				data[ attr[0] ] = attr[1];
+			});
+			return data;
+		}
 	}
 }
 
@@ -177,6 +227,7 @@ wp.hooks.addAction( 'um_member_directory_build_template', 'um_common_frontend', 
 
 jQuery(document).ready(function($) {
 	UM.frontend.dropdown.init();
+	UM.frontend.toggleElements.init();
 
 	$( window ).on( 'resize', function() {
 		UM.frontend.responsive.setClass();
