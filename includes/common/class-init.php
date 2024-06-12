@@ -21,11 +21,12 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 		 */
 		public function includes() {
 			$this->cpt()->hooks();
+			$this->rewrite();
 			$this->screen();
 			$this->secure()->hooks();
 			$this->site_health();
 			$this->theme()->hooks();
-      $this->users()->hooks();
+			$this->users()->hooks();
 		}
 
 		/**
@@ -50,6 +51,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\filesystem'] = new Filesystem();
 			}
 			return UM()->classes['um\common\filesystem'];
+		}
+
+		/**
+		 * @since 2.9.0
+		 *
+		 * @return Rewrite
+		 */
+		public function rewrite() {
+			if ( empty( UM()->classes['um\common\rewrite'] ) ) {
+				UM()->classes['um\common\rewrite'] = new Rewrite();
+			}
+			return UM()->classes['um\common\rewrite'];
 		}
 
 		/**

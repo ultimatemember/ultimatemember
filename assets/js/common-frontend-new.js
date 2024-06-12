@@ -139,6 +139,13 @@ UM.frontend = {
 			});
 		}
 	},
+	progressBar: {
+		init: function () {
+			jQuery( '.um-progress-bar' ).each( function() {
+				jQuery(this).find('.um-progress-bar-inner').css('width', jQuery(this).data('value') + '%');
+			});
+		}
+	},
 	responsive: {
 		resolutions: { //important order by ASC
 			xs: 320,
@@ -190,6 +197,7 @@ UM.frontend = {
 			});
 		}
 	},
+	uploaders: [],
 	url: {
 		parseData: function () {
 			let data = {};
@@ -228,6 +236,7 @@ wp.hooks.addAction( 'um_member_directory_build_template', 'um_common_frontend', 
 jQuery(document).ready(function($) {
 	UM.frontend.dropdown.init();
 	UM.frontend.toggleElements.init();
+	UM.frontend.progressBar.init();
 
 	$( window ).on( 'resize', function() {
 		UM.frontend.responsive.setClass();

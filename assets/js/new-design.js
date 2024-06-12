@@ -498,7 +498,148 @@ jQuery(document).ready( function($) {
 
 	// test case
 	$("#um-indeterminate").prop("indeterminate", true);
+
+
+	jQuery('.um-uploader-button').each( function() {
+		let $button = jQuery(this);
+
+		let $uploader = $button.parents( '.um-uploader' );
+		let $fileList  = $uploader.find( '.um-uploader-filelist' );
+		let $errorList = $uploader.find( '.um-uploader-errorlist' );
+
+		let mimeTypes= $button.data('mime-types');
+		let multiple = $button.data('multiple');
+		let handler  = $button.data('handler');
+		let nonce    = $button.data('nonce');
+
+		let uploaderData = {
+			browse_button: $button.get( 0 ), // you can pass in id...
+			url: wp.ajax.settings.url + '?action=um_upload&handler=' + handler + '&nonce=' + nonce,
+			chunk_size: '1024kb',
+			max_retries: 1,
+			multi_selection: multiple,
+			filters: {
+				max_file_size: '10mb',
+				mime_types: mimeTypes,
+				prevent_duplicates: true
+			},
+			init: {
+				Error: function ( up, err ) {
+					$errorList.html( '<p>' + err.message + '</p>' );
+				},
+				FileFiltered: function ( up, file ) {
+
+					// $errorlist.empty();
+					//
+					// if ( ! up.getOption( 'multi_selection' ) ) {
+					// 	$filelist.find( '.jb-uploader-file' ).each( function ( u, item ) {
+					// 		up.removeFile( item.id );
+					// 	} );
+					// }
+				},
+				FilesAdded: function ( up, files ) {
+					$button.parents('.um-uploader').find('.um-uploader-overflow').removeClass('um-display-none');
+					up.start();
+				},
+				FilesRemoved: function ( up, files ) {
+					$.each( files, function ( i, file ) {
+						jQuery( '#' + file.id ).remove();
+					} );
+
+					if ( ! $fileList.find( '.um-uploader-file' ).length ) {
+						$errorList.empty();
+					}
+				},
+				FileUploaded: function ( up, file, result ) {
+					if ( result.status === 200 && result.response ) {
+						let response = JSON.parse( result.response );
+						if ( ! response ) {
+							$errorList.append( '<p>' + wp.i18n.__( 'Error! Wrong file upload server response.', 'ultimate-member' ) + '</p>' );
+						} else if ( response.info && response.OK === 0 ) {
+							console.error( response.info );
+						} else if ( response.data ) {
+							let actionInFilter = wp.hooks.applyFilters( 'um_uploader_file_uploaded', null, $button, up, file, response );
+							if ( null === actionInFilter ) {
+								// some default process.
+							}
+						}
+
+					} else {
+						// translators: %s is the error status code.
+						console.error( wp.i18n.__( 'File was not loaded, Status Code %s', 'ultimate-member' ), [ result.status ] );
+					}
+				},
+				PostInit: function ( up ) {
+					// $filelist.find( '.jb-uploader-file' ).remove();
+				},
+				UploadProgress: function ( up, file ) {
+					// jQuery( '#' + file.id ).find( 'b' ).html( '<span>' + file.percent + '%</span>' );
+				},
+				UploadComplete: function ( up, files ) {
+					console.log( files );
+					jQuery.each( files, function(i) {
+						console.log( i );
+						console.log( files[i] );
+						up.removeFile( files[i].id );
+					});
+					$button.parents('.um-uploader').find('.um-uploader-overflow').addClass('um-display-none');
+				}
+			}
+		};
+
+		uploaderData = wp.hooks.applyFilters( 'um_uploader_data', uploaderData, handler, $button );
+		if ( ! uploaderData.url ) {
+			return;
+		}
+
+		let uploaderObj = new plupload.Uploader( uploaderData );
+		UM.frontend.uploaders[ uploaderObj['id'] ] = uploaderObj;
+		uploaderObj.init();
+	});
 });
+
+wp.hooks.addFilter( 'um_uploader_data', 'ultimate-member', function( uploaderData, handler, $button ) {
+	if ( 'upload-avatar' !== handler ) {
+		return uploaderData;
+	}
+
+	let userID = $button.data('user_id');
+	uploaderData.url += '&user_id=' + userID;
+
+	return uploaderData;
+});
+
+wp.hooks.addFilter( 'um_uploader_file_uploaded', 'ultimate-member', function( preventDefault, $button, up, file, response ) {
+	let handler  = $button.data('handler');
+	if ( 'upload-avatar' !== handler ) {
+		return preventDefault;
+	}
+
+	let userID = $button.data('user_id');
+	let nonceApply = $button.data('apply_nonce');
+	let nonceDecline = $button.data('decline_nonce');
+
+	let settings = {
+		// These are the defaults.
+		classes:  'um-profile-photo-modal',
+		duration: 400, // ms
+		footer:   '',
+		header:   wp.i18n.__( 'Change your profile photo', 'ultimate-member' ),
+		size:     'normal', // small, normal, large
+		content:  '<div class="um-profile-photo-crop-wrapper" data-crop="square" data-ratio="1" data-min_width="256" data-min_height="256"><img src="' + response.data.url + '" class="um-profile-photo-crop fusion-lazyload-ignore" alt="" /></div><div class="um-modal-buttons-wrapper"><button type="button" class="um-button um-button-primary um-button-size-m um-apply-avatar-crop" data-user_id="' + userID + '" data-nonce="' + nonceApply + '">' + wp.i18n.__( 'Apply', 'ultimate-member' ) + '</button><button type="button" class="um-button um-button-size-m um-modal-avatar-decline" data-user_id="' + userID + '" data-nonce="' + nonceDecline + '">' + wp.i18n.__( 'Cancel', 'ultimate-member' ) + '</button><span class="um-ajax-spinner-svg um-ajax-spinner-s"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">' +
+			'<path d="M45 24C45 26.7578 44.4568 29.4885 43.4015 32.0364C42.3461 34.5842 40.7993 36.8992 38.8492 38.8492C36.8992 40.7993 34.5842 42.3461 32.0364 43.4015C29.4885 44.4568 26.7578 45 24 45C21.2422 45 18.5115 44.4568 15.9636 43.4015C13.4158 42.3461 11.1008 40.7993 9.15075 38.8492C7.20072 36.8992 5.65388 34.5842 4.59853 32.0363C3.54318 29.4885 3 26.7578 3 24C3 21.2422 3.54318 18.5115 4.59853 15.9636C5.65388 13.4158 7.20073 11.1008 9.15076 9.15075C11.1008 7.20072 13.4158 5.65387 15.9637 4.59853C18.5115 3.54318 21.2423 3 24 3C26.7578 3 29.4885 3.54318 32.0364 4.59853C34.5842 5.65388 36.8992 7.20073 38.8493 9.15077C40.7993 11.1008 42.3461 13.4158 43.4015 15.9637C44.4568 18.5115 45 21.2423 45 24L45 24Z" stroke="var(--um-gray-100,#f2f4f7)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>' +
+			'<path d="M24 3C26.7578 3 29.4885 3.54318 32.0364 4.59853C34.5842 5.65388 36.8992 7.20073 38.8492 9.15076C40.7993 11.1008 42.3461 13.4158 43.4015 15.9637C44.4568 18.5115 45 21.2422 45 24" stroke="var(--um-primary-600-bg,#7f56d9)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>' +
+			'</svg></span></div>',
+		source: $button
+	};
+
+	UM.profile.avatarModal = UM.modal.addModal( settings, null );
+
+	return true;
+});
+
+
+
 
 // // Pass reference
 // const choices = new Choices('[data-trigger]');

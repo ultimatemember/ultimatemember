@@ -25,6 +25,7 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 				$this->dev();
 				$this->directory();
 			}
+			$this->files();
 			$this->forms();
 			$this->pages();
 			$this->secure();
@@ -83,6 +84,18 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 				UM()->classes['um\ajax\forms'] = new Forms();
 			}
 			return UM()->classes['um\ajax\forms'];
+		}
+
+		/**
+		 * @since 2.9.0
+		 *
+		 * @return Files
+		 */
+		public function files() {
+			if ( empty( UM()->classes['um\ajax\files'] ) ) {
+				UM()->classes['um\ajax\files'] = new Files();
+			}
+			return UM()->classes['um\ajax\files'];
 		}
 
 		/**

@@ -715,33 +715,6 @@ class Layouts {
 			return '';
 		}
 
-//		$items = array();
-//		if ( UM()->common()->users()->has_photo( $user_id, 'profile_photo' ) ) {
-//			$items[] = '<a href="#" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . esc_html__( 'Change photo', 'ultimate-member' ) . '</a>';
-//			$items[] = '<a href="#" class="um-reset-profile-photo" data-user_id="' . esc_attr( $user_id ) . '" data-nonce="' . wp_create_nonce( 'um_remove_profile_photo' ) . '">' . esc_html__( 'Remove photo', 'ultimate-member' ) . '</a>';
-//		} else {
-//			$items[] = '<a href="#" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . esc_html__( 'Set photo', 'ultimate-member' ) . '</a>';
-//		}
-
-		/**
-		 * Filters action links in dropdown menu for profile photo.
-		 *
-		 * @since 1.3.x
-		 * @since 2.8.4 added $user_id attribute
-		 * @hook um_user_photo_menu_edit
-		 *
-		 * @param {array} $items   Action links in dropdown for profile photo.
-		 * @param {int}   $user_id User ID. Since 2.8.4.
-		 *
-		 * @example <caption>Make any custom action after delete cover photo.</caption>
-		 * function my_custom_user_photo_menu_edit( $items, $user_id ) {
-		 *     $items[] = '<a href="#" class="um-custom-action" data-user_id="' . esc_attr( $user_id ) . '">' . esc_html__( 'Custom action', 'ultimate-member' ) . '</a>';
-		 *     return $items;
-		 * }
-		 * add_filter( 'um_user_photo_menu_edit', 'my_custom_user_photo_menu_edit', 10, 2 );
-		 */
-//		$items = apply_filters( 'um_user_photo_menu_edit', $items, $user_id );
-
 		$uploader_overflow = '';
 		if ( ! UM()->options()->get( 'disable_profile_photo_upload' ) ) {
 			$title = __( 'Set photo', 'ultimate-member' );
@@ -1357,5 +1330,218 @@ class Layouts {
 		);
 
 		return apply_filters( 'um_handle_pagination_arguments', $pagination_data );
+	}
+
+	public static function get_formatted_mime_types( $filter ) {
+		$types         = array();
+		$allowed_mimes = get_allowed_mime_types();
+		foreach ( $allowed_mimes as $extensions => $mime_type ) {
+			$types[] = explode( '|', $extensions );
+		}
+		$allowed_mimes = array_merge( ...$types );
+		$all_mimes     = wp_get_ext_types();
+
+		$mime_types = array();
+		foreach ( $all_mimes as $type => $extensions ) {
+			$extensions = ! empty( $filter ) ? array_intersect( $allowed_mimes, $extensions, $filter ) : array_intersect( $allowed_mimes, $extensions );
+			if ( empty( $extensions ) ) {
+				continue;
+			}
+
+			switch ( $type ) {
+				default:
+					$title_type = __( 'Other', 'ultimate-member' );
+					break;
+				case 'image':
+					$title_type = __( 'Image', 'ultimate-member' );
+					break;
+				case 'audio':
+					$title_type = __( 'Audio', 'ultimate-member' );
+					break;
+				case 'video':
+					$title_type = __( 'Video', 'ultimate-member' );
+					break;
+				case 'document':
+					$title_type = __( 'Document', 'ultimate-member' );
+					break;
+				case 'spreadsheet':
+					$title_type = __( 'Spreadsheet', 'ultimate-member' );
+					break;
+				case 'interactive':
+					$title_type = __( 'Interactive', 'ultimate-member' );
+					break;
+				case 'text':
+					$title_type = __( 'Text', 'ultimate-member' );
+					break;
+				case 'archive':
+					$title_type = __( 'Archive', 'ultimate-member' );
+					break;
+				case 'code':
+					$title_type = __( 'Code', 'ultimate-member' );
+					break;
+			}
+
+			$mime_types[] = array(
+				'title'      => $title_type,
+				'extensions' => implode( ',', $extensions ),
+			);
+		}
+
+		return $mime_types;
+	}
+
+	public static function progress_bar( $args = array() ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'id'    => '',
+				'label' => 'none', // right, bottom
+				'value' => 0, // 0 - 100% absint
+			)
+		);
+
+		// translators: %d is the progress percents.
+		$title = sprintf( __( '%d%%', 'ultimate-member' ), $args['value'] );
+
+		ob_start();
+		?>
+		<div id="<?php echo esc_attr( $args['id'] ); ?>" class="um-progress-bar" data-value="<?php echo esc_attr( $args['value'] ); ?>" title="<?php echo esc_attr( $title ); ?>">
+			<div class="um-progress-bar-inner" style="width:<?php echo esc_attr( $args['value'] ); ?>%;" title="<?php echo esc_attr( $title ); ?>"></div>
+		</div>
+		<?php
+		$progress_bar = ob_get_clean();
+
+		if ( 'none' === $args['label'] ) {
+			$content = $progress_bar;
+		} else {
+			ob_start();
+			?>
+			<div class="um-progress-bar-wrapper um-progress-bar-label-<?php echo esc_attr( $args['label'] ); ?>">
+				<?php echo wp_kses( $progress_bar, UM()->get_allowed_html( 'templates' ) ); ?>
+				<div class="um-progress-bar-label"><?php echo esc_html( $title ); ?></div>
+			</div>
+			<?php
+			$content = ob_get_clean();
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Uploader layout.
+	 *
+	 * @return string
+	 */
+	public static function uploader( $args ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'id'         => '',
+				'async'      => true,
+				'field_id'   => '',
+				'name'       => '',
+				'handler'    => '',
+				'multiple'   => true,
+				'nonce'      => '',
+				'types'      => array(), // if not specified then get all allowed
+				'button'     => array(),
+				'dropzone'   => true,
+				'files_list' => true,
+			)
+		);
+
+		if ( empty( $args['handler'] ) ) {
+			return esc_html__( 'Unknown handler.', 'ultimate-member' );
+		}
+
+		if ( empty( $args['nonce'] ) ) {
+			$args['nonce'] = wp_create_nonce( 'um_upload_' . $args['handler'] );
+		}
+
+		if ( true !== $args['async'] && empty( $args['field_id'] ) ) {
+			return esc_html__( 'Unknown field id.', 'ultimate-member' );
+		}
+
+		if ( empty( $args['id'] ) ) {
+			$args['id'] = wp_unique_id( $args['id'] );
+		}
+
+		$id = $args['id'];
+
+		$mime_types = self::get_formatted_mime_types( $args['types'] );
+		$mime_types = wp_json_encode( $mime_types );
+
+		if ( empty( $mime_types ) ) {
+			return '';
+		}
+
+		ob_start();
+		?>
+		<div class="um-uploader">
+			<?php
+			$button_content = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-upload" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+  <path d="M7 9l5 -5l5 5" />
+  <path d="M12 4l0 12" />
+</svg>';
+			$button_args    = array(
+				'type'          => 'button',
+				'icon_position' => 'content',
+				'design'        => 'secondary-color',
+				'size'          => 's',
+				'classes'       => array( 'um-uploader-button' ),
+				'data'          => array(
+					'handler'    => $args['handler'],
+					'mime-types' => $mime_types,
+					'nonce'      => $args['nonce'],
+					'multiple'   => $args['multiple'],
+				),
+			);
+			if ( ! empty( $args['button'] ) && is_array( $args['button'] ) ) {
+				$button_content = array_key_exists( 'content', $args['button'] ) ? $args['button']['content'] : $button_content;
+				unset( $args['button']['content'] );
+
+				$args['button']['classes'] = ! empty( $args['button']['classes'] ) ? array_merge( $args['button']['classes'], $button_args['classes'] ) : $button_args['classes'];
+				$args['button']['data']    = ! empty( $args['button']['data'] ) ? array_merge( $args['button']['data'], $button_args['data'] ) : $button_args['data'];
+				$button_args               = $args['button'];
+			}
+
+			if ( ! empty( $args['dropzone'] ) ) {
+				?>
+				<div id="um-<?php echo esc_attr( $id ); ?>-uploader-dropzone" class="um-uploader-dropzone">
+					<?php echo wp_kses( self::button( $button_content, $button_args ), UM()->get_allowed_html( 'templates' ) ); ?>
+				</div>
+				<?php
+			} else {
+				echo wp_kses( self::button( $button_content, $button_args ), UM()->get_allowed_html( 'templates' ) );
+			}
+
+			if ( ! empty( $args['files_list'] ) ) {
+				?>
+				<div id="um-<?php echo esc_attr( $id ); ?>-uploader-filelist" class="um-uploader-filelist um-display-none"></div>
+				<?php
+			}
+			?>
+
+			<div class="um-uploaded-content-wrapper">
+
+			</div>
+			<div id="um-<?php echo esc_attr( $id ); ?>-uploader-overflow" class="um-uploader-overflow um-display-none">
+				<?php echo wp_kses( self::ajax_loader(), UM()->get_allowed_html( 'templates' ) ); ?>
+			</div>
+			<div id="um-<?php echo esc_attr( $id ); ?>-uploader-errorlist" class="um-uploader-errorlist um-display-none"></div>
+
+			<?php
+			if ( true !== $args['async'] ) {
+				$name      = $args['multiple'] ? $args['name'] . '[]' : $args['name'];
+				$hash_name = $args['multiple'] ? $args['name'] . '_hash[]' : $args['name'] . '_hash';
+				?>
+				<input type="hidden" class="um-uploaded-value" id="<?php echo esc_attr( $id ); ?>" data-field="<?php echo esc_attr( $args['field_id'] ); ?>" name="<?php echo esc_attr( $name ); ?>" value="" />
+				<input type="hidden" class="um-uploaded-value-hash" id="<?php echo esc_attr( $args['field_id'] ); ?>_hash" name="<?php echo esc_attr( $hash_name ); ?>" value="" />
+			<?php } ?>
+		</div>
+		<?php
+		return ob_get_clean();
 	}
 }

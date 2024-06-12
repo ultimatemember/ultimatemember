@@ -2070,6 +2070,50 @@ input[type="range"]
       &.#{$prefix}visible
         overflow: visible
 
+
+.um
+  .#{$prefix}uploader
+    +flex( column, flex-start, start, nowrap )
+    //.#{$prefix}uploaded-content-wrapper
+    //  +flex( column, flex-start, stretch, nowrap )
+    //  .#{$prefix}uploader-overflow
+    //    position: relative
+    //    .#{$prefix}ajax-spinner-svg
+    //      position: absolute
+    //      top: calc( 50% - 24px )
+    //      left: calc( 50% - 24px )
+    //  .#{$prefix}uploader-filelist
+    //.#{$prefix}uploader-errorlist
+
+// Progress bar
+.um
+  .#{$prefix}progress-bar
+    height: $spacing-md
+    border-radius: $radius-xs
+    overflow: hidden
+    background: $gray-200
+    .#{$prefix}progress-bar-inner
+      border-radius: $radius-xs
+      height: 100%
+      background: $primary-600
+  .#{$prefix}progress-bar-wrapper
+    .#{$prefix}progress-bar-label
+      +typography( text, sm, medium )
+      color: $gray-700
+    &.#{$prefix}progress-bar-label-bottom
+      +flex( column, flex-start, end, nowrap )
+      row-gap: $spacing-md
+      .#{$prefix}progress-bar
+        width: 100%
+    &.#{$prefix}progress-bar-label-right
+      +flex( row, space-between, center, nowrap )
+      column-gap: $spacing-lg
+      .#{$prefix}progress-bar-label
+        max-width: 50px
+      .#{$prefix}progress-bar
+        width: calc( 100% - 50px )
+
+
 // Misc
 .um
   .#{$prefix}full-width

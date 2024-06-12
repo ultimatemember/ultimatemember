@@ -20,10 +20,17 @@ class Users {
 	 * Hooks function.
 	 */
 	public function hooks() {
+		add_action( 'wp_logout', array( &$this, 'flush_cookies' ) );
+		add_action( 'wp_login', array( &$this, 'flush_cookies' ) );
+
 		$this->add_filters();
 
 		add_filter( 'avatar_defaults', array( $this, 'remove_filters' ) );
 		add_filter( 'default_avatar_select', array( $this, 'add_filters_cb' ) );
+	}
+
+	public function flush_cookies() {
+		UM()->setcookie( 'um-temp-uploads', false );
 	}
 
 	public function add_filters() {

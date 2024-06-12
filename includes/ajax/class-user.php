@@ -321,7 +321,7 @@ class User {
 					wp_send_json(
 						array(
 							'OK'   => 0,
-							'info' => __( 'Wrong filetype.', 'jobboardwp' ),
+							'info' => __( 'Wrong filetype.', 'ultimate-member' ),
 						)
 					);
 				}
@@ -353,7 +353,7 @@ class User {
 					wp_send_json(
 						array(
 							'OK'   => 0,
-							'info' => __( 'Failed to open input stream.', 'jobboardwp' ),
+							'info' => __( 'Failed to open input stream.', 'ultimate-member' ),
 						)
 					);
 				}
@@ -367,7 +367,7 @@ class User {
 				wp_send_json(
 					array(
 						'OK'   => 0,
-						'info' => __( 'Failed to open output stream.', 'jobboardwp' ),
+						'info' => __( 'Failed to open output stream.', 'ultimate-member' ),
 					)
 				);
 
@@ -401,79 +401,12 @@ class User {
 				wp_send_json(
 					array(
 						'OK'   => 1,
-						'info' => __( 'Upload successful.', 'jobboardwp' ),
+						'info' => __( 'Upload successful.', 'ultimate-member' ),
 					)
 				);
 			}
 		}
 
 		wp_send_json_success( $files );
-
-		$ret['error'] = null;
-		$ret = array();
-
-		$id = sanitize_text_field( $_POST['key'] );
-		$timestamp = absint( $_POST['timestamp'] );
-		$nonce = sanitize_text_field( $_POST['_wpnonce'] );
-		$user_id = empty( $_POST['user_id'] ) ? get_current_user_id() : absint( $_POST['user_id'] );
-
-		UM()->fields()->set_id = absint( $_POST['set_id'] );
-		UM()->fields()->set_mode = sanitize_key( $_POST['set_mode'] );
-
-		if ( UM()->fields()->set_mode != 'register' && ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-			$ret['error'] = __( 'You have no permission to edit this user', 'ultimate-member' );
-			wp_send_json_error( $ret );
-		}
-
-		/**
-		 * UM hook
-		 *
-		 * @type filter
-		 * @title um_image_upload_nonce
-		 * @description Change Image Upload nonce
-		 * @input_vars
-		 * [{"var":"$nonce","type":"bool","desc":"Nonce"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage
-		 * <?php add_filter( 'um_image_upload_nonce', 'function_name', 10, 1 ); ?>
-		 * @example
-		 * <?php
-		 * add_filter( 'um_image_upload_nonce', 'my_image_upload_nonce', 10, 1 );
-		 * function my_image_upload_nonce( $nonce ) {
-		 *     // your code here
-		 *     return $nonce;
-		 * }
-		 * ?>
-		 */
-		$um_image_upload_nonce = apply_filters( 'um_image_upload_nonce', true );
-
-		if ( $um_image_upload_nonce ) {
-			if ( ! wp_verify_nonce( $nonce, "um_upload_nonce-{$timestamp}" ) && is_user_logged_in() ) {
-				// This nonce is not valid.
-				$ret['error'] = __( 'Invalid nonce', 'ultimate-member' );
-				wp_send_json_error( $ret );
-			}
-		}
-
-		if ( isset( $_FILES[ $id ]['name'] ) ) {
-
-			if ( ! is_array( $_FILES[ $id ]['name'] ) ) {
-
-				UM()->uploader()->replace_upload_dir = true;
-				$uploaded = UM()->uploader()->upload_image( $_FILES[ $id ], $user_id, $id );
-				UM()->uploader()->replace_upload_dir = false;
-				if ( isset( $uploaded['error'] ) ) {
-					$ret['error'] = $uploaded['error'];
-				} else {
-					$ret[] = $uploaded['handle_upload'];
-				}
-
-			}
-
-		} else {
-			$ret['error'] = __( 'A theme or plugin compatibility issue', 'ultimate-member' );
-		}
-		wp_send_json_success( $ret );
 	}
 }

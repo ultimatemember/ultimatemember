@@ -583,6 +583,36 @@ class Shortcodes {
 		ob_start();
 		?>
 		<div class="um">
+			<h3>Progress bar</h3>
+			<div>
+				<?php echo UM()->frontend()::layouts()::progress_bar(); ?>
+				<?php echo UM()->frontend()::layouts()::progress_bar( array( 'label' => 'bottom' ) ); ?>
+				<?php echo UM()->frontend()::layouts()::progress_bar( array( 'label' => 'right' ) ); ?>
+				<?php echo UM()->frontend()::layouts()::progress_bar( array( 'value' => 50 ) ); ?>
+				<?php echo UM()->frontend()::layouts()::progress_bar( array( 'label' => 'bottom', 'value' => 80 ) ); ?>
+				<?php echo UM()->frontend()::layouts()::progress_bar( array( 'label' => 'right', 'value' => 30 ) ); ?>
+				<?php echo UM()->frontend()::layouts()::progress_bar( array( 'value' => 100 ) ); ?>
+			</div>
+			<h3>Uploader</h3>
+			<div>
+				<?php echo UM()->frontend()::layouts()::uploader( array( 'handler' => 'common-upload' ) ); ?>
+				<p>Avatar</p>
+				<?php echo UM()->frontend()::layouts()::uploader(
+					array(
+						'handler' => 'upload-avatar',
+						'button'  => array(
+							'data' => array(
+								'user_id'       => get_current_user_id(),
+								'apply_nonce'   => wp_create_nonce( 'um_upload_profile_photo_apply' ),
+								'decline_nonce' => wp_create_nonce( 'um_upload_profile_photo_decline' ),
+							),
+						),
+					)
+				); ?>
+				<p>Should work for not logged in</p>
+				<?php echo UM()->frontend()::layouts()::uploader( array( 'handler' => 'nopriv-upload' ) ); ?>
+				<?php echo UM()->frontend()::layouts()::uploader( array( 'handler' => 'activity-post-photo' ) ); ?>
+			</div>
 			<h3>Buttons</h3>
 			<script>
 				jQuery(document).ready( function($) {
@@ -859,101 +889,6 @@ class Shortcodes {
 			<h3>Form</h3>
 			<?php echo UM()->frontend()::layouts()::form(); ?>
 
-			<h3>Buttons</h3>
-			<form>
-				<h4>Link type <code>&lt;a&gt;&lt;/a&gt;</code></h4>
-				<?php
-				echo UM()->frontend()::layouts()::button( 'Cancel Fullwidth', array( 'type' => 'link', 'width' => 'full' ) );
-				echo UM()->frontend()::layouts()::button( 'Cancel Fullwidth Disabled', array( 'type' => 'link', 'width' => 'full', 'disabled' => true ) );
-
-				echo UM()->frontend()::layouts()::button( 'Submit Fullwidth', array( 'type' => 'link', 'url' => 'google.com', 'target' => '_blank', 'design' => 'primary', 'width' => 'full' ) );
-				echo UM()->frontend()::layouts()::button( 'Submit Fullwidth Disabled', array( 'type' => 'link', 'url' => 'google.com', 'target' => '_blank', 'design' => 'primary', 'width' => 'full', 'disabled' => true ) );
-
-				echo UM()->frontend()::layouts()::button( 'Primary', array( 'type' => 'link', 'design' => 'primary' ) );
-				echo UM()->frontend()::layouts()::button( 'Secondary gray', array( 'type' => 'link' ) );
-				echo UM()->frontend()::layouts()::button( 'Secondary color', array( 'type' => 'link', 'design' => 'secondary-color' ) );
-				echo UM()->frontend()::layouts()::button( 'Tertiary gray', array( 'type' => 'link', 'design' => 'tertiary-gray' ) );
-				echo UM()->frontend()::layouts()::button( 'Tertiary color', array( 'type' => 'link', 'design' => 'tertiary-color' ) );
-				echo UM()->frontend()::layouts()::button( 'Link gray', array( 'type' => 'link', 'design' => 'link-gray' ) );
-				echo UM()->frontend()::layouts()::button( 'Link color', array( 'type' => 'link', 'design' => 'link-color' ) );
-
-				echo UM()->frontend()::layouts()::button( 'Primary Destructive', array( 'type' => 'link', 'design' => 'primary-destructive' ) );
-				echo UM()->frontend()::layouts()::button( 'Secondary Destructive', array( 'type' => 'link', 'design' => 'secondary-destructive' ) );
-				echo UM()->frontend()::layouts()::button( 'Tertiary Destructive', array( 'type' => 'link', 'design' => 'tertiary-destructive' ) );
-				echo UM()->frontend()::layouts()::button( 'Link Destructive', array( 'type' => 'link', 'design' => 'link-destructive' ) );
-
-				echo UM()->frontend()::layouts()::button( 'Primary', array( 'type' => 'link', 'design' => 'primary', 'disabled' => true ) );
-				echo UM()->frontend()::layouts()::button( 'Secondary gray', array( 'type' => 'link', 'disabled' => true ) );
-				echo UM()->frontend()::layouts()::button( 'Secondary color', array( 'type' => 'link', 'design' => 'secondary-color', 'disabled' => true ) );
-				echo UM()->frontend()::layouts()::button( 'Tertiary gray', array( 'type' => 'link', 'design' => 'tertiary-gray', 'disabled' => true ) );
-				echo UM()->frontend()::layouts()::button( 'Tertiary color', array( 'type' => 'link', 'design' => 'tertiary-color', 'disabled' => true ) );
-				echo UM()->frontend()::layouts()::button( 'Link gray', array( 'type' => 'link', 'design' => 'link-gray', 'disabled' => true ) );
-				echo UM()->frontend()::layouts()::button( 'Link color', array( 'type' => 'link', 'design' => 'link-color', 'disabled' => true ) );
-
-				echo UM()->frontend()::layouts()::button( 'Primary Destructive', array( 'type' => 'link', 'design' => 'primary-destructive', 'disabled' => true ) );
-				echo UM()->frontend()::layouts()::button( 'Secondary Destructive', array( 'type' => 'link', 'design' => 'secondary-destructive', 'disabled' => true ) );
-				echo UM()->frontend()::layouts()::button( 'Tertiary Destructive', array( 'type' => 'link', 'design' => 'tertiary-destructive', 'disabled' => true ) );
-				echo UM()->frontend()::layouts()::button( 'Link Destructive', array( 'type' => 'link', 'design' => 'link-destructive', 'disabled' => true ) );
-				?>
-				<h4>Button type <code>&lt;button&gt;&lt;/button&gt;</code></h4>
-				<p>Button styles</p>
-				<div style="display:flex;justify-content: flex-start;align-items:baseline; flex-wrap: wrap;margin-bottom:20px;gap:8px">
-					<?php
-					echo UM()->frontend()::layouts()::button( 'Primary', array( 'design' => 'primary' ) );
-					echo UM()->frontend()::layouts()::button( 'Secondary gray' );
-					echo UM()->frontend()::layouts()::button( 'Secondary color', array( 'design' => 'secondary-color' ) );
-					echo UM()->frontend()::layouts()::button( 'Tertiary gray', array( 'design' => 'tertiary-gray' ) );
-					echo UM()->frontend()::layouts()::button( 'Tertiary color', array( 'design' => 'tertiary-color' ) );
-					echo UM()->frontend()::layouts()::button( 'Link gray', array( 'design' => 'link-gray' ) );
-					echo UM()->frontend()::layouts()::button( 'Link color', array( 'design' => 'link-color' ) );
-
-					echo UM()->frontend()::layouts()::button( 'Primary Destructive', array( 'design' => 'primary-destructive' ) );
-					echo UM()->frontend()::layouts()::button( 'Secondary Destructive', array( 'design' => 'secondary-destructive' ) );
-					echo UM()->frontend()::layouts()::button( 'Tertiary Destructive', array( 'design' => 'tertiary-destructive' ) );
-					echo UM()->frontend()::layouts()::button( 'Link Destructive', array( 'design' => 'link-destructive' ) );
-					?>
-				</div>
-				<p>Disabled Buttons</p>
-				<div style="display:flex;justify-content: flex-start;align-items:baseline; flex-wrap: wrap;margin-bottom:20px;gap:8px">
-					<?php
-					echo UM()->frontend()::layouts()::button( 'Primary', array( 'design' => 'primary', 'disabled' => true ) );
-					echo UM()->frontend()::layouts()::button( 'Secondary gray', array( 'disabled' => true ) );
-					echo UM()->frontend()::layouts()::button( 'Secondary color', array( 'design' => 'secondary-color', 'disabled' => true ) );
-					echo UM()->frontend()::layouts()::button( 'Tertiary gray', array( 'design' => 'tertiary-gray', 'disabled' => true ) );
-					echo UM()->frontend()::layouts()::button( 'Tertiary color', array( 'design' => 'tertiary-color', 'disabled' => true ) );
-					echo UM()->frontend()::layouts()::button( 'Link gray', array( 'design' => 'link-gray', 'disabled' => true ) );
-					echo UM()->frontend()::layouts()::button( 'Link color', array( 'design' => 'link-color', 'disabled' => true ) );
-
-					echo UM()->frontend()::layouts()::button( 'Primary Destructive', array( 'design' => 'primary-destructive', 'disabled' => true ) );
-					echo UM()->frontend()::layouts()::button( 'Secondary Destructive', array( 'design' => 'secondary-destructive', 'disabled' => true ) );
-					echo UM()->frontend()::layouts()::button( 'Tertiary Destructive', array( 'design' => 'tertiary-destructive', 'disabled' => true ) );
-					echo UM()->frontend()::layouts()::button( 'Link Destructive', array( 'design' => 'link-destructive', 'disabled' => true ) );
-					?>
-				</div>
-				<p>Button sizes and states</p>
-				<?php
-				echo UM()->frontend()::layouts()::button( 'Cancel Fullwidth', array( 'width' => 'full' ) );
-				echo UM()->frontend()::layouts()::button( 'Submit Fullwidth', array( 'type' => 'submit', 'design' => 'primary', 'width' => 'full' ) );
-
-				echo UM()->frontend()::layouts()::button( 'Cancel S', array( 'size' => 's' ) );
-				echo UM()->frontend()::layouts()::button( 'Cancel M', array( 'size' => 'm' ) );
-				echo UM()->frontend()::layouts()::button( 'Cancel L' );
-				echo UM()->frontend()::layouts()::button( 'Cancel XL', array( 'size' => 'xl' ) );
-
-				echo UM()->frontend()::layouts()::button( 'Cancel M', array( 'size' => 'm', 'disabled' => true ) );
-				echo UM()->frontend()::layouts()::button( 'Cancel L', array( 'disabled' => true ) );
-				echo UM()->frontend()::layouts()::button( 'Cancel XL', array( 'size' => 'xl', 'disabled' => true ) );
-
-				echo UM()->frontend()::layouts()::button( 'Submit M', array( 'type' => 'submit', 'design' => 'primary', 'size' => 's' ) );
-				echo UM()->frontend()::layouts()::button( 'Submit M', array( 'type' => 'submit', 'design' => 'primary', 'size' => 'm' ) );
-				echo UM()->frontend()::layouts()::button( 'Submit L', array( 'type' => 'submit', 'design' => 'primary' ) );
-				echo UM()->frontend()::layouts()::button( 'Submit XL', array( 'type' => 'submit', 'design' => 'primary', 'size' => 'xl' ) );
-
-				echo UM()->frontend()::layouts()::button( 'Submit M', array( 'type' => 'submit', 'design' => 'primary', 'size' => 'm', 'disabled' => true ) );
-				echo UM()->frontend()::layouts()::button( 'Submit L', array( 'type' => 'submit', 'design' => 'primary', 'disabled' => true ) );
-				echo UM()->frontend()::layouts()::button( 'Submit XL', array( 'type' => 'submit', 'design' => 'primary', 'size' => 'xl', 'disabled' => true ) );
-				?>
-			</form>
 			<h3>Dropdown</h3>
 			<div style="display: flex; justify-content: flex-start; flex-wrap: wrap; align-items: start; gap: 24px;">
 				<?php

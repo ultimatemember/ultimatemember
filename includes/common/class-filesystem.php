@@ -58,6 +58,67 @@ class Filesystem {
 		$this->temp_upload_url = $this->get_upload_url( 'ultimatemember/temp' );
 	}
 
+	public function files_age() {
+		/**
+		 * Filters the maximum file age in the temp folder. By default, it's 24 hours.
+		 *
+		 * @since 2.8.4
+		 * @hook um_filesystem_max_file_age
+		 *
+		 * @param {int} $file_age Temp file age in seconds.
+		 *
+		 * @return {int} Temp file age in seconds.
+		 */
+		return apply_filters( 'um_filesystem_max_file_age', 24 * HOUR_IN_SECONDS ); // Temp file age in seconds
+	}
+
+	public static function image_mimes( $context = 'list' ) {
+		$mimes = array();
+
+		if ( 'list' === $context ) {
+			$all_mimes = wp_get_ext_types();
+			$mimes     = array_key_exists( 'image', $all_mimes ) ? $all_mimes['image'] : array( 'jpg', 'jpeg', 'jpe', 'gif', 'png', 'bmp', 'tif', 'tiff', 'ico', 'heic', 'webp', 'avif' );
+
+			/**
+			 * Filters the MIME-types of the images that can be uploaded as Company Logo.
+			 *
+			 * @since 2.9.0
+			 * @hook um_upload_image_mimes_list
+			 *
+			 * @param {array} $mime_types MIME types.
+			 *
+			 * @return {array} MIME types.
+			 */
+			$mimes = apply_filters( 'um_upload_image_mimes_list', $mimes );
+		} elseif ( 'allowed' === $context ) {
+			$mimes = array(
+				'jpg|jpeg|jpe' => 'image/jpeg',
+				'gif'          => 'image/gif',
+				'png'          => 'image/png',
+				'bmp'          => 'image/bmp',
+				'tiff|tif'     => 'image/tiff',
+				'webp'         => 'image/webp',
+				'avif'         => 'image/avif',
+				'ico'          => 'image/x-icon',
+				'heic'         => 'image/heic',
+			);
+
+			/**
+			 * Filters the MIME-types of the images that can be uploaded via UM uploader
+			 *
+			 * @since 2.9.0
+			 * @hook um_upload_allowed_image_mimes
+			 *
+			 * @param {array} $mime_types MIME types.
+			 *
+			 * @return {array} MIME types.
+			 */
+			$mimes = apply_filters( 'um_upload_allowed_image_mimes', $mimes );
+		}
+
+		return $mimes;
+	}
+
 	/**
 	 * Remove all files, which are older than 24 hours
 	 *
@@ -74,18 +135,6 @@ class Filesystem {
 			$credentials = request_filesystem_credentials( site_url() );
 			WP_Filesystem( $credentials );
 		}
-
-		/**
-		 * Filters the maximum file age in the temp folder. By default, it's 24 hours.
-		 *
-		 * @since 2.8.4
-		 * @hook um_filesystem_max_file_age
-		 *
-		 * @param {int} $file_age Temp file age in seconds.
-		 *
-		 * @return {int} Temp file age in seconds.
-		 */
-		$file_age = apply_filters( 'um_filesystem_max_file_age', 24 * HOUR_IN_SECONDS ); // Temp file age in seconds
 
 		if ( ! $wp_filesystem->is_dir( $this->temp_upload_dir ) ) {
 			return;
@@ -106,7 +155,7 @@ class Filesystem {
 			$filepath = wp_normalize_path( $this->temp_upload_dir . DIRECTORY_SEPARATOR . $file );
 
 			// Remove temp file if it is older than the max age and is not the current file
-			if ( $wp_filesystem->mtime( $filepath ) < time() - $file_age ) {
+			if ( $wp_filesystem->mtime( $filepath ) < time() - $this->files_age() ) {
 				$wp_filesystem->delete( $filepath );
 			}
 		}
