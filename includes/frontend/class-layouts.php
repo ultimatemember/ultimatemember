@@ -1390,6 +1390,35 @@ class Layouts {
 		return $mime_types;
 	}
 
+	public static function get_svg_by_ext( $ext ) {
+		$ext_types = wp_get_ext_types();
+
+		$icon_name = 'default';
+		foreach ( $ext_types as $key => $extensions ) {
+			if ( is_array( $ext, $extensions, true ) ) {
+				$icon_name = $key;
+				break;
+			}
+		}
+
+		return trailingslashit( includes_url() ) . 'images/media/' . $icon_name . '.svg';
+	}
+
+	public static function get_file_extension_icon( $ext ) {
+		ob_start();
+		?>
+		<div class="um-file-extension">
+			<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file" width="48" height="48" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--um-gray-300, #d0d5dd)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+				<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+				<path d="M14 3v4a1 1 0 0 0 1 1h4" />
+				<path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+			</svg>
+			<span class="um-file-extension-text"><?php echo esc_html( $ext ); ?></span>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
 	public static function progress_bar( $args = array() ) {
 		$args = wp_parse_args(
 			$args,
@@ -1433,20 +1462,35 @@ class Layouts {
 	 * @return string
 	 */
 	public static function uploader( $args ) {
+		$max_upload_size = wp_max_upload_size();
+		if ( ! $max_upload_size ) {
+			$max_upload_size = 0;
+		}
+
+		ob_start();
+		?>
+		<span class="um-supporting-text">
+			<span><a href="#" class="um-upload-link um-link">Click to upload</a> or drag and drop</span>
+			<?php /* translators: %s: Maximum allowed file size. */ ?>
+			<span>SVG, PNG, JPG or GIF (max. 800x400px). <?php printf( __( 'Maximum upload file size: %s.' ), esc_html( size_format( $max_upload_size ) ) ); ?></span>
+		</span>
+		<?php
+		$inner_drop = ob_get_clean();
 		$args = wp_parse_args(
 			$args,
 			array(
-				'id'         => '',
-				'async'      => true,
-				'field_id'   => '',
-				'name'       => '',
-				'handler'    => '',
-				'multiple'   => true,
-				'nonce'      => '',
-				'types'      => array(), // if not specified then get all allowed
-				'button'     => array(),
-				'dropzone'   => true,
-				'files_list' => true,
+				'id'             => '',
+				'async'          => true,
+				'field_id'       => '',
+				'name'           => '',
+				'handler'        => '',
+				'multiple'       => true,
+				'nonce'          => '',
+				'types'          => array(), // if not specified then get all allowed
+				'button'         => array(),
+				'dropzone'       => true,
+				'dropzone_inner' => $inner_drop,
+				'files_list'     => true,
 			)
 		);
 
@@ -1511,6 +1555,9 @@ class Layouts {
 				?>
 				<div id="um-<?php echo esc_attr( $id ); ?>-uploader-dropzone" class="um-uploader-dropzone">
 					<?php echo wp_kses( self::button( $button_content, $button_args ), UM()->get_allowed_html( 'templates' ) ); ?>
+					<div>
+						<?php echo wp_kses( $args['dropzone_inner'], UM()->get_allowed_html( 'templates' ) ); ?>
+					</div>
 				</div>
 				<?php
 			} else {
@@ -1518,8 +1565,43 @@ class Layouts {
 			}
 
 			if ( ! empty( $args['files_list'] ) ) {
+				// <div id="um-<?php echo esc_attr( $id );-uploader-filelist" class="um-uploader-filelist um-display-none">
 				?>
-				<div id="um-<?php echo esc_attr( $id ); ?>-uploader-filelist" class="um-uploader-filelist um-display-none"></div>
+				<div id="um-<?php echo esc_attr( $id ); ?>-uploader-filelist" class="um-uploader-filelist ">
+					<div class="uploader-file-item">
+						<div class="uploader-file-item-ext-ico">
+							<?php echo self::get_file_extension_icon( 'png' ); ?>
+<!--							<img width="48" height="64" src="http://localhost:8000/wp-includes/images/media/video.svg" class="attachment-60x60 size-60x60" alt="" decoding="async" loading="lazy">-->
+						</div>
+						<div class="uploader-file-item-data">
+							<div class="uploader-file-item-header">
+								<div class="uploader-file-item-name">File 1</div>
+
+								<?php
+								$button_content = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 7l16 0" />
+  <path d="M10 11l0 6" />
+  <path d="M14 11l0 6" />
+  <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+  <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+</svg>';
+								$button_args    = array(
+									'type'          => 'button',
+									'icon_position' => 'content',
+									'design'        => 'link-gray',
+									'size'          => 's',
+									'classes'       => array( 'um-uploader-file-item-remove' ),
+								);
+								echo wp_kses( self::button( $button_content, $button_args ), UM()->get_allowed_html( 'templates' ) );
+								?>
+							</div>
+							<div class="uploader-file-item-size">5.0MB</div>
+							<?php echo UM()->frontend()::layouts()::progress_bar( array( 'label' => 'right', 'value' => 30 ) ); ?>
+							<div class="uploader-file-item-error um-display-none"></div>
+						</div>
+					</div>
+				</div>
 				<?php
 			}
 			?>

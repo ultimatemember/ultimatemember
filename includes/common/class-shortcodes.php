@@ -583,6 +583,14 @@ class Shortcodes {
 		ob_start();
 		?>
 		<div class="um">
+			<h3>File extensions</h3>
+			<div style="display:flex;flex-direction:row;justify-content:flex-start;flex-wrap: nowrap;align-items:center; gap: 8px;">
+				<?php echo UM()->frontend()::layouts()::get_file_extension_icon( 'jpg' ); ?>
+				<?php echo UM()->frontend()::layouts()::get_file_extension_icon( 'png' ); ?>
+				<?php echo UM()->frontend()::layouts()::get_file_extension_icon( 'svg' ); ?>
+				<?php echo UM()->frontend()::layouts()::get_file_extension_icon( 'docx' ); ?>
+				<?php echo UM()->frontend()::layouts()::get_file_extension_icon( 'xml' ); ?>
+			</div>
 			<h3>Progress bar</h3>
 			<div>
 				<?php echo UM()->frontend()::layouts()::progress_bar(); ?>

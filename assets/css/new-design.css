@@ -2764,6 +2764,141 @@ input[type=range]:hover, input[type=range]:focus, input[type=range]:focus-visibl
   justify-content: flex-start;
   align-items: start;
   flex-wrap: nowrap;
+  row-gap: 12px;
+}
+.um .um-uploader .um-uploader-dropzone {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  width: 100%;
+  row-gap: 12px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  padding: 16px 24px;
+  border-radius: 12px;
+  border: 1px solid var(--um-gray-200, #eaecf0);
+  background: #fff;
+  margin: 1px;
+}
+.um .um-uploader .um-uploader-dropzone .um-supporting-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  row-gap: 4px;
+}
+.um .um-uploader .um-uploader-dropzone:focus, .um .um-uploader .um-uploader-dropzone[drop-active=true] {
+  border: 2px solid var(--um-primary-600-bg, #7f56d9);
+  margin: 0;
+}
+.um .um-uploader .um-uploader-filelist {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  width: 100%;
+  row-gap: 12px;
+}
+.um .um-uploader .um-uploader-filelist .uploader-file-item {
+  padding: 16px;
+  background: #fff;
+  border: 1px solid var(--um-gray-200, #eaecf0);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: start;
+  flex-wrap: nowrap;
+  column-gap: 12px;
+}
+.um .um-uploader .um-uploader-filelist .uploader-file-item .uploader-file-item-ext-ico {
+  width: 40px;
+}
+.um .um-uploader .um-uploader-filelist .uploader-file-item .uploader-file-item-data {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+.um .um-uploader .um-uploader-filelist .uploader-file-item .uploader-file-item-data .uploader-file-item-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+}
+.um .um-uploader .um-uploader-filelist .uploader-file-item .uploader-file-item-data .uploader-file-item-header .uploader-file-item-name {
+  color: var(--um-gray-700, #344054);
+  font-size: var(--um-text-font-size-sm, 14px);
+  line-height: var(--um-text-line-height-sm, 20px);
+  font-weight: var(--um-text-font-weight-medium, 500);
+}
+.um .um-uploader .um-uploader-filelist .uploader-file-item .uploader-file-item-data .uploader-file-item-header .um-uploader-file-item-remove {
+  padding: 2px 0 0 0;
+}
+.um .um-uploader .um-uploader-filelist .uploader-file-item .uploader-file-item-data .uploader-file-item-size {
+  color: var(--um-gray-600, #475467);
+  font-size: var(--um-text-font-size-sm, 14px);
+  line-height: var(--um-text-line-height-sm, 20px);
+  font-weight: var(--um-text-font-weight-regular, 400);
+}
+.um .um-uploader .um-uploader-filelist:not(.um-display-none) {
+  margin: 4px 0 0 0;
+}
+.um .um-uploader .um-supporting-text {
+  color: var(--um-gray-600, #475467);
+  font-size: var(--um-text-font-size-sm, 14px);
+  line-height: var(--um-text-line-height-sm, 20px);
+  font-weight: var(--um-text-font-weight-regular, 400);
+}
+.um .um-uploader .um-link {
+  font-size: var(--um-text-font-size-sm, 14px);
+  line-height: var(--um-text-line-height-sm, 20px);
+  font-weight: var(--um-text-font-weight-semibold, 600);
+}
+.um .um-uploader.um-disabled .um-uploader-dropzone {
+  background: var(--um-gray-50, #f9fafb);
+}
+.um .um-uploader.um-disabled .um-uploader-dropzone .um-supporting-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  row-gap: 4px;
+}
+
+.um .um-file-extension {
+  position: relative;
+  overflow: hidden;
+  width: 40px;
+  height: 40px;
+}
+.um .um-file-extension > svg {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+}
+.um .um-file-extension .um-file-extension-text {
+  position: absolute;
+  bottom: 6px;
+  left: 0;
+  color: #fff;
+  text-align: center;
+  font-size: 10px;
+  line-height: normal;
+  font-weight: 700;
+  padding: 2px 3px;
+  text-transform: uppercase;
+  background: var(--um-primary-600-bg, #7f56d9);
+  border-radius: 2px;
 }
 
 .um .um-progress-bar {

@@ -144,6 +144,10 @@ UM.frontend = {
 			jQuery( '.um-progress-bar' ).each( function() {
 				jQuery(this).find('.um-progress-bar-inner').css('width', jQuery(this).data('value') + '%');
 			});
+		},
+		set: function( $bar, value ) {
+			$bar.data('value', value).attr('title', value + '%');
+			$bar.find('.um-progress-bar-inner').css('width', value + '%').attr('title', value + '%');
 		}
 	},
 	responsive: {
@@ -237,6 +241,21 @@ jQuery(document).ready(function($) {
 	UM.frontend.dropdown.init();
 	UM.frontend.toggleElements.init();
 	UM.frontend.progressBar.init();
+
+	function allowDrop(ev) {
+		$(ev.target).attr("drop-active", true);
+		ev.preventDefault();
+	}
+
+	/*function leaveDropZone(ev) {
+		$(ev.target).removeAttr("drop-active");
+	}*/
+
+	// function drop(ev) {
+	// 	ev.preventDefault();
+	// 	$(ev.target).removeAttr("drop-active");
+	// }
+
 
 	$( window ).on( 'resize', function() {
 		UM.frontend.responsive.setClass();

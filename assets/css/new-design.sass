@@ -2074,6 +2074,63 @@ input[type="range"]
 .um
   .#{$prefix}uploader
     +flex( column, flex-start, start, nowrap )
+    row-gap: $spacing-lg
+    .#{$prefix}uploader-dropzone
+      +flex( column, flex-start, center, nowrap )
+      width: 100%
+      row-gap: $spacing-lg
+      +border-box
+      padding: $spacing-xl $spacing-3xl
+      border-radius: $radius-xl
+      border: 1px solid $gray-200
+      background: $um-white
+      margin: 1px
+      .#{$prefix}supporting-text
+        +flex( column, flex-start, center, nowrap )
+        row-gap: $spacing-xs
+      &:focus,
+      &[drop-active=true]
+        border: 2px solid $primary-600
+        margin: 0
+    .#{$prefix}uploader-filelist
+      +flex( column, flex-start, stretch, nowrap )
+      width: 100%
+      row-gap: $spacing-lg
+      .uploader-file-item
+        padding: $spacing-xl
+        background: $um-white
+        border: 1px solid $gray-200
+        border-radius: $radius-xl
+        +flex( row, flex-start, start, nowrap )
+        column-gap: $spacing-lg
+        .uploader-file-item-ext-ico
+          width: 40px
+        .uploader-file-item-data
+          +flex( column, flex-start, stretch, nowrap )
+          width: 100%
+          .uploader-file-item-header
+            +flex( row, space-between, flex-start, nowrap )
+            .uploader-file-item-name
+              color: $gray-700
+              +typography( text, sm, medium )
+            .um-uploader-file-item-remove
+              padding: $spacing-xxs 0 0 0
+          .uploader-file-item-size
+            color: $gray-600
+            +typography( text, sm, regular )
+      &:not(.#{$prefix}display-none)
+        margin: $spacing-xs 0 0 0
+    .#{$prefix}supporting-text
+      color: $gray-600
+      +typography( text, sm, regular )
+    .#{$prefix}link
+      +typography( text, sm, semibold )
+    &.#{$prefix}disabled
+      .#{$prefix}uploader-dropzone
+        background: $gray-50
+        .#{$prefix}supporting-text
+          +flex( column, flex-start, center, nowrap )
+          row-gap: $spacing-xs
     //.#{$prefix}uploaded-content-wrapper
     //  +flex( column, flex-start, stretch, nowrap )
     //  .#{$prefix}uploader-overflow
@@ -2084,6 +2141,30 @@ input[type="range"]
     //      left: calc( 50% - 24px )
     //  .#{$prefix}uploader-filelist
     //.#{$prefix}uploader-errorlist
+
+.um
+  .#{$prefix}file-extension
+    position: relative
+    overflow: hidden
+    width: 40px
+    height: 40px
+    & > svg
+      position: absolute
+      top: -4px
+      left: -4px
+    .#{$prefix}file-extension-text
+      position: absolute
+      bottom: $spacing-sm
+      left: 0
+      color: $um-white
+      text-align: center
+      font-size: 10px
+      line-height: normal
+      font-weight: 700
+      padding: $spacing-xxs 3px
+      text-transform: uppercase
+      background: $primary-600
+      border-radius: $radius-xxs
 
 // Progress bar
 .um
