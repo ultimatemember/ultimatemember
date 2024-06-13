@@ -431,7 +431,7 @@ span.um-admin-icon-clear i {
   margin: 0 0 5px;
 }
 .um-entities-conditions-row .um-entities-conditions-full {
-  width: calc(100% - 40px);
+  width: calc(100% - 42px);
 }
 .um-entities-conditions-row .um-entities-conditions-responce {
   vertical-align: top;
@@ -511,7 +511,7 @@ span.um-admin-icon-clear i {
 
 .um-users-conditions-row .select2-container,
 .um-entities-conditions-row .select2-container {
-  width: 48% !important;
+  width: calc(50% - 21px) !important;
   vertical-align: top;
 }
 .um-users-conditions-row .select2-container li,
