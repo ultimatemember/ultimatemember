@@ -110,6 +110,7 @@
   align-items: stretch;
   flex-wrap: nowrap;
 }
+
 .um .um-button {
   text-align: center;
   cursor: pointer;
@@ -2204,10 +2205,6 @@ input[type=range]:hover, input[type=range]:focus, input[type=range]:focus-visibl
   color: var(--um-gray-900, #101828);
 }
 .um .um-small-data .um-supporting-text {
-  font-size: var(--um-text-font-size-sm, 14px);
-  line-height: var(--um-text-line-height-sm, 20px);
-  font-weight: var(--um-text-font-weight-regular, 400);
-  color: var(--um-gray-600, #475467);
   text-overflow: ellipsis;
   padding: 0;
   margin: 0;
@@ -2791,6 +2788,9 @@ input[type=range]:hover, input[type=range]:focus, input[type=range]:focus-visibl
   flex-wrap: nowrap;
   row-gap: 4px;
 }
+.um .um-uploader .um-uploader-dropzone .um-supporting-text > span {
+  text-align: center;
+}
 .um .um-uploader .um-uploader-dropzone:focus, .um .um-uploader .um-uploader-dropzone[drop-active=true] {
   border: 2px solid var(--um-primary-600-bg, #7f56d9);
   margin: 0;
@@ -2804,22 +2804,23 @@ input[type=range]:hover, input[type=range]:focus, input[type=range]:focus-visibl
   width: 100%;
   row-gap: 12px;
 }
-.um .um-uploader .um-uploader-filelist .uploader-file-item {
-  padding: 16px;
-  background: #fff;
-  border: 1px solid var(--um-gray-200, #eaecf0);
-  border-radius: 12px;
+.um .um-uploader .um-uploader-filelist:not(.um-display-none) {
+  margin: 4px 0 0 0;
+}
+.um .um-uploader .um-uploader-filelist .um-uploader-file {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: start;
   flex-wrap: nowrap;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid var(--um-gray-200, #eaecf0);
+  border-radius: 12px;
   column-gap: 12px;
+  margin: 1px;
 }
-.um .um-uploader .um-uploader-filelist .uploader-file-item .uploader-file-item-ext-ico {
-  width: 40px;
-}
-.um .um-uploader .um-uploader-filelist .uploader-file-item .uploader-file-item-data {
+.um .um-uploader .um-uploader-filelist .um-uploader-file .um-uploader-file-data {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -2827,36 +2828,31 @@ input[type=range]:hover, input[type=range]:focus, input[type=range]:focus-visibl
   flex-wrap: nowrap;
   width: 100%;
 }
-.um .um-uploader .um-uploader-filelist .uploader-file-item .uploader-file-item-data .uploader-file-item-header {
+.um .um-uploader .um-uploader-filelist .um-uploader-file .um-uploader-file-data .um-uploader-file-data-header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
   flex-wrap: nowrap;
 }
-.um .um-uploader .um-uploader-filelist .uploader-file-item .uploader-file-item-data .uploader-file-item-header .uploader-file-item-name {
+.um .um-uploader .um-uploader-filelist .um-uploader-file .um-uploader-file-data .um-uploader-file-data-header .um-uploader-file-name {
   color: var(--um-gray-700, #344054);
   font-size: var(--um-text-font-size-sm, 14px);
   line-height: var(--um-text-line-height-sm, 20px);
   font-weight: var(--um-text-font-weight-medium, 500);
 }
-.um .um-uploader .um-uploader-filelist .uploader-file-item .uploader-file-item-data .uploader-file-item-header .um-uploader-file-item-remove {
+.um .um-uploader .um-uploader-filelist .um-uploader-file .um-uploader-file-data .um-uploader-file-data-header .um-uploader-file-remove {
   padding: 2px 0 0 0;
 }
-.um .um-uploader .um-uploader-filelist .uploader-file-item .uploader-file-item-data .uploader-file-item-size {
-  color: var(--um-gray-600, #475467);
-  font-size: var(--um-text-font-size-sm, 14px);
-  line-height: var(--um-text-line-height-sm, 20px);
-  font-weight: var(--um-text-font-weight-regular, 400);
+.um .um-uploader .um-uploader-filelist .um-uploader-file.um-upload-failed {
+  border: 2px solid var(--um-error-600, #d92d20);
+  margin: 0;
 }
-.um .um-uploader .um-uploader-filelist:not(.um-display-none) {
-  margin: 4px 0 0 0;
+.um .um-uploader .um-uploader-filelist .um-uploader-file.um-upload-failed .um-file-extension > svg {
+  stroke: var(--um-error-600, #d92d20);
 }
-.um .um-uploader .um-supporting-text {
-  color: var(--um-gray-600, #475467);
-  font-size: var(--um-text-font-size-sm, 14px);
-  line-height: var(--um-text-line-height-sm, 20px);
-  font-weight: var(--um-text-font-weight-regular, 400);
+.um .um-uploader .um-uploader-filelist .um-uploader-file.um-upload-failed .um-file-extension .um-file-extension-text {
+  background: var(--um-error-600, #d92d20);
 }
 .um .um-uploader .um-link {
   font-size: var(--um-text-font-size-sm, 14px);
@@ -2882,6 +2878,7 @@ input[type=range]:hover, input[type=range]:focus, input[type=range]:focus-visibl
   height: 40px;
 }
 .um .um-file-extension > svg {
+  stroke: var(--um-gray-300, #d0d5dd);
   position: absolute;
   top: -4px;
   left: -4px;
@@ -2944,6 +2941,12 @@ input[type=range]:hover, input[type=range]:focus, input[type=range]:focus-visibl
   width: calc(100% - 50px);
 }
 
+.um .um-supporting-text {
+  color: var(--um-gray-600, #475467);
+  font-size: var(--um-text-font-size-sm, 14px);
+  line-height: var(--um-text-line-height-sm, 20px);
+  font-weight: var(--um-text-font-weight-regular, 400);
+}
 .um .um-full-width {
   width: 100%;
 }

@@ -367,19 +367,34 @@ jQuery(document).ready( function($) {
 		}
 	});
 
-	jQuery( document.body ).on('dragover', '.um-uploader-dropzone', function ( ev ){
-		jQuery(ev.target).attr("drop-active", true);
+	$( document.body ).on('dragover', '.um-uploader-dropzone', function ( ev ){
+		let dropzoneTarget = ev.target;
+		if ( ! ev.target.classList.contains('um-uploader-dropzone') ) {
+			dropzoneTarget = dropzoneTarget.closest('.um-uploader-dropzone');
+		}
+
+		$(dropzoneTarget).attr('drop-active', true);
 		ev.preventDefault();
 	});
 
-	jQuery( document.body ).on('dragleave', '.um-uploader-dropzone', function ( ev ){
+	$( document.body ).on('dragleave', '.um-uploader-dropzone', function ( ev ){
 		ev.preventDefault();
-		jQuery(ev.target).removeAttr("drop-active");
+		let dropzoneTarget = ev.target;
+		if ( ! ev.target.classList.contains('um-uploader-dropzone') ) {
+			dropzoneTarget = dropzoneTarget.closest('.um-uploader-dropzone');
+		}
+
+		$(dropzoneTarget).removeAttr('drop-active');
 	});
 
-	jQuery( document.body ).on('drop', '.um-uploader-dropzone', function ( ev ){
+	$( document.body ).on('drop', '.um-uploader-dropzone', function ( ev ){
 		ev.preventDefault();
-		jQuery(ev.target).removeAttr("drop-active");
+
+		let dropzoneTarget = ev.target;
+		if ( ! ev.target.classList.contains('um-uploader-dropzone') ) {
+			dropzoneTarget = dropzoneTarget.closest('.um-uploader-dropzone');
+		}
+		$(dropzoneTarget).removeAttr('drop-active');
 	});
 
 	jQuery( document.body ).on('click', '.um-toggle-password', function (){
@@ -515,17 +530,27 @@ jQuery(document).ready( function($) {
 	$("#um-indeterminate").prop("indeterminate", true);
 
 
-	jQuery('.um-uploader-button').each( function() {
+	$('.um-uploader-button').each( function() {
 		let $button = jQuery(this);
 
 		let $uploader = $button.parents( '.um-uploader' );
+		let $dropZone  = $uploader.find( '.um-uploader-dropzone' );
 		let $fileList  = $uploader.find( '.um-uploader-filelist' );
-		let $errorList = $uploader.find( '.um-uploader-errorlist' );
 
 		let mimeTypes= $button.data('mime-types');
+		let maxSize     = parseInt( $button.data('max-size') );
 		let multiple = $button.data('multiple');
 		let handler  = $button.data('handler');
 		let nonce    = $button.data('nonce');
+
+		let uploaderFilters = {
+			prevent_duplicates: true,
+			mime_types: mimeTypes
+		}
+
+		if ( 0 !== maxSize ) {
+			uploaderFilters.max_file_size = plupload.formatSize( maxSize );
+		}
 
 		let uploaderData = {
 			browse_button: $button.get( 0 ), // you can pass in id...
@@ -533,46 +558,83 @@ jQuery(document).ready( function($) {
 			chunk_size: '1024kb',
 			max_retries: 1,
 			multi_selection: multiple,
-			filters: {
-				max_file_size: '10mb',
-				mime_types: mimeTypes,
-				prevent_duplicates: true
-			},
+			filters: uploaderFilters,
 			init: {
 				Error: function ( up, err ) {
-					$errorList.html( '<p>' + err.message + '</p>' );
+					if ( 'undefined' !== typeof err.file ) {
+						$fileList.removeClass('um-display-none');
+						let fileRow = $fileList.find('#' + err.file.id);
+
+						if ( ! fileRow.length ) {
+							let $cloned = $uploader.find('.um-uploader-file-placeholder').clone().addClass('um-uploader-file um-upload-failed').removeClass('um-uploader-file-placeholder um-display-none').attr('id',err.file.id);
+							$fileList.append( $cloned );
+
+							fileRow = $fileList.find('#' + err.file.id);
+							fileRow.find('.um-uploader-file-name').text(err.file.name);
+							let extension = err.file.name.split('.').pop();
+							if ( '' === err.file.type ) {
+								extension = 'file';
+							}
+							fileRow.find('.um-file-extension-text').text(extension);
+						} else {
+							fileRow.addClass('um-upload-failed');
+						}
+
+						fileRow.find('.um-supporting-text').text(err.message);
+						fileRow.find('.um-progress-bar-wrapper').remove();
+					}
 				},
 				FileFiltered: function ( up, file ) {
+					$fileList.removeClass('um-display-none');
 
-					// $errorlist.empty();
-					//
-					// if ( ! up.getOption( 'multi_selection' ) ) {
-					// 	$filelist.find( '.jb-uploader-file' ).each( function ( u, item ) {
-					// 		up.removeFile( item.id );
-					// 	} );
-					// }
+					// flush files list if there is only 1 file can be uploaded.
+					if ( ! up.getOption( 'multi_selection' ) ) {
+						$fileList.find( '.um-uploader-file' ).each( function ( u, item ) {
+							up.removeFile( item.id );
+						} );
+					}
+
+					let fileRow = $fileList.find('#' + file.id);
+
+					if ( ! fileRow.length ) {
+						let $cloned = $uploader.find('.um-uploader-file-placeholder').clone().addClass('um-uploader-file').removeClass('um-uploader-file-placeholder um-display-none').attr('id',file.id);
+						$fileList.append( $cloned );
+
+						fileRow = $fileList.find('#' + file.id);
+						fileRow.find('.um-uploader-file-name').text(file.name);
+						let extension = file.name.split('.').pop();
+						if ( '' === file.type ) {
+							extension = 'file';
+						}
+						fileRow.find('.um-file-extension-text').text(extension);
+						fileRow.find('.um-supporting-text').text(plupload.formatSize(file.size));
+					}
 				},
 				FilesAdded: function ( up, files ) {
-					$button.parents('.um-uploader').find('.um-uploader-overflow').removeClass('um-display-none');
-					up.start();
+					if ( files.length ) {
+						up.start();
+					}
 				},
 				FilesRemoved: function ( up, files ) {
 					$.each( files, function ( i, file ) {
 						jQuery( '#' + file.id ).remove();
 					} );
-
-					if ( ! $fileList.find( '.um-uploader-file' ).length ) {
-						$errorList.empty();
-					}
 				},
 				FileUploaded: function ( up, file, result ) {
 					if ( result.status === 200 && result.response ) {
 						let response = JSON.parse( result.response );
 						if ( ! response ) {
-							$errorList.append( '<p>' + wp.i18n.__( 'Error! Wrong file upload server response.', 'ultimate-member' ) + '</p>' );
+							let fileRow = $fileList.find('#' + file.id);
+							fileRow.find('.um-supporting-text').text( wp.i18n.__( 'Error! Wrong file upload server response.', 'ultimate-member' ) );
+							fileRow.addClass('um-upload-failed');
+							fileRow.find('.um-progress-bar-wrapper').remove();
 						} else if ( response.info && response.OK === 0 ) {
 							console.error( response.info );
 						} else if ( response.data ) {
+							let fileRow = $fileList.find('#' + file.id);
+
+							fileRow.data('filename', response.data[0].name_saved).data('nonce', response.data[0].delete_nonce);
+
 							let actionInFilter = wp.hooks.applyFilters( 'um_uploader_file_uploaded', null, $button, up, file, response );
 							if ( null === actionInFilter ) {
 								// some default process.
@@ -585,22 +647,28 @@ jQuery(document).ready( function($) {
 					}
 				},
 				PostInit: function ( up ) {
-					// $filelist.find( '.jb-uploader-file' ).remove();
 				},
 				UploadProgress: function ( up, file ) {
-					// jQuery( '#' + file.id ).find( 'b' ).html( '<span>' + file.percent + '%</span>' );
+					let $bar = jQuery( '#' + file.id ).find( '.um-progress-bar' );
+					if ( $bar.length ) {
+						UM.frontend.progressBar.set( $bar, file.percent );
+					}
 				},
 				UploadComplete: function ( up, files ) {
-					console.log( files );
-					jQuery.each( files, function(i) {
-						console.log( i );
-						console.log( files[i] );
-						up.removeFile( files[i].id );
-					});
+					// console.log( files );
+					// jQuery.each( files, function(i) {
+					// 	console.log( i );
+					// 	console.log( files[i] );
+					// 	up.removeFile( files[i].id );
+					// });
 					$button.parents('.um-uploader').find('.um-uploader-overflow').addClass('um-display-none');
 				}
 			}
 		};
+
+		if ( $dropZone.length ) {
+			uploaderData.drop_element = $dropZone.get( 0 );
+		}
 
 		uploaderData = wp.hooks.applyFilters( 'um_uploader_data', uploaderData, handler, $button );
 		if ( ! uploaderData.url ) {
@@ -609,7 +677,50 @@ jQuery(document).ready( function($) {
 
 		let uploaderObj = new plupload.Uploader( uploaderData );
 		UM.frontend.uploaders[ uploaderObj['id'] ] = uploaderObj;
+		$uploader.data('plupload',uploaderObj['id']);
 		uploaderObj.init();
+	});
+
+	$(document.body).on('click', '.um-upload-link', function(e) {
+		e.preventDefault();
+		$(this).parents('.um-uploader').find('.um-uploader-button').trigger('click');
+	});
+
+	$(document.body).on('click', '.um-uploader-file-remove', function() {
+		let $uploader = $(this).parents('.um-uploader');
+		let $fileRow  = $(this).parents('.um-uploader-file');
+
+		let removeRow = function () {
+			let fileID = $fileRow.attr('id');
+			let uploaderObj = UM.frontend.uploaders[ $uploader.data('plupload') ];
+			uploaderObj.removeFile( fileID );
+			$fileRow.remove();
+		}
+
+		if ( ! $fileRow.hasClass('um-upload-failed') ) {
+			let fileName = $fileRow.data('filename');
+			let nonce = $fileRow.data('nonce');
+
+			// then file can be removed from server.
+			wp.ajax.send(
+				'um_delete_temp_file',
+				{
+					data: {
+						name: fileName,
+						nonce: nonce
+					},
+					success: function () {
+						removeRow();
+					},
+					error: function (data) {
+						alert(data);
+						console.log(data);
+					}
+				}
+			);
+		} else {
+			removeRow();
+		}
 	});
 });
 

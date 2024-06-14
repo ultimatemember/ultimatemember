@@ -603,11 +603,47 @@ class Shortcodes {
 			</div>
 			<h3>Uploader</h3>
 			<div>
+				<p>Common upload</p>
 				<?php echo UM()->frontend()::layouts()::uploader( array( 'handler' => 'common-upload' ) ); ?>
-				<p>Avatar</p>
-				<?php echo UM()->frontend()::layouts()::uploader(
+				<p>Common upload but custom text in dropzone</p>
+				<?php echo UM()->frontend()::layouts()::uploader( array( 'handler' => 'common-upload', 'max_upload_size' => 1024 * 1024, 'dropzone_inner' => 'lorem ipsum' ) ); ?>
+				<p>Common upload but limited by size</p>
+				<?php echo UM()->frontend()::layouts()::uploader( array( 'handler' => 'common-upload', 'max_upload_size' => 1024 * 1024 ) ); ?>
+				<p>Image upload</p>
+				<?php
+				echo UM()->frontend()::layouts()::uploader(
+					array(
+						'handler' => 'upload-image',
+						'types'   => array( 'jpg', 'jpeg', 'jpe', 'gif', 'png', 'bmp', 'tif', 'tiff', 'ico', 'heic', 'webp', 'avif' ),
+					)
+				);
+				?>
+				<p>Image upload but custom text in dropzone</p>
+				<?php
+				echo UM()->frontend()::layouts()::uploader(
+					array(
+						'handler' => 'upload-image',
+						'types'   => array( 'jpg', 'jpeg', 'jpe', 'gif', 'png', 'bmp', 'tif', 'tiff', 'ico', 'heic', 'webp', 'avif' ),
+						'dropzone_inner' => 'lorem ipsum'
+					)
+				);
+				?>
+				<p>Image upload but limited by size</p>
+				<?php
+				echo UM()->frontend()::layouts()::uploader(
+					array(
+						'handler' => 'upload-image',
+						'types'   => array( 'jpg', 'jpeg', 'jpe', 'gif', 'png', 'bmp', 'tif', 'tiff', 'ico', 'heic', 'webp', 'avif' ),
+						'max_upload_size' => 1024 * 1024
+					)
+				);
+				?>
+
+<!--				<p>Avatar</p>-->
+				<?php /*echo UM()->frontend()::layouts()::uploader(
 					array(
 						'handler' => 'upload-avatar',
+						'types'   => array( 'jpg', 'jpeg', 'jpe', 'gif', 'png', 'bmp', 'tif', 'tiff', 'ico', 'heic', 'webp', 'avif' ),
 						'button'  => array(
 							'data' => array(
 								'user_id'       => get_current_user_id(),
@@ -616,10 +652,9 @@ class Shortcodes {
 							),
 						),
 					)
-				); ?>
-				<p>Should work for not logged in</p>
-				<?php echo UM()->frontend()::layouts()::uploader( array( 'handler' => 'nopriv-upload' ) ); ?>
-				<?php echo UM()->frontend()::layouts()::uploader( array( 'handler' => 'activity-post-photo' ) ); ?>
+				);*/ ?>
+<!--				<p>Should work for not logged in</p>-->
+				<?php /*echo UM()->frontend()::layouts()::uploader( array( 'handler' => 'nopriv-upload' ) );*/ ?>
 			</div>
 			<h3>Buttons</h3>
 			<script>

@@ -16,11 +16,39 @@ class Files {
 	 * Files constructor.
 	 */
 	public function __construct() {
+		add_action( 'wp_ajax_um_delete_temp_file', array( $this, 'delete_temp_file' ) );
+		add_action( 'wp_ajax_nopriv_um_delete_temp_file', array( $this, 'delete_temp_file' ) );
+
 		add_action( 'wp_ajax_um_upload', array( $this, 'upload_file' ) );
 		add_action( 'wp_ajax_nopriv_um_upload', array( $this, 'upload_file' ) );
 
 		add_action( 'um_upload_file_validation', array( $this, 'upload_validation' ), 10, 5 );
 		add_action( 'um_upload_file_temp_uploaded', array( $this, 'temp_uploaded' ), 10, 2 );
+	}
+
+	/**
+	 * Common upload file handler. Default result file in temp directory with unique name.
+	 */
+	public function delete_temp_file() {
+		if ( empty( $_REQUEST['name'] ) ) {
+			wp_send_json_error( __( 'Unknown file.', 'ultimate-member' ) );
+		}
+
+		if ( empty( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], 'um_delete_temp_file' . $_REQUEST['name'] ) ) {
+			wp_send_json_error( __( 'Invalid nonce.', 'ultimate-member' ) );
+		}
+
+		$filename = sanitize_file_name( $_REQUEST['name'] );
+		$path     = wp_normalize_path( UM()->common()->filesystem()->temp_upload_dir . '/' . $filename );
+		if ( ! file_exists( $path ) ) {
+			wp_send_json_error( __( 'Invalid file.', 'ultimate-member' ) );
+		}
+
+		if ( ! unlink( $path ) ) {
+			wp_send_json_error( __( 'Cannot remove file from server.', 'ultimate-member' ) );
+		}
+
+		wp_send_json_success();
 	}
 
 	/**
@@ -31,6 +59,7 @@ class Files {
 	private static function get_possible_handlers() {
 		$handlers = array(
 			'common-upload',
+			'upload-image',
 		);
 		if ( is_user_logged_in() ) {
 			if ( ! UM()->options()->get( 'disable_profile_photo_upload' ) ) {
@@ -221,16 +250,20 @@ class Files {
 			// Strip the temp .part suffix off
 			rename( "{$filepath}.part", $filepath ); // Strip the temp .part suffix off
 
-			$fileinfo                = $_FILES['file'];
-			$fileinfo['file']        = $filepath;
-			$fileinfo['name_loaded'] = $filename;
-			$fileinfo['name_saved']  = wp_basename( $fileinfo['file'] );
-			$fileinfo['hash']        = md5( $fileinfo['name_saved'] . '_um_uploader_security_salt' );
-			$fileinfo['path']        = UM()->common()->filesystem()->temp_upload_dir . DIRECTORY_SEPARATOR . $fileinfo['name_saved'];
-			$fileinfo['url']         = UM()->common()->filesystem()->temp_upload_url . '/' . $fileinfo['name_saved'];
-			$fileinfo['size']        = filesize( $fileinfo['file'] );
-			$fileinfo['size_format'] = size_format( $fileinfo['size'] );
-			$fileinfo['time']        = gmdate( 'Y-m-d H:i:s', filemtime( $fileinfo['file'] ) );
+			$name_saved = wp_basename( $filepath );
+
+			$fileinfo                 = $_FILES['file'];
+			$fileinfo['file']         = $filepath;
+			$fileinfo['name_loaded']  = $filename;
+			$fileinfo['name_saved']   = $name_saved;
+			$fileinfo['hash']         = md5( $fileinfo['name_saved'] . '_um_uploader_security_salt' );
+			$fileinfo['path']         = UM()->common()->filesystem()->temp_upload_dir . DIRECTORY_SEPARATOR . $fileinfo['name_saved'];
+			$fileinfo['url']          = UM()->common()->filesystem()->temp_upload_url . '/' . $fileinfo['name_saved'];
+			$fileinfo['size']         = filesize( $fileinfo['file'] );
+			$fileinfo['size_format']  = size_format( $fileinfo['size'] );
+			$fileinfo['time']         = gmdate( 'Y-m-d H:i:s', filemtime( $fileinfo['file'] ) );
+			$fileinfo['delete_nonce'] = wp_create_nonce( 'um_delete_temp_file' . $name_saved );
+			// $fileinfo['uploader_item'] = UM()->frontend()::layouts()::uploader_item( $fileinfo );
 
 			$files[] = $fileinfo;
 

@@ -59,10 +59,12 @@
     width: 66px
     height: 66px
 
+// Make parent block flexible.
 .um
   +flex( column, flex-start, stretch, nowrap )
 
-  // Buttons
+// Buttons.
+.um
   .#{$prefix}button // button has predefined styles for default secondary-gray
     text-align: center
     cursor: pointer
@@ -475,9 +477,7 @@
           background-color: transparent
           border: none
           box-shadow: none
-
-
-// Box
+// Box.
 .um
   .#{$prefix}box
     +flex( column, flex-start, stretch, nowrap )
@@ -520,7 +520,7 @@
       padding: $spacing-lg 0 0 0
       border-top: 1px solid $gray-200
 
-// Link + Link Button
+// Link + Link Button.
 .um
   .#{$prefix}link
     text-decoration: none
@@ -861,8 +861,7 @@
             color: $gray-400
             background-color: transparent
             border: none
-
-// Avatar
+// Avatar.
 .um
   .#{$prefix}avatar
     margin: 0
@@ -888,8 +887,6 @@
     &.#{$prefix}avatar-round
       overflow: hidden
       border-radius: 100%
-
-
 // Avatar uploader
 .um
   .#{$prefix}profile-photo-uploader
@@ -1718,6 +1715,7 @@ input[type="range"]
       padding: 0
       margin: 0
 
+// Small user data header.
 .um
   .#{$prefix}small-data
     display: grid
@@ -1736,16 +1734,13 @@ input[type="range"]
         &:hover
           color: $gray-900
     .#{$prefix}supporting-text
-      +typography( text, sm, regular )
-      color: $gray-600
       text-overflow: ellipsis
       padding: 0
       margin: 0
     &.#{$prefix}data-no-supporting
       +flex( row, flex-start, center, nowrap )
       row-gap: 0
-
-// Badges
+// Badges.
 .um
   .#{$prefix}badge
     text-align: center
@@ -1828,9 +1823,7 @@ input[type="range"]
         border-color: $success-200
         background: $success-50
         color: $success-700
-
-
-// Buttons group
+// Buttons group.
 .um
   .#{$prefix}buttons-group
     margin: 0
@@ -1885,7 +1878,6 @@ input[type="range"]
         border-radius: 0 $radius-md $radius-md 0
         &.disabled
           border-right: 1px solid $button-border-color-disabled
-
 // Pagination
 // Note: It partially uses the buttons group style
 .um
@@ -1959,8 +1951,7 @@ input[type="range"]
       button
         width: auto
         min-width: 80px
-
-// Fields common styling
+// Fields common styling.
 .um
   input[type="date"],
   input[type="datetime"],
@@ -2009,7 +2000,6 @@ input[type="range"]
   input[type="datetime-local"],
   input[type="time"]
     font-family: inherit
-
 // Field wrapper common styling
 .um
   .#{$prefix}field-wrapper
@@ -2053,8 +2043,7 @@ input[type="range"]
       width: 100%
       padding: 0
       margin: 0
-
-// Toggle sections displayed after button/link click
+// Toggle sections displayed after button/link click.
 .um
   .#{$prefix}toggle-block
     display: grid
@@ -2069,8 +2058,7 @@ input[type="range"]
       width: 100%
       &.#{$prefix}visible
         overflow: visible
-
-
+// Uploader.
 .um
   .#{$prefix}uploader
     +flex( column, flex-start, start, nowrap )
@@ -2088,6 +2076,8 @@ input[type="range"]
       .#{$prefix}supporting-text
         +flex( column, flex-start, center, nowrap )
         row-gap: $spacing-xs
+        & > span
+          text-align: center
       &:focus,
       &[drop-active=true]
         border: 2px solid $primary-600
@@ -2096,33 +2086,35 @@ input[type="range"]
       +flex( column, flex-start, stretch, nowrap )
       width: 100%
       row-gap: $spacing-lg
-      .uploader-file-item
+      &:not(.#{$prefix}display-none)
+        margin: $spacing-xs 0 0 0
+      .#{$prefix}uploader-file
+        +flex( row, flex-start, start, nowrap )
         padding: $spacing-xl
         background: $um-white
         border: 1px solid $gray-200
         border-radius: $radius-xl
-        +flex( row, flex-start, start, nowrap )
         column-gap: $spacing-lg
-        .uploader-file-item-ext-ico
-          width: 40px
-        .uploader-file-item-data
+        margin: 1px // for handle 2px border without screen jumping.
+        .#{$prefix}uploader-file-data
           +flex( column, flex-start, stretch, nowrap )
           width: 100%
-          .uploader-file-item-header
+          .#{$prefix}uploader-file-data-header
             +flex( row, space-between, flex-start, nowrap )
-            .uploader-file-item-name
+            .#{$prefix}uploader-file-name
               color: $gray-700
               +typography( text, sm, medium )
-            .um-uploader-file-item-remove
+            .#{$prefix}uploader-file-remove
               padding: $spacing-xxs 0 0 0
-          .uploader-file-item-size
-            color: $gray-600
-            +typography( text, sm, regular )
-      &:not(.#{$prefix}display-none)
-        margin: $spacing-xs 0 0 0
-    .#{$prefix}supporting-text
-      color: $gray-600
-      +typography( text, sm, regular )
+        &.#{$prefix}upload-failed
+          border: 2px solid $error-600
+          margin: 0 // for handle 2px border without screen jumping.
+          .#{$prefix}file-extension
+            & > svg
+              stroke: $error-600
+            .#{$prefix}file-extension-text
+              background: $error-600
+
     .#{$prefix}link
       +typography( text, sm, semibold )
     &.#{$prefix}disabled
@@ -2131,17 +2123,7 @@ input[type="range"]
         .#{$prefix}supporting-text
           +flex( column, flex-start, center, nowrap )
           row-gap: $spacing-xs
-    //.#{$prefix}uploaded-content-wrapper
-    //  +flex( column, flex-start, stretch, nowrap )
-    //  .#{$prefix}uploader-overflow
-    //    position: relative
-    //    .#{$prefix}ajax-spinner-svg
-    //      position: absolute
-    //      top: calc( 50% - 24px )
-    //      left: calc( 50% - 24px )
-    //  .#{$prefix}uploader-filelist
-    //.#{$prefix}uploader-errorlist
-
+// File extensions.
 .um
   .#{$prefix}file-extension
     position: relative
@@ -2149,6 +2131,7 @@ input[type="range"]
     width: 40px
     height: 40px
     & > svg
+      stroke: $gray-300
       position: absolute
       top: -4px
       left: -4px
@@ -2165,8 +2148,7 @@ input[type="range"]
       text-transform: uppercase
       background: $primary-600
       border-radius: $radius-xxs
-
-// Progress bar
+// Progress bar.
 .um
   .#{$prefix}progress-bar
     height: $spacing-md
@@ -2193,10 +2175,11 @@ input[type="range"]
         max-width: 50px
       .#{$prefix}progress-bar
         width: calc( 100% - 50px )
-
-
 // Misc
 .um
+  .#{$prefix}supporting-text
+    color: $gray-600
+    +typography( text, sm, regular )
   .#{$prefix}full-width
     width: 100%
   .#{$prefix}display-none

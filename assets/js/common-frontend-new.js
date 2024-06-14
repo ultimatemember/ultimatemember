@@ -148,6 +148,7 @@ UM.frontend = {
 		set: function( $bar, value ) {
 			$bar.data('value', value).attr('title', value + '%');
 			$bar.find('.um-progress-bar-inner').css('width', value + '%').attr('title', value + '%');
+			$bar.siblings('.um-progress-bar-label').text(value + '%');
 		}
 	},
 	responsive: {
