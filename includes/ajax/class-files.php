@@ -28,6 +28,7 @@ class Files {
 
 	/**
 	 * Common upload file handler. Default result file in temp directory with unique name.
+	 * @todo make delete temp file function secure via $_COOKIE
 	 */
 	public function delete_temp_file() {
 		if ( empty( $_REQUEST['name'] ) ) {
