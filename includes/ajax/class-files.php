@@ -16,14 +16,16 @@ class Files {
 	 * Files constructor.
 	 */
 	public function __construct() {
-		add_action( 'wp_ajax_um_delete_temp_file', array( $this, 'delete_temp_file' ) );
-		add_action( 'wp_ajax_nopriv_um_delete_temp_file', array( $this, 'delete_temp_file' ) );
+		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE ) {
+			add_action( 'wp_ajax_um_delete_temp_file', array( $this, 'delete_temp_file' ) );
+			add_action( 'wp_ajax_nopriv_um_delete_temp_file', array( $this, 'delete_temp_file' ) );
 
-		add_action( 'wp_ajax_um_upload', array( $this, 'upload_file' ) );
-		add_action( 'wp_ajax_nopriv_um_upload', array( $this, 'upload_file' ) );
+			add_action( 'wp_ajax_um_upload', array( $this, 'upload_file' ) );
+			add_action( 'wp_ajax_nopriv_um_upload', array( $this, 'upload_file' ) );
 
-		add_action( 'um_upload_file_validation', array( $this, 'upload_validation' ), 10, 5 );
-		add_action( 'um_upload_file_temp_uploaded', array( $this, 'temp_uploaded' ), 10, 2 );
+			add_action( 'um_upload_file_validation', array( $this, 'upload_validation' ), 10, 5 );
+			add_action( 'um_upload_file_temp_uploaded', array( $this, 'temp_uploaded' ), 10, 2 );
+		}
 	}
 
 	/**
@@ -60,14 +62,14 @@ class Files {
 	private static function get_possible_handlers() {
 		$handlers = array(
 			'common-upload',
-			'upload-image',
+//			'upload-image',
 		);
 		if ( is_user_logged_in() ) {
 			if ( ! UM()->options()->get( 'disable_profile_photo_upload' ) ) {
 				$handlers[] = 'upload-avatar';
 			}
 		} else {
-			$handlers[] = 'nopriv-upload';
+//			$handlers[] = 'nopriv-upload';
 		}
 
 		return apply_filters( 'um_upload_handlers', $handlers );
@@ -110,7 +112,7 @@ class Files {
 		}
 
 		if ( isset( $_COOKIE['um-current-upload-filename'] ) && $chunks > 1 ) {
-			// Double check filetype to avoid break from COOKIES while upload chunks of the big file.
+			// Double check filetype to avoid break from COOKIE while upload chunks of the big file.
 			$image_type = wp_check_filetype( $unique_name, $mimes );
 			if ( ! $image_type['ext'] ) {
 				$error = __( 'Wrong filetype.', 'ultimate-member' );
@@ -264,7 +266,6 @@ class Files {
 			$fileinfo['size_format']  = size_format( $fileinfo['size'] );
 			$fileinfo['time']         = gmdate( 'Y-m-d H:i:s', filemtime( $fileinfo['file'] ) );
 			$fileinfo['delete_nonce'] = wp_create_nonce( 'um_delete_temp_file' . $name_saved );
-			// $fileinfo['uploader_item'] = UM()->frontend()::layouts()::uploader_item( $fileinfo );
 
 			$files[] = $fileinfo;
 

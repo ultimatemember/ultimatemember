@@ -721,25 +721,40 @@ class Layouts {
 			if ( UM()->common()->users()->has_photo( $user_id, 'profile_photo' ) ) {
 				$title = __( 'Change photo', 'ultimate-member' );
 			}
-			$uploader_overflow = '<div class="um-profile-photo-uploader-overflow" title="' . esc_attr( $title ) . '" data-user_id="' . esc_attr( $user_id ) . '" data-nonce="' . wp_create_nonce( 'um_upload_profile_photo' ) . '" data-apply_nonce="' . wp_create_nonce( 'um_upload_profile_photo_apply' ) . '" data-decline_nonce="' . wp_create_nonce( 'um_upload_profile_photo_decline' ) . '">
-				<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-camera" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+
+			$svg = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-camera" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
 					<path d="M5 7h1a2 2 0 0 0 2 -2a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2" />
 					<path d="M9 13a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
-				</svg>
-			</div>';
+				</svg>';
+
+			$uploader = UM()->frontend()::layouts()::uploader(
+				array(
+					'handler'    => 'upload-avatar',
+					'dropzone'   => false,
+					'multiple'   => false,
+					'files_list' => false,
+					'types'      => array( 'jpg', 'jpeg', 'jpe', 'gif', 'png', 'bmp', 'tif', 'tiff', 'ico', 'heic', 'webp', 'avif' ),
+					'button'     => array(
+						'content' => $svg,
+						'title'   => $title,
+						'design'  => 'link-gray',
+						'data'    => array(
+							'user_id'       => get_current_user_id(),
+							'apply_nonce'   => wp_create_nonce( 'um_upload_profile_photo_apply' ),
+							'decline_nonce' => wp_create_nonce( 'um_upload_profile_photo_decline' ),
+						),
+					),
+				)
+			);
+
+			$uploader_overflow = $uploader . '<div class="um-profile-photo-overflow">' . self::ajax_loader() . '</div>';
 		}
 
 		ob_start();
 		?>
 		<div class="um-profile-photo-uploader">
-			<div class="um-profile-photo-wrapper">
-				<?php echo self::single_avatar( $user_id, array( 'size' => 'xl', 'wrapper_class' => array( 'um-profile-photo' ) ) ); ?>
-				<?php echo $uploader_overflow; ?>
-				<div class="um-profile-photo-overflow">
-					<?php echo self::ajax_loader(); ?>
-				</div>
-			</div>
-			<?php /*echo self::dropdown_menu( 'um-avatar-dropdown-toggle', $items );*/ ?>
+			<?php echo wp_kses( self::single_avatar( $user_id, array( 'size' => 'xl', 'wrapper_class' => array( 'um-profile-photo' ) ) ), UM()->get_allowed_html( 'templates' ) ); ?>
+			<?php echo wp_kses( $uploader_overflow, UM()->get_allowed_html( 'templates' ) ); ?>
 		</div>
 		<?php
 		return ob_get_clean();
@@ -1619,6 +1634,7 @@ class Layouts {
 				$button_content = array_key_exists( 'content', $args['button'] ) ? $args['button']['content'] : $button_content;
 				unset( $args['button']['content'] );
 
+				$args['button']['design']  = ! empty( $args['button']['design'] ) ? $args['button']['design'] : $button_args['design'];
 				$args['button']['classes'] = ! empty( $args['button']['classes'] ) ? array_merge( $args['button']['classes'], $button_args['classes'] ) : $button_args['classes'];
 				$args['button']['data']    = ! empty( $args['button']['data'] ) ? array_merge( $args['button']['data'], $button_args['data'] ) : $button_args['data'];
 				$button_args               = $args['button'];
@@ -1643,17 +1659,7 @@ class Layouts {
 				<div id="um-<?php echo esc_attr( $id ); ?>-uploader-filelist" class="um-uploader-filelist um-display-none"></div>
 				<?php
 			}
-			?>
 
-			<div class="um-uploaded-content-wrapper">
-
-			</div>
-			<div id="um-<?php echo esc_attr( $id ); ?>-uploader-overflow" class="um-uploader-overflow um-display-none">
-				<?php echo wp_kses( self::ajax_loader(), UM()->get_allowed_html( 'templates' ) ); ?>
-			</div>
-			<div id="um-<?php echo esc_attr( $id ); ?>-uploader-errorlist" class="um-uploader-errorlist um-display-none"></div>
-
-			<?php
 			if ( true !== $args['async'] ) {
 				$name      = $args['multiple'] ? $args['name'] . '[]' : $args['name'];
 				$hash_name = $args['multiple'] ? $args['name'] . '_hash[]' : $args['name'] . '_hash';

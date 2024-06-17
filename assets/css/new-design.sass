@@ -890,30 +890,23 @@
 // Avatar uploader
 .um
   .#{$prefix}profile-photo-uploader
-    +flex( row, flex-start, start, nowrap )
+    width: 128px
+    height: 128px
     +border-box
     margin: 0
     padding: 0
     position: relative
-    //.#{$prefix}dropdown-wrapper
-    //  min-width: auto
-    //  width: 4px
-    //  right: 4px
-    //  position: relative
-    .#{$prefix}profile-photo-wrapper
-      margin: 0
-      padding: 0
-      position: relative
-      .#{$prefix}profile-photo
-        border: 4px solid $um-white
-        box-shadow: $shadow-lg
-        +border-box
-        img
-          height: auto
-        &:hover
-          & ~ .#{$prefix}profile-photo-uploader-overflow
-            display: block
-    .#{$prefix}profile-photo-uploader-overflow
+    box-shadow: $shadow-lg
+    border-radius: 100%
+    .#{$prefix}profile-photo
+      border: 4px solid $um-white
+      +border-box
+      img
+        height: auto
+      &:hover
+        & ~ .#{$prefix}uploader
+          display: block
+    .#{$prefix}uploader
       cursor: pointer
       position: absolute
       top: 3px
@@ -923,15 +916,25 @@
       background: rgba(0, 0, 0, 0.2)
       border-radius: 100%
       display: none
-      svg
-        stroke: $um-white
-        position: absolute
-        top: calc( 50% - 22px )
-        left: calc( 50% - 22px )
-        > *
-          stroke: $um-white
+      //svg
+      //  stroke: $um-white
+      //  position: absolute
+      //  top: calc( 50% - 22px )
+      //  left: calc( 50% - 22px )
+      //  > *
+      //    stroke: $um-white
       &:hover
         display: block
+      .#{$prefix}uploader-button
+        width: 100%
+        height: 100%
+        svg
+          stroke: $um-white
+          //position: absolute
+          //top: calc( 50% - 22px )
+          //left: calc( 50% - 22px )
+          > *
+            stroke: $um-white
     .#{$prefix}profile-photo-overflow
       backdrop-filter: blur(10px)
       position: absolute
@@ -947,7 +950,7 @@
         top: calc( 50% - 24px )
         left: calc( 50% - 24px )
     &.#{$prefix}processing
-      .#{$prefix}profile-photo-uploader-overflow
+      .#{$prefix}uploader
         display: none
       .#{$prefix}profile-photo-overflow
         display: block
@@ -2114,6 +2117,14 @@ input[type="range"]
               stroke: $error-600
             .#{$prefix}file-extension-text
               background: $error-600
+        &.#{$prefix}upload-completed
+          border: 2px solid $success-600
+          margin: 0 // for handle 2px border without screen jumping.
+          .#{$prefix}file-extension
+            & > svg
+              stroke: $success-600
+            .#{$prefix}file-extension-text
+              background: $success-600
 
     .#{$prefix}link
       +typography( text, sm, semibold )

@@ -18,7 +18,6 @@ class User {
 	public function __construct() {
 		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_no_conflict_avatar' ) ) {
 			add_action( 'wp_ajax_um_delete_profile_photo', array( $this, 'delete_avatar' ) );
-			add_action( 'wp_ajax_um_upload_profile_photo', array( $this, 'upload_profile_photo' ) );
 			add_action( 'wp_ajax_um_decline_profile_photo_change', array( $this, 'decline_profile_photo_change' ) );
 			add_action( 'wp_ajax_um_apply_profile_photo_change', array( $this, 'apply_profile_photo_change' ) );
 		}
@@ -187,226 +186,21 @@ class User {
 		// Flush the user's cache.
 		UM()->common()->users()->remove_cache( $user_id );
 
+		$avatar_args = array(
+			'loading'  => 'lazy',
+			'um-cache' => false,
+		);
+
 		wp_send_json_success(
 			array(
-				'avatar'    => get_avatar( $user_id, 128, '', '', array( 'loading' => 'lazy', 'um-cache' => false ) ),
+				'avatar'    => get_avatar( $user_id, 128, '', '', $avatar_args ),
 				'all_sizes' => array(
-					's'  => get_avatar( $user_id, 24, '', '', array( 'loading' => 'lazy', 'um-cache' => false ) ),
-					'm'  => get_avatar( $user_id, 32, '', '', array( 'loading' => 'lazy', 'um-cache' => false ) ),
-					'l'  => get_avatar( $user_id, 64, '', '', array( 'loading' => 'lazy', 'um-cache' => false ) ),
-					'xl' => get_avatar( $user_id, 128, '', '', array( 'loading' => 'lazy', 'um-cache' => false ) ),
+					's'  => get_avatar( $user_id, 24, '', '', $avatar_args ),
+					'm'  => get_avatar( $user_id, 32, '', '', $avatar_args ),
+					'l'  => get_avatar( $user_id, 64, '', '', $avatar_args ),
+					'xl' => get_avatar( $user_id, 128, '', '', $avatar_args ),
 				),
 			)
 		);
-	}
-
-	/**
-	 * Generate unique filename
-	 *
-	 * @param string $dir
-	 * @param string $name
-	 * @param string $ext
-	 *
-	 * @return string
-	 *
-	 * @since 2.8.4
-	 */
-	public function unique_filename( $dir, $name, $ext ) {
-		$hashed = hash( 'ripemd160', time() . wp_rand( 10, 1000 ) . $name );
-		return "profile_photo_{$hashed}{$ext}";
-	}
-
-	/**
-	 * Image upload by AJAX
-	 *
-	 * @throws \Exception
-	 */
-	public function upload_profile_photo() {
-		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'um_upload_profile_photo' ) ) {
-			wp_send_json(
-				array(
-					'OK'   => 0,
-					'info' => __( 'Invalid nonce.', 'ultimate-member' ),
-				)
-			);
-		}
-
-		if ( ! array_key_exists( 'user_id', $_REQUEST ) ) {
-			wp_send_json(
-				array(
-					'OK'   => 0,
-					'info' => __( 'Invalid data.', 'ultimate-member' ),
-				)
-			);
-		}
-
-		$user_id = absint( $_REQUEST['user_id'] );
-
-		if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-			wp_send_json(
-				array(
-					'OK'   => 0,
-					'info' => __( 'You can not edit this user.', 'ultimate-member' ),
-				)
-			);
-		}
-
-		$files  = array();
-		$chunk  = ! empty( $_REQUEST['chunk'] ) ? absint( $_REQUEST['chunk'] ) : 0;
-		$chunks = ! empty( $_REQUEST['chunks'] ) ? absint( $_REQUEST['chunks'] ) : 0;
-
-		// Get a file name
-		if ( isset( $_REQUEST['name'] ) ) {
-			$filename = sanitize_file_name( $_REQUEST['name'] );
-		} elseif ( ! empty( $_FILES ) ) {
-			$filename = sanitize_file_name( $_FILES['file']['name'] );
-		} else {
-			$filename = uniqid( 'file_' );
-		}
-
-		/**
-		 * Filters the MIME-types of the images that can be uploaded as Company Logo.
-		 *
-		 * @since 2.0
-		 * @hook um_image_upload_allowed_mimes
-		 *
-		 * @param {array} $mime_types MIME types.
-		 *
-		 * @return {array} MIME types.
-		 */
-		$mimes = apply_filters(
-			'um_image_upload_allowed_mimes',
-			array(
-				'jpg|jpeg|jpe' => 'image/jpeg',
-				'gif'          => 'image/gif',
-				'png'          => 'image/png',
-				'bmp'          => 'image/bmp',
-				'tiff|tif'     => 'image/tiff',
-				'ico'          => 'image/x-icon',
-				'webp'         => 'image/webp',
-				'heic'         => 'image/heic',
-			)
-		);
-
-		$image_type = wp_check_filetype( $filename, $mimes );
-		if ( ! $image_type['ext'] ) {
-			wp_send_json(
-				array(
-					'OK'   => 0,
-					'info' => __( 'Wrong filetype.', 'ultimate-member' ),
-				)
-			);
-		}
-
-		UM()->common()->filesystem()->clear_temp_dir();
-
-		if ( empty( $_FILES ) || $_FILES['file']['error'] ) {
-			wp_send_json(
-				array(
-					'OK'   => 0,
-					'info' => __( 'Failed to move uploaded file.', 'ultimate-member' ),
-				)
-			);
-		}
-
-		// Uploader for the chunks
-		if ( $chunks ) {
-
-			if ( isset( $_COOKIE['um-profile-photo-upload'] ) && $chunks > 1 ) {
-				$unique_name = sanitize_file_name( $_COOKIE['um-profile-photo-upload'] );
-				$filepath    = UM()->common()->filesystem()->temp_upload_dir . DIRECTORY_SEPARATOR . $unique_name;
-
-				$image_type = wp_check_filetype( $unique_name, $mimes );
-				if ( ! $image_type['ext'] ) {
-					wp_send_json(
-						array(
-							'OK'   => 0,
-							'info' => __( 'Wrong filetype.', 'ultimate-member' ),
-						)
-					);
-				}
-			} else {
-				$unique_name = wp_unique_filename( UM()->common()->filesystem()->temp_upload_dir, $filename, array( &$this, 'unique_filename' ) );
-				$filepath    = UM()->common()->filesystem()->temp_upload_dir . DIRECTORY_SEPARATOR . $unique_name;
-				if ( $chunks > 1 ) {
-					UM()->setcookie( 'um-profile-photo-upload', $unique_name );
-				}
-			}
-
-			// phpcs:disable WordPress.WP.AlternativeFunctions -- for directly fopen, fwrite, fread, fclose functions using
-			// phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged -- for silenced fopen, fwrite, fread, fclose functions running
-
-			// Open temp file
-			$out = @fopen( "{$filepath}.part", 0 === $chunk ? 'wb' : 'ab' );
-
-			if ( $out ) {
-
-				// Read binary input stream and append it to temp file
-				$in = @fopen( $_FILES['file']['tmp_name'], 'rb' );
-
-				if ( $in ) {
-					// phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition -- reading buffer here
-					while ( $buff = fread( $in, 4096 ) ) {
-						fwrite( $out, $buff );
-					}
-				} else {
-					wp_send_json(
-						array(
-							'OK'   => 0,
-							'info' => __( 'Failed to open input stream.', 'ultimate-member' ),
-						)
-					);
-				}
-
-				fclose( $in );
-				fclose( $out );
-				unlink( $_FILES['file']['tmp_name'] );
-
-			} else {
-
-				wp_send_json(
-					array(
-						'OK'   => 0,
-						'info' => __( 'Failed to open output stream.', 'ultimate-member' ),
-					)
-				);
-
-			}
-
-			// phpcs:enable WordPress.WP.AlternativeFunctions
-			// phpcs:enable WordPress.PHP.NoSilencedErrors.Discouraged
-
-			// Check if file has been uploaded
-			if ( $chunk === $chunks - 1 ) {
-				// Strip the temp .part suffix off
-				rename( "{$filepath}.part", $filepath ); // Strip the temp .part suffix off
-
-				$fileinfo                = $_FILES['file'];
-				$fileinfo['file']        = $filepath;
-				$fileinfo['name_loaded'] = $filename;
-				$fileinfo['name_saved']  = wp_basename( $fileinfo['file'] );
-				$fileinfo['hash']        = md5( $fileinfo['name_saved'] . '_um_uploader_security_salt' );
-				$fileinfo['path']        = UM()->common()->filesystem()->temp_upload_dir . DIRECTORY_SEPARATOR . $fileinfo['name_saved'];
-				$fileinfo['url']         = UM()->common()->filesystem()->temp_upload_url . '/' . $fileinfo['name_saved'];
-				$fileinfo['size']        = filesize( $fileinfo['file'] );
-				$fileinfo['size_format'] = size_format( $fileinfo['size'] );
-				$fileinfo['time']        = gmdate( 'Y-m-d H:i:s', filemtime( $fileinfo['file'] ) );
-
-				$files[] = $fileinfo;
-
-				update_user_meta( $user_id, 'um_temp_profile_photo', $fileinfo );
-				UM()->setcookie( 'um-profile-photo-upload', false );
-
-			} else {
-				wp_send_json(
-					array(
-						'OK'   => 1,
-						'info' => __( 'Upload successful.', 'ultimate-member' ),
-					)
-				);
-			}
-		}
-
-		wp_send_json_success( $files );
 	}
 }

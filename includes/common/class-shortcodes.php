@@ -601,10 +601,39 @@ class Shortcodes {
 				<?php echo UM()->frontend()::layouts()::progress_bar( array( 'label' => 'right', 'value' => 30 ) ); ?>
 				<?php echo UM()->frontend()::layouts()::progress_bar( array( 'value' => 100 ) ); ?>
 			</div>
+
+			<h3>Avatar uploader</h3>
+
+			<?php echo UM()->frontend()::layouts()::avatar_uploader(); ?>
+
 			<h3>Uploader</h3>
 			<div>
 				<p>Common upload</p>
 				<?php echo UM()->frontend()::layouts()::uploader( array( 'handler' => 'common-upload' ) ); ?>
+				<p>Common upload no dropzone, no filelist</p>
+				<?php
+				$svg = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-camera" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M5 7h1a2 2 0 0 0 2 -2a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2" />
+					<path d="M9 13a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+				</svg>';
+				echo UM()->frontend()::layouts()::uploader(
+					array(
+						'handler'    => 'upload-avatar',
+						'dropzone'   => false,
+						'multiple'   => false,
+						'files_list' => false,
+						'types'      => array( 'jpg', 'jpeg', 'jpe', 'gif', 'png', 'bmp', 'tif', 'tiff', 'ico', 'heic', 'webp', 'avif' ),
+						'button'     => array(
+							'content' => $svg,
+							'design'  => 'link-gray',
+							'data'    => array(
+								'user_id'       => get_current_user_id(),
+								'apply_nonce'   => wp_create_nonce( 'um_upload_profile_photo_apply' ),
+								'decline_nonce' => wp_create_nonce( 'um_upload_profile_photo_decline' ),
+							),
+						),
+					)
+				); ?>
 				<p>Common upload but custom text in dropzone</p>
 				<?php echo UM()->frontend()::layouts()::uploader( array( 'handler' => 'common-upload', 'max_upload_size' => 1024 * 1024, 'dropzone_inner' => 'lorem ipsum' ) ); ?>
 				<p>Common upload but limited by size</p>
@@ -638,21 +667,6 @@ class Shortcodes {
 					)
 				);
 				?>
-
-<!--				<p>Avatar</p>-->
-				<?php /*echo UM()->frontend()::layouts()::uploader(
-					array(
-						'handler' => 'upload-avatar',
-						'types'   => array( 'jpg', 'jpeg', 'jpe', 'gif', 'png', 'bmp', 'tif', 'tiff', 'ico', 'heic', 'webp', 'avif' ),
-						'button'  => array(
-							'data' => array(
-								'user_id'       => get_current_user_id(),
-								'apply_nonce'   => wp_create_nonce( 'um_upload_profile_photo_apply' ),
-								'decline_nonce' => wp_create_nonce( 'um_upload_profile_photo_decline' ),
-							),
-						),
-					)
-				);*/ ?>
 <!--				<p>Should work for not logged in</p>-->
 				<?php /*echo UM()->frontend()::layouts()::uploader( array( 'handler' => 'nopriv-upload' ) );*/ ?>
 			</div>
@@ -893,10 +907,6 @@ class Shortcodes {
 			<?php echo UM()->frontend()::layouts()::pagination( array( 'page' => 2, 'total' => 10, 'per_page' => 2 ) ); ?>
 			<?php echo UM()->frontend()::layouts()::pagination( array( 'page' => 1, 'total' => 5, 'per_page' => 5 ) ); ?>
 			<?php echo UM()->frontend()::layouts()::pagination( array( 'page' => 8, 'total' => 500, 'per_page' => 20 ) ); ?>
-
-			<h3>Avatar uploader</h3>
-
-			<?php echo UM()->frontend()::layouts()::avatar_uploader(); ?>
 
 			<h3>Avatars</h3>
 			<p>Clickable</p>
