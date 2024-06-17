@@ -733,15 +733,13 @@ class Layouts {
 					'dropzone'   => false,
 					'multiple'   => false,
 					'files_list' => false,
-					'types'      => array( 'jpg', 'jpeg', 'jpe', 'gif', 'png', 'bmp', 'tif', 'tiff', 'ico', 'heic', 'webp', 'avif' ),
+					'types'      => UM()->common()->filesystem()::image_mimes(),
 					'button'     => array(
 						'content' => $svg,
 						'title'   => $title,
 						'design'  => 'link-gray',
 						'data'    => array(
-							'user_id'       => get_current_user_id(),
-							'apply_nonce'   => wp_create_nonce( 'um_upload_profile_photo_apply' ),
-							'decline_nonce' => wp_create_nonce( 'um_upload_profile_photo_decline' ),
+							'user_id' => $user_id,
 						),
 					),
 				)
@@ -753,8 +751,19 @@ class Layouts {
 		ob_start();
 		?>
 		<div class="um-profile-photo-uploader">
-			<?php echo wp_kses( self::single_avatar( $user_id, array( 'size' => 'xl', 'wrapper_class' => array( 'um-profile-photo' ) ) ), UM()->get_allowed_html( 'templates' ) ); ?>
-			<?php echo wp_kses( $uploader_overflow, UM()->get_allowed_html( 'templates' ) ); ?>
+			<?php
+			echo wp_kses(
+				self::single_avatar(
+					$user_id,
+					array(
+						'size'          => 'xl',
+						'wrapper_class' => array( 'um-profile-photo' ),
+					)
+				),
+				UM()->get_allowed_html( 'templates' )
+			);
+			echo wp_kses( $uploader_overflow, UM()->get_allowed_html( 'templates' ) );
+			?>
 		</div>
 		<?php
 		return ob_get_clean();

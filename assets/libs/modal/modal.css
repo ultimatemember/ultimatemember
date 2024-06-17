@@ -99,16 +99,22 @@
   background-color: #fff;
 }
 .um-modal .um-modal-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
   background-color: var(--um-primary-600-bg, #7f56d9);
   border-radius: 6px 6px 0 0;
   height: 44px;
-  line-height: 40px;
+  font-size: var(--um-text-font-size-lg, 18px);
+  line-height: var(--um-text-line-height-lg, 28px);
+  font-weight: var(--um-text-font-weight-medium, 500);
   color: var(--um-primary-600-fg, #fff);
   padding: 2px 20px;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  font-size: 17px;
 }
 .um-modal .um-modal-body {
   display: flex;

@@ -108,14 +108,14 @@
 
 
   .#{$prefix}modal-header
+    +flex( row, flex-start, center, nowrap )
     background-color: $primary-600
     border-radius: $radius-sm $radius-sm 0 0
     height: 44px
-    line-height: 40px
+    +typography( text, lg, medium )
     color: $primary-fg
     padding: 2px 20px
     +border-box
-    font-size: 17px
 
   .#{$prefix}modal-body
     +flex( column, flex-start, stretch, nowrap )

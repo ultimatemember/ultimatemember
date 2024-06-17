@@ -25,6 +25,7 @@ class Files {
 
 			add_action( 'um_upload_file_validation', array( $this, 'upload_validation' ), 10, 5 );
 			add_action( 'um_upload_file_temp_uploaded', array( $this, 'temp_uploaded' ), 10, 2 );
+			add_filter( 'um_upload_file_fileinfo', array( $this, 'temp_fileinfo' ), 10, 2 );
 		}
 	}
 
@@ -125,6 +126,59 @@ class Files {
 			$user_id = absint( $_REQUEST['user_id'] );
 			update_user_meta( $user_id, 'um_temp_profile_photo', $fileinfo );
 		}
+	}
+
+	public function temp_fileinfo( $fileinfo, $handler ) {
+		if ( 'upload-avatar' === $handler ) {
+			$user_id = absint( $_REQUEST['user_id'] );
+			ob_start();
+			?>
+			<div class="um-profile-photo-crop-wrapper" data-crop="square" data-ratio="1" data-min_width="256" data-min_height="256">
+				<img src="<?php echo esc_url( $fileinfo['url'] ); ?>" class="um-profile-photo-crop fusion-lazyload-ignore" alt="" />
+			</div>
+			<div class="um-modal-buttons-wrapper">
+				<?php
+				echo wp_kses(
+					UM()->frontend()::layouts()::button(
+						__( 'Apply', 'ultimate-member' ),
+						array(
+							'type'    => 'button',
+							'design'  => 'primary',
+							'size'    => 'm',
+							'classes' => array( 'um-apply-avatar-crop' ),
+							'data'    => array(
+								'user_id' => $user_id,
+								'nonce'   => wp_create_nonce( 'um_upload_profile_photo_apply' ),
+							),
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				);
+				echo wp_kses(
+					UM()->frontend()::layouts()::button(
+						__( 'Cancel', 'ultimate-member' ),
+						array(
+							'type'    => 'button',
+							'design'  => 'secondary-gray',
+							'size'    => 'm',
+							'classes' => array( 'um-modal-avatar-decline' ),
+							'data'    => array(
+								'user_id' => $user_id,
+								'nonce'   => wp_create_nonce( 'um_upload_profile_photo_decline' ),
+							),
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				);
+				echo wp_kses( UM()->frontend()::layouts()::ajax_loader( 's' ), UM()->get_allowed_html( 'templates' ) );
+				?>
+			</div>
+			<?php
+			$fileinfo['modal_content'] = ob_get_clean();
+			$fileinfo['modal_content'] = UM()->ajax()->esc_html_spaces( $fileinfo['modal_content'] );
+		}
+
+		return $fileinfo;
 	}
 
 	/**
@@ -266,6 +320,8 @@ class Files {
 			$fileinfo['size_format']  = size_format( $fileinfo['size'] );
 			$fileinfo['time']         = gmdate( 'Y-m-d H:i:s', filemtime( $fileinfo['file'] ) );
 			$fileinfo['delete_nonce'] = wp_create_nonce( 'um_delete_temp_file' . $name_saved );
+
+			$fileinfo = apply_filters( 'um_upload_file_fileinfo', $fileinfo, $handler );
 
 			$files[] = $fileinfo;
 
