@@ -2842,21 +2842,21 @@ input[type=range]:hover, input[type=range]:focus, input[type=range]:focus-visibl
   border: 2px solid var(--um-error-600, #d92d20);
   margin: 0;
 }
-.um .um-uploader .um-uploader-filelist .um-uploader-file.um-upload-failed .um-file-extension > svg {
-  stroke: var(--um-error-600, #d92d20);
+.um .um-uploader .um-uploader-filelist .um-uploader-file.um-upload-failed .um-uploader-file-data .um-uploader-file-data-header .um-uploader-file-name {
+  color: var(--um-error-600, #d92d20);
 }
-.um .um-uploader .um-uploader-filelist .um-uploader-file.um-upload-failed .um-file-extension .um-file-extension-text {
-  background: var(--um-error-600, #d92d20);
+.um .um-uploader .um-uploader-filelist .um-uploader-file.um-upload-failed .um-uploader-file-data .um-supporting-text {
+  color: var(--um-error-500, #f04438);
 }
 .um .um-uploader .um-uploader-filelist .um-uploader-file.um-upload-completed {
   border: 2px solid var(--um-success-600, #039855);
   margin: 0;
 }
-.um .um-uploader .um-uploader-filelist .um-uploader-file.um-upload-completed .um-file-extension > svg {
-  stroke: var(--um-success-600, #039855);
+.um .um-uploader .um-uploader-filelist .um-uploader-file.um-upload-completed .um-uploader-file-data .um-uploader-file-data-header .um-uploader-file-name {
+  color: var(--um-success-600, #039855);
 }
-.um .um-uploader .um-uploader-filelist .um-uploader-file.um-upload-completed .um-file-extension .um-file-extension-text {
-  background: var(--um-success-600, #039855);
+.um .um-uploader .um-uploader-filelist .um-uploader-file.um-upload-completed .um-uploader-file-data .um-supporting-text {
+  color: var(--um-success-500, #12b76a);
 }
 .um .um-uploader .um-link {
   font-size: var(--um-text-font-size-sm, 14px);

@@ -91,6 +91,11 @@ class Files {
 		}
 
 		if ( 'upload-avatar' === $handler ) {
+			if ( ! wp_verify_nonce( sanitize_key( $_REQUEST['nonce'] ), 'um_upload_' . $handler ) ) {
+				// This nonce is not valid.
+				$error = __( 'Invalid nonce.', 'ultimate-member' );
+			}
+
 			if ( ! array_key_exists( 'user_id', $_REQUEST ) ) {
 				$error = __( 'No user to set avatar.', 'ultimate-member' );
 			}

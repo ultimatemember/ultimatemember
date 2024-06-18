@@ -916,13 +916,6 @@
       background: rgba(0, 0, 0, 0.2)
       border-radius: 100%
       display: none
-      //svg
-      //  stroke: $um-white
-      //  position: absolute
-      //  top: calc( 50% - 22px )
-      //  left: calc( 50% - 22px )
-      //  > *
-      //    stroke: $um-white
       &:hover
         display: block
       .#{$prefix}uploader-button
@@ -930,9 +923,6 @@
         height: 100%
         svg
           stroke: $um-white
-          //position: absolute
-          //top: calc( 50% - 22px )
-          //left: calc( 50% - 22px )
           > *
             stroke: $um-white
     .#{$prefix}profile-photo-overflow
@@ -2112,19 +2102,31 @@ input[type="range"]
         &.#{$prefix}upload-failed
           border: 2px solid $error-600
           margin: 0 // for handle 2px border without screen jumping.
-          .#{$prefix}file-extension
-            & > svg
-              stroke: $error-600
-            .#{$prefix}file-extension-text
-              background: $error-600
+          //.#{$prefix}file-extension
+          //  & > svg
+          //    stroke: $error-600
+          //  .#{$prefix}file-extension-text
+          //    background: $error-600
+          .#{$prefix}uploader-file-data
+            .#{$prefix}uploader-file-data-header
+              .#{$prefix}uploader-file-name
+                color: $error-600
+            .#{$prefix}supporting-text
+              color: $error-500
         &.#{$prefix}upload-completed
           border: 2px solid $success-600
           margin: 0 // for handle 2px border without screen jumping.
-          .#{$prefix}file-extension
-            & > svg
-              stroke: $success-600
-            .#{$prefix}file-extension-text
-              background: $success-600
+          .#{$prefix}uploader-file-data
+            .#{$prefix}uploader-file-data-header
+              .#{$prefix}uploader-file-name
+                color: $success-600
+            .#{$prefix}supporting-text
+              color: $success-500
+          //.#{$prefix}file-extension
+          //  & > svg
+          //    stroke: $success-600
+          //  .#{$prefix}file-extension-text
+          //    background: $success-600
 
     .#{$prefix}link
       +typography( text, sm, semibold )

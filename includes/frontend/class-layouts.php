@@ -1480,23 +1480,25 @@ class Layouts {
 		return $content;
 	}
 
-	public static function upload_item_placeholder() {
-		ob_start();
-		?>
-		<div class="um-uploader-file-placeholder um-display-none">
-			<div class="um-file-extension">
-				<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file" width="48" height="48" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--um-gray-300, #d0d5dd)" fill="none" stroke-linecap="round" stroke-linejoin="round">
-					<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-					<path d="M14 3v4a1 1 0 0 0 1 1h4" />
-					<path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
-				</svg>
-				<span class="um-file-extension-text">{{{extension}}}</span>
-			</div>
-			<div class="um-uploader-file-data">
-				<div class="um-uploader-file-data-header">
-					<div class="um-uploader-file-name">{{{name}}}</div>
-					<?php
-					$button_content = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+	public static function upload_item_placeholder( $args ) {
+		$custom_placeholder = apply_filters( 'um_upload_item_placeholder', null, $args );
+		if ( ! $custom_placeholder ) {
+			ob_start();
+			?>
+			<div class="um-uploader-file-placeholder um-display-none">
+				<div class="um-file-extension">
+					<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file" width="48" height="48" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--um-gray-300, #d0d5dd)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+						<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+						<path d="M14 3v4a1 1 0 0 0 1 1h4" />
+						<path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+					</svg>
+					<span class="um-file-extension-text">{{{extension}}}</span>
+				</div>
+				<div class="um-uploader-file-data">
+					<div class="um-uploader-file-data-header">
+						<div class="um-uploader-file-name">{{{name}}}</div>
+						<?php
+						$button_content = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
   <path d="M4 7l16 0" />
   <path d="M10 11l0 6" />
@@ -1504,22 +1506,25 @@ class Layouts {
   <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
   <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
 </svg>';
-					$button_args    = array(
-						'type'          => 'button',
-						'icon_position' => 'content',
-						'design'        => 'link-gray',
-						'size'          => 's',
-						'classes'       => array( 'um-uploader-file-remove' ),
-					);
-					echo wp_kses( self::button( $button_content, $button_args ), UM()->get_allowed_html( 'templates' ) );
-					?>
+						$button_args    = array(
+							'type'          => 'button',
+							'icon_position' => 'content',
+							'design'        => 'link-gray',
+							'size'          => 's',
+							'classes'       => array( 'um-uploader-file-remove' ),
+						);
+						echo wp_kses( self::button( $button_content, $button_args ), UM()->get_allowed_html( 'templates' ) );
+						?>
+					</div>
+					<div class="um-supporting-text">{{{supporting}}}</div>
+					<?php echo wp_kses( self::progress_bar( array( 'label' => 'right' ) ), UM()->get_allowed_html( 'templates' ) ); ?>
 				</div>
-				<div class="um-supporting-text">{{{supporting}}}</div>
-				<?php echo wp_kses( self::progress_bar( array( 'label' => 'right' ) ), UM()->get_allowed_html( 'templates' ) ); ?>
 			</div>
-		</div>
-		<?php
-		return ob_get_clean();
+			<?php
+			$custom_placeholder = ob_get_clean();
+		}
+
+		return $custom_placeholder;
 	}
 
 	/**
@@ -1663,7 +1668,7 @@ class Layouts {
 			}
 
 			if ( ! empty( $args['files_list'] ) ) {
-				echo wp_kses( self::upload_item_placeholder(), UM()->get_allowed_html( 'templates' ) );
+				echo wp_kses( self::upload_item_placeholder( $args ), UM()->get_allowed_html( 'templates' ) );
 				?>
 				<div id="um-<?php echo esc_attr( $id ); ?>-uploader-filelist" class="um-uploader-filelist um-display-none"></div>
 				<?php
