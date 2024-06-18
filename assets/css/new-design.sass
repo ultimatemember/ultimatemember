@@ -2102,31 +2102,32 @@ input[type="range"]
         &.#{$prefix}upload-failed
           border: 2px solid $error-600
           margin: 0 // for handle 2px border without screen jumping.
-          //.#{$prefix}file-extension
+          .#{$prefix}file-extension
+            .#{$prefix}file-extension-text
+              background: $error-600
           //  & > svg
           //    stroke: $error-600
-          //  .#{$prefix}file-extension-text
-          //    background: $error-600
-          .#{$prefix}uploader-file-data
-            .#{$prefix}uploader-file-data-header
-              .#{$prefix}uploader-file-name
-                color: $error-600
-            .#{$prefix}supporting-text
-              color: $error-500
+            .
+          //.#{$prefix}uploader-file-data
+          //  .#{$prefix}uploader-file-data-header
+          //    .#{$prefix}uploader-file-name
+          //      color: $error-600
+          //  .#{$prefix}supporting-text
+          //    color: $error-500
         &.#{$prefix}upload-completed
           border: 2px solid $success-600
           margin: 0 // for handle 2px border without screen jumping.
-          .#{$prefix}uploader-file-data
-            .#{$prefix}uploader-file-data-header
-              .#{$prefix}uploader-file-name
-                color: $success-600
-            .#{$prefix}supporting-text
-              color: $success-500
-          //.#{$prefix}file-extension
+          .#{$prefix}file-extension
+            .#{$prefix}file-extension-text
+              background: $success-600
+          //.#{$prefix}uploader-file-data
+          //  .#{$prefix}uploader-file-data-header
+          //    .#{$prefix}uploader-file-name
+          //      color: $success-600
+          //  .#{$prefix}supporting-text
+          //    color: $success-500
           //  & > svg
           //    stroke: $success-600
-          //  .#{$prefix}file-extension-text
-          //    background: $success-600
 
     .#{$prefix}link
       +typography( text, sm, semibold )
