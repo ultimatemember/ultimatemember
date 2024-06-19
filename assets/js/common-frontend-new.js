@@ -307,7 +307,7 @@ UM.frontend = {
 						FilesRemoved: function ( up, files ) {
 							wp.hooks.doAction( 'um_uploader_files_removed', $uploader, up, files );
 							if ( files.length ) {
-								$.each( files, function ( i, file ) {
+								jQuery.each( files, function ( i, file ) {
 									jQuery( '#' + file.id ).remove();
 								});
 							}
