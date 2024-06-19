@@ -391,7 +391,8 @@ UM.frontend = {
 				$uploader.data('plupload',uploaderObj['id']);
 				uploaderObj.init();
 			});
-
+		},
+		initActions: function () {
 			jQuery(document.body).on('dragover', '.um-uploader-dropzone', function ( ev ){
 				let dropzoneTarget = ev.target;
 				if ( ! ev.target.classList.contains('um-uploader-dropzone') ) {
@@ -509,6 +510,7 @@ jQuery(document).ready(function($) {
 	UM.frontend.toggleElements.init();
 	UM.frontend.progressBar.init();
 	UM.frontend.uploader.init();
+	UM.frontend.uploader.initActions();
 
 	$( window ).on( 'resize', function() {
 		UM.frontend.responsive.setClass();

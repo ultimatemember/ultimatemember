@@ -244,8 +244,6 @@ if ( controlSlider ) {
 // const element = document.querySelector('.js-choice');
 // const choices = new Choices(element);
 jQuery(document).ready( function($) {
-	UM.frontend.uploader.init();
-
 	$('.js-choice').each( function() {
 		if ( $(this).attr( 'multiple' ) ) {
 			let choices = new Choices($(this)[0], {removeItemButton: true});

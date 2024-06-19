@@ -1673,14 +1673,7 @@ class Layouts {
 				<div id="um-<?php echo esc_attr( $id ); ?>-uploader-filelist" class="um-uploader-filelist um-display-none"></div>
 				<?php
 			}
-
-			if ( true !== $args['async'] ) {
-				$name      = $args['multiple'] ? $args['name'] . '[]' : $args['name'];
-				$hash_name = $args['multiple'] ? $args['name'] . '_hash[]' : $args['name'] . '_hash';
-				?>
-				<input type="hidden" class="um-uploaded-value" id="<?php echo esc_attr( $id ); ?>" data-field="<?php echo esc_attr( $args['field_id'] ); ?>" name="<?php echo esc_attr( $name ); ?>" value="" />
-				<input type="hidden" class="um-uploaded-value-hash" id="<?php echo esc_attr( $args['field_id'] ); ?>_hash" name="<?php echo esc_attr( $hash_name ); ?>" value="" />
-			<?php } ?>
+			?>
 		</div>
 		<?php
 		return ob_get_clean();
