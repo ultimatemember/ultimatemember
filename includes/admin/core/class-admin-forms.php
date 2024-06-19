@@ -1995,7 +1995,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 					$class_attr_responce = ' class="um-entities-conditions-responce um-pages-select2 um-forms-field ' . esc_attr( $class ) . '" ';
 
-					$html .= '<select data-parent="' . $entity_key . '" ' . $original_name . $multiple . $name_attr_responce . $class_attr_responce . $data_attr . $disabled . '>';
+					$html .= '<select data-placeholder="' . esc_html__( 'Select', 'ultimate-member' ) . '" data-parent="' . $entity_key . '" ' . $original_name . $multiple . $name_attr_responce . $class_attr_responce . $data_attr . $disabled . '>';
 					if ( ! empty( $entities ) ) {
 						if ( 'site' !== $entity_key ) {
 							foreach ( $entities as $value ) {
@@ -2037,7 +2037,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					}
 					$html .= '</select>';
 
-					$html .= '<select ' . $original_name . $name_attr . $class_attr_responce . $data_attr . '>';
+					$html .= '<select data-placeholder="' . esc_html__( 'Select', 'ultimate-member' ) . '" ' . $original_name . $name_attr . $class_attr_responce . $data_attr . '>';
 					$html .= '</select>';
 
 					$html .= '<button disabled title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="um-conditions-row-action remove-row button">-</button>';
