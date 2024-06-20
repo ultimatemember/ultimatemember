@@ -39,6 +39,7 @@ final class Enqueue extends \um\common\Enqueue {
 	public function scripts_enqueue_priority() {
 		add_action( 'wp_enqueue_scripts', array( &$this, 'wp_enqueue_scripts' ), $this->get_priority() );
 		add_action( 'enqueue_block_assets', array( &$this, 'add_to_global_styles' ) );
+		add_filter( 'um_frontend_common_js_variables', array( &$this, 'add_style_variables' ) );
 	}
 
 	/**
@@ -127,6 +128,27 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_register_style( 'um_crop', $libs_url . 'cropper/cropper' . $suffix . '.css', array(), '1.6.1' );
 
 			wp_register_script( 'um_frontend_common', $js_url . 'common-frontend-new' . $suffix . '.js', array( 'um_common', 'um_crop', 'um_dropdown' ), UM_VERSION, true );
+
+			$um_common_variables = array();
+			/**
+			 * Filters data array for localize frontend common scripts.
+			 *
+			 * @since 2.8.0
+			 * @hook um_frontend_common_js_variables
+			 *
+			 * @param {array} $variables Data to localize.
+			 *
+			 * @return {array} Data to localize.
+			 *
+			 * @example <caption>Add `my_custom_variable` to common frontend scripts to be callable via `um_frontend_common_variables.my_custom_variable` in JS.</caption>
+			 * function um_custom_frontend_common_js_variables( $variables ) {
+			 *     $variables['{my_custom_variable}'] = '{my_custom_variable_value}';
+			 *     return $variables;
+			 * }
+			 * add_filter( 'um_frontend_common_js_variables', 'um_custom_frontend_common_js_variables' );
+			 */
+			$um_common_variables = apply_filters( 'um_frontend_common_js_variables', $um_common_variables );
+			wp_localize_script( 'um_frontend_common', 'um_frontend_common_variables', $um_common_variables );
 
 			wp_register_script( 'um_modal', $libs_url . 'modal/modal' . $suffix . '.js', array( 'um_frontend_common' ), UM_VERSION, true );
 			wp_register_style( 'um_modal', $libs_url . 'modal/modal' . $suffix . '.css', array(), UM_VERSION );
@@ -510,6 +532,37 @@ final class Enqueue extends \um\common\Enqueue {
 
 			wp_add_inline_style( $stylesheet, $dynamic_styles );
 		}
+	}
+
+	/**
+	 * Adds our custom button colors to the global stylesheet.
+	 *
+	 * @since 2.8.4
+	 */
+	public function add_style_variables( $um_common_variables ) {
+		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			$um_common_variables['colors'] = array(
+				'gray25'  => '#fcfcfd',
+				'gray50'  => '#f9fafb',
+				'gray100' => '#f2f4f7',
+				'gray200' => '#eaecf0',
+				'gray300' => '#d0d5dd',
+				'gray400' => '#98a2b3',
+				'gray500' => '#667085',
+				'gray600' => '#475467',
+				'gray700' => '#344054',
+				'gray800' => '#1d2939',
+				'gray900' => '#101828',
+			);
+
+			$palette = UM()->common()::color()->generate_palette( UM()->options()->get( 'primary_color' ) );
+			foreach ( $palette as $title => $colors ) {
+				$um_common_variables['colors'][ 'primary' . $title . 'bg' ] = $colors['bg'];
+				$um_common_variables['colors'][ 'primary' . $title . 'fg' ] = $colors['fg'];
+			}
+		}
+
+		return $um_common_variables;
 	}
 
 	/**

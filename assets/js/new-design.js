@@ -150,7 +150,7 @@ wp.hooks.addAction( 'um-modal-before-close', 'ultimate-member', function( $modal
 
 function controlFromSlider(fromSlider, toSlider/*, fromInput*/) {
 	const [from, to] = getParsed(fromSlider, toSlider);
-	fillSlider(fromSlider, toSlider, '#eaecf0', '#7f56d9', toSlider);
+	fillSlider(fromSlider, toSlider, um_frontend_common_variables.colors.gray200, um_frontend_common_variables.colors.primary600bg, toSlider);
 	if (from > to) {
 		fromSlider.value = to;
 		// fromInput.value = to;
@@ -161,7 +161,7 @@ function controlFromSlider(fromSlider, toSlider/*, fromInput*/) {
 
 function controlToSlider(fromSlider, toSlider/*, toInput*/) {
 	const [from, to] = getParsed(fromSlider, toSlider);
-	fillSlider(fromSlider, toSlider, '#eaecf0', '#7f56d9', toSlider);
+	fillSlider(fromSlider, toSlider, um_frontend_common_variables.colors.gray200, um_frontend_common_variables.colors.primary600bg, toSlider);
 	setToggleAccessible(toSlider);
 	if (from <= to) {
 		toSlider.value = to;
@@ -193,57 +193,49 @@ function fillSlider(from, to, sliderColor, rangeColor, controlSlider) {
 }
 
 function setToggleAccessible(currentTarget) {
-	const toSlider = document.querySelector('#toSlider');
+	//const toSlider = document.querySelector('#toSlider');
 	if (Number(currentTarget.value) <= 0 ) {
-		toSlider.style.zIndex = 2;
+		currentTarget.style.zIndex = 2;
 	} else {
-		toSlider.style.zIndex = 0;
+		currentTarget.style.zIndex = 0;
 	}
 }
 
-const fromSlider = document.querySelector('#fromSlider');
-
-const toSlider = document.querySelector('#toSlider');
-const controlSlider = document.querySelector('.sliders_control');
-// const fromInput = document.querySelector('#fromInput');
-// const toInput = document.querySelector('#toInput');
-if ( fromSlider && toSlider ) {
-	fillSlider(fromSlider, toSlider, '#eaecf0', '#7f56d9', toSlider);
-	setToggleAccessible(toSlider);
-
-	fromSlider.oninput = () => controlFromSlider(fromSlider, toSlider/*, fromInput*/);
-	toSlider.oninput = () => controlToSlider(fromSlider, toSlider/*, toInput*/);
-}
-
-if ( controlSlider ) {
-	controlSlider.addEventListener('mouseover', function() {
-		fillSlider(fromSlider, toSlider, '#d0d5dd', '#6941c6', toSlider);
-	});
-
-	controlSlider.addEventListener('mouseout', function() {
-		fillSlider(fromSlider, toSlider, '#eaecf0', '#7f56d9', toSlider);
-	});
-
-	const sliderForm = controlSlider.closest('form');
-	sliderForm.addEventListener('reset', function() {
-		setTimeout(function() {
-			// executes after the form has been reset. Reset need 1 second time.
-			fillSlider(fromSlider, toSlider, '#eaecf0', '#7f56d9', toSlider);
-		}, 1);
-	});
-}
-
-// controlSlider.onhover = () => fillSlider(fromSlider, toSlider, '#d0d5dd', '#6941c6', toSlider);
-
-
-
-// fromInput.oninput = () => controlFromInput(fromSlider, fromInput, toInput, toSlider);
-// toInput.oninput = () => controlToInput(toSlider, fromInput, toInput, toSlider);
-
-// Pass single element
-// const element = document.querySelector('.js-choice');
-// const choices = new Choices(element);
 jQuery(document).ready( function($) {
+	$('.um-range-container').each( function() {
+		const fromSlider = $(this).find('.um-from-slider')[0];
+		const toSlider = $(this).find('.um-to-slider')[0];
+		const controlSlider = $(this).find('.um-sliders-control')[0];
+
+		if ( fromSlider && toSlider ) {
+			fillSlider(fromSlider, toSlider, um_frontend_common_variables.colors.gray200, um_frontend_common_variables.colors.primary600bg, toSlider);
+			setToggleAccessible(toSlider);
+
+			fromSlider.oninput = () => controlFromSlider(fromSlider, toSlider/*, fromInput*/);
+			toSlider.oninput = () => controlToSlider(fromSlider, toSlider/*, toInput*/);
+		}
+
+		if ( controlSlider ) {
+			controlSlider.addEventListener('mouseover', function() {
+				fillSlider(fromSlider, toSlider, um_frontend_common_variables.colors.gray300, um_frontend_common_variables.colors.primary700bg, toSlider);
+			});
+
+			controlSlider.addEventListener('mouseout', function() {
+				fillSlider(fromSlider, toSlider, um_frontend_common_variables.colors.gray200, um_frontend_common_variables.colors.primary600bg, toSlider);
+			});
+
+			const sliderForm = controlSlider.closest('form');
+			if ( sliderForm ) {
+				sliderForm.addEventListener('reset', function() {
+					setTimeout(function() {
+						// executes after the form has been reset. Reset need 1 second time.
+						fillSlider(fromSlider, toSlider, um_frontend_common_variables.colors.gray200, um_frontend_common_variables.colors.primary600bg, toSlider);
+					}, 1);
+				});
+			}
+		}
+	});
+
 	$('.js-choice').each( function() {
 		if ( $(this).attr( 'multiple' ) ) {
 			let choices = new Choices($(this)[0], {removeItemButton: true});

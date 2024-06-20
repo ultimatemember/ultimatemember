@@ -1188,10 +1188,10 @@ class Layouts {
 
 		ob_start();
 		?>
-		<div class="range_container">
-			<div class="sliders_control">
+		<div class="um-range-container">
+			<div class="um-sliders-control">
 				<?php foreach ( $fields as $field_k => $field ) { ?>
-					<input id="<?php echo esc_attr( $field_k ); ?>Slider" type="range" value="<?php echo esc_attr( $field['value'] ); ?>" min="<?php echo esc_attr( $field['min'] ); ?>" max="<?php echo esc_attr( $field['max'] ); ?>" name="<?php echo esc_attr( $field['name'] ); ?>" />
+					<input class="um-<?php echo esc_attr( $field_k ); ?>-slider" type="range" value="<?php echo esc_attr( $field['value'] ); ?>" min="<?php echo esc_attr( $field['min'] ); ?>" max="<?php echo esc_attr( $field['max'] ); ?>" name="<?php echo esc_attr( $field['name'] ); ?>" />
 				<?php } ?>
 			</div>
 		</div>

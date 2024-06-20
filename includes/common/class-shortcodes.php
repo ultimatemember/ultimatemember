@@ -583,6 +583,37 @@ class Shortcodes {
 		ob_start();
 		?>
 		<div class="um">
+
+			<h3>Range</h3>
+			<div>
+				<?php
+				echo wp_kses(
+					UM()->frontend()::layouts()::range(
+						array(
+							'name'  => 'test1',
+							'value' => 30,
+							'min'   => 10,
+							'max'   => 50,
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				);
+				?>
+
+				<?php
+				echo wp_kses(
+					UM()->frontend()::layouts()::range(
+						array(
+							'name'  => 'test2',
+							'value' => 5,
+							'min'   => 0,
+							'max'   => 30,
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				);
+				?>
+			</div>
 			<h3>File extensions</h3>
 			<div style="display:flex;flex-direction:row;justify-content:flex-start;flex-wrap: nowrap;align-items:center; gap: 8px;">
 				<?php echo UM()->frontend()::layouts()::get_file_extension_icon( 'jpg' ); ?>
