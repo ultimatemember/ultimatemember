@@ -1932,7 +1932,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			}
 			$html .= '</select>';
 
-			$html .= '<select ' . $original_name . $class_hiiden_attr_responce . $data_attr . '>';
+			$html .= '<select data-placeholder="' . esc_html__( 'Select', 'ultimate-member' ) . '" ' . $original_name . $class_hiiden_attr_responce . $data_attr . '>';
 			$html .= '</select>';
 
 			$html .= '<button disabled title="' . esc_html__( 'Remove row', 'ultimate-member' ) . '" class="um-conditions-row-action remove-row button">-</button>';
@@ -2154,7 +2154,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			}
 			$html .= '</select>';
 
-			$html .= '<select ' . $original_name . $class_attr_responce . $data_attr . '>';
+			$html .= '<select data-placeholder="' . esc_html__( 'Select', 'ultimate-member' ) . '" ' . $original_name . $class_attr_responce . $data_attr . '>';
 			$html .= '</select>';
 
 			$html .= '<button title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="um-conditions-row-action add-row button">+</button>';
@@ -2204,7 +2204,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 								$multiple = ' multiple="multiple" ';
 							}
 
-							$html .= '<select data-parent="' . $rule_key . '" ' . $multiple . $original_name . $class_attr_responce . $name_attr_responce . $data_attr . '>';
+							$html .= '<select data-placeholder="' . esc_html__( 'Select', 'ultimate-member' ) . '" data-parent="' . $rule_key . '" ' . $multiple . $original_name . $class_attr_responce . $name_attr_responce . $data_attr . '>';
 							if ( 'users' === $rule_key ) {
 								foreach ( $rule['ids'] as $user_id ) {
 									$user  = get_user_by( 'ID', $user_id );
@@ -2249,7 +2249,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				}
 				$html .= '</select>';
 
-				$html .= '<select ' . $original_name . $class_attr_responce . $data_attr . '>';
+				$html .= '<select data-placeholder="' . esc_html__( 'Select', 'ultimate-member' ) . '" ' . $original_name . $class_attr_responce . $data_attr . '>';
 				$html .= '</select>';
 
 				$html .= '<button title="' . esc_html__( 'Add row', 'ultimate-member' ) . '" class="um-conditions-row-action add-row button">+</button>';

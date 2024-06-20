@@ -101,10 +101,7 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 		} else {
 			$data_rules['_um_authentification'] = 'loggedout';
 		}
-echo '<pre>';
-print_r($data_rules);
-echo '</pre>';
-//exit();
+
 		// @todo v3 type hardcode
 		$data['_um_type'] = 'post';
 
