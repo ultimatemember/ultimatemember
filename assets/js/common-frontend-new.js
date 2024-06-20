@@ -305,12 +305,12 @@ UM.frontend = {
 							}
 						},
 						FilesRemoved: function ( up, files ) {
-							wp.hooks.doAction( 'um_uploader_files_removed', $uploader, up, files );
 							if ( files.length ) {
 								jQuery.each( files, function ( i, file ) {
 									jQuery( '#' + file.id ).remove();
 								});
 							}
+							wp.hooks.doAction( 'um_uploader_files_removed', $uploader, up, files );
 						},
 						FileUploaded: function ( up, file, result ) {
 							if ( result.status === 200 && result.response ) {

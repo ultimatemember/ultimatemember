@@ -513,10 +513,10 @@ class Layouts {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'size'  => 'm', // s,m,l
-				'type'  => 'color', // color, pill-outline, pill-color
-				'color' => 'gray', // gray, brand,error,warning,success
-				'class' => array(),
+				'size'    => 'm', // s,m,l
+				'type'    => 'color', // color, pill-outline, pill-color
+				'color'   => 'gray', // gray, brand,error,warning,success
+				'classes' => array(),
 			)
 		);
 
@@ -526,8 +526,8 @@ class Layouts {
 			'um-badge-' . $args['type'],
 			'um-badge-color-' . $args['color'],
 		);
-		if ( ! empty( $args['class'] ) ) {
-			$classes = array_merge( $classes, $args['class'] );
+		if ( ! empty( $args['classes'] ) ) {
+			$classes = array_merge( $classes, $args['classes'] );
 		}
 		$classes = implode( ' ', $classes );
 
@@ -1519,6 +1519,16 @@ class Layouts {
 					<div class="um-supporting-text">{{{supporting}}}</div>
 					<?php echo wp_kses( self::progress_bar( array( 'label' => 'right' ) ), UM()->get_allowed_html( 'templates' ) ); ?>
 				</div>
+				<?php
+				if ( true !== $args['async'] ) {
+					$name      = $args['multiple'] ? $args['name'] . '[]' : $args['name'];
+					$hash_name = $args['multiple'] ? $args['name'] . '_hash[]' : $args['name'] . '_hash';
+					?>
+					<input type="hidden" class="um-uploaded-value" id="<?php echo esc_attr( $args['id'] ); ?>" data-field="<?php echo esc_attr( $args['field_id'] ); ?>" name="<?php echo esc_attr( $name ); ?>" value="" />
+					<input type="hidden" class="um-uploaded-value-hash" id="<?php echo esc_attr( $args['field_id'] ); ?>_hash" name="<?php echo esc_attr( $hash_name ); ?>" value="" />
+					<?php
+				}
+				?>
 			</div>
 			<?php
 			$custom_placeholder = ob_get_clean();

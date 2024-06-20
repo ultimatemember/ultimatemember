@@ -203,6 +203,28 @@ class Files {
 	}
 
 	/**
+	 * @todo make this works based on $_COOKIE
+	 *
+	 * @param string $file
+	 * @param int    $user_id
+	 *
+	 * @return bool
+	 */
+	public function is_file_author( $file, $user_id = false ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+
+		if ( empty( $user_id ) ) {
+			$user = 'guest';
+		} else {
+			$user = get_user_by( 'id', $user_id );
+		}
+
+		return true;
+	}
+
+	/**
 	 * Common upload file handler. Default result file in temp directory with unique name.
 	 */
 	public function upload_file() {
