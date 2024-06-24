@@ -588,8 +588,78 @@ class Shortcodes {
 			<div>
 				<?php
 				echo wp_kses(
+					UM()->frontend()::layouts()::date_range(
+						array(
+							'id'    => 'test1',
+							'name'  => 'test1',
+							'label' => 'Date range 1',
+							'value' => 30,
+							'min'   => 10,
+							'max'   => 50,
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				);
+				echo wp_kses(
+					UM()->frontend()::layouts()::date_range(
+						array(
+							'id'    => 'test2',
+							'name'  => 'test2',
+							'label' => 'Date range 2',
+							'value' => array( '2024-11-22', '2024-11-15' ),
+							'min'   => 10,
+							'max'   => 50,
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				);
+				echo wp_kses(
+					UM()->frontend()::layouts()::time_range(
+						array(
+							'id'  => 'test3',
+							'name'  => 'test3',
+							'label'  => 'Time range 1',
+							'value' => 30,
+							'min'   => 10,
+							'max'   => 50,
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				);
+				echo wp_kses(
+					UM()->frontend()::layouts()::time_range(
+						array(
+							'id'  => 'test4',
+							'name'  => 'test4',
+							'label'  => 'Time range 2',
+							'value' => array( '10:00', '15:00' ),
+							'min'   => 10,
+							'max'   => 50,
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				);
+
+				echo wp_kses(
 					UM()->frontend()::layouts()::range(
 						array(
+							'label'       => 'Test 5',
+							'name'        => 'test1',
+							'value'       => 30,
+							'min'         => 10,
+							'max'         => 50,
+							'placeholder' => array(
+								'single' => '{{{label}}}: {{{value}}}',
+								'plural' => '{{{label}}}: {{{value_from}}} - {{{value_to}}}',
+							),
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				);
+				echo wp_kses(
+					UM()->frontend()::layouts()::range(
+						array(
+							'label' => 'Test 5.2',
 							'name'  => 'test1',
 							'value' => 30,
 							'min'   => 10,
@@ -604,10 +674,27 @@ class Shortcodes {
 				echo wp_kses(
 					UM()->frontend()::layouts()::range(
 						array(
+							'label'  => 'Test 6',
 							'name'  => 'test2',
-							'value' => 5,
+							'value' => array( 5, 50 ),
 							'min'   => 0,
-							'max'   => 30,
+							'max'   => 100,
+							'placeholder' => array(
+								'single' => '{{{label}}}: {{{value}}}',
+								'plural' => '{{{label}}}: {{{value_from}}} - {{{value_to}}}',
+							),
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				);
+				echo wp_kses(
+					UM()->frontend()::layouts()::range(
+						array(
+							'label'  => 'Test 7',
+							'name'  => 'test2',
+							'value' => array( 5, 50 ),
+							'min'   => 0,
+							'max'   => 100,
 						)
 					),
 					UM()->get_allowed_html( 'templates' )

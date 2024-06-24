@@ -1162,12 +1162,21 @@ class Layouts {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'min'   => 0,
-				'max'   => 100,
-				'name'  => '',
-				'value' => 0,
+				'label'       => '',
+				'min'         => 0,
+				'max'         => 100,
+				'name'        => '',
+				'value'       => 0,
+				'placeholder' => array(
+					'single' => '',
+					'plural' => '',
+				),
 			)
 		);
+
+		if ( empty( $args['placeholder']['single'] ) || empty( $args['placeholder']['plural'] ) ) {
+			$args['placeholder'] = false;
+		}
 
 		$value = is_array( $args['value'] ) ? $args['value'] : array( $args['value'], $args['value'] );
 
@@ -1188,11 +1197,107 @@ class Layouts {
 
 		ob_start();
 		?>
-		<div class="um-range-container">
-			<div class="um-sliders-control">
-				<?php foreach ( $fields as $field_k => $field ) { ?>
-					<input class="um-<?php echo esc_attr( $field_k ); ?>-slider" type="range" value="<?php echo esc_attr( $field['value'] ); ?>" min="<?php echo esc_attr( $field['min'] ); ?>" max="<?php echo esc_attr( $field['max'] ); ?>" name="<?php echo esc_attr( $field['name'] ); ?>" />
-				<?php } ?>
+		<div class="um-field-wrapper">
+			<label for="<?php echo esc_attr( $fields['from']['name'] ); ?>"><?php echo esc_html( $args['label'] ); ?></label>
+			<div class="um-range-container">
+				<div class="um-sliders-control">
+					<?php foreach ( $fields as $field_k => $field ) { ?>
+						<input class="um-<?php echo esc_attr( $field_k ); ?>-slider" type="range" value="<?php echo esc_attr( $field['value'] ); ?>" min="<?php echo esc_attr( $field['min'] ); ?>" max="<?php echo esc_attr( $field['max'] ); ?>" id="<?php echo esc_attr( $field['name'] ); ?>" name="<?php echo esc_attr( $field['name'] ); ?>" />
+					<?php } ?>
+				</div>
+				<?php
+				if ( false !== $args['placeholder'] ) {
+					if ( $fields['from']['value'] === $fields['to']['value'] ) {
+						$text = str_replace( '{{{value}}}', $fields['from']['value'], $args['placeholder']['single'] );
+					} else {
+						$text = str_replace( array( '{{{value_from}}}', '{{{value_to}}}' ), array( $fields['from']['value'], $fields['to']['value'] ), $args['placeholder']['plural'] );
+					}
+					$text = str_replace( '{{{label}}}', $args['label'], $text );
+					?>
+					<div class="um-range-placeholder um-supporting-text" data-placeholder-s="<?php echo esc_attr( $args['placeholder']['single'] ); ?>" data-placeholder-p="<?php echo esc_attr( $args['placeholder']['plural'] ); ?>" data-label="<?php echo esc_attr( $args['label'] ); ?>"><?php echo esc_html( $text ); ?></div>
+					<?php
+				}
+				?>
+			</div>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	public static function date_range( $args ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'min'   => 0,
+				'max'   => 100,
+				'id'    => '',
+				'name'  => '',
+				'label' => '',
+				'value' => 0,
+			)
+		);
+
+		if ( empty( $args['id'] ) ) {
+			return '';
+		}
+
+		if ( empty( $args['name'] ) ) {
+			$args['name'] = $args['id'];
+		}
+		if ( empty( $args['name'] ) ) {
+			return '';
+		}
+
+		$value = is_array( $args['value'] ) ? $args['value'] : array( $args['value'], $args['value'] );
+
+		ob_start();
+		?>
+		<div class="um-field-wrapper">
+			<label for="<?php echo esc_attr( $args['id'] . '_from' ); ?>"><?php echo esc_html( $args['label'] ); ?></label>
+			<div class="um-date-range-row">
+				<input type="date" id="<?php echo esc_attr( $args['id'] . '_from' ); ?>" name="<?php echo esc_attr( $args['name'] . '_from' ); ?>" data-range="from" value="<?php echo esc_attr( min( $value ) ); ?>" />
+				<label for="<?php echo esc_attr( $args['id'] . '_to' ); ?>">to</label>
+				<input type="date" id="<?php echo esc_attr( $args['id'] . '_to' ); ?>" name="<?php echo esc_attr( $args['name'] . '_to' ); ?>" data-range="to" value="<?php echo esc_attr( max( $value ) ); ?>" />
+			</div>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	public static function time_range( $args ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'min'   => 0,
+				'max'   => 100,
+				'id'    => '',
+				'name'  => '',
+				'label' => '',
+				'value' => 0,
+			)
+		);
+
+		if ( empty( $args['id'] ) ) {
+			return '';
+		}
+
+		if ( empty( $args['name'] ) ) {
+			$args['name'] = $args['id'];
+		}
+		if ( empty( $args['name'] ) ) {
+			return '';
+		}
+
+		$value = is_array( $args['value'] ) ? $args['value'] : array( $args['value'], $args['value'] );
+
+		ob_start();
+		?>
+		<div class="um-field-wrapper">
+			<label for="<?php echo esc_attr( $args['id'] . '_from' ); ?>"><?php echo esc_html( $args['label'] ); ?></label>
+			<div class="um-time-range-row">
+				<input type="time" id="<?php echo esc_attr( $args['id'] . '_from' ); ?>" name="<?php echo esc_attr( $args['name'] . '_from' ); ?>" data-range="from" value="<?php echo esc_attr( min( $value ) ); ?>" />
+				<label for="<?php echo esc_attr( $args['id'] . '_to' ); ?>">to</label>
+				<input type="time" id="<?php echo esc_attr( $args['id'] . '_to' ); ?>" name="<?php echo esc_attr( $args['name'] . '_to' ); ?>" data-range="to" value="<?php echo esc_attr( max( $value ) ); ?>" />
 			</div>
 		</div>
 		<?php

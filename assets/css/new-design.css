@@ -1936,6 +1936,7 @@
   width: 100%;
   margin: 0;
   padding: 0;
+  gap: 4px;
 }
 .um .um-range-container .um-sliders-control {
   position: relative;
@@ -2726,6 +2727,46 @@
   width: 100%;
   padding: 0;
   margin: 0;
+}
+.um .um-field-wrapper .um-date-range-row,
+.um .um-field-wrapper .um-time-range-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
+  column-gap: 8px;
+  border: 1px solid var(--um-gray-300, #d0d5dd);
+  border-radius: 8px;
+  background: var(--um-gray-200, #eaecf0);
+}
+.um .um-field-wrapper .um-date-range-row label,
+.um .um-field-wrapper .um-time-range-row label {
+  max-width: 50px;
+  min-width: 30px;
+  font-size: var(--um-text-font-size-sm, 14px);
+  line-height: var(--um-text-line-height-sm, 20px);
+  font-weight: var(--um-text-font-weight-regular, 400);
+  text-align: center;
+}
+.um .um-field-wrapper .um-date-range-row input,
+.um .um-field-wrapper .um-time-range-row input {
+  border: none;
+  width: calc(50% - 20px);
+}
+.um .um-field-wrapper .um-date-range-row input:hover, .um .um-field-wrapper .um-date-range-row input:focus, .um .um-field-wrapper .um-date-range-row input:focus-visible,
+.um .um-field-wrapper .um-time-range-row input:hover,
+.um .um-field-wrapper .um-time-range-row input:focus,
+.um .um-field-wrapper .um-time-range-row input:focus-visible {
+  border: none;
+}
+.um .um-field-wrapper .um-date-range-row input:first-child,
+.um .um-field-wrapper .um-time-range-row input:first-child {
+  border-radius: 8px 0 0 8px;
+}
+.um .um-field-wrapper .um-date-range-row input:last-child,
+.um .um-field-wrapper .um-time-range-row input:last-child {
+  border-radius: 0 8px 8px 0;
 }
 
 .um .um-toggle-block {

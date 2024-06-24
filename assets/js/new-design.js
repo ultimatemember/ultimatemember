@@ -175,6 +175,21 @@ function controlToSlider(fromSlider, toSlider/*, toInput*/) {
 function getParsed(currentFrom, currentTo) {
 	const from = parseInt(currentFrom.value, 10);
 	const to = parseInt(currentTo.value, 10);
+
+	let placeholder = currentFrom.closest( '.um-range-container' ).querySelector('.um-range-placeholder');
+	if ( placeholder ) {
+		if ( placeholder.dataset.placeholderS && placeholder.dataset.placeholderP && placeholder.dataset.label ) {
+			if ( from === to ) {
+				placeholder.innerHTML = placeholder.dataset.placeholderS.replace( '\{\{\{value\}\}\}', from )
+					.replace( '\{\{\{label\}\}\}', placeholder.dataset.label );
+			} else {
+				placeholder.innerHTML = placeholder.dataset.placeholderP.replace( '\{\{\{value_from\}\}\}', from )
+					.replace( '\{\{\{value_to\}\}\}', to )
+					.replace( '\{\{\{label\}\}\}', placeholder.dataset.label );
+			}
+		}
+	}
+
 	return [from, to];
 }
 
