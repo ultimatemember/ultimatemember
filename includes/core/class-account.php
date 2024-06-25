@@ -1220,7 +1220,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 *
 		 * @return bool
 		 */
-		public function is_notifications_tab_visible() {
+		public static function is_notifications_tab_visible() {
 			return apply_filters( 'um_account_notifications_tab_enabled', false );
 		}
 	}

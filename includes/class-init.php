@@ -501,7 +501,6 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return void
 		 */
 		public function includes() {
-
 			$this->common()->includes();
 			$this->access();
 
@@ -565,9 +564,7 @@ if ( ! class_exists( 'UM' ) ) {
 			if ( is_multisite() ) {
 				$this->multisite();
 			}
-
 		}
-
 
 		/**
 		 * @since 2.1.0

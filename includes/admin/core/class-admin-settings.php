@@ -1041,7 +1041,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				)
 			);
 
-			if ( false !== UM()->account()->is_notifications_tab_visible() ) {
+			if ( false !== UM()->account()::is_notifications_tab_visible() ) {
 				$settings_map['account_tab_notifications'] = array(
 					'sanitize' => 'bool',
 				);
@@ -1050,15 +1050,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			$this->settings_map = apply_filters( 'um_settings_map', $settings_map );
 
 			$users_fields = array(
-        array(
-          'id'          => 'register_role',
-          'type'        => 'select',
-          'label'       => __( 'Registration Default Role', 'ultimate-member' ),
-          'description' => __( 'This will be the role assigned to users registering through Ultimate Member registration forms. By default, this setting will follow the core WordPress setting "New User Default Role" unless you specify a different role.', 'ultimate-member' ),
-          'default'     => um_get_metadefault( 'register_role' ),
-          'options'     => UM()->roles()->get_roles( __( 'Default', 'ultimate-member' ) ),
-          'size'        => 'small',
-        ),
+				array(
+				  'id'          => 'register_role',
+				  'type'        => 'select',
+				  'label'       => __( 'Registration Default Role', 'ultimate-member' ),
+				  'description' => __( 'This will be the role assigned to users registering through Ultimate Member registration forms. By default, this setting will follow the core WordPress setting "New User Default Role" unless you specify a different role.', 'ultimate-member' ),
+				  'default'     => um_get_metadefault( 'register_role' ),
+				  'options'     => UM()->roles()->get_roles( __( 'Default', 'ultimate-member' ) ),
+				  'size'        => 'small',
+				),
 				array(
 					'id'          => 'permalink_base',
 					'type'        => 'select',
@@ -1095,12 +1095,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'size'        => 'medium',
 				),
 				array(
-          'id'             => 'author_redirect',
-          'type'           => 'checkbox',
-          'label'          => __( 'Hide author pages', 'ultimate-member' ),
-          'checkbox_label' => __( 'Enable author page redirect to user profile', 'ultimate-member' ),
-          'description'    => __( 'If enabled, author pages will automatically redirect to the user\'s profile page.', 'ultimate-member' ),
-        ),
+					'id'             => 'author_redirect',
+					'type'           => 'checkbox',
+					'label'          => __( 'Hide author pages', 'ultimate-member' ),
+					'checkbox_label' => __( 'Enable author page redirect to user profile', 'ultimate-member' ),
+					'description'    => __( 'If enabled, author pages will automatically redirect to the user\'s profile page.', 'ultimate-member' ),
+				),
 				array(
 					'id'             => 'members_page',
 					'type'           => 'checkbox',
@@ -1109,12 +1109,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'description'    => __( 'Control whether to enable or disable member directories on this site', 'ultimate-member' ),
 				),
 				array(
-          'id'             => 'delete_comments',
-          'type'           => 'checkbox',
-          'label'          => __( 'Delete user comments', 'ultimate-member' ),
-          'checkbox_label' => __( 'Enable deleting user comments after deleting a user', 'ultimate-member' ),
-          'description'    => __( 'Do you want to automatically delete a user\'s comments when they delete their account or are removed from the admin dashboard?', 'ultimate-member' ),
-        ),
+					'id'             => 'delete_comments',
+					'type'           => 'checkbox',
+					'label'          => __( 'Delete user comments', 'ultimate-member' ),
+					'checkbox_label' => __( 'Enable deleting user comments after deleting a user', 'ultimate-member' ),
+					'description'    => __( 'Do you want to automatically delete a user\'s comments when they delete their account or are removed from the admin dashboard?', 'ultimate-member' ),
+				),
 			);
 
 			$avatar_fields = array(
@@ -2244,7 +2244,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				)
 			);
 
-			if ( false === UM()->account()->is_notifications_tab_visible() ) {
+			if ( false === UM()->account()::is_notifications_tab_visible() ) {
 				unset( $this->settings_structure['']['sections']['account']['form_sections']['notifications_tab'] );
 			}
 

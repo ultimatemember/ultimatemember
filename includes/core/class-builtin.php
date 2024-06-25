@@ -727,7 +727,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		/**
 		 * Predefined Fields
 		 */
-		function set_predefined_fields() {
+		public function set_predefined_fields() {
+
 			global $wp_roles;
 
 			$um_roles = array();
@@ -1248,16 +1249,16 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				// private use ( not public list )
 
 				'profile_photo' => array(
-					'title' => __('Profile Photo','ultimate-member'),
-					'metakey' => 'profile_photo',
-					'type' => 'image',
-					'label' => __('Change your profile photo','ultimate-member'),
+					'title'       => __('Profile Photo','ultimate-member'),
+					'metakey'     => 'profile_photo',
+					'type'        => 'image',
+					'label'       => __('Change your profile photo','ultimate-member'),
 					'upload_text' => __('Upload your photo here','ultimate-member'),
-					'icon' => 'fas fa-camera',
-					'crop' => 1,
-					'max_size' => ( UM()->options()->get('profile_photo_max_size') ) ? UM()->options()->get('profile_photo_max_size') : 999999999,
-					'min_width' => str_replace('px','',UM()->options()->get('profile_photosize')),
-					'min_height' => str_replace('px','',UM()->options()->get('profile_photosize')),
+					'icon'        => 'fas fa-camera',
+					'crop'        => 1,
+					'max_size'    => ( UM()->options()->get( 'profile_photo_max_size' ) ) ? UM()->options()->get( 'profile_photo_max_size' ) : 999999999,
+					'min_width'   => str_replace('px','',UM()->options()->get( 'profile_photosize' )),
+					'min_height'  => str_replace('px','',UM()->options()->get('profile_photosize')),
 					'private_use' => true,
 				),
 

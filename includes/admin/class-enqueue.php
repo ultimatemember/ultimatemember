@@ -106,7 +106,7 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_set_script_translations( 'um_admin_blocks_shortcodes', 'ultimate-member' );
 
 		$notifications_enabled = false;
-		if ( false !== UM()->account()->is_notifications_tab_visible() ) {
+		if ( false !== UM()->account()::is_notifications_tab_visible() ) {
 			$notifications_enabled = UM()->options()->get( 'account_tab_notifications' );
 		}
 

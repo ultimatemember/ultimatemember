@@ -194,7 +194,10 @@ class Filesystem {
 		}
 
 		if ( empty( $this->upload_dir[ $blog_id ] ) ) {
-			$uploads                      = wp_upload_dir();
+			$uploads = wp_upload_dir();
+			if ( array_key_exists( 'error', $uploads ) ) {
+				return '';
+			}
 			$this->upload_dir[ $blog_id ] = $uploads['basedir'];
 		}
 
@@ -232,7 +235,10 @@ class Filesystem {
 		}
 
 		if ( empty( $this->upload_url[ $blog_id ] ) ) {
-			$uploads                      = wp_upload_dir();
+			$uploads = wp_upload_dir();
+			if ( array_key_exists( 'error', $uploads ) ) {
+				return '';
+			}
 			$this->upload_url[ $blog_id ] = $uploads['baseurl'];
 		}
 
@@ -256,12 +262,12 @@ class Filesystem {
 	 *
 	 * @since 2.8.4
 	 */
-	public function format_bytes( $size, $precision = 1 ) {
+	public static function format_bytes( $size, $precision = 1 ) {
 		if ( is_numeric( $size ) ) {
 			$base     = log( $size, 1024 );
 			$suffixes = array( '', 'kb', 'MB', 'GB', 'TB' );
 
-			$computed_size = round( pow( 1024, $base - floor( $base ) ), $precision );
+			$computed_size = round( 1024 ** ( $base - floor( $base ) ), $precision );
 			$unit          = $suffixes[ absint( floor( $base ) ) ];
 
 			return $computed_size . ' ' . $unit;
