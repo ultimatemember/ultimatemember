@@ -439,6 +439,9 @@ UM.frontend = {
 				let removeRow = function () {
 					let fileID = $fileRow.attr('id');
 					let uploaderObj = UM.frontend.uploaders[ $uploader.data('plupload') ];
+
+					wp.hooks.doAction( 'um_uploader_file_row_removed', $fileRow, fileID, uploaderObj );
+
 					uploaderObj.removeFile( fileID );
 					$fileRow.remove();
 				}
