@@ -506,7 +506,11 @@ class UM_Restrictions_List_Table extends WP_List_Table {
 				$output .= '<br>';
 			}
 		} else {
-			$output = esc_html__( 'Logged out users', 'ultimate-member' );
+			if ( array_key_exists( '_um_authentification', $option['rules'] ) && 'loggedin' === $option['rules']['_um_authentification'] ) {
+				$output = esc_html__( 'Logged in users:', 'ultimate-member' );
+			} else {
+				$output = esc_html__( 'Logged out users', 'ultimate-member' );
+			}
 		}
 
 		echo wp_kses( $output, UM()->get_allowed_html( 'admin_notice' ) );

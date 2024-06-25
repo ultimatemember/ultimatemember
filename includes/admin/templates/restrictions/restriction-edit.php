@@ -96,8 +96,8 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 			if ( ! empty( $_POST['um_restriction_rules_users']['_um_users'] ) ) {
 				$_POST['um_restriction_rules_users']['_um_users'] = array_values( $_POST['um_restriction_rules_users']['_um_users'] );
 				$data_rules                                       = UM()->admin()->sanitize_restriction_rule_meta( $_POST['um_restriction_rules_users'] );
-				$data_rules['_um_authentification']               = 'loggedin';
 			}
+			$data_rules['_um_authentification'] = 'loggedin';
 		} else {
 			$data_rules['_um_authentification'] = 'loggedout';
 		}
