@@ -149,7 +149,7 @@ wp.hooks.addAction( 'um-modal-before-close', 'ultimate-member', function( $modal
 });
 
 function controlFromSlider(fromSlider, toSlider/*, fromInput*/) {
-	const [from, to] = getParsed(fromSlider, toSlider);
+	const [from, to] = getParsed( fromSlider, toSlider );
 	fillSlider(fromSlider, toSlider, um_frontend_common_variables.colors.gray200, um_frontend_common_variables.colors.primary600bg, toSlider);
 	if (from > to) {
 		fromSlider.value = to;
@@ -163,6 +163,7 @@ function controlToSlider(fromSlider, toSlider/*, toInput*/) {
 	const [from, to] = getParsed(fromSlider, toSlider);
 	fillSlider(fromSlider, toSlider, um_frontend_common_variables.colors.gray200, um_frontend_common_variables.colors.primary600bg, toSlider);
 	setToggleAccessible(toSlider);
+
 	if (from <= to) {
 		toSlider.value = to;
 		// toInput.value = to;
@@ -172,10 +173,7 @@ function controlToSlider(fromSlider, toSlider/*, toInput*/) {
 	}
 }
 
-function getParsed(currentFrom, currentTo) {
-	const from = parseInt(currentFrom.value, 10);
-	const to = parseInt(currentTo.value, 10);
-
+function replacePlaceholder( currentFrom, from, to ) {
 	let placeholder = currentFrom.closest( '.um-range-container' ).querySelector('.um-range-placeholder');
 	if ( placeholder ) {
 		if ( placeholder.dataset.placeholderS && placeholder.dataset.placeholderP && placeholder.dataset.label ) {
@@ -183,12 +181,33 @@ function getParsed(currentFrom, currentTo) {
 				placeholder.innerHTML = placeholder.dataset.placeholderS.replace( '\{\{\{value\}\}\}', from )
 					.replace( '\{\{\{label\}\}\}', placeholder.dataset.label );
 			} else {
-				placeholder.innerHTML = placeholder.dataset.placeholderP.replace( '\{\{\{value_from\}\}\}', from )
-					.replace( '\{\{\{value_to\}\}\}', to )
-					.replace( '\{\{\{label\}\}\}', placeholder.dataset.label );
+				let placeholderFrom = from;
+				let placeholderTo = to;
+
+				if ( placeholderFrom > placeholderTo ) {
+					placeholderFrom = placeholderTo;
+				} else if ( placeholderTo < placeholderFrom ) {
+					placeholderTo = placeholderFrom;
+				}
+
+				if ( placeholderTo === placeholderFrom ) {
+					placeholder.innerHTML = placeholder.dataset.placeholderS.replace( '\{\{\{value\}\}\}', placeholderFrom )
+						.replace( '\{\{\{label\}\}\}', placeholder.dataset.label );
+				} else {
+					placeholder.innerHTML = placeholder.dataset.placeholderP.replace( '\{\{\{value_from\}\}\}', placeholderFrom )
+						.replace( '\{\{\{value_to\}\}\}', placeholderTo )
+						.replace( '\{\{\{label\}\}\}', placeholder.dataset.label );
+				}
 			}
 		}
 	}
+}
+
+function getParsed(currentFrom, currentTo) {
+	const from = parseInt(currentFrom.value, 10);
+	const to = parseInt(currentTo.value, 10);
+
+	replacePlaceholder( currentFrom, from, to );
 
 	return [from, to];
 }
@@ -197,19 +216,33 @@ function fillSlider(from, to, sliderColor, rangeColor, controlSlider) {
 	const rangeDistance = to.max-to.min;
 	const fromPosition = from.value - to.min;
 	const toPosition = to.value - to.min;
-	controlSlider.style.background = `linear-gradient(
-      to right,
-      ${sliderColor} 0%,
-      ${sliderColor} ${(fromPosition)/(rangeDistance)*100}%,
-      ${rangeColor} ${((fromPosition)/(rangeDistance))*100}%,
-      ${rangeColor} ${(toPosition)/(rangeDistance)*100}%,
-      ${sliderColor} ${(toPosition)/(rangeDistance)*100}%,
-      ${sliderColor} 100%)`;
+
+	// Fix for blinking slider progress between switching z-index.
+	const thumbWidth = 23 / ( from.offsetWidth / 100 );
+	if ( 0 === fromPosition ) {
+		controlSlider.style.background = `linear-gradient(
+		  to right,
+		  transparent 0%,
+		  transparent ${thumbWidth}%,
+		  ${sliderColor} ${(fromPosition)/(rangeDistance)*100}%,
+		  ${rangeColor} ${((fromPosition)/(rangeDistance))*100}%,
+		  ${rangeColor} ${(toPosition)/(rangeDistance)*100}%,
+		  ${sliderColor} ${(toPosition)/(rangeDistance)*100}%,
+		  ${sliderColor} 100%)`;
+	} else {
+		controlSlider.style.background = `linear-gradient(
+		  to right,
+		  ${sliderColor} 0%,
+		  ${sliderColor} ${(fromPosition)/(rangeDistance)*100}%,
+		  ${rangeColor} ${((fromPosition)/(rangeDistance))*100}%,
+		  ${rangeColor} ${(toPosition)/(rangeDistance)*100}%,
+		  ${sliderColor} ${(toPosition)/(rangeDistance)*100}%,
+		  ${sliderColor} 100%)`;
+	}
 }
 
 function setToggleAccessible(currentTarget) {
-	//const toSlider = document.querySelector('#toSlider');
-	if (Number(currentTarget.value) <= 0 ) {
+	if ( Number(currentTarget.value) <= currentTarget.min ) {
 		currentTarget.style.zIndex = 2;
 	} else {
 		currentTarget.style.zIndex = 0;
@@ -245,6 +278,7 @@ jQuery(document).ready( function($) {
 					setTimeout(function() {
 						// executes after the form has been reset. Reset need 1 second time.
 						fillSlider(fromSlider, toSlider, um_frontend_common_variables.colors.gray200, um_frontend_common_variables.colors.primary600bg, toSlider);
+						replacePlaceholder( fromSlider, fromSlider.value, toSlider.value );
 					}, 1);
 				});
 			}

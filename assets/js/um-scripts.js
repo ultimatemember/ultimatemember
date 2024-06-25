@@ -394,33 +394,33 @@ jQuery(document).ready(function() {
 		}
 	});
 
-
-	jQuery(document).on('click', '.um-ajax-action', function( e ) {
-		e.preventDefault();
-		var hook = jQuery(this).data('hook');
-		var user_id = jQuery(this).data('user_id');
-		var arguments = jQuery(this).data('arguments');
-
-		if ( jQuery(this).data('js-remove') ){
-			jQuery(this).parents('.'+jQuery(this).data('js-remove')).fadeOut('fast');
-		}
-
-		jQuery.ajax({
-			url: wp.ajax.settings.url,
-			type: 'post',
-			data: {
-				action: 'um_muted_action',
-				hook: hook,
-				user_id: user_id,
-				arguments: arguments,
-				nonce: um_scripts.nonce
-			},
-			success: function(data){
-
-			}
-		});
-		return false;
-	});
+	// Deprecated AJAX action
+	// jQuery(document).on('click', '.um-ajax-action', function( e ) {
+	// 	e.preventDefault();
+	// 	var hook = jQuery(this).data('hook');
+	// 	var user_id = jQuery(this).data('user_id');
+	// 	var arguments = jQuery(this).data('arguments');
+	//
+	// 	if ( jQuery(this).data('js-remove') ){
+	// 		jQuery(this).parents('.'+jQuery(this).data('js-remove')).fadeOut('fast');
+	// 	}
+	//
+	// 	jQuery.ajax({
+	// 		url: wp.ajax.settings.url,
+	// 		type: 'post',
+	// 		data: {
+	// 			action: 'um_muted_action',
+	// 			hook: hook,
+	// 			user_id: user_id,
+	// 			arguments: arguments,
+	// 			nonce: um_scripts.nonce
+	// 		},
+	// 		success: function(data){
+	//
+	// 		}
+	// 	});
+	// 	return false;
+	// });
 
 	jQuery( document.body ).on('click', '#um-search-button', function() {
 		var action = jQuery(this).parents('.um-search-form').data('members_page');

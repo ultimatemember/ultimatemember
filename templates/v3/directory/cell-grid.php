@@ -187,12 +187,12 @@ echo wp_kses(
 	}
 
 	echo wp_kses(
-		UM()->frontend()::layouts()::button(
+		UM()->frontend()::layouts()::link(
 			__( 'View Profile', 'ultimate-member' ),
 			array(
 				'size'   => 'm',
 				'design' => 'primary',
-				'type'   => 'link',
+				'type'   => 'button',
 				'url'    => $member['profile_url'],
 			)
 		),

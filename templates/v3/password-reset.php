@@ -130,10 +130,10 @@ $updated_attr = isset( $_GET['updated'] ) ? sanitize_key( $_GET['updated'] ) : '
 						'id'     => 'um-submit-btn',
 					)
 				);
-				echo UM()->frontend()::layouts()::button(
+				echo UM()->frontend()::layouts()::link(
 					__( 'Back to login', 'ultimate-member' ),
 					array(
-						'type'   => 'link',
+						'type'   => 'button',
 						'url'    => $login_page_url,
 						'design' => 'link-gray',
 						'width'  => 'full',

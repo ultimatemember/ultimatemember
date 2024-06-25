@@ -338,26 +338,25 @@ class Directory extends \um\common\Directory {
 					} else {
 						$value = $range;
 					}
-					?>
-					<div class="um-field-wrapper">
-						<label for="<?php echo esc_attr( $filter ); ?>"><?php echo esc_html( stripslashes( $label ) ); ?></label>
-						<?php
-						echo wp_kses(
-							UM()->frontend()::layouts()::range(
-								array(
-									'name'  => $filter,
-									'value' => $value,
-									'min'   => $range[0],
-									'max'   => $range[1],
-								)
-							),
-							UM()->get_allowed_html( 'templates' )
-						);
-						list( $single_placeholder, $plural_placeholder ) = $this->slider_range_placeholder( $filter, $attrs );
-						?>
-						<div class="um-slider-range" data-placeholder-s="<?php echo esc_attr( $single_placeholder ); ?>" data-placeholder-p="<?php echo esc_attr( $plural_placeholder ); ?>" data-label="<?php echo ( ! empty( $attrs['label'] ) ) ? esc_attr__( stripslashes( $attrs['label'] ), 'ultimate-member' ) : ''; ?>"></div>
-					</div>
-					<?php
+
+					list( $single_placeholder, $plural_placeholder ) = $this->slider_range_placeholder( $filter, $attrs );
+
+					echo wp_kses(
+						UM()->frontend()::layouts()::range(
+							array(
+								'label'       => stripslashes( $label ),
+								'name'        => $filter,
+								'value'       => $value,
+								'min'         => $range[0],
+								'max'         => $range[1],
+								'placeholder' => array(
+									'single' => $single_placeholder,
+									'plural' => $plural_placeholder,
+								),
+							)
+						),
+						UM()->get_allowed_html( 'templates' )
+					);
 				}
 				break;
 
@@ -367,37 +366,28 @@ class Directory extends \um\common\Directory {
 				$label = ! empty( $attrs['label'] ) ? $attrs['label'] : $attrs['title'];
 				$label = stripslashes( $label );
 
-				$default_value_min = '';
-				$default_value_max = '';
-				if ( ! empty( $default_value[0] ) ) {
-					$default_value_min = $default_value[0];
-				}
-				if ( ! empty( $default_value[1] ) ) {
-					$default_value_max = $default_value[1];
-				}
-
 				if ( $range ) {
 					list( $min, $max ) = $range;
-					?>
-					<div class="um-field-wrapper">
-						<?php // translators: %s: Datetime filter label. ?>
-						<label for="<?php echo esc_attr( $filter ); ?>_from"><?php echo esc_html( sprintf( __( '%s From', 'ultimate-member' ), $label ) ); ?></label>
-						<input type="date" id="<?php echo esc_attr( $filter ); ?>_from" name="<?php echo esc_attr( $filter ); ?>_from" class="um-filter"
-							data-filter-label="<?php echo esc_attr( $label ); ?>"
-							data-date_min="<?php echo esc_attr( $min ); ?>" data-date_max="<?php echo esc_attr( $max ); ?>"
-							min="<?php echo esc_attr( $min ); ?>" max="<?php echo esc_attr( $max ); ?>"
-							data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="from" data-value="<?php echo ! empty( $default_value_min ) ? esc_attr( strtotime( $default_value_min ) ) : ''; ?>" />
-					</div>
-					<div class="um-field-wrapper">
-						<?php // translators: %s: Datetime filter label. ?>
-						<label for="<?php echo esc_attr( $filter ); ?>_to"><?php echo esc_html( sprintf( __( '%s To', 'ultimate-member' ), $label ) ); ?></label>
-						<input type="date" id="<?php echo esc_attr( $filter ); ?>_to" name="<?php echo esc_attr( $filter ); ?>_to" class="um-filter"
-							data-filter-label="<?php echo esc_attr( $label ); ?>"
-							data-date_min="<?php echo esc_attr( $min ); ?>" data-date_max="<?php echo esc_attr( $max ); ?>"
-							min="<?php echo esc_attr( $min ); ?>" max="<?php echo esc_attr( $max ); ?>"
-							data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="to" data-value="<?php echo ! empty( $default_value_max ) ? esc_attr( strtotime( $default_value_max ) ) : ''; ?>" />
-					</div>
-					<?php
+
+					if ( $default_value ) {
+						$value = $default_value;
+					} else {
+						$value = 0;
+					}
+
+					echo wp_kses(
+						UM()->frontend()::layouts()::date_range(
+							array(
+								'id'    => $filter,
+								'name'  => $filter,
+								'label' => $label,
+								'value' => $value,
+								'min'   => $min,
+								'max'   => $max,
+							)
+						),
+						UM()->get_allowed_html( 'templates' )
+					);
 				}
 				break;
 			case 'timepicker':
@@ -406,38 +396,28 @@ class Directory extends \um\common\Directory {
 				$label = ! empty( $attrs['label'] ) ? $attrs['label'] : $attrs['title'];
 				$label = stripslashes( $label );
 
-				$default_value_min = '';
-				$default_value_max = '';
-				if ( ! empty( $default_value[0] ) ) {
-					$default_value_min = $default_value[0];
-				}
-				if ( ! empty( $default_value[1] ) ) {
-					$default_value_max = $default_value[1];
-				}
-
 				if ( $range ) {
-					?>
-					<div class="um-field-wrapper">
-						<?php // translators: %s: Timepicker filter label. ?>
-						<label for="<?php echo esc_attr( $filter ); ?>_from"><?php echo esc_html( sprintf( __( '%s From', 'ultimate-member' ), $label ) ); ?></label>
-						<input type="time" id="<?php echo esc_attr( $filter ); ?>_from" name="<?php echo esc_attr( $filter ); ?>_from" class="um-filter"
-							<?php // translators: %s: Timepicker filter label. ?>
-							data-filter-label="<?php echo esc_attr( $label ); ?>"
-							data-min="<?php echo esc_attr( $range[0] ); ?>" data-max="<?php echo esc_attr( $range[1] ); ?>"
-							min="<?php echo esc_attr( $range[0] ); ?>" max="<?php echo esc_attr( $range[1] ); ?>"
-							data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="from" data-value="<?php echo ! empty( $default_value_min ) ? esc_attr( $default_value_min ) : ''; ?>" />
-					</div>
-					<div class="um-field-wrapper">
-						<?php // translators: %s: Timepicker filter label. ?>
-						<label for="<?php echo esc_attr( $filter ); ?>_to"><?php echo esc_html( sprintf( __( '%s To', 'ultimate-member' ), $label ) ); ?></label>
-						<input type="time" id="<?php echo esc_attr( $filter ); ?>_to" name="<?php echo esc_attr( $filter ); ?>_to" class="um-filter"
-							<?php // translators: %s: Timepicker filter label. ?>
-							data-filter-label="<?php echo esc_attr( $label ); ?>"
-							data-min="<?php echo esc_attr( $range[0] ); ?>" data-max="<?php echo esc_attr( $range[1] ); ?>"
-							min="<?php echo esc_attr( $range[0] ); ?>" max="<?php echo esc_attr( $range[1] ); ?>"
-							data-filter_name="<?php echo esc_attr( $filter ); ?>" data-range="to" data-value="<?php echo ! empty( $default_value_max ) ? esc_attr( $default_value_max ) : ''; ?>" />
-					</div>
-					<?php
+					list( $min, $max ) = $range;
+
+					if ( $default_value ) {
+						$value = $default_value;
+					} else {
+						$value = 0;
+					}
+
+					echo wp_kses(
+						UM()->frontend()::layouts()::time_range(
+							array(
+								'id'    => $filter,
+								'name'  => $filter,
+								'label' => $label,
+								'value' => $value,
+								'min'   => $min,
+								'max'   => $max,
+							)
+						),
+						UM()->get_allowed_html( 'templates' )
+					);
 				}
 
 				break;

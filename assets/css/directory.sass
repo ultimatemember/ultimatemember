@@ -20,21 +20,25 @@
         padding: 0
         margin: 0
         +border-box
-        row-gap: 8px
+        row-gap: $spacing-md
         justify-content: normal
         .#{$prefix}filters-form
           margin: 0
           padding: 0
           width: 100%
           display: grid
-          grid-template-rows: auto 1fr
-          grid-template-columns: repeat(2, 1fr)
+          grid-template-columns: calc( 50% - $spacing-xs ) calc( 50% - $spacing-xs )
           grid-gap: $spacing-md
-          grid-auto-rows: minmax(max-content, auto)
-          -ms-grid-template-rows: auto 1fr
-          -ms-grid-template-columns: repeat(2, 1fr)
           -ms-grid-gap: $spacing-md
-          -ms-grid-auto-rows: minmax(max-content, auto)
+
+          //grid-template-rows: auto 1fr
+          //grid-template-columns: repeat(2, 1fr)
+          //grid-gap: $spacing-md
+          //grid-auto-rows: minmax(max-content, auto)
+          //-ms-grid-template-rows: auto 1fr
+          //-ms-grid-template-columns: repeat(2, 1fr)
+          //-ms-grid-gap: $spacing-md
+          //-ms-grid-auto-rows: minmax(max-content, auto)
         .#{$prefix}filters-header,
         .#{$prefix}filters-footer
           +typography( text, md, semibold )
@@ -46,7 +50,7 @@
             padding-left: 0
         .#{$prefix}search-filter
           +flex( column, flex-start, stretch, nowrap )
-          row-gap: $spacing-md
+          //row-gap: $spacing-md
           .choices
             .choices__list--dropdown,
             .choices__list[aria-expanded]

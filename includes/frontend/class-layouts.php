@@ -1214,7 +1214,7 @@ class Layouts {
 					}
 					$text = str_replace( '{{{label}}}', $args['label'], $text );
 					?>
-					<div class="um-range-placeholder um-supporting-text" data-placeholder-s="<?php echo esc_attr( $args['placeholder']['single'] ); ?>" data-placeholder-p="<?php echo esc_attr( $args['placeholder']['plural'] ); ?>" data-label="<?php echo esc_attr( $args['label'] ); ?>"><?php echo esc_html( $text ); ?></div>
+					<div class="um-range-placeholder um-supporting-text" data-placeholder-s="<?php echo esc_attr( $args['placeholder']['single'] ); ?>" data-placeholder-p="<?php echo esc_attr( $args['placeholder']['plural'] ); ?>" data-label="<?php echo esc_attr( $args['label'] ); ?>"><?php echo wp_kses_post( $text ); ?></div>
 					<?php
 				}
 				?>

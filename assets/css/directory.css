@@ -39,14 +39,9 @@
   padding: 0;
   width: 100%;
   display: grid;
-  grid-template-rows: auto 1fr;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: calc(50% - 4px) calc(50% - 4px);
   grid-gap: 8px;
-  grid-auto-rows: minmax(max-content, auto);
-  -ms-grid-template-rows: auto 1fr;
-  -ms-grid-template-columns: repeat(2, 1fr);
   -ms-grid-gap: 8px;
-  -ms-grid-auto-rows: minmax(max-content, auto);
 }
 .um.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-filters-header,
 .um.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-filters-footer {
@@ -72,7 +67,6 @@
   justify-content: flex-start;
   align-items: stretch;
   flex-wrap: nowrap;
-  row-gap: 8px;
 }
 .um.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter .choices .choices__list--dropdown,
 .um.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter .choices .choices__list[aria-expanded] {

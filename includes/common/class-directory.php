@@ -572,43 +572,35 @@ class Directory {
 	}
 
 	/**
-	 * @param $filter
+	 * @param string $filter
+	 * @param array  $attrs
 	 *
-	 * @return mixed
+	 * @return string[]
 	 */
 	protected function slider_range_placeholder( $filter, $attrs ) {
-		switch ( $filter ) {
-			default: {
-				$label = ! empty( $attrs['label'] ) ? $attrs['label'] : $filter;
-				$label = ucwords( str_replace( array( 'um_', '_' ), array( '', ' ' ), $label ) );
-				$placeholders = apply_filters( 'um_member_directory_filter_slider_range_placeholder', false, $filter );
+		if ( 'birth_date' === $filter ) {
+			return array(
+				__( '<strong>Age:</strong>&nbsp;{{{value}}} years old', 'ultimate-member' ),
+				__( '<strong>Age:</strong>&nbsp;{{{value_from}}} - {{{value_to}}} years old', 'ultimate-member' ),
+			);
+		}
 
-				if ( ! $placeholders ) {
-					switch ( $attrs['type'] ) {
-						default:
-							$placeholders = array(
-								"<strong>$label:</strong>&nbsp;{value}",
-								"<strong>$label:</strong>&nbsp;{min_range} - {max_range}",
-							);
-							break;
-						case 'rating':
-							$placeholders = array(
-								"<strong>$label:</strong>&nbsp;{value}" . __( ' stars', 'ultimate-member' ),
-								"<strong>$label:</strong>&nbsp;{min_range} - {max_range}" . __( ' stars', 'ultimate-member' )
-							);
-							break;
-					}
-				}
+		$label        = ! empty( $attrs['label'] ) ? $attrs['label'] : $filter;
+		$label        = ucwords( str_replace( array( 'um_', '_' ), array( '', ' ' ), $label ) );
+		$placeholders = apply_filters( 'um_member_directory_filter_slider_range_placeholder', false, $filter );
 
-				break;
-			}
-			case 'birth_date': {
-				$placeholders = array(
-					__( '<strong>Age:</strong>&nbsp;{value} years old', 'ultimate-member' ),
-					__( '<strong>Age:</strong>&nbsp;{min_range} - {max_range} years old', 'ultimate-member' )
+		if ( false === $placeholders ) {
+			if ( 'rating' === $attrs['type'] ) {
+				return array(
+					"<strong>$label:</strong>&nbsp;{{{value}}}" . __( ' stars', 'ultimate-member' ),
+					"<strong>$label:</strong>&nbsp;{{{value_from}}} - {{{value_to}}}" . __( ' stars', 'ultimate-member' ),
 				);
-				break;
 			}
+
+			$placeholders = array(
+				"<strong>$label:</strong>&nbsp;{{{value}}}",
+				"<strong>$label:</strong>&nbsp;{{{value_from}}} - {{{value_to}}}",
+			);
 		}
 
 		return $placeholders;
