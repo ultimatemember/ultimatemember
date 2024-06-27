@@ -1250,12 +1250,12 @@ class Layouts {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'min'   => 0,
-				'max'   => 100,
-				'id'    => '',
-				'name'  => '',
-				'label' => '',
-				'value' => 0,
+				'min'     => '',
+				'max'     => '',
+				'id'      => '',
+				'name'    => '',
+				'label'   => '',
+				'value'   => '',
 				'classes' => array(
 					'wrapper' => array(),
 					'from'    => array(),
@@ -1307,12 +1307,12 @@ class Layouts {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'min'   => 0,
-				'max'   => 100,
-				'id'    => '',
-				'name'  => '',
-				'label' => '',
-				'value' => 0,
+				'min'     => '',
+				'max'     => '',
+				'id'      => '',
+				'name'    => '',
+				'label'   => '',
+				'value'   => '',
 				'classes' => array(
 					'wrapper' => array(),
 					'from'    => array(),

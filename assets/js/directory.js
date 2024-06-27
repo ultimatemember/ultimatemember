@@ -164,7 +164,7 @@ function um_set_url_from_data( directory, key, value ) {
 			value[ i ] = encodeURIComponent( value[ i ] );
 		});
 		value = value.join( '||' );
-	} else if ( ! jQuery.isNumeric( value ) ) {
+	} else if ( ! Number.isFinite( value ) ) {
 		value = value.split( '||' );
 		jQuery.each( value, function( i ) {
 			value[ i ] = encodeURIComponent( value[ i ] );

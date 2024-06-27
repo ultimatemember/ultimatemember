@@ -450,7 +450,7 @@ class Directory extends \um\common\Directory {
 					if ( $default_value ) {
 						$value = $default_value;
 					} else {
-						$value = 0;
+						$value = '';
 					}
 
 					echo wp_kses(
@@ -484,7 +484,7 @@ class Directory extends \um\common\Directory {
 					if ( $default_value ) {
 						$value = $default_value;
 					} else {
-						$value = 0;
+						$value = '';
 					}
 
 					echo wp_kses(
