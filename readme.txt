@@ -10,13 +10,13 @@ Stable tag: 2.8.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
-The #1 plugin for front-end user profiles, user registration & login forms, member directories, content restriction, user roles and more.
+Membership & community plugin with user profiles, registration & login, member directories, content restriction, user roles and much more.
 
 == Description ==
 
-= Best User Profile & Membership Plugin for WordPress =
+= User Profile & Membership Plugin for WordPress =
 
-Ultimate Member is the #1 user profile & membership plugin for WordPress. The plugin makes it a breeze for users to sign-up and become members of your website. The plugin allows you to add beautiful user profiles to your site and is perfect for creating advanced online communities and membership sites. Lightweight and highly extendible, Ultimate Member will enable you to create almost any type of site where users can join and become members with absolute ease.
+Ultimate Member is the membership & community plugin for WordPress. The plugin makes it a breeze for users to sign-up and become members of your website. The plugin allows you to add beautiful user profiles to your site and is perfect for creating advanced online communities and membership sites. Lightweight and highly extendible, Ultimate Member will enable you to create almost any type of site where users can join and become members with absolute ease.
 
 = Features of the plugin include: =
 
