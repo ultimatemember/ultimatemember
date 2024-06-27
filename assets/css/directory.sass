@@ -28,8 +28,10 @@
           width: 100%
           display: grid
           grid-template-columns: calc( 50% - $spacing-xs ) calc( 50% - $spacing-xs )
+          -ms-grid-template-columns: calc( 50% - $spacing-xs ) calc( 50% - $spacing-xs )
           grid-gap: $spacing-md
           -ms-grid-gap: $spacing-md
+
 
           //grid-template-rows: auto 1fr
           //grid-template-columns: repeat(2, 1fr)
@@ -55,6 +57,20 @@
             .choices__list--dropdown,
             .choices__list[aria-expanded]
               z-index: 3
+          .#{$prefix}field-wrapper
+            width: 100%
+            margin: 0
+            padding: 0
+            .#{$prefix}date-range-row
+              width: 100%
+              margin: 0
+              padding: 0
+              +border-box
+            .#{$prefix}time-range-row
+              width: 100%
+              margin: 0
+              padding: 0
+              +border-box
       .#{$prefix}member-directory-header-row-grid
         width: 100%
         display: grid

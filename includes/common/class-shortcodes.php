@@ -1969,6 +1969,8 @@ class Shortcodes {
 					}
 					$search_filters = $temp_search_filters;
 
+					//$filters_hash = UM()->frontend()->directory()->get_filters_hash( $search_filters, $args );
+
 					if ( empty( $search_filters ) ) {
 						$filters      = false;
 						$show_filters = false;

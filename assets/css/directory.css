@@ -40,6 +40,7 @@
   width: 100%;
   display: grid;
   grid-template-columns: calc(50% - 4px) calc(50% - 4px);
+  -ms-grid-template-columns: calc(50% - 4px) calc(50% - 4px);
   grid-gap: 8px;
   -ms-grid-gap: 8px;
 }
@@ -71,6 +72,27 @@
 .um.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter .choices .choices__list--dropdown,
 .um.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter .choices .choices__list[aria-expanded] {
   z-index: 3;
+}
+.um.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter .um-field-wrapper {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.um.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter .um-field-wrapper .um-date-range-row {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+.um.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter .um-field-wrapper .um-time-range-row {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 .um.um-directory .um-member-directory-header .um-member-directory-header-row-grid {
   width: 100%;

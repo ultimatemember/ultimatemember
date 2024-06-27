@@ -2736,24 +2736,32 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: nowrap;
-  column-gap: 8px;
   border: 1px solid var(--um-gray-300, #d0d5dd);
   border-radius: 8px;
   background: var(--um-gray-200, #eaecf0);
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 .um .um-field-wrapper .um-date-range-row label,
 .um .um-field-wrapper .um-time-range-row label {
-  max-width: 50px;
-  min-width: 30px;
   font-size: var(--um-text-font-size-sm, 14px);
   line-height: var(--um-text-line-height-sm, 20px);
   font-weight: var(--um-text-font-weight-regular, 400);
   text-align: center;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 .um .um-field-wrapper .um-date-range-row input,
 .um .um-field-wrapper .um-time-range-row input {
   border: none;
   width: calc(50% - 20px);
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 .um .um-field-wrapper .um-date-range-row input:hover, .um .um-field-wrapper .um-date-range-row input:focus, .um .um-field-wrapper .um-date-range-row input:focus-visible,
 .um .um-field-wrapper .um-time-range-row input:hover,

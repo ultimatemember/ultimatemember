@@ -110,7 +110,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<div class="um-toggle-block-inner<?php if ( $filters_expanded ) { ?> um-visible<?php } ?>">
 					<form class="um-filters-form">
 						<?php foreach ( $search_filters as $filter => $filter_data ) { ?>
-							<div class="um-search-filter um-<?php echo esc_attr( $filter_data['type'] ); ?>-filter-type" data-filter-name="<?php echo esc_attr( $filter ); ?>">
+							<div class="um-search-filter um-<?php echo esc_attr( $filter_data['type'] ); ?>-filter-type" data-filter-name="<?php echo esc_attr( $filter ); ?>" data-filter-type="<?php echo esc_attr( $filter_data['type'] ); ?>">
 								<?php echo wp_kses( $filter_data['content'], UM()->get_allowed_html( 'templates' ) ); ?>
 							</div>
 						<?php } ?>
@@ -138,15 +138,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 								UM()->frontend()::layouts()::button(
 									__( 'Apply filters', 'ultimate-member' ),
 									array(
-										'size'    => 'm',
-										'design'  => 'primary',
-										'classes' => array( 'um-apply-filters' ),
+										'size'     => 'm',
+										'design'   => 'primary',
+										'classes'  => array( 'um-apply-filters' ),
+										'disabled' => true,
 									)
 								),
 								UM()->get_allowed_html( 'templates' )
 							);
 							?>
-	<!--						<a href="javascript:void(0);" class="um-link um-clear-filters-a --><?php //if ( $not_filtered ) { ?><!--um-display-none--><?php //} ?><!--" title="--><?php //esc_attr_e( 'Remove all filters', 'ultimate-member' ); ?><!--">--><?php //esc_html_e( 'Clear all', 'ultimate-member' ); ?><!--</a>-->
 						</div>
 					</form>
 				</div>
