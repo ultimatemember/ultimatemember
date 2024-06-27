@@ -497,6 +497,17 @@ UM.frontend = {
 				} else {
 					choices = new Choices(jQuery(this)[0]);
 				}
+
+				// Workaround for form reset https://github.com/Choices-js/Choices/issues/1053#issuecomment-1810488521
+				const form = jQuery(this).closest('form')[0];
+				if ( ! form ) {
+					return;
+				}
+
+				form.addEventListener( 'reset', () => {
+					choices.destroy();
+					choices.init();
+				});
 			});
 		}
 	},

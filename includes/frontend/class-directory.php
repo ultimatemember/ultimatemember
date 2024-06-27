@@ -210,7 +210,7 @@ class Directory extends \um\common\Directory {
 					<label for="<?php echo esc_attr( $filter ); ?>"><?php echo esc_html( stripslashes( $label ) ); ?></label>
 					<input type="text" autocomplete="off" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?>"
 						placeholder="<?php echo esc_attr( $label ); ?>"
-						value="<?php echo esc_attr( $filter_from_url ); ?>" class="um-form-field"
+						value="<?php echo esc_attr( $filter_from_url ); ?>" class="um-search-filter-field"
 						aria-label="<?php echo esc_attr( $label ); ?>" />
 				</div>
 				<?php
@@ -348,7 +348,7 @@ class Directory extends \um\common\Directory {
 				?>
 				<div class="um-field-wrapper">
 					<label for="<?php echo esc_attr( $filter ); ?>"><?php echo esc_html( stripslashes( $label ) ); ?></label>
-					<select class="js-choice" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?><?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>[]<?php } ?>"
+					<select class="js-choice um-search-filter-field" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?><?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>[]<?php } ?>"
 							data-placeholder="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
 							aria-label="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
 							<?php if ( count( $attrs['options'] ) > 1 ) { ?>multiple<?php } ?>
@@ -420,6 +420,10 @@ class Directory extends \um\common\Directory {
 							array(
 								'label'       => stripslashes( $label ),
 								'name'        => $filter,
+								'classes' => array(
+									'from' => array( 'um-search-filter-field' ),
+									'to'   => array( 'um-search-filter-field' ),
+								),
 								'value'       => $value,
 								'min'         => $range[0],
 								'max'         => $range[1],
@@ -452,12 +456,16 @@ class Directory extends \um\common\Directory {
 					echo wp_kses(
 						UM()->frontend()::layouts()::date_range(
 							array(
-								'id'    => $filter,
-								'name'  => $filter,
-								'label' => $label,
-								'value' => $value,
-								'min'   => $min,
-								'max'   => $max,
+								'id'      => $filter,
+								'name'    => $filter,
+								'label'   => $label,
+								'value'   => $value,
+								'min'     => $min,
+								'max'     => $max,
+								'classes' => array(
+									'from' => array( 'um-search-filter-field' ),
+									'to'   => array( 'um-search-filter-field' ),
+								),
 							)
 						),
 						UM()->get_allowed_html( 'templates' )
@@ -482,12 +490,16 @@ class Directory extends \um\common\Directory {
 					echo wp_kses(
 						UM()->frontend()::layouts()::time_range(
 							array(
-								'id'    => $filter,
-								'name'  => $filter,
-								'label' => $label,
-								'value' => $value,
-								'min'   => $min,
-								'max'   => $max,
+								'id'      => $filter,
+								'name'    => $filter,
+								'label'   => $label,
+								'value'   => $value,
+								'min'     => $min,
+								'max'     => $max,
+								'classes' => array(
+									'from' => array( 'um-search-filter-field' ),
+									'to'   => array( 'um-search-filter-field' ),
+								),
 							)
 						),
 						UM()->get_allowed_html( 'templates' )

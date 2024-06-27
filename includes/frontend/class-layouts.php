@@ -1171,6 +1171,11 @@ class Layouts {
 					'single' => '',
 					'plural' => '',
 				),
+				'classes' => array(
+					'wrapper' => array(),
+					'from'    => array(),
+					'to'      => array(),
+				),
 			)
 		);
 
@@ -1180,18 +1185,29 @@ class Layouts {
 
 		$value = is_array( $args['value'] ) ? $args['value'] : array( $args['value'], $args['value'] );
 
+		$args['classes'] = wp_parse_args(
+			$args['classes'],
+			array(
+				'wrapper' => array(),
+				'from'    => array(),
+				'to'      => array(),
+			)
+		);
+
 		$fields = array(
 			'from' => array(
-				'name'  => $args['name'] ? $args['name'] . '_min' : 'min',
-				'min'   => $args['min'],
-				'max'   => $args['max'],
-				'value' => min( $value ),
+				'name'    => $args['name'] ? $args['name'] . '_min' : 'min',
+				'min'     => $args['min'],
+				'max'     => $args['max'],
+				'value'   => min( $value ),
+				'classes' => $args['classes']['from'],
 			),
 			'to'   => array(
-				'name'  => $args['name'] ? $args['name'] . '_max' : 'max',
-				'min'   => $args['min'],
-				'max'   => $args['max'],
-				'value' => max( $value ),
+				'name'    => $args['name'] ? $args['name'] . '_max' : 'max',
+				'min'     => $args['min'],
+				'max'     => $args['max'],
+				'value'   => max( $value ),
+				'classes' => $args['classes']['to'],
 			),
 		);
 
@@ -1201,9 +1217,15 @@ class Layouts {
 			<label for="<?php echo esc_attr( $fields['from']['name'] ); ?>"><?php echo esc_html( $args['label'] ); ?></label>
 			<div class="um-range-container">
 				<div class="um-sliders-control">
-					<?php foreach ( $fields as $field_k => $field ) { ?>
-						<input class="um-<?php echo esc_attr( $field_k ); ?>-slider" type="range" value="<?php echo esc_attr( $field['value'] ); ?>" min="<?php echo esc_attr( $field['min'] ); ?>" max="<?php echo esc_attr( $field['max'] ); ?>" id="<?php echo esc_attr( $field['name'] ); ?>" name="<?php echo esc_attr( $field['name'] ); ?>" />
-					<?php } ?>
+					<?php
+					foreach ( $fields as $field_k => $field ) {
+						$field['classes'][] = 'um-' . $field_k . '-slider';
+						$classes = implode( ' ', $field['classes'] );
+						?>
+						<input class="<?php echo esc_attr( $classes ); ?>" type="range" value="<?php echo esc_attr( $field['value'] ); ?>" min="<?php echo esc_attr( $field['min'] ); ?>" max="<?php echo esc_attr( $field['max'] ); ?>" id="<?php echo esc_attr( $field['name'] ); ?>" name="<?php echo esc_attr( $field['name'] ); ?>" />
+						<?php
+					}
+					?>
 				</div>
 				<?php
 				if ( false !== $args['placeholder'] ) {
@@ -1234,6 +1256,11 @@ class Layouts {
 				'name'  => '',
 				'label' => '',
 				'value' => 0,
+				'classes' => array(
+					'wrapper' => array(),
+					'from'    => array(),
+					'to'      => array(),
+				),
 			)
 		);
 
@@ -1248,6 +1275,18 @@ class Layouts {
 			return '';
 		}
 
+		$args['classes'] = wp_parse_args(
+			$args['classes'],
+			array(
+				'wrapper' => array(),
+				'from'    => array(),
+				'to'      => array(),
+			)
+		);
+
+		$from_classes = implode( ' ', $args['classes']['from'] );
+		$to_classes   = implode( ' ', $args['classes']['to'] );
+
 		$value = is_array( $args['value'] ) ? $args['value'] : array( $args['value'], $args['value'] );
 
 		ob_start();
@@ -1255,9 +1294,9 @@ class Layouts {
 		<div class="um-field-wrapper">
 			<label for="<?php echo esc_attr( $args['id'] . '_from' ); ?>"><?php echo esc_html( $args['label'] ); ?></label>
 			<div class="um-date-range-row">
-				<input type="date" id="<?php echo esc_attr( $args['id'] . '_from' ); ?>" name="<?php echo esc_attr( $args['name'] . '_from' ); ?>" data-range="from" value="<?php echo esc_attr( min( $value ) ); ?>" />
+				<input type="date" class="<?php echo esc_attr( $from_classes ); ?>" id="<?php echo esc_attr( $args['id'] . '_from' ); ?>" name="<?php echo esc_attr( $args['name'] . '_from' ); ?>" data-range="from" value="<?php echo esc_attr( min( $value ) ); ?>" />
 				<label for="<?php echo esc_attr( $args['id'] . '_to' ); ?>">to</label>
-				<input type="date" id="<?php echo esc_attr( $args['id'] . '_to' ); ?>" name="<?php echo esc_attr( $args['name'] . '_to' ); ?>" data-range="to" value="<?php echo esc_attr( max( $value ) ); ?>" />
+				<input type="date" class="<?php echo esc_attr( $to_classes ); ?>" id="<?php echo esc_attr( $args['id'] . '_to' ); ?>" name="<?php echo esc_attr( $args['name'] . '_to' ); ?>" data-range="to" value="<?php echo esc_attr( max( $value ) ); ?>" />
 			</div>
 		</div>
 		<?php
@@ -1274,6 +1313,11 @@ class Layouts {
 				'name'  => '',
 				'label' => '',
 				'value' => 0,
+				'classes' => array(
+					'wrapper' => array(),
+					'from'    => array(),
+					'to'      => array(),
+				),
 			)
 		);
 
@@ -1288,16 +1332,28 @@ class Layouts {
 			return '';
 		}
 
+		$args['classes'] = wp_parse_args(
+			$args['classes'],
+			array(
+				'wrapper' => array(),
+				'from'    => array(),
+				'to'      => array(),
+			)
+		);
+
 		$value = is_array( $args['value'] ) ? $args['value'] : array( $args['value'], $args['value'] );
+
+		$from_classes = implode( ' ', $args['classes']['from'] );
+		$to_classes   = implode( ' ', $args['classes']['to'] );
 
 		ob_start();
 		?>
 		<div class="um-field-wrapper">
 			<label for="<?php echo esc_attr( $args['id'] . '_from' ); ?>"><?php echo esc_html( $args['label'] ); ?></label>
 			<div class="um-time-range-row">
-				<input type="time" id="<?php echo esc_attr( $args['id'] . '_from' ); ?>" name="<?php echo esc_attr( $args['name'] . '_from' ); ?>" data-range="from" value="<?php echo esc_attr( min( $value ) ); ?>" />
+				<input type="time" class="<?php echo esc_attr( $from_classes ); ?>" id="<?php echo esc_attr( $args['id'] . '_from' ); ?>" name="<?php echo esc_attr( $args['name'] . '_from' ); ?>" data-range="from" value="<?php echo esc_attr( min( $value ) ); ?>" />
 				<label for="<?php echo esc_attr( $args['id'] . '_to' ); ?>">to</label>
-				<input type="time" id="<?php echo esc_attr( $args['id'] . '_to' ); ?>" name="<?php echo esc_attr( $args['name'] . '_to' ); ?>" data-range="to" value="<?php echo esc_attr( max( $value ) ); ?>" />
+				<input type="time" class="<?php echo esc_attr( $to_classes ); ?>" id="<?php echo esc_attr( $args['id'] . '_to' ); ?>" name="<?php echo esc_attr( $args['name'] . '_to' ); ?>" data-range="to" value="<?php echo esc_attr( max( $value ) ); ?>" />
 			</div>
 		</div>
 		<?php
