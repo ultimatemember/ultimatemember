@@ -127,7 +127,7 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_register_script( 'um_crop', $libs_url . 'cropper/cropper' . $suffix . '.js', array( 'jquery' ), '1.6.1', true );
 			wp_register_style( 'um_crop', $libs_url . 'cropper/cropper' . $suffix . '.css', array(), '1.6.1' );
 
-			wp_register_script( 'um_frontend_common', $js_url . 'common-frontend-new' . $suffix . '.js', array( 'um_common', 'um_crop', 'um_dropdown' ), UM_VERSION, true );
+			wp_register_script( 'um_frontend_common', $js_url . 'common-frontend-new' . $suffix . '.js', array( 'um_common', 'um_crop', 'um_dropdown', 'um_choices' ), UM_VERSION, true );
 
 			$um_common_variables = array();
 			/**
@@ -153,7 +153,7 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_register_script( 'um_modal', $libs_url . 'modal/modal' . $suffix . '.js', array( 'um_frontend_common' ), UM_VERSION, true );
 			wp_register_style( 'um_modal', $libs_url . 'modal/modal' . $suffix . '.css', array(), UM_VERSION );
 
-			wp_register_script( 'um_new_design', $js_url . 'new-design' . $suffix . '.js', array( 'um_frontend_common', 'plupload', 'um_choices', 'um_confirm' ), UM_VERSION, true );
+			wp_register_script( 'um_new_design', $js_url . 'new-design' . $suffix . '.js', array( 'um_frontend_common', 'plupload', 'um_confirm' ), UM_VERSION, true );
 			wp_register_style( 'um_new_design', $css_url . 'new-design' . $suffix . '.css', array( 'um_tipsy', 'um_dropdown', 'um_crop', 'um_modal', 'um_choices', 'um_confirm' ), UM_VERSION );
 
 			wp_register_script( 'um_members', $js_url . 'um-members' . $suffix . '.js', array( 'jquery', 'wp-util', 'jquery-ui-slider', 'wp-hooks', 'jquery-masonry' ), UM_VERSION, true );

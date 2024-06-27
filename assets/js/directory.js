@@ -19,7 +19,66 @@ UM.frontend.directories = {
 			hash |= 0; // Convert to 32-bit integer
 		}
 		return hash;
-	}
+	},
+	filters: {
+		checkEmpty: function ( $filtersForm ) {
+			let $clearFilters = $filtersForm.find('.um-clear-filters-a');
+			let $filters = $filtersForm.find('.um-search-filter input, .um-search-filter select');
+
+			let emptyFilters = 0;
+			$filters.each( function () {
+				let $filterWrapper = jQuery(this).parents( '.um-search-filter' );
+
+				let filterType = $filterWrapper.data( 'filter-type' );
+
+				if ( 'text' === filterType ) {
+					let filterValue = jQuery(this).val();
+					if ( '' === filterValue ) {
+						emptyFilters++;
+					}
+				} else if ( 'select' === filterType ) {
+					let filterValue = jQuery(this).val();
+					if ( 0 === filterValue.length ) {
+						emptyFilters++;
+					}
+				} else if ( 'slider' === filterType ) {
+					// Get from "from" and "to" fields.
+					let $rangeContainer = jQuery(this).parents( '.um-range-container' );
+					const fromSlider = $rangeContainer.find( '.um-from-slider' )[0];
+					const toSlider = $rangeContainer.find( '.um-to-slider' )[0];
+
+					// Empty when selected full range.
+					if ( parseInt( fromSlider.value, 10) === parseInt( fromSlider.min, 10 ) &&
+						parseInt( toSlider.value, 10) === parseInt( toSlider.max, 10 ) ) {
+						emptyFilters++;
+					}
+				} else if ( 'datepicker' === filterType ) {
+					let $rangeContainer = jQuery(this).parents( '.um-date-range-row' );
+					const fromDate = $rangeContainer.find( '[data-range="from"]' );
+					const toDate = $rangeContainer.find( '[data-range="to"]' );
+
+					if ( '' === fromDate.val() && '' === toDate.val() ) {
+						emptyFilters++;
+					}
+				} else if ( 'timepicker' === filterType ) {
+					let $rangeContainer = jQuery(this).parents( '.um-time-range-row' );
+					const fromTime = $rangeContainer.find( '[data-range="from"]' );
+					const toTime = $rangeContainer.find( '[data-range="to"]' );
+
+					if ( '' === fromTime.val() && '' === toTime.val() ) {
+						emptyFilters++;
+					}
+				}
+			});
+
+			// Show clear filters button in case where are not empty filters.
+			if ( $filters.length === emptyFilters ) {
+				$clearFilters.addClass( 'um-hidden' ).prop( 'disabled', true );
+			} else {
+				$clearFilters.removeClass( 'um-hidden' ).prop( 'disabled', false );
+			}
+		}
+	},
 };
 
 UM.frontend.directory = function( hash ) {
@@ -937,84 +996,13 @@ jQuery(document.body).ready( function() {
 	 */
 
 	jQuery( document.body ).on( 'change', '.um-directory .um-search-filter input, .um-directory .um-search-filter select', function() {
-		let $filters = jQuery(this).parents('.um-filters-form').find('.um-search-filter input, .um-search-filter select');
-
 		let $filtersForm = jQuery(this).parents('.um-filters-form');
-		let $clearFilters = $filtersForm.find('.um-clear-filters-a');
 		let $applyFilters = $filtersForm.find('.um-apply-filters');
 
-		let emptyFilters = 0;
-		let filledFilters = {};
-		$filters.each( function () {
-			let $filterWrapper = jQuery(this).parents( '.um-search-filter' );
-
-			let filterType = $filterWrapper.data( 'filter-type' );
-			let filterKey = $filterWrapper.data( 'filter-name' );
-
-			if ( 'text' === filterType ) {
-				let filterValue = jQuery(this).val();
-				if ( '' === filterValue ) {
-					emptyFilters++;
-				}/* else {
-					filledFilters[ filterKey ] = filterValue;
-				}*/
-			} else if ( 'select' === filterType ) {
-				let filterValue = jQuery(this).val();
-				if ( 0 === filterValue.length ) {
-					emptyFilters++;
-				}/* else {
-					filledFilters[ filterKey ] = filterValue;
-				}*/
-			} else if ( 'slider' === filterType ) {
-				// Get from "from" and "to" fields.
-				let $rangeContainer = jQuery(this).parents( '.um-range-container' );
-				const fromSlider = $rangeContainer.find( '.um-from-slider' )[0];
-				const toSlider = $rangeContainer.find( '.um-to-slider' )[0];
-
-				// Empty when selected full range.
-				if ( parseInt( fromSlider.value, 10) === parseInt( fromSlider.min, 10 ) &&
-					parseInt( toSlider.value, 10) === parseInt( toSlider.max, 10 ) ) {
-					emptyFilters++;
-				}/* else {
-					filledFilters[ filterKey ] = [ fromSlider.value, toSlider.value ];
-				}*/
-			} else if ( 'datepicker' === filterType ) {
-				let $rangeContainer = jQuery(this).parents( '.um-date-range-row' );
-				const fromDate = $rangeContainer.find( '[data-range="from"]' );
-				const toDate = $rangeContainer.find( '[data-range="to"]' );
-
-				if ( '' === fromDate.val() && '' === toDate.val() ) {
-					emptyFilters++;
-				}/* else {
-					filledFilters[ filterKey ] = [ fromDate.val(), toDate.val() ];
-				}*/
-			} else if ( 'timepicker' === filterType ) {
-				let $rangeContainer = jQuery(this).parents( '.um-time-range-row' );
-				const fromTime = $rangeContainer.find( '[data-range="from"]' );
-				const toTime = $rangeContainer.find( '[data-range="to"]' );
-
-				if ( '' === fromTime.val() && '' === toTime.val() ) {
-					emptyFilters++;
-				}/* else {
-					filledFilters[ filterKey ] = [ fromTime.val(), toTime.val() ];
-				}*/
-			}
-		});
-
-		// console.log( filledFilters );
-		// // let filtersHash = UM.frontend.directories.filtersHash( JSON.stringify(filledFilters) );
-		// let filtersHash = JSON.stringify(filledFilters);
-		// console.log( filtersHash );
+		UM.frontend.directories.filters.checkEmpty( $filtersForm );
 
 		// Enable filters submission as soon as first filter is changed.
 		$applyFilters.prop( 'disabled', false );
-
-		// Show clear filters button in case where are not empty filters.
-		if ( $filters.length === emptyFilters ) {
-			$clearFilters.addClass( 'um-hidden' ).prop( 'disabled', true );
-		} else {
-			$clearFilters.removeClass( 'um-hidden' ).prop( 'disabled', false );
-		}
 	});
 
 	// jQuery( document.body ).on( 'change', '.um-directory .um-search-filter input', function() {
@@ -1074,93 +1062,9 @@ jQuery(document.body).ready( function() {
 	// 	// 	jQuery(this).trigger('change');
 	// 	// }
 	// });
-	//
-	//
-	// jQuery( document.body ).on( 'blur', '.um-directory .um-search-filter.um-text-filter-type input[type="text"]', function() {
-	// 	var directory = jQuery(this).parents('.um-directory');
-	//
-	// 	if ( um_is_directory_busy( directory ) ) {
-	// 		return;
-	// 	}
-	//
-	// 	var current_value = UM.common.form.sanitizeValue( jQuery(this).val() );
-	// 	var filter_name = jQuery(this).prop('name');
-	// 	var url_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
-	//
-	// 	if ( typeof url_value == 'undefined' ) {
-	// 		url_value = '';
-	// 	}
-	//
-	// 	if ( current_value === url_value ) {
-	// 		return;
-	// 	}
-	//
-	// 	um_members_show_preloader( directory );
-	// 	um_set_url_from_data( directory, 'filter_' + filter_name, current_value );
-	//
-	// 	//set 1st page after filtration
-	// 	directory.data( 'page', 1 );
-	// 	um_set_url_from_data( directory, 'page', '' );
-	//
-	// 	um_ajax_get_members( directory );
-	//
-	// 	directory.data( 'searched', 1 );
-	// 	directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
-	// 	directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
-	//
-	// 	let $filtersBar = directory.find('.um-member-directory-filters-bar');
-	// 	if ( '' !== current_value ) {
-	// 		$filtersBar.find('.um-clear-filters-a').removeClass('um-hidden');
-	// 	}
-	// });
-	//
-	//
-	// //make search on Enter click
-	// jQuery( document.body ).on( 'keypress', '.um-directory .um-search-filter.um-text-filter-type input[type="text"]', function(e) {
-	// 	if ( e.which !== 13 ) {
-	// 		return;
-	// 	}
-	//
-	// 	var directory = jQuery(this).parents('.um-directory');
-	//
-	// 	if ( um_is_directory_busy( directory ) ) {
-	// 		return;
-	// 	}
-	//
-	// 	var current_value = UM.common.form.sanitizeValue( jQuery(this).val() );
-	// 	var filter_name = jQuery(this).prop('name');
-	// 	var url_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
-	//
-	// 	if ( typeof url_value == 'undefined' ) {
-	// 		url_value = '';
-	// 	}
-	//
-	// 	if ( current_value === url_value ) {
-	// 		return;
-	// 	}
-	//
-	// 	um_members_show_preloader( directory );
-	// 	um_set_url_from_data( directory, 'filter_' + filter_name, current_value );
-	//
-	// 	//set 1st page after filtration
-	// 	directory.data( 'page', 1 );
-	// 	um_set_url_from_data( directory, 'page', '' );
-	//
-	// 	um_ajax_get_members( directory );
-	//
-	// 	directory.data( 'searched', 1 );
-	// 	directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
-	// 	directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
-	//
-	// 	let $filtersBar = directory.find('.um-member-directory-filters-bar');
-	// 	if ( '' !== current_value ) {
-	// 		$filtersBar.find('.um-clear-filters-a').removeClass('um-hidden');
-	// 	}
-	// });
 
 	jQuery( document.body ).on( 'reset', '.um-directory .um-filters-form', function() {
 		let $filtersForm = jQuery(this);
-		$filtersForm.data('filters-query','');
 
 		let $clearFilters = $filtersForm.find('.um-clear-filters-a');
 		let $applyFilters = $filtersForm.find('.um-apply-filters');
@@ -1168,14 +1072,16 @@ jQuery(document.body).ready( function() {
 		$clearFilters.addClass('um-hidden').prop('disabled', true);
 		$applyFilters.prop('disabled', true);
 
-		// let directory = jQuery(this).parents('.um-directory');
+		let directory = jQuery(this).parents('.um-directory');
+
+		directory.data( 'page', 1 );
 		// if ( um_is_directory_busy( directory ) ) {
 		// 	return;
 		// }
 		//
 		// um_members_show_preloader( directory );
 		//
-		// directory.data( 'page', 1 );
+		//
 		// um_set_url_from_data( directory, 'page', '' );
 		//
 		// directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
@@ -1186,6 +1092,97 @@ jQuery(document.body).ready( function() {
 
 	jQuery( document.body ).on( 'click', '.um-directory .um-apply-filters', function(e) {
 		e.preventDefault();
+		let directory = jQuery(this).parents('.um-directory');
+		let $filtersForm = jQuery(this).parents('.um-filters-form');
+
+		jQuery(this).prop('disabled',true);
+		UM.frontend.directories.filters.checkEmpty( $filtersForm );
+
+		let $filters = $filtersForm.find('.um-search-filter input, .um-search-filter select');
+		$filters.each( function () {
+			let $filterWrapper = jQuery(this).parents( '.um-search-filter' );
+			let filterType = $filterWrapper.data( 'filter-type' );
+			let filterName = $filterWrapper.data( 'filter-name' );
+
+			if ( 'text' === filterType ) {
+				let filterValue = UM.common.form.sanitizeValue( jQuery(this).val() );
+				//let filterName = jQuery(this).prop('name');
+
+				// let urlValue = um_get_data_for_directory( directory, 'filter_' + filterName );
+				// if ( typeof urlValue == 'undefined' ) {
+				// 	urlValue = '';
+				// }
+				//
+				// if ( filterValue === urlValue ) {
+				// 	return;
+				// }
+
+				um_set_url_from_data( directory, 'filter_' + filterName, filterValue );
+			} else if ( 'select' === filterType ) {
+				//let filterName = jQuery(this).prop('name');
+
+				let filterValueRaw = jQuery(this).val();
+				let filterValue = [];
+				for ( let i = 0; i < filterValueRaw.length; i++ ) {
+					filterValue[i] = UM.common.form.sanitizeValue( filterValueRaw[i] );
+				}
+
+				// let urlValue = um_get_data_for_directory( directory, 'filter_' + filterName );
+				// if ( typeof urlValue == 'undefined' ) {
+				// 	urlValue = [];
+				// } else {
+				// 	urlValue = urlValue.split( '||' );
+				// }
+
+				if ( filterValue.length ) {
+					um_set_url_from_data( directory, 'filter_' + filterName, filterValue.join( '||' ) );
+				} else {
+					um_set_url_from_data( directory, 'filter_' + filterName, '' );
+				}
+			} else if ( 'slider' === filterType ) {
+				// Get from "from" and "to" fields.
+				let $rangeContainer = jQuery(this).parents( '.um-range-container' );
+				const fromSlider = $rangeContainer.find( '.um-from-slider' )[0];
+				const toSlider = $rangeContainer.find( '.um-to-slider' )[0];
+
+				if ( parseInt( fromSlider.value, 10) === parseInt( fromSlider.min, 10 ) ) {
+					um_set_url_from_data( directory, 'filter_' + filterName + '_from', '' );
+				} else {
+					um_set_url_from_data( directory, 'filter_' + filterName + '_from', parseInt( fromSlider.value, 10) );
+				}
+
+				if ( parseInt( toSlider.value, 10) === parseInt( toSlider.max, 10 ) ) {
+					um_set_url_from_data( directory, 'filter_' + filterName + '_to', '' );
+				} else {
+					um_set_url_from_data( directory, 'filter_' + filterName + '_to', parseInt( toSlider.value, 10) );
+				}
+			} else if ( 'datepicker' === filterType ) {
+				let $rangeContainer = jQuery(this).parents( '.um-date-range-row' );
+				const fromDate = $rangeContainer.find( '[data-range="from"]' );
+				const toDate = $rangeContainer.find( '[data-range="to"]' );
+
+				um_set_url_from_data( directory, 'filter_' + filterName + '_from', UM.common.form.sanitizeValue( fromDate.val() ) );
+				um_set_url_from_data( directory, 'filter_' + filterName + '_to', UM.common.form.sanitizeValue( toDate.val() ) );
+
+			} else if ( 'timepicker' === filterType ) {
+				let $rangeContainer = jQuery(this).parents( '.um-time-range-row' );
+				const fromTime = $rangeContainer.find( '[data-range="from"]' );
+				const toTime = $rangeContainer.find( '[data-range="to"]' );
+
+				um_set_url_from_data( directory, 'filter_' + filterName + '_from', UM.common.form.sanitizeValue( fromTime.val() ) );
+				um_set_url_from_data( directory, 'filter_' + filterName + '_to', UM.common.form.sanitizeValue( toTime.val() ) );
+			}
+		});
+
+		// Set 1st page after filtration.
+		directory.data( 'page', 1 );
+		um_set_url_from_data( directory, 'page', '' );
+
+		directory.data( 'searched', 1 );
+		directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
+		directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
+
+		//directory.data( 'page', 1 );
 	});
 
 	// jQuery( document.body ).on( 'click', '.um-directory .um-clear-filters-a', function() {
