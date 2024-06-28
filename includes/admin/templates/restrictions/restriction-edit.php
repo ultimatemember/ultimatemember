@@ -131,6 +131,12 @@ if ( ! empty( $_POST['um_restriction_rules'] ) ) {
 			// roles e.g. "潜水艦subs" with both latin + not-UTB-8 symbols had invalid role ID
 			$restriction_id = absint( $_GET['id'] );
 
+			$data['title'] = trim( esc_html( wp_strip_all_tags( $data['title'] ) ) );
+
+			if ( empty( $data['title'] ) ) {
+				$rule_error .= __( 'Title is empty!', 'ultimate-member' ) . '<br />';
+			}
+
 			$redirect = add_query_arg(
 				array(
 					'page' => 'um_restriction_rules',
