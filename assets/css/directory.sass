@@ -6,9 +6,32 @@
 
 .um
   &.#{$prefix}directory
+    .#{$prefix}member-directory-loading
+      display: none
+    &.#{$prefix}processing
+      .#{$prefix}member-directory-loading
+        +flex( row, center, center, nowrap )
+.um
+  &.#{$prefix}directory
     +flex( column, flex-start, stretch, nowrap )
     width: 100%
     row-gap: $spacing-lg
+    position: relative
+    //.#{$prefix}members-overlay
+    //  display: none
+    //  position: absolute
+    //  width: 100%
+    //  top: 0
+    //  bottom: 0
+    //  background: $overlay-gray900
+    //  backdrop-filter: blur(8px)
+    //  -webkit-backdrop-filter: blur(8px)
+    //  z-index: 2
+    //  border-radius: $radius-md
+    //  .#{$prefix}ajax-spinner-svg
+    //    position: absolute
+    //    left: calc(50% - 33px)
+    //    top: calc(50% - 33px)
     .#{$prefix}member-directory-header
       +flex( column, flex-start, stretch, nowrap )
       row-gap: $spacing-md

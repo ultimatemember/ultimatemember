@@ -593,6 +593,7 @@ jQuery(document).ready(function() {
 		var arr_items = [],
 			search_get = '';
 
+		// @todo member directory filters and populate options
 		if ( data.post.members_directory === 'yes' ) {
 			arr_items.push({id: '', text: '', selected: 1});
 		}

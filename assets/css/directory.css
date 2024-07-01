@@ -1,3 +1,14 @@
+.um.um-directory .um-member-directory-loading {
+  display: none;
+}
+.um.um-directory.um-processing .um-member-directory-loading {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
 .um.um-directory {
   display: flex;
   flex-direction: column;
@@ -6,6 +17,7 @@
   flex-wrap: nowrap;
   width: 100%;
   row-gap: 12px;
+  position: relative;
 }
 .um.um-directory .um-member-directory-header {
   display: flex;
