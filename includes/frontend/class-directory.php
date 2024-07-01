@@ -407,10 +407,13 @@ class Directory extends \um\common\Directory {
 						$label = $attrs['title'];
 					}
 
+					$filter_from_url_from = ! empty( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) : $range[0];
+					$filter_from_url_to   = ! empty( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) : $range[1];
+
 					if ( $default_value ) {
 						$value = $default_value;
 					} else {
-						$value = $range;
+						$value = array( $filter_from_url_from, $filter_from_url_to );
 					}
 
 					list( $single_placeholder, $plural_placeholder ) = $this->slider_range_placeholder( $filter, $attrs );
@@ -420,7 +423,7 @@ class Directory extends \um\common\Directory {
 							array(
 								'label'       => stripslashes( $label ),
 								'name'        => $filter,
-								'classes' => array(
+								'classes'     => array(
 									'from' => array( 'um-search-filter-field' ),
 									'to'   => array( 'um-search-filter-field' ),
 								),
@@ -447,10 +450,13 @@ class Directory extends \um\common\Directory {
 				if ( $range ) {
 					list( $min, $max ) = $range;
 
+					$filter_from_url_from = ! empty( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) : $range[0];
+					$filter_from_url_to   = ! empty( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) : $range[1];
+
 					if ( $default_value ) {
 						$value = $default_value;
 					} else {
-						$value = '';
+						$value = array( $filter_from_url_from, $filter_from_url_to );
 					}
 
 					echo wp_kses(
@@ -481,10 +487,13 @@ class Directory extends \um\common\Directory {
 				if ( $range ) {
 					list( $min, $max ) = $range;
 
+					$filter_from_url_from = ! empty( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) : $range[0];
+					$filter_from_url_to   = ! empty( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) : $range[1];
+
 					if ( $default_value ) {
 						$value = $default_value;
 					} else {
-						$value = '';
+						$value = array( $filter_from_url_from, $filter_from_url_to );
 					}
 
 					echo wp_kses(

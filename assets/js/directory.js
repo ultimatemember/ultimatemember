@@ -290,25 +290,27 @@ UM.frontend.directory.prototype = {
 				const fromSlider = $rangeContainer.find( '.um-from-slider' )[0];
 				const toSlider = $rangeContainer.find( '.um-to-slider' )[0];
 
-				let fromVal;
+				let fromVal =  parseInt( fromSlider.value, 10);
+				let fromValURL;
 				if ( parseInt( fromSlider.value, 10) === parseInt( fromSlider.min, 10 ) ) {
-					fromVal = '';
+					fromValURL = '';
 				} else {
-					fromVal = parseInt( fromSlider.value, 10);
+					fromValURL = parseInt( fromSlider.value, 10);
 				}
-				let toVal;
-				if (  parseInt( toSlider.value, 10) === parseInt( toSlider.max, 10 ) ) {
-					toVal = '';
+				let toVal = parseInt( toSlider.value, 10);
+				let toValURL;
+				if ( parseInt( toSlider.value, 10) === parseInt( toSlider.max, 10 ) ) {
+					toValURL = '';
 				} else {
-					toVal = parseInt( toSlider.value, 10);
+					toValURL = parseInt( toSlider.value, 10);
 				}
 
-				if ( ! ( '' === fromVal &&  '' === toVal ) ) {
+				if ( ! ( '' === fromValURL && '' === toValURL ) ) {
 					filters[ filterName ] = [ fromVal, toVal ];
 				}
 
-				instance.setDataToURL( 'filter_' + filterName + '_from', fromVal );
-				instance.setDataToURL( 'filter_' + filterName + '_to', toVal );
+				instance.setDataToURL( 'filter_' + filterName + '_from', fromValURL );
+				instance.setDataToURL( 'filter_' + filterName + '_to', toValURL );
 			} else if ( 'datepicker' === filterType ) {
 				let $rangeContainer = jQuery(this).parents( '.um-date-range-row' );
 				const fromDate = $rangeContainer.find( '[data-range="from"]' );
@@ -1226,6 +1228,13 @@ jQuery(document.body).ready( function() {
 		preventDefaultRequest = wp.hooks.applyFilters( 'um_member_directory_prevent_default_request', preventDefaultRequest, directoryObj );
 
 		if ( ! preventDefaultRequest ) {
+			let page = directoryObj.getDataFromURL( 'page' );
+			let search = directoryObj.getDataFromURL( 'search' );
+			let order = directoryObj.getDataFromURL( 'sort' );
+			directoryObj.applyFilters();
+			directoryObj.setPage(page);
+			directoryObj.setSearch(search);
+			directoryObj.setOrder(order);
 			directoryObj.request({defaultRequest:true});
 		}
 	});
