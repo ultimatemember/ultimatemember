@@ -440,7 +440,7 @@ class Site_Health {
 			),
 		);
 
-		if ( false !== UM()->account()->is_notifications_tab_visible() ) {
+		if ( false !== UM()->account()::is_notifications_tab_visible() ) {
 			$account_settings['um-account_tab_notifications'] = array(
 				'label' => __( 'Notifications Account Tab', 'ultimate-member' ),
 				'value' => UM()->options()->get( 'account_tab_notifications' ) ? $labels['yes'] : $labels['no'],

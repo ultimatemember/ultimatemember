@@ -2558,13 +2558,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			if ( ! empty( $total_pages ) ) {
 				$index1 = 0 - ( $current_page - 2 ) + 1;
-				$to = $current_page + 2;
+				$to     = $current_page + 2;
 				if ( $index1 > 0 ) {
 					$to += $index1;
 				}
 
 				$index2 = $total_pages - ( $current_page + 2 );
-				$from = $current_page - 2;
+				$from   = $current_page - 2;
 				if ( $index2 < 0 ) {
 					$from += $index2;
 				}
@@ -2575,7 +2575,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				);
 			}
 
-
 			$pagination_data = array(
 				'pages_to_show' => ( ! empty( $pages_to_show ) && count( $pages_to_show ) > 1 ) ? array_values( $pages_to_show ) : array(),
 				'current_page'  => $current_page,
@@ -2583,7 +2582,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				'total_users'   => $total_users,
 			);
 
-			$pagination_data['header'] = $this->convert_tags( $directory_data['header'], $pagination_data );
+			$pagination_data['header']        = $this->convert_tags( $directory_data['header'], $pagination_data );
 			$pagination_data['header_single'] = $this->convert_tags( $directory_data['header_single'], $pagination_data );
 
 			return $pagination_data;
@@ -2851,7 +2850,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * Main Query function for getting members via AJAX
 		 */
 		function ajax_get_members() {
-			UM()->check_ajax_nonce();
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'um_member_directory' ) ) {
+					wp_send_json_error( __( 'Wrong nonce.', 'ultimate-member' ) );
+				}
+			} else {
+				UM()->check_ajax_nonce();
+			}
 
 			global $wpdb;
 

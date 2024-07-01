@@ -20,9 +20,23 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		 * @used-by \UM::includes()
 		 */
 		public function includes() {
+			$this->directory();
 			$this->enqueue();
 			$this->modal();
 			$this->secure();
+		}
+
+		/**
+		 * @since 2.9.0
+		 *
+		 * @return Directory
+		 */
+		public function directory() {
+			if ( empty( UM()->classes['um\frontend\directory'] ) ) {
+				UM()->classes['um\frontend\directory'] = new Directory();
+			}
+
+			return UM()->classes['um\frontend\directory'];
 		}
 
 		/**
@@ -36,6 +50,32 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 			}
 
 			return UM()->classes['um\frontend\enqueue'];
+		}
+
+		/**
+		 * @since 2.8.4
+		 *
+		 * @return form\Form
+		 */
+		public function form() {
+			if ( empty( UM()->classes['um\frontend\form\form'] ) ) {
+				UM()->classes['um\frontend\form\form'] = new form\Form();
+			}
+
+			return UM()->classes['um\frontend\form\form'];
+		}
+
+		/**
+		 * @since 2.8.4
+		 *
+		 * @return Layouts
+		 */
+		public static function layouts() {
+			if ( empty( UM()->classes['um\frontend\layouts'] ) ) {
+				UM()->classes['um\frontend\layouts'] = new Layouts();
+			}
+
+			return UM()->classes['um\frontend\layouts'];
 		}
 
 		/**

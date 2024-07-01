@@ -65,6 +65,9 @@
   margin: 0 0 5px 0;
   display: inline-block;
 }
+.um-form-table.um-top-label .um-forms-line td select.um-forms-field.um-pages-select2 ~ .select2-container {
+  width: 100% !important;
+}
 .um-form-table.um-top-label .um-forms-line[data-field_type=icon] td label {
   width: 100%;
   display: block;

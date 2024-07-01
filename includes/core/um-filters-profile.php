@@ -127,7 +127,7 @@ add_filter( 'get_canonical_url', 'um_get_canonical_url', 20, 2 );
  * @return array
  */
 function um_change_profile_cover_photo_label( $fields ) {
-	$max_size = UM()->files()->format_bytes( $fields['cover_photo']['max_size'] );
+	$max_size = UM()->common()->filesystem()::format_bytes( $fields['cover_photo']['max_size'] );
 	if ( ! empty( $max_size ) ) {
 		list( $file_size, $unit ) = explode( ' ', $max_size );
 
@@ -148,7 +148,7 @@ add_filter( 'um_predefined_fields_hook', 'um_change_profile_cover_photo_label', 
  * @return array
  */
 function um_change_profile_photo_label( $fields ) {
-	$max_size = UM()->files()->format_bytes( $fields['profile_photo']['max_size'] );
+	$max_size = UM()->common()->filesystem()::format_bytes( $fields['profile_photo']['max_size'] );
 	if ( ! empty( $max_size ) ) {
 		list( $file_size, $unit ) = explode( ' ', $max_size );
 

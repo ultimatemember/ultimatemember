@@ -1055,15 +1055,13 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			}
 		}
 
-
 		/**
-		 * Delete a main user photo
+		 * Delete a main user photo.
 		 *
-		 * @param $user_id
-		 * @param $type
+		 * @param int    $user_id
+		 * @param string $type
 		 */
-		function delete_core_user_photo( $user_id, $type ) {
-
+		public function delete_core_user_photo( $user_id, $type ) {
 			delete_user_meta( $user_id, $type );
 
 			/**
@@ -1087,24 +1085,25 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			 */
 			do_action( "um_after_remove_{$type}", $user_id );
 
-			$dir = $this->upload_basedir . $user_id . DIRECTORY_SEPARATOR;
+			$dir    = $this->upload_basedir . $user_id . DIRECTORY_SEPARATOR;
 			$prefix = $type;
-			chdir($dir);
-			$matches = glob($prefix.'*',GLOB_MARK);
+			chdir( $dir );
 
-			if( is_array($matches) && !empty($matches)) {
-				foreach($matches as $match) {
-					if( is_file($dir.$match) ) unlink($dir.$match);
+			$matches = glob( $prefix . '*', GLOB_MARK );
+			if ( is_array( $matches ) && ! empty( $matches ) ) {
+				foreach ( $matches as $match ) {
+					if ( is_file( $dir . $match ) ) {
+						unlink( $dir . $match );
+					}
 				}
 			}
 
-			if ( count(glob("$dir/*")) === 0) {
+			if ( count( glob( "$dir/*" ) ) === 0 ) {
 				rmdir( $dir );
 			}
 
 			UM()->user()->remove_cache( $user_id );
 		}
-
 
 		/**
 		 * Resize a local image
@@ -1248,22 +1247,16 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		/**
 		 * Format Bytes
 		 *
+		 * @deprecated 2.9.0
+		 *
 		 * @param $size
 		 * @param int $precision
 		 *
 		 * @return string
 		 */
 		function format_bytes( $size, $precision = 1 ) {
-			if ( is_numeric( $size ) ) {
-				$base = log( $size, 1024 );
-				$suffixes = array( '', 'kb', 'MB', 'GB', 'TB' );
-				$computed_size = round( pow( 1024, $base - floor( $base ) ), $precision );
-				$unit = $suffixes[ floor( $base ) ];
-
-				return $computed_size.' '.$unit;
-			}
-
-			return '';
+			_deprecated_function( __METHOD__, '2.9.0', 'UM()->common()->filesystem()::format_bytes()' );
+			return UM()->common()->filesystem()::format_bytes( $size, $precision );
 		}
 
 
@@ -1296,7 +1289,5 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			return $sizes;
 		}
-
-
 	}
 }

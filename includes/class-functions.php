@@ -1,5 +1,7 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
-
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'UM_Functions' ) ) {
 
@@ -563,6 +565,28 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'href'  => true,
 							'media' => true,
 						),
+						'svg'      => array(
+							'xmlns'               => true,
+							'height'              => true,
+							'preserveaspectratio' => true,
+							'viewbox'             => true,
+							'width'               => true,
+							'x'                   => true,
+							'y'                   => true,
+							'fill'                => true,
+							'stroke'              => true,
+							'stroke-linecap'      => true,
+							'stroke-linejoin'     => true,
+							'stroke-width'        => true,
+						),
+						'path'     => array(
+							'd'               => true,
+							'stroke'          => true,
+							'stroke-width'    => true,
+							'stroke-linecap'  => true,
+							'stroke-linejoin' => true,
+							'fill'            => true,
+						),
 						'form'     => array(
 							'action'         => true,
 							'accept'         => true,
@@ -615,6 +639,19 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'readonly'     => true,
 							'required'     => true,
 							'autocomplete' => true,
+							'placeholder'  => true,
+						),
+						'button'   => array(
+							'type'         => true,
+							'name'         => true,
+							'value'        => true,
+							'placeholder'  => true,
+							'readonly'     => true,
+							'disabled'     => true,
+							'checked'      => true,
+							'selected'     => true,
+							'required'     => true,
+							'autocomplete' => true,
 						),
 						'img'      => array(
 							'alt'      => true,
@@ -637,6 +674,15 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 							'align' => true,
 						),
 						'h3'       => array(
+							'align' => true,
+						),
+						'h4'       => array(
+							'align' => true,
+						),
+						'h5'       => array(
+							'align' => true,
+						),
+						'h6'       => array(
 							'align' => true,
 						),
 						'p'        => array(
@@ -740,6 +786,53 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			$allowed_html = apply_filters( 'um_late_escaping_allowed_tags', $allowed_html, $context );
 
 			return $allowed_html;
+		}
+
+		/**
+		 * Find the closest number in an array.
+		 *
+		 * @param int[] $array
+		 * @param int   $number
+		 *
+		 * @return int
+		 */
+		public function get_closest_value( $array, $number ) {
+			sort( $array );
+			foreach ( $array as $a ) {
+				if ( $a >= $number ) {
+					return $a;
+				}
+			}
+
+			return end( $array );
+		}
+
+		/**
+		 * Disable page caching and set or clear cookie.
+		 *
+		 * @param string $name
+		 * @param string $value
+		 * @param int    $expire
+		 * @param string $path
+		 *
+		 * @since 2.8.4
+		 */
+		public function setcookie( $name, $value = '', $expire = 0, $path = '' ) {
+			if ( empty( $value ) ) {
+				$expire = absint( time() - YEAR_IN_SECONDS );
+			}
+			if ( empty( $path ) ) {
+				list( $path ) = explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) );
+			}
+
+			$levels = ob_get_level();
+			for ( $i = 0; $i < $levels; $i++ ) {
+				// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+				@ob_end_clean();
+			}
+
+			nocache_headers();
+			setcookie( $name, $value, $expire, $path, COOKIE_DOMAIN, is_ssl(), true );
 		}
 	}
 }

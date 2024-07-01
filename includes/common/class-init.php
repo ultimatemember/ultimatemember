@@ -21,10 +21,12 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 		 */
 		public function includes() {
 			$this->cpt()->hooks();
+			$this->rewrite();
 			$this->screen();
 			$this->secure()->hooks();
 			$this->site_health();
 			$this->theme()->hooks();
+			$this->users()->hooks();
 		}
 
 		/**
@@ -37,6 +39,30 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\cpt'] = new CPT();
 			}
 			return UM()->classes['um\common\cpt'];
+		}
+
+		/**
+		 * @since 2.8.4
+		 *
+		 * @return Filesystem
+		 */
+		public function filesystem() {
+			if ( empty( UM()->classes['um\common\filesystem'] ) ) {
+				UM()->classes['um\common\filesystem'] = new Filesystem();
+			}
+			return UM()->classes['um\common\filesystem'];
+		}
+
+		/**
+		 * @since 2.9.0
+		 *
+		 * @return Rewrite
+		 */
+		public function rewrite() {
+			if ( empty( UM()->classes['um\common\rewrite'] ) ) {
+				UM()->classes['um\common\rewrite'] = new Rewrite();
+			}
+			return UM()->classes['um\common\rewrite'];
 		}
 
 		/**
@@ -64,6 +90,19 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 		}
 
 		/**
+		 * @return Shortcodes
+		 *
+		 * @since 2.8.4
+		 */
+		public function shortcodes() {
+			if ( empty( UM()->classes['um\common\shortcodes'] ) ) {
+				UM()->classes['um\common\shortcodes'] = new Shortcodes();
+			}
+
+			return UM()->classes['um\common\shortcodes'];
+		}
+
+		/**
 		 * @since 2.6.8
 		 *
 		 * @return Site_Health
@@ -76,6 +115,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 		}
 
 		/**
+		 * @since 2.8.4
+		 *
+		 * @return Color
+		 */
+		public static function color() {
+			if ( empty( UM()->classes['um\common\color'] ) ) {
+				UM()->classes['um\common\color'] = new Color();
+			}
+			return UM()->classes['um\common\color'];
+		}
+
+		/**
 		 * @since 2.8.3
 		 *
 		 * @return Theme
@@ -85,6 +136,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\theme'] = new Theme();
 			}
 			return UM()->classes['um\common\theme'];
+		}
+
+		/**
+		 * @since 2.8.4
+		 *
+		 * @return Users
+		 */
+		public function users() {
+			if ( empty( UM()->classes['um\common\users'] ) ) {
+				UM()->classes['um\common\users'] = new Users();
+			}
+			return UM()->classes['um\common\users'];
 		}
 	}
 }

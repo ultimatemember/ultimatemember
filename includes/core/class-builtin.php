@@ -727,7 +727,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		/**
 		 * Predefined Fields
 		 */
-		function set_predefined_fields() {
+		public function set_predefined_fields() {
+
 			global $wp_roles;
 
 			$um_roles = array();
@@ -1248,16 +1249,16 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				// private use ( not public list )
 
 				'profile_photo' => array(
-					'title' => __('Profile Photo','ultimate-member'),
-					'metakey' => 'profile_photo',
-					'type' => 'image',
-					'label' => __('Change your profile photo','ultimate-member'),
+					'title'       => __('Profile Photo','ultimate-member'),
+					'metakey'     => 'profile_photo',
+					'type'        => 'image',
+					'label'       => __('Change your profile photo','ultimate-member'),
 					'upload_text' => __('Upload your photo here','ultimate-member'),
-					'icon' => 'fas fa-camera',
-					'crop' => 1,
-					'max_size' => ( UM()->options()->get('profile_photo_max_size') ) ? UM()->options()->get('profile_photo_max_size') : 999999999,
-					'min_width' => str_replace('px','',UM()->options()->get('profile_photosize')),
-					'min_height' => str_replace('px','',UM()->options()->get('profile_photosize')),
+					'icon'        => 'fas fa-camera',
+					'crop'        => 1,
+					'max_size'    => ( UM()->options()->get( 'profile_photo_max_size' ) ) ? UM()->options()->get( 'profile_photo_max_size' ) : 999999999,
+					'min_width'   => str_replace('px','',UM()->options()->get( 'profile_photosize' )),
+					'min_height'  => str_replace('px','',UM()->options()->get('profile_photosize')),
 					'private_use' => true,
 				),
 
@@ -1387,6 +1388,54 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'account_only' => true,
 				),
 			);
+
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				$this->predefined_fields['username_b']['label'] = __( 'Username or Email Address', 'ultimate-member' );
+
+				$this->predefined_fields['profile_noindex'] = array(
+					'title'          => __( 'Avoid indexing my profile by search engines', 'ultimate-member' ),
+					'metakey'        => 'profile_noindex',
+					'type'           => 'bool',
+					'label'          => __( 'Avoid indexing my profile by search engines', 'ultimate-member' ),
+					'checkbox_label' => __( 'Hide my profile for robots', 'ultimate-member' ),
+					'help'           => __( 'Here you can hide yourself from appearing in search engines.', 'ultimate-member' ),
+					'required'       => 0,
+					'public'         => 1,
+					'editable'       => true,
+					'default'        => UM()->roles()->um_user_can( 'profile_noindex' ) ? true : false,
+					'account_only'   => true,
+					'required_perm'  => 'can_make_private_profile',
+				);
+
+				$this->predefined_fields['hide_in_members'] = array(
+					'title'          => __( 'Hide my profile from directory', 'ultimate-member' ),
+					'metakey'        => 'hide_in_members',
+					'type'           => 'bool',
+					'label'          => __( 'Hide my profile from directory', 'ultimate-member' ),
+					'checkbox_label' => __( 'Hide my profile from directory', 'ultimate-member' ),
+					'help'           => __( 'Here you can hide yourself from appearing in public directory.', 'ultimate-member' ),
+					'required'       => 0,
+					'public'         => 1,
+					'editable'       => true,
+					'default'        => UM()->member_directory()->get_hide_in_members_default() ? true : false,
+					'account_only'   => true,
+					'required_opt'   => array( 'members_page', true ),
+				);
+
+				$this->predefined_fields['um_show_last_login'] = array(
+					'title'          => __( 'Show my last login', 'ultimate-member' ),
+					'metakey'        => 'um_show_last_login',
+					'type'           => 'bool',
+					'label'          => __( 'Show my last login', 'ultimate-member' ),
+					'checkbox_label' => __( 'Show my last login', 'ultimate-member' ),
+					'help'           => __( 'Here you can hide last login field on profile page and card in member directory', 'ultimate-member' ),
+					'required'       => 0,
+					'public'         => 1,
+					'editable'       => true,
+					'default'        => true,
+					'account_only'   => true,
+				);
+			}
 
 			/**
 			 * Filters Ultimate Member predefined fields.
