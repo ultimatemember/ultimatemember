@@ -41,6 +41,7 @@ class Layouts {
 				'header'       => '',
 				'width'        => 150,
 				'parent'       => '',
+				'disabled'     => false,
 			)
 		);
 
@@ -56,27 +57,29 @@ class Layouts {
 		if ( 'dots' !== $args['type'] ) {
 			if ( ! empty( $args['button_label'] ) ) {
 				if ( 'button' === $args['type'] ) {
-					$type_html = self::button(
-						$args['button_label'],
-						array(
-							'type'          => 'button',
-							'icon'          => '<span class="um-dropdown-chevron"></span>',
-							'icon_position' => 'trailing',
-							'design'        => 'secondary-gray',
-							'size'          => 's',
-						)
+					$button_args = array(
+						'type'          => 'button',
+						'icon'          => '<span class="um-dropdown-chevron"></span>',
+						'icon_position' => 'trailing',
+						'design'        => 'secondary-gray',
+						'size'          => 's',
 					);
+					if ( false !== $args['disabled'] ) {
+						$button_args['disabled'] = true;
+					}
+					$type_html = self::button( $args['button_label'], $button_args );
 				} elseif ( 'link' === $args['type'] ) {
-					$type_html = self::link(
-						$args['button_label'],
-						array(
-							'type'          => 'button',
-							'icon'          => '<span class="um-dropdown-chevron"></span>',
-							'icon_position' => 'trailing',
-							'design'        => 'link-gray',
-							'size'          => 's',
-						)
+					$link_args = array(
+						'type'          => 'button',
+						'icon'          => '<span class="um-dropdown-chevron"></span>',
+						'icon_position' => 'trailing',
+						'design'        => 'link-gray',
+						'size'          => 's',
 					);
+					if ( false !== $args['disabled'] ) {
+						$link_args['disabled'] = true;
+					}
+					$type_html = self::link( $args['button_label'], $link_args );
 				}
 			}
 		}
@@ -1379,9 +1382,10 @@ class Layouts {
 			$button = wp_parse_args(
 				$button,
 				array(
-					'classes' => array(),
-					'label'   => '',
-					'data'    => array(),
+					'classes'  => array(),
+					'label'    => '',
+					'data'     => array(),
+					'disabled' => false,
 				)
 			);
 
@@ -1390,6 +1394,9 @@ class Layouts {
 			}
 
 			$button['classes'][] = 'um-button-in-group';
+			if ( false !== $button['disabled'] ) {
+				$button['classes'][] = 'um-disabled';
+			}
 
 			$data_attr = array();
 			foreach ( $button['data'] as $data_k => $data_v ) {

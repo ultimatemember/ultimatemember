@@ -1932,7 +1932,7 @@
         &:hover
           color: $button-color-hover
           background-color: $button-bg-hover
-      &.disabled
+      &.#{$prefix}disabled
         cursor: not-allowed
         color: $button-color-disabled
         background-color: $button-bg-disabled
@@ -1944,11 +1944,25 @@
       &:first-child
         border-radius: $radius-md 0 0 $radius-md
         border-left: 1px solid $button-border-color
-        &.disabled
+        &.#{$prefix}disabled
           border-left: 1px solid $button-border-color-disabled
       &:last-child
         border-radius: 0 $radius-md $radius-md 0
-        &.disabled
+        &.#{$prefix}disabled
+          border-right: 1px solid $button-border-color-disabled
+    &.#{$prefix}disabled
+      .#{$prefix}button-in-group
+        cursor: not-allowed
+        color: $button-color-disabled
+        background-color: $button-bg-disabled
+        border-top: 1px solid  $button-border-color-disabled
+        border-bottom: 1px solid  $button-border-color-disabled
+        &:hover
+          color: $button-color-disabled
+          background-color: $button-bg-disabled
+        &:first-child
+          border-left: 1px solid $button-border-color-disabled
+        &:last-child
           border-right: 1px solid $button-border-color-disabled
 // Pagination
 // Note: It partially uses the buttons group style

@@ -35,6 +35,8 @@
     .#{$prefix}member-directory-header
       +flex( column, flex-start, stretch, nowrap )
       row-gap: $spacing-md
+      &.#{$prefix}display-none
+        display: none
       .#{$prefix}member-directory-header-row
         width: 100%
         &:not(.#{$prefix}member-directory-filters-bar)
@@ -164,6 +166,8 @@
           min-width: auto
           min-height: auto
 
+    & > .#{$prefix}supporting-text
+      text-align: center
     .#{$prefix}members-wrapper
       &.#{$prefix}members-grid
         margin: 0
@@ -178,10 +182,12 @@
         -ms-grid-gap: 10px
         -ms-grid-auto-rows: minmax(max-content, auto)
         align-items: stretch
-
+        &.#{$prefix}display-none
+          display: none
         .#{$prefix}box
           &.#{$prefix}member
             +flex( column, flex-start, center, nowrap )
+            position: relative
             &.#{$prefix}member-with-cover
               padding: 0 0 $spacing-3xl 0
               .#{$prefix}member-photos
@@ -263,6 +269,14 @@
             &.#{$prefix}member-no-actions // not logged-in user
               .#{$prefix}member-photos
                 margin-bottom: calc( $spacing-7xl - $spacing-md )
+            .#{$prefix}member-skeleton
+              position: absolute
+              background: $um-white
+              top: 0
+              bottom: 0
+              left: 0
+              right: 0
+              z-index: 3
 
     &.#{$prefix}ui-xs
       .#{$prefix}member-directory-header

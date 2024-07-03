@@ -65,6 +65,10 @@
             text-indent: 500%
             white-space: nowrap
             overflow: hidden
+        &:disabled
+          .#{$prefix}dropdown-chevron
+            &:after
+              background-color: $button-color-disabled
       &.#{$prefix}dropdown-shown
         > .#{$prefix}button
           .#{$prefix}dropdown-chevron

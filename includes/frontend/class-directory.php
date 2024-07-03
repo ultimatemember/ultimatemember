@@ -487,8 +487,8 @@ class Directory extends \um\common\Directory {
 				if ( $range ) {
 					list( $min, $max ) = $range;
 
-					$filter_from_url_from = ! empty( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) : $range[0];
-					$filter_from_url_to   = ! empty( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) : $range[1];
+					$filter_from_url_from = ! empty( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) : '';
+					$filter_from_url_to   = ! empty( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) : '';
 
 					if ( $default_value ) {
 						$value = $default_value;

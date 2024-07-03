@@ -27,6 +27,9 @@
   flex-wrap: nowrap;
   row-gap: 8px;
 }
+.um.um-directory .um-member-directory-header.um-display-none {
+  display: none;
+}
 .um.um-directory .um-member-directory-header .um-member-directory-header-row {
   width: 100%;
 }
@@ -214,6 +217,9 @@
   min-width: auto;
   min-height: auto;
 }
+.um.um-directory > .um-supporting-text {
+  text-align: center;
+}
 .um.um-directory .um-members-wrapper.um-members-grid {
   margin: 0;
   width: 100%;
@@ -228,12 +234,16 @@
   -ms-grid-auto-rows: minmax(max-content, auto);
   align-items: stretch;
 }
+.um.um-directory .um-members-wrapper.um-members-grid.um-display-none {
+  display: none;
+}
 .um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   flex-wrap: nowrap;
+  position: relative;
 }
 .um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover {
   padding: 0 0 24px 0;
@@ -365,6 +375,15 @@
 }
 .um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-no-actions .um-member-photos {
   margin-bottom: 56px;
+}
+.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member .um-member-skeleton {
+  position: absolute;
+  background: #fff;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
 }
 .um.um-directory.um-ui-xs .um-member-directory-header .um-member-directory-filters-bar {
   grid-template-columns: repeat(1, 1fr);

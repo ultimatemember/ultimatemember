@@ -47,8 +47,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	data-must-search="<?php echo esc_attr( $must_search ); ?>" data-searched="<?php echo $not_searched ? '0' : '1'; ?>"
 	data-view_type="<?php echo esc_attr( $current_view ); ?>" data-page="<?php echo esc_attr( $current_page ); ?>"
 	data-default-order="<?php echo esc_attr( $default_sorting ); ?>" data-sorting="<?php echo esc_attr( $sort_from_url ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_member_directory' ) ); ?>">
-
-	<div class="um-member-directory-header">
+	<?php
+	$header_classes = array( 'um-member-directory-header' );
+	if ( ! $must_search ) {
+		$header_classes[] = ' um-display-none';
+	}
+	?>
+	<div class="<?php echo esc_attr( implode( ' ', $header_classes ) ); ?>">
 		<?php do_action( 'um_members_directory_before_head', $args, $form_id, $not_searched ); ?>
 
 		<?php if ( $has_search || ( $has_filters && $filters_collapsible ) ) { ?>
@@ -158,7 +163,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					$button_args = array();
 					foreach ( UM()->member_directory()->view_types as $key => $value ) {
 						if ( in_array( $key, $view_types, true ) ) {
-							$b_classes = array( 'um-member-directory-view-type-' . $key );
+							$b_classes = array( 'um-member-directory-view-type', 'um-member-directory-view-type-' . $key );
 							if ( $current_view === $key ) {
 								$b_classes[] = 'current';
 							}
@@ -178,7 +183,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 							$button_args,
 							array(
 								'size'    => 'equal',
-								'classes' => array( 'um-member-view-switcher' ),
+								'classes' => array( 'um-member-view-switcher', 'um-disabled' ), // disabled by default until first load.
 							)
 						),
 						UM()->get_allowed_html( 'templates' )
@@ -204,6 +209,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 									'type'         => 'button',
 									'button_label' => $sorting_options[ $sort_from_url ],
 									'width'        => 210,
+									'disabled'     => true,
 								)
 							),
 							UM()->get_allowed_html( 'templates' )
@@ -215,20 +221,34 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 	</div>
 
-	<?php if ( $must_search && $not_searched ) { ?>
-		<div class="um-member-directory-must-search">
-			<?php esc_html_e( 'Please put search criteria for getting the member directory.', 'ultimate-member' ); ?>
+	<?php
+	if ( $must_search ) {
+		$must_search_classes = array(
+			'um-member-directory-must-search',
+			'um-supporting-text',
+		);
+		if ( ! $not_searched ) {
+			$must_search_classes[] = 'um-display-none';
+		}
+		?>
+		<div class="<?php echo esc_attr( implode( ' ', $must_search_classes ) ); ?>">
+			<?php esc_html_e( 'Please put search criteria for getting members.', 'ultimate-member' ); ?>
 		</div>
 	<?php } ?>
-
-	<?php $wrapper_classes = array( 'um-members-wrapper', 'um-members-' . $current_view ); ?>
+	<div class="um-member-directory-empty-search-result um-supporting-text um-display-none">
+		<?php esc_html_e( 'We are sorry. We cannot find any users who match your search criteria.', 'ultimate-member' ); ?>
+	</div>
+	<div class="um-member-directory-empty-no-search-result um-supporting-text um-display-none">
+		<?php esc_html_e( 'No users.', 'ultimate-member' ); ?>
+	</div>
+	<?php $wrapper_classes = array( 'um-members-wrapper', 'um-members-' . $current_view, 'um-display-none' ); ?>
 	<div class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>"></div>
 
 	<div class="um-member-directory-loading">
 		<?php echo wp_kses( UM()->frontend()::layouts()::ajax_loader( 'l' ), UM()->get_allowed_html( 'templates' ) ); ?>
 	</div>
 
-	<div class="um-members-pagination-box"></div>
+	<div class="um-members-pagination-box um-display-none"></div>
 
 	<?php
 	/**

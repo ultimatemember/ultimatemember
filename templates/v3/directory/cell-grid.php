@@ -47,7 +47,9 @@ if ( empty( $member['dropdown_actions'] ) ) {
 }
 
 ob_start();
-
+?>
+	<div class="um-member-skeleton"></div>
+<?php
 if ( $directory_data['cover_photos'] && $member['cover_photo'] ) {
 	if ( $directory_data['profile_photo'] ) {
 		?>
