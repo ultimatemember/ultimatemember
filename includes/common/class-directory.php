@@ -50,6 +50,11 @@ class Directory {
 	public $avatar_size;
 
 	/**
+	 * @var array
+	 */
+	public $sort_fields = array();
+
+	/**
 	 * Directory constructor.
 	 */
 	public function __construct() {
@@ -183,6 +188,21 @@ class Directory {
 		unset( $value );
 
 		$this->filter_types = array_merge( $custom_fields_types, $this->filter_types );
+
+		// Sort
+		$this->sort_fields = array(
+			'user_registered_desc' => __( 'New users first', 'ultimate-member' ),
+			'user_registered_asc'  => __( 'Old users first', 'ultimate-member' ),
+			'username'             => __( 'Username', 'ultimate-member' ),
+			'nickname'             => __( 'Nickname', 'ultimate-member' ),
+			'first_name'           => __( 'First name', 'ultimate-member' ),
+			'last_name'            => __( 'Last name', 'ultimate-member' ),
+			'display_name'         => __( 'Display name', 'ultimate-member' ),
+			'last_first_name'      => __( 'Last & First name', 'ultimate-member' ),
+			'last_login'           => __( 'Last login', 'ultimate-member' ),
+		);
+
+		$this->sort_fields = apply_filters( 'um_members_directory_sort_fields', $this->sort_fields );
 	}
 
 	/**
@@ -469,15 +489,18 @@ class Directory {
 						}
 
 						$label = UM()->fields()->get_label( $key );
-						if ( $key == 'role_select' || $key == 'role_radio' ) {
-							$label = strtr( $label, array(
-								' (Dropdown)'   => '',
-								' (Radio)'      => ''
-							) );
+						if ( in_array( $key, array( 'role_select', 'role_radio' ), true ) ) {
+							$label = strtr(
+								$label,
+								array(
+									' (Dropdown)' => '',
+									' (Radio)'    => '',
+								)
+							);
 						}
 
-						$data_array[ "label_{$key}" ] = esc_html__( $label, 'ultimate-member' );
-						$data_array[ $key ] = wp_kses( $value, UM()->get_allowed_html( 'templates' ) );
+						$data_array[ "label_{$key}" ] = esc_html( $label );
+						$data_array[ $key ]           = wp_kses( $value, UM()->get_allowed_html( 'templates' ) );
 					}
 				}
 			}

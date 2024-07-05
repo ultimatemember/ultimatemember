@@ -50,7 +50,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php
 	$header_classes = array( 'um-member-directory-header' );
 	if ( ! $must_search ) {
-		$header_classes[] = ' um-display-none';
+		$header_classes[] = 'um-display-none';
 	}
 	?>
 	<div class="<?php echo esc_attr( implode( ' ', $header_classes ) ); ?>">
@@ -156,7 +156,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</div>
 		<?php } ?>
 
-		<div class="um-member-directory-header-row-grid">
+		<?php
+		$header_row_classes = array( 'um-member-directory-header-row-grid' );
+		if ( $must_search ) {
+			$header_row_classes[] = 'um-display-none';
+		}
+		?>
+		<div class="<?php echo esc_attr( implode( ' ', $header_row_classes ) ); ?>">
 			<div class="um-member-directory-header-left-cell">
 				<?php
 				if ( ! $single_view ) {

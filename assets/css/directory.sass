@@ -4,6 +4,10 @@
 @import "colors"
 @import "typography"
 
++keyframes(um-ajax-shimmer)
+  100%
+    transform: translateX(100%)
+
 .um
   &.#{$prefix}directory
     .#{$prefix}member-directory-loading
@@ -101,6 +105,8 @@
         display: grid
         grid-auto-columns: minmax(0, 1fr)
         grid-auto-flow: column
+        &.#{$prefix}display-none
+          display: none
         .#{$prefix}member-directory-header-left-cell
           +flex( row, flex-start, baseline, nowrap )
         .#{$prefix}member-directory-header-right-cell
@@ -277,9 +283,61 @@
               left: 0
               right: 0
               z-index: 3
-              .#{$prefix}skeleton-box
+              padding: 24px
+              width: 100%
+              height: 100%
+              +border-box
+              display: none
+              .#{$prefix}member-skeleton-inner
+                +flex(column,flex-start,center, wrap)
+                gap: 8px
+                width: 100%
+                height: 100%
+                overflow: hidden
+                +border-box
+              .#{$prefix}skeleton-box-avatar
                 display: inline-block
-                height: 1em
+                width: 128px
+                height: 128px
+                position: relative
+                overflow: hidden
+                background-color: $gray-300
+                border: none
+                border-radius: 100%
+                margin-bottom: 16px
+                &:after
+                  position: absolute
+                  top: 0
+                  right: 0
+                  bottom: 0
+                  left: 0
+                  transform: translateX(-100%)
+                  background-image: linear-gradient(90deg,rgba(#fff, 0) 0,rgba(#fff, 0.2) 20%,rgba(#fff, 0.5) 60%,rgba(#fff, 0))
+                  animation: um-ajax-shimmer 2s infinite
+                  content: ''
+              .#{$prefix}skeleton-box-header
+                display: inline-block
+                height: 32px
+                position: relative
+                overflow: hidden
+                background-color: $gray-300
+                border: none
+                border-radius: 4px
+                width: 100%
+                &:after
+                  position: absolute
+                  top: 0
+                  right: 0
+                  bottom: 0
+                  left: 0
+                  transform: translateX(-100%)
+                  background-image: linear-gradient(90deg,rgba(#fff, 0) 0,rgba(#fff, 0.2) 20%,rgba(#fff, 0.5) 60%,rgba(#fff, 0))
+                  animation: um-ajax-shimmer 2s infinite
+                  content: ''
+              .#{$prefix}skeleton-box
+                width: 100%
+                display: inline-block
+                height: 24px
                 position: relative
                 overflow: hidden
                 background-color: $gray-300
@@ -295,7 +353,9 @@
                   background-image: linear-gradient(90deg,rgba(#fff, 0) 0,rgba(#fff, 0.2) 20%,rgba(#fff, 0.5) 60%,rgba(#fff, 0))
                   animation: um-ajax-shimmer 2s infinite
                   content: ''
-
+            &.#{$prefix}skeleton-mode
+              .#{$prefix}member-skeleton
+                display: block
     &.#{$prefix}ui-xs
       .#{$prefix}member-directory-header
         .#{$prefix}member-directory-filters-bar

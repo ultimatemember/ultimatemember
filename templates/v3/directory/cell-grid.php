@@ -48,7 +48,20 @@ if ( empty( $member['dropdown_actions'] ) ) {
 
 ob_start();
 ?>
-	<div class="um-member-skeleton"></div>
+	<div class="um-member-skeleton">
+		<div class="um-member-skeleton-inner">
+			<div class="um-skeleton-box-avatar"></div>
+			<div class="um-skeleton-box-header"></div>
+			<div class="um-skeleton-box"></div>
+			<div class="um-skeleton-box"></div>
+			<div class="um-skeleton-box"></div>
+			<div class="um-skeleton-box"></div>
+			<div class="um-skeleton-box"></div>
+			<div class="um-skeleton-box"></div>
+			<div class="um-skeleton-box"></div>
+			<div class="um-skeleton-box"></div>
+		</div>
+	</div>
 <?php
 if ( $directory_data['cover_photos'] && $member['cover_photo'] ) {
 	if ( $directory_data['profile_photo'] ) {

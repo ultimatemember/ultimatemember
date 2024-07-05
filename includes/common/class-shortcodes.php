@@ -2040,20 +2040,12 @@ class Shortcodes {
 								break;
 
 							case 'slider':
-								// getting value from GET line
-								$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) : '';
-								if ( ! empty( $filter_from_url ) ) {
-									$filters_expanded = true;
-									$not_searched     = false;
-									$not_filtered     = false;
-								}
-								break;
-
 							case 'datepicker':
 							case 'timepicker':
 								// getting value from GET line
 								$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) : '';
-								if ( ! empty( $filter_from_url ) ) {
+								$filter_to_url   = ! empty( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_to_' . $unique_hash ] ) : '';
+								if ( ! empty( $filter_from_url ) || ! empty( $filter_to_url ) ) {
 									$filters_expanded = true;
 									$not_searched     = false;
 									$not_filtered     = false;

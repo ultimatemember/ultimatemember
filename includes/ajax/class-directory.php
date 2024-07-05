@@ -1,6 +1,7 @@
 <?php
 namespace um\ajax;
 
+use Exception;
 use WP_User_Query;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -22,9 +23,9 @@ class Directory extends \um\common\Directory {
 	public $query_args = array();
 
 	/**
-	 * @var bool Searching marker.
+	 * @var array
 	 */
-	public $is_search = false;
+	public $custom_filters_in_query = array();
 
 	/**
 	 * Directory constructor.
@@ -40,7 +41,6 @@ class Directory extends \um\common\Directory {
 			'users'       => array(),
 			'total_pages' => 0,
 			'pagination'  => '',
-			'is_search'   => $this->is_search,
 		);
 
 		return apply_filters( 'um_ajax_get_members_response', $response, $directory_data );
@@ -285,7 +285,9 @@ class Directory extends \um\common\Directory {
 		}
 
 		$this->query_args['number'] = ( ! empty( $directory_data['max_users'] ) && $directory_data['max_users'] <= $profiles_per_page ) ? $directory_data['max_users'] : $profiles_per_page;
-		$this->query_args['paged']  = ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
+
+		// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+		$this->query_args['paged'] = ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
 	}
 
 	/**
@@ -297,6 +299,7 @@ class Directory extends \um\common\Directory {
 		// sort members by
 		$this->query_args['order'] = 'ASC';
 
+		// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
 		$sortby = ! empty( $_POST['sorting'] ) ? sanitize_text_field( $_POST['sorting'] ) : $directory_data['sortby'];
 		$sortby = ( 'other' === $sortby ) ? $directory_data['sortby_custom'] : $sortby;
 
@@ -330,40 +333,41 @@ class Directory extends \um\common\Directory {
 			}
 		}
 
-		if ( 'username' == $sortby ) {
-
+		if ( 'username' === $sortby ) {
 			$this->query_args['orderby'] = 'user_login';
-			$this->query_args['order'] = 'ASC';
-
-		} elseif ( 'display_name' == $sortby ) {
-
+			$this->query_args['order']   = 'ASC';
+		} elseif ( 'display_name' === $sortby ) {
 			$display_name = UM()->options()->get( 'display_name' );
-			if ( $display_name == 'username' ) {
+			if ( 'username' === $display_name ) {
 				$this->query_args['orderby'] = 'user_login';
-				$this->query_args['order'] = 'ASC';
+				$this->query_args['order']   = 'ASC';
 			} else {
 				$this->query_args['meta_query'][] = array(
-					'relation' => 'OR',
+					'relation'  => 'OR',
 					'full_name' => array(
-						'key'       => 'full_name',
-						'compare'   => 'EXISTS'
+						'key'     => 'full_name',
+						'compare' => 'EXISTS',
 					),
 					array(
-						'key'       => 'full_name',
-						'compare'   => 'NOT EXISTS'
-					)
+						'key'     => 'full_name',
+						'compare' => 'NOT EXISTS',
+					),
 				);
 
 				$this->query_args['orderby'] = 'full_name, display_name';
-				$this->query_args['order'] = 'ASC';
+				$this->query_args['order']   = 'ASC';
 			}
-
 		} elseif ( in_array( $sortby, array( 'last_name', 'first_name', 'nickname' ), true ) ) {
 
-			$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $sortby . '_c' => array(
-				'key'       => $sortby,
-				'compare'   => 'EXISTS',
-			), ) );
+			$this->query_args['meta_query'] = array_merge(
+				$this->query_args['meta_query'],
+				array(
+					$sortby . '_c' => array(
+						'key'     => $sortby,
+						'compare' => 'EXISTS',
+					),
+				)
+			);
 
 			$this->query_args['orderby'] = array( $sortby . '_c' => 'ASC' );
 			unset( $this->query_args['order'] );
@@ -387,33 +391,36 @@ class Directory extends \um\common\Directory {
 			unset( $this->query_args['order'] );
 
 			add_filter( 'pre_user_query', array( &$this, 'sortby_last_login' ) );
-		} elseif ( $sortby == 'last_first_name' ) {
+		} elseif ( 'last_first_name' === $sortby ) {
 
 			$this->query_args['meta_query'][] = array(
-				'last_name_c'   => array(
-					'key'       => 'last_name',
-					'compare'   => 'EXISTS',
+				'last_name_c'  => array(
+					'key'     => 'last_name',
+					'compare' => 'EXISTS',
 				),
-				'first_name_c'  => array(
-					'key'       => 'first_name',
-					'compare'   => 'EXISTS',
+				'first_name_c' => array(
+					'key'     => 'first_name',
+					'compare' => 'EXISTS',
 				),
 			);
 
-			$this->query_args['orderby'] = array( 'last_name_c' => 'ASC', 'first_name_c' => 'ASC' );
+			$this->query_args['orderby'] = array(
+				'last_name_c'  => 'ASC',
+				'first_name_c' => 'ASC',
+			);
 			unset( $this->query_args['order'] );
 
 		} elseif ( count( $numeric_sorting_keys ) && in_array( $sortby, $numeric_sorting_keys, true ) ) {
 
 			$order = 'DESC';
-			if ( strstr( $sortby, '_desc' ) ) {
+			// Use `str_ends_with()` since min PHP8.0.
+			if ( 0 === strpos( strrev( $sortby ), strrev( '_desc' ) ) ) {
 				$sortby = str_replace( '_desc', '', $sortby );
-				$order = 'DESC';
 			}
-
-			if ( strstr( $sortby, '_asc' ) ) {
+			// Use `str_ends_with()` since min PHP8.0.
+			if ( 0 === strpos( strrev( $sortby ), strrev( '_asc' ) ) ) {
 				$sortby = str_replace( '_asc', '', $sortby );
-				$order = 'ASC';
+				$order  = 'ASC';
 			}
 
 			$this->query_args['meta_query'] = array_merge(
@@ -505,13 +512,13 @@ class Directory extends \um\common\Directory {
 			);
 
 		} else {
-
-			if ( strstr( $sortby, '_desc' ) ) {
+			// Use `str_ends_with()` since min PHP8.0.
+			if ( 0 === strpos( strrev( $sortby ), strrev( '_desc' ) ) ) {
 				$sortby = str_replace( '_desc', '', $sortby );
 				$order  = 'DESC';
 			}
-
-			if ( strstr( $sortby, '_asc' ) ) {
+			// Use `str_ends_with()` since min PHP8.0.
+			if ( 0 === strpos( strrev( $sortby ), strrev( '_asc' ) ) ) {
 				$sortby = str_replace( '_asc', '', $sortby );
 				$order  = 'ASC';
 			}
@@ -525,45 +532,45 @@ class Directory extends \um\common\Directory {
 		}
 
 		/**
-		 * UM hook
+		 * Filters query sort by attributes for search at Members Directory.
 		 *
-		 * @type filter
-		 * @title um_modify_sortby_parameter
-		 * @description Change query sort by attributes for search at Members Directory
-		 * @input_vars
-		 * [{"var":"$query_args","type":"array","desc":"Query Arguments"},
-		 * {"var":"$sortby","type":"string","desc":"Sort by"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage
-		 * <?php add_filter( 'um_modify_sortby_parameter', 'function_name', 10, 2 ); ?>
-		 * @example
-		 * <?php
-		 * add_filter( 'um_modify_sortby_parameter', 'my_modify_sortby_parameter', 10, 2 );
+		 * @since 1.3.x
+		 * @hook um_modify_sortby_parameter
+		 *
+		 * @param {array}  $query_args WP_Query Arguments.
+		 * @param {string} $sortby     meta_key used for sorting.
+		 *
+		 * @return {string} WP_Query Arguments.
+		 * @example <caption>Change sorting query attributes.</caption>
 		 * function my_modify_sortby_parameter( $query_args, $sortby ) {
-		 *     // your code here
+		 *     if ( '{my_custom_sorting_key}' === $sortby ) {
+		 *         $query_args['orderby'] = '{my_custom_sorting_key}';
+		 *         $query_args['order']   = 'DESC';
+		 *     }
 		 *     return $query_args;
 		 * }
-		 * ?>
+		 * add_filter( 'um_modify_sortby_parameter', 'my_modify_sortby_parameter', 10, 2 );
 		 */
 		$this->query_args = apply_filters( 'um_modify_sortby_parameter', $this->query_args, $sortby );
 	}
 
 	/**
-	 * Sorting random
+	 * Sorting random.
 	 *
-	 * @param object $query
+	 * @param WP_User_Query $query
 	 *
-	 * @return mixed
+	 * @return WP_User_Query
 	 */
 	public function sortby_randomly( $query ) {
-		if ( 'random' == $query->query_vars['orderby'] ) {
+		if ( 'random' === $query->query_vars['orderby'] ) {
 
 			if ( um_is_session_started() === false ) {
 				@session_start();
 			}
 
-			// Reset seed on load of initial
+			// Reset seed on load of initial.
+
+			// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
 			if ( empty( $_REQUEST['directory_id'] ) && isset( $_SESSION['um_member_directory_seed'] ) ) {
 				unset( $_SESSION['um_member_directory_seed'] );
 			}
@@ -576,7 +583,8 @@ class Directory extends \um\common\Directory {
 
 			// Set new seed if none exists
 			if ( ! $seed ) {
-				$seed = rand();
+				$seed = wp_rand();
+
 				$_SESSION['um_member_directory_seed'] = $seed;
 			}
 
@@ -587,11 +595,11 @@ class Directory extends \um\common\Directory {
 	}
 
 	/**
-	 * Sorting by last login
+	 * Sorting by last login.
 	 *
-	 * @param object $query
+	 * @param WP_User_Query $query
 	 *
-	 * @return mixed
+	 * @return WP_User_Query
 	 */
 	public function sortby_last_login( $query ) {
 		if ( array_key_exists( 'um_last_login', $query->query_vars['orderby'] ) ) {
@@ -636,37 +644,60 @@ class Directory extends \um\common\Directory {
 	}
 
 	/**
-	 * Handle general search line request
+	 * Handle general search line request.
 	 */
 	public function general_search() {
-		//general search
-		if ( ! empty( $_POST['search'] ) ) {
-			// complex using with change_meta_sql function
-			$search = $this->prepare_search( $_POST['search'] );
-			if ( ! empty( $search ) ) {
-				$meta_query = array(
-					'relation' => 'OR',
-					array(
-						'value'   => $search,
-						'compare' => '=',
-					),
-					array(
-						'value'   => $search,
-						'compare' => 'LIKE',
-					),
-					array(
-						'value'   => serialize( (string) $search ),
-						'compare' => 'LIKE',
-					),
-				);
-
-				$meta_query = apply_filters( 'um_member_directory_general_search_meta_query', $meta_query, $search );
-
-				$this->query_args['meta_query'][] = $meta_query;
-
-				$this->is_search = true;
-			}
+		// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+		if ( empty( $_POST['search'] ) ) {
+			return;
 		}
+
+		// Complex using with change_meta_sql function.
+		// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+		$search = $this->prepare_search( $_POST['search'] );
+		if ( empty( $search ) ) {
+			return;
+		}
+
+		$meta_query = array(
+			'relation' => 'OR',
+			array(
+				'value'   => $search,
+				'compare' => '=',
+			),
+			array(
+				'value'   => $search,
+				'compare' => 'LIKE',
+			),
+			array( // @todo maybe unnecessary because LIKE above checks.
+				'value'   => maybe_serialize( $search ), // already sanitized string here.
+				'compare' => 'LIKE',
+			),
+		);
+
+		/**
+		 * Filters general search query in Members Directory.
+		 *
+		 * @param {array}  $meta_query WP_Query Meta query.
+		 * @param {string} $search     Search line.
+		 *
+		 * @return {string} WP_Query Meta for general search in Member Directory.
+		 * @since 2.1.0
+		 * @hook um_member_directory_general_search_meta_query
+		 *
+		 * @example <caption>Change searching query attributes.</caption>
+		 * function my_member_directory_general_search_meta_query( $query_args, $search ) {
+		 *     $query_args[] = array(
+		 *         'value'   => $search,
+		 *         'compare' => 'NOT LIKE',
+		 *     );
+		 *     return $query_args;
+		 * }
+		 * add_filter( 'um_member_directory_general_search_meta_query', 'my_member_directory_general_search_meta_query', 10, 2 );
+		 */
+		$meta_query = apply_filters( 'um_member_directory_general_search_meta_query', $meta_query, $search );
+
+		$this->query_args['meta_query'][] = $meta_query;
 	}
 
 	/**
@@ -681,126 +712,140 @@ class Directory extends \um\common\Directory {
 	 * @param WP_User_Query $context
 	 *
 	 * @return array
+	 * @throws Exception
 	 */
 	public function change_meta_sql( $sql, $queries, $type, $primary_table, $primary_id_column, $context ) {
-		if ( ! empty( $_POST['search'] ) ) {
-			$search = $this->prepare_search( $_POST['search'] );
-			if ( ! empty( $search ) ) {
-				global $wpdb;
+		// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+		if ( empty( $_POST['search'] ) ) {
+			return $sql;
+		}
 
-				$meta_value  = '%' . $wpdb->esc_like( $search ) . '%';
-				$search_meta = $wpdb->prepare( '%s', $meta_value );
+		// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+		$search = $this->prepare_search( $_POST['search'] );
+		if ( empty( $search ) ) {
+			return $sql;
+		}
 
-				preg_match( '~(?<=\{)(.*?)(?=\})~', $search_meta, $matches, PREG_OFFSET_CAPTURE, 0 );
+		global $wpdb;
 
-				// workaround for standard mySQL hashes which are used by $wpdb->prepare instead of the %symbol
-				// sometimes it breaks error for strings like that wp_postmeta.meta_value LIKE '{12f209b48a89eeab33424902879d05d503f251ca8812dde03b59484a2991dc74}AMS{12f209b48a89eeab33424902879d05d503f251ca8812dde03b59484a2991dc74}'
-				// {12f209b48a89eeab33424902879d05d503f251ca8812dde03b59484a2991dc74} isn't applied by the `preg_replace()` below
-				if ( $matches[0][0] ) {
-					$search_meta  = str_replace( '{' . $matches[0][0] . '}', '#%&', $search_meta );
-					$sql['where'] = str_replace( '{' . $matches[0][0] . '}', '#%&', $sql['where'] );
-				}
+		$meta_value  = '%' . $wpdb->esc_like( $search ) . '%';
+		$search_meta = $wpdb->prepare( '%s', $meta_value );
 
-				// str_replace( '/', '\/', wp_slash( $search_meta ) ) means that we add backslashes to special symbols + add backslash to slash(/) symbol for proper regular pattern.
-				preg_match(
-					'/^(.*).meta_value LIKE ' . str_replace( '/', '\/', wp_slash( $search_meta ) ) . '[^\)]/im',
-					$sql['where'],
-					$join_matches
-				);
+		preg_match( '~(?<=\{)(.*?)(?=\})~', $search_meta, $matches, PREG_OFFSET_CAPTURE, 0 );
 
-				$sql['where'] = str_replace( '#%&', '{' . $matches[0][0] . '}', $sql['where'] );
+		// workaround for standard mySQL hashes which are used by $wpdb->prepare instead of the %symbol
+		// sometimes it breaks error for strings like that wp_postmeta.meta_value LIKE '{12f209b48a89eeab33424902879d05d503f251ca8812dde03b59484a2991dc74}AMS{12f209b48a89eeab33424902879d05d503f251ca8812dde03b59484a2991dc74}'
+		// {12f209b48a89eeab33424902879d05d503f251ca8812dde03b59484a2991dc74} isn't applied by the `preg_replace()` below
+		if ( $matches[0][0] ) {
+			$search_meta  = str_replace( '{' . $matches[0][0] . '}', '#%&', $search_meta );
+			$sql['where'] = str_replace( '{' . $matches[0][0] . '}', '#%&', $sql['where'] );
+		}
 
-				$directory_id   = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
-				$exclude_fields = get_post_meta( $directory_id, '_um_search_exclude_fields', true );
-				$include_fields = get_post_meta( $directory_id, '_um_search_include_fields', true );
+		// str_replace( '/', '\/', wp_slash( $search_meta ) ) means that we add backslashes to special symbols + add backslash to slash(/) symbol for proper regular pattern.
+		preg_match(
+			'/^(.*).meta_value LIKE ' . str_replace( '/', '\/', wp_slash( $search_meta ) ) . '[^\)]/im',
+			$sql['where'],
+			$join_matches
+		);
 
-				if ( isset( $join_matches[1] ) ) {
-					$meta_join_for_search = trim( $join_matches[1] );
+		$sql['where'] = str_replace( '#%&', '{' . $matches[0][0] . '}', $sql['where'] );
 
-					// skip private invisible fields
-					$custom_fields = array();
-					if ( empty( $include_fields ) ) {
-						foreach ( array_keys( UM()->builtin()->all_user_fields ) as $field_key ) {
-							if ( empty( $field_key ) ) {
-								continue;
-							}
+		// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+		$directory_id   = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
+		$exclude_fields = get_post_meta( $directory_id, '_um_search_exclude_fields', true );
+		$include_fields = get_post_meta( $directory_id, '_um_search_include_fields', true );
 
-							$data = UM()->fields()->get_field( $field_key );
-							if ( ! um_can_view_field( $data ) ) {
-								continue;
-							}
+		$meta_join_for_search = '';
+		if ( isset( $join_matches[1] ) ) {
+			$meta_join_for_search = trim( $join_matches[1] );
 
-							$custom_fields[] = $field_key;
-						}
-					} else {
-						foreach ( $include_fields as $field_key ) {
-							if ( empty( $field_key ) ) {
-								continue;
-							}
-
-							$data = UM()->fields()->get_field( $field_key );
-							if ( ! um_can_view_field( $data ) ) {
-								continue;
-							}
-
-							$custom_fields[] = $field_key;
-						}
+			// skip private invisible fields
+			$custom_fields = array();
+			if ( empty( $include_fields ) ) {
+				foreach ( array_keys( UM()->builtin()->all_user_fields ) as $field_key ) {
+					if ( empty( $field_key ) ) {
+						continue;
 					}
 
-					$custom_fields = apply_filters( 'um_general_search_custom_fields', $custom_fields );
-
-					if ( ! empty( $custom_fields ) ) {
-						if ( ! empty( $exclude_fields ) ) {
-							$custom_fields = array_diff( $custom_fields, $exclude_fields );
-						}
-
-						$sql['join'] = preg_replace(
-							'/(' . $meta_join_for_search . ' ON \( ' . $wpdb->users . '\.ID = ' . $meta_join_for_search . '\.user_id )(\))/im',
-							"$1 AND " . $meta_join_for_search . ".meta_key IN( '" . implode( "','", $custom_fields ) . "' ) $2",
-							$sql['join']
-						);
+					$data = UM()->fields()->get_field( $field_key );
+					if ( ! um_can_view_field( $data ) ) {
+						continue;
 					}
+
+					$custom_fields[] = $field_key;
 				}
+			} else {
+				foreach ( $include_fields as $field_key ) {
+					if ( empty( $field_key ) ) {
+						continue;
+					}
 
-				$core_search = $this->get_core_search_fields();
-				if ( ! empty( $include_fields ) ) {
-					$core_search = array_intersect( $core_search, $include_fields );
-				}
-				if ( ! empty( $exclude_fields ) ) {
-					$core_search = array_diff( $core_search, $exclude_fields );
-				}
+					$data = UM()->fields()->get_field( $field_key );
+					if ( ! um_can_view_field( $data ) ) {
+						continue;
+					}
 
-				if ( ! empty( $core_search ) ) {
-					// Add OR instead AND to search in WP core fields user_email, user_login, user_display_name
-					$search_where = $context->get_search_sql( $search, $core_search, 'both' );
-
-					$search_where = preg_replace( '/ AND \((.*?)\)/im', "$1 OR", $search_where );
-
-					// str_replace( '/', '\/', wp_slash( $search ) ) means that we add backslashes to special symbols + add backslash to slash(/) symbol for proper regular pattern.
-					$sql['where'] = preg_replace(
-						'/(' . $meta_join_for_search . '.meta_value = \'' . str_replace( '/', '\/', wp_slash( $search ) ) . '\')/im',
-						trim( $search_where ) . " $1",
-						$sql['where'],
-						1
-					);
+					$custom_fields[] = $field_key;
 				}
 			}
+
+			$custom_fields = apply_filters( 'um_general_search_custom_fields', $custom_fields );
+
+			if ( ! empty( $custom_fields ) ) {
+				if ( ! empty( $exclude_fields ) ) {
+					$custom_fields = array_diff( $custom_fields, $exclude_fields );
+				}
+
+				$sql['join'] = preg_replace(
+					'/(' . $meta_join_for_search . ' ON \( ' . $wpdb->users . '\.ID = ' . $meta_join_for_search . '\.user_id )(\))/im',
+					'$1 AND ' . $meta_join_for_search . ".meta_key IN( '" . implode( "','", $custom_fields ) . "' ) $2",
+					$sql['join']
+				);
+			}
+		}
+
+		$core_search = $this->get_core_search_fields();
+		if ( ! empty( $include_fields ) ) {
+			$core_search = array_intersect( $core_search, $include_fields );
+		}
+		if ( ! empty( $exclude_fields ) ) {
+			$core_search = array_diff( $core_search, $exclude_fields );
+		}
+
+		if ( ! empty( $core_search ) ) {
+			// Add OR instead AND to search in WP core fields user_email, user_login, user_display_name
+			$search_where = $context->get_search_sql( $search, $core_search, 'both' );
+
+			$search_where = preg_replace( '/ AND \((.*?)\)/im', '$1 OR', $search_where );
+
+			// str_replace( '/', '\/', wp_slash( $search ) ) means that we add backslashes to special symbols + add backslash to slash(/) symbol for proper regular pattern.
+			$sql['where'] = preg_replace(
+				'/(' . $meta_join_for_search . '.meta_value = \'' . str_replace( '/', '\/', wp_slash( $search ) ) . '\')/im',
+				trim( $search_where ) . ' $1',
+				$sql['where'],
+				1
+			);
 		}
 
 		return $sql;
 	}
 
 	/**
-	 * Handle filters request
+	 * Handle filters request.
+	 *
+	 * @param array $directory_data
+	 *
+	 * @throws Exception
 	 */
 	public function filters( $directory_data ) {
 		global $wpdb;
-		//filters
+
 		$filter_query = array();
 		if ( ! empty( $directory_data['search_fields'] ) ) {
 			$search_filters = maybe_unserialize( $directory_data['search_fields'] );
 
 			if ( ! empty( $search_filters ) && is_array( $search_filters ) ) {
+				// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
 				$filter_query = array_intersect_key( $_POST, array_flip( $search_filters ) );
 			}
 		}
@@ -812,19 +857,22 @@ class Directory extends \um\common\Directory {
 			return;
 		}
 
-		$this->is_search = true;
+		// phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+		$offset = ( isset( $_POST['gmt_offset'] ) && is_numeric( $_POST['gmt_offset'] ) ) ? (int) $_POST['gmt_offset'] : 0;
+
 		foreach ( $filter_query as $field => $value ) {
 			$field = sanitize_text_field( $field );
+			$attrs = UM()->fields()->get_field( $field );
+			// Skip private invisible fields
+			if ( ! um_can_view_field( $attrs ) ) {
+				continue;
+			}
+
+			// includes trim, but not includes `wp_unslash()`
 			if ( is_array( $value ) ) {
 				$value = array_map( 'sanitize_text_field', $value );
 			} else {
 				$value = sanitize_text_field( $value );
-			}
-
-			$attrs = UM()->fields()->get_field( $field );
-			// skip private invisible fields
-			if ( ! um_can_view_field( $attrs ) ) {
-				continue;
 			}
 
 			/** This filter is documented in includes/core/class-member-directory-meta.php */
@@ -860,35 +908,31 @@ class Directory extends \um\common\Directory {
 					$field_query = apply_filters( 'um_query_args_filter_global', $field_query, $field, $value, $filter_type );
 
 					if ( ! $field_query ) {
-
 						switch ( $filter_type ) {
 							default:
-
 								$field_query = apply_filters( "um_query_args_{$field}_{$filter_type}__filter", false, $field, $value, $filter_type );
-
 								break;
-							case 'text':
 
-								$value = stripslashes( $value );
+							case 'text':
+								$value       = wp_unslash( $value );
+								$compare     = apply_filters( 'um_members_directory_filter_text', 'LIKE', $field );
 								$field_query = array(
 									'relation' => 'OR',
 									array(
-										'key'       => $field,
-										'value'     => trim( $value ),
-										'compare'   => apply_filters( 'um_members_directory_filter_text', 'LIKE', $field )
+										'key'     => $field,
+										'value'   => $value,
+										'compare' => $compare,
 									),
 								);
 
 								$this->custom_filters_in_query[ $field ] = $value;
-
 								break;
 
 							case 'select':
 								if ( is_array( $value ) ) {
-									$field_query = array( 'relation' => esc_sql( $relation ) );
-
+									$field_query = array();
 									foreach ( $value as $single_val ) {
-										$single_val = trim( stripslashes( $single_val ) );
+										$single_val = wp_unslash( $single_val );
 
 										$arr_meta_query = array(
 											array(
@@ -898,7 +942,7 @@ class Directory extends \um\common\Directory {
 											),
 											array(
 												'key'     => $field,
-												'value'   => serialize( (string) $single_val ),
+												'value'   => maybe_serialize( (string) $single_val ),
 												'compare' => 'LIKE',
 											),
 											array(
@@ -909,46 +953,40 @@ class Directory extends \um\common\Directory {
 										);
 
 										if ( is_numeric( $single_val ) ) {
-
 											$arr_meta_query[] = array(
 												'key'     => $field,
-												'value'   => serialize( absint( $single_val ) ),
+												'value'   => maybe_serialize( absint( $single_val ) ),
 												'compare' => 'LIKE',
 											);
-
 										}
 
-										$field_query = array_merge( $field_query, $arr_meta_query );
+										$field_query[] = $arr_meta_query;
 									}
+
+									$field_query             = array_merge( ...$field_query );
+									$field_query['relation'] = esc_sql( $relation );
 								}
 
 								$this->custom_filters_in_query[ $field ] = $value;
-
 								break;
+
 							case 'slider':
-
-								$this->custom_filters_in_query[ $field ] = $value;
-
 								$field_query = array(
 									'key'       => $field,
 									'value'     => $value,
 									'compare'   => 'BETWEEN',
 									'inclusive' => true,
-									'type'		=> 'NUMERIC',
+									'type'      => 'NUMERIC',
 								);
 
+								$this->custom_filters_in_query[ $field ] = $value;
 								break;
+
 							case 'datepicker':
-
-								$offset = 0;
-								if ( isset( $_POST['gmt_offset'] ) && is_numeric( $_POST['gmt_offset'] ) ) {
-									$offset = (int) $_POST['gmt_offset'];
-								}
-
 								$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
 								$to_date   = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
 								$from_date = date( 'Y/m/d', $from_date );
-								$to_date = date( 'Y/m/d', $to_date );
+								$to_date   = date( 'Y/m/d', $to_date );
 
 								$field_query = array(
 									'key'       => $field,
@@ -958,14 +996,13 @@ class Directory extends \um\common\Directory {
 								);
 
 								$this->custom_filters_in_query[ $field ] = array( $from_date, $to_date );
-
 								break;
-							case 'timepicker':
 
+							case 'timepicker':
 								if ( $value[0] == $value[1] ) {
 									$field_query = array(
-										'key'       => $field,
-										'value'     => $value[0],
+										'key'   => $field,
+										'value' => $value[0],
 									);
 								} else {
 									$field_query = array(
@@ -978,10 +1015,9 @@ class Directory extends \um\common\Directory {
 								}
 
 								$this->custom_filters_in_query[ $field ] = $value;
-
 								break;
-						}
 
+						}
 					}
 
 					if ( ! empty( $field_query ) && $field_query !== true ) {
@@ -1007,12 +1043,15 @@ class Directory extends \um\common\Directory {
 					} else {
 						if ( ! empty( $this->query_args['role__in'] ) ) {
 							$this->query_args['role__in'] = is_array( $this->query_args['role__in'] ) ? $this->query_args['role__in'] : array( $this->query_args['role__in'] );
+
 							$default_role = array_intersect( $this->query_args['role__in'], $value );
-							$um_role = array_diff( $value, $default_role );
+							$um_role      = array_diff( $value, $default_role );
 
 							foreach ( $um_role as $key => &$val ) {
 								$val = 'um_' . str_replace( ' ', '-', $val );
 							}
+							unset( $val );
+
 							$this->query_args['role__in'] = array_merge( $default_role, $um_role );
 						} else {
 							$this->query_args['role__in'] = $value;
@@ -1021,9 +1060,10 @@ class Directory extends \um\common\Directory {
 						$this->custom_filters_in_query[ $field ] = $this->query_args['role__in'];
 					}
 					break;
+
 				case 'birth_date':
-					$from_date = date( 'Y/m/d', mktime( 0,0,0, date( 'm', time() ), date( 'd', time() ), date( 'Y', time() - min( $value ) * YEAR_IN_SECONDS ) ) );
-					$to_date   = date( 'Y/m/d', mktime( 0,0,0, date( 'm', time() ), date( 'd', time() ) + 1, date( 'Y', time() - ( max( $value ) + 1 ) * YEAR_IN_SECONDS ) ) );
+					$from_date = wp_date( 'Y/m/d', mktime( 0, 0, 0, wp_date( 'm' ), wp_date( 'd' ), wp_date( 'Y', time() - min( $value ) * YEAR_IN_SECONDS ) ) );
+					$to_date   = wp_date( 'Y/m/d', mktime( 0, 0, 0, wp_date( 'm' ), wp_date( 'j' ) + 1, wp_date( 'Y', time() - ( max( $value ) + 1 ) * YEAR_IN_SECONDS ) ) );
 
 					$meta_query = array(
 						array(
@@ -1038,16 +1078,11 @@ class Directory extends \um\common\Directory {
 					$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
 
 					$this->custom_filters_in_query[ $field ] = array( $to_date, $from_date );
-
 					break;
-				case 'user_registered':
-					$offset = 0;
-					if ( isset( $_POST['gmt_offset'] ) && is_numeric( $_POST['gmt_offset'] ) ) {
-						$offset = (int) $_POST['gmt_offset'];
-					}
 
-					$from_date = date( 'Y-m-d H:i:s', strtotime( date( 'Y-m-d H:i:s', min( $value ) ) . "+$offset hours" ) );
-					$to_date = date( 'Y-m-d H:i:s', strtotime( date( 'Y-m-d H:i:s', max( $value ) ) . "+$offset hours" ) );
+				case 'user_registered':
+					$from_date = gmdate( 'Y-m-d H:i:s', strtotime( $value[0] ) + ( $offset * HOUR_IN_SECONDS ) );
+					$to_date   = gmdate( 'Y-m-d H:i:s', strtotime( $value[1] ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1 ); // time 23:59
 
 					$date_query = array(
 						array(
@@ -1065,16 +1100,12 @@ class Directory extends \um\common\Directory {
 					}
 
 					$this->custom_filters_in_query[ $field ] = $value;
-
 					break;
-				case 'last_login':
-					$offset = 0;
-					if ( isset( $_POST['gmt_offset'] ) && is_numeric( $_POST['gmt_offset'] ) ) {
-						$offset = (int) $_POST['gmt_offset'];
-					}
 
+				case 'last_login':
 					$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
 					$to_date   = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
+
 					$meta_query = array(
 						'relation' => 'AND',
 						array(
@@ -1098,18 +1129,18 @@ class Directory extends \um\common\Directory {
 						),
 					);
 
+					$this->query_args['meta_query']          = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
 					$this->custom_filters_in_query[ $field ] = $value;
-
-					$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
 					break;
+
 				case 'gender':
 					if ( is_array( $value ) ) {
-						$field_query = array( 'relation' => $relation );
+						$field_query = array();
 
 						foreach ( $value as $single_val ) {
-							$single_val = trim( stripslashes( $single_val ) );
+							$single_val = wp_unslash( $single_val );
 
-							$arr_meta_query = array(
+							$field_query[] = array(
 								array(
 									'key'     => $field,
 									'value'   => $single_val,
@@ -1121,14 +1152,15 @@ class Directory extends \um\common\Directory {
 									'compare' => 'LIKE',
 								),
 							);
-
-							$field_query = array_merge( $field_query, $arr_meta_query );
 						}
+
+						$field_query = array_merge( ...$field_query );
+
+						$field_query['relation'] = $relation;
 					}
 
 					if ( ! empty( $field_query ) ) {
-						$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $field_query ) );
-
+						$this->query_args['meta_query']          = array_merge( $this->query_args['meta_query'], array( $field_query ) );
 						$this->custom_filters_in_query[ $field ] = $value;
 					}
 					break;
@@ -1462,6 +1494,8 @@ class Directory extends \um\common\Directory {
 
 	/**
 	 * Main Query function for getting members via AJAX
+	 *
+	 * @throws Exception
 	 */
 	public function ajax_get_members() {
 		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'um_member_directory' ) ) {
@@ -1513,13 +1547,13 @@ class Directory extends \um\common\Directory {
 		$this->pagination_options( $directory_data );
 
 		// handle sorting options
-	//	$this->sorting_query( $directory_data );
+		$this->sorting_query( $directory_data );
 
 		// handle general search line
-	//	$this->general_search();
+		$this->general_search();
 
 		// handle filters
-	//	$this->filters( $directory_data );
+		$this->filters( $directory_data );
 
 	//	$this->default_filters( $directory_data );
 
@@ -1661,7 +1695,6 @@ class Directory extends \um\common\Directory {
 		$response = array(
 			'pagination'  => UM()->ajax()->esc_html_spaces( $pagination ),
 			'total_pages' => absint( ceil( $pagination_args['total'] / $pagination_args['per_page'] ) ),
-			'is_search'   => $this->is_search,
 			// translators: %d is the count of users
 			'counter'     => $pagination_args['total'] > 0 ? esc_html( sprintf( _n( '%d Member', '%d Members', $pagination_args['total'], 'ultimate-member' ), $pagination_args['total'] ) ) : '',
 		);
