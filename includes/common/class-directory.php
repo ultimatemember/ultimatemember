@@ -45,7 +45,7 @@ class Directory {
 	 */
 	public $filter_supported_fields = array();
 
-	public $cover_size;
+	// public $cover_size;
 
 	public $avatar_size;
 
@@ -403,7 +403,6 @@ class Directory {
 
 		$dropdown_actions = $this->build_user_actions_list( $user_id );
 
-		$actions  = array();
 		$can_edit = UM()->roles()->um_current_user_can( 'edit', $user_id );
 
 		// Replace hook 'um_members_just_after_name'
@@ -427,7 +426,6 @@ class Directory {
 			'profile_url'          => esc_url( um_user_profile_url() ),
 			'can_edit'             => (bool) $can_edit,
 			'edit_profile_url'     => esc_url( um_edit_profile_url() ),
-			'avatar'               => wp_kses( get_avatar( $user_id, $this->avatar_size ), UM()->get_allowed_html( 'templates' ) ),
 			'display_name_html'    => wp_kses( um_user( 'display_name', 'html' ), UM()->get_allowed_html( 'templates' ) ),
 			'dropdown_actions'     => $dropdown_actions,
 			'hook_just_after_name' => wp_kses( preg_replace( '/^\s+/im', '', $hook_just_after_name ), UM()->get_allowed_html( 'templates' ) ),

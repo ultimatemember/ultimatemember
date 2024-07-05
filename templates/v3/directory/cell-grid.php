@@ -36,6 +36,8 @@ $card_classes = array(
 
 if ( $directory_data['cover_photos'] && $member['cover_photo'] ) {
 	$card_classes[] = 'um-member-with-cover';
+} else {
+	$card_classes[] = 'um-member-no-cover';
 }
 
 if ( ! $directory_data['profile_photo'] ) {

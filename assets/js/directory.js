@@ -820,6 +820,7 @@ jQuery(document.body).ready( function() {
 		directory.find('.um-members-sorting-toggle .um-button-content').text( sortingLabel );
 
 		directoryObj.setOrder( order );
+		directoryObj.setPage( 1 );
 		directoryObj.request();
 	});
 

@@ -257,7 +257,50 @@
                   +border-box
                   row-gap: $spacing-md
                   .#{$prefix}member-meta-inner
-                    +flex( column, flex-start, stretch, wrap )
+                    +flex( column, flex-start, stretch, nowrap )
+                    row-gap: $spacing-md
+                  .#{$prefix}member-metaline
+                    width: 100%
+                    padding: 0
+                    margin: 0
+                    word-break: break-word
+                    +typography( text, md, regular )
+                    color: $gray-600
+                    strong
+                      +typography( text, md, semibold )
+                      color: $gray-700
+                  &.#{$prefix}member-meta-no-animate
+                    display: grid
+                    grid-template-rows: 1fr
+            &.#{$prefix}member-no-cover
+              .#{$prefix}dropdown-wrapper
+                position: absolute
+                right: $spacing-3xl
+              .#{$prefix}member-box-main
+                width: 100%
+                padding: 0
+                margin: 0
+                +border-box
+                +flex( column, flex-start, center, wrap )
+                row-gap: $spacing-md
+                .#{$prefix}member-name
+                  +typography( header, xs, semibold )
+                  color: $gray-900
+                  text-align: center
+                  width: 100%
+                  word-break: break-word
+                .#{$prefix}member-tagline
+                  +typography( text, md, regular )
+                  color: $gray-600
+                  word-break: break-word
+                .#{$prefix}member-meta
+                  width: 100%
+                  padding: 0
+                  margin: 0
+                  +border-box
+                  row-gap: $spacing-md
+                  .#{$prefix}member-meta-inner
+                    +flex( column, flex-start, stretch, nowrap )
                     row-gap: $spacing-md
                   .#{$prefix}member-metaline
                     width: 100%
