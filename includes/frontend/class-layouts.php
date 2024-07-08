@@ -567,17 +567,46 @@ class Layouts {
 			return '';
 		}
 
+		if ( false === get_userdata( $user_id ) ) {
+			return '';
+		}
+
 		$args = wp_parse_args(
 			$args,
 			array(
+				'wrapper'       => 'div',
 				'size'          => 'm',
 				'type'          => 'round',
 				'wrapper_class' => array(),
 				'clickable'     => false,
 				'url'           => um_user_profile_url( $user_id ),
 				'url_title'     => __( 'Visit profile', 'ultimate-member' ),
+				'ignore_caps'   => false,
+				'tooltip'       => false,
 			)
 		);
+
+		$user_id = absint( $user_id );
+
+		if ( false === $args['ignore_caps'] ) {
+			if ( get_current_user_id() !== $user_id ) {
+				if ( ! um_can_view_profile( $user_id ) ) {
+					return '';
+				}
+
+				if ( ! current_user_can( 'administrator' ) ) {
+					$status = get_user_meta( $user_id, 'account_status', true );
+					if ( 'approved' !== $status ) {
+						return '';
+					}
+				}
+			}
+		}
+
+		$title = '';
+		if ( $args['tooltip'] ) {
+			$title = um_get_display_name( $user_id );
+		}
 
 		$args['url'] = empty( $args['url'] ) ? um_user_profile_url( $user_id ) : $args['url'];
 
@@ -602,18 +631,136 @@ class Layouts {
 
 		$avatar = get_avatar( $user_id, $thumb_size, '', '', array( 'loading' => 'lazy' ) );
 
+		if ( false === $avatar ) {
+			return '';
+		}
+
 		ob_start();
-		?>
-		<div class="<?php echo esc_attr( $wrapper_classes ); ?>" data-user_id="<?php echo esc_attr( $user_id ); ?>">
-			<?php if ( ! empty( $args['clickable'] ) ) { ?>
-				<a href="<?php echo esc_url( $args['url'] ); ?>" title="<?php echo esc_attr( $args['url_title'] ); ?>">
-			<?php } ?>
-			<?php echo $avatar; ?>
-			<?php if ( ! empty( $args['clickable'] ) ) { ?>
-				</a>
-			<?php } ?>
-		</div>
-		<?php
+
+		if ( 'div' === $args['wrapper'] ) {
+			?>
+			<div class="<?php echo esc_attr( $wrapper_classes ); ?>" data-user_id="<?php echo esc_attr( $user_id ); ?>" title="<?php echo esc_attr( $title ); ?>">
+			<?php
+		} elseif ( 'span' === $args['wrapper'] ) {
+			?>
+			<span class="<?php echo esc_attr( $wrapper_classes ); ?>" data-user_id="<?php echo esc_attr( $user_id ); ?>" title="<?php echo esc_attr( $title ); ?>">
+			<?php
+		}
+
+		if ( ! empty( $args['clickable'] ) ) {
+			?>
+			<a href="<?php echo esc_url( $args['url'] ); ?>" title="<?php echo esc_attr( $args['url_title'] ); ?>">
+			<?php
+		}
+		echo wp_kses( $avatar, UM()->get_allowed_html( 'templates' ) );
+		if ( ! empty( $args['clickable'] ) ) {
+			?>
+			</a>
+			<?php
+		}
+		if ( 'div' === $args['wrapper'] ) {
+			?>
+			</div>
+			<?php
+		} elseif ( 'span' === $args['wrapper'] ) {
+			?>
+			</span>
+			<?php
+		}
+		return ob_get_clean();
+	}
+
+	/**
+	 * Avatar layout.
+	 *
+	 * @param int[] $user_ids User ID.
+	 * @param array    $args    {
+	 *     Avatar additional arguments.
+	 *
+	 *     @type string   $size          Avatar size. Uses 's', 'm', 'l', 'xl'. Default 'm'.
+	 *     @type string   $type          Avatar type. Uses 'square', 'round'. Default 'round'.
+	 *     @type string[] $wrapper_class Avatar wrapper additional classes.
+	 * }
+	 *
+	 * @return string
+	 */
+	public static function avatars_list( $user_ids, $args = array() ) {
+		if ( empty( $user_ids ) ) {
+			return '';
+		}
+
+		$args = wp_parse_args(
+			$args,
+			array(
+				'wrapper'       => 'div',
+				'count'         => 0,
+				'size'          => 'm',
+				'type'          => 'round',
+				'wrapper_class' => array(),
+				'tooltip'       => true,
+			)
+		);
+
+		$user_ids = array_unique( $user_ids );
+
+		if ( 0 !== $args['count'] ) {
+			array_splice( $user_ids, $args['count'] );
+		}
+
+		$wrapper_classes = array(
+			'um-avatars-list',
+			'um-avatars-list-' . $args['size'],
+		);
+		if ( $args['tooltip'] ) {
+			$wrapper_classes[] = 'um-avatars-list-tooltip';
+		}
+		$wrapper_classes = array_merge( $wrapper_classes, $args['wrapper_class'] );
+
+		ob_start();
+		if ( 'div' === $args['wrapper'] ) {
+			?>
+			<div class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>">
+			<?php
+		} elseif ( 'span' === $args['wrapper'] ) {
+			?>
+			<span class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>">
+			<?php
+		}
+
+		$counter = 0;
+		foreach ( $user_ids as $user_id ) {
+			if ( 0 !== $args['count'] && $args['count'] === $counter ) {
+				break;
+			}
+
+			$avatar = self::single_avatar(
+				$user_id,
+				array(
+					'size'    => $args['size'],
+					'wrapper' => $args['wrapper'],
+					'tooltip' => $args['tooltip'],
+				)
+			);
+
+			if ( empty( $avatar ) ) {
+				continue;
+			}
+
+			if ( 0 !== $args['count'] ) {
+				++$counter;
+			}
+			echo wp_kses( $avatar, UM()->get_allowed_html( 'templates' ) );
+		}
+
+		if ( 'div' === $args['wrapper'] ) {
+			?>
+			</div>
+			<?php
+		} elseif ( 'span' === $args['wrapper'] ) {
+			?>
+			</span>
+			<?php
+		}
 		return ob_get_clean();
 	}
 

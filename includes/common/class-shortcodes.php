@@ -584,6 +584,73 @@ class Shortcodes {
 		?>
 		<div class="um">
 
+			<h3>Avatars list</h3>
+			<div style="display:flex;flex-direction:column;justify-content:flex-start;flex-wrap: nowrap;align-items:center; gap: 8px;">
+				<?php
+				echo wp_kses(
+					UM()->frontend()::layouts()::avatars_list(
+						array( 162,161,160 ),
+						array(
+							'size' => 's',
+							'count' => 5,
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				);
+				echo wp_kses(
+					UM()->frontend()::layouts()::avatars_list(
+						array( 162,161,160 ),
+						array(
+							'size' => 'l',
+							'count' => 5,
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				);
+				echo wp_kses(
+					UM()->frontend()::layouts()::avatars_list(
+						array( 162,161,160 ),
+						array(
+							'size' => 'xl',
+							'count' => 5,
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				);
+				?>
+				<?php
+				echo wp_kses(
+					UM()->frontend()::layouts()::avatars_list(
+						array( 167, 166, 162, 162,161,160 )
+					),
+					UM()->get_allowed_html( 'templates' )
+				);
+				?>
+
+				<?php
+				echo wp_kses(
+					UM()->frontend()::layouts()::avatars_list(
+						array( 162,161,160 ),
+						array(
+							'count' => 5,
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				);
+				?>
+
+				<?php
+				echo wp_kses(
+					UM()->frontend()::layouts()::avatars_list(
+						array( 162,161,160,159,158,157,156 ),
+						array(
+							'count' => 5,
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				);
+				?>
+			</div>
 			<h3>Range</h3>
 			<div>
 				<?php

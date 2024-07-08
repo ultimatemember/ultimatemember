@@ -867,6 +867,7 @@
   .#{$prefix}avatar
     margin: 0
     padding: 0
+    display: block
     img
       display: block
       width: 100%
@@ -888,6 +889,38 @@
     &.#{$prefix}avatar-round
       overflow: hidden
       border-radius: 100%
+
+// Avatars list.
+.um
+  .#{$prefix}avatars-list
+    +flex( row, flex-start, center, nowrap )
+    margin: 0
+    padding: 0
+    +border-box
+    position: relative
+    &.#{$prefix}avatars-list-s
+      margin: 0 0 0 $spacing-lg
+    &.#{$prefix}avatars-list-m
+      margin: 0 0 0 $spacing-xl
+    &.#{$prefix}avatars-list-l
+      margin: 0 0 0 $spacing-3xl
+    &.#{$prefix}avatars-list-xl
+      margin: 0 0 0 $spacing-5xl
+    .#{$prefix}avatar
+      border: 1.5px solid $um-white
+      position: relative
+      &.#{$prefix}avatar-s
+        margin-left: -$spacing-lg
+      &.#{$prefix}avatar-m
+        margin-left: -$spacing-xl
+      &.#{$prefix}avatar-l
+        margin-left: -$spacing-3xl
+      &.#{$prefix}avatar-xl
+        margin-left: -$spacing-5xl
+    &.#{$prefix}avatars-list-tooltip
+      .#{$prefix}avatar:hover
+        z-index: 1
+
 // Avatar uploader
 .um
   .#{$prefix}profile-photo-uploader

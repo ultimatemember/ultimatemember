@@ -1110,6 +1110,7 @@
 .um .um-avatar {
   margin: 0;
   padding: 0;
+  display: block;
 }
 .um .um-avatar img {
   display: block;
@@ -1137,6 +1138,51 @@
 .um .um-avatar.um-avatar-round {
   overflow: hidden;
   border-radius: 100%;
+}
+
+.um .um-avatars-list {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  position: relative;
+}
+.um .um-avatars-list.um-avatars-list-s {
+  margin: 0 0 0 12px;
+}
+.um .um-avatars-list.um-avatars-list-m {
+  margin: 0 0 0 16px;
+}
+.um .um-avatars-list.um-avatars-list-l {
+  margin: 0 0 0 24px;
+}
+.um .um-avatars-list.um-avatars-list-xl {
+  margin: 0 0 0 40px;
+}
+.um .um-avatars-list .um-avatar {
+  border: 1.5px solid #fff;
+  position: relative;
+}
+.um .um-avatars-list .um-avatar.um-avatar-s {
+  margin-left: -12px;
+}
+.um .um-avatars-list .um-avatar.um-avatar-m {
+  margin-left: -16px;
+}
+.um .um-avatars-list .um-avatar.um-avatar-l {
+  margin-left: -24px;
+}
+.um .um-avatars-list .um-avatar.um-avatar-xl {
+  margin-left: -40px;
+}
+.um .um-avatars-list.um-avatars-list-tooltip .um-avatar:hover {
+  z-index: 1;
 }
 
 .um .um-profile-photo-uploader {
