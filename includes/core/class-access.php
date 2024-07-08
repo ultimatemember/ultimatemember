@@ -774,7 +774,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				$content = sprintf( __( '%s', 'ultimate-member' ), $content );
 			}
 
-			return $content;
+			return do_shortcode($content);
 		}
 
 		/**
