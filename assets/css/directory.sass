@@ -175,6 +175,71 @@
     & > .#{$prefix}supporting-text
       text-align: center
     .#{$prefix}members-wrapper
+      .#{$prefix}box.#{$prefix}member
+        .#{$prefix}member-skeleton
+          position: absolute
+          background: $um-white
+          top: 0
+          bottom: 0
+          left: 0
+          right: 0
+          z-index: 3
+          padding: 24px
+          width: 100%
+          height: 100%
+          +border-box
+          display: none
+          .#{$prefix}member-skeleton-inner
+            +flex(column,flex-start,center, wrap)
+            gap: 8px
+            width: 100%
+            height: 100%
+            overflow: hidden
+            +border-box
+          .#{$prefix}skeleton-box-avatar
+            display: inline-block
+            width: 128px
+            height: 128px
+            position: relative
+            overflow: hidden
+            background-color: $gray-300
+            border: none
+            border-radius: 100%
+            margin-bottom: 16px
+          .#{$prefix}skeleton-box-header
+            display: inline-block
+            height: 32px
+            position: relative
+            overflow: hidden
+            background-color: $gray-300
+            border: none
+            border-radius: 4px
+            width: 100%
+          .#{$prefix}skeleton-box
+            width: 100%
+            display: inline-block
+            height: 24px
+            position: relative
+            overflow: hidden
+            background-color: $gray-300
+            border: none
+            border-radius: 4px
+          .#{$prefix}skeleton-box-avatar,
+          .#{$prefix}skeleton-box-header,
+          .#{$prefix}skeleton-box
+            &:after
+              position: absolute
+              top: 0
+              right: 0
+              bottom: 0
+              left: 0
+              transform: translateX(-100%)
+              background-image: linear-gradient(90deg,rgba(#fff, 0) 0,rgba(#fff, 0.2) 20%,rgba(#fff, 0.5) 60%,rgba(#fff, 0))
+              animation: um-ajax-shimmer 2s infinite
+              content: ''
+        &.#{$prefix}skeleton-mode
+          .#{$prefix}member-skeleton
+            display: block
       &.#{$prefix}members-grid
         margin: 0
         width: 100%
@@ -188,8 +253,6 @@
         -ms-grid-gap: 10px
         -ms-grid-auto-rows: minmax(max-content, auto)
         align-items: stretch
-        &.#{$prefix}display-none
-          display: none
         .#{$prefix}box
           &.#{$prefix}member
             +flex( column, flex-start, center, nowrap )
@@ -319,18 +382,6 @@
               .#{$prefix}member-photos
                 margin-bottom: calc( $spacing-7xl - $spacing-md )
             .#{$prefix}member-skeleton
-              position: absolute
-              background: $um-white
-              top: 0
-              bottom: 0
-              left: 0
-              right: 0
-              z-index: 3
-              padding: 24px
-              width: 100%
-              height: 100%
-              +border-box
-              display: none
               .#{$prefix}member-skeleton-inner
                 +flex(column,flex-start,center, wrap)
                 gap: 8px
@@ -338,67 +389,92 @@
                 height: 100%
                 overflow: hidden
                 +border-box
-              .#{$prefix}skeleton-box-avatar
-                display: inline-block
-                width: 128px
-                height: 128px
-                position: relative
-                overflow: hidden
-                background-color: $gray-300
-                border: none
-                border-radius: 100%
-                margin-bottom: 16px
-                &:after
-                  position: absolute
-                  top: 0
-                  right: 0
-                  bottom: 0
-                  left: 0
-                  transform: translateX(-100%)
-                  background-image: linear-gradient(90deg,rgba(#fff, 0) 0,rgba(#fff, 0.2) 20%,rgba(#fff, 0.5) 60%,rgba(#fff, 0))
-                  animation: um-ajax-shimmer 2s infinite
-                  content: ''
-              .#{$prefix}skeleton-box-header
-                display: inline-block
-                height: 32px
-                position: relative
-                overflow: hidden
-                background-color: $gray-300
-                border: none
-                border-radius: 4px
+      &.#{$prefix}members-list
+        margin: 0
+        width: 100%
+        +flex(column,flex-start,stretch,nowrap)
+        row-gap: 10px
+        .#{$prefix}box
+          &.#{$prefix}member
+            +flex( row, flex-start, center, nowrap )
+            position: relative
+            padding: $spacing-xl
+            .#{$prefix}dropdown-wrapper
+              position: absolute
+              right: $spacing-xl
+              top: $spacing-xl
+            .#{$prefix}member-box-main
+              width: 100%
+              padding: 0 $spacing-2xl 0 0
+              margin: 0
+              +border-box
+              +flex( row, space-between, start, nowrap )
+              column-gap: $spacing-xl
+              .#{$prefix}avatar
+                flex: 0 0 64px
+              & > .#{$prefix}link
+                flex: 1
+              .#{$prefix}member-list-data
+                flex: 4
+                +flex( column, flex-start, flex-start, nowrap )
+                padding: 0
+                margin: 0
+                +border-box
+              .#{$prefix}member-nameline
+                +flex( row, flex-start, center, nowrap )
+                padding: 0 0 $spacing-sm 0
+                gap: $spacing-xl
                 width: 100%
-                &:after
-                  position: absolute
-                  top: 0
-                  right: 0
-                  bottom: 0
-                  left: 0
-                  transform: translateX(-100%)
-                  background-image: linear-gradient(90deg,rgba(#fff, 0) 0,rgba(#fff, 0.2) 20%,rgba(#fff, 0.5) 60%,rgba(#fff, 0))
-                  animation: um-ajax-shimmer 2s infinite
-                  content: ''
-              .#{$prefix}skeleton-box
+                margin: 0
+                +border-box
+                .#{$prefix}member-name
+                  +typography( text, md, semibold )
+                  color: $gray-900
+                  text-align: left
+                  word-break: break-word
+                  padding: 0
+              .#{$prefix}member-taglines
+                +flex( row, flex-start, baseline, wrap )
+                padding: 0 0 $spacing-sm 0
+                margin: 0
+                +border-box
                 width: 100%
-                display: inline-block
-                height: 24px
-                position: relative
-                overflow: hidden
-                background-color: $gray-300
-                border: none
-                border-radius: 4px
-                &:after
-                  position: absolute
-                  top: 0
-                  right: 0
-                  bottom: 0
-                  left: 0
-                  transform: translateX(-100%)
-                  background-image: linear-gradient(90deg,rgba(#fff, 0) 0,rgba(#fff, 0.2) 20%,rgba(#fff, 0.5) 60%,rgba(#fff, 0))
-                  animation: um-ajax-shimmer 2s infinite
-                  content: ''
-            &.#{$prefix}skeleton-mode
-              .#{$prefix}member-skeleton
-                display: block
+                align-self: stretch
+                column-gap: $spacing-xl
+                .#{$prefix}member-tagline
+                  +typography( text, sm, regular )
+                  color: $gray-600
+                  word-break: break-word
+              .#{$prefix}member-meta
+                width: 100%
+                padding: 0
+                margin: 0
+                +border-box
+                .#{$prefix}member-meta-inner
+                  +flex( column, flex-start, stretch, nowrap )
+                  row-gap: $spacing-sm
+                .#{$prefix}member-metaline
+                  width: 100%
+                  padding: 0
+                  margin: 0
+                  word-break: break-word
+                  +typography( text, sm, regular )
+                  color: $gray-600
+                  strong
+                    +typography( text, sm, semibold )
+                    color: $gray-700
+                  &:last-child
+                    margin-bottom: $spacing-sm
+                &.#{$prefix}member-meta-no-animate
+                  display: grid
+                  grid-template-rows: 1fr
+              //.#{$prefix}link.#{$prefix}meta-toggle.#{$prefix}toggle-button-active
+              //  padding: $spacing-sm 0 0 0
+            &.#{$prefix}member-no-actions
+              .#{$prefix}member-box-main
+                padding: 0
+      &.#{$prefix}display-none
+        display: none
     &.#{$prefix}ui-xs
       .#{$prefix}member-directory-header
         .#{$prefix}member-directory-filters-bar

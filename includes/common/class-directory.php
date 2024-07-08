@@ -45,7 +45,7 @@ class Directory {
 	 */
 	public $filter_supported_fields = array();
 
-	// public $cover_size;
+	public $cover_size;
 
 	public $avatar_size;
 

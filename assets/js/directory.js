@@ -100,6 +100,7 @@ UM.frontend.directory.prototype = {
 	order: '',
 	defaultOrder: '',
 	filters: {},
+	layout: '',
 	getDataFromURL: function( dataKey ) {
 		let hash = this.hash;
 		let data = {};
@@ -191,6 +192,12 @@ UM.frontend.directory.prototype = {
 	},
 	getLastResponse: function () {
 		return this.lastResponse;
+	},
+	setLayout: function( layout ) {
+		this.layout = layout;
+	},
+	getLayout: function() {
+		return this.layout;
 	},
 	isBusy: function () {
 		return this.busy;
@@ -596,7 +603,7 @@ UM.frontend.directory.prototype = {
 				instance.setLastResponse( answer );
 				instance.setTotalPages( answer.total_pages );
 
-				um_build_template( instance.wrapper, answer );
+				um_build_template( instance, answer );
 
 				instance.wrapper.find('.um-members-pagination-box').html( answer.pagination );
 				instance.wrapper.data( 'total_pages', answer.total_pages );
@@ -662,24 +669,24 @@ function um_time_convert( time, range ) {
 	return hours + ":" + minutes;
 }
 
-function um_build_template( directory, data ) {
-	let layout = directory.data('view_type');
-	let hash = UM.frontend.directories.getHash( directory );
-	if ( jQuery('.um-' + hash ).length ) {
-		directory.find('.um-members-wrapper').html('').prepend(data[ 'content_' + layout ]);
+function um_build_template( directoryObj, data ) {
+	let layout = directoryObj.getLayout();
+
+	if ( jQuery('.um-' + directoryObj.hash ).length ) {
+		directoryObj.wrapper.find('.um-members-wrapper').html('').prepend(data[ 'content_' + layout ]);
 
 		if ( '' !== data.counter ) {
-			directory.find('.um-members-counter').text( data.counter ).show();
+			directoryObj.wrapper.find('.um-members-counter').text( data.counter ).show();
 		} else {
-			directory.find('.um-members-counter').text( data.counter ).hide();
+			directoryObj.wrapper.find('.um-members-counter').text( data.counter ).hide();
 		}
 
-		directory.addClass('um-loaded');
+		directoryObj.wrapper.addClass('um-loaded');
 
-		jQuery(document).trigger('um_build_template', [directory, data]);
+		jQuery(document).trigger('um_build_template', [directoryObj, data]);
 		jQuery(window).trigger('resize');
 
-		wp.hooks.doAction( 'um_member_directory_build_template', directory );
+		wp.hooks.doAction( 'um_member_directory_build_template', directoryObj.wrapper );
 
 		UM.common.tipsy.init();
 	}
@@ -703,27 +710,26 @@ jQuery(document.body).ready( function() {
 
 		let data = directoryObj.getLastResponse();
 		if ( data !== null ) {
-
+			let layout = $this.data('type');
+			let defaultView = $this.data('default');
 			let prevType = $this.parents('.um-member-view-switcher').find('.um-button-in-group.current').data('type');
+
 			directory.find('.um-members-wrapper.um-members-' + prevType).removeClass('um-members-' + prevType);
 
 			$this.parents('.um-member-view-switcher').find('.um-button-in-group').removeClass('current');
 			$this.addClass('current');
 
-			let layout = $this.data('type');
-			let defaultView = $this.data('default');
-
 			directory.find('.um-members-wrapper').addClass('um-members-' + layout);
 
+			directoryObj.setLayout( layout );
+
 			if ( defaultView ) {
-				um_set_url_from_data( directory, 'view_type', '' );
+				directoryObj.setDataToURL('view_type', '');
 			} else {
-				um_set_url_from_data( directory, 'view_type', layout );
+				directoryObj.setDataToURL('view_type', layout);
 			}
-			directory.data( 'view_type', layout );
 
-			um_build_template( directory, data );
-
+			um_build_template( directoryObj, data );
 			um_init_new_dropdown();
 		}
 	});
@@ -1050,6 +1056,8 @@ jQuery(document.body).ready( function() {
 		}
 
 		directoryObj.setFilters( true );
+
+		directoryObj.setLayout( directory.data('view_type') );
 
 		let ignoreMustSearch = wp.hooks.applyFilters( 'um_member_directory_ignore_after_search', false, directory );
 		if ( false === ignoreMustSearch ) {

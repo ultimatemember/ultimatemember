@@ -8,7 +8,11 @@
  *
  * @version 2.6.1
  *
- * @var array  $args
+ * @var array  $member
+ * @var array  $t_args
+ * @var string $unique_hash
+ * @var array  $directory_data
+ * @var string $form_id
  * @var bool   $cover_photos
  * @var bool   $profile_photo
  * @var bool   $show_name
@@ -22,136 +26,207 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+$card_id      = 'um-member-' . $member['card_anchor'] . '-' . $unique_hash;
+$card_classes = array(
+	'um-member',
+	'um-role-' . $member['role'],
+	'um-member-status-' . $member['account_status'],
+);
+
+if ( $directory_data['cover_photos'] && $member['cover_photo'] ) {
+	$card_classes[] = 'um-member-with-cover';
+} else {
+	$card_classes[] = 'um-member-no-cover';
+}
+
+if ( ! $directory_data['profile_photo'] ) {
+	$card_classes[] = 'um-member-no-photo';
+}
+
+if ( empty( $member['dropdown_actions'] ) ) {
+	$card_classes[] = 'um-member-no-actions';
+}
+
+ob_start();
 ?>
-
-<div id="um-member-{{{user.card_anchor}}}-<?php echo esc_attr( $unique_hash ) ?>" class="um-member um-role-{{{user.role}}} {{{user.account_status}}} <?php if ( $cover_photos ) { echo 'with-cover'; } ?>">
-							<span class="um-member-status {{{user.account_status}}}">
-								{{{user.account_status_name}}}
-							</span>
-	<div class="um-member-card-container">
-		<?php if ( $profile_photo ) { ?>
-			<div class="um-member-photo radius-<?php echo esc_attr( UM()->options()->get( 'profile_photocorner' ) ); ?>">
-				<a href="{{{user.profile_url}}}" title="<# if ( user.display_name ) { #>{{{user.display_name}}}<# } #>">
-					{{{user.avatar}}}
-
-					<?php do_action( 'um_members_list_in_profile_photo_tmpl', $args ); ?>
-				</a>
-			</div>
+<div class="um-member-skeleton">
+	<div class="um-member-skeleton-inner">
+		<?php if ( $directory_data['profile_photo'] ) { ?>
+			<div class="um-skeleton-box-avatar"></div>
 		<?php } ?>
-
-		<div class="um-member-card <?php echo ! $profile_photo ? 'no-photo' : '' ?>">
-			<div class="um-member-card-content">
-				<div class="um-member-card-header">
-					<?php if ( $show_name ) { ?>
-						<# if ( user.display_name_html ) { #>
-						<div class="um-member-name">
-							<a href="{{{user.profile_url}}}" title="<# if ( user.display_name ) { #>{{{user.display_name}}}<# } #>">
-								{{{user.display_name_html}}}
-							</a>
-						</div>
-						<# } #>
-					<?php } ?>
-
-					{{{user.hook_just_after_name}}}
-
-					<?php do_action( 'um_members_list_after_user_name_tmpl', $args ); ?>
-
-					{{{user.hook_after_user_name}}}
-				</div>
-
-				<?php if ( $show_tagline && ! empty( $tagline_fields ) && is_array( $tagline_fields ) ) {
-					foreach ( $tagline_fields as $key ) {
-						if ( empty( $key ) ) {
-							continue;
-						} ?>
-
-						<# if ( typeof user['<?php echo $key; ?>'] !== 'undefined' ) { #>
-						<div class="um-member-tagline um-member-tagline-<?php echo esc_attr( $key ); ?>"
-						     data-key="<?php echo esc_attr( $key ); ?>">
-							{{{user['<?php echo $key; ?>']}}}
-						</div>
-						<# } #>
-
-					<?php }
-				}
-
-				if ( $show_userinfo ) { ?>
-
-					<# var $show_block = false; #>
-
-					<?php foreach ( $reveal_fields as $k => $key ) {
-						if ( empty( $key ) ) {
-							unset( $reveal_fields[ $k ] );
-						} ?>
-
-						<# if ( typeof user['<?php echo $key; ?>'] !== 'undefined' ) {
-						$show_block = true;
-						} #>
-					<?php }
-
-					if ( $show_social ) { ?>
-						<# if ( ! $show_block ) { #>
-						<# $show_block = user.social_urls #>
-						<# } #>
-					<?php } ?>
-
-					<# if ( $show_block ) { #>
-					<div class="um-member-meta-main<?php if ( ! $userinfo_animate ) { echo ' no-animate'; } ?>">
-
-						<div class="um-member-meta">
-							<?php foreach ( $reveal_fields as $key ) { ?>
-
-								<# if ( typeof user['<?php echo $key; ?>'] !== 'undefined' ) { #>
-								<div class="um-member-metaline um-member-metaline-<?php echo $key; ?>">
-									<strong>{{{user['label_<?php echo $key;?>']}}}:</strong>&nbsp;{{{user['<?php echo $key;?>']}}}
-								</div>
-								<# } #>
-
-							<?php }
-
-							if ( $show_social ) { ?>
-								<div class="um-member-connect">
-									{{{user.social_urls}}}
-								</div>
-							<?php } ?>
-						</div>
-					</div>
-					<# } #>
-				<?php } ?>
-			</div>
-
-			<div class="um-member-card-actions">
-
-				<# if ( Object.keys( user.dropdown_actions ).length > 0 ) { #>
-				<div class="um-member-cog">
-					<a href="javascript:void(0);" class="um-member-actions-a">
-						<i class="um-faicon-cog"></i>
-					</a>
-					<?php UM()->member_directory()->dropdown_menu_js( '.um-member-cog', 'click', 'user' ); ?>
-				</div>
-				<# } #>
-
-			</div>
-
+		<div class="um-skeleton-box-group">
+			<div class="um-skeleton-box-header"></div>
+			<div class="um-skeleton-box"></div>
+			<div class="um-skeleton-box"></div>
+			<div class="um-skeleton-box"></div>
+			<div class="um-skeleton-box"></div>
+			<div class="um-skeleton-box"></div>
+			<div class="um-skeleton-box"></div>
+			<div class="um-skeleton-box"></div>
+			<div class="um-skeleton-box"></div>
 		</div>
-	</div>
-	<div class="um-member-card-footer <?php echo ! $profile_photo ? 'no-photo' : '' ?> <?php if ( $show_userinfo && $userinfo_animate ) { ?><# if ( ! $show_block ) { #>no-reveal<# } #><?php } ?>">
-
-		<div class="um-member-card-footer-buttons">
-			<?php do_action( 'um_members_list_just_after_actions_tmpl', $args ); ?>
-		</div>
-
-		<?php if ( $show_userinfo && $userinfo_animate ) { ?>
-			<# if ( $show_block ) { #>
-			<div class="um-member-card-reveal-buttons">
-				<div class="um-member-more">
-					<a href="javascript:void(0);"><i class="um-faicon-angle-down"></i></a>
-				</div>
-				<div class="um-member-less">
-					<a href="javascript:void(0);"><i class="um-faicon-angle-up"></i></a>
-				</div>
-			</div>
-			<# } #>
-		<?php } ?>
 	</div>
 </div>
+<div class="um-member-box-main">
+	<?php
+	echo wp_kses(
+		UM()->frontend()::layouts()::dropdown_menu(
+			'um-member-actions-toggle',
+			$member['dropdown_actions'],
+			array(
+				'width' => 210,
+//				'place' => 'bottom-right',
+			)
+		),
+		UM()->get_allowed_html( 'templates' )
+	);
+
+	if ( $directory_data['profile_photo'] ) {
+		echo wp_kses( UM()->frontend()::layouts()::single_avatar( $member['id'], array( 'size' => 'l' ) ), UM()->get_allowed_html( 'templates' ) );
+		do_action( 'um_members_list_in_profile_photo_tmpl', $t_args );
+	}
+	?>
+
+	<div class="um-member-list-data">
+	<div class="um-member-nameline">
+		<?php
+		if ( $directory_data['show_name'] && $member['display_name_html'] ) {
+			?>
+			<span class="um-member-name" title="<?php if ( $member['display_name'] ) { echo esc_attr( $member['display_name'] ); } ?>">
+				<?php echo wp_kses( $member['display_name_html'], UM()->get_allowed_html( 'templates' ) ); ?>
+			</span>
+			<?php
+		}
+
+		if ( 'approved' !== $member['account_status'] ) {
+			$status_badge = array(
+				'class' => array( 'um-member-status' ),
+				'size'  => 's',
+			);
+			if ( 'awaiting_admin_review' === $member['account_status'] ) {
+				$status_badge['color'] = 'error';
+			}
+			echo wp_kses( UM()->frontend()::layouts()::badge( $member['account_status_name'], $status_badge ), UM()->get_allowed_html( 'templates' ) );
+		} ?>
+	</div>
+	<?php
+	// {{{user.hook_just_after_name}}}
+	do_action( 'um_members_just_after_name', $member['id'], $directory_data );
+	// {{{user.hook_after_user_name}}}
+	do_action( 'um_members_after_user_name', $member['id'], $directory_data );
+
+	if ( ( $directory_data['show_tagline'] && ! empty( $directory_data['tagline_fields'] ) && is_array( $directory_data['tagline_fields'] ) ) || 'approved' !== $member['account_status'] ) {
+		?>
+		<div class="um-member-taglines">
+			<?php
+			foreach ( $directory_data['tagline_fields'] as $key ) {
+				if ( empty( $key ) ) {
+					continue;
+				}
+
+				if ( empty( $member[ $key ] ) ) {
+					continue;
+				}
+				?>
+				<div class="um-member-tagline um-member-tagline-<?php echo esc_attr( $key ); ?>" data-key="<?php echo esc_attr( $key ); ?>">
+					<?php echo wp_kses( $member[ $key ], UM()->get_allowed_html( 'templates' ) ); ?>
+				</div>
+				<?php
+			}
+			?>
+		</div>
+		<?php
+	}
+
+	if ( $directory_data['show_userinfo'] ) {
+		$show_block = false;
+		if ( $directory_data['show_social'] && ! empty( $member['social_urls'] ) ) {
+			$show_block = true;
+		}
+
+		foreach ( $directory_data['reveal_fields'] as $k => $key ) {
+			if ( empty( $key ) ) {
+				continue;
+			}
+
+			if ( empty( $member[ $key ] ) ) {
+				continue;
+			}
+
+			$show_block = true;
+			break;
+		}
+
+		if ( $show_block ) {
+			?>
+			<div class="um-member-meta<?php if ( ! $directory_data['userinfo_animate'] ) { echo ' um-member-meta-no-animate'; } else { echo ' um-toggle-block um-toggle-block-collapsed'; } ?>">
+				<?php
+				if ( $directory_data['userinfo_animate'] ) {
+				?>
+				<div class="um-member-meta-inner um-toggle-block-inner">
+					<?php
+					}
+					foreach ( $directory_data['reveal_fields'] as $key ) {
+						if ( empty( $member[ $key ] ) ) {
+							continue;
+						}
+						?>
+						<div class="um-member-metaline um-member-metaline-<?php echo esc_attr( $key ); ?>">
+							<strong><?php echo esc_html( $member[ 'label_' . $key ] ); ?>:</strong> <?php echo wp_kses( $member[ $key ], UM()->get_allowed_html( 'templates' ) ); ?>
+						</div>
+						<?php
+					}
+
+					if ( $directory_data['show_social'] && ! empty( $member['social_urls'] ) ) {
+						?>
+						<div class="um-member-connect">
+							<?php echo wp_kses( $member['social_urls'], UM()->get_allowed_html( 'templates' ) ); ?>
+						</div>
+					<?php }
+					if ( $directory_data['userinfo_animate'] ) {
+					?>
+				</div>
+			<?php
+			} ?>
+			</div>
+			<?php
+			if ( $directory_data['userinfo_animate'] ) {
+				?>
+				<a class="um-link um-meta-toggle" data-um-toggle=".um-member-meta" data-toggle-text="<?php esc_attr_e( 'Hide details', 'ultimate-member' ); ?>" href="#"><?php esc_html_e( 'More details', 'ultimate-member' ); ?></a>
+				<?php
+			}
+		}
+	}
+	?>
+	</div>
+
+	<?php
+	echo wp_kses(
+		UM()->frontend()::layouts()::link(
+			__( 'View Profile', 'ultimate-member' ),
+			array(
+				'size'   => 'm',
+				'design' => 'primary',
+				'type'   => 'button',
+				'url'    => $member['profile_url'],
+			)
+		),
+		UM()->get_allowed_html( 'templates' )
+	);
+	?>
+</div>
+
+<?php
+$content = ob_get_clean();
+
+echo wp_kses(
+	UM()->frontend()::layouts()::box(
+		$content,
+		array(
+			'id'      => $card_id,
+			'classes' => $card_classes,
+		)
+	),
+	UM()->get_allowed_html( 'templates' )
+);
