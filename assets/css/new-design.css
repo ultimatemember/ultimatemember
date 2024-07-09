@@ -1115,9 +1115,14 @@
 .um .um-avatar img {
   display: block;
   width: 100%;
+  height: auto;
   float: left;
   margin: 0;
   padding: 0;
+}
+.um .um-avatar.um-avatar-xs {
+  width: 24px;
+  height: 24px;
 }
 .um .um-avatar.um-avatar-s {
   width: 32px;
@@ -1153,6 +1158,9 @@
   -webkit-box-sizing: border-box;
   position: relative;
 }
+.um .um-avatars-list.um-avatars-list-xs {
+  margin: 0 0 0 8px;
+}
 .um .um-avatars-list.um-avatars-list-s {
   margin: 0 0 0 12px;
 }
@@ -1168,6 +1176,9 @@
 .um .um-avatars-list .um-avatar {
   border: 1.5px solid #fff;
   position: relative;
+}
+.um .um-avatars-list .um-avatar.um-avatar-xs {
+  margin-left: -8px;
 }
 .um .um-avatars-list .um-avatar.um-avatar-s {
   margin-left: -12px;

@@ -551,7 +551,7 @@ class Layouts {
 	 * @param array    $args    {
 	 *     Avatar additional arguments.
 	 *
-	 *     @type string   $size          Avatar size. Uses 's', 'm', 'l', 'xl'. Default 'm'.
+	 *     @type string   $size          Avatar size. Uses 'xs', 's', 'm', 'l', 'xl'. Default 'm'.
 	 *     @type string   $type          Avatar type. Uses 'square', 'round'. Default 'round'.
 	 *     @type string[] $wrapper_class Avatar wrapper additional classes.
 	 * }
@@ -621,7 +621,7 @@ class Layouts {
 		$wrapper_classes = implode( ' ', $wrapper_classes );
 
 		$thumb_size = 40;
-		if ( 's' === $args['size'] ) {
+		if ( 'xs' === $args['size'] || 's' === $args['size'] ) {
 			$thumb_size = 32;
 		} elseif ( 'l' === $args['size'] ) {
 			$thumb_size = 64;
@@ -677,7 +677,7 @@ class Layouts {
 	 * @param array    $args    {
 	 *     Avatar additional arguments.
 	 *
-	 *     @type string   $size          Avatar size. Uses 's', 'm', 'l', 'xl'. Default 'm'.
+	 *     @type string   $size          Avatar size. Uses 'xs', 's', 'm', 'l', 'xl'. Default 'm'.
 	 *     @type string   $type          Avatar type. Uses 'square', 'round'. Default 'round'.
 	 *     @type string[] $wrapper_class Avatar wrapper additional classes.
 	 * }

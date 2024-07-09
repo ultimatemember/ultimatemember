@@ -871,9 +871,13 @@
     img
       display: block
       width: 100%
+      height: auto
       float: left
       margin: 0
       padding: 0
+    &.#{$prefix}avatar-xs
+      width: 24px
+      height: 24px
     &.#{$prefix}avatar-s
       width: 32px
       height: 32px
@@ -898,6 +902,8 @@
     padding: 0
     +border-box
     position: relative
+    &.#{$prefix}avatars-list-xs
+      margin: 0 0 0 $spacing-md
     &.#{$prefix}avatars-list-s
       margin: 0 0 0 $spacing-lg
     &.#{$prefix}avatars-list-m
@@ -909,6 +915,8 @@
     .#{$prefix}avatar
       border: 1.5px solid $um-white
       position: relative
+      &.#{$prefix}avatar-xs
+        margin-left: -$spacing-md
       &.#{$prefix}avatar-s
         margin-left: -$spacing-lg
       &.#{$prefix}avatar-m
