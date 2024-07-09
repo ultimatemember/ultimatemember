@@ -95,11 +95,15 @@
               margin: 0
               padding: 0
               +border-box
+              input
+                max-width: 140px
             .#{$prefix}time-range-row
               width: 100%
               margin: 0
               padding: 0
               +border-box
+              input
+                max-width: 140px
       .#{$prefix}member-directory-header-row-grid
         width: 100%
         display: grid
@@ -468,11 +472,22 @@
                 &.#{$prefix}member-meta-no-animate
                   display: grid
                   grid-template-rows: 1fr
-              //.#{$prefix}link.#{$prefix}meta-toggle.#{$prefix}toggle-button-active
-              //  padding: $spacing-sm 0 0 0
             &.#{$prefix}member-no-actions
               .#{$prefix}member-box-main
                 padding: 0
+            .#{$prefix}member-skeleton
+              padding: $spacing-xl
+              .#{$prefix}member-skeleton-inner
+                +flex( row, flex-start, center, nowrap )
+                column-gap: $spacing-xl
+                width: 100%
+                height: 100%
+                overflow: hidden
+                +border-box
+                .#{$prefix}skeleton-box-avatar
+                  width: 64px
+                  height: 64px
+                  margin: 0
       &.#{$prefix}display-none
         display: none
     &.#{$prefix}ui-xs
