@@ -12,6 +12,25 @@ foreach ( UM()->builtin()->all_user_fields() as $key => $arr ) {
 $_um_tagline_fields = get_post_meta( $post_id, '_um_tagline_fields', true );
 $_um_reveal_fields  = get_post_meta( $post_id, '_um_reveal_fields', true );
 
+$cover_photos_field = array(
+	'id'      => '_um_cover_photos',
+	'type'    => 'checkbox',
+	'label'   => __( 'Enable Cover Photo', 'ultimate-member' ),
+	'tooltip' => __( 'If turned on, the users cover photo will appear in the directory', 'ultimate-member' ),
+	'value'   => (bool) get_post_meta( $post_id, '_um_cover_photos', true ),
+);
+if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+	$cover_photos_field = array(
+		'id'      => '_um_cover_photos',
+		'type'    => 'checkbox',
+		'label'   => __( 'Enable Cover Photo', 'ultimate-member' ),
+		'value'   => (bool) get_post_meta( $post_id, '_um_cover_photos', true ),
+		'checkbox_label' => __( 'Enable Cover Photo (for grid view only).', 'ultimate-member' ),
+		'description'    => __( 'If turned on, the users cover photo will appear in the directory.', 'ultimate-member' ),
+		'conditional' => array( '_um_view_types_grid', '~', 1 ),
+	);
+}
+
 $fields = array(
 	array(
 		'id'    => '_um_profile_photo',
@@ -19,13 +38,7 @@ $fields = array(
 		'label' => __( 'Enable Profile Photo', 'ultimate-member' ),
 		'value' => (bool) get_post_meta( $post_id, '_um_profile_photo', true ),
 	),
-	array(
-		'id'      => '_um_cover_photos',
-		'type'    => 'checkbox',
-		'label'   => __( 'Enable Cover Photo', 'ultimate-member' ),
-		'tooltip' => __( 'If turned on, the users cover photo will appear in the directory', 'ultimate-member' ),
-		'value'   => (bool) get_post_meta( $post_id, '_um_cover_photos', true ),
-	),
+	$cover_photos_field,
 	array(
 		'id'    => '_um_show_name',
 		'type'  => 'checkbox',

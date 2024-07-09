@@ -730,6 +730,17 @@
   height: 64px;
   margin: 0;
 }
+.um.um-directory .um-members-wrapper.um-members-list .um-box.um-member .um-member-skeleton .um-member-skeleton-inner .um-skeleton-box-group {
+  flex: 1;
+  align-self: start;
+  gap: 6px;
+}
+.um.um-directory .um-members-wrapper.um-members-list .um-box.um-member .um-member-skeleton .um-member-skeleton-inner .um-skeleton-box-group .um-skeleton-box-header {
+  height: 24px;
+}
+.um.um-directory .um-members-wrapper.um-members-list .um-box.um-member .um-member-skeleton .um-member-skeleton-inner .um-skeleton-box-group .um-skeleton-box {
+  height: 20px;
+}
 .um.um-directory .um-members-wrapper.um-display-none {
   display: none;
 }
