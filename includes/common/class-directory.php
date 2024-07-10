@@ -13,6 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Directory {
 
 	/**
+	 * Member Directory Views
+	 *
+	 * @var array
+	 */
+	public $view_types = array();
+
+	/**
 	 * Fields used for searching from wp_users table.
 	 *
 	 * @var string[]
@@ -65,6 +72,11 @@ class Directory {
 	 *
 	 */
 	public function init_variables() {
+		$this->view_types = array(
+			'grid' => __( 'Grid', 'ultimate-member' ),
+			'list' => __( 'List', 'ultimate-member' ),
+		);
+		$this->view_types = apply_filters( 'um_member_directory_views', $this->view_types );
 
 		// Filters
 		$this->filter_fields = array(

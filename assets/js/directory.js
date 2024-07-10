@@ -87,6 +87,7 @@ UM.frontend.directory = function( hash ) {
 	this.hash = hash;
 	this.wrapper = jQuery('.um-directory[data-hash="' + hash + '"]');
 	this.defaultOrder = this.wrapper.data('default-order');
+	this.defaultLayout = this.wrapper.data('default-layout');
 };
 
 UM.frontend.directory.prototype = {
@@ -99,6 +100,7 @@ UM.frontend.directory.prototype = {
 	search: '',
 	order: '',
 	defaultOrder: '',
+	defaultLayout: '',
 	filters: {},
 	layout: '',
 	getDataFromURL: function( dataKey ) {
@@ -193,8 +195,45 @@ UM.frontend.directory.prototype = {
 	getLastResponse: function () {
 		return this.lastResponse;
 	},
-	setLayout: function( layout ) {
+	setLayout: function( layout, args ) {
+		let switcher = this.wrapper.find('.um-member-view-switcher');
+		if ( ! switcher.length ) {
+			return;
+		}
+
+		let ignoreURL = false;
+		if ( 'undefined' !== typeof( args ) && args.hasOwnProperty('ignoreURL') && false !== args.ignoreURL ) {
+			ignoreURL = true;
+		}
+
+		let updateUI = false;
+		if ( 'undefined' !== typeof( args ) && args.hasOwnProperty('updateUI') && false !== args.updateUI ) {
+			updateUI = true;
+		}
+
+		// let defaultView = switcher.find('.um-member-directory-view-type[data-default="1"]').data('type');
+		if ( '' === layout ) {
+			layout = this.defaultLayout;
+		}
+
+		if ( updateUI ) {
+			let prevType = switcher.find('.um-member-directory-view-type.current').data('type');
+			this.wrapper.find('.um-members-wrapper.um-members-' + prevType).removeClass('um-members-' + prevType);
+			this.wrapper.find('.um-members-wrapper').addClass('um-members-' + layout);
+
+			switcher.find('.um-member-directory-view-type').removeClass('current');
+			switcher.find('.um-member-directory-view-type[data-type="' + layout + '"]').addClass('current');
+		}
+
 		this.layout = layout;
+
+		if ( ! ignoreURL ) {
+			if ( this.defaultLayout === layout ) {
+				this.setDataToURL( 'view_type', '' );
+			} else {
+				this.setDataToURL( 'view_type', layout );
+			}
+		}
 	},
 	getLayout: function() {
 		return this.layout;
@@ -473,6 +512,7 @@ UM.frontend.directory.prototype = {
 
 		// Hide wrapper and pagination on every action otherwise pagination
 		if ( ! paginationAction ) {
+			this.wrapper.find( '.um-members-counter' ).text( '' );
 			this.wrapper.find( '.um-members-wrapper' ).addClass( 'um-display-none' );
 			this.wrapper.find( '.um-members-pagination-box' ).addClass( 'um-display-none' );
 		} else {
@@ -514,83 +554,6 @@ UM.frontend.directory.prototype = {
 		for ( const key in filters ) {
 			request[ key ] = filters[ key ];
 		}
-
-		// if ( this.wrapper.find('.um-search-filter').length ) {
-		// 	this.wrapper.find('.um-search-filter').each( function() {
-		// 		var filter = jQuery(this);
-		//
-		// 		if ( filter.find( '.um-slider' ).length ) {
-		// 			var filter_name = filter.find( '.um-slider' ).data('field_name');
-		//
-		// 			var value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
-		// 			var value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
-		// 			if ( typeof value_from != 'undefined' || typeof value_to != 'undefined' ) {
-		// 				request[ filter_name ] = [ value_from, value_to ];
-		// 			}
-		// 		} else if ( filter.find( '.um-datepicker-filter' ).length ) {
-		// 			var filter_name = filter.find( '.um-datepicker-filter' ).data('filter_name');
-		// 			var value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
-		// 			var value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
-		// 			if (  typeof value_from != 'undefined' || typeof value_to != 'undefined') {
-		// 				request[ filter_name ] = [ value_from, value_to ];
-		// 			}
-		// 		} else if ( filter.find( '.um-timepicker-filter' ).length ) {
-		// 			var filter_name = filter.find( '.um-timepicker-filter' ).data('filter_name');
-		// 			var value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
-		// 			var value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
-		//
-		// 			if ( typeof value_from != 'undefined' ) {
-		// 				var value_from = value_from.split(':');
-		// 				var hours = value_from[0]*1;
-		// 				if ( hours < 10 ) {
-		// 					hours = '0' + hours;
-		// 				}
-		//
-		// 				var minutes = value_from[1]*1;
-		// 				if ( minutes < 10 ) {
-		// 					minutes = '0' + minutes;
-		// 				}
-		//
-		// 				value_from = hours + ':' + minutes + ':00';
-		// 			}
-		// 			if ( typeof value_to != 'undefined' ) {
-		// 				var val_to = value_to.split(':');
-		// 				var minutes = val_to[1]*1;
-		//
-		// 				var hours = val_to[0]*1;
-		// 				if ( hours < 10 ) {
-		// 					hours = '0' + hours;
-		// 				}
-		//
-		// 				if ( minutes < 10 ) {
-		// 					minutes = '0' + minutes;
-		// 				}
-		//
-		// 				value_to = hours + ':' + minutes + ':59';
-		// 			}
-		//
-		// 			if ( typeof value_from != 'undefined' || typeof value_to != 'undefined' ) {
-		// 				request[ filter_name ] = [ value_from, value_to ];
-		// 			}
-		// 		} else if (  filter.find( 'select' ).length ) {
-		// 			var filter_name = filter.find('select').attr('name');
-		// 			var value = um_get_data_for_directory( directory, 'filter_' + filter_name );
-		// 			if ( typeof value != 'undefined' ) {
-		// 				value = UM.common.form.unsanitizeValue( value );
-		// 				request[ filter_name ] = value.split( '||' );
-		// 			}
-		// 		} else if ( filter.hasClass( 'um-text-filter-type' ) && filter.find('input[type="text"]').length ) {
-		// 			var filter_name = filter.find('input[type="text"]').attr('name');
-		// 			var value = um_get_data_for_directory( directory, 'filter_' + filter_name );
-		// 			if ( typeof value != 'undefined' ) {
-		// 				value = UM.common.form.unsanitizeValue( value );
-		// 				request[ filter_name ] = value;
-		// 			}
-		// 		} else {
-		// 			request = wp.hooks.applyFilters( 'um_member_directory_custom_filter_handler', request, filter, directory );
-		// 		}
-		// 	});
-		// }
 
 		request = wp.hooks.applyFilters( 'um_member_directory_filter_request', request );
 
@@ -711,23 +674,8 @@ jQuery(document.body).ready( function() {
 		let data = directoryObj.getLastResponse();
 		if ( data !== null ) {
 			let layout = $this.data('type');
-			let defaultView = $this.data('default');
-			let prevType = $this.parents('.um-member-view-switcher').find('.um-button-in-group.current').data('type');
 
-			directory.find('.um-members-wrapper.um-members-' + prevType).removeClass('um-members-' + prevType);
-
-			$this.parents('.um-member-view-switcher').find('.um-button-in-group').removeClass('current');
-			$this.addClass('current');
-
-			directory.find('.um-members-wrapper').addClass('um-members-' + layout);
-
-			directoryObj.setLayout( layout );
-
-			if ( defaultView ) {
-				directoryObj.setDataToURL('view_type', '');
-			} else {
-				directoryObj.setDataToURL('view_type', layout);
-			}
+			directoryObj.setLayout( layout, {updateUI:true} );
 
 			um_build_template( directoryObj, data );
 			um_init_new_dropdown();
@@ -1040,6 +988,13 @@ jQuery(document.body).ready( function() {
 
 		wp.hooks.doAction( 'um_member_directory_on_init', directory, hash );
 
+		let layout = directoryObj.getDataFromURL( 'view_type' );
+		if ( 'undefined' !== typeof layout ) {
+			directoryObj.setLayout( layout, {ignoreURL:true} );
+		} else {
+			directoryObj.setLayout( directoryObj.defaultLayout );
+		}
+
 		let page = directoryObj.getDataFromURL( 'page' );
 		if ( 'undefined' !== typeof page ) {
 			directoryObj.setPage(page, {ignoreURL:true});
@@ -1052,12 +1007,10 @@ jQuery(document.body).ready( function() {
 
 		let order = directoryObj.getDataFromURL( 'sort' );
 		if ( 'undefined' !== typeof order ) {
-			directoryObj.setOrder(order, true);
+			directoryObj.setOrder(order, {ignoreURL:true});
 		}
 
 		directoryObj.setFilters( true );
-
-		directoryObj.setLayout( directory.data('view_type') );
 
 		let ignoreMustSearch = wp.hooks.applyFilters( 'um_member_directory_ignore_after_search', false, directory );
 		if ( false === ignoreMustSearch ) {
@@ -1108,16 +1061,11 @@ jQuery(document.body).ready( function() {
 
 			directoryObj.setFilters( true );
 
-			// View type from history
-			if ( directory.find( '.um-member-directory-view-type' ).length ) {
-				var layout = um_get_data_for_directory( directory, 'view_type' );
-				if ( typeof layout == 'undefined' ) {
-					layout = directory.find( '.um-member-directory-view-type-a[data-default="1"]' ).data('type');
-				}
-				directory.data( 'view_type', layout );
-
-				directory.find('.um-member-directory-view-type .um-member-directory-view-type-a').hide();
-				directory.find('.um-member-directory-view-type .um-member-directory-view-type-a[data-type="' + layout + '"]').show();
+			let layout = directoryObj.getDataFromURL( 'view_type' );
+			if ( 'undefined' !== typeof layout ) {
+				directoryObj.setLayout( layout, {ignoreURL:true,updateUI:true} );
+			} else {
+				directoryObj.setLayout( '', {ignoreURL:true,updateUI:true} );
 			}
 
 			let ignoreMustSearch = wp.hooks.applyFilters( 'um_member_directory_ignore_after_search', false, directory );

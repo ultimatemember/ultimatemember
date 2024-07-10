@@ -45,7 +45,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ); ?>"
 	data-hash="<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ); ?>" data-base-post="<?php echo esc_attr( $post_id ); ?>"
 	data-must-search="<?php echo esc_attr( $must_search ); ?>" data-searched="<?php echo $not_searched ? '0' : '1'; ?>"
-	data-view_type="<?php echo esc_attr( $current_view ); ?>" data-page="<?php echo esc_attr( $current_page ); ?>"
+	data-default-layout="<?php echo esc_attr( $default_view ); ?>" data-page="<?php echo esc_attr( $current_page ); ?>"
 	data-default-order="<?php echo esc_attr( $default_sorting ); ?>" data-sorting="<?php echo esc_attr( $sort_from_url ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'um_member_directory' ) ); ?>">
 	<?php
 	$header_classes = array( 'um-member-directory-header' );
