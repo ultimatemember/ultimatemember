@@ -120,9 +120,14 @@ UM.common = {
 		}
 	},
 	form: {
-		vanillaSerialize: function ( formID ) {
-			let form = document.querySelector('#' + formID);
-			let data = new FormData( form );
+		vanillaSerialize: function ( form ) {
+			let formObj;
+			if (typeof form === "string") {
+				formObj = document.querySelector('#' + form);
+			} else {
+				formObj = form[0];
+			}
+			let data = new FormData( formObj );
 
 			let obj = {};
 			for (let [key, value] of data) {
@@ -152,6 +157,17 @@ UM.common = {
 			e.innerHTML = input;
 			// handle case of empty input
 			return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+		},
+		messageTimeout: function( wrapper, message, timeout = 1000, callback = null ) {
+			wrapper.html( message ).removeClass( 'um-display-none' );
+
+			if ( callback ) {
+				callback( wrapper );
+			}
+
+			setTimeout(() => {
+				wrapper.html( '' ).addClass( 'um-display-none' ).removeClass( ['um-error-text','um-success-text'] );
+			}, timeout );
 		}
 	}
 }

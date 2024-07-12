@@ -284,6 +284,8 @@ UM.frontend = {
 
 									if ( ! fileRow.length ) {
 										let $cloned = $uploader.find('.um-uploader-file-placeholder').clone().addClass('um-uploader-file').removeClass('um-uploader-file-placeholder um-display-none').attr('id',file.id);
+										$cloned.find('.um-uploaded-value').prop('disabled',false);
+										$cloned.find('.um-uploaded-value-hash').prop('disabled',false);
 										$fileList.append( $cloned );
 
 										fileRow = $fileList.find('#' + file.id);

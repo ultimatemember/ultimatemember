@@ -3078,3 +3078,9 @@
 .um .um-visible {
   visibility: visible;
 }
+.um .um-error-text {
+  color: var(--um-error-500, #f04438);
+}
+.um .um-success-text {
+  color: var(--um-success-500, #12b76a);
+}
