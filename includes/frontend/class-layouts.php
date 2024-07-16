@@ -359,20 +359,37 @@ class Layouts {
 	 *
 	 * @return string
 	 */
-	public static function ajax_loader( $size = 'l' ) {
+	public static function ajax_loader( $size = 'l', $args = array() ) {
 		if ( ! in_array( $size, array( 's', 'm', 'l', 'xl' ), true ) ) {
 			return '';
 		}
 
+		$args = wp_parse_args(
+			$args,
+			array(
+				'size'    => $size,
+				'id'      => '',
+				'classes' => array(),
+			)
+		);
+
+		$hash = md5( maybe_serialize( $args ) );
+
 		static $content = array();
 
-		if ( ! empty( $content[ $size ] ) ) {
-			return $content[ $size ];
+		if ( ! empty( $content[ $hash ] ) ) {
+			return $content[ $hash ];
 		}
+
+		$classes = array(
+			'um-ajax-spinner-svg',
+			'um-ajax-spinner-' . $args['size'],
+		);
+		$classes = array_merge( $classes, $args['classes'] );
 
 		ob_start();
 		?>
-		<span class="um-ajax-spinner-svg um-ajax-spinner-<?php echo esc_attr( $size ); ?>">
+		<span class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
 			<?php
 			if ( 'm' === $size ) {
 				?>
@@ -399,9 +416,9 @@ class Layouts {
 			?>
 		</span>
 		<?php
-		$content[ $size ] = ob_get_clean();
+		$content[ $hash ] = ob_get_clean();
 
-		return $content[ $size ];
+		return $content[ $hash ];
 	}
 
 	/**

@@ -145,7 +145,7 @@
 			}
 
 			/* Handlers */
-			$modal.on( 'click', 'a:not([href^="javascript"])', this.stopEvent );
+			$modal.on( 'click', 'a:not([href^="javascript"]):not([href="#"])', this.stopEvent );
 			$modal.on( 'touchmove', this.stopEvent );
 
 			$modalBody.find( 'img' ).on( 'load', function () {

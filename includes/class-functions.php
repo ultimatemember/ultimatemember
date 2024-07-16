@@ -39,7 +39,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 *
 		 * @return bool
 		 */
-		function is_ajax() {
+		public function is_ajax() {
 			return function_exists( 'wp_doing_ajax' ) ? wp_doing_ajax() : defined( 'DOING_AJAX' );
 		}
 

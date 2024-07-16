@@ -2353,10 +2353,24 @@
   .#{$prefix}supporting-text
     color: $gray-600
     +typography( text, sm, regular )
+    .#{$prefix}link
+      color: $gray-600
+      +typography( text, sm, regular )
+      text-decoration: none
+      border: none
+      box-shadow: none
+      &:active,
+      &:hover,
+      &:visited
+        color: $gray-600
+        +typography( text, sm, regular )
+        text-decoration: none
+        border: none
+        box-shadow: none
   .#{$prefix}full-width
     width: 100%
   .#{$prefix}display-none
-    display: none
+    display: none !important // has to be important to rewrite some major display settings without additional styles.
   .#{$prefix}hidden
     visibility: hidden
   .#{$prefix}visible
@@ -2365,3 +2379,5 @@
     color: $error-500
   .#{$prefix}success-text
     color: $success-500
+  .#{$prefix}align-center
+    text-align: center
