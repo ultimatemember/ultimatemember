@@ -284,8 +284,18 @@ UM.frontend = {
 
 									if ( ! fileRow.length ) {
 										let $cloned = $uploader.find('.um-uploader-file-placeholder').clone().addClass('um-uploader-file').removeClass('um-uploader-file-placeholder um-display-none').attr('id',file.id);
-										$cloned.find('.um-uploaded-value').prop('disabled',false);
-										$cloned.find('.um-uploaded-value-hash').prop('disabled',false);
+
+										let objSelectors = [
+											'.um-uploaded-value',
+											'.um-uploaded-value-hash',
+										];
+
+										for ( let i = 0; i < objSelectors.length; i++ ) {
+											let name = $cloned.find(objSelectors[i]).attr('name');
+											name = name.replace( '\{\{\{file_id\}\}\}', file.id );
+											$cloned.find(objSelectors[i]).prop('disabled',false).attr('name', name );
+										}
+
 										$fileList.append( $cloned );
 
 										fileRow = $fileList.find('#' + file.id);
@@ -296,6 +306,10 @@ UM.frontend = {
 										}
 										fileRow.find('.um-file-extension-text').text(extension);
 										fileRow.find('.um-supporting-text').text(plupload.formatSize(file.size));
+
+										if ( $fileList.hasClass('um-uploader-filelist-sortable') ) {
+											$fileList.sortable();
+										}
 									}
 								}
 							}
@@ -392,6 +406,13 @@ UM.frontend = {
 				UM.frontend.uploaders[ uploaderObj['id'] ] = uploaderObj;
 				$uploader.data('plupload',uploaderObj['id']);
 				uploaderObj.init();
+
+				if ( $fileList.length && $fileList.hasClass('um-uploader-filelist-sortable') ) {
+					let actionInFilter = wp.hooks.applyFilters( 'um_uploader_init_sortable_filelist', null, $fileList, handler );
+					if ( null === actionInFilter ) {
+						$fileList.sortable();
+					}
+				}
 			});
 		},
 		initActions: function () {

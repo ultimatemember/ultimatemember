@@ -1854,11 +1854,66 @@ class Layouts {
 				</div>
 				<?php
 				if ( true !== $args['async'] ) {
-					$name      = $args['multiple'] ? $args['name'] . '[]' : $args['name'];
-					$hash_name = $args['multiple'] ? $args['name'] . '_hash[]' : $args['name'] . '_hash';
+					$name      = $args['multiple'] ? $args['name'] . '[{{{file_id}}}][path]' : $args['name'] . '[path]';
+					$hash_name = $args['multiple'] ? $args['name'] . '[{{{file_id}}}][hash]' : $args['name'] . '[hash]';
 					?>
-					<input type="hidden" class="um-uploaded-value" id="<?php echo esc_attr( $args['id'] ); ?>" data-field="<?php echo esc_attr( $args['field_id'] ); ?>" name="<?php echo esc_attr( $name ); ?>" value="" />
-					<input type="hidden" class="um-uploaded-value-hash" id="<?php echo esc_attr( $args['field_id'] ); ?>_hash" name="<?php echo esc_attr( $hash_name ); ?>" value="" />
+					<input type="hidden" class="um-uploaded-value" data-field="<?php echo esc_attr( $args['field_id'] ); ?>" name="<?php echo esc_attr( $name ); ?>" value="" disabled />
+					<input type="hidden" class="um-uploaded-value-hash" name="<?php echo esc_attr( $hash_name ); ?>" value="" disabled />
+					<?php
+				}
+				?>
+			</div>
+			<?php
+			$custom_placeholder = ob_get_clean();
+		}
+
+		return $custom_placeholder;
+	}
+
+	public static function uploaded_item_edit_row( $args, $edit_value_row ) {
+		$custom_placeholder = apply_filters( 'um_upload_edit_list_item_row', null, $args, $edit_value_row );
+		if ( ! $custom_placeholder ) {
+			ob_start();
+			?>
+			<div class="um-uploader-file-placeholder um-display-none">
+				<div class="um-file-extension">
+					<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file" width="48" height="48" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--um-gray-300, #d0d5dd)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+						<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+						<path d="M14 3v4a1 1 0 0 0 1 1h4" />
+						<path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+					</svg>
+					<span class="um-file-extension-text">{{{extension}}}</span>
+				</div>
+				<div class="um-uploader-file-data">
+					<div class="um-uploader-file-data-header">
+						<div class="um-uploader-file-name">{{{name}}}</div>
+						<?php
+						$button_content = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 7l16 0" />
+  <path d="M10 11l0 6" />
+  <path d="M14 11l0 6" />
+  <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+  <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+</svg>';
+						$button_args    = array(
+							'type'          => 'button',
+							'icon_position' => 'content',
+							'design'        => 'link-gray',
+							'size'          => 's',
+							'classes'       => array( 'um-uploader-file-remove' ),
+						);
+						echo wp_kses( self::button( $button_content, $button_args ), UM()->get_allowed_html( 'templates' ) );
+						?>
+					</div>
+					<div class="um-supporting-text">{{{supporting}}}</div>
+					<?php echo wp_kses( self::progress_bar( array( 'label' => 'right' ) ), UM()->get_allowed_html( 'templates' ) ); ?>
+				</div>
+				<?php
+				if ( true !== $args['async'] ) {
+					$name = $args['multiple'] ? $args['name'] . '[{{{file_id}}}][path]' : $args['name'] . '[path]';
+					?>
+					<input type="hidden" class="um-uploaded-value" data-field="<?php echo esc_attr( $args['field_id'] ); ?>" name="<?php echo esc_attr( $name ); ?>" value="" />
 					<?php
 				}
 				?>
@@ -1883,6 +1938,7 @@ class Layouts {
 				'async'           => true,
 				'field_id'        => '',
 				'name'            => '',
+				'value'           => '',
 				'handler'         => '',
 				'multiple'        => true,
 				'nonce'           => '',
@@ -1891,6 +1947,7 @@ class Layouts {
 				'dropzone'        => true,
 				'dropzone_inner'  => '',
 				'files_list'      => true,
+				'sortable_files'  => false,
 				'max_upload_size' => wp_max_upload_size(),
 			)
 		);
@@ -1918,6 +1975,10 @@ class Layouts {
 
 		if ( empty( $mime_types ) ) {
 			return '';
+		}
+
+		if ( ! empty( $args['value'] ) ) {
+			$args['value'] = is_array( $args['value'] ) ? $args['value'] : array( $args['value'] );
 		}
 
 		if ( empty( $args['max_upload_size'] ) ) {
@@ -2012,8 +2073,25 @@ class Layouts {
 
 			if ( ! empty( $args['files_list'] ) ) {
 				echo wp_kses( self::upload_item_placeholder( $args ), UM()->get_allowed_html( 'templates' ) );
+				$filelist_classes = array(
+					'um-uploader-filelist',
+				);
+				if ( empty( $args['value'] ) ) {
+					$filelist_classes[] = 'um-display-none';
+				}
+				if ( ! empty( $args['sortable_files'] ) ) {
+					$filelist_classes[] = 'um-uploader-filelist-sortable';
+				}
 				?>
-				<div id="um-<?php echo esc_attr( $id ); ?>-uploader-filelist" class="um-uploader-filelist um-display-none"></div>
+				<div id="um-<?php echo esc_attr( $id ); ?>-uploader-filelist" class="<?php echo esc_attr( implode( ' ', $filelist_classes ) ); ?>">
+					<?php
+					if ( ! empty( $args['value'] ) ) {
+						foreach ( $args['value'] as $file_row_value ) {
+							echo wp_kses( self::uploaded_item_edit_row( $args, $file_row_value ), UM()->get_allowed_html( 'templates' ) );
+						}
+					}
+					?>
+				</div>
 				<?php
 			}
 			?>

@@ -2353,20 +2353,6 @@
   .#{$prefix}supporting-text
     color: $gray-600
     +typography( text, sm, regular )
-    .#{$prefix}link
-      color: $gray-600
-      +typography( text, sm, regular )
-      text-decoration: none
-      border: none
-      box-shadow: none
-      &:active,
-      &:hover,
-      &:visited
-        color: $gray-600
-        +typography( text, sm, regular )
-        text-decoration: none
-        border: none
-        box-shadow: none
   .#{$prefix}full-width
     width: 100%
   .#{$prefix}display-none
@@ -2381,3 +2367,19 @@
     color: $success-500
   .#{$prefix}align-center
     text-align: center
+
+.um
+  .#{$prefix}link.#{$prefix}link-secondary
+    color: $gray-600
+    +typography( text, sm, regular )
+    text-decoration: none
+    border: none
+    box-shadow: none
+    &:active,
+    &:hover,
+    &:visited
+      color: $gray-600
+      +typography( text, sm, regular )
+      text-decoration: none
+      border: none
+      box-shadow: none
