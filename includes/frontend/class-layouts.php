@@ -1901,7 +1901,7 @@ class Layouts {
 							'icon_position' => 'content',
 							'design'        => 'link-gray',
 							'size'          => 's',
-							'classes'       => array( 'um-uploader-file-remove' ),
+							'classes'       => array( 'um-uploader-file-remove', 'um-tip-n' ),
 						);
 						echo wp_kses( self::button( $button_content, $button_args ), UM()->get_allowed_html( 'templates' ) );
 						?>

@@ -467,6 +467,8 @@ UM.frontend = {
 
 					uploaderObj.removeFile( fileID );
 					$fileRow.remove();
+
+					wp.hooks.doAction( 'um_uploader_after_file_row_removed', $uploader, fileID, uploaderObj );
 				}
 
 				if ( ! $fileRow.hasClass('um-upload-failed') ) {
