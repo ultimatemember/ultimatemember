@@ -75,9 +75,25 @@ class Filesystem {
 	public static function image_mimes( $context = 'list' ) {
 		$mimes = array();
 
+		static $allowed_for_user = null;
+		if ( empty( $allowed_for_user ) ) {
+			$allowed_for_user = get_allowed_mime_types();
+		}
+
+		if ( empty( $allowed_for_user ) ) {
+			return $mimes;
+		}
+
 		if ( 'list' === $context ) {
 			$all_mimes = wp_get_ext_types();
 			$mimes     = array_key_exists( 'image', $all_mimes ) ? $all_mimes['image'] : array( 'jpg', 'jpeg', 'jpe', 'gif', 'png', 'bmp', 'tif', 'tiff', 'ico', 'heic', 'webp', 'avif' );
+
+			$all_extensions = array();
+			foreach ( $allowed_for_user as $extensions => $mime ) {
+				$all_extensions[] = explode( '|', $extensions );
+			}
+			$all_extensions = array_merge( ...$all_extensions );
+			$mimes          = array_intersect( $mimes, $all_extensions );
 
 			/**
 			 * Filters the MIME-types of the images that can be uploaded as Company Logo.
@@ -102,6 +118,8 @@ class Filesystem {
 				'ico'          => 'image/x-icon',
 				'heic'         => 'image/heic',
 			);
+
+			$mimes = array_intersect( $mimes, $allowed_for_user );
 
 			/**
 			 * Filters the MIME-types of the images that can be uploaded via UM uploader
