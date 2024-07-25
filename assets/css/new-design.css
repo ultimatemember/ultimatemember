@@ -1176,6 +1176,9 @@
 .um .um-avatars-list .um-avatar {
   border: 1.5px solid #fff;
   position: relative;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 .um .um-avatars-list .um-avatar.um-avatar-xs {
   margin-left: -8px;
