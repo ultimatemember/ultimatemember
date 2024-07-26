@@ -509,6 +509,11 @@ UM.frontend = {
 				data[ attr[0] ] = attr[1];
 			});
 			return data;
+		},
+		setURLSearchParam: function( key, value ) {
+			const url = new URL(window.location.href);
+			url.searchParams.set(key, value);
+			window.history.pushState({ path: url.href }, '', url.href);
 		}
 	},
 	choices: {
