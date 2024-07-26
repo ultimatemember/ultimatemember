@@ -514,6 +514,11 @@ UM.frontend = {
 			const url = new URL(window.location.href);
 			url.searchParams.set(key, value);
 			window.history.pushState({ path: url.href }, '', url.href);
+		},
+		deleteURLSearchParam: function( key ) {
+			const url = new URL(window.location.href);
+			url.searchParams.delete(key);
+			window.history.pushState({ path: url.href }, '', url.href);
 		}
 	},
 	choices: {
