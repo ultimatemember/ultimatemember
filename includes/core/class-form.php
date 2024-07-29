@@ -856,15 +856,13 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 										case 'vimeo_video':
 										case 'soundcloud_track':
 										case 'spotify':
+										case 'tel':
 											$form[ $k ] = sanitize_text_field( $form[ $k ] );
 											break;
 										case 'multiselect':
 										case 'radio':
 										case 'checkbox':
 											$form[ $k ] = is_array( $form[ $k ] ) ? array_map( 'sanitize_text_field', $form[ $k ] ) : sanitize_text_field( $form[ $k ] );
-											break;
-										case 'tel':
-											$form[ $k ] = sanitize_text_field( $field );
 											break;
 									}
 								}
