@@ -244,7 +244,7 @@ UM.frontend = {
 							wp.hooks.doAction( 'um_uploader_error', $uploader, up, err );
 							if ( 'undefined' !== typeof err.file ) {
 								if ( $fileList.length ) {
-									$fileList.removeClass('um-display-none');
+									$fileList.umShow();
 									let fileRow = $fileList.find('#' + err.file.id);
 
 									if ( ! fileRow.length ) {
@@ -271,7 +271,7 @@ UM.frontend = {
 							let actionInFilter = wp.hooks.applyFilters( 'um_uploader_file_filtered', null, $button, up, file );
 							if ( null === actionInFilter ) {
 								if ( $fileList.length ) {
-									$fileList.removeClass('um-display-none');
+									$fileList.umShow();
 
 									// flush files list if there is only 1 file can be uploaded.
 									if ( ! up.getOption( 'multi_selection' ) ) {
@@ -388,7 +388,6 @@ UM.frontend = {
 						},
 						UploadComplete: function ( up, files ) {
 							wp.hooks.doAction( 'um_uploader_upload_complete', $uploader, up, files );
-							// $button.parents('.um-uploader').find('.um-uploader-overflow').addClass('um-display-none');
 						}
 					}
 				};
@@ -685,25 +684,6 @@ UM.frontend = {
 		}
 	}
 }
-
-// Custom jQuery functions.
-jQuery.fn.extend({
-	umShow: function() {
-		return this.each(function() {
-			jQuery(this).removeClass( 'um-display-none' );
-		});
-	},
-	umHide: function() {
-		return this.each(function() {
-			jQuery(this).addClass( 'um-display-none' );
-		});
-	},
-	umToggle: function() {
-		return this.each(function() {
-			jQuery(this).toggleClass( 'um-display-none' );
-		});
-	}
-});
 
 wp.hooks.addAction( 'um_remove_modal', 'um_common_frontend', function() {
 	UM.frontend.cropper.destroy();

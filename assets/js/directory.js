@@ -270,7 +270,7 @@ UM.frontend.directory.prototype = {
 		}
 
 		if ( updateUI ) {
-			this.wrapper.find( '.um-members-pagination-box' ).addClass( 'um-display-none' );
+			this.wrapper.find( '.um-members-pagination-box' ).umHide();
 		}
 
 		page = parseInt( page );
@@ -504,17 +504,17 @@ UM.frontend.directory.prototype = {
 			this.preloaderShow();
 		}
 
-		this.wrapper.find('.um-member-directory-must-search').addClass( 'um-display-none' );
-		this.wrapper.find('.um-member-directory-empty-search-result' ).addClass( 'um-display-none' );
-		this.wrapper.find('.um-member-directory-empty-no-search-result' ).addClass( 'um-display-none' );
+		this.wrapper.find('.um-member-directory-must-search').umHide();
+		this.wrapper.find('.um-member-directory-empty-search-result' ).umHide();
+		this.wrapper.find('.um-member-directory-empty-no-search-result' ).umHide();
 		this.wrapper.find( '.um-member-directory-sorting .um-dropdown-wrapper .um-button' ).prop( 'disabled', true );
 		this.wrapper.find( '.um-member-view-switcher' ).addClass( 'um-disabled' );
 
 		// Hide wrapper and pagination on every action otherwise pagination
 		if ( ! paginationAction ) {
 			this.wrapper.find( '.um-members-counter' ).text( '' );
-			this.wrapper.find( '.um-members-wrapper' ).addClass( 'um-display-none' );
-			this.wrapper.find( '.um-members-pagination-box' ).addClass( 'um-display-none' );
+			this.wrapper.find( '.um-members-wrapper' ).umHide();
+			this.wrapper.find( '.um-members-pagination-box' ).umHide();
 		} else {
 			this.wrapper.find( '.um-members-wrapper .um-member' ).addClass( 'um-skeleton-mode' );
 		}
@@ -575,17 +575,17 @@ UM.frontend.directory.prototype = {
 					instance.wrapper.find( '.um-member-directory-sorting .um-dropdown-wrapper .um-button' ).prop( 'disabled', false );
 					instance.wrapper.find( '.um-member-view-switcher' ).removeClass( 'um-disabled' );
 
-					instance.wrapper.find( '.um-member-directory-header' ).removeClass( 'um-display-none' );
-					instance.wrapper.find( '.um-members-wrapper' ).removeClass( 'um-display-none' );
-					instance.wrapper.find( '.um-members-pagination-box' ).removeClass( 'um-display-none' );
-					instance.wrapper.find('.um-member-directory-header-row-grid').removeClass( 'um-display-none' );
+					instance.wrapper.find( '.um-member-directory-header' ).umShow();
+					instance.wrapper.find( '.um-members-wrapper' ).umShow();
+					instance.wrapper.find( '.um-members-pagination-box' ).umShow();
+					instance.wrapper.find('.um-member-directory-header-row-grid').umShow();
 				} else {
 					if ( instance.hasSearched() ) {
-						instance.wrapper.find( '.um-member-directory-empty-search-result' ).removeClass( 'um-display-none' );
-						instance.wrapper.find( '.um-member-directory-header' ).removeClass( 'um-display-none' );
-						instance.wrapper.find( '.um-member-directory-header-row-grid' ).addClass( 'um-display-none' );
+						instance.wrapper.find( '.um-member-directory-empty-search-result' ).umShow();
+						instance.wrapper.find( '.um-member-directory-header' ).umShow();
+						instance.wrapper.find( '.um-member-directory-header-row-grid' ).umHide();
 					} else {
-						instance.wrapper.find( '.um-member-directory-empty-no-search-result' ).removeClass( 'um-display-none' );
+						instance.wrapper.find( '.um-member-directory-empty-no-search-result' ).umShow();
 					}
 				}
 
@@ -601,9 +601,9 @@ UM.frontend.directory.prototype = {
 				console.log( data );
 
 				if ( instance.hasSearched() ) {
-					instance.wrapper.find( '.um-member-directory-empty-search-result' ).removeClass( 'um-display-none' );
+					instance.wrapper.find( '.um-member-directory-empty-search-result' ).umShow();
 				} else {
-					instance.wrapper.find( '.um-member-directory-empty-no-search-result' ).removeClass( 'um-display-none' );
+					instance.wrapper.find( '.um-member-directory-empty-no-search-result' ).umShow();
 				}
 
 				instance.preloaderHide();
@@ -712,16 +712,16 @@ jQuery(document.body).ready( function() {
 			let mustSearch = parseInt( directory.data('must-search') );
 			if ( mustSearch === 1 ) {
 				if ( '' === directoryObj.getSearch() && 0 === Object.keys( directoryObj.getFilters() ).length ) {
-					directory.find('.um-member-directory-empty-search-result' ).addClass( 'um-display-none' );
-					directory.find('.um-member-directory-empty-no-search-result' ).addClass( 'um-display-none' );
+					directory.find('.um-member-directory-empty-search-result' ).umHide();
+					directory.find('.um-member-directory-empty-no-search-result' ).umHide();
 					directory.find( '.um-member-directory-sorting .um-dropdown-wrapper .um-button' ).prop( 'disabled', true );
 					directory.find( '.um-member-view-switcher' ).addClass( 'um-disabled' );
 
-					directory.find( '.um-member-directory-header-row-grid' ).addClass( 'um-display-none' );
-					directory.find( '.um-members-wrapper' ).addClass( 'um-display-none' );
-					directory.find( '.um-members-pagination-box' ).addClass( 'um-display-none' );
+					directory.find( '.um-member-directory-header-row-grid' ).umHide();
+					directory.find( '.um-members-wrapper' ).umHide();
+					directory.find( '.um-members-pagination-box' ).umHide();
 
-					directory.find('.um-member-directory-must-search').removeClass( 'um-display-none' );
+					directory.find('.um-member-directory-must-search').umShow();
 					return;
 				}
 			}
@@ -920,16 +920,16 @@ jQuery(document.body).ready( function() {
 			let mustSearch = parseInt( directory.data('must-search') );
 			if ( mustSearch === 1 ) {
 				if ( '' === directoryObj.getSearch() && 0 === Object.keys( directoryObj.getFilters() ).length ) {
-					directory.find('.um-member-directory-empty-search-result' ).addClass( 'um-display-none' );
-					directory.find('.um-member-directory-empty-no-search-result' ).addClass( 'um-display-none' );
+					directory.find('.um-member-directory-empty-search-result' ).umHide();
+					directory.find('.um-member-directory-empty-no-search-result' ).umHide();
 					directory.find( '.um-member-directory-sorting .um-dropdown-wrapper .um-button' ).prop( 'disabled', true );
 					directory.find( '.um-member-view-switcher' ).addClass( 'um-disabled' );
 
-					directory.find( '.um-member-directory-header-row-grid' ).addClass( 'um-display-none' );
-					directory.find( '.um-members-wrapper' ).addClass( 'um-display-none' );
-					directory.find( '.um-members-pagination-box' ).addClass( 'um-display-none' );
+					directory.find( '.um-member-directory-header-row-grid' ).umHide();
+					directory.find( '.um-members-wrapper' ).umHide();
+					directory.find( '.um-members-pagination-box' ).umHide();
 
-					directory.find('.um-member-directory-must-search').removeClass( 'um-display-none' );
+					directory.find('.um-member-directory-must-search').umShow();
 					return;
 				}
 			}
@@ -955,16 +955,16 @@ jQuery(document.body).ready( function() {
 			let mustSearch = parseInt( directory.data('must-search') );
 			if ( mustSearch === 1 ) {
 				if ( '' === directoryObj.getSearch() && 0 === Object.keys( directoryObj.getFilters() ).length ) {
-					directory.find('.um-member-directory-empty-search-result' ).addClass( 'um-display-none' );
-					directory.find('.um-member-directory-empty-no-search-result' ).addClass( 'um-display-none' );
+					directory.find('.um-member-directory-empty-search-result' ).umHide();
+					directory.find('.um-member-directory-empty-no-search-result' ).umHide();
 					directory.find( '.um-member-directory-sorting .um-dropdown-wrapper .um-button' ).prop( 'disabled', true );
 					directory.find( '.um-member-view-switcher' ).addClass( 'um-disabled' );
 
-					directory.find( '.um-member-directory-header-row-grid' ).addClass( 'um-display-none' );
-					directory.find( '.um-members-wrapper' ).addClass( 'um-display-none' );
-					directory.find( '.um-members-pagination-box' ).addClass( 'um-display-none' );
+					directory.find( '.um-member-directory-header-row-grid' ).umHide();
+					directory.find( '.um-members-wrapper' ).umHide();
+					directory.find( '.um-members-pagination-box' ).umHide();
 
-					directory.find('.um-member-directory-must-search').removeClass( 'um-display-none' );
+					directory.find('.um-member-directory-must-search').umShow();
 					return;
 				}
 			}

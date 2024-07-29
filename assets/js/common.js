@@ -1,3 +1,22 @@
+// Custom jQuery functions.
+jQuery.fn.extend({
+	umShow: function() {
+		return this.each(function() {
+			jQuery(this).removeClass( 'um-display-none' );
+		});
+	},
+	umHide: function() {
+		return this.each(function() {
+			jQuery(this).addClass( 'um-display-none' );
+		});
+	},
+	umToggle: function() {
+		return this.each(function() {
+			jQuery(this).toggleClass( 'um-display-none' );
+		});
+	}
+});
+
 if ( typeof ( window.UM ) !== 'object' ) {
 	window.UM = {};
 }
@@ -159,14 +178,14 @@ UM.common = {
 			return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
 		},
 		messageTimeout: function( wrapper, message, timeout = 1000, callback = null ) {
-			wrapper.html( message ).removeClass( 'um-display-none' );
+			wrapper.html( message ).umShow();
 
 			if ( callback ) {
 				callback( wrapper );
 			}
 
 			setTimeout(() => {
-				wrapper.html( '' ).addClass( 'um-display-none' ).removeClass( ['um-error-text','um-success-text'] );
+				wrapper.html( '' ).umHide().removeClass( ['um-error-text','um-success-text'] );
 			}, timeout );
 		}
 	}
