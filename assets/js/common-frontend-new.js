@@ -515,10 +515,14 @@ UM.frontend = {
 			url.searchParams.set(key, value);
 			window.history.pushState({ path: url.href }, '', url.href);
 		},
-		deleteURLSearchParam: function( key ) {
+		deleteURLSearchParam: function( key, reload = false ) {
 			const url = new URL(window.location.href);
 			url.searchParams.delete(key);
-			window.history.pushState({ path: url.href }, '', url.href);
+			if ( reload ) {
+				window.location.assign( url );
+			} else {
+				window.history.pushState({ path: url.href }, '', url.href);
+			}
 		}
 	},
 	choices: {
