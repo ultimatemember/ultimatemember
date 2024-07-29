@@ -686,6 +686,25 @@ UM.frontend = {
 	}
 }
 
+// Custom jQuery functions.
+jQuery.fn.extend({
+	umShow: function() {
+		return this.each(function() {
+			jQuery(this).removeClass( 'um-display-none' );
+		});
+	},
+	umHide: function() {
+		return this.each(function() {
+			jQuery(this).addClass( 'um-display-none' );
+		});
+	},
+	umToggle: function() {
+		return this.each(function() {
+			jQuery(this).toggleClass( 'um-display-none' );
+		});
+	}
+});
+
 wp.hooks.addAction( 'um_remove_modal', 'um_common_frontend', function() {
 	UM.frontend.cropper.destroy();
 });
