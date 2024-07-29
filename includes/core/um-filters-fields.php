@@ -144,6 +144,13 @@ add_filter( 'um_profile_field_filter_hook__vimeo_video', 'um_profile_field_filte
  * @return int|string
  */
 function um_profile_field_filter_hook__phone( $value, $data ) {
+	$value = str_replace( '+', '', $value );
+	$value = trim( $value );
+
+	if ( ! $value ) {
+		return '';
+	}
+
 	$value = '<a href="' . esc_url( 'tel:' . $value ) . '" rel="nofollow" title="' . esc_attr( $data['title'] ) . '">' . esc_html( $value ) . '</a>';
 	return $value;
 }
