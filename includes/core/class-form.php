@@ -863,6 +863,9 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 										case 'checkbox':
 											$form[ $k ] = is_array( $form[ $k ] ) ? array_map( 'sanitize_text_field', $form[ $k ] ) : sanitize_text_field( $form[ $k ] );
 											break;
+										case 'tel':
+											$form[ $k ] = sanitize_text_field( $field );
+											break;
 									}
 								}
 							}
