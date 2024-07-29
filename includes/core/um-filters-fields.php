@@ -144,7 +144,7 @@ add_filter( 'um_profile_field_filter_hook__vimeo_video', 'um_profile_field_filte
  * @return string
  */
 function um_profile_field_filter_hook__phone( $value, $data ) {
-	if ( ! trim( str_replace( '+', '', $value ) ) ) {
+	if ( empty( trim( str_replace( '+', '', $value ) ) ) ) {
 		return '';
 	}
 
