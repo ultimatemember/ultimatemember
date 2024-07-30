@@ -682,7 +682,22 @@ UM.frontend = {
 				}
 			});
 		}
-	}
+	},
+	image: {
+		lazyload: {
+			init: function () {
+				let $lazyloaded = document.querySelectorAll('.um-image-lazyload-wrapper:not(.um-inited)');
+				for (let $item = 0; $item < $lazyloaded.length; $item++) {
+					$lazyloaded[ $item ].classList.add('um-inited');
+					let $img = $lazyloaded[ $item ].querySelector('.um-image-lazyload');
+					$img.addEventListener('load', (e) => {
+						$lazyloaded[ $item ].classList.add('um-loaded');
+						// e.target.style.visibility = 'visible';
+					}, false);
+				}
+			}
+		}
+	},
 }
 
 
@@ -706,15 +721,6 @@ wp.hooks.addAction( 'um_member_directory_build_template', 'um_common_frontend', 
 	UM.frontend.dropdown.init();
 });
 
-let $lazyloaded = document.querySelectorAll('.um-image-lazyload-wrapper');
-for (let $item = 0; $item < $lazyloaded.length; $item++) {
-	let $img = $lazyloaded[ $item ].querySelector('.um-image-lazyload');
-	$img.addEventListener('load', (e) => {
-		$lazyloaded[ $item ].classList.add('um-loaded');
-		// e.target.style.visibility = 'visible';
-	}, false);
-}
-
 jQuery(document).ready(function($) {
 	UM.frontend.dropdown.init();
 	UM.frontend.toggleElements.init();
@@ -724,6 +730,8 @@ jQuery(document).ready(function($) {
 
 	UM.frontend.slider.init();
 	UM.frontend.choices.init();
+
+	UM.frontend.image.lazyload.init();
 
 	$( window ).on( 'resize', function() {
 		UM.frontend.responsive.setClass();
