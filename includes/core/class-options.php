@@ -39,7 +39,7 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		 *
 		 * @return mixed
 		 */
-		public function get( $option_id ) {
+		public function get( $option_id, $default = '' ) {
 			if ( isset( $this->options[ $option_id ] ) ) {
 				/**
 				 * Filters the plugin option.
@@ -67,7 +67,7 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 				case 'admin_email':
 					return get_bloginfo( 'admin_email' );
 				default:
-					return '';
+					return $default;
 			}
 		}
 

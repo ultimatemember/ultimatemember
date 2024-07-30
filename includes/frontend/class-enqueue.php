@@ -453,7 +453,7 @@ final class Enqueue extends \um\common\Enqueue {
 				$styles[] = "--um-error-500-a-{$opacity}:rgba(240,68,56,{$alpha});";
 			}
 
-			$palette = UM()->common()::color()->generate_palette( UM()->options()->get( 'primary_color' ) );
+			$palette = UM()->common()::color()->generate_palette( UM()->options()->get( 'primary_color', '#7f56d9' ) );
 			foreach ( $palette as $title => $colors ) {
 				$styles[] = '--um-primary-' . $title . '-bg:' . esc_attr( $colors['bg'] ) . ';';
 				$styles[] = '--um-primary-' . $title . '-fg:' . esc_attr( $colors['fg'] ) . ';';
@@ -555,7 +555,7 @@ final class Enqueue extends \um\common\Enqueue {
 				'gray900' => '#101828',
 			);
 
-			$palette = UM()->common()::color()->generate_palette( UM()->options()->get( 'primary_color' ) );
+			$palette = UM()->common()::color()->generate_palette( UM()->options()->get( 'primary_color', '#7f56d9' ) );
 			foreach ( $palette as $title => $colors ) {
 				$um_common_variables['colors'][ 'primary' . $title . 'bg' ] = $colors['bg'];
 				$um_common_variables['colors'][ 'primary' . $title . 'fg' ] = $colors['fg'];
