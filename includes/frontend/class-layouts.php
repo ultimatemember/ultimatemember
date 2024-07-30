@@ -2099,4 +2099,26 @@ class Layouts {
 		<?php
 		return ob_get_clean();
 	}
+
+	public static function lazy_image( $src, $args ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'alt'   => '',
+				'width' => '',
+			)
+		);
+		$style = '';
+		if ( ! empty( $args['width'] ) ) {
+			$style .= 'width: ' . $args['width'] . ';';
+		}
+		ob_start();
+		?>
+		<div class="um-image-lazyload-wrapper" style="<?php echo esc_attr( $style ); ?>">
+			<div class="um-skeleton-box"></div>
+			<img class="um-image-lazyload" src="<?php echo esc_url( $src ); ?>" loading="lazy" alt="<?php echo esc_attr( $args['alt'] ); ?>" />
+		</div>
+		<?php
+		return ob_get_clean();
+	}
 }

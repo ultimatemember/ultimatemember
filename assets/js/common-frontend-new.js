@@ -685,6 +685,7 @@ UM.frontend = {
 	}
 }
 
+
 wp.hooks.addAction( 'um_remove_modal', 'um_common_frontend', function() {
 	UM.frontend.cropper.destroy();
 });
@@ -704,6 +705,15 @@ wp.hooks.addAction( 'um_member_directory_loaded', 'um_common_frontend', function
 wp.hooks.addAction( 'um_member_directory_build_template', 'um_common_frontend', function() {
 	UM.frontend.dropdown.init();
 });
+
+let $lazyloaded = document.querySelectorAll('.um-image-lazyload-wrapper');
+for (let $item = 0; $item < $lazyloaded.length; $item++) {
+	let $img = $lazyloaded[ $item ].querySelector('.um-image-lazyload');
+	$img.addEventListener('load', (e) => {
+		$lazyloaded[ $item ].classList.add('um-loaded');
+		// e.target.style.visibility = 'visible';
+	}, false);
+}
 
 jQuery(document).ready(function($) {
 	UM.frontend.dropdown.init();

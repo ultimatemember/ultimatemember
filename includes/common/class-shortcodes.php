@@ -583,6 +583,39 @@ class Shortcodes {
 		ob_start();
 		?>
 		<div class="um">
+			<h3>Lazy load</h3>
+
+			<div style="display:flex;flex-direction:column;justify-content:flex-start;flex-wrap: nowrap;align-items:center; gap: 8px;">
+				<?php echo wp_kses(
+					UM()->frontend()::layouts()::lazy_image(
+						'https://images.unsplash.com/photo-1455058683937-c45857082982?q=80&w=3106&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+						array(
+							'width' => '500px',
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				); ?>
+
+				<?php echo wp_kses(
+					UM()->frontend()::layouts()::lazy_image(
+						'https://images.unsplash.com/photo-1478088702756-f16754aaf0c4?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+						array(
+							'width' => '500px',
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				); ?>
+
+				<?php echo wp_kses(
+					UM()->frontend()::layouts()::lazy_image(
+						'https://images.unsplash.com/photo-1495909617868-3fda03e184ef?q=80&w=3004&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+						array(
+							'width' => '500px',
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				); ?>
+			</div>
 
 			<h3>Avatars list</h3>
 			<div style="display:flex;flex-direction:column;justify-content:flex-start;flex-wrap: nowrap;align-items:center; gap: 8px;">
