@@ -23,6 +23,7 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		 */
 		public function __construct() {
 			$this->init_variables();
+			add_filter( 'um_get_option_filter__primary_color', array( &$this, 'set_default_color' ) );
 		}
 
 		/**
@@ -32,6 +33,14 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 			$this->options = get_option( 'um_options', array() );
 		}
 
+		public function set_default_color( $color ) {
+			if ( empty( $color ) ) {
+				$color = '#7f56d9';
+			}
+
+			return $color;
+		}
+
 		/**
 		 * Get UM option value.
 		 *
@@ -39,7 +48,7 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		 *
 		 * @return mixed
 		 */
-		public function get( $option_id, $default = '' ) {
+		public function get( $option_id ) {
 			if ( isset( $this->options[ $option_id ] ) ) {
 				/**
 				 * Filters the plugin option.
@@ -67,7 +76,7 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 				case 'admin_email':
 					return get_bloginfo( 'admin_email' );
 				default:
-					return $default;
+					return '';
 			}
 		}
 

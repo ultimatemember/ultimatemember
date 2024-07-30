@@ -578,7 +578,7 @@ class Shortcodes {
 		wp_enqueue_style( 'um_new_design' );
 		wp_enqueue_script( 'um_new_design' );
 
-		$palette = UM()->common()::color()->generate_palette( UM()->options()->get( 'primary_color', '#7f56d9' ) );
+		$palette = UM()->common()::color()->generate_palette( UM()->options()->get( 'primary_color' ) );
 
 		ob_start();
 		?>
