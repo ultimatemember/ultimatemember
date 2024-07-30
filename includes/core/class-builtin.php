@@ -1386,6 +1386,19 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable'     => true,
 					'account_only' => true,
 				),
+
+				'um-mailchimp-user-language'  => array(
+					'title'       => __( 'Mailchimp User Language', 'ultimate-member' ),
+					'metakey'     => 'um-mailchimp-user-language',
+					'type'        => 'select',
+					'label'       => __( 'Language', 'ultimate-member' ),
+					'required'    => 0,
+					'public'      => 0,
+					'default'     => 'en',
+					'options'     => array(),
+					'editable'    => true,
+					'account_only' => true,
+				),
 			);
 
 			/**
