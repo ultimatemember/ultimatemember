@@ -690,10 +690,14 @@ UM.frontend = {
 				for (let $item = 0; $item < $lazyloaded.length; $item++) {
 					$lazyloaded[ $item ].classList.add('um-inited');
 					let $img = $lazyloaded[ $item ].querySelector('.um-image-lazyload');
-					$img.addEventListener('load', (e) => {
+
+					if ( $img.complete ) {
 						$lazyloaded[ $item ].classList.add('um-loaded');
-						// e.target.style.visibility = 'visible';
-					}, false);
+					} else {
+						$img.addEventListener('load', (e) => {
+							$lazyloaded[ $item ].classList.add('um-loaded');
+						}, false);
+					}
 				}
 			}
 		}
