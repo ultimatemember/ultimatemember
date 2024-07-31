@@ -2375,20 +2375,27 @@
     text-align: center
 
 .um
-  .#{$prefix}link.#{$prefix}link-secondary
-    color: $gray-600
-    +typography( text, sm, regular )
-    text-decoration: none
-    border: none
-    box-shadow: none
-    &:active,
-    &:hover,
-    &:visited
+  .#{$prefix}link
+    &.#{$prefix}link-secondary
       color: $gray-600
       +typography( text, sm, regular )
       text-decoration: none
       border: none
       box-shadow: none
+      &:active,
+      &:hover,
+      &:visited
+        color: $gray-600
+        +typography( text, sm, regular )
+        text-decoration: none
+        border: none
+        box-shadow: none
+      &.#{$prefix}link-underline
+        text-decoration: underline
+        &:active,
+        &:hover,
+        &:visited
+          text-decoration: underline
 
 // Image lazyload
 .um
@@ -2423,3 +2430,75 @@
         visibility: visible
       .um-skeleton-box
         display: none
+
+
+// Alerts
+.um
+  .#{$prefix}alert
+    +flex( row, flex-start, center, nowrap )
+    border-bottom: 1px solid $gray-300
+    padding: 0 0 $spacing-lg 0
+    margin: 0
+    +border-box
+    .#{$prefix}alert-message
+      +flex( row, flex-start, center, nowrap )
+      width: 100%
+      column-gap: $spacing-lg
+      .#{$prefix}alert-text
+        +typography( text, sm, semibold )
+        color: $gray-700
+    &.#{$prefix}dismissible
+      +flex( row, space-between, center, nowrap )
+      column-gap: $spacing-lg
+      .#{$prefix}alert-message
+        width: auto
+        flex: 1
+    &.#{$prefix}alert-error
+      .#{$prefix}alert-icon
+        color: $error-600
+        .#{$prefix}outline-icon
+          border-color: $outline-outer-error600
+          .#{$prefix}outline-inner
+            border-color: $outline-inner-error600
+            svg
+              color: currentColor
+    &.#{$prefix}alert-warning
+      .#{$prefix}alert-icon
+        color: $warning-600
+        .#{$prefix}outline-icon
+          border-color: $outline-outer-warning600
+          .#{$prefix}outline-inner
+            border-color: $outline-inner-warning600
+            svg
+              color: currentColor
+    &.#{$prefix}alert-success
+      .#{$prefix}alert-icon
+        color: $success-600
+        .#{$prefix}outline-icon
+          border-color: $outline-outer-success600
+          .#{$prefix}outline-inner
+            border-color: $outline-inner-success600
+            svg
+              color: currentColor
+
+
+.um
+  .#{$prefix}outline-icon
+    display: block
+    margin: 0
+    padding: 0
+    +border-box
+    border-radius: $radius-full
+    border: 2px solid $outline-outer-gray600
+    .#{$prefix}outline-inner
+      display: block
+      margin: $spacing-xs
+      border-radius: $radius-full
+      border: 2px solid $outline-inner-gray600
+      +border-box
+      svg
+        display: block
+        margin: $spacing-xs
+        padding: 0
+        color: $gray-600
+        +border-box

@@ -736,6 +736,11 @@ jQuery(document).ready(function($) {
 	$( window ).on( 'resize', function() {
 		UM.frontend.responsive.setClass();
 	});
+
+	$(document.body).on('click', '.um-alert-dismiss', function (e) {
+		e.preventDefault();
+		$(this).parents('.um-alert').umHide();
+	});
 });
 
 jQuery( window ).on( 'load', function() {

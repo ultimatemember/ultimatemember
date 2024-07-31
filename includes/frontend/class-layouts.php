@@ -2121,4 +2121,76 @@ class Layouts {
 		<?php
 		return ob_get_clean();
 	}
+
+	public static function outline_icon( $icon ) {
+		ob_start();
+		?>
+		<div class="um-outline-icon">
+			<div class="um-outline-inner">
+				<?php echo wp_kses( $icon, UM()->get_allowed_html( 'templates' ) ); ?>
+			</div>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	public static function alert( $text, $args ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'type'        => 'error', // error, warning, success
+				'dismissible' => false,
+				'supporting'  => '',
+			)
+		);
+
+		$icon = '';
+		switch ( $args['type'] ) {
+			case 'error':
+			case 'warning':
+				$icon = self::outline_icon( '<svg  xmlns="http://www.w3.org/2000/svg"  width="20"  height="20"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-exclamation-circle"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 9v4" /><path d="M12 16v.01" /></svg>' );
+				break;
+			case 'success':
+				$icon = self::outline_icon( '<svg  xmlns="http://www.w3.org/2000/svg"  width="20"  height="20"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M9 12l2 2l4 -4" /></svg>' );
+				break;
+		}
+
+		$classes = array(
+			'um-alert',
+			'um-alert-' . $args['type'],
+		);
+
+		if ( ! empty( $args['dismissible'] ) ) {
+			$classes[] = 'um-dismissible';
+		}
+
+		ob_start();
+		?>
+		<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
+			<div class="um-alert-message">
+				<?php if ( ! empty( $icon ) ) { ?>
+					<div class="um-alert-icon"><?php echo wp_kses( $icon, UM()->get_allowed_html( 'templates' ) ); ?></div>
+				<?php } ?>
+				<span class="um-alert-text"><?php echo wp_kses( $text, UM()->get_allowed_html( 'templates' ) ); ?></span>
+				<?php if ( ! empty( $args['supporting'] ) ) { ?>
+					<span class="um-supporting-text"><?php echo wp_kses( $args['supporting'], UM()->get_allowed_html( 'templates' ) ); ?></span>
+				<?php } ?>
+			</div>
+			<?php
+			if ( ! empty( $args['dismissible'] ) ) {
+				$button_content = '<svg  xmlns="http://www.w3.org/2000/svg"  width="20"  height="20"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-x"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>';
+				$button_args    = array(
+					'type'          => 'button',
+					'icon_position' => 'content',
+					'design'        => 'link-gray',
+					'size'          => 's',
+					'classes'       => array( 'um-alert-dismiss' ),
+				);
+				echo wp_kses( self::button( $button_content, $button_args ), UM()->get_allowed_html( 'templates' ) );
+			}
+			?>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
 }

@@ -583,6 +583,74 @@ class Shortcodes {
 		ob_start();
 		?>
 		<div class="um">
+			<h3>Alerts</h3>
+			<div style="display:flex;flex-direction:column;justify-content:flex-start;flex-wrap: nowrap;align-items:stretch; gap: 8px;">
+				<?php echo wp_kses(
+					UM()->frontend()::layouts()::alert(
+						'My first alert',
+						array(
+							'type' => 'error',
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				); ?>
+
+				<?php echo wp_kses(
+					UM()->frontend()::layouts()::alert(
+						'Submission error',
+						array(
+							'type' => 'error',
+							'supporting' => 'Wrong nonce'
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				); ?>
+
+
+				<?php echo wp_kses(
+					UM()->frontend()::layouts()::alert(
+						'Submission error',
+						array(
+							'type' => 'error',
+							'supporting' => 'Wrong nonce. <a class="um-link um-link-secondary um-link-underline" href="#">More details</a>',
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				); ?>
+
+
+				<?php echo wp_kses(
+					UM()->frontend()::layouts()::alert(
+						'My first warning',
+						array(
+							'type' => 'warning',
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				); ?>
+
+
+				<?php echo wp_kses(
+					UM()->frontend()::layouts()::alert(
+						'My first success',
+						array(
+							'type' => 'success',
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				); ?>
+
+				<?php echo wp_kses(
+					UM()->frontend()::layouts()::alert(
+						'My first dismissible alert',
+						array(
+							'type'        => 'error',
+							'dismissible' => true,
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				); ?>
+			</div>
 			<h3>Lazy load</h3>
 
 			<div style="display:flex;flex-direction:column;justify-content:flex-start;flex-wrap: nowrap;align-items:center; gap: 8px;">
