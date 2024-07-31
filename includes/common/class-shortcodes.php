@@ -583,6 +583,10 @@ class Shortcodes {
 		ob_start();
 		?>
 		<div class="um">
+			<h3>Outline icon</h3>
+			<div style="display:flex;flex-direction:column;justify-content:flex-start;flex-wrap: nowrap;align-items:flex-start; gap: 8px;">
+				<?php echo UM()->frontend()::layouts()::outline_icon( '<svg  xmlns="http://www.w3.org/2000/svg"  width="20"  height="20"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M9 12l2 2l4 -4" /></svg>' ); ?>
+			</div>
 			<h3>Alerts</h3>
 			<div style="display:flex;flex-direction:column;justify-content:flex-start;flex-wrap: nowrap;align-items:stretch; gap: 8px;">
 				<?php echo wp_kses(
