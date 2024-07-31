@@ -2108,6 +2108,7 @@ class Layouts {
 				'width' => '',
 			)
 		);
+
 		$style = '';
 		if ( ! empty( $args['width'] ) ) {
 			$style .= 'width: ' . $args['width'] . ';';

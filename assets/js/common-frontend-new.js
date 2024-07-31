@@ -694,6 +694,7 @@ UM.frontend = {
 					if ( $img.complete ) {
 						$lazyloaded[ $item ].classList.add('um-loaded');
 					} else {
+						// @todo think about `error` event when image wasn't loaded.
 						$img.addEventListener('load', (e) => {
 							$lazyloaded[ $item ].classList.add('um-loaded');
 						}, false);
