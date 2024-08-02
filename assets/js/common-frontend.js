@@ -99,7 +99,10 @@ UM.frontend = {
 	},
 	dropdown: {
 		init: function() {
-			jQuery('.um-dropdown').um_dropdownMenu();
+			let $dropdown = jQuery('.um-dropdown');
+			if ( $dropdown.length ) {
+				$dropdown.um_dropdownMenu();
+			}
 		}
 	}
 }
