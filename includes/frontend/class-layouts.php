@@ -2100,7 +2100,7 @@ class Layouts {
 		return ob_get_clean();
 	}
 
-	public static function lazy_image( $src, $args ) {
+	public static function lazy_image( $src, $args = array() ) {
 		$args = wp_parse_args(
 			$args,
 			array(
