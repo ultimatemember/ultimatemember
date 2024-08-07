@@ -2436,17 +2436,24 @@
 .um
   .#{$prefix}alert
     +flex( row, flex-start, center, nowrap )
-    border-bottom: 1px solid $gray-300
-    padding: 0 0 $spacing-lg 0
+    padding: 0
     margin: 0
     +border-box
     .#{$prefix}alert-message
       +flex( row, flex-start, center, nowrap )
       width: 100%
       column-gap: $spacing-lg
-      .#{$prefix}alert-text
-        +typography( text, sm, semibold )
-        color: $gray-700
+      .#{$prefix}alert-texts
+        +flex( row, flex-start, center, wrap )
+        flex: 1
+        column-gap: $spacing-lg
+        row-gap: $spacing-xs
+        .#{$prefix}alert-text
+          +typography( text, sm, semibold )
+          color: $gray-700
+    &.#{$prefix}alert-underline
+      border-bottom: 1px solid $gray-300
+      padding: 0 0 $spacing-lg 0
     &.#{$prefix}dismissible
       +flex( row, space-between, center, nowrap )
       column-gap: $spacing-lg

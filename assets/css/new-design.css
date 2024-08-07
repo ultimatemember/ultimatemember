@@ -3179,8 +3179,7 @@
   justify-content: flex-start;
   align-items: center;
   flex-wrap: nowrap;
-  border-bottom: 1px solid var(--um-gray-300, #d0d5dd);
-  padding: 0 0 12px 0;
+  padding: 0;
   margin: 0;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -3195,11 +3194,25 @@
   width: 100%;
   column-gap: 12px;
 }
-.um .um-alert .um-alert-message .um-alert-text {
+.um .um-alert .um-alert-message .um-alert-texts {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 1;
+  column-gap: 12px;
+  row-gap: 4px;
+}
+.um .um-alert .um-alert-message .um-alert-texts .um-alert-text {
   font-size: var(--um-text-font-size-sm, 14px);
   line-height: var(--um-text-line-height-sm, 20px);
   font-weight: var(--um-text-font-weight-semibold, 600);
   color: var(--um-gray-700, #344054);
+}
+.um .um-alert.um-alert-underline {
+  border-bottom: 1px solid var(--um-gray-300, #d0d5dd);
+  padding: 0 0 12px 0;
 }
 .um .um-alert.um-dismissible {
   display: flex;

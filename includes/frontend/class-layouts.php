@@ -5,6 +5,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// @todo Users list layout (e.g. likes list in User Photos modal)
+// @todo Common Grid layout (e.g. albums, photos grid in User Photos gallery)
+
 /**
  * Class Layouts.
  *
@@ -2135,13 +2138,14 @@ class Layouts {
 		return ob_get_clean();
 	}
 
-	public static function alert( $text, $args ) {
+	public static function alert( $text, $args = array() ) {
 		$args = wp_parse_args(
 			$args,
 			array(
 				'type'        => 'error', // error, warning, success
 				'dismissible' => false,
 				'supporting'  => '',
+				'underline'   => true,
 			)
 		);
 
@@ -2165,6 +2169,10 @@ class Layouts {
 			$classes[] = 'um-dismissible';
 		}
 
+		if ( ! empty( $args['underline'] ) ) {
+			$classes[] = 'um-alert-underline';
+		}
+
 		ob_start();
 		?>
 		<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
@@ -2172,10 +2180,12 @@ class Layouts {
 				<?php if ( ! empty( $icon ) ) { ?>
 					<div class="um-alert-icon"><?php echo wp_kses( $icon, UM()->get_allowed_html( 'templates' ) ); ?></div>
 				<?php } ?>
-				<span class="um-alert-text"><?php echo wp_kses( $text, UM()->get_allowed_html( 'templates' ) ); ?></span>
-				<?php if ( ! empty( $args['supporting'] ) ) { ?>
-					<span class="um-supporting-text"><?php echo wp_kses( $args['supporting'], UM()->get_allowed_html( 'templates' ) ); ?></span>
-				<?php } ?>
+				<span class="um-alert-texts">
+					<span class="um-alert-text"><?php echo wp_kses( $text, UM()->get_allowed_html( 'templates' ) ); ?></span>
+					<?php if ( ! empty( $args['supporting'] ) ) { ?>
+						<span class="um-supporting-text"><?php echo wp_kses( $args['supporting'], UM()->get_allowed_html( 'templates' ) ); ?></span>
+					<?php } ?>
+				</span>
 			</div>
 			<?php
 			if ( ! empty( $args['dismissible'] ) ) {
