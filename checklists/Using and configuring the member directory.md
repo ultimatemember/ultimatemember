@@ -24,3 +24,17 @@ This document contains a checklist and provides information about the scenarios 
 - Check the "Only show members who have uploaded a cover photo" setting and check the display of users on the site on the "Members" page
 - Specify the user in the setting "Only show specific users (Enter one username per line)" and check that it is displayed on the site on the "Members" page
 - Specify the user in the "Exclude specific users (Enter one username per line)" setting and check that it is not displayed on the site on the "Members" page
+- Select the "Display name" value in the drop-down list of the "Default sort users by" setting and check the sorting of the display of users on the site on the "Members" page
+- Select the "First name" value in the drop-down list of the "Default sort users by" setting and check the sorting of the display of users on the site on the "Members" page
+- Select the "Last & First name" value in the drop-down list of the "Default sort users by" setting and check the sorting of the display of users on the site on the "Members" page
+- Select the "Last login" value in the drop-down list of the "Default sort users by" setting and check the sorting of the display of users on the site on the "Members" page
+- Select the "Last name" value in the drop-down list of the "Default sort users by" setting and check the sorting of the display of users on the site on the "Members" page
+- Select the "New users first" value in the drop-down list of the "Default sort users by" setting and check the sorting of the display of users on the site on the "Members" page
+- Select the "Nickname" value in the drop-down list of the "Default sort users by" setting and check the sorting of the display of users on the site on the "Members" page
+- Select the value "Old users first" in the drop-down list of the "Default sort users by" setting and check the sorting of the display of users on the site on the "Members" page
+- Select the "Other (Custom field)" value in the drop-down list of the "Default sort users by" setting and check the sorting of the display of users on the site on the "Members" page
+- Select the "Random" value in the drop-down list of the "Default sort users by" setting and check the sorting of the display of users on the site on the "Members" page
+- Select the "Username" value in the drop-down list of the "Default sort users by" setting and check the sorting of the display of users on the site on the "Members" page
+- Check the "Enable custom sorting" checkbox, add new sorting fields and check the display of the sorting drop-down list on the site on the "Members" page
+- To set "Choose field(s) to enable in sorting", add and set up the "Other (Custom Field)" field, check the display of the field value in the sorting drop-down list on the site on the "Members" page
+- In the "Sorting" settings block, for the "Choose field(s) to enable in sorting" setting, delete the configured custom fields and check that they are not displayed in the sorting drop-down list on the site on the "Members" page
