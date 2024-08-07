@@ -185,8 +185,8 @@
   -webkit-mask-position: center;
   mask-repeat: no-repeat;
   -webkit-mask-repeat: no-repeat;
-  mask-image: url(../icons/chevron-down.svg);
-  -webkit-mask-image: url(../icons/chevron-down.svg);
+  mask-image: url(../../icons/chevron-down.svg);
+  -webkit-mask-image: url(../../icons/chevron-down.svg);
   width: 20px;
   height: 20px;
   background-color: var(--um-gray-700, #344054);
@@ -195,8 +195,8 @@
   overflow: hidden;
 }
 .um.um-directory .um-member-directory-header .um-member-directory-search-filters .um-filters-toggle.um-toggle-button-active .um-toggle-chevron:after {
-  mask-image: url(../icons/chevron-up.svg);
-  -webkit-mask-image: url(../icons/chevron-up.svg);
+  mask-image: url(../../icons/chevron-up.svg);
+  -webkit-mask-image: url(../../icons/chevron-up.svg);
 }
 .um.um-directory .um-member-directory-header .um-member-directory-search-filters .um-member-directory-search-wrapper {
   display: flex;

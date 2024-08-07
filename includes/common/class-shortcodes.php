@@ -86,7 +86,6 @@ class Shortcodes {
 
 		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 			add_shortcode( 'ultimatemember_design_scheme', array( &$this, 'design_scheme' ) );
-			add_shortcode( 'ultimatemember_profile', array( &$this, 'new_profile' ) );
 		}
 	}
 
@@ -1308,31 +1307,6 @@ class Shortcodes {
 		return ob_get_clean();
 	}
 
-	public function new_profile( $args = array() ) {
-		$args = shortcode_atts(
-			array(
-				'form_id' => '',
-			),
-			$args,
-			'ultimatemember_profile'
-		);
-
-		$form_id = absint( $args['form_id'] );
-
-		$user       = get_userdata( um_user( 'ID' ) );
-		$user_roles = (array) $user->roles;
-
-		wp_enqueue_style( 'um_new_profile' );
-
-		$content = '';
-		if ( um_is_on_edit_profile() ) {
-			$content = UM()->get_template( 'v3/profile/edit.php', '', array( 'form_id' => $form_id, 'roles' => $user_roles ) );
-		} else {
-			$content = UM()->get_template( 'v3/profile/base.php', '', array( 'form_id' => $form_id, 'roles' => $user_roles ) );
-		}
-		return $content;
-	}
-
 	/**
 	 * Conditional logout form
 	 *
@@ -1785,6 +1759,9 @@ class Shortcodes {
 			if ( 'directory' === $post_data['mode'] ) {
 				wp_enqueue_style( 'um_directory' );
 				wp_enqueue_script( 'um_directory' );
+			} elseif ( 'profile' === $post_data['mode'] ) {
+				wp_enqueue_style( 'um_profile' );
+				wp_enqueue_script( 'um_profile' );
 			}
 		}
 
