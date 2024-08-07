@@ -4,4 +4,5 @@
   justify-content: flex-start;
   align-items: stretch;
   flex-wrap: nowrap;
+  row-gap: 12px;
 }
