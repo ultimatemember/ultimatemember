@@ -281,39 +281,12 @@ class Directory {
 
 		$user_id = absint( $user_id );
 
-//		$items = array(
-//			array(
-//				'<a href="javascript:void(0);" class="um-manual-trigger">' . __( 'Action 1', 'ultimate-member' ) . '</a>',
-//				'<a href="javascript:void(0);" class="um-reset-profile-photo">' . __( 'Action 2', 'ultimate-member' ) . '</a>',
-//			),
-//			array(
-//				'<a href="javascript:void(0);" class="um-manual-trigger">' . __( 'Action 3', 'ultimate-member' ) . '</a>',
-//				'<a href="javascript:void(0);" class="um-reset-profile-photo">' . __( 'Action 4', 'ultimate-member' ) . '</a>',
-//			),
-//			array(
-//				'<a href="javascript:void(0);" class="um-manual-trigger">' . __( 'Action 5', 'ultimate-member' ) . '</a>',
-//				'<a href="javascript:void(0);" class="um-reset-profile-photo">' . __( 'Action 6', 'ultimate-member' ) . '</a>',
-//			),
-//		);
-
 		if ( get_current_user_id() !== $user_id ) {
-
-//			if ( UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-//				$actions['um-editprofile'] = array(
-//					'title' => esc_html__( 'Edit Profile', 'ultimate-member' ),
-//					'url'   => um_edit_profile_url(),
-//				);
-//			}
-
-			$actions = array(
-				array(
-					'<a href="' . esc_url( um_edit_profile_url() ) . '" class="um-editprofile">' . esc_html__( 'Edit Profile', 'ultimate-member' ) . '</a>',
-					//'<a href="' . esc_url( um_get_core_page( 'account' ) ) . '" class="um-myaccount">' . esc_html__( 'My Account', 'ultimate-member' ) . '</a>',
-				),
-//				array(
-//					'<a href="' . esc_url( um_get_core_page( 'logout' ) ) . '" class="um-logout">' . esc_html__( 'Logout', 'ultimate-member' ) . '</a>',
-//				),
-			);
+			if ( UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+				$actions[] = array(
+					'<a href="' . esc_url( um_edit_profile_url( $user_id ) ) . '" class="um-editprofile">' . esc_html__( 'Edit Profile', 'ultimate-member' ) . '</a>',
+				);
+			}
 
 			/**
 			 * UM hook
@@ -348,41 +321,21 @@ class Directory {
 					);
 
 					if ( 'um_switch_user' === $id ) {
+						if ( ! isset( $actions[2] ) ) {
+							$actions[2] = array();
+						}
 						$actions[2][] = '<a href="' . esc_url( $url ) . '" class="' . esc_attr( $id ) . '">' . esc_html( $arr['label'] ) . '</a>';
 					} else {
+						if ( ! isset( $actions[1] ) ) {
+							$actions[1] = array();
+						}
 						$actions[1][] = '<a href="' . esc_url( $url ) . '" class="' . esc_attr( $id ) . '">' . esc_html( $arr['label'] ) . '</a>';
 					}
-
-//					$actions[ $id ] = array(
-//						'title' => esc_html( $arr['label'] ),
-//						'url'   => esc_url( $url ),
-//					);
 				}
-			}
-
-			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-				unset( $actions[0][0] );
 			}
 
 			$actions = apply_filters( 'um_member_directory_users_card_actions', $actions, $user_id );
 		} else {
-//			if ( empty( UM()->user()->cannot_edit ) ) {
-//				$actions['um-editprofile'] = array(
-//					'title' => esc_html__( 'Edit Profile', 'ultimate-member' ),
-//					'url'   => um_edit_profile_url(),
-//				);
-//			}
-//
-//			$actions['um-myaccount'] = array(
-//				'title' => esc_html__( 'My Account', 'ultimate-member' ),
-//				'url'   => um_get_core_page( 'account' ),
-//			);
-//
-//			$actions['um-logout'] = array(
-//				'title' => esc_html__( 'Logout', 'ultimate-member' ),
-//				'url'   => um_get_core_page( 'logout' ),
-//			);
-
 			$actions = array(
 				array(
 					'<a href="' . esc_url( um_edit_profile_url() ) . '" class="um-editprofile">' . esc_html__( 'Edit Profile', 'ultimate-member' ) . '</a>',
