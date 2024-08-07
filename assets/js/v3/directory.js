@@ -198,6 +198,7 @@ UM.frontend.directory.prototype = {
 	setLayout: function( layout, args ) {
 		let switcher = this.wrapper.find('.um-member-view-switcher');
 		if ( ! switcher.length ) {
+			this.layout = this.defaultLayout;
 			return;
 		}
 
@@ -211,7 +212,6 @@ UM.frontend.directory.prototype = {
 			updateUI = true;
 		}
 
-		// let defaultView = switcher.find('.um-member-directory-view-type[data-default="1"]').data('type');
 		if ( '' === layout ) {
 			layout = this.defaultLayout;
 		}
