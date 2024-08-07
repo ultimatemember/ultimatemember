@@ -591,6 +591,57 @@ class Shortcodes {
 			<div style="display:flex;flex-direction:column;justify-content:flex-start;flex-wrap: nowrap;align-items:stretch; gap: 8px;">
 				<?php echo wp_kses(
 					UM()->frontend()::layouts()::alert(
+						'My first dismissible text alert',
+						array(
+							'type' => 'error',
+							'underline' => false,
+							'has_icon' => false,
+							'dismissible' => true,
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				); ?>
+
+
+				<?php echo wp_kses(
+					UM()->frontend()::layouts()::alert(
+						'My first just a text alert',
+						array(
+							'type' => 'error',
+							'underline' => false,
+							'has_icon' => false,
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				); ?>
+
+
+				<?php echo wp_kses(
+					UM()->frontend()::layouts()::alert(
+						'My first no icon alert',
+						array(
+							'type' => 'error',
+							'has_icon' => false,
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				); ?>
+
+
+				<?php echo wp_kses(
+					UM()->frontend()::layouts()::alert(
+						'My first no underline alert',
+						array(
+							'type' => 'error',
+							'underline' => false,
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				); ?>
+
+
+				<?php echo wp_kses(
+					UM()->frontend()::layouts()::alert(
 						'My first alert',
 						array(
 							'type' => 'error',
