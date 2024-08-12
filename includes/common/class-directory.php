@@ -270,94 +270,6 @@ class Directory {
 
 	/**
 	 * @param int $user_id
-	 *
-	 * @return array
-	 */
-	public function build_user_actions_list( $user_id ) {
-		$actions = array();
-		if ( ! is_user_logged_in() ) {
-			return $actions;
-		}
-
-		$user_id = absint( $user_id );
-
-		if ( get_current_user_id() !== $user_id ) {
-			if ( UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-				$actions[] = array(
-					'<a href="' . esc_url( um_edit_profile_url( $user_id ) ) . '" class="um-editprofile">' . esc_html__( 'Edit Profile', 'ultimate-member' ) . '</a>',
-				);
-			}
-
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_admin_user_actions_hook
-			 * @description Extend admin actions for each user
-			 * @input_vars
-			 * [{"var":"$actions","type":"array","desc":"Actions for user"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_admin_user_actions_hook', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_admin_user_actions_hook', 'my_admin_user_actions', 10, 1 );
-			 * function my_admin_user_actions( $actions ) {
-			 *     // your code here
-			 *     return $actions;
-			 * }
-			 * ?>
-			 */
-			$admin_actions = apply_filters( 'um_admin_user_actions_hook', array(), $user_id );
-			if ( ! empty( $admin_actions ) ) {
-				foreach ( $admin_actions as $id => $arr ) {
-					$url = add_query_arg(
-						array(
-							'um_action' => $id,
-							'uid'       => $user_id,
-						),
-						um_get_core_page( 'user' )
-					);
-
-					if ( 'um_switch_user' === $id ) {
-						if ( ! isset( $actions[2] ) ) {
-							$actions[2] = array();
-						}
-						$actions[2][] = '<a href="' . esc_url( $url ) . '" class="' . esc_attr( $id ) . '">' . esc_html( $arr['label'] ) . '</a>';
-					} else {
-						if ( ! isset( $actions[1] ) ) {
-							$actions[1] = array();
-						}
-						$actions[1][] = '<a href="' . esc_url( $url ) . '" class="' . esc_attr( $id ) . '">' . esc_html( $arr['label'] ) . '</a>';
-					}
-				}
-			}
-
-			$actions = apply_filters( 'um_member_directory_users_card_actions', $actions, $user_id );
-		} else {
-			$actions = array(
-				array(
-					'<a href="' . esc_url( um_edit_profile_url() ) . '" class="um-editprofile">' . esc_html__( 'Edit Profile', 'ultimate-member' ) . '</a>',
-					'<a href="' . esc_url( um_get_core_page( 'account' ) ) . '" class="um-myaccount">' . esc_html__( 'My Account', 'ultimate-member' ) . '</a>',
-				),
-				array(
-					'<a href="' . esc_url( um_get_core_page( 'logout' ) ) . '" class="um-logout">' . esc_html__( 'Logout', 'ultimate-member' ) . '</a>',
-				),
-			);
-
-			if ( ! empty( UM()->user()->cannot_edit ) ) {
-				unset( $actions[0][0] );
-			}
-
-			$actions = apply_filters( 'um_member_directory_my_user_card_actions', $actions, $user_id );
-		}
-
-		return $actions;
-	}
-
-	/**
-	 * @param int $user_id
 	 * @param array $directory_data
 	 *
 	 * @return array
@@ -366,7 +278,7 @@ class Directory {
 
 		um_fetch_user( $user_id );
 
-		$dropdown_actions = $this->build_user_actions_list( $user_id );
+		$dropdown_actions = UM()->user()->get_dropdown_items( $user_id, 'directory' );
 
 		$can_edit = UM()->roles()->um_current_user_can( 'edit', $user_id );
 

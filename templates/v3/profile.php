@@ -22,65 +22,61 @@ echo 'NEW';
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?> um-role-<?php echo esc_attr( um_user( 'role' ) ); ?> ">
 	<?php
 	/**
-	 * UM hook
+	 * Fires before User Profile header.
+	 * It's the first hook at User Profile wrapper.
 	 *
-	 * @type action
-	 * @title um_profile_before_header
-	 * @description Some actions before profile form header
-	 * @input_vars
-	 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_action( 'um_profile_before_header', 'function_name', 10, 1 );
-	 * @example
-	 * <?php
-	 * add_action( 'um_profile_before_header', 'my_profile_before_header', 10, 1 );
-	 * function my_profile_before_header( $args ) {
+	 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+	 * 10 - `um_profile_completeness_show_notice()` displays Profile Completeness notices.
+	 *
+	 * @param {array} $args User Profile data.
+	 *
+	 * @since 1.3.x
+	 * @hook  um_profile_before_header
+	 *
+	 * @example <caption>Display some content before User Profile.</caption>
+	 * function my_um_profile_before_header( $args ) {
 	 *     // your code here
+	 *     echo $notice;
 	 * }
-	 * ?>
+	 * add_action( 'um_profile_before_header', 'my_um_profile_before_header' );
 	 */
 	do_action( 'um_profile_before_header', $args );
-
 	/**
-	 * UM hook
+	 * Fires for displaying User Profile cover area.
 	 *
-	 * @type action
-	 * @title um_profile_header_cover_area
-	 * @description Profile header cover area
-	 * @input_vars
-	 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_action( 'um_profile_header_cover_area', 'function_name', 10, 1 );
-	 * @example
-	 * <?php
-	 * add_action( 'um_profile_header_cover_area', 'my_profile_header_cover_area', 10, 1 );
-	 * function my_profile_header_cover_area( $args ) {
+	 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+	 * 9 - `um_profile_header_cover_area()` displays User Profile cover photo.
+	 *
+	 * @param {array} $args User Profile data.
+	 *
+	 * @since 1.3.x
+	 * @hook  um_profile_header_cover_area
+	 *
+	 * @example <caption>Display some content before or after User Profile cover.</caption>
+	 * function my_um_profile_header_cover_area( $args ) {
 	 *     // your code here
+	 *     echo $content;
 	 * }
-	 * ?>
+	 * add_action( 'um_profile_header_cover_area', 'my_um_profile_header_cover_area' );
 	 */
 	do_action( 'um_profile_header_cover_area', $args );
-
 	/**
-	 * UM hook
+	 * Fires for displaying User Profile header.
 	 *
-	 * @type action
-	 * @title um_profile_header
-	 * @description Profile header area
-	 * @input_vars
-	 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_action( 'um_profile_header', 'function_name', 10, 1 );
-	 * @example
-	 * <?php
-	 * add_action( 'um_profile_header', 'my_profile_header', 10, 1 );
-	 * function my_profile_header( $args ) {
+	 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+	 * 9 - `um_profile_header()` displays User Profile header.
+	 *
+	 * @param {array} $args User Profile data.
+	 *
+	 * @since 1.3.x
+	 * @hook  um_profile_header
+	 *
+	 * @example <caption>Display some content before or after User Profile header.</caption>
+	 * function my_um_profile_header( $args ) {
 	 *     // your code here
+	 *     echo $content;
 	 * }
-	 * ?>
+	 * add_action( 'um_profile_header', 'my_um_profile_header' );
 	 */
 	do_action( 'um_profile_header', $args );
 

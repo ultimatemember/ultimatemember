@@ -2595,46 +2595,30 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * @return array
 		 */
 		function build_user_actions_list( $user_id ) {
-
 			$actions = array();
 			if ( ! is_user_logged_in() ) {
 				return $actions;
 			}
 
-			if ( get_current_user_id() != $user_id ) {
+			if ( get_current_user_id() !== absint( $user_id ) ) {
 
 				if ( UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
 					$actions['um-editprofile'] = array(
 						'title' => esc_html__( 'Edit Profile', 'ultimate-member' ),
-						'url'   => um_edit_profile_url(),
+						'url'   => um_edit_profile_url( $user_id ),
 					);
 				}
 
-				/**
-				 * UM hook
-				 *
-				 * @type filter
-				 * @title um_admin_user_actions_hook
-				 * @description Extend admin actions for each user
-				 * @input_vars
-				 * [{"var":"$actions","type":"array","desc":"Actions for user"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage
-				 * <?php add_filter( 'um_admin_user_actions_hook', 'function_name', 10, 1 ); ?>
-				 * @example
-				 * <?php
-				 * add_filter( 'um_admin_user_actions_hook', 'my_admin_user_actions', 10, 1 );
-				 * function my_admin_user_actions( $actions ) {
-				 *     // your code here
-				 *     return $actions;
-				 * }
-				 * ?>
-				 */
-				$admin_actions = apply_filters( 'um_admin_user_actions_hook', array(), $user_id );
+				$admin_actions = UM()->user()->get_admin_actions( $user_id );
 				if ( ! empty( $admin_actions ) ) {
 					foreach ( $admin_actions as $id => $arr ) {
-						$url = add_query_arg( array( 'um_action' => $id, 'uid' => $user_id ), um_get_core_page( 'user' ) );
+						$url = add_query_arg(
+							array(
+								'um_action' => $id,
+								'uid'       => $user_id,
+							),
+							um_get_predefined_page_url( 'user' )
+						);
 
 						$actions[ $id ] = array(
 							'title' => esc_html( $arr['label'] ),
@@ -2650,18 +2634,18 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				if ( empty( UM()->user()->cannot_edit ) ) {
 					$actions['um-editprofile'] = array(
 						'title' => esc_html__( 'Edit Profile', 'ultimate-member' ),
-						'url'   => um_edit_profile_url(),
+						'url'   => um_edit_profile_url( $user_id ),
 					);
 				}
 
 				$actions['um-myaccount'] = array(
 					'title' => esc_html__( 'My Account', 'ultimate-member' ),
-					'url'   => um_get_core_page( 'account' ),
+					'url'   => um_get_predefined_page_url( 'account' ),
 				);
 
 				$actions['um-logout'] = array(
 					'title' => esc_html__( 'Logout', 'ultimate-member' ),
-					'url'   => um_get_core_page( 'logout' ),
+					'url'   => um_get_predefined_page_url( 'logout' ),
 				);
 
 				$actions = apply_filters( 'um_member_directory_my_user_card_actions', $actions, $user_id );

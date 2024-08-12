@@ -22,7 +22,11 @@ add_action( 'um_after_form_fields', 'um_add_form_identifier' );
 function um_add_security_checks( $args ) {
 	if ( is_admin() ) {
 		return;
-	} ?>
+	}
+	if ( ! array_key_exists( 'form_id', $args ) ) {
+		return;
+	}
+	?>
 
 	<p class="<?php echo esc_attr( UM()->honeypot ); ?>_name">
 		<label for="<?php echo esc_attr( UM()->honeypot ) . '_' . $args['form_id']; ?>"><?php _e( 'Only fill in if you are not human' ); ?></label>

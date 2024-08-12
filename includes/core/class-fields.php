@@ -113,8 +113,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 		/**
 		 * Shows social links.
+		 *
+		 * @param null|int $user_id
 		 */
-		public function show_social_urls() {
+		public function show_social_urls( $user_id = null ) {
 			$social = array();
 
 			$fields = UM()->builtin()->get_all_user_fields();
@@ -142,7 +144,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				}
 			}
 		}
-
 
 		/**
 		 * Hidden field inside a shortcode

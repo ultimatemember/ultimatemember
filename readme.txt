@@ -172,6 +172,10 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
   - New UI
 
+* Deprecated:
+
+  - Hook 'um_after_profile_header_name_args' use 'um_after_profile_header_name' instead.
+
 = 2.8.7 2024-06-xx =
 
 

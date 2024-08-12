@@ -1720,6 +1720,7 @@ function um_edit_profile_url( $user_id = null ) {
 
 	$url = remove_query_arg( 'profiletab', $url );
 	$url = remove_query_arg( 'subnav', $url );
+	$url = remove_query_arg( 'notice', $url );
 	$url = add_query_arg( 'um_action', 'edit', $url );
 
 	/**

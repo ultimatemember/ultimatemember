@@ -45,3 +45,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  * }
  * add_filter( 'um_language_file', 'my_um_language_file' );
  */
+
+/**
+ * Fires for displaying content in supporting header row on User Profile.
+ *
+ * @param {array} $args User Profile data.
+ *
+ * @since 1.3.x
+ * @since 2.9.0 added $profile_args, $user_id attributes
+ * @depecated 2.9.0 Please use 'um_after_profile_header_name' hook instead.
+ * @hook  um_after_profile_header_name_args
+ */

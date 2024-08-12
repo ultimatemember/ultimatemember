@@ -37,7 +37,7 @@ function um_get_predefined_page_id( $slug ) {
 /**
  *
  * @param string $slug
- * @param null|int|\WP_Post $post
+ * @param null|int|WP_Post $post
  *
  * @return bool
  */

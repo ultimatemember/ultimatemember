@@ -19,75 +19,18 @@ $description_key = UM()->profile()->get_show_bio_key( $args );
 ?>
 
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?> um-role-<?php echo esc_attr( um_user( 'role' ) ); ?> ">
-
 	<div class="um-form" data-mode="<?php echo esc_attr( $mode ) ?>">
 
 		<?php
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_profile_before_header
-		 * @description Some actions before profile form header
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_profile_before_header', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_profile_before_header', 'my_profile_before_header', 10, 1 );
-		 * function my_profile_before_header( $args ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
+		/** This action is documented in ultimate-member/templates/v3/profile.php */
 		do_action( 'um_profile_before_header', $args );
 
 		if ( um_is_on_edit_profile() ) { ?>
 			<form method="post" action="" data-description_key="<?php echo esc_attr( $description_key ); ?>">
 		<?php }
-
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_profile_header_cover_area
-		 * @description Profile header cover area
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_profile_header_cover_area', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_profile_header_cover_area', 'my_profile_header_cover_area', 10, 1 );
-		 * function my_profile_header_cover_area( $args ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
+		/** This action is documented in ultimate-member/templates/v3/profile.php */
 		do_action( 'um_profile_header_cover_area', $args );
-
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_profile_header
-		 * @description Profile header area
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_profile_header', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_profile_header', 'my_profile_header', 10, 1 );
-		 * function my_profile_header( $args ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
+		/** This action is documented in ultimate-member/templates/v3/profile.php */
 		do_action( 'um_profile_header', $args );
 
 		/**

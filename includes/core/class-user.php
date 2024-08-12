@@ -1961,55 +1961,168 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			delete_user_meta( $this->id, $key );
 		}
 
-
 		/**
-		 * Get admin actions for individual user
+		 * Get admin actions for individual user.
 		 *
-		 * @return array|bool
+		 * @param int    $user_id
+		 * @param string $context
+		 *
+		 * @return array
 		 */
-		function get_admin_actions() {
-			$items = array();
+		public function get_dropdown_items( $user_id, $context = 'profile' ) {
+			$items   = array();
+			$user_id = absint( $user_id );
 
+			if ( is_user_logged_in() ) {
+				if ( $user_id === get_current_user_id() ) {
+					if ( 'profile' !== $context ) {
+						$items = array(
+							array(
+								'<a href="' . esc_url( um_edit_profile_url( $user_id ) ) . '" class="um-editprofile">' . esc_html__( 'Edit Profile', 'ultimate-member' ) . '</a>',
+								'<a href="' . esc_url( um_get_predefined_page_url( 'account' ) ) . '" class="um-myaccount">' . esc_html__( 'My Account', 'ultimate-member' ) . '</a>',
+							),
+							array(
+								'<a href="' . esc_url( um_get_predefined_page_url( 'logout' ) ) . '" class="um-logout">' . esc_html__( 'Logout', 'ultimate-member' ) . '</a>',
+							),
+						);
+
+						if ( ! empty( UM()->user()->cannot_edit ) ) {
+							unset( $items[0][0] );
+						}
+					} else {
+						$items = array(
+							'<a href="' . esc_url( um_get_predefined_page_url( 'account' ) ) . '">' . esc_html__( 'My Account', 'ultimate-member' ) . '</a>',
+							'<a href="' . esc_url( um_get_predefined_page_url( 'logout' ) ) . '">' . esc_html__( 'Logout', 'ultimate-member' ) . '</a>',
+						);
+					}
+				} else {
+					if ( 'profile' !== $context && UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+						$items[] = array(
+							'<a href="' . esc_url( um_edit_profile_url( $user_id ) ) . '" class="um-editprofile">' . esc_html__( 'Edit Profile', 'ultimate-member' ) . '</a>',
+						);
+					}
+
+					$admin_actions = $this->get_admin_actions( $user_id );
+					if ( ! empty( $admin_actions ) ) {
+						$admin_items = array();
+						foreach ( $admin_actions as $id => $arr ) {
+							$url = add_query_arg(
+								array(
+									'um_action' => $id,
+									'uid'       => $user_id,
+								),
+								um_get_predefined_page_url( 'user' )
+							);
+
+							if ( 'um_switch_user' === $id ) {
+								if ( ! isset( $admin_items[1] ) ) {
+									$admin_items[1] = array();
+								}
+								$admin_items[1][] = '<a href="' . esc_url( $url ) . '" class="' . esc_attr( $id ) . '">' . esc_html( $arr['label'] ) . '</a>';
+							} else {
+								if ( ! isset( $admin_items[0] ) ) {
+									$admin_items[0] = array();
+								}
+								$admin_items[0][] = '<a href="' . esc_url( $url ) . '" class="' . esc_attr( $id ) . '">' . esc_html( $arr['label'] ) . '</a>';
+							}
+						}
+
+						$items = array_merge( $items, $admin_items );
+					}
+				}
+			}
 			/**
-			 * UM hook
+			 * Filters the dropdown menu with "More actions" for user.
 			 *
-			 * @type filter
-			 * @title um_admin_user_actions_hook
-			 * @description Extend admin actions for each user
-			 * @input_vars
-			 * [{"var":"$actions","type":"array","desc":"Actions for user"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_admin_user_actions_hook', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_admin_user_actions_hook', 'my_admin_user_actions', 10, 1 );
-			 * function my_admin_user_actions( $actions ) {
-			 *     // your code here
-			 *     return $actions;
+			 * @since 2.9.0
+			 * @hook um_user_dropdown_items
+			 *
+			 * @param {array}  $items   Possible dropdown items list.
+			 * @param {int}    $user_id User ID.
+			 * @param {string} $context Place from where we call base function. It's 'profile' by default.
+			 *
+			 * @return {array} Possible dropdown items list.
+			 *
+			 * @example <caption>Add `um_custom_action` as one of dropdown items.</caption>
+			 * function um_custom_user_dropdown_items( $items, $user_id, $context ) {
+			 *     // single level dropdown
+			 *     $items[] = '<a href="' . esc_url( $item_url ) . '">' . esc_html( $item_title ) . '</a>';
+			 *     // dropdown with separators
+			 *     $items[] = array( '<a href="' . esc_url( $item_url ) . '">' . esc_html( $item_title ) . '</a>' );
+			 *     return $items;
 			 * }
-			 * ?>
+			 * add_filter( 'um_user_dropdown_items', 'um_custom_user_dropdown_items', 10, 3 );
 			 */
-			$actions = apply_filters( 'um_admin_user_actions_hook', array(), um_profile_id() );
-			if ( empty( $actions ) ) {
-				return $items;
-			}
-
-			foreach ( $actions as $id => $arr ) {
-				$url = add_query_arg(
-					array(
-						'um_action' => $id,
-						'uid'       => um_profile_id(),
-					)
-				);
-				/*$url = add_query_arg( 'um_action', $id );
-				$url = add_query_arg( 'uid', um_profile_id(), $url );*/
-				$items[] = '<a href="' . esc_url( $url ) . '" class="real_url ' . esc_attr( $id ) . '-item">' . esc_html( $arr['label'] ) . '</a>';
-			}
-			return $items;
+			return apply_filters( 'um_user_dropdown_items', $items, $user_id, $context );
 		}
 
+		/**
+		 * Get admin actions for individual user.
+		 *
+		 * @param int $user_id
+		 *
+		 * @return array
+		 */
+		public function get_admin_actions( $user_id ) {
+			$actions = array();
+			if ( UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+				um_fetch_user( $user_id );
+				$account_status = um_user( 'account_status' );
+
+				if ( 'awaiting_admin_review' === $account_status ) {
+					$actions['um_approve_membership'] = array( 'label' => __( 'Approve Membership', 'ultimate-member' ) );
+					$actions['um_reject_membership']  = array( 'label' => __( 'Reject Membership', 'ultimate-member' ) );
+				}
+
+				if ( 'rejected' === $account_status ) {
+					$actions['um_approve_membership'] = array( 'label' => __( 'Approve Membership', 'ultimate-member' ) );
+				}
+
+				if ( 'approved' === $account_status ) {
+					$actions['um_put_as_pending'] = array( 'label' => __( 'Put as Pending Review', 'ultimate-member' ) );
+				}
+
+				if ( 'awaiting_email_confirmation' === $account_status ) {
+					$actions['um_resend_activation'] = array( 'label' => __( 'Resend Activation Email', 'ultimate-member' ) );
+				}
+
+				if ( 'inactive' !== $account_status ) {
+					$actions['um_deactivate'] = array( 'label' => __( 'Deactivate this account', 'ultimate-member' ) );
+				}
+
+				if ( 'inactive' === $account_status ) {
+					$actions['um_reenable'] = array( 'label' => __( 'Reactivate this account', 'ultimate-member' ) );
+				}
+			}
+
+			if ( UM()->roles()->um_current_user_can( 'delete', $user_id ) ) {
+				$actions['um_delete'] = array( 'label' => __( 'Delete this user', 'ultimate-member' ) );
+			}
+
+			if ( current_user_can( 'manage_options' ) && ! is_super_admin( $user_id ) ) {
+				$actions['um_switch_user'] = array( 'label' => __( 'Login as this user', 'ultimate-member' ) );
+			}
+
+			/**
+			 * Filters the possible admin actions list.
+			 *
+			 * @since 1.3.x
+			 * @hook um_admin_user_actions_hook
+			 *
+			 * @param {array} $actions Possible actions list.
+			 * @param {int}   $user_id User ID.
+			 *
+			 * @return {array} Possible actions list.
+			 *
+			 * @example <caption>Add `um_custom_action` as one of admin actions.</caption>
+			 * function um_custom_admin_user_actions_hook( $actions, $user_id ) {
+			 *     $actions['um_custom_action'] = array( 'label' => 'Custom action title' );
+			 *     return $actions;
+			 * }
+			 * add_filter( 'um_admin_user_actions_hook', 'um_custom_admin_user_actions_hook', 10, 2 );
+			 */
+			return apply_filters( 'um_admin_user_actions_hook', $actions, $user_id );
+		}
 
 		/**
 		 * This method checks if the profile indexing is disabled

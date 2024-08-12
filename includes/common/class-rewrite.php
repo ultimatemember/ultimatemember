@@ -119,6 +119,10 @@ class Rewrite {
 		return $newrules + $rules;
 	}
 
+	/**
+	 * @todo temp files routing.
+	 * @return void
+	 */
 	public function temp_files_routing() {
 		if ( 'um-temp' !== get_query_var( 'um_action' ) ) {
 			return;
