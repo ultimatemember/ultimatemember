@@ -182,7 +182,6 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 		 */
 		public function add_settings( $settings ) {
 			$nonce       = wp_create_nonce( 'um-secure-expire-session-nonce' );
-			$count_users = count_users();
 
 			$banned_capabilities       = array();
 			$banned_admin_capabilities = UM()->common()->secure()->get_banned_capabilities_list();
@@ -245,7 +244,10 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 				),
 			);
 
-			$count_users_exclude_me = $count_users['total_users'] - 1;
+			global $wpdb;
+			$count_users = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->users}" );
+
+			$count_users_exclude_me = $count_users - 1;
 			if ( $count_users_exclude_me > 0 ) {
 				$secure_fields[] = array(
 					'id'          => 'force_reset_passwords',
