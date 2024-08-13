@@ -266,23 +266,23 @@ class Enqueue {
 		wp_register_style( 'um_raty', $libs_url . 'raty/um-raty' . $suffix . '.css', array(), '2.6.0' );
 
 		$fonticons_handlers = array();
-		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-			// New FontIcons from FontAwesome.
-			// @todo new version
-			// First install set this option to true by default and use new FontAwesome icons
-			wp_register_style( 'um_fontawesome', $css_url . 'um-fontawesome' . $suffix . '.css', array(), self::$fa_version ); // New FontAwesome
-			$fonticons_handlers[] = 'um_fontawesome';
-		} else {
-			// Legacy FontIcons.
-			wp_register_style( 'um_fonticons_ii', $libs_url . 'legacy/fonticons/fonticons-ii' . $suffix . '.css', array(), UM_VERSION ); // Ionicons
-			wp_register_style( 'um_fonticons_fa', $libs_url . 'legacy/fonticons/fonticons-fa' . $suffix . '.css', array(), UM_VERSION ); // FontAwesome
-			$fonticons_handlers = array_merge( $fonticons_handlers, array( 'um_fonticons_ii', 'um_fonticons_fa' ) );
-			// New FontIcons from FontAwesome.
-			// @todo new version
-			// First install set this option to true by default and use new FontAwesome icons
-			wp_register_style( 'um_fontawesome', $css_url . 'um-fontawesome' . $suffix . '.css', array(), self::$fa_version ); // New FontAwesome
-			$fonticons_handlers[] = 'um_fontawesome';
-		}
+//		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+//			// New FontIcons from FontAwesome.
+//			// @todo new version
+//			// First install set this option to true by default and use new FontAwesome icons
+//			wp_register_style( 'um_fontawesome', $css_url . 'um-fontawesome' . $suffix . '.css', array(), self::$fa_version ); // New FontAwesome
+//			$fonticons_handlers[] = 'um_fontawesome';
+//		} else {
+		// Legacy FontIcons.
+		wp_register_style( 'um_fonticons_ii', $libs_url . 'legacy/fonticons/fonticons-ii' . $suffix . '.css', array(), UM_VERSION ); // Ionicons
+		wp_register_style( 'um_fonticons_fa', $libs_url . 'legacy/fonticons/fonticons-fa' . $suffix . '.css', array(), UM_VERSION ); // FontAwesome
+		$fonticons_handlers = array_merge( $fonticons_handlers, array( 'um_fonticons_ii', 'um_fonticons_fa' ) );
+		// New FontIcons from FontAwesome.
+		// @todo new version
+		// First install set this option to true by default and use new FontAwesome icons
+		wp_register_style( 'um_fontawesome', $css_url . 'um-fontawesome' . $suffix . '.css', array(), self::$fa_version ); // New FontAwesome
+		$fonticons_handlers[] = 'um_fontawesome';
+		//}
 
 		self::$fonticons_handlers = $fonticons_handlers;
 
