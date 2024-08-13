@@ -1734,51 +1734,151 @@
 
 // Account
 .um
-  .#{$prefix}tabs-wrapper.#{$prefix}vertical-tabs
-    +flex( row, flex-start, flex-start, nowrap )
-    column-gap: $spacing-3xl
-    .#{$prefix}tabs-list
-      min-width: 160px
-      ul
-        +flex( column, flex-start, stretch, nowrap )
-        list-style: none
-        margin: 0
-        padding: 0
-        row-gap: $spacing-xs
-        li
-          width: 100%
-          a.#{$prefix}link
-            color: $gray-600
-            +typography( text, sm, semibold )
-            width: 100%
-            text-align: left
-            display: inline-block
-            +border-box
-            border-radius: $radius-sm
-            padding: $spacing-md $spacing-lg
-            background-color: transparent
-            &:hover
-              color: $gray-700
-              background-color: $gray-50
-          &.#{$prefix}current-tab
+  .#{$prefix}tabs-wrapper
+    &.#{$prefix}tabs-size-s
+      .#{$prefix}tabs-list
+        ul
+          li
             a.#{$prefix}link
-              color: $primary-700
-              background-color: $primary-200
+              +typography( text, sm, semibold )
+    &.#{$prefix}tabs-size-m
+      ul
+        li
+          a.#{$prefix}link
+            +typography( text, md, semibold )
+    &.#{$prefix}vertical-tabs
+      +flex( row, flex-start, flex-start, nowrap )
+      column-gap: $spacing-3xl
+      .#{$prefix}tabs-list
+        min-width: 160px
+        ul
+          +flex( column, flex-start, stretch, nowrap )
+          list-style: none
+          margin: 0
+          padding: 0
+          row-gap: $spacing-xs
+          li
+            width: 100%
+            a.#{$prefix}link
+              width: 100%
+              text-align: left
+              display: inline-block
+              +border-box
+              border-radius: $radius-sm
+              padding: $spacing-md $spacing-lg
+        select
+          display: none
+      .#{$prefix}tabs-content
+        +flex( column, flex-start, stretch, nowrap )
+        width: calc(100% - 160px)
+        .#{$prefix}tab-content
+          width: 100%
+          row-gap: $spacing-3xl
+          display: none
+          &.#{$prefix}current-tab
+            +flex( column, flex-start, stretch, nowrap )
+    &.#{$prefix}horizontal-tabs
+      +flex( column, flex-start, stretch, nowrap )
+      column-gap: $spacing-3xl
+      .#{$prefix}tabs-list
+        ul
+          +flex( row, flex-start, center, wrap )
+          list-style: none
+          margin: 0
+          padding: 0
+          gap: $spacing-xs
+          li
+            a.#{$prefix}link
+              text-align: center
+              display: inline-block
+              +border-box
+              border-radius: $radius-sm
+              padding: $spacing-md $spacing-lg
+        select
+          display: none
+    &.#{$prefix}primary-color-tabs
+      .#{$prefix}tabs-list
+        ul
+          li
+            a.#{$prefix}link
+              color: $gray-500
+              background-color: transparent
               &:hover
                 color: $primary-700
-                background-color: $primary-200
-      select
-        display: none
-    .#{$prefix}tabs-content
-      +flex( column, flex-start, stretch, nowrap )
-      width: calc(100% - 160px)
-      .#{$prefix}tab-content
-        width: 100%
-        row-gap: $spacing-3xl
-        display: none
-        &.#{$prefix}current-tab
-          +flex( column, flex-start, stretch, nowrap )
-
+                background-color: $primary-50
+              &:focus
+                color: $gray-500
+                background-color: transparent
+                box-shadow: $ring-brand
+            &.#{$prefix}current-tab
+              a.#{$prefix}link
+                color: $primary-700
+                background-color: $primary-50
+                &:hover
+                  color: $primary-700
+                  background-color: $primary-50
+                &:focus
+                  color: $primary-700
+                  background-color: $primary-50
+                  box-shadow: $ring-brand
+    &.#{$prefix}secondary-color-tabs
+      .#{$prefix}tabs-list
+        ul
+          li
+            a.#{$prefix}link
+              color: $gray-500
+              background-color: transparent
+              &:hover
+                color: $gray-700
+                background-color: $gray-50
+              &:focus
+                color: $gray-500
+                background-color: transparent
+                box-shadow: $ring-gray
+            &.#{$prefix}current-tab
+              a.#{$prefix}link
+                color: $gray-700
+                background-color: $gray-50
+                &:hover
+                  color: $gray-700
+                  background-color: $gray-50
+                &:focus
+                  color: $gray-700
+                  background-color: $gray-50
+                  box-shadow: $ring-gray
+    &.#{$prefix}underline-color-tabs
+      .#{$prefix}tabs-list
+        ul
+          border-bottom: 1px solid $gray-200
+          li
+            position: relative
+            top: 1px
+            a.#{$prefix}link
+              border-radius: 0
+              border-bottom: 2px solid transparent
+              color: $gray-500
+              background-color: transparent
+              &:hover
+                color: $primary-700
+                border-color: $primary-600
+                background-color: transparent
+              &:focus
+                color: $gray-500
+                background-color: transparent
+            &.#{$prefix}current-tab
+              a.#{$prefix}link
+                border-radius: 0
+                border-bottom: 2px solid $primary-600
+                color: $primary-700
+                background-color: transparent
+                &:hover
+                  border-bottom: 2px solid $primary-600
+                  color: $primary-700
+                  background-color: transparent
+                &:focus
+                  border-bottom: 2px solid $primary-600
+                  color: $primary-700
+                  background-color: transparent
 .um.#{$prefix}account
   .#{$prefix}tabs-wrapper.#{$prefix}vertical-tabs
     width: 100%

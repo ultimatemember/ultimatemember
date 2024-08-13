@@ -944,9 +944,11 @@ class Layouts {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'wrapper_class' => '',
+				'wrapper_class' => array(),
+				'tabs_only'     => false,
 				'orientation'   => 'vertical',
-				'color'         => 'primary',
+				'color'         => 'primary', // secondary, underline, underline-fill, gray-line
+				'size'          => 's', // s, m
 				'tabs'          => array(
 					'id' => array(
 						'title'   => __( 'Tab title', 'ultimate-member' ),
@@ -962,6 +964,7 @@ class Layouts {
 			'um-tabs-wrapper',
 			'um-' . $args['orientation'] . '-tabs',
 			'um-' . $args['color'] . '-color-tabs',
+			'um-tabs-size-' . $args['size'],
 		);
 		if ( ! empty( $args['wrapper_class'] ) ) {
 			$wrapper_classes = array_merge( $wrapper_classes, $args['wrapper_class'] );
@@ -996,11 +999,13 @@ class Layouts {
 			<?php
 			$mobile_list .= ob_get_clean();
 
-			ob_start();
-			?>
-			<div class="um-tab-content <?php echo esc_attr( $current_class ); ?>" data-tab="<?php echo esc_attr( $tab_id ); ?>"><?php echo wp_kses( $tab_data['content'], UM()->get_allowed_html( 'templates' ) ); ?></div>
-			<?php
-			$content .= ob_get_clean();
+			if ( empty( $args['tabs_only'] ) ) {
+				ob_start();
+				?>
+				<div class="um-tab-content <?php echo esc_attr( $current_class ); ?>" data-tab="<?php echo esc_attr( $tab_id ); ?>"><?php echo wp_kses( $tab_data['content'], UM()->get_allowed_html( 'templates' ) ); ?></div>
+				<?php
+				$content .= ob_get_clean();
+			}
 		}
 
 		$list_html = '<ul>' . $desktop_list . '</ul><select>' . $mobile_list . '</select>';
@@ -1009,7 +1014,9 @@ class Layouts {
 		?>
 		<div class="<?php echo esc_attr( $wrapper_classes ); ?>">
 			<div class="um-tabs-list"><?php echo wp_kses( $list_html, UM()->get_allowed_html( 'templates' ) ); ?></div>
-			<div class="um-tabs-content"><?php echo wp_kses( $content, UM()->get_allowed_html( 'templates' ) ); ?></div>
+			<?php if ( empty( $args['tabs_only'] ) ) { ?>
+				<div class="um-tabs-content"><?php echo wp_kses( $content, UM()->get_allowed_html( 'templates' ) ); ?></div>
+			<?php } ?>
 		</div>
 		<?php
 		return ob_get_clean();

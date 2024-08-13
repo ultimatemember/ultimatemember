@@ -15,7 +15,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-$description_key = UM()->profile()->get_show_bio_key( $args );
+
 echo 'NEW';
 ?>
 
@@ -80,77 +80,7 @@ echo 'NEW';
 	 */
 	do_action( 'um_profile_header', $args );
 
-	/**
-	 * UM hook
-	 *
-	 * @type filter
-	 * @title um_profile_navbar_classes
-	 * @description Additional classes for profile navbar
-	 * @input_vars
-	 * [{"var":"$classes","type":"string","desc":"UM Posts Tab query"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage
-	 * <?php add_filter( 'um_profile_navbar_classes', 'function_name', 10, 1 ); ?>
-	 * @example
-	 * <?php
-	 * add_filter( 'um_profile_navbar_classes', 'my_profile_navbar_classes', 10, 1 );
-	 * function my_profile_navbar_classes( $classes ) {
-	 *     // your code here
-	 *     return $classes;
-	 * }
-	 * ?>
-	 */
-	$classes = apply_filters( 'um_profile_navbar_classes', '' );
-	?>
-
-	<div class="um-profile-navbar <?php echo esc_attr( $classes ); ?>">
-		<?php
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_profile_navbar
-		 * @description Profile navigation bar
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_profile_navbar', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_profile_navbar', 'my_profile_navbar', 10, 1 );
-		 * function my_profile_navbar( $args ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( 'um_profile_navbar', $args );
-		?>
-		<div class="um-clear"></div>
-	</div>
-
-	<?php
-	/**
-	 * UM hook
-	 *
-	 * @type action
-	 * @title um_profile_menu
-	 * @description Profile menu
-	 * @input_vars
-	 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_action( 'um_profile_menu', 'function_name', 10, 1 );
-	 * @example
-	 * <?php
-	 * add_action( 'um_profile_menu', 'my_profile_navbar', 10, 1 );
-	 * function my_profile_navbar( $args ) {
-	 *     // your code here
-	 * }
-	 * ?>
-	 */
-	do_action( 'um_profile_menu', $args );
+	// @todo find the proper place for "um-profile-navbar" block. It's removed for now but there is displayed followers and messages buttons.
 
 	if ( um_is_on_edit_profile() || UM()->user()->preview ) {
 		$nav    = 'main';
@@ -162,7 +92,7 @@ echo 'NEW';
 			<?php
 			if ( ! UM()->user()->preview ) {
 				?>
-				<form method="post" action="" data-description_key="<?php echo esc_attr( $description_key ); ?>" class="um-form-new">
+				<form method="post" action="" class="um-form-new">
 				<?php
 			}
 			/**
@@ -215,6 +145,27 @@ echo 'NEW';
 		</div>
 		<?php
 	} else {
+		// @todo show profile menu only on the view profile mode. Need to clarify if we need it on the profile edit or preview.
+		/**
+		 * Fires for displaying User Profile menu.
+		 *
+		 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+		 * 9 - `um_profile_menu()` displays User Profile menu.
+		 *
+		 * @param {array} $args User Profile data.
+		 *
+		 * @since 2.0
+		 * @hook  um_profile_menu
+		 *
+		 * @example <caption>Display some content before or after User Profile menu.</caption>
+		 * function my_um_profile_menu( $args ) {
+		 *     // your code here
+		 *     echo $content;
+		 * }
+		 * add_action( 'um_profile_menu', 'my_um_profile_menu' );
+		 */
+		do_action( 'um_profile_menu', $args );
+
 		$menu_enabled = UM()->options()->get( 'profile_menu' );
 		$tabs         = UM()->profile()->tabs_active();
 
@@ -276,6 +227,24 @@ echo 'NEW';
 		}
 	}
 
+	/**
+	 * Fires for adding content below User Profile menu.
+	 *
+	 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+	 * 99 - `profile_footer_login_form()` displays User Login form related to messaging extension.
+	 *
+	 * @param {array} $args User Profile data.
+	 *
+	 * @since 2.0
+	 * @hook  um_profile_footer
+	 *
+	 * @example <caption>Display some content in User Profile footer.</caption>
+	 * function my_um_profile_footer( $args ) {
+	 *     // your code here
+	 *     echo $content;
+	 * }
+	 * add_action( 'um_profile_footer', 'my_um_profile_footer' );
+	 */
 	do_action( 'um_profile_footer', $args );
 	?>
 </div>

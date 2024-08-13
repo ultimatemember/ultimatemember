@@ -123,3 +123,7 @@
   padding: 0;
   gap: 16px;
 }
+.um-profile.um-editing .um-profile-header {
+  border-bottom: 1px solid var(--um-gray-200, #eaecf0);
+  padding-bottom: 12px;
+}

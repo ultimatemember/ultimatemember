@@ -844,23 +844,6 @@ class Site_Health {
 		);
 
 		if ( ! empty( $profile_menu ) ) {
-			/**
-			 * Filters a privacy list extend.
-			 *
-			 * @since 2.7.0
-			 * @hook um_profile_tabs_privacy_list
-			 *
-			 * @param {array} $privacy_option Add options for profile tabs' privacy.
-			 *
-			 * @return {array} Options for profile tabs' privacy.
-			 *
-			 * @example <caption>Add options for profile tabs' privacy.</caption>
-			 * function um_profile_menu_link_attrs( $privacy_option ) {
-			 *     // your code here
-			 *     return $privacy_option;
-			 * }
-			 * add_filter( 'um_profile_tabs_privacy_list', 'um_profile_tabs_privacy_list', 10, 1 );
-			 */
 			$privacy_option = UM()->profile()->tabs_privacy();
 
 			$tabs = UM()->profile()->tabs();
@@ -907,23 +890,7 @@ class Site_Health {
 			 */
 			$appearance_settings = apply_filters( 'um_profile_tabs_site_health', $appearance_settings );
 
-			/**
-			 * Filters user profile tabs
-			 *
-			 * @since 2.7.0
-			 * @hook um_profile_tabs
-			 *
-			 * @param {array} $tabs tabs list.
-			 *
-			 * @return {array} tabs list.
-			 *
-			 * @example <caption>Add options for profile tabs' privacy.</caption>
-			 * function um_profile_tabs( $tabs ) {
-			 *     // your code here
-			 *     return $tabs;
-			 * }
-			 * add_filter( 'um_profile_tabs', 'um_profile_tabs', 10, 1 );
-			 */
+			/** This action is documented in ultimate-member/includes/core/class-profile.php */
 			$tabs_options = apply_filters(
 				'um_profile_tabs',
 				array(
