@@ -1516,9 +1516,21 @@ class Directory extends \um\common\Directory {
 
 		$directory_data = UM()->query()->post_data( $directory_id );
 
-		$directory_data['tagline_fields'] = maybe_unserialize( $directory_data['tagline_fields'] );
-		$directory_data['reveal_fields']  = maybe_unserialize( $directory_data['reveal_fields'] );
-		$directory_data['view_types']     = maybe_unserialize( $directory_data['view_types'] );
+		if ( array_key_exists( 'tagline_fields', $directory_data ) ) {
+			$directory_data['tagline_fields'] = maybe_unserialize( $directory_data['tagline_fields'] );
+		} else {
+			$directory_data['tagline_fields'] = array();
+		}
+		if ( array_key_exists( 'reveal_fields', $directory_data ) ) {
+			$directory_data['reveal_fields']  = maybe_unserialize( $directory_data['reveal_fields'] );
+		} else {
+			$directory_data['reveal_fields'] = array();
+		}
+		if ( array_key_exists( 'view_types', $directory_data ) ) {
+			$directory_data['view_types']  = maybe_unserialize( $directory_data['view_types'] );
+		} else {
+			$directory_data['view_types'] = array();
+		}
 
 		// Predefined result for user without capabilities to see other members
 		$this->no_access_response( $directory_data );
