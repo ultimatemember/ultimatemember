@@ -23,6 +23,9 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 			$this->directory();
 			$this->enqueue();
 			$this->modal();
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				$this->profile();
+			}
 			$this->secure();
 		}
 
@@ -89,6 +92,19 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 			}
 
 			return UM()->classes['um\frontend\modal'];
+		}
+
+		/**
+		 * @since 2.9.0
+		 *
+		 * @return Profile
+		 */
+		public function profile() {
+			if ( empty( UM()->classes['um\frontend\profile'] ) ) {
+				UM()->classes['um\frontend\profile'] = new Profile();
+			}
+
+			return UM()->classes['um\frontend\profile'];
 		}
 
 		/**

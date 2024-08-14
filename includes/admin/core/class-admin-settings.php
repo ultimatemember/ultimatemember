@@ -2276,8 +2276,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						)
 					);
 
-					// removed Account deletion text
+					// removed "Account deletion text".
 					unset( $this->settings_structure['']['sections']['account']['form_sections']['delete_tab']['fields'][1], $this->settings_structure['']['sections']['account']['form_sections']['delete_tab']['fields'][2] );
+
+					// removed "Custom message on empty profile", "Custom message emoticon".
+					unset( $this->settings_structure['appearance']['sections']['']['form_sections']['fields']['fields'][4], $this->settings_structure['appearance']['sections']['']['form_sections']['fields']['fields'][5] );
+
+					// removed "Menu icons in desktop view".
+					unset( $this->settings_structure['appearance']['sections']['profile_menu']['fields'][ count( $this->settings_structure['appearance']['sections']['profile_menu']['fields'] ) - 1 ] );
 				}
 
 				if ( UM()->options()->get( 'enable_no_conflict_avatar' ) ) {
