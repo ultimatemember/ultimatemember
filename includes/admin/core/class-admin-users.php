@@ -398,10 +398,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			$old_views = $views;
 			$views     = array();
 
+			global $wpdb;
+			$count_users = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->users}" );
+
 			if ( ! isset( $_REQUEST['role'] ) && ! isset( $_REQUEST['um_status'] ) ) {
-				$views['all'] = '<a href="' . admin_url( 'users.php' ) . '" class="current">' . __( 'All', 'ultimate-member' ) . ' <span class="count">(' . UM()->query()->count_users() . ')</span></a>';
+				$views['all'] = '<a href="' . admin_url( 'users.php' ) . '" class="current">' . __( 'All', 'ultimate-member' ) . ' <span class="count">(' . absint( $count_users ) . ')</span></a>';
 			} else {
-				$views['all'] = '<a href="' . admin_url( 'users.php' ) . '">' . __( 'All', 'ultimate-member' ) . ' <span class="count">(' . UM()->query()->count_users() . ')</span></a>';
+				$views['all'] = '<a href="' . admin_url( 'users.php' ) . '">' . __( 'All', 'ultimate-member' ) . ' <span class="count">(' . absint( $count_users ) . ')</span></a>';
 			}
 
 			$status = array(
