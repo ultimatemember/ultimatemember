@@ -119,8 +119,8 @@ class Users {
 				$multisite_fix_url = str_replace( '/sites/' . get_current_blog_id() . '/', '/', $multisite_fix_url );
 
 				foreach ( $locate as $avatar_basename ) {
-					if ( file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $avatar_basename ) ) {
-						$url = $multisite_fix_url . um_user( 'ID' ) . '/' . $avatar_basename;
+					if ( file_exists( $multisite_fix_dir . $user->ID . DIRECTORY_SEPARATOR . $avatar_basename ) ) {
+						$url = $multisite_fix_url . $user->ID . '/' . $avatar_basename;
 						break;
 					}
 				}
@@ -128,8 +128,8 @@ class Users {
 
 			if ( empty( $url ) ) {
 				foreach ( $locate as $avatar_basename ) {
-					if ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $avatar_basename ) ) {
-						$url = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . '/' . $avatar_basename;
+					if ( file_exists( UM()->uploader()->get_upload_base_dir() . $user->ID . DIRECTORY_SEPARATOR . $avatar_basename ) ) {
+						$url = UM()->uploader()->get_upload_base_url() . $user->ID . '/' . $avatar_basename;
 						break;
 					}
 				}
