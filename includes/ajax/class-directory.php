@@ -1522,12 +1522,12 @@ class Directory extends \um\common\Directory {
 			$directory_data['tagline_fields'] = array();
 		}
 		if ( array_key_exists( 'reveal_fields', $directory_data ) ) {
-			$directory_data['reveal_fields']  = maybe_unserialize( $directory_data['reveal_fields'] );
+			$directory_data['reveal_fields'] = maybe_unserialize( $directory_data['reveal_fields'] );
 		} else {
 			$directory_data['reveal_fields'] = array();
 		}
 		if ( array_key_exists( 'view_types', $directory_data ) ) {
-			$directory_data['view_types']  = maybe_unserialize( $directory_data['view_types'] );
+			$directory_data['view_types'] = maybe_unserialize( $directory_data['view_types'] );
 		} else {
 			$directory_data['view_types'] = array();
 		}
