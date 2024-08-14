@@ -1704,7 +1704,7 @@ class Directory extends \um\common\Directory {
 
 		$response = array(
 			'pagination'  => UM()->ajax()->esc_html_spaces( $pagination ),
-			'total_pages' => absint( ceil( $pagination_args['total'] / $pagination_args['per_page'] ) ),
+			'total_pages' => ! empty( $pagination_args['per_page'] ) ? absint( ceil( $pagination_args['total'] / $pagination_args['per_page'] ) ) : 1,
 			// translators: %d is the count of users
 			'counter'     => $pagination_args['total'] > 0 ? esc_html( sprintf( _n( '%d Member', '%d Members', $pagination_args['total'], 'ultimate-member' ), $pagination_args['total'] ) ) : '',
 		);
