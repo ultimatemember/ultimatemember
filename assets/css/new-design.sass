@@ -1737,9 +1737,17 @@
 
 
 
-// Account
+// Tabs vertical and horizontal
 .um
   .#{$prefix}tabs-wrapper
+    .#{$prefix}tabs-content
+      +flex( column, flex-start, stretch, nowrap )
+      .#{$prefix}tab-content
+        width: 100%
+        row-gap: $spacing-3xl
+        display: none
+        &.#{$prefix}current-tab
+          +flex( column, flex-start, stretch, nowrap )
     &.#{$prefix}tabs-size-s
       .#{$prefix}tabs-list
         ul
@@ -1774,14 +1782,7 @@
         select
           display: none
       .#{$prefix}tabs-content
-        +flex( column, flex-start, stretch, nowrap )
         width: calc(100% - 160px)
-        .#{$prefix}tab-content
-          width: 100%
-          row-gap: $spacing-3xl
-          display: none
-          &.#{$prefix}current-tab
-            +flex( column, flex-start, stretch, nowrap )
     &.#{$prefix}horizontal-tabs
       +flex( column, flex-start, stretch, nowrap )
       column-gap: $spacing-3xl
@@ -1884,38 +1885,6 @@
                   border-bottom: 2px solid $primary-600
                   color: $primary-700
                   background-color: transparent
-.um.#{$prefix}account
-  .#{$prefix}tabs-wrapper.#{$prefix}vertical-tabs
-    width: 100%
-
-.um
-  .#{$prefix}section-header
-    +flex( column, flex-start, stretch, nowrap )
-    row-gap: $spacing-xs
-    .#{$prefix}section-title
-      +typography( text, lg, semibold )
-      color: $gray-900
-      margin: 0
-      padding: 0
-    .#{$prefix}section-supporting-text
-      +typography( text, sm, regular )
-      color: $gray-600
-      margin: 0
-      padding: 0
-
-.um
-  .#{$prefix}tabs-wrapper.#{$prefix}vertical-tabs
-    .#{$prefix}tabs-content
-      .#{$prefix}tab-content[data-tab="personal-data"]
-        row-gap: 0
-
-        form.#{$prefix}form-new
-          .#{$prefix}form-submit
-            +flex( row, flex-start, center, nowrap )
-            row-gap: initial
-            column-gap: $spacing-2xl
-            .#{$prefix}ajax-spinner-svg
-              display: none
 
 // Divider
 .um

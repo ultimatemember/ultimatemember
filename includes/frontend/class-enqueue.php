@@ -356,6 +356,8 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_register_style( 'um_directory', $css_url . 'v3/directory' . $suffix . '.css', array( 'um_new_design' ), UM_VERSION );
 			wp_register_style( 'um_profile', $css_url . 'v3/profile' . $suffix . '.css', array( 'um_new_design' ), UM_VERSION );
 
+			wp_register_style( 'um_account', $css_url . 'v3/account' . $suffix . '.css', array( 'um_new_design' ), UM_VERSION );
+
 			//FontAwesome and FontIcons styles
 //			wp_register_style( 'um_rtl', $css_url . 'um.rtl' . $suffix . '.css', array(), UM_VERSION );
 //			wp_register_style( 'um_default_css', $css_url . 'um-old-default' . $suffix . '.css', array(), UM_VERSION );

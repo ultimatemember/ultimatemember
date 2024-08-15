@@ -672,6 +672,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'account_tab_password'                  => true,
 				'account_tab_privacy'                   => true,
 				'account_tab_notifications'             => true,
+				'account_tab_personal-data'             => true,
 				'account_tab_delete'                    => true,
 				'delete_account_text'                   => __( 'Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account enter your password below.', 'ultimate-member' ),
 				'delete_account_no_pass_required_text'  => __( 'Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account, click on the button below.', 'ultimate-member' ),

@@ -233,8 +233,9 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			}
 
 			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-				wp_enqueue_style( 'um_new_design' );
+				//wp_enqueue_style( 'um_new_design' );
 				wp_enqueue_script( 'um_new_design' );
+				wp_enqueue_style( 'um_account' );
 			}
 
 			ob_start();
@@ -920,7 +921,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				<div class="um-section-header">
 					<p class="um-section-title"><?php echo esc_html( $tab_data['title'] ); ?></p>
 					<?php if ( ! empty( $tab_data['description'] ) ) { ?>
-						<p class="um-section-supporting-text"><?php echo esc_html( $tab_data['description'] ); ?></p>
+						<p class="um-supporting-text"><?php echo esc_html( $tab_data['description'] ); ?></p>
 					<?php } ?>
 				</div>
 				<?php

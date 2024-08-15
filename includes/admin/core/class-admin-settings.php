@@ -777,6 +777,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'account_tab_privacy'                   => array(
 						'sanitize' => 'bool',
 					),
+					'account_tab_personal-data'             => array(
+						'sanitize' => 'bool',
+					),
 					'account_tab_delete'                    => array(
 						'sanitize' => 'bool',
 					),
