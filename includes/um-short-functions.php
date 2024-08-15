@@ -1506,7 +1506,7 @@ function um_edit_my_profile_cancel_uri( $url = '' ) {
  * @return bool
  */
 function um_is_on_edit_profile() {
-	if ( isset( $_REQUEST['um_action'] ) && sanitize_key( $_REQUEST['um_action'] ) == 'edit' ) {
+	if ( isset( $_REQUEST['um_action'] ) && 'edit' === sanitize_key( $_REQUEST['um_action'] ) ) {
 		return true;
 	}
 

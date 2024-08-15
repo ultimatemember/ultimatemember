@@ -9,6 +9,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param array $args
  */
 function um_profile_content_main( $args ) {
+	// Disabled for now in new UI.
+	if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+		return;
+	}
+
 	if ( ! array_key_exists( 'mode', $args ) ) {
 		return;
 	}
