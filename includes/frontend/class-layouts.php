@@ -784,6 +784,67 @@ class Layouts {
 		return ob_get_clean();
 	}
 
+	public static function users_list( $user_ids, $args = array() ) {
+		if ( empty( $user_ids ) ) {
+			return '';
+		}
+
+		$args = wp_parse_args(
+			$args,
+			array(
+				'count'         => 0,
+				'avatar_size'   => 'm',
+				'wrapper_class' => array(),
+				'clickable'     => true,
+				'supporting'    => '',
+			)
+		);
+
+		$user_ids = array_unique( $user_ids );
+
+		if ( 0 !== $args['count'] ) {
+			array_splice( $user_ids, $args['count'] );
+		}
+
+		$wrapper_classes = array(
+			'um-users-list',
+		);
+
+		$wrapper_classes = array_merge( $wrapper_classes, $args['wrapper_class'] );
+		ob_start();
+		?>
+		<div class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>">
+			<?php
+			$counter = 0;
+			foreach ( $user_ids as $user_id ) {
+				if ( 0 !== $args['count'] && $args['count'] === $counter ) {
+					break;
+				}
+
+				$data = self::small_data(
+					$user_id,
+					array(
+						'avatar_size' => $args['avatar_size'],
+						'clickable'   => $args['clickable'],
+						'supporting'  => $args['supporting'],
+					)
+				);
+
+				if ( empty( $data ) ) {
+					continue;
+				}
+
+				if ( 0 !== $args['count'] ) {
+					++$counter;
+				}
+				echo wp_kses( $data, UM()->get_allowed_html( 'templates' ) );
+			}
+			?>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
 	public static function small_data( $user_id = null, $args = array() ) {
 		if ( is_null( $user_id ) && is_user_logged_in() ) {
 			$user_id = get_current_user_id();
@@ -802,9 +863,25 @@ class Layouts {
 				'url'         => um_user_profile_url( $user_id ),
 				'url_title'   => __( 'Visit profile', 'ultimate-member' ),
 				'supporting'  => '',
+				'ignore_caps' => false,
 				'classes'     => array(),
 			)
 		);
+
+		if ( false === $args['ignore_caps'] ) {
+			if ( get_current_user_id() !== $user_id ) {
+				if ( ! um_can_view_profile( $user_id ) ) {
+					return '';
+				}
+
+				if ( ! current_user_can( 'administrator' ) ) {
+					$status = get_user_meta( $user_id, 'account_status', true );
+					if ( 'approved' !== $status ) {
+						return '';
+					}
+				}
+			}
+		}
 
 		$avatar_args = array(
 			'size'      => $args['avatar_size'],
@@ -856,8 +933,13 @@ class Layouts {
 				?>
 				<span class="um-supporting-text">
 					<?php
+					$supporting = $args['supporting'];
+					if ( is_callable( $args['supporting'] ) ) {
+						$supporting = call_user_func( $args['supporting'], $user_id, $args );
+					}
+
 					echo wp_kses(
-						$args['supporting'],
+						$supporting,
 						UM()->get_allowed_html( 'templates' )
 					);
 					?>

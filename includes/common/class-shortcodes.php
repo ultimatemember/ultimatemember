@@ -582,6 +582,62 @@ class Shortcodes {
 		ob_start();
 		?>
 		<div class="um">
+			<h3>Users list</h3>
+			<div style="display:flex;flex-direction:column;justify-content:flex-start;flex-wrap: nowrap;align-items:flex-start; gap: 8px;">
+				<?php
+				$user_ids = get_users(
+					array(
+						'fields' => 'ids',
+					)
+				);
+				echo wp_kses(
+					UM()->frontend()::layouts()::users_list(
+						$user_ids,
+						array(
+							'avatar_size'   => 'm',
+							'count'         => 12,
+							'wrapper_class' => array( 'um-grid' ),
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				);
+				echo wp_kses(
+					UM()->frontend()::layouts()::users_list(
+						$user_ids,
+						array(
+							'avatar_size'   => 'm',
+							'count'         => 12,
+							'wrapper_class' => array( 'um-grid', 'um-grid-col-2' ),
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				);
+				echo wp_kses(
+					UM()->frontend()::layouts()::users_list(
+						$user_ids,
+						array(
+							'avatar_size' => 'm',
+							'count'       => 10,
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				);
+				echo wp_kses(
+					UM()->frontend()::layouts()::users_list(
+						$user_ids,
+						array(
+							'avatar_size' => 'l',
+							'count'       => 10,
+							'supporting'  => function ( $user_id ) {
+								return get_user_meta( $user_id, 'description', true );
+							},
+						)
+					),
+					UM()->get_allowed_html( 'templates' )
+				);
+				?>
+			</div>
+
 			<h3>Outline icon</h3>
 			<div style="display:flex;flex-direction:column;justify-content:flex-start;flex-wrap: nowrap;align-items:flex-start; gap: 8px;">
 				<?php echo UM()->frontend()::layouts()::outline_icon( '<svg  xmlns="http://www.w3.org/2000/svg"  width="20"  height="20"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M9 12l2 2l4 -4" /></svg>' ); ?>

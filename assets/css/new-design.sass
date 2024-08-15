@@ -483,6 +483,7 @@
           background-color: transparent
           border: none
           box-shadow: none
+
 // Box.
 .um
   .#{$prefix}box
@@ -525,6 +526,7 @@
       row-gap: $spacing-md
       padding: $spacing-lg 0 0 0
       border-top: 1px solid $gray-200
+
 
 // Link + Link Button.
 .um
@@ -867,6 +869,7 @@
             color: $gray-400
             background-color: transparent
             border: none
+
 // Avatar.
 .um
   .#{$prefix}avatar
@@ -898,6 +901,7 @@
     &.#{$prefix}avatar-round
       overflow: hidden
       border-radius: 100%
+
 
 // Avatars list.
 .um
@@ -934,6 +938,7 @@
     &.#{$prefix}avatars-list-tooltip
       .#{$prefix}avatar:hover
         z-index: 1
+
 
 // Avatar uploader
 .um
@@ -1934,6 +1939,7 @@
       padding: 0
       margin: 0
 
+
 // Small user data header.
 .um
   .#{$prefix}small-data
@@ -1959,6 +1965,10 @@
     &.#{$prefix}data-no-supporting
       +flex( row, flex-start, center, nowrap )
       row-gap: 0
+      .#{$prefix}user-display-name
+        flex: 1
+
+
 // Badges.
 .um
   .#{$prefix}badge
@@ -2042,6 +2052,8 @@
         border-color: $success-200
         background: $success-50
         color: $success-700
+
+
 // Buttons group.
 .um
   .#{$prefix}buttons-group
@@ -2111,6 +2123,8 @@
           border-left: 1px solid $button-border-color-disabled
         &:last-child
           border-right: 1px solid $button-border-color-disabled
+
+
 // Pagination
 // Note: It partially uses the buttons group style
 .um
@@ -2184,6 +2198,8 @@
       button
         width: auto
         min-width: 80px
+
+
 // Fields common styling.
 .um
   input[type="date"],
@@ -2233,6 +2249,8 @@
   input[type="datetime-local"],
   input[type="time"]
     font-family: inherit
+
+
 // Field wrapper common styling
 .um
   .#{$prefix}field-wrapper
@@ -2301,6 +2319,8 @@
           border-radius: $radius-md 0 0 $radius-md
         &:last-child
           border-radius: 0 $radius-md $radius-md 0
+
+
 // Toggle sections displayed after button/link click.
 .um
   .#{$prefix}toggle-block
@@ -2316,6 +2336,8 @@
       width: 100%
       &.#{$prefix}visible
         overflow: visible
+
+
 // Uploader.
 .um
   .#{$prefix}uploader
@@ -2402,6 +2424,8 @@
         .#{$prefix}supporting-text
           +flex( column, flex-start, center, nowrap )
           row-gap: $spacing-xs
+
+
 // File extensions.
 .um
   .#{$prefix}file-extension
@@ -2427,6 +2451,8 @@
       text-transform: uppercase
       background: $primary-600
       border-radius: $radius-xxs
+
+
 // Progress bar.
 .um
   .#{$prefix}progress-bar
@@ -2454,6 +2480,8 @@
         max-width: 50px
       .#{$prefix}progress-bar
         width: calc( 100% - 50px )
+
+
 // Misc
 .um
   .#{$prefix}supporting-text
@@ -2473,7 +2501,27 @@
     color: $success-500
   .#{$prefix}align-center
     text-align: center
+  .#{$prefix}grid
+    direction: ltr
+    display: grid
+    grid-gap: $spacing-md
+    grid-template-columns: repeat(3, 1fr) // it has 3 columns by default.
+    align-content: center
+    align-items: flex-start
+    &.#{$prefix}grid-col-1
+      grid-template-columns: repeat(1, 1fr)
+    &.#{$prefix}grid-col-2
+      grid-template-columns: repeat(2, 1fr)
+    &.#{$prefix}grid-col-3
+      grid-template-columns: repeat(3, 1fr)
+    &.#{$prefix}grid-col-4
+      grid-template-columns: repeat(4, 1fr)
+    &.#{$prefix}grid-col-5
+      grid-template-columns: repeat(5, 1fr)
+    &.#{$prefix}grid-col-6
+      grid-template-columns: repeat(6, 1fr)
 
+// Secondary link
 .um
   .#{$prefix}link
     &.#{$prefix}link-secondary
@@ -2496,6 +2544,7 @@
         &:hover,
         &:visited
           text-decoration: underline
+
 
 // Image lazyload
 .um
@@ -2589,6 +2638,7 @@
               color: currentColor
 
 
+// Outline icon
 .um
   .#{$prefix}outline-icon
     display: block
@@ -2609,3 +2659,12 @@
         padding: 0
         color: $gray-600
         +border-box
+
+// Users list
+.um
+  .#{$prefix}users-list:not(.#{$prefix}grid)
+    +flex( column, flex-start, stretch, nowrap )
+    gap: $spacing-md
+    margin: 0
+    padding: 0
+    +border-box
