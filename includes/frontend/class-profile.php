@@ -142,7 +142,7 @@ class Profile {
 			}
 		}
 
-		$subnav        = array();
+		$subnav = array();
 		if ( array_key_exists( 'subnav', $tabs[ $active_tab ] ) ) {
 			$default_subnav = array_key_exists( 'subnav_default', $tabs[ $active_tab ] ) ? $tabs[ $active_tab ]['subnav_default'] : array_keys( $tabs[ $active_tab ]['subnav'] )[0];
 			$active_subnav  = UM()->profile()->active_subnav() ? UM()->profile()->active_subnav() : $default_subnav;
@@ -238,13 +238,16 @@ class Profile {
 	}
 
 	public function about( $args ) {
-		if ( ! array_key_exists( 'mode', $args ) ) {
+		if ( ! array_key_exists( 'mode', $args ) || 'profile' !== $args['mode'] ) {
+			// It should be 'profile' only.
 			return;
 		}
-		$mode = $args['mode'];
+		$mode = $args['mode']; // used for handling common form hooks but with `profile` mode.
 
+		$all_tabs = UM()->profile()->tabs_active();
 		// phpcs:ignore WordPress.Security.NonceVerification -- $_REQUEST is used for echo only
-		if ( ! isset( $_REQUEST['um_action'] ) && ! UM()->options()->get( 'profile_tab_main' ) ) {
+		if ( ! array_key_exists( 'main', $all_tabs ) && ! ( um_is_on_edit_profile() || UM()->user()->preview ) ) {
+			// If not preview or edit and tab isn't available to view then return.
 			return;
 		}
 
