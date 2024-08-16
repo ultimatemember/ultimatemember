@@ -33,6 +33,7 @@ function um_add_security_checks( $args ) {
 	if ( is_admin() ) {
 		return;
 	}
+
 	if ( ! array_key_exists( 'form_id', $args ) ) {
 		return;
 	}
@@ -48,20 +49,6 @@ function um_add_security_checks( $args ) {
 		<input type="hidden" name="<?php echo esc_attr( UM()->honeypot ); ?>" id="<?php echo esc_attr( UM()->honeypot . '_' . $args['form_id'] ); ?>" class="input" value="" size="25" autocomplete="off" />
 	</p>
 	<?php
-	if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-		ob_start();
-		?>
-		jQuery( window ).on( 'load', function() {
-			jQuery('input[name="<?php echo esc_js( UM()->honeypot ); ?>"]').val('');
-		});
-		<?php
-		$inline_script = ob_get_clean();
-
-		wp_add_inline_script( 'um_new_design', $inline_script );
-
-		$custom_css = '.' . esc_attr( UM()->honeypot ) . '_name {display: none !important;}';
-		wp_add_inline_style( 'um_new_design', $custom_css );
-	}
 }
 add_action( 'um_after_form_fields', 'um_add_security_checks' );
 add_action( 'um_account_page_hidden_fields', 'um_add_security_checks' );

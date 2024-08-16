@@ -271,6 +271,8 @@ class Profile {
 		 */
 		$can_view = apply_filters( 'um_profile_can_view_main', -1, um_profile_id() );
 
+		// @todo make profile not fully visible for followers, friends and the similar Privacy settings of the user.
+		// @todo It's related to the user profile, user card in member directory. See `um_profile_privacy_options` hook.
 		if ( -1 === (int) $can_view ) {
 			if ( um_is_on_edit_profile() || UM()->user()->preview ) {
 				?>

@@ -737,30 +737,33 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				$um_roles = UM()->roles()->get_roles( false, $exclude_roles );
 			}
 
+			$profile_privacy = array(
+				'Everyone' => __( 'Everyone', 'ultimate-member' ),
+				'Only me'  => __( 'Only me', 'ultimate-member' ),
+			);
+
 			/**
-			 * UM hook
+			 * Filters user profile privacy options.
 			 *
-			 * @type filter
-			 * @title um_profile_privacy_options
-			 * @description Profile Privacy Options
-			 * @input_vars
-			 * [{"var":"$privacy_options","type":"array","desc":"Privacy Options"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_profile_privacy_options', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_profile_privacy_options', 'my_profile_privacy_options', 10, 1 );
-			 * function my_profile_privacy_options( $privacy_options ) {
-			 *     // your code here
-			 *     return $privacy_options;
+			 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+			 * 100 - `um_friends_profile_privacy_options()` from Friends extension  privacy options.
+			 * 100 - `um_followers_profile_privacy_options()` from Followers extension  privacy options.
+			 *
+			 * @param {array} $fields Privacy options.
+			 *
+			 * @return {array} Privacy options.
+			 *
+			 * @since 1.3.x
+			 * @hook  um_profile_privacy_options
+			 *
+			 * @example <caption>Add custom privacy option.</caption>
+			 * function my_privacy_options( $options ) {
+			 *     $options['um_custom'] = __( 'Custom option title', 'ultimate-member' );
+			 *     return $options;
 			 * }
-			 * ?>
+			 * add_filter( 'um_profile_privacy_options', 'my_privacy_options' );
 			 */
-			$profile_privacy = apply_filters( 'um_profile_privacy_options', array(
-				'Everyone'  => __( 'Everyone', 'ultimate-member' ),
-				'Only me'   => __( 'Only me', 'ultimate-member' )
-			) );
+			$profile_privacy = apply_filters( 'um_profile_privacy_options', $profile_privacy );
 
 			/*
 			 * it's important create key for array equals value of 'metakey'.

@@ -528,12 +528,16 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					break;
 				case 'hide_in_members':
 					$hide_in_members = UM()->member_directory()->get_hide_in_members_default();
-					if ( ! empty( $_meta_value ) ) {
-						if ( $_meta_value == 'Yes' || $_meta_value == __( 'Yes', 'ultimate-member' ) ||
-							 array_intersect( array( 'Yes', __( 'Yes', 'ultimate-member' ) ), $_meta_value ) ) {
-							$hide_in_members = true;
-						} else {
-							$hide_in_members = false;
+					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+						$hide_in_members = ! empty( $_meta_value );
+					} else {
+						if ( ! empty( $_meta_value ) ) {
+							if ( $_meta_value == 'Yes' || $_meta_value == __( 'Yes', 'ultimate-member' ) ||
+								 array_intersect( array( 'Yes', __( 'Yes', 'ultimate-member' ) ), $_meta_value ) ) {
+								$hide_in_members = true;
+							} else {
+								$hide_in_members = false;
+							}
 						}
 					}
 

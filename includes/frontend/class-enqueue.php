@@ -167,6 +167,17 @@ final class Enqueue extends \um\common\Enqueue {
 			wp_register_script( 'um_directory', $js_url . 'v3/directory' . $suffix . '.js', array( 'jquery', 'wp-util', 'jquery-ui-slider', 'wp-hooks' ), UM_VERSION, true );
 			wp_register_script( 'um_profile', $js_url . 'v3/profile' . $suffix . '.js', array( 'jquery', 'wp-util', 'jquery-ui-slider', 'wp-hooks' ), UM_VERSION, true );
 
+			ob_start();
+			?>
+			jQuery( window ).on( 'load', function() {
+				jQuery('input[name="<?php echo esc_js( UM()->honeypot ); ?>"]').val('');
+			});
+			<?php
+			$inline_script = ob_get_clean();
+
+			wp_add_inline_script( 'um_new_design', $inline_script );
+			//wp_add_inline_script( 'um_profile', $inline_script );
+
 			// uploadFiles scripts + UM custom styles for uploader.
 			wp_register_script( 'um_jquery_form', $libs_url . 'jquery-form/jquery-form' . $suffix . '.js', array( 'jquery' ), UM_VERSION, true );
 			wp_register_script( 'um_fileupload', $libs_url . 'fileupload/fileupload.js', array( 'um_jquery_form' ), UM_VERSION, true );
@@ -358,6 +369,11 @@ final class Enqueue extends \um\common\Enqueue {
 
 			wp_register_style( 'um_account', $css_url . 'v3/account' . $suffix . '.css', array( 'um_new_design' ), UM_VERSION );
 
+			$custom_css = '.' . esc_attr( UM()->honeypot ) . '_name {display: none !important;}';
+			wp_add_inline_style( 'um_new_design', $custom_css );
+//				wp_add_inline_style( 'um_profile', $custom_css );
+//				wp_add_inline_style( 'um_account', $custom_css );
+
 			//FontAwesome and FontIcons styles
 //			wp_register_style( 'um_rtl', $css_url . 'um.rtl' . $suffix . '.css', array(), UM_VERSION );
 //			wp_register_style( 'um_default_css', $css_url . 'um-old-default' . $suffix . '.css', array(), UM_VERSION );
@@ -410,7 +426,11 @@ final class Enqueue extends \um\common\Enqueue {
 		$this->register_scripts();
 		$this->register_styles();
 
-		$this->load_original();
+		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+
+		} else {
+			$this->load_original();
+		}
 
 		// rtl style
 		if ( is_rtl() ) {

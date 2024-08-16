@@ -93,6 +93,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 				?>
 				<div id="um_field_0_<?php echo esc_attr( $id ); ?>" class="um-field um-field-bool um-field-<?php echo esc_attr( $id ); ?> um-field-bool um-field-type_bool" data-key="<?php echo esc_attr( $id ); ?>">
+					<input type="hidden" name="<?php echo esc_attr( $id ); ?>" value="0" />
 					<div class="um-field-checkbox-area">
 						<label class="um-checkbox-label um-size-md"><input name="<?php echo esc_attr( $id ); ?>" type="checkbox" value="1" <?php checked( $checked ); ?>><?php echo esc_html( $title ); ?></label>
 					</div>
@@ -4323,9 +4324,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '<div class="um-field-checkbox-area">';
 					if ( ! empty( $data['checkbox_label_supported'] ) ) {
-						$output .= '<label class="um-checkbox-label um-size-md um-supporting-text"><input ' . $disabled . ' name="' . esc_attr( $key ) . '" ' . checked( $this->is_selected( $key, true, $data ), true, false ) . ' type="checkbox" value="1" /><span class="um-checkbox-content"><span class="um-text">' . esc_html( $data['checkbox_label'] ) . '</span><br /><span class="um-supporting-text">' . esc_html( $data['checkbox_label_supported'] ) . '</span></span></label>';
+						$output .= '<label class="um-checkbox-label um-size-md um-supporting-text"><input type="hidden" ' . $disabled . ' name="' . esc_attr( $key ) . '" value="0" /><input ' . $disabled . ' name="' . esc_attr( $key ) . '" ' . checked( $this->is_selected( $key, true, $data ), true, false ) . ' type="checkbox" value="1" /><span class="um-checkbox-content"><span class="um-text">' . esc_html( $data['checkbox_label'] ) . '</span><br /><span class="um-supporting-text">' . esc_html( $data['checkbox_label_supported'] ) . '</span></span></label>';
 					} else {
-						$output .= '<label class="um-checkbox-label um-size-md"><input ' . $disabled . ' name="' . esc_attr( $key ) . '" ' . checked( $this->is_selected( $key, true, $data ), true, false ) . ' type="checkbox" value="1" />' . esc_html( $data['checkbox_label'] ) . '</label>';
+						$output .= '<label class="um-checkbox-label um-size-md"><input type="hidden" ' . $disabled . ' name="' . esc_attr( $key ) . '" value="0" /><input ' . $disabled . ' name="' . esc_attr( $key ) . '" ' . checked( $this->is_selected( $key, true, $data ), true, false ) . ' type="checkbox" value="1" />' . esc_html( $data['checkbox_label'] ) . '</label>';
 					}
 					$output .= '</div>';
 

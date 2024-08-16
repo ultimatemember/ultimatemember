@@ -330,31 +330,39 @@ function um_submit_account_details( $args ) {
 			$v = sanitize_text_field( $v );
 		} elseif ( 'user_email' === $k ) {
 			$v = sanitize_email( $v );
-		} elseif ( 'hide_in_members' === $k || 'um_show_last_login' === $k ) {
-			$v = array_map( 'sanitize_text_field', $v );
+		} elseif ( ( 'hide_in_members' === $k || 'um_show_last_login' === $k ) ) {
+			if ( is_array( $v ) ) {
+				$v = array_map( 'sanitize_text_field', $v );
+			} else {
+				$v = (bool) $v;
+			}
 		}
 
 		$changes[ $k ] = $v;
 	}
 
-	if ( isset( $changes['hide_in_members'] ) ) {
-		if ( UM()->member_directory()->get_hide_in_members_default() ) {
-			if ( __( 'Yes', 'ultimate-member' ) === $changes['hide_in_members'] || 'Yes' === $changes['hide_in_members'] || array_intersect( array( 'Yes', __( 'Yes', 'ultimate-member' ) ), $changes['hide_in_members'] ) ) {
-				delete_user_meta( $user_id, 'hide_in_members' );
-				unset( $changes['hide_in_members'] );
-			}
-		} else {
-			if ( __( 'No', 'ultimate-member' ) === $changes['hide_in_members'] || 'No' === $changes['hide_in_members'] || array_intersect( array( 'No', __( 'No', 'ultimate-member' ) ), $changes['hide_in_members'] ) ) {
-				delete_user_meta( $user_id, 'hide_in_members' );
-				unset( $changes['hide_in_members'] );
+	if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+
+	} else {
+		if ( isset( $changes['hide_in_members'] ) ) {
+			if ( UM()->member_directory()->get_hide_in_members_default() ) {
+				if ( __( 'Yes', 'ultimate-member' ) === $changes['hide_in_members'] || 'Yes' === $changes['hide_in_members'] || array_intersect( array( 'Yes', __( 'Yes', 'ultimate-member' ) ), $changes['hide_in_members'] ) ) {
+					delete_user_meta( $user_id, 'hide_in_members' );
+					unset( $changes['hide_in_members'] );
+				}
+			} else {
+				if ( __( 'No', 'ultimate-member' ) === $changes['hide_in_members'] || 'No' === $changes['hide_in_members'] || array_intersect( array( 'No', __( 'No', 'ultimate-member' ) ), $changes['hide_in_members'] ) ) {
+					delete_user_meta( $user_id, 'hide_in_members' );
+					unset( $changes['hide_in_members'] );
+				}
 			}
 		}
-	}
 
-	if ( isset( $changes['um_show_last_login'] ) ) {
-		if ( 'yes' === $changes['um_show_last_login'] || array_intersect( array( 'yes' ), $changes['um_show_last_login'] ) ) {
-			delete_user_meta( $user_id, 'um_show_last_login' );
-			unset( $changes['um_show_last_login'] );
+		if ( isset( $changes['um_show_last_login'] ) ) {
+			if ( 'yes' === $changes['um_show_last_login'] || array_intersect( array( 'yes' ), $changes['um_show_last_login'] ) ) {
+				delete_user_meta( $user_id, 'um_show_last_login' );
+				unset( $changes['um_show_last_login'] );
+			}
 		}
 	}
 
