@@ -337,11 +337,11 @@
                       +typography( text, md, semibold )
                       color: $gray-700
                   .#{$prefix}member-connect
-                    +flex( row, center, center, nowrap )
+                    +flex( row, center, center, wrap )
                     width: 100%
                     margin: 0
                     padding: 0
-                    column-gap: $spacing-md
+                    gap: $spacing-md
                     a
                       text-align: center
                       width: 36px
@@ -490,10 +490,10 @@
                   &:last-child
                     margin-bottom: $spacing-sm
                 .#{$prefix}member-connect
-                  +flex( row, flex-start, center, nowrap )
+                  +flex( row, flex-start, center, wrap )
                   margin: 0 0 $spacing-sm 0
                   padding: 0
-                  column-gap: $spacing-md
+                  gap: $spacing-md
                   a
                     text-align: center
                     width: 36px

@@ -477,11 +477,11 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   width: 100%;
   margin: 0;
   padding: 0;
-  column-gap: 8px;
+  gap: 8px;
 }
 .um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-member-box-main .um-member-meta .um-member-connect a {
   text-align: center;
@@ -733,10 +733,10 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   margin: 0 0 6px 0;
   padding: 0;
-  column-gap: 8px;
+  gap: 8px;
 }
 .um.um-directory .um-members-wrapper.um-members-list .um-box.um-member .um-member-box-main .um-member-meta .um-member-connect a {
   text-align: center;

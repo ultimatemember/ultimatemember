@@ -1035,6 +1035,9 @@
         .#{$prefix}supporting-text
           color: $gray-600
           +typography( text, sm, regular )
+      .#{$prefix}row-heading
+        color: $gray-900
+        +typography( text, lg, semibold )
       .#{$prefix}form-row
         +flex( column, stretch, start, nowrap )
         +border-box
@@ -1043,7 +1046,7 @@
         width: 100%
         row-gap: $spacing-2xl
         .#{$prefix}form-cols
-          +flex( row, flex-start, center, nowrap )
+          +flex( row, flex-start, start, nowrap )
           +border-box
           margin: 0
           padding: 0
@@ -1055,6 +1058,11 @@
             margin: 0
             padding: 0
             row-gap: $spacing-2xl
+            .#{$prefix}field-area
+              +flex( row, flex-start, center, nowrap )
+              .#{$prefix}form-field
+                +border-box
+                width: 100%
             .#{$prefix}field,
             .#{$prefix}field-area-password
               +flex( column, stretch, start, nowrap )

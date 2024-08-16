@@ -261,7 +261,7 @@ if ( true !== UM()->fields()->editing ) {
 
 				if ( ! empty( $profile_args['metafields'] ) ) {
 					?>
-					<div class="um-profile-header-supporting-row um-supporting-text">
+					<div class="um-profile-header-supporting-row">
 						<?php echo wp_kses( UM()->profile()->show_meta( $profile_args['metafields'], $profile_args ), UM()->get_allowed_html( 'templates' ) ); ?>
 					</div>
 					<?php
@@ -269,7 +269,7 @@ if ( true !== UM()->fields()->editing ) {
 
 				if ( $show_bio ) {
 					?>
-					<div class="um-profile-header-supporting-row um-supporting-text">
+					<div class="um-profile-header-supporting-row">
 						<?php
 						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- early escaped variable because need different escape based on options.
 						echo $user_bio;

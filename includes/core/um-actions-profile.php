@@ -1408,20 +1408,17 @@ add_action( 'um_pre_header_editprofile', 'um_add_edit_icon' );
  * Show Fields
  *
  * @param $args
+ *
+ * @return void
+ * @throws Exception
  */
 function um_add_profile_fields( $args ) {
 	if ( true === UM()->fields()->editing ) {
-
-		echo UM()->fields()->display( 'profile', $args );
-
+		echo wp_kses( UM()->fields()->display( 'profile', $args ), UM()->get_allowed_html( 'templates' ) );
 	} else {
-
 		UM()->fields()->viewing = true;
-
-		echo UM()->fields()->display_view( 'profile', $args );
-
+		echo wp_kses( UM()->fields()->display_view( 'profile', $args ), UM()->get_allowed_html( 'templates' ) );
 	}
-
 }
 add_action( 'um_main_profile_fields', 'um_add_profile_fields', 100 );
 

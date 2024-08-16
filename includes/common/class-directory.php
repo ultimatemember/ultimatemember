@@ -382,10 +382,8 @@ class Directory {
 
 			if ( ! empty( $directory_data['show_social'] ) ) {
 				ob_start();
-				UM()->fields()->show_social_urls();
-				$social_urls = ob_get_clean();
-
-				$data_array['social_urls'] = wp_kses( $social_urls, UM()->get_allowed_html( 'templates' ) );
+				UM()->fields()->show_social_urls( $user_id );
+				$data_array['social_urls'] = ob_get_clean();
 			}
 		}
 

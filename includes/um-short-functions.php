@@ -928,11 +928,16 @@ function um_user_submited_display( $k, $title, $data = array(), $style = true ) 
  *
  * @param string $key
  * @param null|string $match
+ * @param null|int $user_id
  *
  * @return string
  */
-function um_filtered_social_link( $key, $match = null ) {
-	$value = um_profile( $key );
+function um_filtered_social_link( $key, $match = null, $user_id = null ) {
+	if ( ! $user_id ) {
+		$value = um_profile( $key );
+	} else {
+		$value = get_user_meta( $user_id, $key, true );
+	}
 	if ( ! empty( $match ) ) {
 		$submatch = str_replace( 'https://', '', $match );
 		$submatch = str_replace( 'http://', '', $submatch );

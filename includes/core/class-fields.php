@@ -131,7 +131,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 
 			foreach ( $social as $k => $arr ) {
-				if ( um_profile( $k ) ) {
+				if ( ! empty( $user_id ) ) {
+					$value = get_user_meta( $user_id, $k, true );
+				} else {
+					$value = um_profile( $k );
+				}
+				if ( $value ) {
 					if ( array_key_exists( 'match', $arr ) ) {
 						$match = is_array( $arr['match'] ) ? $arr['match'][0] : $arr['match'];
 					} else {
@@ -140,7 +145,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$arr['url_target'] = isset( $arr['url_target'] ) ? $arr['url_target'] : '_blank';
 					?>
 
-					<a href="<?php echo esc_url( um_filtered_social_link( $k, $match ) ); ?>"
+					<a href="<?php echo esc_url( um_filtered_social_link( $k, $match, $user_id ) ); ?>"
 					style="background: <?php echo esc_attr( $arr['color'] ); ?>;" target="<?php echo esc_attr( $arr['url_target'] ); ?>" class="um-tip-n"
 					title="<?php echo esc_attr( $arr['title'] ); ?>"><i class="<?php echo esc_attr( $arr['icon'] ); ?>"></i></a>
 
@@ -4557,7 +4562,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			return ( isset ( $results ) ) ? $results : '';
 		}
 
-
 		/**
 		 * Display fields
 		 *
@@ -4582,173 +4586,174 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			$this->set_id = absint( $this->global_args['form_id'] );
 
-			$this->field_icons = ( isset( $this->global_args['icons'] ) ) ? $this->global_args['icons'] : 'label';
+			$this->field_icons = array_key_exists( 'icons', $this->global_args ) ? $this->global_args['icons'] : 'label';
 
 			// start output here
 			$this->get_fields = $this->get_fields();
 
-			if ( ! empty( $this->get_fields ) ) {
+			if ( empty( $this->get_fields ) ) {
+				return $output;
+			}
 
-				// find rows
-				foreach ( $this->get_fields as $key => $array ) {
-					if ( isset( $array['type'] ) && 'row' === $array['type'] ) {
-						$this->rows[ $key ] = $array;
-						unset( $this->get_fields[ $key ] ); // not needed anymore
-					}
+			// find rows
+			foreach ( $this->get_fields as $key => $array ) {
+				if ( isset( $array['type'] ) && 'row' === $array['type'] ) {
+					$this->rows[ $key ] = $array;
+					unset( $this->get_fields[ $key ] ); // not needed anymore
 				}
+			}
 
-				// rows fallback
-				if ( ! isset( $this->rows ) ) {
-					$this->rows = array(
-						'_um_row_1' => array(
-							'type'     => 'row',
-							'id'       => '_um_row_1',
-							'sub_rows' => 1,
-							'cols'     => 1,
-						),
-					);
-				}
+			if ( empty( $this->get_fields ) ) {
+				return $output;
+			}
 
-				// master rows
-				foreach ( $this->rows as $row_id => $row_array ) {
+			// rows fallback
+			if ( ! isset( $this->rows ) ) {
+				$this->rows = array(
+					'_um_row_1' => array(
+						'type'     => 'row',
+						'id'       => '_um_row_1',
+						'sub_rows' => 1,
+						'cols'     => 1,
+					),
+				);
+			}
 
-					$row_fields = $this->get_fields_by_row( $row_id );
-					if ( $row_fields ) {
+			// Master rows
+			foreach ( $this->rows as $row_id => $row_array ) {
 
-						$output .= $this->new_row_output( $row_id, $row_array );
+				$row_fields = $this->get_fields_by_row( $row_id );
+				if ( $row_fields ) {
 
-						$sub_rows = ( isset( $row_array['sub_rows'] ) ) ? $row_array['sub_rows'] : 1;
-						for ( $c = 0; $c < $sub_rows; $c++ ) {
-							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-								$output .= '<div class="um-form-row">';
-							}
-							// cols
-							$cols = isset( $row_array['cols'] ) ? $row_array['cols'] : 1;
-							if ( is_numeric( $cols ) ) {
-								$cols_num = (int) $cols;
+					$output .= $this->new_row_output( $row_id, $row_array );
+
+					$sub_rows = ( isset( $row_array['sub_rows'] ) ) ? $row_array['sub_rows'] : 1;
+					for ( $c = 0; $c < $sub_rows; $c++ ) {
+						if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+							$output .= '<div class="um-form-row">';
+						}
+						// cols
+						$cols = isset( $row_array['cols'] ) ? $row_array['cols'] : 1;
+						if ( is_numeric( $cols ) ) {
+							$cols_num = (int) $cols;
+						} else {
+							if ( strstr( $cols, ':' ) ) {
+								$col_split = explode( ':', $cols );
 							} else {
-								if ( strstr( $cols, ':' ) ) {
-									$col_split = explode( ':', $cols );
-								} else {
-									$col_split = array( $cols );
-								}
-								$cols_num = $col_split[ $c ];
+								$col_split = array( $cols );
+							}
+							$cols_num = $col_split[ $c ];
+						}
+
+						// sub row fields
+						$subrow_fields = $this->get_fields_in_subrow( $row_fields, $c );
+
+						if ( is_array( $subrow_fields ) ) {
+
+							$subrow_fields = $this->array_sort_by_column( $subrow_fields, 'position' );
+
+							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+								$output .= '<div class="um-form-cols um-form-cols-' . esc_attr( $cols_num ) . '">';
 							}
 
-							// sub row fields
-							$subrow_fields = $this->get_fields_in_subrow( $row_fields, $c );
-
-							if ( is_array( $subrow_fields ) ) {
-
-								$subrow_fields = $this->array_sort_by_column( $subrow_fields, 'position' );
+							if ( $cols_num == 1 ) {
 
 								if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-									$output .= '<div class="um-form-cols um-form-cols-' . esc_attr( $cols_num ) . '">';
-								}
-
-								if ( $cols_num == 1 ) {
-
-									if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-										$output .= '<div class="um-form-col um-form-col-1">';
-									} else {
-										$output .= '<div class="um-col-1">';
-									}
-									$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
-									if ( $col1_fields ) {
-										foreach ( $col1_fields as $key => $data ) {
-											if ( ! empty( $args['is_block'] ) ) {
-												$data['is_block'] = true;
-											}
-											$output .= $this->edit_field( $key, $data );
-										}
-									}
-									$output .= '</div>';
-
-								} else if ($cols_num == 2) {
-
-									if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-										$output .= '<div class="um-form-col um-form-col-1">';
-									} else {
-										$output .= '<div class="um-col-121">';
-									}
-
-									$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
-									if ( $col1_fields ) {
-										foreach ( $col1_fields as $key => $data ) {
-											if ( ! empty( $args['is_block'] ) ) {
-												$data['is_block'] = true;
-											}
-											$output .= $this->edit_field( $key, $data );
-										}
-									}
-									$output .= '</div>';
-
-									if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-										$output .= '<div class="um-form-col um-form-col-2">';
-									} else {
-										$output .= '<div class="um-col-122">';
-									}
-
-									$col2_fields = $this->get_fields_in_column( $subrow_fields, 2 );
-									if ( $col2_fields ) {
-										foreach ( $col2_fields as $key => $data ) {
-											if ( ! empty( $args['is_block'] ) ) {
-												$data['is_block'] = true;
-											}
-											$output .= $this->edit_field( $key, $data );
-										}
-									}
-									if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-										$output .= '</div>';
-									} else {
-										$output .= '</div><div class="um-clear"></div>';
-									}
+									$output .= '<div class="um-form-col um-form-col-1">';
 								} else {
-									if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-										$output .= '<div class="um-form-col um-form-col-1">';
-									} else {
-										$output .= '<div class="um-col-131">';
-									}
-
-									$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
-									if ( $col1_fields ) {
-										foreach ( $col1_fields as $key => $data ) {
-											$output .= $this->edit_field( $key, $data );
+									$output .= '<div class="um-col-1">';
+								}
+								$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
+								if ( $col1_fields ) {
+									foreach ( $col1_fields as $key => $data ) {
+										if ( ! empty( $args['is_block'] ) ) {
+											$data['is_block'] = true;
 										}
-									}
-									$output .= '</div>';
-									if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-										$output .= '<div class="um-form-col um-form-col-2">';
-									} else {
-										$output .= '<div class="um-col-132">';
-									}
-									$col2_fields = $this->get_fields_in_column( $subrow_fields, 2 );
-									if ( $col2_fields ) {
-										foreach ( $col2_fields as $key => $data ) {
-											$output .= $this->edit_field( $key, $data );
-										}
-									}
-									$output .= '</div>';
-									if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-										$output .= '<div class="um-form-col um-form-col-3">';
-									} else {
-										$output .= '<div class="um-col-133">';
-									}
-									$col3_fields = $this->get_fields_in_column( $subrow_fields, 3 );
-									if ( $col3_fields ) {
-										foreach ( $col3_fields as $key => $data ) {
-											$output .= $this->edit_field( $key, $data );
-										}
-									}
-									if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-										$output .= '</div>';
-									} else {
-										$output .= '</div><div class="um-clear"></div>';
+										$output .= $this->edit_field( $key, $data );
 									}
 								}
+								$output .= '</div>';
+
+							} else if ($cols_num == 2) {
 
 								if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+									$output .= '<div class="um-form-col um-form-col-1">';
+								} else {
+									$output .= '<div class="um-col-121">';
+								}
+
+								$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
+								if ( $col1_fields ) {
+									foreach ( $col1_fields as $key => $data ) {
+										if ( ! empty( $args['is_block'] ) ) {
+											$data['is_block'] = true;
+										}
+										$output .= $this->edit_field( $key, $data );
+									}
+								}
+								$output .= '</div>';
+
+								if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+									$output .= '<div class="um-form-col um-form-col-2">';
+								} else {
+									$output .= '<div class="um-col-122">';
+								}
+
+								$col2_fields = $this->get_fields_in_column( $subrow_fields, 2 );
+								if ( $col2_fields ) {
+									foreach ( $col2_fields as $key => $data ) {
+										if ( ! empty( $args['is_block'] ) ) {
+											$data['is_block'] = true;
+										}
+										$output .= $this->edit_field( $key, $data );
+									}
+								}
+								if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 									$output .= '</div>';
+								} else {
+									$output .= '</div><div class="um-clear"></div>';
+								}
+							} else {
+								if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+									$output .= '<div class="um-form-col um-form-col-1">';
+								} else {
+									$output .= '<div class="um-col-131">';
+								}
+
+								$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
+								if ( $col1_fields ) {
+									foreach ( $col1_fields as $key => $data ) {
+										$output .= $this->edit_field( $key, $data );
+									}
+								}
+								$output .= '</div>';
+								if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+									$output .= '<div class="um-form-col um-form-col-2">';
+								} else {
+									$output .= '<div class="um-col-132">';
+								}
+								$col2_fields = $this->get_fields_in_column( $subrow_fields, 2 );
+								if ( $col2_fields ) {
+									foreach ( $col2_fields as $key => $data ) {
+										$output .= $this->edit_field( $key, $data );
+									}
+								}
+								$output .= '</div>';
+								if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+									$output .= '<div class="um-form-col um-form-col-3">';
+								} else {
+									$output .= '<div class="um-col-133">';
+								}
+								$col3_fields = $this->get_fields_in_column( $subrow_fields, 3 );
+								if ( $col3_fields ) {
+									foreach ( $col3_fields as $key => $data ) {
+										$output .= $this->edit_field( $key, $data );
+									}
+								}
+								if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+									$output .= '</div>';
+								} else {
+									$output .= '</div><div class="um-clear"></div>';
 								}
 							}
 
@@ -4757,14 +4762,17 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							}
 						}
 
-						$output .= '</div>';
+						if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+							$output .= '</div>';
+						}
 					}
+
+					$output .= '</div>';
 				}
 			}
 
 			return $output;
 		}
-
 
 		/**
 		 * Gets a field in `view mode`
@@ -5124,7 +5132,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			return apply_filters( "um_view_field_output_" . $data['type'], $data );
 		}
 
-
 		/**
 		 * Display fields ( view mode )
 		 *
@@ -5144,7 +5151,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$this->set_mode = $mode;
 			$this->set_id   = absint( $this->global_args['form_id'] );
 
-			$this->field_icons = ( isset( $this->global_args['icons'] ) ) ? $this->global_args['icons'] : 'label';
+			$this->field_icons = array_key_exists( 'icons', $this->global_args ) ? $this->global_args['icons'] : 'label';
 
 			// start output here
 			$this->get_fields = $this->get_fields();
@@ -5153,7 +5160,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			} else {
 				if ( UM()->options()->get( 'profile_empty_text' ) ) {
-
 					$emo = UM()->options()->get( 'profile_empty_text_emo' );
 					if ( $emo ) {
 						$emo = '<i class="um-faicon-frown-o"></i>';
@@ -5178,150 +5184,195 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				}
 			}
 
-			if ( ! empty( $this->get_fields ) ) {
+			if ( empty( $this->get_fields ) ) {
+				return $output;
+			}
 
-				// find rows
-				foreach ( $this->get_fields as $key => $array ) {
-					if ( isset( $array['type'] ) && 'row' === $array['type'] ) {
-						$this->rows[ $key ] = $array;
-						unset( $this->get_fields[ $key ] ); // not needed anymore
+			// Find rows
+			foreach ( $this->get_fields as $key => $array ) {
+				if ( isset( $array['type'] ) && 'row' === $array['type'] ) {
+					$this->rows[ $key ] = $array;
+					unset( $this->get_fields[ $key ] ); // not needed anymore
+				}
+			}
+
+			if ( empty( $this->get_fields ) ) {
+				return $output;
+			}
+
+			// Rows fallback
+			if ( ! isset( $this->rows ) ) {
+				$this->rows = array(
+					'_um_row_1' => array(
+						'type'     => 'row',
+						'id'       => '_um_row_1',
+						'sub_rows' => 1,
+						'cols'     => 1,
+					),
+				);
+			}
+
+			// Master rows
+			foreach ( $this->rows as $row_id => $row_array ) {
+				$row_fields = $this->get_fields_by_row( $row_id );
+				if ( empty( $row_fields ) ) {
+					continue;
+				}
+
+				$output .= $this->new_row_output( $row_id, $row_array );
+
+				$sub_rows = array_key_exists( 'sub_rows', $row_array ) ? $row_array['sub_rows'] : 1;
+				for ( $c = 0; $c < $sub_rows; $c++ ) {
+					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+						$output .= '<div class="um-profile-row">';
 					}
-				}
+					// cols
+					$cols = isset( $row_array['cols'] ) ? $row_array['cols'] : 1;
+					if ( is_numeric( $cols ) ) {
+						$cols_num = (int) $cols;
+					} else {
+						if ( strstr( $cols, ':' ) ) {
+							$col_split = explode( ':', $cols );
+						} else {
+							$col_split = array( $cols );
+						}
+						$cols_num = $col_split[ $c ];
+					}
 
-				// rows fallback
-				if ( ! isset( $this->rows ) ) {
-					$this->rows = array(
-						'_um_row_1' => array(
-							'type'     => 'row',
-							'id'       => '_um_row_1',
-							'sub_rows' => 1,
-							'cols'     => 1,
-						),
-					);
-				}
+					// sub row fields
+					$subrow_fields = $this->get_fields_in_subrow( $row_fields, $c );
 
-				// master rows
-				foreach ( $this->rows as $row_id => $row_array ) {
+					if ( is_array( $subrow_fields ) ) {
 
-					$row_fields = $this->get_fields_by_row( $row_id );
+						$subrow_fields = $this->array_sort_by_column( $subrow_fields, 'position' );
 
-					if ( $row_fields ) {
-
-						$output .= $this->new_row_output( $row_id, $row_array );
-
-						$sub_rows = ( isset( $row_array['sub_rows'] ) ) ? $row_array['sub_rows'] : 1;
-						for ( $c = 0; $c < $sub_rows; $c++ ) {
-
-							// cols
-							$cols = isset( $row_array['cols'] ) ? $row_array['cols'] : 1;
-							if ( is_numeric( $cols ) ) {
-								$cols_num = (int) $cols;
-							} else {
-								if ( strstr( $cols, ':' ) ) {
-									$col_split = explode( ':', $cols );
-								} else {
-									$col_split = array( $cols );
-								}
-								$cols_num = $col_split[ $c ];
-							}
-
-							// sub row fields
-							$subrow_fields = $this->get_fields_in_subrow( $row_fields, $c );
-
-							if ( is_array( $subrow_fields ) ) {
-
-								$subrow_fields = $this->array_sort_by_column( $subrow_fields, 'position' );
-
-								if ( $cols_num == 1 ) {
-
-									$output .= '<div class="um-col-1">';
-									$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
-									if ( $col1_fields ) {
-										foreach ( $col1_fields as $key => $data ) {
-
-											$data = $this->view_field_output( $data );
-											$output .= $this->view_field( $key, $data );
-
-										}
-									}
-									$output .= '</div>';
-
-								} elseif ( $cols_num == 2 ) {
-
-									$output .= '<div class="um-col-121">';
-									$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
-									if ( $col1_fields ) {
-										foreach ( $col1_fields as $key => $data ) {
-
-											$data = $this->view_field_output( $data );
-											$output .= $this->view_field( $key, $data );
-
-										}
-									}
-									$output .= '</div>';
-
-									$output .= '<div class="um-col-122">';
-									$col2_fields = $this->get_fields_in_column( $subrow_fields, 2 );
-									if ( $col2_fields ) {
-										foreach ( $col2_fields as $key => $data ) {
-
-											$data = $this->view_field_output( $data );
-											$output .= $this->view_field( $key, $data );
-
-										}
-									}
-									$output .= '</div><div class="um-clear"></div>';
-
-								} else {
-
-									$output .= '<div class="um-col-131">';
-									$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
-									if ( $col1_fields ) {
-										foreach ( $col1_fields as $key => $data ) {
-
-											$data = $this->view_field_output( $data );
-											$output .= $this->view_field( $key, $data );
-
-										}
-									}
-									$output .= '</div>';
-
-									$output .= '<div class="um-col-132">';
-									$col2_fields = $this->get_fields_in_column( $subrow_fields, 2 );
-									if ( $col2_fields ) {
-										foreach ( $col2_fields as $key => $data ) {
-
-											$data = $this->view_field_output( $data );
-											$output .= $this->view_field( $key, $data );
-
-										}
-									}
-									$output .= '</div>';
-
-									$output .= '<div class="um-col-133">';
-									$col3_fields = $this->get_fields_in_column( $subrow_fields, 3 );
-									if ( $col3_fields ) {
-										foreach ( $col3_fields as $key => $data ) {
-
-											$data = $this->view_field_output( $data );
-											$output .= $this->view_field( $key, $data );
-
-										}
-									}
-									$output .= '</div><div class="um-clear"></div>';
-
-								}
-
-							}
-
+						if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+							$output .= '<div class="um-profile-cols um-profile-cols-' . esc_attr( $cols_num ) . '">';
 						}
 
-						$output .= '</div>';
+						if ( $cols_num == 1 ) {
 
+							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+								$output .= '<div class="um-profile-col um-profile-col-1">';
+							} else {
+								$output .= '<div class="um-col-1">';
+							}
+							$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
+							if ( $col1_fields ) {
+								foreach ( $col1_fields as $key => $data ) {
+
+									$data = $this->view_field_output( $data );
+									$output .= $this->view_field( $key, $data );
+
+								}
+							}
+							$output .= '</div>';
+
+						} elseif ( $cols_num == 2 ) {
+
+							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+								$output .= '<div class="um-profile-col um-profile-col-1">';
+							} else {
+								$output .= '<div class="um-col-121">';
+							}
+
+							$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
+							if ( $col1_fields ) {
+								foreach ( $col1_fields as $key => $data ) {
+
+									$data = $this->view_field_output( $data );
+									$output .= $this->view_field( $key, $data );
+
+								}
+							}
+							$output .= '</div>';
+
+							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+								$output .= '<div class="um-profile-col um-profile-col-2">';
+							} else {
+								$output .= '<div class="um-col-122">';
+							}
+
+							$col2_fields = $this->get_fields_in_column( $subrow_fields, 2 );
+							if ( $col2_fields ) {
+								foreach ( $col2_fields as $key => $data ) {
+
+									$data = $this->view_field_output( $data );
+									$output .= $this->view_field( $key, $data );
+
+								}
+							}
+							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+								$output .= '</div>';
+							} else {
+								$output .= '</div><div class="um-clear"></div>';
+							}
+						} else {
+							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+								$output .= '<div class="um-profile-col um-profile-col-1">';
+							} else {
+								$output .= '<div class="um-col-131">';
+							}
+
+							$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
+							if ( $col1_fields ) {
+								foreach ( $col1_fields as $key => $data ) {
+
+									$data = $this->view_field_output( $data );
+									$output .= $this->view_field( $key, $data );
+
+								}
+							}
+							$output .= '</div>';
+
+							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+								$output .= '<div class="um-profile-col um-profile-col-2">';
+							} else {
+								$output .= '<div class="um-col-132">';
+							}
+							$col2_fields = $this->get_fields_in_column( $subrow_fields, 2 );
+							if ( $col2_fields ) {
+								foreach ( $col2_fields as $key => $data ) {
+
+									$data = $this->view_field_output( $data );
+									$output .= $this->view_field( $key, $data );
+
+								}
+							}
+							$output .= '</div>';
+
+							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+								$output .= '<div class="um-profile-col um-profile-col-3">';
+							} else {
+								$output .= '<div class="um-col-133">';
+							}
+							$col3_fields = $this->get_fields_in_column( $subrow_fields, 3 );
+							if ( $col3_fields ) {
+								foreach ( $col3_fields as $key => $data ) {
+
+									$data = $this->view_field_output( $data );
+									$output .= $this->view_field( $key, $data );
+
+								}
+							}
+							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+								$output .= '</div>';
+							} else {
+								$output .= '</div><div class="um-clear"></div>';
+							}
+						}
+
+						if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+							$output .= '</div>';
+						}
 					}
 
+					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+						$output .= '</div>';
+					}
 				}
 
+				$output .= '</div>';
 			}
 
 			return $output;
@@ -5444,7 +5495,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				}
 			}
 			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-				$output .= '<div class="um-form-rows ' . esc_attr( $row_id . ' ' . $css_class ) . '" style="' . esc_attr( $css_padding . $css_background . $css_margin . $css_border . $css_borderstyle . $css_bordercolor . $css_borderradius . $css_text_color ) . '">' . $header;
+				if ( true === $this->viewing ) {
+					$output .= '<div class="um-profile-rows ' . esc_attr( $row_id . ' ' . $css_class ) . '" style="' . esc_attr( $css_padding . $css_background . $css_margin . $css_border . $css_borderstyle . $css_bordercolor . $css_borderradius . $css_text_color ) . '">' . $header;
+				} else {
+					$output .= '<div class="um-form-rows ' . esc_attr( $row_id . ' ' . $css_class ) . '" style="' . esc_attr( $css_padding . $css_background . $css_margin . $css_border . $css_borderstyle . $css_bordercolor . $css_borderradius . $css_text_color ) . '">' . $header;
+				}
 			} else {
 				$output .= '<div class="um-row ' . esc_attr( $row_id . ' ' . $css_class ) . '" style="' . esc_attr( $css_padding . $css_background . $css_margin . $css_border . $css_borderstyle . $css_bordercolor . $css_borderradius . $css_text_color ) . '">';
 			}

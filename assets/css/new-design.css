@@ -1356,6 +1356,12 @@
   line-height: var(--um-text-line-height-sm, 20px);
   font-weight: var(--um-text-font-weight-regular, 400);
 }
+.um .um-form-new .um-form-rows .um-row-heading {
+  color: var(--um-gray-900, #101828);
+  font-size: var(--um-text-font-size-lg, 18px);
+  line-height: var(--um-text-line-height-lg, 28px);
+  font-weight: var(--um-text-font-weight-semibold, 600);
+}
 .um .um-form-new .um-form-rows .um-form-row {
   display: flex;
   flex-direction: column;
@@ -1374,7 +1380,7 @@
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: center;
+  align-items: start;
   flex-wrap: nowrap;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -1396,6 +1402,19 @@
   margin: 0;
   padding: 0;
   row-gap: 20px;
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area .um-form-field {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  width: 100%;
 }
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field,
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-area-password {

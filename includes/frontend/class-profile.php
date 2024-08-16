@@ -279,131 +279,18 @@ class Profile {
 				<form method="post" action="" class="um-form-new">
 				<?php
 			}
-			/**
-			 * Fires before UM Form content.
-			 *
-			 * @since 1.3.x
-			 * @hook  um_before_form
-			 *
-			 * @param {array} $args UM Form shortcode arguments.
-			 *
-			 * @example <caption>Make any custom action before UM form.</caption>
-			 * function my_before_form( $args ) {
-			 *     // your code here
-			 * }
-			 * add_action( 'um_before_form', 'my_before_form' );
-			 */
+
+			/** This action is documented in includes/core/um-actions-profile.php */
 			do_action( 'um_before_form', $args );
-			/**
-			 * Fires before UM Form fields.
-			 *
-			 * Note: $mode can be equals to 'login', 'profile', 'register'.
-			 *
-			 * @since 1.3.x
-			 * @hook  um_before_{$mode}_fields
-			 *
-			 * @param {array} $args UM Form shortcode arguments.
-			 *
-			 * @example <caption>Make any custom action before UM Profile form fields.</caption>
-			 * function my_before_profile_fields( $args ) {
-			 *     // your code here
-			 * }
-			 * add_action( 'um_before_profile_fields', 'my_before_profile_fields' );
-			 * @example <caption>Make any custom action before UM Login form fields.</caption>
-			 * function my_before_login_fields( $args ) {
-			 *     // your code here
-			 * }
-			 * add_action( 'um_before_login_fields', 'my_before_login_fields' );
-			 * @example <caption>Make any custom action before UM Register form fields.</caption>
-			 * function my_before_register_fields( $args ) {
-			 *     // your code here
-			 * }
-			 * add_action( 'um_before_register_fields', 'my_before_register_fields' );
-			 */
+			/** This action is documented in includes/core/um-actions-profile.php */
 			do_action( "um_before_{$mode}_fields", $args );
-			/**
-			 * Fires for rendering UM Form fields.
-			 *
-			 * Note: $mode can be equals to 'login', 'profile', 'register'.
-			 *
-			 * @since 1.3.x
-			 * @hook  um_main_{$mode}_fields
-			 *
-			 * @param {array} $args UM Form shortcode arguments.
-			 *
-			 * @example <caption>Make any custom action when profile form fields are rendered.</caption>
-			 * function my_main_profile_fields( $args ) {
-			 *     // your code here
-			 * }
-			 * add_action( 'um_main_profile_fields', 'my_main_profile_fields' );
-			 * @example <caption>Make any custom action when login form fields are rendered.</caption>
-			 * function my_main_login_fields( $args ) {
-			 *     // your code here
-			 * }
-			 * add_action( 'um_main_login_fields', 'my_main_login_fields' );
-			 * @example <caption>Make any custom action when register form fields are rendered.</caption>
-			 * function my_main_register_fields( $args ) {
-			 *     // your code here
-			 * }
-			 * add_action( 'um_main_register_fields', 'my_main_register_fields' );
-			 */
+			/** This action is documented in includes/core/um-actions-profile.php */
 			do_action( "um_main_{$mode}_fields", $args );
-			/**
-			 * Fires after UM Form fields.
-			 *
-			 * @since 1.3.x
-			 * @hook  um_after_form_fields
-			 *
-			 * @param {array} $args UM Form shortcode arguments.
-			 *
-			 * @example <caption>Make any custom action after UM Form fields.</caption>
-			 * function my_after_form_fields( $args ) {
-			 *     // your code here
-			 * }
-			 * add_action( 'um_after_form_fields', 'my_after_form_fields' );
-			 */
+			/** This action is documented in includes/core/um-actions-profile.php */
 			do_action( 'um_after_form_fields', $args );
-			/**
-			 * Fires after UM Form fields.
-			 *
-			 * Note: $mode can be equals to 'login', 'profile', 'register'.
-			 *
-			 * @since 1.3.x
-			 * @hook  um_after_{$mode}_fields
-			 *
-			 * @param {array} $args UM Form shortcode arguments.
-			 *
-			 * @example <caption>Make any custom action after profile form fields.</caption>
-			 * function my_after_profile_fields( $args ) {
-			 *     // your code here
-			 * }
-			 * add_action( 'um_after_profile_fields', 'my_after_profile_fields' );
-			 * @example <caption>Make any custom action after login form fields.</caption>
-			 * function my_after_login_fields( $args ) {
-			 *     // your code here
-			 * }
-			 * add_action( 'um_after_login_fields', 'my_after_login_fields' );
-			 * @example <caption>Make any custom action after register form fields.</caption>
-			 * function my_after_register_fields( $args ) {
-			 *     // your code here
-			 * }
-			 * add_action( 'um_after_register_fields', 'my_after_register_fields' );
-			 */
+			/** This action is documented in includes/core/um-actions-profile.php */
 			do_action( "um_after_{$mode}_fields", $args );
-			/**
-			 * Fires after UM Form content.
-			 *
-			 * @since 1.3.x
-			 * @hook  um_after_form
-			 *
-			 * @param {array} $args UM Form shortcode arguments.
-			 *
-			 * @example <caption>Make any custom action after UM Form content.</caption>
-			 * function my_after_form( $args ) {
-			 *     // your code here
-			 * }
-			 * add_action( 'um_after_form', 'my_after_form' );
-			 */
+			/** This action is documented in includes/core/um-actions-profile.php */
 			do_action( 'um_after_form', $args );
 
 			if ( um_is_on_edit_profile() || UM()->user()->preview ) {
