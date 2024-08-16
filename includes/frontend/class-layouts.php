@@ -1033,10 +1033,12 @@ class Layouts {
 				'size'          => 's', // s, m
 				'tabs'          => array(
 					'id' => array(
-						'title'   => __( 'Tab title', 'ultimate-member' ),
-						'content' => __( 'Tab content', 'ultimate-member' ),
-						'url'     => '#',
-						'current' => true,
+						'title'        => __( 'Tab title', 'ultimate-member' ),
+						'content'      => __( 'Tab content', 'ultimate-member' ),
+						'url'          => '#',
+						'current'      => true,
+						'notifier'     => 0,
+						'max_notifier' => 10,
 					),
 				),
 			)
@@ -1064,11 +1066,49 @@ class Layouts {
 		$mobile_list  = '';
 		$content      = '';
 		foreach ( $args['tabs'] as $tab_id => $tab_data ) {
-			$current_class = $current_tab === $tab_id ? 'um-current-tab' : '';
+			$tab_classes = array(
+				'um-tab',
+				'um-tab-' . $tab_id,
+			);
+			if ( array_key_exists( 'notifier', $tab_data ) ) {
+				$tab_classes[] = 'um-tab-has-notifier';
+			}
+			if ( $current_tab === $tab_id ) {
+				$tab_classes[] = 'um-tab-current';
+			}
 			ob_start();
 			?>
-			<li class="<?php echo esc_attr( $current_class ); ?>">
-				<a class="um-link" href="<?php echo esc_url( $tab_data['url'] ); ?>" data-tab="<?php echo esc_attr( $tab_id ); ?>"><?php echo esc_html( $tab_data['title'] ); ?></a>
+			<li class="<?php echo esc_attr( implode( ' ', $tab_classes ) ); ?>">
+				<a class="um-link" href="<?php echo esc_url( $tab_data['url'] ); ?>" data-tab="<?php echo esc_attr( $tab_id ); ?>">
+					<?php
+					echo esc_html( $tab_data['title'] );
+					if ( array_key_exists( 'notifier', $tab_data ) ) {
+						$notifier         = 0;
+						$notifier_classes = array( 'um-' . $tab_id . '-tab-notifier' );
+						if ( 0 < absint( $tab_data['notifier'] ) ) {
+							$notifier = $tab_data['notifier'];
+							if ( array_key_exists( 'max_notifier', $tab_data ) && absint( $tab_data['max_notifier'] ) < absint( $tab_data['notifier'] ) ) {
+								$notifier = sprintf( __( '%d+', 'ultimate-member' ), $notifier );
+							}
+						}
+						if ( 0 === $notifier ) {
+							$notifier_classes[] = 'um-display-none';
+						}
+
+						echo wp_kses(
+							self::badge(
+								$notifier,
+								array(
+									'size'    => $args['size'],
+									'type'    => 'pill-color',
+									'classes' => $notifier_classes,
+								)
+							),
+							UM()->get_allowed_html( 'templates' )
+						);
+					}
+					?>
+				</a>
 			</li>
 			<?php
 			$desktop_list .= ob_get_clean();
@@ -1082,9 +1122,16 @@ class Layouts {
 			$mobile_list .= ob_get_clean();
 
 			if ( empty( $args['tabs_only'] ) ) {
+				$content_classes = array(
+					'um-tab-content',
+					'um-tab-' . $tab_id . '-content',
+				);
+				if ( $current_tab === $tab_id  ) {
+					$content_classes[] = 'um-tab-current';
+				}
 				ob_start();
 				?>
-				<div class="um-tab-content <?php echo esc_attr( $current_class ); ?>" data-tab="<?php echo esc_attr( $tab_id ); ?>"><?php echo wp_kses( $tab_data['content'], UM()->get_allowed_html( 'templates' ) ); ?></div>
+				<div class="<?php echo esc_attr( implode( ' ', $content_classes ) ); ?>" data-tab="<?php echo esc_attr( $tab_id ); ?>"><?php echo wp_kses( $tab_data['content'], UM()->get_allowed_html( 'templates' ) ); ?></div>
 				<?php
 				$content .= ob_get_clean();
 			}

@@ -151,10 +151,7 @@ class Profile {
 				$subnav_link = add_query_arg( 'subnav', $id_s );
 				$subnav_link = apply_filters( 'um_user_profile_subnav_link', $subnav_link, $id_s, $subtab );
 
-				$subtab = array(
-					'title' => $subtab,
-					'url'   => $subnav_link,
-				);
+				$subtab['url'] = $subnav_link;
 
 				if ( $active_subnav === $id_s ) {
 					$subtab['current'] = true;
@@ -220,7 +217,7 @@ class Profile {
 				$new_tab['current'] = true;
 			}
 
-			if ( array_key_exists( 'notifier', $tab ) && $tab['notifier'] > 0 ) {
+			if ( array_key_exists( 'notifier', $tab ) ) {
 				$new_tab['notifier'] = $tab['notifier'];
 			}
 			$tab = $new_tab;

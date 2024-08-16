@@ -1746,7 +1746,7 @@
         width: 100%
         row-gap: $spacing-3xl
         display: none
-        &.#{$prefix}current-tab
+        &.#{$prefix}tab-current
           +flex( column, flex-start, stretch, nowrap )
     &.#{$prefix}tabs-size-s
       .#{$prefix}tabs-list
@@ -1779,6 +1779,10 @@
               +border-box
               border-radius: $radius-sm
               padding: $spacing-md $spacing-lg
+            &.#{$prefix}tab-has-notifier
+              a.#{$prefix}link
+                +flex( row, flex-start, center, nowrap )
+                column-gap: $spacing-sm
         select
           display: none
       .#{$prefix}tabs-content
@@ -1800,6 +1804,10 @@
               +border-box
               border-radius: $radius-sm
               padding: $spacing-md $spacing-lg
+            &.#{$prefix}tab-has-notifier
+              a.#{$prefix}link
+                +flex( row, center, center, nowrap )
+                column-gap: $spacing-sm
         select
           display: none
     &.#{$prefix}primary-color-tabs
@@ -1816,7 +1824,7 @@
                 color: $gray-500
                 background-color: transparent
                 box-shadow: $ring-brand
-            &.#{$prefix}current-tab
+            &.#{$prefix}tab-current
               a.#{$prefix}link
                 color: $primary-700
                 background-color: $primary-50
@@ -1841,7 +1849,7 @@
                 color: $gray-500
                 background-color: transparent
                 box-shadow: $ring-gray
-            &.#{$prefix}current-tab
+            &.#{$prefix}tab-current
               a.#{$prefix}link
                 color: $gray-700
                 background-color: $gray-50
@@ -1871,7 +1879,7 @@
               &:focus
                 color: $gray-500
                 background-color: transparent
-            &.#{$prefix}current-tab
+            &.#{$prefix}tab-current
               a.#{$prefix}link
                 border-radius: 0
                 border-bottom: 2px solid $primary-600
