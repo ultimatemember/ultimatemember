@@ -541,6 +541,7 @@ class Layouts {
 				'type'    => 'color', // color, pill-outline, pill-color
 				'color'   => 'gray', // gray, brand,error,warning,success
 				'classes' => array(),
+				'data'    => array(),
 			)
 		);
 
@@ -555,9 +556,15 @@ class Layouts {
 		}
 		$classes = implode( ' ', $classes );
 
+		$data_atts = array();
+		foreach ( $args['data'] as $data_k => $data_v ) {
+			$data_atts[] = 'data-' . $data_k . '="' . esc_attr( $data_v ) . '"';
+		}
+		$data_atts = implode( ' ', $data_atts );
+
 		ob_start();
-		?>
-		<span class="<?php echo esc_attr( $classes ); ?>">
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  -- $data_atts has been already escaped above. ?>
+		<span class="<?php echo esc_attr( $classes ); ?>" <?php echo $data_atts; ?>>
 			<?php echo esc_html( $label ); ?>
 		</span>
 		<?php
@@ -1083,27 +1090,33 @@ class Layouts {
 					<?php
 					echo esc_html( $tab_data['title'] );
 					if ( array_key_exists( 'notifier', $tab_data ) ) {
+						$badge_args       = array(
+							'size' => $args['size'],
+							'type' => 'pill-color',
+						);
 						$notifier         = 0;
 						$notifier_classes = array( 'um-' . $tab_id . '-tab-notifier' );
 						if ( 0 < absint( $tab_data['notifier'] ) ) {
-							$notifier = $tab_data['notifier'];
-							if ( array_key_exists( 'max_notifier', $tab_data ) && absint( $tab_data['max_notifier'] ) < absint( $tab_data['notifier'] ) ) {
-								$notifier = sprintf( __( '%d+', 'ultimate-member' ), $notifier );
+							$notifier = absint( $tab_data['notifier'] );
+							if ( array_key_exists( 'max_notifier', $tab_data ) ) {
+								$max_notifier = absint( $tab_data['max_notifier'] );
+
+								if ( $max_notifier < $notifier ) {
+									$badge_args['data']['max_notifier'] = $max_notifier;
+									// translators: %d is the notifier value.
+									$notifier = sprintf( __( '%d+', 'ultimate-member' ), $max_notifier );
+								}
 							}
 						}
+
 						if ( 0 === $notifier ) {
 							$notifier_classes[] = 'um-display-none';
 						}
 
+						$badge_args['classes'] = $notifier_classes;
+
 						echo wp_kses(
-							self::badge(
-								$notifier,
-								array(
-									'size'    => $args['size'],
-									'type'    => 'pill-color',
-									'classes' => $notifier_classes,
-								)
-							),
+							self::badge( $notifier, $badge_args ),
 							UM()->get_allowed_html( 'templates' )
 						);
 					}

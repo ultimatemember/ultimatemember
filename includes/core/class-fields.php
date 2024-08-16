@@ -80,35 +80,38 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		/**
 		 * Standard checkbox field
 		 *
-		 * @param  integer $id
-		 * @param  string  $title
-		 * @param  bool $checked
+		 * @param  int    $id
+		 * @param  string $title
+		 * @param  bool   $checked
 		 */
-		function checkbox( $id, $title, $checked = true ) {
-
+		public function checkbox( $id, $title, $checked = true ) {
 			/**
 			 * Set value on form submission
 			 */
-			if ( isset( $_REQUEST[ $id ] ) ) {
-				$checked = (bool) $_REQUEST[ $id ];
-			}
+			$checked = isset( $_REQUEST[ $id ] ) ? (bool) $_REQUEST[ $id ] : $checked;
 
-			$class = $checked ? 'um-icon-android-checkbox-outline' : 'um-icon-android-checkbox-outline-blank';
-
-			?>
-
-
-			<div class="um-field um-field-c">
-				<div class="um-field-area">
-					<label class="um-field-checkbox<?php echo $checked ? ' active' : '' ?>">
-						<input type="checkbox" name="<?php echo esc_attr( $id ); ?>" value="1" <?php checked( $checked ) ?> />
-						<span class="um-field-checkbox-state"><i class="<?php echo esc_attr( $class ) ?>"></i></span>
-						<span class="um-field-checkbox-option"> <?php echo esc_html( $title ); ?></span>
-					</label>
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				?>
+				<div id="um_field_0_<?php echo esc_attr( $id ); ?>" class="um-field um-field-bool um-field-<?php echo esc_attr( $id ); ?> um-field-bool um-field-type_bool" data-key="<?php echo esc_attr( $id ); ?>">
+					<div class="um-field-checkbox-area">
+						<label class="um-checkbox-label um-size-md"><input name="<?php echo esc_attr( $id ); ?>" type="checkbox" value="1" <?php checked( $checked ); ?>><?php echo esc_html( $title ); ?></label>
+					</div>
 				</div>
-			</div>
-
-			<?php
+				<?php
+			} else {
+				$class = $checked ? 'um-icon-android-checkbox-outline' : 'um-icon-android-checkbox-outline-blank';
+				?>
+				<div class="um-field um-field-c">
+					<div class="um-field-area">
+						<label class="um-field-checkbox<?php echo $checked ? ' active' : ''; ?>">
+							<input type="checkbox" name="<?php echo esc_attr( $id ); ?>" value="1" <?php checked( $checked ); ?> />
+							<span class="um-field-checkbox-state"><i class="<?php echo esc_attr( $class ); ?>"></i></span>
+							<span class="um-field-checkbox-option"> <?php echo esc_html( $title ); ?></span>
+						</label>
+					</div>
+				</div>
+				<?php
+			}
 		}
 
 		/**
