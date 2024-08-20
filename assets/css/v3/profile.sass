@@ -66,6 +66,19 @@
             gap: $spacing-xl
             color: $gray-700
             +typography( text, sm, regular )
+  .#{$prefix}profile-navbar
+    gap: $spacing-lg
+    margin: 0
+    padding: 0
+    +border-box
+    &:not(.#{$prefix}grid)
+      +flex( row, flex-start, center, nowrap )
+    &.#{$prefix}grid
+      .#{$prefix}dropdown-wrapper
+        .#{$prefix}dropdown-toggle-button
+          button
+            width: 100%
+            justify-content: center
   &.#{$prefix}editing
     .#{$prefix}profile-header
       border-bottom: 1px solid $gray-200

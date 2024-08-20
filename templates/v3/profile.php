@@ -88,7 +88,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		$content_wrapper_classes[] = 'um-profile-main';
 	} else {
-		// @todo show profile menu only on the view profile mode. Need to clarify if we need it on the profile edit or preview.
+		// @todo show profile navbar and menu only on the view profile mode. Need to clarify if we need it on the profile edit or preview.
+		/**
+		 * Fires for displaying User Profile navigation bar.
+		 *
+		 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+		 * 4 - `um_followers_add_profile_bar()` displays Followers button.
+		 * 5 - `add_profile_bar()` displays Messaging button.
+		 *
+		 * @param {array} $args User Profile data.
+		 *
+		 * @since 1.3.x
+		 * @hook  um_profile_navbar
+		 *
+		 * @example <caption>Display some content before or after User Profile navigation bar.</caption>
+		 * function my_um_profile_navbar( $args ) {
+		 *     // your code here
+		 *     echo $content;
+		 * }
+		 * add_action( 'um_profile_navbar', 'my_um_profile_navbar' );
+		 */
+		do_action( 'um_profile_navbar', $args );
 		/**
 		 * Fires for displaying User Profile menu.
 		 *

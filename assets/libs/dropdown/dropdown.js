@@ -77,6 +77,10 @@
 					width = self.data.width || 150,
 					place = self.data.place || '';
 
+				if ( 'toggle-button-width' === width ) {
+					width = self.$element[0].offsetWidth;
+				}
+
 				var css = {
 					position: 'absolute',
 					width: width + 'px'

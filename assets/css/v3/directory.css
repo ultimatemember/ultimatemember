@@ -348,6 +348,33 @@
   flex-wrap: nowrap;
   position: relative;
 }
+.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member .um-member-box-main .um-member-meta .um-member-connect {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  gap: 8px;
+}
+.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member .um-member-box-main .um-member-meta .um-member-connect a {
+  text-align: center;
+  width: 36px;
+  line-height: 36px;
+  height: 36px;
+  font-size: 20px;
+  border-radius: 999px;
+  color: #fff;
+  opacity: 0.85;
+  margin: 0 1px;
+  transition: 0.25s;
+  display: inline-block;
+}
+.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member .um-member-box-main .um-member-meta .um-member-connect a:hover {
+  opacity: 1;
+}
 .um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover {
   padding: 0 0 24px 0;
 }
@@ -471,33 +498,6 @@
   line-height: var(--um-text-line-height-md, 24px);
   font-weight: var(--um-text-font-weight-semibold, 600);
   color: var(--um-gray-700, #344054);
-}
-.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-member-box-main .um-member-meta .um-member-connect {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  gap: 8px;
-}
-.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-member-box-main .um-member-meta .um-member-connect a {
-  text-align: center;
-  width: 36px;
-  line-height: 36px;
-  height: 36px;
-  font-size: 20px;
-  border-radius: 999px;
-  color: #fff;
-  opacity: 0.85;
-  margin: 0 1px;
-  transition: 0.25s;
-  display: inline-block;
-}
-.um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-member-box-main .um-member-meta .um-member-connect a:hover {
-  opacity: 1;
 }
 .um.um-directory .um-members-wrapper.um-members-grid .um-box.um-member.um-member-with-cover .um-member-box-main .um-member-meta.um-member-meta-no-animate {
   display: grid;

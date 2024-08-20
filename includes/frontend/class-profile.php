@@ -19,6 +19,7 @@ class Profile {
 	 */
 	public function __construct() {
 		add_action( 'um_profile_header', array( &$this, 'header' ), 9 );
+		add_action( 'um_profile_navbar', array( &$this, 'navbar' ), 9 );
 		add_action( 'um_profile_menu', array( &$this, 'menu' ), 9 );
 		add_action( 'um_profile_content_main', array( &$this, 'about' ) );
 	}
@@ -84,6 +85,79 @@ class Profile {
 		}
 
 		UM()->get_template( 'v3/profile/header.php', '', $t_args, true );
+	}
+
+	public function navbar( $args ) {
+		$t_args = $args;
+
+		$t_args['profile_args']    = $args;
+		$t_args['current_user_id'] = get_current_user_id();
+		$t_args['user_profile_id'] = um_profile_id();
+
+		$index = 0;
+		ob_start();
+		/**
+		 * Fires for displaying content in User Profile navigation bar.
+		 *
+		 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+		 * 4 - `um_followers_add_profile_bar()` displays Followers button.
+		 * 5 - `add_profile_bar()` displays Messaging button.
+		 *
+		 * @param {array} $args    User Profile data.
+		 * @param {int}   $user_id User Profile ID.
+		 *
+		 * @since 2.9.0
+		 * @hook  um_profile_navbar_content
+		 *
+		 * @example <caption>Display some content in User Profile navigation bar.</caption>
+		 * function my_um_profile_navbar( $args, $user_id ) {
+		 *     // your code here
+		 *     echo $content;
+		 * }
+		 * add_action( 'um_profile_navbar_content', 'my_um_profile_navbar_content', 10, 2 );
+		 */
+		do_action_ref_array( 'um_profile_navbar_content', array( $args, $t_args['user_profile_id'], &$index ) );
+
+		$content = ob_get_clean();
+		if ( empty( $content ) ) {
+			return;
+		}
+
+		$classes = array( 'um-profile-navbar' );
+		if ( $index > 1 ) {
+			$classes[] = 'um-grid';
+			$classes[] = 'um-grid-col-' . $index;
+		}
+
+		//var_dump( $index );
+
+		/**
+		 * Filters classes of the User Profile navigation bar.
+		 *
+		 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
+		 * 10 - `um_followers_profile_navbar_classes()` from Followers extension class.
+		 * 10 - `profile_navbar_classes()` from Messaging extension class.
+		 *
+		 * @param {array} $classes User Profile navigation bar classes.
+		 *
+		 * @since 2.0
+		 * @since 2.9.0 $classes type is array.
+		 * @hook  um_profile_navbar_classes
+		 *
+		 * @example <caption>Adds `my_custom_class` class to the navigation bar on the User Profile page.</caption>
+		 * function my_um_profile_navbar_classes( $classes ) {
+		 *     // your code here
+		 *     $classes .= 'my_custom_class';
+		 *     echo $classes;
+		 * }
+		 * add_filter( 'um_profile_navbar_classes', 'my_um_profile_navbar_classes' );
+		 */
+		$classes = apply_filters( 'um_profile_navbar_classes', $classes );
+
+		$t_args['content']         = $content;
+		$t_args['wrapper_classes'] = $classes;
+
+		UM()->get_template( 'v3/profile/navbar.php', '', $t_args, true );
 	}
 
 	public function menu( $args ) {

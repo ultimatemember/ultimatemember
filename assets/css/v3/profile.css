@@ -127,6 +127,25 @@
   line-height: var(--um-text-line-height-sm, 20px);
   font-weight: var(--um-text-font-weight-regular, 400);
 }
+.um.um-profile .um-profile-navbar {
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+.um.um-profile .um-profile-navbar:not(.um-grid) {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+.um.um-profile .um-profile-navbar.um-grid .um-dropdown-wrapper .um-dropdown-toggle-button button {
+  width: 100%;
+  justify-content: center;
+}
 .um.um-profile.um-editing .um-profile-header {
   border-bottom: 1px solid var(--um-gray-200, #eaecf0);
   padding-bottom: 12px;

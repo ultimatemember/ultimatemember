@@ -33,49 +33,12 @@ $description_key = UM()->profile()->get_show_bio_key( $args );
 		do_action( 'um_profile_header_cover_area', $args );
 		/** This action is documented in ultimate-member/templates/v3/profile.php */
 		do_action( 'um_profile_header', $args );
-		/**
-		 * Filters classes of the User Profile navigation bar.
-		 *
-		 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
-		 * 10 - `um_followers_profile_navbar_classes()` from Followers extension class.
-		 * 10 - `profile_navbar_classes()` from Messaging extension class.
-		 *
-		 * @param {string} $classes User Profile navigation bar classes.
-		 *
-		 * @since 2.0
-		 * @hook  um_profile_navbar_classes
-		 *
-		 * @example <caption>Adds `my_custom_class` class to the navigation bar on the User Profile page.</caption>
-		 * function my_um_profile_navbar_classes( $classes ) {
-		 *     // your code here
-		 *     $classes .= 'my_custom_class';
-		 *     echo $classes;
-		 * }
-		 * add_filter( 'um_profile_navbar_classes', 'my_um_profile_navbar_classes' );
-		 */
+		/** This filter is documented in ultimate-member/includes/frontend/class-profile.php */
 		$classes = apply_filters( 'um_profile_navbar_classes', '' );
 		?>
 		<div class="um-profile-navbar <?php echo esc_attr( $classes ); ?>">
 			<?php
-			/**
-			 * Fires for displaying User Profile navigation bar.
-			 *
-			 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
-			 * 4 - `um_followers_add_profile_bar()` displays Followers button.
-			 * 5 - `add_profile_bar()` displays Messaging button.
-			 *
-			 * @param {array} $args User Profile data.
-			 *
-			 * @since 1.3.x
-			 * @hook  um_profile_navbar
-			 *
-			 * @example <caption>Display some content before or after User Profile navigation bar.</caption>
-			 * function my_um_profile_navbar( $args ) {
-			 *     // your code here
-			 *     echo $content;
-			 * }
-			 * add_action( 'um_profile_navbar', 'my_um_profile_navbar' );
-			 */
+			/** This action is documented in ultimate-member/templates/v3/profile.php */
 			do_action( 'um_profile_navbar', $args );
 			?>
 			<div class="um-clear"></div>

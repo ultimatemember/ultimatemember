@@ -261,6 +261,28 @@
           &.#{$prefix}member
             +flex( column, flex-start, center, nowrap )
             position: relative
+            .#{$prefix}member-box-main
+              .#{$prefix}member-meta
+                .#{$prefix}member-connect
+                  +flex( row, center, center, wrap )
+                  width: 100%
+                  margin: 0
+                  padding: 0
+                  gap: $spacing-md
+                  a
+                    text-align: center
+                    width: 36px
+                    line-height: 36px
+                    height: 36px
+                    font-size: 20px
+                    border-radius: 999px
+                    color: $um-white
+                    opacity: 0.85
+                    margin: 0 1px
+                    transition: 0.25s
+                    display: inline-block
+                    &:hover
+                      opacity: 1
             &.#{$prefix}member-with-cover
               padding: 0 0 $spacing-3xl 0
               .#{$prefix}member-photos
@@ -336,26 +358,6 @@
                     strong
                       +typography( text, md, semibold )
                       color: $gray-700
-                  .#{$prefix}member-connect
-                    +flex( row, center, center, wrap )
-                    width: 100%
-                    margin: 0
-                    padding: 0
-                    gap: $spacing-md
-                    a
-                      text-align: center
-                      width: 36px
-                      line-height: 36px
-                      height: 36px
-                      font-size: 20px
-                      border-radius: 999px
-                      color: $um-white
-                      opacity: 0.85
-                      margin: 0 1px
-                      transition: 0.25s
-                      display: inline-block
-                      &:hover
-                        opacity: 1
                   &.#{$prefix}member-meta-no-animate
                     display: grid
                     grid-template-rows: 1fr
