@@ -3245,6 +3245,29 @@
 .um .um-grid.um-grid-col-6 {
   grid-template-columns: repeat(6, 1fr);
 }
+.um .um-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  margin: 0;
+  padding: 0;
+  gap: 8px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+.um .um-list .um-list-item {
+  margin: 0;
+  padding: 0 0 8px 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+.um .um-list .um-list-item:not(:last-child) {
+  border-bottom: 1px solid var(--um-gray-200, #eaecf0);
+}
 
 .um .um-link.um-link-secondary {
   color: var(--um-gray-600, #475467);

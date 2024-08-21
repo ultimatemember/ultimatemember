@@ -28,6 +28,9 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 			$this->files();
 			$this->forms();
 			$this->pages();
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				$this->profile();
+			}
 			$this->secure();
 			$this->user();
 		}
@@ -108,6 +111,18 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 				UM()->classes['um\ajax\pages'] = new Pages();
 			}
 			return UM()->classes['um\ajax\pages'];
+		}
+
+		/**
+		 * @since 2.9.0
+		 *
+		 * @return Profile
+		 */
+		public function profile() {
+			if ( empty( UM()->classes['um\ajax\profile'] ) ) {
+				UM()->classes['um\ajax\profile'] = new Profile();
+			}
+			return UM()->classes['um\ajax\profile'];
 		}
 
 		/**

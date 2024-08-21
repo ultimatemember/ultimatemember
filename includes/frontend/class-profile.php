@@ -1,6 +1,8 @@
 <?php
 namespace um\frontend;
 
+use WP_Query;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -14,6 +16,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Profile {
 
+	public static $posts_per_page = 10;
+
+	public static $comments_per_page = 10;
+
 	/**
 	 * Profile constructor.
 	 */
@@ -22,6 +28,8 @@ class Profile {
 		add_action( 'um_profile_navbar', array( &$this, 'navbar' ), 9 );
 		add_action( 'um_profile_menu', array( &$this, 'menu' ), 9 );
 		add_action( 'um_profile_content_main', array( &$this, 'about' ) );
+		add_action( 'um_profile_content_posts', array( &$this, 'posts' ) );
+		add_action( 'um_profile_content_comments', array( &$this, 'comments' ) );
 	}
 
 	public function header( $args ) {
@@ -382,5 +390,108 @@ class Profile {
 			</div>
 			<?php
 		}
+	}
+
+	/**
+	 * @param $args
+	 *
+	 * @return void
+	 */
+	public function posts( $args ) {
+		$user_profile_id = um_profile_id();
+		$per_page        = self::$posts_per_page;
+
+		$query_args = array(
+			'post_type'        => 'post',
+			'posts_per_page'   => $per_page,
+			'offset'           => 0,
+			'author'           => $user_profile_id,
+			'post_status'      => array( 'publish' ),
+			'um_main_query'    => true, // make this query pseudo-main.
+			'suppress_filters' => false, // for WPML.
+		);
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_profile_query_make_posts
+		 * @description Some changes of WP_Query Posts Tab
+		 * @input_vars
+		 * [{"var":"$query_posts","type":"WP_Query","desc":"UM Posts Tab query"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_profile_query_make_posts', 'function_name', 10, 1 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_profile_query_make_posts', 'my_profile_query_make_posts', 10, 1 );
+		 * function my_profile_query_make_posts( $query_posts ) {
+		 *     // your code here
+		 *     return $query_posts;
+		 * }
+		 * ?>
+		 */
+		$query_args = apply_filters( 'um_profile_query_make_posts', $query_args );
+
+		$posts_query = new WP_Query( $query_args );
+
+		$last_id = 0;
+		if ( $posts_query->posts ) {
+			$last_post = end( $posts_query->posts );
+			$last_id = absint( $last_post->ID );
+		}
+
+		$t_args = array(
+			'posts'           => $posts_query->posts,
+			'per_page'        => $per_page,
+			'count_posts'     => $posts_query->found_posts,
+			'last_id'         => $last_id,
+			'current_user_id' => get_current_user_id(),
+			'user_profile_id' => absint( $user_profile_id ),
+		);
+
+		UM()->get_template( 'v3/profile/posts.php', '', $t_args, true );
+	}
+
+	/**
+	 * @param $args
+	 *
+	 * @return void
+	 */
+	public function comments( $args ) {
+		$user_profile_id = um_profile_id();
+		$per_page        = self::$comments_per_page;
+
+		$comments = get_comments( array(
+			'number'        => $per_page,
+			'offset'        => 0,
+			'user_id'       => um_user( 'ID' ),
+			'post_status'   => array( 'publish' ),
+			'type__not_in'  => apply_filters( 'um_excluded_comment_types', array('') ),
+		) );
+
+		$comments_count = get_comments( array(
+			'user_id'       => um_user( 'ID' ),
+			'post_status'   => array( 'publish' ),
+			'type__not_in'  => apply_filters( 'um_excluded_comment_types', array('') ),
+			'count'         => 1,
+		) );
+
+		$last_id = 0;
+		if ( $comments ) {
+			$last_comment = end( $comments );
+			$last_id = absint( $last_comment->comment_ID );
+		}
+
+		$t_args = array(
+			'comments'        => $comments,
+			'per_page'        => $per_page,
+			'count_comments'  => $comments_count,
+			'last_id'         => $last_id,
+			'current_user_id' => get_current_user_id(),
+			'user_profile_id' => absint( $user_profile_id ),
+		);
+
+		UM()->get_template( 'v3/profile/comments.php', '', $t_args, true );
 	}
 }

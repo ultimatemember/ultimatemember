@@ -14,7 +14,6 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 	 */
 	class User_posts {
 
-
 		/**
 		 * User_posts constructor.
 		 */
@@ -22,7 +21,6 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 			add_action( 'um_profile_content_posts', array( &$this, 'add_posts' ) );
 			add_action( 'um_profile_content_comments', array( &$this, 'add_comments' ) );
 		}
-
 
 		/**
 		 * Add posts
@@ -38,27 +36,7 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 				'suppress_filters' => false,
 			);
 
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_profile_query_make_posts
-			 * @description Some changes of WP_Query Posts Tab
-			 * @input_vars
-			 * [{"var":"$query_posts","type":"WP_Query","desc":"UM Posts Tab query"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_profile_query_make_posts', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_profile_query_make_posts', 'my_profile_query_make_posts', 10, 1 );
-			 * function my_profile_query_make_posts( $query_posts ) {
-			 *     // your code here
-			 *     return $query_posts;
-			 * }
-			 * ?>
-			 */
+			/** This filter is documented in includes/frontend/class-profile.php */
 			$args = apply_filters( 'um_profile_query_make_posts', $args );
 			$posts = get_posts( $args );
 
@@ -118,27 +96,7 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 				'suppress_filters' => false,
 			);
 
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_profile_query_make_posts
-			 * @description Some changes of WP_Query Posts Tab
-			 * @input_vars
-			 * [{"var":"$query_posts","type":"WP_Query","desc":"UM Posts Tab query"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_profile_query_make_posts', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_profile_query_make_posts', 'my_profile_query_make_posts', 10, 1 );
-			 * function my_profile_query_make_posts( $query_posts ) {
-			 *     // your code here
-			 *     return $query_posts;
-			 * }
-			 * ?>
-			 */
+			/** This filter is documented in includes/frontend/class-profile.php */
 			$args = apply_filters( 'um_profile_query_make_posts', $args );
 			$posts = get_posts( $args );
 

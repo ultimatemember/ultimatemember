@@ -2505,6 +2505,18 @@
       grid-template-columns: repeat(5, 1fr)
     &.#{$prefix}grid-col-6
       grid-template-columns: repeat(6, 1fr)
+  .#{$prefix}list
+    +flex( column, flex-start, stretch, nowrap )
+    margin: 0
+    padding: 0
+    gap: $spacing-md
+    +border-box
+    .#{$prefix}list-item
+      margin: 0
+      padding: 0 0 $spacing-md 0
+      +border-box
+      &:not(:last-child)
+        border-bottom: 1px solid $gray-200
 
 // Secondary link
 .um

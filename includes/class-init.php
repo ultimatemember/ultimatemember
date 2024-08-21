@@ -535,7 +535,11 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->frontend()->includes();
 				$this->login();
 				$this->register();
-				$this->user_posts();
+				if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+
+				} else {
+					$this->user_posts();
+				}
 				$this->logout();
 			}
 
@@ -1208,6 +1212,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 		/**
 		 * @since 2.0
+		 *
+		 * @todo deprecate since old UI is deprecated
 		 *
 		 * @return um\core\User_posts
 		 */
