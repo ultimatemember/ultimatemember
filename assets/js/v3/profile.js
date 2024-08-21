@@ -76,28 +76,6 @@ jQuery(document).ready(function() {
 				}
 			}
 		);
-
-		jQuery.ajax({
-			url: wp.ajax.settings.url,
-			type: 'post',
-			data: {
-				action: 'um_ajax_paginate_comments',
-				user_id: jQuery(this).data('user_id'),
-				page: next_page,
-				nonce: um_scripts.nonce
-			},
-			complete: function() {
-				parent.removeClass( 'loading' );
-			},
-			success: function( data ) {
-				parent.before( data );
-				if ( next_page === pages ) {
-					parent.remove();
-				} else {
-					obj.data( 'page', next_page );
-				}
-			}
-		});
 	});
 
 	jQuery('.um-profile.um-viewing .um-profile-body .um-row').each(function(){

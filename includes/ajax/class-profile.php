@@ -1,6 +1,7 @@
 <?php
 namespace um\ajax;
 
+use WP_Comment_Query;
 use WP_Query;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -21,8 +22,8 @@ class Profile {
 		add_action( 'wp_ajax_um_get_user_posts', array( $this, 'load_posts' ) );
 		add_action( 'wp_ajax_nopriv_um_get_user_posts', array( $this, 'load_posts' ) );
 
-		add_action( 'wp_ajax_um_ajax_paginate_comments', array( $this, 'load_comments' ) );
-		add_action( 'wp_ajax_nopriv_um_ajax_paginate_comments', array( $this, 'load_comments' ) );
+		add_action( 'wp_ajax_um_get_user_comments', array( $this, 'load_comments' ) );
+		add_action( 'wp_ajax_nopriv_um_get_user_comments', array( $this, 'load_comments' ) );
 	}
 
 	/**
@@ -59,7 +60,7 @@ class Profile {
 
 		$last_id = absint( $_POST['last_id'] );
 
-		$filter_handler = function( $where ) use ( $last_id ) {
+		$filter_handler = static function ( $where ) use ( $last_id ) {
 			global $wpdb;
 			return $where . $wpdb->prepare( " AND {$wpdb->posts}.ID < %d", $last_id );
 		};
@@ -71,7 +72,7 @@ class Profile {
 		$last_id = 0;
 		if ( $posts_query->posts ) {
 			$last_post = end( $posts_query->posts );
-			$last_id = absint( $last_post->ID );
+			$last_id   = absint( $last_post->ID );
 		}
 
 		$content = '';
@@ -109,26 +110,39 @@ class Profile {
 			wp_send_json_error( __( 'Invalid last post ID', 'ultimate-member' ) );
 		}
 
-		// $last_id = absint( $_POST['last_id'] );
-		$page = ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 0;
+		$last_id = absint( $_POST['last_id'] );
 
-		$comments = get_comments( array(
-			'number'        => 10,
-			'offset'        => ( $page - 1 ) * 10,
-			'user_id'       => $author,
-			'post_status'   => array( 'publish' ),
-			'type__not_in'  => apply_filters( 'um_excluded_comment_types', array('') ),
-		) );
+		$filter_handler = static function ( $clauses ) use ( $last_id ) {
+			global $wpdb;
+			$clauses['where'] .= $wpdb->prepare( " AND {$wpdb->comments}.comment_ID < %d", $last_id );
+			return $clauses;
+		};
+
+		$query_args = array(
+			'number'      => UM()->frontend()->profile()::$comments_per_page,
+			'offset'      => 0,
+			'user_id'     => $author,
+			'post_status' => array( 'publish' ),
+			'post_type'   => array( 'post' ),
+		);
+
+		if ( get_current_user_id() !== $author && ! current_user_can( 'edit_posts' ) ) {
+			$query_args['status'] = 'approve';
+		}
+
+		add_filter( 'comments_clauses', $filter_handler );
+		$comments_query = new WP_Comment_Query( $query_args );
+		remove_filter( 'comments_clauses', $filter_handler );
 
 		$last_id = 0;
-		if ( $comments ) {
-			$last_comment = end( $comments );
-			$last_id = absint( $last_comment->comment_ID );
+		if ( $comments_query->comments ) {
+			$last_comment = end( $comments_query->comments );
+			$last_id      = absint( $last_comment->comment_ID );
 		}
 
 		$content = '';
-		if ( ! empty( $comments ) ) {
-			foreach ( $comments as $comment ) {
+		if ( ! empty( $comments_query->comments ) ) {
+			foreach ( $comments_query->comments as $comment ) {
 				$content .= UM()->get_template( 'v3/profile/comments-item.php', '', array( 'comment' => $comment ) );
 			}
 		}

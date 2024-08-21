@@ -1,6 +1,7 @@
 <?php
 namespace um\frontend;
 
+use WP_Comment_Query;
 use WP_Query;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -459,34 +460,34 @@ class Profile {
 	 * @return void
 	 */
 	public function comments( $args ) {
-		$user_profile_id = um_profile_id();
+		$user_profile_id = absint( um_profile_id() );
 		$per_page        = self::$comments_per_page;
 
-		$comments = get_comments( array(
+		$query_args = array(
 			'number'        => $per_page,
 			'offset'        => 0,
-			'user_id'       => um_user( 'ID' ),
+			'no_found_rows' => false,
+			'user_id'       => $user_profile_id,
 			'post_status'   => array( 'publish' ),
-			'type__not_in'  => apply_filters( 'um_excluded_comment_types', array('') ),
-		) );
+			'post_type'     => array( 'post' ),
+		);
 
-		$comments_count = get_comments( array(
-			'user_id'       => um_user( 'ID' ),
-			'post_status'   => array( 'publish' ),
-			'type__not_in'  => apply_filters( 'um_excluded_comment_types', array('') ),
-			'count'         => 1,
-		) );
+		if ( get_current_user_id() !== $user_profile_id && ! current_user_can( 'edit_posts' ) ) {
+			$query_args['status'] = 'approve';
+		}
+
+		$comments_query = new WP_Comment_Query( $query_args );
 
 		$last_id = 0;
-		if ( $comments ) {
-			$last_comment = end( $comments );
-			$last_id = absint( $last_comment->comment_ID );
+		if ( $comments_query->comments ) {
+			$last_comment = end( $comments_query->comments );
+			$last_id      = absint( $last_comment->comment_ID );
 		}
 
 		$t_args = array(
-			'comments'        => $comments,
+			'comments'        => $comments_query->comments,
 			'per_page'        => $per_page,
-			'count_comments'  => $comments_count,
+			'count_comments'  => $comments_query->found_comments,
 			'last_id'         => $last_id,
 			'current_user_id' => get_current_user_id(),
 			'user_profile_id' => absint( $user_profile_id ),
