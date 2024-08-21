@@ -1091,7 +1091,7 @@ class Layouts {
 					echo esc_html( $tab_data['title'] );
 					if ( array_key_exists( 'notifier', $tab_data ) ) {
 						$badge_args       = array(
-							'size' => $args['size'],
+							'size' => 's',
 							'type' => 'pill-color',
 						);
 						$notifier         = 0;
