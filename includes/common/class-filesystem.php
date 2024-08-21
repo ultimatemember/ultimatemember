@@ -194,6 +194,7 @@ class Filesystem {
 	 */
 	public function get_upload_dir( $dir = '', $blog_id = null ) {
 		/** @var $wp_filesystem WP_Filesystem_Base */
+		// Please add define('FS_METHOD', 'direct'); to avoid question about FTP.
 		global $wp_filesystem;
 
 		if ( ! $wp_filesystem instanceof WP_Filesystem_Base ) {
@@ -213,7 +214,7 @@ class Filesystem {
 
 		if ( empty( $this->upload_dir[ $blog_id ] ) ) {
 			$uploads = wp_upload_dir();
-			if ( array_key_exists( 'error', $uploads ) ) {
+			if ( ! empty( $uploads['error'] ) ) {
 				return '';
 			}
 			$this->upload_dir[ $blog_id ] = $uploads['basedir'];
@@ -254,7 +255,7 @@ class Filesystem {
 
 		if ( empty( $this->upload_url[ $blog_id ] ) ) {
 			$uploads = wp_upload_dir();
-			if ( array_key_exists( 'error', $uploads ) ) {
+			if ( ! empty( $uploads['error'] ) ) {
 				return '';
 			}
 			$this->upload_url[ $blog_id ] = $uploads['baseurl'];
