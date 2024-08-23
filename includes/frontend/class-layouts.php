@@ -655,6 +655,28 @@ class Layouts {
 		} elseif ( 'xl' === $args['size'] ) {
 			$thumb_size = 128;
 		}
+		/**
+		 * Filters the avatar's thumb size.
+		 *
+		 * @since 2.9.0
+		 * @hook um_single_avatar_thumbnail_size
+		 *
+		 * @param {int}   $thumb_size Thumb size.
+		 * @param {array} $args       Avatars arguments.
+		 * @param {int}   $user_id    User ID.
+		 *
+		 * @return {int} Thumb size in pixels.
+		 *
+		 * @example <caption>Add `xxl` thumb size.</caption>
+		 * function um_custom_cpt_list( $thumb_size, $args, $user_id ) {
+		 *     if ( 'xxl' === $args['size'] ) {
+		 *         $thumb_size = 256;
+		 *     }
+		 *     return $thumb_size;
+		 * }
+		 * add_filter( 'um_single_avatar_thumbnail_size', 'um_custom_single_avatar_thumbnail_size', 10, 3 );
+		 */
+		$thumb_size = apply_filters( 'um_single_avatar_thumbnail_size', $thumb_size, $args, $user_id );
 
 		$avatar = get_avatar( $user_id, $thumb_size, '', '', array( 'loading' => 'lazy' ) );
 
