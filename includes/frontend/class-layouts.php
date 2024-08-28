@@ -2318,6 +2318,7 @@ class Layouts {
 				'supporting'  => '',
 				'underline'   => true,
 				'has_icon'    => true,
+				'classes'     => array(),
 			)
 		);
 
@@ -2349,6 +2350,10 @@ class Layouts {
 
 		if ( empty( $icon ) ) {
 			$classes[] = 'um-alert-no-icon';
+		}
+
+		if ( ! empty( $args['classes'] ) ) {
+			$classes = array_merge( $classes, $args['classes'] );
 		}
 
 		ob_start();
