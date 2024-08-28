@@ -22,9 +22,10 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		public function includes() {
 			$this->directory();
 			$this->enqueue();
-			$this->modal();
 			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 				$this->profile();
+			} else {
+				$this->modal();
 			}
 			$this->secure();
 		}
