@@ -364,12 +364,12 @@
 		responsive: function( modal ) {
 			let $modal = this.getModal( modal );
 
-			let options = $modal.get( 0 ).umModalOptions;
-			if ( 'full-width' === options.size ) {
-				return this;
-			}
-
 			if ( $modal ) {
+				let options = $modal.get( 0 ).umModalOptions;
+				if ( 'full-width' === options.size ) {
+					return this;
+				}
+
 				$modal.css( {opacity: 0} );
 				//$modal.removeClass( 'uimob340' ).removeClass( 'uimob500' ).removeClass( 'uimob800' ).removeClass( 'uimob960' );
 
