@@ -31,7 +31,7 @@
 .#{$prefix}modal
   border-radius: $radius-sm
   bottom: -50px
-  box-sizing: border-box
+  +border-box
   display: block
   left: 50%
   margin-left: -170px
@@ -42,6 +42,14 @@
   transition: bottom 0.5s ease-out 0.1s
   z-index: 100000
 
+  &.full-width
+    bottom: 50px
+    top: 50px
+    left: 50px
+    right: 50px
+    min-width: auto
+    margin: 0
+    padding: 0
   &.large
     margin-left: -450px
     width: 900px

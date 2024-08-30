@@ -28,6 +28,8 @@
   border-radius: 6px;
   bottom: -50px;
   box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
   display: block;
   left: 50%;
   margin-left: -170px;
@@ -37,6 +39,15 @@
   position: fixed;
   transition: bottom 0.5s ease-out 0.1s;
   z-index: 100000;
+}
+.um-modal.full-width {
+  bottom: 50px;
+  top: 50px;
+  left: 50px;
+  right: 50px;
+  min-width: auto;
+  margin: 0;
+  padding: 0;
 }
 .um-modal.large {
   margin-left: -450px;
