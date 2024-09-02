@@ -25,7 +25,9 @@ if ( ! class_exists( 'um\core\rest\API_v1' ) ) {
 		public function __construct() {
 			parent::__construct();
 
-			add_filter( 'query_vars', array( $this, 'query_vars' ) );
+			if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+				add_filter( 'query_vars', array( $this, 'query_vars' ) );
+			}
 		}
 
 		/**
