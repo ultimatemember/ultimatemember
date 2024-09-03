@@ -25,6 +25,7 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			$this->secure()->hooks();
 			$this->site_health();
 			$this->theme()->hooks();
+			$this->action_scheduler();
 		}
 
 		/**
@@ -85,6 +86,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\theme'] = new Theme();
 			}
 			return UM()->classes['um\common\theme'];
+		}
+
+		/**
+		 * @since 2.6.8
+		 *
+		 * @return Action_Scheduler
+		 */
+		public function action_scheduler() {
+			if ( empty( UM()->classes['um\common\action_scheduler'] ) ) {
+				UM()->classes['um\common\action_scheduler'] = new Action_Scheduler();
+			}
+			return UM()->classes['um\common\action_scheduler'];
 		}
 	}
 }
