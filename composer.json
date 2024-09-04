@@ -9,7 +9,8 @@
   "config": {
     "allow-plugins": {
       "symfony/flex": true,
-      "dealerdirect/phpcodesniffer-composer-installer": true
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "composer/installers": true
     }
   },
   "require": {
@@ -21,7 +22,8 @@
     "ext-fileinfo": "*",
     "ext-curl": "*",
     "ext-iconv": "*",
-    "woocommerce/action-scheduler": "3.2.1"
+    "woocommerce/action-scheduler": "3.2.1",
+    "composer/installers": "^2.3"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
@@ -35,7 +37,7 @@
   },
   "extra": {
     "installer-paths": {
-      "vendor/{$vendor}/{$name}/": ["woocommerce/action-scheduler"]
+      "includes/lib/{$name}/": ["woocommerce/action-scheduler"]
     }
   }
 }
