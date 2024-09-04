@@ -1,4 +1,5 @@
 <?php
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -502,7 +503,13 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		public function includes() {
 
+			$this->action_scheduler();
+			if ( $this->options()->get( 'enable_action_scheduler' ) ) {
+				$this->action_scheduler()->proxy();
+			}
+
 			$this->common()->includes();
+
 			$this->access();
 
 			if ( $this->is_request( 'ajax' ) ) {
@@ -1451,6 +1458,18 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 
 			return $this->classes['multisite'];
+		}
+
+		/**
+		 * @since 2.6.8
+		 *
+		 * @return um\action_scheduler\Init
+		 */
+		public function action_scheduler() {
+			if ( empty( $this->classes['action_scheduler'] ) ) {
+				$this->classes['action_scheduler'] = new um\action_scheduler\Init();
+			}
+			return $this->classes['action_scheduler'];
 		}
 
 

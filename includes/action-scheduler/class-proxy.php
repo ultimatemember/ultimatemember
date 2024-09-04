@@ -1,23 +1,23 @@
 <?php
 
-namespace um\common;
+namespace um\action_scheduler;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'um\common\Action_Scheduler' ) ) {
+if ( ! class_exists( 'um\Action_Scheduler\Proxy' ) ) {
 
 	/**
 	 * Class Action_Scheduler
 	 *
 	 * Wrapper for action-scheduler
 	 *
-	 * @package um\common
+	 * @package um\action_scheduler
 	 */
-	class Action_Scheduler {
+	class Proxy {
 
-		protected $prefix = 'um_';
+		protected $default_group = 'ultimate-member';
 		// TODO: Do we need prefix for hook?.
 
 		/**
@@ -39,7 +39,7 @@ if ( ! class_exists( 'um\common\Action_Scheduler' ) ) {
 		 * @return int Еhe action’s ID. Zero if there was an error scheduling the action. The error will be sent to error_log
 		 */
 		public function enqueue_async_action( $hook, $args = array(), $group = '', $unique = false, $priority = 10 ) {
-			$group = $this->prefix . $group;
+			$group = $this->set_group( $group );
 			return as_enqueue_async_action( $hook, $args, $group, $unique, $priority );
 		}
 
@@ -56,7 +56,7 @@ if ( ! class_exists( 'um\common\Action_Scheduler' ) ) {
 		 * @return int The action’s ID. Zero if there was an error scheduling the action. The error will be sent to error_log.
 		 */
 		public function schedule_single_action( $timestamp, $hook, $args = array(), $group = '', $unique = false, $priority = 10 ) {
-			$group = $this->prefix . $group;
+			$group = $this->set_group( $group );
 
 			return as_schedule_single_action( $timestamp, $hook, $args, $group, $unique, $priority );
 		}
@@ -75,7 +75,7 @@ if ( ! class_exists( 'um\common\Action_Scheduler' ) ) {
 		 * @return int The action’s ID. Zero if there was an error scheduling the action. The error will be sent to error_log.
 		 */
 		public function schedule_recurring_action( $timestamp, $interval_in_seconds, $hook, $args = array(), $group = '', $unique = false, $priority = 10 ) {
-			$group = $this->prefix . $group;
+			$group = $this->set_group( $group );
 
 			return as_schedule_recurring_action( $timestamp, $interval_in_seconds, $hook, $args, $group, $unique, $priority );
 		}
@@ -96,7 +96,7 @@ if ( ! class_exists( 'um\common\Action_Scheduler' ) ) {
 		 * @return int The action’s ID. Zero if there was an error scheduling the action. The error will be sent to error_log.
 		 */
 		public function schedule_cron_action( $timestamp, $schedule, $hook, $args = array(), $group = '', $unique = false, $priority = 10 ) {
-			$group = $this->prefix . $group;
+			$group = $this->set_group( $group );
 
 			return as_schedule_cron_action( $timestamp, $schedule, $hook, $args, $group, $unique, $priority );
 		}
@@ -111,7 +111,7 @@ if ( ! class_exists( 'um\common\Action_Scheduler' ) ) {
 		 * @return int|null
 		 */
 		public function unschedule_action( $hook, $args = array(), $group = '' ) {
-			$group = $this->prefix . $group;
+			$group = $this->set_group( $group );
 
 			return as_unschedule_action( $hook, $args, $group );
 		}
@@ -126,7 +126,7 @@ if ( ! class_exists( 'um\common\Action_Scheduler' ) ) {
 		 * @return string|null The scheduled action ID if a scheduled action was found, or null if no matching action found.
 		 */
 		public function unschedule_all_actions( $hook, $args = array(), $group = '' ) {
-			$group = $this->prefix . $group;
+			$group = $this->set_group( $group );
 
 			return as_unschedule_all_actions( $hook, $args, $group );
 		}
@@ -141,7 +141,7 @@ if ( ! class_exists( 'um\common\Action_Scheduler' ) ) {
 		 * @return int|bool The timestamp for the next occurrence of a pending scheduled action, true for an async or in-progress action or false if there is no matching action.
 		 */
 		public function next_scheduled_action( $hook, $args = array(), $group = '' ) {
-			$group = $this->prefix . $group;
+			$group = $this->set_group( $group );
 
 			return as_next_scheduled_action( $hook, $args, $group );
 		}
@@ -157,7 +157,7 @@ if ( ! class_exists( 'um\common\Action_Scheduler' ) ) {
 		 * @return bool True if a matching action is pending or in-progress, false otherwise.
 		 */
 		public function has_scheduled_action( $hook, $args = array(), $group = '' ) {
-			$group = $this->prefix . $group;
+			$group = $this->set_group( $group );
 
 			return as_has_scheduled_action( $hook, $args, $group );
 		}
@@ -183,9 +183,17 @@ if ( ! class_exists( 'um\common\Action_Scheduler' ) ) {
 		 */
 		public function get_scheduled_actions( $args, $return_format = 'OBJECT' ) {
 			if ( ! empty( $args['group'] ) ) {
-				$args['group'] = $this->prefix . $args['group'];
+				$args['group'] = $this->set_group( $args['group'] );
 			}
 			return as_get_scheduled_actions( $args, $return_format );
+		}
+
+		public function set_group( $group ) {
+			if ( empty( $group ) ) {
+				return $this->default_group;
+			} else {
+				return $this->default_group . '_' . $group;
+			}
 		}
 	}
 }

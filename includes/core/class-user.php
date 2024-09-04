@@ -625,7 +625,15 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			// send email notifications
 			if ( $this->send_mail_on_delete ) {
-				UM()->mail()->send( um_user( 'user_email' ), 'deletion_email' );
+				$user_email = um_user( 'user_email' );
+				$template = 'deletion_email';
+
+				if ( UM()->options()->get( 'enable_action_scheduler' ) ) {
+					UM()->action_scheduler()->proxy()->enqueue_async_action( 'um_send_deleted_user_email', array( $user_email, $template ) );
+				} else {
+					do_action( 'um_send_deleted_user_email', $user_email, $template );
+//					UM()->mail()->send( $user_email, $template );
+				}
 
 				$emails = um_multi_admin_email();
 				if ( ! empty( $emails ) ) {
