@@ -222,6 +222,7 @@ UM.frontend = {
 
 				let mimeTypes= $button.data('mime-types');
 				let maxSize     = parseInt( $button.data('max-size') );
+				let filesLimit  = parseInt( $button.data('max-files') );
 				let multiple = $button.data('multiple');
 				let handler  = $button.data('handler');
 				let nonce    = $button.data('nonce');
@@ -265,8 +266,10 @@ UM.frontend = {
 										fileRow.addClass('um-upload-failed');
 									}
 
-									fileRow.find('.um-supporting-text').text(err.message);
+									fileRow.find('.um-supporting-text').html(err.message);
 									fileRow.find('.um-progress-bar-wrapper').remove();
+
+									wp.hooks.doAction( 'um_uploader_after_file_row_error', $uploader, up, err, fileRow );
 								}
 							}
 						},
@@ -281,6 +284,11 @@ UM.frontend = {
 										$fileList.find( '.um-uploader-file' ).each( function ( u, item ) {
 											up.removeFile( item.id );
 										} );
+									}
+
+									if ( filesLimit ) {
+										console.log( $fileList.find( '.um-uploader-file' ).length );
+										console.log( filesLimit );
 									}
 
 									let fileRow = $fileList.find('#' + file.id);
@@ -448,7 +456,7 @@ UM.frontend = {
 				jQuery(dropzoneTarget).removeAttr('drop-active');
 			});
 
-			jQuery(document.body).on('click', '.um-upload-link', function(e) {
+			jQuery(document.body).on('click', '.um-upload-link:not(.um-link-disabled)', function(e) {
 				e.preventDefault();
 				jQuery(this).parents('.um-uploader').find('.um-uploader-button').trigger('click');
 			});

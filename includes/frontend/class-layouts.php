@@ -2108,21 +2108,24 @@ class Layouts {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'id'              => '',
-				'async'           => true,
-				'field_id'        => '',
-				'name'            => '',
-				'value'           => '',
-				'handler'         => '',
-				'multiple'        => true,
-				'nonce'           => '',
-				'types'           => array(), // if not specified then get all allowed
-				'button'          => array(),
-				'dropzone'        => true,
-				'dropzone_inner'  => '',
-				'files_list'      => true,
-				'sortable_files'  => false,
-				'max_upload_size' => wp_max_upload_size(),
+				'id'                => '',
+				'async'             => true,
+				'field_id'          => '',
+				'name'              => '',
+				'value'             => '',
+				'handler'           => '',
+				'multiple'          => true,
+				'nonce'             => '',
+				'types'             => array(), // if not specified then get all allowed
+				'button'            => array(),
+				'dropzone'          => true,
+				'dropzone_inner'    => '',
+				'files_list'        => true,
+				'sortable_files'    => false,
+				'max_upload_size'   => wp_max_upload_size(),
+				'max_files'         => '', // Integer value of the limit files in the files list. Empty = unlimited.
+				'disable_drop_zone' => false,
+				'dropzone_error'    => '',
 			)
 		);
 
@@ -2186,10 +2189,14 @@ class Layouts {
 				$extra_info[] = sprintf( __( 'Maximum upload file size: %s.' ), size_format( $args['max_upload_size'] ) );
 			}
 			$extra_info = implode( '<br />', $extra_info );
+			$link_classes = array( 'um-upload-link', 'um-link' );
+			if ( ! empty( $args['disable_drop_zone'] ) ) {
+				$link_classes[] = 'um-link-disabled';
+			}
 			ob_start();
 			?>
 			<span class="um-supporting-text">
-				<span><a href="#" class="um-upload-link um-link">Click to upload</a> or drag and drop</span>
+				<span><a href="#" class="<?php echo esc_attr( implode( ' ', $link_classes ) );?>">Click to upload</a> or drag and drop</span>
 				<?php if ( ! empty( $extra_info ) ) { ?>
 					<span><?php echo wp_kses_post( $extra_info ); ?></span>
 				<?php } ?>
@@ -2220,6 +2227,7 @@ class Layouts {
 					'nonce'      => $args['nonce'],
 					'multiple'   => $args['multiple'],
 					'max-size'   => $args['max_upload_size'],
+					'max-files'  => $args['max_files'],
 				),
 			);
 			if ( ! empty( $args['button'] ) && is_array( $args['button'] ) ) {
@@ -2232,9 +2240,17 @@ class Layouts {
 				$button_args               = $args['button'];
 			}
 
+			if ( ! empty( $args['disable_drop_zone'] ) ) {
+				$button_args['disabled'] = true;
+			}
+
 			if ( ! empty( $args['dropzone'] ) ) {
+				$dropzone_classes = array( 'um-uploader-dropzone' );
+				if ( ! empty( $args['disable_drop_zone'] ) ) {
+					$dropzone_classes[] = 'um-dropzone-disabled';
+				}
 				?>
-				<div id="um-<?php echo esc_attr( $id ); ?>-uploader-dropzone" class="um-uploader-dropzone">
+				<div id="um-<?php echo esc_attr( $id ); ?>-uploader-dropzone" class="<?php echo esc_attr( implode( ' ', $dropzone_classes ) ); ?>">
 					<?php echo wp_kses( self::button( $button_content, $button_args ), UM()->get_allowed_html( 'templates' ) ); ?>
 					<div>
 						<?php echo wp_kses( $args['dropzone_inner'], UM()->get_allowed_html( 'templates' ) ); ?>
@@ -2243,6 +2259,10 @@ class Layouts {
 				<?php
 			} else {
 				echo wp_kses( self::button( $button_content, $button_args ), UM()->get_allowed_html( 'templates' ) );
+			}
+
+			if ( ! empty( $args['disable_drop_zone'] ) && ! empty( $args['dropzone_error'] ) ) {
+				echo wp_kses( $args['dropzone_error'], UM()->get_allowed_html( 'templates' ) );
 			}
 
 			if ( ! empty( $args['files_list'] ) ) {

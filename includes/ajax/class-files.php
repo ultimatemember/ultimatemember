@@ -277,7 +277,7 @@ class Files {
 			wp_send_json(
 				array(
 					'OK'   => 0,
-					'info' => esc_html( $error ),
+					'info' => $error,
 				)
 			);
 		}
