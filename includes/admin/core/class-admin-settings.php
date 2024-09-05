@@ -1508,7 +1508,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'sections' => array(
 							''      => array(
 								'title'       => __( 'Restriction Content', 'ultimate-member' ),
-								'description' => __( 'Provides  settings for controlling access to your site.', 'ultimate-member' ),
+								'description' => __( 'Provides settings for controlling access to your site.', 'ultimate-member' ),
 								'fields'      => $access_fields,
 							),
 							'other' => array(
