@@ -632,7 +632,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					UM()->action_scheduler()->proxy()->enqueue_async_action( 'um_send_deleted_user_email', array( $user_email, $template ) );
 				} else {
 					do_action( 'um_send_deleted_user_email', $user_email, $template );
-//					UM()->mail()->send( $user_email, $template );
 				}
 
 				$emails = um_multi_admin_email();
