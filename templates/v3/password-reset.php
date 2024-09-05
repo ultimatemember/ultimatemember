@@ -23,11 +23,11 @@ $updated_attr = isset( $_GET['updated'] ) ? sanitize_key( $_GET['updated'] ) : '
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?>">
 	<form method="post" action="" class="um-form-new">
 		<?php if ( 'checkemail' === $updated_attr ) { ?>
-			<div class="um-form-supporting-text">
+			<div class="um-form-supporting-text um-supporting-text">
 				<?php esc_html_e( 'If an account matching the provided details exists, we will send a password reset link. Please check your inbox.', 'ultimate-member' ); ?>
 			</div>
 		<?php } elseif ( 'password_changed' === $updated_attr ) { ?>
-			<div class="um-form-supporting-text">
+			<div class="um-form-supporting-text um-supporting-text">
 				<?php esc_html_e( 'You have successfully changed password.', 'ultimate-member' ); ?>
 			</div>
 		<?php } else { ?>
@@ -58,7 +58,7 @@ $updated_attr = isset( $_GET['updated'] ) ? sanitize_key( $_GET['updated'] ) : '
 
 			if ( ! empty( $updated_attr ) ) {
 				?>
-				<div class="um-form-supporting-text">
+				<div class="um-form-supporting-text um-supporting-text">
 					<?php
 					if ( 'expiredkey' === $updated_attr ) {
 						esc_html_e( 'Your password reset link has expired. Please request a new link below.', 'ultimate-member' );
@@ -70,7 +70,7 @@ $updated_attr = isset( $_GET['updated'] ) ? sanitize_key( $_GET['updated'] ) : '
 				<?php
 			} else {
 				?>
-				<div class="um-form-supporting-text">
+				<div class="um-form-supporting-text um-supporting-text">
 					<?php esc_html_e( 'To reset your password, please enter your email address or username below.', 'ultimate-member' ); ?>
 				</div>
 				<?php

@@ -1417,7 +1417,24 @@ function um_add_profile_fields( $args ) {
 		echo wp_kses( UM()->fields()->display( 'profile', $args ), UM()->get_allowed_html( 'templates' ) );
 	} else {
 		UM()->fields()->viewing = true;
-		echo wp_kses( UM()->fields()->display_view( 'profile', $args ), UM()->get_allowed_html( 'templates' ) );
+		$allowed_html = UM()->get_allowed_html( 'templates' );
+		if ( empty( $allowed_html['iframe'] ) ) {
+			$allowed_html['iframe'] = array(
+				'allow'           => true,
+				'frameborder'     => true,
+				'loading'         => true,
+				'name'            => true,
+				'referrerpolicy'  => true,
+				'sandbox'         => true,
+				'src'             => true,
+				'srcdoc'          => true,
+				'title'           => true,
+				'width'           => true,
+				'height'          => true,
+				'allowfullscreen' => true,
+			);
+		}
+		echo wp_kses( UM()->fields()->display_view( 'profile', $args ), $allowed_html );
 	}
 }
 add_action( 'um_main_profile_fields', 'um_add_profile_fields', 100 );

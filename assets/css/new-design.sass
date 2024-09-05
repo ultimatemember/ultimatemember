@@ -1012,8 +1012,6 @@
       margin: 0
       padding: 0
       width: 100%
-      color: $gray-600
-      +typography( text, md, regular )
       text-align: center
     .#{$prefix}form-rows
       +flex( column, stretch, start, nowrap )
@@ -1032,9 +1030,6 @@
         .#{$prefix}text
           color: $gray-700
           +typography( text, sm, semibold )
-        .#{$prefix}supporting-text
-          color: $gray-600
-          +typography( text, sm, regular )
       .#{$prefix}row-heading
         color: $gray-900
         +typography( text, lg, semibold )
@@ -1053,76 +1048,22 @@
           width: 100%
           column-gap: $spacing-lg
           .#{$prefix}form-col
-            +flex( column, stretch, start, nowrap )
+            +flex( column, flex-start, stretch, nowrap )
             +border-box
             margin: 0
             padding: 0
             row-gap: $spacing-2xl
-            .#{$prefix}field-area
-              +flex( row, flex-start, center, nowrap )
-              .#{$prefix}form-field
-                +border-box
-                width: 100%
-            .#{$prefix}field,
+            //.#{$prefix}field-area
+            //  +flex( row, flex-start, center, nowrap )
+            //  .#{$prefix}form-field
+            //    +border-box
+            //    width: 100%
             .#{$prefix}field-area-password
-              +flex( column, stretch, start, nowrap )
+              position: relative
+              +flex( column, flex-start, stretch, nowrap )
               +border-box
               margin: 0
               padding: 0
-              row-gap: $spacing-sm
-              width: 100%
-              & > input[type="date"],
-              & > input[type="datetime"],
-              & > input[type="datetime-local"],
-              & > input[type="email"],
-              & > input[type="file"],
-              & > input[type="image"],
-              & > input[type="month"],
-              & > input[type="number"],
-              & > input[type="password"],
-              & > input[type="search"],
-              & > input[type="tel"],
-              & > input[type="text"],
-              & > input[type="time"],
-              & > input[type="url"],
-              & > input[type="week"],
-              & > select,
-              & > textarea
-                +border-box
-                width: 100%
-                border-radius: $radius-md
-                border: 1px solid $gray-300
-                background: $um-white
-                box-shadow: $shadow-xs
-                padding: $spacing-md $spacing-lg
-                color: $gray-900
-                +typography( text, md, regular )
-                &:focus,
-                &:focus-visible
-                  border: 1px solid $primary-300
-                  box-shadow: $ring-brand-shadow-xs
-                  background: $um-white
-                  outline: none
-                &:disabled
-                  background: $gray-50
-                  color: $gray-500
-                &::placeholder
-                  color: $gray-500
-                &.#{$prefix}error
-                  border-color: $error-300
-                  &:focus,
-                  &:focus-visible
-                    box-shadow: $ring-error-shadow-xs
-              & > textarea,
-              & > input[type="date"],
-              & > input[type="datetime"],
-              & > input[type="datetime-local"],
-              & > input[type="time"]
-                font-family: inherit
-              .wp-core-ui.wp-editor-wrap
-                width: 100%
-            .#{$prefix}field-area-password
-              position: relative
               .#{$prefix}toggle-password
                 transition: all .2s linear
                 cursor: pointer
@@ -1142,6 +1083,63 @@
                 &.#{$prefix}icon-eye-disabled
                   mask: url(../icons/eye-off.svg)
                   -webkit-mask: url(../icons/eye-off.svg)
+            .#{$prefix}field
+              +flex( column, flex-start, stretch, nowrap )
+              +border-box
+              margin: 0
+              padding: 0
+              row-gap: $spacing-sm
+            //.#{$prefix}field
+            //  & > input[type="date"],
+            //  & > input[type="datetime"],
+            //  & > input[type="datetime-local"],
+            //  & > input[type="email"],
+            //  & > input[type="file"],
+            //  & > input[type="image"],
+            //  & > input[type="month"],
+            //  & > input[type="number"],
+            //  & > input[type="password"],
+            //  & > input[type="search"],
+            //  & > input[type="tel"],
+            //  & > input[type="text"],
+            //  & > input[type="time"],
+            //  & > input[type="url"],
+            //  & > input[type="week"],
+            //  & > select,
+            //  & > textarea
+            //    +border-box
+            //    width: 100%
+            //    border-radius: $radius-md
+            //    border: 1px solid $gray-300
+            //    background: $um-white
+            //    box-shadow: $shadow-xs
+            //    padding: $spacing-md $spacing-lg
+            //    color: $gray-900
+            //    +typography( text, md, regular )
+            //    &:focus,
+            //    &:focus-visible
+            //      border: 1px solid $primary-300
+            //      box-shadow: $ring-brand-shadow-xs
+            //      background: $um-white
+            //      outline: none
+            //    &:disabled
+            //      background: $gray-50
+            //      color: $gray-500
+            //    &::placeholder
+            //      color: $gray-500
+            //    &.#{$prefix}error
+            //      border-color: $error-300
+            //      &:focus,
+            //      &:focus-visible
+            //        box-shadow: $ring-error-shadow-xs
+            //  & > textarea,
+            //  & > input[type="date"],
+            //  & > input[type="datetime"],
+            //  & > input[type="datetime-local"],
+            //  & > input[type="time"]
+            //    font-family: inherit
+            //  .wp-core-ui.wp-editor-wrap
+            //    width: 100%
             .#{$prefix}field-hint
               +border-box
               margin: 0
@@ -1222,9 +1220,6 @@
                 .#{$prefix}text
                   color: $gray-700
                   +typography( text, sm, medium )
-                .#{$prefix}supporting-text
-                  color: $gray-600
-                  +typography( text, sm, regular )
                 &.#{$prefix}size-sm
                   column-gap: $spacing-md
                   input[type="radio"]
@@ -1327,9 +1322,6 @@
                 .#{$prefix}text
                   color: $gray-700
                   +typography( text, sm, medium )
-                .#{$prefix}supporting-text
-                  color: $gray-600
-                  +typography( text, sm, regular )
                 &.#{$prefix}size-sm
                   column-gap: $spacing-md
                   input[type="checkbox"]
@@ -1360,145 +1352,73 @@
                   align-items: start
                   input[type="checkbox"]
                     margin: $spacing-xxs 0 0 0
-            & > input[type="date"],
-            & > input[type="datetime"],
-            & > input[type="datetime-local"],
-            & > input[type="email"],
-            & > input[type="file"],
-            & > input[type="image"],
-            & > input[type="month"],
-            & > input[type="number"],
-            & > input[type="password"],
-            & > input[type="search"],
-            & > input[type="tel"],
-            & > input[type="text"],
-            & > input[type="time"],
-            & > input[type="url"],
-            & > input[type="week"],
-            & > select,
-            & > textarea
-              +border-box
-              width: 100%
-              border-radius: $radius-md
-              border: 1px solid $gray-300
-              background: $um-white
-              box-shadow: $shadow-xs
-              padding: $spacing-md $spacing-lg
-              color: $gray-900
-              +typography( text, md, regular )
-              &:focus,
-              &:focus-visible
-                border: 1px solid $primary-300
-                box-shadow: $ring-brand-shadow-xs
-                background: $um-white
-                outline: none
-              &:disabled
-                background: $gray-50
-                color: $gray-500
-              &::placeholder
-                color: $gray-500
-              &.#{$prefix}error
-                border-color: $error-300
-                &:focus,
-                &:focus-visible
-                  box-shadow: $ring-error-shadow-xs
-            & > textarea,
-            & > input[type="date"],
-            & > input[type="datetime"],
-            & > input[type="datetime-local"],
-            & > input[type="time"]
-              font-family: inherit
-            .wp-core-ui.wp-editor-wrap,
-            .choices
-              width: 100%
-            & > input[type="color"]
-              -webkit-appearance: none
-              -moz-appearance: none
-              appearance: none
-              +border-box
-              border-radius: $radius-md
-              border: 1px solid $gray-300
-              box-shadow: $shadow-xs
-              padding: 0
-              background: $um-white
-              height: 42px
-              min-width: 64px
-              &::-webkit-color-swatch,
-              &::-moz-color-swatch
-                border: 1px solid $um-white
-                border-radius: $radius-md
-            //input[type="range"]
-            //  //overflow: hidden
+            //& > input[type="date"],
+            //& > input[type="datetime"],
+            //& > input[type="datetime-local"],
+            //& > input[type="email"],
+            //& > input[type="file"],
+            //& > input[type="image"],
+            //& > input[type="month"],
+            //& > input[type="number"],
+            //& > input[type="password"],
+            //& > input[type="search"],
+            //& > input[type="tel"],
+            //& > input[type="text"],
+            //& > input[type="time"],
+            //& > input[type="url"],
+            //& > input[type="week"],
+            //& > select,
+            //& > textarea
+            //  +border-box
             //  width: 100%
-            //  -webkit-appearance: none
-            //  margin: $spacing-md 0
-            //  background-color: $gray-200
-            //  border-radius: $radius-xs
-            //  &:hover
-            //    background-color: $gray-300
-            //    &::-webkit-slider-thumb
-            //      border-color: $primary-700
-            //    &::-webkit-slider-runnable-track
-            //      color: $primary-700
-            //      cursor: pointer
-            //  &::-webkit-slider-thumb
-            //    +thumb
-            //    -webkit-appearance: none
-            //    box-shadow: -80px 0 0 8px #43e5f7
-            //  &::-moz-range-thumb
-            //    +thumb
-            //  &::-ms-thumb
-            //    +thumb
-            //  ::-moz-focus-outer
-            //    border: 0
-            //  &:focus
+            //  border-radius: $radius-md
+            //  border: 1px solid $gray-300
+            //  background: $um-white
+            //  box-shadow: $shadow-xs
+            //  padding: $spacing-md $spacing-lg
+            //  color: $gray-900
+            //  +typography( text, md, regular )
+            //  &:focus,
+            //  &:focus-visible
+            //    border: 1px solid $primary-300
+            //    box-shadow: $ring-brand-shadow-xs
+            //    background: $um-white
             //    outline: none
-            //    &::-webkit-slider-runnable-track
-            //      color: $primary-700
-            //  //  &::-ms-fill-lower
-            //  //    background: $track-color
-            //  //  &::-ms-fill-upper
-            //  //    background: lighten($track-color, $contrast)
-            //  &::-webkit-slider-runnable-track
-            //    +track
-            //    -webkit-appearance: none
-            //    box-shadow: none
-            //    color: $primary-600
-            //    border: none
-            //    border-radius: $radius-xs
-            //    margin-top: -1px
-            //  //&::-moz-range-track
-            //  //  box-shadow: none
-            //  //  +track
-            //  //  background: $track-color
-            //  //  border: $track-border-width solid $track-border-color
-            //  //  border-radius: $track-radius
-            //  //  height: math.div($track-height, 2)
-            //  //&::-ms-track
-            //  //  +track
-            //  //  background: transparent
-            //  //  border-color: transparent
-            //  //  color: transparent
-            //  //
-            //  &::-ms-fill-lower
-            //    box-shadow: none
-            //    background: $primary-600
-            //    border: none
-            //    border-radius: $radius-xs
-            //  &::-ms-fill-upper
-            //    box-shadow: none
-            //    background: $primary-600
-            //    border: none
-            //    border-radius: $radius-xs
-            //
             //  &:disabled
-            //    &::-webkit-slider-thumb,
-            //    &::-moz-range-thumb,
-            //    &::-ms-thumb,
-            //    &::-webkit-slider-runnable-track,
-            //    &::-ms-fill-lower,
-            //    &::-ms-fill-upper
-            //      cursor: not-allowed
+            //    background: $gray-50
+            //    color: $gray-500
+            //  &::placeholder
+            //    color: $gray-500
+            //  &.#{$prefix}error
+            //    border-color: $error-300
+            //    &:focus,
+            //    &:focus-visible
+            //      box-shadow: $ring-error-shadow-xs
+            //& > textarea,
+            //& > input[type="date"],
+            //& > input[type="datetime"],
+            //& > input[type="datetime-local"],
+            //& > input[type="time"]
+            //  font-family: inherit
+            //.wp-core-ui.wp-editor-wrap,
+            //.choices
+            //  width: 100%
+            //& > input[type="color"]
+            //  -webkit-appearance: none
+            //  -moz-appearance: none
+            //  appearance: none
+            //  +border-box
+            //  border-radius: $radius-md
+            //  border: 1px solid $gray-300
+            //  box-shadow: $shadow-xs
+            //  padding: 0
+            //  background: $um-white
+            //  height: 42px
+            //  min-width: 64px
+            //  &::-webkit-color-swatch,
+            //  &::-moz-color-swatch
+            //    border: 1px solid $um-white
+            //    border-radius: $radius-md
           &.#{$prefix}form-cols-1
             .#{$prefix}form-col
               width: 100%
@@ -1526,27 +1446,6 @@
         padding: 0
         text-align: center
         color: $gray-600
-
-
-  //input[type='range']
-  //  overflow: hidden
-  //  width: 80px
-  //  -webkit-appearance: none
-  //  background-color: #9a905d
-  //
-  //  &::-webkit-slider-runnable-track
-  //    height: 10px
-  //    -webkit-appearance: none
-  //    color: #13bba4
-  //    margin-top: -1px
-  //
-  //  &::-webkit-slider-thumb
-  //    width: 10px
-  //    -webkit-appearance: none
-  //    height: 10px
-  //    cursor: ew-resize
-  //    background: #434343
-  //    box-shadow: -80px 0 0 80px #43e5f7
 
 // Range slider.
 .um
@@ -1628,79 +1527,6 @@
     .#{$prefix}from-slider
       top: $spacing-lg
 
-//.range_container
-//  display: flex
-//  flex-direction: column
-//  width: 100%
-//  margin: 0
-//  padding: 0
-
-//.sliders_control
-//  position: relative
-//  height: $spacing-md
-//  padding: $spacing-md 0
-//  input[type="range"]
-//    margin: 0
-//
-//.form_control
-//  position: relative
-//  display: flex
-//  justify-content: space-between
-//  font-size: 24px
-//  color: #635a5a
-
-
-//input[type="range"]#fromSlider::-webkit-slider-thumb
-//  margin-top: $spacing-md
-//
-//input[type="range"]#fromSlider::-moz-range-thumb
-//  margin-top: $spacing-md
-//  padding-top: $spacing-md
-//  top: $spacing-md
-//  position: relative
-//  display: block
-
-//input[type="range"]::-webkit-slider-thumb
-//  -webkit-appearance: none
-//  pointer-events: all
-//  box-shadow: $shadow-md
-//  border-radius: $radius-xl
-//  border: 2px solid $primary-600
-//  background: $um-white
-//  cursor: pointer
-//  height: $spacing-3xl
-//  width: $spacing-3xl
-//  +border-box
-
-//input[type="range"]::-moz-range-thumb
-//  -webkit-appearance: none
-//  pointer-events: all
-//  box-shadow: $shadow-md
-//  border-radius: $radius-xl
-//  border: 2px solid $primary-600
-//  background: $um-white
-//  cursor: pointer
-//  height: $spacing-3xl
-//  width: $spacing-3xl
-//  +border-box
-
-//input[type="range"]::-moz-range-thumb
-//  -webkit-appearance: none
-//  pointer-events: all
-//  width: 24px
-//  height: 24px
-//  background-color: #fff
-//  border-radius: 50%
-//  box-shadow: 0 0 0 1px #C6C6C6
-//  cursor: pointer
-
-//input[type="range"]::-webkit-slider-thumb:hover
-//  border: 2px solid $primary-700
-//
-//input[type="range"]::-webkit-slider-thumb:active
-//  border: 2px solid $primary-600
-  //box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe
-  //-webkit-box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe
 
 //input[type="number"]
 //  color: #8a8383
@@ -1712,36 +1538,6 @@
 //input[type=number]::-webkit-inner-spin-button,
 //input[type=number]::-webkit-outer-spin-button
 //  opacity: 1
-
-//input[type="range"]
-//  -webkit-appearance: none
-//  appearance: none
-//  width: 100%
-//  position: absolute
-//  background-color: $gray-200
-//  pointer-events: none
-//  height: $spacing-md
-//  transition: all .2s ease
-//  border-radius: $radius-xs
-//  outline: none
-//  &:hover,
-//  &:focus,
-//  &:focus-visible
-//    outline: none
-//
-//.sliders_control:hover
-//  input[type="range"]
-//    background-color: $gray-300
-//    &::-webkit-slider-thumb
-//      border: 2px solid $primary-700
-//
-//#fromSlider
-//  height: 0
-//  z-index: 1
-//
-//@-moz-document url-prefix()
-//  #fromSlider
-//    top: $spacing-lg
 
 
 
@@ -1916,13 +1712,6 @@
       +border-box
       height: 1px
 
-.um
-  .#{$prefix}form-col
-    p.#{$prefix}supporting-text
-      +typography( text, sm, regular )
-      color: $gray-600
-      padding: 0
-      margin: 0
 
 
 // Small user data header.
@@ -2205,19 +1994,21 @@
   select,
   textarea
     +border-box
-    border-radius: $radius-md
-    border: 1px solid $gray-300
     background: $um-white
     box-shadow: $shadow-xs
     padding: $spacing-md $spacing-lg
+    margin: 0
     color: $gray-900
     +typography( text, md, regular )
-    &:focus,
-    &:focus-visible
-      border: 1px solid $primary-300
-      box-shadow: $ring-brand-shadow-xs
-      background: $um-white
-      outline: none
+    &:not(.wp-editor-area)
+      border-radius: $radius-md
+      border: 1px solid $gray-300
+      &:focus,
+      &:focus-visible
+        border: 1px solid $primary-300
+        box-shadow: $ring-brand-shadow-xs
+        background: $um-white
+        outline: none
     &:disabled
       background: $gray-50
       color: $gray-500
@@ -2225,15 +2016,49 @@
       color: $gray-500
     &.#{$prefix}error
       border-color: $error-300
-      &:focus,
-      &:focus-visible
-        box-shadow: $ring-error-shadow-xs
+      &:not(.wp-editor-area)
+        &:focus,
+        &:focus-visible
+          box-shadow: $ring-error-shadow-xs
   textarea,
   input[type="date"],
   input[type="datetime"],
   input[type="datetime-local"],
   input[type="time"]
     font-family: inherit
+  input[type="password"]
+    &::-ms-reveal,
+    &::-ms-clear
+      display: none
+  .choices
+    padding: 0
+    margin: 0
+  .#{$prefix}date-range-row,
+  .#{$prefix}time-range-row
+    +flex( row, space-between, center, nowrap )
+    border: 1px solid $gray-300
+    border-radius: $radius-md
+    background: $gray-200
+    +border-box
+    label
+      +typography(text, sm, regular)
+      text-align: center
+      padding: 0
+      margin: 0
+      +border-box
+    input
+      border: none
+      width: calc( 50% - 20px )
+      +border-box
+      &:hover,
+      &:focus,
+      &:focus-visible
+        border: none
+      &:first-child
+        border-radius: $radius-md 0 0 $radius-md
+      &:last-child
+        border-radius: 0 $radius-md $radius-md 0
+
 
 
 // Field wrapper common styling
@@ -2248,11 +2073,6 @@
     > label
       +typography( text, sm, medium )
       color: $gray-700
-      padding: 0
-      margin: 0
-    p.#{$prefix}supporting-text
-      +typography( text, sm, regular )
-      color: $gray-600
       padding: 0
       margin: 0
     input[type="date"],
@@ -2274,36 +2094,8 @@
     textarea
       +border-box
       width: 100%
-      margin: 0
     .choices
       width: 100%
-      padding: 0
-      margin: 0
-    .#{$prefix}date-range-row,
-    .#{$prefix}time-range-row
-      +flex( row, space-between, center, nowrap )
-      border: 1px solid $gray-300
-      border-radius: $radius-md
-      background: $gray-200
-      +border-box
-      label
-        +typography(text, sm, regular)
-        text-align: center
-        padding: 0
-        margin: 0
-        +border-box
-      input
-        border: none
-        width: calc( 50% - 20px )
-        +border-box
-        &:hover,
-        &:focus,
-        &:focus-visible
-          border: none
-        &:first-child
-          border-radius: $radius-md 0 0 $radius-md
-        &:last-child
-          border-radius: 0 $radius-md $radius-md 0
 
 
 // Toggle sections displayed after button/link click.
@@ -2472,6 +2264,9 @@
   .#{$prefix}supporting-text
     color: $gray-600
     +typography( text, sm, regular )
+  p.#{$prefix}supporting-text
+    padding: 0
+    margin: 0
   .#{$prefix}full-width
     width: 100%
   .#{$prefix}display-none
