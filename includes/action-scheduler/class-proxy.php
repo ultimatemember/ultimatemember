@@ -1,12 +1,11 @@
 <?php
-
 namespace um\action_scheduler;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'um\Action_Scheduler\Proxy' ) ) {
+if ( ! class_exists( 'um\action_scheduler\Proxy' ) ) {
 
 	/**
 	 * Class Action_Scheduler
@@ -24,7 +23,10 @@ if ( ! class_exists( 'um\Action_Scheduler\Proxy' ) ) {
 		 * Action_Scheduler constructor.
 		 */
 		public function __construct() {
-			require_once UM_PATH . 'includes/lib/action-scheduler/action-scheduler.php';
+			$lib_path = UM_PATH . 'includes/lib/action-scheduler/action-scheduler.php';
+			if ( file_exists( $lib_path ) ) {
+				require_once UM_PATH . 'includes/lib/action-scheduler/action-scheduler.php';
+			}
 		}
 
 		/**

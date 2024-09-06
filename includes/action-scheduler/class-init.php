@@ -1,5 +1,4 @@
 <?php
-
 namespace um\action_scheduler;
 
 if ( ! defined( 'ABSPATH' ) ) {
