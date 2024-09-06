@@ -22,8 +22,8 @@
     "ext-fileinfo": "*",
     "ext-curl": "*",
     "ext-iconv": "*",
-    "woocommerce/action-scheduler": "3.2.1",
-    "composer/installers": "^2.3"
+    "composer/installers": "^2.3",
+    "woocommerce/action-scheduler": "3.2.1"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",

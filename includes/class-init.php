@@ -503,10 +503,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		public function includes() {
 
-			$this->action_scheduler();
-			if ( $this->options()->get( 'enable_action_scheduler' ) ) {
-				$this->action_scheduler()->proxy();
-			}
+			$this->maybe_action_scheduler();
 
 			$this->common()->includes();
 
@@ -1465,7 +1462,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 *
 		 * @return um\action_scheduler\Init
 		 */
-		public function action_scheduler() {
+		public function maybe_action_scheduler() {
 			if ( empty( $this->classes['action_scheduler'] ) ) {
 				$this->classes['action_scheduler'] = new um\action_scheduler\Init();
 			}

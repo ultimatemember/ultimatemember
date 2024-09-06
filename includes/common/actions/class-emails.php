@@ -1,0 +1,36 @@
+<?php
+namespace um\common\actions;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+if ( ! class_exists( 'um\common\actions\Emails' ) ) {
+
+	/**
+	 * Class Emails
+	 *
+	 * @package um\common\actions
+	 */
+	class Emails {
+
+		public function __construct() {
+			add_action( 'um_send_deleted_user_email', array( $this, 'send' ), 10, 3 );
+		}
+
+		/**
+		 * Send an email after user account was deleted.
+		 *
+		 * @param string $user_email User email.
+		 * @param string $template   Template name.
+		 * @param array  $args       Email additional arguments.
+		 */
+		public function send( $user_email, $template, $args = array() ) {
+			if ( empty( $user_email ) && empty( $template ) ) {
+				return;
+			}
+
+			UM()->mail()->send( $user_email, $template, $args );
+		}
+	}
+}
