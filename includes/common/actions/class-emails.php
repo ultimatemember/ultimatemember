@@ -15,11 +15,11 @@ if ( ! class_exists( 'um\common\actions\Emails' ) ) {
 	class Emails {
 
 		public function __construct() {
-			add_action( 'um_send_deleted_user_email', array( $this, 'send' ), 10, 3 );
+			add_action( 'um_mas_send_email', array( $this, 'send' ), 10, 3 );
 		}
 
 		/**
-		 * Send an email after user account was deleted.
+		 * Send an email
 		 *
 		 * @param string $user_email User email.
 		 * @param string $template   Template name.
