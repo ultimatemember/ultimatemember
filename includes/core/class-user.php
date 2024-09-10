@@ -628,12 +628,12 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				$user_email = um_user( 'user_email' );
 				$template = 'deletion_email';
 
-				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_send_deleted_user_email', array( $user_email, $template ) );
+				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_mas_send_email', array( $user_email, $template ) );
 
 				$emails = um_multi_admin_email();
 				if ( ! empty( $emails ) ) {
 					foreach ( $emails as $email ) {
-						UM()->mail()->send( $email, 'notification_deletion', array( 'admin' => true ) );
+						UM()->maybe_action_scheduler()->enqueue_async_action( 'um_mas_send_email', array( $email, 'notification_deletion', array( 'admin' => true ) ) );
 					}
 				}
 			}
@@ -1656,7 +1656,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ), 10, 1 );
 			add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ), 10, 1 );
 
-			UM()->mail()->send( $userdata->user_email, 'resetpw_email' );
+			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_mas_send_email', array( $userdata->user_email, 'resetpw_email' ) );
 		}
 
 
@@ -1670,7 +1670,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				um_fetch_user( $user_id );
 			}
 
-			UM()->mail()->send( um_user( 'user_email' ), 'changedpw_email' );
+			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_send_deleted_user_email', array( um_user( 'user_email' ), 'changedpw_email' ) );
 
 			if ( ! empty( $user_id ) ) {
 				um_reset_user();
@@ -1705,17 +1705,19 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			delete_option( "um_cache_userdata_{$user_id}" );
 
+			$user_email = um_user( 'user_email' );
+
 			if ( 'awaiting_admin_review' === um_user( 'account_status' ) ) {
 				$userdata = get_userdata( $user_id );
 
 				$this->maybe_generate_password_reset_key( $userdata );
 
-				UM()->mail()->send( um_user( 'user_email' ), 'approved_email' );
+				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_mas_send_email', array( $user_email, 'approved_email' ) );
 
 			} else {
 				//$userdata = get_userdata( $user_id );
 				//get_password_reset_key( $userdata );
-				UM()->mail()->send( um_user( 'user_email' ), 'welcome_email' );
+				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_mas_send_email', array( $user_email, 'approved_email' ) );
 			}
 
 			$this->set_status( 'approved' );
@@ -1756,7 +1758,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			$user = \WP_Session_Tokens::get_instance( um_user( 'ID' ) );
 			$user->destroy_all();
 
-			UM()->mail()->send( um_user( 'user_email' ), 'checkmail_email' );
+			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_mas_send_email', array( um_user( 'user_email' ), 'checkmail_email' ) );
 		}
 
 
@@ -1782,7 +1784,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			$user = \WP_Session_Tokens::get_instance( um_user( 'ID' ) );
 			$user->destroy_all();
 
-			UM()->mail()->send( um_user( 'user_email' ), 'pending_email' );
+			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_mas_send_email', array( um_user( 'user_email' ), 'pending_email' ) );
 		}
 
 
@@ -1809,7 +1811,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			$user = \WP_Session_Tokens::get_instance( um_user( 'ID' ) );
 			$user->destroy_all();
 
-			UM()->mail()->send( um_user( 'user_email' ), 'rejected_email' );
+			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_mas_send_email', array( um_user( 'user_email' ), 'rejected_email' ) );
 		}
 
 
@@ -1856,7 +1858,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 */
 			do_action( 'um_after_user_is_inactive', um_user( 'ID' ) );
 
-			UM()->mail()->send( um_user( 'user_email' ), 'inactive_email' );
+			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_mas_send_email', array( um_user( 'user_email' ), 'inactive_email' ) );
 		}
 
 
