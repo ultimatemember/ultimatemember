@@ -23,7 +23,7 @@
     "ext-curl": "*",
     "ext-iconv": "*",
     "composer/installers": "^2.3",
-    "woocommerce/action-scheduler": "3.2.1"
+    "woocommerce/action-scheduler": "3.8.1"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
