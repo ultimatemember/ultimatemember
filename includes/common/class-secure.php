@@ -113,16 +113,19 @@ if ( ! class_exists( 'um\common\Secure' ) ) {
 			$emails = um_multi_admin_email();
 			if ( ! empty( $emails ) ) {
 				foreach ( $emails as $email ) {
-					UM()->mail()->send(
-						$email,
-						'suspicious-activity',
+					UM()->maybe_action_scheduler()->enqueue_async_action(
+						'um_mas_send_email',
 						array(
-							'admin'        => true,
-							'tags'         => array(
-								'{banned_profile_links}',
-							),
-							'tags_replace' => array(
-								$banned_profile_links,
+							$email,
+							'suspicious-activity',
+							array(
+								'admin'        => true,
+								'tags'         => array(
+									'{banned_profile_links}',
+								),
+								'tags_replace' => array(
+									$banned_profile_links,
+								),
 							),
 						)
 					);
