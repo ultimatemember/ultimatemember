@@ -17,20 +17,23 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		protected $enabled = false;
 
 		protected $default_group = 'ultimate-member';
-		// TODO: Do we need prefix for hook?.
 
 		public function __construct() {
+			$lib_path = UM_PATH . 'includes/lib/action-scheduler/action-scheduler.php';
+			if ( ! file_exists( $lib_path ) ) {
+				wp_die( esc_html__( 'Error: Action Scheduler library is missing.', 'ultimate-member' ) );
+			}
+
+			require_once $lib_path;
+
 			if ( UM()->options()->get( 'enable_action_scheduler' ) ) {
-				$lib_path = UM_PATH . 'includes/lib/action-scheduler/action-scheduler.php';
-				if ( file_exists( $lib_path ) ) {
-					$this->enabled = true;
-					require_once $lib_path;
-				}
+				$this->enabled = true;
 			}
 		}
 
 		/**
 		 * Enqueue an action to run one time, as soon as possible.
+		 * If Action Scheduler is disabled then do_action_ref_array is called to run action right away.
 		 *
 		 * @param string $hook Required. Name of the action hook.
 		 * @param array $args Arguments to pass to callbacks when the hook triggers. Default: array().
@@ -46,7 +49,7 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 				return as_enqueue_async_action( $hook, $args, $group, $unique, $priority );
 			}
 
-			do_action_ref_array( 'um_send_deleted_user_email', $args );
+			do_action_ref_array( $hook, $args );
 			return 0;
 		}
 
@@ -63,9 +66,13 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		 * @return int The action’s ID. Zero if there was an error scheduling the action. The error will be sent to error_log.
 		 */
 		public function schedule_single_action( $timestamp, $hook, $args = array(), $group = '', $unique = false, $priority = 10 ) {
-			$group = $this->set_group( $group );
+			if ( $this->enabled ) {
+				$group = $this->set_group( $group );
+				return as_schedule_single_action( $timestamp, $hook, $args, $group, $unique, $priority );
+			}
 
-			return as_schedule_single_action( $timestamp, $hook, $args, $group, $unique, $priority );
+			do_action_ref_array( $hook, $args );
+			return 0;
 		}
 
 		/**
