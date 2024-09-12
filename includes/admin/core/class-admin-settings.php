@@ -2107,7 +2107,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									'override_templates' => array(
 										'title'       => __( 'Override templates', 'ultimate-member' ),
 										// translators: %s: Link to the docs article.
-										'description' => sprintf( __( 'Each time we release an update, you\'ll find a list of changes made to the template files. <a href="%s" target="_blank">Learn more about overriding templates</a>.<br />You can easily check the status of the latest templates to see if they are up-to-date or need updating. <a href="%s" target="_blank">Learn more about fixing outdated templates</a>.', 'ultimate-member' ), 'https://docs.ultimatemember.com/article/1516-templates-map', 'https://docs.ultimatemember.com/article/1847-fixing-outdated-ultimate-member-templates' ), /** @noinspection HtmlUnknownTarget */
+										'description' => sprintf( __( 'Each time we release an update, you\'ll find a list of changes made to the template files. <a href="%s" target="_blank">Learn more about overriding templates</a>.<br />You can easily check the status of the latest templates to see if they are up-to-date or need updating. <a href="%s" target="_blank">Learn more about fixing outdated templates</a>.', 'ultimate-member' ), 'https://docs.ultimatemember.com/article/1516-templates-map', 'https://docs.ultimatemember.com/article/1847-fixing-outdated-ultimate-member-templates' ),
 										'fields'      => array(
 											array(
 												'id'   => 'override_templates_list_table',
