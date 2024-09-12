@@ -149,7 +149,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 				case 'um_approve_membership':
 				case 'um_reenable':
-
 					add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ), 10, 1 );
 					add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ), 10, 1 );
 
@@ -161,7 +160,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 					break;
 
 				case 'um_resend_activation':
-
 					add_filter( 'um_template_tags_patterns_hook', array( UM()->user(), 'add_activation_placeholder' ), 10, 1 );
 					add_filter( 'um_template_tags_replaces_hook', array( UM()->user(), 'add_activation_replace_placeholder' ), 10, 1 );
 
@@ -174,7 +172,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 				case 'um_delete':
 					if ( is_admin() ) {
-						wp_die( __( 'This action is not allowed in backend.', 'ultimate-member' ) );
+						wp_die( esc_html__( 'This action is not allowed in backend.', 'ultimate-member' ) );
 					}
 					UM()->user()->delete();
 					break;
@@ -484,6 +482,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 				$rolename = UM()->roles()->get_priority_user_role( get_current_user_id() );
 				$role     = get_role( $rolename );
 
+				if ( empty( $role ) ) {
+					wp_die( esc_html__( 'You do not have enough permissions to do that.', 'ultimate-member' ) );
+				}
+
 				if ( ! current_user_can( 'edit_users' ) && ! $role->has_cap( 'edit_users' ) ) {
 					wp_die( esc_html__( 'You do not have enough permissions to do that.', 'ultimate-member' ) );
 				}
@@ -540,14 +542,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 				$uri = $this->set_redirect_uri( admin_url( 'users.php' ) );
 				$uri = add_query_arg( 'update', 'um_users_updated', $uri );
 
-				wp_redirect( $uri );
+				wp_safe_redirect( $uri );
 				exit;
-			} elseif ( ! empty( $_REQUEST['um_bulkedit'] ) ) {
+			}
 
+			if ( ! empty( $_REQUEST['um_bulkedit'] ) ) {
 				$uri = $this->set_redirect_uri( admin_url( 'users.php' ) );
-				wp_redirect( $uri );
+				wp_safe_redirect( $uri );
 				exit;
-
 			}
 		}
 
