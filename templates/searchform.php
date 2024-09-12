@@ -2,7 +2,7 @@
 /**
  * Template for the search form
  *
- * This template can be overridden by copying it to yourtheme/ultimate-member/searchform.php
+ * This template can be overridden by copying it to your-theme/ultimate-member/searchform.php
  *
  * Call: function ultimatemember_searchform()
  *

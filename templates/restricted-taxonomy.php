@@ -2,7 +2,7 @@
 /**
  * Template for the taxonomy restricted message
  *
- * This template can be overridden by copying it to yourtheme/ultimate-member/restricted-taxonomy.php
+ * This template can be overridden by copying it to your-theme/ultimate-member/restricted-taxonomy.php
  *
  * Call: function taxonomy_message()
  *
