@@ -709,7 +709,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 				),
 			);
 
-			$allowed_html = array_merge( $global_allowed, $allowed_html );
+			$allowed_html = array_merge_recursive( $global_allowed, $allowed_html );
 			$allowed_html = array_map( '_wp_add_global_attributes', $allowed_html );
 
 			/**
