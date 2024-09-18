@@ -22,8 +22,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		 * Admin_Users constructor.
 		 */
 		public function __construct() {
-			add_action( 'restrict_manage_users', array( &$this, 'restrict_manage_users' ) );
-
 			add_filter( 'user_row_actions', array( &$this, 'user_row_actions' ), 10, 2 );
 
 			add_filter( 'user_has_cap', array( &$this, 'map_caps_by_role' ), 10, 4 );
@@ -181,7 +179,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 		/**
 		 * Add UM Bulk actions to Users List Table
-		 *
+		 * @deprecated 2.8.7
 		 */
 		public function restrict_manage_users() {
 			?>
@@ -207,33 +205,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		/**
 		 * Get UM bulk actions HTML
 		 *
+		 * @deprecated 2.8.7
+		 *
 		 * @return string
 		 */
 		public function get_bulk_admin_actions() {
-
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_admin_bulk_user_actions_hook
-			 * @description Admin Users List Table bulk actions
-			 * @input_vars
-			 * [{"var":"$actions","type":"array","desc":"User List Table bulk actions"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_admin_bulk_user_actions_hook', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_admin_bulk_user_actions_hook', 'my_admin_bulk_user_actions', 10, 1 );
-			 * function my_admin_bulk_user_actions( $actions ) {
-			 *     // your code here
-			 *     $actions['my-custom-bulk'] = array(
-			 *         'label' => 'My Custom Bulk Action'
-			 *     );
-			 *     return $actions;
-			 * }
-			 * ?>
-			 */
 			$actions = apply_filters( 'um_admin_bulk_user_actions_hook', array(
 				'um_approve_membership' => array(
 					'label' => __( 'Approve Membership', 'ultimate-member' )

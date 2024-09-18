@@ -83,6 +83,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			$this->notices();
 			$this->secure();
 			$this->site_health();
+			$this->users_columns();
 		}
 
 		public function init_variables() {
@@ -2129,6 +2130,18 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 				UM()->classes['um\admin\site_health'] = new Site_Health();
 			}
 			return UM()->classes['um\admin\site_health'];
+		}
+
+		/**
+		 * @since 2.8.7
+		 *
+		 * @return Users_Columns
+		 */
+		public function users_columns() {
+			if ( empty( UM()->classes['um\admin\users_columns'] ) ) {
+				UM()->classes['um\admin\users_columns'] = new Users_Columns();
+			}
+			return UM()->classes['um\admin\users_columns'];
 		}
 	}
 }
