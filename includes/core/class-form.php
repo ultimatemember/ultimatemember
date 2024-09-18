@@ -1009,7 +1009,9 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			$global_role = get_option( 'default_role' ); // WP Global settings
 
 			$um_global_role = UM()->options()->get( 'register_role' ); // UM Settings Global settings
-			if ( ! empty( $um_global_role ) ) {
+
+			$existing_roles = array_keys( wp_roles()->roles );
+			if ( ! empty( $um_global_role ) && in_array( $um_global_role, $existing_roles, true ) ) {
 				$global_role = $um_global_role; // Form Global settings
 			}
 
@@ -1023,7 +1025,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				$role = get_post_meta( $post_id, "_um_{$mode}_role", true );
 			}
 
-			if ( empty( $role ) ) { // custom role is default, return default role's slug
+			if ( empty( $role ) || ! in_array( $role, $existing_roles, true ) ) { // custom role is default, return default role's slug
 				$role = $global_role;
 			}
 
