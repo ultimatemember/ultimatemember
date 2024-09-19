@@ -420,7 +420,27 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				return UM()->get_template( 'login-to-view.php', '', $args );
 			}
 
-			return apply_shortcodes( $this->convert_locker_tags( wpautop( $content ) ) );
+			$prepared_content = wp_kses( apply_shortcodes( $this->convert_locker_tags( wpautop( $content ) ) ), UM()->get_allowed_html( 'templates' ) );
+
+			/**
+			 * Filters prepared inner content via Ultimate Member handlers in [um_loggedin] shortcode.
+			 *
+			 * @since 2.8.7
+			 * @hook  um_loggedin_inner_content
+			 *
+			 * @param {string} $prepared_content Prepared inner content via Ultimate Member handlers.
+			 * @param {string} $content          Original inner content.
+			 *
+			 * @return {string} Prepared inner content.
+			 *
+			 * @example <caption>Change inner content with own handlers.</caption>
+			 * function my_um_loggedin_inner_content( $prepared_content, $content ) {
+			 *     $prepared_content = esc_html( $content );
+			 *     return $prepared_content;
+			 * }
+			 * add_filter( 'um_loggedin_inner_content', 'my_um_loggedin_inner_content', 10, 2 );
+			 */
+			return apply_filters( 'um_loggedin_inner_content', $prepared_content, $content );
 		}
 
 		/**
