@@ -2252,7 +2252,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			// required option? 'required_opt' - it's field attribute predefined in the field data in code
 			if ( isset( $data['required_opt'] ) ) {
 				$opt = $data['required_opt'];
-				if ( UM()->options()->get( $opt[0] ) !== $opt[1] ) {
+				if ( (bool) UM()->options()->get( $opt[0] ) !== (bool) $opt[1] ) {
 					return '';
 				}
 			}

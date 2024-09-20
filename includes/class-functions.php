@@ -696,6 +696,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 						'time'     => array(
 							'datetime' => true,
 						),
+						'section'  => array(),
 					);
 					break;
 				case 'admin_notice':
