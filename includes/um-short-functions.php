@@ -1579,7 +1579,7 @@ function um_can_view_field( $data ) {
 
 /**
  * Checks if user can view profile
- *
+ * @todo make the function review. Maybe rewrite it.
  * @param int $user_id
  *
  * @return bool

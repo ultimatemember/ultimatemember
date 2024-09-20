@@ -45,3 +45,23 @@ if ( ! defined( 'ABSPATH' ) ) {
  * }
  * add_filter( 'um_language_file', 'my_um_language_file' );
  */
+
+/**
+ * Fires after user status changed.
+ *
+ * @param {int} $user_id User ID.
+ *
+ * @since 1.3.x
+ * @depecated 2.8.7 use action hook `um_after_user_status_is_changed` instead.
+ * @hook um_after_user_status_is_changed_hook
+ */
+
+/**
+ * Fires just before User status is changed.
+ *
+ * @since 1.3.x
+ * @depecated 2.8.7 use action hook `um_before_user_status_is_set` instead.
+ * @hook um_when_status_is_set
+ *
+ * @param {int} $user_id User ID. Since 2.0
+ */

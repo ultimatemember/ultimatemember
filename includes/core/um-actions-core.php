@@ -90,22 +90,29 @@ function um_action_request_process() {
 			}
 
 			um_fetch_user( $uid );
-			UM()->user()->reject();
+			UM()->common()->users()->reject( $uid );
 			exit( wp_redirect( UM()->permalinks()->get_current_url( true ) ) );
 			break;
 
 		case 'um_approve_membership':
-		case 'um_reenable':
 			if ( ! $can_edit_users ) {
 				wp_die( esc_html__( 'You do not have permission to make this action.', 'ultimate-member' ) );
 			}
 
 			um_fetch_user( $uid );
 
-			add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ), 10, 1 );
-			add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ), 10, 1 );
+			UM()->common()->users()->approve( $uid );
+			exit( wp_redirect( UM()->permalinks()->get_current_url( true ) ) );
+			break;
 
-			UM()->user()->approve();
+		case 'um_reactivate':
+			if ( ! $can_edit_users ) {
+				wp_die( esc_html__( 'You do not have permission to make this action.', 'ultimate-member' ) );
+			}
+
+			um_fetch_user( $uid );
+
+			UM()->common()->users()->reactivate( $uid );
 			exit( wp_redirect( UM()->permalinks()->get_current_url( true ) ) );
 			break;
 
@@ -115,7 +122,7 @@ function um_action_request_process() {
 			}
 
 			um_fetch_user( $uid );
-			UM()->user()->pending();
+			UM()->common()->users()->set_as_pending( $uid );
 			exit( wp_redirect( UM()->permalinks()->get_current_url( true ) ) );
 			break;
 
@@ -124,11 +131,8 @@ function um_action_request_process() {
 				wp_die( esc_html__( 'You do not have permission to make this action.', 'ultimate-member' ) );
 			}
 
-			add_filter( 'um_template_tags_patterns_hook', array( UM()->user(), 'add_activation_placeholder' ), 10, 1 );
-			add_filter( 'um_template_tags_replaces_hook', array( UM()->user(), 'add_activation_replace_placeholder' ), 10, 1 );
-
 			um_fetch_user( $uid );
-			UM()->user()->email_pending();
+			UM()->common()->users()->send_activation( $uid );
 			exit( wp_redirect( UM()->permalinks()->get_current_url( true ) ) );
 			break;
 
@@ -138,7 +142,7 @@ function um_action_request_process() {
 			}
 
 			um_fetch_user( $uid );
-			UM()->user()->deactivate();
+			UM()->common()->users()->deactivate( $uid );
 			exit( wp_redirect( UM()->permalinks()->get_current_url( true ) ) );
 			break;
 

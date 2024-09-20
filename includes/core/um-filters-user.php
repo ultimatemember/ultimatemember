@@ -42,7 +42,7 @@ function um_admin_user_actions_hook( $actions, $user_id ) {
 		}
 
 		if ( 'inactive' === $account_status ) {
-			$actions['um_reenable'] = array( 'label' => __( 'Reactivate this account', 'ultimate-member' ) );
+			$actions['um_reactivate'] = array( 'label' => __( 'Reactivate this account', 'ultimate-member' ) );
 		}
 	}
 
