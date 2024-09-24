@@ -1,5 +1,11 @@
 ﻿== Changelog ==
 
+= 2.8.7 Aug 19, 2024 =
+
+* Bugfixes:
+
+  - Fixed: The "Clear All" button in the member directory did not reset all dependent dropdowns.
+
 = 2.8.6 May 22, 2024 =
 
 * Enhancements:

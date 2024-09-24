@@ -1534,7 +1534,9 @@ jQuery(document.body).ready( function() {
 				});
 
 				if ( directory.find( '.um-search-filter select[data-um-parent="' +  filter_name + '"]' ).length > 0 ) {
-					select.trigger('change');
+					setTimeout(function(){
+						select.trigger('change');
+					}, 250);
 				}
 
 			} else if ( type === 'slider' ) {
