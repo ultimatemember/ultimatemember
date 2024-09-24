@@ -494,23 +494,29 @@ add_action( 'um_submit_account_details', 'um_submit_account_details' );
 
 /**
  * Maybe clear all sessions except current after changing email. Because email can be used for login.
+ * Using a proper hook that triggers on email changed action in WordPress native handlers.
+ * It starts to work sitewide in UM Account and there wp_update_user with new user_email attribute is used.
  *
- * @param $user_id
- * @param $changes
+ * @since  2.8.7
  *
- * @return void
+ * @param  bool   $send     Whether to send the email.
+ * @param  array  $user     The original user array.
+ * @param  array  $userdata The updated user array.
+ * @return bool
  */
-function um_maybe_flush_users_session( $user_id, $changes ) {
-	if ( ! isset( UM()->user()->previous_data['user_email'] ) ) {
-		return;
+function um_maybe_flush_users_session_update_user( $send, $user, $userdata ) {
+	// Clear all sessions except current after changing email. Because email can be used for login.
+	if ( get_current_user_id() === $userdata['ID'] ) {
+		wp_destroy_other_sessions();
+	} else {
+		$sessions_manager = WP_Session_Tokens::get_instance( $userdata['ID'] );
+		// Remove all the session data for all users.
+		$sessions_manager->destroy_all();
 	}
 
-	if ( UM()->user()->previous_data['user_email'] !== $changes['user_email'] ) {
-		// Clear all sessions except current after changing email. Because email can be used for login.
-		wp_destroy_other_sessions();
-	}
+	return $send;
 }
-add_action( 'um_after_user_account_updated', 'um_maybe_flush_users_session', 10, 2 );
+add_filter( 'send_email_change_email', 'um_maybe_flush_users_session_update_user', 20, 3 );
 
 /**
  * Hidden inputs for account form
