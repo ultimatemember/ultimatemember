@@ -326,7 +326,9 @@ function um_submit_account_details( $args ) {
 
 		if ( 'single_user_password' === $k || 'user_login' === $k ) {
 			continue;
-		} elseif ( 'first_name' === $k || 'last_name' === $k || 'user_password' === $k ) {
+		}
+
+		if ( 'first_name' === $k || 'last_name' === $k || 'user_password' === $k ) {
 			$v = sanitize_text_field( $v );
 		} elseif ( 'user_email' === $k ) {
 			$v = sanitize_email( $v );
@@ -403,7 +405,7 @@ function um_submit_account_details( $args ) {
 	 */
 	do_action( 'um_account_pre_update_profile', $changes, $user_id );
 
-	if ( isset( $changes['first_name'] ) || isset( $changes['last_name'] ) || isset( $changes['nickname'] ) ) {
+	if ( isset( $changes['first_name'] ) || isset( $changes['last_name'] ) || isset( $changes['nickname'] ) || isset( $changes['user_email'] ) ) {
 		$user = get_userdata( $user_id );
 		if ( ! empty( $user ) && ! is_wp_error( $user ) ) {
 			UM()->user()->previous_data['display_name'] = $user->display_name;
@@ -416,6 +418,9 @@ function um_submit_account_details( $args ) {
 			}
 			if ( isset( $changes['nickname'] ) ) {
 				UM()->user()->previous_data['nickname'] = $user->nickname;
+			}
+			if ( isset( $changes['user_email'] ) ) {
+				UM()->user()->previous_data['user_email'] = $user->user_email;
 			}
 		}
 	}
@@ -474,7 +479,7 @@ function um_submit_account_details( $args ) {
 		$url = add_query_arg( 'updated', 'account', $url );
 
 		if ( function_exists( 'icl_get_current_language' ) ) {
-			if ( icl_get_current_language() != icl_get_default_language() ) {
+			if ( icl_get_current_language() !== icl_get_default_language() ) {
 				$url = UM()->permalinks()->get_current_url( true );
 				$url = add_query_arg( 'updated', 'account', $url );
 
@@ -487,6 +492,25 @@ function um_submit_account_details( $args ) {
 }
 add_action( 'um_submit_account_details', 'um_submit_account_details' );
 
+/**
+ * Maybe clear all sessions except current after changing email. Because email can be used for login.
+ *
+ * @param $user_id
+ * @param $changes
+ *
+ * @return void
+ */
+function um_maybe_flush_users_session( $user_id, $changes ) {
+	if ( ! isset( UM()->user()->previous_data['user_email'] ) ) {
+		return;
+	}
+
+	if ( UM()->user()->previous_data['user_email'] !== $changes['user_email'] ) {
+		// Clear all sessions except current after changing email. Because email can be used for login.
+		wp_destroy_other_sessions();
+	}
+}
+add_action( 'um_after_user_account_updated', 'um_maybe_flush_users_session', 10, 2 );
 
 /**
  * Hidden inputs for account form
