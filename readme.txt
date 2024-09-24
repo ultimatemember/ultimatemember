@@ -5,8 +5,8 @@ Contributors: ultimatemember, champsupertramp, nsinelnikov
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
-Tested up to: 6.5
-Stable tag: 2.8.6
+Tested up to: 6.6
+Stable tag: 2.8.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -166,9 +166,29 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.8.7 2024-06-xx =
+= 2.8.7 2024-09-26 =
 
+**Enhancements**
 
+* Added: Single user actions on WP Users list table
+* Updated: User status filter on WP Users list table
+* Updated: User bulk actions on WP Users list table
+* Updated: User actions on User Profile and Member Directory card
+
+**Bugfixes**
+
+* Fixed: CVE-2024-8520
+* Fixed: CVE-2024-8519
+* Fixed: Performance issue related to Settings > Secure tab
+* Fixed: The "Clear All" button in the member directory did not reset all dependent dropdowns
+
+**Templates required update**
+
+* login-to-view.php
+
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
+
+**Deprecated**
 
 = 2.8.6 2024-05-22 =
 
@@ -367,6 +387,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.8.7 =
+This version fixes a security related bug. Upgrade immediately.
 
 = 2.8.5 =
 This version fixes a security related bug. Upgrade immediately.
