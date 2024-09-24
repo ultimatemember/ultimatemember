@@ -134,7 +134,6 @@ function um_profile_field_filter_hook__vimeo_video( $value, $data ) {
 }
 add_filter( 'um_profile_field_filter_hook__vimeo_video', 'um_profile_field_filter_hook__vimeo_video', 99, 2 );
 
-
 /**
  * Outputs a phone link
  *
@@ -144,13 +143,13 @@ add_filter( 'um_profile_field_filter_hook__vimeo_video', 'um_profile_field_filte
  * @return string
  */
 function um_profile_field_filter_hook__phone( $value, $data ) {
-	if ( empty( trim( str_replace( '+', '', $value ) ) ) ) {
+	$maybe_empty_phone = trim( str_replace( '+', '', $value ) );
+	if ( empty( $maybe_empty_phone ) ) {
 		return '';
 	}
 
 	$value = trim( $value );
-	$value = '<a href="' . esc_url( 'tel:' . $value ) . '" rel="nofollow" title="' . esc_attr( $data['title'] ) . '">' . esc_html( $value ) . '</a>';
-	return $value;
+	return '<a href="' . esc_url( 'tel:' . $value ) . '" rel="nofollow" title="' . esc_attr( $data['title'] ) . '">' . esc_html( $value ) . '</a>';
 }
 add_filter( 'um_profile_field_filter_hook__tel', 'um_profile_field_filter_hook__phone', 99, 2 );
 

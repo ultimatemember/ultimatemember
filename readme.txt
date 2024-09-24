@@ -177,10 +177,12 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 **Bugfixes**
 
-* Fixed: CVE-2024-8520
-* Fixed: CVE-2024-8519
+* Fixed: Single user action on User Profile security vulnerability. CVE ID: CVE-2024-8520
+* Fixed: [um_loggedin] shortcode security vulnerability. CVE ID: CVE-2024-8519
 * Fixed: Performance issue related to Settings > Secure tab
 * Fixed: The "Clear All" button in the member directory did not reset all dependent dropdowns
+* Fixed: Telegram and Discord social links in profile header
+* Fixed: UM links to empty phone numbers
 
 **Templates required update**
 
