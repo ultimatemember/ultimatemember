@@ -120,7 +120,6 @@ function um_replace_placeholders() {
 		'{user_account_link}',
 	);
 
-
 	/**
 	 * UM hook
 	 *
