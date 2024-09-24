@@ -180,24 +180,23 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 					exit;
 				default:
 					/**
-					 * UM hook
+					 * Fires to handle 3rd-party user actions from User Profile.
 					 *
-					 * @type action
-					 * @title um_action_user_request_hook
-					 * @description Integration for user actions
-					 * @input_vars
-					 * [{"var":"$action","type":"string","desc":"Action for user"},
-					 * {"var":"$user_id","type":"int","desc":"User ID"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_action( 'um_action_user_request_hook', 'function_name', 10, 2 );
-					 * @example
-					 * <?php
-					 * add_action( 'um_action_user_request_hook', 'my_action_user_request', 10, 2 );
-					 * function my_action_user_request( $action, $user_id ) {
-					 *     // your code here
+					 * Note: Please verify nonce and redirect after action individually in 3rd-party handler.
+					 *
+					 * @since 1.3.x
+					 * @hook um_action_user_request_hook
+					 *
+					 * @param {string} $action  User action key.
+					 * @param {int}    $user_id User ID.
+					 *
+					 * @example <caption>Update `some_custom_meta` user meta on `my_custom_action`.</caption>
+					 * function um_action_user_request_hook( $action, $user_id ) {
+					 *     if ( 'my_custom_action' === $action ) {
+					 *         update_user_meta( $user_id, 'some_custom_meta', true );
+					 *     }
 					 * }
-					 * ?>
+					 * add_action( 'um_action_user_request_hook', 'um_action_user_request_hook', 10, 2 );
 					 */
 					do_action( 'um_action_user_request_hook', $action, $user_id );
 					break;
