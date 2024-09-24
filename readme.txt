@@ -184,6 +184,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: The "Clear All" button in the member directory did not reset all dependent dropdowns
 * Fixed: Telegram and Discord social links in profile header
 * Fixed: UM links to empty phone numbers
+* Fixed: Email changing via User Account flush session. Security enhancement because email can be used for login
 
 **Templates required update**
 
