@@ -174,6 +174,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Updated: User status filter on WP Users list table
 * Updated: User bulk actions on WP Users list table
 * Updated: User actions on User Profile and Member Directory card
+* Added: Applying shortcodes from the post restriction message
 
 **Bugfixes**
 
