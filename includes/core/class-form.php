@@ -856,6 +856,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 										case 'vimeo_video':
 										case 'soundcloud_track':
 										case 'spotify':
+										case 'tel':
 											$form[ $k ] = sanitize_text_field( $form[ $k ] );
 											break;
 										case 'multiselect':
