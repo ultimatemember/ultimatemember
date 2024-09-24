@@ -490,9 +490,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				case 'um_settings_updated':
 					$messages[0]['content'] = __( 'Settings have been saved successfully.', 'ultimate-member' );
 					break;
-				case 'um_user_updated':
-					$messages[0]['content'] = __( 'User has been updated.', 'ultimate-member' );
-					break;
 				case 'um_users_updated':
 					$messages[0]['content'] = __( 'Users have been updated.', 'ultimate-member' );
 					break;

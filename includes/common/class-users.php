@@ -103,10 +103,10 @@ class Users {
 	public function statuses_list() {
 		$statuses = array(
 			'approved'                    => __( 'Approved', 'ultimate-member' ),
-			'awaiting_admin_review'       => __( 'Pending review', 'ultimate-member' ),
+			'awaiting_admin_review'       => __( 'Pending administrator review', 'ultimate-member' ),
 			'awaiting_email_confirmation' => __( 'Waiting email confirmation', 'ultimate-member' ),
-			'inactive'                    => __( 'Inactive', 'ultimate-member' ),
-			'rejected'                    => __( 'Rejected', 'ultimate-member' ),
+			'inactive'                    => __( 'Membership inactive', 'ultimate-member' ),
+			'rejected'                    => __( 'Membership rejected', 'ultimate-member' ),
 		);
 		/**
 		 * Filters the user statuses added via Ultimate Member plugin.
@@ -114,13 +114,13 @@ class Users {
 		 * Note: Statuses format is 'key' => 'title'
 		 *
 		 * @since 2.8.7
-		 * @hook  um_admin_get_user_statuses
+		 * @hook  um_user_statuses
 		 *
 		 * @param {array} $statuses User statuses in Ultimate Member environment.
 		 *
 		 * @return {array} User statuses.
 		 */
-		return apply_filters( 'um_admin_get_user_statuses', $statuses );
+		return apply_filters( 'um_user_statuses', $statuses );
 	}
 
 	/**
@@ -184,8 +184,18 @@ class Users {
 	 *
 	 * @return string
 	 */
-	public function get_status( $user_id ) {
-		return get_user_meta( $user_id, 'account_status', true );
+	public function get_status( $user_id, $format = 'raw' ) {
+		$status = get_user_meta( $user_id, 'account_status', true );
+		if ( 'raw' === $format ) {
+			return $status;
+		}
+
+		$all_statuses = $this->statuses_list();
+		if ( array_key_exists( $status, $all_statuses ) ) {
+			return $all_statuses[ $status ];
+		}
+
+		return __( 'Undefined', 'ultimate-member' );
 	}
 
 	/**
@@ -280,9 +290,34 @@ class Users {
 		return get_password_reset_key( $userdata );
 	}
 
-	public function can_activation_send( $user_id ) {
+	public function can_current_user_edit_user( $user_id ) {
 		$current_user_id = get_current_user_id();
 		if ( $current_user_id === $user_id ) {
+			return true;
+		}
+
+		if ( ! self::user_exists( $user_id ) ) {
+			return false;
+		}
+
+		$rolename = UM()->roles()->get_priority_user_role( $current_user_id );
+		$role     = get_role( $rolename );
+
+		if ( null === $role ) {
+			return false;
+		}
+
+		// Make Ultimate Member bulk actions only when the current user has 'edit_users' capability.
+		if ( ! current_user_can( 'edit_users' ) && ! $role->has_cap( 'edit_users' ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public function can_activation_send( $user_id ) {
+		$current_user_id = get_current_user_id();
+		if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
 			return false;
 		}
 
@@ -357,7 +392,7 @@ class Users {
 	 */
 	public function can_be_deactivated( $user_id ) {
 		$current_user_id = get_current_user_id();
-		if ( $current_user_id === $user_id ) {
+		if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
 			return false;
 		}
 
@@ -440,7 +475,7 @@ class Users {
 	 */
 	public function can_be_rejected( $user_id ) {
 		$current_user_id = get_current_user_id();
-		if ( $current_user_id === $user_id ) {
+		if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
 			return false;
 		}
 
@@ -523,7 +558,7 @@ class Users {
 	 */
 	public function can_be_set_as_pending( $user_id ) {
 		$current_user_id = get_current_user_id();
-		if ( $current_user_id === $user_id ) {
+		if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
 			return false;
 		}
 
@@ -598,7 +633,7 @@ class Users {
 	 */
 	public function can_be_approved( $user_id ) {
 		$current_user_id = get_current_user_id();
-		if ( $current_user_id === $user_id ) {
+		if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
 			return false;
 		}
 
@@ -616,6 +651,27 @@ class Users {
 
 		$status = $this->get_status( $user_id );
 		return 'approved' !== $status;
+	}
+
+	/**
+	 * @param int $user_id
+	 *
+	 * @return bool
+	 */
+	public static function user_exists( $user_id ) {
+		/**
+		 * @var bool[] $search_results
+		 */
+		static $search_results = array();
+
+		if ( array_key_exists( $user_id, $search_results ) ) {
+			return $search_results[ $user_id ];
+		}
+
+		$user = get_userdata( $user_id );
+
+		$search_results[ $user_id ] = false !== $user;
+		return $search_results[ $user_id ];
 	}
 
 	/**
@@ -684,7 +740,7 @@ class Users {
 	 */
 	public function can_be_reactivated( $user_id ) {
 		$current_user_id = get_current_user_id();
-		if ( $current_user_id === $user_id ) {
+		if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
 			return false;
 		}
 

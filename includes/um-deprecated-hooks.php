@@ -65,3 +65,33 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @param {int} $user_id User ID. Since 2.0
  */
+
+/**
+ * Fires for handle admin user_action scripts.
+ *
+ * @since 1.3.x
+ * @depecated 2.8.7 WordPress native `handle_bulk_actions-users` hook is used. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+ * @hook um_admin_user_action_hook
+ *
+ * @param {string} $bulk_action Bulk action key
+ */
+
+/**
+ * Fires for handle admin user_action scripts.
+ * Where $bulk_action is a bulk action key
+ *
+ * @since 1.3.x
+ * @depecated 2.8.7 WordPress native `handle_bulk_actions-users` hook is used. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+ * @hook um_admin_user_action_{$bulk_action}_hook
+ */
+
+/**
+ * Fires for handle custom admin user_action scripts.
+ * Where $action is a bulk action key
+ *
+ * @since 1.3.x
+ * @depecated 2.8.7 WordPress native `handle_bulk_actions-users` hook is used. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+ * @hook um_admin_custom_hook_{$action}
+ *
+ * @param {int} $user_id User ID.
+ */

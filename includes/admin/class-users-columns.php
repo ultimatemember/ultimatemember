@@ -46,7 +46,7 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 		 * @return array
 		 */
 		public function manage_users_columns( $columns ) {
-			$columns['account_status'] = __( 'Status', 'ultimate-member' );
+			$columns['um_account_status'] = __( 'Status', 'ultimate-member' );
 			return $columns;
 		}
 
@@ -60,10 +60,91 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 		 * @return string
 		 */
 		public function manage_users_custom_column( $value, $column_name, $user_id ) {
-			if ( 'account_status' === $column_name ) {
-				um_fetch_user( $user_id );
-				$value = um_user( 'account_status_name' );
-				um_reset_user();
+			if ( 'um_account_status' !== $column_name ) {
+				return $value;
+			}
+
+			$status = UM()->common()->users()->get_status( $user_id, 'formatted' );
+
+			$status = apply_filters( 'um_users_column_account_status', $status, $user_id );
+
+			$value = '<span class="um-user-status">' . esc_html( $status ) . '</span>';
+
+			if ( get_current_user_id() === $user_id ) {
+				return $value;
+			}
+
+			$row_actions = array();
+			if ( UM()->common()->users()->can_be_approved( $user_id ) ) {
+				$url = add_query_arg(
+					array(
+						'um_adm_action' => 'approve_user',
+						'uid'           => $user_id,
+						'_wpnonce'      => wp_create_nonce( 'approve_user' . $user_id ),
+					),
+					admin_url( 'users.php' )
+				);
+				$row_actions[] = '<a href="' . esc_url( $url ) . '" class="um-set-status-approved">' . esc_html__( 'Approve', 'ultimate-member' ) . '</a>';
+			}
+			if ( UM()->common()->users()->can_be_reactivated( $user_id ) ) {
+				$url = add_query_arg(
+					array(
+						'um_adm_action' => 'reactivate_user',
+						'uid'           => $user_id,
+						'_wpnonce'      => wp_create_nonce( 'reactivate_user' . $user_id ),
+					),
+					admin_url( 'users.php' )
+				);
+				$row_actions[] = '<a href="' . esc_url( $url ) . '" class="um-reactivate-user">' . esc_html__( 'Reactivate', 'ultimate-member' ) . '</a>';
+			}
+			if ( UM()->common()->users()->can_be_set_as_pending( $user_id ) ) {
+				$url = add_query_arg(
+					array(
+						'um_adm_action' => 'put_user_as_pending',
+						'uid'           => $user_id,
+						'_wpnonce'      => wp_create_nonce( 'put_user_as_pending' . $user_id ),
+					),
+					admin_url( 'users.php' )
+				);
+				$row_actions[] = '<a href="' . esc_url( $url ) . '" class="um-set-status-pending">' . esc_html__( 'Put as pending', 'ultimate-member' ) . '</a>';
+			}
+			if ( UM()->common()->users()->can_activation_send( $user_id ) ) {
+				$url = add_query_arg(
+					array(
+						'um_adm_action' => 'resend_user_activation',
+						'uid'           => $user_id,
+						'_wpnonce'      => wp_create_nonce( 'resend_user_activation' . $user_id ),
+					),
+					admin_url( 'users.php' )
+				);
+				$row_actions[] = '<a href="' . esc_url( $url ) . '" class="um-resend-activation-email">' . esc_html__( 'Resend activation email', 'ultimate-member' ) . '</a>';
+			}
+			if ( UM()->common()->users()->can_be_rejected( $user_id ) ) {
+				$url = add_query_arg(
+					array(
+						'um_adm_action' => 'reject_user',
+						'uid'           => $user_id,
+						'_wpnonce'      => wp_create_nonce( 'reject_user' . $user_id ),
+					),
+					admin_url( 'users.php' )
+				);
+				$row_actions[] = '<a href="' . esc_url( $url ) . '" class="um-set-status-rejected" onclick="return confirm( \'' . esc_js( __( 'Are you sure you want to reject this user membership?', 'ultimate-member' ) ) . '\' );">' . esc_html__( 'Reject', 'ultimate-member' ) . '</a>';
+			}
+			if ( UM()->common()->users()->can_be_deactivated( $user_id ) ) {
+				$url = add_query_arg(
+					array(
+						'um_adm_action' => 'deactivate_user',
+						'uid'           => $user_id,
+						'_wpnonce'      => wp_create_nonce( 'deactivate_user' . $user_id ),
+					),
+					admin_url( 'users.php' )
+				);
+				$row_actions[] = '<a href="' . esc_url( $url ) . '" class="um-deactivate-user" onclick="return confirm( \'' . esc_js( __( 'Are you sure you want to deactivate this user?', 'ultimate-member' ) ) . '\' );">' . esc_html__( 'Deactivate', 'ultimate-member' ) . '</a>';
+			}
+
+			$row_actions = apply_filters( 'um_users_column_account_status_row_actions', $row_actions, $user_id );
+			if ( ! empty( $row_actions ) ) {
+				$value .= '<div class="row-actions"><ul class="um-user-status-row-actions"><li>' . implode( '</li><li> | </li><li>', $row_actions ) . '</li></ul></div>';
 			}
 			return $value;
 		}
@@ -180,7 +261,6 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 		 * @return array
 		 */
 		private function get_user_bulk_actions() {
-			// @todo check verified users module for the proper integration. remove old integration way
 			$um_actions = array(
 				'um_approve_membership' => __( 'Approve Membership', 'ultimate-member' ),
 				'um_reject_membership'  => __( 'Reject Membership', 'ultimate-member' ),
@@ -232,6 +312,23 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 			return $actions;
 		}
 
+		private function get_statuses_filter_options() {
+			$statuses = UM()->common()->users()->statuses_list();
+			/**
+			 * Filters the user statuses added via Ultimate Member plugin.
+			 *
+			 * Note: Statuses format is 'key' => 'title'
+			 *
+			 * @since 2.8.7
+			 * @hook  um_user_statuses_admin_filter_options
+			 *
+			 * @param {array} $statuses User statuses in Ultimate Member environment.
+			 *
+			 * @return {array} User statuses.
+			 */
+			return apply_filters( 'um_user_statuses_admin_filter_options', $statuses );
+		}
+
 		/**
 		 * Adds HTML with the filter by the Ultimate Member status.
 		 *
@@ -250,7 +347,7 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 			// need to add there additional nonce field because WordPress native _wpnonce field isn't visible on the users.php screen then custom actions
 			wp_nonce_field( 'um-bulk-users', '_um_wpnonce', false );
 
-			$statuses = UM()->common()->users()->statuses_list();
+			$statuses = $this->get_statuses_filter_options();
 			?>
 			<div class="alignleft actions um-filter-by-status">
 				<label class="screen-reader-text" for="<?php echo esc_attr( $id ); ?>"><?php esc_html_e( 'All Statuses', 'ultimate-member' ); ?></label>
@@ -503,7 +600,7 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 		 * @param string $uri
 		 * @return string
 		 */
-		private function set_redirect_uri( $uri ) {
+		public function set_redirect_uri( $uri ) {
 			if ( ! empty( $_REQUEST['s'] ) ) {
 				$uri = add_query_arg( 's', sanitize_text_field( $_REQUEST['s'] ), $uri );
 			}

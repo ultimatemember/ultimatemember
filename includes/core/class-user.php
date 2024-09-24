@@ -1725,28 +1725,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		function get_admin_actions() {
 			$items = array();
 
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_admin_user_actions_hook
-			 * @description Extend admin actions for each user
-			 * @input_vars
-			 * [{"var":"$actions","type":"array","desc":"Actions for user"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_admin_user_actions_hook', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_admin_user_actions_hook', 'my_admin_user_actions', 10, 1 );
-			 * function my_admin_user_actions( $actions ) {
-			 *     // your code here
-			 *     return $actions;
-			 * }
-			 * ?>
-			 */
-			$actions = apply_filters( 'um_admin_user_actions_hook', array(), um_profile_id() );
+			$actions = UM()->frontend()->users()->get_actions_list( um_profile_id() );
 			if ( empty( $actions ) ) {
 				return $items;
 			}
@@ -1756,10 +1735,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					array(
 						'um_action' => $id,
 						'uid'       => um_profile_id(),
+						'nonce'     => wp_create_nonce( $id . um_profile_id() ),
 					)
 				);
-				/*$url = add_query_arg( 'um_action', $id );
-				$url = add_query_arg( 'uid', um_profile_id(), $url );*/
 				$items[] = '<a href="' . esc_url( $url ) . '" class="real_url ' . esc_attr( $id ) . '-item">' . esc_html( $arr['label'] ) . '</a>';
 			}
 			return $items;
@@ -2111,32 +2089,15 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		/**
 		 * This method checks if a user exists or not in your site based on the user ID.
 		 *
-		 * @usage <?php UM()->user()->user_exists_by_id( $user_id ); ?>
+		 * @deprecated 2.8.7
 		 *
 		 * @param int $user_id A user ID must be passed to check if the user exists
 		 *
 		 * @return bool|int
-		 *
-		 * @example Basic Usage
-
-		<?php
-
-		$boolean = UM()->user()->user_exists_by_id( 15 );
-		if ( $boolean ) {
-		// That user exists
-		}
-
-		?>
-
-		 *
 		 */
 		public function user_exists_by_id( $user_id ) {
-			$aux = get_userdata( absint( $user_id ) );
-			if ( $aux == false ) {
-				return false;
-			} else {
-				return $user_id;
-			}
+			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()::user_exists' );
+			return UM()->common()->users()::user_exists( $user_id ) ? $user_id : false;
 		}
 
 		/**
