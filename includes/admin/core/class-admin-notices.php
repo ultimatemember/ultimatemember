@@ -490,9 +490,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				case 'um_settings_updated':
 					$messages[0]['content'] = __( 'Settings have been saved successfully.', 'ultimate-member' );
 					break;
-				case 'um_user_updated':
-					$messages[0]['content'] = __( 'User has been updated.', 'ultimate-member' );
-					break;
 				case 'um_users_updated':
 					$messages[0]['content'] = __( 'Users have been updated.', 'ultimate-member' );
 					break;
@@ -501,6 +498,36 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					break;
 				case 'um_secure_restore':
 					$messages[0]['content'] = __( 'Account has been successfully restored.', 'ultimate-member' );
+					break;
+				case 'um_approved':
+					$approved_count = isset( $_REQUEST['approved_count'] ) ? absint( $_REQUEST['approved_count'] ) : 0;
+
+					$messages[0]['content'] = sprintf( _n( '<strong>%s</strong> user has been approved.', '<strong>%s</strong> users have been approved.', $approved_count, 'ultimate-member' ), $approved_count );
+					break;
+				case 'um_reactivated':
+					$reactivated_count = isset( $_REQUEST['reactivated_count'] ) ? absint( $_REQUEST['reactivated_count'] ) : 0;
+
+					$messages[0]['content'] = sprintf( _n( '<strong>%s</strong> user has been reactivated.', '<strong>%s</strong> users have been reactivated.', $reactivated_count, 'ultimate-member' ), $reactivated_count );
+					break;
+				case 'um_rejected':
+					$rejected_count = isset( $_REQUEST['rejected_count'] ) ? absint( $_REQUEST['rejected_count'] ) : 0;
+
+					$messages[0]['content'] = sprintf( _n( '<strong>%s</strong> user has been rejected.', '<strong>%s</strong> users have been rejected.', $rejected_count, 'ultimate-member' ), $rejected_count );
+					break;
+				case 'um_deactivate':
+					$deactivated_count = isset( $_REQUEST['deactivated_count'] ) ? absint( $_REQUEST['deactivated_count'] ) : 0;
+
+					$messages[0]['content'] = sprintf( _n( '<strong>%s</strong> user has been deactivated.', '<strong>%s</strong> users have been deactivated.', $deactivated_count, 'ultimate-member' ), $deactivated_count );
+					break;
+				case 'um_pending':
+					$pending_count = isset( $_REQUEST['pending_count'] ) ? absint( $_REQUEST['pending_count'] ) : 0;
+
+					$messages[0]['content'] = sprintf( _n( '<strong>%s</strong> user has been set as pending admin review.', '<strong>%s</strong> users have been set as pending admin review.', $pending_count, 'ultimate-member' ), $pending_count );
+					break;
+				case 'um_resend_activation':
+					$resend_activation_count = isset( $_REQUEST['resend_activation_count'] ) ? absint( $_REQUEST['resend_activation_count'] ) : 0;
+
+					$messages[0]['content'] = sprintf( _n( 'Activation email for <strong>%s</strong> user has been sent.', 'Activation emails for <strong>%s</strong> users have been sent.', $resend_activation_count, 'ultimate-member' ), $resend_activation_count );
 					break;
 				default:
 					/**

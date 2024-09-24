@@ -129,7 +129,7 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 				$set_password_required = get_user_meta( $user_id, 'um_set_password_required', true );
 
 				um_fetch_user( $user_id );
-				UM()->user()->approve();
+				UM()->common()->users()->approve( $user_id );
 				if ( ! empty( $set_password_required ) ) {
 					$redirect = um_user( 'password_reset_link' );
 				}
