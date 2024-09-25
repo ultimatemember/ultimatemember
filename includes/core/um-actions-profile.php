@@ -729,7 +729,10 @@ function um_profile_dynamic_meta_desc() {
 		}
 
 		$image      = current( explode( '?', $image ) ); // strip $_GET attributes from photo URL.
-		$image_info = wp_check_filetype( $image );
+		$image_url  = wp_parse_url( $image );
+		$image_name = explode( '/', $image_url['path'] );
+		$image_name = end( $image_name );
+		$image_info = wp_check_filetype( $image_name );
 
 		$person = array(
 			'@context'     => 'https://schema.org',
