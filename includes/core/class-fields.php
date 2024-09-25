@@ -4299,6 +4299,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$data = $this->get_field( $key );
 			}
 
+			// Invalid field data.
+			if ( ! is_array( $data ) ) {
+				return '';
+			}
+
 			//hide if empty type
 			if ( ! array_key_exists( 'type', $data ) || empty( $data['type'] ) ) {
 				return '';
