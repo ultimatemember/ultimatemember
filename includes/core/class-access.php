@@ -1264,7 +1264,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				return $block_content;
 			}
 
-			$default_message = UM()->options()->get( 'restricted_block_message' );
+			$default_message = wp_kses_post( UM()->options()->get( 'restricted_block_message' ) );
 			switch ( $block['attrs']['um_who_access'] ) {
 				case '1': {
 					if ( ! is_user_logged_in() ) {

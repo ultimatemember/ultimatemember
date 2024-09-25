@@ -638,7 +638,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						),
 						array(
 							'id'          => 'restricted_block_message',
-							'type'        => 'textarea',
+							'type'        => 'wp_editor',
 							'label'       => __( 'Restricted Access Block Message', 'ultimate-member' ),
 							'description' => __( 'This is the message shown to users that do not have permission to view the block\'s content.', 'ultimate-member' ),
 							'conditional' => array( 'restricted_blocks', '=', 1 ),
@@ -650,7 +650,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'sanitize' => 'bool',
 				);
 				$settings_map['restricted_block_message'] = array(
-					'sanitize' => 'textarea',
+					'sanitize' => 'wp_kses',
 				);
 			}
 
