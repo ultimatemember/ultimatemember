@@ -40,7 +40,7 @@ $role = $object['data'];
 					'options'     => UM()->roles()->get_roles(),
 					'multi'       => true,
 					'value'       => ! empty( $role['_um_can_edit_roles'] ) ? $role['_um_can_edit_roles'] : array(),
-					'conditional' => array( '_um_can_edit_everyone', '=', '1' )
+					'conditional' => array( '_um_can_edit_everyone', '=', '1' ),
 				),
 				array(
 					'id'      => '_um_can_delete_everyone',
@@ -57,7 +57,7 @@ $role = $object['data'];
 					'options'     => UM()->roles()->get_roles(),
 					'multi'       => true,
 					'value'       => ! empty( $role['_um_can_delete_roles'] ) ? $role['_um_can_delete_roles'] : array(),
-					'conditional' => array( '_um_can_delete_everyone', '=', '1' )
+					'conditional' => array( '_um_can_delete_everyone', '=', '1' ),
 				)
 			),
 		)

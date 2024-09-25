@@ -26,7 +26,7 @@ $role = $object['data'];
 					'options'     => UM()->roles()->get_roles(),
 					'multi'       => true,
 					'value'       => ! empty( $role['_um_can_view_roles'] ) ? $role['_um_can_view_roles'] : array(),
-					'conditional' => array( '_um_can_view_all', '=', '1' )
+					'conditional' => array( '_um_can_view_all', '=', '1' ),
 				),
 				array(
 					'id'      => '_um_can_make_private_profile',
