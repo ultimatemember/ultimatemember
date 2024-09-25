@@ -19,7 +19,7 @@
 				'id'            => '_um_can_view_roles',
 				'type'          => 'select',
 				'label'         => __( 'Can view these user roles only', 'ultimate-member' ),
-				'tooltip'       => __( 'Which roles that role can view, choose none to allow role to view all member roles', 'ultimate-member' ),
+				'tooltip'       => __( 'Multiple selections of which roles this role can view, none selected to allow this role to view all member roles.', 'ultimate-member' ),
 				'options'       => UM()->roles()->get_roles(),
 				'multi'         => true,
 				'value'         => ! empty( $role['_um_can_view_roles'] ) ? $role['_um_can_view_roles'] : array(),
