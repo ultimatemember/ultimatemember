@@ -1447,7 +1447,7 @@ function um_set_requested_user( $user_id ) {
  */
 function um_get_requested_user() {
 	if ( ! empty( UM()->user()->target_id ) ) {
-		return UM()->user()->target_id;
+		return absint( UM()->user()->target_id );
 	}
 
 	return false;
