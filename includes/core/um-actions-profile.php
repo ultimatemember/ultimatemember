@@ -631,7 +631,6 @@ if ( ! function_exists( 'um_profile_remove_wpseo' ) ) {
 }
 add_action( 'get_header', 'um_profile_remove_wpseo', 8 );
 
-
 /**
  * The profile page SEO tags
  *
@@ -641,10 +640,9 @@ add_action( 'get_header', 'um_profile_remove_wpseo', 8 );
  */
 function um_profile_dynamic_meta_desc() {
 	if ( um_is_core_page( 'user' ) && um_get_requested_user() ) {
-
 		$user_id = um_get_requested_user();
 
-		if ( um_user( 'ID' ) !== $user_id) {
+		if ( um_user( 'ID' ) !== $user_id ) {
 			um_fetch_user( $user_id );
 		}
 
@@ -674,48 +672,39 @@ function um_profile_dynamic_meta_desc() {
 		$url         = um_user_profile_url( $user_id );
 
 		/**
-		 * UM hook
+		 * Filters the profile SEO image size. Default 190. Available 'original'.
 		 *
-		 * @type filter
-		 * @title um_profile_dynamic_meta_image_size
-		 * @description Change the profile SEO image size. Default 190. Available 'original'.
-		 * @input_vars
-		 * [{"var":"$image_size","type":"int|string","desc":"Image size"},
-		 *  {"var":"$user_id","type":"int","desc":"User ID"}]
-		 * @change_log
-		 * ["Since: 2.5.5"]
-		 * @usage add_filter( 'um_profile_dynamic_meta_image_size', 'function_name', 10, 2 );
-		 * @example
-		 * <?php
-		 * add_filter( 'um_profile_dynamic_meta_image_size', 'my_profile_meta_image_size', 10, 2 );
-		 * function my_profile_meta_image_size( $image_size, $user_id ) {
-		 *   // your code here
-		 *   return $image_size;
+		 * @param {string} $image_size Image size.
+		 * @param {int}    $user_id    User ID.
+		 *
+		 * @return {array} Changed image type
+		 *
+		 * @since 2.5.5
+		 * @hook um_profile_dynamic_meta_image_size
+		 *
+		 * @example <caption>Change meta image to cover photo `cover_photo`.</caption>
+		 * function my_um_profile_dynamic_meta_image_size( $image_size, $user_id ) {
+		 *     return 'original';
 		 * }
-		 * ?>
+		 * add_filter( 'um_profile_dynamic_meta_image_size', 'my_um_profile_dynamic_meta_image_size', 10, 2 );
 		 */
 		$image_size = apply_filters( 'um_profile_dynamic_meta_image_size', 190, $user_id );
-
 		/**
-		 * UM hook
+		 * Filters the profile SEO image type. Default 'profile_photo'. Available 'cover_photo', 'profile_photo'.
 		 *
-		 * @type filter
-		 * @title um_profile_dynamic_meta_image_type
-		 * @description Change the profile SEO image type. Default 'profile_photo'. Available 'cover_photo', 'profile_photo', .
-		 * @input_vars
-		 * [{"var":"$image_type","type":"string","desc":"Image type - cover_photo or profile_photo"},
-		 *  {"var":"$user_id","type":"int","desc":"User ID"}]
-		 * @change_log
-		 * ["Since: 2.5.5"]
-		 * @usage add_filter( 'um_profile_dynamic_meta_image_type', 'function_name', 10, 2 );
-		 * @example
-		 * <?php
-		 * add_filter( 'um_profile_dynamic_meta_image_type', 'my_profile_meta_image_type', 10, 2 );
-		 * function my_profile_meta_image_type( $image_type, $user_id ) {
-		 *   // your code here
-		 *   return $image_type;
+		 * @param {string} $image_type Image type - cover_photo or profile_photo.
+		 * @param {int}    $user_id    User ID.
+		 *
+		 * @return {string} Changed image type
+		 *
+		 * @since 2.5.5
+		 * @hook um_profile_dynamic_meta_image_type
+		 *
+		 * @example <caption>Change meta image to cover photo `cover_photo`.</caption>
+		 * function my_um_profile_dynamic_meta_image_type( $image_type, $user_id ) {
+		 *     return 'cover_photo';
 		 * }
-		 * ?>
+		 * add_filter( 'um_profile_dynamic_meta_image_type', 'my_um_profile_dynamic_meta_image_type', 10, 2 );
 		 */
 		$image_type = apply_filters( 'um_profile_dynamic_meta_image_type', 'profile_photo', $user_id );
 
@@ -729,20 +718,21 @@ function um_profile_dynamic_meta_desc() {
 			} else {
 				$image = um_get_cover_uri( um_profile( 'cover_photo' ), null );
 			}
-		} else {
-			if ( is_numeric( $image_size ) ) {
-				$sizes = UM()->options()->get( 'photo_thumb_sizes' );
-				if ( is_array( $sizes ) ) {
-					$image_size = um_closest_num( $sizes, $image_size );
-				}
-				$image = um_get_user_avatar_url( $user_id, $image_size );
-			} else {
-				$image = um_get_user_avatar_url( $user_id, 'original' );
+		} elseif ( is_numeric( $image_size ) ) {
+			$sizes = UM()->options()->get( 'photo_thumb_sizes' );
+			if ( is_array( $sizes ) ) {
+				$image_size = um_closest_num( $sizes, $image_size );
 			}
+			$image = um_get_user_avatar_url( $user_id, $image_size );
+		} else {
+			$image = um_get_user_avatar_url( $user_id, 'original' );
 		}
 
+		$image      = current( explode( '?', $image ) ); // strip $_GET attributes from photo URL.
+		$image_info = wp_check_filetype( $image );
+
 		$person = array(
-			'@context'     => 'http://schema.org',
+			'@context'     => 'https://schema.org',
 			'@type'        => 'ProfilePage',
 			'dateCreated'  => um_user( 'user_registered' ),
 			'dateModified' => gmdate( 'Y-m-d H:i:s', um_user( 'last_update' ) ),
@@ -757,16 +747,15 @@ function um_profile_dynamic_meta_desc() {
 				),
 			),
 		);
-
 		/**
-		 * Filters changing the shema.org of profile's person.
+		 * Filters changing the schema.org of profile's person.
 		 *
-		 * @param {array} $person Data of the profile person.
+		 * @param {array} $person  Data of the profile person.
 		 * @param {int}   $user_id User ID.
 		 *
 		 * @return {array} Changed person's data.
 		 *
-		 * @since 2.8.0
+		 * @since 2.8.7
 		 * @hook um_profile_dynamic_meta_profile_schema
 		 *
 		 * @example <caption>Change name of person.</caption>
@@ -793,14 +782,20 @@ function um_profile_dynamic_meta_desc() {
 		<meta property="og:image" content="<?php echo esc_url( $image ); ?>"/>
 		<meta property="og:image:alt" content="<?php esc_attr_e( 'Profile photo', 'ultimate-member' ); ?>"/>
 		<?php if ( is_numeric( $image_size ) ) { ?>
-		<meta property="og:image:height" content="<?php echo absint( $image_size ); ?>"/>
-		<meta property="og:image:width" content="<?php echo absint( $image_size ); ?>"/>
+			<meta property="og:image:height" content="<?php echo absint( $image_size ); ?>"/>
+			<meta property="og:image:width" content="<?php echo absint( $image_size ); ?>"/>
+		<?php } ?>
+		<?php if ( is_ssl() ) { ?>
+			<meta property="og:image:secure_url" content="<?php echo esc_url( $image ); ?>"/>
+		<?php } ?>
+		<?php if ( $image_info['type'] ) { ?>
+			<meta property="og:image:type" content="<?php echo esc_attr( $image_info['type'] ); ?>" />
 		<?php } ?>
 		<meta property="og:url" content="<?php echo esc_url( $url ); ?>"/>
 
 		<meta name="twitter:card" content="summary"/>
 		<?php if ( $twitter ) { ?>
-		<meta name="twitter:site" content="@<?php echo esc_attr( $twitter ); ?>"/>
+			<meta name="twitter:site" content="@<?php echo esc_attr( $twitter ); ?>"/>
 		<?php } ?>
 		<meta name="twitter:title" content="<?php echo esc_attr( $title ); ?>"/>
 		<meta name="twitter:description" content="<?php echo esc_attr( $description ); ?>"/>
@@ -815,7 +810,6 @@ function um_profile_dynamic_meta_desc() {
 	}
 }
 add_action( 'wp_head', 'um_profile_dynamic_meta_desc', 20 );
-
 
 /**
  * Profile header cover

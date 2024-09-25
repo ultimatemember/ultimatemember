@@ -175,6 +175,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Updated: User bulk actions on WP Users list table
 * Updated: User actions on User Profile and Member Directory card
 * Added: Applying shortcodes from the post restriction message
+* Added: ProfilePage Structured Data
 
 **Bugfixes**
 
@@ -185,6 +186,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: Telegram and Discord social links in profile header
 * Fixed: UM links to empty phone numbers
 * Fixed: Email changing via User Account flush session. Security enhancement because email can be used for login
+* Fixed: User Profile image URL in meta tags
 
 **Templates required update**
 
