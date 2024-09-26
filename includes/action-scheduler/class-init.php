@@ -18,17 +18,84 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 
 		protected $default_group = 'ultimate-member';
 
+		protected $lib_path = UM_PATH . 'includes/lib/action-scheduler/action-scheduler.php';
+
 		public function __construct() {
-			$lib_path = UM_PATH . 'includes/lib/action-scheduler/action-scheduler.php';
-			if ( ! file_exists( $lib_path ) ) {
-				wp_die( esc_html__( 'Error: Action Scheduler library is missing.', 'ultimate-member' ) );
+			if ( ! $this->can_be_active() ) {
+				UM()->admin()->notices()->add_notice(
+					'um-action-scheduler',
+					array(
+						'class' => 'notice-warning is-dismissible',
+						// translators: %1$s - Plugin name, %1$s - Plugin Version
+						'message' => '<p>' . sprintf( __( '<strong>%1$s %2$s</strong> The file needed to enable the Action Scheduler is missing. The plugin will continue to function as it did before, but without the new benefits offered by the Action Scheduler.', 'ultimate-member' ), UM_PLUGIN_NAME, UM_VERSION ) . '</p>',
+					)
+				);
+			} else {
+				add_filter( 'um_settings_structure', array( $this, 'add_setting' ), 10, 1 );
+
+				if ( UM()->options()->get( 'enable_action_scheduler' ) ) {
+					$this->enabled = true;
+				}
+			}
+		}
+
+		/**
+		 * Adds a Action Scheduler setting to Ultimate Member feature settings
+		 *
+		 * @param $settings
+		 *
+		 * @return array
+		 */
+		public function add_setting( $settings ) {
+			$settings['advanced']['sections']['features']['form_sections']['features']['fields'][] = array(
+				'id'             => 'enable_action_scheduler',
+				'type'           => 'checkbox',
+				'label'          => __( 'Action Scheduler', 'ultimate-member' ),
+				'checkbox_label' => __( 'Enable Action Scheduler', 'ultimate-member' ),
+				'description'    => __( 'Check this box if you want to use the Ultimate Member action scheduler. By enabling it, certain tasks like sending system emails will be scheduled to run at optimal times, which can help reduce the load on your server', 'ultimate-member' ),
+			);
+
+			return $settings;
+		}
+
+		/**
+		 * Verifies whether WooCommerce is installed and activated,
+		 * and checks for the existence of the WooCommerce Action Scheduler file.
+		 *
+		 * @return bool
+		 */
+		public function verify_wc_action_scheduler() {
+			if ( ! is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
+				return false;
 			}
 
-			require_once $lib_path;
+			$action_scheduler_file = WP_PLUGIN_DIR . '/woocommerce/packages/action-scheduler/action-scheduler.php';
 
-			if ( UM()->options()->get( 'enable_action_scheduler' ) ) {
-				$this->enabled = true;
+			return file_exists( $action_scheduler_file );
+		}
+
+		/**
+		 * Tries to load Action Scheduler from Ultimate Member if file exists
+		 *
+		 * @return bool
+		 */
+		public function load_library() {
+			if ( file_exists( $this->lib_path ) ) {
+				require_once $this->lib_path;
+
+				return true;
 			}
+
+			return false;
+		}
+
+		/**
+		 * Checks whenever Action Scheduler can be active
+		 *
+		 * @return bool
+		 */
+		public function can_be_active() {
+			return $this->verify_wc_action_scheduler() || $this->load_library();
 		}
 
 		/**
