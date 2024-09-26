@@ -306,7 +306,7 @@ function um_user_edit_profile( $args, $form_data ) {
 			//validation of correct values from options in wp-admin
 			$stripslashes = '';
 			if ( isset( $args['submitted'][ $key ] ) && is_string( $args['submitted'][ $key ] ) ) {
-				$stripslashes = stripslashes( $args['submitted'][ $key ] );
+				$stripslashes = wp_unslash( $args['submitted'][ $key ] );
 			}
 
 			if ( 'select' === $array['type'] ) {
@@ -361,7 +361,7 @@ function um_user_edit_profile( $args, $form_data ) {
 						// translators: %s: title.
 						$args['submitted'][ $key ] = sprintf( __( 'Your choosed %s', 'ultimate-member' ), $array['title'] );
 					} else {
-						if ( isset( $userinfo[ $key ] ) && $args['submitted'][ $key ] != $userinfo[ $key ] ) {
+						if ( isset( $userinfo[ $key ] ) && $args['submitted'][ $key ] !== $userinfo[ $key ] ) {
 							$to_update[ $key ] = $args['submitted'][ $key ];
 						} elseif ( '' !== $args['submitted'][ $key ] ) {
 							$to_update[ $key ] = $args['submitted'][ $key ];
