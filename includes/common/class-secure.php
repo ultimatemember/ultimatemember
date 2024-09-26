@@ -114,7 +114,7 @@ if ( ! class_exists( 'um\common\Secure' ) ) {
 			if ( ! empty( $emails ) ) {
 				foreach ( $emails as $email ) {
 					UM()->maybe_action_scheduler()->enqueue_async_action(
-						'um_mas_send_email',
+						'um_dispatch_email',
 						array(
 							$email,
 							'suspicious-activity',

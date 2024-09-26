@@ -15,7 +15,7 @@ if ( ! class_exists( 'um\common\actions\Emails' ) ) {
 	class Emails {
 
 		public function __construct() {
-			add_action( 'um_mas_send_email', array( $this, 'send' ), 10, 3 );
+			add_action( 'um_dispatch_email', array( $this, 'send' ), 10, 3 );
 		}
 
 		/**

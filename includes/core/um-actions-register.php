@@ -127,9 +127,9 @@ function um_send_registration_notification( $user_id ) {
 	if ( ! empty( $emails ) ) {
 		foreach ( $emails as $email ) {
 			if ( 'pending' !== um_user( 'account_status' ) ) {
-				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_mas_send_email', array( $email, 'notification_new_user', array( 'admin' => true ) ) );
+				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $email, 'notification_new_user', array( 'admin' => true ) ) );
 			} else {
-				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_mas_send_email', array( $email, 'notification_review', array( 'admin' => true ) ) );
+				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $email, 'notification_review', array( 'admin' => true ) ) );
 			}
 		}
 	}
