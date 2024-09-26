@@ -190,6 +190,8 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: Email changing via User Account flush session. Security enhancement because email can be used for login
 * Fixed: User Profile image URL in meta tags
 * Fixed: Empty User Profile and PHP Fatal error when cannot get profile field data
+* Fixed: Parsing /modal/ templates and parsing templates on the Windows hosting
+* Fixed: Validation `form_id` attribute in the `ultimatemember` shortcode
 
 **Templates required update**
 

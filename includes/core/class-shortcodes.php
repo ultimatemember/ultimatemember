@@ -672,6 +672,22 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			$args['form_id']  = ! empty( $args['form_id'] ) ? absint( $args['form_id'] ) : '';
 			$args['is_block'] = (bool) $args['is_block'];
 
+			$form_post = get_post( $args['form_id'] );
+			// Invalid post ID. Maybe post doesn't exist.
+			if ( empty( $form_post ) ) {
+				return '';
+			}
+
+			// Invalid post type. It can be only `um_form` or `um_directory`
+			$post_types = array( 'um_form' );
+			if ( UM()->options()->get( 'members_page' ) ) {
+				$post_types[] = 'um_directory';
+			}
+
+			if ( ! in_array( $form_post->post_type, $post_types, true ) ) {
+				return '';
+			}
+
 			/**
 			 * Filters variable for enable singleton shortcode loading on the same page.
 			 * Note: Set it to `false` if you don't need to render the same form twice or more on the same page.
