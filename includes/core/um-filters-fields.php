@@ -260,7 +260,7 @@ function um_profile_field_filter_hook__textarea( $value, $data ) {
 		return '';
 	}
 	if ( ! empty( $data['html'] ) ) {
-		return $value;
+		return '<iframe class="um-textarea-html-value" title="' . esc_attr( $data['label'] ) . '" srcdoc="' . wp_kses_post( $value ) .'"></iframe>';
 	}
 
 	$description_key = UM()->profile()->get_show_bio_key( UM()->fields()->global_args );

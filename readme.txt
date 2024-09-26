@@ -224,6 +224,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: Sorting by last login value when "Hide my last login" is set
 * Fixed: PHP errors while uploading files
 * Fixed: Parsing error on the license activation
+* Fixed: Saving field value when type is textarea and using HTML is enabled
 
 **Templates required update**
 
