@@ -1670,7 +1670,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				um_fetch_user( $user_id );
 			}
 
-			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_send_deleted_user_email', array( um_user( 'user_email' ), 'changedpw_email' ) );
+			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_mas_send_email', array( um_user( 'user_email' ), 'changedpw_email' ) );
 
 			if ( ! empty( $user_id ) ) {
 				um_reset_user();
@@ -1717,7 +1717,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			} else {
 				//$userdata = get_userdata( $user_id );
 				//get_password_reset_key( $userdata );
-				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_mas_send_email', array( $user_email, 'approved_email' ) );
+				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_mas_send_email', array( $user_email, 'welcome_email' ) );
 			}
 
 			$this->set_status( 'approved' );
