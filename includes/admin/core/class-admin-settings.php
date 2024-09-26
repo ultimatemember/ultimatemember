@@ -2115,13 +2115,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 												'checkbox_label' => __( 'Enable Gutenberg Blocks', 'ultimate-member' ),
 												'description'    => __( 'Check this box if you would like to use Ultimate Member blocks in Gutenberg editor. Important some themes have the conflicts with Gutenberg editor.', 'ultimate-member' ),
 											),
-											array(
-													'id'             => 'enable_action_scheduler',
-													'type'           => 'checkbox',
-													'label'          => __( 'Action Scheduler', 'ultimate-member' ),
-													'checkbox_label' => __( 'Enable Action Scheduler', 'ultimate-member' ),
-													'description'    => __( 'Check this box if you want to use the Ultimate Member action scheduler. By enabling it, certain tasks like sending system emails will be scheduled to run at optimal times, which can help reduce the load on your server', 'ultimate-member' ),
-											),
 											$same_page_update,
 										),
 									),
