@@ -166,7 +166,7 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.8.7 2024-09-26 =
+= 2.8.7 2024-09-30 =
 
 **Enhancements**
 
@@ -174,8 +174,10 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Updated: User status filter on WP Users list table
 * Updated: User bulk actions on WP Users list table
 * Updated: User actions on User Profile and Member Directory card
-* Added: Applying shortcodes from the post restriction message
+* Added: Applying shortcodes in the post restriction message
 * Added: ProfilePage Structured Data
+* Added: Ability to use HTML tags (allowed in `wp_kses_post`) in the global block restriction message
+* Changed: Some wp-admin fields descriptions
 
 **Bugfixes**
 
@@ -187,6 +189,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: UM links to empty phone numbers
 * Fixed: Email changing via User Account flush session. Security enhancement because email can be used for login
 * Fixed: User Profile image URL in meta tags
+* Fixed: Empty User Profile and PHP Fatal error when cannot get profile field data
 
 **Templates required update**
 
