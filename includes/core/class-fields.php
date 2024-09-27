@@ -2110,7 +2110,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			return apply_filters( 'um_field_non_utf8_value', $option_value );
 		}
 
-
 		/**
 		 * Getting the fields that need to be disabled in edit mode (profile)
 		 *

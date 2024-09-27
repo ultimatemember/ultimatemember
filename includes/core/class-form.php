@@ -448,6 +448,11 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 				$ignore_keys = array();
 
+				$arr_restricted_fields = array();
+				if ( 'profile' === $this->form_data['mode'] ) {
+					$arr_restricted_fields = UM()->fields()->get_restricted_fields_for_edit();
+				}
+
 				$field_types_without_metakey = UM()->builtin()->get_fields_without_metakey();
 				foreach ( $custom_fields as $cf_k => $cf_data ) {
 					if ( ! array_key_exists( 'type', $cf_data ) || in_array( $cf_data['type'], $field_types_without_metakey, true ) ) {
@@ -493,7 +498,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					// Column names from wp_users table.
 					$cf_metakeys = array_values( array_diff( $cf_metakeys, array( 'user_login' ) ) );
 					// Hidden for edit fields
-					$cf_metakeys = array_values( array_diff( $cf_metakeys, UM()->fields()->get_restricted_fields_for_edit() ) );
+					$cf_metakeys = array_values( array_diff( $cf_metakeys, $arr_restricted_fields ) );
 
 					$cf_metakeys[] = 'profile_photo';
 					$cf_metakeys[] = 'cover_photo';

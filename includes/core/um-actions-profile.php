@@ -226,6 +226,8 @@ function um_user_edit_profile( $args, $form_data ) {
 
 	// loop through fields
 	if ( ! empty( $fields ) ) {
+		$arr_restricted_fields = UM()->fields()->get_restricted_fields_for_edit( $user_id );
+
 		foreach ( $fields as $key => $array ) {
 			if ( ! isset( $array['type'] ) ) {
 				continue;
@@ -253,8 +255,7 @@ function um_user_edit_profile( $args, $form_data ) {
 			}
 
 			// fields that need to be disabled in edit mode (profile) (email, username, etc.)
-			$arr_restricted_fields = UM()->fields()->get_restricted_fields_for_edit( $user_id );
-			if ( in_array( $key, $arr_restricted_fields, true ) ) {
+			if ( is_array( $arr_restricted_fields ) && in_array( $key, $arr_restricted_fields, true ) ) {
 				continue;
 			}
 
