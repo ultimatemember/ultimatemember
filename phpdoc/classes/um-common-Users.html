@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>Ultimate Member - PHPDoc</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src').replace( /\\/g, '/');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist, is empty or trying to view from localhost';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">Ultimate Member - PHPDoc</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                                                        <li><a href="../namespaces/um.html"><abbr title="\um">normal</abbr></a></li>
+                                                    </ul>
+                    </li>
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">19</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">10</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">66</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-318092425"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-318092425" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-747713552"></a>
+                                <a href="../namespaces/um.html" style="margin-left: 30px; padding-left: 0">um</a>
+            </div>
+            <div id="namespace-747713552" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-2028311481"></a>
+                                <a href="../namespaces/um-admin.html" style="margin-left: 30px; padding-left: 0">admin</a>
+            </div>
+            <div id="namespace-2028311481" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-541529182"></a>
+                                <a href="../namespaces/um-admin-core.html" style="margin-left: 30px; padding-left: 0">core</a>
+            </div>
+            <div id="namespace-541529182" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Ajax-Hooks.html"><abbr title="\um\admin\core\Admin_Ajax_Hooks">Admin_Ajax_Hooks</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Builder.html"><abbr title="\um\admin\core\Admin_Builder">Admin_Builder</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Columns.html"><abbr title="\um\admin\core\Admin_Columns">Admin_Columns</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-DragDrop.html"><abbr title="\um\admin\core\Admin_DragDrop">Admin_DragDrop</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Forms.html"><abbr title="\um\admin\core\Admin_Forms">Admin_Forms</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Forms-Settings.html"><abbr title="\um\admin\core\Admin_Forms_Settings">Admin_Forms_Settings</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-GDPR.html"><abbr title="\um\admin\core\Admin_GDPR">Admin_GDPR</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Menu.html"><abbr title="\um\admin\core\Admin_Menu">Admin_Menu</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Metabox.html"><abbr title="\um\admin\core\Admin_Metabox">Admin_Metabox</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Navmenu.html"><abbr title="\um\admin\core\Admin_Navmenu">Admin_Navmenu</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Notices.html"><abbr title="\um\admin\core\Admin_Notices">Admin_Notices</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Settings.html"><abbr title="\um\admin\core\Admin_Settings">Admin_Settings</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Theme-Updater.html"><abbr title="\um\admin\core\Admin_Theme_Updater">Admin_Theme_Updater</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-core-Admin-Upgrade.html"><abbr title="\um\admin\core\Admin_Upgrade">Admin_Upgrade</abbr></a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/um-admin-Actions-Listener.html"><abbr title="\um\admin\Actions_Listener">Actions_Listener</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-Admin-Functions.html"><abbr title="\um\admin\Admin_Functions">Admin_Functions</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-Enqueue.html"><abbr title="\um\admin\Enqueue">Enqueue</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-Screen.html"><abbr title="\um\admin\Screen">Screen</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-Secure.html"><abbr title="\um\admin\Secure">Secure</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-Site-Health.html"><abbr title="\um\admin\Site_Health">Site_Health</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-admin-Users-Columns.html"><abbr title="\um\admin\Users_Columns">Users_Columns</abbr></a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-490201541"></a>
+                                <a href="../namespaces/um-ajax.html" style="margin-left: 30px; padding-left: 0">ajax</a>
+            </div>
+            <div id="namespace-490201541" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/um-ajax-Forms.html"><abbr title="\um\ajax\Forms">Forms</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-ajax-Init.html"><abbr title="\um\ajax\Init">Init</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-ajax-Pages.html"><abbr title="\um\ajax\Pages">Pages</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-ajax-Secure.html"><abbr title="\um\ajax\Secure">Secure</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-ajax-Users.html"><abbr title="\um\ajax\Users">Users</abbr></a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-460003031"></a>
+                                <a href="../namespaces/um-common.html" style="margin-left: 30px; padding-left: 0">common</a>
+            </div>
+            <div id="namespace-460003031" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/um-common-CPT.html"><abbr title="\um\common\CPT">CPT</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-common-Enqueue.html"><abbr title="\um\common\Enqueue">Enqueue</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-common-Filesystem.html"><abbr title="\um\common\Filesystem">Filesystem</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-common-Init.html"><abbr title="\um\common\Init">Init</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-common-Screen.html"><abbr title="\um\common\Screen">Screen</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-common-Secure.html"><abbr title="\um\common\Secure">Secure</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-common-Site-Health.html"><abbr title="\um\common\Site_Health">Site_Health</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-common-Theme.html"><abbr title="\um\common\Theme">Theme</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-common-Users.html"><abbr title="\um\common\Users">Users</abbr></a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-131438262"></a>
+                                <a href="../namespaces/um-core.html" style="margin-left: 30px; padding-left: 0">core</a>
+            </div>
+            <div id="namespace-131438262" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-9210697"></a>
+                                <a href="../namespaces/um-core-rest.html" style="margin-left: 30px; padding-left: 0">rest</a>
+            </div>
+            <div id="namespace-9210697" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/um-core-rest-API.html"><abbr title="\um\core\rest\API">API</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-rest-API-v1.html"><abbr title="\um\core\rest\API_v1">API_v1</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-rest-API-v2.html"><abbr title="\um\core\rest\API_v2">API_v2</abbr></a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/um-core-Access.html"><abbr title="\um\core\Access">Access</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Account.html"><abbr title="\um\core\Account">Account</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-AJAX-Common.html"><abbr title="\um\core\AJAX_Common">AJAX_Common</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Blocks.html"><abbr title="\um\core\Blocks">Blocks</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Builtin.html"><abbr title="\um\core\Builtin">Builtin</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Cron.html"><abbr title="\um\core\Cron">Cron</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Date-Time.html"><abbr title="\um\core\Date_Time">Date_Time</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-External-Integrations.html"><abbr title="\um\core\External_Integrations">External_Integrations</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Fields.html"><abbr title="\um\core\Fields">Fields</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Files.html"><abbr title="\um\core\Files">Files</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-FontIcons.html"><abbr title="\um\core\FontIcons">FontIcons</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Form.html"><abbr title="\um\core\Form">Form</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-GDPR.html"><abbr title="\um\core\GDPR">GDPR</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Login.html"><abbr title="\um\core\Login">Login</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Logout.html"><abbr title="\um\core\Logout">Logout</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Mail.html"><abbr title="\um\core\Mail">Mail</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Member-Directory.html"><abbr title="\um\core\Member_Directory">Member_Directory</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Member-Directory-Meta.html"><abbr title="\um\core\Member_Directory_Meta">Member_Directory_Meta</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Multisite.html"><abbr title="\um\core\Multisite">Multisite</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Options.html"><abbr title="\um\core\Options">Options</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Password.html"><abbr title="\um\core\Password">Password</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Permalinks.html"><abbr title="\um\core\Permalinks">Permalinks</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Plugin-Updater.html"><abbr title="\um\core\Plugin_Updater">Plugin_Updater</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Profile.html"><abbr title="\um\core\Profile">Profile</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Query.html"><abbr title="\um\core\Query">Query</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Register.html"><abbr title="\um\core\Register">Register</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Rewrite.html"><abbr title="\um\core\Rewrite">Rewrite</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Roles-Capabilities.html"><abbr title="\um\core\Roles_Capabilities">Roles_Capabilities</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Setup.html"><abbr title="\um\core\Setup">Setup</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Shortcodes.html"><abbr title="\um\core\Shortcodes">Shortcodes</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Templates.html"><abbr title="\um\core\Templates">Templates</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Uploader.html"><abbr title="\um\core\Uploader">Uploader</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-User.html"><abbr title="\um\core\User">User</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-User-posts.html"><abbr title="\um\core\User_posts">User_posts</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-core-Validation.html"><abbr title="\um\core\Validation">Validation</abbr></a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-710563087"></a>
+                                <a href="../namespaces/um-frontend.html" style="margin-left: 30px; padding-left: 0">frontend</a>
+            </div>
+            <div id="namespace-710563087" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/um-frontend-Actions-Listener.html"><abbr title="\um\frontend\Actions_Listener">Actions_Listener</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-frontend-Enqueue.html"><abbr title="\um\frontend\Enqueue">Enqueue</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-frontend-Init.html"><abbr title="\um\frontend\Init">Init</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-frontend-Modal.html"><abbr title="\um\frontend\Modal">Modal</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-frontend-Secure.html"><abbr title="\um\frontend\Secure">Secure</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-frontend-User-Profile.html"><abbr title="\um\frontend\User_Profile">User_Profile</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-frontend-Users.html"><abbr title="\um\frontend\Users">Users</abbr></a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1776954466"></a>
+                                <a href="../namespaces/um-lib.html" style="margin-left: 30px; padding-left: 0">lib</a>
+            </div>
+            <div id="namespace-1776954466" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-402091014"></a>
+                                <a href="../namespaces/um-lib-mobiledetect.html" style="margin-left: 30px; padding-left: 0">mobiledetect</a>
+            </div>
+            <div id="namespace-402091014" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/um-lib-mobiledetect-Um-Mobile-Detect.html"><abbr title="\um\lib\mobiledetect\Um_Mobile_Detect">Um_Mobile_Detect</abbr></a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1751822538"></a>
+                                <a href="../namespaces/um-widgets.html" style="margin-left: 30px; padding-left: 0">widgets</a>
+            </div>
+            <div id="namespace-1751822538" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/um-widgets-UM-Search-Widget.html"><abbr title="\um\widgets\UM_Search_Widget">UM_Search_Widget</abbr></a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/um-Config.html"><abbr title="\um\Config">Config</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-Dependencies.html"><abbr title="\um\Dependencies">Dependencies</abbr></a></li>
+                                                    <li class="class"><a href="../classes/um-Extensions.html"><abbr title="\um\Extensions">Extensions</abbr></a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Array2XML.html"><abbr title="\Array2XML">Array2XML</abbr></a></li>
+                                                    <li class="class"><a href="../classes/UM-Emails-List-Table.html"><abbr title="\UM_Emails_List_Table">UM_Emails_List_Table</abbr></a></li>
+                                                    <li class="class"><a href="../classes/UM-Functions.html"><abbr title="\UM_Functions">UM_Functions</abbr></a></li>
+                                                    <li class="class"><a href="../classes/UM-Roles-List-Table.html"><abbr title="\UM_Roles_List_Table">UM_Roles_List_Table</abbr></a></li>
+                                                    <li class="class"><a href="../classes/UM-Versions-List-Table.html"><abbr title="\UM_Versions_List_Table">UM_Versions_List_Table</abbr></a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/um-common.html"><abbr title="\um\common">normal</abbr></a> <i class="icon-level-up"></i>
+                                            </nav>
+                    
+                    <h1><small>\um\common</small>Users</h1>
+                    <p><em>Class Users</em></p>
+                    
+                    
+                                        
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/um-common-Users.html#method_hooks" class="">hooks()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_map_caps_by_role" class="">map_caps_by_role()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_restrict_roles" class="">restrict_roles()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_statuses_list" class="">statuses_list()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_set_status" class="">set_status()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_get_status" class="">get_status()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_has_status" class="">has_status()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_remove_cache" class="">remove_cache()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_reset_activation_link" class="">reset_activation_link()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_assign_secretkey" class="">assign_secretkey()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_maybe_generate_password_reset_key" class="">maybe_generate_password_reset_key()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_can_current_user_edit_user" class="">can_current_user_edit_user()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_can_activation_send" class="">can_activation_send()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_send_activation" class="">send_activation()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_can_be_deactivated" class="">can_be_deactivated()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_deactivate" class="">deactivate()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_can_be_rejected" class="">can_be_rejected()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_reject" class="">reject()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_can_be_set_as_pending" class="">can_be_set_as_pending()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_set_as_pending" class="">set_as_pending()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_can_be_approved" class="">can_be_approved()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_approve" class="">approve()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_can_be_reactivated" class="">can_be_reactivated()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_reactivate" class="">reactivate()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_user_exists" class="">user_exists()</a><br />
+                                                                    <a href="../classes/um-common-Users.html#method_destroy_all_sessions" class="">destroy_all_sessions()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No public properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No constants found</em>
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No protected properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <em>No private methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No private properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/includes-common-class-users.html"><div class="path-wrapper">includes/common/class-users.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">um\common</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                    <div class="namespace-wrapper">\um\common\Users</div>
+                            </dd>
+
+                        
+                        
+                        
+                                                
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr><td colspan="2"><em>None found</em></td></tr>
+                                        </table>
+                </aside>
+            </div>
+
+                        
+                        
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_hooks" name="method_hooks" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">hooks()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">hooks() : mixed</pre>
+                <p><em></em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_map_caps_by_role" name="method_map_caps_by_role" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">map_caps_by_role()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">map_caps_by_role(bool[]  <span class="argument">$allcaps</span>, string[]  <span class="argument">$caps</span>, array  <span class="argument">$args</span>) : bool[]</pre>
+                <p><em>Restrict the edit/delete users via wp-admin screen due UM role capabilities</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>bool[]</td>
+                                <td>$allcaps </td>
+                                <td><p>Array of key/value pairs where keys represent a capability name
+and boolean values represent whether the user has that capability.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string[]</td>
+                                <td>$caps </td>
+                                <td><p>Required primitive capabilities for the requested capability.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$args </td>
+                                <td><p>{
+Arguments that accompany the requested capability check.</p>
+<pre class="prettyprint"><code class="prettyprint">@type string $0 Requested capability.
+@type int    $1 Concerned user ID.
+@type mixed  ...$2 Optional second and further parameters, typically object ID.</code></pre>
+<p>}</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool[]
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_restrict_roles" name="method_restrict_roles" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">restrict_roles()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">restrict_roles(array  <span class="argument">$roles</span>) : array</pre>
+                <p><em>Hide role filters with not accessible roles</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$roles </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_statuses_list" name="method_statuses_list" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">statuses_list()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">statuses_list() : array</pre>
+                <p><em>Get the user statuses list.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_set_status" name="method_set_status" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">set_status()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">set_status(int  <span class="argument">$user_id</span>, string  <span class="argument">$status</span>) : bool</pre>
+                <p><em>Set user&#039;s account status.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>int</td>
+                                <td>$user_id </td>
+                                <td><p>User ID.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$status </td>
+                                <td><p>Status key.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_status" name="method_get_status" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_status()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_status(int  <span class="argument">$user_id</span>, mixed  <span class="argument">$format = &#039;raw&#039;</span>) : string</pre>
+                <p><em>Get user account status.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>int</td>
+                                <td>$user_id </td>
+                                <td><p>User ID</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>mixed</td>
+                                <td>$format </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_has_status" name="method_has_status" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">has_status()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">has_status(int  <span class="argument">$user_id</span>, string  <span class="argument">$status_control</span>) : bool</pre>
+                <p><em>Check if user has selected account status.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>int</td>
+                                <td>$user_id </td>
+                                <td><p>User ID.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$status_control </td>
+                                <td><p>Status key.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.8.7                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_remove_cache" name="method_remove_cache" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">remove_cache()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">remove_cache(int  <span class="argument">$user_id</span>) : mixed</pre>
+                <p><em>Reset User cache</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>int</td>
+                                <td>$user_id </td>
+                                <td><p>User ID.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_reset_activation_link" name="method_reset_activation_link" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">reset_activation_link()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">reset_activation_link(int  <span class="argument">$user_id</span>) : mixed</pre>
+                <p><em>Reset Activation link hash.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>int</td>
+                                <td>$user_id </td>
+                                <td><p>User ID.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_assign_secretkey" name="method_assign_secretkey" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">assign_secretkey()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">assign_secretkey(int  <span class="argument">$user_id</span>) : mixed</pre>
+                <p><em>Set user&#039;s activation link hash</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>int</td>
+                                <td>$user_id </td>
+                                <td><p>User ID.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_maybe_generate_password_reset_key" name="method_maybe_generate_password_reset_key" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">maybe_generate_password_reset_key()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">maybe_generate_password_reset_key(\WP_User  <span class="argument">$userdata</span>) : string|\WP_Error</pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>\WP_User</td>
+                                <td>$userdata </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string|\WP_Error
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_can_current_user_edit_user" name="method_can_current_user_edit_user" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">can_current_user_edit_user()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">can_current_user_edit_user(int  <span class="argument">$user_id</span>) : bool</pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>int</td>
+                                <td>$user_id </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_can_activation_send" name="method_can_activation_send" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">can_activation_send()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">can_activation_send(int  <span class="argument">$user_id</span>, bool  <span class="argument">$force = false</span>) : bool</pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>int</td>
+                                <td>$user_id </td>
+                                <td><p>User ID.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>bool</td>
+                                <td>$force </td>
+                                <td><p>If true - ignore current user condition.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_send_activation" name="method_send_activation" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">send_activation()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">send_activation(int  <span class="argument">$user_id</span>, bool  <span class="argument">$force = false</span>) : bool</pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>int</td>
+                                <td>$user_id </td>
+                                <td><p>User ID.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>bool</td>
+                                <td>$force </td>
+                                <td><p>If true - ignore current user condition.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_can_be_deactivated" name="method_can_be_deactivated" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">can_be_deactivated()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">can_be_deactivated(int  <span class="argument">$user_id</span>, bool  <span class="argument">$force = false</span>) : bool</pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>int</td>
+                                <td>$user_id </td>
+                                <td><p>User ID.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>bool</td>
+                                <td>$force </td>
+                                <td><p>If true - ignore current user condition.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_deactivate" name="method_deactivate" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">deactivate()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">deactivate(int  <span class="argument">$user_id</span>, bool  <span class="argument">$force = false</span>) : bool</pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>int</td>
+                                <td>$user_id </td>
+                                <td><p>User ID.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>bool</td>
+                                <td>$force </td>
+                                <td><p>If true - ignore current user condition.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_can_be_rejected" name="method_can_be_rejected" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">can_be_rejected()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">can_be_rejected(int  <span class="argument">$user_id</span>, bool  <span class="argument">$force = false</span>) : bool</pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>int</td>
+                                <td>$user_id </td>
+                                <td><p>User ID.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>bool</td>
+                                <td>$force </td>
+                                <td><p>If true - ignore current user condition.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_reject" name="method_reject" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">reject()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">reject(int  <span class="argument">$user_id</span>, bool  <span class="argument">$force = false</span>) : bool</pre>
+                <p><em>Reject user membership.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>int</td>
+                                <td>$user_id </td>
+                                <td><p>User ID.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>bool</td>
+                                <td>$force </td>
+                                <td><p>If true - ignore current user condition.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_can_be_set_as_pending" name="method_can_be_set_as_pending" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">can_be_set_as_pending()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">can_be_set_as_pending(int  <span class="argument">$user_id</span>, bool  <span class="argument">$force = false</span>) : bool</pre>
+                <p><em>Check if the user can be set as pending admin review.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>int</td>
+                                <td>$user_id </td>
+                                <td><p>User ID.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>bool</td>
+                                <td>$force </td>
+                                <td><p>If true - ignore current user condition.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_set_as_pending" name="method_set_as_pending" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">set_as_pending()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">set_as_pending(int  <span class="argument">$user_id</span>, bool  <span class="argument">$force = false</span>) : bool</pre>
+                <p><em>Set user as pending admin review.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>int</td>
+                                <td>$user_id </td>
+                                <td><p>User ID.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>bool</td>
+                                <td>$force </td>
+                                <td><p>If true - ignore current user condition.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_can_be_approved" name="method_can_be_approved" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">can_be_approved()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">can_be_approved(int  <span class="argument">$user_id</span>, bool  <span class="argument">$force = false</span>) : bool</pre>
+                <p><em>Check if the user can be approved.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>int</td>
+                                <td>$user_id </td>
+                                <td><p>User ID.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>bool</td>
+                                <td>$force </td>
+                                <td><p>If true - ignore current user condition.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_approve" name="method_approve" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">approve()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">approve(int  <span class="argument">$user_id</span>, bool  <span class="argument">$force = false</span>) : bool</pre>
+                <p><em>Approve user.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>int</td>
+                                <td>$user_id </td>
+                                <td><p>User ID.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>bool</td>
+                                <td>$force </td>
+                                <td><p>If true - ignore current user condition.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                            &mdash; <p><code class="prettyprint">true</code> if the user has been approved
+<code class="prettyprint">false</code> on failure or if the user already has approved status.</p>
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_can_be_reactivated" name="method_can_be_reactivated" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">can_be_reactivated()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">can_be_reactivated(int  <span class="argument">$user_id</span>, bool  <span class="argument">$force = false</span>) : bool</pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>int</td>
+                                <td>$user_id </td>
+                                <td><p>User ID.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>bool</td>
+                                <td>$force </td>
+                                <td><p>If true - ignore current user condition.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_reactivate" name="method_reactivate" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">reactivate()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">reactivate(int  <span class="argument">$user_id</span>, bool  <span class="argument">$force = false</span>) : bool</pre>
+                <p><em>Reactivate user.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>int</td>
+                                <td>$user_id </td>
+                                <td><p>User ID.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>bool</td>
+                                <td>$force </td>
+                                <td><p>If true - ignore current user condition.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                            &mdash; <p><code class="prettyprint">true</code> if the user has been reactivated
+<code class="prettyprint">false</code> on failure or if the user already has approved status.</p>
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_user_exists" name="method_user_exists" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">user_exists()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">user_exists(int  <span class="argument">$user_id</span>) : bool</pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>int</td>
+                                <td>$user_id </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_destroy_all_sessions" name="method_destroy_all_sessions" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">destroy_all_sessions()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">destroy_all_sessions(int  <span class="argument">$user_id</span>) : void</pre>
+                <p><em>Clear all sessions for user ID.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>int</td>
+                                <td>$user_id </td>
+                                <td><p>User ID.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/um-common-Users.html"><div class="path-wrapper">\um\common\Users</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">class-users.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/includes/common/class-users.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                            <li><a href="../namespaces/um.html"><abbr title="\um">normal</abbr></a></li>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on September 27th, 2024 at 15:07.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

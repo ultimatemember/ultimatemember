@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: includes/admin/class-users-columns.php - Ultimate Member Hook Docs</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+
+	<link href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono|IBM+Plex+Sans:300,400|Playfair+Display:900&display=swap" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="styles-um.css">
+</head>
+
+<body>
+
+<div id="main">
+
+	
+    <h1 class="page-title">Source: includes/admin/class-users-columns.php</h1>
+	
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>&lt;?php
+namespace um\admin;
+
+use WP_User;
+use WP_User_Query;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
+
+	/**
+	 * Class Users_Columns
+	 *
+	 * @package um\admin
+	 */
+	class Users_Columns {
+
+		/**
+		 * Users_Columns constructor.
+		 */
+		public function __construct() {
+			add_filter( 'manage_users_columns', array( &amp;$this, 'manage_users_columns' ) );
+			add_filter( 'manage_users_custom_column', array( &amp;$this, 'manage_users_custom_column' ), 10, 3 );
+
+			add_action( 'pre_user_query', array( &amp;$this, 'sort_by_newest' ) );
+			add_filter( 'users_list_table_query_args', array( &amp;$this, 'hide_by_caps' ), 1 );
+			add_filter( 'views_users', array( &amp;$this, 'restrict_role_links' ) );
+
+			add_filter( 'user_row_actions', array( &amp;$this, 'user_row_actions' ), 10, 2 );
+			add_filter( 'bulk_actions-users', array( &amp;$this, 'add_bulk_actions' ) );
+			add_filter( 'handle_bulk_actions-users', array( &amp;$this, 'handle_bulk_actions' ), 10, 3 );
+
+			add_action( 'manage_users_extra_tablenav', array( &amp;$this, 'add_status_filter' ) );
+			add_action( 'pre_user_query', array( &amp;$this, 'filter_users_by_status' ) );
+
+			add_filter( 'removable_query_args', array( &amp;$this, 'add_removable_query_args' ) );
+		}
+
+		/**
+		 * Filter: Add column 'Status'
+		 *
+		 * @param array $columns
+		 *
+		 * @return array
+		 */
+		public function manage_users_columns( $columns ) {
+			$columns['um_account_status'] = __( 'Status', 'ultimate-member' );
+			return $columns;
+		}
+
+		/**
+		 * Filter: Show column 'Status'
+		 *
+		 * @param string $value
+		 * @param string $column_name
+		 * @param int    $user_id
+		 *
+		 * @return string
+		 */
+		public function manage_users_custom_column( $value, $column_name, $user_id ) {
+			if ( 'um_account_status' !== $column_name ) {
+				return $value;
+			}
+
+			$status = UM()->common()->users()->get_status( $user_id, 'formatted' );
+
+			$status = apply_filters( 'um_users_column_account_status', $status, $user_id );
+
+			$value = '&lt;span class="um-user-status">' . esc_html( $status ) . '&lt;/span>';
+
+			if ( get_current_user_id() === $user_id ) {
+				return $value;
+			}
+
+			$row_actions = array();
+			if ( UM()->common()->users()->can_be_approved( $user_id ) ) {
+				$url = add_query_arg(
+					array(
+						'um_adm_action' => 'approve_user',
+						'uid'           => $user_id,
+						'_wpnonce'      => wp_create_nonce( 'approve_user' . $user_id ),
+					),
+					admin_url( 'users.php' )
+				);
+				$row_actions[] = '&lt;a href="' . esc_url( $url ) . '" class="um-set-status-approved">' . esc_html__( 'Approve', 'ultimate-member' ) . '&lt;/a>';
+			}
+			if ( UM()->common()->users()->can_be_reactivated( $user_id ) ) {
+				$url = add_query_arg(
+					array(
+						'um_adm_action' => 'reactivate_user',
+						'uid'           => $user_id,
+						'_wpnonce'      => wp_create_nonce( 'reactivate_user' . $user_id ),
+					),
+					admin_url( 'users.php' )
+				);
+				$row_actions[] = '&lt;a href="' . esc_url( $url ) . '" class="um-reactivate-user">' . esc_html__( 'Reactivate', 'ultimate-member' ) . '&lt;/a>';
+			}
+			if ( UM()->common()->users()->can_be_set_as_pending( $user_id ) ) {
+				$url = add_query_arg(
+					array(
+						'um_adm_action' => 'put_user_as_pending',
+						'uid'           => $user_id,
+						'_wpnonce'      => wp_create_nonce( 'put_user_as_pending' . $user_id ),
+					),
+					admin_url( 'users.php' )
+				);
+				$row_actions[] = '&lt;a href="' . esc_url( $url ) . '" class="um-set-status-pending">' . esc_html__( 'Put as pending', 'ultimate-member' ) . '&lt;/a>';
+			}
+			if ( UM()->common()->users()->can_activation_send( $user_id ) ) {
+				$url = add_query_arg(
+					array(
+						'um_adm_action' => 'resend_user_activation',
+						'uid'           => $user_id,
+						'_wpnonce'      => wp_create_nonce( 'resend_user_activation' . $user_id ),
+					),
+					admin_url( 'users.php' )
+				);
+				$row_actions[] = '&lt;a href="' . esc_url( $url ) . '" class="um-resend-activation-email">' . esc_html__( 'Resend activation email', 'ultimate-member' ) . '&lt;/a>';
+			}
+			if ( UM()->common()->users()->can_be_rejected( $user_id ) ) {
+				$url = add_query_arg(
+					array(
+						'um_adm_action' => 'reject_user',
+						'uid'           => $user_id,
+						'_wpnonce'      => wp_create_nonce( 'reject_user' . $user_id ),
+					),
+					admin_url( 'users.php' )
+				);
+				$row_actions[] = '&lt;a href="' . esc_url( $url ) . '" class="um-set-status-rejected" onclick="return confirm( \'' . esc_js( __( 'Are you sure you want to reject this user membership?', 'ultimate-member' ) ) . '\' );">' . esc_html__( 'Reject', 'ultimate-member' ) . '&lt;/a>';
+			}
+			if ( UM()->common()->users()->can_be_deactivated( $user_id ) ) {
+				$url = add_query_arg(
+					array(
+						'um_adm_action' => 'deactivate_user',
+						'uid'           => $user_id,
+						'_wpnonce'      => wp_create_nonce( 'deactivate_user' . $user_id ),
+					),
+					admin_url( 'users.php' )
+				);
+				$row_actions[] = '&lt;a href="' . esc_url( $url ) . '" class="um-deactivate-user" onclick="return confirm( \'' . esc_js( __( 'Are you sure you want to deactivate this user?', 'ultimate-member' ) ) . '\' );">' . esc_html__( 'Deactivate', 'ultimate-member' ) . '&lt;/a>';
+			}
+
+			$row_actions = apply_filters( 'um_users_column_account_status_row_actions', $row_actions, $user_id );
+			if ( ! empty( $row_actions ) ) {
+				$value .= '&lt;div class="row-actions">&lt;ul class="um-user-status-row-actions">&lt;li>' . implode( '&lt;/li>&lt;li> | &lt;/li>&lt;li>', $row_actions ) . '&lt;/li>&lt;/ul>&lt;/div>';
+			}
+			return $value;
+		}
+
+		/**
+		 * Change default sorting at WP Users list table
+		 *
+		 * @param WP_User_Query $query Current instance of WP_User_Query (passed by reference).
+		 */
+		public function sort_by_newest( $query ) {
+			global $pagenow;
+
+			// phpcs:ignore WordPress.Security.NonceVerification -- situated in WP native query and just checking sorting
+			if ( 'users.php' === $pagenow &amp;&amp; ! isset( $_REQUEST['orderby'] ) &amp;&amp; is_admin() ) {
+				$query->query_vars['order'] = 'desc';
+				$query->query_orderby       = ' ORDER BY user_registered DESC';
+			}
+		}
+
+		/**
+		 * Hide users who are hidden by role access for not Administrator user
+		 *
+		 * @param array $args Arguments passed to WP_User_Query to retrieve items for the current
+		 *                    users list table
+		 *
+		 * @return array
+		 */
+		public function hide_by_caps( $args ) {
+			if ( current_user_can( 'manage_options' ) ) {
+				return $args;
+			}
+
+			// @todo avoid um_user() function using
+			// @todo check another restrictions not only the role settings. We need to exclude users per user ID.
+			$can_view_roles = um_user( 'can_view_roles' );
+			if ( ! empty( $can_view_roles ) &amp;&amp; um_user( 'can_view_all' ) ) {
+				$args['role__in'] = $can_view_roles;
+			}
+
+			return $args;
+		}
+
+		/**
+		 * Hide role filters with not accessible roles
+		 *
+		 * @param array $views
+		 * @return array
+		 */
+		public function restrict_role_links( $views ) {
+			if ( current_user_can( 'manage_options' ) ) {
+				return $views;
+			}
+
+			$can_view_roles = um_user( 'can_view_roles' );
+			if ( ! empty( $can_view_roles ) &amp;&amp; um_user( 'can_view_all' ) ) {
+				$wp_roles = wp_roles();
+				foreach ( $wp_roles->get_names() as $this_role => $name ) {
+					if ( ! in_array( $this_role, $can_view_roles, true ) ) {
+						unset( $views[ $this_role ] );
+					}
+				}
+			}
+
+			return $views;
+		}
+
+		/**
+		 * Custom row actions for users page
+		 *
+		 * @param array   $actions
+		 * @param WP_User $user_object
+		 *
+		 * @return array
+		 */
+		public function user_row_actions( $actions, $user_object ) {
+			$user_id = $user_object->ID;
+
+			// Link to Ultimate Member Profile.
+			$actions['frontend_profile'] = '&lt;a href="' . esc_url( um_user_profile_url( $user_id ) ) . '">' . esc_html__( 'View profile', 'ultimate-member' ) . '&lt;/a>';
+
+			// The link for open popup with the registration data submitted through Ultimate Member Registration form.
+			$submitted = get_user_meta( $user_id, 'submitted', true );
+			if ( ! empty( $submitted ) ) {
+				$actions['view_info'] = '&lt;a href="#" data-modal="UM_preview_registration" data-modal-size="smaller"
+				data-dynamic-content="um_admin_review_registration" data-arg1="' . esc_attr( $user_id ) . '" data-arg2="edit_registration">' . esc_html__( 'Info', 'ultimate-member' ) . '&lt;/a>';
+				// For new modal below.
+				// $actions['view_info'] = '&lt;a href="#" class="um-preview-registration" data-user_id="' . esc_attr( $user_id ) . '">' . esc_html__( 'Info', 'ultimate-member' ) . '&lt;/a>';
+			}
+
+			// Remove row actions for now Administrator role and who cannot view profiles of row's user.
+			if ( ! current_user_can( 'manage_options' ) &amp;&amp; ! um_can_view_profile( $user_id ) ) {
+				unset( $actions['frontend_profile'], $actions['view_info'], $actions['view'] );
+			}
+
+			/**
+			 * Filters the rows actions for the user in wp-admin > Users List Table screen.
+			 *
+			 * Note: Row actions format is 'key' => 'action_link_html'
+			 *
+			 * @since 1.3.x
+			 * @hook  um_admin_user_row_actions
+			 *
+			 * @param {array} $actions User's row actions.
+			 * @param {int}   $user_id Row's user ID.
+			 *
+			 * @return {array} User's row actions.
+			 */
+			return apply_filters( 'um_admin_user_row_actions', $actions, $user_id );
+		}
+
+		/**
+		 * Get the list with the bulk actions.
+		 *
+		 * @return array
+		 */
+		private function get_user_bulk_actions() {
+			$um_actions = array(
+				'um_approve_membership' => __( 'Approve Membership', 'ultimate-member' ),
+				'um_reject_membership'  => __( 'Reject Membership', 'ultimate-member' ),
+				'um_put_as_pending'     => __( 'Put as Pending Review', 'ultimate-member' ),
+				'um_resend_activation'  => __( 'Resend Activation E-mail', 'ultimate-member' ),
+				'um_deactivate'         => __( 'Deactivate', 'ultimate-member' ),
+				'um_reactivate'         => __( 'Reactivate', 'ultimate-member' ), // um_reenable
+			);
+			/**
+			 * Filters wp-admin > Users List Table bulk actions.
+			 *
+			 * @since 1.3.x
+			 * @since 2.8.7 changed format from `$action_slug => array( 'label' => $action_title )` to `$action_slug => $action_title`
+			 * @hook um_admin_bulk_user_actions_hook
+			 *
+			 * @param {array} $um_actions Users admin actions.
+			 *
+			 * @return {array} Users admin actions.
+			 *
+			 * @example &lt;caption>Add `$action_title` to Users List Table bulk actions.&lt;/caption>
+			 * function um_custom_admin_bulk_user_actions_hook( $um_actions ) {
+			 *     $um_actions[ $action_slug ] = $action_title;
+			 *     return $um_actions;
+			 * }
+			 * add_filter( 'um_admin_bulk_user_actions_hook', 'um_custom_admin_bulk_user_actions_hook' );
+			 */
+			return apply_filters( 'um_admin_bulk_user_actions_hook', $um_actions );
+		}
+
+		/**
+		 * @param array $actions
+		 *
+		 * @return array
+		 */
+		public function add_bulk_actions( $actions ) {
+			$rolename = UM()->roles()->get_priority_user_role( get_current_user_id() );
+			$role     = get_role( $rolename );
+
+			if ( null === $role ) {
+				return $actions;
+			}
+
+			// Add Ultimate Member bulk actions only when the current user has 'edit_users' capability.
+			if ( ! current_user_can( 'edit_users' ) &amp;&amp; ! $role->has_cap( 'edit_users' ) ) {
+				return $actions;
+			}
+
+			$actions[ esc_html__( 'Ultimate Member', 'ultimate-member' ) ] = $this->get_user_bulk_actions();
+			return $actions;
+		}
+
+		private function get_statuses_filter_options() {
+			$statuses = UM()->common()->users()->statuses_list();
+			/**
+			 * Filters the user statuses added via Ultimate Member plugin.
+			 *
+			 * Note: Statuses format is 'key' => 'title'
+			 *
+			 * @since 2.8.7
+			 * @hook  um_user_statuses_admin_filter_options
+			 *
+			 * @param {array} $statuses User statuses in Ultimate Member environment.
+			 *
+			 * @return {array} User statuses.
+			 */
+			return apply_filters( 'um_user_statuses_admin_filter_options', $statuses );
+		}
+
+		/**
+		 * Adds HTML with the filter by the Ultimate Member status.
+		 *
+		 * @param string $which Where the callback's hook fired.
+		 */
+		public function add_status_filter( $which ) {
+			if ( 'top' !== $which ) {
+				return;
+			}
+
+			// Set default statuses if not already done.
+			UM()->setup()->set_default_user_status();
+
+			$id = 'um_user_status';
+
+			// need to add there additional nonce field because WordPress native _wpnonce field isn't visible on the users.php screen then custom actions
+			wp_nonce_field( 'um-bulk-users', '_um_wpnonce', false );
+
+			$statuses = $this->get_statuses_filter_options();
+			?>
+			&lt;div class="alignleft actions um-filter-by-status">
+				&lt;label class="screen-reader-text" for="&lt;?php echo esc_attr( $id ); ?>">&lt;?php esc_html_e( 'All Statuses', 'ultimate-member' ); ?>&lt;/label>
+				&lt;select name="&lt;?php echo esc_attr( $id ); ?>" id="&lt;?php echo esc_attr( $id ); ?>">
+					&lt;option value="">&lt;?php esc_html_e( 'All Statuses', 'ultimate-member' ); ?>&lt;/option>
+					&lt;?php
+					foreach ( $statuses as $k => $v ) {
+						$selected = isset( $_GET[ $id ] ) &amp;&amp; sanitize_key( $_GET[ $id ] ) === $k; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- native WordPress nonce is used
+						?>
+						&lt;option value="&lt;?php echo esc_attr( $k ); ?>" &lt;?php selected( $selected ); ?>>&lt;?php echo esc_html( $v ); ?>&lt;/option>
+						&lt;?php
+					}
+					?>
+				&lt;/select>
+				&lt;?php submit_button( __( 'Filter', 'ultimate-member' ), '', 'um_filter_users', false ); ?>
+			&lt;/div>
+			&lt;?php
+		}
+
+		/**
+		 * Function for handling custom bulk actions on the Users List Table
+		 *
+		 * @param string $sendback       URL for redirect after handling bulk action
+		 * @param string $current_action Bulk action key
+		 * @param array $userids         User IDs
+		 *
+		 * @return string URL for redirect after handling bulk action
+		 */
+		public function handle_bulk_actions( $sendback, $current_action, $userids ) {
+			$um_actions = $this->get_user_bulk_actions();
+
+			if ( ! array_key_exists( $current_action, $um_actions ) ) {
+				return $sendback;
+			}
+
+			// need to handle there additional nonce field because WordPress native _wpnonce field isn't visible on the users.php screen then custom actions
+			check_admin_referer( 'um-bulk-users', '_um_wpnonce' );
+
+			$rolename = UM()->roles()->get_priority_user_role( get_current_user_id() );
+			$role     = get_role( $rolename );
+
+			if ( null === $role ) {
+				return $sendback;
+			}
+
+			// Make Ultimate Member bulk actions only when the current user has 'edit_users' capability.
+			if ( ! current_user_can( 'edit_users' ) &amp;&amp; ! $role->has_cap( 'edit_users' ) ) {
+				wp_die( esc_html__( 'You do not have enough permissions to do that.', 'ultimate-member' ) );
+			}
+
+			$users = array_map( 'absint', $userids );
+			$users = array_diff( $users, array( get_current_user_id() ) ); // cannot make any action related to himself.
+
+			switch ( $current_action ) {
+				case 'um_approve_membership':
+					$approved_count = 0;
+					foreach ( $users as $user_id ) {
+						$res = UM()->common()->users()->approve( $user_id );
+						if ( $res ) {
+							++$approved_count;
+						}
+					}
+
+					$sendback = add_query_arg(
+						array(
+							'approved_count' => $approved_count,
+							'update'         => 'um_approved',
+						),
+						$this->set_redirect_uri( $sendback )
+					);
+					break;
+
+				case 'um_reactivate':
+					$reactivated_count = 0;
+					foreach ( $users as $user_id ) {
+						$res = UM()->common()->users()->reactivate( $user_id );
+						if ( $res ) {
+							++$reactivated_count;
+						}
+					}
+
+					$sendback = add_query_arg(
+						array(
+							'reactivated_count' => $reactivated_count,
+							'update'            => 'um_reactivated',
+						),
+						$this->set_redirect_uri( $sendback )
+					);
+					break;
+
+				case 'um_reject_membership':
+					$rejected_count = 0;
+					foreach ( $users as $user_id ) {
+						$res = UM()->common()->users()->reject( $user_id );
+						if ( $res ) {
+							++$rejected_count;
+						}
+					}
+
+					$sendback = add_query_arg(
+						array(
+							'rejected_count' => $rejected_count,
+							'update'         => 'um_rejected',
+						),
+						$this->set_redirect_uri( $sendback )
+					);
+					break;
+
+				case 'um_deactivate':
+					$deactivated_count = 0;
+					foreach ( $users as $user_id ) {
+						$res = UM()->common()->users()->deactivate( $user_id );
+						if ( $res ) {
+							++$deactivated_count;
+						}
+					}
+
+					$sendback = add_query_arg(
+						array(
+							'deactivated_count' => $deactivated_count,
+							'update'            => 'um_deactivate',
+						),
+						$this->set_redirect_uri( $sendback )
+					);
+					break;
+
+				case 'um_put_as_pending':
+					$pending_count = 0;
+					foreach ( $users as $user_id ) {
+						$res = UM()->common()->users()->set_as_pending( $user_id );
+						if ( $res ) {
+							++$pending_count;
+						}
+					}
+
+					$sendback = add_query_arg(
+						array(
+							'pending_count' => $pending_count,
+							'update'        => 'um_pending',
+						),
+						$this->set_redirect_uri( $sendback )
+					);
+					break;
+
+				case 'um_resend_activation':
+					$email_pending_count = 0;
+					foreach ( $users as $user_id ) {
+						$res = UM()->common()->users()->send_activation( $user_id );
+						if ( $res ) {
+							++$email_pending_count;
+						}
+					}
+
+					$sendback = add_query_arg(
+						array(
+							'resend_activation_count' => $email_pending_count,
+							'update'                  => 'um_resend_activation',
+						),
+						$this->set_redirect_uri( $sendback )
+					);
+					break;
+
+				default:
+					/**
+					 * Fires when a custom Ultimate Member bulk action for wp-admin > Users list table should be handled.
+					 *
+					 * The redirect link should be modified with success or failure feedback
+					 * from the action to be used to display feedback to the user.
+					 *
+					 * The dynamic portion of the hook name, `$current_action`, refers to the current bulk action.
+					 * Use together with custom actions added via `um_admin_bulk_user_actions_hook` hook.
+					 *
+					 * @param {string} $sendback The redirect URL.
+					 * @param {array}  $userids  Selected users in bulk action.
+					 *
+					 * @return {string} The redirect URL.
+					 *
+					 * @since 2.8.7
+					 * @hook um_handle_bulk_actions-users-{$current_action}
+					 *
+					 * @example &lt;caption>Handle custom-action and set redirect after it.&lt;/caption>
+					 * function um_custom_bulk_actions_users( $sendback, $userids ) {
+					 *     foreach ( $userids as $user_id ) {
+					 *         // make some action here
+					 *     }
+					 *     return add_query_arg( 'action_counter', 'completed action count', $sendback );
+					 * }
+					 * add_filter( 'um_handle_bulk_actions-users-custom-action', 'um_custom_bulk_actions_users' );
+					 */
+					$sendback = apply_filters( "um_handle_bulk_actions-users-{$current_action}", $sendback, $userids ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+					break;
+			}
+
+			return $sendback;
+		}
+
+		/**
+		 * Filter WP users by UM Status
+		 *
+		 * WP_User_Query $query Current instance of WP_User_Query (passed by reference).
+		 */
+		public function filter_users_by_status( $query ) {
+			global $wpdb, $pagenow;
+
+			if ( 'users.php' !== $pagenow || ! is_admin() ) {
+				return;
+			}
+
+			if ( empty( $_REQUEST['um_user_status'] ) ) {
+				return;
+			}
+
+			$status = sanitize_key( $_REQUEST['um_user_status'] );
+
+			/**
+			 * Filters the marker to disable Ultimate Member default filter by user status.
+			 *
+			 * @since 2.8.7
+			 * @hook  um_skip_filter_users_by_status
+			 *
+			 * @param {bool}   $skip   Marker to skip Ultimate Member core user filter handler.
+			 * @param {string} $status User Status
+			 *
+			 * @return {array} User's row actions.
+			 */
+			$skip_status_filter = apply_filters( 'um_skip_filter_users_by_status', false, $status );
+			if ( false !== $skip_status_filter ) {
+				return;
+			}
+
+			$query->query_where = str_replace(
+				'WHERE 1=1',
+				$wpdb->prepare(
+					"WHERE 1=1 AND
+					{$wpdb->users}.ID IN (
+						SELECT {$wpdb->usermeta}.user_id
+						FROM $wpdb->usermeta
+						WHERE {$wpdb->usermeta}.meta_key = 'account_status' AND
+							{$wpdb->usermeta}.meta_value = %s
+					)",
+					$status
+				),
+				$query->query_where
+			);
+		}
+
+		/**
+		 * Sets redirect URI after bulk action
+		 *
+		 * @param string $uri
+		 * @return string
+		 */
+		public function set_redirect_uri( $uri ) {
+			if ( ! empty( $_REQUEST['s'] ) ) {
+				$uri = add_query_arg( 's', sanitize_text_field( $_REQUEST['s'] ), $uri );
+			}
+
+			if ( ! empty( $_REQUEST['um_user_status'] ) ) {
+				$uri = add_query_arg( 'um_user_status', sanitize_key( $_REQUEST['um_user_status'] ), $uri );
+			}
+
+			return $uri;
+		}
+
+		/**
+		 * Add query args to list of query variable names to remove.
+		 *
+		 * @param array $removable_query_args An array of query variable names to remove from a URL
+		 *
+		 * @return array
+		 */
+		public function add_removable_query_args( $removable_query_args ) {
+			$removable_query_args[] = '_um_wpnonce'; // need to add there additional nonce field because WordPress native _wpnonce field isn't visible on the users.php screen then custom actions
+			$removable_query_args[] = 'approved_count';
+			$removable_query_args[] = 'rejected_count';
+			$removable_query_args[] = 'reactivated_count';
+			$removable_query_args[] = 'deactivated_count';
+			$removable_query_args[] = 'pending_count';
+			$removable_query_args[] = 'resend_activation_count';
+			return $removable_query_args;
+		}
+	}
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    <footer>
+		<a href="https://wordpress.org/plugins/ultimate-member/">Ultimate Member Plugin</a> &bull;
+		<a href="https://docs.ultimatemember.com/">Official Docs</a>
+	</footer>
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="track_%257B$status%257D_user_registration.html">track_{$status}_user_registration</a></li><li><a href="um_access_profile.html">um_access_profile</a></li><li><a href="um_account_page_hidden_fields.html">um_account_page_hidden_fields</a></li><li><a href="um_action_user_request_hook.html">um_action_user_request_hook</a></li><li><a href="um_admin_ajax_modal_content__hook.html">um_admin_ajax_modal_content__hook</a></li><li><a href="um_admin_ajax_modal_content__hook_%257B$act_id%257D.html">um_admin_ajax_modal_content__hook_{$act_id}</a></li><li><a href="um_admin_custom_hook_%257B$action%257D.html">um_admin_custom_hook_{$action}</a></li><li><a href="um_admin_user_action_hook.html">um_admin_user_action_hook</a></li><li><a href="um_admin_user_action_%257B$bulk_action%257D_hook.html">um_admin_user_action_{$bulk_action}_hook</a></li><li><a href="um_after_delete_role.html">um_after_delete_role</a></li><li><a href="um_after_delete_role_meta.html">um_after_delete_role_meta</a></li><li><a href="um_after_email_notification_sending.html">um_after_email_notification_sending</a></li><li><a href="um_after_email_template_part.html">um_after_email_template_part</a></li><li><a href="um_after_everything_output.html">um_after_everything_output</a></li><li><a href="um_after_form.html">um_after_form</a></li><li><a href="um_after_form_fields.html">um_after_form_fields</a></li><li><a href="um_after_save_registration_details.html">um_after_save_registration_details</a></li><li><a href="um_after_user_is_approved.html">um_after_user_is_approved</a></li><li><a href="um_after_user_is_inactive.html">um_after_user_is_inactive</a></li><li><a href="um_after_user_is_reactivated.html">um_after_user_is_reactivated</a></li><li><a href="um_after_user_is_rejected.html">um_after_user_is_rejected</a></li><li><a href="um_after_user_is_set_as_awaiting_email_confirmation.html">um_after_user_is_set_as_awaiting_email_confirmation</a></li><li><a href="um_after_user_is_set_as_pending.html">um_after_user_is_set_as_pending</a></li><li><a href="um_after_user_status_is_changed.html">um_after_user_status_is_changed</a></li><li><a href="um_after_user_status_is_changed_hook.html">um_after_user_status_is_changed_hook</a></li><li><a href="um_after_%257B$mode%257D_fields.html">um_after_{$mode}_fields</a></li><li><a href="um_ajax_load_posts__%257B$hook%257D.html">um_ajax_load_posts__{$hook}</a></li><li><a href="um_before_email_notification_sending.html">um_before_email_notification_sending</a></li><li><a href="um_before_email_template_body.html">um_before_email_template_body</a></li><li><a href="um_before_email_template_part.html">um_before_email_template_part</a></li><li><a href="um_before_form.html">um_before_form</a></li><li><a href="um_before_form_is_loaded.html">um_before_form_is_loaded</a></li><li><a href="um_before_save_registration_details.html">um_before_save_registration_details</a></li><li><a href="um_before_submit_form_post.html">um_before_submit_form_post</a></li><li><a href="um_before_user_hash_is_changed.html">um_before_user_hash_is_changed</a></li><li><a href="um_before_user_is_approved.html">um_before_user_is_approved</a></li><li><a href="um_before_user_is_deactivated.html">um_before_user_is_deactivated</a></li><li><a href="um_before_user_is_reactivated.html">um_before_user_is_reactivated</a></li><li><a href="um_before_user_is_rejected.html">um_before_user_is_rejected</a></li><li><a href="um_before_user_is_set_as_awaiting_email_confirmation.html">um_before_user_is_set_as_awaiting_email_confirmation</a></li><li><a href="um_before_user_is_set_as_pending.html">um_before_user_is_set_as_pending</a></li><li><a href="um_before_user_status_is_set.html">um_before_user_status_is_set</a></li><li><a href="um_before_%257B$mode%257D_fields.html">um_before_{$mode}_fields</a></li><li><a href="um_before_%257B$mode%257D_form_is_loaded.html">um_before_{$mode}_form_is_loaded</a></li><li><a href="um_change_password_form.html">um_change_password_form</a></li><li><a href="um_change_password_page_hidden_fields.html">um_change_password_page_hidden_fields</a></li><li><a href="um_enqueue_frontend_preview_assets.html">um_enqueue_frontend_preview_assets</a></li><li><a href="um_load_gutenberg_js.html">um_load_gutenberg_js</a></li><li><a href="um_main_%257B$mode%257D_fields.html">um_main_{$mode}_fields</a></li><li><a href="um_on_login_before_redirect.html">um_on_login_before_redirect</a></li><li><a href="um_post_registration_%257B$status%257D_hook.html">um_post_registration_{$status}_hook</a></li><li><a href="um_pre_%257B$mode%257D_shortcode.html">um_pre_{$mode}_shortcode</a></li><li><a href="um_registration_after_auto_login.html">um_registration_after_auto_login</a></li><li><a href="um_registration_complete.html">um_registration_complete</a></li><li><a href="um_registration_set_extra_data.html">um_registration_set_extra_data</a></li><li><a href="um_reset_password_errors_hook.html">um_reset_password_errors_hook</a></li><li><a href="um_reset_password_process_hook.html">um_reset_password_process_hook</a></li><li><a href="um_role_edit_data.html">um_role_edit_data</a></li><li><a href="um_role_row_actions.html">um_role_row_actions</a></li><li><a href="um_run_ajax_function__%257B$hook%257D.html">um_run_ajax_function__{$hook}</a></li><li><a href="um_submit_form_errors_hook.html">um_submit_form_errors_hook</a></li><li><a href="um_submit_form_errors_hook_.html">um_submit_form_errors_hook_</a></li><li><a href="um_submit_form_errors_hook__blockedemails.html">um_submit_form_errors_hook__blockedemails</a></li><li><a href="um_submit_form_errors_hook__blockedips.html">um_submit_form_errors_hook__blockedips</a></li><li><a href="um_submit_form_errors_hook__blockedwords.html">um_submit_form_errors_hook__blockedwords</a></li><li><a href="um_submit_form_errors_hook__profile.html">um_submit_form_errors_hook__profile</a></li><li><a href="um_submit_form_errors_hook__registration.html">um_submit_form_errors_hook__registration</a></li><li><a href="um_submit_form_errors_hook_login.html">um_submit_form_errors_hook_login</a></li><li><a href="um_submit_form_errors_hook_logincheck.html">um_submit_form_errors_hook_logincheck</a></li><li><a href="um_user_after_query.html">um_user_after_query</a></li><li><a href="um_user_before_query.html">um_user_before_query</a></li><li><a href="um_user_before_updating_profile.html">um_user_before_updating_profile</a></li><li><a href="um_user_edit_profile.html">um_user_edit_profile</a></li><li><a href="um_user_login.html">um_user_login</a></li><li><a href="um_user_login_extra_hook.html">um_user_login_extra_hook</a></li><li><a href="um_user_register.html">um_user_register</a></li><li><a href="um_when_status_is_set.html">um_when_status_is_set</a></li></ul><h3>Filters</h3><ul><li><a href="um_access_restricted_post_instance.html">um_access_restricted_post_instance</a></li><li><a href="um_account_scripts_dependencies.html">um_account_scripts_dependencies</a></li><li><a href="um_account_shortcode_args_filter.html">um_account_shortcode_args_filter</a></li><li><a href="um_add_user_frontend_submitted.html">um_add_user_frontend_submitted</a></li><li><a href="um_adm_action_custom_update_notice.html">um_adm_action_custom_update_notice</a></li><li><a href="um_admin_builder_skip_field_validation.html">um_admin_builder_skip_field_validation</a></li><li><a href="um_admin_bulk_user_actions_hook.html">um_admin_bulk_user_actions_hook</a></li><li><a href="um_admin_enqueue_localize_data.html">um_admin_enqueue_localize_data</a></li><li><a href="um_admin_field_update_error_handling.html">um_admin_field_update_error_handling</a></li><li><a href="um_admin_forms_data_localize.html">um_admin_forms_data_localize</a></li><li><a href="um_admin_pre_save_field_to_db.html">um_admin_pre_save_field_to_db</a></li><li><a href="um_admin_pre_save_field_to_form.html">um_admin_pre_save_field_to_form</a></li><li><a href="um_admin_pre_save_fields_hook.html">um_admin_pre_save_fields_hook</a></li><li><a href="um_admin_user_actions_hook.html">um_admin_user_actions_hook</a></li><li><a href="um_admin_user_row_actions.html">um_admin_user_row_actions</a></li><li><a href="um_allowed_redirect_hosts.html">um_allowed_redirect_hosts</a></li><li><a href="um_allowed_user_tags_patterns.html">um_allowed_user_tags_patterns</a></li><li><a href="um_api_output_format.html">um_api_output_format</a></li><li><a href="um_before_save_filter_submitted.html">um_before_save_filter_submitted</a></li><li><a href="um_before_update_profile.html">um_before_update_profile</a></li><li><a href="um_blacklist_fields_hook.html">um_blacklist_fields_hook</a></li><li><a href="um_browser_url_redirect_to__filter.html">um_browser_url_redirect_to__filter</a></li><li><a href="um_can_view_profile.html">um_can_view_profile</a></li><li><a href="um_change_default_forms_ids.html">um_change_default_forms_ids</a></li><li><a href="um_change_default_tab.html">um_change_default_tab</a></li><li><a href="um_change_email_template_file.html">um_change_email_template_file</a></li><li><a href="um_change_field_label.html">um_change_field_label</a></li><li><a href="um_change_role_data.html">um_change_role_data</a></li><li><a href="um_checkbox_field_options.html">um_checkbox_field_options</a></li><li><a href="um_checkbox_field_options_%257B$key%257D.html">um_checkbox_field_options_{$key}</a></li><li><a href="um_common_js_variables.html">um_common_js_variables</a></li><li><a href="um_completeness_field_id.html">um_completeness_field_id</a></li><li><a href="um_core_enqueue_priority.html">um_core_enqueue_priority</a></li><li><a href="um_core_form_meta_all.html">um_core_form_meta_all</a></li><li><a href="um_core_page_id_filter.html">um_core_page_id_filter</a></li><li><a href="um_core_pages.html">um_core_pages</a></li><li><a href="um_cpt_list.html">um_cpt_list</a></li><li><a href="um_cron_disable.html">um_cron_disable</a></li><li><a href="um_custom_dropdown_options_parent__%257B$form_key%257D.html">um_custom_dropdown_options_parent__{$form_key}</a></li><li><a href="um_custom_dropdown_options_source__%257B$form_key%257D.html">um_custom_dropdown_options_source__{$form_key}</a></li><li><a href="um_custom_error_message_handler.html">um_custom_error_message_handler</a></li><li><a href="um_custom_meta_permalink_base_generate_user_slug.html">um_custom_meta_permalink_base_generate_user_slug</a></li><li><a href="um_custom_success_message_handler.html">um_custom_success_message_handler</a></li><li><a href="um_dequeue_select2_scripts.html">um_dequeue_select2_scripts</a></li><li><a href="um_disable_blocks_script.html">um_disable_blocks_script</a></li><li><a href="um_disable_dynamic_global_css.html">um_disable_dynamic_global_css</a></li><li><a href="um_disable_email_notification_sending.html">um_disable_email_notification_sending</a></li><li><a href="um_edit_field_%257B$mode%257D_%257B$type%257D.html">um_edit_field_{$mode}_{$type}</a></li><li><a href="um_edit_label_all_fields.html">um_edit_label_all_fields</a></li><li><a href="um_edit_label_%257B$key%257D.html">um_edit_label_{$key}</a></li><li><a href="um_edit_profile_url.html">um_edit_profile_url</a></li><li><a href="um_email_get_template_file_path.html">um_email_get_template_file_path</a></li><li><a href="um_email_notifications.html">um_email_notifications</a></li><li><a href="um_email_send_message_content.html">um_email_send_message_content</a></li><li><a href="um_email_send_subject.html">um_email_send_subject</a></li><li><a href="um_email_template_body_attrs.html">um_email_template_body_attrs</a></li><li><a href="um_email_template_html_formatting.html">um_email_template_html_formatting</a></li><li><a href="um_email_template_path.html">um_email_template_path</a></li><li><a href="um_email_templates_path_by_slug.html">um_email_templates_path_by_slug</a></li><li><a href="um_enqueue_localize_data.html">um_enqueue_localize_data</a></li><li><a href="um_excluded_comment_types.html">um_excluded_comment_types</a></li><li><a href="um_extend_account_settings.html">um_extend_account_settings</a></li><li><a href="um_external_profile_url.html">um_external_profile_url</a></li><li><a href="um_field_checkbox_item_title.html">um_field_checkbox_item_title</a></li><li><a href="um_fields_without_metakey.html">um_fields_without_metakey</a></li><li><a href="um_filesystem_max_file_age.html">um_filesystem_max_file_age</a></li><li><a href="um_form_fields_textarea_settings.html">um_form_fields_textarea_settings</a></li><li><a href="um_frontend_common_js_variables.html">um_frontend_common_js_variables</a></li><li><a href="um_get_current_page_url.html">um_get_current_page_url</a></li><li><a href="um_get_field__%257B$key%257D.html">um_get_field__{$key}</a></li><li><a href="um_get_field_%257B$type%257D.html">um_get_field_{$type}</a></li><li><a href="um_get_form_fields.html">um_get_form_fields</a></li><li><a href="um_get_option_filter__%257B$option_id%257D.html">um_get_option_filter__{$option_id}</a></li><li><a href="um_get_pickadate_locale.html">um_get_pickadate_locale</a></li><li><a href="um_handle_bulk_actions-users-%257B$current_action%257D.html">um_handle_bulk_actions-users-{$current_action}</a></li><li><a href="um_hook_for_field_%257B$type%257D.html">um_hook_for_field_{$type}</a></li><li><a href="um_ignore_restricted_content.html">um_ignore_restricted_content</a></li><li><a href="um_ignore_restricted_excerpt.html">um_ignore_restricted_excerpt</a></li><li><a href="um_ignore_restricted_title.html">um_ignore_restricted_title</a></li><li><a href="um_is_field_disabled.html">um_is_field_disabled</a></li><li><a href="um_is_ultimatememeber_admin_screen.html">um_is_ultimatememeber_admin_screen</a></li><li><a href="um_language_file.html">um_language_file</a></li><li><a href="um_language_locale.html">um_language_locale</a></li><li><a href="um_language_textdomain.html">um_language_textdomain</a></li><li><a href="um_late_escaping_allowed_tags.html">um_late_escaping_allowed_tags</a></li><li><a href="um_licenses_site_health.html">um_licenses_site_health</a></li><li><a href="um_localize_permalink_filter.html">um_localize_permalink_filter</a></li><li><a href="um_locate_email_template.html">um_locate_email_template</a></li><li><a href="um_locate_user_profile_not_loggedin__redirect.html">um_locate_user_profile_not_loggedin__redirect</a></li><li><a href="um_loggedin_inner_content.html">um_loggedin_inner_content</a></li><li><a href="um_login_allow_nonce_verification.html">um_login_allow_nonce_verification</a></li><li><a href="um_login_invalid_nonce_redirect_url.html">um_login_invalid_nonce_redirect_url</a></li><li><a href="um_login_redirect_url.html">um_login_redirect_url</a></li><li><a href="um_logout_redirect_url.html">um_logout_redirect_url</a></li><li><a href="um_member_directory_core_search_fields.html">um_member_directory_core_search_fields</a></li><li><a href="um_member_directory_custom_sorting_type.html">um_member_directory_custom_sorting_type</a></li><li><a href="um_members_directory_select_filter_relation.html">um_members_directory_select_filter_relation</a></li><li><a href="um_multiselect_options.html">um_multiselect_options</a></li><li><a href="um_multiselect_options_%257B$key%257D.html">um_multiselect_options_{$key}</a></li><li><a href="um_multiselect_options_%257B$type%257D.html">um_multiselect_options_{$type}</a></li><li><a href="um_nav_menu_roles_item_visibility.html">um_nav_menu_roles_item_visibility</a></li><li><a href="um_override_templates_get_template_path__%257B$key%257D.html">um_override_templates_get_template_path__{$key}</a></li><li><a href="um_override_templates_scan_files.html">um_override_templates_scan_files</a></li><li><a href="um_permalink_base_after_filter%257B$filter_slug%257D.html">um_permalink_base_after_filter{$filter_slug}</a></li><li><a href="um_permalink_base_before_filter.html">um_permalink_base_before_filter</a></li><li><a href="um_pre_args_setup.html">um_pre_args_setup</a></li><li><a href="um_predefined_fields_hook.html">um_predefined_fields_hook</a></li><li><a href="um_predefined_page_option_key.html">um_predefined_page_option_key</a></li><li><a href="um_predefined_pages.html">um_predefined_pages</a></li><li><a href="um_prepare_user_results_array.html">um_prepare_user_results_array</a></li><li><a href="um_prepare_user_results_array_meta.html">um_prepare_user_results_array_meta</a></li><li><a href="um_profile_can_view_main.html">um_profile_can_view_main</a></li><li><a href="um_profile_dynamic_meta_image_size.html">um_profile_dynamic_meta_image_size</a></li><li><a href="um_profile_dynamic_meta_image_type.html">um_profile_dynamic_meta_image_type</a></li><li><a href="um_profile_dynamic_meta_profile_schema.html">um_profile_dynamic_meta_profile_schema</a></li><li><a href="um_profile_menu_link_%257B$id%257D_attrs.html">um_profile_menu_link_{$id}_attrs</a></li><li><a href="um_profile_nopriv_tag_hook__%257B$usermeta%257D.html">um_profile_nopriv_tag_hook__{$usermeta}</a></li><li><a href="um_profile_permalink.html">um_profile_permalink</a></li><li><a href="um_profile_tabs.html">um_profile_tabs</a></li><li><a href="um_profile_tabs_privacy_list.html">um_profile_tabs_privacy_list</a></li><li><a href="um_profile_tabs_site_health.html">um_profile_tabs_site_health</a></li><li><a href="um_profile_tag_hook__%257B$usermeta%257D.html">um_profile_tag_hook__{$usermeta}</a></li><li><a href="um_query_args_filter_global_meta.html">um_query_args_filter_global_meta</a></li><li><a href="um_query_args_%257B$field%257D__filter_meta.html">um_query_args_{$field}__filter_meta</a></li><li><a href="um_radio_field_options.html">um_radio_field_options</a></li><li><a href="um_radio_field_options_%257B$key%257D.html">um_radio_field_options_{$key}</a></li><li><a href="um_radio_options_pair__%257B$key%257D.html">um_radio_options_pair__{$key}</a></li><li><a href="um_register_allow_nonce_verification.html">um_register_allow_nonce_verification</a></li><li><a href="um_register_invalid_nonce_redirect_url.html">um_register_invalid_nonce_redirect_url</a></li><li><a href="um_registration_for_loggedin_users.html">um_registration_for_loggedin_users</a></li><li><a href="um_registration_pending_user_redirect.html">um_registration_pending_user_redirect</a></li><li><a href="um_registration_show_message_redirect_url.html">um_registration_show_message_redirect_url</a></li><li><a href="um_registration_user_role.html">um_registration_user_role</a></li><li><a href="um_reset_password_shortcode_args_filter.html">um_reset_password_shortcode_args_filter</a></li><li><a href="um_rest_get_auser.html">um_rest_get_auser</a></li><li><a href="um_rest_userdata.html">um_rest_userdata</a></li><li><a href="um_restricted_post_content.html">um_restricted_post_content</a></li><li><a href="um_secure_register_form_banned_capabilities.html">um_secure_register_form_banned_capabilities</a></li><li><a href="um_select_dropdown_dynamic_options.html">um_select_dropdown_dynamic_options</a></li><li><a href="um_select_dropdown_dynamic_options_%257B$key%257D.html">um_select_dropdown_dynamic_options_{$key}</a></li><li><a href="um_select_options_pair.html">um_select_options_pair</a></li><li><a href="um_selectbox_options.html">um_selectbox_options</a></li><li><a href="um_setup_predefined_page_content.html">um_setup_predefined_page_content</a></li><li><a href="um_shortcode_args_filter.html">um_shortcode_args_filter</a></li><li><a href="um_skip_filter_users_by_status.html">um_skip_filter_users_by_status</a></li><li><a href="um_submit_form_data.html">um_submit_form_data</a></li><li><a href="um_submit_post_form.html">um_submit_post_form</a></li><li><a href="um_submitted_data_value.html">um_submitted_data_value</a></li><li><a href="um_ultimatemember_account_shortcode_disable_singleton.html">um_ultimatemember_account_shortcode_disable_singleton</a></li><li><a href="um_ultimatemember_shortcode_disable_singleton.html">um_ultimatemember_shortcode_disable_singleton</a></li><li><a href="um_upload_allowed_image_mimes.html">um_upload_allowed_image_mimes</a></li><li><a href="um_upload_image_mimes_list.html">um_upload_image_mimes_list</a></li><li><a href="um_user_permissions_filter.html">um_user_permissions_filter</a></li><li><a href="um_user_pre_updating_files_array.html">um_user_pre_updating_files_array</a></li><li><a href="um_user_profile_restricted_edit_fields.html">um_user_profile_restricted_edit_fields</a></li><li><a href="um_user_register_submitted__email.html">um_user_register_submitted__email</a></li><li><a href="um_user_statuses.html">um_user_statuses</a></li><li><a href="um_user_statuses_admin_filter_options.html">um_user_statuses_admin_filter_options</a></li><li><a href="um_view_field.html">um_view_field</a></li><li><a href="um_view_field_value_%257B$type%257D.html">um_view_field_value_{$type}</a></li><li><a href="um_view_label_%257B$key%257D.html">um_view_label_{$key}</a></li><li><a href="um_whitelisted_metakeys.html">um_whitelisted_metakeys</a></li><li><a href="um_wp_safe_redirect_fallback.html">um_wp_safe_redirect_fallback</a></li><li><a href="um_%257B$key%257D_form_edit_field.html">um_{$key}_form_edit_field</a></li><li><a href="um_%257B$key%257D_form_show_field.html">um_{$key}_form_show_field</a></li><li><a href="um_%257B$type%257D_form_show_field.html">um_{$type}_form_show_field</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
