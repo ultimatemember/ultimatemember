@@ -117,25 +117,25 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 
 				$account_secret_hash = get_user_meta( $user_id, 'account_secret_hash', true );
 				if ( empty( $account_secret_hash ) || strtolower( sanitize_text_field( $_REQUEST['hash'] ) ) !== strtolower( $account_secret_hash ) ) {
-					wp_die( __( 'This activation link is expired or have already been used.', 'ultimate-member' ) );
+					wp_die( esc_html__( 'This activation link is expired or have already been used.', 'ultimate-member' ) );
 				}
 
 				$account_secret_hash_expiry = get_user_meta( $user_id, 'account_secret_hash_expiry', true );
 				if ( ! empty( $account_secret_hash_expiry ) && time() > $account_secret_hash_expiry ) {
-					wp_die( __( 'This activation link is expired.', 'ultimate-member' ) );
+					wp_die( esc_html__( 'This activation link is expired.', 'ultimate-member' ) );
 				}
 
 				$redirect              = um_get_core_page( 'login', 'account_active' );
 				$set_password_required = get_user_meta( $user_id, 'um_set_password_required', true );
 
 				um_fetch_user( $user_id );
-				UM()->common()->users()->approve( $user_id );
+				UM()->common()->users()->approve( $user_id, true );
 				if ( ! empty( $set_password_required ) ) {
 					$redirect = um_user( 'password_reset_link' );
 				}
 				um_reset_user();
 
-				$user_role = UM()->roles()->get_priority_user_role( $user_id );
+				$user_role      = UM()->roles()->get_priority_user_role( $user_id );
 				$user_role_data = UM()->roles()->role_data( $user_role );
 
 				// log in automatically

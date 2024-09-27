@@ -30,8 +30,8 @@ class Users {
 	 * @param array    $args    {
 	 *     Arguments that accompany the requested capability check.
 	 *
-	 *     @type string    $0 Requested capability.
-	 *     @type int       $1 Concerned user ID.
+	 *     @type string $0 Requested capability.
+	 *     @type int    $1 Concerned user ID.
 	 *     @type mixed  ...$2 Optional second and further parameters, typically object ID.
 	 * }
 	 *
@@ -290,6 +290,11 @@ class Users {
 		return get_password_reset_key( $userdata );
 	}
 
+	/**
+	 * @param int $user_id
+	 *
+	 * @return bool
+	 */
 	public function can_current_user_edit_user( $user_id ) {
 		$current_user_id = get_current_user_id();
 		if ( $current_user_id === $user_id ) {
@@ -315,30 +320,36 @@ class Users {
 		return true;
 	}
 
-	public function can_activation_send( $user_id ) {
-		$current_user_id = get_current_user_id();
-		if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
-			return false;
+	/**
+	 * @param int  $user_id User ID.
+	 * @param bool $force   If true - ignore current user condition.
+	 *
+	 * @return bool
+	 */
+	public function can_activation_send( $user_id, $force = false ) {
+		if ( ! $force ) {
+			$current_user_id = get_current_user_id();
+			if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
+				return false;
+			}
 		}
 
-//		$rolename = UM()->roles()->get_priority_user_role( $current_user_id );
-//		$role     = get_role( $rolename );
-//
-//		if ( null === $role ) {
-//			return false;
-//		}
-//
-//		// Make Ultimate Member bulk actions only when the current user has 'edit_users' capability.
-//		if ( ! current_user_can( 'edit_users' ) && ! $role->has_cap( 'edit_users' ) ) {
-//			return false;
-//		}
+		/*if ( ! $this->can_current_user_edit_user( $user_id ) ) {
+			return false;
+		}*/
 
 		$status = $this->get_status( $user_id );
 		return 'awaiting_admin_review' !== $status;
 	}
 
-	public function send_activation( $user_id ) {
-		if ( ! $this->can_activation_send( $user_id ) ) {
+	/**
+	 * @param int  $user_id User ID.
+	 * @param bool $force   If true - ignore current user condition.
+	 *
+	 * @return bool
+	 */
+	public function send_activation( $user_id, $force = false ) {
+		if ( ! $this->can_activation_send( $user_id, $force ) ) {
 			return false;
 		}
 
@@ -356,9 +367,8 @@ class Users {
 
 		// It's `false` on failure or if the user already has rejected status.
 		if ( false !== $result ) {
-			//clear all sessions for email confirmation pending users
-			$user = WP_Session_Tokens::get_instance( $user_id );
-			$user->destroy_all();
+			// Clear all sessions for email confirmation pending users
+			self::destroy_all_sessions( $user_id );
 
 			// Set activation link hash.
 			$this->assign_secretkey( $user_id );
@@ -386,27 +396,22 @@ class Users {
 	}
 
 	/**
-	 * @param $user_id
+	 * @param int  $user_id User ID.
+	 * @param bool $force   If true - ignore current user condition.
 	 *
 	 * @return bool
 	 */
-	public function can_be_deactivated( $user_id ) {
-		$current_user_id = get_current_user_id();
-		if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
-			return false;
+	public function can_be_deactivated( $user_id, $force = false ) {
+		if ( ! $force ) {
+			$current_user_id = get_current_user_id();
+			if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
+				return false;
+			}
 		}
 
-//		$rolename = UM()->roles()->get_priority_user_role( $current_user_id );
-//		$role     = get_role( $rolename );
-//
-//		if ( null === $role ) {
-//			return false;
-//		}
-//
-//		// Make Ultimate Member bulk actions only when the current user has 'edit_users' capability.
-//		if ( ! current_user_can( 'edit_users' ) && ! $role->has_cap( 'edit_users' ) ) {
-//			return false;
-//		}
+		/*if ( ! $this->can_current_user_edit_user( $user_id ) ) {
+			return false;
+		}*/
 
 		$status = $this->get_status( $user_id );
 		if ( 'inactive' === $status ) {
@@ -423,12 +428,13 @@ class Users {
 	}
 
 	/**
-	 * @param $user_id
+	 * @param int  $user_id User ID.
+	 * @param bool $force   If true - ignore current user condition.
 	 *
 	 * @return bool
 	 */
-	public function deactivate( $user_id ) {
-		if ( ! $this->can_be_deactivated( $user_id ) ) {
+	public function deactivate( $user_id, $force = false ) {
+		if ( ! $this->can_be_deactivated( $user_id, $force ) ) {
 			return false;
 		}
 
@@ -447,8 +453,7 @@ class Users {
 		// It's `false` on failure or if the user already has approved status.
 		if ( false !== $result ) {
 			// Clear all sessions for inactive users
-			$user = WP_Session_Tokens::get_instance( $user_id );
-			$user->destroy_all();
+			self::destroy_all_sessions( $user_id );
 
 			$userdata = get_userdata( $user_id );
 			UM()->mail()->send( $userdata->user_email, 'inactive_email' );
@@ -469,27 +474,22 @@ class Users {
 	}
 
 	/**
-	 * @param $user_id
+	 * @param int  $user_id User ID.
+	 * @param bool $force   If true - ignore current user condition.
 	 *
 	 * @return bool
 	 */
-	public function can_be_rejected( $user_id ) {
-		$current_user_id = get_current_user_id();
-		if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
-			return false;
+	public function can_be_rejected( $user_id, $force = false ) {
+		if ( ! $force ) {
+			$current_user_id = get_current_user_id();
+			if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
+				return false;
+			}
 		}
 
-//		$rolename = UM()->roles()->get_priority_user_role( $current_user_id );
-//		$role     = get_role( $rolename );
-//
-//		if ( null === $role ) {
-//			return false;
-//		}
-//
-//		// Make Ultimate Member bulk actions only when the current user has 'edit_users' capability.
-//		if ( ! current_user_can( 'edit_users' ) && ! $role->has_cap( 'edit_users' ) ) {
-//			return false;
-//		}
+		/*if ( ! $this->can_current_user_edit_user( $user_id ) ) {
+			return false;
+		}*/
 
 		$status = $this->get_status( $user_id );
 		if ( 'rejected' === $status ) {
@@ -506,12 +506,15 @@ class Users {
 	}
 
 	/**
-	 * @param $user_id
+	 * Reject user membership.
+	 *
+	 * @param int  $user_id User ID.
+	 * @param bool $force   If true - ignore current user condition.
 	 *
 	 * @return bool
 	 */
-	public function reject( $user_id ) {
-		if ( ! $this->can_be_rejected( $user_id ) ) {
+	public function reject( $user_id, $force = false ) {
+		if ( ! $this->can_be_rejected( $user_id, $force ) ) {
 			return false;
 		}
 
@@ -530,8 +533,7 @@ class Users {
 		// It's `false` on failure or if the user already has rejected status.
 		if ( false !== $result ) {
 			// Clear all sessions for rejected users
-			$user = WP_Session_Tokens::get_instance( $user_id );
-			$user->destroy_all();
+			self::destroy_all_sessions( $user_id );
 
 			$userdata = get_userdata( $user_id );
 			UM()->mail()->send( $userdata->user_email, 'rejected_email' );
@@ -552,39 +554,39 @@ class Users {
 	}
 
 	/**
-	 * @param int $user_id
+	 * Check if the user can be set as pending admin review.
+	 *
+	 * @param int  $user_id User ID.
+	 * @param bool $force   If true - ignore current user condition.
 	 *
 	 * @return bool
 	 */
-	public function can_be_set_as_pending( $user_id ) {
-		$current_user_id = get_current_user_id();
-		if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
-			return false;
+	public function can_be_set_as_pending( $user_id, $force = false ) {
+		if ( ! $force ) {
+			$current_user_id = get_current_user_id();
+			if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
+				return false;
+			}
 		}
 
-//		$rolename = UM()->roles()->get_priority_user_role( $current_user_id );
-//		$role     = get_role( $rolename );
-//
-//		if ( null === $role ) {
-//			return false;
-//		}
-//
-//		// Make Ultimate Member bulk actions only when the current user has 'edit_users' capability.
-//		if ( ! current_user_can( 'edit_users' ) && ! $role->has_cap( 'edit_users' ) ) {
-//			return false;
-//		}
+		/*if ( ! $this->can_current_user_edit_user( $user_id ) ) {
+			return false;
+		}*/
 
 		$status = $this->get_status( $user_id );
 		return 'awaiting_admin_review' !== $status;
 	}
 
 	/**
-	 * @param int $user_id
+	 * Set user as pending admin review.
+	 *
+	 * @param int  $user_id User ID.
+	 * @param bool $force   If true - ignore current user condition.
 	 *
 	 * @return bool
 	 */
-	public function set_as_pending( $user_id ) {
-		if ( ! $this->can_be_set_as_pending( $user_id ) ) {
+	public function set_as_pending( $user_id, $force = false ) {
+		if ( ! $this->can_be_set_as_pending( $user_id, $force ) ) {
 			return false;
 		}
 
@@ -603,8 +605,7 @@ class Users {
 		// It's `false` on failure or if the user already has rejected status.
 		if ( false !== $result ) {
 			// Clear all sessions for awaiting admin confirmation users
-			$user = WP_Session_Tokens::get_instance( $user_id );
-			$user->destroy_all();
+			self::destroy_all_sessions( $user_id );
 
 			$userdata = get_userdata( $user_id );
 			UM()->mail()->send( $userdata->user_email, 'pending_email' );
@@ -627,63 +628,38 @@ class Users {
 	/**
 	 * Check if the user can be approved.
 	 *
-	 * @param int $user_id User ID
+	 * @param int  $user_id User ID.
+	 * @param bool $force   If true - ignore current user condition.
 	 *
 	 * @return bool
 	 */
-	public function can_be_approved( $user_id ) {
-		$current_user_id = get_current_user_id();
-		if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
-			return false;
+	public function can_be_approved( $user_id, $force = false ) {
+		if ( ! $force ) {
+			$current_user_id = get_current_user_id();
+			if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
+				return false;
+			}
 		}
 
-//		$rolename = UM()->roles()->get_priority_user_role( $current_user_id );
-//		$role     = get_role( $rolename );
-//
-//		if ( null === $role ) {
-//			return false;
-//		}
-//
-//		// Make Ultimate Member bulk actions only when the current user has 'edit_users' capability.
-//		if ( ! current_user_can( 'edit_users' ) && ! $role->has_cap( 'edit_users' ) ) {
-//			return false;
-//		}
+		/*if ( ! $this->can_current_user_edit_user( $user_id ) ) {
+			return false;
+		}*/
 
 		$status = $this->get_status( $user_id );
 		return 'approved' !== $status;
 	}
 
 	/**
-	 * @param int $user_id
-	 *
-	 * @return bool
-	 */
-	public static function user_exists( $user_id ) {
-		/**
-		 * @var bool[] $search_results
-		 */
-		static $search_results = array();
-
-		if ( array_key_exists( $user_id, $search_results ) ) {
-			return $search_results[ $user_id ];
-		}
-
-		$user = get_userdata( $user_id );
-
-		$search_results[ $user_id ] = false !== $user;
-		return $search_results[ $user_id ];
-	}
-
-	/**
 	 * Approve user.
 	 *
-	 * @param int $user_id User ID.
+	 * @param int  $user_id User ID.
+	 * @param bool $force   If true - ignore current user condition.
 	 *
 	 * @return bool `true` if the user has been approved
 	 *              `false` on failure or if the user already has approved status.
 	 */
-	public function approve( $user_id ) {
-		if ( ! $this->can_be_approved( $user_id ) ) {
+	public function approve( $user_id, $force = false ) {
+		if ( ! $this->can_be_approved( $user_id, $force ) ) {
 			return false;
 		}
 
@@ -734,39 +710,38 @@ class Users {
 	}
 
 	/**
-	 * @param int $user_id
+	 * @param int  $user_id User ID.
+	 * @param bool $force   If true - ignore current user condition.
 	 *
 	 * @return bool
 	 */
-	public function can_be_reactivated( $user_id ) {
-		$current_user_id = get_current_user_id();
-		if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
-			return false;
+	public function can_be_reactivated( $user_id, $force = false ) {
+		if ( ! $force ) {
+			$current_user_id = get_current_user_id();
+			if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
+				return false;
+			}
 		}
 
-//		$rolename = UM()->roles()->get_priority_user_role( $current_user_id );
-//		$role     = get_role( $rolename );
-//
-//		if ( null === $role ) {
-//			return false;
-//		}
-//
-//		// Make Ultimate Member bulk actions only when the current user has 'edit_users' capability.
-//		if ( ! current_user_can( 'edit_users' ) && ! $role->has_cap( 'edit_users' ) ) {
-//			return false;
-//		}
+		/*if ( ! $this->can_current_user_edit_user( $user_id ) ) {
+			return false;
+		}*/
 
 		$status = $this->get_status( $user_id );
 		return 'inactive' === $status;
 	}
 
 	/**
-	 * @param int $user_id
+	 * Reactivate user.
 	 *
-	 * @return bool
+	 * @param int  $user_id User ID.
+	 * @param bool $force   If true - ignore current user condition.
+	 *
+	 * @return bool `true` if the user has been reactivated
+	 *              `false` on failure or if the user already has approved status.
 	 */
-	public function reactivate( $user_id ) {
-		if ( ! $this->can_be_reactivated( $user_id ) ) {
+	public function reactivate( $user_id, $force = false ) {
+		if ( ! $this->can_be_reactivated( $user_id, $force ) ) {
 			return false;
 		}
 
@@ -807,5 +782,38 @@ class Users {
 		}
 
 		return false;
+	}
+
+	/**
+	 * @param int $user_id
+	 *
+	 * @return bool
+	 */
+	public static function user_exists( $user_id ) {
+		/**
+		 * @var bool[] $search_results
+		 */
+		static $search_results = array();
+
+		if ( array_key_exists( $user_id, $search_results ) ) {
+			return $search_results[ $user_id ];
+		}
+
+		$user = get_userdata( $user_id );
+
+		$search_results[ $user_id ] = false !== $user;
+		return $search_results[ $user_id ];
+	}
+
+	/**
+	 * Clear all sessions for user ID.
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return void
+	 */
+	public static function destroy_all_sessions( $user_id ) {
+		$user = WP_Session_Tokens::get_instance( $user_id );
+		$user->destroy_all();
 	}
 }

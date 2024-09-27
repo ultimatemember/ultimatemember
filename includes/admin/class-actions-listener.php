@@ -47,7 +47,13 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 						if ( UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
 							$result = UM()->common()->users()->approve( $user_id );
 							if ( $result ) {
-								$redirect = add_query_arg( array( 'update' => 'um_approved', 'approved_count' => 1 ), $redirect );
+								$redirect = add_query_arg(
+									array(
+										'update'         => 'um_approved',
+										'approved_count' => 1,
+									),
+									$redirect
+								);
 							}
 						}
 
@@ -66,7 +72,13 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 						if ( UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
 							$result = UM()->common()->users()->reactivate( $user_id );
 							if ( $result ) {
-								$redirect = add_query_arg( array( 'update' => 'um_reactivated', 'reactivated_count' => 1 ), $redirect );
+								$redirect = add_query_arg(
+									array(
+										'update' => 'um_reactivated',
+										'reactivated_count' => 1,
+									),
+									$redirect
+								);
 							}
 						}
 						wp_safe_redirect( $redirect );
@@ -84,7 +96,13 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 						if ( UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
 							$result = UM()->common()->users()->set_as_pending( $user_id );
 							if ( $result ) {
-								$redirect = add_query_arg( array( 'update' => 'um_pending', 'pending_count' => 1 ), $redirect );
+								$redirect = add_query_arg(
+									array(
+										'update'        => 'um_pending',
+										'pending_count' => 1,
+									),
+									$redirect
+								);
 							}
 						}
 						wp_safe_redirect( $redirect );
@@ -102,7 +120,13 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 						if ( UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
 							$result = UM()->common()->users()->send_activation( $user_id );
 							if ( $result ) {
-								$redirect = add_query_arg( array( 'update' => 'um_resend_activation', 'resend_activation_count' => 1 ), $redirect );
+								$redirect = add_query_arg(
+									array(
+										'update' => 'um_resend_activation',
+										'resend_activation_count' => 1,
+									),
+									$redirect
+								);
 							}
 						}
 						wp_safe_redirect( $redirect );
@@ -120,7 +144,13 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 						if ( UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
 							$result = UM()->common()->users()->reject( $user_id );
 							if ( $result ) {
-								$redirect = add_query_arg( array( 'update' => 'um_rejected', 'rejected_count' => 1 ), $redirect );
+								$redirect = add_query_arg(
+									array(
+										'update'         => 'um_rejected',
+										'rejected_count' => 1,
+									),
+									$redirect
+								);
 							}
 						}
 						wp_safe_redirect( $redirect );
@@ -138,7 +168,13 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 						if ( UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
 							$result = UM()->common()->users()->deactivate( $user_id );
 							if ( $result ) {
-								$redirect = add_query_arg( array( 'update' => 'um_deactivate', 'deactivated_count' => 1 ), $redirect );
+								$redirect = add_query_arg(
+									array(
+										'update' => 'um_deactivate',
+										'deactivated_count' => 1,
+									),
+									$redirect
+								);
 							}
 						}
 						wp_safe_redirect( $redirect );

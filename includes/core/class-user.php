@@ -1570,7 +1570,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 */
 		public function approve( $repeat = true ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- deprecated function
 			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->approve()' );
-			UM()->common()->users()->approve( um_user( 'ID' ) );
+			UM()->common()->users()->approve( um_user( 'ID' ), $repeat );
 		}
 
 		/**

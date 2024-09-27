@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function um_post_registration_approved_hook( $user_id ) {
 	um_fetch_user( $user_id );
 
-	UM()->common()->users()->approve( $user_id );
+	UM()->common()->users()->approve( $user_id, true );
 }
 add_action( 'um_post_registration_approved_hook', 'um_post_registration_approved_hook' );
 
@@ -23,7 +23,7 @@ add_action( 'um_post_registration_approved_hook', 'um_post_registration_approved
 function um_post_registration_checkmail_hook( $user_id ) {
 	um_fetch_user( $user_id );
 
-	UM()->common()->users()->send_activation( $user_id );
+	UM()->common()->users()->send_activation( $user_id, true );
 }
 add_action( 'um_post_registration_checkmail_hook', 'um_post_registration_checkmail_hook' );
 
@@ -35,7 +35,7 @@ add_action( 'um_post_registration_checkmail_hook', 'um_post_registration_checkma
 function um_post_registration_pending_hook( $user_id ) {
 	um_fetch_user( $user_id );
 
-	UM()->common()->users()->set_as_pending( $user_id );
+	UM()->common()->users()->set_as_pending( $user_id, true );
 }
 add_action( 'um_post_registration_pending_hook', 'um_post_registration_pending_hook' );
 
