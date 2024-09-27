@@ -448,6 +448,11 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 				$ignore_keys = array();
 
+				$arr_restricted_fields = array();
+				if ( 'profile' === $this->form_data['mode'] ) {
+					$arr_restricted_fields = UM()->fields()->get_restricted_fields_for_edit();
+				}
+
 				$field_types_without_metakey = UM()->builtin()->get_fields_without_metakey();
 				foreach ( $custom_fields as $cf_k => $cf_data ) {
 					if ( ! array_key_exists( 'type', $cf_data ) || in_array( $cf_data['type'], $field_types_without_metakey, true ) ) {
@@ -493,7 +498,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					// Column names from wp_users table.
 					$cf_metakeys = array_values( array_diff( $cf_metakeys, array( 'user_login' ) ) );
 					// Hidden for edit fields
-					$cf_metakeys = array_values( array_diff( $cf_metakeys, UM()->fields()->get_restricted_fields_for_edit() ) );
+					$cf_metakeys = array_values( array_diff( $cf_metakeys, $arr_restricted_fields ) );
 
 					$cf_metakeys[] = 'profile_photo';
 					$cf_metakeys[] = 'cover_photo';
@@ -758,6 +763,12 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 											break;
 										case 'textarea':
 											if ( ! empty( $field['html'] ) || ( UM()->profile()->get_show_bio_key( $form ) === $k && UM()->options()->get( 'profile_show_html_bio' ) ) ) {
+												$form[ $k ] = html_entity_decode( $form[ $k ] ); // required because WP_Editor send sometimes encoded content.
+												preg_match( '/^<p>(.*?)<\/p>$/', $form[ $k ], $match ); // required because WP_Editor send content wrapped to <p></p>
+												if ( ! empty( $match[1] ) ) {
+													$form[ $k ] = $match[1];
+												}
+
 												$allowed_html = UM()->get_allowed_html( 'templates' );
 												if ( empty( $allowed_html['iframe'] ) ) {
 													$allowed_html['iframe'] = array(
@@ -856,6 +867,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 										case 'vimeo_video':
 										case 'soundcloud_track':
 										case 'spotify':
+										case 'tel':
 											$form[ $k ] = sanitize_text_field( $form[ $k ] );
 											break;
 										case 'multiselect':

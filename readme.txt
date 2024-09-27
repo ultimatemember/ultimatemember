@@ -5,18 +5,18 @@ Contributors: ultimatemember, champsupertramp, nsinelnikov
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
-Tested up to: 6.5
-Stable tag: 2.8.6
+Tested up to: 6.6
+Stable tag: 2.8.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
-The #1 plugin for front-end user profiles, user registration & login forms, member directories, content restriction, user roles and more.
+Membership & community plugin with user profiles, registration & login, member directories, content restriction, user roles and much more.
 
 == Description ==
 
-= Best User Profile & Membership Plugin for WordPress =
+= User Profile & Membership Plugin for WordPress =
 
-Ultimate Member is the #1 user profile & membership plugin for WordPress. The plugin makes it a breeze for users to sign-up and become members of your website. The plugin allows you to add beautiful user profiles to your site and is perfect for creating advanced online communities and membership sites. Lightweight and highly extendible, Ultimate Member will enable you to create almost any type of site where users can join and become members with absolute ease.
+The ultimate user profile & membership plugin for WordPress. The plugin makes it a breeze for users to sign-up and become members of your website. The plugin allows you to add beautiful user profiles to your site and is designed for creating advanced online communities and membership sites. Lightweight and highly extendible, Ultimate Member will enable you to create almost any type of site where users can join and become members with absolute ease.
 
 = Features of the plugin include: =
 
@@ -166,6 +166,63 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
+= 2.8.7 2024-09-30 =
+
+**Enhancements**
+
+* Added: Single user actions on WP Users list table
+* Updated: User status filter on WP Users list table
+* Updated: User bulk actions on WP Users list table
+* Updated: User actions on User Profile and Member Directory card
+* Added: Applying shortcodes in the post restriction message
+* Added: ProfilePage Structured Data
+* Added: Ability to use HTML tags (allowed in `wp_kses_post`) in the global block restriction message
+* Changed: Some wp-admin fields descriptions
+* Updated: Data format in `um_admin_bulk_user_actions_hook` hook. Changed format from `$action_slug => array( 'label' => $action_title )` to `$action_slug => $action_title`
+* Added: `$old_status` param to `um_after_user_status_is_changed` hook
+* Added: `$user_id` param to `um_before_user_hash_is_changed` hook
+* Added: `$user_id, $hash, $expiration` params to `um_after_user_hash_is_changed` hook
+* Added: `um_restricted_post_content` hook
+* Added: `um_loggedin_inner_content` hook
+* Added: `um_profile_dynamic_meta_profile_schema` hook
+
+**Bugfixes**
+
+* Fixed: Single user action on User Profile security vulnerability. CVE ID: CVE-2024-8520
+* Fixed: [um_loggedin] shortcode security vulnerability. CVE ID: CVE-2024-8519
+* Fixed: Performance issue related to Settings > Secure tab
+* Fixed: The "Clear All" button in the member directory did not reset all dependent dropdowns
+* Fixed: Telegram and Discord social links in profile header
+* Fixed: UM links to empty phone numbers
+* Fixed: Email changing via User Account flush session. Security enhancement because email can be used for login
+* Fixed: User Profile image URL in meta tags
+* Fixed: Empty User Profile and PHP Fatal error when cannot get profile field data
+* Fixed: Parsing /modal/ templates and parsing templates on the Windows hosting
+* Fixed: Validation `form_id` attribute in the `ultimatemember` shortcode
+
+**Templates required update**
+
+* login-to-view.php
+
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
+
+**Deprecated**
+
+Hook: `um_after_user_status_is_changed_hook`. Use action hook `um_after_user_status_is_changed` instead.
+Hook: `um_when_status_is_set`. Use action hook `um_before_user_status_is_set` instead.
+Hook: `um_admin_user_action_hook`. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+Hook: `um_admin_user_action_{$bulk_action}_hook`. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+Hook: `um_admin_custom_hook_{$action}`. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+Function: `UM()->user()->set_status( $status )`. Use function `UM()->common()->users()->set_status( $status, $user_id )` instead.
+Function: `UM()->user()->assign_secretkey()`. Use function `UM()->common()->users()->assign_secretkey( $user_id )` instead.
+Function: `UM()->user()->approve( $repeat )`. Use function `UM()->common()->users()->approve( $user_id, $force )` instead.
+Function: `UM()->user()->email_pending()`. Use function `UM()->common()->users()->approve( $user_id, $force )` instead.
+Function: `UM()->user()->pending()`. Use function `UM()->common()->users()->set_as_pending( $user_id, $force )` instead.
+Function: `UM()->user()->reject()`. Use function `UM()->common()->users()->reject( $user_id, $force )` instead.
+Function: `UM()->user()->deactivate()`. Use function `UM()->common()->users()->deactivate( $user_id, $force )` instead.
+Function: `UM()->user()->user_exists_by_id( $user_id )`. Use function `UM()->common()->users()::user_exists( $user_id )` instead.
+Function: `UM()->files()->format_bytes( $size )`. Use function `UM()->common()->filesystem()::format_bytes( $size )` instead.
+
 = 2.8.6 2024-05-22 =
 
 **Enhancements**
@@ -189,6 +246,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: Sorting by last login value when "Hide my last login" is set
 * Fixed: PHP errors while uploading files
 * Fixed: Parsing error on the license activation
+* Fixed: Saving field value when type is textarea and using HTML is enabled
 
 **Templates required update**
 
@@ -363,6 +421,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.8.7 =
+This version fixes a security related bug. Upgrade immediately.
 
 = 2.8.5 =
 This version fixes a security related bug. Upgrade immediately.

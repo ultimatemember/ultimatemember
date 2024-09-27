@@ -67,7 +67,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			add_action( 'um_admin_do_action__purge_temp', array( &$this, 'purge_temp' ) );
 			add_action( 'um_admin_do_action__manual_upgrades_request', array( &$this, 'manual_upgrades_request' ) );
 			add_action( 'um_admin_do_action__duplicate_form', array( &$this, 'duplicate_form' ) );
-			add_action( 'um_admin_do_action__user_action', array( &$this, 'user_action' ) );
 			add_action( 'um_admin_do_action__check_templates_version', array( &$this, 'check_templates_version' ) );
 
 			add_action( 'um_admin_do_action__install_core_pages', array( &$this, 'install_core_pages' ) );
@@ -79,10 +78,12 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		}
 
 		public function includes() {
+			$this->actions_listener();
 			$this->enqueue();
 			$this->notices();
 			$this->secure();
 			$this->site_health();
+			$this->users_columns();
 		}
 
 		public function init_variables() {
@@ -1759,6 +1760,8 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 				delete_transient( "um_count_users_{$status}" );
 			}
 
+			delete_transient( 'um_count_users_all' );
+
 			do_action( 'um_flush_user_status_cache' );
 
 			$url = add_query_arg(
@@ -1841,69 +1844,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		}
 
 		/**
-		 * Various user actions.
-		 */
-		public function user_action() {
-			if ( ! current_user_can( 'edit_users' ) ) {
-				die();
-			}
-			if ( ! isset( $_REQUEST['sub'] ) ) {
-				die();
-			}
-			if ( ! isset( $_REQUEST['user_id'] ) ) {
-				die();
-			}
-
-			um_fetch_user( absint( $_REQUEST['user_id'] ) );
-
-			$subaction = sanitize_key( $_REQUEST['sub'] );
-
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_admin_user_action_hook
-			 * @description Action on bulk user subaction
-			 * @input_vars
-			 * [{"var":"$subaction","type":"string","desc":"Bulk Subaction"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_admin_user_action_hook', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_admin_user_action_hook', 'my_admin_user_action', 10, 1 );
-			 * function my_admin_user_action( $subaction ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( 'um_admin_user_action_hook', $subaction );
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_admin_user_action_{$subaction}_hook
-			 * @description Action on bulk user subaction
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_admin_user_action_{$subaction}_hook', 'function_name', 10 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_admin_user_action_{$subaction}_hook', 'my_admin_user_action', 10 );
-			 * function my_admin_user_action() {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( "um_admin_user_action_{$subaction}_hook" );
-
-			um_reset_user();
-
-			wp_safe_redirect( add_query_arg( 'update', 'um_user_updated', admin_url( '?page=ultimatemember' ) ) );
-			exit;
-		}
-
-		/**
 		 * Manual check templates versions.
 		 */
 		public function check_templates_version() {
@@ -1946,7 +1886,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 				$action = sanitize_key( $_REQUEST['um_adm_action'] );
 
 				$individual_nonce_actions = array(
-					'user_action',
 					'duplicate_form',
 				);
 				$individual_nonce_actions = apply_filters( 'um_adm_action_individual_nonce_actions', $individual_nonce_actions );
@@ -2072,6 +2011,18 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		}
 
 		/**
+		 * @since 2.8.7
+		 *
+		 * @return Actions_Listener
+		 */
+		public function actions_listener() {
+			if ( empty( UM()->classes['um\admin\actions_listener'] ) ) {
+				UM()->classes['um\admin\actions_listener'] = new Actions_Listener();
+			}
+			return UM()->classes['um\admin\actions_listener'];
+		}
+
+		/**
 		 * @since 2.7.0
 		 *
 		 * @return Enqueue
@@ -2129,6 +2080,18 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 				UM()->classes['um\admin\site_health'] = new Site_Health();
 			}
 			return UM()->classes['um\admin\site_health'];
+		}
+
+		/**
+		 * @since 2.8.7
+		 *
+		 * @return Users_Columns
+		 */
+		public function users_columns() {
+			if ( empty( UM()->classes['um\admin\users_columns'] ) ) {
+				UM()->classes['um\admin\users_columns'] = new Users_Columns();
+			}
+			return UM()->classes['um\admin\users_columns'];
 		}
 	}
 }

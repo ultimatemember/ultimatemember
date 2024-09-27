@@ -229,9 +229,11 @@ if ( ! class_exists( 'um\common\Secure' ) ) {
 			$user->update_user_level_from_caps();
 
 			if ( is_user_logged_in() ) {
-				UM()->user()->set_status( 'inactive' );
+				//UM()->user()->set_status( 'inactive' );
+				UM()->common()->users()->set_status( $user->ID, 'inactive' );
 			} else {
-				UM()->user()->set_status( 'rejected' );
+				//UM()->user()->set_status( 'rejected' );
+				UM()->common()->users()->set_status( $user->ID, 'rejected' );
 			}
 			um_reset_user();
 			update_user_meta( $user->ID, 'um_user_blocked', 'suspicious_activity' );

@@ -120,7 +120,6 @@ function um_replace_placeholders() {
 		'{user_account_link}',
 	);
 
-
 	/**
 	 * UM hook
 	 *
@@ -1448,7 +1447,7 @@ function um_set_requested_user( $user_id ) {
  */
 function um_get_requested_user() {
 	if ( ! empty( UM()->user()->target_id ) ) {
-		return UM()->user()->target_id;
+		return absint( UM()->user()->target_id );
 	}
 
 	return false;
@@ -1579,7 +1578,7 @@ function um_can_view_field( $data ) {
 
 /**
  * Checks if user can view profile
- *
+ * @todo make the function review. Maybe rewrite it.
  * @param int $user_id
  *
  * @return bool

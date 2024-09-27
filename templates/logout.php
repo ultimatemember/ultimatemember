@@ -2,7 +2,7 @@
 /**
  * Template for the logout
  *
- * This template can be overridden by copying it to yourtheme/ultimate-member/templates/logout.php
+ * This template can be overridden by copying it to your-theme/ultimate-member/templates/logout.php
  *
  * Page: "Logout"
  *

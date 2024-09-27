@@ -1,5 +1,28 @@
 @import "selectors"
+@import "mixins"
 
+.#{$prefix}admin.users-php
+  .um_account_status
+    +flex( column, flex-start, stretch, nowrap )
+    span
+      margin: 0 0 2px 0
+      padding: 0
+    ul
+      +flex( row, flex-start, baseline, wrap )
+      column-gap: 4px
+      row-gap: 0
+      margin: 0 0 4px 0
+      padding: 0
+      li
+        margin: 0
+        padding: 0
+        a
+          &.um-set-status-rejected,
+          &.um-deactivate-user
+            color: #b32d2e
+            &:active,
+            &:hover
+              color: #b32d2e
 .#{$prefix}admin.users-php
   .subsubsub
     li.subsep

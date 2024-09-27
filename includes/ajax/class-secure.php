@@ -287,7 +287,7 @@ class Secure {
 			$content                .= ' <a href="' . esc_url( $lock_register_forms_url ) . '" target="_blank">' . esc_html__( 'Click here to lock them now.', 'ultimate-member' ) . '</a>';
 			$content                .= ' ' . esc_html__( 'You can unblock the Register forms later. Just go to Ultimate Member > Settings > Advanced > Security and uncheck the option "Lock All Register Forms".', 'ultimate-member' );
 			$content                .= $br . $br;
-			$suspicious_accounts_url = admin_url( 'users.php?um_status=inactive' );
+			$suspicious_accounts_url = admin_url( 'users.php?um_user_status=inactive' );
 
 			if ( $might_affected_users->get_total() > 0 ) {
 				$od = gmdate( 'F d, Y', $oldest_date );

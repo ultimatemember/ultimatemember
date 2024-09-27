@@ -134,18 +134,22 @@ function um_profile_field_filter_hook__vimeo_video( $value, $data ) {
 }
 add_filter( 'um_profile_field_filter_hook__vimeo_video', 'um_profile_field_filter_hook__vimeo_video', 99, 2 );
 
-
 /**
  * Outputs a phone link
  *
  * @param $value
  * @param $data
  *
- * @return int|string
+ * @return string
  */
 function um_profile_field_filter_hook__phone( $value, $data ) {
-	$value = '<a href="' . esc_url( 'tel:' . $value ) . '" rel="nofollow" title="' . esc_attr( $data['title'] ) . '">' . esc_html( $value ) . '</a>';
-	return $value;
+	$maybe_empty_phone = trim( str_replace( '+', '', $value ) );
+	if ( empty( $maybe_empty_phone ) ) {
+		return '';
+	}
+
+	$value = trim( $value );
+	return '<a href="' . esc_url( 'tel:' . $value ) . '" rel="nofollow" title="' . esc_attr( $data['title'] ) . '">' . esc_html( $value ) . '</a>';
 }
 add_filter( 'um_profile_field_filter_hook__tel', 'um_profile_field_filter_hook__phone', 99, 2 );
 
@@ -256,7 +260,7 @@ function um_profile_field_filter_hook__textarea( $value, $data ) {
 		return '';
 	}
 	if ( ! empty( $data['html'] ) ) {
-		return $value;
+		return '<iframe class="um-textarea-html-value" title="' . esc_attr( $data['label'] ) . '" srcdoc="' . wp_kses_post( $value ) .'"></iframe>';
 	}
 
 	$description_key = UM()->profile()->get_show_bio_key( UM()->fields()->global_args );
@@ -456,7 +460,7 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 		$value = '<a href="' . esc_url( $value, $protocols ) . '" title="' . esc_attr( $alt ) . '" target="' . esc_attr( $data['url_target'] ) . '" ' . $url_rel . '>' . esc_html( $alt ) . '</a>';
 	} else {
 		// check $value is oEmbed
-		if ( 'oembed' === $data['type'] ) {
+		if ( array_key_exists( 'type', $data ) && 'oembed' === $data['type'] ) {
 			return $value;
 		}
 
