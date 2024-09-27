@@ -178,6 +178,13 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Added: ProfilePage Structured Data
 * Added: Ability to use HTML tags (allowed in `wp_kses_post`) in the global block restriction message
 * Changed: Some wp-admin fields descriptions
+* Updated: Data format in `um_admin_bulk_user_actions_hook` hook. Changed format from `$action_slug => array( 'label' => $action_title )` to `$action_slug => $action_title`
+* Added: `$old_status` param to `um_after_user_status_is_changed` hook
+* Added: `$user_id` param to `um_before_user_hash_is_changed` hook
+* Added: `$user_id, $hash, $expiration` params to `um_after_user_hash_is_changed` hook
+* Added: `um_restricted_post_content` hook
+* Added: `um_loggedin_inner_content` hook
+* Added: `um_profile_dynamic_meta_profile_schema` hook
 
 **Bugfixes**
 
@@ -200,6 +207,20 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 **Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
 
 **Deprecated**
+
+Hook: `um_after_user_status_is_changed_hook`. Use action hook `um_after_user_status_is_changed` instead.
+Hook: `um_when_status_is_set`. Use action hook `um_before_user_status_is_set` instead.
+Hook: `um_admin_user_action_hook`. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+Hook: `um_admin_user_action_{$bulk_action}_hook`. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+Hook: `um_admin_custom_hook_{$action}`. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+Function: `UM()->user()->set_status( $status )`. Use function `UM()->common()->users()->set_status( $status, $user_id )` instead.
+Function: `UM()->user()->assign_secretkey()`. Use function `UM()->common()->users()->assign_secretkey( $user_id )` instead.
+Function: `UM()->user()->approve( $repeat )`. Use function `UM()->common()->users()->approve( $user_id, $force )` instead.
+Function: `UM()->user()->email_pending()`. Use function `UM()->common()->users()->approve( $user_id, $force )` instead.
+Function: `UM()->user()->pending()`. Use function `UM()->common()->users()->set_as_pending( $user_id, $force )` instead.
+Function: `UM()->user()->reject()`. Use function `UM()->common()->users()->reject( $user_id, $force )` instead.
+Function: `UM()->user()->deactivate()`. Use function `UM()->common()->users()->deactivate( $user_id, $force )` instead.
+Function: `UM()->user()->user_exists_by_id( $user_id )`. Use function `UM()->common()->users()::user_exists( $user_id )` instead.
 
 = 2.8.6 2024-05-22 =
 

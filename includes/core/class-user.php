@@ -1514,6 +1514,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 		/**
 		 * Set user's hash
+		 *
+		 * @deprecated 2.8.7
 		 */
 		public function assign_secretkey() {
 			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->assign_secretkey()' );
