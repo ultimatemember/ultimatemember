@@ -759,8 +759,10 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 										case 'textarea':
 											if ( ! empty( $field['html'] ) || ( UM()->profile()->get_show_bio_key( $form ) === $k && UM()->options()->get( 'profile_show_html_bio' ) ) ) {
 												$form[ $k ] = html_entity_decode( $form[ $k ] ); // required because WP_Editor send sometimes encoded content.
-												preg_match('/^<p>(.*?)<\/p>$/', $form[ $k ], $match );
-												$form[ $k ] = $match[1]; // required because WP_Editor send content wrapped to <p></p>
+												preg_match( '/^<p>(.*?)<\/p>$/', $form[ $k ], $match ); // required because WP_Editor send content wrapped to <p></p>
+												if ( ! empty( $match[1] ) ) {
+													$form[ $k ] = $match[1];
+												}
 
 												$allowed_html = UM()->get_allowed_html( 'templates' );
 												if ( empty( $allowed_html['iframe'] ) ) {
