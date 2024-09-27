@@ -19,6 +19,7 @@
   - Added: `um_restricted_post_content` hook
   - Added: `um_loggedin_inner_content` hook
   - Added: `um_profile_dynamic_meta_profile_schema` hook
+  - Removed: `UM()->fields()->get_restricted_fields_for_edit()` function from a fields loop
 
 * Bugfixes:
 

@@ -185,6 +185,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Added: `um_restricted_post_content` hook
 * Added: `um_loggedin_inner_content` hook
 * Added: `um_profile_dynamic_meta_profile_schema` hook
+* Removed: `UM()->fields()->get_restricted_fields_for_edit()` function from a fields loop
 
 **Bugfixes**
 
@@ -208,20 +209,20 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 **Deprecated**
 
-Hook: `um_after_user_status_is_changed_hook`. Use action hook `um_after_user_status_is_changed` instead.
-Hook: `um_when_status_is_set`. Use action hook `um_before_user_status_is_set` instead.
-Hook: `um_admin_user_action_hook`. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
-Hook: `um_admin_user_action_{$bulk_action}_hook`. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
-Hook: `um_admin_custom_hook_{$action}`. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
-Function: `UM()->user()->set_status( $status )`. Use function `UM()->common()->users()->set_status( $status, $user_id )` instead.
-Function: `UM()->user()->assign_secretkey()`. Use function `UM()->common()->users()->assign_secretkey( $user_id )` instead.
-Function: `UM()->user()->approve( $repeat )`. Use function `UM()->common()->users()->approve( $user_id, $force )` instead.
-Function: `UM()->user()->email_pending()`. Use function `UM()->common()->users()->approve( $user_id, $force )` instead.
-Function: `UM()->user()->pending()`. Use function `UM()->common()->users()->set_as_pending( $user_id, $force )` instead.
-Function: `UM()->user()->reject()`. Use function `UM()->common()->users()->reject( $user_id, $force )` instead.
-Function: `UM()->user()->deactivate()`. Use function `UM()->common()->users()->deactivate( $user_id, $force )` instead.
-Function: `UM()->user()->user_exists_by_id( $user_id )`. Use function `UM()->common()->users()::user_exists( $user_id )` instead.
-Function: `UM()->files()->format_bytes( $size )`. Use function `UM()->common()->filesystem()::format_bytes( $size )` instead.
+* Hook: `um_after_user_status_is_changed_hook`. Use action hook `um_after_user_status_is_changed` instead.
+* Hook: `um_when_status_is_set`. Use action hook `um_before_user_status_is_set` instead.
+* Hook: `um_admin_user_action_hook`. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+* Hook: `um_admin_user_action_{$bulk_action}_hook`. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+* Hook: `um_admin_custom_hook_{$action}`. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+* Function: `UM()->user()->set_status( $status )`. Use function `UM()->common()->users()->set_status( $status, $user_id )` instead.
+* Function: `UM()->user()->assign_secretkey()`. Use function `UM()->common()->users()->assign_secretkey( $user_id )` instead.
+* Function: `UM()->user()->approve( $repeat )`. Use function `UM()->common()->users()->approve( $user_id, $force )` instead.
+* Function: `UM()->user()->email_pending()`. Use function `UM()->common()->users()->approve( $user_id, $force )` instead.
+* Function: `UM()->user()->pending()`. Use function `UM()->common()->users()->set_as_pending( $user_id, $force )` instead.
+* Function: `UM()->user()->reject()`. Use function `UM()->common()->users()->reject( $user_id, $force )` instead.
+* Function: `UM()->user()->deactivate()`. Use function `UM()->common()->users()->deactivate( $user_id, $force )` instead.
+* Function: `UM()->user()->user_exists_by_id( $user_id )`. Use function `UM()->common()->users()::user_exists( $user_id )` instead.
+* Function: `UM()->files()->format_bytes( $size )`. Use function `UM()->common()->filesystem()::format_bytes( $size )` instead.
 
 = 2.8.6 2024-05-22 =
 
