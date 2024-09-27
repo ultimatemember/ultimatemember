@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$actions = '';
+$actions = array();
 if ( is_user_logged_in() && UM()->roles()->um_current_user_can( 'edit', $user_profile_id ) ) {
 	if ( true === UM()->fields()->editing ) {
 		$submit   = UM()->frontend()::layouts()::button(
@@ -48,9 +48,10 @@ if ( is_user_logged_in() && UM()->roles()->um_current_user_can( 'edit', $user_pr
 				),
 			)
 		);
-		$actions .= $cancel . $submit;
+		$actions['cancel'] = $cancel;
+		$actions['submit'] = $submit;
 	} else {
-		$actions .= UM()->frontend()::layouts()::link(
+		$actions['edit_profile'] = UM()->frontend()::layouts()::link(
 			__( 'Edit Profile', 'ultimate-member' ),
 			array(
 				'design'  => 'primary',
@@ -68,7 +69,7 @@ if ( is_user_logged_in() && UM()->roles()->um_current_user_can( 'edit', $user_pr
 if ( true !== UM()->fields()->editing ) {
 	$dropdown_actions = UM()->user()->get_dropdown_items( $user_profile_id );
 	if ( ! empty( $dropdown_actions ) ) {
-		$actions .= UM()->frontend()::layouts()::dropdown_menu(
+		$actions['more_actions'] = UM()->frontend()::layouts()::dropdown_menu(
 			'um-profile-actions-toggle',
 			$dropdown_actions,
 			array(
@@ -79,6 +80,34 @@ if ( true !== UM()->fields()->editing ) {
 		);
 	}
 }
+/**
+ * Filters a User Profile actions list.
+ *
+ * @param {array} $actions         Actions in format 'action_key' => 'action_html'.
+ * @param {array} $profile_args    User Profile data.
+ * @param {int}   $user_profile_id User Profile ID.
+ *
+ * @return {array} User Profile actions.
+ *
+ * @since 2.9.0
+ * @hook um_user_profile_actions
+ *
+ * @example <caption>Add custom user profile action.</caption>
+ * function um_profile_menu_link_attrs( $actions, $profile_args, $user_profile_id ) {
+ *     if ( true !== UM()->fields()->editing ) {
+ *         $actions = UM()->array_insert_before(
+ *             $actions,
+ *             'more_actions',
+ *             array(
+ *                 'custom_action_key' => 'Custom action HTML',
+ *             )
+ *         );
+ *     }
+ *     return $actions;
+ * }
+ * add_filter( 'um_profile_tabs_privacy_list', 'um_profile_tabs_privacy_list', 10, 1 );
+ */
+$actions = apply_filters( 'um_user_profile_actions', $actions, $profile_args, $user_profile_id );
 // Reason for deprecate these hooks is unified dropdown with the actions. please use new one:
 // apply_filters( 'um_user_dropdown_items', $items, $user_id, $context );
 //@todo apply_filters( 'um_profile_edit_menu_items', $items, um_profile_id() ); hook is deprecated for new UI.
@@ -219,7 +248,7 @@ if ( true !== UM()->fields()->editing ) {
 							 */
 							do_action( 'um_before_profile_actions', $profile_args, $user_profile_id );
 
-							echo wp_kses( $actions, UM()->get_allowed_html( 'templates' ) );
+							echo wp_kses( implode( '', $actions ), UM()->get_allowed_html( 'templates' ) );
 
 							/**
 							 * Fires after profile actions.
