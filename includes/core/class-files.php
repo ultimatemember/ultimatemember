@@ -1244,28 +1244,19 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			return $removed_files;
 		}
 
-
 		/**
 		 * Format Bytes
 		 *
+		 * @deprecated 2.8.7
 		 * @param $size
 		 * @param int $precision
 		 *
 		 * @return string
 		 */
-		function format_bytes( $size, $precision = 1 ) {
-			if ( is_numeric( $size ) ) {
-				$base = log( $size, 1024 );
-				$suffixes = array( '', 'kb', 'MB', 'GB', 'TB' );
-				$computed_size = round( pow( 1024, $base - floor( $base ) ), $precision );
-				$unit = $suffixes[ floor( $base ) ];
-
-				return $computed_size.' '.$unit;
-			}
-
-			return '';
+		public function format_bytes( $size, $precision = 1 ) {
+			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->filesystem()->format_bytes()' );
+			return UM()->common()->filesystem()::format_bytes( $size, $precision );
 		}
-
 
 		/**
 		 * Get the list of profile/cover sizes

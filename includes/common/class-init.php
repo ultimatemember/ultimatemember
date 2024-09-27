@@ -41,6 +41,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 		}
 
 		/**
+		 * @since 2.8.7
+		 *
+		 * @return Filesystem
+		 */
+		public function filesystem() {
+			if ( empty( UM()->classes['um\common\filesystem'] ) ) {
+				UM()->classes['um\common\filesystem'] = new Filesystem();
+			}
+			return UM()->classes['um\common\filesystem'];
+		}
+
+		/**
 		 * @since 2.6.8
 		 *
 		 * @return Screen
