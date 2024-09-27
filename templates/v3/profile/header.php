@@ -200,7 +200,45 @@ if ( true !== UM()->fields()->editing ) {
 					<?php } ?>
 					<?php if ( ! empty( $actions ) ) { ?>
 						<div class="um-profile-header-actions">
-							<?php echo wp_kses( $actions, UM()->get_allowed_html( 'templates' ) ); ?>
+							<?php
+							/**
+							 * Fires before profile actions.
+							 *
+							 * @param {array} $args    User Profile data.
+							 * @param {int}   $user_id User Profile ID. Since 2.9.0.
+							 *
+							 * @since 2.8.7
+							 * @hook  um_before_profile_actions
+							 *
+							 * @example <caption>Display some content before profile actions in User Profile header.</caption>
+							 * function my_um_before_profile_actions( $args, $user_id ) {
+							 *     // your code here
+							 *     echo $content;
+							 * }
+							 * add_action( 'um_before_profile_actions', 'my_um_before_profile_actions', 10, 2 );
+							 */
+							do_action( 'um_before_profile_actions', $profile_args, $user_profile_id );
+
+							echo wp_kses( $actions, UM()->get_allowed_html( 'templates' ) );
+
+							/**
+							 * Fires after profile actions.
+							 *
+							 * @param {array} $args    User Profile data.
+							 * @param {int}   $user_id User Profile ID. Since 2.9.0.
+							 *
+							 * @since 2.8.7
+							 * @hook  um_after_profile_actions
+							 *
+							 * @example <caption>Display some content after profile actions in User Profile header.</caption>
+							 * function my_um_after_profile_actions( $args, $user_id ) {
+							 *     // your code here
+							 *     echo $content;
+							 * }
+							 * add_action( 'um_after_profile_actions', 'my_um_after_profile_actions', 10, 2 );
+							 */
+							do_action( 'um_after_profile_actions', $profile_args, $user_profile_id );
+							?>
 						</div>
 					<?php } ?>
 				</div>
