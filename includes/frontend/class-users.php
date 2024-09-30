@@ -33,6 +33,9 @@ class Users {
 			if ( UM()->common()->users()->can_be_approved( $user_id ) ) {
 				$actions['approve_user'] = array( 'label' => __( 'Approve Membership', 'ultimate-member' ) );
 			}
+			if ( UM()->common()->users()->can_be_rejected( $user_id ) ) {
+				$actions['reject_user'] = array( 'label' => __( 'Reject Membership', 'ultimate-member' ) );
+			}
 			if ( UM()->common()->users()->can_be_reactivated( $user_id ) ) {
 				$actions['reactivate_user'] = array( 'label' => __( 'Reactivate this account', 'ultimate-member' ) );
 			}
@@ -41,9 +44,6 @@ class Users {
 			}
 			if ( UM()->common()->users()->can_activation_send( $user_id ) ) {
 				$actions['resend_user_activation'] = array( 'label' => __( 'Resend Activation Email', 'ultimate-member' ) );
-			}
-			if ( UM()->common()->users()->can_be_rejected( $user_id ) ) {
-				$actions['reject_user'] = array( 'label' => __( 'Reject Membership', 'ultimate-member' ) );
 			}
 			if ( UM()->common()->users()->can_be_deactivated( $user_id ) ) {
 				$actions['deactivate_user'] = array( 'label' => __( 'Deactivate this account', 'ultimate-member' ) );
