@@ -307,6 +307,12 @@ input[type=number].um-forms-field {
 }
 
 .um-form-fields-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  row-gap: 4px;
   float: left;
   clear: none;
   margin: 0;
