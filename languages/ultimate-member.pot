@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-09-30T20:11:34+00:00\n"
+"POT-Creation-Date: 2024-09-30T20:48:43+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: ultimate-member\n"
@@ -173,160 +173,160 @@ msgstr ""
 msgid "Invalid user."
 msgstr ""
 
-#: includes/admin/class-secure.php:196
+#: includes/admin/class-secure.php:195
 msgid "Scan Now"
 msgstr ""
 
-#: includes/admin/class-secure.php:198
+#: includes/admin/class-secure.php:197
 msgid "Last scan:"
 msgstr ""
 
-#: includes/admin/class-secure.php:202
-#: includes/admin/class-secure.php:339
+#: includes/admin/class-secure.php:201
+#: includes/admin/class-secure.php:338
 msgid "ago"
 msgstr ""
 
-#: includes/admin/class-secure.php:204
+#: includes/admin/class-secure.php:203
 msgid "Not Completed."
 msgstr ""
 
-#: includes/admin/class-secure.php:207
+#: includes/admin/class-secure.php:206
 msgid "Not Scanned yet."
 msgstr ""
 
-#: includes/admin/class-secure.php:221
+#: includes/admin/class-secure.php:220
 #: includes/admin/class-site-health.php:1112
 msgid "Banned Administrative Capabilities"
 msgstr ""
 
 #. translators: %s are disabled default capabilities that are enabled by default.
-#: includes/admin/class-secure.php:223
+#: includes/admin/class-secure.php:222
 msgid "All the above are default Administrator & Super Admin capabilities. When someone tries to inject capabilities to the Account, Profile & Register forms submission, it will be flagged with this option. The %s capabilities are locked to ensure no users will be created with these capabilities."
 msgstr ""
 
-#: includes/admin/class-secure.php:228
+#: includes/admin/class-secure.php:227
 msgid "Scanner"
 msgstr ""
 
-#: includes/admin/class-secure.php:230
+#: includes/admin/class-secure.php:229
 msgid "Scan your site to check for vulnerabilities prior to Ultimate Member version 2.6.7 and get recommendations to secure your site."
 msgstr ""
 
-#: includes/admin/class-secure.php:235
+#: includes/admin/class-secure.php:234
 #: includes/admin/class-site-health.php:1116
 msgid "Lock All Register Forms"
 msgstr ""
 
-#: includes/admin/class-secure.php:236
+#: includes/admin/class-secure.php:235
 msgid "Lock Forms"
 msgstr ""
 
-#: includes/admin/class-secure.php:237
+#: includes/admin/class-secure.php:236
 msgid "This prevents all users from registering with Ultimate Member on your site."
 msgstr ""
 
-#: includes/admin/class-secure.php:242
+#: includes/admin/class-secure.php:241
 #: includes/admin/class-site-health.php:1120
 msgid "Display Login form notice to reset passwords"
 msgstr ""
 
-#: includes/admin/class-secure.php:243
+#: includes/admin/class-secure.php:242
 msgid "Enable Login form notice"
 msgstr ""
 
-#: includes/admin/class-secure.php:244
+#: includes/admin/class-secure.php:243
 msgid "Enforces users to reset their passwords (one-time) and prevent from entering old password."
 msgstr ""
 
-#: includes/admin/class-secure.php:256
+#: includes/admin/class-secure.php:255
 msgid "Expire All Users Sessions"
 msgstr ""
 
 #. translators: %d is the users count.
-#: includes/admin/class-secure.php:258
+#: includes/admin/class-secure.php:257
 msgid "Are you sure that you want to make all users sessions expired?"
 msgstr ""
 
 #. translators: %d is the users count.
-#: includes/admin/class-secure.php:258
+#: includes/admin/class-secure.php:257
 msgid "Logout Users (%d)"
 msgstr ""
 
-#: includes/admin/class-secure.php:259
+#: includes/admin/class-secure.php:258
 msgid "This will log out all users on your site and forces them to reset passwords <br/>when <strong>\"Display Login form notice to reset passwords\" is enabled/checked.</strong>"
 msgstr ""
 
-#: includes/admin/class-secure.php:269
+#: includes/admin/class-secure.php:268
 msgid "Administrative capabilities ban"
 msgstr ""
 
-#: includes/admin/class-secure.php:270
+#: includes/admin/class-secure.php:269
 #: includes/admin/class-site-health.php:1124
 msgid "Enable ban for administrative capabilities"
 msgstr ""
 
-#: includes/admin/class-secure.php:271
+#: includes/admin/class-secure.php:270
 msgid " When someone tries to inject capabilities to the Account, Profile & Register forms submission, it will be banned."
 msgstr ""
 
-#: includes/admin/class-secure.php:276
+#: includes/admin/class-secure.php:275
 #: includes/admin/class-site-health.php:1132
 msgid "Notify Administrators"
 msgstr ""
 
-#: includes/admin/class-secure.php:277
+#: includes/admin/class-secure.php:276
 msgid "Enable notification"
 msgstr ""
 
-#: includes/admin/class-secure.php:278
+#: includes/admin/class-secure.php:277
 msgid "When enabled, All administrators will be notified when someone has suspicious activities in the Account, Profile & Register forms."
 msgstr ""
 
-#: includes/admin/class-secure.php:285
+#: includes/admin/class-secure.php:284
 #: includes/admin/class-site-health.php:1137
 msgid "Send Immediately"
 msgstr ""
 
-#: includes/admin/class-secure.php:286
+#: includes/admin/class-secure.php:285
 #: includes/admin/class-site-health.php:1138
 msgid "Hourly"
 msgstr ""
 
-#: includes/admin/class-secure.php:287
+#: includes/admin/class-secure.php:286
 #: includes/admin/class-site-health.php:1139
 msgid "Daily"
 msgstr ""
 
-#: includes/admin/class-secure.php:289
+#: includes/admin/class-secure.php:288
 #: includes/admin/class-site-health.php:1143
 msgid "Notification Schedule"
 msgstr ""
 
-#: includes/admin/class-secure.php:295
+#: includes/admin/class-secure.php:294
 msgid "Allowed hosts for safe redirect (one host per line)"
 msgstr ""
 
-#: includes/admin/class-secure.php:296
+#: includes/admin/class-secure.php:295
 msgid "Extend allowed hosts for frontend pages redirects."
 msgstr ""
 
-#: includes/admin/class-secure.php:306
+#: includes/admin/class-secure.php:305
 msgid "Security"
 msgstr ""
 
-#: includes/admin/class-secure.php:307
+#: includes/admin/class-secure.php:306
 msgid "This feature scans for suspicious registered accounts, bans the usage of administrative capabilities to site subscribers/members, allows the website administrators to force all users to reset their passwords, preventing users from logging-in using their old passwords that may have been exposed."
 msgstr ""
 
-#: includes/admin/class-secure.php:334
+#: includes/admin/class-secure.php:333
 msgid "Blocked Due to Suspicious Activity"
 msgstr ""
 
-#: includes/admin/class-secure.php:337
+#: includes/admin/class-secure.php:336
 msgid "Are you sure that you want to restore this account after getting flagged for suspicious activity?"
 msgstr ""
 
-#: includes/admin/class-secure.php:337
+#: includes/admin/class-secure.php:336
 msgid "Restore Account"
 msgstr ""
 
@@ -9799,11 +9799,11 @@ msgid "Membership Inactive"
 msgstr ""
 
 #: includes/core/rest/class-api-v1.php:220
-#: includes/core/rest/class-api-v1.php:277
-#: includes/core/rest/class-api-v1.php:309
+#: includes/core/rest/class-api-v1.php:276
+#: includes/core/rest/class-api-v1.php:308
 #: includes/core/rest/class-api-v2.php:202
-#: includes/core/rest/class-api-v2.php:259
-#: includes/core/rest/class-api-v2.php:291
+#: includes/core/rest/class-api-v2.php:258
+#: includes/core/rest/class-api-v2.php:290
 msgid "You must provide a user ID"
 msgstr ""
 
@@ -9817,30 +9817,30 @@ msgstr ""
 msgid "You need to provide value to update"
 msgstr ""
 
-#: includes/core/rest/class-api-v1.php:244
-#: includes/core/rest/class-api-v2.php:226
+#: includes/core/rest/class-api-v1.php:243
+#: includes/core/rest/class-api-v2.php:225
 msgid "User status has been changed."
 msgstr ""
 
-#: includes/core/rest/class-api-v1.php:254
-#: includes/core/rest/class-api-v2.php:236
+#: includes/core/rest/class-api-v1.php:253
+#: includes/core/rest/class-api-v2.php:235
 msgid "User role has been changed."
 msgstr ""
 
-#: includes/core/rest/class-api-v1.php:258
-#: includes/core/rest/class-api-v2.php:240
+#: includes/core/rest/class-api-v1.php:257
+#: includes/core/rest/class-api-v2.php:239
 msgid "User meta has been changed."
 msgstr ""
 
-#: includes/core/rest/class-api-v1.php:285
-#: includes/core/rest/class-api-v1.php:316
-#: includes/core/rest/class-api-v2.php:267
-#: includes/core/rest/class-api-v2.php:298
+#: includes/core/rest/class-api-v1.php:284
+#: includes/core/rest/class-api-v1.php:315
+#: includes/core/rest/class-api-v2.php:266
+#: includes/core/rest/class-api-v2.php:297
 msgid "Invalid user specified"
 msgstr ""
 
-#: includes/core/rest/class-api-v1.php:292
-#: includes/core/rest/class-api-v2.php:274
+#: includes/core/rest/class-api-v1.php:291
+#: includes/core/rest/class-api-v2.php:273
 msgid "User has been successfully deleted."
 msgstr ""
 
