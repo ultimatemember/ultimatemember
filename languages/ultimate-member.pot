@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-09-30T14:55:24+00:00\n"
+"POT-Creation-Date: 2024-09-30T15:01:59+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: ultimate-member\n"
@@ -2045,12 +2045,12 @@ msgid "Approve Membership"
 msgstr ""
 
 #: includes/admin/class-users-columns.php:272
-#: includes/frontend/class-users.php:46
+#: includes/frontend/class-users.php:37
 msgid "Reject Membership"
 msgstr ""
 
 #: includes/admin/class-users-columns.php:273
-#: includes/frontend/class-users.php:40
+#: includes/frontend/class-users.php:43
 msgid "Put as Pending Review"
 msgstr ""
 
@@ -10403,11 +10403,11 @@ msgstr ""
 msgid "Your new password cannot be same as old password."
 msgstr ""
 
-#: includes/frontend/class-users.php:37
+#: includes/frontend/class-users.php:40
 msgid "Reactivate this account"
 msgstr ""
 
-#: includes/frontend/class-users.php:43
+#: includes/frontend/class-users.php:46
 msgid "Resend Activation Email"
 msgstr ""
 
