@@ -217,7 +217,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Function: `UM()->user()->set_status( $status )`. Use function `UM()->common()->users()->set_status( $status, $user_id )` instead.
 * Function: `UM()->user()->assign_secretkey()`. Use function `UM()->common()->users()->assign_secretkey( $user_id )` instead.
 * Function: `UM()->user()->approve( $repeat )`. Use function `UM()->common()->users()->approve( $user_id, $force )` instead.
-* Function: `UM()->user()->email_pending()`. Use function `UM()->common()->users()->approve( $user_id, $force )` instead.
+* Function: `UM()->user()->email_pending()`. Use function `UM()->common()->users()->send_activation( $user_id, $force )` instead.
 * Function: `UM()->user()->pending()`. Use function `UM()->common()->users()->set_as_pending( $user_id, $force )` instead.
 * Function: `UM()->user()->reject()`. Use function `UM()->common()->users()->reject( $user_id, $force )` instead.
 * Function: `UM()->user()->deactivate()`. Use function `UM()->common()->users()->deactivate( $user_id, $force )` instead.
