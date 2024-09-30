@@ -12,13 +12,13 @@
   - Added: ProfilePage Structured Data
   - Added: Ability to use HTML tags (allowed in `wp_kses_post`) in the global block restriction message
   - Changed: Some wp-admin fields descriptions
-  - Updated: Data format in `um_admin_bulk_user_actions_hook` hook. Changed format from `$action_slug => array( 'label' => $action_title )` to `$action_slug => $action_title`
-  - Added: `$old_status` param to `um_after_user_status_is_changed` hook
-  - Added: `$user_id` param to `um_before_user_hash_is_changed` hook
-  - Added: `$user_id, $hash, $expiration` params to `um_after_user_hash_is_changed` hook
-  - Added: `um_restricted_post_content` hook
-  - Added: `um_loggedin_inner_content` hook
-  - Added: `um_profile_dynamic_meta_profile_schema` hook
+  - Updated: Data format in `um_admin_bulk_user_actions_hook` filter hook. Changed format from `$action_slug => array( 'label' => $action_title )` to `$action_slug => $action_title`
+  - Added: `$old_status` param to `um_after_user_status_is_changed` action hook
+  - Added: `$user_id` param to `um_before_user_hash_is_changed` action hook
+  - Added: `$user_id, $hash, $expiration` params to `um_after_user_hash_is_changed` action hook
+  - Added: `um_restricted_post_content` filter hook
+  - Added: `um_loggedin_inner_content` filter hook
+  - Added: `um_profile_dynamic_meta_profile_schema` filter hook
   - Removed: `UM()->fields()->get_restricted_fields_for_edit()` function from a fields loop
 
 * Bugfixes:
@@ -43,11 +43,11 @@
 
 * Deprecated:
 
-  - Hook: `um_after_user_status_is_changed_hook`. Use action hook `um_after_user_status_is_changed` instead.
-  - Hook: `um_when_status_is_set`. Use action hook `um_before_user_status_is_set` instead.
-  - Hook: `um_admin_user_action_hook`. Use filter hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
-  - Hook: `um_admin_user_action_{$bulk_action}_hook`. Use filter hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
-  - Hook: `um_admin_custom_hook_{$action}`. Use filter hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+  - Hook: Action hook `um_after_user_status_is_changed_hook`. Use action hook `um_after_user_status_is_changed` instead.
+  - Hook: Action hook `um_when_status_is_set`. Use action hook `um_before_user_status_is_set` instead.
+  - Hook: Action hook `um_admin_user_action_hook`. Use filter hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+  - Hook: Action hook `um_admin_user_action_{$bulk_action}_hook`. Use filter hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+  - Hook: Action hook `um_admin_custom_hook_{$action}`. Use filter hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
   - Function: `UM()->user()->set_status( $status )`. Use function `UM()->common()->users()->set_status( $status, $user_id )` instead.
   - Function: `UM()->user()->assign_secretkey()`. Use function `UM()->common()->users()->assign_secretkey( $user_id )` instead.
   - Function: `UM()->user()->approve( $repeat )`. Use function `UM()->common()->users()->approve( $user_id, $force )` instead.
