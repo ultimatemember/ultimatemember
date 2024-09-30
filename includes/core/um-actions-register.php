@@ -64,7 +64,7 @@ function um_after_insert_user( $user_id, $args, $form_data = null ) {
 		um_fetch_user( $user_id );
 		$status = um_user( 'status' );
 	}
-	// UM()->user()->set_status( $status );
+
 	UM()->common()->users()->set_status( $user_id, $status );
 
 	// Create user uploads directory.

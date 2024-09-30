@@ -166,7 +166,7 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.8.7 2024-09-30 =
+= 2.8.7 2024-10-01 =
 
 **Enhancements**
 
@@ -214,6 +214,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Hook: Action hook `um_admin_user_action_hook`. Use filter hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
 * Hook: Action hook `um_admin_user_action_{$bulk_action}_hook`. Use filter hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
 * Hook: Action hook `um_admin_custom_hook_{$action}`. Use filter hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+* Hook: Filter hook `um_admin_views_users`. Use 'um_user_statuses_admin_filter_options' hook instead.
 * Function: `UM()->user()->set_status( $status )`. Use function `UM()->common()->users()->set_status( $status, $user_id )` instead.
 * Function: `UM()->user()->assign_secretkey()`. Use function `UM()->common()->users()->assign_secretkey( $user_id )` instead.
 * Function: `UM()->user()->approve( $repeat )`. Use function `UM()->common()->users()->approve( $user_id, $force )` instead.

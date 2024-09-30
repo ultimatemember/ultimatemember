@@ -95,3 +95,17 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @param {int} $user_id User ID.
  */
+
+/**
+ * Filters the WP Users list table views.
+ *
+ * Fully deprecated. Please use 'um_user_statuses_admin_filter_options' hook instead since 2.8.7.
+ *
+ * @param {array} $views List table filter views.
+ *
+ * @return {array} List table filter views.
+ *
+ * @since 1.3.x
+ * @depecated 2.8.7 Fully deprecated because there is used dropdown with statuses instead of list table views.
+ * @hook um_admin_views_users
+ */

@@ -150,7 +150,6 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 				}
 				// Restore Account Status.
 				if ( isset( $metadata['account_status'] ) ) {
-					// UM()->user()->set_status( $metadata['account_status'] );
 					UM()->common()->users()->set_status( $user_id, $metadata['account_status'] );
 				}
 

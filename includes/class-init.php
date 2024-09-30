@@ -1451,7 +1451,6 @@ if ( ! class_exists( 'UM' ) ) {
 			require_once 'core/um-actions-form.php';
 			require_once 'core/um-actions-access.php';
 			require_once 'core/um-actions-wpadmin.php';
-//			require_once 'core/um-actions-core.php';
 			require_once 'core/um-actions-ajax.php';
 			require_once 'core/um-actions-login.php';
 			require_once 'core/um-actions-register.php';

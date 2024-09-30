@@ -221,7 +221,6 @@ if ( ! class_exists( 'um\core\rest\API_v2' ) ) {
 
 			switch ( $data ) {
 				case 'status':
-					// UM()->user()->set_status( $value );
 					UM()->common()->users()->set_status( $id, $value );
 					$response['success'] = __( 'User status has been changed.', 'ultimate-member' );
 					break;
