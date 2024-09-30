@@ -133,7 +133,12 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 					admin_url( 'users.php' )
 				);
 
-				$row_actions[] = '<a href="' . esc_url( $url ) . '" class="um-resend-activation-email">' . esc_html__( 'Resend activation email', 'ultimate-member' ) . '</a>';
+				$title = __( 'Send activation email', 'ultimate-member' );
+				if ( UM()->common()->users()->has_status( $user_id, 'awaiting_email_confirmation' ) ) {
+					$title = __( 'Resend activation email', 'ultimate-member' );
+				}
+
+				$row_actions[] = '<a href="' . esc_url( $url ) . '" class="um-resend-activation-email">' . esc_html( $title ) . '</a>';
 			}
 			if ( UM()->common()->users()->can_be_deactivated( $user_id ) ) {
 				$url = add_query_arg(

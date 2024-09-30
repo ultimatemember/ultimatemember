@@ -634,7 +634,7 @@ class Users {
 		}*/
 
 		$status = $this->get_status( $user_id );
-		return 'approved' !== $status;
+		return 'approved' !== $status && 'inactive' !== $status; // inactive can be only reactivated
 	}
 
 	/**
