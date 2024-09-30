@@ -118,7 +118,7 @@ if ( ! class_exists( 'um\admin\Actions_Listener' ) ) {
 
 						$redirect = wp_get_referer();
 						if ( UM()->common()->users()->can_current_user_edit_user( $user_id ) ) {
-							$result = UM()->common()->users()->send_activation( $user_id );
+							$result = UM()->common()->users()->send_activation( $user_id, true );
 							if ( $result ) {
 								$redirect = add_query_arg(
 									array(

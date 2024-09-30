@@ -321,6 +321,8 @@ class Users {
 	}
 
 	/**
+	 * Activation can be sent everytime for every user. Even force for current user.
+	 *
 	 * @param int  $user_id User ID.
 	 * @param bool $force   If true - ignore current user condition.
 	 *
@@ -338,8 +340,7 @@ class Users {
 			return false;
 		}*/
 
-		$status = $this->get_status( $user_id );
-		return 'awaiting_admin_review' !== $status;
+		return true;
 	}
 
 	/**
@@ -365,8 +366,8 @@ class Users {
 
 		$result = $this->set_status( $user_id, 'awaiting_email_confirmation' );
 
-		// It's `false` on failure or if the user already has rejected status.
-		if ( false !== $result ) {
+		// It's `false` on failure or if `$force` and the user already has `awaiting_email_confirmation` status.
+		if ( false !== $result || ( $force && $this->has_status( $user_id, 'awaiting_email_confirmation' ) ) ) {
 			// Clear all sessions for email confirmation pending users
 			self::destroy_all_sessions( $user_id );
 
@@ -375,11 +376,15 @@ class Users {
 
 			$userdata = get_userdata( $user_id );
 
+			$current_user_id = get_current_user_id();
+			um_fetch_user( $user_id );
+
 			add_filter( 'um_template_tags_patterns_hook', array( UM()->user(), 'add_activation_placeholder' ) );
 			add_filter( 'um_template_tags_replaces_hook', array( UM()->user(), 'add_activation_replace_placeholder' ) );
 
 			UM()->mail()->send( $userdata->user_email, 'checkmail_email' );
 
+			um_fetch_user( $current_user_id );
 			/**
 			 * Fires after User has been set as pending email confirmation.
 			 *
@@ -397,16 +402,13 @@ class Users {
 
 	/**
 	 * @param int  $user_id User ID.
-	 * @param bool $force   If true - ignore current user condition.
 	 *
 	 * @return bool
 	 */
-	public function can_be_deactivated( $user_id, $force = false ) {
-		if ( ! $force ) {
-			$current_user_id = get_current_user_id();
-			if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
-				return false;
-			}
+	public function can_be_deactivated( $user_id ) {
+		$current_user_id = get_current_user_id();
+		if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
+			return false;
 		}
 
 		/*if ( ! $this->can_current_user_edit_user( $user_id ) ) {
@@ -414,27 +416,17 @@ class Users {
 		}*/
 
 		$status = $this->get_status( $user_id );
-		if ( 'inactive' === $status ) {
-			// Break if the user already approved
-			return false;
-		}
-
-		if ( 'approved' !== $status ) {
-			// Break if the user already doesn't approved yet
-			return false;
-		}
-
-		return true;
+		// Break only if the user already approved
+		return 'inactive' !== $status;
 	}
 
 	/**
 	 * @param int  $user_id User ID.
-	 * @param bool $force   If true - ignore current user condition.
 	 *
 	 * @return bool
 	 */
-	public function deactivate( $user_id, $force = false ) {
-		if ( ! $this->can_be_deactivated( $user_id, $force ) ) {
+	public function deactivate( $user_id ) {
+		if ( ! $this->can_be_deactivated( $user_id ) ) {
 			return false;
 		}
 
@@ -455,6 +447,8 @@ class Users {
 			// Clear all sessions for inactive users
 			self::destroy_all_sessions( $user_id );
 
+			$this->reset_activation_link( $user_id );
+
 			$userdata = get_userdata( $user_id );
 			UM()->mail()->send( $userdata->user_email, 'inactive_email' );
 
@@ -474,17 +468,16 @@ class Users {
 	}
 
 	/**
-	 * @param int  $user_id User ID.
-	 * @param bool $force   If true - ignore current user condition.
+	 * User can be rejected only after awaiting admin review status.
+	 *
+	 * @param int $user_id User ID.
 	 *
 	 * @return bool
 	 */
-	public function can_be_rejected( $user_id, $force = false ) {
-		if ( ! $force ) {
-			$current_user_id = get_current_user_id();
-			if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
-				return false;
-			}
+	public function can_be_rejected( $user_id ) {
+		$current_user_id = get_current_user_id();
+		if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
+			return false;
 		}
 
 		/*if ( ! $this->can_current_user_edit_user( $user_id ) ) {
@@ -492,29 +485,20 @@ class Users {
 		}*/
 
 		$status = $this->get_status( $user_id );
-		if ( 'rejected' === $status ) {
-			// Break if the user already rejected
-			return false;
-		}
 
-		if ( 'approved' !== $status ) {
-			// Break if the user already doesn't approved yet
-			return false;
-		}
-
-		return true;
+		// User can be rejected only after awaiting admin review status
+		return 'awaiting_admin_review' === $status;
 	}
 
 	/**
 	 * Reject user membership.
 	 *
 	 * @param int  $user_id User ID.
-	 * @param bool $force   If true - ignore current user condition.
 	 *
 	 * @return bool
 	 */
-	public function reject( $user_id, $force = false ) {
-		if ( ! $this->can_be_rejected( $user_id, $force ) ) {
+	public function reject( $user_id ) {
+		if ( ! $this->can_be_rejected( $user_id ) ) {
 			return false;
 		}
 
@@ -535,6 +519,8 @@ class Users {
 			// Clear all sessions for rejected users
 			self::destroy_all_sessions( $user_id );
 
+			$this->reset_activation_link( $user_id );
+
 			$userdata = get_userdata( $user_id );
 			UM()->mail()->send( $userdata->user_email, 'rejected_email' );
 
@@ -554,7 +540,7 @@ class Users {
 	}
 
 	/**
-	 * Check if the user can be set as pending admin review.
+	 * Check if the user can be set as pending admin review. Cannot set the same status but any user can be set to pending admin review.
 	 *
 	 * @param int  $user_id User ID.
 	 * @param bool $force   If true - ignore current user condition.
@@ -607,6 +593,8 @@ class Users {
 			// Clear all sessions for awaiting admin confirmation users
 			self::destroy_all_sessions( $user_id );
 
+			$this->reset_activation_link( $user_id );
+
 			$userdata = get_userdata( $user_id );
 			UM()->mail()->send( $userdata->user_email, 'pending_email' );
 
@@ -626,7 +614,7 @@ class Users {
 	}
 
 	/**
-	 * Check if the user can be approved.
+	 * Check if the user can be approved. Any user with status that isn't equal to `approved` can be approved.
 	 *
 	 * @param int  $user_id User ID.
 	 * @param bool $force   If true - ignore current user condition.
@@ -689,11 +677,15 @@ class Users {
 				$this->maybe_generate_password_reset_key( $userdata );
 			}
 
+			$current_user_id = get_current_user_id();
+			um_fetch_user( $user_id );
+
 			add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ) );
 			add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ) );
 
 			UM()->mail()->send( $userdata->user_email, $email_slug );
 
+			um_fetch_user( $current_user_id );
 			/**
 			 * Fires after User has been approved.
 			 *
@@ -710,17 +702,16 @@ class Users {
 	}
 
 	/**
+	 * Reactivated can be only `inactive` user.
+	 *
 	 * @param int  $user_id User ID.
-	 * @param bool $force   If true - ignore current user condition.
 	 *
 	 * @return bool
 	 */
-	public function can_be_reactivated( $user_id, $force = false ) {
-		if ( ! $force ) {
-			$current_user_id = get_current_user_id();
-			if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
-				return false;
-			}
+	public function can_be_reactivated( $user_id ) {
+		$current_user_id = get_current_user_id();
+		if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
+			return false;
 		}
 
 		/*if ( ! $this->can_current_user_edit_user( $user_id ) ) {
@@ -734,14 +725,13 @@ class Users {
 	/**
 	 * Reactivate user.
 	 *
-	 * @param int  $user_id User ID.
-	 * @param bool $force   If true - ignore current user condition.
+	 * @param int $user_id User ID.
 	 *
 	 * @return bool `true` if the user has been reactivated
 	 *              `false` on failure or if the user already has approved status.
 	 */
-	public function reactivate( $user_id, $force = false ) {
-		if ( ! $this->can_be_reactivated( $user_id, $force ) ) {
+	public function reactivate( $user_id ) {
+		if ( ! $this->can_be_reactivated( $user_id ) ) {
 			return false;
 		}
 
@@ -764,10 +754,15 @@ class Users {
 
 			$userdata = get_userdata( $user_id );
 
+			$current_user_id = get_current_user_id();
+			um_fetch_user( $user_id );
+
 			add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ) );
 			add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ) );
 
 			UM()->mail()->send( $userdata->user_email, 'welcome_email' );
+
+			um_fetch_user( $current_user_id );
 
 			/**
 			 * Fires after User has been reactivated.

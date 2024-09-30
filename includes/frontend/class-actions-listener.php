@@ -112,7 +112,7 @@ if ( ! class_exists( 'um\frontend\Actions_Listener' ) ) {
 						wp_die( esc_html__( 'You do not have permission to edit this user.', 'ultimate-member' ) );
 					}
 
-					$result = UM()->common()->users()->send_activation( $user_id );
+					$result = UM()->common()->users()->send_activation( $user_id, true );
 					if ( ! $result ) {
 						wp_die( esc_html__( 'Something went wrong.', 'ultimate-member' ) );
 					}

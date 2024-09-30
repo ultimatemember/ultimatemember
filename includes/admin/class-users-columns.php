@@ -84,7 +84,20 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 					),
 					admin_url( 'users.php' )
 				);
+
 				$row_actions[] = '<a href="' . esc_url( $url ) . '" class="um-set-status-approved">' . esc_html__( 'Approve', 'ultimate-member' ) . '</a>';
+			}
+			if ( UM()->common()->users()->can_be_rejected( $user_id ) ) {
+				$url = add_query_arg(
+					array(
+						'um_adm_action' => 'reject_user',
+						'uid'           => $user_id,
+						'_wpnonce'      => wp_create_nonce( 'reject_user' . $user_id ),
+					),
+					admin_url( 'users.php' )
+				);
+
+				$row_actions[] = '<a href="' . esc_url( $url ) . '" class="um-set-status-rejected" onclick="return confirm( \'' . esc_js( __( 'Are you sure you want to reject this user membership?', 'ultimate-member' ) ) . '\' );">' . esc_html__( 'Reject', 'ultimate-member' ) . '</a>';
 			}
 			if ( UM()->common()->users()->can_be_reactivated( $user_id ) ) {
 				$url = add_query_arg(
@@ -95,6 +108,7 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 					),
 					admin_url( 'users.php' )
 				);
+
 				$row_actions[] = '<a href="' . esc_url( $url ) . '" class="um-reactivate-user">' . esc_html__( 'Reactivate', 'ultimate-member' ) . '</a>';
 			}
 			if ( UM()->common()->users()->can_be_set_as_pending( $user_id ) ) {
@@ -106,6 +120,7 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 					),
 					admin_url( 'users.php' )
 				);
+
 				$row_actions[] = '<a href="' . esc_url( $url ) . '" class="um-set-status-pending">' . esc_html__( 'Put as pending', 'ultimate-member' ) . '</a>';
 			}
 			if ( UM()->common()->users()->can_activation_send( $user_id ) ) {
@@ -117,18 +132,8 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 					),
 					admin_url( 'users.php' )
 				);
+
 				$row_actions[] = '<a href="' . esc_url( $url ) . '" class="um-resend-activation-email">' . esc_html__( 'Resend activation email', 'ultimate-member' ) . '</a>';
-			}
-			if ( UM()->common()->users()->can_be_rejected( $user_id ) ) {
-				$url = add_query_arg(
-					array(
-						'um_adm_action' => 'reject_user',
-						'uid'           => $user_id,
-						'_wpnonce'      => wp_create_nonce( 'reject_user' . $user_id ),
-					),
-					admin_url( 'users.php' )
-				);
-				$row_actions[] = '<a href="' . esc_url( $url ) . '" class="um-set-status-rejected" onclick="return confirm( \'' . esc_js( __( 'Are you sure you want to reject this user membership?', 'ultimate-member' ) ) . '\' );">' . esc_html__( 'Reject', 'ultimate-member' ) . '</a>';
 			}
 			if ( UM()->common()->users()->can_be_deactivated( $user_id ) ) {
 				$url = add_query_arg(
@@ -139,6 +144,7 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 					),
 					admin_url( 'users.php' )
 				);
+
 				$row_actions[] = '<a href="' . esc_url( $url ) . '" class="um-deactivate-user" onclick="return confirm( \'' . esc_js( __( 'Are you sure you want to deactivate this user?', 'ultimate-member' ) ) . '\' );">' . esc_html__( 'Deactivate', 'ultimate-member' ) . '</a>';
 			}
 
@@ -495,7 +501,7 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 				case 'um_resend_activation':
 					$email_pending_count = 0;
 					foreach ( $users as $user_id ) {
-						$res = UM()->common()->users()->send_activation( $user_id );
+						$res = UM()->common()->users()->send_activation( $user_id, true );
 						if ( $res ) {
 							++$email_pending_count;
 						}
