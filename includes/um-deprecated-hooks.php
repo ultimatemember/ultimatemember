@@ -99,7 +99,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Filters the WP Users list table views.
  *
- * Fully deprecated. Please use 'um_user_statuses_admin_filter_options' hook instead since 2.8.7.
+ * Fully deprecated. Please use filter 'um_user_statuses_admin_filter_options' hook instead since 2.8.7.
  *
  * @param {array} $views List table filter views.
  *
