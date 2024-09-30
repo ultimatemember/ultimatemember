@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-09-30T15:01:59+00:00\n"
+"POT-Creation-Date: 2024-09-30T20:11:34+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: ultimate-member\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. Author of the plugin
 #: ultimate-member.php
 #: includes/admin/class-site-health.php:292
-#: includes/admin/class-users-columns.php:317
+#: includes/admin/class-users-columns.php:322
 #: includes/admin/core/class-admin-menu.php:183
 #: includes/core/class-user.php:1060
 msgid "Ultimate Member"
@@ -2008,7 +2008,7 @@ msgid "Reject"
 msgstr ""
 
 #: includes/admin/class-users-columns.php:112
-#: includes/admin/class-users-columns.php:276
+#: includes/admin/class-users-columns.php:281
 msgid "Reactivate"
 msgstr ""
 
@@ -2017,57 +2017,63 @@ msgid "Put as pending"
 msgstr ""
 
 #: includes/admin/class-users-columns.php:136
+#: includes/frontend/class-users.php:46
+msgid "Send activation email"
+msgstr ""
+
+#: includes/admin/class-users-columns.php:138
+#: includes/frontend/class-users.php:48
 msgid "Resend activation email"
 msgstr ""
 
-#: includes/admin/class-users-columns.php:148
+#: includes/admin/class-users-columns.php:153
 msgid "Are you sure you want to deactivate this user?"
 msgstr ""
 
-#: includes/admin/class-users-columns.php:148
-#: includes/admin/class-users-columns.php:275
+#: includes/admin/class-users-columns.php:153
+#: includes/admin/class-users-columns.php:280
 msgid "Deactivate"
 msgstr ""
 
-#: includes/admin/class-users-columns.php:232
+#: includes/admin/class-users-columns.php:237
 #: templates/account.php:61
 #: templates/account.php:102
 msgid "View profile"
 msgstr ""
 
-#: includes/admin/class-users-columns.php:238
+#: includes/admin/class-users-columns.php:243
 msgid "Info"
 msgstr ""
 
-#: includes/admin/class-users-columns.php:271
+#: includes/admin/class-users-columns.php:276
 #: includes/frontend/class-users.php:34
 msgid "Approve Membership"
 msgstr ""
 
-#: includes/admin/class-users-columns.php:272
+#: includes/admin/class-users-columns.php:277
 #: includes/frontend/class-users.php:37
 msgid "Reject Membership"
 msgstr ""
 
-#: includes/admin/class-users-columns.php:273
+#: includes/admin/class-users-columns.php:278
 #: includes/frontend/class-users.php:43
 msgid "Put as Pending Review"
 msgstr ""
 
-#: includes/admin/class-users-columns.php:274
+#: includes/admin/class-users-columns.php:279
 msgid "Resend Activation E-mail"
 msgstr ""
 
-#: includes/admin/class-users-columns.php:359
-#: includes/admin/class-users-columns.php:361
+#: includes/admin/class-users-columns.php:364
+#: includes/admin/class-users-columns.php:366
 msgid "All Statuses"
 msgstr ""
 
-#: includes/admin/class-users-columns.php:371
+#: includes/admin/class-users-columns.php:376
 msgid "Filter"
 msgstr ""
 
-#: includes/admin/class-users-columns.php:404
+#: includes/admin/class-users-columns.php:409
 msgid "You do not have enough permissions to do that."
 msgstr ""
 
@@ -10407,19 +10413,15 @@ msgstr ""
 msgid "Reactivate this account"
 msgstr ""
 
-#: includes/frontend/class-users.php:46
-msgid "Resend Activation Email"
-msgstr ""
-
-#: includes/frontend/class-users.php:49
+#: includes/frontend/class-users.php:53
 msgid "Deactivate this account"
 msgstr ""
 
-#: includes/frontend/class-users.php:54
+#: includes/frontend/class-users.php:58
 msgid "Delete this user"
 msgstr ""
 
-#: includes/frontend/class-users.php:58
+#: includes/frontend/class-users.php:62
 msgid "Login as this user"
 msgstr ""
 
