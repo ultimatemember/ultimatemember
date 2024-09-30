@@ -76,7 +76,11 @@ class Users {
 				$actions['put_user_as_pending'] = array( 'label' => __( 'Put as Pending Review', 'ultimate-member' ) );
 			}
 			if ( UM()->common()->users()->can_activation_send( $user_id ) ) {
-				$actions['resend_user_activation'] = array( 'label' => __( 'Resend Activation Email', 'ultimate-member' ) );
+				$title = __( 'Send activation email', 'ultimate-member' );
+				if ( UM()->common()->users()->has_status( $user_id, 'awaiting_email_confirmation' ) ) {
+					$title = __( 'Resend activation email', 'ultimate-member' );
+				}
+				$actions['resend_user_activation'] = array( 'label' => $title );
 			}
 			if ( UM()->common()->users()->can_be_deactivated( $user_id ) ) {
 				$actions['deactivate_user'] = array( 'label' => __( 'Deactivate this account', 'ultimate-member' ) );
