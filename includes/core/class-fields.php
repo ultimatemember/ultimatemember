@@ -2118,6 +2118,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return array
 		 */
 		public function get_restricted_fields_for_edit( $_um_profile_id = false ) {
+			static $cache = array();
+
+			$cache_key = absint( $_um_profile_id );
+			if ( array_key_exists( $cache_key, $cache ) ) {
+				return $cache[ $cache_key ];
+			}
+
 			// fields that need to be disabled in edit mode (profile)
 			$arr_restricted_fields = array( 'user_email', 'username', 'user_login', 'user_password', '_um_last_login', 'user_registered' );
 			/**
@@ -2140,7 +2147,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			 * }
 			 * add_filter( 'um_user_profile_restricted_edit_fields', 'my_make_email_editable', 10, 2 );
 			 */
-			return apply_filters( 'um_user_profile_restricted_edit_fields', $arr_restricted_fields, $_um_profile_id );
+			$cache[ $cache_key ] = apply_filters( 'um_user_profile_restricted_edit_fields', $arr_restricted_fields, $_um_profile_id );
+
+			return $cache[ $cache_key ];
 		}
 
 		/**
