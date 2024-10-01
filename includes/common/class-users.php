@@ -329,9 +329,13 @@ class Users {
 	 * @return bool
 	 */
 	public function can_activation_send( $user_id, $force = false ) {
+		if ( ! self::user_exists( $user_id ) ) {
+			return false;
+		}
+
 		if ( ! $force ) {
 			$current_user_id = get_current_user_id();
-			if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
+			if ( $current_user_id === $user_id ) {
 				return false;
 			}
 		}
@@ -548,9 +552,13 @@ class Users {
 	 * @return bool
 	 */
 	public function can_be_set_as_pending( $user_id, $force = false ) {
+		if ( ! self::user_exists( $user_id ) ) {
+			return false;
+		}
+
 		if ( ! $force ) {
 			$current_user_id = get_current_user_id();
-			if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
+			if ( $current_user_id === $user_id ) {
 				return false;
 			}
 		}
@@ -622,9 +630,13 @@ class Users {
 	 * @return bool
 	 */
 	public function can_be_approved( $user_id, $force = false ) {
+		if ( ! self::user_exists( $user_id ) ) {
+			return false;
+		}
+
 		if ( ! $force ) {
 			$current_user_id = get_current_user_id();
-			if ( $current_user_id === $user_id || ! self::user_exists( $user_id ) ) {
+			if ( $current_user_id === $user_id ) {
 				return false;
 			}
 		}
