@@ -26,7 +26,7 @@ class Users {
 		um_fetch_user( $user_id );
 
 		$priority_role = UM()->roles()->get_priority_user_role( get_current_user_id() );
-		$role = get_role( $priority_role );
+		$role          = get_role( $priority_role );
 
 		$can_edit_users = null !== $role && current_user_can( 'edit_users' ) && $role->has_cap( 'edit_users' );
 		if ( $can_edit_users ) {
