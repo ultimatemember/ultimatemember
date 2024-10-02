@@ -80,7 +80,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			);
 		}
 
-
 		/**
 		 * File download link generate
 		 *

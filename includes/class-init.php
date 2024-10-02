@@ -550,6 +550,7 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->user();
 			$this->profile();
 			$this->builtin();
+			$this->files();
 			$this->form()->hooks();
 			$this->permalinks();
 			$this->cron();
@@ -1273,7 +1274,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 *
 		 * @return um\core\Files
 		 */
-		function files() {
+		public function files() {
 			if ( empty( $this->classes['files'] ) ) {
 				$this->classes['files'] = new um\core\Files();
 			}
