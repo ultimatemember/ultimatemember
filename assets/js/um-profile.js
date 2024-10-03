@@ -142,14 +142,9 @@ jQuery(document).ready(function() {
 
 	let textarea_iframe = jQuery('iframe.um-textarea-html-value');
 	textarea_iframe.each(function() {
-		jQuery(this).onload = function() {
-			resizeIframe(iframe);
+		let obj = jQuery(this);
+		obj.onload = function() {
+			UM.frontend.iframe.resize(obj[0]);
 		};
 	});
 });
-
-function resizeIframe(obj, height) {
-	let dataHeight = obj.getAttribute('data-height');
-	obj.style.minHeight = obj.contentWindow.document.documentElement.scrollHeight + 'px';
-	obj.style.height = dataHeight + 'px';
-}
