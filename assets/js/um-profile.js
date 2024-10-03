@@ -140,7 +140,7 @@ jQuery(document).ready(function() {
 		jQuery( e.currentTarget).trigger( "click" );
 	});
 
-	let textarea_iframe = jQuery('iframe.um-textarea-html-value, .mce-edit-area iframe');
+	let textarea_iframe = jQuery('iframe.um-textarea-html-value');
 	textarea_iframe.each(function() {
 		jQuery(this).onload = function() {
 			resizeIframe(iframe);
