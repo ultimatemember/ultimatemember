@@ -253,6 +253,8 @@ function um_check_user_status( $user_id, $args, $form_data = null ) {
 			exit;
 		}
 	} else {
+		um_fetch_user( $user_id ); // required because there can be empty um_user.
+
 		if ( 'redirect_url' === um_user( $status . '_action' ) && '' !== um_user( $status . '_url' ) ) {
 			/**
 			 * Filters the redirect URL for pending user after registration.
