@@ -259,8 +259,10 @@ function um_profile_field_filter_hook__textarea( $value, $data ) {
 	if ( ! $value ) {
 		return '';
 	}
+
 	if ( ! empty( $data['html'] ) ) {
-		return '<iframe class="um-textarea-html-value" title="' . esc_attr( $data['label'] ) . '" srcdoc="' . wp_kses_post( $value ) .'"></iframe>';
+		$height = isset( $data['height'] ) && absint( $data['height'] ) > 0 ? absint( $data['height'] ) : '';
+		return '<iframe class="um-textarea-html-value" onload="resizeIframe(this)" data-height="' . $height . '" title="' . esc_attr( $data['label'] ) . '" srcdoc="' . wp_kses_post( esc_attr( $value ) ) . '"></iframe>';
 	}
 
 	$description_key = UM()->profile()->get_show_bio_key( UM()->fields()->global_args );

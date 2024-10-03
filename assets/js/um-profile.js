@@ -139,4 +139,17 @@ jQuery(document).ready(function() {
 	jQuery( '.um-profile-nav a' ).on( 'touchend', function(e) {
 		jQuery( e.currentTarget).trigger( "click" );
 	});
+
+	let textarea_iframe = jQuery('iframe.um-textarea-html-value');
+	textarea_iframe.each(function() {
+		jQuery(this).onload = function() {
+			resizeIframe(iframe);
+		};
+	});
 });
+
+function resizeIframe(obj, height) {
+	let dataHeight = obj.getAttribute('data-height');
+	obj.style.minHeight = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+	obj.style.height = dataHeight + 'px';
+}
