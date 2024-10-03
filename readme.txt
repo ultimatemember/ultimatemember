@@ -166,11 +166,13 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.8.8 2024-10-03 =
+= 2.8.8 2024-10-04 =
 
 **Bugfixes**
 
 * Fixed: Download routing initialization
+* Fixed: Textarea height and HTML formatted textarea field height isolated via `<iframe>` on view mode
+* Fixed: User registration if email activation or admin review are required
 
 = 2.8.7 2024-10-01 =
 

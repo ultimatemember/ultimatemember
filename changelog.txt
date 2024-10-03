@@ -1,5 +1,13 @@
 ﻿== Changelog ==
 
+= 2.8.8 October 04, 2024 =
+
+* Bugfixes:
+
+  - Fixed: Download routing initialization
+  - Fixed: Textarea height and HTML formatted textarea field height isolated via `<iframe>` on view mode
+  - Fixed: User registration if email activation or admin review are required
+
 = 2.8.7 October 01, 2024 =
 
 * Enhancements:
