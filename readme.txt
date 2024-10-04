@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
 Tested up to: 6.6
-Stable tag: 2.8.7
+Stable tag: 2.8.8
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -165,6 +165,17 @@ No specific extensions are needed. But we highly recommended keep active these P
 = Important: =
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
+
+= 2.8.8 2024-10-04 =
+
+**Bugfixes**
+
+* Fixed: Download routing initialization
+* Fixed: Textarea height and HTML formatted textarea field height isolated via `<iframe>` on view mode
+* Fixed: User registration if email activation or admin review are required
+* Fixed: First installation errors
+
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
 
 = 2.8.7 2024-10-01 =
 
