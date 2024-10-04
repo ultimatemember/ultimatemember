@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Ultimate Member plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ultimate Member 2.8.7\n"
+"Project-Id-Version: Ultimate Member 2.8.8\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ultimate-member\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-10-01T14:46:53+00:00\n"
+"POT-Creation-Date: 2024-10-04T09:06:28+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: ultimate-member\n"
@@ -1618,8 +1618,8 @@ msgstr ""
 
 #: includes/admin/class-site-health.php:1976
 #: includes/core/class-member-directory.php:437
-#: includes/core/um-filters-fields.php:1005
-#: includes/core/um-filters-fields.php:1022
+#: includes/core/um-filters-fields.php:1006
+#: includes/core/um-filters-fields.php:1023
 msgid "Age"
 msgstr ""
 
@@ -9392,7 +9392,7 @@ msgid "Upload File"
 msgstr ""
 
 #: includes/core/class-fields.php:3114
-#: includes/core/um-filters-fields.php:372
+#: includes/core/um-filters-fields.php:373
 msgid "This file has been removed."
 msgstr ""
 
@@ -9422,46 +9422,46 @@ msgstr ""
 msgid "Invalid action."
 msgstr ""
 
-#: includes/core/class-files.php:269
+#: includes/core/class-files.php:268
 msgid "Wrong path"
 msgstr ""
 
-#: includes/core/class-files.php:273
+#: includes/core/class-files.php:272
 msgid "Wrong mode"
 msgstr ""
 
-#: includes/core/class-files.php:293
-#: includes/core/class-files.php:334
-#: includes/core/class-files.php:373
+#: includes/core/class-files.php:292
+#: includes/core/class-files.php:333
+#: includes/core/class-files.php:372
 msgid "You have no permission to edit this user"
 msgstr ""
 
-#: includes/core/class-files.php:307
+#: includes/core/class-files.php:306
 msgid "You have no permission to delete this file"
 msgstr ""
 
-#: includes/core/class-files.php:318
+#: includes/core/class-files.php:317
 msgid "Invalid parameters"
 msgstr ""
 
-#: includes/core/class-files.php:323
+#: includes/core/class-files.php:322
 msgid "Invalid coordinates"
 msgstr ""
 
-#: includes/core/class-files.php:341
+#: includes/core/class-files.php:340
 msgid "Invalid file ownership"
 msgstr ""
 
-#: includes/core/class-files.php:403
+#: includes/core/class-files.php:402
 msgid "Invalid nonce"
 msgstr ""
 
-#: includes/core/class-files.php:424
-#: includes/core/class-files.php:510
+#: includes/core/class-files.php:423
+#: includes/core/class-files.php:509
 msgid "A theme or plugin compatibility issue"
 msgstr ""
 
-#: includes/core/class-files.php:1285
+#: includes/core/class-files.php:1284
 msgid "Original size"
 msgstr ""
 
@@ -9638,7 +9638,7 @@ msgstr ""
 
 #: includes/core/class-password.php:511
 #: includes/core/um-actions-account.php:67
-#: includes/core/um-actions-register.php:323
+#: includes/core/um-actions-register.php:325
 msgid "Passwords may not contain the character \"\\\"."
 msgstr ""
 
@@ -10343,12 +10343,12 @@ msgstr ""
 msgid "Joined %s"
 msgstr ""
 
-#: includes/core/um-filters-fields.php:406
+#: includes/core/um-filters-fields.php:407
 msgid "Untitled photo"
 msgstr ""
 
 #. translators: %s: link.
-#: includes/core/um-filters-fields.php:525
+#: includes/core/um-filters-fields.php:526
 msgid "This link leads to a 3rd-party website. Make sure the link is safe and you really want to go to this website: '%s'"
 msgstr ""
 
