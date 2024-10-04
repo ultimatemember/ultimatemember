@@ -192,7 +192,16 @@ if ( ! class_exists( 'um\common\CPT' ) ) {
 				$mode = 'members';
 				if ( 'um_form' === $post->post_type ) {
 					$meta_value_mode = get_post_meta( $post_id, '_um_mode', true );
-					$mode            = ! empty( $meta_value_mode ) ? $meta_value_mode : sanitize_key( $_POST['form']['_um_mode'] ); // phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+					if ( ! empty( $meta_value_mode ) ) {
+						$mode = $meta_value_mode;
+					} elseif ( ! empty( $_POST['form']['_um_mode'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+						$mode = sanitize_key( $_POST['form']['_um_mode'] ); // phpcs:ignore WordPress.Security.NonceVerification -- already verified here
+					}
+				}
+
+				// $mode can be empty on the first installation
+				if ( empty( $mode ) ) {
+					return;
 				}
 
 				// Set current published form or member directory as predefined in the case when old default doesn't exist or hasn't a `publish` status.
