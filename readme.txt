@@ -173,6 +173,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: Download routing initialization
 * Fixed: Textarea height and HTML formatted textarea field height isolated via `<iframe>` on view mode
 * Fixed: User registration if email activation or admin review are required
+* Fixed: First installation errors
+
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
 
 = 2.8.7 2024-10-01 =
 
