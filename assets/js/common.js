@@ -23,6 +23,7 @@ UM.common = {
 				jQuery('.um-tip-e').tipsy('hide');
 				jQuery('.um-tip-s').tipsy('hide');
 				jQuery('.um .tipsy').remove();
+				jQuery('.um-page .tipsy').remove();
 			}
 		}
 	},
