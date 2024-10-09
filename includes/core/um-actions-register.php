@@ -58,14 +58,12 @@ function um_after_insert_user( $user_id, $args, $form_data = null ) {
 		UM()->user()->set_registration_details( $args['submitted'], $args, $form_data );
 	}
 
-	// Set user status.
-	$status = um_user( 'status' );
-	if ( empty( $status ) ) {
-		um_fetch_user( $user_id );
-		$status = um_user( 'status' );
-	}
-
-	UM()->common()->users()->set_status( $user_id, $status );
+	/**
+	 * Status will be set later using the "um_post_registration_{$status}_hook" hook.
+	 *
+	 * @see um_check_user_status()
+	 * @since 2.8.9
+	 */
 
 	// Create user uploads directory.
 	UM()->uploader()->get_upload_user_base_dir( $user_id, true );
@@ -127,7 +125,7 @@ function um_send_registration_notification( $user_id ) {
 	$emails = um_multi_admin_email();
 	if ( ! empty( $emails ) ) {
 		foreach ( $emails as $email ) {
-			if ( 'pending' !== um_user( 'account_status' ) ) {
+			if ( 'pending' !== um_user( 'status' ) ) {
 				UM()->mail()->send( $email, 'notification_new_user', array( 'admin' => true ) );
 			} else {
 				UM()->mail()->send( $email, 'notification_review', array( 'admin' => true ) );
@@ -145,7 +143,7 @@ add_action( 'um_registration_complete', 'um_send_registration_notification' );
  * @param null|array $form_data
  */
 function um_check_user_status( $user_id, $args, $form_data = null ) {
-	$status = um_user( 'account_status' );
+	$status = um_user( 'status' );
 	/**
 	 * Fires after complete UM user registration.
 	 * Where $status can be equal to 'approved', 'checkmail' or 'pending'.
