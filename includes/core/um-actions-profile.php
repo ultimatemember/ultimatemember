@@ -1318,11 +1318,11 @@ function um_profile_header( $args ) {
 			}
 			?>
 
-			<div class="um-profile-status <?php echo esc_attr( um_user( 'account_status' ) ); ?>">
+			<div class="um-profile-status <?php echo esc_attr( UM()->common()->users()->get_status( um_user( 'ID' ) ) ); ?>">
 				<span>
 					<?php
 					// translators: %s: profile status.
-					echo esc_html( sprintf( __( 'This user account status is %s', 'ultimate-member' ), um_user( 'account_status_name' ) ) );
+					echo esc_html( sprintf( __( 'This user account status is %s', 'ultimate-member' ), UM()->common()->users()->get_status( um_user( 'ID' ), 'formatted' ) ) );
 					?>
 				</span>
 			</div>

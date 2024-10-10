@@ -432,7 +432,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 
 			$metakeys = array( 'account_status', 'hide_in_members', 'synced_gravatar_hashed_id', 'synced_profile_photo', 'profile_photo', 'cover_photo', '_um_verified' );
-			if ( ! in_array( $meta_key, $metakeys ) ) {
+			if ( ! in_array( $meta_key, $metakeys, true ) ) {
 				return;
 			}
 
@@ -506,7 +506,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		function on_update_usermeta( $meta_id, $object_id, $meta_key, $_meta_value ) {
 
 			$metakeys = array( 'account_status', 'hide_in_members', 'synced_gravatar_hashed_id', 'synced_profile_photo', 'profile_photo', 'cover_photo', '_um_verified' );
-			if ( ! in_array( $meta_key, $metakeys ) ) {
+			if ( ! in_array( $meta_key, $metakeys, true ) ) {
 				return;
 			}
 
@@ -642,27 +642,22 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			delete_transient( 'um_count_users_pending_dot' );
 		}
 
-
 		/**
 		 *
 		 */
-		function check_membership() {
+		public function check_membership() {
 			if ( ! is_user_logged_in() ) {
 				return;
 			}
 
-			um_fetch_user( get_current_user_id() );
-			$status = um_user( 'account_status' );
-
-			if ( 'rejected' == $status ) {
+			$status = UM()->common()->users()->get_status( get_current_user_id() );
+			if ( 'rejected' === $status ) {
 				wp_logout();
 				session_unset();
-				exit( wp_redirect( um_get_core_page( 'login' ) ) );
+				um_safe_redirect( um_get_core_page( 'login' ) );
+				exit;
 			}
-
-			um_reset_user();
 		}
-
 
 		/**
 		 * Multisite add existing user
@@ -1295,25 +1290,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 						$this->usermeta['account_status'][0] = 'approved';
 					}
 
-					if ( $this->usermeta['account_status'][0] == 'approved' ) {
-						$this->usermeta['account_status_name'][0] = __( 'Approved', 'ultimate-member' );
-					}
-
-					if ( $this->usermeta['account_status'][0] == 'awaiting_email_confirmation' ) {
-						$this->usermeta['account_status_name'][0] = __( 'Awaiting Email Confirmation', 'ultimate-member' );
-					}
-
-					if ( $this->usermeta['account_status'][0] == 'awaiting_admin_review' ) {
-						$this->usermeta['account_status_name'][0] = __( 'Pending Review', 'ultimate-member' );
-					}
-
-					if ( $this->usermeta['account_status'][0] == 'rejected' ) {
-						$this->usermeta['account_status_name'][0] = __( 'Membership Rejected', 'ultimate-member' );
-					}
-
-					if ( $this->usermeta['account_status'][0] == 'inactive' ) {
-						$this->usermeta['account_status_name'][0] = __( 'Membership Inactive', 'ultimate-member' );
-					}
+					$this->usermeta['account_status_name'][0] = UM()->common()->users()->get_status( $this->id, 'formatted' );
 
 					// add user meta
 					foreach ( $this->usermeta as $k => $v ) {
@@ -1619,35 +1596,28 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 *
 		 * @param bool $send_mail
 		 */
-		function delete( $send_mail = true ) {
-
+		public function delete( $send_mail = true ) {
 			$this->send_mail_on_delete = $send_mail;
-			//don't send email notification to not approved user
-			if ( 'approved' != um_user( 'account_status' ) ) {
+			// Don't send email notification to not approved user
+			if ( 'approved' !== UM()->common()->users()->get_status( $this->id ) ) {
 				$this->send_mail_on_delete = false;
 			}
 
 			// remove user
 			if ( is_multisite() ) {
-
 				if ( ! function_exists( 'wpmu_delete_user' ) ) {
 					require_once ABSPATH . 'wp-admin/includes/ms.php';
 				}
 
 				wpmu_delete_user( $this->id );
-
 			} else {
-
 				if ( ! function_exists( 'wp_delete_user' ) ) {
 					require_once ABSPATH . 'wp-admin/includes/user.php';
 				}
 
 				wp_delete_user( $this->id );
-
 			}
-
 		}
-
 
 		/**
 		 * This method gets a user role in slug format. e.g. member

@@ -130,16 +130,14 @@ function um_submit_form_errors_hook_logincheck( $submitted_data, $form_data ) {
 	}
 
 	$user_id = ( isset( UM()->login()->auth_id ) ) ? UM()->login()->auth_id : '';
-	um_fetch_user( $user_id );
 
-	$status = um_user( 'account_status' ); // account status
+	$status = UM()->common()->users()->get_status( $user_id ); // account status
 	switch ( $status ) {
 		// If user can't log in to site...
 		case 'inactive':
 		case 'awaiting_admin_review':
 		case 'awaiting_email_confirmation':
 		case 'rejected':
-			um_reset_user();
 			// Not `um_safe_redirect()` because UM()->permalinks()->get_current_url() is situated on the same host.
 			wp_safe_redirect( add_query_arg( 'err', esc_attr( $status ), UM()->permalinks()->get_current_url() ) );
 			exit;
