@@ -166,6 +166,18 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
+= 2.8.9 2024-10-14 =
+
+**Enhancements**
+
+* Added: Using PHP tidy extension (if it's active) to make HTML textarea value clear
+* Added: `um_tidy_config` filter hook for setting PHP tidy config
+
+**Bugfixes**
+
+* Fixed: UM tipsy removing inside .um-page selector (e.g. tipsy init from um-modal)
+* Fixed: Rollback using `<iframe>` for displaying HTML formatted textarea value
+
 = 2.8.8 2024-10-04 =
 
 **Bugfixes**

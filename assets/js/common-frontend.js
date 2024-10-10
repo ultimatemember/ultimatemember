@@ -96,18 +96,6 @@ UM.frontend = {
 				UM.frontend.cropper.obj = null; // flush our own object
 			}
 		}
-	},
-	iframe: {
-		resize: function(obj) {
-			let newHeight;
-			// 150 is default height of the iframe in web-browser
-			if ( obj.contentWindow.document.documentElement.scrollHeight > 150 && obj.contentWindow.document.documentElement.scrollHeight > obj.contentWindow.document.documentElement.offsetHeight ) {
-				newHeight = obj.contentWindow.document.documentElement.scrollHeight;
-			} else {
-				newHeight = obj.contentWindow.document.documentElement.offsetHeight;
-			}
-			obj.style.height = newHeight + 'px';
-		}
 	}
 }
 

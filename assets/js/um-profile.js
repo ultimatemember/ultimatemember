@@ -139,12 +139,4 @@ jQuery(document).ready(function() {
 	jQuery( '.um-profile-nav a' ).on( 'touchend', function(e) {
 		jQuery( e.currentTarget).trigger( "click" );
 	});
-
-	let textarea_iframe = jQuery('iframe.um-textarea-html-value');
-	textarea_iframe.each(function() {
-		let obj = jQuery(this);
-		obj.onload = function() {
-			UM.frontend.iframe.resize(obj[0]);
-		};
-	});
 });

@@ -21,6 +21,7 @@
     "ext-fileinfo": "*",
     "ext-curl": "*",
     "ext-iconv": "*",
+    "ext-tidy": "*",
     "woocommerce/action-scheduler": "3.2.1"
   },
   "require-dev": {
