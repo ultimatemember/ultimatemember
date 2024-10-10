@@ -598,20 +598,39 @@ class Layouts {
 			return '';
 		}
 
-		$args = wp_parse_args(
-			$args,
-			array(
-				'wrapper'       => 'div',
-				'size'          => 'm',
-				'type'          => 'round',
-				'wrapper_class' => array(),
-				'clickable'     => false,
-				'url'           => um_user_profile_url( $user_id ),
-				'url_title'     => __( 'Visit profile', 'ultimate-member' ),
-				'ignore_caps'   => false,
-				'tooltip'       => false,
-			)
+		$default_args = array(
+			'wrapper'       => 'div',
+			'size'          => 'm',
+			'type'          => 'round',
+			'wrapper_class' => array(),
+			'clickable'     => false,
+			'url'           => um_user_profile_url( $user_id ),
+			'url_title'     => __( 'Visit profile', 'ultimate-member' ),
+			'ignore_caps'   => false,
+			'tooltip'       => false,
 		);
+		/**
+		 * Filters default arguments for displaying single avatar layout.
+		 *
+		 * @param {array} $default_args Default arguments.
+		 * @param {int}   $user_id      User ID.
+		 *
+		 * @return {array} Single avatar layout default arguments.
+		 *
+		 * @since 2.9.0
+		 * @hook um_user_single_avatar_default_args
+		 *
+		 * @example <caption>Extends default arguments for displaying single avatar layout.</caption>
+		 * function my_user_single_avatar_default_args( $default_args, $user_id ) {
+		 *     // your code here
+		 *     $default_args['custom_key'] = 'custom_value';
+		 *     return $default_args;
+		 * }
+		 * add_filter( 'um_user_single_avatar_default_args', 'my_user_single_avatar_default_args', 10, 2 );
+		 */
+		$default_args = apply_filters( 'um_user_single_avatar_default_args', $default_args, $user_id );
+
+		$args = wp_parse_args( $args, $default_args );
 
 		$user_id = absint( $user_id );
 
@@ -645,6 +664,29 @@ class Layouts {
 		if ( ! empty( $args['wrapper_class'] ) ) {
 			$wrapper_classes = array_merge( $wrapper_classes, $args['wrapper_class'] );
 		}
+		/**
+		 * Filters wrapper classes for displaying single avatar layout.
+		 *
+		 * @param {array} $wrapper_classes Single avatar wrapper classes.
+		 * @param {array} $args            Single avatar arguments.
+		 * @param {int}   $user_id         User ID.
+		 *
+		 * @return {array} Single avatar wrapper classes.
+		 *
+		 * @since 2.9.0
+		 * @hook um_user_single_avatar_wrapper_classes
+		 *
+		 * @example <caption>Extends wrapper classes for displaying single avatar layout when `custom_arg` isn't empty.</caption>
+		 * function my_user_single_avatar_default_args( $wrapper_classes, $args, $user_id ) {
+		 *     // your code here
+		 *     if ( ! empty( $args['custom_arg'] ) ) {
+		 *         $wrapper_classes[] = 'custom_class';
+		 *     }
+		 *     return $wrapper_classes;
+		 * }
+		 * add_filter( 'um_user_single_avatar_wrapper_classes', 'my_user_single_avatar_wrapper_classes', 10, 3 );
+		 */
+		$wrapper_classes = apply_filters( 'um_user_single_avatar_wrapper_classes', $wrapper_classes, $args, $user_id );
 		$wrapper_classes = implode( ' ', $wrapper_classes );
 
 		$thumb_size = 40;
@@ -696,6 +738,24 @@ class Layouts {
 			<?php
 		}
 
+		/**
+		 * Fires in the single user avatar wrapper before avatar image.
+		 *
+		 * @param {int}   $user_id User ID.
+		 * @param {array} $args    Single avatar arguments.
+		 *
+		 * @since 2.9.0
+		 * @hook um_user_single_avatar_before
+		 *
+		 * @example <caption>Action before avatar image.</caption>
+		 * function my_user_single_avatar_before( $user_id, $args ) {
+		 *     // your code here
+		 *     echo 'something';
+		 * }
+		 * add_action( 'um_user_single_avatar_before', 'my_user_single_avatar_before', 10, 2 );
+		 */
+		do_action( 'um_user_single_avatar_before', $user_id, $args );
+
 		if ( ! empty( $args['clickable'] ) ) {
 			?>
 			<a href="<?php echo esc_url( $args['url'] ); ?>" title="<?php echo esc_attr( $args['url_title'] ); ?>">
@@ -707,6 +767,25 @@ class Layouts {
 			</a>
 			<?php
 		}
+
+		/**
+		 * Fires in the single user avatar wrapper after avatar image.
+		 *
+		 * @param {int}   $user_id User ID.
+		 * @param {array} $args    Single avatar arguments.
+		 *
+		 * @since 2.9.0
+		 * @hook um_user_single_avatar_after
+		 *
+		 * @example <caption>Action after avatar image.</caption>
+		 * function my_user_single_avatar_after( $user_id, $args ) {
+		 *     // your code here
+		 *     echo 'something';
+		 * }
+		 * add_action( 'um_user_single_avatar_after', 'my_user_single_avatar_after', 10, 2 );
+		 */
+		do_action( 'um_user_single_avatar_after', $user_id, $args );
+
 		if ( 'div' === $args['wrapper'] ) {
 			?>
 			</div>
