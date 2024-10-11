@@ -60,7 +60,7 @@ if ( ! class_exists( 'um\frontend\User_Profile' ) ) {
 				exit;
 			}
 
-			if ( ! um_can_edit_my_profile() ) {
+			if ( um_is_myprofile() && ! um_can_edit_my_profile() ) {
 				um_safe_redirect( um_edit_my_profile_cancel_uri() );
 				exit;
 			}
