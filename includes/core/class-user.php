@@ -650,8 +650,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				return;
 			}
 
-			$status = UM()->common()->users()->get_status( get_current_user_id() );
-			if ( 'rejected' === $status ) {
+			if ( UM()->common()->users()->has_status( get_current_user_id(), 'rejected' ) ) {
 				wp_logout();
 				session_unset();
 				um_safe_redirect( um_get_core_page( 'login' ) );
@@ -1294,7 +1293,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 					// add user meta
 					foreach ( $this->usermeta as $k => $v ) {
-						if ( $k == 'display_name' ) {
+						if ( 'display_name' === $k ) {
 							continue;
 						}
 						$this->profile[ $k ] = $v[0];
@@ -1599,7 +1598,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		public function delete( $send_mail = true ) {
 			$this->send_mail_on_delete = $send_mail;
 			// Don't send email notification to not approved user
-			if ( 'approved' !== UM()->common()->users()->get_status( $this->id ) ) {
+			if ( ! UM()->common()->users()->has_status( $this->id, 'approved' ) ) {
 				$this->send_mail_on_delete = false;
 			}
 
