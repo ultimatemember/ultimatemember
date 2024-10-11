@@ -1362,7 +1362,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		<?php UM()->user()->auto_login( 10, true ); ?>
 		 *
 		 */
-		function auto_login( $user_id, $rememberme = 0 ) {
+		public function auto_login( $user_id, $rememberme = 0 ) {
 
 			wp_set_current_user( $user_id );
 
