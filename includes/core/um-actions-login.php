@@ -129,7 +129,7 @@ function um_submit_form_errors_hook_logincheck( $submitted_data, $form_data ) {
 		wp_logout();
 	}
 
-	$user_id = ( isset( UM()->login()->auth_id ) ) ? UM()->login()->auth_id : '';
+	$user_id = isset( UM()->login()->auth_id ) ? UM()->login()->auth_id : '';
 
 	$status = UM()->common()->users()->get_status( $user_id ); // account status
 	switch ( $status ) {
@@ -148,7 +148,6 @@ function um_submit_form_errors_hook_logincheck( $submitted_data, $form_data ) {
 		wp_safe_redirect( um_get_core_page( 'login' ) );
 		exit;
 	}
-
 }
 add_action( 'um_submit_form_errors_hook_logincheck', 'um_submit_form_errors_hook_logincheck', 9999, 2 );
 
@@ -191,6 +190,16 @@ add_action( 'wp_login', 'um_store_lastlogin_timestamp_' );
 function um_user_login( $submitted_data ) {
 	// phpcs:disable WordPress.Security.NonceVerification -- already verified here
 	$rememberme = ( isset( $_REQUEST['rememberme'], $submitted_data['rememberme'] ) && 1 === (int) $submitted_data['rememberme'] ) ? 1 : 0;
+
+	$user_id = isset( UM()->login()->auth_id ) ? UM()->login()->auth_id : '';
+	if ( empty( $user_id ) ) {
+		// refresh page if the user_id is empty
+		// Not `um_safe_redirect()` because UM()->permalinks()->get_current_url() is situated on the same host.
+		wp_safe_redirect( UM()->permalinks()->get_current_url() );
+		exit;
+	}
+
+	um_fetch_user( $user_id );
 
 	// @todo check using the 'deny_admin_frontend_login' option
 	if ( false !== strrpos( um_user( 'wp_roles' ), 'administrator' ) && ( ! isset( $_GET['provider'] ) && UM()->options()->get( 'deny_admin_frontend_login' ) ) ) {

@@ -682,6 +682,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				/* Continue based on form mode - store data. */
 				/**
 				 * Fires for make main actions on UM login, registration or profile form submission.
+				 * Where $mode equals login, registration or profile
 				 *
 				 * Internal Ultimate Member callbacks (Priority -> Callback name -> Excerpt):
 				 * ### um_submit_form_login:
@@ -696,16 +697,16 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				 * * 10 - `um_submit_form_profile()` Profile form main handler.
 				 *
 				 * @since 1.3.x
-				 * @hook um_submit_form_errors_hook
+				 * @hook um_submit_form_{$mode}
 				 *
 				 * @param {array} $post      $_POST Submission array.
 				 * @param {array} $form_data UM form data. Since 2.6.7
 				 *
-				 * @example <caption>Make any custom action.</caption>
-				 * function my_custom_before_submit_form_post( $post, $form_data ) {
+				 * @example <caption>Make any custom action on profile submission.</caption>
+				 * function my_custom_submit_form_profile( $post, $form_data ) {
 				 *     // your code here
 				 * }
-				 * add_action( 'um_submit_form_errors_hook', 'my_custom_submit_form_errors_hook', 10, 2 );
+				 * add_action( 'um_submit_form_profile', 'my_custom_submit_form_profile', 10, 2 );
 				 */
 				do_action( "um_submit_form_{$this->form_data['mode']}", $this->post_form, $this->form_data );
 			}
