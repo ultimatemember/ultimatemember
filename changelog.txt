@@ -17,6 +17,7 @@
   - Fixed: Rollback using `<iframe>` for displaying HTML formatted textarea value
   - Fixed: Capability to edit user profile for Administrator when user doesn't have a capability to edit its profile
   - Fixed: Sending email notifications based on user status after registration
+  - Fixed: PHP error when meta `um_member_directory_data` has a wrong format
 
 * Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade
 
