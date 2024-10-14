@@ -417,7 +417,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 		}
 
-
 		/**
 		 * When you delete usermeta connected with member directory - reset it to  default value
 		 *
@@ -426,7 +425,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param string $meta_key
 		 * @param mixed $_meta_value
 		 */
-		function on_delete_usermeta( $meta_ids, $object_id, $meta_key, $_meta_value ) {
+		public function on_delete_usermeta( $meta_ids, $object_id, $meta_key, $_meta_value ) {
 			if ( $this->deleted_user_id ) {
 				return;
 			}
@@ -436,8 +435,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				return;
 			}
 
+			// Set default if empty or has a wrong format.
 			$md_data = get_user_meta( $object_id, 'um_member_directory_data', true );
-			if ( empty( $md_data ) ) {
+			if ( empty( $md_data ) || ! is_array( $md_data ) ) {
 				$md_data = array(
 					'account_status'  => 'approved',
 					'hide_in_members' => UM()->member_directory()->get_hide_in_members_default(),
@@ -494,7 +494,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			update_user_meta( $object_id, 'um_member_directory_data', $md_data );
 		}
 
-
 		/**
 		 * When you add/update usermeta connected with member directories - set this data to member directory metakey
 		 *
@@ -503,15 +502,15 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param string $meta_key
 		 * @param mixed $_meta_value
 		 */
-		function on_update_usermeta( $meta_id, $object_id, $meta_key, $_meta_value ) {
-
+		public function on_update_usermeta( $meta_id, $object_id, $meta_key, $_meta_value ) {
 			$metakeys = array( 'account_status', 'hide_in_members', 'synced_gravatar_hashed_id', 'synced_profile_photo', 'profile_photo', 'cover_photo', '_um_verified' );
 			if ( ! in_array( $meta_key, $metakeys, true ) ) {
 				return;
 			}
 
+			// Set default if empty or has a wrong format.
 			$md_data = get_user_meta( $object_id, 'um_member_directory_data', true );
-			if ( empty( $md_data ) ) {
+			if ( empty( $md_data ) || ! is_array( $md_data ) ) {
 				$md_data = array(
 					'account_status'  => 'approved',
 					'hide_in_members' => UM()->member_directory()->get_hide_in_members_default(),
@@ -528,7 +527,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				case 'hide_in_members':
 					$hide_in_members = UM()->member_directory()->get_hide_in_members_default();
 					if ( ! empty( $_meta_value ) ) {
-						if ( $_meta_value == 'Yes' || $_meta_value == __( 'Yes', 'ultimate-member' ) ||
+						if ( 'Yes' === $_meta_value || __( 'Yes', 'ultimate-member' ) === $_meta_value ||
 							 array_intersect( array( 'Yes', __( 'Yes', 'ultimate-member' ) ), $_meta_value ) ) {
 							$hide_in_members = true;
 						} else {
@@ -557,13 +556,12 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					$md_data['cover_photo'] = ! empty( $_meta_value );
 					break;
 				case '_um_verified':
-					$md_data['verified'] = $_meta_value == 'verified' ? true : false;
+					$md_data['verified'] = 'verified' === $_meta_value;
 					break;
 			}
 
 			update_user_meta( $object_id, 'um_member_directory_data', $md_data );
 		}
-
 
 		/**
 		 * @param $user_id
