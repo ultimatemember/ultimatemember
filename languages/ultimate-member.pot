@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-10-14T12:08:11+00:00\n"
+"POT-Creation-Date: 2024-10-14T14:25:13+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: ultimate-member\n"
@@ -20,7 +20,7 @@ msgstr ""
 #: includes/admin/class-site-health.php:292
 #: includes/admin/class-users-columns.php:322
 #: includes/admin/core/class-admin-menu.php:183
-#: includes/core/class-user.php:1054
+#: includes/core/class-user.php:1052
 msgid "Ultimate Member"
 msgstr ""
 
@@ -423,8 +423,8 @@ msgstr ""
 #: includes/core/class-builtin.php:1343
 #: includes/core/class-builtin.php:1361
 #: includes/core/class-builtin.php:1377
+#: includes/core/class-user.php:530
 #: includes/core/class-user.php:531
-#: includes/core/class-user.php:532
 #: includes/core/um-actions-account.php:344
 msgid "Yes"
 msgstr ""
@@ -7265,7 +7265,7 @@ msgid "oEmbed"
 msgstr ""
 
 #: includes/core/class-builtin.php:761
-#: includes/core/class-user.php:1788
+#: includes/core/class-user.php:1786
 msgid "Only me"
 msgstr ""
 
@@ -9771,11 +9771,11 @@ msgstr ""
 msgid "Unable to crop image file: %s"
 msgstr ""
 
-#: includes/core/class-user.php:1116
+#: includes/core/class-user.php:1114
 msgid "Ultimate Member Role"
 msgstr ""
 
-#: includes/core/class-user.php:1119
+#: includes/core/class-user.php:1117
 msgid "&mdash; No role for Ultimate Member &mdash;"
 msgstr ""
 
