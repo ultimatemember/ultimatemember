@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Ultimate Member plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ultimate Member 2.8.8\n"
+"Project-Id-Version: Ultimate Member 2.8.9\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ultimate-member\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-10-04T09:06:28+00:00\n"
+"POT-Creation-Date: 2024-10-14T12:08:11+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: ultimate-member\n"
@@ -20,7 +20,7 @@ msgstr ""
 #: includes/admin/class-site-health.php:292
 #: includes/admin/class-users-columns.php:322
 #: includes/admin/core/class-admin-menu.php:183
-#: includes/core/class-user.php:1060
+#: includes/core/class-user.php:1054
 msgid "Ultimate Member"
 msgstr ""
 
@@ -56,71 +56,71 @@ msgstr ""
 msgid "Other (Custom Field)"
 msgstr ""
 
-#: includes/admin/class-admin.php:1800
+#: includes/admin/class-admin.php:1807
 #: includes/admin/class-secure.php:96
 #: includes/admin/class-secure.php:133
 msgid "Security check"
 msgstr ""
 
-#: includes/admin/class-admin.php:1804
+#: includes/admin/class-admin.php:1811
 msgid "Wrong ID"
 msgstr ""
 
 #. translators: %s - Form title
-#: includes/admin/class-admin.php:1812
+#: includes/admin/class-admin.php:1819
 msgid "Duplicate of %s"
 msgstr ""
 
-#: includes/admin/class-admin.php:1872
+#: includes/admin/class-admin.php:1879
 msgid "Docs"
 msgstr ""
 
-#: includes/admin/class-admin.php:1873
+#: includes/admin/class-admin.php:1880
 #: includes/admin/core/class-admin-menu.php:195
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/class-admin.php:1896
+#: includes/admin/class-admin.php:1903
 #: includes/admin/core/class-admin-notices.php:1060
 #: includes/admin/core/class-admin-settings.php:2520
 #: includes/ajax/class-secure.php:34
 msgid "Security Check"
 msgstr ""
 
-#: includes/admin/class-admin.php:1958
-#: includes/admin/class-admin.php:1961
+#: includes/admin/class-admin.php:1965
+#: includes/admin/class-admin.php:1968
 msgid "Form updated."
 msgstr ""
 
-#: includes/admin/class-admin.php:1959
+#: includes/admin/class-admin.php:1966
 msgid "Custom field updated."
 msgstr ""
 
-#: includes/admin/class-admin.php:1960
+#: includes/admin/class-admin.php:1967
 msgid "Custom field deleted."
 msgstr ""
 
-#: includes/admin/class-admin.php:1962
+#: includes/admin/class-admin.php:1969
 msgid "Form restored to revision."
 msgstr ""
 
-#: includes/admin/class-admin.php:1963
+#: includes/admin/class-admin.php:1970
 msgid "Form created."
 msgstr ""
 
-#: includes/admin/class-admin.php:1964
+#: includes/admin/class-admin.php:1971
 msgid "Form saved."
 msgstr ""
 
-#: includes/admin/class-admin.php:1965
+#: includes/admin/class-admin.php:1972
 msgid "Form submitted."
 msgstr ""
 
-#: includes/admin/class-admin.php:1966
+#: includes/admin/class-admin.php:1973
 msgid "Form scheduled."
 msgstr ""
 
-#: includes/admin/class-admin.php:1967
+#: includes/admin/class-admin.php:1974
 msgid "Form draft updated."
 msgstr ""
 
@@ -173,160 +173,160 @@ msgstr ""
 msgid "Invalid user."
 msgstr ""
 
-#: includes/admin/class-secure.php:195
+#: includes/admin/class-secure.php:196
 msgid "Scan Now"
 msgstr ""
 
-#: includes/admin/class-secure.php:197
+#: includes/admin/class-secure.php:198
 msgid "Last scan:"
 msgstr ""
 
-#: includes/admin/class-secure.php:201
-#: includes/admin/class-secure.php:338
+#: includes/admin/class-secure.php:202
+#: includes/admin/class-secure.php:339
 msgid "ago"
 msgstr ""
 
-#: includes/admin/class-secure.php:203
+#: includes/admin/class-secure.php:204
 msgid "Not Completed."
 msgstr ""
 
-#: includes/admin/class-secure.php:206
+#: includes/admin/class-secure.php:207
 msgid "Not Scanned yet."
 msgstr ""
 
-#: includes/admin/class-secure.php:220
+#: includes/admin/class-secure.php:221
 #: includes/admin/class-site-health.php:1112
 msgid "Banned Administrative Capabilities"
 msgstr ""
 
 #. translators: %s are disabled default capabilities that are enabled by default.
-#: includes/admin/class-secure.php:222
+#: includes/admin/class-secure.php:223
 msgid "All the above are default Administrator & Super Admin capabilities. When someone tries to inject capabilities to the Account, Profile & Register forms submission, it will be flagged with this option. The %s capabilities are locked to ensure no users will be created with these capabilities."
 msgstr ""
 
-#: includes/admin/class-secure.php:227
+#: includes/admin/class-secure.php:228
 msgid "Scanner"
 msgstr ""
 
-#: includes/admin/class-secure.php:229
+#: includes/admin/class-secure.php:230
 msgid "Scan your site to check for vulnerabilities prior to Ultimate Member version 2.6.7 and get recommendations to secure your site."
 msgstr ""
 
-#: includes/admin/class-secure.php:234
+#: includes/admin/class-secure.php:235
 #: includes/admin/class-site-health.php:1116
 msgid "Lock All Register Forms"
 msgstr ""
 
-#: includes/admin/class-secure.php:235
+#: includes/admin/class-secure.php:236
 msgid "Lock Forms"
 msgstr ""
 
-#: includes/admin/class-secure.php:236
+#: includes/admin/class-secure.php:237
 msgid "This prevents all users from registering with Ultimate Member on your site."
 msgstr ""
 
-#: includes/admin/class-secure.php:241
+#: includes/admin/class-secure.php:242
 #: includes/admin/class-site-health.php:1120
 msgid "Display Login form notice to reset passwords"
 msgstr ""
 
-#: includes/admin/class-secure.php:242
+#: includes/admin/class-secure.php:243
 msgid "Enable Login form notice"
 msgstr ""
 
-#: includes/admin/class-secure.php:243
+#: includes/admin/class-secure.php:244
 msgid "Enforces users to reset their passwords (one-time) and prevent from entering old password."
 msgstr ""
 
-#: includes/admin/class-secure.php:255
+#: includes/admin/class-secure.php:256
 msgid "Expire All Users Sessions"
 msgstr ""
 
 #. translators: %d is the users count.
-#: includes/admin/class-secure.php:257
+#: includes/admin/class-secure.php:258
 msgid "Are you sure that you want to make all users sessions expired?"
 msgstr ""
 
 #. translators: %d is the users count.
-#: includes/admin/class-secure.php:257
+#: includes/admin/class-secure.php:258
 msgid "Logout Users (%d)"
 msgstr ""
 
-#: includes/admin/class-secure.php:258
+#: includes/admin/class-secure.php:259
 msgid "This will log out all users on your site and forces them to reset passwords <br/>when <strong>\"Display Login form notice to reset passwords\" is enabled/checked.</strong>"
 msgstr ""
 
-#: includes/admin/class-secure.php:268
+#: includes/admin/class-secure.php:269
 msgid "Administrative capabilities ban"
 msgstr ""
 
-#: includes/admin/class-secure.php:269
+#: includes/admin/class-secure.php:270
 #: includes/admin/class-site-health.php:1124
 msgid "Enable ban for administrative capabilities"
 msgstr ""
 
-#: includes/admin/class-secure.php:270
+#: includes/admin/class-secure.php:271
 msgid " When someone tries to inject capabilities to the Account, Profile & Register forms submission, it will be banned."
 msgstr ""
 
-#: includes/admin/class-secure.php:275
+#: includes/admin/class-secure.php:276
 #: includes/admin/class-site-health.php:1132
 msgid "Notify Administrators"
 msgstr ""
 
-#: includes/admin/class-secure.php:276
+#: includes/admin/class-secure.php:277
 msgid "Enable notification"
 msgstr ""
 
-#: includes/admin/class-secure.php:277
+#: includes/admin/class-secure.php:278
 msgid "When enabled, All administrators will be notified when someone has suspicious activities in the Account, Profile & Register forms."
 msgstr ""
 
-#: includes/admin/class-secure.php:284
+#: includes/admin/class-secure.php:285
 #: includes/admin/class-site-health.php:1137
 msgid "Send Immediately"
 msgstr ""
 
-#: includes/admin/class-secure.php:285
+#: includes/admin/class-secure.php:286
 #: includes/admin/class-site-health.php:1138
 msgid "Hourly"
 msgstr ""
 
-#: includes/admin/class-secure.php:286
+#: includes/admin/class-secure.php:287
 #: includes/admin/class-site-health.php:1139
 msgid "Daily"
 msgstr ""
 
-#: includes/admin/class-secure.php:288
+#: includes/admin/class-secure.php:289
 #: includes/admin/class-site-health.php:1143
 msgid "Notification Schedule"
 msgstr ""
 
-#: includes/admin/class-secure.php:294
+#: includes/admin/class-secure.php:295
 msgid "Allowed hosts for safe redirect (one host per line)"
 msgstr ""
 
-#: includes/admin/class-secure.php:295
+#: includes/admin/class-secure.php:296
 msgid "Extend allowed hosts for frontend pages redirects."
 msgstr ""
 
-#: includes/admin/class-secure.php:305
+#: includes/admin/class-secure.php:306
 msgid "Security"
 msgstr ""
 
-#: includes/admin/class-secure.php:306
+#: includes/admin/class-secure.php:307
 msgid "This feature scans for suspicious registered accounts, bans the usage of administrative capabilities to site subscribers/members, allows the website administrators to force all users to reset their passwords, preventing users from logging-in using their old passwords that may have been exposed."
 msgstr ""
 
-#: includes/admin/class-secure.php:333
+#: includes/admin/class-secure.php:334
 msgid "Blocked Due to Suspicious Activity"
 msgstr ""
 
-#: includes/admin/class-secure.php:336
+#: includes/admin/class-secure.php:337
 msgid "Are you sure that you want to restore this account after getting flagged for suspicious activity?"
 msgstr ""
 
-#: includes/admin/class-secure.php:336
+#: includes/admin/class-secure.php:337
 msgid "Restore Account"
 msgstr ""
 
@@ -1310,22 +1310,22 @@ msgid "Custom Homepage Redirect"
 msgstr ""
 
 #: includes/admin/class-site-health.php:1447
-#: includes/admin/templates/role/register.php:18
+#: includes/admin/templates/role/register.php:25
 msgid "Auto Approve"
 msgstr ""
 
 #: includes/admin/class-site-health.php:1448
-#: includes/admin/templates/role/register.php:19
+#: includes/admin/templates/role/register.php:26
 msgid "Require Email Activation"
 msgstr ""
 
 #: includes/admin/class-site-health.php:1449
-#: includes/admin/templates/role/register.php:20
+#: includes/admin/templates/role/register.php:27
 msgid "Require Admin Review"
 msgstr ""
 
 #: includes/admin/class-site-health.php:1457
-#: includes/admin/templates/role/register.php:14
+#: includes/admin/templates/role/register.php:21
 msgid "Registration Status"
 msgstr ""
 
@@ -1334,7 +1334,7 @@ msgstr ""
 #: includes/admin/class-site-health.php:1823
 #: includes/admin/templates/form/login_settings.php:20
 #: includes/admin/templates/role/login.php:19
-#: includes/admin/templates/role/register.php:30
+#: includes/admin/templates/role/register.php:37
 msgid "Redirect to profile"
 msgstr ""
 
@@ -1345,9 +1345,9 @@ msgstr ""
 #: includes/admin/class-site-health.php:1824
 #: includes/admin/templates/form/login_settings.php:21
 #: includes/admin/templates/role/login.php:20
-#: includes/admin/templates/role/register.php:31
-#: includes/admin/templates/role/register.php:58
-#: includes/admin/templates/role/register.php:92
+#: includes/admin/templates/role/register.php:38
+#: includes/admin/templates/role/register.php:57
+#: includes/admin/templates/role/register.php:99
 msgid "Redirect to URL"
 msgstr ""
 
@@ -1362,42 +1362,42 @@ msgstr ""
 #: includes/admin/templates/role/delete.php:26
 #: includes/admin/templates/role/login.php:28
 #: includes/admin/templates/role/logout.php:26
-#: includes/admin/templates/role/register.php:38
-#: includes/admin/templates/role/register.php:72
-#: includes/admin/templates/role/register.php:106
+#: includes/admin/templates/role/register.php:45
+#: includes/admin/templates/role/register.php:71
+#: includes/admin/templates/role/register.php:113
 msgid "Set Custom Redirect URL"
 msgstr ""
 
 #: includes/admin/class-site-health.php:1497
 #: includes/admin/class-site-health.php:1566
-#: includes/admin/templates/role/register.php:57
-#: includes/admin/templates/role/register.php:91
+#: includes/admin/templates/role/register.php:56
+#: includes/admin/templates/role/register.php:98
 #: assets/js/admin/block-restrictions.js:162
 msgid "Show custom message"
 msgstr ""
 
 #: includes/admin/class-site-health.php:1506
-#: includes/admin/templates/role/register.php:45
+#: includes/admin/templates/role/register.php:78
 msgid "Login user after validating the activation link?"
 msgstr ""
 
 #: includes/admin/class-site-health.php:1518
 #: includes/admin/class-site-health.php:1575
-#: includes/admin/templates/role/register.php:26
-#: includes/admin/templates/role/register.php:53
-#: includes/admin/templates/role/register.php:87
+#: includes/admin/templates/role/register.php:33
+#: includes/admin/templates/role/register.php:52
+#: includes/admin/templates/role/register.php:94
 msgid "Action to be taken after registration"
 msgstr ""
 
 #: includes/admin/class-site-health.php:1531
 #: includes/admin/class-site-health.php:1588
-#: includes/admin/templates/role/register.php:65
-#: includes/admin/templates/role/register.php:99
+#: includes/admin/templates/role/register.php:64
+#: includes/admin/templates/role/register.php:106
 msgid "Personalize the custom message"
 msgstr ""
 
 #: includes/admin/class-site-health.php:1556
-#: includes/admin/templates/role/register.php:79
+#: includes/admin/templates/role/register.php:86
 msgid "URL redirect after email activation"
 msgstr ""
 
@@ -4544,7 +4544,7 @@ msgid "Appearance"
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:1595
-#: includes/core/class-form.php:1004
+#: includes/core/class-form.php:1068
 msgid "Profile"
 msgstr ""
 
@@ -5742,18 +5742,15 @@ msgid "Get latest versions"
 msgstr ""
 
 #: includes/admin/templates/dashboard/users.php:24
-#: includes/core/class-user.php:1307
 msgid "Pending Review"
 msgstr ""
 
 #: includes/admin/templates/dashboard/users.php:36
 #: includes/common/class-users.php:105
-#: includes/core/class-user.php:1299
 msgid "Approved"
 msgstr ""
 
 #: includes/admin/templates/dashboard/users.php:46
-#: includes/core/class-user.php:1303
 msgid "Awaiting Email Confirmation"
 msgstr ""
 
@@ -6344,29 +6341,29 @@ msgstr ""
 msgid "Learn more about role priorities"
 msgstr ""
 
-#: includes/admin/templates/role/register.php:15
+#: includes/admin/templates/role/register.php:22
 msgid "Select the status you would like this user role to have after they register on your site"
 msgstr ""
 
-#: includes/admin/templates/role/register.php:27
-#: includes/admin/templates/role/register.php:54
-#: includes/admin/templates/role/register.php:88
+#: includes/admin/templates/role/register.php:34
+#: includes/admin/templates/role/register.php:53
+#: includes/admin/templates/role/register.php:95
 msgid "Select what action is taken after a person registers on your site. Depending on the status you can redirect them to their profile, a custom url or show a custom message"
 msgstr ""
 
-#: includes/admin/templates/role/register.php:46
-msgid "Login the user after validating the activation link"
-msgstr ""
-
-#: includes/admin/templates/role/register.php:66
+#: includes/admin/templates/role/register.php:65
 msgid "Thank you for registering. Before you can login we need you to activate your account by clicking the activation link in the email we just sent you."
 msgstr ""
 
-#: includes/admin/templates/role/register.php:80
+#: includes/admin/templates/role/register.php:79
+msgid "Login the user after validating the activation link"
+msgstr ""
+
+#: includes/admin/templates/role/register.php:87
 msgid "If you want users to go to a specific page other than login page after email activation, enter the URL here."
 msgstr ""
 
-#: includes/admin/templates/role/register.php:100
+#: includes/admin/templates/role/register.php:107
 msgid "Thank you for applying for membership to our site. We will review your details and send you an email letting you know whether your application has been successful or not."
 msgstr ""
 
@@ -6767,7 +6764,7 @@ msgstr ""
 #: includes/class-config.php:249
 #: includes/class-config.php:932
 #: includes/class-config.php:993
-#: includes/core/class-form.php:1001
+#: includes/core/class-form.php:1065
 msgid "Login"
 msgstr ""
 
@@ -6776,7 +6773,7 @@ msgstr ""
 #: includes/class-config.php:253
 #: includes/class-config.php:935
 #: includes/class-config.php:997
-#: includes/core/class-form.php:1007
+#: includes/core/class-form.php:1071
 msgid "Register"
 msgstr ""
 
@@ -7268,7 +7265,7 @@ msgid "oEmbed"
 msgstr ""
 
 #: includes/core/class-builtin.php:761
-#: includes/core/class-user.php:1819
+#: includes/core/class-user.php:1788
 msgid "Only me"
 msgstr ""
 
@@ -9638,7 +9635,7 @@ msgstr ""
 
 #: includes/core/class-password.php:511
 #: includes/core/um-actions-account.php:67
-#: includes/core/um-actions-register.php:325
+#: includes/core/um-actions-register.php:317
 msgid "Passwords may not contain the character \"\\\"."
 msgstr ""
 
@@ -9679,14 +9676,6 @@ msgstr ""
 #: includes/core/class-password.php:562
 #: includes/core/um-actions-form.php:658
 msgid "Your passwords do not match"
-msgstr ""
-
-#: includes/core/class-permalinks.php:120
-msgid "This activation link is expired or have already been used."
-msgstr ""
-
-#: includes/core/class-permalinks.php:125
-msgid "This activation link is expired."
 msgstr ""
 
 #: includes/core/class-profile.php:67
@@ -9782,28 +9771,20 @@ msgstr ""
 msgid "Unable to crop image file: %s"
 msgstr ""
 
-#: includes/core/class-user.php:1122
+#: includes/core/class-user.php:1116
 msgid "Ultimate Member Role"
 msgstr ""
 
-#: includes/core/class-user.php:1125
+#: includes/core/class-user.php:1119
 msgid "&mdash; No role for Ultimate Member &mdash;"
 msgstr ""
 
-#: includes/core/class-user.php:1311
-msgid "Membership Rejected"
-msgstr ""
-
-#: includes/core/class-user.php:1315
-msgid "Membership Inactive"
-msgstr ""
-
 #: includes/core/rest/class-api-v1.php:220
-#: includes/core/rest/class-api-v1.php:276
-#: includes/core/rest/class-api-v1.php:308
+#: includes/core/rest/class-api-v1.php:277
+#: includes/core/rest/class-api-v1.php:309
 #: includes/core/rest/class-api-v2.php:202
-#: includes/core/rest/class-api-v2.php:258
-#: includes/core/rest/class-api-v2.php:290
+#: includes/core/rest/class-api-v2.php:259
+#: includes/core/rest/class-api-v2.php:291
 msgid "You must provide a user ID"
 msgstr ""
 
@@ -9817,30 +9798,30 @@ msgstr ""
 msgid "You need to provide value to update"
 msgstr ""
 
-#: includes/core/rest/class-api-v1.php:243
-#: includes/core/rest/class-api-v2.php:225
+#: includes/core/rest/class-api-v1.php:244
+#: includes/core/rest/class-api-v2.php:226
 msgid "User status has been changed."
 msgstr ""
 
-#: includes/core/rest/class-api-v1.php:253
-#: includes/core/rest/class-api-v2.php:235
+#: includes/core/rest/class-api-v1.php:254
+#: includes/core/rest/class-api-v2.php:236
 msgid "User role has been changed."
 msgstr ""
 
-#: includes/core/rest/class-api-v1.php:257
-#: includes/core/rest/class-api-v2.php:239
+#: includes/core/rest/class-api-v1.php:258
+#: includes/core/rest/class-api-v2.php:240
 msgid "User meta has been changed."
 msgstr ""
 
-#: includes/core/rest/class-api-v1.php:284
-#: includes/core/rest/class-api-v1.php:315
-#: includes/core/rest/class-api-v2.php:266
-#: includes/core/rest/class-api-v2.php:297
+#: includes/core/rest/class-api-v1.php:285
+#: includes/core/rest/class-api-v1.php:316
+#: includes/core/rest/class-api-v2.php:267
+#: includes/core/rest/class-api-v2.php:298
 msgid "Invalid user specified"
 msgstr ""
 
-#: includes/core/rest/class-api-v1.php:291
-#: includes/core/rest/class-api-v2.php:273
+#: includes/core/rest/class-api-v1.php:292
+#: includes/core/rest/class-api-v2.php:274
 msgid "User has been successfully deleted."
 msgstr ""
 
@@ -10220,15 +10201,15 @@ msgstr ""
 msgid "Password is incorrect. Please try again."
 msgstr ""
 
-#: includes/core/um-actions-login.php:199
+#: includes/core/um-actions-login.php:206
 msgid "This action has been prevented for security measures."
 msgstr ""
 
-#: includes/core/um-actions-login.php:415
+#: includes/core/um-actions-login.php:422
 msgid "Keep me signed in"
 msgstr ""
 
-#: includes/core/um-actions-login.php:459
+#: includes/core/um-actions-login.php:466
 msgid "Forgot your password?"
 msgstr ""
 
@@ -10267,27 +10248,35 @@ msgid "Your IP address has been blocked."
 msgstr ""
 
 #: includes/core/um-actions-misc.php:165
-#: includes/core/um-filters-login.php:75
+#: includes/core/um-filters-login.php:74
 msgid "Your account has been disabled."
 msgstr ""
 
 #: includes/core/um-actions-misc.php:168
-#: includes/core/um-filters-login.php:78
+#: includes/core/um-filters-login.php:77
 msgid "Your account has not been approved yet."
 msgstr ""
 
 #: includes/core/um-actions-misc.php:171
-#: includes/core/um-filters-login.php:81
+#: includes/core/um-filters-login.php:80
 msgid "Your account is awaiting email verification."
 msgstr ""
 
 #: includes/core/um-actions-misc.php:174
-#: includes/core/um-filters-login.php:84
+#: includes/core/um-filters-login.php:83
 msgid "Your membership request has been rejected."
 msgstr ""
 
 #: includes/core/um-actions-misc.php:177
 msgid "An error has been encountered. Probably page was cached. Please try again."
+msgstr ""
+
+#: includes/core/um-actions-misc.php:180
+msgid "This activation link is expired or have already been used."
+msgstr ""
+
+#: includes/core/um-actions-misc.php:183
+msgid "This activation link is expired."
 msgstr ""
 
 #: includes/core/um-actions-profile.php:203
@@ -10404,8 +10393,8 @@ msgstr ""
 msgid "<strong>Important:</strong> Our website is currently under maintenance. Please check back soon."
 msgstr ""
 
-#: includes/frontend/class-secure.php:175
-#: includes/frontend/class-secure.php:176
+#: includes/frontend/class-secure.php:180
+#: includes/frontend/class-secure.php:181
 msgid "Your new password cannot be same as old password."
 msgstr ""
 
