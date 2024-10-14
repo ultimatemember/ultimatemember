@@ -1532,6 +1532,13 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 							$sanitized[ $k ] = absint( $v );
 						}
 						break;
+					case 'empty_absint':
+						if ( is_array( $v ) ) {
+							$sanitized[ $k ] = array_map( 'absint', $v );
+						} else {
+							$sanitized[ $k ] = ( '' !== $v ) ? absint( $v ) : '';
+						}
+						break;
 					case 'key':
 						if ( is_array( $v ) ) {
 							$sanitized[ $k ] = array_map( 'sanitize_key', $v );

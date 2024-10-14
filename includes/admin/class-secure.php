@@ -150,6 +150,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 				}
 				// Restore Account Status.
 				if ( isset( $metadata['account_status'] ) ) {
+					// Force update of the user status without email notifications.
 					UM()->common()->users()->set_status( $user_id, $metadata['account_status'] );
 				}
 
@@ -327,7 +328,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 			if ( 'account_status' === $column_name ) {
 				um_fetch_user( $user_id );
 				$is_blocked     = um_user( 'um_user_blocked' );
-				$account_status = um_user( 'account_status' );
+				$account_status = UM()->common()->users()->get_status( $user_id );
 				if ( ! empty( $is_blocked ) && in_array( $account_status, array( 'rejected', 'inactive' ), true ) ) {
 					$datetime            = um_user( 'um_user_blocked__timestamp' );
 					$val                .= '<div><small>' . esc_html__( 'Blocked Due to Suspicious Activity', 'ultimate-member' ) . '</small></div>';

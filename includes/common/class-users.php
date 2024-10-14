@@ -279,6 +279,8 @@ class Users {
 		 * @param {int}    $expiration Expiration timestamp. Since 2.8.7.
 		 */
 		do_action( 'um_after_user_hash_is_changed', $user_id, $hash, $expiration );
+
+		$this->remove_cache( $user_id ); // Don't remove this line. It's required removing cache duplicate for the force case when re-send activation email.
 	}
 
 	/**
