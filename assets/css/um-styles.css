@@ -1148,14 +1148,3 @@ small.um-max-filesize span{
 	float: none;
 	height: auto;
 }
-
-.um-textarea-html-value {
-	border: none;
-	width: 100%;
-	max-width: none;
-	margin: 0;
-	padding: 0;
-	overflow: auto;
-	max-height: none;
-	height: auto;
-}

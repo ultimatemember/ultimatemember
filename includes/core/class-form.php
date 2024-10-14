@@ -736,6 +736,59 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			return $form;
 		}
 
+		/**
+		 * Use PHP tidy extension if it's active for getting clean HTML without unclosed tags.
+		 *
+		 * @param string $html_fragment Textarea with active HTML option field value.
+		 * @param array  $field_data    Ultimate Member form field data.
+		 *
+		 * @return string|\tidy
+		 */
+		private static function maybe_apply_tidy( $html_fragment, $field_data ) {
+			// Break if extension isn't active in php.ini
+			if ( ! function_exists( 'tidy_parse_string' ) ) {
+				return $html_fragment;
+			}
+
+			$tidy_config = array(
+				'clean'          => true,
+				'output-xhtml'   => true,
+				'show-body-only' => true,
+				'wrap'           => 0,
+			);
+			/**
+			 * Filters PHP tidy extension config.
+			 * Get more info here https://www.php.net/manual/en/tidy.parsestring.php
+			 *
+			 * @param {array} $tidy_config Config.
+			 * @param {array} $field_data  UM Form Field Data.
+			 *
+			 * @return {array} Config.
+			 *
+			 * @since 2.8.9
+			 * @hook um_tidy_config
+			 *
+			 * @example <caption>Customize tidy config based on field data.</caption>
+			 * function my_um_tidy_config( $tidy_config, $field_data ) {
+			 *     // your code here
+			 *     if ( 'custom_metakey' === $field_data['metakey'] ) {
+			 *         $tidy_config['clean'] = false;
+			 *     }
+			 *     return $tidy_config;
+			 * }
+			 * add_filter( 'um_tidy_config', 'my_um_tidy_config', 10, 2 );
+			 */
+			$tidy_config = apply_filters( 'um_tidy_config', $tidy_config, $field_data );
+
+			// since PHP8.0 $tidy_config, 'UTF8' variables are nullable https://www.php.net/manual/en/tidy.parsestring.php
+			$tidy   = tidy_parse_string( $html_fragment, $tidy_config, 'UTF8' );
+			$result = $tidy->cleanRepair();
+			if ( $result ) {
+				return $tidy;
+			}
+
+			return $html_fragment;
+		}
 
 		/**
 		 * Beautify form data
@@ -769,6 +822,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 												if ( ! empty( $match[1] ) ) {
 													$form[ $k ] = $match[1];
 												}
+
+												$form[ $k ] = self::maybe_apply_tidy( $form[ $k ], $field );
 
 												$allowed_html = UM()->get_allowed_html( 'templates' );
 												if ( empty( $allowed_html['iframe'] ) ) {
@@ -907,6 +962,14 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 						if ( array_key_exists( $description_key, $custom_fields ) ) {
 							$field_exists = true;
 							if ( ! empty( $custom_fields[ $description_key ]['html'] ) && $bio_html ) {
+								$form[ $description_key ] = html_entity_decode( $form[ $description_key ] ); // required because WP_Editor send sometimes encoded content.
+								preg_match( '/^<p>(.*?)<\/p>$/', $form[ $description_key ], $match ); // required because WP_Editor send content wrapped to <p></p>
+								if ( ! empty( $match[1] ) ) {
+									$form[ $description_key ] = $match[1];
+								}
+
+								$form[ $description_key ] = self::maybe_apply_tidy( $form[ $description_key ], $custom_fields[ $description_key ] );
+
 								$allowed_html = UM()->get_allowed_html( 'templates' );
 								if ( empty( $allowed_html['iframe'] ) ) {
 									$allowed_html['iframe'] = array(
