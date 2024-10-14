@@ -2781,7 +2781,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							if ( ! empty( $results ) ) {
 								foreach ( $results as $user_id ) {
 									$md_data = get_user_meta( $user_id, 'um_member_directory_data', true );
-									if ( ! empty( $md_data ) ) {
+									if ( ! empty( $md_data ) && is_array( $md_data ) ) {
 										$md_data['profile_photo'] = ! empty( $_POST['um_options']['use_gravatars'] );
 										update_user_meta( $user_id, 'um_member_directory_data', $md_data );
 									}
@@ -2831,7 +2831,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					if ( ! empty( $results ) ) {
 						foreach ( $results as $user_id ) {
 							$md_data = get_user_meta( $user_id, 'um_member_directory_data', true );
-							if ( ! empty( $md_data ) ) {
+							if ( ! empty( $md_data ) && is_array( $md_data ) ) {
 								$md_data['hide_in_members'] = ( $_POST['um_options']['account_hide_in_directory_default'] === 'No' ) ? false : true;
 								update_user_meta( $user_id, 'um_member_directory_data', $md_data );
 							}
