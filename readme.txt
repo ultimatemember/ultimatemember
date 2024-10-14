@@ -6,7 +6,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
 Tested up to: 6.6
-Stable tag: 2.8.8
+Stable tag: 2.8.9
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -165,6 +165,26 @@ No specific extensions are needed. But we highly recommended keep active these P
 = Important: =
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
+
+= 2.8.9 2024-10-14 =
+
+**Enhancements**
+
+* Added: Using PHP tidy extension (if it's active) to make HTML textarea value clear
+* Added: `um_tidy_config` filter hook for setting PHP tidy config
+* Tweak: Avoid using force `set_status()` function.
+* Tweak: Properly using `UM()->common()->users()->get_status( $user_id )` instead of `um_user( 'account_status' )`
+* Tweak: Properly using `UM()->common()->users()->get_status( $user_id, 'formatted' )` instead of `um_user( 'account_status_name' )`
+* Tweak: Properly using `um_user( 'status' )` for getting user role setting while registration
+
+**Bugfixes**
+
+* Fixed: UM tipsy removing inside .um-page selector (e.g. tipsy init from um-modal)
+* Fixed: Rollback using `<iframe>` for displaying HTML formatted textarea value
+* Fixed: Capability to edit user profile for Administrator when user doesn't have a capability to edit its profile
+* Fixed: Sending email notifications based on user status after registration
+
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
 
 = 2.8.8 2024-10-04 =
 

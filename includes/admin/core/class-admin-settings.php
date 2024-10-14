@@ -769,7 +769,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'sanitize' => 'bool',
 					),
 					'activation_link_expiry_time'           => array(
-						'sanitize' => 'absint',
+						'sanitize' => 'empty_absint',
 					),
 					'account_tab_password'                  => array(
 						'sanitize' => 'bool',
