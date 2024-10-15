@@ -1,5 +1,11 @@
 ﻿== Changelog ==
 
+= 2.9.0 xx xx, 2024 =
+
+**Bugfixes**
+
+* Fixed: User status filter on wp-admin > Users on mobile devices
+
 = 2.8.9 October 14, 2024 =
 
 * Enhancements:

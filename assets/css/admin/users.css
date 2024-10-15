@@ -1,3 +1,6 @@
+.um-admin.users-php .um-filter-by-status {
+  padding: 0 8px 0 0;
+}
 .um-admin.users-php .um_account_status {
   display: flex;
   flex-direction: column;

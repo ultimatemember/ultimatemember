@@ -360,7 +360,7 @@ if ( ! class_exists( 'um\admin\Users_Columns' ) ) {
 
 			$statuses = $this->get_statuses_filter_options();
 			?>
-			<div class="alignleft actions um-filter-by-status">
+			<div class="alignleft um-filter-by-status">
 				<label class="screen-reader-text" for="<?php echo esc_attr( $id ); ?>"><?php esc_html_e( 'All Statuses', 'ultimate-member' ); ?></label>
 				<select name="<?php echo esc_attr( $id ); ?>" id="<?php echo esc_attr( $id ); ?>">
 					<option value=""><?php esc_html_e( 'All Statuses', 'ultimate-member' ); ?></option>
