@@ -234,8 +234,8 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 					$user_id = $this->get_user_id_by_user_login_slug();
 				}
 
-				if ( 'user_id' === $permalink_base ) {
-					$user_id = UM()->user()->user_exists_by_id( um_queried_user() );
+				if ( 'user_id' === $permalink_base && UM()->common()->users()::user_exists( um_queried_user() ) ) {
+					$user_id = um_queried_user();
 				}
 
 				if ( 'hash' === $permalink_base ) {

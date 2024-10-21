@@ -530,7 +530,6 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->admin_settings();
 				$this->columns();
 				$this->metabox();
-				$this->users();
 				$this->dragdrop();
 				$this->admin_gdpr();
 				$this->admin_navmenu();
@@ -555,6 +554,7 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->user();
 			$this->profile();
 			$this->builtin();
+			$this->files();
 			$this->form()->hooks();
 			$this->permalinks();
 			$this->cron();
@@ -905,20 +905,6 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 			return $this->classes['admin_metabox'];
 		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * @return um\admin\core\Admin_Users()
-		 */
-		function users() {
-			if ( empty( $this->classes['admin_users'] ) ) {
-				$this->classes['admin_users'] = new um\admin\core\Admin_Users();
-			}
-			return $this->classes['admin_users'];
-		}
-
 
 		/**
 		 * @since 2.0
@@ -1292,7 +1278,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 *
 		 * @return um\core\Files
 		 */
-		function files() {
+		public function files() {
 			if ( empty( $this->classes['files'] ) ) {
 				$this->classes['files'] = new um\core\Files();
 			}
@@ -1482,7 +1468,6 @@ if ( ! class_exists( 'UM' ) ) {
 			require_once 'core/um-actions-form.php';
 			require_once 'core/um-actions-access.php';
 			require_once 'core/um-actions-wpadmin.php';
-			require_once 'core/um-actions-core.php';
 			require_once 'core/um-actions-ajax.php';
 			require_once 'core/um-actions-login.php';
 			require_once 'core/um-actions-register.php';

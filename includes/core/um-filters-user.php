@@ -4,61 +4,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Main admin user actions.
- *
- * @param array $actions
- * @param int   $user_id
- *
- * @return array
- */
-function um_admin_user_actions_hook( $actions, $user_id ) {
-	um_fetch_user( $user_id );
-
-	$role = get_role( UM()->roles()->get_priority_user_role( get_current_user_id() ) );
-
-	$can_edit_users = null !== $role && current_user_can( 'edit_users' ) && $role->has_cap( 'edit_users' );
-	if ( $can_edit_users ) {
-		$account_status = um_user( 'account_status' );
-
-		if ( 'awaiting_admin_review' === $account_status ) {
-			$actions['um_approve_membership'] = array( 'label' => __( 'Approve Membership', 'ultimate-member' ) );
-			$actions['um_reject_membership']  = array( 'label' => __( 'Reject Membership', 'ultimate-member' ) );
-		}
-
-		if ( 'rejected' === $account_status ) {
-			$actions['um_approve_membership'] = array( 'label' => __( 'Approve Membership', 'ultimate-member' ) );
-		}
-
-		if ( 'approved' === $account_status ) {
-			$actions['um_put_as_pending'] = array( 'label' => __( 'Put as Pending Review', 'ultimate-member' ) );
-		}
-
-		if ( 'awaiting_email_confirmation' === $account_status ) {
-			$actions['um_resend_activation'] = array( 'label' => __( 'Resend Activation Email', 'ultimate-member' ) );
-		}
-
-		if ( 'inactive' !== $account_status ) {
-			$actions['um_deactivate'] = array( 'label' => __( 'Deactivate this account', 'ultimate-member' ) );
-		}
-
-		if ( 'inactive' === $account_status ) {
-			$actions['um_reenable'] = array( 'label' => __( 'Reactivate this account', 'ultimate-member' ) );
-		}
-	}
-
-	if ( UM()->roles()->um_current_user_can( 'delete', $user_id ) ) {
-		$actions['um_delete'] = array( 'label' => __( 'Delete this user', 'ultimate-member' ) );
-	}
-
-	if ( current_user_can( 'manage_options' ) && ! is_super_admin( $user_id ) ) {
-		$actions['um_switch_user'] = array( 'label' => __( 'Login as this user', 'ultimate-member' ) );
-	}
-
-	return $actions;
-}
-add_filter( 'um_admin_user_actions_hook', 'um_admin_user_actions_hook', 10, 2 );
-
-/**
  * Filter user basename.
  *
  * @param  string $value

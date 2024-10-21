@@ -142,7 +142,12 @@ if ( ! class_exists( 'um\frontend\Secure' ) ) {
 		 */
 		public function login_validate_expired_pass() {
 			if ( UM()->options()->get( 'display_login_form_notice' ) ) {
-				$expired_password_reset = get_user_meta( um_user( 'ID' ), 'um_secure_has_reset_password', true );
+				$user_id = isset( UM()->login()->auth_id ) ? UM()->login()->auth_id : '';
+				if ( empty( $user_id ) ) {
+					return;
+				}
+
+				$expired_password_reset = get_user_meta( $user_id, 'um_secure_has_reset_password', true );
 				if ( ! $expired_password_reset ) {
 					$login_url = add_query_arg( 'notice', 'expired_password', um_get_core_page( 'login' ) );
 					// Not `um_safe_redirect()` because predefined login page is situated on the same host.

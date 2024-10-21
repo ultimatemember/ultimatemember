@@ -27,6 +27,7 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 			$this->secure()->hooks();
 			$this->site_health();
 			$this->theme()->hooks();
+			$this->users()->hooks();
 		}
 
 		/**
@@ -49,6 +50,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\cpt'] = new CPT();
 			}
 			return UM()->classes['um\common\cpt'];
+		}
+
+		/**
+		 * @since 2.8.7
+		 *
+		 * @return Filesystem
+		 */
+		public function filesystem() {
+			if ( empty( UM()->classes['um\common\filesystem'] ) ) {
+				UM()->classes['um\common\filesystem'] = new Filesystem();
+			}
+			return UM()->classes['um\common\filesystem'];
 		}
 
 		/**
@@ -97,6 +110,18 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 				UM()->classes['um\common\theme'] = new Theme();
 			}
 			return UM()->classes['um\common\theme'];
+		}
+
+		/**
+		 * @since 2.8.7
+		 *
+		 * @return Users
+		 */
+		public function users() {
+			if ( empty( UM()->classes['um\common\users'] ) ) {
+				UM()->classes['um\common\users'] = new Users();
+			}
+			return UM()->classes['um\common\users'];
 		}
 	}
 }

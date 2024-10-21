@@ -134,18 +134,22 @@ function um_profile_field_filter_hook__vimeo_video( $value, $data ) {
 }
 add_filter( 'um_profile_field_filter_hook__vimeo_video', 'um_profile_field_filter_hook__vimeo_video', 99, 2 );
 
-
 /**
  * Outputs a phone link
  *
  * @param $value
  * @param $data
  *
- * @return int|string
+ * @return string
  */
 function um_profile_field_filter_hook__phone( $value, $data ) {
-	$value = '<a href="' . esc_url( 'tel:' . $value ) . '" rel="nofollow" title="' . esc_attr( $data['title'] ) . '">' . esc_html( $value ) . '</a>';
-	return $value;
+	$maybe_empty_phone = trim( str_replace( '+', '', $value ) );
+	if ( empty( $maybe_empty_phone ) ) {
+		return '';
+	}
+
+	$value = trim( $value );
+	return '<a href="' . esc_url( 'tel:' . $value ) . '" rel="nofollow" title="' . esc_attr( $data['title'] ) . '">' . esc_html( $value ) . '</a>';
 }
 add_filter( 'um_profile_field_filter_hook__tel', 'um_profile_field_filter_hook__phone', 99, 2 );
 
@@ -255,8 +259,9 @@ function um_profile_field_filter_hook__textarea( $value, $data ) {
 	if ( ! $value ) {
 		return '';
 	}
+
 	if ( ! empty( $data['html'] ) ) {
-		return $value;
+		return wp_kses_post( $value );
 	}
 
 	$description_key = UM()->profile()->get_show_bio_key( UM()->fields()->global_args );

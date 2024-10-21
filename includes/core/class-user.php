@@ -130,7 +130,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			add_action( 'personal_options_update', array( &$this, 'remove_cache' ) );
 			//add_action('edit_user_profile_update', array(&$this, 'remove_cache') );
 			add_action( 'um_when_role_is_set', array( &$this, 'remove_cache' ) );
-			add_action( 'um_when_status_is_set', array( &$this, 'remove_cache' ) );
 
 			add_action( 'show_user_profile', array( $this, 'profile_form_additional_section' ), 10 );
 			add_action( 'user_new_form', array( $this, 'profile_form_additional_section' ), 10 );
@@ -418,7 +417,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 		}
 
-
 		/**
 		 * When you delete usermeta connected with member directory - reset it to  default value
 		 *
@@ -427,18 +425,19 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param string $meta_key
 		 * @param mixed $_meta_value
 		 */
-		function on_delete_usermeta( $meta_ids, $object_id, $meta_key, $_meta_value ) {
+		public function on_delete_usermeta( $meta_ids, $object_id, $meta_key, $_meta_value ) {
 			if ( $this->deleted_user_id ) {
 				return;
 			}
 
 			$metakeys = array( 'account_status', 'hide_in_members', 'synced_gravatar_hashed_id', 'synced_profile_photo', 'profile_photo', 'cover_photo', '_um_verified' );
-			if ( ! in_array( $meta_key, $metakeys ) ) {
+			if ( ! in_array( $meta_key, $metakeys, true ) ) {
 				return;
 			}
 
+			// Set default if empty or has a wrong format.
 			$md_data = get_user_meta( $object_id, 'um_member_directory_data', true );
-			if ( empty( $md_data ) ) {
+			if ( empty( $md_data ) || ! is_array( $md_data ) ) {
 				$md_data = array(
 					'account_status'  => 'approved',
 					'hide_in_members' => UM()->member_directory()->get_hide_in_members_default(),
@@ -495,7 +494,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			update_user_meta( $object_id, 'um_member_directory_data', $md_data );
 		}
 
-
 		/**
 		 * When you add/update usermeta connected with member directories - set this data to member directory metakey
 		 *
@@ -504,15 +502,15 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param string $meta_key
 		 * @param mixed $_meta_value
 		 */
-		function on_update_usermeta( $meta_id, $object_id, $meta_key, $_meta_value ) {
-
+		public function on_update_usermeta( $meta_id, $object_id, $meta_key, $_meta_value ) {
 			$metakeys = array( 'account_status', 'hide_in_members', 'synced_gravatar_hashed_id', 'synced_profile_photo', 'profile_photo', 'cover_photo', '_um_verified' );
-			if ( ! in_array( $meta_key, $metakeys ) ) {
+			if ( ! in_array( $meta_key, $metakeys, true ) ) {
 				return;
 			}
 
+			// Set default if empty or has a wrong format.
 			$md_data = get_user_meta( $object_id, 'um_member_directory_data', true );
-			if ( empty( $md_data ) ) {
+			if ( empty( $md_data ) || ! is_array( $md_data ) ) {
 				$md_data = array(
 					'account_status'  => 'approved',
 					'hide_in_members' => UM()->member_directory()->get_hide_in_members_default(),
@@ -529,7 +527,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				case 'hide_in_members':
 					$hide_in_members = UM()->member_directory()->get_hide_in_members_default();
 					if ( ! empty( $_meta_value ) ) {
-						if ( $_meta_value == 'Yes' || $_meta_value == __( 'Yes', 'ultimate-member' ) ||
+						if ( 'Yes' === $_meta_value || __( 'Yes', 'ultimate-member' ) === $_meta_value ||
 							 array_intersect( array( 'Yes', __( 'Yes', 'ultimate-member' ) ), $_meta_value ) ) {
 							$hide_in_members = true;
 						} else {
@@ -558,13 +556,12 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					$md_data['cover_photo'] = ! empty( $_meta_value );
 					break;
 				case '_um_verified':
-					$md_data['verified'] = $_meta_value == 'verified' ? true : false;
+					$md_data['verified'] = 'verified' === $_meta_value;
 					break;
 			}
 
 			update_user_meta( $object_id, 'um_member_directory_data', $md_data );
 		}
-
 
 		/**
 		 * @param $user_id
@@ -646,27 +643,21 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			delete_transient( 'um_count_users_pending_dot' );
 		}
 
-
 		/**
 		 *
 		 */
-		function check_membership() {
+		public function check_membership() {
 			if ( ! is_user_logged_in() ) {
 				return;
 			}
 
-			um_fetch_user( get_current_user_id() );
-			$status = um_user( 'account_status' );
-
-			if ( 'rejected' == $status ) {
+			if ( UM()->common()->users()->has_status( get_current_user_id(), 'rejected' ) ) {
 				wp_logout();
 				session_unset();
-				exit( wp_redirect( um_get_core_page( 'login' ) ) );
+				um_safe_redirect( um_get_core_page( 'login' ) );
+				exit;
 			}
-
-			um_reset_user();
 		}
-
 
 		/**
 		 * Multisite add existing user
@@ -1299,29 +1290,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 						$this->usermeta['account_status'][0] = 'approved';
 					}
 
-					if ( $this->usermeta['account_status'][0] == 'approved' ) {
-						$this->usermeta['account_status_name'][0] = __( 'Approved', 'ultimate-member' );
-					}
-
-					if ( $this->usermeta['account_status'][0] == 'awaiting_email_confirmation' ) {
-						$this->usermeta['account_status_name'][0] = __( 'Awaiting Email Confirmation', 'ultimate-member' );
-					}
-
-					if ( $this->usermeta['account_status'][0] == 'awaiting_admin_review' ) {
-						$this->usermeta['account_status_name'][0] = __( 'Pending Review', 'ultimate-member' );
-					}
-
-					if ( $this->usermeta['account_status'][0] == 'rejected' ) {
-						$this->usermeta['account_status_name'][0] = __( 'Membership Rejected', 'ultimate-member' );
-					}
-
-					if ( $this->usermeta['account_status'][0] == 'inactive' ) {
-						$this->usermeta['account_status_name'][0] = __( 'Membership Inactive', 'ultimate-member' );
-					}
+					$this->usermeta['account_status_name'][0] = UM()->common()->users()->get_status( $this->id, 'formatted' );
 
 					// add user meta
 					foreach ( $this->usermeta as $k => $v ) {
-						if ( $k == 'display_name' ) {
+						if ( 'display_name' === $k ) {
 							continue;
 						}
 						$this->profile[ $k ] = $v[0];
@@ -1390,7 +1363,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		<?php UM()->user()->auto_login( 10, true ); ?>
 		 *
 		 */
-		function auto_login( $user_id, $rememberme = 0 ) {
+		public function auto_login( $user_id, $rememberme = 0 ) {
 
 			wp_set_current_user( $user_id );
 
@@ -1507,133 +1480,24 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		/**
 		 * Set user's account status
 		 *
-		 * @param $status
+		 * @deprecated 2.8.7
+		 *
+		 * @param string $status
 		 */
-		function set_status( $status ) {
-
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_when_status_is_set
-			 * @description Action on user status changed
-			 * @input_vars
-			 * [{"var":"$user_id","type":"int","desc":"User ID"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_when_status_is_set', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_when_status_is_set', 'my_when_status_is_set', 10, 1 );
-			 * function my_when_status_is_set( $user_id ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( 'um_when_status_is_set', um_user( 'ID' ) );
-
-			$this->profile['account_status'] = $status;
-
-			$this->update_usermeta_info( 'account_status' );
-
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_after_user_status_is_changed_hook
-			 * @description Action after user status changed
-			 * @input_vars
-			 * [{"var":"$user_id","type":"int","desc":"User ID"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_after_user_status_is_changed_hook', 'function_name', 10 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_after_user_status_is_changed_hook', 'my_after_user_status_is_changed', 10 );
-			 * function my_after_user_status_is_changed() {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( 'um_after_user_status_is_changed_hook', um_user( 'ID' ) );
-
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_after_user_status_is_changed
-			 * @description Action after user status changed
-			 * @input_vars
-			 * [{"var":"$status","type":"string","desc":"User Status"},
-			 *  {"var":"$user_id","type":"integer","desc":"User ID"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_after_user_status_is_changed', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_after_user_status_is_changed', 'my_after_user_status_is_changed', 10, 1 );
-			 * function my_after_user_status_is_changed( $status ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( 'um_after_user_status_is_changed', $status, um_user( 'ID' ) );
-
+		public function set_status( $status ) {
+			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->set_status()' );
+			UM()->common()->users()->set_status( $status, um_user( 'ID' ) );
 		}
-
 
 		/**
 		 * Set user's hash
+		 *
+		 * @deprecated 2.8.7
 		 */
-		function assign_secretkey() {
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_before_user_hash_is_changed
-			 * @description Action before user hash is changed
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_before_user_hash_is_changed', 'function_name', 10 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_before_user_hash_is_changed', 'my_before_user_hash_is_changed', 10 );
-			 * function my_before_user_hash_is_changed() {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( 'um_before_user_hash_is_changed' );
-
-			$this->profile['account_secret_hash'] = UM()->validation()->generate();
-			$this->update_usermeta_info( 'account_secret_hash' );
-
-			$expiry_time = UM()->options()->get( 'activation_link_expiry_time' );
-			if ( ! empty( $expiry_time ) && is_numeric( $expiry_time ) ) {
-				$this->profile['account_secret_hash_expiry'] = time() + $expiry_time * DAY_IN_SECONDS;
-				$this->update_usermeta_info( 'account_secret_hash_expiry' );
-			}
-
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_after_user_hash_is_changed
-			 * @description Action after user hash is changed
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_after_user_hash_is_changed', 'function_name', 10 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_after_user_hash_is_changed', 'my_after_user_hash_is_changed', 10 );
-			 * function my_after_user_hash_is_changed() {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( 'um_after_user_hash_is_changed' );
+		public function assign_secretkey() {
+			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->assign_secretkey()' );
+			UM()->common()->users()->assign_secretkey( um_user( 'ID' ) );
 		}
-
 
 		/**
 		 * @param \WP_User $userdata
@@ -1680,222 +1544,80 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 		/**
 		 * This method approves a user membership and sends them an optional welcome/approval email.
-		 *
-		 * @usage <?php UM()->user()->approve(); ?>
-		 *
-		 * @example Approve a pending user and allow him to sign-in to your site.
-
-		<?php
-
-		um_fetch_user( 352 );
-		UM()->user()->approve();
-
-		?>
-		 *
+		 * @param bool $repeat @deprecated
+		 * @deprecated 2.8.7
 		 */
-		public function approve( $repeat = true ) {
-			$user_id = um_user( 'ID' );
-
-			if ( ! $repeat ) {
-				$status = get_user_meta( $user_id, 'account_status', true );
-				if ( 'approved' === $status ) {
-					return;
-				}
-			}
-
-			delete_option( "um_cache_userdata_{$user_id}" );
-
-			$user_email = um_user( 'user_email' );
-
-			if ( 'awaiting_admin_review' === um_user( 'account_status' ) ) {
-				$userdata = get_userdata( $user_id );
-
-				$this->maybe_generate_password_reset_key( $userdata );
-
-				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $user_email, 'approved_email' ) );
-
-			} else {
-				//$userdata = get_userdata( $user_id );
-				//get_password_reset_key( $userdata );
-				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $user_email, 'welcome_email' ) );
-			}
-
-			$this->set_status( 'approved' );
-			$this->delete_meta( 'account_secret_hash' );
-			$this->delete_meta( 'account_secret_hash_expiry' );
-
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_after_user_is_approved
-			 * @description Action after user was approved
-			 * @input_vars
-			 * [{"var":"$user_id","type":"int","desc":"User ID"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_after_user_is_approved', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_after_user_is_approved', 'my_after_user_is_approved', 10, 1 );
-			 * function my_after_user_hash_is_changed( $user_id ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( 'um_after_user_is_approved', um_user( 'ID' ) );
+		public function approve( $repeat = true ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- deprecated function
+			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->approve()' );
+			UM()->common()->users()->approve( um_user( 'ID' ), $repeat );
 		}
-
 
 		/**
 		 * Pending email
+		 * @deprecated 2.8.7
 		 */
-		function email_pending() {
-			$this->assign_secretkey();
-			$this->set_status( 'awaiting_email_confirmation' );
-
-			//clear all sessions for email confirmation pending users
-			$user = \WP_Session_Tokens::get_instance( um_user( 'ID' ) );
-			$user->destroy_all();
-
-			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( um_user( 'user_email' ), 'checkmail_email' ) );
+		public function email_pending() {
+			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->send_activation()' );
+			UM()->common()->users()->send_activation( um_user( 'ID' ) );
 		}
-
 
 		/**
 		 * This method puts a user under manual review by administrator and sends them an optional email.
-		 *
-		 * @usage <?php UM()->user()->pending(); ?>
-		 *
-		 * @example An example of putting a user pending manual review
-
-		<?php
-
-		um_fetch_user( 54 );
-		UM()->user()->pending();
-
-		?>
-		 *
+		 * @deprecated 2.8.7
+		 * @return void
 		 */
-		function pending() {
-			$this->set_status( 'awaiting_admin_review' );
-
-			//clear all sessions for awaiting admin confirmation users
-			$user = \WP_Session_Tokens::get_instance( um_user( 'ID' ) );
-			$user->destroy_all();
-
-			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( um_user( 'user_email' ), 'pending_email' ) );
+		public function pending() {
+			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->set_as_pending()' );
+			UM()->common()->users()->set_as_pending( um_user( 'ID' ) );
 		}
-
 
 		/**
 		 * This method rejects a user membership and sends them an optional email.
-		 *
-		 * @usage <?php UM()->user()->reject(); ?>
-		 *
-		 * @example Reject a user membership example
-
-		<?php
-
-		um_fetch_user( 114 );
-		UM()->user()->reject();
-
-		?>
-
-		 *
+		 * @deprecated 2.8.7
+		 * @return void
 		 */
-		function reject() {
-			$this->set_status( 'rejected' );
-
-			//clear all sessions for rejected users
-			$user = \WP_Session_Tokens::get_instance( um_user( 'ID' ) );
-			$user->destroy_all();
-
-			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( um_user( 'user_email' ), 'rejected_email' ) );
+		public function reject() {
+			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->reject()' );
+			UM()->common()->users()->reject( um_user( 'ID' ) );
 		}
-
 
 		/**
 		 * This method deactivates a user membership and sends them an optional email.
-		 *
-		 * @usage <?php UM()->user()->deactivate(); ?>
-		 *
-		 * @example Deactivate a user membership with the following example
-
-		<?php
-
-		um_fetch_user( 32 );
-		$ultimatemember->user->deactivate();
-
-		?>
-		 *
+		 * @deprecated 2.8.7
+		 * @return void
 		 */
-		function deactivate() {
-			$this->set_status( 'inactive' );
-
-			//clear all sessions for inactive users
-			$user = \WP_Session_Tokens::get_instance( um_user( 'ID' ) );
-			$user->destroy_all();
-
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_after_user_is_inactive
-			 * @description Action after user was inactive
-			 * @input_vars
-			 * [{"var":"$user_id","type":"int","desc":"User ID"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_after_user_is_inactive', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_after_user_is_inactive', 'my_after_user_is_inactive', 10, 1 );
-			 * function my_after_user_is_inactive( $user_id ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( 'um_after_user_is_inactive', um_user( 'ID' ) );
-
-			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( um_user( 'user_email' ), 'inactive_email' ) );
+		public function deactivate() {
+			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()->deactivate()' );
+			UM()->common()->users()->deactivate( um_user( 'ID' ) );
 		}
-
 
 		/**
 		 * Delete user
 		 *
 		 * @param bool $send_mail
 		 */
-		function delete( $send_mail = true ) {
-
+		public function delete( $send_mail = true ) {
 			$this->send_mail_on_delete = $send_mail;
-			//don't send email notification to not approved user
-			if ( 'approved' != um_user( 'account_status' ) ) {
+			// Don't send email notification to not approved user
+			if ( ! UM()->common()->users()->has_status( $this->id, 'approved' ) ) {
 				$this->send_mail_on_delete = false;
 			}
 
 			// remove user
 			if ( is_multisite() ) {
-
 				if ( ! function_exists( 'wpmu_delete_user' ) ) {
 					require_once ABSPATH . 'wp-admin/includes/ms.php';
 				}
 
 				wpmu_delete_user( $this->id );
-
 			} else {
-
 				if ( ! function_exists( 'wp_delete_user' ) ) {
 					require_once ABSPATH . 'wp-admin/includes/user.php';
 				}
 
 				wp_delete_user( $this->id );
-
 			}
-
 		}
-
 
 		/**
 		 * This method gets a user role in slug format. e.g. member
@@ -1975,28 +1697,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		function get_admin_actions() {
 			$items = array();
 
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_admin_user_actions_hook
-			 * @description Extend admin actions for each user
-			 * @input_vars
-			 * [{"var":"$actions","type":"array","desc":"Actions for user"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_admin_user_actions_hook', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_admin_user_actions_hook', 'my_admin_user_actions', 10, 1 );
-			 * function my_admin_user_actions( $actions ) {
-			 *     // your code here
-			 *     return $actions;
-			 * }
-			 * ?>
-			 */
-			$actions = apply_filters( 'um_admin_user_actions_hook', array(), um_profile_id() );
+			$actions = UM()->frontend()->users()->get_actions_list( um_profile_id() );
 			if ( empty( $actions ) ) {
 				return $items;
 			}
@@ -2006,10 +1707,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					array(
 						'um_action' => $id,
 						'uid'       => um_profile_id(),
+						'nonce'     => wp_create_nonce( $id . um_profile_id() ),
 					)
 				);
-				/*$url = add_query_arg( 'um_action', $id );
-				$url = add_query_arg( 'uid', um_profile_id(), $url );*/
 				$items[] = '<a href="' . esc_url( $url ) . '" class="real_url ' . esc_attr( $id ) . '-item">' . esc_html( $arr['label'] ) . '</a>';
 			}
 			return $items;
@@ -2361,32 +2061,15 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		/**
 		 * This method checks if a user exists or not in your site based on the user ID.
 		 *
-		 * @usage <?php UM()->user()->user_exists_by_id( $user_id ); ?>
+		 * @deprecated 2.8.7
 		 *
 		 * @param int $user_id A user ID must be passed to check if the user exists
 		 *
 		 * @return bool|int
-		 *
-		 * @example Basic Usage
-
-		<?php
-
-		$boolean = UM()->user()->user_exists_by_id( 15 );
-		if ( $boolean ) {
-		// That user exists
-		}
-
-		?>
-
-		 *
 		 */
 		public function user_exists_by_id( $user_id ) {
-			$aux = get_userdata( absint( $user_id ) );
-			if ( $aux == false ) {
-				return false;
-			} else {
-				return $user_id;
-			}
+			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->users()::user_exists' );
+			return UM()->common()->users()::user_exists( $user_id ) ? $user_id : false;
 		}
 
 		/**
@@ -2527,7 +2210,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			return $hash_email_address;
 		}
 
-
 		/**
 		 * UM Placeholders for activation link in email
 		 *
@@ -2535,11 +2217,10 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 *
 		 * @return array
 		 */
-		function add_activation_placeholder( $placeholders ) {
+		public function add_activation_placeholder( $placeholders ) {
 			$placeholders[] = '{account_activation_link}';
 			return $placeholders;
 		}
-
 
 		/**
 		 * UM Replace Placeholders for activation link in email
@@ -2548,31 +2229,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 *
 		 * @return array
 		 */
-		function add_activation_replace_placeholder( $replace_placeholders ) {
+		public function add_activation_replace_placeholder( $replace_placeholders ) {
 			$replace_placeholders[] = um_user( 'account_activation_link' );
 			return $replace_placeholders;
-		}
-
-
-		/**
-		 * Get pending users (in queue)
-		 *
-		 * @deprecated 2.4.2
-		 */
-		function get_pending_users_count() {
-			_deprecated_function( __METHOD__, '2.4.2', 'UM()->query()->get_pending_users_count()' );
-			return UM()->query()->get_pending_users_count();
-		}
-
-
-		/**
-		 * Remove cached queue from Users backend
-		 *
-		 * @deprecated 2.4.2
-		 */
-		function remove_cached_queue() {
-			_deprecated_function( __METHOD__, '2.4.2', '' );
-			delete_option( 'um_cached_users_queue' );
 		}
 	}
 }

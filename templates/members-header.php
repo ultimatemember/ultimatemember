@@ -2,7 +2,7 @@
 /**
  * Template for the members directory header JS-template
  *
- * This template can be overridden by copying it to yourtheme/ultimate-member/members-header.php
+ * This template can be overridden by copying it to your-theme/ultimate-member/members-header.php
  *
  * Page: "Members"
  *

@@ -2,7 +2,7 @@
 /**
  * Template for the modal form
  *
- * This template can be overridden by copying it to yourtheme/ultimate-member/modal/upload-single.php
+ * This template can be overridden by copying it to your-theme/ultimate-member/modal/upload-single.php
  *
  * @version 2.8.6
  */

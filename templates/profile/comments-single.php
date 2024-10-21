@@ -2,7 +2,7 @@
 /**
  * Template for the profile single comments
  *
- * This template can be overridden by copying it to yourtheme/ultimate-member/profile/comments-single.php
+ * This template can be overridden by copying it to your-theme/ultimate-member/profile/comments-single.php
  *
  * Page: "Profile"
  *

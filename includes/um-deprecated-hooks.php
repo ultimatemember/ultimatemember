@@ -45,3 +45,67 @@ if ( ! defined( 'ABSPATH' ) ) {
  * }
  * add_filter( 'um_language_file', 'my_um_language_file' );
  */
+
+/**
+ * Fires after user status changed.
+ *
+ * @param {int} $user_id User ID.
+ *
+ * @since 1.3.x
+ * @depecated 2.8.7 use action hook `um_after_user_status_is_changed` instead.
+ * @hook um_after_user_status_is_changed_hook
+ */
+
+/**
+ * Fires just before User status is changed.
+ *
+ * @since 1.3.x
+ * @depecated 2.8.7 use action hook `um_before_user_status_is_set` instead.
+ * @hook um_when_status_is_set
+ *
+ * @param {int} $user_id User ID. Since 2.0
+ */
+
+/**
+ * Fires for handle admin user_action scripts.
+ *
+ * @since 1.3.x
+ * @depecated 2.8.7 WordPress native `handle_bulk_actions-users` hook is used. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+ * @hook um_admin_user_action_hook
+ *
+ * @param {string} $bulk_action Bulk action key
+ */
+
+/**
+ * Fires for handle admin user_action scripts.
+ * Where $bulk_action is a bulk action key
+ *
+ * @since 1.3.x
+ * @depecated 2.8.7 WordPress native `handle_bulk_actions-users` hook is used. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+ * @hook um_admin_user_action_{$bulk_action}_hook
+ */
+
+/**
+ * Fires for handle custom admin user_action scripts.
+ * Where $action is a bulk action key
+ *
+ * @since 1.3.x
+ * @depecated 2.8.7 WordPress native `handle_bulk_actions-users` hook is used. Use action hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+ * @hook um_admin_custom_hook_{$action}
+ *
+ * @param {int} $user_id User ID.
+ */
+
+/**
+ * Filters the WP Users list table views.
+ *
+ * Fully deprecated. Please use filter 'um_user_statuses_admin_filter_options' hook instead since 2.8.7.
+ *
+ * @param {array} $views List table filter views.
+ *
+ * @return {array} List table filter views.
+ *
+ * @since 1.3.x
+ * @depecated 2.8.7 Fully deprecated because there is used dropdown with statuses instead of list table views.
+ * @hook um_admin_views_users
+ */

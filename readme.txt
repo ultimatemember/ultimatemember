@@ -5,8 +5,8 @@ Contributors: ultimatemember, champsupertramp, nsinelnikov
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
-Tested up to: 6.5
-Stable tag: 2.8.6
+Tested up to: 6.6
+Stable tag: 2.8.9
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -166,9 +166,102 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.8.7 2024-06-xx =
+= 2.9.0 2024-xx-xx =
 
+**Bugfixes**
 
+* Fixed: User status filter on wp-admin > Users on mobile devices
+
+= 2.8.9 2024-10-14 =
+
+**Enhancements**
+
+* Added: Using PHP tidy extension (if it's active) to make HTML textarea value clear
+* Added: `um_tidy_config` filter hook for setting PHP tidy config
+* Tweak: Avoid using force `set_status()` function.
+* Tweak: Properly using `UM()->common()->users()->get_status( $user_id )` instead of `um_user( 'account_status' )`
+* Tweak: Properly using `UM()->common()->users()->get_status( $user_id, 'formatted' )` instead of `um_user( 'account_status_name' )`
+* Tweak: Properly using `um_user( 'status' )` for getting user role setting while registration
+
+**Bugfixes**
+
+* Fixed: UM tipsy removing inside .um-page selector (e.g. tipsy init from um-modal)
+* Fixed: Rollback using `<iframe>` for displaying HTML formatted textarea value
+* Fixed: Capability to edit user profile for Administrator when user doesn't have a capability to edit its profile
+* Fixed: Sending email notifications based on user status after registration
+* Fixed: PHP error when meta `um_member_directory_data` has a wrong format
+
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
+
+= 2.8.8 2024-10-04 =
+
+**Bugfixes**
+
+* Fixed: Download routing initialization
+* Fixed: Textarea height and HTML formatted textarea field height isolated via `<iframe>` on view mode
+* Fixed: User registration if email activation or admin review are required
+* Fixed: First installation errors
+
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
+
+= 2.8.7 2024-10-01 =
+
+**Enhancements**
+
+* Added: Single user actions on WP Users list table
+* Updated: User status filter on WP Users list table
+* Updated: User bulk actions on WP Users list table
+* Updated: User actions on User Profile and Member Directory card
+* Added: Applying shortcodes in the post restriction message
+* Added: ProfilePage Structured Data
+* Added: Ability to use HTML tags (allowed in `wp_kses_post`) in the global block restriction message
+* Changed: Some wp-admin fields descriptions
+* Updated: Data format in `um_admin_bulk_user_actions_hook` filter hook. Changed format from `$action_slug => array( 'label' => $action_title )` to `$action_slug => $action_title`
+* Added: `$old_status` param to `um_after_user_status_is_changed` action hook
+* Added: `$user_id` param to `um_before_user_hash_is_changed` action hook
+* Added: `$user_id, $hash, $expiration` params to `um_after_user_hash_is_changed` action hook
+* Added: `um_restricted_post_content` filter hook
+* Added: `um_loggedin_inner_content` filter hook
+* Added: `um_profile_dynamic_meta_profile_schema` filter hook
+* Removed: `UM()->fields()->get_restricted_fields_for_edit()` function from a fields loop
+
+**Bugfixes**
+
+* Fixed: Single user action on User Profile security vulnerability. CVE ID: CVE-2024-8520
+* Fixed: [um_loggedin] shortcode security vulnerability. CVE ID: CVE-2024-8519
+* Fixed: Performance issue related to Settings > Secure tab
+* Fixed: The "Clear All" button in the member directory did not reset all dependent dropdowns
+* Fixed: Telegram and Discord social links in profile header
+* Fixed: UM links to empty phone numbers
+* Fixed: Email changing via User Account flush session. Security enhancement because email can be used for login
+* Fixed: User Profile image URL in meta tags
+* Fixed: Empty User Profile and PHP Fatal error when cannot get profile field data
+* Fixed: Parsing /modal/ templates and parsing templates on the Windows hosting
+* Fixed: Validation `form_id` attribute in the `ultimatemember` shortcode
+
+**Templates required update**
+
+* login-to-view.php
+
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
+
+**Deprecated**
+
+* Hook: Action hook `um_after_user_status_is_changed_hook`. Use action hook `um_after_user_status_is_changed` instead.
+* Hook: Action hook `um_when_status_is_set`. Use action hook `um_before_user_status_is_set` instead.
+* Hook: Action hook `um_admin_user_action_hook`. Use filter hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+* Hook: Action hook `um_admin_user_action_{$bulk_action}_hook`. Use filter hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+* Hook: Action hook `um_admin_custom_hook_{$action}`. Use filter hook `um_handle_bulk_actions-users-{$current_action}` for custom user bulk actions instead.
+* Hook: Filter hook `um_admin_views_users`. Use filter 'um_user_statuses_admin_filter_options' hook instead.
+* Function: `UM()->user()->set_status( $status )`. Use function `UM()->common()->users()->set_status( $status, $user_id )` instead.
+* Function: `UM()->user()->assign_secretkey()`. Use function `UM()->common()->users()->assign_secretkey( $user_id )` instead.
+* Function: `UM()->user()->approve( $repeat )`. Use function `UM()->common()->users()->approve( $user_id, $force )` instead.
+* Function: `UM()->user()->email_pending()`. Use function `UM()->common()->users()->send_activation( $user_id, $force )` instead.
+* Function: `UM()->user()->pending()`. Use function `UM()->common()->users()->set_as_pending( $user_id, $force )` instead.
+* Function: `UM()->user()->reject()`. Use function `UM()->common()->users()->reject( $user_id )` instead.
+* Function: `UM()->user()->deactivate()`. Use function `UM()->common()->users()->deactivate( $user_id )` instead.
+* Function: `UM()->user()->user_exists_by_id( $user_id )`. Use function `UM()->common()->users()::user_exists( $user_id )` instead.
+* Function: `UM()->files()->format_bytes( $size )`. Use function `UM()->common()->filesystem()::format_bytes( $size )` instead.
 
 = 2.8.6 2024-05-22 =
 
@@ -193,6 +286,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: Sorting by last login value when "Hide my last login" is set
 * Fixed: PHP errors while uploading files
 * Fixed: Parsing error on the license activation
+* Fixed: Saving field value when type is textarea and using HTML is enabled
 
 **Templates required update**
 
@@ -367,6 +461,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.8.7 =
+This version fixes a security related bug. Upgrade immediately.
 
 = 2.8.5 =
 This version fixes a security related bug. Upgrade immediately.

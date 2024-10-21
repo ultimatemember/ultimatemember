@@ -186,7 +186,7 @@ div.uimob340 .um-header .um-profile-meta {
 
 div.uimob340 .um-header.no-cover .um-profile-meta {padding-top: 0 !important}
 
-div.uimob340 .um-header .um-name { 
+div.uimob340 .um-header .um-name {
 	float: none !important;
 	margin-right: 0 !important;
 	font-size: 18px;
@@ -388,7 +388,7 @@ div.uimob500 .um-header .um-profile-meta {
 
 div.uimob500 .um-header.no-cover .um-profile-meta {padding-top: 0 !important}
 
-div.uimob500 .um-header .um-name { 
+div.uimob500 .um-header .um-name {
 	float: none !important;
 	margin-right: 0 !important;
 	font-size: 21px;
@@ -636,7 +636,7 @@ div.uimob960 .um-profile-photo a.um-profile-photo-img {
 	.um-modal.no-photo .um-modal-header {
 		display: none;
 	}
-	
+
 	.ajax-upload-dragdrop span.icon,
 	.ajax-upload-dragdrop span.str {
 		display: none;
@@ -645,12 +645,10 @@ div.uimob960 .um-profile-photo a.um-profile-photo-img {
 }
 
 @media screen and (max-width: 600px) {
-	
 	.um-popup {
-		width: 96%;
-		margin-left: 2%;
-		left: 0;
-		top: 15px;
+		width: 96% !important;
+		margin-left: 2% !important;
+		left: 0 !important;
+		top: 15px !important;
 	}
-	
 }

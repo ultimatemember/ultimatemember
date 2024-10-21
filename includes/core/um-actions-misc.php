@@ -176,6 +176,12 @@ function um_add_update_notice( $args ) {
 			case 'invalid_nonce':
 				$err = __( 'An error has been encountered. Probably page was cached. Please try again.', 'ultimate-member' );
 				break;
+			case 'activation_link_used':
+				$err = __( 'This activation link is expired or have already been used.', 'ultimate-member' );
+				break;
+			case 'activation_link_expired':
+				$err = __( 'This activation link is expired.', 'ultimate-member' );
+				break;
 		}
 	}
 	// phpcs:enable WordPress.Security.NonceVerification -- used for echo and already verified here.
