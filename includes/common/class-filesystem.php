@@ -1,4 +1,5 @@
-<?php namespace um\common;
+<?php
+namespace um\common;
 
 use WP_Filesystem_Base;
 
@@ -16,28 +17,28 @@ class Filesystem {
 	/**
 	 * @var array
 	 *
-	 * @since 2.8.4
+	 * @since 2.8.7
 	 */
 	public $upload_dir = array();
 
 	/**
 	 * @var array
 	 *
-	 * @since 2.8.4
+	 * @since 2.8.7
 	 */
 	public $upload_url = array();
 
 	/**
 	 * @var string
 	 *
-	 * @since 2.8.4
+	 * @since 2.8.7
 	 */
 	public $temp_upload_dir = '';
 
 	/**
 	 * @var string
 	 *
-	 * @since 2.8.4
+	 * @since 2.8.7
 	 */
 	public $temp_upload_url = '';
 
@@ -51,7 +52,7 @@ class Filesystem {
 	/**
 	 * Init uploading URL and directory
 	 *
-	 * @since 2.8.4
+	 * @since 2.8.7
 	 */
 	public function init_paths() {
 		$this->temp_upload_dir = $this->get_upload_dir( 'ultimatemember/temp' );
@@ -62,7 +63,7 @@ class Filesystem {
 		/**
 		 * Filters the maximum file age in the temp folder. By default, it's 24 hours.
 		 *
-		 * @since 2.8.4
+		 * @since 2.8.7
 		 * @hook um_filesystem_max_file_age
 		 *
 		 * @param {int} $file_age Temp file age in seconds.
@@ -98,7 +99,7 @@ class Filesystem {
 			/**
 			 * Filters the MIME-types of the images that can be uploaded as Company Logo.
 			 *
-			 * @since 2.9.0
+			 * @since 2.8.7
 			 * @hook um_upload_image_mimes_list
 			 *
 			 * @param {array} $mime_types MIME types.
@@ -124,7 +125,7 @@ class Filesystem {
 			/**
 			 * Filters the MIME-types of the images that can be uploaded via UM uploader
 			 *
-			 * @since 2.9.0
+			 * @since 2.8.7
 			 * @hook um_upload_allowed_image_mimes
 			 *
 			 * @param {array} $mime_types MIME types.
@@ -142,7 +143,7 @@ class Filesystem {
 	 *
 	 * Can duplicate this function functionality `remove_old_files`
 	 *
-	 * @since 2.8.4
+	 * @since 2.8.7
 	 */
 	public function clear_temp_dir() {
 		global $wp_filesystem;
@@ -164,7 +165,7 @@ class Filesystem {
 			return;
 		}
 
-		// phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition -- reading folder's content here
+		// phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition, Generic.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition -- reading folder's content here
 		while ( false !== ( $file = readdir( $dir ) ) ) {
 			if ( '.' === $file || '..' === $file ) {
 				continue;
@@ -190,10 +191,9 @@ class Filesystem {
 	 *
 	 * @return string
 	 *
-	 * @since 2.8.4
+	 * @since 2.8.7
 	 */
 	public function get_upload_dir( $dir = '', $blog_id = null ) {
-		/** @var $wp_filesystem WP_Filesystem_Base */
 		// Please add define('FS_METHOD', 'direct'); to avoid question about FTP.
 		global $wp_filesystem;
 
@@ -206,10 +206,8 @@ class Filesystem {
 
 		if ( ! $blog_id ) {
 			$blog_id = get_current_blog_id();
-		} else {
-			if ( is_multisite() ) {
-				switch_to_blog( $blog_id );
-			}
+		} elseif ( is_multisite() ) {
+			switch_to_blog( $blog_id );
 		}
 
 		if ( empty( $this->upload_dir[ $blog_id ] ) ) {
@@ -242,15 +240,13 @@ class Filesystem {
 	 *
 	 * @return string
 	 *
-	 * @since 2.8.4
+	 * @since 2.8.7
 	 */
 	public function get_upload_url( $url = '', $blog_id = null ) {
 		if ( ! $blog_id ) {
 			$blog_id = get_current_blog_id();
-		} else {
-			if ( is_multisite() ) {
-				switch_to_blog( $blog_id );
-			}
+		} elseif ( is_multisite() ) {
+			switch_to_blog( $blog_id );
 		}
 
 		if ( empty( $this->upload_url[ $blog_id ] ) ) {
@@ -279,7 +275,7 @@ class Filesystem {
 	 *
 	 * @return string
 	 *
-	 * @since 2.8.4
+	 * @since 2.8.7
 	 */
 	public static function format_bytes( $size, $precision = 1 ) {
 		if ( is_numeric( $size ) ) {
