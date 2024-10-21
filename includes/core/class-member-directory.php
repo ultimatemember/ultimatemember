@@ -2662,7 +2662,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$dropdown_actions = $this->build_user_actions_list( $user_id );
 
-			$actions  = array();
 			$can_edit = UM()->roles()->um_current_user_can( 'edit', $user_id );
 
 			// Replace hook 'um_members_just_after_name'
@@ -2748,14 +2747,18 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							}
 
 							$label = UM()->fields()->get_label( $key );
-							if ( $key == 'role_select' || $key == 'role_radio' ) {
-								$label = strtr( $label, array(
-									' (Dropdown)'   => '',
-									' (Radio)'      => ''
-								) );
+							if ( 'role_select' === $key || 'role_radio' === $key ) {
+								$label = strtr(
+									$label,
+									array(
+										' (Dropdown)' => '',
+										' (Radio)'    => '',
+									)
+								);
 							}
 
 							$data_array[ "label_{$key}" ] = esc_html__( $label, 'ultimate-member' );
+
 							$data_array[ $key ] = wp_kses( $value, UM()->get_allowed_html( 'templates' ) );
 						}
 					}
