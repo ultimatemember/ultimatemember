@@ -73,7 +73,7 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		}
 
 		/**
-		 * @since 2.8.4
+		 * @since 2.9.0
 		 *
 		 * @return form\Form
 		 */
@@ -86,7 +86,7 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		}
 
 		/**
-		 * @since 2.8.4
+		 * @since 2.9.0
 		 *
 		 * @return Layouts
 		 */

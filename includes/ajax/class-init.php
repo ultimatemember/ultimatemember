@@ -33,6 +33,7 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 			}
 			$this->secure();
 			$this->user();
+			$this->users();
 		}
 
 		/**
@@ -78,18 +79,6 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		}
 
 		/**
-		 * @since 2.8.6
-		 *
-		 * @return Forms
-		 */
-		public function forms() {
-			if ( empty( UM()->classes['um\ajax\forms'] ) ) {
-				UM()->classes['um\ajax\forms'] = new Forms();
-			}
-			return UM()->classes['um\ajax\forms'];
-		}
-
-		/**
 		 * @since 2.9.0
 		 *
 		 * @return Files
@@ -99,6 +88,18 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 				UM()->classes['um\ajax\files'] = new Files();
 			}
 			return UM()->classes['um\ajax\files'];
+		}
+
+		/**
+		 * @since 2.8.6
+		 *
+		 * @return Forms
+		 */
+		public function forms() {
+			if ( empty( UM()->classes['um\ajax\forms'] ) ) {
+				UM()->classes['um\ajax\forms'] = new Forms();
+			}
+			return UM()->classes['um\ajax\forms'];
 		}
 
 		/**
@@ -138,7 +139,7 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		}
 
 		/**
-		 * @since 2.8.4
+		 * @since 2.9.0
 		 *
 		 * @return User
 		 */
@@ -149,6 +150,25 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 			return UM()->classes['um\ajax\user'];
 		}
 
+		/**
+		 * @since 2.8.7
+		 *
+		 * @return Users
+		 */
+		public function users() {
+			if ( empty( UM()->classes['um\ajax\users'] ) ) {
+				UM()->classes['um\ajax\users'] = new Users();
+			}
+			return UM()->classes['um\ajax\users'];
+		}
+
+		/**
+		 * @since 2.9.0
+		 *
+		 * @param string $html
+		 *
+		 * @return string
+		 */
 		public function esc_html_spaces( $html ) {
 			$html = preg_replace(
 				array( '/^\s+/im', '/\\r\\n/im', '/\\n/im', '/\\t+/im' ),
