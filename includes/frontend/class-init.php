@@ -20,6 +20,7 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		 * @used-by \UM::includes()
 		 */
 		public function includes() {
+			$this->actions_listener();
 			$this->directory();
 			$this->enqueue();
 			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
@@ -28,6 +29,21 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 				$this->modal();
 			}
 			$this->secure();
+			$this->user_profile();
+			$this->users();
+		}
+
+		/**
+		 * @since 2.8.7
+		 *
+		 * @return Actions_Listener
+		 */
+		public function actions_listener() {
+			if ( empty( UM()->classes['um\frontend\actions_listener'] ) ) {
+				UM()->classes['um\frontend\actions_listener'] = new Actions_Listener();
+			}
+
+			return UM()->classes['um\frontend\actions_listener'];
 		}
 
 		/**
@@ -118,6 +134,30 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 				UM()->classes['um\frontend\secure'] = new Secure();
 			}
 			return UM()->classes['um\frontend\secure'];
+		}
+
+		/**
+		 * @since 2.8.7
+		 *
+		 * @return User_Profile
+		 */
+		public function user_profile() {
+			if ( empty( UM()->classes['um\frontend\user_profile'] ) ) {
+				UM()->classes['um\frontend\user_profile'] = new User_Profile();
+			}
+			return UM()->classes['um\frontend\user_profile'];
+		}
+
+		/**
+		 * @since 2.8.7
+		 *
+		 * @return Users
+		 */
+		public function users() {
+			if ( empty( UM()->classes['um\frontend\users'] ) ) {
+				UM()->classes['um\frontend\users'] = new Users();
+			}
+			return UM()->classes['um\frontend\users'];
 		}
 	}
 }
