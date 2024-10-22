@@ -106,6 +106,8 @@ class Theme {
 		$scan_files     = self::get_all_templates();
 		foreach ( $scan_files as $key => $files ) {
 			foreach ( $files as $file ) {
+				$file = wp_normalize_path( $file ); // for not a Linux hosting.
+
 				if ( false === strpos( $file, 'email/' ) ) {
 					/**
 					 * Filters an array of the template files for scanning versions based on $key.
@@ -133,8 +135,8 @@ class Theme {
 						'profile/comments-single.php',
 						'profile/posts.php',
 						'profile/posts-single.php',
-						'modal/um_upload_single.php',
-						'modal/um_view_photo.php',
+						'modal/upload-single.php',
+						'modal/view-photo.php',
 					);
 
 					$theme_file = false;

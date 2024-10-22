@@ -2,7 +2,7 @@
 /**
  * Template for the members directory pagination JS template
  *
- * This template can be overridden by copying it to yourtheme/ultimate-member/members-pagination.php
+ * This template can be overridden by copying it to your-theme/ultimate-member/members-pagination.php
  *
  * Page: "Members"
  *

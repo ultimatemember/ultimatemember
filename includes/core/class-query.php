@@ -307,17 +307,24 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 			return $users_count;
 		}
 
-
 		/**
 		 * Count all users
 		 *
-		 * @return mixed
+		 * @param bool $force Avoid transient. Default false.
+		 *
+		 * @return int
 		 */
-		function count_users() {
-			$result = count_users();
-			return $result['total_users'];
-		}
+		public function count_users( $force = false ) {
+			$users_count = get_transient( 'um_count_users_all' );
+			if ( $force || false === $users_count ) {
+				$result = count_users();
 
+				$users_count = $result['total_users'];
+				set_transient( 'um_count_users_all', $users_count, HOUR_IN_SECONDS );
+			}
+
+			return $users_count;
+		}
 
 		/**
 		 * Using wpdb instead of update_post_meta

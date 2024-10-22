@@ -1078,6 +1078,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'icon'       => 'fab fa-telegram',
 					'validate'   => 'telegram_url',
 					'url_text'   => 'Telegram',
+					'advanced'   => 'social',
+					'color'      => '#24A1DE',
 					'match'      => 'https://t.me/',
 				),
 
@@ -1094,7 +1096,9 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'url_text'   => __( 'Discord', 'ultimate-member' ),
 					'url_rel'    => 'nofollow',
 					'validate'   => 'discord',
+					'advanced'   => 'social',
 					'color'      => '#7289da',
+					'match'      => 'https://discord.com/users/',
 				),
 
 				'tiktok'               => array(

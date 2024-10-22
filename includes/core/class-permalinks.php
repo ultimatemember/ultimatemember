@@ -113,43 +113,43 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 				 isset( $_REQUEST['user_id'] ) && is_numeric( $_REQUEST['user_id'] ) ) { // valid token
 
 				$user_id = absint( $_REQUEST['user_id'] );
+				if ( is_user_logged_in() && get_current_user_id() !== $user_id ) {
+					// Cannot activate another user account. Please log out and try again.
+					wp_safe_redirect( um_user_profile_url( get_current_user_id() ) );
+					exit;
+				}
+
 				delete_option( "um_cache_userdata_{$user_id}" );
 
 				$account_secret_hash = get_user_meta( $user_id, 'account_secret_hash', true );
 				if ( empty( $account_secret_hash ) || strtolower( sanitize_text_field( $_REQUEST['hash'] ) ) !== strtolower( $account_secret_hash ) ) {
-					wp_die( __( 'This activation link is expired or have already been used.', 'ultimate-member' ) );
+					wp_safe_redirect( add_query_arg( 'err', 'activation_link_used', um_get_core_page( 'login' ) ) );
+					exit;
 				}
 
 				$account_secret_hash_expiry = get_user_meta( $user_id, 'account_secret_hash_expiry', true );
 				if ( ! empty( $account_secret_hash_expiry ) && time() > $account_secret_hash_expiry ) {
-					wp_die( __( 'This activation link is expired.', 'ultimate-member' ) );
+					wp_safe_redirect( add_query_arg( 'err', 'activation_link_expired', um_get_core_page( 'login' ) ) );
+					exit;
 				}
 
 				$redirect              = um_get_core_page( 'login', 'account_active' );
 				$set_password_required = get_user_meta( $user_id, 'um_set_password_required', true );
 
 				um_fetch_user( $user_id );
-				UM()->user()->approve();
+				UM()->common()->users()->approve( $user_id, true );
 				if ( ! empty( $set_password_required ) ) {
 					$redirect = um_user( 'password_reset_link' );
 				}
 				um_reset_user();
 
-				$user_role = UM()->roles()->get_priority_user_role( $user_id );
+				$user_role      = UM()->roles()->get_priority_user_role( $user_id );
 				$user_role_data = UM()->roles()->role_data( $user_role );
 
 				// log in automatically
 				$login = ! empty( $user_role_data['login_email_activate'] ); // Role setting "Login user after validating the activation link?"
 				if ( ! is_user_logged_in() && $login ) {
-					$user = get_userdata( $user_id );
-
-					// update wp user
-					wp_set_current_user( $user_id, $user->user_login );
-					wp_set_auth_cookie( $user_id );
-
-					ob_start();
-					do_action( 'wp_login', $user->user_login, $user );
-					ob_end_clean();
+					UM()->user()->auto_login( $user_id );
 				}
 
 				/**

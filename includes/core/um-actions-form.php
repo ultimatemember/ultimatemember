@@ -417,13 +417,15 @@ function um_submit_form_errors_hook_( $submitted_data, $form_data ) {
 		um_reset_user();
 	}
 
+	$restricted_fields = array();
+	if ( 'profile' === $mode ) {
+		$restricted_fields = UM()->fields()->get_restricted_fields_for_edit();
+	}
+
 	foreach ( $fields as $key => $array ) {
 
-		if ( 'profile' === $mode ) {
-			$restricted_fields = UM()->fields()->get_restricted_fields_for_edit();
-			if ( is_array( $restricted_fields ) && in_array( $key, $restricted_fields, true ) ) {
-				continue;
-			}
+		if ( 'profile' === $mode && is_array( $restricted_fields ) && in_array( $key, $restricted_fields, true ) ) {
+			continue;
 		}
 
 		$can_view = true;

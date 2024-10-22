@@ -645,12 +645,10 @@ div.uimob960 .um-profile-photo a.um-profile-photo-img {
 }
 
 @media screen and (max-width: 600px) {
-
 	.um-popup {
 		width: 96% !important;
 		margin-left: 2% !important;
 		left: 0 !important;
 		top: 15px !important;
 	}
-
 }

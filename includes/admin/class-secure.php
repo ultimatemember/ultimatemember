@@ -150,7 +150,8 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 				}
 				// Restore Account Status.
 				if ( isset( $metadata['account_status'] ) ) {
-					UM()->user()->set_status( $metadata['account_status'] );
+					// Force update of the user status without email notifications.
+					UM()->common()->users()->set_status( $user_id, $metadata['account_status'] );
 				}
 
 				// Delete blocked meta.
@@ -182,7 +183,6 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 		 */
 		public function add_settings( $settings ) {
 			$nonce       = wp_create_nonce( 'um-secure-expire-session-nonce' );
-			$count_users = count_users();
 
 			$banned_capabilities       = array();
 			$banned_admin_capabilities = UM()->common()->secure()->get_banned_capabilities_list();
@@ -245,7 +245,10 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 				),
 			);
 
-			$count_users_exclude_me = $count_users['total_users'] - 1;
+			global $wpdb;
+			$count_users = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->users}" );
+
+			$count_users_exclude_me = $count_users - 1;
 			if ( $count_users_exclude_me > 0 ) {
 				$secure_fields[] = array(
 					'id'          => 'force_reset_passwords',
@@ -325,7 +328,7 @@ if ( ! class_exists( 'um\admin\Secure' ) ) {
 			if ( 'account_status' === $column_name ) {
 				um_fetch_user( $user_id );
 				$is_blocked     = um_user( 'um_user_blocked' );
-				$account_status = um_user( 'account_status' );
+				$account_status = UM()->common()->users()->get_status( $user_id );
 				if ( ! empty( $is_blocked ) && in_array( $account_status, array( 'rejected', 'inactive' ), true ) ) {
 					$datetime            = um_user( 'um_user_blocked__timestamp' );
 					$val                .= '<div><small>' . esc_html__( 'Blocked Due to Suspicious Activity', 'ultimate-member' ) . '</small></div>';

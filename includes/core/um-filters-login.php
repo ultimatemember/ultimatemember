@@ -66,8 +66,7 @@ function um_wp_form_errors_hook_logincheck( $user ) {
 	}
 
 	if ( isset( $user->ID ) ) {
-		um_fetch_user( $user->ID );
-		$status = um_user( 'account_status' );
+		$status = UM()->common()->users()->get_status( $user->ID );
 
 		$error = null;
 		switch ( $status ) {

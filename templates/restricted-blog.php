@@ -2,7 +2,7 @@
 /**
  * Template for the blog restricted message
  *
- * This template can be overridden by copying it to yourtheme/ultimate-member/restricted-blog.php
+ * This template can be overridden by copying it to your-theme/ultimate-member/restricted-blog.php
  *
  * Call: function blog_message()
  *
