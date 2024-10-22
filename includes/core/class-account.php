@@ -302,11 +302,11 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				 */
 				$this->current_tab = apply_filters( 'um_change_default_tab', $this->current_tab, $args );
 
-				/** This filter is documented in includes/core/class-shortcodes.php */
+				/** This action is documented in includes/common/class-shortcodes.php */
 				do_action( "um_pre_{$args['mode']}_shortcode", $args );
-				/** This filter is documented in includes/core/class-shortcodes.php */
+				/** This action is documented in includes/common/class-shortcodes.php */
 				do_action( 'um_before_form_is_loaded', $args );
-				/** This filter is documented in includes/core/class-shortcodes.php */
+				/** This action is documented in includes/common/class-shortcodes.php */
 				do_action( "um_before_{$args['mode']}_form_is_loaded", $args );
 
 				UM()->shortcodes()->template_load( $args['template'], $args );
@@ -1168,28 +1168,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				$classes .= ' um-viewing';
 			}
 
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_form_official_classes__hook
-			 * @description Change not default Account tabs content
-			 * @input_vars
-			 * [{"var":"$classes","type":"string","desc":"Form Classes"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_form_official_classes__hook', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_form_official_classes__hook', 'my_form_official_classes', 10, 1 );
-			 * function my_form_official_classes( $classes ) {
-			 *     // your code here
-			 *     return $classes;
-			 * }
-			 * ?>
-			 */
-			$classes = apply_filters( 'um_form_official_classes__hook', $classes );
-			return $classes;
+			/** This filter is documented in includes/common/class-shortcodes.php */
+			return apply_filters( 'um_form_official_classes__hook', $classes );
 		}
 
 		/**

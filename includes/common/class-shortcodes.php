@@ -82,7 +82,6 @@ class Shortcodes {
 		add_shortcode( 'ultimatemember_login', array( &$this, 'ultimatemember_login' ) );
 		add_shortcode( 'ultimatemember_register', array( &$this, 'ultimatemember_register' ) );
 		add_shortcode( 'ultimatemember_profile', array( &$this, 'ultimatemember_profile' ) );
-		//add_shortcode( 'ultimatemember_directory', array( &$this, 'ultimatemember_directory' ) );
 
 		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 			add_shortcode( 'ultimatemember_design_scheme', array( &$this, 'design_scheme' ) );
@@ -170,17 +169,17 @@ class Shortcodes {
 	/**
 	 * Logged-in only content
 	 *
-	 * @param array $args
+	 * @param array  $args
 	 * @param string $content
 	 *
 	 * @return string
 	 */
-	public function um_loggedin( $args = array(), $content = "" ) {
+	public function um_loggedin( $args = array(), $content = '' ) {
 		ob_start();
 
 		$args = shortcode_atts(
 			array(
-				'lock_text' => __( 'This content has been restricted to logged in users only. Please <a href="{login_referrer}">login</a> to view this content.', 'ultimate-member' ),
+				'lock_text' => __( 'This content has been restricted to logged-in users only. Please <a href="{login_referrer}">login</a> to view this content.', 'ultimate-member' ),
 				'show_lock' => 'yes',
 			),
 			$args,
@@ -188,49 +187,52 @@ class Shortcodes {
 		);
 
 		if ( ! is_user_logged_in() ) {
+			// Hide content for not logged-in users. Maybe display locked content notice.
 			if ( 'no' === $args['show_lock'] ) {
-				echo '';
-			} else {
-				$args['lock_text'] = $this->convert_locker_tags( $args['lock_text'] );
-				UM()->get_template( 'login-to-view.php', '', $args, true );
+				return '';
 			}
-		} else {
-			if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
-				echo do_shortcode( $this->convert_locker_tags( wpautop( $content ) ) );
-			} else {
-				echo apply_shortcodes( $this->convert_locker_tags( wpautop( $content ) ) );
-			}
+			$args['lock_text'] = $this->convert_locker_tags( $args['lock_text'] );
+			return UM()->get_template( 'login-to-view.php', '', $args );
 		}
 
-		$output = ob_get_clean();
+		$prepared_content = wp_kses( apply_shortcodes( $this->convert_locker_tags( wpautop( $content ) ) ), UM()->get_allowed_html( 'templates' ) );
 
-		return htmlspecialchars_decode( $output, ENT_NOQUOTES );
+		/**
+		 * Filters prepared inner content via Ultimate Member handlers in [um_loggedin] shortcode.
+		 *
+		 * @since 2.8.7
+		 * @hook  um_loggedin_inner_content
+		 *
+		 * @param {string} $prepared_content Prepared inner content via Ultimate Member handlers.
+		 * @param {string} $content          Original inner content.
+		 *
+		 * @return {string} Prepared inner content.
+		 *
+		 * @example <caption>Change inner content with own handlers.</caption>
+		 * function my_um_loggedin_inner_content( $prepared_content, $content ) {
+		 *     $prepared_content = esc_html( $content );
+		 *     return $prepared_content;
+		 * }
+		 * add_filter( 'um_loggedin_inner_content', 'my_um_loggedin_inner_content', 10, 2 );
+		 */
+		return apply_filters( 'um_loggedin_inner_content', $prepared_content, $content );
 	}
 
 	/**
 	 * Logged-out only content
 	 *
-	 * @param array $args
+	 * @param array  $args
 	 * @param string $content
 	 *
 	 * @return string
 	 */
 	public function um_loggedout( $args = array(), $content = '' ) {
-		ob_start();
-
-		// Hide for logged in users
 		if ( is_user_logged_in() ) {
-			echo '';
-		} else {
-			if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
-				echo do_shortcode( wpautop( $content ) );
-			} else {
-				echo apply_shortcodes( wpautop( $content ) );
-			}
+			// Hide for logged-in users
+			return '';
 		}
 
-		$output = ob_get_clean();
-		return $output;
+		return apply_shortcodes( $this->convert_locker_tags( wpautop( $content ) ) );
 	}
 
 	/**
@@ -248,18 +250,22 @@ class Shortcodes {
 	 * @param  string $content
 	 * @return string
 	 */
-	public function um_shortcode_show_content_for_role( $atts = array() , $content = '' ) {
+	public function um_shortcode_show_content_for_role( $atts = array(), $content = '' ) {
 		global $user_ID;
 
 		if ( ! is_user_logged_in() ) {
-			return;
+			return '';
 		}
 
-		$a = shortcode_atts( array(
-			'roles' => '',
-			'not' => '',
-			'is_profile' => false,
-		), $atts );
+		$a = shortcode_atts(
+			array(
+				'roles'      => '',
+				'not'        => '',
+				'is_profile' => false,
+			),
+			$atts,
+			'um_show_content'
+		);
 
 		if ( $a['is_profile'] ) {
 			um_fetch_user( um_profile_id() );
@@ -270,32 +276,20 @@ class Shortcodes {
 		$current_user_roles = um_user( 'roles' );
 
 		if ( ! empty( $a['not'] ) && ! empty( $a['roles'] ) ) {
-			if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
-				return do_shortcode( $this->convert_locker_tags( $content ) );
-			} else {
-				return apply_shortcodes( $this->convert_locker_tags( $content ) );
-			}
+			return apply_shortcodes( $this->convert_locker_tags( $content ) );
 		}
 
 		if ( ! empty( $a['not'] ) ) {
-			$not_in_roles = explode( ",", $a['not'] );
+			$not_in_roles = explode( ',', $a['not'] );
 
 			if ( is_array( $not_in_roles ) && ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, $not_in_roles ) ) <= 0 ) ) {
-				if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
-					return do_shortcode( $this->convert_locker_tags( $content ) );
-				} else {
-					return apply_shortcodes( $this->convert_locker_tags( $content ) );
-				}
+				return apply_shortcodes( $this->convert_locker_tags( $content ) );
 			}
 		} else {
-			$roles = explode( ",", $a['roles'] );
+			$roles = explode( ',', $a['roles'] );
 
 			if ( ! empty( $current_user_roles ) && is_array( $roles ) && count( array_intersect( $current_user_roles, $roles ) ) > 0 ) {
-				if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
-					return do_shortcode( $this->convert_locker_tags( $content ) );
-				} else {
-					return apply_shortcodes( $this->convert_locker_tags( $content ) );
-				}
+				return apply_shortcodes( $this->convert_locker_tags( $content ) );
 			}
 		}
 
@@ -573,6 +567,12 @@ class Shortcodes {
 //		return um_get_template_html( $template, $t_args );
 //	}
 
+	/**
+	 * @since 2.9.0
+	 * @param $args
+	 *
+	 * @return false|string
+	 */
 	public function design_scheme( $args ) {
 		wp_enqueue_style( 'um_new_design' );
 		wp_enqueue_script( 'um_new_design' );
@@ -1370,14 +1370,17 @@ class Shortcodes {
 	 *
 	 * @return array
 	 */
-	function display_logout_form( $args ) {
-		if ( is_user_logged_in() && isset( $args['mode'] ) && $args['mode'] == 'login' ) {
+	public function display_logout_form( $args ) {
+		if ( ! is_user_logged_in() ) {
+			return $args;
+		}
 
+		if ( array_key_exists( 'mode', $args ) && 'login' === $args['mode'] ) {
 			if ( isset( UM()->user()->preview ) && UM()->user()->preview ) {
 				return $args;
 			}
 
-			if ( get_current_user_id() != um_user( 'ID' ) ) {
+			if ( get_current_user_id() !== um_user( 'ID' ) ) {
 				um_fetch_user( get_current_user_id() );
 			}
 
@@ -1387,7 +1390,6 @@ class Shortcodes {
 		return $args;
 	}
 
-
 	/**
 	 * Filter shortcode args
 	 *
@@ -1395,77 +1397,79 @@ class Shortcodes {
 	 *
 	 * @return array
 	 */
-	function parse_shortcode_args( $args ) {
-		if ( $this->message_mode == true ) {
+	public function parse_shortcode_args( $args ) {
+		if ( true === $this->message_mode ) {
 			if ( ! empty( $_REQUEST['um_role'] ) ) {
 				$args['template'] = 'message';
-				$roleID = sanitize_key( $_REQUEST['um_role'] );
-				$role = UM()->roles()->role_data( $roleID );
 
+				$role_id = sanitize_key( $_REQUEST['um_role'] );
+				$role    = UM()->roles()->role_data( $role_id );
 				if ( ! empty( $role ) && ! empty( $role['status'] ) ) {
-					$message_key = $role['status'] . '_message';
+					$message_key          = $role['status'] . '_message';
 					$this->custom_message = ! empty( $role[ $message_key ] ) ? $this->convert_user_tags( stripslashes( $role[ $message_key ] ) ) : '';
 				}
 			}
 		}
 
 		foreach ( $args as $k => $v ) {
-			$args[ $k ] = maybe_unserialize( $args[ $k ] );
+			$args[ $k ] = maybe_unserialize( $v );
 		}
 
 		return $args;
 	}
-
 
 	/**
 	 * Emoji support
 	 *
 	 * @todo Maybe deprecate soon because there is native `wp_staticize_emoji()`
 	 *
-	 * @param $content
+	 * @param string $content
 	 *
-	 * @return mixed|string
+	 * @return string
 	 */
 	public function emotize( $content ) {
 		$content = stripslashes( $content );
 		foreach ( self::$emoji as $code => $val ) {
-			$regex = str_replace(array('(', ')'), array("\\" . '(', "\\" . ')'), $code);
-			$content = preg_replace('/(' . $regex . ')(\s|$)/', '<img src="' . $val . '" alt="' . $code . '" title="' . $code . '" class="emoji" />$2', $content);
+			$regex   = str_replace( array( '(', ')' ), array( '\\(', '\\)' ), $code );
+			$content = preg_replace( '/(' . $regex . ')(\s|$)/', '<img src="' . $val . '" alt="' . $code . '" title="' . $code . '" class="emoji" />$2', $content );
 		}
 		return $content;
 	}
 
-
 	/**
 	 * Remove wpautop filter for post content if it's UM core page
 	 */
-	function is_um_page() {
+	public function is_um_page() {
 		if ( is_ultimatemember() ) {
 			remove_filter( 'the_content', 'wpautop' );
 		}
 	}
-
 
 	/**
 	 * Retrieve core login form
 	 *
 	 * @return int
 	 */
-	function core_login_form() {
-		$forms = get_posts(array('post_type' => 'um_form', 'posts_per_page' => 1, 'meta_key' => '_um_core', 'meta_value' => 'login'));
-		$form_id = isset( $forms[0]->ID ) ? $forms[0]->ID: 0;
+	public function core_login_form() {
+		$forms = get_posts(
+			array(
+				'post_type'      => 'um_form',
+				'posts_per_page' => 1,
+				'meta_key'       => '_um_core',
+				'meta_value'     => 'login',
+			)
+		);
 
-		return $form_id;
+		return isset( $forms[0]->ID ) ? $forms[0]->ID : 0;
 	}
-
 
 	/**
 	 * Load a compatible template
 	 *
 	 * @param $tpl
 	 */
-	function load_template( $tpl ) {
-		$loop = ( $this->loop ) ? $this->loop : array();
+	public function load_template( $tpl ) {
+		$loop = $this->loop ? $this->loop : array();
 
 		$args = array();
 		if ( isset( $this->set_args ) && is_array( $this->set_args ) ) {
@@ -1507,30 +1511,28 @@ class Shortcodes {
 			// Avoid Directory Traversal vulnerability by the checking the realpath.
 			// Templates can be situated only in the get_stylesheet_directory() or plugindir templates.
 			$real_file = wp_normalize_path( realpath( $file ) );
-			if ( 0 === strpos( $real_file, wp_normalize_path( UM_PATH . "templates" . DIRECTORY_SEPARATOR ) ) || 0 === strpos( $real_file, wp_normalize_path( get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR ) ) ) {
+			if ( 0 === strpos( $real_file, wp_normalize_path( UM_PATH . 'templates' . DIRECTORY_SEPARATOR ) ) || 0 === strpos( $real_file, wp_normalize_path( get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'ultimate-member' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR ) ) ) {
 				include $file;
 			}
 		}
 	}
 
-
 	/**
 	 * Add class based on shortcode
 	 *
-	 * @param $mode
+	 * @param string $mode
 	 * @param array $args
 	 *
-	 * @return mixed|string|void
+	 * @return string
 	 */
-	function get_class($mode, $args = array()) {
-
+	public function get_class( $mode, $args = array() ) {
 		$classes = 'um-' . $mode;
 
-		if (is_admin()) {
+		if ( is_admin() ) {
 			$classes .= ' um-in-admin';
 		}
 
-		if (isset(UM()->form()->errors) && UM()->form()->errors) {
+		if ( isset( UM()->form()->errors ) && UM()->form()->errors ) {
 			$classes .= ' um-err';
 		}
 
@@ -1542,52 +1544,49 @@ class Shortcodes {
 			$classes .= ' um-viewing';
 		}
 
-		if (isset($args['template']) && $args['template'] != $args['mode']) {
+		if ( array_key_exists( 'template', $args ) && $args['template'] !== $args['mode'] ) {
 			$classes .= ' um-' . $args['template'];
 		}
 
 		/**
-		 * UM hook
+		 * Filters Ultimate Member forms classes.
 		 *
-		 * @type filter
-		 * @title um_form_official_classes__hook
-		 * @description Change official form classes
-		 * @input_vars
-		 * [{"var":"$classes","type":"string","desc":"Classes string"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage
-		 * <?php add_filter( 'um_form_official_classes__hook', 'function_name', 10, 1 ); ?>
-		 * @example
-		 * <?php
-		 * add_filter( 'um_form_official_classes__hook', 'my_form_official_classes', 10, 1 );
-		 * function my_form_official_classes( $classes ) {
+		 * @param {string} $classes UM Form classes.
+		 *
+		 * @return {string} UM Form classes.
+		 *
+		 * @since 1.3.x
+		 * @hook um_form_official_classes__hook
+		 *
+		 * @example <caption>Extends UM form classes.</caption>
+		 * function my_um_form_official_classes__hook( $classes ) {
 		 *     // your code here
+		 *     $classes .= ' custom_class';
 		 *     return $classes;
 		 * }
-		 * ?>
+		 * add_filter( 'um_form_official_classes__hook', 'my_um_form_official_classes__hook' );
 		 */
-		$classes = apply_filters( 'um_form_official_classes__hook', $classes );
-		return $classes;
+		return apply_filters( 'um_form_official_classes__hook', $classes );
 	}
 
 	/**
+	 *
 	 * @param array $args
 	 *
 	 * @return string
 	 */
-	function ultimatemember_login( $args = array() ) {
+	public function ultimatemember_login( $args = array() ) {
 		global $wpdb;
 
 		$args = ! empty( $args ) ? $args : array();
 
 		$default_login = $wpdb->get_var(
 			"SELECT pm.post_id
-				FROM {$wpdb->postmeta} pm
-				LEFT JOIN {$wpdb->postmeta} pm2 ON( pm.post_id = pm2.post_id AND pm2.meta_key = '_um_is_default' )
-				WHERE pm.meta_key = '_um_mode' AND
-					  pm.meta_value = 'login' AND
-					  pm2.meta_value = '1'"
+			FROM {$wpdb->postmeta} pm
+			LEFT JOIN {$wpdb->postmeta} pm2 ON( pm.post_id = pm2.post_id AND pm2.meta_key = '_um_is_default' )
+			WHERE pm.meta_key = '_um_mode' AND
+				  pm.meta_value = 'login' AND
+				  pm2.meta_value = '1'"
 		);
 
 		$args['form_id'] = $default_login;
@@ -1596,31 +1595,27 @@ class Shortcodes {
 			$shortcode_attrs .= " {$key}=\"{$value}\"";
 		}
 
-		if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
-			return do_shortcode( "[ultimatemember {$shortcode_attrs} /]" );
-		} else {
-			return apply_shortcodes( "[ultimatemember {$shortcode_attrs} /]" );
-		}
+		return apply_shortcodes( "[ultimatemember {$shortcode_attrs} /]" );
 	}
 
-
 	/**
+	 *
 	 * @param array $args
 	 *
 	 * @return string
 	 */
-	function ultimatemember_register( $args = array() ) {
+	public function ultimatemember_register( $args = array() ) {
 		global $wpdb;
 
 		$args = ! empty( $args ) ? $args : array();
 
 		$default_register = $wpdb->get_var(
 			"SELECT pm.post_id
-				FROM {$wpdb->postmeta} pm
-				LEFT JOIN {$wpdb->postmeta} pm2 ON( pm.post_id = pm2.post_id AND pm2.meta_key = '_um_is_default' )
-				WHERE pm.meta_key = '_um_mode' AND
-					  pm.meta_value = 'register' AND
-					  pm2.meta_value = '1'"
+			FROM {$wpdb->postmeta} pm
+			LEFT JOIN {$wpdb->postmeta} pm2 ON( pm.post_id = pm2.post_id AND pm2.meta_key = '_um_is_default' )
+			WHERE pm.meta_key = '_um_mode' AND
+				  pm.meta_value = 'register' AND
+				  pm2.meta_value = '1'"
 		);
 
 		$args['form_id'] = $default_register;
@@ -1629,49 +1624,40 @@ class Shortcodes {
 			$shortcode_attrs .= " {$key}=\"{$value}\"";
 		}
 
-		if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
-			return do_shortcode( "[ultimatemember {$shortcode_attrs} /]" );
-		} else {
-			return apply_shortcodes( "[ultimatemember {$shortcode_attrs} /]" );
-		}
+		return apply_shortcodes( "[ultimatemember {$shortcode_attrs} /]" );
 	}
 
-
 	/**
+	 *
 	 * @param array $args
 	 *
 	 * @return string
 	 */
-	function ultimatemember_profile( $args = array() ) {
+	public function ultimatemember_profile( $args = array() ) {
 		global $wpdb;
 
 		$args = ! empty( $args ) ? $args : array();
 
 		$default_profile = $wpdb->get_var(
 			"SELECT pm.post_id
-				FROM {$wpdb->postmeta} pm
-				LEFT JOIN {$wpdb->postmeta} pm2 ON( pm.post_id = pm2.post_id AND pm2.meta_key = '_um_is_default' )
-				WHERE pm.meta_key = '_um_mode' AND
-					  pm.meta_value = 'profile' AND
-					  pm2.meta_value = '1'"
+			FROM {$wpdb->postmeta} pm
+			LEFT JOIN {$wpdb->postmeta} pm2 ON( pm.post_id = pm2.post_id AND pm2.meta_key = '_um_is_default' )
+			WHERE pm.meta_key = '_um_mode' AND
+				  pm.meta_value = 'profile' AND
+				  pm2.meta_value = '1'"
 		);
 
 		$args['form_id'] = $default_profile;
-
 		$shortcode_attrs = '';
 		foreach ( $args as $key => $value ) {
 			$shortcode_attrs .= " {$key}=\"{$value}\"";
 		}
 
-		if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
-			return do_shortcode( "[ultimatemember {$shortcode_attrs} /]" );
-		} else {
-			return apply_shortcodes( "[ultimatemember {$shortcode_attrs} /]" );
-		}
+		return apply_shortcodes( "[ultimatemember {$shortcode_attrs} /]" );
 	}
 
-
 	/**
+	 *
 	 * @param array $args
 	 *
 	 * @return string
@@ -1702,6 +1688,7 @@ class Shortcodes {
 		$post_data = UM()->query()->post_data( $args['id'] );
 		$args      = array_merge( $args, $post_data );
 
+		/** This action is documented in includes/common/class-shortcodes.php */
 		do_action( 'um_pre_directory_shortcode', $args );
 
 		$template = 'members';
@@ -1718,6 +1705,7 @@ class Shortcodes {
 			include_once $file;
 		}
 
+		/** This action is documented in includes/common/class-shortcodes.php */
 		do_action( 'um_after_everything_output' );
 
 		return ob_get_clean();
@@ -1745,6 +1733,22 @@ class Shortcodes {
 		$args['form_id']  = ! empty( $args['form_id'] ) ? absint( $args['form_id'] ) : '';
 		$args['is_block'] = (bool) $args['is_block'];
 
+		$form_post = get_post( $args['form_id'] );
+		// Invalid post ID. Maybe post doesn't exist.
+		if ( empty( $form_post ) ) {
+			return '';
+		}
+
+		// Invalid post type. It can be only `um_form` or `um_directory`
+		$post_types = array( 'um_form' );
+		if ( UM()->options()->get( 'members_page' ) ) {
+			$post_types[] = 'um_directory';
+		}
+
+		if ( ! in_array( $form_post->post_type, $post_types, true ) ) {
+			return '';
+		}
+
 		/**
 		 * Filters variable for enable singleton shortcode loading on the same page.
 		 * Note: Set it to `false` if you don't need to render the same form twice or more on the same page.
@@ -1763,14 +1767,12 @@ class Shortcodes {
 		 * add_filter( 'um_ultimatemember_shortcode_disable_singleton', '__return_false' );
 		 */
 		$disable_singleton_shortcode = apply_filters( 'um_ultimatemember_shortcode_disable_singleton', true, $args );
-		if ( false === $disable_singleton_shortcode ) {
-			if ( isset( $args['form_id'] ) ) {
-				$id = $args['form_id'];
-				if ( isset( $this->forms_exist[ $id ] ) && true === $this->forms_exist[ $id ] ) {
-					return '';
-				}
-				$this->forms_exist[ $id ] = true;
+		if ( false === $disable_singleton_shortcode && array_key_exists( 'form_id', $args ) ) {
+			$id = $args['form_id'];
+			if ( isset( $this->forms_exist[ $id ] ) && true === $this->forms_exist[ $id ] ) {
+				return '';
 			}
+			$this->forms_exist[ $id ] = true;
 		}
 
 		return $this->load( $args );
@@ -1779,7 +1781,7 @@ class Shortcodes {
 	/**
 	 * Load a module with global function
 	 *
-	 * @param $args
+	 * @param array $args
 	 *
 	 * @return string
 	 */
@@ -2180,7 +2182,7 @@ class Shortcodes {
 					if ( ! empty( $search_filters ) ) {
 						$search_filters = array_filter(
 							$search_filters,
-							function( $item ) {
+							function ( $item ) {
 								return array_key_exists( $item, UM()->member_directory()->filter_fields );
 							}
 						);
@@ -2336,7 +2338,7 @@ class Shortcodes {
 	/**
 	 * Get dynamic CSS args
 	 *
-	 * @param $args
+	 * @param array $args
 	 * @return array
 	 */
 	public function get_css_args( $args ) {
@@ -2397,8 +2399,8 @@ class Shortcodes {
 	/**
 	 * Loads a template file
 	 *
-	 * @param $template
-	 * @param array $args
+	 * @param string $template
+	 * @param array  $args
 	 */
 	public function template_load( $template, $args = array() ) {
 		if ( is_array( $args ) ) {
@@ -2407,124 +2409,107 @@ class Shortcodes {
 		$this->load_template( $template );
 	}
 
-
 	/**
 	 * Checks if a template file exists
 	 *
-	 * @param $template
+	 * @param string $template
 	 *
 	 * @return bool
 	 */
-	function template_exists($template) {
-
-		$file = UM_PATH . 'templates/' . $template . '.php';
+	public function template_exists( $template ) {
+		$file       = UM_PATH . 'templates/' . $template . '.php';
 		$theme_file = get_stylesheet_directory() . '/ultimate-member/templates/' . $template . '.php';
 
-		if (file_exists($theme_file) || file_exists($file)) {
-			return true;
-		}
-
-		return false;
+		return file_exists( $theme_file ) || file_exists( $file );
 	}
-
 
 	/**
 	 * Get File Name without path and extension
 	 *
-	 * @param $file
+	 * @param string $file
 	 *
-	 * @return mixed|string
+	 * @return string
 	 */
-	function get_template_name( $file ) {
+	public function get_template_name( $file ) {
 		$file = basename( $file );
 		$file = preg_replace( '/\\.[^.\\s]{3,4}$/', '', $file );
 		return $file;
 	}
-
 
 	/**
 	 * Get Templates
 	 *
 	 * @param null $excluded
 	 *
-	 * @return mixed
+	 * @return array
 	 */
-	function get_templates( $excluded = null ) {
-
+	public function get_templates( $excluded = null ) {
+		$array = array();
 		if ( $excluded ) {
 			$array[ $excluded ] = __( 'Default Template', 'ultimate-member' );
 		}
 
-		$paths[] = glob( UM_PATH . 'templates/' . '*.php' );
-
+		$paths[] = glob( UM_PATH . 'templates/*.php' );
 		if ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' ) ) {
-			$paths[] = glob( get_stylesheet_directory() . '/ultimate-member/templates/' . '*.php' );
+			$paths[] = glob( get_stylesheet_directory() . '/ultimate-member/templates/*.php' );
 		}
 
-		if ( isset( $paths ) && ! empty( $paths ) ) {
+		if ( empty( $paths ) ) {
+			return $array;
+		}
 
-			foreach ( $paths as $k => $files ) {
-
-				if ( isset( $files ) && ! empty( $files ) ) {
-
-					foreach ( $files as $file ) {
-
-						$clean_filename = $this->get_template_name( $file );
-
-						if ( 0 === strpos( $clean_filename, $excluded ) ) {
-
-							$source = file_get_contents( $file );
-							$tokens = @\token_get_all( $source );
-							$comment = array(
-								T_COMMENT, // All comments since PHP5
-								T_DOC_COMMENT, // PHPDoc comments
-							);
-							foreach ( $tokens as $token ) {
-								if ( in_array( $token[0], $comment ) && strstr( $token[1], '/* Template:' ) && $clean_filename != $excluded ) {
-									$txt = $token[1];
-									$txt = str_replace( '/* Template: ', '', $txt );
-									$txt = str_replace( ' */', '', $txt );
-									$array[ $clean_filename ] = $txt;
-								}
-							}
-
-						}
-
-					}
-
-				}
-
+		foreach ( $paths as $files ) {
+			if ( empty( $files ) ) {
+				continue;
 			}
 
+			foreach ( $files as $file ) {
+				$clean_filename = $this->get_template_name( $file );
+
+				if ( 0 === strpos( $clean_filename, $excluded ) ) {
+					$source = file_get_contents( $file );
+					$tokens = @\token_get_all( $source );
+					$comment = array(
+						T_COMMENT, // All comments since PHP5
+						T_DOC_COMMENT, // PHPDoc comments
+					);
+					foreach ( $tokens as $token ) {
+						if ( $clean_filename !== $excluded && in_array( $token[0], $comment, true ) && false !== strpos( $token[1], '/* Template:' ) ) {
+							$txt = $token[1];
+							$txt = str_replace( array( '/* Template: ', ' */' ), '', $txt );
+
+							$array[ $clean_filename ] = $txt;
+						}
+					}
+				}
+			}
 		}
 
 		return $array;
 	}
 
-
 	/**
 	 * Get Shortcode for given form ID
 	 *
-	 * @param $post_id
+	 * @param int $post_id
 	 *
 	 * @return string
 	 */
-	function get_shortcode( $post_id ) {
-		$shortcode = '[ultimatemember form_id="' . $post_id . '"]';
-		return $shortcode;
+	public function get_shortcode( $post_id ) {
+		return '[ultimatemember form_id="' . $post_id . '"]';
 	}
 
-
 	/**
 	 * Get Shortcode for given form ID
 	 *
-	 * @param $post_id
+	 * @param int $post_id
 	 *
 	 * @return string
 	 */
-	function get_default_shortcode( $post_id ) {
-		$mode = UM()->query()->get_attr( 'mode', $post_id );
+	public function get_default_shortcode( $post_id ) {
+		$shortcode = '';
 
+		$mode = UM()->query()->get_attr( 'mode', $post_id );
 		switch ( $mode ) {
 			case 'login':
 				$shortcode = '[ultimatemember_login]';
@@ -2543,17 +2528,16 @@ class Shortcodes {
 		return $shortcode;
 	}
 
-
 	/**
 	 * Convert access lock tags
 	 *
-	 * @param $str
+	 * @param string $str
 	 *
-	 * @return mixed|string
+	 * @return string
 	 */
-	function convert_locker_tags( $str ) {
-		add_filter( 'um_template_tags_patterns_hook', array( &$this, 'add_placeholder' ), 10, 1 );
-		add_filter( 'um_template_tags_replaces_hook', array( &$this, 'add_replace_placeholder' ), 10, 1 );
+	public function convert_locker_tags( $str ) {
+		add_filter( 'um_template_tags_patterns_hook', array( &$this, 'add_placeholder' ) );
+		add_filter( 'um_template_tags_replaces_hook', array( &$this, 'add_replace_placeholder' ) );
 		return um_convert_tags( $str, array(), false );
 	}
 
@@ -2664,12 +2648,10 @@ class Shortcodes {
 	}
 
 	/**
-	 * @param array $args
-	 * @param string $content
 	 *
 	 * @return string
 	 */
-	public function ultimatemember_searchform( $args = array(), $content = '' ) {
+	public function ultimatemember_searchform() {
 		if ( ! UM()->options()->get( 'members_page' ) ) {
 			return '';
 		}
@@ -2699,7 +2681,7 @@ class Shortcodes {
 				$directory_data['roles_can_search'] = maybe_unserialize( $directory_data['roles_can_search'] );
 			}
 
-			$show_search = empty( $directory_data['roles_can_search'] ) || ( ! empty( $priority_user_role ) && in_array( $priority_user_role, $directory_data['roles_can_search'] ) );
+			$show_search = empty( $directory_data['roles_can_search'] ) || ( ! empty( $priority_user_role ) && in_array( $priority_user_role, $directory_data['roles_can_search'], true ) );
 			if ( empty( $directory_data['search'] ) || ! $show_search ) {
 				continue;
 			}
@@ -2715,35 +2697,35 @@ class Shortcodes {
 
 		$search_value = array_values( $query );
 
-		$template = UM()->get_template( 'searchform.php', '', array( 'query' => $query, 'search_value' => $search_value[0], 'members_page' => um_get_core_page( 'members' ) ) );
-
-		return $template;
+		$t_args = array(
+			'query'        => $query,
+			'search_value' => $search_value[0],
+			'members_page' => um_get_core_page( 'members' ),
+		);
+		return UM()->get_template( 'searchform.php', '', $t_args );
 	}
-
 
 	/**
 	 * UM Placeholders for login referrer
 	 *
-	 * @param $placeholders
+	 * @param array $placeholders
 	 *
 	 * @return array
 	 */
-	function add_placeholder( $placeholders ) {
+	public function add_placeholder( $placeholders ) {
 		$placeholders[] = '{login_referrer}';
 		return $placeholders;
 	}
 
-
 	/**
 	 * UM Replace Placeholders for login referrer
 	 *
-	 * @param $replace_placeholders
+	 * @param array $replace_placeholders
 	 *
 	 * @return array
 	 */
-	function add_replace_placeholder( $replace_placeholders ) {
+	public function add_replace_placeholder( $replace_placeholders ) {
 		$replace_placeholders[] = um_dynamic_login_page_redirect();
 		return $replace_placeholders;
 	}
-
 }
