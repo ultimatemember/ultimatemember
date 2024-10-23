@@ -2558,13 +2558,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			if ( ! empty( $total_pages ) ) {
 				$index1 = 0 - ( $current_page - 2 ) + 1;
-				$to = $current_page + 2;
+				$to     = $current_page + 2;
 				if ( $index1 > 0 ) {
 					$to += $index1;
 				}
 
 				$index2 = $total_pages - ( $current_page + 2 );
-				$from = $current_page - 2;
+				$from   = $current_page - 2;
 				if ( $index2 < 0 ) {
 					$from += $index2;
 				}
@@ -2575,7 +2575,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				);
 			}
 
-
 			$pagination_data = array(
 				'pages_to_show' => ( ! empty( $pages_to_show ) && count( $pages_to_show ) > 1 ) ? array_values( $pages_to_show ) : array(),
 				'current_page'  => $current_page,
@@ -2583,7 +2582,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				'total_users'   => $total_users,
 			);
 
-			$pagination_data['header'] = $this->convert_tags( $directory_data['header'], $pagination_data );
+			$pagination_data['header']        = $this->convert_tags( $directory_data['header'], $pagination_data );
 			$pagination_data['header_single'] = $this->convert_tags( $directory_data['header_single'], $pagination_data );
 
 			return $pagination_data;
@@ -2600,11 +2599,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				return $actions;
 			}
 
-			if ( get_current_user_id() !== $user_id ) {
+			if ( get_current_user_id() !== absint( $user_id ) ) {
 				if ( UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
 					$actions['um-editprofile'] = array(
 						'title' => esc_html__( 'Edit Profile', 'ultimate-member' ),
-						'url'   => um_edit_profile_url(),
+						'url'   => um_edit_profile_url( $user_id ),
 					);
 				}
 
@@ -2632,18 +2631,18 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				if ( empty( UM()->user()->cannot_edit ) ) {
 					$actions['um-editprofile'] = array(
 						'title' => esc_html__( 'Edit Profile', 'ultimate-member' ),
-						'url'   => um_edit_profile_url(),
+						'url'   => um_edit_profile_url( $user_id ),
 					);
 				}
 
 				$actions['um-myaccount'] = array(
 					'title' => esc_html__( 'My Account', 'ultimate-member' ),
-					'url'   => um_get_core_page( 'account' ),
+					'url'   => um_get_predefined_page_url( 'account' ),
 				);
 
 				$actions['um-logout'] = array(
 					'title' => esc_html__( 'Logout', 'ultimate-member' ),
-					'url'   => um_get_core_page( 'logout' ),
+					'url'   => um_get_predefined_page_url( 'logout' ),
 				);
 
 				$actions = apply_filters( 'um_member_directory_my_user_card_actions', $actions, $user_id );
@@ -2663,7 +2662,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$dropdown_actions = $this->build_user_actions_list( $user_id );
 
-			$actions  = array();
 			$can_edit = UM()->roles()->um_current_user_can( 'edit', $user_id );
 
 			// Replace hook 'um_members_just_after_name'
@@ -2749,14 +2747,18 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							}
 
 							$label = UM()->fields()->get_label( $key );
-							if ( $key == 'role_select' || $key == 'role_radio' ) {
-								$label = strtr( $label, array(
-									' (Dropdown)'   => '',
-									' (Radio)'      => ''
-								) );
+							if ( 'role_select' === $key || 'role_radio' === $key ) {
+								$label = strtr(
+									$label,
+									array(
+										' (Dropdown)' => '',
+										' (Radio)'    => '',
+									)
+								);
 							}
 
 							$data_array[ "label_{$key}" ] = esc_html__( $label, 'ultimate-member' );
+
 							$data_array[ $key ] = wp_kses( $value, UM()->get_allowed_html( 'templates' ) );
 						}
 					}
@@ -2830,7 +2832,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * Main Query function for getting members via AJAX
 		 */
 		function ajax_get_members() {
-			UM()->check_ajax_nonce();
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'um_member_directory' ) ) {
+					wp_send_json_error( __( 'Wrong nonce.', 'ultimate-member' ) );
+				}
+			} else {
+				UM()->check_ajax_nonce();
+			}
 
 			global $wpdb;
 

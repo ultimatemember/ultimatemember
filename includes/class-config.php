@@ -39,6 +39,13 @@ if ( ! class_exists( 'um\Config' ) ) {
 		public $predefined_pages;
 
 		/**
+		 * @since 2.8.4
+		 *
+		 * @var array
+		 */
+		public $avatar_thumbnail_sizes;
+
+		/**
 		 * @var array
 		 */
 		public $core_directory_meta = array();
@@ -665,6 +672,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'account_tab_password'                  => true,
 				'account_tab_privacy'                   => true,
 				'account_tab_notifications'             => true,
+				'account_tab_personal-data'             => true,
 				'account_tab_delete'                    => true,
 				'delete_account_text'                   => __( 'Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account enter your password below.', 'ultimate-member' ),
 				'delete_account_no_pass_required_text'  => __( 'Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account, click on the button below.', 'ultimate-member' ),
@@ -732,7 +740,12 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'secure_notify_admins_banned_accounts__interval' => 'instant',
 				'secure_allowed_redirect_hosts'         => '',
 				'delete_comments'                       => false,
+				'primary_color'                         => '#7f56d9',
 			);
+
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				$this->settings_defaults['account_tab_personal-data'] = true;
+			}
 
 			add_filter( 'um_get_tabs_from_config', '__return_true' );
 
@@ -1039,6 +1052,11 @@ if ( ! class_exists( 'um\Config' ) ) {
 			// @todo remove in 3.0 version
 			$this->predefined_pages = apply_filters( 'um_core_pages', $this->predefined_pages );
 			$this->core_pages       = $this->predefined_pages;
+		}
+
+		public function init_avatar_thumbnail_sizes() {
+			$this->avatar_thumbnail_sizes = array( 32, 40, 64, 80, 128, 256 );
+			$this->avatar_thumbnail_sizes = apply_filters( 'um_avatar_thumbnail_sizes', $this->avatar_thumbnail_sizes );
 		}
 	}
 }

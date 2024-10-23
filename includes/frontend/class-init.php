@@ -21,8 +21,13 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		 */
 		public function includes() {
 			$this->actions_listener();
+			$this->directory();
 			$this->enqueue();
-			$this->modal();
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				$this->profile();
+			} else {
+				$this->modal();
+			}
 			$this->secure();
 			$this->user_profile();
 			$this->users();
@@ -42,6 +47,19 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		}
 
 		/**
+		 * @since 2.9.0
+		 *
+		 * @return Directory
+		 */
+		public function directory() {
+			if ( empty( UM()->classes['um\frontend\directory'] ) ) {
+				UM()->classes['um\frontend\directory'] = new Directory();
+			}
+
+			return UM()->classes['um\frontend\directory'];
+		}
+
+		/**
 		 * @since 2.7.0
 		 *
 		 * @return Enqueue
@@ -55,6 +73,32 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		}
 
 		/**
+		 * @since 2.9.0
+		 *
+		 * @return form\Form
+		 */
+		public function form() {
+			if ( empty( UM()->classes['um\frontend\form\form'] ) ) {
+				UM()->classes['um\frontend\form\form'] = new form\Form();
+			}
+
+			return UM()->classes['um\frontend\form\form'];
+		}
+
+		/**
+		 * @since 2.9.0
+		 *
+		 * @return Layouts
+		 */
+		public static function layouts() {
+			if ( empty( UM()->classes['um\frontend\layouts'] ) ) {
+				UM()->classes['um\frontend\layouts'] = new Layouts();
+			}
+
+			return UM()->classes['um\frontend\layouts'];
+		}
+
+		/**
 		 * @since 2.8.6
 		 *
 		 * @return Modal
@@ -65,6 +109,19 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 			}
 
 			return UM()->classes['um\frontend\modal'];
+		}
+
+		/**
+		 * @since 2.9.0
+		 *
+		 * @return Profile
+		 */
+		public function profile() {
+			if ( empty( UM()->classes['um\frontend\profile'] ) ) {
+				UM()->classes['um\frontend\profile'] = new Profile();
+			}
+
+			return UM()->classes['um\frontend\profile'];
 		}
 
 		/**

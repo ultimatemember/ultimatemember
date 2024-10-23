@@ -106,7 +106,7 @@ final class Enqueue extends \um\common\Enqueue {
 		wp_set_script_translations( 'um_admin_blocks_shortcodes', 'ultimate-member' );
 
 		$notifications_enabled = false;
-		if ( false !== UM()->account()->is_notifications_tab_visible() ) {
+		if ( false !== UM()->account()::is_notifications_tab_visible() ) {
 			$notifications_enabled = UM()->options()->get( 'account_tab_notifications' );
 		}
 
@@ -604,6 +604,9 @@ final class Enqueue extends \um\common\Enqueue {
 			// phpcs:ignore WordPress.Security.NonceVerification
 			if ( isset( $_GET['tab'] ) && 'appearance' === $_GET['tab'] && empty( $_GET['section'] ) ) {
 				// Init WP Media Uploader on the UM > Settings > Appearance > Profile screen.
+				wp_enqueue_media();
+			} elseif ( isset( $_GET['section'] ) && 'users' === $_GET['section'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+				// Init WP Media Uploader on the UM > Settings > General > Users screen.
 				wp_enqueue_media();
 			}
 

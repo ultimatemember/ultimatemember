@@ -23,6 +23,7 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		 */
 		public function __construct() {
 			$this->init_variables();
+			add_filter( 'um_get_option_filter__primary_color', array( &$this, 'set_default_color' ) );
 		}
 
 		/**
@@ -30,6 +31,14 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		 */
 		private function init_variables() {
 			$this->options = get_option( 'um_options', array() );
+		}
+
+		public function set_default_color( $color ) {
+			if ( empty( $color ) ) {
+				$color = '#7f56d9';
+			}
+
+			return $color;
 		}
 
 		/**

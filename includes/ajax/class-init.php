@@ -20,10 +20,74 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		 * @used-by \UM::includes()
 		 */
 		public function includes() {
+			$this->account();
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				$this->dev();
+				$this->directory();
+			}
+			$this->files();
 			$this->forms();
 			$this->pages();
+			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+				$this->profile();
+			}
 			$this->secure();
+			$this->user();
 			$this->users();
+		}
+
+		/**
+		 * @since 2.9.0
+		 *
+		 * @return Account
+		 */
+		public function account() {
+			if ( empty( UM()->classes['um\ajax\account'] ) ) {
+				UM()->classes['um\ajax\account'] = new Account();
+			}
+			return UM()->classes['um\ajax\account'];
+		}
+
+		/**
+		 * @since 2.9.0
+		 *
+		 * @return Dev
+		 */
+		public function dev() {
+			if ( empty( UM()->classes['um\ajax\dev'] ) ) {
+				UM()->classes['um\ajax\dev'] = new Dev();
+			}
+
+			return UM()->classes['um\ajax\dev'];
+		}
+
+		/**
+		 * @since 2.9.0
+		 *
+		 * @return Directory|Directory_Meta
+		 */
+		public function directory() {
+			if ( empty( UM()->classes['um\ajax\directory'] ) ) {
+				if ( UM()->options()->get( 'member_directory_own_table' ) ) {
+					UM()->classes['um\ajax\directory'] = new Directory_Meta();
+				} else {
+					UM()->classes['um\ajax\directory'] = new Directory();
+				}
+			}
+
+			return UM()->classes['um\ajax\directory'];
+		}
+
+		/**
+		 * @since 2.9.0
+		 *
+		 * @return Files
+		 */
+		public function files() {
+			if ( empty( UM()->classes['um\ajax\files'] ) ) {
+				UM()->classes['um\ajax\files'] = new Files();
+			}
+			return UM()->classes['um\ajax\files'];
 		}
 
 		/**
@@ -51,6 +115,18 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		}
 
 		/**
+		 * @since 2.9.0
+		 *
+		 * @return Profile
+		 */
+		public function profile() {
+			if ( empty( UM()->classes['um\ajax\profile'] ) ) {
+				UM()->classes['um\ajax\profile'] = new Profile();
+			}
+			return UM()->classes['um\ajax\profile'];
+		}
+
+		/**
 		 * @since 2.6.8
 		 *
 		 * @return Secure
@@ -63,6 +139,18 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		}
 
 		/**
+		 * @since 2.9.0
+		 *
+		 * @return User
+		 */
+		public function user() {
+			if ( empty( UM()->classes['um\ajax\user'] ) ) {
+				UM()->classes['um\ajax\user'] = new User();
+			}
+			return UM()->classes['um\ajax\user'];
+		}
+
+		/**
 		 * @since 2.8.7
 		 *
 		 * @return Users
@@ -72,6 +160,23 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 				UM()->classes['um\ajax\users'] = new Users();
 			}
 			return UM()->classes['um\ajax\users'];
+		}
+
+		/**
+		 * @since 2.9.0
+		 *
+		 * @param string $html
+		 *
+		 * @return string
+		 */
+		public function esc_html_spaces( $html ) {
+			$html = preg_replace(
+				array( '/^\s+/im', '/\\r\\n/im', '/\\n/im', '/\\t+/im' ),
+				array( '', ' ', ' ', ' ' ),
+				$html
+			);
+
+			return $html;
 		}
 	}
 }

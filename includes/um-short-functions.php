@@ -927,11 +927,16 @@ function um_user_submited_display( $k, $title, $data = array(), $style = true ) 
  *
  * @param string $key
  * @param null|string $match
+ * @param null|int $user_id
  *
  * @return string
  */
-function um_filtered_social_link( $key, $match = null ) {
-	$value = um_profile( $key );
+function um_filtered_social_link( $key, $match = null, $user_id = null ) {
+	if ( ! $user_id ) {
+		$value = um_profile( $key );
+	} else {
+		$value = get_user_meta( $user_id, $key, true );
+	}
 	if ( ! empty( $match ) ) {
 		$submatch = str_replace( 'https://', '', $match );
 		$submatch = str_replace( 'http://', '', $submatch );
@@ -1037,7 +1042,11 @@ function um_filtered_value( $key, $data = false ) {
 	 * ?>
 	 */
 	$value = apply_filters( "um_profile_field_filter_hook__{$type}", $value, $data );
-	$value = UM()->shortcodes()->emotize( $value );
+
+	if ( UM()->options()->get( 'enable_custom_emoji' ) ) {
+		$value = UM()->shortcodes()->emotize( $value );
+	}
+	$value = wp_staticize_emoji( $value );
 	return $value;
 }
 
@@ -1501,7 +1510,7 @@ function um_edit_my_profile_cancel_uri( $url = '' ) {
  * @return bool
  */
 function um_is_on_edit_profile() {
-	if ( isset( $_REQUEST['um_action'] ) && sanitize_key( $_REQUEST['um_action'] ) == 'edit' ) {
+	if ( isset( $_REQUEST['um_action'] ) && 'edit' === sanitize_key( $_REQUEST['um_action'] ) ) {
 		return true;
 	}
 
@@ -1715,6 +1724,7 @@ function um_edit_profile_url( $user_id = null ) {
 
 	$url = remove_query_arg( 'profiletab', $url );
 	$url = remove_query_arg( 'subnav', $url );
+	$url = remove_query_arg( 'notice', $url );
 	$url = add_query_arg( 'um_action', 'edit', $url );
 
 	/**
@@ -2621,7 +2631,9 @@ function um_user( $data, $attrs = null ) {
 
 			$alt = um_profile( 'nickname' );
 
-			$cover_html = $cover_uri ? '<img src="' . esc_attr( $cover_uri ) . '" alt="' . esc_attr( $alt ) . '" loading="lazy" />' : '';
+			$data_ratio = UM()->options()->get( 'profile_cover_ratio' );
+
+			$cover_html = $cover_uri ? '<img src="' . esc_attr( $cover_uri ) . '" alt="' . esc_attr( $alt ) . '" loading="lazy" data-ratio="' . esc_attr( $data_ratio ) . '"/>' : '';
 
 			$cover_html = apply_filters( 'um_user_cover_photo_html__filter', $cover_html, $cover_uri, $alt, $is_default, $attrs );
 			return $cover_html;

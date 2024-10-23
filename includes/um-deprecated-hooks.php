@@ -109,3 +109,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @depecated 2.8.7 Fully deprecated because there is used dropdown with statuses instead of list table views.
  * @hook um_admin_views_users
  */
+
+/**
+ * Fires for displaying content in supporting header row on User Profile.
+ *
+ * @param {array} $args User Profile data.
+ *
+ * @since 1.3.x
+ * @since 2.9.0 added $profile_args, $user_id attributes
+ * @depecated 2.9.0 Please use 'um_after_profile_header_name' hook instead.
+ * @hook  um_after_profile_header_name_args
+ */

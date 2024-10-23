@@ -165,7 +165,7 @@ class Filesystem {
 			return;
 		}
 
-		// phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition -- reading folder's content here
+		// phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition, Generic.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition -- reading folder's content here
 		while ( false !== ( $file = readdir( $dir ) ) ) {
 			if ( '.' === $file || '..' === $file ) {
 				continue;

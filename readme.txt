@@ -166,11 +166,19 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.9.0 2024-xx-xx =
+= 2.9.0: xxxx, 2024 =
+
+**Enhancements**
+
+* New UI
 
 **Bugfixes**
 
 * Fixed: User status filter on wp-admin > Users on mobile devices
+
+**Deprecated**
+
+* Action hook 'um_after_profile_header_name_args' use action hook 'um_after_profile_header_name' instead.
 
 = 2.8.9 2024-10-14 =
 
@@ -286,7 +294,6 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 * Fixed: Sorting by last login value when "Hide my last login" is set
 * Fixed: PHP errors while uploading files
 * Fixed: Parsing error on the license activation
-* Fixed: Saving field value when type is textarea and using HTML is enabled
 
 **Templates required update**
 
@@ -461,9 +468,6 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
-
-= 2.8.7 =
-This version fixes a security related bug. Upgrade immediately.
 
 = 2.8.5 =
 This version fixes a security related bug. Upgrade immediately.

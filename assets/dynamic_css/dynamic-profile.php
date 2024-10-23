@@ -17,7 +17,15 @@ $meta_padding = ( $args['photosize'] + 60 ) . 'px';
 		.um-<?php echo esc_attr( $args['form_id'] ); ?>.um .um-profile-body {
 			max-width: <?php echo esc_attr( $args['area_max_width'] ); ?>;
 		}
-	<?php } ?>
+
+		<?php if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) { ?>
+			.um-<?php echo esc_attr( $args['form_id'] ); ?>.um .um-profile-body .um-form-new {
+				width: <?php echo esc_attr( $args['area_max_width'] ); ?>;
+			}
+			<?php
+		}
+	}
+	?>
 	.um-<?php echo esc_attr( $args['form_id'] ); ?>.um .um-profile-photo a.um-profile-photo-img {
 		width: <?php echo esc_attr( $args['photosize'] ); ?>px;
 		height: <?php echo esc_attr( $args['photosize'] ); ?>px;
@@ -34,4 +42,5 @@ $meta_padding = ( $args['photosize'] + 60 ) . 'px';
 			padding-left: <?php echo esc_attr( $meta_padding ); ?>;
 		}
 	<?php } ?>
+
 </style>
