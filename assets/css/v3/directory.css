@@ -104,10 +104,6 @@
   align-items: stretch;
   flex-wrap: nowrap;
 }
-.um.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter .choices .choices__list--dropdown,
-.um.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter .choices .choices__list[aria-expanded] {
-  z-index: 3;
-}
 .um.um-directory .um-member-directory-header .um-member-directory-filters-bar .um-search-filter .um-field-wrapper {
   width: 100%;
   margin: 0;

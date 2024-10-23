@@ -208,6 +208,20 @@ UM.frontend = {
 	uploaders: [],
 	uploader: {
 		init: function () {
+			plupload.addFileFilter('um_files_limit', function(filters, file, cb) {
+				let self = this;
+				if (filters && self.files.length >= filters) {
+					this.trigger('Error', {
+						code : -801,
+						message : wp.i18n.__( 'Files limit error.', 'ultimate-member' ),
+						file : file
+					});
+					cb(false);
+				} else {
+					cb(true);
+				}
+			});
+
 			jQuery('.um-uploader-button').each( function() {
 				let $button = jQuery(this);
 
@@ -234,6 +248,10 @@ UM.frontend = {
 
 				if ( 0 !== maxSize ) {
 					uploaderFilters.max_file_size = plupload.formatSize( maxSize );
+				}
+
+				if ( 0 !== filesLimit ) {
+					uploaderFilters.um_files_limit = filesLimit;
 				}
 
 				let uploaderData = {
@@ -287,7 +305,7 @@ UM.frontend = {
 									}
 
 									if ( filesLimit ) {
-										console.log( $fileList.find( '.um-uploader-file' ).length );
+										console.log( $fileList.find( '.um-uploader-file:not(.um-upload-failed)' ).length );
 										console.log( filesLimit );
 									}
 

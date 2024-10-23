@@ -194,7 +194,7 @@
 }
 .um .choices__list--dropdown, .um .choices__list[aria-expanded] {
   visibility: hidden;
-  z-index: 1;
+  z-index: 3;
   position: absolute;
   width: 100%;
   background-color: #fff;
