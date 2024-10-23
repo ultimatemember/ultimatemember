@@ -1005,6 +1005,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'enable_blocks'                         => array(
 						'sanitize' => 'bool',
 					),
+					'enable_action_scheduler'               => array(
+						'sanitize' => 'bool',
+					),
 					'rest_api_version'                      => array(
 						'sanitize' => 'text',
 					),

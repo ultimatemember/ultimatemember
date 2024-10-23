@@ -593,7 +593,7 @@ function um_account_updated_notification( $user_id, $changed ) {
 	if ( 'password' !== $_POST['_um_account_tab'] || ! UM()->options()->get( 'changedpw_email_on' ) ) {
 		// Avoid email duplicates (account changed and password changed) on the password change tab.
 		um_fetch_user( $user_id );
-		UM()->mail()->send( um_user( 'user_email' ), 'changedaccount_email' );
+		UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( um_user( 'user_email' ), 'changedaccount_email' ) );
 	}
 	// phpcs:enable WordPress.Security.NonceVerification
 }

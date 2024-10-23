@@ -20,12 +20,24 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 		 * @used-by \UM::includes()
 		 */
 		public function includes() {
+			$this->actions();
+
 			$this->cpt()->hooks();
 			$this->screen();
 			$this->secure()->hooks();
 			$this->site_health();
 			$this->theme()->hooks();
 			$this->users()->hooks();
+		}
+
+		/**
+		 * @since 2.6.8
+		 *
+		 */
+		private function actions() {
+			if ( empty( UM()->classes['um\common\actions\emails'] ) ) {
+				UM()->classes['um\common\actions\emails'] = new actions\Emails();
+			}
 		}
 
 		/**
