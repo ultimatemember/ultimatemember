@@ -818,11 +818,6 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 										case 'textarea':
 											if ( ! empty( $field['html'] ) || ( UM()->profile()->get_show_bio_key( $form ) === $k && UM()->options()->get( 'profile_show_html_bio' ) ) ) {
 												$form[ $k ] = html_entity_decode( $form[ $k ] ); // required because WP_Editor send sometimes encoded content.
-												preg_match( '/^<p>(.*?)<\/p>$/', $form[ $k ], $match ); // required because WP_Editor send content wrapped to <p></p>
-												if ( ! empty( $match[1] ) ) {
-													$form[ $k ] = $match[1];
-												}
-
 												$form[ $k ] = self::maybe_apply_tidy( $form[ $k ], $field );
 
 												$allowed_html = UM()->get_allowed_html( 'templates' );
@@ -963,11 +958,6 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 							$field_exists = true;
 							if ( ! empty( $custom_fields[ $description_key ]['html'] ) && $bio_html ) {
 								$form[ $description_key ] = html_entity_decode( $form[ $description_key ] ); // required because WP_Editor send sometimes encoded content.
-								preg_match( '/^<p>(.*?)<\/p>$/', $form[ $description_key ], $match ); // required because WP_Editor send content wrapped to <p></p>
-								if ( ! empty( $match[1] ) ) {
-									$form[ $description_key ] = $match[1];
-								}
-
 								$form[ $description_key ] = self::maybe_apply_tidy( $form[ $description_key ], $custom_fields[ $description_key ] );
 
 								$allowed_html = UM()->get_allowed_html( 'templates' );
