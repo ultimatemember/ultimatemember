@@ -216,6 +216,17 @@ UM.frontend = {
 				let self = this;
 				let filesCount = wp.hooks.applyFilters( 'um_uploader_files_limit', self.files.length, self );
 
+				if ( filesCount >= filters ) {
+					this.trigger('Error', {
+						code : -801,
+						message : wp.i18n.__( 'Files limit error.', 'ultimate-member' ),
+						file : file
+					});
+					cb(false);
+				} else {
+					cb(true);
+				}
+
 				let button = self.getOption( 'browse_button' )[0];
 				let dropZone = self.getOption( 'drop_element' )[0];
 				let uploadLink = dropZone.querySelector( '.um-upload-link' );
@@ -228,17 +239,6 @@ UM.frontend = {
 					button.removeAttribute('disabled');
 					dropZone.classList.remove('um-dropzone-disabled');
 					uploadLink.classList.remove('um-link-disabled');
-				}
-
-				if ( filesCount >= filters ) {
-					this.trigger('Error', {
-						code : -801,
-						message : wp.i18n.__( 'Files limit error.', 'ultimate-member' ),
-						file : file
-					});
-					cb(false);
-				} else {
-					cb(true);
 				}
 			});
 
