@@ -209,14 +209,10 @@ UM.frontend = {
 	uploader: {
 		init: function () {
 			plupload.addFileFilter('um_files_limit', function(filters, file, cb) {
-				if ( ! filters ) {
-					cb(true);
-				}
-
 				let self = this;
 				let filesCount = wp.hooks.applyFilters( 'um_uploader_files_limit', self.files.length, self );
 
-				if ( filesCount >= filters ) {
+				if ( filters && filesCount >= filters ) {
 					this.trigger('Error', {
 						code : -801,
 						message : wp.i18n.__( 'Files limit error.', 'ultimate-member' ),
@@ -231,7 +227,7 @@ UM.frontend = {
 				let dropZone = self.getOption( 'drop_element' )[0];
 				let uploadLink = dropZone.querySelector( '.um-upload-link' );
 
-				if ( filesCount >= filters - 1 ) {
+				if ( filters && filesCount >= filters - 1 ) {
 					button.setAttribute('disabled', 'disabled');
 					dropZone.classList.add('um-dropzone-disabled');
 					uploadLink.classList.add('um-link-disabled');
