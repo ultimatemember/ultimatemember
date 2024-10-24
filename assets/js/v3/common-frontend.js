@@ -226,15 +226,20 @@ UM.frontend = {
 				let button = self.getOption( 'browse_button' )[0];
 				let dropZone = self.getOption( 'drop_element' )[0];
 				let uploadLink = dropZone.querySelector( '.um-upload-link' );
+				let $uploader = dropZone.parentNode;
 
 				if ( filters && filesCount >= filters - 1 ) {
 					button.setAttribute('disabled', 'disabled');
 					dropZone.classList.add('um-dropzone-disabled');
 					uploadLink.classList.add('um-link-disabled');
+
+					wp.hooks.doAction( 'um_uploader_trigger_files_limit_true', $uploader );
 				} else {
 					button.removeAttribute('disabled');
 					dropZone.classList.remove('um-dropzone-disabled');
 					uploadLink.classList.remove('um-link-disabled');
+
+					wp.hooks.doAction( 'um_uploader_trigger_files_limit_false', $uploader );
 				}
 			});
 
