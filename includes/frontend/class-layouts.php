@@ -2340,7 +2340,7 @@ class Layouts {
 				echo wp_kses( self::button( $button_content, $button_args ), UM()->get_allowed_html( 'templates' ) );
 			}
 
-			if ( ! empty( $args['disable_drop_zone'] ) && ! empty( $args['dropzone_error'] ) ) {
+			if ( ! empty( $args['dropzone_error'] ) ) {
 				echo wp_kses( $args['dropzone_error'], UM()->get_allowed_html( 'templates' ) );
 			}
 

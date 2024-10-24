@@ -40,7 +40,7 @@ UM.frontend = {
 
 			const img = new Image;
 			img.src = target_img.attr( 'src' );
-			//console.log(img);
+
 			new ResizeObserver((e, observer) => {
 				//img.remove();
 				observer.disconnect();
@@ -224,20 +224,34 @@ UM.frontend = {
 				}
 
 				let button = self.getOption( 'browse_button' )[0];
-				let dropZone = self.getOption( 'drop_element' )[0];
-				let uploadLink = dropZone.querySelector( '.um-upload-link' );
-				let $uploader = dropZone.parentNode;
+				let $uploader = button.parentNode;
 
 				if ( filters && filesCount >= filters - 1 ) {
 					button.setAttribute('disabled', 'disabled');
-					dropZone.classList.add('um-dropzone-disabled');
-					uploadLink.classList.add('um-link-disabled');
+
+					let dropZone = self.getOption( 'drop_element' )[0];
+					if ( dropZone ) {
+						$uploader = dropZone.parentNode;
+						dropZone.classList.add('um-dropzone-disabled');
+						let uploadLink = dropZone.querySelector( '.um-upload-link' );
+						if ( uploadLink ) {
+							uploadLink.classList.add('um-link-disabled');
+						}
+					}
 
 					wp.hooks.doAction( 'um_uploader_trigger_files_limit_true', $uploader );
 				} else {
 					button.removeAttribute('disabled');
-					dropZone.classList.remove('um-dropzone-disabled');
-					uploadLink.classList.remove('um-link-disabled');
+
+					let dropZone = self.getOption( 'drop_element' )[0];
+					if ( dropZone ) {
+						$uploader = dropZone.parentNode;
+						dropZone.classList.remove('um-dropzone-disabled');
+						let uploadLink = dropZone.querySelector( '.um-upload-link' );
+						if ( uploadLink ) {
+							uploadLink.classList.remove('um-link-disabled');
+						}
+					}
 
 					wp.hooks.doAction( 'um_uploader_trigger_files_limit_false', $uploader );
 				}
@@ -516,12 +530,16 @@ UM.frontend = {
 
 					if ( filter && uploaderObj.files.length < filter ) {
 						let button = uploaderObj.getOption( 'browse_button' )[0];
-						let dropZone = uploaderObj.getOption( 'drop_element' )[0];
-						let uploadLink = dropZone.querySelector( '.um-upload-link' );
-
 						button.removeAttribute('disabled');
-						dropZone.classList.remove('um-dropzone-disabled');
-						uploadLink.classList.remove('um-link-disabled');
+
+						let dropZone = uploaderObj.getOption( 'drop_element' )[0];
+						if ( dropZone ) {
+							dropZone.classList.remove('um-dropzone-disabled');
+							let uploadLink = dropZone.querySelector( '.um-upload-link' );
+							if ( uploadLink ) {
+								uploadLink.classList.remove('um-link-disabled');
+							}
+						}
 					}
 
 					wp.hooks.doAction( 'um_uploader_after_file_row_removed', $uploader, fileID, uploaderObj );
