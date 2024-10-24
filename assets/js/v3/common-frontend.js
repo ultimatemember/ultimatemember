@@ -209,8 +209,28 @@ UM.frontend = {
 	uploader: {
 		init: function () {
 			plupload.addFileFilter('um_files_limit', function(filters, file, cb) {
+				if ( ! filters ) {
+					cb(true);
+				}
+
 				let self = this;
-				if (filters && self.files.length >= filters) {
+				let filesCount = wp.hooks.applyFilters( 'um_uploader_files_limit', self.files.length, self );
+
+				let button = self.getOption( 'browse_button' )[0];
+				let dropZone = self.getOption( 'drop_element' )[0];
+				let uploadLink = dropZone.querySelector( '.um-upload-link' );
+
+				if ( filesCount >= filters - 1 ) {
+					button.setAttribute('disabled', 'disabled');
+					dropZone.classList.add('um-dropzone-disabled');
+					uploadLink.classList.add('um-link-disabled');
+				} else {
+					button.removeAttribute('disabled');
+					dropZone.classList.remove('um-dropzone-disabled');
+					uploadLink.classList.remove('um-link-disabled');
+				}
+
+				if ( filesCount >= filters ) {
 					this.trigger('Error', {
 						code : -801,
 						message : wp.i18n.__( 'Files limit error.', 'ultimate-member' ),
@@ -302,11 +322,6 @@ UM.frontend = {
 										$fileList.find( '.um-uploader-file' ).each( function ( u, item ) {
 											up.removeFile( item.id );
 										} );
-									}
-
-									if ( filesLimit ) {
-										console.log( $fileList.find( '.um-uploader-file:not(.um-upload-failed)' ).length );
-										console.log( filesLimit );
 									}
 
 									let fileRow = $fileList.find('#' + file.id);
@@ -493,8 +508,20 @@ UM.frontend = {
 
 					wp.hooks.doAction( 'um_uploader_file_row_removed', $fileRow, fileID, uploaderObj );
 
+					let filter = uploaderObj.getOption( 'filters' ).um_files_limit;
+
 					uploaderObj.removeFile( fileID );
 					$fileRow.remove();
+
+					if ( filter && uploaderObj.files.length < filter ) {
+						let button = uploaderObj.getOption( 'browse_button' )[0];
+						let dropZone = uploaderObj.getOption( 'drop_element' )[0];
+						let uploadLink = dropZone.querySelector( '.um-upload-link' );
+
+						button.removeAttribute('disabled');
+						dropZone.classList.remove('um-dropzone-disabled');
+						uploadLink.classList.remove('um-link-disabled');
+					}
 
 					wp.hooks.doAction( 'um_uploader_after_file_row_removed', $uploader, fileID, uploaderObj );
 				}
