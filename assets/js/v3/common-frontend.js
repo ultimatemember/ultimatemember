@@ -603,8 +603,19 @@ UM.frontend = {
 		init: function () {
 			jQuery('.js-choice').each( function() {
 				let choices = null;
+				// @todo https://github.com/Choices-js/Choices/issues/747 maybe add native "clear all" button in the future
 				if ( jQuery(this).attr( 'multiple' ) ) {
-					choices = new Choices(jQuery(this)[0], {removeItemButton: true});
+					// @todo https://github.com/Choices-js/Choices/issues/1066 , but it works properly on backend validation
+					let minSelections = jQuery(this).data( 'min_selections' );
+
+					let maxSelections = jQuery(this).data( 'max_selections' );
+					let attrs = {removeItemButton: true};
+
+					if ( maxSelections ) {
+						attrs.maxItemCount = maxSelections;
+					}
+
+					choices = new Choices(jQuery(this)[0], attrs);
 				} else if ( jQuery(this).hasClass( 'um-no-search' ) ) {
 					choices = new Choices(jQuery(this)[0], {searchEnabled: false});
 				} else {

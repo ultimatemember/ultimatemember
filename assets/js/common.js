@@ -46,6 +46,51 @@ UM.common = {
 			}
 		}
 	},
+	rating: {
+		init: function () {
+			if ( 'function' === typeof( jQuery.fn.um_raty ) ) {
+				if ( jQuery('.um-rating').length ) {
+					jQuery('.um-rating').um_raty({
+						half:       false,
+						starType:   'i',
+						number:     function() {
+							return jQuery(this).attr('data-number');
+						},
+						score:      function() {
+							return jQuery(this).attr('data-score');
+						},
+						scoreName:  function() {
+							return jQuery(this).attr('data-key');
+						},
+						hints:      false,
+						click:      function( score, evt ) {
+							um_live_field = this.id;
+							um_live_value = score;
+							// @todo make condition logic here
+							// um_apply_conditions( jQuery(this), false );
+						}
+					});
+				}
+				if ( jQuery('.um-rating-readonly').length ) {
+					jQuery('.um-rating-readonly').um_raty({
+						half:       false,
+						starType:   'i',
+						number:     function() {
+							return jQuery(this).attr('data-number');
+						},
+						score:      function() {
+							return jQuery(this).attr('data-score');
+						},
+						scoreName:  function() {
+							return jQuery(this).attr('data-key');
+						},
+						hints:      false,
+						readOnly:   true
+					});
+				}
+			}
+		}
+	},
 	datetimePicker: {
 		init: function () {
 			jQuery('.um-datepicker:not(.picker__input)').each(function(){
@@ -198,9 +243,11 @@ jQuery(document).on( 'ajaxStart', function() {
 
 jQuery(document).on( 'ajaxSuccess', function() {
 	UM.common.tipsy.init();
+	UM.common.rating.init();
 });
 
 jQuery(document).ready(function() {
 	UM.common.tipsy.init();
+	UM.common.rating.init();
 	UM.common.datetimePicker.init();
 });

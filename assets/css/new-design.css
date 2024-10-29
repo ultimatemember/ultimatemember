@@ -1731,7 +1731,7 @@
   align-items: end;
 }
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols.um-form-cols-3 .um-form-col {
-  width: 33.3333333333%;
+  width: calc(33.3333333333% - 8px);
 }
 .um .um-form-new .um-form-submit {
   box-sizing: border-box;

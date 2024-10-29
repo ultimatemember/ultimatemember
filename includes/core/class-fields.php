@@ -2434,7 +2434,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					 */
 					$output .= apply_filters( "um_edit_field_{$mode}_{$type}", $output, $data );
 					break;
-				/* Other fields */
+				/* Other fields with new UI.*/
 				case 'googlemap':
 				case 'youtube_video':
 				case 'vimeo_video':
@@ -2446,27 +2446,42 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
 
-					$output .= '<div class="um-field-area">';
-
-					if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
-					}
-
 					$field_name  = $key . $form_suffix;
 					$field_value = $this->field_value( $key, $default, $data );
 
-					$output .= '<input ' . $disabled . ' class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>
+					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+						$output .= '<input ' . $disabled . ' class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
+						if ( ! empty( $disabled ) ) {
+							$output .= $this->disabled_hidden_field( $field_name, $field_value );
+						}
 
-						</div>';
+						if ( $this->is_error( $key ) ) {
+							$output .= $this->field_error( $this->show_error( $key ), $field_name );
+						} elseif ( $this->is_notice( $key ) ) {
+							$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						} elseif ( ! empty( $data['help'] ) ) {
+							$output .= '<p class="um-field-hint">' . esc_html( $data['help'] ) . '</p>';
+						}
+					} else {
+						$output .= '<div class="um-field-area">';
 
-					if ( ! empty( $disabled ) ) {
-						$output .= $this->disabled_hidden_field( $field_name, $field_value );
-					}
+						if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
+							$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
+						}
 
-					if ( $this->is_error( $key ) ) {
-						$output .= $this->field_error( $this->show_error( $key ), $field_name );
-					} elseif ( $this->is_notice( $key ) ) {
-						$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						$output .= '<input ' . $disabled . ' class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>
+
+							</div>';
+
+						if ( ! empty( $disabled ) ) {
+							$output .= $this->disabled_hidden_field( $field_name, $field_value );
+						}
+
+						if ( $this->is_error( $key ) ) {
+							$output .= $this->field_error( $this->show_error( $key ), $field_name );
+						} elseif ( $this->is_notice( $key ) ) {
+							$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						}
 					}
 
 					$output .= '</div>';
@@ -3305,21 +3320,41 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
 
-					$output .= '<div class="um-field-area">';
+					$field_name  = $key . $form_suffix;
+					$field_value = $this->field_value( $key, $default, $data );
 
-					$output .= '<div class="um-rating um-raty" id="' . esc_attr( $key ) . '" data-key="' . esc_attr( $key ) . '" data-number="' . esc_attr( $data['number'] ) . '" data-score="' . $this->field_value( $key, $default, $data ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $key ) . '></div>';
-					$output .= '</div>';
+					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+						if ( ! empty( $disabled ) ) {
+							$output .= '<div class="um-rating-readonly um-raty ' . esc_attr( $this->get_class( $key, $data ) ) . '" id="' . esc_attr( $field_name ) . '" data-key="' . esc_attr( $key ) . '" data-number="' . esc_attr( $data['number'] ) . '" data-score="' . esc_attr( $field_value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '></div>';
+							$output .= $this->disabled_hidden_field( $field_name, $field_value );
+						} else {
+							$output .= '<div class="um-rating um-raty ' . esc_attr( $this->get_class( $key, $data ) ) . '" id="' . esc_attr( $field_name ) . '" data-key="' . esc_attr( $key ) . '" data-number="' . esc_attr( $data['number'] ) . '" data-score="' . esc_attr( $field_value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '></div>';
+						}
 
-					if ( $this->is_error( $key ) ) {
-						$output .= $this->field_error( $this->show_error( $key ), $key );
-					} elseif ( $this->is_notice( $key ) ) {
-						$output .= $this->field_notice( $this->show_notice( $key ), $key );
+						if ( $this->is_error( $key ) ) {
+							$output .= $this->field_error( $this->show_error( $key ), $field_name );
+						} elseif ( $this->is_notice( $key ) ) {
+							$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						} elseif ( ! empty( $data['help'] ) ) {
+							$output .= '<p class="um-field-hint">' . esc_html( $data['help'] ) . '</p>';
+						}
+					} else {
+						$output .= '<div class="um-field-area">';
+
+						$output .= '<div class="um-rating um-raty" id="' . esc_attr( $field_name ) . '" data-key="' . esc_attr( $key ) . '" data-number="' . esc_attr( $data['number'] ) . '" data-score="' . esc_attr( $field_value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '></div>';
+						$output .= '</div>';
+
+						if ( $this->is_error( $key ) ) {
+							$output .= $this->field_error( $this->show_error( $key ), $field_name );
+						} elseif ( $this->is_notice( $key ) ) {
+							$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						}
 					}
 
 					$output .= '</div>';
 
 					break;
-				/* Gap/Space */
+				/* Gap/Space with new UI.*/
 				case 'spacing':
 					$field_style = array();
 					if ( array_key_exists( 'spacing', $data ) ) {
@@ -3327,7 +3362,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					}
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data, $field_style ) . '></div>';
 					break;
-				/* A line divider */
+				/* A line divider with new UI.*/
 				case 'divider':
 					$border_style = '';
 					if ( array_key_exists( 'borderwidth', $data ) ) {
@@ -3817,11 +3852,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							}
 						}
 
+						$output .= '</select>';
+
 						if ( ! empty( $disabled ) ) {
 							$output .= $this->disabled_hidden_field( $form_key, $field_value );
 						}
-
-						$output .= '</select>';
 
 						if ( $this->is_error( $key ) ) {
 							$output .= $this->field_error( $this->show_error( $key ), $field_name );
@@ -3904,6 +3939,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$field_name = $key;
 
 					$max_selections = isset( $data['max_selections'] ) ? absint( $data['max_selections'] ) : 0;
+					$min_selections = isset( $data['min_selections'] ) ? absint( $data['min_selections'] ) : 0;
 
 					/** This filter is documented in includes/core/class-fields.php */
 					$options_pair = apply_filters( 'um_select_options_pair', null, $data );
@@ -3917,44 +3953,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$options = $data['options'];
 					}
 
-//					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
-//						$class = 'js-choice um-no-search';
-//
-//						$output .= '<select multiple data-default="' . esc_attr( $default ) . '" ' . $disabled . ' ' . $select_original_option_value . ' ' . $disabled_by_parent_option . '  name="' . esc_attr( $form_key ) . '" id="' . esc_attr( $field_id ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" class="' . esc_attr( $this->get_class( $key, $data, $class ) ) . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '" ' . $atts_ajax . ' ' . $this->aria_valid_attributes( $this->is_error( $form_key ), $form_key ) . '>';
-//						if ( ! ( isset( $data['allowclear'] ) && 0 === $data['allowclear'] ) ) {
-//							$output .= '<option value="">' . esc_html__( 'None', 'ultimate-member' ) . '</option>';
-//						}
-//					} else {
-//
-//					}
-
-					$class = 'um-s1';
-					if ( isset( $data['allowclear'] ) && 0 === $data['allowclear'] ) {
-						$class = 'um-s2';
-					}
-
-					if ( isset( $data['label'] ) ) {
-						$output .= $this->field_label( $data['label'], $key, $data );
-					}
-
-					$has_icon = ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons;
-
-					$output .= '<div class="um-field-area ' . ( $has_icon ? 'um-field-area-has-icon' : '' ) . ' ">';
-					if ( $has_icon ) {
-						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
-					}
-
-					$output .= '<select  ' . $disabled . ' multiple="multiple" name="' . esc_attr( $field_name ) . '[]" id="' . esc_attr( $field_id ) . '" data-maxsize="' . esc_attr( $max_selections ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" class="' . $this->get_class( $key, $data, $class ) . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '>';
-
 					if ( 'builtin' === $options ) {
 						$options = UM()->builtin()->get( $data['filter'] );
 					}
 
-					if ( ! isset( $options ) ) {
-						$options = UM()->builtin()->get( 'countries' );
-					}
-
-					if ( isset( $options ) ) {
+					if ( ! empty( $options ) ) {
 						/**
 						 * Filters multiselect options.
 						 *
@@ -4013,51 +4016,120 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$options = apply_filters( "um_multiselect_options_{$type}", $options, $data );
 					}
 
-					// Add an empty option!
-					$output .= '<option value=""></option>';
-
-					$arr_selected = array();
-					// add options
-					if ( ! empty( $options ) && is_array( $options ) ) {
-						foreach ( $options as $k => $v ) {
-
-							$v = rtrim( $v );
-
-							$um_field_checkbox_item_title = $v;
-							$opt_value                    = $v;
-
-							if ( $options_pair ) {
-								$opt_value = $k;
-							}
-
-							$opt_value = $this->filter_field_non_utf8_value( $opt_value );
-
-							$output .= '<option value="' . esc_attr( $opt_value ) . '" ';
-							if ( $this->is_selected( $key, $opt_value, $data ) ) {
-
-								$output                    .= 'selected';
-								$arr_selected[ $opt_value ] = $opt_value;
-							}
-
-							$output .= '>' . esc_html__( $um_field_checkbox_item_title, 'ultimate-member' ) . '</option>';
-
-						}
+					if ( isset( $data['label'] ) ) {
+						$output .= $this->field_label( $data['label'], $key, $data );
 					}
 
-					$output .= '</select>';
+					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+						$class = 'js-choice';
 
-					if ( ! empty( $disabled ) && ! empty( $arr_selected ) ) {
-						foreach ( $arr_selected as $item ) {
-							$output .= $this->disabled_hidden_field( $key . '[]', $item );
+						$output .= '<select multiple data-default="' . esc_attr( $default ) . '" ' . $disabled . '  name="' . esc_attr( $field_name ) . '[]" id="' . esc_attr( $field_id ) . '" data-validate="' . esc_attr( $validate ) . '" data-max_selections="' . esc_attr( $max_selections ) . '" data-min_selections="' . esc_attr( $min_selections ) . '" data-key="' . esc_attr( $key ) . '" class="' . esc_attr( $this->get_class( $key, $data, $class ) ) . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '>';
+						// if ( ! ( isset( $data['allowclear'] ) && 0 === $data['allowclear'] ) ) {
+						// @todo maybe add clear all button here.
+						// }
+
+						$arr_selected = array();
+						// add options
+						if ( ! empty( $options ) && is_array( $options ) ) {
+							foreach ( $options as $k => $v ) {
+
+								$v = rtrim( $v );
+
+								$um_field_checkbox_item_title = $v;
+								$opt_value                    = $v;
+
+								if ( $options_pair ) {
+									$opt_value = $k;
+								}
+
+								$opt_value = $this->filter_field_non_utf8_value( $opt_value );
+
+								$output .= '<option value="' . esc_attr( $opt_value ) . '" ';
+								if ( $this->is_selected( $key, $opt_value, $data ) ) {
+									$output                    .= 'selected';
+									$arr_selected[ $opt_value ] = $opt_value;
+								}
+
+								$output .= '>' . esc_html( $um_field_checkbox_item_title ) . '</option>';
+							}
 						}
-					}
 
-					$output .= '</div>';
+						$output .= '</select>';
 
-					if ( $this->is_error( $key ) ) {
-						$output .= $this->field_error( $this->show_error( $key ), $field_name );
-					} elseif ( $this->is_notice( $key ) ) {
-						$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						if ( ! empty( $disabled ) && ! empty( $arr_selected ) ) {
+							foreach ( $arr_selected as $item ) {
+								$output .= $this->disabled_hidden_field( $key . '[]', $item );
+							}
+						}
+
+						if ( $this->is_error( $key ) ) {
+							$output .= $this->field_error( $this->show_error( $key ), $field_name );
+						} elseif ( $this->is_notice( $key ) ) {
+							$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						} elseif ( ! empty( $data['help'] ) ) {
+							$output .= '<p class="um-field-hint">' . esc_html( $data['help'] ) . '</p>';
+						}
+					} else {
+						$class = 'um-s1';
+						if ( isset( $data['allowclear'] ) && 0 === $data['allowclear'] ) {
+							$class = 'um-s2';
+						}
+
+						$has_icon = ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons;
+
+						$output .= '<div class="um-field-area ' . ( $has_icon ? 'um-field-area-has-icon' : '' ) . ' ">';
+						if ( $has_icon ) {
+							$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
+						}
+
+						$output .= '<select  ' . $disabled . ' multiple="multiple" name="' . esc_attr( $field_name ) . '[]" id="' . esc_attr( $field_id ) . '" data-maxsize="' . esc_attr( $max_selections ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" class="' . $this->get_class( $key, $data, $class ) . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '>';
+
+						// Add an empty option!
+						$output .= '<option value=""></option>';
+
+						$arr_selected = array();
+						// add options
+						if ( ! empty( $options ) && is_array( $options ) ) {
+							foreach ( $options as $k => $v ) {
+
+								$v = rtrim( $v );
+
+								$um_field_checkbox_item_title = $v;
+								$opt_value                    = $v;
+
+								if ( $options_pair ) {
+									$opt_value = $k;
+								}
+
+								$opt_value = $this->filter_field_non_utf8_value( $opt_value );
+
+								$output .= '<option value="' . esc_attr( $opt_value ) . '" ';
+								if ( $this->is_selected( $key, $opt_value, $data ) ) {
+
+									$output                    .= 'selected';
+									$arr_selected[ $opt_value ] = $opt_value;
+								}
+
+								$output .= '>' . esc_html__( $um_field_checkbox_item_title, 'ultimate-member' ) . '</option>';
+
+							}
+						}
+
+						$output .= '</select>';
+
+						if ( ! empty( $disabled ) && ! empty( $arr_selected ) ) {
+							foreach ( $arr_selected as $item ) {
+								$output .= $this->disabled_hidden_field( $key . '[]', $item );
+							}
+						}
+
+						$output .= '</div>';
+
+						if ( $this->is_error( $key ) ) {
+							$output .= $this->field_error( $this->show_error( $key ), $field_name );
+						} elseif ( $this->is_notice( $key ) ) {
+							$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						}
 					}
 
 					$output .= '</div>';
@@ -4360,7 +4432,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '</div>';
 					break;
-				/* Bool Checkbox */
+				/* Bool Checkbox with new UI.*/
 				case 'bool':
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . ' ' . $this->aria_valid_attributes( $this->is_error( $key ), $key ) . '>';
 
@@ -4390,13 +4462,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '</div>';
 					break;
-				/* HTML */
+				/* HTML with new UI. */
 				case 'block':
 					$content = array_key_exists( 'content', $data ) ? $data['content'] : '';
 					// @todo WP_KSES for $content
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>' . $content . '</div>';
 					break;
-				/* Shortcode */
+				/* Shortcode with new UI. */
 				case 'shortcode':
 					$content = array_key_exists( 'content', $data ) ? $data['content'] : '';
 					$content = str_replace( '{profile_id}', um_profile_id(), $content );

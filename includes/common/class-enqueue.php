@@ -289,8 +289,8 @@ class Enqueue {
 		// Select2 JS.
 		$this->register_select2();
 
-		$common_js_deps  = array( 'jquery', 'wp-util', 'wp-hooks', 'wp-i18n', 'um_tipsy' );
-		$common_css_deps = array_merge( array( 'um_tipsy' ), self::$fonticons_handlers );
+		$common_js_deps  = array( 'jquery', 'wp-util', 'wp-hooks', 'wp-i18n', 'um_tipsy', 'um_raty' );
+		$common_css_deps = array_merge( array( 'um_tipsy', 'um_raty' ), self::$fonticons_handlers );
 		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 
 		} else {
