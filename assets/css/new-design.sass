@@ -1150,11 +1150,21 @@
               &.#{$prefix}field-error
                 color: $error-500
             .#{$prefix}field-radio-area
-              +flex( column, flex-start, stretch, nowrap )
-              row-gap: $spacing-xl
+              +flex( row, flex-start, start, nowrap )
+              column-gap: $spacing-xl
+              width: 100%
+              .#{$prefix}field-radio-column
+                width: 50%
+                +flex( column, flex-start, stretch, nowrap )
+                row-gap: $spacing-xl
             .#{$prefix}field-checkbox-area
-              +flex( column, flex-start, stretch, nowrap )
-              row-gap: $spacing-xl
+              +flex( row, flex-start, start, nowrap )
+              column-gap: $spacing-xl
+              width: 100%
+              .#{$prefix}field-checkbox-column
+                width: 50%
+                +flex( column, flex-start, stretch, nowrap )
+                row-gap: $spacing-xl
             label
               +border-box
               width: 100%

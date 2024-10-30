@@ -170,6 +170,10 @@ function defaultTask( done ) {
 		.pipe( uglify() )
 		.pipe( rename({ suffix: '.min' }) )
 		.pipe( dest( 'assets/js/v3/' ) ); // min JS files
+	src(['assets/js/v3/admin/*.js','!assets/js/v3/admin/*.min.js'])
+		.pipe( uglify() )
+		.pipe( rename({ suffix: '.min' }) )
+		.pipe( dest( 'assets/js/v3/admin/' ) ); // min JS files
 	src(['assets/css/v3/*.sass'])
 		.pipe( sass().on( 'error', sass.logError ) )
 		.pipe( dest( 'assets/css/v3/' ) ); // full CSS files from SASS

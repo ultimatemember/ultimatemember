@@ -1,6 +1,7 @@
 <?php
 namespace um\admin\core;
 
+use DateTimeZone;
 use WP_Post;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -2309,41 +2310,55 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_default':
-					?>
-
-					<?php if ( $this->set_field_type == 'textarea' ) { ?>
-
-					<p><label for="_default"><?php _e( 'Default Text', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Text to display by default in this field', 'ultimate-member' ) ); ?></label>
-						<textarea name="_default" id="_default"><?php echo $this->edit_mode_value; ?></textarea>
-					</p>
-
-				<?php } elseif ( $this->set_field_type == 'date' ) { ?>
-
-					<p class="um"><label for="_default"><?php _e( 'Default Date', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'You may use all PHP compatible date formats such as: 2020-02-02, 02/02/2020, yesterday, today, tomorrow, next monday, first day of next month, +3 day', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" class="um-datepicker" data-format="yyyy/mm/dd" />
-					</p>
-
-				<?php } elseif ( $this->set_field_type == 'time' ) { ?>
-
-					<p class="um"><label for="_default"><?php _e( 'Default Time', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'You may use all PHP compatible date formats such as: 2020-02-02, 02/02/2020, yesterday, today, tomorrow, next monday, first day of next month, +3 day', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" class="um-timepicker" data-format="HH:i" />
-					</p>
-
-				<?php } elseif ( $this->set_field_type == 'rating' ) { ?>
-
-					<p><label for="_default"><?php _e( 'Default Rating', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'If you wish the rating field to be prefilled with a number of stars, enter it here.', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" />
-					</p>
-
-				<?php } else { ?>
-
-					<p><label for="_default"><?php _e( 'Default Value', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value', 'ultimate-member' ) ); ?></label>
-						<input type="text" name="_default" id="_default" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
-					</p>
-
-				<?php } ?>
-
-					<?php
+					if ( 'textarea' === $this->set_field_type ) {
+						?>
+						<p><label for="_default"><?php esc_html_e( 'Default Text', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Text to display by default in this field', 'ultimate-member' ) ); ?></label>
+							<textarea name="_default" id="_default"><?php echo $this->edit_mode_value; ?></textarea>
+						</p>
+						<?php
+					} elseif ( 'date' === $this->set_field_type ) {
+						?>
+						<p class="um"><label for="_default"><?php esc_html_e( 'Default Date', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'You may use all PHP compatible date formats such as: 2020-02-02, 02/02/2020, yesterday, today, tomorrow, next monday, first day of next month, +3 day', 'ultimate-member' ) ); ?></label>
+							<?php
+							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+								// Maybe convert to proper date format of native input type="date".
+								if ( ! empty( $this->edit_mode_value ) && false === strpos( $this->edit_mode_value, '-' ) ) {
+									$this->edit_mode_value = wp_date( 'Y-m-d', strtotime( $this->edit_mode_value ), new DateTimeZone( 'UTC' ) );
+								}
+								?>
+								<input type="date" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" />
+								<?php
+							} else {
+								?>
+								<input type="text" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" class="um-datepicker" data-format="yyyy/mm/dd" />
+								<?php
+							}
+							?>
+						</p>
+						<?php
+					} elseif ( 'time' === $this->set_field_type ) {
+						?>
+						<p class="um"><label for="_default"><?php esc_html_e( 'Default Time', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'You may use all PHP compatible date formats such as: 2020-02-02, 02/02/2020, yesterday, today, tomorrow, next monday, first day of next month, +3 day', 'ultimate-member' ) ); ?></label>
+							<?php if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) { ?>
+								<input type="time" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" />
+							<?php } else { ?>
+								<input type="text" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" class="um-timepicker" data-format="HH:i" />
+							<?php } ?>
+						</p>
+						<?php
+					} elseif ( 'rating' === $this->set_field_type ) {
+						?>
+						<p><label for="_default"><?php esc_html_e( 'Default Rating', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'If you wish the rating field to be prefilled with a number of stars, enter it here.', 'ultimate-member' ) ); ?></label>
+							<input type="text" name="_default" id="_default" value="<?php echo $this->edit_mode_value; ?>" />
+						</p>
+						<?php
+					} else {
+						?>
+						<p><label for="_default"><?php esc_html_e( 'Default Value', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This option allows you to pre-fill the field with a default value prior to the user entering a value in the field. Leave blank to have no default value', 'ultimate-member' ) ); ?></label>
+							<input type="text" name="_default" id="_default" value="<?php echo esc_attr( $this->edit_mode_value ); ?>" />
+						</p>
+						<?php
+					}
 					break;
 
 				case '_label':

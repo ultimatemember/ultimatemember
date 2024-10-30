@@ -1,6 +1,8 @@
 <?php
 namespace um\core;
 
+use DateTimeZone;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -3010,77 +3012,111 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '</div>';
 					break;
-				/* Date */
+				/* Date with new UI. */
 				case 'date':
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
-
-					if ( isset( $data['label'] ) ) {
-						$output .= $this->field_label( $data['label'], $key, $data );
-					}
-
-					$output .= '<div class="um-field-area">';
-
-					if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
-					}
-
-					// Normalise date format.
-					$value = $this->field_value( $key, $default, $data );
-					if ( $value ) {
-						// numeric (either unix or YYYYMMDD). ACF uses Ymd format of date inside the meta tables.
-						if ( is_numeric( $value ) && strlen( $value ) !== 8 ) {
-							$unixtimestamp = $value;
-						} else {
-							$unixtimestamp = strtotime( $value );
-						}
-						// Ultimate Member date field stores the date in metatable in the format Y/m/d. Convert to it before echo.
-						$value = date( 'Y/m/d', $unixtimestamp );
-					}
-
-					$field_name = $key . $form_suffix;
-
-					$disabled_weekdays = '';
-					if ( isset( $data['disabled_weekdays'] ) && is_array( $data['disabled_weekdays'] ) ) {
-						$disabled_weekdays = '[' . implode( ',', $data['disabled_weekdays'] ) . ']';
-					}
-
-					$output .= '<input ' . $disabled . '  class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" data-range="' . esc_attr( $data['range'] ) . '" data-years="' . esc_attr( $data['years'] ) . '" data-years_x="' . esc_attr( $data['years_x'] ) . '" data-disabled_weekdays="' . esc_attr( $disabled_weekdays ) . '" data-date_min="' . esc_attr( $data['date_min'] ) . '" data-date_max="' . esc_attr( $data['date_max'] ) . '" data-format="' . esc_attr( $data['js_format'] ) . '" data-value="' . esc_attr( $value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>
-
-						</div>';
-
-					if ( $this->is_error( $key ) ) {
-						$output .= $this->field_error( $this->show_error( $key ), $field_name );
-					} elseif ( $this->is_notice( $key ) ) {
-						$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
-					}
-
-					$output .= '</div>';
-					break;
-				/* Time */
-				case 'time':
-					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
-
-					if ( isset( $data['label'] ) ) {
-						$output .= $this->field_label( $data['label'], $key, $data );
-					}
-
-					$output .= '<div class="um-field-area">';
-
-					if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
-						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
-					}
 
 					$field_name  = $key . $form_suffix;
 					$field_value = $this->field_value( $key, $default, $data );
 
-					$output .= '<input  ' . $disabled . '  class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '"  data-format="' . esc_attr( $data['js_format'] ) . '" data-intervals="' . esc_attr( $data['intervals'] ) . '" data-value="' . esc_attr( $field_value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>
+					if ( isset( $data['label'] ) ) {
+						$output .= $this->field_label( $data['label'], $key, $data );
+					}
+
+					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+						if ( ! empty( $field_value ) && false === strpos( $field_value, '-' ) ) {
+							$field_value = wp_date( 'Y-m-d', strtotime( $field_value ), new DateTimeZone( 'UTC' ) );
+						}
+
+						$output .= '<input ' . $disabled . ' class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="date" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
+						if ( ! empty( $disabled ) ) {
+							$output .= $this->disabled_hidden_field( $field_name, $field_value );
+						}
+
+						if ( $this->is_error( $key ) ) {
+							$output .= $this->field_error( $this->show_error( $key ), $field_name );
+						} elseif ( $this->is_notice( $key ) ) {
+							$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						} elseif ( ! empty( $data['help'] ) ) {
+							$output .= '<p class="um-field-hint">' . esc_html( $data['help'] ) . '</p>';
+						}
+					} else {
+						$output .= '<div class="um-field-area">';
+
+						if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
+							$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
+						}
+
+						// Normalise date format.
+						if ( $field_value ) {
+							// numeric (either unix or YYYYMMDD). ACF uses Ymd format of date inside the meta tables.
+							if ( is_numeric( $field_value ) && strlen( $field_value ) !== 8 ) {
+								$unixtimestamp = $field_value;
+							} else {
+								$unixtimestamp = strtotime( $field_value );
+							}
+							// Ultimate Member date field stores the date in metatable in the format Y/m/d. Convert to it before echo.
+							$field_value = date( 'Y/m/d', $unixtimestamp );
+						}
+
+						$disabled_weekdays = '';
+						if ( isset( $data['disabled_weekdays'] ) && is_array( $data['disabled_weekdays'] ) ) {
+							$disabled_weekdays = '[' . implode( ',', $data['disabled_weekdays'] ) . ']';
+						}
+
+						$output .= '<input ' . $disabled . '  class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" data-range="' . esc_attr( $data['range'] ) . '" data-years="' . esc_attr( $data['years'] ) . '" data-years_x="' . esc_attr( $data['years_x'] ) . '" data-disabled_weekdays="' . esc_attr( $disabled_weekdays ) . '" data-date_min="' . esc_attr( $data['date_min'] ) . '" data-date_max="' . esc_attr( $data['date_max'] ) . '" data-format="' . esc_attr( $data['js_format'] ) . '" data-value="' . esc_attr( $field_value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>
 
 						</div>';
 
-					if ( $this->is_error( $key ) ) {
-						$output .= $this->field_error( $this->show_error( $key ), $field_name );
-					} elseif ( $this->is_notice( $key ) ) {
-						$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						if ( $this->is_error( $key ) ) {
+							$output .= $this->field_error( $this->show_error( $key ), $field_name );
+						} elseif ( $this->is_notice( $key ) ) {
+							$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						}
+					}
+
+					$output .= '</div>';
+					break;
+				/* Time with new UI. */
+				case 'time':
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
+
+					$field_name  = $key . $form_suffix;
+					$field_value = $this->field_value( $key, $default, $data );
+
+					if ( isset( $data['label'] ) ) {
+						$output .= $this->field_label( $data['label'], $key, $data );
+					}
+
+					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+						$output .= '<input ' . $disabled . ' class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="time" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>';
+						if ( ! empty( $disabled ) ) {
+							$output .= $this->disabled_hidden_field( $field_name, $field_value );
+						}
+
+						if ( $this->is_error( $key ) ) {
+							$output .= $this->field_error( $this->show_error( $key ), $field_name );
+						} elseif ( $this->is_notice( $key ) ) {
+							$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						} elseif ( ! empty( $data['help'] ) ) {
+							$output .= '<p class="um-field-hint">' . esc_html( $data['help'] ) . '</p>';
+						}
+					} else {
+						$output .= '<div class="um-field-area">';
+
+						if ( ! empty( $data['icon'] ) && isset( $this->field_icons ) && 'field' === $this->field_icons ) {
+							$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
+						}
+
+						$output .= '<input  ' . $disabled . '  class="' . esc_attr( $this->get_class( $key, $data ) ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '"  data-format="' . esc_attr( $data['js_format'] ) . '" data-intervals="' . esc_attr( $data['intervals'] ) . '" data-value="' . esc_attr( $field_value ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '/>
+
+						</div>';
+
+						if ( $this->is_error( $key ) ) {
+							$output .= $this->field_error( $this->show_error( $key ), $field_name );
+						} elseif ( $this->is_notice( $key ) ) {
+							$output .= $this->field_notice( $this->show_notice( $key ), $field_name );
+						}
 					}
 
 					$output .= '</div>';
@@ -3612,7 +3648,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$output .= '</div>';
 
 					break;
-				/* Select dropdown */
+				/* Select dropdown with new UI. */
 				case 'select':
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
@@ -3931,7 +3967,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '</div>';
 					break;
-				/* Multi-Select dropdown */
+				/* Multi-Select dropdown with new UI. */
 				case 'multiselect':
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
@@ -4134,7 +4170,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '</div>';
 					break;
-				/* Radio */
+				/* Radio with new UI. */
 				case 'radio':
 					$form_key = str_replace( array( 'role_select', 'role_radio' ), 'role', $key );
 
@@ -4188,8 +4224,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
 
-					$output .= '<div class="um-field-area">';
-
 					// Add options.
 					$i           = 0;
 					$field_value = array();
@@ -4214,84 +4248,142 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					 */
 					$options_pair = apply_filters( "um_radio_options_pair__{$key}", false, $data );
 
-					if ( ! empty( $options ) ) {
-						foreach ( $options as $k => $v ) {
+					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+						$output .= '<div class="um-field-radio-area"><div class="um-field-radio-column">';
 
-							$v = rtrim( $v );
+						if ( ! empty( $options ) ) {
+							$column_separator = count( $options ) / 2;
+							foreach ( $options as $k => $v ) {
+								$v = rtrim( $v );
 
-							$um_field_checkbox_item_title = $v;
-							$option_value                 = $v;
+								$um_field_checkbox_item_title = $v;
+								$option_value                 = $v;
 
-							if ( ( ! is_numeric( $k ) && 'role' === $form_key ) || ( 'account' === $this->set_mode || um_is_core_page( 'account' ) ) ) {
-								$option_value = $k;
-							}
+								if ( ( ! is_numeric( $k ) && 'role' === $form_key ) || ( 'account' === $this->set_mode || um_is_core_page( 'account' ) ) ) {
+									$option_value = $k;
+								}
 
-							if ( $options_pair ) {
-								$option_value = $k;
-							}
+								if ( $options_pair ) {
+									$option_value = $k;
+								}
 
-							$i++;
-							if ( 0 === $i % 2 ) {
-								$col_class = ' right ';
-							} else {
-								$col_class = '';
-							}
+								$i++;
+								if ( $i - 1 === $column_separator ) {
+									$output .= '</div><div class="um-field-radio-column">';
+								}
 
-							if ( $this->is_radio_checked( $key, $option_value, $data ) ) {
-								$active = 'active';
-								$class  = 'um-icon-android-radio-button-on';
-							} else {
-								$active = '';
-								$class  = 'um-icon-android-radio-button-off';
-							}
+								$option_value = $this->filter_field_non_utf8_value( $option_value );
 
-							// It's for a legacy case `array_key_exists( 'editable', $data )`.
-							if ( array_key_exists( 'editable', $data ) && empty( $data['editable'] ) ) {
-								$col_class .= ' um-field-radio-state-disabled';
-							}
+								if ( $this->is_radio_checked( $key, $option_value, $data ) ) {
+									$field_value[ $key ] = $option_value;
+								}
 
-							$output .= '<label class="um-field-radio ' . esc_attr( $active ) . ' um-field-half ' . esc_attr( $col_class ) . '">';
+								// It's for a legacy case `array_key_exists( 'editable', $data )`.
+								if ( array_key_exists( 'editable', $data ) && empty( $data['editable'] ) ) {
+									$disabled = 'disabled';
+								}
 
-							$option_value = $this->filter_field_non_utf8_value( $option_value );
-
-							$output .= '<input ' . $disabled . ' type="radio" name="' . ( ( 'role' === $form_key ) ? esc_attr( $form_key ) : esc_attr( $form_key ) . '[]' ) . '" value="' . esc_attr( $option_value ) . '" ';
-
-							if ( $this->is_radio_checked( $key, $option_value, $data ) ) {
-								$output             .= 'checked';
-								$field_value[ $key ] = $option_value;
-							}
-
-							$output .= ' />';
-
-							$output .= '<span class="um-field-radio-state"><i class="' . esc_attr( $class ) . '"></i></span>';
-							$output .= '<span class="um-field-radio-option">' . esc_html__( $um_field_checkbox_item_title, 'ultimate-member' ) . '</span>';
-							$output .= '</label>';
-
-							if ( 0 === $i % 2 ) {
-								$output .= '<div class="um-clear"></div>';
+								$output .= '<label class="um-radio-label um-size-sm"><input ' . $disabled . ' name="' . ( ( 'role' === $form_key ) ? esc_attr( $form_key ) : esc_attr( $form_key ) . '[]' ) . '" type="radio" value="' . esc_attr( $option_value ) . '" ' . checked( $this->is_radio_checked( $key, $option_value, $data ), true, false ) . '/>' . esc_html( $um_field_checkbox_item_title ) . '</label>';
 							}
 						}
-					}
 
-					if ( ! empty( $disabled ) ) {
-						foreach ( $field_value as $item ) {
-							$output .= $this->disabled_hidden_field( $form_key, $item );
+						if ( ! empty( $disabled ) ) {
+							foreach ( $field_value as $item ) {
+								$output .= $this->disabled_hidden_field( $form_key, $item );
+							}
 						}
-					}
 
-					$output .= '<div class="um-clear"></div>';
+						$output .= '</div></div>';
 
-					$output .= '</div>';
+						if ( $this->is_error( $key ) ) {
+							$output .= $this->field_error( $this->show_error( $key ), $form_key );
+						} elseif ( $this->is_notice( $key ) ) {
+							$output .= $this->field_notice( $this->show_notice( $key ), $form_key );
+						} elseif ( ! empty( $data['help'] ) ) {
+							$output .= '<p class="um-field-hint">' . esc_html( $data['help'] ) . '</p>';
+						}
+					} else {
+						$output .= '<div class="um-field-area">';
 
-					if ( $this->is_error( $key ) ) {
-						$output .= $this->field_error( $this->show_error( $key ), $form_key );
-					} elseif ( $this->is_notice( $key ) ) {
-						$output .= $this->field_notice( $this->show_notice( $key ), $form_key );
+						if ( ! empty( $options ) ) {
+							foreach ( $options as $k => $v ) {
+
+								$v = rtrim( $v );
+
+								$um_field_checkbox_item_title = $v;
+								$option_value                 = $v;
+
+								if ( ( ! is_numeric( $k ) && 'role' === $form_key ) || ( 'account' === $this->set_mode || um_is_core_page( 'account' ) ) ) {
+									$option_value = $k;
+								}
+
+								if ( $options_pair ) {
+									$option_value = $k;
+								}
+
+								$i++;
+								if ( 0 === $i % 2 ) {
+									$col_class = ' right ';
+								} else {
+									$col_class = '';
+								}
+
+								if ( $this->is_radio_checked( $key, $option_value, $data ) ) {
+									$active = 'active';
+									$class  = 'um-icon-android-radio-button-on';
+								} else {
+									$active = '';
+									$class  = 'um-icon-android-radio-button-off';
+								}
+
+								// It's for a legacy case `array_key_exists( 'editable', $data )`.
+								if ( array_key_exists( 'editable', $data ) && empty( $data['editable'] ) ) {
+									$col_class .= ' um-field-radio-state-disabled';
+								}
+
+								$output .= '<label class="um-field-radio ' . esc_attr( $active ) . ' um-field-half ' . esc_attr( $col_class ) . '">';
+
+								$option_value = $this->filter_field_non_utf8_value( $option_value );
+
+								$output .= '<input ' . $disabled . ' type="radio" name="' . ( ( 'role' === $form_key ) ? esc_attr( $form_key ) : esc_attr( $form_key ) . '[]' ) . '" value="' . esc_attr( $option_value ) . '" ';
+
+								if ( $this->is_radio_checked( $key, $option_value, $data ) ) {
+									$output             .= 'checked';
+									$field_value[ $key ] = $option_value;
+								}
+
+								$output .= ' />';
+
+								$output .= '<span class="um-field-radio-state"><i class="' . esc_attr( $class ) . '"></i></span>';
+								$output .= '<span class="um-field-radio-option">' . esc_html__( $um_field_checkbox_item_title, 'ultimate-member' ) . '</span>';
+								$output .= '</label>';
+
+								if ( 0 === $i % 2 ) {
+									$output .= '<div class="um-clear"></div>';
+								}
+							}
+						}
+
+						if ( ! empty( $disabled ) ) {
+							foreach ( $field_value as $item ) {
+								$output .= $this->disabled_hidden_field( $form_key, $item );
+							}
+						}
+
+						$output .= '<div class="um-clear"></div>';
+
+						$output .= '</div>';
+
+						if ( $this->is_error( $key ) ) {
+							$output .= $this->field_error( $this->show_error( $key ), $form_key );
+						} elseif ( $this->is_notice( $key ) ) {
+							$output .= $this->field_notice( $this->show_notice( $key ), $form_key );
+						}
 					}
 
 					$output .= '</div>';
 					break;
-				/* Checkbox */
+				/* Checkbox with new UI. */
 				case 'checkbox':
 					$options = array();
 					if ( isset( $data['options'] ) && is_array( $data['options'] ) ) {
@@ -4342,92 +4434,182 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
 
-					$output .= '<div class="um-field-area">';
-
 					// Add options.
 					$i = 0;
-					foreach ( $options as $k => $v ) {
 
-						$v = rtrim( $v );
+					/**
+					 * Filters enable options pair by field $data.
+					 *
+					 * @since 2.9.0
+					 * @hook  um_checkbox_options_pair__{$key}
+					 *
+					 * @param {bool}  $options_pair Enable pairs.
+					 * @param {array} $data         Field Data.
+					 *
+					 * @return {bool} Enable pairs.
+					 *
+					 * @example <caption>Enable options pair.</caption>
+					 * function my_checkbox_field_options( $options ) {
+					 *     // your code here
+					 *     return $options;
+					 * }
+					 * add_filter( 'um_checkbox_options_pair__{$key}', 'my_checkbox_field_options', 10, 2 );
+					 */
+					$options_pair = apply_filters( "um_checkbox_options_pair__{$key}", false, $data );
 
-						$i++;
-						if ( 0 === $i % 2 ) {
-							$col_class = ' right ';
-						} else {
-							$col_class = '';
+					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+						$output .= '<div class="um-field-checkbox-area"><div class="um-field-checkbox-column">';
+
+						if ( ! empty( $options ) ) {
+							$column_separator = count( $options ) / 2;
+							foreach ( $options as $k => $v ) {
+								$v = rtrim( $v );
+
+								$um_field_checkbox_item_title = $v;
+								/**
+								 * Filters change Checkbox item title.
+								 *
+								 * @since 1.3.x
+								 * @hook  um_field_checkbox_item_title
+								 *
+								 * @param {string} $um_field_checkbox_item_title Item Title.
+								 * @param {string} $key                          Field Key.
+								 * @param {string} $v                            Field Value.
+								 * @param {array}  $data                         Field Data.
+								 *
+								 * @return {string} Item Title.
+								 *
+								 * @example <caption>Change Checkbox item title.</caption>
+								 * function um_checkbox_field_options( $um_field_checkbox_item_title, $key, $v, $data ) {
+								 *     // your code here
+								 *     return $um_field_checkbox_item_title;
+								 * }
+								 * add_filter( 'um_field_checkbox_item_title', 'um_checkbox_field_options', 10, 4 );
+								 */
+								$um_field_checkbox_item_title = apply_filters( 'um_field_checkbox_item_title', $um_field_checkbox_item_title, $key, $v, $data );
+
+								if ( $options_pair ) {
+									$v = $k;
+								}
+
+								$v          = $this->filter_field_non_utf8_value( $v );
+								$value_attr = ( ! empty( $v ) && is_string( $v ) ) ? wp_strip_all_tags( $v ) : $v;
+
+								$i++;
+								if ( $i - 1 === $column_separator ) {
+									$output .= '</div><div class="um-field-checkbox-column">';
+								}
+
+								// It's for a legacy case `array_key_exists( 'editable', $data )`.
+								if ( array_key_exists( 'editable', $data ) && empty( $data['editable'] ) ) {
+									$disabled = 'disabled';
+								}
+
+								$output .= '<label class="um-checkbox-label um-size-sm"><input ' . $disabled . ' name="' . esc_attr( $key ) . '[]" type="checkbox" value="' . esc_attr( $value_attr ) . '" ' . checked( $this->is_selected( $key, $v, $data ), true, false ) . ' />' . esc_html( $um_field_checkbox_item_title ) . '</label>';
+
+								if ( ! empty( $disabled ) && $this->is_selected( $key, $v, $data ) ) {
+									$output .= $this->disabled_hidden_field( $key . '[]', $value_attr );
+								}
+							}
 						}
 
-						if ( $this->is_selected( $key, $v, $data ) ) {
-							$active = 'active';
-							$class  = 'um-icon-android-checkbox-outline';
-						} else {
-							$active = '';
-							$class  = 'um-icon-android-checkbox-outline-blank';
+						$output .= '</div></div>';
+
+						if ( $this->is_error( $key ) ) {
+							$output .= $this->field_error( $this->show_error( $key ), $key );
+						} elseif ( $this->is_notice( $key ) ) {
+							$output .= $this->field_notice( $this->show_notice( $key ), $key );
+						} elseif ( ! empty( $data['help'] ) ) {
+							$output .= '<p class="um-field-hint">' . esc_html( $data['help'] ) . '</p>';
+						}
+					} else {
+						$output .= '<div class="um-field-area">';
+
+						foreach ( $options as $k => $v ) {
+							$v = rtrim( $v );
+							if ( $options_pair ) {
+								$v = $k;
+							}
+
+							$i++;
+							if ( 0 === $i % 2 ) {
+								$col_class = ' right ';
+							} else {
+								$col_class = '';
+							}
+
+							if ( $this->is_selected( $key, $v, $data ) ) {
+								$active = 'active';
+								$class  = 'um-icon-android-checkbox-outline';
+							} else {
+								$active = '';
+								$class  = 'um-icon-android-checkbox-outline-blank';
+							}
+
+							// It's for a legacy case `array_key_exists( 'editable', $data )`.
+							if ( array_key_exists( 'editable', $data ) && empty( $data['editable'] ) ) {
+								$col_class .= ' um-field-radio-state-disabled';
+							}
+
+							$output .= '<label class="um-field-checkbox ' . esc_attr( $active ) . ' um-field-half ' . esc_attr( $col_class ) . '">';
+
+							$um_field_checkbox_item_title = $v;
+
+							$v          = $this->filter_field_non_utf8_value( $v );
+							$value_attr = ( ! empty( $v ) && is_string( $v ) ) ? wp_strip_all_tags( $v ) : $v;
+
+							$output .= '<input  ' . $disabled . ' type="checkbox" name="' . esc_attr( $key ) . '[]" value="' . esc_attr( $value_attr ) . '" ';
+
+							if ( $this->is_selected( $key, $v, $data ) ) {
+								$output .= 'checked';
+							}
+
+							$output .= ' />';
+
+							if ( ! empty( $disabled ) && $this->is_selected( $key, $v, $data ) ) {
+								$output .= $this->disabled_hidden_field( $key . '[]', $value_attr );
+							}
+
+							$output .= '<span class="um-field-checkbox-state"><i class="' . esc_attr( $class ) . '"></i></span>';
+
+							/**
+							 * Filters change Checkbox item title.
+							 *
+							 * @since 1.3.x
+							 * @hook  um_field_checkbox_item_title
+							 *
+							 * @param {string} $um_field_checkbox_item_title Item Title.
+							 * @param {string} $key                          Field Key.
+							 * @param {string} $v                            Field Value.
+							 * @param {array}  $data                         Field Data.
+							 *
+							 * @return {string} Item Title.
+							 *
+							 * @example <caption>Change Checkbox item title.</caption>
+							 * function um_checkbox_field_options( $um_field_checkbox_item_title, $key, $v, $data ) {
+							 *     // your code here
+							 *     return $um_field_checkbox_item_title;
+							 * }
+							 * add_filter( 'um_field_checkbox_item_title', 'um_checkbox_field_options', 10, 4 );
+							 */
+							$um_field_checkbox_item_title = apply_filters( 'um_field_checkbox_item_title', $um_field_checkbox_item_title, $key, $v, $data );
+
+							$output .= '<span class="um-field-checkbox-option">' . esc_html__( $um_field_checkbox_item_title, 'ultimate-member' ) . '</span>';
+							$output .= '</label>';
+
+							if ( 0 === $i % 2 ) {
+								$output .= '<div class="um-clear"></div>';
+							}
 						}
 
-						// It's for a legacy case `array_key_exists( 'editable', $data )`.
-						if ( array_key_exists( 'editable', $data ) && empty( $data['editable'] ) ) {
-							$col_class .= ' um-field-radio-state-disabled';
+						$output .= '<div class="um-clear"></div>';
+						$output .= '</div>';
+
+						if ( $this->is_error( $key ) ) {
+							$output .= $this->field_error( $this->show_error( $key ), $key );
+						} elseif ( $this->is_notice( $key ) ) {
+							$output .= $this->field_notice( $this->show_notice( $key ), $key );
 						}
-
-						$output .= '<label class="um-field-checkbox ' . esc_attr( $active ) . ' um-field-half ' . esc_attr( $col_class ) . '">';
-
-						$um_field_checkbox_item_title = $v;
-
-						$v          = $this->filter_field_non_utf8_value( $v );
-						$value_attr = ( ! empty( $v ) && is_string( $v ) ) ? wp_strip_all_tags( $v ) : $v;
-
-						$output .= '<input  ' . $disabled . ' type="checkbox" name="' . esc_attr( $key ) . '[]" value="' . esc_attr( $value_attr ) . '" ';
-
-						if ( $this->is_selected( $key, $v, $data ) ) {
-							$output .= 'checked';
-						}
-
-						$output .= ' />';
-
-						if ( ! empty( $disabled ) && $this->is_selected( $key, $v, $data ) ) {
-							$output .= $this->disabled_hidden_field( $key . '[]', $value_attr );
-						}
-
-						$output .= '<span class="um-field-checkbox-state"><i class="' . esc_attr( $class ) . '"></i></span>';
-
-						/**
-						 * Filters change Checkbox item title.
-						 *
-						 * @since 1.3.x
-						 * @hook  um_field_checkbox_item_title
-						 *
-						 * @param {string} $um_field_checkbox_item_title Item Title.
-						 * @param {string} $key                          Field Key.
-						 * @param {string} $v                            Field Value.
-						 * @param {array}  $data                         Field Data.
-						 *
-						 * @return {string} Item Title.
-						 *
-						 * @example <caption>Change Checkbox item title.</caption>
-						 * function um_checkbox_field_options( $um_field_checkbox_item_title, $key, $v, $data ) {
-						 *     // your code here
-						 *     return $um_field_checkbox_item_title;
-						 * }
-						 * add_filter( 'um_field_checkbox_item_title', 'um_checkbox_field_options', 10, 4 );
-						 */
-						$um_field_checkbox_item_title = apply_filters( 'um_field_checkbox_item_title', $um_field_checkbox_item_title, $key, $v, $data );
-
-						$output .= '<span class="um-field-checkbox-option">' . esc_html__( $um_field_checkbox_item_title, 'ultimate-member' ) . '</span>';
-						$output .= '</label>';
-
-						if ( 0 === $i % 2 ) {
-							$output .= '<div class="um-clear"></div>';
-						}
-					}
-
-					$output .= '<div class="um-clear"></div>';
-					$output .= '</div>';
-
-					if ( $this->is_error( $key ) ) {
-						$output .= $this->field_error( $this->show_error( $key ), $key );
-					} elseif ( $this->is_notice( $key ) ) {
-						$output .= $this->field_notice( $this->show_notice( $key ), $key );
 					}
 
 					$output .= '</div>';

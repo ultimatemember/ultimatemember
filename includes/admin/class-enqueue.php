@@ -432,7 +432,13 @@ final class Enqueue extends \um\common\Enqueue {
 		$js_url  = self::get_url( 'js' );
 		$css_url = self::get_url( 'css' );
 
-		wp_register_script( 'um_admin_builder', $js_url . 'admin/builder' . $suffix . '.js', array( 'um_admin_modal', 'jquery-ui-draggable', 'jquery-ui-sortable', 'editor', 'wp-tinymce', self::$select2_handle, 'um_raty' ), UM_VERSION, true );
+		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			$src = $js_url . 'v3/admin/builder' . $suffix . '.js';
+		} else {
+			$src = $js_url . 'admin/builder' . $suffix . '.js';
+		}
+
+		wp_register_script( 'um_admin_builder', $src, array( 'um_admin_modal', 'jquery-ui-draggable', 'jquery-ui-sortable', 'editor', 'wp-tinymce', self::$select2_handle, 'um_raty' ), UM_VERSION, true );
 		wp_set_script_translations( 'um_admin_builder', 'ultimate-member' );
 		wp_enqueue_script( 'um_admin_builder' );
 

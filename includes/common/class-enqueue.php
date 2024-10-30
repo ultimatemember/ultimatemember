@@ -320,7 +320,13 @@ class Enqueue {
 			$common_css_deps = array_merge( $common_css_deps, array( 'um_datetime_date', 'um_datetime_time' ) );
 		}
 
-		wp_register_script( 'um_common', $js_url . 'common' . $suffix . '.js', $common_js_deps, UM_VERSION, true );
+		if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
+			$src = $js_url . 'v3/common' . $suffix . '.js';
+		} else {
+			$src = $js_url . 'common' . $suffix . '.js';
+		}
+
+		wp_register_script( 'um_common', $src, $common_js_deps, UM_VERSION, true );
 		$um_common_variables = array(
 			'locale' => get_locale(),
 		);
