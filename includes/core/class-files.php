@@ -514,93 +514,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			wp_send_json_success( $ret );
 		}
 
-
-		/**
-		 * Allowed image types
-		 *
-		 * @return array
-		 */
-		function allowed_image_types() {
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_allowed_image_types
-			 * @description Extend allowed image types
-			 * @input_vars
-			 * [{"var":"$types","type":"array","desc":"Image ext types"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_allowed_image_types', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_allowed_image_types', 'my_allowed_image_types', 10, 1 );
-			 * function my_allowed_image_types( $types ) {
-			 *     // your code here
-			 *     return $types;
-			 * }
-			 * ?>
-			 */
-			return apply_filters( 'um_allowed_image_types', array(
-				'png'   => 'PNG',
-				'jpeg'  => 'JPEG',
-				'jpg'   => 'JPG',
-				'gif'   => 'GIF'
-			) );
-		}
-
-
-		/**
-		 * Allowed file types
-		 *
-		 * @return mixed
-		 */
-		function allowed_file_types() {
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_allowed_file_types
-			 * @description Extend allowed File types
-			 * @input_vars
-			 * [{"var":"$types","type":"array","desc":"Files ext types"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_allowed_file_types', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_allowed_file_types', 'my_allowed_file_types', 10, 1 );
-			 * function my_allowed_file_types( $types ) {
-			 *     // your code here
-			 *     return $types;
-			 * }
-			 * ?>
-			 */
-			return apply_filters( 'um_allowed_file_types', array(
-				'pdf'   => 'PDF',
-				'txt'   => 'Text',
-				'csv'   => 'CSV',
-				'doc'   => 'DOC',
-				'docx'  => 'DOCX',
-				'odt'   => 'ODT',
-				'ods'   => 'ODS',
-				'xls'   => 'XLS',
-				'xlsx'  => 'XLSX',
-				'zip'   => 'ZIP',
-				'rar'   => 'RAR',
-				'mp3'   => 'MP3',
-				'jpg'   => 'JPG',
-				'jpeg'  => 'JPEG',
-				'png'   => 'PNG',
-				'gif'   => 'GIF',
-				'eps'   => 'EPS',
-				'psd'   => 'PSD',
-				'tif'   => 'TIF',
-				'tiff'  => 'TIFF',
-			) );
-		}
-
-
 		/**
 		 * Get extension icon
 		 *
@@ -1165,24 +1078,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			}
 		}
 
-
-		/**
-		 * New user upload
-		 *
-		 * @param $user_id
-		 * @param $source
-		 * @param $key
-		 *
-		 * @deprecated 2.1.0
-		 *
-		 * @return string
-		 */
-		function new_user_upload( $user_id, $source, $key ) {
-			um_deprecated_function( 'new_user_upload', '2.1.0', '' );
-			return '';
-		}
-
-
 		/**
 		 * Remove a directory
 		 *
@@ -1255,6 +1150,60 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		public function format_bytes( $size, $precision = 1 ) {
 			_deprecated_function( __METHOD__, '2.8.7', 'UM()->common()->filesystem()::format_bytes()' );
 			return UM()->common()->filesystem()::format_bytes( $size, $precision );
+		}
+
+		/**
+		 * Allowed image types
+		 *
+		 * @deprecated 2.9.0
+		 *
+		 * @return array
+		 */
+		public function allowed_image_types() {
+			_deprecated_function( __METHOD__, '2.9.0' );
+			return apply_filters(
+				'um_allowed_image_types',
+				array(
+					'png'   => 'PNG',
+					'jpeg'  => 'JPEG',
+					'jpg'   => 'JPG',
+					'gif'   => 'GIF'
+				)
+			);
+		}
+
+		/**
+		 * Allowed file types
+		 * @deprecated 2.9.0
+		 * @return array
+		 */
+		public function allowed_file_types() {
+			_deprecated_function( __METHOD__, '2.9.0' );
+			return apply_filters(
+				'um_allowed_file_types',
+				array(
+					'pdf'   => 'PDF',
+					'txt'   => 'Text',
+					'csv'   => 'CSV',
+					'doc'   => 'DOC',
+					'docx'  => 'DOCX',
+					'odt'   => 'ODT',
+					'ods'   => 'ODS',
+					'xls'   => 'XLS',
+					'xlsx'  => 'XLSX',
+					'zip'   => 'ZIP',
+					'rar'   => 'RAR',
+					'mp3'   => 'MP3',
+					'jpg'   => 'JPG',
+					'jpeg'  => 'JPEG',
+					'png'   => 'PNG',
+					'gif'   => 'GIF',
+					'eps'   => 'EPS',
+					'psd'   => 'PSD',
+					'tif'   => 'TIF',
+					'tiff'  => 'TIFF',
+				)
+			);
 		}
 
 		/**

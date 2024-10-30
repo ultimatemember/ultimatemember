@@ -87,7 +87,19 @@ class Filesystem {
 
 		if ( 'list' === $context ) {
 			$all_mimes = wp_get_ext_types();
-			$mimes     = array_key_exists( 'image', $all_mimes ) ? $all_mimes['image'] : array( 'jpg', 'jpeg', 'jpe', 'gif', 'png', 'bmp', 'tif', 'tiff', 'ico', 'heic', 'webp', 'avif' );
+
+			$default_image_types = array( 'jpg', 'jpeg', 'jpe', 'gif', 'png', 'bmp', 'tif', 'tiff', 'ico', 'heic', 'webp', 'avif' );
+			/**
+			 * Filters the allowed image mimes.
+			 *
+			 * @param {array} $mimes Allowed image mimes.
+			 *
+			 * @since 2.9.0
+			 * @hook  um_allowed_default_image_types
+			 */
+			$default_image_types = apply_filters( 'um_allowed_default_image_types', $default_image_types );
+
+			$mimes = array_key_exists( 'image', $all_mimes ) ? $all_mimes['image'] : $default_image_types;
 
 			$all_extensions = array();
 			foreach ( $allowed_for_user as $extensions => $mime ) {
@@ -97,7 +109,7 @@ class Filesystem {
 			$mimes          = array_intersect( $mimes, $all_extensions );
 
 			/**
-			 * Filters the MIME-types of the images that can be uploaded as Company Logo.
+			 * Filters the MIME-types of the images that can be uploaded via UM image uploader.
 			 *
 			 * @since 2.8.7
 			 * @hook um_upload_image_mimes_list
@@ -119,11 +131,20 @@ class Filesystem {
 				'ico'          => 'image/x-icon',
 				'heic'         => 'image/heic',
 			);
+			/**
+			 * Filters the allowed image mimes.
+			 *
+			 * @param {array} $mimes Allowed image mimes.
+			 *
+			 * @since 2.9.0
+			 * @hook  um_allowed_default_image_mimes
+			 */
+			$mimes = apply_filters( 'um_allowed_default_image_mimes', $mimes );
 
 			$mimes = array_intersect( $mimes, $allowed_for_user );
 
 			/**
-			 * Filters the MIME-types of the images that can be uploaded via UM uploader
+			 * Filters the MIME-types of the images that can be uploaded via UM image uploader.
 			 *
 			 * @since 2.8.7
 			 * @hook um_upload_allowed_image_mimes
@@ -133,6 +154,95 @@ class Filesystem {
 			 * @return {array} MIME types.
 			 */
 			$mimes = apply_filters( 'um_upload_allowed_image_mimes', $mimes );
+		}
+
+		return $mimes;
+	}
+
+	/**
+	 * @since 2.9.0
+	 * @param string $context
+	 *
+	 * @return array
+	 */
+	public static function file_mimes( $context = 'list' ) {
+		$mimes = array();
+
+		static $allowed_for_user = null;
+		if ( empty( $allowed_for_user ) ) {
+			$allowed_for_user = get_allowed_mime_types();
+		}
+
+		if ( empty( $allowed_for_user ) ) {
+			return $mimes;
+		}
+
+		if ( 'list' === $context ) {
+			$all_mimes = wp_get_ext_types();
+			if ( array_key_exists( 'image', $all_mimes ) ) {
+				unset( $all_mimes['image'] );
+			}
+
+			if ( ! empty( $all_mimes ) ) {
+				$mimes = array_merge( ...array_values( $all_mimes ) );
+			} else {
+				$mimes = array( 'pdf', 'txt', 'csv', 'doc', 'docx', 'odt', 'ods', 'xls', 'xlsx', 'zip', 'rar', 'mp3', 'eps', 'psd' );
+				/**
+				 * Filters the allowed file mimes.
+				 *
+				 * @param {array} $mimes Allowed file mimes.
+				 *
+				 * @since 2.9.0
+				 * @hook  um_allowed_default_file_types
+				 */
+				$mimes = apply_filters( 'um_allowed_default_file_types', $mimes );
+			}
+
+			$all_extensions = array();
+			foreach ( $allowed_for_user as $extensions => $mime ) {
+				$all_extensions[] = explode( '|', $extensions );
+			}
+			$all_extensions = array_merge( ...$all_extensions );
+			$mimes          = array_intersect( $mimes, $all_extensions );
+
+			/**
+			 * Filters the MIME-types of the files that can be uploaded via UM file uploader.
+			 *
+			 * @since 2.9.0
+			 * @hook um_upload_file_mimes_list
+			 *
+			 * @param {array} $mime_types MIME types.
+			 *
+			 * @return {array} MIME types.
+			 */
+			$mimes = apply_filters( 'um_upload_file_mimes_list', $mimes );
+			$mimes = array_values( array_unique( $mimes ) );
+		} elseif ( 'allowed' === $context ) {
+			$mimes = array(
+				'jpg|jpeg|jpe' => 'image/jpeg',
+				'gif'          => 'image/gif',
+				'png'          => 'image/png',
+				'bmp'          => 'image/bmp',
+				'tiff|tif'     => 'image/tiff',
+				'webp'         => 'image/webp',
+				'avif'         => 'image/avif',
+				'ico'          => 'image/x-icon',
+				'heic'         => 'image/heic',
+			);
+
+			$mimes = array_intersect( $mimes, $allowed_for_user );
+
+			/**
+			 * Filters the MIME-types of the files that can be uploaded via UM file uploader
+			 *
+			 * @since 2.9.0
+			 * @hook um_upload_allowed_file_mimes
+			 *
+			 * @param {array} $mime_types MIME types.
+			 *
+			 * @return {array} MIME types.
+			 */
+			$mimes = apply_filters( 'um_upload_allowed_file_mimes', $mimes );
 		}
 
 		return $mimes;

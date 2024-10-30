@@ -1,3 +1,50 @@
+wp.hooks.addFilter( 'um_uploader_data', 'ultimate-member', function( uploaderData, handler, $button ) {
+	if ( 'field-image' !== handler && 'field-file' !== handler ) {
+		return uploaderData;
+	}
+
+	let $userField = $button.parents('form').find('input[name="user_id"]');
+	if ( $userField.length ) {
+		let userID = $userField.val();
+		if ( userID ) {
+			uploaderData.url += '&user_id=' + userID;
+		}
+	}
+
+	let $formField = $button.parents('form').find('input[name="form_id"]');
+	if ( $formField.length ) {
+		let formID = $formField.val();
+		if ( formID ) {
+			uploaderData.url += '&form_id=' + formID;
+		}
+	}
+
+	let field = $button.parents('.um-field').data('key');
+	if ( field ) {
+		uploaderData.url += '&field_id=' + field;
+	}
+
+	return uploaderData;
+});
+
+wp.hooks.addFilter( 'um_uploader_file_uploaded', 'ultimate-member', function( preventDefault, $button, up, file, response ) {
+	let handler = $button.data( 'handler' );
+	if ( 'field-image' !== handler && 'field-file' !== handler ) {
+		return preventDefault;
+	}
+
+	let $uploader = $button.parents( '.um-uploader' );
+	let $fileList = $uploader.find( '.um-uploader-filelist' );
+
+	if ( $fileList.length ) {
+		let fileRow = $fileList.find( '#' + file.id );
+		fileRow.find( '.um-uploaded-value' ).val( response.data[0].name_saved );
+		fileRow.find( '.um-uploaded-value-hash' ).val( response.data[0].hash );
+	}
+
+	return null;
+});
+
 jQuery(document).ready(function() {
 
 	jQuery( document.body ).on( 'click', '.um-user-posts-load-more', function( e ) {

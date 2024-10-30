@@ -1350,25 +1350,6 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['mail'];
 		}
 
-
-		/**
-		 * @deprecated 2.1.0
-		 *
-		 * @since 2.0
-		 *
-		 * @return um\core\Members
-		 */
-		function members() {
-			um_deprecated_function( 'UM()->members()', '2.1.0', 'UM()->member_directory()' );
-
-			if ( empty( $this->classes['members'] ) ) {
-				$this->classes['members'] = new um\core\Members();
-			}
-
-			return $this->classes['members'];
-		}
-
-
 		/**
 		 * @since 2.0
 		 *

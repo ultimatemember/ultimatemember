@@ -2029,45 +2029,39 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_allowed_types':
-
-					if ( $this->set_field_type == 'image' ) {
-
+					if ( 'image' === $this->set_field_type ) {
 						if ( isset( $this->edit_mode_value ) && is_array( $this->edit_mode_value ) ) {
 							$values = $this->edit_mode_value;
 						} else {
 							$values = array( 'png','jpeg','jpg','gif' );
-						} ?>
-
-						<p><label for="_allowed_types"><?php _e( 'Allowed Image Types', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Select the image types that you want to allow to be uploaded via this field.', 'ultimate-member' ) ); ?></label>
+						}
+						?>
+						<p>
+							<label for="_allowed_types"><?php esc_html_e( 'Allowed Image Types', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select the image types that you want to allow to be uploaded via this field.', 'ultimate-member' ) ); ?></label>
 							<select name="_allowed_types[]" id="_allowed_types" multiple="multiple" style="width: 100%">
-								<?php foreach( UM()->files()->allowed_image_types() as $e => $n ) { ?>
-									<option value="<?php echo $e; ?>" <?php if ( in_array( $e, $values ) ) { echo 'selected'; } ?>><?php echo $n; ?></option>
+								<?php foreach ( UM()->common()->filesystem()::image_mimes() as $n ) { ?>
+									<option value="<?php echo esc_attr( $n ); ?>" <?php selected( in_array( $n, $values, true ) ); ?>><?php echo esc_html( $n ); ?></option>
 								<?php } ?>
 							</select>
 						</p>
-
 						<?php
-
 					} else {
-
 						if ( isset( $this->edit_mode_value ) && is_array( $this->edit_mode_value ) ) {
 							$values = $this->edit_mode_value;
 						} else {
 							$values = array( 'pdf', 'txt' );
-						} ?>
-
-						<p><label for="_allowed_types"><?php _e( 'Allowed File Types', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Select the image types that you want to allow to be uploaded via this field.', 'ultimate-member' ) ); ?></label>
+						}
+						?>
+						<p>
+							<label for="_allowed_types"><?php esc_html_e( 'Allowed File Types', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'Select the file types that you want to allow to be uploaded via this field.', 'ultimate-member' ) ); ?></label>
 							<select name="_allowed_types[]" id="_allowed_types" multiple="multiple" style="width: 100%">
-								<?php foreach( UM()->files()->allowed_file_types() as $e => $n ) { ?>
-									<option value="<?php echo $e; ?>" <?php if ( in_array( $e, $values ) ) { echo 'selected'; } ?>><?php echo $n; ?></option>
+								<?php foreach ( UM()->common()->filesystem()::file_mimes() as $n ) { ?>
+									<option value="<?php echo esc_attr( $n ); ?>" <?php selected( in_array( $n, $values, true ) ); ?>><?php echo esc_html( $n ); ?></option>
 								<?php } ?>
 							</select>
 						</p>
-
 						<?php
-
 					}
-
 					break;
 
 				case '_upload_text':

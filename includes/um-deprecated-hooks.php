@@ -120,3 +120,23 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @depecated 2.9.0 Please use 'um_after_profile_header_name' hook instead.
  * @hook  um_after_profile_header_name_args
  */
+
+/**
+ * Filters the allowed image types.
+ *
+ * @param {array} $types Allowed image types.
+ *
+ * @since 1.3.x
+ * @depecated 2.9.0 Please use 'um_allowed_default_image_types' hook instead.
+ * @hook  um_allowed_image_types
+ */
+
+/**
+ * Filters the allowed file types.
+ *
+ * @param {array} $types Allowed file types.
+ *
+ * @since 1.3.x
+ * @depecated 2.9.0 Please use 'um_allowed_default_file_types' hook instead.
+ * @hook  um_allowed_file_types
+ */

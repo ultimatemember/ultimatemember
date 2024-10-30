@@ -2029,18 +2029,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			return false;
 		}
 
-
-		/**
-		 * Update files
-		 *
-		 * @param $changes
-		 *
-		 * @deprecated 2.1.0
-		 */
-		function update_files( $changes ) {
-			um_deprecated_function( 'update_files', '2.1.0', '' );
-		}
-
 		/**
 		 * Update profile
 		 *

@@ -63,6 +63,8 @@ class Files {
 	private static function get_possible_handlers() {
 		$handlers = array(
 			'common-upload',
+			'field-file',
+			'field-image',
 //			'upload-image',
 		);
 		if ( is_user_logged_in() ) {
@@ -81,6 +83,8 @@ class Files {
 		if ( 'upload-avatar' === $handler ) {
 			// Check the avatar file format.
 			$mimes = UM()->common()->filesystem()::image_mimes( 'allowed' );
+		} elseif ( 'field-file' === $handler || 'field-image' === $handler ) {
+
 		}
 		return apply_filters( 'um_upload_mimes', $mimes, $handler );
 	}
@@ -104,6 +108,29 @@ class Files {
 
 			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
 				$error = __( 'You can not edit this user.', 'ultimate-member' );
+			}
+		} elseif ( 'field-file' === $handler || 'field-image' === $handler ) {
+			if ( ! wp_verify_nonce( sanitize_key( $_REQUEST['nonce'] ), 'um_upload_' . $handler ) ) {
+				// This nonce is not valid.
+				$error = __( 'Invalid nonce.', 'ultimate-member' );
+			}
+
+			if ( ! array_key_exists( 'user_id', $_REQUEST ) ) {
+				$error = __( 'No user to set value.', 'ultimate-member' );
+			}
+
+			$user_id = absint( $_REQUEST['user_id'] );
+
+			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+				$error = __( 'You can not edit this user.', 'ultimate-member' );
+			}
+
+			if ( ! array_key_exists( 'form_id', $_REQUEST ) ) {
+				$error = __( 'No form to set value.', 'ultimate-member' );
+			}
+
+			if ( ! array_key_exists( 'field_id', $_REQUEST ) ) {
+				$error = __( 'No field to set value.', 'ultimate-member' );
 			}
 		}
 
