@@ -17,8 +17,9 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 		 * Blocks constructor.
 		 */
 		public function __construct() {
-			add_action( 'init', array( &$this, 'block_editor_render' ) );
+//			add_action( 'init', array( &$this, 'block_editor_render' ) );
 			add_filter( 'block_type_metadata_settings', array( &$this, 'block_type_metadata_settings' ), 9999, 2 );
+			add_action( 'init', array( &$this, 'wp_register_block_metadata_collection' ), 11 );
 		}
 
 		/**
@@ -69,7 +70,7 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 		 *
 		 * @uses register_block_type_from_metadata()
 		 */
-		public function block_editor_render() {
+		public function wp_register_block_metadata_collection() {
 			/**
 			 * Filters the variable to disable adding UM Blocks to Gutenberg editor.
 			 *
@@ -98,6 +99,11 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 			if ( empty( $enable_blocks ) ) {
 				return;
 			}
+
+			wp_register_block_metadata_collection(
+				UM_PATH . 'build',
+				UM_PATH . 'build/blocks-manifest.php'
+			);
 
 			$blocks = array(
 				'um-block/um-member-directories' => array(
@@ -131,7 +137,7 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 
 			foreach ( $blocks as $k => $block_data ) {
 				$block_type = str_replace( 'um-block/', '', $k );
-				register_block_type_from_metadata( UM_PATH . 'includes/blocks/' . $block_type, $block_data );
+				register_block_type_from_metadata( UM_PATH . 'build/' . $block_type, $block_data );
 			}
 		}
 

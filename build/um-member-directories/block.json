@@ -1,12 +1,12 @@
 {
   "apiVersion": 2,
-  "name": "um-block/um-forms",
-  "title": "Form",
-  "description": "Choose display form",
-  "icon": "forms",
+  "name": "um-block/um-member-directories",
+  "title": "Member Directory",
+  "description": "Choose display directory",
+  "icon": "groups",
   "category": "um-blocks",
   "attributes": {
-    "form_id": {
+    "member_id": {
       "type": "integer"
     }
   },

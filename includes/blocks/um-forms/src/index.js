@@ -2,90 +2,73 @@ import { useSelect } from '@wordpress/data';
 import { PanelBody, SelectControl, Spinner } from '@wordpress/components';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import ServerSideRender from '@wordpress/server-side-render';
-import { registerBlockType } from "@wordpress/blocks";
+import { registerBlockType } from '@wordpress/blocks';
+import { useMemo } from '@wordpress/element';
 
 registerBlockType('um-block/um-forms', {
 	edit: function (props) {
-		let { form_id, setAttributes } = props.attributes;
 		const blockProps = useBlockProps();
-		const posts = useSelect((select) => {
-			return select('core').getEntityRecords('postType', 'um_form', {
-				per_page: -1,
-				_fields: ['id', 'title']
-			});
-		});
+		const { attributes, setAttributes } = props;
+		const { form_id } = attributes;
 
-		if (!posts) {
-			return (
-				<p>
-					<Spinner />
-					{wp.i18n.__('Loading...', 'ultimate-member')}
-				</p>
-			);
-		}
+		const posts = useSelect(
+			(select) => select('core').getEntityRecords('postType', 'um_form', { per_page: -1, _fields: ['id', 'title'] }),
+			[]
+		);
 
-		if (posts.length === 0) {
-			return 'No forms found.';
-		}
-
-		function get_option( posts ) {
-			var option = [];
-
-			posts.map( function( post ) {
-				option.push(
-					{
-						label: post.title.rendered,
-						value: post.id
-					}
-				);
-			});
-
-			return option;
-		}
-
-		function umShortcode( value ) {
-
-			var shortcode = '';
-
-			if (value !== undefined && value !== '') {
-				shortcode = '[ultimatemember form_id="' + value + '"]';
+		const options = useMemo(() => {
+			if (!posts) {
+				return [{ label: wp.i18n.__('Loading...', 'ultimate-member'), value: '' }];
 			}
+			if (posts.length === 0) {
+				return [{ label: wp.i18n.__('No forms found.', 'ultimate-member'), value: '' }];
+			}
+			return [{ label: wp.i18n.__('Select Form', 'ultimate-member'), value: '' }].concat(
+				posts.map((post) => ({ label: post.title.rendered, value: post.id }))
+			);
+		}, [posts]);
 
-			return shortcode;
-		}
-
-		let posts_data = [{ id: '', title: '' }].concat(posts);
-
-		let get_post = posts_data.map((post) => {
-			return {
-				label: post.title.rendered,
-				value: post.id
-			};
-		});
+		const onFormChange = (value) => setAttributes({ form_id: value });
 
 		return (
 			<div {...blockProps}>
-				<ServerSideRender block="um-block/um-forms" attributes={props.attributes} />
+				<ServerSideRender block="um-block/um-forms" attributes={attributes} />
 				<InspectorControls>
 					<PanelBody title={wp.i18n.__('Select Forms', 'ultimate-member')}>
 						<SelectControl
 							label={wp.i18n.__('Select Forms', 'ultimate-member')}
 							className="um_select_forms"
 							value={form_id}
-							options={get_post}
-							style={{ height: '35px', lineHeight: '20px', padding: '0 7px' }}
-							onChange={(value) => {
-								props.setAttributes({ form_id: value });
-								umShortcode(value);
-							}}
+							options={options}
+							onChange={onFormChange}
 						/>
 					</PanelBody>
 				</InspectorControls>
 			</div>
 		);
-
 	},
-	save: function save(props) {
-		return null;
-	}
+
+	save: () => null
+});
+
+jQuery(window).on( 'load', function($) {
+	let observer = new MutationObserver(function(mutations) {
+		mutations.forEach(function(mutation) {
+
+			jQuery(mutation.addedNodes).find('.um-form').each(function() {
+				let wrapper = document.querySelector('.um-form');
+
+				if (wrapper) {
+					wrapper.addEventListener('click', (event) => {
+						if (event.target !== wrapper) {
+							event.preventDefault();
+							event.stopPropagation();
+						}
+					});
+				}
+			});
+		});
+	});
+
+	observer.observe(document, {attributes: false, childList: true, characterData: false, subtree:true});
 });

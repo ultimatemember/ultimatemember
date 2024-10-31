@@ -23,11 +23,9 @@
   "scripts": {
     "build:docs": "rm -rf docs/hooks/ && jsdoc -c hookdoc-conf.json",
     "build": "npm-run-all build:*",
-    "build:all-blocks": "npm-run-all --parallel build-block-*",
-    "build-block-um-member-directories": "cd includes/blocks/um-member-directories && wp-scripts build src/index.js",
-    "build-block-um-forms": "cd includes/blocks/um-forms && wp-scripts build src/index.js",
-    "build-block-um-password-reset": "cd includes/blocks/um-password-reset && wp-scripts build src/index.js",
-    "build-block-um-account": "cd includes/blocks/um-account && wp-scripts build src/index.js"
+    "build-blocks": "wp-scripts build --webpack-src-dir=includes/blocks --output-path=build",
+    "build-manifest": "wp-scripts build-blocks-manifest",
+    "build:all-blocks": "npm-run-all build-blocks build-manifest"
   },
   "engines": {
     "node": ">= 0.10.0"
@@ -43,12 +41,12 @@
     "jsdoc": "~4.0.2",
     "wp-hookdoc": "^0.2.0",
     "npm-run-all": "^4.1.5",
-    "@wordpress/block-editor": "^11.5.0",
-    "@wordpress/blocks": "^12.5.0",
-    "@wordpress/components": "^23.5.0",
-    "@wordpress/i18n": "^4.28.0",
-    "@wordpress/scripts": "^25.5.1",
-    "@wordpress/server-side-render": "^4.5.0"
+    "@wordpress/block-editor": "^14.5.0",
+    "@wordpress/blocks": "^13.10.0",
+    "@wordpress/components": "^28.10.0",
+    "@wordpress/i18n": "^5.10.0",
+    "@wordpress/scripts": "^30.3.0",
+    "@wordpress/server-side-render": "^5.10.0"
   },
   "dependencies": {
     "react": "^18.2.0",
