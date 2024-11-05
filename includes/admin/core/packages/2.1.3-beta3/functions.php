@@ -140,7 +140,7 @@ KEY meta_key_indx (um_key),
 KEY meta_value_indx (um_value(191))
 ) $charset_collate;";
 
-	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 	dbDelta( $sql );
 
 	update_option( 'um_last_version_upgrade', '2.1.3-beta3' );
