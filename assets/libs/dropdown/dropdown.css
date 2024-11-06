@@ -131,6 +131,18 @@
   color: var(--um-gray-500, #667085);
   background: none;
 }
+.um-dropdown ul li a.um-destructive {
+  color: var(--um-error-700, #b42318);
+  background: none;
+}
+.um-dropdown ul li a.um-destructive:hover {
+  color: var(--um-error-800, #912018);
+  background-color: var(--um-error-50, #fef3f2);
+}
+.um-dropdown ul li a.um-destructive:focus {
+  color: var(--um-error-700, #b42318);
+  background: none;
+}
 .um-dropdown ul:last-child {
   border-bottom: none;
 }

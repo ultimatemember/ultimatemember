@@ -67,7 +67,7 @@ if ( is_user_logged_in() && UM()->roles()->um_current_user_can( 'edit', $user_pr
 }
 
 if ( true !== UM()->fields()->editing ) {
-	$dropdown_actions = UM()->user()->get_dropdown_items( $user_profile_id );
+	$dropdown_actions = UM()->frontend()->users()->get_dropdown_items( $user_profile_id );
 	if ( ! empty( $dropdown_actions ) ) {
 		$actions['more_actions'] = UM()->frontend()::layouts()::dropdown_menu(
 			'um-profile-actions-toggle',

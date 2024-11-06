@@ -125,6 +125,38 @@ jQuery(document).ready(function() {
 		);
 	});
 
+	jQuery( document.body ).on( 'click', '.um-user-action.um_delete', function(e) {
+		e.preventDefault();
+		// Using wp.hooks here for workaround and integrate um-dropdown links and js.confirm
+		if ( ! confirm( wp.i18n.__( 'Are you sure that you want to delete this user?', 'ultimate-member' ) ) ) {
+			wp.hooks.addFilter( 'um_dropdown_link_result', 'ultimate-member', function( result, attrClass ) {
+				if ( 'um-user-action um_delete um-destructive' !== attrClass ) {
+					return result;
+				}
+				return false;
+			});
+			return false;
+		} else {
+			wp.hooks.removeFilter( 'um_dropdown_link_result', 'ultimate-member' );
+		}
+	});
+
+	jQuery( document.body ).on( 'click', '.um-user-action.um_switch_user', function(e) {
+		e.preventDefault();
+
+		if ( ! confirm( wp.i18n.__( 'Are you sure that you want to switch to this user? It breaks your current session.', 'ultimate-member' ) ) ) {
+			wp.hooks.addFilter( 'um_dropdown_link_result', 'ultimate-member', function( result, attrClass ) {
+				if ( 'um-user-action um_switch_user' !== attrClass ) {
+					return result;
+				}
+				return false;
+			});
+			return false;
+		} else {
+			wp.hooks.removeFilter( 'um_dropdown_link_result', 'ultimate-member' );
+		}
+	});
+
 	jQuery('.um-profile.um-viewing .um-profile-body .um-row').each(function(){
 		var this_row = jQuery(this);
 		if ( this_row.find('.um-field').length == 0 ) {
@@ -142,10 +174,6 @@ jQuery(document).ready(function() {
 		e.preventDefault();
 		jQuery(this).parents('.um.um-profile.um-editing').find('form').trigger('submit');
 		return false;
-	});
-
-	jQuery( document.body ).on( 'click', '.um-profile-edit-a', function(e){
-		jQuery(this).addClass('active');
 	});
 
 	// Bio characters limit
@@ -180,15 +208,6 @@ jQuery(document).ready(function() {
 					}
 				});
 			});
-		}
-	});
-
-
-	jQuery( '.um-profile-edit a.um_delete-item' ).on( 'click', function(e) {
-		e.preventDefault();
-
-		if ( ! confirm( wp.i18n.__( 'Are you sure that you want to delete this user?', 'ultimate-member' ) ) ) {
-			return false;
 		}
 	});
 

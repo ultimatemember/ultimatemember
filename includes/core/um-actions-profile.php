@@ -1343,17 +1343,7 @@ function um_add_edit_icon( $args ) {
 			return;
 		}
 
-		$items   = array();
-		$actions = UM()->user()->get_admin_actions( um_profile_id() );
-		foreach ( $actions as $id => $arr ) {
-			$url = add_query_arg(
-				array(
-					'um_action' => $id,
-					'uid'       => um_profile_id(),
-				)
-			);
-			$items[ $id ] = '<a href="' . esc_url( $url ) . '" class="real_url ' . esc_attr( $id ) . '-item">' . esc_html( $arr['label'] ) . '</a>';
-		}
+		$items = UM()->user()->get_admin_actions();
 		if ( UM()->roles()->um_current_user_can( 'edit', um_profile_id() ) ) {
 			$items['editprofile'] = '<a href="' . esc_url( um_edit_profile_url() ) . '" class="real_url">' . __( 'Edit Profile', 'ultimate-member' ) . '</a>';
 		}

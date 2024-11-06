@@ -1760,7 +1760,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 		/**
 		 * Get admin actions for individual user
-		 *
+		 * @todo remove as soon as new UI is live.
 		 * @return array
 		 */
 		public function get_admin_actions() {
@@ -1779,104 +1779,10 @@ if ( ! class_exists( 'um\core\User' ) ) {
 						'nonce'     => wp_create_nonce( $id . um_profile_id() ),
 					)
 				);
+
 				$items[] = '<a href="' . esc_url( $url ) . '" class="real_url ' . esc_attr( $id ) . '-item">' . esc_html( $arr['label'] ) . '</a>';
 			}
 			return $items;
-		}
-
-		/**
-		 * Get admin actions for individual user.
-		 *
-		 * @param int    $user_id
-		 * @param string $context
-		 *
-		 * @return array
-		 */
-		public function get_dropdown_items( $user_id, $context = 'profile' ) {
-			$items   = array();
-			$user_id = absint( $user_id );
-
-			if ( is_user_logged_in() ) {
-				if ( $user_id === get_current_user_id() ) {
-					if ( 'profile' !== $context ) {
-						$items = array(
-							array(
-								'<a href="' . esc_url( um_edit_profile_url( $user_id ) ) . '" class="um-editprofile">' . esc_html__( 'Edit Profile', 'ultimate-member' ) . '</a>',
-								'<a href="' . esc_url( um_get_predefined_page_url( 'account' ) ) . '" class="um-myaccount">' . esc_html__( 'My Account', 'ultimate-member' ) . '</a>',
-							),
-							array(
-								'<a href="' . esc_url( um_get_predefined_page_url( 'logout' ) ) . '" class="um-logout">' . esc_html__( 'Logout', 'ultimate-member' ) . '</a>',
-							),
-						);
-
-						if ( ! empty( UM()->user()->cannot_edit ) ) {
-							unset( $items[0][0] );
-						}
-					} else {
-						$items = array(
-							'<a href="' . esc_url( um_get_predefined_page_url( 'account' ) ) . '">' . esc_html__( 'My Account', 'ultimate-member' ) . '</a>',
-							'<a href="' . esc_url( um_get_predefined_page_url( 'logout' ) ) . '">' . esc_html__( 'Logout', 'ultimate-member' ) . '</a>',
-						);
-					}
-				} else {
-					if ( 'profile' !== $context && UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-						$items[] = array(
-							'<a href="' . esc_url( um_edit_profile_url( $user_id ) ) . '" class="um-editprofile">' . esc_html__( 'Edit Profile', 'ultimate-member' ) . '</a>',
-						);
-					}
-
-					$admin_actions = $this->get_admin_actions( $user_id );
-					if ( ! empty( $admin_actions ) ) {
-						$admin_items = array();
-						foreach ( $admin_actions as $id => $arr ) {
-							$url = add_query_arg(
-								array(
-									'um_action' => $id,
-									'uid'       => $user_id,
-								),
-								um_get_predefined_page_url( 'user' )
-							);
-
-							if ( 'um_switch_user' === $id ) {
-								if ( ! isset( $admin_items[1] ) ) {
-									$admin_items[1] = array();
-								}
-								$admin_items[1][] = '<a href="' . esc_url( $url ) . '" class="' . esc_attr( $id ) . '">' . esc_html( $arr['label'] ) . '</a>';
-							} else {
-								if ( ! isset( $admin_items[0] ) ) {
-									$admin_items[0] = array();
-								}
-								$admin_items[0][] = '<a href="' . esc_url( $url ) . '" class="' . esc_attr( $id ) . '">' . esc_html( $arr['label'] ) . '</a>';
-							}
-						}
-
-						$items = array_merge( $items, $admin_items );
-					}
-				}
-			}
-			/**
-			 * Filters the dropdown menu with "More actions" for user.
-			 *
-			 * @since 2.9.0
-			 * @hook um_user_dropdown_items
-			 *
-			 * @param {array}  $items   Possible dropdown items list.
-			 * @param {int}    $user_id User ID.
-			 * @param {string} $context Place from where we call base function. It's 'profile' by default.
-			 *
-			 * @return {array} Possible dropdown items list.
-			 *
-			 * @example <caption>Add `um_custom_action` as one of dropdown items.</caption>
-			 * function um_custom_user_dropdown_items( $items, $user_id, $context ) {
-			 *     // single level dropdown
-			 *     $items[] = '<a href="' . esc_url( $item_url ) . '">' . esc_html( $item_title ) . '</a>';
-			 *     // dropdown with separators
-			 *     $items[] = array( '<a href="' . esc_url( $item_url ) . '">' . esc_html( $item_title ) . '</a>' );
-			 *     return $items;
-			 * }
-			 * add_filter( 'um_user_dropdown_items', 'um_custom_user_dropdown_items', 10, 3 );
-			 */
-			return apply_filters( 'um_user_dropdown_items', $items, $user_id, $context );
 		}
 
 		/**

@@ -278,7 +278,7 @@ class Directory {
 
 		um_fetch_user( $user_id );
 
-		$dropdown_actions = UM()->user()->get_dropdown_items( $user_id, 'directory' );
+		$dropdown_actions = UM()->frontend()->users()->get_dropdown_items( $user_id, 'directory' );
 
 		$can_edit = UM()->roles()->um_current_user_can( 'edit', $user_id );
 
