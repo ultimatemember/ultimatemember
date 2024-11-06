@@ -168,6 +168,10 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 = 2.9.0 2024-11-12 =
 
+**Enhancements**
+
+* Added: Supporting new `wp_register_block_metadata_collection()` function for registering WP Blocks
+
 **Bugfixes**
 
 * Fixed: User status filter on wp-admin > Users on mobile devices

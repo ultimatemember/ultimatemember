@@ -28,6 +28,7 @@
 /assets/libs/fontawesome/scss export-ignore
 /docs export-ignore
 /tests export-ignore
+/blocks-src export-ignore
 
 # Files
 /.bowerrc export-ignore
