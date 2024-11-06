@@ -272,9 +272,9 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		public function set_group( $group ) {
 			if ( empty( $group ) ) {
 				return $this->default_group;
-			} else {
-				return $this->default_group . '_' . $group;
 			}
+
+			return $this->default_group . '_' . $group;
 		}
 	}
 }
