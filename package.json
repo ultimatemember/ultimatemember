@@ -23,8 +23,8 @@
   "scripts": {
     "build:docs": "rm -rf docs/hooks/ && jsdoc -c hookdoc-conf.json",
     "build": "npm-run-all build:*",
-    "build-blocks": "wp-scripts build --webpack-src-dir=includes/blocks --output-path=build",
-    "build-manifest": "wp-scripts build-blocks-manifest",
+    "build-blocks": "wp-scripts build --webpack-src-dir=blocks-src --output-path=includes/blocks",
+    "build-manifest": "wp-scripts build-blocks-manifest --input=includes/blocks --output=includes/blocks/blocks-manifest.php",
     "build:all-blocks": "npm-run-all build-blocks build-manifest"
   },
   "engines": {

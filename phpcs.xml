@@ -15,6 +15,8 @@
 	<exclude-pattern>node_modules/*</exclude-pattern>
 	<exclude-pattern>documentor/*</exclude-pattern>
 	<exclude-pattern>\.idea/*</exclude-pattern>
+	<exclude-pattern>blocks-src/*</exclude-pattern>
+	<exclude-pattern>build/*</exclude-pattern>
 
 	<rule ref="WordPress-Extra"/>
 
