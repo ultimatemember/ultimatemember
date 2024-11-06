@@ -3781,7 +3781,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						 * add_filter( 'um_custom_dropdown_options_parent__{$form_key}', 'function_name', 10, 2 );
 						 */
 						$parent_dropdown_relationship = apply_filters( "um_custom_dropdown_options_parent__{$form_key}", $data['parent_dropdown_relationship'], $data );
-						$atts_ajax                   .= ' data-um-parent="' . esc_attr( $parent_dropdown_relationship ) . '" ';
+						$atts_ajax                   .= ' data-um-parent="' . esc_attr( $parent_dropdown_relationship ) . '" data-nonce="' . wp_create_nonce( 'um_dropdown_parent_nonce' . $data['metakey'] ) . '" ';
 
 						if ( ! empty( $data['custom_dropdown_options_source'] ) && function_exists( $data['custom_dropdown_options_source'] ) && um_user( $data['parent_dropdown_relationship'] ) ) {
 							if ( ! $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {

@@ -832,6 +832,172 @@ jQuery(document).ready(function($) {
 		e.preventDefault();
 		$(this).parents('.um-alert').umHide();
 	});
+
+	let um_select_options_cache = {};
+	/**
+	 * Find all select fields with parent select fields
+	 */
+	jQuery('select[data-um-parent]').each( function() {
+		var me = jQuery(this);
+		var parent_option = me.data('um-parent');
+		var um_ajax_source = me.data('um-ajax-source');
+		var nonce = me.data('nonce');
+
+		me.attr('data-um-init-field', true );
+
+		jQuery(document).on('change','select[name="' + parent_option + '"]',function() {
+			var parent  = jQuery(this);
+			var form_id = parent.closest( 'form' ).find( 'input[type="hidden"][name="form_id"]' ).val();
+
+			var arr_key;
+			if ( me.attr( 'data-member-directory' ) === 'yes' ) {
+				var directory = parent.parents('.um-directory');
+				arr_key = um_get_data_for_directory( directory, 'filter_' + parent_option );
+				if ( typeof arr_key != 'undefined' ) {
+					arr_key = arr_key.split('||');
+				} else {
+					arr_key = '';
+				}
+			} else {
+				arr_key = parent.val();
+			}
+
+			if ( typeof arr_key != 'undefined' && arr_key !== '' && typeof um_select_options_cache[ arr_key ] !== 'object' ) {
+
+				if ( typeof( me.um_wait ) === 'undefined' || me.um_wait === false ) {
+					me.um_wait = true;
+				} else {
+					return;
+				}
+
+				wp.ajax.send(
+					'um_select_options',
+					{
+						data: {
+							action: 'um_select_options',
+							parent_option_name: parent_option,
+							parent_option: arr_key,
+							child_callback: um_ajax_source,
+							child_name: me.attr('name'),
+							members_directory: me.attr('data-member-directory'),
+							form_id: form_id,
+							nonce: nonce
+						},
+						success: function( data ) {
+							console.log(data)
+							if ( data.status === 'success' && arr_key !== '' ) {
+								um_select_options_cache[ arr_key ] = data;
+								um_field_populate_child_options( me, data, arr_key );
+							}
+
+							if ( typeof data.debug !== 'undefined' ) {
+								console.log( data );
+							}
+
+							me.um_wait = false;
+						},
+						error: function( e ) {
+							console.log( e );
+							me.um_wait = false;
+						}
+					}
+				);
+			}
+
+			if ( typeof arr_key != 'undefined' && arr_key !== '' && typeof um_select_options_cache[ arr_key ] == 'object' ) {
+				setTimeout( um_field_populate_child_options, 10, me, um_select_options_cache[ arr_key ], arr_key );
+			}
+
+			if ( typeof arr_key != 'undefined' || arr_key === '' ) {
+				me.find('option[value!=""]').remove();
+				me.val('').trigger('change');
+			}
+
+		});
+
+		jQuery('select[name="' + parent_option + '"]').trigger('change');
+
+	});
+
+	/**
+	 * Populates child options and cache ajax response
+	 *
+	 * @param me
+	 * @param data
+	 * @param arr_key
+	 */
+	function um_field_populate_child_options( me, data, arr_key ) {
+		var directory = me.parents('.um-directory');
+		var child_name = me.attr('name');
+		me.find('option[value!=""]').remove();
+
+		if ( ! me.hasClass('um-child-option-disabled') ) {
+			me.prop('disabled', false);
+		}
+
+		var arr_items = [],
+			search_get = '';
+
+		// @todo member directory filters and populate options
+		if ( data.post.members_directory === 'yes' ) {
+			arr_items.push({id: '', text: '', selected: 1});
+		}
+		jQuery.each( data.items, function(k,v){
+			arr_items.push({id: k, text: v, selected: (v === search_get)});
+		});
+
+		// UM.frontend.choices.init();
+// 		console.log(data)
+console.log(arr_items)
+
+		if ( data.post.members_directory === 'yes' ) {
+			me.find('option').each( function() {
+				if ( jQuery(this).html() !== '' ) {
+					jQuery(this).data( 'value_label', jQuery(this).html() ).attr( 'data-value_label', jQuery(this).html() );
+				}
+			});
+
+			var current_filter_val = um_get_data_for_directory( directory, 'filter_' + child_name );
+			if ( typeof current_filter_val !== 'undefined' ) {
+				current_filter_val = current_filter_val.split('||');
+
+				var temp_filter_val = [];
+				jQuery.each( current_filter_val, function(i) {
+					if ( me.find('option[value="' + current_filter_val[ i ] + '"]').length ) {
+						temp_filter_val.push( current_filter_val[ i ] );
+					}
+					me.find('option[value="' + current_filter_val[ i ] + '"]').prop('disabled', true).hide();
+					if ( me.find('option:not(:disabled)').length === 1 ) {
+						me.prop('disabled', true);
+					}
+
+					me.select2('destroy').select2();
+					me.val('').trigger( 'change' );
+				});
+
+				temp_filter_val = temp_filter_val.join('||');
+				if ( current_filter_val !== temp_filter_val ) {
+					um_set_url_from_data( directory, 'filter_' + child_name, temp_filter_val );
+					um_ajax_get_members( directory );
+				}
+			}
+
+			um_change_tag( directory );
+		}
+
+		if ( data.post.members_directory !== 'yes' ) {
+			if ( typeof data.field.default !== 'undefined' && ! me.data('um-original-value') ) {
+				me.val( data.field.default ).trigger('change');
+			} else if ( me.data('um-original-value') !== '' ) {
+				me.val( me.data('um-original-value') ).trigger('change');
+			}
+
+			if ( data.field.editable == 0 ) {
+				me.addClass('um-child-option-disabled');
+				me.attr('disabled','disabled');
+			}
+		}
+	}
 });
 
 jQuery( window ).on( 'load', function() {

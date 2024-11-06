@@ -114,9 +114,15 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 *
 		 */
 		public function ajax_select_options() {
-			UM()->check_ajax_nonce();
-
 			// phpcs:disable WordPress.Security.NonceVerification
+			if ( ! isset( $_POST['child_name'] ) ) {
+				wp_send_json_error( __( 'Invalid user ID', 'ultimate-member' ) );
+			}
+			$child_name = sanitize_key( $_POST['child_name'] );
+
+			if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'um_dropdown_parent_nonce' . $child_name ) ) {
+				wp_send_json_error( __( 'Wrong nonce', 'ultimate-member' ) );
+			}
 
 			$arr_options           = array();
 			$arr_options['status'] = 'success';
@@ -245,7 +251,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				}
 
 				// phpcs:enable WordPress.Security.NonceVerification
-				wp_send_json( $arr_options );
+				wp_send_json_success( $arr_options );
 			}
 		}
 
