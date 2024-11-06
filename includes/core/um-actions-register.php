@@ -120,9 +120,9 @@ function um_send_registration_notification( $user_id ) {
 	if ( ! empty( $emails ) ) {
 		foreach ( $emails as $email ) {
 			if ( 'pending' !== $registration_status ) {
-				UM()->mail()->send( $email, 'notification_new_user', array( 'admin' => true ) );
+				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $email, 'notification_new_user', array( 'admin' => true ) ) );
 			} else {
-				UM()->mail()->send( $email, 'notification_review', array( 'admin' => true ) );
+				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $email, 'notification_review', array( 'admin' => true ) ) );
 			}
 		}
 	}
