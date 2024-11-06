@@ -31,13 +31,15 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 		}
 
 		/**
-		 * @since 2.6.8
+		 * Init actions that can be scheduled via Action Scheduler.
 		 *
+		 * @since 2.9.0
 		 */
 		private function actions() {
 			if ( empty( UM()->classes['um\common\actions\emails'] ) ) {
 				UM()->classes['um\common\actions\emails'] = new actions\Emails();
 			}
+			// Other classes init here as soon as possible.
 		}
 
 		/**

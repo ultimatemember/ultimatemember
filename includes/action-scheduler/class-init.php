@@ -10,16 +10,36 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 	/**
 	 * Class Init
 	 *
+	 * @since 2.9.0
+	 *
 	 * @package um\action_scheduler
 	 */
 	class Init {
 
+		/**
+		 * Global variable if Action Scheduler is active.
+		 *
+		 * @var bool
+		 */
 		protected $enabled = false;
 
+		/**
+		 * Action Scheduler group
+		 *
+		 * @var string
+		 */
 		protected $default_group = 'ultimate-member';
 
+		/**
+		 * Path to library
+		 *
+		 * @var string
+		 */
 		protected $lib_path = UM_PATH . 'includes/lib/action-scheduler/action-scheduler.php';
 
+		/**
+		 *
+		 */
 		public function __construct() {
 			if ( ! $this->can_be_active() ) {
 				UM()->admin()->notices()->add_notice(
@@ -31,7 +51,7 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 					)
 				);
 			} else {
-				add_filter( 'um_settings_structure', array( $this, 'add_setting' ), 10, 1 );
+				add_filter( 'um_settings_structure', array( $this, 'add_setting' ) );
 
 				if ( UM()->options()->get( 'enable_action_scheduler' ) ) {
 					$this->enabled = true;
@@ -40,9 +60,9 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		}
 
 		/**
-		 * Adds a Action Scheduler setting to Ultimate Member feature settings
+		 * Adds the Action Scheduler setting to Ultimate Member feature settings
 		 *
-		 * @param $settings
+		 * @param array $settings
 		 *
 		 * @return array
 		 */
@@ -103,10 +123,10 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		 * If Action Scheduler is disabled then do_action_ref_array is called to run action right away.
 		 *
 		 * @param string $hook Required. Name of the action hook.
-		 * @param array $args Arguments to pass to callbacks when the hook triggers. Default: array().
+		 * @param array  $args Arguments to pass to callbacks when the hook triggers. Default: array().
 		 * @param string $group The group to assign this job to. Default: ''.
-		 * @param boolean $unique Whether the action should be unique. Default: false.
-		 * @param integer $priority Lower values take precedence over higher values. Defaults to 10, with acceptable values falling in the range 0-255.
+		 * @param bool   $unique Whether the action should be unique. Default: false.
+		 * @param int    $priority Lower values take precedence over higher values. Defaults to 10, with acceptable values falling in the range 0-255.
 		 *
 		 * @return int Еhe action’s ID. Zero if there was an error scheduling the action. The error will be sent to error_log
 		 */
@@ -123,12 +143,12 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		/**
 		 * Schedule an action to run one time at some defined point in the future.
 		 *
-		 * @param integer $timestamp Required. The Unix timestamp representing the date you want the action to run.
+		 * @param int    $timestamp Required. The Unix timestamp representing the date you want the action to run.
 		 * @param string $hook Required. Name of the action hook.
-		 * @param array $args Arguments to pass to callbacks when the hook triggers. Default: array()
+		 * @param array  $args Arguments to pass to callbacks when the hook triggers. Default: array()
 		 * @param string $group The group to assign this job to. Default: ''.
-		 * @param boolean $unique Whether the action should be unique. Default: false.
-		 * @param integer $priority Lower values take precedence over higher values. Defaults to 10, with acceptable values falling in the range 0-255.)
+		 * @param bool   $unique Whether the action should be unique. Default: false.
+		 * @param int    $priority Lower values take precedence over higher values. Defaults to 10, with acceptable values falling in the range 0-255.)
 		 *
 		 * @return int The action’s ID. Zero if there was an error scheduling the action. The error will be sent to error_log.
 		 */
@@ -145,13 +165,13 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		/**
 		 * Schedule an action to run repeatedly with a specified interval in seconds.
 		 *
-		 * @param integer $timestamp Required. The Unix timestamp representing the date you want the action to run.
-		 * @param integer $interval_in_seconds Required. How long to wait between runs.
+		 * @param int    $timestamp Required. The Unix timestamp representing the date you want the action to run.
+		 * @param int    $interval_in_seconds Required. How long to wait between runs.
 		 * @param string $hook Required. Name of the action hook.
-		 * @param array $args Arguments to pass to callbacks when the hook triggers. Default: array().
+		 * @param array  $args Arguments to pass to callbacks when the hook triggers. Default: array().
 		 * @param string $group The group to assign this job to. Default: ''.
-		 * @param boolean $unique Whether the action should be unique. Default: false.
-		 * @param integer $priority Lower values take precedence over higher values. Defaults to 10, with acceptable values falling in the range 0-255.
+		 * @param bool   $unique Whether the action should be unique. Default: false.
+		 * @param int    $priority Lower values take precedence over higher values. Defaults to 10, with acceptable values falling in the range 0-255.
 		 *
 		 * @return int The action’s ID. Zero if there was an error scheduling the action. The error will be sent to error_log.
 		 */
@@ -166,13 +186,13 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		 *
 		 * If execution of a cron-like action is delayed, the next attempt will still be scheduled according to the provided cron expression.
 		 *
-		 * @param integer $timestamp Required. The Unix timestamp representing the date you want the action to run.
+		 * @param int    $timestamp Required. The Unix timestamp representing the date you want the action to run.
 		 * @param string $schedule Required. A cron-like schedule string, see http://en.wikipedia.org/wiki/Cron.
 		 * @param string $hook Required Name of the action hook.
-		 * @param array $args Arguments to pass to callbacks when the hook triggers. Default: array().
+		 * @param array  $args Arguments to pass to callbacks when the hook triggers. Default: array().
 		 * @param string $group The group to assign this job to. Default: ''.
-		 * @param boolean $unique Whether the action should be unique. Default: false.
-		 * @param integer $priority Lower values take precedence over higher values. Defaults to 10, with acceptable values falling in the range 0-255.
+		 * @param bool   $unique Whether the action should be unique. Default: false.
+		 * @param int    $priority Lower values take precedence over higher values. Defaults to 10, with acceptable values falling in the range 0-255.
 		 *
 		 * @return int The action’s ID. Zero if there was an error scheduling the action. The error will be sent to error_log.
 		 */
@@ -186,10 +206,10 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		 * Cancel the next occurrence of a scheduled action.
 		 *
 		 * @param string $hook Required. Name of the action hook.
-		 * @param array $args Arguments passed to callbacks when the hook triggers. Default: array().
+		 * @param array  $args Arguments passed to callbacks when the hook triggers. Default: array().
 		 * @param string $group The group the job is assigned to. Default: ''.
 		 *
-		 * @return int|null
+		 * @return int|null The scheduled action ID if a scheduled action was found, or null if no matching action found.
 		 */
 		public function unschedule_action( $hook, $args = array(), $group = '' ) {
 			$group = $this->set_group( $group );
@@ -200,23 +220,21 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		/**
 		 * Cancel all occurrences of a scheduled action.
 		 *
-		 * @param string $hook Required. Name of the action hook.
-		 * @param array $args Arguments passed to callbacks when the hook triggers. Default: array().
-		 * @param string $group The group the job is assigned to. Default: ''.
-		 *
-		 * @return string|null The scheduled action ID if a scheduled action was found, or null if no matching action found.
+		 * @param string $hook The hook that the job will trigger.
+		 * @param array  $args Args that would have been passed to the job.
+		 * @param string $group The group the job is assigned to.
 		 */
 		public function unschedule_all_actions( $hook, $args = array(), $group = '' ) {
 			$group = $this->set_group( $group );
 
-			return as_unschedule_all_actions( $hook, $args, $group );
+			as_unschedule_all_actions( $hook, $args, $group );
 		}
 
 		/**
 		 * Returns the next timestamp for a scheduled action.
 		 *
 		 * @param string $hook Required. Name of the action hook. Default: none.
-		 * @param array $args Arguments passed to callbacks when the hook triggers. Default: array().
+		 * @param array  $args Arguments passed to callbacks when the hook triggers. Default: array().
 		 * @param string $group The group the job is assigned to. Default: ''.
 		 *
 		 * @return int|bool The timestamp for the next occurrence of a pending scheduled action, true for an async or in-progress action or false if there is no matching action.
@@ -232,7 +250,7 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		 * It’s recommended to use this function when you need to know whether a specific action is currently scheduled.
 		 *
 		 * @param string $hook Required. Name of the action hook. Default: none.
-		 * @param array $args Arguments passed to callbacks when the hook triggers. Default: array().
+		 * @param array  $args Arguments passed to callbacks when the hook triggers. Default: array().
 		 * @param string $group The group the job is assigned to. Default: ''.
 		 *
 		 * @return bool True if a matching action is pending or in-progress, false otherwise.
@@ -244,20 +262,21 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		}
 
 		/**
-		 * @param array $args $args (array) Arguments to search and filter results by. Possible arguments, with their default values:
-		 * 'hook' => '' - the name of the action that will be triggered
-		 * 'args' => NULL - the args array that will be passed with the action
-		 * 'date' => NULL - the scheduled date of the action. Expects a DateTime object, a unix timestamp, or a string that can parsed with strtotime().
-		 * 'date_compare' => '<=’ - operator for testing “date”. accepted values are ‘!=’, ‘>’, ‘>=’, ‘<’, ‘<=’, ‘=’
-		 * 'modified' => NULL - the date the action was last updated. Expects a DateTime object, a unix timestamp, or a string that can parsed with strtotime().
-		 * 'modified_compare' => '<=' - operator for testing “modified”. accepted values are ‘!=’, ‘>’, ‘>=’, ‘<’, ‘<=’, ‘=’
-		 * 'group' => '' - the group the action belongs to
-		 * 'status' => '' - ActionScheduler_Store::STATUS_COMPLETE or ActionScheduler_Store::STATUS_PENDING
-		 * 'claimed' => NULL - TRUE to find claimed actions, FALSE to find unclaimed actions, a string to find a specific claim ID
-		 * 'per_page' => 5 - Number of results to return
-		 * 'offset' => 0
-		 * 'orderby' => 'date' - accepted values are ‘hook’, ‘group’, ‘modified’, or ‘date’
-		 * 'order' => 'ASC'
+		 * @param array $args Arguments to search and filter results by. Possible arguments, with their default values:
+		 *          'hook' => '' - the name of the action that will be triggered
+		 *          'args' => NULL - the args array that will be passed with the action
+		 *          'date' => NULL - the scheduled date of the action. Expects a DateTime object, a unix timestamp, or a string that can parsed with strtotime().
+		 *          'date_compare' => '<=' - operator for testing “date”. accepted values are ‘!=’, ‘>’, ‘>=’, ‘<’, ‘<=’, ‘=’
+		 *          'modified' => NULL - the date the action was last updated. Expects a DateTime object, a unix timestamp, or a string that can parsed with strtotime().
+		 *          'modified_compare' => '<=' - operator for testing “modified”. accepted values are ‘!=’, ‘>’, ‘>=’, ‘<’, ‘<=’, ‘=’
+		 *          'group' => '' - the group the action belongs to
+		 *          'status' => '' - ActionScheduler_Store::STATUS_COMPLETE or ActionScheduler_Store::STATUS_PENDING
+		 *          'claimed' => NULL - TRUE to find claimed actions, FALSE to find unclaimed actions, a string to find a specific claim ID
+		 *          'per_page' => 5 - Number of results to return
+		 *          'offset' => 0
+		 *          'orderby' => 'date' - accepted values are ‘hook’, ‘group’, ‘modified’, or ‘date’
+		 *          'order' => 'ASC'
+		 *
 		 * @param string $return_format The format in which to return the scheduled actions: 'OBJECT', 'ARRAY_A', or 'ids'. Default: 'OBJECT'.
 		 *
 		 * @return array Array of action rows matching the criteria specified with $args.

@@ -10,6 +10,8 @@ if ( ! class_exists( 'um\common\actions\Emails' ) ) {
 	/**
 	 * Class Emails
 	 *
+	 * @since 2.9.0
+	 *
 	 * @package um\common\actions
 	 */
 	class Emails {

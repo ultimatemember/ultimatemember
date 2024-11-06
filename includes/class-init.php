@@ -1444,7 +1444,9 @@ if ( ! class_exists( 'UM' ) ) {
 		}
 
 		/**
-		 * @since 2.6.8
+		 * Maybe include and init Action Scheduler.
+		 *
+		 * @since 2.9.0
 		 *
 		 * @return um\action_scheduler\Init
 		 */
@@ -1454,7 +1456,6 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 			return $this->classes['action_scheduler'];
 		}
-
 
 		/**
 		 * Include files with hooked filters/actions

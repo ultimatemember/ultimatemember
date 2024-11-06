@@ -623,7 +623,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			// send email notifications
 			if ( $this->send_mail_on_delete ) {
 				$user_email = um_user( 'user_email' );
-				$template = 'deletion_email';
+				$template   = 'deletion_email';
 
 				UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $user_email, $template ) );
 
