@@ -174,7 +174,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 **Bugfixes**
 
+* Fixed: Disabling user status column wp-admin > Users screen
 * Fixed: User status filter on wp-admin > Users on mobile devices
+* Fixed: Extra unwrapping of the WP Editor field's value
 
 = 2.8.9 2024-10-14 =
 
