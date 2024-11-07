@@ -601,8 +601,13 @@ UM.frontend = {
 	},
 	choices: {
 		init: function () {
+			const self = this;
+			self.choicesInstances = {};
+
 			jQuery('.js-choice').each( function() {
+				let element = jQuery(this)[0];
 				let choices = null;
+				let attrs = {};
 				// @todo https://github.com/Choices-js/Choices/issues/747 maybe add native "clear all" button in the future
 				if ( jQuery(this).attr( 'multiple' ) ) {
 					// @todo https://github.com/Choices-js/Choices/issues/1066 , but it works properly on backend validation
@@ -615,12 +620,12 @@ UM.frontend = {
 						attrs.maxItemCount = maxSelections;
 					}
 
-					choices = new Choices(jQuery(this)[0], attrs);
 				} else if ( jQuery(this).hasClass( 'um-no-search' ) ) {
-					choices = new Choices(jQuery(this)[0], {searchEnabled: false});
-				} else {
-					choices = new Choices(jQuery(this)[0]);
+					attrs = { searchEnabled: false };
 				}
+
+				choices = new Choices(jQuery(this)[0], attrs);
+				self.choicesInstances[element.id] = choices;
 
 				// Workaround for form reset https://github.com/Choices-js/Choices/issues/1053#issuecomment-1810488521
 				const form = jQuery(this).closest('form')[0];
@@ -633,6 +638,23 @@ UM.frontend = {
 					choices.init();
 				});
 			});
+		},
+		updateOptions: function (selector, newOptions) {
+			const element = jQuery('#' + selector);
+			if (element && this.choicesInstances[selector]) {
+				const choices = this.choicesInstances[selector];
+				choices.clearStore();
+				choices.clearChoices();
+				choices.removeActiveItems();
+				choices.enable();
+				if (newOptions.length === 0) {
+					let none = element.attr('data-none');
+					choices.setChoices([{ id: '', text: none, disabled: true, selected: true }], 'id', 'text', true);
+				} else {
+					console.log(newOptions)
+					choices.setChoices(newOptions, 'id', 'label', true);
+				}
+			}
 		}
 	},
 	slider: {
@@ -884,10 +906,9 @@ jQuery(document).ready(function($) {
 							nonce: nonce
 						},
 						success: function( data ) {
-							console.log(data)
 							if ( data.status === 'success' && arr_key !== '' ) {
 								um_select_options_cache[ arr_key ] = data;
-								um_field_populate_child_options( me, data, arr_key );
+								um_field_populate_child_options(  me.attr('id'), data, arr_key );
 							}
 
 							if ( typeof data.debug !== 'undefined' ) {
@@ -902,10 +923,8 @@ jQuery(document).ready(function($) {
 						}
 					}
 				);
-			}
-
-			if ( typeof arr_key != 'undefined' && arr_key !== '' && typeof um_select_options_cache[ arr_key ] == 'object' ) {
-				setTimeout( um_field_populate_child_options, 10, me, um_select_options_cache[ arr_key ], arr_key );
+			} else {
+				setTimeout( um_field_populate_child_options, 10, me.attr('id'), um_select_options_cache[ arr_key ], arr_key );
 			}
 
 			if ( typeof arr_key != 'undefined' || arr_key === '' ) {
@@ -922,11 +941,12 @@ jQuery(document).ready(function($) {
 	/**
 	 * Populates child options and cache ajax response
 	 *
-	 * @param me
+	 * @param selector
 	 * @param data
 	 * @param arr_key
 	 */
-	function um_field_populate_child_options( me, data, arr_key ) {
+	function um_field_populate_child_options( selector, data, arr_key ) {
+		let me = jQuery( '#' + selector );
 		var directory = me.parents('.um-directory');
 		var child_name = me.attr('name');
 		me.find('option[value!=""]').remove();
@@ -937,20 +957,25 @@ jQuery(document).ready(function($) {
 
 		var arr_items = [],
 			search_get = '';
+		if( me.attr('data-um-original-value') ) {
+			search_get = me.attr('data-um-original-value');
+		}
 
 		// @todo member directory filters and populate options
-		if ( data.post.members_directory === 'yes' ) {
+		if ( typeof data !== 'undefined' && data.post.members_directory === 'yes' ) {
 			arr_items.push({id: '', text: '', selected: 1});
 		}
-		jQuery.each( data.items, function(k,v){
-			arr_items.push({id: k, text: v, selected: (v === search_get)});
-		});
+		if ( typeof data !== 'undefined' && data.items ) {
+			jQuery.each(data.items, function (k, v) {
+				if ( 0 !== parseInt( k ) ) {
+					arr_items.push({id: k, text: v, selected: (v === search_get)});
+				}
+			});
+		}
 
-		// UM.frontend.choices.init();
-// 		console.log(data)
-console.log(arr_items)
+		UM.frontend.choices.updateOptions(selector, arr_items);
 
-		if ( data.post.members_directory === 'yes' ) {
+		if ( typeof data !== 'undefined' && data.post.members_directory === 'yes' ) {
 			me.find('option').each( function() {
 				if ( jQuery(this).html() !== '' ) {
 					jQuery(this).data( 'value_label', jQuery(this).html() ).attr( 'data-value_label', jQuery(this).html() );
@@ -985,7 +1010,7 @@ console.log(arr_items)
 			um_change_tag( directory );
 		}
 
-		if ( data.post.members_directory !== 'yes' ) {
+		if ( typeof data !== 'undefined' && data.post.members_directory !== 'yes' ) {
 			if ( typeof data.field.default !== 'undefined' && ! me.data('um-original-value') ) {
 				me.val( data.field.default ).trigger('change');
 			} else if ( me.data('um-original-value') !== '' ) {
