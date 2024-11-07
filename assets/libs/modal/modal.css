@@ -135,6 +135,9 @@
   flex-wrap: nowrap;
   row-gap: 8px;
 }
+.um-modal .um-modal-body .um-photo-modal-img {
+  object-fit: contain;
+}
 .um-modal .um-modal-footer {
   background-color: #fff;
   border-radius: 0 0 6px 6px;

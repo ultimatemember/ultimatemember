@@ -135,8 +135,11 @@
               width: 100%
               color: $gray-700
               +typography( text, sm, regular )
-              margin: 0
-              padding: 0
+              padding: 0 0 $spacing-2xl 0
+              border-bottom: 1px solid $gray-200
+              &:last-child
+                border-bottom: none
+                padding: 0
               &.#{$prefix}field-type_image,
               &.#{$prefix}field-type_file
                 width: auto
@@ -156,6 +159,17 @@
           &.#{$prefix}profile-cols-3
             .#{$prefix}profile-col
               width: calc( 100% / 3 )
+    .#{$prefix}form-new
+      .#{$prefix}form-rows
+        .#{$prefix}form-row
+          .#{$prefix}form-cols
+            .#{$prefix}form-col
+              .#{$prefix}field
+                padding: 0 0 $spacing-2xl 0
+                border-bottom: 1px solid $gray-200
+                &:last-child
+                  border-bottom: none
+                  padding: 0
   // Profile > Posts
   &.#{$prefix}profile-posts
     +flex( column, flex-start, center, nowrap )

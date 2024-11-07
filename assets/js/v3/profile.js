@@ -157,6 +157,27 @@ jQuery(document).ready(function() {
 		}
 	});
 
+	jQuery( document.body ).on('click', '.um-photo-modal', function(e){
+		e.preventDefault();
+		let photoSrc = jQuery(this).data('src');
+		let content = jQuery(this).html();
+
+		let settings = {
+			// These are the defaults.
+			classes:  'um-profile-field-photo-modal',
+			duration: 400, // ms
+			footer:   '',
+			header:   '',
+			size:     'large', // small, normal, large
+			content:  content,
+			template: '<div class="um-modal"><span class="um-modal-close um-modal-close-fixed">&times;</span><div class="um-modal-body"></div></div>'
+		};
+
+		UM.modal.addModal( settings, null );
+
+		return false;
+	});
+
 	jQuery('.um-profile.um-viewing .um-profile-body .um-row').each(function(){
 		var this_row = jQuery(this);
 		if ( this_row.find('.um-field').length == 0 ) {

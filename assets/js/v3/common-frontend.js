@@ -243,8 +243,9 @@ UM.frontend = {
 				} else {
 					button.removeAttribute('disabled');
 
-					let dropZone = self.getOption( 'drop_element' )[0];
-					if ( dropZone ) {
+					if ( self.getOption( 'drop_element' ) ) {
+						let dropZone = self.getOption( 'drop_element' )[0];
+
 						$uploader = dropZone.parentNode;
 						dropZone.classList.remove('um-dropzone-disabled');
 						let uploadLink = dropZone.querySelector( '.um-upload-link' );

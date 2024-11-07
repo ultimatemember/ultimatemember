@@ -56,13 +56,10 @@
 
 			/* Template */
 			let $modal;
-			if ( options.template ) { // Custom template
-				let template = wp.template( options.template );
-				if ( template ) {
-					$modal = $( template( options ) );
-				}
+			if ( '' !== options.template ) { // Custom template
+				$modal = $( options.template );
 			}
-			if ( !$modal ) { // Default template
+			if ( ! $modal ) { // Default template
 				$modal = $( this.defaultTemplate );
 				if ( options.header ) {
 					$modal.find( '.um-modal-header' ).html( options.header );
@@ -131,6 +128,7 @@
 			}
 
 			/* Attributes, classes and styles */
+			console.log( $modal );
 			$modal.get( 0 ).umModalOptions = options;
 			if ( typeof options.attributes === 'object' ) {
 				for ( let i in options.attributes ) {

@@ -248,7 +248,11 @@
   font-size: var(--um-text-font-size-sm, 14px);
   line-height: var(--um-text-line-height-sm, 20px);
   font-weight: var(--um-text-font-weight-regular, 400);
-  margin: 0;
+  padding: 0 0 20px 0;
+  border-bottom: 1px solid var(--um-gray-200, #eaecf0);
+}
+.um-profile-body.um-profile-main .um-profile-rows .um-profile-row .um-profile-cols .um-profile-col .um-field:last-child {
+  border-bottom: none;
   padding: 0;
 }
 .um-profile-body.um-profile-main .um-profile-rows .um-profile-row .um-profile-cols .um-profile-col .um-field.um-field-type_image, .um-profile-body.um-profile-main .um-profile-rows .um-profile-row .um-profile-cols .um-profile-col .um-field.um-field-type_file {
@@ -274,6 +278,14 @@
 }
 .um-profile-body.um-profile-main .um-profile-rows .um-profile-row .um-profile-cols.um-profile-cols-3 .um-profile-col {
   width: 33.3333333333%;
+}
+.um-profile-body.um-profile-main .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field {
+  padding: 0 0 20px 0;
+  border-bottom: 1px solid var(--um-gray-200, #eaecf0);
+}
+.um-profile-body.um-profile-main .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field:last-child {
+  border-bottom: none;
+  padding: 0;
 }
 .um-profile-body.um-profile-posts {
   display: flex;

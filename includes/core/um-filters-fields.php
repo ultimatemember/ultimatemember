@@ -438,10 +438,10 @@ function um_profile_field_filter_hook__image( $value, $data ) {
 		if ( preg_match( '/\<img.*src=\"([^"]+).*/', $value, $matches ) ) {
 			$uri = $matches[1];
 			// translators: %s is the field name
-			$value = '<a href="#" class="um-photo-modal" data-src="' . esc_url( $uri ) . '" title="' . sprintf( esc_attr__( 'Preview %s', 'ultimate-member' ), esc_attr( $title ) ) . '"><img src="' . esc_url( $uri ) . '" alt="' . esc_attr( $title ) . '" /></a>';
+			$value = '<a href="#" class="um-photo-modal" data-src="' . esc_url( $uri ) . '" title="' . sprintf( esc_attr__( 'Preview %s', 'ultimate-member' ), esc_attr( $title ) ) . '"><img class="um-photo-modal-img" src="' . esc_url( $uri ) . '" alt="' . esc_attr( $title ) . '" /></a>';
 		} elseif ( ! $removed ) {
 			// translators: %s is the field name
-			$value = '<a href="#" class="um-photo-modal" data-src="' . esc_url( $uri ) . '" title="' . sprintf( esc_attr__( 'Preview %s', 'ultimate-member' ), esc_attr( $title ) ) . '"><img src="' . esc_url( $uri ) . '" alt="' . esc_attr( $title ) . '" /></a>';
+			$value = '<a href="#" class="um-photo-modal" data-src="' . esc_url( $uri ) . '" title="' . sprintf( esc_attr__( 'Preview %s', 'ultimate-member' ), esc_attr( $title ) ) . '"><img class="um-photo-modal-img" src="' . esc_url( $uri ) . '" alt="' . esc_attr( $title ) . '" /></a>';
 		} else {
 			$value = '';
 		}
