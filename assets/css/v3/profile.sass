@@ -46,7 +46,7 @@
             line-height: 36px
             height: 36px
             font-size: 20px
-            border-radius: 999px
+            border-radius: 100%
             color: $um-white
             opacity: 0.85
             margin: 0 1px
@@ -137,6 +137,9 @@
               +typography( text, sm, regular )
               margin: 0
               padding: 0
+              &.#{$prefix}field-type_image,
+              &.#{$prefix}field-type_file
+                width: auto
               label
                 color: $gray-900
                 +typography( text, md, medium )
@@ -232,3 +235,27 @@
                 +typography( text, sm, regular )
                 color: $gray-600
                 text-decoration: underline
+
+.#{$prefix}field-value
+  .#{$prefix}photo-modal
+    +flex( row,flex-start,center,nowrap )
+    border-radius: $radius-xs
+    border: 1px solid $gray-200
+    padding: $spacing-xs
+    +border-box
+    max-width: 100%
+    img
+      border-radius: $radius-xs
+      max-height: 300px
+      max-width: 100%
+  .#{$prefix}field-single-file
+    +flex( row,flex-start,start,nowrap )
+    column-gap: $spacing-md
+    .#{$prefix}field-file-info
+      +flex( column,flex-start,start,nowrap )
+      .#{$prefix}field-file-download-link
+        display: none
+    &:hover
+      .#{$prefix}field-file-info
+        .#{$prefix}field-file-download-link
+          display: inline

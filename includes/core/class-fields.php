@@ -5349,6 +5349,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$output .= '<div class="um-field-area">';
 					$output .= '<div class="um-field-value">' . $response . '</div>';
 					$output .= '</div>';
+					$output .= '</div>';
 					break;
 					/* HTML */
 				case 'block':
@@ -5541,7 +5542,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$profile_url = um_user_profile_url( um_profile_id() );
 							$edit_url    = add_query_arg( array( 'profiletab' => $tab, 'um_action' => $edit_action ), $profile_url );
 						} else {
-							$edit_url    = um_edit_profile_url();
+							$edit_url = um_edit_profile_url();
 						}
 						// translators: %s: edit user link.
 						$output .= '<p class="um-profile-note">' . $emo . '<span>' . sprintf( __( 'Your profile is looking a little empty. Why not <a href="%s">add</a> some information!', 'ultimate-member' ), esc_url( $edit_url ) ) . '</span></p>';
@@ -5589,6 +5590,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$output .= $this->new_row_output( $row_id, $row_array );
 
 				$sub_rows = array_key_exists( 'sub_rows', $row_array ) ? $row_array['sub_rows'] : 1;
+
 				for ( $c = 0; $c < $sub_rows; $c++ ) {
 					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 						$output .= '<div class="um-profile-row">';
@@ -5598,26 +5600,25 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if ( is_numeric( $cols ) ) {
 						$cols_num = (int) $cols;
 					} else {
-						if ( strstr( $cols, ':' ) ) {
+						if ( false !== strpos( $cols, ':' ) ) {
 							$col_split = explode( ':', $cols );
 						} else {
 							$col_split = array( $cols );
 						}
-						$cols_num = $col_split[ $c ];
+						$cols_num = (int) $col_split[ $c ];
 					}
 
 					// sub row fields
 					$subrow_fields = $this->get_fields_in_subrow( $row_fields, $c );
 
 					if ( is_array( $subrow_fields ) ) {
-
 						$subrow_fields = $this->array_sort_by_column( $subrow_fields, 'position' );
 
 						if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 							$output .= '<div class="um-profile-cols um-profile-cols-' . esc_attr( $cols_num ) . '">';
 						}
 
-						if ( $cols_num == 1 ) {
+						if ( 1 === $cols_num ) {
 
 							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 								$output .= '<div class="um-profile-col um-profile-col-1">';
@@ -5627,15 +5628,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
 							if ( $col1_fields ) {
 								foreach ( $col1_fields as $key => $data ) {
-
-									$data = $this->view_field_output( $data );
+									$data    = $this->view_field_output( $data );
 									$output .= $this->view_field( $key, $data );
-
 								}
 							}
 							$output .= '</div>';
 
-						} elseif ( $cols_num == 2 ) {
+						} elseif ( 2 === $cols_num ) {
 
 							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 								$output .= '<div class="um-profile-col um-profile-col-1">';
@@ -5646,10 +5645,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
 							if ( $col1_fields ) {
 								foreach ( $col1_fields as $key => $data ) {
-
-									$data = $this->view_field_output( $data );
+									$data    = $this->view_field_output( $data );
 									$output .= $this->view_field( $key, $data );
-
 								}
 							}
 							$output .= '</div>';
@@ -5663,10 +5660,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$col2_fields = $this->get_fields_in_column( $subrow_fields, 2 );
 							if ( $col2_fields ) {
 								foreach ( $col2_fields as $key => $data ) {
-
-									$data = $this->view_field_output( $data );
+									$data    = $this->view_field_output( $data );
 									$output .= $this->view_field( $key, $data );
-
 								}
 							}
 							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
@@ -5684,10 +5679,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
 							if ( $col1_fields ) {
 								foreach ( $col1_fields as $key => $data ) {
-
-									$data = $this->view_field_output( $data );
+									$data    = $this->view_field_output( $data );
 									$output .= $this->view_field( $key, $data );
-
 								}
 							}
 							$output .= '</div>';
@@ -5700,10 +5693,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$col2_fields = $this->get_fields_in_column( $subrow_fields, 2 );
 							if ( $col2_fields ) {
 								foreach ( $col2_fields as $key => $data ) {
-
-									$data = $this->view_field_output( $data );
+									$data    = $this->view_field_output( $data );
 									$output .= $this->view_field( $key, $data );
-
 								}
 							}
 							$output .= '</div>';
@@ -5716,10 +5707,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$col3_fields = $this->get_fields_in_column( $subrow_fields, 3 );
 							if ( $col3_fields ) {
 								foreach ( $col3_fields as $key => $data ) {
-
-									$data = $this->view_field_output( $data );
+									$data    = $this->view_field_output( $data );
 									$output .= $this->view_field( $key, $data );
-
 								}
 							}
 							if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
@@ -5855,12 +5844,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				$css_border .= 'border-top-width: 0px;';
 				$css_margin .= 'margin-top: 0px;';
-			} else {
+			} elseif ( ! empty( $borderradius ) ) {
 				// No heading.
-				if ( ! empty( $borderradius ) ) {
-					$css_borderradius = 'border-radius: ' . esc_attr( $borderradius ) . ';';
-				}
+				$css_borderradius = 'border-radius: ' . esc_attr( $borderradius ) . ';';
 			}
+
 			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 				if ( true === $this->viewing ) {
 					$output .= '<div class="um-profile-rows ' . esc_attr( $row_id . ' ' . $css_class ) . '" style="' . esc_attr( $css_padding . $css_background . $css_margin . $css_border . $css_borderstyle . $css_bordercolor . $css_borderradius . $css_text_color ) . '">' . $header;
@@ -5870,6 +5858,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			} else {
 				$output .= '<div class="um-row ' . esc_attr( $row_id . ' ' . $css_class ) . '" style="' . esc_attr( $css_padding . $css_background . $css_margin . $css_border . $css_borderstyle . $css_bordercolor . $css_borderradius . $css_text_color ) . '">';
 			}
+
 			return $output;
 		}
 
@@ -5931,27 +5920,26 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @since  2.1.2
 		 *
-		 * @param  string $key
-		 * @param  array $classes
-		 * @param  string $conditional
-		 * @param  array $data
-		 * @param  array $field_style
+		 * @param string $key
+		 * @param array  $classes
+		 * @param string $conditional
+		 * @param array  $data
+		 * @param array  $field_style
 		 *
-		 * @return string/html
+		 * @return string HTML attributes of the field wrapper
 		 */
-		function get_atts( $key, $classes, $conditional, $data, $field_style = array() ) {
-
+		public function get_atts( $key, $classes, $conditional, $data, $field_style = array() ) {
 			array_unshift( $classes, 'um-field-' . $data['type'] );
 			array_unshift( $classes, 'um-field' );
 
 			$field_atts = array(
-				'id'        => array(
+				'id'       => array(
 					"um_field_{$this->set_id}_{$key}",
 				),
-				'class'     => $classes,
-				'data-key'  => array(
-					esc_attr( $key )
-				)
+				'class'    => $classes,
+				'data-key' => array(
+					esc_attr( $key ),
+				),
 			);
 
 			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
@@ -5965,7 +5953,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 
 			if ( ! empty( $field_style ) && is_array( $field_style ) ) {
-
 				$arr_inline_style = '';
 				foreach ( $field_style as $style_attr => $style_value ) {
 					$arr_inline_style .= esc_attr( $style_attr ) . ':' . esc_attr( $style_value ) . ';';
@@ -5997,12 +5984,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			 */
 			$field_atts = apply_filters( 'um_field_extra_atts', $field_atts, $key, $data );
 
-			$html_atts = '';
+			$html_atts = array();
 			foreach ( $field_atts as $att_name => $att_values ) {
-				$att_values = implode( " ", $att_values );
-				$html_atts .= " {$att_name}=\"" . esc_attr( $att_values ) . "\"";
+				$att_values  = implode( ' ', $att_values );
+				$html_atts[] = $att_name . '="' . esc_attr( $att_values ) . '"';
 			}
-
+			$html_atts  = implode( ' ', $html_atts );
 			$html_atts .= $conditional;
 
 			return $html_atts;

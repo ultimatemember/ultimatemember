@@ -108,7 +108,7 @@
   margin-bottom: 0;
   margin-left: 8px;
   padding-left: 16px;
-  border-left: 1px solid #008fa1;
+  border-left: 1px solid rgb(0, 142.7735849057, 161);
   background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiIGhlaWdodD0iMjEiIHZpZXdCb3g9IjAgMCAyMSAyMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjRkZGIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yLjU5Mi4wNDRsMTguMzY0IDE4LjM2NC0yLjU0OCAyLjU0OEwuMDQ0IDIuNTkyeiIvPjxwYXRoIGQ9Ik0wIDE4LjM2NEwxOC4zNjQgMGwyLjU0OCAyLjU0OEwyLjU0OCAyMC45MTJ6Ii8+PC9nPjwvc3ZnPg==");
   background-size: 8px;
   width: 8px;
@@ -134,7 +134,7 @@
   overflow: hidden;
 }
 .is-focused .um .choices__inner, .is-open .um .choices__inner {
-  border-color: #b7b7b7;
+  border-color: rgb(182.75, 182.75, 182.75);
 }
 .is-open .um .choices__inner {
   border-radius: 8px 8px 0 0;
@@ -172,7 +172,7 @@
   margin-right: 3.75px;
   margin-bottom: 3.75px;
   background-color: #00bcd4;
-  border: 1px solid #00a5bb;
+  border: 1px solid rgb(0, 165.3867924528, 186.5);
   color: #fff;
   word-break: break-all;
   box-sizing: border-box;
@@ -185,12 +185,12 @@
   margin-left: 3.75px;
 }
 .um .choices__list--multiple .choices__item.is-highlighted {
-  background-color: #00a5bb;
-  border: 1px solid #008fa1;
+  background-color: rgb(0, 165.3867924528, 186.5);
+  border: 1px solid rgb(0, 142.7735849057, 161);
 }
 .is-disabled .um .choices__list--multiple .choices__item {
-  background-color: #aaaaaa;
-  border: 1px solid #919191;
+  background-color: rgb(170.25, 170.25, 170.25);
+  border: 1px solid rgb(144.75, 144.75, 144.75);
 }
 .um .choices__list--dropdown, .um .choices__list[aria-expanded] {
   visibility: hidden;
@@ -211,7 +211,7 @@
   visibility: visible;
 }
 .is-open .um .choices__list--dropdown, .is-open .um .choices__list[aria-expanded] {
-  border-color: #b7b7b7;
+  border-color: rgb(182.75, 182.75, 182.75);
 }
 .is-flipped .um .choices__list--dropdown, .is-flipped .um .choices__list[aria-expanded] {
   top: auto;
@@ -259,7 +259,7 @@
   }
 }
 .um .choices__list--dropdown .choices__item--selectable.is-highlighted, .um .choices__list[aria-expanded] .choices__item--selectable.is-highlighted {
-  background-color: #f2f2f2;
+  background-color: rgb(242.25, 242.25, 242.25);
 }
 .um .choices__list--dropdown .choices__item--selectable.is-highlighted::after, .um .choices__list[aria-expanded] .choices__item--selectable.is-highlighted::after {
   opacity: 0.5;
@@ -279,8 +279,8 @@
   font-weight: 600;
   font-size: 12px;
   padding: 10px;
-  border-bottom: 1px solid #f7f7f7;
-  color: gray;
+  border-bottom: 1px solid rgb(246.5, 246.5, 246.5);
+  color: rgb(127.5, 127.5, 127.5);
 }
 .um .choices__button {
   text-indent: -9999px;

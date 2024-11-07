@@ -18,6 +18,11 @@ $unix_published_date = get_post_datetime( $post, 'date', 'gmt' );
 $categories_list     = get_the_category_list( ', ', '', $post->ID );
 
 $wrapper_classes = array( 'um-list-item' );
+
+$item_title = get_the_title( $post );
+if ( empty( $item_title ) ) {
+	$item_title = __( '(No title)', 'ultimate-member' );
+}
 ?>
 
 <div class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>">
@@ -42,7 +47,7 @@ $wrapper_classes = array( 'um-list-item' );
 	?>
 
 	<div class="um-item-data">
-		<a class="um-link um-header-link um-item-link" href="<?php echo esc_url( get_permalink( $post ) ); ?>"><?php echo wp_kses( get_the_title( $post ), UM()->get_allowed_html( 'templates' ) ); ?></a>
+		<a class="um-link um-header-link um-item-link" href="<?php echo esc_url( get_permalink( $post ) ); ?>"><?php echo wp_kses( $item_title, UM()->get_allowed_html( 'templates' ) ); ?></a>
 		<div class="um-item-meta">
 			<?php if ( false !== $unix_published_date ) { ?>
 				<span class="um-supporting-text">

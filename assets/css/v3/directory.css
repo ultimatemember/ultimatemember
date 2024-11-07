@@ -361,7 +361,7 @@
   line-height: 36px;
   height: 36px;
   font-size: 20px;
-  border-radius: 999px;
+  border-radius: 100%;
   color: #fff;
   opacity: 0.85;
   margin: 0 1px;
@@ -740,7 +740,7 @@
   line-height: 36px;
   height: 36px;
   font-size: 20px;
-  border-radius: 999px;
+  border-radius: 100%;
   color: #fff;
   opacity: 0.85;
   margin: 0 1px;
