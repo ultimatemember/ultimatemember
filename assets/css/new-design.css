@@ -1442,6 +1442,56 @@
   padding: 0;
   row-gap: 6px;
 }
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field.um-field-type_image, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field.um-field-type_file {
+  align-items: flex-start;
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field.um-field-type_image label,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field.um-field-type_image .um-field-value, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field.um-field-type_file label,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field.um-field-type_file .um-field-value {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  row-gap: 6px;
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field.um-field-type_image label .um-field-value-control,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field.um-field-type_image .um-field-value .um-field-value-control, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field.um-field-type_file label .um-field-value-control,
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field.um-field-type_file .um-field-value .um-field-value-control {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  column-gap: 6px;
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field.um-field-type_image .um-field-uploader-wrapper, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field.um-field-type_file .um-field-uploader-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: start;
+  flex-wrap: nowrap;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  row-gap: 6px;
+}
+.um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field.um-field-type_image .um-uploader, .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field.um-field-type_file .um-uploader {
+  width: 100%;
+}
 .um .um-form-new .um-form-rows .um-form-row .um-form-cols .um-form-col .um-field-hint {
   box-sizing: border-box;
   -moz-box-sizing: border-box;

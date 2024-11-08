@@ -404,7 +404,6 @@ function um_profile_field_filter_hook__file( $value, $data ) {
 }
 add_filter( 'um_profile_field_filter_hook__file', 'um_profile_field_filter_hook__file', 99, 2 );
 
-
 /**
  * Image field
  *

@@ -263,13 +263,14 @@
       max-height: 300px
       max-width: 100%
   .#{$prefix}field-single-file
-    +flex( row,flex-start,start,nowrap )
+    +flex( row,flex-start,center,nowrap )
     column-gap: $spacing-md
+    padding: 0
     .#{$prefix}field-file-info
       +flex( column,flex-start,start,nowrap )
       .#{$prefix}field-file-download-link
-        display: none
+        visibility: hidden
     &:hover
       .#{$prefix}field-file-info
         .#{$prefix}field-file-download-link
-          display: inline
+          visibility: visible

@@ -452,9 +452,10 @@
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: start;
+  align-items: center;
   flex-wrap: nowrap;
   column-gap: 8px;
+  padding: 0;
 }
 .um-field-value .um-field-single-file .um-field-file-info {
   display: flex;
@@ -464,8 +465,8 @@
   flex-wrap: nowrap;
 }
 .um-field-value .um-field-single-file .um-field-file-info .um-field-file-download-link {
-  display: none;
+  visibility: hidden;
 }
 .um-field-value .um-field-single-file:hover .um-field-file-info .um-field-file-download-link {
-  display: inline;
+  visibility: visible;
 }

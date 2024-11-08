@@ -1089,6 +1089,31 @@
               margin: 0
               padding: 0
               row-gap: $spacing-sm
+              &.#{$prefix}field-type_image,
+              &.#{$prefix}field-type_file
+                align-items: flex-start
+                label,
+                .#{$prefix}field-value
+                  +flex( column, flex-start, stretch, nowrap )
+                  +border-box
+                  margin: 0
+                  padding: 0
+                  row-gap: $spacing-sm
+                  .#{$prefix}field-value-control
+                    +flex( row, flex-start, center, nowrap )
+                    +border-box
+                    margin: 0
+                    padding: 0
+                    column-gap: $spacing-sm
+                .#{$prefix}field-uploader-wrapper
+                  width: 100%
+                  +flex( column, flex-start, start, nowrap )
+                  +border-box
+                  margin: 0
+                  padding: 0
+                  row-gap: $spacing-sm
+                .#{$prefix}uploader
+                  width: 100%
             //.#{$prefix}field
             //  & > input[type="date"],
             //  & > input[type="datetime"],

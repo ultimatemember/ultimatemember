@@ -223,7 +223,7 @@ class Layouts {
 
 		ob_start();
 		?>
-		<button id="<?php echo esc_attr( $args['id'] ); ?>" type="<?php echo esc_attr( $args['type'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" title="<?php echo esc_attr( $args['title'] ); ?>" <?php disabled( $args['disabled'] ); ?> <?php echo $data_atts; ?>><?php echo wp_kses( $content, UM()->get_allowed_html( 'templates' ) ); ?></button>
+		<button <?php if ( ! empty( $args['id'] ) ) { ?>id="<?php echo esc_attr( $args['id'] ); ?>"<?php } ?> type="<?php echo esc_attr( $args['type'] ); ?>" class="<?php echo esc_attr( $classes ); ?>" title="<?php echo esc_attr( $args['title'] ); ?>" <?php disabled( $args['disabled'] ); ?> <?php echo $data_atts; ?>><?php echo wp_kses( $content, UM()->get_allowed_html( 'templates' ) ); ?></button>
 		<?php
 		return ob_get_clean();
 	}
@@ -2188,6 +2188,7 @@ class Layouts {
 			$args,
 			array(
 				'id'                => '',
+				'classes'           => array(),
 				'async'             => true,
 				'field_id'          => '',
 				'name'              => '',
@@ -2223,6 +2224,12 @@ class Layouts {
 		if ( empty( $args['id'] ) ) {
 			$args['id'] = wp_unique_id( $args['id'] );
 		}
+
+		$classes = array( 'um-uploader' );
+		if ( ! empty( $args['classes'] ) ) {
+			$classes = array_merge( $classes, $args['classes'] );
+		}
+		$classes = array_unique( $classes );
 
 		$id = $args['id'];
 
@@ -2286,7 +2293,7 @@ class Layouts {
 
 		ob_start();
 		?>
-		<div class="um-uploader" id="<?php echo esc_attr( $id ); ?>">
+		<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" id="<?php echo esc_attr( $id ); ?>">
 			<?php
 			$button_content = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-upload" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
