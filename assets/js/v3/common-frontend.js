@@ -614,7 +614,7 @@ UM.frontend = {
 					let minSelections = jQuery(this).data( 'min_selections' );
 
 					let maxSelections = jQuery(this).data( 'max_selections' );
-					let attrs = {removeItemButton: true};
+					attrs = {removeItemButton: true};
 
 					if ( maxSelections ) {
 						attrs.maxItemCount = maxSelections;
@@ -639,20 +639,23 @@ UM.frontend = {
 				});
 			});
 		},
-		updateOptions: function (selector, newOptions) {
+		updateOptions: function (selector, newOptions, reset = false) {
 			const element = jQuery('#' + selector);
 			if (element && this.choicesInstances[selector]) {
 				const choices = this.choicesInstances[selector];
-				choices.clearStore();
-				choices.clearChoices();
-				choices.removeActiveItems();
-				choices.enable();
-				if (newOptions.length === 0) {
-					let none = element.attr('data-none');
-					choices.setChoices([{ id: '', text: none, disabled: true, selected: true }], 'id', 'text', true);
+				if ( true === reset ) {
+					choices.removeActiveItems();
 				} else {
-					console.log(newOptions)
-					choices.setChoices(newOptions, 'id', 'label', true);
+					choices.clearStore();
+					choices.clearChoices();
+					choices.removeActiveItems();
+					choices.enable();
+					if (newOptions.length === 0) {
+						let none = element.attr('data-none');
+						choices.setChoices([{ id: '', text: none, disabled: true, selected: true }], 'id', 'text', true);
+					} else {
+						choices.setChoices(newOptions, 'id', 'label', true);
+					}
 				}
 			}
 		}
@@ -860,24 +863,28 @@ jQuery(document).ready(function($) {
 	 * Find all select fields with parent select fields
 	 */
 	jQuery('select[data-um-parent]').each( function() {
-		var me = jQuery(this);
-		var parent_option = me.data('um-parent');
-		var um_ajax_source = me.data('um-ajax-source');
-		var nonce = me.data('nonce');
+		console.log(1)
+		let me = jQuery(this);
+		let parent_option = me.data('um-parent');
+		let um_ajax_source = me.data('um-ajax-source');
+		let nonce = me.data('nonce');
+		let member_directory = '';
 
 		me.attr('data-um-init-field', true );
 
 		jQuery(document).on('change','select[name="' + parent_option + '"]',function() {
-			var parent  = jQuery(this);
-			var form_id = parent.closest( 'form' ).find( 'input[type="hidden"][name="form_id"]' ).val();
+			let parent  = jQuery(this);
+			let form_id = parent.closest( 'form' ).find( 'input[type="hidden"][name="form_id"]' ).val();
 
-			var arr_key;
-			if ( me.attr( 'data-member-directory' ) === 'yes' ) {
-				var directory = parent.parents('.um-directory');
-				arr_key = um_get_data_for_directory( directory, 'filter_' + parent_option );
-				if ( typeof arr_key != 'undefined' ) {
-					arr_key = arr_key.split('||');
-				} else {
+			let arr_key;
+			if ( me.parents('.um-directory').length ) {
+				member_directory = 'yes';
+				arr_key = [];
+				jQuery(this).find('option:selected').each( function() {
+					arr_key.push(jQuery(this).val());
+				});
+
+				if ( typeof arr_key === 'undefined' ) {
 					arr_key = '';
 				}
 			} else {
@@ -885,10 +892,14 @@ jQuery(document).ready(function($) {
 			}
 
 			if ( typeof arr_key != 'undefined' && arr_key !== '' && typeof um_select_options_cache[ arr_key ] !== 'object' ) {
-
 				if ( typeof( me.um_wait ) === 'undefined' || me.um_wait === false ) {
 					me.um_wait = true;
 				} else {
+					return;
+				}
+
+				if ( ( arr_key.length === 0 || arr_key === '' ) && member_directory === 'yes' ) {
+					me.um_wait = false;
 					return;
 				}
 
@@ -901,7 +912,7 @@ jQuery(document).ready(function($) {
 							parent_option: arr_key,
 							child_callback: um_ajax_source,
 							child_name: me.attr('name'),
-							members_directory: me.attr('data-member-directory'),
+							members_directory: member_directory,
 							form_id: form_id,
 							nonce: nonce
 						},
@@ -963,7 +974,7 @@ jQuery(document).ready(function($) {
 
 		// @todo member directory filters and populate options
 		if ( typeof data !== 'undefined' && data.post.members_directory === 'yes' ) {
-			arr_items.push({id: '', text: '', selected: 1});
+			// arr_items.push({id: '', text: '', selected: 1});
 		}
 		if ( typeof data !== 'undefined' && data.items ) {
 			jQuery.each(data.items, function (k, v) {
@@ -982,32 +993,20 @@ jQuery(document).ready(function($) {
 				}
 			});
 
-			var current_filter_val = um_get_data_for_directory( directory, 'filter_' + child_name );
+			let hash = UM.frontend.directories.getHash( directory );
+			let directoryObj = UM.frontend.directories.list[ hash ];
+			let current_filter_val = directoryObj.getDataFromURL( 'filter_' + child_name );
 			if ( typeof current_filter_val !== 'undefined' ) {
 				current_filter_val = current_filter_val.split('||');
 
-				var temp_filter_val = [];
-				jQuery.each( current_filter_val, function(i) {
-					if ( me.find('option[value="' + current_filter_val[ i ] + '"]').length ) {
-						temp_filter_val.push( current_filter_val[ i ] );
+				arr_items.forEach(item => {
+					if (current_filter_val.includes(item.id)) {
+						item.selected = true;
 					}
-					me.find('option[value="' + current_filter_val[ i ] + '"]').prop('disabled', true).hide();
-					if ( me.find('option:not(:disabled)').length === 1 ) {
-						me.prop('disabled', true);
-					}
-
-					me.select2('destroy').select2();
-					me.val('').trigger( 'change' );
 				});
 
-				temp_filter_val = temp_filter_val.join('||');
-				if ( current_filter_val !== temp_filter_val ) {
-					um_set_url_from_data( directory, 'filter_' + child_name, temp_filter_val );
-					um_ajax_get_members( directory );
-				}
+				UM.frontend.choices.updateOptions(selector, arr_items);
 			}
-
-			um_change_tag( directory );
 		}
 
 		if ( typeof data !== 'undefined' && data.post.members_directory !== 'yes' ) {
