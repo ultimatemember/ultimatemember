@@ -114,9 +114,15 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 *
 		 */
 		public function ajax_select_options() {
-			UM()->check_ajax_nonce();
-
 			// phpcs:disable WordPress.Security.NonceVerification
+			if ( ! isset( $_POST['child_name'] ) ) {
+				wp_send_json_error( __( 'Invalid user ID', 'ultimate-member' ) );
+			}
+			$child_name = sanitize_key( $_POST['child_name'] );
+
+			if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'um_dropdown_parent_nonce' . $child_name ) ) {
+				wp_send_json_error( __( 'Wrong nonce', 'ultimate-member' ) );
+			}
 
 			$arr_options           = array();
 			$arr_options['status'] = 'success';
@@ -127,7 +133,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				$arr_options['status']  = 'error';
 				$arr_options['message'] = __( 'Wrong callback.', 'ultimate-member' );
 
-				wp_send_json( $arr_options );
+				wp_send_json_error( $arr_options );
 			}
 
 			$ajax_source_func = sanitize_text_field( $_POST['child_callback'] );
@@ -136,7 +142,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				$arr_options['status']  = 'error';
 				$arr_options['message'] = __( 'Wrong callback.', 'ultimate-member' );
 
-				wp_send_json( $arr_options );
+				wp_send_json_error( $arr_options );
 			}
 
 			$allowed_callbacks = UM()->options()->get( 'allowed_choice_callbacks' );
@@ -144,7 +150,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			if ( empty( $allowed_callbacks ) ) {
 				$arr_options['status']  = 'error';
 				$arr_options['message'] = __( 'This is not possible for security reasons.', 'ultimate-member' );
-				wp_send_json( $arr_options );
+				wp_send_json_error( $arr_options );
 			}
 
 			$allowed_callbacks = array_map( 'rtrim', explode( "\n", wp_unslash( $allowed_callbacks ) ) );
@@ -153,14 +159,14 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				$arr_options['status']  = 'error';
 				$arr_options['message'] = __( 'This is not possible for security reasons.', 'ultimate-member' );
 
-				wp_send_json( $arr_options );
+				wp_send_json_error( $arr_options );
 			}
 
 			if ( UM()->fields()->is_source_blacklisted( $ajax_source_func ) ) {
 				$arr_options['status']  = 'error';
 				$arr_options['message'] = __( 'This is not possible for security reasons.', 'ultimate-member' );
 
-				wp_send_json( $arr_options );
+				wp_send_json_error( $arr_options );
 			}
 
 			if ( isset( $_POST['form_id'] ) ) {
@@ -184,8 +190,13 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				);
 
 				if ( ! empty( $values_array ) ) {
-					$parent_dropdown      = isset( $arr_options['post']['parent_option_name'] ) ? $arr_options['post']['parent_option_name'] : '';
-					$arr_options['items'] = call_user_func( $ajax_source_func, $parent_dropdown );
+					$parent_dropdown = isset( $arr_options['post']['parent_option_name'] ) ? $arr_options['post']['parent_option_name'] : '';
+
+					if ( ! empty( $_POST['parent_option'] ) ) {
+						$arr_options['items'] = call_user_func( $ajax_source_func, $parent_dropdown );
+					} else {
+						$arr_options['items'] = array();
+					}
 
 					if ( array_keys( $arr_options['items'] ) !== range( 0, count( $arr_options['items'] ) - 1 ) ) {
 						// array with dropdown items is associative
@@ -198,7 +209,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					$arr_options['items'] = array();
 				}
 
-				wp_send_json( $arr_options );
+				wp_send_json_success( $arr_options );
 			} else {
 				/**
 				 * UM hook
@@ -245,7 +256,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				}
 
 				// phpcs:enable WordPress.Security.NonceVerification
-				wp_send_json( $arr_options );
+				wp_send_json_success( $arr_options );
 			}
 		}
 

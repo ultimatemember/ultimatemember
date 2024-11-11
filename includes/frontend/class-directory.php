@@ -298,7 +298,7 @@ class Directory extends \um\common\Directory {
 
 					$ajax_source = apply_filters( "um_custom_dropdown_options_source__{$filter}", $attrs['custom_dropdown_options_source'], $attrs );
 
-					$custom_dropdown .= ' data-um-ajax-source="' . esc_attr( $ajax_source ) . '" ';
+					$custom_dropdown .= ' data-um-ajax-source="' . esc_attr( $ajax_source ) . '" data-nonce="' . wp_create_nonce( 'um_dropdown_parent_nonce' . $attrs['metakey'] ) . '" ';
 
 					$attrs['options'] = UM()->fields()->get_options_from_callback( $attrs, $attrs['type'] );
 				} else {
@@ -351,19 +351,20 @@ class Directory extends \um\common\Directory {
 					<select class="js-choice um-search-filter-field" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?><?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>[]<?php } ?>"
 							data-placeholder="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
 							aria-label="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
-							<?php if ( count( $attrs['options'] ) > 1 ) { ?>multiple<?php } ?>
+							<?php if ( count( $attrs['options'] ) > 1 || '' !== $attrs['custom_dropdown_options_source'] ) { ?>multiple<?php } ?>
 						<?php echo $custom_dropdown; ?>>
 
 						<option></option>
 
-						<?php if ( ! empty( $attrs['options'] ) ) {
+						<?php
+						if ( ! empty( $attrs['options'] ) ) {
 							foreach ( $attrs['options'] as $k => $v ) {
 
 								$v = stripslashes( $v );
 
 								$opt = $v;
 
-								if ( strstr( $filter, 'role_' ) || $filter == 'role' ) {
+								if ( strstr( $filter, 'role_' ) || 'role' === $filter ) {
 									$opt = $k;
 								}
 
@@ -385,12 +386,16 @@ class Directory extends \um\common\Directory {
 										selected( in_array( $opt, $default_value ) );
 									} else {
 										selected( $opt === $default_value || ( ! empty( $filter_from_url ) && in_array( $opt, $filter_from_url, true ) ) );
-									} ?>>
+									}
+									?>
+								>
 									<?php _e( $v, 'ultimate-member' ); ?>
 								</option>
 
-							<?php }
-						} ?>
+								<?php
+							}
+						}
+						?>
 
 					</select>
 				</div>
