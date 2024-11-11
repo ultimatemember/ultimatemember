@@ -54,7 +54,6 @@ jobs:
         git rm -r docs
         git rm -r blocks-src
         git rm -r tests
-        git add vendor/\*
         git add includes/lib/action-scheduler/\*
         git commit -a -m "Composer Installed. Cleared release repo."
     - name: Push changes
