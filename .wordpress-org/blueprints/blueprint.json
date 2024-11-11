@@ -15,7 +15,7 @@
             "step": "installPlugin",
             "pluginZipFile": {
                 "resource": "url",
-                "url": "https:\/\/downloads.wordpress.org\/plugin\/ultimate-member.2.8.9.zip"
+                "url": "https:\/\/downloads.wordpress.org\/plugin\/ultimate-member.2.9.0.zip"
             },
             "options": {
                 "activate": true

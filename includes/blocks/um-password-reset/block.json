@@ -5,6 +5,6 @@
   "description": "Displaying the password reset form",
   "icon": "unlock",
   "category": "um-blocks",
-  "editorScript": "file:./build/index.js",
+  "editorScript": "file:./src/index.js",
   "textdomain": "ultimate-member"
 }

@@ -10,6 +10,6 @@
       "type": "string"
     }
   },
-  "editorScript": "file:./build/index.js",
+  "editorScript": "file:./src/index.js",
   "textdomain": "ultimate-member"
 }

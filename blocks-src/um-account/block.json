@@ -1,0 +1,15 @@
+{
+  "apiVersion": 2,
+  "name": "um-block/um-account",
+  "title": "Account",
+  "description": "Displaying the account page of the current user",
+  "icon": "id",
+  "category": "um-blocks",
+  "attributes": {
+    "tab": {
+      "type": "string"
+    }
+  },
+  "editorScript": "file:./src/index.js",
+  "textdomain": "ultimate-member"
+}

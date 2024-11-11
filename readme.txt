@@ -5,8 +5,8 @@ Contributors: ultimatemember, champsupertramp, nsinelnikov
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.5
-Tested up to: 6.6
-Stable tag: 2.8.9
+Tested up to: 6.7
+Stable tag: 2.9.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -165,6 +165,22 @@ No specific extensions are needed. But we highly recommended keep active these P
 = Important: =
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
+
+= 2.9.0 2024-11-12 =
+
+**Enhancements**
+
+* Added: Action Scheduler (version 3.8.1) for email sending. More info is [here](https://actionscheduler.org/).
+* Added: Supporting new `wp_register_block_metadata_collection()` function for registering WP Blocks
+
+**Bugfixes**
+
+* Fixed: `ajax_image_upload()` and `ajax_resize_image()` handlers vulnerability. CVE ID: CVE-2024-10528
+* Fixed: Disabling user status column wp-admin > Users screen
+* Fixed: User status filter on wp-admin > Users on mobile devices
+* Fixed: Extra unwrapping of the WP Editor field's value
+
+**Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade**
 
 = 2.8.9 2024-10-14 =
 
@@ -455,6 +471,9 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 [See changelog for all versions](https://plugins.svn.wordpress.org/ultimate-member/trunk/changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.9.0 =
+This version fixes a security related bug. Upgrade immediately.
 
 = 2.8.7 =
 This version fixes a security related bug. Upgrade immediately.

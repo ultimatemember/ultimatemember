@@ -1,0 +1,10 @@
+{
+  "apiVersion": 2,
+  "name": "um-block/um-password-reset",
+  "title": "Password Reset",
+  "description": "Displaying the password reset form",
+  "icon": "unlock",
+  "category": "um-blocks",
+  "editorScript": "file:./src/index.js",
+  "textdomain": "ultimate-member"
+}

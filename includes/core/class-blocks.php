@@ -17,7 +17,7 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 		 * Blocks constructor.
 		 */
 		public function __construct() {
-			add_action( 'init', array( &$this, 'block_editor_render' ) );
+			add_action( 'init', array( &$this, 'block_editor_render' ), 11 );
 			add_filter( 'block_type_metadata_settings', array( &$this, 'block_type_metadata_settings' ), 9999, 2 );
 		}
 
@@ -68,6 +68,7 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 		 * Register UM Blocks.
 		 *
 		 * @uses register_block_type_from_metadata()
+		 * @uses wp_register_block_metadata_collection()
 		 */
 		public function block_editor_render() {
 			/**
@@ -97,6 +98,10 @@ if ( ! class_exists( 'um\core\Blocks' ) ) {
 			$enable_blocks = UM()->options()->get( 'enable_blocks' );
 			if ( empty( $enable_blocks ) ) {
 				return;
+			}
+
+			if ( function_exists( 'wp_register_block_metadata_collection' ) ) {
+				wp_register_block_metadata_collection( UM_PATH . 'includes/blocks', UM_PATH . 'includes/blocks/blocks-manifest.php' );
 			}
 
 			$blocks = array(

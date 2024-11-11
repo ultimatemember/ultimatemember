@@ -543,7 +543,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'size'        => 'medium',
 				),
 				array(
-					'id'          => 'a$access_fieldsccess_redirect',
+					'id'          => 'access_redirect',
 					'type'        => 'text',
 					'label'       => __( 'Custom Redirect URL', 'ultimate-member' ),
 					'description' => __( 'A logged out user will be redirected to this url If he is not permitted to access the site.', 'ultimate-member' ),
@@ -1003,6 +1003,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'sanitize' => 'bool',
 					),
 					'enable_blocks'                         => array(
+						'sanitize' => 'bool',
+					),
+					'enable_action_scheduler'               => array(
 						'sanitize' => 'bool',
 					),
 					'rest_api_version'                      => array(

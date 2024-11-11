@@ -250,7 +250,7 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 				return;
 			}
 
-			require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
 			$api_params = array(
 				'edd_action' => 'check_licenses',
