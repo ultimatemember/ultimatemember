@@ -48,7 +48,6 @@ jobs:
         git rm hookdoc-conf.json
         git rm manifest.json
         git rm package.json
-        git rm package-lock.json
         git rm phpcs.xml
         git rm phpdoc.dist.xml
         git rm webpack.mix.js
