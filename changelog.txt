@@ -1,10 +1,20 @@
 ﻿== Changelog ==
 
-= 2.9.0 xx xx, 2024 =
+= 2.9.0 November 12, 2024 =
 
-**Bugfixes**
+* Enhancements:
 
-* Fixed: User status filter on wp-admin > Users on mobile devices
+  - Added: Action Scheduler (version 3.8.1) for email sending. More info is [here](https://actionscheduler.org/)
+  - Added: Supporting new `wp_register_block_metadata_collection()` function for registering WP Blocks
+
+* Bugfixes:
+
+  - Fixed: `ajax_image_upload()` and `ajax_resize_image()` handlers vulnerability. CVE ID: CVE-2024-10528
+  - Fixed: Disabling user status column wp-admin > Users screen
+  - Fixed: User status filter on wp-admin > Users on mobile devices
+  - Fixed: Extra unwrapping of the WP Editor field's value
+
+* Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade
 
 = 2.8.9 October 14, 2024 =
 
