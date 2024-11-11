@@ -651,8 +651,7 @@ UM.frontend = {
 					choices.removeActiveItems();
 					choices.enable();
 					if (newOptions.length === 0) {
-						let none = element.attr('data-none');
-						choices.setChoices([{ id: '', text: none, disabled: true, selected: true }], 'id', 'text', true);
+						choices.removeActiveItems();
 					} else {
 						choices.setChoices(newOptions, 'id', 'label', true);
 					}
@@ -863,7 +862,6 @@ jQuery(document).ready(function($) {
 	 * Find all select fields with parent select fields
 	 */
 	jQuery('select[data-um-parent]').each( function() {
-		console.log(1)
 		let me = jQuery(this);
 		let parent_option = me.data('um-parent');
 		let um_ajax_source = me.data('um-ajax-source');
@@ -897,11 +895,10 @@ jQuery(document).ready(function($) {
 				} else {
 					return;
 				}
-
-				if ( ( arr_key.length === 0 || arr_key === '' ) && member_directory === 'yes' ) {
-					me.um_wait = false;
-					return;
-				}
+				// if ( ( arr_key.length === 0 || arr_key === '' ) && member_directory === 'yes' ) {
+				// 	me.um_wait = false;
+				// 	return;
+				// }
 
 				wp.ajax.send(
 					'um_select_options',

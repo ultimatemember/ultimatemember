@@ -190,8 +190,13 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				);
 
 				if ( ! empty( $values_array ) ) {
-					$parent_dropdown      = isset( $arr_options['post']['parent_option_name'] ) ? $arr_options['post']['parent_option_name'] : '';
-					$arr_options['items'] = call_user_func( $ajax_source_func, $parent_dropdown );
+					$parent_dropdown = isset( $arr_options['post']['parent_option_name'] ) ? $arr_options['post']['parent_option_name'] : '';
+
+					if ( ! empty( $_POST['parent_option'] ) ) {
+						$arr_options['items'] = call_user_func( $ajax_source_func, $parent_dropdown );
+					} else {
+						$arr_options['items'] = array();
+					}
 
 					if ( array_keys( $arr_options['items'] ) !== range( 0, count( $arr_options['items'] ) - 1 ) ) {
 						// array with dropdown items is associative
