@@ -45,7 +45,7 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 				UM()->admin()->notices()->add_notice(
 					'um-action-scheduler',
 					array(
-						'class' => 'notice-warning is-dismissible',
+						'class'   => 'notice-warning is-dismissible',
 						// translators: %1$s - Plugin name, %1$s - Plugin Version
 						'message' => '<p>' . sprintf( __( '<strong>%1$s %2$s</strong> The file needed to enable the Action Scheduler is missing. The plugin will continue to function as it did before, but without the new benefits offered by the Action Scheduler.', 'ultimate-member' ), UM_PLUGIN_NAME, UM_VERSION ) . '</p>',
 					)
@@ -55,6 +55,7 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 
 				if ( UM()->options()->get( 'enable_action_scheduler' ) ) {
 					$this->enabled = true;
+					$this->load_library( true );
 				}
 			}
 		}
@@ -97,11 +98,15 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		/**
 		 * Tries to load Action Scheduler from Ultimate Member if file exists
 		 *
+		 * @param bool $force
+		 *
 		 * @return bool
 		 */
-		public function load_library() {
+		public function load_library( $force = false ) {
 			if ( file_exists( $this->lib_path ) ) {
-				require_once $this->lib_path;
+				if ( $force ) {
+					require_once $this->lib_path;
+				}
 
 				return true;
 			}
@@ -148,7 +153,7 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		 * @param array  $args Arguments to pass to callbacks when the hook triggers. Default: array()
 		 * @param string $group The group to assign this job to. Default: ''.
 		 * @param bool   $unique Whether the action should be unique. Default: false.
-		 * @param int    $priority Lower values take precedence over higher values. Defaults to 10, with acceptable values falling in the range 0-255.)
+		 * @param int    $priority Lower values take precedence over higher values. Defaults to 10, with acceptable values falling in the range 0-255.
 		 *
 		 * @return int The action’s ID. Zero if there was an error scheduling the action. The error will be sent to error_log.
 		 */
