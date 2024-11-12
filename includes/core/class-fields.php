@@ -1447,7 +1447,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		}
 
 		/**
-		 * Gets selected option value from a callback function.
+		 * Gets selected option value from a callback function. View field mode.
 		 *
 		 * @param  string|array $value
 		 * @param  array        $data
@@ -1468,13 +1468,27 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				return $value;
 			}
 
+			$key         = $data['metakey'];
 			$arr_options = array();
 
-			$has_custom_source = apply_filters( "um_has_dropdown_options_source__{$data['metakey']}", false );
+			/**
+			 * Filters a marker for enable way to populate field options via the filter hook `um_get_field__$key`.
+			 *
+			 * @param {bool} $has_custom_source Marker for using the hook. Default `false`.
+			 *
+			 * @return {bool} Populate via hook marker.
+			 *
+			 * @since 2.0.50
+			 * @hook um_has_dropdown_options_source__$key
+			 *
+			 * @example <caption>Marker for populate options for the field with key `my_key` via hook `um_get_field__my_key`.</caption>
+			 * add_filter( 'um_has_dropdown_options_source__my_key', '__return_true' );
+			 */
+			$has_custom_source = apply_filters( "um_has_dropdown_options_source__$key", false );
 			if ( $has_custom_source ) {
 
 				/** This filter is documented in includes/core/class-fields.php */
-				$opts        = apply_filters( "um_get_field__{$data['metakey']}", array() );
+				$opts        = apply_filters( "um_get_field__$key", array() );
 				$arr_options = array_key_exists( 'options', $opts ) ? $opts['options'] : array();
 
 			} elseif ( function_exists( $data['custom_dropdown_options_source'] ) ) {
