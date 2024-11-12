@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-11-11T12:43:50+00:00\n"
+"POT-Creation-Date: 2024-11-12T12:33:55+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: ultimate-member\n"
@@ -40,15 +40,15 @@ msgstr ""
 msgid "<strong>%1$s %2$s</strong> The file needed to enable the Action Scheduler is missing. The plugin will continue to function as it did before, but without the new benefits offered by the Action Scheduler."
 msgstr ""
 
-#: includes/action-scheduler/class-init.php:73
+#: includes/action-scheduler/class-init.php:74
 msgid "Action Scheduler"
 msgstr ""
 
-#: includes/action-scheduler/class-init.php:74
+#: includes/action-scheduler/class-init.php:75
 msgid "Enable Action Scheduler"
 msgstr ""
 
-#: includes/action-scheduler/class-init.php:75
+#: includes/action-scheduler/class-init.php:76
 msgid "Check this box if you want to use the Ultimate Member action scheduler. By enabling it, certain tasks like sending system emails will be scheduled to run at optimal times, which can help reduce the load on your server"
 msgstr ""
 
