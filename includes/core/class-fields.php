@@ -3901,13 +3901,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				case 'select':
 					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
+					// Hardcode here to change 'role_select' or 'role_radio' field key to 'role' field name on the form.
 					$form_key = str_replace( array( 'role_select', 'role_radio' ), 'role', $key );
 					$field_id = $form_key;
-
-					$has_parent_option            = false;
-					$disabled_by_parent_option    = '';
-					$atts_ajax                    = '';
-					$select_original_option_value = '';
 
 					/**
 					 * Filters enable options pair by field $data.
@@ -3935,10 +3931,26 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$options_pair = true;
 					}
 
+					// Get options from field settings.
 					$options = array();
-					if ( isset( $data['options'] ) && is_array( $data['options'] ) ) {
-						$options = $data['options'];
+					if ( array_key_exists( 'options', $data ) ) {
+						if ( is_array( $data['options'] ) ) {
+							$options = $data['options'];
+						} elseif ( 'builtin' === $data['options'] && array_key_exists( 'filter', $data ) ) {
+							// @todo maybe remove this condition because options can have only `array` type.
+							$options = UM()->builtin()->get( $data['filter'] );
+						}
 					}
+
+					if ( ( 'country' === $key || 'languages' === $key ) && empty( $options ) ) {
+						// Fallback for fields 'country' or 'languages' when options are empty.
+						$options = UM()->builtin()->get( $key );
+					}
+
+					$has_parent_option            = false;
+					$disabled_by_parent_option    = '';
+					$atts_ajax                    = '';
+					$select_original_option_value = '';
 
 					if ( ! empty( $data['parent_dropdown_relationship'] ) && ! UM()->user()->preview ) {
 						$has_parent_option         = true;
@@ -4015,17 +4027,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					}
 
 					if ( ! $has_parent_option ) {
-						if ( 'builtin' === $options ) {
-							$options = UM()->builtin()->get( $data['filter'] );
-						}
-
-						// 'country'
-						if ( 'country' === $key && empty( $options ) ) {
-							$options = UM()->builtin()->get( 'countries' );
-						} elseif ( empty( $options ) && isset( $data['options'] ) ) {
-							$options = $data['options'];
-						}
-
 						/**
 						 * Filters dropdown options.
 						 *
@@ -4086,11 +4087,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 					}
 
+					// Filter roles here for getting only available in the options.
 					if ( 'role' === $form_key ) {
 						$options = $this->get_available_roles( $form_key, $options );
 					}
 
-					$field_value = '';
+					$field_value = ''; // required to disable hidden fields below.
 
 					if ( isset( $data['label'] ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
@@ -4223,6 +4225,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$field_id   = $key;
 					$field_name = $key;
 
+					// Selections count settings.
 					$max_selections = isset( $data['max_selections'] ) ? absint( $data['max_selections'] ) : 0;
 					$min_selections = isset( $data['min_selections'] ) ? absint( $data['min_selections'] ) : 0;
 
@@ -4233,20 +4236,20 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$options_pair = true;
 					}
 
+					// Get options from field settings.
 					$options = array();
-					if ( isset( $data['options'] ) && is_array( $data['options'] ) ) {
-						$options = $data['options'];
+					if ( array_key_exists( 'options', $data ) ) {
+						if ( is_array( $data['options'] ) ) {
+							$options = $data['options'];
+						} elseif ( 'builtin' === $data['options'] && array_key_exists( 'filter', $data ) ) {
+							// @todo maybe remove this condition because options can have only `array` type.
+							$options = UM()->builtin()->get( $data['filter'] );
+						}
 					}
 
-					if ( 'builtin' === $options ) {
-						$options = UM()->builtin()->get( $data['filter'] );
-					}
-
-					// 'country'
-					if ( 'country' === $key && empty( $options ) ) {
-						$options = UM()->builtin()->get( 'countries' );
-					} elseif ( empty( $options ) && isset( $data['options'] ) ) {
-						$options = $data['options'];
+					if ( ( 'country' === $key || 'languages' === $key ) && empty( $options ) ) {
+						// Fallback for fields 'country' or 'languages' when options are empty.
+						$options = UM()->builtin()->get( $key );
 					}
 
 					if ( ! empty( $options ) ) {
@@ -4308,6 +4311,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$options = apply_filters( "um_multiselect_options_{$type}", $options, $data );
 					}
 
+					$arr_selected = array(); // required to disable hidden fields below.
+
 					if ( isset( $data['label'] ) ) {
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
@@ -4320,7 +4325,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						// @todo maybe add clear all button here.
 						// }
 
-						$arr_selected = array();
 						// add options
 						if ( ! empty( $options ) && is_array( $options ) ) {
 							foreach ( $options as $k => $v ) {
@@ -4379,11 +4383,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						// Add an empty option!
 						$output .= '<option value=""></option>';
 
-						$arr_selected = array();
 						// add options
 						if ( ! empty( $options ) && is_array( $options ) ) {
 							foreach ( $options as $k => $v ) {
-
 								$v = rtrim( $v );
 
 								$um_field_checkbox_item_title = $v;
@@ -4403,7 +4405,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								}
 
 								$output .= '>' . esc_html__( $um_field_checkbox_item_title, 'ultimate-member' ) . '</option>';
-
 							}
 						}
 
