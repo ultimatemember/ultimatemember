@@ -641,6 +641,90 @@ UM.frontend = {
 				});
 			});
 		},
+		initChild: function() {
+			let $childDropdown = jQuery('select[data-um-parent]');
+			if ( $childDropdown.length ) {
+				/**
+				 * Find all select fields with parent select fields
+				 */
+				$childDropdown.each( function() {
+					let me = jQuery(this);
+					let parentOption = me.data('um-parent');
+					let childCallback = me.data('um-ajax-source');
+					let nonce = me.data('nonce');
+					let member_directory = '';
+
+					jQuery(document.body).on('change','select[name="' + parentOption + '"]',function() {
+						let parent  = jQuery(this);
+						let form_id = parent.closest( 'form' ).find( 'input[type="hidden"][name="form_id"]' ).val();
+
+						let arr_key;
+						if ( me.parents('.um-directory').length ) {
+							member_directory = 'yes';
+							arr_key = [];
+							jQuery(this).find('option:selected').each( function() {
+								arr_key.push(jQuery(this).val());
+							});
+
+							if ( typeof arr_key === 'undefined' ) {
+								arr_key = '';
+							}
+						} else {
+							arr_key = parent.val();
+						}
+
+						if ( typeof arr_key != 'undefined' && arr_key !== '' && typeof UM.frontend.choices.optionsCache[ arr_key ] !== 'object' ) {
+							if ( typeof( me.um_wait ) === 'undefined' || me.um_wait === false ) {
+								me.um_wait = true;
+							} else {
+								return;
+							}
+
+							wp.ajax.send(
+								'um_select_options',
+								{
+									data: {
+										action: 'um_select_options',
+										parent_option_name: parentOption,
+										parent_option: arr_key,
+										child_callback: childCallback,
+										child_name: me.attr('name'),
+										members_directory: member_directory,
+										form_id: form_id,
+										nonce: nonce
+									},
+									success: function( data ) {
+										if ( data.status === 'success' && arr_key !== '' ) {
+											UM.frontend.choices.optionsCache[ arr_key ] = data;
+											UM.frontend.choices.populateChildOptions( me.attr('id'), data, arr_key );
+										}
+
+										if ( typeof data.debug !== 'undefined' ) {
+											console.log( data );
+										}
+
+										me.um_wait = false;
+									},
+									error: function( e ) {
+										console.log( e );
+										me.um_wait = false;
+									}
+								}
+							);
+						} else {
+							setTimeout( UM.frontend.choices.populateChildOptions, 10, me.attr('id'), UM.frontend.choices.optionsCache[ arr_key ], arr_key );
+						}
+
+						if ( typeof arr_key != 'undefined' || arr_key === '' ) {
+							me.find('option[value!=""]').remove();
+							me.val('').trigger('change');
+						}
+					});
+
+					jQuery('select[name="' + parentOption + '"]').trigger('change');
+				});
+			}
+		},
 		updateOptions: function (selector, newOptions, reset = false) {
 			const element = jQuery('#' + selector);
 			if (element && this.choicesInstances[selector]) {
@@ -919,7 +1003,9 @@ jQuery(document).ready(function($) {
 	UM.frontend.uploader.initActions();
 
 	UM.frontend.slider.init();
+
 	UM.frontend.choices.init();
+	UM.frontend.choices.initChild();
 
 	UM.frontend.image.lazyload.init();
 
@@ -930,86 +1016,6 @@ jQuery(document).ready(function($) {
 	$(document.body).on('click', '.um-alert-dismiss', function (e) {
 		e.preventDefault();
 		$(this).parents('.um-alert').umHide();
-	});
-
-	/**
-	 * Find all select fields with parent select fields
-	 */
-	jQuery('select[data-um-parent]').each( function() {
-		let me = jQuery(this);
-		let parentOption = me.data('um-parent');
-		let childCallback = me.data('um-ajax-source');
-		let nonce = me.data('nonce');
-		let member_directory = '';
-
-		jQuery(document.body).on('change','select[name="' + parentOption + '"]',function() {
-			let parent  = jQuery(this);
-			let form_id = parent.closest( 'form' ).find( 'input[type="hidden"][name="form_id"]' ).val();
-
-			let arr_key;
-			if ( me.parents('.um-directory').length ) {
-				member_directory = 'yes';
-				arr_key = [];
-				jQuery(this).find('option:selected').each( function() {
-					arr_key.push(jQuery(this).val());
-				});
-
-				if ( typeof arr_key === 'undefined' ) {
-					arr_key = '';
-				}
-			} else {
-				arr_key = parent.val();
-			}
-
-			if ( typeof arr_key != 'undefined' && arr_key !== '' && typeof UM.frontend.choices.optionsCache[ arr_key ] !== 'object' ) {
-				if ( typeof( me.um_wait ) === 'undefined' || me.um_wait === false ) {
-					me.um_wait = true;
-				} else {
-					return;
-				}
-
-				wp.ajax.send(
-					'um_select_options',
-					{
-						data: {
-							action: 'um_select_options',
-							parent_option_name: parentOption,
-							parent_option: arr_key,
-							child_callback: childCallback,
-							child_name: me.attr('name'),
-							members_directory: member_directory,
-							form_id: form_id,
-							nonce: nonce
-						},
-						success: function( data ) {
-							if ( data.status === 'success' && arr_key !== '' ) {
-								UM.frontend.choices.optionsCache[ arr_key ] = data;
-								UM.frontend.choices.populateChildOptions( me.attr('id'), data, arr_key );
-							}
-
-							if ( typeof data.debug !== 'undefined' ) {
-								console.log( data );
-							}
-
-							me.um_wait = false;
-						},
-						error: function( e ) {
-							console.log( e );
-							me.um_wait = false;
-						}
-					}
-				);
-			} else {
-				setTimeout( UM.frontend.choices.populateChildOptions, 10, me.attr('id'), UM.frontend.choices.optionsCache[ arr_key ], arr_key );
-			}
-
-			if ( typeof arr_key != 'undefined' || arr_key === '' ) {
-				me.find('option[value!=""]').remove();
-				me.val('').trigger('change');
-			}
-		});
-
-		jQuery('select[name="' + parentOption + '"]').trigger('change');
 	});
 });
 

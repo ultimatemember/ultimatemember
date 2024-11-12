@@ -760,7 +760,6 @@ function um_select_dropdown_dynamic_options_to_utf8( $options, $data ) {
 }
 add_filter( 'um_select_dropdown_dynamic_options','um_select_dropdown_dynamic_options_to_utf8', 10, 2 );
 
-
 /**
  * Filter non-UTF8 strings
  * @param  string $value
@@ -768,7 +767,6 @@ add_filter( 'um_select_dropdown_dynamic_options','um_select_dropdown_dynamic_opt
  * @uses hook filter: um_field_non_utf8_value
  */
 function um_field_non_utf8_value( $value ) {
-
 	if ( function_exists( 'mb_detect_encoding' ) ) {
 		$encoding = mb_detect_encoding( $value, 'utf-8, iso-8859-1, ascii', true );
 		if ( strcasecmp( $encoding, 'UTF-8' ) !== 0 ) {
@@ -782,9 +780,9 @@ function um_field_non_utf8_value( $value ) {
 }
 add_filter( 'um_field_non_utf8_value', 'um_field_non_utf8_value' );
 
-
 /**
- * Returns dropdown/multi-select options from a callback function
+ * Returns dropdown/multi-select options from a callback function.
+ *
  * @param  $options array
  * @param  $data array
  * @return array
@@ -795,24 +793,26 @@ function um_select_dropdown_dynamic_callback_options( $options, $data ) {
 		if ( UM()->fields()->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
 			return $options;
 		}
-		$options = call_user_func( $data['custom_dropdown_options_source'] );
+
+		if ( isset( $data['parent_dropdown_relationship'] ) ) {
+			$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+		} else {
+			$options = call_user_func( $data['custom_dropdown_options_source'] );
+		}
 	}
 
 	return $options;
 }
-add_filter( 'um_select_dropdown_dynamic_options','um_select_dropdown_dynamic_callback_options', 10, 2 );
-add_filter( 'um_multiselect_options','um_select_dropdown_dynamic_callback_options', 10, 2 );
-
+add_filter( 'um_select_dropdown_dynamic_options', 'um_select_dropdown_dynamic_callback_options', 10, 2 );
+add_filter( 'um_multiselect_options', 'um_select_dropdown_dynamic_callback_options', 10, 2 );
 
 /**
- * Pair dropdown/multi-select options from a callback function
+ * Pair dropdown/multi-select options from a callback function.
  *
  * @param  $value string
  * @param  $data  array
  * @return string
- * @uses   hook filter: um_profile_field_filter_hook__
  */
-
 function um_option_match_callback_view_field( $value, $data ) {
 	if ( ! empty( $data['custom_dropdown_options_source'] ) ) {
 		return UM()->fields()->get_option_value_from_callback( $value, $data, $data['type'] );
@@ -820,10 +820,10 @@ function um_option_match_callback_view_field( $value, $data ) {
 
 	return $value;
 }
-add_filter('um_profile_field_filter_hook__select','um_option_match_callback_view_field', 10, 2);
-add_filter('um_profile_field_filter_hook__multiselect','um_option_match_callback_view_field', 10, 2);
-add_filter('um_field_select_default_value','um_option_match_callback_view_field', 10, 2);
-add_filter('um_field_multiselect_default_value','um_option_match_callback_view_field', 10, 2);
+add_filter( 'um_profile_field_filter_hook__select', 'um_option_match_callback_view_field', 10, 2 );
+add_filter( 'um_profile_field_filter_hook__multiselect', 'um_option_match_callback_view_field', 10, 2 );
+add_filter( 'um_field_select_default_value', 'um_option_match_callback_view_field', 10, 2 );
+add_filter( 'um_field_multiselect_default_value', 'um_option_match_callback_view_field', 10, 2 );
 
 /**
  * Apply textdomain in select/multi-select options

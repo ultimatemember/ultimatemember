@@ -1447,76 +1447,80 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		}
 
 		/**
-		 * Gets selected option value from a callback function
+		 * Gets selected option value from a callback function.
 		 *
-		 * @param  string $value
-		 * @param  array  $data
-		 * @param  string $type
+		 * @param  string|array $value
+		 * @param  array        $data
+		 * @param  string       $type
 		 *
 		 * @return string
 		 */
-		function get_option_value_from_callback( $value, $data, $type ) {
-
-			if ( in_array( $type, array( 'select', 'multiselect' ) ) && ! empty( $data['custom_dropdown_options_source'] ) ) {
-
-				if ( $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
-					return $value;
-				}
-
-				$has_custom_source = apply_filters( "um_has_dropdown_options_source__{$data['metakey']}", false );
-
-				if ( $has_custom_source ) {
-
-					/** This filter is documented in includes/core/class-fields.php */
-					$opts        = apply_filters( "um_get_field__{$data['metakey']}", array() );
-					$arr_options = array_key_exists( 'options', $opts ) ? $opts['options'] : array();
-
-				} elseif ( function_exists( $data['custom_dropdown_options_source'] ) ) {
-					if ( isset( $data['parent_dropdown_relationship'] ) ) {
-						$_POST['parent_option_name'] = $data['parent_dropdown_relationship'];
-						$_POST['parent_option'] = um_user( $data['parent_dropdown_relationship'] );
-
-						$arr_options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
-					} else {
-						$arr_options = call_user_func( $data['custom_dropdown_options_source'] );
-					}
-				}
-
-				if ( $has_custom_source || function_exists( $data['custom_dropdown_options_source'] ) ) {
-					if ( $type == 'select' ) {
-						if ( ! empty( $arr_options[ $value ] ) ) {
-							return $arr_options[ $value ];
-						} elseif ( ! empty( $data['default'] ) && empty( $arr_options[ $value ] ) ) {
-							return $arr_options[ $data['default'] ];
-						} else {
-							return '';
-						}
-					} elseif ( $type == 'multiselect' ) {
-
-						if ( is_array( $value ) ) {
-							$values = $value;
-						} else {
-							$values = explode( ', ', $value );
-						}
-
-						$arr_paired_options = array();
-
-						foreach ( $values as $option ) {
-							if ( isset( $arr_options[ $option ] ) ) {
-								$arr_paired_options[] = $arr_options[ $option ];
-							}
-						}
-
-						return implode( ', ', $arr_paired_options );
-					}
-				}
-
-
+		public function get_option_value_from_callback( $value, $data, $type ) {
+			if ( ! in_array( $type, array( 'select', 'multiselect' ), true ) ) {
+				return $value;
 			}
 
-			return $value;
-		}
+			if ( empty( $data['custom_dropdown_options_source'] ) ) {
+				return $value;
+			}
 
+			if ( $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
+				return $value;
+			}
+
+			$arr_options = array();
+
+			$has_custom_source = apply_filters( "um_has_dropdown_options_source__{$data['metakey']}", false );
+			if ( $has_custom_source ) {
+
+				/** This filter is documented in includes/core/class-fields.php */
+				$opts        = apply_filters( "um_get_field__{$data['metakey']}", array() );
+				$arr_options = array_key_exists( 'options', $opts ) ? $opts['options'] : array();
+
+			} elseif ( function_exists( $data['custom_dropdown_options_source'] ) ) {
+				if ( ! empty( $data['parent_dropdown_relationship'] ) ) {
+					$_POST['parent_option_name'] = $data['parent_dropdown_relationship'];
+					$_POST['parent_option']      = um_user( $data['parent_dropdown_relationship'] );
+
+					$arr_options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+				} else {
+					$arr_options = call_user_func( $data['custom_dropdown_options_source'] );
+				}
+			}
+
+			if ( empty( $arr_options ) ) {
+				return $value;
+			}
+
+			if ( 'select' === $type ) {
+				if ( ! empty( $arr_options[ $value ] ) ) {
+					return $arr_options[ $value ];
+				}
+
+				if ( ! empty( $data['default'] ) && isset( $arr_options[ $data['default'] ] ) ) {
+					return $arr_options[ $data['default'] ];
+				}
+
+				return '';
+			}
+
+			// `multiselect` part is here.
+			if ( is_array( $value ) ) {
+				$values = $value;
+			} else {
+				$values = explode( ', ', $value );
+			}
+
+			$arr_paired_options = array();
+
+			foreach ( $values as $option ) {
+				if ( isset( $arr_options[ $option ] ) ) {
+					$arr_paired_options[] = $arr_options[ $option ];
+				}
+			}
+
+			return implode( ', ', $arr_paired_options );
+		}
 
 		/**
 		 * Get select options from a callback function
