@@ -492,6 +492,15 @@ UM.frontend.directory.prototype = {
 				instance.setDataToURL( 'filter_' + filterName + '_to', '' );
 			}
 		});
+
+		// Flush dropdown filters with child options.
+		let $childFilters = jQuery('select[data-um-parent]');
+		if ( $childFilters.length ) {
+			$childFilters.each( function() {
+				let selector = jQuery(this).data('um-parent');
+				UM.frontend.choices.updateOptions( selector, [], true );
+			});
+		}
 	},
 	request: function ( args ) {
 		let paginationAction = false;
@@ -547,8 +556,6 @@ UM.frontend.directory.prototype = {
 			post_refferer:  this.wrapper.data('base-post'),
 			nonce:          this.wrapper.data('nonce')
 		};
-
-		// console.log( this.getFilters() );
 
 		let filters = this.getFilters();
 		for ( const key in filters ) {
@@ -914,13 +921,6 @@ jQuery(document.body).ready( function() {
 
 		directoryObj.resetFilters();
 		directoryObj.setPage(1);
-
-		if ( jQuery('select[data-um-parent]').length ) {
-			jQuery('select[data-um-parent]').each( function() {
-				let selector = jQuery(this).attr('data-um-parent');
-				UM.frontend.choices.updateOptions( selector, [], true );
-			});
-		}
 
 		let ignoreMustSearch = wp.hooks.applyFilters( 'um_member_directory_ignore_after_search', false, directory );
 		if ( false === ignoreMustSearch ) {

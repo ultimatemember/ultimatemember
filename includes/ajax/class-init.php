@@ -24,7 +24,9 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 				$this->dev();
 				$this->directory();
+				$this->fields();
 			}
+
 			$this->files();
 			$this->forms();
 			$this->pages();
@@ -76,6 +78,18 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 			}
 
 			return UM()->classes['um\ajax\directory'];
+		}
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return Fields
+		 */
+		public function fields() {
+			if ( empty( UM()->classes['um\ajax\fields'] ) ) {
+				UM()->classes['um\ajax\fields'] = new Fields();
+			}
+			return UM()->classes['um\ajax\fields'];
 		}
 
 		/**

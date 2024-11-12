@@ -1,11 +1,11 @@
 <?php
 namespace um\core;
 
-// Exit if executed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'um\core\AJAX_Common' ) ) {
-
 
 	/**
 	 * Class AJAX_Common
@@ -13,27 +13,21 @@ if ( ! class_exists( 'um\core\AJAX_Common' ) ) {
 	 */
 	class AJAX_Common {
 
-
 		/**
 		 * AJAX_Common constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 			// UM_EVENT => nopriv
-			$ajax_actions = array(
-			);
+			$ajax_actions = array();
 
 			foreach ( $ajax_actions as $action => $nopriv ) {
 
 				add_action( 'wp_ajax_um_' . $action, array( $this, $action ) );
 
-				if ( $nopriv ){
+				if ( $nopriv ) {
 					add_action( 'wp_ajax_nopriv_um_' . $action, array( $this, $action ) );
 				}
-
 			}
-
-			add_action( 'wp_ajax_um_select_options', array( UM()->form(), 'ajax_select_options' ) );
-			add_action( 'wp_ajax_nopriv_um_select_options', array( UM()->form(), 'ajax_select_options' ) );
 
 			if ( ! ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_no_conflict_avatar' ) ) ) {
 				add_action( 'wp_ajax_um_delete_profile_photo', array( UM()->profile(), 'ajax_delete_profile_photo' ) );
@@ -46,6 +40,9 @@ if ( ! class_exists( 'um\core\AJAX_Common' ) ) {
 			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 
 			} else {
+				add_action( 'wp_ajax_um_select_options', array( UM()->form(), 'ajax_select_options' ) );
+				add_action( 'wp_ajax_nopriv_um_select_options', array( UM()->form(), 'ajax_select_options' ) );
+
 				add_action( 'wp_ajax_um_ajax_paginate_posts', array( UM()->user_posts(), 'load_posts' ) );
 				add_action( 'wp_ajax_um_ajax_paginate_comments', array( UM()->user_posts(), 'load_comments' ) );
 				add_action( 'wp_ajax_nopriv_um_ajax_paginate_posts', array( UM()->user_posts(), 'load_posts' ) );
