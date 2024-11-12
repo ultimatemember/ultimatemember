@@ -548,7 +548,6 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->password();
 			$this->rewrite();
 			$this->mail();
-			$this->rest_api();
 			$this->shortcodes();
 			$this->roles();
 			$this->user();
@@ -565,11 +564,15 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->blocks();
 			$this->secure();
 
-			//if multisite networks active
+			// If multisite networks active
 			if ( is_multisite() ) {
 				$this->multisite();
 			}
 
+			// Call only when REST_API request
+			if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+				$this->rest_api();
+			}
 		}
 
 
@@ -1001,14 +1004,12 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['config'];
 		}
 
-
 		/**
 		 * @since 2.0
 		 *
 		 * @return um\core\rest\API_v1|um\core\rest\API_v2
 		 */
-		function rest_api() {
-
+		public function rest_api() {
 			$api_version = $this->options()->get( 'rest_api_version' );
 
 			if ( empty( $this->classes['rest_api'] ) ) {
@@ -1023,7 +1024,6 @@ if ( ! class_exists( 'UM' ) ) {
 
 			return $this->classes['rest_api'];
 		}
-
 
 		/**
 		 * @since 2.0
