@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-11-12T12:33:55+00:00\n"
+"POT-Creation-Date: 2024-11-12T14:50:33+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: ultimate-member\n"
@@ -9446,10 +9446,10 @@ msgstr ""
 
 #: includes/core/class-files.php:294
 #: includes/core/class-files.php:329
-#: includes/core/class-files.php:468
-#: includes/core/class-files.php:620
-#: includes/core/class-files.php:625
-#: includes/core/class-files.php:636
+#: includes/core/class-files.php:482
+#: includes/core/class-files.php:650
+#: includes/core/class-files.php:655
+#: includes/core/class-files.php:666
 msgid "You have no permission to edit this user"
 msgstr ""
 
@@ -9466,66 +9466,66 @@ msgid "Invalid coordinates"
 msgstr ""
 
 #: includes/core/class-files.php:333
-#: includes/core/class-files.php:473
+#: includes/core/class-files.php:487
 msgid "Please login to edit this user"
 msgstr ""
 
 #: includes/core/class-files.php:343
-#: includes/core/class-files.php:484
+#: includes/core/class-files.php:498
 msgid "You have no permission to edit user profile"
 msgstr ""
 
 #: includes/core/class-files.php:347
-#: includes/core/class-files.php:489
-#: includes/core/class-files.php:641
+#: includes/core/class-files.php:503
+#: includes/core/class-files.php:671
 msgid "User has to be empty on registration"
 msgstr ""
 
 #: includes/core/class-files.php:353
-#: includes/core/class-files.php:496
-#: includes/core/class-files.php:648
+#: includes/core/class-files.php:510
+#: includes/core/class-files.php:678
 msgid "Invalid form ID"
 msgstr ""
 
 #: includes/core/class-files.php:357
-#: includes/core/class-files.php:501
-#: includes/core/class-files.php:653
+#: includes/core/class-files.php:515
+#: includes/core/class-files.php:683
 msgid "Invalid form post type"
 msgstr ""
 
 #: includes/core/class-files.php:362
-#: includes/core/class-files.php:507
-#: includes/core/class-files.php:659
+#: includes/core/class-files.php:521
+#: includes/core/class-files.php:689
 msgid "Invalid form status"
 msgstr ""
 
 #: includes/core/class-files.php:367
-#: includes/core/class-files.php:513
-#: includes/core/class-files.php:665
+#: includes/core/class-files.php:527
+#: includes/core/class-files.php:695
 msgid "Invalid form type"
 msgstr ""
 
 #: includes/core/class-files.php:376
 #: includes/core/class-files.php:381
 #: includes/core/class-files.php:384
-#: includes/core/class-files.php:523
-#: includes/core/class-files.php:529
-#: includes/core/class-files.php:533
-#: includes/core/class-files.php:675
-#: includes/core/class-files.php:681
-#: includes/core/class-files.php:685
+#: includes/core/class-files.php:537
+#: includes/core/class-files.php:543
+#: includes/core/class-files.php:547
+#: includes/core/class-files.php:705
+#: includes/core/class-files.php:711
+#: includes/core/class-files.php:715
 msgid "You have no permission to edit this user through this form"
 msgstr ""
 
 #: includes/core/class-files.php:391
-#: includes/core/class-files.php:541
-#: includes/core/class-files.php:693
+#: includes/core/class-files.php:555
+#: includes/core/class-files.php:723
 msgid "Invalid form fields"
 msgstr ""
 
 #: includes/core/class-files.php:397
-#: includes/core/class-files.php:548
-#: includes/core/class-files.php:699
+#: includes/core/class-files.php:562
+#: includes/core/class-files.php:729
 msgid "Invalid field metakey"
 msgstr ""
 
@@ -9533,27 +9533,31 @@ msgstr ""
 msgid "This field doesn't support image crop"
 msgstr ""
 
-#: includes/core/class-files.php:406
-#: includes/core/class-files.php:554
-#: includes/core/class-files.php:704
+#: includes/core/class-files.php:410
+#: includes/core/class-files.php:415
+#: includes/core/class-files.php:419
+#: includes/core/class-files.php:572
+#: includes/core/class-files.php:578
+#: includes/core/class-files.php:583
+#: includes/core/class-files.php:734
 msgid "You have no permission to edit this field"
 msgstr ""
 
-#: includes/core/class-files.php:412
+#: includes/core/class-files.php:426
 msgid "Invalid file ownership"
 msgstr ""
 
-#: includes/core/class-files.php:461
-#: includes/core/class-files.php:613
+#: includes/core/class-files.php:475
+#: includes/core/class-files.php:643
 msgid "Invalid nonce"
 msgstr ""
 
-#: includes/core/class-files.php:573
-#: includes/core/class-files.php:728
+#: includes/core/class-files.php:603
+#: includes/core/class-files.php:758
 msgid "A theme or plugin compatibility issue"
 msgstr ""
 
-#: includes/core/class-files.php:1501
+#: includes/core/class-files.php:1531
 msgid "Original size"
 msgstr ""
 
