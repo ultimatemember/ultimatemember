@@ -1,0 +1,61 @@
+name: Build Release
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+
+jobs:
+  generate-translations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: WordPress .pot File Generator
+        uses: iamdharmesh/action-wordpress-pot-generator@main
+        with:
+          destination_path: './languages'
+          slug: 'ultimate-member'
+          text_domain: 'ultimate-member'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build:
+    needs: generate-translations
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install PHP
+      uses: "shivammathur/setup-php@v2"
+      with:
+        php-version: "latest"
+    - name: Install Composer Dependencies
+      run: |
+        composer install --no-progress --no-dev --optimize-autoloader --ignore-platform-req=ext-exif --ignore-platform-req=ext-gd --ignore-platform-req=ext-tidy
+    - name: Commit files
+      run: |
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git rm .bowerrc
+        git rm .editorconfig
+        git rm .gitignore
+        git rm .jshintrc
+        git rm .travis.yml
+        git rm bower.json
+        git rm composer.json
+        git rm gulpfile.js
+        git rm manifest.json
+        git rm phpcs.xml
+        git rm phpdoc.dist.xml
+        git rm -r docs
+        git rm -r tests
+        git add includes/lib/action-scheduler/\*
+        git commit -a -m "Composer Installed. Cleared release repo."
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: releases
+        repository: ultimatemember/ultimatemember
+        force: true

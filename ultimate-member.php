@@ -17,7 +17,7 @@
 defined( 'ABSPATH' ) || exit;
 
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
-$plugin_data = get_plugin_data( __FILE__ );
+$plugin_data = get_plugin_data( __FILE__, true, false );
 
 // phpcs:disable Generic.NamingConventions.UpperCaseConstantName
 define( 'um_url', plugin_dir_url( __FILE__ ) );

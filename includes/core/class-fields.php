@@ -454,10 +454,14 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @param array  $position
 		 */
 		private function add_field_from_predefined( $global_id, $form_id, $position = array() ) {
-			$fields      = UM()->query()->get_attr( 'custom_fields', $form_id );
-			$field_scope = UM()->builtin()->predefined_fields;
+			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
+			if ( empty( $fields ) || ! is_array( $fields ) ) {
+				$fields = array();
+			}
 
 			if ( ! isset( $fields[ $global_id ] ) ) {
+				$field_scope = UM()->builtin()->predefined_fields;
+
 				$count = 1;
 				if ( ! empty( $fields ) ) {
 					$count = count( $fields ) + 1;
@@ -5033,7 +5037,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			return $arr;
 		}
 
-
 		/**
 		 * Get fields in row
 		 *
@@ -5041,8 +5044,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @return string
 		 */
-		function get_fields_by_row( $row_id ) {
-			if ( ! isset( $this->get_fields ) ) {
+		public function get_fields_by_row( $row_id ) {
+			if ( ! isset( $this->get_fields ) || ! is_array( $this->get_fields ) ) {
 				return '';
 			}
 
@@ -5052,9 +5055,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				}
 			}
 
-			return ( isset ( $results ) ) ? $results : '';
+			return isset( $results ) ? $results : '';
 		}
-
 
 		/**
 		 * Get fields by sub row
@@ -5742,7 +5744,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				}
 			}
 
-			if ( empty( $this->get_fields ) ) {
+			if ( empty( $this->get_fields ) || ! is_array( $this->get_fields ) ) {
 				return $output;
 			}
 

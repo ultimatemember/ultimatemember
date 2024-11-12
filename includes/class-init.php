@@ -1,4 +1,5 @@
 <?php
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -501,7 +502,10 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return void
 		 */
 		public function includes() {
+			$this->maybe_action_scheduler();
+
 			$this->common()->includes();
+
 			$this->access();
 
 			if ( $this->is_request( 'ajax' ) ) {
@@ -547,7 +551,6 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->password();
 			$this->rewrite();
 			$this->mail();
-			$this->rest_api();
 			$this->shortcodes();
 			$this->roles();
 			$this->user();
@@ -564,9 +567,14 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->blocks();
 			$this->secure();
 
-			//if multisite networks active
+			// If multisite networks active
 			if ( is_multisite() ) {
 				$this->multisite();
+			}
+
+			// Call only when REST_API request
+			if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+				$this->rest_api();
 			}
 		}
 
@@ -998,14 +1006,12 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['config'];
 		}
 
-
 		/**
 		 * @since 2.0
 		 *
 		 * @return um\core\rest\API_v1|um\core\rest\API_v2
 		 */
-		function rest_api() {
-
+		public function rest_api() {
 			$api_version = $this->options()->get( 'rest_api_version' );
 
 			if ( empty( $this->classes['rest_api'] ) ) {
@@ -1020,7 +1026,6 @@ if ( ! class_exists( 'UM' ) ) {
 
 			return $this->classes['rest_api'];
 		}
-
 
 		/**
 		 * @since 2.0
@@ -1419,6 +1424,19 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['multisite'];
 		}
 
+		/**
+		 * Maybe include and init Action Scheduler.
+		 *
+		 * @since 2.9.0
+		 *
+		 * @return um\action_scheduler\Init
+		 */
+		public function maybe_action_scheduler() {
+			if ( empty( $this->classes['action_scheduler'] ) ) {
+				$this->classes['action_scheduler'] = new um\action_scheduler\Init();
+			}
+			return $this->classes['action_scheduler'];
+		}
 
 		/**
 		 * Include files with hooked filters/actions

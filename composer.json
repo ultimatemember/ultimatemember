@@ -9,7 +9,8 @@
   "config": {
     "allow-plugins": {
       "symfony/flex": true,
-      "dealerdirect/phpcodesniffer-composer-installer": true
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "composer/installers": true
     }
   },
   "require": {
@@ -22,10 +23,10 @@
     "ext-curl": "*",
     "ext-iconv": "*",
     "ext-tidy": "*",
-    "woocommerce/action-scheduler": "3.2.1"
+    "composer/installers": "^2.3",
+    "woocommerce/action-scheduler": "3.8.1"
   },
   "require-dev": {
-    "roave/security-advisories": "dev-latest",
     "wp-cli/wp-cli": "*",
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
     "object-calisthenics/phpcs-calisthenics-rules": "*",
@@ -36,7 +37,7 @@
   },
   "extra": {
     "installer-paths": {
-      "vendor/{$vendor}/{$name}/": ["woocommerce/action-scheduler"]
+      "includes/lib/{$name}/": ["woocommerce/action-scheduler"]
     }
   }
 }

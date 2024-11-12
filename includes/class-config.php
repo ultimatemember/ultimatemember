@@ -740,7 +740,8 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'secure_notify_admins_banned_accounts__interval' => 'instant',
 				'secure_allowed_redirect_hosts'         => '',
 				'delete_comments'                       => false,
-				'primary_color'                         => '#7f56d9',
+				'enable_action_scheduler'               => false,
+        'primary_color'                         => '#7f56d9',
 			);
 
 			if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {

@@ -614,7 +614,7 @@ class Users {
 			add_filter( 'um_template_tags_patterns_hook', array( UM()->user(), 'add_activation_placeholder' ) );
 			add_filter( 'um_template_tags_replaces_hook', array( UM()->user(), 'add_activation_replace_placeholder' ) );
 
-			UM()->mail()->send( $userdata->user_email, 'checkmail_email' );
+			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $userdata->user_email, 'checkmail_email' ) );
 
 			um_fetch_user( $current_user_id );
 			/**
@@ -682,7 +682,7 @@ class Users {
 			$this->reset_activation_link( $user_id );
 
 			$userdata = get_userdata( $user_id );
-			UM()->mail()->send( $userdata->user_email, 'inactive_email' );
+			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $userdata->user_email, 'inactive_email' ) );
 
 			/**
 			 * Fires after User has been deactivated.
@@ -754,7 +754,7 @@ class Users {
 			$this->reset_activation_link( $user_id );
 
 			$userdata = get_userdata( $user_id );
-			UM()->mail()->send( $userdata->user_email, 'rejected_email' );
+			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $userdata->user_email, 'rejected_email' ) );
 
 			/**
 			 * Fires after User has been rejected.
@@ -832,7 +832,7 @@ class Users {
 			$this->reset_activation_link( $user_id );
 
 			$userdata = get_userdata( $user_id );
-			UM()->mail()->send( $userdata->user_email, 'pending_email' );
+			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $userdata->user_email, 'pending_email' ) );
 
 			/**
 			 * Fires after User has been set as pending admin review.
@@ -923,7 +923,7 @@ class Users {
 			add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ) );
 			add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ) );
 
-			UM()->mail()->send( $userdata->user_email, $email_slug );
+			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $userdata->user_email, $email_slug ) );
 
 			um_fetch_user( $current_user_id );
 			/**
@@ -1000,7 +1000,7 @@ class Users {
 			add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ) );
 			add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ) );
 
-			UM()->mail()->send( $userdata->user_email, 'welcome_email' );
+			UM()->maybe_action_scheduler()->enqueue_async_action( 'um_dispatch_email', array( $userdata->user_email, 'welcome_email' ) );
 
 			um_fetch_user( $current_user_id );
 

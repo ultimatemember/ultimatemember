@@ -220,6 +220,7 @@ assets/vendor/
 package-lock.json
 .idea/
 composer.lock
+includes/lib/action-scheduler/
 
 # exclude Composer installation
 composer.phar

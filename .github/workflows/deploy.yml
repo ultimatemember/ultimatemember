@@ -9,10 +9,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Build
+      - name: Build, Install Subversion
         run: |
           npm install
           npm run build
+          sudo apt-get install subversion
       - name: WordPress Plugin Deploy
         id: deploy
         uses: 10up/action-wordpress-plugin-deploy@stable

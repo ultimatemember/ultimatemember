@@ -1,18 +1,18 @@
 .um-admin.users-php .um-filter-by-status {
   padding: 0 8px 0 0;
 }
-.um-admin.users-php .um_account_status {
+.um-admin.users-php .um_account_status:not(.hidden) {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
   flex-wrap: nowrap;
 }
-.um-admin.users-php .um_account_status span {
+.um-admin.users-php .um_account_status:not(.hidden) span {
   margin: 0 0 2px 0;
   padding: 0;
 }
-.um-admin.users-php .um_account_status ul {
+.um-admin.users-php .um_account_status:not(.hidden) ul {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -23,14 +23,14 @@
   margin: 0 0 4px 0;
   padding: 0;
 }
-.um-admin.users-php .um_account_status ul li {
+.um-admin.users-php .um_account_status:not(.hidden) ul li {
   margin: 0;
   padding: 0;
 }
-.um-admin.users-php .um_account_status ul li a.um-set-status-rejected, .um-admin.users-php .um_account_status ul li a.um-deactivate-user {
+.um-admin.users-php .um_account_status:not(.hidden) ul li a.um-set-status-rejected, .um-admin.users-php .um_account_status:not(.hidden) ul li a.um-deactivate-user {
   color: #b32d2e;
 }
-.um-admin.users-php .um_account_status ul li a.um-set-status-rejected:active, .um-admin.users-php .um_account_status ul li a.um-set-status-rejected:hover, .um-admin.users-php .um_account_status ul li a.um-deactivate-user:active, .um-admin.users-php .um_account_status ul li a.um-deactivate-user:hover {
+.um-admin.users-php .um_account_status:not(.hidden) ul li a.um-set-status-rejected:active, .um-admin.users-php .um_account_status:not(.hidden) ul li a.um-set-status-rejected:hover, .um-admin.users-php .um_account_status:not(.hidden) ul li a.um-deactivate-user:active, .um-admin.users-php .um_account_status:not(.hidden) ul li a.um-deactivate-user:hover {
   color: #b32d2e;
 }
 
