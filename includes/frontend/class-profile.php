@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Profile
  *
- * @since 2.9.0
+ * @since 3.0.0
  *
  * @package um\frontend
  */
@@ -115,7 +115,7 @@ class Profile {
 		 * @param {array} $args    User Profile data.
 		 * @param {int}   $user_id User Profile ID.
 		 *
-		 * @since 2.9.0
+		 * @since 3.0.0
 		 * @hook  um_profile_navbar_content
 		 *
 		 * @example <caption>Display some content in User Profile navigation bar.</caption>
@@ -150,7 +150,7 @@ class Profile {
 		 * @param {array} $classes User Profile navigation bar classes.
 		 *
 		 * @since 2.0
-		 * @since 2.9.0 $classes type is array.
+		 * @since 3.0.0 $classes type is array.
 		 * @hook  um_profile_navbar_classes
 		 *
 		 * @example <caption>Adds `my_custom_class` class to the navigation bar on the User Profile page.</caption>

@@ -116,8 +116,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param {array} $args User Profile data.
  *
  * @since 1.3.x
- * @since 2.9.0 added $profile_args, $user_id attributes
- * @depecated 2.9.0 Please use 'um_after_profile_header_name' hook instead.
+ * @since 3.0.0 added $profile_args, $user_id attributes
+ * @depecated 3.0.0 Please use 'um_after_profile_header_name' hook instead.
  * @hook  um_after_profile_header_name_args
  */
 
@@ -127,7 +127,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param {array} $types Allowed image types.
  *
  * @since 1.3.x
- * @depecated 2.9.0 Please use 'um_allowed_default_image_types' hook instead.
+ * @depecated 3.0.0 Please use 'um_allowed_default_image_types' hook instead.
  * @hook  um_allowed_image_types
  */
 
@@ -137,6 +137,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param {array} $types Allowed file types.
  *
  * @since 1.3.x
- * @depecated 2.9.0 Please use 'um_allowed_default_file_types' hook instead.
+ * @depecated 3.0.0 Please use 'um_allowed_default_file_types' hook instead.
  * @hook  um_allowed_file_types
  */

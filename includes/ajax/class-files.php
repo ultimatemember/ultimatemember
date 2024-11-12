@@ -222,7 +222,7 @@ class Files {
 	 *
 	 * @return string
 	 *
-	 * @since 2.9.0
+	 * @since 3.0.0
 	 */
 	public function unique_filename( $dir, $name, $ext ) {
 		$hashed = hash( 'ripemd160', time() . wp_rand( 10, 1000 ) . $name );

@@ -4697,7 +4697,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					/**
 					 * Filters enable options pair by field $data.
 					 *
-					 * @since 2.9.0
+					 * @since 3.0.0
 					 * @hook  um_checkbox_options_pair__{$key}
 					 *
 					 * @param {bool}  $options_pair Enable pairs.

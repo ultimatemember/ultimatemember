@@ -2,7 +2,7 @@
 /**
  * Template for field wrapper
  *
- * This template can be overridden by copying it to yourtheme/ultimate-member/templates/components/form/field-wrapper.php
+ * This template can be overridden by copying it to your-theme/ultimate-member/templates/components/form/field-wrapper.php
  *
  * Page: "Account"
  *

@@ -2,11 +2,11 @@
 /**
  * Template for the header of profile page
  *
- * This template can be overridden by copying it to yourtheme/ultimate-member/templates/v3/profile/header.php
+ * This template can be overridden by copying it to your-theme/ultimate-member/templates/v3/profile/header.php
  *
  * Page: "Profile"
  *
- * @version 2.9.0
+ * @version 3.0.0
  *
  * @var int    $current_user_id
  * @var int    $user_profile_id
@@ -89,7 +89,7 @@ if ( true !== UM()->fields()->editing ) {
  *
  * @return {array} User Profile actions.
  *
- * @since 2.9.0
+ * @since 3.0.0
  * @hook um_user_profile_actions
  *
  * @example <caption>Add custom user profile action.</caption>
@@ -127,10 +127,10 @@ $actions = apply_filters( 'um_user_profile_actions', $actions, $profile_args, $u
 	 * 10 - `um_add_edit_icon()` displays User Profile edit button.
 	 *
 	 * @param {array} $args    User Profile data.
-	 * @param {int}   $user_id User Profile ID. Since 2.9.0.
+	 * @param {int}   $user_id User Profile ID. Since 3.0.0.
 	 *
 	 * @since 1.3.x
-	 * @since 2.9.0 added $user_id attribute
+	 * @since 3.0.0 added $user_id attribute
 	 * @hook  um_pre_header_editprofile
 	 *
 	 * @example <caption>Display some content in User Profile header wrapper.</caption>
@@ -166,10 +166,10 @@ $actions = apply_filters( 'um_user_profile_actions', $actions, $profile_args, $u
 			 * 10 - `um_friends_add_button()` displays Add Friend button.
 			 *
 			 * @param {array} $args    User Profile data.
-			 * @param {int}   $user_id User Profile ID. Since 2.9.0.
+			 * @param {int}   $user_id User Profile ID. Since 3.0.0.
 			 *
 			 * @since 2.0
-			 * @since 2.9.0 added $user_id attribute
+			 * @since 3.0.0 added $user_id attribute
 			 * @hook  um_before_profile_main_meta
 			 *
 			 * @example <caption>Display some content in User Profile header content wrapper.</caption>
@@ -210,10 +210,10 @@ $actions = apply_filters( 'um_user_profile_actions', $actions, $profile_args, $u
 							 * 200 - `um_followers_add_state()` displays Followers state.
 							 *
 							 * @param {array} $args    User Profile data.
-							 * @param {int}   $user_id User Profile ID. Since 2.9.0.
+							 * @param {int}   $user_id User Profile ID. Since 3.0.0.
 							 *
 							 * @since 1.3.x
-							 * @since 2.9.0 added $user_id attribute
+							 * @since 3.0.0 added $user_id attribute
 							 * @hook  um_after_profile_name_inline
 							 *
 							 * @example <caption>Display some content after display name in User Profile header.</caption>
@@ -234,7 +234,7 @@ $actions = apply_filters( 'um_user_profile_actions', $actions, $profile_args, $u
 							 * Fires before profile actions.
 							 *
 							 * @param {array} $args    User Profile data.
-							 * @param {int}   $user_id User Profile ID. Since 2.9.0.
+							 * @param {int}   $user_id User Profile ID. Since 3.0.0.
 							 *
 							 * @since 2.8.7
 							 * @hook  um_before_profile_actions
@@ -254,7 +254,7 @@ $actions = apply_filters( 'um_user_profile_actions', $actions, $profile_args, $u
 							 * Fires after profile actions.
 							 *
 							 * @param {array} $args    User Profile data.
-							 * @param {int}   $user_id User Profile ID. Since 2.9.0.
+							 * @param {int}   $user_id User Profile ID. Since 3.0.0.
 							 *
 							 * @since 2.8.7
 							 * @hook  um_after_profile_actions
@@ -310,11 +310,11 @@ $actions = apply_filters( 'um_user_profile_actions', $actions, $profile_args, $u
 				 * 60 - `um_friends_add_button_nocover()` displays Friends buttons.
 				 * 70 - `um_mycred_show_user_badges_profile_header()` displays myCRED badges.
 				 *
-				 * @param {array} $args    User Profile data. Since 2.9.0.
-				 * @param {int}   $user_id User Profile ID. Since 2.9.0.
+				 * @param {array} $args    User Profile data. Since 3.0.0.
+				 * @param {int}   $user_id User Profile ID. Since 3.0.0.
 				 *
 				 * @since 1.3.x
-				 * @since 2.9.0 added $profile_args, $user_id attributes
+				 * @since 3.0.0 added $profile_args, $user_id attributes
 				 * @hook  um_after_profile_header_name
 				 *
 				 * @example <caption>Display some content in supporting header row on User Profile.</caption>
@@ -354,7 +354,7 @@ $actions = apply_filters( 'um_user_profile_actions', $actions, $profile_args, $u
 			 * @param {int}   $user_id User Profile ID.
 			 *
 			 * @since 1.3.x
-			 * @since 2.9.0 Changed the arguments position. $user_id was the 1st, and it's the 2nd now.
+			 * @since 3.0.0 Changed the arguments position. $user_id was the 1st, and it's the 2nd now.
 			 * @hook  um_after_header_meta
 			 *
 			 * @example <caption>Display some content at the end of supporting row in User Profile header wrapper after standard content.</caption>

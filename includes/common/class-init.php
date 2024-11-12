@@ -54,7 +54,7 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 		}
 
 		/**
-		 * @since 2.9.0
+		 * @since 3.0.0
 		 *
 		 * @return Rewrite
 		 */
@@ -92,7 +92,7 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 		/**
 		 * @return Shortcodes
 		 *
-		 * @since 2.9.0
+		 * @since 3.0.0
 		 */
 		public function shortcodes() {
 			if ( empty( UM()->classes['um\common\shortcodes'] ) ) {
@@ -115,7 +115,7 @@ if ( ! class_exists( 'um\common\Init' ) ) {
 		}
 
 		/**
-		 * @since 2.9.0
+		 * @since 3.0.0
 		 *
 		 * @return Color
 		 */

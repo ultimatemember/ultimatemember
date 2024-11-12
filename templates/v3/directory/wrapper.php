@@ -2,11 +2,11 @@
 /**
  * Template for the members directory
  *
- * This template can be overridden by copying it to yourtheme/ultimate-member/templates/members.php
+ * This template can be overridden by copying it to your-theme/ultimate-member/templates/members.php
  *
  * Page: "Members"
  *
- * @version 2.9.0
+ * @version 3.0.0
  *
  * @var array  $args
  * @var array  $t_args

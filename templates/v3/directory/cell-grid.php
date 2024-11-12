@@ -2,7 +2,7 @@
 /**
  * Template for the members directory grid
  *
- * This template can be overridden by copying it to yourtheme/ultimate-member/members-grid.php
+ * This template can be overridden by copying it to your-theme/ultimate-member/members-grid.php
  *
  * Page: "Members"
  *

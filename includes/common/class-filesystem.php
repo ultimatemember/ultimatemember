@@ -94,7 +94,7 @@ class Filesystem {
 			 *
 			 * @param {array} $mimes Allowed image mimes.
 			 *
-			 * @since 2.9.0
+			 * @since 3.0.0
 			 * @hook  um_allowed_default_image_types
 			 */
 			$default_image_types = apply_filters( 'um_allowed_default_image_types', $default_image_types );
@@ -136,7 +136,7 @@ class Filesystem {
 			 *
 			 * @param {array} $mimes Allowed image mimes.
 			 *
-			 * @since 2.9.0
+			 * @since 3.0.0
 			 * @hook  um_allowed_default_image_mimes
 			 */
 			$mimes = apply_filters( 'um_allowed_default_image_mimes', $mimes );
@@ -160,7 +160,7 @@ class Filesystem {
 	}
 
 	/**
-	 * @since 2.9.0
+	 * @since 3.0.0
 	 * @param string $context
 	 *
 	 * @return array
@@ -192,7 +192,7 @@ class Filesystem {
 				 *
 				 * @param {array} $mimes Allowed file mimes.
 				 *
-				 * @since 2.9.0
+				 * @since 3.0.0
 				 * @hook  um_allowed_default_file_types
 				 */
 				$mimes = apply_filters( 'um_allowed_default_file_types', $mimes );
@@ -208,7 +208,7 @@ class Filesystem {
 			/**
 			 * Filters the MIME-types of the files that can be uploaded via UM file uploader.
 			 *
-			 * @since 2.9.0
+			 * @since 3.0.0
 			 * @hook um_upload_file_mimes_list
 			 *
 			 * @param {array} $mime_types MIME types.
@@ -235,7 +235,7 @@ class Filesystem {
 			/**
 			 * Filters the MIME-types of the files that can be uploaded via UM file uploader
 			 *
-			 * @since 2.9.0
+			 * @since 3.0.0
 			 * @hook um_upload_allowed_file_mimes
 			 *
 			 * @param {array} $mime_types MIME types.

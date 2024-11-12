@@ -1155,12 +1155,12 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		/**
 		 * Allowed image types
 		 *
-		 * @deprecated 2.9.0
+		 * @deprecated 3.0.0
 		 *
 		 * @return array
 		 */
 		public function allowed_image_types() {
-			_deprecated_function( __METHOD__, '2.9.0' );
+			_deprecated_function( __METHOD__, '3.0.0' );
 			return apply_filters(
 				'um_allowed_image_types',
 				array(
@@ -1174,11 +1174,11 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 		/**
 		 * Allowed file types
-		 * @deprecated 2.9.0
+		 * @deprecated 3.0.0
 		 * @return array
 		 */
 		public function allowed_file_types() {
-			_deprecated_function( __METHOD__, '2.9.0' );
+			_deprecated_function( __METHOD__, '3.0.0' );
 			return apply_filters(
 				'um_allowed_file_types',
 				array(

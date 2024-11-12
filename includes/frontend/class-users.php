@@ -171,7 +171,7 @@ class Users {
 		/**
 		 * Filters the dropdown menu with "More actions" for user.
 		 *
-		 * @since 2.9.0
+		 * @since 3.0.0
 		 * @hook um_user_dropdown_items
 		 *
 		 * @param {array}  $items   Possible dropdown items list.

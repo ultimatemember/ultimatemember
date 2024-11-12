@@ -2,7 +2,7 @@
 /**
  * Template for the profile single post
  *
- * This template can be overridden by copying it to yourtheme/ultimate-member/profile/posts-single.php
+ * This template can be overridden by copying it to your-theme/ultimate-member/profile/posts-single.php
  *
  * Page: "Profile"
  *

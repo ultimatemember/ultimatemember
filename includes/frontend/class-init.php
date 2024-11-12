@@ -47,7 +47,7 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		}
 
 		/**
-		 * @since 2.9.0
+		 * @since 3.0.0
 		 *
 		 * @return Directory
 		 */
@@ -73,7 +73,7 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		}
 
 		/**
-		 * @since 2.9.0
+		 * @since 3.0.0
 		 *
 		 * @return form\Form
 		 */
@@ -86,7 +86,7 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		}
 
 		/**
-		 * @since 2.9.0
+		 * @since 3.0.0
 		 *
 		 * @return Layouts
 		 */
@@ -112,7 +112,7 @@ if ( ! class_exists( 'um\frontend\Init' ) ) {
 		}
 
 		/**
-		 * @since 2.9.0
+		 * @since 3.0.0
 		 *
 		 * @return Profile
 		 */

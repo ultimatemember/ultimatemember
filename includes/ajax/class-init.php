@@ -39,7 +39,7 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		}
 
 		/**
-		 * @since 2.9.0
+		 * @since 3.0.0
 		 *
 		 * @return Account
 		 */
@@ -51,7 +51,7 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		}
 
 		/**
-		 * @since 2.9.0
+		 * @since 3.0.0
 		 *
 		 * @return Dev
 		 */
@@ -64,7 +64,7 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		}
 
 		/**
-		 * @since 2.9.0
+		 * @since 3.0.0
 		 *
 		 * @return Directory|Directory_Meta
 		 */
@@ -93,7 +93,7 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		}
 
 		/**
-		 * @since 2.9.0
+		 * @since 3.0.0
 		 *
 		 * @return Files
 		 */
@@ -129,7 +129,7 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		}
 
 		/**
-		 * @since 2.9.0
+		 * @since 3.0.0
 		 *
 		 * @return Profile
 		 */
@@ -153,7 +153,7 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		}
 
 		/**
-		 * @since 2.9.0
+		 * @since 3.0.0
 		 *
 		 * @return User
 		 */
@@ -177,7 +177,7 @@ if ( ! class_exists( 'um\ajax\Init' ) ) {
 		}
 
 		/**
-		 * @since 2.9.0
+		 * @since 3.0.0
 		 *
 		 * @param string $html
 		 *

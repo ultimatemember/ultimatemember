@@ -1034,7 +1034,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 								 * @input_vars
 								 * [{"var":"$args","type":"array","desc":"Account shortcode arguments"}]
 								 * @change_log
-								 * ["Since: 2.0","Since: 2.9.0 - Added $tab_id"]
+								 * ["Since: 2.0","Since: 3.0.0 - Added $tab_id"]
 								 * @usage add_action( 'um_account_page_hidden_fields', 'function_name', 10, 1 );
 								 * @example
 								 * <?php

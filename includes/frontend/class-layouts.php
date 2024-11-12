@@ -617,7 +617,7 @@ class Layouts {
 		 *
 		 * @return {array} Single avatar layout default arguments.
 		 *
-		 * @since 2.9.0
+		 * @since 3.0.0
 		 * @hook um_user_single_avatar_default_args
 		 *
 		 * @example <caption>Extends default arguments for displaying single avatar layout.</caption>
@@ -673,7 +673,7 @@ class Layouts {
 		 *
 		 * @return {array} Single avatar wrapper classes.
 		 *
-		 * @since 2.9.0
+		 * @since 3.0.0
 		 * @hook um_user_single_avatar_wrapper_classes
 		 *
 		 * @example <caption>Extends wrapper classes for displaying single avatar layout when `custom_arg` isn't empty.</caption>
@@ -700,7 +700,7 @@ class Layouts {
 		/**
 		 * Filters the avatar's thumb size.
 		 *
-		 * @since 2.9.0
+		 * @since 3.0.0
 		 * @hook um_single_avatar_thumbnail_size
 		 *
 		 * @param {int}   $thumb_size Thumb size.
@@ -744,7 +744,7 @@ class Layouts {
 		 * @param {int}   $user_id User ID.
 		 * @param {array} $args    Single avatar arguments.
 		 *
-		 * @since 2.9.0
+		 * @since 3.0.0
 		 * @hook um_user_single_avatar_before
 		 *
 		 * @example <caption>Action before avatar image.</caption>
@@ -774,7 +774,7 @@ class Layouts {
 		 * @param {int}   $user_id User ID.
 		 * @param {array} $args    Single avatar arguments.
 		 *
-		 * @since 2.9.0
+		 * @since 3.0.0
 		 * @hook um_user_single_avatar_after
 		 *
 		 * @example <caption>Action after avatar image.</caption>

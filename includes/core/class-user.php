@@ -1074,7 +1074,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 *
 			 * @return {string} Additional content.
 			 *
-			 * @since 2.9.0
+			 * @since 3.0.0
 			 * @hook um_user_new_form_additional_fields
 			 *
 			 * @example <caption>Add some custom content to the new user form.</caption>

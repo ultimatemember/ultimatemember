@@ -2,7 +2,7 @@
 /**
  * Template for the members directory pagination JS template
  *
- * @version 2.9.0
+ * @version 3.0.0
  *
  * @var array $pages
  * @var int   $page

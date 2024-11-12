@@ -568,7 +568,7 @@ class Shortcodes {
 //	}
 
 	/**
-	 * @since 2.9.0
+	 * @since 3.0.0
 	 * @param $args
 	 *
 	 * @return false|string

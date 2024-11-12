@@ -2,11 +2,11 @@
 /**
  * Template for the navigation bar of profile page
  *
- * This template can be overridden by copying it to yourtheme/ultimate-member/templates/v3/profile/navbar.php
+ * This template can be overridden by copying it to your-theme/ultimate-member/templates/v3/profile/navbar.php
  *
  * Page: "Profile"
  *
- * @version 2.9.0
+ * @version 3.0.0
  *
  * @var int    $current_user_id
  * @var int    $user_profile_id

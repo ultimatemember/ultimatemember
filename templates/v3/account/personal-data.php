@@ -2,11 +2,11 @@
 /**
  * Template for the account page
  *
- * This template can be overridden by copying it to yourtheme/ultimate-member/templates/account.php
+ * This template can be overridden by copying it to your-theme/ultimate-member/templates/account.php
  *
  * Page: "Account"
  *
- * @version 2.9.0
+ * @version 3.0.0
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
