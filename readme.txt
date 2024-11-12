@@ -166,7 +166,7 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.9.0: xxxx, 2024 =
+= 3.0.0: xxxx, 2024 =
 
 **Enhancements**
 
@@ -179,6 +179,14 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 **Deprecated**
 
 * Action hook 'um_after_profile_header_name_args' use action hook 'um_after_profile_header_name' instead.
+* Filter hook 'um_allowed_image_types' use filter hook 'um_allowed_default_image_types' instead.
+* Filter hook 'um_allowed_file_types' use filter hook 'um_allowed_default_file_types' instead.
+
+= 2.9.0: xxxx, 2024 =
+
+**Bugfixes**
+
+* Fixed: User status filter on wp-admin > Users on mobile devices
 
 = 2.8.9 2024-10-14 =
 
