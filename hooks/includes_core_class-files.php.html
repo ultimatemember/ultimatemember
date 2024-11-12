@@ -435,8 +435,22 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				wp_send_json_error( esc_js( __( 'This field doesn\'t support image crop', 'ultimate-member' ) ) );
 			}
 
-			if ( 'profile' === $mode &amp;&amp; ! um_can_edit_field( $custom_fields[ $key ] ) ) {
-				wp_send_json_error( esc_js( __( 'You have no permission to edit this field', 'ultimate-member' ) ) );
+			if ( 'profile' === $mode ) {
+				if ( in_array( $key, array( 'cover_photo', 'profile_photo' ), true ) ) {
+					if ( 'profile_photo' === $key ) {
+						$disable_photo_uploader = empty( $post_data['use_custom_settings'] ) ? UM()->options()->get( 'disable_profile_photo_upload' ) : $post_data['disable_photo_upload'];
+						if ( $disable_photo_uploader ) {
+							wp_send_json_error( esc_js( __( 'You have no permission to edit this field', 'ultimate-member' ) ) );
+						}
+					} else {
+						$cover_enabled_uploader = empty( $post_data['use_custom_settings'] ) ? UM()->options()->get( 'profile_cover_enabled' ) : $post_data['cover_enabled'];
+						if ( ! $cover_enabled_uploader ) {
+							wp_send_json_error( esc_js( __( 'You have no permission to edit this field', 'ultimate-member' ) ) );
+						}
+					}
+				} elseif ( ! um_can_edit_field( $custom_fields[ $key ] ) ) {
+					wp_send_json_error( esc_js( __( 'You have no permission to edit this field', 'ultimate-member' ) ) );
+				}
 			}
 
 			$src        = esc_url_raw( $_REQUEST['src'] );
@@ -583,9 +597,25 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				}
 			}
 
-			if ( 'profile' === $mode &amp;&amp; ! um_can_edit_field( $custom_fields[ $id ] ) ) {
-				$ret['error'] = esc_html__( 'You have no permission to edit this field', 'ultimate-member' );
-				wp_send_json_error( $ret );
+			if ( 'profile' === $mode ) {
+				if ( in_array( $id, array( 'cover_photo', 'profile_photo' ), true ) ) {
+					if ( 'profile_photo' === $id ) {
+						$disable_photo_uploader = empty( $post_data['use_custom_settings'] ) ? UM()->options()->get( 'disable_profile_photo_upload' ) : $post_data['disable_photo_upload'];
+						if ( $disable_photo_uploader ) {
+							$ret['error'] = esc_html__( 'You have no permission to edit this field', 'ultimate-member' );
+							wp_send_json_error( $ret );
+						}
+					} else {
+						$cover_enabled_uploader = empty( $post_data['use_custom_settings'] ) ? UM()->options()->get( 'profile_cover_enabled' ) : $post_data['cover_enabled'];
+						if ( ! $cover_enabled_uploader ) {
+							$ret['error'] = esc_html__( 'You have no permission to edit this field', 'ultimate-member' );
+							wp_send_json_error( $ret );
+						}
+					}
+				} elseif ( ! um_can_edit_field( $custom_fields[ $id ] ) ) {
+					$ret['error'] = esc_html__( 'You have no permission to edit this field', 'ultimate-member' );
+					wp_send_json_error( $ret );
+				}
 			}
 
 			if ( isset( $_FILES[ $id ]['name'] ) ) {
