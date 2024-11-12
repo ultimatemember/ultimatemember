@@ -116,7 +116,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param {array} $args User Profile data.
  *
  * @since 1.3.x
- * @since 3.0.0 added $profile_args, $user_id attributes
  * @depecated 3.0.0 Please use 'um_after_profile_header_name' hook instead.
  * @hook  um_after_profile_header_name_args
  */
