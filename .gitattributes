@@ -26,9 +26,10 @@
 /.github export-ignore
 /assets/sass export-ignore
 /assets/libs/fontawesome/scss export-ignore
-/docs export-ignore
-/tests export-ignore
 /blocks-src export-ignore
+/docs export-ignore
+/node_modules export-ignore
+/tests export-ignore
 
 # Files
 /.bowerrc export-ignore
@@ -43,6 +44,7 @@
 /hookdoc-conf.json export-ignore
 /manifest.json export-ignore
 /package.json export-ignore
+/package-lock.json export-ignore
 /phpcs.xml export-ignore
 /phpdoc.dist.xml export-ignore
 /README.md export-ignore

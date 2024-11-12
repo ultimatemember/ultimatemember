@@ -45,14 +45,10 @@ jobs:
         git rm bower.json
         git rm composer.json
         git rm gulpfile.js
-        git rm hookdoc-conf.json
         git rm manifest.json
-        git rm package.json
         git rm phpcs.xml
         git rm phpdoc.dist.xml
-        git rm -r .github
         git rm -r docs
-        git rm -r blocks-src
         git rm -r tests
         git add includes/lib/action-scheduler/\*
         git commit -a -m "Composer Installed. Cleared release repo."
