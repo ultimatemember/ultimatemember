@@ -168,7 +168,11 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 = 2.9.1 xx-xx-xx =
 
+**Bugfixes**
 
+* Fixed: Issues when the form's custom fields meta has a wrong format
+* Fixed: Validation of the "Registration Default Role" slug
+* Fixed: Allowed query variables via registered REST API class only when REST_REQUEST is defined
 
 = 2.9.0 2024-11-12 =
 
