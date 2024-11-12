@@ -3965,9 +3965,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$parent_dropdown_relationship = apply_filters( "um_custom_dropdown_options_parent__{$form_key}", $data['parent_dropdown_relationship'], $data );
 						$atts_ajax                   .= ' data-um-parent="' . esc_attr( $parent_dropdown_relationship ) . '" data-nonce="' . esc_attr( wp_create_nonce( 'um_dropdown_parent_nonce' . $data['metakey'] ) ) . '" ';
 
-						if ( ! empty( $data['custom_dropdown_options_source'] ) && function_exists( $data['custom_dropdown_options_source'] ) && um_user( $data['parent_dropdown_relationship'] ) ) {
+						if ( ! empty( $data['custom_dropdown_options_source'] ) && function_exists( $data['custom_dropdown_options_source'] ) && um_user( $parent_dropdown_relationship ) ) {
 							if ( ! $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
-								$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+								$options = call_user_func( $data['custom_dropdown_options_source'], $parent_dropdown_relationship );
 							}
 
 							$disabled_by_parent_option = '';
@@ -4240,6 +4240,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					if ( 'builtin' === $options ) {
 						$options = UM()->builtin()->get( $data['filter'] );
+					}
+
+					// 'country'
+					if ( 'country' === $key && empty( $options ) ) {
+						$options = UM()->builtin()->get( 'countries' );
+					} elseif ( empty( $options ) && isset( $data['options'] ) ) {
+						$options = $data['options'];
 					}
 
 					if ( ! empty( $options ) ) {
