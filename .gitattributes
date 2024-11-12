@@ -44,6 +44,7 @@
 /hookdoc-conf.json export-ignore
 /manifest.json export-ignore
 /package.json export-ignore
+/package-lock.json export-ignore
 /phpcs.xml export-ignore
 /phpdoc.dist.xml export-ignore
 /README.md export-ignore
