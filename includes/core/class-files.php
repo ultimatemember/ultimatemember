@@ -376,6 +376,8 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 					wp_send_json_error( esc_js( __( 'You have no permission to edit this user through this form', 'ultimate-member' ) ) );
 				}
 
+				$post_data['role'] = maybe_unserialize( $post_data['role'] );
+
 				if ( is_array( $post_data['role'] ) ) {
 					if ( ! count( array_intersect( $post_data['role'], $current_user_roles ) ) ) {
 						wp_send_json_error( esc_js( __( 'You have no permission to edit this user through this form', 'ultimate-member' ) ) );
@@ -537,6 +539,8 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 					$ret['error'] = esc_html__( 'You have no permission to edit this user through this form', 'ultimate-member' );
 					wp_send_json_error( $ret );
 				}
+
+				$post_data['role'] = maybe_unserialize( $post_data['role'] );
 
 				if ( is_array( $post_data['role'] ) ) {
 					if ( ! count( array_intersect( $post_data['role'], $current_user_roles ) ) ) {
@@ -705,6 +709,8 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 					$ret['error'] = esc_html__( 'You have no permission to edit this user through this form', 'ultimate-member' );
 					wp_send_json_error( $ret );
 				}
+
+				$post_data['role'] = maybe_unserialize( $post_data['role'] );
 
 				if ( is_array( $post_data['role'] ) ) {
 					if ( ! count( array_intersect( $post_data['role'], $current_user_roles ) ) ) {
