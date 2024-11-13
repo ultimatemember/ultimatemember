@@ -36,9 +36,16 @@ function um_get_avatar( $avatar = '', $id_or_email='', $size = '96', $avatar_cla
 	if ( empty( $user_id ) )
 		return $avatar;
 
-	um_fetch_user( $user_id );
+	if ( $user_id !== um_user( 'ID' ) ) {
+		$temp_id = um_user( 'ID' );
+		um_fetch_user( $user_id );
+	}
 
 	$avatar = um_user( 'profile_photo', $size );
+
+	if ( ! empty( $temp_id ) ) {
+		um_fetch_user( $temp_id );
+	}
 
 	return $avatar;
 }

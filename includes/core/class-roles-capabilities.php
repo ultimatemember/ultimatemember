@@ -703,7 +703,10 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 
 			$return = 1;
 
-			um_fetch_user( get_current_user_id() );
+			if ( get_current_user_id() !== um_user( 'ID' ) ) {
+				$temp_id = um_user( 'ID' );
+				um_fetch_user( get_current_user_id() );
+			}
 
 			$current_user_roles = $this->get_all_user_roles( $user_id );
 
@@ -744,7 +747,9 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 
 			}
 
-			um_fetch_user( $user_id );
+			if ( ! empty( $temp_id ) ) {
+				um_fetch_user( $temp_id );
+			}
 
 			return $return;
 		}

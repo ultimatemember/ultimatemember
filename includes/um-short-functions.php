@@ -2169,7 +2169,9 @@ function um_get_default_avatar_uri() {
 function um_get_user_avatar_data( $user_id = '', $size = '96' ) {
 	if ( empty( $user_id ) ) {
 		$user_id = um_user( 'ID' );
-	} else {
+	}
+	if ( $user_id !== um_user( 'ID' ) ) {
+		$temp_id = um_user( 'ID' );
 		um_fetch_user( $user_id );
 	}
 
@@ -2264,6 +2266,10 @@ function um_get_user_avatar_data( $user_id = '', $size = '96' ) {
 	 * ?>
 	 */
 	$data['alt'] = apply_filters( "um_avatar_image_alternate_text", um_user( "display_name" ), $data );
+
+	if ( ! empty( $temp_id ) ) {
+		um_fetch_user( $temp_id );
+	}
 
 	return $data;
 }
