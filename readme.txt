@@ -172,6 +172,7 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 * Fixed: "Load textdomain just in time" issue
 * Fixed: Capabilities checking in the wp-admin > Users list table
+* Fixed: File/image upload on the role specific profile form
 * Fixed: Issues when the form's custom fields meta has a wrong format
 * Fixed: Validation of the "Registration Default Role" slug
 * Fixed: Allowed query variables via registered REST API class only when REST_REQUEST is defined
