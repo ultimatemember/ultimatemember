@@ -166,10 +166,12 @@ No specific extensions are needed. But we highly recommended keep active these P
 
 IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSION 2.6.7 PATCHES SECURITY PRIVILEGE ESCALATION VULNERABILITY. PLEASE SEE [THIS ARTICLE](https://docs.ultimatemember.com/article/1866-security-incident-update-and-recommended-actions) FOR MORE INFORMATION
 
-= 2.9.1 xx-xx-xx =
+= 2.9.1 2024-11-14 =
 
 **Bugfixes**
 
+* Fixed: "Load textdomain just in time" issue
+* Fixed: Capabilities checking in the wp-admin > Users list table
 * Fixed: Issues when the form's custom fields meta has a wrong format
 * Fixed: Validation of the "Registration Default Role" slug
 * Fixed: Allowed query variables via registered REST API class only when REST_REQUEST is defined
