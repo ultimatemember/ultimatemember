@@ -3953,66 +3953,16 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$has_parent_option            = false;
 					$disabled_by_parent_option    = '';
-					$atts_ajax                    = '';
 					$select_original_option_value = '';
 
-					if ( ! empty( $data['parent_dropdown_relationship'] ) && ! UM()->user()->preview ) {
-						$has_parent_option         = true;
-						$disabled_by_parent_option = ' disabled="disabled" ';
-
+					$atts_ajax        = '';
+					$choices_callback = ! empty( $data['custom_dropdown_options_source'] ) ? $data['custom_dropdown_options_source'] : '';
+					if ( ! empty( $choices_callback ) && function_exists( $choices_callback ) && ! $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
 						/**
-						 * Filters parent dropdown relationship by $form_key.
+						 * Filters a custom dropdown options source by $field_id.
 						 *
 						 * @since 1.3.x
-						 * @hook  um_custom_dropdown_options_parent__{$form_key}
-						 *
-						 * @param {string}  $parent  Parent dropdown relationship.
-						 * @param {array}   $data    Field Data.
-						 *
-						 * @return {string} Parent dropdown relationship.
-						 *
-						 * @example <caption>Change parent dropdown relationship.</caption>
-						 * function function_name( $parent, $data ) {
-						 *     // your code here
-						 *     return $parent;
-						 * }
-						 * add_filter( 'um_custom_dropdown_options_parent__{$form_key}', 'function_name', 10, 2 );
-						 */
-						$parent_dropdown_relationship = apply_filters( "um_custom_dropdown_options_parent__{$form_key}", $data['parent_dropdown_relationship'], $data );
-						$atts_ajax                   .= ' data-um-parent="' . esc_attr( $parent_dropdown_relationship ) . '" data-nonce="' . esc_attr( wp_create_nonce( 'um_dropdown_parent_nonce' . $data['metakey'] ) ) . '" ';
-
-						if ( ! empty( $data['custom_dropdown_options_source'] ) && function_exists( $data['custom_dropdown_options_source'] ) && um_user( $parent_dropdown_relationship ) ) {
-							if ( ! $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
-								$options = call_user_func( $data['custom_dropdown_options_source'], $parent_dropdown_relationship );
-							}
-
-							$disabled_by_parent_option = '';
-							if ( um_user( $form_key ) ) {
-								$select_original_option_value = ' data-um-original-value="' . esc_attr( um_user( $form_key ) ) . '" ';
-							}
-						}
-					}
-
-					// Child dropdown option selected
-					if ( isset( UM()->form()->post_form[ $form_key ] ) ) {
-						$select_original_option_value = " data-um-original-value='" . esc_attr( UM()->form()->post_form[ $form_key ] ) . "' ";
-					}
-
-					// Child dropdown
-					if ( $has_parent_option ) {
-						if ( ! empty( $data['custom_dropdown_options_source'] ) && function_exists( $data['custom_dropdown_options_source'] ) && isset( UM()->form()->post_form[ $form_key ] ) ) {
-							if ( ! $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
-								$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
-							}
-						}
-					}
-
-					if ( ! empty( $data['custom_dropdown_options_source'] ) ) {
-						/**
-						 * Filters a custom dropdown options source by $form_key.
-						 *
-						 * @since 1.3.x
-						 * @hook  um_custom_dropdown_options_source__{$form_key}
+						 * @hook  um_custom_dropdown_options_source__{$field_id}
 						 *
 						 * @param {string} $source Dropdown options source.
 						 * @param {array}  $data   Field Data.
@@ -4024,33 +3974,84 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						 *     // your code here
 						 *     return $source;
 						 * }
-						 * add_filter( 'um_custom_dropdown_options_source__{$form_key}', 'function_name', 10, 2 );
+						 * add_filter( 'um_custom_dropdown_options_source__{$field_id}', 'function_name', 10, 2 );
 						 */
-						$ajax_source = apply_filters( "um_custom_dropdown_options_source__{$form_key}", $data['custom_dropdown_options_source'], $data );
-						$atts_ajax  .= ' data-um-ajax-source="' . esc_attr( $ajax_source ) . '" ';
+						$choices_callback = apply_filters( "um_custom_dropdown_options_source__$field_id", $choices_callback, $data );
+						$atts_ajax       .= ' data-um-ajax-source="' . esc_attr( $choices_callback ) . '" ';
+
+						if ( ! empty( $data['parent_dropdown_relationship'] ) && ! UM()->user()->preview ) {
+							$has_parent_option         = true;
+							$disabled_by_parent_option = ' disabled="disabled" ';
+
+							/**
+							 * Filters parent dropdown relationship by $field_id.
+							 *
+							 * @since 1.3.x
+							 * @hook  um_custom_dropdown_options_parent__{$field_id}
+							 *
+							 * @param {string}  $parent  Parent dropdown relationship.
+							 * @param {array}   $data    Field Data.
+							 *
+							 * @return {string} Parent dropdown relationship.
+							 *
+							 * @example <caption>Change parent dropdown relationship.</caption>
+							 * function function_name( $parent, $data ) {
+							 *     // your code here
+							 *     return $parent;
+							 * }
+							 * add_filter( 'um_custom_dropdown_options_parent__{$field_id}', 'function_name', 10, 2 );
+							 */
+							$parent_dropdown_relationship = apply_filters( "um_custom_dropdown_options_parent__$field_id", $data['parent_dropdown_relationship'], $data );
+							$atts_ajax                   .= ' data-um-parent="' . esc_attr( $parent_dropdown_relationship ) . '" data-nonce="' . esc_attr( wp_create_nonce( 'um_dropdown_parent_nonce' . $data['metakey'] ) ) . '" ';
+
+							if ( ! empty( $data['custom_dropdown_options_source'] ) && function_exists( $data['custom_dropdown_options_source'] ) && um_user( $parent_dropdown_relationship ) ) {
+								if ( ! $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
+									$options = call_user_func( $data['custom_dropdown_options_source'], $parent_dropdown_relationship );
+								}
+
+								$disabled_by_parent_option = '';
+								if ( um_user( $form_key ) ) {
+									$select_original_option_value = ' data-um-original-value="' . esc_attr( um_user( $form_key ) ) . '" ';
+								}
+							}
+						}
+
+						// Child dropdown option selected
+						if ( isset( UM()->form()->post_form[ $form_key ] ) ) {
+							$select_original_option_value = " data-um-original-value='" . esc_attr( UM()->form()->post_form[ $form_key ] ) . "' ";
+						}
+
+						// Child dropdown
+						if ( $has_parent_option ) {
+							if ( ! empty( $data['custom_dropdown_options_source'] ) && function_exists( $data['custom_dropdown_options_source'] ) && isset( UM()->form()->post_form[ $form_key ] ) ) {
+								if ( ! $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
+									$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+								}
+							}
+						}
 					}
 
 					if ( ! $has_parent_option ) {
-						/**
-						 * Filters dropdown options.
-						 *
-						 * @since 2.0
-						 * @hook  um_selectbox_options
-						 *
-						 * @param {array}  $options Field options.
-						 * @param {string} $key     Field metakey.
-						 *
-						 * @return {array} Field options.
-						 *
-						 * @example <caption>Extend dropdown options.</caption>
-						 * function my_um_selectbox_options( $options, $key ) {
-						 *     // your code here
-						 *     return $options;
-						 * }
-						 * add_filter( 'um_selectbox_options', 'my_um_selectbox_options', 10, 2 );
-						 */
-						$options = apply_filters( 'um_selectbox_options', $options, $key );
-						if ( isset( $options ) ) {
+						if ( ! empty( $options ) ) {
+							/**
+							 * Filters dropdown options.
+							 *
+							 * @since 2.0
+							 * @hook  um_selectbox_options
+							 *
+							 * @param {array}  $options Field options.
+							 * @param {string} $key     Field metakey.
+							 *
+							 * @return {array} Field options.
+							 *
+							 * @example <caption>Extend dropdown options.</caption>
+							 * function my_um_selectbox_options( $options, $key ) {
+							 *     // your code here
+							 *     return $options;
+							 * }
+							 * add_filter( 'um_selectbox_options', 'my_um_selectbox_options', 10, 2 );
+							 */
+							$options = apply_filters( 'um_selectbox_options', $options, $key );
 							/**
 							 * Filters dropdown dynamic options.
 							 *
@@ -4256,6 +4257,14 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$options = UM()->builtin()->get( $key );
 					}
 
+					$atts_ajax        = '';
+					$choices_callback = ! empty( $data['custom_dropdown_options_source'] ) ? $data['custom_dropdown_options_source'] : '';
+					if ( ! empty( $choices_callback ) && function_exists( $choices_callback ) && ! $this->is_source_blacklisted( $data['custom_dropdown_options_source'] ) ) {
+						/** This filter is documented in includes/core/class-fields.php */
+						$choices_callback = apply_filters( "um_custom_dropdown_options_source__$field_id", $choices_callback, $data );
+						$atts_ajax       .= ' data-um-ajax-source="' . esc_attr( $choices_callback ) . '" ';
+					}
+
 					if ( ! empty( $options ) ) {
 						/**
 						 * Filters multiselect options.
@@ -4324,7 +4333,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if ( defined( 'UM_DEV_MODE' ) && UM_DEV_MODE && UM()->options()->get( 'enable_new_ui' ) ) {
 						$class = 'js-choice';
 
-						$output .= '<select multiple data-default="' . esc_attr( $default ) . '" ' . $disabled . '  name="' . esc_attr( $field_name ) . '[]" id="' . esc_attr( $field_id ) . '" data-validate="' . esc_attr( $validate ) . '" data-max_selections="' . esc_attr( $max_selections ) . '" data-min_selections="' . esc_attr( $min_selections ) . '" data-key="' . esc_attr( $key ) . '" class="' . esc_attr( $this->get_class( $key, $data, $class ) ) . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '>';
+						$output .= '<select multiple data-default="' . esc_attr( $default ) . '" ' . $disabled . '  name="' . esc_attr( $field_name ) . '[]" id="' . esc_attr( $field_id ) . '" data-validate="' . esc_attr( $validate ) . '" data-max_selections="' . esc_attr( $max_selections ) . '" data-min_selections="' . esc_attr( $min_selections ) . '" data-key="' . esc_attr( $key ) . '" class="' . esc_attr( $this->get_class( $key, $data, $class ) ) . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '" ' . $atts_ajax . ' ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '>';
 						// if ( ! ( isset( $data['allowclear'] ) && 0 === $data['allowclear'] ) ) {
 						// @todo maybe add clear all button here.
 						// }
@@ -4382,7 +4391,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$output .= '<div class="um-field-icon"><i class="' . esc_attr( $data['icon'] ) . '"></i></div>';
 						}
 
-						$output .= '<select  ' . $disabled . ' multiple="multiple" name="' . esc_attr( $field_name ) . '[]" id="' . esc_attr( $field_id ) . '" data-maxsize="' . esc_attr( $max_selections ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" class="' . $this->get_class( $key, $data, $class ) . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '" ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '>';
+						$output .= '<select  ' . $disabled . ' multiple="multiple" name="' . esc_attr( $field_name ) . '[]" id="' . esc_attr( $field_id ) . '" data-maxsize="' . esc_attr( $max_selections ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" class="' . $this->get_class( $key, $data, $class ) . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '" ' . $atts_ajax . ' ' . $this->aria_valid_attributes( $this->is_error( $key ), $field_name ) . '>';
 
 						// Add an empty option!
 						$output .= '<option value=""></option>';
