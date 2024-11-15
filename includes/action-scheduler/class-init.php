@@ -42,14 +42,7 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 		 */
 		public function __construct() {
 			if ( ! $this->can_be_active() ) {
-				UM()->admin()->notices()->add_notice(
-					'um-action-scheduler',
-					array(
-						'class'   => 'notice-warning is-dismissible',
-						// translators: %1$s - Plugin name, %1$s - Plugin Version
-						'message' => '<p>' . sprintf( __( '<strong>%1$s %2$s</strong> The file needed to enable the Action Scheduler is missing. The plugin will continue to function as it did before, but without the new benefits offered by the Action Scheduler.', 'ultimate-member' ), UM_PLUGIN_NAME, UM_VERSION ) . '</p>',
-					)
-				);
+				add_action( 'init', array( $this, 'add_notice' ) );
 			} else {
 				add_filter( 'um_settings_structure', array( $this, 'add_setting' ) );
 
@@ -58,6 +51,17 @@ if ( ! class_exists( 'um\action_scheduler\Init' ) ) {
 					$this->load_library( true );
 				}
 			}
+		}
+
+		public function add_notice() {
+			UM()->admin()->notices()->add_notice(
+				'um-action-scheduler',
+				array(
+					'class'   => 'notice-warning is-dismissible',
+					// translators: %1$s - Plugin name, %1$s - Plugin Version
+					'message' => '<p>' . sprintf( __( '<strong>%1$s %2$s</strong> The file needed to enable the Action Scheduler is missing. The plugin will continue to function as it did before, but without the new benefits offered by the Action Scheduler.', 'ultimate-member' ), UM_PLUGIN_NAME, UM_VERSION ) . '</p>',
+				)
+			);
 		}
 
 		/**

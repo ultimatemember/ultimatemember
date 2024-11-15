@@ -366,8 +366,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 *
 		 * @return string
 		 */
-		function get_fields_by_row( $row_id ) {
-
+		public function get_fields_by_row( $row_id ) {
 			if ( empty( $this->global_fields ) || ! is_array( $this->global_fields ) ) {
 				$this->global_fields = array();
 			}
@@ -379,9 +378,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 				}
 			}
 
-			return ( isset ( $results ) ) ? $results : '';
+			return isset( $results ) ? $results : '';
 		}
-
 
 		/**
 		 * Get fields by sub row
