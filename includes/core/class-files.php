@@ -471,7 +471,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			 * @hook um_image_upload_validation
 			 *
 			 * @example <caption>Custom validation.</caption>
-			 * function my_image_upload_nonce( $custom_validation, $id, $user_id ) {
+			 * function my_um_image_upload_validation( $custom_validation, $id, $user_id ) {
 			 *     // your code here
 			 *     $ret['error'] = esc_html__( 'Error code', 'ultimate-member' );
 			 *     wp_send_json_error( $ret );
