@@ -168,6 +168,10 @@ IMPORTANT: PLEASE UPDATE THE PLUGIN TO AT LEAST VERSION 2.6.7 IMMEDIATELY. VERSI
 
 = 2.9.1 2024-11-14 =
 
+**Enhancements**
+
+* Added: `um_image_upload_validation` hook for 3rd-party validation during upload images
+
 **Bugfixes**
 
 * Fixed: "Load textdomain just in time" issue
