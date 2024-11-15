@@ -1,6 +1,6 @@
 ﻿== Changelog ==
 
-= 2.9.1 November 14, 2024 =
+= 2.9.1 November 15, 2024 =
 
 * Enhancements:
 
