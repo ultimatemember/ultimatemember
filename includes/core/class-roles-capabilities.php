@@ -711,16 +711,25 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 
 			$current_user_roles = $this->get_all_user_roles( $user_id );
 
-			switch( $cap ) {
+			switch ( $cap ) {
 				case 'edit':
-					if ( get_current_user_id() === $user_id && ! um_user( 'can_edit_profile' ) ) {
-						$return = 0;
-					} elseif ( ! um_user( 'can_access_private_profile' ) && UM()->user()->is_private_profile( $user_id ) ) {
-						$return = 0;
-					} elseif ( ! um_user( 'can_edit_everyone' ) ) {
-						$return = 0;
-					} elseif ( um_user( 'can_edit_roles' ) && ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, um_user( 'can_edit_roles' ) ) ) <= 0 ) ) {
-						$return = 0;
+					if ( get_current_user_id() === $user_id ) {
+						if ( ! um_user( 'can_edit_profile' ) ) {
+							$return = 0;
+						}
+					} else {
+						// don't merge these `if` conditions!
+						if ( ! um_user( 'can_access_private_profile' ) && UM()->user()->is_private_profile( $user_id ) ) {
+							$return = 0;
+						} else {
+							if ( ! um_user( 'can_edit_everyone' ) ) {
+								$return = 0;
+							} else {
+								if ( um_user( 'can_edit_roles' ) && ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, um_user( 'can_edit_roles' ) ) ) <= 0 ) ) {
+									$return = 0;
+								}
+							}
+						}
 					}
 					break;
 
